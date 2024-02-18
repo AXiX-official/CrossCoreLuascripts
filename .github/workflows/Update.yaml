@@ -107,7 +107,7 @@ jobs:
         server_port: 465
         username: ${{ secrets.GMAIL_USERNAME }}
         password: ${{ secrets.GMAIL_APP_PASSWORD }}
-        subject: Your Subject
+        subject: 交错战线CFG文件更新
         to: ${{ secrets.RECIPIENTS }}
         from: ${{ secrets.GMAIL_USERNAME }}
         body: "cfg${{ steps.commit-message.outputs.message }}.zip"
