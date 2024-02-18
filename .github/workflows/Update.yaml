@@ -41,17 +41,19 @@ jobs:
         echo "${{ steps.calc-hash.outputs.hash }}" > new-hash.txt
 
     - name: Download old hash
+      if: "${{ github.event.inputs.force_check }}" == 'false'
       uses: actions/download-artifact@v2
       with:
         name: hash-${{ matrix.platform }}
         path: old-hash.txt
 
     - name: Check hash
+      if: "${{ github.event.inputs.force_check }}" == 'false'
       id: check-hash
       run: |
         echo "Old hash: $(Get-Content -Path old-hash.txt)"
         echo "New hash: ${HASH}"
-        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}" -or "${{ github.event.inputs.force_check }}" == 'true') {
+        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
           echo "${HASH}" > new-hash.txt
           echo "::set-output name=changed::true"
         } else {
