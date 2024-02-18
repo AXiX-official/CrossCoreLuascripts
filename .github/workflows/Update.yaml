@@ -1,0 +1,114 @@
+﻿name: Check file changes
+on:
+  schedule:
+    - cron:  '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check-file:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        platform: ['android', 'ios']
+        include:
+          - platform: 'android'
+            url: 'https://cdn.megagamelog.com/cross/release/android/curr/Custom/luascripts'
+            filename: 'lua_android'
+          - platform: 'ios'
+            url: 'https://cdn.megagamelog.com/cross/release/ios/curr_new/Custom/luascripts'
+            filename: 'lua_ios'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Download file
+      run: |
+        curl -L -o ${{ matrix.filename }} "${{ matrix.url }}"
+
+    - name: Calculate hash
+      id: calc-hash
+      shell: bash
+      run: |
+        echo "::set-output name=hash::$(sha256sum ${{ matrix.filename }} | awk '{ print $1 }')"
+
+    - name: Download old hash
+      uses: actions/download-artifact@v2
+      with:
+        name: hash-${{ matrix.platform }}
+        path: old-hash.txt
+
+    - name: Check hash
+      id: check-hash
+      run: |
+        echo "Old hash: $(Get-Content -Path old-hash.txt)"
+        echo "New hash: ${HASH}"
+        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
+          echo "${HASH}" > new-hash.txt
+          echo "::set-output name=changed::true"
+        } else {
+          echo "::set-output name=changed::false"
+        }
+      env:
+        HASH: ${{ steps.calc-hash.outputs.hash }}
+
+    - name: Upload new hash
+      if: steps.check-hash.outputs.changed == 'true'
+      uses: actions/upload-artifact@v2
+      with:
+        name: hash-${{ matrix.platform }}
+        path: new-hash.txt
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      if: steps.check-hash.outputs.changed == 'true'
+
+    - name: Unpack and Push
+      if: steps.check-hash.outputs.changed == 'true'
+      run: |
+        curl -L -o studio.zip https://github.com/RazTools/Studio/releases/download/v1.00.00/net7.0-windows.zip
+        Expand-Archive -Path studio.zip -DestinationPath studio
+        git clone ${{ secrets.TOOL_URL }} tool
+        python tool/decrypt.py "${{ matrix.filename }}"
+        mkdir lua
+        studio/AssetStudioCLI "${{ matrix.filename }}_decrypt" lua --game Normal
+        python tool/sortFile.py lua "CrossCore-Luascripts/${{ matrix.platform }}"
+
+    - name: Generate commit message
+      if: steps.check-hash.outputs.changed == 'true'
+      id: commit-message
+      shell: pwsh
+      run: |
+        $svnVersion = Select-String -Path "CrossCore-Luascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "(\d+)"' | % { $_.Matches.Groups[1].Value }
+        $date = Get-Date -Format "yyyy/MM/dd"
+        echo "::set-output name=message::[${date}]-${svnVersion}"
+
+    - name: Commit changes
+      if: steps.check-hash.outputs.changed == 'true'
+      run: |
+        cd CrossCore-Luascripts
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -am "${{ steps.commit-message.outputs.message }}"
+        git push
+
+    - name: Step for Android
+      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
+      run: |
+        pip install -r tool/requirements.txt
+        python tool/2csv.py lua
+        Compress-Archive -Path cfg -DestinationPath "cfg${{ steps.commit-message.outputs.message }}.zip"
+        echo "::set-output name=packed::true"
+
+    - name: Send mail
+      if: steps.check-hash.outputs.changed == 'true'
+      uses: dawidd6/action-send-mail@v2
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.GMAIL_USERNAME }}
+        password: ${{ secrets.GMAIL_APP_PASSWORD }}
+        subject: Your Subject
+        to: ${{ secrets.RECIPIENTS }}
+        from: ${{ secrets.GMAIL_USERNAME }}
+        body: "cfg${{ steps.commit-message.outputs.message }}.zip"
+        attachments: "cfg${{ steps.commit-message.outputs.message }}.zip"
