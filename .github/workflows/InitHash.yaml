@@ -1,0 +1,36 @@
+name: Init Hash
+on:
+  workflow_dispatch:
+
+jobs:
+  check-file:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        platform: ['android', 'ios']
+        include:
+          - platform: 'android'
+            url: 'https://cdn.megagamelog.com/cross/release/android/curr/Custom/luascripts'
+            filename: 'lua_android'
+          - platform: 'ios'
+            url: 'https://cdn.megagamelog.com/cross/release/ios/curr_new/Custom/luascripts'
+            filename: 'lua_ios'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Download file
+      run: |
+        curl -L -o ${{ matrix.filename }} "${{ matrix.url }}"
+
+    - name: Calculate hash
+      id: calc-hash
+      shell: bash
+      run: |
+        echo "::set-output name=hash::$(sha256sum ${{ matrix.filename }} | awk '{ print $1 }')"
+
+    - name: Upload new hash
+      uses: actions/upload-artifact@v2
+      with:
+        name: hash-${{ matrix.platform }}
+        path: new-hash.txt
