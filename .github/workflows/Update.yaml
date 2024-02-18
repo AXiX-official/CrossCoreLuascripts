@@ -3,6 +3,11 @@ on:
   schedule:
     - cron:  '0 * * * *'
   workflow_dispatch:
+    inputs:
+      force_check:
+        description: 'Force check hash to be true'
+        required: false
+        default: 'false'
 
 jobs:
   check-file:
@@ -42,7 +47,7 @@ jobs:
       run: |
         echo "Old hash: $(Get-Content -Path old-hash.txt)"
         echo "New hash: ${HASH}"
-        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
+        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}" -or "${{ github.event.inputs.force_check }}" == 'true') {
           echo "${HASH}" > new-hash.txt
           echo "::set-output name=changed::true"
         } else {
