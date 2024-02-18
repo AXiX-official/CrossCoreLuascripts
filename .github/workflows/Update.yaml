@@ -52,7 +52,7 @@ jobs:
       run: |
         echo "Old hash: $(Get-Content -Path old-hash.txt)"
         echo "New hash: ${HASH}"
-        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}" -or "${{ github.event.inputs.force_check }}" == 'true') {
+        if ("${{ github.event.inputs.force_check }}" == 'true' -or "$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
           echo "${HASH}" > new-hash.txt
           echo "::set-output name=changed::true"
         } else {
