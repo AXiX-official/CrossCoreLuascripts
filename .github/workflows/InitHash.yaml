@@ -16,9 +16,6 @@ jobs:
             url: 'https://cdn.megagamelog.com/cross/release/ios/curr_new/Custom/luascripts'
             filename: 'lua_ios'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Download file
       run: |
         curl -L -o ${{ matrix.filename }} "${{ matrix.url }}"
@@ -28,6 +25,10 @@ jobs:
       shell: bash
       run: |
         echo "::set-output name=hash::$(sha256sum ${{ matrix.filename }} | awk '{ print $1 }')"
+
+    - name: Save hash
+      run: |
+        echo "${{ steps.calc-hash.outputs.hash }}" > new-hash.txt
 
     - name: Upload new hash
       uses: actions/upload-artifact@v2
