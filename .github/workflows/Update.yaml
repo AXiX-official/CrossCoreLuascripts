@@ -48,12 +48,11 @@ jobs:
         path: old-hash.txt
 
     - name: Check hash
-      if: "${{ github.event.inputs.force_check }}" == 'false'
       id: check-hash
       run: |
         echo "Old hash: $(Get-Content -Path old-hash.txt)"
         echo "New hash: ${HASH}"
-        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
+        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}" -or "${{ github.event.inputs.force_check }}" == 'true') {
           echo "${HASH}" > new-hash.txt
           echo "::set-output name=changed::true"
         } else {
