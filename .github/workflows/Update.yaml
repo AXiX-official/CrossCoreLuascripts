@@ -132,7 +132,7 @@ jobs:
         echo "::set-output name=packed::true"
 
     - name: Send mail
-      if: steps.step-android.outputs.packed == 'true' && ${{ github.event.inputs.send_mail == 'true'}} 
+      if: steps.step-android.outputs.packed == 'true'
       uses: dawidd6/action-send-mail@v2
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
