@@ -154,7 +154,7 @@ jobs:
         echo "::set-output name=packed::true"
 
     - name: Send mail
-      if: steps.check-hash.outputs.changed == 'true'
+      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
       uses: dawidd6/action-send-mail@v2
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
