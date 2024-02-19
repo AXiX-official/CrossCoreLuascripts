@@ -49,8 +49,9 @@ jobs:
       id: check-hash
       env:
         HASH: ${{ steps.calc-hash.outputs.hash }}
+        FORCE_CHECK: ${{ github.event.inputs.force_check }}
       run: |
-        if ('${{ github.event.inputs.force_check }}' -eq 'true') {
+        if ( $env:FORCE_CHECK -eq 'true') {
           Move-Item -Path  D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt -Force
           echo "::set-output name=changed::true"
         } else {
@@ -108,9 +109,10 @@ jobs:
       if: matrix.platform == 'android'
       id: set-mail
       env:
-        CHANGED: ${{ steps.check-hash.outputs.changed }}      
+        CHANGED: ${{ steps.check-hash.outputs.changed }}
+        SEND_MAIL: ${{ github.event.inputs.send_mail }}
       run: |
-        if ($env:CHANGED -eq 'true' && ${{ github.event.inputs.send_mail }} -eq 'true') {
+        if ($env:CHANGED -eq 'true' && $env:SEND_MAIL -eq 'true') {
           echo "::set-output name=send_mail::true"
         } else {
           echo "::set-output name=send_mail::false"
