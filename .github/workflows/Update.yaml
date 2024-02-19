@@ -148,6 +148,7 @@ jobs:
 
     - name: Step for Android
       if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
+      id: step-android
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
@@ -157,7 +158,7 @@ jobs:
         echo "::set-output name=packed::true"
 
     - name: Send mail
-      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true' && ${{ github.event.inputs.send_mail == 'true'}} 
+      if: stpe.step-android.outputs.packed == 'true' && ${{ github.event.inputs.send_mail == 'true'}} 
       uses: dawidd6/action-send-mail@v2
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
