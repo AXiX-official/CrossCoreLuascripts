@@ -104,10 +104,8 @@ jobs:
 
     - name: Commit changes
       if: steps.check-hash.outputs.changed == 'true'
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        Set-Location -Path $env:WORKSPACE_PATH
+        Set-Location -Path D:/a/CrossCoreLuascripts/CrossCoreLuascripts/
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add ${{ matrix.platform }}
