@@ -131,6 +131,17 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
 
+    - name: Generate cfg vesion
+      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
+      id: cfg-version
+      shell: bash
+      env:
+        WORKSPACE_PATH: ${{ github.workspace }}
+      run: |
+        svnVersion=$(grep -o 'g_svnVersion = "[0-9]*' "$WORKSPACE_PATH/${{ matrix.platform }}/SvnVersion.lua" | grep -o '[0-9]*')
+        date=$(date +"%Y%m%d")
+        echo "::set-output name=version::${date}-${svnVersion}"
+
     - name: Step for Android
       if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
       env:
@@ -138,7 +149,8 @@ jobs:
       run: |
         pip install -r $WORKSPACE_PATH/tool/requirements.txt
         python $WORKSPACE_PATH/tool/2csv.py lua
-        Compress-Archive -Path cfg -DestinationPath "$WORKSPACE_PATH/cfg${{ steps.commit-message.outputs.message }}.zip"
+
+        Compress-Archive -Path cfg -DestinationPath "$WORKSPACE_PATH/cfg${{ steps.cfg-version.outputs.version }}.zip"
         echo "::set-output name=packed::true"
 
     - name: Send mail
