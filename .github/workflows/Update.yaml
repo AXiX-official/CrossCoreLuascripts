@@ -8,10 +8,6 @@ on:
         description: 'Force check hash to be true'
         required: false
         default: 'false'
-      send_mail:
-        description: 'Send mail'
-        required: false
-        default: 'true'
 
 jobs:
   check-file:
@@ -147,7 +143,7 @@ jobs:
         echo "::set-output name=version::${date}-${svnVersion}"
 
     - name: Step for Android
-      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true' && ${{ github.event.inputs.send_mail == 'true'}}
+      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
       id: step-android
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
@@ -158,7 +154,7 @@ jobs:
         echo "::set-output name=packed::true"
 
     - name: Send mail
-      if: stpe.step-android.outputs.packed == 'true' && ${{ github.event.inputs.send_mail == 'true'}} 
+      if: stpe.step-android.outputs.packed == 'true'
       uses: dawidd6/action-send-mail@v2
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
