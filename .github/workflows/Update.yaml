@@ -86,6 +86,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       if: steps.check-hash.outputs.changed == 'true'
+      with:
+        persist-credentials: false
 
     - name: Unpack and Push
       if: steps.check-hash.outputs.changed == 'true'
@@ -116,14 +118,19 @@ jobs:
       if: steps.check-hash.outputs.changed == 'true'
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
-        MY_TOKEN: ${{ secrets.MY_TOKEN }}
       run: |
         Set-Location -Path $env:WORKSPACE_PATH
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add ${{ matrix.platform }}
         git commit -am "${{ steps.commit-message.outputs.message }}"
-        git push https://${{ secrets.MY_TOKEN }}@github.com/AXiX-official/CrossCoreLuascripts.git
+        git push origin
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
 
     - name: Step for Android
       if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
