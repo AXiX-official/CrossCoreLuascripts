@@ -23,20 +23,21 @@ jobs:
             url: 'https://cdn.megagamelog.com/cross/release/ios/curr_new/Custom/luascripts'
             filename: 'lua_ios'
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Download file
       run: |
         curl -L -o ${{ matrix.filename }} "${{ matrix.url }}"
-
     - name: Calculate hash
       id: calc-hash
-      shell: pwsh
+      shell: bash
       run: |
-        echo "::set-output name=hash::$(Get-FileHash -Algorithm SHA256 ${{ matrix.filename }} | ForEach-Object Hash)"
-      env:
-        HASH: ${{ steps.calc-hash.outputs.hash }}
-
+        echo "::set-output name=hash::$(sha256sum ${{ matrix.filename }} | awk '{ print $1 }')"
+    - name: Save hash
+      run: |
+        echo "${{ steps.calc-hash.outputs.hash }}" > new-hash.txt
     - name: Download old hash
-      if: "${{ github.event.inputs.force_check }}" == 'false'
       uses: actions/download-artifact@v2
       with:
         name: hash-${{ matrix.platform }}
@@ -47,12 +48,14 @@ jobs:
       run: |
         echo "Old hash: $(Get-Content -Path old-hash.txt)"
         echo "New hash: ${HASH}"
-        if ("${{ github.event.inputs.force_check }}" == 'true' -or "$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
+        if ("$(Get-Content -Path old-hash.txt)" -ne "${HASH}" -or "${{ github.event.inputs.force_check }}" == 'true') {
           echo "${HASH}" > new-hash.txt
           echo "::set-output name=changed::true"
         } else {
           echo "::set-output name=changed::false"
         }
+      env:
+        HASH: ${{ steps.calc-hash.outputs.hash }}
 
     - name: Upload new hash
       if: steps.check-hash.outputs.changed == 'true'
@@ -75,7 +78,6 @@ jobs:
         mkdir lua
         studio/AssetStudioCLI "${{ matrix.filename }}_decrypt" lua --game Normal
         python tool/sortFile.py lua "CrossCore-Luascripts/${{ matrix.platform }}"
-
     - name: Generate commit message
       if: steps.check-hash.outputs.changed == 'true'
       id: commit-message
@@ -84,7 +86,6 @@ jobs:
         $svnVersion = Select-String -Path "CrossCore-Luascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "(\d+)"' | % { $_.Matches.Groups[1].Value }
         $date = Get-Date -Format "yyyy/MM/dd"
         echo "::set-output name=message::[${date}]-${svnVersion}"
-
     - name: Commit changes
       if: steps.check-hash.outputs.changed == 'true'
       run: |
@@ -93,7 +94,6 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -am "${{ steps.commit-message.outputs.message }}"
         git push
-
     - name: Step for Android
       if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
       run: |
@@ -101,7 +101,6 @@ jobs:
         python tool/2csv.py lua
         Compress-Archive -Path cfg -DestinationPath "cfg${{ steps.commit-message.outputs.message }}.zip"
         echo "::set-output name=packed::true"
-
     - name: Send mail
       if: steps.check-hash.outputs.changed == 'true'
       uses: dawidd6/action-send-mail@v2
