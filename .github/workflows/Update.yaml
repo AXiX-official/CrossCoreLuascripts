@@ -123,9 +123,10 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add ${{ matrix.platform }}
-        git commit -am "${{ steps.commit-message.outputs.message }}"
+        git commit -am "${{ steps.commit-message.outputs.message }}" || echo "::set-output name=skipped::true"
 
     - name: Push changes
+      if: steps.commit.outputs.skipped != 'true'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
