@@ -1,0 +1,943 @@
+local fillExpBar = nil
+local expBar = nil
+local layout = nil
+local data = nil
+local elseData = nil
+local items = nil
+local cardCount = 0
+local stages = {}
+local rewards = nil
+
+local soundIds = {} --声音id
+local isSoundPlay = false
+
+-- boss
+local addDamage = 0
+local damageTime = 0.5 -- 动效时间
+local curDamage = 0
+local targetDamage = 0
+
+-- pvp
+local fillExerBar = nil
+local exerBar = nil
+local currRankLv = 0
+local isStartPvpExp = false
+
+--扫荡
+local isSweep = false
+local sweepView = nil
+
+-- buff
+local isHasBuff = false
+
+-- anim
+local isJumpToEnd = false
+local actions = {}
+
+function Awake()
+    fillExpBar = ComUtil.GetCom(expSlider, "Slider")
+    fillExerBar = ComUtil.GetCom(exerSlider, "Slider")
+
+    expBar = ExpBar.New();
+    exerBar = ExpBar.New();
+
+    eventMgr = ViewEvent.New();
+    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
+    eventMgr:AddListener(EventType.Fight_Over_Reward, OnShowReward)
+    eventMgr:AddListener(EventType.Equip_SetLock_Ret, OnLockRet)
+
+    layout = ComUtil.GetCom(hsv, "UIInfinite")
+    layout:Init("UIs/FightOver/FightOverGridItem", LayoutCallBack, true)
+
+    local anims = ComUtil.GetComsInChildren(gameObject, "ActionBase")
+    for i = 0, anims.Length - 1 do
+        table.insert(actions, anims[i])
+    end
+
+    InitPanel()
+end
+
+function LayoutCallBack(index)
+    local lua = layout:GetItemLua(index)
+    if (lua) then
+        local _data = rewards[index]
+        lua.Refresh(_data)
+    end
+end
+
+function OnViewClosed(viewKey)
+    if viewKey == "RewardPanel" then
+        CSAPI.SetGOActive(node, true)
+        RefreshPanel()
+    end
+end
+
+function OnShowReward(index)
+    if isJumpToEnd then
+        return
+    end
+
+    if index and index < cardCount then
+        return
+    end
+
+    if isSweep and sweepView and not sweepView.IsAnimEnd() then --如果是扫荡先播放扫荡动效
+        sweepView.PlayAnim()
+        return
+    end
+
+    ShowRewardAnim() --奖励动效
+end
+
+function OnLockRet()
+    layout:UpdateList()
+end
+
+function InitPanel()
+    local topTrans = topObj.transform
+    if topTrans.childCount > 0 then
+        for i = 0, topTrans.childCount - 1 do
+            CSAPI.SetGOActive(topTrans:GetChild(i).gameObject, false)
+        end
+    end
+end
+
+function OnDestroy()
+    eventMgr:ClearListener();
+end
+
+function Update()
+    if isJumpToEnd then
+        return
+    end
+
+    if expBar then
+        expBar:Update()
+    end
+
+    if exerBar then
+        exerBar:Update()
+    end
+
+    UpdateBossDamage()
+end
+
+function Refresh(_data, _elseData)
+    data = _data
+    elseData = _elseData
+    isSweep = elseData and elseData.isSweep
+    if data then
+        -- reward
+        rewards = data.rewards or nil
+        -- if DungeonMgr:CurrSectionIsMainLine() then -- 自动奖励
+        --     DungeonMgr:AddAIFightRewards(rewards);
+        -- end
+
+        if IsCardShow(rewards) then --卡牌展示
+            return
+        end
+
+        if rewards ~= nil and #rewards > 0 and DungeonMgr:IsCurrTower() then --爬塔特殊显示
+            CSAPI.SetGOActive(node, false)
+            UIUtil:OpenReward({rewards},{isTower = true});
+        else
+            RefreshPanel()
+        end
+    end
+end
+
+function RefreshPanel()
+    sceneType = data.sceneType
+
+    SetTitleIcon()
+    SetPlayer()
+    SetRewards()
+    SetCards()
+
+    if isSweep then
+        SetSweepPanel()
+    elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
+        SetPVPPanel()
+    elseif sceneType == SceneType.BOSS then
+        SetFiledBossPanel()
+    else
+        SetPVEPanel()
+    end
+end
+
+function SetTitleIcon()
+    local imgName = "win"
+    if elseData then
+        if isSweep then
+            imgName = "sweep"
+        elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
+            imgName = elseData.bIsWin and imgName or "lose"
+        end
+    end
+    CSAPI.LoadImg(topImg, "UIs/FightOver/img_" .. imgName .. ".png", true, nil, true)
+end
+
+------------------------------------玩家------------------------------------
+function SetPlayer()
+    CSAPI.SetText(txtName, PlayerClient:GetName())
+
+    --先配置好防止跳过没配置
+    SetExp(0)
+
+    FuncUtil:Call(function()
+        if gameObject and not isJumpToEnd then
+            SetExp(data.nPlayerExp)
+        end
+    end, nil, 1000)
+end
+
+-- 玩家升级动画效果
+function SetExp(addExp)
+    local maxLv = PlayerClient:GetMaxLv();
+    if maxLv == PlayerClient:GetLv() then
+        RefreshTextLv(maxLv)
+        RefreshTextExp("MAX", "MAX")
+        SetProgress(1)
+    elseif (addExp <= 0) then
+        local curExp = PlayerClient:GetExp()
+        local maxExp = GetLvExp(PlayerClient:GetLv())
+        RefreshTextLv(PlayerClient:GetLv())
+        RefreshTextExp(curExp, maxExp)
+        SetProgress(curExp / maxExp)
+    else
+        local oldLv = PlayerClient:GetLv()
+        local oldExp = PlayerClient:GetExp() - addExp
+        while oldExp < 0 do
+            oldLv = oldLv - 1
+            local cfg = Cfgs.CfgPlrUpgrade:GetByID(oldLv)
+            oldExp = cfg.nNextExp + oldExp
+        end
+        local maxExp = GetLvExp(oldLv)
+        RefreshTextLv(oldLv)
+        RefreshTextExp(oldExp, maxExp)
+        SetProgress(oldExp / maxExp)
+        expBar:Begin(oldLv, oldExp, PlayerClient:GetLv(), PlayerClient:GetExp(), addExp, maxLv, SetProgress, GetLvExp,
+            RefreshTextLv, RefreshTextExp);
+    end
+end
+
+function RefreshTextLv(lv)
+    local lvStr = LanguageMgr:GetByID(26020)
+    CSAPI.SetText(txtLv, lvStr .. lv)
+end
+
+function RefreshTextExp(currExp, nextExp)
+    CSAPI.SetText(txtExpPrograss, string.format("%s/%s", currExp, nextExp))
+end
+
+function GetLvExp(lv)
+    local exp = 0
+    local cfg = Cfgs.CfgPlrUpgrade:GetByID(lv);
+    if cfg then
+        exp = cfg.nNextExp;
+    end
+    return exp;
+end
+
+function SetProgress(val)
+    fillExpBar.value = val
+end
+------------------------------------角色------------------------------------
+function SetCards()
+    local teams = {data.team}
+    if not teams then
+        LogError("没有队伍数据！")
+        return
+    end
+    if sceneType == SceneType.PVE and IsTowerComplete() then -- 爬塔特殊处理
+        teams = TeamMgr:GetFightTeam()
+    end
+    local cardSkinIDs = {}
+    cardCount = 0
+    items = items or {}
+    local favors = GetFavors()
+    for _, team in ipairs(teams) do
+        for i = 1, team:GetCount() do
+            local v = team:GetItemByIndex(i);
+            if v ~= nil and v.fuid == nil and v.index ~= 6 then -- 助战不加入队伍
+                local prefabs = "FightOver/FightOverCardItem";
+                local parent = teamObj;
+                ResUtil:CreateUIGOAsync(prefabs, parent, function(go)
+                    local lua = ComUtil.GetLuaTable(go)
+                    lua.SetIndex(cardCount + 1)
+                    local _exp = 0;
+                    local _favor = favors and favors[v.cid] or 0;
+                    if sceneType == SceneType.PVE or sceneType == SceneType.PVEBuild or isSweep then
+                        _exp = data.exp[v.cid] or 0;
+                    else
+                        _exp = data.exp[1]
+                    end
+                    lua.Refresh(v, {
+                        exp = _exp,
+                        favor = _favor
+                    })
+                    if isJumpToEnd then
+                        lua.CardAnimComplete()
+                    else
+                        lua.PlayStartAnim(1000 + ((cardCount % 5) * 100))
+                    end
+                    table.insert(items, lua)
+                end)
+                table.insert(cardSkinIDs, v:GetCard():GetSkinID())
+                cardCount = cardCount + 1
+            end
+        end
+    end
+
+    -- 超过5个卡牌往上移
+    CSAPI.SetAnchor(playerObj, 0, cardCount > 5 and 137 or 0)
+
+    local modelId = nil
+    if g_FightMgr then --战斗后
+        local mvpInfo = g_FightMgr:GetMvp(TeamUtil.myNetTeamId);
+        modelId = mvpInfo and mvpInfo.model or nil
+    elseif #cardSkinIDs > 0 then
+        -- local index = CSAPI.RandomInt(1, #cardSkinIDs)
+        -- modelId = cardSkinIDs[index]
+    end
+    SetRole(modelId)
+end
+
+function GetFavors()
+    local favors = {}
+    if data.favor then
+        for k, v in ipairs(data.favor) do
+            favors[v.id] = v.num
+        end
+    end
+    return favors
+end
+
+--设置角色
+function SetRole(_id)
+    if (_id) then
+        RoleTool.LoadImg(icon, _id, LoadImgType.Main)--立绘
+
+        if (sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP) and not elseData.bIsWin  then --pvp战斗失败不播放语音
+            return
+        end
+
+        local cfgModel = Cfgs.character:GetByID(_id);
+        if (cfgModel.s_mvp) then
+            if (cfgModel.id == 8011001) then
+                local soundId = cfgModel.s_mvp[PlayerClient:GetSex()]
+                if(soundId) then 
+                    soundIds = {soundId}
+                    -- CSAPI.PlayRandSound({soundId}, true);
+                end
+            else
+                soundIds = cfgModel.s_mvp
+                -- CSAPI.PlayRandSound(cfgModel.s_mvp, true);
+            end
+            FuncUtil:Call(function ()
+                if gameObject and not isJumpToEnd then
+                    PlayRoleSound()
+                end
+            end, nil, 400)
+        end
+    end
+end
+
+--播放人物声音
+function PlayRoleSound()
+    if soundIds and #soundIds > 0 and not isSoundPlay then
+        CSAPI.PlayRandSound(soundIds, true);
+        isSoundPlay = true
+    end
+end
+
+-- 角色动效
+function IsCardAnimEnd()
+    if items and #items > 0 then
+        for i, v in ipairs(items) do
+            if not v.IsAnimComplete() then
+                return false
+            end
+        end
+    end
+    return true
+end
+
+-- 跳过动效
+function CardAnimComplete()
+    if items and #items > 0 then
+        for i, v in ipairs(items) do
+            if not v.IsAnimComplete() then
+                v.JumpToComplete()
+            end
+        end
+    end
+end
+
+------------------------------------物品------------------------------------
+function IsCardShow(_rewards)
+    local showList = {};
+    if _rewards and #_rewards>0 then
+        for k, v in ipairs(_rewards) do
+            if v.type == RandRewardType.CARD then
+                local card = RoleMgr:GetData(v.c_id);
+                if card == nil then
+                    LogError("未获得卡牌数据：" .. v.c_id);
+                elseif card:GetQuantity() < 2 then
+                    table.insert(showList, {
+                        id = v.c_id,
+                        num = card:GetQuantity()
+                    });
+                elseif card:GetQuality() == CardQuality.SSR or card:GetQuality() == CardQuality.SR then
+                    table.insert(showList, {
+                        id = v.c_id,
+                        num = card:GetQuantity()
+                    });
+                end
+            elseif v.type == RandRewardType.ITEM then
+                local cfg = Cfgs.ItemInfo:GetByID(v.id);
+                if cfg.type == ITEM_TYPE.CARD and v.c_id then
+                    local card = RoleMgr:GetData(v.c_id);
+                    if card == nil then
+                        LogError("未获得卡牌数据：" .. v.c_id);
+                    elseif card:GetQuantity() < 2 then
+                        table.insert(showList, {
+                            id = v.c_id,
+                            num = card:GetQuantity()
+                        });
+                    elseif card:GetQuality() == CardQuality.SSR or card:GetQuality() == CardQuality.SR then
+                        table.insert(showList, {
+                            id = v.c_id,
+                            num = card:GetQuantity()
+                        });
+                    end
+                end
+            end
+        end
+        if showList and #showList >= 1 then
+            CSAPI.SetGOActive(node, false)
+            CSAPI.OpenView("CreateShowView", {showList}, 2, function(go)
+                local lua = ComUtil.GetLuaTable(go);
+                lua.SetShowRewardPanel(function ()
+                    CSAPI.SetGOActive(node, true)
+                    RefreshPanel()
+                    CSAPI.PlayBGM("Sys_Victory")
+                end)
+            end);
+            return true
+        end
+    end
+    return false
+end
+
+function SetRewards()
+    if not rewards or #rewards < 1 then
+        CSAPI.SetGOActive(rewardObj, false)
+        return
+    end
+
+    rewards = RewardUtil.SetShrink(rewards)
+
+    layout:IEShowList(#rewards)
+    CSAPI.SetGOActive(rewardObj, false)
+
+    SetBuffs()
+
+    -- --卡牌动效播放时间
+    -- local cardTime = DungeonMgr:GetCurrDungeonType() == eDuplicateType.Teaching and 800 or 2400
+
+    -- --延迟播放时间
+    -- local delayTime =1000 + (((cardCount - 1) % 5) * 100) + cardTime + 200
+    -- FuncUtil:Call(function()
+    --     if gameObject then
+    --         OnShowReward()
+    --     end
+    -- end, nil, delayTime)
+end
+
+function IsRewardAnimEnd()
+    if rewards and #rewards > 0 then
+        for i, v in ipairs(rewards) do
+            local lua = layout:GetItemLua(i)
+            if lua and not lua.IsAnimComplete() then
+                return false
+            end
+        end
+    end
+    return true
+end
+
+function RewardAnimComplete()
+    if rewards and #rewards > 0 then
+        for i, v in ipairs(rewards) do
+            local lua = layout:GetItemLua(i)
+            if lua then
+                lua.JumpToAnimComplete()
+            end
+        end
+    end
+end
+
+------------------------------------主线/副本------------------------------------
+function SetPVEPanel()
+    local dungeonType = DungeonMgr:GetCurrDungeonType()
+    if dungeonType == eDuplicateType.Tower then
+        if DungeonMgr:IsCurrDungeonComplete() then
+            CSAPI.SetGOActive(titleObj, true)
+            CSAPI.SetGOActive(stepObj, true)
+            CSAPI.SetGOActive(towerObj, true)
+            SetTowerPanel()
+        end
+        return
+    end
+
+    CSAPI.SetGOActive(titleObj, true)
+    CSAPI.SetGOActive(starObj, dungeonType ~= eDuplicateType.TaoFa)
+    CSAPI.SetGOActive(taskObj, dungeonType ~= eDuplicateType.TaoFa)
+
+    SetPVETitle()
+    SetStarInfo()
+    if dungeonType == eDuplicateType.BattleField then
+        BattleFieldMgr:AddRewardCur(1)
+    end
+end
+
+function SetPVETitle()
+    local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    if cfgDungeon then
+        local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
+        local sectionType = sectionData:GetSectionType()
+        local str = ""
+        if sectionType == SectionType.MainLine then
+            local isHard = cfgDungeon.type == eDuplicateType.MainElite
+            str = isHard and LanguageMgr:GetByID(15016) or LanguageMgr:GetByID(15015) .. "  "
+            str = str .. LanguageMgr:GetByID(34005) .. " "
+            str = cfgDungeon.chapterID and str .. cfgDungeon.chapterID or str
+        else
+            str = cfgDungeon.name
+        end
+        CSAPI.SetText(txtTitle, str)
+    end
+end
+
+function SetStarInfo()
+    local dungeonData = DungeonMgr:GetDungeonData(DungeonMgr:GetCurrId())
+    local star = 0
+    local completeInfo = nil
+    if dungeonData and dungeonData.data then
+        completeInfo = dungeonData:GetNGrade()
+        star = dungeonData.data.star or 0
+    end
+    local starInfos = DungeonUtil.GetStarInfo2(DungeonMgr:GetCurrId(), completeInfo);
+    for i = 1, 3 do
+        -- star
+        local go = starObj.transform:GetChild(i - 1).gameObject
+        CSAPI.SetGOActive(go, star >= i)
+        -- CSAPI.SetImgColor(go, 255, 255, 255, star < i and 178 or 255)
+
+        -- task  
+        local taskGO = taskObj.transform:GetChild(i - 1).gameObject
+        if starInfos[i] then
+            local img = ComUtil.GetComInChildren(taskGO, "Image")
+            CSAPI.SetImgColor(img.gameObject, 255, 255, 255, starInfos[i].isComplete and 255 or 178)
+
+            local text = ComUtil.GetComInChildren(taskGO, "Text")
+            text.text = starInfos[i].tips
+            local color = starInfos[i].isComplete and {255, 193, 70, 255} or {255, 255, 255, 255}
+            CSAPI.SetTextColor(text.gameObject, color[1], color[2], color[3], color[4])
+        else
+            CSAPI.SetGOActive(taskGO, false)
+        end
+    end
+end
+
+------------------------------------爬塔------------------------------------
+-- 设置塔副本界面
+function SetTowerPanel()
+    CSAPI.SetText(txtStep, BattleMgr:GetStepNum() .. "")
+
+    local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    if cfg then
+        CSAPI.SetText(txtTitle, cfg.name or "")
+
+        local missionDatas = MissionMgr:GetActivityDatas(eTaskType.TmpDupTower, cfg.missionID)
+        -- prograss
+        local cur, max = GetTowerPrograss(missionDatas)
+        if max > 0 then
+            for i = 1, max do
+                ShowPrograss(i, cur)
+                ShowStage(i, missionDatas[i])
+            end
+        end
+    else
+        LogError("未找到配置表数据！ID:" .. DungeonMgr:GetCurrId())
+    end
+end
+
+-- 获取塔副本任务进度
+function GetTowerPrograss(missionDatas)
+    local cur, max = 0, 0
+    if missionDatas then
+        max = #missionDatas
+        for _, missData in ipairs(missionDatas) do
+            if missData:IsFinish() then
+                cur = cur + 1
+            end
+        end
+    end
+    return cur, max
+end
+
+-- 显示进度
+function ShowPrograss(i, cur)
+    if i == 1 then
+        local color = i <= cur and {255, 183, 38, 255} or {255, 255, 255, 255}
+        CSAPI.SetImgColor(pImg.gameObject, color[1], color[2], color[3], color[4])
+        local fadeT = ComUtil.GetCom(pImg.gameObject, "ActionFadeT")
+        fadeT:Play()
+    else
+        local go = CSAPI.CloneGO(pImg.gameObject)
+        CSAPI.SetParent(go, pImgObj)
+
+        local color = i <= cur and {255, 183, 38, 255} or {255, 255, 255, 255}
+        CSAPI.SetImgColor(go, color[1], color[2], color[3], color[4])
+
+        local fadeT = ComUtil.GetCom(go, "ActionFadeT")
+        fadeT.delay = i * 100
+        fadeT:Play()
+    end
+end
+
+-- 显示阶段
+function ShowStage(i, missionData)
+    local text1, text2 = nil, nil
+    local parentGO = nil
+    if i == 1 then
+        parentGO = stageItem.transform:GetChild(0).gameObject
+        text1 = ComUtil.GetCom(parentGO.transform:GetChild(0).gameObject, "Text")
+        text2 = ComUtil.GetCom(parentGO.transform:GetChild(1).gameObject, "Text")
+    else
+        local go = CSAPI.CloneGO(stageItem.gameObject)
+        CSAPI.SetParent(go, stageObj)
+        parentGO = go.transform:GetChild(0).gameObject
+        text1 = ComUtil.GetCom(parentGO.transform:GetChild(0).gameObject, "Text")
+        text2 = ComUtil.GetCom(parentGO.transform:GetChild(1).gameObject, "Text")
+    end
+    text1.text = LanguageMgr:GetByID(2008) .. i .. ":"
+    text2.text = missionData:GetDesc()
+    -- len
+    local len = GLogicCheck:GetStringLen(text2.text)
+    local count = math.modf(len / 23)
+    CSAPI.SetRTSize(parentGO.transform.parent.gameObject, 665, 41 + 39 * count)
+    -- color
+    local isFinish = missionData:IsFinish()
+    local color = isFinish and {255, 193, 70, 255} or {255, 255, 255, 255}
+    CSAPI.SetTextColor(text1.gameObject, color[1], color[2], color[3], color[4])
+    CSAPI.SetTextColor(text2.gameObject, color[1], color[2], color[3], color[4])
+    -- anim
+    local move = ComUtil.GetCom(parentGO, "ActionMoveByCurve")
+    move.delay = (5 - i) * 100
+    move:Play()
+
+    local fade = ComUtil.GetCom(parentGO, "ActionFade")
+    fade:Play(0, 1, 200, (5 - i) * 100)
+end
+
+-- 爬塔boss结算
+function IsTowerComplete()
+    local dungeonType = DungeonMgr:GetCurrDungeonType()
+    return dungeonType == eDuplicateType.Tower and DungeonMgr:IsCurrDungeonComplete()
+end
+
+------------------------------------军演------------------------------------
+function SetPVPPanel()
+    -- CSAPI.SetGOActive(roundObj, true)
+
+    -- -- round
+    -- CSAPI.SetText(txtRound, FightClient:GetTurn() .. "")
+
+    if sceneType == SceneType.PVP then
+        return
+    end
+
+    CSAPI.SetGOActive(exerObj, true)
+    CSAPI.SetGOActive(pvpEffect, false)
+
+    -- icon
+    local iconName = ExerciseMgr:GetDwIcon()
+    if iconName and iconName ~= "" then
+        ResUtil.ExerciseGrade:Load(exerIcon, iconName, true)
+    end
+
+    local rankStr = ExerciseMgr:GetRank() > 0 and ExerciseMgr:GetRank() or "--"
+    CSAPI.SetText(txtRank2, LanguageMgr:GetByID(33000) .. ":" .. rankStr)
+    CSAPI.SetGOActive(rankUp, ExerciseMgr:IsRankUp())
+
+    FuncUtil:Call(function()
+        if gameObject and not isJumpToEnd then
+            isStartPvpExp = true
+            SetPVPScore(data.jf)
+        end
+    end, nil, 300)
+end
+
+-- 军演升级动画效果
+function SetPVPScore(addScore)
+    local maxRankLv = GetMaxRankLv()
+    if maxRankLv == ExerciseMgr:GetRankLevel() then
+        RefreshTextRank(maxRankLv)
+        RefreshTextScore("MAX", "MAX")
+        SetPVPProgress(1)
+    elseif (addScore <= 0) then
+        local curScore = ExerciseMgr:GetScore()
+        local maxScroe = GetMaxScore(ExerciseMgr:GetRankLevel())
+        RefreshTextRank(ExerciseMgr:GetRankLevel())
+        RefreshTextScore(curScore, maxScroe)
+        SetPVPProgress(curScore / maxScroe)
+    else
+        local oldLv, oldScore = GetOldRankLvAndScore(addScore)
+        currRankLv = oldLv
+        local maxScore = GetMaxScore(oldLv)
+        RefreshTextRank(oldLv)
+        RefreshTextScore(oldScore, maxScore)
+        SetPVPProgress(oldScore / maxScore)
+        expBar:Begin(oldLv, oldScore, ExerciseMgr:GetRankLevel(), ExerciseMgr:GetScore(), addScore, maxRankLv,
+            SetPVPProgress, GetMaxScore, RefreshTextRank, RefreshTextScore);
+    end
+end
+
+function RefreshTextRank(rankLv)
+    local cfg = Cfgs.CfgPracticeRankLevel:GetByID(rankLv)
+    local name = cfg and cfg.name or ""
+    if currRankLv > 0 and currRankLv ~= rankLv then
+        currRankLv = rankLv
+        CSAPI.SetText(txtRank1, name)
+        -- 特效
+        CSAPI.SetGOActive(pvpEffect, false)
+        CSAPI.SetGOActive(pvpEffect, true)
+    else
+        CSAPI.SetText(txtRank1, name)
+    end
+end
+
+function RefreshTextScore(currScore, nextScroe)
+    CSAPI.SetText(txtRankNum, string.format("%s/%s", currScore, nextScroe))
+end
+
+-- 获取段位所需积分
+function GetMaxScore(rankLv)
+    local score = 0
+    local cfg = Cfgs.CfgPracticeRankLevel:GetByID(rankLv)
+    if cfg then
+        score = cfg.nScore;
+    end
+    return score;
+end
+
+-- 获取最高段位
+function GetMaxRankLv()
+    local cfg = Cfgs.CfgPracticeRankLevel:GetAll()
+    local rankLv = 0
+    if cfg then
+        for k, v in pairs(cfg) do
+            rankLv = rankLv < v.id and v.id or rankLv
+        end
+    end
+    return rankLv
+end
+
+-- slider
+function SetPVPProgress(val)
+    fillExerBar.value = val
+end
+
+-- 获取未增加积分前的信息
+function GetOldRankLvAndScore(scoreAdd)
+    local lv = ExerciseMgr:GetRankLevel()
+    local score = 0;
+    local currentScore = ExerciseMgr:GetScore();
+    if currentScore >= scoreAdd then
+        score = currentScore - scoreAdd;
+    else
+        scoreAdd = scoreAdd - currentScore;
+        while (lv > 1) do
+            lv = lv - 1;
+            local maxExp = GetMaxScore(lv)
+            if scoreAdd > maxExp then
+                scoreAdd = scoreAdd - maxExp;
+            else
+                score = maxExp - scoreAdd;
+                break
+            end
+        end
+    end
+    return lv, score;
+end
+
+------------------------------------战场boss------------------------------------
+function SetFiledBossPanel()
+    BattleFieldMgr:AddBossChangeCount(1)
+
+    CSAPI.SetGOActive(roundObj, true)
+    CSAPI.SetGOActive(titleObj, true)
+    CSAPI.SetGOActive(damageObj, true)
+
+    LanguageMgr:SetText(txtTitle, 25036)
+
+    CSAPI.SetText(txtRound, FightClient:GetTurn() .. "")
+
+    targetDamage = data.damage or 0
+    addDamage = math.floor(targetDamage / damageTime * Time.deltaTime)
+    curDamage = 0
+
+    CSAPI.SetText(txtDamage, curDamage .. "")
+    CSAPI.SetGOActive(txt_topDamage, false)
+end
+
+function UpdateBossDamage()
+    if curDamage >= targetDamage then
+        return
+    end
+
+    curDamage = curDamage + addDamage
+
+    if curDamage >= targetDamage then
+        curDamage = targetDamage
+        CSAPI.SetGOActive(txt_topDamage, data.hDamage and targetDamage >= data.hDamage)
+    end
+
+    CSAPI.SetText(txtDamage, curDamage .. "")
+end
+
+------------------------------------扫荡------------------------------------
+function SetSweepPanel()
+    CSAPI.SetGOActive(roleParent, false)
+    CSAPI.SetGOActive(sweepObj, true)
+    SetSweepTitle()
+    ResUtil:CreateUIGOAsync("FightOver/FightOverSweep",sweepObj,function (go)
+        local lua = ComUtil.GetLuaTable(go)
+        lua.Refresh(elseData)
+        sweepView = lua
+    end)
+end
+
+function SweepAnimComplete()
+    if sweepView and not sweepView.IsAnimEnd() then
+        sweepView.JumpToAnimEnd()
+    end
+end
+
+function SetSweepTitle()
+    local cfgDungeon = Cfgs.MainLine:GetByID(elseData.id)
+    if cfgDungeon then
+        local str1 = LanguageMgr:GetByID(34005) ..  " "
+        str1 = cfgDungeon.chapterID and str1 .. cfgDungeon.chapterID or str1
+        CSAPI.SetText(txtMopUpLv1, str1)
+
+        local isHard = false
+        if cfgDungeon.type == eDuplicateType.MainElite or cfgDungeon.type == eDuplicateType.MainNormal then
+            isHard = cfgDungeon.type == eDuplicateType.MainElite          
+        else
+            isHard = cfgDungeon.diff == 2
+        end
+        local str2 = isHard and LanguageMgr:GetByID(15016) or LanguageMgr:GetByID(15015)
+        str2 =StringUtil:SetByColor(str2,isHard and "FF7781" or "FFFFFF")
+        CSAPI.SetText(txtMopUpLv2, str2)
+    end
+end
+
+------------------------------------加成------------------------------------
+function SetBuffs()
+    isHasBuff = false
+    local lifeBuffs = PlayerClient:GetLifeBuff()
+    if lifeBuffs then
+        for i, v in ipairs(lifeBuffs) do
+            if v.id == 4 or v.id == 9 or v.id == 14 then
+                isHasBuff = true
+                break
+            end
+        end
+    end
+
+    -- 经验和金钱副本才会显示玩家能力加成
+    local dungeonType = DungeonMgr:GetCurrDungeonType()
+    if dungeonType == eDuplicateType.Exp or dungeonType == eDuplicateType.Gold then
+        local abilityBuffs = PlayerAbilityMgr:GetFightOverBuff()
+        if abilityBuffs and not isHasBuff then
+            isHasBuff = #abilityBuffs > 0
+        end
+    end
+    CSAPI.SetGOActive(btnBuff, isHasBuff)
+end
+
+function OnClickBuff()
+    if isHasBuff then
+        CSAPI.OpenView("FightOverBuff", {
+            type = 1,
+            id = DungeonMgr:GetCurrId()
+        })
+    end
+end
+
+------------------------------------anim------------------------------------
+
+function ShowRewardAnim()
+    CSAPI.SetGOActive(rewardObj, rewards and #rewards > 0)
+    if rewards and #rewards > 0 then
+        for i, v in ipairs(rewards) do
+            local lua = layout:GetItemLua(i)
+            if lua then
+                lua.PlayStartAnim((i - 1) * 100)
+            end
+        end
+    end
+end
+
+-- 动效结束
+function IsAnimEnd()
+    return IsRewardAnimEnd() and IsCardAnimEnd()
+end
+
+-- 跳过动效
+function JumpToAnimEnd()
+    CSAPI.SetGOActive(rewardObj, rewards and #rewards > 0)
+
+    CSAPI.SetGOActive(topImgEffect, false)
+
+    --sound
+    PlayRoleSound()
+
+    -- exp
+    if expBar.isRun then
+        expBar.isRun = false
+        SetExp(0)
+    end
+
+    -- card
+    CardAnimComplete()
+
+    -- rewards
+    RewardAnimComplete()
+
+    if isSweep then
+        SweepAnimComplete()
+    elseif sceneType == SceneType.PVPMirror then
+        CSAPI.SetGOActive(pvpEffect, false)
+        SetPVPScore(0)
+    elseif sceneType == SceneType.BOSS then
+        CSAPI.SetGOActive(topDamageEffect, false)
+        curDamage = targetDamage
+        CSAPI.SetText(txtDamage, curDamage .. "")
+        CSAPI.SetGOActive(txt_topDamage, data.hDamage and targetDamage >= data.hDamage)
+    end
+
+    if #actions > 0 then -- 动效跳过
+        for i, v in ipairs(actions) do
+            if v.gameObject.activeSelf == true then
+                v:SetComplete(true)
+            end
+        end
+    end
+
+    isJumpToEnd = true
+end

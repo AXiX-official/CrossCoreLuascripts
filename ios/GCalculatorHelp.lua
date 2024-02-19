@@ -1,0 +1,1769 @@
+-- OPENDEBUG()
+GCalHelp = {}
+
+-------------------------------------------------------------------------------------------------------------------
+-- 加上某个值
+function GCalHelp:Add(tb, key, val)
+    if not val then
+        return
+    end
+
+    local orignVal = tb[key] or 0
+    local curVal = orignVal + val
+    tb[key] = curVal
+
+    -- LogDebug("GCalHelp:Add( key:%s : %s + %s = %s)", key, orignVal, val, curVal)
+    return curVal, orignVal
+end
+
+-- 乘以某个值
+function GCalHelp:Multi(tb, key, val)
+    if not val then
+        return
+    end
+
+    local orignVal = tb[key] or 1
+    local curVal = orignVal * val
+    tb[key] = curVal
+    -- LogDebug("GCalHelp:Multi( %s : %s * %s = %s)", key, orignVal, val, curVal)
+    return curVal, orignVal
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- 获取表格
+-- wkv : 是否设置弱引用 传入 'k', 'v', 'kv'
+function GCalHelp:GetTb(tb, key, def, wkv)
+    if not key then
+        return nil
+    end
+
+    -- LogTrace()
+    local t = tb[key]
+    if not t then
+        ASSERT(def == nil or type(def) == 'table')
+
+        tb[key] = def or {}
+        t = tb[key]
+
+        if wkv then
+            setmetatable(t, {__mode = wkv})
+        end
+    end
+
+    return t
+end
+
+-------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetVal(tb, key, def)
+    local t = tb[key]
+    if t == nil and def ~= nil then
+        tb[key] = def
+        t = def
+    end
+
+    return t
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- 获取二级索引的值，没有返回默认值
+function GCalHelp:GetTbValeByKey(tb, index, key, def)
+    local info = tb[index]
+    if not info then
+        LogWarning('Can not get by index:%s, key: %s, use def val, %s', index, key, def)
+        return def
+    end
+
+    local val = info[key]
+    if not val then
+        LogWarning('Can not get by index:%s, key: %s, use def val, %s', index, key, def)
+        return def
+    end
+
+    return val
+end
+
+-------------------------------------------------------------------------------------------------------------------
+function GCalHelp:CheckGetVal(tb, def, ...)
+    if not tb then
+        return def
+    end
+
+    local tv = nil
+    local ntb = tb
+    local args = {...}
+    -- LogDebug("===================================================================================")
+    -- LogTable(args, "GCalHelp:CheckGetVal")
+    -- LogDebug("===================================================================================")
+    for _, k in ipairs(args) do
+        tv = ntb[k]
+        if tv == nil then
+            return def
+        end
+        ntb = tv
+    end
+
+    return tv
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- GetTimeStampBySplit
+-- sDate : 以字符分割的数字时间（顺序 年 月 日 时 分 秒）， 如：2018-11-12 10:30:18
+function GCalHelp:GetTimeStampBySplit(sDate, tModule)
+    if not sDate or sDate == '' then
+        return 0
+    end
+
+    if type(sDate) ~= 'string' then
+        LogError('sDate %s type not string!!!!!!:', sDate)
+        if tModule then
+            LogTable(tModule, 'GetTimeStampBySplit() from:')
+        end
+        return
+    end
+
+    local rt = {}
+    string.gsub(
+        sDate,
+        '%d+',
+        function(w)
+            table.insert(rt, w)
+        end
+    )
+
+    local len = #rt
+    if len == 3 then
+        return rt[1] * 3600 + rt[2] * 60 + rt[3]
+    elseif len == 6 then
+        local parm = {year = rt[1], month = rt[2], day = rt[3], hour = rt[4], min = rt[5], sec = rt[6]}
+        local dt = os.time(parm)
+        return dt
+    else
+        LogError('sDate %s split error!!!!!!!', sDate)
+        LogTable(rt, 'GCalHelp:GetTimeStampBySplit():')
+        if tModule then
+            LogTable(tModule, 'GetTimeStampBySplit() from:')
+        end
+    end
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- 输入： [1001, 1, 1002, 2]
+-- 返回：{ { id =1001, num =1 }, { id =1002, num =2 }]
+-- 输入： [1001, 1, 1, 1002, 2, 2]
+-- 返回：{ { id =1001, num =1, type =1 }, { id =1002, num =2, type =2 }]
+function GCalHelp:ArrToIdNumTb(arr, numMulti)
+    numMulti = numMulti or 1
+
+    local len = #arr
+    local ret = {}
+    if len % 2 == 0 then
+        for i = 1, len, 2 do
+            table.insert(ret, {id = arr[i], num = math.ceil(arr[i + 1] * numMulti), type = RandRewardType.ITEM})
+        end
+    elseif len % 3 == 0 then
+        for i = 1, len, 3 do
+            table.insert(
+                ret,
+                {id = arr[i], num = math.ceil(arr[i + 1] * numMulti), type = arr[i + 2] or RandRewardType.ITEM}
+            )
+        end
+    end
+
+    return ret
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- 输入：[[1001, 1, 1], [1002, 2, 2]]
+-- 返回：{ { id =1001, num =1, type =1 }, { id =1002, num =2, type =2 }]
+function GCalHelp:IdNumArrToTb(arr, numMulti, numAdd, ret)
+    numAdd = numAdd or 0
+    numMulti = numMulti or 1
+
+    ret = ret or {}
+    for _, v in ipairs(arr) do
+        local num = v[2]
+        if v[4] then
+            -- 有第四个值，为随机值，那么
+            num = math.ceil(math.random(num, v[4]))
+        end
+
+        -- 向上取整
+        table.insert(ret, {id = v[1], num = math.ceil(num * numMulti) + numAdd, type = v[3] or RandRewardType.ITEM})
+    end
+
+    return ret
+end
+
+function GCalHelp:TbToIdNumArr(arr)
+    local ret = {}
+    for _, v in ipairs(arr) do
+        table.insert(ret, {v.id, v.num, v.type})
+    end
+    return ret
+end
+
+----------------------------------------------------------------------------------
+-- 计算处理权重值
+function GCalHelp:CalArrWeight(arr, field, sumField)
+    if not arr then
+        return
+    end
+
+    local sumWeight = 0
+    for _, info in ipairs(arr) do
+        local orign = info[field]
+        info[sumField] = orign + sumWeight
+        sumWeight = sumWeight + orign
+    end
+end
+
+----------------------------------------------------------------------------------
+-- 使用预先计算的权重来取值
+-- 返回 arr[i], i
+function GCalHelp:GetByWeight(arrTb, weightField)
+    -- LogDebug("GCalHelp:GetByWeight weightField: %s", weightField)
+    -- LogTable(arrTb, "GCalHelp:GetByWeight arrTb:")
+    local r = math.random(arrTb[#arrTb][weightField])
+    -- 末尾已经是计算好的总权重值
+    for i, v in ipairs(arrTb) do
+        if r <= v[weightField] then
+            return v, i
+        end
+    end
+
+    return nil, nil
+end
+
+----------------------------------------------------------------------------------
+-- 使用没有预先计算的权重来取值
+function GCalHelp:GetByCalWeight(arrTb, weightField)
+    -- LogDebug("GCalHelp:GetByCalWeight weightField: %s", weightField)
+    -- LogTable(arrTb, "GCalHelp:GetByCalWeight arrTb:")
+    local weight = 0
+    for _, v in ipairs(arrTb) do
+        weight = weight + v[weightField]
+    end
+
+    local r = math.random(weight)
+    for i, v in ipairs(arrTb) do
+        if r <= v[weightField] then
+            return v, i
+        else
+            r = r - v[weightField]
+        end
+    end
+end
+
+-----------------------------------------------------------------------------------------------------------------
+-- 生成 20 位的兑换码
+-- -- 2：平台 -- 6：id -- 12 -- 随机码--
+-- val: 十进制
+-- len: 需要的字符长度，小于前边补0
+function GCalHelp:GetStrByNum(val, len)
+    local retVal = string.format('%0' .. len .. 'X', val)
+    -- LogDebug("GetStrByNum retVal: %s", retVal)
+    return retVal
+end
+
+local exchagneCodeArr = {
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    -- "I", -- 去掉
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    -- "O", -- 去掉
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z'
+}
+
+local exchangeCodeSep = '-'
+local exchagneCodeArrLen = table.size(exchagneCodeArr)
+
+-- 从 exchagneCodeArr 随机一个码数来
+function GCalHelp:GetStrCode(len)
+    local randArr = {}
+
+    -- 随机数组
+    for i = 1, len, 1 do
+        local index = math.random(exchagneCodeArrLen)
+        table.insert(randArr, exchagneCodeArr[index])
+    end
+
+    -- 连接
+    local retStr = table.concat(randArr)
+
+    -- LogDebug("GetStrCode retVal: %s", retStr)
+    return retStr
+end
+
+----------------------------------------------------------------------------------
+--
+-- 类型
+-- plat : 1 ~ 255 最大值
+-- id   ：1 ~ ‭16777215‬ 最大值
+function GCalHelp:GetExchangeCodePre(plat, id)
+    local partA = self:GetStrByNum(plat, 2)
+    local partB = self:GetStrByNum(id, 6)
+
+    -- 在第四个空字符后面添加空格
+    local retStr = partA .. string.sub(partB, 1, 2) .. exchangeCodeSep .. string.sub(partB, 3, -1)
+
+    -- LogDebug("GetExchangeCodePre retVal: %s", retStr)
+    return retStr
+end
+
+----------------------------------------------------------------------------------
+--
+function GCalHelp:GetExchangeCodeSub()
+    local len = 4
+    local retStr =
+        self:GetStrCode(len) .. exchangeCodeSep .. self:GetStrCode(len) .. exchangeCodeSep .. self:GetStrCode(len)
+    -- console.log("GetExchangeCodeSub:", retStr)
+    return retStr
+end
+
+----------------------------------------------------------------------------------
+-- 根据时间返回服务器活动的当天，月份，天数
+-- args:
+---- isYearDay: 是否按一年第几天返回，false, 则返回当月第几天
+---- osDate：os.date("*t", os.time()） 返回的今天时间信息的结构体
+---- osTime 当前时间戳
+-- return:
+---- month(1~12), day(1~31)
+function GCalHelp:GetActiveUseDay(isYearDay, osDate, osTime)
+    if not osTime then
+        osTime = CURRENT_TIME
+    end
+
+    if not osDate then
+        osDate = os.date('*t', osTime)
+    end
+
+    -- LogTable(osDate, "osDate:")
+    -- 如果没过特定的时间点，算前一天
+    if osDate.hour < g_ActivityDiffDayTime then
+        osTime = osTime - 86400 -- 86400 等于(24 x 60 x 60)一天多少秒
+        osDate = os.date('*t', osTime)
+    end
+
+    local useDay = osDate.day
+    if isYearDay then
+        useDay = osDate.yday
+    end
+
+    return osDate.month, useDay
+end
+
+----------------------------------------------------------------------------------
+--
+function GCalHelp:NumkeyToStr(map)
+    for k, v in pairs(map) do
+        map[k] = nil
+        map[tostring(v)] = v
+    end
+end
+
+----------------------------------------------------------------------------------
+--
+function GCalHelp:StrkeyToNum(map)
+    for k, v in pairs(map) do
+        map[k] = nil
+        map[tonumber(v)] = v
+    end
+end
+
+----------------------------------------------------------------------------------
+-- 根据时间差，返回过了多少周期，还有剩余多少时间没算进去
+-- 已过周期，剩余时间（不足一个周期）
+function GCalHelp:GetPeriodCnt(preTime, needDiff, curTime)
+    local periodCnt = 0
+    local leftTime = 0
+
+    if preTime <= 0 then
+        return periodCnt, leftTime
+    end
+
+    curTime = curTime or CURRENT_TIME
+    local diff = curTime - preTime
+
+    if diff > 0 then
+        periodCnt = math.floor(diff / needDiff)
+        leftTime = diff % needDiff
+    end
+
+    LogDebug(
+        'GCalHelp:GetPeriodCnt() preTime: %s, needDiff: %s, curTime: %s, diff: %s， periodCnt:%s, reduceTime:%s',
+        preTime,
+        needDiff,
+        curTime,
+        diff,
+        periodCnt,
+        leftTime
+    )
+    return periodCnt, leftTime
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetArmyRobotTeams(uid, teamIds, formatId, teamType)
+    local ret = {
+        uid = uid,
+        is_robot = BoolType.Yes,
+        performance = 0,
+        team = {
+            leader = 0,
+            index = teamType,
+            data = {
+                card_info = {}
+            }
+        }
+    }
+
+    -- 计算队伍的站位信息
+    local formation = MonsterFormation[formatId]
+    if formatId and formation then
+        for i, mid in ipairs(teamIds) do
+            local mCfg = MonsterData[mid]
+            if mCfg then
+                if not ret.team.leader then
+                    ret.team.leader = mCfg.card_id
+                end
+
+                local pos = formation.coordinate[i]
+                table.insert(
+                    ret.team.data,
+                    {
+                        cid = mCfg.card_id,
+                        index = i,
+                        row = pos[1],
+                        col = pos[2],
+                        card_info = {
+                            cid = mCfg.card_id,
+                            cfgid = mCfg.card_id,
+                            level = mCfg.level,
+                            break_level = mCfg.break_level,
+                            name = mCfg.name
+                        }
+                    }
+                )
+            end
+        end
+    end
+
+    -- LogTable(ret, "GCalHelp:GetArmyRobotTeams:")
+    return ret
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetArmyRobotSimpleTeams(uid, teamIds)
+    local ret = {
+        uid = uid,
+        is_robot = BoolType.Yes,
+        team = {}
+    }
+
+    for _, mid in ipairs(teamIds) do
+        local mCfg = MonsterData[mid]
+        if mCfg then
+            local robotCard = {
+                cfgid = mCfg.card_id,
+                level = mCfg.level,
+                break_level = mCfg.break_level,
+                name = mCfg.name
+            }
+            table.insert(ret.team, robotCard)
+        end
+    end
+
+    return ret
+end
+
+-------------------------------------------------------------------------------------
+-- 获取被动buff属性
+-- 33	增加物品获得数量	add_get_item_num
+-- 34	增加物品获得百分比	add_get_item_pct
+function GCalHelp:GetIsPassivBuf(liftBufCfg)
+    if liftBufCfg.jValiTime or liftBufCfg.jOpenDups then
+        return true
+    end
+
+    return false
+end
+
+-- -- 33	增加物品获得数量	add_get_item_num
+-- -- 34	增加物品获得百分比	add_get_item_pct
+function GCalHelp:GetBufIsUseKeyVals(liftBufCfg)
+    if liftBufCfg.nType == 33 or liftBufCfg.nType == 34 then
+        return true
+    end
+
+    return false
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetBufsTypeFromName(nameArr)
+    local bTypes = {}
+    local cardFieldToIndex = GobalCfg:Get('cardFieldToIndex')
+
+    for _, n in ipairs(nameArr) do
+        table.insert(bTypes, cardFieldToIndex[n])
+    end
+
+    table.sort(bTypes)
+
+    return bTypes
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetPassivBuf(passivBufIds, cfgMainLine, nameArr, ret)
+    -- LogTable(passivBufIds, "LifeBuffMgr:GetPassivBuf() passivBufIds:")
+
+    local bTypes = self:GetBufsTypeFromName(nameArr)
+
+    ret = ret or {}
+
+    for _, id in ipairs(passivBufIds) do
+        local liftBufCfg = CfgLifeBuffer[id]
+        if liftBufCfg and self:GetIsPassivBuf(liftBufCfg) then
+            if table.empty(bTypes) or GCalHelp:Bsearch(bTypes, liftBufCfg.nType) then
+                -- 判断有效期，和有效性
+                local isInRange = true
+                if liftBufCfg.jValiTime then
+                    isInRange = false
+
+                    for _, timeRange in ipairs(liftBufCfg.jValiTime) do
+                        if TimerHelper:CurTimeIsInRange(timeRange[1], timeRange[2]) then
+                            isInRange = true
+                        end
+                    end
+                end
+
+                if isInRange then
+                    local isInDup = true
+                    if liftBufCfg.jOpenDups then
+                        isInDup = false
+
+                        local dupIds = liftBufCfg.jOpenDups[1]
+                        if #dupIds > 0 then
+                            local isFind, index, val = GCalHelp:Bsearch(dupIds, cfgMainLine.id)
+                            -- LogDebug("GCalHelp:GetPassivBuf() cfgMainLine.id:%s, find:%s", cfgMainLine.id, isFind)
+                            -- LogTable(dupIds, "dupIds:")
+                            isInDup = isFind
+                        else
+                            if
+                                cfgMainLine.type == liftBufCfg.jOpenDups[2] and
+                                    cfgMainLine.group == liftBufCfg.jOpenDups[3]
+                             then
+                                isInDup = true
+                            end
+                        end
+                    end
+
+                    if isInDup then
+                        local isUseVal = true
+                        if GCalHelp:GetBufIsUseKeyVals(liftBufCfg) then
+                            isUseVal = false
+                        end
+
+                        local fInfo = ret[liftBufCfg.sFieldName]
+                        if not fInfo then
+                            fInfo = {val = 0, vals = {}}
+                            ret[liftBufCfg.sFieldName] = fInfo
+                        end
+
+                        -- LogTable(liftBufCfg, "liftBufCfg:")
+                        if liftBufCfg.bIsAdd then
+                            if isUseVal then
+                                GCalHelp:Add(fInfo, 'val', liftBufCfg.jValMap[1])
+                            else
+                                -- 暂时被动buf, 的第一个都是id值
+                                local vals = GCalHelp:GetTb(fInfo, 'vals', {})
+                                for k, arr in pairs(liftBufCfg.jValMap) do
+                                    if vals[k] then
+                                        vals[k][2] = vals[k][2] + arr[2]
+                                    else
+                                        vals[k] = table.copy(arr)
+                                    end
+                                end
+                            end
+                        else
+                            if isUseVal then
+                                fInfo.val = liftBufCfg.jValMap[1]
+                            else
+                                fInfo.vals = table.copy(liftBufCfg.jValMap)
+                            end
+                        end
+                    end
+                end
+            else
+                -- 没有选入，表示 nameArr 参数没有获取要求
+                -- LogError("GCalHelp:GetPassivBuf, buff id:%s, nType:%s(%s) not find in nameArr", id, liftBufCfg.nType, CfgCardPropertyEnum[liftBufCfg.nType].sFieldName)
+            end
+        end
+    end
+
+    -- LogTable(ret, "GCalHelp:GetPassivBuf ret:")
+    return ret
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- passivBufReward：保存被动buf添加的
+function GCalHelp:CalAddDupItems(orignReward, buffArr, passivBufReward)
+    passivBufReward = {} or passivBufReward
+
+    local addItemBufNames = {'add_get_item_num', 'add_get_item_pct'}
+
+    -- LogTable(buffArr, 'GCalHelp:CalAddDupItems:')
+    -- 合并两个被动buf，玩家和卡牌的
+    -- plrBufs passivBufAdds
+    local addItemBufs = {}
+    for _, n in ipairs(addItemBufNames) do
+        for _, tb in ipairs(buffArr) do
+            local info = tb[n]
+            if info then
+                local curInfo = self:GetTb(addItemBufs, n, {})
+                if info.val then
+                    self:Add(curInfo, 'val', info.val)
+                end
+
+                if info.vals then
+                    local vals = self:GetTb(curInfo, 'vals', {})
+                    for k, arr in pairs(info.vals) do
+                        -- vals[1] 是掉落的物品id
+                        if vals[k] then
+                            vals[k][2] = vals[k][2] + arr[2]
+                        else
+                            vals[k] = table.copy(arr)
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    local addItemNumList = addItemBufs['add_get_item_num']
+    local addItemPctList = addItemBufs['add_get_item_pct']
+
+    -- LogTable(addItemNumList, 'addItemNumList:')
+    -- LogTable(addItemPctList, 'addItemPctList:')
+    -- LogTable(orignReward, 'orignReward:')
+
+    if addItemPctList or addItemNumList then
+        for _, rItem in pairs(orignReward) do
+            if addItemNumList then
+                local addInfo = addItemNumList.vals[rItem.id]
+                if addInfo then
+                    -- 这里只添加额外的，不包含原来的
+                    local add = table.copy(rItem)
+                    add.num = addInfo[2]
+                    table.insert(passivBufReward, add)
+                end
+            end
+
+            if addItemPctList then
+                local addInfo = addItemPctList.vals[rItem.id]
+                if addInfo then
+                    -- 这里只添加额外的，不包含原来的
+                    local add = table.copy(rItem)
+                    add.num = math.floor(add.num * addInfo[2])
+                    table.insert(passivBufReward, add)
+                end
+            end
+        end
+    end
+
+    -- LogTable(passivBufReward, 'GCalHelp:CalAddDupItems passivBufReward:')
+    return passivBufReward
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- number: 身份证号码
+--
+-- return: accType, accIndex, age
+-- accType： 玩家/游客
+-- accIndex：对应类型的配置索引
+-- age：计算的年龄
+function GCalHelp:CalAccType(number, curTime)
+    if not number then
+        return AccType.Guest, 1, 0
+    end
+
+    if number:len() < 18 then
+        return AccType.Guest, 1, 0
+    end
+
+    local sStr = number:sub(7, 14)
+    local info = {
+        year = tonumber(sStr:sub(1, 4)),
+        month = tonumber(sStr:sub(5, 6)),
+        day = tonumber(sStr:sub(7, 8))
+    }
+
+    -- LogTable(info, "GCalHelp:CalAccType:")
+    return self:CalAccTypeByInfo(info, curTime)
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:CalAccTypeByInfo(info, curTime)
+    if info.year < 1900 or info.month < 1 or info.month > 12 or info.day < 1 or info.day > 31 then
+        return AccType.Guest, 1, 0
+    end
+
+    local curInfo = os.date('*t', curTime)
+    local age = curInfo.year - info.year
+    if curInfo.month <= info.month then
+        if curInfo.month < info.month then
+            age = age - 1
+        else
+            if curInfo.day <= info.day then
+                age = age - 1
+            end
+        end
+    end
+
+    -- LogInfo("GCalHelp:CalAccTypeByInfo age:%s", age)
+    local cfgs = CfgAccTypeLimit[AccType.Plr]
+    -- LogTable(cfgs, "cfgs:")
+    for index, cfg in pairs(cfgs.infos) do
+        if GLogicCheck:IsInRange(cfg.ageLimitA, cfg.ageLimitB, age) then
+            LogDebug('GCalHelp:CalAccTypeByInfo cfg.id: %s, index: %s, age: %s', AccType.Plr, index, age)
+            return AccType.Plr, index, age
+        end
+    end
+
+    return AccType.Guest, 1, age
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:IsLimitLoginTime(antiInfo)
+    -- LogTable(antiInfo, "GCalHelp:IsLimitLoginTime antiInfo:")
+    local accType = AccType.Guest
+    local subType = 1
+    if antiInfo and antiInfo.accType then
+        accType = antiInfo.accType
+        subType = antiInfo.subType
+    end
+
+    local accTypeCfg = CfgAccTypeLimit[accType]
+    if accTypeCfg then
+        local subCfg = accTypeCfg.infos[subType]
+        if subCfg and subCfg.canLoginTimeRange then
+            local arr = subCfg.canLoginTimeRange
+            -- 因为这里取当前 小时 作为判断后边的分是不计算的，例如填[8, 10]小时可以登陆，所以这里要减掉1小时，符合配置要求
+            if not GLogicCheck:IsInRange(arr[1], arr[2] - 1, CommDataMgr:GetCurHour()) then
+                return true, arr, subCfg
+            end
+        end
+    end
+
+    return false
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- args:
+-- 	timeArr: [年，月，日，时，分，秒]， -1 表示忽略
+-- 	curTime : 当前时间， 秒数时间戳
+-- return:
+-- 	返回开始的时间戳
+function GCalHelp:CalTimeByArr(timeArr, curTime)
+    if not timeArr then
+        return nil
+    end
+
+    local tmp = os.date('*t', curTime)
+    local year, month, day, hour, min, sec = timeArr[1], timeArr[2], timeArr[3], timeArr[4], timeArr[5], timeArr[6]
+
+    if year and year > -1 then
+        tmp.year = year
+    end
+
+    if month and month > -1 then
+        tmp.month = month
+    end
+
+    if day and day > -1 then
+        tmp.day = day
+    end
+
+    if hour and hour > -1 then
+        tmp.hour = hour
+    end
+
+    if min and min > -1 then
+        tmp.min = min
+    end
+
+    if sec and sec > -1 then
+        tmp.sec = sec
+    end
+
+    local t = os.time(tmp)
+    return t
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 把奖励列表合并
+function GCalHelp:MergeRewards(rewards)
+    local ret = {}
+
+    local mapByType = {
+        [RandRewardType.ITEM] = {}
+        -- [RandRewardType.CARD] = {},
+        -- [RandRewardType.EQUIP] = {}
+    }
+    -- LogTable(mapByType, "GCalHelp:MergeRewards mapByType:")
+    for _, reward in ipairs(rewards) do
+        if not reward.type then
+            reward.type = RandRewardType.ITEM
+        end
+
+        -- LogTable(reward, "GCalHelp:MergeRewards reward:")
+        local list = mapByType[reward.type]
+        if list then
+            local info = list[reward.id]
+            if not info then
+                list[reward.id] = table.copy(reward)
+            else
+                info.num = info.num + reward.num
+            end
+        else
+            table.insert(ret, reward)
+        end
+    end
+
+    for _, list in pairs(mapByType) do
+        for _, v in pairs(list) do
+            table.insert(ret, v)
+        end
+    end
+
+    return ret
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:ForRank(arr, begRank, endRank, fun)
+    -- LogDebug("GCalHelp:ForRank() begRank:%s, endRank:%s, arr len:%s", begRank, endRank, #arr)
+
+    local endIndex = #arr
+    if endIndex > endRank then
+        endIndex = endRank
+    end
+
+    local begIndex = begRank
+    if begIndex < 1 or begIndex > endIndex then
+        ASSERT(false)
+    end
+
+    if endIndex - begIndex > 50 then
+        ASSERT(false)
+    end
+
+    for i = begIndex, endIndex, 1 do
+        fun(i, arr[i])
+    end
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 返回数组中第一个比val 大的值， 如果没有，就返回第一个
+-- args:
+-- vals: 从小到大排序的数组
+-- val: 检测的值
+-- return 第一个比val大的值 是否是从头开始
+function GCalHelp:GetFirstBigger(vals, val)
+    for ix, h in ipairs(vals) do
+        if h > val then
+            return h, false, ix
+        end
+    end
+
+    return vals[1], true, 1
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 检测是否到刷新的时间
+-- return
+-- bool 是否刷新
+-- int next hour
+-- bool isNext(是已经超过末尾否从头来过)
+function GCalHelp:IsHourFlush(hours, preHour, curHour)
+    if preHour < hours[1] then
+        preHour = hours[1]
+    end
+
+    local isFind, index, val = false, nil, nil
+    for i = preHour, curHour, 1 do
+        isFind, index, val = GCalHelp:Bsearch(hours, i)
+        if isFind then
+            break
+        end
+    end
+
+    return isFind, self:GetFirstBigger(hours, curHour)
+end
+
+function CalIsFlushHourDiffIx(flushHours, curYDay, maxIx, lastYDay, canIndex)
+    local diffDot = 1
+    if maxIx == 0 then
+        return diffDot
+    end
+
+    canIndex = canIndex or 1
+
+    if lastYDay == 0 then
+        diffDot = canIndex
+    else
+        local diffDay = curYDay - lastYDay
+        if diffDay < 2 then
+            diffDay = 0
+        end
+
+        if maxIx >= canIndex then
+            diffDot = diffDay * #flushHours + canIndex
+        else
+            diffDot = diffDay * #flushHours + canIndex - maxIx
+        end
+    end
+
+    LogDebug(
+        'CalIsFlushHourDiffIx() curYDay:%s, maxIx:%s, lastYDay:%s, canIndex:%s, diffDot:%s',
+        curYDay,
+        maxIx,
+        lastYDay,
+        canIndex,
+        diffDot
+    )
+    return diffDot
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- args:
+-- flushHours: 刷新的时间点 [ 0, 1, 3 ~ 23], 需要已经从小到大排序
+-- recoreds: 已经刷新过的记录（Tips: 这个table会被修改）
+-- -- -- -- {
+-- -- -- -- 	[刷新时间点] = yday(一年中的第几天)
+-- -- -- -- }
+-- curHour:
+-- curYDay:
+-- return:
+-- bool : 是否刷新
+-- int  ：下次刷新时间 flushHours 的下标
+-- bool : isNextDay, 下次刷新时间, 是否是隔天
+-- diffDot: 间隔了多少个刷新点
+-- Tips: recoreds 使用 flushHours 的下标作为索引，因为更新时间有0小时，所以不能用flushHours，包含的小时来做索引
+function GCalHelp:GetIsFlushHour(flushHours, recoreds, curHour, curYDay)
+    -- LogDebug('')
+    -- LogTrace("GCalHelp:GetIsFlushHour")
+    local isNextDay = false
+    if table.empty(flushHours) then
+        return false
+    end
+
+    LogDebug('curHour:%s, curYDay:%s', curHour, curYDay)
+    LogTable(flushHours, 'GCalHelp:GetIsFlushHour() flushHours：')
+    LogTable(recoreds, 'GCalHelp:GetIsFlushHour() recoreds:')
+
+    local canIndex = nil -- 最大可更新的下标
+    local maxIx = 0
+    local lastYDay = 0
+    local fLen = #flushHours
+    for i = fLen, 1, -1 do
+        local v = flushHours[i]
+        if not canIndex then
+            if curHour >= v then
+                canIndex = i
+            end
+        end
+
+        local recordVal = recoreds[i]
+        LogDebug('GetIsFlushHour() i:%s, v:%s, recordVal %s', i, v, recordVal)
+        if recordVal and recordVal > lastYDay then
+            LogDebug('GetIsFlushHour() use i:%s, recordVal:%s', i, recordVal)
+            maxIx = i
+            lastYDay = recordVal
+        end
+    end
+
+    -- 刷新一次昨天的记录
+    if not canIndex then
+        local lastIx = #flushHours
+        if table.empty(recoreds) then
+            recoreds[lastIx] = curYDay - 1
+            return true, 1, isNextDay, 0
+        else
+            -- 还没到第一个的刷新时间， 那么看看最后一个, 这个就是间隔了一两天没上的情况
+            if not recoreds[lastIx] or curYDay - recoreds[lastIx] > 1 then
+                recoreds[lastIx] = curYDay - 1
+                local diffDot = CalIsFlushHourDiffIx(flushHours, curYDay, maxIx, lastYDay, canIndex)
+                -- LogTable(recoreds, 'recoreds:')
+                -- LogDebug(
+                --     'GCalHelp:GetIsFlushHour return isFlush:%s, nextIx:%s, isNextDay:%s, diffDot:%s',
+                --     true,
+                --     1,
+                --     isNextDay,
+                --     diffDot
+                -- )
+                return true, 1, isNextDay, diffDot
+            end
+        end
+    end
+
+    local diffDot = CalIsFlushHourDiffIx(flushHours, curYDay, maxIx, lastYDay, canIndex)
+
+    -- 还没到第二天的第一个刷新时间
+    if not canIndex then
+        -- LogDebug(
+        --     'GCalHelp:GetIsFlushHour return isFlush:%s, nextIx:%s, isNextDay:%s, diffDot:%s',
+        --     false,
+        --     1,
+        --     isNextDay,
+        --     diffDot
+        -- )
+        return false, 1, isNextDay, diffDot
+    end
+
+    local nextIx = canIndex + 1
+    if nextIx > #flushHours then
+        nextIx = 1
+        isNextDay = true
+    end
+
+    local preYDay = recoreds[canIndex]
+    if preYDay and preYDay == curYDay then
+        -- LogDebug(
+        --     'GCalHelp:GetIsFlushHour return isFlush:%s, nextIx:%s, isNextDay:%s, diffDot:%s',
+        --     false,
+        --     nextIx,
+        --     isNextDay,
+        --     diffDot
+        -- )
+        return false, nextIx, isNextDay, diffDot
+    end
+
+    recoreds[canIndex] = curYDay
+    -- LogTable(recoreds, 'recoreds:')
+    -- LogDebug(
+    --     'GCalHelp:GetIsFlushHour return isFlush:%s, nextIx:%s, isNextDay:%s, diffDot:%s',
+    --     true,
+    --     nextIx,
+    --     isNextDay,
+    --     diffDot
+    -- )
+
+    return true, nextIx, isNextDay, diffDot
+end
+
+function GCalHelp:CalNextFlushtTime(zeroTime, hour)
+    return zeroTime + TimerHelper.cHourSeconds * hour
+end
+
+function GCalHelp:GetMonsterGroupHp(groupId)
+    local useHp = 0
+
+    local monsterCfg = MonsterGroup[groupId]
+    local stage1 = monsterCfg.stage[1]
+
+    for _, mId in ipairs(stage1.monsters) do
+        local mCfg = MonsterData[mId]
+        useHp = mCfg.maxhp + useHp
+    end
+
+    return useHp
+end
+
+------------------------------------------------------------------------------------------------------------
+-- 基地远征使用
+-- subId : CfgExpeditionTaskSub 表的 ids
+-- subIndex : CfgExpeditionTaskSub 表的 index
+function GCalHelp:CombineEdnTaskId(subId, subIndex)
+    local retVal = subId * 100000 + subIndex
+    -- LogDebug("ret: %s, subId: %s, subIx: %s", retVal, subId, subIndex)
+    return retVal
+end
+
+function GCalHelp:SplitEdnTaskId(taskId)
+    local subId = math.floor(taskId / 100000)
+    local subIndex = taskId % 100000
+
+    -- LogDebug("GCalHelp:SplitEdnTaskId(taskId:%s) subId:%s, subIndex:%s", taskId, subId, subIndex)
+    return subId, subIndex
+end
+
+------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:IsHoliday(curDate, CfgHolidays)
+    -- LogTable(curDate, "TodayIsHoliday curDate:")
+    -- LogTable(CfgHolidays, "TodayIsHoliday CfgHolidays:")
+    -- 不是周末的话，看看是不是法定假期
+    local cfg = CfgHolidays[curDate.year]
+    if cfg then
+        local mCfg = cfg.holidays[curDate.month]
+        if mCfg then
+            return GCalHelp:Bsearch(mCfg.holidayArr, curDate.day)
+        end
+    end
+
+    return false
+end
+
+------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetChatTbName(chatTypeName)
+    local cacheName = 'chatLog' .. chatTypeName
+    -- LogInfo("ChatMgr:GetCacheTbName: %s", cacheName)
+    return cacheName
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 返回卡牌中止能添加多少热值
+-- maxHot: 卡牌最大热值
+-- curHot：当前热值
+-- start_time：开始冷却时间
+-- end_time：冷却完成时间
+-- curTime：当前时间
+function GCalHelp:GetCardCoolPauseAddHot(maxHot, curHot, start_time, end_time, curTime)
+    local difHot = maxHot - curHot
+    local difTime = end_time - start_time
+
+    local addHot = 0
+    local leftTime = end_time - curTime
+    if leftTime <= 0 then
+        addHot = difHot
+    else
+        addHot = math.floor(((difTime - leftTime) / difTime) * difHot)
+    end
+
+    return addHot
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 获取连续数值范围
+-- args:
+-- -- idArr : id数组
+-- return:
+-- sids : 单个id
+-- rangs : 范围id
+function GCalHelp:GetRangNum(idArr)
+    idArr = idArr or {}
+
+    table.sort(idArr)
+
+    local sids = {}
+    local rangs = {}
+
+    local sIx = 1
+    local eIx = sIx + 1
+    local lIx = #idArr
+
+    while sIx <= lIx do
+        while eIx <= lIx do
+            if idArr[eIx] - idArr[eIx - 1] == 1 then
+                eIx = eIx + 1
+            else
+                eIx = eIx - 1
+                break
+            end
+        end
+
+        if eIx > lIx then
+            eIx = lIx
+        end
+
+        if eIx - sIx >= 1 then
+            table.insert(rangs, {idArr[sIx], idArr[eIx]})
+            sIx = eIx + 1
+        else
+            table.insert(sids, idArr[sIx])
+            sIx = sIx + 1
+        end
+
+        eIx = sIx + 1
+    end
+
+    return sids, rangs
+end
+
+-- args
+-- -- arr: 数值数组
+-- -- rangArr ： 数值范围数组 [ [1, 3], [5,100] ]
+-- return
+-- -- arr: 将范围数值，还原成id，插入 arr 中然后返回
+function GCalHelp:RangNumToArr(arr, rangArr)
+    arr = arr or {}
+    rangArr = rangArr or {}
+
+    for _, range in ipairs(rangArr) do
+        local ib, ie = range[1], range[2]
+        while ib <= ie do
+            table.insert(arr, ib)
+            ib = ib + 1
+        end
+    end
+
+    return arr
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 宿舍相关
+function GCalHelp:GetDormId(cfgId, index)
+    return cfgId * 100 + index
+end
+
+function GCalHelp:GetDormCfgId(id)
+    local cfgId = math.floor(id / 100)
+    local index = math.floor(id % 100)
+    return cfgId, index
+end
+
+-- 获取宿舍家具id
+-- cfgId: 配置表愿你选哪个id
+-- incId: 自增id
+function GCalHelp:GetDormFurId(cfgId, incId)
+    return cfgId * 10000 + incId
+end
+
+-- 获取宿舍家具cfgId
+function GCalHelp:GetDormFurCfgId(id)
+    local cfgId = math.floor(id / 10000)
+    local incId = math.floor(id % 10000)
+    return cfgId, incId
+end
+
+-- 计算宿舍舒适度添加疲劳值恢复百分比
+-- 参数：
+-- comfort 舒适度
+--
+-- 返回值:
+-- 1: 添加的百分比
+function GCalHelp:DormTiredAddPerent(comfort)
+    return math.floor(comfort / 20)
+end
+
+-- 区分是宿舍id 还是建筑id
+function GCalHelp:IsDormId(id)
+    return id > 0 and id < 10000
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+-- arg:
+-- -- cfgId
+-- return
+-- baseCfgId : 一级的id
+-- lv: 该技能的等级
+function GCalHelp:GetEquipBaseIdAndLv(cfgId)
+    local lv = cfgId % 100
+    local baseCfgId = cfgId - lv + 1
+    return baseCfgId, lv
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 计算生产中心，建筑的效益百分比值
+-- local vals = {
+-- 	-- 建筑的
+-- 	build.perBenefit,
+-- 	build.perHpBenefit,
+-- 	build.perRoleTiredBenefit,
+-- 	build.perRoleAbilityBenefit,
+-- 	-- 全局的
+-- 	mdata.power.perBenefit,
+-- 	mdata.perRoleAbilityBenefit
+-- }
+-- 返回值：百分比(0 ~ 1) / (0, 1]
+function GCalHelp:GetBuildProductBenefit(vals, buildRoleCnt)
+    local retVal = 1
+    for _, val in ipairs(vals) do
+        if val then
+            if val <= 0 then
+                retVal = 0
+                break
+            end
+            retVal = retVal * (val / 100)
+        end
+    end
+
+    if g_BuildNotRoleBenefit and buildRoleCnt < 1 then
+        retVal = retVal * (g_BuildNotRoleBenefit / 100)
+    end
+
+    -- LogTable(vals, "BuildsMgr:GetBenefit vals:")
+    -- LogDebug("BuildsMgr:GetBenefit ret :%s", retVal)
+    return retVal
+end
+
+-- 生成斐波那契数组
+function GCalHelp:GenFiboSeries(n)
+    local arr = {1}
+    local sum = 1
+    local preIx = 1
+    local preVal = 0
+    while sum < n do
+        local preIxVal = arr[preIx]
+        local val = preVal + preIxVal
+        if sum + val > n then
+            val = n - sum
+        end
+
+        preIx = preIx + 1
+
+        arr[preIx] = val
+
+        sum = sum + val
+        preVal = preIxVal
+    end
+
+    -- LogTable(arr, "GCalHelp:GenFiboSeries(n) " .. n .. " :")
+    return arr
+end
+
+-- 获取明天活动时间重置点
+function GCalHelp:GetNextActiveZeroTime()
+    return self:CalNextZeroTime(g_ActivityDiffDayTime)
+end
+
+-- zeroHour: 重置的小时
+function GCalHelp:CalNextZeroTime(zeroHour)
+    local oneHour = 60 * 60
+    local curTimeStmap = os.time()
+
+    -- 获取当天的0点时间
+    local timeTable = os.date('*t', curTimeStmap)
+    timeTable.hour = 0
+    timeTable.min = 0
+    timeTable.sec = 0
+    local zeroTimeStmap = os.time(timeTable)
+
+    local todyActiveTime = zeroTimeStmap + oneHour * zeroHour
+    if curTimeStmap <= todyActiveTime then
+        return todyActiveTime
+    end
+
+    local nextActiveTime = todyActiveTime + (24 * oneHour)
+    -- LogDebug("GCalHelp:GetNextActiveZeroTime() netTime：%s", netTime)
+    return nextActiveTime
+end
+
+-- 获取周期起始点
+-- 2021-11-1 这一天刚好是每月的第一天与周一，符合当前游戏月与周重置的起始要求，所以以这天为起始点
+-- Return:
+-- 1:起始时间点：cycleTime
+-- 2:起始时间点结构：cycleDate
+function GCalHelp:GetCycleStartTime()
+    -- 测试天
+    -- local useDate = {year = 2022, month = 6, day = 25, hour = 0, min = 0, sec = 0}
+    --
+    -- 测试周
+    -- local useDate = {year = 2022, month = 6, day = 20, hour = 0, min = 0, sec = 0}
+    --
+    -- 测试月
+    -- local useDate = {year = 2021, month = 5, day = 1, hour = 0, min = 0, sec = 0}
+    -- local useDate = {year = 2022, month = 5, day = 1, hour = 0, min = 0, sec = 0}
+    -- local useDate = {year = 2022, month = 6, day = 1, hour = 0, min = 0, sec = 0}
+    local useDate = {year = 2021, month = 11, day = 1, hour = 0, min = 0, sec = 0}
+    local cycleStartTime = os.time(useDate)
+
+    -- LogTable(useDate, "GetCycleStartTime cycleStartDate:" .. cycleStartTime)
+    return cycleStartTime, useDate
+end
+
+-- Args:
+-- cycleType： 配置表周期类型
+-- cycleVal： 配置表周期值
+-- curTime：当前时间戳
+-- cycleStartTime: 周期时间点，不传，将自动调用 GetCycleStartTime() 返回
+-- cycleStartDate: 周期时间点数据结构，不传，将自动调用 GetCycleStartTime() 返回
+-- Ret:
+-- 返回下次重置的时间戳
+function GCalHelp:GetCycleResetTime(cycleType, cycleVal, curTime, cycleStartTime, cycleStartDate)
+    if not cycleStartTime or not cycleStartDate then
+        cycleStartTime, cycleStartDate = self:GetCycleStartTime()
+    end
+
+    if cycleVal < 1 then
+        return 0
+    end
+
+    local resetTime = 0
+    if cycleType == PeriodType.None then
+        resetTime = 0
+    elseif cycleType == PeriodType.Day then
+        resetTime = self:GetDayCycle(curTime, cycleVal, cycleStartTime)
+    elseif cycleType == PeriodType.Week then
+        resetTime = self:GetWeekCycle(curTime, cycleVal, cycleStartTime)
+    elseif cycleType == PeriodType.Month then
+        resetTime = self:GetMonthCycle(curTime, cycleVal, cycleStartDate)
+    else
+        LogError('GCalHelp:GetCycleStartTime() unknow cycleType:%s', cycleType)
+    end
+
+    return resetTime
+end
+
+function GCalHelp:GetDayCycle(curTime, cycleVal, cycleStartTime)
+    -- 周期间隔时间
+    -- 86400: 一天的秒数
+    local cycleTime = cycleVal * 86400
+    -- LogDebug('GCalHelp:GetDayCycle() cycleTime:%s = cycleVal:%s * TimerHelper.cDaySeconds:%s', cycleTime, cycleVal, cycleTime)
+    -- 取它的下一个周期
+    local diffA = (curTime - cycleStartTime) / cycleTime
+    local diffCycle = math.floor(diffA) + 1
+    -- LogDebug('GCalHelp:GetDayCycle() curTime:%s, cycleStartTime:%s, diffA：%s, diffCycle:%s', curTime, cycleStartTime, diffA, diffCycle)
+    -- 返回时间
+    local ret = cycleStartTime + diffCycle * cycleTime
+    -- LogTable(os.date('*t', ret), 'GCalHelp:GetDayCycle() cycleVal: ' .. cycleVal)
+    -- LogDebug('GCalHelp:GetDayCycle() ret:%s\n', ret)
+    return ret
+end
+
+--获取星期开始时间，每周一早上凌晨为重置点时间
+function GCalHelp:GetWeekCycle(curTime, cycleVal, cycleStartTime)
+    -- 周期间隔时间
+    -- 86400: 一天的秒数
+    local cycleTime = cycleVal * 7 * 86400
+
+    -- 取它的下一个周期
+    local diffCycle = math.floor((curTime - cycleStartTime) / cycleTime) + 1
+
+    -- 返回时间
+    local ret = cycleStartTime + diffCycle * cycleTime
+    -- LogTable(os.date("*t", ret), "GCalHelp:GetWeekCycle() cycleVal: " .. cycleVal)
+    return ret
+end
+
+--获取月开始时间，每个月1号起始零点（凌晨）
+function GCalHelp:GetMonthCycle(curTime, cycleVal, cycleStartDate)
+    local curDate = os.date('*t', curTime)
+
+    -- 两个时间相差的年
+    local diffYears = curDate.year - cycleStartDate.year
+
+    -- 计算两个时间相隔几个月
+    local difMonth = 0
+    if diffYears > 0 then
+        difMonth = (diffYears - 1) * 12 + (12 - cycleStartDate.month) + curDate.month
+    else
+        difMonth = curDate.month - cycleStartDate.month
+    end
+
+    -- 计算这个重置月处于第几个周期
+    local diffCycle = math.floor(difMonth / cycleVal) + 1
+
+    -- 算出这个周期共过去多少个月
+    local addMonth = diffCycle * cycleVal
+
+    -- 这个周期过去多少年
+    local addYear = math.floor(addMonth / 12)
+
+    -- 余下不满一年的月份
+    addMonth = addMonth % 12
+
+    -- LogDebug("diffCycle:%s, difMonth:%s, cycleVal:%s, addMonth:%s", diffCycle, difMonth, cycleVal, addMonth)
+    -- 添加年份(不能使用curDate.year，因为 cycleStartDate.year + addYear 是可能大于curDate.year的)
+    local yearNumber = cycleStartDate.year + addYear
+
+    -- 增加余下的月份
+    local monthNumber = cycleStartDate.month
+
+    for i = 1, addMonth, 1 do
+        monthNumber = monthNumber + 1
+        if monthNumber > 12 then
+            yearNumber = yearNumber + 1
+            monthNumber = 1
+        end
+    end
+
+    local ret = os.time({year = yearNumber, month = monthNumber, day = 1, hour = 0, min = 0, sec = 0})
+
+    -- LogTable(os.date("*t", ret), "GCalHelp:GetMonthCycle() cycleVal: " .. cycleVal)
+    -- LogDebug("")
+    return ret
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+-- 计算卡牌核心升级提升还需要多少个核心碎片
+-- args：
+-- -- cfgid: 卡牌配置id
+-- -- curCl: 当前核心等级
+-- -- skills: 卡牌技能列表 { [id] = {lv =xx, exp =xx, type = xxx} }
+-- ret:
+-- -- 返回需要多少个核心材料，生满级
+function GCalHelp:GetCardNeedCoreItemCnt(cfgid, curCl, skills)
+    local cCfg = CardData[cfgid]
+    local coreLvCfg = CfgCardCoreLv[cCfg.quality]
+
+    local lcnt = 0
+    local sumNeed = 0
+
+    -- LogTable(skills, "cfgid:" .. cfgid .. ", curCl:" .. curCl)
+    -- 突破等级计算
+    local info = coreLvCfg.infos[curCl]
+    while info and info.costNum do
+        sumNeed = sumNeed + info.costNum
+
+        curCl = curCl + 1
+        info = coreLvCfg.infos[curCl]
+
+        lcnt = lcnt + 1
+        if lcnt >= 100 then
+            ASSERT(false)
+            break
+        end
+    end
+
+    -- LogDebug("GetCardNeedCoreItemCnt() cfgid:%s, curCl:%s, sumNeed:%s", cfgid, curCl, sumNeed)
+    -- 天赋所需计算
+    local mainTalentLv = 1
+    for _, sinfo in pairs(skills) do
+        if sinfo.type == SkillMainType.CardTalent then
+            local skillCfg = skill[sinfo.id]
+            mainTalentLv = skillCfg.lv
+        end
+    end
+
+    -- LogDebug("GetCardNeedCoreItemCnt() cfgid:%s, mainTalentLv:%s", cfgid, mainTalentLv)
+    local cmtuCfg = CfgMainTalentSkillUpgrade[cCfg.quality]
+    info = cmtuCfg.infos[mainTalentLv]
+    while info and info.costNum do
+        sumNeed = sumNeed + info.costNum
+
+        mainTalentLv = mainTalentLv + 1
+        info = cmtuCfg.infos[mainTalentLv]
+
+        lcnt = lcnt + 1
+        if lcnt >= 100 then
+            ASSERT(false)
+            break
+        end
+    end
+
+    -- LogDebug("GetCardNeedCoreItemCnt() sumNeed:%s", sumNeed)
+    return sumNeed
+end
+
+function GCalHelp:GetTaskCfg(taskType, taskCfgid)
+    local cfgName = cTaskCfgNames[taskType]
+    local cfgs = _G[cfgName]
+    return cfgs[taskCfgid]
+end
+
+function GCalHelp:CheckFirstPassRewardInfo(retData)
+    -- 首次通关卡牌给的延伸物品，不放在首次通关的数组里面
+    local dupCfg = MainLine[retData.id]
+    if not dupCfg then
+        return
+    end
+
+    local inCfg = {}
+    if dupCfg.fisrtPassReward then
+        for _, arr in ipairs(dupCfg.fisrtPassReward) do
+            local itype = arr[3]
+            if not itype or itype == RandRewardType.ITEM then
+                local iCfg = ItemInfo[arr[1]]
+                if iCfg.type == ITEM_TYPE.CARD then
+                    inCfg[iCfg.dy_value1] = 1
+                else
+                    inCfg[arr[1]] = 1
+                end
+            else
+                inCfg[arr[1]] = 1
+            end
+        end
+    end
+
+    -- LogTable(dupCfg.fisrtPassReward, 'dupCfg.fisrtPassReward:')
+    -- LogTable(inCfg, 'inCfg:')
+    GCalHelp:GetTb(retData, 'reward')
+
+    local fisrtPassReward = GCalHelp:GetTb(retData, 'fisrtPassReward')
+    retData.fisrtPassReward = {}
+
+    for _, item in pairs(fisrtPassReward) do
+        if inCfg[item.id] then
+            table.insert(retData.fisrtPassReward, item)
+        else
+            table.insert(retData.reward, item)
+        end
+    end
+
+    return retData
+end
+
+-- GCalHelp:CalCardCoreElemByCfg()
+-- args:
+-- cfg: 卡牌配置信息，CardData[cfgid]
+-- getCnt: 卡牌获取次数
+-- ret:
+-- { {id=1, num=1, type=1}, {id=1, num=1, type=1}}
+function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets)
+    gets = gets or {}
+
+    if not cfg or not cfg.coreItemId then
+        return gets
+    end
+
+    local elemCfg = CfgCardElem[cfg.quality]
+    if not elemCfg then
+        return gets
+    end
+
+    -- LogTable(elemCfg, "elemCfg:")
+    local useCfg = nil
+    for _, info in pairs(elemCfg.infos) do
+        if GLogicCheck:IsInRange(info.minGetCnt, info.maxGetCnt, getCnt) then
+            useCfg = info
+        end
+    end
+
+    if not useCfg then
+        return gets
+    end
+
+    -- 先看下，核心原件满了没, {核心} { 通用 } { 额外} 写入顺序是这样的, 不能修改添加的顺序，不然前端会显示异常
+    if useCfg.elemNum and useCfg.elemNum > 0 then
+        -- LogDebug("CreateCardCoreElemByCfg() Add %s %s", cfg.coreItemId, canAddNum)
+        table.insert(gets, {id = cfg.coreItemId, num = useCfg.elemNum})
+    end
+
+    -- LogTable(gets, "========================================gets:")
+    -- LogTable(useCfg.reward, "useCfg.reward:")
+    if useCfg.reward then
+        GCalHelp:IdNumArrToTb(useCfg.reward, nil, nil, gets)
+    end
+
+    return gets
+end
+
+--------------------------------------------------------------------------------------------------------------------------------------
+--
+-- 返回一个副本的来源标志
+-- return: [pre]-dupType_[副本类型]-dupGroup_[副本分组]-id_[副本id]
+function GCalHelp:GetDupFrom(dupCfg, pre)
+    return pre .. '-dupType_' .. dupCfg.type .. '-dupGroup_' .. dupCfg.group .. '-id_' .. dupCfg.id
+end
+
+--------------------------------------------------------------------------------------------------------------------------------------
+--
+-- args:
+-- -- arr: 排序的数组
+-- -- val: 查找的值
+
+-- return :
+-- -- bool：是否找到
+-- -- index：所在的下标
+-- -- val：查找到的值
+
+function GCalHelp:Bsearch(arr, val)
+    local left = 1
+    local right = #arr
+    local sumLen = right
+    if left > right then
+        return false
+    end
+
+    -- LogDebug("")
+    -- LogTable(arr, "find table:")
+
+    local rv, mid = 0, 0
+
+    local loopCnt = 0
+    while left <= right do
+        mid = math.ceil((left + right) / 2)
+        rv = arr[mid]
+        -- LogDebug("mid:%s, l:%s, r:%s, rv:%s, val:%s", mid, left, right, rv, val)
+
+        if rv == val then
+            break
+        elseif rv < val then
+            left = mid + 1
+        else
+            right = mid - 1
+        end
+
+        -- LogDebug("mid:%s, l:%s, r:%s, rv:%s, val:%s", mid, left, right, rv, val)
+
+        loopCnt = loopCnt + 1
+        if loopCnt > sumLen then
+            -- 防止死循环保护
+            LogError(
+                'GCalHelp:Bsearch() sum len: %s, loop: %s had error! table find: %s info is: %s',
+                sumLen,
+                loopCnt,
+                val,
+                table.tostring(arr)
+            )
+            break
+        end
+    end
+
+    return val == rv, mid, rv
+end
+
+-- attackScore: 攻击方分数
+-- defenseScore: 防御方分数
+function GCalHelp:GetArmyAddScore(attackScore, defenseScore)
+    local changeScore = 0
+    local diffScore = defenseScore - attackScore
+    for _, cfg in ipairs(CfgPracticeScore) do
+        if diffScore >= cfg.nDiffMin and diffScore < cfg.nDiffMax then
+            changeScore = cfg.nGetScore
+            break
+        end
+    end
+
+    return changeScore
+end
+
+function GCalHelp:GetDupTypeName(dupCfg)
+    local dupTypeName = eDuplicateTypeName[dupCfg.type]
+    --LogDebug("dupTypeName:%s", dupTypeName)
+    if dupTypeName then
+        dupTypeName = eDuplicateTypeChName[dupTypeName]
+    end
+    --LogDebug("dupTypeName:%s", dupTypeName)
+
+    dupTypeName = (dupTypeName or ' ') .. (dupCfg.chapterID or ' ')
+
+    return dupTypeName
+end
+
+function GCalHelp:GetCardPoolSelectId(cardPoolCfg)
+    if cardPoolCfg.sel_quality_type then
+        return cardPoolCfg.sel_quality_type
+    end
+
+    return cardPoolCfg.id
+end
