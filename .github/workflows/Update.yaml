@@ -149,7 +149,7 @@ jobs:
       run: |
         pip install -r $WORKSPACE_PATH/tool/requirements.txt
         python $WORKSPACE_PATH/tool/2csv.py lua
-
+        echo $WORKSPACE_PATH/android/cfg
         Compress-Archive -Path $WORKSPACE_PATH/android/cfg -DestinationPath "$WORKSPACE_PATH/cfg${{ steps.cfg-version.outputs.version }}.zip"
         echo "::set-output name=packed::true"
 
