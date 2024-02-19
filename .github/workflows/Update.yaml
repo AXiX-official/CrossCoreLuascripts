@@ -83,7 +83,7 @@ jobs:
         python tool/decrypt.py "${{ matrix.filename }}"
         mkdir lua
         studio/AssetStudioCLI "${{ matrix.filename }}_decrypt" lua --game Normal
-        python tool/sortFile.py lua "CrossCoreLuascripts/CrossCore-Luascripts/${{ matrix.platform }}"
+        python tool/sortFile.py lua "CrossCoreLuascripts/CrossCore-Luascripts/${{ matrix.platform }}" tool/structure.json
 
     - name: Generate commit message
       if: steps.check-hash.outputs.changed == 'true'
