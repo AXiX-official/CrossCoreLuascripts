@@ -99,7 +99,7 @@ jobs:
         python $WORKSPACE_PATH/tool/decrypt.py "${{ matrix.filename }}"
         mkdir lua
         studio/AssetStudioCLI ${{ matrix.filename }}_decrypt lua --game Normal --silent
-        python $WORKSPACE_PATH/tool/sortFile.py lua/TextAsset $WORKSPACE_PATH/${{ matrix.platform }} $WORKSPACE_PATH/tool/structure.json
+        python $WORKSPACE_PATH/tool/sortFile.py lua/TextAsset D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }} $WORKSPACE_PATH/tool/structure.json
 
     - name: Generate commit message
       if: steps.check-hash.outputs.changed == 'true'
