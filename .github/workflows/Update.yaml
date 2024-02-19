@@ -104,7 +104,6 @@ jobs:
     - name: Generate commit message
       if: steps.check-hash.outputs.changed == 'true'
       id: commit-message
-      shell: pwsh
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
