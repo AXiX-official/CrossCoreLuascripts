@@ -31,36 +31,25 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Download file
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        cd $WORKSPACE_PATH
-        curl -L -o ${{ matrix.filename }} "${{ matrix.url }}"
+        curl -L -o D:/a/CrossCoreLuascripts/${{ matrix.filename }} "${{ matrix.url }}"
 
     - name: Calculate hash
       id: calc-hash
       shell: pwsh
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        Set-Location -Path $env:WORKSPACE_PATH
-        $hash = Get-FileHash -Path ${{ matrix.filename }} -Algorithm SHA256
+        $hash = Get-FileHash -Path D:/a/CrossCoreLuascripts/${{ matrix.filename }} -Algorithm SHA256
         Write-Host "::set-output name=hash::$($hash.Hash)"
 
     - name: Save hash
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        cd $WORKSPACE_PATH
         echo "${{ steps.calc-hash.outputs.hash }}" > D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt
 
     - name: Check hash
       id: check-hash
       env:
-        WORKSPACE_PATH: ${{ github.workspace }}
         HASH: ${{ steps.calc-hash.outputs.hash }}
       run: |
-        cd $WORKSPACE_PATH
         if ('${{ github.event.inputs.force_check }}' -eq 'true') {
           mv D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.filename }}-hash.txt
           echo "::set-output name=changed::true"
@@ -77,26 +66,20 @@ jobs:
 
     - name: Unpack and Push
       if: steps.check-hash.outputs.changed == 'true'
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        cd $WORKSPACE_PATH
-        curl -L -o studio.zip https://github.com/RazTools/Studio/releases/download/v1.00.00/net7.0-windows.zip
-        Expand-Archive -Path studio.zip -DestinationPath studio
+        curl -L -o D:/a/CrossCoreLuascripts/studio.zip https://github.com/RazTools/Studio/releases/download/v1.00.00/net7.0-windows.zip
+        Expand-Archive -Path D:/a/CrossCoreLuascripts/studio.zip -DestinationPath D:/a/CrossCoreLuascripts/studio
         git clone "https://${{ secrets.MY_TOKEN }}@github.com/AXiX-official/CrossCore-Auto-Lua.git" D:/a/CrossCoreLuascripts/tool
-        python D:/a/CrossCoreLuascripts/tool/decrypt.py "${{ matrix.filename }}"
-        mkdir lua
-        studio/AssetStudioCLI ${{ matrix.filename }}_decrypt lua --game Normal --silent
-        python D:/a/CrossCoreLuascripts/tool/sortFile.py lua/TextAsset D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }} D:/a/CrossCoreLuascripts/tool/structure.json
+        python D:/a/CrossCoreLuascripts/tool/decrypt.py "D:/a/CrossCoreLuascripts/${{ matrix.filename }}"
+        mkdir D:/a/CrossCoreLuascripts/lua
+        D:/a/CrossCoreLuascripts/studio/AssetStudioCLI D:/a/CrossCoreLuascripts/${{ matrix.filename }}_decrypt D:/a/CrossCoreLuascripts/lua --game Normal --silent
+        python D:/a/CrossCoreLuascripts/tool/sortFile.py D:/a/CrossCoreLuascripts/lua/TextAsset D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }} D:/a/CrossCoreLuascripts/tool/structure.json
 
     - name: Generate commit message
       if: steps.check-hash.outputs.changed == 'true'
       id: commit-message
-      shell: pwsh
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        $svnVersion = Select-String -Path "$env:WORKSPACE_PATH/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "\d+' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '\d+' | % { $_.Matches } | % { $_.Value }
+        $svnVersion = Select-String -Path "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "\d+' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '\d+' | % { $_.Matches } | % { $_.Value }
         $date = Get-Date -Format "yyyy/MM/dd"
         echo "::set-output name=message::[$date]-$svnVersion"
 
@@ -119,11 +102,8 @@ jobs:
     - name: Generate cfg vesion
       if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
       id: cfg-version
-      shell: pwsh
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        $svnVersion = Select-String -Path "$env:WORKSPACE_PATH/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "[0-9]*' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '[0-9]*' | % { $_.Matches } | % { $_.Value }
+        $svnVersion = Select-String -Path "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "[0-9]*' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '[0-9]*' | % { $_.Matches } | % { $_.Value }
         $date = Get-Date -Format "yyyyMMdd"
         echo "::set-output name=version::$date-$svnVersion"
 
