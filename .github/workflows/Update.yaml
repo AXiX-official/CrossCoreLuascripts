@@ -37,6 +37,9 @@ jobs:
       run: |
         echo "${{ steps.calc-hash.outputs.hash }}" > new-hash.txt
 
+    - name: Print force_check value
+      run: echo "force_check: ${{ github.event.inputs.force_check }}"
+
     - name: Download old hash
       if: ${{ github.event.inputs.force_check }} == 'false'
       uses: actions/download-artifact@v2
