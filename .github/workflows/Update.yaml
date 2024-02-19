@@ -118,6 +118,7 @@ jobs:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
         cd $WORKSPACE_PATH
+        ls
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add ${{ matrix.platform }}
