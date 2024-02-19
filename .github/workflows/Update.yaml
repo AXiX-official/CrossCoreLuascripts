@@ -147,7 +147,7 @@ jobs:
         echo "::set-output name=version::${date}-${svnVersion}"
 
     - name: Step for Android
-      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
+      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true' && ${{ github.event.inputs.send_mail == 'true'}}
       id: step-android
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
