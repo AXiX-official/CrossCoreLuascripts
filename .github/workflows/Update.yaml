@@ -108,7 +108,7 @@ jobs:
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        svnVersion=$(grep -o 'g_svnVersion = "[0-9]*' "$WORKSPACE_PATH/../${{ matrix.platform }}/SvnVersion.lua" | grep -o '[0-9]*')
+        svnVersion=$(grep -o 'g_svnVersion = "[0-9]*' "$WORKSPACE_PATH/${{ matrix.platform }}/SvnVersion.lua" | grep -o '[0-9]*')
         date=$(date +"%Y/%m/%d")
         echo "::set-output name=message::[${date}]-${svnVersion}"
 
