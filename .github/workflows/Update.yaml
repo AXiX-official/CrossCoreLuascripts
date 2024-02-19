@@ -49,7 +49,7 @@ jobs:
       run: |
         if (${{ github.event.inputs.force_check == 'true'}}) {
           echo "::set-output name=changed::true"
-          exit 0
+          return
         }
         echo "Old hash: $(Get-Content old-hash.txt)"
         echo "New hash: ${env:HASH}"
