@@ -51,13 +51,13 @@ jobs:
         HASH: ${{ steps.calc-hash.outputs.hash }}
       run: |
         if ('${{ github.event.inputs.force_check }}' -eq 'true') {
-          mv D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt
+          Move-Item -Path  D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt -Force
           echo "::set-output name=changed::true"
         } else {
           echo "Old hash: $(Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt)"
           echo "New hash: ${env:HASH}"
           if ((Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt) -ne "${env:HASH}") {
-            mv D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt
+            Move-Item -Path  D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt -Force
             echo "::set-output name=changed::true"
           } else {
             echo "::set-output name=changed::false"
