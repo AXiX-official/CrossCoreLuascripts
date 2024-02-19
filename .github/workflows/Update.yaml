@@ -3,15 +3,6 @@ on:
   schedule:
     - cron:  '0 0-15,16-23 * * *'
   workflow_dispatch:
-    inputs:
-      force_check:
-        description: 'Force check hash to be true'
-        required: false
-        default: 'false'
-      send_mail:
-        description: 'Send mail'
-        required: false
-        default: 'true'
 
 jobs:
   check-file:
@@ -49,21 +40,15 @@ jobs:
       id: check-hash
       env:
         HASH: ${{ steps.calc-hash.outputs.hash }}
-        FORCE_CHECK: ${{ github.event.inputs.force_check }}
       run: |
-        if ( $env:FORCE_CHECK -eq 'true') {
+        echo "Old hash: $(Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt)"
+        echo "New hash: ${env:HASH}"
+        if ((Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt) -ne "${env:HASH}") {
           Move-Item -Path  D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt -Force
           echo "::set-output name=changed::true"
         } else {
-          echo "Old hash: $(Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt)"
-          echo "New hash: ${env:HASH}"
-          if ((Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt) -ne "${env:HASH}") {
-            Move-Item -Path  D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}-hash.txt -Force
-            echo "::set-output name=changed::true"
-          } else {
-            echo "::set-output name=changed::false"
-          }
-        }      
+          echo "::set-output name=changed::false"
+        }  
 
     - name: Unpack and Push
       if: steps.check-hash.outputs.changed == 'true'
@@ -110,9 +95,8 @@ jobs:
       id: set-mail
       env:
         CHANGED: ${{ steps.check-hash.outputs.changed }}
-        SEND_MAIL: ${{ github.event.inputs.send_mail }}
       run: |
-        if ($env:CHANGED -eq 'true' && $env:SEND_MAIL -eq 'true') {
+        if ($env:CHANGED -eq 'true') {
           echo "::set-output name=send_mail::true"
         } else {
           echo "::set-output name=send_mail::false"
