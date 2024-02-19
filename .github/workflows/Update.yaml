@@ -81,6 +81,7 @@ jobs:
       run: |
         $svnVersion = Select-String -Path "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "\d+' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '\d+' | % { $_.Matches } | % { $_.Value }
         $date = Get-Date -Format "yyyy/MM/dd"
+        echo "SVN_VERSION=$svnVersion" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
         echo "::set-output name=message::[$date]-$svnVersion"
 
     - name: Commit changes
@@ -119,10 +120,8 @@ jobs:
       if: steps.set-mail.outputs.send_mail == 'true'
       id: cfg-version
       run: |
-        $svnVersion = Select-String -Path "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "[0-9]*' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '[0-9]*' | % { $_.Matches } | % { $_.Value }
         $date = Get-Date -Format "yyyyMMdd"
-        echo "::set-output name=version::$date-$svnVersion"
-        echo "Version: $date-$svnVersion"
+        echo "::set-output name=version::$date-${{ env.SVN_VERSION }}"
 
     - name: Step for Android
       if: steps.set-mail.outputs.send_mail == 'true'
