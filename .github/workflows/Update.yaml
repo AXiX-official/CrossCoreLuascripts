@@ -29,7 +29,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      if: steps.check-hash.outputs.changed == 'true'
 
     - name: Download file
       env:
