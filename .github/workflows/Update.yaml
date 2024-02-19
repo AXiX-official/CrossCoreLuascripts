@@ -32,6 +32,9 @@ jobs:
       shell: pwsh
       run: |
         echo "::set-output name=hash::$(Get-FileHash -Algorithm SHA256 ${{ matrix.filename }} | ForEach-Object Hash)"
+      env:
+        HASH: ${{ steps.calc-hash.outputs.hash }}
+
     - name: Download old hash
       if: "${{ github.event.inputs.force_check }}" == 'false'
       uses: actions/download-artifact@v2
@@ -50,8 +53,6 @@ jobs:
         } else {
           echo "::set-output name=changed::false"
         }
-      env:
-        HASH: ${{ steps.calc-hash.outputs.hash }}
 
     - name: Upload new hash
       if: steps.check-hash.outputs.changed == 'true'
