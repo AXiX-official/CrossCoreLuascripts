@@ -1,0 +1,155 @@
+-- 家具购买
+local count = 1 -- 选择几件
+
+function Awake()
+    tab = ComUtil.GetCom(tabs, "CTab")
+    tab:AddSelChangedCallBack(OnTabChanged)
+    cg_pay = ComUtil.GetCom(btn_pay, "CanvasGroup")
+end
+
+function OnOpen()
+    if  openSetting and openSetting==2  then
+        cfg = Cfgs.CfgFurniture:GetByID(data.id)
+    else
+        cfg = Cfgs.CfgFurniture:GetByID(data)
+    end
+    
+    -- name 
+    CSAPI.SetText(txt_name, cfg.sName)
+    -- comfort
+    CSAPI.SetText(txtComfort, cfg.comfort .. "")
+    -- icon
+    ResUtil.Furniture:Load(icon, cfg.icon, true)
+    -- desc
+    CSAPI.SetText(txt_desc, cfg.desc)
+    -- tab 
+    tab.selIndex = 0
+end
+
+function OnTabChanged(_index)
+    if (_index == 1 and cfg.price_2 == nil) then
+        tab.selIndex = 0
+        return
+    end
+    count = 1
+    RefreshPanel()
+end
+
+function RefreshPanel()
+    price = tab.selIndex == 0 and cfg.price_1[1] or cfg.price_2[1]
+
+    -- price 单价
+    local _cfg = Cfgs.ItemInfo:GetByID(price[1])
+    iconName = _cfg and _cfg.icon or nil
+    if (iconName) then
+        ResUtil.IconGoods:Load(nPriceIcon, iconName .. "_1", true)
+    end
+    CSAPI.SetText(txt_nPrice, price[2] .. "")
+    -- 持有 
+    cur = DormMgr:GetBuyCount(cfg.id)
+    max = cfg.buyNumLimit
+    CSAPI.SetText(txt_hasNum, string.format("%s/%s", cur, max))
+    -- 内容 
+    CSAPI.SetText(txt_contentName, cfg.sName)
+    CSAPI.SetText(txt_contentNum, "X1")
+    --
+    Change()
+
+    --
+    SetImgTabs()
+end
+
+function Change()
+    CSAPI.SetText(txt_useNum, count .. "")
+    -- 合计
+    if (iconName) then
+        ResUtil.IconGoods:Load(priceIcon, iconName .. "_1", true)
+    end
+    need = price[2] * count
+    CSAPI.SetText(txt_price, need .. "")
+    -- btn 
+    had = BagMgr:GetCount(price[1])
+    cg_pay.alpha = had >= need and 1 or 0.3
+end
+
+function SetImgTabs()
+    if (not isSetTab) then
+        local _cfg1 = Cfgs.ItemInfo:GetByID(cfg.price_1[1][1])
+        ResUtil.IconGoods:Load(imtTab1, _cfg1.icon .. "_1", true)
+
+        local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
+        ResUtil.IconGoods:Load(imtTab2, _cfg2.icon .. "_1", true)
+    end
+end
+
+function OnClickRemove()
+    if (count > 1) then
+        count = count - 1
+        Change()
+    else 
+        LanguageMgr:ShowTips(2309)
+    end
+end
+
+function OnClickAdd()
+    if (count < (max - cur)) then
+        count = count + 1
+        Change()
+    else 
+        LanguageMgr:ShowTips(2308)
+    end
+end
+
+function OnClickMax()
+    if (count ~= (max - cur)) then
+        count = max - cur
+        Change()
+    else 
+        LanguageMgr:ShowTips(2308)
+    end
+end
+
+function OnClickMin()
+    if (count ~= 1) then
+        count = 1
+        Change()
+    else 
+        LanguageMgr:ShowTips(2309)
+    end
+end
+
+function OnClickMask()
+    Close()
+end
+
+function OnClickPay()
+    if (had >= need) then
+        if openSetting==2 then --商店中的购买
+            if data==nil or data.commId==nil then
+                LogError("传入的数据有误！");
+                return
+            end
+            ShopProto:Buy(data.commId,TimeUtil:GetTime(),count,tab.selIndex == 0 and "price_1" or "price_2",function(proto)
+                EventMgr.Dispatch(EventType.Shop_View_Refresh);
+                if proto and next(proto.gets)  then
+                    UIUtil:OpenReward( {proto.gets})
+                end
+            end)
+        else
+            local infos = {{
+                ["id"] = cfg.id,
+                num = count
+            }}
+            DormProto:BuyFurniture(infos, tab.selIndex == 0 and "price_1" or "price_2")
+        end
+        Close()
+    end
+end
+
+
+function Close()
+	CSAPI.SetGOActive(tweenObj2,true);
+	FuncUtil:Call(function()
+		view:Close();
+	end,nil,180);
+end

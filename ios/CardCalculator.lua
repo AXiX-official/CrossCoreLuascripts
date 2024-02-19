@@ -1,0 +1,504 @@
+-- OPENDEBUG()
+-- 计算卡牌的属性
+GCardCalculator = {
+    m_useProperty = {
+        id = true,
+        name = true,
+        -- cardName = true,
+        model = true,
+        attack = true,
+        maxhp = true,
+        defense = true,
+        speed = true,
+        crit_rate = true,
+        crit = true,
+        hit = true,
+        resist = true,
+        hot = true,
+        np = true,
+        sp = true,
+        sp_race = true,
+        sp_race2 = true,
+        bedamage = true,
+        damage = true,
+        becure = true,
+        cure = true,
+        damagePhysics = true,
+        damageLight = true,
+        fight_cost = true,
+        career = true,
+        quality = true,
+        nStep = true,
+        nJump = true,
+        nMoveType = true
+    }
+}
+
+-------------------------------------------------------------------------------------------------------------------
+-- 计算卡牌等级的属性
+-- cfgid ：配置id
+-- level : 等级
+-- intensify_level：强化等级
+-- break_level : 突破等级
+-- cl: 核心等级
+local LvlCalArgs = {
+    cal1 = {'attack', 'maxhp', 'defense'},
+    cal2 = {'speed', 'crit_rate', 'crit', 'hit', 'resist', 'hot', 'np', 'sp', 'sp_race'},
+    cal3 = {'hot', 'np', 'sp', 'sp_race', 'sp_race2'}
+}
+
+function GCardCalculator:CalLvlPropertys(cfgid, level, intensify_level, break_level, isMonster, cl)
+    -- LogDebug("cfgid:%s, level:%s, intensify_level:%s, break_level:%s, isMonster:%s, cl:%s,", cfgid, level, intensify_level, break_level, isMonster, cl)
+
+    -- intensify_level：这个在那时没用了
+    intensify_level = intensify_level or 1
+
+    if not cfgid or not level or not intensify_level or not break_level then
+        LogWarning(
+            'not cfgid:%s or not level:%s or not intensify_level:%s or not break_level:%s',
+            cfgid,
+            level,
+            intensify_level,
+            break_level
+        )
+        return nil
+    end
+
+    cl = cl or 1
+
+    -- LogDebug("CalLvlPropertys(%s, %s, %s, %s)", cfgid, level, intensify_level, break_level)
+    -- 基本属性
+    local cfg = nil
+    if (isMonster) then
+        cfg = MonsterNumerical[cfgid]
+    else
+        cfg = CardData[cfgid]
+    end
+
+    if not cfg then
+        LogWarning('CardData not find config: %d.', cfgid)
+        return nil
+    end
+
+    local ret = {}
+
+    -- 拷贝基本属性
+    -- table.copy(cfg, ret)
+    for k, v in pairs(cfg) do
+        if self.m_useProperty[k] then
+            ret[k] = v
+        end
+    end
+
+    ret.card_exp_add = 0
+    ret.plr_exp_add = 0
+    ret.gold_add = 0
+
+    if not isMonster then
+        local lvAdd = CardLevel[level]
+        -- 等级添加
+        local breakAdd = CardBreak[break_level]
+        -- 突破添加
+        local intensifyAdd = CardIntensify[intensify_level]
+        --强化添加
+
+        if not lvAdd then
+            local maxLv = #CardLevel
+            if level > maxLv then
+                lvAdd = CardLevel[maxLv]
+            end
+        end
+
+        if not breakAdd then
+            local maxLv = #CardBreak
+            if level > maxLv then
+                breakAdd = CardBreak[maxLv]
+            end
+        end
+
+        if not intensifyAdd then
+            local maxLv = #CardIntensify
+            if level > maxLv then
+                intensifyAdd = CardIntensify[maxLv]
+            end
+        end
+
+        -- LogTable(ret, "ret:")
+        -- LogTable(lvAdd, "lvAdd:")
+        -- LogTable(breakAdd, "breakAdd:")
+        for _, v in pairs(LvlCalArgs.cal1) do
+            -- LogDebug("cal1(%s, %s, %s, %s)", v, ret[v], lvAdd[v], breakAdd[v])
+            GCalHelp:Multi(ret, v, lvAdd[v])
+            GCalHelp:Multi(ret, v, breakAdd[v])
+        end
+
+        for _, v in pairs(LvlCalArgs.cal2) do
+            -- LogDebug("cal1(%s, %s, %s, %s)", v, ret[v], lvAdd[v], breakAdd[v])
+            GCalHelp:Add(ret, v, lvAdd[v])
+            GCalHelp:Add(ret, v, breakAdd[v])
+        end
+
+        for _, v in pairs(LvlCalArgs.cal3) do
+            -- LogDebug("cal2(%s, %s, %s)", v, ret[v], intensifyAdd[v])
+            GCalHelp:Add(ret, v, intensifyAdd[v])
+        end
+
+        -- 设置需要的数据
+        -- 最高等级
+        ret.max_level = GCardCalculator:CalCardMaxLv(cfg, break_level, cl)
+    end
+
+    -- LogTable(
+    --     {cfgid = cfgid, level = level, intensify_level = intensify_level, break_level = break_level},
+    --     "CalLvlPropertys params:"
+    -- )
+    -- 属性最大值，检测
+    for _, propertyCfg in pairs(CfgCardPropertyEnum) do
+        if propertyCfg.nUpperLimit and ret[propertyCfg.sFieldName] > propertyCfg.nUpperLimit then
+            ret[propertyCfg.sFieldName] = propertyCfg.nUpperLimit
+        end
+    end
+
+    -- LogTable(ret, "CalLvlPropertys ret:" .. cfgid)
+    return ret
+end
+
+-- args:
+-- breakLv: 突破（跃升）等级
+-- coreLv：核心等级
+-- rets:
+-- -- 最高等级
+function GCardCalculator:CalCardMaxLv(cardCfg, breakLv, coreLv)
+    local max_level = 1
+
+    local bCfgLimit = CfgCardBreakLimitLv[breakLv]
+    if bCfgLimit then
+        max_level = bCfgLimit.limitLv
+    else
+        local clCfgs = CfgCardCoreLv[cardCfg.quality]
+        if clCfgs then
+            local clCfg = clCfgs.infos[coreLv]
+            if clCfg then
+                max_level = clCfg.limitLv
+            end
+        else
+            LogWarning('CfgCardCoreLv not find by quality:%s', cardCfg.quality)
+        end
+    end
+
+    return max_level
+end
+
+-- 根据 卡牌配置表-基础表 的突破模板id， 计算获得当前使用的突破id
+function GCardCalculator:CalUseBreakId(base_id, break_level)
+    return base_id + break_level - 1
+end
+
+-------------------------------------------------------------------------------------------------------------------
+--
+local PropertyAddCalArgs = {
+    cal1 = {'attack', 'maxhp', 'defense'},
+    cal2 = {'speed', 'crit_rate', 'crit', 'hit', 'resist', 'hot', 'np', 'sp', 'sp_race', 'sp_race2'},
+    cal3 = {'bedamage', 'damage', 'becure', 'cure', 'damagePhysics', 'damageLight'}
+}
+
+function TakePropertyAdd(ret, sumP1, sumP2)
+    -- cal1
+    for _, pn in ipairs(PropertyAddCalArgs.cal1) do
+        local val = GCalHelp:CheckGetVal(sumP1, 0, pn) + GCalHelp:CheckGetVal(sumP2, 0, pn)
+        if val ~= 0 then
+            -- LogDebug("cal %s val %s, %s", pn, ret[pn], (1 + val))
+            GCalHelp:Multi(ret, pn, (1 + val))
+        end
+    end
+
+    -- cal2
+    for _, pn in ipairs(PropertyAddCalArgs.cal2) do
+        local val = GCalHelp:CheckGetVal(sumP1, 0, pn) + GCalHelp:CheckGetVal(sumP2, 0, pn)
+        if val ~= 0 then
+            -- LogDebug("cal %s val %s, %s", pn, ret[pn], (val))
+            GCalHelp:Add(ret, pn, val)
+        end
+    end
+
+    -- cal3
+    for _, pn in ipairs(PropertyAddCalArgs.cal3) do
+        local val = GCalHelp:CheckGetVal(sumP1, 0, pn) + GCalHelp:CheckGetVal(sumP2, 0, pn)
+        if val ~= 0 then
+            -- LogDebug("cal %s val %s, %s", pn, ret[pn], (1 + val))
+            GCalHelp:Add(ret, pn, 1 + val)
+        end
+    end
+end
+
+local SumCalArgs = {
+    cal1 = {'card_exp_add', 'plr_exp_add', 'gold_add'},
+    cal2 = {'attack', 'maxhp', 'defense', 'speed', 'hot', 'np', 'sp'}
+}
+
+-- 计算卡牌等级基础属性和装备的属性和
+-- cardCalResult ： CalLvlPropertys() 返回的结果
+-- equipsCalResult ： CalEquipPropertys() 返回的结果
+-- skillMap: 返回的卡牌技能，的结构 skillMap = { [skill_id1] = {}, [skill_id2] = {} }, 暂时只需要用到键值key技能id
+function GCardCalculator:CalSumPropery(cardCalResult, equipsCalResult, skillMap, useSubTalents)
+    local ret = {}
+    table.copy(cardCalResult, ret)
+
+    -- LogTable(cardCalResult, "CalSumPropery cardCalResult")
+    -- LogTable(useSubTalents, "CalSumPropery useSubTalents")
+    -- LogTable(equipsCalResult, "GCardCalculator:CalSumPropery( equipsCalResult ):")
+    local equipsProperty = nil
+    if equipsCalResult then
+        -- lifeBuf
+        equipsProperty = equipsCalResult.baseVal
+        for _, pn in ipairs(SumCalArgs.cal1) do
+            local val = equipsProperty[pn]
+            if val then
+                GCalHelp:Add(ret, pn, val)
+            end
+        end
+    else
+        equipsCalResult = GEquipCalculator:CalEquipPropertys(nil)
+        equipsProperty = equipsCalResult.baseVal
+    end
+
+    ret.skills = {}
+    ret.eskills = equipsCalResult.eskills -- 装备技能列表
+
+    local skillSumLevel = 0
+    if skillMap then
+        for id, v in pairs(skillMap) do
+            local skillId = id
+            local skillCfg = skill[skillId]
+            if skillCfg then
+                if skillCfg.lv then
+                    skillSumLevel = skillSumLevel + skillCfg.lv
+                    table.insert(ret.skills, skillId)
+                end
+
+                if skillCfg.main_type == SkillMainType.CardTalent then
+                    local qualityCfg = CfgMainTalentSkillUpgrade[ret.quality]
+                    -- LogInfo("quality:%s, lv:%s", ret.quality, skillCfg.lv)
+                    if qualityCfg then
+                        local upCfg = qualityCfg.infos[skillCfg.lv]
+                        if upCfg and upCfg.nAddSp then
+                            GCalHelp:Add(ret, 'sp', upCfg.nAddSp)
+                        -- LogInfo("===========================================================")
+                        -- LogInfo("After add %s sp is %s", upCfg.nAddSp, ret.sp)
+                        -- LogInfo("===========================================================")
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- 加入装备技能
+    if equipsCalResult.fightSkills then
+        for _, equipSkillId in pairs(equipsCalResult.fightSkills) do
+            local cfg = CfgEquipSkill[equipSkillId]
+            if cfg then
+                local skillId = cfg.nGetSkillId
+                local skillCfg = skill[skillId]
+                if skillCfg then
+                    skillSumLevel = skillSumLevel + skillCfg.lv
+                    table.insert(ret.skills, skillId)
+                end
+            end
+        end
+    end
+
+    -- 副本天赋技能
+    local subTablentProperty = {}
+    if useSubTalents then
+        -- LogTable(useSubTalents, "useSubTalents:")
+        for _, tId in pairs(useSubTalents) do
+            if tId > 0 then
+                local stCfg = CfgSubTalentSkill[tId]
+                if stCfg then
+                    if stCfg.nFightSkillId then
+                        local skillCfg = skill[stCfg.nFightSkillId]
+                        if skillCfg then
+                            if skillCfg.lv then
+                                skillSumLevel = skillSumLevel + skillCfg.lv
+                            end
+                            table.insert(ret.skills, stCfg.nFightSkillId)
+                        else
+                            LogWarning('not find sub talent id nFightSkillId (%d) in skill cfg', stCfg.nFightSkillId)
+                        end
+                    end
+
+                    -- 属性添加
+                    -- LogTable(stCfg.jPropertys, "stCfg.jPropertys:")
+                    if stCfg.jPropertys then
+                        for _, proInfo in ipairs(stCfg.jPropertys) do
+                            local proType, proValue = proInfo[1], proInfo[2]
+
+                            -- 获取技能添加的属性点
+                            local propertyName = CfgCardPropertyEnum[proType].sFieldName
+                            -- LogDebug("Add %s, %f", propertyName, proValue)
+                            GCalHelp:Add(subTablentProperty, propertyName, proValue)
+                        end
+                    end
+                else
+                    LogWarning('not find sub talent (id:%d) in CfgSubTalentSkill', tId)
+                end
+            end
+        end
+    end
+
+    -- 拷贝一下到装备里面一起计算
+    TakePropertyAdd(ret, equipsProperty, subTablentProperty)
+
+    ret.performance = GCardCalculator:CalPerformance(ret, skillSumLevel)
+
+    -- 转化为整型
+    for _, key in ipairs(SumCalArgs.cal2) do
+        local val = ret[key]
+        if val then
+            ret[key] = math.floor(val)
+        end
+    end
+
+    -- 从小到大排序
+    table.sort(
+        ret.skills,
+        function(a, b)
+            return a < b
+        end
+    )
+    ret.passivBufIds = equipsCalResult.passivBufIds
+
+    -- LogDebug("-------------------------------------------------------------")
+    -- LogTrace("CalSumPropery ret:")
+    -- LogTable(ret, "CalSumPropery ret:")
+
+    -- LogDebug("ret.crit_rate:%s", ret.crit_rate)
+    return ret
+end
+
+function GCardCalculator:CalPerformance(ret, skillSumLevel)
+    -- （攻击+生命*0.24+防御*6）/2+（速度-100）*8.6+（暴击伤害-1.5）*540+（暴击+效果命中+效果抵抗）*859+（技能等级-3）*24
+    local performance =
+        (ret.attack + ret.maxhp * 0.2 + ret.defense * 5) / 2 + (ret.speed - 100) * 8.6 + (ret.crit - 1.5) * 540 +
+        (ret.crit_rate + ret.hit + ret.resist) * 859 +
+        (skillSumLevel - 3) * 24
+
+    -- LogDebug("skillSumLevel: %d, performance: %f", skillSumLevel, performance)
+    return math.floor(performance)
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- 计算冷却需要的时间
+-- maxHot: 最高热值
+-- curHot: 当前热值
+-- level: 等级
+-- breakLevel: 突破等级
+-- quality: 品质
+-- return : 秒数
+function GCardCalculator:CalCardCoolTime(maxHot, curHot, level, breakLevel, quality)
+    -- LogDebug("curHot:%s, level:%s, breakLevel:%s, quality:%s", curHot, level, breakLevel, quality)
+    -- 热值消耗公式：（以数值给出公式为准）
+    -- 卡牌冷却秒数=热值×等级修正×品质倍率×突破次数倍率×150
+    -- 例如：卡牌品质SSR、突破次数4，等级95，热值为150，则需要消耗的秒数=150×1.5×1.3×1.5×150=65812.5秒；
+    -- 结果取整后65812秒=1096分钟=18小时；
+    if curHot >= maxHot then
+        return 0
+    end
+
+    local val = maxHot - curHot
+
+    local levelIndex = math.floor((level + 9) / 10)
+    -- level从1 开始 1~10 要算出等于1
+    local levelArg = GCalHelp:GetTbValeByKey(CfgCardCoolBoxLevelArg, levelIndex, 'fArg', 1)
+    local qualityArg = GCalHelp:GetTbValeByKey(CfgCardCoolBoxQualityArg, quality, 'fArg', 1)
+    local breakLevelArg = GCalHelp:GetTbValeByKey(CfgCardCoolBoxBreakLevelArg, breakLevel, 'fArg', 1)
+
+    local seconds = g_CardCoolTimeBaseVal * levelArg * qualityArg * breakLevelArg * val
+    -- LogDebug(
+    --     "levelArg:%s, qualityArg:%s, breakLevelArg:%s, curHot:%s, g_CardCoolTimeBaseVal:%s",
+    --     levelArg,
+    --     qualityArg,
+    --     breakLevelArg,
+    --     curHot,
+    --     g_CardCoolTimeBaseVal
+    -- )
+    return seconds
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- 一次性计算返回总属性
+-- 参数
+-- cfgid ：配置id
+-- level : 等级
+-- intensify_level：强化等级
+-- break_level : 突破等级
+-- equips： CalEquipPropertys() 返回的结果, 没有填 nil
+-- skillMap: 返回的卡牌技能，的结构, 没有填 nil
+-- 使用的副天赋, 没有填 nil
+-- isMonster： 是否是怪物
+-- cl:核心等级
+function GCardCalculator:CalPropertys(
+    cfgid,
+    level,
+    intensify_level,
+    break_level,
+    equips,
+    skillMap,
+    useSubTalents,
+    isMonster,
+    cl)
+    local lvl_cals = GCardCalculator:CalLvlPropertys(cfgid, level, intensify_level, break_level, isMonster, cl)
+    --local equip_cals = GEquipCalculator:CalEquipPropertys(equips)
+    local sum_cals = GCardCalculator:CalSumPropery(lvl_cals, equips, skillMap, useSubTalents)
+    return sum_cals
+end
+
+--返回队伍的光环战力值加成
+-- args:
+-- orignPower: 没有加光环队伍的总战力
+-- dataArr：卡牌数据数组 = {
+--     [1] = {
+--         data = {
+--             id = 卡牌id,
+--             attack= 0,
+--             maxhp=0,
+--             defense =0,
+--             speed =0,
+--             crit_rate =0,
+--             crit =0,
+--             hit =0,
+--             damage =0,
+--             resist =0,
+--         },
+--         col= 编队col,
+--         row= 编队row,
+--     }
+-- }
+-- rets: 光环战力加成，加成后的总战力
+function GCardCalculator:GetTeamPowerAdd(orignPower, dataArr)
+    local property = Halo:Calc(dataArr) --计算光环加成的具体数值
+
+    local power = 0
+    if property then
+        for ix, v in ipairs(property) do --计算这一部分属性的战斗力
+            if v.bInHalo then --受到光环加成的卡
+                local old = GCardCalculator:CalPerformance(dataArr[ix].data, 3)
+                local new = GCardCalculator:CalPerformance(v.data, 3)
+                local haloAddPower = (new - old)
+                power = power + haloAddPower
+            end
+        end
+    end
+
+    power = math.floor(power)
+    -- LogDebug("GCardCalculator:GetTeamPowerAdd() power:%s orignPower:%s, sum:%s", power, orignPower, orignPower + power)
+    return power, orignPower + power
+end
+
+-- id: 自己的订单id
+-- pay_type: PayType 枚举类型
+-- channel: 玩家渠道
+function GCardCalculator:GetPayOrderStrId(id, pay_type, channel)
+    return string.format('%s_%s_%s', id, (PayTypeName[pay_type] or pay_type), (ChannelTypeName[channel] or channel))
+end
