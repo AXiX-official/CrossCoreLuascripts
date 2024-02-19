@@ -107,8 +107,8 @@ jobs:
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
-        $svnVersion = Select-String -Path "$WORKSPACE_PATH/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "(\d+)"' | % { $_.Matches.Groups[1].Value }
-        $date = Get-Date -Format "yyyy/MM/dd"
+        svnVersion=$(grep -oP 'g_svnVersion = "\K\d+' "$WORKSPACE_PATH/${{ matrix.platform }}/SvnVersion.lua")
+        date=$(date +"%Y/%m/%d")
         echo "::set-output name=message::[${date}]-${svnVersion}"
 
     - name: Commit changes
