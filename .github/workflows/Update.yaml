@@ -103,19 +103,28 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
 
+    - name: Set Mail
+      if: matrix.platform == 'android'
+      id: set-mail
+      run: |
+        if (steps.check-hash.outputs.changed == 'true' && ${{ github.event.inputs.send_mail == 'true'}}) {
+          echo "::set-output name=send_mail::true"
+        } else {
+          echo "::set-output name=send_mail::false"
+        }
+
     - name: Generate cfg vesion
-      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
+      if: steps.set-mail.outputs.send_mail == 'true'
       id: cfg-version
       run: |
         $svnVersion = Select-String -Path "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "[0-9]*' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '[0-9]*' | % { $_.Matches } | % { $_.Value }
         $date = Get-Date -Format "yyyyMMdd"
         echo "::set-output name=version::$date-$svnVersion"
+        echo "Version: $date-$svnVersion"
 
     - name: Step for Android
-      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true' && ${{ github.event.inputs.send_mail == 'true'}}
+      if: steps.set-mail.outputs.send_mail == 'true'
       id: step-android
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
       run: |
         pip install -r D:/a/CrossCoreLuascripts/tool/requirements.txt
         python D:/a/CrossCoreLuascripts/tool/2csv.py D:/a/CrossCoreLuascripts/CrossCoreLuascripts/android/cfg D:/a/CrossCoreLuascripts/cfg
