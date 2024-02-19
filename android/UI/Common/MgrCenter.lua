@@ -1,0 +1,121 @@
+--管理器中心
+require "MgrBase"
+
+--注册名称(必填)
+local mgrNames = {
+	"RedPointMgr",  --红点管理
+	"DungeonMgr",	--副本
+	"SignInMgr",    --签到
+	"ActivityMgr",  --活动
+	"CRoleMgr",     --卡牌角色
+	"RoleSkinMgr",  --皮肤
+	"ExerciseMgr",  --演习
+	"FriendMgr",    --好友
+	"PlayerMgr",    --玩家
+	--"CoolMgr",      --热值冷却
+	"CreateMgr",    --角色工厂
+	"MailMgr",      --邮件
+	"MissionMgr",   --任务
+	"JumpMgr",      --跳转
+	"RoleMgr",      --卡牌
+	"RoleSkillMgr", --卡牌技能
+	"PlayerAbilityMgr", --玩家能力
+	"MatrixMgr",   --基地
+	"RoleAudioPlayMgr", --角色音效播放管理
+	"BattleFieldMgr",     --世界boss
+	"WorldBossMgr",
+	"ChatMgr",
+	"TeamMgr",		--编队
+	"BagMgr",		--背包
+	"ShopMgr",		--商城
+	"EquipMgr",		--装备
+	"GuildMgr",		--公会
+	"GuildFightMgr",--公会战
+	"TeamBossMgr",--组队boss
+    "DormMgr",    --宿舍
+	"ArchiveMgr",   --图鉴
+	"SweepMgr",  --扫荡
+	"DungeonBoxMgr", --副本星级
+
+	"MenuMgr", --主界面相关(需要先收到关卡数据)
+	"AIStrategyMgr",--AI预设
+	"ExplorationMgr",--勘探
+	"FavourMgr",--好感度
+	"MulPicMgr",--好感度
+	"SortMgr",
+	"SDKPayMgr",--SDK支付
+}
+
+
+local this = {
+	datas = {}  --管理类字典
+}
+
+--==============================--
+--desc:注册管理类
+--time:2019-09-03 02:22:40
+--@_name:
+--@return 
+--==============================--
+function MgrRegister(_name)
+	if(StringUtil:IsEmpty(_name)) then
+		LogError("name is nil")
+		return {}
+	end
+	local result = oo.class(MgrBase)
+	this.datas[_name] = result
+	return result
+end
+
+--==============================--
+--desc: 初始化所有管理类
+--time:2019-09-03 11:31:00
+--@args:
+--@return 
+--==============================--
+function this:Init()
+	-- for k, v in pairs(self.datas) do
+	-- 	v:Init()
+	-- end
+	for i, v in ipairs(mgrNames) do
+		if(self.datas[v]) then 
+			self.datas[v]:Init()
+		end 
+	end
+end
+
+--清空管理器数据
+function this:Clear()
+	for k, v in pairs(self.datas) do
+		v:Clear()
+	end
+end
+
+--==============================--
+--desc: 获取管理类
+--time:2019-09-03 02:45:39
+--@key:
+--@return
+--==============================--
+function this:GetData(key)
+	return self.datas[key]
+end
+
+--==============================--
+--desc:获取所有管理类
+--time:2019-09-03 11:30:06
+--@return 
+--==============================--
+function this:GetDatas()
+	return self.datas
+end
+
+--初始化脚本
+function this:InitAll()
+	for i, v in ipairs(mgrNames) do
+		_G[v] = require(v)
+	end
+end
+this:InitAll()
+
+return this 

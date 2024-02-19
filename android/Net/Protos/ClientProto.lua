@@ -1,0 +1,252 @@
+ClientProto = {}
+
+-- 签到记录
+function ClientProto:GetSignInfo(_id, _index)
+    local proto = {"ClientProto:GetSignInfo", {
+        id = _id,
+        index = _index
+    }}
+    NetMgr.net:Send(proto)
+end
+
+function ClientProto:GetSignInfoRet(proto)
+    SignInMgr:GetSignInfoRet(proto)
+end
+
+-- 签到
+function ClientProto:AddSign(_id)
+    local proto = {"ClientProto:AddSign", {
+        id = _id
+    }}
+    NetMgr.net:Send(proto)
+end
+
+function ClientProto:AddSignRet(proto)
+
+    SignInMgr:AddSignRet(proto)
+end
+
+-- 兑换码
+function ClientProto:UseExchangeCode(_code)
+    local proto = {"ClientProto:UseExchangeCode", {
+        code = _code
+    }}
+    NetMgr.net:Send(proto)
+end
+
+function ClientProto:UseExchangeCodeRet(proto)
+    if (proto.is_ok) then
+        -- local dialogData = {}
+        -- dialogData.content = StringTips.Activity_tips3
+        -- CSAPI.OpenView("Dialog", dialogdata)
+        Tips.ShowTips(StringTips.Activity_tips3)
+    end
+end
+
+-- --刷新活动跳转(有活动更新时，服务器主动推送)
+-- function ClientProto:FlushActiveSkip()
+-- 	ActivityMgr:Init()
+-- end
+-- 活动公告更新
+function ClientProto:BackstageChagne(proto)
+    ActivityMgr:InitData(proto.type)
+end
+
+-- 获取关卡奖励领取信息
+function ClientProto:DupSumStarRewardInfo(starRewardIDs)
+    -- self.dupSumStarRewardInfoFunc = func;
+    local ids = starRewardIDs or {}
+    local proto = {"ClientProto:DupSumStarRewardInfo", ids}
+    NetMgr.net:Send(proto)
+end
+
+-- 获取关卡奖励领取信息返回
+function ClientProto:DupSumStarRewardInfoRet(proto)
+    DungeonBoxMgr:SetDatas(proto)
+    -- if self.dupSumStarRewardInfoFunc then
+    -- 	self.dupSumStarRewardInfoFunc(proto);
+    -- end
+end
+
+-- 领取关卡宝箱
+function ClientProto:GetDupSumStarReward(datas)
+    -- self.dupSumStarRewardFunc = func;
+    local proto = {"ClientProto:GetDupSumStarReward", {
+        infos = datas
+    }}
+    NetMgr.net:Send(proto)
+end
+
+-- --领取关卡宝箱返回
+-- function ClientProto:GetDupSumStarRewardRet(proto)
+-- 	if self.dupSumStarRewardFunc then
+-- 		self.dupSumStarRewardFunc(proto);
+-- 	end
+-- end
+-- 设置副本使用物品
+function ClientProto:SetDupUseItem(dungeonId, index, isUse, func)
+    self.dupUseItemFunc = func;
+    local proto = nil;
+    if index then
+        proto = {"ClientProto:SetDupUseItem", {
+            id = dungeonId,
+            index = index,
+            is_open = isUse
+        }}
+    else
+        proto = {"ClientProto:SetDupUseItem", {
+            id = dungeonId,
+            is_open = isUse
+        }}
+    end
+    NetMgr.net:Send(proto)
+end
+
+-- 设置副本物品返回
+function ClientProto:SetDupUseItemRet(proto)
+    if self.dupUseItemFunc then
+        self.dupUseItemFunc(proto);
+    end
+end
+
+-- 全局弹奖励
+function ClientProto:RewardNotice(proto)
+    if (proto and proto.rewards and #proto.rewards > 0) then
+        if (self._rewards == nil) then
+            self._rewards = proto.rewards
+        else
+            for i, v in pairs(proto.rewards) do
+                table.insert(self._rewards, v)
+            end
+        end
+        if (proto.is_finish) then
+            local rewards = {}
+            rewards = self._rewards
+            UIUtil:OpenReward({rewards})
+            self._rewards = nil
+        end
+    end
+end
+
+-- 实名验证（防沉迷）
+function ClientProto:SetAntiAdiction(name, number,pi)
+    if name and number then
+        NetMgr.net:Send({"ClientProto:SetAntiAdiction", {
+            name = name,
+            number = number,
+            pi=pi,
+        }})
+    end
+end
+
+-- 实名验证返回
+function ClientProto:SetAntiAdictionRet(proto)
+    EventMgr.Dispatch(EventType.Authentication_Result, proto);
+end
+
+-- 实名验证更新
+function ClientProto:AnitiAdictionUpdate(proto)
+    EventMgr.Dispatch(EventType.Authentication_Update, proto);
+end
+
+-- 客户端初始化完成
+function ClientProto:InitFinish(isReconnect,immediately)
+    self.isReconnect = isReconnect;
+    if(immediately)then
+        self:SendInitFinish();
+    else
+        FuncUtil:Call(self.SendInitFinish, self, 3000);
+    end
+end
+
+function ClientProto:InitFinishRet(proto)
+    self.finishRet = true;
+    self.isReconnect = nil;
+
+    --服务器压力大，延迟到这里请求
+    DormMgr:RequestDormProtoServerData();--先不请求试试看
+end
+
+-- 未收到InitFinishRet前每隔几秒发一次直到成功为止
+function ClientProto:SendInitFinish()
+    if self.finishRet then
+        LogWarning("结束发送");
+        EventMgr.Dispatch(EventType.Client_Init_Finish);
+        self.finishRet = false;
+    else
+        LogWarning("正在疯狂发送协议");
+        NetMgr.net:Send({"ClientProto:InitFinish", {
+            is_reconnect = self.isReconnect
+        }})
+        FuncUtil:Call(self.SendInitFinish, self, 3000);
+    end
+end
+
+-- 换线
+function ClientProto:ChangeLine(proto)
+    if (GuideMgr:IsGuiding()) then -- 新手引导中、网络中断会导致卡住
+        return;
+    end
+    -- 如果在主界面则直接切线不用延迟
+    local scene = SceneMgr:GetCurrScene()
+    if (scene.type and scene.type ~= 2 and not FightClient:IsFightting()) then
+        ReloginAccount()
+        ExerciseMgr.delay = nil;
+--    else
+--        if (not proto.delay) then
+--            ReloginAccount()
+--        end
+--        ExerciseMgr.delay = proto.delay -- 是否延迟切线
+    else
+        PlayerClient:SetChangeLine(true);
+    end
+end
+
+function ClientProto:DelayChangeLine()
+    if (ExerciseMgr.delay) then
+        ReloginAccount()
+    end
+    ExerciseMgr.delay = nil
+end
+
+-- 下线
+function ClientProto:Offline(callBack)
+    NetMgr.net:Send({"ClientProto:Offline"})
+end
+
+function ClientProto:OfflineRet()
+end
+
+-- 兑换
+function ClientProto:ExchangeItem(_exchanges, cb)
+    self.ExchangeItemCB = cb
+    NetMgr.net:Send({"ClientProto:ExchangeItem", {
+        exchanges = _exchanges
+    }})
+end
+function ClientProto:ExchangeItemRet(proto)
+    if (self.ExchangeItemCB) then
+        self.ExchangeItemCB(proto)
+    end
+    self.ExchangeItemCB = nil
+end
+
+function ClientProto:GetMemberRewardInfo()
+    NetMgr.net:Send({"ClientProto:GetMemberRewardInfo"})
+end
+
+function ClientProto:GetMemberRewardInfoRet(proto)
+    if proto then
+        ShopMgr:UpdateMonthCard(proto);
+        EventMgr.Dispatch(EventType.Shop_MemberCard_Ret, proto.infos)
+    end
+end
+
+-- {id,type,nBegTime,nEndTime} -type:1.战场
+function ClientProto:ActiveOpen(proto)
+    Log("ClientProto:ActiveOpen")
+    Log(proto);
+    if proto then
+        DungeonMgr:AddActivityOpenInfo(proto)
+    end
+end

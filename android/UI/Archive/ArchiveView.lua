@@ -1,0 +1,271 @@
+
+local newName = {"roleNew", "courseNew", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew"}
+
+function OnInit()
+	UIUtil:AddTop2("ArchiveView", gameObject, function()
+		view:Close()
+	end, nil, "")
+end
+
+function OnOpen()
+	CSAPI.PlayUISound("ui_generic_click_return")	
+	InitPanel()
+end
+
+function InitPanel()
+	InitRolePanel()
+	InitEnemyPanel()
+	InitMemoryPanel()
+	
+	InitNew()
+end
+
+--角色
+function InitRolePanel()
+	local count, max = ArchiveMgr:GetRoleCount()
+	CSAPI.SetText(txtRoleNum1, count .. "")
+	CSAPI.SetText(txtRoleNum2, "/" .. max)
+	local percent = math.floor(count / max * 100)
+	CSAPI.SetText(txtRoleNum3, percent .. "%")
+	CSAPI.SetRTSize(roleLine, 298 * percent / 100, 36)
+end
+
+function OnRoleDown()
+	CSAPI.SetUIScaleTo(btnRole, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not roleT then
+		roleT = ComUtil.GetCom(roleFadeT, "ActionFadeT")
+	end
+	roleT:Play()
+end
+
+function OnRoleUp()
+	CSAPI.SetUIScaleTo(btnRole, nil, 1, 1, 1, function()
+		OnClickRole()
+	end, 0.15)
+end
+
+function OnClickRole()
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Role)
+	if isNew then
+		CSAPI.SetGOActive(roleNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Role, false)
+	end
+	if not CSAPI.IsViewOpen("ArchiveRoleListView") then
+		CSAPI.OpenView("ArchiveRoleListView", ArchiveType.Role)
+	end
+end
+
+--敌兵
+function InitEnemyPanel()
+	local count, max = ArchiveMgr:GetEnemyCount()
+	CSAPI.SetText(txtEnemyNum1, count .. "")
+	CSAPI.SetText(txtEnemyNum2, "/" .. max)
+	local percent = math.floor(count / max * 100)
+	CSAPI.SetText(txtEnemyNum3, percent .. "%")
+	CSAPI.SetRTSize(enemyLine, 396 * percent / 100, 36)
+end
+
+function OnEnemyDown()
+	CSAPI.SetUIScaleTo(btnEnemy, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not enemyT then
+		enemyT = ComUtil.GetCom(enemyFadeT, "ActionFadeT")
+	end
+	enemyT:Play()
+end
+
+function OnEnemyUp()
+	CSAPI.SetUIScaleTo(btnEnemy, nil, 1, 1, 1, function()
+		OnClickEnemy()
+	end, 0.15)
+end
+
+function OnClickEnemy()
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Enemy)
+	if isNew then
+		CSAPI.SetGOActive(enemyNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Enemy, false)
+	end
+	if not CSAPI.IsViewOpen("ArchiveRoleListView") then
+		CSAPI.OpenView("ArchiveRoleListView", ArchiveType.Enemy)
+	end
+end
+
+--装备
+function OnClickEquip()	
+	--Tips.ShowTips(StringConstant.tips1)
+	-- Tips.ShowTips("敬请期待")
+end
+
+
+--回忆
+function InitMemoryPanel()
+	local count, max = ArchiveMgr:GetMemoriesCount()
+	CSAPI.SetText(txtMemoryNum1, count .. "")
+	CSAPI.SetText(txtMemoryNum2, "/" .. max)
+	local percent = math.floor(count / max * 100)
+	CSAPI.SetText(txtMemoryNum3, percent .. "%")
+	CSAPI.SetRTSize(memoryLine, 470 * percent / 100, 36)
+end
+
+function OnMemoryDown()
+	CSAPI.SetUIScaleTo(btnMemory, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not memoryT then
+		memoryT = ComUtil.GetCom(memoryFadeT, "ActionFadeT")
+	end
+	memoryT:Play()
+end
+
+function OnMemoryUp()
+	CSAPI.SetUIScaleTo(btnMemory, nil, 1, 1, 1, function()
+		OnClickMemory()
+	end, 0.15)
+end
+
+function OnClickMemory()
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Story)
+	if isNew then
+		CSAPI.SetGOActive(memoryNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Story, false)
+	end
+	if not CSAPI.IsViewOpen("ArchiveStoryView") then
+		CSAPI.OpenView("ArchiveStoryView")
+	end
+	--Tips.ShowTips("敬请期待")
+end
+
+--教程
+function OnCourseDown()
+	CSAPI.SetUIScaleTo(btnCourse, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not courseT then
+		courseT = ComUtil.GetCom(courseFadeT, "ActionFadeT")
+	end
+	courseT:Play()
+end
+
+function OnCourseUp()
+	CSAPI.SetUIScaleTo(btnCourse, nil, 1, 1, 1, function()
+		OnClickCourse()
+	end, 0.15)
+end
+
+function OnClickCourse()
+	if not CSAPI.IsViewOpen("ArchiveCourseView") then
+		CSAPI.OpenView("ArchiveCourseView")
+	end
+end
+
+--物品
+function OnGoodsDown()
+	CSAPI.SetUIScaleTo(btnGoods, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not goodsT then
+		goodsT = ComUtil.GetCom(goodsFadeT, "ActionFadeT")
+	end
+	goodsT:Play()
+end
+
+function OnGoodsUp()
+	CSAPI.SetUIScaleTo(btnGoods, nil, 1, 1, 1, function()
+		OnClickGoods()
+	end, 0.15)
+end
+
+function OnClickGoods()
+	if not CSAPI.IsViewOpen("ArchiveGoodsListView") then
+		CSAPI.OpenView("ArchiveGoodsListView")
+	end
+end
+
+function OnBoardDown()
+	CSAPI.SetUIScaleTo(btnBoard, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not boardT then
+		boardT = ComUtil.GetCom(boardFadeT, "ActionFadeT")
+	end
+	boardT:Play()
+end
+
+function OnBoardUp()
+	CSAPI.SetUIScaleTo(btnBoard, nil, 1, 1, 1, function()
+		OnClickBoard()
+	end, 0.15)
+end
+
+function OnClickBoard()
+	-- LanguageMgr:ShowTips(1000)
+	-- CSAPI.OpenView("MulPictureView",1)
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Board)
+	if isNew then
+		CSAPI.SetGOActive(boardNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Board, false)
+	end
+	if not CSAPI.IsViewOpen("ArchiveBoard") then
+		CSAPI.OpenView("ArchiveBoard")
+	end
+end
+
+function InitNew()
+	for i = 1, #newName do
+		CSAPI.SetGOActive(this[newName[i]].gameObject, ArchiveMgr:GetIsNew(i))
+	end
+end
+
+function OnDestroy()	
+	ReleaseCSComRefs();
+end
+
+----#Start#----
+----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
+function ReleaseCSComRefs()	
+	gameObject = nil;
+	transform = nil;
+	txt1 = nil;
+	this["txt1 (1)"] = nil;
+	this["txt1 (2)"] = nil;
+	btns = nil;
+	btnRole = nil;
+	txt_role = nil;
+	this["txt_role (1)"] = nil;
+	roleLine = nil;
+	txtRoleNum1 = nil;
+	txtRoleNum2 = nil;
+	txtRoleNum3 = nil;
+	roleNew = nil;
+	btnEquip = nil;
+	Text = nil;
+	Text = nil;
+	Text = nil;
+	equipNew = nil;
+	btnMemory = nil;
+	txt_memory = nil;
+	this["txt_memory (1)"] = nil;
+	memoryLine = nil;
+	txtMemoryNum1 = nil;
+	txtMemoryNum2 = nil;
+	txtMemoryNum3 = nil;
+	txtMemoryNum3 = nil;
+	memoryNew = nil;
+	btnCourse = nil;
+	txt_course = nil;
+	this["txt_course (1)"] = nil;
+	courseNew = nil;
+	btnGoods = nil;
+	txt_Goods = nil;
+	this["txt_Goods (1)"] = nil;
+	this["txt_Goods (2)"] = nil;
+	goodsNew = nil;
+	btnEnemy = nil;
+	txt_Enemy = nil;
+	this["txt_Enemy (1)"] = nil;
+	enemyLine = nil;
+	txtEnemyNum1 = nil;
+	txtEnemyNum2 = nil;
+	txtEnemyNum3 = nil;
+	enemyNew = nil;
+	roleFadeT = nil;
+	memoryFadeT = nil;
+	courseFadeT = nil;
+	goodsFadeT = nil;
+	enemyFadeT = nil;
+	view = nil;
+	this = nil;
+end
+----#End#----
