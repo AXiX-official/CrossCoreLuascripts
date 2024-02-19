@@ -47,7 +47,7 @@ jobs:
     - name: Check hash
       id: check-hash
       run: |
-        if [ ${{ github.event.inputs.force_check = 'true'}} ]; then
+        if [ ${{ github.event.inputs.force_check == 'true'}} ]; then
           echo "::set-output name=changed::true"
           exit 0
         fi
