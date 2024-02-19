@@ -23,9 +23,6 @@ jobs:
             url: 'https://cdn.megagamelog.com/cross/release/ios/curr_new/Custom/luascripts'
             filename: 'lua_ios'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Download file
       run: |
         curl -L -o ${{ matrix.filename }} "${{ matrix.url }}"
