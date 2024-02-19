@@ -93,6 +93,10 @@ jobs:
         git add ${{ matrix.platform }}-hash.txt
         git commit -am "${{ steps.commit-message.outputs.message }}"
 
+    - name: Pull latest changes
+      run: |
+        git pull origin ${{ github.ref }}
+
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
