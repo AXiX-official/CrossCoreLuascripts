@@ -75,38 +75,38 @@ jobs:
     - name: Unpack and Push
       if: steps.check-hash.outputs.changed == 'true'
       run: |
-        ls
-        cd ..
-        ls
+        cd ../..
         curl -L -o studio.zip https://github.com/RazTools/Studio/releases/download/v1.00.00/net7.0-windows.zip
         Expand-Archive -Path studio.zip -DestinationPath studio
         git clone "https://${{ secrets.MY_TOKEN }}@github.com/AXiX-official/CrossCore-Auto-Lua.git" tool
         python tool/decrypt.py "${{ matrix.filename }}"
         mkdir lua
         studio/AssetStudioCLI "${{ matrix.filename }}_decrypt" lua --game Normal
-        python tool/sortFile.py lua "CrossCore-Luascripts/${{ matrix.platform }}"
+        python tool/sortFile.py lua "CrossCoreLuascripts/CrossCore-Luascripts/${{ matrix.platform }}"
 
     - name: Generate commit message
       if: steps.check-hash.outputs.changed == 'true'
       id: commit-message
       shell: pwsh
       run: |
-        $svnVersion = Select-String -Path "CrossCore-Luascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "(\d+)"' | % { $_.Matches.Groups[1].Value }
+        $svnVersion = Select-String -Path "CrossCoreLuascripts/CrossCore-Luascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "(\d+)"' | % { $_.Matches.Groups[1].Value }
         $date = Get-Date -Format "yyyy/MM/dd"
         echo "::set-output name=message::[${date}]-${svnVersion}"
 
     - name: Commit changes
       if: steps.check-hash.outputs.changed == 'true'
       run: |
-        cd CrossCore-Luascripts
+        cd CrossCore-Luascripts/CrossCoreLuascripts
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        git add ${{ matrix.platform }}
         git commit -am "${{ steps.commit-message.outputs.message }}"
         git push
 
     - name: Step for Android
       if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
       run: |
+        cd ../..
         pip install -r tool/requirements.txt
         python tool/2csv.py lua
         Compress-Archive -Path cfg -DestinationPath "cfg${{ steps.commit-message.outputs.message }}.zip"
