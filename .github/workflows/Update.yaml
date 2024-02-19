@@ -136,8 +136,8 @@ jobs:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
         pip install -r D:/a/CrossCoreLuascripts/tool/requirements.txt
-        python D:/a/CrossCoreLuascripts/tool/2csv.py lua
-        Compress-Archive -Path D:/a/CrossCoreLuascripts/CrossCoreLuascripts/android/cfg -DestinationPath "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip"
+        python D:/a/CrossCoreLuascripts/tool/2csv.py D:/a/CrossCoreLuascripts/CrossCoreLuascripts/android/cfg D:/a/CrossCoreLuascripts/cfg
+        Compress-Archive -Path D:/a/CrossCoreLuascripts/cfg -DestinationPath "D:/a/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip"
         echo "::set-output name=packed::true"
 
     - name: Send mail
@@ -154,4 +154,4 @@ jobs:
         to: ${{ secrets.RECIPIENTS }}
         from: ${{ secrets.GMAIL_USERNAME }}
         body: "cfg${{ steps.cfg-version.outputs.version }}.zip"
-        attachments: D:/a/CrossCoreLuascripts/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip
+        attachments: D:/a/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip
