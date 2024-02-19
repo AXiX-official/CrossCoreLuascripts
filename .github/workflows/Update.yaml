@@ -47,13 +47,17 @@ jobs:
     - name: Check hash
       id: check-hash
       run: |
-        echo "Old hash: $(Get-Content -Path old-hash.txt)"
-        echo "New hash: ${HASH}"
-        if ("${{ github.event.inputs.force_check  == 'true'}}" -or "$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
+        if [ "${{ github.event.inputs.force_check }}" = 'true' ]; then
           echo "::set-output name=changed::true"
-        } else {
+          exit 0
+        fi
+        echo "Old hash: $(cat old-hash.txt)"
+        echo "New hash: ${HASH}"
+        if [ "$(cat old-hash.txt)" != "${HASH}" ]; then
+          echo "::set-output name=changed::true"
+        else
           echo "::set-output name=changed::false"
-        }
+        fi
       env:
         HASH: ${{ steps.calc-hash.outputs.hash }}
 
