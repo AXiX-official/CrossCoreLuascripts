@@ -91,7 +91,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git add ${{ matrix.platform }}
         git add ${{ matrix.platform }}-hash.txt
-        git commit -am "${{ steps.commit-message.outputs.message }}"
+        git commit -am "${{ steps.commit-message.outputs.message }}" || true
 
     - name: Pull latest changes
       run: |
