@@ -49,14 +49,14 @@ jobs:
       run: |
         if (${{ github.event.inputs.force_check == 'true'}}) {
           echo "::set-output name=changed::true"
-          return
-        }
-        echo "Old hash: $(Get-Content old-hash.txt)"
-        echo "New hash: ${env:HASH}"
-        if ((Get-Content old-hash.txt) -ne "${env:HASH}") {
-          echo "::set-output name=changed::true"
-        } else {
-          echo "::set-output name=changed::false"
+        } else{
+          echo "Old hash: $(Get-Content old-hash.txt)"
+          echo "New hash: ${env:HASH}"
+          if ((Get-Content old-hash.txt) -ne "${env:HASH}") {
+            echo "::set-output name=changed::true"
+          } else {
+            echo "::set-output name=changed::false"
+          }
         }
       env:
         HASH: ${{ steps.calc-hash.outputs.hash }}
