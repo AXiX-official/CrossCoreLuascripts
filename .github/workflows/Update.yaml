@@ -27,6 +27,12 @@ jobs:
             url: 'https://cdn.megagamelog.com/cross/release/ios/curr_new/Custom/luascripts'
             filename: 'lua_ios'
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      if: steps.check-hash.outputs.changed == 'true'
+      with:
+        persist-credentials: false
+
     - name: Download file
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
@@ -48,16 +54,7 @@ jobs:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
         cd $WORKSPACE_PATH
-        echo "${{ steps.calc-hash.outputs.hash }}" > D:/a/CrossCoreLuascripts/new-hash.txt
-
-    - name: Download old hash
-      if: ${{ github.event.inputs.force_check == 'false'}} 
-      uses: actions/download-artifact@v2
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
-      with:
-        name: hash-${{ matrix.platform }}
-        path: D:/a/CrossCoreLuascripts/old-hash.txt
+        echo "${{ steps.calc-hash.outputs.hash }}" > D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt
 
     - name: Check hash
       id: check-hash
@@ -67,31 +64,18 @@ jobs:
       run: |
         cd $WORKSPACE_PATH
         if ('${{ github.event.inputs.force_check }}' -eq 'true') {
+          mv D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.filename }}-hash.txt
           echo "::set-output name=changed::true"
         } else {
-          echo "Old hash: $(Get-Content D:/a/CrossCoreLuascripts/old-hash.txt)"
+          echo "Old hash: $(Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.filename }}-hash.txt)"
           echo "New hash: ${env:HASH}"
-          if ((Get-Content D:/a/CrossCoreLuascripts/old-hash.txt) -ne "${env:HASH}") {
+          if ((Get-Content D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.filename }}-hash.txt) -ne "${env:HASH}") {
+            mv D:/a/CrossCoreLuascripts/CrossCoreLuascripts/new-hash.txt D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.filename }}-hash.txt
             echo "::set-output name=changed::true"
           } else {
             echo "::set-output name=changed::false"
           }
         }      
-
-    - name: Upload new hash
-      if: steps.check-hash.outputs.changed == 'true'
-      uses: actions/upload-artifact@v2
-      env:
-        WORKSPACE_PATH: ${{ github.workspace }}
-      with:
-        name: hash-${{ matrix.platform }}
-        path: D:/a/CrossCoreLuascripts/new-hash.txt
-
-    - name: Checkout code
-      uses: actions/checkout@v2
-      if: steps.check-hash.outputs.changed == 'true'
-      with:
-        persist-credentials: false
 
     - name: Unpack and Push
       if: steps.check-hash.outputs.changed == 'true'
@@ -127,6 +111,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add ${{ matrix.platform }}
+        git add ${{ matrix.platform }}-hash.txt
         git commit -am "${{ steps.commit-message.outputs.message }}" || true
 
     - name: Push changes
