@@ -8,6 +8,10 @@ on:
         description: 'Force check hash to be true'
         required: false
         default: 'false'
+      send_mail:
+        description: 'Send mail'
+        required: false
+        default: 'true'
 
 jobs:
   check-file:
@@ -44,7 +48,7 @@ jobs:
         WORKSPACE_PATH: ${{ github.workspace }}
       run: |
         cd $WORKSPACE_PATH
-        echo "${{ steps.calc-hash.outputs.hash }}" > new-hash.txt
+        echo "${{ steps.calc-hash.outputs.hash }}" > D:/a/CrossCoreLuascripts/new-hash.txt
 
     - name: Download old hash
       if: ${{ github.event.inputs.force_check == 'false'}} 
@@ -53,7 +57,7 @@ jobs:
         WORKSPACE_PATH: ${{ github.workspace }}
       with:
         name: hash-${{ matrix.platform }}
-        path: ${{ github.workspace }}/old-hash.txt
+        path: D:/a/CrossCoreLuascripts/old-hash.txt
 
     - name: Check hash
       id: check-hash
@@ -65,9 +69,9 @@ jobs:
         if ('${{ github.event.inputs.force_check }}' -eq 'true') {
           echo "::set-output name=changed::true"
         } else {
-          echo "Old hash: $(Get-Content old-hash.txt)"
+          echo "Old hash: $(Get-Content D:/a/CrossCoreLuascripts/old-hash.txt)"
           echo "New hash: ${env:HASH}"
-          if ((Get-Content old-hash.txt) -ne "${env:HASH}") {
+          if ((Get-Content D:/a/CrossCoreLuascripts/old-hash.txt) -ne "${env:HASH}") {
             echo "::set-output name=changed::true"
           } else {
             echo "::set-output name=changed::false"
@@ -81,7 +85,7 @@ jobs:
         WORKSPACE_PATH: ${{ github.workspace }}
       with:
         name: hash-${{ matrix.platform }}
-        path: ${{ github.workspace }}/new-hash.txt
+        path: D:/a/CrossCoreLuascripts/new-hash.txt
 
     - name: Checkout code
       uses: actions/checkout@v2
@@ -153,7 +157,7 @@ jobs:
         echo "::set-output name=packed::true"
 
     - name: Send mail
-      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true'
+      if: matrix.platform == 'android' && steps.check-hash.outputs.changed == 'true' && ${{ github.event.inputs.send_mail == 'true'}} 
       uses: dawidd6/action-send-mail@v2
       env:
         WORKSPACE_PATH: ${{ github.workspace }}
