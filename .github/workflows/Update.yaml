@@ -37,12 +37,8 @@ jobs:
       run: |
         echo "${{ steps.calc-hash.outputs.hash }}" > new-hash.txt
 
-    - name: Print force_check value
-      run: |
-        echo "force_check: ${{ github.event.inputs.force_check }}"
-
     - name: Download old hash
-      if: ${{ github.event.inputs.force_check }} == 'false'
+      if: ${{ github.event.inputs.force_check == 'false'}} 
       uses: actions/download-artifact@v2
       with:
         name: hash-${{ matrix.platform }}
@@ -53,7 +49,7 @@ jobs:
       run: |
         echo "Old hash: $(Get-Content -Path old-hash.txt)"
         echo "New hash: ${HASH}"
-        if ("${{ github.event.inputs.force_check }}" == 'true' -or "$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
+        if ("${{ github.event.inputs.force_check  == 'true'}}" -or "$(Get-Content -Path old-hash.txt)" -ne "${HASH}") {
           echo "::set-output name=changed::true"
         } else {
           echo "::set-output name=changed::false"
