@@ -29,10 +29,9 @@ jobs:
 
     - name: Calculate hash
       id: calc-hash
-      shell: bash
+      shell: pwsh
       run: |
-        echo "::set-output name=hash::$(sha256sum ${{ matrix.filename }} | awk '{ print $1 }')"
-
+        echo "::set-output name=hash::$(Get-FileHash -Algorithm SHA256 ${{ matrix.filename }} | ForEach-Object Hash)"
     - name: Download old hash
       if: "${{ github.event.inputs.force_check }}" == 'false'
       uses: actions/download-artifact@v2
