@@ -47,9 +47,9 @@ jobs:
     - name: Check hash
       id: check-hash
       run: |
-        if (${{ github.event.inputs.force_check == 'true'}}) {
+        if ('${{ github.event.inputs.force_check }}' -eq 'true') {
           echo "::set-output name=changed::true"
-        } else{
+        } else {
           echo "Old hash: $(Get-Content old-hash.txt)"
           echo "New hash: ${env:HASH}"
           if ((Get-Content old-hash.txt) -ne "${env:HASH}") {
