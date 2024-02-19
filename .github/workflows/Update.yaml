@@ -149,8 +149,7 @@ jobs:
       run: |
         pip install -r $WORKSPACE_PATH/tool/requirements.txt
         python $WORKSPACE_PATH/tool/2csv.py lua
-        echo $WORKSPACE_PATH/android/cfg
-        Compress-Archive -Path $WORKSPACE_PATH/android/cfg -DestinationPath "$WORKSPACE_PATH/cfg${{ steps.cfg-version.outputs.version }}.zip"
+        Compress-Archive -Path D:/a/CrossCoreLuascripts/CrossCoreLuascripts/android/cfg -DestinationPath "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip"
         echo "::set-output name=packed::true"
 
     - name: Send mail
@@ -166,5 +165,5 @@ jobs:
         subject: 交错战线CFG文件更新
         to: ${{ secrets.RECIPIENTS }}
         from: ${{ secrets.GMAIL_USERNAME }}
-        body: "cfg${{ steps.commit-message.outputs.message }}.zip"
-        attachments: ${{ github.workspace }}/cfg${{ steps.commit-message.outputs.message }}.zip
+        body: "cfg${{ steps.cfg-version.outputs.version }}.zip"
+        attachments: D:/a/CrossCoreLuascripts/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip
