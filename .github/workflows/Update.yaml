@@ -106,13 +106,11 @@ jobs:
       if: steps.check-hash.outputs.changed == 'true'
       run: |
         Set-Location -Path D:/a/CrossCoreLuascripts/CrossCoreLuascripts/
-        pwd
-        ls
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add ${{ matrix.platform }}
         git add ${{ matrix.platform }}-hash.txt
-        git commit -am "${{ steps.commit-message.outputs.message }}" || true
+        git commit -am "${{ steps.commit-message.outputs.message }}"
 
     - name: Push changes
       uses: ad-m/github-push-action@master
