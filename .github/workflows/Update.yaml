@@ -26,7 +26,7 @@ jobs:
       with:
         timeout_minutes: 5
         max_attempts: 3
-        command: curl -L -o D:/a/CrossCoreLuascripts/${{ matrix.filename }} "${{ matrix.url }}"
+        command: Invoke-WebRequest -Uri "${{ matrix.url }}" -OutFile "D:/a/CrossCoreLuascripts/${{ matrix.filename }}"
 
     - name: Calculate hash
       id: calc-hash
