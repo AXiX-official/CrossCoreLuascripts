@@ -6,6 +6,7 @@ local blendType=nil;--立绘效果
 local shaderUtil=nil;
 local roleImage=nil;
 local gradient = nil
+local isUseShopImg=false;
 function Awake()
 	rect=ComUtil.GetCom(img,"RectTransform");
 	roleImage=ComUtil.GetCom(img,"Image");
@@ -18,11 +19,14 @@ function Awake()
 	cGrabPassInvert = ComUtil.GetCom(img, "CGrabPassInvert")
 end
 
-function Init(modelID, cb)
+--useShopImg:是否使用特殊宣传图
+function Init(modelID, cb,useShopImg)
 	InitNull();
 	cfg = Cfgs.character:GetByID(modelID);
+	isUseShopImg=useShopImg;
 	if cfg then
-		ResUtil.ImgCharacter:Load(img, cfg.img, function()
+		local imgName=useShopImg and cfg.shopImg or cfg.img;
+		ResUtil.ImgCharacter:Load(img, imgName, function()
 			size = CSAPI.GetRTSize(img)
 			local max =size[0]>size[1] and size[0] or size[1]
 			CSAPI.SetRTSize(mask, max*2, max*2);
@@ -61,6 +65,7 @@ end
 
 function OnRecycle()
 	InitNull();
+	isUseShopImg=false;
 	blendType=CharacterImgShader.BlendFace;
 	if canvasGroup then
 		canvasGroup.alpha=1;
@@ -89,7 +94,11 @@ end
 
 function GetFacePath(item)
 	if item and cfg then
-		return "Bigs/Character/" .. cfg.img .. "/face/" .. item.img .. ".png";
+		if isUseShopImg then
+			return "Bigs/Character/" .. cfg.shopImg .. "/face/" .. item.img .. ".png";
+		else
+			return "Bigs/Character/" .. cfg.img .. "/face/" .. item.img .. ".png";
+		end
 	end
 	return nil;
 end

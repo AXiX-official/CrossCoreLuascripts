@@ -20,8 +20,8 @@ function Init(_playCB, _endCB, _needClick)
     isInit = true
 end
 
--- _force 强制l2d显示或者隐藏
-function Refresh(_modelId, _posType, _callBack, _force)
+-- _force 强制l2d显示或者隐藏 _isUseShopImg:是否使用特殊宣传图（仅商店）
+function Refresh(_modelId, _posType, _callBack, _force,_isUseShopImg)
     if (not isInit and _modelId == nil or _posType == nil) then
         return
     end
@@ -30,6 +30,7 @@ function Refresh(_modelId, _posType, _callBack, _force)
     posType = _posType
     callBack = _callBack
     cfg = Cfgs.character:GetByID(modelId)
+    isUseShopImg=_isUseShopImg
     if (not cfg.l2dName) then
         isLive2D = false
     else
@@ -73,7 +74,7 @@ function AddImgItem(isAdd)
     else
         CSAPI.SetGOActive(imgItemLua.gameObject, true)
     end
-    imgItemLua.Refresh(modelId, posType, callBack)
+    imgItemLua.Refresh(modelId, posType, callBack,isUseShopImg)
 end
 
 -- live2d
