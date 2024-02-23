@@ -462,6 +462,27 @@ function this:GetNum()
     elseif self:GetSumBuyLimit() == -1 then
         num = -1
     end
+    if num~=-1 and (self:GetType()==CommodityItemType.THEME or self:GetType()==CommodityItemType.FORNITURE) then --家具的可剩余购买次数需要减去持有数
+        local list=self:GetCommodityList();
+        if list then
+            local dyVal1=list[1].data:GetDyVal1();
+            --查询宿舍表
+            local buyCount=num; --持有上限值
+            if dyVal1 then
+                local cfg = Cfgs.CfgFurniture:GetByID(dyVal1);  
+                --判断是否超过持有数，超过持有数不能购买
+                if self:GetType()==CommodityItemType.FORNITURE then --家具
+                    buyCount=cfg.buyNumLimit-DormMgr:GetBuyCount(dyVal1);
+                else--主题
+                    local themeData = DormMgr:GetThemesByID(ThemeType.Sys, dyVal1)
+                    local cfg2=Cfgs.CfgFurnitureTheme:GetByID(dyVal1);
+                    local num2=cfg2.comfort;
+                    buyCount=themeData~=nil and 0 or num;
+                end
+            end
+            num=num>=buyCount and buyCount or num; --真正的购买上限
+        end
+    end
     return num
 end
 
@@ -594,6 +615,14 @@ function this:GetChargeID()
         return chargeCfg.iosID;
     end
     return nil;
+end
+
+--是否使用商店特殊插图
+function this:IsShowImg()
+    if self.cfg and self.cfg.isShowImg then
+        return self.cfg.isShowImg==1;
+    end
+    return false;
 end
 
 return this
