@@ -63,16 +63,26 @@ function Refresh()
         if currSkinInfo then
             -- 获取L2D按钮状态
             local hasL2d=currSkinInfo:HasL2D();
-            CSAPI.SetGOActive(btnL2D, hasL2d);
             curModelCfg=currSkinInfo:GetModelCfg();
             local cards=RoleMgr:GetCardsByCfgID(curModelCfg.role_id);
+            rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(curModelCfg.role_id,curModelCfg.id);
             if cards then
                 card=cards[1]
             end
+            local useL2d=l2dOn;
+            local comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
+            local isShowImg=false;
+            if comm and comm:IsShowImg() and rSkinInfo and rSkinInfo:CheckCanUse()~=true then
+                useL2d=false; 
+                isShowImg=true;
+                CSAPI.SetGOActive(btnL2D, false);
+            else
+                CSAPI.SetGOActive(btnL2D, hasL2d);
+            end
             -- 初始化立绘
-            roleItem.Refresh(currSkinInfo:GetModelID(), LoadImgType.SkinFull,nil,l2dOn)
+            roleItem.Refresh(currSkinInfo:GetModelID(), LoadImgType.SkinFull,nil,useL2d,isShowImg)
             -- 初始化L2D按钮状态
-            SetL2DState(l2dOn);
+            SetL2DState(useL2d);
             --设置描述
             CSAPI.SetText(txt_desc,currSkinInfo:GetDesc());
             SetContent();
@@ -97,7 +107,6 @@ function SetContent()
         return;
     end
     local getType,getTips=currSkinInfo:GetWayInfo();
-    rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(curModelCfg.role_id,curModelCfg.id);
     local has=rSkinInfo and rSkinInfo:CheckCanUse() or false;
     if has then
         if card then

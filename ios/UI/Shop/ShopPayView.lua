@@ -244,7 +244,7 @@ function OnClickDetails()
 		local good=getList[1];
 		local type = good.data:GetType();
 		if type==ITEM_TYPE.PANEL_IMG then--多人插图,特殊处理
-			CSAPI.OpenView("MulPictureView",good.data:GetDyVal1());
+			CSAPI.OpenView("MulPictureView",good.data:GetDyVal1(),commodity:IsShowImg() and 1 or 0);
 		end
 	end
 end

@@ -33,9 +33,10 @@ end
 -- @_posType:
 -- @_callBack:
 -- @_needFace:
+-- @_isUseShopImg:是否使用特殊宣传图
 -- @return 
 -- ==============================--
-function Refresh(_modelId, _posType, _callBack)
+function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
 
     if (not isInit and _modelId == nil or _posType == nil) then
         return
@@ -44,7 +45,7 @@ function Refresh(_modelId, _posType, _callBack)
     modelId = _modelId
     posType = _posType
     callBack = _callBack
-
+    isUseShopImg=_isUseShopImg;
     -- 重置点击记录
     if (oldModelId ~= nil) then
         if (oldModelId ~= _modelId) then
@@ -67,10 +68,10 @@ function SetFaceItem()
     if(not faceLua) then 
         ResUtil:CreateUIGOAsync("Common/CharacterImgItem", faceNode, function(go)
             faceLua = ComUtil.GetLuaTable(go)
-            faceLua.Init(modelId, CreateFaceCB)
+            faceLua.Init(modelId, CreateFaceCB,isUseShopImg)
         end)
     else 
-        faceLua.Init(modelId, CreateFaceCB)
+        faceLua.Init(modelId, CreateFaceCB,isUseShopImg)
     end 
 end
 

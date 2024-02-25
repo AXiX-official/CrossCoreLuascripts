@@ -1194,6 +1194,7 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent)
     local shield = 0 --盾吸收的伤害
 
     if num < 0 then
+        self.nBeSkillDamage = self.nBeSkillDamage or 0
         self.nBeSkillDamage = self.nBeSkillDamage - num
         --LogDebugEx("FightCardBase:AddHpNoShield", self.name, self.nBeSkillDamage)
     end
@@ -1938,10 +1939,10 @@ function FightCardServer:AIOnTurn(isMotionless)
         self.team.fightMgr.log:Clean()
         self:DoAI()
         return true
-    elseif ty == CardType.Summon then
+    elseif ty == CardType.Summon or ty == CardType.Unite then
         if self:GetTeamID() == 1 or mgr.type == SceneType.PVP then
             --
-            -- 我方或者pvp敌方的召唤物需要手动操作
+            -- 我方或者pvp敌方的召唤物(或合体)需要手动操作
         else
             -- if mgr.type == SceneType.PVPMirror and self:GetTeamID() ~= 1 then
             -- 其他情况AI托管

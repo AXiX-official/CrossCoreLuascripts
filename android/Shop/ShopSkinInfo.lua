@@ -159,4 +159,5 @@ function this:IsHide()
     return self.cfg and self.cfg.isShow==1 or false;
 end
 
+
 return this;
