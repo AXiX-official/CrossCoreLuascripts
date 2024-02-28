@@ -337,6 +337,7 @@ function OpenSelBox()
 		LogError("获取配置表出错！")
 		return
 	end
+	Close();
 	local rewardID = cfg.dy_value1
 	local rewardCfg=Cfgs.RewardInfo:GetByID(rewardID);
 	CSAPI.OpenView("GiftInfo",{info=itemInfo,rewardCfg=rewardCfg,showBtn=true});

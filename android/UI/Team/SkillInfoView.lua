@@ -5,6 +5,7 @@ function OnOpen()
     if data then
         CSAPI.SetText(text_skillName,data.name);
         CSAPI.SetText(text_lv,string.format(LanguageMgr:GetTips(1009),tostring(data.lv)));
+        CSAPI.SetText(text_lv2,"");
         -- CSAPI.SetText(text_lv2,data.lv ~= nil and "LV." or "");
         CSAPI.SetText(text_desc,data.desc);
         -- ResUtil.IconSkill:Load(icon,data.icon,true);

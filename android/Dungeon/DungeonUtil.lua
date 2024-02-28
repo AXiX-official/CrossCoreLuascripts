@@ -266,4 +266,17 @@ function this.GetMultiCfg(sectionID)
 	return cfg
 end
 
+function this.GetViewPath(sectionID)
+	local sectionData = DungeonMgr:GetSectionData(sectionID)
+	if sectionData and sectionData:GetPath() then
+		local strs = StringUtil:split(sectionData:GetPath(),"/")
+		if strs[1] == "DungeonActivity1" then
+			return "DungeonActivity1","DungeonPlot"
+		elseif strs[1] == "DungeonActivity3" then
+			return "DungeonActivity3","DungeonRole"
+		end
+	end
+	return "",""
+end
+
 return this; 

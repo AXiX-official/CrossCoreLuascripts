@@ -523,4 +523,14 @@ function this:NumberToString(szNum)
     return str
 end
 
+--替换字符串中不定的%s，replacements为table
+function this:ReplacePlaceholders(str, replacements)
+	return str:gsub("%%s", function()
+	  local value = replacements[1]
+	  table.remove(replacements, 1)
+	  return tostring(value)
+	end)
+end
+  
+
 return this;

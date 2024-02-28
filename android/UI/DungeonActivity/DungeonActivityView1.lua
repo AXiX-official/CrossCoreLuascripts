@@ -19,7 +19,7 @@ function Awake()
 end
 
 function OnMissionRefresh()
-    SetRed(MissionMgr:CheckRed({eTaskType.Story}))
+    SetRed(MissionMgr:CheckDungeonActivityRed(data.id))
 end
 
 function OnLoadComplete()
@@ -41,8 +41,6 @@ function OnViewClosed(viewKey)
         end,nil,200)
     end
 end
-
-local time = 1
 
 function Update()
     if openInfo and not openInfo:IsOpen() then
@@ -69,7 +67,7 @@ function OnOpen()
         end
     end,nil,300)
 
-    SetRed(MissionMgr:CheckRed({eTaskType.Story}))
+    SetRed(MissionMgr:CheckDungeonActivityRed(data.id))
 end
 
 function SetTime()

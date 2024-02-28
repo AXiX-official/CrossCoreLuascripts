@@ -56,7 +56,7 @@ function Awake()
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
     --CSAPI.SetText(txtVer, "Ver:1.0.0" .. tostring(UnityEngine.Application.version));
-    CSAPI.SetText(txtVer, "Ver:1.2");
+    CSAPI.SetText(txtVer, "Ver:1.3");
     -- 开启战斗场景镜头
     local xluaCamera = CameraMgr:GetXLuaCamera();
     if (xluaCamera) then

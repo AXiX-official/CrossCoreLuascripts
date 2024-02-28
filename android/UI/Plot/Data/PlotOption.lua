@@ -39,15 +39,21 @@ end
 
 --返回下一段对话内容数据
 function this:GetNextPlotInfo()
-	local nextID = self.cfg and self.cfg.nextId or - 1;
-	local nextPlotData = nil;
-	if nextID == - 1 then
-		return nil;
-	else
-		nextPlotData = PlotData.New();
-		nextPlotData:InitCfg(nextID);
+	local nextIds = self.cfg and self.cfg.nextId or {- 1};
+	local nextId = nextIds[1]
+	if #nextIds > 1 and self.cfg and self.cfg.nextType then
+		if self.cfg.nextType == 1 then --性别
+			nextId = PlayerClient:GetSex() == 1 and nextIds[1] or nextIds[2]
+		end
 	end
-	return nextPlotData;
+	local next = nil;
+	if nextId == - 1 then
+		return nil
+	else
+		next = PlotData.New();
+		next:InitCfg(nextId);
+	end
+	return next;
 end
 
 --返回奖励信息

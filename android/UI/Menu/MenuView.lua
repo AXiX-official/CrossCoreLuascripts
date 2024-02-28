@@ -45,7 +45,7 @@ local enterRefreshTime = nil
 
 -- 主界面
 function Awake()
-    cg_node = ComUtil.GetOrAddCom(node, "CanvasGroup")
+    cg_node = ComUtil.GetCom(node, "CanvasGroup")
     enterSV_sv = ComUtil.GetCom(enterSV, "ScrollRect")
     endAnim = ComUtil.GetCom(node, "ActionBase")
 
@@ -601,7 +601,6 @@ function Update()
     if (activityRefreshTime and curTime > activityRefreshTime) then
         activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
         ActivityMgr:RefreshOpenState()
-        ActivityMgr:SetActiveOpenTime()
         EventMgr.Dispatch(EventType.Update_Everyday) -- 到点刷新活动
     end
 
@@ -728,7 +727,11 @@ function OnRedPointRefresh()
     isOpen = lockData["MissionView"]
     if (isOpen) then
         local _data = RedPointMgr:GetData(RedPointType.Mission)
-        UIUtil:SetRedPoint2(menuRedPath, this["btnMissionView"], _data[1] == 1, 220, 27, 0)
+        local b = false 
+        if(_data and _data[1]==1) then 
+            b = true 
+        end
+        UIUtil:SetRedPoint2(menuRedPath, this["btnMissionView"], b, 220, 27, 0)
     end
 
     -- 角色
@@ -1728,11 +1731,18 @@ function ModelOpen()
 end
 ]]
 
+-- 登录语言
 function PlayLoginVoice()
     local isPlay = false
-    if (isRole and isChangeImgPlayVoice and CheckIsTop() and (not ActivityMgr:CheckIsNeedShow()) and
-        (not SignInMgr:CheckNeedSignIn())) then
-        cardIconItem.PlayVoice(RoleAudioType.login)
+    if (isRole and isChangeImgPlayVoice and CheckIsTop() and (not ActivityMgr:CheckIsNeedShow()) and (not SignInMgr:CheckNeedSignIn())) then
+        if(PlayerClient:IsPlayerBirthDay() and not PlayerClient:IsPlayBirthDayVoice()) then 
+            cardIconItem.PlayVoice(RoleAudioType.birthday)  --玩家生日
+        elseif(MenuMgr:CheckIsFightVier()) then 
+            cardIconItem.PlayVoice(RoleAudioType.levelBack) -- 归来语音
+            MenuMgr:SetFightOver(false)
+        else 
+            cardIconItem.PlayVoice(RoleAudioType.login)
+        end 
         isPlay = true
     end
     isChangeImgPlayVoice = false

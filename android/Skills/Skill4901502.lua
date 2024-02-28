@@ -19,7 +19,7 @@ function Skill4901502:OnActionOver(caster, target, data)
 		return
 	end
 	-- 4901502
-	self:HitAddBuff(SkillEffect[4901502], caster, caster, data, 2000,3005,2)
+	self:HitAddBuff(SkillEffect[4901502], caster, caster, data, 2000,3005,1)
 end
 -- 行动结束2
 function Skill4901502:OnActionOver2(caster, target, data)
@@ -41,7 +41,7 @@ function Skill4901502:OnActionOver2(caster, target, data)
 		return
 	end
 	-- 4901512
-	self:HitAddBuff(SkillEffect[4901512], caster, caster, data, 2000,3005,2)
+	self:HitAddBuff(SkillEffect[4901512], caster, caster, data, 2000,3005,1)
 end
 -- 入场时
 function Skill4901502:OnBorn(caster, target, data)

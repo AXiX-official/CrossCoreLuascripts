@@ -841,4 +841,18 @@ function this:CheckNewYearRed()
     return false
 end
 
+--活动副本任务红点
+function this:CheckDungeonActivityRed(sectionId)
+    if (self.datas) then
+        for i, v in pairs(self.datas) do
+            if v:GetType() == eTaskType.Story and v:GetGroup() == sectionId then
+                if (not self.CheckIsReset(v) and v:CheckIsOpen() and v:IsFinish() and not v:IsGet()) then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 return this

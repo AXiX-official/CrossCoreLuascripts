@@ -380,8 +380,8 @@ function this:GetNewPlayerFightCount()
     return 2;
 end
 function this:IsPassNewPlayerFight()
-    local playerLv = self:GetLv(); 
-    if(playerLv and playerLv > 1)then
+    local playerLv = self:GetLv();
+    if (playerLv and playerLv > 1) then
         return true;
     end
 
@@ -535,21 +535,20 @@ function this:SetLocalNewPlayerFightState(index)
     PlayerPrefs.SetInt(self:GetNewPlayerFightStateKey() .. "_" .. self:GetID(), index);
 end
 
---设置切线
+-- 设置切线
 function this:SetChangeLine(state)
     self.changeLine = state;
 end
 function this:NeedChangeLine()
-    return self.changeLine;    
+    return self.changeLine;
 end
 function this:ApplyChangeLine()
-    if(not self:NeedChangeLine())then
+    if (not self:NeedChangeLine()) then
         return;
     end
 
     ReloginAccount();
 end
-
 
 -- 注销
 function this:Exit()
@@ -713,6 +712,27 @@ function this:PayRechargeRet(proto)
 end
 function this:GetPayAmount()
     return self.c_amount or 0
+end
+
+-- 当天是否是玩家生日
+function this:IsPlayerBirthDay()
+    local birth = self.data.birth
+    if (birth) then
+        local timeInfo = TimeUtil:GetTimeHMS(TimeUtil:GetBJTime())
+        if (timeInfo and timeInfo.month == birth[1] and timeInfo.day == birth[2]) then
+            return true
+        end
+    end
+    return false
+end
+
+--是否已播放生日祝福
+function this:IsPlayBirthDayVoice()
+    if(not self.isPlayBirthDayVoice) then 
+        self.isPlayBirthDayVoice = 1
+        return false  
+    end 
+    return true 
 end
 
 return this;

@@ -1,5 +1,5 @@
-function SetClickCB(cb)
-    cb = cb
+function SetClickCB(_cb)
+    cb = _cb
 end
 -- MenuConditionInfo
 function Refresh(_data)

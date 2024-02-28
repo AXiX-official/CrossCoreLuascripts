@@ -46,9 +46,10 @@ function TaskProto:GetRewardRet(proto)
     -- end
 end
 
-function TaskProto:GetRewardByType(_type)
+function TaskProto:GetRewardByType(_type, _nGroup)
     local proto = {"TaskProto:GetRewardByType", {
-        type = _type
+        type = _type,
+        nGroup = _nGroup
     }}
     NetMgr.net:Send(proto)
 end

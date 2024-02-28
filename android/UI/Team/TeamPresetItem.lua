@@ -34,7 +34,7 @@ function OnTeamNameEdit(str)
             elseData.team:SetTeamName(str);
             isChange=true;
 		else
-            Tips.ShowTips(LanguageMgr:GetTips(9004))
+            Tips.ShowTips(LanguageMgr:GetTips(9003))
             input.text=elseData.team:GetTeamName();
         end
 	end

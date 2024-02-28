@@ -190,6 +190,7 @@ end
 
 function SetScale(value)
     CSAPI.SetScale(node, value, value, 1)
+    CSAPI.SetScale(lockObj, value, value, 1)
 end
 
 function SetSelect(b)

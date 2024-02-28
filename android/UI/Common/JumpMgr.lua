@@ -346,6 +346,21 @@ function this.DungeonActivityState(cfg)
     if sectionData then
         local isOpen, _lockStr = sectionData:GetOpen()
 
+        local openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+        if isOpen and openInfo then
+            if cfg.sName == "DungeonActivity3" then
+                if not openInfo:IsOpen() then
+                    isOpen = false
+                    _lockStr = LanguageMgr:GetTips(24001)
+                end
+            else
+                if not openInfo:IsDungeonOpen() then
+                    isOpen = false
+                    _lockStr = LanguageMgr:GetTips(24003)
+                end
+            end
+        end
+
         if not isOpen then -- 章节开启检测
             return JumpModuleState.Close, _lockStr
         end
