@@ -64,6 +64,34 @@ jobs:
         D:/a/CrossCoreLuascripts/studio/AssetStudioCLI D:/a/CrossCoreLuascripts/${{ matrix.filename }}_decrypt D:/a/CrossCoreLuascripts/lua --game Normal --silent
         python D:/a/CrossCoreLuascripts/tool/sortFile.py D:/a/CrossCoreLuascripts/lua/TextAsset D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }} D:/a/CrossCoreLuascripts/tool/structure.json
 
+    - name: Set Mail
+      if: matrix.platform == 'android'
+      id: set-mail
+      env:
+        CHANGED: ${{ steps.check-hash.outputs.changed }}
+      run: |
+        if ($env:CHANGED -eq 'true') {
+          echo "::set-output name=send_mail::true"
+        } else {
+          echo "::set-output name=send_mail::false"
+        }
+
+    - name: Generate cfg vesion
+      if: steps.set-mail.outputs.send_mail == 'true'
+      id: cfg-version
+      run: |
+        $date = Get-Date -Format "yyyyMMdd"
+        echo "::set-output name=version::$date-${{ env.SVN_VERSION }}"
+
+    - name: Step for Android
+      if: steps.set-mail.outputs.send_mail == 'true'
+      id: step-android
+      run: |
+        pip install -r D:/a/CrossCoreLuascripts/tool/requirements.txt
+        python D:/a/CrossCoreLuascripts/tool/2csv.py D:/a/CrossCoreLuascripts/CrossCoreLuascripts/android/cfg D:/a/CrossCoreLuascripts/cfg
+        Compress-Archive -Path D:/a/CrossCoreLuascripts/cfg -DestinationPath "D:/a/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip"
+        echo "::set-output name=packed::true"
+
     - name: Generate commit message
       if: steps.check-hash.outputs.changed == 'true'
       id: commit-message
@@ -92,34 +120,6 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
-
-    - name: Set Mail
-      if: matrix.platform == 'android'
-      id: set-mail
-      env:
-        CHANGED: ${{ steps.check-hash.outputs.changed }}
-      run: |
-        if ($env:CHANGED -eq 'true') {
-          echo "::set-output name=send_mail::true"
-        } else {
-          echo "::set-output name=send_mail::false"
-        }
-
-    - name: Generate cfg vesion
-      if: steps.set-mail.outputs.send_mail == 'true'
-      id: cfg-version
-      run: |
-        $date = Get-Date -Format "yyyyMMdd"
-        echo "::set-output name=version::$date-${{ env.SVN_VERSION }}"
-
-    - name: Step for Android
-      if: steps.set-mail.outputs.send_mail == 'true'
-      id: step-android
-      run: |
-        pip install -r D:/a/CrossCoreLuascripts/tool/requirements.txt
-        python D:/a/CrossCoreLuascripts/tool/2csv.py D:/a/CrossCoreLuascripts/CrossCoreLuascripts/android/cfg D:/a/CrossCoreLuascripts/cfg
-        Compress-Archive -Path D:/a/CrossCoreLuascripts/cfg -DestinationPath "D:/a/CrossCoreLuascripts/cfg${{ steps.cfg-version.outputs.version }}.zip"
-        echo "::set-output name=packed::true"
 
     - name: Send mail
       if: steps.step-android.outputs.packed == 'true'
