@@ -99,7 +99,7 @@ jobs:
         $svnVersion = Select-String -Path "D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }}/SvnVersion.lua" -Pattern 'g_svnVersion = "\d+' | % { $_.Matches } | % { $_.Value } | Select-String -Pattern '\d+' | % { $_.Matches } | % { $_.Value }
         $date = Get-Date -Format "yyyy/MM/dd"
         echo "SVN_VERSION=$svnVersion" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
-        echo "::set-output name=message::[$date]-$svnVersion"
+        echo "::set-output name=message::${{ matrix.platform }}-[$date]-$svnVersion"
 
     - name: Commit changes
       if: steps.check-hash.outputs.changed == 'true'
