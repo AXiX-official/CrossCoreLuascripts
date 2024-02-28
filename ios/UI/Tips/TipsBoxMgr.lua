@@ -157,6 +157,7 @@ end
 
 --------------------------------点击特效--------------------------------------
 local Input = CS.UnityEngine.Input
+local TouchPhase = CS.UnityEngine.TouchPhase;
 local GetMouseButtonDown = CS.UnityEngine.Input.GetMouseButtonDown
 local isEnableClickEffect = true
 local clickTimer = 0
@@ -178,11 +179,12 @@ function Update()
 			pos = Input.mousePosition
 		end
 	else
-		if(Input.touchCount == 1 and Input.GetTouch(0).phase == CS.UnityEngine.TouchPhase.Began) then
-			if(Time.time < clickTimer) then
-				return
-			end
-			clickTimer = Time.time + 0.1
+		if(Time.time < clickTimer) then
+			return
+		end
+		clickTimer = Time.time + 0.1
+
+		if(Input.touchCount == 1 and Input.GetTouch(0).phase == TouchPhase.Began) then			
 			pos = Input.GetTouch(0).position
 		end
 	end

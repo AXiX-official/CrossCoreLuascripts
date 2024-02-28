@@ -45,9 +45,9 @@ end
 --副本开启
 function this:IsDungeonOpen()
     if self.data and self.data.nBegTime and self.data.nBattleendTime then
-        return TimeUtil:GetTime() >= self.data.nBegTime and TimeUtil:GetTime() < self.data.nBattleendTime
+        return TimeUtil:GetTime() >= self.data.nBegTime and TimeUtil:GetTime() < self.data.nBattleendTime,LanguageMgr:GetByID(24003)
     end
-    return false
+    return false,""
 end
 
 --困难本开启
@@ -73,7 +73,7 @@ function this:IsExtreOpen()
         local tips = LanguageMgr:GetTips(24007, timeStr)
         return TimeUtil:GetTime() >= self.data.nExBegTime,tips
     end
-    return false
+    return false,""
 end
 
 function this:GetTimeStrs()
@@ -102,6 +102,10 @@ end
 
 function this:GetName()
     return self.cfg and self.cfg.name or ""
+end
+
+function this:GetShopID()
+    return self.cfg and self.cfg.shopID
 end
 
 function this:GetHardTime()

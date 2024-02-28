@@ -34,6 +34,7 @@ function Awake()
     eventMgr:AddListener(EventType.AIPreset_SetRet, SaveCache);
     eventMgr:AddListener(EventType.AIPreset_Switch,OnSwitch);
     eventMgr:AddListener(EventType.AIPreset_ShowSkill,ShowSkill);
+    SetOverLoadState(isOverLoad);
 end
 
 function OnDestroy()

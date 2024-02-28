@@ -1,6 +1,9 @@
 -- data: MatrixData
 function Awake()
     dormCameraMgr = ComUtil.GetCom(gameObject, "DormCameraMgr")
+
+    cm1 = ComUtil.GetCom(cameraGo, "Camera")
+    cm2 = ComUtil.GetCom(CameraUI, "Camera")
 end
 
 function Refresh(_data)
@@ -69,4 +72,13 @@ end
 -- 移除
 function Exit()
 
+end
+
+
+function Update()
+    if (cm1 ~= nil and cm2 ~= nil) then
+        if (cm1.fieldOfView ~= cm2.fieldOfView) then
+            cm2.fieldOfView = cm1.fieldOfView
+        end
+    end
 end

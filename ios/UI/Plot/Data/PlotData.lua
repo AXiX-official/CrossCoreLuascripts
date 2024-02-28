@@ -57,6 +57,14 @@ function this:GetContent()
 		else
 			str = str:gsub("%%s",PlayerClient:GetName())
 		end
+
+		if self:IsLeader() then
+			local strs = StringUtil:split(str ,"<sp>");
+			if #strs > 1 then
+				local sex = PlayerClient:GetSex()
+				str = strs[sex]
+			end
+		end
 	end
 	return str;
 end
@@ -201,7 +209,18 @@ function this:GetOptions()
 			for i = 1, #optionsId do
 				local option = PlotOption.New();
 				option:InitCfg(optionsId[i]);
-				table.insert(options, option);
+				if self.cfg and self.cfg.nextType then
+					if self.cfg.nextType == 1 then
+						local isMan = PlayerClient:GetSex() == 1
+						if isMan and i <= #optionsId / 2 then
+							table.insert(options, option);
+						elseif not isMan and i > #optionsId / 2 then
+							table.insert(options, option);
+						end
+					end
+				else
+					table.insert(options, option);
+				end
 			end
 		end
 	end
@@ -210,10 +229,16 @@ end
 
 --返回下一段对话的对象
 function this:GetNextPlotInfo()
-	local nextId = self.cfg and self.cfg.nextId or - 1;
+	local nextIds = self.cfg and self.cfg.nextId or {- 1};
+	local nextId = nextIds[1]
+	if #nextIds > 1 and self.cfg and self.cfg.nextType then
+		if self.cfg.nextType == 1 then --性别
+			nextId = PlayerClient:GetSex() == 1 and nextIds[1] or nextIds[2]
+		end
+	end
 	local next = nil;
 	if nextId == - 1 then
-		nextPlotInfo = nil;
+		return nil
 	else
 		next = this.New();
 		next:InitCfg(nextId);

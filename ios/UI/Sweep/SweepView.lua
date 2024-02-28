@@ -464,6 +464,14 @@ end
 
 --开始扫荡
 function OnStarSweep()
+    local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
+    if sectionData then
+        local openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+        if openInfo and not openInfo:IsDungeonOpen() then
+            LanguageMgr:ShowTips(24003)
+            return
+        end
+    end
     if teamView then
         local teamListItem = teamView.GetListItem()
         local teamData = teamListItem and teamListItem.GetTeamData() or nil

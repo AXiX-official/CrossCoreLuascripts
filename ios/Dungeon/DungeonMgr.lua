@@ -386,6 +386,8 @@ function this:IsDungeonOpen(id)
                         if sectionType == SectionType.MainLine then
                             local exStr = cfg2.type == 2 and string.format("(%s)", LanguageMgr:GetByID(15016)) or ""
                             dungeonName = cfg2.chapterID .. " " .. cfg2.name .. exStr;
+                        elseif cfg2.diff then
+                            dungeonName = cfg2.diff == 2 and LanguageMgr:GetByID(15016) .. "-" .. cfg2.name or cfg2.name
                         else
                             dungeonName = cfg2.name;
                         end
@@ -1004,8 +1006,14 @@ function this:OnQuit(isExit, jumpType)
             elseif cfg.type == eDuplicateType.BattleField then --战场
                 CSAPI.OpenView("BattleField", {id = cfg.group})
             elseif cfg.type == eDuplicateType.StoryActive then --剧情
-                CSAPI.OpenView("DungeonActivity1",{id = cfg.group})
-                CSAPI.OpenView("DungeonPlot",{id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
+                local path1,paht2 = DungeonUtil.GetViewPath(cfg.group)
+                if path1~="" then
+                    CSAPI.OpenView(path1, {id = cfg.group},{isDungeonOver = true})
+                end
+                if paht2~=""  then
+                    CSAPI.OpenView(paht2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
+                end
+                
             elseif cfg.type == eDuplicateType.TaoFa then --讨伐
                 CSAPI.OpenView("DungeonActivity2",{id = cfg.group, itemId = cfg.id})
             end

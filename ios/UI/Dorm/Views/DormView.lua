@@ -408,7 +408,8 @@ end
 
 -- 好友拜访
 function OnClickFriend()
-    CSAPI.OpenView("MatrixTradingFriend", {"DormView"})
+    --CSAPI.OpenView("MatrixTradingFriend", {"DormView"})
+    OpenSelectFriend()
 end
 -- 模板分享（暂屏蔽） 
 function OnClickShare()
@@ -429,9 +430,10 @@ function OnClickMask()
     SetLookState()
 end
 
--- 选择好友
+-- 选择好友(此时在好友房间)
 function OnClickSelectFriend()
-    CSAPI.OpenView("MatrixTradingFriend", {"DormView", curRoomData:GetFid()})
+    -- CSAPI.OpenView("MatrixTradingFriend", {"DormView", curRoomData:GetFid()})
+    OpenSelectFriend(curRoomData:GetFid())
 end
 
 -- 更换房间（好友）
@@ -440,19 +442,19 @@ function OnClickChange2()
     CSAPI.OpenView("DormRoom", fid)
 end
 
-function OnPressLDown()
-    GetDormGround().OnPress(true, true)
-end
-function OnPressLUp()
-    GetDormGround().OnPress(true, false)
-end
+-- function OnPressLDown()
+--     GetDormGround().OnPress(true, true)
+-- end
+-- function OnPressLUp()
+--     GetDormGround().OnPress(true, false)
+-- end
 
-function OnPressRDown()
-    GetDormGround().OnPress(false, true)
-end
-function OnPressRUp()
-    GetDormGround().OnPress(false, false)
-end
+-- function OnPressRDown()
+--     GetDormGround().OnPress(false, true)
+-- end
+-- function OnPressRUp()
+--     GetDormGround().OnPress(false, false)
+-- end
 
 ------------------------------------------------------------------------------
 -- 当前场景的资源加载完毕
@@ -504,3 +506,15 @@ function Exit1()
 end
 
 ------------------------------------------------------------------------------
+
+function OpenSelectFriend(fid)
+    if (matrixTradingFriend) then
+        CSAPI.SetGOActive(matrixTradingFriend.gameObject, true)
+        matrixTradingFriend.Refresh({"DormView", fid})
+    else
+        ResUtil:CreateUIGOAsync("Matrix/MatrixTradingFriend", gameObject, function(go)
+            matrixTradingFriend = ComUtil.GetLuaTable(go)
+            matrixTradingFriend.Refresh({"DormView", fid})
+        end)
+    end
+end

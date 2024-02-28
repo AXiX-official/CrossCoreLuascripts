@@ -6,11 +6,15 @@ function Refresh(_data)
 	data = _data
 	if data then
 		local reward = data.reward
+		local skills = reward.eSkills
 		local isGet = data.isGet
 		--物品
 		if item == nil then
 			ResUtil:CreateUIGOAsync("Grid/GridItem", itemNode, function(go)
 				local goodsData, clickCB = GridFakeData(reward, true)
+				if skills then
+					goodsData.data.skills = skills
+				end
 				local lua = ComUtil.GetLuaTable(go)	
 				lua.Refresh(goodsData)
 				lua.SetClickCB(clickCB);
@@ -21,7 +25,10 @@ function Refresh(_data)
 				item = lua
 			end)
 		else		
-			local goodsData, clickCB = GridFakeData(reward, true)
+			local goodsData, clickCB = GridFakeData(reward)
+			if skills then
+				goodsData.data.skills = skills
+			end
 			item.Refresh(goodsData)
 			item.SetClickCB(clickCB);
 			item.SetCount(reward.num)

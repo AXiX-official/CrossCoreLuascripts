@@ -184,8 +184,12 @@ function OnLoginSceneLoaded()
 	GuideMgr:Init();	
 
      --习惯设置
-    SettingMgr:Init();
-	SettingMgr:LoginSet();
+	 SettingMgr:Init();
+	 --if(CSAPI.GetGlobalGO("CommonRT"))then
+	--	 SettingMgr:LoginSet();
+	 --else
+		 FuncUtil:Call(SettingMgr.LoginSet,SettingMgr,50);
+	 --end
 
 	--多语言 
 	--LanguageMgr:ChangeLanguage(4) --1234  中文，繁体，日语，英文

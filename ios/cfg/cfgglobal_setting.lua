@@ -206,7 +206,7 @@ local conf = {
 {'2703',	'g_ChatCacheDiff',	'',	'int',	'300'},
 {'2801',	'g_DiamondRmbRate',	'',	'int',	'10'},
 {'2802',	'g_SignMaxLen',	'',	'int',	'20'},
-{'2803',	'g_MaxUseItem',	'',	'int',	'99'},
+{'2803',	'g_MaxUseItem',	'',	'int',	'50'},
 {'2804',	'g_ResAddr1',	'',	'string',	'183.6.55.57:8000'},
 {'2805',	'g_AssitReward',	'',	'json',	'[[10001, 2000, 2]]'},
 {'2806',	'g_AssitRewardMax',	'',	'int',	'20'},

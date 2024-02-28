@@ -792,4 +792,15 @@ function this:CheckHadL2dIn(isRole, id, isl2d)
     return false
 end
 
+--有一次战斗结束
+function this:SetFightOver(b)
+    self.isFightOver = b 
+end
+function this:CheckIsFightVier()
+    if(self.isFightOver) then 
+        return true 
+    end
+    return false 
+end
+
 return this

@@ -446,10 +446,25 @@ function this.SortFunc_3005(a, b)
 end
 function this.SortFunc_3006(a, b)
     -- 点数
-    if (a:GetTotalSkillValue() == b:GetTotalSkillValue()) then
-        return nil
+    --判断第一个技能点的值大小
+    local a1=a:GetSkillInfo(1)
+    local b1=b:GetSkillInfo(1)
+    if a1 and b1 then
+        if a1.nLv==b1.nLv then
+            if (a:GetTotalSkillValue() == b:GetTotalSkillValue()) then
+                return nil
+            else
+                return a:GetTotalSkillValue() > b:GetTotalSkillValue()
+            end
+        else
+            return a1.nLv>b1.nLv
+        end
     else
-        return a:GetTotalSkillValue() > b:GetTotalSkillValue()
+        if (a:GetTotalSkillValue() == b:GetTotalSkillValue()) then
+            return nil
+        else
+            return a:GetTotalSkillValue() > b:GetTotalSkillValue()
+        end
     end
 end
 function this.SortFunc_3007(a, b)

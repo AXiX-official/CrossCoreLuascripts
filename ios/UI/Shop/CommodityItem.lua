@@ -52,7 +52,7 @@ function Refresh(_data,_elseData)
     this.elseData=_elseData;
     SetName(this.data:GetName());
     local num=this.data:GetNum()
-    ShopCommFunc.SetIconBorder2(_data,_elseData.commodityType,_elseData.isFragment,bg,icon,light,tIcon,tIcon2,tBorder)
+    ShopCommFunc.SetIconBorder2(_data,_elseData.commodityType,bg,icon,light,tIcon,tIcon2,tBorder)
     SetLimitTag(this.data:IsLimitTime(),this.data:GetEndBuyTips());
     -- if _elseData and _elseData.commodityType ==2 then
     --     SetLimit();

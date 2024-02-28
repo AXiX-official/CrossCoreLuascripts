@@ -542,23 +542,23 @@ function PlayBarTween(slider,tween,val,func)
 						PlayBarTween(slider,tween,(val-1),func);
 					else
 						slider.value=1;
-						SetMask(false);
 						func();
+						SetMask(false);
 					end
 				end,nil,150);
 			elseif func then
-				SetMask(false);
 				func();
+				SetMask(false);
 			else
 				SetMask(false);
 			end
 		end);
 	else
 		slider.value=val;
-		SetMask(false);
 		if func then
 			func();
 		end
+		SetMask(false);
 	end
 end
 

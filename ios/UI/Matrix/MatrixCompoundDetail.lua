@@ -196,11 +196,11 @@ function SerRight()
         CSAPI.SetGOActive(txtTips, false)
     end
     -- spends 2
-    local id = data:GetCfg().cost[1][1]
+    local id = curData:GetCfg().cost[1][1]
     local _cfg = Cfgs.ItemInfo:GetByID(id)
     ResUtil.IconGoods:Load(imgIcon2, _cfg.icon .. "_1")
 
-    local need = data:GetPriceNum() * count
+    local need = curData:GetPriceNum() * count
     local max = BagMgr:GetCount(id)
     local str = need > max and StringUtil:SetByColor(need, "ff6565") or need
     CSAPI.SetText(txtNum2, str .. "")

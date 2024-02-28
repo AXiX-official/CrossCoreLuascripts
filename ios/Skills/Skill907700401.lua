@@ -64,7 +64,7 @@ function Skill907700401:OnActionOver(caster, target, data)
 	-- 8623
 	local count623 = SkillApi:GetCount(self, caster, target,3,907700401)
 	-- 8821
-	if SkillJudger:Equal(self, caster, target, true,count623,8) then
+	if SkillJudger:GreaterEqual(self, caster, target, true,count623,8) then
 	else
 		return
 	end

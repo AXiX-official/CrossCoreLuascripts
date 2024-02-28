@@ -431,21 +431,21 @@ end
 function LayoutCallBack(index)
 	local _data = curDatas[index]
     local item=layout:GetItemLua(index);
-    item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),isFragment=IsShowExchange()});
+    item.Refresh(_data,{commodityType=currPageData:GetCommodityType()});
     item.SetClickCB(OnClickGrid);
 end
 
 function LayoutCallBack2(index)
     local _data=curDatas[index]
     local item=layout2:GetItemLua(index);
-    item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),showType=currPageData:GetShowType(),isFragment=IsShowExchange()});
+    item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),showType=currPageData:GetShowType()});
     item.SetClickCB(OnClickPackage);
 end
 
 function LayoutCallBack3(index)
     local _data=curDatas[index]
     local item=layout3:GetItemLua(index);
-    item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),isFragment=IsShowExchange()});
+    item.Refresh(_data,{commodityType=currPageData:GetCommodityType()});
     item.SetClickCB(OnClickGrid);
 end
 
@@ -453,7 +453,7 @@ function LayoutCallBack4(index)
 	local _data = curDatas[index]
     local item=layout4:GetItemLua(index);
     -- item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),showType=currPageData:GetShowType()});
-    item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),showType=currPageData:GetShowType(),isFragment=IsShowExchange()});
+    item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),showType=currPageData:GetShowType()});
     item.SetClickCB(OnClickGrid);
 end
 

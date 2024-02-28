@@ -67,11 +67,6 @@ function Update()
         CSAPI.SetAnchor(itemParent.gameObject, x, 0)
     end
 
-    -- 背景动效位置变动
-    -- if IsNil(animInfo) then
-    --     return
-    -- end
-
     if animPlayTime > 0 then
         animPlayTime = animPlayTime - Time.deltaTime
     else
@@ -367,9 +362,15 @@ function OnStoryPlayComplete()
         end
     end
     currItem = nil
-
     RefreshPanel()
     JumpToItem()
+    
+    local bgPos_x = CSAPI.GetLocalPos(bgImg.gameObject)
+    local bgPrecent = math.abs(bgPos_x) / (bgWidth - canvasW)
+    local x = -(bgPrecent * (itemWidth - canvasW))
+    lastPosX = x
+    CSAPI.SetAnchor(lineNode.gameObject, x, 0)
+    CSAPI.SetAnchor(itemParent.gameObject, x, 0)
 end
 
 -- 获取关卡组

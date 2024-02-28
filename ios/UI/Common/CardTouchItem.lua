@@ -65,7 +65,10 @@ function OnDragXY(_x, _y)
     --     y = _y
     --     parentLua.ItemDragBeginCB(cfgChild)
     -- end
-
+    if(x==nil or y==nil) then 
+        x = _x 
+        y = _y 
+    end 
     parentLua.ItemDragCB(cfgChild, _x - x, _y - y)
     x = _x
     y = _y

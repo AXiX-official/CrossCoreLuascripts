@@ -30,5 +30,5 @@ function Skill502601302:OnAfterHurt(caster, target, data)
 		return
 	end
 	-- 502601302
-	self:HitAddBuff(SkillEffect[502601302], caster, target, data, 3900,1001)
+	self:HitAddBuff(SkillEffect[502601302], caster, target, data, 2700,1001)
 end

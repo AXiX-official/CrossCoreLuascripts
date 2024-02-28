@@ -101,9 +101,9 @@ GameMsg.map["sPairIntInt"] = {
 	{ "first","second",},
 }
 GameMsg.map["sNumInfo"] = {
-	--id     数量   类型          
-	{ "uint","uint","byte","uint",},
-	{ "id",  "num", "type","c_id",},
+	--id     数量   类型          装备的技能id 
+	{ "uint","uint","byte","uint","array|uint",},
+	{ "id",  "num", "type","c_id","eSkills",   },
 }
 GameMsg.map["sStrNumInfo"] = {
 	--字符id 数量   
@@ -111,9 +111,9 @@ GameMsg.map["sStrNumInfo"] = {
 	{ "sid", "num", },
 }
 GameMsg.map["sReward"] = {
-	--物品id 数量   类型          
-	{ "uint","uint","byte","uint",},
-	{ "id",  "num", "type","c_id",},
+	--物品id 数量   类型          装备的技能id 
+	{ "uint","uint","byte","uint","array|uint",},
+	{ "id",  "num", "type","c_id","eSkills",   },
 }
 GameMsg.map["sPlrPaneInfo"] = {
 	--角色id    头像模型  角色量     最大副本进度 创建时间 最大爬塔进度 军演历史最高段位 基地行星指挥部等级 
@@ -366,9 +366,9 @@ GameMsg.map["sPlrData"] = {
 	{ "uid", "name",  "hot",  "level","gold","diamond","currtime",  "exp","sign",  "create_time","army_coin","tp",   "tpBeginTime","notLog",            },
 }
 GameMsg.map["LoginProto:LoginGame"] = {
-	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 
-	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       },
-	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", },
+	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       
+	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort",},
+	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       },
 }
 GameMsg.map["LoginProto:PlrUpdate"] = {
 	--更新信息(不是所有字段都有) 添加的经验 下次体能恢复时间 
@@ -1752,7 +1752,7 @@ GameMsg.map["EquipProto:EquipAddGridRet"] = {
 }
 GameMsg.map["sEquipLockInfo"] = {
 	--装备id 是否锁定 0：否 1：锁定 
-	{ "uint","short",              },
+	{ "uint","byte",               },
 	{ "sid", "lock",               },
 }
 GameMsg.map["EquipProto:EquipLock"] = {
@@ -2006,9 +2006,9 @@ GameMsg.map["TaskProto:GetRewardRet"] = {
 	{ "info",              "infos",             "dailyStar","weeklyStar","gets",        },
 }
 GameMsg.map["TaskProto:GetRewardByType"] = {
-	--任务类型 
-	{ "uint",  },
-	{ "type",  },
+	--任务类型 辅助字段[任务中细分类型] 
+	{ "uint",  "uint",              },
+	{ "type",  "nGroup",            },
 }
 GameMsg.map["TaskProto:GetRewardByTypeRet"] = {
 	--任务唯一索引         每日星数    每周星数                    

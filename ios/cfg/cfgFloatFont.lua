@@ -128,6 +128,7 @@ local conf = {
 {'304',	'buff_gaoya',	'',	'高压',	'',	''},
 {'305',	'buff_wanhe',	'',	'回庇',	'',	''},
 {'306',	'buff_baopojia',	'',	'爆破伤害',	'',	''},
+{'307',	'buff_xuruo',	'',	'虚弱',	'',	''},
 },
 }
 --cfgFloatFont = conf
