@@ -157,7 +157,7 @@ function this:ChangeAction1(_action, curRole)
     if (not curRole or curRole.GetIsClick() or curRole.GetIsTookUp() or curRole.GetIsInte()) then
         return
     end
-    curRole.ChangeAction(_action)
+    curRole.ChangeAction(_action,self.isDorm)
     -- 隐藏换装按钮
     if (_action == DormRoleActionType.click_grab) then
         -- self:SetBtnCloths(curRole, false)
@@ -465,6 +465,8 @@ function this:RefreshRoles()
             end
         end
     end
+    self.inNUm = self.inNUm~=nil and self.inNUm+1 or 1
+    local isPlayAudio = false
     for i, v in pairs(idsDic) do
         if (not self.roleModels[v]) then
             local path = self.isDorm and "Scenes/Dorm/DormRole" or "Scenes/Matrix/MatrixIndoorRole"
@@ -477,6 +479,11 @@ function this:RefreshRoles()
                 CSAPI.SetPos(go, arr[0], arr[1], arr[2])
                 lua.Init(index, self, info, self.isDorm)
                 self.roleModels[v] = lua
+                if (self.inNUm>1 and not self.isDorm and not isPlayAudio) then
+                    isPlayAudio = true
+                    --进入设施语言（仅基地）
+                    RoleAudioPlayMgr:PlayByType(info:GetFirstSkinId(), RoleAudioType.allocation) 
+                end
             end)
         end
     end
@@ -486,16 +493,16 @@ function this:RefreshRoles()
     end
 end
 
---角色是否已经全部加载
+-- 角色是否已经全部加载
 function this:IsLoadSuccess()
-    if(self.roleModels) then 
+    if (self.roleModels) then
         for k, v in pairs(self.roleModels) do
-            if(not v.CheckIsLoadSuccess()) then 
-                return false 
-            end 
+            if (not v.CheckIsLoadSuccess()) then
+                return false
+            end
         end
-    end 
-    return true 
+    end
+    return true
 end
 
 -- 用index来辨识每个role，用以获取不重复的初始位置和随机位置

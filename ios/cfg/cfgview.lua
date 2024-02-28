@@ -307,6 +307,9 @@ local conf = {
 {'297',	'MenuBuyPanel',	'MenuBuy/MenuBuyPanel',	'',	'',	'',	'',	'1',	'',	'',	'',	''},
 {'298',	'SettingWindow',	'Setting/SettingWindow',	'',	'Top',	'',	'',	'1',	'',	'',	'',	''},
 {'299',	'ExtraActivityView',	'ActivityList/ActivityListView',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'300',	'DungeonActivity3',	'DungeonActivity3/DungeonActivityView3',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'301',	'DungeonRole',	'DungeonRole/DungeonRoleView',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'302',	'DungeonTaoFaBuy',	'DungeonActivity2/DungeonTaoFaBuy',	'',	'Top',	'',	'',	'1',	'',	'',	'',	''},
 },
 }
 --cfgview = conf

@@ -96,7 +96,7 @@ function this.SetIconBorder(data, commodityType, border, icon,tIcon,tBorder,open
 end
 
 -- 读取边框和图标（商品子物体用）
-function this.SetIconBorder2(data, commodityType, isFragment, border, icon, light, tIcon,tIcon2,tBorder,openSetting)
+function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon,tIcon2,tBorder,openSetting)
     local goodsData = nil;
     if border then
         CSAPI.SetGOActive(border, true);
@@ -182,7 +182,7 @@ function this.SetIconBorder2(data, commodityType, isFragment, border, icon, ligh
         ResUtil.Commodity:Load(light, itemQualitys3[qulaity]);
     end
     if tIcon then
-        local tIcons = isFragment == true and packQualitys2 or itemQualitys2
+        local tIcons = packQualitys2
         ResUtil.Commodity:Load(tIcon, tIcons[qulaity]);
     end
 end

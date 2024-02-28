@@ -1180,7 +1180,8 @@ function ConfigChecker:CfgActive(cfgs)
 end
 
 function ConfigChecker:CfgActiveEntry(cfgs)
-    for k, v in pairs(cfgs) do
+    local battleEndTimeTable = {}
+    for _, v in pairs(cfgs) do
         if v.begTime then
             v.nBegTime = GCalHelp:GetTimeStampBySplit(v.begTime, v)
         end
@@ -1195,7 +1196,21 @@ function ConfigChecker:CfgActiveEntry(cfgs)
         end
         if v.battleendTime then
             v.nBattleendTime = GCalHelp:GetTimeStampBySplit(v.battleendTime, v)
+            if v.config and v.nConfigID then
+                local config_table = _G[v.config]
+                if config_table and config_table[v.nConfigID] then
+                    local tar_config = config_table[v.nConfigID]
+                    if tar_config.sectionID then
+                        if not battleEndTimeTable[tar_config.sectionID] then
+                            battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
+                        else
+                            LogWarning("CfgActiveEntry sectionID出现重复%s:%s", v.config, v.nConfigID)
+                        end
+                    end
+                end
+            end
         end
+        _G["DupActiveBattleEndTime"] = battleEndTimeTable
     end
 end
 

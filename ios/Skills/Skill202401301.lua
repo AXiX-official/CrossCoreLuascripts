@@ -10,7 +10,7 @@ end
 function Skill202401301:DoSkill(caster, target, data)
 	-- 202400301
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[202400301], caster, target, data, 4002)
+	self:AddBuff(SkillEffect[202400301], caster, target, data, 202400301)
 	-- 202400306
 	self.order = self.order + 1
 	self:Cure(SkillEffect[202400306], caster, target, data, 2,0.1)

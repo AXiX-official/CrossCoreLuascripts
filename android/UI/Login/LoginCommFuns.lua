@@ -351,14 +351,14 @@ end
 
 function GetLastServerInfo()
 	--local serverID = 3;--默认打包服
-    --local serverID = 5;--默认S分支测试服
+    --local serverID = 5;--默认内部稳定测试服
 	--local serverID = 22;--默认打包测试服
-    --local serverID = 11;--默认主干外服
-    local serverID = PlayerPrefs.GetInt(lastServerPath);
-	--LogError(serverID);
+    --local serverID = 11;--默认主干外服  	
 	--local serverID = 16;--默认审核服
 	--local serverID = 19;--内部稳定服
 	--local serverID = 23;--默认ios提审服
+	local serverID = PlayerPrefs.GetInt(lastServerPath);--正式服
+	--LogError(serverID);
 	local lastServerInfo = nil;
 	if serverID and type(serverID) == "number" and serverID ~= 0 then
 		lastServerInfo = GetServerInfoByID(serverID);

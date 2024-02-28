@@ -150,7 +150,7 @@ function OnClickAllGet()
             end
             TaskProto:GetReward(nil, ids)
         else
-            TaskProto:GetRewardByType(type)
+            TaskProto:GetRewardByType(type, data.group)
         end
 	end
 end

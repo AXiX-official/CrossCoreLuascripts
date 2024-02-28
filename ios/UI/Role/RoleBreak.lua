@@ -131,7 +131,8 @@ function SetTalent()
         -- name
         CSAPI.SetText(txtTalent1, cfg.name)
         -- desc 
-        CSAPI.SetText(txtTalent2, cfg.desc1)
+        local _desc = StringUtil:SkillDescFormat(cfg.desc1)
+        CSAPI.SetText(txtTalent2,_desc or cfg.desc1)
     end
 end
 

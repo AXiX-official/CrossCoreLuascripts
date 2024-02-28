@@ -8,6 +8,7 @@ local curItem = nil
 
 local isSpring = false
 local endTime = nil
+local type = 1
 
 function OnInit()
     eventMgr = ViewEvent.New()

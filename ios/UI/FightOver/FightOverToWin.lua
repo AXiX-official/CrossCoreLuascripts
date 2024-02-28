@@ -513,6 +513,9 @@ function SetPVETitle()
             str = isHard and LanguageMgr:GetByID(15016) or LanguageMgr:GetByID(15015) .. "  "
             str = str .. LanguageMgr:GetByID(34005) .. " "
             str = cfgDungeon.chapterID and str .. cfgDungeon.chapterID or str
+        elseif sectionType == SectionType.Activity then
+            local isHard = cfgDungeon.diff and cfgDungeon.diff == 2
+            str = isHard and cfgDungeon.name.." ("..LanguageMgr:GetByID(15016)..")" or cfgDungeon.name
         else
             str = cfgDungeon.name
         end

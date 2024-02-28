@@ -2,6 +2,7 @@ local cfgs = nil
 local curIndex = 0
 local rightItems = {}
 local openCfgs = {} -- 开启的活动
+local list = {}
 local curItem = nil
 local btnCallBack = nil
 local top = nil
@@ -45,13 +46,14 @@ function OnRedPointRefresh()
     local redTypes = group == 1 and RedPointMgr:GetData(RedPointType.ActivityList1) or RedPointMgr:GetData(RedPointType.ActivityList2)
     if leftPanel and openCfgs and #redTypes > 0 then
         for k, v in ipairs(redTypes) do
-            local cfg = Cfgs.CfgActiveList:GetByID(v.type)
-            local idx = cfg and cfg.index or 0
+            if list[v.type] then
+                local idx = list[v.type].index
             if idx > 0 and leftPanel.leftItems[idx] then
                 leftPanel.leftItems[idx].SetRed(v.b == 1)
             end
         end
     end
+end
 end
 
 function OnDayRefresh()
@@ -82,6 +84,7 @@ function InitLeftPanel()
     local leftDatas = {}
     openCfgs = ActivityMgr:GetArr(tonumber(group))
     for i, v in ipairs(openCfgs) do
+        list[v.id] = {index = i} --记录当前类型的顺序
         table.insert(leftDatas,{v.leftInfo[1].id, v.leftInfo[1].path})
     end
     leftPanel.Init(this, leftDatas)

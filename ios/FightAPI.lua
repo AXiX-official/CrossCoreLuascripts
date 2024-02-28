@@ -1371,7 +1371,7 @@ function FightAPI:Cure(effect, caster, target, data, cureTy, percent)
 	-- self.order = self.order + 1
 	LogDebugEx("---FightAPI:CureEx---", caster.name, target.name)
 
-	if not target:IsLive() then return end -- 已经死了就不加血
+	if not target:IsLive() then return 0 end -- 已经死了就不加血
 
 	local mgr = self.team.fightMgr
 
@@ -1383,7 +1383,7 @@ function FightAPI:Cure(effect, caster, target, data, cureTy, percent)
 	-- LogDebugEx("FightAPI:Cure", hp, damageAdjust, caster:Get("cure") , target:Get("becure"))
 	-- ASSERT()
 	hp = math.floor(hp)
-	if hp <= 0 then return end
+	if hp <= 0 then return 0 end
 
 
 	local spill = hp - (target:Get("maxhp") - target:Get("hp"))

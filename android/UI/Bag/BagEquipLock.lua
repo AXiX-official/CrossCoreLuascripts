@@ -4,6 +4,7 @@ local root=nil;
 local data=nil;
 local selectList={}; --选中状态的列表
 local originList={}; --源列表的列表
+local onceMax=300;
 function this.SetData(_root,_data)
     root=_root;
     data=_data;
@@ -16,9 +17,9 @@ function this.Refresh()
         for k,v in ipairs(list) do
             if v:IsLock()==true then
                 table.insert(selectList,v);
-                table.insert(originList,v);
             end
         end
+        originList=list;
     end
     root.Refresh(list);
 end
@@ -67,6 +68,34 @@ function this.OnClickReturn()
 end
 
 function this.OnClickLock()
+    local infos=this.GetChangeList();
+    if infos==nil or (infos and #infos<=0) then
+        EventMgr.Dispatch(EventType.Equip_SetLock_Ret)
+        do return end
+    end
+    -- LogError(#infos);
+    if #infos>=onceMax then --筛选出状态变更的内容，超过onceMax个则分段发送，每次间隔250毫秒
+        local round= math.ceil(#infos/onceMax)
+        local index=1;
+        FuncUtil:Timer(function()
+            local list={};
+            for i=index,#infos do
+                if #list>=onceMax then
+                    break;
+                end
+                table.insert(list,infos[i]);
+                index=index+1;
+            end
+            -- LogError("发送到"..tostring(index).."的所有数据")
+            -- LogError(list)
+            EquipProto:SetLock(list);
+        end,nil,0,250,round);   
+    else
+        EquipProto:SetLock(infos)
+    end
+end
+
+function this.GetChangeList()
     local infos={};
     local max=#originList>=#selectList and #originList or #selectList
     for k,v in ipairs(originList) do
@@ -77,21 +106,11 @@ function this.OnClickLock()
                 break;
             end
         end
-        table.insert(infos,{sid=v:GetID(),lock=has==true and 1 or 0});
-    end
-    for k, v in ipairs(selectList) do
-        local has=false;
-        for _,val in ipairs(infos) do
-            if v:GetID()==val.sid then
-                has=true;
-                break;
-            end
-        end
-        if has==false then
-            table.insert(infos,{sid=v:GetID(),lock=1});
+        if v:IsLock()~=has then
+            table.insert(infos,{sid=v:GetID(),lock=has==true and 1 or 0});
         end
     end
-    EquipProto:SetLock(infos)
+    return infos;
 end
 
 function this.CleanCache()

@@ -330,11 +330,11 @@ function SetCharInfos(character)
             if SkillUtil:IsSpecialSkill(cfg.type) and not PlayerClient:IsPassNewPlayerFight() then --如果未通关新手剧情不显示合体技
             elseif cfg.main_type~=SkillMainType.CardSubTalent and cfg.main_type~=SkillMainType.Equip and cfg.upgrade_type~=CardSkillUpType.OverLoad then
                 table.insert( charInfos[1], {cfg=cfg});
-            elseif cfg.main_type==SkillMainType.Equip then
-                local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
-                if skillCfg then
-                    table.insert( charInfos[4], skillCfg);
-                end
+            -- elseif cfg.main_type==SkillMainType.Equip then
+            --     local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+            --     if skillCfg then
+            --         table.insert( charInfos[4], skillCfg);
+            --     end
             end
         elseif cfg.upgrade_type~=CardSkillUpType.OverLoad  then --不再次显示Overload技能
             if cfg.main_type==SkillMainType.CardSubTalent then --怪物的副天赋技能

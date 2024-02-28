@@ -8,7 +8,7 @@ local conf = {
 'id','iosID','group','appleShopType'
 },
 	["data"] = {
-{'30001',	'PayMonthlyCard_30001',	'1',	'2'},
+{'30001',	'PayMonthlyCard_30001',	'1',	'3'},
 {'30015',	'PayGiftPack_30015',	'1',	'0'},
 {'30016',	'PayGiftPack_30016',	'1',	'0'},
 {'30017',	'PayGiftPack_30017',	'1',	'0'},
@@ -27,9 +27,9 @@ local conf = {
 {'30030',	'PayGiftPack_30030',	'1',	'0'},
 {'30031',	'PayGiftPack_30031',	'1',	'0'},
 {'30032',	'PayGiftPack_30032',	'1',	'0'},
-{'31001',	'PayPassportA_31001',	'1',	'2'},
-{'31002',	'PayPassportB_31002',	'1',	'2'},
-{'31003',	'PayPassportC_31003',	'1',	'2'},
+{'31001',	'PayPassportA_31001',	'1',	'3'},
+{'31002',	'PayPassportB_31002',	'1',	'3'},
+{'31003',	'PayPassportC_31003',	'1',	'3'},
 {'40001',	'PayRecharge_40001',	'1',	'0'},
 {'40002',	'PayRecharge_40002',	'1',	'0'},
 {'40003',	'PayRecharge_40003',	'1',	'0'},

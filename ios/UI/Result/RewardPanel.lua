@@ -163,8 +163,10 @@ function ShowList()
         srClick = ComUtil.GetCom(sr, "ScrollRect")
     end
 
+    local num = #rewards > 12 and 12 or #rewards
+
     AnimStart()
-    FuncUtil:Call(AnimEnd, nil, (#rewards - 1) * 50 + 400 + 400)
+    FuncUtil:Call(AnimEnd, nil, (num - 1) * 50 + 400 + 400)
     layout:IEShowList(#rewards)
 end
 

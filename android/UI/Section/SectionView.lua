@@ -984,6 +984,10 @@ function ClickDailyItemL2(item)
         return
     end
 
+    if not dailyPanel then -- 未加载完无法点击
+        return
+    end
+
     SetCurrDailyL2(item)
 
     curState = currIndex == 2 and 1 or 0
@@ -1371,18 +1375,32 @@ function RefreshItemNums()
 end
 
 function OnEnterCB1(item)
+    local sectionData = item.GetData().data
+    if IsNil(sectionData) then
+        LogError("缺少章节数据!!!")
+        return 
+    end
+
     if not item:GetOpen() then
+        local _,lockStr = sectionData:GetOpen()
+        Tips.ShowTips(lockStr)
         isClickEnter = false
         return
     end
+
+    local path = sectionData:GetCfg().path or ""
+    if path == "" then
+        LogError("缺少界面路径!!!" .. sectionData:GetCfg().id)
+        return
+    end
     if item.GetData().type == SectionActivityType.BattleField then
-        CSAPI.OpenView("BattleField",{id = item.GetID()})
+        CSAPI.OpenView(path,{id = item.GetID()})
     elseif item.GetData().type == SectionActivityType.Tower then
-        CSAPI.OpenView("DungeonTower")
+        CSAPI.OpenView(path)
     elseif item.GetData().type == SectionActivityType.Plot then
-        CSAPI.OpenView("DungeonActivity1",{id = item.GetID()})
+        CSAPI.OpenView(path,{id = item.GetID()})
     elseif item.GetData().type == SectionActivityType.TaoFa then
-        CSAPI.OpenView("DungeonActivity2",{id = 4001})
+        CSAPI.OpenView(path,{id = 4001})
     end
 end
 

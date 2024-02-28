@@ -130,7 +130,7 @@ function ApplyRefresh()
     
     if(items)then
         for character,item in pairs(items)do
-            if(character.IsDead() and character.IsDeadPlayed())then
+            if((character.IsDead() and character.IsDeadPlayed()) or (not CharacterMgr:Get(character.GetID())))then
                 items[character] = nil;
                 item.Remove();
                 --FuncUtil:Call(item.Remove,nil,100);

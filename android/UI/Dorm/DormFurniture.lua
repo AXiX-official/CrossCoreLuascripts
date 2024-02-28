@@ -501,7 +501,7 @@ function InSelect(b, _isFirst)
         -- 进入时缓存位置，如果有碰撞则不缓存
         if (isFirst) then
             cachePos = nil
-            cacheRotaY = nil 
+            cacheRotaY = nil
         else
             cachePos = data:GetPoint()
             cacheRotaY = CSAPI.csGetAngle(gameObject)[1]
@@ -529,7 +529,12 @@ end
 function SetToTop()
     tool:SetCamera2(isSelect)
     if (modelGO) then
-        modelGO.layer = isSelect and 27 or 26
+        -- modelGO.layer = isSelect and 27 or 26
+        local mrs = ComUtil.GetComsInChildren(modelGO,"MeshRenderer") or {}
+        for k=1, mrs.Length do
+            mrs[k-1].gameObject.layer = isSelect and 27 or 26
+        end
+
         -- 如果有子物体，子物体的层级也要调整
         SetChildToTop()
     end
@@ -541,6 +546,10 @@ function SetChildToTop()
         for i, v in ipairs(childIDs) do
             local childLua = tool:GetFurnitureModelByID(v)
             childLua.modelGO.layer = isSelect and 27 or 26
+            local mrs = ComUtil.GetComsInChildren(childLua.modelGO,"MeshRenderer") or {}
+            for k=1, mrs.Length do
+                mrs[k-1].gameObject.layer = isSelect and 27 or 26
+            end
         end
     end
 end
@@ -549,7 +558,7 @@ function SetShadow(cb)
     if (isSelect) then
         if (not dormRoleShadow) then
             CSAPI.CreateGOAsync("Scenes/Dorm/DormRoleShadow", 0, 0, 0, gameObject, function(go)
-                CSAPI.SetGOActive(go,true)
+                CSAPI.SetGOActive(go, true)
                 dormRoleShadow = ComUtil.GetLuaTable(go)
                 dormRoleShadow.Init(data:GetCfg().id, not CheckIsInCol())
                 if (cb) then
@@ -659,9 +668,9 @@ function SetBoxToScan(isScaning)
         return
     end
     local boxNum = data:GetCfg().boxNum or 1
-    boxNum = boxNum>1 and (boxNum+1) or boxNum
+    boxNum = boxNum > 1 and (boxNum + 1) or boxNum
     for i = 0, boxNum - 1 do
-        if (boxNum == 1 or (boxNum > 1 and i ~= 0)) then --额外加的不用设置
+        if (boxNum == 1 or (boxNum > 1 and i ~= 0)) then -- 额外加的不用设置
             if (this["box" .. i]) then
                 local box = ComUtil.GetCom(this["box" .. i], "BoxCollider")
                 box.isTrigger = not isScaning

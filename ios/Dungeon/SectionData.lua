@@ -344,4 +344,18 @@ function this:GetMultiID()
 	return self.cfg and self.cfg.multiId
 end
 
+--角色活动轮盘区域数
+function this:GetTurnNum()
+	return self.cfg and self.cfg.turnNum
+end
+
+--进入选关时播放的剧情id
+function this:GetStoryID()
+	return self.cfg and self.cfg.story
+end
+
+function this:GetPath()
+	return self.cfg and self.cfg.path
+end
+
 return this; 

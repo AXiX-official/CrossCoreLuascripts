@@ -13,6 +13,11 @@ function Buffer4403501:OnBefourHurt(caster, target)
 	else
 		return
 	end
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, self.caster, target, true) then
+	else
+		return
+	end
 	-- 8479
 	local c79 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,3295)
 	-- 8213

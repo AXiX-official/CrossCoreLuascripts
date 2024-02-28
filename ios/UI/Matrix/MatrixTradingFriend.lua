@@ -31,7 +31,8 @@ function ItemClickCB(_data)
         else
             -- 新的访问
             CSAPI.OpenView("DormRoom", nfid)
-            view:Close()
+            --view:Close()
+            OnClickMask()
         end
     end
 end
@@ -64,10 +65,11 @@ function RefreshPanel()
 end
 
 function OnClickMask()
-    if (openView == "MatrixTrading") then
-        CSAPI.SetGOActive(gameObject, false)
-    else
-        view:Close()
-    end
+    -- if (openView == "MatrixTrading") then
+    --     CSAPI.SetGOActive(gameObject, false)
+    -- else
+    --     view:Close()
+    -- end
+    CSAPI.SetGOActive(gameObject, false)
 end
 

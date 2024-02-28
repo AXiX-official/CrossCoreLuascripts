@@ -73,6 +73,8 @@ function OnOpen()
     end)
 
     EventMgr.Dispatch(EventType.Fight_Over_Panel_Show)
+
+    MenuMgr:SetFightOver(true)
 end
 
 function GetIsWin(_sceneType)

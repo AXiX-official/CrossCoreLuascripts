@@ -14,25 +14,18 @@ function Skill907700402:DoSkill(caster, target, data)
 end
 -- 攻击结束
 function Skill907700402:OnAttackOver(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8434
-	local count34 = SkillApi:BuffCount(self, caster, target,2,3,3005)
-	-- 8117
-	if SkillJudger:Greater(self, caster, self.card, true,count34,0) then
-	else
-		return
-	end
-	-- 907700402
-	self:AddTempAttr(SkillEffect[907700402], caster, self.card, data, "damage",0.4)
+	-- 907700401
+	self:OwnerAddBuffCount(SkillEffect[907700401], caster, target, data, 907700401,1,8)
 end
 -- 伤害前
 function Skill907700402:OnBefourHurt(caster, target, data)
@@ -71,7 +64,7 @@ function Skill907700402:OnActionOver(caster, target, data)
 	-- 8623
 	local count623 = SkillApi:GetCount(self, caster, target,3,907700401)
 	-- 8885
-	if SkillJudger:Equal(self, caster, target, true,count623,4) then
+	if SkillJudger:GreaterEqual(self, caster, target, true,count623,4) then
 	else
 		return
 	end
