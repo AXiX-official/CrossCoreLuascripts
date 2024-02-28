@@ -178,13 +178,13 @@ function Update()
 			clickTimer = Time.time + 0.1
 			pos = Input.mousePosition
 		end
-	else
-		if(Time.time < clickTimer) then
-			return
-		end
-		clickTimer = Time.time + 0.1
-
-		if(Input.touchCount == 1 and Input.GetTouch(0).phase == TouchPhase.Began) then			
+	else		
+		if(Input.touchCount == 1 and Input.GetTouch(0).phase == TouchPhase.Began) then		
+			if(Time.time < clickTimer) then
+				return
+			end
+			clickTimer = Time.time + 0.1
+				
 			pos = Input.GetTouch(0).position
 		end
 	end
