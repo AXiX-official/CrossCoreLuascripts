@@ -1400,7 +1400,7 @@ function OnEnterCB1(item)
     elseif item.GetData().type == SectionActivityType.Plot then
         CSAPI.OpenView(path,{id = item.GetID()})
     elseif item.GetData().type == SectionActivityType.TaoFa then
-        CSAPI.OpenView(path,{id = 4001})
+        CSAPI.OpenView(path,{id = item.GetID()})
     end
 end
 

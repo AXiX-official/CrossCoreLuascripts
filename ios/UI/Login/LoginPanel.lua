@@ -216,7 +216,7 @@ function OnLoginPhoneAuthCode(data)
                     SetPhoneLoginKey(loginKey);
                     local currServer = GetCurrentServer();
                     SignAccount(jsonData.phone, jsonData.open_id, currServer.id, function(result2)
-                        SaveLastSDKAccount(result2.data.oacc_name,  result2.data.opwd, result2.data.open_id);
+                        SaveLastSDKAccount(result2.data.oacc_name,  "", result2.data.open_id);
                         -- SaveLastAccount(result2.data.open_id, result2.data.opwd);
                         Login({
                             account = result2.data.open_id,
@@ -537,19 +537,41 @@ end
 -- 渠道验证通过回调，开始登录
 function OnChannelSignResult(json)
     if json ~= nil and json ~= "" and type(json) == "table" then
-        local open_id = json["open_id"];
-        local pwd = json["opwd"];
-        local uid=json["uid"];
-        Login({
-            account = open_id,
-            pwd = pwd
-        });
+        if json.code==ResultCode.Normal then --验证通过
+            local open_id = json["open_id"];
+            local pwd = json["opwd"];
+            local uid=json["uid"];
+            Login({
+                account = open_id,
+                pwd = pwd
+            });
+        elseif json.left_time then
+            local tab = TimeUtil:GetTimeTab(json.left_time)
+            local dialogData = {}
+            dialogData.content = LanguageMgr:GetTips(json.language,tab[1],tab[2] % 24,tab[3])
+            if json.forbit and json.forbit == 1 then
+                CSAPI.OpenView("Prompt", dialogData)
+            else
+                dialogData.okCallBack = loginCallBack
+                loginCallBack = nil    
+                CSAPI.OpenView("Dialog", dialogData)
+            end
+            EventMgr.Dispatch(EventType.Login_Hide_Mask, nil)
+        else
+            local dialogdata = {
+                content = LanguageMgr:GetTips(json.language)
+            }
+            CSAPI.OpenView("Prompt", dialogdata)
+            LogError("登陆SDK返回的json数据不正确:" .. tostring(json))
+            EventMgr.Dispatch(EventType.Login_Hide_Mask, nil)
+        end
     else
         local dialogdata = {
             content = LanguageMgr:GetTips(9006)
         }
         CSAPI.OpenView("Prompt", dialogdata)
         LogError("登陆SDK返回的json数据不正确:" .. tostring(json))
+        EventMgr.Dispatch(EventType.Login_Hide_Mask, nil)
     end
 end
 

@@ -15,6 +15,7 @@ local conf = {
 {'2',	'2',	'',	'',	'',	'1',	'1',	'arch_three_people',	''},
 {'2',	'2',	'',	'',	'',	'2',	'3',	'arch_kadya_liedown',	''},
 {'2',	'2',	'',	'',	'',	'3',	'7',	'arch_trytomoveforward',	'80405'},
+{'2',	'2',	'',	'',	'',	'4',	'9',	'arch_play_time',	''},
 {'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
 {'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},

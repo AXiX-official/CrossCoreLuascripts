@@ -128,7 +128,7 @@ function Refresh(data,type)
             SetInfoGrid(cfg.icon,"btn_1_01",cfg.lv, ResUtil.RoleTalent,1/0.6);
             -- ResUtil.RoleTalent:Load(icon,cfg.icon);
             SetName(cfg.name);
-            local desc, cfgs2 = StringUtil:SkillDescFormat(isSmiple and cfg.desc2 or cfg.desc);
+            local desc, cfgs2 = StringUtil:SkillDescFormat(isSmiple and cfg.desc1 or cfg.desc);
             SetDesc(desc);
             SetRound();
             SetDesc2()
