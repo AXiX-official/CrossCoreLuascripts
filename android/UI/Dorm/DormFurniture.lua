@@ -530,9 +530,9 @@ function SetToTop()
     tool:SetCamera2(isSelect)
     if (modelGO) then
         -- modelGO.layer = isSelect and 27 or 26
-        local mrs = ComUtil.GetComsInChildren(modelGO,"MeshRenderer") or {}
-        for k=1, mrs.Length do
-            mrs[k-1].gameObject.layer = isSelect and 27 or 26
+        local mrs = ComUtil.GetComsInChildren(modelGO, "MeshRenderer") or {}
+        for k = 1, mrs.Length do
+            mrs[k - 1].gameObject.layer = isSelect and 27 or 26
         end
 
         -- 如果有子物体，子物体的层级也要调整
@@ -546,9 +546,9 @@ function SetChildToTop()
         for i, v in ipairs(childIDs) do
             local childLua = tool:GetFurnitureModelByID(v)
             childLua.modelGO.layer = isSelect and 27 or 26
-            local mrs = ComUtil.GetComsInChildren(childLua.modelGO,"MeshRenderer") or {}
-            for k=1, mrs.Length do
-                mrs[k-1].gameObject.layer = isSelect and 27 or 26
+            local mrs = ComUtil.GetComsInChildren(childLua.modelGO, "MeshRenderer") or {}
+            for k = 1, mrs.Length do
+                mrs[k - 1].gameObject.layer = isSelect and 27 or 26
             end
         end
     end
@@ -609,57 +609,92 @@ function GetCurPos()
     return CSAPI.csGetPos(gameObject)
 end
 
+-- 两物体是否无碰撞
+function CheckIsNotTrigger(lua)
+    if (not lua) then
+        return true
+    end
+    -- 墙砖和地毯
+    if ((lua.data:IsCarpet() and data:IsBrick()) or (lua.data:IsBrick() and data:IsCarpet())) then
+        return true
+    end
+    -- 地毯和非地毯
+    if (lua.data:IsCarpet() ~= data:IsCarpet()) then
+        return true
+    end
+    -- 墙砖和非墙砖
+    if (lua.data:IsBrick() ~= data:IsBrick()) then
+        return true
+    end
+    return false
+end
+
 -- 与家具碰撞时才会进入到该方法（非家具已屏蔽）
 function OnTriggerEnter(go)
+    if (not gameObject.activeSelf or not go.activeSelf) then
+        return
+    end
     if (not ComUtil) then
         return
     end
+
     local lua = ComUtil.GetLuaTable(go.transform.parent.gameObject)
-    -- 是否相同类型
-    if (lua.data:IsCarpet() == data:IsCarpet()) then
-        -- 砖
-        if (data:IsCarpet()) then
-            colCount = colCount + 1
-            SetShadow()
-            return
-        end
-        -- 非砖
-        colCount = colCount + 1 -- 存在碰撞
-        if (isSelect and data:IsCanOverlay() and lua.data:IsCanReceive()) then
-            -- 放置在上面的家具					
-            data:SetParentID(lua.data:GetID())
-            lua.data:SetChildID(data:GetID(), true)
-            CSAPI.SetParent(gameObject, lua.gameObject)
-            lua.SetIsReceive(true)
-            isOverlay = true
-            -- ChangeGoPos(transform.position)
-        end
-        SetShadow()
+    -- 无碰撞
+    if (CheckIsNotTrigger(lua)) then
+        return
     end
+
+    -- 砖
+    if (data:IsCarpet() or data:IsBrick()) then
+        colCount = colCount + 1
+        SetShadow()
+        return
+    end
+
+    -- 非砖
+    colCount = colCount + 1 -- 存在碰撞
+    if (isSelect and data:IsCanOverlay() and lua.data:IsCanReceive()) then
+        -- 放置在上面的家具					
+        data:SetParentID(lua.data:GetID())
+        lua.data:SetChildID(data:GetID(), true)
+        CSAPI.SetParent(gameObject, lua.gameObject)
+        lua.SetIsReceive(true)
+        isOverlay = true
+        -- ChangeGoPos(transform.position)
+    end
+    SetShadow()
 end
 
 function OnTriggerExit(go)
-    local lua = ComUtil.GetLuaTable(go.transform.parent.gameObject)
-    if (lua.data:IsCarpet() == data:IsCarpet()) then
-        -- 砖
-        if (data:IsCarpet()) then
-            colCount = colCount - 1
-            SetShadow()
-            return
-        end
-        -- 非砖
-        colCount = colCount - 1
-        if (isSelect and data:IsCanOverlay() and lua.data:IsCanReceive()) then
-            -- 放置在上面的家具			
-            data:SetParentID(nil)
-            lua.data:SetChildID(data:GetID(), false)
-            CSAPI.SetParent(gameObject, tool.main.furniturePoint)
-            lua.SetIsReceive(false)
-            isOverlay = false
-            -- ChangeGoPos(transform.position)
-        end
-        SetShadow()
+    if (not gameObject.activeSelf or not go.activeSelf) then
+        return
     end
+
+    local lua = ComUtil.GetLuaTable(go.transform.parent.gameObject)
+    -- 无碰撞
+    if (CheckIsNotTrigger(lua)) then
+        return
+    end
+
+    -- 砖
+    if (data:IsCarpet() or data:IsBrick()) then
+        colCount = colCount - 1
+        SetShadow()
+        return
+    end
+
+    -- 非砖
+    colCount = colCount - 1
+    if (isSelect and data:IsCanOverlay() and lua.data:IsCanReceive()) then
+        -- 放置在上面的家具			
+        data:SetParentID(nil)
+        lua.data:SetChildID(data:GetID(), false)
+        CSAPI.SetParent(gameObject, tool.main.furniturePoint)
+        lua.SetIsReceive(false)
+        isOverlay = false
+        -- ChangeGoPos(transform.position)
+    end
+    SetShadow()
 end
 
 -- scan时反勾选box的isTrigger (常规状态下是勾选的)

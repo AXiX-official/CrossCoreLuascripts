@@ -126,6 +126,7 @@ function FightCardBase:LoadData(data, typ)
     ASSERT(config)
 
     table.copy(config, self)
+    self.name = self.name or "None"
 
     -- 通用属性
     self.sp = data.sp or 0

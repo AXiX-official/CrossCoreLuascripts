@@ -164,6 +164,11 @@ end
 --     end
 -- end
 
+--是墙砖
+function this:IsBrick()
+    return self:GetCfg().isBrick
+end
+
 -- 可容纳
 function this:IsCanReceive()
     return self:GetCfg().receive

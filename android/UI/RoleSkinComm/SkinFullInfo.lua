@@ -17,6 +17,8 @@ local isFirst=true;
 local isInit=false;
 local roleItem2=nil
 local countDown=0.46;
+local hasL2d=false;
+local isShowImg=false;
 
 function Awake()
     layout = ComUtil.GetCom(hsv, "UISV")
@@ -62,7 +64,7 @@ function Refresh()
         card=nil
         if currSkinInfo then
             -- 获取L2D按钮状态
-            local hasL2d=currSkinInfo:HasL2D();
+            hasL2d=currSkinInfo:HasL2D();
             curModelCfg=currSkinInfo:GetModelCfg();
             local cards=RoleMgr:GetCardsByCfgID(curModelCfg.role_id);
             rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(curModelCfg.role_id,curModelCfg.id);
@@ -71,7 +73,7 @@ function Refresh()
             end
             local useL2d=l2dOn;
             local comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
-            local isShowImg=false;
+            isShowImg=false;
             if comm and comm:IsShowImg() and rSkinInfo and rSkinInfo:CheckCanUse()~=true then
                 useL2d=false; 
                 isShowImg=true;
@@ -312,15 +314,16 @@ end
 function PlayMoveTween(isRTL)
     local x1 = 0
     local x2 = isRTL and 400 or -400
-    if(l2dOn) then 
-        UIUtil:SetObjFade(item1, 1, 0, nil, 1, 299, 1)
+    -- LogError(tostring(isShowImg))
+    if(not isShowImg and hasL2d) then 
+        UIUtil:SetObjFade(item1, 1, 0, nil, 1, 300, 1)
     else 
         UIUtil:SetObjFade(item1, 1, 0, nil, 300, 1, 1)
     end 
     UIUtil:SetPObjMove(item1, x1, x2, 0, 0, 0, 0, function()
         Refresh()
-        if(l2dOn) then 
-            UIUtil:SetObjFade(item1, 0, 1, nil, 1, 1, 0)
+        if(not isShowImg and hasL2d) then 
+            UIUtil:SetObjFade(item1, 0, 1, nil, 1, 300, 0)
         else 
             UIUtil:SetObjFade(item1, 0, 1, nil, 300, 1, 0)
         end 
@@ -328,6 +331,34 @@ function PlayMoveTween(isRTL)
     end, 301, 1)
 end
 
+
+local holdDownTime = 0
+local holdTime = 0.1
+local startPosX = 0
+
+function OnPressDown(isDrag, clickTime)
+    holdDownTime = Time.unscaledTime
+    startPosX = CS.UnityEngine.Input.mousePosition.x
+end
+
+function OnPressUp(isDrag, clickTime)
+    if Time.unscaledTime - holdDownTime >= holdTime then
+        local len = CS.UnityEngine.Input.mousePosition.x - startPosX
+        if (math.abs(len) > 100) then
+            local index=nowIdx
+            if (len > 0) then
+                 --图片左移
+                 index=nowIdx-1<=0 and 0 or nowIdx-1;
+            else
+                --图片右移
+                index=nowIdx+1>=#list and #list or nowIdx+1;
+            end
+            if index~=nowIdx then
+                layout:MoveToCenter(index);
+            end
+        end
+    end
+end
 
 function Update()
     if isFirst then

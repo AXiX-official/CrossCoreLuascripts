@@ -16,6 +16,7 @@ local conf = {
 {'6',	'6',	'61009',	'顷刻烟火',	'6',	'3',	'fireworks_IoIent',	'fireworks_IoIent_replace',	'board_fireworks_IoIent',	'商店购买',	'29,-22,1.32',	'CG03_FireworksLoIent',	'0,0,1',	'1',	'80404'},
 {'7',	'7',	'61010',	'导购进修课',	'7',	'2',	'trytomoveforward',	'trytomoveforward_replace',	'board_trytomoveforward',	'商店购买',	'-163,-386,0.95',	'CG06_TryToMoveForward_spine',	'0,-71,1',	'1',	'80405'},
 {'8',	'8',	'61004',	'基地勘测',	'8',	'4',	'base_check',	'',	'board_base_check',	'高级勘测奖励',	'0,0,0.98',	'XingYun',	'-16,-51,0.85',	'',	'1'},
+{'9',	'9',	'61011',	'游乐时光',	'9',	'2',	'play_time',	'',	'board_play_time',	'高级勘测奖励',	'-28,-89,1',	'2022_04',	'0,0,1',	'',	'1'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf
