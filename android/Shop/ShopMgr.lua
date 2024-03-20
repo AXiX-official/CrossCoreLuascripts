@@ -10,22 +10,29 @@ function this:Init(proto)
 		self:UpdateMonthDays(proto.m_cnt);
 	end
 	EventMgr.AddListener(EventType.Player_Update,this.OnPlayerUpdate)
-	self:CheckRedInfo();
 	self:SearchRefreshIDs();
-	self:LoadLocalRecord();
+	if self.localRecords ==nil then
+		self:LoadLocalRecord();
+	end
+	if self.storeVerInfo==nil then
+		self.storeVerInfo=FileUtil.LoadByPath("StoreVer.txt");
+	end
 	self:CheckCommReset();
+	-- self:CheckRedInfo();
 end
 
 function this.OnPlayerUpdate()
 	this:CheckRedInfo();
 end
 
-function this:UpdateData(id, info)
+function this:UpdateData(id, info,checkRed)
 	if self.records == nil then
 		self.records = {};
 	end
 	self.records[id] = info;
-	self:CheckRedInfo();
+	if checkRed then
+		self:CheckRedInfo();
+	end
 end
 
 --更新月卡\周卡信息
@@ -94,6 +101,10 @@ function this:CheckRedInfo()
 				data[page:GetID()][v:GetID()]=data[page:GetID()][v:GetID()] or true;
 			end
 		end
+	end
+	if self.pagesNewInfo~=nil and next(self.pagesNewInfo) then
+		data=data or {};
+		data.isRed=true;
 	end
     RedPointMgr:UpdateData(RedPointType.Shop,data)  
 end
@@ -354,7 +365,32 @@ function this:CheckCommReset()
 				end
 			end
 		end
-		EventMgr.Dispatch(EventType.Shop_NewInfo_Refresh,data);
+	end
+	--检测皮肤商店是否有新内容
+	local page2=self:GetPageByID(4);
+	if page2 and page2:GetStoreVer()~=nil and page2:GetCheckNew() then--同时填了checkNew字段和商店版本不一致时才做检查
+		local storeVer=page2:GetStoreVer();--检查本地缓存版本是否一致
+		if (self.storeVerInfo~=nil and storeVer~=self.storeVerInfo.ver) or self.storeVerInfo==nil then
+			data[page2:GetID()]={storeVer};
+		end
+	end
+	self.pagesNewInfo=data;
+	self:CheckRedInfo();
+	EventMgr.Dispatch(EventType.Shop_NewInfo_Refresh,self.pagesNewInfo);
+end
+
+--设置皮肤商店New的状态
+function this:SetSkinStoreNewState()
+	local page2=self:GetPageByID(4);
+	if page2 and page2:GetStoreVer()~=nil and page2:GetCheckNew() then 
+		local storeVer=page2:GetStoreVer();
+		self.storeVerInfo={ver=storeVer};
+		FileUtil.SaveToFile("StoreVer.txt",self.storeVerInfo);
+		if self.pagesNewInfo then
+			self.pagesNewInfo[4]=nil;
+			self:CheckRedInfo();
+			EventMgr.Dispatch(EventType.Shop_NewInfo_Refresh,self.pagesNewInfo);
+		end
 	end
 end
 
@@ -456,6 +492,8 @@ function this:Clear()
 	self.localRecords={};
 	self.newPageIds={};
 	self.fixedUpdateTime=nil;
+	self.storeVerInfo=nil;
+	self.pagesNewInfo=nil;
 end
 
 return this; 

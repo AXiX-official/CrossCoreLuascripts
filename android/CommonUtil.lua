@@ -104,3 +104,6 @@ require "ThinkingAnalyticsMgr"
 
 --new工具
 SectionNewUtil = require "SectionNewUtil"
+
+--声音
+require "SettingMgr"

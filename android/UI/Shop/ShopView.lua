@@ -165,9 +165,15 @@ function Refresh(isJump)
     end
     if currPageData and childPageID and currChildPage and newInfos and newInfos[currPageData:GetID()] and newInfos[currPageData:GetID()][childPageID] and currChildPage.tips then
         Tips.ShowTips(LanguageMgr:GetTips(currChildPage.tips));   --抛出刷新提示
-    elseif currPageData and childPageID==nil and newInfos and newInfos[currPageData:GetID()] and currPageData:GetTips() then
+    elseif currPageData and childPageID==nil and newInfos and newInfos[currPageData:GetID()] then
         --判断是否还有其它数据
-        Tips.ShowTips(LanguageMgr:GetTips(currPageData:GetTips()));   --抛出刷新提示
+        if currPageData:GetTips() then
+            Tips.ShowTips(LanguageMgr:GetTips(currPageData:GetTips()));   --抛出刷新提示
+        end
+        if currPageData:GetID()==4 then--皮肤商店
+            ShopMgr:SetSkinStoreNewState();--设置皮肤状态
+            
+        end
     end
     ShopMgr:SetCommResetInfo(currPageData:GetID(),childPageID);
     ShopMgr:CheckCommReset();--检测一次商店的新商品
@@ -368,7 +374,9 @@ function InitSV(donReset)
             if donReset then
                 isTweenning=false;
                 CSAPI.SetGOActive(mask,isTweenning);
-                currLayout:UpdateList();
+                -- currLayout:UpdateList();
+                currLayout:IEShowList(#curDatas);
+                SetSVActive();
             else
                 currLayout:IEShowList(#curDatas,OnAnimeEnd);
                 SetSVActive();
@@ -512,9 +520,10 @@ end
 --检测自动刷新时间
 function AutoRefresh()
 	if currPageData~=nil and currPageData:GetCommodityType()==CommodityType.Normal then--检测固定道具商店的重置时间和折扣时间
-		local nowTime=TimeUtil:GetTime();
+		local nowTime=TimeUtil:GetTime(1);
 		local checkList=currPageData:GetRefreshInfos();
 		local isReset,isRefresh=ShopCommFunc.IsRefreshCommodityInfos(checkList,nowTime);
+        -- LogError("isReset:"..tostring(isReset).."\t isRefresh:"..tostring(isRefresh))
         if lastTime~=0 and lastTime-1<=0 then
             ShopProto:GetShopResetTime();
 		end
@@ -523,12 +532,13 @@ function AutoRefresh()
             ShopProto:GetShopInfos()
             -- ShopProto:GetShopResetTime();
 			return
-        elseif isRefresh and currLayout then --道具购买期限刷新
+        elseif isRefresh and currLayout then --道具购买期限刷新    
             ShopMgr:CheckCommReset();
             local isDonReset=true;
             if currPageData:GetShowType()==ShopShowType.Skin then
                 isDonReset=false;
             end
+            -- LogError("道具购买期限刷新！"..tostring(isDonReset))
             InitSV(isDonReset);
             -- currLayout:UpdateList();
             -- ShopProto:GetShopResetTime();

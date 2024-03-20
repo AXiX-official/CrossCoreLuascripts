@@ -24,7 +24,7 @@ end
 function this.ClientInitFinish()
 	--检查一次发货信息
 	SDKPayMgr:SetLastPayInfo(nil,nil);
-	SDKPayMgr:SearchPayReward();
+	SDKPayMgr:SearchPayReward(true);
 	if CSAPI.GetChannelType()==ChannelType.QOO then
 		SDKPayMgr:CheckSDKOrder();--检查SDK订单信息
 	elseif this.isSDKInit and this.currPlatform==8 then --IOS
@@ -270,11 +270,13 @@ function this:SetLastPayInfo(_orderID,_payType)
 end
 
 --向服务器查询支付发下信息
-function this:SearchPayReward()
+function this:SearchPayReward(isFirst)
 	self.searchPayCount=0;
+	if not isFirst then
+		--锁屏商店界面
+		EventMgr.Dispatch(EventType.Shop_Buy_Mask,true)
+	end
 	self.searchPaySuccess=false;
-	--锁屏商店界面
-	EventMgr.Dispatch(EventType.Shop_Buy_Mask,true)
 	FuncUtil:Call(self.SendSearchPayReward,self,500,self.lastOrderID,self.lastPayType);
 end
 
@@ -287,14 +289,15 @@ function this:SendSearchPayReward(_orderID,_payType)
 	end
 	-- LogError("查询订单————————————————————————————>"..tostring(_orderID).."\t"..tostring(_payType));
 	self.searchPayCount=self.searchPayCount or 0;
+	local delay=self.searchPayCount>0 and 1000 or 0;
 	self.searchPayCount=self.searchPayCount+1;
 	PlayerProto:PayReward(_orderID,_payType);
-	local delay=self.searchPayCount>0 and 1000 or 0;
 	FuncUtil:Call(self.SendSearchPayReward,self,delay,_orderID,_payType);
 end
 
 --收到支付奖励信息
 function this:SetPayReward(proto)
+	-- LogError(proto)
 	if (proto and proto.rewards and #proto.rewards > 0) then
         if (self.payRewards == nil) then
             self.payRewards = proto.rewards

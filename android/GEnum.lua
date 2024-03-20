@@ -1,3 +1,4 @@
+
 -- 将名字与数值反向关联，就可以实用数值返回枚举值的名字
 function GenEnumNameByVal(name, enums)
     local tmpTb = {}
@@ -656,7 +657,9 @@ ActivityListType = {
     MissionContinue = 1003,
     Investment = 1004,
     NewYearContinue = 1005, --新年阶段任务
-    NewYearSignIn = 1006 --新年签到
+    NewYearSignIn = 1006, --新年签到
+    SignInCommon = 1007, --通用签到
+    SignInShadowSpider = 1008 --迷城蛛影签到
 }
 
 -- 剧情站位

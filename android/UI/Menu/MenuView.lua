@@ -33,7 +33,7 @@ local isReady = false
 
 local isLoading_Complete = false
 local menuBuyItem
-local endAnim
+--local endAnim
 
 -- 新春活动
 local isSpring = false
@@ -47,7 +47,7 @@ local enterRefreshTime = nil
 function Awake()
     cg_node = ComUtil.GetCom(node, "CanvasGroup")
     enterSV_sv = ComUtil.GetCom(enterSV, "ScrollRect")
-    endAnim = ComUtil.GetCom(node, "ActionBase")
+    --endAnim = ComUtil.GetCom(node, "ActionBase")
 
     -- init
     InitPanel()
@@ -350,13 +350,13 @@ function SetTweened()
     cg_node.alpha = 1
     CSAPI.SetScale(uis, 1, 1, 1)
     CSAPI.SetGOActive(anims, true)
-    if (endAnim) then
-        endAnim:ToPlay(function()
-            if (anims) then
-                CSAPI.SetGOActive(anims, false)
-            end
-        end)
-    end
+    -- if (endAnim) then
+    --     endAnim:ToPlay(function()
+    --         if (anims) then
+    --             CSAPI.SetGOActive(anims, false)
+    --         end
+    --     end)
+    -- end
 
     if (isRole) then
         cardIconItem.PlayLC() -- 立绘拉扯
@@ -609,19 +609,25 @@ function Update()
         enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
         SetEnter()
     end
+
+    -- 强制隐藏mask，防止锁屏
+    if (mask.activeSelf and animTimer ~= nil and (Time.time - animTimer) > 3) then
+        CSAPI.SetGOActive(mask, false)
+    end
+
 end
 ----------------------------------------动画+红点-----------------------------------------------】
 -- 处理动画在某个关键帧上的事件
 function Anim()
-    -- tip 图标拉扯
-    if ((Time.time - animTimer) > 0.25 and isPlayTopGrad == nil) then
-        isPlayTopGrad = 1
-        CSAPI.SetGOActive(cGrab, true)
-    end
-    if ((Time.time - animTimer) > 1 and isPlayTopGrad == 1) then
-        isPlayTopGrad = 2
-        CSAPI.SetGOActive(cGrab, false)
-    end
+    -- -- tip 图标拉扯
+    -- if ((Time.time - animTimer) > 0.25 and isPlayTopGrad == nil) then
+    --     isPlayTopGrad = 1
+    --     CSAPI.SetGOActive(cGrab, true)
+    -- end
+    -- if ((Time.time - animTimer) > 1 and isPlayTopGrad == 1) then
+    --     isPlayTopGrad = 2
+    --     CSAPI.SetGOActive(cGrab, false)
+    -- end
     -- 红点、上锁
     if ((Time.time - animTimer) > 1.05 and isRedPoint == nil) then
         isRedPoint = 1
@@ -654,7 +660,6 @@ function Anim()
 end
 
 function StopAnim()
-    isAnim = false
     MenuMgr:SetPlay(1)
     -- CSAPI.SetGOActive(anims, false)
     CSAPI.SetGOActive(mask, false)
@@ -669,6 +674,7 @@ function StopAnim()
         local cg = ComUtil.GetOrAddCom(iconParent, "CanvasGroup")
         cg.alpha = 1
     end
+    isAnim = false
 end
 
 -- 任务的bar
@@ -727,9 +733,9 @@ function OnRedPointRefresh()
     isOpen = lockData["MissionView"]
     if (isOpen) then
         local _data = RedPointMgr:GetData(RedPointType.Mission)
-        local b = false 
-        if(_data and _data[1]==1) then 
-            b = true 
+        local b = false
+        if (_data and _data[1] == 1) then
+            b = true
         end
         UIUtil:SetRedPoint2(menuRedPath, this["btnMissionView"], b, 220, 27, 0)
     end
@@ -1491,7 +1497,7 @@ function OnViewOpened(viewKey)
     local cfg = Cfgs.view:GetByKey(viewKey)
     if (IsNeedAdd(viewKey) or (viewKey ~= "Menu" and cfg and not cfg.layer and not cfg.is_window)) then
         openViews[viewKey] = 1
-        if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView") then
+        if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView" and viewKey ~="MenuBuyPanel") then
             RoleAudioPlayMgr:StopSound() -- 有其它界面打开则中断语音
         end
 
@@ -1734,15 +1740,18 @@ end
 -- 登录语言
 function PlayLoginVoice()
     local isPlay = false
-    if (isRole and isChangeImgPlayVoice and CheckIsTop() and (not ActivityMgr:CheckIsNeedShow()) and (not SignInMgr:CheckNeedSignIn())) then
-        if(PlayerClient:IsPlayerBirthDay() and not PlayerClient:IsPlayBirthDayVoice()) then 
-            cardIconItem.PlayVoice(RoleAudioType.birthday)  --玩家生日
-        elseif(MenuMgr:CheckIsFightVier()) then 
+    if (isRole and isChangeImgPlayVoice and CheckIsTop() and (not ActivityMgr:CheckIsNeedShow()) and
+        (not SignInMgr:CheckNeedSignIn())) then
+        if (PlayerClient:IsPlayerBirthDay() and not PlayerClient:IsPlayBirthDayVoice()) then
+            cardIconItem.PlayVoice(RoleAudioType.birthday) -- 玩家生日
+        elseif (MenuMgr:CheckIsFightVier()) then
             cardIconItem.PlayVoice(RoleAudioType.levelBack) -- 归来语音
             MenuMgr:SetFightOver(false)
-        else 
-            cardIconItem.PlayVoice(RoleAudioType.login)
-        end 
+        else
+            if (not cardIconItem.HadInAudio()) then -- 无开场动画语音才会播登录语音
+                cardIconItem.PlayVoice(RoleAudioType.login)
+            end
+        end
         isPlay = true
     end
     isChangeImgPlayVoice = false

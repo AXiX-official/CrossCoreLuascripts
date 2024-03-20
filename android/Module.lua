@@ -111,7 +111,7 @@ _G.MgrCenter = require "MgrCenter"
 
 
 --设置
-_G.SettingMgr = require "SettingMgr"
+-- _G.SettingMgr = require "SettingMgr"
 
 --结算封装工具
 _G.FightOverTool = require "FightOverTool"

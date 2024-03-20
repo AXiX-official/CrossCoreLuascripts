@@ -1,6 +1,9 @@
 -- 设置
 require "SettingKey"
 -- local this = MgrRegister("SettingMgr")
+SettingMgr = {}
+local this = SettingMgr
+
 function this:Init()
     self.datas = {}
     self:InitLocalCfg()
@@ -105,10 +108,10 @@ end
 
 -- 预先设置
 function this:LoginSet()
-    -- 音频
-    CSAPI.SetVolume(self:GetValue(s_audio_scale.music) / 100 * self:GetSoundVolumeCoeff("bgm"), "bgm")
-    CSAPI.SetVolume(self:GetValue(s_audio_scale.sound) / 100 * self:GetSoundVolumeCoeff(""), "")
-    CSAPI.SetVolume(self:GetValue(s_audio_scale.dubbing) / 100, "feature")
+    -- -- 音频
+    -- CSAPI.SetVolume(self:GetValue(s_audio_scale.music) / 100 * self:GetSoundVolumeCoeff("bgm"), "bgm")
+    -- CSAPI.SetVolume(self:GetValue(s_audio_scale.sound) / 100 * self:GetSoundVolumeCoeff(""), "")
+    -- CSAPI.SetVolume(self:GetValue(s_audio_scale.dubbing) / 100, "feature")
 
     -- 画质（+描边开关）
     CSAPI.SetGameLv(self:GetGameImgLv())
@@ -124,6 +127,14 @@ function this:LoginSet()
     -- CSAPI.SetShaderOutline(self:GetValue(s_toggle_mb_key)==1)
     -- 首次安装按机型设置画质
     self:SetGameLVFirst()
+end
+
+-- 预先设置音量
+function this:LoginSoundSet()
+    -- 音频
+    CSAPI.SetVolume(self:GetValue(s_audio_scale.music) / 100 * self:GetSoundVolumeCoeff("bgm"), "bgm")
+    CSAPI.SetVolume(self:GetValue(s_audio_scale.sound) / 100 * self:GetSoundVolumeCoeff(""), "")
+    CSAPI.SetVolume(self:GetValue(s_audio_scale.dubbing) / 100, "feature")
 end
 
 function this:GetSoundVolumeCoeff(key)

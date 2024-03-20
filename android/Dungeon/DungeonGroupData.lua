@@ -140,4 +140,29 @@ function this:GetCGUnLock()
     return self.cfg.unlockCG
 end
 
+-----------------------------------------------TaoFa-----------------------------------------------
+function this:GetBGPath()
+    local name = self.cfg and self.cfg.bg or ""
+    if name ~= "" then
+        return "UIs/DungeonActivity/TaoFa/" .. name .."/bg"
+    end
+    return nil
+end
+
+function this:GetVideoName()
+    return self.cfg and self.cfg.video
+end
+
+function this:GetImgPath()
+    local name = self.cfg and self.cfg.img or ""
+    if name ~= "" then
+        return "UIs/DungeonActivity/TaoFa/" .. name .."/img"
+    end
+    return nil 
+end
+
+function this:GetShowType()
+    return self.cfg and self.cfg.showType or 1
+end
+
 return this;

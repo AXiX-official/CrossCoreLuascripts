@@ -6,7 +6,7 @@ isHideQuestionItem = true -- 外部调用
 function Awake()
     recordBeginTime = CSAPI.GetRealTime()
     -- 立绘
-    cardIconItem = RoleTool.AddRole(iconParent)
+    cardIconItem = RoleTool.AddRole(iconParent,nil,nil,false)
 
     UIUtil:AddQuestionItem("RoleInfo", gameObject, questionP)
 end
@@ -62,6 +62,9 @@ function OnInit()
         OpenAnim(true)
     end)
 
+    --卸载装备
+    eventMgr:AddListener(EventType.Equip_Down_Ret,RefreshPanel)
+    
     -- 卡牌刷新
     eventMgr:AddListener(EventType.Card_Update, RefreshPanel)
     eventMgr:AddListener(EventType.Role_Tag_Update, SetTag)

@@ -99,7 +99,8 @@ function EPlayerInfo(proto)
     local cur, max = CRoleMgr:GetCount()
     CSAPI.SetText(txtDysj2, cur .. "/" .. max)
     -- 最高段位
-    local zgdwRate = ExerciseMgr:GetMaxDwName()
+    local cfgExercise = Cfgs.CfgPracticeRankLevel:GetByID(pData.max_rank_level or 0)
+    local zgdwRate = cfgExercise and cfgExercise.name or "--"
     CSAPI.SetText(txtZgdw2, zgdwRate .. "")
     -- 剧情进度
     local max_dup = pData.max_dup or 0

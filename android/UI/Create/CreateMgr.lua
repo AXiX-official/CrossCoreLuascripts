@@ -223,12 +223,12 @@ function this:CardCreateFinishRet(proto)
     _datas.lottery_id = curData:GetCfg().sName
     _datas.lottery_hero = self_info and self_info.num or "无保底角色"
     _datas.add_num = self:GetCreateCnt(proto.card_pool_id)
-    _datas.item_gain = {}
-    for i, v in ipairs(proto.infos) do
-        for k, m in ipairs(v.items) do
-            table.insert(_datas.item_gain, v)
-        end
-    end
+    _datas.item_gain = proto.infos--{}
+    -- for i, v in ipairs(proto.infos) do
+    --     for k, m in ipairs(v.items) do
+    --         table.insert(_datas.item_gain, m)
+    --     end
+    -- end
     _datas.item_use = proto.costs
     ThinkingAnalyticsMgr:TrackEvents("draw_card", _datas)
 end
@@ -257,10 +257,10 @@ function this:FirstCardCreateRet(proto)
     _datas.lottery_id = curData:GetCfg().sName
     _datas.lottery_hero = self_info and self_info.num or "无保底英雄"
     _datas.add_num = proto.create_cnt
-    _datas.item_gain = {}
-    for i, v in ipairs(proto.hadGetLog) do
-        table.insert(_datas.item_gain, v)
-    end
+    _datas.item_gain = proto.hadGetLog --{}
+    -- for i, v in ipairs(proto.hadGetLog) do
+    --     table.insert(_datas.item_gain, v)
+    -- end
     _datas.item_use = proto.costs
     ThinkingAnalyticsMgr:TrackEvents("draw_card", _datas)
 end

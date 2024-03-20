@@ -34,7 +34,7 @@ end
 
 --购买回调
 function ShopProto:BuyRet(proto)
-    ShopMgr:UpdateData(proto.id,proto.info);
+    ShopMgr:UpdateData(proto.id,proto.info,true);
     ShopMgr:UpdateMonthDays(proto.m_cnt);
     EventMgr.Dispatch(EventType.Shop_Buy_Ret,proto)
     if self.buyCallBack then

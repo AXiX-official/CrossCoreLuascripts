@@ -1058,6 +1058,7 @@ function this:SendToQuit()
             nDuplicateID = currId
         });
     end
+    self:SetCurrId()
 end
 
 -- 战斗结束数据

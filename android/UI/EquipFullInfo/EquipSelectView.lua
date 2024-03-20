@@ -522,10 +522,10 @@ function OnUpOneRet(eventData)
         CSAPI.PlayUISound("ui_stretch")
     end
     EventMgr.Dispatch(EventType.Equip_Change,true);
-    if isSuitSelect then
+    -- if isSuitSelect then
         RefreshList();
-        return;
-    end
+    --     return;
+    -- end
     -- if suitSelect then
     --     suitSelect.Close();
     -- end

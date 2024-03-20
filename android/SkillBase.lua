@@ -1170,7 +1170,7 @@ function SkillBase:AICanUse()
 		--LogDebugEx("2222222222222222")
 		if self.sp and self.sp > 0 then
 			--LogDebugEx("3333333333333333")
-			if mgr:IsReserveSP() then 
+			if mgr:IsReserveSP() and (self.upgrade_type or 4) > 3 then  -- upgrade_type[1-3]的不限制
 				LogDebugEx("AICanUse:sp保留")
 				return 
 			end -- 保留sp

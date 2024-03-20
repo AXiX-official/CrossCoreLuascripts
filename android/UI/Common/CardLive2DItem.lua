@@ -5,7 +5,7 @@ local oldModelId = nil
 local clickRecords = {}
 local mulNames = {} -- 多段组点击记录
 local hideTxt = false
-local graphic=nil;
+local graphic = nil;
 function Awake()
     img_imgObj = ComUtil.GetCom(imgObj, "Image")
 end
@@ -58,7 +58,7 @@ function SetImg()
         ResUtil:CreateSpine(l2dName .. "/" .. l2dName, 0, 0, 0, prefabObj, function(go)
             l2dGo = go
             l2d = ComUtil.GetCom(l2dGo, "CSpine")
-            graphic=ComUtil.GetComInChildren(l2dGo, "SkeletonGraphic");
+            graphic = ComUtil.GetComInChildren(l2dGo, "SkeletonGraphic");
             SetBlack(false);
             if (callBack) then
                 callBack()
@@ -163,7 +163,7 @@ function ItemDragCB(cfgChild, x, y)
         return
     end
     local limit = cfgChild.clickNum[5] or 1
-    local moveSpeed = cfgChild.clickNum[4] and cfgChild.clickNum[4]*0.001 or 0.001
+    local moveSpeed = cfgChild.clickNum[4] and cfgChild.clickNum[4] * 0.001 or 0.001
     l2d:PlayByDrag(cfgChild.sName, cfgChild.gesture, x, y, cfgChild.trackIndex, limit, moveSpeed)
 end
 
@@ -313,6 +313,9 @@ end
 
 -- 点击
 function OnClick()
+    if (not needClick) then
+        return
+    end
     PlayVoice()
 end
 
@@ -439,4 +442,16 @@ end
 function Reset()
     oldModelId = nil
     clickRecords = {}
+end
+
+--是否有开场动画语音
+function HadInAudio()
+    if (cfg) then
+        for k, v in ipairs(cfg.item) do
+            if (v.sName == "in") then
+                return v.audioId ~= nil
+            end
+        end
+    end
+    return false
 end

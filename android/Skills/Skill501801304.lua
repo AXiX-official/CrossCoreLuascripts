@@ -29,8 +29,8 @@ function Skill501801304:OnAttackBegin(caster, target, data)
 	else
 		return
 	end
-	-- 302100301
-	self:DelBuffQuality(SkillEffect[302100301], caster, target, data, 1,2)
+	-- 501800301
+	self:DelBufferGroup(SkillEffect[501800301], caster, target, data, 2,2)
 end
 -- 攻击结束
 function Skill501801304:OnAttackOver(caster, target, data)

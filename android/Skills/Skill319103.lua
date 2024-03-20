@@ -28,6 +28,8 @@ function Skill319103:OnActionOver(caster, target, data)
 	else
 		return
 	end
+	-- 8678
+	local count678 = SkillApi:SkillLevel(self, caster, target,3,7009002)
 	-- 319103
-	self:CallSkill(SkillEffect[319103], caster, self.card, data, 700900201)
+	self:CallSkill(SkillEffect[319103], caster, self.card, data, 700900200+count678)
 end

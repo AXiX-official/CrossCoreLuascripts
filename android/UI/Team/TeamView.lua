@@ -697,6 +697,7 @@ end
 
 function Exit()
     local assist=teamData:GetAssistData();
+	RoleAudioPlayMgr:StopSound();
     TeamMgr:SaveEditTeam(function()
 		if closeFunc then
 			closeFunc(assist);
@@ -745,6 +746,11 @@ function OnOpenPreset(data)
     end
     clickID=nil;
 	Refresh();
+	--播放队长出击语音
+	local member=teamData:GetLeader();
+	if member then
+		RoleAudioPlayMgr:PlayByType(member:GetModelID(), RoleAudioType.enterLevel)
+	end
 end
 
 --编成预设
@@ -1254,6 +1260,8 @@ function JoinCard(card,row,col,index,isReplace)
 		RefreshCardList();
 		RefreshFormationView()
 		isChange=true;
+		--播放出击语音
+		RoleAudioPlayMgr:PlayByType(card:GetModelCfg().id, RoleAudioType.enterLevel)
 	else
 		Log("位置不足！");
 	end
@@ -1406,6 +1414,11 @@ end
 function SetTeamLeader(cid)
 	teamData:SetLeader(cid);
     isChange=true
+	--设置队长播放对应角色出击音效
+	local member=teamData:GetItem(cid);
+	if member then
+		RoleAudioPlayMgr:PlayByType(member:GetModelID(), RoleAudioType.enterLevel)
+	end
     Refresh();
 end
 

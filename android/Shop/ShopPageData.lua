@@ -38,6 +38,10 @@ function this:GetIsHot()
 	return self.cfg and self.cfg.isHot==1 or nil;
 end
 
+function this:GetStoreVer()
+	return self.cfg and self.cfg.storeVer or nil;
+end
+
 --返回ID
 function this:GetID()
 	return self.cfg and self.cfg.id or nil;
@@ -71,6 +75,10 @@ function this:GetCloseTime()
 		time = self.cfg.closeTime;
 	end
 	return time;
+end
+
+function this:GetCheckNew()
+	return self.cfg and self.cfg.checkNew==1 or false;
 end
 
 --返回开始时间秒数

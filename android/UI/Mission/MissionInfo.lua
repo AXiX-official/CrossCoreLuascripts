@@ -149,6 +149,8 @@ function this:GetSortIndex()
 			self.sortIndex = 0
 		elseif(self:IsFinish()) then
 			self.sortIndex = 1000
+		elseif(self.cfg and self.cfg.index)then
+			self.sortIndex = self.cfg.index
 		else
 			self.sortIndex = 100 - self:GetType()
 		end

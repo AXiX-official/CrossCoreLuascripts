@@ -96,7 +96,7 @@ function InitListener()
 	eventMgr:AddListener(EventType.Battle_Turn_Changed, OnBattleChangeRound);
 	
 	eventMgr:AddListener(EventType.Battle_UI_BlackShow, OnBlackClose);
-	-- eventMgr:AddListener(EventType.AIPreset_Battle_SetRet,OnAISetRet)
+	eventMgr:AddListener(EventType.AIPreset_Battle_SetRet,OnAISetRet)
 
 	eventMgr:AddListener(EventType.Mission_List, OnTowerRedRefresh)
 end
@@ -944,7 +944,7 @@ function OnClickMission()
 	end
 end
 
---[[
+
 -------------------------------------------寻路AIUI------------------------------
 function OnAISetRet(proto)
 	if proto and proto.ret==true then
@@ -971,7 +971,7 @@ function OnAISetRet(proto)
 		end
 	end
 end
-
+--[[
 function InitAIMove()
 	--自动寻路
 	if dungeonData then

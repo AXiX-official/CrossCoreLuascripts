@@ -99,7 +99,12 @@ function InitHotItem()
 end
 
 function SetFighting(num)
-    CSAPI.SetText(txt_fighting,tostring(tostring(num==nil and 0 or num)));
+    if num==nil or num==0 then
+        CSAPI.SetGOActive(fightObj,false);
+    else
+        CSAPI.SetGOActive(fightObj,true);
+        CSAPI.SetText(txt_fighting,tostring(tostring(num)));
+    end
 end
 
 function RefreshItems()

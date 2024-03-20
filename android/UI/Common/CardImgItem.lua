@@ -158,6 +158,9 @@ end
 
 -- 点击
 function OnClick()
+    if (not needClick) then
+        return
+    end
     PlayVoice()
 end
 

@@ -137,7 +137,7 @@ function Refresh(_data, _elseData)
             return
         end
 
-        if rewards ~= nil and #rewards > 0 and DungeonMgr:IsCurrTower() then --爬塔特殊显示
+        if rewards ~= nil and #rewards > 0 and DungeonMgr:IsCurrTower() and not isSweep then --爬塔特殊显示
             CSAPI.SetGOActive(node, false)
             UIUtil:OpenReward({rewards},{isTower = true});
         else
