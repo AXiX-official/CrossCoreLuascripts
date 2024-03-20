@@ -1,5 +1,6 @@
 --卡牌角色
 local curSkinData = nil
+local baseSkinData = nil
 local panelNames = {"ArchiveRoleZLNew","ArchiveRoleZLNew", "ArchiveRoleTC", "ArchiveRoleJQ", "ArchiveRoleCG", "ArchiveRoleApparel"}
 local lastIndex = 1
 local lastSkinIdx = 1
@@ -116,6 +117,7 @@ function SetLeft()
 	end)
 	
 	curSkinData = models[1]
+	baseSkinData = models[1]
 	
 	--角色
 	SetRole(curSkinData:GetSkinID())
@@ -207,7 +209,8 @@ function AddPanel(i)
 		panel = ComUtil.GetLuaTable(go)
 		panels[panelNames[i]] = panel
 	end
-	local elseData = curSkinData
+	-- local elseData = curSkinData
+	local elseData = baseSkinData
 	if(panelNames[i] == "ArchiveRoleApparel") then
 		panel.SetRoleParent(cardIconItem)
 	elseif(panelNames[i] == "ArchiveRoleTC") then

@@ -83,14 +83,24 @@ end
 -- 未获得的
 -- show:是否是商品 ，shopId:显示逻辑（商品就填商品id，否则填1：显示 不填不显示）
 function this:IsShow()
+    -- 配置了时间的
+    if (self:GetCfg().sStart or self:GetCfg().sEnd) then
+        local curTime = TimeUtil:GetTime()
+        local sTime = self:GetCfg().sStart and TimeUtil:GetTimeStampBySplit(self:GetCfg().sStart) or nil
+        local eTime = self:GetCfg().sEnd and TimeUtil:GetTimeStampBySplit(self:GetCfg().sEnd) or nil
+        if ((sTime and curTime < sTime) or (eTime and eTime < curTime)) then
+            return false --不在显示时间内
+        end
+    end
+
     local shopId = self:GetCfg().shopId
     if (self:GetCfg().show) then
         -- 是商品
         local cfg = shopId and Cfgs.CfgCommodity:GetByID(shopId) or nil
         if (cfg) then
             local curTime = TimeUtil:GetTime()
-            --local startTime = cfg.sBuyStart and GCalHelp:GetTimeStampBySplit(cfg.sBuyStart) or nil
-            --local sBuyEnd = cfg.sBuyEnd and GCalHelp:GetTimeStampBySplit(cfg.sBuyEnd) or nil
+            -- local startTime = cfg.sBuyStart and GCalHelp:GetTimeStampBySplit(cfg.sBuyStart) or nil
+            -- local sBuyEnd = cfg.sBuyEnd and GCalHelp:GetTimeStampBySplit(cfg.sBuyEnd) or nil
             local startTime = cfg.sBuyStart and TimeUtil:GetTimeStampBySplit(cfg.sBuyStart) or nil
             local sBuyEnd = cfg.sBuyEnd and TimeUtil:GetTimeStampBySplit(cfg.sBuyEnd) or nil
             if (startTime and curTime < startTime) then

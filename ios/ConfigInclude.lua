@@ -299,6 +299,7 @@ local ConfigList =
 	'DungeonGroup1',
 	'DungeonGroup2',
 	'DungeonGroup3',
+	'DungeonGroup4',
 	'Emoji',
 	'EmojiConf',
 	'ExploreBase',

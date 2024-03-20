@@ -148,10 +148,14 @@ end
 
 -- 当前登录第一次打开主界面 
 function this:GetIsPlay()
-    return self.isPlay and self.isPlay == 1
+    if(self.isPlayNum~=nil) then
+        return true --已播放
+    else 
+        return false 
+    end 
 end
 function this:SetPlay(n)
-    self.isPlay = n
+    self.isPlayNum = n
 end
 
 ------------------------------------------------------------------模块开启(记录未开启的数据)

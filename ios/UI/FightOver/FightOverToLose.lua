@@ -37,7 +37,7 @@ function SetStarInfos()
     end
 
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon.type == eDuplicateType.Tower then
+    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa then
         CSAPI.SetGOActive(taskObj, false)
         return
     end

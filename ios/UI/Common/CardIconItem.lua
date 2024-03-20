@@ -177,3 +177,12 @@ end
 function Reset()
     
 end
+
+--是否有开场动画语音
+function HadInAudio()
+    if (isLive2D) then
+       return live2DItemLua.HadInAudio()
+    else
+       return false 
+    end
+end

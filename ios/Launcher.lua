@@ -98,6 +98,10 @@ function Init()
 
     CSAPI.OpenView("ColorMask");
     FuncUtil:Call(LoadFirstScene,nil,500);   
+
+	--习惯设置
+	SettingMgr:Init();
+	FuncUtil:Call(SettingMgr.LoginSoundSet,SettingMgr,50);
 end
 
 function LoadFirstScene()
@@ -183,13 +187,14 @@ function OnLoginSceneLoaded()
 	--引导初始化
 	GuideMgr:Init();	
 
-     --习惯设置
-	 SettingMgr:Init();
-	 --if(CSAPI.GetGlobalGO("CommonRT"))then
+    --习惯设置
+    -- SettingMgr:Init();
+    --if(CSAPI.GetGlobalGO("CommonRT"))then
 	--	 SettingMgr:LoginSet();
-	 --else
-		 FuncUtil:Call(SettingMgr.LoginSet,SettingMgr,50);
-	 --end
+	--else
+		--音量的设置提交到前面加载
+		FuncUtil:Call(SettingMgr.LoginSet,SettingMgr,50);
+	--end
 
 	--多语言 
 	--LanguageMgr:ChangeLanguage(4) --1234  中文，繁体，日语，英文

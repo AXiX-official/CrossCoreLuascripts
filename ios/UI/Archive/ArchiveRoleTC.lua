@@ -22,10 +22,7 @@ end
 
 function Refresh(_data, _selectSkin)
 	data = _data
-	--local voiceInfo = CRoleMgr:GetScriptCfg(data:GetID(), _selectSkin:GetSkinID())
-	--curDatas = voiceInfo and voiceInfo:GetArr() or {}
-	--curDatas = voiceInfo and voiceInfo:GetArr() or {}
-	curDatas = CRoleMgr:GetScriptCfgs(data:GetID(), _selectSkin:GetSkinID())
+	curDatas = CRoleMgr:GetRoleScriptCfgs(data:GetID(), true)
 	tlua:AnimAgain()
 	layout:IEShowList(#curDatas)
 end

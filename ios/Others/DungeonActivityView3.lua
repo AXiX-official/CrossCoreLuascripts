@@ -51,11 +51,20 @@ function OnOpen()
     end
     
     if data then
+        SetEffectScale()
         SetTime()
         SetNum()
         SetRed(MissionMgr:CheckDungeonActivityRed(data.id))
         -- SetPlot()
     end
+end
+
+function SetEffectScale()
+    local canvasSize = CSAPI.GetMainCanvasSize()
+    local scale1 = canvasSize[0] / 1920
+    local scale2 = canvasSize[1] / 1080
+    local scale = scale1 > scale2 and scale1 or scale2
+    CSAPI.SetScale(effect_bg,scale,scale,scale)
 end
 
 function SetTime()

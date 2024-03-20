@@ -551,6 +551,7 @@ function OnClickLayout()
             id = curThemeID
         }})
         LanguageMgr:ShowTips(21026)
+        RefreshLayout()
     end
 end
 
@@ -710,5 +711,14 @@ function SortByDefaultTheme(a, b,ud)
         else
             return a.id > b.id
         end
+    end
+end
+
+
+function RefreshLayout()
+    if (isDetail) then
+        layout2:UpdateList()
+    else
+        layout1:UpdateList()
     end
 end

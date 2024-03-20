@@ -8,11 +8,6 @@ function Skill332203:Init(skillID, card)
 end
 -- 死亡时
 function Skill332203:OnDeath(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
 	-- 8070
 	if SkillJudger:TargetIsSelf(self, caster, target, true) then
 	else

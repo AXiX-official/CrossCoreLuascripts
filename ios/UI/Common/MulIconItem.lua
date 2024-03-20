@@ -183,3 +183,8 @@ function GetIconName()
         return imgItemLua.GetIconName()
     end
 end
+
+--是否有开场动画语音
+function HadInAudio()
+   return false 
+end

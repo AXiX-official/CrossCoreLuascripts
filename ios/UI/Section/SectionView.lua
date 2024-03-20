@@ -537,7 +537,7 @@ function InitExerciseView()
         -- CSAPI.SetScriptEnable(btnExerciseR, "Button", false)
         ResUtil:LoadBigImg(btnExerciseR, "UIs/Exercise/1/bg3")
     end
-    isPvpRet = ExerciseMgr:CheckIsInit()
+    isPvpRet = ExerciseMgr:GetEndTime() ~= 0
 end
 
 -- 初始化活动界面
@@ -2082,6 +2082,9 @@ function OnDropEnd2(_type)
 end
 
 function ShowDropPanel(type)
+    if type == 3 and not isPvpRet then
+        ExerciseMgr:GetPracticeInfo(true, false)
+    end
     currIndex = 2
     curState = 1
     isViewDrop = true

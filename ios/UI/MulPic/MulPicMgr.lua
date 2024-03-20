@@ -32,7 +32,7 @@ function this:GetData(id)
 end
 
 -- 列表（包含不可用,默认true）
-function this:GetArr(isContain,isAllTime)
+function this:GetArr(isContain)
     isContain = isContain == nil and true or false
     local arr = {}
     local datas = self:GetDatas()

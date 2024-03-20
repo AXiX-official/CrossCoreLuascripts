@@ -43,6 +43,7 @@ local conf = {
 {'33',	'Uillean',	'cn'},
 {'34',	'Silver_Feather',	'cn'},
 {'35',	'Zeus',	'cn'},
+{'36',	'Lepus',	'cn'},
 },
 }
 --cfgSoundLanguage = conf

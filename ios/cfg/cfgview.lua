@@ -310,6 +310,10 @@ local conf = {
 {'300',	'DungeonActivity3',	'DungeonActivity3/DungeonActivityView3',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'301',	'DungeonRole',	'DungeonRole/DungeonRoleView',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'302',	'DungeonTaoFaBuy',	'DungeonActivity2/DungeonTaoFaBuy',	'',	'Top',	'',	'',	'1',	'',	'',	'',	''},
+{'303',	'ExplainBox',	'Tips/ExplainBox',	'',	'Topest',	'',	'',	'1',	'',	'',	'',	''},
+{'304',	'DungeonActivity4',	'DungeonActivity4/DungeonActivityView4',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'305',	'DungeonShadowSpider',	'DungeonActivity4/DungeonShadowSpider',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'306',	'VideoPlayer',	'VideoPlayer/VideoPlayer',	'',	'Top',	'',	'',	'',	'',	'1',	'1',	''},
 },
 }
 --cfgview = conf

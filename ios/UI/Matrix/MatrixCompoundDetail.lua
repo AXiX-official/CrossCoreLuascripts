@@ -276,14 +276,17 @@ function ShowRewardPanel(proto)
 end
 
 function OnViewOpened(viewKey)
-    if (viewKey == "RewardPanel" or viewKey == "GoodsFullInfo" or viewKey == "GoodsFullInfo2") then
+    if (viewKey == "RewardPanel" or viewKey == "GoodsFullInfo" or viewKey == "GoodsFullInfo2" or viewKey=="MatrixResPanel") then
         --cv_middle.overrideSorting = false
         CSAPI.SetGOActive(objTx, false)
     end
 end
 
 function OnViewClosed(viewKey)
-    if (viewKey == "RewardPanel" or viewKey == "GoodsFullInfo" or viewKey == "GoodsFullInfo2") then
+    if(CSAPI.IsViewOpen("MatrixResPanel")) then 
+        return
+    end 
+    if (viewKey == "RewardPanel" or viewKey == "GoodsFullInfo" or viewKey == "GoodsFullInfo2" or viewKey=="MatrixResPanel") then
         --cv_middle.overrideSorting = true
         CSAPI.SetGOActive(objTx, true)
     end

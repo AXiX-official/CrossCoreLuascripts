@@ -45,7 +45,7 @@ end
 --副本开启
 function this:IsDungeonOpen()
     if self.data and self.data.nBegTime and self.data.nBattleendTime then
-        return TimeUtil:GetTime() >= self.data.nBegTime and TimeUtil:GetTime() < self.data.nBattleendTime,LanguageMgr:GetByID(24003)
+        return TimeUtil:GetTime() >= self.data.nBegTime and TimeUtil:GetTime() < self.data.nBattleendTime,LanguageMgr:GetTips(24003)
     end
     return false,""
 end
