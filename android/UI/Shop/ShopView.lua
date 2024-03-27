@@ -839,7 +839,7 @@ function OnBuyRet(proto)
                 cost_type=priceInfo~=nil and tostring(priceInfo[1].id) or "免费",
                 cost_num=currPrice,
             }
-            ThinkingAnalyticsMgr:TrackEvents("store_buy",record )
+            BuryingPointMgr:TrackEvents("store_buy",record )
         end
         if comm:GetType()==CommodityItemType.MonthCard then --月卡
             ClientProto:GetMemberRewardInfo();
@@ -880,7 +880,7 @@ function OnExchangeRet(proto)
                 cost_num=currPrice,
             }
             -- LogError(record)
-            ThinkingAnalyticsMgr:TrackEvents("store_buy",record )
+            BuryingPointMgr:TrackEvents("store_buy",record )
         end
     end
     Refresh();

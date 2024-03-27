@@ -368,7 +368,7 @@ function PlotPlayOver()
 	if isAuto then
 		isAuto = false;
 	end	
-	ThinkingAnalyticsMgr:TrackEvents("plot_dialogue", {reason = "完成对话", plot_id = storyData:GetID()})
+	BuryingPointMgr:TrackEvents("plot_dialogue", {reason = "完成对话", plot_id = storyData:GetID()})
 	isPlotEnd = true
 	SetTween(false)
 end
@@ -492,6 +492,12 @@ function PlayPlot()
 	if currentPlotData:GetContent() == nil or currentPlotData:GetContent() == "" then --无对话框的时候播放完毕
 		FuncUtil:Call(OnPlayOver, nil, delayTimer * 1000);
 	end
+
+	--打点
+	local recordId = currentPlotData.cfg.record_id
+	if recordId then
+		BuryingPointMgr:BuryingPoint("after_login",recordId)
+end
 end
 
 --播放震动
@@ -1135,7 +1141,7 @@ function OnClickSure()
 	PlotTween.FadeIn(blackMask, nil, function()
 		CloseView()
 	end)
-	ThinkingAnalyticsMgr:TrackEvents("plot_dialogue", {reason = "跳过对话", plot_id = storyData:GetID()})
+	BuryingPointMgr:TrackEvents("plot_dialogue", {reason = "跳过对话", plot_id = storyData:GetID()})
 end
 
 function OnClickCancel()

@@ -118,7 +118,7 @@ function EquipProto:EquipUpRet(proto)
 			}},
 			role_id=proto.target_card_id,
 		}
-		ThinkingAnalyticsMgr:TrackEvents("chipWear", data)
+		BuryingPointMgr:TrackEvents("chipWear", data)
 		EventMgr.Dispatch(EventType.Equip_UpOne_Ret,{equipId=proto.equip_id, cardId=proto.target_card_id})
 	end
 end
@@ -185,7 +185,7 @@ function EquipProto:EquipUpgradeRet(proto)
 			chip_star=equip:GetStars(),
 			chip_level=equip:GetLv(),
 		}
-		ThinkingAnalyticsMgr:TrackEvents("chipUpgrading", data)
+		BuryingPointMgr:TrackEvents("chipUpgrading", data)
 	end
 	EventMgr.Dispatch(EventType.Equip_Upgrade_Ret,tips)
 end
@@ -249,7 +249,7 @@ function EquipProto:EquipSellRet(proto)
 			item_name=c.name,
 			get_num=price,
 		});
-		ThinkingAnalyticsMgr:TrackEvents("chipDecompose", data)
+		BuryingPointMgr:TrackEvents("chipDecompose", data)
 	end
 	EventMgr.Dispatch(EventType.Equip_Sell_Ret)
 end
@@ -279,7 +279,7 @@ function EquipProto:EquipUpsRet(proto)
 				table.insert(data.chip_item,chip);
 				EquipMgr:EquipUp(v, proto.target_card_id);
 			end
-			ThinkingAnalyticsMgr:TrackEvents("chipWear", data)
+			BuryingPointMgr:TrackEvents("chipWear", data)
 		end
 	end
 	EventMgr.Dispatch(EventType.Equip_Ups_Ret,proto)

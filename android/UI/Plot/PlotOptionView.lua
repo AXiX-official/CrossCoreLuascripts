@@ -113,6 +113,11 @@ end
 function JumpNextPlot(plotInfo)
 	--抛出选择剧情选项事件
 	EventMgr.Dispatch(EventType.Select_Plot_Option, plotInfo);
+	--打点
+	local recordId = plotInfo.cfg.record_id
+	if recordId then
+		BuryingPointMgr:BuryingPoint("after_login",recordId)
+	end
 end
 
 --显示奖励信息

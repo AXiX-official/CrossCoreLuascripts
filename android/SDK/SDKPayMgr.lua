@@ -88,7 +88,7 @@ function this:HandleSDKPayResult(data)
 		self:SearchPayReward()
 		-- LogError("支付成功！sdk订单号："..tostring(sdk_order_id).."\t订单号："..tostring(data.OrderID).."\tGoodsID:"..tostring(data.GoodsID).."\t isPC:"..tostring(CSAPI.IsPCPlatform()))
 		if record~=nil then --上传SDK订单号
-			ThinkingAnalyticsMgr:TrackEvents("store_pay",record);
+			BuryingPointMgr:TrackEvents("store_pay",record);
 		end
 		if not CSAPI.IsPCPlatform() then --非PC才上传信息
 			local payType=PayTypeName[data.SDKType];
@@ -131,7 +131,7 @@ function this:HandleSDKPayResult(data)
 		EventMgr.Dispatch(EventType.Shop_Buy_Mask,false)
 		-- LogError("上传数数数据:")
 		-- LogError(record)
-		ThinkingAnalyticsMgr:TrackEvents("store_pay",record);
+		BuryingPointMgr:TrackEvents("store_pay",record);
     else --支付失败上传数数数据
 		-- LogError("支付失败！")
 		-- LogError(tostring(data.Info))
@@ -161,7 +161,7 @@ function this:HandleSDKPayResult(data)
 			CSAPI.OpenView("Prompt", dialogdata)
 			-- LogError("上传数数数据:")
 			-- LogError(record)
-			ThinkingAnalyticsMgr:TrackEvents("store_pay",record);
+			BuryingPointMgr:TrackEvents("store_pay",record);
 		end
     end
 end

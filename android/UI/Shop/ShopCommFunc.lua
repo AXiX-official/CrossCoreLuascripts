@@ -333,7 +333,7 @@ function this.BuyCommodity(commodity, currNum, callBack,useCost,payType,isInstal
                 }
                 -- LogError("上传数数内容：")
                 -- LogError(record)
-               ThinkingAnalyticsMgr:TrackEvents("store_pay",record);
+               BuryingPointMgr:TrackEvents("store_pay",record);
                if payType==PayType.AlipayQR or payType==PayType.WeChatQR then
                     EventMgr.Dispatch(EventType.SDK_Pay_QRURL,data.code_url)
                elseif payType==PayType.BsAli then

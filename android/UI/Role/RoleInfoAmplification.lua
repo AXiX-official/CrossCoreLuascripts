@@ -22,9 +22,13 @@ function OnOpen()
 	curCRoleId =data[1]--cardData:GetRoleID()
 	curModeId = data[2]--cardData:GetSkinID()
 	local isLive2D = data[3] or false
+	local isShopImg= data[4] or false
+	if isShopImg then
+		isLive2D=false;
+	end
 	pos = openSetting ~= nil and openSetting or LoadImgType.RoleInfo
 	
-	cardIconItem.Refresh(curModeId, pos, nil, isLive2D)
+	cardIconItem.Refresh(curModeId, pos, nil, isLive2D,isShopImg)
 	
 	SetSliderValue()
 	SetAmplification()

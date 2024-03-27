@@ -541,7 +541,7 @@ function this:Op(datas)
 			eventName = "delete_friend"
 		end
 		if(eventName ~= "") then
-			ThinkingAnalyticsMgr:TrackEvents(eventName, {friend_id = v.uid})
+			BuryingPointMgr:TrackEvents(eventName, {friend_id = v.uid})
 		end
 	end
 	

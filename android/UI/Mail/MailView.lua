@@ -70,7 +70,7 @@ function EOperate(proto)
             send_time = TimeUtil:GetTimeStr2(data.start_time or 0)
         }
     
-        ThinkingAnalyticsMgr:TrackEvents("mail", taData)
+        BuryingPointMgr:TrackEvents("mail", taData)
     end  
 end
 

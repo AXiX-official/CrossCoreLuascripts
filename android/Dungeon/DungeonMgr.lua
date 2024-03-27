@@ -26,7 +26,8 @@ SectionActivityType = {
     Tower = 101,
     BattleField = 102,
     Plot = 103,
-    TaoFa = 104
+    TaoFa = 104,
+    Trials = 105 --试炼
 }
 
 --章节活动开启类型

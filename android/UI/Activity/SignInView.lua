@@ -205,7 +205,7 @@ function ESignCB(proto)
 		task_name = proto.index,
 		item_gain = rewards
 	}
-	ThinkingAnalyticsMgr:TrackEvents("activity_attend", taData)
+	BuryingPointMgr:TrackEvents("activity_attend", taData)
 end
 
 --自动签到

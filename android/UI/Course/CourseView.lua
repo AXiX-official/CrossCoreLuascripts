@@ -174,7 +174,7 @@ function OnBattleEnter()
                 teamNum = selItem.GetCfg().teamNum or 1
             }, TeamConfirmOpenType.Dungeon)
         end
-        ThinkingAnalyticsMgr:TrackEvents("main_fight", {
+        BuryingPointMgr:TrackEvents("main_fight", {
             reason = "进入副本",
             world_id = sectionData:GetID(),
             card_id = selItem.GetID()

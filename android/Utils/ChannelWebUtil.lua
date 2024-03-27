@@ -80,7 +80,7 @@ function this.SendToServer(url,data,func)
 			if json~=nil and type(json)=="table" and func~=nil then
 				func(json);
 			else
-				LogError("http返回结果有误："..tostring(result));
+				LogError("http返回结果有误：" ..tostring(result) .. tostring(url) .. table.tostring(data,true));
 				-- LogError("访问"..tostring(url).."时出错！返回结果："..tostring(result));
 			end
 		end

@@ -23,13 +23,12 @@ function this:Init()
 			if CSAPI.GetPublishType() == 1 then  --主干
 				--self.mgr:Init("c4b4ce36a23141d983ddba27e8bfe2e8","https://shushu-receiver.megagamelog.com")
 				--国内正式
-				self.mgr:Init("960faaceaf8946689f84fcac8b328bc3","https://shushu-receiver.megagamelog.com")
+				self.mgr:Init("960faaceaf8946689f84fcac8b328bc3","https://shushu-receiver.megagamelog.com")	
 			else 
 				--s分支
 				--self.mgr:Init("c4b4ce36a23141d983ddba27e8bfe2e8", "https://shushu-receiver.megagamelog.com")  
 				--国内正式
-				self.mgr:Init("960faaceaf8946689f84fcac8b328bc3", "https://shushu-receiver.megagamelog.com")  
-				
+				self.mgr:Init("960faaceaf8946689f84fcac8b328bc3","https://shushu-receiver.megagamelog.com") 
 			end
 			self:EnableAutoTrack() -- 开启自动采集
 		end
@@ -104,6 +103,27 @@ function this:RefreshDatas()
 		datas.channel = CSAPI.GetChannelType()
 		self:TrackStateEvents(datas)
 	end
+end
+
+--获取预置属性内容
+-- "#carrier": "中国电信",
+-- "#os": "iOS",
+-- "#device_id": "A8B1C00B-A6AC-4856-8538-0FBC642C1BAD",
+-- "#screen_height": 2264,
+-- "#bundle_id": "com.sw.thinkingdatademo",
+-- "#manufacturer": "Apple",
+-- "#device_model": "iPhone7",
+-- "#screen_width": 1080,
+-- "#system_language": "zh",
+-- "#os_version": "10",
+-- "#network_type": "WIFI",
+-- "#zone_offset": 8,
+-- "#app_version":"1.0.0"
+function this:GetpresetProperty(key)
+	if key == nil or key == "" or not isOpen then
+		return
+	end
+	return self.mgr:GetpresetProperty("#" .. key)
 end
 
 ---------------------------------------静态公共事件-----------------------------------------

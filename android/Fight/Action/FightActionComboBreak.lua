@@ -60,6 +60,11 @@ function this:PlayBreak()
     character.ApplyCast("combobreak");    
     --将合体者移出战场
     character.PutOut(); 
+
+    local cfgModel = character.GetCfgModel();
+    if(cfgModel)then
+        CSAPI.PlayRandSound(cfgModel.s_combo_break,true);
+    end
 end
 
 function this:CreateComboBreakCharacters()

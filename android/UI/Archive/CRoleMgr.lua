@@ -214,7 +214,7 @@ function this:GetRoleScriptCfgs(role_id,isHave)
             local ids = {}
             for i, modelId in ipairs(modelIds) do
                 local cfg_character = Cfgs.character:GetByID(modelId)
-                if cfg_character and (not cfg_character.skinType or cfg_character.skinType ~= 2) then
+                if cfg_character and cfg_character.voiceID and (not cfg_character.skinType or cfg_character.skinType ~= 2) then
                     local _groups = Cfgs.Sound:GetGroup(cfg_character.voiceID)
                     if _groups and not ids[cfg_character.voiceID] then
                         for i, v in ipairs(_groups) do

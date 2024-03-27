@@ -131,7 +131,7 @@ function OnClick()
                 PlayerProto:LookRole(data:GetID())
                 local count = ArchiveMgr:GetRoleCount()
                 local str = "点亮角色图鉴"
-                ThinkingAnalyticsMgr:TrackEvents("unlock", {
+                BuryingPointMgr:TrackEvents("unlock", {
                     reason = str,
                     unlock_num = count
                 })
@@ -158,7 +158,7 @@ function OnClick()
     -- 	ArchiveMgr:SetNew(elseData, cfg.id, false)
     -- 	local count = elseData == ArchiveType.Role and ArchiveMgr:GetRoleCount() or ArchiveMgr:GetEnemyCount()
     -- 	local str = elseData == ArchiveType.Role and "点亮角色图鉴" or "点亮敌兵图鉴"
-    -- 	ThinkingAnalyticsMgr:TrackEvents("unlock", {reason = str, unlock_num = count})
+    -- 	BuryingPointMgr:TrackEvents("unlock", {reason = str, unlock_num = count})
     -- end
 end
 
