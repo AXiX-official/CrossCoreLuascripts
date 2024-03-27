@@ -5,7 +5,7 @@ function Awake()
     eventMgr:AddListener(EventType.Activity_SignIn, ESignCB)
 
     layout = ComUtil.GetCom(hsv, "UIInfinite")
-    layout:Init("UIs/SignInContinue2/SignInActivityItem", LayoutCallBack, true)
+    layout:Init("UIs/SignInContinue3/SignInCommonItem", LayoutCallBack, true)
 
     fade = ComUtil.GetCom(gameObject, "ActionFade")
 end
@@ -72,7 +72,7 @@ function ESignCB(proto)
     -- layout:UpdateList()
     SetDatas()
     isClick = false
-    ActivityMgr:SetListData(ActivityListType.NewYearContinue, {
+    ActivityMgr:SetListData(ActivityListType.SignInCommon, {
         key = _key
     })
 end
@@ -123,7 +123,7 @@ function OnClickMask()
 
             local taData = {
                 reson = "领取活动奖励",
-                activity_name = "每日活动",
+                activity_name = "通用签到",
                 task_id = data.proto.index,
                 task_name = "第" .. data.proto.index .. "天",
                 item_gain = rewards

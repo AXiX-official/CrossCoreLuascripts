@@ -151,6 +151,8 @@ function LoginProto:LoginGame(proto)
         ClientProto:InitFinish(true,true);
 		--重登时，刷新商店物品
         ShopProto:GetShopInfos();
+		-- ShopProto:GetShopOpenTime();
+		-- ShopProto:GetShopCommodity();
 		return;
 	end
 	self.logined = 1;
@@ -164,6 +166,8 @@ function LoginProto:LoginGame(proto)
 	PlayerProto:SectionMultiInfo();
 	PlayerProto:GetLifeBuff();
 	EquipProto:GetEquips()
+	-- ShopProto:GetShopOpenTime();
+	-- ShopProto:GetShopCommodity();
 	ShopProto:GetShopInfos();
 	eventMgr = ViewEvent.New();
 	eventMgr:AddListener(EventType.Init_Plot_Data, function()
@@ -200,6 +204,7 @@ function LoginProto:LoginGame(proto)
         uid = PlayerClient:GetUid(),
         name = PlayerClient:GetName()
     }, true);
+	BuryingPointMgr:BuryingPoint("before_login", "10022");
 end
 
 --接收完剧情信息之后

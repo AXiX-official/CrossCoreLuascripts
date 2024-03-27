@@ -360,15 +360,15 @@ function OnClickQuip()
 end
 
 function OnQuipOk()
+	BuryingPointMgr:TrackEvents("main_fight",{
+		reason = "副本撤退",
+		world_id = DungeonMgr:GetCurrSectionData():GetID(),
+		card_id = DungeonMgr:GetCurrId() or 0
+	})
 	DungeonMgr:SendToQuit();
 	FriendMgr:ClearAssistData();
 	TeamMgr:ClearFightTeamData();
-	UIUtil:AddFightTeamState(2,"BattleView:OnQuipOk()")
-	ThinkingAnalyticsMgr:TrackEvents("main_fight",{
-		reason = "副本撤退",
-		world_id = DungeonMgr:GetCurrSectionData():GetID(),
-		card_id = DungeonMgr:GetCurrId()
-	})
+	UIUtil:AddFightTeamState(2,"BattleView:OnQuipOk()")	
 	-- BattleMgr:SetInputState(true);
 end
 

@@ -209,7 +209,7 @@ function this:InitDatas()
                         local _datas = {}
                         _datas.system_name = (v == "Section") and m.name or m.sName
                         _datas.system_id = m.id .. ""
-                        ThinkingAnalyticsMgr:TrackEvents("open_system", _datas)
+                        BuryingPointMgr:TrackEvents("open_system", _datas)
                     end
                     -- end
                 end

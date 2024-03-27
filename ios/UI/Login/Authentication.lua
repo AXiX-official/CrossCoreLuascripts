@@ -9,6 +9,7 @@ function Awake()
     eventMgr = ViewEvent.New();
     
     eventMgr:AddListener(EventType.Authentication_Result, OnValidResult)
+    BuryingPointMgr:BuryingPoint("before_login", "10020");
 end
 
 function OnDestroy()
@@ -100,7 +101,8 @@ function OnValidResult(proto)
         LanguageMgr:ShowTips(9001);
 	end
     --数数SDK
-    ThinkingAnalyticsMgr:TrackEvents("name_approve",{number=proto.number});
+    BuryingPointMgr:TrackEvents("name_approve",{number=proto.number});
+    BuryingPointMgr:BuryingPoint("before_login", "10021");
     -- PlayTween(false)
 end
 

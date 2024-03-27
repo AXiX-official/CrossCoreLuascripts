@@ -211,7 +211,7 @@ function PlayerProto:CardUpgradeRet(proto)
 		_datas.hero_id = cardData:GetID()
 		_datas.hero_name = cardData:GetName()
 		_datas.hero_level = cardData:GetLv()
-		ThinkingAnalyticsMgr:TrackEvents("roleUpgrade", _datas)
+        BuryingPointMgr:TrackEvents("roleUpgrade", _datas)
 	end
 end
 
@@ -233,7 +233,7 @@ function PlayerProto:CardBreakRet(proto)
 		_datas.hero_id = cardData:GetID()
 		_datas.hero_name = cardData:GetName()
 		_datas.hero_yuesheng = cardData:GetBreakLevel()
-		ThinkingAnalyticsMgr:TrackEvents("RoleLeap", _datas)
+        BuryingPointMgr:TrackEvents("RoleLeap", _datas)
 	end
 end
 
@@ -305,7 +305,7 @@ function PlayerProto:CardSkillUpgradeFinishRet(proto)
 			_datas.skill_oldid = v.ids[1]
 			_datas.skill_newid = v.ids[2]
 			_datas.skill_level = skillCfg.lv
-			ThinkingAnalyticsMgr:TrackEvents("SkillUpgrading", _datas)
+            BuryingPointMgr:TrackEvents("SkillUpgrading", _datas)
 		end
 	end
 end
@@ -624,7 +624,7 @@ function PlayerProto:MainTalentUpgradeRet(proto)
 	_datas.skill_oldid = proto.skill_id
 	_datas.skill_newid = proto.new_skill_id
 	_datas.skill_level = skillCfg.lv
-	ThinkingAnalyticsMgr:TrackEvents("SkillUpgrading", _datas)
+    BuryingPointMgr:TrackEvents("SkillUpgrading", _datas)
 end
 
 --随机副天赋(学习)
@@ -734,7 +734,7 @@ function PlayerProto:UpgradeSubTalentRet(proto)
 	_datas.hero_name = cardData:GetName()
 	_datas.skill_id = ids[proto.index]
 	_datas.skill_level = proto.index
-	ThinkingAnalyticsMgr:TrackEvents("PassiveSkill", _datas)
+    BuryingPointMgr:TrackEvents("PassiveSkill", _datas)
 
 	LanguageMgr:ShowTips(3012)
 end
@@ -848,7 +848,7 @@ function PlayerProto:CardCoreLvRet(proto)
 		_datas.hero_id = cardData:GetID()
 		_datas.hero_name = cardData:GetName()
 		_datas.hero_level_max = cardData:GetMaxLv()
-		ThinkingAnalyticsMgr:TrackEvents("RoleBreak", _datas)
+        BuryingPointMgr:TrackEvents("RoleBreak", _datas)
 	end
 end
 

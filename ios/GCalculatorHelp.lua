@@ -1767,3 +1767,8 @@ function GCalHelp:GetCardPoolSelectId(cardPoolCfg)
 
     return cardPoolCfg.id
 end
+
+
+function GCalHelp:Clock()
+    return math.floor(os.clock() * 1000)
+end

@@ -106,6 +106,27 @@ function this:RefreshDatas()
 	end
 end
 
+--获取预置属性内容
+-- "#carrier": "中国电信",
+-- "#os": "iOS",
+-- "#device_id": "A8B1C00B-A6AC-4856-8538-0FBC642C1BAD",
+-- "#screen_height": 2264,
+-- "#bundle_id": "com.sw.thinkingdatademo",
+-- "#manufacturer": "Apple",
+-- "#device_model": "iPhone7",
+-- "#screen_width": 1080,
+-- "#system_language": "zh",
+-- "#os_version": "10",
+-- "#network_type": "WIFI",
+-- "#zone_offset": 8,
+-- "#app_version":"1.0.0"
+function this:GetpresetProperty(key)
+	if key == nil or key == "" or not isOpen then
+		return
+	end
+	return self.mgr:GetpresetProperty("#" .. key)
+end
+
 ---------------------------------------静态公共事件-----------------------------------------
 --添加静态公共事件到数数缓存
 function this:TrackStateEvent(_eventName, _Value)

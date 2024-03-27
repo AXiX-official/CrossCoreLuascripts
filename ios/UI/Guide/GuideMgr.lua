@@ -92,7 +92,7 @@ function this:Record(group)
         local _data = {};
         _data["guide_step"] = groupName;
         _data["guide_id"] = group;
-        ThinkingAnalyticsMgr:TrackEvents("guide_completed", _data);
+        BuryingPointMgr:TrackEvents("guide_completed", _data);
     end
 end
 
@@ -457,9 +457,16 @@ function this:InputEventTrigger()
             func(GuideBehaviour);
         end  
     end
-   
+
+    --引导记录
+    local recordId = doingGuide.cfg.record_id; 
+    if(recordId)then
+        BuryingPointMgr:BuryingPoint("after_login", recordId);
+    end
+
     EventMgr.Dispatch(EventType.Guide_Scroll_Switch,true,true);
     CSAPI.DisableInput(500);--禁用小段输入时间，防止bug
+    
     
     local nextGuideId = self:GetNextGuide(doingGuide.cfg.id);
     local cfgGuideNext = nextGuideId and Cfgs.Guide:GetByID(nextGuideId);

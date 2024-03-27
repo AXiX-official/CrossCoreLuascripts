@@ -252,7 +252,7 @@ end
 --进入立绘查看界面
 function OnClickSearch()
     if curModelCfg then
-        CSAPI.OpenView("RoleInfoAmplification", {curModelCfg.role_id, curModelCfg.id, l2dOn}, LoadImgType.Main)
+        CSAPI.OpenView("RoleInfoAmplification", {curModelCfg.role_id, curModelCfg.id, l2dOn,isShowImg}, LoadImgType.Main)
     end
 end
 

@@ -32,6 +32,7 @@ function Awake()
 	isAgree=GetAgree();
 	-- CSAPI.SetGOActive(tick,isAgree);
 	CSAPI.SetText(inpPwdHolder, string.format(LanguageMgr:GetByID(16056), eRegisterLen.PwdMin, eRegisterLen.PwdMax));
+	BuryingPointMgr:BuryingPoint("before_login", "10018");
 end
 
 function OnEnable()
@@ -215,6 +216,7 @@ end
 function RegisterSuccess()
 	EventMgr.Dispatch(EventType.Login_Hide_Mask);		
 	SaveLastServerInfo(serverInfo.id);
+	BuryingPointMgr:BuryingPoint("before_login", "10019");
 	if IsAccount() then
 		SaveLastAccount(accountName, pwd);
 	--else --手机注册（官方SDK）

@@ -41,7 +41,7 @@ function TaskProto:GetRewardRet(proto)
     --         _datas.active_weeklyStar = proto.weeklyStar or 0
     --         local eventName = (curData:GetType() == eTaskType.Main or curData:GetType() == eTaskType.Main) and
     --                               "main_work" or "repetition_work"
-    --         ThinkingAnalyticsMgr:TrackEvents(eventName, _datas)
+    --         BuryingPointMgr:TrackEvents(eventName, _datas)
     --     end
     -- end
 end
@@ -84,7 +84,7 @@ function TaskProto:GetRewardByTypeRet(proto)
     --     _datas.item_gain = proto.gets
     --     _datas.active_dailyStar = proto.dailyStar or 0
     --     _datas.active_weeklyStar = proto.weeklyStar or 0
-    --     ThinkingAnalyticsMgr:TrackEvents(eventName, _datas)
+    --     BuryingPointMgr:TrackEvents(eventName, _datas)
     -- end
 end
 

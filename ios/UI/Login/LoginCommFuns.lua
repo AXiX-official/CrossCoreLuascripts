@@ -70,7 +70,7 @@ function SignChannelAccount(data,func)
 				--上传热云注册事件
 				ReYunSDK:SetRegisterEvent(account,{channelType=CSAPI.GetChannelName()});
 				--上传数数
-				ThinkingAnalyticsMgr:TrackEvents("openid_register", {phone=open_id}, TAType.First);
+				BuryingPointMgr:TrackEvents("openid_register", {phone=open_id}, TAType.First);
 			end
 			if func then
 				func(json.data);
@@ -491,7 +491,8 @@ function LoginAccount(accountName, pwd,relogin)
 		SceneMgr:SetLoginLoaded(true);
 		if CSAPI.IsChannel() then
 			ThinkingAnalyticsMgr:TrackStateEvent("open_id",accountName)
-			ThinkingAnalyticsMgr:TrackEvents("openid_login", {open_id=accountName});
+			BuryingPointMgr:TrackEvents("openid_login", {open_id=accountName});
+			BuryingPointMgr:SetOpenID(accountName)
 		end
 		ThinkingAnalyticsMgr:Login(accountName);
         --登录服务器地址
@@ -647,9 +648,10 @@ function SignSDK(token,pwd,server_id,func)
 				func(json);
 			end
 			ThinkingAnalyticsMgr:TrackStateEvent("open_id", json.open_id)
-			ThinkingAnalyticsMgr:TrackEvents("openid_login", {open_id=json.open_id,phone=token});
+			BuryingPointMgr:TrackEvents("openid_login", {open_id=json.open_id,phone=token});
+			BuryingPointMgr:SetOpenID(json.open_id)
 		else
-			-- ThinkingAnalyticsMgr:TrackEvents("openid_login", {code=json.code});
+			-- BuryingPointMgr:TrackEvents("openid_login", {code=json.code});
 			Tips.ShowTips(json.msg);
 			EventMgr.Dispatch(EventType.Login_Hide_Mask);
 		end
@@ -669,7 +671,7 @@ function SignAccount(phone,oid,server_id,func)
 				--LogError("ReYunSDK:Reg------------------->"..tostring(account));
 				ReYunSDK:SetRegisterEvent(account,{channelType=CSAPI.GetChannelName()});
 				JuLiangSDK:Register("官网", true)
-				ThinkingAnalyticsMgr:TrackEvents("openid_register", {phone=accountName}, TAType.First);
+				BuryingPointMgr:TrackEvents("openid_register", {phone=accountName}, TAType.First);
 			end
 			if func then
 				func(json);

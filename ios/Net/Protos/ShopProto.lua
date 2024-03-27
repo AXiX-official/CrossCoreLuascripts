@@ -77,7 +77,7 @@ end
 function ShopProto:GetExchangeInfoRet(proto)
     ShopMgr:SetExchangeData(proto);
     if proto and proto.is_flush then --手动刷新 记录数数
-        ThinkingAnalyticsMgr:TrackEvents("store_refresh", {store_type=tostring(proto.cfgid)})
+        BuryingPointMgr:TrackEvents("store_refresh", {store_type=tostring(proto.cfgid)})
     end
     EventMgr.Dispatch(EventType.Shop_RandComm_Refresh)
 end

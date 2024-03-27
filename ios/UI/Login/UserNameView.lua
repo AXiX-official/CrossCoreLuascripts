@@ -321,7 +321,7 @@ function OnClickConfirm()
 		EventMgr.Dispatch(EventType.Net_Msg_Getted,"name_set");
 		
 		--数数接入		
-		ThinkingAnalyticsMgr:TrackEvents("register", {gender = currSex == 1 and "男" or "女",createTime = TimeUtil:GetTime() .. ""})
+		BuryingPointMgr:TrackEvents("register", {gender = currSex == 1 and "男" or "女",createTime = TimeUtil:GetTime() .. ""})
 
 		if closeFunc then
 			closeFunc();

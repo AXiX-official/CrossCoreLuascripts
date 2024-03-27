@@ -316,7 +316,7 @@ function this:TryGetData(_type)
             self.listDatas[_type] = {
                 key = _key
             }
-        elseif (_type == ActivityListType.SignInContinue or _type == ActivityListType.NewYearSignIn) then -- 连续签到
+        elseif self:IsSignInContinue(_type) then -- 连续签到
             local keys = SignInMgr:GetDataKeysByType(RewardActivityType.Continuous)
             self.listDatas[_type] = {
                 key = keys[_type]
@@ -447,7 +447,7 @@ function this:CheckRed(type)
         return MissionMgr:CheckGuideRed()
     elseif type == ActivityListType.NewYearContinue then
         return MissionMgr:CheckNewYearRed()
-    elseif type == ActivityListType.SignIn or type == ActivityListType.SignInContinue then
+    elseif type == ActivityListType.SignIn or self:IsSignInContinue(type) then
         if self.listDatas and self.listDatas[type] then
             return self.listDatas[type].isSingIn
         end
@@ -484,6 +484,16 @@ function this:IsActivityListNull(group)
         end
     end
     return true
+end
+
+function this:IsSignInContinue(type)
+    local _types = {ActivityListType.SignInContinue,ActivityListType.NewYearSignIn,ActivityListType.SignInCommon,ActivityListType.SignInShadowSpider}
+    for i, _type in ipairs(_types) do
+        if type == _type then
+            return true
+        end
+    end
+    return false
 end
 
 

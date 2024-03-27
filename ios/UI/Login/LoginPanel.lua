@@ -56,7 +56,7 @@ function Awake()
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
     --CSAPI.SetText(txtVer, "Ver:1.0.0" .. tostring(UnityEngine.Application.version));
-    CSAPI.SetText(txtVer, "Ver:1.3");
+    CSAPI.SetText(txtVer, "Ver:1.4");
     -- 开启战斗场景镜头
     local xluaCamera = CameraMgr:GetXLuaCamera();
     if (xluaCamera) then
@@ -287,6 +287,7 @@ function OnLoadingOver()
         end
         CSAPI.SetGOActive(tween1, true);
         isFirst = false;
+        BuryingPointMgr:BuryingPoint("before_login", "10017");
     end
     if GetOpenCount() > 1 then
         PlayEnter();

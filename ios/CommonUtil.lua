@@ -105,5 +105,8 @@ require "ThinkingAnalyticsMgr"
 --new工具
 SectionNewUtil = require "SectionNewUtil"
 
---声音
+--设置
 require "SettingMgr"
+
+--埋点管理
+require "BuryingPointMgr"
