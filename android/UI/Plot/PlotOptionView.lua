@@ -41,6 +41,15 @@ function InitView(data)
 				CSAPI.SetAnchor(v, 0, 10000)
 			end
 		end
+		
+		--打点
+		local info = data[1]
+		if info then
+			local recordId = info.cfg.record_id
+			if recordId then
+				BuryingPointMgr:BuryingPoint("after_login",recordId)
+			end
+		end
 	else
 		for k, v in ipairs(items) do
 			-- CSAPI.SetGOActive(v, false);
@@ -113,11 +122,6 @@ end
 function JumpNextPlot(plotInfo)
 	--抛出选择剧情选项事件
 	EventMgr.Dispatch(EventType.Select_Plot_Option, plotInfo);
-	--打点
-	local recordId = plotInfo.cfg.record_id
-	if recordId then
-		BuryingPointMgr:BuryingPoint("after_login",recordId)
-	end
 end
 
 --显示奖励信息

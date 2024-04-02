@@ -436,7 +436,7 @@ function SetCurDatas()
             if (#curDatas > 1) then
                 local func = SortByDefaultTheme
                 if (themeSort[1] ~= 1) then
-                    func = themeSort[1] == 2 and SrotByPrice1 or SortByComfort
+                    func = themeSort[1] == 2 and SortByComfort or SrotByPrice1
                 end
                 table.sort(curDatas, function(a, b)
                     local bo = func(a, b, themeSort[2])
@@ -473,7 +473,7 @@ function SetCurDatas()
         CacheSortData(furnitureCfgs)
         local func = SortByDefault
         if (funitureSort[1] ~= 1) then
-            func = funitureSort[1] == 2 and SrotByPrice1 or SortByComfort
+            func = funitureSort[1] == 2 and  SortByComfort or SrotByPrice1
         end
         table.sort(furnitureCfgs, function(a, b)
             local bo = func(a, b, funitureSort[2])
@@ -629,7 +629,7 @@ end
 -- end
 
 ----------------------------------------------------排序----------------------------------------------------
--- 未放置家具>已放置>未拥有
+-- 已购未放置家具>已放置>未拥有
 function CacheSortData(cfgs)
     cacheDic = {}
     for k, v in pairs(cfgs) do

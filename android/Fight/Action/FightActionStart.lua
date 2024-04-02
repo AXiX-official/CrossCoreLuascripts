@@ -94,7 +94,6 @@ function this:OnPlotComplete()
         CSAPI.StopBGM();
         CSAPI.SetBGMLock("boss_enter");
         CameraMgr:EnableMainCamera(false);
-        local enterAni = ResUtil:PlayVideo(enterAniName);
         --[[ local enterAni = ResUtil:PlayVideo(enterAniName);
         enterAni:AddCompleteEvent(function()
             CameraMgr:EnableMainCamera(true);
@@ -102,7 +101,7 @@ function this:OnPlotComplete()
             CSAPI.SetBGMLock();
             EventMgr.Dispatch(EventType.Replay_BGM);
         end);
-        ]]
+ ]]
         CSAPI.OpenView("VideoPlayer", {
             videoName = enterAniName,
             callBack = function()
@@ -119,6 +118,10 @@ function this:OnPlotComplete()
         if(enterSound)then
             CSAPI.PlaySound("fight/effect/" .. enterSound .. ".acb",enterSound);
         end        
+
+        if(FightClient:IsNewPlayerFight())then--新手关boss入场打点
+            BuryingPointMgr:BuryingPoint("after_login", 20042);
+        end
     else
         FuncUtil:Call(self.PlayCharacterFightStart,self,150);
     end

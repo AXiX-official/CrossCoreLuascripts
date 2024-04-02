@@ -176,6 +176,9 @@ function LoginProto:LoginGame(proto)
 	PlotMgr:Init();
 	
 	MgrCenter:Init()  --统一调用
+	
+	--数数校准时间
+	ThinkingAnalyticsMgr:CalibrateTime()
 
 	GuildProto:GuildInfo();
 	-- if proto.guild_id ~=nil then--获取公会信息		

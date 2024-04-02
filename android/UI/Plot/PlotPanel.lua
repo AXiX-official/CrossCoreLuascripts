@@ -1142,6 +1142,9 @@ function OnClickSure()
 		CloseView()
 	end)
 	BuryingPointMgr:TrackEvents("plot_dialogue", {reason = "跳过对话", plot_id = storyData:GetID()})
+	if storyData.cfg and storyData.cfg.record_id then
+		BuryingPointMgr:BuryingPoint("after_login", storyData.cfg.record_id)
+	end
 end
 
 function OnClickCancel()

@@ -2,6 +2,8 @@ ThinkingAnalyticsMgr = {}
 local this = ThinkingAnalyticsMgr
 
 local isOpen = true
+local appId,url = nil,nil
+local isEnableLog = false
 
 TAType = {
 	Normal = 1, --普通事件
@@ -16,23 +18,26 @@ TAUserType = {
 }
 
 function this:Init()
+	-- isOpen = isOpen and (not CSAPI.IsPCPlatform()) or false
+	local _appId,_url = "960faaceaf8946689f84fcac8b328bc3","https://shushu-receiver.megagamelog.com"
 	if(self.mgr == nil) then
-		local go = UnityEngine.GameObject("ThinkingAnalyticsMgr")
-		self.mgr = go:AddComponent(typeof(CS.TAMgr));
-		if isOpen then
+		--local go = UnityEngine.GameObject("ThinkingAnalyticsMgr")
+		--self.mgr = go:AddComponent(typeof(CS.TAMgr));
+		self.mgr = CS.TAMgr.ins;
+		if isOpen then		
 			if CSAPI.GetPublishType() == 1 then  --主干
-				--self.mgr:Init("c4b4ce36a23141d983ddba27e8bfe2e8","https://shushu-receiver.megagamelog.com")
-				--国内正式
-				self.mgr:Init("960faaceaf8946689f84fcac8b328bc3","https://shushu-receiver.megagamelog.com")	
-			else 
-				--s分支
-				--self.mgr:Init("c4b4ce36a23141d983ddba27e8bfe2e8", "https://shushu-receiver.megagamelog.com")  
-				--国内正式
-				self.mgr:Init("960faaceaf8946689f84fcac8b328bc3","https://shushu-receiver.megagamelog.com") 
+				self.mgr:Init(_appId,_url)
+			else --s分支
+				self.mgr:Init(_appId,_url)
 			end
 			self:EnableAutoTrack() -- 开启自动采集
+			self:ClearStateEvents() -- 清理缓存
 		end
 	end	
+
+	if isEnableLog then
+		appId,url = _appId,_url
+	end
 	return self.mgr
 end
 
@@ -61,6 +66,7 @@ end
 --登出数数
 function this:Logout()
 	self.mgr:Logout()
+	self:ClearStateEvents()
 end
 
 --立即上报
@@ -68,8 +74,15 @@ function this:Flush()
 	self.mgr:Flush()
 end
 
+--校准时间
+function this:CalibrateTime()
+-- if self.mgr.CalibrateTime ~= nil then
+-- 	self.mgr:CalibrateTime() 
+-- end	-- self.mgr:CalibrateTime() 
+end
+
 --发送事件 --_datas结构：字典 type类型为可更新或可重写时需要提供_eventId
-function this:TrackEvents(_eventName, _datas, _type, _eventId)
+function this:TrackEvents(_eventName, _datas, _type, _eventId, isNoRefresh)
 	if(_eventName == nil or _eventName == "") then
 		return;
 	end
@@ -83,8 +96,18 @@ function this:TrackEvents(_eventName, _datas, _type, _eventId)
 	end
 
 	if isOpen then
-		self:RefreshDatas()
+		if not isNoRefresh then
+			self:RefreshDatas()
+		end
 		self.mgr:TrackEvent(_eventName, _datas, _type, _eventId)
+		if isEnableLog then
+			LogError("数数事件上报：appId:"..appId..",url:"..url..",eventName:".. _eventName..",type:".. _type)
+			if _eventId then
+				LogError("eventId:" .. _eventId)
+			end
+			LogError("datas:")
+			LogError(_datas)
+		end
 	end
 end
 
@@ -101,6 +124,7 @@ function this:RefreshDatas()
 		datas.diamond = PlayerClient:GetDiamond()
 		datas.max_battle_id = DungeonMgr:GetMaxDungeonID()
 		datas.channel = CSAPI.GetChannelType()
+		datas.ADID = CSAPI.GetADID()
 		self:TrackStateEvents(datas)
 	end
 end

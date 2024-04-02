@@ -14,7 +14,7 @@ function Awake()
     eventMgr:AddListener(EventType.Team_Confirm_Refreh, RefreshItems)
     eventMgr:AddListener(EventType.Team_Confirm_ItemDisable, OnOptionChange)
     eventMgr:AddListener(EventType.Team_Card_Refresh, RefreshTeams); 
-    eventMgr:AddListener(EventType.Team_Data_Update, RefreshItems)
+    -- eventMgr:AddListener(EventType.Team_Data_Update, RefreshItems)
 end
 
 function Refresh(_data)

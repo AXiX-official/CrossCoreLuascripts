@@ -1091,5 +1091,15 @@ function this.IsInternation()
     return this.csIsInternation and this.csIsInternation();
 end
 
+this.csGetADID = CS.CSAPI.GetADID;
+--- 获取广告ID
+function this.GetADID()
+	if(this.csGetADID)then
+		return this.csGetADID();
+	end
+	return 0;
+end
+
+
 return this;
 

@@ -364,6 +364,7 @@ local ConfigList =
 	'TestUnion1',
 	'TestUnion2',
 	'Transform',
+	'UpdateData',
 	'view'
 }
 function ReadAllConfig()
