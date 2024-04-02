@@ -125,7 +125,7 @@ function OnClickMask()
                 reson = "领取活动奖励",
                 activity_name = "迷城蛛影签到",
                 task_id = data.proto.index,
-                task_name = "第" .. data.proto.index .. "天",
+                task_name = data.proto.index,
                 item_gain = rewards
             }
             BuryingPointMgr:TrackEvents("activity_attend", taData)

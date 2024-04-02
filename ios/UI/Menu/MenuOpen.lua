@@ -43,6 +43,8 @@ function SetPanel()
     local datas = MenuMgr:GetWaitDatas()
     items = items or {}
     ItemUtil.AddItems("Popup/MenuOpenItem", items, datas, node,ItemClickCB)
+
+    BD(datas)
 end
 
 function ItemClickCB()
@@ -66,3 +68,14 @@ function AnimEnd()
     CSAPI.SetGOActive(UIMaskGo, false)
 end
 
+--通关0-1打点一次
+function BD(datas)
+    for k, v in pairs(datas) do
+        local _data = v:GetCondition()
+        if(_data and _data[1]==2001) then 
+            BuryingPointMgr:BuryingPoint("after_login", "20188")
+            break
+        end 
+    end
+
+end

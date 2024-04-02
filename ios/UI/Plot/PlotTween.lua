@@ -221,7 +221,6 @@ function this.FixActionList(_type)
 		end
 	end
 	actionLists[_type] = _list
-	
 end
 
 --添加到队列
@@ -251,12 +250,9 @@ function this.StopListAction(_type)
 		for i, v in ipairs(actionLists[_type]) do
 			v.action:SetComplete()
 			if(v.action) then
-				local canvasGroup = ComUtil.GetCom(v.action.gameObject, "CanvasGroup");
-				if canvasGroup == nil then
-					canvasGroup = v.action.gameObject:AddComponent(typeof(CS.CanvasGroup));
-				end
+				local canvasGroup = ComUtil.GetOrAddCom(v.action.gameObject, "CanvasGroup");
+				-- v.action.enabled = false
 				canvasGroup.alpha = 1
-				v.action.enabled = false
 			end
 			-- if(v.action) then
 			-- 	v.action:SetAlpha(1)

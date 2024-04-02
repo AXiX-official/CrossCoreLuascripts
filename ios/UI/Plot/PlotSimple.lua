@@ -108,6 +108,11 @@ function PlayPlot()
 		end
 		isPlaying = true;
 		CSAPI.ApplyTextTween(txt_content, textContent, playSpeed, OnPlotOver);
+		--打点
+		local recordId = currentPlotData.cfg.record_id
+		if recordId then
+			BuryingPointMgr:BuryingPoint("after_login",recordId)
+		end
 	else
 		isPlaying = false;
 		-- OnPlotOver();

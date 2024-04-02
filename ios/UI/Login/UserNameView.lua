@@ -157,6 +157,7 @@ function OnClickOK()
 			Tips.ShowTips(LanguageMgr:GetByID(16076));
 		end
 	end)
+	BuryingPointMgr:BuryingPoint("after_login",20031)
 end
 
 --匹配中英文数字(中文符号没有去除),符合返回true，否则返回false
@@ -329,6 +330,7 @@ function OnClickConfirm()
 			view:Close();
 		end
 	end);
+	BuryingPointMgr:BuryingPoint("after_login",20032)
 end
 
 ---------------------------------生日-----------------------------------

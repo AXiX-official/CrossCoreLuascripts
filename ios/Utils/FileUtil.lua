@@ -54,8 +54,8 @@ function this.TableToString(tab)
     return str;
 end
 
---fileName:文件名要带后缀 data:数据
-function this.SaveToFile(fileName,data)
+--fileName:文件名要带后缀 data:数据 isUnUse:不使用uid记录
+function this.SaveToFile(fileName,data,isUnUse)
     if fileName=="" or fileName==nil then
         LogError("文件名不能为空！");
         return 
@@ -67,20 +67,22 @@ function this.SaveToFile(fileName,data)
         local encodeStr=Base64.enc(str);
         encodeStr=CSAPI.EncyptStr(encodeStr);
         encodeStr=encodeStr;
-        local filePath=string.format("%s/%s_%s_%s",this.GetPath(),serverID,PlayerClient:GetUid(),fileName);
+        local uid = isUnUse and 0 or PlayerClient:GetUid()
+        local filePath=string.format("%s/%s_%s_%s",this.GetPath(),serverID,uid,fileName);
         -- CSAPI.SaveToFile(filePath,str);
         CSAPI.SaveToFile(filePath,encodeStr);
     end
 end
 
---读取文件并返回lua对象 fileName:要带后缀
-function this.LoadByPath(fileName)
+--读取文件并返回lua对象 fileName:要带后缀 isUnUse:不使用uid记录
+function this.LoadByPath(fileName,isUnUse)
     local tab=nil;
     if fileName=="" or fileName==nil then
         return tab;
     end
     local serverID = PlayerPrefs.GetInt(lastServerPath);
-    local filePath= string.format("%s/%s_%s_%s",this.GetPath(),serverID,PlayerClient:GetUid(),fileName);
+    local uid = isUnUse and 0 or PlayerClient:GetUid()
+    local filePath= string.format("%s/%s_%s_%s",this.GetPath(),serverID,uid,fileName);
     local str=CSAPI.LoadStringByFile(filePath);
     if str~=nil and str~="" then
         local result=string.match(str,"[^a-zA-Z0-9/+=]+"); --加密串不会有花括号之类的标点符号

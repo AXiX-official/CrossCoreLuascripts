@@ -577,10 +577,14 @@ function this:PlayFightOP()
         callBack = self.OnFightVedioComplete,
         caller = self
     });
+
+    BuryingPointMgr:BuryingPoint("after_login", 20066);
 end
 
 -- 剧情战斗动画播放完成
 function this:OnFightVedioComplete()
+    BuryingPointMgr:BuryingPoint("after_login", 30003);
+
     CSAPI.CloseView("VideoPlayer");
     CSAPI.SetSoundOff(false);
     -- LogError("剧情战斗动画播放完成");
