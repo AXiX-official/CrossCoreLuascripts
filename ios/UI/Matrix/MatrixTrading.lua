@@ -180,6 +180,9 @@ end
 
 -- 自己的订单数据（实单+空单/假单+锁单）
 function SetDatas()
+    if(not buildingData) then 
+        return 
+    end 
     buildLv = buildingData:GetCfg().id
     SetMaxCount()
     tNexGiftsEx = buildingData:GetData().tNexGiftsEx

@@ -367,7 +367,7 @@ function OnClick()
 end
 
 function OnHolder()
-    if elseData.hcb ~= nil then
+    if elseData~=nil and elseData.hcb ~= nil then
         elseData.hcb(this);
     else
         EventMgr.Dispatch(EventType.Role_Card_Holder, this)

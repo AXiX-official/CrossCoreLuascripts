@@ -47,7 +47,7 @@ function PreLoadImgs()
             img = modelCfg and modelCfg.img or nil
         else
             local _curData = RoleMgr:GetData(v.id)
-            img = _curData:GetDrawImg()
+            img = _curData and _curData:GetDrawImg()
         end
 
         if (img) then
