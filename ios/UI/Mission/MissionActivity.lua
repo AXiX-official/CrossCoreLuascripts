@@ -79,6 +79,9 @@ function SetTopBtn()
     elseif type == eTaskType.Story then
         if data.group == 3001 then
             table.insert(ids,{10015})
+        elseif data.group == 3003 then
+            table.insert(ids,{10016})
+            table.insert(ids,{12007,140014})
         end
     elseif type == eTaskType.DupTaoFa then
         table.insert(ids,{10040})

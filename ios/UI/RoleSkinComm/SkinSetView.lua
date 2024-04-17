@@ -70,7 +70,10 @@ function IsSkinCommShow(shopSkinInfo)
     if shopSkinInfo==nil then
         return isShow
     end
-    if shopSkinInfo:IsHide() then --需要被隐藏的
+    local hideType=shopSkinInfo:GetHideType();
+    if hideType==nil or hideType==3 then --type==3表示一定隐藏
+        isShow=false;
+    elseif hideType==1 then--原始图
         local modelCfg=shopSkinInfo:GetModelCfg();
         --判断是否在商品上架期限
         local commodity=ShopMgr:GetFixedCommodity(modelCfg.shopId);
@@ -78,13 +81,22 @@ function IsSkinCommShow(shopSkinInfo)
             return isShow;
         end
         local rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(shopSkinInfo:GetModelCfg().role_id, shopSkinInfo:GetModelCfg().id)
-        if commodity:GetNowTimeCanBuy() then
+        if commodity:GetNowTimeCanBuy() then --是否可以购买
             isShow=true;
         elseif rSkinInfo~=nil and rSkinInfo:CheckCanUse() then
             isShow=true
         end
-    else
-        isShow=true;
+    elseif hideType==2 then--和谐图
+        local modelCfg=shopSkinInfo:GetModelCfg();
+        --判断是否在商品上架期限
+        local commodity=ShopMgr:GetFixedCommodity(modelCfg.shopId);
+        if commodity==nil then
+            return isShow;
+        end
+        local buyStartTime=commodity:GetBuyStartTime();
+        if (buyStartTime>0 and buyStartTime<=TimeUtil:GetTime()) or (buyStartTime==0) then
+            isShow=true;
+        end
     end
     return isShow;
 end

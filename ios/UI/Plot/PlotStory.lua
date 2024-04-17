@@ -22,13 +22,15 @@ function Refresh()
 	fade:Play(0, 1, 250, 0,AnimEnd)
 	while(plot:GetNextPlotInfo() ~= nil or(plot:GetKey() == "PlotData" and plot:GetOptions() ~= nil)) do
 		if plot:GetContent() ~= nil then
-			ResUtil:CreateUIGOAsync("Plot/PlotStoryItem", Content, function(go)
-				local lua = ComUtil.GetLuaTable(go);
-				lua.Refresh(plot);
-				SetPos(lua, index);	
-				table.insert(items, 1, lua)
-				--lua.SetFadeIn()			
-			end);
+			if (plot:GetKey() == "PlotData" and plot:GetShowStory()) or plot:GetKey() == "PlotOption" then
+				ResUtil:CreateUIGOAsync("Plot/PlotStoryItem", Content, function(go)
+					local lua = ComUtil.GetLuaTable(go);
+					lua.Refresh(plot);
+					SetPos(lua, index);	
+					table.insert(items, 1, lua)
+					--lua.SetFadeIn()			
+				end);
+			end
 			if(data.currPlot and plot:GetID() == data.currPlot:GetID() and plot:GetKey() == data.currPlot:GetKey()) then
 				break;
 			elseif plot:GetKey() == "PlotData" and plot:GetOptions() ~= nil then
@@ -64,6 +66,7 @@ end
 
 function SetPos(lua, index)
 	local height = lua.GetHeight();
+	CSAPI.SetRTSize(lua.gameObject,1681,height)
 	currY = index == 1 and currY or currY - lineHeight;
 	CSAPI.SetAnchor(lua.gameObject, 34, currY);
 	currY = currY - height;

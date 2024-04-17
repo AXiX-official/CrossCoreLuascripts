@@ -616,7 +616,7 @@ function ShowInfo(item)
     isActive = item ~= nil;
     -- CSAPI.SetGOActive(infoMask, isActive)
     if itemInfo == nil then
-        ResUtil:CreateUIGOAsync("Dungeon/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)

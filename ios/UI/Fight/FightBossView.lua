@@ -152,9 +152,14 @@ function UpdateInfo()
 
     --UpdateBGM(hpProgress);    
     
-    if(hp <= 0 and not bossDead)then
-        bossDead = 1;   
-        FuncUtil:Call(SetShowState,nil,1000,false); 
+    if(hp <= 0)then
+        if(not bossDead)then
+            bossDead = 1;   
+            FuncUtil:Call(SetShowState,nil,1000,false); 
+        end
+    else
+        bossDead = nil;
+        SetShowState(true);
     end
 end
 --更新Buff

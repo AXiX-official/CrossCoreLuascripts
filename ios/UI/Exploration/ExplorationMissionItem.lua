@@ -104,7 +104,8 @@ function OnClick()
                 -- LanguageMgr:ShowTips(xxx)
                 LogError("任务已过期")
             else
-                MissionMgr:GetReward(data:GetID())
+                -- MissionMgr:GetReward(data:GetID())
+                TaskProto:GetRewardByType(data:GetType())
             end
         else
             if (data:GetJumpID()) then

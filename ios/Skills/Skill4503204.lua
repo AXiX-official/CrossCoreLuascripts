@@ -10,9 +10,9 @@ end
 function Skill4503204:OnBefourHurt(caster, target, data)
 	-- 4503204
 	self:tFunc_4503204_4503213(caster, target, data)
-	self:tFunc_4503204_4503223(caster, target, data)
+	self:tFunc_4503204_4503222(caster, target, data)
 end
-function Skill4503204:tFunc_4503204_4503223(caster, target, data)
+function Skill4503204:tFunc_4503204_4503222(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -20,8 +20,8 @@ function Skill4503204:tFunc_4503204_4503223(caster, target, data)
 	end
 	-- 8478
 	local count78 = SkillApi:DeathCount(self, caster, target,3)
-	-- 4503223
-	self:AddTempAttr(SkillEffect[4503223], caster, self.card, data, "damage",-count78*0.12)
+	-- 4503222
+	self:AddTempAttr(SkillEffect[4503222], caster, self.card, data, "damage",count78*0.08)
 end
 function Skill4503204:tFunc_4503204_4503213(caster, target, data)
 	-- 8063

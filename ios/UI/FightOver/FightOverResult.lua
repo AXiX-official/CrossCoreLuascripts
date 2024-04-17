@@ -74,7 +74,10 @@ function OnOpen()
 
     EventMgr.Dispatch(EventType.Fight_Over_Panel_Show)
 
-    MenuMgr:SetFightOver(true)
+    local isSweep = data.elseData and data.elseData.isSweep or false
+    if not isSweep then
+        MenuMgr:SetFightOver(true)
+    end
 end
 
 function GetIsWin(_sceneType)
@@ -192,7 +195,7 @@ function OnClickMask()
     local cfg = DungeonMgr:GetFightMonsterGroup();
     local isNotPvP = sceneType ~= SceneType.PVP and sceneType ~= SceneType.PVPMirror
     if (bIsWin and cfg and cfg.storyID2 and isNotPvP) then
-        PlotMgr:TryPlay(cfg.storyID2, ApplyQuit);
+        PlotMgr:TryPlay(cfg.storyID2, ApplyQuit, nil, false);
     else
         ApplyQuit();
     end

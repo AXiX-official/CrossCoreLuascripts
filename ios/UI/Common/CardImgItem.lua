@@ -45,6 +45,9 @@ function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
     modelId = _modelId
     posType = _posType
     callBack = _callBack
+    if isUseShopImg~=_isUseShopImg then
+        oldModelId="";
+    end
     isUseShopImg=_isUseShopImg;
     -- 重置点击记录
     if (oldModelId ~= nil) then

@@ -24,8 +24,8 @@ function Skill503200204:DoSkill(caster, target, data)
 		self:DamageLight(SkillEffect[12813], caster, target, data, 0.25,1)
 	end
 end
--- 攻击结束
-function Skill503200204:OnAttackOver(caster, target, data)
+-- 伤害后
+function Skill503200204:OnAfterHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -41,6 +41,6 @@ function Skill503200204:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 503200203
-	self:HitAddBuff(SkillEffect[503200203], caster, target, data, 4000,1001)
+	-- 503200202
+	self:HitAddBuff(SkillEffect[503200202], caster, target, data, 3000,1001)
 end

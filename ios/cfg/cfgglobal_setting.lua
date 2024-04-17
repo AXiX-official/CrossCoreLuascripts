@@ -43,7 +43,7 @@ local conf = {
 {'1033',	'g_turn_timeout_eff',	'',	'int',	'10'},
 {'1034',	'g_turn_timeout_warning_time',	'',	'int',	'2000'},
 {'1035',	'g_hot_lower_on_pve_fight',	'',	'float[]',	'0.01,0.1'},
-{'1036',	'g_thr_star_on_pve_fight',	'',	'float[]',	'0.3,0.3'},
+{'1036',	'g_thr_star_on_pve_fight',	'',	'float[]',	'0,0'},
 {'1037',	'g_TeamStep',	'',	'int',	'2'},
 {'1038',	'g_TeamJump',	'',	'int',	'2'},
 {'1039',	'g_TeamBossUpdateDiff',	'',	'int',	'5'},
@@ -268,6 +268,12 @@ local conf = {
 {'4102',	'g_addHotTime',	'',	'json',	'[["2024-02-07 10:00:00","2024-02-21 03:00:00"]]'},
 {'4201',	'g_FightOnlineUnlock',	'',	'bool',	'1'},
 {'4301',	'g_TimeZone',	'',	'float',	'8'},
+{'4401',	'g_DungeonTaoFaDailyNum',	'',	'int',	'2'},
+{'4402',	'g_DungeonTaoFaDailyBuy',	'',	'int',	'2'},
+{'4403',	'g_DungeonTaoFaDailyCost',	'',	'json',	'[[10002,50,2]]'},
+{'4404',	'g_DungeonArachnidDailyBuy',	'',	'int',	'6'},
+{'4405',	'g_DungeonArachnidDailyCost',	'',	'json',	'[[10002,15,2]]'},
+{'4406',	'g_DungeonArachnidGets',	'',	'json',	'[[12007,1,2]]'},
 },
 }
 --cfgglobal_setting = conf

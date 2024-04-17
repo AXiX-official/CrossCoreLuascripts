@@ -31,6 +31,12 @@ function Refresh(_data)
 		CSAPI.SetText(txtPercent, str)
 		
 		isUnLock = PlotMgr:IsPlayed(data.story_id)
+		if not isUnLock and data.lock then
+			local dungeonData = DungeonMgr:GetDungeonData(data.lock)
+			if dungeonData and dungeonData:IsPass() then
+				isUnLock = true
+			end
+		end
 		CSAPI.SetGOActive(unLockObj, isUnLock)
 		CSAPI.SetGOActive(lockObj, not isUnLock)
 		canvasGroup.alpha = isUnLock and 1 or 0.5

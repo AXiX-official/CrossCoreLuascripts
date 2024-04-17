@@ -8,10 +8,10 @@ function Buffer4906105:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer4906105:OnCreate(caster, target)
-	-- 4010
-	self:AddAttrPercent(BufferEffect[4010], self.caster, target or self.owner, nil,"attack",0.50)
-	-- 4110
-	self:AddAttrPercent(BufferEffect[4110], self.caster, target or self.owner, nil,"defense",0.5)
-	-- 4210
-	self:AddAttr(BufferEffect[4210], self.caster, target or self.owner, nil,"speed",50)
+	-- 4016
+	self:AddAttrPercent(BufferEffect[4016], self.caster, target or self.owner, nil,"attack",0.80)
+	-- 4116
+	self:AddAttrPercent(BufferEffect[4116], self.caster, target or self.owner, nil,"defense",0.8)
+	-- 4212
+	self:AddAttr(BufferEffect[4212], self.caster, target or self.owner, nil,"speed",60)
 end

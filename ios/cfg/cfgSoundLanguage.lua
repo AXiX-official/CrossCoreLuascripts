@@ -40,10 +40,11 @@ local conf = {
 {'30',	'Talbot',	'cn'},
 {'31',	'Vortex',	'cn'},
 {'32',	'wolframite',	'cn'},
-{'33',	'Uillean',	'cn'},
+{'33',	'Collapsar',	'cn'},
 {'34',	'Silver_Feather',	'cn'},
 {'35',	'Zeus',	'cn'},
-{'36',	'Lepus',	'cn'},
+{'36',	'Uillean',	'cn'},
+{'37',	'Lepus',	'cn'},
 },
 }
 --cfgSoundLanguage = conf

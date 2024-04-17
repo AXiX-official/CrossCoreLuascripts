@@ -6,6 +6,9 @@ local this =
 {time=13000,type=0,cue_sheet="fight/effect/Lepus_merge.acb",cue_name="Lepus_merge"},
 {time=3500,type=0}
 },
+[1120628288]={
+{time=3000,type=0,cue_sheet="cv/Lepus.acb",cue_name="Lepus_42",cue_feature=1}
+},
 [1310282141]={
 {delay=3000,time=13830,type=0,cue_sheet="cv/Lepus.acb",cue_name="Lepus_51",cue_feature=1},
 {delay=500,time=13830,type=0,cue_sheet="cv/Lepus.acb",cue_name="Lepus_50",cue_feature=1},

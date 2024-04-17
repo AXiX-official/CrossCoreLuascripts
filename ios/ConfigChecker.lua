@@ -1150,6 +1150,20 @@ function ConfigChecker:ItemInfo(cfgs)
             cfg.nExpiry = GCalHelp:GetTimeStampBySplit(cfg.sExpiry, cfg)
         end
 
+        --if cfg.type == ITEM_TYPE.ICON_FRAME then
+        --    local frameCfg = AvatarFrame[cfg.dy_value2]
+        --    frameCfg.item_id = id
+        --elseif cfg.type == ITEM_TYPE.PROP then
+        --    if cfg.dy_value1 == PROP_TYPE.IconFrame then
+        --        local item_id = cfg.dy_arr[1]
+        --        local iconFrameItem = cfgs[item_id]
+        --        ASSERT(
+        --            iconFrameItem.type == ITEM_TYPE.ICON_FRAME,
+        --            string.format('道具id:%s的物品对应的头像框物品:%s，类型不对', id, item_id)
+        --        )
+        --    end
+        --end
+
         -- cfg.hide : 只导出了客户端
         if IS_CLIENT and not cfg.hide then
             if cfg.type == ITEM_TYPE.CARD then
@@ -1204,13 +1218,13 @@ function ConfigChecker:CfgActiveEntry(cfgs)
                         if not battleEndTimeTable[tar_config.sectionID] then
                             battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
                         else
-                            LogWarning("CfgActiveEntry sectionID出现重复%s:%s", v.config, v.nConfigID)
+                            LogWarning('CfgActiveEntry sectionID出现重复%s:%s', v.config, v.nConfigID)
                         end
                     end
                 end
             end
         end
-        _G["DupActiveBattleEndTime"] = battleEndTimeTable
+        _G['DupActiveBattleEndTime'] = battleEndTimeTable
     end
 end
 
@@ -1241,13 +1255,38 @@ function ConfigChecker:CfgCardRoleUpgrade(cfgs)
     end
 end
 
-function ConfigChecker:CfgCommodity(cfgs)
+function ConfigChecker:CfgLimitedTime(cfgs)
     -- 计算操作
-    for k, v in pairs(cfgs) do
-        v.nDiscountStart = GCalHelp:GetTimeStampBySplit(v.sDiscountStart, v)
-        v.nDiscountEnd = GCalHelp:GetTimeStampBySplit(v.sDiscountEnd, v)
+    for _, v in pairs(cfgs) do
+        if v.times then
+            local times = SplitString(v.times, '-')
+            if times then
+                local start_time = times[1]
+                if start_time then
+                    local start_times = SplitString(start_time, ':')
+                    if start_times and #start_times == 3 then
+                        local s_time = {}
+                        s_time.time = start_time
+                        s_time.time_h = start_times[1]
+                        s_time.time_m = start_times[2]
+                        s_time.time_s = start_times[3]
+                        v.s_time = s_time
+                    end
+                end
 
-        v.nBuyStart = GCalHelp:GetTimeStampBySplit(v.sBuyStart, v)
-        v.nBuyEnd = GCalHelp:GetTimeStampBySplit(v.sBuyEnd, v)
+                local end_time = times[2]
+                if end_time then
+                    local end_times = SplitString(end_time, ':')
+                    if end_times and #end_times == 3 then
+                        local e_time = {}
+                        e_time.time = end_time
+                        e_time.time_h = end_times[1]
+                        e_time.time_m = end_times[2]
+                        e_time.time_s = end_times[3]
+                        v.e_time = e_time
+                    end
+                end
+            end
+        end
     end
 end

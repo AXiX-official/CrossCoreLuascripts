@@ -492,8 +492,10 @@ function SetPVEPanel()
     end
 
     CSAPI.SetGOActive(titleObj, true)
-    CSAPI.SetGOActive(starObj, dungeonType ~= eDuplicateType.TaoFa)
-    CSAPI.SetGOActive(taskObj, dungeonType ~= eDuplicateType.TaoFa)
+    local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    local isDanger = cfgDungeon and cfgDungeon.diff and cfgDungeon.diff == 3
+    CSAPI.SetGOActive(starObj, dungeonType ~= eDuplicateType.TaoFa and not isDanger)
+    CSAPI.SetGOActive(taskObj, dungeonType ~= eDuplicateType.TaoFa and not isDanger)
 
     SetPVETitle()
     SetStarInfo()
@@ -514,8 +516,14 @@ function SetPVETitle()
             str = str .. LanguageMgr:GetByID(34005) .. " "
             str = cfgDungeon.chapterID and str .. cfgDungeon.chapterID or str
         elseif sectionType == SectionType.Activity then
-            local isHard = cfgDungeon.diff and cfgDungeon.diff == 2
-            str = isHard and cfgDungeon.name.." ("..LanguageMgr:GetByID(15016)..")" or cfgDungeon.name
+            local diff = cfgDungeon.diff or 1
+            if diff == 1 then
+                str = cfgDungeon.name
+            elseif diff == 2 then
+                str = cfgDungeon.name.." ("..LanguageMgr:GetByID(15016)..")"
+            else
+                str = cfgDungeon.name .. " " .. LanguageMgr:GetByID(15127, " " .. cfgDungeon.chapterID)
+            end
         else
             str = cfgDungeon.name
         end

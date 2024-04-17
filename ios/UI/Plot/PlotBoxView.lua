@@ -2,12 +2,13 @@
 --播放文字效果参数
 local isPlaying = false; --文字是否播放完
 local isTween = false;--是否正在播放窗口动画
--- local playSpeed = 3;--文字播放速度
 local playSpeed = 0.02;--文字播放速度，值越小越快
--- local lastIndex = 1;--计时器
 local plotOptionObj;--对话选项
 local plotContent = nil
-local isLastCenter = false
+local contents = {}
+local currLeftIndex= 0 --左侧对话文本下标
+local recordInfo = {}
+local isLastLeft = false
 local currentPlotData;
 local text_roleName1;  --角色名称控件
 local text_roleName2;  --角色名称控件
@@ -21,12 +22,20 @@ local fade1 = nil --标题动画控件
 local fade2 = nil --标题动画控件
 local isMove = false --标题是否移动
 
+local gradient = nil
+
+
 function Awake()
 	plotContent = PlotContent1
 	text_roleName1 = ComUtil.GetCom(PlotTitle1, "Text");
 	text_roleName2 = ComUtil.GetCom(PlotTitle2, "Text");
 	fade1 = ComUtil.GetCom(titleFade1, "ActionFade");
 	fade2 = ComUtil.GetCom(titleFade2, "ActionFade");
+	gradient=ComUtil.GetCom(icon,"UIImageGradient");
+
+	if content3 then
+		table.insert(contents,content3.gameObject)
+	end
 end
 
 function OnEnable()
@@ -46,6 +55,7 @@ function OnDestroy()
 	currentPlotData = nil;
 	plotOptionObj = nil;
 	onPlotOver = nil;
+	SetIconGradient()
 	ReleaseCSComRefs()
 end
 
@@ -58,55 +68,83 @@ function IsTween()
 end
 
 function ShowBox(data, isAuto)	
+	if recordInfo[data:GetID()] then
+		return
+	end
+	recordInfo[data:GetID()] = 1
+	
 	if data:IsLastContent() == false then
 		currentPlotData = data;
 		CSAPI.SetGOActive(gameObject, true);
-		-- CSAPI.SetGOActive(moveObj, false)
 		CSAPI.SetGOActive(centerObj, currentPlotData:IsCenter())
-		CSAPI.SetGOActive(bottomObj, not currentPlotData:IsCenter())		
-		-- CSAPI.SetGOActive(childNode, not currentPlotData:IsCenter())
+		CSAPI.SetGOActive(bottomObj, not currentPlotData:IsCenter() and not currentPlotData:IsLeft())
 		if currentPlotData:IsCenter() then
 			PlotTween.FadeIn(centerObj)
 		end
 		plotContent = currentPlotData:IsCenter() and PlotContent2 or PlotContent1
-		local talkName = currentPlotData:GetTalkName();		
+		ShowLeftBox()
+		local talkName = currentPlotData:GetTalkName();
 		if talkName == nil or talkName == "" then
 			CSAPI.SetGOActive(titleObj, false);
 		else
 			SetTitlePos(currentPlotData)
 			CSAPI.SetGOActive(titleObj, true);
 		end
-		-- CSAPI.SetGOActive(iconObj, false)
 		CSAPI.SetGOActive(iconObj, currentPlotData:GetShowIcon());
 		if currentPlotData:GetShowIcon() then
+			SetIconGradient()
 			--获取配置表头像
 			if currentPlotData:IsLeader() then
 				ResUtil.RoleCard:Load(icon, PlayerClient:GetIconName(), true);
 			else
 				local talkInfo = currentPlotData:GetTalkInfo();
 				ResUtil.RoleCard:Load(icon, talkInfo:GetIcon(), true);
+
+				local useGradient = currentPlotData:IsIconGradient()
+				local iconGradient = talkInfo:GetIconGradient()
+				if iconGradient and useGradient then
+					iconGradient = iconGradient < 0 and 0 or iconGradient
+					iconGradient = iconGradient> 100 and 100 or iconGradient
+					SetIconGradient(iconGradient)
+				end
 			end
-		end
-		-- lastIndex=1;
-		-- fIndex=1;
-		tagInfo = {};--记录当前字符串的标签信息
-		for s in string.gmatch(data:GetContent(), "<[%p%w]->") do
-			table.insert(tagInfo, s);
 		end
 		if isTween then
 			PlotTween.FadeIn(childNode, nil, function()
 				isPlaying = true;
 				isTween = false;
 				PlayPlot()
-				isLastCenter = currentPlotData:IsCenter()
 			end);
 		else
 			isPlaying = true;
 			PlayPlot()
-			isLastCenter = currentPlotData:IsCenter()
 		end
 
 		SetNextTween(isAuto)
+	end
+end
+
+function ShowLeftBox()
+	CSAPI.SetGOActive(leftObj,currentPlotData:IsLeft())
+	if currentPlotData:IsLeft() then
+		currLeftIndex = currLeftIndex + 1
+		if contents[currLeftIndex] then
+			plotContent = contents[currLeftIndex]
+		else
+			local go = CSAPI.CloneGO(contents[1],grid.transform)
+			go.transform:SetSiblingIndex(currLeftIndex - 1)
+			plotContent = go
+			contents[currLeftIndex] = go
+		end
+		isLastLeft =true
+	elseif isLastLeft then
+		isLastLeft = false
+		if #contents > 0 then
+			for i, v in ipairs(contents) do
+				CSAPI.SetText(v,"")
+			end
+		end
+		currLeftIndex = 0
 	end
 end
 
@@ -117,7 +155,6 @@ function HideBox(isTween)
 			CSAPI.SetGOActive(gameObject, false);
 		end);
 	else
-		-- CSAPI.SetScale(gameObject,0,0,0);
 		CSAPI.SetGOActive(gameObject, false);
 	end
 end
@@ -140,13 +177,6 @@ function JumpPlot()
 end
 
 function PlayPlot()
-	-- if isLastCenter and currentPlotData:IsCenter() then
-	-- 	MoveUpAndFadeOut(plotContent.gameObject, 0.5, function()
-	-- 		PlayPlotContent()
-	-- 	end, 0, 95, 20)
-	-- else
-	-- 	PlayPlotContent()
-	-- end
 	PlayPlotContent()
 end
 
@@ -162,16 +192,9 @@ end
 
 --播放完的回调
 function PlayFullPolt()
-	-- text_content.text=currentPlotData:GetContent().." ";
 	if isPlaying then
 		isPlaying = false;
-		-- lastIndex=1;
-		-- local options = currentPlotData:GetOptions();
-		-- if options ~= nil then
-		-- 	InitSelectObj(options);--初始化选项
-		-- else
-			OnPlotOver();
-		-- end
+		OnPlotOver();
 	end
 end
 
@@ -211,40 +234,12 @@ function SetTitlePos(data)
 		end								
 	end
 	
-	-- local title = isRight and imgTitle2 or imgTitle1
-	-- local txtRole = isRight and text_roleName2 or text_roleName1
-	-- local fade = isRight and fade1 or fade2
-	-- local otherFade = not isRight and fade1 or fade2
 	local title = imgTitle1
 	local txtRole = text_roleName1
 	local fade = fade1
 	local otherFade = fade2
-	
-	
-	-- if(isMove ~= isRight) then
-	-- 	fade:Play(1, 0, 333, 0, function()
-	-- 		txtRole.text = currentPlotData:GetTalkName();
-	-- 		CSAPI.SetText(text_title2,currentPlotData:GetTalkEnName())
-	-- 		otherFade:Play(0, 1, 333)
-	-- 	end)	
-	-- 	isMove = isRight
-	-- else
 	txtRole.text = currentPlotData:GetTalkName();	
 	CSAPI.SetText(text_title2, currentPlotData:GetTalkEnName())		
-	-- end
-end
-
---移动渐出
-function MoveUpAndFadeOut(go, _time, callBack, _delay, startY, offsetY)
-	CSAPI.MoveTo(go, "UI_Local_Move", 0, startY + offsetY, 0, function()
-		CSAPI.SetAnchor(go, 0, startY)
-	end, _time, _delay)
-	PlotTween.FadeOut(go, _time, function()
-		PlotTween.FadeIn(go)
-		if callBack then
-			callBack()
-		end
-	end, _delay)
 end
 
 --设置NEXT动画
@@ -256,21 +251,21 @@ function SetNextTween(isAuto, isClick)
 			PlotTween.TweenMoveByPingPong2(moveObj, {0, 13}, 0.1)
 		end
 	end	
-	-- if not nextFade then
-	-- 	nextFade = ComUtil.GetCom(nextTween, "ActionFade")
-	-- end
-	-- if not nextMove then
-	-- 	nextMove = ComUtil.GetCom(nextTween, "ActionMoveByCurve")
-	-- end
-	-- if state then		
-	-- 	CSAPI.SetGOActive(moveObj, true)
-	-- 	nextFade.delayValue = 0
-	-- 	nextFade:Play(0, 1, 400, 0)
-	-- else
-	-- 	--CSAPI.SetGOActive(nextTween, true)
-	-- 	nextFade.delayValue = 1
-	-- 	nextFade:Play(1, 0, 400, 0)
-	-- end
+end
+
+function SetIconGradient(num)
+	local keys = {}
+	if num then
+		num = 100 - num
+		table.insert(keys,{0, 100, 100, 100})
+		table.insert(keys,{num, 0, 0, 0})
+		table.insert(keys,{100, 0, 0, 0})
+	else
+		table.insert(keys,{0, 100, 100, 100})
+		table.insert(keys,{100, 100, 100, 100})
+	end
+	gradient:SetGradientColor(keys)
+	gradient.enabled = num ~= nil
 end
 
 ----#Start#----

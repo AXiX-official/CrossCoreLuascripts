@@ -51,7 +51,7 @@ function this:GetRewardCfg()
 end
 
 function this:GetSortIndex()
-	return self:GetCfg().sortIndex
+	return self:GetCfg() and self:GetCfg().sortIndex or 0
 end
 
 --活动在当天是否已签 （根据最后签到时间来检测）

@@ -979,6 +979,8 @@ this.Shop_NewInfo_Refresh=370013;
 this.Shop_Buy_Mask=370014;
 --商店刷新时间返回
 this.Shop_ResetTime_Ret=370015;
+--商店开启时间返回
+this.Shop_OpenTime_Ret=370016;
 
 --------------------------------------------引导
 --引导完成
@@ -1146,6 +1148,7 @@ this.Tower_Update_Data = 480001
 this.Activity_Open_State = 490001 --活动关卡开启状态
 this.TaoFa_Count_Refresh = 490002 --讨伐次数刷新
 this.TaoFa_Count_BuyRefresh = 490003 --讨伐购买次数刷新
+this.Arachnid_Count_Refresh = 490004 --活动购买次数刷新
 
 -----------------------------------战场
 this.BattleField_Show_List = 500001 --战区设置
@@ -1164,6 +1167,8 @@ this.Wait_Panel_Close = 530001  --关闭等待界面
 
 -----------------------------------------设置
 this.Setting_Window_Logout_Agree = 540001
+-----------------------------------------通用购买窗口
+this.Universal_Purchase_Refresh_Panel = 550001
 
 this.Client_Init_Finish=550001;--客户端初始化完成
 

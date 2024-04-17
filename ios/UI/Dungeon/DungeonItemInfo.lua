@@ -17,8 +17,22 @@ local currDungeonData = nil
 local isShow = false
 local isAnim = true
 local isSweepOpen = false
+local sectionData = nil
 -- 每周
 local prograssGOs = {}
+-- 多倍
+local multiNum = 0
+local isDoubleOpen = false
+local isMultiUpdate = false
+local multiUpdateTime = 0
+local isDescOpen = false
+-- 活动
+local isActive = false
+
+local layout = nil
+local svUtil = nil
+local curDatas = nil
+local currLevel = 1
 
 function SetClickCB(_cb)
     cb = _cb
@@ -36,6 +50,14 @@ function Awake()
     txtSelDungeonNum = ComUtil.GetCom(selDungeonNum, "Text")
     txtCost = ComUtil.GetCom(cost, "Text")
 
+    layout = ComUtil.GetCom(hsv, "UISV")
+    if layout then
+        layout:Init("UIs/DungeonActivity2/DungeonDangerNum", LayoutCallBack, true)
+        layout:AddOnValueChangeFunc(OnValueChange)    
+    end
+    svUtil = SVCenterDrag.New()
+    CSAPI.SetGOActive(dangerObj, false)
+
     -- pImg
     local imgGO = ComUtil.GetComInChildren(pImgObj, "Image").gameObject
     table.insert(prograssGOs, imgGO)
@@ -43,7 +65,19 @@ function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Mission_List, OnTowerRefresh)
     eventMgr:AddListener(EventType.Player_HotChange, ShowCost)
+    eventMgr:AddListener(EventType.Bag_Update, ShowCost)
     eventMgr:AddListener(EventType.Sweep_Show_Panel, OnRefreshSweep)
+    eventMgr:AddListener(EventType.Dungeon_DailyData_Update,OnDailyDataUpdate)
+end
+
+function Update()
+    if isMultiUpdate or not sectionData then
+        return
+    end
+    if multiUpdateTime and TimeUtil:GetTime() >= multiUpdateTime then
+        isMultiUpdate = true
+        PlayerProto:SectionMultiInfo()
+    end
 end
 
 function OnTowerRefresh()
@@ -58,17 +92,22 @@ function OnRefreshSweep()
     end
 end
 
+function OnDailyDataUpdate()
+    ShowDoublePanel()
+end
+
 -- 初始化右侧栏
 function InitInfo(_isAnim)
-    isAnim = _isAnim
-    if isAnim then
-        local x, y, z = CSAPI.GetLocalPos(childNode);
-        enterPos = {x, y, z}
-        outPos = {4000, y, 0};
-        CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
-    end
+    -- isAnim = _isAnim
+    -- if isAnim then
+    local x, y, z = CSAPI.GetLocalPos(childNode);
+    enterPos = {x, y, z}
+    outPos = {4000, y, 0};
+    CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
+    -- end
     CSAPI.SetGOActive(gameObject, false);
     ShowMask(false)
+    ShowDesc(false)
 end
 
 function Show(item)
@@ -88,12 +127,14 @@ function Show(item)
 end
 
 function Refresh()
+    sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
     txtSelDungeonName.text = cfgDungeon.name
     txtSelDungeonNum.text = cfgDungeon.chapterID and cfgDungeon.chapterID .. "" or ""
     -- CSAPI.SetText(selDungeonNum_1, cfgDungeon.chapterID and "STAGE" or "")
     CSAPI.SetText(selDungeonNum_1, cfgDungeon.chapterID and LanguageMgr:GetByID(15124) or "")
     ShowCost()
-    local str = cfgDungeon.lvTips ~= nil and cfgDungeon.lvTips or 0
+    CSAPI.SetGOActive(levelObj,cfgDungeon.lvTips ~= nil)
+    local str = cfgDungeon.lvTips ~= nil and cfgDungeon.lvTips or "— —"
     str = cfgDungeon.type == eDuplicateType.Teaching and "— —" or str -- 教程不显示lv
     CSAPI.SetText(txt_topTips2, str);
     CSAPI.SetGOActive(hardInfoObj, cfgDungeon.type == eDuplicateType.MainElite)
@@ -109,17 +150,18 @@ function Refresh()
     CSAPI.SetGOActive(mapObj, not isFighting)
     CSAPI.SetGOActive(enemyImg1, not isFighting)
     CSAPI.SetGOActive(enemyImg2, isFighting)
+    ShowDoublePanel()
 end
 
 -- 右边信息栏移动
 function PlayInfoMove(isShow)
-    if not isAnim then
-        CSAPI.SetGOActive(gameObject, isShow);
-        if isShow then
-            Refresh()
-        end
-        return
-    end
+    -- if not isAnim then
+    --     CSAPI.SetGOActive(gameObject, isShow);
+    --     if isShow then
+    --         Refresh()
+    --     end
+    --     return
+    -- end
     if isShow then
         CSAPI.SetGOActive(gameObject, true);
         if isInfoShow and selItem ~= lastItem then
@@ -128,6 +170,7 @@ function PlayInfoMove(isShow)
                 CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
                 infoCG.alpha = 1
                 PlayMoveAction(childNode, {enterPos[1], enterPos[2], enterPos[3]})
+                ShowAnim()
                 Refresh()
             end)
         else
@@ -137,8 +180,9 @@ function PlayInfoMove(isShow)
             PlayMoveAction(childNode, {enterPos[1], enterPos[2], enterPos[3]}, function()
                 isInfoShow = true
             end)
+            ShowAnim()
         end
-    else
+    elseif isInfoShow then
         PlayMoveAction(childNode, {outPos[1], outPos[2], outPos[3]}, function()
             CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
             isInfoShow = false;
@@ -162,10 +206,28 @@ end
 
 function ShowCost()
     if cfgDungeon then
-        local cost = cfgDungeon.enterCostHot and cfgDungeon.enterCostHot or 0
-        cost = cfgDungeon.winCostHot and cost + cfgDungeon.winCostHot or cost
-        cost = StringUtil:SetByColor(cost .. "", math.abs(cost) <= PlayerClient:Hot() and "191919" or "CD333E")
-        txtCost.text = " " .. cost
+        local _cost = DungeonUtil.GetCost(cfgDungeon)
+        CSAPI.SetGOActive(ticketObj, _cost~=nil)
+        if _cost~=nil then
+            local cur = BagMgr:GetCount(_cost[1])
+            CSAPI.SetText(txtTicket,cur .. "")
+            ResUtil.IconGoods:Load(ticketIcon, _cost[1] .. "_1")
+            ResUtil.IconGoods:Load(costImg, _cost[1] .. "_3")
+            CSAPI.SetAnchor(costImg,-153,0)
+            CSAPI.SetText(cost,"-" .. _cost[2])
+            local cfg = Cfgs.ItemInfo:GetByID(_cost[1])
+            if cfg then
+                CSAPI.SetText(txt_cost, cfg.name)
+            end
+        else
+            ResUtil.IconGoods:Load(ticketIcon, ITEM_ID.Hot .. "_1")
+            ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .. "_3")
+            local cost = cfgDungeon.enterCostHot and cfgDungeon.enterCostHot or 0
+            cost = cfgDungeon.winCostHot and cost + cfgDungeon.winCostHot or cost
+            cost = StringUtil:SetByColor(cost .. "", math.abs(cost) <= PlayerClient:Hot() and "191919" or "CD333E")
+            txtCost.text = " " .. cost
+            LanguageMgr:SetText(txt_cost, 15004)
+        end
     end
 end
 
@@ -212,7 +274,6 @@ function GetRewardDatas(cfg)
     local _datas = {}
     local dungeonData = DungeonMgr:GetDungeonData(cfg.id)
     local isTeaching = cfg.type == eDuplicateType.Teaching -- 教程关
-    local sectionData = DungeonMgr:GetSectionData(cfg.group)
     local specialRewards = RewardUtil.GetSpecialReward(cfg.group)
     if (specialRewards) then
         for i, v in ipairs(specialRewards) do
@@ -303,32 +364,17 @@ function ShowStarInfo(cfgDungeon)
         CSAPI.SetGOActive(goGoals[i].gameObject, false)
     end
     if #starInfos > 0 then
-        local Len = isTower and 1 or 3
+        local Len = (isTower or (cfgDungeon.diff and cfgDungeon.diff == 3)) and 1 or 3
         for i = 1, Len do
             if #goGoals >= i then
-                -- if cfgDungeon.nGroupID ~= nil and cfgDungeon.nGroupID ~= "" then -- 直接进入战斗的关卡类型
-                --     if i == 1 then
-                --         goGoals[i].Init(starInfos[i].tips, starInfos[i].isComplete, true, isTower);
-                --         CSAPI.SetGOActive(goGoals[i].gameObject, true)
-                --     end
-                -- else
                 CSAPI.SetGOActive(goGoals[i].gameObject, true)
                 goGoals[i].Init(starInfos[i].tips, starInfos[i].isComplete);
-                -- end
             else
                 ResUtil:CreateUIGOAsync("FightTaskItem/FightBigTaskItem", goalTitle, function(go)
                     goGoals = goGoals or {};
                     local item = ComUtil.GetLuaTable(go);
-                    -- if cfgDungeon.nGroupID ~= nil and cfgDungeon.nGroupID ~= "" then -- 直接进入战斗的关卡类型
-                    --     if i == 1 then
-                    --         item.Init(starInfos[i].tips, starInfos[i].isComplete, true, isTower);
-                    --     else
-                    --         CSAPI.SetGOActive(item.gameObject, false)
-                    --     end
-                    -- else
                     CSAPI.SetGOActive(item.gameObject, true)
                     item.Init(starInfos[i].tips, starInfos[i].isComplete);
-                    -- end
                     table.insert(goGoals, item);
                 end);
             end
@@ -414,6 +460,10 @@ end
 
 --扫荡状态
 function ShowSweep(cfgDungeon)
+    if cfgDungeon.diff and cfgDungeon.diff == 3 then
+        CSAPI.SetGOActive(btnSweep,false)
+        return  
+    end
     CSAPI.SetGOActive(btnSweep,cfgDungeon.modUpCnt ~= nil)
     if cfgDungeon.modUpCnt == nil then
         return
@@ -424,7 +474,7 @@ function ShowSweep(cfgDungeon)
         isSweepOpen = sweepData:IsOpen()
     end 
     CSAPI.SetGOActive(sweepLock,not isSweepOpen)
-    CSAPI.SetImgColor(btnSweep,255,255,255,isSweepOpen and 255 or 76)
+    CSAPI.SetImgColor(sweepImg,255,255,255,isSweepOpen and 255 or 76)
 end
 
 function ShowCourse(cfgDungeon)
@@ -499,7 +549,6 @@ end
 
 function OnClickMap()
     if selItem ~= nil then
-        local cfgDungeon = selItem.GetCfg();
         if cfgDungeon then
             ShowDetails(cfgDungeon.map, DungeonDetailsType.Map);
         end
@@ -508,36 +557,22 @@ end
 
 function OnClickEnemy()
     if selItem ~= nil then
-        local cfgDungeon = selItem.GetCfg();
         local list = {};
         if cfgDungeon and cfgDungeon.enemyPreview then
             for k, v in ipairs(cfgDungeon.enemyPreview) do
                 local cfg = Cfgs.CardData:GetByID(v);
                 table.insert(list, {
                     id = v,
-                    -- level = cfgDungeon.previewLv,
                     isBoss = k == 1
                 });
             end
         end
         CSAPI.OpenView("FightEnemyInfo", list);
-        -- if cfgDungeon and cfgDungeon.enemyPreview then
-        --     for k, v in ipairs(cfgDungeon.enemyPreview) do
-        --         local cfg = Cfgs.CardData:GetByID(v);
-        --         table.insert(list, {
-        --             cfg = cfg,
-        --             level = cfgDungeon.previewLv,
-        --             isBoss = k == 1
-        --         });
-        --     end
-        -- end
-        -- ShowDetails(list, DungeonDetailsType.Enemy);
     end
 end
 
 function OnClickOutput()
     if selItem ~= nil then
-        local cfgDungeon = selItem.GetCfg();
         ShowDetails(cfgDungeon, DungeonDetailsType.MainLineOutPut);
     end
 end
@@ -556,9 +591,9 @@ function OnClickSweep()
     OnSweepClick(cfgDungeon)
 end
 
-function OnSweepClick(_cfg)
+function OnSweepClick(_cfg,_buyFunc)
     if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = _cfg.id})
+        CSAPI.OpenView("SweepView",{id = _cfg.id},{onBuyFunc = _buyFunc})
     else
         local sweepData = SweepMgr:GetData(_cfg.id)
         if sweepData then
@@ -577,10 +612,13 @@ function IsSweepOpen()
 end
 
 function OnClickBack()
+    if isDescOpen then
+        ShowDesc(false)
+    end
     if maskCB then
         maskCB()
-        ShowMask(false)
     end
+    ShowMask(false)
 end
 
 function ShowMask(b)
@@ -612,4 +650,189 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
+end
+
+--------------------------------------------双倍
+-- 设置双倍
+function ShowDoublePanel()
+    if cfgDungeon and cfgDungeon.diff and cfgDungeon.diff == 3 then --危险等级不显示双倍
+        DungeonMgr:SetMultiReward(false)
+        CSAPI.SetGOActive(doubleObj,false)
+        return
+    end
+    multiUpdateTime = DungeonMgr:GetMultiUpdateTime()
+    if multiUpdateTime and TimeUtil:GetTime() < multiUpdateTime then
+        isMultiUpdate = false
+    end
+    -- double		
+    local hasMulti = DungeonUtil.HasMultiDesc(sectionData:GetID());
+    CSAPI.SetGOActive(doubleObj,hasMulti)
+    if not hasMulti then
+        return
+    end
+    local dStr = DungeonUtil.GetMultiDesc2(sectionData:GetID())
+    CSAPI.SetText(txtDouble, dStr);
+
+    multiNum = DungeonUtil.GetMultiNum(sectionData:GetID())
+    CSAPI.SetGOActive(btnMask, multiNum <= 0)
+    if (multiNum > 0) then
+        local doubleState = LoadDoubleState(sectionData:GetID())
+        if (doubleState) then
+            isDoubleOpen = doubleState.type == 1
+        end
+    else
+        isDoubleOpen = false
+    end
+    SetDoubleState()
+end
+
+-- 设置双倍状态
+function SetDoubleState()   
+    CSAPI.SetGOActive(close,not isDoubleOpen)
+    CSAPI.SetGOActive(open,isDoubleOpen)
+    DungeonMgr:SetMultiReward(isDoubleOpen)
+    SaveDoubleState(sectionData:GetID(), isDoubleOpen and 1 or 0)
+end
+
+-- 保存副本双倍状态
+function SaveDoubleState(_id, _type)
+    if (_id > 0) then
+        local _data = LoadDoubleState(_id) or {}
+        _data.id = _id
+        _data.type = _type
+        FileUtil.SaveToFile("doubleState_" .. _id .. ".txt", _data)
+    end
+end
+
+-- 读取副本双倍状态
+function LoadDoubleState(_id)
+    return FileUtil.LoadByPath("doubleState_" .. _id .. ".txt")
+end
+
+function ShowDouble(b)
+    isDoubleOpen = b
+    SetDoubleState()
+end
+
+function IsDouble()
+    return isDoubleOpen
+end
+
+function GetMultiNum()
+    return multiNum
+end
+
+function OnClickDouble()
+    isDoubleOpen = not isDoubleOpen
+    if multiNum < 1 then
+        LanguageMgr:ShowTips(8016)
+        isDoubleOpen = false
+    end
+    SetDoubleState()
+end
+
+function ShowDesc(b)
+    isDescOpen = true
+    CSAPI.SetGOActive(descObj,b)
+end
+
+function OnClickDesc()
+    ShowMask(true)
+    ShowDesc(true)
+end
+--------------------------------------------危险难度
+function LayoutCallBack(index)
+    local _data = curDatas[index]
+    local item = layout:GetItemLua(index)
+    item.SetIndex(index)
+    item.SetClickCB(OnClickItem)
+    item.Refresh(_data)
+    item.SetSelect(index == currLevel)
+end
+
+function OnClickItem(index)
+    layout:MoveToCenter(index)
+end
+
+function OnValueChange()
+    local index = layout:GetCurIndex()
+    if index + 1 ~= currLevel then
+        local item = layout:GetItemLua(currLevel)
+        if item then
+            item.SetSelect(false)
+        end
+        currLevel = index + 1
+        local item = layout:GetItemLua(currLevel)
+        if (item) then
+            item.SetSelect(true);
+        end
+        SetArrows()
+        CSAPI.SetGOActive(tipImg, currLevel == 1)
+        CSAPI.SetGOActive(txt_tip, currLevel == 1)
+        if curDatas then
+            cfgDungeon = curDatas[currLevel]
+            Refresh()
+        end
+    end
+    svUtil:Update()
+end
+
+function SetArrows()
+    CSAPI.SetGOActive(btnFirst,currLevel ~= 1)
+    CSAPI.SetGOActive(btnLast,currLevel ~= #curDatas)
+end
+
+function ShowDangeLevel(isDanger,cfgs,currDanger)
+    currLevel = currDanger or currLevel
+    CSAPI.SetGOActive(dangerObj, isDanger)
+    CSAPI.SetGOActive(outputObj, not isDanger)
+    if isDanger and cfgs then
+        curDatas = cfgs
+        svUtil:Init(layout, #curDatas, {100, 100}, 5, 0.1, 0.58)
+        layout:IEShowList(#curDatas, nil, currLevel)
+        SetArrows()
+        CSAPI.SetGOActive(tipImg, currLevel == 1)
+        CSAPI.SetGOActive(txt_tip, currLevel == 1)
+        if curDatas then
+            cfgDungeon = curDatas[currLevel]
+            Refresh()
+        end
+    end
+end
+
+function GetCurrDanger()
+    return currLevel
+end
+
+function OnClickLast()
+    if (currLevel ~= #curDatas) then
+        layout:MoveToCenter(#curDatas)
+    end
+end
+
+function OnClickFirst()
+    if (currLevel ~= 1) then
+        layout:MoveToCenter(1)
+    end
+end
+
+function GetCurrLevel()
+    return currLevel
+end
+
+--------------------------------------------动画
+function SetIsActive(b)
+    isActive = b
+end
+
+function ShowAnim()
+    if isActive then
+        CSAPI.SetGOActive(enterAnim,false)
+        CSAPI.SetGOActive(enterAnim,true)
+    end
+end
+
+function SetPos(isShow)
+    local pos = isShow and enterPos or outPos
+    CSAPI.SetLocalPos(childNode, pos[1], pos[2], pos[3])
 end

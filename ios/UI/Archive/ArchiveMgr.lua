@@ -122,12 +122,11 @@ function this:GetMemoryCountByID(_id)
         for k, m in ipairs(cfg.infos) do
             if (PlotMgr:IsPlayed(m.story_id)) then
                 count = count + 1
-                -- local ids = self:GetData(ArchiveType.Story).ids
-                -- if(not ids or not ids[m.story_id]) then
-                -- 	self.datas[ArchiveType.Story].ids = self.datas[ArchiveType.Story].ids or {}
-                -- 	self.datas[ArchiveType.Story].ids[m.story_id] = 1
-                -- 	self.datas[ArchiveType.Story].ids[_id] = 1
-                -- end
+            elseif m.lock then
+                local dungeonData = DungeonMgr:GetDungeonData(m.lock)
+                if dungeonData and dungeonData:IsPass() then
+                    count = count + 1
+                end
             end
         end
         max = max + #cfg.infos

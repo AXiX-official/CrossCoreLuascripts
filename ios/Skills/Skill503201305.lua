@@ -30,7 +30,7 @@ function Skill503201305:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 503201303
-	self:HitAddBuff(SkillEffect[503201303], caster, target, data, 5000,3004)
+	self:HitAddBuff(SkillEffect[503201303], caster, target, data, 6000,3004)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -47,7 +47,7 @@ function Skill503201305:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 503201304
-	self:AddBuff(SkillEffect[503201304], caster, target, data, 1001,2)
+	self:HitAddBuff(SkillEffect[503201304], caster, target, data, 10000,1001,2)
 	-- 503201305
-	self:AddBuff(SkillEffect[503201305], caster, target, data, 1001,2)
+	self:HitAddBuff(SkillEffect[503201305], caster, target, data, 10000,1001,2)
 end

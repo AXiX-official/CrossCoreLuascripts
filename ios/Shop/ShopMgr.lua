@@ -1,35 +1,72 @@
 --商品数据管理
 local this = MgrRegister("ShopMgr")
 require "LoginCommFuns"
---Init函数中 存放了从服务器获取到的商店购买记录
-function this:Init(proto)
+-- Init函数中 存放了从服务器获取到的商店购买记录
+function this:Init()
+	EventMgr.AddListener(EventType.Player_Update,this.OnPlayerUpdate)
+end
+
+function this:OnCommodityInfoRet(proto)
 	if proto and proto.infos then
 		for k, v in ipairs(proto.infos) do
 			this:UpdateData(v.id, v);
 		end
 		self:UpdateMonthDays(proto.m_cnt);
 	end
-	EventMgr.AddListener(EventType.Player_Update,this.OnPlayerUpdate)
-	self:SearchRefreshIDs();
-	if self.localRecords ==nil then
-		self:LoadLocalRecord();
+	if proto and proto.is_finish then --发送完成
+		-- LogError("ShopInit-------------");
+		-- LogError(self.records);
+		self:SearchRefreshIDs();
+		if self.localRecords ==nil then
+			self:LoadLocalRecord();
+		end
+		if self.storeVerInfo==nil then
+			self.storeVerInfo=FileUtil.LoadByPath("StoreVer.txt");
+		end
+		self:CheckCommReset();
+		-- self:CheckRedInfo();
 	end
-	if self.storeVerInfo==nil then
-		self.storeVerInfo=FileUtil.LoadByPath("StoreVer.txt");
+end
+
+--初始化商店页签开启/关闭时间
+function this:InitShopOpenTime(proto)
+	if proto and proto.infos then
+		self.shopOpenTimes=self.shopOpenTimes or {};
+		for k,v in ipairs(proto.infos) do
+			local key=tostring(v.shop_id);
+			if v.group_id then
+				key=string.format("%s_%s",v.shop_id,v.group_id);
+			end
+			self.shopOpenTimes[key]=v;
+		end
 	end
-	self:CheckCommReset();
-	-- self:CheckRedInfo();
+end
+
+--获取商店开启时间信息 id 页签id group_id 子页签id
+function this:GetPageTimeInfo(id,group_id)
+	if self.shopOpenTimes then
+		local key=tostring(id);
+		if group_id then
+			key=string.format("%s_%s",v.shop_id,v.group_id);
+		end
+		return self.shopOpenTimes[key];
+	end
 end
 
 function this.OnPlayerUpdate()
 	this:CheckRedInfo();
 end
-
+-- local ids={80001,50003,50004,80025,80027,80107,80108}
 function this:UpdateData(id, info,checkRed)
 	if self.records == nil then
 		self.records = {};
 	end
 	self.records[id] = info;
+	-- for k,v  in ipairs(ids) do
+	-- 	if id==v then
+	-- 		LogError(info);
+	-- 	end
+	-- end
 	if checkRed then
 		self:CheckRedInfo();
 	end
@@ -70,21 +107,12 @@ function this:GetPageByID(id)
 		if cfg then
 			local pageData=ShopPageData.New();
 			pageData:SetCfg(id);
+			pageData:SetData(self:GetPageTimeInfo(id));
 			--判断当前商店是否开启
 			if pageData:IsOpen() then--当前商店页开启则返回
 				return pageData;
 			end
 		end
-		-- for k,v in pairs(Cfgs.CfgShopPage:GetAll()) do 
-		-- 	if id==v.id then
-		-- 		local pageData=ShopPageData.New();
-		-- 		pageData:SetCfg(v.id);
-		-- 		--判断当前商店是否开启
-		-- 		if pageData:IsOpen() then--当前商店页开启则返回
-		-- 			return pageData;
-		-- 		end
-		-- 	end
-		-- end
 	end
 	return nil;
 end
@@ -121,10 +149,8 @@ function this:GetAllPages(isHide)
 		-- 	isAdd=true
 		end
 		if isAdd then
-			local pageData=ShopPageData.New();
-			pageData:SetCfg(v.id);
-			--判断当前商店是否开启
-			if pageData:IsOpen() then--当前商店页开启则返回
+			local pageData=self:GetPageByID(v.id);
+			if pageData then--当前商店页开启则返回
 				table.insert(list,pageData);
 			end
 		end
@@ -415,11 +441,15 @@ function this:SetCommResetInfo(id,topTabID)
 	if id==nil then
 		do return end;
 	end
+	local pageData=self:GetPageByID(id);
+	if pageData==nil then
+		do return end;
+	end
 	--判断ID是否是要检测的商店页ID
 	local isIn=false;
-	if self.newPageIds[id]~=nil and topTabID==nil then
+	if self.newPageIds and self.newPageIds[id]~=nil and topTabID==nil then
 		isIn=true;
-	elseif self.newPageIds[id]~=nil and topTabID then
+	elseif self.newPageIds and self.newPageIds[id]~=nil and topTabID then
 		for k, v in pairs(self.newPageIds[id]) do
 			if v==topTabID then
 				isIn=true;
@@ -428,7 +458,6 @@ function this:SetCommResetInfo(id,topTabID)
 		end
 	end
 	if isIn then--是的话获取最新商品重置时间
-		local pageData=self:GetPageByID(id);
 		local infos=pageData:GetCommRefreshInfos(topTabID);
 		if topTabID then
 			self.localRecords[id]=self.localRecords[id] or {}
@@ -494,6 +523,7 @@ function this:Clear()
 	self.fixedUpdateTime=nil;
 	self.storeVerInfo=nil;
 	self.pagesNewInfo=nil;
+	self.shopOpenTimes={};
 end
 
 return this; 

@@ -102,7 +102,7 @@ end
 -- 初始化右侧栏
 function InitInfo()
     if (itemInfo == nil) then
-        ResUtil:CreateUIGOAsync("Dungeon/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)

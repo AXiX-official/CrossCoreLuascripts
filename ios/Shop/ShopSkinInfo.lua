@@ -155,8 +155,11 @@ function this:HasSpecial()
     return has
 end
 
-function this:IsHide()
-    return self.cfg and self.cfg.isShow==1 or false;
+--- 1.正常的图（售前隐藏，需要判断在售时间+是否拥有）
+-- 2.和谐的图（售前隐藏，售后常驻显示）
+-- 3.一定隐藏
+function this:GetHideType()
+    return self.cfg and self.cfg.hideType or false;
 end
 
 

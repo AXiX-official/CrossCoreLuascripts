@@ -57,9 +57,8 @@ function this:GetContent()
 		else
 			str = str:gsub("%%s",PlayerClient:GetName())
 		end
-
 		if self:IsLeader() then
-			local strs = StringUtil:split(str ,"<sp>");
+			local strs = StringUtil:Split(str ,"<sp>");
 			if #strs > 1 then
 				local sex = PlayerClient:GetSex()
 				str = strs[sex]
@@ -119,16 +118,23 @@ function this:GetImgChangeType()
 	return self.cfg and self.cfg.imgChangeType or 0;
 end
 
+function this:GetTag()
+	return self.cfg and self.cfg.talkRoleTag;
+end
+
 --返回发言者ID
 function this:GetTalkID()
 	return self.cfg and self.cfg.talkRoleID;
 end
 
-function this:IsTalkID(id)
+function this:IsTalkID(key)
 	local talkIDs = self:GetTalkID();
+	local talkTags = self:GetTag() or {}
+	local tag = 1
 	if talkIDs then
 		for k, v in ipairs(talkIDs) do
-			if id == v then
+			tag = talkTags[k] or tag
+			if key == v .. "_" .. tag then
 				return true;
 			end
 		end
@@ -349,6 +355,11 @@ function this:IsCenter()
 	return isCenter
 end
 
+--文字出现在左侧状态
+function this:IsLeft()
+	return self.cfg and self.cfg.isCenter and self.cfg.isCenter == 2
+end
+
 --获取眨眼次数
 function this:GetBlinkNum()
 	return self.cfg and self.cfg.blink
@@ -361,9 +372,8 @@ function this:GetBlinkTime()
 	return blinkNum * blinkTime
 end
 
-function this:IsShowIcon()
-	local isShow = self.cfg.showStoryIcon == 1 or false
-	return isShow
+function this:GetShowStory()
+	return self.cfg and self.cfg.showStory
 end
 
 function this:GetClearRoles()
@@ -447,5 +457,9 @@ function this:IsLeader()
 	return self.cfg and self.cfg.isLeader ~= nil
 end
 
+--头像渐变
+function this:IsIconGradient()
+	return self.cfg and self.cfg.useGradient == 1
+end
 
 return this; 

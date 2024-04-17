@@ -50,4 +50,29 @@ function this:RefreshDoubleNew()
     FileUtil.SaveToFile("Section_Daily_New"..PlayerClient:GetUid().. ".txt",newInfo)
 end
 
+function this:IsNew(str, dayDiffs)
+    if str == nil or str == "" then
+        return false
+    end
+    local newInfo = FileUtil.LoadByPath(str.."_".. PlayerClient:GetUid().. ".txt") or {}
+    self:RefreshNew(str,dayDiffs)
+    if not newInfo.resetTime then
+        return false
+    end
+    if TimeUtil:GetTime() >= newInfo.resetTime then
+        return true
+    end
+    return false
+end
+
+function this:RefreshNew(str, dayDiffs)
+    if str == nil or str == "" then
+        return
+    end
+    local newInfo = FileUtil.LoadByPath(str.."_"..PlayerClient:GetUid().. ".txt") or {}
+    dayDiffs = dayDiffs or g_ActivityDiffDayTime * 3600
+    newInfo.resetTime = TimeUtil:GetResetTime(dayDiffs)
+    FileUtil.SaveToFile(str.."_"..PlayerClient:GetUid().. ".txt",newInfo)
+end
+
 return this

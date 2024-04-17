@@ -33,7 +33,7 @@ end
 
 function OnMissionListRefresh(eventData)
     if eventData and eventData[1]==types[selectID]  then
-        UIUtil:OpenReward({eventData[2]});
+        UIUtil:OpenReward({eventData[2]},{isNoShrink=true});
     end
     Refresh()
 end

@@ -33,7 +33,7 @@ local isReady = false
 
 local isLoading_Complete = false
 local menuBuyItem
---local endAnim
+-- local endAnim
 
 -- 新春活动
 local isSpring = false
@@ -42,12 +42,15 @@ local isSpringStart = nil
 
 local activityRefreshTime = nil
 local enterRefreshTime = nil
+local talkTxtIsShow = true -- 聊天文本框
+local talkTxtIsShowSaveKey = "talkTxtIsShow"
+local isTalk = false
 
 -- 主界面
 function Awake()
     cg_node = ComUtil.GetCom(node, "CanvasGroup")
     enterSV_sv = ComUtil.GetCom(enterSV, "ScrollRect")
-    --endAnim = ComUtil.GetCom(node, "ActionBase")
+    -- endAnim = ComUtil.GetCom(node, "ActionBase")
 
     -- init
     InitPanel()
@@ -68,6 +71,9 @@ function Awake()
     CSAPI.SetGOActive(mulIconItem.gameObject, not isRole)
     -- CSAPI.SetGOActive(bg, isRole)
     CSAPI.SetGOActive(ui_structure, false)
+
+    local value = PlayerPrefs.GetInt(talkTxtIsShowSaveKey)
+    talkTxtIsShow = value == 0
 end
 
 function InitPanel()
@@ -874,7 +880,9 @@ function PlayCB(curCfg)
         local script = SettingMgr:GetSoundScript(curCfg) or ""
         CSAPI.SetText(txtTalk, script)
         SetTalkName(curCfg)
-        CSAPI.SetGOActive(talkBg, true)
+        -- CSAPI.SetGOActive(talkBg, true)
+        isTalk = true
+        SetTalkBg()
     end
 end
 
@@ -896,8 +904,10 @@ end
 function EndCB()
     if (not IsNil(gameObject) and not IsNil(talkBg)) then
         voicePlaying = false
-        CSAPI.SetGOActive(talkBg, false)
+        -- CSAPI.SetGOActive(talkBg, false)
         nextPlayTime = TimeUtil:GetTime() + 180
+        isTalk = false
+        SetTalkBg()
     end
 end
 
@@ -1317,6 +1327,7 @@ end
 function SetCenter()
     SetBG()
     SetImg()
+    SetObjTalk()
 end
 -- 设置背景
 function SetBG()
@@ -1448,6 +1459,29 @@ function OnClickShow()
     CSAPI.OpenView("CRoleDisplay")
 end
 
+-- 隐藏语音文本框
+function OnClickTalk()
+    local value = talkTxtIsShow and 1 or 0
+    talkTxtIsShow = not talkTxtIsShow
+    PlayerPrefs.SetInt(talkTxtIsShowSaveKey, value)
+    SetObjTalk()
+    SetTalkBg()
+    LanguageMgr:ShowTips(talkTxtIsShow and 13002 or 13001)
+end
+-- 隐藏语音文本按钮的样式更换
+function SetObjTalk()
+    local imgName = talkTxtIsShow and "UIs/Menu/btn_03_01.png" or "UIs/Menu/btn_03_02.png"
+    CSAPI.LoadImg(btnTalk, imgName, true, nil, true)
+end
+-- 语音文本
+function SetTalkBg()
+    local b = false
+    if (isTalk and talkTxtIsShow) then
+        b = true
+    end
+    CSAPI.SetGOActive(talkBg, b)
+end
+
 -- 隐藏界面，展示角色
 function OnClickHide()
     ShowRole(true)
@@ -1466,6 +1500,7 @@ function ShowRole(_isShow)
     end
     CSAPI.SetGOActive(objShow, not isShow)
     CSAPI.SetGOActive(objHide, not isShow)
+    CSAPI.SetGOActive(objTalk, not isShow)
 
     -- 收缩动画
     if (not anims2.activeSelf and isShow) then
@@ -1497,7 +1532,7 @@ function OnViewOpened(viewKey)
     local cfg = Cfgs.view:GetByKey(viewKey)
     if (IsNeedAdd(viewKey) or (viewKey ~= "Menu" and cfg and not cfg.layer and not cfg.is_window)) then
         openViews[viewKey] = 1
-        if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView" and viewKey ~="MenuBuyPanel") then
+        if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView" and viewKey ~= "MenuBuyPanel") then
             RoleAudioPlayMgr:StopSound() -- 有其它界面打开则中断语音
         end
 

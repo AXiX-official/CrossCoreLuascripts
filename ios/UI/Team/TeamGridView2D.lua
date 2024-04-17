@@ -4,6 +4,7 @@ local isDrag=false;
 local canDrag=true;
 local clickImg=nil;
 local position=nil;
+local dragTips=nil;
 function Awake()
     clickImg=ComUtil.GetCom(gameObject,"Image");
     dragCom=ComUtil.GetCom(gameObject,"DragCallLua");

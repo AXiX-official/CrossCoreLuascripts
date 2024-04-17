@@ -20,18 +20,17 @@ function SetClickCB(_cb)
     cb = _cb
 end
 
-function SetDoubleCB(_cb)
-    doubleCB = _cb
-end
+-- function SetDoubleCB(_cb)
+--     doubleCB = _cb
+-- end
 
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/Section/SectionDailyItemR", LayoutCallBack, true)
 
 
-    ShowDesc(false)
+    -- ShowDesc(false)
     SetSelect(false)
-    -- InitInfo()
     CSAPI.SetGOActive(rightAction,false)
 
     SetTextDay()
@@ -39,7 +38,7 @@ end
 
 function OnEnable()
     eventMgr = ViewEvent:New()
-    eventMgr:AddListener(EventType.Dungeon_DailyData_Update,OnDailyDataUpdate)
+    -- eventMgr:AddListener(EventType.Dungeon_DailyData_Update,OnDailyDataUpdate)
 end
 
 function OnDailyDataUpdate()
@@ -84,7 +83,7 @@ end
 function Refresh(_data)
     sectionData = _data
     if sectionData then        
-        SetDouble()
+        -- SetDouble()
         SetGrid()
         SetDatas()
     end
@@ -97,6 +96,7 @@ function SetTextDay()
 end
 
 --------------------------------------------双倍
+--[[
 -- 设置双倍
 function SetDouble()
     multiUpdateTime = DungeonMgr:GetMultiUpdateTime()
@@ -179,7 +179,7 @@ function OnClickDesc()
     if doubleCB then
         doubleCB(true)
     end
-end
+end--]]
 
 -----------------------------------------------
 -- 设置掉落信息

@@ -19,9 +19,7 @@ function Skill25101:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 25101
-	if self:Rand(2000) then
+	if self:Rand(3000) then
 		self:ClosingBuff(SkillEffect[25101], caster, target, data, 1)
-		-- 251010
-		self:ShowTips(SkillEffect[251010], caster, self.card, data, 2,"引爆",true)
 	end
 end

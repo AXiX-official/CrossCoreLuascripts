@@ -10,10 +10,11 @@ local lineKey = "line_";
 --尝试播放
 function this:TryPlay(id,callBack,caller,forcePlay)
 
-     --未登录
-     if(not PlayerClient:GetUid())then
+    --未登录
+    if(not PlayerClient:GetUid())then
         return false;
     end
+
     --forcePlay = 1;
     --挂机战斗不播剧情
     if(_G.Fight_Auto)then

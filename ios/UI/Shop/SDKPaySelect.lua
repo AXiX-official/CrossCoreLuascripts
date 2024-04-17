@@ -17,6 +17,11 @@ function Awake()
     eventMgr:AddListener(EventType.SDK_Pay_Result,OnSDKPayResult)
     eventMgr:AddListener(EventType.SDK_Pay_QRURL,OnQRResult)
     eventMgr:AddListener(EventType.SDK_QRPay_Over,OnQROver)
+    eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopRefresh)
+end
+
+function OnShopRefresh()
+	Close()
 end
 
 function OnDestroy()

@@ -8,10 +8,11 @@ function this:GetTime()
 end
 
 -- 北京时区的时间戳（秒）
-function this:GetBJTime()
+function this:GetBJTime(_origin)
+    local origin = _origin or CSAPI.GetServerTime()
     local serverTimeZone = g_TimeZone or 8 -- 服务器时区
     local currTimeZone = os.difftime(os.time(), os.time(os.date("!*t", os.time()))) / 3600 -- 本地时区
-    local serverTime = CSAPI.GetServerTime() + (serverTimeZone - currTimeZone) * 60 * 60 -- 不受时区影响的服务器时间
+    local serverTime = origin + (serverTimeZone - currTimeZone) * 60 * 60 -- 不受时区影响的服务器时间
     -- 考虑夏令时的影响
     local isDst = os.date("*t").isdst
     serverTime = serverTime - (isDst and 1 or 0) * 60 * 60
@@ -107,22 +108,32 @@ function this:GetTimeTab(_timer)
     if (_timer <= 0) then
         return {0, 0, 0, 0, 0, 0}
     else
+        local num = 0 -- 秒
         local d = math.floor(_timer / 86400)
-        local h = math.floor(_timer / 3600)
-        local m = math.floor((_timer % 3600) / 60)
-        local s = math.floor((_timer % 3600) % 60)
+        num = _timer - d * 86400
+        local h = math.floor(num / 3600)
+        num = num - h * 3600
+        local m = math.floor(num / 60)
+        num = num - m * 60
+        local s = num
         return {d, h, m, s}
     end
 end
 
--- 秒数转时间: 00：00：00
+-- 秒数转时间: 00：00：00 (时间不能大于1天)
 function this:GetTimeTab2(_timer)
     if (_timer <= 0) then
         return {"00", "00", "00"}
     else
-        local h = math.floor(_timer / 3600)
-        local m = math.floor((_timer % 3600) / 60)
-        local s = math.floor((_timer % 3600) % 60)
+        local num = 0 -- 秒
+        local d = math.floor(_timer / 86400)
+        num = _timer - d * 86400
+        local h = math.floor(num / 3600)
+        num = num - h * 3600
+        local m = math.floor(num / 60)
+        num = num - m * 60
+        local s = num
+        d = d < 10 and "0" .. d or d
         h = h < 10 and "0" .. h or h
         m = m < 10 and "0" .. m or m
         s = s < 10 and "0" .. s or s
@@ -346,6 +357,31 @@ function this:GetRefreshTime(cfgStr, sTimeStr, eTimeStr)
 		end
     end
     return timer
+end
+
+function this:GetUTCNum()
+    -- 获取当前时间的本地日期和时间
+    local currentTime = os.time()
+    local localTime = os.date("*t", currentTime)
+
+    -- 获取本地时区偏移量
+    local utcOffset = os.date("%z", currentTime)
+
+    -- 解析时区偏移量的小时部分
+    return tonumber(utcOffset:sub(1, 3))
+end
+
+-- 将字符串转换的本地时区的时间戳转成服务器时区的时间戳
+function this:GetTimeStampBySplit(_str)
+    local originalTime = GCalHelp:GetTimeStampBySplit(_str);
+
+    local num = g_TimeZone - self:GetUTCNum()
+    -- 计算时区偏移量（秒）
+    local timeZoneOffsetSeconds = num * 3600
+
+    -- 调整时间戳到服务器时区
+    local time = originalTime - timeZoneOffsetSeconds
+    return time
 end
 
 return this

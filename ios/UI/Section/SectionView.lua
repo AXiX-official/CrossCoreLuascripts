@@ -392,7 +392,7 @@ function InitDailyView()
         ResUtil:CreateUIGOAsync("Section/SectionDailyView", dailyNode, function(go)
             dailyPanel = ComUtil.GetLuaTable(go)
             dailyPanel.SetClickCB(ClickDailyItemR)
-            dailyPanel.SetDoubleCB(OnMaskRefresh)
+            -- dailyPanel.SetDoubleCB(OnMaskRefresh)
             CSAPI.SetGOActive(go, false)
         end)
     end
@@ -1077,8 +1077,8 @@ function ClickDailyItemR(item)
 end
 
 function OnEnterDaily()
-    local isDouble = dailyPanel.IsDouble()
-    local multiNum =  dailyPanel.GetMultiNum()
+    local isDouble = itemInfo.IsDouble()
+    local multiNum =  itemInfo.GetMultiNum()
     local isFirstDouble = DungeonMgr:GetFisrtOpenDouble()
     if (not isDouble and multiNum > 0 and not isFirstDouble) then
         DungeonMgr:SetFisrtOpenDouble(true)
@@ -1092,11 +1092,11 @@ function OnEnterDaily()
         dialogData.okText = LanguageMgr:GetByID(1031)
         dialogData.cancelText = LanguageMgr:GetByID(1003)
         dialogData.okCallBack = function()
-            dailyPanel.ShowDouble(true)
+            itemInfo.ShowDouble(true)
             EnterNextView(curDailyItemR)
         end
         dialogData.cancelCallBack = function()
-            dailyPanel.ShowDouble(false)
+            itemInfo.ShowDouble(false)
             EnterNextView(curDailyItemR)
         end
         CSAPI.OpenView("Dialog", dialogData)
@@ -1567,7 +1567,7 @@ end
 ------------------------------------右侧信息栏-----------------------------------
 function ShowItemInfo(cb)    
     if (itemInfo == nil) then --没有则异步创建
-        ResUtil:CreateUIGOAsync("Dungeon/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)

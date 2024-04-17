@@ -12,7 +12,7 @@ end
 
 --获取购买记录返回
 function ShopProto:GetShopInfosAdd(proto)
-    ShopMgr:Init(proto);
+    ShopMgr:OnCommodityInfoRet(proto);
     EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
 end
 
@@ -90,4 +90,29 @@ end
 function ShopProto:GetShopResetTimeRet(proto)
     ShopMgr:SetShopResetTime(proto);
     EventMgr.Dispatch(EventType.Shop_ResetTime_Ret);
+end
+
+--获取商店页的开启时间
+function ShopProto:GetShopOpenTime()
+    local proto={"ShopProto:GetShopOpenTime",{}};
+    NetMgr.net:Send(proto);
+end
+
+function ShopProto:GetShopOpenTimeRet(proto)
+    ShopMgr:InitShopOpenTime(proto);
+    EventMgr.Dispatch(EventType.Shop_OpenTime_Ret);
+end
+
+--获取商店售卖的商品列表，id不发等获取所有商品内容
+function ShopProto:GetShopCommodity(shopId,groupId)
+    -- if shopId==nil then
+    --     LogError("商店ID不得为空！");
+    -- end
+    local proto={"ShopProto:GetShopCommodity",{shop_id=shopId,group_id=groupId}};
+    NetMgr.net:Send(proto);
+end
+
+function ShopProto:GetShopCommodityRet(proto)
+    ShopMgr:OnCommodityInfoRet(proto);
+    EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
 end

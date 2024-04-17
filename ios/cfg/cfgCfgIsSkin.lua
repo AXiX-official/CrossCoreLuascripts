@@ -1,6 +1,6 @@
 local conf = {
 	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '看板皮肤筛选',
+	["sheetname"] = '商店皮肤筛选',
 	["types"] = {
 'int','string','string'
 },

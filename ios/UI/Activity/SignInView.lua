@@ -80,7 +80,7 @@ function SetLeft()
 	--时间
 	local tab = TimeUtil:GetTimeHMS(TimeUtil:GetBJTime())
 	local month = tab.month
-	if tab.hour < g_ActivityDiffDayTime then
+	if tab.day == 1 and tab.hour < g_ActivityDiffDayTime then
 		month = month - 1
 	end
 	LanguageMgr:SetText(txtTime, 13004, month)

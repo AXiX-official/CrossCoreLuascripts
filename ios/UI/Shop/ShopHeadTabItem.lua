@@ -39,7 +39,7 @@ function Refresh(_data,_elseData)
         if _elseData.newInfos then
             SetNewInfo(_elseData.newInfos);
         end
-        if this.index==_elseData.sIndex then
+        if this.index==_elseData.sIndex or (this.index~=_elseData.sIndex and isNowOn) then
             PlayTween(this.index==_elseData.sIndex);
         end
     end

@@ -136,8 +136,8 @@ end
 
 -----------------------------------------------plot-----------------------------------------------
 
-function this:GetCGUnLock()
-    return self.cfg.unlockCG
+function this:GetTargetJson()
+    return self.cfg and self.cfg.target
 end
 
 -----------------------------------------------TaoFa-----------------------------------------------

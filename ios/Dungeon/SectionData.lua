@@ -349,6 +349,16 @@ function this:GetTurnNum()
 	return self.cfg and self.cfg.turnNum
 end
 
+--角色活动轮盘背景
+function this:GetTurnImg()
+	return self.cfg and self.cfg.turnImg
+end
+
+--角色活动右侧背景
+function this:GetTurnIcon()
+	return self.cfg and self.cfg.turnIcon
+end
+
 --进入选关时播放的剧情id
 function this:GetStoryID()
 	return self.cfg and self.cfg.story

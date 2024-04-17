@@ -39,6 +39,10 @@ function this:SetCfg(rewardId,itemId,itemIndex)
     end
 end
 
+function this:GetData()
+    return self.data;
+end
+
 function this:GetCfg()
     return self.cfg;
 end

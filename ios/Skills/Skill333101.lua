@@ -24,5 +24,5 @@ function Skill333101:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 333101
-	self:AddTempAttr(SkillEffect[333101], caster, caster, data, "damage",-0.4)
+	self:AddTempAttr(SkillEffect[333101], caster, caster, data, "damage",-0.04)
 end

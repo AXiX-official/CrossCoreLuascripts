@@ -55,6 +55,7 @@ function Awake()
     eventMgr:AddListener(EventType.Shop_Exchange_Ret,OnExchangeRet)
     eventMgr:AddListener(EventType.Shop_NewInfo_Refresh,SetNewInfo)
     eventMgr:AddListener(EventType.Shop_ResetTime_Ret,InitRefreshInfo)
+    eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopTagRefresh)
     InitSVList();
     --商店bgm
     local bgm = g_bgm_shop;
@@ -67,6 +68,49 @@ function Awake()
     ShopProto:GetShopResetTime();
 
     MenuMgr:ShopFirstOpen() --商店第一次打开记录 rui
+end
+
+--页签刷新
+function OnShopTagRefresh()
+    if CSAPI.IsViewOpen("DormThemePayView") then
+        CSAPI.CloseView("DormThemePayView");
+    end
+    if CSAPI.IsViewOpen("DormFurniturePayView") then
+        CSAPI.CloseView("DormFurniturePayView");
+    end
+    --获取新的page页信息
+    pages=nil;
+    lastPageIndex=nil;
+    currPageIndex=nil;
+    childPageID=nil;
+    currPageData=nil;
+    currChildPage=nil;
+    if data then
+        pages={ShopMgr:GetPageByID(data)};
+    else
+        pages=ShopMgr:GetAllPages(true);
+    end
+    if pages==nil or next(pages)==nil then
+        --不存在页签则关闭页面
+        --弹提示
+        Tips.ShowTips(LanguageMgr:GetTips(15121));
+        OnClickBack()
+        do return end
+    end
+    Tips.ShowTips(LanguageMgr:GetTips(15120));
+    --刷新商店页面
+    local index=1;
+    for k,v in ipairs(pages) do
+        if v:IsDefaultOpen() then
+            index=k;
+        elseif k==1 then
+            index=k;
+            break;
+        end
+    end
+    currPageIndex=index;
+    childPageID=nil;
+    Refresh();
 end
 
 --初始化无限滚动列表
@@ -101,6 +145,7 @@ end
 
 --data:传入商店页ID，只显示单个商店 openSetting={商店一级页面ID，商店二级页签ID}
 function OnOpen()
+    pages=nil;
     if data then
         pages={ShopMgr:GetPageByID(data)};
     else
@@ -172,7 +217,6 @@ function Refresh(isJump)
         end
         if currPageData:GetID()==4 then--皮肤商店
             ShopMgr:SetSkinStoreNewState();--设置皮肤状态
-            
         end
     end
     ShopMgr:SetCommResetInfo(currPageData:GetID(),childPageID);
@@ -234,7 +278,7 @@ end
 
 --初始化头部页签
 function InitHeadTabs()
-    if headTabs==nil or #headTabs==0 then
+    if headTabs==nil or #headTabs==0 or (pages~=nil and #pages~=#headTabs) then
         ItemUtil.AddItems("Shop/ShopHeadTabItem", headTabs, pages, headNode, nil, 1, {sIndex=currPageIndex,newInfos=newInfos,childPageID=childPageID});
     else
         for k, v in ipairs(headTabs) do
@@ -520,7 +564,7 @@ end
 --检测自动刷新时间
 function AutoRefresh()
 	if currPageData~=nil and currPageData:GetCommodityType()==CommodityType.Normal then--检测固定道具商店的重置时间和折扣时间
-		local nowTime=TimeUtil:GetTime(1);
+		local nowTime=TimeUtil:GetTime();
 		local checkList=currPageData:GetRefreshInfos();
 		local isReset,isRefresh=ShopCommFunc.IsRefreshCommodityInfos(checkList,nowTime);
         -- LogError("isReset:"..tostring(isReset).."\t isRefresh:"..tostring(isRefresh))
@@ -529,7 +573,9 @@ function AutoRefresh()
 		end
 		if isReset then --列表刷新
             ShopMgr:CheckCommReset();
-            ShopProto:GetShopInfos()
+            local groupID=currChildPage and currChildPage.id or nil;
+	        ShopProto:GetShopCommodity(currPageData:GetID(),groupID);
+            -- ShopProto:GetShopInfos()
             -- ShopProto:GetShopResetTime();
 			return
         elseif isRefresh and currLayout then --道具购买期限刷新    
@@ -804,8 +850,7 @@ end
 function OnBuyRet(proto)
     -- LogError(proto);
     if proto then
-        local comm=CommodityData.New();
-        comm:SetCfg(proto.id);
+        local comm=ShopMgr:GetFixedCommodity(proto.id);
         local priceInfo=comm:GetRealPrice();
         local isPay=false;
         local price=0;
