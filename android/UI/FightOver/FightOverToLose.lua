@@ -42,6 +42,11 @@ function SetStarInfos()
         return
     end
 
+    if cfgDungeon.diff and cfgDungeon.diff == 3 then
+        CSAPI.SetGOActive(taskObj, false)
+        return
+    end
+
     local dungeonData = DungeonMgr:GetDungeonData(DungeonMgr:GetCurrId())
     local completeInfo = nil
     if dungeonData and dungeonData.data then
@@ -86,7 +91,7 @@ function IsShowAgain()
                 return true
             end
             return false
-        elseif dungeonType == eDuplicateType.StoryActive then --检测副本开启时间是否过了
+        elseif dungeonType == eDuplicateType.StoryActive or dungeonType == eDuplicateType.TaoFa then --检测副本开启时间是否过了
             local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
             if sectionData == nil then
                 LogError("找不到关卡表章节数据！id：" .. cfgDungeon.group)

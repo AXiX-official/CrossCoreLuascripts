@@ -30,7 +30,5 @@ function Skill503000301:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 503000301
-	if self:Rand(5000) then
-		self:ClosingBuffByID(SkillEffect[503000301], caster, target, data, 1,1003)
-	end
+	self:ClosingBuffByID(SkillEffect[503000301], caster, target, data, 1,1003)
 end

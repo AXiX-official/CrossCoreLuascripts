@@ -1302,6 +1302,19 @@ function this:SetIsNew(id, b)
     FileUtil.SaveToFile("Dungeon_new_Info" .. PlayerClient:GetUid() .. ".txt",newInfo)
 end
 
+---------------------------------------------活动门票---------------------------------------------
+
+function this:SetArachnidCount(proto)
+    if proto and proto.can_buy_cnt then
+        self.ArachnidCount = proto.can_buy_cnt or 0
+    end
+    EventMgr.Dispatch(EventType.Arachnid_Count_Refresh)
+end
+
+function this:GetArachnidCount()
+    return self.ArachnidCount or 0
+end
+
 function this:Clear()
     self.dragList = nil;
     self.dungeonHardLv = 1;

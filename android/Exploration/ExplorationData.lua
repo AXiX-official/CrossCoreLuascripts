@@ -278,8 +278,9 @@ function this:GetTargetCommInfo(targetState)
         end
     end
     if commId then
-        commInfo=CommodityData.New();
-        commInfo:SetCfg(commId);
+        -- commInfo=CommodityData.New();
+        -- commInfo:SetCfg(commId);
+        commInfo=ShopMgr:GetFixedCommodity(commId);
         return commInfo;
     end
 end

@@ -2,10 +2,15 @@
 local roleItem=nil;
 local effect=nil;
 local skinDesc=""
+local modelID=nil
  
 this.ClickBtn=nil;
 function Awake()
     roleItem = RoleTool.AddRole(iconParent, PlayCB, nil, false)		
+end
+
+function OnDestroy()
+    RoleAudioPlayMgr:StopSound();
 end
 
 --data:ShopSkinInfo
@@ -13,6 +18,8 @@ function OnOpen()
     if data then
         CSAPI.SetGOActive(clicker,false)
         local hasEnter=data:HasEnterTween();
+        -- local hasEnter=data:HasL2D();
+        modelID=data:GetModelID();
         roleItem.Refresh(data:GetModelID(), LoadImgType.SkinReward,function()
             if roleItem.CheckIn() and CSAPI.IsInternation() then --有反和谐且有入场动画
                 roleItem.PlayIn(function()
@@ -103,6 +110,10 @@ function ShowEffect(func)
         CSAPI.SetGOActive(fc_pifu_ToWhite,false);
         CSAPI.SetGOActive(fc_pifu_OutWhite,true);
         CSAPI.SetScale(baiping, arr.x, arr.y, 1)
+        --设置播放角色获得音效
+        if modelID then
+            RoleAudioPlayMgr:PlayByType(modelID, RoleAudioType.shopGet)
+        end
         --播放第二段段
         if func~=nil then
             -- FuncUtil:Call(func, nil, 300)

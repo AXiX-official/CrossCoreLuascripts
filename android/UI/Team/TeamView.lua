@@ -204,6 +204,8 @@ function OnDisable()
 	-- TeamMgr:SetTeamViewOptions(isAddtive,isAddtive);
 	TeamMgr:DelEditTeam();
     RecordMgr:Save(RecordMode.View,recordTime,"ui_id="..RecordViews.TeamEdit);
+	--记录2D/3D选项
+	TeamMgr:SaveViewerOption(is3D);
 end
 
 function OnDestroy()
@@ -343,6 +345,7 @@ function OnOpen()
 		CSAPI.SetGOActive(fullMask,false);
 	end,nil,1000)--动画锁屏
     isFirst=true;
+	is3D=TeamMgr:GetViewerOption();
     if data then
         if data.team then
             teamData=data.team;
@@ -355,7 +358,6 @@ function OnOpen()
         excludIds=data.excludIds;
         canEmpty=data.canEmpty;
         selectType=data.selectType or TeamSelectType.Normal;
-		is3D=not data.is2D;
 		canAssist=data.canAssist;
         closeFunc=data.closeFunc;
 		if data.NPCList then

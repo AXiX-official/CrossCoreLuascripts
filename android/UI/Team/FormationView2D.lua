@@ -1052,8 +1052,9 @@ end
 function SetLock(_isLock)
 	isLock=_isLock;
 	if gridList then
+		local tips=_isLock==true and LanguageMgr:GetTips(14001) or nil
 		for k,v in pairs(gridList) do
-			v.SetDragActive(not _isLock,LanguageMgr:GetTips(14001));
+			v.SetDragActive(not _isLock,tips);
 		end
 	end
 end

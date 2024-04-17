@@ -21,10 +21,13 @@ function this:GetFunc(sName)
         self.funcs["Dungeon"] = self.Dungeon
         self.funcs["DungeonTower"] = self.Dungeon
         self.funcs["DungeonActivity1"] = self.DungeonActivity
-        self.funcs["DungeonPlot"] = self.DungeonActivity
         self.funcs["DungeonActivity2"] = self.DungeonActivity
         self.funcs["DungeonActivity3"] = self.DungeonActivity
+        self.funcs["DungeonActivity4"] = self.DungeonActivity
+        self.funcs["DungeonActivity5"] = self.DungeonActivity
         self.funcs["DungeonRole"] = self.DungeonActivity
+        self.funcs["DungeonShadowSpider"] = self.DungeonActivity
+        self.funcs["DungeonPlot"] = self.DungeonActivity
         self.funcs["BattleField"] = self.DungeonActivity
         -- self.funcs["RoleListView"] = self.SetPage
         -- self.funcs["Bag"] = self.SetPage
@@ -348,7 +351,7 @@ function this.DungeonActivityState(cfg)
 
         local openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
         if isOpen and openInfo then
-            if cfg.sName == "DungeonActivity3" then
+            if string.match(cfg.sName,"DungeonActivity") then 
                 if not openInfo:IsOpen() then
                     isOpen = false
                     _lockStr = LanguageMgr:GetTips(24001)

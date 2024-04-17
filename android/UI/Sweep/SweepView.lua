@@ -11,6 +11,8 @@ local resetTime = -1
 
 local slider = nil
 local isMat = false
+local isHot= false
+local isHas =false --体力和材料都消耗
 local matCost = nil
 local maxSweepNum = 0
 local currSweepNum = 0
@@ -33,6 +35,9 @@ local loadingTime = 30
 --taofa
 local isTaoFaMat = false
 local taoFaInfo = nil
+
+--buy
+local onBuyFunc = nil
 
 function Awake()
     slider = ComUtil.GetCom(leftSlider, "Slider")
@@ -62,6 +67,7 @@ function OnEnable()
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened);
     eventMgr:AddListener(EventType.Player_HotChange, OnHotChange);
     eventMgr:AddListener(EventType.Sweep_Close_Panel, OnSweepPanelClose);
+    eventMgr:AddListener(EventType.Bag_Update, RefreshSweepPanel)
 
     CSAPI.AddSliderCallBack(leftSlider, SliderCB)
 end
@@ -161,6 +167,7 @@ function OnOpen()
 
     if openSetting then
         taoFaInfo = openSetting.taoFaInfo
+        onBuyFunc = openSetting.onBuyFunc
     end
 
     InitPanel()
@@ -172,6 +179,7 @@ function InitPanel()
     InitRewards()
     InitDouble()
     InitTeamPanel()
+    InitCost()
     RefreshSweepPanel()
 end
 
@@ -279,23 +287,43 @@ function InitDouble()
     end
 end
 
---界面
-function RefreshSweepPanel()
-    isMat = cfgDungeon.modUpCost ~= nil
-    CSAPI.SetGOActive(hasObj,isMat)
-    CSAPI.SetGOActive(onlyObj,not isMat)
+function InitCost()
+    isMat = GetMatCost() ~= nil
+    isHot = GetHotCost() ~= 0
+    isHas = isMat and isHot
+    CSAPI.SetGOActive(hasObj,isHas)
+    CSAPI.SetGOActive(onlyObj,not isHas)
 
-    --mat
+    local cfgMat = nil
     if isMat then
-        isTaoFaMat = cfgDungeon.type == eDuplicateType.TaoFa
-        local matReward = cfgDungeon.modUpCost[1]
+        local matReward = GetMatCost()
         matCost = {id = matReward[1], num = matReward[2], type = matReward[3]}
-        local cfg = Cfgs.ItemInfo:GetByID(matCost.id)
-        if cfg and cfg.icon then
-            -- ResUtil.IconGoods:Load(matIcon, cfg.icon .."_1")
-        end
+        cfgMat= Cfgs.ItemInfo:GetByID(matCost.id)
+    end
+    local cfgHot = Cfgs.ItemInfo:GetByID(ITEM_ID.Hot)
+
+    if isHas then
+        ResUtil.IconGoods:Load(hasIcon1, ITEM_ID.Hot .. "_1")
+        ResUtil.IconGoods:Load(hasIcon2, matCost.id .. "_1")
+        CSAPI.SetText(txt_cost, cfgHot and cfgHot.name or "")
+        ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .."_3")
+    elseif isHot then
+        ResUtil.IconGoods:Load(onlyIcon1, ITEM_ID.Hot .."_1")
+        ResUtil.IconGoods:Load(onlyIcon2, ITEM_ID.Hot .."_1")
+        CSAPI.SetText(txt_cost, cfgHot and cfgHot.name or "")
+        ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .."_3")
+    elseif matCost then        
+        ResUtil.IconGoods:Load(onlyIcon1, matCost.id .. "_1")
+        ResUtil.IconGoods:Load(onlyIcon2, matCost.id .. "_1")
+        CSAPI.SetText(txt_cost, cfgMat and cfgMat.name or "")
+        ResUtil.IconGoods:Load(costImg, cfgMat.id .. "_3")
     end
 
+    isTaoFaMat = cfgDungeon.type == eDuplicateType.TaoFa
+end
+
+--界面
+function RefreshSweepPanel()
     SetTime()
 
     --count
@@ -346,26 +374,38 @@ end
 --体力
 function RefreshCost(value)
     local currHot = PlayerClient:Hot()
-    local hotCost = GetCost() * value
+    local hotCost = GetHotCost() * value
     local targetHot = currHot + hotCost
     isHotEnough = targetHot >= 0
     targetHot = StringUtil:SetByColor(targetHot .. "", targetHot >= 0 and "ffffff" or "CD333E")
     local str = StringUtil:SetByColor(hotCost .. "", math.abs(hotCost) <= PlayerClient:Hot() and "191919" or "CD333E")
-    CSAPI.SetText(cost, str)
-    if isMat then
+    if isHas then
         CSAPI.SetText(txtHot1, currHot .. "")
         CSAPI.SetText(txtHot2, targetHot .. "")
-    else
+        CSAPI.SetText(cost,"-" .. str)
+    elseif isHot then    
         CSAPI.SetText(txtHot2, currHot .. "")
         CSAPI.SetText(txtMat2, targetHot .. "")
+        CSAPI.SetText(cost, "-" .. str)
     end
 end
 
 --单次体力消耗
-function GetCost()
+function GetHotCost()
     local cost = cfgDungeon.enterCostHot and cfgDungeon.enterCostHot or 0
     cost = cfgDungeon.winCostHot and cost + cfgDungeon.winCostHot or cost
     return cost
+end
+
+function GetMatCost()
+    local cost1 = cfgDungeon.modUpCost and cfgDungeon.modUpCost[1] or nil
+    local cost2 = DungeonUtil.GetCost(cfgDungeon)
+    if cost1 then
+        cost1[2] = (cost2~=nil and cost1[1] == cost2[1]) and cost1[2] + cost2[2] or cost1[2]
+    else
+        cost1 = cost2
+    end
+    return cost1
 end
 
 --材料
@@ -375,13 +415,19 @@ function RefreshMaterial(value)
     end
     local taoFaNum = taoFaInfo and taoFaInfo.count or 0
     local currMat = isTaoFaMat and taoFaNum or BagMgr:GetCount(matCost.id)
-    local tagetMat = currMat - (value * matCost.num)
+    local matCost = value * matCost.num
+    local tagetMat = currMat - matCost
     isMatEnough = tagetMat >= 0
     tagetMat = StringUtil:SetByColor(tagetMat .. "", tagetMat >= 0 and "ffffff" or "CD333E")
-    CSAPI.SetText(txtMat1, currMat .. "")
-    CSAPI.SetText(txtMat2, tagetMat .. "")
-    -- cost = StringUtil:SetByColor(cost .. "", math.abs(cost) <= PlayerClient:Hot() and "191919" or "CD333E")
-    -- CSAPI.SetText(txtCost, cost)
+    local str = StringUtil:SetByColor(matCost .. "", math.abs(matCost) <= currMat and "191919" or "CD333E")
+    if isHas then
+        CSAPI.SetText(txtMat1, currMat .. "")
+        CSAPI.SetText(txtMat2, tagetMat .. "")    
+    elseif isMat then
+        CSAPI.SetText(txtHot2, currMat .. "")
+        CSAPI.SetText(txtMat2, tagetMat .. "")
+        CSAPI.SetText(cost, "-" .. str)
+    end
 end
 
 --按钮状态
@@ -419,6 +465,10 @@ function OnClickSweep()
     end
 
     if isMat and not isMatEnough then
+        if onBuyFunc then
+            onBuyFunc()
+            return
+        end
         local goodsData = nil
         if matCost then
             goodsData = GridFakeData(matCost)
@@ -538,14 +588,18 @@ function OnClickClose()
 end
 
 function OnClick(go)
-    if isMat and go.name == "btnMat" then
+    if (isHas and go.name == "btnMat") or not isHot then
+        if onBuyFunc then
+            onBuyFunc()
+            return
+        end
         local reward = {}
         reward.id = matCost.id
         reward.type = matCost.type
         reward.num = BagMgr:GetCount(matCost.id)
         local goodsData = GridFakeData(reward)
         UIUtil:OpenGoodsInfo(goodsData)
-        return
+        return            
     end
     CSAPI.OpenView("HotPanel")
 end

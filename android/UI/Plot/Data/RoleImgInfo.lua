@@ -77,6 +77,10 @@ function this:GetGradientInfo()
     return self.cfg and self.cfg.gradientInfo
 end
 
+function this:GetIconGradient()
+    return self.cfg and self.cfg.IconGradient
+end
+
 -- function this:GetIcon2()
 --     local iconName=nil;
 --     if  self:GetModelID()~=nil then

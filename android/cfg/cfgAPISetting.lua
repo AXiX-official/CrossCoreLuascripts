@@ -56,6 +56,7 @@ local conf = {
 {'710',	'',	'500',	'',	'',	'',	'common_hit/qc_zhiliao_hit',	''},
 {'711',	'',	'300',	'',	'',	'',	'',	''},
 {'712',	'',	'500',	'20',	'2',	'',	'common_hit/qc_zhiliao_hit',	''},
+{'713',	'',	'1000',	'',	'',	'',	'o20230/cast2_cure01',	''},
 },
 }
 --cfgAPISetting = conf

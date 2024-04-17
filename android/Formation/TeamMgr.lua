@@ -6,6 +6,15 @@ this.presetNum = g_FormationDefaultNum;--预设队伍数量
 this.fightingTeam = nil;--战斗中的队伍列表缓存
 this.assistTeamIndex={};--用于存储助战卡牌上阵对应的队伍id
 
+function this:Init()
+	local options=FileUtil.LoadByPath("TeamViewSelected.txt")
+	if options==nil then
+		self.is3D=true;
+	else
+		self.is3D=options.is3D;
+	end
+end
+
 --设置数据
 function this:SetData(teamData)
 	self.datas = {}; -- 单个数据字段[index]={teamName,leader,data},这是副本队伍数据队列
@@ -952,6 +961,20 @@ function this:GetTeamViewOptions()
 	end
 end
 
+--编队视图缓存
+function this:SetViewerOption(is3D)
+	self.is3D=is3D;
+end
+
+function this:GetViewerOption()
+	return self.is3D;
+end
+
+function this:SaveViewerOption(is3D)
+	self:SetViewerOption(is3D)
+	FileUtil.SaveToFile("TeamViewSelected.txt",{is3D=self:GetViewerOption()})
+end
+
 function this:Clear()
 	self.isAddtive1 = nil
 	self.isAddtive2=nil
@@ -964,6 +987,7 @@ function this:Clear()
 	self.datas =  {};
 	self.assistTeamIndex={};
 	self.assistDatas=nil;
+	self.is3D=false;
 end
 
 return this; 

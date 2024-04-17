@@ -1,4 +1,4 @@
--- 聚合炮
+-- 爪击
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -8,10 +8,7 @@ function Skill300400103:Init(skillID, card)
 end
 -- 执行技能
 function Skill300400103:DoSkill(caster, target, data)
-	-- 11002
+	-- 11001
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11002], caster, target, data, 0.5,2)
-	-- 304000102
-	self.order = self.order + 1
-	self:StealBuff(SkillEffect[304000102], caster, target, data, 2,2)
+	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
 end

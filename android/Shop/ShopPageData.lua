@@ -21,6 +21,10 @@ function this:SetCfg(cfgId)
 	end
 end
 
+function this:SetData(data)
+	self.data=data;
+end
+
 --返回商店名多语言ID
 function this:GetNameID()
 	return self.cfg and self.cfg.nameID or nil;
@@ -62,19 +66,21 @@ function this:GetTips()
 end
 
 function this:GetOpenTime()
-	local time = nil;
-	if self.cfg and self.cfg.openTime ~= "" and self.cfg.openTime ~= nil then
-		time = self.cfg.openTime;
+	local time = self:GetOpenTimeData();
+	if time>0 then
+		return TimeUtil:GetTimeStr2(time);
+	else
+		return nil;
 	end
-	return time;
 end
 
 function this:GetCloseTime()
-	local time = nil;
-	if self.cfg and self.cfg.closeTime ~= "" and self.cfg.closeTime ~= nil then
-		time = self.cfg.closeTime;
+	local time = self:GetCloseTimeData();
+	if time>0 then
+		return TimeUtil:GetTimeStr2(time);
+	else
+		return nil;
 	end
-	return time;
 end
 
 function this:GetCheckNew()
@@ -83,22 +89,18 @@ end
 
 --返回开始时间秒数
 function this:GetOpenTimeData()
-	local time = self:GetOpenTime();
-	if time ~= nil then
-		time = TimeUtil:GetTimeStampBySplit(time);
-	else
-		time = 0;
+	local time = 0;
+	if self.data and self.data.open_time then
+		time = self.data.open_time;
 	end
 	return time;
 end
 
 --返回关闭时间秒数
 function this:GetCloseTimeData()
-	local time = self:GetCloseTime();
-	if time ~= nil then
-		time = TimeUtil:GetTimeStampBySplit(time);
-	else
-		time = 0;
+	local time = 0;
+	if self.data and self.data.close_time then
+		time = self.data.close_time;
 	end
 	return time;
 end
@@ -141,13 +143,10 @@ function this:GetRefreshInfos()
 		if cfgs then
 			local nowTime=TimeUtil:GetTime();
 			for k, v in ipairs(cfgs) do
-				local itemData = CommodityData.New();
-				itemData:SetCfg(v.id);
-				local records=ShopMgr:GetRecordInfos(v.id);
-				itemData:SetData(records);
+				local itemData =ShopMgr:GetFixedCommodity(v.id)
 				local beginTime=itemData:GetBuyStartTime();
 				local endTime=itemData:GetBuyEndTime();
-				if itemData:GetResetType()~=0 or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime) then 
+				if itemData:HasData() and (itemData:GetResetType()~=0 or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) then 
 					table.insert(itemDatas, itemData);
 				end
 			end
@@ -160,6 +159,7 @@ end
 function this:GetCommodityInfos(isLimit,topTabID)
 	local itemDatas = {};
 	local tabCfg=topTabID==nil and nil or Cfgs.CfgShopTab:GetByID(topTabID);
+	-- local ids={80012,80013,80014,80015};
 	if self:GetCommodityType()==CommodityType.Normal then
 		--固定道具
 		local cfgs=Cfgs.CfgCommodity:GetGroup(self:GetID());
@@ -167,12 +167,20 @@ function this:GetCommodityInfos(isLimit,topTabID)
 			for k, v in ipairs(cfgs) do
 				local itemData = ShopMgr:GetFixedCommodity(v.id);
 				local canAdd=true;
-				if (tabCfg and tabCfg.isAll~=1 and itemData:GetTabID()~=topTabID) then
+				-- for _,val in ipairs(ids) do
+				-- 	if itemData:GetID()==val then
+				-- 		LogError(tostring(itemData:GetID()).."\t"..tostring(itemData:GetName()).."\t"..tostring(itemData:GetBuyStart()).."\t"..tostring(itemData:GetBuyEnd()).."\t"..tostring(itemData:GetDiscountStart()).."\t"..tostring(itemData:GetDiscountEnd()));
+				-- 	end
+				-- end
+				if (tabCfg and tabCfg.isAll~=1 and itemData:GetTabID()~=topTabID) or itemData:HasData()~=true then
 					canAdd=false;
 				end
-				if (itemData:IsOver() and itemData:ShowOnSoldOut()~=true) or itemData:IsShow()~=true then--售罄时不显示的数据
+				if itemData:IsShow()~=true or (itemData:IsOver() and itemData:ShowOnSoldOut()~=true) then--售罄时不显示的数据
 					canAdd=false;
 				end
+				-- if itemData:GetShopID()==4 then
+				-- 	LogError(itemData:GetID().."\t"..tostring(itemData:IsShow()).."\t"..tostring(itemData:IsOver()).."\t canAdd:"..tostring(canAdd))
+				-- end
 				if isLimit then
 					-- if itemData:GetType()==CommodityItemType.Skin then
 					-- 	if itemData:GetID()==50003 or itemData:GetID()==50005 then

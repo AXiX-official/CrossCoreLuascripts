@@ -829,8 +829,18 @@ function FightHelp:OnPlayerLogin(uid, ispvp, notiteConn)
 
         local oDuplicate = mgr.oDuplicate
         if oDuplicate and oDuplicate.nEndTime and oDuplicate.nEndTime <= CURRENT_TIME then
+            -- LogDebug("--------------------11111")
             FightHelp:Destroy(uid)
         -- 副本过期, 战斗一并销毁
+            local oPlayer = GetPlayer(uid)
+            if oPlayer then
+                local dupMgr = oPlayer.oDuplicateMgr
+                if dupMgr and dupMgr.oFightDuplicate == oDuplicate then
+                    dupMgr.oFightDuplicate.oFightMgr = nil
+                    dupMgr.oFightDuplicate = nil
+                    -- LogDebug("--------------------22222")
+                end
+            end
         end
 
         if notiteConn then

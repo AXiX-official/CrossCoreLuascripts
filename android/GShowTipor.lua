@@ -9,6 +9,7 @@ TipAargType.CardId = 3 -- 3：代表卡牌id
 TipAargType.EquipId = 4 -- 4：代表装备id
 TipAargType.DupId = 5 -- 5：副本ID
 TipAargType.Role = 6 -- 6：角色Id
+TipAargType.SectionId = 7 -- 7：章节Id
 
 -- 使用值对应key的名字
 for k, v in pairs(TipAargType) do
@@ -123,6 +124,14 @@ end
 function GCTipTool:SendNotEquip(plr, opName, equipId)
     local args = self:OneEquipArg(equipId)
     self:SendToPlr(plr, opName, "equipNotFind", args)
+end
+
+-- 添加一个副本id与数量参数
+function GCTipTool:OneSectionNumArg(id, num, args)
+    args = args or {}
+    self:AddArg(TipAargType.SectionId, id, args)
+    self:AddArg(TipAargType.OnlyParm, num, args)
+    return args
 end
 
 -- 添加一个参数

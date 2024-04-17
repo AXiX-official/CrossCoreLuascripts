@@ -79,8 +79,8 @@ end
 
 -- 获取名称
 function this:GetName()
-    -- return self.cfg and self.cfg.name or "" 
-    return self.data and self.data.name or self.cfg.name
+    return self.cfg and self.cfg.name or "" 
+    --return self.data and self.data.name or self.cfg.name
 end
 
 -- 获取名称

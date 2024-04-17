@@ -56,7 +56,7 @@ function Skill24901:OnActionOver2(caster, target, data)
 		return
 	end
 	-- 24911
-	if self:Rand(1000) then
+	if self:Rand(1500) then
 		self:BeatBack(SkillEffect[24911], caster, self.card, data, nil,6)
 	end
 end

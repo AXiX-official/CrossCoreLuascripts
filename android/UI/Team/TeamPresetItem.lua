@@ -25,6 +25,7 @@ end
 
 function OnDestroy()
 	CSAPI.RemoveInputFieldCallBack(inp_teamName,OnTeamNameEdit);
+	CSAPI.RemoveInputFieldChange(inp_teamName,OnNameChange)
 	ReleaseCSComRefs();
 end
 

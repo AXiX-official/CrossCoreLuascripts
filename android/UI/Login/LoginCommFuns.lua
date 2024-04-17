@@ -351,7 +351,7 @@ end
 
 function GetLastServerInfo()
 	--local serverID = 3;--默认打包服
-    --local serverID = 5;--默认内部稳定测试服
+    --local serverID = 5;--默认媒体服
 	--local serverID = 22;--默认打包测试服
     --local serverID = 11;--默认主干外服  	
 	--local serverID = 16;--默认审核服
@@ -485,7 +485,9 @@ function LoginAccount(accountName, pwd,relogin)
 	end, function()
         if(relogin)then
 			--重登时，刷新商店物品
-			ShopProto:GetShopInfos();
+			-- ShopProto:GetShopInfos();
+			ShopProto:GetShopOpenTime();
+			ShopProto:GetShopCommodity();
             return;
         end
 		SceneMgr:SetLoginLoaded(true);

@@ -98,7 +98,7 @@ function SetTouch()
                     end
                 end
             else
-                if (v.sName ~= "in") then
+                if (v.sName ~= "in" and not v.hideAreas) then
                     table.insert(touchDatas, v)
                 end
             end
@@ -108,10 +108,24 @@ function SetTouch()
 end
 
 -- 点击触发
-function TouchItemClickCB(cfgChild)
+function TouchItemClickCB(_cfgChild)
     if (isIn or RoleAudioPlayMgr:GetIsPlaying()) then
         return
     end
+   -- 随机动作 
+   local cfgChild = nil
+   if (_cfgChild.randomAnim) then
+       local num = CSAPI.RandomInt(0, 100)
+       local count = 0
+       for k, v in ipairs(_cfgChild.randomAnim) do
+           count = count + v[2] * 100
+           if (num <= count) then
+               cfgChild = cfg.item[v[1]]
+               break
+           end
+       end
+   end 
+   cfgChild = cfgChild or _cfgChild
 
     if (cfgChild.gesture ~= nil and cfgChild.gesture ~= 0) then
         return

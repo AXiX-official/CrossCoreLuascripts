@@ -52,6 +52,8 @@ ITEM_TYPE.CARD_CORE_ELEM = 15 -- 卡牌核心碎片
 ITEM_TYPE.PANEL_IMG = 16 -- 看板图片
 ITEM_TYPE.SEL_BOX = 17 -- 物品选择箱子
 ITEM_TYPE.THEME = 18 -- 宿舍主题
+ITEM_TYPE.ICON_FRAME = 19 -- 头像框(dy_value1 头像框配置表的id)
+ITEM_TYPE.LIMITED_TIME_ITEM = 20 -- 限时物品
 
 -- 物品标签
 ITEM_TAG = {}
@@ -566,6 +568,7 @@ CardSkinType = {}
 CardSkinType.Break = 1 -- 突破皮肤
 CardSkinType.Else = 2 -- 额外
 CardSkinType.Add = 3 -- 新增
+CardSkinType.JieJin = 4 -- 解禁
 
 -- 技能类型
 SkillMainType = {}
@@ -1014,6 +1017,7 @@ RoleAudioType.allocation = 14 -- 配置设施
 RoleAudioType.allocationTouch = 15 -- 设施接触
 RoleAudioType.birthday = 16 -- 角色生日时
 RoleAudioType.shop = 17 -- 商店语音（在商店界面，点击看板时的语音）
+RoleAudioType.shopGet = 18
 
 -- 全局邀请类型
 InviteTypes = {}
@@ -1208,6 +1212,7 @@ PlrMixIx.taoFaCountBuyCnt = 48 -- taoFaCountBuyCnt
 PlrMixIx.modHotLastTime = 49 -- 特殊掉落的最后活动时间
 PlrMixIx.modHot = 50 -- 特殊掉落的活动时间内累计消耗的体力值
 PlrMixIx.fixTmpDupTowerBug = 51 -- 爬塔新任务记录异常
+PlrMixIx.arachnid_count = 53 -- 购买蛛影迷城入场券
 
 -- 图鉴
 ArchiveType = {}

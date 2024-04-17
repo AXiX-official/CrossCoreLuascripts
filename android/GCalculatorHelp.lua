@@ -1772,3 +1772,13 @@ end
 function GCalHelp:Clock()
     return math.floor(os.clock() * 1000)
 end
+
+function GCalHelp:FindObjArrByKey(arr, key, val)
+    for _, info in ipairs(arr) do
+        if info[key] == val then
+            return info
+        end
+    end
+
+    return nil
+end

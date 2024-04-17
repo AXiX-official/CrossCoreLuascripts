@@ -152,7 +152,7 @@ function ShowItemInfo(item)
     if itemInfo then
         itemInfo.Show(item)
     else
-        ResUtil:CreateUIGOAsync("Dungeon/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)

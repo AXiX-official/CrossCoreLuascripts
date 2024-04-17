@@ -231,7 +231,8 @@ function this.SetPriceIcon(moneyIcon,cost)
         if cfg and cfg.icon then
             ResUtil.IconGoods:Load(moneyIcon, cfg.icon.."_1");
         else
-            LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
+            LogError("道具商店：读取物品的价格Icon出错！CostInfo:");
+            LogError(cost)
         end
     end
 end
@@ -635,6 +636,9 @@ function this.GetSkinInfo(commodity)
     if commodity then
         local list = commodity:GetCommodityList();
         local skinId = nil;
+        if list==nil then
+            return skinInfo;
+        end
         for k, v in ipairs(list) do
             if v.type == RandRewardType.ITEM and v.data and v.data:GetItemType() == ITEM_TYPE.SKIN then
                 skinId = v.data:GetDyVal2();
@@ -654,8 +658,7 @@ function this.GetSkinCommodity(modelID)
     if modelID then
         for k, v in pairs(Cfgs.CfgCommodity:GetAll()) do
             if v.nType == CommodityItemType.Skin then
-                local comm = CommodityData.New();
-                comm:SetCfg(v.id);
+                local comm = ShopMgr:GetFixedCommodity(v.id)
                 local gets = comm:GetCommodityList();
                 if gets then
                     for _, item in ipairs(gets) do

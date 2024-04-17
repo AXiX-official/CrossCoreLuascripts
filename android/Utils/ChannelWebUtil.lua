@@ -25,10 +25,6 @@ function this.SetServerInfo(_serverInfo)
     -- LogError(serverInfo)
 end
 
---- func 返回SDK访问路径
----@param cmd string SDK操作类型
----@param extend string 额外拼接路径
----@param data table 附帶參數
 function this.GetRealUrl(cmd,extend,data)
     -- local url=signType.Mega;
 	-- if CSAPI.GetChannelType()==ChannelType.QOO then
@@ -41,9 +37,6 @@ function this.GetRealUrl(cmd,extend,data)
 	local url="";
 	if serverInfo then
 		local targetUrl=serverInfo.sdkUrl;
-		--if	data and data.pay_type==tostring(PayType.WeChat) then
-		--	targetUrl="https://mycdn.megagamelog.com/php/sdk/";
-		--end
 		if extend then
 			url=string.format("%s%s%s",targetUrl,url,extend);
 		else
@@ -71,8 +64,8 @@ end
 ---@param data table 
 ---@param func function
 function this.SendToServer(url,data,func)
-    -- Log("SendToServer:"..tostring(url))
-	-- Log(data);
+    --  Log("SendToServer:"..tostring(url))
+	--  Log(data);
 	EventMgr.Dispatch(EventType.Login_Show_Mask)
 	CSAPI.WebPostRequest(url,data,function(result)
 		if result then

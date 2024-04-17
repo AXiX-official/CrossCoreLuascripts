@@ -12,7 +12,7 @@ function this:BuryingPoint(_eventName, _stepID)
         end
         datas.step_id = _stepID
         self:TrackEvents(_eventName, datas,nil,nil,_eventName == "before_login")
-        self:SDKTrack(_eventName, datas)
+        self:SDKTrack(_eventName, _stepID)
         --Log("打点上报，事件名：" .._eventName .. ",步骤id：" .. _stepID)
         infos[_eventName .. "_" .. _stepID] = 1
         FileUtil.SaveToFile("BuryingPoint.txt", infos, true)
@@ -40,12 +40,12 @@ function this:SDKTrack(_eventName, _stepID)
     if _stepID == nil or _stepID == 0 then
         return
     end
-    local cfg =Cfgs.UpdateData:GetByID(_stepID)
+    local cfg =Cfgs.UpdateData:GetByID(tonumber(_stepID))
     if cfg and cfg.HC_event and cfg.HC_argument and cfg.TE_event == _eventName then
         local data = {}
         data[cfg.HC_argument] = _stepID
         if CSAPI.GetADID() > 0 and ReYunSDK and ReYunSDK.SetCustomEvent then
-            ReYunSDK:SetCustomEvent(cfg.HC_event,data);
+            ReYunSDK:SetCustomEvent(cfg.HC_event, data);
         end
     end
 end

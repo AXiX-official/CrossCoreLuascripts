@@ -21,7 +21,7 @@ function Skill4503205:tFunc_4503205_4503223(caster, target, data)
 	-- 8478
 	local count78 = SkillApi:DeathCount(self, caster, target,3)
 	-- 4503223
-	self:AddTempAttr(SkillEffect[4503223], caster, self.card, data, "damage",-count78*0.12)
+	self:AddTempAttr(SkillEffect[4503223], caster, self.card, data, "damage",count78*0.12)
 end
 function Skill4503205:tFunc_4503205_4503213(caster, target, data)
 	-- 8063

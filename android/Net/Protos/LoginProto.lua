@@ -150,9 +150,9 @@ function LoginProto:LoginGame(proto)
 		--马上通知
         ClientProto:InitFinish(true,true);
 		--重登时，刷新商店物品
-        ShopProto:GetShopInfos();
-		-- ShopProto:GetShopOpenTime();
-		-- ShopProto:GetShopCommodity();
+        -- ShopProto:GetShopInfos();
+		ShopProto:GetShopOpenTime();
+		ShopProto:GetShopCommodity();
 		return;
 	end
 	self.logined = 1;
@@ -166,9 +166,9 @@ function LoginProto:LoginGame(proto)
 	PlayerProto:SectionMultiInfo();
 	PlayerProto:GetLifeBuff();
 	EquipProto:GetEquips()
-	-- ShopProto:GetShopOpenTime();
-	-- ShopProto:GetShopCommodity();
-	ShopProto:GetShopInfos();
+	ShopProto:GetShopOpenTime();
+	ShopProto:GetShopCommodity();
+	-- ShopProto:GetShopInfos();
 	eventMgr = ViewEvent.New();
 	eventMgr:AddListener(EventType.Init_Plot_Data, function()
 		self:OnPlotInit();

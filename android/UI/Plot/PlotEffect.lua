@@ -130,7 +130,7 @@ function SkipVideo()
                             end	
                             lastVideoInfos[v.id] = nil
                         end
-                    else 
+                    else
                         if(not lastVideoInfos[v.id]) then
                             lastVideoInfos[v.id] = {}
                             CreateVideo(cfgVideo.name, videoParent,function (video)

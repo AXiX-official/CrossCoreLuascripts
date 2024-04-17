@@ -47,7 +47,29 @@ function Skill703600502:OnActionOver2(caster, target, data)
 		return
 	end
 	-- 703600504
-	self:AddProgress(SkillEffect[703600504], caster, self.card, data, 1001)
+	self:ExtraRound(SkillEffect[703600504], caster, self.card, data, nil)
+end
+-- 回合开始时
+function Skill703600502:OnRoundBegin(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8420
+	local count20 = SkillApi:GetAttr(self, caster, target,3,"hp")
+	-- 8106
+	if SkillJudger:Less(self, caster, self.card, true,count20,2) then
+	else
+		return
+	end
+	-- 8424
+	local count24 = SkillApi:BuffCount(self, caster, target,3,3,6111)
+	-- 8107
+	if SkillJudger:Greater(self, caster, self.card, true,count24,0) then
+	else
+		return
+	end
 	-- 703600507
 	self:Custom(SkillEffect[703600507], caster, self.card, data, "play_plot",{id=10051})
 	-- 92017

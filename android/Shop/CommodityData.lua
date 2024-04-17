@@ -20,7 +20,19 @@ function this:SetCfg(cfgId)
     end
 end
 
-function this:SetData(data) if data then self.data = data end end
+function this:SetData(data) 
+    if data then 
+        self.data = data 
+    end 
+end
+
+function this:GetData()
+    return self.data;
+end
+
+function this:HasData()
+    return self:GetData()~=nil and true or false
+end
 
 function this:GetShopID()
     if self.cfg then return self.cfg.group end
@@ -71,7 +83,10 @@ function this:GetNowDiscount()
         local begin = self:GetDiscountStartTime()
         local endTime = self:GetDiscountEndTime()
         if nowTime >= begin and (endTime == 0 or nowTime <= endTime) then -- 折扣时间内则有效
-            num = self.cfg.fDiscount ~= 0 and self.cfg.fDiscount or num
+            -- num = self.cfg.fDiscount ~= 0 and self.cfg.fDiscount or num
+            if self.data and self.data.shop_config and self.data.shop_config.fDiscount then
+                num=self.data.shop_config.fDiscount
+            end
         end
     end
     return num
@@ -97,54 +112,78 @@ end
 
 -- 返回折扣开始时间字符串
 function this:GetDiscountStart()
-    local time = nil
-    if self.cfg and self.cfg.sDiscountStart ~= "" and self.cfg.sDiscountStart ~=
-        nil then time = self.cfg.sDiscountStart end
+    local time = self:GetDiscountStartTime();
+    if time>0 then
+        return TimeUtil:GetTimeStr2(time)
+    else
+        return nil
+    end
     return time
 end
 
 -- 返回折扣结束时间字符串
 function this:GetDiscountEnd()
-    local time = nil
-    if self.cfg and self.cfg.sDiscountEnd ~= "" and self.cfg.sDiscountEnd ~= nil then
-        time = self.cfg.sDiscountEnd
+    local time = self:GetDiscountEndTime();
+    if time>0 then
+        return TimeUtil:GetTimeStr2(time)
+    else
+        return nil
     end
-    return time
 end
 
 -- 返回折扣开始时间秒数
 function this:GetDiscountStartTime()
-    local time = self:GetDiscountStart()
-    if time ~= nil then
-        time = TimeUtil:GetTimeStampBySplit(time)
-    else
-        time = 0
+    local time = 0
+    if self.data and self.data.shop_config and self.data.shop_config.nDiscountStart then
+        time = self.data.shop_config.nDiscountStart;
     end
     return time
 end
 
 -- 返回折扣结束时间秒数
 function this:GetDiscountEndTime()
-    local time = self:GetDiscountEnd()
-    if time ~= nil then
-        time = TimeUtil:GetTimeStampBySplit(time)
-    else
-        time = 0
+    local time = 0
+    if self.data and self.data.shop_config and self.data.shop_config.nDiscountEnd then
+        time = self.data.shop_config.nDiscountEnd;
     end
     return time
 end
 
 -- 单次购买上限
-function this:GetOnecBuyLimit() return self.cfg and self.cfg.nOnecBuyLimit or 0 end
+function this:GetOnecBuyLimit()
+    --  return self.cfg and self.cfg.nOnecBuyLimit or 0
+    if self.data and self.data.shop_config and self.data.shop_config.nOnecBuyLimit then
+        return self.data.shop_config.nOnecBuyLimit  
+    end
+    return 0
+end
 
 -- 总购买上限
-function this:GetSumBuyLimit() return self.cfg and self.cfg.nSumBuyLimit or 0 end
+function this:GetSumBuyLimit()
+    --  return self.cfg and self.cfg.nSumBuyLimit or 0 
+    if self.data and self.data.shop_config and self.data.shop_config.nSumBuyLimit then
+        return self.data.shop_config.nSumBuyLimit   
+    end
+    return 0
+end
 
 -- 重置类型
-function this:GetResetType() return self.cfg and self.cfg.nResetType or 0 end
+function this:GetResetType()
+    --  return self.cfg and self.cfg.nResetType or 0 
+    if self.data and self.data.shop_config and self.data.shop_config.nResetType then
+        return self.data.shop_config.nResetType   
+    end
+    return 0
+end
 
 -- 重置值
-function this:GetResetValue() return self.cfg and self.cfg.nResetValue or 0 end
+function this:GetResetValue() 
+    -- return self.cfg and self.cfg.nResetValue or 0 
+    if self.data and self.data.shop_config and self.data.shop_config.nResetValue then
+        return self.data.shop_config.nResetValue   
+    end
+    return 0
+end
 
 function this:GetResetTips()
     local str = ""
@@ -194,40 +233,38 @@ function this:GetBuyLimitVal() return self.cfg and self.cfg.nBuyLimitVal or 0 en
 
 -- 返回购买开始时间字符串
 function this:GetBuyStart()
-    local time = nil
-    if self.cfg and self.cfg.sBuyStart ~= "" and self.cfg.sBuyStart ~= nil then
-        time = self.cfg.sBuyStart
-    end
-    return time
+    local time = self:GetBuyStartTime();
+    if time>0 then
+        return TimeUtil:GetTimeStr2(time)
+    else
+        return nil
+    end    
 end
 
 -- 返回购买开始时间秒数
 function this:GetBuyStartTime()
-    local time = self:GetBuyStart()
-    if time ~= nil then
-        time = TimeUtil:GetTimeStampBySplit(time)
-    else
-        time = 0
+    local time = 0
+    if self.data and self.data.open_time then
+        time = self.data.open_time;
     end
     return time
 end
 
 -- 返回购买结束时间
 function this:GetBuyEnd()
-    local time = nil
-    if self.cfg and self.cfg.sBuyEnd ~= "" and self.cfg.sBuyEnd ~= nil then
-        time = self.cfg.sBuyEnd
-    end
-    return time
+    local time = self:GetBuyEndTime()
+    if time>0 then
+        return TimeUtil:GetTimeStr2(time)
+    else
+        return nil
+    end        
 end
 
 -- 返回购买结束时间秒数
 function this:GetBuyEndTime()
-    local time = self:GetBuyEnd()
-    if time ~= nil then
-        time = TimeUtil:GetTimeStampBySplit(time)
-    else
-        time = 0
+    local time = 0
+    if self.data and self.data.close_time then      
+        time = self.data.close_time
     end
     return time
 end
@@ -354,9 +391,13 @@ end
 -- 返回未打折的价格
 function this:GetPrice()
     local priceInfo = nil
-    if self.cfg and self.cfg.jCosts then
+    local jCosts=nil;
+    if self.data and self.data.shop_config and self.data.shop_config.jCosts then
+        jCosts=self.data.shop_config.jCosts;
+    end
+    if jCosts then
         priceInfo = {}
-        for k, v in ipairs(self.cfg.jCosts) do
+        for k, v in ipairs(jCosts) do
             local info = {}
             info.id = v[1]
             info.num = v[2]
@@ -385,9 +426,13 @@ end
 -- 返回获得物品数据
 function this:GetCommodityList()
     local info = nil
-    if self.cfg and self.cfg.jGets then
+    local jGets=nil;
+    if self.data and self.data.shop_config and self.data.shop_config.jGets then
+        jGets=self.data.shop_config.jGets;
+    end
+    if jGets then
         info = {}
-        for k, v in ipairs(self.cfg.jGets) do
+        for k, v in ipairs(jGets) do
             local type = v[3]
             local data = nil
             if type == RandRewardType.ITEM then
@@ -409,17 +454,18 @@ end
 
 -- 返回当前额外获得的东西
 function this:GetExCommodityList()
-    if self.cfg and self.cfg.jExGets then
+    local jExGets=self:GetExGets();
+    if jExGets then
         local infos = nil
         local num = self:GetBuyCount()
         local val = nil
-        for k,v in ipairs(self.cfg.jExGets) do
+        for k,v in ipairs(jExGets) do
 			if v[1]==num+1 then
 				val = v[2]
 			end
 		end
-		if (val==nil and self.cfg.jExGets[1][1] == 0) then -- self.cfg.jExGets[1][1]==0表示默认赠送物品，不管购买多少次，如果没有对应的购买次数赠送的额外物品，那就取这个
-            val = self.cfg.jExGets[1][2]
+		if (val==nil and jExGets[1][1] == 0) then -- self.cfg.jExGets[1][1]==0表示默认赠送物品，不管购买多少次，如果没有对应的购买次数赠送的额外物品，那就取这个
+            val = jExGets[1][2]
         end
         if val then
             infos = {}
@@ -450,7 +496,14 @@ function this:GetExCommodityList()
 end
 
 -- 返回额外获得配置
-function this:GetExGets() return self.cfg and self.cfg.jExGets or nil end
+function this:GetExGets()
+    --  return self.cfg and self.cfg.jExGets or nil 
+    local jExGets=nil;
+    if self.data and self.data.shop_config and self.data.shop_config.jExGets then
+        jExGets=self.data.shop_config.jExGets
+    end
+    return jExGets;
+end
 
 -- 返回商品剩余数量
 function this:GetNum()
@@ -488,8 +541,14 @@ end
 
 -- 是否售完
 function this:IsOver()
+    if self:HasData()~=true then --未开放购买
+        return true;
+    end
     if self:GetType() == CommodityItemType.Skin then
         local skinInfo =ShopCommFunc.GetSkinInfo(self);
+        if skinInfo==nil then
+            return true;
+        end
         local curModelCfg=skinInfo:GetModelCfg();
         local rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(curModelCfg.role_id,curModelCfg.id);
         if rSkinInfo and rSkinInfo:CheckCanUse() then
@@ -512,7 +571,7 @@ function this:GetLimitDesc(colorCode)
     local resetType = self:GetResetType()
     local sumBuyLimit = self:GetSumBuyLimit()
     local num = self:GetNum()
-    if sumBuyLimit > 0 then
+    if sumBuyLimit > 0 and num>=0 then
 		if colorCode~=nil then
 			str = string.format(LanguageMgr:GetTips(15003), string.format("<color=#%s>%s</color>",colorCode,num))
 		else
@@ -522,7 +581,7 @@ function this:GetLimitDesc(colorCode)
     return str
 end
 
--- 返回购买次数
+-- 返回当期已经购买的次数
 function this:GetBuyCount()
     if self.data and self.data.cnt then return self.data.cnt end
     return 0
@@ -531,7 +590,7 @@ end
 --是否显示在列表
 function this:IsShow()
     local isShow=true;
-    if self.cfg.isShow then
+    if  self:HasData()~=true or (self.data and self.data.shop_config and self.data.shop_config.isShow and self.data.shop_config.isShow==1) then
         isShow=false;
     end
     return isShow;
@@ -540,6 +599,9 @@ end
 -- 返回当前时间段该商品是否可以购买
 function this:GetNowTimeCanBuy()
     local canBuy = true
+    if self:GetData()==nil then
+        canBuy=false;
+    end
     local currTime = TimeUtil:GetTime()
     local beginTime = self:GetBuyStartTime()
     local endTime = self:GetBuyEndTime()

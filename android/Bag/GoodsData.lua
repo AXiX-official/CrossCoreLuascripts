@@ -310,6 +310,14 @@ function this:GetTOtherGetInfo()
 	return infos;
 end
 
+function this:GetMoneyJumpID()
+	local id=nil;
+	if self.cfg and self.cfg.j_moneyGet then
+		id=self.cfg.j_moneyGet
+	end
+	return id;
+end
+
 --返回失效日期
 function this:GetExpiry()
 	if self.cfg and self.cfg.sExpiry then

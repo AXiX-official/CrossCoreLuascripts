@@ -56,7 +56,7 @@ function Awake()
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
     --CSAPI.SetText(txtVer, "Ver:1.0.0" .. tostring(UnityEngine.Application.version));
-    CSAPI.SetText(txtVer, "Ver:1.4");
+    CSAPI.SetText(txtVer, "Ver:1.5");
     -- 开启战斗场景镜头
     local xluaCamera = CameraMgr:GetXLuaCamera();
     if (xluaCamera) then
@@ -259,6 +259,9 @@ function OnNetConnectFail()
     CSAPI.OpenView("Dialog", {
         content = LanguageMgr:GetTips(1008)
     });
+    
+    local account, pwd = GetLastAccount();
+    LogError(string.format("connect fail。%s",tostring(account)));
 end
 
 function OnLoadingOver()

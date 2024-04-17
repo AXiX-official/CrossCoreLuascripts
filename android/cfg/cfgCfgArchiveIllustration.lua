@@ -16,11 +16,14 @@ local conf = {
 {'2',	'2',	'',	'',	'',	'2',	'3',	'arch_kadya_liedown',	''},
 {'2',	'2',	'',	'',	'',	'3',	'7',	'arch_trytomoveforward',	'80405'},
 {'2',	'2',	'',	'',	'',	'4',	'9',	'arch_play_time',	''},
+{'2',	'2',	'',	'',	'',	'5',	'10',	'arch_relaxing_afternoon',	''},
 {'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
 {'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},
 {'4',	'4',	'arch_base_check',	'作战准备',	'',	'',	'',	'',	''},
 {'4',	'4',	'',	'',	'',	'1',	'8',	'arch_base_check',	''},
+{'5',	'5',	'arch_bestie_agent',	'娇痴颐使',	'',	'',	'',	'',	''},
+{'5',	'5',	'',	'',	'',	'1',	'11',	'arch_bestie_agent',	'80406'},
 },
 }
 --cfgCfgArchiveIllustration = conf

@@ -111,6 +111,9 @@ function this:GetParamStrByData(data)
         elseif data.type==TipAargType.Role  then --卡牌id
             item=Cfgs.CfgCardRole:GetByID(data.param);
             str=item and item.sAliasName or ""
+        elseif data.type==TipAargType.SectionId  then --章节id
+            item =Cfgs.Section:GetByID(tonumber(data.param))
+            str=item and item.name or ""
         else    --不对的参数类型
             LogError("不支持的参数类型:"..tostring(data.type));
         end

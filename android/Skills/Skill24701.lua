@@ -15,6 +15,4 @@ function Skill24701:OnActionOver(caster, target, data)
 	end
 	-- 24701
 	self:AddBuff(SkillEffect[24701], caster, self.card, data, 24701)
-	-- 247010
-	self:ShowTips(SkillEffect[247010], caster, self.card, data, 2,"愤怒",true)
 end

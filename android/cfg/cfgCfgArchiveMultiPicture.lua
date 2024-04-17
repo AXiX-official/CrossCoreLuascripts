@@ -17,7 +17,8 @@ local conf = {
 {'7',	'7',	'61010',	'导购进修课',	'7',	'',	'',	'2',	'trytomoveforward',	'trytomoveforward_replace',	'board_trytomoveforward',	'商店购买',	'-163,-386,0.95',	'CG06_TryToMoveForward_spine',	'0,-71,1',	'1',	'80405'},
 {'8',	'8',	'61004',	'基地勘测',	'8',	'',	'',	'4',	'base_check',	'',	'board_base_check',	'高级勘测奖励',	'0,0,0.98',	'XingYun',	'-16,-51,0.85',	'',	'1'},
 {'9',	'9',	'61011',	'游乐时光',	'9',	'',	'',	'2',	'play_time',	'',	'board_play_time',	'高级勘测奖励',	'-28,-89,1',	'2022_04',	'0,0,1',	'',	'1'},
-{'10',	'10',	'61012',	'慵懒午后',	'10',	'2024/4/17 03:00:00',	'2044/2/10 23:59:59',	'2',	'relaxing_afternoon',	'',	'board_relaxing_afternoon',	'高级勘测奖励',	'113,0,0.94',	'Aerbeisi',	'113,0,1',	'',	'1'},
+{'10',	'10',	'61012',	'慵懒午后',	'10',	'',	'',	'2',	'relaxing_afternoon',	'',	'board_relaxing_afternoon',	'高级勘测奖励',	'113,0,0.94',	'Aerbeisi',	'113,0,1',	'',	'1'},
+{'11',	'11',	'61013',	'妙探双姝',	'11',	'',	'',	'5',	'bestie_agent',	'bestie_agent_replace',	'board_bestie_agent',	'商店购买',	'-260,-57,0.9',	'CG0008_BestieAgent_spine',	'58,-28,1',	'1',	'80406'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf

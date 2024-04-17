@@ -274,9 +274,28 @@ function this.GetViewPath(sectionID)
 			return "DungeonActivity1","DungeonPlot"
 		elseif strs[1] == "DungeonActivity3" then
 			return "DungeonActivity3","DungeonRole"
+		elseif strs[1] == "DungeonActivity4" then
+			return "DungeonActivity4","DungeonShadowSpider"
 		end
 	end
 	return "",""
+end
+
+function this.GetCost(cfg)
+	local enterCost = cfg.cost and cfg.cost[1] or nil
+    local winCost = cfg.winCost and cfg.winCost[1] or nil
+    local cost = nil
+    if enterCost then
+        cost = enterCost
+    end
+    if winCost then
+		if cost~=nil and cost[1] == winCost[1] then
+			cost[2] = cost[2] + winCost[2]
+		elseif cost == nil then
+			cost = winCost
+		end
+    end
+    return cost
 end
 
 return this; 

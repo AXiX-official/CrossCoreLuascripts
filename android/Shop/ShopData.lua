@@ -38,10 +38,9 @@ function this:GetPageDatas()
 	local cfgs=Cfgs.CfgShopPage:GetGroup(self:GetID());
 	if cfgs then
 		for k,v in ipairs(cfgs) do
-			local pageData=ShopPageData.New();
-			pageData:SetCfg(v.id);
+			local pageData=ShopMgr:GetPageByID(self:GetID(),v.id);
 			--判断当前商店是否开启
-			if pageData:IsOpen() then--当前商店页开启则返回
+			if pageData then--当前商店页开启则返回
 				table.insert(pageDatas,pageData);
 			end
 		end
@@ -63,8 +62,7 @@ function this:GetDefaultOpenPageData()
 	if cfgs then
 		for k,v in ipairs(cfgs) do
 			if v.nDefault==1 then--当前商店页开启则返回
-				local pageData=ShopPageData.New();
-				pageData.cfg=v;
+				local pageData=ShopMgr:GetPageByID(self:GetID(),v.id);
 				return pageData;
 			end
 		end

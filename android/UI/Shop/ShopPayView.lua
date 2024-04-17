@@ -35,6 +35,9 @@ function InitListener()
 	eventMgr:AddListener(EventType.RewardPanel_Close,ShowBuffTips);
 	eventMgr:AddListener(EventType.SDK_Pay_Result,OnSDKResult);
 	eventMgr:AddListener(EventType.SDK_QRPay_Over,OnQROver)
+	eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopRefresh)
+	eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpen)
+	eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClose)
 end
 
 function OnDestroy()
@@ -43,6 +46,9 @@ function OnDestroy()
 	ReleaseCSComRefs();
 end
 
+function OnShopRefresh()
+	Close()
+end
 
 function OnOpen()
 	UIUtil:ShowAction(childNode,nil,UIUtil.active2);
@@ -333,6 +339,20 @@ function SetMaxNum()
 		end
 		currentMaxCount=currentMaxCount==0 and 1 or currentMaxCount;
 		-- slider.maxValue=currentMaxCount;
+	end
+end
+
+function OnViewOpen(key)
+	if key=="MulPictureView" then
+		--预览时隐藏
+		CSAPI.SetAnchor(gameObject,100000,100000);
+	end
+end
+
+function OnViewClose(key)
+	if key=="MulPictureView" then
+		--关闭预览时显示
+		CSAPI.SetAnchor(gameObject,0,0);
 	end
 end
 

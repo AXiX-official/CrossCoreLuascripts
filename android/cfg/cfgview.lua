@@ -311,9 +311,10 @@ local conf = {
 {'301',	'DungeonRole',	'DungeonRole/DungeonRoleView',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'302',	'DungeonTaoFaBuy',	'DungeonActivity2/DungeonTaoFaBuy',	'',	'Top',	'',	'',	'1',	'',	'',	'',	''},
 {'303',	'ExplainBox',	'Tips/ExplainBox',	'',	'Topest',	'',	'',	'1',	'',	'',	'',	''},
-{'304',	'DungeonActivity4',	'DungeonActivity4/DungeonActivityView4',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'305',	'DungeonShadowSpider',	'DungeonActivity4/DungeonShadowSpider',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'304',	'DungeonActivity4',	'DungeonActivity4/DungeonActivityView4',	'',	'',	'[[10016],[12007,140014]]',	'',	'',	'',	'',	'',	''},
+{'305',	'DungeonShadowSpider',	'DungeonActivity4/DungeonShadowSpider',	'',	'',	'[[10016],[12007,140014]]',	'',	'',	'',	'',	'',	''},
 {'306',	'VideoPlayer',	'VideoPlayer/VideoPlayer',	'',	'Top',	'',	'',	'',	'',	'1',	'1',	''},
+{'311',	'UniversalPurchase',	'UniversalPurchase/UniversalPurchaseVIew',	'',	'Top',	'',	'',	'1',	'',	'',	'',	''},
 },
 }
 --cfgview = conf

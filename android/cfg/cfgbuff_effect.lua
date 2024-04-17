@@ -74,6 +74,9 @@ local conf = {
 {'64',	'cast_buff_bingdong',	'common/cast_buff_bingdong',	'',	'',	'',	'',	'',	''},
 {'65',	'buff_hit_a40020',	'a40020/cast_hit',	'',	'1500',	'',	'',	'',	''},
 {'66',	'Homology_eff',	'buff/Homology_eff',	'',	'',	'1',	'1',	'2',	''},
+{'67',	'cast2_cure01_o20230',	'o20230/cast2_cure01',	'',	'',	'1',	'1',	'2',	''},
+{'68',	'buff_eff2_o20230',	'o20230/buff_eff2',	'',	'',	'1',	'1',	'1',	''},
+{'69',	'cast2_buff_g91060',	'g91060/cast_shield',	'',	'',	'',	'',	'',	''},
 },
 }
 --cfgbuff_effect = conf

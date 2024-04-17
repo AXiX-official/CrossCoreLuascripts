@@ -593,8 +593,34 @@ function this:SetBtnState(go, enable, cAlpha)
     end
 end
 
-function this:ShowWaitPanel()
-    CSAPI.OpenView("WaitPanel")
+--打开通用购买界面
+---@param title 标题
+---@param tips 提示语
+---@param count 可购买数量
+---@param maxCount 可购买最大数量
+---@param cost 单次购买价格
+---@param reward 购买的物品
+---@param payFunc 购买函数
+function this:OpenPurchaseView(title,tips,count,maxCount,cost,reward,payFunc)
+    if count <= 0 then
+        local dialogData = {}
+        local cfg = Cfgs.ItemInfo:GetByID(reward[1][1])
+        dialogData.content = LanguageMgr:GetTips(24009)
+        dialogData.okCallBack = function()
+            JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
+        end
+        CSAPI.OpenView("Dialog",dialogData)
+        return 
+    end
+    local data = {}
+    data.title = title
+    data.tips = tips
+    data.count = count
+    data.max = maxCount
+    data.cost = cost
+    data.reward = reward
+    data.payFunc = payFunc
+    CSAPI.OpenView("UniversalPurchase",data)
 end
 
 return this

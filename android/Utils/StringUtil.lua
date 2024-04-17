@@ -17,6 +17,26 @@ function this:split(str, reps)
     return resultStrList
 end
 
+--用字符串切割
+function this:Split(str, reps)
+    local result = {}
+    local start_index = 1
+    local end_index = string.find(str, reps)
+    
+    while end_index do
+        local part = string.sub(str, start_index, end_index - 1)
+        table.insert(result, part)
+        
+        start_index = end_index + string.len(reps)
+        end_index = string.find(str, reps, start_index)
+    end
+    
+    local last_part = string.sub(str, start_index)
+    table.insert(result, last_part)
+    
+    return result
+end
+
 -- 默认黑色
 function this:SetColorByName(txt, str, colorName)
     if (txt == nil) then

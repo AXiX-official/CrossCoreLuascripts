@@ -15,6 +15,7 @@ local cgList;--cg队列
 local cgIndex = - 1;--cg播放下标,为-1时表示没有播放
 local cgTimer = 0;--cg计时器
 local cgCall = nil;--cg播放完的回调
+local cgDelay = 0
 local isCGPlay = false --用于背景动画执行时禁止点击部分按钮
 
 local shakeObjs = nil;--震动脚本对象
@@ -192,7 +193,7 @@ end
 
 function OnOpen()
 	-- ResUtil:PlayVideo("plot_burn1", gameObject)
-	CSAPI.StopBGM(1)
+	CSAPI.StopBGM(500)
 	if data == nil then
 		LogError("章节ID不能为空！");
 		return;
@@ -250,17 +251,11 @@ function Update()
 			if cgIndex == #cgList then				
 				CSAPI.SetGOActive(boxParent, false)
 				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType(), cgCall, function()
-					CSAPI.SetGOActive(boxParent, true)					
-					-- if not isOpenTween then
-					PlayContent();
-					-- end			
-					isCGPlay = false
+					-- CSAPI.SetGOActive(boxParent, true)					
+					-- PlayContent();
+					-- isCGPlay = false
 				end);
-				-- if cgCall then
-				-- 	cgCall();
-				-- end
 				anyWayObj.enabled = true;
-				-- CSAPI.SetGOActive(buttonChild, true);
 				CSAPI.SetTimeScale(playPower[powerIndex]);--还原快进速度							
 			else
 				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType());
@@ -333,11 +328,12 @@ end
 function SetTween(isOpen)
 	if isOpen then
 		AnimStart()
+		local boxTime = currentPlotData:IsLeft() and 250 or 500
 		bgFade:Play(0, 1, 250, 0)
 		lineFade:Play(0, 1, 250, 250)
 		imgFade:Play(0, 1, 250, 250)
-		nodeFade:Play(0, 1, 250, 500)
-		boxFade:Play(0, 1, 250, 500, function()	
+		nodeFade:Play(0, 1, 250, boxTime)
+		boxFade:Play(0, 1, 250, boxTime, function()	
 			CSAPI.SetGOActive(leftButton, true)
 			-- PlayContent()
 			if data.talkID then
@@ -439,12 +435,20 @@ function PlayPlot()
 		cgIndex = 1;
 		local cgTimer2 = currentPlotData:GetImgDelay();
 		table.insert(timers, #cgList * cgTimer2);
-		cgCall = function()			
+		cgCall = function()	
 			if clearRoles then
 				ClearImg(clearRoles)
 			else
 				UpdateRoleImg(pInfos)
-			end
+			end		
+			PlotTween.FadeIn(ImgParent,0.25,function ()
+				if not currentPlotData:IsLeft() then
+					CSAPI.SetGOActive(boxParent, true)					
+					PlayContent();
+					isCGPlay = false
+					isChangeBg = false
+				end
+			end, 0.5)
 		end		
 	else
 		--播放文字和立绘
@@ -497,7 +501,7 @@ function PlayPlot()
 	local recordId = currentPlotData.cfg.record_id
 	if recordId then
 		BuryingPointMgr:BuryingPoint("after_login",recordId)
-end
+	end
 end
 
 --播放震动
@@ -551,11 +555,11 @@ end
 function PlayBGM()
 	local bgmName = currentPlotData:GetBGM();
 	if bgmName == "none" then
-		CSAPI.StopBGM();
+		CSAPI.StopBGM(1000);
 	elseif bgmName ~= nil and bgmName ~= "none" and currBgName ~= bgmName then
-		--切换BGM		
+		--切换BGM	
 		CSAPI.SetBGMLock(myBGMLockKey);
-		CSAPI.PlayBGM(bgmName, nil, nil, myBGMLockKey);
+		CSAPI.PlayBGM(bgmName, 1000, nil, myBGMLockKey);
 		currBgName = bgmName
 	end
 end
@@ -607,11 +611,15 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 			-- AnimStart()
 			if isFirstChange then --首次切换
 				PlotTween.FadeIn(bg, 0.25, nil, 0.25)
-				PlotTween.FadeIn(ImgParent, 0.25, nil, 0.25)
+				PlotTween.FadeIn(ImgParent, 0.25, nil, 0.5)
 				isFirstChange = false
 			else
-				PlotTween.Twinkle(ImgParent, 0.5)
-				PlotTween.Twinkle(bg, 0.5)	
+				-- PlotTween.Twinkle(ImgParent, 0.5)
+				if cgIndex == 1 then
+					PlotTween.FadeOut(ImgParent, 0.25)
+					cgDelay = 250
+				end
+				PlotTween.Twinkle(bg, 0.25,nil,cgDelay / 1000)	
 			end
 			FuncUtil:Call(function()
 				if(gameObject and not effectInfos[plotID].isJumpCG and currentPlotData) then
@@ -620,25 +628,25 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 					if roleCB then
 						roleCB()
 					end
-					if cgIndex + 1 > #cgList then
-						cgIndex = - 1;
-						cgList = nil;
-						cgTimer = 0;
-					else
-						cgIndex = cgIndex + 1
-					end
 					effectInfos[plotID].isJumpCG = true
 				end
-			end, nil, 250)
-			FuncUtil:Call(function()
-				if(gameObject and (not effectInfos[plotID].isPlayBox) and currentPlotData) then
+			end, nil, 250 + cgDelay)
+			if currentPlotData:IsLeft() then
+				FuncUtil:Call(function ()
+					CSAPI.SetGOActive(boxParent, true)					
+					PlayContent();
+					isCGPlay = false
 					isChangeBg = false
-					if boxCB then
-						boxCB()
-					end
-					effectInfos[plotID].isPlayBox = true
-				end
-			end, nil, 500)
+				end,this,125 + cgDelay)
+			end
+			if cgIndex + 1 > #cgList then
+				cgIndex = - 1;
+				cgList = nil;
+				cgTimer = 0;
+			else
+				cgIndex = cgIndex + 1
+			end
+			cgDelay = 0
 		elseif changeType == ImgChangeType.Line then
 			PlayLineTween(- 1, 1, 500, function()
 				CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
@@ -711,7 +719,6 @@ function PlayContent()
 	if currentPlotData:GetBlinkNum() ~= nil and currentPlotData:GetBlinkNum() > 0 and blinkNum == 0 then
 		HideDialogBox()
 		CSAPI.SetGOActive(effectEye, true)
-		-- ComUtil.GetCom(effectEye, "CanvasGroup").alpha = 1
 		SetBlink(currentPlotData:GetBlinkNum())
 		return
 	end
@@ -747,22 +754,25 @@ function UpdateRoleImg(pInfos)
 	-- Log( "立绘信息：");
 	-- Log(pInfos)
 	if pInfos ~= nil then
+		local tag = 1
+		local key = 1
 		--处理入场、移动、退场
 		for k, v in ipairs(pInfos) do	
-			local roleView = roleList[v.id];	
+			tag = v.tag or 1
+			key = v.id .. "_" .. tag
+			local roleView = roleList[key];	
 			if v.out and roleView then--退场
 				roleView.SetImg(v);
 				roleView.PlayImgLeave(v.time, nil, v.delay, isChangeBg); --当进行背景切换时出现退场直接退场
-				-- roleView.PlayImgLeave(nil, v.delay)
-				roleList[v.id] = nil;
+				roleList[key] = nil;
 				roleCount = roleCount - 1
 			elseif v.move then--移动
 				roleView.PlayImgMove(v.move, v.time);
 			elseif v.pingPong then
 				roleView.PlayImgMoveByPingPong(v.pingPong, v.time)
 			elseif v.enter then--入场
-				local isTalk = currentPlotData:IsTalkID(v.id);
-				local posRoleView = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
+				local isTalk = currentPlotData:IsTalkID(key);
+				local posRoleView,posRoleKey = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
 				local leaveFunc = nil;
 				if roleView ~= nil and posRoleView ~= nil then--执行操作
 					leaveFunc = function()
@@ -779,7 +789,7 @@ function UpdateRoleImg(pInfos)
 						CSAPI.SetGOActive(roleView.gameObject, true);
 						roleView.PlayImgEntrance(v.time);
 					end
-					roleList[v.id] = roleView;
+					roleList[key] = roleView;
 				elseif roleView ~= nil then
 					roleView.SetImg(v);
 					roleView.PlayImgMove(roleView.GetTargetPos(), v.time, nil, v.delay)
@@ -788,12 +798,11 @@ function UpdateRoleImg(pInfos)
 					roleView.SetImg(v);
 					roleView.PlayImgEntrance(v.time, nil, v.delay);
 					roleView.SetImgState(isTalk);
-					roleList[v.id] = roleView;
+					roleList[key] = roleView;
 					roleCount = roleCount + 1
 				end
-				if posRoleView then  --播放旧立绘退场之后再播放新立绘入场
-					local oldId = posRoleView.data.id;
-					roleList[oldId] = nil;
+				if posRoleView and posRoleKey then  --播放旧立绘退场之后再播放新立绘入场
+					roleList[posRoleKey] = nil;
 					posRoleView.PlayImgLeave(v.time, leaveFunc, v.delay);
 				end				
 			elseif v.black then --变色
@@ -809,11 +818,14 @@ function UpdateRoleImg(pInfos)
 			local currEmojis = currentPlotData:GetEmojiIDs()
 			local currPos = v.GetPos()
 			local index = - 1;
-			-- local isTalk=currentPlotData:IsTalkID(v.data.id);
 			local talkIds = currentPlotData:GetTalkID();
+			local talkTags = currentPlotData:GetTag() or {}
 			if talkIds then
+				local tag,key = 1,1
 				for ix, id in ipairs(talkIds) do
-					if v.data.id == id then
+					tag = talkTags[ix] or tag
+					key = id.."_" ..tag
+					if k == key then
 						index = ix;
 						break;
 					end
@@ -823,28 +835,11 @@ function UpdateRoleImg(pInfos)
 			v.SetMask(hasMasks[currPos]>0); --设置遮罩
 			v.SetFace(currFaceIDs[currPos])
 			v.SetEmoji(currEmojis[currPos])
-			-- if index > 0 then
-			-- 	v.SetFace(currFaceIDs[index]);
-			-- 	local emojiInfo = currEmojis[index];
-			-- 	if emojiInfo then
-			-- 		v.SetEmoji(emojiInfo[1], emojiInfo[2]);
-			-- 	else
-			-- 		v.SetEmoji();
-			-- 	end
-			-- else
-			-- 	v.SetFace();
-			-- 	v.SetEmoji();
-			-- end
 		end
 	end
-	--当前背景是否变暗
-	-- if roleCount > 0 then
-	-- 	CSAPI.csSetUIColorByTime(bgMask.gameObject, "action_UIColor_to_front", 0, 0, 0, 70, nil, 0.15, 0)
-	-- else
 	if(bgMask) then
 		CSAPI.csSetUIColorByTime(bgMask.gameObject, "action_UIColor_to_front", 0, 0, 0, 0, nil, 0.15, 0)
 	end
-	-- end
 end
 
 --根据位置返回立绘面板对象
@@ -852,11 +847,11 @@ function GetRoleViewByPos(pos)
 	if roleList then
 		for k, v in pairs(roleList) do
 			if v.data.pos == pos then
-				return v;
+				return v,k;
 			end
 		end
 	end
-	return nil;
+	return nil,nil;
 end
 
 --新增人物立绘
@@ -950,24 +945,35 @@ function FinshEffect()
 			CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
 			SetBackGround(cgList[#cgList]);
 			if cgCall then
-				cgCall()
+				-- cgCall()
+				local clearRoles = currentPlotData:GetClearRoles()
+				local pInfos = currentPlotData:GetAllRoleInfos();
+				if clearRoles then
+					ClearImg(clearRoles)
+				else
+					UpdateRoleImg(pInfos)
+				end	
 			end			
 			cgIndex = - 1;
 			cgList = nil;
 			cgTimer = 0;
 			anyWayObj.enabled = true;
 			CSAPI.SetTimeScale(playPower[powerIndex])
-			effectInfos[plotID].isJumpCG = true
-			isEffect = true
-		end
-		if(not effectInfos[plotID].isPlayBox) then
 			isCGPlay = false
 			isChangeBg = false
 			CSAPI.SetGOActive(boxParent, true)
 			PlayContent();
-			effectInfos[plotID].isPlayBox = true
+			effectInfos[plotID].isJumpCG = true
 			isEffect = true
 		end
+		-- if(not effectInfos[plotID].isPlayBox) then
+		-- 	isCGPlay = false
+		-- 	isChangeBg = false
+		-- 	CSAPI.SetGOActive(boxParent, true)
+		-- 	PlayContent();
+		-- 	effectInfos[plotID].isPlayBox = true
+		-- 	isEffect = true
+		-- end
 	end
 	
 	if(blurTimer > 0) then --模糊
@@ -1231,9 +1237,13 @@ function RecordFrameInfo(plotInfo)
 	if pInfos then
 		jumpRecord.roles = jumpRecord.roles == nil and {} or jumpRecord.roles;
 		jumpRecord.hasMask = currentPlotData:HasMask();
+		local tag = 1
+		local key = 1
 		--更新重新入场图片的位置
 		for k, v in ipairs(pInfos) do
-			if v.enter and jumpRecord.roles[v.id] then
+			tag = v.tag or 1
+			key = v.id .. "_" .. tag
+			if v.enter and jumpRecord.roles[key] then
 				local roleImgInfo = RoleImgInfo.New();
 				roleImgInfo:InitCfg(v.id);
 				local posList = roleImgInfo:GetRoleImgPos();
@@ -1241,7 +1251,7 @@ function RecordFrameInfo(plotInfo)
 				if posList and posList[v.pos] then
 					pos = {posList[v.pos] [1], posList[v.pos] [2]};
 				end
-				jumpRecord.roles[v.id] = {
+				jumpRecord.roles[key] = {
 					id = v.id,
 					pos = v.pos,
 					realPos = pos,
@@ -1252,7 +1262,7 @@ function RecordFrameInfo(plotInfo)
 		--更新要显示的图片缓存
 		for k, v in ipairs(pInfos) do
 			if v.out then
-				jumpRecord.roles[v.id] = nil;
+				jumpRecord.roles[key] = nil;
 			elseif v.enter then
 				local roleImgInfo = RoleImgInfo.New();
 				roleImgInfo:InitCfg(v.id);
@@ -1273,16 +1283,16 @@ function RecordFrameInfo(plotInfo)
 						jumpRecord.roles[removeId] = nil;
 					end
 				end
-				jumpRecord.roles[v.id] = {
+				jumpRecord.roles[key] = {
 					id = v.id,
 					pos = v.pos,
 					realPos = pos,
 					black = v.black;
 				};
 			elseif v.move then
-				jumpRecord.roles[v.id].pos = v.move;
+				jumpRecord.roles[key].pos = v.move;
 			elseif v.black then
-				jumpRecord.roles[v.id].black = v.black;
+				jumpRecord.roles[key].black = v.black;
 			end
 			-- if v.header then --表情
 			-- 	jumpRecord.roles[v.id].header = v.header
@@ -1303,9 +1313,12 @@ function ShowLastFrame()
 			SetBackGround(jumpRecord.lastCGPath);
 		end
 		if jumpRecord.roles then
+			local tag,key = 1,1
 			--显示立绘
 			for k, v in pairs(jumpRecord.roles) do
-				local roleImg = roleList[v.id];
+				tag = v.tag or 1
+				key = v.id .. "_" .. tag
+				local roleImg = roleList[key];
 				local isTalk = false;
 				if jumpRecord.talkID then
 					for _, tID in ipairs(jumpRecord.talkID) do
@@ -1315,16 +1328,15 @@ function ShowLastFrame()
 						end
 					end
 				end
-				local posRoleView = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
-				if posRoleView then  --播放旧立绘退场
-					local oldId = posRoleView.data.id;
-					roleList[oldId] = nil;
+				local posRoleView,posRoleKey = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
+				if posRoleView and posRoleKey then  --播放旧立绘退场
+					roleList[posRoleKey] = nil;
 					posRoleView.PlayImgLeave();
 				end
 				if roleImg == nil then--新立绘入场
 					roleImg = CreateRoleImg(v);
 					roleImg.SetImg(v);
-					roleList[v.id] = roleImg;
+					roleList[key] = roleImg;
 					CSAPI.SetLocalPos(roleImg.gameObject, v.realPos[1], v.realPos[2], 0);
 					
 				end
@@ -1448,14 +1460,11 @@ end
 
 -----------------------------------动画-------------------------
 function AnimStart()
-	if not UIMask then
-		UIMask = CSAPI.GetGlobalGO("UIClickMask")
-	end
-	CSAPI.SetGOActive(UIMask, true)
+	CSAPI.SetGOActive(animMask, true)
 end
 
 function AnimEnd()
-	CSAPI.SetGOActive(UIMask, false)
+	CSAPI.SetGOActive(animMask, false)
 end
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）

@@ -8,6 +8,7 @@ local isTeaching=true; --是否是教学关卡
 local isNotAssist=false;
 local slider=nil;
 local currCostHot=0;--当前消耗的热值
+local  currCostInfo=nil;
 function Awake()
     -- slider=ComUtil.GetCom(hotSlider, "OutlineBar")
     eventMgr = ViewEvent.New();
@@ -18,6 +19,7 @@ function Awake()
      --更新热值
 	eventMgr:AddListener(EventType.CardCool_Update, OnCardCoolUpdate)
     eventMgr:AddListener(EventType.Player_HotChange, SetEnterCost)
+    eventMgr:AddListener(EventType.Bag_Update,SetEnterCost);
     -- eventMgr:AddListener(EventType.Team_Confirm_OpenSkill, OnClickSkill)
     CSAPI.SetGOActive(btnAISetting,true);
 end
@@ -114,6 +116,8 @@ function OnOpen()
     end
     CSAPI.SetText(txt_cost,tostring(enterCost));
     CSAPI.SetText(txt_move,tostring(moveLimit));
+    --如果配置表中存在cost值，则读取cost信息，否则直接当热值处理
+    currCostInfo=DungeonUtil.GetCost(dungeonCfg);
     currCostHot=enterCost+successCost;
     SetFighting(dungeonCfg.lvTips);
     SetEnterCost();
@@ -148,11 +152,31 @@ function Init()
 end
 
 function InitHotItem()
-    local maxHot=PlayerClient:MaxHot();
-    local currHot=PlayerClient:Hot();
-    ResUtil.IconGoods:Load(moneyIcon3, "10035_1")
-    CSAPI.SetText(txt_hot,string.format("%s/%s",currHot,maxHot));
-    -- slider:SetProgress(currHot/maxHot);
+    if currCostInfo then
+        --读取消耗信息
+        local type = currCostInfo[3]
+        -- local type=2;
+        local num=currCostInfo[2];
+        local cid=currCostInfo[1];
+        if type == RandRewardType.ITEM then
+            local data = GoodsData()
+            data:InitCfg(cid)
+            local hasCount=BagMgr:GetCount(cid);
+            ResUtil.IconGoods:Load(moneyIcon3,data:GetIcon().."_1");
+            CSAPI.SetText(txt_hot,tostring(hasCount));
+            CSAPI.SetGOActive(moneyAdd,data:GetMoneyJumpID()~=nil);
+        else
+            LogError("配置表错误！道具类型错误！");
+            LogError(currCostInfo);
+        end
+   else
+       local maxHot=PlayerClient:MaxHot();
+       local currHot=PlayerClient:Hot();
+       ResUtil.IconGoods:Load(moneyIcon3, "10035_1")
+       CSAPI.SetText(txt_hot,string.format("%s/%s",currHot,maxHot));
+       CSAPI.SetGOActive(moneyAdd,true);
+       -- slider:SetProgress(currHot/maxHot);
+   end
 end
 
 function SetFighting(num)
@@ -165,21 +189,60 @@ function SetFighting(num)
 end
 
 function SetEnterCost()
-    local currHot=PlayerClient:Hot();
-    local cHot=math.abs(currCostHot)
-    local costHot=currHot>=cHot and string.format("<color='#000000'>%s</color>",currCostHot) or string.format("<color='#cd333e'>%s</color>",currCostHot);
-    CSAPI.SetText(txt_cost,LanguageMgr:GetByID(26041,costHot));
-    InitHotItem();
+        if currCostInfo~=nil then
+            --读取消耗信息
+            local type = currCostInfo[3]
+            -- local type=2;
+            local num=currCostInfo[2];
+            local cid=currCostInfo[1];
+            if type == RandRewardType.ITEM then
+                local data = GoodsData()
+                data:InitCfg(cid)
+                local hasCount=BagMgr:GetCount(cid);
+                ResUtil.IconGoods:Load(costIcon,data:GetIcon().."_3");
+                local costHot=hasCount>=num and string.format("<color='#000000'>%s</color>",num) or string.format("<color='#cd333e'>%s</color>",num);
+                CSAPI.SetText(txt_cost,data:GetName().."-"..costHot);
+            else
+                LogError("配置表错误！道具类型错误！");
+                LogError(currCostInfo);
+            end
+        else
+            local currHot=PlayerClient:Hot();
+            local cHot=math.abs(currCostHot)
+            local costHot=currHot>=cHot and string.format("<color='#000000'>%s</color>",currCostHot) or string.format("<color='#cd333e'>%s</color>",currCostHot);
+            CSAPI.LoadImg(costIcon,"UIs/TeamConfirm/btn_8_07.png",true,nil,true);
+            CSAPI.SetText(txt_cost,LanguageMgr:GetByID(26041,costHot));
+        end
+        InitHotItem();
 end
 
 function OnClickBattle()
-     --检测热值
-     local currHot=PlayerClient:Hot();
-     if currHot<math.abs(currCostHot) then
-         --弹出补充热值的提示
-         CSAPI.OpenView("HotPanel");
-         return;
-     end
+    --检测热值
+    if currCostInfo then
+        --读取消耗信息
+        local type = currCostInfo[3]
+        -- local type=2;
+        local num=currCostInfo[2];
+        local cid=currCostInfo[1];
+        if type == RandRewardType.ITEM then
+            local data = GoodsData()
+            data:InitCfg(cid)
+            local hasCount=BagMgr:GetCount(cid);
+            if hasCount<num then
+                return;
+            end
+        else
+            LogError("配置表错误！道具类型错误！");
+            LogError(currCostInfo);
+        end
+   else
+        local currHot=PlayerClient:Hot();
+        if currHot<math.abs(currCostHot) then
+            --弹出补充热值的提示
+            CSAPI.OpenView("HotPanel");
+            return;
+        end
+   end
     local canBattle=true;
     local duplicateTeamDatas={};
     local dungeonCfg=Cfgs.MainLine:GetByID(currDungeonID)
@@ -275,7 +338,27 @@ function Close()
 end
 
 function OnClickHot()
-    CSAPI.OpenView("HotPanel");
+    if currCostHot then
+        --读取消耗信息
+        local type = currCostInfo[3]
+        -- local type=2;
+        local num=currCostInfo[2];
+        local cid=currCostInfo[1];
+        if type == RandRewardType.ITEM then
+            local data = GoodsData()
+            data:InitCfg(cid)
+            local jumpId=data:GetMoneyJumpID();
+            LogError(jumpId)
+           if jumpId then
+                JumpMgr:Jump(jumpId);
+           end
+        else
+            LogError("配置表错误！道具类型错误！");
+            LogError(currCostInfo);
+        end
+    else
+        CSAPI.OpenView("HotPanel");
+    end
 end
 
 function OnRefresh()

@@ -8,6 +8,7 @@ function OnDestroy()
 	storyData = nil;
 	currentPlotData = nil;
 	RecordMgr:Save(RecordMode.View, CSAPI.GetRealTime(), "ui_id=" .. RecordViews.Plot);	
+
 	TryCallBack();
 end
 
@@ -129,6 +130,5 @@ function Close()
 		CSAPI.SetGOActive(rootNode, false);
 		view:Close();
 	end);
-
-	TryCallBack();
+    TryCallBack();
 end 

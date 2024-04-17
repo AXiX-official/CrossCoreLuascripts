@@ -24,8 +24,8 @@ function Skill503200205:DoSkill(caster, target, data)
 		self:DamageLight(SkillEffect[12813], caster, target, data, 0.25,1)
 	end
 end
--- 攻击结束
-function Skill503200205:OnAttackOver(caster, target, data)
+-- 伤害后
+function Skill503200205:OnAfterHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
