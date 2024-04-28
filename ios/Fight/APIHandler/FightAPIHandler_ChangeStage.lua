@@ -7,7 +7,7 @@ function this:Handle(data)
     fightAction:PushSub(createFightAction);
 
     FightActionUtil:SetServerDatasHangUpState(true);
-
+    CSAPI.DisableInput(10000);
     return fightAction;
 end
 

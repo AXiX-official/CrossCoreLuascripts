@@ -74,12 +74,13 @@ function RefreshPanel()
 
     SetDatas()
     SetLeft()
+    SetGet()
     SetMiddle()
     SetL2dBtn()
-    SetGet()
+    -- SetGet()
     SetBtns()
 
-    --SetNew()
+    -- SetNew()
 end
 
 function SetBG(id)
@@ -125,6 +126,12 @@ function SetMiddle()
     if (cache ~= nil) then
         _isL2D = cache.l2d
     end
+    -- 和谐不显示动态
+    local isShopImg = false
+    if (not isCanUse and CheckIsHX()) then
+        _isL2D = false
+        isShopImg = true
+    end
     --
     if (isRole) then
         CSAPI.SetGOActive(movePoint, false)
@@ -134,10 +141,10 @@ function SetMiddle()
                 UIUtil:SetObjFade(movePoint, 0, 1, nil, 300, 0, 0)
             end
             oldModelID = curModelID
-        end, _isL2D)
+        end, _isL2D, isShopImg)
         isL2D = cardIconItem.IsLive2D()
     else
-        mulIconItem.Refresh(curPanelID, nil, nil, _isL2D)
+        mulIconItem.Refresh(curPanelID, nil, nil, _isL2D, isShopImg)
         isL2D = mulIconItem.IsLive2D()
     end
     --
@@ -148,6 +155,24 @@ function SetMiddle()
         CSAPI.SetAnchor(iconParent, 0, 0, 0)
         CSAPI.SetScale(iconParent, 1, 1, 1)
     end
+end
+
+-- 是否和谐中 
+function CheckIsHX()
+    if (isRole) then
+        local _cfg1 = Cfgs.character:GetByID(curModelID)
+        local _cfg2 = _cfg1.shopId and Cfgs.CfgCommodity:GetByID(_cfg1.shopId) or nil
+        if (_cfg2 and _cfg2.isShowImg == 1) then
+            return true
+        end
+    else
+        local _cfg1 = Cfgs.CfgArchiveMultiPicture:GetByID(curPanelID)
+        local _cfg2 = _cfg1.show and Cfgs.CfgCommodity:GetByID(_cfg1.shopId) or nil
+        if (_cfg2 and _cfg2.isShowImg == 1) then
+            return true
+        end
+    end
+    return false
 end
 
 function SetL2dBtn()
@@ -162,6 +187,9 @@ function SetL2dBtn()
         if (cfg and cfg.l2dName) then
             isShow = true
         end
+    end
+    if (isRole and not isCanUse and CheckIsHX()) then
+        isShow = false
     end
     CSAPI.SetGOActive(btnKey, isShow)
     if (isShow) then
@@ -178,7 +206,12 @@ function SetGet()
         isCanUse = _data:CheckCanUse()
         str = isCanUse and "" or _data:GetCfg().get_txt
     else
-        -- 多人插图是必定获得才显示
+        local _data = MulPicMgr:GetData(curPanelID)
+        if (_data and _data:IsHad()) then
+            isCanUse = true
+        else
+            isCanUse = false
+        end
     end
 
     CSAPI.SetText(txtNoGet, str)
@@ -271,16 +304,16 @@ end
 function OnClickCkB()
     local type = isRole and 1 or 2
     NodeActive(false)
-    --CSAPI.OpenView("CRoleSelectView", {ChangeKBCB, OnOpenSelectView, Save}, type)
-    if(not cRoleSelectView) then 
+    -- CSAPI.OpenView("CRoleSelectView", {ChangeKBCB, OnOpenSelectView, Save}, type)
+    if (not cRoleSelectView) then
         ResUtil:CreateUIGOAsync("CRoleDisplay/CRoleSelectView", gameObject, function(go)
             cRoleSelectView = ComUtil.GetLuaTable(go)
             cRoleSelectView.Refresh({ChangeKBCB, OnOpenSelectView, Save}, type)
         end)
-    else 
-        CSAPI.SetGOActive(cRoleSelectView.gameObject,true)
+    else
+        CSAPI.SetGOActive(cRoleSelectView.gameObject, true)
         cRoleSelectView.Refresh({ChangeKBCB, OnOpenSelectView, Save}, type)
-    end 
+    end
 
 end
 -- 还原
@@ -338,4 +371,27 @@ end
 function SetNew()
     local _data = RedPointMgr:GetData(RedPointType.CRoleSkin)
     UIUtil:SetNewPoint(btnCKb, _data ~= nil, 98, 32.6, 0)
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    if (not cRoleSelectView) then
+        ---填写退出代码逻辑/接口
+        if top.OnClickBack then
+            top.OnClickBack();
+        end
+    else
+        if cRoleSelectView.gameObject.activeInHierarchy then
+            if cRoleSelectView.OnClickC then
+                cRoleSelectView.OnClickC();
+            else
+                CSAPI.SetGOActive(cRoleSelectView.gameObject, false)
+            end
+        else
+            ---填写退出代码逻辑/接口
+            if top.OnClickBack then
+                top.OnClickBack();
+            end
+        end
+    end
 end

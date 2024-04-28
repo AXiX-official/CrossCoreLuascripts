@@ -11,7 +11,7 @@ function Refresh(_data)
     data = _data
     cfgModel = Cfgs.character:GetByID(data:GetSkinID())
 
-    ResUtil.CardIcon:Load(icon, cfgModel.Card_head, true)
+    SetIcon()
     SetName(cfgModel.key)
     SetSName(cfgModel.desc)
     SetL2dTag(data:GetCfg().l2dName ~= nil)
@@ -20,6 +20,11 @@ function Refresh(_data)
     SetSIcon()
     SetGetTag()
     SetHas(data:CheckCanUse())
+end
+
+function SetIcon()
+    local iconName = cfgModel.Card_head
+    ResUtil.CardIcon:Load(icon, cfgModel.Card_head, true)
 end
 
 function SetSIcon()
@@ -99,15 +104,15 @@ function GetWayInfo()
 end
 
 function SetL2dTag(isShow)
-    --CSAPI.SetGOActive(l2dTag, isShow == true) --和谐隐藏
+    -- CSAPI.SetGOActive(l2dTag, isShow == true) --和谐隐藏
 end
 
 function SetAnimaTag(isShow)
-    --CSAPI.SetGOActive(animaTag, isShow == true)
+    -- CSAPI.SetGOActive(animaTag, isShow == true)
 end
 
 function SetModelTag(isShow)
-    --CSAPI.SetGOActive(modelTag, isShow == true)
+    -- CSAPI.SetGOActive(modelTag, isShow == true)
 end
 
 function OnClickSelf()

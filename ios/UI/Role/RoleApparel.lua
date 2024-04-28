@@ -138,9 +138,13 @@ function SetArrow()
     end
 end
 
--- l2d开关
+-- l2d开关  data:IsHX() and cfgModel.shopImg or 
 function SetL2dBtn()
     local b = cfgModel.l2dName ~= nil
+    if (curDatas[curIndex]:IsHX()) then
+        b = false -- 和谐中 
+    end
+
     if (not b and isLive2D) then
         isLive2D = false
     end
@@ -162,7 +166,7 @@ function SetImg()
     -- cardIconItem.Refresh(curModeId, LoadImgType.RoleInfo, function(go)
     --     CSAPI.SetGOActive(iconParent, true)
     -- end, isLive2D)
-    cardIconItem.Refresh(curModeId, LoadImgType.RoleInfo, nil, isLive2D)
+    cardIconItem.Refresh(curModeId, LoadImgType.RoleInfo, nil, isLive2D, curDatas[curIndex]:IsHX())
 end
 
 function SetBtn()
@@ -295,18 +299,18 @@ end
 function PlayMoveTween(isRTL)
     local x1 = 0
     local x2 = isRTL and 400 or -400
-    if(isLive2D) then 
+    if (isLive2D) then
         UIUtil:SetObjFade(item1, 1, 0, nil, 1, 299, 1)
-    else 
+    else
         UIUtil:SetObjFade(item1, 1, 0, nil, 300, 1, 1)
-    end 
+    end
     UIUtil:SetPObjMove(item1, x1, x2, 0, 0, 0, 0, function()
         RefreshPanel(true)
-        if(isLive2D) then 
+        if (isLive2D) then
             UIUtil:SetObjFade(item1, 0, 1, nil, 1, 1, 0)
-        else 
+        else
             UIUtil:SetObjFade(item1, 0, 1, nil, 300, 1, 0)
-        end 
+        end
         UIUtil:SetPObjMove(item1, -x2, x1, 0, 0, 0, 0, nil, 300, 1)
     end, 301, 1)
 end

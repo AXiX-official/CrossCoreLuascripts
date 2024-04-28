@@ -112,20 +112,20 @@ function TouchItemClickCB(_cfgChild)
     if (isIn or RoleAudioPlayMgr:GetIsPlaying()) then
         return
     end
-   -- 随机动作 
-   local cfgChild = nil
-   if (_cfgChild.randomAnim) then
-       local num = CSAPI.RandomInt(0, 100)
-       local count = 0
-       for k, v in ipairs(_cfgChild.randomAnim) do
-           count = count + v[2] * 100
-           if (num <= count) then
-               cfgChild = cfg.item[v[1]]
-               break
-           end
-       end
-   end 
-   cfgChild = cfgChild or _cfgChild
+    -- 随机动作 
+    local cfgChild = nil
+    if (_cfgChild.randomAnim) then
+        local num = CSAPI.RandomInt(0, 100)
+        local count = 0
+        for k, v in ipairs(_cfgChild.randomAnim) do
+            count = count + v[2] * 100
+            if (num <= count) then
+                cfgChild = cfg.item[v[1]]
+                break
+            end
+        end
+    end
+    cfgChild = cfgChild or _cfgChild
 
     if (cfgChild.gesture ~= nil and cfgChild.gesture ~= 0) then
         return

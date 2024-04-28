@@ -86,6 +86,9 @@ function Update()
             minStartTime = nil
             RefreshPanel()
         end
+        if (curData and curData:CheckIsDy()) then
+            SetShowTime()
+        end
     end
 end
 
@@ -107,7 +110,7 @@ function SetDatas()
     if (g_CardPoolBtnSort) then
         local _cfg = Cfgs.CfgOpenRules:GetByID(g_CardPoolBtnSort)
         if (_cfg and _cfg.val) then
-            isPass = DungeonMgr:CheckDungeonPass(_cfg.val)
+            isPass = DungeonMgr:CheckDungeonPass(_cfg.val) -- 未通关0_1,将30连卡池放前面
             if (not isPass) then
                 local index = nil
                 for k, v in pairs(_datas) do
@@ -190,11 +193,30 @@ function ClickBtnItemCB(index)
 end
 
 function SetShowTime()
-    local showTimes = curData:GetCfg().showTimes
-    CSAPI.SetGOActive(timeObj, showTimes ~= nil)
-    if (showTimes ~= nil) then
-        for k, v in ipairs(showTimes) do
-            CSAPI.SetText(this["txtTime" .. k], showTimes[k])
+    local isDy = curData:CheckIsDy()
+    if (isDy) then
+        CSAPI.SetGOActive(timeObj, false)
+        local str = ""
+        local endTime = curData:GetDyEndTime()
+        if (endTime and endTime > TimeUtil:GetTime()) then
+            local residue = endTime - TimeUtil:GetTime()
+            local timeData = TimeUtil:GetTimeTab(residue)
+            if (residue <= 60) then
+                str = LanguageMgr:GetByID(17154, math.ceil(timeData[4]))
+            else
+                str = LanguageMgr:GetByID(17150, timeData[1], timeData[2], timeData[3])
+            end
+        end
+        CSAPI.SetText(txtTimeDy, str)
+        CSAPI.SetGOActive(timeObj2, endTime ~= nil)
+    else
+        CSAPI.SetGOActive(timeObj2, false)
+        local showTimes = curData:GetCfg().showTimes
+        CSAPI.SetGOActive(timeObj, showTimes ~= nil)
+        if (showTimes ~= nil) then
+            for k, v in ipairs(showTimes) do
+                CSAPI.SetText(this["txtTime" .. k], showTimes[k])
+            end
         end
     end
 end
@@ -251,7 +273,7 @@ function SetBgs()
     -- icon1 
     local nType = UIUtil:GetSceneType()
     local x = icon3Str ~= nil and -300 or 500
-    local y = 0--nType == 2 and -40 or 0 -- 宽屏提高40 
+    local y = 0 -- nType == 2 and -40 or 0 -- 宽屏提高40 
 
     CSAPI.SetGOActive(icon, false)
     ResUtil:LoadBigImg(icon, "UIs/Create/" .. curData:GetCfg().icon1 .. "/bg", true, function()

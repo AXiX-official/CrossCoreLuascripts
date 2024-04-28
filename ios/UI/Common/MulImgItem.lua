@@ -34,14 +34,14 @@ end
 -- @_needFace:
 -- @return 
 -- ==============================--
-function Refresh(_modelId, _posType, _callBack)
+function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
     if (not isInit and _modelId == nil) then
         return
     end
     cfgID = _modelId
     posType = _posType
     callBack = _callBack
-
+    isUseShopImg = _isUseShopImg
     -- 重置点击记录
     if (oldModelId) then
         if (oldModelId ~= _modelId) then
@@ -68,7 +68,7 @@ function SetImg()
     scale = scale * rate
 
     cfg = Cfgs.CfgArchiveMultiPicture:GetByID(cfgID)
-    ResUtil.MultiImg:Load(imgObj, cfg.img, nil, true)
+    ResUtil.MultiImg:Load(imgObj, isUseShopImg and cfg.img_replace or cfg.img, nil, true)
     CSAPI.SetAnchor(imgObj, pos.x, pos.y, pos.z)
     CSAPI.SetScale(imgObj, scale, scale, 1)
     if (callBack) then

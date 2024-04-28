@@ -17,6 +17,7 @@ function this:SetData(cfg)
     self.logs = nil -- 保存的列表   sCardCreateLog
     self.last_op = nil -- 最后一次数据，中途重登时使用，如果没有，则从logs中获取
     self.isSave = false -- 当前抽卡结果是否已保存到logs
+    self.isDy = false
 end
 
 function this:GetCfg()
@@ -120,6 +121,9 @@ function this:RefreshInfo()
 end
 -- 卡池开放时间
 function this:GetStartTime()
+    if (self:CheckIsDy()) then
+        return nil
+    end
     if (self.cfg.sStart == nil) then
         return nil
     else
@@ -128,6 +132,12 @@ function this:GetStartTime()
 end
 -- 卡池是否已开放
 function this:CheckIsStart()
+    if (self:CheckIsDy()) then
+        if (TimeUtil:GetTime() < self.dyEndTime) then
+            return true
+        end
+        return false
+    end
     local _time = self:GetStartTime()
     if (_time and TimeUtil:GetTime() < _time) then
         return false
@@ -137,6 +147,9 @@ end
 
 -- 卡池结束时间
 function this:GetEndTime()
+    if (self:CheckIsDy()) then
+        return self.dyEndTime
+    end
     if (self.cfg.sEnd == nil) then
         return nil
     else
@@ -146,6 +159,12 @@ end
 
 -- 卡池是否已关闭
 function this:CheckIsEnd()
+    if (self:CheckIsDy()) then
+        if (TimeUtil:GetTime() >= self.dyEndTime) then
+            return true
+        end
+        return false
+    end
     local _time = self:GetEndTime()
     if (_time and TimeUtil:GetTime() >= _time) then
         return true
@@ -192,6 +211,20 @@ end
 -- 当前第几次
 function this:GetCurCount()
 
+end
+----------------------------------动态卡池-------------------------------------------
+
+function this:InitDyOpenPool(endTime)
+    self.isDy = true
+    self.dyEndTime = TimeUtil:GetBJTime(endTime) 
+end
+
+-- 是否是动态卡池
+function this:CheckIsDy()
+    return self.isDy
+end
+function this:GetDyEndTime()
+    return self.dyEndTime
 end
 
 return this

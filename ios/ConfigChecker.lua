@@ -1064,10 +1064,26 @@ function ConfigChecker:CfgCardPool(cfgs)
                     ASSERT(false, string.format('CfgCardPool 配置表 id :%s 中的 childIds 字段的子id:%s 在配置表中找不到', id, cid))
                 end
             end
+
+            if cfg.nType ~= CardPoolType.GobalCreateCnt then
+                ASSERT(false, string.format('CfgCardPool 配置表 id :%s 的卡池类型应该为3', id))
+            end
         end
 
-        if cfg.type == 1 and not cfg.nSort then
+        if cfg.nType == CardPoolType.JustFinish and not cfg.nSort then
             ASSERT(false, string.format('CfgCardPool 配置表 id :%s 中的 nSort 为空', id))
+        end
+
+        if cfg.nType == CardPoolType.FixTimeFirstLogin then
+            if not cfg.duration or cfg.duration < 1 then
+                ASSERT(false, string.format('CfgCardPool 配置表 id :%s 中的 duration 不允许为 %s', id, cfg.duration))
+            end
+
+            if not cfg.plrCreateTime then
+                ASSERT(false, string.format('CfgCardPool 配置表 id :%s 中的 plrCreateTime 为空', id))
+            end
+
+            cfg.nPlrCreateTime = GCalHelp:GetTimeStampBySplit(cfg.plrCreateTime, cfg)
         end
 
         -- 查看奖励
@@ -1105,6 +1121,9 @@ function ConfigChecker:CfgCardPool(cfgs)
         if cfg.sel_card_ids then
             table.sort(cfg.sel_card_ids)
         end
+
+        cfg.nStart = GCalHelp:GetTimeStampBySplit(cfg.sStart, cfg)
+        cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.sEnd, cfg)
     end
 end
 
