@@ -21,7 +21,7 @@ function Init(_playCB, _endCB, _needClick)
 end
 
 -- _force 强制l2d显示或者隐藏
-function Refresh(_modelId, _posType, _callBack, _force)
+function Refresh(_modelId, _posType, _callBack, _force,_isUseShopImg)
     if (not isInit and _modelId == nil) then
         return
     end
@@ -30,6 +30,7 @@ function Refresh(_modelId, _posType, _callBack, _force)
     posType = _posType
     callBack = _callBack
     cfg = Cfgs.CfgArchiveMultiPicture:GetByID(modelId)
+    isUseShopImg=_isUseShopImg
     if (not cfg.l2dName) then
         isLive2D = false
     else
@@ -70,7 +71,7 @@ function AddImgItem(isAdd)
     else
         CSAPI.SetGOActive(imgItemLua.gameObject, true)
     end
-    imgItemLua.Refresh(modelId, posType, callBack)
+    imgItemLua.Refresh(modelId, posType, callBack,isUseShopImg)
 end
 
 -- live2d

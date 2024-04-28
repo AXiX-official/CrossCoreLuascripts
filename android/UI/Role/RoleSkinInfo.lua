@@ -142,28 +142,50 @@ end
 -- 非突破类型皮肤，是否出售中
 function this:IsInSell()
     if (not self:CheckIsNotBreakType()) then
-        return false 
+        return false
     end
     local shopId = self:GetCfg().shopId
     local cfg = shopId and Cfgs.CfgCommodity:GetByID(shopId) or nil
     if (cfg) then
         local curTime = TimeUtil:GetTime()
-        local startTime = cfg.sBuyStart and TimeUtil:GetTimeStampBySplit(cfg.sBuyStart) or nil
-        local sBuyEnd = cfg.sBuyEnd and TimeUtil:GetTimeStampBySplit(cfg.sBuyEnd) or nil
-        if (startTime and curTime < startTime) then
-            return false
+        -- local startTime = cfg.sBuyStart and TimeUtil:GetTimeStampBySplit(cfg.sBuyStart) or nil
+        -- local sBuyEnd = cfg.sBuyEnd and TimeUtil:GetTimeStampBySplit(cfg.sBuyEnd) or nil
+        local itemData = ShopMgr:GetFixedCommodity(shopId)
+        if (itemData and itemData:GetNowTimeCanBuy() and itemData:IsShow()) then
+            return true 
         end
-        if (sBuyEnd and curTime > sBuyEnd) then
-            return false
-        end
-        return true
     end
     return false
 end
 
---皮肤类型
+-- 皮肤类型
 function this:GetSkinType()
     return self:GetCfg().skinType or 0
+end
+
+-- CardSkinType
+function this:GetType()
+    return self.type
+end
+
+-- 是否是商店物品
+function this:CheckIsShopItem()
+    return self:GetCfg().shopId ~= nil
+end
+
+-- 和谐中
+function this:IsHX()
+    if (not self:CheckCanUse() and self:CheckIsShopItem()) then
+        local cfg = Cfgs.CfgCommodity:GetByID(self:GetCfg().shopId)
+        if (cfg and cfg.isShowImg == 1) then
+            return true
+        end
+    end
+    return false
+end
+
+function this:GetTxt()
+    return self:GetCfg().get_txt
 end
 
 return this

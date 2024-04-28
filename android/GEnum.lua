@@ -1,4 +1,3 @@
-
 -- 将名字与数值反向关联，就可以实用数值返回枚举值的名字
 function GenEnumNameByVal(name, enums)
     local tmpTb = {}
@@ -1192,7 +1191,7 @@ PlrMixIx.selCardIx = 28
 PlrMixIx.selCardVId = 29
 PlrMixIx.icon_id_grid = 30
 PlrMixIx.rewardMustUseCnt = 31
-PlrMixIx.cardInfo = 32 -- 如果重新弃用重命名，或者增加，需要移出去
+PlrMixIx.cardInfo = 32 -- 如果重新启用重命名，或者增加，需要移出去
 PlrMixIx.freeArmyWin = 33
 PlrMixIx.freeArmyLost = 34
 PlrMixIx.uniqueMailId = 35
@@ -1212,7 +1211,9 @@ PlrMixIx.taoFaCountBuyCnt = 48 -- taoFaCountBuyCnt
 PlrMixIx.modHotLastTime = 49 -- 特殊掉落的最后活动时间
 PlrMixIx.modHot = 50 -- 特殊掉落的活动时间内累计消耗的体力值
 PlrMixIx.fixTmpDupTowerBug = 51 -- 爬塔新任务记录异常
+PlrMixIx.icon_frame = 52 -- 头像框
 PlrMixIx.arachnid_count = 53 -- 购买蛛影迷城入场券
+PlrMixIx.tSetName = 54 -- 设置名字时间，首次
 
 -- 图鉴
 ArchiveType = {}
@@ -1272,7 +1273,6 @@ eRecordType.ArmyCalFinishIx = 18 -- [军演服使用] 结算进度值
 eRecordType.ArmyCalFinishOnceCnt = 19 -- [军演服使用] 结算进度值，每次结算的人数
 eRecordType.ArmyCalFinishUseTime = 20 -- [军演服使用] 结算使用的时间戳
 
-
 GmInitPlrType = {}
 GmInitPlrType.Item = 1 -- 物品
 GmInitPlrType.Card = 2 -- 卡牌
@@ -1311,7 +1311,7 @@ SettingFightSimpleType.Close = 2 -- 关闭
 
 SettingWindowType = {}
 SettingWindowType.Main = 1 --主界面
-SettingWindowType.Reset = 2--重置密码
+SettingWindowType.Reset = 2 --重置密码
 SettingWindowType.Account = 3 --账号管理
 SettingWindowType.LogoutCode = 4 --注销账号验证码
 SettingWindowType.Success = 5 --注销成功
@@ -1382,12 +1382,27 @@ PayType.WeChat = 2 -- 微信
 PayType.BiliBili = 3 -- BiliBili
 PayType.Qoo = 4 -- Qoo
 PayType.IOS = 5 -- ios
-PayType.AlipayQR=6--支付宝扫码
-PayType.WeChatQR=7--微信扫码
-PayType.BsAli=8--聚合支付-支付宝
+PayType.AlipayQR = 6 --支付宝扫码
+PayType.WeChatQR = 7 --微信扫码
+PayType.BsAli = 8 --聚合支付-支付宝
 
 GenEnumNameByVal('PayTypeName', PayType)
 
-PaySelectConf={}
-PaySelectConf.Default=1 --默认支付方式
-PaySelectConf.BsAli=2 --启用聚合支付替换支付宝支付
+PaySelectConf = {}
+PaySelectConf.Default = 1 --默认支付方式
+PaySelectConf.BsAli = 2 --启用聚合支付替换支付宝支付
+
+OpenRuleType = {}
+OpenRuleType.Lv = 1 -- 1：等级
+OpenRuleType.DupId = 2 -- 2：关卡
+OpenRuleType.NewPlrSetp = 3 -- 3：新手步骤( 基地开启不支持这个类型)
+OpenRuleType.Add = 4 -- 4：购买等其他外部添加
+
+
+CardPoolType = {}
+CardPoolType.JustFinish = 1 -- 1：直接获取
+CardPoolType.WaitFinish = 2 -- 2：需要建造时间
+CardPoolType.GobalCreateCnt = 3 -- 3：全服抽卡次数开启
+CardPoolType.FixTimeFirstLogin = 4 -- 4：固定时间后首次登录开启
+
+

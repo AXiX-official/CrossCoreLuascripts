@@ -1768,7 +1768,6 @@ function GCalHelp:GetCardPoolSelectId(cardPoolCfg)
     return cardPoolCfg.id
 end
 
-
 function GCalHelp:Clock()
     return math.floor(os.clock() * 1000)
 end
@@ -1776,6 +1775,16 @@ end
 function GCalHelp:FindObjArrByKey(arr, key, val)
     for _, info in ipairs(arr) do
         if info[key] == val then
+            return info
+        end
+    end
+
+    return nil
+end
+
+function GCalHelp:FindArrByFor(arr, val)
+    for _, info in ipairs(arr) do
+        if info == val then
             return info
         end
     end

@@ -30,6 +30,12 @@ function OnOpen()
 end
 --等待入场动画结束，暂停，关闭点击遮罩
 function OnPlayEnterComplete()
+    if(FightActionUtil:IsHangup())then
+        OnClickExit();
+        return;        
+    end
+
+
     SetClickMaskState(false);
     FightClient:SetPauseState(true);
 end

@@ -20,9 +20,20 @@ function this:Clear()
     self.newSkins = {}
 end
 
--- 获取皮肤列表(已混合变身、同调的皮肤)
-function this:GetDatas(cfgid)
-    return self.datas[cfgid]
+-- 获取皮肤列表(已混合变身、同调的皮肤) --- 默认不包含解禁的皮肤
+function this:GetDatas(cfgid, containJieJin)
+    if (containJieJin) then
+        return self.datas[cfgid]
+    else
+        local dic = {}
+        local _dic = self.datas[cfgid]
+        for k, v in pairs(_dic) do
+            if (v:GetType() ~= CardSkinType.JieJin) then
+                dic[k] = v 
+            end
+        end
+        return dic
+    end
 end
 
 -- 获取某张卡牌某个皮肤的对象

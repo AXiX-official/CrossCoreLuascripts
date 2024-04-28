@@ -1151,9 +1151,9 @@ GameMsg.map["PlayerProto:CardFactoryInfo"] = {
 	{ },
 }
 GameMsg.map["PlayerProto:CardFactoryInfoRet"] = {
-	--是否已经首次十连     保底设置(id：卡池id, num:已中次数 ,type:设置的保底卡牌) 今日抽卡次数    服务器累计抽卡次数 建造次数(卡池id,建造次数) 建造中的             等待中的             完成                 
-	{ "map|sFirstCreateInfo|card_pool_id","map|sNumInfo|id",   "ushort",       "list|sNumInfo",   "json",               "list|sCardCreateInfo","list|sCardCreateInfo","list|sCardCreateInfo",},
-	{ "firt_create_infos", "sel_infos",         "daily_use_cnt","sum_pool_cnts",   "create_cnts",        "buildings",         "waitings",          "finishs",           },
+	--是否已经首次十连     保底设置(id：卡池id, num:已中次数 ,type:设置的保底卡牌) 今日抽卡次数    服务器累计抽卡次数 建造次数(卡池id,建造次数) 动态开启的卡池 建造中的             等待中的             完成                 
+	{ "map|sFirstCreateInfo|card_pool_id","map|sNumInfo|id",   "ushort",       "list|sNumInfo",   "json",               "json",        "list|sCardCreateInfo","list|sCardCreateInfo","list|sCardCreateInfo",},
+	{ "firt_create_infos", "sel_infos",         "daily_use_cnt","sum_pool_cnts",   "create_cnts",        "dy_open_pool","buildings",         "waitings",          "finishs",           },
 }
 GameMsg.map["PlayerProto:CardPoolOpen"] = {
 	--服务器累计抽卡次数 

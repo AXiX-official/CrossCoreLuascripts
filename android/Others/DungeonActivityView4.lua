@@ -119,7 +119,9 @@ end
 
 function OnDestroy()
     if not FightClient:IsFightting() then --不在战斗中关闭界面时重播bgm
-        CSAPI.ReplayBGM(lastBGM)
+        FuncUtil:Call(function ()
+            CSAPI.ReplayBGM(lastBGM)
+        end,this,300)
     end
     
     eventMgr:ClearListener()

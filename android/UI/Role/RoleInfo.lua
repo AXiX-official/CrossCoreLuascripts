@@ -39,8 +39,9 @@ function OpenAnim(b)
     CSAPI.SetGOActive(mask, b)
     CSAPI.SetGOActive(anim_open, b)
     timer = b and Time.time + 0.7 or nil
-
-    isFirst = true
+    if(b)then 
+        isFirst = true
+    end 
 end
 
 function OnInit()
@@ -58,8 +59,8 @@ function OnInit()
     end)
     -- 更换装备 --改为监听 RoleEquip 界面的关闭
     eventMgr:AddListener(EventType.Equip_Change, function()
-        RefreshPanel()
         OpenAnim(true)
+        RefreshPanel()
     end)
 
     --卸载装备
@@ -88,8 +89,8 @@ function OnViewClosed(viewKey)
     end
     -- if (viewKey == "RoleEquip" or viewKey == "RoleCenter") then
     if (viewKey == "RoleCenter") then
-        RefreshPanel()
         OpenAnim(true)
+        RefreshPanel()
     end
 end
 
@@ -97,8 +98,8 @@ function OnOpen()
     -- openSetting = openSetting == nil and RoleInfoOpenType.LookSelf or openSetting --todo 
     cardData = data
 
-    RefreshPanel()
     OpenAnim(true)
+    RefreshPanel()
 end
 
 function RefreshPanel()
@@ -188,8 +189,10 @@ function SetRole()
         CSAPI.SetGOActive(iconParent, true)
         if (isFirst) then
             isFirst = false
-            UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
-            UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
+            if(iconNode~=nil) then 
+                UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
+                UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
+            end 
         end
     end, cardData:GetSkinIsL2d())
 end

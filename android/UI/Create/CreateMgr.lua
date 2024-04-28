@@ -65,6 +65,8 @@ function this:CheckPoolActive(_poolId)
     local v = self:GetData(_poolId)
     if (v and v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
         return true
+    elseif(v:GetCfg().nType == 4 and not v:CheckIsEnd()) then 
+        return true 
     end
     return false
 end
@@ -74,6 +76,8 @@ function this:GetArr()
     local arr = {}
     for i, v in pairs(self.datas) do
         if (v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
+            table.insert(arr, v)
+        elseif(v:GetCfg().nType == 4 and not v:CheckIsEnd()) then 
             table.insert(arr, v)
         end
     end
@@ -88,7 +92,7 @@ end
 -- 刷新时间点
 function this:GetRefreshTime()
     local minStartTime, minEndTime = nil, nil
-    local arr = self.datas or {} --self:GetArr()
+    local arr = self.datas or {} -- self:GetArr()
     if (arr) then
         local curTime = TimeUtil:GetTime()
         for i, v in pairs(arr) do
@@ -179,6 +183,16 @@ function this:CardFactoryInfoRet(proto)
     -- for i, v in pairs(self.create_cnts) do
     -- 	self:RemoveData(i)
     -- end
+
+    -- 动态开启的卡池
+    self.dy_open_pool = proto.dy_open_pool -- 动态开启的卡池
+    if (self.dy_open_pool) then
+        for k, v in pairs(self.dy_open_pool) do
+            if (type(k) == "number" and self.datas[k] ~= nil) then
+                self.datas[k]:InitDyOpenPool(v[1])
+            end
+        end
+    end
 end
 
 -- 获取首次抽卡logs
@@ -223,7 +237,7 @@ function this:CardCreateFinishRet(proto)
     _datas.lottery_id = curData:GetCfg().sName
     _datas.lottery_hero = self_info and self_info.num or "无保底角色"
     _datas.add_num = self:GetCreateCnt(proto.card_pool_id)
-    _datas.item_gain = proto.infos--{}
+    _datas.item_gain = proto.infos -- {}
     -- for i, v in ipairs(proto.infos) do
     --     for k, m in ipairs(v.items) do
     --         table.insert(_datas.item_gain, m)
@@ -257,7 +271,7 @@ function this:FirstCardCreateRet(proto)
     _datas.lottery_id = curData:GetCfg().sName
     _datas.lottery_hero = self_info and self_info.num or "无保底英雄"
     _datas.add_num = proto.create_cnt
-    _datas.item_gain = proto.hadGetLog --{}
+    _datas.item_gain = proto.hadGetLog -- {}
     -- for i, v in ipairs(proto.hadGetLog) do
     --     table.insert(_datas.item_gain, v)
     -- end

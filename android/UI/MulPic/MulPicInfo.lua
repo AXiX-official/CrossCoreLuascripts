@@ -89,7 +89,7 @@ function this:IsShow()
         local sTime = self:GetCfg().sStart and TimeUtil:GetTimeStampBySplit(self:GetCfg().sStart) or nil
         local eTime = self:GetCfg().sEnd and TimeUtil:GetTimeStampBySplit(self:GetCfg().sEnd) or nil
         if ((sTime and curTime < sTime) or (eTime and eTime < curTime)) then
-            return false --不在显示时间内
+            return false -- 不在显示时间内
         end
     end
 
@@ -99,18 +99,16 @@ function this:IsShow()
         local cfg = shopId and Cfgs.CfgCommodity:GetByID(shopId) or nil
         if (cfg) then
             local curTime = TimeUtil:GetTime()
-            -- local startTime = cfg.sBuyStart and GCalHelp:GetTimeStampBySplit(cfg.sBuyStart) or nil
-            -- local sBuyEnd = cfg.sBuyEnd and GCalHelp:GetTimeStampBySplit(cfg.sBuyEnd) or nil
-            local startTime = cfg.sBuyStart and TimeUtil:GetTimeStampBySplit(cfg.sBuyStart) or nil
-            local sBuyEnd = cfg.sBuyEnd and TimeUtil:GetTimeStampBySplit(cfg.sBuyEnd) or nil
-            if (startTime and curTime < startTime) then
-                return false
+            -- local startTime = cfg.sBuyStart and TimeUtil:GetTimeStampBySplit(cfg.sBuyStart) or nil
+            -- local sBuyEnd = cfg.sBuyEnd and TimeUtil:GetTimeStampBySplit(cfg.sBuyEnd) or nil
+            local itemData = ShopMgr:GetFixedCommodity(shopId)
+            if (itemData) then
+                if (itemData and itemData:GetNowTimeCanBuy() and itemData:IsShow()) then
+                    return true 
+                end
             end
-            if (sBuyEnd and curTime > sBuyEnd) then
-                return false
-            end
-            return true
         end
+        return false 
     else
         -- 不是商品
         if (shopId ~= nil) then

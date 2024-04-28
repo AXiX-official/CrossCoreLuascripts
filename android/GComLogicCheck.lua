@@ -667,3 +667,38 @@ function GLogicCheck:CalArmyFinish(info, dfInfo, isWiner, ret)
 
     return ret
 end
+
+
+function GLogicCheck:IsPassRule(ruleId, plr, itemId)
+    if not ruleId or ruleId == 0 then
+        return true
+    end
+
+    local cfg = CfgOpenRules[ruleId]
+    if not cfg then
+        return false, cfg
+    end
+
+    -- OpenRuleType = {}
+    -- OpenRuleType.Lv = 1 -- 1：等级
+    -- OpenRuleType.DupId = 2 -- 2：关卡
+    -- OpenRuleType.NewPlrSetp = 3 -- 3：新手步骤( 基地开启不支持这个类型)
+    -- OpenRuleType.Add = 4 -- 4：购买等其他外部添加
+
+    if cfg.type == OpenRuleType.Lv then
+        return plr:Get('level') >= cfg.val, cfg
+    end
+
+    if cfg.type == OpenRuleType.DupId then
+        return plr:IsPassDup(cfg.val), cfg
+    end
+
+    if cfg.type == OpenRuleType.Add then
+        return itemId == cfg.val, cfg
+    end
+
+    return false, cfg
+end
+
+
+

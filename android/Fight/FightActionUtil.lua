@@ -241,6 +241,10 @@ function this:SetServerDatasHangUpState(isHangUp)
     end
 end
 
+function this:IsHangup()
+    return self.hangupArr;
+end
+
 function this:HangupFightResult(fightResultData)
     if(self.hangupArr)then
         self.fightResultData = fightResultData;
