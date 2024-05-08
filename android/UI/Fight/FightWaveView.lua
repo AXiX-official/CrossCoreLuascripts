@@ -11,6 +11,8 @@ function OnOpen()
     FuncUtil:Call(Close,nil,3000);
 
     CSAPI.PlayUISound("ui_battle_switch_level");
+
+    FightClient:SetPauseState(false);
 end
 
 

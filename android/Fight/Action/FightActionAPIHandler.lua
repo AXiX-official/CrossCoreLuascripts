@@ -16,8 +16,8 @@ function this:Handle(effEventData)
         self.effFuncArr[APIType.DeleteShield] = self.HandleDeleteShield;
 
         self.effFuncArr[APIType.AddHp] = self.EffAction_AddHp;
-        --self.effFuncArr[APIType.AddMaxHpPercent] = self.EffAction_AddHp;
-        self.effFuncArr[APIType.SetHP] = self.EffAction_SetHp;        
+        self.effFuncArr[APIType.SetHP] = self.EffAction_SetHp;    
+        self.effFuncArr[APIType.RestoreHP] = self.EffAction_SetHp;    
         self.effFuncArr[APIType.AddNP] = self.EffAction_AddNP;
         self.effFuncArr[APIType.AddSP] = self.EffAction_AddSP;
         self.effFuncArr[APIType.AddXP] = self.EffAction_AddXP;
@@ -174,7 +174,6 @@ function this:EffAction_SetHp(effEventData)
     end
 end
 
-
 --加NP
 function this:EffAction_AddNP(effEventData)
 --    LogError("NP变化");
@@ -328,10 +327,15 @@ function this:EffAction_ShowTips(effEventData)
     local targetId = effEventData.targetID;         
     local targetCharacter = CharacterMgr:Get(targetId);
     if(targetCharacter)then   
+        local content = effEventData.content;
+        if(effEventData.id)then
+            local cfgFloatFont = Cfgs.FloatFont:GetByID(effEventData.id);
+            content = cfgFloatFont.show;
+        end
         if(effEventData.type == 1)then
-            targetCharacter.CreateFloatFont(nil,nil,nil,effEventData.content);   
+            targetCharacter.CreateFloatFont(nil,nil,nil,content);   
         else     
-            EventMgr.Dispatch(EventType.Fight_Trigger_Event_Update,{ character = targetCharacter,desc = effEventData.content});
+            EventMgr.Dispatch(EventType.Fight_Trigger_Event_Update,{ character = targetCharacter,desc = content});
         end
     end
 end
@@ -359,9 +363,13 @@ function this:EffAction_Custom(effEventData)
         if(effEventData.action == "play_ani")then
             local stateName = effEventData.param.name;
             targetCharacter.EnterState(stateName);
+--        elseif(effEventData.action == "play_plot")then 
+--            local plotId = effEventData.param.id;
+--            PlotMgr:TryPlay(plotId,nil,nil,true);
         end
     end
 end
+
 
 
 --API飘字

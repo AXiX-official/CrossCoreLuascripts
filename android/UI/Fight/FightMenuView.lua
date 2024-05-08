@@ -32,6 +32,7 @@ end
 function OnPlayEnterComplete()
     if(FightActionUtil:IsHangup())then
         OnClickExit();
+        FightClient:SetPauseState(false);
         return;        
     end
 
