@@ -71,6 +71,8 @@ APIType =
     AddHp = "AddHp",
     --设置HP
     SetHP = "SetHP",
+    --回满血
+    RestoreHP = "RestoreHP",    
     --加蓝
     AddNP = "AddNp",
     --加同步率
@@ -352,6 +354,9 @@ function this:GetAPIHandler(apiName)
         self.handers[APIType.AddHp] = apiHandler;
         --设置HP
         self.handers[APIType.SetHP] = apiHandler;
+        --回满血
+        self.handers[APIType.RestoreHP] = apiHandler;
+        
         --加蓝
         self.handers[APIType.AddNP] = apiHandler;
         --加同步率
