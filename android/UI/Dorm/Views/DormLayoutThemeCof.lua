@@ -49,6 +49,14 @@ end
 -- 主题对应的家具是否齐全 todo
 -- local b = DormMgr:CheckEnoughByThemeID(curThemeType, themeData.id)
 function OnClickB()
+    local roleNum = DormMgr:GetCurRoomData():GetNum()
+    local handNun = 256 - roleNum
+    local fNum = DormMgr:GetSaveThemeGridNun(themeData.id)
+    if(fNum>=handNun) then 
+        LanguageMgr:ShowTips(21035)
+        return  
+    end 
+    -- 
     EventMgr.Dispatch(EventType.Dorm_Theme_Change, {ThemeType.Save, themeData})
     LanguageMgr:ShowTips(21026)
     view:Close()

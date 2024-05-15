@@ -871,7 +871,7 @@ function OnRedPointRefresh()
         if(_pData ~= nil or _pData2 ~= nil) then 
             _isRed = true 
         end 
-        UIUtil:SetRedPoint2(menuRedPath, btnPlayerView,_isRed, 168, 30, 0)
+        UIUtil:SetRedPoint2(menuRedPath, btnPlayerView,_isRed, 169.4, -6.1, 0)
     end
     -- -- 新皮肤（看板）
     -- local _data = RedPointMgr:GetData(RedPointType.CRoleSkin)

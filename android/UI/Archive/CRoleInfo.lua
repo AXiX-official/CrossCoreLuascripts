@@ -164,6 +164,10 @@ function this:GetFirstCardId()
     return self.cfg.id
 end
 
+function this:GetBaseModel()
+    return self.cfgModel
+end
+
 function this:GetCurModel()
     local cardData = RoleMgr:GetData(self:GetFirstCardId())
     if (cardData) then
