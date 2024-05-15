@@ -36,8 +36,6 @@ function InitListener()
 	eventMgr:AddListener(EventType.SDK_Pay_Result,OnSDKResult);
 	eventMgr:AddListener(EventType.SDK_QRPay_Over,OnQROver)
 	eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopRefresh)
-	eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpen)
-	eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClose)
 end
 
 function OnDestroy()
@@ -250,7 +248,7 @@ function OnClickDetails()
 		local good=getList[1];
 		local type = good.data:GetType();
 		if type==ITEM_TYPE.PANEL_IMG then--多人插图,特殊处理
-			CSAPI.OpenView("MulPictureView",good.data:GetDyVal1(),commodity:IsShowImg() and 1 or 0);
+			CSAPI.OpenView("MulPictureView",{id=good.data:GetDyVal1(),showMask=true},commodity:IsShowImg() and 1 or 0);
 		end
 	end
 end
@@ -342,19 +340,6 @@ function SetMaxNum()
 	end
 end
 
-function OnViewOpen(key)
-	if key=="MulPictureView" then
-		--预览时隐藏
-		CSAPI.SetAnchor(gameObject,100000,100000);
-	end
-end
-
-function OnViewClose(key)
-	if key=="MulPictureView" then
-		--关闭预览时显示
-		CSAPI.SetAnchor(gameObject,0,0);
-	end
-end
 
 function Close()
 	UIUtil:HideAction(childNode, function()

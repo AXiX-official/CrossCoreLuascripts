@@ -33,7 +33,8 @@ function this:UpdateGoodsData(data, setNew)
         local goodsData = self:GetData(data.id);
         if (goodsData) then
             if (data.num and data.num <= 0) then
-                -- 移除                
+                -- 移除            
+                goodsData:GetData().num = data.num --头像相关会继续调用数量进行判断       
                 self:RemoveGoods(data.id);
             else
                 -- 更新
@@ -49,6 +50,12 @@ function this:UpdateGoodsData(data, setNew)
                 self:SetNewState(data.id, true);
             end
         end
+        if(goodsData:GetItemType()==ITEM_TYPE.ICON_FRAME) then 
+            HeadFrameMgr:UpdateGoodsData(goodsData,setNew)
+        end 
+        if(goodsData:GetItemType()==ITEM_TYPE.ICON) then 
+            HeadIconMgr:UpdateGoodsData(goodsData,setNew)
+        end 
     end
 end
 

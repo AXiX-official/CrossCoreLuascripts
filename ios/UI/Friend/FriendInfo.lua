@@ -160,4 +160,8 @@ function this:GetSign()
 	return self.sign or ""
 end
 
+function this:GetFrameId()
+	return self.icon_frame or 1
+end
+
 return this 

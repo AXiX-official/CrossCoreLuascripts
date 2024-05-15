@@ -38,5 +38,5 @@ function Skill23201:OnCure(caster, target, data)
 		return
 	end
 	-- 232010
-	self:ShowTips(SkillEffect[232010], caster, self.card, data, 2,"复苏",true)
+	self:ShowTips(SkillEffect[232010], caster, self.card, data, 2,"复苏",true,232010)
 end

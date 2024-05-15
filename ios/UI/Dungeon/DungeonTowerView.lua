@@ -79,7 +79,6 @@ function InitInfo()
     if (itemInfo == nil) then
         ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)
             itemInfo.SetClickMaskCB(OnClickBack)
         end)
@@ -111,10 +110,10 @@ function OnBattleEnter()
 end
 
 function EnterNextView(_item)
-    if (itemInfo.IsCanAIMove()) then -- 自动寻路
-        BattleMgr:SetAIMoveState(itemInfo.IsAIMove())
-    end
-    DungeonMgr:ShowAIMoveBtn(itemInfo.IsCanAIMove() and itemInfo.IsAIMove())
+    -- if (itemInfo.IsCanAIMove()) then -- 自动寻路
+    --     BattleMgr:SetAIMoveState(itemInfo.IsAIMove())
+    -- end
+    -- DungeonMgr:ShowAIMoveBtn(itemInfo.IsCanAIMove() and itemInfo.IsAIMove())
     -- 进入副本前编队
     if _item.GetCfg() and _item.GetCfg().arrForceTeam ~= nil then -- 强制上阵编队
         CSAPI.OpenView("TeamForceConfirm", {
@@ -215,7 +214,7 @@ end
 function ShowItems(datas)
     if datas and #datas > 0 then
         startIndex = 1
-        if startIndex < 3 then
+        if #datas < 3 then
             startIndex = #datas % 2 == 1 and 2 or 1.5
         end
         -- startIndex = 1
@@ -274,7 +273,6 @@ function ClickItemCB1(item)
     currItem1 = item
     currItem1.SetSelect(true)
 
-    -- itemInfo.Show(currItem1)
     scrollRect.enabled = false
     local index = item.GetIndex()
     MoveToIndex(index, function()
@@ -387,7 +385,7 @@ function ClickItemCB2(item)
     currItem2.SetSelect(true)
     selIndex = currItem2.index
     if itemInfo then
-        itemInfo.Show(item)
+        itemInfo.Show(item.GetCfg(), DungeonInfoType.Tower)
     end
 end
 -----------------------------------------------anim-----------------------------------------------

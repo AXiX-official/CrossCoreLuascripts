@@ -43,7 +43,7 @@ function Skill20501:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 205010
-	self:ShowTips(SkillEffect[205010], caster, self.card, data, 2,"重击",true)
+	self:ShowTips(SkillEffect[205010], caster, self.card, data, 2,"重击",true,205010)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -62,5 +62,5 @@ function Skill20501:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 205010
-	self:ShowTips(SkillEffect[205010], caster, self.card, data, 2,"重击",true)
+	self:ShowTips(SkillEffect[205010], caster, self.card, data, 2,"重击",true,205010)
 end

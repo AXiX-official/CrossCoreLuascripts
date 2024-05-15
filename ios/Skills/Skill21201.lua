@@ -21,5 +21,5 @@ function Skill21201:OnDeath(caster, target, data)
 	-- 21201
 	self:AddNp(SkillEffect[21201], caster, self.card, data, 5)
 	-- 212010
-	self:ShowTips(SkillEffect[212010], caster, self.card, data, 2,"收割",true)
+	self:ShowTips(SkillEffect[212010], caster, self.card, data, 2,"收割",true,212010)
 end

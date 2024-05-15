@@ -218,7 +218,8 @@ function SetCurSelectPanel()
         -- in
         local roomName = curData:GetRoomNama() or "——"
         if (roomName ~= "——") then
-            roomName = LanguageMgr:GetByID(32002) .. roomName
+            local inBuilding = curData:IsInBuilding()
+            roomName = not inBuilding and (LanguageMgr:GetByID(32002) .. roomName) or roomName
         end
         CSAPI.SetText(txtIn, string.format("%s", roomName))
         -- skills
@@ -507,17 +508,35 @@ function OnClickSure()
         if (showTips) then
             local str = LanguageMgr:GetTips(languageID)
             UIUtil:OpenDialog(str, function()
-                BuildingProto:BuildSetRole(infos)
-                view:Close()
+                SetRoles(infos, curRoleIds)
             end, nil)
         else
-            BuildingProto:BuildSetRole(infos)
-            view:Close()
+            SetRoles(infos, curRoleIds)
         end
     else
         -- Tips.ShowTips("未发生改动")
         view:Close()
     end
+end
+
+function SetRoles(infos, curRoleIds)
+    if (not buildData) then
+        -- 宿舍
+        if (DormMgr:GetEmptyNum() > #curRoleIds) then
+            BuildingProto:BuildSetRole(infos)
+        else
+            FuncUtil:Call(function()
+                LanguageMgr:ShowTips(21034)
+            end, nil, 100)
+        end
+    else --if (presetIndex == buildData:GetCurPresetId()) then
+        -- 更改当前队伍
+        BuildingProto:BuildSetRole(infos)
+    --else
+        -- -- 仅预设
+        -- BuildingProto:BuildSetPresetRole(roomId, presetIndex, curRoleIds)
+    end
+    view:Close()
 end
 
 -- 技能无法重复（不同技能时判断repleaceType，相同技能时判断sameIsReplace） return true:不能重复

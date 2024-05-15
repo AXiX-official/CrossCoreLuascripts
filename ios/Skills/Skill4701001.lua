@@ -28,7 +28,7 @@ function Skill4701001:OnBefourHurt(caster, target, data)
 	-- 4701001
 	self:AddTempAttr(SkillEffect[4701001], caster, caster, data, "damage",-count18*0.003)
 	-- 4701007
-	self:ShowTips(SkillEffect[4701007], caster, self.card, data, 2,"战意",true)
+	self:ShowTips(SkillEffect[4701007], caster, self.card, data, 2,"战意",true,4701007)
 end
 -- 攻击结束
 function Skill4701001:OnAttackOver(caster, target, data)

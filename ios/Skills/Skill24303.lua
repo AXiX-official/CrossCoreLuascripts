@@ -27,6 +27,6 @@ function Skill24303:OnAfterHurt(caster, target, data)
 	if self:Rand(4000) then
 		self:OwnerAddBuffCount(SkillEffect[24303], caster, self.card, data, 24303,1,10)
 		-- 243010
-		self:ShowTips(SkillEffect[243010], caster, self.card, data, 2,"精准",true)
+		self:ShowTips(SkillEffect[243010], caster, self.card, data, 2,"精准",true,243010)
 	end
 end

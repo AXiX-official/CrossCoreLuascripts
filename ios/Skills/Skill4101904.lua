@@ -36,7 +36,7 @@ function Skill4101904:OnAfterHurt(caster, target, data)
 		self:AddHp(SkillEffect[4101911], caster, target, data, -math.floor(count80))
 	end
 	-- 4101906
-	self:ShowTips(SkillEffect[4101906], caster, self.card, data, 2,"同心协力",true)
+	self:ShowTips(SkillEffect[4101906], caster, self.card, data, 2,"同心协力",true,4101906)
 end
 -- 行动结束
 function Skill4101904:OnActionOver(caster, target, data)

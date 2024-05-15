@@ -26,5 +26,5 @@ function Skill20902:OnAfterHurt(caster, target, data)
 		return
 	end
 	-- 209010
-	self:ShowTips(SkillEffect[209010], caster, self.card, data, 2,"汲取",true)
+	self:ShowTips(SkillEffect[209010], caster, self.card, data, 2,"汲取",true,209010)
 end

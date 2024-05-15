@@ -21,5 +21,5 @@ function Skill4101803:OnRoundBegin(caster, target, data)
 	-- 4101803
 	self:Cure(SkillEffect[4101803], caster, self.card, data, 1,0.1)
 	-- 4101806
-	self:ShowTips(SkillEffect[4101806], caster, self.card, data, 2,"自我修复",true)
+	self:ShowTips(SkillEffect[4101806], caster, self.card, data, 2,"自我修复",true,4101806)
 end

@@ -43,7 +43,7 @@ function Skill20402:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 204010
-	self:ShowTips(SkillEffect[204010], caster, self.card, data, 2,"催眠",true)
+	self:ShowTips(SkillEffect[204010], caster, self.card, data, 2,"催眠",true,204010)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -62,5 +62,5 @@ function Skill20402:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 204010
-	self:ShowTips(SkillEffect[204010], caster, self.card, data, 2,"催眠",true)
+	self:ShowTips(SkillEffect[204010], caster, self.card, data, 2,"催眠",true,204010)
 end

@@ -1168,20 +1168,56 @@ function ConfigChecker:ItemInfo(cfgs)
         if cfg.sExpiry then
             cfg.nExpiry = GCalHelp:GetTimeStampBySplit(cfg.sExpiry, cfg)
         end
-
-        --if cfg.type == ITEM_TYPE.ICON_FRAME then
-        --    local frameCfg = AvatarFrame[cfg.dy_value2]
-        --    frameCfg.item_id = id
-        --elseif cfg.type == ITEM_TYPE.PROP then
-        --    if cfg.dy_value1 == PROP_TYPE.IconFrame then
-        --        local item_id = cfg.dy_arr[1]
-        --        local iconFrameItem = cfgs[item_id]
-        --        ASSERT(
-        --            iconFrameItem.type == ITEM_TYPE.ICON_FRAME,
-        --            string.format('道具id:%s的物品对应的头像框物品:%s，类型不对', id, item_id)
-        --        )
-        --    end
-        --end
+        if cfg.type == ITEM_TYPE.ICON_FRAME then
+            local frameCfg = AvatarFrame[cfg.dy_value2]
+            if frameCfg then
+                ASSERT(not frameCfg.item_id, string.format('该头像框id=%s已有对应的物品id=%s,头像框配置冲突', cfg.dy_value2, id))
+                frameCfg.item_id = id
+            else
+                ASSERT(false, string.format('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
+            end
+        elseif cfg.type == ITEM_TYPE.ICON then
+            local avatarCfg = CfgAvatar[cfg.dy_value2]
+            if avatarCfg then
+                ASSERT(not avatarCfg.item_id, string.format('该头像id=%s已有对应的物品id=%s,头像表配置冲突', cfg.dy_value2, id))
+                avatarCfg.item_id = id
+            else
+                ASSERT(false, string.format('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
+            end
+        elseif cfg.type == ITEM_TYPE.PROP then
+            if cfg.dy_value1 == PROP_TYPE.IconFrame then
+                local item_id = cfg.dy_arr[1]
+                local iconFrameItem = cfgs[item_id]
+                ASSERT(
+                    iconFrameItem.dy_value2 == cfg.dy_value2,
+                    string.format(
+                        '头像框道具id:%s的对应的头像框id:%s 与 使用后获得的头像框物品id:%s对应的头像框id：%s 不符',
+                        id,
+                        cfg.dy_value2,
+                        item_id,
+                        iconFrameItem.dy_value2
+                    )
+                )
+                ASSERT(
+                    iconFrameItem.type == ITEM_TYPE.ICON_FRAME,
+                    string.format('道具id:%s的物品对应的头像框物品:%s，类型不对', id, item_id)
+                )
+            elseif cfg.dy_value1 == PROP_TYPE.Icon then
+                local item_id = cfg.dy_arr[1]
+                local iconItem = cfgs[item_id]
+                ASSERT(
+                    iconItem.dy_value2 == cfg.dy_value2,
+                    string.format(
+                        '头像道具id:%s的对应的头像id:%s 与 使用后获得的头像物品id:%s对应的头像id：%s 不符',
+                        id,
+                        cfg.dy_value2,
+                        item_id,
+                        iconItem.dy_value2
+                    )
+                )
+                ASSERT(iconItem.type == ITEM_TYPE.ICON, string.format('道具id:%s的物品对应的头像物品:%s，类型不对', id, item_id))
+            end
+        end
 
         -- cfg.hide : 只导出了客户端
         if IS_CLIENT and not cfg.hide then
@@ -1198,6 +1234,22 @@ function ConfigChecker:ItemInfo(cfgs)
             elseif cfg.type == ITEM_TYPE.SKIN then
             end
         end
+    end
+end
+
+function ConfigChecker:AvatarFrame(cfgs)
+    for id, cfg in pairs(cfgs) do
+        -- id ==1 默认头像框，无对应物品id
+        if id ~= 1 then
+            ASSERT(cfg.item_id, string.format('头像框id:%s无对应的的物品id,配置不对', id))
+        end
+    end
+end
+
+function ConfigChecker:CfgAvatar(cfgs)
+    for id, cfg in pairs(cfgs) do
+        -- 道具头像要有对应的物品id
+        ASSERT(cfg.item_id, string.format('头像id:%s无对应的的物品id,配置不对', id))
     end
 end
 

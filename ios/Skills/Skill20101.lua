@@ -26,5 +26,5 @@ function Skill20101:OnBefourHurt(caster, target, data)
 	-- 20101
 	self:AddTempAttrPercent(SkillEffect[20101], caster, target, data, "defense",-0.15)
 	-- 201010
-	self:ShowTips(SkillEffect[201010], caster, self.card, data, 2,"穿甲",true)
+	self:ShowTips(SkillEffect[201010], caster, self.card, data, 2,"穿甲",true,201010)
 end

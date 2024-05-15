@@ -37,7 +37,7 @@ function Skill4600802:OnActionOver2(caster, target, data)
 	-- 92017
 	self:DelBufferForce(SkillEffect[92017], caster, self.card, data, 6111,2)
 	-- 4600807
-	self:ShowTips(SkillEffect[4600807], caster, self.card, data, 2,"意志力",true)
+	self:ShowTips(SkillEffect[4600807], caster, self.card, data, 2,"意志力",true,4600807)
 end
 -- 回合开始处理完成后
 function Skill4600802:OnAfterRoundBegin(caster, target, data)
@@ -65,5 +65,5 @@ function Skill4600802:OnAfterRoundBegin(caster, target, data)
 	-- 92017
 	self:DelBufferForce(SkillEffect[92017], caster, self.card, data, 6111,2)
 	-- 4600807
-	self:ShowTips(SkillEffect[4600807], caster, self.card, data, 2,"意志力",true)
+	self:ShowTips(SkillEffect[4600807], caster, self.card, data, 2,"意志力",true,4600807)
 end

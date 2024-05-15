@@ -39,7 +39,7 @@ function Skill4200702:OnDeath(caster, target, data)
 	-- 4200718
 	self:DelBuff(SkillEffect[4200718], caster, self.card, data, 200700104)
 	-- 4200720
-	self:ShowTips(SkillEffect[4200720], caster, self.card, data, 2,"回生",true)
+	self:ShowTips(SkillEffect[4200720], caster, self.card, data, 2,"回生",true,4200720)
 	-- 8611
 	local count611 = SkillApi:SkillLevel(self, caster, target,3,3239)
 	-- 8827

@@ -97,7 +97,7 @@ function IsShowAgain()
                 LogError("找不到关卡表章节数据！id：" .. cfgDungeon.group)
                 return false
             end
-            local openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+            local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
             if openInfo and not openInfo:IsDungeonOpen() then
                 isTimeOut = true
                 return false               

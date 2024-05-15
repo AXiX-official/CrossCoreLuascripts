@@ -57,11 +57,19 @@ function OnViewOpened(viewKey)
     if CheckView(viewKey) then
         CSAPI.SetGOActive(lastEffect, false)
     end
+    if viewKey == "Plot" then
+        CSAPI.SetGOActive(node,false)
+        CSAPI.SetGOActive(black,false)
+    end
 end
 
 function OnViewClosed(viewKey)
     if CheckView(viewKey) then
         CSAPI.SetGOActive(lastEffect, true)
+    end
+    if viewKey == "Plot" then
+        CSAPI.SetGOActive(node,true)
+        CSAPI.SetGOActive(black,true)
     end
 end
 
@@ -166,9 +174,9 @@ function OnOpen()
     InitState()
     if data then
         sectionData = DungeonMgr:GetSectionData(data.id)
-        openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+        openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if not openInfo then
-            LogError("缺少活动时间数据！id" .. sectionData:GetActiveOpenID())
+            LogError("缺少活动时间数据！id" .. sectionData:GetID())
             return
         end
         InitDatas()
@@ -335,24 +343,29 @@ function ShowInfo(item)
     if IsPlotItem(item) then
         return
     end
+    local cfg = item and item.GetCfg() or nil
+    local type = item and item.IsDanger() and DungeonInfoType.Danger or DungeonInfoType.Normal 
     SetWidth(isActive)
     if itemInfo == nil then
         ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo2", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)
-            itemInfo.OnClickSweep = OnClickSweep
+            itemInfo.SetBuyFunc(OnBuyFunc)
             itemInfo.SetIsActive(true)
-            itemInfo.Show(item)
-            if item then
-                itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
-            end
+            itemInfo.Show(cfg,type,function ()
+                if item then
+                    itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
+                    itemInfo.SetItemPos("Double",-166,-427)
+                end
+            end)
         end)
     else
-        itemInfo.Show(item)
-        if item then
-            itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
-        end
+        itemInfo.Show(cfg,type,function ()
+            if item then
+                itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
+                itemInfo.SetItemPos("Double",-166,-427)
+            end
+        end)
     end
 end
 
@@ -438,28 +451,7 @@ function OnBattleEnter()
             end
         end
     end
-    local isDouble = itemInfo.IsDouble()
-    local multiNum =  itemInfo.GetMultiNum()
-    local isFirstDouble = DungeonMgr:GetFisrtOpenDouble()
-    if (not isDouble and multiNum > 0 and not isFirstDouble and not currItem.IsDanger()) then
-        DungeonMgr:SetFisrtOpenDouble(true)
-        local dialogData = {}
-        local name = currItem:GetName()
-        dialogData.content = string.format(LanguageMgr:GetByID(15072), name, multiNum)
-        dialogData.okText = LanguageMgr:GetByID(1031)
-        dialogData.cancelText = LanguageMgr:GetByID(1003)
-        dialogData.okCallBack = function()
-            itemInfo.ShowDouble(true)
-            EnterNextView()
-        end
-        dialogData.cancelCallBack = function()
-            itemInfo.ShowDouble(false)
-            EnterNextView()
-        end
-        CSAPI.OpenView("Dialog", dialogData)
-    else
-        EnterNextView()
-    end
+    EnterNextView()
 end
 
 function OnPayFunc(count)
@@ -487,18 +479,9 @@ function EnterNextView()
     end
 end
 
-function OnClickSweep()
-    if not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-    if currItem then
-        local cfg = currItem:GetCfg()
-        itemInfo.OnSweepClick(cfg,function ()
-            local curCount = DungeonMgr:GetArachnidCount()
-            UIUtil:OpenPurchaseView(nil,nil,curCount,g_DungeonArachnidDailyBuy,g_DungeonArachnidDailyCost,g_DungeonArachnidGets,OnPayFunc)
-        end)
-    end
+function OnBuyFunc()
+    local curCount = DungeonMgr:GetArachnidCount()
+    UIUtil:OpenPurchaseView(nil,nil,curCount,g_DungeonArachnidDailyBuy,g_DungeonArachnidDailyCost,g_DungeonArachnidGets,OnPayFunc)
 end
 
 function OnClickBack()

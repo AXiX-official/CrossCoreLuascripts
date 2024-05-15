@@ -516,7 +516,7 @@ end
 function OnStarSweep()
     local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
     if sectionData then
-        local openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+        local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if openInfo and not openInfo:IsDungeonOpen() then
             LanguageMgr:ShowTips(24003)
             return

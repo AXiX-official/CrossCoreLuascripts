@@ -1,4 +1,4 @@
--- 反弹的意志
+-- 原初的巨人
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -57,5 +57,5 @@ function Skill922800601:OnActionOver(caster, target, data)
 	-- 922800602
 	self:AddHp(SkillEffect[922800602], caster, caster, data, math.floor(-count616*0.5))
 	-- 922800603
-	self:ShowTips(SkillEffect[922800603], caster, self.card, data, 2,"反伤",true)
+	self:ShowTips(SkillEffect[922800603], caster, self.card, data, 2,"反伤",true,922800603)
 end

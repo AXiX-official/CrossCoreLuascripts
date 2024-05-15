@@ -13,8 +13,8 @@ function this:Init()
 	self.had_del_cnt = 0
 	self.had_apply_cnt = 0
 	self:GetFriendsData()
-	
-	--服务器压力大，不要在登录的时候发送
+
+    --服务器压力大，不要在登录的时候发送
 	--self:GetRecomend()
 end
 
@@ -217,6 +217,7 @@ function this:GetAssistFormat(proto, card, index, isFull)
 		name = proto.name,
 		alias = proto.alias,
 		icon_id = proto.icon_id,
+		icon_frame=proto.icon_frame,
 		level = proto.level,
 		card = card,
 		assit_cnt = proto.assit_cnt,
@@ -594,7 +595,8 @@ function this:GetFriendFlush()
 		"is_online",
 		"level",
 		"uid",
-		"build_opens"
+		"build_opens",
+		"icon_frame"
 	}
 	self:GetFlush(fileds)
 end

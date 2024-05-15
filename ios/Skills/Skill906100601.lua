@@ -1,4 +1,4 @@
--- 突袭
+-- 钢体
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -26,4 +26,14 @@ function Skill906100601:OnAfterHurt(caster, target, data)
 	end
 	-- 906100601
 	self:AddBuffCount(SkillEffect[906100601], caster, target, data, 906100601,1,10)
+end
+-- 回合开始时
+function Skill906100601:OnRoundBegin(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 906100602
+	self:DelBufferForce(SkillEffect[906100602], caster, self.card, data, 906100601)
 end

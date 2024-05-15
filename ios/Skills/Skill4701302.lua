@@ -19,7 +19,7 @@ function Skill4701302:OnBorn(caster, target, data)
 		self:OwnerAddBuff(SkillEffect[4701302], caster, target, data, 4701302)
 	end
 	-- 4701307
-	self:ShowTips(SkillEffect[4701307], caster, self.card, data, 2,"丰盈之喜",true)
+	self:ShowTips(SkillEffect[4701307], caster, self.card, data, 2,"丰盈之喜",true,4701307)
 end
 -- 死亡时
 function Skill4701302:OnDeath(caster, target, data)
@@ -34,7 +34,7 @@ function Skill4701302:OnDeath(caster, target, data)
 		self:DelBufferTypeForce(SkillEffect[4701306], caster, target, data, 4701301)
 	end
 	-- 4701307
-	self:ShowTips(SkillEffect[4701307], caster, self.card, data, 2,"丰盈之喜",true)
+	self:ShowTips(SkillEffect[4701307], caster, self.card, data, 2,"丰盈之喜",true,4701307)
 end
 -- 特殊入场时(复活，召唤，合体)
 function Skill4701302:OnBornSpecial(caster, target, data)

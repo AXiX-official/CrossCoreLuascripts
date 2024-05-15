@@ -60,6 +60,14 @@ function this:GetIcon()
 	return self.cfg.icon;
 end
 
+function this:GetIcon1()
+	return self.cfg.icon1;
+end
+
+function this:GetIcon2()
+	return self.cfg.icon2;
+end
+
 function this:GetSectionBG()
 	return self.cfg.sBg;
 end
@@ -305,17 +313,23 @@ function this:GetOpenState()
 			lockStr = self.cfg.lock_desc
 		elseif self:GetSectionType() == SectionType.Activity then --活动没有未开启显示
 			if self:GetType() ~= SectionActivityType.Tower then
+				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
+				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
 				if openState > 0 then
-					openState = DungeonMgr:IsActiveOpen(self.cfg.activeId) and 1 or -2
+					openState = isActiveOpen and 1 or -2
 					lockStr = LanguageMgr:GetTips(24001)
 				else
-					openState = DungeonMgr:IsActiveOpen(self.cfg.activeId) and openState or -2
-					lockStr = DungeonMgr:IsActiveOpen(self.cfg.activeId) and lockStr or LanguageMgr:GetTips(24001)
+					openState = isActiveOpen and openState or -2
+					lockStr = isActiveOpen and lockStr or LanguageMgr:GetTips(24001)
 				end
 			end
 		end
 	end
 	return openState, lockStr
+end
+
+function this:IsActiveOpen()
+	
 end
 
 --掉落奖励
@@ -334,10 +348,6 @@ end
 
 function this:GetDailyType()
 	return self.cfg and self.cfg.dailyEnumID
-end
-
-function this:GetActiveOpenID()
-	return self.cfg and self.cfg.activeId
 end
 
 function this:GetMultiID()
@@ -364,8 +374,17 @@ function this:GetStoryID()
 	return self.cfg and self.cfg.story
 end
 
+function this:GetInfo()
+	return self.cfg and self.cfg.info and self.cfg.info[1]
+end
+
 function this:GetPath()
-	return self.cfg and self.cfg.path
+	local info = self:GetInfo()
+	local viewKey = ""
+	if info and info.view then
+		viewKey = info.view
+	end
+	return viewKey
 end
 
 return this; 

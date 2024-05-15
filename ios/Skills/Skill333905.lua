@@ -1,4 +1,4 @@
---  赤溟2
+-- 赤溟2
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -13,8 +13,8 @@ function Skill333905:OnAddBuff(caster, target, data, buffer)
 	else
 		return
 	end
-	-- 8255
-	if SkillJudger:HasBuff(self, caster, target, true,3,1,1) then
+	-- 8256
+	if SkillJudger:IsCtrlBuff(buffer or self, caster, target, true) then
 	else
 		return
 	end

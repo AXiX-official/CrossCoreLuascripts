@@ -17,7 +17,7 @@ function Skill4200805:OnRoundOver(caster, target, data)
 	if self:Rand(3500) then
 		self:AddProgress(SkillEffect[4200804], caster, self.card, data, 300)
 		-- 4200806
-		self:ShowTips(SkillEffect[4200806], caster, self.card, data, 2,"微观",true)
+		self:ShowTips(SkillEffect[4200806], caster, self.card, data, 2,"微观",true,4200806)
 	end
 end
 -- 行动结束
@@ -31,6 +31,6 @@ function Skill4200805:OnActionOver(caster, target, data)
 	if self:Rand(1000) then
 		self:AddProgress(SkillEffect[4200805], caster, caster, data, 300)
 		-- 4200806
-		self:ShowTips(SkillEffect[4200806], caster, self.card, data, 2,"微观",true)
+		self:ShowTips(SkillEffect[4200806], caster, self.card, data, 2,"微观",true,4200806)
 	end
 end

@@ -1,4 +1,4 @@
--- 冥界之门
+-- 不死之身
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -54,5 +54,5 @@ function Skill907000401:OnActionOver(caster, target, data)
 		return
 	end
 	-- 6204
-	self:ShowTips(SkillEffect[6204], caster, self.card, data, 1,"伤害免疫",true)
+	self:ShowTips(SkillEffect[6204], caster, self.card, data, 1,"伤害免疫",true,6204)
 end

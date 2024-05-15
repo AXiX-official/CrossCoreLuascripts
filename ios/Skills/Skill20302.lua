@@ -39,5 +39,5 @@ function Skill20302:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 203010
-	self:ShowTips(SkillEffect[203010], caster, self.card, data, 2,"征服",true)
+	self:ShowTips(SkillEffect[203010], caster, self.card, data, 2,"征服",true,203010)
 end

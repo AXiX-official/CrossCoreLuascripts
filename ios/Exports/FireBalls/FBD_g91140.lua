@@ -8,7 +8,7 @@ local this =
 {effect="cast2_eff_02",time=3500,type=0,pos_ref={ref_type=6}},
 {time=2000,type=3,hit_creates={250893574},hits={0}},
 {delay=1700,time=4000,type=1,hit_type=1,camera_shake={time=300,shake_dir=1,range=300,range2=300,hz=30,decay_value=0.3},hits={0,200,400,600}},
-{effect="cast2_hit",time=5000,type=0,pos_ref={ref_type=1,offset_row=-250}},
+{effect="cast2_hit",time=5000,type=0,pos_ref={ref_type=1}},
 {effect="cast2_eff_01",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fifteen.acb",cue_name="Meganeura_attack_skill_03",path_target={ref_type=1}}
 },
 [250893574]={

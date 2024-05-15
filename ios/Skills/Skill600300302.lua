@@ -43,7 +43,7 @@ function Skill600300302:OnActionOver2(caster, target, data)
 	-- 92017
 	self:DelBufferForce(SkillEffect[92017], caster, self.card, data, 6111,2)
 	-- 4600307
-	self:ShowTips(SkillEffect[4600307], caster, self.card, data, 2,"恒长",true)
+	self:ShowTips(SkillEffect[4600307], caster, self.card, data, 2,"恒长",true,4600307)
 	-- 8131
 	if SkillJudger:OwnerPercentHp(self, caster, target, true,0.1) then
 	else

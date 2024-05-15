@@ -32,7 +32,7 @@ function Skill22801:OnActionOver2(caster, target, data)
 	-- 92017
 	self:DelBufferForce(SkillEffect[92017], caster, self.card, data, 6111,2)
 	-- 228010
-	self:ShowTips(SkillEffect[228010], caster, self.card, data, 2,"重构",true)
+	self:ShowTips(SkillEffect[228010], caster, self.card, data, 2,"重构",true,228010)
 end
 -- 回合开始处理完成后
 function Skill22801:OnAfterRoundBegin(caster, target, data)
@@ -55,5 +55,5 @@ function Skill22801:OnAfterRoundBegin(caster, target, data)
 	-- 92017
 	self:DelBufferForce(SkillEffect[92017], caster, self.card, data, 6111,2)
 	-- 228010
-	self:ShowTips(SkillEffect[228010], caster, self.card, data, 2,"重构",true)
+	self:ShowTips(SkillEffect[228010], caster, self.card, data, 2,"重构",true,228010)
 end

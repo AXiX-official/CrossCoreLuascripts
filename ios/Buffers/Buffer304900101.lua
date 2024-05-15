@@ -11,5 +11,5 @@ function Buffer304900101:OnCreate(caster, target)
 	-- 304900101
 	self:AddAttr(BufferEffect[304900101], self.caster, self.card, nil, "hit",0.05*self.nCount)
 	-- 304900102
-	self:AddAttr(BufferEffect[304900102], self.caster, self.card, nil, "crit_rate",0.05*self.nCount)
+	self:AddAttr(BufferEffect[304900102], self.caster, self.card, nil, "crit",0.05*self.nCount)
 end

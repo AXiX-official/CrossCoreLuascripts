@@ -6,7 +6,7 @@ function Refresh(data, _elseData)
 
     curSelectDatas = elseData[cfgName]
     -- title
-    CSAPI.SetText(txtTitle, title)
+    CSAPI.SetText(txtTitle, LanguageMgr:GetByID(tonumber(title)))
     SetItems()
 end
 

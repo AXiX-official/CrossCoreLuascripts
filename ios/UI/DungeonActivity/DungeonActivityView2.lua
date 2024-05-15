@@ -95,7 +95,7 @@ function OnOpen()
     if data and data.id then
         local sectionData = DungeonMgr:GetSectionData(data.id)
         if sectionData then
-            openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+            openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         end
         SetDatas()
     end

@@ -53,6 +53,7 @@ ITEM_TYPE.SEL_BOX = 17 -- 物品选择箱子
 ITEM_TYPE.THEME = 18 -- 宿舍主题
 ITEM_TYPE.ICON_FRAME = 19 -- 头像框(dy_value1 头像框配置表的id)
 ITEM_TYPE.LIMITED_TIME_ITEM = 20 -- 限时物品
+ITEM_TYPE.ICON = 21  -- 头像(dy_value1 头像配置表的id)
 
 -- 物品标签
 ITEM_TAG = {}
@@ -72,6 +73,11 @@ PROP_TYPE.ExpMaterial = 4 -- 经验素材 dy_tb 字段填写增加的经验值 d
 PROP_TYPE.ExpAddCard = 5 -- 经验加成卡
 PROP_TYPE.GoldAddCard = 6 -- 金币加成卡
 PROP_TYPE.PlrHot = 7 -- 玩家体能
+PROP_TYPE.IconFrame = 8 -- 头像框(dy_arr[头像框物品id, 有效时间秒（不填 or 0表示不过期）], 可配置为自动使用，客户端不显示)
+PROP_TYPE.CardOpen = 9 -- 形态转换开启 [不能填成自动使用](dy_value1：道具子类型， dy_value2：生效的卡牌，dy_arr: 添加or开启的卡牌id)
+PROP_TYPE.MechaOpen = 10 -- 机神开启   [不能填成自动使用](dy_value1：道具子类型， dy_value2：生效的卡牌，dy_arr: 添加or开启的机神技能id)
+PROP_TYPE.Icon = 13 -- 头像(dy_arr[头像物品id, 有效时间秒（不填 or 0表示不过期）], 可配置为自动使用，客户端不显示)
+
 
 -- 物品月卡类型
 ItemMemberType = {}
@@ -1405,4 +1411,17 @@ CardPoolType.WaitFinish = 2 -- 2：需要建造时间
 CardPoolType.GobalCreateCnt = 3 -- 3：全服抽卡次数开启
 CardPoolType.FixTimeFirstLogin = 4 -- 4：固定时间后首次登录开启
 
+------------------副本信息------------------
+DungeonInfoType = {}
+DungeonInfoType.Normal = 1
+DungeonInfoType.Tower = 2
+DungeonInfoType.Course = 3
+DungeonInfoType.Trials = 4
+DungeonInfoType.Danger = 5
+DungeonInfoType.Plot = 6
 
+
+-- TODO: 热更赋值使用，没有就
+if not ACC_TO_UID_ADD_NUM then
+    ACC_TO_UID_ADD_NUM = 100000000
+end

@@ -16,7 +16,7 @@ function Skill4601901:OnBorn(caster, target, data)
 	-- 4601901
 	self:AddSp(SkillEffect[4601901], caster, self.card, data, 5)
 	-- 4601911
-	self:ShowTips(SkillEffect[4601911], caster, self.card, data, 2,"战局感应",true)
+	self:ShowTips(SkillEffect[4601911], caster, self.card, data, 2,"战局感应",true,4601911)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else

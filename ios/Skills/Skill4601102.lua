@@ -21,5 +21,5 @@ function Skill4601102:OnActionOver(caster, target, data)
 	-- 4601102
 	self:AddBuff(SkillEffect[4601102], caster, self.card, data, 2407)
 	-- 4601106
-	self:ShowTips(SkillEffect[4601106], caster, self.card, data, 2,"攻防一体",true)
+	self:ShowTips(SkillEffect[4601106], caster, self.card, data, 2,"攻防一体",true,4601106)
 end

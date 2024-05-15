@@ -12,6 +12,7 @@ function this:SetInfo(proto)
     self.add_exp = proto.add_exp or 0
     self.add_cost = 0; -- cost值上限buff
     self.add_gold = 0; -- 金币上限buff
+    self.icon_frame = proto.icon_frame --头像框id
 end
 
 function this:UpdateInfo(proto)
@@ -159,15 +160,16 @@ end
 --     self.role_id = _role_id
 -- end
 
--- 模型id
+-- 头像id(头像表id或模型表id)
 function this:GetIconId()
     return self.icon_id
 end
+--选择男女主后会返回一次
 function this:SetIconId(_icon_id)
     self.icon_id = _icon_id
 end
 
--- 多人看板id
+-- 看板id（）
 function this:GetPanelId()
     return self.panel_id
 end
@@ -175,9 +177,18 @@ function this:SetPanelId(_panel_id)
     self.panel_id = _panel_id
 end
 
--- 看板是角色
+--头像框id
+function this:GetHeadFrame()
+    return self.icon_frame or 1
+end
+function this:SetHeadFrame(icon_frame)
+    self.icon_frame = icon_frame or 1
+end
+
+-- 看板是角色(不在头像表，那就是角色头像)
 function this:KBIsRole()
-    return self.panel_id == nil and true or false
+    local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(self.panel_id)
+    return cfg==nil 
 end
 
 -- 队长模型表id
@@ -584,7 +595,6 @@ end
 -- 剧情战斗动画播放完成
 function this:OnFightVedioComplete()
     BuryingPointMgr:BuryingPoint("after_login", 30003);
-
     CSAPI.CloseView("VideoPlayer");
     CSAPI.SetSoundOff(false);
     -- LogError("剧情战斗动画播放完成");

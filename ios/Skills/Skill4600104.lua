@@ -46,5 +46,5 @@ function Skill4600104:OnAfterHurt(caster, target, data)
 	-- 4600104
 	self:AddUplimitBuff(SkillEffect[4600104], caster, self.card, data, 3,3,4600104,20,4600104)
 	-- 4600107
-	self:ShowTips(SkillEffect[4600107], caster, self.card, data, 2,"王牌",true)
+	self:ShowTips(SkillEffect[4600107], caster, self.card, data, 2,"王牌",true,4600107)
 end

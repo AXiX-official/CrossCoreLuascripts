@@ -55,6 +55,7 @@ function FightEventMgr:AddSkillEvent(event, skill)
 	LogDebugEx("注册技能事件", event, skill.id)
 	if not self.events.Skill[event] then return end
 
+	skill.priority = skill.priority or 0
 	if skill.priority and #self.events.Skill[event] > 0 then 
 		-- 有优先级, 需要比较插入, 大的先
 		for i,v in ipairs(self.events.Skill[event]) do

@@ -22,6 +22,6 @@ function Skill21102:OnActionOver(caster, target, data)
 	if self:Rand(7000) then
 		self:AddNp(SkillEffect[21102], caster, caster, data, 5)
 		-- 211010
-		self:ShowTips(SkillEffect[211010], caster, self.card, data, 2,"慈悲",true)
+		self:ShowTips(SkillEffect[211010], caster, self.card, data, 2,"慈悲",true,211010)
 	end
 end

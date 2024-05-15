@@ -47,6 +47,10 @@ _G.CharacterGoodsData = require "CharacterGoodsData";
 
 --关卡信息工具类
 _G.DungeonUtil = require "DungeonUtil"
+_G.DungeonInfoUtil = require "DungeonInfoUtil"
+_G.DungeonInfoNameUtil = require "DungeonInfoNameUtil"
+
+
 --战场信息工具类
 _G.BattleFieldUtil = require "BattleFieldUtil"
 --释放管理
@@ -144,3 +148,7 @@ _G.AnimaCurveEnum=CS.AnimCurveEnum;
 --基地角色管理工具
 require "MatrixRoleTool"
 
+--头像框 
+_G.HeadFrameData = require "HeadFrameData";
+--头像
+_G.HeadIconData = require "HeadIconData";

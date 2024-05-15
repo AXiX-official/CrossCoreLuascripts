@@ -19,6 +19,7 @@ local conf = {
 {'9',	'9',	'61011',	'游乐时光',	'9',	'',	'',	'2',	'play_time',	'',	'board_play_time',	'高级勘测奖励',	'-28,-89,1',	'2022_04',	'0,0,1',	'',	'1'},
 {'10',	'10',	'61012',	'慵懒午后',	'10',	'',	'',	'2',	'relaxing_afternoon',	'',	'board_relaxing_afternoon',	'高级勘测奖励',	'113,0,0.94',	'Aerbeisi',	'113,0,1',	'',	'1'},
 {'11',	'11',	'61013',	'妙探双姝',	'11',	'',	'',	'5',	'bestie_agent',	'bestie_agent_replace',	'board_bestie_agent',	'商店购买',	'-260,-57,0.9',	'CG0008_BestieAgent_spine',	'58,-28,1',	'1',	'80406'},
+{'12',	'12',	'61014',	'星河共旅',	'12',	'2024/5/22 03:00:00',	'2034/6/26 3:00:00',	'6',	'trip_in_the_milky_way',	'',	'board_trip_in_the_milky_way',	'高级勘测奖励',	'-58,-65,1.2',	'Ying',	'-58,-65,1.3',	'',	'1'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf

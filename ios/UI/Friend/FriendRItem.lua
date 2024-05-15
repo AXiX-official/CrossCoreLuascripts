@@ -29,12 +29,14 @@ function Refresh(_data, _sign)
 		--state
 		state = data:GetState()
 		--icon
-		local iconName = data:GetIconName()
-		if(iconName) then
-			ResUtil.RoleCard:Load(icon, iconName, false)
-			CSAPI.SetRectSize(icon,148,148)
-		end
-		CSAPI.SetGOActive(icon, iconName ~= nil)
+		local iconId = data:GetIconId()
+		-- if(iconName) then
+		-- 	ResUtil.RoleCard:Load(icon, iconName, false)
+		-- 	CSAPI.SetRectSize(icon,148,148)
+		-- end
+		local frame = data:GetFrameId()
+		UIUtil:AddHeadByID(frameParent,0.78,frame,iconId)
+		-- CSAPI.SetGOActive(icon, iconId ~= nil)
 		--lv
 		CSAPI.SetText(txtLv2, data:GetLv() .. "")
 		--name
@@ -347,6 +349,10 @@ end
 
 function GetSupports()
 	return data and data.assit_team and data.assit_team.data
+end
+
+function GetIconName()
+	return data and data:GetIconName()
 end
 
 function OnClick()

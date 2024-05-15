@@ -36,5 +36,5 @@ function Skill24002:OnDelBuff(caster, target, data)
 		return
 	end
 	-- 240010
-	self:ShowTips(SkillEffect[240010], caster, self.card, data, 2,"消除",true)
+	self:ShowTips(SkillEffect[240010], caster, self.card, data, 2,"消除",true,240010)
 end

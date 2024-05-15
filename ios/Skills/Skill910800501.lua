@@ -1,4 +1,4 @@
--- 森林守护
+-- 耐寒特性
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -11,11 +11,6 @@ function Skill910800501:DoSkill(caster, target, data)
 	-- 12001
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12001], caster, target, data, 1,1)
-end
--- 回合开始时
-function Skill910800501:OnRoundBegin(caster, target, data)
-	-- 910800501
-	self:DelBufferGroup(SkillEffect[910800501], caster, self.card, data, 3,5)
 end
 -- 驱散buff时
 function Skill910800501:OnDelBuff(caster, target, data)

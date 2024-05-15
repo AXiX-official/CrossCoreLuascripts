@@ -25,5 +25,5 @@ function Skill23003:OnActionOver(caster, target, data)
 	-- 23013
 	self:AddBuff(SkillEffect[23013], caster, caster, data, 5203,1)
 	-- 230010
-	self:ShowTips(SkillEffect[230010], caster, self.card, data, 2,"钝化",true)
+	self:ShowTips(SkillEffect[230010], caster, self.card, data, 2,"钝化",true,230010)
 end

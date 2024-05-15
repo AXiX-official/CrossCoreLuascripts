@@ -10,7 +10,7 @@ end
 function Skill202301304:DoSkill(caster, target, data)
 	-- 202301304
 	self.order = self.order + 1
-	self:Cure(SkillEffect[202301304], caster, target, data, 1,0.28)
+	self:Cure(SkillEffect[202301304], caster, target, data, 1,0.48)
 	-- 202300306
 	self.order = self.order + 1
 	self:DelBuffQuality(SkillEffect[202300306], caster, target, data, 2,2)
@@ -18,6 +18,6 @@ function Skill202301304:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	local targets = SkillFilter:Exception(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:Cure(SkillEffect[202301314], caster, target, data, 1,0.14)
+		self:Cure(SkillEffect[202301314], caster, target, data, 1,0.24)
 	end
 end

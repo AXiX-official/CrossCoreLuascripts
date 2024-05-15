@@ -23,5 +23,5 @@ function Skill21603:OnAttackOver(caster, target, data)
 	-- 21613
 	self:AddBuffCount(SkillEffect[21613], caster, self.card, data, 21613,1,3)
 	-- 216010
-	self:ShowTips(SkillEffect[216010], caster, self.card, data, 2,"暴怒",true)
+	self:ShowTips(SkillEffect[216010], caster, self.card, data, 2,"暴怒",true,216010)
 end

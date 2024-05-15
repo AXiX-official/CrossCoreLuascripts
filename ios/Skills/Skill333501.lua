@@ -1,4 +1,4 @@
---  袅韵2
+-- 袅韵2
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,5 +19,5 @@ function Skill333501:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 333501
-	self:Cure(SkillEffect[333501], caster, self.card, data, 1,0.02)
+	self:Cure(SkillEffect[333501], caster, self.card, data, 2,0.02)
 end

@@ -28,5 +28,5 @@ function Skill4300201:OnAttackOver(caster, target, data)
 	-- 4300201
 	self:LimitDamage(SkillEffect[4300201], caster, target, data, 1,0.2)
 	-- 4300207
-	self:ShowTips(SkillEffect[4300207], caster, self.card, data, 2,"机敏",true)
+	self:ShowTips(SkillEffect[4300207], caster, self.card, data, 2,"机敏",true,4300207)
 end

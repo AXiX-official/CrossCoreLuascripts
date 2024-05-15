@@ -27,7 +27,8 @@ RedPointType.ActiveEntry3 = "ActiveEntry3"  --拟真演训
 RedPointType.ActiveEntry4 = "ActiveEntry4"  --迷城蛛影
 
 RedPointType.MaterialBag = "MaterialBag" -- 背包
-
+RedPointType.HeadFrame = "HeadFrame" -- 头像框
+RedPointType.Head = "Head" -- 头像
 
 local this = MgrRegister("RedPointMgr")
 

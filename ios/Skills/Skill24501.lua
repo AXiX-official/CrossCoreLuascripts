@@ -37,6 +37,6 @@ function Skill24501:OnAfterHurt(caster, target, data)
 	if self:Rand(3000) then
 		self:AddBuff(SkillEffect[24501], caster, self.card, data, 24501)
 		-- 245010
-		self:ShowTips(SkillEffect[245010], caster, self.card, data, 2,"乘风",true)
+		self:ShowTips(SkillEffect[245010], caster, self.card, data, 2,"乘风",true,245010)
 	end
 end

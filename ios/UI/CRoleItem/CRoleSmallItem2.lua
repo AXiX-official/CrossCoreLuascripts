@@ -1,6 +1,6 @@
 function Refresh(lv, id)
     -- lv
-    CSAPI.SetText(txtLv2, lv .. "")
+    --SAPI.SetText(txtLv2, lv .. "")
     -- icon 
     local modelCfg = Cfgs.character:GetByID(id)
     if (modelCfg and modelCfg.icon) then

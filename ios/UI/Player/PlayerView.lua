@@ -2,6 +2,7 @@ local elseData = nil
 local fade = nil
 local isAnim = false
 local outBar = nil
+local headItem = nil
 
 function Awake()
     LanguageMgr:SetText(Placeholder, 8002, g_SignMaxLen)
@@ -14,7 +15,7 @@ function Awake()
 end
 
 function OnInit()
-    -- UIUtil:AddTop2("PlayerView", gameObject, OnClickClose)
+    UIUtil:AddTop2("PlayerView", gameObject, OnClickClose)
     eventMgr = ViewEvent.New()
     -- 请求信息返回
     eventMgr:AddListener(EventType.Player_Info, EPlayerInfo)
@@ -22,7 +23,8 @@ function OnInit()
     eventMgr:AddListener(EventType.Player_Select_Card, SetRole)
     eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
-
+    eventMgr:AddListener(EventType.Head_Frame_Change, SetHeadFrame)
+    eventMgr:AddListener(EventType.RedPoint_Refresh, SetRed)
     -- CSAPI.AddInputFieldChange(inputSign, InputChange)
     -- CSAPI.AddInputFieldCallBack(inputSign, InputCB)
 end
@@ -30,7 +32,6 @@ end
 function OnViewOpened(viewKey)
     if viewKey == "RoleListSelectView" then
         CSAPI.SetGOActive(gameObject, false)
-
     end
 end
 
@@ -44,10 +45,10 @@ function OnOpen()
     PlayerMgr:PlrPaneInfo()
     SetRole()
     SetPanel()
-    isAnim = true
-    fade:Play(0, 1, 150, 0, function()
-        isAnim = false
-    end)
+    -- isAnim = true
+    -- fade:Play(0, 1, 150, 0, function()
+    --     isAnim = false
+    -- end)
 end
 
 function SetPanel()
@@ -58,11 +59,15 @@ function SetPanel()
     -- uid
     CSAPI.SetText(txtUID, PlayerClient:GetUid() .. "")
     -- qm
-    SetSign()
+    -- SetSign()
     -- support
     SetSupport()
     -- lv
     SetLv()
+
+    SetHeadFrame()
+
+    SetRed()
 end
 
 -- 设置等级
@@ -92,6 +97,16 @@ function GetMaxExp(lv)
     return cfg and cfg.nNextExp or 0
 end
 
+function SetRed()
+    local _pData = RedPointMgr:GetData(RedPointType.HeadFrame)
+    local _pData2 = RedPointMgr:GetData(RedPointType.Head)
+    local _isRed = false 
+    if(_pData ~= nil or _pData2 ~= nil) then 
+        _isRed = true 
+    end 
+    UIUtil:SetRedPoint2("Common/Red2", iconNode, _isRed, 89, 91, 0)
+end
+
 -- 玩家信息返回
 function EPlayerInfo(proto)
     local pData = proto.info
@@ -99,9 +114,9 @@ function EPlayerInfo(proto)
     local cur, max = CRoleMgr:GetCount()
     CSAPI.SetText(txtDysj2, cur .. "/" .. max)
     -- 最高段位
-    local cfgExercise = Cfgs.CfgPracticeRankLevel:GetByID(pData.max_rank_level or 0)
-    local zgdwRate = cfgExercise and cfgExercise.name or "--"
-    CSAPI.SetText(txtZgdw2, zgdwRate .. "")
+    -- local cfgExercise = Cfgs.CfgPracticeRankLevel:GetByID(pData.max_rank_level or 0)
+    -- local zgdwRate = cfgExercise and cfgExercise.name or "--"
+    -- CSAPI.SetText(txtZgdw2, zgdwRate .. "")
     -- 剧情进度
     local max_dup = pData.max_dup or 0
     local mDungeonCfg = Cfgs.MainLine:GetByID(max_dup)
@@ -115,19 +130,24 @@ function EPlayerInfo(proto)
     -- local bulidData = MatrixMgr:GetMainBuilding()
     -- CSAPI.SetText(txtJddj2, "LV." .. bulidData:GetLv())
     -- 爬塔进度
-    local max_tower = pData.max_tower or 0
-    local tDungeonCfg = Cfgs.MainLine:GetByID(max_tower)
-    CSAPI.SetGOActive(ptjdImg,not (tDungeonCfg and tDungeonCfg.name))
-    CSAPI.SetText(txtPtjd2, tDungeonCfg and tDungeonCfg.name or "")
+    -- local max_tower = pData.max_tower or 0
+    -- local tDungeonCfg = Cfgs.MainLine:GetByID(max_tower)
+    -- CSAPI.SetText(txtPtjd2, tDungeonCfg and tDungeonCfg.name or "")
 end
 
 function SetRole()
     -- role
-    local cfgModel = Cfgs.character:GetByID(PlayerClient:GetIconId())
-    if cfgModel and cfgModel.Card_head then
-        ResUtil.CardIcon:Load(role, cfgModel.Card_head, true)
-    end
+    -- local cfgModel = Cfgs.character:GetByID(PlayerClient:GetIconId())
+    -- if cfgModel and cfgModel.icon then
+    --     ResUtil.RoleCard:Load(role, cfgModel.icon, true)
+    --     CSAPI.SetScale(role, 0.87, 0.87)
+    -- end
+
     -- RoleTool.LoadImg(role, PlayerClient:GetIconId(), LoadImgType.Main)
+end
+
+function SetHeadFrame()
+    UIUtil:AddHeadFrame(headParent, 1)
 end
 
 -- 设置签名
@@ -201,6 +221,10 @@ function OnClickClose()
         view:Close()
         isAnim = false
     end)
+end
+
+function OnClickIcon()
+    CSAPI.OpenView("HeadFramePanel")
 end
 
 function OnDestroy()

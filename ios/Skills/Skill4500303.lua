@@ -16,7 +16,7 @@ function Skill4500303:OnBorn(caster, target, data)
 	-- 4500302
 	self:AddNp(SkillEffect[4500302], caster, self.card, data, 10)
 	-- 4500308
-	self:ShowTips(SkillEffect[4500308], caster, self.card, data, 2,"协调感应",true)
+	self:ShowTips(SkillEffect[4500308], caster, self.card, data, 2,"协调感应",true,4500308)
 end
 -- 回合开始时
 function Skill4500303:OnRoundBegin(caster, target, data)

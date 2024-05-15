@@ -222,6 +222,7 @@ end
 -- 读取配置表到内存
 function ConfigParser:ReadOneConfig(filename)
     local fullfileName = 'cfg' .. filename
+    LogInfo("ConfigParser:ReadOneConfig--"..fullfileName)
     local config = require(fullfileName)
 
     -- Loader:AddReplaceFile(filename)
@@ -236,6 +237,8 @@ function ConfigParser:ReadOneConfig(filename)
             local function XpcallCB(msg, ...)
                 LogInfo('-------------------配置表出错---------------------')
                 LogInfo(config.filename .. '的 ' .. config.sheetname .. ' 第' .. (k + 5) .. '行')
+                LogTable(config.names)
+                LogTable(config.types)
                 self:SimpleShowTable(takeColInfo, '报错的列信息:')
                 LogInfo('LUA ERROR: ' .. tostring(msg) .. '\n')
                 LogInfo(debug.traceback())
@@ -386,17 +389,35 @@ function ConfigParser:ClientConfig()
         -- table.ReadOnly(_G[k])
     end
 
+    -- 需要全部配置检查完才检查的配置，key为表名，value随便配的
+    local FinallyCheckConfig = {
+        AvatarFrame = 1,
+        CfgAvatar = 1,
+        CfgShopPage = 1
+    }
+
     -- 检查/特殊处理以及设为只读
     for k, v in pairs(self.m_mapConfigList) do
-        if ConfigChecker[k] then
-            -- xpcall(ConfigChecker[k], function() LogError(debug.traceback()) end, ConfigChecker, _G[k])
+        if ConfigChecker[k] and not FinallyCheckConfig[k] then
             local result, errmsg = pcall(ConfigChecker[k], ConfigChecker, _G[k])
             if errmsg then
                 -- LogTable(_G[k])
                 print(result, errmsg)
                 ASSERT('配置表出错' .. k)
             end
-        -- ConfigChecker[k](ConfigChecker, _G[k])
+        end
+    end
+
+    -- 检查/特殊处理以及设为只读(再检查一遍配置)
+    for cfgName, _ in pairs(FinallyCheckConfig) do
+        if self.m_mapConfigList[cfgName] then
+            if ConfigChecker[cfgName] then
+                local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
+                if errmsg then
+                    print(result, errmsg)
+                    ASSERT('配置表出错' .. cfgName)
+                end
+            end
         end
         table.ReadOnly(_G[k])
     end

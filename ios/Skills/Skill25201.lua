@@ -21,5 +21,5 @@ function Skill25201:OnAttackOver(caster, target, data)
 	-- 25201
 	self:HitAddBuff(SkillEffect[25201], caster, target, data, 1000,3201)
 	-- 252010
-	self:ShowTips(SkillEffect[252010], caster, self.card, data, 2,"封印",true)
+	self:ShowTips(SkillEffect[252010], caster, self.card, data, 2,"封印",true,252010)
 end

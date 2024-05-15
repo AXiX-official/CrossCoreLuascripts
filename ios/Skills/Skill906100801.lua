@@ -1,4 +1,4 @@
--- 冲击
+-- 神罚
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -20,7 +20,7 @@ function Skill906100801:OnRoundBegin(caster, target, data)
 		return
 	end
 	-- 8681
-	local count681 = SkillApi:BuffCount(self, caster, target,3,3,4906101)
+	local count681 = SkillApi:BuffCount(self, caster, self.card,3,4,4906101)
 	-- 8893
 	if SkillJudger:Greater(self, caster, target, true,count681,0) then
 	else
@@ -42,7 +42,7 @@ function Skill906100801:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 8681
-	local count681 = SkillApi:BuffCount(self, caster, target,3,3,4906101)
+	local count681 = SkillApi:BuffCount(self, caster, self.card,3,4,4906101)
 	-- 8893
 	if SkillJudger:Greater(self, caster, target, true,count681,0) then
 	else

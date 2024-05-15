@@ -112,4 +112,12 @@ function this:GetHardTime()
     return self.data and self.data.nHardBegTime
 end
 
+function this:GetSectionID()
+    return self.cfg and self.cfg.sectionID
+end
+
+function this:GetSectionID()
+    return self.cfg and self.cfg.sectionID
+end
+
 return this 
