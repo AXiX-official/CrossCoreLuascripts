@@ -114,6 +114,15 @@ function ItemClickCB2(item)
         Refresh()
         return
     end
+    --是否还有位置 
+    local roleNum = DormMgr:GetCurRoomData():GetNum()
+    local fNum = DormMgr:GetFurnitureGridNum()
+    local hadNum = 256-fNum
+    local needNum = math.ceil(_data.scale[1]*_data.scale[3])
+    if(hadNum<=needNum) then 
+        LanguageMgr:ShowTips(21035)
+        return 
+    end 
     -- 已放置高亮
     if (item.iSet) then
         EventMgr.Dispatch(EventType.Dorm_UIFurnitrue_Click, _data.id)
@@ -122,7 +131,7 @@ function ItemClickCB2(item)
     if (curDataType ~= 2 or item.cur <= 0) then
         return
     end
-    -- 场景是否已满 
+    -- 数量限制
     local curCount, maxCount = DormMgr:GetCurRoomCopyNum()
     if (curCount >= maxCount) then
         LanguageMgr:ShowTips(21030)

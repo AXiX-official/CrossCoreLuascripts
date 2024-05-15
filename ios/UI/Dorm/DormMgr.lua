@@ -1168,20 +1168,47 @@ end
 
 -- 可用的空位置数量（放置驻员）
 function this:GetEmptyNum()
-    local raysHitCount = 0
-    local gridSize = 16
-    local rayHeight = 2
-    local gridSizeHalf = gridSize / 2
-    for x = 0, gridSize do
-        for z = 0, gridSize do
-            local rayOrigin = UnityEngine.Vector3(x - gridSizeHalf + 0.5, 0, z - gridSizeHalf + 0.5)
-            if (UnityEngine.Physics.Raycast(rayOrigin, UnityEngine.Vector3.up, rayHeight,1<<DormLayer.furniture)) then
-                raysHitCount = raysHitCount + 1
+    -- local raysHitCount = 0
+    -- local gridSize = 16
+    -- local rayHeight = 2
+    -- local gridSizeHalf = gridSize / 2
+    -- for x = 0, gridSize do
+    --     for z = 0, gridSize do
+    --         local rayOrigin = UnityEngine.Vector3(x - gridSizeHalf + 0.5, 0, z - gridSizeHalf + 0.5)
+    --         if (UnityEngine.Physics.Raycast(rayOrigin, UnityEngine.Vector3.up, rayHeight,1<<DormLayer.furniture)) then
+    --             raysHitCount = raysHitCount + 1
+    --         end
+    --     end
+    -- end
+    -- return 256 - raysHitCount
+    return 256 - self:GetFurnitureGridNum()
+end
+
+--当前所有家具占地格子数量
+function this:GetFurnitureGridNum()
+    local num = 0
+    local furnitureDatas = self:GetCurRoomCopyDatas()
+    for i, v in pairs(furnitureDatas) do
+        num = num + v:GetGridNum()
+    end
+    return num 
+end
+
+--某保存主体的占地数量
+function this:GetSaveThemeGridNun(id)
+    local num = 0 
+    local themeData = DormMgr:GetThemesByID(ThemeType.Save, id)
+    local furnitureDatas = themeData.furnitures or {}
+    for k, v in pairs(furnitureDatas) do
+        if(v.parentID==nil) then 
+            local cfgID = GCalHelp:GetDormFurCfgId(v.id)
+            local cfg = Cfgs.CfgFurniture:GetByID(cfgID)
+            if(cfg.sType~=0 and  cfg.sType~=1 and cfg.sType~=7 and cfg.sType~=8) then 
+                num=num+math.ceil(cfg.scale[1]*cfg.scale[3])
             end
         end
     end
-    return 256 - raysHitCount
+    return num 
 end
-
 
 return this

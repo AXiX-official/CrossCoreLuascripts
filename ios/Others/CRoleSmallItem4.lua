@@ -28,9 +28,9 @@ function Refresh(_data, _selectID)
             CSAPI.SetGOActive(effectGO, false)
         end
         CSAPI.SetGOActive(icon, true)
-        local iconName = _data:GetCRoleInfo():GetBaseIcon()
-        if (iconName) then
-            ResUtil.RoleCard:Load(icon, iconName)
+        local cfgModel = _data:GetCRoleInfo():GetBaseModel()
+        if (cfgModel.icon) then
+            ResUtil.RoleCard:Load(icon, cfgModel.icon)
             -- CSAPI.SetScale(icon, 0.86, 0.86, 1) -- icon 和特效默认0.86大小
         end
     else

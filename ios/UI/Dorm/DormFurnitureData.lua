@@ -208,4 +208,13 @@ function this:GetInteActionID(targetGO)
     return key
 end
 
+
+--占地数量（仅考虑放地且无父的家具）
+function this:GetGridNum()
+    if(self:GetParentID()~=nil or self:GetCfg().sType==0 or self:GetCfg().sType==1 or self:GetCfg().sType==7 or self:GetCfg().sType==8) then 
+        return 0
+    end 
+    return math.ceil(self:GetCfg().scale[1]*self:GetCfg().scale[3])
+end
+
 return this
