@@ -28,5 +28,5 @@ function Skill23103:OnDeath(caster, target, data)
 		self:AddHp(SkillEffect[23103], caster, target, data, -count47/math.max(1,count2)*1.5)
 	end
 	-- 231010
-	self:ShowTips(SkillEffect[231010], caster, self.card, data, 2,"满溢",true)
+	self:ShowTips(SkillEffect[231010], caster, self.card, data, 2,"满溢",true,231010)
 end

@@ -96,7 +96,7 @@ end
 function OnOpen() 
     if data then
         sectionData = DungeonMgr:GetSectionData(data.id)
-        openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+        openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
 
         InitPanel()
         RefreshPanel()
@@ -500,17 +500,16 @@ end
 -- 关卡信息
 function ShowInfo(item)
     isActive = item ~= nil;
+    local _cfg = item and item.GetCfg() or nil
     CSAPI.SetGOActive(infoMask, isActive)
     if itemInfo == nil then
         ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.InitInfo(true)
-            itemInfo.SetClickCB(OnBattleEnter)
-            itemInfo.Show(item)
-            itemInfo.OnSweepClick = this.OnSweepClick
+            itemInfo.SetClickCB(OnBattleEnter,OnSweepClick)
+            itemInfo.Show(_cfg)
         end)
     else
-        itemInfo.Show(item)
+        itemInfo.Show(_cfg)
     end
 end
 
@@ -536,7 +535,8 @@ function OnBattleEnter()
     end
 end
 
-function OnSweepClick(_cfg)
+function OnSweepClick()
+    local _cfg = currItem:GetCfg()
     if not openInfo:IsDungeonOpen() then
         LanguageMgr:ShowTips(24003)
         return

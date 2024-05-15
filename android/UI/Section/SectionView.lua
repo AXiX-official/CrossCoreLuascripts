@@ -146,6 +146,7 @@ function Awake()
     btnCanvasGroup = ComUtil.GetCom(btnEnter,"CanvasGroup")
     
     CSAPI.SetGOActive(clickMask, false)
+    CSAPI.SetGOActive(doubleMask, false)
 end
 
 function LayoutCallBack1(index)
@@ -386,7 +387,7 @@ end
 
 -- 初始化日常界面
 function InitDailyView()
-    OnMaskRefresh(false)
+    -- OnMaskRefresh(false)
 
     if not dailyPanel then
         ResUtil:CreateUIGOAsync("Section/SectionDailyView", dailyNode, function(go)
@@ -1070,50 +1071,10 @@ function ClickDailyItemR(item)
 
     ShowItemInfo(function ()
         currItem = curDailyItemR
-        itemInfo.Show(curDailyItemR)
+        itemInfo.Show(curDailyItemR.GetCfg())
     end)
 
     ShowLineAnim()
-end
-
-function OnEnterDaily()
-    local isDouble = itemInfo.IsDouble()
-    local multiNum =  itemInfo.GetMultiNum()
-    local isFirstDouble = DungeonMgr:GetFisrtOpenDouble()
-    if (not isDouble and multiNum > 0 and not isFirstDouble) then
-        DungeonMgr:SetFisrtOpenDouble(true)
-        local dialogData = {}
-        local name = ""
-        local lua = layout3:GetItemLua(currDailyIndexL2)
-        if lua then
-            name = lua:GetData():GetName()
-        end
-        dialogData.content = string.format(LanguageMgr:GetByID(15072), name, multiNum)
-        dialogData.okText = LanguageMgr:GetByID(1031)
-        dialogData.cancelText = LanguageMgr:GetByID(1003)
-        dialogData.okCallBack = function()
-            itemInfo.ShowDouble(true)
-            EnterNextView(curDailyItemR)
-        end
-        dialogData.cancelCallBack = function()
-            itemInfo.ShowDouble(false)
-            EnterNextView(curDailyItemR)
-        end
-        CSAPI.OpenView("Dialog", dialogData)
-    else
-        EnterNextView(curDailyItemR)
-    end
-end
-
-function OnMaskRefresh(b)
-    CSAPI.SetGOActive(doubleMask, b)
-end
-
-function OnClickDoubleMask()
-    OnMaskRefresh(false)
-    if dailyPanel then
-        dailyPanel.ShowDesc(false)
-    end
 end
 
 function JumpToDaily(group,id)
@@ -1170,7 +1131,9 @@ end
 ------------------------------------军演-----------------------------------
 function OnExerciseRefresh()
     isPvpRet = true
-    ShowExercisePanel()
+    if currIndex < 3 then
+        ShowExercisePanel()
+    end
 end
 
 function ShowExercisePanel()
@@ -1182,7 +1145,6 @@ function ShowExercisePanel()
     -- move
     MoveTo(viewInfo.Exercise[currIndex], SectionViewType.Exercise, pType, 0)
 
-    
     if currIndex == 1 then
         -- scale
         CSAPI.SetScale(btnExerciseL, 0.73, 0.73, 1)
@@ -1257,7 +1219,7 @@ function RefreshActivityDatas()
             local sectionData = DungeonMgr:GetSectionData(cfg.id)   
             if sectionData then
                 activityTypeDatas[sectionData:GetType()] = activityTypeDatas[sectionData:GetType()] or {}
-                if sectionData:GetType() == SectionActivityType.Tower  then --爬塔只显示一个
+                if sectionData:GetType() == SectionActivityType.Tower or sectionData:GetType() == SectionActivityType.NewTower  then --爬塔只显示一个
                     if #activityTypeDatas[sectionData:GetType()] < 1 then
                         table.insert(activityTypeDatas[sectionData:GetType()],sectionData)
                     end
@@ -1267,11 +1229,13 @@ function RefreshActivityDatas()
             end
         end
 
+        local logStrs = {}
         for _, _type in pairs(SectionActivityType) do
             local typeDatas = activityTypeDatas[_type]           
             if typeDatas and #typeDatas > 0 then
                 for i, v in ipairs(typeDatas) do
-                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower then
+                    table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),v:GetOpenState()))
+                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower or _type == SectionActivityType.NewTower then
                         local _data = {
                             data = v,
                             type = _type,
@@ -1283,6 +1247,8 @@ function RefreshActivityDatas()
                 end
             end
         end
+        --Log("活动信息:")
+        --Log(logStrs)
     end
     table.sort(datas, function(a, b)      
         local pos1 = a.pos or 99
@@ -1388,18 +1354,14 @@ function OnEnterCB1(item)
         return
     end
 
-    local path = sectionData:GetCfg().path or ""
+    local path = sectionData:GetPath() or ""
     if path == "" then
         LogError("缺少界面路径!!!" .. sectionData:GetCfg().id)
         return
     end
-    if item.GetData().type == SectionActivityType.BattleField then
-        CSAPI.OpenView(path,{id = item.GetID()})
-    elseif item.GetData().type == SectionActivityType.Tower then
+    if sectionData:GetType() == SectionActivityType.Tower then
         CSAPI.OpenView(path)
-    elseif item.GetData().type == SectionActivityType.Plot then
-        CSAPI.OpenView(path,{id = item.GetID()})
-    elseif item.GetData().type == SectionActivityType.TaoFa then
+    else
         CSAPI.OpenView(path,{id = item.GetID()})
     end
 end
@@ -1569,9 +1531,7 @@ function ShowItemInfo(cb)
     if (itemInfo == nil) then --没有则异步创建
         ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)
-            -- itemInfo.SetClickMaskCB(OnClickBack)
             CSAPI.SetGOActive(itemInfo.bg, false)
             if cb then
                 cb()
@@ -1586,16 +1546,16 @@ end
 
 -- 进入
 function OnBattleEnter()
-    if (currItem) then
-        OnEnterDaily()
+    if (curDailyItemR) then
+        EnterNextView(curDailyItemR)
     end
 end
 
 function EnterNextView(_item)
-    if (itemInfo.IsCanAIMove()) then -- 自动寻路
-        BattleMgr:SetAIMoveState(itemInfo.IsAIMove())
-    end
-    DungeonMgr:ShowAIMoveBtn(itemInfo.IsCanAIMove() and itemInfo.IsAIMove())
+    -- if (itemInfo.IsCanAIMove()) then -- 自动寻路
+    --     BattleMgr:SetAIMoveState(itemInfo.IsAIMove())
+    -- end
+    -- DungeonMgr:ShowAIMoveBtn(itemInfo.IsCanAIMove() and itemInfo.IsAIMove())
     -- 进入副本前编队
     if _item.GetCfg() and _item.GetCfg().arrForceTeam ~= nil then -- 强制上阵编队
         CSAPI.OpenView("TeamForceConfirm", {

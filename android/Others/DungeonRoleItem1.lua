@@ -42,7 +42,7 @@ function Refresh(_data)
 end
 
 function SetIcon()
-    local iconName = "bg1"
+    local iconName = sectionData:GetTurnImg() or "bg1"
     if iconName ~= nil and iconName ~= "" then
         ResUtil:LoadBigImg(bg, "UIs/DungeonActivity/Role/" .. iconName .. "/bg")
     end

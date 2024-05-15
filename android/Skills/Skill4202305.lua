@@ -23,8 +23,8 @@ function Skill4202305:OnActionOver(caster, target, data)
 end
 -- 攻击结束
 function Skill4202305:OnAttackOver(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	-- 8071
+	if SkillJudger:TargetIsFriend(self, caster, target, true) then
 	else
 		return
 	end
@@ -42,6 +42,13 @@ function Skill4202305:OnAttackOver(caster, target, data)
 	end
 	-- 8094
 	if SkillJudger:TargetPercentHp(self, caster, target, false,0.5) then
+	else
+		return
+	end
+	-- 8496
+	local count96 = SkillApi:BuffCount(self, caster, target,3,1,1)
+	-- 8899
+	if SkillJudger:Less(self, caster, target, true,count96,1) then
 	else
 		return
 	end

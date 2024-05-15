@@ -1,4 +1,4 @@
--- 森林守护
+-- 冰霜巨震
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -44,6 +44,11 @@ function Skill910800301:OnActionOver(caster, target, data)
 	else
 		return
 	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
 	-- 910800302
-	self:Cure(SkillEffect[910800302], caster, self.card, data, 4,0.20)
+	self:Cure(SkillEffect[910800302], caster, self.card, data, 4,0.50)
 end

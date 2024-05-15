@@ -621,6 +621,18 @@ function Update()
         CSAPI.SetGOActive(mask, false)
     end
 
+    -- 头像框 
+    if (HeadFrameMgr:GetMinExpiry()) then
+        if (curTime > HeadFrameMgr:GetMinExpiry()) then
+            HeadFrameMgr:RefreshDatas()
+        end
+    end
+    --头像
+    if (HeadIconMgr:GetMinExpiry()) then
+        if (curTime > HeadIconMgr:GetMinExpiry()) then
+            HeadIconMgr:RefreshDatas()
+        end
+    end
 end
 ----------------------------------------动画+红点-----------------------------------------------】
 -- 处理动画在某个关键帧上的事件
@@ -851,6 +863,16 @@ function OnRedPointRefresh()
         -- end
     end
 
+    -- 角色详情 头像框 
+    if (true) then
+        local _pData = RedPointMgr:GetData(RedPointType.HeadFrame)
+        local _pData2 = RedPointMgr:GetData(RedPointType.Head)
+        local _isRed = false 
+        if(_pData ~= nil or _pData2 ~= nil) then 
+            _isRed = true 
+        end 
+        UIUtil:SetRedPoint2(menuRedPath, btnPlayerView,_isRed, 168, 30, 0)
+    end
     -- -- 新皮肤（看板）
     -- local _data = RedPointMgr:GetData(RedPointType.CRoleSkin)
     -- UIUtil:SetNewPoint(btnShow, _data ~= nil, 35, 25, 0)
@@ -1341,7 +1363,7 @@ end
 -- 设置看板  
 function SetImg(cb)
     -- 加载立绘并且调整到调整过的位置
-    isRole = PlayerClient:GetPanelId() == nil
+    isRole = PlayerClient:KBIsRole() 
     CSAPI.SetGOActive(cardIconItem.gameObject, isRole)
     CSAPI.SetGOActive(mulIconItem.gameObject, not isRole)
     -- CSAPI.SetGOActive(bg, isRole)
@@ -1361,7 +1383,7 @@ function SetImg1(cb)
     CSAPI.SetAnchor(iconParent, x, y, 0)
     CSAPI.SetScale(iconParent, scale, scale, 1)
     -- 看板角色名
-    local modelCfg = Cfgs.character:GetByID(PlayerClient:GetIconId())
+    local modelCfg = Cfgs.character:GetByID(PlayerClient:GetPanelId())
     local cfg = Cfgs.CfgCardRole:GetByID(modelCfg.role_id)
     if (cfg and (cfg.id == g_InitRoleId[1] or cfg.id == g_InitRoleId[2])) then
         CSAPI.SetGOActive(nameBg, false)
@@ -1379,15 +1401,15 @@ function SetImg1(cb)
     -- 是否有入场动画 
     isIn = false
     if (l2d) then
-        isIn = MenuMgr:CheckHadL2dIn(true, PlayerClient:GetIconId(), true) -- 有 in
-        if (isIn and MenuMgr:CheckIsPlayIn(PlayerClient:GetIconId())) then
+        isIn = MenuMgr:CheckHadL2dIn(true, PlayerClient:GetPanelId(), true) -- 有 in
+        if (isIn and MenuMgr:CheckIsPlayIn(PlayerClient:GetPanelId())) then
             isIn = false
         end
     end
 
-    cardIconItem.Refresh(PlayerClient:GetIconId(), LoadImgType.Main, function()
+    cardIconItem.Refresh(PlayerClient:GetPanelId(), LoadImgType.Main, function()
         if (isIn) then
-            MenuMgr:SetPlayInID(PlayerClient:GetIconId())
+            MenuMgr:SetPlayInID(PlayerClient:GetPanelId())
             if (cb) then
                 cb()
             end
@@ -1397,8 +1419,8 @@ function SetImg1(cb)
         -- isIn = false -- 是否有入场动画 
         -- if (l2d) then
         --     local _isIn = cardIconItem.CheckIn()
-        --     if (_isIn and not MenuMgr:CheckIsPlayIn(PlayerClient:GetIconId())) then
-        --         MenuMgr:SetPlayInID(PlayerClient:GetIconId())
+        --     if (_isIn and not MenuMgr:CheckIsPlayIn(PlayerClient:GetPanelId())) then
+        --         MenuMgr:SetPlayInID(PlayerClient:GetPanelId())
         --         isIn = true
         --     end
         -- else
@@ -1443,7 +1465,7 @@ function SetImg2(cb)
         -- isIn = false -- 是否有入场动画 
         -- if (l2d) then
         --     local _isIn = mulIconItem.CheckIn()
-        --     if (_isIn and not MenuMgr:CheckIsPlayIn(PlayerClient:GetIconId())) then
+        --     if (_isIn and not MenuMgr:CheckIsPlayIn(PlayerClient:GetPanelId())) then
         --         MenuMgr:SetPlayInID(PlayerClient:GetPanelId())
         --         isIn = true
         --     end
@@ -1678,7 +1700,9 @@ function EActivityGetCB()
     if (isCheckTime == nil or Time.time > (isCheckTime + 0.2)) then
         isCheckTime = Time.time
         FuncUtil:Call(EActivityGetCB2, nil, 200)
+        return
     end
+
 
     -- 技能完成
     -- OpenRoleListNormal(need)

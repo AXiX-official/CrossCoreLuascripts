@@ -26,5 +26,5 @@ function Skill4101103:OnBefourHurt(caster, target, data)
 	-- 4101103
 	self:AddTempAttr(SkillEffect[4101103], caster, caster, data, "damage",-0.16)
 	-- 4101106
-	self:ShowTips(SkillEffect[4101106], caster, self.card, data, 2,"重装",true)
+	self:ShowTips(SkillEffect[4101106], caster, self.card, data, 2,"重装",true,4101106)
 end

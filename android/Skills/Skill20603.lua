@@ -43,7 +43,7 @@ function Skill20603:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 206010
-	self:ShowTips(SkillEffect[206010], caster, self.card, data, 2,"麻醉",true)
+	self:ShowTips(SkillEffect[206010], caster, self.card, data, 2,"麻醉",true,206010)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -62,5 +62,5 @@ function Skill20603:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 206010
-	self:ShowTips(SkillEffect[206010], caster, self.card, data, 2,"麻醉",true)
+	self:ShowTips(SkillEffect[206010], caster, self.card, data, 2,"麻醉",true,206010)
 end

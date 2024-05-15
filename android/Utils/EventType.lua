@@ -533,6 +533,10 @@ this.Update_Everyday = 180011;
 this.Main_Enter=180012;
 -- 玩家累计充值金额发生改变
 this.Pay_Amount_Change=180013;
+--更换头像框
+this.Head_Frame_Change=180014;
+--更换头像
+this.Head_Icon_Change=180015;
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -826,8 +830,6 @@ this.Player_Icon_Click = 270007
 this.Player_Select_BG = 270008;
 --能力点击
 this.Player_Ability_CanClick = 270009;
---副本结束
-this.Update_Dungeon_Data = 270009;
 --玩家能力信息界面状态
 this.Player_AbilityInfo_ViewActive = 270010;
 --玩家能力信息界面位置
@@ -1084,6 +1086,8 @@ this.Dungeon_PlotPlay_Over = 420003;--剧情类的关卡播放完毕
 this.Dungeon_DailyData_Update = 420004 --日常变量更新
 this.Dungeon_MainLine_Update = 420005 --主线更新
 this.Dungeon_Box_Refresh = 420006 --星级奖励更新
+this.Update_Dungeon_Data = 420007;--副本结束
+this.Dungeon_InfoPanel_Update = 420008 --副本信息界面更新
 
 --------------------------------------组队boss
 this.TeamBoss_List = 430001

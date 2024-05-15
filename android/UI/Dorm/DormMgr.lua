@@ -1166,4 +1166,22 @@ function this:ClearDormModels()
     end
 end
 
+-- 可用的空位置数量（放置驻员）
+function this:GetEmptyNum()
+    local raysHitCount = 0
+    local gridSize = 16
+    local rayHeight = 2
+    local gridSizeHalf = gridSize / 2
+    for x = 0, gridSize do
+        for z = 0, gridSize do
+            local rayOrigin = UnityEngine.Vector3(x - gridSizeHalf + 0.5, 0, z - gridSizeHalf + 0.5)
+            if (UnityEngine.Physics.Raycast(rayOrigin, UnityEngine.Vector3.up, rayHeight,1<<DormLayer.furniture)) then
+                raysHitCount = raysHitCount + 1
+            end
+        end
+    end
+    return 256 - raysHitCount
+end
+
+
 return this

@@ -19,11 +19,6 @@ function Skill4304904:OnActionOver(caster, target, data)
 	else
 		return
 	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
 	-- 4304924
 	self:Cure(SkillEffect[4304924], caster, self.card, data, 4,0.15)
 end

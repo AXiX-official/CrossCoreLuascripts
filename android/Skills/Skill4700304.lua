@@ -28,5 +28,5 @@ function Skill4700304:OnAttackOver(caster, target, data)
 	-- 4700304
 	self:AddBuff(SkillEffect[4700304], caster, self.card, data, 6504)
 	-- 4700306
-	self:ShowTips(SkillEffect[4700306], caster, self.card, data, 2,"水能",true)
+	self:ShowTips(SkillEffect[4700306], caster, self.card, data, 2,"水能",true,4700306)
 end

@@ -36,7 +36,6 @@ function Refresh(_data,_elseData)
     elseData = _elseData
     if cfgDungeon then
         dungeonData = DungeonMgr:GetDungeonData(cfgDungeon.id)
-        SetIcon()
         SetTitle()
         SetStar()
         SetHard()
@@ -47,15 +46,14 @@ function Refresh(_data,_elseData)
     end
 end
 
-function SetIcon()
+function SetIcon(iconName)
     local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
     if not sectionData then
         LogError("找不到章节表数据！！！id:" .. cfgDungeon.group)
         return
     end
     local path = sectionData:GetIndex() > 10 and sectionData:GetIndex() or "0" .. sectionData:GetIndex() 
-    path = "icon_01" .. path
-    local iconName = cfgDungeon.icon or ""
+    path = "icon_01_" .. path
     if iconName and iconName~= "" then
         ResUtil:LoadBigImg(icon,"UIs/DungeonActivity/Role/" .. path .."/" .. iconName)
     end

@@ -21,5 +21,5 @@ function Skill24803:OnActionBegin(caster, target, data)
 	-- 24803
 	self:AddBuff(SkillEffect[24803], caster, self.card, data, 24803)
 	-- 248010
-	self:ShowTips(SkillEffect[248010], caster, self.card, data, 2,"自在",true)
+	self:ShowTips(SkillEffect[248010], caster, self.card, data, 2,"自在",true,248010)
 end

@@ -48,6 +48,6 @@ function Skill4401404:tFunc_4401404_4401414(caster, target, data)
 	if self:Rand(7000) then
 		self:DelBufferGroup(SkillEffect[4401414], caster, target, data, 2,1)
 		-- 4401406
-		self:ShowTips(SkillEffect[4401406], caster, self.card, data, 2,"粼光",true)
+		self:ShowTips(SkillEffect[4401406], caster, self.card, data, 2,"粼光",true,4401406)
 	end
 end

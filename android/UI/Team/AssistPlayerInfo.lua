@@ -21,6 +21,7 @@ function OnOpen()
     end
 end
 
+
 function FindRet(proto)
     if proto and data and #proto.info>=1 and proto.info[1].uid==data.uid then
         local d = FriendInfo.New()
@@ -31,10 +32,11 @@ end
 
 function Refresh(d)
     if d then
-            local cfgModel = Cfgs.character:GetByID(d:GetIconId());
-            if cfgModel then
-                ResUtil.RoleCard:Load(icon,cfgModel.icon);
-            end
+            -- local cfgModel = Cfgs.character:GetByID(d:GetIconId());
+            -- if cfgModel then
+            --     ResUtil.RoleCard:Load(icon,cfgModel.icon);
+            -- end
+            UIUtil:AddHeadByID(border,0.8,d:GetFrameId(),d:GetIconId());
             --计算最近登陆时间
             if d:IsOnLine() then
                 CSAPI.SetText(txt_time,LanguageMgr:GetByID(26028));

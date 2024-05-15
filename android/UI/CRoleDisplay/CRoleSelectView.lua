@@ -5,6 +5,9 @@ local timeSort1 = 1 -- 早到后
 local timeSort2 = 1 -- 多人插图
 -- local sortLua1 = nil
 -- local sortLua2 = nil
+local _useRoleID = nil
+local _usePanelID = nil 
+
 
 function Awake()
     layout1 = ComUtil.GetCom(vsv1, "UIInfinite")
@@ -41,7 +44,7 @@ function LayoutCallBack1(index)
         lua.SetClickCB(ItemClickCB1)
         local _useID = usePanelID == nil and useRoleID or nil
         lua.Refresh(_data, {
-            curID = curID,
+            curID = _useRoleID,--curID,
             useID = _useID
         })
         -- lua.SetNew()
@@ -52,6 +55,7 @@ function ItemClickCB1(_data)
         return
     end
     curID = _data:GetID()
+    _useRoleID = curID
     cg_btns.alpha = curID ~= nil and 1 or 0.3
     layout1:UpdateList()
     ChangeKBCB(curTabIndex, curID)
@@ -64,7 +68,7 @@ function LayoutCallBack2(index)
         lua.SetIndex(index)
         lua.SetClickCB(ItemClickCB2)
         lua.Refresh(_data, {
-            curID = curID,
+            curID = _usePanelID,--curID,
             useID = usePanelID
         })
     end
@@ -74,6 +78,7 @@ function ItemClickCB2(_data)
         return
     end
     curID = _data:GetID()
+    _usePanelID = curID
     cg_btns.alpha = _data:IsHad() and 1 or 0.3
     layout2:UpdateList()
     ChangeKBCB(curTabIndex, curID)
@@ -86,24 +91,36 @@ function OnOpen()
     Save = data[3]
     curTabIndex = openSetting or 1
 
-    local useModelID = PlayerClient:GetIconId()
-    useRoleID = Cfgs.character:GetByID(useModelID).role_id
-    usePanelID = PlayerClient:GetPanelId()
+    local baseID = PlayerClient:GetPanelId()
+    local isRole = PlayerClient:KBIsRole()
+    if (isRole) then
+        useRoleID = Cfgs.character:GetByID(baseID).role_id
+        usePanelID = nil
+    else
+        useRoleID = nil
+        usePanelID = baseID
+    end
     curID = nil -- 默认不选中
 
     RefreshPanel()
 end
 
-function Refresh(data,type)
+function Refresh(data, type)
     ChangeKBCB = data[1]
     OnOpenSelectView = data[2]
     Save = data[3]
     openSetting = type
     curTabIndex = openSetting or 1
 
-    local useModelID = PlayerClient:GetIconId()
-    useRoleID = Cfgs.character:GetByID(useModelID).role_id
-    usePanelID = PlayerClient:GetPanelId()
+    local baseID = PlayerClient:GetPanelId()
+    local isRole = PlayerClient:KBIsRole()
+    if (isRole) then
+        useRoleID = Cfgs.character:GetByID(baseID).role_id
+        usePanelID = nil
+    else
+        useRoleID = nil
+        usePanelID = baseID
+    end
     curID = nil -- 默认不选中
 
     RefreshPanel()
@@ -197,7 +214,11 @@ function OnClickOne()
         return
     end
     curTabIndex = 1
-    curID = usePanelID == nil and useRoleID or nil
+   --curID = usePanelID == nil and useRoleID or nil
+    if(_usePanelID) then 
+        _useRoleID = nil 
+    end 
+   curID = _useRoleID
     RefreshPanel()
 end
 
@@ -206,15 +227,19 @@ function OnClickMore()
         return
     end
     curTabIndex = 2
-    curID = usePanelID
+    --curID = usePanelID
+    if(_useRoleID) then 
+        _usePanelID = nil 
+    end 
+    curID = _usePanelID
     RefreshPanel()
 end
 
 function OnClickC()
     -- OnClickMask()
     OnOpenSelectView()
-    --view:Close()
-    CSAPI.SetGOActive(gameObject,false)
+    -- view:Close()
+    CSAPI.SetGOActive(gameObject, false)
 end
 
 function OnClickS()
@@ -235,8 +260,8 @@ function OnClickS()
         panelID = curID
     end
     Save(panelID, modelID)
-    --view:Close()
-    CSAPI.SetGOActive(gameObject,false)
+    -- view:Close()
+    CSAPI.SetGOActive(gameObject, false)
 end
 
 function OnClickMask()

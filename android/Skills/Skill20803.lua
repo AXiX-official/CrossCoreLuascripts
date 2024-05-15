@@ -33,5 +33,5 @@ function Skill20803:OnAttackOver(caster, target, data)
 	-- 93005
 	self:ResetCD(SkillEffect[93005], caster, target, data, 99)
 	-- 208010
-	self:ShowTips(SkillEffect[208010], caster, self.card, data, 2,"不屈",true)
+	self:ShowTips(SkillEffect[208010], caster, self.card, data, 2,"不屈",true,208010)
 end

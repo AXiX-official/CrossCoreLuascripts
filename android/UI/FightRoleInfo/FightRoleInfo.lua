@@ -377,21 +377,28 @@ function SetCharInfos(character)
     end
     --获取卡牌对象的天赋技能信息
     if character.IsEnemy()==false and charData.isNpc~=true then
-        --获取卡牌数据
-        local cid=charData.fuid==nil and charData.cid or FormationUtil.FormatAssitID(charData.fuid,charData.cid);
-        local card=FormationUtil.FindTeamCard(charData.cid)
         -- if card and card:GetCfgID()==charData.cfgid then --防止试玩中cid错误的情况
-        if card then
-            --副天赋
-            local serverData=card:GetDeputyTalent();
-            local talentList=serverData==nil and nil or serverData.use;
-            if talentList then
-                for i=1,#talentList do
-                    if talentList[i]~=0 then
-                        local cfg=Cfgs.CfgSubTalentSkill:GetByID(talentList[i]);
-                        table.insert(charInfos[3],{cfg=cfg,isTalent=true});
+        if charData.fuid==nil then
+            --获取卡牌数据
+            local card=FormationUtil.FindTeamCard(charData.cid)
+            if card~=nil then
+                --副天赋
+                local serverData=card:GetDeputyTalent();
+                local talentList=serverData==nil and nil or serverData.use;
+                if talentList then
+                    for i=1,#talentList do
+                        if talentList[i]~=0 then
+                            local cfg=Cfgs.CfgSubTalentSkill:GetByID(talentList[i]);
+                            table.insert(charInfos[3],{cfg=cfg,isTalent=true});
+                        end
                     end
                 end
+            end
+        else --助战卡
+            local use=charData.use_sub_talent or {};
+            for k,v in pairs(use) do
+                local cfg=Cfgs.CfgSubTalentSkill:GetByID(v);
+                table.insert(charInfos[3],{cfg=cfg,isTalent=true});
             end
         end
     end

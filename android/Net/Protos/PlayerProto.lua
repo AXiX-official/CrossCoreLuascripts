@@ -390,7 +390,7 @@ function PlayerProto:SetPlrName(data, callBack)
 end
 
 function PlayerProto:SetPlrNameRet(proto)
-    -- PlayerClient:SetCRoleId(proto.role_id)
+    PlayerClient:SetPanelId(proto.panel_id)
     PlayerClient:SetIconId(proto.icon_id)
     PlayerClient:SetModifyName(false);
     if self.setNameCallBack then
@@ -1126,4 +1126,14 @@ end
 --活动入场卷购买返回
 function PlayerProto:BuyArachnidCountRet(proto)
     DungeonMgr:SetArachnidCount(proto)
+end
+
+--设置头像框
+function PlayerProto:SetIcon(_icon_id)
+    local proto = {"PlayerProto:SetIcon", {icon_id = _icon_id}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetIconRet(proto)
+    PlayerClient:SetIconId(proto.icon_id)
+    EventMgr.Dispatch(EventType.Head_Icon_Change, proto)
 end

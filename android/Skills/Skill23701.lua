@@ -16,5 +16,5 @@ function Skill23701:OnBorn(caster, target, data)
 	-- 23701
 	self:AddBuff(SkillEffect[23701], caster, self.card, data, 23701)
 	-- 237010
-	self:ShowTips(SkillEffect[237010], caster, self.card, data, 2,"振奋",true)
+	self:ShowTips(SkillEffect[237010], caster, self.card, data, 2,"振奋",true,237010)
 end

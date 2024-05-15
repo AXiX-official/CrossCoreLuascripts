@@ -36,5 +36,5 @@ function Skill4600103:OnAfterHurt(caster, target, data)
 	-- 4600103
 	self:AddBuff(SkillEffect[4600103], caster, self.card, data, 4600103)
 	-- 4600107
-	self:ShowTips(SkillEffect[4600107], caster, self.card, data, 2,"王牌",true)
+	self:ShowTips(SkillEffect[4600107], caster, self.card, data, 2,"王牌",true,4600107)
 end

@@ -59,10 +59,17 @@ function ItemClickCB(index)
 end
 
 function OnOpen()
-    useModelID = PlayerClient:GetIconId()
-    usePanelID = PlayerClient:GetPanelId()
+    local baseID = PlayerClient:GetPanelId()
+    local isRole = PlayerClient:KBIsRole()
+    if (isRole) then
+        useModelID = baseID
+        usePanelID = nil
+    else
+        useModelID = nil
+        usePanelID = baseID
+    end
 
-    curModelID = usePanelID == nil and useModelID or nil
+    curModelID = useModelID
     curPanelID = usePanelID
     curLIndex = nil
     RefreshPanel()
@@ -127,10 +134,10 @@ function SetMiddle()
         _isL2D = cache.l2d
     end
     -- 和谐不显示动态
-    local isShopImg = false
+    local isShopImg = false 
     if (not isCanUse and CheckIsHX()) then
         _isL2D = false
-        isShopImg = true
+        isShopImg = true 
     end
     --
     if (isRole) then
@@ -141,10 +148,10 @@ function SetMiddle()
                 UIUtil:SetObjFade(movePoint, 0, 1, nil, 300, 0, 0)
             end
             oldModelID = curModelID
-        end, _isL2D, isShopImg)
+        end, _isL2D,isShopImg)
         isL2D = cardIconItem.IsLive2D()
     else
-        mulIconItem.Refresh(curPanelID, nil, nil, _isL2D, isShopImg)
+        mulIconItem.Refresh(curPanelID, nil, nil, _isL2D,isShopImg)
         isL2D = mulIconItem.IsLive2D()
     end
     --

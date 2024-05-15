@@ -44,6 +44,8 @@ local mgrNames = {
 	"MulPicMgr",--好感度
 	"SortMgr",
 	"SDKPayMgr",--SDK支付
+	"HeadFrameMgr",
+	"HeadIconMgr",
 }
 
 

@@ -39,5 +39,5 @@ function Skill21802:OnActionOver(caster, target, data)
 		return
 	end
 	-- 218010
-	self:ShowTips(SkillEffect[218010], caster, self.card, data, 2,"腐蚀",true)
+	self:ShowTips(SkillEffect[218010], caster, self.card, data, 2,"腐蚀",true,218010)
 end

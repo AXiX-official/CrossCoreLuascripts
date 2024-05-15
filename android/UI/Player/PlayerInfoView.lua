@@ -1,8 +1,11 @@
 local fade = nil
 local isAnim = false
+local isFirst = false
 
 function Awake()
     fade = ComUtil.GetCom(gameObject, "ActionFade")
+
+    UIUtil:AddTop2("PlayerInfoView", gameObject, OnClickClose)
 end
 
 -- 玩家信息
@@ -29,14 +32,18 @@ ____["level"]:100
 }
 --]]
 function OnPlayerInfoSet(_data)
-    if _data then
+    if isFirst then
+        return
+    end
+    isFirst = true
+    if _data  then
 		Show(_data)
-		isAnim= true
 		CSAPI.SetGOActive(startAction,true)
 		CSAPI.SetGOActive(node, true)
-        fade:Play(0, 1, 100, 0,function ()
-			isAnim = false
-		end)		
+        -- isAnim= true
+        -- fade:Play(0, 1, 100, 0,function ()
+		-- 	isAnim = false
+		-- end)		
     end
 end
 
@@ -44,31 +51,30 @@ function Show(_data)
     -- LogError(_data)
     local info = _data.info
     -- icon
-    if info and info.icon_id then
-        local cfgModel = Cfgs.character:GetByID(info.icon_id)
-        if cfgModel and cfgModel.Card_head then
-            ResUtil.CardIcon:Load(role, cfgModel.Card_head, true)
-        end
-        -- RoleTool.LoadImg(role, info.icon_id, LoadImgType.Main)
-    end
+    -- if data and data.iconName then
+    --     ResUtil.RoleCard:Load(role, data.iconName, true)
+    --     CSAPI.SetScale(role, 0.87, 0.87)
+    --     -- RoleTool.LoadImg(role, info.icon_id, LoadImgType.Main)
+    -- end
 
     -- name
     CSAPI.SetText(txtName, _data.name)
 
     -- lv
-    CSAPI.SetText(txtLv1, _data.level .. "")
+    local level = _data.level or 1
+    CSAPI.SetText(txtLv1, level .. "")
 
     -- uid
     CSAPI.SetText(txtUID, _data.uid .. "")
 
     -- sign 
-    local signStr = _data.sign
-    local alpha = 255
-    if signStr == "" then
-        signStr = LanguageMgr:GetByID(27010)
-        alpha = 76
-    end
-    SetSign(signStr)
+    -- local signStr = _data.sign
+    -- local alpha = 255
+    -- if signStr == "" then
+    --     signStr = LanguageMgr:GetByID(27010)
+    --     alpha = 76
+    -- end
+    -- SetSign(signStr)
     -- CSAPI.SetTextColor(txtSign,255,255,255,alpha)
 
     -- 创建时间
@@ -88,9 +94,9 @@ function Show(_data)
     -- end
     CSAPI.SetText(txtDysj2,role_num .."/"..max)
     -- 最高段位
-    local cfgExercise = Cfgs.CfgPracticeRankLevel:GetByID(info.max_rank_level)
-    local zgdwRate = cfgExercise and cfgExercise.name or ""
-    CSAPI.SetText(txtZgdw2, zgdwRate .. "")
+    -- local cfgExercise = Cfgs.CfgPracticeRankLevel:GetByID(info.max_rank_level)
+    -- local zgdwRate = cfgExercise and cfgExercise.name or ""
+    -- CSAPI.SetText(txtZgdw2, zgdwRate .. "")
     -- 剧情进度
     local max_dup = info.max_dup or 0
     local mDungeonCfg = Cfgs.MainLine:GetByID(max_dup)
@@ -101,10 +107,11 @@ function Show(_data)
     CSAPI.SetText(txtJddj2, lvStr.. buildLv)
 
     -- 爬塔进度
-    local max_tower = info.max_tower or 0
-    local tDungeonCfg = Cfgs.MainLine:GetByID(max_tower)
-    CSAPI.SetGOActive(ptjdImg,not (tDungeonCfg and tDungeonCfg.name))
-    CSAPI.SetText(txtPtjd2, tDungeonCfg and tDungeonCfg.name or "")
+    -- local max_tower = info.max_tower or 0
+    -- local tDungeonCfg = Cfgs.MainLine:GetByID(max_tower)
+    -- CSAPI.SetGOActive(ptjdImg,not (tDungeonCfg and tDungeonCfg.name))
+    -- CSAPI.SetText(txtPtjd2, tDungeonCfg and tDungeonCfg.name or "")
+    SetHeadFrame(info.icon_frame or 1,info.icon_id)
 end
 
 function OnOpen()
@@ -120,6 +127,10 @@ end
 function SetSign(str)
     str = MsgParser:getString(str) -- 屏蔽字体用***代替
     -- CSAPI.SetText(txtSign, str)
+end
+
+function SetHeadFrame(_id,_icon_id)
+    UIUtil:AddHeadByID(headParent,1,_id, _icon_id)
 end
 
 -- 协战

@@ -30,7 +30,7 @@ function Refresh(_data)
         invite_time = nil
     end
     -- 
-    AddCRoleItem()
+    --AddCRoleItem()
 
     -- name
     CSAPI.SetText(txtName, data:GetName())
@@ -48,18 +48,20 @@ function Refresh(_data)
     local str = LanguageMgr:GetByID(id)
     StringUtil:SetColorByName(txtState, str, colorName)
     CSAPI.LoadImg(imgState, "UIs/ExerciseR/" .. imgName .. ".png", true, nil, true)
+    --head
+    UIUtil:AddHeadByID(hfParent, 0.7, data:GetFrameId(), data:GetIconId())
 end
 
-function AddCRoleItem()
-    if (not cRoleLittleItem2) then
-        ResUtil:CreateUIGOAsync("CRoleItem/CRoleSmallItem2", iconParent, function(go)
-            cRoleLittleItem2 = ComUtil.GetLuaTable(go)
-            cRoleLittleItem2.Refresh(data:GetLv(), data:GetIconId())
-        end)
-    else
-        cRoleLittleItem2.Refresh(data:GetLv(), data:GetIconId())
-    end
-end
+-- function AddCRoleItem()
+--     if (not cRoleLittleItem2) then
+--         ResUtil:CreateUIGOAsync("CRoleItem/CRoleSmallItem2", iconParent, function(go)
+--             cRoleLittleItem2 = ComUtil.GetLuaTable(go)
+--             cRoleLittleItem2.Refresh(data:GetLv(), data:GetIconId())
+--         end)
+--     else
+--         cRoleLittleItem2.Refresh(data:GetLv(), data:GetIconId())
+--     end
+-- end
 
 function SetBtn()
     local btnShow1 = true

@@ -23,5 +23,5 @@ function Skill4500601:OnRoundOver(caster, target, data)
 	-- 4500601
 	self:AddBuff(SkillEffect[4500601], caster, self.card, data, 4500601)
 	-- 4500606
-	self:ShowTips(SkillEffect[4500606], caster, self.card, data, 2,"凌波翩跹",true)
+	self:ShowTips(SkillEffect[4500606], caster, self.card, data, 2,"凌波翩跹",true,4500606)
 end

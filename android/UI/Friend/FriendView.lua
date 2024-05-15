@@ -554,7 +554,8 @@ end
 function OnInfoCallBack(_item)
     CSAPI.OpenView("PlayerInfoView", {
         uid = _item.GetUid(),
-        supports = _item.GetSupports()
+        supports = _item.GetSupports(),
+        iconName = _item.GetIconName()
     })
 end
 

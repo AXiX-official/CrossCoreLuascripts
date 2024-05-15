@@ -515,7 +515,7 @@ function OnClickDetails()
 	end
 	local cfg = itemInfo:GetCfg();
 	if cfg and cfg.type==ITEM_TYPE.PANEL_IMG and cfg.dy_value1 then--多人插图,特殊处理
-		CSAPI.OpenView("MulPictureView",cfg.dy_value1);
+		CSAPI.OpenView("MulPictureView",{id=cfg.dy_value1,showMask=true});
 	end
 end
 

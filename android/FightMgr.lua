@@ -2673,7 +2673,8 @@ local clientShowAttr = {
     'skills',
     'eskills',
     'tTransfoSkills',
-    'career'
+    'career',
+    'use_sub_talent'
 }
 
 function FightMgrClient:ClientPrintCardInfo(id, bt)

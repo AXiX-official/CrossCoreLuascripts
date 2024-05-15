@@ -26,5 +26,5 @@ function Skill22602:OnActionBegin(caster, target, data)
 	-- 22602
 	self:AddBuff(SkillEffect[22602], caster, self.card, data, 22602)
 	-- 226010
-	self:ShowTips(SkillEffect[226010], caster, self.card, data, 2,"冰冻",true)
+	self:ShowTips(SkillEffect[226010], caster, self.card, data, 2,"冰冻",true,226010)
 end

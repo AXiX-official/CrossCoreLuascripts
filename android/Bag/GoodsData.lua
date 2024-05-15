@@ -343,6 +343,14 @@ function this:GetAcquireTime()
 	return self.data.time or 0 
 end
 
+--过期时间（头像框）
+function this:GetHeadFrameExpiry()
+	if(self.data.expiry==nil or self.data.expiry==0) then 
+		return nil 
+	end 
+	return self.data.expiry
+end
+
 -- ----------------------------------------状态记录--------------------------------------
 -- --是否被选择为素材
 -- function this:GetIsSelect()

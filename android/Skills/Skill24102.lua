@@ -27,6 +27,6 @@ function Skill24102:OnAfterHurt(caster, target, data)
 	if self:Rand(2000) then
 		self:AddProgress(SkillEffect[24102], caster, target, data, -200)
 		-- 241010
-		self:ShowTips(SkillEffect[241010], caster, self.card, data, 2,"震慑",true)
+		self:ShowTips(SkillEffect[241010], caster, self.card, data, 2,"震慑",true,241010)
 	end
 end

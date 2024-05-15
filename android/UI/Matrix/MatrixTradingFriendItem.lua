@@ -8,7 +8,7 @@ function Refresh(_data, _fid, _cb)
     cb = _cb
 
     -- child
-    SetIcon(data:GetIconName())
+    -- SetIcon(data:GetIconName())
     -- name
     CSAPI.SetText(txtName, data:GetName())
     -- lv
@@ -31,25 +31,26 @@ function Refresh(_data, _fid, _cb)
     end
     CSAPI.SetGOActive(btnOk, not isSelect)
     CSAPI.SetGOActive(btnL, isSelect)
+    -- head
+    UIUtil:AddHeadByID(hfParent, 0.8, data:GetFrameId(), data:GetIconId())
 end
 
-function SetIcon(iconName)
-    if (roleItem == nil) then
-        ResUtil:CreateUIGOAsync("CRoleItem/MatrixRole", childParent, function(go)
-            roleItem = ComUtil.GetLuaTable(go)
-            roleItem.SetIcon(iconName)
-        end)
-    else
-        roleItem.SetIcon(iconName)
-    end
-end
+-- function SetIcon(iconName)
+--     if (roleItem == nil) then
+--         ResUtil:CreateUIGOAsync("CRoleItem/MatrixRole", childParent, function(go)
+--             roleItem = ComUtil.GetLuaTable(go)
+--             roleItem.SetIcon(iconName)
+--         end)
+--     else
+--         roleItem.SetIcon(iconName)
+--     end
+-- end
 
 function OnClickR()
     if (cb and cg_btnOk.alpha == 1) then
         cb(data)
     end
 end
-
 
 function OnClickL()
     LanguageMgr:ShowTips(2101)

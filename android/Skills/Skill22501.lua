@@ -16,5 +16,5 @@ function Skill22501:OnBorn(caster, target, data)
 	-- 22501
 	self:AddNp(SkillEffect[22501], caster, self.card, data, 10)
 	-- 225010
-	self:ShowTips(SkillEffect[225010], caster, self.card, data, 2,"装填",true)
+	self:ShowTips(SkillEffect[225010], caster, self.card, data, 2,"装填",true,225010)
 end

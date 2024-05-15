@@ -28,11 +28,11 @@ function Refresh(cfg, curSelectDatas)
         local sortIcon = cfg.sortIcon[1] -- json 
         isShowName = sortIcon[1] == 1
         CSAPI.LoadImg(icon, "UIs/Icons/" .. sortIcon[2] .. ".png", true, nil, false)
-        CSAPI.SetGOActive(icon, true)
+        CSAPI.SetGOActive(iconParent, true)
         CSAPI.SetScale(icon, sortIcon[3], sortIcon[3], sortIcon[3])
         cg_icon.alpha = isSelect and 1 or sortIcon[4]
     else
-        CSAPI.SetGOActive(icon, false)
+        CSAPI.SetGOActive(iconParent, false)
     end
     -- text 
     CSAPI.SetGOActive(txtName, isShowName)

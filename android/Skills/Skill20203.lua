@@ -22,6 +22,6 @@ function Skill20203:OnAfterHurt(caster, target, data)
 	if self:Rand(3000) then
 		self:LimitDamage(SkillEffect[20203], caster, target, data, 0.06,1.2)
 		-- 202010
-		self:ShowTips(SkillEffect[202010], caster, self.card, data, 2,"切割",true)
+		self:ShowTips(SkillEffect[202010], caster, self.card, data, 2,"切割",true,202010)
 	end
 end

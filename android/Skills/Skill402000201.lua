@@ -27,5 +27,5 @@ function Skill402000201:OnAttackOver(caster, target, data)
 	-- 402000101
 	self:HitAddBuffCount(SkillEffect[402000101], caster, target, data, 10000,402000101,2,6)
 	-- 402000102
-	self:ShowTips(SkillEffect[402000102], caster, target, data, 2,"磷雾",true)
+	self:ShowTips(SkillEffect[402000102], caster, target, data, 2,"磷雾",true,402000102)
 end

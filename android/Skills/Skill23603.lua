@@ -44,5 +44,5 @@ function Skill23603:OnAfterHurt(caster, target, data)
 	-- 93010
 	self:ResetCD(SkillEffect[93010], caster, target, data, 3)
 	-- 236010
-	self:ShowTips(SkillEffect[236010], caster, self.card, data, 2,"救赎",true)
+	self:ShowTips(SkillEffect[236010], caster, self.card, data, 2,"救赎",true,236010)
 end

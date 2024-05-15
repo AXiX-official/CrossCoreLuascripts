@@ -135,13 +135,17 @@ end
 --设置支援玩家信息
 function SetAssistPlayerInfos(assistData)
 	if assistData then
-		SetFIcon(assistData.icon_id)
+		local frameId=assistData.icon_frame or 1;
+		UIUtil:AddHeadByID(fBorder,0.8,frameId,assistData.icon_id);
+		-- SetFIcon(assistData.icon_id)
+		-- SetFBorder(assistData.icon_frame)
 		SetFLv(assistData.level);
 		SetFID(assistData.name);
 		SetFState(assistData.is_fls==true and 1 or 2);
 	else
-		SetFIcon();
+		-- SetFIcon();
 		SetFID();
+		-- SetFBorder();
 		SetFLv();
 		SetFState();
 	end
@@ -150,13 +154,14 @@ end
 --设置NPC显示
 function SetNPCPlayerInfos(cardData,isNpc)
 	if cardData and isNpc then
-		SetFIcon(cardData:GetModelCfg().id)
+		UIUtil:AddHeadByID(fBorder,0.8,1,cardData:GetModelCfg().id);
+		-- SetFIcon(cardData:GetModelCfg().id)
 		-- SetFLv(LanguageMgr:GetByID(26036));
 		SetFLv(tostring(cardData:GetLv()));
 		SetFID(LanguageMgr:GetByID(26035));
 		SetFState(3);
 	else
-		SetFIcon()
+		-- SetFIcon()
 		SetFLv();
 		SetFID();
 		SetFState();
@@ -201,19 +206,23 @@ function SetFID(fID)
 	end
 end
 
-function SetFIcon(iconId)
-	if iconId then
-		local cfgModel = Cfgs.character:GetByID(iconId);
-		if cfgModel then
-			ResUtil.RoleCard:Load(fIcon,cfgModel.icon);
-			CSAPI.SetGOActive(fIcon,true);
-		else
-			CSAPI.SetGOActive(fIcon,false);
-		end
-	else
-		CSAPI.SetGOActive(fIcon,false);
-	end
-end
+-- function SetFIcon(iconId)
+-- 	if iconId then
+-- 		local cfgModel = Cfgs.character:GetByID(iconId);
+-- 		if cfgModel then
+-- 			ResUtil.RoleCard:Load(fIcon,cfgModel.icon);
+-- 			CSAPI.SetGOActive(fIcon,true);
+-- 		else
+-- 			CSAPI.SetGOActive(fIcon,false);
+-- 		end
+-- 	else
+-- 		CSAPI.SetGOActive(fIcon,false);
+-- 	end
+-- end
+
+-- function SetFBorder(borderId)
+-- 	UIUtil:AddHeadFrame(fBorderObj,borderId or 1,1.4);
+-- end
 
 function SetFLv(_lv)
 	if _lv then
@@ -266,7 +275,7 @@ function OnClick()
 end
 
 function OnHolder()
-	if elseData.hcb ~= nil then
+	if elseData and elseData.hcb ~= nil then
 		elseData.hcb(this);
 	else
 		EventMgr.Dispatch(EventType.Role_Card_Holder, this)

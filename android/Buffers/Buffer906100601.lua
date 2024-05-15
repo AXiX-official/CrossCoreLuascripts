@@ -24,7 +24,7 @@ function Buffer906100601:OnBefourCritHurt(caster, target)
 		return
 	end
 	-- 906100601
-	self:AddTempAttr(BufferEffect[906100601], self.caster, self.caster, nil, "crit_rate",-0.02*self.nCount)
+	self:AddTempAttr(BufferEffect[906100601], self.caster, self.caster, nil, "crit_rate",-0.04*self.nCount)
 	-- 906100602
-	self:AddTempAttr(BufferEffect[906100602], self.caster, self.caster, nil, "crit",-0.04*self.nCount)
+	self:AddTempAttr(BufferEffect[906100602], self.caster, self.caster, nil, "crit",-0.08*self.nCount)
 end

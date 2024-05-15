@@ -104,7 +104,6 @@ function InitInfo()
     if (itemInfo == nil) then
         ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)
         end)
     end
@@ -634,30 +633,25 @@ end
 -- 关卡信息
 function ShowInfo(item)
     isActive = item ~= nil;
+    local cfg = item and item.GetCfg() or nil
     CSAPI.SetGOActive(infoMask, isActive)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
-    itemInfo.Show(item)
+    itemInfo.Show(cfg)
 end
 
 -- 进入
 function OnBattleEnter()
     if (selItem) then
-        if (itemInfo.IsCanAIMove()) then -- 自动寻路
-            BattleMgr:SetAIMoveState(itemInfo.IsAIMove())
-        end
-        DungeonMgr:ShowAIMoveBtn(itemInfo.IsCanAIMove() and itemInfo.IsAIMove())
         if selItem.GetCfg().arrForceTeam ~= nil then -- 强制上阵编队
             CSAPI.OpenView("TeamForceConfirm", {
                 dungeonId = selItem.GetID(),
-                teamNum = selItem.GetTeamNum(),
-                isNotAssist = itemInfo.IsAIMove()
+                teamNum = selItem.GetTeamNum()
             })
         else
             CSAPI.OpenView("TeamConfirm", { -- 正常上阵
                 dungeonId = selItem.GetID(),
-                teamNum = selItem.GetTeamNum(),
-                isNotAssist = itemInfo.IsAIMove()
+                teamNum = selItem.GetTeamNum()
             }, TeamConfirmOpenType.Dungeon)
         end
         CSAPI.SetGOActive(mapView.ModelCamera, false);

@@ -30,5 +30,5 @@ function Skill4301201:OnActionOver(caster, target, data)
 	-- 4301206
 	self:AddNp(SkillEffect[4301206], caster, self.card, data, 10)
 	-- 4301207
-	self:ShowTips(SkillEffect[4301207], caster, self.card, data, 2,"预热",true)
+	self:ShowTips(SkillEffect[4301207], caster, self.card, data, 2,"预热",true,4301207)
 end

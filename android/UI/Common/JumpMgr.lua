@@ -20,11 +20,7 @@ function this:GetFunc(sName)
         self.funcs = {}
         self.funcs["Dungeon"] = self.Dungeon
         self.funcs["DungeonTower"] = self.Dungeon
-        self.funcs["DungeonActivity1"] = self.DungeonActivity
-        self.funcs["DungeonActivity2"] = self.DungeonActivity
-        self.funcs["DungeonActivity3"] = self.DungeonActivity
-        self.funcs["DungeonActivity4"] = self.DungeonActivity
-        self.funcs["DungeonActivity5"] = self.DungeonActivity
+        self.funcs["DungeonActivity"] = self.DungeonActivity
         self.funcs["DungeonRole"] = self.DungeonActivity
         self.funcs["DungeonShadowSpider"] = self.DungeonActivity
         self.funcs["DungeonPlot"] = self.DungeonActivity
@@ -219,19 +215,23 @@ function this.DungeonActivity(cfg)
         end
         local sectionData = DungeonMgr:GetSectionData(cfg.val1)
         if sectionData then
+            local viewName = cfg.sName
+            if viewName == "DungeonActivity" and cfg.page then
+                viewName = viewName .. cfg.page
+            end
             if sectionData:GetType() == SectionActivityType.BattleField then
                 if cfg.val2 == 2 then
                     this.CheckClose(cfg);
                     CSAPI.OpenView("BattleFieldBoss")
                 else
                     this.CheckClose(cfg);
-                    CSAPI.OpenView(cfg.sName, {
+                    CSAPI.OpenView(viewName, {
                         id = cfg.val1
                     })
                 end
             else
                 this.CheckClose(cfg);
-                CSAPI.OpenView(cfg.sName, {
+                CSAPI.OpenView(viewName, {
                     id = cfg.val1,
                     type = cfg.val2,
                     itemId = cfg.val3
@@ -349,7 +349,7 @@ function this.DungeonActivityState(cfg)
     if sectionData then
         local isOpen, _lockStr = sectionData:GetOpen()
 
-        local openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+        local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if isOpen and openInfo then
             if string.match(cfg.sName,"DungeonActivity") then 
                 if not openInfo:IsOpen() then

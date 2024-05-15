@@ -189,18 +189,18 @@ function this:OpenReward(data, elseData)
                 end
             end
         end
-        if ( #showSkinList >= 1) or (#showRoleList >= 1) then
+        if (#showSkinList >= 1) or (#showRoleList >= 1) then
             if (#showRoleList >= 1) then
                 CSAPI.OpenView("CreateShowView", {showRoleList}, 2, function(go)
                     local lua = ComUtil.GetLuaTable(go);
-                    lua.SetShowRewardPanel(function ()
+                    lua.SetShowRewardPanel(function()
                         if #showSkinList >= 1 then
                             UIUtil:ShowSkinList(showSkinList, data, elseData)
                         else
                             CSAPI.OpenView("RewardPanel", data, elseData)
                         end
                     end)
-                end); 
+                end);
             else
                 UIUtil:ShowSkinList(showSkinList, data, elseData)
             end
@@ -210,11 +210,11 @@ function this:OpenReward(data, elseData)
     end
 end
 
---递归播放皮肤展示界面
+-- 递归播放皮肤展示界面
 function this:ShowSkinList(list, data, elseData)
     local skinInfo = table.remove(list, 1)
-    CSAPI.OpenView("SkinShowView",skinInfo,nil,function(go)
-    local lua = ComUtil.GetLuaTable(go);
+    CSAPI.OpenView("SkinShowView", skinInfo, nil, function(go)
+        local lua = ComUtil.GetLuaTable(go);
         lua.ClickBtn = function()
             if #list > 0 then
                 lua.Init()
@@ -593,7 +593,7 @@ function this:SetBtnState(go, enable, cAlpha)
     end
 end
 
---打开通用购买界面
+-- 打开通用购买界面
 ---@param title 标题
 ---@param tips 提示语
 ---@param count 可购买数量
@@ -601,7 +601,7 @@ end
 ---@param cost 单次购买价格
 ---@param reward 购买的物品
 ---@param payFunc 购买函数
-function this:OpenPurchaseView(title,tips,count,maxCount,cost,reward,payFunc)
+function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFunc)
     if count <= 0 then
         local dialogData = {}
         local cfg = Cfgs.ItemInfo:GetByID(reward[1][1])
@@ -609,8 +609,8 @@ function this:OpenPurchaseView(title,tips,count,maxCount,cost,reward,payFunc)
         dialogData.okCallBack = function()
             JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
         end
-        CSAPI.OpenView("Dialog",dialogData)
-        return 
+        CSAPI.OpenView("Dialog", dialogData)
+        return
     end
     local data = {}
     data.title = title
@@ -620,7 +620,35 @@ function this:OpenPurchaseView(title,tips,count,maxCount,cost,reward,payFunc)
     data.cost = cost
     data.reward = reward
     data.payFunc = payFunc
-    CSAPI.OpenView("UniversalPurchase",data)
+    CSAPI.OpenView("UniversalPurchase", data)
+end
+
+-- 添加头像+头像框(自己)
+function this:AddHeadFrame(parent, scale)
+    self:AddHeadByID(parent, scale, PlayerClient:GetHeadFrame(), PlayerClient:GetIconId())
+end
+
+-- frameID头像框id，iconID头像id
+function this:AddHeadByID(parent, scale, frameID, iconID)
+    scale = scale or 1
+    local itemGo = parent.transform:Find("RoleHead")
+    if (not itemGo) then
+        ResUtil:CreateUIGOAsync("Common/RoleHead", parent, function(go)
+            local item = ComUtil.GetLuaTable(go)
+            item.Refresh(scale, frameID, iconID)
+        end)
+    else
+        local item = ComUtil.GetLuaTable(itemGo.gameObject)
+        item.Refresh(scale, frameID, iconID)
+    end
+end
+
+-- 移除头像（头像+头像框）
+function this:RemoveHead(parent)
+    local itemGo = parent.transform:Find("RoleHead")
+    if (itemGo) then
+        CSAPI.RemoveGO(itemGo.gameObject)
+    end
 end
 
 return this

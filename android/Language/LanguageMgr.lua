@@ -19,6 +19,7 @@ end
 
 -- 改变全局多语言
 function this:ChangeLanguage(num)
+    self.mLocalLanguageType = num 
     self:GetMgr():ChangeLanguageType(num)
 end
 

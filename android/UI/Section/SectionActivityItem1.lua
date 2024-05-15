@@ -14,6 +14,10 @@ local isSelect = false
 local isTower = false
 local resetTime = 0
 
+-- 爬塔
+local isNewTower = false
+local towerResetTime = 0
+
 -- 动效
 local textRand = nil
 local lastSelect = false
@@ -46,6 +50,7 @@ function Refresh(_data, elseData)
         lastState = currState
         SetBG()
         SetTower()
+        SetNewTower()
         SetTitle()
         SetLock()
         SetRed()
@@ -57,6 +62,8 @@ end
 function Update()
     if isTower then
         UpdateTower()
+    elseif isNewTower then
+        UpdateNewTower()
     else
         -- UpdateActivity()
     end
@@ -180,6 +187,45 @@ end
 
 function IsTower()
     return isTower
+end
+
+-------------------------------------------新爬塔
+function SetNewTower()
+    isNewTower = data.type == SectionActivityType.NewTower
+    CSAPI.SetGOActive(towerObj2, isNewTower)
+    if isNewTower then
+        openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
+        RefreshNewTower()
+    end
+end
+
+function RefreshNewTower()
+    if openInfo then
+        towerResetTime = openInfo:GetEndTime()
+    end
+    local tab = TowerMgr:GetCounts()
+    tab[1] = tab[1] or {}
+    CSAPI.SetText(txtTowerNol1,"/" .. (tab[1].max or 0))
+    CSAPI.SetText(txtTowerNol2,(tab[1].cur or 0) .. "")
+    tab[2] = tab[2] or {}
+    CSAPI.SetText(txtTowerHard1,"/" .. (tab[2].max or 0))
+    CSAPI.SetText(txtTowerHard2,(tab[2].cur or 0) .. "")    
+end
+
+function UpdateNewTower()
+    if isNewTower then
+        if TimeUtil:GetTime() > towerResetTime then
+            return
+        end
+
+        if (towerResetTime >= 0) then
+            local timeTab = TimeUtil:GetDiffHMS(towerResetTime, TimeUtil:GetTime())
+            local day = timeTab.day > 0 and timeTab.day .. LanguageMgr:GetByID(11010) or ""
+            local hour = timeTab.hour > 0 and timeTab.hour .. LanguageMgr:GetByID(11009) or ""
+            local min = timeTab.minute > 0 and timeTab.minute .. LanguageMgr:GetByID(11011) or ""
+            LanguageMgr:SetText(txtTowerTime2, 36006, day .. hour .. min)
+        end
+    end
 end
 
 ------------------------------------动效----------------------------------------

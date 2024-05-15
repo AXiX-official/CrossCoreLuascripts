@@ -294,6 +294,19 @@ function this.Filter_CfgMatrixOrderType(newDatas, dic)
     end
     return _newDatas
 end
+-- 头像框
+function this.Filter_CfgIsAvatar(newDatas, dic)
+    local _newDatas = {}
+    for i, v in pairs(newDatas) do
+        for k, val in pairs(dic) do
+            if (v:GetClassType() and dic[v:GetClassType()]) then
+                table.insert(_newDatas, v)
+                break
+            end
+        end
+    end
+    return _newDatas
+end
 --------------------------------------------------筛选end-----------------------------------------------------
 
 --------------------------------------------------排序-----------------------------------------------------
@@ -672,5 +685,8 @@ function this.SortFunc_7003(a, b)
     end
 end
 
+function this.SortFunc_8000(a, b)
+    return a:GetSortIndex() < b:GetSortIndex()
+end
 --------------------------------------------------排序end-----------------------------------------------------
 return this

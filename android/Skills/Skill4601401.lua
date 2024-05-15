@@ -28,5 +28,5 @@ function Skill4601401:OnBefourHurt(caster, target, data)
 	-- 4601401
 	self:LimitDamage(SkillEffect[4601401], caster, target, data, 0.04,0.48)
 	-- 4601406
-	self:ShowTips(SkillEffect[4601406], caster, self.card, data, 2,"碎盾",true)
+	self:ShowTips(SkillEffect[4601406], caster, self.card, data, 2,"碎盾",true,4601406)
 end

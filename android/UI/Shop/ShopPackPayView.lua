@@ -23,8 +23,6 @@ function InitListener()
 	eventMgr:AddListener(EventType.Shop_MonthCard_DaysChange,OnMonthCardDaysChange)
 	eventMgr:AddListener(EventType.SDK_QRPay_Over,OnQROver)
 	eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopRefresh)
-	eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpen)
-	eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClose)
 end
 
 function OnDestroy()
@@ -267,20 +265,6 @@ function OnSuccess(proto)
 				ShowBuffTips();
 			end
 		end
-	end
-end
-
-function OnViewOpen(key)
-	if key=="MulPictureView" then
-		--预览时隐藏
-		CSAPI.SetAnchor(gameObject,100000,100000);
-	end
-end
-
-function OnViewClose(key)
-	if key=="MulPictureView" then
-		--关闭预览时显示
-		CSAPI.SetAnchor(gameObject,0,0);
 	end
 end
 

@@ -26,7 +26,7 @@ function Skill4100105:OnActionOver(caster, target, data)
 	-- 4100105
 	self:OwnerAddBuffCount(SkillEffect[4100105], caster, self.card, data, 4100105,1,4)
 	-- 4100106
-	self:ShowTips(SkillEffect[4100106], caster, self.card, data, 2,"荣耀之心",true)
+	self:ShowTips(SkillEffect[4100106], caster, self.card, data, 2,"荣耀之心",true,4100106)
 end
 -- 行动结束2
 function Skill4100105:OnActionOver2(caster, target, data)
@@ -43,7 +43,7 @@ function Skill4100105:OnActionOver2(caster, target, data)
 	-- 4100107
 	self:OwnerAddBuffCount(SkillEffect[4100107], caster, self.card, data, 4100105,1,4)
 	-- 4100106
-	self:ShowTips(SkillEffect[4100106], caster, self.card, data, 2,"荣耀之心",true)
+	self:ShowTips(SkillEffect[4100106], caster, self.card, data, 2,"荣耀之心",true,4100106)
 end
 -- 入场时
 function Skill4100105:OnBorn(caster, target, data)

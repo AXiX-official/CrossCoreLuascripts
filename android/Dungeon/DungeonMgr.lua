@@ -27,7 +27,8 @@ SectionActivityType = {
     BattleField = 102,
     Plot = 103,
     TaoFa = 104,
-    Trials = 105 --试炼
+    NewTower = 105, -- 新爬塔
+    Trials = 106 --试炼
 }
 
 --章节活动开启类型
@@ -204,13 +205,36 @@ function this:GetAllSectionDatas()
     return self.sectionDatas;
 end
 -- 获取指定章节数据 sectionType
-function this:GetScetionDatas(_type)
+function this:GetScetionDatas(_group)
     if (self.sectionDatas) then
         local _datas = {}
         for i, v in pairs(self.sectionDatas) do
-            if (v:GetGroup() == _type) then
+            if (v:GetGroup() == _group) then
                 table.insert(_datas,v)
             end
+        end
+        if #_datas>0 then
+            table.sort(_datas,function (a,b)
+                return a:GetID() < b:GetID()
+            end)
+        end
+        return _datas
+    end
+end
+
+-- 获取指定章节数据 --SectionActivityType
+function this:GetActivitySectionDatas(_type, isOpen)
+    if (self.sectionDatas) then
+        local _datas = {}
+        for i, v in pairs(self.sectionDatas) do
+            if (v:GetType() == _type and (not isOpen or v:GetOpen())) then
+                table.insert(_datas,v)
+            end
+        end
+        if #_datas>0 then
+            table.sort(_datas,function (a,b)
+                return a:GetID() < b:GetID()
+            end)
         end
         return _datas
     end
@@ -435,6 +459,11 @@ function this:GetDungeonGroupDatas(group, ishard)
             end
         end
     end
+    if #datas > 0 then
+        table.sort(datas,function (a,b)
+            return a:GetID() < b:GetID()
+        end)
+    end
     return datas
 end
 
@@ -548,9 +577,26 @@ function this:GetActiveOpenInfo(_id)
     return self.ActiveOpenInfos and self.ActiveOpenInfos[_id]
 end
 
+--获取活动开启信息 --章节id
+function this:GetActiveOpenInfo2(_id)
+    if self.ActiveOpenInfos then
+        for k, v in pairs(self.ActiveOpenInfos) do
+            if v:GetSectionID() and v:GetSectionID() == _id then
+                return v
+            end
+        end
+    end
+end
+
 --活动开启
 function this:IsActiveOpen(_id)
     local openInfo = self:GetActiveOpenInfo(_id)
+    return openInfo and openInfo:IsOpen()
+end
+
+--活动开启 --章节id
+function this:IsActiveOpen2(_id)
+    local openInfo = self:GetActiveOpenInfo2(_id)
     return openInfo and openInfo:IsOpen()
 end
 

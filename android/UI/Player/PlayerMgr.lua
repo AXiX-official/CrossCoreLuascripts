@@ -36,13 +36,13 @@ end
 --修改模型
 function this:ChangeIcon(_panel_id, _icon_id,_cb)
 	self.ChangeIconCB = _cb 
-	local proto = {"PlayerProto:ChangeIcon", {panel_id = _panel_id, icon_id = _icon_id}}
+	local proto = {"PlayerProto:ChangeIcon", {panel_id = _panel_id or _icon_id}}
 	NetMgr.net:Send(proto)
 end
 --修改模型
 function this:ChangeIconRet(proto)
 	PlayerClient:SetPanelId(proto.panel_id)
-	PlayerClient:SetIconId(proto.icon_id)
+	--PlayerClient:SetIconId(proto.icon_id)
 	EventMgr.Dispatch(EventType.Player_Select_Card)
 	if(self.ChangeIconCB) then 
 		self.ChangeIconCB()

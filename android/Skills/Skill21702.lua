@@ -41,5 +41,5 @@ function Skill21702:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 217010
-	self:ShowTips(SkillEffect[217010], caster, self.card, data, 2,"致命",true)
+	self:ShowTips(SkillEffect[217010], caster, self.card, data, 2,"致命",true,217010)
 end

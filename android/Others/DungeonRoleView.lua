@@ -99,9 +99,9 @@ function OnOpen()
             return
         end
 
-        openInfo = DungeonMgr:GetActiveOpenInfo(sectionData:GetActiveOpenID())
+        openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if not openInfo then
-            LogError("缺少活动时间数据！id" .. sectionData:GetActiveOpenID())
+            LogError("缺少活动时间数据！id" .. sectionData:GetID())
             return
         end
         isHardTimeOpen,hardTimeTips = openInfo:IsHardOpen()
@@ -268,6 +268,7 @@ function SetItems(b)
 
     local pos = {{x = -301.5,y = 120}, {x = -301.5,y = -111}}
     local _datas = currDatas[currTurnNum]:GetDungeonGroups()
+    local groupCfg = currDatas[currTurnNum]:GetCfg()
     if _datas then
         for i, v in ipairs(_datas) do
             local cfg = Cfgs.MainLine:GetByID(v)
@@ -275,6 +276,7 @@ function SetItems(b)
                 if items[i] then
                     items[i].SetIndex(i == 1 and currTurnNum * 2 - 1 or currTurnNum * 2)
                     items[i].Refresh(cfg,currLevel)
+                    items[i].SetIcon(groupCfg.Icon and groupCfg.Icon[i] or "")
                     CSAPI.SetAnchor(items[i].gameObject, pos[i].x, pos[i].y)
                     if isActive  then
                         if not items[1].GetLock() then
@@ -290,6 +292,7 @@ function SetItems(b)
                         lua.SetIndex(i == 1 and currTurnNum * 2 - 1 or currTurnNum * 2)
                         lua.SetClickCB(OnItemClick)
                         lua.Refresh(cfg,currLevel)
+                        lua.SetIcon(groupCfg.Icon and groupCfg.Icon[i] or "")
                         items[i] = lua
                         CSAPI.SetAnchor(go, pos[i].x, pos[i].y)
                         if i == #_datas then
@@ -614,19 +617,18 @@ end
 -- 关卡信息
 function ShowInfo(item)
     isActive = item ~= nil;
+    local cfg = item and item.GetCfg() or nil
     -- CSAPI.SetGOActive(infoMask, isActive)
     if itemInfo == nil then
         ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.InitInfo(true)
             itemInfo.SetClickCB(OnBattleEnter)
-            itemInfo.OnClickSweep = OnClickSweep
-            itemInfo.Show(item)
+            itemInfo.Show(cfg)
             CSAPI.MoveTo(node,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
             CSAPI.MoveTo(svMove,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
         end)
     else
-        itemInfo.Show(item)
+        itemInfo.Show(cfg)
         CSAPI.MoveTo(node,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
         CSAPI.MoveTo(svMove,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
     end
@@ -651,17 +653,6 @@ function OnBattleEnter()
                 teamNum = cfg.teamNum
             }, TeamConfirmOpenType.Dungeon)
         end
-    end
-end
-
-function OnClickSweep()
-    if not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-    if currItem then
-        local cfg = currItem:GetCfg()
-        itemInfo.OnSweepClick(cfg)
     end
 end
 

@@ -86,11 +86,11 @@ function GetServerPath()
 	local useJsonFile;
     local isRelease = true;
     if(isRelease)then
+		--媒体用
+		--useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_mt.json";
 		--正式
-		useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
-		--if(CSAPI.GetPlatform() ==-1)then--审核用
-		--	useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_1.json";
-		--end
+		useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";	
+		
     else
 		--主干
         _G.server_list_enc_close = 1;

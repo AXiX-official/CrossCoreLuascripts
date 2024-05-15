@@ -18,7 +18,9 @@ end
 function OnViewClosed(viewKey)
     if viewKey == "Plot" or viewKey == "ShopView" then
         FuncUtil:Call(function ()
-            CSAPI.PlayBGM("Event_ArachnidsInTheTwilight", 1)
+            if gameObject then
+                CSAPI.PlayBGM("Event_ArachnidsInTheTwilight", 1)
+            end
         end,this,200)
     end
 end
@@ -49,9 +51,8 @@ function OnOpen()
     SetBGScale()
     if openSetting and openSetting.isDungeonOver then --战斗完返回
         isLoading = true
-    else
-        lastBGM = CSAPI.PlayBGM("Event_ArachnidsInTheTwilight", 1)
     end
+    lastBGM = CSAPI.PlayBGM("Event_ArachnidsInTheTwilight", 1)
     if data then
         SetTime()
         SetNum()
@@ -119,9 +120,7 @@ end
 
 function OnDestroy()
     if not FightClient:IsFightting() then --不在战斗中关闭界面时重播bgm
-        FuncUtil:Call(function ()
-            CSAPI.ReplayBGM(lastBGM)
-        end,this,300)
+        CSAPI.ReplayBGM(lastBGM)
     end
     
     eventMgr:ClearListener()

@@ -24,5 +24,5 @@ function Skill23303:OnDeath(caster, target, data)
 		self:AddProgress(SkillEffect[23303], caster, target, data, -300)
 	end
 	-- 233010
-	self:ShowTips(SkillEffect[233010], caster, self.card, data, 2,"威慑",true)
+	self:ShowTips(SkillEffect[233010], caster, self.card, data, 2,"威慑",true,233010)
 end

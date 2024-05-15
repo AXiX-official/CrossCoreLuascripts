@@ -919,6 +919,15 @@ function SkillApi:GetCount(oSkill, caster, target, filter, buffID)
 	return oBuffMgr:GetCount(buffID)
 end
 
+-- 获取当前操作数
+function SkillApi:GetTurnCount(oSkill, caster, target)
+	local mgr = oSkill.team.fightMgr
+	return mgr.nStepPVE or 0
+end
+-- 总伤害
+function SkillApi:GetTotalDamage(oSkill, caster, target, filter)
+	return oSkill.card.nTotalDamage or 0
+end
 ----------------------------------------------
 -- 技能基类
 FightAPI = oo.class()
@@ -1369,6 +1378,7 @@ end
 -- 治疗
 function FightAPI:Cure(effect, caster, target, data, cureTy, percent)
 	-- self.order = self.order + 1
+	local caster = self.card
 	LogDebugEx("---FightAPI:CureEx---", caster.name, target.name)
 
 	if not target:IsLive() then return 0 end -- 已经死了就不加血
@@ -1428,6 +1438,16 @@ function FightAPI:SpillCure(effect, caster, target, data, cureTy, percent, spill
 	end
 end
 
+-- 恢复血量
+function FightAPI:RestoreHP(effect, caster, target, data)
+	-- self.order = self.order + 1
+	LogDebugEx("---FightAPI:RestoreHP---", caster.name, target.name)
+	if not target.isInvincible then return end
+	target.hp = target.maxhp
+	self.log:Add({api="RestoreHP", targetID = target.oid, attr = "hp", 
+		hp = target:Get("hp"),  effectID = effect.apiSetting, order = self.order})
+	return spill
+end
 
 -- 复活
 function FightAPI:Revive(effect, caster, target, data, cureTy, percent, sdata)
@@ -1573,7 +1593,7 @@ function FightAPI:Help(effect, caster, target, data, ty, index)
 			ASSERT(t)
 			helper = {t}
 		else
-			helper = SkillFilter:Rand(self, caster, target, 1)
+			helper = SkillFilter:Rand(self, caster, target, 1, 1)
 		end
 	elseif ty == 3 then
 		-- 召唤物主动协助
@@ -1587,6 +1607,7 @@ function FightAPI:Help(effect, caster, target, data, ty, index)
 	end
 
 	for k,v in ipairs(helper) do
+		--LogDebugEx("name = ", v.name)
 		if v ~= caster then
 			-- self.log:Add({api="Help", id = caster.oid, helperID = v.oid})
 
@@ -2041,7 +2062,7 @@ function FightAPI:SetShareDamage(effect, caster, target, data, percent)
 end
 
 --飘字
-function FightAPI:ShowTips(effect, caster, target, data, type, content, isFilter)
+function FightAPI:ShowTips(effect, caster, target, data, type, content, isFilter, iLanguageId)
 
 	-- 过滤掉重复的提示
 	if isFilter then
@@ -2054,7 +2075,7 @@ function FightAPI:ShowTips(effect, caster, target, data, type, content, isFilter
 		mgr.currTips[content] = 1
 	end
 
-	local data = {api="ShowTips", type = type, content = content, effectID = effect.apiSetting}
+	local data = {api="ShowTips", type = type, content = content, id = iLanguageId, effectID = effect.apiSetting}
 	if caster then
 		data.casterID = caster.oid
 	end

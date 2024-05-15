@@ -26,7 +26,7 @@ function Skill24603:OnAfterHurt(caster, target, data)
 	-- 24603
 	self:HitAddBuff(SkillEffect[24603], caster, target, data, 4500,5104)
 	-- 246010
-	self:ShowTips(SkillEffect[246010], caster, self.card, data, 2,"限制",true)
+	self:ShowTips(SkillEffect[246010], caster, self.card, data, 2,"限制",true,246010)
 end
 -- 行动结束
 function Skill24603:OnActionOver(caster, target, data)
