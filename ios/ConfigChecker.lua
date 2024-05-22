@@ -1174,7 +1174,7 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(not frameCfg.item_id, string.format('该头像框id=%s已有对应的物品id=%s,头像框配置冲突', cfg.dy_value2, id))
                 frameCfg.item_id = id
             else
-                ASSERT(false, string.format('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
+                ASSERT('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2)
             end
         elseif cfg.type == ITEM_TYPE.ICON then
             local avatarCfg = CfgAvatar[cfg.dy_value2]
@@ -1182,7 +1182,7 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(not avatarCfg.item_id, string.format('该头像id=%s已有对应的物品id=%s,头像表配置冲突', cfg.dy_value2, id))
                 avatarCfg.item_id = id
             else
-                ASSERT(false, string.format('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
+                ASSERT('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2)
             end
         elseif cfg.type == ITEM_TYPE.PROP then
             if cfg.dy_value1 == PROP_TYPE.IconFrame then
