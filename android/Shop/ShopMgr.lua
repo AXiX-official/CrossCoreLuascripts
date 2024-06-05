@@ -47,7 +47,7 @@ function this:GetPageTimeInfo(id,group_id)
 	if self.shopOpenTimes then
 		local key=tostring(id);
 		if group_id then
-			key=string.format("%s_%s",v.shop_id,v.group_id);
+			key=string.format("%s_%s",id,group_id);
 		end
 		return self.shopOpenTimes[key];
 	end
@@ -104,6 +104,23 @@ end
 function this:GetPageByID(id)
 	if id then
 		local cfg=Cfgs.CfgShopPage:GetByID(id);
+		if cfg then
+			local pageData=ShopPageData.New();
+			pageData:SetCfg(id);
+			pageData:SetData(self:GetPageTimeInfo(id));
+			--判断当前商店是否开启
+			if pageData:IsOpen() then--当前商店页开启则返回
+				return pageData;
+			end
+		end
+	end
+	return nil;
+end
+
+--返回已开启的子商店页数据
+function this:GetChildPageByID(id)
+	if id then
+		local cfg=Cfgs.CfgShopTab:GetByID(id);
 		if cfg then
 			local pageData=ShopPageData.New();
 			pageData:SetCfg(id);
@@ -302,7 +319,7 @@ function this:GetFixedCommodity(cfgId)
 	end
 end
 
---是否存在固定商品购买记录
+--是否存在当期固定商品购买记录
 function this:HasBuyRecord(cfgId)
 	local record=self:GetRecordInfos(cfgId);
 	if record then
@@ -311,44 +328,68 @@ function this:HasBuyRecord(cfgId)
 	return false;
 end
 
---group:传入group值
-function this:GetPromoteInfo(group)
+--group:传入组id
+function this:GetPromoteInfos(group)
+	local list={};
 	if group then
-		local cfg=Cfgs.CfgShopReCommend:GetGroup(group)[1];
-		if cfg then
-			local info=ShopPromote.New();
-			info:SetCfg(cfg.id);
-			return info;
+		local cfgs=Cfgs.CfgShopReCommend:GetGroup(group);
+		if cfgs~=nil then
+			for k,v in ipairs(cfgs) do
+				local info=ShopPromote.New();
+				info:SetCfg(v.id);
+				if (info:GetShowType()==1 and info:GetNowTimeCanShow()) then
+					table.insert(list,info);
+				elseif (info:GetShowType()==2 and info:GetNowTimeCanShow() and info:IsBuy()~=true) or  (info:GetShowType()==2 and info:GetNowTimeCanShow() and ( info:IsBuy()~=true or k==#cfgs)) then
+					table.insert(list,info);
+					break;
+				end
+			end
+			table.sort(list,function(a,b) --排序
+				return a:GetSort()<b:GetSort();
+			end);
 		end
 	end
+	return list;
 end
 
---读取推荐广告的本地数据 
-function this:PromoteIsRed(id)
-	if self.prmoteConfs==nil then
-		self.prmoteConfs=FileUtil.LoadByPath("ShopPromote.txt");
-		self.prmoteConfs=self.prmoteConfs or {};
-	end
-	if id and self.prmoteConfs and self.prmoteConfs[id] then
-		local promote=ShopPromote.New();
-		promote:SetCfg(id);
-		local isBetween=ShopCommFunc.TimeIsBetween(promote:GetStartTime(),promote:GetEndTime(),self.prmoteConfs[id].time);	
-		if isBetween then --在推广时间内是否查看过推荐数据
-			return self.prmoteConfs[id].isRead~=1; --看过则不显示红点
-		end
-	end
-	return true;--默认显示红点
-end
+-- --group:传入group值
+-- function this:GetPromoteInfo(group)
+-- 	if group then
+-- 		local cfg=Cfgs.CfgShopReCommend:GetGroup(group)[1];
+-- 		if cfg then
+-- 			local info=ShopPromote.New();
+-- 			info:SetCfg(cfg.id);
+-- 			return info;
+-- 		end
+-- 	end
+-- end
 
---缓存推荐数据
-function this:SavePromoteState(id,isRead)
-	self.prmoteConfs=self.prmoteConfs or {};
-	local info={};
-	info.isRead=isRead==true and 0 or 1;
-	info.time=TimeUtil:GetTime();
-	self.prmoteConfs[id]=info;
-	FileUtil.SaveToFile("ShopPromote.txt",self.prmoteConfs);
-end
+-- -- 读取推荐广告的本地数据 
+-- function this:PromoteIsRed(id)
+-- 	if self.prmoteConfs==nil then
+-- 		self.prmoteConfs=FileUtil.LoadByPath("ShopPromote.txt");
+-- 		self.prmoteConfs=self.prmoteConfs or {};
+-- 	end
+-- 	if id and self.prmoteConfs and self.prmoteConfs[id] then
+-- 		local promote=ShopPromote.New();
+-- 		promote:SetCfg(id);
+-- 		local isBetween=ShopCommFunc.TimeIsBetween(promote:GetStartTime(),promote:GetEndTime(),self.prmoteConfs[id].time);	
+-- 		if isBetween then --在推广时间内是否查看过推荐数据
+-- 			return self.prmoteConfs[id].isRead~=1; --看过则不显示红点
+-- 		end
+-- 	end
+-- 	return true;--默认显示红点
+-- end
+
+-- --缓存推荐数据
+-- function this:SavePromoteState(id,isRead)
+-- 	self.prmoteConfs=self.prmoteConfs or {};
+-- 	local info={};
+-- 	info.isRead=isRead==true and 0 or 1;
+-- 	info.time=TimeUtil:GetTime();
+-- 	self.prmoteConfs[id]=info;
+-- 	FileUtil.SaveToFile("ShopPromote.txt",self.prmoteConfs);
+-- end
 
 local localfile="store_local_record.txt";
 
@@ -518,7 +559,7 @@ function this:Clear()
 	self.exchangeData={};
 	self.prmoteConfs=nil;
 	self.monthCardInfo=nil;
-	self.localRecords={};
+	self.localRecords=nil;
 	self.newPageIds={};
 	self.fixedUpdateTime=nil;
 	self.storeVerInfo=nil;

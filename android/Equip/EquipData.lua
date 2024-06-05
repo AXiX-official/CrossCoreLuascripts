@@ -262,7 +262,14 @@ end
 function this:GetTOtherGetInfo()
 	local infos=nil;
 	if self.cfg and self.cfg.t_otherGet then
-		infos=self.cfg.t_otherGet;
+		-- infos=self.cfg.t_otherGet;
+		infos={};
+		for k,v in ipairs(self.cfg.t_otherGet) do
+			local text=LanguageMgr:GetByID(v);
+			if text~=nil then
+				table.insert(infos,text);
+			end
+		end
 	end
 	return infos;
 end

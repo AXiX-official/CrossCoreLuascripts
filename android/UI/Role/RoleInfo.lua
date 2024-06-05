@@ -6,7 +6,7 @@ isHideQuestionItem = true -- 外部调用
 function Awake()
     recordBeginTime = CSAPI.GetRealTime()
     -- 立绘
-    cardIconItem = RoleTool.AddRole(iconParent,nil,nil,false)
+    cardIconItem = RoleTool.AddRole(iconParent, nil, nil, false)
 
     UIUtil:AddQuestionItem("RoleInfo", gameObject, questionP)
 end
@@ -39,9 +39,8 @@ function OpenAnim(b)
     CSAPI.SetGOActive(mask, b)
     CSAPI.SetGOActive(anim_open, b)
     timer = b and Time.time + 0.7 or nil
-    if(b)then 
-        isFirst = true
-    end 
+
+    isFirst = true
 end
 
 function OnInit()
@@ -59,13 +58,13 @@ function OnInit()
     end)
     -- 更换装备 --改为监听 RoleEquip 界面的关闭
     eventMgr:AddListener(EventType.Equip_Change, function()
-        OpenAnim(true)
         RefreshPanel()
+        OpenAnim(true)
     end)
 
-    --卸载装备
-    eventMgr:AddListener(EventType.Equip_Down_Ret,RefreshPanel)
-    
+    -- 卸载装备
+    eventMgr:AddListener(EventType.Equip_Down_Ret, RefreshPanel)
+
     -- 卡牌刷新
     eventMgr:AddListener(EventType.Card_Update, RefreshPanel)
     eventMgr:AddListener(EventType.Role_Tag_Update, SetTag)
@@ -89,8 +88,8 @@ function OnViewClosed(viewKey)
     end
     -- if (viewKey == "RoleEquip" or viewKey == "RoleCenter") then
     if (viewKey == "RoleCenter") then
-        OpenAnim(true)
         RefreshPanel()
+        OpenAnim(true)
     end
 end
 
@@ -98,8 +97,8 @@ function OnOpen()
     -- openSetting = openSetting == nil and RoleInfoOpenType.LookSelf or openSetting --todo 
     cardData = data
 
-    OpenAnim(true)
     RefreshPanel()
+    OpenAnim(true)
 end
 
 function RefreshPanel()
@@ -133,6 +132,8 @@ function RefreshPanel()
     end
 
     cardData:SetIsNew(false) -- 已查看,这不是新卡了
+
+    --SetChangeBtn()
 end
 
 function SetRed()
@@ -189,10 +190,8 @@ function SetRole()
         CSAPI.SetGOActive(iconParent, true)
         if (isFirst) then
             isFirst = false
-            if(iconNode~=nil) then 
-                UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
-                UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
-            end 
+            UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
+            UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
         end
     end, cardData:GetSkinIsL2d())
 end
@@ -578,9 +577,9 @@ function SetBtns()
     isHideQuestionItem = not isRealCard
 
     -- 战斗中时
-    if(openSetting and openSetting==10) then 
+    if (openSetting and openSetting == 10) then
         topLua.SetHomeActive(false)
-    else 
+    else
         topLua.SetHomeActive(not isFighting)
     end
     CSAPI.SetGOActive(btnDirll, not isFighting)
@@ -688,7 +687,7 @@ function OnClickSpecialSkill()
             LanguageMgr:ShowTips(1006)
             return
         else
-            CSAPI.OpenView("RoleInfoFussion", {cardData, _data},openSetting)
+            CSAPI.OpenView("RoleInfoFussion", {cardData, _data}, openSetting)
         end
     end
 end
@@ -740,6 +739,7 @@ function OnClickTalentDetail()
     CSAPI.OpenView("RoleCenter", {cardData}, "talent")
 end
 
+local RoleMatrixSkillInfoLua=nil;
 -- 基建技能
 function OnClickMatrixSkill()
     if (not cardData:GetCRoleData()) then
@@ -747,6 +747,35 @@ function OnClickMatrixSkill()
     end
     ResUtil:CreateUIGOAsync("Role/RoleMatrixSkillInfo", gameObject, function(go)
         local lua = ComUtil.GetLuaTable(go)
+        RoleMatrixSkillInfoLua=lua;
         lua.Refresh(cardData:GetCRoleData())
     end)
+end
+
+-- 换角色、机神---------------------------------------------------------------------------------------------------------------------
+
+function SetChangeBtn()
+    local b = false
+    if (#cardData:GetCfg().changeCardIds > 0 or #cardData:GetCfg().allTcSkills > 0) then
+        b = true
+    end
+    CSAPI.SetGOActive(btnJieJin, b)
+end
+
+--解禁
+function OnClickJieJin()
+    CSAPI.OpenView("RoleJieJin",cardData)
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if RoleMatrixSkillInfoLua and RoleMatrixSkillInfoLua.OnClickMask then
+        RoleMatrixSkillInfoLua.OnClickMask()
+        RoleMatrixSkillInfoLua=nil
+    else
+        if  topLua.OnClickBack then
+            topLua.OnClickBack();
+        end
+    end
 end

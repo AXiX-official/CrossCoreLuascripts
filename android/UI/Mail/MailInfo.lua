@@ -1,3 +1,4 @@
+
 --邮件信息
 local this = {
 	id = nil,
@@ -36,7 +37,13 @@ function this:InitData(sMailInfo)
 		else
 			self.desc = ""
 		end
-		self.rewards = sMailInfo.data and sMailInfo.data.rewards or nil
+		self.rewards = sMailInfo.data and sMailInfo.data.rewards or {}
+		self.del_time = sMailInfo.data and sMailInfo.data.read_del_sec or nil
+		if self.del_time and self.end_time == 0 then
+			if (self.is_read ==MailReadType.Yes and #self.rewards < 1) or self.is_get ==MailGetType.Yes then
+				self.end_time = TimeUtil:GetTime() + self.del_time
+			end
+		end
 	else
 		local cfg = Cfgs.CfgMail:GetByID(self.cfgid)
 		if(cfg) then
@@ -140,9 +147,16 @@ end
 --------------------------------set
 function this:SetIsRead(_is_read)
 	self.is_read = _is_read
+	if self.is_read==MailReadType.Yes and self.del_time ~= nil and #self.rewards < 1 and self.end_time == 0 then --已读后自动删除功能
+		self.end_time = TimeUtil:GetTime() + self.del_time
+	end
 end
+
 function this:SetIsGet(_is_get)
 	self.is_get = _is_get
+	if self.is_get ==MailGetType.Yes and self.del_time ~= nil and self.end_time == 0 then --已读已领后自动删除功能
+		self.end_time = TimeUtil:GetTime() + self.del_time
+	end
 end
 
 

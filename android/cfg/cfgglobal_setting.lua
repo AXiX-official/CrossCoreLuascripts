@@ -126,7 +126,7 @@ local conf = {
 {'1512',	'g_AssitCD',	'',	'int',	'5'},
 {'1513',	'g_OverLoadActivate',	'',	'bool',	'0'},
 {'1601',	'g_MailMaxSize',	'',	'int',	'200'},
-{'1602',	'g_MailOnceSendCnt',	'',	'int',	'20'},
+{'1602',	'g_MailOnceSendCnt',	'',	'int',	'10'},
 {'1603',	'g_MailAttachMaxSize',	'',	'int',	'60'},
 {'1604',	'g_MailPlrHotMailId',	'',	'int',	'20001'},
 {'1605',	'g_MailSignFullMailId',	'',	'int',	'30001'},

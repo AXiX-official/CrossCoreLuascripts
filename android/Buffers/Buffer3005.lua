@@ -18,6 +18,6 @@ function Buffer3005:OnDeath(caster, target)
 end
 -- 创建时
 function Buffer3005:OnCreate(caster, target)
-	-- 5201
-	self:AddAttr(BufferEffect[5201], self.caster, target or self.owner, nil,"speed",-5)
+	-- 5204
+	self:AddAttr(BufferEffect[5204], self.caster, target or self.owner, nil,"speed",-20)
 end

@@ -10,7 +10,7 @@ local eventMgr=nil;
 local cardAIPreset=nil;
 local currItem=nil;--当前选中的队员
 local teamData=nil;--队伍数据
-local realIndex=nil;--当前的策略真是索引
+local realIndex=nil;--当前的策略真实索引
 local sdr=nil;
 local tVal=5;
 local colors={{0,0,0,255},{146,146,150,255}}
@@ -49,6 +49,12 @@ function OnInit()
 
 --data:{teamData=TeamData,selectIndex=选中的队员,index=副本类型,oid=oid,cuid=cuid}
 function OnOpen()
+    if topTools then
+        topTools.SetHomeActive(openSetting==nil);
+    end
+    local x=openSetting==nil and 485 or 300;
+    local anchorX,anchorY=CSAPI.GetAnchor(topTools.btn_exit);
+    CSAPI.SetAnchor(questionItem,x,-72)
     AIStrategyMgr:ClearEditData();
     if data==nil then
         LogError("没有传入必须的参数");
@@ -424,4 +430,11 @@ end
 function SetHandleVal(val)
     CSAPI.SetText(txtVal,tostring(val));
     currNP=val;
+end
+
+function OnClickQuestion()
+    local cfg=Cfgs.CfgModuleInfo:GetByID("AIPrefabSetting");
+    if cfg then
+        CSAPI.OpenView("ModuleInfoView", cfg)
+    end
 end

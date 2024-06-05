@@ -197,4 +197,11 @@ function this:GetIndex()
 	return nil
 end
 
+function this:GetFinishCfg()
+	if(self.finish_ids) then
+		return Cfgs.CfgTaskFinishVal:GetByID(self.finish_ids[1].id)
+	end
+	return nil
+end
+
 return this 

@@ -7,8 +7,8 @@ function this:SetInfo(proto)
     self.data = proto
     self.info = proto.infos;
     self.can_modify_name = proto.can_modify_name;
-    self:SetPanelId(proto.panel_id)
-    self:SetIconId(proto.icon_id)
+    -- self:SetPanelId(proto.panel_id)
+    -- self:SetIconId(proto.icon_id)
     self.add_exp = proto.add_exp or 0
     self.add_cost = 0; -- cost值上限buff
     self.add_gold = 0; -- 金币上限buff
@@ -162,19 +162,19 @@ end
 
 -- 头像id(头像表id或模型表id)
 function this:GetIconId()
-    return self.icon_id
+    return self.data.icon_id
 end
 --选择男女主后会返回一次
 function this:SetIconId(_icon_id)
-    self.icon_id = _icon_id
+    self.data.icon_id = _icon_id
 end
 
 -- 看板id（）
 function this:GetPanelId()
-    return self.panel_id
+    return self.data.panel_id
 end
 function this:SetPanelId(_panel_id)
-    self.panel_id = _panel_id
+    self.data.panel_id = _panel_id
 end
 
 --头像框id
@@ -187,7 +187,7 @@ end
 
 -- 看板是角色(不在头像表，那就是角色头像)
 function this:KBIsRole()
-    local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(self.panel_id)
+    local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(self.data.panel_id)
     return cfg==nil 
 end
 
@@ -503,7 +503,7 @@ function this:NewPlayerFight(newPlayerFightIndex)
     newPlayerFightIndex = newPlayerFightIndex or 2;
     newPlayerFightIndex = math.max(2, newPlayerFightIndex);
     self.newPlayerFightIndex = newPlayerFightIndex;
-
+    FightClient.NewPlayerDrasu=true;
     -- LogError("新手战斗" .. newPlayerFightIndex);
     -- 新手强制战斗
     local fightGroupIDs = self:GetNewPlayerFightIDs(newPlayerFightIndex);
@@ -522,6 +522,7 @@ function this:NewPlayerFight(newPlayerFightIndex)
             PlayerClient:SetNewPlayerFightStateKey(nextNewPlayerFightIndex);
             if (not PlayerClient:HasNextNewPlayerFight()) then -- 巅峰战斗最后一场新手战斗
                 EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "new_player_fight_pass");
+
             end
             FightActionMgr:Push(FightActionMgr:Apply(FightActionType.FightEnd, {
                 custom_result = 1,
@@ -579,7 +580,8 @@ end
 
 -- 播放战斗OP
 function this:PlayFightOP()
-    -- LogError("开始播放剧情战斗动画");
+    FightClient.NewPlayerDrasu=false;
+    --LogError("开始播放剧情战斗动画");
     CSAPI.StopSound();
     CSAPI.SetSoundOff(true);
     CSAPI.DisableInput(1000);
@@ -747,6 +749,14 @@ function this:IsPlayBirthDayVoice()
         return false  
     end 
     return true 
+end
+
+--最后设置的角色看板ID
+function this:SetLastRoleID(id)
+    self.data.role_panel_id = id 
+end
+function this:GetLastRoleID()
+    return self.data.role_panel_id
 end
 
 return this;

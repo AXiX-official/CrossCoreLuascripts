@@ -32,7 +32,9 @@ function InitData(data,isLeader,_isMini,_isMirror)
 
 	if data.bIsNpc==false and not isMirror then
 		local cfg=data:GetModelCfg();
-		FormationUtil.Load2DImg(icon,cfg.formation_icon,data:GetGrids());
+		if cfg~=nil then
+			FormationUtil.Load2DImg(icon,cfg,data:GetGrids());
+		end
 		-- ResUtil.FormationIcon:Load(icon,cfg.formation_icon);
 		SetGridSize(data:GetGrids());
 	else
@@ -41,7 +43,9 @@ function InitData(data,isLeader,_isMini,_isMirror)
 			skinID=cfg.model;
         end
         local modelCfg=Cfgs.character:GetByID(skinID);
-		FormationUtil.Load2DImg(icon,modelCfg.formation_icon,data:GetGrids());
+		if modelCfg then
+			FormationUtil.Load2DImg(icon,modelCfg,data:GetGrids());
+		end
         -- ResUtil.FormationIcon:Load(icon,modelCfg.formation_icon);
         SetGridSize(cfg.grids);
     end
@@ -54,6 +58,7 @@ function InitData(data,isLeader,_isMini,_isMirror)
 	-- CSAPI.SetGOActive(attrObj,false);
 	ShowArrow(false);
 end
+
 
 function SetHaloCfg()
 	if this.data then

@@ -48,16 +48,16 @@ function OnRedPointRefresh()
         for k, v in ipairs(redTypes) do
             if list[v.type] then
                 local idx = list[v.type].index
-            if idx > 0 and leftPanel.leftItems[idx] then
-                leftPanel.leftItems[idx].SetRed(v.b == 1)
+                if idx > 0 and leftPanel.leftItems[idx] then
+                    leftPanel.leftItems[idx].SetRed(v.b == 1)
+                end
             end
         end
     end
 end
-end
 
 function OnDayRefresh()
-    UIUtil:ToHome()
+   UIUtil:ToHome()
 end
 
 function OnDisable()
@@ -74,6 +74,7 @@ function OnOpen()
     CSAPI.SetGOActive(emptyObj,openCfgs == nil or #openCfgs < 1)
 
     -- ActivityMgr:CheckRedPointData()
+    OnRedPointRefresh()
 end
 
 function InitLeftPanel()
@@ -133,7 +134,7 @@ end
 function SetRight()
     local cfg = openCfgs[curIndex]
     if (cfg) then
-        if cfg.path and (cfg.id == ActivityListType.SignInContinue or cfg.id == ActivityListType.Investment) then
+        if cfg.path and (cfg.id == ActivityListType.SignInContinue or cfg.id == ActivityListType.Investment or ActivityListType.DropAdd) then
             CSAPI.SetGOActive(imgParent,false)
         else
             CSAPI.SetGOActive(imgParent,true)

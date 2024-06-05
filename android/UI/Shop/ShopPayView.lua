@@ -164,21 +164,30 @@ end
 function InitCommodityInfo()
 	CSAPI.SetGOActive(tIcon,false);
 	CSAPI.SetGOActive(btnDetails,false);
-	ShopCommFunc.SetIconBorder(commodity,commodityType,border,icon,tIcon,tBorder,2);
+	local isSmall=false;
 	local getList=commodity:GetCommodityList();
 	if getList then
 		local good=getList[1];
-		if good.data:GetType()==ITEM_TYPE.CARD_CORE_ELEM or good.data:GetType()==ITEM_TYPE.CARD then
+		if good.data:GetType()==ITEM_TYPE.CARD_CORE_ELEM or good.data:GetType()==ITEM_TYPE.CARD or good.data:GetType()==ITEM_TYPE.EQUIP or good.data:GetType()==ITEM_TYPE.EQUIP_MATERIAL then
 			CSAPI.SetGOActive(tIcon,true);
+			isSmall=true;
 		elseif good.data:GetType()==ITEM_TYPE.PANEL_IMG then--多人插图
 			CSAPI.SetGOActive(btnDetails,true);
 		end
+		SetDayObj(good.data:GetIconDayTips());
 	end
+	ShopCommFunc.SetIconBorder(commodity,commodityType,border,icon,tIcon,tBorder,2,isSmall);
 	-- 	CSAPI.SetGOActive(countObj,true)
 	-- 	CSAPI.SetText(txt_count,tostring(getList[1].num));
 	-- else
 	-- 	CSAPI.SetGOActive(countObj,false)
 	-- end
+end
+
+--设置有效天数
+function SetDayObj(txt)
+	CSAPI.SetGOActive(dayObj,txt~=nil)
+	CSAPI.SetText(txt_day,txt);
 end
 
 function RefreshPrice()

@@ -9,6 +9,11 @@ function GenEnumNameByVal(name, enums)
     _G[name] = tmpTb
 end
 
+-- TODO: 热更赋值使用，没有就赋值一下
+if not ACC_TO_UID_ADD_NUM then
+    ACC_TO_UID_ADD_NUM = 100000000
+end
+
 -----------------------物品--------------------------------------------------------------------------
 MAX_INT = 2000000000
 MAX_UNSIGNED_INT = MAX_INT * 2
@@ -439,6 +444,7 @@ eTaskEventType.Remould = 23 -- 重塑
 eTaskEventType.First = 24 -- 首次登录
 eTaskEventType.Team = 25 -- 队伍
 eTaskEventType.Skill = 26 -- 技能
+eTaskEventType.Board = 27 -- 看板
 
 eLockState = {}
 eLockState.No = 0
@@ -479,6 +485,7 @@ eTeamType = {
     RealPracticeAttack = 23, -- 实时军演攻击队伍
     GuildFight = 24, -- 公会战队伍
     TeamBoss = 25, -- 组队boss队伍
+    Tower=26,--爬塔限制队伍
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
     ForceFight = 10000 -- 强制上阵索引起始值
 }
@@ -667,7 +674,8 @@ ActivityListType = {
     NewYearContinue = 1005, --新年阶段任务
     NewYearSignIn = 1006, --新年签到
     SignInCommon = 1007, --通用签到
-    SignInShadowSpider = 1008 --迷城蛛影签到
+    SignInShadowSpider = 1008, --迷城蛛影签到
+    DropAdd= 1009 --多倍掉落活动
 }
 
 -- 剧情站位
@@ -1148,6 +1156,7 @@ ChannelType.TapTap = 2 -- taptap
 ChannelType.QOO = 3 -- QOO
 ChannelType.Test = 4 -- 测试人员，内部使用
 ChannelType.All = 5 -- 兑换码使用不限制平台
+ChannelType.ZiLong = 6 -- 紫龙
 
 GenEnumNameByVal('ChannelTypeName', ChannelType)
 
@@ -1220,6 +1229,9 @@ PlrMixIx.fixTmpDupTowerBug = 51 -- 爬塔新任务记录异常
 PlrMixIx.icon_frame = 52 -- 头像框
 PlrMixIx.arachnid_count = 53 -- 购买蛛影迷城入场券
 PlrMixIx.tSetName = 54 -- 设置名字时间，首次
+PlrMixIx.newTowerInfo = 55 -- 重置新爬塔的时间
+PlrMixIx.returningPlr = 56 -- 回归玩家配置信息
+PlrMixIx.role_panel_id = 57 -- 最后设置的角色看板ID
 
 -- 图鉴
 ArchiveType = {}
@@ -1391,6 +1403,7 @@ PayType.IOS = 5 -- ios
 PayType.AlipayQR = 6 --支付宝扫码
 PayType.WeChatQR = 7 --微信扫码
 PayType.BsAli = 8 --聚合支付-支付宝
+PayType.ZiLong = 9 --紫龙
 
 GenEnumNameByVal('PayTypeName', PayType)
 
@@ -1419,9 +1432,21 @@ DungeonInfoType.Course = 3
 DungeonInfoType.Trials = 4
 DungeonInfoType.Danger = 5
 DungeonInfoType.Plot = 6
+DungeonInfoType.Feast = 7
 
 
--- TODO: 热更赋值使用，没有就
-if not ACC_TO_UID_ADD_NUM then
-    ACC_TO_UID_ADD_NUM = 100000000
-end
+-----------------------------------------------------------------------------------------------------------------
+-- 回归玩家类型
+RegressionPlrType = {}
+RegressionPlrType.Short = 1 -- 短期回归玩家
+RegressionPlrType.Long = 2 -- 长期回归玩家
+
+-----------------------------------------------------------------------------------------------------------------
+-- 回归活动类型
+RegressionActiveType = {}
+RegressionActiveType.Sign = 1 -- 1、签到
+RegressionActiveType.DropAdd = 2 -- 2、掉落加成
+RegressionActiveType.ResourcesRecovery = 3 -- 3、找回资源
+RegressionActiveType.Fund = 4 -- 4、回归基金
+RegressionActiveType.Cloth = 5 -- 5、限时时装
+RegressionActiveType.ItemPool = 6 -- 6、回归道具池

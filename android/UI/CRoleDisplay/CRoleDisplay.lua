@@ -174,10 +174,13 @@ function CheckIsHX()
         end
     else
         local _cfg1 = Cfgs.CfgArchiveMultiPicture:GetByID(curPanelID)
-        local _cfg2 = _cfg1.show and Cfgs.CfgCommodity:GetByID(_cfg1.shopId) or nil
-        if (_cfg2 and _cfg2.isShowImg == 1) then
-            return true
-        end
+        -- local _cfg2 = _cfg1.show and Cfgs.CfgCommodity:GetByID(_cfg1.shopId) or nil
+        -- if (_cfg2 and _cfg2.isShowImg == 1) then
+        --     return true
+        -- end
+        if(_cfg1.img_replace~=nil) then 
+            return true 
+        end 
     end
     return false
 end

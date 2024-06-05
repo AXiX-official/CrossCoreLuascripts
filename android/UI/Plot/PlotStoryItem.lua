@@ -88,8 +88,8 @@ function SetIconGradient(num)
 	if num then
 		num = 100 - num
 		table.insert(keys,{0, 100, 100, 100})
-		table.insert(keys,{num, 100, 100, 100})
-		table.insert(keys,{100, 100, 100, 100})
+		table.insert(keys,{num, 0, 0, 0})
+		table.insert(keys,{100, 0, 0, 0})
 	else
 		table.insert(keys,{0, 100, 100, 100})
 		table.insert(keys,{100, 100, 100, 100})

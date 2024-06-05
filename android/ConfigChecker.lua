@@ -4,6 +4,10 @@
 -- OPENDEBUG()
 ConfigChecker = {}
 
+if not CURRENT_TIME then
+    CURRENT_TIME = os.time()
+end
+
 -- 检查副本数据
 function ConfigChecker:CheckDungeon()
     -- for duplicateID,v in pairs(MainLine) do
@@ -36,9 +40,9 @@ end
 function ConfigChecker:ShowCheckPrimaryKeyErr(checkCfg, errCfg, findKey)
     LogTable(errCfg, '报错的哪一行数据为:')
     if checkCfg.cfgFieldKey2 then
-        LogInfo('配日志表:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey .. '.' .. checkCfg.cfgFieldKey2)
+        LogInfo('配置表:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey .. '.' .. checkCfg.cfgFieldKey2)
     else
-        LogInfo('配日志的:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey)
+        LogInfo('配置表:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey)
     end
 
     LogInfo('在表[' .. checkCfg.relevance .. ']中找不到主键为' .. findKey .. '的配置')
@@ -1174,7 +1178,7 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(not frameCfg.item_id, string.format('该头像框id=%s已有对应的物品id=%s,头像框配置冲突', cfg.dy_value2, id))
                 frameCfg.item_id = id
             else
-                ASSERT('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2)
+                ASSERT(false, string.format('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
         elseif cfg.type == ITEM_TYPE.ICON then
             local avatarCfg = CfgAvatar[cfg.dy_value2]
@@ -1182,7 +1186,7 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(not avatarCfg.item_id, string.format('该头像id=%s已有对应的物品id=%s,头像表配置冲突', cfg.dy_value2, id))
                 avatarCfg.item_id = id
             else
-                ASSERT('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2)
+                ASSERT(false, string.format('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
         elseif cfg.type == ITEM_TYPE.PROP then
             if cfg.dy_value1 == PROP_TYPE.IconFrame then
@@ -1360,4 +1364,38 @@ function ConfigChecker:CfgLimitedTime(cfgs)
             end
         end
     end
+end
+function ConfigChecker:CfgDupDropCntAdd(cfgs)
+    -- 累计总共添加的次数
+    g_AddDupMultiCnt = 0
+    g_ReCalAddDupMultiTime = nil
+
+    for _, cfg in pairs(cfgs) do
+        cfg.nStart = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+
+        local isInRange = GLogicCheck:IsInRange(cfg.nStart, cfg.nEnd, CURRENT_TIME, true)
+        if isInRange then
+            g_AddDupMultiCnt = g_AddDupMultiCnt + cfg.dropAddCnt
+            if cfg.nEnd ~= 0 then
+                -- 开启的判断结束时间，保存最小的需要计算时间
+                if not g_ReCalAddDupMultiTime or cfg.nEnd < g_ReCalAddDupMultiTime then
+                    g_ReCalAddDupMultiTime = cfg.nEnd
+                end
+            end
+        else
+            -- 只需要查看还没开启的
+            if cfg.nStart > CURRENT_TIME then
+                if not g_ReCalAddDupMultiTime or cfg.nStart < g_ReCalAddDupMultiTime then
+                    g_ReCalAddDupMultiTime = cfg.nStart
+                end
+            end
+        end
+    end
+
+    LogDebug(
+        'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s',
+        g_AddDupMultiCnt,
+        g_ReCalAddDupMultiTime
+    )
 end

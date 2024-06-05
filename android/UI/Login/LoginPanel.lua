@@ -56,7 +56,7 @@ function Awake()
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
     --CSAPI.SetText(txtVer, "Ver:1.0.0" .. tostring(UnityEngine.Application.version));
-    CSAPI.SetText(txtVer, "Ver:1.5");
+    CSAPI.SetText(txtVer, "");
     -- 开启战斗场景镜头
     local xluaCamera = CameraMgr:GetXLuaCamera();
     if (xluaCamera) then
@@ -831,4 +831,12 @@ function GoToUpdateIOS()
     local url = "https://itunes.apple.com/in/app/id6443983362";
     Log("打开URL" .. url);
     CSAPI.OpenWebBrowser(url);
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if switchObj.gameObject.activeInHierarchy==true and OnClickBack then
+        OnClickBack();
+    end
 end

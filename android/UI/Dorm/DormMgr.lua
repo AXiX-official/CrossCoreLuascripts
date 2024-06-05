@@ -1187,9 +1187,11 @@ end
 --当前所有家具占地格子数量
 function this:GetFurnitureGridNum()
     local num = 0
-    local furnitureDatas = self:GetCurRoomCopyDatas()
-    for i, v in pairs(furnitureDatas) do
-        num = num + v:GetGridNum()
+    local furnitureDatas = self:GetCurRoomCopyDatas() or  self:GetCopyFurnitureDatas2()
+    if(furnitureDatas) then 
+        for i, v in pairs(furnitureDatas) do
+            num = num + v:GetGridNum()
+        end
     end
     return num 
 end
@@ -1209,6 +1211,21 @@ function this:GetSaveThemeGridNun(id)
         end
     end
     return num 
+end
+
+--临时复制一份当前真实数据
+function this:GetCopyFurnitureDatas2(_roomID)
+    local roomID = _roomID or  GCalHelp:GetDormId(1, 1) 
+    local roomDatas = self:GetDormDatas()
+    local roomData = roomDatas[roomID] 
+    local dic = table.copy(roomData:GetFurnitures())
+    local datas = {}
+    for i, v in pairs(dic) do
+        local _data = DormFurnitureData.New()
+        _data:InitData(v)
+        datas[v.id] = _data
+    end
+    return datas
 end
 
 return this

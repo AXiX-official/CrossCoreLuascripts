@@ -10,13 +10,13 @@ local packQualitys2 = {"img_25_05", "img_25_04", "img_25_03", "img_25_02", "img_
 local channelType=CSAPI.GetChannelType();
 
 -- 读取图标和边框 （支付页面用）openSetting:支付窗口填2
-function this.SetIconBorder(data, commodityType, border, icon,tIcon,tBorder,openSetting)
+function this.SetIconBorder(data, commodityType, border, icon,tIcon,tBorder,openSetting,isSmall)
     local goodsData = nil;
     if border then
         CSAPI.SetGOActive(border, true);
         CSAPI.SetScale(border, normalSize, normalSize, normalSize);
     end
-    local iSize=iconSize;
+    local iSize=isSmall==true and normalSize or iconSize;
     openSetting=openSetting or 1
     local qulaity = 1;
     local iName=data:GetIcon();
@@ -42,6 +42,9 @@ function this.SetIconBorder(data, commodityType, border, icon,tIcon,tBorder,open
             elseif goodsData:GetType()==ITEM_TYPE.PanelImg then--多人插图,特殊处理
                 local cfg=goodsData:GetCfg();
                 ResUtil.MultiIcon:Load(icon,cfg.itemPicture);
+            elseif goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType()==ITEM_TYPE.EQUIP then --装备素材
+                -- GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetCfg(),false,true);
+                GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetIcon(),goodsData:GetQuality(),goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL,false)
             else
                 -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
                 goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
@@ -63,7 +66,8 @@ function this.SetIconBorder(data, commodityType, border, icon,tIcon,tBorder,open
         if data:GetType() == RandRewardType.EQUIP then -- 装备
             goodsData = data.goods;
             qulaity = goodsData:GetQuality();
-            ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+            GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetIcon(),goodsData:GetQuality(),false,false)
+            -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
         elseif data:GetType() == RandRewardType.CARD or data:GetType() == RandRewardType.ITEM then
             local good = {
                 id = data:GetID(),
@@ -83,6 +87,9 @@ function this.SetIconBorder(data, commodityType, border, icon,tIcon,tBorder,open
             elseif goodsData:GetType()==ITEM_TYPE.PanelImg then--多人插图,特殊处理
                 local cfg=goodsData:GetCfg();
                 ResUtil.MultiIcon:Load(icon,cfg.itemPicture);
+            elseif goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType()==ITEM_TYPE.EQUIP then --装备素材
+                -- GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetCfg(),false,true);
+                GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetIcon(),goodsData:GetQuality(),goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL,false)
             else
                 -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
                 goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
@@ -128,6 +135,8 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon,tIc
             -- elseif goodsData:GetType()==ITEM_TYPE.PanelImg then--多人插图,特殊处理
             --     local cfg=goodsData:GetCfg();
             --     ResUtil.MultiIcon:Load(icon,cfg.itemPicture);
+            elseif goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType()==ITEM_TYPE.EQUIP then --装备素材
+                GridUtil.LoadEquipIcon(icon,tIcon2,goodsData:GetIcon(),goodsData:GetQuality(),goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL,false)
             else
                 -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
                 goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
@@ -149,7 +158,8 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon,tIc
         if data:GetType() == RandRewardType.EQUIP then -- 装备
             goodsData = data.goods;
             qulaity = goodsData:GetQuality();
-            ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+            -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+            GridUtil.LoadEquipIcon(icon,tIcon2,goodsData:GetIcon(),qulaity,false,false)
         elseif data:GetType() == RandRewardType.CARD or data:GetType() == RandRewardType.ITEM then
             local good = {
                 id = data:GetID(),
@@ -166,6 +176,9 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon,tIc
             elseif goodsData:GetType()==ITEM_TYPE.CARD_CORE_ELEM then
                 ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
                 GridUtil.LoadTIcon(tIcon2,tBorder,goodsData:GetCfg(),true);
+            elseif goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType()==ITEM_TYPE.EQUIP then --装备素材
+                -- GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetCfg(),false,true);
+                GridUtil.LoadEquipIcon(icon,tIcon2,goodsData:GetIcon(),goodsData:GetQuality(),goodsData:GetType()==ITEM_TYPE.EQUIP_MATERIAL,false)
             -- elseif goodsData:GetType()==ITEM_TYPE.PanelImg then--多人插图,特殊处理
             --     local cfg=goodsData:GetCfg();
             --     ResUtil.MultiIcon:Load(icon,cfg.itemPicture);
@@ -284,7 +297,7 @@ function this.BuyCommodity(commodity, currNum, callBack,useCost,payType,isInstal
             --LogError("PayType:"..tostring(payType))
             local priceInfo2=commodity:GetPrice();
             if SDKPayMgr:GetIsPaying() and payType==PayType.IOS then --目前只针对IOS进行拦截
-                Log("正在处理支付中...");
+                LogError("正在处理支付中...");
                 do return end;
             end
             EventMgr.Dispatch(EventType.Shop_Buy_Mask,true);
@@ -630,6 +643,17 @@ function this.TimeIsBetween(startTime, endTime, currentTime)
     return false;
 end
 
+-- 是否在时间范围内
+function this.TimeIsBetween2(startTime, endTime, currentTime)
+    if currentTime == nil then
+        currentTime = TimeUtil:GetTime();
+    end
+    if (startTime == 0 or currentTime >= startTime) and (endTime == 0 or currentTime < endTime) then
+        return true;
+    end
+    return false;
+end
+
 -- 返回商品中包含的皮肤信息
 function this.GetSkinInfo(commodity)
     local skinInfo = nil;
@@ -748,6 +772,30 @@ function this.InitPaySDK()
     --临时
 	-- local eventData={comms={PayRecharge_40001=0,PayMonthly_30001=0}}--苹果商店数据，0=消耗型，1=不可销毁的，2=订阅的。
 	EventMgr.Dispatch(EventType.SDK_Pay_Init,eventData,true) 
+end
+
+--打开指定商品的购买界面
+function this.OpenBuyConfrim(shopId,topId,commID)
+    if shopId==nil or commID==nil then
+        return;
+    end
+    local pageData=ShopMgr:GetPageByID(shopId);
+    if pageData and pageData:IsOpen() then
+        local list=pageData:GetCommodityInfos(true,topId);
+        local commData=nil;
+        if list then
+            for k,v in ipairs(list) do
+                if v:GetID()==commID then
+                    commData=v;
+                    break;
+                end
+            end
+            if commData==nil then
+                return;
+            end
+            ShopCommFunc.OpenPayView(commData,pageData);
+        end
+    end
 end
 
 return this;

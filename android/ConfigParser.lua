@@ -2,6 +2,7 @@ Loader:Require('SvnVersion')
 Loader:AddReplaceFile('SvnVersion')
 
 Loader:Require('GEnum')
+Loader:Require('GComLogicCheck')
 
 local CfgBase = Loader:Require('CfgBase')
 

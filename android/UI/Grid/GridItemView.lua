@@ -28,6 +28,7 @@ function Clean()
 	SetCount()	
 	SetDownCount()
 	SetIsUp(false)
+	SetDayObj();
 	CSAPI.SetGOActive(tBorder,false)
 	CSAPI.SetGOActive(tIcon,false)
 	if redObj~=nil then
@@ -102,6 +103,13 @@ function Refresh(data, _elseData)
 		if data:GetClassType()=="GoodsData" then
 			local cfg=data:GetCfg();
 			if cfg.type==ITEM_TYPE.EQUIP or cfg.type==ITEM_TYPE.EQUIP_MATERIAL then
+				if cfg.type==ITEM_TYPE.EQUIP_MATERIAL then
+					CSAPI.SetImgColor(bg, 255, 255, 255, 0);
+					GridUtil.LoadEquipIcon(icon,tIcon,data:GetIcon(),data:GetQuality(),cfg.type==ITEM_TYPE.EQUIP_MATERIAL,false)
+					isLoadIcon=true;
+				else
+					CSAPI.SetImgColor(bg, 255, 255, 255, 255);
+				end
 				frameList=EquipQualityFrame
 			elseif cfg.type==ITEM_TYPE.CARD_CORE_ELEM then
 				CSAPI.SetGOActive(tIcon,true)
@@ -114,6 +122,22 @@ function Refresh(data, _elseData)
 				if checkRed then
 					redObj=UIUtil:SetRedPoint(root,true,78,78);
 				end
+			elseif cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon) then --头像框/头像
+				local dayTips=nil;
+				local dyArr=cfg.dy_arr;
+				if dyArr and dyArr[2]~=0 then
+					local result=TimeUtil:GetTimeTab(dyArr[2]);
+					if result[1]>0 then
+						dayTips=LanguageMgr:GetByID(46006,result[1]);
+					elseif result[2]>0 then
+						dayTips=LanguageMgr:GetByID(46007,result[2]);
+					elseif result[3]>0 then
+						dayTips=LanguageMgr:GetByID(46008,result[3]);
+					end
+				-- elseif dyArr and dyArr[2]==0 then
+				-- 	dayTips=LanguageMgr:GetByID(46009);
+				end
+				SetDayObj(dayTips);
 			end
 			scale=data:GetIconScale();
 		elseif data:GetClassType()=="EquipData" then
@@ -192,6 +216,12 @@ end
 
 function SetIconScale(scale)
 	CSAPI.SetScale(icon, scale, scale, scale);
+end
+
+--设置有效天数
+function SetDayObj(txt)
+	CSAPI.SetGOActive(dayObj,txt~=nil)
+	CSAPI.SetText(txt_day,txt);
 end
 
 function SetCountText(num)

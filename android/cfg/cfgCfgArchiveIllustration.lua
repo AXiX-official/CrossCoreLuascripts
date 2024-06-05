@@ -17,6 +17,8 @@ local conf = {
 {'2',	'2',	'',	'',	'',	'3',	'7',	'arch_trytomoveforward',	'80405'},
 {'2',	'2',	'',	'',	'',	'4',	'9',	'arch_play_time',	''},
 {'2',	'2',	'',	'',	'',	'5',	'10',	'arch_relaxing_afternoon',	''},
+{'2',	'2',	'',	'',	'',	'6',	'13',	'arch_greenhouse',	'80407'},
+{'2',	'2',	'',	'',	'',	'7',	'14',	'arch_starry_night',	'80408'},
 {'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
 {'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},
@@ -24,6 +26,8 @@ local conf = {
 {'4',	'4',	'',	'',	'',	'1',	'8',	'arch_base_check',	''},
 {'5',	'5',	'arch_bestie_agent',	'娇痴颐使',	'',	'',	'',	'',	''},
 {'5',	'5',	'',	'',	'',	'1',	'11',	'arch_bestie_agent',	'80406'},
+{'6',	'6',	'arch_trip_in_the_milky_way',	'寰宇梦境',	'',	'',	'',	'',	''},
+{'6',	'6',	'',	'',	'',	'1',	'12',	'arch_trip_in_the_milky_way',	''},
 },
 }
 --cfgCfgArchiveIllustration = conf

@@ -118,6 +118,9 @@ function Refresh(_data,_elseData)
                 overType=2;
             end
         end
+        SetDayObj(good.data:GetIconDayTips());
+    else
+        SetDayObj();
     end
     SetGoodsNum(num,type);
     -- SetTIcon(this.data:GetTIcon());
@@ -129,6 +132,12 @@ function Refresh(_data,_elseData)
     local isLock=not this.data:GetBuyLimit();
     SetLockObj(isLock,this.data:GetBuyLimitDesc());
     SetRedInfo();
+end
+
+--设置有效天数
+function SetDayObj(txt)
+	CSAPI.SetGOActive(dayObj,txt~=nil)
+	CSAPI.SetText(txt_day,txt);
 end
 
 -- function SetTIcon(iconName)

@@ -9,6 +9,7 @@ LoginProto = {
 --查询账号
 function LoginProto:SendQueryAccount(msg, relogin, queryFunc,successFunc)
 	self.relogin = relogin
+	msg.account=tostring(msg.account);
 	local proto = {"ClientProto:QueryAccount", msg};
 	self.account=msg.account;
 	msg.SvnVersion = g_svnVersion
@@ -146,12 +147,11 @@ function LoginProto:LoginGame(proto)
 	if(self.logined) then
 		Log("重新登录游戏成功==================")
 		EventMgr.Dispatch(EventType.Relogin_Success, nil, true);
-		ClientProto:InitFinish(true); --初始化完成协议
 		--马上通知
         ClientProto:InitFinish(true,true);
 		--重登时，刷新商店物品
         -- ShopProto:GetShopInfos();
-		ShopProto:GetShopOpenTime();
+		ShopProto:GetShopOpenTime(true);
 		ShopProto:GetShopCommodity();
 		return;
 	end
@@ -264,7 +264,7 @@ function LoginProto:Logout()
 	self.isOnline=false;
 	self.logined = nil
 	local channelType=CSAPI.GetChannelType();
-	if self.vosQueryAccount.is_anti_addiction==1 and channelType==ChannelType.Normal or channelType==ChannelType.TapTap then
+	if self.vosQueryAccount.is_anti_addiction==1 and (channelType==ChannelType.Normal or channelType==ChannelType.TapTap)  then
 		local signData={
 			pid=self:GetPI(),
 			account=self.account,
@@ -275,6 +275,8 @@ function LoginProto:Logout()
 			--发送协议给服务器
 			Log("上报注销："..tostring(json.isOk));
 		end);
+		--清理快速登录的缓存
+		SetPhoneLoginKey();
 	end
 	local cfgLaucher = Cfgs.launcher:GetByID(1)
 	-- NetMgr.net:Disconnect();

@@ -1,5 +1,5 @@
 local recordBeginTime = 0
-
+local Top=nil;
 local curBuildID = nil -- 当前选择的建筑
 --------------------------------------------------预警时间
 local wTimer = 0
@@ -23,7 +23,7 @@ end
 
 -- local rTime = 0
 function OnInit()
-    UIUtil:AddTop2("MatrixView", top, Back1, Back2, {})
+    Top=UIUtil:AddTop2("MatrixView", top, Back1, Back2, {})
 
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Matrix_Building_Update, RefreshPanel) -- 建筑更新
@@ -463,3 +463,10 @@ function Exit1()
 end
 
 ------------------------------------------------------------------------------
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if  Top.OnClickBack then
+        Top.OnClickBack();
+    end
+end

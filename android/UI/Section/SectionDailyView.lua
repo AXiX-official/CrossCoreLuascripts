@@ -10,10 +10,10 @@ local itemInfo = nil
 local weekIds = {1023, 1017, 1018, 1019, 1020, 1021, 1022}
 
 -- 多倍
-local multiNum = 0
-local isDoubleOpen = false
-local isMultiUpdate = false
-local multiUpdateTime = 0
+-- local multiNum = 0
+-- local isDoubleOpen = false
+-- local isMultiUpdate = false
+-- local multiUpdateTime = 0
 
 -- 设置回调
 function SetClickCB(_cb)
@@ -49,15 +49,15 @@ function OnDisable()
     eventMgr:ClearListener()
 end
 
-function Update()
-    if isMultiUpdate or not sectionData then
-        return
-    end
-    if multiUpdateTime and TimeUtil:GetTime() >= multiUpdateTime then
-        isMultiUpdate = true
-        PlayerProto:SectionMultiInfo()
-    end
-end
+-- function Update()
+--     if isMultiUpdate or not sectionData then
+--         return
+--     end
+--     if multiUpdateTime and TimeUtil:GetTime() >= multiUpdateTime then
+--         isMultiUpdate = true
+--         PlayerProto:SectionMultiInfo()
+--     end
+-- end
 
 function LayoutCallBack(index)
     local lua = layout:GetItemLua(index)

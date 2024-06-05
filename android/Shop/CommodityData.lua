@@ -392,8 +392,10 @@ end
 function this:GetPrice()
     local priceInfo = nil
     local jCosts=nil;
-    if self.data and self.data.shop_config and self.data.shop_config.jCosts then
+    if self.data and self.data.shop_config then
         jCosts=self.data.shop_config.jCosts;
+    elseif self.cfg then
+        jCosts=self.cfg.jCosts;
     end
     if jCosts then
         priceInfo = {}

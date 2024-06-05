@@ -12,7 +12,16 @@ local intervalTime = 0
 local dotIntervalTime = 10
 local dotPool = {}
 
+local top=nil;
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=UnityEngine.Input
+local KeyCode=UnityEngine.KeyCode
+
 function Awake()
+    CSAPI.Getplatform();
+    IsMobileplatform=CSAPI.IsMobileplatform;
     CSAPI.SetGOActive(right, false)
     local iconName = Cfgs.ItemInfo:GetByID(g_ResetAbilityCost[1][1]).icon
     if (iconName) then
@@ -21,7 +30,7 @@ function Awake()
 end
 
 function OnInit()
-    UIUtil:AddTop2("PlayerAbility", topNode, OnClickBack, OnClickHome, {})
+    top=UIUtil:AddTop2("PlayerAbility", topNode, OnClickBack, OnClickHome, {})
 end
 
 function OnEnable()
@@ -37,7 +46,27 @@ function OnDisable()
     --EventMgr.Dispatch(EventType.Matrix_View_Show_Changed, true)
 end
 
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+    --仅仅安卓或者苹果平台生效
+    if IsMobileplatform then
+        if(Input.GetKeyDown(KeyCode.Escape))then
+            --  OnVirtualkey()   调关闭
+            if CSAPI.IsBeginnerGuidance()==false then
+                if isShow then
+                    OnClickReturn()
+                else
+                    if  top.OnClickBack then
+                        top.OnClickBack();
+                    end
+                end
+            end
+
+        end
+    end
+end
 function Update()
+    CheckVirtualkeys()
     if intervalTime > 0 then
         intervalTime = intervalTime - (Time.deltaTime * 1000)
     else

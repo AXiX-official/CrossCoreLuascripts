@@ -6,7 +6,7 @@ end
 
 function OnOpen()
 	local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-	local title1 = openSetting == (BattleEnterType.Start and cfgDungeon.chapterID) and {cfgDungeon.name, "STAGE " .. cfgDungeon.chapterID} or {"探索进行"}
+	local title1 = openSetting == (BattleEnterType.Start and cfgDungeon.chapterID) and {cfgDungeon.name, "STAGE " .. cfgDungeon.chapterID} or {LanguageMgr:GetByID(15128)}
     --LogError(title1);
     if(openSetting == BattleEnterType.Start)then
         ResUtil:CreateUIGOAsync("FightAction/FightPauseOrCut", node.gameObject, function(go)

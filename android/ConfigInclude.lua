@@ -116,6 +116,7 @@ local ConfigList =
 	'CfgDungeonGroup',
 	'CfgDungeonPlot',
 	'CfgDungeonTaoFa',
+	'CfgDupDropCntAdd',
 	'CfgDupDropMulti',
 	'CfgDupFight',
 	'CfgDupStory',

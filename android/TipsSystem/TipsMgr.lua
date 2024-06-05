@@ -94,6 +94,7 @@ function this:ShowMsg(data)
 			CSAPI.OpenView("LoadPrompt", {content = tipsData:GetContent(), okCallBack = function()
 				CSAPI.Quit();
 			end})
+			do return end;
 		elseif index==9 then --注销账号
 			ClientProto:Offline()
 			MgrCenter:Clear()
@@ -105,6 +106,7 @@ function this:ShowMsg(data)
 				end
 				LoginProto:Logout()
 			end})
+			do return end;
 		end
 		self:DebugLog(data)
 		if tipsData:GetFunType() == TipsFunType.Login then --处理登录失败的情况

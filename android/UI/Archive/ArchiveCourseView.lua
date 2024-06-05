@@ -4,6 +4,7 @@ local curType = 1  --当前类型
 local curDatas = {}
 local teamDatas = {}
 
+local top=nil;
 curIndex1, curIndex2 = 1,1
 
 
@@ -29,7 +30,7 @@ function TItemCB(item)
 end
 
 function OnInit()
-	UIUtil:AddTop2("ArchiveCourseView", gameObject, function()		
+	top=UIUtil:AddTop2("ArchiveCourseView", gameObject, function()
 		view:Close()		
 	end, nil, "")
 end
@@ -122,7 +123,17 @@ end
 function OnDestroy()    
     ReleaseCSComRefs();
 end
-
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+	---填写退出代码逻辑/接口
+	if  top.OnClickBack then
+		top.OnClickBack();
+		if not UIMask then
+			UIMask = CSAPI.GetGlobalGO("UIClickMask")
+		end
+		CSAPI.SetGOActive(UIMask, false)
+	end
+end
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
 function ReleaseCSComRefs()     

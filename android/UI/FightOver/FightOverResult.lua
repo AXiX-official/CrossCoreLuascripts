@@ -28,6 +28,7 @@ function OnEnable()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadComplete)
+    FightClient.IsFightOver=true;
 end
 
 function OnViewOpened(viewKey)
@@ -43,6 +44,7 @@ function OnLoadComplete()
 end
 
 function OnDisable()
+    FightClient.IsFightOver=false;
     eventMgr:ClearListener();
 end
 
@@ -198,6 +200,14 @@ function OnClickMask()
         PlotMgr:TryPlay(cfg.storyID2, ApplyQuit, nil, false);
     else
         ApplyQuit();
+    end
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if  OnClickMask then
+        OnClickMask();
     end
 end
 

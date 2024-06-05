@@ -19,7 +19,7 @@ function Buffer702200202:OnActionOver(caster, target)
 		return
 	end
 	-- 702200201
-	self:OwnerHitAddBuff(BufferEffect[702200201], self.caster, self.caster, nil, 6000,1002,3)
+	self:OwnerHitAddBuff(BufferEffect[702200201], self.caster, self.caster, nil, 6000,1002,2)
 end
 -- 创建时
 function Buffer702200202:OnCreate(caster, target)

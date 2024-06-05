@@ -85,6 +85,18 @@ function this:GetArr(index)
     return arr
 end
 
+function this:GetDatas(type)
+    local datas = {}
+    if (self.datas) then
+        for i, v in pairs(self.datas) do
+            if (type == v:GetType()) then
+                table.insert(datas, v)
+            end
+        end
+    end
+    return datas
+end
+
 function this:GetData(id)
     if (id == nil) then
         Log("获取数据失败！！id无效");
@@ -346,7 +358,7 @@ function this:GetActivityIndex(_type)
         return self.dayIndex or 1
     elseif _type == eTaskType.Guide or _type == eTaskType.GuideStage then
         return self.guideIndex or 1
-    elseif _type == eTaskType.NewYear or _type == eTaskType.NewYearFinish then        
+    elseif _type == eTaskType.NewYear or _type == eTaskType.NewYearFinish then
         return self.newYearIndex or 1
     end
     return 1
@@ -463,7 +475,7 @@ function this:GetTasksData()
 end
 function this:GetTasksDataRet()
     EventMgr.Dispatch(EventType.Mission_List)
-    ActivityMgr:RefreshOpenState() --用于到点刷新活动状态
+    ActivityMgr:RefreshOpenState() -- 用于到点刷新活动状态
 end
 
 -- 领取奖励
@@ -587,13 +599,13 @@ function this:GetSevenTaskDayRet(proto)
             self.dayIndex = proto.c_day
         elseif proto.type == eTaskType.Guide or proto.type == eTaskType.GuideStage then
             self.guideIndex = proto.c_day
-        elseif proto.type == eTaskType.NewYearFinish or proto.type == eTaskType.NewYear then --写死全开
+        elseif proto.type == eTaskType.NewYearFinish or proto.type == eTaskType.NewYear then -- 写死全开
             -- self.newYearIndex = proto.c_day
         end
         -- 活动
         ActivityMgr:CheckRedPointData()
 
-        --ActivityMgr:InitListOpenState()
+        -- ActivityMgr:InitListOpenState()
     end
 end
 
@@ -707,10 +719,10 @@ end
 
 -- 任务奖励  
 function this:GetRewardRet(datas, dailyStar, weeklyStar, rewards)
-    if(self.infos) then 
+    if (self.infos) then
         self.infos.dailyStar = dailyStar
         self.infos.weeklyStar = weeklyStar
-    end 
+    end
     local type = nil
     if (datas and #datas > 0) then
         for i, v in ipairs(datas) do
@@ -735,7 +747,7 @@ function this:GetResetTaskInfo()
 end
 function this:GetResetTaskInfoRet(proto)
     self.infos = proto
-    --EventMgr.Dispatch(EventType.Mission_List)    两条协议基本是同时请求的，所以由GetTasksDataRet来刷新界面
+    -- EventMgr.Dispatch(EventType.Mission_List)    两条协议基本是同时请求的，所以由GetTasksDataRet来刷新界面
 end
 
 -- 是否有未领取
@@ -841,7 +853,7 @@ function this:CheckNewYearRed()
     return false
 end
 
---活动副本任务红点
+-- 活动副本任务红点
 function this:CheckDungeonActivityRed(sectionId)
     if (self.datas) then
         for i, v in pairs(self.datas) do
@@ -853,6 +865,25 @@ function this:CheckDungeonActivityRed(sectionId)
         end
     end
     return false
+end
+
+-- 日常的点击操作任务是否已完成
+function this:CheckDoClickBoard()
+    local datas = self:GetDatas(eTaskType.Daily)
+    if (datas) then
+        for k, v in pairs(datas) do
+            if (v:GetFinishCfg() and v:GetFinishCfg().nType==10027 and not self.CheckIsReset(v) and v:CheckIsOpen() and not v:IsGet()) then
+                return 1 
+            end
+        end
+    end
+    return 0
+end
+
+function this:DoClickBoard()
+    if(self:CheckDoClickBoard()==1) then 
+        PlayerProto:ClickBoard()
+    end 
 end
 
 return this

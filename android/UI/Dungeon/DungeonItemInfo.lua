@@ -90,7 +90,7 @@ function IsShowDouble()
         return false
     end
     local sectionData = DungeonMgr:GetSectionData(currCfg.group)
-    if sectionData and DungeonUtil.GetMultiNum(sectionData:GetID()) > 0 then
+    if sectionData and DungeonUtil.HasMultiDesc(sectionData:GetID())then
         CSAPI.SetRTSize(layout,579,880)
         return true
     end

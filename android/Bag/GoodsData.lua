@@ -232,6 +232,27 @@ function this:GetDropList()
 	return list;
 end
 
+--返回头像和头像框的剩余天数描述
+function this:GetIconDayTips()
+	local tips=nil;
+	if self:GetItemType()==ITEM_TYPE.PROP and (self:GetDyVal1()==PROP_TYPE.IconFrame or self:GetDyVal1()==PROP_TYPE.Icon) then
+		local dyArr=self:GetDyArr();
+		if dyArr and dyArr[2]~=0 then
+			local result=TimeUtil:GetTimeTab(dyArr[2]);
+			if result[1]>0 then
+				tips=LanguageMgr:GetByID(46006,result[1]);
+			elseif result[2]>0 then
+				tips=LanguageMgr:GetByID(46007,result[2]);
+			elseif result[3]>0 then
+				tips=LanguageMgr:GetByID(46008,result[3]);
+			end
+		-- elseif dyArr and dyArr[2]==0 then
+		-- 	tips=LanguageMgr:GetByID(46009);
+		end
+	end
+	return tips;
+end
+
 --动态值1
 function this:GetDyVal1()
 	return self.cfg and self.cfg.dy_value1 or nil;
@@ -305,7 +326,14 @@ end
 function this:GetTOtherGetInfo()
 	local infos=nil;
 	if self.cfg and self.cfg.t_otherGet then
-		infos=self.cfg.t_otherGet;
+		-- infos=self.cfg.t_otherGet;
+		infos={};
+		for k,v in ipairs(self.cfg.t_otherGet) do
+			local text=LanguageMgr:GetByID(v);
+			if text~=nil then
+				table.insert(infos,text);
+			end
+		end
 	end
 	return infos;
 end

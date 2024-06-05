@@ -93,8 +93,8 @@ function SetBtn()
 end
 
 function SetDesc()
-    CSAPI.SetGOActive(svOnObj, isDetail)
-    CSAPI.SetGOActive(svOffObj, not isDetail)
+    --CSAPI.SetGOActive(svOnObj, isDetail)
+    --CSAPI.SetGOActive(svOffObj, not isDetail)
 
     local desc1 = ""
     if (isTalent) then
@@ -187,10 +187,10 @@ function GetMaxLv()
     return 1
 end
 
-function OnClickSVType()
-    isDetail = not isDetail
-    SetDesc()
-end
+-- function OnClickSVType()
+--     isDetail = not isDetail
+--     SetDesc()
+-- end
 
 function OnClickMask()
     view:Close()

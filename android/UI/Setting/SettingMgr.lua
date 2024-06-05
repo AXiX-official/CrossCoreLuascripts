@@ -7,6 +7,7 @@ local this = SettingMgr
 function this:Init()
     self.datas = {}
     self:InitLocalCfg()
+    SettingMgr:SaveValue(s_fight_simple_key, SettingFightSimpleType.Close) --强制关闭简要描述
 end
 
 -- 读取本地配置（未设置的默认赋初始值保存一次）

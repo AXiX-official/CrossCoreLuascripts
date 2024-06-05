@@ -392,6 +392,7 @@ end
 function PlayerProto:SetPlrNameRet(proto)
     PlayerClient:SetPanelId(proto.panel_id)
     PlayerClient:SetIconId(proto.icon_id)
+    PlayerClient:SetLastRoleID(proto.role_panel_id)
     PlayerClient:SetModifyName(false);
     if self.setNameCallBack then
         self.setNameCallBack(proto);
@@ -1136,4 +1137,69 @@ end
 function PlayerProto:SetIconRet(proto)
     PlayerClient:SetIconId(proto.icon_id)
     EventMgr.Dispatch(EventType.Head_Icon_Change, proto)
+end
+
+--异构空间获取角色hp和sp
+function PlayerProto:GetNewTowerCardInfo()
+    local proto = {"PlayerProto:GetNewTowerCardInfo"}
+    NetMgr.net:Send(proto)
+end
+
+--异构空间获取角色hp和sp返回
+function PlayerProto:GetNewTowerCardInfoRet(proto)
+    Log("PlayerProto:GetNewTowerCardInfoRet")
+    Log(proto)
+    TowerMgr:SetCardInfos(proto)
+end
+
+--重置异构空间角色hp和sp
+function PlayerProto:ResetNewTowerCardInfo(sid)
+    local proto = {"PlayerProto:ResetNewTowerCardInfo",{sid = sid}}
+    NetMgr.net:Send(proto)
+end
+
+--获取异构空间今天的剩余重置次数
+function PlayerProto:GetNewTowerResetCnt()
+    local proto = {"PlayerProto:GetNewTowerResetCnt"}
+    NetMgr.net:Send(proto)
+end
+
+--获取异构空间今天的剩余重置次数返回
+function PlayerProto:GetNewTowerResetCntRet(proto)
+    Log("PlayerProto:GetNewTowerResetCntRet")
+    Log(proto)
+    TowerMgr:SetResetCnt(proto)
+end
+
+--获取副本的怪物hp和sp
+function PlayerProto:GetDupMonsterHpInfo(dungeonId)
+    local proto = {"PlayerProto:GetDupMonsterHpInfo",{id = dungeonId}}
+    NetMgr.net:Send(proto)
+end
+
+--获取副本的怪物hp和sp返回
+function PlayerProto:GetDupMonsterHpInfoRet(proto)
+    Log("PlayerProto:GetDupMonsterHpInfoRet")
+    Log(proto)
+    TowerMgr:SetDatas(proto)
+end
+
+--修改主角返回
+function PlayerProto:ChangePlrShpaeRet(proto)
+	PlayerClient:SetPanelId(proto.panel_id)
+    PlayerProto:SetIconRet(proto.icon_id)   --头像
+    PlayerProto:SetLastRoleID(proto.role_panel_id)   --头像
+
+    EventMgr.Dispatch(EventType.Player_Select_Card)
+end
+
+-- 回归玩家判断(服务器推送)
+function PlayerProto:CheckReturningPlr(proto)
+    RegressionMgr:CheckReturningPlr(proto)
+    EventMgr.Dispatch(EventType.HuiGui_Check)
+end
+
+function PlayerProto:ClickBoard()
+    local proto = {"PlayerProto:ClickBoard"}
+    NetMgr.net:Send(proto)
 end

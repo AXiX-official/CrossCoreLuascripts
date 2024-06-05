@@ -4,7 +4,7 @@ local GuideBehaviour = require "GuideBehaviour";
 
 GuideMgr = {};
 local this = GuideMgr;
-
+this.IsGuideEnd=false;
 function this:GetGuideKey()
     return "guide_data_key";
 end
@@ -303,8 +303,8 @@ function this:TrySkipStep(cfg)
     end  
 end
 
-function this:DoGuide(data,flag)    
-
+function this:DoGuide(data,flag)
+    this.IsGuideEnd=true;
     if(self:CheckRoll(data.cfg))then--回滚到指定引导
         self:CheckGuide(flag);
         return;
@@ -329,7 +329,7 @@ function this:DoGuide(data,flag)
     end
     --LogError("执行引导" .. table.tostring(data,true));
 
-    CSAPI.OpenView("Guide",data);    
+    CSAPI.OpenView("Guide",data);
 
      --引导步骤开始时处理
     local guideName = data.cfg.name;
@@ -535,7 +535,7 @@ end
 function this:GuideComplete()
 --    LogError("引导完成========================");
 --    LogError(self.doingGuide);
-
+    this.IsGuideEnd=false;
     local doingGuide = self.doingGuide;    
     if(not doingGuide)then
         return;

@@ -18,6 +18,7 @@ end
 function this:GetFunc(sName)
     if (self.funcs == nil) then
         self.funcs = {}
+        self.funcs["Menu"] = self.Menu
         self.funcs["Dungeon"] = self.Dungeon
         self.funcs["DungeonTower"] = self.Dungeon
         self.funcs["DungeonActivity"] = self.DungeonActivity
@@ -43,6 +44,10 @@ function this:GetFunc(sName)
     else
         return self.Normal
     end
+end
+
+function this.Menu()
+    CSAPI.CloseAllOpenned()
 end
 
 --跳转到链接
@@ -255,7 +260,7 @@ function this.Shop(cfg)
         if cfg.val1 and cfg.val1 ~= 0 and cfg.val2 == nil and cfg.val3 == nil then -- 打开单个商店
             CSAPI.OpenView(cfg.sName, cfg.val1);
         else
-            CSAPI.OpenView(cfg.sName, nil, {cfg.val2, cfg.val3});
+            CSAPI.OpenView(cfg.sName, nil, {[1]=cfg.val2, [2]=cfg.val3,[3]=cfg.val5}); --val5是要打开购买界面的商品名称
         end
     else
         FuncUtil:Call(function()

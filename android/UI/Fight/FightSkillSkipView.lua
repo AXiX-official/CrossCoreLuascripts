@@ -19,7 +19,7 @@ function OnFightSkipStateChanged(state)
         return;
     end
 
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then           
+    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
         return;
     end
 
@@ -27,7 +27,7 @@ function OnFightSkipStateChanged(state)
         OnClickSkip();
         return;
     end
-
+    FightClient.Intheamplificationmove=state;
     CSAPI.SetGOActive(btnSkip,state);
 end
 

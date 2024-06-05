@@ -93,14 +93,18 @@ function ShopProto:GetShopResetTimeRet(proto)
 end
 
 --获取商店页的开启时间
-function ShopProto:GetShopOpenTime()
+function ShopProto:GetShopOpenTime(isRelink)
     local proto={"ShopProto:GetShopOpenTime",{}};
+    self.isRelink=isRelink;
     NetMgr.net:Send(proto);
 end
 
 function ShopProto:GetShopOpenTimeRet(proto)
     ShopMgr:InitShopOpenTime(proto);
-    EventMgr.Dispatch(EventType.Shop_OpenTime_Ret);
+    if self.isRelink~=true then
+        EventMgr.Dispatch(EventType.Shop_OpenTime_Ret);
+    end
+    self.isRelink=nil;
 end
 
 --获取商店售卖的商品列表，id不发等获取所有商品内容
@@ -114,5 +118,7 @@ end
 
 function ShopProto:GetShopCommodityRet(proto)
     ShopMgr:OnCommodityInfoRet(proto);
-    EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
+    if  proto and proto.is_finish then
+        EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
+    end
 end

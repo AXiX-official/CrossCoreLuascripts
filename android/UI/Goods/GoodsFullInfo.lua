@@ -21,7 +21,17 @@ local expiryTime=nil;
 local isUse=false;
 local defaultSize={0,0};
 -- local slider=nil;
+
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=CS.UnityEngine.Input
+local KeyCode=CS.UnityEngine.KeyCode
+
+
 function Awake()
+	CSAPI.Getplatform();
+	IsMobileplatform=CSAPI.IsMobileplatform;
 	addBtn = ComUtil.GetCom(btn_add, "Button");
 	removeBtn = ComUtil.GetCom(btn_remove, "Button");
 	maxBtn = ComUtil.GetCom(btn_max, "Button");
@@ -114,12 +124,31 @@ function Refresh()
 				local dormCfg=Cfgs.CfgFurniture:GetByID(cfg.dy_value1)
 				CSAPI.SetText(txtComfort, dormCfg.comfort .. "")
 			end
+		elseif cfg and (cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon)) then --头像/头像框
+			local goods=BagMgr:GetFakeData(cfg.id);
+			SetDayObj(goods:GetIconDayTips());
+			local loader=itemInfo:GetIconLoader();
+			if loader then
+				loader:Load(icon, itemInfo:GetIcon())
+			end
+			CSAPI.SetScale(icon,1,1,1);
+			CSAPI.SetGOActive(btnDetails,false);
+		elseif cfg and (cfg.type==ITEM_TYPE.EQUIP_MATERIAL or cfg.type==ITEM_TYPE.EQUIP) then
+			GridUtil.LoadEquipIcon(icon,tIcon,itemInfo:GetCfg().icon,itemInfo:GetCfg().quality,cfg.type==ITEM_TYPE.EQUIP_MATERIAL,false);
 		elseif cfg and cfg.type==ITEM_TYPE.CARD then --卡牌，特殊处理
 			GridUtil.LoadCIcon(icon,tIcon,itemInfo:GetCfg(),false);
 			CSAPI.SetScale(icon,1,1,1);
 		elseif itemInfo:GetClassType()=="CharacterCardsData" then --卡牌数据类型
 			GridUtil.LoadCIconByCard(icon,tIcon,itemInfo:GetCfg(),false)
 			CSAPI.SetScale(icon,1,1,1);
+		elseif itemInfo:GetClassType()=="EquipData" and itemInfo:GetType()==EquipType.Material then--素材芯片特殊处理
+			GridUtil.LoadEquipIcon(icon,tIcon,itemInfo:GetIcon(),itemInfo:GetQuality(),true,false);
+			-- local loader=itemInfo:GetIconLoader();
+			-- if loader then
+			-- 	loader:Load(icon, itemInfo:GetIcon().."_02")
+			-- end
+			-- CSAPI.SetScale(icon,0.8,0.8,0.8);
+			CSAPI.SetGOActive(btnDetails,false);
 		else
 			local loader=itemInfo:GetIconLoader();
 			if loader then
@@ -145,6 +174,8 @@ function Refresh()
 			if (itemInfo:GetClassType()~="EquipData" and itemInfo.GetType~=nil and itemInfo:GetType()==ITEM_TYPE.EQUIP_MATERIAL) or (itemInfo:GetClassType()=="EquipData" and itemInfo.GetType~=nil and itemInfo:GetType()==EquipType.Material)  then
 				local info=EquipMgr:GetEquipByCfgID(itemInfo:GetCfgID());
 				count=info~=nil and info:GetCount() or 0;
+			elseif itemInfo:GetCount()>0 and openSetting==nil then
+				count=itemInfo:GetCount();
 			else
 				count=BagMgr:GetCount(itemInfo:GetID());
 			end
@@ -179,6 +210,8 @@ function Refresh()
 				SetNumObj(false)
 				clickFunc = OpenSelBox;
 				showGets=false;
+			elseif cfg.type==ITEM_TYPE.EQUIP then
+				CSAPI.SetGOActive(tIcon,true);
 			elseif cfg.is_can_use then --可以使用的道具
 				CSAPI.SetText(txt_open, LanguageMgr:GetByID(1032))
 				CSAPI.SetText(txt_openTips, LanguageMgr:GetByType(1032,4))
@@ -220,6 +253,16 @@ function Refresh()
 	-- SetBgHeight();
 end
 
+--设置有效天数
+function SetDayObj(txt)
+	CSAPI.SetGOActive(dayObj,txt~=nil)
+	CSAPI.SetText(txt_day,txt);
+end
+
+function Update()
+	CheckVirtualkeys()
+end
+
 function RefreshLimit()
 	if itemInfo.GetExpiryTips==nil then
 		CSAPI.SetGOActive(limitObj,false);
@@ -231,7 +274,6 @@ function RefreshLimit()
 		CSAPI.SetText(txt_limit,day);
 	end
 end
-
 function SetNumObj(isShow)
 	CSAPI.SetGOActive(mUseNode, isShow==true);
 	if isShow then
@@ -396,7 +438,7 @@ function OnUseItem(proto)
 	local goods = BagMgr:GetData(itemInfo:GetID());
 	Tips.ShowTips(string.format(LanguageMgr:GetTips(12014), itemInfo:GetName(), useNum))
 	if goods and goods:GetCount() > 0 then
-		maxNum=itemInfo:GetCount()<g_MaxUseItem and itemInfo:GetCount() or g_MaxUseItem;
+		maxNum=goods:GetCount()<g_MaxUseItem and goods:GetCount() or g_MaxUseItem;
 		useNum = 1;
 		-- slider.value=0;
 		if data then
@@ -519,6 +561,19 @@ function OnClickDetails()
 	end
 end
 
+
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+	--仅仅安卓或者苹果平台生效
+	if IsMobileplatform then
+		if(Input.GetKeyDown(KeyCode.Escape))then
+			--  OnVirtualkey()   调关闭
+			if CSAPI.IsBeginnerGuidance()==false then
+				OnClickReturn();
+			end
+		end
+	end
+end
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
 function ReleaseCSComRefs()     

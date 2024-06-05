@@ -114,3 +114,12 @@ function OnClickAdjustCancel()
     cb("cancel")
     view:Close()
 end
+
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if  OnClickAdjustCancel then
+        OnClickAdjustCancel()
+    end
+end

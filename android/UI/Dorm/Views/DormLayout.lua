@@ -114,14 +114,16 @@ function ItemClickCB2(item)
         Refresh()
         return
     end
-    --是否还有位置 
-    local roleNum = DormMgr:GetCurRoomData():GetNum()
-    local fNum = DormMgr:GetFurnitureGridNum()
-    local hadNum = 256-fNum
-    local needNum = math.ceil(_data.scale[1]*_data.scale[3])
-    if(hadNum<=needNum) then 
-        LanguageMgr:ShowTips(21035)
-        return 
+    --是否还有位置 (墙、地面、墙饰忽略；地毯单独算)
+    if(_data.sType~=0 and _data.sType~=1 and _data.sType~=7 and _data.sType~=8) then 
+        local roleNum = DormMgr:GetCurRoomData():GetNum()
+        local fNum = DormMgr:GetFurnitureGridNum()
+        local hadNum = 256-fNum-roleNum
+        local needNum = math.ceil(_data.scale[1]*_data.scale[3])
+        if(hadNum<=needNum) then 
+            LanguageMgr:ShowTips(21035)
+            return 
+        end
     end 
     -- 已放置高亮
     if (item.iSet) then
@@ -340,10 +342,10 @@ function SetNode()
         end
     elseif (mainIndex == 2) then
         titleName1 = LanguageMgr:GetByID(32071)
-        titleName2 = LanguageMgr:GetByType(32071, 3)
+        titleName2 = LanguageMgr:GetByType(32071, 4)
     elseif (mainIndex == 3) then
         titleName1 = LanguageMgr:GetByID(32072)
-        titleName2 = LanguageMgr:GetByType(32072, 3)
+        titleName2 = LanguageMgr:GetByType(32072, 4)
     end
     CSAPI.SetGOActive(imgTitleBg, titleImgName ~= nil)
     if (titleImgName) then

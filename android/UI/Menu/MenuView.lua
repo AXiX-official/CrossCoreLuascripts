@@ -1408,6 +1408,9 @@ function SetImg1(cb)
     end
 
     cardIconItem.Refresh(PlayerClient:GetPanelId(), LoadImgType.Main, function()
+        if(isIn and not cardIconItem.CheckIn()) then
+            isIn = false
+        end 
         if (isIn) then
             MenuMgr:SetPlayInID(PlayerClient:GetPanelId())
             if (cb) then
@@ -1454,6 +1457,9 @@ function SetImg2(cb)
     end
 
     mulIconItem.Refresh(PlayerClient:GetPanelId(), nil, function()
+        if(isIn and not mulIconItem.CheckIn()) then
+            isIn = false
+        end 
         if (isIn) then
             MenuMgr:SetPlayInID(PlayerClient:GetPanelId())
             if (cb) then
@@ -1900,6 +1906,16 @@ end
 function InitResetTime()
     rRunTime = MatrixMgr:GetResetTime()
 end
+
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if btnHide.gameObject.activeInHierarchy==false and OnClickBack then
+        OnClickBack();
+    end
+end
+
 
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）

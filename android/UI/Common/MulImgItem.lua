@@ -93,6 +93,7 @@ function SetTouch()
 end
 
 function PlayAudio(cfgChild)
+    MissionMgr:DoClickBoard()
     if (RoleAudioPlayMgr:GetIsPlaying()) then
         return
     end
@@ -134,7 +135,7 @@ end
 
 -- 点击
 function OnClick()
-
+    MissionMgr:DoClickBoard()
 end
 
 -- 类型

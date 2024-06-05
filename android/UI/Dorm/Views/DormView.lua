@@ -19,7 +19,7 @@ local comfortPrefabs = {}
 
 local isLook = false
 local setRoleTime = nil
-
+local top = nil
 function Awake()
     UIUtil:AddQuestionItem("Dorm", gameObject, node)
     CSAPI.CreateGOAsync("Scenes/Dorm/DormAmbientSetting")
@@ -28,7 +28,7 @@ function Awake()
 end
 
 function OnInit()
-    UIUtil:AddTop2("DormView", node, Back1, Back2, {})
+    top=UIUtil:AddTop2("DormView", node, Back1, Back2, {})
 
     eventMgr = ViewEvent.New()
     -- 添加说话文本
@@ -504,7 +504,13 @@ function Exit1()
 
     DormMgr:ClearDatas()
 end
-
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if  top.OnClickBack then
+        top.OnClickBack();
+    end
+end
 ------------------------------------------------------------------------------
 
 function OpenSelectFriend(fid)

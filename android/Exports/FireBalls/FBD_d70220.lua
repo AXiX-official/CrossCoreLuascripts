@@ -35,7 +35,7 @@ effect="Cast0_hit",time=2000,type=0,pos_ref={ref_type=1}
 [958292235]={
 {time=2000,type=0,cue_sheet="fight/effect/eighth.acb",cue_name="Loki_buff"},
 {time=2000,type=0},
-{effect="Cast3_eff",time=2000,type=0,pos_ref={ref_type=6},cue_sheet="cv/Loki.acb",cue_name="Loki_10",cue_feature=1},
+{effect="Cast3_eff",time=2000,type=0,pos_ref={ref_type=6},cue_sheet="cv/Loki.acb",cue_name="Loki_13",cue_feature=1},
 {delay=950,time=2000,type=3,hits={0}}
 }
 };

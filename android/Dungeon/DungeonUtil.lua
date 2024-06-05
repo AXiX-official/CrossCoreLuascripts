@@ -173,8 +173,9 @@ function this.GetMultiDesc(id)
 			table.insert(list, str);
 		end
 		if cfg.dropAdd then
-			local num = cfg.dropAdd[2] - infoNum;
-			local str = LanguageMgr:GetByID(15069, LanguageMgr:GetByID(15070, cfg.dropAdd[1]), num, cfg.dropAdd[2])
+			local extreAdd = this.GetExtreMultiNum() --额外增加的次数
+			local num = cfg.dropAdd[2] - infoNum + extreAdd;
+			local str = LanguageMgr:GetByID(15069, LanguageMgr:GetByID(15070, cfg.dropAdd[1] + extreAdd), num, cfg.dropAdd[2] + extreAdd)
 			table.insert(list, str);
 		end
 		for k, v in ipairs(list) do
@@ -200,18 +201,19 @@ function this.GetMultiDesc2(id)
 			table.insert(list, str);
 		end
 		if cfg.cardExpAdd then
-			local num = cfg.cardExpAdd[2] - infoNum;
+			local num = cfg.cardExpAdd[2] - infoNum
 			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. cfg.cardExpAdd[2]			
 			table.insert(list, str);
 		end
 		if cfg.moneyAdd then
-			local num = cfg.moneyAdd[2] - infoNum;
+			local num = cfg.moneyAdd[2] - infoNum
 			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. cfg.moneyAdd[2]
 			table.insert(list, str);
 		end
 		if cfg.dropAdd then
-			local num = cfg.dropAdd[2] - infoNum;
-			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. cfg.dropAdd[2]
+			local extreAdd = this.GetExtreMultiNum() --额外增加的次数
+			local num = cfg.dropAdd[2] - infoNum + extreAdd;
+			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. (cfg.dropAdd[2] + extreAdd)
 			table.insert(list, str);
 		end
 		for k, v in ipairs(list) do
@@ -223,6 +225,32 @@ function this.GetMultiDesc2(id)
 		end
 	end
 	return str;
+end
+
+--活动增加的额外掉落次数 只针对dropAdd这个字段
+function this.GetExtreMultiNum()
+	local add,regresAdd = 0,0
+	local cfgs = Cfgs.CfgDupDropCntAdd:GetAll()
+	local isRegres = false --回归
+	if cfgs then
+		for _, cfg in pairs(cfgs) do
+			if cfg.startTime and cfg.endTime then
+				local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
+				local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+				if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
+					if cfg.regressionType ~= nil then
+						if isRegres then
+							add = add + cfg.dropAddCnt
+							regresAdd = regresAdd + cfg.dropAddCnt
+						end						
+					else
+						add = add + cfg.dropAddCnt
+					end
+				end
+			end			
+		end
+	end
+	return add,regresAdd
 end
 
 --判断该章节是否有多倍掉落信息
@@ -239,6 +267,7 @@ function this.GetMultiNum(id)
 	local cfg = this.GetMultiCfg(id)
 	local cur,max = 0,0
 	local infoNum = DungeonMgr:GetSectionMultiNum(id);
+	local extreAdd = this.GetExtreMultiNum()
 	if(cfg and this.HasMultiDesc(id)) then
 		if cfg.plrExpAdd then
 			cur = cfg.plrExpAdd[2] - infoNum
@@ -250,8 +279,8 @@ function this.GetMultiNum(id)
 			cur = cfg.moneyAdd[2] - infoNum
 			max = cfg.moneyAdd[2]
 		elseif cfg.dropAdd then
-			cur = cfg.dropAdd[2] - infoNum
-			max = cfg.dropAdd[2]
+			cur = cfg.dropAdd[2] - infoNum + extreAdd
+			max = cfg.dropAdd[2] + extreAdd
 		end
 	end
 	return cur,max
@@ -264,6 +293,20 @@ function this.GetMultiCfg(sectionID)
 		cfg = Cfgs.CfgDupDropMulti:GetByID(cfgSection.multiId)
 	end
 	return cfg
+end
+
+--查询剩余的多倍数量
+function this.HasMultiNum(cfgId)
+	local datas = DungeonMgr:GetAllSectionDatas()
+	if datas and #datas > 0 then
+		for i, v in pairs(datas) do
+			if v:GetMultiID() and v:GetMultiID() == cfgId then
+				local num = DungeonUtil.GetMultiNum(v:GetID())
+				return num > 0
+			end
+		end
+	end
+	return false
 end
 
 function this.GetViewPath(sectionID)
@@ -291,5 +334,7 @@ function this.GetCost(cfg)
     end
     return cost
 end
+
+
 
 return this; 

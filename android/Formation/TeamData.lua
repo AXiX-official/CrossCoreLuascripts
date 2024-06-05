@@ -398,7 +398,7 @@ end
 --设置队伍名
 function this:SetTeamName(name)
 	if name==nil or name=="" then
-		name=string.format( LanguageMgr:GetTips(14017),self.index)
+		name=FormationUtil.GetDefaultName(self.index);
 	else
 		name=tostring(name)
 	end
@@ -407,7 +407,11 @@ end
 
 --返回队伍名称
 function this:GetTeamName()
-	return self.teamName==nil and string.format( LanguageMgr:GetTips(14017),self.index) or self.teamName;
+	local teamName=self.teamName
+	if teamName==nil or teamName=="" then
+		teamName=FormationUtil.GetDefaultName(self.index);
+	end
+	return teamName;
 end
 
 --返回队伍COST值

@@ -41,6 +41,8 @@ local childPageID=nil;--当前选中的二级页签下标
 local currChildPage=nil;--当前子页面配置信息
 local monthCardItems={};
 local newInfos=nil;--new状态数据
+local lastChildPageIDs=nil;--当前页面的二级页签的id列表
+local lastPageIDs=nil;--当前商店的页面id列表
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Shop_Tab_Change,OnPageChange)
@@ -66,7 +68,6 @@ function Awake()
     CSAPI.SetParent(video.gameObject, videoNode);
     ClientProto:GetMemberRewardInfo();
     ShopProto:GetShopResetTime();
-
     MenuMgr:ShopFirstOpen() --商店第一次打开记录 rui
 end
 
@@ -97,6 +98,7 @@ function OnShopTagRefresh()
         OnClickBack()
         do return end
     end
+    RecordPageIDs();
     Tips.ShowTips(LanguageMgr:GetTips(15120));
     --刷新商店页面
     local index=1;
@@ -155,6 +157,7 @@ function OnOpen()
         LogError("未找到商店页面数据！");
         do return end
     end
+    RecordPageIDs();
     -- ShopMgr:CheckCommReset(); --检测一次商店的新商品
     local index=1;
     for k,v in ipairs(pages) do
@@ -184,12 +187,16 @@ function OnOpen()
     else
         Refresh()
     end
+    if openSetting and openSetting[3]~=nil and openSetting[3]~="" then
+        ShopCommFunc.OpenBuyConfrim(openSetting[1],openSetting[2],tonumber(openSetting[3]));
+    end
     isFirst=false;
 end
 
 function Refresh(isJump)
     currPageData=pages[currPageIndex];
     childTabDatas=currPageData:GetTopTabs(true);
+    RecordChildPageIDs();
     --查找默认子页面
     if childTabDatas and next(childTabDatas) and currPageData:GetCommodityType()~=CommodityType.Promote  then
         if not isJump then
@@ -319,7 +326,6 @@ end
 
 function InitPromotes()
     SetArrActive({cardPage,sv,sv2,sv3,sv4,sv5,bMask,leftParent,videoNode,btnSkinSet},false);
-    -- SetArrActive({promoteObj},true);暂时改动
     CSAPI.SetAnchor(promoteObj,0,0);
     if promoteItem==nil then
         ResUtil:CreateUIGOAsync("ShopPromote/PromoteMain",promoteObj,function(go)
@@ -607,6 +613,7 @@ function Update()
     countTime=countTime+Time.deltaTime;
 	if countTime>=updateTime then
 		AutoRefresh();
+        CheckPageRefresh();
 		countTime=0;
 	end
     if isNil==true then
@@ -785,12 +792,12 @@ end
 function OnChildTabChange(eventData)
     childPageID=eventData.cfg.id;
     currChildPage=eventData.cfg;
-    --记录红点状态并更新数据
-    if currPageData:GetCommodityType()==CommodityType.Promote then
-        local info=ShopMgr:GetPromoteInfo(childPageID)
-        info:SetRed(false);
-        RoleAudioPlayMgr:StopSound();
-    end
+    --记录红点状态并更新数据,无用
+    -- if currPageData:GetCommodityType()==CommodityType.Promote then
+    --     local info=ShopMgr:GetPromoteInfo(childPageID)
+    --     info:SetRed(false);
+    --     RoleAudioPlayMgr:StopSound();
+    -- end
     Refresh();
 end
 
@@ -958,6 +965,78 @@ end
 
 function OnClickCoreDetails()
     CSAPI.OpenView("CoreExchangeDetails");
+end
+
+--检测商店页刷新
+function CheckPageRefresh()
+    if data==nil then
+        local openList=ShopMgr:GetAllPages(true);
+        if openList then
+            local tempList=nil;
+            if lastPageIDs then
+                for k,v in pairs(lastPageIDs) do
+                    local hasOld=false;
+                    local hasNew=false;
+                    for key,val in ipairs(openList) do
+                        if currPageData and val:GetID()==currPageData:GetID() and tempList==nil then
+                            tempList=val:GetTopTabs(true);
+                        end
+                        if val:GetID()==tonumber(k) then
+                            hasOld=true;
+                            break;
+                        elseif lastPageIDs[val:GetID()]==nil then
+                            hasNew=true;
+                            break;
+                        end
+                    end 
+                    if hasOld~=true or hasNew==true then
+                        --刷新商店页面
+                        OnShopTagRefresh();
+                        break;
+                    end
+                end
+                
+            end
+            if tempList and lastChildPageIDs then
+                for k,v in pairs(lastChildPageIDs) do
+                    local hasOld=false;
+                    local hasNew=false;
+                    for key,val in ipairs(tempList) do
+                        if val.id==tonumber(k) then
+                            hasOld=true;
+                            break;
+                        elseif lastChildPageIDs[val.id]==nil then
+                            hasNew=true;
+                            break;
+                        end
+                    end 
+                    if hasOld~=true or hasNew==true then
+                        --刷新商店页面
+                        OnShopTagRefresh();
+                        break;
+                    end
+                end
+            end
+        end
+    end
+end
+
+function RecordPageIDs()
+    lastPageIDs={};
+    if pages then
+        for k,v in ipairs(pages) do
+            lastPageIDs[v:GetID()]=true;
+        end
+    end
+end
+
+function RecordChildPageIDs()
+    lastChildPageIDs={};
+    if childTabDatas then
+        for k,v in ipairs(childTabDatas) do
+            lastChildPageIDs[v.id]=true;
+        end
+    end
 end
 
 --动画

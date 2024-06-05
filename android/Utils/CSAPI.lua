@@ -1061,7 +1061,20 @@ this.GetPublishType = CS.CSAPI.GetPublishType
 
 this.SetImgClicker=CS.CSAPI.SetImgClicker;
 
-this.GetSystemInfo=CS.CSAPI.GetSystemInfo;
+this.GetSystemInfo=function(func)
+	if this.systemInfo~=nil then
+		if(func)then
+			func(this.systemInfo);
+		end
+	else
+		CS.CSAPI.GetSystemInfo(function(js)
+			this.systemInfo=js;
+			if(func)then
+				func(js);
+			end
+		end);
+	end
+end;
 
 _G.ReYunSDK=CS.ReYunSDK.ins;
 
@@ -1100,6 +1113,50 @@ function this.GetADID()
 	return 0;
 end
 
+this.SetUIFit=CS.CSAPI.SetUIFit;
+this.AddUIAdaptive=CS.CSAPI.AddUIAdaptive;
+this.RemoveAdaptive=CS.CSAPI.RemoveAdaptive;
+---是否存在新手引导
+function this.IsBeginnerGuidance()
+	if GuideMgr.IsGuideEnd==true then
+		return true;
+	end
+	local PlotSimple = CSAPI.GetView("PlotSimple")
+	if (PlotSimple) then
+		return true;
+	end
+	local Plot = CSAPI.GetView("Plot")
+	if (Plot) then
+		return true;
+	end
+	local VideoPlayer = CSAPI.GetView("VideoPlayer")
+	if (VideoPlayer) then
+		return true;
+	end
+	if  FightClient.Intheamplificationmove then
+		return true;
+	end
+	if  FightClient.NewPlayerDrasu then
+		return true;
+	end
+
+	return false;
+end
+
+---是否是移动平台
+this.IsMobileplatform=false;
+--获取平台
+function this.Getplatform()
+	this.IsMobileplatform=false;
+	if UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android or
+			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.IPhonePlayer or
+			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.WindowsEditor
+	then
+		this.IsMobileplatform=true;
+	else
+		this.IsMobileplatform=false;
+	end
+end
 
 return this;
 

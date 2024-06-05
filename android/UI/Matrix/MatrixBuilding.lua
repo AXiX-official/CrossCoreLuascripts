@@ -4,7 +4,7 @@ local cRoleInfo = nil
 local time = 0
 local time2 = 2
 local setRoleTime = nil
-
+local Top=nil;
 function Awake()
     -- CSAPI.CreateGOAsync("Scenes/Dorm/DormAmbientSetting")
 
@@ -20,7 +20,7 @@ function Awake()
 end
 
 function OnInit()
-    UIUtil:AddTop2("MatrixBuilding", node, Back1, Back2, {})
+    Top=UIUtil:AddTop2("MatrixBuilding", node, Back1, Back2, {})
 
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
@@ -469,5 +469,17 @@ function Exit()
 
     view:Close()
 end
-
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if matrixRemould then
+        if matrixRemould.gameObject.activeInHierarchy then
+            CSAPI.SetGOActive(matrixRemould.gameObject, false)
+            return;
+        end
+    end
+    if  Top.OnClickBack then
+        Top.OnClickBack();
+    end
+end
 ------------------------------------------------------------------------------

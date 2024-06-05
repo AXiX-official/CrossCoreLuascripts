@@ -501,7 +501,7 @@ function this:Init()
     self.MultiIcon = ResIconUtil.New("MultiIcon")  --多人插入缩列图
     self.MultBoard=ResIconUtil.New("MultBoard") --多人插入缩列图 看板
 
-    self.MenuEnter = ResIconUtil.New("MenuEnter")
+    self.MenuEnter = ResIconUtil.New("MenuEnter")  
     self.HeadFrame = ResIconUtil.New("HeadFrame")  --头像框
     self.Head = ResIconUtil.New("Head")  --头像框
     -- img
@@ -514,12 +514,7 @@ function this:Init()
     self.SkinMall=ResIconUtil.New("RoleSkinMall")
     self.SkinSetIcon=ResIconUtil.New("SkinSetIcon")
     self.Tag=ResIconUtil.New("Tag")
-    --Trials
-    self.TrialsList = ResIconUtil.New("Trials/List")
-    self.TrialsPage = ResIconUtil.New("Trials/Page")
-    --Trials
-    self.TrialsList = ResIconUtil.New("Trials/List")
-    self.TrialsPage = ResIconUtil.New("Trials/Page")
+    self.StorePromote = ResImgUtil.New("UIs/ShopPromote");--商店推荐页
 end
 
 return this;

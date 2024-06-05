@@ -1643,6 +1643,7 @@ function RecycleLines()
 end
 
 ------------------------------------点击-----------------------------------
+
 function OnClickBack()
     if currType == SectionViewType.Daily and currIndex > 2 then
         currIndex = currIndex - 1
@@ -2117,9 +2118,31 @@ function CheckModelOpen()
 end
 
 
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if isAnim then
+        return
+    end
+    if  top.OnClickBack then
+        top.OnClickBack();
+        if not UIMask then
+            UIMask = CSAPI.GetGlobalGO("UIClickMask")
+        end
+        CSAPI.SetGOActive(UIMask, false)
+    end
+end
+
+
+
 function OnDestroy()
     eventMgr:ClearListener();
     ReleaseCSComRefs()
+    if not UIMask then
+        UIMask = CSAPI.GetGlobalGO("UIClickMask")
+    end
+    CSAPI.SetGOActive(UIMask, false)
 end
 
 ----#Start#----

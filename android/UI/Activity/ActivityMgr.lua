@@ -470,6 +470,19 @@ function this:CheckRed(type)
             return BagMgr:GetCount(ITEM_ID.DIAMOND) >= costCount
         end
         return false
+    elseif type == ActivityListType.DropAdd then
+        local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.DropAdd)
+        if cfg and cfg.info then
+            for i, v in ipairs(cfg.info) do
+                if v.id and DungeonUtil.HasMultiNum(v.id) then
+                    return true
+                end
+            end
+        end
+        return false
+    else
+        local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. type) == 0
+        return isRed
     end
 end
 

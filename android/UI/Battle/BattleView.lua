@@ -249,6 +249,8 @@ function OnViewShow(isShow)
 		-- 	isLeftHide = false;
 		-- end);
 	end	
+
+	BattleMgr:UpdateMistViewDis();--更新迷雾视野距离
 end
 
 --初始化战场
@@ -597,6 +599,8 @@ function RefreshStarInfo(data)
 			if data.num > maxNum then
 				BattleMgr:SetInputState(false);
 			end
+
+			BattleMgr:UpdateMistViewDis();
 		end
 	end
 end
@@ -971,6 +975,16 @@ function OnAISetRet(proto)
 		end
 	end
 end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+	---填写退出代码逻辑/接口
+	if  top.OnClickBack then
+		top.OnClickBack();
+	end
+end
+
+
 --[[
 function InitAIMove()
 	--自动寻路

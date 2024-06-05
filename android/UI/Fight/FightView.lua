@@ -2,11 +2,17 @@ local character = nil;
 local timeOutValue = nil;
 local recordBeginTime = 0;
 local currTotalDamage=0;--当前战斗对敌方造成的总伤害值
-
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=UnityEngine.Input
+local KeyCode=UnityEngine.KeyCode
 function Awake()    
  	--添加问号 rui 211130 --因为不是通过openview打开的，所以要手动添加
 	--UIUtil:AddQuestionItem("Fight",gameObject, rt,"QuestionItem2")
-     
+    CSAPI.Getplatform();
+    IsMobileplatform=CSAPI.IsMobileplatform;
+
     currShowState = false;--当前状态
     ctrlShowState = false;--控制状态
 
@@ -574,7 +580,7 @@ function UpdateTriggerEvent(data)
 end
 
 --回城
-function OnClickBtnBack() 
+function OnClickBtnBack()
     if(DungeonMgr:IsTutorialDungeon() and GuideMgr:HasGuide("Fight"))then      
         --Tips.ShowTips("特殊关卡，暂不能操作")
         return;
@@ -1031,3 +1037,31 @@ function OnClickQuestion()
         CSAPI.OpenView("ModuleInfoView", cfg)
     end 
 end
+
+
+
+
+-----------------------------------------------虚拟返回键代码 下-------------------------------------------------------------
+
+--OnClickBtnBack
+function Update()
+    CheckVirtualkeys()
+end
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+    --仅仅安卓或者苹果平台生效
+    if IsMobileplatform then
+        if(Input.GetKeyDown(KeyCode.Escape))then
+            if  OnClickBtnBack then
+                if CSAPI.IsBeginnerGuidance()==false then
+                    if FightClient.IsFightStop and FightClient.IsFightOver==false then
+                        OnClickBtnBack();
+                    else
+                        FightClient.IsFightStop=true;
+                    end
+                end
+            end
+        end
+    end
+end
+-----------------------------------------------虚拟返回键代码 上-------------------------------------------------------------

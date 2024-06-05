@@ -22,13 +22,9 @@ end
 
 function this:GetCfgID() return self.cfg and self.cfg.id or nil end
 
--- 返回类型
-function this:GetType() return self.cfg and self.cfg.type or 1 end
+-- 返回显示类型
+function this:GetShowType() return self.cfg and self.cfg.showType or 1 end
 
---返回关联UI物体名
-function this:GetResName()
-    return self.cfg and self.cfg.resName or "ShopPromote/PromoteItem";
-end
 
 function this:GetImg()
     return self.cfg and self.cfg.img or nil;
@@ -42,49 +38,81 @@ function this:GetTabID()
     return self.cfg and self.cfg.group or nil;
 end
 
-function this:HasAssistant()
-    return self.cfg and self.cfg.hasAssistant==1 or false;
-end
-
-function this:GetModelID()
-    return self.cfg and self.cfg.modelID or nil;
-end
-
-function this:GetCRoleID()
-    return self.cfg and self.cfg.cRoleID or nil;
-end
-
-function this:GetVoiceType()
-    return self.cfg and self.cfg.voiceType or nil;
-end
-
 function this:GetStartTime()
-    local time = nil;
+    local time = 0;
 	if self.cfg and self.cfg.startTime ~= "" and self.cfg.startTime ~= nil then
-		time = self.cfg.startTime;
+		time = TimeUtil:GetTimeStampBySplit(self.cfg.startTime)
 	end
 	return time;
 end
 
 function this:GetEndTime()
-    local time = nil;
+    local time = 0;
 	if self.cfg and self.cfg.endTime ~= "" and self.cfg.endTime ~= nil then
-		time = self.cfg.endTime;
+		time = TimeUtil:GetTimeStampBySplit(self.cfg.endTime)
 	end
 	return time;
 end
 
---是否显示红点
-function this:HasRed()
-    local currState=ShopMgr:PromoteIsRed(self:GetCfgID());
-    return currState;
+function this:GetSort()
+    return self.cfg and self.cfg.sort or 1000;
 end
 
-function this:SetRed(isRed)
-    local currState=ShopMgr:PromoteIsRed(self:GetCfgID());
-    if currState~=isRed then
-        ShopMgr:SavePromoteState(self:GetCfgID(),isRed);
+--返回当前推荐商品是否已经购买过
+function this:IsBuy()
+    local isBuy=false;
+    local commId=self.cfg and self.cfg.commID or nil;
+    if commId then
+        local comm=ShopMgr:GetFixedCommodity(commId);
+        if comm and comm:GetBuyCount()>0 then
+            isBuy=true;
+        end
     end
+    return isBuy;
+end
+
+-- 返回当前时间段该商品是否可以购买
+function this:GetNowTimeCanShow()
+    local canShow = true
+    local currTime = TimeUtil:GetTime()
+    local beginTime = self:GetStartTime()
+    local endTime = self:GetEndTime()
+    if (beginTime ~= 0 and currTime < beginTime) or
+        (endTime ~= 0 and currTime >= endTime) then canShow = false end
+    return canShow
+end
+
+--返回跳转信息
+function this:GetJumpInfo()
+    local jumpInfo=nil;
+    local jumpId=self:GetJumpID();
+    if jumpId~=nil then
+        local jumpCfg=Cfgs.CfgJump:GetByID(jumpId);
+        if jumpCfg==nil then
+            LogError("读取跳转表错误！未找到跳转ID："..tostring(jumpId).."对应的数据！");
+            do return end
+        end
+        if jumpCfg.val1 and jumpCfg.val1 ~= 0 and jumpCfg.val2 == nil and jumpCfg.val3 == nil then -- 打开单个商店
+            jumpInfo={
+                id=self.cfg.sJumpID,
+                commId=self.cfg.commID,
+                shopId=jumpCfg.val1,
+            }
+        else
+            jumpInfo={
+                id=self.cfg.sJumpID,
+                commId=self.cfg.commID,
+                shopId=jumpCfg.val2,
+                topId=jumpCfg.val3,--二级页签ID
+            }
+        end
+    end
+    return jumpInfo;
+end
+
+--返回自动换页时间
+function this:GetChangeTime()
+    return  self.cfg and self.cfg.changeTimer or 5;
 end
 
 return this

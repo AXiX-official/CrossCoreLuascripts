@@ -2,15 +2,21 @@ local conf = {
 	["filename"] = 's-商店配置.xlsx',
 	["sheetname"] = '商城推荐配置',
 	["types"] = {
-'int','string','int','int','string','string','int','int','int','string','int','string','string'
+'int','string','int','int','int','string','int','int','string','string','int'
 },
 	["names"] = {
-'id','key','group','type','resName','img','sJumpID','hasAssistant','modelID','cRoleID','voiceType','startTime','endTime'
+'id','key','group','showType','sort','img','commID','sJumpID','startTime','endTime','changeTimer'
 },
 	["data"] = {
-{'1001',	'',	'2001',	'1',	'',	'Store01',	'140003',	'1',	'9908002',	'9908_Kadya',	'21',	'',	''},
-{'1002',	'',	'2002',	'2',	'ShopPromote/PromoteSurveryItem',	'',	'',	'1',	'9908002',	'9908_Kadya',	'22',	'',	''},
-{'1003',	'',	'2003',	'2',	'ShopPromote/PromoteMonthItem',	'',	'140009',	'1',	'9908002',	'9908_Kadya',	'23',	'',	''},
+{'1001',	'',	'101',	'1',	'5',	'L_Skin01',	'',	'140008',	'',	'',	'5'},
+{'1002',	'',	'101',	'1',	'4',	'L_Skin02',	'',	'140008',	'',	'',	'3'},
+{'1003',	'',	'101',	'1',	'1',	'L_Skin03',	'',	'140008',	'',	'',	'3'},
+{'1004',	'',	'101',	'1',	'2',	'L_Skin04',	'',	'140019',	'',	'',	'3'},
+{'1005',	'',	'101',	'1',	'3',	'L_Skin05',	'',	'140019',	'',	'',	'3'},
+{'1006',	'',	'201',	'2',	'1',	'M_Packs01',	'30023',	'140105',	'',	'',	''},
+{'1007',	'',	'301',	'2',	'1',	'ST_Packs01',	'30016',	'140106',	'',	'',	''},
+{'1008',	'',	'301',	'2',	'2',	'ST_Packs02',	'30015',	'140107',	'',	'',	''},
+{'1009',	'',	'401',	'1',	'1',	'SD_Packs01',	'30001',	'140108',	'',	'',	''},
 },
 }
 --cfgCfgShopReCommend = conf

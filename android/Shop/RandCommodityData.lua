@@ -30,12 +30,14 @@ function this:SetCfg(rewardId,itemId,itemIndex)
     if rewardCfg then
         self.icon=rewardCfg.icon;
         self.quality=rewardCfg.quality;
-        for k,v in ipairs(rewardCfg.item) do
-            if v.id==itemId and k==itemIndex then
-                self.cfg=v;
-                break;
+        if rewardCfg.item then
+            for k,v in ipairs(rewardCfg.item) do
+                if v.id==itemId and k==itemIndex then
+                    self.cfg=v;
+                    break;
+                end
             end
-        end
+        end        
     end
 end
 

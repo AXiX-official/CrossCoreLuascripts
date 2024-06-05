@@ -83,8 +83,7 @@ end
 function SetPart()
     local _titleIdx = titleIdx - 1
     local indexStr = _titleIdx > 9 and _titleIdx .. "" or "0" .. _titleIdx
-    -- CSAPI.SetText(txtPart, "PART " .. indexStr)
-    CSAPI.SetText(txtPart, "")
+    CSAPI.SetText(txtPart, "PART " .. indexStr)
     CSAPI.SetText(txtIndex, indexStr)
 end
 

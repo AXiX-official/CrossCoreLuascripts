@@ -719,7 +719,7 @@ function this:EnterDungeon(proto)
             -- 有战斗进行中，直接进战斗
             BattleMgr:SetBattleData(proto)
         else
-            if (not SceneMgr:IsBattleDungeon()) then
+            if (not SceneMgr:IsBattleDungeon() or (proto and proto.nStep and proto.nStep == 0) ) then
                 BattleMgr:Reset();
                 EventMgr.Dispatch(EventType.Scene_Load, "Battle");
                 BattleMgr:PushData(proto, BattleMgr.Init);
@@ -1060,9 +1060,8 @@ function this:OnQuit(isExit, jumpType)
                 if paht2~=""  then
                     CSAPI.OpenView(paht2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
                 end
-                
             elseif cfg.type == eDuplicateType.TaoFa then --讨伐
-                CSAPI.OpenView("DungeonActivity2",{id = cfg.group, itemId = cfg.id})
+                CSAPI.OpenView("DungeonActivity2",{id = cfg.group, itemId = cfg.id})           
             end
         end
     elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then

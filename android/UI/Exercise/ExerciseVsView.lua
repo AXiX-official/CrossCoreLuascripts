@@ -29,7 +29,7 @@ end
 -- 自己
 function SetLeft()
     -- icon
-    SetIconL(PlayerClient:GetIconId())
+    SetIconL(PlayerClient:GetLastRoleID())
     -- attack
     local teamData = TeamMgr:GetTeamData(eTeamType.PracticeAttack)
     if teamData then
@@ -74,7 +74,11 @@ end
 function SetRight()
     lData = ExerciseMgr:GetEnemyInfo(data.uid)
     -- icon
-    SetIconR(lData.icon_id)
+    local icon_id = lData.icon_id
+    if(lData.role_panel_id~=nil and lData.role_panel_id~=0) then 
+        icon_id = lData.role_panel_id
+    end 
+    SetIconR(icon_id)
     -- attack
     CSAPI.SetText(txtFightingR2, lData.performance .. "")
     -- rank

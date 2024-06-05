@@ -125,6 +125,7 @@ function OnClickAgain()
     end
 
     FightClient:Reset();
+    BattleMgr:Reset();
 
     if sceneType == SceneType.PVE then
         local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())

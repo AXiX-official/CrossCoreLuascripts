@@ -27,6 +27,7 @@ local conf = {
 {'30030',	'PayGiftPack_30030',	'1',	'0'},
 {'30031',	'PayGiftPack_30031',	'1',	'0'},
 {'30032',	'PayGiftPack_30032',	'1',	'0'},
+{'30033',	'PayGiftPack_30033',	'1',	'0'},
 {'31001',	'PayPassportA_31001',	'1',	'2'},
 {'31002',	'PayPassportB_31002',	'1',	'2'},
 {'31003',	'PayPassportC_31003',	'1',	'2'},

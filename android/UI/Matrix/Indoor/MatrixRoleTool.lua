@@ -525,7 +525,7 @@ function this:ClearCurPosCache(index)
 end
 
 function this:GetUsablePos(index)
-    return self.aStar:GetRandomPos(index)
+    return self.aStar:GetRandomPos2(index)
 end
 
 -- 位置当前是否有其他角色

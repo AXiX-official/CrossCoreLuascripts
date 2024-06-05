@@ -6,7 +6,7 @@ require "CommonUtil"
 --战斗启动
 require "FightLauncher"
 require("GCalculatorHelp");
-
+require "AdaptiveConfiguration"
 cfgLaucher = nil
 
 function Awake()	

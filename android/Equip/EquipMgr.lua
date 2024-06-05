@@ -125,7 +125,7 @@ function this:SearchBeastEquips(cardId)
 						slotEquips[key][slot]={};
 						slotEquips[key][slot].id=v:GetID();
 						slotEquips[key][slot].score=score;
-						if slotEquips[1][slot] and slotEquips[1][slot].score>score then
+						if slotEquips[1][slot] and slotEquips[1][slot].score>=score then
 							isBig=false;
 						else
 							isBig=true;

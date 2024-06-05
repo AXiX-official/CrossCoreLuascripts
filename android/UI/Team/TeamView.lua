@@ -53,7 +53,11 @@ local isTeamDup=true;
 local sortView=nil;
 local sortID=2;
 
+local BackteamPreset=nil;
+local Top=nil;
+
 function Awake()
+	BackteamPreset=nil;
 	ResUtil:LoadBigImg(mbg, "UIs/BGs/bg_13/bg", true, function()
 		-- CSAPI.SetScale(mbg, 1, 1, 1)
 		UIUtil:SetPerfectScale(mbg);
@@ -282,7 +286,7 @@ function IsDisClick()
 end
 
 function OnInit()
-    UIUtil:AddTop2("TeamView",gameObject, OnClickReturn,OnClickHomeFunc,{})
+	Top=UIUtil:AddTop2("TeamView",gameObject, OnClickReturn,OnClickHomeFunc,{})
 	-- OnCharacterForceMove(
 	-- 	{
 	-- 		forceData={{row=1,col=3,cfgId=71020}},
@@ -767,7 +771,9 @@ function OnClickPrefab()
 	end
     if teamPreset == nil then
         ResUtil:CreateUIGOAsync("FormatPreset/TeamPreset", gameObject,function(go)
-            teamPreset = ComUtil.GetLuaTable(go);
+			teamPreset = ComUtil.GetLuaTable(go);
+			BackteamPreset=teamPreset;
+			print("查找到并赋值")
         end);
 	else
 		CSAPI.SetGOActive(teamPreset.gameObject, true);
@@ -1607,6 +1613,26 @@ function SetSortObj()
 end
 
 -------------------------------筛选
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+	if BackteamPreset then
+		---填写退出代码逻辑/接口
+		if BackteamPreset.OnOpenPreset and BackteamPreset.gameObject.activeInHierarchy then
+			BackteamPreset.OnOpenPreset();
+		else
+			if  Top.OnClickBack then
+				Top.OnClickBack();
+				BackteamPreset=nil;
+			end
+		end
+	else
+		if  Top.OnClickBack then
+			Top.OnClickBack();
+		end
+	end
+end
+
+
 --[[
 --上下
 function OnClickUD()

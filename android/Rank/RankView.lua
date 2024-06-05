@@ -101,10 +101,11 @@ function SetMyData()
     -- 战斗力
     CSAPI.SetText(txtFighting, info:GetScore() .. "")
     -- icon
-    ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")
-    local _cfg = Cfgs.character:GetByID(info:GetModuleID())
-    if (_cfg.icon) then
-        ResUtil.RoleCard:Load(icon, _cfg.icon, true)
-    end
+    -- ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")
+    -- local _cfg = Cfgs.character:GetByID(info:GetModuleID())
+    -- if (_cfg.icon) then
+    --     ResUtil.RoleCard:Load(icon, _cfg.icon, true)
+    -- end
+    UIUtil:AddHeadFrame(hfParent, 0.9)
 end
 

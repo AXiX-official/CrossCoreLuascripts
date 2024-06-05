@@ -277,7 +277,7 @@ end
 
 function SetDOP()
     local time = TimeUtil:GetTimeHMS(TimeUtil:GetTime(), " %Y.%m.%d")
-    CSAPI.SetText(txtDOP, string.format("//:%s", time)) --DOP//:%s
+    CSAPI.SetText(txtDOP, string.format("DOP//:%s", time)) --DOP//:%s
 
     local x = -30
     local _q = curData:GetQuality() or 3

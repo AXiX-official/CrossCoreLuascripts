@@ -42,6 +42,7 @@ end
 --修改模型
 function this:ChangeIconRet(proto)
 	PlayerClient:SetPanelId(proto.panel_id)
+	PlayerClient:SetLastRoleID(proto.role_panel_id)
 	--PlayerClient:SetIconId(proto.icon_id)
 	EventMgr.Dispatch(EventType.Player_Select_Card)
 	if(self.ChangeIconCB) then 

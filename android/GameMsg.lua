@@ -371,9 +371,9 @@ GameMsg.map["sPlrData"] = {
 	{ "uid", "name",  "hot",  "level","gold","diamond","currtime",  "exp","sign",  "create_time","army_coin","tp",   "tpBeginTime","notLog",            },
 }
 GameMsg.map["LoginProto:LoginGame"] = {
-	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     
-	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      },
-	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame",},
+	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     最后设置的角色看板ID 
+	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      "uint",              },
+	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame","role_panel_id",     },
 }
 GameMsg.map["LoginProto:PlrUpdate"] = {
 	--更新信息(不是所有字段都有) 添加的经验 下次体能恢复时间 
@@ -1291,9 +1291,9 @@ GameMsg.map["PlayerProto:SetPlrName"] = {
 	{ "name",  "index",             "month","day", "use_vid",   },
 }
 GameMsg.map["PlayerProto:SetPlrNameRet"] = {
-	--头像模型  看板id     
-	{ "uint",   "uint",    },
-	{ "icon_id","panel_id",},
+	--头像模型  看板id     最后设置的角色看板ID 
+	{ "uint",   "uint",    "uint",              },
+	{ "icon_id","panel_id","role_panel_id",     },
 }
 GameMsg.map["PlayerProto:DailyData"] = {
 	--副本章节通过次数统计 
@@ -1321,9 +1321,9 @@ GameMsg.map["PlayerProto:ChangeIcon"] = {
 	{ "panel_id","icon_id",},
 }
 GameMsg.map["PlayerProto:ChangeIconRet"] = {
-	--看板图片id 头像模型  
-	{ "uint",    "uint",   },
-	{ "panel_id","icon_id",},
+	--看板图片id 头像模型  最后设置的角色看板ID 
+	{ "uint",    "uint",   "uint",              },
+	{ "panel_id","icon_id","role_panel_id",     },
 }
 GameMsg.map["PlayerProto:PlrPaneInfo"] = {
 	--
@@ -2016,9 +2016,9 @@ GameMsg.map["sShopCommodityCfg"] = {
 	{ "nDiscountStart","nDiscountEnd","fDiscount","jGets",           "jExGets","jCosts",  "nOnecBuyLimit","nSumBuyLimit","nResetType","nResetValue","isShow",      },
 }
 GameMsg.map["sMailContent"] = {
-	--邮件名称 发件人名称 描述     获得的奖励(物品id,数量) 
-	{ "string","string",  "string","list|sNumInfo",      },
-	{ "name",  "from",    "desc",  "rewards",            },
+	--邮件名称 发件人名称 描述     获得的奖励(物品id,数量) 阅读后多少秒删除 
+	{ "string","string",  "string","list|sNumInfo",      "uint",          },
+	{ "name",  "from",    "desc",  "rewards",            "read_del_sec",  },
 }
 GameMsg.map["sMailInfo"] = {
 	--邮件id（排序依据） 表id(无id则为gm邮件) 状态(1:未读 2:已读) 是否已领取(1:未领 2：已领取) 发件人     开始时间 -秒 完成时间 -秒 数据结构             创建时间      
@@ -2146,9 +2146,9 @@ GameMsg.map["sPracticeInfo"] = {
 	{ "start_time",        "end_time",    "can_join_cnt","t_join_cnt",        "flush_cnt",   "rank_level","max_rank_level","rank","max_rank","score","can_join_buy_cnt",},
 }
 GameMsg.map["sPracticeObjInfo"] = {
-	--id     姓名     玩家等级 段位         排名   综合能力      头像模型id 是否机器人 积分    
-	{ "uint","string","uint",  "short",     "uint","uint",       "uint",    "byte",    "uint", },
-	{ "uid", "name",  "level", "rank_level","rank","performance","icon_id", "is_robot","score",},
+	--id     姓名     玩家等级 段位         排名   综合能力      头像模型id 头像框       最后设置的角色看板ID 是否机器人 积分    
+	{ "uint","string","uint",  "short",     "uint","uint",       "uint",    "uint",      "uint",              "byte",    "uint", },
+	{ "uid", "name",  "level", "rank_level","rank","performance","icon_id", "icon_frame","role_panel_id",     "is_robot","score",},
 }
 GameMsg.map["sPracticeBaseTeam"] = {
 	--是否机器人                   好友id 
@@ -2301,9 +2301,9 @@ GameMsg.map["ArmyProto:QuitFreeArmyRet"] = {
 	{ },
 }
 GameMsg.map["ArmyProto:FreeArmyMatch"] = {
-	--对手id 队伍信息          战胜次数  战败次数                              对方排名 
-	{ "uint","struts|TeamItem","uint",   "uint",    "uint", "uint",   "string","uint",  },
-	{ "uid", "team",           "win_cnt","lost_cnt","level","icon_id","name",  "rank",  },
+	--对手id 队伍信息          战胜次数  战败次数                     头像框       最后设置的角色看板ID          对方排名 
+	{ "uint","struts|TeamItem","uint",   "uint",    "uint", "uint",   "uint",      "uint",              "string","uint",  },
+	{ "uid", "team",           "win_cnt","lost_cnt","level","icon_id","icon_frame","role_panel_id",     "name",  "rank",  },
 }
 GameMsg.map["ArmyProto:GetSelfPracticeInfo"] = {
 	--
@@ -3699,6 +3699,36 @@ GameMsg.map["TeamBoss:TimeOutClose"] = {
 	--房间id 
 	{ "int", },
 	{ "id",  },
+}
+GameMsg.map["PlayerProto:ChangePlrName"] = {
+	--名字     使用的物品 
+	{ "string","uint",    },
+	{ "name",  "item_id", },
+}
+GameMsg.map["PlayerProto:ChangePlrNameRet"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:ChangePlrShpae"] = {
+	--使用的物品 全局表g_SexInitCardIds的下标 生日月  生日天 选择的台词id 
+	{ "uint",    "byte",              "byte", "byte","uint",      },
+	{ "item_id", "index",             "month","day", "use_vid",   },
+}
+GameMsg.map["PlayerProto:ChangePlrShpaeRet"] = {
+	--头像模型  看板id     最后设置的角色看板ID 
+	{ "uint",   "uint",    "uint",              },
+	{ "icon_id","panel_id","role_panel_id",     },
+}
+GameMsg.map["PlayerProto:CheckReturningPlr"] = {
+	--回归类型 离开天数 触发回归时间戳 
+	{ "uint",  "uint",  "uint",        },
+	{ "type",  "leave", "time",        },
+}
+GameMsg.map["PlayerProto:ClickBoard"] = {
+	--
+	{ },
+	{ },
 }
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 

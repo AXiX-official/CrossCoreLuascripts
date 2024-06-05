@@ -181,7 +181,7 @@ function OnClickGridNormal(id)
 end
 
 --移动目标
-function ApplyMove(character,targetId)
+function ApplyMove(character,targetId,isSlide)
     local startId = character.GetCurrGridId();
     if(startId == nil)then
         LogError("无法移动战棋目标，目标不在棋盘中");
@@ -193,10 +193,10 @@ function ApplyMove(character,targetId)
         return;
     end    
 
-    local path = BattleMgr:FindPathNew(character,targetId);
+    local path = BattleMgr:FindPathNew(character,targetId,100);--服务器给的移动位置，忽略步数限制
     if(path == null)then
         OnMoveCallBack();
-        LogError("不存在路径");
+        LogError(string.format("不存在路径:%s --> %s",character.GetCurrGridId(),targetId));
         return;
     end
 
@@ -211,7 +211,7 @@ function ApplyMove(character,targetId)
 
     SetGridLightStates();
     --SetGridLightStates(lightGridIds,character.GetType() == eDungeonCharType.MonsterGroup,startId);
-    character.MoveTo(targetId,pathGos,OnMoveCallBack);
+    character.MoveTo(targetId,pathGos,OnMoveCallBack,nil,isSlide);
 end
 
 --移动完成回调
@@ -246,6 +246,10 @@ function ApplyTransfer(character,posGridId,targetGridId,isTranferState,callBack,
     else
         LogError("找不到传送路径对象" .. transferAnim);
     end
+end
+
+function GetBattleDungeonData()
+    return battleDungeonData;
 end
 
 function GetTransferAnim(posGridId,targetGridId,isTranferState)
@@ -395,6 +399,11 @@ end
 
 --移除
 function Remove()
+    --LogError("移除格子场地");
+    if(isRemoved)then
+        return;
+    end
+    isRemoved = true;
     CSAPI.RemoveGO(gameObject);
 end
 

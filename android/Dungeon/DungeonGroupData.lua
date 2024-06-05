@@ -153,6 +153,10 @@ function this:GetVideoName()
     return self.cfg and self.cfg.video
 end
 
+function this:GetEffectName()
+    return self.cfg and self.cfg.effect
+end
+
 function this:GetImgPath()
     local name = self.cfg and self.cfg.img or ""
     if name ~= "" then

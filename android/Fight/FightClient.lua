@@ -2,7 +2,13 @@ local this = {};
 
 this.data = nil;
 this.isStarted = nil;
-
+--返回虚拟键标记
+this.IsFightStop=true;
+this.IsFightOver=false;
+--处于放大招中
+this.Intheamplificationmove=false;
+---德拉苏
+this.NewPlayerDrasu=false;
 --初始化战斗
 function this:Init(data,initCallBack,initCaller)
     --LogError("进入战斗==========================");
@@ -589,7 +595,7 @@ end
 local key_fight_pause = "fight_pause";
 function this:SetPauseState(state)
     --LogError("state:" .. tostring(state));
-
+    this.IsFightStop=state
     CSAPI.SetTimeScaleByKey(key_fight_pause, state and 0 or 1);
 end
 

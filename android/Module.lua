@@ -152,3 +152,5 @@ require "MatrixRoleTool"
 _G.HeadFrameData = require "HeadFrameData";
 --头像
 _G.HeadIconData = require "HeadIconData";
+
+require "SpineTools"

@@ -267,10 +267,17 @@ function this:GetTopTabs(isFitler)
 		if isFitler then
 			for k,v in ipairs(cfgs) do
 				local isOpen=false;
-				if v.startTime == nil and v.endTime == nil then
+				local timeInfo=ShopMgr:GetPageTimeInfo(self:GetID(),v.id);
+				local startTime=v.startTime==nil and 0 or TimeUtil:GetTimeStampBySplit(v.startTime);
+				local endTime=v.endTime==nil and 0 or TimeUtil:GetTimeStampBySplit(v.endTime);
+				if timeInfo then
+					startTime=timeInfo.open_time;
+					endTime=timeInfo.close_time;
+				end
+				if startTime == 0 and endTime == 0 then
 					isOpen = true;
 				else
-					isOpen = ShopCommFunc.TimeIsBetween(v.startTime,v.endTime);
+					isOpen = ShopCommFunc.TimeIsBetween2(startTime,endTime);
 				end
 				if isOpen then
 					list=list or {};
