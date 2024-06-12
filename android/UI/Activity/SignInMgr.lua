@@ -37,7 +37,7 @@ function this:GetCurDay(timer)
             -- 上一天
             -- 可能是上个月最后一天，亦有可能是上一年
             -- 通过时间戳来换算
-            local time = TimeUtil:GetBJTime() - 86400
+            local time = timer - 86400
             curDay = tonumber(TimeUtil:GetTime3("day", time))
         end
     end
@@ -219,15 +219,12 @@ function this:CheckAll()
     if (GuideMgr:HasGuide() or GuideMgr:IsGuiding()) then
         return false
     end
-
     if (not self:SignInIsOpen()) then
         return false
     end
-
     if not self.datas then
         return false
     end
-
     local arr = self:GetArr()
     local isOpen = false
     for i, v in ipairs(arr) do

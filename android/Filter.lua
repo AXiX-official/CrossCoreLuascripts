@@ -683,7 +683,7 @@ function Filter:GetUnite(card)
 	local arr = self.team.arrCard
 	local res = {}
 	for i,v in ipairs(arr) do
-		if v:IsLive() and v ~= card and v.nClass == card.nClass then
+		if v:IsLive() and v ~= card and v.nClass == card.nClass and v.type ~= CardType.Unite then -- 必须是同小队并且不是同调角色
 			-- table.insert(res, v)
 			LogDebugEx("同队角色:", v.name)
 			return {v}

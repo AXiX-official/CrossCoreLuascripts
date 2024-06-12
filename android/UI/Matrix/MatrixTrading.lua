@@ -331,11 +331,14 @@ function TradingItemCB(itemData)
     local enough, alsoNeed = itemData:IsEnough()
     if (id) then
         if (enough) then
-            if (fid) then
-                BuildingProto:TradeFlrOrder(fid, id, TradeFlrOrderCB)
-            else
-                BuildingProto:Trade(buildId, id)
-            end
+            local str = LanguageMgr:GetTips(2316)
+            UIUtil:OpenDialog(str,function()
+                if (fid) then
+                    BuildingProto:TradeFlrOrder(fid, id, TradeFlrOrderCB)
+                else
+                    BuildingProto:Trade(buildId, id)
+                end
+            end)
         else
             local str = LanguageMgr:GetTips(2102)
             UIUtil:OpenDialog(str, function()

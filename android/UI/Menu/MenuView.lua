@@ -616,10 +616,10 @@ function Update()
         SetEnter()
     end
 
-    -- 强制隐藏mask，防止锁屏
-    if (mask.activeSelf and animTimer ~= nil and (Time.time - animTimer) > 3) then
-        CSAPI.SetGOActive(mask, false)
-    end
+    -- -- 强制隐藏mask，防止锁屏
+    -- if (mask.activeSelf and animTimer ~= nil and (Time.time - animTimer) > 3) then
+    --     CSAPI.SetGOActive(mask, false)
+    -- end
 
     -- 头像框 
     if (HeadFrameMgr:GetMinExpiry()) then
@@ -680,7 +680,7 @@ end
 function StopAnim()
     MenuMgr:SetPlay(1)
     -- CSAPI.SetGOActive(anims, false)
-    CSAPI.SetGOActive(mask, false)
+    --CSAPI.SetGOActive(mask, false)
     cg_node.alpha = 1
     CSAPI.SetGOActive(ui_structure, true)
     OnLoadingComplete()
@@ -1706,10 +1706,10 @@ function EActivityGetCB()
     if (isCheckTime == nil or Time.time > (isCheckTime + 0.2)) then
         isCheckTime = Time.time
         FuncUtil:Call(EActivityGetCB2, nil, 200)
-        return
+        --return
     end
 
-
+    CSAPI.SetGOActive(mask, false)
     -- 技能完成
     -- OpenRoleListNormal(need)
 end
