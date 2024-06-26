@@ -126,6 +126,7 @@ function this:InitFight(data)
             self:SetAutoFight(false);  
         else
             local auto = PlayerPrefs.GetInt("fight_Auto")==1;
+            --LogError(tostring(auto));
             self:SetAutoFight(auto);  
         end
     end    
@@ -207,7 +208,7 @@ function this:QuitFihgt()
     end
 end
 function this:Reset()    
-    self:SetAutoFight(false);
+    self:SetAutoFight(false,true);
     self:Clean();
     self.playSpeed = nil;
     defaultPlaySpeed = nil;
@@ -359,7 +360,7 @@ function this:AddPlaySpeed(addValue)
 	this:SetPlaySpeed(playSpeed);
 end
 function this:SetPlaySpeed(playSpeed,dontSave)
-    --LogError("playSpeed:" .. tostring(playSpeed));
+    --LogError(string.format("playSpeed:%s,dontSave:%s",tostring(playSpeed),tostring(dontSave)));
 
     local slowestPlaySpeed,fastestPlaySpeed = self:GetPlaySpeedSetting();
 
@@ -415,17 +416,22 @@ function this:ChangedAutoFight()
     EventMgr.Dispatch(EventType.Fight_Auto_Changed);	
 end
 --设置自动战斗
-function this:SetAutoFight(autoFight)
+function this:SetAutoFight(autoFight,dontSave)
     --LogError("AutoFight:" .. tostring(autoFight));
 
 	self.autoFight = autoFight;
     
-    if(g_FightMgr)then
+    if(dontSave)then
+        return;
+    end
+    if(g_FightMgr)then      
         if(g_FightMgr.type ~= SceneType.PVP and g_FightMgr.type ~= SceneType.PVPMirror and not self:GetDirll())then           
 	        PlayerPrefs.SetInt("fight_Auto", autoFight==true and 1 or 0);
+            --LogError("set auto state:" .. tostring(autoFight));
         end
     else
         PlayerPrefs.SetInt("fight_Auto", autoFight==true and 1 or 0);
+        --LogError("set auto state:" .. tostring(autoFight));
     end
 end
 --是否自动战斗

@@ -883,12 +883,20 @@ function OnRedPointRefresh()
         -- end
     end
 
-    -- 角色详情 头像框 
+    -- 成就 todo 
+    isOpen = lockData["Achievement"]
+    if (isOpen) then
+        local _pData = RedPointMgr:GetData(RedPointType.Achievement)
+        UIUtil:SetRedPoint2(menuRedPath, btnAchievement, _pData ~= nil, 51, 19, 0)
+    end
+
+    -- 角色详情 头像框 徽章
     if (true) then
         local _pData = RedPointMgr:GetData(RedPointType.HeadFrame)
         local _pData2 = RedPointMgr:GetData(RedPointType.Head)
+        local _pData3 = RedPointMgr:GetData(RedPointType.Badge)
         local _isRed = false
-        if (_pData ~= nil or _pData2 ~= nil) then
+        if (_pData ~= nil or _pData2 ~= nil or _pData3 ~= nil) then
             _isRed = true
         end
         UIUtil:SetRedPoint2(menuRedPath, btnPlayerView, _isRed, 169.4, -6.1, 0)

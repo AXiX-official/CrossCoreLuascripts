@@ -6,6 +6,8 @@ local modelID=nil
 local changeInfo=nil;
 local changeData=nil;
 this.ClickBtn=nil;
+local langID=nil;
+local otherImgName=nil;
 function Awake()
     roleItem = RoleTool.AddRole(iconParent, PlayCB, nil, false)		
 end
@@ -103,8 +105,6 @@ end
 function SetChangeInfo(cfg)
     if cfg then
         local type=cfg.skinType;
-        local langID=18104;
-        local otherImgName="img_12_01";
         if type==3 then
             langID=18105;
             otherImgName="img_12_02";
@@ -113,11 +113,17 @@ function SetChangeInfo(cfg)
             otherImgName="img_12_03";
         elseif type==5 then
             langID=18104;
+            otherImgName="img_12_01";
         end
-        CSAPI.SetText(txt_other,LanguageMgr:GetByID(langID));
+        if langID~=nil then
+            CSAPI.SetText(txt_other,LanguageMgr:GetByID(langID));
+        end
         --加载图
         ResUtil.Card:Load(otherIcon, cfg.List_head);
-        otherImgName=string.format("UIs/RoleSkinComm/%s.png",otherImgName);
+        if otherImgName~=nil then
+            local tempName=string.format("UIs/RoleSkinComm/%s.png",otherImgName);
+            CSAPI.LoadImg(otherImgTips,tempName,true,nil,true);
+        end
         CSAPI.SetGOActive(btnOther,true);
     else
         CSAPI.SetGOActive(btnOther,false);

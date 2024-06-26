@@ -120,6 +120,9 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon,tIc
             ResUtil.IconGoods:Load(icon, iName);
         elseif data:GetType() == CommodityItemType.Item then -- 商品类型为1时读取物品表中的icon
             local item = data:GetCommodityList()[1];
+            if item==nil or data:GetCommodityList()==nil then
+                LogError("读取物品信息时出现错误！商品ID："..tostring(data:GetID()));
+            end
             local good = {
                 id = item.cid
             };

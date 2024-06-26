@@ -426,9 +426,12 @@ function ConfigChecker:MainLine(cfg)
             table.insert(arr, k)
         end
         if v.group and v.type then
-            local groupArr = GCalHelp:GetTb(g_CalMainLineCount, v.group, {})
-            local typeArr = GCalHelp:GetTb(groupArr, v.type, {})
-            table.insert(typeArr, k)
+            -- 1剧情副本不算星
+            if not v.sub_type or v.sub_type ~= 1 then
+                local groupArr = GCalHelp:GetTb(g_CalMainLineCount, v.group, {})
+                local typeArr = GCalHelp:GetTb(groupArr, v.type, {})
+                table.insert(typeArr, k)
+            end
         end
         if v.forceSkill then
             table.sort(v.forceSkill)

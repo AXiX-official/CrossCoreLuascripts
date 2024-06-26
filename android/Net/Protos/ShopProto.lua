@@ -12,8 +12,8 @@ end
 
 --获取购买记录返回
 function ShopProto:GetShopInfosAdd(proto)
-    ShopMgr:OnCommodityInfoRet(proto);
-    EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
+    -- ShopMgr:OnCommodityInfoRet(proto);
+    -- EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
 end
 
 --购买物品

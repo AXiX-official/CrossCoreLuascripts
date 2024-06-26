@@ -347,7 +347,7 @@ function ShowInfo(item)
     local type = item and item.IsDanger() and DungeonInfoType.Danger or DungeonInfoType.Normal 
     SetWidth(isActive)
     if itemInfo == nil then
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo2", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo2", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
             itemInfo.SetBuyFunc(OnBuyFunc)

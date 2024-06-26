@@ -446,7 +446,7 @@ function ShowInfo(item)
     local cfg = item and item.GetCfg() or nil
     local type = item and item.GetInfoType() or DungeonInfoType.Normal 
     if itemInfo == nil then
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo3", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo3", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter,nil,OnStoryCB)
             itemInfo.SetBuyFunc(OnBuyFunc)
@@ -459,6 +459,7 @@ function ShowInfo(item)
                     itemInfo.SetItemPos("Double",-166,-427)
                 end
             end)
+            CSAPI.SetRTSize(itemInfo.layout,579,845)
         end)
     else
         itemInfo.Show(cfg,type,function ()
@@ -467,6 +468,7 @@ function ShowInfo(item)
                 itemInfo.SetItemPos("Double",-166,-427)
             end
         end)
+        CSAPI.SetRTSize(itemInfo.layout,579,845)
     end
 end
 

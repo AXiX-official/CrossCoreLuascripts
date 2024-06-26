@@ -1536,7 +1536,7 @@ end
 ------------------------------------右侧信息栏-----------------------------------
 function ShowItemInfo(cb)    
     if (itemInfo == nil) then --没有则异步创建
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
             CSAPI.SetGOActive(itemInfo.bg, false)

@@ -4,7 +4,7 @@ local this = MgrRegister("RegressionMgr")
 function this:Init()
     self:Clear()
     -- 回归信息
-    RegressionProto:GetInfo()
+    --RegressionProto:GetInfo()
 end
 
 function this:Clear()
