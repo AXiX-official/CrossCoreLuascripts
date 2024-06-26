@@ -55,8 +55,8 @@ function Awake()
     -- local goRT = CSAPI.GetGlobalGO("CommonRT")
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
-    --CSAPI.SetText(txtVer, "Ver:1.0.0" .. tostring(UnityEngine.Application.version));
-    CSAPI.SetText(txtVer, "");
+    CSAPI.SetText(txtVer, "Ver:1.8.0");
+    --CSAPI.SetText(txtVer, "");
     -- 开启战斗场景镜头
     local xluaCamera = CameraMgr:GetXLuaCamera();
     if (xluaCamera) then
@@ -106,7 +106,7 @@ function InitListener()
 
     eventMgr:AddListener(EventType.Login_White_Mask_FadeOut, ApplyFadeOut)
 
- eventMgr:AddListener(EventType.Login_Switch_Server, OnClickSwitch)
+--  eventMgr:AddListener(EventType.Login_Switch_Server, OnClickSwitch)
     -- eventMgr:AddListener(EventType.Main_Activity,function(key)
     -- 	Log(key)
     -- 	if key==BackstageFlushType.Board then

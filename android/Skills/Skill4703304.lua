@@ -23,12 +23,15 @@ function Skill4703304:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8420
-	local count20 = SkillApi:GetAttr(self, caster, target,3,"hp")
-	-- 8467
-	local count67 = SkillApi:GetAttr(self, caster, target,2,"hp")
-	-- 8189
-	if SkillJudger:Greater(self, caster, target, true,count20,count67) then
+	-- 8095
+	if SkillJudger:TargetPercentHp(self, caster, target, false,0.6) then
+	else
+		return
+	end
+	-- 8665
+	local count665 = SkillApi:BuffCount(self, caster, target,3,4,4703306)
+	-- 8872
+	if SkillJudger:Greater(self, caster, target, true,count665,0) then
 	else
 		return
 	end

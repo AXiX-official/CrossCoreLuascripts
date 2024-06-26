@@ -1,0 +1,17 @@
+local conf = {
+	["filename"] = 'h-徽章表.xlsx',
+	["sheetname"] = '徽章组',
+	["types"] = {
+'int','int','int','string','string','int[]','int[]','string'
+},
+	["names"] = {
+'id','key','type','name','icon','pos','size','begTime'
+},
+	["data"] = {
+{'1',	'1',	'1',	'主线剧情',	'bg_1',	'1,1',	'1,2',	'2025/02/23 10:00:00'},
+{'2',	'2',	'2',	'绮境笺宴',	'bg_2',	'2,1',	'1,1',	''},
+{'3',	'3',	'3',	'碎星虚影',	'bg_3',	'2,2',	'1,1',	''},
+},
+}
+--cfgCfgBadgeGroup = conf
+return conf

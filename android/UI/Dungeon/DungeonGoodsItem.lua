@@ -24,7 +24,7 @@ function Refresh(data, elseData)
 		local reward = data.data or {}
 		local count = 0 --可以获取的奖励数量
 		if reward.id then
-			count = reward.num
+			count = reward.num or 0
 			reward.num = BagMgr:GetCount(reward.id)
 		else
 			reward = {id = data.cfg.id, num = BagMgr:GetCount(data.cfg.id)}

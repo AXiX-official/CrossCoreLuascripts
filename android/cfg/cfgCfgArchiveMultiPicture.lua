@@ -22,7 +22,8 @@ local conf = {
 {'12',	'12',	'61014',	'星河共旅',	'12',	'',	'',	'6',	'trip_in_the_milky_way',	'trip_in_the_milky_way',	'board_trip_in_the_milky_way',	'高级勘测奖励',	'-58,-65,1.2',	'Ying',	'-58,-65,1.3',	'',	'1'},
 {'13',	'13',	'61015',	'温室闲暇',	'13',	'',	'',	'2',	'greenhouse',	'',	'board_greenhouse',	'商店购买',	'299,-27,1.4',	'CG00012_Greenhouse_spine',	'0,-37,1',	'1',	'80407'},
 {'14',	'14',	'61016',	'熠星之夜',	'14',	'',	'',	'2',	'starry_night',	'starry_night_replace',	'board_starry_night',	'商店购买',	'78,-72,1.2',	'CG00011_StarryNight_spine',	'217,-77,1.23',	'1',	'80408'},
-{'15',	'15',	'61018',	'与喵同乐',	'15',	'2024/6/26 03:00:00',	'2034/6/26 3:00:00',	'2',	'fun_with_mew',	'fun_with_mew',	'board_fun_with_mew',	'高级勘测奖励',	'-69.5,-10,0.62',	'feili',	'-48,-10,1.4',	'',	'1'},
+{'15',	'15',	'61018',	'与喵同乐',	'15',	'',	'',	'2',	'fun_with_mew',	'fun_with_mew',	'board_fun_with_mew',	'高级勘测奖励',	'-69.5,-10,0.62',	'feili',	'-48,-10,1.4',	'',	'1'},
+{'16',	'16',	'61017',	'软梦盈心',	'16',	'',	'',	'2',	'tender_dream',	'',	'board_tender_dream',	'商店购买',	'-49,14,1.05',	'CG0007_TenderDreamImmersingHeart',	'0,0,1',	'1',	'80409'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf

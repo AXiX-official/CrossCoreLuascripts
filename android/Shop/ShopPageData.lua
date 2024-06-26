@@ -135,7 +135,7 @@ function this:GetGoldType()
 end
 
 --返回固定类型中需要检测刷新的数据列表
-function this:GetRefreshInfos()
+function this:GetRefreshInfos(topTabID)
 	local itemDatas = {};
 	if self:GetCommodityType()==CommodityType.Normal then
 		--固定道具
@@ -146,7 +146,12 @@ function this:GetRefreshInfos()
 				local itemData =ShopMgr:GetFixedCommodity(v.id)
 				local beginTime=itemData:GetBuyStartTime();
 				local endTime=itemData:GetBuyEndTime();
-				if itemData:HasData() and (itemData:GetResetType()~=0 or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) then 
+				local resetTime=itemData:GetResetTime();;
+				-- if itemData:HasData() and ((itemData:GetResetType()~=0 and (resetTime==0 or nowTime<=resetTime)) or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) and ((topTabID~=nil and itemData:GetTabID()==topTabID) or topTabID==nil) then 
+				if itemData:HasData() and ((itemData:GetResetType()~=0 and (itemData:GetResetTime()==0 or nowTime<=itemData:GetResetTime())) or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) and ((topTabID~=nil and itemData:GetTabID()==topTabID) or topTabID==nil) then 
+					-- if itemData:GetID()==80001 then
+					-- 	LogError("22222222222222222222");
+					-- end
 					table.insert(itemDatas, itemData);
 				end
 			end
@@ -278,6 +283,8 @@ function this:GetTopTabs(isFitler)
 					isOpen = true;
 				else
 					isOpen = ShopCommFunc.TimeIsBetween2(startTime,endTime);
+					local itemList=self:GetCommodityInfos(true,v.id);
+					isOpen=#itemList>0 and true or false;
 				end
 				if isOpen then
 					list=list or {};

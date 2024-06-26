@@ -4,6 +4,7 @@ local currSkinInfo=nil;
 
 function Awake()
     SetMoney({ {ITEM_ID.DIAMOND}});
+    UIUtil.SetRTAlpha(rtCamera,rtObj);
 end
 
 --data:CommodityData
@@ -64,6 +65,25 @@ function OnOpen()
             CSAPI.SetText(txt_price, tostring(0));
             CSAPI.SetText(txt_goodsName,moneyName);
         end
+        local changeInfo=currSkinInfo:GetChangeInfo();
+        if changeInfo then
+            local type=changeInfo[1].cfg.skinType;
+            local langID=18099;
+            if type==3 then
+                langID=18100;
+            elseif type==4 then
+                langID=18103;
+            elseif type==5 then
+                langID=18099;
+            end
+            local cardName=changeInfo[1].cfg.key;
+            -- if changeInfo[1].cfg.role_id then
+            --     local cardCfg=Cfgs.Card:GetByID(changeInfo[1].cfg.role_id);
+            --     cardName=cardCfg.name;
+            -- end
+            CSAPI.SetText(txt_tips3,LanguageMgr:GetByID(langID,cardName,changeInfo[1].cfg.desc));
+        end
+        CSAPI.SetGOActive(txt_tips3,changeInfo~=nil);
     end
 end
 
@@ -90,7 +110,9 @@ function OnSuccess(proto)
 end
 
 function OnClickAnyway()
-    view:Close();
+    if gameObject~=nil and view~=nil then
+        view:Close();
+    end
 end
 
 function OnClickCancel()

@@ -57,9 +57,10 @@ function Team:LoadConfig(id, stage, hpinfo)
 	if hpinfo then
 		for i, pos in ipairs(formation.coordinate) do
 			local monsterID = self.monsters[i]
-			if hpinfo[i] and hpinfo[i] > 0 and monsterID and monsterID ~= 0 then
+			if hpinfo[i] and hpinfo[i].hp and hpinfo[i].hp > 0 and monsterID and monsterID ~= 0 then
 				local card = self:AddCard(pos[1], pos[2], monsterID)
-				card.hp = hpinfo[i]
+				card.hp = hpinfo[i].hp
+				card.sp = hpinfo[i].sp
 				card.configIndex = i
 			end
 		end
@@ -142,9 +143,9 @@ function Team:Summon(caster, monsterID, pos, data, isSummon2Summon)
 
 	LogDebugEx("card.model", caster.modelA)
 	-- 购买皮肤后, 机神皮肤也需要更换(此处确认没有机神皮肤, 先屏蔽)
-	-- if caster.modelA then 
-	-- 	card.model = caster.modelA
-	-- end
+	if caster.modelA then 
+		card.model = caster.modelA
+	end
 	-- -- self.fightMgr:OnBorn(card, true)
 
 	if data then
@@ -644,6 +645,14 @@ function Team:AddUniteCard(row, col, id, parent, data, coordinate)
 	LogDebugEx("card.hp", card:Get("maxhp"), card:Get("hp"))
 	--LogDebugEx("card.progress", card.progress)
 	-- self.fightMgr:OnBorn(card, true)
+
+
+	-- 设置同调皮肤
+	if mainCard.modelA then 
+		card.model = mainCard.modelA
+	end
+
+
 	return card
 end
 
@@ -671,6 +680,36 @@ function Team:DelCard(card)
 		end
 	end
 end
+
+function Team:RandNum(len,num)
+	local temp = {}
+	for i=1,len do
+		table.insert(temp, i)
+	end
+
+	local res = {}
+	for i=1,num do
+		local r = self.fightMgr.rand:Rand(#temp)+1
+		table.insert(res, temp[r])
+		table.remove(temp, r)
+	end	
+	return res
+end
+
+function Team:GetRandCard(num)
+	num = num or 1
+
+	if num >= #self.arrCard then return self.arrCard end
+	local res = Team:RandNum(#self.arrCard,num)
+	local ret = {}
+	for i,v in ipairs(res) do
+		table.insert(ret, self.arrCard[v])
+	end
+	
+	return ret
+end
+
+
 ----------event------------
 function Team:OnTimer(tm)
 end

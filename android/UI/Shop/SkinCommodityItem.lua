@@ -3,6 +3,7 @@ local currPrice=priceObj;
 local skinInfo=nil;
 local countTime=0;
 local updateTime=600;
+local changeInfo=nil;
 
 function Refresh(_data,_elseData)
     this.data=_data;
@@ -10,10 +11,46 @@ function Refresh(_data,_elseData)
     skinInfo=ShopCommFunc.GetSkinInfo(this.data);
     currPrice=priceObj3
     local num=this.data:GetNum()
-    ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
     RefreshTime();
     SetDiscount(this.data:GetNowDiscount())
     if skinInfo then
+        changeInfo=skinInfo:GetChangeInfo();
+        local hasMore=changeInfo~=nil and true or false;
+        local showBg1=true;
+        local showOtherIcon=false;
+        -- if this.data:GetIcon2()~=nil then
+        --     --加载SpriteRenderer
+        --     ResUtil.SkinMall:LoadSR(Role_A,this.data:GetIcon());
+        --     ResUtil.SkinMall:LoadSR(Role_B,this.data:GetIcon2());
+        --     showBg1=false  
+        -- else
+        --     local index= this.data:GetID()%2==0 and 2 or 1;
+        --     local imgA=index==1 and "60020_Skin101_mall" or "20070_Skin104_mall";
+        --     local imgB=index==1 and "40050_Skin108_mall" or "60110_Skin102_mall";
+        --     ResUtil.SkinMall:LoadSR(Role_A,imgA);
+        --     ResUtil.SkinMall:LoadSR(Role_B,imgB);
+        --     showBg1=false  
+        -- end
+        if hasMore~=true then
+            ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
+        else
+            if changeInfo[1].cfg.skinType~=5 then --形切或者同调
+                if this.data:GetIcon2()~=nil then
+                    --加载SpriteRenderer
+                    ResUtil.SkinMall:LoadSR(Role_A,this.data:GetIcon());
+                    ResUtil.SkinMall:LoadSR(Role_B,this.data:GetIcon2());
+                    showBg1=false  
+                end
+            else
+                ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
+                --加载机神icon
+                showBg1=true
+                showOtherIcon=true;
+            end
+        end
+        CSAPI.SetGOActive(otherIcon,showOtherIcon);
+        CSAPI.SetGOActive(bg,showBg1);
+        CSAPI.SetGOActive(bg2,not showBg1);
         SetName(skinInfo:GetRoleName());
         SetL2dTag(skinInfo:HasL2D());
         SetAnimaTag(skinInfo:HasEnterTween());

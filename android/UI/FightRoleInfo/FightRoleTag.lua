@@ -19,6 +19,7 @@ function Refresh(data,_elseData)
     local imgName= data.isEnemy and "UIs/FightRoleInfo/btn_5_2.png" or "UIs/FightRoleInfo/btn_5_1.png";
     CSAPI.LoadImg(border,imgName,true,nil,true);
     SetIsBoss(data.isBoss)
+    SetIsDead(data.isDead)
     -- CSAPI.SetGOActive(boss,this.data.GetCharacterType() == CardType.Boss);
 end
 
@@ -68,6 +69,10 @@ end
 
 function SetIsBoss(isBoss)  
     CSAPI.SetGOActive(boss,isBoss==true);
+end
+
+function SetIsDead(isDead)
+    CSAPI.SetGOActive(dead,isDead==true);
 end
 
 function OnDestroy()    

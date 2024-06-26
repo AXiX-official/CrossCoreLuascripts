@@ -1,6 +1,7 @@
 local fade = nil
 local isAnim = false
 local isFirst = false
+local badgeItems = {}
 
 function Awake()
     fade = ComUtil.GetCom(gameObject, "ActionFade")
@@ -112,6 +113,16 @@ function Show(_data)
     -- CSAPI.SetGOActive(ptjdImg,not (tDungeonCfg and tDungeonCfg.name))
     -- CSAPI.SetText(txtPtjd2, tDungeonCfg and tDungeonCfg.name or "")
     SetHeadFrame(info.icon_frame or 1,info.icon_id)
+
+    if _data.badgedPos and #_data.badgedPos > 0 then
+        local datas = {}
+        for i, v in ipairs(_data.badgedPos) do
+            local data = BadgeData.New()
+            data:Init(Cfgs.CfgBadge:GetByID(v.sid))
+            datas[v.num] = data
+        end
+        SetBadge(datas)
+    end
 end
 
 function OnOpen()
@@ -131,6 +142,30 @@ end
 
 function SetHeadFrame(_id,_icon_id)
     UIUtil:AddHeadByID(headParent,1,_id, _icon_id)
+end
+
+function SetBadge(_datas)
+    if #badgeItems > 0 then
+        for i, v in ipairs(badgeItems) do
+            CSAPI.SetGOActive(v.gameObject,false)
+        end
+    end
+    if _datas then
+        for i = 1, (g_BadgeMax or 6) do
+            if i <= #badgeItems then
+                badgeItems[i].Refresh(_datas[i],true)
+                CSAPI.SetGOAlpha(badgeItems[i].gameObject, 1)
+            else
+                ResUtil:CreateUIGOAsync("Badge/BadgeGridItem",badgeParent,function (go)
+                    local lua = ComUtil.GetLuaTable(go)
+                    lua.Refresh(_datas[i],true)
+                    lua.SetScale(0.6)
+                    CSAPI.SetGOAlpha(go, 1)
+                    badgeItems[i] = lua
+                end)
+            end
+        end    
+    end
 end
 
 -- 协战

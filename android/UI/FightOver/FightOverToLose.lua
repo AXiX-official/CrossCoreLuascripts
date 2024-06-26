@@ -2,12 +2,14 @@
 local canvasGroup = nil
 local isShowAgain = false
 local isTimeOut = false
+local isDirll = false
 
 function Awake()
     canvasGroup = ComUtil.GetCom(btnAgain, "CanvasGroup")
 end
 
 function Refresh(_data, _elseData)
+    isDirll = _elseData and _elseData.isDirll
     -- anim
     CSAPI.SetGOActive(animMask, true)
     FuncUtil:Call(function()
@@ -20,6 +22,9 @@ function Refresh(_data, _elseData)
 
     -- icon
     ResUtil.IconGoods:Load(costIcon, ITEM_ID.Hot .. "_1", true)
+    if isDirll then
+        CSAPI.LoadImg(titleImg, "UIs/FightOver/img_dirll_lose.png", true, nil, true)
+    end
 
     -- starInfo
     SetStarInfos()
@@ -37,7 +42,7 @@ function SetStarInfos()
     end
 
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa then
+    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type == eDuplicateType.NewTower then
         CSAPI.SetGOActive(taskObj, false)
         return
     end
@@ -126,6 +131,8 @@ function OnClickAgain()
 
     FightClient:Reset();
     BattleMgr:Reset();
+    TeamMgr:ClearAssistTeamIndex();
+    TeamMgr:ClearFightTeamData();
 
     if sceneType == SceneType.PVE then
         local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
@@ -137,13 +144,32 @@ function OnClickAgain()
                     teamNum = cfgDungeon.teamNum or 1
                 })
             else
+                local type = TeamConfirmOpenType.Dungeon
+                local _disChoosie = false
+                if cfgDungeon.type == eDuplicateType.NewTower then
+                    type = TeamConfirmOpenType.Tower
+                    _disChoosie= true
+                elseif cfgDungeon.type  == eDuplicateType.Rogue then
+                    type = TeamConfirmOpenType.Rogue
+                    _disChoosie= true
+                end                
                 CSAPI.OpenView("TeamConfirm", { -- 正常上阵
                     dungeonId = cfgDungeon.id,
-                    teamNum = cfgDungeon.teamNum or 1
-                }, TeamConfirmOpenType.Dungeon)
+                    teamNum = cfgDungeon.teamNum or 1,
+                    isDirll = isDirll,
+                    disChoosie=_disChoosie,
+                    overCB = isDirll and OnFightOverCB or nil
+                }, type)
             end
         end
     end
+end
+
+function OnFightOverCB(stage, winer)
+    if currItem and currItem.GetCfg() and currItem.GetCfg().id then
+        DungeonMgr:SetCurrId1(currItem.GetCfg().id)
+    end
+    FightOverTool.OnDirllOver(stage, winer)
 end
 
 -- 等级提升

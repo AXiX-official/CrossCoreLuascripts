@@ -1,6 +1,6 @@
 local conf = {
 	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = 'Sheet1',
+	["sheetname"] = '头像',
 	["types"] = {
 'int','string','string'
 },

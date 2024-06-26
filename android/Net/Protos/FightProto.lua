@@ -162,7 +162,9 @@ function FightProto:RecvCmd(proto)
 			g_FightMgr.tClientInitData = fightActionData
 			fightActionData.api = "InitData";
 			FightActionMgr:PushSkill({fightActionData});
-			DungeonMgr:SetFightTeamId(data.nTeamIndex);
+			if data.nTeamIndex then
+				DungeonMgr:SetFightTeamId(data.nTeamIndex);
+			end
 			local fightActionData1 = g_FightMgr:GetInitData()
 			FightActionMgr:PushSkill(fightActionData1);
 		elseif data.stype == SceneType.BOSS then
@@ -551,7 +553,7 @@ end
 function FightProto:CurrDuplicate(proto)
 	Log("FightProto:CurrDuplicate")
 	--    LogError("当前副本======临时日志");
-	--	LogError(proto);
+	-- 	LogError(proto);
 	DungeonMgr:SetCurrFightId(nil);
 	TeamMgr:ClearFightID();
 	if proto.data then
@@ -581,8 +583,8 @@ end
 
 -- 开始恢复战斗结果
 function FightProto:RestoreFightStart(proto)
-	Log("FightProto:RestoreFightStart")
-	Log(proto)
+	--LogError("FightProto:RestoreFightStart")
+	--LogError(proto)
 	if proto.restart then
 		-- 清空游戏现场
 		g_FightMgr = nil
@@ -621,7 +623,7 @@ function FightProto:InBattle(proto)
 
 			if(FightClient:IsCanExit() and not FightClient:IsNewPlayerFight()) then			
                 local callBack = function()   
-                    PlayerClient.info = nil;                              
+                    PlayerClient.info = nil;                 
 	                ToLogin();
 			    end
                 local dialogdata = {
@@ -659,11 +661,10 @@ end
 
 
 function FightProto:SetRestoreFightProto(proto)
+    --LogError("SetRestoreFightProto" .. table.tostring(proto,true));
     if(FightClient:IsFightting())then
 		FightClient:QuitFihgt()	
-		DungeonMgr:SendToQuit();
-
-        return;
+		DungeonMgr:SendToQuit();        return;
     end
 	self.restoreFightProto = proto;
 	EventMgr.Dispatch(EventType.Fight_Restore);
@@ -706,7 +707,8 @@ function FightProto:ShowRestoreFightDialog(isShow)
 			-- UIUtil:AddFightTeamState(2,"BattleView:OnQuipOk()")
 		-- end	
 	end
-	
+    --LogError(self.restoreFightProto);
+	--LogError(id);
 	-- end
 	CSAPI.OpenView("DialogNoTop", {
 		content = StringConstant.fight_restore,

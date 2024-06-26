@@ -36,45 +36,45 @@ function this:Init()
     self.defaultGroundID = 1001
     self.defaultWallID = 1002
 
-    self:InitCfgs()
+    --self:InitCfgs()
 end
 
 function this:RequestDormProtoServerData()
-    --服务器压力大，不要在登录的时候发送
+    -- 服务器压力大，不要在登录的时候发送
     DormProto:BuyRecord()
     DormProto:GetOpenDorm()
     DormProto:GetSelfTheme({ThemeType.Share, ThemeType.Sys}) -- 先获取分享数据，以获取长度，或分享时插入数据
 end
 
--- 初始化表
-function this:InitCfgs()
-    -- 计算主题表的舒适度和价格
-    local cfgs = Cfgs.CfgFurnitureTheme:GetAll()
-    for k, v in pairs(cfgs) do
-        local comfort, price_1, price_2 = 0, 0, 0
-        local id1, id2 = nil, nil
-        local layoutCfg = Cfgs.CfgThemeLayout:GetByID(v.layoutId)
-        if (layoutCfg) then
-            for n, m in ipairs(layoutCfg.infos) do
-                local cfg = Cfgs.CfgFurniture:GetByID(m.cfgID)
-                comfort = comfort + cfg.comfort
-                price_1 = price_1 + cfg.price_1[1][2]
-                price_2 = price_2 + cfg.price_2[1][2]
-                if (id1 == nil) then
-                    id1, id2 = cfg.price_1[1][1], cfg.price_2[1][1]
-                end
-            end
-        end
-        cfgs[k].comfort = comfort
-        cfgs[k].price_1 = {{id1, price_1}}
-        cfgs[k].price_2 = {{id2, price_2}}
-    end
-    -- 家具类型表重新排序
-    local cfgs = Cfgs.CfgFurnitureEnum:GetAll()
-    table.sort(cfgs, function(a, b)
-        return a.index < b.index
-    end)
-end
+-- -- 初始化表
+-- function this:InitCfgs()
+--     -- 计算主题表的舒适度和价格
+--     local cfgs = Cfgs.CfgFurnitureTheme:GetAll()
+--     for k, v in pairs(cfgs) do
+--         local comfort, price_1, price_2 = 0, 0, 0
+--         local id1, id2 = nil, nil
+--         local layoutCfg = Cfgs.CfgThemeLayout:GetByID(v.layoutId)
+--         if (layoutCfg) then
+--             for n, m in ipairs(layoutCfg.infos) do
+--                 local cfg = Cfgs.CfgFurniture:GetByID(m.cfgID)
+--                 comfort = comfort + cfg.comfort
+--                 price_1 = price_1 + cfg.price_1[1][2]
+--                 price_2 = price_2 + cfg.price_2[1][2]
+--                 if (id1 == nil) then
+--                     id1, id2 = cfg.price_1[1][1], cfg.price_2[1][1]
+--                 end
+--             end
+--         end
+--         cfgs[k].comfort = comfort
+--         cfgs[k].price_1 = {{id1, price_1}}
+--         cfgs[k].price_2 = {{id2, price_2}}
+--     end
+--     -- 家具类型表重新排序
+--     local cfgs = Cfgs.CfgFurnitureEnum:GetAll()
+--     table.sort(cfgs, function(a, b)
+--         return a.index < b.index
+--     end)
+-- end
 
 function this:GetPrice()
     return self.price
@@ -930,10 +930,15 @@ end
 
 function this:BuyThemeRet(proto)
     -- 刷新系统主题列表
-    local sysDatas = self.themeDatas[ThemeType.Sys] or {}
-    sysDatas[proto.themeId] = {
-        id = proto.themeId
-    } -- 封装一个主题数据
+    if(proto.isFullBuy) then 
+        self.themeDatas = self.themeDatas or {}
+        self.themeDatas[ThemeType.Sys] = self.themeDatas[ThemeType.Sys] or {}
+        self.themeDatas[ThemeType.Sys][proto.themeId] = {id = proto.themeId}
+    end 
+    -- local sysDatas = self.themeDatas[ThemeType.Sys] or {}
+    -- sysDatas[proto.themeId] = {
+    --     id = proto.themeId
+    -- } -- 封装一个主题数据
     -- 刷新购买记录
     local dic = {}
     if (proto.ids) then
@@ -1089,8 +1094,10 @@ function this:GetThemePrices(themeId)
         local num = v[2] > v[3] and (v[2] - v[3]) or 0
         if (num > 0) then
             local _cfg = Cfgs.CfgFurniture:GetByID(v[1])
-            price1 = price1 + _cfg.price_1[1][2] * num
-            price2 = price2 + _cfg.price_2[1][2] * num
+            if(not _cfg.special) then 
+                price1 = price1 + _cfg.price_1[1][2] * num
+                price2 = price2 + _cfg.price_2[1][2] * num
+            end 
         end
     end
     return price1, price2
@@ -1152,17 +1159,16 @@ function this:ThemeHideDic(isContain4001)
     return dic
 end
 
-
---移除宿舍模型
+-- 移除宿舍模型
 function this:ClearDormModels()
     local modelNames = {"DormGround", "DormMain"}
     for k, v in pairs(modelNames) do
         local go = GameObject.Find(v)
-        if(go) then 
+        if (go) then
             local lua = ComUtil.GetLuaTable(go)
             lua.Exit()
             CSAPI.RemoveGO(go)
-        end 
+        end
     end
 end
 

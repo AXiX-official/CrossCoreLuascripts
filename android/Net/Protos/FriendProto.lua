@@ -70,6 +70,8 @@ function FriendProto:AssitInfoAdd(proto)
 	if self.assitInfoReturn then
 		self.assitInfoReturn(proto);
 		self.assitInfoReturn = nil;
+	else
+		FriendMgr:OnAssitInfoAdd(proto);
 	end
 	EventMgr.Dispatch(EventType.Team_AssistInfo_Init);
 end

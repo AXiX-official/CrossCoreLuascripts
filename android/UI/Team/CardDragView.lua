@@ -7,21 +7,52 @@ local currTime=0;
 local loopTime=6;--循环时间
 local haloInfos=nil;
 local isLoop=false;
+local hpBarImg=nil;
+local spBarImg=nil;
 
--- function Awake()
--- 	eventMgr = ViewEvent.New();
--- 	eventMgr:AddListener(EventType.TeamView_AddtiveState_Change,SetAddtiveState);
--- end
+function Awake()
+	-- eventMgr = ViewEvent.New();
+	-- eventMgr:AddListener(EventType.TeamView_AddtiveState_Change,SetAddtiveState);
+	hpBarImg=ComUtil.GetCom(hpBar, "Image");
+    spBarImg=ComUtil.GetCom(spBar, "Image");
+end
 
 -- function OnDestroy()
 -- 	eventMgr:ClearListener();
 -- end
 
-function Refresh(teamItem)
+function Refresh(teamItem,_isShowInfos)
 	data=teamItem;
 	SetLv();
 	SetTips();
 	SetFightObj();
+	if _isShowInfos then
+		local cardInfo=nil;
+		local strs = StringUtil:split(data:GetID(), "_");
+		if strs and #strs>1 and strs[1]~="npc" then
+			cardInfo=FormationUtil.GetTowerCardInfo(tonumber(strs[2]),tonumber(strs[1]),TeamMgr.currentIndex);
+		else
+			cardInfo=FormationUtil.GetTowerCardInfo(data:GetID(),nil,TeamMgr.currentIndex);
+		end
+		local currHp,currSp=0,0;
+		if cardInfo then
+			currHp=cardInfo.tower_hp/100;
+			currSp=cardInfo.tower_sp/100;
+		end
+		SetCardInfos(currHp,currSp);
+	else
+		SetCardInfos();
+	end
+end
+
+function SetCardInfos(hp,sp)
+    if hp and sp then
+        CSAPI.SetGOActive(infos,true);
+        hpBarImg.fillAmount=hp;
+        spBarImg.fillAmount=sp;
+    else
+        CSAPI.SetGOActive(infos,false);
+    end
 end
 
 function SetFightObj()

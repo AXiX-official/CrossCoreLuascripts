@@ -1061,7 +1061,9 @@ function this:OnQuit(isExit, jumpType)
                     CSAPI.OpenView(paht2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
                 end
             elseif cfg.type == eDuplicateType.TaoFa then --讨伐
-                CSAPI.OpenView("DungeonActivity2",{id = cfg.group, itemId = cfg.id})           
+                CSAPI.OpenView("DungeonActivity2",{id = cfg.group, itemId = cfg.id}) 
+            elseif cfg.type == eDuplicateType.NewTower then
+                CSAPI.OpenView("TowerView",{id = cfg.group}) --默认最新关卡          
             end
         end
     elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then

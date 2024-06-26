@@ -28,8 +28,8 @@ function ShowOutput()
             CSAPI.SetGOActive(goodsItem.gameObject, false);
         end
     end
+    CSAPI.SetGOActive(empty, not rewardDatas or #rewardDatas < 1)
     if (not rewardDatas or #rewardDatas < 1) then
-        CSAPI.SetGOActive(empty, true)
         return
     end
     for i = 1, 4 do
@@ -62,7 +62,7 @@ function GetRewardDatas()
     local dungeonData = DungeonMgr:GetDungeonData(cfg.id)
     local isTeaching = cfg.type == eDuplicateType.Teaching -- 教程关
     local specialRewards = RewardUtil.GetSpecialReward(cfg.group)
-    if (specialRewards) then
+    if (specialRewards and #specialRewards > 0) then
         for i, v in ipairs(specialRewards) do
             local _data = {
                 id = v[1],

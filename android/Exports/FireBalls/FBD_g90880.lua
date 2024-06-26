@@ -6,7 +6,7 @@ local this =
 },
 [-686817241]={
 {delay=2150,time=3500,type=1,hit_type=0,camera_shake={time=130,shake_dir=1,range=250,range1=150,range2=50,hz=50,decay_value=0.35},hit_creates={1192467788},hits={0,150,300}},
-{effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=0,offset_row=-200}}
+{effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=0,offset_row=-200},cue_sheet="fight/effect/fourteen.acb",cue_name="Folie_attack_skill_01"}
 },
 [1192467788]={
 effect="cast1_hit",time=3500,type=0,pos_ref={ref_type=4,part_index=1}
@@ -22,7 +22,7 @@ effect="cast1_hit",time=3500,type=0,pos_ref={ref_type=4,part_index=1}
 [958292235]={
 {delay=6800,time=4000,type=1,hit_type=1,hits={0}},
 {delay=9300,time=4000,type=1,hit_type=1,hits={0}},
-{effect="cast3_eff",time=10800,type=0,pos_ref={ref_type=6}},
+{effect="cast3_eff",time=10800,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Folie_attack_skill_02"},
 {delay=7800,time=4000,type=1,hit_type=1,hits={0}},
 {delay=9000,time=4000,type=1,hit_type=1,hits={0}},
 {delay=7300,time=4000,type=1,hit_type=1,hits={0}}
@@ -30,7 +30,7 @@ effect="cast1_hit",time=3500,type=0,pos_ref={ref_type=4,part_index=1}
 [-1485114200]={
 {delay=10000,time=4000,type=1,hit_type=1,hits={0}},
 {delay=7950,time=4000,type=1,hit_type=1,hit_creates={226809859},hits={0,80,160,240,320,400,480}},
-{effect="cast4_eff",time=11000,type=0,pos_ref={ref_type=6}},
+{effect="cast4_eff",time=11000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Folie_attack_skill_03"},
 {delay=9150,time=4000,type=1,hit_type=1,is_fake=1,fake_damage=1,hit_creates={-454591178},hits={0,150,300,450,600,750,900}}
 },
 [226809859]={
@@ -41,13 +41,16 @@ effect="cast4_hit",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [-1609092943]={
 {delay=1650,time=3500,type=1,hit_type=0,camera_shake={time=180,shake_dir=1,range=600,range1=400,range2=200,hz=30,decay_value=0.35},hit_creates={661633433},hits={0,200,400}},
-{effect="cast0_eff",time=3500,type=0,pos_ref={ref_type=6,offset_row=-250}}
+{effect="cast0_eff",time=3500,type=0,pos_ref={ref_type=6,offset_row=-250},cue_sheet="fight/effect/fourteen.acb",cue_name="Folie_attack_general"}
 },
 [661633433]={
 effect="cast0_hit",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [-316323548]={
 {effect="dead_eff",effect_pack="g90610",time=3500,type=0,pos_ref={ref_type=6}}
+},
+[-1183793042]={
+{time=8000,type=0}
 }
 };
 

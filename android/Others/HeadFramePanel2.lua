@@ -254,7 +254,7 @@ function SetRoleIcons(_data)
             break
         end
     end
-    svUtil:Init(layout2, #skins, {274, 422}, 3, 0.1, 0.5)
+    svUtil:Init(layout2, #skins, {274, 422}, 5, 0.1, 0.5)
     layout2:IEShowList(#skins, OnValueChange, curIndex)
 
     RefreshRoleIcon()

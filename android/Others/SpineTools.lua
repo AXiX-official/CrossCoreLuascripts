@@ -106,15 +106,15 @@ function this:Update()
     -- 物件多段点击间的过渡
     if (self.mulClickDic) then
         for k, v in pairs(self.mulClickDic) do
-            if (v.te.TrackTime ~= v.progress) then
-                if (v.te.TimeScale ~= 1 or v.te.TimeScale ~= -1) then
-                    v.te.TimeScale = v.progress > v.te.TrackTime and 1 or -1
-                end
-                if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or v.te.TrackTime <= v.progress) then
+            --if (v.te.TimeScale~=0) then --v.te.TrackTime ~= v.progress) then
+                -- if (v.te.TimeScale ~= 1 or v.te.TimeScale ~= -1) then
+                --     v.te.TimeScale = v.progress > v.te.TrackTime and 1 or -1
+                -- end
+                if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or (v.te.TimeScale == -1 and v.te.TrackTime <= v.progress)) then
                     v.te.TimeScale = 0
                     v.te.TrackTime = v.progress
                 end
-            end
+            --end
         end
     end
     -- 拖拽恢复 
@@ -274,13 +274,21 @@ function this:PlayByMulClick(animName, trackIndex, timeScale, progress)
         self.mulClickDic[trackIndex] = data
         return true
     else
-        if (data.te.TrackTime == data.progress) then
-            data.te.TimeScale = timeScale
+        if (data.te.TimeScale == 0) then
             data.progress = progress * data.duration
+            data.te.TimeScale = timeScale
             return true
         end
     end
     return false
+end
+--多段点击是否进行中
+function this:CheckMulClickIsPlay(trackIndex)
+    local data = self.mulClickDic[trackIndex]
+    if (data~=nil and data.te.TimeScale ~= 0) then
+        return true
+    end
+    return false 
 end
 
 -- 主体的多段点击（渐入渐出）
@@ -460,6 +468,7 @@ function this:GetTrackTimePercent(trackIndex)
     if (te) then
         return te.TrackTime / te.Animation.Duration
     end
+    return 1
 end
 
 function this:ClearTrack(trackIndex)

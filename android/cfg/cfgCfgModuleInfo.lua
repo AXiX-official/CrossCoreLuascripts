@@ -67,6 +67,8 @@ local conf = {
 {'SkyEye',	'SkyEye',	'',	'',	'',	'1309',	'',	'',	''},
 {'Inject',	'Inject',	'',	'',	'',	'1310',	'',	'',	''},
 {'DungeonActivity2',	'DungeonActivity2',	'1',	'1',	'487,-72',	'',	'37028,37029',	'',	''},
+{'TowerListView',	'TowerListView',	'1',	'1',	'487,-72',	'2101,2102',	'',	'',	''},
+{'Achievement',	'Achievement',	'1',	'1',	'487,-72',	'',	'47013,47014',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

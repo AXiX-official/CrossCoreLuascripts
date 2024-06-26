@@ -3,12 +3,16 @@ local clicker=nil
 local isDisable=false;
 local data=nil;
 local cb=nil;
+local hpBarImg=nil;
+local spBarImg=nil;
 function Awake()
     clicker=ComUtil.GetCom(clickImg,"Image");
+    hpBarImg=ComUtil.GetCom(hpBar, "Image");
+    spBarImg=ComUtil.GetCom(spBar, "Image");
 end
 
 --data: teamItemData:上阵的队员信息
-function Refresh(d,index)
+function Refresh(d,index,openSetting)
     InitNull();
     data=d;
     if data then
@@ -21,6 +25,21 @@ function Refresh(d,index)
         SetLv(data:GetLv());
         SetIcon(data:GetSmallImg());
         SetQuality(data:GetQuality());
+        if openSetting==TeamConfirmOpenType.Tower then
+            local cardInfo=nil;
+            local strs = StringUtil:split(data:GetID(), "_");
+            if strs and #strs>1 and strs[1]~="npc" then
+                cardInfo=FormationUtil.GetTowerCardInfo(tonumber(strs[2]),tonumber(strs[1]),TeamMgr.currentIndex);
+            else
+                cardInfo=FormationUtil.GetTowerCardInfo(data:GetID(),nil,TeamMgr.currentIndex);
+            end
+            local currHp,currSp=1,1;
+            if cardInfo then
+                currHp=cardInfo.tower_hp/100;
+                currSp=cardInfo.tower_sp/100;
+            end
+            SetCardInfos(currHp,currSp);
+        end
         -- SetAssist(data:IsAssist())
     -- elseif index==6 then
     --     SetAssist(true)
@@ -48,6 +67,16 @@ function SetIcon(iconName)
         ResUtil.Card:Load(icon,iconName);
     else
         CSAPI.SetGOActive(icon,false);
+    end
+end
+
+function SetCardInfos(hp,sp)
+    if hp and sp then
+        CSAPI.SetGOActive(infoObj,true);
+        hpBarImg.fillAmount=hp;
+        spBarImg.fillAmount=sp;
+    else
+        CSAPI.SetGOActive(infoObj,false);
     end
 end
 
@@ -111,7 +140,7 @@ function InitNull()
     CSAPI.SetGOActive(disObj,isDisable);
     CSAPI.SetGOActive(node,false);
     CSAPI.SetGOActive(disObj,isDisable);
-    CSAPI.SetGOActive(tipsObj,false);
+    SetCardInfos();
     SetClick(not isDisable);
 end
 
@@ -139,7 +168,6 @@ txt_name=nil;
 tagObj=nil;
 txt_tag=nil;
 txt_hot=nil;
-tipsObj=nil;
 txt_tips=nil;
 tipsIcon=nil;
 clickImg=nil;

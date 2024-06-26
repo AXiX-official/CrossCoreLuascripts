@@ -408,9 +408,7 @@ end
 --返回队伍名称
 function this:GetTeamName()
 	local teamName=self.teamName
-	if teamName==nil or teamName=="" then
-		teamName=FormationUtil.GetDefaultName(self.index);
-	end
+	teamName=FormationUtil.GetDefaultName(self.index,self.teamName);
 	return teamName;
 end
 

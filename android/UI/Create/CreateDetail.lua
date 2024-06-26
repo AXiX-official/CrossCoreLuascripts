@@ -65,8 +65,8 @@ function RefreshPanel()
         SetRecord()
     end
 
-    CSAPI.SetGOActive(Image1, curIndex1 == 2)
-    CSAPI.SetGOActive(Image2, curIndex1 == 1)
+    CSAPI.SetGOActive(Image1, curIndex1 == 1)
+    CSAPI.SetGOActive(Image2, curIndex1 == 2)
     CSAPI.SetGOActive(Image3, curIndex1 == 3)
 end
 

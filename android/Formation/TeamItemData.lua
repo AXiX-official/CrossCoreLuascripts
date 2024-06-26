@@ -370,4 +370,41 @@ function this:GetFormatData()
     return nil;
 end
 
+function this:GetFightCardData()
+    local card=self:GetCard();
+    if card then
+        local data=card:GetTotalProperty();
+        data.isLeader=self.isLeader;
+        data.hp=data.maxhp;
+        data.nClass=card:GetCamp();
+        data.real_cid=card:GetCfgID();
+        data.cuid=card:GetCfgID();
+        data.break_level=card:GetBreakLevel();
+        data.intensify_level=card:GetIntensifyLevel();
+        data.hp_percent=1;
+        data.col=self.col;
+        data.row=self.row;
+        data.level=card:GetLv();
+        data.model=card:GetSkinIDBase();
+        data.modelA=RoleTool.GetElseSkin(card);
+        local cid=card:GetID();
+        local strs = StringUtil:split(cid, "_");
+        if self:IsAssist() and not self:IsNPC() and strs then
+            cid=tonumber(strs[2]);
+        end
+        local tab={
+            cid=cid,
+            -- uid=self.fuid or PlayerClient:GetUid(),
+            fuid=self.fuid,
+            uid=PlayerClient:GetUid(),
+            row=self.row,
+            col=self.col,
+            maxhp=data.maxhp,
+            data=data,
+        }
+        return tab;
+    end
+    return nil;
+end
+
 return this;

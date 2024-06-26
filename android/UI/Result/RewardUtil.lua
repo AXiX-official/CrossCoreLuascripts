@@ -89,12 +89,21 @@ end
 --特殊掉落
 function this.GetSpecialReward(sectionID)
     local cfg = Cfgs.CfgSpecialDrops:GetByID(sectionID)
-    if cfg and cfg.dropItemID then
+    if cfg and cfg.DropsStartTime and cfg.DropsEndTime then
         local begTime = TimeUtil:GetTimeStampBySplit(cfg.DropsStartTime) or 0
         local endTime = TimeUtil:GetTimeStampBySplit(cfg.DropsEndTime) or 0
         local curTime = TimeUtil:GetTime() or 0
-        if curTime> begTime and curTime<=endTime then
-            return cfg.dropItemID
+        if curTime> begTime and curTime<=endTime and cfg.DropID then
+            if cfg.DropID and #cfg.DropID > 0 then
+                local rewards = {}
+                for i, id in ipairs(cfg.DropID) do
+                    local cfgItem = Cfgs.CfgDropItem:GetByID(id)
+                    if cfgItem then
+                        table.insert(rewards,{cfgItem.DropItemID})
+                    end
+                end
+                return rewards
+            end
         end
     end
 	return nil

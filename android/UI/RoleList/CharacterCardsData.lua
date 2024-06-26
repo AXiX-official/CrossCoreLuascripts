@@ -20,6 +20,13 @@ function this:Init(characterData, isRealCard)
         self:GetTotalProperty()
         -- 能否跃升突破
         self:CheckRed()
+        -- 解禁数据 
+        if (self.data.open_cards and #self.data.open_cards > 0) then
+            RoleSkinMgr:AddRoleJieJinSkin(self.cfg.role_id, self.data.open_cards)
+        end
+        if (self.data.open_mechas and #self.data.open_mechas > 0) then
+            RoleSkinMgr:AddMechaJieJinSkin(self.cfg.add_role_id, self.data.open_mechas)
+        end
     end
 end
 -- 初始化配置
@@ -79,8 +86,8 @@ end
 
 -- 获取名称
 function this:GetName()
-    return self.cfg and self.cfg.name or "" 
-    --return self.data and self.data.name or self.cfg.name
+    return self.cfg and self.cfg.name or ""
+    -- return self.data and self.data.name or self.cfg.name
 end
 
 -- 获取名称
@@ -254,11 +261,26 @@ end
 
 -- 当前使用的皮肤是否使用l2d
 function this:GetSkinIsL2d()
+    if (self:IsBaseCard()) then
+        return self:GetSkinIsL2dBase()
+    else
+        return self:GetSkinIsL2dElse()
+    end
+end
+
+function this:GetSkinIsL2dBase()
     if (self.data and self.data.skinIsl2d ~= nil) then
         return self.data.skinIsl2d == BoolType.Yes
     end
     return false
 end
+function this:GetSkinIsL2dElse()
+    if (self.data and self.data.skinIsl2d_a ~= nil) then
+        return self.data.skinIsl2d_a == BoolType.Yes
+    end
+    return false
+end
+
 
 -- 当前使用的皮肤
 function this:GetSkinID()
@@ -270,11 +292,17 @@ function this:GetSkinID()
 end
 
 function this:GetSkinIDBase()
-    return self.data and self.data.skin or self.cfg.model
+    if(self.data and self.data.skin~=nil and self.data.skin~=0) then 
+        return self.data.skin
+    end 
+    return  self.cfg.model
 end
 
 function this:GetSkinIDElse()
-    return self.data and self.data.skin_a or self.cfg.model
+    if(self.data and self.data.skin_a~=nil and self.data.skin_a~=0) then 
+        return self.data.skin_a
+    end 
+    return  self.cfg.model
 end
 
 -- 返回角色标示
@@ -1029,6 +1057,14 @@ function this:SupportSortNum()
         end
     end
     return 0
+end
+
+-- 额外（机神，同调，形切） 是否与皮肤
+function this:CheckHadSkins()
+    if (self.cfg.breakModels ~= nil or self.cfg.skin ~= nil) then
+        return true
+    end
+    return false 
 end
 
 return this;

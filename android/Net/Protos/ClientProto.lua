@@ -165,6 +165,8 @@ function ClientProto:InitFinishRet(proto)
 
     --服务器压力大，延迟到这里请求
     DormMgr:RequestDormProtoServerData();--先不请求试试看
+
+    ActivityMgr:CheckRedPointData() --用于活动
 end
 
 -- 未收到InitFinishRet前每隔几秒发一次直到成功为止

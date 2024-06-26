@@ -28,9 +28,6 @@ effect="cast2_hit",time=3500,type=0,pos_ref={ref_type=4,part_index=1}
 {delay=850,time=3500,type=1,hit_type=1,camera_shake={time=250,shake_dir=1,range=400,range2=400,hz=50,decay_value=0.4},hits={0}},
 {effect="cast0_hit",delay=850,time=2000,type=0,pos_ref={ref_type=0,offset_row=25,lock_col=1}},
 {effect="cast0_eff",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Oman_attack_general"}
-},
-[-1183793042]={
-{time=3500,type=0}
 }
 };
 

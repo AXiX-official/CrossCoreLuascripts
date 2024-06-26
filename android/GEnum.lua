@@ -326,6 +326,8 @@ eTaskTypeTipsImg[14] = '4' -- 每周勘探任务
 eTaskTypeTipsImg[15] = '4' -- 每期勘探任务
 eTaskTypeTipsImg[16] = '4' -- 每期引导任务阶段
 eTaskTypeTipsImg[17] = '4' -- 每期引导任务
+eTaskTypeTipsImg[101] = '5' -- 成就
+eTaskTypeTipsImg[201] = '6' -- 徽章
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -485,7 +487,8 @@ eTeamType = {
     RealPracticeAttack = 23, -- 实时军演攻击队伍
     GuildFight = 24, -- 公会战队伍
     TeamBoss = 25, -- 组队boss队伍
-    Tower=26,--爬塔限制队伍
+    Tower=26,--异构爬塔（普通）
+    TowerDifficulty=27,--异构爬塔（困难）
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
     ForceFight = 10000 -- 强制上阵索引起始值
 }
@@ -578,9 +581,9 @@ EquipCoreSetting.Select = 3 -- 选择装备面板
 -- 卡牌皮肤类型
 CardSkinType = {}
 CardSkinType.Break = 1 -- 突破皮肤
-CardSkinType.Else = 2 -- 额外
-CardSkinType.Add = 3 -- 新增
-CardSkinType.JieJin = 4 -- 解禁
+CardSkinType.Skin = 2 -- 额外
+--CardSkinType.Add = 3 -- 新增
+CardSkinType.JieJin = 3 -- 解禁
 
 -- 技能类型
 SkillMainType = {}
@@ -675,7 +678,8 @@ ActivityListType = {
     NewYearSignIn = 1006, --新年签到
     SignInCommon = 1007, --通用签到
     SignInShadowSpider = 1008, --迷城蛛影签到
-    DropAdd= 1009 --多倍掉落活动
+    DropAdd= 1009, --多倍掉落活动
+    Exchange = 1010, --兑换活动
 }
 
 -- 剧情站位
@@ -861,6 +865,7 @@ TeamConfirmOpenType = {}
 TeamConfirmOpenType.Dungeon = 1 -- 副本
 TeamConfirmOpenType.Matrix = 2 -- 基地
 TeamConfirmOpenType.FieldBoss = 3 -- 战场boss
+TeamConfirmOpenType.Tower=4--编队
 
 -- 商店商品的展示方式
 ShopShowType = {}
@@ -978,6 +983,7 @@ TeamOpenSetting = {}
 TeamOpenSetting.Normal = 1 -- 正常打开
 TeamOpenSetting.PVE = 2 -- pve编队
 TeamOpenSetting.PVP = 3 -- pvp编队
+TeamOpenSetting.Tower = 4 --爬塔编成
 
 -----------------聊天类型
 ChatType = {}
@@ -1232,6 +1238,8 @@ PlrMixIx.tSetName = 54 -- 设置名字时间，首次
 PlrMixIx.newTowerInfo = 55 -- 重置新爬塔的时间
 PlrMixIx.returningPlr = 56 -- 回归玩家配置信息
 PlrMixIx.role_panel_id = 57 -- 最后设置的角色看板ID
+PlrMixIx.badged = 58 -- 徽章
+PlrMixIx.specialDrops = 59 -- 特殊掉落
 
 -- 图鉴
 ArchiveType = {}
@@ -1450,3 +1458,133 @@ RegressionActiveType.ResourcesRecovery = 3 -- 3、找回资源
 RegressionActiveType.Fund = 4 -- 4、回归基金
 RegressionActiveType.Cloth = 5 -- 5、限时时装
 RegressionActiveType.ItemPool = 6 -- 6、回归道具池
+RegressionActiveType.Shop = 7 -- 7、回归商店
+RegressionActiveType.Tasks = 8 -- 8、回归任务
+RegressionActiveType.Banner = 9 -- 9、回归卡池
+RegressionActiveType.Show = 10 -- 10、玩法一览
+RegressionActiveType.ConsumeReduce = 11 -- 11、体力消耗减少
+
+
+--编队爬塔限制条件运算符类型
+TeamConditionOperator={
+    And="&",
+    Or="|",
+}
+--编队爬塔限制编入类型
+TeamConditionLimitEditType={
+    Only=1,--只能编入对应内容，只能编入是指只有符合限制条件的卡牌可以被编入
+    Dis=2,--禁止编入对应内容，禁止编入是指除限制条件外的卡牌都可以被编入
+    Max=3,--最多编入对应内容，例如最多编入4星卡牌数量，是指最多可以在队伍中上阵几张4星卡
+    Must=4,--必须编入对应内容，必须编入是指队伍中必须编入指定符合条件的卡牌 
+}
+--编队爬塔限制类型
+TeamConditionLimitType={
+    Quality=1,--稀有度
+    TeamType=2,--所属小队
+    RoleType=3,--角色定位
+    CoreType=4,--核心类型
+    Territory=5,--地域
+    Faction=6,--所属
+    CardID=98,--卡牌ID
+    TeamItemNum=99,--队伍人数
+}
+
+-----------------------------------------------------------------------------------------------------------------
+-- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
+eAchieveFinishType = {
+    GetTypeById = function(id)
+        return math.floor(id / 1000)
+    end
+}
+
+eAchieveFinishType.Player = 10 -- 玩家
+eAchieveFinishType.Card = 20 -- 卡牌
+eAchieveFinishType.CardDelete = 21 -- 卡牌删除
+eAchieveFinishType.CardSkill = 22 -- 卡牌技能
+eAchieveFinishType.Fight = 30 -- 战斗
+eAchieveFinishType.Shop = 35 -- 商店
+eAchieveFinishType.Equip = 40 -- 装备
+eAchieveFinishType.Build = 45 -- 建筑
+eAchieveFinishType.CardCreate = 50 -- 卡牌创建
+eAchieveFinishType.Task = 60 -- 任务
+eAchieveFinishType.Army = 61 -- 军演
+eAchieveFinishType.Item = 65 -- 物品
+
+eAchieveEventType = {}
+eAchieveEventType.None = 0
+eAchieveEventType.Upgrade = 1 -- 升级[参数 obj]
+eAchieveEventType.Break = 2 -- 突破[参数 obj]
+eAchieveEventType.PassCounterpart = 5 -- 副本通关[参数 obj]
+eAchieveEventType.TaskFinish = 8 -- 任务完成[参数 obj]
+eAchieveEventType.Collect = 14 -- 收集
+eAchieveEventType.PassClass = 17 -- 副本通关卡牌阵营
+eAchieveEventType.PassCard = 18 -- 副本通关指定卡牌
+eAchieveEventType.PassRolePos = 19 -- 副本通关指定卡牌角色定位
+eAchieveEventType.Order = 20 -- 订单
+eAchieveEventType.ReduceItem = 21 -- 消耗物品
+eAchieveEventType.Dormitory = 22 -- 宿舍
+eAchieveEventType.Skill = 26 -- 技能
+eAchieveEventType.CollectConditions = 27 -- 完成章章节指定关卡3星条件
+eAchieveEventType.CollectStar = 28 -- 副本通关星数[参数 obj]
+eAchieveEventType.PassByType = 29 -- 根据副本类型通关次数[参数 obj]
+eAchieveEventType.Rank = 30 -- 排名
+eAchieveEventType.Death = 31 -- 死亡
+eAchieveEventType.Unite = 32 -- Unite
+eAchieveEventType.OnBorn = 33 -- 机神召唤
+eAchieveEventType.OverLoad = 34 -- OverLoad
+eAchieveEventType.Friend = 35 -- Friend
+eAchieveEventType.PowerAdd = 37 -- 电力总数
+eAchieveEventType.PowerFull = 38 -- 电力充裕
+--切换皮肤资源类型
+SkinChangeResourceType={
+    Spine=1, --Spine资源
+    Image=2,--立绘
+}
+
+
+-----------------------------------------------------------------------------------------------------------------
+-- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
+eBadgedFinishType = {
+    GetTypeById = function(id)
+        return math.floor(id / 1000)
+    end
+}
+
+eBadgedFinishType.Player = 10 -- 玩家
+eBadgedFinishType.Card = 20 -- 卡牌
+eBadgedFinishType.CardDelete = 21 -- 卡牌删除
+eBadgedFinishType.CardSkill = 22 -- 卡牌技能
+eBadgedFinishType.Fight = 30 -- 战斗
+eBadgedFinishType.Shop = 35 -- 商店
+eBadgedFinishType.Equip = 40 -- 装备
+eBadgedFinishType.Build = 45 -- 建筑
+eBadgedFinishType.CardCreate = 50 -- 卡牌创建
+eBadgedFinishType.Task = 60 -- 任务
+eBadgedFinishType.Army = 61 -- 军演
+eBadgedFinishType.Item = 65 -- 物品
+
+eBadgedEventType = {}
+eBadgedEventType.None = 0
+eBadgedEventType.Upgrade = 1 -- 升级[参数 obj]
+eBadgedEventType.Break = 2 -- 突破[参数 obj]
+eBadgedEventType.PassCounterpart = 5 -- 副本通关[参数 obj]
+eBadgedEventType.TaskFinish = 8 -- 任务完成[参数 obj]
+eBadgedEventType.Collect = 14 -- 收集
+eBadgedEventType.PassClass = 17 -- 副本通关卡牌阵营
+eBadgedEventType.PassCard = 18 -- 副本通关指定卡牌
+eBadgedEventType.PassRolePos = 19 -- 副本通关指定卡牌角色定位
+eBadgedEventType.Order = 20 -- 订单
+eBadgedEventType.ReduceItem = 21 -- 消耗物品
+eBadgedEventType.Dormitory = 22 -- 宿舍
+eBadgedEventType.Skill = 26 -- 技能
+eBadgedEventType.CollectConditions = 27 -- 完成章章节指定关卡3星条件
+eBadgedEventType.CollectStar = 28 -- 副本通关星数[参数 obj]
+eBadgedEventType.PassByType = 29 -- 根据副本类型通关次数[参数 obj]
+eBadgedEventType.Rank = 30 -- 排名
+eBadgedEventType.Death = 31 -- 死亡
+eBadgedEventType.Unite = 32 -- Unite
+eBadgedEventType.OnBorn = 33 -- 机神召唤
+eBadgedEventType.OverLoad = 34 -- OverLoad
+eBadgedEventType.Friend = 35 -- Friend
+eBadgedEventType.PowerAdd = 37 -- 电力总数
+eBadgedEventType.PowerFull = 38 -- 电力充裕

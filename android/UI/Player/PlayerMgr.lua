@@ -1,10 +1,14 @@
-local this = {}
+PlayerMgr = MgrRegister("PlayerMgr")
+local this = PlayerMgr
 
 function this:Init()
 	--self:PlrPaneInfo()
+	self:Clear()
+	PlayerProto:GetSpecialDropsInfo()
 end
 
 function this:Clear()
+	self.dropInfos = {}
 end
 
 
@@ -75,6 +79,24 @@ function this:SignRet(proto)
 	EventMgr.Dispatch(EventType.Player_Change_Sign)
 end
 
+---------------------------------------------特殊掉落---------------------------------------------
+function this:UpdateSpecialDrops(proto)
+    self.dropInfos = {}
+    if proto and proto.dropInfos and #proto.dropInfos > 0 then
+        for i, v in ipairs(proto.dropInfos) do
+            self.dropInfos[v.sid] = v.num
+        end
+    end
+    EventMgr.Dispatch(EventType.SpecialDrops_Info_Update)
+end
+
+function this:GetSpecialDrops()
+    return self.dropInfos
+end
+
+function this:GetSpecialDrop(goodId)
+	return self.dropInfos[goodId] or 0
+end
 
 
 return this

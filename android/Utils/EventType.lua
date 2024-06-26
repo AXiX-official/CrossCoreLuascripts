@@ -60,6 +60,7 @@ this.Net_Connect_Fail = 8006;
 this.Net_Loading = 8007;
 this.Net_Msg_Wait = 8008;--等待指定的消息
 this.Net_Msg_Getted = 8009;--收到指定的消息
+this.Net_Tips_Disconnect=8010;--提示中需要主动断开连接的
 ------------------------------------------场景
 --加载场景
 this.Scene_Load = 9000;
@@ -156,9 +157,6 @@ this.Login_CD_Down2=11019;
 this.Login_SDK_DelAccount = 11020;
 -- SDK删除账号回调
 this.Login_SDK_DelAccount_CallBack = 11021;
-
---选择服务器
-this.Login_Switch_Server = 11021;
 
 ----------------------------SDK
 --调用SDK支付
@@ -377,6 +375,9 @@ this.Fight_SetSettingBtn = 140031 --设置战斗界面的暂停按钮状态
 
 this.Fight_Over_Panel_Show = 140032 --显示结算界面
 
+--进入战斗失败
+this.Fight_Enter_Fail=140033 --进入战斗失败
+
 -----------------------------------------登录模块
 --玩家登录成功
 this.Login_Server_Success			= 150000;
@@ -403,6 +404,8 @@ this.Login_Hide_Mask = 150010;
 
 --手机验证码登录
 this.Login_Phone_Auth_Code = 150011;
+--实名验证窗口关闭
+this.Authentication_Close = 150012;
 
 ------------------------------------------剧情系统
 --剧情选项
@@ -533,7 +536,7 @@ this.Update_Everyday = 180011;
 this.Main_Enter=180012;
 -- 玩家累计充值金额发生改变
 this.Pay_Amount_Change=180013;
---更换头像框
+--更换头像框 
 this.Head_Frame_Change=180014;
 --更换头像
 this.Head_Icon_Change=180015;
@@ -643,6 +646,8 @@ this.TeamView_Hide_TeamList=190048;
 this.TeamView_ViewType_Change=190049;
 --编队拖拽上阵事件丢失
 this.TeamView_DragJoin_Lost=190050;
+--设置子节点变更
+this.TeamView_ChildNode_Change=190051;
 -------------------------------------------背包
 --物品更新
 this.Bag_Update = 200000;
@@ -950,6 +955,7 @@ this.Matrix_Building_Upgrade = 360014
 this.Matrix_Trading_FlrUpgrade = 360015 --好友订单刷新
 this.Matrix_Compound_Success = 360016 --订单合成成功
 this.Matrix_Building_UpdateEnd = 360017 --建筑更新完成 
+this.Matrix_Add_PresetTeam = 360018 --新增预设队伍 
 --------------------------------------------商店
 --商店主界面点击按钮
 this.Shop_Main_ClickBtn = 370001
@@ -1147,6 +1153,9 @@ this.Exploration_TaskTime_Ret=470010;--获取勘探任务时间返回
 
 -----------------------------------爬塔
 this.Tower_Update_Data = 480001
+this.NewTower_ResetCnt_Update = 480002 --异构空间角色重置刷新
+this.NewTower_CardInfo_Update_Finish = 480003 --异构空间角色协议接收完毕
+this.NewTower_AssistCardInfo_Update_Finish=480004 --易构空间助战角色信息接收完毕
 
 -----------------------------------活动关卡
 this.Activity_Open_State = 490001 --活动关卡开启状态
@@ -1175,5 +1184,27 @@ this.Setting_Window_Logout_Agree = 540001
 this.Universal_Purchase_Refresh_Panel = 550001
 
 this.Client_Init_Finish=550001;--客户端初始化完成
+
+-----------------------------------------回归相关 
+this.HuiGui_Check = 560001 --回归判断
+this.HuiGui_Res_Recovery = 560002 --资源找回 
+
+-----------------------------------------成就
+this.Achievement_Data_Update = 570001 --数据更新
+
+-----------------------------------------徽章
+this.Badge_Data_Update = 580001 --数据更新
+this.Badge_Sort_Update = 580002 --装备位数据更新
+-----------------------------------------特殊掉落
+this.SpecialDrops_Info_Update = 590001 --掉落更新
+
+--------------------------------道具池活动相关
+this.ItemPool_Date_Update=600001;--道具池数据刷新
+this.ItemPool_Draw_Ret=600002;--道具池抽卡返回
+
+---屏幕自适应 关闭 UI页面数据
+this.LuaView_Lua_Closed=800019;
+
+
 
 return this; 

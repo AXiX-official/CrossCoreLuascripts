@@ -192,7 +192,7 @@ function this:GetRoleScriptCfgs(role_id,isHave)
     local groups = {}
     local data = self:GetData(role_id)
     if data then
-        local skins = RoleSkinMgr:GetDatas(data:GetCfg().id)
+        local skins = RoleSkinMgr:GetDatas(role_id)
         local modelIds = {}
         if skins then
             for _, skin in pairs(skins) do

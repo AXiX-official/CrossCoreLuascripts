@@ -15,6 +15,12 @@ local isNotAssist=false;
 local slider=nil;
 local currCostHot=0;--当前消耗的热值
 local currCostInfo=nil;--当前消耗物品的信息
+local cond=nil;
+local dungeonCfg=nil;
+local battleCanvas=nil;
+local towerIndex=eTeamType.Tower;
+local condDescItems={};
+local disChoosie=false;--禁用下来选择
 -- {-5.22988,-200}
 -- {-5.22988,250}
 function Awake()
@@ -30,7 +36,9 @@ function Awake()
 	eventMgr:AddListener(EventType.CardCool_Update, OnCardCoolUpdate)
     eventMgr:AddListener(EventType.Player_HotChange, SetEnterCost)
     eventMgr:AddListener(EventType.Bag_Update,SetEnterCost);
+    eventMgr:AddListener(EventType.Fight_Enter_Fail,OnEnterFail)
     CSAPI.SetGOActive(btnAISetting,true);
+    battleCanvas=ComUtil.GetCom(btnBattle,"CanvasGroup");
 end
 
 function OnViewOpened(viewkey)
@@ -72,10 +80,16 @@ function OnOpen()
     TeamMgr:ClearAssistTeamIndex();
     if data then
         isNotAssist=data.isNotAssist;
+        disChoosie=data.disChoosie;
+        if data.dungeonId then
+            currDungeonID=data.dungeonId;
+            dungeonCfg=Cfgs.MainLine:GetByID(currDungeonID)
+        end
     end
     -- if FriendMgr:IsRefreshAssist() then
     --     FriendMgr:InitAssistData();
     -- end
+    CSAPI.SetGOActive(condObj,false);
     if openSetting==TeamConfirmOpenType.Dungeon then
         LoadConfig();
         InitDungeon();
@@ -83,6 +97,8 @@ function OnOpen()
         InitMatrix();
     elseif openSetting==TeamConfirmOpenType.FieldBoss then
         InitFieldBoss()
+    elseif openSetting==TeamConfirmOpenType.Tower then
+        InitTower();
     end
     InitChoosieIDs();--初始化已选择的队伍id
     InitOptions();
@@ -142,7 +158,7 @@ function RefreshItems()
             state=TeamConfirmItemState.Disable;
         end
         local npc=k==1 and forceNPC or nil
-        table.insert(list,{id=k,num=k,options=optionsData,forceNPC=npc,NPCList=assistNPCList,showClean=teamMax>1,currState=v.GetState(),state=state,ShowDownList=ShowDownList});
+        table.insert(list,{id=k,num=k,options=optionsData,forceNPC=npc,NPCList=assistNPCList,showClean=teamMax>1,currState=v.GetState(),state=state,ShowDownList=ShowDownList,openSetting=openSetting,cond=cond,dungeonCfg=dungeonCfg,isDirll=data.isDirll});
     end
     ItemUtil.AddItems("TeamConfirm/TeamListItem", teamItems, list, itemNode, nil, 1, nil)
 end
@@ -150,6 +166,9 @@ end
 function RefreshTeams()
     for k,v in ipairs(teamItems) do
         v.SetTeamData(v.GetTeamIndex());
+    end
+    if openSetting==TeamConfirmOpenType.Tower then
+        SetBtnStateTower();
     end
 end
 
@@ -171,7 +190,7 @@ function InitItem()
             state=TeamConfirmItemState.Disable;
         end
         local npc=i==1 and forceNPC or nil
-        table.insert(list,{id=i,num=i,options=optionsData,showClean=teamMax>1,forceNPC=npc,NPCList=assistNPCList,state=state,ShowDownList=ShowDownList});
+        table.insert(list,{id=i,num=i,options=optionsData,showClean=teamMax>1,forceNPC=npc,NPCList=assistNPCList,state=state,ShowDownList=ShowDownList,openSetting=openSetting,cond=cond,dungeonCfg=dungeonCfg,isDirll=data.isDirll});
     end
     ItemUtil.AddItems("TeamConfirm/TeamListItem", teamItems, list, itemNode, nil, 1, nil)
 end
@@ -182,7 +201,7 @@ function InitChoosieIDs()
     --查找当前可用的队伍中是否有对应的id
     for i = startTeamIdx, endTeamIdx do
         local team=TeamMgr:GetTeamData(i);
-        if team and team:GetCount()>0 and team:HasLeader() then
+        if team and ((team:GetCount()>0 and team:HasLeader()) or disChoosie) then
             if  localCfg~=nil then
                 local hasID=false;
                 local idx=0;
@@ -207,6 +226,9 @@ function InitChoosieIDs()
                 else
                     table.remove(localCfg,idx);
                 end
+            elseif disChoosie then--禁用选择
+                choosieID[1]={index=1,teamId=i};
+                choosieCount=choosieCount+1;
             else
                 table.insert(otherID,i);
             end
@@ -263,8 +285,8 @@ function RefreshChoosieIDs() --当编队消失时查找下一支符合编队条�
         local hasID=false;
         if choosieID then
             for k,v in pairs(choosieID) do
-                 if v.teamId==i and team and team:GetCount()>0 and team:HasLeader() then --置空
-                    hasID=true;
+                 if v.teamId==i and team and ((team:GetCount()>0 and team:HasLeader()) or  disChoosie) then --置空
+                    hasID=true
                     choosieCount=choosieCount+1;
                     choosieIndex=v.index;
                     break;
@@ -326,7 +348,7 @@ function InitOptions()
     local sNum=0;--选中的id数
     for i = startTeamIdx, endTeamIdx do
         local team=TeamMgr:GetTeamData(i);
-        if team  then
+        if team then
             local option={};
             if sNum<count then
                 for k,v in pairs(choosieID) do
@@ -338,7 +360,11 @@ function InitOptions()
                     end
                 end   
             end
-            option.desc=i<10 and "0".. i or i; --选项描述
+            if team:GetIndex()<=g_TeamMaxNum then
+                option.desc=i<10 and "0".. i or i; --选项描述
+            else
+                option.desc="???";
+            end
             option.name=team:GetTeamName();
             option.id=i; --队伍id
             -- option.index=#optionsData+1;--选项下标
@@ -385,6 +411,8 @@ function OnClickBattle()
         OnMatrix();
     elseif openSetting==TeamConfirmOpenType.FieldBoss then
         OnFieldBoss()
+    elseif openSetting==TeamConfirmOpenType.Tower then
+        OnTower();
     end
 end
 
@@ -422,11 +450,6 @@ function SetEnterCost()
 end
 
 function Close()
-    -- for k,v in ipairs(teamItems) do
-    --     if v.IsChange() then
-    --         v.SaveData();
-    --     end
-    -- end
     view:Close();
 end
 function OnClickEdit()
@@ -441,9 +464,6 @@ function InitDungeon()
         TeamMgr:ClearFightTeamData();
         UIUtil:AddFightTeamState(2, "FightOverResult:ApplyQuit()")
     end
-    if data and data.dungeonId then
-        currDungeonID=data.dungeonId;
-    end
     if data and data.teamNum then
         teamMax=data.teamNum 
     else
@@ -456,7 +476,6 @@ function InitDungeon()
     local successCost=0;
     local moveLimit=0;
     local warnDesc=nil;
-    local dungeonCfg=Cfgs.MainLine:GetByID(currDungeonID)
     if dungeonData and dungeonData:IsPass() then--已通关
         forceNPC=nil;
         assistNPCList=dungeonData:GetAssistNPCList();
@@ -492,7 +511,7 @@ function InitDungeon()
     CSAPI.SetText(txt_tipsWarn,warnDesc==nil and "" or warnDesc);
     --如果配置表中存在cost值，则读取cost信息，否则直接当热值处理
     currCostInfo=DungeonUtil.GetCost(dungeonCfg);
-    currCostHot=enterCost+successCost;
+    currCostHot=math.ceil((enterCost+successCost) * (100- DungeonUtil.GetExtreHotNum()) / 100);
     SetFighting(dungeonCfg.lvTips);
     SetEnterCost();
     CSAPI.SetText(txt_move,tostring(moveLimit));
@@ -511,7 +530,6 @@ function OnDungeon()
     local duplicateTeamDatas={};
     local choosieID={};
     local choosieInfo={};--缓存配置的信息
-    local dungeonCfg=Cfgs.MainLine:GetByID(currDungeonID)
     for k,v in ipairs(teamItems) do
         if k<=teamMax and v.IsUse()==true then
             local duplicateTeam=v.GetDuplicateTeamData();
@@ -582,6 +600,191 @@ function OnMatrix()
         local teamData = item.GetDuplicateTeamData()
         MatrixMgr:SetIsAttack(true)
         BuildingProto:AssualtAttack(data.id,data.index,teamData.nTeamIndex,teamData.nSkillGroup);
+    end
+end
+
+function InitTower()
+    CSAPI.SetGOActive(nameObj,false);
+    CSAPI.SetGOActive(btnNavi,false);
+    CSAPI.SetGOActive(fightObj,false);
+    if dungeonCfg then
+        TowerMgr:SetSectionId(dungeonCfg.group)
+        if dungeonCfg.teamLimted~=nil and dungeonCfg.teamLimted~=""  then
+            cond=TeamCondition.New();
+            cond:Init(dungeonCfg.teamLimted);
+            towerIndex=dungeonCfg.group==7001 and eTeamType.Tower or eTeamType.TowerDifficulty;
+            CSAPI.SetGOActive(condObj,true);
+            local descList=cond:GetDesc();
+            if dungeonCfg.tacticsSwitch==1 then
+                table.insert(descList,LanguageMgr:GetByID(49028));
+            end
+            --初始化条件描述
+            ItemUtil.AddItems("TeamConfirm/TeamConfirmCondItem", condDescItems, descList, conLayout);
+        end
+    end
+    startTeamIdx = towerIndex;
+    endTeamIdx = towerIndex;
+    teamMax=1;
+    local teamData=TeamMgr:GetTeamData(towerIndex);
+    --剔除当前队伍中耐久度为0的卡牌
+    FormationUtil.CleanDeathTowerMember(teamData);
+    --判断当前队伍中上一局是否存在助战卡，存在则直接上阵
+    SetBtnStateTower();
+    SetEnterCost();
+end
+
+
+--爬塔设置按钮状态
+function SetBtnStateTower()
+    local teamData=TeamMgr:GetTeamData(towerIndex);
+    --判断当前队伍中上一局是否存在助战卡，存在则直接上阵
+    if cond then
+		local result2=cond:CheckPass(teamData)
+        battleCanvas.alpha=result2 and 1 or 0.5;
+	end
+end
+
+function OnTower()
+    --检查队伍是否符合限制
+    local item=teamItems[1];
+    local dupTeam = item.GetDuplicateTeamData()
+    TeamMgr.currIndex=towerIndex;
+    local teamData=TeamMgr:GetEditTeam();
+    if cond and teamData~=nil then
+		-- LogError("检测限制--------------->")
+		local result2=cond:CheckPass(teamData)
+		if result2~=true then
+			-- local dialogData = {}
+			-- dialogData.content = "当前队伍不符合限制条件！"
+			-- CSAPI.OpenView("Dialog", dialogData)
+            if teamData:GetRealCount()>0 then
+                Tips.ShowTips(LanguageMgr:GetByID(49033));
+            else
+                Tips.ShowTips(LanguageMgr:GetTips(14005));
+            end
+            return
+		end
+		-- LogError("条件："..tostring(cond:GetID()).."\t检测结果："..tostring(result).."\t队伍结果："..tostring(result2))
+	end
+    --检测是否有助战卡并判断是否已经锁定该卡牌,未锁定则提示是否锁定
+    local assistData=item.GetAssistData();
+    if data.isDirll == true and dungeonCfg and dungeonCfg.nGroupID then --模拟战
+        if teamData:GetRealCount()<=0 then
+            Tips.ShowTips(LanguageMgr:GetTips(14005));
+            do return end;
+        end
+        local assistInfo=nil;
+        if assistData~=nil and assistData.card~=nil then
+            assistInfo=assistData.card:GetAssistData()
+        end
+        --LogError(assistData)
+        local dirllData={}
+        dirllData={};
+        local tCommanderSkill=nil;
+        local skillGroupID=teamData:GetSkillGroupID();
+        if skillGroupID and dungeonCfg and dungeonCfg.tacticsSwitch~=1 then
+            local tacticData=TacticsMgr:GetDataByID(skillGroupID);
+            if tacticData and  tacticData:IsUnLock() then
+                tCommanderSkill={};
+                tCommanderSkill=tacticData:GetSkillsIds();
+            end
+        end
+        if (assistInfo and assistInfo.isFull==true) or (assistInfo==nil and teamData:GetAssistID()==nil) then --锁定卡
+            if  assistData~=nil and teamData:GetAssistID()==nil then
+                teamData:AddCard(assistData);
+            end
+            for k,v in ipairs(teamData.data) do
+                local itemData=v:GetFightCardData();
+                table.insert(dirllData,itemData);
+            end
+            TeamMgr:AddFightTeamData(teamData);
+            DungeonMgr:SetFightTeamId(teamData:GetIndex());
+            -- LogError("111111111111111111")
+            -- LogError(dirllData)
+            -- LogError(tCommanderSkill)
+            -- do return end 
+            CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill);
+        elseif assistInfo~=nil then --未锁定的卡
+            local uid=assistData.card:GetData().fuid;
+            local cid=assistData.card:GetData().old_cid;
+            FriendMgr:SetAssistInfos(uid, {cid}, function()
+                if  assistData~=nil and teamData:GetAssistID()==nil then
+                    teamData:AddCard(assistData);
+                elseif assistData~=nil and teamData:GetAssistID()~=nil then
+                    teamData:RemoveCard(assistData:GetID());
+                    teamData:AddCard(assistData);
+                end
+                for k,v in ipairs(teamData.data) do
+                    local itemData=v:GetFightCardData();
+                    table.insert(dirllData,itemData);
+                end
+                TeamMgr:AddFightTeamData(teamData);
+                DungeonMgr:SetFightTeamId(teamData:GetIndex());
+                -- LogError(dirllData)
+                -- LogError(tCommanderSkill)
+                -- do return end 
+                CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill);
+            end);
+        end
+        do return end
+    end
+    if assistData~=nil then
+        local isLockAssist=FriendMgr:IsLockAssist(assistData:GetID(),dungeonCfg.group);
+        -- LogError(assistData)
+        -- LogError(tostring(isLockAssist).."\t"..tostring(assistData:GetID()).."\t"..tostring(dungeonCfg.group))
+        if isLockAssist~=true then
+            local data={
+                assist=assistData,
+                okCallBack=function() 
+                    OnTowerEnter(dupTeam,item,assistData);
+                end,
+            }
+            CSAPI.OpenView("TowerAssistDialog",data);
+        else
+            OnTowerEnter(dupTeam,item,assistData)
+        end
+    else
+        OnTowerEnter(dupTeam,item,assistData)
+    end
+end
+
+function OnTowerEnter(dupTeam,item,assistData)
+    --提示是否锁定助战卡牌
+    if currDungeonID==nil or currDungeonID=="" then
+        LogError("出战关卡的ID不能为nil！"..tostring(currDungeonID));
+        return;
+    elseif item.CanBattle()==true then
+        local duplicateTeamDatas = {dupTeam}
+        if #duplicateTeamDatas>0 then
+            if dungeonCfg.tacticsSwitch then
+                for k,v in ipairs(duplicateTeamDatas) do
+                    v.nSkillGroup=nil
+                end
+            end
+            --判断装备是否超量
+            if EquipMgr:IsBagFull() then
+                TipsMgr:HandleMsg({strId="equipBagSpaceLimit"});
+                -- Tips.ShowTips(LanguageMgr:GetTips(14003));
+                do return end
+            end
+                --进入战斗！！
+                BattleMgr:SetLastCtrlId(nil);
+                TeamMgr.currentIndex=dupTeam.nTeamIndex;
+                local teamData=TeamMgr:GetEditTeam();
+                if  assistData~=nil then
+                    teamData:AddCard(item.GetAssistData());
+                    -- FriendMgr:SetAssistMemberCnt(assistData.fuid);
+                end
+                TeamMgr:AddFightTeamData(teamData);
+                UIUtil:AddFightTeamState(1,"TeamConfirm:OnTower()")
+                TeamMgr:DelEditTeam();
+                DungeonMgr:ApplyEnter(currDungeonID, {dupTeam.nTeamIndex}, duplicateTeamDatas);
+                UIUtil:AddNetWeakHandle(500);
+        else
+            Tips.ShowTips(LanguageMgr:GetTips(14004));
+        end
+    elseif dupTeam==nil then
+        Tips.ShowTips(LanguageMgr:GetTips(14005));
     end
 end
 
@@ -675,6 +878,12 @@ function OnClickNavi(go)
         end
     end
     CSAPI.OpenView("FightNaviSetting",nil,num);
+end
+
+function OnEnterFail()
+    if gameObject or view then
+        view:Close();
+    end
 end
 
 ----#Start#----

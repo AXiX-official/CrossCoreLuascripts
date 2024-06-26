@@ -213,6 +213,9 @@ function GCalHelp:CalArrWeight(arr, field, sumField)
     local sumWeight = 0
     for _, info in ipairs(arr) do
         local orign = info[field]
+        if not orign then
+            LogError('GCalHelp:CalArrWeight not field %s', field)
+        end
         info[sumField] = orign + sumWeight
         sumWeight = sumWeight + orign
     end
@@ -1789,5 +1792,20 @@ function GCalHelp:FindArrByFor(arr, val)
         end
     end
 
+    return nil
+end
+
+
+-- 获取卡牌id（机神、同调、形切的卡牌id） 如果没有，说明不是此类卡牌
+function GCalHelp:GetElseCfgID(baseCfgID)
+    local cfg = CardData[baseCfgID]
+    if (cfg.fit_result) then
+        return cfg.fit_result
+    elseif (cfg.tTransfo) then
+        return cfg.tTransfo[1]
+    elseif (cfg.summon) then
+        local cardCfg = MonsterData[cfg.summon]
+        return cardCfg.card_id
+    end
     return nil
 end

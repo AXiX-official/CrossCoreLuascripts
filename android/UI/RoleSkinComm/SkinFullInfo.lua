@@ -19,6 +19,7 @@ local roleItem2=nil
 local countDown=0.46;
 local hasL2d=false;
 local isShowImg=false;
+local changeInfo=nil;
 
 function Awake()
     layout = ComUtil.GetCom(hsv, "UISV")
@@ -26,7 +27,7 @@ function Awake()
     layout:AddOnValueChangeFunc(OnValueChange);
     svUtil = SVCenterDrag.New();
     roleItem = RoleTool.AddRole(item1, nil, nil, false)		
-    UIUtil:AddTop2("SkinFullInfo", gameObject, Close,nil,{});
+    UIUtil:AddTop2("SkinFullInfo", root, Close,nil,{});
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Card_Update, OnCardUpdate)
     eventMgr:AddListener(EventType.Card_Skin_Get, Refresh)
@@ -88,6 +89,8 @@ function Refresh()
             --设置描述
             CSAPI.SetText(txt_desc,currSkinInfo:GetDesc());
             SetContent();
+            changeInfo=currSkinInfo:GetChangeInfo();
+            SetChangeInfo();
         else
             curModelCfg=nil;
         end
@@ -99,6 +102,31 @@ function Refresh()
         LogError("无皮肤列表");
     end
     SetArrow(nowIdx);
+end
+
+function SetChangeInfo()
+    if changeInfo then
+        local type=changeInfo[1].cfg.skinType;
+        local langID=18104;
+        local otherImgName="img_12_01";
+        if type==3 then--同调
+            langID=18105;
+            otherImgName="img_12_02";
+        elseif type==4 then --形切
+            langID=18106;
+            otherImgName="img_12_03";
+        elseif type==5 then --机神
+            langID=18104;
+        end
+        CSAPI.SetText(txt_other,LanguageMgr:GetByID(langID));
+        --加载图
+        ResUtil.Card:Load(otherIcon, changeInfo[1].cfg.List_head);
+        otherImgName=string.format("UIs/RoleSkinComm/%s.png",otherImgName);
+        CSAPI.LoadImg(otherImgTips,otherImgName,true,nil,true);
+        CSAPI.SetGOActive(btnOther,true);
+    else
+        CSAPI.SetGOActive(btnOther,false);
+    end
 end
 
 function SetContent()
@@ -252,7 +280,28 @@ end
 --进入立绘查看界面
 function OnClickSearch()
     if curModelCfg then
-        CSAPI.OpenView("RoleInfoAmplification", {curModelCfg.role_id, curModelCfg.id, l2dOn,isShowImg}, LoadImgType.Main)
+        OpenSearchView({curModelCfg.id, l2dOn,isShowImg}, LoadImgType.Main)
+    end
+end
+
+function OpenSearchView(data,loadImgType)
+    if data~=nil then
+        CSAPI.OpenView("RoleInfoAmplification", data,loadImgType)
+    end
+end
+
+function OnClickOther()
+    if changeInfo then
+        local cfg=changeInfo[1].cfg;
+        local type=changeInfo[1].type;
+        local isShowImg2=isShowImg;
+        local tips=nil;
+        local desc="";
+        if type==5 then
+            isShowImg2=false;
+        end
+        desc=LanguageMgr:GetByID(18102,currSkinInfo:GetRoleName(),cfg.desc);
+        OpenSearchView({cfg.id, type==SkinChangeResourceType.Spine,isShowImg2,desc}, LoadImgType.Main)
     end
 end
 
@@ -273,7 +322,8 @@ end
 --点击穿戴
 function OnClickEquip()
     if card and currSkinInfo then
-        RoleSkinMgr:UseSkin(card:GetID(), currSkinInfo:GetModelID(), card:GetSkinIDElse(),l2dOn)
+        local skin_a = RoleTool.GetBDSkin_a(card:GetCfgID(), currSkinInfo:GetModelID())
+        RoleSkinMgr:UseSkin(card:GetID(), currSkinInfo:GetModelID(), skin_a,l2dOn,l2dOn)
     end
 end
 

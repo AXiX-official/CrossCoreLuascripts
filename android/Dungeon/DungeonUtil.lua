@@ -231,22 +231,20 @@ end
 function this.GetExtreMultiNum()
 	local add,regresAdd = 0,0
 	local cfgs = Cfgs.CfgDupDropCntAdd:GetAll()
-	local isRegres = false --回归
+	local isRegres = RegressionMgr:IsHuiGui()
 	if cfgs then
 		for _, cfg in pairs(cfgs) do
 			if cfg.startTime and cfg.endTime then
 				local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
 				local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
 				if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
-					if cfg.regressionType ~= nil then
-						if isRegres then
-							add = add + cfg.dropAddCnt
-							regresAdd = regresAdd + cfg.dropAddCnt
-						end						
-					else
-						add = add + cfg.dropAddCnt
-					end
+					add = add + cfg.dropAddCnt
 				end
+			elseif cfg.regressionType ~= nil then
+				if isRegres then
+					add = add + cfg.dropAddCnt
+					regresAdd = regresAdd + cfg.dropAddCnt
+				end	
 			end			
 		end
 	end
@@ -335,6 +333,38 @@ function this.GetCost(cfg)
     return cost
 end
 
+--获取实际消耗体力
+function this.GetHot(cfg)
+	local costNum = cfg.enterCostHot and cfg.enterCostHot or 0
+	costNum = cfg.winCostHot and costNum + cfg.winCostHot or costNum
+	if DungeonUtil.GetExtreHotNum() > 0 then
+		local num = DungeonUtil.GetExtreHotNum() < 100 and DungeonUtil.GetExtreHotNum() or 100
+		costNum = costNum * (100 - DungeonUtil.GetExtreHotNum()) / 100 
+	end
+	return math.ceil(costNum),costNum --因为是负数，所以向上取整
+end
 
-
+--体力消耗减少
+function this.GetExtreHotNum()
+	local add,regresAdd = 0,0
+	-- local cfgs = Cfgs.CfgDupConsumeReduce:GetAll()
+	-- local isRegres = RegressionMgr:IsHuiGui()
+	-- if cfgs then
+	-- 	for _, cfg in pairs(cfgs) do
+	-- 		if cfg.startTime and cfg.endTime then
+	-- 			local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
+	-- 			local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+	-- 			if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
+	-- 				add = add + cfg.consumeReduce
+	-- 			end
+	-- 		elseif cfg.regressionType ~= nil then
+	-- 			if isRegres then
+	-- 				add = add + cfg.consumeReduce
+	-- 				regresAdd = regresAdd + cfg.consumeReduce
+	-- 			end	
+	-- 		end			
+	-- 	end
+	-- end
+	return add,regresAdd
+end
 return this; 

@@ -45,9 +45,9 @@ local tagList={ --二级页签配置
 	}}
 }
 ----------------------------------动画相关
-local tagNodeDelayTime=840; --装备Tab的动画延迟时间
-local sellBtnDelayTime=900;--出售按钮的动画延迟时间
-local tabNodeDelayTime=540;--TabNode的动画延迟时间
+local tagNodeDelayTime=540; --装备Tab的动画延迟时间
+local sellBtnDelayTime=600;--出售按钮的动画延迟时间
+local tabNodeDelayTime=340;--TabNode的动画延迟时间
 local tabNodeTweens={};
 local equipTabTweens={}; --装备Tab的动画脚本对象
 local sellBtnTweens={};--出售按钮的动画脚本对象
@@ -62,8 +62,10 @@ local tweenLua=nil;
 local isFirst=true;
 local sortID=9;
 local lastEquipType=nil;
+local tweenMaskTime=1000;
 function Awake()	
 	--初始化菜单项
+	-- AdaptiveConfiguration.SetLuaObjUIFit("BagView",gameObject)
 	layout = ComUtil.GetCom(sv, "UISV")
 	layout2=ComUtil.GetCom(sv2,"UISV")
 	curLayout=layout;
@@ -241,6 +243,7 @@ function SetCurModule(_isFirst)
 		InitTagState(tagData,_isFirst,isEnter);
 	end
 	curModule.Refresh();
+
 end
 
 function Refresh(list) --刷新列表
@@ -284,20 +287,28 @@ function Refresh(list) --刷新列表
 		CSAPI.SetGOActive(SortNone,false);
 	end
 	-- RefreshSortBar();
+	CSAPI.SetGOActive(mask,true);
+	FuncUtil:Call(function()
+		CSAPI.SetGOActive(mask,false);
+	end,nil,tweenMaskTime);
 	if list then
 		curDatas = list;
 		selectIndex =nil;
 		SortDataBySortUD();
 		-- layout:Init("UIs/Grid/GridItem",LayoutCallBack,true)
 		if isFirst then
-			CSAPI.SetGOActive(mask,true);
-			FuncUtil:Call(function()--动画所需的延迟
-				tweenLua:AnimAgain();
-				if curLayout then
-					curLayout:IEShowList(#curDatas,TweenCall,1)
-				end
-			end,nil,80)
+			-- CSAPI.SetGOActive(mask,true);
+			-- FuncUtil:Call(function()--动画所需的延迟
+			-- 	tweenLua:AnimAgain();
+			-- 	if curLayout then
+			-- 		curLayout:IEShowList(#curDatas,TweenCall,1)
+			-- 	end
+			-- end,nil,80)
 			isFirst=false;
+			tweenLua:AnimAgain();
+			if curLayout then
+				curLayout:IEShowList(#curDatas,nil,1)
+			end
 		else
 			curLayout:IEShowList(#curDatas)
 		end

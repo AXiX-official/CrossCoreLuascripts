@@ -15,15 +15,15 @@ end
 -- @_skinid:皮肤id
 -- @_minBreakLv:最低可用的突破等级
 -- @_type:皮肤类型
--- @_typeNum:0:正常的皮肤， 1：变身的皮肤，2：合体的皮肤
+-- @_typeNum:  0:正常的皮肤，1：变身的皮肤，2：合体的皮肤 3：解禁的角色皮肤 4:解禁的机神皮肤
 -- @return
 -- ==============================--
-function this:Set(_cardId, _skinid, _minBreakLv, _type, _typeNum)
+function this:Set(_cardId, _skinid, _minBreakLv, _type)
     self.cardId = _cardId
     self.skinid = _skinid
     self.minBreakLv = _minBreakLv or 2
     self.type = _type or CardSkinType.Break
-    self.typeNum = _typeNum
+    -- self.typeNum = _typeNum
     self:SetIndex()
 end
 
@@ -114,9 +114,9 @@ function this:GetRoleId()
     return self.roleId
 end
 
-function this:GetTypeNum()
-    return self.typeNum
-end
+-- function this:GetTypeNum()
+--     return self.typeNum
+-- end
 
 function this:CheckIsNew()
     if (not self:CheckCanUse()) then
@@ -152,7 +152,7 @@ function this:IsInSell()
         -- local sBuyEnd = cfg.sBuyEnd and TimeUtil:GetTimeStampBySplit(cfg.sBuyEnd) or nil
         local itemData = ShopMgr:GetFixedCommodity(shopId)
         if (itemData and itemData:GetNowTimeCanBuy() and itemData:IsShow()) then
-            return true 
+            return true
         end
     end
     return false
@@ -186,6 +186,13 @@ end
 
 function this:GetTxt()
     return self:GetCfg().get_txt
+end
+
+-- 
+function this:IsThisCard(cardID)
+    if (self.cardId == cardID) then
+        return true
+    end
 end
 
 return this

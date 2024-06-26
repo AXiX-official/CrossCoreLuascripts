@@ -9,15 +9,19 @@ local currTime=0;
 local loopTime=6;--循环时间
 local haloInfos=nil;
 local descTxts=nil;
+local hpBarImg=nil;
+local spBarImg=nil;
 function Awake()
 	local imgs = ComUtil.GetComsInChildren(gameObject, "Image", true);
 	upTween = ComUtil.GetCom(txt_topAddVal, "ActionNumberRunner");
     downTween = ComUtil.GetCom(txt_downAddVal, "ActionNumberRunner");
 	descTxts={{txt_topAdd,txt_topAddVal,upTween},{txt_downAdd,txt_downAddVal,downTween}};
+	hpBarImg=ComUtil.GetCom(hpBar, "Image");
+    spBarImg=ComUtil.GetCom(spBar, "Image");
 end
 
---设置数据 k:当前
-function InitData(data,isLeader,_isMini,_isMirror)
+--设置数据 k:当前 _isShowInfos:是否显示hp/sp条
+function InitData(data,isLeader,_isMini,_isMirror,_isShowInfos)
 	isMirror = _isMirror==nil and false or _isMirror
 	if(isMirror) then 
 		SetDragEnable()
@@ -49,6 +53,23 @@ function InitData(data,isLeader,_isMini,_isMirror)
         -- ResUtil.FormationIcon:Load(icon,modelCfg.formation_icon);
         SetGridSize(cfg.grids);
     end
+	if _isShowInfos then
+		local cardInfo=nil;
+		local strs = StringUtil:split(data:GetID(), "_");
+		if strs and #strs>1 and strs[1]~="npc" then
+			cardInfo=FormationUtil.GetTowerCardInfo(tonumber(strs[2]),tonumber(strs[1]),TeamMgr.currentIndex);
+		else
+			cardInfo=FormationUtil.GetTowerCardInfo(data:GetID(),nil,TeamMgr.currentIndex);
+		end
+		local currHp,currSp=0,0;
+		if cardInfo then
+			currHp=cardInfo.tower_hp/100;
+			currSp=cardInfo.tower_sp/100;
+		end
+		SetCardInfos(currHp,currSp);
+	else
+		SetCardInfos();
+	end
 	SetHaloCfg();
 	CSAPI.SetText(txt_lv,tostring(data:GetLv()));
 	SetSupport(data:IsAssist());
@@ -59,6 +80,15 @@ function InitData(data,isLeader,_isMini,_isMirror)
 	ShowArrow(false);
 end
 
+function SetCardInfos(hp,sp)
+    if hp and sp then
+        CSAPI.SetGOActive(infos,true);
+        hpBarImg.fillAmount=hp;
+        spBarImg.fillAmount=sp;
+    else
+        CSAPI.SetGOActive(infos,false);
+    end
+end
 
 function SetHaloCfg()
 	if this.data then

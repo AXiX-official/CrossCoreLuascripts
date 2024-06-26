@@ -18,10 +18,10 @@ function Skill332502:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8431
-	local count31 = SkillApi:BuffCount(self, caster, target,2,4,3002)
-	-- 8114
-	if SkillJudger:Greater(self, caster, self.card, true,count31,0) then
+	-- 8416
+	local count16 = SkillApi:BuffCount(self, caster, target,2,2,2)
+	-- 8108
+	if SkillJudger:Greater(self, caster, self.card, true,count16,0) then
 	else
 		return
 	end

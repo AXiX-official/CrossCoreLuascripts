@@ -340,6 +340,10 @@ end
 
 function OnClickAI()
     if teamData then
+        if teamData:GetRealCount()<=0 then
+            Tips.ShowTips(LanguageMgr:GetByID(26047))
+            do return end
+        end
         local isOpen,lockStr=MenuMgr:CheckModelOpen(OpenViewType.special, FormationUtil.AIModuleKey)
         if isOpen~=true then
             Tips.ShowTips(lockStr);
@@ -347,7 +351,7 @@ function OnClickAI()
         end
         CSAPI.OpenView("AIPrefabSetting",{teamData=teamData});
     else
-        Tips.ShowTips("请先选择要使用的队伍")
+        Tips.ShowTips(LanguageMgr:GetByID(26048))
     end
 end
 
@@ -449,8 +453,10 @@ function OnClickSkill()
             return
         end
         CSAPI.OpenView("TacticsView",{teamData=teamData,closeFunc=OnSkillChange});
+    elseif teamData and teamData:GetRealCount()==0 then
+        Tips.ShowTips(LanguageMgr:GetByID(26047))
     else
-        Tips.ShowTips("请先选择要使用的队伍")
+        Tips.ShowTips(LanguageMgr:GetByID(26048))
     end
 end
 

@@ -384,4 +384,11 @@ function this:GetTimeStampBySplit(_str)
     return time
 end
 
+--某个月有多少天（下个月的第0天，也就是本月的最后一天）
+function this:DaysInMonth(year, month)
+    return os.date("*t", os.time({year=year, month=month+1, day=0})).day
+end
+
+
+
 return this

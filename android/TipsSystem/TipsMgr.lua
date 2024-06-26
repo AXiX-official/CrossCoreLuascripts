@@ -5,6 +5,9 @@ local this = {
 		"accExist", "accNotExist", "accLenErr", "pwdLenErr", "sqlFail",
 		"pwdErr", "relogin", "svrBusy", "loadDataErr"
 	},
+	authenError={ --身份验证错误信息
+		"accRegisterLimit",
+	},
 	funHandles = {}, -- 特殊处理函数
 }
 
@@ -96,6 +99,13 @@ function this:ShowMsg(data)
 			end})
 			do return end;
 		elseif index==9 then --注销账号
+			self:CheckAuthenError(tipsData);
+			if LoginProto:IsOnline()~=true then --还没完成登录流程，中断
+				NetMgr.net:Disconnect();
+				MgrCenter:Clear()
+				CSAPI.OpenView("LoadPrompt", {content = tipsData:GetContent()})
+				do return end;
+			end
 			ClientProto:Offline()
 			MgrCenter:Clear()
 			EventMgr.Dispatch(EventType.Login_Quit, nil,true);	
@@ -141,7 +151,21 @@ function this:CheckDisConnect(tipsData)
 	if key then
 		for _, v in ipairs(self.disConnectError) do
 			if key == v then
+				EventMgr.Dispatch(EventType.Net_Tips_Disconnect)
 				NetMgr.net:Disconnect()
+				return
+			end
+		end
+	end
+end
+
+function this:CheckAuthenError(tipsData)
+	local key = tipsData:GetKey()
+	if key then
+		for _, v in ipairs(self.authenError) do
+			if key == v then
+				EventMgr.Dispatch(EventType.Authentication_Close)
+				EventMgr.Dispatch(EventType.Login_Hide_Mask);
 				return
 			end
 		end

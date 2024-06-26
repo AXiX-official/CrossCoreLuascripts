@@ -15,4 +15,6 @@ end
 function Buffer332603:OnActionOver(caster, target)
 	-- 332613
 	self:AddProgress(BufferEffect[332613], self.caster, self.card, nil, 120*self.nCount)
+	-- 332621
+	self:DelBufferTypeForce(BufferEffect[332621], self.caster, self.card, nil, 332601)
 end

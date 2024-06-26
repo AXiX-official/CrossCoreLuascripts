@@ -120,7 +120,8 @@ function OnCardInfoCallBack(proto)
 	-- end
 	if _cards then	
 		local _card = CharacterCardsData(_cards[1])	
-		CSAPI.OpenView("RoleInfo", _card, RoleInfoOpenType.LookOther)
+		--CSAPI.OpenView("RoleInfo", _card, RoleInfoOpenType.LookOther)
+		CSAPI.OpenView("RoleInfo", _card)
 	end
 end
 

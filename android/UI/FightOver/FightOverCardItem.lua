@@ -1,6 +1,7 @@
 --2400的动效播放时间
 local nextDelayTime = 200 --到下一个阶段的冷却时间
 local index = 0
+local teamIndex = 0
 
 -- exp
 local expBar = nil
@@ -23,6 +24,9 @@ local anims = {}
 local moveAnim = nil
 local fadeAnim = nil
 local currAnimStage = 0 --当前动画在第几阶段
+
+--assit
+local isAssit = false
 
 function Awake()
     expBar = ComUtil.GetCom(expSlider, "Slider")
@@ -53,6 +57,7 @@ function Refresh(_teamItemData, elseData)
     SetCard()
 
     addExp = elseData and elseData.exp or 0
+    teamIndex = elseData and elseData.teamIndex or 0
 
     oldLv, curExp, upNum = GetBeforCardInfo(addExp)
     if cardData:GetLv() >= cardData:GetMaxLv() then
@@ -64,9 +69,13 @@ function Refresh(_teamItemData, elseData)
 
     CSAPI.SetGOActive(expObj, false)
     CSAPI.SetGOActive(favorObj, false)
+    CSAPI.SetGOActive(stateObj,false)
+    CSAPI.SetGOActive(assitObj,false)
 
     local favor = elseData and elseData.favor or 0    
     SetFavor(favor)
+
+    isAssit = _teamItemData.index == 6
 end
 
 function SetCard()
@@ -248,6 +257,27 @@ function JumpToExpComplete()
     end
 end
 
+---------------------------------state---------------------------------
+function SetState()    
+    CSAPI.SetGOActive(stateObj, true)
+    local strs = StringUtil:split(data:GetID(), "_");
+    local info = nil
+    if strs and #strs>1 and strs[1]~="npc" then
+        info=FormationUtil.GetTowerCardInfo(tonumber(strs[2]), tonumber(strs[1]),teamIndex);
+    else
+        info=FormationUtil.GetTowerCardInfo(data:GetID(),nil, teamIndex);
+    end
+    local hp,sp = 100,100
+    if info then
+        hp = info.tower_hp
+        sp = info.tower_sp
+    end
+    CSAPI.SetGOActive(dead,hp <= 0)
+    CSAPI.SetGOActive(stateImg,hp > 0)
+    CSAPI.SetRTSize(hpObj,127 * hp / 100, 10)
+    CSAPI.SetRTSize(spImg,127 * sp / 100, 4)
+    EventMgr.Dispatch(EventType.Fight_Over_Reward, index)
+end
 ---------------------------------anim---------------------------------
 
 --300
@@ -265,13 +295,14 @@ end
 
 --300
 function PlayFavorAnim()
-    if (data == nil) or (data and data.bIsNpc)  then -- NPC不加经验和好感
+    if (data == nil) or (data and data.bIsNpc) then -- NPC不加经验和好感
         EventMgr.Dispatch(EventType.Fight_Over_Reward, index)
         currAnimStage = 4
         return;
     end
     currAnimStage = 2
     CSAPI.SetGOActive(favorObj, true)
+    CSAPI.SetGOActive(assitObj,isAssit)
     FuncUtil:Call(function ()
         if gameObject and not isStopAnim then
             CSAPI.SetGOActive(favorObj, false)
@@ -282,7 +313,13 @@ end
 
 function PlayExpAnim()
     currAnimStage = 3
-    SetExp()
+    local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    local isNewTower = cfg and cfg.type == eDuplicateType.NewTower
+    if isNewTower then
+        SetState()
+    else
+        SetExp()
+    end
 end
 
 function JumpToComplete()
@@ -294,8 +331,14 @@ function JumpToComplete()
     end
     
     if currAnimStage < 4 then
-        CSAPI.SetGOActive(expObj, true)
-        JumpToExpComplete()
+        local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+        local isNewTower = cfg and cfg.type == eDuplicateType.NewTower
+        if not isNewTower then
+            CSAPI.SetGOActive(expObj, true)
+            JumpToExpComplete()
+        else
+            SetState()
+        end
     end
 
     if currAnimStage < 3 then

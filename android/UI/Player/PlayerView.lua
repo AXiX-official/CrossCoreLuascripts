@@ -3,6 +3,7 @@ local fade = nil
 local isAnim = false
 local outBar = nil
 local headItem = nil
+local badgeItems = {}
 
 function Awake()
     LanguageMgr:SetText(Placeholder, 8002, g_SignMaxLen)
@@ -23,8 +24,9 @@ function OnInit()
     eventMgr:AddListener(EventType.Player_Select_Card, SetRole)
     eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
-    eventMgr:AddListener(EventType.Head_Frame_Change, SetHeadFrame)
     eventMgr:AddListener(EventType.RedPoint_Refresh, SetRed)
+    eventMgr:AddListener(EventType.Badge_Sort_Update, SetBadge)
+    eventMgr:AddListener(EventType.Player_EditName,OnNameChange)
     -- CSAPI.AddInputFieldChange(inputSign, InputChange)
     -- CSAPI.AddInputFieldCallBack(inputSign, InputCB)
 end
@@ -39,6 +41,11 @@ function OnViewClosed(viewKey)
     if viewKey == "RoleListSelectView" then
         CSAPI.SetGOActive(gameObject, true)
     end
+end
+
+function OnNameChange()
+    CSAPI.SetText(txtName, PlayerClient:GetName() .. "")
+    LanguageMgr:ShowTips(30002)
 end
 
 function OnOpen()
@@ -66,6 +73,8 @@ function SetPanel()
     SetLv()
 
     SetHeadFrame()
+
+    SetBadge()
 
     SetRed()
 end
@@ -105,6 +114,13 @@ function SetRed()
         _isRed = true 
     end 
     UIUtil:SetRedPoint2("Common/Red2", iconNode, _isRed, 89, 91, 0)
+
+    local _pData3 = RedPointMgr:GetData(RedPointType.Badge)
+    local _isRed2 = false 
+    if _pData3 ~= nil then
+        _isRed2 = true
+    end
+    UIUtil:SetRedPoint2("Common/Red2", badgeRed, _isRed2)
 end
 
 -- 玩家信息返回
@@ -150,35 +166,61 @@ function SetHeadFrame()
     UIUtil:AddHeadFrame(headParent, 1)
 end
 
--- 设置签名
-function SetSign(_str)
-    local str = ""
-    if (_str) then
-        str = _str
-    else
-        str = PlayerClient:GetSign()
-    end
-    str = MsgParser:getString(str) -- 屏蔽字体用***代替
-    input_Sign.text = str
-end
-
-function InputChange(_str)
-    _str = StringUtil:SetStringByLen(_str, g_SignMaxLen, "")
-    _str = StringUtil:FilterChar(_str)
-    SetSign(_str)
-end
-
-function InputCB(_str)
-    _str = StringUtil:SetStringByLen(_str, g_SignMaxLen, "")
-    _str = StringUtil:FilterChar(_str)
-    SetSign(_str)
-
-    -- 修改签名
-    local str = input_Sign.text
-    if (str ~= PlayerClient:GetSign()) then
-        PlayerMgr:Sign(str)
+function SetBadge()
+    local badgeDatas = BadgeMgr:GetSortArr()
+    for i = 1, (g_BadgeMax or 6) do
+        if i <= #badgeItems then
+            badgeItems[i].Refresh(badgeDatas[i])
+        else
+            ResUtil:CreateUIGOAsync("Badge/BadgeGridItem",badgeParent,function (go)
+                local lua = ComUtil.GetLuaTable(go)
+                lua.SetIndex(i)
+                lua.SetClickCB(OnBadgeClickCB)
+                lua.Refresh(badgeDatas[i])
+                lua.SetScale(0.6)
+                badgeItems[i] = lua
+            end)
+        end
     end
 end
+
+function OnBadgeClickCB(item)
+    CSAPI.OpenView("BadgeView",item.index or 0)
+end
+
+function OnClickBadge()
+    CSAPI.OpenView("BadgeView",1)
+end
+
+-- -- 设置签名
+-- function SetSign(_str)
+--     local str = ""
+--     if (_str) then
+--         str = _str
+--     else
+--         str = PlayerClient:GetSign()
+--     end
+--     str = MsgParser:getString(str) -- 屏蔽字体用***代替
+--     input_Sign.text = str
+-- end
+
+-- function InputChange(_str)
+--     _str = StringUtil:SetStringByLen(_str, g_SignMaxLen, "")
+--     _str = StringUtil:FilterChar(_str)
+--     SetSign(_str)
+-- end
+
+-- function InputCB(_str)
+--     _str = StringUtil:SetStringByLen(_str, g_SignMaxLen, "")
+--     _str = StringUtil:FilterChar(_str)
+--     SetSign(_str)
+
+--     -- 修改签名
+--     local str = input_Sign.text
+--     if (str ~= PlayerClient:GetSign()) then
+--         PlayerMgr:Sign(str)
+--     end
+-- end
 
 --------------------------------支援-------------------------------------
 -- 协战信息
@@ -209,7 +251,8 @@ function OnClickCopy()
 end
 
 function OnClickName()
-    LanguageMgr:ShowTips(30001)
+    -- LanguageMgr:ShowTips(30001)
+    CSAPI.OpenView("InfoCorrBox")
 end
 
 function OnClickClose()

@@ -28,8 +28,8 @@ function Skill4503001:OnAfterHurt(caster, target, data)
 	-- 4503001
 	self:HitAddBuff(SkillEffect[4503001], caster, target, data, 2000,1003,2)
 end
--- 攻击结束
-function Skill4503001:OnAttackOver(caster, target, data)
+-- 伤害前
+function Skill4503001:OnBefourHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -48,8 +48,8 @@ function Skill4503001:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 4503011
-	if self:Rand(3000) then
-		self:AlterBufferByID(SkillEffect[4503011], caster, target, data, 1003,2)
+	if self:Rand(2000) then
+		self:AlterBufferByID(SkillEffect[4503011], caster, target, data, 1003,1)
 	end
 end
 -- 暴击伤害前(OnBefourHurt之前)

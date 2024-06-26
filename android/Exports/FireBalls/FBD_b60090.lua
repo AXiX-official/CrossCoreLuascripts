@@ -11,6 +11,7 @@ local this =
 {effect="cast6_eff",delay=10500,time=5000,type=0,pos_ref={ref_type=13,offset_row=-600},dont_remove_when_skip=1},
 {effect="cast2_eff",time=11000,type=0,pos_ref={ref_type=6}},
 {time=11000,type=0,cue_sheet="fight/effect/twelfth.acb",cue_name="Curtana_attack_skill_02"},
+{delay=6500,time=11000,type=0,cue_sheet="cv/Curtana.acb",cue_name="Curtana_12",cue_feature=1},
 {delay=10000,time=1000,type=3,hits={0}},
 {delay=2600,time=11000,type=0,cue_sheet="cv/Curtana.acb",cue_name="Curtana_11",cue_feature=1}
 },

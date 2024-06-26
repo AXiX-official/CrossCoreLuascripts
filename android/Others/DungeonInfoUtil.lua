@@ -2,6 +2,7 @@ local this = {};
 
 this.ShowType = {
     Title = "Title",
+    Title2 = "Title2",
     Target = "Target",
     Prograss = "Prograss",
     Output = "Output",
@@ -9,8 +10,11 @@ this.ShowType = {
     Double = "Double",
     Details ="Details",
     Danger = "Danger",
+    Danger2 = "Danger2",
     Course = "Course",
     Button = "Button",
+    Button2 = "Button2",
+    Button3 = "Button3",
     Badge = "Badge",
     Plot = "Plot",
     PlotButton = "PlotButton",
@@ -96,11 +100,13 @@ function this:ShowPanels(typeNames)
 end
 
 function this:GetPanel(typeName)
-    return self.panel and self.panel[typeName]
+    if self.panel and self.panel[typeName] and self.panel[typeName].gameObject.activeSelf == true then
+        return self.panel[typeName]
+    end
 end
 
 function this:RefreshPanel()
-    if this.panel then
+    if self.panel then
         for _, lua in pairs(self.panel) do
             if lua.gameObject.activeSelf then
                 lua.Refresh(self.datas)

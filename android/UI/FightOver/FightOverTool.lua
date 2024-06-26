@@ -169,11 +169,18 @@ function this.OnSweepOver(proto, isForceOver)
 	CSAPI.OpenView("FightOverResult", data);
 end
 
+--模拟使用
+function this.OnDirllOver(stage, winer)
+	local team = this.GetTeamData(DungeonMgr:GetFightTeamId(), true); 
+	local data = {}
+	this.PushEnd(data,winer == 1,team,nil, 0, {}, 0,{},false,{isDirll = true,stage = stage})
+end
+
 --返回编队数据
 function this.GetTeamData(teamID, isDuplicate)
 	local teamData = nil;
 	if isDuplicate then
-		teamData = TeamMgr:GetFightTeamData(teamID);		
+		teamData = TeamMgr:GetFightTeamData(teamID);
 	else
 		teamData = TeamMgr:GetTeamData(teamID)
 	end

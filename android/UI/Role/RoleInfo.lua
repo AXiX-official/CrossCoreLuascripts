@@ -16,9 +16,9 @@ function OnEnable()
 end
 
 function OnDisable()
-    if (openSetting and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
-        CSAPI.PlayUISound("ui_cosmetic_adjustment")
-    end
+    -- if (openSetting) then -- and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
+    CSAPI.PlayUISound("ui_cosmetic_adjustment")
+    -- end
 end
 function OnDestroy()
     RecordMgr:Save(RecordMode.View, recordBeginTime, "ui_id=" .. RecordViews.RoleInfo)
@@ -39,8 +39,9 @@ function OpenAnim(b)
     CSAPI.SetGOActive(mask, b)
     CSAPI.SetGOActive(anim_open, b)
     timer = b and Time.time + 0.7 or nil
-
-    isFirst = true
+    if (b) then
+        isFirst = true
+    end
 end
 
 function OnInit()
@@ -175,7 +176,7 @@ function ChangeRole()
 end
 
 function SetRole()
-    CSAPI.SetGOActive(iconParent, false)
+    -- CSAPI.SetGOActive(iconParent, false)
     -- RoleTool.LoadImg(img, cardData:GetSkinID(), LoadImgType.RoleInfo, function()
     --     CSAPI.SetGOActive(iconParent, true)
     --     if (isFirst) then
@@ -190,8 +191,10 @@ function SetRole()
         CSAPI.SetGOActive(iconParent, true)
         if (isFirst) then
             isFirst = false
-            UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
-            UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
+            if (iconNode ~= nil) then
+                UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
+                UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
+            end
         end
     end, cardData:GetSkinIsL2d())
 end
@@ -328,6 +331,13 @@ function SetSpecialSkill()
         CSAPI.SetText(txtTT1, str1)
         CSAPI.SetText(txtTT2, str2[1])
     end
+    -- red
+    local isRed = false
+    local twoCardID = GCalHelp:GetElseCfgID(cardData:GetCfgID())
+    if (_data and not isFighting and RoleSkinMgr:CheckIsNewAdd(twoCardID)) then
+        isRed = true
+    end
+    UIUtil:SetRedPoint(btnSpecialSkill, isRed, 119.4, 22.5, 0)
 end
 
 -- 角色定位
@@ -585,6 +595,9 @@ function SetBtns()
     CSAPI.SetGOActive(btnDirll, not isFighting)
     CSAPI.SetGOActive(questionP, not isFighting)
     CSAPI.SetGOActive(btnApparel, not isFighting)
+    -- red 
+    local isRed = RoleSkinMgr:CheckIsNewAdd(cardData:GetCfgID())
+    UIUtil:SetRedPoint(btnApparel, isRed, 58.3, 26.2, 0)
 end
 
 -------------------------------------------------------------------------------------------------------------------------
@@ -627,6 +640,9 @@ function OnClickApparel()
         CSAPI.PlayUISound("ui_generic_tab_2") -- todo 
         CSAPI.OpenView("RoleApparel", cardData)
     end
+    -- 
+    RoleSkinMgr:SetIsNewAdd(cardData:GetCfgID())
+    UIUtil:SetRedPoint(btnApparel, false, 58.3, 26.2, 0)
 end
 
 -- 训练
@@ -687,7 +703,7 @@ function OnClickSpecialSkill()
             LanguageMgr:ShowTips(1006)
             return
         else
-            CSAPI.OpenView("RoleInfoFussion", {cardData, _data}, openSetting)
+            CSAPI.OpenView("RoleInfoFussion", {cardData, _data, isRealCard, isFighting}, openSetting)
         end
     end
 end
@@ -739,7 +755,7 @@ function OnClickTalentDetail()
     CSAPI.OpenView("RoleCenter", {cardData}, "talent")
 end
 
-local RoleMatrixSkillInfoLua=nil;
+local RoleMatrixSkillInfoLua = nil;
 -- 基建技能
 function OnClickMatrixSkill()
     if (not cardData:GetCRoleData()) then
@@ -747,7 +763,7 @@ function OnClickMatrixSkill()
     end
     ResUtil:CreateUIGOAsync("Role/RoleMatrixSkillInfo", gameObject, function(go)
         local lua = ComUtil.GetLuaTable(go)
-        RoleMatrixSkillInfoLua=lua;
+        RoleMatrixSkillInfoLua = lua;
         lua.Refresh(cardData:GetCRoleData())
     end)
 end
@@ -762,9 +778,9 @@ function SetChangeBtn()
     CSAPI.SetGOActive(btnJieJin, b)
 end
 
---解禁
+-- 解禁
 function OnClickJieJin()
-    CSAPI.OpenView("RoleJieJin",cardData)
+    CSAPI.OpenView("RoleJieJin", cardData)
 end
 
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
@@ -772,9 +788,9 @@ function OnClickVirtualkeysClose()
     ---填写退出代码逻辑/接口
     if RoleMatrixSkillInfoLua and RoleMatrixSkillInfoLua.OnClickMask then
         RoleMatrixSkillInfoLua.OnClickMask()
-        RoleMatrixSkillInfoLua=nil
+        RoleMatrixSkillInfoLua = nil
     else
-        if  topLua.OnClickBack then
+        if topLua.OnClickBack then
             topLua.OnClickBack();
         end
     end

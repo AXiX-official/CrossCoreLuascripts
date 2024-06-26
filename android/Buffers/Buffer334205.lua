@@ -6,6 +6,16 @@ Buffer334205 = oo.class(BuffBase)
 function Buffer334205:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
+-- 死亡时
+function Buffer334205:OnDeath(caster, target)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 334215
+	self:AddAttrPercent(BufferEffect[334215], self.caster, self.creater, nil, "attack",-0.10)
+end
 -- 创建时
 function Buffer334205:OnCreate(caster, target)
 	-- 334205

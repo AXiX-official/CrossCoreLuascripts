@@ -147,6 +147,61 @@ function this:Sort(id, datas, elseData)
     end
 end
 
+-- 排序总表 id ； datas : 需要排序筛选的数据  elseData:辅助排序的自定义参数
+function this:Sort2(id, datas, elseData)
+    local newDatas = {}
+    for k, v in pairs(datas) do
+        table.insert(newDatas, v)
+    end
+    local sortData = self:GetData(id)
+    -- 筛选 
+    local filter = sortData.Filter
+    if (filter) then
+        for k, v in pairs(filter) do
+            if (v[1] ~= 0) then
+                local func = this["Filter_" .. k]
+                local dic = self.ToDic(v)
+                newDatas = func(newDatas, dic)
+            end
+        end
+    end
+    -- 排序方法
+    local sortFuncs = {}
+    local ids = sortData.Sort
+    if id==4 and elseData and elseData.isTower==true then
+        table.insert(sortFuncs,function(a,b)
+            local aNum=a.canDrag and 1 or 0;
+            local bNum=b.canDrag and 1 or 0;
+            if aNum~=bNum then
+                return aNum>bNum;
+            end
+        end);
+    end
+    for k, v in ipairs(ids) do
+        table.insert(sortFuncs, this["SortFunc_" .. v])
+    end
+    table.sort(newDatas, function(a, b)
+        local result = nil
+        for k, v in ipairs(sortFuncs) do
+            if (result == nil) then
+                result = v(a, b, sortData, elseData) -- 传值
+            else
+                break
+            end
+        end
+        if (result == nil) then
+            return false
+        end
+        return result
+    end)
+    -- 上下
+    if (sortData.UD == 1) then
+        return newDatas
+    else
+        return FuncUtil.Reverse(newDatas)
+    end
+end
+
 -- 筛选数据转成字典
 function this.ToDic(arr)
     local dic = {}
@@ -307,6 +362,20 @@ function this.Filter_CfgIsAvatar(newDatas, dic)
     end
     return _newDatas
 end
+--成就
+function this.Filter_CfgAchieveQualitySort(newDatas, dic)
+    local _newDatas = {}
+    for i, v in pairs(newDatas) do
+        for k, val in pairs(dic) do
+            if (v:GetQuality() and dic[v:GetQuality()]) then
+                table.insert(_newDatas, v)
+                break
+            end
+        end
+    end
+    return _newDatas
+end
+
 --------------------------------------------------筛选end-----------------------------------------------------
 
 --------------------------------------------------排序-----------------------------------------------------
@@ -648,7 +717,7 @@ function this.SortFunc_7000(a, b)
     if a.id == b.id then
         return nil
     else
-        return a.id < b.id
+        return a.id > b.id
     end
 end
 
@@ -687,6 +756,50 @@ end
 
 function this.SortFunc_8000(a, b)
     return a:GetSortIndex() < b:GetSortIndex()
+end
+
+function this.SortFunc_8000(a, b)
+    return a:GetSortIndex() < b:GetSortIndex()
+end
+
+function this.SortFunc_9000(a, b)
+    return a:GetID() > b:GetID()
+end
+
+function this.SortFunc_9001(a, b)
+    if a:GetQuality() == b:GetQuality() then
+        return nil
+    else
+        return a:GetQuality() > b:GetQuality()
+    end
+end
+
+function this.SortFunc_9002(a, b)
+    local index1 = (a:IsFinish() and not a:IsGet()) and 3 or 2
+    local index2 = (b:IsFinish() and not b:IsGet()) and 3 or 2
+    index1 = a:IsGet() and 1 or index1
+    index2 = b:IsGet() and 1 or index2
+    if index1 == index2 then
+        return nil
+    else
+        return index1 > index2
+    end
+end
+
+function this.SortFunc_9003(a, b)
+    if a:GetPercent(true) == b:GetPercent(true) then
+        return nil
+    else
+        return a:GetPercent(true) > b:GetPercent(true)
+    end
+end
+
+function this.SortFunc_9004(a, b)
+    if a:GetFinishTime() == b:GetFinishTime() then
+        return nil
+    else
+        return a:GetFinishTime() > b:GetFinishTime()
+    end
 end
 --------------------------------------------------排序end-----------------------------------------------------
 return this

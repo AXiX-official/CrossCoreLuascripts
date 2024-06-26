@@ -136,7 +136,7 @@ end
 -- onlyInSell: true:非突破皮肤未获得时，在商店出售时才插入列表  false:都插入列表
 function this:GetAllSkinsArr(onlyInSell)
     local skins = {}
-    local _skins = RoleSkinMgr:GetDatas(self.cfg.id)
+    local _skins = RoleSkinMgr:GetDatas(self.cfg.id,true)
     for n, v in pairs(_skins) do
         if (onlyInSell) then
             if (v:CheckIsBreakType() or v:CheckCanUse() or v:IsInSell()) then
@@ -235,6 +235,10 @@ end
 -- 出生地 id
 function this:GetBlood()
     return self.cfg and self.cfg.sBirthPlace or 1
+end
+
+function this:GetBelonging()
+    return self.cfg and self.cfg.sBelonging or  1
 end
 
 -- 取第一个能力

@@ -12,8 +12,8 @@ function Skill503000303:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11005], caster, target, data, 0.2,5)
 end
--- 攻击结束
-function Skill503000303:OnAttackOver(caster, target, data)
+-- 暴击伤害前(OnBefourHurt之前)
+function Skill503000303:OnBefourCritHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -24,11 +24,20 @@ function Skill503000303:OnAttackOver(caster, target, data)
 	else
 		return
 	end
+	-- 8429
+	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
+	-- 8112
+	if SkillJudger:Greater(self, caster, self.card, true,count29,0) then
+	else
+		return
+	end
 	-- 8200
 	if SkillJudger:IsCurrSkill(self, caster, target, true) then
 	else
 		return
 	end
 	-- 503000301
-	self:ClosingBuffByID(SkillEffect[503000301], caster, target, data, 1,1003)
+	self:AddTempAttr(SkillEffect[503000301], caster, self.card, data, "crit_rate",0.15)
+	-- 503000302
+	self:AddTempAttr(SkillEffect[503000302], caster, self.card, data, "crit",0.3)
 end

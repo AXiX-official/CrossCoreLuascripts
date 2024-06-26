@@ -156,7 +156,7 @@ end
 -- end
 
 -- 加载怪物组(我方阵型)
-function SingleFightMgrServer:MakeFightDataFromGroup(groupID, cid, model)
+function SingleFightMgrServer:MakeFightDataFromGroup(groupID, cid, model, modelA)
 -- ["data"]:
 -- {
 --     ["data"]:
@@ -242,6 +242,10 @@ function SingleFightMgrServer:MakeFightDataFromGroup(groupID, cid, model)
 				carddata.data.model = model
 			end
 
+			if monsterID == cid and modelA then
+				carddata.data.modelA = modelA
+			end
+
 			table.insert(data, carddata)
 		end
 	end
@@ -311,7 +315,7 @@ end
 ------------------------------------------------------------------
 -- 创建一个副本单机战斗
 function CreateDuplicateSingleFight(proto)
-
+	LogTable(proto, "CreateDuplicateSingleFight")
 	local groupID, nDuplicateID, tData, exData = proto.groupID, proto.nDuplicateID, proto.data, proto.exData
 
 	CURRENT_TIME=TimeUtil:GetTime()
@@ -324,7 +328,7 @@ function CreateDuplicateSingleFight(proto)
 	mgr.myOID      = proto.myOID
 	mgr.monsterOID = proto.monsterOID
 
-	LogTable(tData)
+	LogTable(tData,"CreateDuplicateSingleFight tData")
 	mgr:AddPlayer(PlayerClient:GetID(), 1)
 	mgr:LoadConfig(groupID, 1)
 	mgr:LoadData(1, tData.data, nil, tData.tCommanderSkill)
@@ -381,7 +385,7 @@ end
 
 ------------------------------------------------------------------
 -- 创建一个单机模拟战斗(开场用)
-function CreateSimulateFight(groupID, groupID2, cbOver, seed, cid, model)
+function CreateSimulateFight(groupID, groupID2, cbOver, seed, cid, model, modelA)
 
 	LogDebugEx("CreateSimulateFight",groupID, groupID2, seed)
 	local fid = UID(10)
@@ -389,7 +393,7 @@ function CreateSimulateFight(groupID, groupID2, cbOver, seed, cid, model)
 	local mgr = SingleFightMgrServer(fid, groupID2, SceneType.SinglePVE, seed, 0)
 	g_FightMgrServer = mgr
 
-	local data = mgr:MakeFightDataFromGroup(groupID, cid, model)
+	local data = mgr:MakeFightDataFromGroup(groupID, cid, model, modelA)
 	LogTable(data, "MakeFightDataFromGroup")
 
 	mgr:AddPlayer(PlayerClient:GetID(), 1)
@@ -422,13 +426,139 @@ function CreateSimulateFight(groupID, groupID2, cbOver, seed, cid, model)
 	return mgr
 end
 
--- 训练(试玩)  可选参数[cid, model] 需要修改模型的角色id和模型
-function CreateDirllFight(groupID, groupID2, cbOver, cid, model)
+-- 训练(试玩)  可选参数[cid, model, modelA] 需要修改模型的角色id/模型/同调,机神,形态切换的模型id
+function CreateDirllFight(groupID, groupID2, cbOver, cid, model, modelA)
 	-- LogDebugEx("CreateDirllFight",groupID, groupID2, os.time())
-	return CreateSimulateFight(groupID, groupID2, cbOver, os.time(), cid, model)
+	return CreateSimulateFight(groupID, groupID2, cbOver, os.time(), cid, model, modelA)
+end
+
+-- 创建一个单机模拟战斗
+function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill)
+
+	LogDebugEx("CreateSimulateFight",groupID, groupID2, seed)
+	-- ASSERT()
+	local fid = UID(10)
+	local seed = seed or 1 -- 结果必然确定
+	local mgr = SingleFightMgrServer(fid, groupID2, SceneType.SinglePVE, seed, 0)
+	g_FightMgrServer = mgr
+
+	-- local data = mgr:MakeFightDataFromGroup(groupID, cid, model)
+	-- LogTable(data, "MakeFightDataFromGroup")
+	data.data = Halo:Calc(data.data)
+	data.tCommanderSkill = tCommanderSkill
+
+	mgr:AddPlayer(PlayerClient:GetID(), 1)
+	mgr:LoadConfig(groupID2, 1)
+	mgr:LoadData(1, data.data, nil, tCommanderSkill)
+	mgr:AfterLoadData({})
+
+	mgr.Over = function(self, stage, winer)
+		LogDebugEx("CreateSimulateFight:Over", self.type, self.nDuplicateID, winer)
+		self:AddCmd(CMD_TYPE.End, {stage = stage, winer = winer})
+		if cbOver then
+			cbOver(stage, winer)
+		end
+		-- g_FightMgrServer = nil
+		FightMgrBase.Over(self, stage, winer)
+	end
+
+	mgr:AddCmd(
+		CMD_TYPE.InitData,
+		{
+			seed = seed,
+			stype = SceneType.SinglePVE,
+			groupID = groupID2,
+			teamID = 1,
+			data = data,
+			exData = {}
+		}
+	)
+	-- ASSERT()
+	return mgr
 end
 
 
+-- data 结构
+-- {
+--     [ "data" ]s = 
+--     {
+--         [ 1 ]n = 
+--         {
+--             [ "cid" ]s = [ 71010 ]f
+--             [ "uid" ]s = [ 1002 ]f
+--             [ "row" ]s = [ 2 ]f
+--             [ "col" ]s = [ 2 ]f
+--             [ "maxhp" ]s = [ 2213 ]f
+--             [ "fuid" ]s = [ 1001 ]f  -- 如果是好友
+--             [ "npcid" ]s = [ 1001 ]f -- 如果是npc
+--             [ "data" ]s = 以下是配置表的信息
+--             {
+--                 [ "isLeader" ]s = [ 'true' ]boolean
+--                 [ "sp_race" ]s = [ 5 ]f
+--                 [ "sp_race2" ]s = [ 10 ]f
+--                 [ "hp" ]s = [ 2213 ]f
+--                 [ "nClass" ]s = [ 8 ]f
+--                 [ "real_cid" ]s = [ 71010 ]f
+--                 [ "id" ]s = [ 71010 ]f
+--                 [ "hot" ]s = [ 100 ]f
+--                 [ "cuid" ]s = [ 71010 ]f
+--                 [ "break_level" ]s = [ 1 ]f
+--                 [ "intensify_level" ]s = [ 1 ]f
+--                 [ "name" ]s = [ "总队长" ]s
+--                 [ "nStep" ]s = [ 0 ]f
+--                 [ "nJump" ]s = [ 0 ]f
+--                 [ "hp_percent" ]s = [ 1 ]f
+--                 [ "performance" ]s = [ 844 ]f
+--                 [ "fight_cost" ]s = [ 0 ]f
+--                 [ "career" ]s = [ 2 ]f
+--                 [ "nMoveType" ]s = [ 1 ]f
+--                 [ "col" ]s = [ 2 ]f
+--                 [ "level" ]s = [ 13 ]f
+--                 [ "quality" ]s = [ 5 ]f
+--                 [ "row" ]s = [ 2 ]f
+--                 [ "card_exp_add" ]s = [ 0 ]f
+--                 [ "plr_exp_add" ]s = [ 0 ]f
+--                 [ "gold_add" ]s = [ 0 ]f
+--                 [ "max_level" ]s = [ 20 ]f
+--                 [ "model" ]s = [ 7101001 ]f
+--                 [ "skills" ]s = 
+--                 {
+--                     [ 1 ]n = [ 4710101 ]f
+--                     [ 2 ]n = [ 710100101 ]f
+--                     [ 3 ]n = [ 710100201 ]f
+--                     [ 4 ]n = [ 710100301 ]f
+--                     [ 5 ]n = [ 710100401 ]f
+--                     [ 6 ]n = [ 710101301 ]f
+--                 }
+--                 [ "np" ]s = [ 0 ]f
+--                 [ "attack" ]s = [ 299 ]f
+--                 [ "maxhp" ]s = [ 2213 ]f
+--                 [ "defense" ]s = [ 134 ]f
+--                 [ "speed" ]s = [ 110 ]f
+--                 [ "crit" ]s = [ 1.6 ]f
+--                 [ "crit_rate" ]s = [ 0.11 ]f
+--                 [ "hit" ]s = [ 0 ]f
+--                 [ "resist" ]s = [ 0 ]f
+--                 [ "sp" ]s = [ 30 ]f
+--             }
+
+--         }
+--     }
+-- }
+
+--     [ "tCommanderSkill" ]s = 	
+--		{
+--			[ 1 ]n = [ 1020101 ]f
+--			[ 2 ]n = [ 1020201 ]f
+--			[ 3 ]n = [ 1020301 ]f
+--		},
+
+-- 自定义数据试玩战斗
+function CreateDirllFightByData(data, groupID2, cbOver, tCommanderSkill)
+	LogTable(data)
+	-- LogDebugEx("CreateDirllFight",groupID, groupID2, os.time())
+	return CreateSimulateFightByData(data, groupID2, cbOver, os.time(), tCommanderSkill)
+end
 -- ------------------------------------------------------------------
 -- -- 创建一个世界boss战斗
 -- function CreateBossFight(proto)

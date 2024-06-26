@@ -20,6 +20,9 @@ eDuplicateType.Tower           = 5 -- 爬塔
 eDuplicateType.BattleField     = 6 -- 战场
 eDuplicateType.BattleFieldBoss = 7 -- 战场boss
 eDuplicateType.TaoFa           = 8 -- 讨伐
+eDuplicateType.NewTower        = 9 -- 异构空间
+eDuplicateType.Rogue           = 10 -- 乱序演习
+
 eDuplicateType.Materials       = 101 -- 材料副本
 eDuplicateType.Equip           = 102 -- 装备副本
 eDuplicateType.Gold            = 103 --金币

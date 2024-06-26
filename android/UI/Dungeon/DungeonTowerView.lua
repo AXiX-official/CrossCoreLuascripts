@@ -97,7 +97,7 @@ function OnBattleEnter()
         if isMax or isAddToMax then
             local dialogData = {}
             dialogData.content = isMax and LanguageMgr:GetByID(15079) or LanguageMgr:GetByID(15078)
-            -- dialogData.okText = LanguageMgr:GetByID(1031)
+            dialogData.okText = LanguageMgr:GetByID(1031)
             dialogData.cancelText = LanguageMgr:GetByID(1003)
             dialogData.okCallBack = function()
                 EnterNextView(currItem2)
@@ -156,6 +156,8 @@ function Update()
 end
 
 function OnOpen()
+    -- local fit1,fit2 = -CSAPI.UIFitoffsetTop(),-CSAPI.UIFoffsetBottom()
+    -- offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920 + fit1 + fit2) / 2
     offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920) / 2
     left = left + offsetW
     selIndex = 0

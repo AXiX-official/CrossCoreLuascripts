@@ -394,7 +394,8 @@ function ConfigParser:ClientConfig()
     local FinallyCheckConfig = {
         AvatarFrame = 1,
         CfgAvatar = 1,
-        CfgShopPage = 1
+        CfgShopPage = 1,
+        CfgReturningActivity = 1,
     }
 
     -- 检查/特殊处理以及设为只读

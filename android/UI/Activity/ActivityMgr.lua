@@ -27,8 +27,7 @@ function this:GetActivityDownAddress(type)
     -- local curServer = GetCurrentServer()
     local currPlatform = CSAPI.GetPlatform()
     local str1 = currPlatform == 8 and "ios" or "android"
-    local str2 = "text"
-    if (CSAPI.GetChannelType() == ChannelType.BliBli) then
+	local str2 = "text"    if (CSAPI.GetChannelType() == ChannelType.BliBli) then
         str2 = "bilibili"
     elseif (CSAPI.GetChannelType() == ChannelType.Normal or CSAPI.GetChannelType() == ChannelType.TapTap) then
         str2 = "official"
@@ -415,27 +414,35 @@ end
 function this:CheckRedPointData()
     local redTypes1 = {}
     local redTypes2 = {}
+    local redTypes3 = {}
     if ActivityListType then
         for k, v in pairs(ActivityListType) do
             local cfg = Cfgs.CfgActiveList:GetByID(v)
             if cfg then
-                if cfg.group and cfg.group == 2 then
-                    table.insert(redTypes2, {
-                        type = v,
-                        b = self:CheckRed(v) and 1 or 0
-                    })
-                else
-                    table.insert(redTypes1, {
-                        type = v,
-                        b = self:CheckRed(v) and 1 or 0
-                    })
+                if cfg.group then
+                    if cfg.group == 2 then
+                        table.insert(redTypes2, {
+                            type = v,
+                            b = self:CheckRed(v) and 1 or 0
+                        })
+                    elseif cfg.group == 3 then
+                        table.insert(redTypes3, {
+                            type = v,
+                            b = self:CheckRed(v) and 1 or 0
+                        })
+                    else
+                        table.insert(redTypes1, {
+                            type = v,
+                            b = self:CheckRed(v) and 1 or 0
+                        })
+                    end
                 end
             end
-
         end
     end
     RedPointMgr:UpdateData(RedPointType.ActivityList1, redTypes1)
     RedPointMgr:UpdateData(RedPointType.ActivityList2, redTypes2)
+    RedPointMgr:UpdateData(RedPointType.ActivityList3, redTypes3)
 end
 
 -- type:ActivityListType
@@ -480,6 +487,23 @@ function this:CheckRed(type)
             end
         end
         return false
+    elseif type == ActivityListType.Exchange then
+        local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.Exchange)
+        if cfg and cfg.info and cfg.info[1] and cfg.info[1].shopId then
+            local page = ShopMgr:GetPageByID(cfg.info[1].shopId)
+            if page then
+                local datas = page:GetCommodityInfos(true)
+                if datas and #datas > 0 then
+                    local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
+                    for i, v in ipairs(datas) do
+                        if infos[v:GetID()] and infos[v:GetID()] == 1 and v:GetNum() > 0 and ShopCommFunc.CheckCanPay(v,1) then
+                            return true
+                        end
+                    end
+                end
+            end
+        end
+        return false
     else
         local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. type) == 0
         return isRed
@@ -487,8 +511,8 @@ function this:CheckRed(type)
 end
 
 -- 活动内容为空
-function this:IsActivityListNull(group)
-    local isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, "ExtraActivityView")
+function this:IsActivityListNull(viewName, group)
+    local isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, viewName)
     if isOpen and self.activityListDatas then
         for i, v in pairs(self.activityListDatas) do
             if v.cfg and v.cfg.group == group and v.isOpen then

@@ -250,11 +250,7 @@ function Update()
 			cgTimer = 0;
 			if cgIndex == #cgList then				
 				CSAPI.SetGOActive(boxParent, false)
-				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType(), cgCall, function()
-					-- CSAPI.SetGOActive(boxParent, true)					
-					-- PlayContent();
-					-- isCGPlay = false
-				end);
+				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType(), cgCall);
 				anyWayObj.enabled = true;
 				CSAPI.SetTimeScale(playPower[powerIndex]);--还原快进速度							
 			else
@@ -448,6 +444,7 @@ function PlayPlot()
 					isCGPlay = false
 					isChangeBg = false
 				end
+				cgCall=nil
 			end, 0.5)
 		end		
 	else
@@ -622,7 +619,7 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 				PlotTween.Twinkle(bg, 0.25,nil,cgDelay / 1000)	
 			end
 			FuncUtil:Call(function()
-				if(gameObject and not effectInfos[plotID].isJumpCG and currentPlotData) then
+				if(gameObject and currentPlotData) then
 					CSAPI.SetGOActive(grayEffect, currentPlotData ~= nil and currentPlotData:IsGray() or false);
 					SetBackGround(imgPath);
 					if roleCB then
@@ -908,7 +905,7 @@ function OnClickAnyway()
 	if(FinshEffect()) then --跳过特效
 		do return end
 	end
-	
+
 	if not isAuto and not plotBox.IsTween() then		
 		delayTimer = 0
 		if IsPlayOver() then		
@@ -928,6 +925,10 @@ end
 
 --提前终止所有效果
 function FinshEffect()	
+	if cgCall then  --存在cg动画不能跳过
+		return true
+	end
+
 	if(IsPlayOver()) then --已经播放完就不需要跳过特效
 		return false
 	end
@@ -940,41 +941,33 @@ function FinshEffect()
 		isEffect = true
 	end
 	
-	if(cgList) then --背景
-		if(not effectInfos[plotID].isJumpCG) then			
-			CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
-			SetBackGround(cgList[#cgList]);
-			if cgCall then
-				-- cgCall()
-				local clearRoles = currentPlotData:GetClearRoles()
-				local pInfos = currentPlotData:GetAllRoleInfos();
-				if clearRoles then
-					ClearImg(clearRoles)
-				else
-					UpdateRoleImg(pInfos)
-				end	
-			end			
-			cgIndex = - 1;
-			cgList = nil;
-			cgTimer = 0;
-			anyWayObj.enabled = true;
-			CSAPI.SetTimeScale(playPower[powerIndex])
-			isCGPlay = false
-			isChangeBg = false
-			CSAPI.SetGOActive(boxParent, true)
-			PlayContent();
-			effectInfos[plotID].isJumpCG = true
-			isEffect = true
-		end
-		-- if(not effectInfos[plotID].isPlayBox) then
-		-- 	isCGPlay = false
-		-- 	isChangeBg = false
-		-- 	CSAPI.SetGOActive(boxParent, true)
-		-- 	PlayContent();
-		-- 	effectInfos[plotID].isPlayBox = true
-		-- 	isEffect = true
-		-- end
-	end
+	-- if(cgList) then --背景
+	-- 	if(not effectInfos[plotID].isJumpCG) then			
+	-- 		CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
+	-- 		SetBackGround(cgList[#cgList]);
+	-- 		if cgCall then
+	-- 			-- cgCall()
+	-- 			local clearRoles = currentPlotData:GetClearRoles()
+	-- 			local pInfos = currentPlotData:GetAllRoleInfos();
+	-- 			if clearRoles then
+	-- 				ClearImg(clearRoles)
+	-- 			else
+	-- 				UpdateRoleImg(pInfos)
+	-- 			end	
+	-- 		end			
+	-- 		cgIndex = - 1;
+	-- 		cgList = nil;
+	-- 		cgTimer = 0;
+	-- 		anyWayObj.enabled = true;
+	-- 		CSAPI.SetTimeScale(playPower[powerIndex])
+	-- 		isCGPlay = false
+	-- 		isChangeBg = false
+	-- 		CSAPI.SetGOActive(boxParent, true)
+	-- 		PlayContent();
+	-- 		effectInfos[plotID].isJumpCG = true
+	-- 		isEffect = true
+	-- 	end
+	-- end
 	
 	if(blurTimer > 0) then --模糊
 		blur.Progress = blur.Progress + blurTimer * blurSpeed

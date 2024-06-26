@@ -9,7 +9,7 @@ end
 -- 创建时
 function Buffer304800101:OnCreate(caster, target)
 	-- 304800101
-	self:AddAttr(BufferEffect[304800101], self.caster, self.card, nil, "attack",0.05*self.nCount)
+	self:AddAttrPercent(BufferEffect[304800101], self.caster, self.card, nil, "attack",0.05*self.nCount)
 	-- 304800102
 	self:AddAttr(BufferEffect[304800102], self.caster, self.card, nil, "bedamage",-0.05*self.nCount)
 end

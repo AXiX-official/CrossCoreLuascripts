@@ -119,11 +119,11 @@ function RefreshPanel()
     if (isRefresh) then
         curIndex = curIndex1
         if (curItem) then
-            curItem.PlayFade(true,function ()
+            UIUtil:SetObjFade(curItem.gameObject,1,0,function ()
                 CSAPI.SetGOActive(curItem.gameObject, false)
                 curItem = nil
                 SetRight()
-            end)
+            end,200)
         else
             SetRight()
         end
@@ -149,14 +149,14 @@ function SetRight()
             CSAPI.SetGOActive(rightItems[cfg.id].gameObject, true)
             rightItems[cfg.id].isFirst = false
             rightItems[cfg.id].Refresh(data, {cfg = cfg})
-            rightItems[cfg.id].PlayFade(false)
+            UIUtil:SetObjFade(rightItems[cfg.id].gameObject,0,1,nil,200)
             curItem = rightItems[cfg.id]
         else
             if (cfg.path) then
                 ResUtil:CreateUIGOAsync(cfg.path, right, function(go)
                     local lua = ComUtil.GetLuaTable(go)
                     lua.Refresh(data, {cfg = cfg})
-                    lua.PlayFade(false)
+                    UIUtil:SetObjFade(go,0,1,nil,200)
                     rightItems[cfg.id] = lua
                     curItem = lua
                 end)
@@ -171,6 +171,13 @@ end
 function ShowTop(_cfg)
     if _cfg.path and _cfg.id == ActivityListType.Investment then
         top.SetMoney({{ITEM_ID.DIAMOND,140001}})
+    elseif _cfg.id == ActivityListType.Exchange then
+        local info =_cfg.info and _cfg.info[1] or nil
+        local tab = {}
+        if info and info.goodId then
+            tab = {{info.goodId}}
+        end
+        top.SetMoney(tab)
     else
         top.SetMoney()
     end

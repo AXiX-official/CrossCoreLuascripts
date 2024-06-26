@@ -19,6 +19,8 @@ local conf = {
 {'2',	'2',	'',	'',	'',	'5',	'10',	'arch_relaxing_afternoon',	''},
 {'2',	'2',	'',	'',	'',	'6',	'13',	'arch_greenhouse',	'80407'},
 {'2',	'2',	'',	'',	'',	'7',	'14',	'arch_starry_night',	'80408'},
+{'2',	'2',	'',	'',	'',	'9',	'15',	'arch_fun_with_mew',	''},
+{'2',	'2',	'',	'',	'',	'8',	'16',	'arch_tender_dream',	'80409'},
 {'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
 {'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},

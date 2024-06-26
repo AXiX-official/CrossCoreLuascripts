@@ -85,10 +85,9 @@ function OnClickEnter()
 			PlayerPrefs.SetInt("key_for_dirll_fight_2", enemy_monster_id);
 			CreateDirllFight(role_monster_id, enemy_monster_id, function(stage, winer)
 				FightActionMgr:Push(FightActionMgr:Apply(FightActionType.FightEnd, {custom_result = 1, bIsWin = 1, content = LanguageMgr:GetByID(15054)}));
-			end, cfgRole.roleID, cardData:GetSkinID());
+			end, cfgRole.roleID, cardData:GetSkinID(),RoleTool.GetElseSkin(cardData));
 
 			RoleMgr:SetRoleListSortData() -- 保存卡牌列表界面的排序，以便战斗返回时按保存的打开
-
 		else
 			LogError("获取不到怪物组id！" .. role_monster_id .. "|" .. enemy_monster_id)
 		end

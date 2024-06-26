@@ -25,7 +25,9 @@ function this:GetFunc(sName)
         self.funcs["DungeonRole"] = self.DungeonActivity
         self.funcs["DungeonShadowSpider"] = self.DungeonActivity
         self.funcs["DungeonPlot"] = self.DungeonActivity
+        self.funcs["DungeonFeast"] = self.DungeonActivity
         self.funcs["BattleField"] = self.DungeonActivity
+        self.funcs["TowerView"] = self.DungeonActivity
         -- self.funcs["RoleListView"] = self.SetPage
         -- self.funcs["Bag"] = self.SetPage
         self.funcs["ShopView"] = self.Shop
@@ -38,6 +40,7 @@ function this:GetFunc(sName)
         self.funcs["Dorm"] = self.Dorm
         self.funcs["ActivityListView"] = self.ActivityListView
         self.funcs["SpeicalJump"] = self.SpeicalJump
+        self.funcs["AchievementView"] = self.Achievement
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -243,7 +246,8 @@ function this.DungeonActivity(cfg)
                 }, nil)
             end
         else
-            LogError("缺少跳转的章节数据!跳转id:" .. cfg.id)
+            CSAPI.OpenView(cfg.sName)
+            -- LogError("缺少跳转的章节数据!跳转id:" .. cfg.id)
         end
     else
         FuncUtil:Call(function()
@@ -272,6 +276,11 @@ end
 function this.Setting(cfg)
     this.CheckClose(cfg);
     CSAPI.OpenView(cfg.sName, nil, tonumber(cfg.page))
+end
+
+function this.Achievement(cfg)
+    this.CheckClose(cfg);
+    CSAPI.OpenView(cfg.sName, nil, {group = cfg.val1,itemId = cfg.val2})
 end
 
 -- 返回获取跳转状态的方法名
@@ -353,7 +362,6 @@ function this.DungeonActivityState(cfg)
     local sectionData = DungeonMgr:GetSectionData(cfg.val1);
     if sectionData then
         local isOpen, _lockStr = sectionData:GetOpen()
-
         local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if isOpen and openInfo then
             if string.match(cfg.sName,"DungeonActivity") then 
@@ -368,7 +376,6 @@ function this.DungeonActivityState(cfg)
                 end
             end
         end
-
         if not isOpen then -- 章节开启检测
             return JumpModuleState.Close, _lockStr
         end
@@ -379,8 +386,8 @@ function this.DungeonActivityState(cfg)
                 return JumpModuleState.Close, _lockStr
             end
         end
-        return JumpModuleState.Normal
     end
+    return JumpModuleState.Normal
 end
 
 function this.ShopState(cfg)

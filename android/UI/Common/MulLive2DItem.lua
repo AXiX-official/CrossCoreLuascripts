@@ -229,7 +229,7 @@ function ItemDragEndCB(cfgChild, x, y)
     else
         if (content.gestureDatas and content.gestureDatas.stopTime >= 0) then
             local forward = false
-            local limit = content.gestureDatas.limitPerc or 1
+            local limit = content.gestureDatas.splitPerc or 1
             if (limit ~= 1) then
                 local cur = spineTools:GetTrackTimePercent(cfgChild.trackIndex)
                 if (limit - cur < 0.01) then
@@ -266,8 +266,8 @@ function PlayAudio(cfgChild)
                 local len = #audioIds
                 index = CSAPI.RandomInt(1, len)
             end
-            audioId = audioIds[index]
         end
+        audioId = audioIds[index]
     end
     if (audioId) then
         RoleAudioPlayMgr:PlayById(modelId, audioId, PlayCB, EndCB)
@@ -486,62 +486,70 @@ function SetContent(cfgChild)
             end
         end
     end
-    -- 动作组 (不是可以多次点击的要在停止时才能继续点击，是多次点击的要在次数未用完时才能点击)
+    -- 动作组
     if (content.actions) then
-        local num = 1
-        local isNext = false
-        local isRecover, isPlay = spineTools:CheckActionsCanClick(GetTrackIndex(cfgChild))
-        local _num = records[cfgChild.index] or num
-        -- 当前片段可以多次点击
-        if (records[cfgChild.index] and content.actions[records[cfgChild.index]][4] ~= nil) then
-            local key = cfgChild.index .. "_" .. _num
-            if (clickCounts[key] and clickCounts[key] == 0) then
-                -- 切换到下一个动画
-                clickCounts[key] = content.actions[_num][4]
-                isNext = true
-            else
-                -- 还是当前动画
-                if (not clickCounts[key]) then
-                    clickCounts[key] = content.actions[_num][4]
-                end
-                clickCounts[key] = clickCounts[key] - 1
-            end
-        else
-            if (isRecover or isPlay) then
-                -- 当前动作不能中断
-                sName = nil
-            else
-                -- 切换到下一个动画
-                if (records[cfgChild.index]) then
-                    isNext = true
-                end
-            end
-        end
 
-        if (sName ~= nil) then
-            if (isNext) then
-                -- 是不是最后 
-                if (_num == #content.actions) then
-                    sName = nil
-                else
-                    num = _num + 1
-                end
-            else
-                num = _num --todo 是否做成点击后直接设置可以播放到最后？
-            end
-        end
-        progress = content.actions[num][2]
-        records[cfgChild.index] = num
     end
+    -- -- 动作组 (不是可以多次点击的要在停止时才能继续点击，是多次点击的要在次数未用完时才能点击)
+    -- if (content.actions) then
+    --     local num = 1
+    --     local isNext = false
+    --     local isRecover, isPlay = spineTools:CheckActionsCanClick(GetTrackIndex(cfgChild))
+    --     local _num = records[cfgChild.index] or num
+    --     -- 当前片段可以多次点击
+    --     if (records[cfgChild.index] and content.actions[records[cfgChild.index]][4] ~= nil) then
+    --         local key = cfgChild.index .. "_" .. _num
+    --         if (clickCounts[key] and clickCounts[key] == 0) then
+    --             -- 切换到下一个动画
+    --             clickCounts[key] = content.actions[_num][4]
+    --             isNext = true
+    --         else
+    --             -- 还是当前动画
+    --             if (not clickCounts[key]) then
+    --                 clickCounts[key] = content.actions[_num][4]
+    --             end
+    --             clickCounts[key] = clickCounts[key] - 1
+    --         end
+    --     else
+    --         if (isRecover or isPlay) then
+    --             -- 当前动作不能中断
+    --             sName = nil
+    --         else
+    --             -- 切换到下一个动画
+    --             if (records[cfgChild.index]) then
+    --                 isNext = true
+    --             end
+    --         end
+    --     end
+
+    --     if (sName ~= nil) then
+    --         if (isNext) then
+    --             -- 是不是最后 
+    --             if (_num == #content.actions) then
+    --                 sName = nil
+    --             else
+    --                 num = _num + 1
+    --             end
+    --         else
+    --             num = _num --todo 是否做成点击后直接设置可以播放到最后？
+    --         end
+    --     end
+    --     progress = content.actions[num][2]
+    --     records[cfgChild.index] = num
+    -- end
     -- 播放到指定百分比 
     if (content.clicks) then
-        local num = 1
-        if (records[cfgChild.index] and records[cfgChild.index] < #content.clicks) then
-            num = records[cfgChild.index] + 1
-        end
-        records[cfgChild.index] = num
-        progress = content.clicks[num]
-        timeScale = 0
+        if(spineTools:CheckMulClickIsPlay(GetTrackIndex(cfgChild))) then 
+            sName = nil 
+        else 
+            local num = 1
+            if (records[cfgChild.index] and records[cfgChild.index] < #content.clicks) then
+                num = records[cfgChild.index] + 1
+            end
+            records[cfgChild.index] = num
+            progress = content.clicks[num]
+            timeScale = progress==0 and -1 or 1
+        end 
     end
     return sName, timeScale, progress
 end

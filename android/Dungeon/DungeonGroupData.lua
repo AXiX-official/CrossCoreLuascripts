@@ -60,6 +60,20 @@ function this:GetDungeonGroups()
     return nil
 end
 
+function this:GetDungeonCfgs()
+    local ids = self:GetDungeonGroups()
+    local cfgs = {}
+    if ids and #ids > 0 then
+        for i, v in ipairs(ids) do
+            local cfg = Cfgs.MainLine:GetByID(v)
+            if cfg then
+                table.insert(cfgs,cfg)
+            end
+        end
+    end
+    return cfgs
+end
+
 --获取星数
 function this:GetStar()
     local groups = self:GetDungeonGroups()
@@ -138,6 +152,10 @@ end
 
 function this:GetTargetJson()
     return self.cfg and self.cfg.target
+end
+
+function this:GetIcon()
+    return self.cfg and self.cfg.icon or ""
 end
 
 -----------------------------------------------TaoFa-----------------------------------------------

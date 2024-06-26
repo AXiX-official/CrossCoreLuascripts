@@ -376,6 +376,12 @@ function this:LoadBigImg2(target, res, nativeSize, callBack)
     CSAPI.LoadImg(target, res, nativeSize, callBack);
 end
 
+-- 加载大图jpg
+function this:LoadMenuBg(target, res, nativeSize, callBack)
+    res = self.bigImg .. "/" .. res;
+    CSAPI.LoadImg(target, res, nativeSize, callBack);
+end
+
 function this:LoadBigSR(target, res, nativeSize, callBack)
     res = self.bigImg .. "/" .. res .. ".png";
     CSAPI.LoadSR(target, res, nativeSize, callBack);
@@ -515,6 +521,18 @@ function this:Init()
     self.SkinSetIcon=ResIconUtil.New("SkinSetIcon")
     self.Tag=ResIconUtil.New("Tag")
     self.StorePromote = ResImgUtil.New("UIs/ShopPromote");--商店推荐页
+    --badge
+    self.BadgeBg = ResIconUtil.New("Badge/BG") --徽章组背景
+    self.Badge = ResIconUtil.New("Badge/Icon") --徽章图片
+    --Trials
+    self.TrialsList = ResIconUtil.New("Trials/List")
+    self.TrialsPage = ResIconUtil.New("Trials/Page")
+    --Achievement
+    self.AchievementQua = ResIconUtil.New("Achievement/Quality") --成就品质
+    self.Achievement = ResIconUtil.New("Achievement/Icon") --成就图标
+    self.AchievementType = ResIconUtil.New("Achievement/Type") --类型
+    --feast
+    self.Feast = ResIconUtil.New("Feast")
 end
 
 return this;

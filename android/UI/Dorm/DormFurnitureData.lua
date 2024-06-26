@@ -197,6 +197,8 @@ end
 4：观看
 5：玩模型
 6：浇水
+7: 跳舞机
+8：操作电脑
 ]]
 function this:GetInteActionID(targetGO)
     local inteActionId = self:GetCfg().inteActionId or 0

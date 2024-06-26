@@ -241,6 +241,9 @@ function OnOpen()
     jumpData = data
     local baseScale = {1920, 1080}
 	local curScale = CSAPI.GetMainCanvasSize()
+    -- local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
+    -- local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
+    -- offset.x =  (curScale[0] - baseScale[1] + fit1 + fit2)/2
     offset.x =  (curScale[0] - baseScale[1])/2
     offset.y = (curScale[1] - baseScale[2])/2 
 
@@ -1131,9 +1134,7 @@ end
 ------------------------------------军演-----------------------------------
 function OnExerciseRefresh()
     isPvpRet = true
-    if currIndex < 3 then
-        ShowExercisePanel()
-    end
+    ShowExercisePanel()
 end
 
 function ShowExercisePanel()
@@ -1145,6 +1146,7 @@ function ShowExercisePanel()
     -- move
     MoveTo(viewInfo.Exercise[currIndex], SectionViewType.Exercise, pType, 0)
 
+    
     if currIndex == 1 then
         -- scale
         CSAPI.SetScale(btnExerciseL, 0.73, 0.73, 1)
@@ -1219,8 +1221,13 @@ function RefreshActivityDatas()
             local sectionData = DungeonMgr:GetSectionData(cfg.id)   
             if sectionData then
                 activityTypeDatas[sectionData:GetType()] = activityTypeDatas[sectionData:GetType()] or {}
-                if sectionData:GetType() == SectionActivityType.Tower or sectionData:GetType() == SectionActivityType.NewTower  then --爬塔只显示一个
-                    if #activityTypeDatas[sectionData:GetType()] < 1 then
+                if sectionData:IsShowOnly() then
+                    if #activityTypeDatas[sectionData:GetType()] > 0 then
+                        local id = activityTypeDatas[sectionData:GetType()][1]:GetID()
+                        if id > sectionData:GetID() then
+                            activityTypeDatas[sectionData:GetType()][1] = sectionData
+                        end
+                    else
                         table.insert(activityTypeDatas[sectionData:GetType()],sectionData)
                     end
                 else
@@ -1235,7 +1242,7 @@ function RefreshActivityDatas()
             if typeDatas and #typeDatas > 0 then
                 for i, v in ipairs(typeDatas) do
                     table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),v:GetOpenState()))
-                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower or _type == SectionActivityType.NewTower then
+                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower then
                         local _data = {
                             data = v,
                             type = _type,
@@ -1247,8 +1254,8 @@ function RefreshActivityDatas()
                 end
             end
         end
-        --Log("活动信息:")
-        --Log(logStrs)
+        Log("活动信息:")
+        Log(logStrs)
     end
     table.sort(datas, function(a, b)      
         local pos1 = a.pos or 99
@@ -1359,10 +1366,10 @@ function OnEnterCB1(item)
         LogError("缺少界面路径!!!" .. sectionData:GetCfg().id)
         return
     end
-    if sectionData:GetType() == SectionActivityType.Tower then
+    if sectionData:GetType() == SectionActivityType.Tower or sectionData:GetType() == SectionActivityType.NewTower then
         CSAPI.OpenView(path)
     else
-        CSAPI.OpenView(path,{id = item.GetID()})
+        CSAPI.OpenView(path, {id = item.GetID()})
     end
 end
 

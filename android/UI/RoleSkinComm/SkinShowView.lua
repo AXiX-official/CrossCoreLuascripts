@@ -3,7 +3,8 @@ local roleItem=nil;
 local effect=nil;
 local skinDesc=""
 local modelID=nil
- 
+local changeInfo=nil;
+local changeData=nil;
 this.ClickBtn=nil;
 function Awake()
     roleItem = RoleTool.AddRole(iconParent, PlayCB, nil, false)		
@@ -20,7 +21,7 @@ function OnOpen()
         local hasEnter=data:HasEnterTween();
         -- local hasEnter=data:HasL2D();
         modelID=data:GetModelID();
-        roleItem.Refresh(data:GetModelID(), LoadImgType.SkinReward,function()
+        roleItem.Refresh(modelID, LoadImgType.SkinReward,function()
             if roleItem.CheckIn() and CSAPI.IsInternation() then --有反和谐且有入场动画
                 roleItem.PlayIn(function()
                     ShowTween2(roleItem.CheckIn())
@@ -36,6 +37,7 @@ function OnOpen()
         CSAPI.SetText(txt_roleName,modelCfg.key);
         CSAPI.SetText(txt_roleNameTips,modelCfg.englishName);
         skinDesc = data:GetSkinDesc()
+        changeInfo=data:GetChangeInfo()
     end
 end
 
@@ -91,8 +93,35 @@ function ShowTween2(isL2d)
     end
     CSAPI.SetGOActive(clicker,true)
     CSAPI.SetText(txt_desc, skinDesc)	
+    if changeInfo then
+        SetChangeInfo(changeInfo[1].cfg);
+    end
     --播放语音
     -- roleItem.PlayVoice(RoleAudioType.get);
+end
+
+function SetChangeInfo(cfg)
+    if cfg then
+        local type=cfg.skinType;
+        local langID=18104;
+        local otherImgName="img_12_01";
+        if type==3 then
+            langID=18105;
+            otherImgName="img_12_02";
+        elseif type==4 then --形切
+            langID=18106;
+            otherImgName="img_12_03";
+        elseif type==5 then
+            langID=18104;
+        end
+        CSAPI.SetText(txt_other,LanguageMgr:GetByID(langID));
+        --加载图
+        ResUtil.Card:Load(otherIcon, cfg.List_head);
+        otherImgName=string.format("UIs/RoleSkinComm/%s.png",otherImgName);
+        CSAPI.SetGOActive(btnOther,true);
+    else
+        CSAPI.SetGOActive(btnOther,false);
+    end
 end
 
 function ShowEffect(func)
@@ -120,6 +149,54 @@ function ShowEffect(func)
             FuncUtil:Call(func, nil, 0)
         end
     end, nil, 350)
+end
+
+function OpenSearchView(data,loadImgType)
+    if data~=nil then
+        CSAPI.OpenView("RoleInfoAmplification", data,loadImgType)
+    end
+end
+
+function OnClickOther()
+    if changeInfo then
+        local cfg=changeInfo[1].cfg;
+        local type=changeInfo[1].type;
+        if type==5 then --机神
+            OpenSearchView({ cfg.id, type==SkinChangeResourceType.Spine,false}, LoadImgType.Main)
+        elseif changeData then --变更展示信息
+            changeData=nil;
+            SetChangeInfo(cfg);
+            SwitchChange();
+        else
+            changeData=changeInfo[1];
+            SetChangeInfo(data:GetModelCfg());
+            SwitchChange();
+        end
+    end
+end
+
+function SwitchChange()
+    local modelCfg=nil;
+    local hasEnter=false;
+    if changeData then
+        --刷新皮肤信息、加载新的皮肤
+        modelCfg=changeData.cfg;
+        skinDesc = modelCfg.skin_desc;
+        modelID=modelCfg.id;
+        hasEnter=modelCfg.hadAni==1;
+    else
+        hasEnter=data:HasEnterTween();
+        -- local hasEnter=data:HasL2D();
+        modelID=data:GetModelID();
+        modelCfg=data:GetModelCfg();
+        skinDesc = data:GetSkinDesc()
+    end
+    roleItem.Refresh(modelID, LoadImgType.SkinReward,nil,hasEnter);
+    --刷新皮肤信息、加载新的皮肤
+    CSAPI.SetText(txt_set,modelCfg.desc);
+    CSAPI.SetText(txt_roleName,modelCfg.key);
+    CSAPI.SetText(txt_roleNameTips,modelCfg.englishName);
+    CSAPI.SetText(txt_desc, skinDesc)	
 end
 
 --------------------------------------------用于奖励弹窗--------------------------------------------

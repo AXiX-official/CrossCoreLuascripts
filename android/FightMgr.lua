@@ -281,8 +281,20 @@ function FightMgrBase:AfterLoadData(exData)
             end
         end
 
-        if exData.tExBuff then
+        if exData.tExBuff then -- 我方buff
             self.tExBuff = exData.tExBuff
+        end
+
+        if exData.tMonsterBuff then -- 怪物buff
+            self.tMonsterBuff = exData.tMonsterBuff
+        end
+
+        if exData.tAllBuff then -- 双方buff
+            self.tAllBuff = exData.tAllBuff
+        end
+
+        if exData.tRandBuff then -- 随机buff 格式给我方三个人加buff, 敌方1个人加buff[{teamID=1,count=3,buff=[buffid1, buffid2]},{teamID=2,count=1,buff=[buffid1]}]
+            self.tRandBuff = exData.tRandBuff
         end
 
         if exData.nEnterNp then
@@ -556,6 +568,18 @@ function FightMgrBase:OnBorn(card, isspecial)
             card:AddBuff(card, buffID)
         end
     end
+
+    if self.tMonsterBuff and card:GetTeamID() == 2 then
+        for i, buffID in ipairs(self.tMonsterBuff) do
+            card:AddBuff(card, buffID)
+        end
+    end
+
+    if self.tAllBuff then
+        for i, buffID in ipairs(self.tAllBuff) do
+            card:AddBuff(card, buffID)
+        end
+    end    
 
     if isspecial then
         -- 复活/召唤/合体等非正常入场
@@ -962,6 +986,9 @@ function FightMgrBase:Attack(caster, target, data, pos)
     if ret and oSkill.upgrade_type == CardSkillUpType.OverLoad then
         caster:AddBuff(caster, g_overLoadBuffer)
         caster:AddSP(-g_overLoadCost)
+        if self.oDuplicate then
+            self.oDuplicate:OverLoad({ caster.cuid })
+        end
     end
 
     -- self.isRoundOver = true
@@ -1697,6 +1724,21 @@ function FightMgrBase:OnStart(data)
         self:OnBorn(v)
     end
 
+    if self.tRandBuff then
+        for i,v in ipairs(self.tRandBuff) do
+            -- local teamID = v[1]
+            -- local count = v[2]
+            -- local buffs = v[3]
+
+            local cards = self:GetTeam(v.teamID):GetRandCard(v.count)
+            for i,card in ipairs(cards) do
+                for i, buffID in ipairs(v.buff) do
+                    card:AddBuff(card, buffID)
+                end
+            end
+        end
+    end
+
     self.oFightEventMgr:DoEvent('OnStart')
     self.log:EndSub('datas')
 
@@ -1946,6 +1988,9 @@ function FightMgrServer:OverLoad(data)
         self.overLoadData = nil
         local teamID = self.currTurn:GetTeamID()
         self.currTurn:AddSP(-g_overLoadCost)
+        if self.oDuplicate then
+            self.oDuplicate:OverLoad({ self.currTurn.cuid })
+        end
         return waitTime
     else
         ASSERT()
@@ -2182,6 +2227,9 @@ function FightMgrClient:OverLoad(data)
         self.overLoadData = nil
         FightActionMgr:PushSkill(self.log:GetAndClean())
         self.currTurn:AddSP(-g_overLoadCost)
+        if self.oDuplicate then
+            self.oDuplicate:OverLoad({ self.currTurn.cuid })
+        end
         FightActionMgr:PushSkill({{api = 'OverLoad', id = self.currTurn.oid, flag = 2}})
     else
         ASSERT()

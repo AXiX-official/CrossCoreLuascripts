@@ -12,6 +12,7 @@ RedPointType.PlayerAbility = "PlayerAbility";
 RedPointType.Activity = "Activity" -- 活动
 RedPointType.ActivityList1 = "ActivityList1" -- 活动列表1
 RedPointType.ActivityList2 = "ActivityList2" -- 活动列表2
+RedPointType.ActivityList3 = "ActivityList3" -- 特别活动
 RedPointType.Exploration = "Exploration" -- 勘探
 RedPointType.Attack = "Attack" -- 出击
 RedPointType.Bag = "Bag" -- 背包
@@ -29,6 +30,10 @@ RedPointType.ActiveEntry4 = "ActiveEntry4"  --迷城蛛影
 RedPointType.MaterialBag = "MaterialBag" -- 背包
 RedPointType.HeadFrame = "HeadFrame" -- 头像框
 RedPointType.Head = "Head" -- 头像
+
+RedPointType.Achievement = "Achievement" --成就
+
+RedPointType.Badge = "Badge" --徽章
 
 local this = MgrRegister("RedPointMgr")
 

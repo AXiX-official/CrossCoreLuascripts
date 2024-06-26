@@ -112,8 +112,9 @@ function this:GetHardTime()
     return self.data and self.data.nHardBegTime
 end
 
-function this:GetSectionID()
-    return self.cfg and self.cfg.sectionID
+--获取剩余时间
+function this:GetEndTime()
+    return self.data and self.data.nEndTime or 0
 end
 
 function this:GetSectionID()

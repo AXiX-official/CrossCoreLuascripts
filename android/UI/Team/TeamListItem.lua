@@ -7,11 +7,11 @@ local canvasGroup=nil;
 local dropClick=nil;
 local eventMgr=nil;
 local delayCtrl=nil
-local assistData=nil;
+local assistData=nil; --TeamItemData类型
+local openSetting=nil;
 -- local skillAlpha=nil;
 -- local aiAlpha=nil;
 function Awake()
-    TeamConfirmUtil.CreateGrids(nil,grids,gridNode,OnClickGrid);
     canvasGroup=ComUtil.GetCom(dropDownList,"CanvasGroup");
     -- skillAlpha=ComUtil.GetCom(skillRoot,"CanvasGroup");
     -- aiAlpha=ComUtil.GetCom(aiRoot,"CanvasGroup")
@@ -34,7 +34,7 @@ function OnUseAIPreset(eventData)
         end
         if tIndex then
             TeamMgr:SaveItemStrategyIndex(tIndex,eventData.cid,eventData.index);
-            TeamConfirmUtil.CreateGrids(teamData,grids,gridNode,OnClickGrid);
+            TeamConfirmUtil.CreateGrids(teamData,grids,gridNode,OnClickGrid,openSetting);
         end
     end
 end
@@ -75,8 +75,7 @@ function SetTeamData(index)
         CSAPI.SetText(txt_teamName,LanguageMgr:GetByID(25021));
     end
     SetSkillIcon(skillId);
-    TeamConfirmUtil.CreateGrids(teamData,grids,gridNode,OnClickGrid);
-    
+    TeamConfirmUtil.CreateGrids(teamData,grids,gridNode,OnClickGrid,openSetting);
 end
 
 function GetTeamIndex()
@@ -90,26 +89,52 @@ end
 function Refresh(d)
     data=d;
     if data then
+        openSetting=data.openSetting or nil;
+        TeamConfirmUtil.CreateGrids(nil,grids,gridNode,OnClickGrid,openSetting);
         local teamID=nil;
         if data.currState then
             SetState(data.currState);
         else
             SetState(data.state);
         end
+        local optionData=nil;
         for k,v in ipairs(data.options) do
             if v.itemID==data.id then
                 teamID=v.id;
+                optionData=v;
                 ShowDownListInfo(v);
                 break;
             end
         end
-        if teamID~=nil then
-            CSAPI.SetText(dropVal,"0"..teamID);
+        if optionData~=nil then
+            CSAPI.SetText(dropVal,optionData.desc);
         else
             CSAPI.SetText(dropVal,"-");
         end
+        if openSetting==TeamConfirmOpenType.Tower and assistData==nil then
+            --获取锁定的助战卡牌信息
+            local assistInfo= TowerMgr:GetLockAssistInfo(data.dungeonCfg.group);
+            if assistInfo~=nil and assistInfo.tower_hp>0 and assistInfo.isSelect then
+                --直接设置助战卡
+                 local teamItemData=TeamItemData.New();
+                 local cid=FormationUtil.FormatAssitID(assistInfo.fuid,assistInfo.cid);
+                 local d={
+                    cid=cid,
+                    row=assistInfo.row,
+                    col=assistInfo.col,
+                    fuid=assistInfo.fuid,
+                    bIsNpc=false,
+                    index=6,
+                 }
+                 teamItemData:SetData(d);
+                 if teamItemData:GetCard()~=nil then
+                    assistData=teamItemData;
+                 end
+            end
+        end
         SetTeamData(teamID);
-       
+    else
+        TeamConfirmUtil.CreateGrids(nil,grids,gridNode,OnClickGrid,openSetting);
     end
 end
 
@@ -171,16 +196,17 @@ function OnClickGrid(tab)
     local canAddAssist=GetState()~=TeamConfirmItemState.UnAssist
     -- TeamMgr.currentIndex=teamData:GetIndex();
     local canEmpty=teamData:GetIndex()~=1 and true or false;
+    local open1=openSetting==TeamConfirmOpenType.Tower and TeamOpenSetting.Tower or TeamOpenSetting.PVE;
     if isAssist then
         local cid=nil;
         SetTeamData(teamData:GetIndex());
         if assistData then
             cid=assistData.card:GetID();
         end
-        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,is2D=true,canAssist=canAddAssist},TeamOpenSetting.PVE);
+        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},open1);
     else
         SetTeamData(teamData:GetIndex());
-        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,is2D=true,canAssist=canAddAssist},TeamOpenSetting.PVE);
+        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},open1);
     end
 end
 
@@ -217,6 +243,10 @@ end
 
 function OnClickAI()
     if teamData then
+        if teamData:GetRealCount()<=0 then
+            Tips.ShowTips(LanguageMgr:GetByID(26047))
+            do return end
+        end
         local isOpen,lockStr=MenuMgr:CheckModelOpen(OpenViewType.special, FormationUtil.AIModuleKey)
         if isOpen~=true then
             Tips.ShowTips(lockStr);
@@ -224,7 +254,7 @@ function OnClickAI()
         end
         CSAPI.OpenView("AIPrefabSetting",{teamData=teamData});
     else
-        Tips.ShowTips("请先选择要使用的队伍")
+        Tips.ShowTips(LanguageMgr:GetByID(26048))
     end
 end
 
@@ -317,6 +347,7 @@ function SetState(_state)
     local gridDisable=false;
     -- CSAPI.SetText(txt_teamTips,"请选择队伍");
     local alpha=1;
+    local dropCanClicker=false;
     if state==TeamConfirmItemState.Normal then
         -- CSAPI.SetGOActive(grids[6].gameObject,true);
         grids[6].SetDisable(false);
@@ -324,7 +355,7 @@ function SetState(_state)
         CSAPI.SetGOActive(btnSkill,true);
         CSAPI.SetGOActive(btnAI,true);
         CSAPI.SetText(txt_teamName,LanguageMgr:GetByID(25021));
-        dropClick.raycastTarget=true;
+        dropCanClicker=true;
         -- CSAPI.SetGOActive(dropDownList,true);
         CSAPI.SetGOActive(btnUse,data.showClean);
         CSAPI.SetGOActive(txt_fightTips,true);
@@ -335,7 +366,7 @@ function SetState(_state)
         CSAPI.SetGOActive(gridNode,false);
         CSAPI.SetGOActive(btnSkill,false);
         CSAPI.SetGOActive(btnAI,false);
-        dropClick.raycastTarget=false;
+        dropCanClicker=false;
         -- CSAPI.SetGOActive(dropDownList,false);
         CSAPI.SetGOActive(btnUse,false);
         CSAPI.SetText(dropVal,"—");
@@ -349,7 +380,7 @@ function SetState(_state)
         -- CSAPI.SetGOActive(grids[6].gameObject,true);
         CSAPI.SetGOActive(gridNode,false);
         CSAPI.SetGOActive(btnSkill,false);
-        dropClick.raycastTarget=false;
+        dropCanClicker=false;
         -- CSAPI.SetGOActive(dropDownList,false);
         CSAPI.SetGOActive(btnUse,true);
         CSAPI.SetGOActive(btnAI,false);
@@ -365,13 +396,20 @@ function SetState(_state)
         -- CSAPI.SetGOActive(grids[6].gameObject,false);
         CSAPI.SetGOActive(btnSkill,true);
         CSAPI.SetGOActive(btnAI,true);
-        dropClick.raycastTarget=true;
+        dropCanClicker=true;
         CSAPI.SetGOActive(txt_fightTips,true);
         CSAPI.SetText(dropVal,"—");
         CSAPI.SetText(txt_teamName,LanguageMgr:GetByID(25021));
         -- CSAPI.SetGOActive(dropDownList,true);
         CSAPI.SetGOActive(btnUse,data.showClean);
         CSAPI.SetGOActive(txt_disable,false);
+    end
+    if data.openSetting==TeamConfirmOpenType.Tower then
+        dropClick.raycastTarget=false;
+        CSAPI.SetGOActive(dropTirangle,false);
+    else
+        dropClick.raycastTarget=dropCanClicker;
+        CSAPI.SetGOActive(dropTirangle,dropCanClicker);
     end
     canvasGroup.alpha=alpha;
     CheckModelOpen();
@@ -401,8 +439,10 @@ function OnClickSkill()
             return
         end
         CSAPI.OpenView("TacticsView",{teamData=teamData,closeFunc=OnSkillChange});
+    elseif teamData and teamData:GetRealCount()==0 then
+        Tips.ShowTips(LanguageMgr:GetByID(26047))
     else
-        Tips.ShowTips("请先选择要使用的队伍")
+        Tips.ShowTips(LanguageMgr:GetByID(26048))
     end
 end
 
@@ -443,7 +483,8 @@ end
 
 --放置助战卡牌
 function PushAssistCard(assist)
-    local card =assist.card;
+    -- local card =assist.card;
+    local card=assist:GetCard();
     --判断当前队伍中是否存在同样的人物
     local roleInfo=teamData:GetItemByRoleTag(card:GetRoleTag());
     if roleInfo then

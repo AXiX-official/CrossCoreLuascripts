@@ -139,6 +139,12 @@ end
 --------------------------------任务tips--------------------------------------
 function ShowMisionTips()
 	local arr = MissionMgr:GetChangeDatas()
+	if #arr < 1 then
+		arr = AchievementMgr:GetChangeDatas()
+	end
+	if #arr < 1 then
+		arr = BadgeMgr:GetChangeDatas()
+	end
 	if(#arr > 0) then
 		if(not missionTips) then
 			local go = ResUtil:CreateUIGO("Tips/MissionTips", transform)

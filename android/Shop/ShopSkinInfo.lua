@@ -115,6 +115,19 @@ function this:GetSkinDesc()
     return self.modelCfg and self.modelCfg.skin_desc or ""
 end
 
+function this:GetChangeInfo()
+    local modelCfg=self:GetModelCfg();
+    local list=nil;
+    if modelCfg and modelCfg.changeShowBtn then
+        list={};
+        for i=1,#modelCfg.changeShowBtn,2 do
+            local type=modelCfg.changeShowBtn[i+1]==nil and SkinChangeResourceType.Spine or modelCfg.changeShowBtn[i+1];
+            table.insert(list,{cfg=Cfgs.character:GetByID(modelCfg.changeShowBtn[i]),type=type});
+        end
+    end
+    return list;
+end
+
 --是否有入场动画
 function this:HasEnterTween()
     local has=false

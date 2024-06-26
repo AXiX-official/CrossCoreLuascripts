@@ -991,9 +991,9 @@ GameMsg.map["sCardMixData"] = {
 	{ "inExp",             "tAHot",              "cl",                 },
 }
 GameMsg.map["sCardsData"] = {
-	--        卡牌的唯一id 名字     技能                等级    跃升等级[以前的突破等级] 强化等级          强化经验        血量   经验   当前热值  装备id      卡牌的装备(卡牌的装备信息，主要在军演，那边使用) 性能（缓存显示、军演）使用 使用的皮肤 皮肤l2d     其他形态皮肤 是否新   获取次数  副天赋       标签   卡牌其他信息         角色好感度(查看好友助战卡牌信息时使用,暂时只写入等级) 创建时间戳                                           
-	{ "uint", "uint",      "string","map|sSkillData|id","uint", "uint",              "uint",           "uint",         "uint","uint","uint",   "json",     "list|sEquip",       "float",              "uint",    "byte",     "uint",      "bool",  "uint",   "json",      "byte","struts|sCardMixData","struts|sAddRole",   "uint",    "list|sChangeCardInfos","list|sChangeCardInfos",},
-	{ "cfgid","cid",       "name",  "skills",           "level","break_level",       "intensify_level","intensify_exp","hp",  "exp", "cur_hot","equip_ids","equips",            "performance",        "skin",    "skinIsl2d","skin_a",    "is_new","get_cnt","sub_talent","tag", "mix_data",          "role",              "ctime",   "open_cards",        "open_mechas",       },
+	--        卡牌的唯一id 名字     技能                等级    跃升等级[以前的突破等级] 强化等级          强化经验        血量   经验   当前热值  装备id      卡牌的装备(卡牌的装备信息，主要在军演，那边使用) 性能（缓存显示、军演）使用 使用的皮肤 皮肤l2d     其他形态皮肤 皮肤l2d       是否新   获取次数  副天赋       标签   卡牌其他信息         角色好感度(查看好友助战卡牌信息时使用,暂时只写入等级) 创建时间戳                                           
+	{ "uint", "uint",      "string","map|sSkillData|id","uint", "uint",              "uint",           "uint",         "uint","uint","uint",   "json",     "list|sEquip",       "float",              "uint",    "byte",     "uint",      "byte",       "bool",  "uint",   "json",      "byte","struts|sCardMixData","struts|sAddRole",   "uint",    "list|sChangeCardInfos","list|sChangeCardInfos",},
+	{ "cfgid","cid",       "name",  "skills",           "level","break_level",       "intensify_level","intensify_exp","hp",  "exp", "cur_hot","equip_ids","equips",            "performance",        "skin",    "skinIsl2d","skin_a",    "skinIsl2d_a","is_new","get_cnt","sub_talent","tag", "mix_data",          "role",              "ctime",   "open_cards",        "open_mechas",       },
 }
 GameMsg.map["sCardsFriendlyData"] = {
 	--配置id  卡牌的唯一id   
@@ -1371,9 +1371,9 @@ GameMsg.map["PlayerProto:GetLifeBuffRet"] = {
 	{ "buffs",           },
 }
 GameMsg.map["sSkin"] = {
-	--卡牌配置id              
-	{ "uint",    "array|uint",},
-	{ "cfgid",   "info",      },
+	--卡牌配置id              是否新增 
+	{ "uint",    "array|uint","bool",  },
+	{ "cfgid",   "info",      "is_add",},
 }
 GameMsg.map["PlayerProto:GetSkins"] = {
 	--卡牌配置id(0获取全部) 
@@ -1386,9 +1386,9 @@ GameMsg.map["PlayerProto:GetSkinsRet"] = {
 	{ "info",      },
 }
 GameMsg.map["PlayerProto:UseSkin"] = {
-	--                       皮肤l2d     
-	{ "uint","uint","uint",  "byte",     },
-	{ "cid", "skin","skin_a","skinIsl2d",},
+	--                       皮肤l2d     皮肤Al2d      
+	{ "uint","uint","uint",  "byte",     "byte",       },
+	{ "cid", "skin","skin_a","skinIsl2d","skinIsl2d_a",},
 }
 GameMsg.map["PlayerProto:GetCardGetCnt"] = {
 	--        
@@ -1764,6 +1764,56 @@ GameMsg.map["PlayerProto:SetIconRet"] = {
 	--头像id    
 	{ "uint",   },
 	{ "icon_id",},
+}
+GameMsg.map["sCardInfo"] = {
+	--       hp百分比（整数,最大100） sp百分比（整数,最大100） 助战的好友id col    row    isSelect   
+	{ "uint","uint",              "uint",              "uint",      "uint","uint","bool",    },
+	{ "cid", "tower_hp",          "tower_sp",          "fuid",      "col", "row", "isSelect",},
+}
+GameMsg.map["PlayerProto:GetNewTowerCardInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:GetNewTowerCardInfoRet"] = {
+	--章节id 角色的hp和sp     助战卡牌           是否最后一条 
+	{ "uint","list|sCardInfo","struts|sCardInfo","bool",      },
+	{ "sid", "card_infos",    "assit_card_info", "is_finish", },
+}
+GameMsg.map["PlayerProto:ResetNewTowerCardInfo"] = {
+	--章节id 
+	{ "uint",},
+	{ "sid", },
+}
+GameMsg.map["PlayerProto:GetNewTowerResetCnt"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:GetNewTowerResetCntRet"] = {
+	--剩余重置次数(sid 章节id，num数量) 
+	{ "list|sStrNumInfo",  },
+	{ "reset_cnt",         },
+}
+GameMsg.map["PlayerProto:GetDupMonsterHpInfo"] = {
+	--副本id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["PlayerProto:GetDupMonsterHpInfoRet"] = {
+	--副本的怪物hp         
+	{ "list|sDupMonsterInfo",},
+	{ "dup_monster_infos", },
+}
+GameMsg.map["sMonsterInfo"] = {
+	--MonsterFormation.coordinate的第几个 hp百分比（整数，最大100） sp百分比（整数,最大100） 怪物id       
+	{ "uint",              "uint",              "uint",              "uint",      },
+	{ "configIndex",       "tower_hp",          "tower_sp",          "monster_id",},
+}
+GameMsg.map["sDupMonsterInfo"] = {
+	--副本id MonsterFormation.coordinate的第几个 
+	{ "uint","list|sMonsterInfo", },
+	{ "id",  "monster_infos",     },
 }
 GameMsg.map["sEquip"] = {
 	--配置id  装备的唯一id 等级    经验   是否锁定 随机技能点类型    随机技能点值       所属卡牌id(非空表示被装备了) 是否新   数量    技能ids数组  
@@ -3326,9 +3376,9 @@ GameMsg.map["DormProto:BuyTheme"] = {
 	{ "themeId","useCost",           },
 }
 GameMsg.map["DormProto:BuyThemeRet"] = {
-	--方案id    购买的家具列表（家具配置id） 扣费方式[ price_1 / price_2 ] 
-	{ "uint",   "array|uint",         "string",            },
-	{ "themeId","ids",                "useCost",           },
+	--方案id    购买的家具列表（家具配置id） 扣费方式[ price_1 / price_2 ] 是否买完    
+	{ "uint",   "array|uint",         "string",            "bool",     },
+	{ "themeId","ids",                "useCost",           "isFullBuy",},
 }
 GameMsg.map["DormProto:StoreTheme"] = {
 	--方案id    是否取消   
@@ -3571,9 +3621,9 @@ GameMsg.map["FriendProto:GetAssitInfo"] = {
 	{ "uid",               },
 }
 GameMsg.map["FriendProto:AssitInfoAdd"] = {
-	--好友id(无发为获取全部)                   
-	{ "long",              "list|sAssitInfo",},
-	{ "uid",               "assits",         },
+	--好友id(无发为获取全部)                   新爬塔锁定的角色     
+	{ "long",              "list|sAssitInfo","list|sNewTowerAssitInfo",},
+	{ "uid",               "assits",         "new_tower_assits",  },
 }
 GameMsg.map["FriendProto:FriendPaneInfo"] = {
 	--好友id 
@@ -3581,9 +3631,9 @@ GameMsg.map["FriendProto:FriendPaneInfo"] = {
 	{ "uid", },
 }
 GameMsg.map["FriendProto:FriendPaneInfoRet"] = {
-	--面板信息             好友id 玩家名称 等级    经验   签名     
-	{ "struts|sPlrPaneInfo","long","string","uint", "uint","string",},
-	{ "info",              "uid", "name",  "level","exp", "sign",  },
+	--面板信息             好友id 玩家名称 等级    经验   签名     徽章的位置         
+	{ "struts|sPlrPaneInfo","long","string","uint", "uint","string","list|sStrNumInfo",},
+	{ "info",              "uid", "name",  "level","exp", "sign",  "badgedPos",       },
 }
 GameMsg.map["FriendProto:GetFriendCard"] = {
 	--好友id 选择的卡牌id 0:协战，1：好友列表(除了搜索之外)，2：好友搜索 
@@ -3700,6 +3750,11 @@ GameMsg.map["TeamBoss:TimeOutClose"] = {
 	{ "int", },
 	{ "id",  },
 }
+GameMsg.map["sNewTowerAssitInfo"] = {
+	--章节id 锁定的卡牌          
+	{ "uint","struts|sAssitInfo",},
+	{ "sid", "new_tower_assit",  },
+}
 GameMsg.map["PlayerProto:ChangePlrName"] = {
 	--名字     使用的物品 
 	{ "string","uint",    },
@@ -3730,6 +3785,26 @@ GameMsg.map["PlayerProto:ClickBoard"] = {
 	{ },
 	{ },
 }
+GameMsg.map["sNewTowerAssitCard"] = {
+	--章节id 助战卡牌           
+	{ "uint","struts|sCardInfo",},
+	{ "sid", "assit_card_info", },
+}
+GameMsg.map["PlayerProto:NewTowerAssitCardRet"] = {
+	--新爬塔助战卡牌       
+	{ "list|sNewTowerAssitCard",},
+	{ "assit_card_infos",  },
+}
+GameMsg.map["PlayerProto:GetSpecialDropsInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:GetSpecialDropsInfoRet"] = {
+	--掉落了数量         
+	{ "list|sStrNumInfo",},
+	{ "dropInfos",       },
+}
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 
 	{ "long",  "array|long",  "uint",  "string","uint",  "byte",  "string", "string",            "json",              },
@@ -3759,6 +3834,106 @@ GameMsg.map["ChatProto:RecvMsg"] = {
 	--             
 	{ "list|sChat",},
 	{ "infos",     },
+}
+GameMsg.map["RegressionProto:GetInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["RegressionProto:GetInfoRet"] = {
+	--资源找回是否已领取 
+	{ "int",             },
+	{ "resourcesIsGain", },
+}
+GameMsg.map["RegressionProto:ResourcesRecoveryGain"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["RegressionProto:ResourcesRecoveryGainRet"] = {
+	--资源找回是否已领取 
+	{ "int",             },
+	{ "resourcesIsGain", },
+}
+GameMsg.map["AchievementProto:GetFinishInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["AchievementProto:GetFinishInfoRet"] = {
+	--成就条件的进度（CfgAchieveFinishVal的id，完成的次数） 是否最后一条 
+	{ "list|sStrNumInfo",  "bool",      },
+	{ "finish_list",       "is_finish", },
+}
+GameMsg.map["AchievementProto:GetRewardInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["AchievementProto:GetRewardInfoRet"] = {
+	--领取的奖励返回       是否最后一条 
+	{ "list|sAchievementRewardDetail","bool",      },
+	{ "infos",             "is_finish", },
+}
+GameMsg.map["AchievementProto:GetReward"] = {
+	--领取成就的id（CfgAchieve的id） 
+	{ "int",               },
+	{ "id",                },
+}
+GameMsg.map["AchievementProto:GetRewardRet"] = {
+	--奖励返回             领取的奖励     
+	{ "struts|sAchievementRewardDetail","list|sReward",},
+	{ "achievementReward", "gets",        },
+}
+GameMsg.map["AchievementProto:GetAllReward"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["AchievementProto:GetAllRewardRet"] = {
+	--奖励返回             领取的奖励     
+	{ "list|sAchievementRewardDetail","list|sReward",},
+	{ "achievementRewards","gets",        },
+}
+GameMsg.map["sAchievementRewardDetail"] = {
+	--成就id（CfgAchieve的id） 领取时间 完成时间      
+	{ "uint",              "uint",  "uint",       },
+	{ "id",                "time",  "finish_time",},
+}
+GameMsg.map["BadgedProto:GetBadgedInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["BadgedProto:GetBadgedInfoRet"] = {
+	--领取的奖励返回 是否最后一条 
+	{ "list|sBadged","bool",      },
+	{ "infos",       "is_finish", },
+}
+GameMsg.map["sBadged"] = {
+	--徽章id 完成时间      是否需要new标识 
+	{ "uint","uint",       "bool",         },
+	{ "id",  "finish_time","is_new",       },
+}
+GameMsg.map["BadgedProto:UpdateBadged"] = {
+	--徽章id       
+	{ "array|uint",},
+	{ "ids",       },
+}
+GameMsg.map["BadgedProto:GetSortBadgedInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["BadgedProto:GetSortBadgedInfoRet"] = {
+	--徽章的位置         
+	{ "list|sStrNumInfo",},
+	{ "pos",             },
+}
+GameMsg.map["BadgedProto:UpdateSortBadged"] = {
+	--徽章的位置         
+	{ "list|sStrNumInfo",},
+	{ "pos",             },
 }
 GameMsg.map["PlayerProto:GetClientData"] = {
 	--键值     

@@ -65,6 +65,11 @@ require("GComLogicCheck");
 _G.TeamItemData = require "TeamItemData"
 _G.TeamData = require "TeamData"
 _G.FormationTable = require "FormationTable"
+_G.TeamCondition=require "TeamCondition"
+_G.TeamLimitCondition=require "TeamLimitCondition"
+_G.TeamLimitGroup=require "TeamLimitGroup"
+_G.TeamLimit=require "TeamLimit"
+
 --��ɹ�����
 _G.FormationUtil = require "FormationUtil";
 --������ݹ�����
@@ -152,5 +157,16 @@ require "MatrixRoleTool"
 _G.HeadFrameData = require "HeadFrameData";
 --头像
 _G.HeadIconData = require "HeadIconData";
+--成就
+_G.AchievementData = require "AchievementData"
+_G.AchievementListData = require "AchievementListData"
+_G.AchievementChangeInfo = require "AchievementChangeInfo"
+
+--爬塔
+_G.TowerData = require "TowerData"
+
+--徽章
+_G.BadgeData = require "BadgeData"
+_G.BadgeChangeInfo = require "BadgeChangeInfo"
 
 require "SpineTools"

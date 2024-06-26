@@ -8,6 +8,21 @@ function Buffer334115:Init(mgr, id, target, caster)
 end
 -- 伤害前
 function Buffer334115:OnBefourHurt(caster, target)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 8246
+	if SkillJudger:IsTargetMech(self, self.caster, target, true,10) then
+	else
+		return
+	end
 	-- 334115
 	self:AddTempAttr(BufferEffect[334115], self.caster, self.card, nil, "damage",0.25)
 end

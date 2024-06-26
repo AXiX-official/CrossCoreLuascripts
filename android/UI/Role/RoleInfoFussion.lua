@@ -5,7 +5,7 @@ local isFirst = true
 function Awake()
     -- recordBeginTime = CSAPI.GetRealTime()
     -- 立绘
-    -- cardImgLua = RoleTool.AddImg(iconParent)
+    cardIconItem = RoleTool.AddRole(iconParent, nil, nil, false)
 end
 
 function OnEnable()
@@ -13,9 +13,9 @@ function OnEnable()
 end
 
 function OnDisable()
-    if (openSetting and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
-        CSAPI.PlayUISound("ui_cosmetic_adjustment")
-    end
+    -- if (openSetting and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
+    CSAPI.PlayUISound("ui_cosmetic_adjustment")
+    -- end
 end
 function OnDestroy()
     -- RecordMgr:Save(RecordMode.View, recordBeginTime, "ui_id=" .. RecordViews.RoleInfo)
@@ -84,6 +84,9 @@ end
 function OnOpen()
     oldCardData = data[1]
     skillData = data[2]
+    cardIsReal = data[3] -- 基础卡是否是自己已获得的卡
+    isFighting = data[4] -- 基础是否战斗中
+
     cfg = Cfgs.skill:GetByID(skillData.id)
     isFighting = oldCardData:IsFighting()
 
@@ -140,37 +143,37 @@ function InitData()
     else
         -- 召唤 --等级继承，技能、被动技能不继承(到怪物表拿数据)、无副天赋
         local cardId = oldCardData:GetCfg().summon
-        local cardCfg = Cfgs.MonsterData:GetByID(cardId)
-        -- 普通技能需要重新封装
-        local newSkillDatas = {}
-        local curSkillsID = cardCfg.jcSkills
-        for i, v in ipairs(curSkillsID) do
-            local cfg = Cfgs.skill:GetByID(v)
-            table.insert(newSkillDatas, {
-                id = curSkillsID[i],
-                exp = 0,
-                type = SkillMainType.CardNormal
-            })
-        end
-        -- 被动技能
-        local sSkillID = cardCfg.tfSkills and cardCfg.tfSkills[1] or nil
-        table.insert(newSkillDatas, {
-            id = sSkillID,
-            exp = 0,
-            type = SkillMainType.CardTalent
-        })
+        -- local cardCfg = Cfgs.MonsterData:GetByID(cardId)
+        -- -- 普通技能需要重新封装
+        -- local newSkillDatas = {}
+        -- local curSkillsID = cardCfg.jcSkills
+        -- for i, v in ipairs(curSkillsID) do
+        --     table.insert(newSkillDatas, {
+        --         id = curSkillsID[i],
+        --         exp = 0,
+        --         type = SkillMainType.CardNormal
+        --     })
+        -- end
+        -- -- 被动技能
+        -- local sSkillID = cardCfg.tfSkills and cardCfg.tfSkills[1] or nil
+        -- table.insert(newSkillDatas, {
+        --     id = sSkillID,
+        --     exp = 0,
+        --     type = SkillMainType.CardTalent
+        -- })
 
-        -- 重新封装
-        local newInfo = {}
-        local key = string.format("%s_%s", cardCfg.numerical, oldCardData:GetLv())
-        local cfg = Cfgs.MonsterNumerical:GetByKey(key)
-        newInfo = table.copy(cfg)
-        newInfo.cfgid = cardId
-        newInfo.skills = newSkillDatas
-        newInfo.break_level = 1
-        newInfo.intensify_level = 1
-        local monsterCardsData = require "MonsterCardsData"
-        cardData = MonsterCardsData(newInfo)
+        -- -- 重新封装
+        -- local newInfo = {}
+        -- local key = string.format("%s_%s", cardCfg.numerical, oldCardData:GetLv())
+        -- local _cfg = Cfgs.MonsterNumerical:GetByKey(key)
+        -- newInfo = table.copy(_cfg)
+        -- newInfo.cfgid = cardId
+        -- newInfo.skills = newSkillDatas
+        -- newInfo.break_level = 1
+        -- newInfo.intensify_level = 1
+        -- local monsterCardsData = require "MonsterCardsData"
+        -- cardData = MonsterCardsData(newInfo)
+        cardData = RoleTool.GetNewCardData2(oldCardData, cardId)
     end
 end
 
@@ -232,15 +235,26 @@ end
 -- end
 
 function SetRole()
+    -- CSAPI.SetGOActive(iconParent, false)
+    -- RoleTool.LoadImg(img, cardData:GetSkinID(), LoadImgType.RoleInfo, function()
+    --     CSAPI.SetGOActive(iconParent, true)
+    --     if (isFirst) then
+    --         isFirst = false
+    --         UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
+    --         UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
+    --     end
+    -- end)
     CSAPI.SetGOActive(iconParent, false)
-    RoleTool.LoadImg(img, cardData:GetSkinID(), LoadImgType.RoleInfo, function()
+    cardIconItem.Refresh(cardData:GetSkinID(), LoadImgType.RoleInfo, function(go)
         CSAPI.SetGOActive(iconParent, true)
         if (isFirst) then
             isFirst = false
-            UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
-            UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
+            if (iconNode ~= nil) then
+                UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
+                UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
+            end
         end
-    end)
+    end, cardData:GetSkinIsL2d())
 end
 
 -- tag
@@ -558,7 +572,7 @@ end
 function SetBtns()
     -- CSAPI.SetGOActive(btnLv, isRealCard)
     CSAPI.SetGOActive(btnTalentDetail, isRealCard)
-    CSAPI.SetGOActive(topBtns, isRealCard)
+    CSAPI.SetGOActive(topBtns, cardIsReal)
     CSAPI.SetGOActive(dragBg, isRealCard)
 
     -- if (isRealCard) then
@@ -570,11 +584,25 @@ function SetBtns()
     --     CSAPI.SetGOActive(btnLove, isShow)
     -- end
     -- 战斗中时
-    if (openSetting and openSetting == 10) then
+    if (openSetting ~= nil and openSetting == 10) then
         topLua.SetHomeActive(false)
     else
         topLua.SetHomeActive(not isFighting)
     end
+    -- -- 皮肤
+    -- local b = false
+    -- if (cardIsReal and not isFighting) then
+    --     b = cardData:CheckHadSkins()
+    -- end
+    -- CSAPI.SetGOActive(btnApparel, b)
+
+    -- -- red
+    -- local isRed = false
+    -- local twoCardID = RoleTool.GetTwoCfgID(oldCardData:GetCfgID())
+    -- if (RoleSkinMgr:CheckIsNewAdd(twoCardID)) then
+    --     isRed = true
+    -- end
+    -- UIUtil:SetRedPoint(btnApparel, isRed, 58.3, 26.2, 0)
 end
 
 function SetTips()
@@ -648,13 +676,17 @@ function OnPressUp(isDrag, clickTime)
 end
 
 -------------------------------------------------------------------------------------------------------------------------
--- 服装
-function OnClickApparel()
-    if (not cardData.isMonster) then
-        CSAPI.PlayUISound("ui_generic_tab_2") -- todo 
-        CSAPI.OpenView("RoleApparel", cardData)
-    end
-end
+-- -- 服装
+-- function OnClickApparel()
+--     -- if (not cardData.isMonster) then
+--     CSAPI.PlayUISound("ui_generic_tab_2")
+--     CSAPI.OpenView("RoleApparel", cardData, cardData.isMonster)
+--     -- end
+--     --
+--     local twoCardID = RoleTool.GetTwoCfgID(oldCardData:GetCfgID())
+--     RoleSkinMgr:SetIsNewAdd(twoCardID)
+--     UIUtil:SetRedPoint(btnApparel, false, 58.3, 26.2, 0)
+-- end
 
 -- 训练
 function OnClickDirll()

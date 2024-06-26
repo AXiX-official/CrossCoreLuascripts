@@ -1947,6 +1947,9 @@ function SkillBase:Summon(effect, caster, target, data, monsterID, ty, pos, sdat
 	local teamID = 0
 	if ty == 1 then
 		teamID = caster:GetTeamID()
+		if mgr.oDuplicate then
+			mgr.oDuplicate:OnBorn({ caster.cuid })
+		end
 	elseif ty == 2 then
 		teamID = target:GetTeamID()
 	else
@@ -1985,6 +1988,10 @@ function SkillBase:Unite(effect, caster, target, data, monsterID, sdata)
 	-- 修改合体模型(合体皮肤)
 	if caster.modelA and caster.modelA > 0 then 
 		card.model = caster.modelA
+	end
+
+	if mgr.oDuplicate then
+		mgr.oDuplicate:Unite({ caster.cuid })
 	end
 
 	self.log:Add({api="Unite", id = caster.oid, ids ={caster.oid,target.oid}, 

@@ -7,6 +7,7 @@ local items = nil
 local cardCount = 0
 local stages = {}
 local rewards = nil
+local gridLayout = nil
 
 local soundIds = {} --声音id
 local isSoundPlay = false
@@ -30,6 +31,9 @@ local sweepView = nil
 -- buff
 local isHasBuff = false
 
+--模拟
+local isDirll = false
+
 -- anim
 local isJumpToEnd = false
 local actions = {}
@@ -37,6 +41,8 @@ local actions = {}
 function Awake()
     fillExpBar = ComUtil.GetCom(expSlider, "Slider")
     fillExerBar = ComUtil.GetCom(exerSlider, "Slider")
+
+    gridLayout = ComUtil.GetCom()
 
     expBar = ExpBar.New();
     exerBar = ExpBar.New();
@@ -100,6 +106,7 @@ function InitPanel()
             CSAPI.SetGOActive(topTrans:GetChild(i).gameObject, false)
         end
     end
+    CSAPI.SetGOActive(buttonObj,false)
 end
 
 function OnDestroy()
@@ -126,6 +133,7 @@ function Refresh(_data, _elseData)
     data = _data
     elseData = _elseData
     isSweep = elseData and elseData.isSweep
+    isDirll = elseData and elseData.isDirll
     if data then
         -- reward
         rewards = data.rewards or nil
@@ -156,6 +164,8 @@ function RefreshPanel()
 
     if isSweep then
         SetSweepPanel()
+    elseif isDirll then
+        SetDirllPanel()
     elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
         SetPVPPanel()
     elseif sceneType == SceneType.BOSS then
@@ -170,6 +180,8 @@ function SetTitleIcon()
     if elseData then
         if isSweep then
             imgName = "sweep"
+        elseif isDirll then
+            imgName = "dirll_win"
         elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
             imgName = elseData.bIsWin and imgName or "lose"
         end
@@ -253,13 +265,17 @@ function SetCards()
         teams = TeamMgr:GetFightTeam()
     end
     local cardSkinIDs = {}
+    local hasAssit = false --有助战
     cardCount = 0
     items = items or {}
     local favors = GetFavors()
     for _, team in ipairs(teams) do
-        for i = 1, team:GetCount() do
+        for i = 1, 6 do
             local v = team:GetItemByIndex(i);
-            if v ~= nil and v.fuid == nil and v.index ~= 6 then -- 助战不加入队伍
+            if v ~= nil then
+                if v.index == 6 then --有助战
+                    hasAssit = true
+                end
                 local prefabs = "FightOver/FightOverCardItem";
                 local parent = teamObj;
                 ResUtil:CreateUIGOAsync(prefabs, parent, function(go)
@@ -274,7 +290,8 @@ function SetCards()
                     end
                     lua.Refresh(v, {
                         exp = _exp,
-                        favor = _favor
+                        favor = _favor,
+                        teamIndex = team:GetIndex()
                     })
                     if isJumpToEnd then
                         lua.CardAnimComplete()
@@ -289,8 +306,29 @@ function SetCards()
         end
     end
 
-    -- 超过5个卡牌往上移
-    CSAPI.SetAnchor(playerObj, 0, cardCount > 5 and 137 or 0)
+    local actionWH1 = ComUtil.GetCom(p1,"ActionWH")
+    local actionWH2 = ComUtil.GetCom(p2,"ActionWH")
+    if hasAssit and cardCount > 5 then
+        CSAPI.SetRTSize(rewardNode,875,299)
+        CSAPI.SetAnchor(p1,68,0)
+        CSAPI.SetRTSize(teamObj,920,164)
+        if actionWH1 then
+            actionWH1.scaleW = 940
+        end
+        if actionWH2 then
+            actionWH2.scaleW = 940
+        end
+    else
+        -- 超过5个卡牌往上移
+        CSAPI.SetAnchor(playerObj, 0, cardCount > 5 and 137 or 0)
+    end
+
+    if actionWH1 then
+        actionWH1:Play()
+    end
+    if actionWH2 then
+        actionWH2:Play()
+    end
 
     local modelId = nil
     if g_FightMgr then --战斗后
@@ -489,6 +527,14 @@ function SetPVEPanel()
             SetTowerPanel()
         end
         return
+    elseif dungeonType == eDuplicateType.NewTower then
+        CSAPI.SetGOActive(titleObj, true)
+        CSAPI.SetRTSize(bottomObj,0,447)
+        CSAPI.SetGOActive(buttonObj,true)
+        CSAPI.SetGOActive(newTowerObj, true)
+        CSAPI.SetGOActive(taskObj,true)
+        SetNewTowerPanel()
+        return
     end
 
     CSAPI.SetGOActive(titleObj, true)
@@ -658,6 +704,72 @@ end
 function IsTowerComplete()
     local dungeonType = DungeonMgr:GetCurrDungeonType()
     return dungeonType == eDuplicateType.Tower and DungeonMgr:IsCurrDungeonComplete()
+end
+
+------------------------------------异构空间------------------------------------
+function SetNewTowerPanel()
+    local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    LanguageMgr:SetText(txtTowerPass,49018,StringUtil:SetByColor(cfg.chapterID,"ffc146"))
+    LanguageMgr:SetText(txtTitle,49008)
+    CSAPI.SetGOAlpha(btnNext, cfg.lasChapterID ~= nil and 1 or 0.3)
+    SetTargetInfo(cfg)
+end
+
+function SetTargetInfo(cfg)
+    for i = 1, 3 do
+        local taskGO = taskObj.transform:GetChild(i - 1).gameObject
+        CSAPI.SetGOActive(taskGO,false)
+    end
+    if cfg and cfg.teamLimted then
+        local teamCond = TeamCondition.New()
+        teamCond:Init(cfg.teamLimted)
+        local list = teamCond:GetDesc()
+        if cfg.tacticsSwitch then
+            table.insert(list,LanguageMgr:GetByID(49028))
+        end
+        if list and #list>0 then
+            for i, v in ipairs(list) do
+                local taskGO = taskObj.transform:GetChild(i - 1).gameObject
+                if taskGO == nil then
+                    taskGO = CSAPI.CloneGO(taskObj.transform:GetChild(0).gameObject)
+                else
+                    CSAPI.SetGOActive(taskGO, true)
+                end
+
+                local img = ComUtil.GetComInChildren(taskGO, "Image")
+                CSAPI.LoadImg(img.gameObject,"UIs/FightOver/img_17_01.png", true, nil, true)
+                
+                local text = ComUtil.GetComInChildren(taskGO, "Text")
+                text.text = v
+            end
+        end
+    end
+end
+
+function OnClickNext()
+    local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    if cfg and cfg.lasChapterID then
+        local lasCfg = Cfgs.MainLine:GetByID(cfg.lasChapterID[1])
+        local lastType = TeamConfirmOpenType.Dungeon
+        local _disChoosie = false
+        if lasCfg.type == eDuplicateType.NewTower then
+            lastType = TeamConfirmOpenType.Tower
+            _disChoosie= true
+        elseif lasCfg.type  == eDuplicateType.Rogue then
+            lastType = TeamConfirmOpenType.Rogue
+            _disChoosie= true
+        end
+        if lasCfg and DungeonMgr:IsDungeonOpen(lasCfg.id) then
+            FightClient:Reset()
+            TeamMgr:ClearAssistTeamIndex();
+            TeamMgr:ClearFightTeamData();
+            CSAPI.OpenView("TeamConfirm", { -- 正常上阵
+                dungeonId = lasCfg.id,
+                teamNum = lasCfg.teamNum or 1,
+                disChoosie = _disChoosie,
+            }, lastType)
+        end
+    end
 end
 
 ------------------------------------军演------------------------------------
@@ -855,6 +967,17 @@ function SetSweepTitle()
         str2 =StringUtil:SetByColor(str2,isHard and "FF7781" or "FFFFFF")
         CSAPI.SetText(txtMopUpLv2, str2)
     end
+end
+------------------------------------模拟------------------------------------
+
+function SetDirllPanel()
+    CSAPI.SetGOActive(newTowerObj, true)
+    CSAPI.SetGOActive(titleObj,true)
+    CSAPI.SetGOActive(taskObj,true)
+    local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    LanguageMgr:SetText(txtTowerPass,49018,StringUtil:SetByColor(cfg.chapterID,"ffc146"))
+    LanguageMgr:SetText(txtTitle,49008)
+    SetTargetInfo(cfg)
 end
 
 ------------------------------------加成------------------------------------

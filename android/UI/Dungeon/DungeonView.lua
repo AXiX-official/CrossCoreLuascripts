@@ -439,13 +439,17 @@ function ShowDungeon(_id)
     if groups and #groups > 0 then
         for i, v in pairs(groups) do
             local cfg = Cfgs.MainLine:GetByID(v)
-            local lua = GetItem()
-            items = items or {}
-            items[cfg.id] = lua
-            lua.Set(cfg)
-            lua.SetNext(i ~= #groups)
-            lua.SetSort(i)
-            CSAPI.SetGOActive(lua.gameObject, true)
+            if cfg then
+                local lua = GetItem()
+                items = items or {}
+                items[cfg.id] = lua
+                lua.Set(cfg)
+                lua.SetNext(i ~= #groups)
+                lua.SetSort(i)
+                CSAPI.SetGOActive(lua.gameObject, true)
+            else
+                LogError("没找到关卡表数据！！！id:" .. v)
+            end
         end
         local cur,max = currListItem:GetPassCount()
         CSAPI.SetText(txtPrograss, math.floor(cur/max * 100) .. "%")

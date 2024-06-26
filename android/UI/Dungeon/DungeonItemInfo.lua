@@ -1,20 +1,3 @@
-local infoUtil = nil
-local enterPos = nil
-local outPos = nil
-local isInfoShow = nil
-local lastCfg = nil
-local currCfg = nil
-local infoFade = nil
-local infoCG = nil
-local infoMove = nil
-local isActive = false
-local enterCB = nil
-local sweepCB = nil
-local maskCB = nil
-local buyFunc = nil
--- 多倍
-local isDouble = true
-local multiNum = 0
 
 function Awake()
     eventMgr = ViewEvent.New();
@@ -28,7 +11,10 @@ function Awake()
 end
 
 function OnPanelUpdate(_data)
-    infoUtil.RefreshPanel()
+    if _data then
+        infoUtil:Set(_data)
+    end
+    infoUtil:RefreshPanel()
 end
 
 function InitInfo()
@@ -68,7 +54,7 @@ function SetItems(typeNames, callBack)
             if typeName ~= "" then
                 if typeName == "Double" then
                     if IsShowDouble() then
-                        infoUtil:Show(typeName, doubleParent)    
+                        infoUtil:Show(typeName, doubleParent)
                     end
                 elseif i == #typeNames then
                     infoUtil:Show(typeName, layout, function(panel)
@@ -139,11 +125,16 @@ end
 function ClearLastItem()
     lastCfg = nil
 end
+
+function SetLayoutPos(pos)
+    CSAPI.SetAnchor(layout,pos[1],pos[2])
+end
 ------------------------------------------------按钮回调
 
-function SetClickCB(_cb1, _cb2)
+function SetClickCB(_cb1, _cb2,_cb3)
     enterCB = _cb1
     sweepCB = _cb2
+    storyCB = _cb3
     if enterCB then
         local _enterCB = enterCB
         enterCB = function()
@@ -160,7 +151,10 @@ function OnButtonClick(panel)
     if sweepCB then
         panel.OnClickSweep = sweepCB
     end
-    if buyFunc then
+    if storyCB and panel.SetStoryCB then
+        panel.SetStoryCB(storyCB)
+    end
+    if buyFunc and panel.SetBuyFunc then
         panel.SetBuyFunc(buyFunc)
     end
 end
@@ -257,10 +251,18 @@ function SetPos(isShow)
     CSAPI.SetLocalPos(childNode, pos[1], pos[2], pos[3])
 end
 
-function ShowDangeLevel(isDanger, cfgs, currDanger)
+function ShowDangeLevel(isDanger, cfgs, currDanger, emptyStr)
     local dangerPanel =infoUtil:GetPanel("Danger")
     if isDanger and cfgs then
-        dangerPanel.ShowDangeLevel(isDanger, cfgs, currDanger)
+        if #cfgs > 1 then
+            dangerPanel.ShowDangeLevel(isDanger, cfgs, currDanger)
+        else
+            if emptyStr~=nil and emptyStr~="" then
+                dangerPanel.SetEmptyStr(emptyStr)
+            end
+            CSAPI.SetGOActive(dangerPanel.node, false)
+            CSAPI.SetGOActive(dangerPanel.empty, true)
+        end
     end
 end
 
@@ -268,5 +270,18 @@ function SetItemPos(typeName,x,y)
     local panel = infoUtil:GetPanel(typeName)
     if panel then
         panel.SetPos(x,y)
+    end
+end
+
+function GetCurrDanger()
+    local panel = infoUtil:GetPanel("Danger")
+    return panel and panel.GetCurrDanger() or 1
+end
+
+------------------------------------------------剧情
+function IsStoryFirst()
+    local plotButton = infoUtil:GetPanel("PlotButton")
+    if plotButton then
+        return plotButton.isStoryFirst
     end
 end

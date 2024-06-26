@@ -53,8 +53,8 @@ function OnValueChange()
         CSAPI.SetGOActive(tipImg, currLevel == 1)
         CSAPI.SetGOActive(txt_tip, currLevel == 1)
         if curDatas then
-            cfg = curDatas[currLevel]            
-            EventMgr.Dispatch(EventType.Dungeon_InfoPanel_Update)
+            cfg = curDatas[currLevel]   
+            EventMgr.Dispatch(EventType.Dungeon_InfoPanel_Update, cfg)
             -- Refresh()
         end
     end
@@ -77,7 +77,7 @@ function ShowDangeLevel(isDanger,cfgs,currDanger)
         CSAPI.SetGOActive(txt_tip, currLevel == 1)
         if curDatas then
             cfg = curDatas[currLevel]
-            EventMgr.Dispatch(EventType.Dungeon_InfoPanel_Update)
+            EventMgr.Dispatch(EventType.Dungeon_InfoPanel_Update, cfg)
             -- Refresh()
         end
     end

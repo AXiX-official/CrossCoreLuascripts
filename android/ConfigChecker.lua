@@ -418,7 +418,18 @@ end
 -- 关卡表
 function ConfigChecker:MainLine(cfg)
     -- LogDebug("IS_CLIENT:" .. IS_CLIENT)
+    g_CalMainLineStarIxs = {}
+    g_CalMainLineCount = {}
     for k, v in pairs(cfg) do
+        if v.starIx then
+            local arr = GCalHelp:GetTb(g_CalMainLineStarIxs, v.starIx, {})
+            table.insert(arr, k)
+        end
+        if v.group and v.type then
+            local groupArr = GCalHelp:GetTb(g_CalMainLineCount, v.group, {})
+            local typeArr = GCalHelp:GetTb(groupArr, v.type, {})
+            table.insert(typeArr, k)
+        end
         if v.forceSkill then
             table.sort(v.forceSkill)
         end
@@ -1365,6 +1376,46 @@ function ConfigChecker:CfgLimitedTime(cfgs)
         end
     end
 end
+function ConfigChecker:CfgFurniture(cfgs)
+    -- for k, cfg in pairs(cfgs) do
+    -- end
+end
+
+-- 计算主题表的舒适度和价格
+function ConfigChecker:CfgFurnitureTheme(cfgs)
+    for k, cfg in pairs(cfgs) do
+        local comfort, price_1, price_2 = 0, 0, 0
+        local id1, id2 = nil, nil
+        local layoutCfg = CfgThemeLayout[cfg.layoutId]
+        if (layoutCfg) then
+            for n, m in ipairs(layoutCfg.infos) do
+                local furCfg = CfgFurniture[m.cfgID]
+                if (not furCfg.special) then
+                    comfort = comfort + furCfg.comfort
+                    price_1 = price_1 + furCfg.price_1[1][2]
+                    price_2 = price_2 + furCfg.price_2[1][2]
+                    if (id1 == nil) then
+                        id1, id2 = furCfg.price_1[1][1], furCfg.price_2[1][1]
+                    end
+                end
+            end
+        end
+
+        cfg.comfort = comfort
+        cfg.price_1 = {{id1, price_1}}
+        cfg.price_2 = {{id2, price_2}}
+    end
+end
+
+-- 家具类型表重新排序
+function ConfigChecker:CfgFurnitureEnum(cfgs)
+    table.sort(
+        cfgs,
+        function(a, b)
+            return a.index < b.index
+        end
+    )
+end
 function ConfigChecker:CfgDupDropCntAdd(cfgs)
     -- 累计总共添加的次数
     g_AddDupMultiCnt = 0
@@ -1398,4 +1449,125 @@ function ConfigChecker:CfgDupDropCntAdd(cfgs)
         g_AddDupMultiCnt,
         g_ReCalAddDupMultiTime
     )
+end
+
+function ConfigChecker:CfgAchieve(cfgs)
+    local achievementFinishIds = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local aFinishIds = cfg.aFinishIds
+        if not aFinishIds then
+            LogError('CfgAchieve id:%s 的aFinishIds不允许为空', cfgid)
+        end
+
+        local aFinishId = aFinishIds[1]
+        local finishCount = aFinishIds[2]
+        if not aFinishId then
+            LogError('CfgAchieve id:%s 的条件Id不允许为空', cfgid)
+        end
+        if not finishCount then
+            LogError('CfgAchieve id:%s 的完成次数不允许为空', cfgid)
+        end
+
+        if not achievementFinishIds[aFinishId] then
+            achievementFinishIds[aFinishId] = {}
+        end
+        cfg.aFinishId = aFinishId
+        cfg.finishCount = finishCount
+        table.insert(achievementFinishIds[aFinishId], cfgid)
+    end
+    cfgs.achievementFinishIds = achievementFinishIds
+end
+
+function ConfigChecker:CfgAchieveFinishVal(cfgs)
+    local achieveGroup = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local nType = cfg.nType
+        if not nType then
+            LogError('CfgAchieveFinishVal id:%s 的nType不允许为空', cfgid)
+        end
+        if cfg.aVal2 then
+            table.sort(cfg.aVal2)
+        end
+
+        local group = eAchieveFinishType.GetTypeById(nType)
+
+        if not achieveGroup[group] then
+            achieveGroup[group] = {}
+        end
+        table.insert(achieveGroup[group], cfgid)
+    end
+    cfgs.achieveGroup = achieveGroup
+end
+
+function ConfigChecker:CfgBadge(cfgs)
+    local badgedFinishIds = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local aFinishIds = cfg.aFinishIds
+        if not aFinishIds then
+            LogError('CfgBadge id:%s 的aFinishIds不允许为空', cfgid)
+        end
+
+        local aFinishId = aFinishIds[1]
+        local finishCount = aFinishIds[2]
+        if not aFinishId then
+            LogError('CfgBadge id:%s 的条件Id不允许为空', cfgid)
+        end
+        if not finishCount then
+            LogError('CfgBadge id:%s 的完成次数不允许为空', cfgid)
+        end
+
+        if not badgedFinishIds[aFinishId] then
+            badgedFinishIds[aFinishId] = {}
+        end
+        cfg.aFinishId = aFinishId
+        cfg.finishCount = finishCount
+        table.insert(badgedFinishIds[aFinishId], cfgid)
+    end
+    cfgs.badgedFinishIds = badgedFinishIds
+end
+
+function ConfigChecker:CfgBadgeFinishVal(cfgs)
+    local badgedGroup = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local nType = cfg.nType
+        if not nType then
+            LogError('CfgBadgeFinishVal id:%s 的nType不允许为空', cfgid)
+        end
+
+        local group = eBadgedFinishType.GetTypeById(nType)
+
+        --LogI("group:%s", group)
+
+        if not badgedGroup[group] then
+            badgedGroup[group] = {}
+        end
+        table.insert(badgedGroup[group], cfgid)
+    end
+    cfgs.badgedGroup = badgedGroup
+end
+function ConfigChecker:CfgReturningActivity(cfgs)
+    for returnType, cfg in pairs(cfgs) do
+        for idx, ccc in pairs(cfg.infos) do
+            if ccc.activityId then
+                if ccc.type == RegressionActiveType.DropAdd then
+                    ccc.relateCfg = CfgDupDropCntAdd[ccc.activityId]
+                elseif ccc.type == RegressionActiveType.Banner then
+                    -- 回归卡池
+                    local cardPoolCfg = CfgCardPool[ccc.activityId]
+                    if not cardPoolCfg or cardPoolCfg.nType ~= CardPoolType.Regression then
+                        ASSERT(
+                            false,
+                            string.format(
+                                'CfgReturningActivity id:%s, sub index:%s 填写的对应的卡池id：%s找不到配置或者卡池类型不是%s[CardPoolType.Regression].',
+                                returnType,
+                                idx,
+                                ccc.activityId,
+                                CardPoolType.Regression
+                            )
+                        )
+                    end
+                end
+            end
+        end
+    end
 end

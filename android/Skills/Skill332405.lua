@@ -6,8 +6,8 @@ Skill332405 = oo.class(SkillBase)
 function Skill332405:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 回合结束时
-function Skill332405:OnRoundOver(caster, target, data)
+-- 行动结束
+function Skill332405:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -18,8 +18,8 @@ function Skill332405:OnRoundOver(caster, target, data)
 		self:AddBuffCount(SkillEffect[332405], caster, self.card, data, 332401,1,5)
 	end
 end
--- 行动结束
-function Skill332405:OnActionOver(caster, target, data)
+-- 行动结束2
+function Skill332405:OnActionOver2(caster, target, data)
 	-- 8672
 	local count672 = SkillApi:GetCount(self, caster, target,3,332401)
 	-- 8881

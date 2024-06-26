@@ -13,7 +13,7 @@ function this:Init()
 	self.had_del_cnt = 0
 	self.had_apply_cnt = 0
 	self:GetFriendsData()
-
+	--self:InitAssistData();
     --服务器压力大，不要在登录的时候发送
 	--self:GetRecomend()
 end
@@ -173,8 +173,10 @@ function this:CreateAssistData(data)
 		setmetatable(assist.card, getmetatable(data.card))
 		setmetatable(assist, getmetatable(data))
 		local card = assist.card
+		card.old_cid=card.cid;
 		local cid = FormationUtil.FormatAssitID(data.uid, card.cid)
 		card.cid = cid
+		card.fuid=data.uid;
 		return assist;
 	end
 	return nil;
@@ -233,8 +235,17 @@ end
 -- 获取助战的数据
 function this:InitAssistData(callBack)
 	FriendProto:GetAssitInfo(nil, function(proto)
-		if proto and proto.assits then
-			self:ClearAssistData(false);
+		self:OnAssitInfoAdd(proto);
+		if callBack then
+			callBack();
+		end
+	end)
+end
+
+function this:OnAssitInfoAdd(proto)
+	if proto then
+		self:ClearAssistData(false);
+		if proto.assits then
 			--缓存已经助战的卡
 			self.isRealRefresh = false;
 			self.tLIndex=1;
@@ -247,13 +258,37 @@ function this:InitAssistData(callBack)
 				end
 			end
 		end
-		if self.assistData then
-			table.sort(self.assistData, AssistSortUtil.Sort);
+		-- LogError(proto.new_tower_assits)
+		if proto.new_tower_assits and #proto.new_tower_assits>0 then --爬塔锁定的角色数据
+			self.newTowerAssitsLock=self.newTowerAssitsLock or {};
+			for k,v in ipairs(proto.new_tower_assits) do
+				if v.new_tower_assit and v.sid then
+					local formatData=self:GetAssistFormat(v.new_tower_assit, v.new_tower_assit.cards[1], 1,true)
+					local assist=self:CreateAssistData(formatData);
+					self.newTowerAssitsLock[v.sid] =assist;
+				end
+			end
+		else
+			self.newTowerAssitsLock=nil;
 		end
-		if callBack then
-			callBack();
-		end
-	end)
+	end
+	if self.assistData then
+		table.sort(self.assistData, AssistSortUtil.Sort);
+	end
+end
+
+function this:IsLockAssist(cid,sectionId)
+	if self.newTowerAssitsLock and self.newTowerAssitsLock[sectionId] and self.newTowerAssitsLock[sectionId].card.cid==cid then
+		return true;
+	end
+	return false;
+end
+
+function this:GetLockAssistID(sectionId)
+	if self.newTowerAssitsLock and self.newTowerAssitsLock[sectionId] then
+		return self.newTowerAssitsLock[sectionId].card.cid;
+	end
+	return nil;
 end
 
 --是否刷新助战数据
@@ -265,7 +300,7 @@ function this:IsRefreshAssist()
 end
 
 --返回助战卡牌数据列表 isRefresh:是否刷新下标
-function this:GetAssistList(num, isRefresh, fixedID)
+function this:GetAssistList(num, isRefresh, fixedID,isTower,sectionId)
 	local list = {};
 	if self.assistData then
 		self.tLIndex = self.tLIndex or 1;
@@ -275,6 +310,14 @@ function this:GetAssistList(num, isRefresh, fixedID)
 				self.tLIndex = 1;
 			end
 		elseif self.tLAssitList then --上次请求的列表
+			if fixedID then
+				local fixedUserID=nil;--当前固定显示的卡牌的用户ID
+				local card = self:GetAssistCardData(fixedID,sectionId);
+				if card then
+					fixedUserID=card:GetData().assist.uid;--持有人ID
+					table.insert(list, card);
+				end
+			end
 			for k,v in ipairs(self.tLAssitList) do --防止NPC重复
 				table.insert(list,v);
 			end
@@ -285,7 +328,7 @@ function this:GetAssistList(num, isRefresh, fixedID)
 		local assits = {};
 		local fixedUserID=nil;--当前固定显示的卡牌的用户ID
 		if fixedID then
-			local card = self:GetAssistCardData(fixedID);
+			local card = self:GetAssistCardData(fixedID,sectionId);
 			if card then
 				fixedUserID=card:GetData().assist.uid;--持有人ID
 				table.insert(list, card);
@@ -316,12 +359,12 @@ function this:GetAssistList(num, isRefresh, fixedID)
 						if userIdx~=-1 then --存在相同玩家的卡牌时判定使用哪一张
 							--比较两个卡的显示次数，少的覆盖多的
 							if self.assistData[i].showNum<assits[userIdx].showNum then
-								local card = self:GetAssistCardData(assist.card.cid);
+								local card = self:GetAssistCardData(assist.card.cid,sectionId);
 								assits[userIdx]={card=card,showNum=self.assistData[i].showNum};
 								self.tLIndex = i;
 							end
 						else --否则直接加入
-							local card = self:GetAssistCardData(assist.card.cid);
+							local card = self:GetAssistCardData(assist.card.cid,sectionId);
 							table.insert(assits, {card=card,showNum=self.assistData[i].showNum});
 							self.tLIndex = i;
 						end
@@ -344,7 +387,7 @@ function this:GetAssistList(num, isRefresh, fixedID)
 		end
 		table.sort(list,AssistSortUtil.Sort2);
 		table.sort(self.tLAssitList,AssistSortUtil.Sort2);
-		local isRefresh=true;
+		local isRefresh2=true;
 		for k,v in ipairs(self.assistData) do --记录显示轮次并判断是否刷新
 			local has=false;
 			for _, val in ipairs(assits) do
@@ -358,12 +401,12 @@ function this:GetAssistList(num, isRefresh, fixedID)
 				v.showNum=v.showNum+1;
 			end
 			if v.showNum<1 then
-				isRefresh=false;
+				isRefresh2=false;
 				break;
 			end
 		end
-		-- Log("是否需要刷新："..tostring(isRefresh))
-		self.isRealRefresh = isRefresh; --设置下次获取需要刷新
+		-- Log("是否需要刷新："..tostring(isRefresh2))
+		self.isRealRefresh = isRefresh2; --设置下次获取需要刷新
 	end
 	return list;
 end
@@ -383,8 +426,17 @@ function this:SetAssistMemberCnt(uid)
 end
 
 --返回协战数据的卡牌对象
-function this:GetAssistCardData(cid)
-	local assist = self:GetAssistData(cid);
+function this:GetAssistCardData(cid,sectionId)
+	-- local assist = self:GetAssistData(cid);
+	local assist=nil;
+	if (sectionId==7001 or sectionId==7002) and self.newTowerAssitsLock~=nil and self.newTowerAssitsLock[sectionId]~=nil then --优先获取爬塔助战卡
+		if self.newTowerAssitsLock[sectionId].card and self.newTowerAssitsLock[sectionId].card.cid==cid then
+			assist=self.newTowerAssitsLock[sectionId];
+		end
+	end
+	if assist==nil then
+		assist = self:GetAssistData(cid);
+	end
 	local card = nil;
 	if assist ~= nil then
 		card = CharacterCardsData(assist.card)
@@ -491,6 +543,7 @@ function this:ClearAssistData(isForce)
 			self.assistData = nil
 		end
 	end
+	self.newTowerAssitsLock=nil;
 	self.dCleanList = nil;
 	self.tLIndex = 1;
 	self.tLAssitList=nil;

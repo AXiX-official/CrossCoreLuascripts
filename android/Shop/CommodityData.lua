@@ -53,6 +53,9 @@ function this:GetType() return self.cfg and self.cfg.nType or 1 end
 -- 返回ICON
 function this:GetIcon() return self.cfg and self.cfg.sIcon or "" end
 
+-- 返回ICON2
+function this:GetIcon2() return self.cfg and self.cfg.sIcon_2 or nil end
+
 -- 格子图标
 function this:GetGirdIcon() return self.cfg and self.cfg.sGridIcon or "" end
 
@@ -520,6 +523,10 @@ function this:GetNum()
     if num~=-1 and (self:GetType()==CommodityItemType.THEME or self:GetType()==CommodityItemType.FORNITURE) then --家具的可剩余购买次数需要减去持有数
         local list=self:GetCommodityList();
         if list then
+            -- if list[1].data==nil then
+            --     LogError(self:GetID())
+            --     LogError(list[1])
+            -- end
             local dyVal1=list[1].data:GetDyVal1();
             --查询宿舍表
             local buyCount=num; --持有上限值

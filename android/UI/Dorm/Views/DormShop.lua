@@ -121,8 +121,8 @@ function InitFuritureDic()
             if (not _furnitureDic[v.sType]) then
                 _furnitureDic[v.sType] = {}
             end
-            --不是隐藏的主题
-            if(not themeHideDic[v.theme]) then 
+            --不是隐藏的主题,不是特殊家具
+            if(not themeHideDic[v.theme] and not v.special) then 
                 table.insert(_furnitureDic[v.sType], v.id)
             end 
         end
@@ -197,10 +197,12 @@ function GetThemeDic(index)
             if (not _dic[v.cfgID]) then
                 _dic[v.cfgID] = 1
                 local furCfg = Cfgs.CfgFurniture:GetByID(v.cfgID)
-                if (not _typeDic[furCfg.sType]) then
-                    _typeDic[furCfg.sType] = {}
-                end
-                table.insert(_typeDic[furCfg.sType], v.cfgID)
+                if(not furCfg.special) then 
+                    if (not _typeDic[furCfg.sType]) then
+                        _typeDic[furCfg.sType] = {}
+                    end
+                    table.insert(_typeDic[furCfg.sType], v.cfgID)
+                end 
             end
         end
         -- 筛查存在的类型

@@ -529,18 +529,6 @@ function OnClickNetwork()
     -- FuncUtil:Call(CSAPI.SendToNetworkServer, nil, 500, "测试发送信息");
 end
 
-function OnClickURL()
-    local url = "https://itunes.apple.com/in/app/id6443983362";
-    LogError("打开URL" .. url);
-    CSAPI.OpenWebBrowser(url);
-end
-
-function OnClickURL1()
-    local url = "hhttps://itunes.apple.com/in/app/id6443983362";
-    LogError("Application.OpenURL：" .. url);
-    UnityEngine.Application.OpenURL(url);
-end
-
 function OnClickUI()
     if (_G.fightViewState == nil) then
         _G.fightViewState = true;
@@ -689,18 +677,34 @@ function OnClickFightRecord()
 end
 
 function OnClickServerList()
+    LogError("aaaa");
     _G.server_list_enc_close = 1;
-    -- InitServerInfo(nil, "219.135.170.30/php/serverlist.php?cmd=get&zone=1");
-    InitServerInfo(nil, "http://219.135.170.30/php/res/serverList/serverlist_nw1.json");
+    InitServerInfo(nil, "http://192.168.5.86/php/res/serverList/serverlist_nw1.json");
     OnClickClose();
      
-    FuncUtil:Call(function() EventMgr.Dispatch(EventType.Login_Switch_Server) end,nil,500);   
+    --FuncUtil:Call(function() EventMgr.Dispatch(11111) end,nil,1000); 
+
+    local go = CSAPI.GetView("Login");
+    local lua = ComUtil.GetLuaTable(go);
+    lua.OnClickSwitch();
 end
 
 function OnClickLoadingList()
     local go = CSAPI.GetView("Loading");
     local lua = ComUtil.GetLuaTable(go);
     lua.RefreshLoadContent();
+end
+
+function OnClickSpine()
+    ResUtil:CreateUIGOAsync("SpineTest", gameObject)
+end
+
+function OnClickCond()
+    ResUtil:CreateUIGOAsync("GMConditionTest", gameObject)
+end
+
+function OnClickRegres()
+    CSAPI.OpenView("RegressionList")
 end
 
 --------------------------------------下拉列表逻辑处理完毕------------

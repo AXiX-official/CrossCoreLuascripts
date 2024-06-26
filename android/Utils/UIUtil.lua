@@ -651,4 +651,60 @@ function this:RemoveHead(parent)
     end
 end
 
+-- 打开成就弹窗
+function this:OpenAchieveReward(data,elseData)
+    local rewards = elseData
+    local closeCallBack = nil
+    if rewards then
+        closeCallBack = function()
+            self:OpenReward({rewards})
+        end
+    end
+    
+    CSAPI.OpenView("RewardAchievement",data,{closeCallBack = closeCallBack})
+end
+
+--临时用,设置RT_mix_v2的材质球属性
+function this.SetRTAlpha(cameraGO,rawGO)
+    if cameraGO==nil or rawGO==nil then
+        do return end;
+    end
+    local img=ComUtil.GetCom(rawGO,"RawImage");
+    if img==nil then
+        LogError("没找到对应的RawImage脚本！"..tostring(img==nil).."\t"..tostring(img2==nil));
+        do return end;
+    end
+    local rt=this.CreateRT();
+    local c=ComUtil.GetCom(cameraGO,"Camera");
+    c.targetTexture=rt;
+    img.texture=rt;
+end
+
+--创建临时用的RT
+function this.CreateRT()
+    if CRT then
+        return CRT;
+    else
+        local rtSize={x=1334,y=750};
+        local wh = UnityEngine.Screen.width * 1.0 / UnityEngine.Screen.height * 1.0;--当前UI的宽高比
+        local rtWh = (rtSize.x / rtSize.y);--rt尺寸的宽高比
+        local v2 = UnityEngine.Vector2(0, 0);
+        if (UnityEngine.Mathf.Abs(wh - rtWh) <= 0.2) then
+            v2 = UnityEngine.Vector2(rtSize.x, rtSize.y);
+        else
+            v2 = UnityEngine.Vector2(rtSize.y * wh, rtSize.y);
+        end
+        CRT=UnityEngine.RenderTexture(UnityEngine.Mathf.CeilToInt(v2.x), UnityEngine.Mathf.CeilToInt(v2.y), 24,UnityEngine.RenderTextureFormat.ARGB32);
+        return CRT;
+    end
+end
+
+--销毁RT
+function this.DestoryRT()
+    if CRT~=nil then
+        UnityEngine.GameObject.Destroy(CRT);
+        CRT=nil;
+    end
+end
+
 return this

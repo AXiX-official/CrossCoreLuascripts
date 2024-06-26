@@ -32,7 +32,7 @@ function InitListener()
     eventMgr:AddListener(EventType.Character_Create,OnCharacterCreate); 
     eventMgr:AddListener(EventType.Character_FightInfo_Changed,OnCharacterFightInfoChanged);
    
-    eventMgr:AddListener(EventType.Fight_View_Main_Info_Show_State, SetShowState);
+    eventMgr:AddListener(EventType.Fight_View_Main_Info_Show_State, OnFightInfoShowStateChanged);
     eventMgr:AddListener(EventType.Fight_UI_Enter_Action,PlayEnterAction);    
     eventMgr:AddListener(EventType.Fight_Action_Turn,OnFightActionTurn);    
      

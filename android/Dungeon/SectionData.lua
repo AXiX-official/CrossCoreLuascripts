@@ -314,7 +314,6 @@ function this:GetOpenState()
 		elseif self:GetSectionType() == SectionType.Activity then --活动没有未开启显示
 			if self:GetType() ~= SectionActivityType.Tower then
 				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
-				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
 				if openState > 0 then
 					openState = isActiveOpen and 1 or -2
 					lockStr = LanguageMgr:GetTips(24001)
@@ -326,10 +325,6 @@ function this:GetOpenState()
 		end
 	end
 	return openState, lockStr
-end
-
-function this:IsActiveOpen()
-	
 end
 
 --掉落奖励
@@ -385,6 +380,14 @@ function this:GetPath()
 		viewKey = info.view
 	end
 	return viewKey
+end
+
+function this:GetDescKey()
+	return self.cfg and self.cfg.descKey or ""
+end
+
+function this:IsShowOnly()
+	return self.cfg and self.cfg.onlyOne and self.cfg.onlyOne == 1
 end
 
 return this; 

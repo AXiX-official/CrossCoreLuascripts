@@ -13,6 +13,10 @@ function this.GetNames(_type)
         return this.Danger()
     elseif _type == DungeonInfoType.Plot then
         return this.Plot()
+    elseif _type == DungeonInfoType.Feast then
+        return this.Feast()
+    elseif _type == DungeonInfoType.TotalBattle then
+        return this.TotalBattle()
     end
 end
 
@@ -38,6 +42,14 @@ end
 
 function this.Plot()
     return  {"Title", "Level", "Plot", "Output","PlotButton"}
+end
+
+function this.Feast()
+    return  {"Title", "Level", "Target", "Output", "Details","Double","Button2"}
+end
+
+function this.TotalBattle()
+    return  {"Title2", "Level", "Total", "Output","Danger2" ,"Details","Button3"}
 end
 
 return this; 

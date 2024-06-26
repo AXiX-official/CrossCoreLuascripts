@@ -184,6 +184,10 @@ function InitListener()
     eventMgr:AddListener(EventType.Activity_List_Null_Check, SetActivityBtn)
     -- 重置金额刷新
     eventMgr:AddListener(EventType.Pay_Amount_Change, SetMenuBuy)
+    -- 回归判断(3点会更新)
+    eventMgr:AddListener(EventType.HuiGui_Check, SetResRecoveryBtn)
+    -- 资源找回 
+    eventMgr:AddListener(EventType.HuiGui_Res_Recovery, SetResRecoveryBtn)
 end
 
 function OnDestroy()
@@ -201,7 +205,7 @@ function AddBtnsFunc()
     if (needCheckBtns == nil) then
         needCheckBtns = {"PlayerView", "ActivityListView", "FriendView", "ArchiveView", "TeamView", "RoleListNormal",
                          "MissionView", "ShopView", "CreateView", "Matrix", "Bag", "MailView", "Dorm", "PlayerAbility",
-                         "ExerciseLView", "ExplorationMain", "CourseView"} -- "GuildMenu",
+                         "ExerciseLView", "ExplorationMain", "CourseView", "Achievement"} -- "GuildMenu",
         btnsLockInfo = {}
         for i, v in pairs(needCheckBtns) do
             if (v == "PlayerAbility") then
@@ -217,7 +221,7 @@ function AddBtnsFunc()
             elseif (v == "ActivityListView" or v == "MailView" or v == "ExplorationMain") then
                 btnsLockInfo[v] = {22.5, 21}
             elseif (v == "FriendView" or v == "ArchiveView" or v == "CourseView" or v == "Matrix" or v == "Bag" or v ==
-                "Dorm") then -- or v =="GuildMenu") then -- 公会默认不开放 rui/20220608
+                "Dorm" or "Achievement") then -- or v =="GuildMenu") then -- 公会默认不开放 rui/20220608
                 btnsLockInfo[v] = {51, 19}
             end
         end
@@ -617,7 +621,7 @@ function Update()
     end
 
     -- -- 强制隐藏mask，防止锁屏
-    -- if (mask.activeSelf and animTimer ~= nil and (Time.time - animTimer) > 3) then
+    -- if (mask.activeSelf and animTimer ~= nil and (Time.time - animTimer) > 20) then
     --     CSAPI.SetGOActive(mask, false)
     -- end
 
@@ -627,7 +631,7 @@ function Update()
             HeadFrameMgr:RefreshDatas()
         end
     end
-    --头像
+    -- 头像
     if (HeadIconMgr:GetMinExpiry()) then
         if (curTime > HeadIconMgr:GetMinExpiry()) then
             HeadIconMgr:RefreshDatas()
@@ -637,7 +641,7 @@ end
 ----------------------------------------动画+红点-----------------------------------------------】
 -- 处理动画在某个关键帧上的事件
 function Anim()
-    -- -- tip 图标拉扯
+    -- tip 图标拉扯
     -- if ((Time.time - animTimer) > 0.25 and isPlayTopGrad == nil) then
     --     isPlayTopGrad = 1
     --     CSAPI.SetGOActive(cGrab, true)
@@ -680,7 +684,7 @@ end
 function StopAnim()
     MenuMgr:SetPlay(1)
     -- CSAPI.SetGOActive(anims, false)
-    --CSAPI.SetGOActive(mask, false)
+    -- CSAPI.SetGOActive(mask, false) --改动所有活动都关了才隐藏
     cg_node.alpha = 1
     CSAPI.SetGOActive(ui_structure, true)
     OnLoadingComplete()
@@ -816,6 +820,22 @@ function OnRedPointRefresh()
         UIUtil:SetRedPoint2(menuRedPath, btnPay, isRed, 122, 39, 0)
     end
 
+    -- 活动（特别...）
+    -- isOpen = true
+    -- if (isOpen) then
+    --     local _aData = RedPointMgr:GetData(RedPointType.ActivityList3)
+    --     local isRed = false
+    --     if _aData and #_aData > 0 then
+    --         for k, v in ipairs(_aData) do
+    --             if v.b == 1 then
+    --                 isRed = true
+    --                 break
+    --             end
+    --         end
+    --     end
+    --     UIUtil:SetRedPoint2(menuRedPath, btnSpecialGifts, isRed, 122, 39, 0)
+    -- end
+
     -- 商店
     isOpen = lockData["ShopView"]
     if (isOpen) then
@@ -867,11 +887,11 @@ function OnRedPointRefresh()
     if (true) then
         local _pData = RedPointMgr:GetData(RedPointType.HeadFrame)
         local _pData2 = RedPointMgr:GetData(RedPointType.Head)
-        local _isRed = false 
-        if(_pData ~= nil or _pData2 ~= nil) then 
-            _isRed = true 
-        end 
-        UIUtil:SetRedPoint2(menuRedPath, btnPlayerView,_isRed, 169.4, -6.1, 0)
+        local _isRed = false
+        if (_pData ~= nil or _pData2 ~= nil) then
+            _isRed = true
+        end
+        UIUtil:SetRedPoint2(menuRedPath, btnPlayerView, _isRed, 169.4, -6.1, 0)
     end
     -- -- 新皮肤（看板）
     -- local _data = RedPointMgr:GetData(RedPointType.CRoleSkin)
@@ -1105,6 +1125,10 @@ function SetLeft()
     SetMenuBuy()
 
     SetActivityBtn()
+
+    SetResRecoveryBtn()
+
+    -- SetSpecialGiftsBtn()
 end
 
 -- 等级经验条
@@ -1192,8 +1216,29 @@ function OnChatNewInfo(_data)
     end
 end
 
+-- 维纳测度
 function SetActivityBtn()
-    CSAPI.SetGOActive(btnPay, not ActivityMgr:IsActivityListNull(2))
+    CSAPI.SetGOActive(btnPay, not ActivityMgr:IsActivityListNull("ExtraActivityView", 2))
+end
+
+-- 资源找回
+function SetResRecoveryBtn()
+    -- local isShow = false
+    -- if (RegressionMgr:CheckHadActivity(RegressionActiveType.ResourcesRecovery) and
+    --     not RegressionMgr:CheckResRecoveryIsGain()) then
+    --     isShow = true
+    -- end
+    -- CSAPI.SetGOActive(btnResRecovery, isShow)
+    -- if (isShow) then
+    --     local isRed = not RegressionMgr:CheckResRecoveryIsGain()
+    --     UIUtil:SetRedPoint(btnResRecovery, isRed, 123, 31, 0)
+    -- end
+end
+
+-- 特别馈赠
+function SetSpecialGiftsBtn()
+    -- local isShow = not ActivityMgr:IsActivityListNull("SpecialActivityView", 3)
+    -- CSAPI.SetGOActive(btnSpecialGifts, true)
 end
 
 ----------------------------------------right-----------------------------------------------
@@ -1363,7 +1408,7 @@ end
 -- 设置看板  
 function SetImg(cb)
     -- 加载立绘并且调整到调整过的位置
-    isRole = PlayerClient:KBIsRole() 
+    isRole = PlayerClient:KBIsRole()
     CSAPI.SetGOActive(cardIconItem.gameObject, isRole)
     CSAPI.SetGOActive(mulIconItem.gameObject, not isRole)
     -- CSAPI.SetGOActive(bg, isRole)
@@ -1408,9 +1453,9 @@ function SetImg1(cb)
     end
 
     cardIconItem.Refresh(PlayerClient:GetPanelId(), LoadImgType.Main, function()
-        if(isIn and not cardIconItem.CheckIn()) then
+        if (isIn and not cardIconItem.CheckIn()) then
             isIn = false
-        end 
+        end
         if (isIn) then
             MenuMgr:SetPlayInID(PlayerClient:GetPanelId())
             if (cb) then
@@ -1457,9 +1502,9 @@ function SetImg2(cb)
     end
 
     mulIconItem.Refresh(PlayerClient:GetPanelId(), nil, function()
-        if(isIn and not mulIconItem.CheckIn()) then
+        if (isIn and not mulIconItem.CheckIn()) then
             isIn = false
-        end 
+        end
         if (isIn) then
             MenuMgr:SetPlayInID(PlayerClient:GetPanelId())
             if (cb) then
@@ -1560,7 +1605,7 @@ function OnViewOpened(viewKey)
     local cfg = Cfgs.view:GetByKey(viewKey)
     if (IsNeedAdd(viewKey) or (viewKey ~= "Menu" and cfg and not cfg.layer and not cfg.is_window)) then
         openViews[viewKey] = 1
-        if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView" and viewKey ~= "MenuBuyPanel") then
+        if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView" and viewKey ~= "MenuBuyPanel" and viewKey ~= "ResRecovery") then
             RoleAudioPlayMgr:StopSound() -- 有其它界面打开则中断语音
         end
 
@@ -1608,7 +1653,7 @@ function OnViewClosed(viewKey)
         return -- 入场动画
     end
 
-    EndCB() -- 执行语音循环播放
+    --EndCB() -- 执行语音循环播放
 
     PlayLoginVoice()
 
@@ -1687,31 +1732,42 @@ function ShowActivity(type)
 end
 
 -- ==============================--
--- desc:签到记录接收完毕，检测自动签到
+-- desc:弹窗
 -- time:2019-09-23 02:23:26
 -- @return 
 -- ==============================--
 function EActivityGetCB()
+
     -- 公告活动
     if (ActivityMgr:ToShowAD()) then
         CSAPI.OpenView("ActivityView")
         return
     end
-    -- 签到
+
+    -- 签到 签到记录接收完毕，检测自动签到 
     if (SignInMgr:CheckAll()) then
         return
     end
+
+    -- 解禁数据
+    --if (RoleMgr:GetJieJinDatas()) then
+    --    CSAPI.OpenView("RoleJieJinSuccess")
+    --    return
+    --end
+
+    -- 资源找回 
+    -- if (RegressionMgr:CheckNeedShow()) then
+    --     CSAPI.OpenView("ResRecovery")
+    --     return
+    -- end
 
     -- 付费弹窗 所有界面关闭的0.2后才打开界面（因为有可能是跳转触发的关闭所有界面）
     if (isCheckTime == nil or Time.time > (isCheckTime + 0.2)) then
         isCheckTime = Time.time
         FuncUtil:Call(EActivityGetCB2, nil, 200)
-        --return
     end
 
     CSAPI.SetGOActive(mask, false)
-    -- 技能完成
-    -- OpenRoleListNormal(need)
 end
 
 function EActivityGetCB2()
@@ -1755,6 +1811,7 @@ function OnFightRestore()
 end
 
 function TriggerGuide()
+    CSAPI.SetGOActive(mask,false)
     -- LogError("Menu引导");
     EventMgr.Dispatch(EventType.Guide_Trigger, "Menu");
 end
@@ -1826,7 +1883,7 @@ end
 -- 部分虽然是Top或者弹窗，但它们影响了主界面的逻辑顺序，所以记录进来
 function IsNeedAdd(viewKey)
     if (viewKey == "ActivityView" or viewKey == "PlayerUpgrade" or viewKey == "Guide" or viewKey == "SignInContinue" or
-        viewKey == "CRoleDisplay" or viewKey == "MenuBuyPanel") then
+        viewKey == "CRoleDisplay" or viewKey == "MenuBuyPanel" or viewKey == "ResRecovery") then
         return true
     end
     return false
@@ -1889,6 +1946,16 @@ function OnClickBtnBuy2()
     -- Tips.ShowTips("敬请期待")
 end
 
+-- 资源回收
+function OnClickResRecovery()
+    --CSAPI.OpenView("ResRecovery")
+end
+
+-- 特别馈赠
+function OnClickSpecialGifts()
+    -- CSAPI.OpenView("SpecialActivityView", nil, 3)
+end
+
 -----------------------------------------------基地数据更新----------------------------------------------------------------
 function MatrixUpdate()
     if (rRunTime) then
@@ -1907,15 +1974,13 @@ function InitResetTime()
     rRunTime = MatrixMgr:GetResetTime()
 end
 
-
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
 function OnClickVirtualkeysClose()
     ---填写退出代码逻辑/接口
-    if btnHide.gameObject.activeInHierarchy==false and OnClickBack then
+    if btnHide.gameObject.activeInHierarchy == false and OnClickBack then
         OnClickBack();
     end
 end
-
 
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）

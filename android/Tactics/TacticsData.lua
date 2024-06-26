@@ -87,4 +87,10 @@ function this:GetIcon()
 	return self.cfg and self.cfg.sIcon or nil;
 end
 
+function this:GetSkillsIds()
+	local cfgs = {}
+	local ids =(self:IsUnLock() and self.data) and self.data.skill_ids or self.cfg.aSkillIds;
+	return ids;
+end
+
 return this; 

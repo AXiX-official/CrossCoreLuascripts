@@ -2,7 +2,7 @@
 local this = 
 {
 [-865403415]={
-{effect="call",time=9000,type=0,pos_ref={ref_type=6}}
+{effect="call",time=9000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/Khepri_summon.acb",cue_name="Khepri_summon"}
 },
 [-686817241]={
 {time=4000,type=2,hit_creates={1192467788},hits={0}},

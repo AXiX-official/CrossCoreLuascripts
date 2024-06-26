@@ -17,12 +17,6 @@ function OnNameChange(str)
 	input.text=text;
 end
 
-function OnDisable()
-	if isChange and elseData and elseData.team then
-		PlayerProto:SaveTeam(elseData.team);
-	end
-end
-
 function OnDestroy()
 	CSAPI.RemoveInputFieldCallBack(inp_teamName,OnTeamNameEdit);
 	CSAPI.RemoveInputFieldChange(inp_teamName,OnNameChange)
@@ -53,7 +47,7 @@ function Refresh(_data,_elseData)
 			-- CSAPI.LoadImg(renameImg,"UIs/FormatPreset/write.png",true,nil,true);
 			isFirst=true;
 			local teamName=elseData.team:GetTeamName();
-			input.text=teamName==nil and string.format( LanguageMgr:GetTips(14017),elseData.team.index) or tostring(teamName);
+			input.text=teamName==nil and FormationUtil.GetDefaultName(elseData.team.index) or tostring(teamName);
 			isFirst=false;
 			local datas={};
 			for i=1,5 do
@@ -133,13 +127,13 @@ function OnClickItem()
 		if clickFunc then
 			clickFunc(this,btnObj.activeSelf);
 		end
-	else
-		local dialogdata = {}
-		dialogdata.content = string.format(LanguageMgr:GetTips(14034),input.text)
-		dialogdata.okCallBack = function()
-			ReplaceTeam();
-		end
-        CSAPI.OpenView("Dialog", dialogdata)
+	-- else
+	-- 	local dialogdata = {}
+	-- 	dialogdata.content = string.format(LanguageMgr:GetTips(14034),input.text)
+	-- 	dialogdata.okCallBack = function()
+	-- 		ReplaceTeam();
+	-- 	end
+    --     CSAPI.OpenView("Dialog", dialogdata)
 	end
 end
 

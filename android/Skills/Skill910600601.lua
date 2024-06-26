@@ -18,11 +18,6 @@ function Skill910600601:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
 	-- 8416
 	local count16 = SkillApi:BuffCount(self, caster, target,2,2,2)
 	-- 8108

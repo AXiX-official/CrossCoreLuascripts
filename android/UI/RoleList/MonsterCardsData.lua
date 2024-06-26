@@ -30,10 +30,10 @@ function this:InitCfg(cfgid)
 	end
 end
 
---当前使用的皮肤
-function this:GetSkinID()
-	return self.cfg.model
-end
+-- -- 当前使用的皮肤
+-- function this:GetSkinID()
+--     return self.cfg.model
+-- end
 
 --数值模板id
 function this:GetMonsterNumericalID()
@@ -119,5 +119,9 @@ function this:IsBaseCard()
 	return false
 end
 
+--卡牌表
+function this:GetCardCfg()
+    return self.cardCfg
+end
 
-return this 
+return this

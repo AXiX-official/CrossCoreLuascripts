@@ -258,50 +258,6 @@ function SetBGIcon(_quality)
     ResUtil.CardBorder:Load(bgIcon, name);
 end
 
--- -- 稀有度:1 > 等级:2 > 好感度:3 > 入手顺序:4 > 性能:5 > 保护:6 > 热值：7>属性：8>9：表id
--- function SetPro()
---     if (elseData and (elseData.listType or elseData.isCost)) then
---         CSAPI.SetGOActive(pro, true)
---         local str = ""
---         local sort = RoleMgr:GetSortType(elseData.listType).Sort[1]
---         local iconName = Cfgs.CfgRoleSortEnum:GetByID(sort).icon
---         if elseData.isCost then
---             -- 热值
---             local cur, max = cardData:GetHot(), cardData:GetCurDataByKey("hot")
---             cur = cur <= 10 and StringUtil:SetByColor(cur, "FF381E") or cur
---             str = string.format("%s/%s", cur, max)
---             iconName = Cfgs.CfgRoleSortEnum:GetByID(7).icon
---         elseif (sort == 3) then
---             -- 好感
---             local cur = cardData:GetFavorability()
---             local max = CRoleMgr:GetCRoleMaxLv()
---             -- str = string.format("%s/%s", cur, max)
---             str=tostring(cur)
---         elseif (sort == 5) then
---             -- 性能
---             str = cardData:GetProperty() .. ""
---         elseif (sort == 8) then
---             -- 属性
---             local mulID = RoleMgr:GetMultiID(elseData.listType)
---             local proCfg = Cfgs.CfgCardPropertyEnum:GetByID(mulID)
---             str = cardData:GetCurDataByKey(proCfg.sFieldName) .. ""
---             iconName = proCfg.icon
---         else
---             CSAPI.SetGOActive(pro, false)
---             return
---         end
---         CSAPI.SetGOActive(lvObj, false);
---         CSAPI.SetText(txtPro, str)
---         if (iconName) then
---             iconName = string.format("UIs/AttributeNew2/%s.png", iconName)
---             CSAPI.LoadImg(pro, iconName, true, nil, true)
---         end
---     else
---         CSAPI.SetGOActive(pro, false)
---     end
--- end
-
-
 -- 筛选值条
 function SetPro()
     if (elseData and  elseData.sortId) then
@@ -341,9 +297,6 @@ function SetPro()
         CSAPI.SetGOActive(lvObj, true)
     end
 end
-
-
-
 
 -- 是否激活碰撞体
 function ActiveClick(active)
@@ -476,16 +429,6 @@ end
 function SetLock(b)
     CSAPI.SetGOActive(lockImg, b)
 end
-
--- 颜色
--- function SetColor(_quality, _index)
---     local name = "btn_1_03";
---     if _quality then
---         _quality = _quality >= 3 and _quality or 3;
---         name = "btn_1_0" .. tostring(_quality);
---     end
---     ResUtil.CardBorder:Load(color, name);
--- end
 
 function SetTipsObj(isShow)
     CSAPI.SetGOActive(tipsObj, isShow == true);

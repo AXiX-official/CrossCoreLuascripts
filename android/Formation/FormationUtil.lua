@@ -48,7 +48,9 @@ this.orderList = { -- 编队类型对应的配置下标
     [eTeamType.GuildFight] = 4, -- 公会战队伍
     [eTeamType.TeamBoss] = 5, -- 组队boss队伍
     [eTeamType.Preset] = 1, -- 队伍预设索引起始值，从30开始到36
-    [eTeamType.ForceFight] = 1 -- 强制上阵索引起始值
+    [eTeamType.ForceFight] = 1, -- 强制上阵索引起始值
+    [eTeamType.Tower]=6,
+    [eTeamType.TowerDifficulty]=6,
 }
 
 -- 返回占用类型
@@ -205,8 +207,9 @@ function this.FindTeamCard(cid)
             if strs[1] == "npc" then -- npc卡牌
                 return this.FindNPC(tonumber(strs[2]));
             else
+                local sectionId=TowerMgr:GetSectionId();
                 -- 助战卡牌id
-                return FriendMgr:GetAssistCardData(cid);
+                return FriendMgr:GetAssistCardData(cid,sectionId);
             end
         else
             -- 正常的卡牌id
@@ -529,11 +532,23 @@ end
 ---@param index 队伍索引
 function this.GetOrderByTeamIndex(index)
     local type = TeamMgr:GetTeamType(index)
-    return this.orderList[type];
+    if this.orderList[type]~=nil then
+        return this.orderList[type];
+    else
+        return 6;
+    end
+end
+
+function this.GetTowerCardInfo(cid,uid,teamIndex)
+    local sId=7001
+    if teamIndex==eTeamType.TowerDifficulty then
+        sId=7002;
+    end
+    return TowerMgr:GetCardInfo(cid,uid,sId);
 end
 
 -- 删除耐久度为0的队员（爬塔用）
-function this.CleanDeathTowerMember(teamData)
+function this.CleanDeathTowerMember(teamData,sectionID)
     if teamData ~= nil then
         local removeIDs = {}
         for i = 1, 6 do
@@ -543,9 +558,9 @@ function this.CleanDeathTowerMember(teamData)
                 local cardData = item:GetCard();
                 if item:IsAssist() then
                     local assistData = cardData:GetAssistData()
-                    cardInfo = TowerMgr:GetCardInfo(cardData:GetID(), assistData.uid);
+                    cardInfo = this.GetTowerCardInfo(cardData:GetData().old_cid, assistData.uid,teamData:GetIndex());
                 else
-                    cardInfo = TowerMgr:GetCardInfo(cardData:GetID());
+                    cardInfo = this.GetTowerCardInfo(cardData:GetID(),nil,teamData:GetIndex());
                 end
                 if cardInfo ~= nil and cardInfo.tower_hp <= 0 then
                     table.insert(removeIDs, item:GetID())
@@ -560,12 +575,12 @@ function this.CleanDeathTowerMember(teamData)
     end
 end
 
-function this.GetDefaultName(teamIndex)
-    local teamName = nil;
+function this.GetDefaultName(teamIndex,name)
+    local teamName = name;
     local teamType = TeamMgr:GetTeamType(teamIndex);
-    if teamType == eTeamType.Tower then
+    if teamType == eTeamType.Tower or teamType==eTeamType.TowerDifficulty then
         teamName = LanguageMgr:GetByID(49021);
-    else
+    elseif teamName==nil or teamName=="" then
         teamName = string.format(LanguageMgr:GetTips(14017), teamIndex)
     end
     return teamName;

@@ -56,10 +56,11 @@ end
 
 function SetData()
     if data then
-        for _,item in ipairs(data) do
+        for index,item in ipairs(data) do
             local cardData = MonsterInfo.New();
             cardData:Init(item.id);	
-            table.insert(curDatas,{monster=cardData,isBoss=item.isBoss});
+            table.insert(curDatas,{monster=cardData,isBoss=item.isBoss,isDead = item.isDead});
+            lastIndex = item.isSel and index or lastIndex
         end
     end
 end
@@ -111,6 +112,7 @@ function RefreshTabs()
                 icon=v.monster:GetIcon(),
                 isEnemy=true,
                 isBoss=v.isBoss,
+                isDead = v.isDead
             },lastIndex);
             y=k==1 and y or y-item.GetLineHeight()-normalY;
             sizeY=sizeY+normalY+item.GetLineHeight();

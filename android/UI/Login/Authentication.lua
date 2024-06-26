@@ -9,6 +9,7 @@ function Awake()
     eventMgr = ViewEvent.New();
     
     eventMgr:AddListener(EventType.Authentication_Result, OnValidResult)
+    eventMgr:AddListener(EventType.Authentication_Close, OnValidClose)
     BuryingPointMgr:BuryingPoint("before_login", "10020");
 end
 
@@ -60,9 +61,11 @@ function OnClickValid()
                 channel=tostring(CSAPI.GetChannelType()),
             };  
             ChannelWebUtil.SendToServer2(signData,ChannelWebUtil.Extends.Authen,function(json)
-                EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="user_authen",time=2000,timeOutCallBack=function()
+                EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="user_authen",time=30000,timeOutCallBack=function()
                     --超时，回到登录界面
-                    view:Close();
+                    if gameObject~=nil and view~=nil then
+                        view:Close();
+                    end
                 end});
                 if json.isOk then
                     --发送协议给服务器
@@ -238,6 +241,13 @@ function ValidOtherChar(s)
         k=k+byteCount;
     end
     return false;
+end
+
+function OnValidClose()
+    if gameObject~=nil and view~=nil then
+        EventMgr.Dispatch(EventType.Net_Msg_Getted,"user_authen");
+        OnClickClose();
+    end
 end
 
 function OnClickClose()

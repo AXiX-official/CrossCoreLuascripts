@@ -20,6 +20,7 @@ function Awake()
 	eventMgr:AddListener(EventType.CardCool_Update, OnCardCoolUpdate)
     eventMgr:AddListener(EventType.Player_HotChange, SetEnterCost)
     eventMgr:AddListener(EventType.Bag_Update,SetEnterCost);
+    eventMgr:AddListener(EventType.Fight_Enter_Fail,OnEnterFail)
     -- eventMgr:AddListener(EventType.Team_Confirm_OpenSkill, OnClickSkill)
     CSAPI.SetGOActive(btnAISetting,true);
 end
@@ -118,7 +119,7 @@ function OnOpen()
     CSAPI.SetText(txt_move,tostring(moveLimit));
     --如果配置表中存在cost值，则读取cost信息，否则直接当热值处理
     currCostInfo=DungeonUtil.GetCost(dungeonCfg);
-    currCostHot=enterCost+successCost;
+    currCostHot=math.ceil((enterCost+successCost) * (100- DungeonUtil.GetExtreHotNum()) / 100);
     SetFighting(dungeonCfg.lvTips);
     SetEnterCost();
     if dungeonCfg and dungeonCfg.type==eDuplicateType.Teaching then
@@ -387,6 +388,12 @@ function OnClickNavi(go)
         end
     end
     CSAPI.OpenView("FightNaviSetting",nil,num);
+end
+
+function OnEnterFail()
+    if gameObject or view then
+        view:Close();
+    end
 end
 
 ----#Start#----

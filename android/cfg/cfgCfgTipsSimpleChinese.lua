@@ -30,7 +30,7 @@ local conf = {
 {'20',	'GeneralTipsClose',	'8',	'1',	'{}',	''},
 {'21',	'',	'',	'',	'',	''},
 {'22',	'itemNotEnough',	'1',	'',	'物品数量不足',	''},
-{'23',	'itemNumNotEnough',	'1',	'',	'物品 {} 不足 {}',	''},
+{'23',	'itemNumNotEnough',	'1',	'',	'物品 {} 数量不足 {}',	''},
 {'24',	'itemNotFind',	'1',	'',	'找不到物品 {}',	''},
 {'25',	'itemBapOpenLimit',	'1',	'',	'仓库开启上限限制',	''},
 {'26',	'itemBagSpaceLimit',	'7',	'',	'物品<color=#FFC142>{1}</color>已到达数量上限，只能再添加{2}个',	'80001'},

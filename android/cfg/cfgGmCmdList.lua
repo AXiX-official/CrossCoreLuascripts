@@ -82,6 +82,7 @@ local conf = {
 {'72',	'七日',	'sevenTaskOpenNewDay',	'0',	'开启新一天的七日任务',	'sevenTaskOpenNewDay',	'sevenTaskOpenNewDay'},
 {'73',	'勘测',	'resetExploration',	'0',	'重置测绘记录',	'resetExploration',	'resetExploration'},
 {'74',	'购买',	'recharge',	'1',	'模拟充值',	'recharge id[CfgCommodity表的id]',	'recharge 40001'},
+{'75',	'回归',	'setReturnPlr',	'1',	'设置回归玩家',	'setReturnPlr 回归类型( 1短期回归玩家，2长期回归玩家)',	'setReturnPlr 1'},
 },
 }
 --cfgGmCmdList = conf

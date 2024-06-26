@@ -361,5 +361,142 @@ function this.GetSkillColor(icon_bg_type)
     return iconColors[icon_bg_type] or "ffffff"
 end
 
+-- 新卡：同调，形态切换， 解限
+function this.GetNewCardData1(oldCardData, newCardCfgID)
+    -- 形态切换、同调 --等级继承，技能、被动技能继承等级，副天赋继承主体，变更皮肤
+    local cardCfg = Cfgs.CardData:GetByID(newCardCfgID)
+    -- 普通技能需要重新封装
+    local newSkillDatas = {}
+    local curSkillsID = cardCfg.jcSkills
+    local skills = oldCardData:GetSkills()
+    for i, v in ipairs(skills) do
+        local cfg = Cfgs.skill:GetByID(v.id)
+        table.insert(newSkillDatas, {
+            id = curSkillsID[i] + (cfg.lv - 1),
+            exp = 0,
+            type = SkillMainType.CardNormal
+        })
+    end
+    -- 被动技能
+    local sSkillID = cardCfg.tfSkills and cardCfg.tfSkills[1] or nil
+    if (sSkillID) then
+        local skillsDatas = oldCardData:GetSkills(SkillMainType.CardTalent)
+        if (#skillsDatas > 0) then
+            local id = skillsDatas and skillsDatas[1].id or nil
+            if (id) then
+                local cfg = Cfgs.skill:GetByID(id)
+                sSkillID = sSkillID + (cfg.lv - 1)
+                table.insert(newSkillDatas, {
+                    id = sSkillID,
+                    exp = 0,
+                    type = SkillMainType.CardTalent
+                })
+            end
+        end
+    end
+    -- 副天赋
+    -- 重新封装
+    local newInfo = {}
+    newInfo = table.copy(oldCardData:GetData())
+    newInfo.cfgid = newCardCfgID
+    newInfo.skills = newSkillDatas
+    return CharacterCardsData(newInfo, false)
+end
+
+-- 新卡：召唤
+function this.GetNewCardData2(oldCardData, monsterCfgID)
+    -- 召唤 --等级继承，技能、被动技能不继承(到怪物表拿数据)、无副天赋
+    local cardCfg = Cfgs.MonsterData:GetByID(monsterCfgID)
+    -- 普通技能需要重新封装
+    local newSkillDatas = {}
+    local curSkillsID = cardCfg.jcSkills
+    for i, v in ipairs(curSkillsID) do
+        table.insert(newSkillDatas, {
+            id = curSkillsID[i],
+            exp = 0,
+            type = SkillMainType.CardNormal
+        })
+    end
+    -- 被动技能
+    local sSkillID = cardCfg.tfSkills and cardCfg.tfSkills[1] or nil
+    table.insert(newSkillDatas, {
+        id = sSkillID,
+        exp = 0,
+        type = SkillMainType.CardTalent
+    })
+
+    -- 重新封装
+    local newInfo = {}
+    local key = string.format("%s_%s", cardCfg.numerical, oldCardData:GetLv())
+    local _cfg = Cfgs.MonsterNumerical:GetByKey(key)
+    newInfo = table.copy(_cfg)
+    newInfo.cfgid = monsterCfgID
+    newInfo.skills = newSkillDatas
+    newInfo.break_level = 1
+    newInfo.intensify_level = 1
+    newInfo.skin_a = oldCardData:GetData().skin_a
+    local monsterCardsData = require "MonsterCardsData"
+    return MonsterCardsData(newInfo)
+end
+
+-- 技能id获取怪物id （必须是召唤技能）
+function this.GetMonsterIDBySkillID(skillID)
+    local cfg = Cfgs.skill:GetByID(skillID)
+    local arg = Cfgs.SkillEffect:GetByID(cfg.DoSkill[1]).arg
+    local strs = StringUtil:split(arg, ",")
+    return tonumber(strs[1])
+end
+
+-- -- 获取卡牌id（机神、同调、形切）
+-- function this.GetTwoCfgID(baseCfgID)
+--     local cfg = Cfgs.CardData:GetByID(baseCfgID)
+--     if (cfg.fit_result) then
+--         return cfg.fit_result
+--     elseif (cfg.tTransfo) then
+--         return cfg.tTransfo[1]
+--     elseif (cfg.summon) then
+--         local cardCfg = Cfgs.MonsterData:GetByID(cfg.summon)
+--         return cardCfg.card_id
+--     end
+--     return nil
+-- end
+
+-- 获取绑定的skin_a
+function this.GetBDSkin_a(baseCfgID, curModeId)
+    local skin_a = nil
+    local elseCfgID = GCalHelp:GetElseCfgID(baseCfgID)
+    if (elseCfgID) then
+        local cfg = Cfgs.CardData:GetByID(baseCfgID)
+        local elseCfg = Cfgs.CardData:GetByID(elseCfgID)
+        if (cfg.skin and elseCfg.skin) then
+            for k, v in ipairs(cfg.skin) do
+                if (v == curModeId) then
+                    skin_a = elseCfg.skin[k]
+                    break
+                end
+            end
+            if(not skin_a) then 
+                skin_a = elseCfg.model
+            end
+        end
+    end
+    return skin_a
+end
+
+-- 卡牌当前的机神、形切、同调的皮肤
+function this.GetElseSkin(cardData)
+    local skin_a = cardData:GetData().skin_a
+    if (skin_a==nil or skin_a==0) then
+        local cfgid = GCalHelp:GetElseCfgID(cardData:GetCfgID())
+        if (cfgid) then
+            local cfg = Cfgs.CardData:GetByID(cfgid)
+            skin_a = cfg.model
+        else 
+            skin_a = cardData:GetCfg().model
+        end
+    end
+    return skin_a
+end
+
 return this
 

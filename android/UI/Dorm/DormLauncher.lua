@@ -138,10 +138,11 @@ DormRoleActionType.normal_fatigue = "DormRoleActionLeisure"
 4：观看
 5：玩模型
 6：浇水
-7:跳舞
+7: 跳舞
+8：操作电脑
 ]]
 DormAction3 = {"furniture_sleep_0", "furniture_sit_01", "furniture_sit_02", "furniture_sit_03", "furniture_watch",
-               "furniture_gundam", "furniture_Watering","furniture_Dance"}
+               "furniture_gundam", "furniture_Watering","furniture_Dance","base_operatePC1"}
 
 -- 基础时间+持续时间
 function Dorm_Action_Time(_dormAction2)

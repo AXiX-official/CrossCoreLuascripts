@@ -69,6 +69,9 @@ function Awake()
     ClientProto:GetMemberRewardInfo();
     ShopProto:GetShopResetTime();
     MenuMgr:ShopFirstOpen() --商店第一次打开记录 rui
+    UIUtil.SetRTAlpha(rtCamera,sv5Img);
+    -- CSAPI.SetRenderTexture(sv5Img,goRT);
+	-- CSAPI.SetCameraRenderTarget(rtCamera,goRT);
 end
 
 --页签刷新
@@ -143,6 +146,7 @@ function OnDestroy()
     RoleAudioPlayMgr:StopSound();
     EventMgr.Dispatch(EventType.Replay_BGM);--重播场景背景音乐
     ReleaseCSComRefs();
+    UIUtil.DestoryRT();
 end
 
 --data:传入商店页ID，只显示单个商店 openSetting={商店一级页面ID，商店二级页签ID}
@@ -316,7 +320,7 @@ function InitLeftTabs(isJump)
     --             break;
     --         end
     --     end
-        ItemUtil.AddItems("Shop/ShopTabItem", childTabItems, childTabDatas, leftParent, nil, 1, {sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos});
+    ItemUtil.AddItems("Shop/ShopTabItem", childTabItems, childTabDatas, leftParent, nil, 1, {sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos});
     -- else
     --     childTabDatas=nil;
     --     childPageID=nil;
@@ -418,7 +422,8 @@ function InitSV(donReset)
             end
             if ShopCommFunc.IsRecordRefreshInfo(currPageData:GetID()) then --记录一次当前列表刷新时间
                 local nowTime=TimeUtil:GetTime();
-                local checkList=currPageData:GetRefreshInfos();
+                local childID=currChildPage and currChildPage.id or nil;
+                local checkList=currPageData:GetRefreshInfos(childID);
                 ShopCommFunc.IsRefreshCommodityInfos(checkList,nowTime);
             end
             if donReset then
@@ -524,6 +529,7 @@ function LayoutCallBack5(index)
 end
 
 
+
 --购买月卡
 --[[ 旧的购买月卡逻辑，现在不需要
 function OnClickPay()
@@ -564,6 +570,7 @@ function OnClickSkin(tab)
 end
 
 function OnShopInfosRefresh()
+    -- LogError("OnShopInfosRefresh-------------------")
     InitSV();
 end
 
@@ -571,16 +578,18 @@ end
 function AutoRefresh()
 	if currPageData~=nil and currPageData:GetCommodityType()==CommodityType.Normal then--检测固定道具商店的重置时间和折扣时间
 		local nowTime=TimeUtil:GetTime();
-		local checkList=currPageData:GetRefreshInfos();
+        local childID=currChildPage and currChildPage.id or nil;
+		local checkList=currPageData:GetRefreshInfos(childID);
 		local isReset,isRefresh=ShopCommFunc.IsRefreshCommodityInfos(checkList,nowTime);
         -- LogError("isReset:"..tostring(isReset).."\t isRefresh:"..tostring(isRefresh))
-        if lastTime~=0 and lastTime-1<=0 then
-            ShopProto:GetShopResetTime();
-		end
+        -- if lastTime~=0 and lastTime-1<=0 then
+        --     ShopProto:GetShopResetTime();
+		-- end
 		if isReset then --列表刷新
             ShopMgr:CheckCommReset();
-            local groupID=currChildPage and currChildPage.id or nil;
-	        ShopProto:GetShopCommodity(currPageData:GetID(),groupID);
+            ShopProto:GetShopCommodity(currPageData:GetID());
+            -- local groupID=currChildPage and currChildPage.id or nil;
+	        -- ShopProto:GetShopCommodity(currPageData:GetID(),groupID);
             -- ShopProto:GetShopInfos()
             -- ShopProto:GetShopResetTime();
 			return
@@ -643,11 +652,14 @@ function InitRefreshInfo()
         currChildPage~=nil and currChildPage.updateTime~=nil and currChildPage.updateTime~=ShopFixedUpdateType.None
     ) then --固定商店刷新时间
         local updataType=currPageData:GetUpdateTime()
+        -- LogError(currPageData:GetID())
         if currChildPage then
             updataType=currChildPage.updateTime
+            -- LogError(currChildPage)
         end
         local lTime=ShopMgr:GetFixedUpdateTime(updataType);
         lastTime=lTime>TimeUtil:GetTime() and lTime-TimeUtil:GetTime() or 0; --计算剩余时间
+        -- LogError(tostring(lTime).."\t"..tostring(lastTime));
         SetTimeText(lastTime);
         CSAPI.SetGOActive(refreshObj,false);
         CSAPI.SetGOActive(txt_refreshTime2,true);
@@ -710,9 +722,9 @@ function SetLayout()
     CSAPI.SetGOActive(sv3,currLayout==layout3);
     CSAPI.SetGOActive(sv4,currLayout==layout4);
     CSAPI.SetGOActive(sv5,currLayout==layout5);
-    CSAPI.SetGOActive(leftParent,hasTabs);
     CSAPI.SetGOActive(cardPage,currLayout==nil);
     CSAPI.SetGOActive(videoNode,currLayout==nil);
+    CSAPI.SetGOActive(leftParent,hasTabs);
     CSAPI.SetGOActive(bMask,true);
     -- SetArrActive({promoteObj,talkBg},false);
     --临时用

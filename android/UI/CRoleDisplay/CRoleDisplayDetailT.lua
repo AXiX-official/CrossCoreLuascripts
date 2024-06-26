@@ -79,6 +79,7 @@ function SetAmplification(_show)
         mulIconItem.SetClickActive(false)
         if (not uiHandle) then
             uiHandle = ComUtil.GetCom(handleMask, "UIHandle")
+            uiHandle.isMoveLimit = false 
         end
         uiHandle:InitParm(1, 1, g_MutiLookScale[1] / imgScale, g_MutiLookScale[2] / imgScale) -- 对应的是父类不是role
         uiHandle:Init(iconParent)--, nil, true, false)

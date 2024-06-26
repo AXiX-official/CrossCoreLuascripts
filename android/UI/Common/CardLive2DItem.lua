@@ -240,7 +240,7 @@ function ItemDragEndCB(cfgChild, x, y)
     else
         if (content.gestureDatas and content.gestureDatas.stopTime >= 0) then
             local forward = false
-            local limit = content.gestureDatas.limitPerc or 1
+            local limit = content.gestureDatas.splitPerc or 1
             if (limit ~= 1) then
                 local cur = spineTools:GetTrackTimePercent(cfgChild.trackIndex)
                 if (limit - cur < 0.01) then
@@ -534,13 +534,17 @@ function SetContent(cfgChild)
     -- end
     -- 播放到指定百分比 
     if (content.clicks) then
-        local num = 1
-        if (records[cfgChild.index] and records[cfgChild.index] < #content.clicks) then
-            num = records[cfgChild.index] + 1
-        end
-        records[cfgChild.index] = num
-        progress = content.clicks[num]
-        timeScale = 0
+        if(spineTools:CheckMulClickIsPlay(GetTrackIndex(cfgChild))) then 
+            sName = nil 
+        else 
+            local num = 1
+            if (records[cfgChild.index] and records[cfgChild.index] < #content.clicks) then
+                num = records[cfgChild.index] + 1
+            end
+            records[cfgChild.index] = num
+            progress = content.clicks[num]
+            timeScale = progress==0 and -1 or 1
+        end 
     end
     return sName, timeScale, progress
 end

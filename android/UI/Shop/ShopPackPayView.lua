@@ -41,7 +41,6 @@ function OnMonthCardDaysChange(days)
 end
 
 function OnOpen()
-	UIUtil:ShowAction(childNode,nil,UIUtil.active2);
 	commodity=data.commodity;
 	pageData=data.pageData;
 	commodityType=data.pageData:GetCommodityType();
@@ -116,7 +115,8 @@ function OnOpen()
 		CSAPI.SetText(txt_name,commodity:GetName());
 		CSAPI.SetText(txt_desc,commodity:GetDesc());
 		ShopCommFunc.SetIconBorder(commodity,commodityType,border,icon,nil,nil,2);
-        InitSV();
+		UIUtil:ShowAction(childNode,InitSV,UIUtil.active2);
+        -- InitSV();
 	    -- RefreshPrice();
 		-- if currPrice>0 then
         -- 	CSAPI.SetText(txt_payTips,LanguageMgr:GetTips(15107,currPrice,currMoneyName,commodity:GetName()));
@@ -124,6 +124,8 @@ function OnOpen()
 		-- 	CSAPI.SetText(txt_payTips,LanguageMgr:GetTips(15106,commodity:GetName()));
 		-- end
 		-- Log(string.format(LanguageMgr:GetByID(18014),currPrice,currMoneyName,commodity:GetName()));
+	else
+		UIUtil:ShowAction(childNode,nil,UIUtil.active2);
 	end
 end
 

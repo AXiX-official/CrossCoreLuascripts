@@ -1148,14 +1148,19 @@ end
 --异构空间获取角色hp和sp返回
 function PlayerProto:GetNewTowerCardInfoRet(proto)
     Log("PlayerProto:GetNewTowerCardInfoRet")
-    Log(proto)
     TowerMgr:SetCardInfos(proto)
 end
 
 --重置异构空间角色hp和sp
-function PlayerProto:ResetNewTowerCardInfo(sid)
+function PlayerProto:ResetNewTowerCardInfo(sid,cb)
+    self.ResetCardInfoCallBack = cb
     local proto = {"PlayerProto:ResetNewTowerCardInfo",{sid = sid}}
     NetMgr.net:Send(proto)
+end
+
+--异构空间助战卡牌返回
+function PlayerProto:NewTowerAssitCardRet(proto)
+    TowerMgr:SetAssistCardInfos(proto)
 end
 
 --获取异构空间今天的剩余重置次数
@@ -1169,6 +1174,10 @@ function PlayerProto:GetNewTowerResetCntRet(proto)
     Log("PlayerProto:GetNewTowerResetCntRet")
     Log(proto)
     TowerMgr:SetResetCnt(proto)
+    if self.ResetCardInfoCallBack then
+        self.ResetCardInfoCallBack()
+        self.ResetCardInfoCallBack = nil
+    end
 end
 
 --获取副本的怪物hp和sp
@@ -1202,4 +1211,14 @@ end
 function PlayerProto:ClickBoard()
     local proto = {"PlayerProto:ClickBoard"}
     NetMgr.net:Send(proto)
+end
+
+--获取特殊掉落数量
+function PlayerProto:GetSpecialDropsInfo()
+    local proto = {"PlayerProto:GetSpecialDropsInfo"}
+    NetMgr.net:Send(proto)
+end
+
+function PlayerProto:GetSpecialDropsInfoRet(proto)
+    PlayerMgr:UpdateSpecialDrops(proto)
 end

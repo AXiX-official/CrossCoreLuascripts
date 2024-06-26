@@ -96,7 +96,7 @@ function this:GetTeamData(index,hasEditTeam)
 	else
 		if self.datas[index]==nil then
 			local tab = {};
-			tab.teamName = string.format( LanguageMgr:GetTips(14017),index);
+			tab.teamName = FormationUtil.GetDefaultName(index);
 			tab.leader = nil;
 			tab.index = index;
 			tab.data = {};
@@ -119,7 +119,9 @@ function this:GetTeamDatasByType(_eTeamType)
 				table.insert(teams,v);
 			elseif _eTeamType==eTeamType.Preset and k>=eTeamType.Preset then
 				table.insert(teams,v);
-			elseif k==_eTeamType then
+			elseif _eTeamType==eTeamType.Tower and k==eTeamType.Tower then
+				table.insert(teams,v);
+			elseif _eTeamType==eTeamType.TowerDifficulty and k==eTeamType.TowerDifficulty then
 				table.insert(teams,v);
 			end
 		end
@@ -173,6 +175,10 @@ function this:GetTeamType(index)
 		type=eTeamType.GuildFight;
 	elseif index >= eTeamType.Preset and index < 40 then
 		type=eTeamType.Preset;
+	elseif index==eTeamType.Tower then
+		type=eTeamType.Tower;
+	elseif index==eTeamType.TowerDifficulty then
+		type=eTeamType.TowerDifficulty;
 	elseif(index >= eTeamType.ForceFight) then--强制上阵
 		type=eTeamType.ForceFight;
 	end
@@ -621,7 +627,7 @@ function this:UpdateFightTeamData(sDuplicateCharData)
 		local teamData = {
 			index = sDuplicateCharData.nTeamID,
 			leader = leaderID,
-			name = currTeam == nil and string.format( LanguageMgr:GetTips(14017),sDuplicateCharData.nTeamID) or currTeam.teamName,
+			name = currTeam == nil and FormationUtil.GetDefaultName(sDuplicateCharData.nTeamID) or currTeam.teamName,
 			data = posData,
 			nReserveNP=sDuplicateCharData.nReserveNP == nil and 0 or sDuplicateCharData.nReserveNP,
 			bIsReserveSP=sDuplicateCharData.bIsReserveSP == nil and false or sDuplicateCharData.bIsReserveSP,

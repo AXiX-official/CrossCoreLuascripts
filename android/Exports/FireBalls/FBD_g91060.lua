@@ -34,13 +34,10 @@ effect="cast1_hit01",time=4000,type=0,pos_ref={ref_type=4,part_index=1}
 [-1485114200]={
 {delay=9000,time=4000,type=1,hit_type=1,hits={0,100,200}},
 {effect="cast4_eff",time=11600,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fifteen.acb",cue_name="Thórdarson_attack_skill_02"},
-{effect="cast4_hit",delay=9810,time=1690,type=0,pos_ref={ref_type=4,part_index=1}}
+{effect="cast4_hit",delay=9810,time=1690,type=0,pos_ref={ref_type=1,offset_row=-250}}
 },
 [-316323548]={
 {effect="dead_eff",effect_pack="g92280",time=10000,type=0,pos_ref={ref_type=6}}
-},
-[-601574123]={
-{effect="cast_shield ",time=2000,type=0,pos_ref={ref_type=6}}
 }
 };
 

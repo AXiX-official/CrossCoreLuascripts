@@ -65,6 +65,7 @@ function SetAmplification(_show)
         --CSAPI.SetParent(iconParent, iconPoint2)
         if (not uiHandle) then
             uiHandle = ComUtil.GetCom(handleMask, "UIHandle")
+            uiHandle.isMoveLimit = false 
         end
         uiHandle:InitParm(1, 1, g_CardLookScale[1] / imgScale, g_CardLookScale[2] / imgScale) -- 对应的是父类不是role
         uiHandle:Init(iconParent)

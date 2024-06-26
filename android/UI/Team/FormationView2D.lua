@@ -21,6 +21,7 @@ local isDraging=false;
 local addtiveState=false;
 local joinModel=nil;
 local infoNode=nil;--信息窗口挂载点
+local isShowInfos=false;--是否显示hp/sp
 function Awake()
 	ResUtil:CreateUIGOAsync("Formation/CardDragView2D",MoveNode,function(go)
 		joinModel=ComUtil.GetLuaTable(go);
@@ -168,7 +169,7 @@ function SetDragLeave(_canDragLeave)
 end
 
 --初始化阵型 生成卡牌放到对应位置上
-function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode)    
+function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode,_isShowInfos)    
 	SetParentSibling(0);
 	CleanCache();
 	CloseInfoView();
@@ -178,6 +179,7 @@ function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode)
 	addtiveState=_addtiveState;
 	isMini=false;
 	infoNode=_infoNode;
+	isShowInfos=_isShowInfos;
 	formatTab = FormationTable.New(3, 3);
 	formatTab:SetForceTab(forceTab);
 	if data ~= nil then
@@ -193,7 +195,7 @@ function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode)
 			cardList[v.cid] = ComUtil.GetLuaTable(go);
 			local isLeader=teamData:IsLeader(v.cid);
 			cardList[v.cid].SetTween(_playTween);
-			cardList[v.cid].InitData(v,isLeader,isMini,isMirror);
+			cardList[v.cid].InitData(v,isLeader,isMini,isMirror,isShowInfos);
 			-- local coord = FormationUtil.GetPlaceHolderInfo(v:GetGrids());
 			-- cardList[v.cid].SetGridImg(v.row,v.col,coord);
 			if not isMini then
@@ -663,7 +665,8 @@ end
 
 --设置父节点层级
 function SetParentSibling(index)
-	transform.parent:SetSiblingIndex(index);
+	-- transform.parent:SetSiblingIndex(index);
+	EventMgr.Dispatch(EventType.TeamView_ChildNode_Change,index);
 end
 
 --点击了阵型格子
@@ -823,7 +826,7 @@ function OnJoinDragBegin(eventData)
 			}
 			teamItemData:SetData(tempData);
 			CSAPI.SetGOActive(joinModel.gameObject,true);
-			joinModel.InitData(teamItemData,false);
+			joinModel.InitData(teamItemData,false,isShowInfos);
 			currentDragData=teamItemData;
 			local pos=UnityEngine.Vector3(eventData.x,eventData.y,transform.position.z);
 			joinModel.Move(pos);
@@ -1030,7 +1033,7 @@ end
 --offset:110
 function SetInfoViewPos(teamItemData)
 	for k,v in pairs(cardList) do
-		v.InitData(v.data,false,isMini,isMirror);
+		v.InitData(v.data,false,isMini,isMirror,isShowInfos);
 	end
 	if teamItemData then
 		local item=cardList[teamItemData:GetID()];
