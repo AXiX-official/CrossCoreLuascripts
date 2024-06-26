@@ -677,16 +677,18 @@ function OnClickFightRecord()
 end
 
 function OnClickServerList()
-    LogError("aaaa");
+    --LogError("aaaa");
     _G.server_list_enc_close = 1;
     InitServerInfo(nil, "http://192.168.5.86/php/res/serverList/serverlist_nw1.json");
     OnClickClose();
      
-    --FuncUtil:Call(function() EventMgr.Dispatch(11111) end,nil,1000); 
+    FuncUtil:Call(function()
+        local go = CSAPI.GetView("Login");
+        local lua = ComUtil.GetLuaTable(go);
+        lua.OnClickSwitch();
+    end,nil,1000); 
 
-    local go = CSAPI.GetView("Login");
-    local lua = ComUtil.GetLuaTable(go);
-    lua.OnClickSwitch();
+    
 end
 
 function OnClickLoadingList()
