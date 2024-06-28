@@ -131,3 +131,8 @@ end
 function SetPos(x,y)
     CSAPI.SetAnchor(doubleObj,x,y)
 end
+
+function SetIsCanvas(b)
+    CSAPI.SetScriptEnable(doubleMask,"Canvas",b)
+    CSAPI.SetScriptEnable(descObj,"Canvas",b)
+end

@@ -667,6 +667,9 @@ function ShowMainPanel()
     end
 
     -- move
+    if viewInfo.Main == nil then
+        InitViewInfo()
+    end
     MoveTo(viewInfo.Main[currIndex], SectionViewType.MainLine, pType, 0)
     
     if currIndex == 1 then
@@ -764,6 +767,9 @@ function ShowDailyPanel()
 
     -- move
     if curState > 0 then
+        if viewInfo.Daily == nil then
+            InitViewInfo()
+        end
         MoveTo(viewInfo.Daily[currIndex], SectionViewType.Daily, pType, offsetX)    
         CSAPI.SetAnchor(dailyPanel.selectObj, offset.x + 920 , 0)  
         CSAPI.SetAnchor(sv3, offset.x + 310, -6.5)
@@ -1144,6 +1150,9 @@ function ShowExercisePanel()
     end
 
     -- move
+    if viewInfo.Exercise == nil then
+        InitViewInfo()
+    end
     MoveTo(viewInfo.Exercise[currIndex], SectionViewType.Exercise, pType, 0)
 
     
@@ -1278,6 +1287,9 @@ function ShowActivityPanel()
 
     -- move
     CSAPI.SetLocalPos(activityNode,0,0)
+    if viewInfo.Activity == nil then
+        InitViewInfo()
+    end
     MoveTo(viewInfo.Activity[currIndex], SectionViewType.Activity, pType, 0)
 
     if items4 and #items4>0 then

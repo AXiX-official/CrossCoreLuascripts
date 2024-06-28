@@ -42,7 +42,8 @@ function SetStarInfos()
     end
 
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type == eDuplicateType.NewTower then
+    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type ==
+        eDuplicateType.NewTower then
         CSAPI.SetGOActive(taskObj, false)
         return
     end
@@ -96,7 +97,7 @@ function IsShowAgain()
                 return true
             end
             return false
-        elseif dungeonType == eDuplicateType.StoryActive or dungeonType == eDuplicateType.TaoFa then --检测副本开启时间是否过了
+        elseif dungeonType == eDuplicateType.StoryActive or dungeonType == eDuplicateType.TaoFa then -- 检测副本开启时间是否过了
             local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
             if sectionData == nil then
                 LogError("找不到关卡表章节数据！id：" .. cfgDungeon.group)
@@ -105,7 +106,7 @@ function IsShowAgain()
             local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
             if openInfo and not openInfo:IsDungeonOpen() then
                 isTimeOut = true
-                return false               
+                return false
             end
         end
         CSAPI.SetGOActive(costObj, true)
@@ -129,47 +130,7 @@ function OnClickAgain()
         return
     end
 
-    FightClient:Reset();
-    BattleMgr:Reset();
-    TeamMgr:ClearAssistTeamIndex();
-    TeamMgr:ClearFightTeamData();
-
-    if sceneType == SceneType.PVE then
-        local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-        -- 进入副本前编队
-        if cfgDungeon then
-            if cfgDungeon.arrForceTeam ~= nil then -- 强制上阵编队
-                CSAPI.OpenView("TeamForceConfirm", {
-                    dungeonId = cfgDungeon.id,
-                    teamNum = cfgDungeon.teamNum or 1
-                })
-            else
-                local type = TeamConfirmOpenType.Dungeon
-                local _disChoosie = false
-                if cfgDungeon.type == eDuplicateType.NewTower then
-                    type = TeamConfirmOpenType.Tower
-                    _disChoosie= true
-                elseif cfgDungeon.type  == eDuplicateType.Rogue then
-                    type = TeamConfirmOpenType.Rogue
-                    _disChoosie= true
-                end                
-                CSAPI.OpenView("TeamConfirm", { -- 正常上阵
-                    dungeonId = cfgDungeon.id,
-                    teamNum = cfgDungeon.teamNum or 1,
-                    isDirll = isDirll,
-                    disChoosie=_disChoosie,
-                    overCB = isDirll and OnFightOverCB or nil
-                }, type)
-            end
-        end
-    end
-end
-
-function OnFightOverCB(stage, winer)
-    if currItem and currItem.GetCfg() and currItem.GetCfg().id then
-        DungeonMgr:SetCurrId1(currItem.GetCfg().id)
-    end
-    FightOverTool.OnDirllOver(stage, winer)
+    ApplyQuit(isDirll and 6 or 5)
 end
 
 -- 等级提升

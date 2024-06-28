@@ -605,7 +605,7 @@ function AutoRefresh()
             -- ShopProto:GetShopResetTime();
         end
 	end
-    if lastTime>0 and currPageData~=nil then 
+    if lastTime and lastTime>0 and currPageData~=nil then 
 		lastTime=lastTime-updateTime;
 		if lastTime<=0 then
 			-- Log( "自动刷新");

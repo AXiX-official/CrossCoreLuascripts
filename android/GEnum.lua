@@ -1399,7 +1399,8 @@ SendSubCMD.Change = 'change'
 
 -- 商店类型(对应CfgShopPage的id)
 ShopGroup = {
-    ArmyShop = 904 -- 演习兑换
+    ArmyShop = 904, -- 演习兑换
+    GiftShop = 3, -- 礼包商店
 }
 
 PayType = {}

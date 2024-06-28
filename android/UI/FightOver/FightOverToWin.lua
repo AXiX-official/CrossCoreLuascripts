@@ -294,7 +294,7 @@ function SetCards()
                         teamIndex = team:GetIndex()
                     })
                     if isJumpToEnd then
-                        lua.CardAnimComplete()
+                        lua.JumpToComplete()
                     else
                         lua.PlayStartAnim(1000 + ((cardCount % 5) * 100))
                     end
@@ -747,30 +747,13 @@ function SetTargetInfo(cfg)
 end
 
 function OnClickNext()
-    local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfg and cfg.lasChapterID then
-        local lasCfg = Cfgs.MainLine:GetByID(cfg.lasChapterID[1])
-        local lastType = TeamConfirmOpenType.Dungeon
-        local _disChoosie = false
-        if lasCfg.type == eDuplicateType.NewTower then
-            lastType = TeamConfirmOpenType.Tower
-            _disChoosie= true
-        elseif lasCfg.type  == eDuplicateType.Rogue then
-            lastType = TeamConfirmOpenType.Rogue
-            _disChoosie= true
-        end
-        if lasCfg and DungeonMgr:IsDungeonOpen(lasCfg.id) then
-            FightClient:Reset()
+    FightClient:Clean()
+    FriendMgr:ClearAssistData();
             TeamMgr:ClearAssistTeamIndex();
             TeamMgr:ClearFightTeamData();
-            CSAPI.OpenView("TeamConfirm", { -- 正常上阵
-                dungeonId = lasCfg.id,
-                teamNum = lasCfg.teamNum or 1,
-                disChoosie = _disChoosie,
-            }, lastType)
+    UIUtil:AddFightTeamState(2, "FightOverResult:ApplyQuit()")
+    DungeonMgr:Quit(false, 7)
         end
-    end
-end
 
 ------------------------------------军演------------------------------------
 function SetPVPPanel()

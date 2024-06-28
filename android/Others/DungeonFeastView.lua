@@ -200,16 +200,16 @@ function InitAnimState()
             isDungeonOver = true
             if DungeonMgr:GetCurrDungeonIsFirst() then --首通
                 DungeonMgr:SetCurrDungeonNoFirst()
-                if currLevel == 1 and curIndex == #curDatas then --开启困难
-                    isHardUnLockAnim = true
-                    currLevel = 1
-                    isHardOpen = false
-                    curDatas = datas[currLevel]
+                -- if currLevel == 1 and curIndex == #curDatas then --开启困难
+                --     isHardUnLockAnim = true
+                --     currLevel = 1
+                --     isHardOpen = false
+                --     curDatas = datas[currLevel]
+                -- end
                 end
             end
         end
     end
-end
 
 function GetCurIndex(_itemId)
     local index = curIndex
@@ -459,6 +459,7 @@ function ShowInfo(item)
                     itemInfo.SetItemPos("Double",-166,-427)
                 end
             end)
+            itemInfo.CallFunc("Double","SetIsCanvas",true)
             CSAPI.SetRTSize(itemInfo.layout,579,845)
         end)
     else

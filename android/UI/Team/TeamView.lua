@@ -910,8 +910,12 @@ function SetAssistList()
 	if svList then
 		if openSetting==TeamOpenSetting.Tower then
 			table.sort(svList,function(a,b)
-				if a:GetID()==lockAssistID then
-					return true;
+				local n1=a:GetID()==lockAssistID and 1 or 0;
+				local n2=b:GetID()==lockAssistID and 1 or 0
+				if n1~=n2 then
+					return n1>n2;
+				else
+					return AssistSortUtil.Sort2(a,b)
 				end
 			end)
 		end

@@ -252,7 +252,7 @@ end
 
 function OnClickName()
     -- LanguageMgr:ShowTips(30001)
-    CSAPI.OpenView("InfoCorrBox")
+    -- CSAPI.OpenView("InfoCorrBox")
 end
 
 function OnClickClose()

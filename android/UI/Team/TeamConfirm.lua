@@ -837,6 +837,10 @@ function OnDownValChange(options)
 end
 
 function OnOptionChange(eventData)
+    if optionsData==nil then
+        LogError("选择数据为空！"..tostring(startTeamIdx).."\t"..tostring(endTeamIdx).."\t"..tostring(dungeonCfg.id));
+        do return end
+    end
     for k,v in ipairs(optionsData) do
         if v.itemID==eventData then
             v.itemID=nil;

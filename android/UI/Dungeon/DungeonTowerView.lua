@@ -46,7 +46,7 @@ end
 
 function OnRedPointRefresh()
     -- 任务
-    local _data = RedPointMgr:GetData(RedPointType.MissionTower)
+    local _data = RedPointMgr:GetData(RedPointType.MissionTower) or {}
     UIUtil:SetRedPoint2("Common/Red2", btnMission, _data[eTaskType.DupTower] == 1, 39, 36, 0)
 end
 

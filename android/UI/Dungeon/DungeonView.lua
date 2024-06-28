@@ -641,7 +641,9 @@ function ShowInfo(item)
     CSAPI.SetGOActive(infoMask, isActive)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
-    itemInfo.Show(cfg)
+    if itemInfo then
+        itemInfo.Show(cfg)
+    end
 end
 
 -- 进入

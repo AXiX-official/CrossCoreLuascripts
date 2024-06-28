@@ -52,6 +52,9 @@ end
 
 --扫荡状态
 function ShowSweep()
+    if cfg == nil then
+        return
+    end
     if cfg.diff and cfg.diff == 3 then
         CSAPI.SetGOActive(btnSweep,false)
         CSAPI.SetAnchor(btnEnter,0,58)

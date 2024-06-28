@@ -52,7 +52,7 @@ function SetItems(typeNames, callBack)
     if typeNames and #typeNames > 0 then
         for i, typeName in ipairs(typeNames) do
             if typeName ~= "" then
-                if typeName == "Double" then
+                if typeName == "Double" or typeName == "Double2" then
                     if IsShowDouble() then
                         infoUtil:Show(typeName, doubleParent)
                     end
@@ -128,6 +128,36 @@ end
 
 function SetLayoutPos(pos)
     CSAPI.SetAnchor(layout,pos[1],pos[2])
+end
+
+function CallFunc(panelName,panelFuncName,...)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil then
+        -- LogError("没找到对应名称的组件!!" .. panelName)
+        return nil
+    end
+
+    if panel[panelFuncName] == nil then
+        -- LogError("没找到对应方法名的方法!!" .. panelFuncName)
+        return nil
+    end
+
+    return panel[panelFuncName](...)
+end
+
+function SetPanelPos(panelName,x,y)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil then
+        LogError("没找到对应名称的组件!!" .. panelName)
+        return nil
+    end
+    CSAPI.SetAnchor(panel.gameObject,x,y)
 end
 ------------------------------------------------按钮回调
 
@@ -253,7 +283,7 @@ end
 
 function ShowDangeLevel(isDanger, cfgs, currDanger, emptyStr)
     local dangerPanel =infoUtil:GetPanel("Danger")
-    if isDanger and cfgs then
+    if dangerPanel and isDanger and cfgs then
         if #cfgs > 1 then
             dangerPanel.ShowDangeLevel(isDanger, cfgs, currDanger)
         else

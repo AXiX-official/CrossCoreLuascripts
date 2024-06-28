@@ -139,7 +139,7 @@ function this:GetDungeonSectionType(id)
     local cfgDungeon = Cfgs.MainLine:GetByID(id);
     if (cfgDungeon) then
         local sectionData = self:GetSectionData(cfgDungeon.group);
-        return sectionData:GetSectionType();
+        return sectionData and sectionData:GetSectionType();
     end
     return nil;
 end
@@ -1036,7 +1036,9 @@ function this:OnQuit(isExit, jumpType)
         elseif jumpType == 4 then
             JumpMgr:Jump(80002);
         end
-        return
+        if jumpType < 5 then
+            return
+        end
     end
 
     isExit = isExit ~= nil and isExit or false;
@@ -1063,7 +1065,16 @@ function this:OnQuit(isExit, jumpType)
             elseif cfg.type == eDuplicateType.TaoFa then --讨伐
                 CSAPI.OpenView("DungeonActivity2",{id = cfg.group, itemId = cfg.id}) 
             elseif cfg.type == eDuplicateType.NewTower then
-                CSAPI.OpenView("TowerView",{id = cfg.group}) --默认最新关卡          
+                CSAPI.OpenView("TowerView") --默认最新关卡        
+                local datas = DungeonMgr:GetActivitySectionDatas(SectionActivityType.NewTower) 
+                if #datas>0 then
+                    for i, v in ipairs(datas) do
+                        if v:GetID() == cfg.group then
+                            CSAPI.OpenView("TowerListView", {id = cfg.group}, i)
+                            break
+                        end
+                    end
+                end
             end
         end
     elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then
@@ -1092,6 +1103,47 @@ function this:OnQuit(isExit, jumpType)
                     state = _state
                 });
             end
+        end
+    end
+    
+    if jumpType and (jumpType == 5 or jumpType == 6 or jumpType == 7) then --失败重开或下一关
+        local cfgDungeon = Cfgs.MainLine:GetByID(self.currId)
+        local OnFightOverCB = nil
+        if jumpType == 6 then --模拟
+            local cfgId = self.currId
+            OnFightOverCB = function (stage, winer)
+                if cfgId then
+                    DungeonMgr:SetCurrId1(cfgId)
+                end
+                FightOverTool.OnDirllOver(stage, winer)
+            end   
+        elseif jumpType == 7 and cfgDungeon and cfgDungeon.lasChapterID then --下一关
+            cfgDungeon = DungeonMgr:IsDungeonOpen(cfgDungeon.id) and Cfgs.MainLine:GetByID(cfgDungeon.lasChapterID[1]) or cfgDungeon
+        end
+        if cfgDungeon then
+            if cfgDungeon.arrForceTeam ~= nil then -- 强制上阵编队
+                CSAPI.OpenView("TeamForceConfirm", {
+                    dungeonId = cfgDungeon.id,
+                    teamNum = cfgDungeon.teamNum or 1
+                })
+            else
+                local type = TeamConfirmOpenType.Dungeon
+                local _disChoosie = false
+                if cfgDungeon.type == eDuplicateType.NewTower then
+                    type = TeamConfirmOpenType.Tower
+                    _disChoosie= true
+                elseif cfgDungeon.type  == eDuplicateType.Rogue then
+                    type = TeamConfirmOpenType.Rogue
+                    _disChoosie= true
+                end                
+                CSAPI.OpenView("TeamConfirm", { -- 正常上阵
+                    dungeonId = cfgDungeon.id,
+                    teamNum = cfgDungeon.teamNum or 1,
+                    isDirll = OnFightOverCB ~= nil,
+                    disChoosie=_disChoosie,
+                    overCB = OnFightOverCB
+                }, type)
+            end 
         end
     end
     self:SetCurrId()

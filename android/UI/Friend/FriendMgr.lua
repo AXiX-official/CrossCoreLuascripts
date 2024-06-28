@@ -533,6 +533,7 @@ end
 function this:ClearAssistData(isForce)
 	if isForce then
 		self.assistData = nil
+		self.newTowerAssitsLock=nil;
 	else
 		if self.dCleanList then
 			self.assistData ={}
@@ -543,7 +544,6 @@ function this:ClearAssistData(isForce)
 			self.assistData = nil
 		end
 	end
-	self.newTowerAssitsLock=nil;
 	self.dCleanList = nil;
 	self.tLIndex = 1;
 	self.tLAssitList=nil;
