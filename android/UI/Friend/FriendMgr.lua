@@ -268,8 +268,8 @@ function this:OnAssitInfoAdd(proto)
 					self.newTowerAssitsLock[v.sid] =assist;
 				end
 			end
-		else
-			self.newTowerAssitsLock=nil;
+		-- else
+		-- 	self.newTowerAssitsLock=nil;
 		end
 	end
 	if self.assistData then

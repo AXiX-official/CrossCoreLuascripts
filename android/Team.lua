@@ -30,6 +30,8 @@ function Team:InitMap(row, col)
 end
 
 function Team:LoadConfig(id, stage, hpinfo)
+	LogTable(hpinfo, "Team:LoadConfig:hpinfo")
+	-- LogTrace()
 	-- LogDebugEx("Team:LoadConfig", id, stage)
 	self.id = id
 	local config = MonsterGroup[self.id]
@@ -60,10 +62,13 @@ function Team:LoadConfig(id, stage, hpinfo)
 			if hpinfo[i] and hpinfo[i].hp and hpinfo[i].hp > 0 and monsterID and monsterID ~= 0 then
 				local card = self:AddCard(pos[1], pos[2], monsterID)
 				card.hp = hpinfo[i].hp
-				card.sp = hpinfo[i].sp
+				if hpinfo[i].sp then
+					card.sp = hpinfo[i].sp
+				end
 				card.configIndex = i
 			end
 		end
+
 	else
 		for i, pos in ipairs(formation.coordinate) do
 			local monsterID = self.monsters[i]

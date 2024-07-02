@@ -426,10 +426,14 @@ function CheckModelOpen()
 	local color2={255,255,255,255};
 	local c1=isOpen and color2 or color;
 	local c2=isOpen2 and color2 or color;
-	CSAPI.SetImgColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
-	CSAPI.SetImgColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
-	CSAPI.SetTextColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
-	CSAPI.SetTextColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
+	if skillImg~=nil and skillImg~="" then
+		CSAPI.SetImgColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
+		CSAPI.SetTextColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
+	end
+	if aiImg~=nil and aiImg~="" then
+		CSAPI.SetImgColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
+		CSAPI.SetTextColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
+	end
 end
 
 --设置页面布局
@@ -1791,5 +1795,7 @@ scroll=nil;
 scroll2=nil;
 txt_noneAssist=nil;
 layout=nil;
+skillImg=nil;
+aiImg=nil;
 end
 ----#End#----
