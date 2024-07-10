@@ -413,10 +413,10 @@ function OnOpen()
 	SetViewBtnState(is3D)
     SetViewLayout(openSetting);
     -- SetTabData()
-	CheckModelOpen();
 	UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Diagonal) --椭圆动画
     --layout:AddBarAnim(0.4,false);
     Refresh();
+	CheckModelOpen();
 end
 
 function CheckModelOpen()
@@ -426,11 +426,11 @@ function CheckModelOpen()
 	local color2={255,255,255,255};
 	local c1=isOpen and color2 or color;
 	local c2=isOpen2 and color2 or color;
-	if skillImg~=nil and skillImg~="" then
+	if IsNil(skillImg)~=true then
 		CSAPI.SetImgColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
 		CSAPI.SetTextColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
 	end
-	if aiImg~=nil and aiImg~="" then
+	if IsNil(skillImg)~=true then
 		CSAPI.SetImgColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
 		CSAPI.SetTextColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
 	end

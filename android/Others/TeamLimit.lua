@@ -214,7 +214,7 @@ function this:CheckPass(teamData)
                 end
             end
         elseif v.limit==TeamConditionLimitEditType.Max then --最多编入
-            isTrueNum=num>targetCount and false or true;
+            isTrueNum=num<=targetCount and true or false;
         elseif v.limit==TeamConditionLimitEditType.Must then --必须编入
             isTrueNum=num>=targetCount and true or false;
         end
