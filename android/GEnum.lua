@@ -1697,7 +1697,7 @@ eCollectType = {}
 eCollectType.Recharge = 1 --累计充值
 
 eCollectTable = {}
-eCollectTable[eCollectType.Recharge] = CfgRechargeCount
+eCollectTable[eCollectType.Recharge] = 'CfgRechargeCount'
 
 -- 回归商店id
 eReturnPlrShopType = {}

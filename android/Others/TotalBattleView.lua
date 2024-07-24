@@ -173,6 +173,7 @@ function Update()
 end
 
 function OnOpen()
+    CheckTime()
     SetDatas()  
     CheckOpenSection()  
     InitJumpState()
@@ -265,7 +266,7 @@ end
 function RefreshPanel()
     SetDatas()    
     CheckOpenSection()
-    layout:IEShowList(#sectionDatas,nil,currIndex)
+    layout:UpdateList()
     SetLeft()
     SetRight()
 end
@@ -295,6 +296,18 @@ function CheckOpenSection()
     CSAPI.SetGOActive(timeObj,isOpen)
     CSAPI.SetGOActive(mask,isOpen)
     CSAPI.SetGOActive(infoParent,isOpen)
+end
+
+function CheckTime()
+    local rankTime = TotalBattleMgr:GetRankTime()
+    if rankTime<= 0 then
+        PlayerProto:GetStarPalaceInfo()
+    elseif TotalBattleMgr:IsFighting() then
+        local fightTime = TotalBattleMgr:GetFightTime()
+        if fightTime <= 0 then
+            PlayerProto:GetStarPalaceInfo()
+        end
+    end
 end
 
 -----------------------------------------------left-----------------------------------------------
