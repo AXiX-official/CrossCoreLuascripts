@@ -475,7 +475,7 @@ function this.GetBDSkin_a(baseCfgID, curModeId)
                     break
                 end
             end
-            if(not skin_a) then 
+            if (not skin_a) then
                 skin_a = elseCfg.model
             end
         end
@@ -486,17 +486,31 @@ end
 -- 卡牌当前的机神、形切、同调的皮肤
 function this.GetElseSkin(cardData)
     local skin_a = cardData:GetData().skin_a
-    if (skin_a==nil or skin_a==0) then
-        local cfgid = GCalHelp:GetElseCfgID(cardData:GetCfgID())
+    if (skin_a == nil or skin_a == 0) then
+        local cfgid = nil
+        if (cardData:GetID() == g_InitRoleId[1] or cardData:GetID() == g_InitRoleId[2]) then
+            --主角要读取真实数据
+            local specialSkillData = cardData:GetSpecialSkill()[1]
+            local cfg = this.GetRoleCfgBySkillID(specialSkillData.id)
+            cfgid = cfg.id
+        else
+            cfgid = GCalHelp:GetElseCfgID(cardData:GetCfgID())
+        end
         if (cfgid) then
             local cfg = Cfgs.CardData:GetByID(cfgid)
             skin_a = cfg.model
-        else 
+        else
             skin_a = cardData:GetCfg().model
         end
     end
     return skin_a
 end
 
-return this
+-- 通过怪物技能id获取卡牌表
+function this.GetRoleCfgBySkillID(skillID)
+    local monsterID = RoleTool.GetMonsterIDBySkillID(skillID)
+    local monsterCfg = Cfgs.MonsterData:GetByID(monsterID)
+    return Cfgs.CardData:GetByID(monsterCfg.card_id)
+end
 
+return this

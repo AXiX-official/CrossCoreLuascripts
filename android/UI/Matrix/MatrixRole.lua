@@ -48,7 +48,7 @@ end
 
 function SetRed()
     local isRed = false
-    if (curData ~= nil) then
+    if (curData ~= nil and curData:IsInBuilding()) then
         isRed = curData:CheckIsRed()
     end
     UIUtil:SetRedPoint(clickNode, isRed, 73, 73, 0)

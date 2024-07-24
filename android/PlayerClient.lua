@@ -349,18 +349,20 @@ end
 
 -- 背景
 function this:GetBG()
-    local _data = FileUtil.LoadByPath("bgNew.txt")
-    local id = 1
-    if (_data and _data.id) then
-        id = _data.id
-    end
-    return id
+    -- local _data = FileUtil.LoadByPath("bgNew.txt")
+    -- local id = 1
+    -- if (_data and _data.id) then
+    --     id = _data.id
+    -- end
+    -- return id
+    return self.data.background_id or 1
 end
 
 function this:SetBG(_id)
-    FileUtil.SaveToFile("bgNew.txt", {
-        id = _id
-    })
+    -- FileUtil.SaveToFile("bgNew.txt", {
+    --     id = _id
+    -- })
+    self.data.background_id = _id 
 end
 
 function this:GetNewPlayerFightStateKey()

@@ -6,8 +6,8 @@ Skill330202 = oo.class(SkillBase)
 function Skill330202:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束
-function Skill330202:OnActionOver(caster, target, data)
+-- 行动开始
+function Skill330202:OnActionBegin(caster, target, data)
 	-- 8166
 	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
 	else

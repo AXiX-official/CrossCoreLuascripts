@@ -9,6 +9,9 @@ function Awake()
 end
 
 function Refresh(_data, _elseData)
+    data = _data 
+    elseData = _elseData 
+
     isDirll = _elseData and _elseData.isDirll
     -- anim
     CSAPI.SetGOActive(animMask, true)
@@ -42,8 +45,7 @@ function SetStarInfos()
     end
 
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type ==
-        eDuplicateType.NewTower then
+    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type == eDuplicateType.NewTower then
         CSAPI.SetGOActive(taskObj, false)
         return
     end
@@ -78,6 +80,9 @@ end
 
 -- 显示再次挑战按钮
 function IsShowAgain()
+    if sceneType == SceneType.Rogue then
+        return true
+    end 
     if not DungeonMgr:GetCurrId() then
         return false
     end
@@ -90,14 +95,14 @@ function IsShowAgain()
 
     local dungeonType = cfgDungeon.type
     if sceneType == SceneType.PVE then
-        if dungeonType == eDuplicateType.Tower then
-            if DungeonMgr:IsCurrDungeonComplete() then
-                CSAPI.SetGOActive(costObj, true)
-                CSAPI.SetText(txtCost, "0")
-                return true
-            end
+        if not DungeonMgr:IsCurrDungeonComplete() then
             return false
-        elseif dungeonType == eDuplicateType.StoryActive or dungeonType == eDuplicateType.TaoFa then -- 检测副本开启时间是否过了
+        end
+        if dungeonType == eDuplicateType.Tower then
+            CSAPI.SetGOActive(costObj, true)
+            CSAPI.SetText(txtCost, "0")
+            return true
+        elseif dungeonType == eDuplicateType.StoryActive or dungeonType == eDuplicateType.TaoFa then --检测副本开启时间是否过了
             local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
             if sectionData == nil then
                 LogError("找不到关卡表章节数据！id：" .. cfgDungeon.group)
@@ -106,14 +111,13 @@ function IsShowAgain()
             local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
             if openInfo and not openInfo:IsDungeonOpen() then
                 isTimeOut = true
-                return false
+                return false               
             end
         end
         CSAPI.SetGOActive(costObj, true)
 
-        local winCost = cfgDungeon and cfgDungeon.winCostHot or 0
-        local enterCost = cfgDungeon and cfgDungeon.enterCostHot or 0
-        CSAPI.SetText(txtCost, math.abs(winCost + enterCost) .. "")
+        local costNum = DungeonUtil.GetHot(cfgDungeon)
+        CSAPI.SetText(txtCost, costNum .. "")
         return true
     end
 
@@ -130,7 +134,15 @@ function OnClickAgain()
         return
     end
 
-    ApplyQuit(isDirll and 6 or 5)
+    -- if sceneType == SceneType.Rogue then
+    --     RogueMgr:FightToBack(false,elseData.group)
+    --     return 
+    -- end 
+    local num = isDirll and 6 or 5
+    if sceneType == SceneType.Rogue then
+        num = nil 
+    end
+    ApplyQuit(num)
 end
 
 -- 等级提升
@@ -229,5 +241,10 @@ function ApplyQuit(jumpType)
         DungeonMgr:Quit(not bIsWin);
     elseif (sceneType == SceneType.GuildBOSS) then
         GuildFightMgr:FightQuit();
+    elseif (sceneType == SceneType.Rogue) then
+        FriendMgr:ClearAssistData();
+        TeamMgr:ClearAssistTeamIndex();
+        TeamMgr:ClearFightTeamData();
+        RogueMgr:FightToBack(false,elseData.group)
     end
 end

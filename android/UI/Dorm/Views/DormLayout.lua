@@ -9,8 +9,12 @@ local isSelecting = false -- 选中一件家具编辑中
 local isInWall = false -- 当前选中的家具在墙
 local themeSort = {1, 1} -- 1:默认 2:舒适度  3：价格    ； 1：降序 2：升序
 local funitureSort = {1, 1} -- 1:默认 2:舒适度  3：价格 ； 1：降序 2：升序
+local needToFirst = false 
 
 function Awake()
+    sr1_sr = ComUtil.GetComInChildren(hsv,"ScrollRect")
+    sr2_sr = ComUtil.GetComInChildren(vsv,"ScrollRect")
+
     layout1 = ComUtil.GetCom(hsv, "UIInfinite")
     layout1:Init("UIs/Dorm2/DormLayoutItem", LayoutCallBack1, true)
     sr1 = layout1:GetSR()
@@ -91,6 +95,7 @@ function LayoutCallBack2(index)
     end
 end
 function ItemClickCB1(item)
+    needToFirst = true 
     local _data = item.data
     if (curDataType == 1) then
         -- 点选某主题
@@ -316,11 +321,17 @@ function SetNode()
 
     -- curDatas 
     SetCurDatas()
+    local _index = needToFirst and 1 or 0
     if (isDetail) then
-        layout2:IEShowList(#curDatas)
+        sr2_sr.enabled = false 
+        sr2_sr.enabled = true 
+        layout2:IEShowList(#curDatas,nil,_index)
     else
-        layout1:IEShowList(#curDatas)
-    end
+        sr1_sr.enabled = false 
+        sr1_sr.enabled = true 
+        layout1:IEShowList(#curDatas,nil,_index)
+    end 
+    
     -- title 
     local titleImgName = nil
     local titleName1, titleName2 = "", ""

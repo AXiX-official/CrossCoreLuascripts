@@ -126,3 +126,7 @@ end
 function TaskProto:GetTasksDataRet()
     MissionMgr:GetTasksDataRet()
 end
+
+function TaskProto:TaskDelete(proto)
+    MissionMgr:TaskDelete(proto)
+end

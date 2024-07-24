@@ -8,10 +8,10 @@ function Skill984000701:Init(skillID, card)
 end
 -- 回合开始处理完成后
 function Skill984000701:OnAfterRoundBegin(caster, target, data)
-	-- 8411
-	local count11 = SkillApi:BuffCount(self, caster, target,1,1,2)
+	-- 8579
+	local count100 = SkillApi:BuffCount(self, caster, target,3,2,1)
 	-- 984000704
-	if SkillJudger:Greater(self, caster, target, true,count11,2) then
+	if SkillJudger:Greater(self, caster, target, true,count100,3) then
 	else
 		return
 	end

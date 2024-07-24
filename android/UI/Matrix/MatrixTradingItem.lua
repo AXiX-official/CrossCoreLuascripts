@@ -122,7 +122,7 @@ function SetEntity()
                 item1 = ComUtil.GetLuaTable(go)
                 item1.OnClick = function()
                     if (not fid) then
-                        CSAPI.OpenView("DormSetRoleList", buildId, 18)
+                        CSAPI.OpenView("DormSetRoleList", {buildId}, 18)
                     end
                 end
                 item1.Refresh(info, true)
@@ -195,7 +195,7 @@ end
 -- 添加驻员
 function OnClickAdd()
     if (not fid) then
-        CSAPI.OpenView("DormSetRoleList", buildId, 18)
+        CSAPI.OpenView("DormSetRoleList", {buildId}, 18)
     end
 end
 

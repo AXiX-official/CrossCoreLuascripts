@@ -35,6 +35,7 @@ local conf = {
 {'BadgeView',	'BadgeView',	'徽章',	'1',	'Badge',	'2001',	'',	''},
 {'Achievement',	'Achievement',	'成就',	'1',	'Achievement',	'2105',	'',	''},
 {'TowerView',	'TowerView',	'异构空间',	'',	'',	'2120',	'',	''},
+{'RogueView',	'RogueView',	'乱序演习',	'',	'',	'2120',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

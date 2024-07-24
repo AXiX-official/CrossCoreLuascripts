@@ -20,7 +20,7 @@ function Skill4304903:OnActionOver(caster, target, data)
 		return
 	end
 	-- 4304923
-	self:Cure(SkillEffect[4304923], caster, self.card, data, 4,0.20)
+	self:Cure(SkillEffect[4304923], caster, self.card, data, 2,0.10)
 end
 function Skill4304903:tFunc_4304933_4304903(caster, target, data)
 	-- 8063
@@ -34,7 +34,7 @@ function Skill4304903:tFunc_4304933_4304903(caster, target, data)
 		return
 	end
 	-- 4304903
-	self:AddTempAttrPercent(SkillEffect[4304903], caster, caster, data, "attack",-0.2)
+	self:AddTempAttrPercent(SkillEffect[4304903], caster, caster, data, "attack",-0.20)
 end
 function Skill4304903:tFunc_4304933_4304913(caster, target, data)
 	-- 8060
@@ -43,5 +43,5 @@ function Skill4304903:tFunc_4304933_4304913(caster, target, data)
 		return
 	end
 	-- 4304913
-	self:AddTempAttrPercent(SkillEffect[4304913], caster, target, data, "defense",-0.2)
+	self:AddTempAttrPercent(SkillEffect[4304913], caster, target, data, "defense",-0.20)
 end

@@ -3,7 +3,7 @@ local isDrag = false
 function Awake()
     click_clickNode = ComUtil.GetCom(clickNode, "Button")
     drag_clickNode = ComUtil.GetCom(clickNode, "DragCallLua")
-    polygon = ComUtil.GetCom(clickNode,"PolygonColliderImage")
+    polygon = ComUtil.GetCom(clickNode, "PolygonColliderImage")
 end
 
 function SetClickCB(_cb)
@@ -23,14 +23,25 @@ function Refresh(_cfgChild, _parentLua)
     local gesture = cfgChild.gesture or 0
     click_clickNode.enabled = gesture == 0
     drag_clickNode.enabled = gesture ~= 0
-    --hide (生成时默认一隐藏)
-    local isHide = false 
-    if(cfgChild.content and cfgChild.content.isHide~=nil) then 
-        isHide = true 
-    end 
-    CSAPI.SetGOActive(gameObject,not isHide)
+    -- hide (生成时默认一隐藏)
+    local isHide = false
+    if (cfgChild.content and cfgChild.content.isHide ~= nil) then
+        isHide = true
+    end
+    CSAPI.SetGOActive(gameObject, not isHide)
 
     polygon:AutoScale()
+
+    -- 设置鞋
+    drag_clickNode.dragGO = nil
+    drag_clickNode.move = false
+    if (cfgChild.sType == SpineActionType.RoleDrag or cfgChild.sType == SpineActionType.ElseDrag) then
+        if (cfgChild.content.drag ~= nil and cfgChild.content.drag.targetObjName ~= nil) then
+            local dragObj = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.targetObjName).gameObject
+            drag_clickNode.dragGO = dragObj
+            drag_clickNode.move = true
+        end
+    end
 end
 
 function OnClick()
@@ -40,31 +51,30 @@ function OnClick()
 end
 
 function OnBeginDragXY(_x, _y)
-    if (not parentLua.IsIdle()) then
-        return
-    end
+    -- if (not parentLua.IsIdle()) then
+    --     return
+    -- end
     x = _x
     y = _y
-    parentLua.ItemDragBeginCB(cfgChild,_x,_y)
+    parentLua.ItemDragBeginCB(cfgChild, _x, _y)
 end
 
 function OnDragXY(_x, _y)
-    if (not parentLua.IsIdle()) then
-        return
+    -- if (not parentLua.IsIdle()) then
+    --     return
+    -- end
+    if (x == nil or y == nil) then
+        x = _x
+        y = _y
     end
-    if(x==nil or y==nil) then 
-        x = _x 
-        y = _y 
-    end 
     parentLua.ItemDragCB(cfgChild, _x - x, _y - y)
     x = _x
     y = _y
 end
 
 function OnEndDragXY(_x, _y)
-    parentLua.ItemDragEndCB(cfgChild,_x,_y)
+    parentLua.ItemDragEndCB(cfgChild, _x, _y)
 end
-
 
 function GetIndex()
     return cfgChild.index

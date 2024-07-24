@@ -16,7 +16,6 @@ function Refresh(tab)
     end
 end
 
-
 function OnClickMap()
     CSAPI.OpenView("DungeonDetail", {cfg.map, DungeonDetailsType.Map})
 end

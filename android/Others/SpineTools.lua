@@ -83,6 +83,7 @@ function this:Update()
             if (v ~= nil and v.Animation ~= nil and v.Alpha <= 1) then
                 v.Alpha = v.Alpha + Time.deltaTime / self.fadeInTime
                 if (v.Alpha >= 1) then
+                    v.Alpha = 1
                     self.teFadeInClickDic[k] = nil
                     break
                 end
@@ -96,6 +97,7 @@ function this:Update()
             if (v ~= nil and v.Animation ~= nil and v.Alpha >= 0) then
                 v.Alpha = v.Alpha - Time.deltaTime / self.fadeInTime
                 if (v.Alpha <= 0) then
+                    v.Alpha = 0
                     self.teFadeInBaclClickDic[k] = nil
                     break
                 end
@@ -106,15 +108,21 @@ function this:Update()
     -- 物件多段点击间的过渡
     if (self.mulClickDic) then
         for k, v in pairs(self.mulClickDic) do
-            --if (v.te.TimeScale~=0) then --v.te.TrackTime ~= v.progress) then
-                -- if (v.te.TimeScale ~= 1 or v.te.TimeScale ~= -1) then
-                --     v.te.TimeScale = v.progress > v.te.TrackTime and 1 or -1
-                -- end
-                if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or (v.te.TimeScale == -1 and v.te.TrackTime <= v.progress)) then
-                    v.te.TimeScale = 0
+            -- if (v.te.TimeScale~=0) then --v.te.TrackTime ~= v.progress) then
+            -- if (v.te.TimeScale ~= 1 or v.te.TimeScale ~= -1) then
+            --     v.te.TimeScale = v.progress > v.te.TrackTime and 1 or -1
+            -- end
+            if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or
+                (v.te.TimeScale == -1 and v.te.TrackTime <= v.progress)) then
+                v.te.TimeScale = 0
+                if (v.progress == 1 and v.isClicksLast) then
+                    -- 首尾相接的，最终动画播完设置为0
+                    v.te.TrackTime = 0
+                else
                     v.te.TrackTime = v.progress
                 end
-            --end
+            end
+            -- end
         end
     end
     -- 拖拽恢复 
@@ -261,7 +269,7 @@ function this:PlayByClick2(animName, trackIndex)
 end
 
 -- 多段点击（物件）（非1轨道）
-function this:PlayByMulClick(animName, trackIndex, timeScale, progress)
+function this:PlayByMulClick(animName, trackIndex, timeScale, progress, isClicksLast)
     local data = self.mulClickDic[trackIndex]
     if (data == nil) then
         local te = self.anim:SetAnimation(trackIndex, animName, false)
@@ -271,10 +279,12 @@ function this:PlayByMulClick(animName, trackIndex, timeScale, progress)
         data.te = te
         data.duration = te.Animation.Duration
         data.progress = progress * data.duration
+        data.isClicksLast = isClicksLast
         self.mulClickDic[trackIndex] = data
         return true
     else
         if (data.te.TimeScale == 0) then
+            data.isClicksLast = isClicksLast
             data.progress = progress * data.duration
             data.te.TimeScale = timeScale
             return true
@@ -282,17 +292,17 @@ function this:PlayByMulClick(animName, trackIndex, timeScale, progress)
     end
     return false
 end
---多段点击是否进行中
+-- 多段点击是否进行中
 function this:CheckMulClickIsPlay(trackIndex)
     local data = self.mulClickDic[trackIndex]
-    if (data~=nil and data.te.TimeScale ~= 0) then
+    if (data ~= nil and data.te.TimeScale ~= 0) then
         return true
     end
-    return false 
+    return false
 end
 
 -- 主体的多段点击（渐入渐出）
-function this:PlayByActionsClick(animName, trackIndex, fadeIn, fadeOut, complete, stopPerc, stopTime)
+function this:PlayByActionsClick(animName, trackIndex, fadeIn, fadeOut, complete, stopPerc, stopTime, stopCount)
     fadeIn = fadeIn == nil and true or fadeIn
     fadeOut = fadeOut == nil and true or fadeOut
     local te = self.anim:SetAnimation(trackIndex, animName, false)
@@ -313,6 +323,7 @@ function this:PlayByActionsClick(animName, trackIndex, fadeIn, fadeOut, complete
         data.te = te
         data.stopPerc = stopPerc * te.Animation.Duration
         data.stopTime = stopTime
+        data.stopCount = stopCount or 3
         data.timer = 0
         self.stopDic[trackIndex] = data
     end
@@ -325,7 +336,8 @@ function this:ResetActionsClick(trackIndex, stopPerc, stopLimit)
     if (data) then
         local time1 = stopPerc * data.te.Animation.Duration
         local time2 = stopLimit * data.te.Animation.Duration
-        if (data.te.TrackTime >= time1 and data.te.TrackTime <= time2) then
+        if (data.te.TrackTime >= time1 and data.te.TrackTime <= time2 and data.stopCount > 0) then
+            data.stopCount = data.stopCount - 1
             data.te.TrackTime = time1
             data.te.TimeScale = 1
             -- return true 
@@ -374,7 +386,7 @@ function this:PlayByDrag(animName, trackIndex, gesture, x, y, limit, speed)
         return -- 恢复中
     end
     if (trackIndex == 1 and self:CheckIsPlaying(trackIndex)) then
-        return -- 主体正在播放
+        return -- 主体正在播放(主体暂停中可以拖，拖尾巴)
     end
     limit = limit ~= nil and limit or 1
     speed = speed ~= nil and speed or 0.002
@@ -424,7 +436,7 @@ end
 
 -- 休闲中
 function this:IsIdle()
-    return not self:CheckIsPlaying(1)
+    return not self:CheckIsExist(1)
 end
 
 -- 某轨道是否在播放中(必定是在播放中)

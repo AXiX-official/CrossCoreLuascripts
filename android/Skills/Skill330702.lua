@@ -23,3 +23,18 @@ function Skill330702:OnAttackBegin(caster, target, data)
 		self:StealBuff(SkillEffect[330702], caster, target, data, 2,1)
 	end
 end
+-- 伤害前
+function Skill330702:OnBefourHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8214
+	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
+	else
+		return
+	end
+	-- 330712
+	self:AddTempAttr(SkillEffect[330712], caster, self.card, data, "damage",0.15)
+end

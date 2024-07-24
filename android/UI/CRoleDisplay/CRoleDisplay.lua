@@ -35,6 +35,9 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
+    if (top ~= nil and top.gameObject ~= nil) then
+        CSAPI.SetGOActive(top.gameObject, true)
+    end
 end
 
 function LayoutCallBack(index)
@@ -93,7 +96,7 @@ end
 function SetBG(id)
     local cfg = Cfgs.CfgMenuBg:GetByID(id)
     if (cfg and cfg.name) then
-        ResUtil:LoadBigImg2(bg, "UIs/BGs/" .. cfg.name .. "/bg", false, function()
+        ResUtil:LoadMenuBg(bg, "UIs/" .. cfg.name, false, function()
             CSAPI.SetScale(bg, 1.05, 1.05, 1)
         end)
     end
@@ -134,10 +137,10 @@ function SetMiddle()
         _isL2D = cache.l2d
     end
     -- 和谐不显示动态
-    local isShopImg = false 
+    local isShopImg = false
     if (not isCanUse and CheckIsHX()) then
         _isL2D = false
-        isShopImg = true 
+        isShopImg = true
     end
     --
     if (isRole) then
@@ -148,10 +151,10 @@ function SetMiddle()
                 UIUtil:SetObjFade(movePoint, 0, 1, nil, 300, 0, 0)
             end
             oldModelID = curModelID
-        end, _isL2D,isShopImg)
+        end, _isL2D, isShopImg)
         isL2D = cardIconItem.IsLive2D()
     else
-        mulIconItem.Refresh(curPanelID, nil, nil, _isL2D,isShopImg)
+        mulIconItem.Refresh(curPanelID, nil, nil, _isL2D, isShopImg)
         isL2D = mulIconItem.IsLive2D()
     end
     --
@@ -178,9 +181,9 @@ function CheckIsHX()
         -- if (_cfg2 and _cfg2.isShowImg == 1) then
         --     return true
         -- end
-        if(_cfg1.img_replace~=nil) then 
-            return true 
-        end 
+        if (_cfg1.img_replace ~= nil) then
+            return true
+        end
     end
     return false
 end

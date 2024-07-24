@@ -51,6 +51,8 @@ this.orderList = { -- 编队类型对应的配置下标
     [eTeamType.ForceFight] = 1, -- 强制上阵索引起始值
     [eTeamType.Tower]=6,
     [eTeamType.TowerDifficulty]=6,
+    [eTeamType.Rogue]=6,
+    [eTeamType.TotalBattle]=6,
 }
 
 -- 返回占用类型
@@ -575,15 +577,63 @@ function this.CleanDeathTowerMember(teamData,sectionID)
     end
 end
 
+--删除无法使用的队员
+function this.CleanTotalBattleMember(teamData)
+    if teamData ~= nil then
+        local removeIDs = {}
+        for i = 1, 6 do
+            local item = teamData:GetItemByIndex(i);
+            if item ~= nil then
+                local isRemove=TotalBattleMgr:IsShowCard(item:GetID());
+                if isRemove~=true then
+                    table.insert(removeIDs, item:GetID())
+                end
+            end
+        end
+        if removeIDs and #removeIDs > 0 then
+            for k, v in ipairs(removeIDs) do
+                teamData:RemoveCard(v);
+            end
+        end
+    end
+end
+
 function this.GetDefaultName(teamIndex,name)
     local teamName = name;
     local teamType = TeamMgr:GetTeamType(teamIndex);
-    if teamType == eTeamType.Tower or teamType==eTeamType.TowerDifficulty then
+    if teamType == eTeamType.Rogue then
+        teamName = LanguageMgr:GetByID(50028);
+    elseif teamType==eTeamType.TotalBattle then
+        teamName = LanguageMgr:GetByID(51007);
+    elseif teamType == eTeamType.Tower or teamType==eTeamType.TowerDifficulty then
         teamName = LanguageMgr:GetByID(49021);
     elseif teamName==nil or teamName=="" then
         teamName = string.format(LanguageMgr:GetTips(14017), teamIndex)
     end
     return teamName;
+end
+
+--返回强制上阵卡牌配置ID
+function this.GetNForceID(forceCfg)
+    local nForceID=nil;
+    if forceCfg==nil then
+        return nForceID;
+    end
+    local cfg=Cfgs.CardData:GetByID(forceCfg.nForceID);
+	if cfg and cfg.role_tag=="lead" and forceCfg.bIsNpc~=true then --队长需要另外判断
+		local nForceID=forceCfg.nForceID;
+		if RoleMgr:IsSexInitCardIDs(nForceID) then--判断当前卡牌是否是主角卡，是的话替换为当前性别的对应卡牌ID
+			nForceID=RoleMgr:GetCurrSexCardCfgId();
+		end
+    elseif forceCfg.bIsNpc==true then
+        if #forceCfg.nForceID==1 then
+            nForceID=forceCfg.nForceID[1]
+        else
+            local idx=PlayerClient:GetSex();
+            nForceID=forceCfg.nForceID[idx];
+        end
+    end
+    return nForceID;
 end
 
 return this;

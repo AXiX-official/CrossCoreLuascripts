@@ -123,6 +123,10 @@ function this:GetTeamDatasByType(_eTeamType)
 				table.insert(teams,v);
 			elseif _eTeamType==eTeamType.TowerDifficulty and k==eTeamType.TowerDifficulty then
 				table.insert(teams,v);
+			elseif _eTeamType==eTeamType.Rogue then
+				table.insert(teams,v);
+			elseif _eTeamType==eTeamType.TotalBattle then
+				table.insert(teams,v);
 			end
 		end
 		return teams;
@@ -181,6 +185,10 @@ function this:GetTeamType(index)
 		type=eTeamType.TowerDifficulty;
 	elseif(index >= eTeamType.ForceFight) then--强制上阵
 		type=eTeamType.ForceFight;
+	elseif index==eTeamType.Rogue then
+		type=eTeamType.Rogue;
+	elseif index==eTeamType.TotalBattle then
+		type=eTeamType.TotalBattle;
 	end
 	return type;
 end

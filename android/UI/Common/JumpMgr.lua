@@ -26,10 +26,10 @@ function this:GetFunc(sName)
         self.funcs["DungeonShadowSpider"] = self.DungeonActivity
         self.funcs["DungeonPlot"] = self.DungeonActivity
         self.funcs["DungeonFeast"] = self.DungeonActivity
+        self.funcs["DungeonTaoFa"] = self.DungeonActivity
         self.funcs["BattleField"] = self.DungeonActivity
         self.funcs["TowerView"] = self.DungeonActivity
-        -- self.funcs["RoleListView"] = self.SetPage
-        -- self.funcs["Bag"] = self.SetPage
+        self.funcs["RogueView"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -41,6 +41,7 @@ function this:GetFunc(sName)
         self.funcs["ActivityListView"] = self.ActivityListView
         self.funcs["SpeicalJump"] = self.SpeicalJump
         self.funcs["AchievementView"] = self.Achievement
+        self.funcs["RegressionList"] = self.RegressionList
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -283,6 +284,18 @@ function this.Achievement(cfg)
     CSAPI.OpenView(cfg.sName, nil, {group = cfg.val1,itemId = cfg.val2})
 end
 
+function this.RegressionList(cfg)
+    local state, lockStr = this.RegressionState(cfg);
+    if state == JumpModuleState.Normal then
+        this.CheckClose(cfg);
+        CSAPI.OpenView(cfg.sName, {group = cfg.val1,id = cfg.val2})
+    else
+        FuncUtil:Call(function()
+            Tips.ShowTips(lockStr)
+        end, nil, 100)
+    end
+end
+
 -- 返回获取跳转状态的方法名
 function this:GetStateFunc(sName)
     if (self.stateFuncs == nil) then
@@ -297,6 +310,7 @@ function this:GetStateFunc(sName)
         self.stateFuncs["Section"] = self.SectionState
         self.stateFuncs["SignInContinue"] = self.SignInContinueState
         self.stateFuncs["ActivityListView"] = self.ActivityListViewState
+        self.stateFuncs["RegressionList"] = self.RegressionState
     end
     if (self.stateFuncs[sName]) then
         return self.stateFuncs[sName]
@@ -424,6 +438,36 @@ function this.ModuleState(cfg)
         return JumpModuleState.Normal;
     else
         return JumpModuleState.Lock, lockStr;
+    end
+end
+
+function this.RegressionState(cfg)
+    local isOpen,type = RegressionMgr:IsHuiGui()
+    if isOpen then
+        if cfg.val1 == nil then
+            return JumpModuleState.Normal;
+        end
+        if type == cfg.val1 then
+            if cfg.val2 == nil then
+                return JumpModuleState.Normal;
+            end
+            local _cfg = Cfgs.CfgReturningActivity:GetByID(cfg.val1)
+            if _cfg and _cfg.infos and #_cfg.infos > 0 then
+                for i, info in ipairs(_cfg.infos) do
+                    if info.index == cfg.val2 then
+                        if not info.IsHide and RegressionMgr:GetActivityEndTime(info.type) > TimeUtil:GetTime() then --超过持续时间不显示
+                            return JumpModuleState.Normal;
+                        else
+                            return JumpModuleState.Lock, LanguageMgr:GetTips(38003);
+                        end
+                    end
+                end
+            end
+        else
+            return JumpModuleState.Lock, LanguageMgr:GetTips(38004);
+        end
+    else
+        return JumpModuleState.Lock, LanguageMgr:GetTips(38002);
     end
 end
 

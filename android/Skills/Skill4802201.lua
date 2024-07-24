@@ -31,3 +31,18 @@ function Skill4802201:OnAttackOver(caster, target, data)
 	-- 4802202
 	self:DelBufferGroup(SkillEffect[4802202], caster, target, data, 2,2)
 end
+-- 伤害前
+function Skill4802201:OnBefourHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4802305
+	self:AddTempAttr(SkillEffect[4802305], caster, self.card, data, "damage",0.4)
+end

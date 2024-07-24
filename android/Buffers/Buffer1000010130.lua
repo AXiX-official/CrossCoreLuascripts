@@ -19,5 +19,5 @@ function Buffer1000010130:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000010130
-	self:AddBuffCount(BufferEffect[1000010130], self.caster, target or self.owner, nil,1000010131,1,5)
+	self:AddBuffCount(BufferEffect[1000010130], self.caster, self.card, nil, 1000010131,1,5)
 end

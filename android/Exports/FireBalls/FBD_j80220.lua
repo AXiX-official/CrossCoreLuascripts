@@ -21,10 +21,10 @@ effect="cast1_hit01",time=3000,type=0,pos_ref={ref_type=4,part_index=1}
 },
 [1310282141]={
 {delay=6550,time=4000,type=1,hit_type=1,hit_creates={2124325257},hits={0}},
-{effect="cast2_eff02",time=12500,type=0,pos_ref={ref_type=6}},
+{effect="cast2_eff02",time=12200,type=0,pos_ref={ref_type=6}},
 {delay=6550,time=4000,type=1,hit_type=1,hits={561}},
 {delay=6550,time=4000,type=1,hit_type=1,hits={2281}},
-{effect="cast2_eff01",time=12500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fifteen.acb",cue_name="Ammit_attack_skill_02"},
+{effect="cast2_eff01",time=12200,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fifteen.acb",cue_name="Ammit_attack_skill_02"},
 {delay=6550,time=4000,type=1,hit_type=1,hits={1281}},
 {delay=6550,time=4000,type=1,hit_type=1,hits={1481}},
 {delay=6550,time=4000,type=1,hit_type=1,hits={981}}

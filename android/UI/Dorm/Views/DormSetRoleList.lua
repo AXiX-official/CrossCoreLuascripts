@@ -4,6 +4,7 @@
 local selectIDS = {} -- 字典
 local curCount = 0
 local maxCount = 0
+local presetIndex = 1 -- 预设队伍下标
 
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
@@ -65,7 +66,8 @@ function ItemClickCB(item)
 end
 
 function OnOpen()
-    roomId = data -- 房间id/建筑id
+    roomId = data[1] -- 房间id/建筑id
+    _presetIndex = data[2]
     orderType = DormMgr:GetSetRoleSortUD()
     conditionData = DormMgr:GetSetRoleSortTab()
     roomType = DormMgr:GetRoomTypeByID(roomId) -- 房间类型
@@ -116,8 +118,8 @@ function InitDataBase()
         --     end
         -- end
         -- baseDatas = newArr
-
-        oldSelectIDs = buildData:GetRoles()
+        presetIndex = _presetIndex or buildData:GetCurPresetId()
+        oldSelectIDs = buildData:GetPrestRoles(presetIndex)
         maxCount = buildData:GetMaxNum()
     else
         -- 宿舍 看所有人
@@ -434,8 +436,10 @@ function OnClickSure()
                     local _roomType = DormMgr:GetRoomTypeByID(_roomId)
                     if (_roomType == RoomType.dorm) then
                         list[_roomId].roleIds = DormMgr:GetRoomData(_roomId):GetRoles()
+                        list[_roomId].teamId = DormMgr:GetRoomData(_roomId):GetCurPresetId()
                     else
                         list[_roomId].roleIds = MatrixMgr:GetBuildingDataById(_roomId):GetRoles()
+                        list[_roomId].teamId = MatrixMgr:GetBuildingDataById(_roomId):GetCurPresetId()
                     end
                 end
                 for k, m in ipairs(list[_roomId].roleIds) do
@@ -464,7 +468,8 @@ function OnClickSure()
         end
         table.insert(infos, {
             id = roomId,
-            roleIds = curRoleIds
+            roleIds = curRoleIds,
+            teamId = presetIndex
         })
         local showTips, languageID = false, nil
         -- 交易中心的提示 
@@ -522,19 +527,13 @@ end
 function SetRoles(infos, curRoleIds)
     if (not buildData) then
         -- 宿舍
-        if (DormMgr:GetEmptyNum() > #curRoleIds) then
-            BuildingProto:BuildSetRole(infos)
-        else
-            FuncUtil:Call(function()
-                LanguageMgr:ShowTips(21034)
-            end, nil, 100)
-        end
-    else --if (presetIndex == buildData:GetCurPresetId()) then
+        BuildingProto:BuildSetRole(infos)
+    elseif (presetIndex == buildData:GetCurPresetId()) then
         -- 更改当前队伍
         BuildingProto:BuildSetRole(infos)
-    --else
-        -- -- 仅预设
-        -- BuildingProto:BuildSetPresetRole(roomId, presetIndex, curRoleIds)
+    else
+        -- 仅预设
+        BuildingProto:BuildSetPresetRole(roomId, presetIndex, curRoleIds)
     end
     view:Close()
 end

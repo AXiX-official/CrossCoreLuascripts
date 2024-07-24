@@ -348,10 +348,11 @@ function CreateAllLine()
             if k ~= 1 then
                 local x1, y1 = CSAPI.GetLocalPos(listItems[lastID].gameObject)
                 local x2, y2 = CSAPI.GetLocalPos(listItems[k].gameObject)
+                local scale = CSAPI.GetSizeOffset()
                 local pos = {{x1, y1}}
                 if v:GetTurnPos() and #v:GetTurnPos() > 0 then
                     for _, _pos in ipairs(v:GetTurnPos()) do
-                        table.insert(pos, _pos)
+                        table.insert(pos, {_pos[1] * scale,_pos[2] * scale})
                     end
                 end
                 table.insert(pos, {x2, y2})

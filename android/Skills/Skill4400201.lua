@@ -6,8 +6,8 @@ Skill4400201 = oo.class(SkillBase)
 function Skill4400201:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动开始
-function Skill4400201:OnActionBegin(caster, target, data)
+-- 行动结束
+function Skill4400201:OnActionOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -40,6 +40,8 @@ function Skill4400201:OnAttackOver(caster, target, data)
 	else
 		return
 	end
+	-- 8689
+	local count689 = SkillApi:GetCount(self, caster, target,3,4400201)
 	-- 4400211
-	self:OwnerAddBuff(SkillEffect[4400211], caster, target, data, 4400211)
+	self:LimitDamage(SkillEffect[4400211], caster, target, data, 1,0.15*count689)
 end

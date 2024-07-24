@@ -29,9 +29,11 @@ function this:OnPlay()
 
     self:ApplyCreate();
 
-    EventMgr.Dispatch(EventType.Character_FightInfo_Show,false); 
 
-    EventMgr.Dispatch(EventType.Scene_Mask_Changed,true);
+    if(not self:IsSkip())then
+        EventMgr.Dispatch(EventType.Character_FightInfo_Show,false); 
+        EventMgr.Dispatch(EventType.Scene_Mask_Changed,true);
+    end
 end
 
 function this:OnClean()
@@ -56,17 +58,92 @@ function this:OnClean()
     EventMgr.Dispatch(EventType.Scene_Mask_Changed,false);
 end
 
+function this:IsSkip()
+    local character = self:GetActorCharacter();
+
+    return character and character.IsSkipSkill();
+end
+
 function this:ApplyCreate()
     if(not self.isPreloaded or not self.isPlayed)then
         return;
     end
 
-   self.summons = CharacterMgr:CreateCharacters(self.data.datas);
-   self:SetSummonsShowState(false);
+   self.summons = CharacterMgr:CreateCharacters(self.data.datas);   
+
+   
    self.isSummonCreated = 1;
 
-   self:MasterShow();
+    if(self:IsSkip())then
+        self:ShowSummonCharacter();
+        return;
+    end
+
+    local aniName,aniSound = self:GetEnterAni();      
+    if(aniName and not FightActionMgr:IsSkiping())then
+        local summonAni = ResUtil:PlayVideo(aniName); 
+        if(aniSound)then
+            CSAPI.PlaySound("fight/effect/" .. aniSound .. ".acb",aniSound);
+        end  
+        summonAni:AddCompleteEvent(function()           
+            --EventMgr.Dispatch(EventType.Fight_Mask); 
+            --FuncUtil:Call(self.OnVideoComplete,self,250);
+            self:OnVideoComplete();
+        end); 
+        return;
+    end
+    
+    self:SetSummonsShowState(false);
+    self:MasterShow();
    --self:ApplySummonShow();    
+end
+
+function this:OnVideoComplete()
+    self:ShowSummonCharacter();
+end
+
+
+--- 机身自带入场视频，写在这里
+function this:GetCustomPlayTime()
+    local enterAniName = self:GetEnterAni();
+    if(enterAniName)then
+    --[[     if(not enterAniTimes)then
+            enterAniTimes = 
+            {
+                summon_enter_80240 = 5000
+            };
+        end ]]
+        --LogError(enterAniTimes[enterAniName]);
+        return 7000;--enterAniTimes[enterAniName];
+    end
+
+end
+
+function this:GetEnterAni()
+    local summonDatas = self.data and self.data.datas;
+    if(not summonDatas)then
+        return;
+    end
+
+    for _,summonData in ipairs(summonDatas)do
+        local cfgModel = Cfgs.character:GetByID(summonData.characterData and summonData.characterData.model or 0);
+        --LogError(summonData);
+        local enterAniName = cfgModel and cfgModel.enter_ani;
+        --LogError(cfgModel);
+        --enterAniName = "summon_enter_80240"
+        if(enterAniName)then
+            return enterAniName,cfgModel.enter_sound;
+        end        
+    end
+
+    --return "summon_enter_80240";
+end
+    
+function this:ShowSummonCharacter()   
+    CharacterMgr:SetAllShowState(true);    
+    FightActionMgr:TryStopSkip(); 
+    EventMgr.Dispatch(EventType.Character_HeadInfo_Scale_State,true);      
+    --EventMgr.Dispatch(EventType.Fight_Mask); 
 end
 
 function this:MasterShow()
@@ -75,7 +152,6 @@ function this:MasterShow()
     end
 
     self.master.SetOverTurn(true);
-
 
     local cfgSkill = Cfgs.skill:GetByID(self.fightAction and self.fightAction:GetSkillID()); 
 

@@ -8,10 +8,10 @@ function Skill984000801:Init(skillID, card)
 end
 -- 行动结束
 function Skill984000801:OnActionOver(caster, target, data)
-	-- 8411
-	local count11 = SkillApi:BuffCount(self, caster, target,1,1,2)
+	-- 8579
+	local count100 = SkillApi:BuffCount(self, caster, target,3,2,1)
 	-- 984000803
-	if SkillJudger:Less(self, caster, target, true,count11,5) then
+	if SkillJudger:Less(self, caster, target, true,count100,5) then
 	else
 		return
 	end

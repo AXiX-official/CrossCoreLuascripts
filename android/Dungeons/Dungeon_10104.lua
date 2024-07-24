@@ -29,14 +29,13 @@ monsters=
 props=
 {
 {born_group=103,wave=1,rate=100,nPropID=1,name="货箱",icon="MapProps_001",desc="装着各种随机素材的箱子。",res="GridProps/baoxiang/baoxiang",get_eff="baoxiang_hit",eBlockState=1,nStep=0,state=1,type=26,param={10001}},
-{born_group=103,wave=1,rate=0,nPropID=2,name="货箱",icon="MapProps_001",desc="装着各种随机素材的箱子。",res="GridProps/baoxiang/baoxiang",get_eff="baoxiang_hit",eBlockState=1,nStep=0,state=1,type=28,param={10006}},
-{born_group=107,wave=2,rate=100,nPropID=3,float_content="耐久+50%",name="生命补给",icon="图标名称",desc="基地投送的作战补给，获得后队伍全体耐久+50%。",res="GridProps/buff/Buff_Heal",get_eff="get_eff_green",eBlockState=1,nStep=0,state=1,type=2,param={0.5}},
-{born_pos=10302,wave=1,rate=100,nPropID=4,nRelationID=1,AICtl=1007,icon="图标名称",desc="未设置",bIsCanPass=1,perpetual=1,nStep=2,state=4,type=29,len=2,nChangeStep=0,dir={1}},
-{born_pos=10308,wave=1,rate=100,nPropID=5,nRelationID=2,AICtl=1007,icon="图标名称",desc="未设置",bIsCanPass=1,perpetual=1,nStep=2,state=4,type=29,len=2,nChangeStep=0,dir={1}},
-{born_group=109,wave=1,rate=100,nPropID=6,name="泄止阀",icon="MapProps_016",desc="世界树的稳压器，会定期释放高压气体击退范围内的敌人并造成一定伤害。",res="GridProps/section2/5",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=37,attack_range =111,start_round=2,interval_round  =3,damage=0.05,collide_damage=0},
-{born_group=110,wave=1,rate=100,nPropID=7,name="泄止阀",icon="MapProps_016",desc="世界树的稳压器，会定期释放高压气体击退范围内的敌人并造成一定伤害。",res="GridProps/section2/5",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=37,attack_range =112,start_round=2,interval_round  =3,damage=0.05,collide_damage=0},
-{born_group=106,wave=1,rate=100,nPropID=8,name="探视天眼",icon="MapProps_015",desc="世界树自卫系统中的检测器，随机检测自身为中心3格十字范围内的敌方单位，若检测到敌方单位立即召唤妨害造物清理目标。",res="GridProps/section2/6",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=0},
-{born_group=106,wave=1,rate=100,nPropID=9,name="探视天眼",icon="MapProps_015",desc="世界树自卫系统中的检测器，随机检测自身为中心3格十字范围内的敌方单位，若检测到敌方单位立即召唤妨害造物清理目标。",res="GridProps/section2/6",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=0}
+{born_group=107,wave=2,rate=100,nPropID=2,float_content="耐久+30%",name="耐久补给",icon="MapProps_002",desc="基地投送的作战补给，获得后队伍全体耐久+30%。",res="GridProps/buff/Buff_Heal",get_eff="get_eff_green",eBlockState=1,nStep=0,state=1,type=2,param={0.3}},
+{born_pos=10302,wave=1,rate=100,nPropID=3,nRelationID=1,AICtl=1007,icon="图标名称",desc="未设置",bIsCanPass=1,perpetual=1,nStep=2,state=4,type=29,len=2,nChangeStep=0,dir={1}},
+{born_pos=10308,wave=1,rate=100,nPropID=4,nRelationID=2,AICtl=1007,icon="图标名称",desc="未设置",bIsCanPass=1,perpetual=1,nStep=2,state=4,type=29,len=2,nChangeStep=0,dir={1}},
+{born_group=109,wave=1,rate=100,nPropID=5,name="泄止阀",icon="MapProps_016",desc="世界树的稳压器，会定期释放高压气体击退范围内的敌人并造成一定伤害。",res="GridProps/section2/5",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=37,attack_range =111,start_round=2,interval_round  =3,damage=0.05,collide_damage=0},
+{born_group=110,wave=1,rate=100,nPropID=6,name="泄止阀",icon="MapProps_016",desc="世界树的稳压器，会定期释放高压气体击退范围内的敌人并造成一定伤害。",res="GridProps/section2/5",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=37,attack_range =112,start_round=2,interval_round  =3,damage=0.05,collide_damage=0},
+{born_group=106,wave=1,rate=100,nPropID=7,name="探视天眼",icon="MapProps_015",desc="世界树自卫系统中的检测器，随机检测自身为中心3格十字范围内的敌方单位，若检测到敌方单位立即召唤妨害造物清理目标。",res="GridProps/section2/6",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=0},
+{born_group=106,wave=1,rate=100,nPropID=8,name="探视天眼",icon="MapProps_015",desc="世界树自卫系统中的检测器，随机检测自身为中心3格十字范围内的敌方单位，若检测到敌方单位立即召唤妨害造物清理目标。",res="GridProps/section2/6",get_eff="baoxiang_hit",eBlockState=3,perpetual=1,nStep=0,state=1,type=0}
 },
 }
 return this;

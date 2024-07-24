@@ -64,7 +64,8 @@ function Refresh(_data)
 end
 
 function SetPos(pos)
-	CSAPI.SetLocalPos(gameObject, pos.x, pos.y)
+	local scale = CSAPI.GetSizeOffset()
+	CSAPI.SetLocalPos(gameObject, pos.x * scale, pos.y * scale)
 end
 
 function SetBtnPos(pos)

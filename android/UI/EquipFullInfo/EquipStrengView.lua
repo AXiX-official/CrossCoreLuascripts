@@ -20,6 +20,8 @@ local sBarTween=nil;
 local cBarTween=nil;
 local beforeLv=0;
 local disNewTween=false;
+local sBar=nil
+local cBar=nil
 
 function Awake()
 	aphlaCanvas=ComUtil.GetCom(btn_strength,"CanvasGroup");
@@ -38,6 +40,7 @@ function Awake()
 	eventMgr = ViewEvent.New();
 	eventMgr:AddListener(EventType.Equip_Upgrade_Ret,OnUpgradeRet);
 	eventMgr:AddListener(EventType.Bag_Update,OnBagUpdate);
+	eventMgr:AddListener(EventType.Equip_StrengthTween_State,SetMask)
 	ResUtil:CreateUIGOAsync("Sort/SortTop",btnTool,function(go)
 		CSAPI.SetScale(go,1,1,1);
 		local lua=ComUtil.GetLuaTable(go);
@@ -346,12 +349,17 @@ function OnUpgradeRet(critTips)
 	if	data.equip:GetLv()~=data.equip:GetMaxLv() then
 		testVal=testVal+data.equip:GetExp()/data.equip:GetLvUpExp();
 	end
-	--播放升级动画
-	PlayBarTween(sBar,sBarTween,testVal,function()
-		--刷新界面
-		cBar.value=0;
-		Refresh(data.equip)
-	end);
+	if sBar and sBarTween and testVal then
+		--播放升级动画
+		PlayBarTween(sBar,sBarTween,testVal,function()
+			--刷新界面
+			if cBar~=nil then
+				cBar.value=0;
+			end
+			EventMgr.Dispatch(EventType.Equip_StrengthTween_State,false)
+			Refresh(data.equip)
+		end);
+	end
 	EventMgr.Dispatch(EventType.Equip_Change);
 end 
 
@@ -522,7 +530,7 @@ function OnClickRemoveStuff(tab)
 end
 
 function PlayBarTween(slider,tween,val,func)
-	if tween and val>0 then
+	if tween and val>0 and cBarTween and sBarTween and cBar and sBar then
 		--计算时间
 		local currVal=slider.value;
 		tween.target=slider.gameObject;
@@ -531,7 +539,7 @@ function PlayBarTween(slider,tween,val,func)
 		cBarTween.time=time;
 		sBarTween.time=time;
 		local isLvUp=val>=1;
-		SetMask(true);
+		EventMgr.Dispatch(EventType.Equip_StrengthTween_State,true)
 		tween:Play(function()
 			if isLvUp and slider~=cBar then
 				slider.value=0;
@@ -543,14 +551,12 @@ function PlayBarTween(slider,tween,val,func)
 					else
 						slider.value=1;
 						func();
-						SetMask(false);
 					end
 				end,nil,150);
 			elseif func then
 				func();
-				SetMask(false);
 			else
-				SetMask(false);
+				EventMgr.Dispatch(EventType.Equip_StrengthTween_State,false)
 			end
 		end);
 	else
@@ -558,12 +564,11 @@ function PlayBarTween(slider,tween,val,func)
 		if func then
 			func();
 		end
-		SetMask(false);
 	end
 end
 
 function SetMask(isShow)
-	CSAPI.SetGOActive(mask,isShow);
+	CSAPI.SetGOActive(mask,isShow==true);
 end
 
 ------------------------筛选

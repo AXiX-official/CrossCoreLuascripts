@@ -5,6 +5,7 @@ local grids={};
 local data=nil;
 local canvasGroup=nil;
 local dropClick=nil;
+local dropClick2=nil;
 local eventMgr=nil;
 local delayCtrl=nil
 local assistData=nil; --TeamItemData类型
@@ -16,6 +17,7 @@ function Awake()
     -- skillAlpha=ComUtil.GetCom(skillRoot,"CanvasGroup");
     -- aiAlpha=ComUtil.GetCom(aiRoot,"CanvasGroup")
     dropClick=ComUtil.GetCom(dClick,"Image");
+    dropClick2=ComUtil.GetCom(dropDownList,"Image");
     delayCtrl=ComUtil.GetCom(dropTween,"ActionsDelayCtrl");
     delayCtrl.unitDelay=250;
     eventMgr = ViewEvent.New();
@@ -86,10 +88,23 @@ function GetTeamIndex()
     end
 end
 
+function SetOpenSetting(op)
+    op=op==nil and TeamConfirmOpenType.Dungeon or op;
+    if op==TeamConfirmOpenType.Tower then
+        openSetting=TeamOpenSetting.Tower
+    elseif op==TeamConfirmOpenType.TotalBattle then
+        openSetting=TeamOpenSetting.TotalBattle
+    elseif op==TeamConfirmOpenType.Rogue then
+        openSetting=TeamOpenSetting.Rogue
+    else
+        openSetting=TeamOpenSetting.PVE
+    end
+end
+
 function Refresh(d)
     data=d;
     if data then
-        openSetting=data.openSetting or nil;
+        SetOpenSetting(data.openSetting);
         TeamConfirmUtil.CreateGrids(nil,grids,gridNode,OnClickGrid,openSetting);
         local teamID=nil;
         if data.currState then
@@ -111,7 +126,7 @@ function Refresh(d)
         else
             CSAPI.SetText(dropVal,"-");
         end
-        if openSetting==TeamConfirmOpenType.Tower and assistData==nil then
+        if openSetting==TeamOpenSetting.Tower and assistData==nil then
             --获取锁定的助战卡牌信息
             local assistInfo= TowerMgr:GetLockAssistInfo(data.dungeonCfg.group);
             if assistInfo~=nil and assistInfo.tower_hp>0 and assistInfo.isSelect then
@@ -196,17 +211,16 @@ function OnClickGrid(tab)
     local canAddAssist=GetState()~=TeamConfirmItemState.UnAssist
     -- TeamMgr.currentIndex=teamData:GetIndex();
     local canEmpty=teamData:GetIndex()~=1 and true or false;
-    local open1=openSetting==TeamConfirmOpenType.Tower and TeamOpenSetting.Tower or TeamOpenSetting.PVE;
     if isAssist then
         local cid=nil;
         SetTeamData(teamData:GetIndex());
         if assistData then
             cid=assistData.card:GetID();
         end
-        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},open1);
+        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
     else
         SetTeamData(teamData:GetIndex());
-        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},open1);
+        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
     end
 end
 
@@ -404,11 +418,13 @@ function SetState(_state)
         CSAPI.SetGOActive(btnUse,data.showClean);
         CSAPI.SetGOActive(txt_disable,false);
     end
-    if data.openSetting==TeamConfirmOpenType.Tower then
+    if data.openSetting==TeamConfirmOpenType.Tower or data.openSetting==TeamConfirmOpenType.TotalBattle then
         dropClick.raycastTarget=false;
+        dropClick2.raycastTarget=false;
         CSAPI.SetGOActive(dropTirangle,false);
     else
         dropClick.raycastTarget=dropCanClicker;
+        dropClick2.raycastTarget=dropCanClicker;
         CSAPI.SetGOActive(dropTirangle,dropCanClicker);
     end
     canvasGroup.alpha=alpha;
@@ -432,7 +448,7 @@ function CheckModelOpen()
 end
 
 function OnClickSkill()
-    if teamData then
+    if teamData and teamData:GetRealCount()>0 then
         local isOpen,lockStr=MenuMgr:CheckModelOpen(OpenViewType.main, FormationUtil.SkillModuleKey)
         if isOpen~=true then
             Tips.ShowTips(lockStr);

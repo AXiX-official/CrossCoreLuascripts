@@ -59,8 +59,8 @@ function OnInit()
     end)
     -- 更换装备 --改为监听 RoleEquip 界面的关闭
     eventMgr:AddListener(EventType.Equip_Change, function()
-        RefreshPanel()
         OpenAnim(true)
+        RefreshPanel()
     end)
 
     -- 卸载装备
@@ -89,8 +89,8 @@ function OnViewClosed(viewKey)
     end
     -- if (viewKey == "RoleEquip" or viewKey == "RoleCenter") then
     if (viewKey == "RoleCenter") then
-        RefreshPanel()
         OpenAnim(true)
+        RefreshPanel()
     end
 end
 
@@ -98,8 +98,8 @@ function OnOpen()
     -- openSetting = openSetting == nil and RoleInfoOpenType.LookSelf or openSetting --todo 
     cardData = data
 
-    RefreshPanel()
     OpenAnim(true)
+    RefreshPanel()
 end
 
 function RefreshPanel()
@@ -134,7 +134,7 @@ function RefreshPanel()
 
     cardData:SetIsNew(false) -- 已查看,这不是新卡了
 
-    --SetChangeBtn()
+    SetChangeBtn()
 end
 
 function SetRed()
@@ -334,7 +334,7 @@ function SetSpecialSkill()
     -- red
     local isRed = false
     local twoCardID = GCalHelp:GetElseCfgID(cardData:GetCfgID())
-    if (_data and not isFighting and RoleSkinMgr:CheckIsNewAdd(twoCardID)) then
+    if (twoCardID and _data and not isFighting and RoleSkinMgr:CheckIsNewAdd(twoCardID)) then
         isRed = true
     end
     UIUtil:SetRedPoint(btnSpecialSkill, isRed, 119.4, 22.5, 0)
@@ -772,7 +772,7 @@ end
 
 function SetChangeBtn()
     local b = false
-    if (#cardData:GetCfg().changeCardIds > 0 or #cardData:GetCfg().allTcSkills > 0) then
+    if ((cardData:GetCfg().changeCardIds~=nil and #cardData:GetCfg().changeCardIds > 0) or (cardData:GetCfg().allTcSkills~=nil and #cardData:GetCfg().allTcSkills > 0)) then
         b = true
     end
     CSAPI.SetGOActive(btnJieJin, b)

@@ -47,10 +47,10 @@ function Skill4304803:OnActionOver2(caster, target, data)
 	else
 		return
 	end
-	-- 8424
-	local count24 = SkillApi:BuffCount(self, caster, target,3,3,6111)
-	-- 8107
-	if SkillJudger:Greater(self, caster, self.card, true,count24,0) then
+	-- 8684
+	local count684 = SkillApi:GetCount(self, caster, target,3,304800101)
+	-- 8897
+	if SkillJudger:Greater(self, caster, target, true,count684,4) then
 	else
 		return
 	end

@@ -45,7 +45,14 @@ function InitDatas()
     local cfgs = Cfgs.CfgBadgeGroup:GetAll()
     if cfgs then
         for k, v in pairs(cfgs) do
-            table.insert(groupCfgs,v)
+            if v.begTime then
+                local sTime = TimeUtil:GetTimeStampBySplit(v.begTime)
+                if TimeUtil:GetTime()>=sTime then
+                    table.insert(groupCfgs,v)
+                end
+            else
+                table.insert(groupCfgs,v)
+            end
         end
     end
     if #groupCfgs >0 then

@@ -16,8 +16,8 @@ end
 function SetName()
     CSAPI.SetText(txtName,cfg.name)
     CSAPI.SetText(txtStage,cfg.chapterID and cfg.chapterID .. "" or "")
-    CSAPI.SetGOActive(txtStage,cfg.type ~= eDuplicateType.Tower)
-    CSAPI.SetGOActive(txt_stage,cfg.type ~= eDuplicateType.Tower)
+    CSAPI.SetGOActive(txtStage,cfg.type ~= eDuplicateType.Tower and cfg.type ~= eDuplicateType.TaoFa)
+    CSAPI.SetGOActive(txt_stage,cfg.type ~= eDuplicateType.Tower and cfg.type ~= eDuplicateType.TaoFa)
 end
 
 function SetHard()

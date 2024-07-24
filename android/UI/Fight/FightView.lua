@@ -40,11 +40,6 @@ function Awake()
         npBar:SetFormat("<color=#FFC146><size=45>{0}</size></color>/{1}");
     end
 
-    if(npText)then
-        CSAPI.SetText(npText,LanguageMgr:GetByID(28014));
-    end
-
-
     txtName = ComUtil.GetCom(goNameText,"Text");
     txtLv = ComUtil.GetCom(goLvText,"Text");
 
@@ -155,6 +150,9 @@ function InitFightInfo()
                 info = tostring(cfgDungeon.name);
             end
         end
+    elseif(g_FightMgr.type == SceneType.Rogue)then
+        items2 = items2 or {}
+        ItemUtil.AddItems("Rogue/RogueBuffSelectItem2", items2, RogueMgr:GetSelectBuffs(), rogueBuffs)
     end
     --CSAPI.SetText(fightInfoText,info);
 end
@@ -196,7 +194,8 @@ function InitListener()
 
     eventMgr:AddListener(EventType.Fight_SkipCast2,OnPlayCastSkipSound);    
 
-    eventMgr:AddListener(EventType.Fight_Action_Turn_Add1,TurnNumAdd);        
+    eventMgr:AddListener(EventType.Fight_Action_Turn_Add1,TurnNumAdd);    
+    
 end
 function OnDestroy()
     eventMgr:ClearListener();
@@ -282,8 +281,7 @@ function ShowCharacter(showCharacter)
 
 
     txtName.text = character.GetName();
-    --txtLv.text = "<size=25>" .. StringConstant.lv .. "</size>" .. character.GetLv();
-    txtLv.text = string.format(LanguageMgr:GetByID(26000),character.GetLv());
+    txtLv.text = "<size=25>" .. StringConstant.lv .. "</size>" .. character.GetLv();
     local cfg = character.GetCfgModel();      
     if(cfg == nil)then
         return; 
@@ -425,17 +423,16 @@ end
 --回合数+1
 function TurnNumAdd()
     if(turnData)then
-        turnData.add1 = 1;        
+        turnData.add1 = 1;
+        --LogError(turnData.turnNum + 1);
         UpdateTurn(turnData);
     end
 end
 
 function UpdateTurn(data)
     if(data)then
-        turnData = data;        
-        if(txtTurn == nil)then
-            txtTurn = ComUtil.GetCom(turn,"Text");
-        end
+        turnData = data;
+        
         local turnNum = data and data.turnNum or 1;
         --turnNum = math.max(1,turnNum);
         local turnNumLimit = data and data.nStepLimit or 0;--"--";
@@ -467,9 +464,15 @@ function UpdateTurn(data)
             end           
         end
         local str = turnNumLimit >= 100 and "" or ("/" .. turnNumLimit);
+
+        if(txtTurn == nil)then
+            txtTurn = ComUtil.GetCom(turn,"Text");
+        end
+
         if(turnData and turnData.add1)then
             turnNum = turnNum + 1;
         end
+
         txtTurn.text = string.format("<color=#%s>%s</color>%s",colorStr,turnNum,str);                   
     end
     
@@ -904,7 +907,7 @@ end
 function OnFightMask(characterID)
     CSAPI.SetGOActive(cast2Mask,true);
     local delayCloseTime = 1500;
-
+    --LogError(tostring(characterID));
     local character = characterID and CharacterMgr:Get(characterID);
     if(character)then
         delayCloseTime = 2200;
@@ -918,9 +921,11 @@ function OnFightMask(characterID)
         local cfg = character.GetCfg();
         local starLv = cfg and cfg.quality or 3;     
         local isOverLoad = character.GetOverloadState();
-        ActiveCast2Mask(starLv,isOverLoad);      
-        
-        CheckAutoSkipCast2(character);      
+
+        CheckAutoSkipCast2(character);  
+
+        ActiveCast2Mask(starLv,isOverLoad,character.IsSkipSkill());    
+                    
     else
         delayCloseTime = 1000;
         CSAPI.SetGOActive(Cast2ShowRole_ToWhite,true);
@@ -939,31 +944,37 @@ function CheckAutoSkipCast2(character)
     local skipPlay = nil;
     local skipSettingVal = SettingMgr:GetValue(s_fight_action_key);
 
-    if(skipSettingVal == SettingFightActionType.Close)then
-        skipPlay = 1;
-    else
-        local fightAction = character.GetFightAction();
-        local skillID = fightAction and fightAction:GetSkillID();   
-        local skillKey = tostring(skillID); 
-        local currPlayTime = os.date("%d");   
+    local fightAction = character.GetFightAction();
+    local skillID = fightAction and fightAction:GetSkillID();  
+    local cfgSkill = Cfgs.skill:GetByID(skillID);
+    
+    if(not cfgSkill or (cfgSkill.type ~= SkillType.Summon and cfgSkill.type ~= SkillType.Unite))then--不是召唤和同调
+        
+        if(skipSettingVal == SettingFightActionType.Close)then
+            skipPlay = 1;
+        else            
+            local skillKey = tostring(skillID); 
+            local currPlayTime = os.date("%d");   
+            
+            if(skipSettingVal == SettingFightActionType.Once)then                   
+                local lastPlayTime = PlayerPrefs.GetString(skillKey);
+                if(lastPlayTime == currPlayTime)then
+                    skipPlay = 1;
+                end                
+            end       
 
-        if(skipSettingVal == SettingFightActionType.Once)then                   
-            local lastPlayTime = PlayerPrefs.GetString(skillKey);
-            if(lastPlayTime == currPlayTime)then
-                skipPlay = 1;
-            end                
-        end       
-
-        PlayerPrefs.SetString(skillKey,currPlayTime);
+            PlayerPrefs.SetString(skillKey,currPlayTime);
+        end
     end
 
     if(skipPlay)then
-        EventMgr.Dispatch(EventType.Fight_Skill_Skip_Next);
+        character.SetSkipSkill(true);
+        --EventMgr.Dispatch(EventType.Fight_Skill_Skip_Next);
     end 
 end
 
 
-function ActiveCast2Mask(starLv,isOverLoad)
+function ActiveCast2Mask(starLv,isOverLoad,skipSkill)
     CSAPI.SetGOActive(this["Cast2ShowRole_" .. starLv],true);
 --    if(not roleAnimator)then
 --        roleAnimator = ComUtil.GetComInChildren(Cast2ShowRole_Role,"Animator");
@@ -973,8 +984,12 @@ function ActiveCast2Mask(starLv,isOverLoad)
     if(isOverLoad)then
         CSAPI.SetGOActive(Cast2ShowRole_OverLoad,isOverLoad);
     end
-    FuncUtil:Call(ActiveToWhite,nil,1650);    
-    FuncUtil:Call(ActiveCast2MaskComplete,nil,1750);
+    if(skipSkill)then
+        FuncUtil:Call(RecoverCast2Mask,nil,2400);
+    else
+        FuncUtil:Call(ActiveToWhite,nil,1650);    
+        FuncUtil:Call(ActiveCast2MaskComplete,nil,1950);
+    end
 end
 
 function ActiveToWhite()

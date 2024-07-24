@@ -15,6 +15,15 @@ function Skill334001:OnCure(caster, target, data)
 	end
 	-- 334011
 	self:AddBuffCount(SkillEffect[334011], caster, self.card, data, 304900101,1,10)
+	-- 8686
+	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
+	-- 334021
+	if self:Rand(1000) then
+		local targets = SkillFilter:Rand(self, caster, target, 4)
+		for i,target in ipairs(targets) do
+			self:CallSkill(SkillEffect[334021], caster, target, data, 304900100+count686)
+		end
+	end
 end
 -- 入场时
 function Skill334001:OnBorn(caster, target, data)

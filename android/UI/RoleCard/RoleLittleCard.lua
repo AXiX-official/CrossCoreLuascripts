@@ -87,10 +87,18 @@ function Refresh(_cardData, _elseData)
     ActiveClick(true)
     if (cardData and cardData.data ~= nil) then
         CSAPI.SetGOActive(Image, true)
+        if elseData and elseData.disDrag==true  then
+            CSAPI.SetText(txt_tips,LanguageMgr:GetByID(49027));
+            canClick=false;
+        else
+            CSAPI.SetText(txt_tips,LanguageMgr:GetByID(26024));
+        end
         if elseData and elseData.key == "TeamEdit" then
             RefreshByTeamEdit()
         elseif elseData and elseData.key == "TeamFormation" then
             RefreshByFormation()
+        elseif elseData and elseData.key=="TotalBattle" then
+            RefreshByTotalBattle();
         else
             SetIcon(cardData:GetSmallImg())
             SetTag(cardData:GetData().tag)
@@ -109,7 +117,7 @@ function Refresh(_cardData, _elseData)
             SetName(cardData:GetName())
             local _index = RoleTool.GetStateStr(cardData)
             SetState(_index)
-            SetFormation(cardData:GetID())
+            SetFormation(cardData:GetID(),elseData and elseData.hideFormat)
             SetSelect(elseData and elseData.isSelect)
             SetLock(cardData:IsLock())
             -- SetColor(cardData:GetQuality(), _index)
@@ -141,6 +149,33 @@ function Refresh(_cardData, _elseData)
         end
         SetEmpty(imgName)
     end
+end
+
+function RefreshByTotalBattle()
+    SetIcon(cardData:GetSmallImg())
+    SetTag(cardData:GetData().tag)
+    SetLv(cardData:GetLv())
+    SetPro();
+    SetBGIcon(cardData:GetQuality())
+    SetName(cardData:GetName())
+    local _index = RoleTool.GetStateStr(cardData)
+    if _index == 1 then
+        -- SetColor(cardData:GetQuality(), _index)
+        SetState(_index)
+    else
+        -- SetColor(cardData:GetQuality())
+        SetState()
+    end
+    SetFormation();
+    SetAttrs(elseData and elseData.showAttr)
+    SetGridIcon(cardData:GetCfg().gridsIcon);
+    SetSelect(elseData and elseData.isSelect)
+    SetLock()
+    SetTime()
+    SetTipsObj(elseData and elseData.showTips);
+    SetNPCObj(elseData and elseData.showNPC);
+    SetIcon(cardData:GetSmallImg())
+    SetName(cardData:GetName())
 end
 
 function SetEmpty(imgName)
@@ -320,6 +355,9 @@ function OnClick()
 end
 
 function OnHolder()
+    if elseData~=nil and elseData.disDrag==true then
+        return;
+    end
     if elseData~=nil and elseData.hcb ~= nil then
         elseData.hcb(this);
     else
@@ -391,13 +429,14 @@ function SetName(str)
 end
 
 function SetState(_index)
-    if _index then
-        CSAPI.SetGOActive(imgState, true)
-        local str = LanguageMgr:GetByID(2999 + _index)
-        CSAPI.SetText(txtState, "· " .. str)
-    else
-        CSAPI.SetGOActive(imgState, false)
-    end
+    --用不到了，统一隐藏
+    -- if _index then
+    --     CSAPI.SetGOActive(imgState, true)
+    --     local str = LanguageMgr:GetByID(2999 + _index)
+    --     CSAPI.SetText(txtState, "· " .. str)
+    -- else
+    --     CSAPI.SetGOActive(imgState, false)
+    -- end
 end
 
 -- 编队使用的设置状态，用于显示卡牌是NPC还是强制出战还是支援
@@ -411,7 +450,13 @@ function SetState2(str)
 end
 
 -- 第几编队
-function SetFormation(_cid)
+function SetFormation(_cid,_hideFormat)
+    local hideFormat = _hideFormat==nil and false or _hideFormat
+    if(hideFormat) then 
+        CSAPI.SetGOActive(format, false)
+        return 
+    end 
+
     local cid = _cid
     local index = TeamMgr:GetCardTeamIndex(cid)
     if index ~= -1 then
@@ -479,6 +524,9 @@ function OnBeginDragXY(x, y, deltaX, deltaY)
     if isEvent == true then
         return;
     end
+    if elseData and elseData.disDrag==true then
+		return;
+	end
     pressTime=0;
     cDeltaX=deltaX;
     cDeltaY=deltaY;
@@ -508,6 +556,9 @@ end
 -- 左右移动为上阵，上下移动为滑动
 function OnDragXY(x, y, deltaX, deltaY)
     -- Log("OnDrag....")
+    if elseData and elseData.disDrag==true then
+		return;
+	end
     cDeltaX=cDeltaX+deltaX;
     cDeltaY=cDeltaY+deltaY;
     pressTime=pressTime+Time.deltaTime;
@@ -542,6 +593,9 @@ function OnDragXY(x, y, deltaX, deltaY)
 end
 
 function OnEndDragXY(x, y, deltaX, deltaY)
+    if elseData and elseData.disDrag==true then
+		return;
+	end
     EventMgr.Dispatch(EventType.TeamView_DragMask_Change, false)
     -- Log("OnEndDrag....")
     -- Log("isEvent:"..tostring(isEvent))

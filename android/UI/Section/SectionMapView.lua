@@ -35,7 +35,8 @@ function Init(_data, min, max)
         -- 背景
         local bgRes = sectionData:GetBG();
         local posZ = -sectionData:GetBGPosZ()
-        SetBgModel(bgRes, posZ)
+        local scale = CSAPI.GetSizeOffset()
+        SetBgModel(bgRes, posZ * (1 / scale))
 
         CSAPI.SetGOActive(goModelRaw, true)
     end

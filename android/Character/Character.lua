@@ -479,6 +479,8 @@ function ResetPlace(fadeToIdle)
     ResetAngle();
     
     ApplyIdle(fadeToIdle);
+
+    CSAPI.SetScale(gameObject,1,1,1);
 end
 
 --获取方向
@@ -846,7 +848,21 @@ function CreateFloatValue(res,value,floatNode,color)
     floatNode = floatNode or gameObject; 
     local floatData = {go = floatNode,res = res,value = value,color = color};
 
-    EventMgr.Dispatch(EventType.Fight_Float_Num,floatData);    
+
+    local currTime = CSAPI.GetTime();
+    local nextCanCreateTime = lastCreateNumTime and (lastCreateNumTime + 0.1) or 0;
+    local delay = nil;      
+  
+    if(currTime > nextCanCreateTime)then
+        lastCreateNumTime = currTime;
+        delay = 0;
+    else
+        lastCreateNumTime = nextCanCreateTime;
+        delay = math.floor((nextCanCreateTime - currTime) * 1000);            
+    end
+
+    FuncUtil:Call(EventMgr.Dispatch,nil,delay,EventType.Fight_Float_Num,floatData);
+    --EventMgr.Dispatch(EventType.Fight_Float_Num,floatData);    
 
     AddSkipFloatData(floatData);
 end
@@ -919,8 +935,9 @@ function AddMaxHp(val)
 end
 --更新信息：HP
 function UpdateHp(curr,max,immediately,onlyFakeBar)
-    --LogError("更新HP" .. tostring(curr) .. "/" .. tostring(max));
-
+ --[[    if(curr)then
+    LogError("id" .. GetID() .. ":" .. "更新HP" .. tostring(curr));
+    end ]]
 
     hpMax = max or hpMax or 1;
     if(curr)then    
@@ -1320,6 +1337,7 @@ end
 
 --播放FightAction
 function PlayFightAction(fightAction,callBack)
+    SetSkipSkill(false);
     fapModule:Play(fightAction,callBack);
 end
 
@@ -1448,20 +1466,20 @@ function ApplyCast(castName)
 end
 
 function ApplyCastPreFB(castName)
-    fbModule:CreateCastPreFB(castName);
+    if(fbModule)then
+        fbModule:CreateCastPreFB(castName);
+    end
 end
 
---function ApplyStateMoveData(moveData)
---   if(moveModule)then
---       moveModule:ApplyStateMoveData(moveData);
---   end 
---end
+function SetSkipSkill(skipSkill)
+    isSkipShowSkill = skipSkill;
+end
+function IsSkipSkill()
+    return isSkipShowSkill;
+end
 
---创建召唤特效
---function CreateSummonEffect()
---    local res = GetModelName() .. "/summon_effect";    
---    ResUtil:CreateEffect(res,0,0,0,gameObject);
---end
+
+
 --召唤出场
 function ApplySummon()    
     

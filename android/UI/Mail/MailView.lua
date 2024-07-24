@@ -1,6 +1,7 @@
 local itemName = "Mail/MailItem"
 local itemName2 = "Mail/MailItem2"
 local itemPath = "UIs/Mail/MailItem"
+local currItem = nil
 local selectID = nil
 local layout = nil
 
@@ -48,7 +49,7 @@ function EOperate(proto)
         end
         RefreshPanel()
     else
-        SetPanel()
+        OnOpen()
     end
 
     local data = MailMgr:GetData(selectID)

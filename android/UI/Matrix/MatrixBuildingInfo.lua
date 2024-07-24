@@ -18,15 +18,15 @@ function OnDestroy()
     eventMgr:ClearListener()
 end
 
-function Update()
-    if (runTime) then
-        timer = timer - Time.deltaTime
-        if (timer < 0) then
-            timer = 0.2
-            SetTime()
-        end
-    end
-end
+-- function Update()
+--     if (runTime) then
+--         timer = timer - Time.deltaTime
+--         if (timer < 0) then
+--             timer = 0.2
+--             SetTime()
+--         end
+--     end
+-- end
 
 function OnOpen()
     buildData = data
@@ -49,44 +49,44 @@ function OnOpen()
     -- 建筑属性
     SetGrid()
 
-    SetUpgrade()
-    SetTime()
+    -- SetUpgrade()
+    -- SetTime()
 
     --
-    CSAPI.SetGOActive(btnUp, (not runTime and curLv < maxLv) and true or false)
+    --CSAPI.SetGOActive(btnUp, (not runTime and curLv < maxLv) and true or false)
 end
 
-function SetUpgrade()
-    runTime = false
-    baseTime = 0
-    needTime = 0
+-- function SetUpgrade()
+--     runTime = false
+--     baseTime = 0
+--     needTime = 0
 
-    curLv, maxLv = buildData:GetLv()
-    -- local id = 10036 --已满级
-    -- local alpha = 0.3
-    if (curLv < maxLv) then
-        local _buildingState, _baseTime = buildData:GetState()
-        if (_buildingState == MatrixBuildingType.Upgrage) then
-            baseTime = _baseTime
-        end
-    end
-end
+--     curLv, maxLv = buildData:GetLv()
+--     -- local id = 10036 --已满级
+--     -- local alpha = 0.3
+--     if (curLv < maxLv) then
+--         local _buildingState, _baseTime = buildData:GetState()
+--         if (_buildingState == MatrixBuildingType.Upgrage) then
+--             baseTime = _baseTime
+--         end
+--     end
+-- end
 
-function SetTime()
-    if (baseTime > 0) then
-        needTime = baseTime - TimeUtil:GetTime()
-        -- needTime = needTime > 0 and needTime or 0
-    else
-        needTime = -1
-    end
-    runTime = needTime >= -0.1
-    CSAPI.SetGOActive(timeObj, runTime)
-    CSAPI.SetText(txtUpTime, TimeUtil:GetTimeStr7(needTime))
-    if (runTime == false) then
-        -- SetUpgrade()
-        -- CSAPI.SetGOActive(btnUp, (curLv < maxLv) and true or false)
-    end
-end
+-- function SetTime()
+--     if (baseTime > 0) then
+--         needTime = baseTime - TimeUtil:GetTime()
+--         -- needTime = needTime > 0 and needTime or 0
+--     else
+--         needTime = -1
+--     end
+--     runTime = needTime >= -0.1
+--     CSAPI.SetGOActive(timeObj, runTime)
+--     CSAPI.SetText(txtUpTime, TimeUtil:GetTimeStr7(needTime))
+--     if (runTime == false) then
+--         -- SetUpgrade()
+--         -- CSAPI.SetGOActive(btnUp, (curLv < maxLv) and true or false)
+--     end
+-- end
 
 -- 对应 CfgMatrixAttribute表
 function SetGrid()
@@ -202,23 +202,23 @@ function AttributeFunc14()
     return buildData:GetCfg().teamCntLimit or "0"
 end
 
--- 升级
-function OnClickUp()
-    local num, str = IsCreateOrUpgrade()
-    if (num == 2) then
-        -- LanguageMgr:ShowTips(str)  --建造中
-        return false
-    end
-    if (num == 1) then
-        LanguageMgr:ShowTips(str) -- 升级中
-        return false
-    end
+-- -- 升级
+-- function OnClickUp()
+--     local num, str = IsCreateOrUpgrade()
+--     if (num == 2) then
+--         -- LanguageMgr:ShowTips(str)  --建造中
+--         return false
+--     end
+--     if (num == 1) then
+--         LanguageMgr:ShowTips(str) -- 升级中
+--         return false
+--     end
 
-    if (curLv >= maxLv) then
-        return
-    end
-    CSAPI.OpenView("MatrixUp", buildData)
-end
+--     if (curLv >= maxLv) then
+--         return
+--     end
+--     CSAPI.OpenView("MatrixUp", buildData)
+-- end
 -- 是否升级或者建造中
 function IsCreateOrUpgrade()
     local num, str = 0, ""

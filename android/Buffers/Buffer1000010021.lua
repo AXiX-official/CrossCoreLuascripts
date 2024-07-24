@@ -1,4 +1,4 @@
--- +10%效果抵抗
+-- 迅捷：减速
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1000010021:OnCreate(caster, target)
 	-- 1000010021
-	self:AddAttrPercent(BufferEffect[1000010021], self.caster, self.card, nil, "resist",0.1*self.nCount)
+	self:AddAttr(BufferEffect[1000010021], self.caster, self.card, nil, "resist",0.1*self.nCount)
 end

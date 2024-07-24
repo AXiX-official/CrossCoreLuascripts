@@ -1795,10 +1795,250 @@ function GCalHelp:FindArrByFor(arr, val)
     return nil
 end
 
+function GCalHelp:GetCanModifyCfgFieldInfo(cfgName, fieldName)
+    local canModifyCfg = CfgDySetOpenCfgs[cfgName]
 
+    local canModifyFieldCfg = GCalHelp:FindObjArrByKey(canModifyCfg.fields, 'field', fieldName)
+    return canModifyFieldCfg
+end
+
+-- 在加载完配置表之后, 再调用
+function GCalHelp:DyModifyCfgs(modifysArr)
+    if DEBUG then
+    -- LogTable(modifysArr, 'GCalHelp:DyModifyCfgs() modifysArr:')
+    end
+
+    if not next(modifysArr) then
+        return
+    end
+
+    -- 统计需要重新加载的配置表
+    local oldCfgs = {}
+    local loadCfgs = {}
+    local allModifCfg = {}
+
+    local idTypeInfos = {}
+
+    -- 加载需要的表
+    for _, modifyInfo in ipairs(modifysArr) do
+        if DEBUG then
+            LogTable(modifyInfo, 'GCalHelp:DyModifyCfgs() modifyInfo:')
+        end
+
+        local cfgName = modifyInfo.name
+        local cfgs = _G[cfgName]
+        allModifCfg[cfgName] = cfgs
+
+        if modifyInfo.is_del then
+            if not loadCfgs[cfgName] then
+                -- 保存一下内存的表格
+                oldCfgs[cfgName] = cfgs
+
+                -- 记载一次表格
+                local isCallOk = xpcall(ConfigParser.ReadOneConfig, XpcallCB, ConfigParser, cfgName)
+                if isCallOk then
+                    loadCfgs[cfgName] = _G[cfgName]
+                end
+
+                -- 还回去
+                _G[cfgName] = oldCfgs[cfgName]
+            end
+        end
+
+        local k, _ = next(cfgs)
+        local canModifyFieldCfg = self:GetCanModifyCfgFieldInfo(modifyInfo.name, modifyInfo.field)
+
+        idTypeInfos[cfgName] = {
+            idType = type(k),
+            subIdType = canModifyFieldCfg.sub_index_type
+        }
+    end
+
+    -- 设置修改
+    for _, modifyInfo in ipairs(modifysArr) do
+        local canModifyFieldCfg = self:GetCanModifyCfgFieldInfo(modifyInfo.name, modifyInfo.field)
+
+        local cfgName = modifyInfo.name
+
+        -- 设置主键的值
+        local idInfo = idTypeInfos[cfgName]
+        local rowId = modifyInfo.row_id
+        if idInfo.idType ~= 'string' then
+            rowId = tonumber(rowId)
+        end
+
+        local subId = modifyInfo.sub_id
+        if idInfo.subIdType ~= 'string' then
+            subId = tonumber(subId)
+        end
+
+        if modifyInfo.is_del then
+            -- 删除的要还原, 原来的配置
+            local oldCfg = oldCfgs[cfgName][rowId]
+            local loadCfg = loadCfgs[cfgName][rowId]
+
+            if canModifyFieldCfg.sub_tb then
+                local tb = GCalHelp:CheckGetVal(loadCfg, nil, canModifyFieldCfg.sub_tb, subId)
+                if tb then
+                    local loadlVal = tb[canModifyFieldCfg.field]
+                    oldCfg[canModifyFieldCfg.sub_tb][subId][canModifyFieldCfg.field] = loadlVal
+                end
+            else
+                local loadlVal = loadCfg[canModifyFieldCfg.field]
+                oldCfg[canModifyFieldCfg.field] = loadlVal
+            end
+        else
+            local cfgs = _G[cfgName]
+            local cfg = cfgs[rowId]
+
+            local val = modifyInfo.val
+            if canModifyFieldCfg.field_type == 'number' then
+                val = tonumber(val)
+            elseif canModifyFieldCfg.field_type == 'bool' then
+                if val == 'true' then
+                    val = true
+                elseif val == 'false' then
+                    val = false
+                else
+                    local tmpVal = tonumber(val)
+                    -- LogDebug('val:%s, tmpVal:%s', val, tmpVal)
+                    if tmpVal and tmpVal > 0 then
+                        val = true
+                    else
+                        val = false
+                    end
+                end
+            elseif canModifyFieldCfg.field_type == 'json' then
+                val = Json.Decode(val)
+            end
+
+            if canModifyFieldCfg.sub_tb then
+                local tb = GCalHelp:CheckGetVal(cfg, nil, canModifyFieldCfg.sub_tb, subId)
+                if tb then
+                    tb[canModifyFieldCfg.field] = val
+                end
+            else
+                cfg[canModifyFieldCfg.field] = val
+            end
+        end
+    end
+
+    for cfgName, _ in pairs(allModifCfg) do
+        if ConfigChecker[cfgName] then
+            local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
+            if errmsg then
+                print(result, errmsg)
+                ASSERT(false, '配置表出错' .. cfgName)
+            end
+        end
+    end
+
+    -- 调试打印
+    if DEBUG then
+        local hadShowLog = {}
+        for _, modifyInfo in ipairs(modifysArr) do
+            local cfgName = modifyInfo.name
+            local cfgs = _G[cfgName]
+
+            local idInfo = idTypeInfos[cfgName]
+            local rowId = modifyInfo.row_id
+
+            local tmpId = cfgName .. rowId
+            if not hadShowLog[tmpId] then
+                hadShowLog[tmpId] = 1
+                if idInfo.idType ~= 'string' then
+                    rowId = tonumber(rowId)
+                end
+
+                local cfg = cfgs[rowId]
+                LogTable(cfg, 'GCalHelp:DyModifyCfgs(), ' .. cfgName .. ' after chagne:')
+            end
+        end
+    end
+end
+
+-- sk : save key
+function GCalHelp:MapToArr(o, sk)
+    local arr = {}
+    for k, v in pairs(o) do
+        if sk then
+            table.insert(arr, {k, v})
+        else
+            table.insert(arr, v)
+        end
+    end
+    return arr
+end
+
+function GCalHelp:ArrToMap(arr, keyIndex)
+    local map = {}
+    for _, v in ipairs(arr) do
+        map[v[keyIndex]] = v
+    end
+
+    return map
+end
+
+function GCalHelp:CopyTbData(src, cpy)
+    if type(src) ~= 'table' then
+        return nil
+    end
+
+    cpy = cpy or {}
+
+    for i, v in pairs(src) do
+        local vtyp = type(v)
+        if (vtyp == 'table') then
+            if rawget(v, '__class') then
+                -- 类不拷贝类
+            else
+                cpy[i] = self:CopyTbData(v)
+            end
+        elseif (vtyp == 'function') then
+            -- 函数不拷贝
+        else
+            cpy[i] = v
+        end
+    end
+
+    return cpy
+end
+
+-- CheckItemExpirys() 会计算当前物品的剩余数量，会删除 itemGets 中已经过期的数据
+-- args:
+---- hadNum：当前拥有总量
+---- itemGets: 分批次获取的物品信息
+---- curTime: 当前时间[秒]
+-- ret:
+---- leftNum: 返回剩余的数量
+function GCalHelp:RemoveItemExpirys(hadNum, itemGets, curTime)
+    local leftNum = hadNum
+
+    -- 数组末尾的先过期
+    for ix = #itemGets, 1, -1 do
+        -- statements
+        local info = itemGets[ix]
+        local num, expiry = info[1], info[2]
+        if curTime >= expiry then
+            -- LogDebug('GCalHelp:RemoveItemExpirys() leftNum:%s, remove ix:%s, num:%s, expiry:%s', leftNum, ix, num, expiry)
+            -- 删除过期的部分
+            table.remove(itemGets, ix)
+            leftNum = leftNum - num
+        else
+            break
+        end
+    end
+
+    return leftNum
+end
+
+--警告 主角真实数据不能用这个方法，因为主角解限，机神数据不是读表的，而是通过服务器发
 -- 获取卡牌id（机神、同调、形切的卡牌id） 如果没有，说明不是此类卡牌
 function GCalHelp:GetElseCfgID(baseCfgID)
     local cfg = CardData[baseCfgID]
+    if (not cfg) then
+        return nil
+    end
     if (cfg.fit_result) then
         return cfg.fit_result
     elseif (cfg.tTransfo) then
@@ -1808,4 +2048,70 @@ function GCalHelp:GetElseCfgID(baseCfgID)
         return cardCfg.card_id
     end
     return nil
+end
+
+-- 获取生效中的乱序演习词条
+function GCalHelp:GetRogueEffectingBuff(arrSelectBuffs, nRound)
+    local effectingBuffs = {}
+    local buffArr = {}
+    local mapSelectBuffs = {}
+    for roundIdx, rogueBuff in pairs(arrSelectBuffs) do
+        mapSelectBuffs[rogueBuff] = true
+    end
+
+    for roundIdx, rogueBuff in pairs(arrSelectBuffs) do
+        local cfg = CfgRogueBuff[rogueBuff]
+        if cfg.preConditions == 1 then
+            -- 前置条件参数
+            if mapSelectBuffs[cfg.preConditionsValue] then
+                buffArr[rogueBuff] = roundIdx
+            end
+        else
+            buffArr[rogueBuff] = roundIdx
+        end
+    end
+
+    for rogueBuffID, idx in pairs(buffArr) do
+        local cfg = CfgRogueBuff[rogueBuffID]
+        -- 判断战斗外生效次数，根据选取时的回合数判断是否还生效
+        if cfg.lifeType == 2 then
+            if idx + cfg.lifeValue > nRound then
+                table.insert(effectingBuffs, rogueBuffID)
+            end
+        else
+            table.insert(effectingBuffs, rogueBuffID)
+        end
+    end
+
+    return effectingBuffs
+end
+
+--通过技能id获取怪物的基础模型
+function GCalHelp:GetBaseModelBySkillID(skillID)
+    local cfg = skill[skillID]
+    local arg = SkillEffect[cfg.DoSkill[1]].arg
+
+    local strs = SplipLine(arg, ',')
+    local monsterID = tonumber(strs[1])
+    if monsterID then
+        local monsterCfg = MonsterData[monsterID]
+        if not monsterCfg.card_id then
+            LogError("GCalHelp:GetBaseModelBySkillID() skillID:%s monsterID:%s not set card_id in cfg MonsterData", skillID, monsterID)
+        end
+
+        local cardCfg = CardData[monsterCfg.card_id]
+        if not cardCfg then
+            LogError(
+                "GCalHelp:GetBaseModelBySkillID() skillID:%s monsterID:%s card_id:%s not find data from cfg CardData"
+                , skillID
+                , monsterID
+                , monsterCfg.card_id)
+        end
+
+        return CardData[monsterCfg.card_id].model, monsterID
+    else
+        LogError("GCalHelp:GetBaseModelBySkillID() skillID:%s not find data from MonsterData", skillID)
+    end
+
+    return nil, monsterID
 end

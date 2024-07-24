@@ -4,17 +4,29 @@ local this = MgrRegister("RegressionMgr")
 function this:Init()
     self:Clear()
     -- 回归信息
-    --RegressionProto:GetInfo()
+    RegressionProto:GetInfo()
+
 end
 
 function this:Clear()
     self.getInfoRetProto = {}
     self.checkReturningPlrProto = {}
+    self.closeTime = 0
+    self.activityInfos = {}
 end
 
 -- 回归数据
 function this:CheckReturningPlr(proto)
     self.checkReturningPlrProto = proto
+    if proto and proto.activity_times and #proto.activity_times > 0 then
+        for i, v in ipairs(proto.activity_times) do
+            self.activityInfos[v.ty] = {
+                id=v.id,
+                sTime = v.start_time,
+                eTime = v.end_time
+            }
+        end
+    end
 end
 
 -- 资源找回数据
@@ -124,4 +136,106 @@ function this:CheckNeedShow()
     return true
 end
 
+------------------------------------------------------------------回归活动---------------------------------------------------------------------
+function this:GetArr(group)
+    group = group or 1
+    local isRegress,id = self:IsHuiGui()
+    local datas = {}
+    self.closeTime = self.closeTime or 0
+    if isRegress then
+        local cfg = Cfgs.CfgReturningActivity:GetByID(id)
+        if cfg and cfg.infos and #cfg.infos > 0 then
+            for _, info in ipairs(cfg.infos) do
+                if info.group and info.group == group and not info.IsHide then --有隐藏字段不显示
+                    local aInfo = self.activityInfos[info.type]
+                    if aInfo and aInfo.sTime and aInfo.eTime and TimeUtil:GetTime() >= aInfo.sTime 
+                    and TimeUtil:GetTime() < aInfo.eTime then
+                        if info.type == RegressionActiveType.Tasks then
+                            local missionDatas = MissionMgr:GetActivityDatas(eTaskType.RegressionTask, info.activityId)
+                            if missionDatas and #missionDatas> 0 then
+                                table.insert(datas,info)
+                            end
+                        else
+                            table.insert(datas,info)
+                        end
+                        self.closeTime = aInfo.eTime > self.closeTime and aInfo.eTime or self.closeTime
+                    end
+                end
+            end
+            if #datas > 0 then
+                table.sort(datas,function (a,b)
+                    if a.sort == b.sort then
+                        return a.index < b.index
+                    else
+                        return a.sort < b.sort
+                    end
+                end)
+            end
+        end
+    end
+    return datas
+end
+
+function this:GetTime()
+    if self.closeTime > 0 and self.closeTime > TimeUtil:GetTime() then
+        return self.closeTime - TimeUtil:GetTime()
+    end
+    return 0
+end
+
+--RegressionActiveType    
+function this:GetActivityEndTime(type)
+    if self.activityInfos[type] and self.activityInfos[type].eTime then
+        return self.activityInfos[type].eTime
+    end
+    return 0
+end
+
+------------------------------------------------------------------红点---------------------------------------------------------------------
+
+function this:CheckRedPointData()
+    local isCheck,type = self:IsHuiGui()
+    local redData1 = nil
+    if isCheck then
+        local _cfgs = Cfgs.CfgReturningActivity:GetAll()
+        if _cfgs and #_cfgs > 0 then
+            local redInfos = FileUtil.LoadByPath("Regression_RedInfo.txt") or {}
+            for _, v in ipairs(_cfgs) do
+                if v.id == type and v.infos and #v.infos > 0 then
+                    for _, _info in ipairs(v.infos) do
+                        local aInfo = self.activityInfos[_info.type]
+                        if aInfo and aInfo.sTime and aInfo.eTime and TimeUtil:GetTime() >= aInfo.sTime 
+                        and TimeUtil:GetTime() < aInfo.eTime then
+                            if _info.group and self:CheckRed(_info.type,_info.activityId,redInfos) then
+                                redData1 = 1
+                                break
+                            end
+                        end 
+                    end
+                end
+            end
+        end  
+    end
+    RedPointMgr:UpdateData(RedPointType.Regression, redData1)
+end
+
+function this:CheckRed(_type,_activityId,redInfos)
+    if _type == RegressionActiveType.DropAdd then
+        return DungeonUtil.HasMultiNum(_activityId)
+    elseif _type == RegressionActiveType.Fund then
+        return MissionMgr:CheckRed2(eTaskType.Regression,_activityId)
+    elseif _type == RegressionActiveType.Tasks then
+        return MissionMgr:CheckRed2(eTaskType.RegressionTask,_activityId)
+    elseif _type == RegressionActiveType.Sign then
+        local isDone = SignInMgr:CheckIsDone(_activityId)
+        return not SignInMgr:CheckIsDone(_activityId)
+    elseif _type == RegressionActiveType.Show then
+        return false 
+    else
+        if redInfos == nil then
+            redInfos = FileUtil.LoadByPath("Regression_RedInfo.txt") or {}
+        end
+        return (redInfos[_type] == nil or  redInfos[_type] == 0)
+    end
+end
 return this

@@ -30,7 +30,9 @@ function this:GetListArr()
     local datas = {}
     if self.listDatas then
         for k, v in pairs(self.listDatas) do
-            table.insert(datas,v)
+            if v:IsShow() then
+                table.insert(datas,v)
+            end
         end
     end
     if #datas>0 then
@@ -47,7 +49,7 @@ function this:GetListArr2(cfgId)
     local cfg = Cfgs.CfgAchieveType:GetByID(cfgId)
     if cfg and cfg.infos and #cfg.infos >0 then
         for i, v in ipairs(cfg.infos) do
-            if self.listDatas[v.typeNum] then
+            if self.listDatas[v.typeNum] and self.listDatas[v.typeNum]:IsShow() then
                 table.insert(datas,self.listDatas[v.typeNum])
             end
         end
@@ -159,16 +161,19 @@ end
 --获取特定的数据 完成或未完成
 function this:GetArr2(isFinish,isLimit)
     local _datas = {}
+    local closeTypes = self:GetCloseTypes()
     if self.datas then
         for k, v in pairs(self.datas) do
-            if (isFinish and v:IsFinish()) or (not isFinish and not v:IsFinish()) then
-                if v:GetPreposition() then
-                    local prep = self.datas[v:GetPreposition()]
-                    if prep and prep:IsGet() then
+            if closeTypes[v:GetType()] == nil then
+                if (isFinish and v:IsFinish()) or (not isFinish and not v:IsFinish()) then
+                    if v:GetPreposition() then
+                        local prep = self.datas[v:GetPreposition()]
+                        if prep and prep:IsGet() then
+                            table.insert(_datas,v)
+                        end
+                    else
                         table.insert(_datas,v)
                     end
-                else
-                    table.insert(_datas,v)
                 end
             end
         end
@@ -202,6 +207,27 @@ function this:GetArr2(isFinish,isLimit)
         _datas = arr
     end
     return _datas
+end
+
+--获取还未开始显示的类型
+function this:GetCloseTypes()
+    local types = {}
+    local cfgs = Cfgs.CfgAchieveType:GetAll()
+    if cfgs then
+        for k, m in pairs(cfgs) do
+            if m.infos and #m.infos> 0 then
+                for i, v in ipairs(m.infos) do
+                    if v.showTime then
+                        local sTime = TimeUtil:GetTimeStampBySplit(v.showTime)
+                        if sTime and TimeUtil:GetTime() < sTime then
+                            types[v.typeNum] = 1
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return types
 end
 
 function this:GetArr3(type)

@@ -340,6 +340,21 @@ GameMsg.map["ClientProto:DelAccRet"] = {
 	{ "int",               },
 	{ "result",            },
 }
+GameMsg.map["sDySetCfgNotice"] = {
+	--配置表名字 修改的字段 配置表id 二级名字 二级id   配置的值 是否删除 
+	{ "string",  "string",  "string","string","string","string","bool",  },
+	{ "name",    "field",   "row_id","sub_tb","sub_id","val",   "is_del",},
+}
+GameMsg.map["ClientProto:DySetCfgNotice"] = {
+	--                     
+	{ "list|sDySetCfgNotice",},
+	{ "infos",             },
+}
+GameMsg.map["ClientProto:PlrNotice"] = {
+	--通知信息 
+	{ "json",  },
+	{ "notice",},
+}
 GameMsg.map["ClientProto:QueryAccount"] = {
 	--账号      版本号                
 	{ "string", "string",    "string",},
@@ -371,9 +386,9 @@ GameMsg.map["sPlrData"] = {
 	{ "uid", "name",  "hot",  "level","gold","diamond","currtime",  "exp","sign",  "create_time","army_coin","tp",   "tpBeginTime","notLog",            },
 }
 GameMsg.map["LoginProto:LoginGame"] = {
-	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     最后设置的角色看板ID 
-	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      "uint",              },
-	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame","role_panel_id",     },
+	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     最后设置的角色看板ID 背景ID          
+	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      "uint",              "uint",         },
+	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame","role_panel_id",     "background_id",},
 }
 GameMsg.map["LoginProto:PlrUpdate"] = {
 	--更新信息(不是所有字段都有) 添加的经验 下次体能恢复时间 
@@ -461,9 +476,14 @@ GameMsg.map["LoginProto:WaitingLoginUpdate"] = {
 	{ "waitCnt","waitingTime",       },
 }
 GameMsg.map["ClientProto:ActiveOpen"] = {
-	--活动id  活动类型 开始时间   关闭时间   困难本开启时间 EX本开启时间 副本关闭时间     
-	{ "short","short", "int",     "int",     "int",         "int",       "int",           },
-	{ "id",   "type",  "nBegTime","nEndTime","nHardBegTime","nExBegTime","nBattleendTime",},
+	--活动id  活动类型 开始时间   关闭时间   困难本开启时间 EX本开启时间 副本关闭时间     子章节的开放时间     
+	{ "short","short", "int",     "int",     "int",         "int",       "int",           "list|sSectionTable",},
+	{ "id",   "type",  "nBegTime","nEndTime","nHardBegTime","nExBegTime","nBattleendTime","sectionTables",     },
+}
+GameMsg.map["sSectionTable"] = {
+	--章节id  开始时间    关闭时间    
+	{ "short","int",      "int",      },
+	{ "id",   "startTime","closeTime",},
 }
 GameMsg.map["FightProtocol:StartMainLineFight"] = {
 	--副本ID         怪物组    角色数据         队伍编号     
@@ -869,6 +889,66 @@ GameMsg.map["sModUpReward"] = {
 	--第几次扫荡   奖励           
 	{ "byte",      "list|sReward",},
 	{ "modUpIndex","reward",      },
+}
+GameMsg.map["sRogueDuplicateData"] = {
+	--关卡组ID 最高回合数 历史最小操作数 
+	{ "uint",  "uint",    "uint",        },
+	{ "id",    "maxRound","minSteps",    },
+}
+GameMsg.map["FightProtocol:GetRogueInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["FightProto:GetRogueInfoRet"] = {
+	--数据                 是否完了    已通关最大关卡组 是否战斗中   
+	{ "list|sRogueDuplicateData","bool",     "uint",          "bool",      },
+	{ "datas",             "is_finish","maxGroup",      "isFighting",},
+}
+GameMsg.map["FightProto:FightingRogueData"] = {
+	--副本类型 关卡组ID 关卡轮次 已选择词条组  随机词条组    已选卡牌    编队信息             副本id        目前总操作数 
+	{ "byte",  "uint",  "uint",  "array|uint", "array|uint", "json",     "list|sDuplicateTeamData","uint",       "uint",      },
+	{ "index", "group", "round", "selectBuffs","randomBuffs","selectPos","list",              "duplicateID","steps",     },
+}
+GameMsg.map["FightProtocol:EnterRogueDuplicate"] = {
+	--副本类型 关卡组ID 编队信息             
+	{ "byte",  "uint",  "list|sDuplicateTeamData",},
+	{ "index", "group", "list",              },
+}
+GameMsg.map["FightProtocol:RogueSelectBuff"] = {
+	--所选BUFF 
+	{ "uint",  },
+	{ "buff",  },
+}
+GameMsg.map["FightProto:RogueSelectBuffRet"] = {
+	--已选择词条组  
+	{ "array|uint", },
+	{ "selectBuffs",},
+}
+GameMsg.map["FightProtocol:RogueSelectPos"] = {
+	--选择卡牌位置 
+	{ "uint",      },
+	{ "pos",       },
+}
+GameMsg.map["FightProto:RogueSelectPosRet"] = {
+	--已选卡牌    
+	{ "json",     },
+	{ "selectPos",},
+}
+GameMsg.map["FightProtocol:EnterRogueFight"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["FightProtocol:QuitRogueFight"] = {
+	--是否保存进度 退出类型   
+	{ "bool",      "short",   },
+	{ "save",      "quitType",},
+}
+GameMsg.map["FightProto:RogueOver"] = {
+	--结果     当前关卡轮次 关卡组ID 总操作数 通关奖励          是否保存进度 经验(卡牌) 玩家经验     参与战斗的卡牌(id：卡牌id, num:添加的好感度) 已选择词条组  退出类型   
+	{ "bool",  "uint",      "uint",  "uint",  "list|sReward",   "bool",      "uint",    "uint",      "list|sNumInfo",     "array|uint", "short",   },
+	{ "bIsWin","round",     "group", "steps", "fisrtPassReward","save",      "exp",     "nPlayerExp","cardsExp",          "selectBuffs","quitType",},
 }
 GameMsg.map["ItemData"] = {
 	--id     数量  有效期序列值 第一个获取时间 过期时间 
@@ -2190,6 +2270,16 @@ GameMsg.map["TaskProto:GetTasksDataRet"] = {
 	{ },
 	{ },
 }
+GameMsg.map["sDeleteTask"] = {
+	--任务唯一索引 任务id  类型   
+	{ "uint",      "uint", "byte",},
+	{ "id",        "cfgid","type",},
+}
+GameMsg.map["TaskProto:TaskDelete"] = {
+	--被删除的任务列表   
+	{ "list|sDeleteTask",},
+	{ "tasks",           },
+}
 GameMsg.map["sPracticeInfo"] = {
 	--本季赛开始时间(时间前的都是休息时间） 本季赛结束时间 可以参加的计数 下次参加次数重置时间 已使用刷新次数 段位         最高段位         排名   最高排名   积分    可购买军演挑战次数 
 	{ "uint",              "uint",        "short",       "uint",              "byte",        "short",     "uint",          "uint","uint",    "uint", "short",           },
@@ -2406,9 +2496,9 @@ GameMsg.map["sProductAdd"] = {
 	{ "id",    "num",   "limit", },
 }
 GameMsg.map["sBuildInfo"] = {
-	--       配置表id 耐久度  等级   进去下一等级的时间(为0表示没升级) 建造完成时间 建筑当前时间(交易中心有) 起点坐标     产出    上次产生奖励的时间 产生奖励的时间 额外产出  上次额外产出的时间 额外产出的时间 入住角色id   运行中    血量电量百分比（100±100） 角色电量百分比（100±100） 生产效益百分比 建筑血量影响生产效益百分比 角色疲劳值影响生产效益百分比 角色能力影响生产效益百分比 停止时间 角色能力列表         角色电量增加数值(增) 刷新时间(0为不需要刷新,与服务器时间做对比)                      
-	{ "uint","uint",  "short","uint","uint",              "uint",      "double",            "array|byte","json", "uint",            "uint",        "json",   "uint",            "uint",        "array|uint","bool",   "short",             "short",             "short",       "short",              "short",              "short",              "uint",  "map|sBuildRoleAbility|id","short",             "double",             "map|sProductAdd|id",},
-	{ "id",  "cfgId", "hp",   "lv",  "tUp",               "tBuild",    "tCur",              "pos",       "gifts","tPreGifs",        "tNexGifs",    "giftsEx","tPreGiftsEx",     "tNexGiftsEx", "roleIds",   "running","perHpPower",        "perRolePower",      "perBenefit",  "perHpBenefit",       "perRoleTiredBenefit", "perRoleAbilityBenefit", "tStop", "roleAbilitys",      "rolePower",         "tFlush",             "productAdd",        },
+	--       配置表id 耐久度  等级   进去下一等级的时间(为0表示没升级) 建造完成时间 建筑当前时间(交易中心有) 起点坐标     产出    上次产生奖励的时间 产生奖励的时间 额外产出  上次额外产出的时间 额外产出的时间 入住角色id   运行中    血量电量百分比（100±100） 角色电量百分比（100±100） 生产效益百分比 建筑血量影响生产效益百分比 角色疲劳值影响生产效益百分比 角色能力影响生产效益百分比 停止时间 角色能力列表         角色电量增加数值(增) 刷新时间(0为不需要刷新,与服务器时间做对比)                      预设角色列表         当前使用的预设队伍id（默认1） 
+	{ "uint","uint",  "short","uint","uint",              "uint",      "double",            "array|byte","json", "uint",            "uint",        "json",   "uint",            "uint",        "array|uint","bool",   "short",             "short",             "short",       "short",              "short",              "short",              "uint",  "map|sBuildRoleAbility|id","short",             "double",             "map|sProductAdd|id","list|sPresetRoleTeam","uint",               },
+	{ "id",  "cfgId", "hp",   "lv",  "tUp",               "tBuild",    "tCur",              "pos",       "gifts","tPreGifs",        "tNexGifs",    "giftsEx","tPreGiftsEx",     "tNexGiftsEx", "roleIds",   "running","perHpPower",        "perRolePower",      "perBenefit",  "perHpBenefit",       "perRoleTiredBenefit", "perRoleAbilityBenefit", "tStop", "roleAbilitys",      "rolePower",         "tFlush",             "productAdd",        "presetRoles",       "curPresetId",        },
 }
 GameMsg.map["BuildingProto:AddNotice"] = {
 	--建筑信息                      
@@ -2421,9 +2511,9 @@ GameMsg.map["BuildingProto:BuildsBaseInfo"] = {
 	{ },
 }
 GameMsg.map["BuildingProto:BuildsBaseInfoRet"] = {
-	--总人口    建筑类型数量 总电量  角色电量百分比（100±100) 角色产量增减百分比（100±100） 预警级别    运行状态配置id 
-	{ "uint",   "json",      "json", "short",             "short",             "byte",     "byte",        },
-	{ "roleCnt","buildCnts", "power","perRolePower",      "perRoleAbilityBenefit","warningLv","runTypeCfgId",},
+	--总人口    建筑类型数量 总电量  角色电量百分比（100±100) 角色产量增减百分比（100±100） 预警级别    运行状态配置id 额外预设队伍数       
+	{ "uint",   "json",      "json", "short",             "short",             "byte",     "byte",        "uint",              },
+	{ "roleCnt","buildCnts", "power","perRolePower",      "perRoleAbilityBenefit","warningLv","runTypeCfgId","extraPresetTeamNum",},
 }
 GameMsg.map["BuildingProto:BuildsList"] = {
 	--
@@ -2451,9 +2541,9 @@ GameMsg.map["BuildingProto:BuildRemoveRet"] = {
 	{ "id",  "ok",    },
 }
 GameMsg.map["sBuildSetRole"] = {
-	--建筑id 角色id       
-	{ "uint","array|uint",},
-	{ "id",  "roleIds",   },
+	--建筑id 角色id       当前预设队伍id 
+	{ "uint","array|uint","uint",        },
+	{ "id",  "roleIds",   "teamId",      },
 }
 GameMsg.map["BuildingProto:BuildSetRole"] = {
 	--                     
@@ -2739,6 +2829,41 @@ GameMsg.map["BuildingProto:BuildsListRet"] = {
 	--建筑信息                      
 	{ "list|sBuildInfo","bool",     },
 	{ "builds",         "is_finish",},
+}
+GameMsg.map["sPresetRoleTeam"] = {
+	--预设队伍id 预设队伍名称 预设队伍成员 
+	{ "uint",    "string",    "array|uint",},
+	{ "teamId",  "name",      "roleIds",   },
+}
+GameMsg.map["BuildingProto:BuildSetPresetRole"] = {
+	--建筑id 预设队伍id 角色id       
+	{ "uint","uint",    "array|uint",},
+	{ "id",  "teamId",  "roleIds",   },
+}
+GameMsg.map["BuildingProto:BuildSetPresetRoleRet"] = {
+	--建筑id 预设队伍信息         
+	{ "uint","struts|sPresetRoleTeam",},
+	{ "id",  "infos",             },
+}
+GameMsg.map["BuildingProto:BuildSetPresetTeamName"] = {
+	--建筑id 预设队伍id 预设队伍名称 
+	{ "uint","uint",    "string",    },
+	{ "id",  "teamId",  "name",      },
+}
+GameMsg.map["BuildingProto:BuildSetPresetTeamNameRet"] = {
+	--建筑id 预设队伍信息         
+	{ "uint","struts|sPresetRoleTeam",},
+	{ "id",  "infos",             },
+}
+GameMsg.map["BuildingProto:BuildAddPresetTeam"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["BuildingProto:BuildAddPresetTeamRet"] = {
+	--额外预设队伍数       
+	{ "uint",              },
+	{ "extraPresetTeamNum",},
 }
 GameMsg.map["sSkillGroup"] = {
 	--技能组id 技能组等级 技能组等级   
@@ -3776,9 +3901,9 @@ GameMsg.map["PlayerProto:ChangePlrShpaeRet"] = {
 	{ "icon_id","panel_id","role_panel_id",     },
 }
 GameMsg.map["PlayerProto:CheckReturningPlr"] = {
-	--回归类型 离开天数 触发回归时间戳 
-	{ "uint",  "uint",  "uint",        },
-	{ "type",  "leave", "time",        },
+	--回归类型 离开天数 触发回归时间戳 各个活动开启时间     
+	{ "uint",  "uint",  "uint",        "list|sReturningTime",},
+	{ "type",  "leave", "time",        "activity_times",    },
 }
 GameMsg.map["PlayerProto:ClickBoard"] = {
 	--
@@ -3804,6 +3929,116 @@ GameMsg.map["PlayerProto:GetSpecialDropsInfoRet"] = {
 	--掉落了数量         
 	{ "list|sStrNumInfo",},
 	{ "dropInfos",       },
+}
+GameMsg.map["PlayerProto:SetBackground"] = {
+	--背景ID          
+	{ "uint",         },
+	{ "background_id",},
+}
+GameMsg.map["PlayerProto:SetBackgroundRet"] = {
+	--背景ID          
+	{ "uint",         },
+	{ "background_id",},
+}
+GameMsg.map["PlayerProto:GetStarPalaceInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:GetStarPalaceInfoRet"] = {
+	--副本信息             是否需要重置数据 结束时间   怪物血量  开放副本id 
+	{ "list|sStarPalaceInfo","bool",          "uint",    "uint",   "uint",    },
+	{ "infos",             "isReset",       "stopTime","boss_hp","dupId",   },
+}
+GameMsg.map["PlayerProto:DeathCardInfos"] = {
+	--不可使用的卡牌  不可使用的好友卡牌 
+	{ "list|sNumInfo","list|sNumInfo",   },
+	{ "cards",        "f_cards",         },
+}
+GameMsg.map["PlayerProto:GiveUpStarPalaceChallenge"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:GetStarRank"] = {
+	--第几页  排行榜类型（章节id） 
+	{ "int",  "int",               },
+	{ "nPage","rank_type",         },
+}
+GameMsg.map["sStarRank"] = {
+	--排名   当前积分  名字    等级    头像      通关的最大副本id 头像框       
+	{ "int", "int",   "string","short","int",    "int",           "int",       },
+	{ "rank","score", "name",  "level","icon_id","dupId",         "icon_frame",},
+}
+GameMsg.map["PlayerProto:GetStarRankRet"] = {
+	--排名数据         我的排名 排行榜类型（章节id） 当前积分 
+	{ "list|sStarRank","short", "int",               "int",   },
+	{ "data",          "rank",  "rank_type",         "score", },
+}
+GameMsg.map["PlayerProto:GetColletData"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:GetColletDataRet"] = {
+	--当前累充金额 已领取的     
+	{ "int",       "array|uint",},
+	{ "score",     "data",      },
+}
+GameMsg.map["PlayerProto:TakeColletReward"] = {
+	--表的id 
+	{ "int", },
+	{ "id",  },
+}
+GameMsg.map["sNewPanel"] = {
+	--位置   看板ids      细节      细节      
+	{ "uint","array|uint","json",   "json",   },
+	{ "idx", "ids",       "detail1","detail2",},
+}
+GameMsg.map["PlayerProto:GetNewPanel"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:SetNewPanel"] = {
+	--看板信息           设置      是否随机 当前使用 
+	{ "map|sNewPanel|id","uint",   "bool",  "uint",  },
+	{ "panels",          "setting","random","using", },
+}
+GameMsg.map["PlayerProto:GetNewPanelRet"] = {
+	--看板信息           轮换设置  是否随机 当前使用 最后更新时间  
+	{ "map|sNewPanel|id","uint",   "bool",  "uint",  "uint",       },
+	{ "panels",          "setting","random","using", "update_time",},
+}
+GameMsg.map["PlayerProto:SetNewPanelUsing"] = {
+	--使用看板位置 
+	{ "uint",      },
+	{ "using",     },
+}
+GameMsg.map["PlayerProto:SetNewPanelUsingRet"] = {
+	--当前使用 最后更新时间  
+	{ "uint",  "uint",       },
+	{ "using", "update_time",},
+}
+GameMsg.map["PlayerProto:TakeColletRewardRet"] = {
+	--表的id 
+	{ "int", },
+	{ "id",  },
+}
+GameMsg.map["sStarPalaceInfo"] = {
+	--章节id    当前排名 当前章节的子副本数据 下次刷新时间        
+	{ "uint",   "uint",  "list|sStarDupInfo", "int",              },
+	{ "groupId","ranks", "starDupInfos",      "next_refresh_time",},
+}
+GameMsg.map["sStarDupInfo"] = {
+	--当前积分 副本id  历史最高积分        
+	{ "uint",  "uint", "int",              },
+	{ "score", "dupId","history_max_score",},
+}
+GameMsg.map["sReturningTime"] = {
+	--活动id 活动类型 开启时间     结束时间   
+	{ "uint","uint",  "uint",      "uint",    },
+	{ "id",  "ty",    "start_time","end_time",},
 }
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 
@@ -3854,6 +4089,31 @@ GameMsg.map["RegressionProto:ResourcesRecoveryGainRet"] = {
 	--资源找回是否已领取 
 	{ "int",             },
 	{ "resourcesIsGain", },
+}
+GameMsg.map["sItemPool"] = {
+	--道具池ID 轮次    开始时间    已拿走奖励 
+	{ "uint",  "uint", "uint",     "json",    },
+	{ "id",    "round","startTime","drawArr", },
+}
+GameMsg.map["RegressionProto:ItemPoolInfo"] = {
+	--道具池ID 是否进入下一轮 
+	{ "uint",  "bool",        },
+	{ "id",    "nextRound",   },
+}
+GameMsg.map["RegressionProto:ItemPoolInfoRet"] = {
+	--道具池信息       
+	{ "list|sItemPool",},
+	{ "info",          },
+}
+GameMsg.map["RegressionProto:ItemPoolDraw"] = {
+	--道具池ID 抽取次数 
+	{ "uint",  "uint",  },
+	{ "id",    "times", },
+}
+GameMsg.map["RegressionProto:ItemPoolDrawRet"] = {
+	--道具池信息         本次抽取奖励 
+	{ "struts|sItemPool","array|uint",},
+	{ "info",            "drawArr",   },
 }
 GameMsg.map["AchievementProto:GetFinishInfo"] = {
 	--

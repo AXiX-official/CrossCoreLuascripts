@@ -167,6 +167,7 @@ function ClientProto:InitFinishRet(proto)
     DormMgr:RequestDormProtoServerData();--先不请求试试看
 
     ActivityMgr:CheckRedPointData() --用于活动
+    RegressionMgr:CheckRedPointData() --用于回归活动
 end
 
 -- 未收到InitFinishRet前每隔几秒发一次直到成功为止
@@ -246,9 +247,27 @@ end
 
 -- {id,type,nBegTime,nEndTime} -type:1.战场
 function ClientProto:ActiveOpen(proto)
-    Log("ClientProto:ActiveOpen")
-    Log(proto);
+    -- Log("ClientProto:ActiveOpen")
+    -- Log(proto);
     if proto then
         DungeonMgr:AddActivityOpenInfo(proto)
     end
+end
+
+--服务器修改表字段
+function ClientProto:DySetCfgNotice(proto)
+    GCalHelp:DyModifyCfgs(proto.infos)
+    for k, v in pairs(proto.infos) do
+        -- if(v.name=="global_setting" and (v.row_id=="g_ZilongWebBtnOpen" or v.row_id=="g_ZilongWebBtnClose" or v.row_id=="g_ZilongWebBtnLv")) then 
+        --     EventMgr.Dispatch(EventType.Menu_WebView_Enabled) --主界面的问卷调查
+        -- end 
+        if (v.name == "CfgActiveEntry") then
+            EventMgr.Dispatch(EventType.CfgActiveEntry_Change) --活动表动态更改
+        end
+    end
+end
+---1055 后台通知
+function ClientProto:PlrNotice(proto)
+    --LogError("1055 后台通知------")
+    --LogError(proto)
 end

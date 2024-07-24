@@ -45,7 +45,7 @@ function SetItems()
     CSAPI.SetRTSize(gameObject, w, h)
     local _datas = BadgeMgr:GetArr(cfg.id) or {}
     items1 = items1 or {}
-    if size[1] == 1 then
+    if size[2] == 1 then
         CSAPI.SetAnchor(grid1, 64 + w / 2, -72)
         datas1 = _datas
         ItemUtil.AddItems("Badge/BadgeGridItem", items1, datas1, grid1, OnItemClick, 1, isHideNew, OnLoadSuccse)
@@ -57,7 +57,7 @@ function SetItems()
         items2 = items2 or {}
         if #_datas > 1 then
             for i, v in ipairs(_datas) do
-                if i <= #_datas / 2 then
+                if i <= math.ceil(#_datas / 2) then
                     table.insert(datas1, v)
                 else
                     table.insert(datas2, v)

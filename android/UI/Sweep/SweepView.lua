@@ -392,20 +392,22 @@ end
 
 --单次体力消耗
 function GetHotCost()
-    local cost = cfgDungeon.enterCostHot and cfgDungeon.enterCostHot or 0
-    cost = cfgDungeon.winCostHot and cost + cfgDungeon.winCostHot or cost
-    return cost
+    local costNum = DungeonUtil.GetHot(cfgDungeon)
+    return costNum
 end
 
 function GetMatCost()
     local cost1 = cfgDungeon.modUpCost and cfgDungeon.modUpCost[1] or nil
     local cost2 = DungeonUtil.GetCost(cfgDungeon)
+    local cost = nil
     if cost1 then
-        cost1[2] = (cost2~=nil and cost1[1] == cost2[1]) and cost1[2] + cost2[2] or cost1[2]
-    else
-        cost1 = cost2
+        cost= {}
+        cost[1] = cost1[1]
+        cost[2] = (cost2~=nil and cost1[1] == cost2[1]) and cost1[2] + cost2[2] or cost1[2]
+    elseif cost2 then
+        cost= {cost2[1],cost2[2]}
     end
-    return cost1
+    return cost
 end
 
 --材料
@@ -415,11 +417,11 @@ function RefreshMaterial(value)
     end
     local taoFaNum = taoFaInfo and taoFaInfo.count or 0
     local currMat = isTaoFaMat and taoFaNum or BagMgr:GetCount(matCost.id)
-    local matCost = value * matCost.num
-    local tagetMat = currMat - matCost
+    local matCostNum = value * matCost.num
+    local tagetMat = currMat - matCostNum
     isMatEnough = tagetMat >= 0
     tagetMat = StringUtil:SetByColor(tagetMat .. "", tagetMat >= 0 and "ffffff" or "CD333E")
-    local str = StringUtil:SetByColor(matCost .. "", math.abs(matCost) <= currMat and "191919" or "CD333E")
+    local str = StringUtil:SetByColor(matCostNum .. "", math.abs(matCostNum) <= currMat and "191919" or "CD333E")
     if isHas then
         CSAPI.SetText(txtMat1, currMat .. "")
         CSAPI.SetText(txtMat2, tagetMat .. "")    

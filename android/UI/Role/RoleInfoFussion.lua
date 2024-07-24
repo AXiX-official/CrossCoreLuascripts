@@ -142,38 +142,37 @@ function InitData()
         career = cardCfg.career
     else
         -- 召唤 --等级继承，技能、被动技能不继承(到怪物表拿数据)、无副天赋
-        local cardId = oldCardData:GetCfg().summon
-        -- local cardCfg = Cfgs.MonsterData:GetByID(cardId)
-        -- -- 普通技能需要重新封装
-        -- local newSkillDatas = {}
-        -- local curSkillsID = cardCfg.jcSkills
-        -- for i, v in ipairs(curSkillsID) do
-        --     table.insert(newSkillDatas, {
-        --         id = curSkillsID[i],
-        --         exp = 0,
-        --         type = SkillMainType.CardNormal
-        --     })
-        -- end
-        -- -- 被动技能
-        -- local sSkillID = cardCfg.tfSkills and cardCfg.tfSkills[1] or nil
-        -- table.insert(newSkillDatas, {
-        --     id = sSkillID,
-        --     exp = 0,
-        --     type = SkillMainType.CardTalent
-        -- })
+        local cardId = RoleTool.GetMonsterIDBySkillID(skillData.id)
+        local cardCfg = Cfgs.MonsterData:GetByID(cardId)
+        -- 普通技能需要重新封装
+        local newSkillDatas = {}
+        local curSkillsID = cardCfg.jcSkills
+        for i, v in ipairs(curSkillsID) do
+            table.insert(newSkillDatas, {
+                id = curSkillsID[i],
+                exp = 0,
+                type = SkillMainType.CardNormal
+            })
+        end
+        -- 被动技能
+        local sSkillID = cardCfg.tfSkills and cardCfg.tfSkills[1] or nil
+        table.insert(newSkillDatas, {
+            id = sSkillID,
+            exp = 0,
+            type = SkillMainType.CardTalent
+        })
 
-        -- -- 重新封装
-        -- local newInfo = {}
-        -- local key = string.format("%s_%s", cardCfg.numerical, oldCardData:GetLv())
-        -- local _cfg = Cfgs.MonsterNumerical:GetByKey(key)
-        -- newInfo = table.copy(_cfg)
-        -- newInfo.cfgid = cardId
-        -- newInfo.skills = newSkillDatas
-        -- newInfo.break_level = 1
-        -- newInfo.intensify_level = 1
-        -- local monsterCardsData = require "MonsterCardsData"
-        -- cardData = MonsterCardsData(newInfo)
-        cardData = RoleTool.GetNewCardData2(oldCardData, cardId)
+        -- 重新封装
+        local newInfo = {}
+        local key = string.format("%s_%s", cardCfg.numerical, oldCardData:GetLv())
+        local _cfg = Cfgs.MonsterNumerical:GetByKey(key)
+        newInfo = table.copy(_cfg)
+        newInfo.cfgid = cardId
+        newInfo.skills = newSkillDatas
+        newInfo.break_level = 1
+        newInfo.intensify_level = 1
+        local monsterCardsData = require "MonsterCardsData"
+        cardData = MonsterCardsData(newInfo)
     end
 end
 

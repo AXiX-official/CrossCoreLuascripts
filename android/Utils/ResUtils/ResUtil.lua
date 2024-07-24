@@ -533,6 +533,12 @@ function this:Init()
     self.AchievementType = ResIconUtil.New("Achievement/Type") --类型
     --feast
     self.Feast = ResIconUtil.New("Feast")
+
+    self.RogueIcon = ResIconUtil.New("RogueIcon")
+    self.RogueBuff = ResIconUtil.New("RogueBuff")
+
+    self.DungeonSummer = ResIconUtil.New("DungeonSummer") --夏日选关
+    self.DungeonTaoFa = ResIconUtil.New("DungeonTaoFa") --讨伐相关
 end
 
 return this;

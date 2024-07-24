@@ -99,6 +99,10 @@ function OnOpen()
         InitFieldBoss()
     elseif openSetting==TeamConfirmOpenType.Tower then
         InitTower();
+    elseif openSetting==TeamConfirmOpenType.Rogue then
+        InitRogue();
+    elseif openSetting==TeamConfirmOpenType.TotalBattle then
+        InitTotalBattle();
     end
     InitChoosieIDs();--初始化已选择的队伍id
     InitOptions();
@@ -111,7 +115,7 @@ end
 function InitHotItem()
     if currCostInfo then
          --读取消耗信息
-         local type = currCostInfo[3]
+         local type = currCostInfo[3] or 2
          -- local type=2;
          local num=currCostInfo[2];
          local cid=currCostInfo[1];
@@ -380,31 +384,33 @@ end
 
 function OnClickBattle()
     --检测热值
-    if currCostInfo then
-        --读取消耗信息
-        local type = currCostInfo[3]
-        -- local type=2;
-        local num=currCostInfo[2];
-        local cid=currCostInfo[1];
-        if type == RandRewardType.ITEM then
-            local data = GoodsData()
-            data:InitCfg(cid)
-            local hasCount=BagMgr:GetCount(cid);
-            if hasCount<num then
+    if data.isDirll~=true then
+        if currCostInfo then
+            --读取消耗信息
+            local type = currCostInfo[3]
+            -- local type=2;
+            local num=currCostInfo[2];
+            local cid=currCostInfo[1];
+            if type == RandRewardType.ITEM then
+                local data = GoodsData()
+                data:InitCfg(cid)
+                local hasCount=BagMgr:GetCount(cid);
+                if hasCount<num then
+                    return;
+                end
+            else
+                LogError("配置表错误！道具类型错误！");
+                LogError(currCostInfo);
+            end
+       else
+            local currHot=PlayerClient:Hot();
+            if currHot<math.abs(currCostHot) then
+                --弹出补充热值的提示
+                CSAPI.OpenView("HotPanel");
                 return;
             end
-        else
-            LogError("配置表错误！道具类型错误！");
-            LogError(currCostInfo);
-        end
-   else
-        local currHot=PlayerClient:Hot();
-        if currHot<math.abs(currCostHot) then
-            --弹出补充热值的提示
-            CSAPI.OpenView("HotPanel");
-            return;
-        end
-   end
+       end
+    end
     if openSetting==TeamConfirmOpenType.Dungeon then
         OnDungeon();
     elseif openSetting==TeamConfirmOpenType.Matrix then
@@ -413,6 +419,10 @@ function OnClickBattle()
         OnFieldBoss()
     elseif openSetting==TeamConfirmOpenType.Tower then
         OnTower();
+    elseif openSetting==TeamConfirmOpenType.Rogue then
+        OnRogue();
+    elseif openSetting==TeamConfirmOpenType.TotalBattle then
+        OnTotalBattle();
     end
 end
 
@@ -427,14 +437,17 @@ function SetEnterCost()
         local type = currCostInfo[3]
         -- local type=2;
         local num=currCostInfo[2];
+        if data and data.isDirll then
+            num=0;
+        end
         local cid=currCostInfo[1];
         if type == RandRewardType.ITEM then
-            local data = GoodsData()
-            data:InitCfg(cid)
+            local d = GoodsData()
+            d:InitCfg(cid)
             local hasCount=BagMgr:GetCount(cid);
-            ResUtil.IconGoods:Load(costIcon,data:GetIcon().."_3");
+            ResUtil.IconGoods:Load(costIcon,d:GetIcon().."_3");
             local costHot=hasCount>=num and string.format("<color='#000000'>%s</color>",num) or string.format("<color='#cd333e'>%s</color>",num);
-            CSAPI.SetText(txt_cost,data:GetName().."-"..costHot);
+            CSAPI.SetText(txt_cost,d:GetName().."-"..costHot);
         else
             LogError("配置表错误！道具类型错误！");
             LogError(currCostInfo);
@@ -633,6 +646,37 @@ function InitTower()
     SetEnterCost();
 end
 
+function InitRogue()
+    SetEnterCost()
+    CSAPI.SetGOActive(nameObj,false);
+    CSAPI.SetGOActive(btnNavi,false);
+    CSAPI.SetGOActive(fightObj,false);
+    CSAPI.SetGOActive(hotObj,false)
+    startTeamIdx = eTeamType.Rogue;
+    endTeamIdx =  eTeamType.Rogue;
+    teamMax=1;
+    CSAPI.SetGOActive(txtRogue,true)
+    CSAPI.SetGOActive(rogueMonster,true)
+    CSAPI.CreateGOAsync("UIs/DungeonItemInfo/DungeonInfoDetailsRogue", 0, 0, 0, rogueMonster, function(go)
+        local lua = ComUtil.GetLuaTable(go)
+        lua.Refresh(data.rogueData)
+    end)
+end
+
+function OnRogue()
+    local item=teamItems[1];
+    if item.CanBattle()==true then
+        local teamData = item.GetDuplicateTeamData()
+        if(teamData) then 
+            FightProto:EnterRogueDuplicate(data.rogueData:GetID(),{teamData},function ()
+                view:Close()
+                CSAPI.OpenView("RogueBuffSelect",data.rogueData)
+            end)
+        else
+            Tips.ShowTips(LanguageMgr:GetTips(14005)) 
+        end 
+    end
+end
 
 --爬塔设置按钮状态
 function SetBtnStateTower()
@@ -644,6 +688,67 @@ function SetBtnStateTower()
 	end
 end
 
+--初始化总力战
+function InitTotalBattle()
+    currCostInfo=DungeonUtil.GetCost(dungeonCfg);
+    if TotalBattleMgr:IsFighting() then
+        currCostInfo[2]=0
+    end
+    SetEnterCost()
+    CSAPI.SetGOActive(nameObj,false);
+    CSAPI.SetGOActive(btnNavi,false);
+    CSAPI.SetGOActive(fightObj,false);
+    CSAPI.SetGOActive(hotObj,false)
+    startTeamIdx = eTeamType.TotalBattle;
+    endTeamIdx =  eTeamType.TotalBattle;
+    teamMax=1;
+    local teamData=TeamMgr:GetTeamData(startTeamIdx);
+    --剔除当前队伍中耐久度为0的卡牌
+    FormationUtil.CleanTotalBattleMember(teamData);
+end
+
+function OnTotalBattle()
+    local item=teamItems[1];
+    local dupTeam = item.GetDuplicateTeamData()
+    TeamMgr.currIndex=eTeamType.TotalBattle;
+    local teamData=TeamMgr:GetEditTeam();
+    if data.isDirll == true and dungeonCfg and dungeonCfg.nGroupID then --模拟战
+        if teamData:GetRealCount()<=0 then
+            Tips.ShowTips(LanguageMgr:GetTips(14005));
+            do return end;
+        end
+        local dirllData={}
+        dirllData={};
+        local tCommanderSkill=nil;
+        local skillGroupID=teamData:GetSkillGroupID();
+        if skillGroupID and dungeonCfg and dungeonCfg.tacticsSwitch~=1 then
+            local tacticData=TacticsMgr:GetDataByID(skillGroupID);
+            if tacticData and  tacticData:IsUnLock() then
+                tCommanderSkill={};
+                tCommanderSkill=tacticData:GetSkillsIds();
+            end
+        end
+        for k,v in ipairs(teamData.data) do
+            local itemData=v:GetFightCardData();
+            table.insert(dirllData,itemData);
+        end
+        TeamMgr:AddFightTeamData(teamData);
+        DungeonMgr:SetFightTeamId(teamData:GetIndex());
+        -- LogError("111111111111111111")
+        -- LogError(dirllData)
+        -- LogError(tCommanderSkill)
+        -- do return end 
+        local exData = {}
+        if TotalBattleMgr:GetFightBossHp() > 0 then --赋予模拟boss血量，队列表示第几只boss怪
+            exData.hpinfo = {{hp = TotalBattleMgr:GetFightBossHp()}}
+        end
+        CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill,exData);
+        do return end
+    else
+        OnDungeon();
+    end
+end
+   
 function OnTower()
     --检查队伍是否符合限制
     local item=teamItems[1];
@@ -652,6 +757,7 @@ function OnTower()
     local teamData=TeamMgr:GetEditTeam();
     if cond and teamData~=nil then
 		-- LogError("检测限制--------------->")
+        -- LogError(teamData:GetData())
 		local result2=cond:CheckPass(teamData)
 		if result2~=true then
 			-- local dialogData = {}
@@ -662,7 +768,7 @@ function OnTower()
             else
                 Tips.ShowTips(LanguageMgr:GetTips(14005));
             end
-            return
+            do return end
 		end
 		-- LogError("条件："..tostring(cond:GetID()).."\t检测结果："..tostring(result).."\t队伍结果："..tostring(result2))
 	end

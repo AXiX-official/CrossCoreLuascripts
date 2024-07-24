@@ -168,10 +168,14 @@ function InitCommodityInfo()
 	local getList=commodity:GetCommodityList();
 	if getList then
 		local good=getList[1];
-		if good.data:GetType()==ITEM_TYPE.CARD_CORE_ELEM or good.data:GetType()==ITEM_TYPE.CARD or good.data:GetType()==ITEM_TYPE.EQUIP or good.data:GetType()==ITEM_TYPE.EQUIP_MATERIAL then
+		if good.data:GetType()==ITEM_TYPE.CARD_CORE_ELEM or good.data:GetType()==ITEM_TYPE.CARD then
+			CSAPI.SetGOActive(tIcon,true);
+		elseif good.data:GetType()==ITEM_TYPE.EQUIP or good.data:GetType()==ITEM_TYPE.EQUIP_MATERIAL then
 			CSAPI.SetGOActive(tIcon,true);
 			isSmall=true;
 		elseif good.data:GetType()==ITEM_TYPE.PANEL_IMG then--多人插图
+			CSAPI.SetGOActive(btnDetails,true);
+		elseif good.data:GetType()==ITEM_TYPE.BG_ITEM then--背景道具
 			CSAPI.SetGOActive(btnDetails,true);
 		end
 		SetDayObj(good.data:GetIconDayTips());
@@ -258,6 +262,8 @@ function OnClickDetails()
 		local type = good.data:GetType();
 		if type==ITEM_TYPE.PANEL_IMG then--多人插图,特殊处理
 			CSAPI.OpenView("MulPictureView",{id=good.data:GetDyVal1(),showMask=true},commodity:IsShowImg() and 1 or 0);
+		elseif good.data:GetType()==ITEM_TYPE.BG_ITEM then--背景道具
+			CSAPI.OpenView("BGPictureView",{id=good.data:GetDyVal1(),showMask=true});
 		end
 	end
 end

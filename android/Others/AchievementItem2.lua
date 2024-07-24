@@ -101,7 +101,10 @@ end
 function SetReward()
     CSAPI.SetGOActive(grid,not isList)
     if not isList then
-        CSAPI.SetGOActive(btnGet,not data:IsGet())
+        local jumpId = data:GetJumpId()
+        local isJump = not data:IsFinish() and jumpId ~=nil
+        CSAPI.SetGOActive(btnGet,not data:IsGet() and not isJump)
+        CSAPI.SetGOActive(btnJump,isJump)
         CSAPI.SetImgColor(btnGet,255,255,255,not data:IsFinish() and 125 or 255)
         local gridDatas = GridUtil.GetGridObjectDatas(data:GetRewards() or {})
         rewardItems = rewardItems or {}
@@ -109,6 +112,7 @@ function SetReward()
         GridClickFunc.OpenInfoSmiple, 1, data:IsGet())
     else
         CSAPI.SetGOActive(btnGet,false)
+        CSAPI.SetGOActive(btnJump,false)
     end
 end
 
@@ -136,6 +140,12 @@ function OnClickGet()
     AchievementProto:GetReward(data:GetID(),function ()
         CSAPI.OpenView("Achievement",nil,{group = data:GetType(),itemId = data:GetID()})
     end)
+end
+
+function OnClickJump()
+    if data:GetJumpId() then
+        JumpMgr:Jump(data:GetJumpId())
+    end
 end
 
 function OnClickQuestion()

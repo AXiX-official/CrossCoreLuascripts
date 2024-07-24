@@ -50,6 +50,11 @@ local mgrNames = {
 	"TowerMgr", --新爬塔
 	"BadgeMgr", --徽章
 	"RegressionMgr", --回归相关
+	"ItemPoolActivityMgr",--道具池相关
+	"RogueMgr",
+	"TotalBattleMgr", --十二星宫
+	"AccuChargeMgr", --累计充值
+
 }
 
 

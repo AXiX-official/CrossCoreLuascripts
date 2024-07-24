@@ -168,7 +168,7 @@ function this:Sort2(id, datas, elseData)
     -- 排序方法
     local sortFuncs = {}
     local ids = sortData.Sort
-    if id==4 and elseData and elseData.isTower==true then
+    if id==4 and elseData and (elseData.isTower==true or elseData.isTotalBattle) then
         table.insert(sortFuncs,function(a,b)
             local aNum=a.canDrag and 1 or 0;
             local bNum=b.canDrag and 1 or 0;

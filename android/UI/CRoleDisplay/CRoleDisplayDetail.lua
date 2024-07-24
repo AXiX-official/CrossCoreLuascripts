@@ -31,7 +31,7 @@ function InitBG()
     local curBGID = PlayerClient:GetBG()
     local cfg = Cfgs.CfgMenuBg:GetByID(curBGID)
     if (cfg and cfg.name) then
-        ResUtil:LoadBigImg2(showBg, "UIs/BGs/" .. cfg.name .. "/bg", false)
+        ResUtil:LoadMenuBg(showBg, "UIs/" .. cfg.name, false)
     end
 end
 

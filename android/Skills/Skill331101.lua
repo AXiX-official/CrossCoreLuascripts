@@ -29,8 +29,8 @@ function Skill331101:OnBefourHurt(caster, target, data)
 	local count20 = SkillApi:GetAttr(self, caster, target,3,"hp")
 	-- 8467
 	local count67 = SkillApi:GetAttr(self, caster, target,2,"hp")
-	-- 8876
-	if SkillJudger:Less(self, caster, target, true,count20,count67) then
+	-- 8189
+	if SkillJudger:Greater(self, caster, target, true,count20,count67) then
 	else
 		return
 	end

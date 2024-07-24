@@ -23,7 +23,7 @@ function Skill984000401:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 984000401
-	self:DelBuffQuality(SkillEffect[984000401], caster, target, data, 1,3)
+	self:DelBuffQuality(SkillEffect[984000401], caster, target, data, 1,99)
 	-- 984000402
 	self:AddBuff(SkillEffect[984000402], caster, target, data, 984010303)
 	-- 984000403

@@ -169,4 +169,8 @@ _G.TowerData = require "TowerData"
 _G.BadgeData = require "BadgeData"
 _G.BadgeChangeInfo = require "BadgeChangeInfo"
 
+--道具池
+_G.ItemPoolInfo=require "ItemPoolInfo"
+_G.ItemPoolGoodsInfo=require "ItemPoolGoodsInfo"
+
 require "SpineTools"

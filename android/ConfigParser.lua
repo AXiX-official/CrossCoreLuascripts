@@ -177,26 +177,37 @@ function ConfigParser:Union()
     -- _G[filename]
     -- 表联合配置
     for k, v in pairs(ConfigUnion) do
-        LogDebugEx('合成 ' .. v.name .. ':' .. v.sUnionName)
-        _G[v.sUnionName] = {}
-        self.m_mapTableInfo[v.sUnionName] = {arrUnion = {}}
-        for index, item in ipairs(v.item) do
+        LogDebugEx('合成 ' .. v.name .. '=>' .. v.sUnionName)
+
+        local unionTb = {}
+
+        local mapTb = {arrUnion = {}, sheetname = v.sUnionName}
+        self.m_mapTableInfo[v.sUnionName] = mapTb
+
+        for _, item in ipairs(v.item) do
             -- LogDebugEx("--"..item.sCfgName..":"..item.sCfgKey)
-            if _G[item.sCfgKey] then
-                for key, val in ipairs(_G[item.sCfgKey]) do
-                    -- ASSERT(not _G[v.sUnionName][key], "重复的id"..key)
-                    -- _G[v.sUnionName][key] = val
-                    table.insert(_G[v.sUnionName], val)
+            local cfgName = item.sCfgKey
+            local cfgs = _G[cfgName]
+            if cfgs then
+                for _, cfg in pairs(cfgs) do
+                    -- ASSERT(not _unionTb[key], "重复的id"..key)
+                    if unionTb[cfg.id] then
+                        ASSERT(false, string.format('配置表:%s, 的id:%s, 重复', cfgName, cfg.id))
+                    end
+                    unionTb[cfg.id] = cfg
                 end
-                _G[item.sCfgKey] = nil
-                self.m_mapConfigList[item.sCfgKey] = nil
-                table.insert(self.m_mapTableInfo[v.sUnionName].arrUnion, self.m_mapTableInfo[item.sCfgKey])
-                self.m_mapTableInfo[v.sUnionName].filename = self.m_mapTableInfo[item.sCfgKey].filename
-                self.m_mapTableInfo[v.sUnionName].sheetname = self.m_mapTableInfo[item.sCfgKey].sheetname
+
+                _G[cfgName] = nil
+
+                self.m_mapConfigList[cfgName] = nil
+                table.insert(mapTb.arrUnion, self.m_mapTableInfo[cfgName])
+                self.m_mapTableInfo[v.sUnionName].filename = self.m_mapTableInfo[cfgName].filename
+                mapTb.filename = self.m_mapTableInfo[cfgName].filename
             end
         end
+
+        _G[v.sUnionName] = unionTb
         self.m_mapConfigList[v.sUnionName] = v.sUnionName
-        table.ReadOnly(_G[v.sUnionName])
     end
 end
 
@@ -223,48 +234,49 @@ end
 -- 读取配置表到内存
 function ConfigParser:ReadOneConfig(filename)
     local fullfileName = 'cfg' .. filename
-    LogInfo("ConfigParser:ReadOneConfig--"..fullfileName)
     local config = require(fullfileName)
 
     -- Loader:AddReplaceFile(filename)
     -- LogInfo("Read[ " .. fullfileName .. " ]from[ " .. config.filename .. " ]->[ " .. config.sheetname .. "]")
     local takeColInfo = {}
     if config then
-        self.m_mapTableInfo[filename] = {filename = config.filename, sheetname = config.sheetname}
-        _G[filename] = {}
-        local isOk = true
+        self.m_mapTableInfo[filename] = {
+            filename = config.filename,
+            sheetname = config.sheetname,
+            names = config.names,
+            types = config.types
+        }
+
+
+        local newCfgs = {}
+
         local currrow = 0
         for k, data in ipairs(config.data) do
-            local function XpcallCB(msg, ...)
+
+            local function TmpXpcallCB(msg, ...)
                 LogInfo('-------------------配置表出错---------------------')
                 LogInfo(config.filename .. '的 ' .. config.sheetname .. ' 第' .. (k + 5) .. '行')
-                LogTable(config.names)
-                LogTable(config.types)
                 self:SimpleShowTable(takeColInfo, '报错的列信息:')
                 LogInfo('LUA ERROR: ' .. tostring(msg) .. '\n')
                 LogInfo(debug.traceback())
-                self:SimpleShowTable({...}, 'XpcallCB:')
+                self:SimpleShowTable({...}, 'TmpXpcallCB:')
                 LogInfo('----------------------------------------')
             end
 
-            local function ReadOneLineLuaConfig()
-                currrow = self:ReadOneLineLuaConfig(filename, config, currrow, k, data, takeColInfo)
+            local tmpRetOnLineFun = function()
+                -- 导表工具，xpcall 只接受一个回调函数
+                currrow = self:ReadOneLineLuaConfig(filename, newCfgs, config, currrow, k, data, takeColInfo)
             end
 
-            if not xpcall(ReadOneLineLuaConfig, XpcallCB) then
-                ASSERT()
+            local isCallOk = xpcall(tmpRetOnLineFun, TmpXpcallCB)
+            if not isCallOk then
+                ASSERT(false)
             end
-
-            -- isOk, currrow =
-            --     xpcall(self.ReadOneLineLuaConfig, XpcallCB, self, filename, config, currrow, k, data, takeColInfo)
-            -- if not isOk then
-            --     ASSERT()
-            -- end
         end
 
+        _G[filename] = newCfgs
         _G[fullfileName] = nil
     end
-    table.ReadOnly(_G[filename])
 
     package.loaded[fullfileName] = nil
     -- LogInfo("loaded %s", fullfileName)
@@ -279,71 +291,65 @@ function ConfigParser:ReadLuaConfig()
     end
 end
 
-function ConfigParser:ReadOneLineLuaConfig(filename, config, currrow, k, data, takeColInfo)
+function ConfigParser:ReadOneLineLuaConfig(filename, newCfgs, config, currrow, k, data, takeColInfo)
     if currrow >= k then
         -- 跳过二级table表结构的行
         -- print("ignore sub item ", k)
-    else
-        currrow = k
-        local tableRowNum = 0
-        local t = {}
-        local currcol = 0
-        for i, name in ipairs(config.names) do
-            if currcol >= i then
-            else
-                currcol = i
-                local typ = config.types[i]
+        return currrow
+    end
 
-                takeColInfo['列名: '] = name
-                takeColInfo['列类型: '] = typ
+    local tableRowNum = 0
+    local t = {}
+    local currcol = 0
+    for i, name in ipairs(config.names) do
+        if currcol >= i then
+        else
+            currcol = i
+            local typ = config.types[i]
 
-                if typ ~= '' then
-                    local num = self:GetTableSize(typ)
-                    if num and num > 0 then
-                        local rownum, ret = self:FormatTable(config, k, i, num)
-                        if rownum > 0 then
-                            t[name] = ret
-                            currcol = i + num
-                            tableRowNum = tableRowNum < rownum and rownum or tableRowNum
-                        else
-                            t[name] = {}
-                        end
+            takeColInfo['列名: '] = name
+            takeColInfo['列类型: '] = typ
+
+            if typ ~= '' then
+                local num = self:GetTableSize(typ)
+                if num and num > 0 then
+                    local rownum, ret = self:FormatTable(config, k, i, num)
+                    if rownum > 0 then
+                        t[name] = ret
+                        currcol = i + num
+                        tableRowNum = tableRowNum < rownum and rownum or tableRowNum
                     else
-                        t[name] = self:FormatValue(data[i], config.types[i])
+                        t[name] = {}
                     end
+                else
+                    t[name] = self:FormatValue(data[i], config.types[i])
                 end
             end
         end
+    end
 
-        currrow = k + tableRowNum
+    currrow = k + tableRowNum
 
-        if not t.key then
-            t.key = t.id
-        end
+    if not t.key then
+        t.key = t.id
+    end
 
-        table.insert(_G[filename], t)
+    if newCfgs[t.id] then
+        LogTable(t, 't:')
+        LogTable(newCfgs, 'newCfgs:')
+
+        local info = self.m_mapTableInfo[filename]
+        ASSERT(false, info.filename .. '-[' .. info.sheetname .. ']表中存在重复的id:' .. t.id)
+    else
+        newCfgs[t.id] = t
     end
 
     return currrow
 end
 
 function ConfigParser:SetGolble()
+    -- 代码移动到，ConfigChecker:global_setting(cfgs)
     -- IS_CLIENT
-    LogDebugEx('load global_setting:')
-    for k, v in pairs(global_setting) do
-        if v.key ~= '' then
-            LogDebugEx('load global_setting:' .. v.key)
-            local val = self:FormatValue(v.value, v.type)
-
-            -- print(IS_CLIENT, v.user, v.user == 1)
-            if IS_CLIENT and (v.user == 1 or not v.user) then
-                _G[v.key] = val
-            elseif IS_SERVER and (v.user == 2 or not v.user) then
-                _G[v.key] = val
-                Loader:AddReplaceFile(v.key)
-            end
-        end
-    end
 end
 
 function ConfigParser:GenCfgList(ConfigList)
@@ -352,6 +358,13 @@ function ConfigParser:GenCfgList(ConfigList)
     for k, v in pairs(ConfigList) do
         self.m_mapConfigList[v] = v
     end
+end
+
+function ConfigParser:GetCfgSheetName(cfgName)
+    -- LogTable(self.m_mapTableInfo[cfgName], 'm_mapTableInfo')
+    -- LogTable(self.m_mapConfigList[cfgName], 'm_mapConfigList')
+    local cfgStructInfo = self.m_mapTableInfo[cfgName]
+    return cfgStructInfo.sheetname
 end
 
 function ConfigParser:ClientConfig()
@@ -372,40 +385,23 @@ function ConfigParser:ClientConfig()
         end
     end
 
-    -- 转成用id作为配置的key
-    for k, v in pairs(self.m_mapConfigList) do
-        -- LogDebugEx("load config 2:"..k)
-        local cfg = {}
-        for i, v in ipairs(_G[k]) do
-            ASSERT(
-                not cfg[v.id],
-                self.m_mapTableInfo[k].filename .. '-[' .. self.m_mapTableInfo[k].sheetname .. ']表中存在重复的id' .. v.id
-            )
-            cfg[v.id] = v
-        end
-        -- if ConfigChecker[k] then
-        --     ConfigChecker[k](ConfigChecker, cfg)
-        -- end
-        _G[k] = cfg
-        -- table.ReadOnly(_G[k])
-    end
-
     -- 需要全部配置检查完才检查的配置，key为表名，value随便配的
     local FinallyCheckConfig = {
         AvatarFrame = 1,
         CfgAvatar = 1,
         CfgShopPage = 1,
         CfgReturningActivity = 1,
+        MainLine = 1,
+        CfgMenuBg = 1,
     }
 
     -- 检查/特殊处理以及设为只读
-    for k, v in pairs(self.m_mapConfigList) do
-        if ConfigChecker[k] and not FinallyCheckConfig[k] then
-            local result, errmsg = pcall(ConfigChecker[k], ConfigChecker, _G[k])
+    for cfgName, _ in pairs(self.m_mapConfigList) do
+        if ConfigChecker[cfgName] and not FinallyCheckConfig[cfgName] then
+            local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
             if errmsg then
-                -- LogTable(_G[k])
                 print(result, errmsg)
-                ASSERT('配置表出错' .. k)
+                ASSERT(false, '配置表出错' .. cfgName)
             end
         end
     end
@@ -417,16 +413,26 @@ function ConfigParser:ClientConfig()
                 local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
                 if errmsg then
                     print(result, errmsg)
-                    ASSERT('配置表出错' .. cfgName)
+                    ASSERT(false, '配置表出错' .. cfgName)
                 end
             end
         end
-        table.ReadOnly(_G[k])
     end
 
     -- 主键关联检查
     ConfigChecker:CheckPrimaryKey()
     ConfigChecker:CheckDungeon()
+
+    -- 设置为只读
+    -- for cfgName, _ in pairs(self.m_mapConfigList) do
+    --     local cfgs = _G[cfgName]
+    --     for k, cfg in pairs(cfgs) do
+    --         cfgs[k] = table.ReadOnly(cfg)
+    --     end
+
+    --     _G[cfgName] = table.ReadOnly(cfgs)
+    -- end
+
     return Cfgs
 end
 

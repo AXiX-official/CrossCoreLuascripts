@@ -15,4 +15,6 @@ end
 function Buffer2133:OnCreate(caster, target)
 	-- 2113
 	self:AddShield(BufferEffect[2113], self.caster, target or self.owner, nil,1,0.14)
+	-- 6103
+	self:ImmuneBuffQuality(BufferEffect[6103], self.caster, target or self.owner, nil,2)
 end

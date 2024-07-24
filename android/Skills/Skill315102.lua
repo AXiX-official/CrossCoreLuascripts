@@ -35,5 +35,8 @@ function Skill315102:OnBornSpecial(caster, target, data)
 		return
 	end
 	-- 315112
-	self:OwnerAddBuff(SkillEffect[315112], caster, caster, data, 315102)
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[315112], caster, target, data, 315102)
+	end
 end

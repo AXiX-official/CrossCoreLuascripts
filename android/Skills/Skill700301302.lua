@@ -21,6 +21,11 @@ function Skill700301302:OnActionOver(caster, target, data)
 	end
 	-- 8422
 	local count22 = SkillApi:BuffCount(self, caster, target,1,4,650)
+	-- 8902
+	if SkillJudger:Greater(self, caster, target, true,count22,0) then
+	else
+		return
+	end
 	-- 8554
 	self:Cure(SkillEffect[8554], caster, self.card, data, 1,math.max(count22*0.08,0.08))
 	-- 8200
@@ -30,6 +35,11 @@ function Skill700301302:OnActionOver(caster, target, data)
 	end
 	-- 8422
 	local count22 = SkillApi:BuffCount(self, caster, target,1,4,650)
+	-- 8902
+	if SkillJudger:Greater(self, caster, target, true,count22,0) then
+	else
+		return
+	end
 	-- 8555
 	self:AddBuff(SkillEffect[8555], caster, self.card, data, 2150+count22)
 end

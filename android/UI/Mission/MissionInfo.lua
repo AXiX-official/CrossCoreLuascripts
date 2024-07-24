@@ -81,6 +81,11 @@ end
 function this:GetJumpID()
 	return self.cfg and self.cfg.nTransferPath or nil
 end
+
+--获取基金任务id
+function this:GetFundId()
+	return self.cfg and self.cfg.fundId
+end
 --------------------------set
 function this:SetIsGet(is_get)
 	self.is_get = is_get
@@ -150,7 +155,7 @@ function this:GetSortIndex()
 		elseif(self:IsFinish()) then
 			self.sortIndex = 1000
 		elseif(self.cfg and self.cfg.index)then
-			self.sortIndex = self.cfg.index
+			self.sortIndex = 1000 - self.cfg.index
 		else
 			self.sortIndex = 100 - self:GetType()
 		end

@@ -9,6 +9,8 @@ SceneType.PVEBuild	= 6 -- pve(非副本)
 SceneType.GuildBOSS	= 7 -- 工会BOSS
 SceneType.TeamBOSS	= 7 -- 组队BOSS
 SceneType.FieldBoss	= 8 -- 战场系统BOSS
+SceneType.Rogue		= 9 -- 乱序演习
+
 
 -- 副本类型
 eDuplicateType                 = {}
@@ -22,6 +24,7 @@ eDuplicateType.BattleFieldBoss = 7 -- 战场boss
 eDuplicateType.TaoFa           = 8 -- 讨伐
 eDuplicateType.NewTower        = 9 -- 异构空间
 eDuplicateType.Rogue           = 10 -- 乱序演习
+eDuplicateType.StarPalace      = 11 -- 十二星宫
 
 eDuplicateType.Materials       = 101 -- 材料副本
 eDuplicateType.Equip           = 102 -- 装备副本

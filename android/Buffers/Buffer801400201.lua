@@ -26,7 +26,7 @@ function Buffer801400201:OnActionOver(caster, target)
 		self:OwnerAddBuff(BufferEffect[801400203], self.caster, self.caster, nil, 801400301)
 	else
 		-- 801400201
-		self:HitAddBuff(BufferEffect[801400201], self.caster, self.caster, nil, 8000,3009,3)
+		self:HitAddBuff(BufferEffect[801400201], self.caster, self.caster, nil, 4000,3009,3)
 	end
 end
 -- 创建时

@@ -8,6 +8,11 @@ function this.New()
     return ins
 end
 
+--[[
+CardSkinType = {}
+CardSkinType.Break = 1 -- 突破皮肤
+CardSkinType.Skin = 2 -- 额外
+]]
 -- ==============================--
 -- desc:
 -- time:2019-08-19 11:34:07
@@ -15,20 +20,23 @@ end
 -- @_skinid:皮肤id
 -- @_minBreakLv:最低可用的突破等级
 -- @_type:皮肤类型
--- @_typeNum:  0:正常的皮肤，1：变身的皮肤，2：合体的皮肤 3：解禁的角色皮肤 4:解禁的机神皮肤
+-- @_typeNum:         
 -- @return
 -- ==============================--
-function this:Set(_cardId, _skinid, _minBreakLv, _type)
-    self.cardId = _cardId
-    self.skinid = _skinid
+function this:Set(_roleID, _cardID, _skinID, _minBreakLv, _type, _isJieJin, _jiejinCondition)
+    self.roleID = _roleID
+    self.cardID = _cardID
+    self.skinID = _skinID
     self.minBreakLv = _minBreakLv or 2
     self.type = _type or CardSkinType.Break
     -- self.typeNum = _typeNum
+    self.isJieJin = _isJieJin
+    self.jiejinCondition = _jiejinCondition
     self:SetIndex()
 end
 
 function this:GetSkinID()
-    return self.skinid
+    return self.skinID
 end
 
 function this:SetIndex()
@@ -44,14 +52,23 @@ end
 -- 某卡牌是否可以使用这个皮肤
 -- function this:CheckCanUse(cardData)
 function this:CheckCanUse()
+    if (self.isJieJin and self.jiejinCondition ~= nil and not MenuMgr:CheckConditionIsOK({self.jiejinCondition})) then
+        return false
+    end
     if (self.type == CardSkinType.Break) then
-        local cardData = RoleMgr:GetData(self.cardId)
-        local lv = cardData and cardData:GetBreakLevel() or 1
-        if (self.minBreakLv > 1 and lv < self.minBreakLv) then
-            return false
-        else
+        -- local cardData = RoleMgr:GetData(self.cardID)
+        -- local lv = cardData and cardData:GetBreakLevel() or 1
+        -- if (self.minBreakLv > 1 and lv < self.minBreakLv) then
+        --     return false
+        -- else
+        --     return true
+        -- end
+        local cRoleData = CRoleMgr:GetData(self.roleID)
+        local lv = cRoleData and cRoleData:GetBreakLevel() or 1
+        if (lv >= self.minBreakLv) then
             return true
         end
+        return false
     else
         return self:GetCanUse()
     end
@@ -60,7 +77,7 @@ end
 -- 皮肤是否已解锁或获得
 function this:CheckCanUseByMaxLV()
     if (self.type == CardSkinType.Break) then
-        local cRoleData = CRoleMgr:GetData(self:GetCfg().role_id)
+        local cRoleData = CRoleMgr:GetData(self.roleID)
         local lv = cRoleData and cRoleData:GetBreakLevel() or 1
         if (lv >= self.minBreakLv) then
             return true
@@ -103,7 +120,7 @@ function this:GetDesc()
 end
 
 function this:GetCardId()
-    return self.cardId or nil
+    return self.cardID or nil
 end
 
 function this:SetRoleId(_id)
@@ -190,9 +207,13 @@ end
 
 -- 
 function this:IsThisCard(cardID)
-    if (self.cardId == cardID) then
+    if (self.cardID == cardID) then
         return true
     end
+end
+
+function this:CheckIsJieJin()
+    return self.isJieJin
 end
 
 return this

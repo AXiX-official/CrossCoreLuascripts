@@ -31,6 +31,8 @@ function Skill332401:OnActionOver2(caster, target, data)
 	self:DelBufferGroup(SkillEffect[332411], caster, self.card, data, 1,5)
 	-- 332412
 	self:DelBufferForce(SkillEffect[332412], caster, self.card, data, 332401)
+	-- 8685
+	local count685 = SkillApi:SkillLevel(self, caster, target,3,4002002)
 	-- 332413
-	self:CallSkill(SkillEffect[332413], caster, target, data, 400200201)
+	self:CallOwnerSkill(SkillEffect[332413], caster, target, data, 400200200+count685)
 end

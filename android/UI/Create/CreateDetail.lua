@@ -74,7 +74,7 @@ function SetRule()
     --
     local ruleIDs = data:GetCfg().cardRule
     ruleItems = ruleItems or {}
-    ItemUtil.AddItems("Create/CreaterRuleItem", ruleItems, ruleIDs, ruleGrid)
+    ItemUtil.AddItems("Create/CreaterRuleItem", ruleItems, ruleIDs, ruleGrid,nil,1, data:GetCfg().sName)
     --
     curPanelGO = sr
     SetCruGOActive(true)

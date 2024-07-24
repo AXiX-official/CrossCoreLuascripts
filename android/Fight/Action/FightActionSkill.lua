@@ -335,8 +335,10 @@ function this:PushSub(fightAction,order)
         --LogError(table.tostring(fightAction:GetData()));
         local targetCharacter = fightAction:GetTargetCharacter();        
         if(targetCharacter == nil)then
-            LogError("API:AddBuff、UpdateBuff或者MissBuff操作失败，找不到目标角色，api数据如下");
-            LogError(fightAction:GetData());
+            if(fightAction:GetAPIName() ~= APIType.AddNP)then
+                LogError("API:AddBuff、UpdateBuff或者MissBuff操作失败，找不到目标角色，api数据如下");
+                LogError(fightAction:GetData());
+            end
             return;
         end
 
@@ -950,6 +952,13 @@ function this:PushHitResult(characterId)
     end
 end
 
+
+function this:GetCustomPlayTime()
+    if(self.faSummon)then
+        return self.faSummon:GetCustomPlayTime();
+    end
+end
+
 --播放召唤
 function this:PlaySummon()
     if(self.faSummon)then
@@ -980,6 +989,10 @@ function this:CheckLeftData()
             if(self:ApplyBuffData(id))then
                 LogError("有Buff遗漏=============================");                
                 isLeftData = 1;
+            end
+            if(self:ApplyDebuffData(id))then
+                LogWarning("有Debuff遗漏=============================");                
+                --isLeftData = 1;
             end
         end
         if(isLeftData)then

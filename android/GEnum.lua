@@ -35,6 +35,7 @@ ITEM_ID.EX = 10044 --10044_Item##高级勘探
 ITEM_ID.PLUS = 10045 --10045_Item##机密勘探
 ITEM_ID.DIFF = 10046 --10046_Item##勘探差价
 ITEM_ID.TAO_FA_Count = 12005 --讨伐次数
+ITEM_ID.DeductionVoucher=10999 --抵扣券
 
 -- save type是数据库保存，不能修改，只能添加
 ITEM_TYPE = {}
@@ -59,6 +60,9 @@ ITEM_TYPE.THEME = 18 -- 宿舍主题
 ITEM_TYPE.ICON_FRAME = 19 -- 头像框(dy_value1 头像框配置表的id)
 ITEM_TYPE.LIMITED_TIME_ITEM = 20 -- 限时物品
 ITEM_TYPE.ICON = 21  -- 头像(dy_value1 头像配置表的id)
+ITEM_TYPE.CHANGE_SHAPE = 22 -- 形态转换券
+ITEM_TYPE.CHANGE_NAME = 23 -- 改名券
+ITEM_TYPE.BG_ITEM=24 --主界面背景图道具
 
 -- 物品标签
 ITEM_TAG = {}
@@ -111,6 +115,8 @@ CallPlrType.TransformMsg = 10
 CallPlrType.TryPassFriend = 11
 CallPlrType.GetOpenDorm = 12
 CallPlrType.GetDorm = 13
+CallPlrType.PlrBindInvite = 14
+CallPlrType.PlrBindInviteAgree = 15
 
 -------------------------------------------------------------------------------------------------
 -- 掉落类型
@@ -185,46 +191,52 @@ eDungeonMapState = {}
 eDungeonMapState.Normal = 1 -- 正常
 eDungeonMapState.Info = 2 -- 查看地图信息
 
+-- 枚举：副本移动回复的特殊移动类型，目前只有怪物移动会用到
+eDungeonSpecialMoveType = {}
+eDungeonSpecialMoveType.SandSlip  = 1 -- 流沙滑动
+
 -- 道具类型
 ePropType = {}
-ePropType.Normal = 0 -- 无须类型的道具
-ePropType.AddHp = 1 -- 补给
-ePropType.AddHpPercent = 2 -- 补给百分比
-ePropType.Damage = 3 -- 陷阱伤害
-ePropType.DamagePercent = 4 -- 陷阱伤害百分比
-ePropType.Box = 5 -- 宝箱
-ePropType.Rand = 6 -- 随机物品
-ePropType.TransferDoor = 7 -- 传送门
-ePropType.TransferDoorRand = 8 -- 传送门（随机）
-ePropType.TransferStage = 9 -- 传送平台
+ePropType.Normal            = 0 -- 无须类型的道具
+ePropType.AddHp             = 1 -- 补给
+ePropType.AddHpPercent      = 2 -- 补给百分比
+ePropType.Damage            = 3 -- 陷阱伤害
+ePropType.DamagePercent     = 4 -- 陷阱伤害百分比
+ePropType.Box               = 5 -- 宝箱
+ePropType.Rand              = 6 -- 随机物品
+ePropType.TransferDoor      = 7 -- 传送门
+ePropType.TransferDoorRand  = 8 -- 传送门（随机）
+ePropType.TransferStage     = 9 -- 传送平台
 ePropType.TransferStageRand = 10 -- 传送平台（随机）
-ePropType.AttackObj = 11 -- 炮台
-ePropType.AttackObjRand = 12 -- 飞来伤害
-ePropType.Buffer = 13 -- 加buff
-ePropType.AttackBack = 14 -- 击退陷阱
-ePropType.Trigger = 15 -- 触发器
-ePropType.Block = 16 -- 机关障碍
-ePropType.PushBox = 17 -- 可移动箱子
-ePropType.OnceWay = 18 -- 一次性道路
-ePropType.Palsy = 19 -- 麻痹陷阱
-ePropType.Ice = 20 -- 冰冻陷阱
-ePropType.Fire = 21 -- 燃烧陷阱
-ePropType.Thunder = 22 -- 落雷陷阱
-ePropType.Smog = 23 -- 毒雾陷阱
-ePropType.Holographic = 24 -- 全息投影
-ePropType.FieldEffect = 25 -- 场地效果
-ePropType.DisposableBox = 26 -- 首次宝箱
-ePropType.AttackObjPoised = 27 -- 蓄力炮台
-ePropType.SecendBox = 28 -- 二次宝箱(与首次宝箱互斥)
-ePropType.MonsterTrigger = 29 -- 怪物触发AI
-ePropType.WarmingPoised = 30 -- 红蓝炮台
-ePropType.Toxicide = 31 -- 解毒草
-ePropType.WarmingThunderA = 32 -- 预示落雷A
-ePropType.WarmingThunderB = 33 -- 预示落雷B
-ePropType.AddNp = 34 -- np补给
-ePropType.Spread = 35 -- 扩散陷阱
-ePropType.SpreadB = 36 -- 扩散陷阱B
-ePropType.AttackBackB = 37 -- 击退陷阱B
+ePropType.AttackObj         = 11 -- 炮台
+ePropType.AttackObjRand     = 12 -- 飞来伤害
+ePropType.Buffer            = 13 -- 加buff
+ePropType.AttackBack        = 14 -- 击退陷阱
+ePropType.Trigger           = 15 -- 触发器
+ePropType.Block             = 16 -- 机关障碍
+ePropType.PushBox           = 17 -- 可移动箱子
+ePropType.OnceWay           = 18 -- 一次性道路
+ePropType.Palsy             = 19 -- 麻痹陷阱
+ePropType.Ice               = 20 -- 冰冻陷阱
+ePropType.Fire              = 21 -- 燃烧陷阱
+ePropType.Thunder           = 22 -- 落雷陷阱
+ePropType.Smog              = 23 -- 毒雾陷阱
+ePropType.Holographic       = 24 -- 全息投影
+ePropType.FieldEffect       = 25 -- 场地效果
+ePropType.DisposableBox     = 26 -- 首次宝箱
+ePropType.AttackObjPoised   = 27 -- 蓄力炮台
+ePropType.SecendBox         = 28 -- 二次宝箱(与首次宝箱互斥)
+ePropType.MonsterTrigger    = 29 -- 怪物触发AI
+ePropType.WarmingPoised     = 30 -- 红蓝炮台
+ePropType.Toxicide          = 31 -- 解毒草
+ePropType.WarmingThunderA   = 32 -- 预示落雷A
+ePropType.WarmingThunderB   = 33 -- 预示落雷B
+ePropType.AddNp             = 34 -- np补给
+ePropType.Spread            = 35 -- 扩散陷阱
+ePropType.SpreadB           = 36 -- 扩散陷阱B
+ePropType.AttackBackB       = 37 -- 击退陷阱B
+ePropType.Rockfall          = 38 -- 落石
+
 
 -- 障碍类型
 eBlockType = {}
@@ -306,6 +318,13 @@ eTaskType.GuideStage = 16 -- 每期引导任务阶段
 eTaskType.Guide = 17 -- 每期引导任务
 eTaskType.NewYearFinish = 18 -- 新年阶段任务
 eTaskType.NewYear = 19 -- 新年任务
+eTaskType.Regression = 20 -- 回归基金任务
+eTaskType.Rogue = 21      -- 乱序演习任务
+eTaskType.RegressionTask = 22     -- 回归任务
+-- eTaskType.RegressionBind = 23     -- 回归绑定任务
+eTaskType.StarPalace = 24     -- 十二星宫任务
+
+
 
 -- 任务提示图片： 白、黄、蓝、绿
 eTaskTypeTipsImg = {}
@@ -326,8 +345,10 @@ eTaskTypeTipsImg[14] = '4' -- 每周勘探任务
 eTaskTypeTipsImg[15] = '4' -- 每期勘探任务
 eTaskTypeTipsImg[16] = '4' -- 每期引导任务阶段
 eTaskTypeTipsImg[17] = '4' -- 每期引导任务
-eTaskTypeTipsImg[101] = '5' -- 成就
-eTaskTypeTipsImg[201] = '6' -- 徽章
+eTaskTypeTipsImg[18] = '4'
+eTaskTypeTipsImg[19] = '4'
+eTaskTypeTipsImg[20] = '4'
+eTaskTypeTipsImg[21] = '4'
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -354,7 +375,8 @@ TASK_TYPE_COUNT = table.size(eTaskType)
 
 -- 按阶段完成的任务
 eStageTask = {
-    [eTaskType.Guide] = true
+    [eTaskType.Guide] = true,
+    [eTaskType.RegressionTask] = true,
 }
 
 -- 前后关联关系的任务（后边数字为接取顺序）
@@ -386,7 +408,12 @@ cTaskCfgNames = {
     [eTaskType.Guide] = 'CfgGuideTask',
     [eTaskType.GuideStage] = 'CfgGuideFinish',
     [eTaskType.NewYearFinish] = 'CfgNewYearFinish',
-    [eTaskType.NewYear] = 'CfgNewYearTask'
+    [eTaskType.NewYear] = 'CfgNewYearTask',
+    [eTaskType.Regression] = 'CfgRegressionFundTask',
+    [eTaskType.Rogue] = 'CfgRogueTask',
+    [eTaskType.RegressionTask] = 'CfgRegressionTask',
+    -- [eTaskType.RegressionBind] = 'CfgRegressionBind',
+    [eTaskType.StarPalace] = 'CfgTotalBattleTask',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -427,7 +454,7 @@ eTaskEventType.Cool = 4 -- 冷却[参数 obj]
 eTaskEventType.PassCounterpart = 5 -- 副本通关[参数 obj]
 eTaskEventType.KillMonster = 6 -- 副本通关[参数 obj]
 eTaskEventType.CardCreate = 7 -- 卡牌建造[参数 建造id]
-eTaskEventType.TaskFinish = 8 -- 卡牌建造[参数 obj]
+eTaskEventType.TaskFinish = 8 -- 完成任务
 eTaskEventType.Win = 9 -- 胜利
 eTaskEventType.Decompose = 10 -- 分解
 eTaskEventType.DpStart = 11 -- 通关星级
@@ -447,6 +474,7 @@ eTaskEventType.First = 24 -- 首次登录
 eTaskEventType.Team = 25 -- 队伍
 eTaskEventType.Skill = 26 -- 技能
 eTaskEventType.Board = 27 -- 看板
+eTaskEventType.PassGroup = 28 -- 通关关卡组
 
 eLockState = {}
 eLockState.No = 0
@@ -489,8 +517,11 @@ eTeamType = {
     TeamBoss = 25, -- 组队boss队伍
     Tower=26,--异构爬塔（普通）
     TowerDifficulty=27,--异构爬塔（困难）
+    Rogue = 28,  --乱序演习
+    TotalBattle=29,--总力战
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
     ForceFight = 10000 -- 强制上阵索引起始值
+    
 }
 
 eCardMainType = {}
@@ -583,7 +614,7 @@ CardSkinType = {}
 CardSkinType.Break = 1 -- 突破皮肤
 CardSkinType.Skin = 2 -- 额外
 --CardSkinType.Add = 3 -- 新增
-CardSkinType.JieJin = 3 -- 解禁
+--CardSkinType.JieJin = 3 -- 解禁
 
 -- 技能类型
 SkillMainType = {}
@@ -679,7 +710,10 @@ ActivityListType = {
     SignInCommon = 1007, --通用签到
     SignInShadowSpider = 1008, --迷城蛛影签到
     DropAdd= 1009, --多倍掉落活动
+    AdvBindUsersView = 2001, --引导游客绑定账号
     Exchange = 1010, --兑换活动
+    SignInGold = 1013, --2.0签到
+    AccuCharge = 1011, --累计充值
 }
 
 -- 剧情站位
@@ -865,7 +899,9 @@ TeamConfirmOpenType = {}
 TeamConfirmOpenType.Dungeon = 1 -- 副本
 TeamConfirmOpenType.Matrix = 2 -- 基地
 TeamConfirmOpenType.FieldBoss = 3 -- 战场boss
-TeamConfirmOpenType.Tower=4--编队
+TeamConfirmOpenType.Tower=4 --塔本
+TeamConfirmOpenType.Rogue=5 --
+TeamConfirmOpenType.TotalBattle =6 --十二星宫
 
 -- 商店商品的展示方式
 ShopShowType = {}
@@ -892,6 +928,7 @@ CommodityItemType.MonthCard = 5 -- 月卡
 CommodityItemType.THEME = 6 -- 宿舍主题
 CommodityItemType.FORNITURE = 7 -- 宿舍家具
 CommodityItemType.Exploration = 8 -- 勘探
+CommodityItemType.Regression = 9 -- 回归基金
 
 -- 商品道具品质背景图
 CommodityQuality = {'white.png', 'green.png', 'blue.png', 'purple.png', 'yellow.png'}
@@ -967,7 +1004,7 @@ EquipType.Normal = 1 -- 1: 普通装备
 EquipType.Material = 2 -- 2: 素材装备
 
 -----------------道具页签类型
-GoodsType = {
+GoodsType = {   
     Normal = 1, -- 普通素材
     Prop = 2 -- 消耗品
 }
@@ -984,7 +1021,8 @@ TeamOpenSetting.Normal = 1 -- 正常打开
 TeamOpenSetting.PVE = 2 -- pve编队
 TeamOpenSetting.PVP = 3 -- pvp编队
 TeamOpenSetting.Tower = 4 --爬塔编成
-
+TeamOpenSetting.Rogue = 5 --肉鸽
+TeamOpenSetting.TotalBattle=6--总力战
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1162,7 +1200,9 @@ ChannelType.TapTap = 2 -- taptap
 ChannelType.QOO = 3 -- QOO
 ChannelType.Test = 4 -- 测试人员，内部使用
 ChannelType.All = 5 -- 兑换码使用不限制平台
-ChannelType.ZiLong = 6 -- 紫龙
+ChannelType.ZiLong = 6 -- 紫龙-台湾
+ChannelType.ZiLongRK =7 -- 紫龙-韩国
+ChannelType.ZiLongJP =8 -- 紫龙-日本
 
 GenEnumNameByVal('ChannelTypeName', ChannelType)
 
@@ -1240,6 +1280,8 @@ PlrMixIx.returningPlr = 56 -- 回归玩家配置信息
 PlrMixIx.role_panel_id = 57 -- 最后设置的角色看板ID
 PlrMixIx.badged = 58 -- 徽章
 PlrMixIx.specialDrops = 59 -- 特殊掉落
+PlrMixIx.background_id = 60 -- 背景ID
+PlrMixIx.starPalace = 61 -- 十二星宫进度
 
 -- 图鉴
 ArchiveType = {}
@@ -1298,6 +1340,8 @@ eRecordType.ArmyCalFinishCnt = 17 -- [军演服使用] 已经结算的人数
 eRecordType.ArmyCalFinishIx = 18 -- [军演服使用] 结算进度值
 eRecordType.ArmyCalFinishOnceCnt = 19 -- [军演服使用] 结算进度值，每次结算的人数
 eRecordType.ArmyCalFinishUseTime = 20 -- [军演服使用] 结算使用的时间戳
+eRecordType.OffLineMailMysqlTbChange = 21 -- [中心服] 玩家离线邮件转移表数据
+eRecordType.BindPlrActiveId = 22 -- [游戏服] 绑定活动id
 
 GmInitPlrType = {}
 GmInitPlrType.Item = 1 -- 物品
@@ -1401,6 +1445,7 @@ SendSubCMD.Change = 'change'
 ShopGroup = {
     ArmyShop = 904, -- 演习兑换
     GiftShop = 3, -- 礼包商店
+    RegressionShop = 3001, -- 复归商店
 }
 
 PayType = {}
@@ -1413,12 +1458,15 @@ PayType.AlipayQR = 6 --支付宝扫码
 PayType.WeChatQR = 7 --微信扫码
 PayType.BsAli = 8 --聚合支付-支付宝
 PayType.ZiLong = 9 --紫龙
+PayType.ZiLongDeductionvoucher=10--紫龙抵扣券
+PayType.ZiLongGitPay =11 --紫龙预约和礼品发放
 
 GenEnumNameByVal('PayTypeName', PayType)
 
 PaySelectConf = {}
 PaySelectConf.Default = 1 --默认支付方式
 PaySelectConf.BsAli = 2 --启用聚合支付替换支付宝支付
+PaySelectConf.AdvPay=3--海外支付类型
 
 OpenRuleType = {}
 OpenRuleType.Lv = 1 -- 1：等级
@@ -1432,39 +1480,7 @@ CardPoolType.JustFinish = 1 -- 1：直接获取
 CardPoolType.WaitFinish = 2 -- 2：需要建造时间
 CardPoolType.GobalCreateCnt = 3 -- 3：全服抽卡次数开启
 CardPoolType.FixTimeFirstLogin = 4 -- 4：固定时间后首次登录开启
-
-------------------副本信息------------------
-DungeonInfoType = {}
-DungeonInfoType.Normal = 1
-DungeonInfoType.Tower = 2
-DungeonInfoType.Course = 3
-DungeonInfoType.Trials = 4
-DungeonInfoType.Danger = 5
-DungeonInfoType.Plot = 6
-DungeonInfoType.Feast = 7
-
-
------------------------------------------------------------------------------------------------------------------
--- 回归玩家类型
-RegressionPlrType = {}
-RegressionPlrType.Short = 1 -- 短期回归玩家
-RegressionPlrType.Long = 2 -- 长期回归玩家
-
------------------------------------------------------------------------------------------------------------------
--- 回归活动类型
-RegressionActiveType = {}
-RegressionActiveType.Sign = 1 -- 1、签到
-RegressionActiveType.DropAdd = 2 -- 2、掉落加成
-RegressionActiveType.ResourcesRecovery = 3 -- 3、找回资源
-RegressionActiveType.Fund = 4 -- 4、回归基金
-RegressionActiveType.Cloth = 5 -- 5、限时时装
-RegressionActiveType.ItemPool = 6 -- 6、回归道具池
-RegressionActiveType.Shop = 7 -- 7、回归商店
-RegressionActiveType.Tasks = 8 -- 8、回归任务
-RegressionActiveType.Banner = 9 -- 9、回归卡池
-RegressionActiveType.Show = 10 -- 10、玩法一览
-RegressionActiveType.ConsumeReduce = 11 -- 11、体力消耗减少
-
+CardPoolType.Regression = 5 -- 5：回归卡池
 
 --编队爬塔限制条件运算符类型
 TeamConditionOperator={
@@ -1489,6 +1505,41 @@ TeamConditionLimitType={
     CardID=98,--卡牌ID
     TeamItemNum=99,--队伍人数
 }
+------------------副本信息------------------
+DungeonInfoType = {}
+DungeonInfoType.Normal = 1
+DungeonInfoType.Tower = 2
+DungeonInfoType.Course = 3
+DungeonInfoType.Trials = 4
+DungeonInfoType.Danger = 5
+DungeonInfoType.Plot = 6
+DungeonInfoType.Feast = 7
+DungeonInfoType.TotalBattle = 8
+DungeonInfoType.Summer = 9
+DungeonInfoType.SummerDanger = 10
+
+-----------------------------------------------------------------------------------------------------------------
+-- 回归玩家类型
+RegressionPlrType = {}
+RegressionPlrType.Short = 1 -- 短期回归玩家
+RegressionPlrType.Long = 2 -- 长期回归玩家
+RegressionPlrType.Active = 3 -- 活跃玩家
+
+-----------------------------------------------------------------------------------------------------------------
+-- 回归活动类型
+RegressionActiveType = {}
+RegressionActiveType.Sign = 1 -- 1、签到
+RegressionActiveType.DropAdd = 2 -- 2、掉落加成
+RegressionActiveType.ResourcesRecovery = 3 -- 3、找回资源
+RegressionActiveType.Fund = 4 -- 4、回归基金
+RegressionActiveType.Cloth = 5 -- 5、限时时装
+RegressionActiveType.ItemPool = 6 -- 6、回归道具池
+RegressionActiveType.Shop = 7 -- 7、回归商店
+RegressionActiveType.Tasks = 8 -- 8、回归任务
+RegressionActiveType.Banner = 9 -- 9、回归卡池
+RegressionActiveType.Show = 10 -- 10、玩法一览
+RegressionActiveType.ConsumeReduce = 11 -- 11、体力消耗减少
+
 
 -----------------------------------------------------------------------------------------------------------------
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -1536,6 +1587,15 @@ eAchieveEventType.OverLoad = 34 -- OverLoad
 eAchieveEventType.Friend = 35 -- Friend
 eAchieveEventType.PowerAdd = 37 -- 电力总数
 eAchieveEventType.PowerFull = 38 -- 电力充裕
+
+-- 肉鸽玩法词条对象类型
+RogueBuffTarget = {}
+RogueBuffTarget.TeamAll = 1         -- 我方全体
+RogueBuffTarget.MonsterAll = 2      -- 敌方全体
+RogueBuffTarget.TeamRandom = 3      -- 我方随机
+RogueBuffTarget.MonsterRandom = 4   -- 敌方随机
+RogueBuffTarget.BothAll = 5         -- 敌我全体
+
 --切换皮肤资源类型
 SkinChangeResourceType={
     Spine=1, --Spine资源
@@ -1589,3 +1649,56 @@ eBadgedEventType.OverLoad = 34 -- OverLoad
 eBadgedEventType.Friend = 35 -- Friend
 eBadgedEventType.PowerAdd = 37 -- 电力总数
 eBadgedEventType.PowerFull = 38 -- 电力充裕
+
+--道具池相关
+--抽取类型
+ItemPoolExtractType={
+    RoundLoop=1,--轮数无限
+    RoundLimit=2,--轮数上限设置
+    Once=3,--只能抽一次
+    DropLoop=4--按同一轮的配置无限抽取
+}
+--开放条件
+ItemPoolPropType={
+    TimeLimit=1,--根据时间开放
+    Const=2,--常驻
+    Cost=3,--根据抽取道具
+    Regression=4,--回归活动
+}
+
+
+-- 绑定玩家类型
+eBindActivePlrType = {}
+eBindActivePlrType.Any = 1 -- 1：任何玩家
+eBindActivePlrType.Return = 2 -- 2：回归玩家
+eBindActivePlrType.Acitve = 3 -- 3：活跃玩家
+
+---绑定限制类型枚举
+eBindLimitType={
+    UnLimit=0,--不限制
+    Day=1,--每日上限
+    Week=2,--每周上限
+}
+
+--绑定邀请界面打开方式
+eBindInviteOpenType={
+    Invite=1,
+    Request=2,
+}
+
+--排行榜
+eRankType = {}
+eRankType.StarRank1 = 9001 --十二星宫 9001
+eRankType.StarRank2 = 9002 --十二星宫 9002
+eRankType.StarRank3 = 9003 --十二星宫 9003
+
+--收集活动类型
+eCollectType = {}
+eCollectType.Recharge = 1 --累计充值
+
+eCollectTable = {}
+eCollectTable[eCollectType.Recharge] = CfgRechargeCount
+
+-- 回归商店id
+eReturnPlrShopType = {}
+eReturnPlrShopType[3001] = true

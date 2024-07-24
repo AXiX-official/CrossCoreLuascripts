@@ -69,10 +69,15 @@ function OnClickS()
         UIUtil:OpenDialog(content, function()
             local proto = {"RegressionProto:ResourcesRecoveryGain"}
             NetMgr.net:Send(proto)
+            view:Close()
         end)
     end
 end
 
 function OnClickClose()
+    view:Close()
+end
+
+function OnClickVirtualkeysClose()
     view:Close()
 end

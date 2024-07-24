@@ -6,10 +6,13 @@ Buffer1000010080 = oo.class(BuffBase)
 function Buffer1000010080:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 战斗开始
-function Buffer1000010080:OnStart(caster, target)
-	do
-		-- 1000010080
-		self:AddNp(BufferEffect[1000010080], self.caster, self.card, nil, 50)
+-- 创建时
+function Buffer1000010080:OnCreate(caster, target)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
+	else
+		return
 	end
+	-- 1000010080
+	self:AddNp(BufferEffect[1000010080], self.caster, self.card, nil, 10)
 end

@@ -430,7 +430,7 @@ function CheckModelOpen()
 		CSAPI.SetImgColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
 		CSAPI.SetTextColor(skillImg,c1[1],c1[2],c1[3],c1[4],true);
 	end
-	if IsNil(skillImg)~=true then
+	if IsNil(aiImg)~=true then
 		CSAPI.SetImgColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
 		CSAPI.SetTextColor(aiImg,c2[1],c2[2],c2[3],c2[4],true);
 	end
@@ -438,6 +438,7 @@ end
 
 --设置页面布局
 function SetViewLayout(openSetting)
+	local hasPrefab=true;
     if openSetting==TeamOpenSetting.Normal then
 		CSAPI.SetGOActive(btn_svType2,false);
         CSAPI.SetGOActive(btn_svType,true);
@@ -446,12 +447,15 @@ function SetViewLayout(openSetting)
         CSAPI.SetGOActive(btn_svType2,false);
         CSAPI.SetGOActive(btn_svType,true);
 		CSAPI.SetGOActive(btn_list,false);
-    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower then
+    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle then
 		CSAPI.SetGOActive(btn_svType2,canAssist);
         CSAPI.SetGOActive(btn_svType,true);
 		CSAPI.SetGOActive(btn_list,false);
     end
-	CSAPI.SetGOActive(btn_prefab,openSetting~=TeamOpenSetting.Tower);
+	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle then
+		hasPrefab=false;
+	end
+	CSAPI.SetGOActive(btn_prefab,hasPrefab);
 end
 
 --刷新面板 isReset:是否重置卡牌列表，notLoadModel：是否不刷新阵盘
@@ -517,7 +521,7 @@ end
 
 function RefreshLeftInfo()
 	if teamData then
-		if openSetting==TeamOpenSetting.Tower then
+		if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle then
 			input.interactable=false;
 		else
 			input.interactable=not TeamMgr:GetTeamIsFight(teamData:GetIndex())
@@ -786,10 +790,6 @@ function OnOpenPreset(data)
     if teamData.teamName~=teamName then
         teamData.teamName=teamName;
     end
-	if openSetting==TeamOpenSetting.Tower then --剔除耐久值为0的卡
-		FormationUtil.CleanDeathTowerMember(teamData);
-		isChange=true;
-	end
     clickID=nil;
 	Refresh();
 	--播放队长出击语音
@@ -844,6 +844,11 @@ function SetSVList()
 				arr[i].canDrag=CheckCardCanPass(arr[i]);
 			end
 			svList=SortMgr:Sort2(sortID,arr,{isTower=openSetting==TeamOpenSetting.Tower})
+		elseif openSetting==TeamOpenSetting.TotalBattle then
+			for i=1,#arr do
+				arr[i].canDrag=TotalBattleMgr:IsShowCard(arr[i]:GetID());
+			end
+			svList=SortMgr:Sort2(sortID,arr,{isTotalBattle=openSetting==TeamOpenSetting.TotalBattle})
 		else
 			svList=SortMgr:Sort(sortID,arr)
 		end
@@ -857,7 +862,8 @@ function SetSVList()
 			local forceIDs = {};
 			if forceCfg then
 				for k, v in ipairs(forceCfg) do
-					table.insert(forceIDs, v.nForceID);
+					local nForceID = FormationUtil.GetNForceID(v);
+					table.insert(forceIDs, nForceID);
 				end
 			end
 			local list = RoleMgr:GetCardsByExcludeIds(forceIDs)--剔除同队强制上阵的相同roleTag类型的卡牌
@@ -916,6 +922,16 @@ function SetAssistList()
 			table.sort(svList,function(a,b)
 				local n1=a:GetID()==lockAssistID and 1 or 0;
 				local n2=b:GetID()==lockAssistID and 1 or 0
+				if n1~=n2 then
+					return n1>n2;
+				else
+					return AssistSortUtil.Sort2(a,b)
+				end
+			end)
+		elseif openSetting==TeamOpenSetting.TotalBattle then
+			table.sort(svList,function(a,b)
+				local n1=TotalBattleMgr:IsShowCard(a:GetID()) and 1 or 0;
+				local n2=TotalBattleMgr:IsShowCard(b:GetID()) and 1 or 0
 				if n1~=n2 then
 					return n1>n2;
 				else
@@ -992,6 +1008,15 @@ function LayoutCallBack(index)
 	if (selectType ~= TeamSelectType.Support  and _data:GetRoleTag()==assistTag) or (roleItem and  _data:GetRoleTag()==roleItem:GetRoleTag() and roleItem:GetIndex()~=6 and selectType==TeamSelectType.Support) then
 		isEqual=true;
 	end
+	local disDrag=false;
+	local key="TeamFormation"
+	if openSetting==TeamOpenSetting.Tower then
+		disDrag=not _data.canDrag;
+	elseif openSetting==TeamOpenSetting.TotalBattle then
+		key="TotalBattle";
+		disDrag=TotalBattleMgr:IsShowCard(_data:GetID())~=true
+		isEqual=disDrag;
+	end
 	local _elseData={
         isSelect=teamData:GetItem(_data:GetID())~=nil,
 		isCost=isCost,
@@ -1001,10 +1026,10 @@ function LayoutCallBack(index)
 		showNPC=FormationUtil.IsNPCAssist(_data:GetID()),
 		showAttr=isAddtive,
 		sr=scroll,
-		key="TeamFormation",
+		key=key,
 		canClick=enableClick,
 		sortId=sortID,
-		disDrag=not _data.canDrag,
+		disDrag=disDrag,
     };
 	local grid=layout:GetItemLua(index);
 	grid.SetIndex(index);
@@ -1030,6 +1055,8 @@ function LayoutCallBack2(index)
 		elseif canDrag~=true and FriendMgr:GetLockAssistID(sectionID)==nil then
 			canDrag=canPass;
 		end
+	elseif openSetting==TeamOpenSetting.TotalBattle then
+		canDrag=TotalBattleMgr:IsShowCard(_data:GetID());
 	end
 	local _elseData={
         isSelect=teamData:GetItem(_data:GetID())~=nil,
@@ -1254,7 +1281,8 @@ function OnCardJoin(eventData)
 			local isForce = false;
 			if forceCfg and posItem then --判断当前位置的卡牌是否是强制上阵的卡牌
 				for k, v in ipairs(forceCfg) do
-					if  v.nForceID == posItem:GetCardCfgID() then
+					local nForceID = FormationUtil.GetNForceID(v);
+					if  nForceID == posItem:GetCardCfgID() then
 						isForce = true;
 						break;
 					end
@@ -1390,7 +1418,8 @@ function Leave(_cid)
 			local isForce = false;
 			if forceCfg then
 				for k, v in ipairs(forceCfg) do
-					if teamItem and v.nForceID == teamItem:GetCardCfgID() then
+					local nForceID = FormationUtil.GetNForceID(v);
+					if teamItem and nForceID == teamItem:GetCardCfgID() then
 						isForce = true;
 						break;
 					end

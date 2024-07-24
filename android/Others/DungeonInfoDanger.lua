@@ -67,6 +67,8 @@ function SetArrows()
 end
 
 function ShowDangeLevel(isDanger,cfgs,currDanger)
+    CSAPI.SetGOActive(node,isDanger)
+    CSAPI.SetGOActive(empty,not isDanger)
     currLevel = currDanger or currLevel
     if isDanger and cfgs then
         curDatas = cfgs
@@ -81,7 +83,6 @@ function ShowDangeLevel(isDanger,cfgs,currDanger)
             -- Refresh()
         end
     end
-    CSAPI.SetGOActive(empty,not isDanger)
 end
 
 function SetEmptyStr(_str)

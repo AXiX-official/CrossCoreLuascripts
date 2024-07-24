@@ -13,8 +13,13 @@ function Skill8556:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8442
-	local count42 = SkillApi:SkillLevel(self, caster, target,3,3123)
+	-- 8422
+	local count22 = SkillApi:BuffCount(self, caster, target,1,4,650)
+	-- 8902
+	if SkillJudger:Greater(self, caster, target, true,count22,0) then
+	else
+		return
+	end
 	-- 8556
 	self:AddBuff(SkillEffect[8556], caster, self.card, data, 6500+count42)
 end

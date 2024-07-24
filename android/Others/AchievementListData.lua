@@ -86,4 +86,14 @@ function this:GetPercent()
 	return 0
 end
 
+function this:IsShow()
+	if self.info and self.info.showTime then
+		local sTime = TimeUtil:GetTimeStampBySplit(self.info.showTime)
+		if sTime and TimeUtil:GetTime() < sTime then
+			return false
+		end
+	end
+	return true
+end
+
 return this;

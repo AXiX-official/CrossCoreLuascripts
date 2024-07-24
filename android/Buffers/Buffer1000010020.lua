@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1000010020:OnCreate(caster, target)
 	-- 1000010020
-	self:AddBuffCount(BufferEffect[1000010020], self.caster, self.card, nil, 1000010021,1,5)
+	self:AddAttr(BufferEffect[1000010020], self.caster, self.card, nil, "resist",0.2)
 end

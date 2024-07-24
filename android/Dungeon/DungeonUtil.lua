@@ -242,8 +242,15 @@ function this.GetExtreMultiNum()
 				end
 			elseif cfg.regressionType ~= nil then
 				if isRegres then
-					add = add + cfg.dropAddCnt
-					regresAdd = regresAdd + cfg.dropAddCnt
+					local arr = RegressionMgr:GetArr()
+					if #arr > 0 then
+						for k, m in ipairs(arr) do
+							if m.type == RegressionActiveType.DropAdd and m.activityId == cfg.id then
+								add = add + cfg.dropAddCnt
+								regresAdd = regresAdd + cfg.dropAddCnt
+							end
+						end
+					end
 				end	
 			end			
 		end
@@ -347,24 +354,58 @@ end
 --体力消耗减少
 function this.GetExtreHotNum()
 	local add,regresAdd = 0,0
-	-- local cfgs = Cfgs.CfgDupConsumeReduce:GetAll()
-	-- local isRegres = RegressionMgr:IsHuiGui()
-	-- if cfgs then
-	-- 	for _, cfg in pairs(cfgs) do
-	-- 		if cfg.startTime and cfg.endTime then
-	-- 			local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
-	-- 			local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
-	-- 			if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
-	-- 				add = add + cfg.consumeReduce
-	-- 			end
-	-- 		elseif cfg.regressionType ~= nil then
-	-- 			if isRegres then
-	-- 				add = add + cfg.consumeReduce
-	-- 				regresAdd = regresAdd + cfg.consumeReduce
-	-- 			end	
-	-- 		end			
-	-- 	end
-	-- end
+	local cfgs = Cfgs.CfgDupConsumeReduce:GetAll()
+	local isRegres = RegressionMgr:IsHuiGui()
+	if cfgs then
+		for _, cfg in pairs(cfgs) do
+			if cfg.startTime and cfg.endTime then
+				local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
+				local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+				if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
+					add = add + cfg.consumeReduce
+				end
+			elseif cfg.regressionType ~= nil then
+				if isRegres then
+					local arr = RegressionMgr:GetArr()
+					if #arr > 0 then
+						for k, m in ipairs(arr) do
+							if m.type == RegressionActiveType.ConsumeReduce and m.activityId == cfg.id then
+								add = add + cfg.consumeReduce
+								regresAdd = regresAdd + cfg.consumeReduce			
+							end
+						end
+					end
+				end	
+			end			
+		end
+	end
 	return add,regresAdd
 end
+
+function this.IsEnough(cfg)
+	local isEnough,str = false,""
+	if cfg then
+		local cost = DungeonUtil.GetCost(cfg)
+		if cost then
+			local cur = BagMgr:GetCount(cost[1])
+			local need = cost[2]
+			isEnough = cur >= need
+			if not isEnough then
+				local _cfg = Cfgs.ItemInfo:GetByID(cost[1])
+				if _cfg and _cfg.name then
+					str = LanguageMgr:GetTips(15000,_cfg.name)
+				end
+			end
+		else
+			local cur = PlayerClient:Hot()
+			local need = math.abs(DungeonUtil.GetHot(cfg))
+			isEnough = cur >= need
+			if not isEnough then
+				str = LanguageMgr:GetTips(8013)
+			end
+		end
+	end
+	return isEnough,str
+end
+
 return this; 

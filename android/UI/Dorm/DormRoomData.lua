@@ -256,4 +256,11 @@ function this:GetSceneKey()
     return "Dorm"
 end
 
+----------------------------------------队伍预设------------------------------------------
+-- 当前使用的预设队伍id（默认1）
+function this:GetCurPresetId()
+    return 1
+end
+
+
 return this

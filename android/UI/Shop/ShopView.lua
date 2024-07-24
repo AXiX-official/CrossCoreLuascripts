@@ -43,6 +43,7 @@ local monthCardItems={};
 local newInfos=nil;--new状态数据
 local lastChildPageIDs=nil;--当前页面的二级页签的id列表
 local lastPageIDs=nil;--当前商店的页面id列表
+local layout6=nil;
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Shop_Tab_Change,OnPageChange)
@@ -135,6 +136,8 @@ function InitSVList()
     layout5 = ComUtil.GetCom(sv5, "UISV")
 	layout5:Init("UIs/Shop/SkinCommodityItem",LayoutCallBack5,true)
     layout5Tween=UIInfiniteUtil:AddUIInfiniteAnim(layout5, UIInfiniteAnimType.MoveByType2,{"RTL"});
+    layout6 = ComUtil.GetCom(leftsv, "UISV")
+	layout6:Init("UIs/Shop/ShopTabItem",LayoutCallBack6,true)
 end
 
 function OnInit()
@@ -307,25 +310,29 @@ end
 
 --初始化左边二级菜单
 function InitLeftTabs(isJump)
-    -- childTabDatas=currPageData:GetTopTabs(true);
-    if childTabDatas and next(childTabDatas) and currPageData:GetCommodityType()~=CommodityType.Promote  then
-    --     if not isJump then
-    --         childPageID=lastPageIndex==currPageIndex and childPageID or childTabDatas[1].id;
-    --     else
-    --         childPageID=childPageID or childTabDatas[1].id;
-    --     end
-    --     for k,v in ipairs(childTabDatas) do
-    --         if childPageID==v.id then
-    --             currChildPage=v;
-    --             break;
-    --         end
-    --     end
-    ItemUtil.AddItems("Shop/ShopTabItem", childTabItems, childTabDatas, leftParent, nil, 1, {sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos});
-    -- else
-    --     childTabDatas=nil;
-    --     childPageID=nil;
-    --     currChildPage=nil;
-    end
+     -- childTabDatas=currPageData:GetTopTabs(true);
+     if childTabDatas and next(childTabDatas) and currPageData:GetCommodityType()~=CommodityType.Promote  then
+        --     if not isJump then
+        --         childPageID=lastPageIndex==currPageIndex and childPageID or childTabDatas[1].id;
+        --     else
+        --         childPageID=childPageID or childTabDatas[1].id;
+        --     end
+        --     for k,v in ipairs(childTabDatas) do
+        --         if childPageID==v.id then
+        --             currChildPage=v;
+        --             break;
+        --         end
+        --     end
+         --   ItemUtil.AddItems("Shop/ShopTabItem", childTabItems, childTabDatas, leftParent, nil, 1, {sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos});
+            CSAPI.SetGOActive(leftParent,true);
+            layout6:IEShowList(#childTabDatas);
+        -- else
+        --     childTabDatas=nil;
+        --     childPageID=nil;
+        --     currChildPage=nil;
+        else
+            CSAPI.SetGOActive(leftParent,false);
+        end
 end
 
 function InitPromotes()
@@ -518,6 +525,15 @@ function LayoutCallBack4(index)
     -- item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),showType=currPageData:GetShowType()});
     item.Refresh(_data,{commodityType=currPageData:GetCommodityType(),showType=currPageData:GetShowType()});
     item.SetClickCB(OnClickGrid);
+end
+
+function LayoutCallBack6(index)
+    local _data=childTabDatas[index]
+    local item=layout6:GetItemLua(index);
+    local elseData={sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos}
+    item.Refresh(_data, elseData);
+    -- item.SetIndex(index);
+    -- item.SetClickCB(OnClickSkin);
 end
 
 function LayoutCallBack5(index)

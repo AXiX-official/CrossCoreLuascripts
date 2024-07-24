@@ -707,4 +707,13 @@ function this.DestoryRT()
     end
 end
 
+-- 奖励转成带key的 [[10040,30,2]]=》 {{id= 10010,num = 30,type = 2}}
+function this.ChangeRewards(_rewards)
+    local rewards = {}
+    for k, v in ipairs(_rewards) do
+        table.insert(rewards,{id = v[1],num = v[2],type = v[3]})
+    end
+    return rewards
+end
+
 return this

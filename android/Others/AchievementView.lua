@@ -1,8 +1,9 @@
-local leftCfgs = {}
+local leftDatas = {}
 local panels = {}
 local lastPanel = nil
 curIndex1, curIndex2 = 1, 0 -- 父index,子index
 local recoverNews = {}
+local refreshTime,time,timer = 0,0,0
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -17,27 +18,81 @@ function OnDestroy()
     eventMgr:ClearListener()
 end
 
+function Update()
+    if time > 0 and timer < Time.time then
+         timer = Time.time + 1
+         time = refreshTime - TimeUtil:GetTime()
+         if time <= 0 then
+             RefreshDatas()
+             if time > 0 then
+                 InitLeftPanel()
+                 RefreshPanel()            
+             end
+         end
+    end 
+ end
+
 function OnOpen()
-    InitDatas()
+    RefreshDatas()
     InitJumpState()
     InitLeftPanel()
     RefreshPanel()
 end
 
-function InitDatas()
-    if #leftCfgs < 1 then
-        local cfgs = Cfgs.CfgAchieveType:GetAll()
-        if cfgs == nil then
-            LogError("配置表信息丢失！！！CfgAchieveType")
-            return
+function RefreshDatas()
+    leftDatas = {}
+    refreshTime = 0
+    local cfgs = Cfgs.CfgAchieveType:GetAll()
+    if cfgs == nil then
+        return
+    end
+    for _, cfg in pairs(cfgs) do
+        local data ={cfg = cfg,infos = {}}
+        if cfg.infos and #cfg.infos > 0 then
+            for _, info in ipairs(cfg.infos) do
+                if info.showTime then
+                    local sTime = TimeUtil:GetTimeStampBySplit(info.showTime)
+                    if sTime then
+                        if TimeUtil:GetTime() >= sTime then
+                            table.insert(data.infos, info)
+                        elseif refreshTime == 0 or refreshTime > sTime then
+                            refreshTime = sTime
+                        end
+                    end
+                else
+                    table.insert(data.infos, info)
+                end
+            end
         end
-        for _, cfg in pairs(cfgs) do
-            table.insert(leftCfgs,cfg)
-        end
-        if #leftCfgs > 0 then
-            table.sort(leftCfgs,function (a,b)
-                return a.sort < b.sort
+        if #data.infos > 0 then
+            table.sort(data.infos,function (a,b)
+                return a.index < b.index
             end)
+        end
+        table.insert(leftDatas,data)
+    end
+    if #leftDatas > 0 then
+        table.sort(leftDatas,function (a,b)
+            return a.cfg.sort < b.cfg.sort
+        end)
+    end
+
+    time = refreshTime > 0 and refreshTime - TimeUtil:GetTime() or 0
+    timer = 0
+end
+
+function InitJumpState()
+    if openSetting and openSetting.group then
+        if #leftDatas > 0 then
+            for k, data in ipairs(leftDatas) do
+                if data.infos and #data.infos>0 then
+                    for i, v in ipairs(data.infos) do
+                        if v.typeNum == openSetting.group then
+                            curIndex1,curIndex2 = k + 1, i
+                        end
+                    end
+                end
+            end
         end
     end
 end
@@ -47,38 +102,21 @@ function InitLeftPanel()
         local go = ResUtil:CreateUIGO("Common/LeftPanel", leftParent.transform)
         leftPanel = ComUtil.GetLuaTable(go)
     end
-    local leftDatas,leftChildDatas = {{47100,"ActivityList/icon1"}},{{}} -- 多语言id，需要配置英文 -- 子项多语言，需要配置英文
-    if #leftCfgs > 0 then
-        for _, cfg in ipairs(leftCfgs) do
-            table.insert(leftDatas,{cfg.leftInfo[1].id,cfg.leftInfo[1].path})
+    local _leftDatas,_leftChildDatas = {{47100,"ActivityList/icon1"}},{{}} -- 多语言id，需要配置英文 -- 子项多语言，需要配置英文
+    if #leftDatas > 0 then
+        for _, data in ipairs(leftDatas) do
+            table.insert(_leftDatas,{data.cfg.leftInfo[1].id,data.cfg.leftInfo[1].path})
             local _data = {}
-            if cfg.infos then
-                for i, v in ipairs(cfg.infos) do
+            if data.infos then
+                for i, v in ipairs(data.infos) do
                     table.insert(_data,v.childId)
                 end
             end
-            table.insert(leftChildDatas,_data)
+            table.insert(_leftChildDatas,_data)
         end
     end
-    leftPanel.Init(this, leftDatas, leftChildDatas)
+    leftPanel.Init(this, _leftDatas, _leftChildDatas)
 end
-
-function InitJumpState()
-    if openSetting and openSetting.group then
-        if #leftCfgs > 0 then
-            for k, cfg in ipairs(leftCfgs) do
-                if cfg.infos and #cfg.infos>0 then
-                    for i, v in ipairs(cfg.infos) do
-                        if v.typeNum == openSetting.group then
-                            curIndex1,curIndex2 = k + 1, v.index
-                        end
-                    end
-                end
-            end
-        end
-    end
-end
-
 
 function RefreshPanel()
     ShowRightPanel()
@@ -112,9 +150,9 @@ end
 
 function GetData()
     if curIndex1 > 1 then
-        local cfg = leftCfgs[curIndex1 - 1]
-        if cfg.infos and cfg.infos[curIndex2] and cfg.infos[curIndex2].typeNum then
-            return AchievementMgr:GetListData(cfg.infos[curIndex2].typeNum)
+        local data = leftDatas[curIndex1 - 1]
+        if data.infos and data.infos[curIndex2] and data.infos[curIndex2].typeNum then
+            return AchievementMgr:GetListData(data.infos[curIndex2].typeNum)
         end
     end
     return nil
@@ -138,13 +176,13 @@ function SetRed()
         local isRed = false
         if i == 1 then
             isRed = AchievementMgr:CheckRed()
-        elseif leftCfgs[i - 1] then
-            isRed = AchievementMgr:CheckRed2(leftCfgs[i - 1].id)
+        elseif leftDatas[i - 1] then
+            isRed = AchievementMgr:CheckRed2(leftDatas[i - 1].id)
         end
         v.SetRed(isRed)
     end
     for i, v in ipairs(leftPanel.leftChildItems) do
-        local infos = leftCfgs[i-1] and leftCfgs[i-1].infos or nil
+        local infos = leftDatas[i-1] and leftDatas[i-1].infos or nil
         for k, m in ipairs(v) do
             local isRed = false
             if infos and infos[k] then
@@ -169,3 +207,6 @@ function OnClickHome()
     RefreshNew()
     UIUtil:ToHome();
 end
+
+
+

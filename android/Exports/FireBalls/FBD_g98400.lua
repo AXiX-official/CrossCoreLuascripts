@@ -21,7 +21,7 @@ time=2000,type=0
 [-1485114200]={
 {delay=8900,time=4000,type=1,hit_type=1,hits={0}},
 {delay=8500,time=4000,type=1,hit_type=1,hits={0}},
-{effect="cast4_eff",time=11000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fifteen.acb",cue_name="Gemini_attack_skill_03"},
+{effect="cast4_eff",time=10800,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fifteen.acb",cue_name="Gemini_attack_skill_03"},
 {delay=9300,time=4000,type=1,hit_type=1,hits={0}},
 {delay=3200,time=4000,type=1,hit_type=1,hit_creates={226809859},hits={0}}
 },

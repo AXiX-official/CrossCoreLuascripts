@@ -104,7 +104,7 @@ function SetRoleItemAnim()
 end
 
 function ItemClickCB()
-    CSAPI.OpenView("DormSetRoleList", buildingData:GetID())
+    CSAPI.OpenView("DormSetRoleList", {buildingData:GetID()})
 end
 
 function SetMiddle()
@@ -216,7 +216,7 @@ function CalMaxCount()
 end
 
 function OnClickRolePoint()
-    CSAPI.OpenView("DormSetRoleList", buildingData:GetID())
+    CSAPI.OpenView("DormSetRoleList", {buildingData:GetID()})
 end
 
 function CountChange()

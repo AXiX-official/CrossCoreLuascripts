@@ -79,6 +79,8 @@ function Refresh(_cardData, _elseData)
             UIUtil:SetRedPoint(red, isRed)
             CSAPI.SetGOActive(red, isRed)
         end
+        --  
+        SetJieJin()
     end
     SetSelect(elseData.isSelect)
     -- 天赋升级，分解，支援卡,批量锁定  
@@ -359,3 +361,11 @@ function SetPro()
     CSAPI.SetGOActive(proObj, not StringUtil:IsEmpty(str))
 end
 
+function SetJieJin()
+    if(elseData and elseData.isJieJin) then 
+        CSAPI.SetGOActive(format, false)
+        CSAPI.SetGOActive(state, false)
+        ActiveClick(false)
+        CSAPI.SetGOActive(new, false)
+    end 
+end

@@ -11,10 +11,3 @@ function Buffer4400202:OnCreate(caster, target)
 	-- 4400202
 	self:AddAttr(BufferEffect[4400202], self.caster, target or self.owner, nil,"speed",10*self.nCount)
 end
--- 攻击结束
-function Buffer4400202:OnAttackOver(caster, target)
-	-- 8490
-	local c90 = SkillApi:GetCount(self, self.caster, target or self.owner,4,4400201)
-	-- 4400211
-	self:LimitDamage(BufferEffect[4400211], self.caster, target or self.owner, nil,1,0.15*c90)
-end

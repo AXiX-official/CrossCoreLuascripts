@@ -6,7 +6,6 @@ local hasCallFunc = false;
 local isShowLvBar = false
 
 local bIsWin = false
-local isPVPWin = false
 local fightOverData = nil
 local sceneType = nil
 
@@ -57,6 +56,29 @@ function OnOpen()
     
     sceneType = data.sceneType -- 在FightActionFightEnd添加的
 
+    --如果是肉鸽,如果是非最终轮胜利,不用显示结算
+    --如果任意轮是保存进度退出，不用显示结算
+    if(sceneType==SceneType.Rogue) then 
+        if(data.bIsWin and data.elseData.round<RogueMgr:GetCurData2():GetLimitRound()) then 
+            FriendMgr:ClearAssistData();
+            TeamMgr:ClearAssistTeamIndex();
+            TeamMgr:ClearFightTeamData();
+            CSAPI.SetScale(gameObject,0,0,0)
+            FightClient:Clean()
+            RogueMgr:NeedToBuffView(true)
+            RogueMgr:FightToBack(false, data.elseData.group)
+            return
+        elseif(data.elseData.quitType==2 and data.elseData.save)then 
+            FriendMgr:ClearAssistData();
+            TeamMgr:ClearAssistTeamIndex();
+            TeamMgr:ClearFightTeamData();
+            CSAPI.SetScale(gameObject,0,0,0)
+            FightClient:Clean()
+            RogueMgr:FightToBack(data.elseData.save, data.elseData.group)
+            return
+        end 
+    end 
+
     bIsWin = GetIsWin(sceneType)
 
     --FightProto:DuplicateOver整合的数据
@@ -85,9 +107,12 @@ end
 function GetIsWin(_sceneType)
     if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror) then
         return true
-    elseif _sceneType == SceneType.PVP then
-        isPVPWin = data.bIsWin
-        return true
+    elseif _sceneType == SceneType.PVE then
+        local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+        if cfg and cfg.type == eDuplicateType.StarPalace then
+            return true             
+        end
+        return data.bIsWin
     else
         return data.bIsWin
     end
@@ -169,6 +194,11 @@ function ApplyQuit()
         DungeonMgr:Quit(not bIsWin);
     elseif (sceneType == SceneType.GuildBOSS) then
         GuildFightMgr:FightQuit();
+    elseif (sceneType == SceneType.Rogue) then
+        FriendMgr:ClearAssistData();
+        TeamMgr:ClearAssistTeamIndex();
+        TeamMgr:ClearFightTeamData();
+        RogueMgr:FightToBack(not data.bIsWin, data.elseData.group) --最终轮
     end
 end
 

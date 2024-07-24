@@ -103,7 +103,10 @@ function CreateEffect()
         return;
     end
 
-    if(IsSkip() and not DontRemoveWhenSkip())then
+    --if(IsSkip() and not DontRemoveWhenSkip())then
+    --    return;
+    --end
+    if(IsSkip())then
         return;
     end
     
@@ -137,7 +140,7 @@ function DontRemoveWhenSkip()
 end
 
 function IsSkip()
-    return FightActionMgr:IsSkiping() or FightActionMgr:GetAutoSkipNext();
+    return FightActionMgr:IsSkiping() or FightActionMgr:GetAutoSkipNext() or character.IsSkipSkill();
 end
 
 function PlaySound()
@@ -167,6 +170,11 @@ end
 
 --摄像机震动
 function ApplyCameraShake()
+    if(IsSkip())then
+        return;
+    end
+
+
     local shakeData = cfg.camera_shake;
     if(shakeData == nil)then
         return;
@@ -229,8 +237,12 @@ function ApplyHits()
                         dis = dis - hitDisOffset;
                         delayAdd = math.max(0,math.floor(dis * hitDelayCoeff));
                     end
-                                  
-                    FuncUtil:Call(func,nil,hitDelay + delayAdd,targetCharacter); 
+                           
+                    if(IsSkip())then   
+                        func(targetCharacter);
+                    else                        
+                        FuncUtil:Call(func,nil,hitDelay + delayAdd,targetCharacter); 
+                    end
                 end
             end
         end

@@ -98,7 +98,7 @@ function InitListener()
 	eventMgr:AddListener(EventType.Battle_UI_BlackShow, OnBlackClose);
 	eventMgr:AddListener(EventType.AIPreset_Battle_SetRet,OnAISetRet)
 
-	eventMgr:AddListener(EventType.Mission_List, OnTowerRedRefresh)
+	eventMgr:AddListener(EventType.Mission_List, OnRedPointRefresh)
 end
 
 --锁定点击
@@ -620,7 +620,7 @@ end
 
 --初始化关卡信息
 function InitDungeonInfo()
-	OnTowerRedRefresh()
+	OnRedPointRefresh()
 	-- local dungeonCfg=dungeonData:GetCfg();
 	--初始化特殊条件
 	-- InitStarInfo();
@@ -915,23 +915,32 @@ function OnClickSetting()
 	end
 end
 
-function OnTowerRedRefresh()
-	local isRed = false
+function OnRedPointRefresh()
 	if dungeonData then
-		local missionDatas = MissionMgr:GetActivityDatas(eTaskType.TmpDupTower, dungeonData:GetCfg().missionID)
-		if missionDatas then
-			for _, missData in ipairs(missionDatas) do
-				if missData:IsFinish() and not missData:IsGet() then
-					isRed = true
-					break
-				end
+		local cfg = dungeonData:GetCfg()
+		local isRed = false
+		if cfg.type == eDuplicateType.Tower then
+			isRed = CheckRed(eTaskType.TmpDupTower,cfg.missionID)
+		elseif cfg.type == eDuplicateType.TaoFa then
+			isRed = CheckRed(eTaskType.DupTaoFa,cfg.group)
+		end
+		SetRed(isRed)
+	end
+end
+
+function CheckRed(_type, _group)
+	local datas = MissionMgr:GetActivityDatas(_type, _group)
+	if datas and #datas > 0 then
+		for i, v in ipairs(datas) do
+			if v:IsFinish() and not v:IsGet() then
+				return true
 			end
 		end
 	end
-	SetTowerRed(isRed)
+	return false
 end
 
-function SetTowerRed(b)
+function SetRed(b)
 	UIUtil:SetRedPoint2("Common/Red2", redParent, b, 0,0, 0)
 end
 
@@ -939,10 +948,16 @@ function OnClickMission()
 	if dungeonData then
 		local cfg = dungeonData:GetCfg()
 		if cfg then
+			local _type = eTaskType.TmpDupTower
+			local _group = cfg.missionID
+			if cfg.type == eDuplicateType.TaoFa then
+				_type = eTaskType.DupTaoFa
+				_group = cfg.group
+			end
 			CSAPI.OpenView("MissionActivity", {
-				type = eTaskType.TmpDupTower,
+				type = _type,
 				title = LanguageMgr:GetByID(6018, cfg.name),
-				group = cfg.missionID
+				group = _group
 			})
 		end
 	end

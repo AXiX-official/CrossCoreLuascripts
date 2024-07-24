@@ -66,7 +66,7 @@ function InitSkinData()
     if(isMonster) then 
         cardCfgID = cardData:GetCfg().card_id
     end
-    local infos = RoleSkinMgr:GetDatas(cardData:GetRoleID())
+    local infos = RoleSkinMgr:GetDatas(cardData:GetRoleID(),true)
     for i, v in pairs(infos) do
         if (v:IsThisCard(cardCfgID)) then
             table.insert(_curDatas, v)
@@ -92,7 +92,6 @@ function InitSkinData()
     useIndex = GetBaseIndex() -- 当前使用的
     isLive2D = cardData:GetSkinIsL2d()
     curIndex = curIndex ~= nil and curIndex or useIndex -- 当前点中的
-
     -- items 
     svUtil:Init(layout, #curDatas, {274, 422}, 7, 0.1, 0.5)
     layout:IEShowList(#curDatas, FirstCB, curIndex)

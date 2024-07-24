@@ -1,5 +1,5 @@
 local cfg = nil
-local data = nil
+local data = nil --dungeonData
 local sectionData = nil
 local slider = nil
 
@@ -13,14 +13,23 @@ function Refresh(tab)
     sectionData = tab.sectionData
     if cfg then
         SetName()
-        SetSlider()
+        SetNum()
     end
 end
 
 function SetName()
-    CSAPI.SetText(txtName,cfg.name)
+    CSAPI.SetText(txtName, cfg.name)
 end
 
-function SetSlider()
-    slider.value = 1
+function SetNum()
+    local max = cfg.hp or 1
+    local cur = max
+    if TotalBattleMgr:IsFighting() then
+        local fightInfo = TotalBattleMgr:GetFightInfo()
+        if fightInfo and fightInfo.id == cfg.id then
+            cur = TotalBattleMgr:GetFightBossHp()
+        end
+    end
+    slider.value = cur / max
+    CSAPI.SetText(txtNum,cur.."/"..max)
 end

@@ -8,7 +8,7 @@ function Skill984000101:Init(skillID, card)
 end
 -- 执行技能
 function Skill984000101:DoSkill(caster, target, data)
-	-- 11002
+	-- 11001
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11002], caster, target, data, 0.5,2)
+	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
 end

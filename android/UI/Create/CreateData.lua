@@ -18,6 +18,10 @@ function this:SetData(cfg)
     self.last_op = nil -- 最后一次数据，中途重登时使用，如果没有，则从logs中获取
     self.isSave = false -- 当前抽卡结果是否已保存到logs
     self.isDy = false
+    if(self.cfg.nType==4 or self.cfg.nType==5) then 
+        self.isDy = true 
+        self.dyEndTime = 0 
+    end 
 end
 
 function this:GetCfg()

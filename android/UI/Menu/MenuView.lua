@@ -1,6 +1,7 @@
 --[[1、遍历所有anim，赋值target，查找丢失的
 2、按需求激活或者关闭对应的anim（开启记录需要保存到本地）
 3、激活note和anim，在规定时间激活额外动画，动画完成
+Loading_Complete=>L2dIn(界面动画、刷新界面数据、生成角色)=>角色生成完isAnim = true=>2s后 StopAnim=》OnLoadingComplete
 ]] require "LoginCommFuns"
 local menuRedPath = "Common/Red2"
 local menuLockPath = "Menu/MenuLock"
@@ -31,6 +32,10 @@ local rRunTime
 local rFastestData
 local isReady = false
 
+-- 回归活动
+local regresTime = 0
+local regresTimer = 0
+
 local isLoading_Complete = false
 local menuBuyItem
 -- local endAnim
@@ -45,11 +50,13 @@ local enterRefreshTime = nil
 local talkTxtIsShow = true -- 聊天文本框
 local talkTxtIsShowSaveKey = "talkTxtIsShow"
 local isTalk = false
-
+local isNeedToShowMenuBuy = false
+local resRecoveryEndTime = nil
 -- 主界面
 function Awake()
     cg_node = ComUtil.GetCom(node, "CanvasGroup")
     enterSV_sv = ComUtil.GetCom(enterSV, "ScrollRect")
+    groupsv_sv = ComUtil.GetCom(groupsv, "ScrollRect")
     -- endAnim = ComUtil.GetCom(node, "ActionBase")
 
     -- init
@@ -74,6 +81,8 @@ function Awake()
 
     local value = PlayerPrefs.GetInt(talkTxtIsShowSaveKey)
     talkTxtIsShow = value == 0
+
+    CSAPI.SetGOActive(mask, true)
 end
 
 function InitPanel()
@@ -185,9 +194,19 @@ function InitListener()
     -- 重置金额刷新
     eventMgr:AddListener(EventType.Pay_Amount_Change, SetMenuBuy)
     -- 回归判断(3点会更新)
-    eventMgr:AddListener(EventType.HuiGui_Check, SetResRecoveryBtn)
+    eventMgr:AddListener(EventType.HuiGui_Check, SetRegressionBtn)
     -- 资源找回 
     eventMgr:AddListener(EventType.HuiGui_Res_Recovery, SetResRecoveryBtn)
+    -- 改名
+    eventMgr:AddListener(EventType.Player_EditName, function()
+        CSAPI.SetText(txtName, PlayerClient:GetName())
+    end)
+    -- 活动表动态更改
+    eventMgr:AddListener(EventType.CfgActiveEntry_Change, function()
+        enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
+        SetEnter()
+    end)
+
 end
 
 function OnDestroy()
@@ -504,22 +523,28 @@ function OnLoadingComplete()
         return
     end
 
+    -- 检测邀请
+    MenuMgr:CheckInviteTips()
+
     -- 功能解锁
     if (CheckModelOpen()) then
         return
     end
 
+    local b = false
     FightProto:ShowRestoreFightDialog(not isGuide);
     if (isGuide) then
         TriggerGuide();
+        b = true
     else
-        EActivityGetCB();
+        b = EActivityGetCB();
     end
 
     ShowHint(true);
     EventMgr.Dispatch(EventType.Main_Enter);
-    -- 检测邀请
-    MenuMgr:CheckInviteTips()
+    if (not b) then
+        PlayLoginVoice()
+    end
 end
 
 local curTime = 0
@@ -637,6 +662,20 @@ function Update()
             HeadIconMgr:RefreshDatas()
         end
     end
+
+    -- if (CollaborationMgr:GetNextBeginTime() > 0 and curTime > CollaborationMgr:GetNextBeginTime()) or
+    --     (CollaborationMgr:GetNextEndTime() > 0 and curTime > CollaborationMgr:GetNextEndTime()) then
+    --     CollaborationMgr:Clear();
+    --     RegressionProto:PlrBindInfo();
+    -- end
+
+    -- 回归活动
+    RegresUpdate()
+
+    --资源找回
+    if(resRecoveryEndTime~=nil and TimeUtil:GetTime()>resRecoveryEndTime) then 
+        SetResRecoveryBtn()
+    end 
 end
 ----------------------------------------动画+红点-----------------------------------------------】
 -- 处理动画在某个关键帧上的事件
@@ -658,13 +697,13 @@ function Anim()
         SetLocks()
     end
     -- 播放设置看板的声音
-    if ((Time.time - animTimer) > 1.11 and isPlayVoiceFirst == nil) then
-        isPlayVoiceFirst = 1
-        local isPlay = PlayLoginVoice()
-        if (not isPlay) then
-            isChangeImgPlayVoice = true -- 如果未播放，则设置为关闭所有界面时再检测一次
-        end
-    end
+    -- if ((Time.time - animTimer) > 1.11 and isPlayVoiceFirst == nil) then
+    --     isPlayVoiceFirst = 1
+    --     local isPlay = PlayLoginVoice()
+    --     if (not isPlay) then
+    --         isChangeImgPlayVoice = true -- 如果未播放，则设置为关闭所有界面时再检测一次
+    --     end
+    -- end
     -- 任务bar
     if ((Time.time - animTimer) > 1.07 and isShowMissionBar == nil) then
         isShowMissionBar = 1
@@ -821,20 +860,27 @@ function OnRedPointRefresh()
     end
 
     -- 活动（特别...）
-    -- isOpen = true
-    -- if (isOpen) then
-    --     local _aData = RedPointMgr:GetData(RedPointType.ActivityList3)
-    --     local isRed = false
-    --     if _aData and #_aData > 0 then
-    --         for k, v in ipairs(_aData) do
-    --             if v.b == 1 then
-    --                 isRed = true
-    --                 break
-    --             end
-    --         end
-    --     end
-    --     UIUtil:SetRedPoint2(menuRedPath, btnSpecialGifts, isRed, 122, 39, 0)
-    -- end
+    isOpen = true
+    if (isOpen) then
+        local _aData = RedPointMgr:GetData(RedPointType.ActivityList3)
+        local isRed = false
+        if _aData and #_aData > 0 then
+            for k, v in ipairs(_aData) do
+                if v.b == 1 then
+                    isRed = true
+                    break
+                end
+            end
+        end
+        UIUtil:SetRedPoint2(menuRedPath, btnSpecialGifts, isRed, 122, 39, 0)
+    end
+
+    -- 活动（回归）
+    isOpen = true
+    if (isOpen) then
+        local _aData = RedPointMgr:GetData(RedPointType.Regression)
+        UIUtil:SetRedPoint2(menuRedPath, btnRegression, _aData ~= nil, 122, 39, 0)
+    end
 
     -- 商店
     isOpen = lockData["ShopView"]
@@ -1134,9 +1180,13 @@ function SetLeft()
 
     SetActivityBtn()
 
-    SetResRecoveryBtn()
+    SetSpecialGiftsBtn()
 
-    -- SetSpecialGiftsBtn()
+    SetRegressionBtn()
+
+
+
+    SetResRecoveryBtn()
 end
 
 -- 等级经验条
@@ -1231,23 +1281,34 @@ end
 
 -- 资源找回
 function SetResRecoveryBtn()
-    -- local isShow = false
-    -- if (RegressionMgr:CheckHadActivity(RegressionActiveType.ResourcesRecovery) and
-    --     not RegressionMgr:CheckResRecoveryIsGain()) then
-    --     isShow = true
-    -- end
-    -- CSAPI.SetGOActive(btnResRecovery, isShow)
-    -- if (isShow) then
-    --     local isRed = not RegressionMgr:CheckResRecoveryIsGain()
-    --     UIUtil:SetRedPoint(btnResRecovery, isRed, 123, 31, 0)
-    -- end
+    local isShow = false
+    resRecoveryEndTime = nil 
+    local _resRecoveryEndTime = RegressionMgr:GetActivityEndTime(RegressionActiveType.ResourcesRecovery)
+    if (_resRecoveryEndTime>TimeUtil:GetTime() and  RegressionMgr:CheckHadActivity(RegressionActiveType.ResourcesRecovery) and
+        not RegressionMgr:CheckResRecoveryIsGain()) then
+        isShow = true
+        resRecoveryEndTime = _resRecoveryEndTime
+    end
+    CSAPI.SetGOActive(btnResRecovery, isShow)
+    if (isShow) then
+        local isRed = not RegressionMgr:CheckResRecoveryIsGain()
+        UIUtil:SetRedPoint(btnResRecovery, isRed, 123, 31, 0)
+    end
 end
 
 -- 特别馈赠
 function SetSpecialGiftsBtn()
-    -- local isShow = not ActivityMgr:IsActivityListNull("SpecialActivityView", 3)
-    -- CSAPI.SetGOActive(btnSpecialGifts, true)
+    local isShow = not ActivityMgr:IsActivityListNull("SpecialActivityView", 3)
+    CSAPI.SetGOActive(btnSpecialGifts, isShow)
 end
+
+-- 回归活动
+function SetRegressionBtn()
+    CSAPI.SetGOActive(btnRegression, RegressionMgr:IsHuiGui() and #RegressionMgr:GetArr() > 0)
+    regresTime = RegressionMgr:GetTime()
+    regresTimer = 0
+end
+
 
 ----------------------------------------right-----------------------------------------------
 function SetRight()
@@ -1266,7 +1327,7 @@ function SetEnter()
     local datas = {}
     local curTime = TimeUtil:GetTime()
     local cfgs = Cfgs.CfgActiveEntry:GetAll()
-    for k, v in ipairs(cfgs) do
+    for k, v in pairs(cfgs) do
         local begTime = TimeUtil:GetTimeStampBySplit(v.begTime) -- GCalHelp:GetTimeStampBySplit(v.begTime)
         local endTime = TimeUtil:GetTimeStampBySplit(v.endTime) -- GCalHelp:GetTimeStampBySplit(v.endTime)
         if (v.mainShow == 1 and curTime >= begTime and curTime < endTime) then
@@ -1409,7 +1470,7 @@ function SetBG()
     local curBGID = PlayerClient:GetBG()
     local cfg = Cfgs.CfgMenuBg:GetByID(curBGID)
     if (cfg and cfg.name) then
-        ResUtil:LoadBigImg2(bg, "UIs/BGs/" .. cfg.name .. "/bg", false)
+        ResUtil:LoadMenuBg(bg, "UIs/" .. cfg.name, false)
     end
 end
 
@@ -1611,16 +1672,27 @@ function OnViewOpened(viewKey)
     end
 
     local cfg = Cfgs.view:GetByKey(viewKey)
-    if (IsNeedAdd(viewKey) or (viewKey ~= "Menu" and cfg and not cfg.layer and not cfg.is_window)) then
-        openViews[viewKey] = 1
-        if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView" and viewKey ~= "MenuBuyPanel" and viewKey ~= "ResRecovery") then
+    if (not cfg.top_mask) then
+        openViews[viewKey] = cfg.is_window and 2 or 1
+        local cfg = Cfgs.view:GetByKey(viewKey)
+        if (not cfg.is_window) then
             RoleAudioPlayMgr:StopSound() -- 有其它界面打开则中断语音
         end
-
-        HidePanel(viewKey)
+        HidePanel(viewKey, true)
     end
 
-    CreateEffect()
+    -- local cfg = Cfgs.view:GetByKey(viewKey)
+    -- if (IsNeedAdd(viewKey) or (viewKey ~= "Menu" and cfg and not cfg.layer and not cfg.is_window)) then
+    --     openViews[viewKey] = 1
+    --     if (viewKey ~= "RoleBreakSuccess" and viewKey ~= "CreateShowView" and viewKey ~= "MenuBuyPanel" and viewKey ~=
+    --         "ResRecovery") then
+    --         RoleAudioPlayMgr:StopSound() -- 有其它界面打开则中断语音
+    --     end
+
+    --     HidePanel(viewKey, true)
+    -- end
+
+    -- CreateEffect()
 end
 
 -- 其它界面关闭
@@ -1634,9 +1706,9 @@ function OnViewClosed(viewKey)
         SetDisplay()
     end
 
-    if (not SceneMgr:IsMajorCity()) then
-        return
-    end
+    -- if (not SceneMgr:IsMajorCity()) then
+    --     return
+    -- end
 
     if (not openViews[viewKey]) then
         -- 是不影响的界面，将不处理下面的逻辑	
@@ -1644,14 +1716,17 @@ function OnViewClosed(viewKey)
     end
 
     openViews[viewKey] = nil
-
-    HidePanel(viewKey)
+    HidePanel(viewKey, false)
 
     if (not CheckIsTop()) then
         return
     end
 
-    CreateEffect()
+    if (not SceneMgr:IsMajorCity()) then
+        return
+    end
+
+    -- CreateEffect()
 
     if (loadingComplete == nil) then
         return -- 动画未播完
@@ -1661,16 +1736,19 @@ function OnViewClosed(viewKey)
         return -- 入场动画
     end
 
-    --EndCB() -- 执行语音循环播放
-
-    PlayLoginVoice()
+    -- EndCB() -- 执行语音循环播放
+    -- PlayLoginVoice()
 
     -- 功能解锁
     if (CheckModelOpen()) then
         return
     end
 
-    CheckPopUpWindow();
+    if (CheckPopUpWindow()) then
+        return
+    end
+
+    PlayLoginVoice()
 
     --
     ShowHint(true)
@@ -1680,8 +1758,9 @@ function CheckPopUpWindow()
     local isGuide = GuideMgr:HasGuide("Menu") or GuideMgr:IsGuiding();
     if (isGuide) then
         TriggerGuide();
+        return true
     else
-        EActivityGetCB();
+        return EActivityGetCB();
     end
 end
 
@@ -1689,18 +1768,17 @@ end
 function CheckIsTop()
     for i, v in pairs(openViews) do
         if (v ~= nil) then
-            -- 还有界面，主界面不是在最上层
             return false
         end
     end
     return true
 end
 
---
+-- 主界面是否在最上（忽略窗口型界面）
 function CheckIsTop2()
     for i, v in pairs(openViews) do
-        if (i ~= "Guide" and v ~= nil) then
-            -- 还有界面，主界面不是在最上层
+        -- if (i ~= "Guide" and v ~= nil) then
+        if (v == 1) then
             return false
         end
     end
@@ -1745,48 +1823,70 @@ end
 -- @return 
 -- ==============================--
 function EActivityGetCB()
+    if (loadingComplete == nil) then
+        return true -- 动画未播完
+    end
 
     -- 公告活动
     if (ActivityMgr:ToShowAD()) then
         CSAPI.OpenView("ActivityView")
-        return
+        return true
     end
 
     -- 签到 签到记录接收完毕，检测自动签到 
     if (SignInMgr:CheckAll()) then
-        return
+        return true
     end
 
     -- 解禁数据
-    --if (RoleMgr:GetJieJinDatas()) then
-    --    CSAPI.OpenView("RoleJieJinSuccess")
-    --    return
-    --end
-
-    -- 资源找回 
-    -- if (RegressionMgr:CheckNeedShow()) then
-    --     CSAPI.OpenView("ResRecovery")
-    --     return
+    -- if (RoleMgr:GetJieJinDatas()) then
+    --     CSAPI.OpenView("RoleJieJinSuccess")
+    --     return true
     -- end
 
-    -- 付费弹窗 所有界面关闭的0.2后才打开界面（因为有可能是跳转触发的关闭所有界面）
-    if (isCheckTime == nil or Time.time > (isCheckTime + 0.2)) then
-        isCheckTime = Time.time
-        FuncUtil:Call(EActivityGetCB2, nil, 200)
+    -- 资源找回 
+    if (RegressionMgr:CheckNeedShow()) then
+        CSAPI.OpenView("ResRecovery")
+        return true
+    end
+    
+    if(RoleMgr:GetJieJinDatas()) then
+        CSAPI.OpenView("RoleJieJinSuccess")
     end
 
+    if (isNeedToShowMenuBuy) then
+        return true
+    elseif (not isNeedToShowMenuBuy and menuBuyItem ~= nil and menuBuyItem.gameObject.activeSelf and
+        MenuMgr:CheckNeedToShowMenuBuy()) then
+        isNeedToShowMenuBuy = true
+        FuncUtil:Call(EActivityGetCB2, nil, 100)
+        return true
+    end
+    -- 付费弹窗 所有界面关闭的0.2后才打开界面（因为有可能是跳转触发的关闭所有界面）
+    -- if (isCheckTime == nil or Time.time > (isCheckTime + 0.2)) then
+    --     isCheckTime = Time.time
+    --     FuncUtil:Call(EActivityGetCB2, nil, 200)
+    --     return true 
+    -- else
+    --     CSAPI.SetGOActive(mask, false)
+    -- end
+
     CSAPI.SetGOActive(mask, false)
+    return false
 end
 
 function EActivityGetCB2()
-    if (not CheckIsTop()) then
-        return
-    end
-    if (MenuMgr:CheckNeedToShowMenuBuy()) then
-        if (menuBuyItem ~= nil and menuBuyItem.gameObject.activeSelf) then
-            menuBuyItem.OnClick()
-        end
-    end
+    CSAPI.SetGOActive(mask, false)
+    isNeedToShowMenuBuy = false
+    menuBuyItem.OnClick()
+    -- if (not CheckIsTop()) then
+    --     return
+    -- end
+    -- if (MenuMgr:CheckNeedToShowMenuBuy()) then
+    --     if (menuBuyItem ~= nil and menuBuyItem.gameObject.activeSelf) then
+    --         menuBuyItem.OnClick()
+    --     end
+    -- end
 end
 
 -- --技能升级完成 提示是否打开技能列表
@@ -1819,7 +1919,7 @@ function OnFightRestore()
 end
 
 function TriggerGuide()
-    CSAPI.SetGOActive(mask,false)
+    CSAPI.SetGOActive(mask, false)
     -- LogError("Menu引导");
     EventMgr.Dispatch(EventType.Guide_Trigger, "Menu");
 end
@@ -1870,8 +1970,8 @@ end
 -- 登录语言
 function PlayLoginVoice()
     local isPlay = false
-    if (isRole and isChangeImgPlayVoice and CheckIsTop() and (not ActivityMgr:CheckIsNeedShow()) and
-        (not SignInMgr:CheckNeedSignIn())) then
+    -- if (isRole and isChangeImgPlayVoice and CheckIsTop() and (not ActivityMgr:CheckIsNeedShow()) and (not SignInMgr:CheckNeedSignIn())) then
+    if (isRole and isChangeImgPlayVoice) then
         if (PlayerClient:IsPlayerBirthDay() and not PlayerClient:IsPlayBirthDayVoice()) then
             cardIconItem.PlayVoice(RoleAudioType.birthday) -- 玩家生日
         elseif (MenuMgr:CheckIsFightVier()) then
@@ -1888,40 +1988,66 @@ function PlayLoginVoice()
     return isPlay
 end
 
--- 部分虽然是Top或者弹窗，但它们影响了主界面的逻辑顺序，所以记录进来
-function IsNeedAdd(viewKey)
-    if (viewKey == "ActivityView" or viewKey == "PlayerUpgrade" or viewKey == "Guide" or viewKey == "SignInContinue" or
-        viewKey == "CRoleDisplay" or viewKey == "MenuBuyPanel" or viewKey == "ResRecovery") then
-        return true
-    end
-    return false
-end
+-- -- 部分虽然是Top或者弹窗，但它们影响了主界面的逻辑顺序，所以记录进来(有就不是top)
+-- function IsNeedAdd(viewKey)
+--     if (viewKey == "ActivityView" or viewKey == "PlayerUpgrade" or viewKey == "Guide" or viewKey == "SignInContinue" or
+--         viewKey == "CRoleDisplay" or viewKey == "MenuBuyPanel" or viewKey == "ResRecovery" or viewKey =="RoleJieJinSuccess") then
+--         return true
+--     end
+--     return false
+-- end
 
 -- 当界面不是最前时，隐藏
-function HidePanel(viewKey)
-    if (IsNeedAdd(viewKey)) then
-        return
-    end
-    if (CheckIsTop2()) then
-        CSAPI.SetScale(gameObject, 1, 1, 1)
-        enterSV_sv.enabled = true
+function HidePanel(viewKey, open)
+    -- if (IsNeedAdd(viewKey)) then
+    --     return
+    -- end
+    if (not open) then
+        -- 关闭viewKey
+        if (CheckIsTop2()) then
+            CSAPI.SetScale(gameObject, 1, 1, 1)
+            enterSV_sv.enabled = true
+            groupsv_sv.enabled = true
+        end
     else
-        enterSV_sv.enabled = false
-        CSAPI.SetScale(gameObject, 0, 0, 0)
+        if (not openViews[viewKey] or openViews[viewKey] == 2) then
+            return
+        end
+        -- 打开viewKey
+        if (CheckIsOneTop()) then
+            enterSV_sv.enabled = false
+            groupsv_sv.enabled = false
+            CSAPI.SetScale(gameObject, 0, 0, 0)
+        end
     end
+end
+
+-- 是否最多只有一层上层(不包含弹窗类型)
+function CheckIsOneTop()
+    local num = 0
+    for i, v in pairs(openViews) do
+        if (v == 1) then
+            num = num + 1
+            if (num > 1) then
+                return false
+            end
+        end
+    end
+    return true
 end
 
 -- function OnClickAbility()
 -- 	CSAPI.OpenView("PlayerAbility")
 -- end
 
-function CreateEffect()
-    local b = false
-    if (CheckIsTop2() and not CSAPI.IsViewOpen("CRoleDisplay")) then
-        b = true
-    end
-    CSAPI.SetGOActive(ui_structure, b)
-end
+-- 层级已处理好
+-- function CreateEffect()
+--     local b = false
+--     if (CheckIsTop2() and not CSAPI.IsViewOpen("CRoleDisplay")) then
+--         b = true
+--     end
+--     CSAPI.SetGOActive(ui_structure, b)
+-- end
 
 -- 付费弹窗
 function SetMenuBuy()
@@ -1956,13 +2082,19 @@ end
 
 -- 资源回收
 function OnClickResRecovery()
-    --CSAPI.OpenView("ResRecovery")
+    CSAPI.OpenView("ResRecovery")
 end
 
 -- 特别馈赠
 function OnClickSpecialGifts()
-    -- CSAPI.OpenView("SpecialActivityView", nil, 3)
+    CSAPI.OpenView("SpecialActivityView", nil, 3)
 end
+
+-- 回归活动
+function OnClickRegression()
+    CSAPI.OpenView("RegressionList")
+end
+
 
 -----------------------------------------------基地数据更新----------------------------------------------------------------
 function MatrixUpdate()
@@ -1980,6 +2112,17 @@ end
 
 function InitResetTime()
     rRunTime = MatrixMgr:GetResetTime()
+end
+
+-----------------------------------------------回归更新----------------------------------------------------------------
+function RegresUpdate()
+    if regresTime > 0 and Time.time > regresTimer then
+        regresTimer = Time.time + 1
+        regresTime = RegressionMgr:GetTime()
+        if regresTime <= 0 then
+            CSAPI.SetGOActive(btnRegression, false)
+        end
+    end
 end
 
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口

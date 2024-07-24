@@ -2,14 +2,17 @@
 local this = 
 {
 [-865403415]={
-{effect="call_eff",time=15500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/Ammit_enter.acb",cue_name="Ammit_enter"}
+{time=15500,type=0,cue_sheet="cv/Anubis.acb",cue_name="Anubis_40",cue_feature=1},
+{effect="call_eff",time=15500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/Ammit_summon.acb",cue_name="Ammit_summon"}
 },
 [1310282141]={
 {delay=8900,time=3000,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hits={0}},
 {delay=9700,time=3000,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hits={0}},
 {delay=7500,time=3000,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hit_creates={161059103},hits={0}},
+{delay=1500,time=11000,type=0,cue_sheet="cv/Anubis.acb",cue_name="Anubis_12",cue_feature=1},
 {delay=7700,time=3000,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hits={0}},
 {effect="cast2_eff",time=11000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Anubis_attack_skill_02"},
+{time=11000,type=0,cue_sheet="cv/Anubis.acb",cue_name="Anubis_11",cue_feature=1},
 {delay=7900,time=3000,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hits={0}}
 },
 [161059103]={
@@ -20,6 +23,7 @@ time=3000,type=0
 {delay=1709,time=3000,type=1,hit_type=0,camera_shake={time=500,shake_dir=1,range=200,range2=200,hz=100,decay_value=0.6},hits={0}},
 {effect="cast1_eff",time=4000,type=0,pos_ref={ref_type=3,offset_row=-300},cue_sheet="fight/effect/thirteen.acb",cue_name="Anubis_attack_skill_01"},
 {delay=2789,time=3000,type=1,hit_type=0,camera_shake={time=300,shake_dir=1,range=100,range1=250,hz=100,decay_value=0.4},hits={0}},
+{time=4000,type=0,cue_sheet="cv/Anubis.acb",cue_name="Anubis_10",cue_feature=1},
 {effect="cast1_hit1",time=4500,type=0,pos_ref={ref_type=3}},
 {effect="cast1_hit3",time=3000,type=0,pos_ref={ref_type=3}}
 },
@@ -29,6 +33,7 @@ time=3000,type=0
 {delay=1145,time=4500,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hit_creates={592569883},hits={0}},
 {delay=1745,time=4500,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hit_creates={-1776803717},hits={0}},
 {delay=680,time=4500,type=1,hit_type=0,is_fake=1,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hit_creates={-2014587674},hits={0}},
+{time=3000,type=0,cue_sheet="cv/Anubis.acb",cue_name="Anubis_07",cue_feature=1},
 {delay=1345,time=4500,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hit_creates={-1276183670},hits={0}},
 {delay=880,time=4500,type=1,hit_type=0,is_fake=1,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hit_creates={1776661962},hits={0}},
 {delay=945,time=4500,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hit_creates={1414977165},hits={0}},
@@ -68,6 +73,7 @@ effect="cast3_hit",time=3000,type=0,pos_ref={ref_type=4,part_index=1}
 },
 [-1609092943]={
 {delay=830,time=3000,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,range2=200,hz=50,decay_value=0.5},hits={0}},
+{time=3000,type=0,cue_sheet="cv/Anubis.acb",cue_name="Anubis_09",cue_feature=1},
 {effect="cast0_eff",time=3000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Anubis_attack_general"},
 {effect="cast0_hit_01",delay=830,time=3000,type=0,pos_ref={ref_type=0,offset_row=50,lock_col=1}},
 {effect="cast0_hit_02",time=3000,type=0,pos_ref={ref_type=1,offset_row=-300,lock_col=1}}

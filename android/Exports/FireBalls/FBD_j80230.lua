@@ -11,7 +11,7 @@ effect="cast2_hit",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [-686817241]={
 {delay=1250,time=4000,type=3,hit_creates={1192467788},hits={0}},
-{effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Khepri_attack_skill_01",volume_coeff=10}
+{effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Khepri_attack_skill_01"}
 },
 [1192467788]={
 effect="cast1_buff",time=2000,type=0,pos_ref={ref_type=4,part_index=0}

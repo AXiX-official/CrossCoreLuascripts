@@ -28,6 +28,9 @@ local currAnimStage = 0 --当前动画在第几阶段
 --assit
 local isAssit = false
 
+--dirll
+local isDirll = false
+
 function Awake()
     expBar = ComUtil.GetCom(expSlider, "Slider")
 
@@ -58,6 +61,7 @@ function Refresh(_teamItemData, elseData)
 
     addExp = elseData and elseData.exp or 0
     teamIndex = elseData and elseData.teamIndex or 0
+    isDirll = elseData and elseData.isDirll
 
     oldLv, curExp, upNum = GetBeforCardInfo(addExp)
     if cardData:GetLv() >= cardData:GetMaxLv() then
@@ -278,6 +282,17 @@ function SetState()
     CSAPI.SetRTSize(spImg,127 * sp / 100, 4)
     EventMgr.Dispatch(EventType.Fight_Over_Reward, index)
 end
+---------------------------------total---------------------------------
+function SetTotal()
+    if isDirll then
+        return
+    end
+    CSAPI.SetGOActive(stateObj, true)
+    CSAPI.SetGOActive(stateImg,false)
+    CSAPI.SetGOActive(dead,true)
+    EventMgr.Dispatch(EventType.Fight_Over_Reward, index)
+end
+
 ---------------------------------anim---------------------------------
 
 --300
@@ -295,6 +310,10 @@ end
 
 --300
 function PlayFavorAnim()
+    local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    if cfg and cfg.type == eDuplicateType.StarPalace and isDirll then
+        return
+    end
     if (data == nil) or (data and data.bIsNpc) then -- NPC不加经验和好感
         EventMgr.Dispatch(EventType.Fight_Over_Reward, index)
         currAnimStage = 4
@@ -314,9 +333,10 @@ end
 function PlayExpAnim()
     currAnimStage = 3
     local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    local isNewTower = cfg and cfg.type == eDuplicateType.NewTower
-    if isNewTower then
+    if cfg and cfg.type == eDuplicateType.NewTower then
         SetState()
+    elseif cfg and cfg.type == eDuplicateType.StarPalace and TotalBattleMgr:IsFighting() then
+        SetTotal()
     else
         SetExp()
     end
@@ -333,11 +353,15 @@ function JumpToComplete()
     if currAnimStage < 4 then
         local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
         local isNewTower = cfg and cfg.type == eDuplicateType.NewTower
-        if not isNewTower then
+        if isDirll then
+        
+        elseif cfg and cfg.type == eDuplicateType.NewTower then
+            SetState()
+        elseif cfg and cfg.type == eDuplicateType.StarPalace and TotalBattleMgr:IsFighting() then
+            SetTotal()
+        else
             CSAPI.SetGOActive(expObj, true)
             JumpToExpComplete()
-        else
-            SetState()
         end
     end
 

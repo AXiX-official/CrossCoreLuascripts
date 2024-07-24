@@ -32,8 +32,10 @@ RedPointType.HeadFrame = "HeadFrame" -- 头像框
 RedPointType.Head = "Head" -- 头像
 
 RedPointType.Achievement = "Achievement" --成就
-
+RedPointType.Regression = "Regression" --回归
 RedPointType.Badge = "Badge" --徽章
+RedPointType.Rogue = "Rogue" --乱序演习
+RedPointType.AccuCharge = "AccuCharge" --累计充值
 
 local this = MgrRegister("RedPointMgr")
 

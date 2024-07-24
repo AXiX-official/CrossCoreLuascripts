@@ -27,8 +27,7 @@ function this:GetActivityDownAddress(type)
     -- local curServer = GetCurrentServer()
     local currPlatform = CSAPI.GetPlatform()
     local str1 = currPlatform == 8 and "ios" or "android"
-	local str2 = "text"    if (CSAPI.GetChannelType() == ChannelType.BliBli) then
-        str2 = "bilibili"
+	local str2 = "text"    if (CSAPI.GetChannelType() == ChannelType.BliBli) then        str2 = "bilibili"
     elseif (CSAPI.GetChannelType() == ChannelType.Normal or CSAPI.GetChannelType() == ChannelType.TapTap) then
         str2 = "official"
     elseif (CSAPI.GetChannelType() == ChannelType.QOO) then
@@ -477,16 +476,16 @@ function this:CheckRed(type)
             return BagMgr:GetCount(ITEM_ID.DIAMOND) >= costCount
         end
         return false
-    elseif type == ActivityListType.DropAdd then
-        local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.DropAdd)
-        if cfg and cfg.info then
-            for i, v in ipairs(cfg.info) do
-                if v.id and DungeonUtil.HasMultiNum(v.id) then
-                    return true
-                end
-            end
-        end
-        return false
+    -- elseif type == ActivityListType.DropAdd then
+    --     local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.DropAdd)
+    --     if cfg and cfg.info then
+    --         for i, v in ipairs(cfg.info) do
+    --             if v.id and DungeonUtil.HasMultiNum(v.id) then
+    --                 return true
+    --             end
+    --         end
+    --     end
+    --     return false
     elseif type == ActivityListType.Exchange then
         local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.Exchange)
         if cfg and cfg.info and cfg.info[1] and cfg.info[1].shopId then
@@ -504,6 +503,12 @@ function this:CheckRed(type)
             end
         end
         return false
+    elseif type == ActivityListType.AccuCharge then
+        local num = RedPointMgr:GetData(RedPointType.AccuCharge)
+        if(num and num==1) then 
+            return true
+        end 
+        return false          
     else
         local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. type) == 0
         return isRed
@@ -524,7 +529,7 @@ function this:IsActivityListNull(viewName, group)
 end
 
 function this:IsSignInContinue(type)
-    local _types = {ActivityListType.SignInContinue,ActivityListType.NewYearSignIn,ActivityListType.SignInCommon,ActivityListType.SignInShadowSpider}
+    local _types = {ActivityListType.SignInContinue,ActivityListType.NewYearSignIn,ActivityListType.SignInCommon,ActivityListType.SignInShadowSpider,ActivityListType.SignInGold}
     for i, _type in ipairs(_types) do
         if type == _type then
             return true

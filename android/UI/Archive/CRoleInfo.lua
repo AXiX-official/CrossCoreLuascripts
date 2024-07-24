@@ -148,7 +148,11 @@ function this:GetAllSkinsArr(onlyInSell)
     end
     if (#skins > 1) then
         table.sort(skins, function(a, b)
-            return a:GetIndex() < b:GetIndex()
+            if(a:CheckCanUse()==b:CheckCanUse()) then 
+                return a:GetIndex() < b:GetIndex()
+            else 
+                return a:CheckCanUse()
+            end 
         end)
     end
     return skins

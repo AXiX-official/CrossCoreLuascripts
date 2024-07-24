@@ -6,10 +6,8 @@ Buffer1000010110 = oo.class(BuffBase)
 function Buffer1000010110:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 战斗开始
-function Buffer1000010110:OnStart(caster, target)
-	do
-		-- 1000010110
-		self:AddBuffCount(BufferEffect[1000010110], self.caster, self.card, nil, 1000010111,1,1)
-	end
+-- 创建时
+function Buffer1000010110:OnCreate(caster, target)
+	-- 1000010110
+	self:AddBuffCount(BufferEffect[1000010110], self.caster, self.card, nil, 1000010111,1,1)
 end

@@ -312,7 +312,12 @@ end
 
 ----------------------------------------------------------------------------------
 -- 任务是否还在有效期
-function GLogicCheck:TaskIsPassTimeLimit(cfg)
+function GLogicCheck:TaskIsPassTimeLimit(cfg, openTime, closeTime)
+    if openTime and closeTime then
+        local isOk = self:IsInRange(openTime, closeTime, CURRENT_TIME)
+        return isOk
+    end
+
     if cfg.nOpenTime == 0 then
         return true
     elseif cfg.nCloseTime == 0 then

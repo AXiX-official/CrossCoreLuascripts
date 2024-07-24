@@ -259,7 +259,7 @@ function this:OnAssitInfoAdd(proto)
 			end
 		end
 		-- LogError(proto.new_tower_assits)
-		if proto.new_tower_assits and #proto.new_tower_assits>0 then --爬塔锁定的角色数据
+		if proto.new_tower_assits and #proto.new_tower_assits>0 then --爬塔锁定的角色数据,只有重登才会清理
 			self.newTowerAssitsLock=self.newTowerAssitsLock or {};
 			for k,v in ipairs(proto.new_tower_assits) do
 				if v.new_tower_assit and v.sid then
@@ -315,7 +315,16 @@ function this:GetAssistList(num, isRefresh, fixedID,isTower,sectionId)
 				local card = self:GetAssistCardData(fixedID,sectionId);
 				if card then
 					fixedUserID=card:GetData().assist.uid;--持有人ID
-					table.insert(list, card);
+					local has=false;
+					for k,v in ipairs(self.tLAssitList) do
+						if v:GetID()==fixedID then
+							has=true;
+							break;
+						end
+					end
+					if has~=true then
+						table.insert(list, card);
+					end
 				end
 			end
 			for k,v in ipairs(self.tLAssitList) do --防止NPC重复

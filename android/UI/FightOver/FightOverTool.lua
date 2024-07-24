@@ -9,7 +9,7 @@ function this.PushEnd(_data, _isWin, _team, _rewards, _jf, _exp, _nPlayerExp, _f
 	data.team = _team
 	data.rewards = _rewards
 	data.jf = _jf or 0
-	data.exp = _exp
+	data.exp = _exp or 0
 	data.nPlayerExp = _nPlayerExp or 0
 	data.favor = _favor
 	data.elseData = _elseData
@@ -18,6 +18,13 @@ function this.PushEnd(_data, _isWin, _team, _rewards, _jf, _exp, _nPlayerExp, _f
 	else
 		FightActionMgr:Push(FightActionMgr:Apply(FightActionType.FightEnd, data))
 	end
+end
+
+--结果 Rogue
+function this.RogueInfoUpdate(proto)
+	local team = this.GetTeamData(eTeamType.Rogue, false);
+	local exp = this.GetExpList(proto, false);
+	this.PushEnd(nil, proto.bIsWin, team, proto.fisrtPassReward, 0, exp, 0,proto.cardsExp, proto.isForceOver,proto)
 end
 
 --结果 实时pvp    proto.type:  RealArmyType.Friend  RealArmyType.Freedom
@@ -173,7 +180,7 @@ end
 function this.OnDirllOver(stage, winer)
 	local team = this.GetTeamData(DungeonMgr:GetFightTeamId(), true); 
 	local data = {}
-	this.PushEnd(data,winer == 1,team,nil, 0, {}, 0,{},false,{isDirll = true,stage = stage})
+	this.PushEnd(data,winer == 1,team,nil, 0, {}, 0,{},false,{isDirll = true,isWin = winer == 1})
 end
 
 --返回编队数据

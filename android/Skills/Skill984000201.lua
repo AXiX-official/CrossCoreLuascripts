@@ -12,8 +12,8 @@ function Skill984000201:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
 end
--- 行动开始
-function Skill984000201:OnActionBegin(caster, target, data)
+-- 行动结束
+function Skill984000201:OnActionOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -31,6 +31,6 @@ function Skill984000201:OnActionBegin(caster, target, data)
 	end
 	-- 984000202
 	if self:Rand(5000) then
-		self:AddProgress(SkillEffect[984000202], caster, target, data, 500)
+		self:AddProgress(SkillEffect[984000202], caster, self.card, data, 500)
 	end
 end

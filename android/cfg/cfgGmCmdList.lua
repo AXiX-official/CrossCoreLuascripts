@@ -83,6 +83,11 @@ local conf = {
 {'73',	'勘测',	'resetExploration',	'0',	'重置测绘记录',	'resetExploration',	'resetExploration'},
 {'74',	'购买',	'recharge',	'1',	'模拟充值',	'recharge id[CfgCommodity表的id]',	'recharge 40001'},
 {'75',	'回归',	'setReturnPlr',	'1',	'设置回归玩家',	'setReturnPlr 回归类型( 1短期回归玩家，2长期回归玩家)',	'setReturnPlr 1'},
+{'76',	'战斗',	'setRogueBuff',	'1',	'设置乱序演习当前回合词条',	'setRogueBuff buffid',	'setRogueBuff 15001'},
+{'77',	'乱序',	'refreshRogueBuff',	'0',	'重新随机当前乱序演习随机词条',	'refreshRogueBuff (需要保存进度退出界面再重新进入选择buff界面)',	'refreshRogueBuff'},
+{'78',	'乱序',	'setRogueDuplicate',	'1',	'乱序选怪物界面，固定选择某个怪物id',	'setRogueDuplicate 关卡ID (在翻怪物卡牌前输入，输入完需保存进度退出界面再重新进入)',	'setRogueDuplicate 40001'},
+{'79',	'重置道具池',	'resetItemPool',	'1',	'重置道具池',	'resetItemPool 道具池ID（没填则默认所有道具池重置）',	'resetItemPool 1001'},
+{'80',	'乱序',	'passRogue',	'1',	'通关乱序演习关卡组,不填id全部通关',	'passRogue 关卡组ID(没填则默认所有乱序关卡)',	'passRogue 15001'},
 },
 }
 --cfgGmCmdList = conf

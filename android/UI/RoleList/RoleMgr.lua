@@ -707,7 +707,7 @@ function this:CardDisintegrateRet(proto)
         EventMgr.Dispatch(EventType.Role_Create_Disintegrate, proto)
 
         -- 移除技能升级红点
-        --RoleSkillMgr:RemoveDeleteCard(proto.card_ids)
+        -- RoleSkillMgr:RemoveDeleteCard(proto.card_ids)
     end
 end
 
@@ -830,10 +830,48 @@ function this:SetRoleListSortData()
     self.roleListData = table.copy(SortMgr:GetData(1))
 end
 function this:GetRoleListSortData()
-   return self.roleListData 
+    return self.roleListData
 end
 function this:ClearRoleListSortData()
-    self.roleListData  = nil 
+    self.roleListData = nil
+end
+
+--解禁数据（用于弹出界面展示）
+function this:AddJieJinDatas(proto)
+    if(proto==nil) then 
+        self.jiejinDatas = nil 
+        return 
+    end 
+    if (self.jiejinDatas) then
+        if (proto.open_cards) then
+            self.jiejinDatas.open_cards = self.jiejinDatas.open_cards or {}
+            for k, v in pairs(proto.open_cards) do
+                table.insert(self.jiejinDatas.open_cards, v)
+            end
+        end
+        if (proto.open_mechas) then
+            self.jiejinDatas.open_mechas = self.jiejinDatas.open_mechas or {}
+            for k, v in pairs(proto.open_mechas) do
+                table.insert(self.jiejinDatas.open_mechas, v)
+            end
+        end
+    else
+        self.jiejinDatas = proto
+    end
+end
+function this:GetJieJinDatas()
+    return self.jiejinDatas
+end
+
+--获取总队长
+function this:GetLeader()
+    for k, v in ipairs(g_InitRoleId) do
+        local data = self:GetData(v)
+        if(data) then 
+            return data 
+        end 
+    end
+    return nil 
 end
 
 return this

@@ -13,6 +13,7 @@ function this:Init()
             self:InitCfgData(v.id, m)
         end
     end
+    self:InitJieJin()
 
     this:GetSkins(0)
 end
@@ -30,8 +31,8 @@ function this:GetDatas(cfgid, containJieJin)
         local dic = {}
         local _dic = self.datas[cfgid]
         for k, v in pairs(_dic) do
-            if (v:GetType() ~= CardSkinType.JieJin) then
-                dic[k] = v 
+            if (not v:CheckIsJieJin()) then
+                dic[k] = v
             end
         end
         return dic
@@ -53,7 +54,9 @@ function this:GetSkinCount(cfgid)
     local datas = self.datas[cfgid]
     if (datas) then
         for i, v in pairs(datas) do
-            count = count + 1
+            if (not v:CheckIsJieJin()) then
+                count = count + 1
+            end
         end
     end
     return count
@@ -67,13 +70,8 @@ function this:InitJieJin()
         local _data = self.datas[cfg.role_id]
         if (cfg.changeCardIds) then
             for n, m in ipairs(cfg.changeCardIds) do
-                if (m[1] ~= cfg.id) then
-                    local model = Cfgs.CardData:GetByID(m[1]).model
-                    if (not _data[model]) then
-                        local skin4 = RoleSkinInfo.New()
-                        skin4:Set(cfg.id, model, 1, CardSkinType.JieJin)
-                        _data[model] = skin4
-                    end
+                if (m[1] ~= v) then
+                    self:InitCfgData(cfg.role_id, m[1], true, m[2])
                 end
             end
         end
@@ -83,15 +81,13 @@ function this:InitJieJin()
         local cfg = Cfgs.CardData:GetByID(v)
         local _data = self.datas[cfg.add_role_id]
         if (cfg.allTcSkills) then
+            local role_id = RoleTool.GetRoleCfgBySkillID(cfg.tcSkills[1]).role_id
             for n, m in ipairs(cfg.allTcSkills) do
                 if (m[1] ~= cfg.tcSkills[1]) then
                     local monsterID = RoleTool.GetMonsterIDBySkillID(m[1])
-                    local model = Cfgs.MonsterData:GetByID(monsterID).model
-                    if (not _data[model]) then
-                        local skin5 = RoleSkinInfo.New()
-                        skin5:Set(cfg.id, model, 1, CardSkinType.JieJin)
-                        _data[model] = skin5
-                    end
+                    local monsterCfg = Cfgs.MonsterData:GetByID(monsterID)
+                    local _cfg = Cfgs.CardData:GetByID(monsterCfg.card_id)
+                    self:InitCfgData(role_id, monsterCfg.card_id, true, m[2])
                 end
             end
         end
@@ -99,30 +95,13 @@ function this:InitJieJin()
 end
 
 -- 初始化表数据
-function this:InitCfgData(roleID, cardID)
+function this:InitCfgData(roleID, cardID, isJieJin, jiejinCondition)
     -- if (self.datas and self.datas[roleID]) then
     --     return
     -- end
     self.datas[roleID] = self.datas[roleID] or {}
     local _data = self.datas[roleID]
 
-    -- self:RefreshData(cardID, _data, 0) 
-
-    -- -- 添加变身的皮肤
-    -- if (cfg.tTransfo) then
-    --     for i, v in ipairs(cfg.tTransfo) do
-    --         local transCfg = Cfgs.CardData:GetByID(v)
-    --         self:RefreshData(transCfg, _data, 1)
-    --     end
-    -- end
-    -- -- 添加合体的皮肤
-    -- if (cfg.fit_result) then
-    --     local transCfg = Cfgs.CardData:GetByID(cfg.fit_result)
-    --     self:RefreshData(transCfg, _data, 2)
-    -- end
-    -- end
-
-    -- function this:RefreshData(cardID, _data, _typeNum)
     local cfg = Cfgs.CardData:GetByID(cardID)
     if (not cfg) then
         return _data
@@ -131,7 +110,7 @@ function this:InitCfgData(roleID, cardID)
     if (cfg.model) then
         if (not _data[cfg.model]) then
             local skin1 = RoleSkinInfo.New()
-            skin1:Set(cfg.id, cfg.model, 1, CardSkinType.Break)
+            skin1:Set(roleID, cfg.id, cfg.model, 1, CardSkinType.Break, isJieJin, jiejinCondition)
             _data[cfg.model] = skin1
         end
     end
@@ -140,7 +119,7 @@ function this:InitCfgData(roleID, cardID)
         for n, m in ipairs(cfg.breakModels) do
             if (not _data[m]) then
                 local skin2 = RoleSkinInfo.New()
-                skin2:Set(cfg.id, m, n + 1, CardSkinType.Break)
+                skin2:Set(roleID, cfg.id, m, n + 1, CardSkinType.Break, isJieJin, jiejinCondition)
                 _data[m] = skin2
             end
         end
@@ -150,7 +129,7 @@ function this:InitCfgData(roleID, cardID)
         for n, m in ipairs(cfg.skin) do
             if (not _data[m]) then
                 local skin3 = RoleSkinInfo.New()
-                skin3:Set(cfg.id, m, n, CardSkinType.Skin)
+                skin3:Set(roleID, cfg.id, m, n, CardSkinType.Skin, isJieJin, jiejinCondition)
                 _data[m] = skin3
             end
         end
@@ -234,7 +213,7 @@ function this:GetSkinsRet(proto)
             end
         end
     end
-    --CRoleMgr:CheckNewSkin()
+    -- CRoleMgr:CheckNewSkin()
     -- EventMgr.Dispatch(EventType.Card_Skin_Get)
 end
 

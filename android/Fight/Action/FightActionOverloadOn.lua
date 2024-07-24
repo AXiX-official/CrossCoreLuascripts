@@ -23,7 +23,7 @@ function this:DelayPlay()
 end
 
 function this:Show()
-    EventMgr.Dispatch(EventType.Fight_View_Main_Info_Show_State,false);     
+    --EventMgr.Dispatch(EventType.Fight_View_Main_Info_Show_State,false);     
 
   
     local character = self:GetActorCharacter();

@@ -39,13 +39,13 @@ function OnOpen()
 end
 
 function InitData()
-	curDatas = MatrixMgr:GetBuildingDatasArr(true)
+	curDatas = MatrixMgr:GetBuildingDatasArr(false)
 	curData = curDatas[1]
 end
 
 function RefreshPanel()
 	layout:IEShowList(#curDatas, FirstAnim)
-	SetRoleItems()
+	--SetRoleItems()
 	
 	--role
 	local curRole1, curRole2 = MatrixMgr:GetRoleCnt()
@@ -68,33 +68,33 @@ end
 function SetClickCB(_curData)
 	curData = _curData
 	layout:UpdateList()
-	SetRoleItems()
+	--SetRoleItems()
 	
 	--SetPos()
 end
 
 
---驻员信息
-function SetRoleItems()
-	matrixRoleItems = matrixRoleItems or {}
-	local datas = curData:GetRoleInfos()
-	ItemUtil.AddItems(itemPath1, matrixRoleItems, datas, grid, nil, 1, curData, function()
-		ItemAnims()
-	end)
-end
+-- --驻员信息
+-- function SetRoleItems()
+-- 	matrixRoleItems = matrixRoleItems or {}
+-- 	local datas = curData:GetRoleInfos()
+-- 	ItemUtil.AddItems(itemPath1, matrixRoleItems, datas, grid, nil, 1, curData, function()
+-- 		ItemAnims()
+-- 	end)
+-- end
 
-function ItemAnims()
-	if(isFirst) then
-		return
-	end
-	isFirst = 1
-	for i, v in ipairs(matrixRoleItems) do
-		local delay =(i - 1) * 20
-		UIUtil:SetObjFade(v.node, 0, 1, nil, 300, delay)
-		local y1 = - i * 20
-		UIUtil:SetPObjMove(v.node, 0, 0, y1, 0, 0, 0, nil, 200, delay)
-	end
-end
+-- function ItemAnims()
+-- 	if(isFirst) then
+-- 		return
+-- 	end
+-- 	isFirst = 1
+-- 	for i, v in ipairs(matrixRoleItems) do
+-- 		local delay =(i - 1) * 20
+-- 		UIUtil:SetObjFade(v.node, 0, 1, nil, 300, delay)
+-- 		local y1 = - i * 20
+-- 		UIUtil:SetPObjMove(v.node, 0, 0, y1, 0, 0, 0, nil, 200, delay)
+-- 	end
+-- end
 
 
 -- local posImg = {1001, 1002, 1003, 1004, 1005, 1006, 1009}

@@ -94,7 +94,9 @@ function GetServerPath()
     else
 		--主干
         _G.server_list_enc_close = 1;
-        useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试	        
+        useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试	     
+		--useJsonFile = "http://mega.megagamelog.com:880/php/res/serverList/serverlist_nw1.json ";--ios提审
+		  
     end  
 		
 	Log("GetServerPath() useJsonFile is:" .. useJsonFile);

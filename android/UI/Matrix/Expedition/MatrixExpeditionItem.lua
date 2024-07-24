@@ -224,7 +224,8 @@ end
 function SetTime()
     local runLen = oldLen + (TimeUtil:GetTime() - openTime) * timeMul
     if (data:GetTCur() and data:GetTCur() > 0) then
-        needTime = createTime - data:GetTCur() - runLen
+        --needTime = createTime - data:GetTCur() - runLen
+        needTime = data:GetTF() - TimeUtil:GetTime()
     else
         needTime = createTime - buildData:GetOldTime() - runLen
     end

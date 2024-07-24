@@ -50,6 +50,13 @@ function this:GetTCur()
 	end
 	return nil
 end
+--当前时间进度
+function this:GetTF()
+	if(self.serverData) then
+		return self.serverData.tf or nil
+	end
+	return nil
+end
 --结束时间  
 function this:GetCrateEndTime()
 	return self.serverData.num or 0

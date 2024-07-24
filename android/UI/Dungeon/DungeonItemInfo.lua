@@ -159,6 +159,22 @@ function SetPanelPos(panelName,x,y)
     end
     CSAPI.SetAnchor(panel.gameObject,x,y)
 end
+
+function SetFunc(panelName,oldFuncName,newFunc)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil then
+        return nil
+    end
+
+    if panel[oldFuncName] == nil then
+        return nil
+    end
+
+    panel[oldFuncName] = newFunc
+end
 ------------------------------------------------按钮回调
 
 function SetClickCB(_cb1, _cb2,_cb3)

@@ -1,5 +1,5 @@
 --是否屏蔽日志
--- noLog = 1;
+noLog = 1;
 --debug_model = 1;
 
 

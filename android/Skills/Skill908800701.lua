@@ -12,25 +12,23 @@ function Skill908800701:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12001], caster, target, data, 1,1)
 end
--- 回合结束时
-function Skill908800701:OnRoundOver(caster, target, data)
+-- 攻击结束
+function Skill908800701:OnAttackOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8419
-	local count19 = SkillApi:GetAttr(self, caster, target,3,"xp")
-	-- 8153
-	if SkillJudger:Greater(self, caster, self.card, true,count19,2) then
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
-	-- 908800601
-	local targets = SkillFilter:Rand(self, caster, target, 4)
-	for i,target in ipairs(targets) do
-		self:CallOwnerSkill(SkillEffect[908800601], caster, target, data, 908800201)
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
 	end
-	-- 907800603
-	self:AddXp(SkillEffect[907800603], caster, self.card, data, -4)
+	-- 908800701
+	self:HitAddBuff(SkillEffect[908800701], caster, target, data, 2500,3004,1)
 end

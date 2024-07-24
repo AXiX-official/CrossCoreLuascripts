@@ -17,6 +17,10 @@ function this.GetNames(_type)
         return this.Feast()
     elseif _type == DungeonInfoType.TotalBattle then
         return this.TotalBattle()
+    elseif _type == DungeonInfoType.Summer then
+        return this.Summer()
+    elseif _type == DungeonInfoType.SummerDanger then
+        return this.Summer()
     end
 end
 
@@ -50,6 +54,10 @@ end
 
 function this.TotalBattle()
     return  {"Title2", "Level", "Total", "Output","Danger2" ,"Details","Button3"}
+end
+
+function this.Summer()
+    return {"Title3","Level2","Target2","Output2","Details","Double2","Button2"}
 end
 
 return this; 

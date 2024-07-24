@@ -1,5 +1,5 @@
 local cfg = nil
-local colors = {{255,193,70,255},{255,255,255,255},{255,255,255,128}}
+local colors = {{255,193,70,255},{255,255,255,125},{255,255,255,45}}
 local isOpen = false
 local index = 1
 
@@ -19,13 +19,14 @@ function SetSelect(b)
     CSAPI.SetTextColor(txtNum,colors[idx][1],colors[idx][2],colors[idx][3],colors[idx][4])
     CSAPI.SetGOActive(selImg,b and isOpen)
     CSAPI.SetGOActive(img,not b or not isOpen)
-    CSAPI.SetImgColor(img,255,255,255,isOpen and 255 or 128)
+    -- CSAPI.SetImgColor(img,255,255,255,isOpen and 255 or 128)
+    CSAPI.SetGOActive(lock,not isOpen)
 end
 
 function Refresh(_cfg)
-    CSAPI.SetText(txtNum, cfg.chapterID .. "")
     cfg = _cfg
     if cfg then
+        CSAPI.SetText(txtNum, cfg.chapterID .. "")
         isOpen = DungeonMgr:IsDungeonOpen(cfg.id)
     end
 end

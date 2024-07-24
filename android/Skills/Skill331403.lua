@@ -29,7 +29,7 @@ function Skill331403:OnDeath(caster, target, data)
 	-- 331406
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:DelBufferTypeForce(SkillEffect[331406], caster, target, data, 4701301)
+		self:DelBufferTypeForce(SkillEffect[331406], caster, target, data, 331401)
 	end
 end
 -- 特殊入场时(复活，召唤，合体)
@@ -40,5 +40,8 @@ function Skill331403:OnBornSpecial(caster, target, data)
 		return
 	end
 	-- 331413
-	self:OwnerAddBuff(SkillEffect[331413], caster, caster, data, 331413)
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[331413], caster, target, data, 331403)
+	end
 end

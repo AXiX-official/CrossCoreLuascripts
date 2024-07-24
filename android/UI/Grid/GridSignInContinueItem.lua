@@ -3,7 +3,15 @@
 function Refresh(_data, _elseData)
 	data = _data
 	if(data) then
-		data:GetIconLoader():Load(icon, data:GetIcon())
+		local type1 = data.data and data.data.type
+		local type2 = data:GetCfg() and data:GetCfg().type
+		if type1 == "GoodsData" and type2 == ITEM_TYPE.CARD then
+			CSAPI.SetGOActive(tIcon,true)
+			GridUtil.LoadCIcon(icon,tIcon,data:GetCfg(),false);
+		else
+			CSAPI.SetGOActive(tIcon,false)
+			data:GetIconLoader():Load(icon, data:GetIcon())
+		end
 	end
 end
 

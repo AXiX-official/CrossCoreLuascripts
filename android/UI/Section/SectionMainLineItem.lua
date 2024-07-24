@@ -131,11 +131,20 @@ function OnClick()
         end
         return
     end
-    if isLock and data:GetCfg().preSection then
-        local preSectionData = DungeonMgr:GetSectionData(data:GetCfg().preSection)
-        -- local str = elseData.hardLv > 1 and "("..")" or ""
-        LanguageMgr:ShowTips(25001, preSectionData:GetName())
-        return
+
+    if isLock then
+        if data:GetCfg().preSection  then
+            local preSectionData = DungeonMgr:GetSectionData(data:GetCfg().preSection)
+            if preSectionData:GetState() ~= 2 then
+                LanguageMgr:ShowTips(25001, preSectionData:GetName())
+                return
+            end
+        end
+        local _,lockStr = data:GetOpen()
+        if lockStr and lockStr~="" then
+            Tips.ShowTips(lockStr)
+            return
+        end
     end
     if cb and not isLock then
         cb(this)

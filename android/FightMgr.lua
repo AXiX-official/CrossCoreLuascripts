@@ -411,8 +411,9 @@ function FightMgrBase:Over(stage, winer)
 end
 
 function FightMgrBase:Destroy()
-    LogDebug('FightMgrBase:Destroy')
-    if g_FightMgrServer then
+    LogDebugEx('FightMgrBase:Destroy', self == g_FightMgrServer)
+   -- LogTrace()
+    if g_FightMgrServer and g_FightMgrServer.isOver then
         g_FightMgrServer = nil
     end
 end
@@ -1838,8 +1839,9 @@ end
 -- 玩家断线重连
 function FightMgrBase:OnPlayerLogin(uid)
     -- LogTrace("FightMgrBase:OnPlayerLogin:")
-
-    self:Send(uid, 'FightProto:InBattle', {type = self.type, nDuplicateID = self.nDuplicateID})
+    if self.type ~= SceneType.Rogue then
+        self:Send(uid, 'FightProto:InBattle', {type = self.type, nDuplicateID = self.nDuplicateID})
+    end
 end
 
 function FightMgrBase:CheckRelive(caster, data)
@@ -3583,7 +3585,7 @@ elseif IS_SERVER then
     FightMgr = FightMgrServer
     function CreateFightMgr(id, groupID, ty, seed, nDuplicateID)
         LogDebugEx('CreateFightMgr', id, groupID, ty, seed, nDuplicateID)
-        if ty == SceneType.PVE then
+        if ty == SceneType.PVE or ty == SceneType.Rogue then
             return PVEFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild then
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)

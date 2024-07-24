@@ -21,6 +21,8 @@ local conf = {
 {'2',	'2',	'',	'',	'',	'7',	'14',	'arch_starry_night',	'80408'},
 {'2',	'2',	'',	'',	'',	'9',	'15',	'arch_fun_with_mew',	''},
 {'2',	'2',	'',	'',	'',	'8',	'16',	'arch_tender_dream',	'80409'},
+{'2',	'2',	'',	'',	'',	'9',	'17',	'arch_intoxicated_shadow',	'80410'},
+{'2',	'2',	'',	'',	'',	'10',	'18',	'arch_weightless_space',	'80411'},
 {'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
 {'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},
@@ -30,6 +32,8 @@ local conf = {
 {'5',	'5',	'',	'',	'',	'1',	'11',	'arch_bestie_agent',	'80406'},
 {'6',	'6',	'arch_trip_in_the_milky_way',	'寰宇梦境',	'',	'',	'',	'',	''},
 {'6',	'6',	'',	'',	'',	'1',	'12',	'arch_trip_in_the_milky_way',	''},
+{'6',	'6',	'',	'',	'',	'2',	'20',	'arch_guard_of_iron_bastion',	'80412'},
+{'6',	'6',	'',	'',	'',	'3',	'22',	'arch_snowland_gods',	''},
 },
 }
 --cfgCfgArchiveIllustration = conf

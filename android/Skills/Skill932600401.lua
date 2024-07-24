@@ -43,4 +43,6 @@ function Skill932600401:OnAttackOver(caster, target, data)
 	end
 	-- 932600402
 	self:AddProgress(SkillEffect[932600402], caster, target, data, -300)
+	-- 932600403
+	self:DelBufferForce(SkillEffect[932600403], caster, self.card, data, 932600401,3)
 end

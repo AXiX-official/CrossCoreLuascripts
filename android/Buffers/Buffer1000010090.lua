@@ -8,11 +8,6 @@ function Buffer1000010090:Init(mgr, id, target, caster)
 end
 -- 驱散buff时
 function Buffer1000010090:OnDelBuff(caster, target)
-	-- 8256
-	if SkillJudger:IsCtrlBuff(self, self.caster, target, true) then
-	else
-		return
-	end
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else

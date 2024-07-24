@@ -599,20 +599,21 @@ function this:CheckTeamForce(forceCfg)
 		return isTrue;
 	end
 	for k,v in ipairs(forceCfg) do
-		if v.nForceID~=nil then
+		local nForceID=FormationUtil.GetNForceID(v);
+		if nForceID~=nil then
 			local data=nil;
 			if v.bIsNpc then
-				data=self:GetItem(FormationUtil.FormatNPCID(v.nForceID));
+				data=self:GetItem(FormationUtil.FormatNPCID(nForceID));
 			else
-				data=self:GetItemByCfgID(v.nForceID);
+				data=self:GetItemByCfgID(nForceID);
 			end
 			if data==nil or data.index~=v.index then
-				local cfg=Cfgs.CardData:GetByID(v.nForceID);
+				local cfg=Cfgs.CardData:GetByID(nForceID);
 				if cfg.role_tag=="lead" then --队长需要另外判断
-					local nForceID=v.nForceID;
-					if RoleMgr:IsSexInitCardIDs(nForceID) then--判断当前卡牌是否是主角卡，是的话替换为当前性别的对应卡牌ID
-						nForceID=RoleMgr:GetCurrSexCardCfgId();
-					end
+					-- local nForceID=v.nForceID;
+					-- if RoleMgr:IsSexInitCardIDs(nForceID) then--判断当前卡牌是否是主角卡，是的话替换为当前性别的对应卡牌ID
+					-- 	nForceID=RoleMgr:GetCurrSexCardCfgId();
+					-- end
 					data=self:GetItemByCfgID(nForceID);
 					if data~=nil and data.index==v.index then
 						isTrue=true;

@@ -505,6 +505,7 @@ this.Role_Jump_Skill = 170040 --跳转到指定技能页面
 this.Role_Jump_Break = 170041 --跳转到指定突破页面
 
 this.Role_FirstCreate_End = 170042
+this.Role_Captain_ToFirst = 170043  --队长排在最前面
 ------------------------------------------主界面
 --切换显示状态
 this.Main_Menu_Show			= 180000;
@@ -540,6 +541,10 @@ this.Pay_Amount_Change=180013;
 this.Head_Frame_Change=180014;
 --更换头像
 this.Head_Icon_Change=180015;
+--累充领取
+this.AccuCharge_Get=180016;
+--活动表动态更改 
+this.CfgActiveEntry_Change=180017;
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -719,6 +724,8 @@ this.Equip_Remould_Select=210029;
 this.Equip_TweenMask_State=210030;
 --装备数据更新
 this.Equip_Update=210031;
+--强化动画遮罩
+this.Equip_StrengthTween_State=210032;
 ------------------------------------------战棋系统事件
 --场地初始化完成
 this.Battle_Ground_Inited = 220000;
@@ -879,6 +886,7 @@ this.Exercise_Army_Out = 290012
 this.Exercise_End = 290013 --本赛季结束
 this.ExerciseL_New = 290014 --参加此时重置
 this.ExerciseL_BuyCount = 290015 --购买挑战次数
+this.Rogue_CancelBack = 290016 --放弃
 --------------------------------------------------物品合成
 --合成成功
 this.Goods_Combine_Success = 300001
@@ -1162,6 +1170,8 @@ this.Activity_Open_State = 490001 --活动关卡开启状态
 this.TaoFa_Count_Refresh = 490002 --讨伐次数刷新
 this.TaoFa_Count_BuyRefresh = 490003 --讨伐购买次数刷新
 this.Arachnid_Count_Refresh = 490004 --活动购买次数刷新
+this.Activity_Open_Refresh = 490005 --活动时间刷新
+this.TotalBattle_Rank_Update = 490006 --十二星宫排行榜
 
 -----------------------------------战场
 this.BattleField_Show_List = 500001 --战区设置
@@ -1201,6 +1211,8 @@ this.SpecialDrops_Info_Update = 590001 --掉落更新
 --------------------------------道具池活动相关
 this.ItemPool_Date_Update=600001;--道具池数据刷新
 this.ItemPool_Draw_Ret=600002;--道具池抽卡返回
+
+
 
 ---屏幕自适应 关闭 UI页面数据
 this.LuaView_Lua_Closed=800019;

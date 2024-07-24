@@ -19,8 +19,14 @@ function SetLock()
     isOpen = true
     if (cfg.nConfigID) then
         local cfg = Cfgs[cfg.config]:GetByID(cfg.nConfigID)
-        if (cfg and cfg.sectionID) then
-            local sectionData = DungeonMgr:GetSectionData(cfg.sectionID)
+        if (cfg) then
+            local sid = 0
+            if cfg.sectionID then
+                sid = cfg.sectionID
+            elseif cfg.infos and cfg.infos[1] and cfg.infos[1].sectionID then
+                sid = cfg.infos[1].sectionID
+            end
+            local sectionData = DungeonMgr:GetSectionData(sid)
             if (sectionData ~= nil) then
                 isOpen = sectionData:GetOpen()
             end

@@ -151,4 +151,8 @@ function this:GetPostposition()
 	return self.cfg and self.cfg.after
 end
 
+function this:GetJumpId()
+	return self.cfg and self.cfg.jump
+end
+
 return this;

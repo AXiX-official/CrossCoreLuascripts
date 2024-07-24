@@ -122,10 +122,10 @@ function TouchItemClickCB(cfgChild)
     end
     local content = cfgChild.content or {}
 
-    local sName, timeScale, progress = cfgChild.sName, 1, 1
+    local sName, timeScale, progress,isClicksLast = cfgChild.sName, 1, 1,false
     -- content内容
     if (cfgChild.content) then
-        sName, timeScale, progress = SetContent(cfgChild)
+        sName, timeScale, progress,isClicksLast = SetContent(cfgChild)
     end
     if (not sName) then
         return
@@ -144,7 +144,7 @@ function TouchItemClickCB(cfgChild)
     if (isCan) then
         local b = false
         if (trackIndex ~= 1 and content.clicks ~= nil) then
-            b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress)
+            b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress,isClicksLast)
         elseif (content.actions ~= nil) then
             local num = records[cfgChild.index]
             local startTime = content.actions[num][1]
@@ -284,6 +284,7 @@ end
 -- 能否点击
 function SetClickActive(b)
     isActive = b
+    CSAPI.SetGOActive(mask,b)
 end
 
 function PlayVoice(type)
@@ -313,12 +314,12 @@ function EndCB()
     end
 end
 
--- 点击
+-- 点击 rui240710 不会进入这里，点击无动作区域会触发OnClickMask
 function OnClick()
-    if (not needClick) then
-        return
-    end
-    PlayVoice()
+    -- if (not needClick) then
+    --     return
+    -- end
+    -- PlayVoice()
 end
 
 -- 类型
@@ -464,7 +465,7 @@ end
 -- 点击 content内容
 function SetContent(cfgChild)
     local content = cfgChild.content
-    local sName, timeScale, progress = cfgChild.sName, 1, 1
+    local sName, timeScale, progress,isClicksLast = cfgChild.sName, 1, 1,false
     -- 激活与隐藏
     if (content.activation) then
         for k, v in pairs(touchItems) do
@@ -549,9 +550,10 @@ function SetContent(cfgChild)
             records[cfgChild.index] = num
             progress = content.clicks[num]
             timeScale = progress==0 and -1 or 1
+            isClicksLast = num>=#content.clicks
         end 
     end
-    return sName, timeScale, progress
+    return sName, timeScale, progress,isClicksLast
 end
 
 

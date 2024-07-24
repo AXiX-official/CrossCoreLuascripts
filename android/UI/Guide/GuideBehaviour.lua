@@ -800,5 +800,54 @@ function this:GuideBehaviourStart_TowerBattle_126010()
     UIUtil:OpenQuestion("Inject");
 end
 
+--乱序空间引导----------------------------------------------------------------------------
+function this:GuideBehaviourCondition_RogueBattle_130010()
+    return GuideMgr:IsGuided(1270);--检测之前的引导是否通过
+end
 
+--机神解限关卡引导----------------------------------------------------------------------------
+function this:GuideBehaviourCondition_KishinBreak_141010()  
+   if(FightClient:GetDirll())then
+       return false;
+   end
+   local id = DungeonMgr:GetCurrId();      
+   return id and id == 1319;
+end
+--引导机神召唤
+function this:GuideBehaviour_KishinBreak_141020()
+   EventMgr.Dispatch(EventType.Input_Select_Skill_Item,4);
+   FightGridSelMgr.CloseInput(true);
+end
+function this:GuideBehaviour_KishinBreak_141030()
+   FightGridSelMgr.CloseInput(false);
+   EventMgr.Dispatch(EventType.Input_Select_Skill_Item,4);
+end
+
+--引导机神技能释放
+function this:GuideBehaviour_KishinBreak_141040()
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,2);
+    FightGridSelMgr.CloseInput(true);
+ end
+ function this:GuideBehaviour_KishinBreak_141050()
+    FightGridSelMgr.CloseInput(false);
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,2);
+ end
+
+--机神解限强制引导
+function this:GuideBehaviourSkip_KishinBreak_141510()    
+    return GuideMgr:IsGuided(1420);--检测是否需要引导
+end
+function this:GuideBehaviourCondition_KishinBreak_141510()
+    return DungeonMgr:CheckDungeonPass(1319) and GuideMgr:IsGuided(1410);
+end
+
+function this:GuideBehaviourCondition_KishinBreak_142010()     
+    return DungeonMgr:CheckDungeonPass(1319) and GuideMgr:IsGuided(1410);
+end
+function this:GuideBehaviourStart_KishinBreak_142030() 
+    EventMgr.Dispatch(EventType.Role_Captain_ToFirst);
+end
+function this:GuideBehaviourStart_KishinBreak_142050()
+    UIUtil:OpenQuestion("KishinBreak");
+end
 return this;

@@ -309,6 +309,7 @@ function SetItems()
     -- end
 
     -- 角色管理
+    table.insert(indexs, 7)
     table.insert(indexs, 4)
 
     items1 = items1 or {}
@@ -407,9 +408,9 @@ function OnClickMask()
     CSAPI.SetGOActive(mask, false)
 end
 
-function OnClickTitle()
-    CSAPI.OpenView("MatrixBuildingInfo", buildData)
-end
+-- function OnClickTitle()
+--     CSAPI.OpenView("MatrixBuildingInfo", buildData)
+-- end
 
 -- 羁绊
 function OnClickJB()

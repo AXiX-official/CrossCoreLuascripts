@@ -13,11 +13,12 @@ effect="cast1_hit",time=3500,type=0,pos_ref={ref_type=4,part_index=1}
 },
 [-173569934]={
 {delay=1500,time=4500,type=3,hits={0}},
-{effect="cast2_1_eff",time=4500,type=0,pos_ref={ref_type=6}}
+{effect="cast2_1_eff",time=4500,type=0,pos_ref={ref_type=6}},
+{time=4500,type=0,cue_sheet="fight/effect/fourteen.acb",cue_name="Folie_attack_skill_04"}
 },
 [1823398344]={
 {time=4500,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hits={0}},
-{effect="cast2_1_hit",time=4500,type=0,pos_ref={ref_type=6}}
+{effect="cast2_1_hit",time=4500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Folie_attack_skill_05"}
 },
 [958292235]={
 {delay=6800,time=4000,type=1,hit_type=1,hits={0}},

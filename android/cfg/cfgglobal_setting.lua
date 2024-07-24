@@ -180,6 +180,9 @@ local conf = {
 {'g_BuildOpLogCnt',	'g_BuildOpLogCnt',	'',	'int',	'50'},
 {'g_BuildTradeOderSpeedCost',	'g_BuildTradeOderSpeedCost',	'',	'int',	'33'},
 {'g_CraftingCenterItems',	'g_CraftingCenterItems',	'',	'int[]',	'60101,60102,60103'},
+{'g_BuildPresetTeamBuyCost',	'g_BuildPresetTeamBuyCost',	'',	'int[]',	'10002,50,2'},
+{'g_BuildBasePresetTeamCnt',	'g_BuildBasePresetTeamCnt',	'',	'int',	'2'},
+{'g_BuildMaxPresetTeamCnt',	'g_BuildMaxPresetTeamCnt',	'',	'int',	'4'},
 {'g_DormRoleHitAngle',	'g_DormRoleHitAngle',	'',	'float',	'60'},
 {'g_DormColMinDis1',	'g_DormColMinDis1',	'',	'float',	'0.2'},
 {'g_DormColMinDis2',	'g_DormColMinDis2',	'',	'float',	'0.2'},
@@ -278,6 +281,11 @@ local conf = {
 {'g_ResetTeamStateDailyTime',	'g_ResetTeamStateDailyTime',	'',	'json',	'[[7001,1],[7002,1]]'},
 {'g_BadgeMax',	'g_BadgeMax',	'',	'int',	'6'},
 {'g_AchieveMenuListNum',	'g_AchieveMenuListNum',	'',	'int',	'10'},
+{'g_ExploringIsHelp',	'g_ExploringIsHelp',	'',	'bool',	''},
+{'g_ExploringRankFresh',	'g_ExploringRankFresh',	'',	'int',	'1800'},
+{'g_ExploringBattleTiem',	'g_ExploringBattleTiem',	'',	'int',	'3600'},
+{'g_ExploringRankRule',	'g_ExploringRankRule',	'',	'int',	'100'},
+{'g_ExploringTicket',	'g_ExploringTicket',	'',	'int[]',	'12009,10,3'},
 },
 }
 --cfgglobal_setting = conf

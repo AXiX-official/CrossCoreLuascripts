@@ -30,5 +30,5 @@ function Skill984020201:OnActionBegin(caster, target, data)
 		return
 	end
 	-- 984020202
-	self:AddBuffCount(SkillEffect[984020202], caster, self.card, data, 984020202,2,5)
+	self:AddBuffCount(SkillEffect[984020202], caster, self.card, data, 984020202,1,5)
 end

@@ -1,4 +1,4 @@
--- 效果抵抗提高20%，持续2回合
+-- 迅捷：加机动Ⅱ
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1000010151:OnCreate(caster, target)
 	-- 1000010151
-	self:AddTempAttrPercent(BufferEffect[1000010151], self.caster, self.card, nil, "defense",0.1)
+	self:AddTempAttrPercent(BufferEffect[1000010151], self.caster, self.card, nil, "speed",0.16)
 end

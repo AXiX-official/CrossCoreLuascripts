@@ -6,15 +6,10 @@ Buffer1000010070 = oo.class(BuffBase)
 function Buffer1000010070:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 驱散buff时
-function Buffer1000010070:OnDelBuff(caster, target)
+-- 攻击结束
+function Buffer1000010070:OnAttackOver(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
-	else
-		return
-	end
-	-- 8256
-	if SkillJudger:IsCtrlBuff(self, self.caster, target, true) then
 	else
 		return
 	end

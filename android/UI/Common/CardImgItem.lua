@@ -36,7 +36,7 @@ end
 -- @_isUseShopImg:是否使用特殊宣传图
 -- @return 
 -- ==============================--
-function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
+function Refresh(_modelId, _posType, _callBack, _isUseShopImg)
 
     if (not isInit and _modelId == nil or _posType == nil) then
         return
@@ -45,10 +45,10 @@ function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
     modelId = _modelId
     posType = _posType
     callBack = _callBack
-    if isUseShopImg~=_isUseShopImg then
-        oldModelId="";
+    if isUseShopImg ~= _isUseShopImg then
+        oldModelId = "";
     end
-    isUseShopImg=_isUseShopImg;
+    isUseShopImg = _isUseShopImg;
     -- 重置点击记录
     if (oldModelId ~= nil) then
         if (oldModelId ~= _modelId) then
@@ -63,19 +63,19 @@ function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
     oldModelId = _modelId
 
     SetTouch()
-    
+
     SetFaceItem()
 end
 
 function SetFaceItem()
-    if(not faceLua) then 
+    if (not faceLua) then
         ResUtil:CreateUIGOAsync("Common/CharacterImgItem", faceNode, function(go)
             faceLua = ComUtil.GetLuaTable(go)
-            faceLua.Init(modelId, CreateFaceCB,isUseShopImg)
+            faceLua.Init(modelId, CreateFaceCB, isUseShopImg)
         end)
-    else 
-        faceLua.Init(modelId, CreateFaceCB,isUseShopImg)
-    end 
+    else
+        faceLua.Init(modelId, CreateFaceCB, isUseShopImg)
+    end
 end
 
 -- function SetFaceItem()
@@ -99,7 +99,7 @@ function CreateFaceCB(_img)
     CSAPI.SetAnchor(imgObj, pos.x, pos.y, pos.z)
     CSAPI.SetScale(imgObj, scale, scale, 1)
     local size = CSAPI.GetRTSize(_img)
-    CSAPI.SetRTSize(imgObj, size[0], size[1])  --设置碰撞体的大小
+    CSAPI.SetRTSize(imgObj, size[0], size[1]) -- 设置碰撞体的大小
     if (callBack) then
         callBack()
     end
@@ -172,6 +172,14 @@ end
 -- 类型
 function PlayVoice(type)
     type = type == nil and RoleAudioType.touch or type
+
+    if (type == RoleAudioType.touch) then
+        local cfg = Cfgs.character:GetByID(modelId)
+        if (cfg and cfg.base_voiceID ~= nil) then
+            return -- 如果是商城皮肤并且填了保底台词，则不需要普通触摸语音
+        end
+    end
+
     if (not RoleAudioPlayMgr:GetIsPlaying()) then
         RoleAudioPlayMgr:PlayByType(modelId, type, nil, PlayCB, EndCB)
     end

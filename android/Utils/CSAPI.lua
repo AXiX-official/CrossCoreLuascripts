@@ -911,6 +911,17 @@ function this.GetMainCanvasSize()
 	return CS.UIUtil.mainCanvasRectTransform.sizeDelta
 end
 
+--获取与主画布分辨率比例差
+function this.GetSizeOffset()
+	local size = CSAPI.GetMainCanvasSize()
+	local xScale,yScale = 1,1
+	if size then
+		xScale = size[0] / 1920
+		yScale = size[1] / 1080	
+	end
+	return xScale > yScale and xScale or yScale
+end
+
 --是否是宽屏（平板之类）
 function this.Iswidescreen()
 	return CS.UIUtil.mainCanvasMatch < 1

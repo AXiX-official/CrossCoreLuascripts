@@ -14,5 +14,5 @@ function Buffer1000010040:OnRoundBegin(caster, target)
 		return
 	end
 	-- 1000010040
-	self:AddNp(BufferEffect[1000010040], self.caster, self.card, nil, 6)
+	self:AddNp(BufferEffect[1000010040], self.caster, self.card, nil, 5)
 end

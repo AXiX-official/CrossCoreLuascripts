@@ -1092,11 +1092,11 @@ function PlayerProto:ChangeCardCfgId(_cid, _cfgid)
     NetMgr.net:Send(proto)
 end
 function PlayerProto:ChangeCardCfgIdRet(proto)
-	Tips.ShowTips("更换角色成功")
+	LanguageMgr:ShowTips(3014)
 end
 
 -- 切换卡牌形态
-function PlayerProto:ChangeCardTcSkill(_cid,_oldSkillId,_useSkillId)
+function PlayerProto:ChangeCardTcSkill(_cid, _oldSkillId, _useSkillId)
     local proto = {"PlayerProto:ChangeCardTcSkill", {
         cid = _cid,
         oldSkillId = _oldSkillId,
@@ -1105,12 +1105,14 @@ function PlayerProto:ChangeCardTcSkill(_cid,_oldSkillId,_useSkillId)
     NetMgr.net:Send(proto)
 end
 function PlayerProto:ChangeCardTcSkillRet(proto)
-	Tips.ShowTips("更换机神成功")
+	LanguageMgr:ShowTips(3014)
 end
 
---更换头像框
+-- 更换头像框
 function PlayerProto:SetIconFrame(_icon_frame)
-    local proto = {"PlayerProto:SetIconFrame", {icon_frame =_icon_frame }}
+    local proto = {"PlayerProto:SetIconFrame", {
+        icon_frame = _icon_frame
+    }}
     NetMgr.net:Send(proto)
 end
 function PlayerProto:SetIconFrameRet(proto)
@@ -1118,20 +1120,30 @@ function PlayerProto:SetIconFrameRet(proto)
     EventMgr.Dispatch(EventType.Head_Frame_Change, proto)
 end
 
+-- 解禁通知
+function PlayerProto:CardChangeOpenNotice(proto)
+    RoleMgr:AddJieJinDatas(proto)
+end
+
 --活动入场卷购买
 function PlayerProto:BuyArachnidCount(_buy_cnt)
-    local proto = {"PlayerProto:BuyArachnidCount", {buy_cnt = _buy_cnt}}
+    local proto = {"PlayerProto:BuyArachnidCount", {
+        buy_cnt = _buy_cnt
+    }}
     NetMgr.net:Send(proto)
 end
 
---活动入场卷购买返回
+-- 活动入场卷购买返回
 function PlayerProto:BuyArachnidCountRet(proto)
     DungeonMgr:SetArachnidCount(proto)
 end
 
---设置头像框
+
+-- 设置头像框
 function PlayerProto:SetIcon(_icon_id)
-    local proto = {"PlayerProto:SetIcon", {icon_id = _icon_id}}
+    local proto = {"PlayerProto:SetIcon", {
+        icon_id = _icon_id
+    }}
     NetMgr.net:Send(proto)
 end
 function PlayerProto:SetIconRet(proto)
@@ -1139,37 +1151,39 @@ function PlayerProto:SetIconRet(proto)
     EventMgr.Dispatch(EventType.Head_Icon_Change, proto)
 end
 
---异构空间获取角色hp和sp
+-- 异构空间获取角色hp和sp
 function PlayerProto:GetNewTowerCardInfo()
     local proto = {"PlayerProto:GetNewTowerCardInfo"}
     NetMgr.net:Send(proto)
 end
 
---异构空间获取角色hp和sp返回
+-- 异构空间获取角色hp和sp返回
 function PlayerProto:GetNewTowerCardInfoRet(proto)
     Log("PlayerProto:GetNewTowerCardInfoRet")
     TowerMgr:SetCardInfos(proto)
 end
 
---重置异构空间角色hp和sp
-function PlayerProto:ResetNewTowerCardInfo(sid,cb)
+-- 重置异构空间角色hp和sp
+function PlayerProto:ResetNewTowerCardInfo(sid, cb)
     self.ResetCardInfoCallBack = cb
-    local proto = {"PlayerProto:ResetNewTowerCardInfo",{sid = sid}}
+    local proto = {"PlayerProto:ResetNewTowerCardInfo", {
+        sid = sid
+    }}
     NetMgr.net:Send(proto)
 end
 
---异构空间助战卡牌返回
+-- 异构空间助战卡牌返回
 function PlayerProto:NewTowerAssitCardRet(proto)
     TowerMgr:SetAssistCardInfos(proto)
 end
 
---获取异构空间今天的剩余重置次数
+-- 获取异构空间今天的剩余重置次数
 function PlayerProto:GetNewTowerResetCnt()
     local proto = {"PlayerProto:GetNewTowerResetCnt"}
     NetMgr.net:Send(proto)
 end
 
---获取异构空间今天的剩余重置次数返回
+-- 获取异构空间今天的剩余重置次数返回
 function PlayerProto:GetNewTowerResetCntRet(proto)
     Log("PlayerProto:GetNewTowerResetCntRet")
     Log(proto)
@@ -1180,24 +1194,26 @@ function PlayerProto:GetNewTowerResetCntRet(proto)
     end
 end
 
---获取副本的怪物hp和sp
+-- 获取副本的怪物hp和sp
 function PlayerProto:GetDupMonsterHpInfo(dungeonId)
-    local proto = {"PlayerProto:GetDupMonsterHpInfo",{id = dungeonId}}
+    local proto = {"PlayerProto:GetDupMonsterHpInfo", {
+        id = dungeonId
+    }}
     NetMgr.net:Send(proto)
 end
 
---获取副本的怪物hp和sp返回
+-- 获取副本的怪物hp和sp返回
 function PlayerProto:GetDupMonsterHpInfoRet(proto)
     Log("PlayerProto:GetDupMonsterHpInfoRet")
     Log(proto)
     TowerMgr:SetDatas(proto)
 end
 
---修改主角返回
+-- 修改主角返回
 function PlayerProto:ChangePlrShpaeRet(proto)
-	PlayerClient:SetPanelId(proto.panel_id)
-    PlayerProto:SetIconRet(proto.icon_id)   --头像
-    PlayerProto:SetLastRoleID(proto.role_panel_id)   --头像
+    PlayerClient:SetPanelId(proto.panel_id)
+    PlayerProto:SetIconRet(proto.icon_id) -- 头像
+    PlayerProto:SetLastRoleID(proto.role_panel_id) -- 头像
 
     EventMgr.Dispatch(EventType.Player_Select_Card)
 end
@@ -1213,7 +1229,20 @@ function PlayerProto:ClickBoard()
     NetMgr.net:Send(proto)
 end
 
---获取特殊掉落数量
+-- 修改角色名
+function PlayerProto:ChangePlrName(_name, _item_id)
+    local proto = {"PlayerProto:ChangePlrName", {
+        name = _name,
+        item_id = _item_id
+    }}
+    NetMgr.net:Send(proto)
+end
+
+function PlayerProto:ChangePlrNameRet()
+    EventMgr.Dispatch(EventType.Player_EditName)
+end
+
+-- 获取特殊掉落数量
 function PlayerProto:GetSpecialDropsInfo()
     local proto = {"PlayerProto:GetSpecialDropsInfo"}
     NetMgr.net:Send(proto)
@@ -1221,4 +1250,74 @@ end
 
 function PlayerProto:GetSpecialDropsInfoRet(proto)
     PlayerMgr:UpdateSpecialDrops(proto)
+end
+
+-- 修改背景 
+function PlayerProto:SetBackground(id, cb)
+    self.SetBackgroundCB = cb
+    local proto = {"PlayerProto:SetBackground", {
+        background_id = id
+    }}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetBackgroundRet(proto)
+    PlayerClient:SetBG(proto.background_id)
+    EventMgr.Dispatch(EventType.Player_Select_BG)
+    if (self.SetBackgroundCB) then
+        self.SetBackgroundCB(proto.background_id)
+    end
+    self.SetBackgroundCB = nil
+end
+
+--十二宫获取挑战开启信息
+function PlayerProto:GetStarPalaceInfo()
+    local proto = {"PlayerProto:GetStarPalaceInfo", {}}
+    NetMgr.net:Send(proto)
+end
+
+--十二宫获取挑战开启信息返回
+function PlayerProto:GetStarPalaceInfoRet(proto)
+    TotalBattleMgr:SetInfo(proto)
+end
+
+--十二宫不可使用的卡牌
+function PlayerProto:DeathCardInfos(proto)
+    TotalBattleMgr:CardCacheAdd(proto)
+end
+
+--放弃获开启挑战
+function PlayerProto:GiveUpStarPalaceChallenge()
+    local proto = {"PlayerProto:GiveUpStarPalaceChallenge", {}}
+    NetMgr.net:Send(proto)
+end
+
+--十二星宫排行榜
+function PlayerProto:GetStarRank(page,sid)
+    local proto = {"PlayerProto:GetStarRank", {nPage=page,rank_type=sid}}
+    NetMgr.net:Send(proto)
+end
+
+--十二星宫排行榜返回
+function PlayerProto:GetStarRankRet(proto)
+    TotalBattleMgr:GetRankRet(proto)
+end
+
+--获取累充的领取状态
+function PlayerProto:GetColletData()
+    local proto = {"PlayerProto:GetColletData"}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:GetColletDataRet(proto)
+    AccuChargeMgr:GetColletDataRet(proto)
+end
+function PlayerProto:TakeColletReward(_id,_cb)
+    self.TakeColletRewardCB = _cb 
+    local proto = {"PlayerProto:TakeColletReward",{id = _id}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:TakeColletRewardRet(proto)
+    if(self.TakeColletRewardCB) then 
+        self.TakeColletRewardCB(proto.id)
+    end
+    self.TakeColletRewardCB = nil 
 end

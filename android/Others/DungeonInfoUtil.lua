@@ -3,11 +3,16 @@ local this = {};
 this.ShowType = {
     Title = "Title",
     Title2 = "Title2",
+    Title3 = "Title3",
     Target = "Target",
+    Target2 = "Target2",
     Prograss = "Prograss",
     Output = "Output",
+    Output2 = "Output2",
     Level = "Level",
+    Level2 = "Level2",
     Double = "Double",
+    Double2 = "Double2",
     Details ="Details",
     Danger = "Danger",
     Danger2 = "Danger2",
@@ -18,6 +23,7 @@ this.ShowType = {
     Badge = "Badge",
     Plot = "Plot",
     PlotButton = "PlotButton",
+    Total= "Total",
 }
 
 function this.New()
@@ -32,9 +38,9 @@ function this:Set(cfg)
     if cfg then
         self.data = DungeonMgr:GetDungeonData(cfg.id)
         self.sectionData = DungeonMgr:GetSectionData(cfg.group)
-        self.panel = self.panel or {}
-        self.create = self.create or {}
     end
+    self.panel = self.panel or {}
+    self.create = self.create or {}
     self.datas = {cfg =self.cfg,data =self.data,sectionData =self.sectionData}
 end
 

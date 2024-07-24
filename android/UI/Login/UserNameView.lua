@@ -390,7 +390,12 @@ function SetDayOptions()
 			CSAPI.SetGOActive(dayGos[i], false)
 		end
 	end
-	if currDay > days then
+	
+	if not currDayText then
+		currDayText = ComUtil.GetCom(txtSel, "Text")
+	end
+	local _day = tonumber(currDayText.text)
+	if (currDay > days) or (_day > days) then
 		SetSelectDay(days)
 	end
 end

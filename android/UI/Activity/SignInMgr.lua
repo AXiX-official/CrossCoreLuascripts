@@ -284,4 +284,15 @@ function this:GetNewTimeData()
     return newTimeData
 end
 
+function this:CheckIsDone(id)
+    local arr = self:GetArr() or {}
+    if #arr > 0 then
+        for i, v in ipairs(arr) do
+            if v:GetID() == id then
+                return v:CheckIsDone(),v:GetKey()
+            end
+        end
+    end
+end
+
 return this

@@ -68,6 +68,7 @@ function Team:LoadConfig(id, stage, hpinfo)
 				card.configIndex = i
 			end
 		end
+
 	else
 		for i, pos in ipairs(formation.coordinate) do
 			local monsterID = self.monsters[i]

@@ -187,4 +187,8 @@ function this:GetShowType()
     return self.cfg and self.cfg.showType or 1
 end
 
+function this:GetIcon()
+    return self.cfg and self.cfg.icon
+end
+
 return this;

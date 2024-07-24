@@ -58,9 +58,9 @@ function this:Play(fightAction)
     end
 
     EventMgr.Dispatch(EventType.Character_FightInfo_Show,false); 
-    if(self:HasCustomCamera())then                
+    if(self:HasCustomCamera() and not self.character.IsSkipSkill())then                
         --self:SetSceneMaskState(true);
-
+        
         local delayTime = FightClient:GetFightMaskDelayTime();
         EventMgr.Dispatch(EventType.Character_HeadInfo_Scale_State,false);       
         EventMgr.Dispatch(EventType.Fight_Mask,self.character.GetID()); 
@@ -68,7 +68,7 @@ function this:Play(fightAction)
         FuncUtil:Call(self.SetSceneMaskState,self,delayTime,true);
 
         local hideSceneTime = self:GetHideSceneTime();
-        if(hideSceneTime and hideSceneTime > 0)then
+        if(hideSceneTime and hideSceneTime > 0 and not self.character.IsSkipSkill())then
             FuncUtil:Call(self.RecoverScene,self,hideSceneTime + delayTime);
         end
         --协战标签
@@ -113,7 +113,7 @@ end
 --技能准备
 function this:CastReady()
     
-    if(self:HasCustomCamera())then     
+    if(self:HasCustomCamera() and not self.character.IsSkipSkill())then     
         FightPosRefUtil:SetOverTurn(true);
     end
 
@@ -132,7 +132,7 @@ function this:CastReady()
     
     self:InitCastView();          
 
-    if(self:HasCustomCamera())then      
+    if(self:HasCustomCamera() and not self.character.IsSkipSkill())then      
         
         self:SetOverTurn(true);--大招改成180翻转，而非镜像
 
@@ -170,6 +170,11 @@ function this:SetOverTurn(state)
 end
 
 function this:SetSceneMaskState(state)
+    if(state and self.character and self.character.IsSkipSkill())then
+        return;
+    end
+
+
     if(self.sceneMaskState ~= nil and self.sceneMaskState == state)then
         return;
     end
@@ -206,6 +211,11 @@ end
 
 --初始化技能特殊设置
 function this:InitCastSpe()
+    if(self.character.IsSkipSkill())then
+        return;
+    end
+
+
      --技能特殊设置
     if(self.castStateData and self.castStateData.spe_setting)then
          self:SetOverTurn(true);
@@ -222,6 +232,10 @@ end
 
 --初始化角色显示状态
 function this:InitCharactersShowState()
+
+    if(self.character.IsSkipSkill())then
+        return;
+    end
 
     --同调不初始化角色显示状态，由同调脚本控制
     local skillType = self.cfgSkill and self.cfgSkill.type;  
@@ -253,7 +267,7 @@ function this:InitCharactersShowState()
                     local isShow = list[id] ~= nil;
 
                     --被保护的角色，在大招中不显示
-                    if(hasCustomCamera)then
+                    if(hasCustomCamera and not self.character.IsSkipSkill())then
                         local protectCharacter = self.fightAction:GetProtectCharacter();
                         if(protectCharacter == tmpCharacter)then
                             isShow = false;
@@ -311,7 +325,11 @@ function this:InitRot()
 end
 
 --初始化自己的位置
-function this:InitStartPos()          
+function this:InitStartPos()     
+    if(self.character.IsSkipSkill())then
+        return;
+    end
+    
     if(self.castStateData and self.castStateData.start_pos)then
         local x,y,z = self.fightAction:Calculate(self.castStateData.start_pos);      
         --local x0,y0,z0 = self.character.GetPos();  
@@ -400,6 +418,10 @@ end
 
 --初始化镜头
 function this:InitCamera()
+    if(self.character.IsSkipSkill())then
+        return;
+    end    
+
     --技能开始时初始镜头设置
     if(self.castStateData and self.castStateData.start_camera)then
         CameraMgr:ApplyAction(self.castStateData.start_camera,self.fightAction,self.character.gameObject,nil,true);
@@ -721,6 +743,9 @@ function this:SetCharacterShadowState(state)
 end
 
 function this:ApplyHideSetting()
+    if(self.character.IsSkipSkill())then
+        return;
+    end
     if(self.castStateData and self.castStateData.showDatas)then
         for _,showData in ipairs(self.castStateData.showDatas)do            
             FuncUtil:Call(self.SetTargetsShowState,self,showData.delay,showData);
@@ -770,8 +795,10 @@ function this:StartAction()
     if(self.cfgSkill.type == SkillType.Summon)then
         --召唤
         self.fightAction:PlaySummon();
-        FightClient:SetPlaySpeed(1,true);--1倍数，保证音画同步
-        commonSummonEff = ResUtil:CreateEffectImmediately("common/common_summon");
+        if(not self.character.IsSkipSkill())then
+            FightClient:SetPlaySpeed(1,true);--1倍数，保证音画同步
+            commonSummonEff = ResUtil:CreateEffectImmediately("common/common_summon");
+        end
 --    elseif(self.cfgSkill.type == SkillType.Unite)then
 --        self:SetSceneMaskState(true);
     elseif(self.cfgSkill.type == SkillType.Transform)then
@@ -779,8 +806,12 @@ function this:StartAction()
         self.fightAction:PlayTransform();
     else    
         --开始放招
-        self.character.ApplyCast(self.castName);  
-
+        if(self.character.IsSkipSkill())then
+            self.character.OnStateEnter(CSAPI.StringToHash(self.castName));
+            self:ShowHitEffs();
+        else
+            self.character.ApplyCast(self.castName);  
+        end
         local backDelay = self.castStateData and self.castStateData.back_delay;
         if(backDelay)then
             FuncUtil:Call(self.TeleportCustom,self,backDelay); 
@@ -792,12 +823,16 @@ function this:StartAction()
          --有协战者
         EventMgr.Dispatch(EventType.Fight_Trigger_Event_Update,{ character = helpFightAction:GetActorCharacter(),typeIndex = 1});          
     else
+        local customPlayTime = self.fightAction:GetCustomPlayTime();
 
-       local playTime = self.castStateData and self.castStateData.play_time;
+        local playTime = customPlayTime or (self.castStateData and self.castStateData.play_time);
         if(playTime == nil)then
             --LogError("虽然不是错误，但是还是要设置下技能表演时间。角色=" .. self.character.GetModelName() .. "，技能=" .. self.cfgSkill.cast);
             playTime = self.cfgSkill.action_time or 1000;
-        end
+        end      
+       
+        playTime = self.character.IsSkipSkill() and 1000 or playTime;
+
         FuncUtil:Call(self.ActionTimeOver,self,playTime);
     end   
 end
@@ -835,7 +870,7 @@ function this:SetFace(index)
     end
 end
 --播放完成
-function this:ApplyComplete()   
+function this:ApplyComplete()     
     if(self.timerComplete)then        
       
          --协战者无权利控制镜头
@@ -922,7 +957,7 @@ end
 
 
 function this:CastComplete()
-    if(self:HasCustomCamera())then
+    if(self:HasCustomCamera() and not self.character.IsSkipSkill())then
         EventMgr.Dispatch(EventType.Fight_Skill_Skip,false); 
 
         local delayTime = 350;
@@ -956,7 +991,7 @@ function this:RecoverScene()
 end
 function this:DelayRecoverScene()
     --local skipState = FightActionMgr:TryStopSkip();
-    if(self:HasCustomCamera())then
+    if(self:HasCustomCamera() and not self.character.IsSkipSkill())then
         CameraMgr:CloseAllCamera();  
         CameraMgr:ApplyCommonAction(nil,"default_camera");
     end
@@ -986,10 +1021,35 @@ function this:IsPlaying()
     return self.isPlaying;
 end
 
+
+--- 显示命中特效
+function this:ShowHitEffs()
+    local fa = self.fightAction;
+    if(not fa)then
+        return;
+    end
+    local targets = fa:GetTargetCharacters();
+    if(targets)then
+        for _,target in pairs(targets)do
+            if(target)then
+                local damageFloatDatas = target.GetFloatDatas();
+                if(damageFloatDatas)then
+                    local originPos = target.GetOriginPos();
+                    local x,y,z = originPos[1],originPos[2],originPos[3];
+                    ResUtil:CreateEffect("common_hit/common_hit1",x,0,z);
+                    --FuncUtil:Call(ResUtil.CreateEffect,ResUtil,400,"common_hit/common_hit1",x,0,z);
+                end
+            end
+        end
+    end
+end
+
+
+
 function this:CastEnd()  
-    --LogError("CastEnd");
     self.isPlaying = false;
     self.character.SetFace("");    
+    self.character.SetSkipSkill(false);
     self:SetCharacterShadowState(true);--还原中低配影子
     EventMgr.Dispatch(EventType.Character_HeadInfo_Scale_State,true);
     EventMgr.Dispatch(EventType.Fight_View_Mask,true); 
@@ -1005,7 +1065,7 @@ function this:CastEnd()
     end
 
     if(not self:HasRecoverSceneTime())then
-        if(self:HasCustomCamera())then
+        if(self:HasCustomCamera() and not self.character.IsSkipSkill())then
             self:SetOverTurn(false);
             FightPosRefUtil:SetOverTurn(false);
             FightClient:SetSkillSceneState(false);

@@ -120,26 +120,26 @@ function this:GetTimeTab(_timer)
     end
 end
 
--- 秒数转时间: 00：00：00 (时间不能大于1天)
-function this:GetTimeTab2(_timer)
-    if (_timer <= 0) then
-        return {"00", "00", "00"}
-    else
-        local num = 0 -- 秒
-        local d = math.floor(_timer / 86400)
-        num = _timer - d * 86400
-        local h = math.floor(num / 3600)
-        num = num - h * 3600
-        local m = math.floor(num / 60)
-        num = num - m * 60
-        local s = num
-        d = d < 10 and "0" .. d or d
-        h = h < 10 and "0" .. h or h
-        m = m < 10 and "0" .. m or m
-        s = s < 10 and "0" .. s or s
-        return {h, m, s}
-    end
-end
+-- -- 秒数转时间: 00：00：00 (时间不能大于1天)
+-- function this:GetTimeTab2(_timer)
+--     if (_timer <= 0) then
+--         return {"00", "00", "00"}
+--     else
+--         local num = 0 -- 秒
+--         local d = math.floor(_timer / 86400)
+--         num = _timer - d * 86400
+--         local h = math.floor(num / 3600)
+--         num = num - h * 3600
+--         local m = math.floor(num / 60)
+--         num = num - m * 60
+--         local s = num
+--         d = d < 10 and "0" .. d or d
+--         h = h < 10 and "0" .. h or h
+--         m = m < 10 and "0" .. m or m
+--         s = s < 10 and "0" .. s or s
+--         return {h, m, s}
+--     end
+-- end
 
 -- 秒数转时间: 00：00：00
 function this:GetTimeStr(_timer)

@@ -593,7 +593,7 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
                     callBack = callBack
                 });
             elseif commodityData:GetType() == CommodityItemType.Package or commodityData:GetType() ==
-                CommodityItemType.MonthCard then
+                CommodityItemType.MonthCard or commodityData:GetType() == CommodityItemType.Regression then
                 CSAPI.OpenView("ShopPackPayView", {
                     commodity = commodityData,
                     pageData = pageData,

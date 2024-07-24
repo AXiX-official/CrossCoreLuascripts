@@ -214,6 +214,16 @@ function this:GetRoles()
     return self.data.roleIds or {}
 end
 
+-- 预设驻员
+function this:GetPrestRoles(index)
+    local roleIds = {}
+    local datas = self:GetPresetRoles()
+    if (datas[index]) then
+        roleIds = datas[index].roleIds or {}
+    end
+    return roleIds
+end
+
 -- 当前房间可以放置的驻员数量
 function this:GetMaxNum()
     local cur = self.cfg and self.cfg.roleLimit or 0
@@ -245,6 +255,12 @@ end
 -- end
 -- 封装驻员数据，5个位置  {data = ,curLv = ,openLv=}   noNil:剔除不开放的
 function this:GetRoleInfos(noNil)
+    --宿舍 暂时取第一间房的数据 todo 
+    if (self:GetType() == BuildsType.Entry) then
+        local roomID = GCalHelp:GetDormId(1, 1) -- 默认打开101房
+        local roomData = DormMgr:GetRoomData(roomID)
+        return roomData:GetRoleInfos()
+    end
     noNil = noNil == nil and true or noNil
     local roleInfos = {}
     local roles = self:GetRoles()
@@ -585,6 +601,7 @@ function this:GetTimeMul()
     elseif (self:GetType() == BuildsType.Remould) then
         abilityType = RoleAbilityType.Artisan
     end
+    --[[ 改为正常显示
     -- 能力值
     local per = 0
     if (self:GetData().roleAbilitys and self:GetData().roleAbilitys[abilityType]) then
@@ -592,12 +609,14 @@ function this:GetTimeMul()
     end
     -- 电力影响的值
     local powerPer = self:GetPowerEffectVal()
-    local timeMul = (100 + per) * (100 + powerPer) / 10000
+    local timeMul = (100 + per) * (100 + powerPer) / 10000 
+    ]]
+    local timeMul = 1 -- 时间倍率 修改为正常显示
     local openTime = TimeUtil:GetTime()
     local oldLen = (openTime - self:GetOldTime()) * timeMul -- 向下取整
     return timeMul, openTime, oldLen
 end
-
+--[[ 改为正常显示
 -- 电力影响的值
 function this:GetPowerEffectVal()
     local val = 0
@@ -614,6 +633,7 @@ function this:GetPowerEffectVal()
     end
     return val
 end
+    ]]
 
 -- function this:GetNextRefreshTime()
 --     local curTime = TimeUtil:GetTime()
@@ -941,6 +961,50 @@ function this:GetAbilityVale(type)
         return roleAbilitys[type]
     end
     return nil
+end
+
+----------------------------------------队伍预设------------------------------------------
+-- 预设角色列表
+function this:GetPresetRoles()
+    return self:GetData().presetRoles or {}
+end
+-- 当前使用的预设队伍id（默认1）
+function this:GetCurPresetId()
+    return self:GetData().curPresetId or 1
+end
+
+function this:SetPresetRoles(sPresetRoleTeam)
+    local presetRoles = self:GetData().presetRoles or {}
+    local isIn = false
+    for k, v in pairs(presetRoles) do
+        if (v.teamId == sPresetRoleTeam.teamId) then
+            v.roleIds = sPresetRoleTeam.roleIds
+            isIn = true
+            break
+        end
+    end
+    if (not isIn) then
+        table.insert(self:GetData().presetRoles, sPresetRoleTeam.teamId, sPresetRoleTeam)
+    end
+end
+
+function this:SetCurPresetId(id)
+    self:GetData().curPresetId = id
+end
+
+function this:SetTeamName(sPresetRoleTeam)
+    local presetRoles = self:GetData().presetRoles or {}
+    local isIn = false
+    for k, v in pairs(presetRoles) do
+        if (v.teamId == sPresetRoleTeam.teamId) then
+            v.name = sPresetRoleTeam.name
+            isIn = true
+            break
+        end
+    end
+    if (not isIn) then
+        table.insert(self:GetData().presetRoles, sPresetRoleTeam.teamId, sPresetRoleTeam)
+    end
 end
 
 return this

@@ -290,7 +290,10 @@ function GetGridsState(row,col)
 				-- 	currentDragData.index=nil;
 				-- end
 				local isSuccess,isReplace=formatTab:PushCardByPos(currentDragData,true,true);
-				local maxNum = currentDragData.fuid~=nil and g_TeamMemberMaxNum + 1 or g_TeamMemberMaxNum;
+				local maxNum =g_TeamMemberMaxNum;
+				if currentDragData.fuid~=nil or currentDragData.bIsNpc==true  then
+					maxNum=g_TeamMemberMaxNum+1;
+				end
 				--获取当前相同的卡牌
 				local eqItem=formatTab:GetPosDataByRoleTag(currentDragData:GetRoleTag());
 				if isSuccess~=true or (isSuccess and teamData:GetRealCount()>=maxNum and isReplace==false) or ( eqItem and (eqItem.col~=col or eqItem.row~=row)) then
