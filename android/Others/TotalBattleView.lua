@@ -380,10 +380,12 @@ function OnBattleEnter()
     local currCfgs = currItem.GetCfgs()
     currDanger = itemInfo.CallFunc("Danger2","GetCurrDanger")
     local cfg = currCfgs and currCfgs[currDanger] or nil
-    local isEnough, tipsStr = DungeonUtil.IsEnough(cfg)
-    if not isEnough then
-        Tips.ShowTips(tipsStr)
-        return 
+    if not TotalBattleMgr:IsFighting() then
+        local isEnough, tipsStr = DungeonUtil.IsEnough(cfg)
+        if not isEnough then
+            Tips.ShowTips(tipsStr)
+            return 
+        end
     end
     if cfg and DungeonMgr:IsDungeonOpen(cfg.id) then
         CSAPI.OpenView("TeamConfirm", { -- 正常上阵

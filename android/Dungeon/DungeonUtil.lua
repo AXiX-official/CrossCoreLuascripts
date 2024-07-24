@@ -328,13 +328,13 @@ function this.GetCost(cfg)
     local winCost = cfg.winCost and cfg.winCost[1] or nil
     local cost = nil
     if enterCost then
-        cost = {enterCost[1],enterCost[2]}
+        cost = {enterCost[1],enterCost[2],enterCost[3]}
     end
     if winCost then
 		if cost~=nil and cost[1] == winCost[1] then
 			cost[2] = cost[2] + winCost[2]
 		elseif cost == nil then
-			cost = {winCost[1], winCost[2]}
+			cost = {winCost[1], winCost[2],winCost[3]}
 		end
     end
     return cost
