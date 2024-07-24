@@ -27,6 +27,7 @@ function this:GetFunc(sName)
         self.funcs["DungeonPlot"] = self.DungeonActivity
         self.funcs["DungeonFeast"] = self.DungeonActivity
         self.funcs["DungeonTaoFa"] = self.DungeonActivity
+        self.funcs["TotalBattle"] = self.DungeonActivity
         self.funcs["BattleField"] = self.DungeonActivity
         self.funcs["TowerView"] = self.DungeonActivity
         self.funcs["RogueView"] = self.DungeonActivity

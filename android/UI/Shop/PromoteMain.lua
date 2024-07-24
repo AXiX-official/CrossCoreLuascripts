@@ -9,16 +9,27 @@ local layoutList3={};
 local layoutList4={};
 function Awake()
     layout = ComUtil.GetCom(hpage, "UISlideshow")
-    layout:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack, true)
+    if layout then
+        layout:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack, true)
+    end
     layout2 = ComUtil.GetCom(mhpage, "UISlideshow")
-    layout2:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack2, true)
+    if layout2 then
+        layout2:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack2, true)
+    end
     layout3 = ComUtil.GetCom(blhpage, "UISlideshow")
-    layout3:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack3, true)
+    if layout3 then
+        layout3:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack3, true)
+    end
     layout4 = ComUtil.GetCom(brhpage, "UISlideshow")
-    layout4:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack4, true)
+    if layout4 then
+        layout4:Init("UIs/ShopPromote/PromoteImg", LayoutCallBack4, true)
+    end
 end
 
 function Refresh()
+    if layout==nil or layout2==nil or layout3==nil or layout4==nil then
+        do return end
+    end
     layoutList=ShopMgr:GetPromoteInfos(101);
     layoutList2=ShopMgr:GetPromoteInfos(201);
     layoutList3=ShopMgr:GetPromoteInfos(301);

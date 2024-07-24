@@ -845,6 +845,9 @@ function this:GuideBehaviourCondition_KishinBreak_142010()
     return DungeonMgr:CheckDungeonPass(1319) and GuideMgr:IsGuided(1410);
 end
 function this:GuideBehaviourStart_KishinBreak_142030() 
+    local roleListData = table.copy(SortMgr:GetData(1))
+    roleListData["Filter"]["CfgTeamEnum"] = {8}
+    SortMgr:SetData(1, roleListData)
     EventMgr.Dispatch(EventType.Role_Captain_ToFirst);
 end
 function this:GuideBehaviourStart_KishinBreak_142050()

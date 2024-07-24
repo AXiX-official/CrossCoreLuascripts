@@ -148,7 +148,7 @@ function OnClick()
         end
     elseif elseData == ArchiveType.Enemy then
         if dungeonData and dungeonData:IsPass() then
-            CSAPI.OpenView("Archive3/ArchiveEnemy", cfg)
+            CSAPI.OpenView("ArchiveEnemy", cfg)
         else
             LanguageMgr:ShowTips(18000)
             -- Tips.ShowTips(18001)
