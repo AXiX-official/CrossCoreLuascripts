@@ -124,8 +124,9 @@ function SetMyData()
 	CSAPI.SetText(txtLv, lvStr.. info:GetLevel())
 	--排名
 	CSAPI.SetText(txtRank1,(rank < 4 and rank ~= 0) and rank .. "" or "")
-	CSAPI.SetText(txtRank2, rank >= 4 and rank .. "" or "")
-    CSAPI.SetText(txtRank2, rank > 100 and "100+" or "")
+    local rankStr = rank >= 4 and rank .. "" or ""
+    rankStr = rank > 100 and "100+" or rankStr
+	CSAPI.SetText(txtRank2, rankStr)
 	--战斗力
 	CSAPI.SetText(txtFighting, info:GetScore() .. "")
 	--icon

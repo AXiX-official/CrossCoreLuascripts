@@ -459,6 +459,8 @@ end
 
 -- 训练(试玩)  可选参数[cid, model, modelA] 需要修改模型的角色id/模型/同调,机神,形态切换的模型id
 function CreateDirllFight(groupID, groupID2, cbOver, cid, model, modelA, skills)
+	g_FightMgrServer = nil
+	g_FightMgr = nil
     -- LogDebugEx("CreateDirllFight",groupID, groupID2, os.time())
     return CreateSimulateFight(groupID, groupID2, cbOver, os.time(), cid, model, modelA, skills)
 end
@@ -589,6 +591,9 @@ end
 function CreateDirllFightByData(data, groupID2, cbOver, tCommanderSkill, exData)
     LogTable(data)
     -- LogDebugEx("CreateDirllFight",groupID, groupID2, os.time())
+	g_FightMgrServer = nil
+	g_FightMgr = nil
+
     exData = exData or {}
     --exData.hpinfo = {}
     --exData.hpinfo[1] = { hp = 50 }

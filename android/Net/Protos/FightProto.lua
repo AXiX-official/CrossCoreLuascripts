@@ -208,7 +208,7 @@ function FightProto:RecvCmd(proto)
             g_FightMgr = SingleFightMgrClient(data.fid, data.groupID, SceneType.PVE, data.seed)
             g_FightMgr.uid = PlayerClient:GetID()
 
-            g_FightMgr:LoadConfig(data.groupID, 1)
+            g_FightMgr:LoadConfig(data.groupID, 1,data.exData.hpinfo)
             g_FightMgr:LoadData(data.teamID, data.data.data, nil, data.data.tCommanderSkill)
 
             g_FightMgr:AfterLoadData(data.exData)
@@ -742,8 +742,7 @@ end
 function FightProto:SetRestoreFightProto(proto)
     -- LogError("SetRestoreFightProto" .. table.tostring(proto,true));
     if (FightClient:IsFightting()) then
-		FightClient:QuitFihgt()	
-		DungeonMgr:SendToQuit();        return;
+        return;
     end
     self.restoreFightProto = proto;
     EventMgr.Dispatch(EventType.Fight_Restore);

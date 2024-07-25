@@ -33,13 +33,18 @@ function this:GetColletDataRet(proto)
 end
 
 function this:CheckRed()
+    local num = 0
     for k, v in pairs(self.datas) do
         if (v:IsRed()) then
-            RedPointMgr:UpdateData(RedPointType.AccuCharge, 1)
-            return
+            num = 1 
+            break
         end
     end
-    RedPointMgr:UpdateData(RedPointType.AccuCharge, 0)
+    local rData = RedPointMgr:GetData(RedPointType.AccuCharge)
+    if(rData==nil or rData~=num) then 
+        RedPointMgr:UpdateData(RedPointType.AccuCharge, num)
+        ActivityMgr:CheckRedPointData(ActivityListType.AccuCharge)
+    end 
 end
 
 function this:GetScore()

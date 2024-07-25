@@ -35,10 +35,14 @@ function Refresh(_reward)
         local goodsData = nil;
         if reward.c_id and reward.type == RandRewardType.EQUIP then
             goodsData = EquipMgr:GetEquip(reward.c_id);
-            if goodsData:GetType() == EquipType.Material then
-                clickCB = GridClickFunc.OpenInfoSmiple
+            if goodsData == nil then
+                LogError("找不到对应cid的装备!!!" .. reward.c_id)
             else
-                clickCB = GridClickFunc.EquipDetails
+                if goodsData:GetType() == EquipType.Material then
+                    clickCB = GridClickFunc.OpenInfoSmiple
+                else
+                    clickCB = GridClickFunc.EquipDetails
+                end   
             end
         else
             goodsData, clickCB = GridFakeData(reward)

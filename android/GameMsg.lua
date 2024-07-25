@@ -3972,7 +3972,7 @@ GameMsg.map["sStarRank"] = {
 }
 GameMsg.map["PlayerProto:GetStarRankRet"] = {
 	--排名数据         我的排名 排行榜类型（章节id） 当前积分 
-	{ "list|sStarRank","short", "int",               "int",   },
+	{ "list|sStarRank","int",   "int",               "int",   },
 	{ "data",          "rank",  "rank_type",         "score", },
 }
 GameMsg.map["PlayerProto:GetColletData"] = {

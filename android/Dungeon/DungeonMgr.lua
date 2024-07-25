@@ -172,6 +172,7 @@ function this:AddDungeonData(data)
         data.isPass = false;
     end
     dungeonData:SetData(data);
+    self.dungeonDatas = self.dungeonDatas or {}
     self.dungeonDatas[data.id] = dungeonData;
     self.maxDungeonID = self.maxDungeonID or 0
     if data.id and data.id > self.maxDungeonID then
