@@ -24,5 +24,5 @@ function Buffer1000040100:OnAfterHurt(caster, target)
 		return
 	end
 	-- 1000040100
-	self:AddBuff(BufferEffect[1000040100], self.caster, self.card, nil, 1000040101)
+	self:AddBuff(BufferEffect[1000040100], self.caster, target or self.owner, nil,1000040101)
 end
