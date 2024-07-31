@@ -19,5 +19,7 @@ function Skill1000060070:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 1000060070
-	self:AlterBufferByID(SkillEffect[1000060070], caster, target, data, 3005,1)
+	if self:Rand(6500) then
+		self:AlterBufferByID(SkillEffect[1000060070], caster, target, data, 3005,1)
+	end
 end

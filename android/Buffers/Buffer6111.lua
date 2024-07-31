@@ -39,6 +39,8 @@ function Buffer6111:OnActionOver2(caster, target)
 	end
 	-- 1064
 	self:DelBufferForce(BufferEffect[1064], self.caster, self.card, nil, 6111)
+	-- 1066
+	self:OwnerAddBuffCount(BufferEffect[1066], self.caster, self.card, nil, 304800101,-5,8)
 	-- 1065
 	self:SetValue(BufferEffect[1065], self.caster, self.card, nil, "L6111",0)
 end

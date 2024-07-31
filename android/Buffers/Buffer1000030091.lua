@@ -9,8 +9,5 @@ end
 -- 伤害前
 function Buffer1000030091:OnBefourHurt(caster, target)
 	-- 1000030091
-	local targets = SkillFilter:All(self, self.caster, target or self.owner, nil)
-	for i,target in ipairs(targets) do
-		self:AddAttrPercent(BufferEffect[1000030091], self.caster, target, nil, "damage",0.2)
-	end
+	self:AddAttrPercent(BufferEffect[1000030091], self.caster, self.card, nil, "damage",0.2)
 end

@@ -90,7 +90,18 @@ function InitLeftPanel()
 end
 
 function RefreshPanel()
-    -- 跳进来的
+    -- 跳进来的  --关卡是否已开启
+    if(openSetting) then  
+        local _data = RogueMgr:GetData(openSetting)
+        if(_data:IsLock()) then 
+            if (_data:GetCfg().perLevel) then
+                local cfg = Cfgs.DungeonGroup:GetByID(_data:GetCfg().perLevel)
+                LanguageMgr:ShowTips(39002, cfg.name)
+            end
+            openSetting = nil 
+        end 
+    end 
+
     selectID = openSetting
 
     selectItem = nil -- 换页
@@ -102,6 +113,9 @@ function RefreshPanel()
     CSAPI.SetGOActive(txtTime, time > 0)
     -- right 
     SetRight(selectID, openSetting ~= nil)
+    if(openSetting ~= nil and selectItem~=nil) then --跳进来应该有个动画
+        SetSelect(selectItem,true)
+    end
     -- 侧边动画
     leftPanel.Anim()
     -- 
@@ -124,7 +138,10 @@ function Update()
         timer = Time.time + 1
         time = RogueMgr:GetRogueTime()
         local timeData = TimeUtil:GetTimeTab(time)
-        LanguageMgr:SetText(txtTime, 50001, timeData[1], timeData[2], timeData[3])
+        LanguageMgr:SetText(txtTime, 50001, timeData[1], timeData[2], timeData[3]) 
+        if(time<=0) then 
+            CSAPI.SetGOActive(txtTime, time > 0)
+        end 
     end
 end
 
@@ -157,6 +174,9 @@ function SetItems()
             end)
         else
             item.Refresh(v, selectID, inAnim)
+            if (selectID == v:GetID()) then
+                selectItem = item
+            end
         end
     end
 end

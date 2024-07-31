@@ -720,6 +720,9 @@ function FightProto:InBattle(proto)
 
         end
         return;
+    elseif proto.type == SceneType.Rogue and not FightClient:IsFightting()then 
+        FightProto:QuitRogueFight(true, 1)
+        return;
     end
 
     if g_FightMgr and not g_FightMgr.isOver then
@@ -742,6 +745,8 @@ end
 function FightProto:SetRestoreFightProto(proto)
     -- LogError("SetRestoreFightProto" .. table.tostring(proto,true));
     if (FightClient:IsFightting()) then
+		FightClient:QuitFihgt()	
+		DungeonMgr:SendToQuit();        
         return;
     end
     self.restoreFightProto = proto;

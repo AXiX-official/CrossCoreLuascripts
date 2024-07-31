@@ -113,7 +113,7 @@ function ESignCB(proto)
     ActivityMgr:SetListData(ActivityListType.SignInContinue, {
         key = _key
     })
-    ActivityMgr:CheckRedPointData()
+    ActivityMgr:CheckRedPointData(ActivityListType.SignInContinue)
 
     local taData = {
         reson = "领取活动奖励",

@@ -2706,3 +2706,28 @@ function ConfigChecker:CfgTotalBattle(cfgs)
         end
     end
 end
+function ConfigChecker:CfgRogueBuff(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if not cfg.skillId and not cfg.buffId then
+            assert(false, string.format("词条表，CfgRogueBuff id:%s 没有配对应的技能或BUFF", cfg.id))
+        end
+
+        if cfg.lifeType == 2 then
+            assert(cfg.lifeValue, string.format("词条表，CfgRogueBuff id:%s 没有配对应的词条生命参数", cfg.id))
+        end
+
+        if cfg.target == 3 or cfg.target == 4 then
+            -- 我方随机或敌方随机，需要配对应的随机个数
+            assert(cfg.targetValue, string.format("词条表，CfgRogueBuff id:%s 没有配对应的对象参数", cfg.id))
+        end
+
+        if cfg.preConditions then
+            assert(cfg.preConditionsValue, string.format("词条表，CfgRogueBuff id:%s 没有配对应的前置条件参数", cfg.id))
+        end
+
+        if not cfg.probability then
+            assert(false, string.format("词条表，CfgRogueBuff id:%s 没有配出现概率", cfg.id))
+        end
+
+    end
+end

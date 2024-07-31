@@ -6,8 +6,8 @@ Buffer1000030100 = oo.class(BuffBase)
 function Buffer1000030100:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 暴击伤害前(OnBefourHurt之前)
-function Buffer1000030100:OnBefourCritHurt(caster, target)
+-- 伤害后
+function Buffer1000030100:OnAfterHurt(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else
@@ -24,5 +24,5 @@ function Buffer1000030100:OnBefourCritHurt(caster, target)
 		return
 	end
 	-- 1000030100
-	self:AddBuff(BufferEffect[1000030100], self.caster, self.card, nil, 1000030101)
+	self:AddBuff(BufferEffect[1000030100], self.caster, target or self.owner, nil,1000030101)
 end

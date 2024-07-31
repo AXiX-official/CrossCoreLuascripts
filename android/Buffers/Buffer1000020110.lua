@@ -6,8 +6,8 @@ Buffer1000020110 = oo.class(BuffBase)
 function Buffer1000020110:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 攻击结束
-function Buffer1000020110:OnAttackOver(caster, target)
+-- 行动结束
+function Buffer1000020110:OnActionOver(caster, target)
 	-- 8218
 	if SkillJudger:IsShieldDestroy(self, self.caster, target, true) then
 	else
@@ -24,5 +24,5 @@ function Buffer1000020110:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000020110
-	self:AddBuff(BufferEffect[1000020110], self.caster, self.card, nil, 1000020111,1000020112)
+	self:AddBuff(BufferEffect[1000020110], self.caster, self.card, nil, 1000020111)
 end

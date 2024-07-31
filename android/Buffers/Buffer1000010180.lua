@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1000010180:OnCreate(caster, target)
 	-- 1000010180
-	self:AddBuffCount(BufferEffect[1000010180], self.caster, self.card, nil, 1000010181,1,5)
+	self:AddAttrPercent(BufferEffect[1000010180], self.caster, self.card, nil, "attack",0.1)
 end

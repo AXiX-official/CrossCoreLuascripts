@@ -16,5 +16,5 @@ function Skill1000020180:OnActionOver(caster, target, data)
 		return
 	end
 	-- 1000020180
-	self:AddBuff(SkillEffect[1000020180], caster, self.card, data, 1000020180)
+	self:AddTempAttr(SkillEffect[1000020180], caster, self.card, data, "crit_rate",1)
 end

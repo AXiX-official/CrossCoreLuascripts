@@ -6,8 +6,8 @@ Buffer1000040010 = oo.class(BuffBase)
 function Buffer1000040010:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 创建时
-function Buffer1000040010:OnCreate(caster, target)
+-- 伤害前
+function Buffer1000040010:OnBefourHurt(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else
@@ -24,5 +24,5 @@ function Buffer1000040010:OnCreate(caster, target)
 		return
 	end
 	-- 1000040010
-	self:AddAttrPercent(BufferEffect[1000040010], self.caster, self.card, nil, "damage",0.5)
+	self:AddTempAttrPercent(BufferEffect[1000040010], self.caster, self.card, nil, "damage",0.5)
 end

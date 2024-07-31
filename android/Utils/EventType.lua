@@ -28,7 +28,8 @@ this.Input_Event_Trigger = 1005;
 this.Show_Prompt = 1006;
 --请求失败
 this.Web_Error = 1007;
-
+--重连成功推送
+this.InitFinishRet = 1008
 ------------------------------------------界面
 --界面被打开
 this.View_Lua_Opened = 1100;

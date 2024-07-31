@@ -36,7 +36,8 @@ function LayoutCallBack(index)
     if (lua) then
         local _data = curDatas[index]
         lua.SetIndex(index)
-        lua.SetClickCB(OnShopCallBuy)
+        lua.SetClickCB(OnClickCB)
+        lua.SetShopClickCB(OnShopCallBuy)
         lua.Refresh(_data, {isBuy = isBuy})
     end
 end
@@ -124,11 +125,32 @@ function SetShop()
         local rewards = commData:GetCommodityList()
         local num = 300
         CSAPI.SetText(txtMoney,num .. "")
+
+        commData:GetData().close_time = targetTime
     end
 end
 
 function OnClickShop()
     OnShopCallBuy()
+end
+
+function OnClickCB()
+    local datas = MissionMgr:GetActivityDatas(eTaskType.Regression, info.activityId) or {}
+    local ids = {}
+    if #datas > 0 then
+        for i, v in ipairs(datas) do
+            if v:IsFinish() and not v:IsGet() then
+                if v:GetFundId() then
+                    if isBuy then
+                        table.insert(ids,v:GetID())
+                    end
+                else
+                    table.insert(ids,v:GetID())
+                end
+            end
+        end
+    end
+    TaskProto:GetReward(nil,ids)
 end
 
 function OnShopCallBuy()

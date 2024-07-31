@@ -1839,9 +1839,9 @@ end
 -- 玩家断线重连
 function FightMgrBase:OnPlayerLogin(uid)
     -- LogTrace("FightMgrBase:OnPlayerLogin:")
-    if self.type ~= SceneType.Rogue then
-        self:Send(uid, 'FightProto:InBattle', {type = self.type, nDuplicateID = self.nDuplicateID})
-    end
+    -- if self.type ~= SceneType.Rogue then
+    self:Send(uid, 'FightProto:InBattle', {type = self.type, nDuplicateID = self.nDuplicateID})
+    -- end
 end
 
 function FightMgrBase:CheckRelive(caster, data)

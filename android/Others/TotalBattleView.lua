@@ -85,7 +85,7 @@ end
 function OnViewClosed(viewKey)
     if viewKey == "Plot" or viewKey == "ShopView" then
         FuncUtil:Call(function ()
-            if gameObject then
+            if gameObject and info then
                 CSAPI.PlayBGM(info.bgm, 1)
             end
         end,this,200)

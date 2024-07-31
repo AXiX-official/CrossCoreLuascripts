@@ -19,5 +19,5 @@ function Buffer1000060130:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000060130
-	self:AddBuff(BufferEffect[1000060130], self.caster, self.card, nil, 3005)
+	self:AddBuff(BufferEffect[1000060130], self.caster, target or self.owner, nil,3005)
 end

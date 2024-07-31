@@ -27,6 +27,7 @@ function this:CheckReturningPlr(proto)
             }
         end
     end
+    self:CheckRedPointData()
 end
 
 -- 资源找回数据
@@ -206,7 +207,7 @@ function this:CheckRedPointData()
                         local aInfo = self.activityInfos[_info.type]
                         if aInfo and aInfo.sTime and aInfo.eTime and TimeUtil:GetTime() >= aInfo.sTime 
                         and TimeUtil:GetTime() < aInfo.eTime then
-                            if _info.group and self:CheckRed(_info.type,_info.activityId,redInfos) then
+                            if _info.group and self:CheckRed(_info.type,_info.activityId,redInfos,_info) then
                                 redData1 = 1
                                 break
                             end
@@ -219,15 +220,30 @@ function this:CheckRedPointData()
     RedPointMgr:UpdateData(RedPointType.Regression, redData1)
 end
 
-function this:CheckRed(_type,_activityId,redInfos)
+function this:CheckRed(_type,_activityId,redInfos,_info)
     if _type == RegressionActiveType.DropAdd then
         return DungeonUtil.HasMultiNum(_activityId)
     elseif _type == RegressionActiveType.Fund then
-        return MissionMgr:CheckRed2(eTaskType.Regression,_activityId)
+        local shopId = (_info and _info.infos and _info.infos[1]) and _info.infos[1].shopId or 0
+        local recordInfo = ShopMgr:GetRecordInfos(shopId)
+        local isBuy = recordInfo and recordInfo.last_buy_time > 0    
+        local datas = MissionMgr:GetDatas(eTaskType.Regression)
+        if #datas > 0 then
+            for i, v in ipairs(datas) do
+                if (not MissionMgr:CheckIsReset(v) and v:CheckIsOpen() and v:IsFinish() and not v:IsGet()) then
+                    if v:GetFundId() then 
+                        if isBuy then --有购买基金
+                            return true
+                        end
+                    else
+                        return true
+                    end
+                end
+            end
+        end
     elseif _type == RegressionActiveType.Tasks then
         return MissionMgr:CheckRed2(eTaskType.RegressionTask,_activityId)
     elseif _type == RegressionActiveType.Sign then
-        local isDone = SignInMgr:CheckIsDone(_activityId)
         return not SignInMgr:CheckIsDone(_activityId)
     elseif _type == RegressionActiveType.Show then
         return false 

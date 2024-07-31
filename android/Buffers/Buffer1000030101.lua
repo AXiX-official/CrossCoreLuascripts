@@ -6,8 +6,8 @@ Buffer1000030101 = oo.class(BuffBase)
 function Buffer1000030101:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 创建时
-function Buffer1000030101:OnCreate(caster, target)
+-- 伤害后
+function Buffer1000030101:OnAfterHurt(caster, target)
 	-- 8070
 	if SkillJudger:TargetIsSelf(self, self.caster, target, true) then
 	else
@@ -15,6 +15,11 @@ function Buffer1000030101:OnCreate(caster, target)
 	end
 	-- 8220
 	if SkillJudger:IsDamageType(self, self.caster, target, true,1) then
+	else
+		return
+	end
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, self.caster, target, true) then
 	else
 		return
 	end

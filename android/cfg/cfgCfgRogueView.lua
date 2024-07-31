@@ -8,7 +8,7 @@ local conf = {
 'id','key','name','sectionID','actionTime'
 },
 	["data"] = {
-{'8001',	'8001',	'Active_Name_13##乱序演习',	'11001',	'07/31 12:00 - 9/28  02:59'},
+{'8001',	'8001',	'Active_Name_13##乱序演习',	'11001',	'06/31 12:00 - 9/28  02:59'},
 },
 }
 --cfgCfgRogueView = conf

@@ -24,5 +24,5 @@ function Buffer1000070110:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000070110
-	self:AddProgress(BufferEffect[1000070110], self.caster, target or self.owner, nil,8)
+	self:AddProgress(BufferEffect[1000070110], self.caster, self.card, nil, 80)
 end

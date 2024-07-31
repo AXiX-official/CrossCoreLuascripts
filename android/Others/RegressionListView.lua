@@ -8,13 +8,7 @@ curIndex1, curIndex2 = 1, 1;
 
 function Awake()
     eventMgr = ViewEvent.New()
-    eventMgr:AddListener(EventType.Update_Everyday, function ()
-        leftInfos = RegressionMgr:GetArr()
-        SetLeft()
-        leftPanel.Anim()
-        SetRight()
-        SetRed()
-    end)
+    eventMgr:AddListener(EventType.Update_Everyday, OnOpen)
 end
 
 function OnDestroy()
@@ -172,9 +166,11 @@ end
 
 function SetRed()
     for i, v in ipairs(leftPanel.leftItems) do
-        local isRed = RegressionMgr:CheckRed(leftInfos[i].type, leftInfos[i].activityId,redInfos)
-        isRed = i == curIndex1 and false or isRed
-        v.SetRed(isRed)
+        if leftInfos[i] then
+            local isRed = RegressionMgr:CheckRed(leftInfos[i].type, leftInfos[i].activityId,redInfos,leftInfos[i])
+            isRed = i == curIndex1 and false or isRed
+            v.SetRed(isRed)    
+        end
     end
 end
 

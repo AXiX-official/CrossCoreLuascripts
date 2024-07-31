@@ -26,12 +26,21 @@ end
 function this:GetActivityDownAddress(type)
     -- local curServer = GetCurrentServer()
     local currPlatform = CSAPI.GetPlatform()
-    local str1 = currPlatform == 8 and "ios" or "android"
-	local str2 = "text"    if (CSAPI.GetChannelType() == ChannelType.BliBli) then        str2 = "bilibili"
+    local str1 = "pc"
+    if(currPlatform == 8) then 
+        str1 = "ios"
+    elseif(currPlatform == 11) then 
+        str1 = "android"
+    end 
+    local str2 = "text"
+    if (CSAPI.GetChannelType() == ChannelType.BliBli) then
+        str2 = "bilibili"
     elseif (CSAPI.GetChannelType() == ChannelType.Normal or CSAPI.GetChannelType() == ChannelType.TapTap) then
         str2 = "official"
     elseif (CSAPI.GetChannelType() == ChannelType.QOO) then
         str2 = "qoo"
+    elseif (CSAPI.GetChannelType() == ChannelType.ZiLong) then
+        str2 = "zilong"
     end
     local fileName = ""
     if (type == BackstageFlushType.Board) then
@@ -410,43 +419,59 @@ function this:ClearSavePanel()
 end
 
 -- 检测红点
-function this:CheckRedPointData()
-    local redTypes1 = {}
-    local redTypes2 = {}
-    local redTypes3 = {}
+function this:CheckRedPointData(type)
+    if type then
+        local cfg = Cfgs.CfgActiveList:GetByID(type)
+        if cfg and cfg.group then
+            local redData = RedPointMgr:GetData(RedPointType["ActivityList" .. cfg.group])
+            local isRed = redData ~= nil
+            if self:CheckRed(type) and redData == nil then
+                redData = 1
+            end
+            if isRed ~= (redData ~= nil) then
+                RedPointMgr:UpdateData(RedPointType["ActivityList" .. cfg.group], redData) 
+            end
+            return
+        end
+    end
+    local redData1 = RedPointMgr:GetData(RedPointType.ActivityList1)
+    local redData2 = RedPointMgr:GetData(RedPointType.ActivityList2)
+    local redData3 = RedPointMgr:GetData(RedPointType.ActivityList3)
+    local isRed1 = redData1 ~= nil
+    local isRed2 = redData2 ~= nil
+    local isRed3 = redData3 ~= nil
     if ActivityListType then
         for k, v in pairs(ActivityListType) do
             local cfg = Cfgs.CfgActiveList:GetByID(v)
             if cfg then
                 if cfg.group then
-                    if cfg.group == 2 then
-                        table.insert(redTypes2, {
-                            type = v,
-                            b = self:CheckRed(v) and 1 or 0
-                        })
-                    elseif cfg.group == 3 then
-                        table.insert(redTypes3, {
-                            type = v,
-                            b = self:CheckRed(v) and 1 or 0
-                        })
-                    else
-                        table.insert(redTypes1, {
-                            type = v,
-                            b = self:CheckRed(v) and 1 or 0
-                        })
+                    if self:CheckRed(v) then
+                        if cfg.group == 2 and redData2 == nil then
+                            redData2 = 1
+                        elseif cfg.group == 3 and redData3 == nil then
+                            redData3 = 1
+                        elseif cfg.group == 1 and redData1 == nil then
+                            redData1 = 1
+                        end
                     end
                 end
             end
         end
     end
-    RedPointMgr:UpdateData(RedPointType.ActivityList1, redTypes1)
-    RedPointMgr:UpdateData(RedPointType.ActivityList2, redTypes2)
-    RedPointMgr:UpdateData(RedPointType.ActivityList3, redTypes3)
+    if isRed1 ~= (redData1 ~= nil) then
+        RedPointMgr:UpdateData(RedPointType.ActivityList1, redData1)
+    end
+    if isRed2 ~= (redData2 ~= nil) then
+        RedPointMgr:UpdateData(RedPointType.ActivityList2, redData2)
+    end
+    if isRed3 ~= (redData3 ~= nil) then
+        RedPointMgr:UpdateData(RedPointType.ActivityList3, redData3)
+    end
 end
 
 -- type:ActivityListType
 function this:CheckRed(type)
-    if self.activityListDatas and self.activityListDatas[type] and (not self.activityListDatas[type].isOpen) then
+    if not self.activityListDatas or not self.activityListDatas[type] or (not self.activityListDatas[type].isOpen) then
         return false
     end
     if type == ActivityListType.MissionContinue then
@@ -455,7 +480,7 @@ function this:CheckRed(type)
         return MissionMgr:CheckNewYearRed()
     elseif type == ActivityListType.SignIn or self:IsSignInContinue(type) then
         if self.listDatas and self.listDatas[type] then
-            return self.listDatas[type].isSingIn
+            return self.listDatas[type].isSingIn == true
         end
         return false
     elseif type == ActivityListType.Investment then
@@ -529,7 +554,7 @@ function this:IsActivityListNull(viewName, group)
 end
 
 function this:IsSignInContinue(type)
-    local _types = {ActivityListType.SignInContinue,ActivityListType.NewYearSignIn,ActivityListType.SignInCommon,ActivityListType.SignInShadowSpider,ActivityListType.SignInGold}
+    local _types = {ActivityListType.SignInContinue,ActivityListType.NewYearSignIn,ActivityListType.SignInCommon,ActivityListType.SignInShadowSpider,ActivityListType.SignInGold,ActivityListType.SignInZhongQiu}
     for i, _type in ipairs(_types) do
         if type == _type then
             return true

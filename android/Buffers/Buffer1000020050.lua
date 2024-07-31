@@ -26,5 +26,5 @@ function Buffer1000020050:OnAddBuff(caster, target, buffer)
 		return
 	end
 	-- 1000020050
-	self:AddNp(BufferEffect[1000020050], self.caster, self.card, nil, 3)
+	self:AddNp(BufferEffect[1000020050], self.caster, self.card, nil, 10)
 end

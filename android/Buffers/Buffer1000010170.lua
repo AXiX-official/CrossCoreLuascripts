@@ -6,8 +6,8 @@ Buffer1000010170 = oo.class(BuffBase)
 function Buffer1000010170:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 攻击结束
-function Buffer1000010170:OnAttackOver(caster, target)
+-- 行动结束
+function Buffer1000010170:OnActionOver(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else

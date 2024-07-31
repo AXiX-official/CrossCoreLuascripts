@@ -20,7 +20,7 @@ function Buffer1000060040:OnAttackOver(caster, target)
 	end
 	-- 1000060040
 	if self:Rand(7500) then
-		self:AddBuff(BufferEffect[1000060040], self.caster, self.card, nil, 1000060041)
+		self:AddBuff(BufferEffect[1000060040], self.caster, target or self.owner, nil,1000060041)
 		-- 8060
 		if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 		else
@@ -32,6 +32,6 @@ function Buffer1000060040:OnAttackOver(caster, target)
 			return
 		end
 		-- 1000060043
-		self:AddBuff(BufferEffect[1000060043], self.caster, self.card, nil, 1000060042)
+		self:AddBuff(BufferEffect[1000060043], self.caster, target or self.owner, nil,1000060042)
 	end
 end

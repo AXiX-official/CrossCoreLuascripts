@@ -135,7 +135,7 @@ function ShowReward(proto)
     PlayAnim(function ()
         UIUtil:OpenReward(reward)
         reward = nil
-        ActivityMgr:CheckRedPointData()
+        ActivityMgr:CheckRedPointData(ActivityListType.Investment)
         Refresh()
     end)
 end
@@ -176,7 +176,7 @@ function OnClickJump()
     if reward then
         UIUtil:OpenReward(reward)
         reward = nil
-        ActivityMgr:CheckRedPointData()
+        ActivityMgr:CheckRedPointData(ActivityListType.Investment)
         Refresh()
     end
 end

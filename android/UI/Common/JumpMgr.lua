@@ -248,7 +248,11 @@ function this.DungeonActivity(cfg)
                 }, nil)
             end
         else
-            CSAPI.OpenView(cfg.sName)
+            if(cfg.sName=="RogueView" and cfg.page~=nil) then 
+                CSAPI.OpenView(cfg.sName,nil,tonumber(cfg.page))
+            else 
+                CSAPI.OpenView(cfg.sName)
+            end 
             -- LogError("缺少跳转的章节数据!跳转id:" .. cfg.id)
         end
     else

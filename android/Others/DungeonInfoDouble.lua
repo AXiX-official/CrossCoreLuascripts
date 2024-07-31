@@ -48,7 +48,7 @@ function ShowDoublePanel()
     if not hasMulti then
         return
     end
-    local dStr = DungeonUtil.GetMultiDesc2(sectionData:GetID())
+    local dStr = DungeonUtil.GetMultiDesc(sectionData:GetID())
     CSAPI.SetText(txtDouble, dStr);
 
     multiNum = DungeonUtil.GetMultiNum(sectionData:GetID())

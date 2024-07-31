@@ -344,6 +344,33 @@ function SingleFightMgrClient:ForceQuit()
     g_FightMgrServer:Over(self.stage, 2)
 end
 
+-- 结束
+function SingleFightMgrClient:Over(stage, winer)
+    LogDebug('SingleFightMgrClient:Over', stage, winer)
+
+    if g_FightMgrServer then 
+        LogDebugEx("g_FightMgrServer.isOver", g_FightMgrServer.isOver)
+        if g_FightMgrServer.isOver then -- 已经结束
+        else
+            LogTrace()
+            return -- 服务器未结束, 客户端不要结束
+        end
+    end
+
+    -- self:AddCmd(CMD_TYPE.End, stage)
+    for i, v in ipairs(self.arrCard) do
+        -- 战斗结束, 解除合体角色
+        if v:GetTeamID() == 1 and v:IsUnite() then
+            v.team:Resolve(v, true)
+        end
+    end
+
+    self.isOver = true
+    self:Destroy()
+    LogTrace()
+end
+
+
 ------------------------------------------------------------------
 -- 创建一个副本单机战斗
 function CreateDuplicateSingleFight(proto)
@@ -473,12 +500,20 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
     local seed = seed or 1 -- 结果必然确定
     local mgr = SingleFightMgrServer(fid, groupID2, SceneType.SinglePVE, seed, 0)
     g_FightMgrServer = mgr
+    mgr.uid = PlayerClient:GetID()
 
     -- local data = mgr:MakeFightDataFromGroup(groupID, cid, model)
     -- LogTable(data, "MakeFightDataFromGroup")
+    -- LogTable(data.data, "------------111")
     data.data = Halo:Calc(data.data)
+    -- LogTable(data.data, "------------22222")
     data.tCommanderSkill = tCommanderSkill
-
+    for _, v in pairs(data.data) do
+        v.maxhp = v.data.maxhp
+        if v.data.hp_percent then
+            v.data.hp = math.floor(v.data.maxhp * v.data.hp_percent)
+        end
+    end
     LogTable(data.data, 'data.data')
     LogTable(tCommanderSkill, 'data.tCommanderSkill')
 

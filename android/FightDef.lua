@@ -139,6 +139,8 @@ ePassiveTiming.OnAfterRoundBegin = 21 -- 回合开始处理完成后
 ePassiveTiming.OnActionOver2     = 22 -- 行动结束2
 ePassiveTiming.OnResolve         = 23 -- 解体
 ePassiveTiming.OnBefourCritHurt  = 24  -- 暴击伤害前(OnBefourHurt之前)
+ePassiveTiming.OnAttackOver2     = 25  -- 攻击结束2
+
 
 -- 被动时机(数组)
 arrPassiveTiming = {}

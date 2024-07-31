@@ -635,6 +635,9 @@ function this:GetEndBuyTips()
       
 		local count=TimeUtil:GetDiffHMS(buyEndTime,TimeUtil.GetTime());
 
+        if self:GetType()==CommodityItemType.Regression then         
+            return LanguageMgr:GetByID(60005,count.day)
+        end
 --        if self:GetType()==CommodityItemType.Skin then            
             -- if self:GetID()==50007 then
             --    LogError("Before:"..tostring(self:GetBuyEndTime())) 

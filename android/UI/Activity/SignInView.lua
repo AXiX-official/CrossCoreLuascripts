@@ -196,7 +196,7 @@ function ESignCB(proto)
 	CSAPI.SetGOActive(mask, false)
 	RefreshPanel()--刷新列表
 	ActivityMgr:SetListData(ActivityListType.SignIn, {key = _key})
-	ActivityMgr:CheckRedPointData()
+	ActivityMgr:CheckRedPointData(ActivityListType.SignIn)
 
 	local taData = {
 		reson = "领取活动奖励",

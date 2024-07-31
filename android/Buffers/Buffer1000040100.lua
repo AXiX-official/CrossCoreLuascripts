@@ -6,8 +6,8 @@ Buffer1000040100 = oo.class(BuffBase)
 function Buffer1000040100:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 暴击伤害前(OnBefourHurt之前)
-function Buffer1000040100:OnBefourCritHurt(caster, target)
+-- 伤害后
+function Buffer1000040100:OnAfterHurt(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else

@@ -43,16 +43,10 @@ function OnBtnCallBack()
 end
 
 function OnRedPointRefresh()
-    local redTypes = group == 1 and RedPointMgr:GetData(RedPointType.ActivityList1) or RedPointMgr:GetData(RedPointType.ActivityList2)
-    if leftPanel and openCfgs and #redTypes > 0 then
-        for k, v in ipairs(redTypes) do
-            if list[v.type] then
-                local idx = list[v.type].index
-                if idx > 0 and leftPanel.leftItems[idx] then
-                    leftPanel.leftItems[idx].SetRed(v.b == 1)
-                end
-            end
-        end
+    for i, v in ipairs(leftPanel.leftItems) do
+        local isRed = ActivityMgr:CheckRed(openCfgs[i].id)
+        isRed = i == curIndex1 and false or isRed
+        v.SetRed(isRed)
     end
 end
 
@@ -72,9 +66,6 @@ function OnOpen()
     end
 
     CSAPI.SetGOActive(emptyObj,openCfgs == nil or #openCfgs < 1)
-
-    -- ActivityMgr:CheckRedPointData()
-    OnRedPointRefresh()
 end
 
 function InitLeftPanel()
@@ -128,7 +119,7 @@ function RefreshPanel()
             SetRight()
         end
     end
-    ActivityMgr:CheckRedPointData()
+    OnRedPointRefresh()
 end
 
 function SetRight()
@@ -143,19 +134,19 @@ function SetRight()
         ShowTop(cfg)
         ShowQusetion(cfg)
 
-        local data = ActivityMgr:TryGetData(cfg.id)
+        local data,esleData = GetInfo(cfg)
 
         if (rightItems[cfg.id]) then
             CSAPI.SetGOActive(rightItems[cfg.id].gameObject, true)
             rightItems[cfg.id].isFirst = false
-            rightItems[cfg.id].Refresh(data, {cfg = cfg})
+            rightItems[cfg.id].Refresh(data, esleData)
             UIUtil:SetObjFade(rightItems[cfg.id].gameObject,0,1,nil,200)
             curItem = rightItems[cfg.id]
         else
             if (cfg.path) then
                 ResUtil:CreateUIGOAsync(cfg.path, right, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(data, {cfg = cfg})
+                    lua.Refresh(data, esleData)
                     UIUtil:SetObjFade(go,0,1,nil,200)
                     rightItems[cfg.id] = lua
                     curItem = lua
@@ -165,6 +156,8 @@ function SetRight()
             end
         end
         curData = nil
+
+        PlayerPrefs.SetInt(PlayerClient:GetUid() .."_Activity_Red_" .. cfg.id,1)
     end
 end
 
@@ -188,6 +181,11 @@ function ShowQusetion(_cfg)
     if _cfg.moduleInfo then
         UIUtil:AddQuestionItem(_cfg.moduleInfo, gameObject, qusetion)
     end
+end
+
+function GetInfo(_cfg)
+    local data,elseData = ActivityMgr:TryGetData(_cfg.id),{cfg = _cfg}
+    return data,elseData
 end
 
 

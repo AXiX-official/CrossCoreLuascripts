@@ -19,7 +19,7 @@ function Buffer1000060070:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000060070
-	if self:Rand(6500) then
+	if self:Rand(5000) then
 		self:AlterBufferByID(BufferEffect[1000060070], self.caster, target or self.owner, nil,3005,1)
 	end
 end

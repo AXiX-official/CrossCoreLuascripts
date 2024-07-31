@@ -193,7 +193,7 @@ end
 
 function this:AddNextRankList(sid)
 	self.cur_rank[sid] = self.cur_rank[sid] or 0
-	self.max_rank[sid] = self.max_rank[sid] or g_ArmyRankNumMax
+	self.max_rank[sid] = self.max_rank[sid] or g_ExploringRankRule
 	if(self.cur_rank[sid] < (self.max_rank[sid] - 1)) then
         local curPage = math.modf((self.cur_rank[sid] / 11) + 1)
         curPage = curPage + 1 > 10 and curPage or curPage + 1
@@ -217,7 +217,8 @@ function this:GetMyRank(sid)
         icon_id = PlayerClient:GetIconId(),
         icon_frame = PlayerClient:GetHeadFrame(),
         score = self.myScore[sid] or 0,
-        dupId = cfgDungeon and cfgDungeon.id or 0
+        dupId = cfgDungeon and cfgDungeon.id or 0,
+        -- sel_card_ix = PlayerClient:GetSex()
         -- nDamage = self:GetDamage()
     }
     local info = TotalBattleRankInfo.New()

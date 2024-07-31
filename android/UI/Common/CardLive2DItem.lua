@@ -273,7 +273,7 @@ function PlayAudio(cfgChild)
     if (audioIds and #audioIds > 0) then
         local index = 1
         if (#audioIds > 1) then
-            if (content.actions or content.clicks) then
+            if (content.actions or content.clicks or content.randomActions) then
                 -- 顺序
                 if (records[cfgChild.index]) then
                     index = records[cfgChild.index]
@@ -511,14 +511,17 @@ function SetContent(cfgChild)
     -- 随机动作
     if (content.randomActions) then
         local num = CSAPI.RandomInt(0, 100)
+        local _k = 1
         local count = 0
-        for k, v in ipairs(content.randomAnim) do
+        for k, v in ipairs(content.randomActions) do
             count = count + v[2] * 100
             if (num <= count) then
                 sName = v[1]
+                _k = k 
                 break
             end
         end
+        records[cfgChild.index]  = _k
     end
     -- 动作组
     if (content.actions) then

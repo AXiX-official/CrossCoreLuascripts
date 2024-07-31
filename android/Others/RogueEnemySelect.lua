@@ -1,7 +1,23 @@
+local isOK = false
+
 function Awake()
     UIUtil:AddTop2("RogueEnemySelect", AdaptiveScreen, function()
         RogueMgr:Back(view)
     end, nil, {})
+
+    eventMgr = ViewEvent.New()
+    eventMgr:AddListener(EventType.InitFinishRet, function()
+        if (isOK) then
+            if (isOK ~= "ToFight") then
+                FightProto:RogueSelectPos(isOK, nil)
+            end
+            FightProto:EnterRogueFight()
+        end
+    end) -- 重连成功
+end
+
+function OnDestroy()
+    eventMgr:ClearListener()
 end
 
 function OnOpen()
@@ -41,13 +57,14 @@ function SetItems()
     ItemUtil.AddItems("Rogue/RogueEnemySelectItem", items, datas, group, ItemClickCB, 1, nil, function()
         if (curData.selectPos) then
             for k, v in pairs(curData.selectPos) do
-                items[v.pos].SetMonster(v.duplicateID,true)
+                items[v.pos].SetMonster(v.duplicateID, true)
             end
         end
     end)
 end
 
 function ItemClickCB(item)
+    isOK = item.index
     CSAPI.SetGOActive(mask, true)
     item.SetMonster(curData.duplicateID)
     item.Select()
@@ -55,12 +72,11 @@ function ItemClickCB(item)
 end
 
 function ToFight()
+    isOK = "ToFight"
     FuncUtil:Call(function()
         FightProto:EnterRogueFight()
     end, nil, 3000)
 end
-
-
 
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
 function OnClickVirtualkeysClose()

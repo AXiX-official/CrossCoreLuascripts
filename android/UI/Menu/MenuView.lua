@@ -830,49 +830,22 @@ function OnRedPointRefresh()
     -- 活动（签到...）
     isOpen = lockData["ActivityListView"]
     if (isOpen) then
-        local _aData = RedPointMgr:GetData(RedPointType.ActivityList1)
-        local isRed = false
-        if _aData and #_aData > 0 then
-            for k, v in ipairs(_aData) do
-                if v.b == 1 then
-                    isRed = true
-                    break
-                end
-            end
-        end
-        UIUtil:SetRedPoint2(menuRedPath, btnActivityListView, isRed, 22, 22, 0)
+        local _data = RedPointMgr:GetData(RedPointType.ActivityList1)
+        UIUtil:SetRedPoint2(menuRedPath, btnActivityListView, _data~=nil, 22, 22, 0)
     end
 
     -- 活动（阶段...）
     isOpen = true
     if (isOpen) then
-        local _aData = RedPointMgr:GetData(RedPointType.ActivityList2)
-        local isRed = false
-        if _aData and #_aData > 0 then
-            for k, v in ipairs(_aData) do
-                if v.b == 1 then
-                    isRed = true
-                    break
-                end
-            end
-        end
-        UIUtil:SetRedPoint2(menuRedPath, btnPay, isRed, 122, 39, 0)
+        local _data = RedPointMgr:GetData(RedPointType.ActivityList2)
+        UIUtil:SetRedPoint2(menuRedPath, btnPay, _data~=nil, 122, 39, 0)
     end
 
     -- 活动（特别...）
     isOpen = true
     if (isOpen) then
-        local _aData = RedPointMgr:GetData(RedPointType.ActivityList3)
-        local isRed = false
-        if _aData and #_aData > 0 then
-            for k, v in ipairs(_aData) do
-                if v.b == 1 then
-                    isRed = true
-                    break
-                end
-            end
-        end
-        UIUtil:SetRedPoint2(menuRedPath, btnSpecialGifts, isRed, 122, 39, 0)
+        local _data = RedPointMgr:GetData(RedPointType.ActivityList3)
+        UIUtil:SetRedPoint2(menuRedPath, btnSpecialGifts, _data~=nil, 122, 39, 0)
     end
 
     -- 活动（回归）

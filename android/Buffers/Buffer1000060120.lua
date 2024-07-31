@@ -25,6 +25,6 @@ function Buffer1000060120:OnAttackOver(caster, target)
 	end
 	-- 1000060120
 	if self:Rand(8000) then
-		self:AddBuff(BufferEffect[1000060120], self.caster, self.card, nil, 3005)
+		self:AddBuff(BufferEffect[1000060120], self.caster, target or self.owner, nil,3005)
 	end
 end

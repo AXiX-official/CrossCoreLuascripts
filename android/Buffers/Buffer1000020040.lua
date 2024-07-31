@@ -6,8 +6,8 @@ Buffer1000020040 = oo.class(BuffBase)
 function Buffer1000020040:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 攻击开始
-function Buffer1000020040:OnAttackBegin(caster, target)
+-- 伤害前
+function Buffer1000020040:OnBefourHurt(caster, target)
 	-- 8738
 	local c134 = SkillApi:BuffCount(self, self.caster, target or self.owner,3,4,3)
 	-- 1000020199
@@ -21,5 +21,5 @@ function Buffer1000020040:OnAttackBegin(caster, target)
 		return
 	end
 	-- 1000020040
-	self:AddAttrPercent(BufferEffect[1000020040], self.caster, self.card, nil, "damage",1)
+	self:AddTempAttrPercent(BufferEffect[1000020040], self.caster, self.card, nil, "damage",1)
 end

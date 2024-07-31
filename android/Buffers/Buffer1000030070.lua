@@ -6,8 +6,8 @@ Buffer1000030070 = oo.class(BuffBase)
 function Buffer1000030070:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 攻击结束
-function Buffer1000030070:OnAttackOver(caster, target)
+-- 行动结束
+function Buffer1000030070:OnActionOver(caster, target)
 	-- 8260
 	if SkillJudger:IsCanHurt(self, self.caster, target, false) then
 	else
@@ -19,5 +19,7 @@ function Buffer1000030070:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000030070
-	self:AddAttr(BufferEffect[1000030070], self.caster, self.card, nil, "crit_rate",1)
+	self:AddBuff(BufferEffect[1000030070], self.caster, self.card, nil, 1000010102)
+	-- 1000010103
+	self:AddAttr(BufferEffect[1000010103], self.caster, self.card, nil, "crit",1)
 end

@@ -21,8 +21,8 @@ function Skill4202303:OnActionOver(caster, target, data)
 	-- 4202316
 	self:CallOwnerSkill(SkillEffect[4202316], caster, self.card, data, 202300406)
 end
--- 攻击结束
-function Skill4202303:OnAttackOver(caster, target, data)
+-- 攻击结束2
+function Skill4202303:OnAttackOver2(caster, target, data)
 	-- 8071
 	if SkillJudger:TargetIsFriend(self, caster, target, true) then
 	else

@@ -1334,6 +1334,14 @@ function SkillBase:Apply(caster, targets, pos, data)
 
 		for i,target in ipairs(self.currentAtkTargets) do
 			target:OnBeAttack(caster)
+		end
+
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
+			mgr:DoEventWithLog("OnAttackOver2", caster, target, data)-- 攻击者表现还没完成, 还有镜头
+		end
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
 			mgr:DoEventWithLog("OnAttackOver", caster, target, data)-- 攻击者表现还没完成, 还有镜头
 		end
 
@@ -1557,8 +1565,17 @@ function SkillBase:OnCallSkill(effectID, caster, targets, pos, data, api)
 
 		for i,target in ipairs(self.currentAtkTargets) do
 			target:OnBeAttack(caster)
+			-- mgr:DoEventWithLog("OnAttackOver", caster, target, data)
+		end
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
 			mgr:DoEventWithLog("OnAttackOver", caster, target, data)
 		end
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
+			mgr:DoEventWithLog("OnAttackOver2", caster, target, data)
+		end
+
 		self.currentAtkTargets = nil
 	-- else
 	-- 	if mgr.currentDeathsBySkill then

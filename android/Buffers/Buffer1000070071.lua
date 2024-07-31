@@ -6,8 +6,8 @@ Buffer1000070071 = oo.class(BuffBase)
 function Buffer1000070071:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 创建时
-function Buffer1000070071:OnCreate(caster, target)
+-- 行动结束
+function Buffer1000070071:OnActionOver(caster, target)
 	-- 1000070071
 	self:AddAttr(BufferEffect[1000070071], self.caster, self.card, nil, "crit",0.08)
 end

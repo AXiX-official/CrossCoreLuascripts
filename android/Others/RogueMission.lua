@@ -76,6 +76,8 @@ function Update()
         if (time <= 0) then
             curIndex1 = 1
             InitLeftPanel()
+            RefreshPanel()
+            CSAPI.SetGOActive(txtTime, time > 0)
         end
     end
 end

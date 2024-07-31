@@ -11,6 +11,10 @@ function Awake()
     slider = ComUtil.GetCom(numSlider, "Slider")
 end
 
+function SetShopClickCB(_shopCb)
+    shopCb = _shopCb
+end
+
 function SetClickCB(_cb)
     cb = _cb
 end
@@ -74,19 +78,8 @@ function SetState()
 end
 
 function OnClickGet()
-    if (MissionMgr:CheckIsReset(info)) then
-        -- LanguageMgr:ShowTips(xxx)
-        LogError("任务已过期")
-    else
-        local ids = {}
-        if isFinish and not isGet then
-            table.insert(ids,info:GetID())
-        end
-        if isFinish2 and not isGet2 and isBuy then
-            table.insert(ids,fundInfo:GetID())
-        end
-        TaskProto:GetReward(nil,ids)
-        -- MissionMgr:GetReward(nil,ids)
+    if cb then
+        cb() 
     end
 end
 
@@ -97,7 +90,7 @@ function OnClickJump()
 end
 
 function OnClickShop()
-    if cb then
-        cb()
+    if shopCb then
+        shopCb()
     end
 end

@@ -23,7 +23,7 @@ function OnValueChanged(b)
     end
     infos[data:GetID()] = i
     FileUtil.SaveToFile("Activity_ExChange_Tip",infos)
-    ActivityMgr:CheckRedPointData()
+    ActivityMgr:CheckRedPointData(ActivityListType.Exchange)
 end
 
 function OnDestroy()

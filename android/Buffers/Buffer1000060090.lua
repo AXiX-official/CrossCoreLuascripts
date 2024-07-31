@@ -6,8 +6,8 @@ Buffer1000060090 = oo.class(BuffBase)
 function Buffer1000060090:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 攻击结束
-function Buffer1000060090:OnAttackOver(caster, target)
+-- 行动结束
+function Buffer1000060090:OnActionOver(caster, target)
 	-- 8261
 	if SkillJudger:HasBuff(self, self.caster, target, true,2,1,1) then
 	else
@@ -24,5 +24,5 @@ function Buffer1000060090:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000060090
-	self:AddProgress(BufferEffect[1000060090], self.caster, self.card, nil, -100)
+	self:AddProgress(BufferEffect[1000060090], self.caster, target or self.owner, nil,-100)
 end

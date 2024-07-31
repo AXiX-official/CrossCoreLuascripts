@@ -577,6 +577,9 @@ function this:CheckRedPointData()
     -- 活动
     ActivityMgr:CheckRedPointData()
 
+    --回归
+    RegressionMgr:CheckRedPointData()
+
     -- 勘探
     ExplorationMgr:CheckRedInfo();
 

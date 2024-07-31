@@ -6,8 +6,8 @@ Buffer1000060043 = oo.class(BuffBase)
 function Buffer1000060043:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 攻击结束
-function Buffer1000060043:OnAttackOver(caster, target)
+-- 创建时
+function Buffer1000060043:OnCreate(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else
@@ -19,5 +19,5 @@ function Buffer1000060043:OnAttackOver(caster, target)
 		return
 	end
 	-- 1000060043
-	self:AddBuff(BufferEffect[1000060043], self.caster, self.card, nil, 1000060042)
+	self:AddBuff(BufferEffect[1000060043], self.caster, target or self.owner, nil,1000060042)
 end

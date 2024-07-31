@@ -24,7 +24,7 @@ end
 
 function OnSuccess()
     SetItems()
-    ActivityMgr:CheckRedPointData()
+    ActivityMgr:CheckRedPointData(ActivityListType.Exchange)
 end
 
 function Refresh(_data,_elseData)

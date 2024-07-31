@@ -205,6 +205,10 @@ function ApplyQuit(jumpType)
             -- DungeonMgr:ApplyEnter(dungeonId);
             return;
         end
+    elseif sceneType == SceneType.Rogue then 
+        FriendMgr:ClearAssistData();
+        TeamMgr:ClearAssistTeamIndex();
+        TeamMgr:ClearFightTeamData();
     end
     if jumpType then
         local jumpID = nil;
@@ -217,11 +221,11 @@ function ApplyQuit(jumpType)
         elseif jumpType == 4 then
             jumpID = 80002;
         end
-        if sceneType == SceneType.PVE then
+        --if sceneType == SceneType.PVE then
             DungeonMgr:Quit(false, jumpType)
-        else
-            JumpMgr:Jump(jumpID);
-        end
+        --else
+            --JumpMgr:Jump(jumpID);
+        --end
         return
     end
 
@@ -242,9 +246,6 @@ function ApplyQuit(jumpType)
     elseif (sceneType == SceneType.GuildBOSS) then
         GuildFightMgr:FightQuit();
     elseif (sceneType == SceneType.Rogue) then
-        FriendMgr:ClearAssistData();
-        TeamMgr:ClearAssistTeamIndex();
-        TeamMgr:ClearFightTeamData();
         RogueMgr:FightToBack(false,elseData.group)
     end
 end

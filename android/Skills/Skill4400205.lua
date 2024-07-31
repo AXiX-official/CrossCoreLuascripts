@@ -6,8 +6,8 @@ Skill4400205 = oo.class(SkillBase)
 function Skill4400205:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束
-function Skill4400205:OnActionOver(caster, target, data)
+-- 行动结束2
+function Skill4400205:OnActionOver2(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else

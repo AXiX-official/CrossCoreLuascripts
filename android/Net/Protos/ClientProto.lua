@@ -168,6 +168,7 @@ function ClientProto:InitFinishRet(proto)
 
     ActivityMgr:CheckRedPointData() --用于活动
     RegressionMgr:CheckRedPointData() --用于回归活动
+    EventMgr.Dispatch(EventType.InitFinishRet)
 end
 
 -- 未收到InitFinishRet前每隔几秒发一次直到成功为止

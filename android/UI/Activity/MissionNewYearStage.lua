@@ -100,7 +100,7 @@ function Refresh(_data,_elseData)
     RefreshTopItems()
 
     -- red
-    ActivityMgr:CheckRedPointData()
+    ActivityMgr:CheckRedPointData(ActivityListType.NewYearContinue)
 end
 
 function GetTaskType(cfg)

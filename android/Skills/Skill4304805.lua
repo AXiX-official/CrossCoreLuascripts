@@ -33,8 +33,8 @@ function Skill4304805:OnAttackOver(caster, target, data)
 		self:OwnerAddBuffCount(SkillEffect[4304813], caster, self.card, data, 304800101,1,8)
 	end
 end
--- 行动结束2
-function Skill4304805:OnActionOver2(caster, target, data)
+-- 行动结束
+function Skill4304805:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -68,8 +68,8 @@ function Skill4304805:OnActionOver2(caster, target, data)
 	-- 4304828
 	self:OwnerAddBuffCount(SkillEffect[4304828], caster, self.card, data, 304800101,-5,8)
 end
--- 行动结束
-function Skill4304805:OnActionOver(caster, target, data)
+-- 行动结束2
+function Skill4304805:OnActionOver2(caster, target, data)
 	-- 8684
 	local count684 = SkillApi:GetCount(self, caster, target,3,304800101)
 	-- 8897
