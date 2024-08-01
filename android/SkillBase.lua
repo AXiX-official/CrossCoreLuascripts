@@ -962,6 +962,7 @@ function SkillBase:LoadConfig()
 	end
 
 	self.aiStrategy = config.aiStrategy
+	self.aiStrategy_src = config.aiStrategy -- 原配置的ai, 用于技能调用
 	
 	if config.skillStrategy then
 		self.skillStrategy = table.copy(config.skillStrategy)

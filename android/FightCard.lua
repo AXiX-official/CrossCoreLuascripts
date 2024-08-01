@@ -508,7 +508,7 @@ function FightCardBase:AIStrategySelectTarget4CallSkill(team, oSkill, exclude)
     --LogDebugEx("AIStrategySelectTarget", oSkill.id)
 
     --LogTable(skill[oSkill.id], "skill")
-    local aiStrategy = oSkill.aiStrategy or {}
+    local aiStrategy = oSkill.aiStrategy_src or {} --oSkill.aiStrategy or {}  -- 后端没有同步ai到前端, 导致数据不一致
     local ts = {}
     --LogTable(oSkill.aiStrategy, "oSkill.aiStrategy")
 
