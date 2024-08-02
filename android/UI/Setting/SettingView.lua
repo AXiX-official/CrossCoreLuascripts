@@ -15,6 +15,8 @@ function Awake()
 		local itemRT = ComUtil.GetCom(this["itemRT" .. i], "ActionWH")
 		table.insert(itemsRT, itemRT)
 	end
+
+	CSAPI.SetText(txtVer, _G.g_ver_name);
 end
 
 function OnDestroy()

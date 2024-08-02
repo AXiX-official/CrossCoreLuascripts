@@ -55,7 +55,8 @@ function Awake()
     -- local goRT = CSAPI.GetGlobalGO("CommonRT")
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
-    CSAPI.SetText(txtVer, "Ver:2.0.0");
+    _G.g_ver_name = "Ver:2.0.0";
+    CSAPI.SetText(txtVer, _G.g_ver_name);
     --CSAPI.SetText(txtVer, "");
     -- 开启战斗场景镜头
     local xluaCamera = CameraMgr:GetXLuaCamera();

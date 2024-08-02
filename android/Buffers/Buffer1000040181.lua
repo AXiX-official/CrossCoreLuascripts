@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1000040181:OnCreate(caster, target)
 	-- 1000040181
-	self:AddAttr(BufferEffect[1000040181], self.caster, self.card, nil, "crit_rate",0.05)
+	self:AddAttr(BufferEffect[1000040181], self.caster, self.card, nil, "crit_rate",0.05*self.nCount)
 end

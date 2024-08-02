@@ -13,18 +13,11 @@ function Skill1000050090:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
-	else
-		return
-	end
 	-- 1000050022
 	if SkillJudger:HasBuff(self, caster, target, true,1,1000050021) then
 	else
 		return
 	end
 	-- 1000050090
-	if self:Rand(8000) then
-		self:AddBuffCount(SkillEffect[1000050090], caster, target, data, 1000050091,1,5)
-	end
+	self:AddBuffCount(SkillEffect[1000050090], caster, target, data, 1000050091,1,5)
 end

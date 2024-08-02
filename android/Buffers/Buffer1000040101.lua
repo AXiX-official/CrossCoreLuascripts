@@ -8,11 +8,16 @@ function Buffer1000040101:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer1000040101:OnCreate(caster, target)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, self.caster, target, true) then
 	else
 		return
 	end
-	-- 1000010160
-	self:AddBuff(BufferEffect[1000010160], self.caster, self.card, nil, 1000010161,2)
+	-- 8221
+	if SkillJudger:IsDamageType(self, self.caster, target, true,2) then
+	else
+		return
+	end
+	-- 1000040101
+	self:AddAttr(BufferEffect[1000040101], self.caster, target or self.owner, nil,"bedamage",0.2)
 end

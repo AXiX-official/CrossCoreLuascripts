@@ -6,8 +6,8 @@ Buffer1000030101 = oo.class(BuffBase)
 function Buffer1000030101:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 伤害后
-function Buffer1000030101:OnAfterHurt(caster, target)
+-- 创建时
+function Buffer1000030101:OnCreate(caster, target)
 	-- 8070
 	if SkillJudger:TargetIsSelf(self, self.caster, target, true) then
 	else
@@ -24,5 +24,5 @@ function Buffer1000030101:OnAfterHurt(caster, target)
 		return
 	end
 	-- 1000030101
-	self:AddAttrPercent(BufferEffect[1000030101], self.caster, target or self.owner, nil,"bedamage",0.2)
+	self:AddAttr(BufferEffect[1000030101], self.caster, target or self.owner, nil,"bedamage",0.2)
 end
