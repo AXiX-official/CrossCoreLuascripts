@@ -155,6 +155,16 @@ GameMsg.map["sChangeCardInfos"] = {
 	{ "uint","uint",},
 	{ "id",  "skin",},
 }
+GameMsg.map["sZiLongUserInfo"] = {
+	--运营商      选择语言 设备id   紫龙上线渠道id 
+	{ "string",   "string","string","string",      },
+	{ "operators","langue","device","gameChannel", },
+}
+GameMsg.map["sPairStringInt"] = {
+	--值1      值2      
+	{ "string","uint",  },
+	{ "first", "second",},
+}
 GameMsg.map["SystemProto:ServerError"] = {
 	--账号     
 	{ "string",},
@@ -376,9 +386,9 @@ GameMsg.map["LoginProto:PreLoginGame"] = {
 	{ "key",   "ip",    "port", "is_ok",     "strId",             "args",          "svr_group",   },
 }
 GameMsg.map["ClientProto:LoginGame"] = {
-	--登陆秘钥 版本号       账号   登陆设备信息         数数游客id   
-	{ "string","string",    "long","struts|sLoginDevice","string",    },
-	{ "key",   "SvnVersion","uid", "device",            "distinctId",},
+	--登陆秘钥 版本号       账号   登陆设备信息         数数游客id   紫龙玩家信息         中台uid        中台传的信息    
+	{ "string","string",    "long","struts|sLoginDevice","string",    "struts|sZiLongUserInfo","string",      "json",         },
+	{ "key",   "SvnVersion","uid", "device",            "distinctId","ziLongUserInfo",    "centerWebUid","centerWebInfo",},
 }
 GameMsg.map["sPlrData"] = {
 	--账号   名字     体能    等级    金币   钻石      服务器时间戳 经验  签名     创建时间      军演代币    tp值    tp开始时间    是否不统计日志(1:为不统计，0为统计) 
@@ -4194,6 +4204,16 @@ GameMsg.map["BadgedProto:UpdateSortBadged"] = {
 	--徽章的位置         
 	{ "list|sStrNumInfo",},
 	{ "pos",             },
+}
+GameMsg.map["ZiLongProto:GetGuestBinding"] = {
+	--设置了这个不领取，只返回能否领取 
+	{ "bool",               },
+	{ "isTry",              },
+}
+GameMsg.map["ZiLongProto:GetGuestBindingRet"] = {
+	--设置了这个不领取，只返回能否领取 是否有奖励能领取 奖励            
+	{ "bool",               "bool",          "list|sNumInfo",},
+	{ "isTry",              "isHadReward",   "rewards",      },
 }
 GameMsg.map["PlayerProto:GetClientData"] = {
 	--键值     
