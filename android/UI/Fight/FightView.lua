@@ -124,7 +124,7 @@ function Awake()
     if(not speedState)then
         CSAPI.SetGOActive(speedMask,true);
     end
-    
+    AdaptiveConfiguration.SetLuaObjUIFit("FigHtView",gameObject);
 end
 
 function InitFightInfo()

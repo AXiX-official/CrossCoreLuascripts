@@ -1,6 +1,7 @@
 --引导界面
 
 function Awake()
+    AdaptiveConfiguration.SetLuaUIFit("GuiDeView", node.gameObject)
     transPanel = transform.parent.parent;
     canvasGroup = ComUtil.GetCom(node,"CanvasGroup");
 end
@@ -23,6 +24,7 @@ end
 function OnDestroy()
     eventMgr:ClearListener();    
     --EventMgr.Dispatch(EventType.Guide_State_Changed,false);
+    --AdaptiveConfiguration.RemoveLuaUIFit("GuiDeView")
 end
 
 --网络断开连接

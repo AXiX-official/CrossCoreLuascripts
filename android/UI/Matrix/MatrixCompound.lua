@@ -18,7 +18,8 @@ function Awake()
         local lua = ComUtil.GetLuaTable(go)
         lua.Init(15, RefreshPanel)
     end)
-
+    
+	AdaptiveConfiguration.SetLuaObjUIFit("MatrixCompound",gameObject)
 end
 
 function LayoutCallBack(index)

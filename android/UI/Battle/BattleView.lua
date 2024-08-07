@@ -49,7 +49,7 @@ function Awake()
 	CSAPI.SetGOActive(bg, false)
 	CSAPI.SetGOActive(node, false)
 
-
+	AdaptiveConfiguration.SetLuaObjUIFit("Battle",gameObject)
 end
 
 function OnInit()

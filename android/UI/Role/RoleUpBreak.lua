@@ -108,7 +108,7 @@ end
 
 function ShowPanel(panelName, elseData)
     if (not panels[panelName]) then
-        ResUtil:CreateUIGOAsync("Role/" .. panelName, gameObject, function(go)
+        ResUtil:CreateUIGOAsync("Role/" .. panelName, AdaptiveScreen, function(go)
             local _curPanel = ComUtil.GetLuaTable(go)
             panels[panelName] = _curPanel
 

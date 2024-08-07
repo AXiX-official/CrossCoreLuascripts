@@ -262,6 +262,12 @@ function this:GetTargetPrice(targetState)
     end
 end
 
+---台服
+function this:GetTWDDataPrice(targetState)
+    local commInfo=self:GetTargetCommInfo(targetState);
+    return commInfo;
+end
+
 function this:GetTargetCommInfo(targetState)
     local curState=self:GetState();
     local commId=nil;

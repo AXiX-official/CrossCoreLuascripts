@@ -141,7 +141,7 @@ function InitSVList()
 end
 
 function OnInit()
-    topTools=UIUtil:AddTop2("ShopView",top,OnClickBack,nil,ids);
+    topTools=UIUtil:AddTop2("ShopView",gameObject,OnClickBack,nil,ids);
 end
 
 function OnDestroy()

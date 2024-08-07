@@ -25,10 +25,12 @@ function Awake()
     CSAPI.CreateGOAsync("Scenes/Dorm/DormAmbientSetting")
     ac_count = ComUtil.GetCom(count, "ActionBase")
     time = Time.time
+
+    AdaptiveConfiguration.SetLuaObjUIFit("DormView",gameObject)
 end
 
 function OnInit()
-    top=UIUtil:AddTop2("DormView", node, Back1, Back2, {})
+    top=UIUtil:AddTop2("DormView", topParent, Back1, Back2, {})
 
     eventMgr = ViewEvent.New()
     -- 添加说话文本

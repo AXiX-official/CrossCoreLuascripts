@@ -807,4 +807,10 @@ function this:CheckIsFightVier()
     return false 
 end
 
+function this:GetTopIndex()
+    self.topIndex = self.topIndex or 1
+    self.topIndex = self.topIndex+1
+    return self.topIndex
+end
+
 return this

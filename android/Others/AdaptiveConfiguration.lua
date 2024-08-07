@@ -1,45 +1,94 @@
-
 --UI自适应数据配置 词典
 AdaptiveConfiguration={}
 local this=AdaptiveConfiguration;
-
 local Screen=UnityEngine.Screen;
-
 local orientation=nil;
-function this.OnInit()
-     --print("初始化屏幕状态："..tostring(Screen.orientation));
-    orientation=Screen.orientation;
+---AdaptiveConfiguration.SetLuaUIFit("FightTimeLineView",gameObject); --节点添加
+---AdaptiveConfiguration.RemoveLuaUIFit("FightTimeLineView");  ---移除事件
+---指定机型 代码获取不了的
+this.SpecifiedModel=
+{
+    {id="huawei lio-an00", topOffset=90, bottomOffset=0,},
+    {id="iphone12,5", topOffset=132, bottomOffset=0,},
+    {id="google pixel 8", topOffset=85, bottomOffset=60,},
 
+}
+
+
+function this.OnInit()
+    ----print("初始化屏幕状态："..tostring(Screen.orientation));
+    --CS.UIFit.ins:RegisterListening()
+    ----CS.UIFit.ins:SetIsLock(false);
+    --CSAPI.AddEventListener(EventType.LuaView_Lua_Closed,this.LuaView_Lua_Closed)
+    --orientation=Screen.orientation;
+    --this.SetSpecifiedModel()
+end
+
+function this.LuaView_Lua_Closed(param)
+    -- print("------------------------------"..param)
+    -- if param~=nil then
+    --     if this.IsitinAdaptiveMode(param) then
+    --         this.RemoveLuaUIFit(param)
+    --     end
+    -- end
 end
 ---监听执行数据
 function this.MonitorExecutiondata()
-    if orientation~=Screen.orientation then
-        --print("屏幕发生变化："..tostring(Screen.orientation))
-        orientation=Screen.orientation;
-        this.ScreenRotationOccurs()
-    end
+     --if orientation~=Screen.orientation then
+     --    --print("屏幕发生变化："..tostring(Screen.orientation))
+     --    orientation=Screen.orientation;
+     --    this.ScreenRotationOccurs()
+     --end
+end
+----指传入 主页面节点 需要自己查找节点
+function this.SetLuaObjUIFit(UIkey,ObjItem)
+     --if ObjItem~=nil then
+     --    if ObjItem.transform:Find("AdaptiveScreen")~=nil then
+     --        local AdaptiveScreen=ObjItem.transform:Find("AdaptiveScreen").gameObject
+     --        if AdaptiveScreen~=nil then
+     --            ---print("存在指定节点-------AdaptiveScreen-----："..UIkey)
+     --            this.SetLuaUIFit(UIkey,AdaptiveScreen)
+     --        end
+     --    end
+     --end
 end
 ---自适应UI集合
 this.AdaptiveSet={};
 --自适应
 function this.SetLuaUIFit(UIkey,Item)
-    CSAPI.SetUIFit(Item)
-    local tableItem=
-    {
-        key=UIkey,
-        value=Item,
-    };
-    table.insert(this.AdaptiveSet,tableItem);
-    print("打印："..table.tostring(this.AdaptiveSet))
+     --CSAPI.SetUIFit(Item)
+     --local tableItem=
+     --{
+     --    key=UIkey,
+     --    value=Item.gameObject,
+     --};
+     -----执行规避重复传入key
+     --this.RepeatUIkey(UIkey,tableItem)
+     -----print("打印："..table.tostring(this.AdaptiveSet))
 end
 
----屏幕发生旋转调用
+---如果key 重复， 那么使用最后最新的
+function this.RepeatUIkey(UIkey,Item)
+    if this.IsitinAdaptiveMode(UIkey) then
+        print("AdaptiveConfiguration Repeat  ---key:"..UIkey)
+        for i, v in pairs(this.AdaptiveSet) do
+            ---有这个key
+            if tostring(this.AdaptiveSet[i].key)==tostring(UIkey) then
+                this.AdaptiveSet[i].value=Item;
+                return;
+            end
+        end
+    else
+        table.insert(this.AdaptiveSet,Item);
+    end
+end
+
+
+---屏幕发生旋转调用  IsCheckUp：true 旋转时候进行扭转UI自适应， false 检查是否存在空数据剔除  原因是框架没有统一的 关闭位置
 function this.ScreenRotationOccurs()
     if #this.AdaptiveSet>0 then
         for i, v in pairs(this.AdaptiveSet) do
-            if this.AdaptiveSet[i].value~=nil then
-                CSAPI.SetUIFit(this.AdaptiveSet[i].value)
-            end
+            CSAPI.SetUIFit(this.AdaptiveSet[i].value.gameObject)
         end
     end
 end
@@ -53,13 +102,50 @@ function this.RemoveLuaUIFit(UIkey)
             ---print("  输出："..this.AdaptiveSet[i].key)
             if tostring( this.AdaptiveSet[i].key)==tostring(UIkey) then
                 -- print("移除key："..UIkey);
-                table.remove(this.AdaptiveSet,index);
+                if #this.AdaptiveSet>=index then
+                    table.remove(this.AdaptiveSet,index);
+                else
+
+                    LogError("  出现越界情况："..UIkey.."index:"..index)
+                    LogError(this.AdaptiveSet)
+                    this.AdaptiveSet={}
+                end
                 -- print("打印："..table.tostring(this.AdaptiveSet))
                 return;
             end
         end
     end
 end
+
+---是否处于自适应中 当前需要引导的页面
+function this.IsitinAdaptiveMode(UIkey)
+    if #this.AdaptiveSet>0 then
+        for i, v in pairs(this.AdaptiveSet) do
+            ---有这个key
+            if tostring(this.AdaptiveSet[i].key)==tostring(UIkey) then
+                return true;
+            end
+        end
+    end
+    return false;
+end
+--- 初始化 设置指定机型
+function this.SetSpecifiedModel()
+    local count=#this.SpecifiedModel
+    if count>0 then
+        for i, v in pairs(this.SpecifiedModel) do
+            this.AddUIAdaptive(this.SpecifiedModel[i].id,this.SpecifiedModel[i].topOffset,this.SpecifiedModel[i].bottomOffset)
+        end
+    end
+end
+function this.AddUIAdaptive(DevName,topOffset,bottomOffset)
+    -- print("DevName:"..DevName.." topOffset:"..topOffset.."bottomOffset:"..bottomOffset)
+    CSAPI.AddUIAdaptive(DevName,topOffset,bottomOffset);
+end
+function this.RemoveAdaptive(DevName)
+    CSAPI.RemoveAdaptive(DevName);
+end
+
 
 
 
@@ -324,7 +410,7 @@ end
 --    },
 --
 --}
---
+
 --function this.AddUIAdaptive(id,topOffset,bottomOffset)
 --     local IsKey=false;
 --    for i, v in pairs(this.UIAdaptiveDic) do

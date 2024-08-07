@@ -45,6 +45,8 @@ function Awake()
         local y = num == 1 and 100000 or 0
         CSAPI.SetAnchor(gameObject, 0, y, 0)
     end)
+    
+    AdaptiveConfiguration.SetLuaObjUIFit("DormLayout",gameObject)
 end
 
 function OnDisable()

@@ -9,7 +9,7 @@ local time = 0
 local selectID
 -- 完成状态+界面动画
 function Awake()
-    UIUtil:AddTop2("RogueView", AdaptiveScreen, function()
+    UIUtil:AddTop2("RogueView", gameObject, function()
         if (right.activeInHierarchy) then
             OnClickRight()
         else

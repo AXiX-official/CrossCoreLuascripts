@@ -34,6 +34,8 @@ local conf = {
 {'6',	'6',	'',	'',	'',	'1',	'12',	'arch_trip_in_the_milky_way',	''},
 {'6',	'6',	'',	'',	'',	'2',	'20',	'arch_guard_of_iron_bastion',	'80412'},
 {'6',	'6',	'',	'',	'',	'3',	'22',	'arch_snowland_gods',	''},
+{'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
+{'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
 },
 }
 --cfgCfgArchiveIllustration = conf

@@ -11,7 +11,7 @@ local time2 = 3
 -- local rFastestData = nil --{time,id} 最快刷新的建筑
 function Awake()
     -- 添加问号 rui 211130 --因为不是通过openview打开的，所以要手动添加
-    UIUtil:AddQuestionItem("Matrix", gameObject)
+    UIUtil:AddQuestionItem("Matrix", gameObject,AdaptiveScreen)
 
     recordBeginTime = CSAPI.GetRealTime()
 

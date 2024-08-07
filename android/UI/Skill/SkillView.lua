@@ -26,6 +26,7 @@ function Awake()
     --txtOverload_cost1 = ComUtil.GetCom(overload_cost1,"Text");
     
     SetOverload();
+    AdaptiveConfiguration.SetLuaObjUIFit("Skill",gameObject); --节点添加
 end
 
 function OnInit()

@@ -15,13 +15,13 @@ local this =
 {delay=1750,time=5500,type=1,work_delay=500,hit_type=0,camera_shake={time=250,shake_dir=1,range=200,range1=100,hz=200,decay_value=0.25},hit_creates={-792640316},hits={0}}
 },
 [-792640316]={
-effect="cast1_hit1",effect_pack="s50320",time=5500,type=0,pos_ref={ref_type=4,part_index=1}
+effect="cast1_hit1",effect_pack="s50320",time=5500,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [1082022229]={
-effect="cast1_hit1",effect_pack="s50320",time=5500,type=0,pos_ref={ref_type=4,part_index=1}
+effect="cast1_hit1",effect_pack="s50320",time=5500,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [-1480166318]={
-effect="cast1_hit1",effect_pack="s50320",time=5500,type=0,pos_ref={ref_type=4,part_index=1}
+effect="cast1_hit1",effect_pack="s50320",time=5500,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [1310282141]={
 {time=10200,type=0,cue_sheet="fight/effect/fourteen.acb",cue_name="Salticidae_attack_skill_02"},

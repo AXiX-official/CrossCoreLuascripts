@@ -82,6 +82,7 @@ function Awake()
 	local size=CSAPI.GetRealRTSize(teamListSV);
 	svHeight=size[1];
     InitListener()
+	UIUtil:AddQuestionItem("TeamView", gameObject, TopNode)
 end
 
 function InitSVObj()

@@ -250,14 +250,28 @@ function this:AddQuestionItem(viewKey, go, father, prefabName)
         end
         if (tab["QuestionItem"] == nil) then
             tab["QuestionItem"] = 1 -- 防止异步生成时有额外的进入
-            local parent = father == nil and go or father
+            local parent = father --== nil and go or father
+            if(parent == nil) then 
+                local tran = go.transform:Find("AdaptiveScreen")
+                if(tran~=nil) then 
+                    parent = tran.gameObject 
+                else 
+                    parent = go 
+                end 
+            end 
             ResUtil:CreateUIGOAsync("ModuleInfo/" .. prefabName, parent, function(itemGo)
                 tab["QuestionItem"] = ComUtil.GetLuaTable(itemGo)
                 tab["QuestionItem"].Refresh(cfg)
+                if tab.OnAddQuestionItem then
+                    tab:OnAddQuestionItem(1);
+                end
             end)
         else
             if (tab["QuestionItem"] ~= 1) then
                 tab["QuestionItem"].Refresh(cfg)
+                if tab.OnAddQuestionItem then
+                    tab:OnAddQuestionItem(2);
+                end
             end
         end
     end

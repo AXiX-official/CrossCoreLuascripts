@@ -14,6 +14,7 @@ local recordBeginTime = 0
 local isAnimEnd = false -- 动画是否已展示完毕
 -- local scrollBarIsShow=true
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("RoleListNormal",gameObject)
     -- 记录
     recordBeginTime = CSAPI.GetRealTime()
 

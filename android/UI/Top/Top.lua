@@ -1,3 +1,13 @@
+local topIndex = 0
+function Awake()
+    topIndex = MenuMgr:GetTopIndex()
+    AdaptiveConfiguration.SetLuaUIFit("Top" .. topIndex, gameObject)
+end
+
+function OnDestroy()
+    EventMgr.Dispatch(LuaView_Lua_Closed, "Top" .. topIndex)
+end
+
 function OnEnable()
     if (eventMgr) then
         eventMgr:ClearListener()

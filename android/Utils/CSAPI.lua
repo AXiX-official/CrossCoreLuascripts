@@ -494,14 +494,16 @@ function this.OpenView(viewKey, data, openSetting, callBack, closeAll, jump)
 		UIUtil:OpenView(viewKey, closeAll, function()
 			this.csOpenView(viewKey, data, openSetting, function(go)
 				UIUtil:AddQuestionItem(viewKey, go)
+				AdaptiveConfiguration.SetLuaObjUIFit(viewKey,go.gameObject)
 				if(callBack) then
 					callBack(go)
 				end
 			end)
 		end)
 	else
-		this.csOpenView(viewKey, data, openSetting, function()
+		this.csOpenView(viewKey, data, openSetting, function(go)
 			UIUtil:AddQuestionItem(viewKey, go)
+			AdaptiveConfiguration.SetLuaObjUIFit(viewKey,go.gameObject)
 			if(callBack) then
 				callBack(go)
 			end
@@ -729,7 +731,6 @@ function this.PlayBGM(bgm, fadeDelay, volumeCoeff, lockKey)
 		return;
 	end
 	
-	--LogError("播放BGM " .. tostring(bgm));
 	if(not bgm) then
 		return;
 	end
@@ -1002,6 +1003,8 @@ function this.GetChannelName()
 		return "TAPTAP"
 	elseif channelType==ChannelType.QOO then
 		return "QOO"
+	elseif channelType==ChannelType.ZiLong then
+		return "台服"
 	end
 end
 
@@ -1016,6 +1019,8 @@ function this.GetChannelStr()
         return "taptap"
     elseif channelType==ChannelType.QOO then
         return "qoo"
+	elseif channelType==ChannelType.ZiLong then
+		return "tw"
     end
 end
 
@@ -1046,6 +1051,7 @@ end
 this.OpenWebBrowser = CS.CSAPI.OpenWebBrowser
 this.InitViewData = CS.CSAPI.InitViewData;
 this.WebPostRequest = CS.CSAPI.WebPostRequest;
+this.WebPostRequestJsonStr=CS.CSAPI.WebPostRequestJsonStr;
 --this.csWebPostRequest = CS.CSAPI.WebPostRequest;
 --function this.WebPostRequest(url,formData,func)
 --    LogError(string.format("Post内容：%s\n参数：%s",url,table.tostring(formData)));
@@ -1123,10 +1129,33 @@ function this.GetADID()
 	end
 	return 0;
 end
+this.DispatchEvent=CS.CSAPI.DispatchEvent;
+this.Currentplatform=CS.UnityEngine.Application.platform;
+this.Android=CS.UnityEngine.RuntimePlatform.Android;
+this.IPhonePlayer=CS.UnityEngine.RuntimePlatform.IPhonePlayer;
+this.WindowsEditor=CS.UnityEngine.RuntimePlatform.WindowsEditor;
 
+
+this.IsADV=CS.CSAPI.IsADV;
 this.SetUIFit=CS.CSAPI.SetUIFit;
 this.AddUIAdaptive=CS.CSAPI.AddUIAdaptive;
 this.RemoveAdaptive=CS.CSAPI.RemoveAdaptive;
+this.AddEventListener=CS.CSAPI.AddEventListener;
+this.RemoveEventListener=CS.CSAPI.RemoveEventListener;
+this.UIFitoffsetTop=CS.CSAPI.UIFitoffsetTop;
+this.UIFoffsetBottom=CS.CSAPI.UIFoffsetBottom;
+this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
+this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
+this.QuitGame =CS.CSAPI.QuitGame;
+this.GetDeviceID =CS.CSAPI.GetDeviceID;
+this.GetInside =CS.CSAPI.GetInside;
+this.GetsSDKInitSuccess =CS.CSAPI.GetsSDKInitSuccess;
+
+this.ZLongServerListUrl=CS.ShiryuStreamingAssets.ins.GetServerListUrl
+this.ZLongServerId=CS.ShiryuStreamingAssets.ins.GetServerId
+
+this.PCSetWindow=CS.CSAPI.PCSetWindow;
+this.APKVersion=CS.CSAPI.APKVersion;
 ---是否存在新手引导
 function this.IsBeginnerGuidance()
 	if GuideMgr.IsGuideEnd==true then

@@ -542,10 +542,13 @@ this.Pay_Amount_Change=180013;
 this.Head_Frame_Change=180014;
 --更换头像
 this.Head_Icon_Change=180015;
+--问卷调查显示隐藏
+this.Menu_WebView_Enabled=180016;
 --累充领取
-this.AccuCharge_Get=180016;
+this.AccuCharge_Get=180017;
 --活动表动态更改 
-this.CfgActiveEntry_Change=180017;
+this.CfgActiveEntry_Change=180018;
+---------------------------------------
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -725,8 +728,6 @@ this.Equip_Remould_Select=210029;
 this.Equip_TweenMask_State=210030;
 --装备数据更新
 this.Equip_Update=210031;
---强化动画遮罩
-this.Equip_StrengthTween_State=210032;
 ------------------------------------------战棋系统事件
 --场地初始化完成
 this.Battle_Ground_Inited = 220000;
@@ -1212,8 +1213,6 @@ this.SpecialDrops_Info_Update = 590001 --掉落更新
 --------------------------------道具池活动相关
 this.ItemPool_Date_Update=600001;--道具池数据刷新
 this.ItemPool_Draw_Ret=600002;--道具池抽卡返回
-
-
 
 ---屏幕自适应 关闭 UI页面数据
 this.LuaView_Lua_Closed=800019;

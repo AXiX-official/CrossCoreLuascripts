@@ -177,7 +177,12 @@ function OnOpen()
     SetDatas()  
     CheckOpenSection()  
     InitJumpState()
-    layout:IEShowList(#sectionDatas,OnLoadSuccess,currIndex)
+    if not isFirst then
+        layout:IEShowList(#sectionDatas,OnLoadSuccess,currIndex)
+        isFirst = true
+    else
+        layout:UpdateList()
+    end
     SetRed(MissionMgr:CheckRed({eTaskType.StarPalace}))
 
     if openSetting and openSetting.isDungeonOver then --战斗完返回

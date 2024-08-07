@@ -24,6 +24,7 @@ local disChoosie=false;--禁用下来选择
 -- {-5.22988,-200}
 -- {-5.22988,250}
 function Awake()
+    UIUtil:AddQuestionItem("TeamConfirm", gameObject, questionParent)
     -- slider=ComUtil.GetCom(hotSlider, "OutlineBar")
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Team_Confirm_Refreh, RefreshItems)
@@ -661,6 +662,7 @@ function InitRogue()
         local lua = ComUtil.GetLuaTable(go)
         lua.Refresh(data.rogueData)
     end)
+    CSAPI.SetGOActive(questionParent,false)
 end
 
 function OnRogue()

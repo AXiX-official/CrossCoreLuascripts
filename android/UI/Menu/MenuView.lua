@@ -52,8 +52,10 @@ local talkTxtIsShowSaveKey = "talkTxtIsShow"
 local isTalk = false
 local isNeedToShowMenuBuy = false
 local resRecoveryEndTime = nil
+local webCheckTime = nil 
 -- 主界面
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("MenuView",gameObject); --节点添加
     cg_node = ComUtil.GetCom(node, "CanvasGroup")
     enterSV_sv = ComUtil.GetCom(enterSV, "ScrollRect")
     groupsv_sv = ComUtil.GetCom(groupsv, "ScrollRect")
@@ -201,6 +203,8 @@ function InitListener()
     eventMgr:AddListener(EventType.Player_EditName, function()
         CSAPI.SetText(txtName, PlayerClient:GetName())
     end)
+    -- 
+    eventMgr:AddListener(EventType.Menu_WebView_Enabled, CheckBtnWebView)
     -- 活动表动态更改
     eventMgr:AddListener(EventType.CfgActiveEntry_Change, function()
         enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
@@ -676,6 +680,10 @@ function Update()
     if(resRecoveryEndTime~=nil and TimeUtil:GetTime()>resRecoveryEndTime) then 
         SetResRecoveryBtn()
     end 
+
+    if(webCheckTime and curTime>webCheckTime) then 
+        CheckBtnWebView()
+    end 
 end
 ----------------------------------------动画+红点-----------------------------------------------】
 -- 处理动画在某个关键帧上的事件
@@ -985,6 +993,9 @@ function SetTop()
     SetMoneys()
     InitTopTime()
     SetPower()
+
+    --问卷调查
+    --CheckBtnWebView()
 end
 
 -- 金钱
@@ -2051,6 +2062,42 @@ end
 function OnClickBtnBuy2()
     CSAPI.OpenView("ExtraActivityView", nil, 2)
     -- Tips.ShowTips("敬请期待")
+end
+
+--检查按钮是否显示(等级+显示时间内)
+function CheckBtnWebView()
+    webCheckTime = nil 
+    local b = false 
+    local curTime = TimeUtil:GetTime()
+    local lv = g_ZilongWebBtnLv or 1
+    if (PlayerClient:GetLv()>=lv and 
+     (g_ZilongWebBtnOpen==nil or curTime>=TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) and
+      (g_ZilongWebBtnClose==nil or TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)>curTime)) then
+        b = true 
+    end
+    CSAPI.SetGOActive(btnWebView,b)
+    --
+    if(g_ZilongWebBtnOpen~=nil and  curTime<TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) then 
+        webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)
+    elseif(g_ZilongWebBtnClose~=nil and  curTime<TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)) then 
+        webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)
+    end 
+
+    CheckBtnWebViewRed()
+end
+--检查按钮红点
+function CheckBtnWebViewRed()
+    if(btnWebView.activeSelf) then
+        ShiryuSDK.QueryRedDotState(1,function (isAdd)
+            UIUtil:SetRedPoint(btnWebView, isAdd, 22, 22, 0)
+            print("CheckBtnWebViewRed--------："..tostring(isAdd))
+        end)
+    else
+    end 
+end
+--打开活动页面
+function OnClickWebView()
+    ShiryuSDK.ShowActivityUI(CheckBtnWebViewRed)--关闭时请求一次红点
 end
 
 -- 资源回收

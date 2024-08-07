@@ -51,10 +51,10 @@ function OnInit()
 function OnOpen()
     if topTools then
         topTools.SetHomeActive(openSetting==nil);
+        local x=openSetting==nil and 485 or 300;
+        local anchorX,anchorY=CSAPI.GetAnchor(topTools.btn_exit);
+        CSAPI.SetAnchor(questionItem,x,-72)
     end
-    local x=openSetting==nil and 485 or 300;
-    local anchorX,anchorY=CSAPI.GetAnchor(topTools.btn_exit);
-    CSAPI.SetAnchor(questionItem,x,-72)
     AIStrategyMgr:ClearEditData();
     if data==nil then
         LogError("没有传入必须的参数");

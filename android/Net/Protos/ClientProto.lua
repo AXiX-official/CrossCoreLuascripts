@@ -259,16 +259,27 @@ end
 function ClientProto:DySetCfgNotice(proto)
     GCalHelp:DyModifyCfgs(proto.infos)
     for k, v in pairs(proto.infos) do
-        -- if(v.name=="global_setting" and (v.row_id=="g_ZilongWebBtnOpen" or v.row_id=="g_ZilongWebBtnClose" or v.row_id=="g_ZilongWebBtnLv")) then 
-        --     EventMgr.Dispatch(EventType.Menu_WebView_Enabled) --主界面的问卷调查
-        -- end 
+        if(v.name=="global_setting" and (v.row_id=="g_ZilongWebBtnOpen" or v.row_id=="g_ZilongWebBtnClose" or v.row_id=="g_ZilongWebBtnLv")) then
+            EventMgr.Dispatch(EventType.Menu_WebView_Enabled) --主界面的问卷调查
+        end
         if (v.name == "CfgActiveEntry") then
             EventMgr.Dispatch(EventType.CfgActiveEntry_Change) --活动表动态更改
         end
     end
 end
+
+
 ---1055 后台通知
 function ClientProto:PlrNotice(proto)
-    --LogError("1055 后台通知------")
-    --LogError(proto)
+    if proto["notice"]["type"] then
+        if proto["notice"]["type"]=="points" then
+            ---proto["notice"]["value"]
+            ---  Log("解析成功")
+            AdvDeductionvoucher.QueryPoints(function()
+                CSAPI.DispatchEvent(EventType.Shop_View_Refresh)
+            end)
+        end
+    end
+
+
 end

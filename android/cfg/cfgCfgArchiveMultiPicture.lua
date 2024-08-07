@@ -29,6 +29,7 @@ local conf = {
 {'20',	'20',	'61022',	'铁壁之卫',	'19',	'',	'',	'6',	'guard_of_iron_bastion',	'guard_of_iron_bastion_replace',	'board_guard_of_iron_bastion',	'',	'商店购买',	'-44,15,0.67',	'CG0014_GuardOfIronBastion_spine',	'72,0,1',	'',	'1'},
 {'21',	'21',	'61023',	'瞬息留影',	'21',	'2024/7/31 3:00:00',	'',	'6',	'silhouette_in_a_moment',	'',	'board_silhouette_in_a_moment',	'Small_silhouette_in_a_moment',	'高级勘测奖励',	'101,15,1',	'leikesi',	'106,11,1.1',	'',	'1'},
 {'22',	'22',	'61024',	'雪域众神',	'22',	'',	'',	'6',	'snowland_gods',	'',	'board_snowland_gods',	'Small_snowland_gods',	'活动商店兑换',	'-37,-132,1.1',	'CG0019_SnowlandGods_spine',	'72,-38,1',	'',	'1'},
+{'27',	'27',	'61029',	'欢欣鼓舞',	'27',	'',	'',	'7',	'dance_for_joy',	'',	'board_dance_for_joy',	'Small_dance_for_joy',	'加油喝彩2024',	'-70,-20,0.88',	'CG0024_DanceForJoy_spine',	'55,-51,1.23',	'',	'1'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf
