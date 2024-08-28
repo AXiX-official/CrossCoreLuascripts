@@ -292,6 +292,7 @@ function this:CheakPopInfos()
 end
 
 function this:UpdateActivityOpen(aType)
+    aType = tonumber(aType)
     if self.activityListDatas and self.activityListDatas[aType] then
         if aType == ActivityListType.Investment then
             local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
