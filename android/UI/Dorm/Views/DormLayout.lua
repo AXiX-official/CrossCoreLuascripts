@@ -236,7 +236,7 @@ function SetMain()
         themeCfgLen = 0
         local cfgThemeDatas = Cfgs.CfgFurnitureTheme:GetAll()
         for k, v in pairs(cfgThemeDatas) do
-            if(not v.hide) then 
+            if(DormMgr:CheckIsOpen(v) and  not v.hide) then 
                 themeCfgLen = themeCfgLen + 1
             end 
         end
@@ -447,7 +447,7 @@ function SetCurDatas()
                 themeCfgsArr = {}
                 local themeCfgs = Cfgs.CfgFurnitureTheme:GetAll()
                 for k, v in pairs(themeCfgs) do
-                    if(not v.hide) then 
+                    if(DormMgr:CheckIsOpen(v) and  not v.hide) then 
                         table.insert(themeCfgsArr, v)
                     end 
                 end

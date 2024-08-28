@@ -71,7 +71,7 @@ function this:Clear()
     self.savePanel = {}
     self.isFirst = nil
     -- self.redInfos = nil
-    self.operateList = {}
+    self.operateActive = {}
 end
 
 function this:Init1(webIp, webPort, time)
@@ -252,7 +252,9 @@ function this:InitListOpenState()
             end
 
             if v.type == ALType.Pay then
+                if not self.operateActive[v.id] then
                 isOpen = false
+            end
             end
 
             if isOpen and v.sTime and v.eTime then -- 时间限制
@@ -462,6 +464,7 @@ function this:SetOperateActive(aType,info)
                 self.activityListDatas[aType].isOpen = true
                 self.activityListDatas[aType].sTime = info.openTime
                 self.activityListDatas[aType].eTime = info.closeTime
+                self.operateActive[aType] = 1
             end
         end
     end

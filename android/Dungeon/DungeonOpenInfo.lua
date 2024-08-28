@@ -9,10 +9,13 @@ function this.New()
 	return ins;
 end
 
+function this:InitOpenCfg(cfg)
+    self.openCfg = cfg
+end
+
 function this:Init(_data)
     self.data = _data
     if self.data then
-        self.openCfg = Cfgs.CfgActiveEntry:GetByID(self.data.id)
         if self.openCfg and self.openCfg.config and self.openCfg.nConfigID then
             self.cfg = Cfgs[self.openCfg.config]:GetByID(self.openCfg.nConfigID)
         end

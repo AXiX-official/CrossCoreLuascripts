@@ -110,7 +110,7 @@ function this:SetOpenTimes(proto)
 end
 
 function this:GetOpenTime(id)
-	return self.openTimes[id] or 0
+	return self.openTimes[tostring(id)] or 0
 end
 
 return this

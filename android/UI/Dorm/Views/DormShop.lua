@@ -144,7 +144,7 @@ function SetLDatas()
         local _curLDatas = {}
         local cfgs = Cfgs.CfgFurnitureTheme:GetAll()
         for k, v in pairs(cfgs) do
-            if (not v.hide) then
+            if (DormMgr:CheckIsOpen(v) and not v.hide) then
                 table.insert(_curLDatas, v)
             end
         end

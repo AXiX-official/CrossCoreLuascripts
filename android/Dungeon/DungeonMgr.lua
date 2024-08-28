@@ -189,13 +189,15 @@ end
 
 -- 初始化章节
 function this:InitSectionDatas()
-    self.sectionDatas = {};
-    -- 初始化主线章节
-    local cfgs = Cfgs.Section:GetAll();
-    for _, cfg in pairs(cfgs) do
-        local sectionData = SectionData.New();
-        sectionData:Init(cfg);
-        self.sectionDatas[cfg.id] = sectionData;
+    if self.sectionDatas == nil then
+        self.sectionDatas = {};
+        -- 初始化主线章节
+        local cfgs = Cfgs.Section:GetAll();
+        for _, cfg in pairs(cfgs) do
+            local sectionData = SectionData.New();
+            sectionData:Init(cfg);
+            self.sectionDatas[cfg.id] = sectionData;
+        end
     end
 end
 
@@ -452,13 +454,15 @@ end
 
 --初始化关卡组
 function this:InitDungeonGroupDatas()
-    local cfgs = Cfgs.DungeonGroup:GetAll()
-    if cfgs then
-        self.dungeonGroupDatas = self.dungeonGroupDatas or {}
-        for _, cfg in pairs(cfgs) do           
-            local data = DungeonGroupData.New()
-            data:Init(cfg)
-            self.dungeonGroupDatas[cfg.id] = data
+    if self.dungeonGroupDatas == nil then
+        self.dungeonGroupDatas =  {}
+        local cfgs = Cfgs.DungeonGroup:GetAll()
+        if cfgs then
+            for _, cfg in pairs(cfgs) do           
+                local data = DungeonGroupData.New()
+                data:Init(cfg)
+                self.dungeonGroupDatas[cfg.id] = data
+            end
         end
     end
 end
@@ -565,16 +569,26 @@ function this:IsCurrTower()
     return cfgDungeon and cfgDungeon.type == eDuplicateType.Tower;
 end
 ------------------------------------活动------------------------------------
+function this:InitActivityOpenInfos()
+    if self.ActiveOpenInfos == nil then
+        self.ActiveOpenInfos = {}
+        local cfgs = Cfgs.CfgActiveEntry:GetAll()
+        if cfgs then
+            for k, v in pairs(cfgs) do
+                local info = DungeonOpenInfo.New()
+                info:InitOpenCfg(v)
+                self.ActiveOpenInfos[v.id] = info
+            end
+        end
+    end
+end
+
 --添加活动开启信息 1-战场 2-剧情活动 3-讨伐活动
 function this:AddActivityOpenInfo(proto)
-    self.ActiveOpenInfos = self.ActiveOpenInfos or {}
     if proto and proto.id then
-        local activeOpenInfo = self.ActiveOpenInfos[proto.id]
-        if activeOpenInfo == nil then
-            activeOpenInfo = DungeonOpenInfo.New()
+        if self.ActiveOpenInfos[proto.id] then
+            self.ActiveOpenInfos[proto.id]:Init(proto)
         end
-        activeOpenInfo:Init(proto)
-        self.ActiveOpenInfos[proto.id] = activeOpenInfo
         EventMgr.Dispatch(EventType.Activity_Open_Refresh,proto.id)
     end
 end
@@ -1200,6 +1214,7 @@ function this:Init()
         id = 0
     }) -- 初始化本地缓存
     self:InitDungeonGroupDatas()
+    self:InitActivityOpenInfos()
 end
 
 -- 获取界面打开设置
@@ -1491,8 +1506,9 @@ function this:Clear()
     self.dungeonGroupDatas = nil
     self.ActivityPlotDatas = nil
     self.hardInfo = nil
+    self.ActiveOpenInfos = nil
 end
 
-this:Init();
+this:Init()
 
 return this;

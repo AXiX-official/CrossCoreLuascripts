@@ -1152,7 +1152,7 @@ function this:ThemeHideDic(isContain4001)
     local dic = {}
     local cfgs = Cfgs.CfgFurnitureTheme:GetAll()
     for k, v in pairs(cfgs) do
-        if (v.hide and (v.id ~= 4001 or isContain4001)) then
+        if (not DormMgr:CheckIsOpen(v) or (v.hide and (v.id ~= 4001 or isContain4001))) then
             dic[v.id] = 1
         end
     end
@@ -1232,6 +1232,18 @@ function this:GetCopyFurnitureDatas2(_roomID)
         datas[v.id] = _data
     end
     return datas
+end
+
+--是否在开放时间段内
+function this:CheckIsOpen(cfg)
+    local curTime = TimeUtil:GetTime()
+    if(cfg.sStart and curTime<TimeUtil:GetTimeStampBySplit(cfg.sStart)) then 
+        return false
+    end 
+    if(cfg.sEnd and curTime>=TimeUtil:GetTimeStampBySplit(cfg.sEnd)) then 
+        return false
+    end
+    return true 
 end
 
 return this
