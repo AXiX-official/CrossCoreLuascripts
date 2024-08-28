@@ -52,7 +52,7 @@ function Refresh(_modelId, _posType, _callBack)
 
     SetImg()
 
-    SetTouch()
+    --SetTouch()
 end
 
 function SetImg()
@@ -77,6 +77,9 @@ function SetImg()
             if (not l2d or not l2d.animationState) then
                 isHeXie = true
             end
+
+            SetTouch()
+
             if (callBack) then
                 callBack()
             end
@@ -98,15 +101,14 @@ end
 
 -- 位置触摸
 function SetTouch()
-    if (not needClick) then
-        return
-    end
     touchItems = touchItems or {}
     touchDatas = {}
-    if (cfg and #cfg.item > 0) then
-        for k, v in ipairs(cfg.item) do
-            if (v.sName ~= "in") then
-                table.insert(touchDatas, v)
+    if (needClick) then
+        if (cfg and #cfg.item > 0) then
+            for k, v in ipairs(cfg.item) do
+                if (v.sName ~= "in") then
+                    table.insert(touchDatas, v)
+                end
             end
         end
     end
@@ -625,4 +627,19 @@ function HadInAudio()
         end
     end
     return false
+end
+
+
+function ClearCache()
+    if (l2dGo) then
+        SetBlack(false)
+        CSAPI.RemoveGO(l2dGo)
+    end
+    l2dGo = nil
+    if (dragObj) then
+        CSAPI.RemoveGO(dragObj)
+    end
+    dragObj = nil
+    oldModelId = nil
+    records = {}
 end

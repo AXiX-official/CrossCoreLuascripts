@@ -345,7 +345,7 @@ function SetDowns()
     local conditions = curData:GetCfg().conditions
     -- CSAPI.SetGOActive(down, conditions == nil)
     -- CSAPI.SetGOActive(down2, conditions ~= nil)	
-    if (conditions) then
+    if (conditions and curData:GetCfg().nType==1) then
         SetDown2(conditions)
     else
         SetDown1()

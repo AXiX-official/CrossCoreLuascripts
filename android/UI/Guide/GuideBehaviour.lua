@@ -853,4 +853,22 @@ end
 function this:GuideBehaviourStart_KishinBreak_142050()
     UIUtil:OpenQuestion("KishinBreak");
 end
+
+--钓鱼佬编队关卡引导
+function this:GuideBehaviourCondition_FishMan_143010()
+    local data = GuideMgr:GetViewTriggerData();
+    return data and data.dungeonId == 96114;
+end
+function this:GuideBehaviourStart_FishMan_143020()
+    UIUtil:OpenQuestion("FishMan");
+end
+--宠物首次引导
+function this:GuideBehaviourCondition_Pet_144010()
+    return DungeonMgr:CheckDungeonPass(1008);--检测是否需要引导
+end
+function this:GuideBehaviourStart_Pet_144020()
+    UIUtil:OpenQuestion("PetMainFirst");
+end
+
+
 return this;

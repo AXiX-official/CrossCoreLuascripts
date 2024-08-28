@@ -32,6 +32,7 @@ function Awake()
     eventMgr:AddListener(EventType.Tower_Update_Data, RefresTopPanel)
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
     eventMgr:AddListener(EventType.Mission_List, OnTowerRefresh)
+    eventMgr:AddListener(EventType.CfgActiveEntry_Change, OnTowerRefresh)
 
     m_Slider = ComUtil.GetCom(slider, "Slider")
 
@@ -46,7 +47,7 @@ end
 
 function OnRedPointRefresh()
     -- 任务
-    local _data = RedPointMgr:GetData(RedPointType.MissionTower) or {}
+    local _data = RedPointMgr:GetData(RedPointType.MissionTower)
     UIUtil:SetRedPoint2("Common/Red2", btnMission, _data[eTaskType.DupTower] == 1, 39, 36, 0)
 end
 
@@ -156,9 +157,9 @@ function Update()
 end
 
 function OnOpen()
-    -- local fit1,fit2 = -CSAPI.UIFitoffsetTop(),-CSAPI.UIFoffsetBottom()
-    -- offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920 + fit1 + fit2) / 2
-    offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920) / 2
+    local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
+    local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
+    offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920 + fit1 + fit2) / 2
     left = left + offsetW
     selIndex = 0
     if data then
@@ -177,7 +178,14 @@ function InitTowerItems()
     if datas then
         for k, v in pairs(datas) do
             if v:GetType() == SectionActivityType.Tower then
-                table.insert(sectionDatas, v)
+                local openInfo = DungeonMgr:GetActiveOpenInfo2(v:GetID())
+                if openInfo then
+                    if openInfo:IsOpen() then
+                        table.insert(sectionDatas, v)
+                    end
+                else
+                    table.insert(sectionDatas, v)
+                end
             end
         end
     end

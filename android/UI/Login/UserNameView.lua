@@ -310,6 +310,7 @@ function OnClickConfirm()
 	timeOutCallBack=function ()
 		LanguageMgr:ShowTips(1014)
 		-- Tips.ShowTips("网络连接超时，即将返回重新登录")
+		SceneMgr:SetLoginLoaded(false);
 		BackToLogin()
 	end});
 

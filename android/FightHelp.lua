@@ -1,5 +1,5 @@
 function LogEnterFight(oPlayer, fid, sceneType, nDuplicateID, groupID, data)
-    -- LogTable(info)
+    -- LogTable(data)
     --LogDebugEx("LogEnterFight", fid, sceneType, nDuplicateID, groupID)
     local logdata = {}
     for tid, v in ipairs(data.data) do
@@ -41,6 +41,11 @@ end
 
 function FightHelp:AddFightMgr(uids, mgr)
     for i, uid in ipairs(uids) do
+        if FightHelp:GetFightMgrEx(uid) then 
+            FightHelp:Destroy(uid)
+            -- ASSERT(nil, "查bug用, 该玩家有战斗未销毁")
+        end
+
         FightHelp.mapPlayerMgr[uid] = mgr
     end
 
@@ -131,7 +136,8 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
     -- DT(player)
     -- 战斗管理器的id
     --ASSERT(nDuplicateID)
-    -- LogTable(data)
+    -- LogTable(data, "StartMainLineFight data =")
+    -- LogTable(exData, "exData")
     -- ASSERT()
     local fid = UID(10)
     local seed = os.time() + math.random(1000000)
@@ -620,6 +626,7 @@ function FightHelp:AddLiveBuff(data, damage, bedamage)
         if data.damage < 0 then
             data.damage = 0
         end
+        --data.damage_add = damage
     end
 
     -- 受到的伤害增加的百分比
@@ -629,6 +636,7 @@ function FightHelp:AddLiveBuff(data, damage, bedamage)
         if data.bedamage < 0 then
             data.bedamage = 0
         end
+        --data.bedamage_add = bedamage
     end
 end
 
@@ -824,6 +832,19 @@ function FightHelp:RestoreFight(uid, data)
         return
     end
 end
+
+-- 客户端战斗出错
+function FightHelp:ClientError(uid, data)
+    local mgr = self:GetFightMgr(uid)
+    local ret
+    if mgr then
+        mgr:ClientError(uid, data)
+    else
+        -- 提示错误
+        return
+    end
+end
+
 --------------------------------------------------------------
 function FightHelp:OnTimer()
     -- LogDebug("1111111111111111 FightHelp:OnTimer()")
@@ -837,6 +858,12 @@ function FightHelp:OnTimer()
             -- if not ret then LogError(err) end
         end
         -- LogInfo("FightHelp:OnTimer() %s", GameApp:GetTickCount()-t)
+        FightHelp.count = FightHelp.count or 0
+        FightHelp.count = FightHelp.count + 1
+        if FightHelp.count > 100 then 
+            FightHelp.count = 0
+            LogInfo("FightHelp:OnTimer size(lstMgr) = %s, size(mapPlayerMgr)=%s", table.size(FightHelp.lstMgr), table.size(FightHelp.mapPlayerMgr))
+        end
     end
 
     return f

@@ -1771,8 +1771,15 @@ function GCalHelp:GetCardPoolSelectId(cardPoolCfg)
     return cardPoolCfg.id
 end
 
-function GCalHelp:Clock()
-    return math.floor(os.clock() * 1000)
+
+-- isCpuClock: 是否只算占用CPU的时间，线程挂起睡眠不算
+function GCalHelp:Clock(isCpuClock)
+    -- CUP 占用时间，线程挂起不算
+    if isCpuClock then
+        return math.floor(os.clock() * 1000)
+    else
+        return GameApp:GetTickCount()
+    end
 end
 
 function GCalHelp:FindObjArrByKey(arr, key, val)
@@ -1786,9 +1793,9 @@ function GCalHelp:FindObjArrByKey(arr, key, val)
 end
 
 function GCalHelp:FindArrByFor(arr, val)
-    for _, info in ipairs(arr) do
-        if info == val then
-            return info
+    for _, aVal in ipairs(arr) do
+        if aVal == val then
+            return aVal
         end
     end
 
@@ -2115,3 +2122,207 @@ function GCalHelp:GetBaseModelBySkillID(skillID)
 
     return nil, monsterID
 end
+
+-- 接受一个数x和两个区间端点min和max作为参数
+-- 然后返回x在[min, max]区间内的值。
+-- 如果x小于min，则返回min；如果x大于max，则返回max；否则，直接返回x。
+function GCalHelp:MathClamp(x, min, max)
+    x = math.max(x, min)
+    x = math.min(x, max)
+    return x
+end
+
+--计算当前宠物基本属性值，如果在运动中的话也计算运动中的变化
+---comment
+---@param pet table 宠物
+function GCalHelp:CalPetAbility(pet, curTime)
+    local cfg = CfgPet[pet.id]
+    local happy_sub = cfg.happyDown
+    local food_sub = cfg.foodDown
+    local wash_sub = cfg.washDown
+    local interval = cfg.interval
+    curTime = curTime or CURRENT_TIME
+    -- 计算宠物基本属性扣除，随时间扣除
+
+    local cnt = math.floor((curTime - pet.last_time) / interval)
+
+    local states = self:GetPetStates(pet)
+    for k, state in pairs(states) do
+        local stateCfg = CfgPetState[state]
+        local effect = stateCfg.effect
+        if stateCfg and stateCfg.stateType == 3 then
+            -- 宠物处于某种状态下，会受到影响
+            -- 3：心情值降低速度加快，每个时间间隔多扣effect[1]
+            happy_sub = happy_sub + (effect[1] or 0)
+        end
+    end
+
+    local food_diff = food_sub * cnt
+    local wash_diff = wash_sub * cnt
+    local happy_diff = happy_sub * cnt
+
+    -- 计算最新值，并且更新时间
+    pet.happy = math.max(pet.happy - happy_diff, 0)
+    pet.food = math.max(pet.food - food_diff, 0)
+    pet.wash = math.max(pet.wash - wash_diff, 0)
+    pet.last_time = pet.last_time + (cnt * interval)
+
+    -- 如果宠物在运动中，算上运动的属性变动
+    if pet.sport == 0 or pet.scene == 0 then
+        return pet
+    end
+
+    local sportCfg = CfgPetSport[pet.scene]
+    if not sportCfg then
+        return pet
+    end
+
+    local subcfg = sportCfg.infos[pet.sport]
+    local happychange = subcfg.happyChange
+    local foodchange = subcfg.foodChange
+    local washchange = subcfg.washChange
+    local sport_interval = sportCfg.interval
+
+    local end_time = pet.start_time + pet.keep_time
+
+    -- 计算变动次数,算出属性最新值跟最新时间
+    local periodCnt , reduceTime = GCalHelp:GetPeriodCnt(pet.start_time, sport_interval, math.min(end_time, curTime))
+    if periodCnt > 0 then
+        for i = 1, periodCnt do
+            pet.happy = GCalHelp:MathClamp(pet.happy + (happychange), 0, cfg.happyMax)
+            pet.food = GCalHelp:MathClamp(pet.food + ( foodchange), 0, cfg.foodMax)
+            pet.wash = GCalHelp:MathClamp(pet.wash + ( washchange), 0, cfg.washMax)
+            local timediff = sport_interval
+            pet.start_time = pet.start_time + timediff
+            pet.keep_time = math.max(pet.keep_time - timediff, 0)
+            local feedCfg = CfgPetFeedReward[cfg.feedReward].infos
+            pet.feed = math.min(feedCfg[#feedCfg].feedNum, pet.feed + subcfg.feedChange)
+
+            -- 属性值不足，中断运动
+            if pet.wash == 0 or pet.food == 0 then
+                pet.sport = 0
+                pet.scene = 0
+                pet.keep_time = 0
+                pet.start_time = 0
+                return pet, true
+            end
+        end
+    end
+
+    if end_time < curTime then
+        -- 运动结束了
+        pet.sport = 0
+        pet.scene = 0
+        pet.keep_time = 0
+        pet.start_time = 0
+    end
+    return pet
+end
+
+--计算出当前宠物处于哪些状态
+---comment
+---@param pet table 宠物
+---@return table 宠物所处状态的数组
+function GCalHelp:GetPetStates(pet)
+    local state = {}
+    local petCfg = CfgPet[pet.id]
+    if not petCfg then
+        return state
+    end
+    if CfgPetState and next(CfgPetState) then
+        for id, cfg in ipairs(CfgPetState) do
+            local passNum = 0
+            for _, ty in ipairs(cfg.attribute) do
+                local abi = pet[ePetAbilityType[ty]]
+                local max = petCfg[ePetAbilityType[ty].."Max"]
+                abi = math.floor(abi / max * 100)
+                if cfg.judge == 1 then
+                    -- 大于
+                    if abi > cfg.value then
+                        passNum = passNum + 1
+                    end
+                elseif cfg.judge == 2 then
+                    -- 大于等于
+                    if abi >= cfg.value then
+                        passNum = passNum + 1
+                    end
+                elseif cfg.judge == 3 then
+                    -- 等于
+                    if abi == cfg.value then
+                        passNum = passNum + 1
+                    end
+                elseif cfg.judge == 4 then
+                    -- 小于等于
+                    if abi <= cfg.value then
+                        passNum = passNum + 1
+                    end
+                elseif cfg.judge == 5 then
+                    -- 小于
+                    if abi < cfg.value then
+                        passNum = passNum + 1
+                    end
+                end
+            end
+            if passNum == #cfg.attribute then
+                table.insert(state, id)
+            end
+        end
+    end
+
+    return state
+end
+
+------------------------------------------------------------------------------------------
+-- args:
+-- -- cfgSection： Section 表的配置信息
+-- -- returnAdd ：回归增加
+
+-- ret:
+-- -- 返回增加的倍数[掉落倍数]
+-- -- 返回多倍最大次数，
+-- -- 目前是否无限多倍次数
+-- -- 是否启用了限时多倍掉落
+function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
+    returnAdd = returnAdd or 0
+
+    local sumMulti = 0
+    local sumMaxCnt = 0
+
+    local notDelCnt = false
+
+    if cfgSection.multiId then
+        local dropMultiCfg = CfgDupDropMulti[cfgSection.multiId]
+        if dropMultiCfg and dropMultiCfg.dropAdd then
+            local dropMulti, dropCnt = dropMultiCfg.dropAdd[1], dropMultiCfg.dropAdd[2]
+            sumMulti = sumMulti + dropMulti
+            if dropCnt > 0 then
+                sumMaxCnt = sumMaxCnt + dropCnt
+            else
+                notDelCnt = true
+            end
+        end        
+    end
+
+    local isUseSpecialMulti = false
+    if cfgSection.specialMultiIds and g_SpecialMultiId then
+        -- Tips: 这里是因为 cfgSection.specialMultiIds 只会填一两个值，所以直接用遍历
+        if self:FindArrByFor(cfgSection.specialMultiIds, g_SpecialMultiId) then
+            local specialDropMultiCfg = CfgDupDropMulti[g_SpecialMultiId]
+            if specialDropMultiCfg and specialDropMultiCfg.dropAdd then
+                local specialDropMulti, specialDropCnt = specialDropMultiCfg.dropAdd[1], specialDropMultiCfg.dropAdd[2]
+
+                isUseSpecialMulti = true
+                sumMulti = sumMulti + specialDropMulti
+                if specialDropCnt > 0 then
+                    sumMaxCnt = sumMaxCnt + specialDropCnt
+                else
+                    notDelCnt = true
+                end
+            end
+        end
+    end
+
+    sumMaxCnt = sumMaxCnt + returnAdd
+    return sumMulti, sumMaxCnt, notDelCnt, isUseSpecialMulti
+end
+

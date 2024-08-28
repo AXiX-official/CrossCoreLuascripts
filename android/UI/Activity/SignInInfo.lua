@@ -112,7 +112,7 @@ end
 --活动是否在有效时间段内
 function this:CheckInTime()
 	local cfg = self:GetCfg()
-	if cfg and cfg.regressionType then
+	if cfg and not cfg.begTime and not cfg.endTime then
 		return true
 	end
 	local begTime = TimeUtil:GetTimeStampBySplit(cfg.begTime)

@@ -247,12 +247,10 @@ function ConfigParser:ReadOneConfig(filename)
             types = config.types
         }
 
-
         local newCfgs = {}
 
         local currrow = 0
         for k, data in ipairs(config.data) do
-
             local function TmpXpcallCB(msg, ...)
                 LogInfo('-------------------配置表出错---------------------')
                 LogInfo(config.filename .. '的 ' .. config.sheetname .. ' 第' .. (k + 5) .. '行')
@@ -392,7 +390,7 @@ function ConfigParser:ClientConfig()
         CfgShopPage = 1,
         CfgReturningActivity = 1,
         MainLine = 1,
-        CfgMenuBg = 1,
+        CfgMenuBg = 1
     }
 
     -- 检查/特殊处理以及设为只读

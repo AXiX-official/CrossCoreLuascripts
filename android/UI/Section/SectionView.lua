@@ -70,6 +70,7 @@ local lastPosY={0,0,0}
 local currDailyIndexL1 = 0
 local currDailyIndexL2 = 0
 local currDailyIndexR = 0
+local isDailyNew = false
 
 --军演
 local eRectL = nil
@@ -117,6 +118,8 @@ function Awake()
     eventMgr:AddListener(EventType.Exercise_Update, OnExerciseRefresh)
     --new
     eventMgr:AddListener(EventType.Dungeon_DailyData_Update, DailyNewRefresh)
+    --限时多倍
+    eventMgr:AddListener(EventType.Section_Daily_Double_Update, OnDoubleRefresh)
     --red
     eventMgr:AddListener(EventType.Dungeon_Box_Refresh, OnRedRefresh)
     eventMgr:AddListener(EventType.Mission_List, OnRedRefresh)
@@ -630,13 +633,12 @@ function ShowPanel(type)
         top.SetMoney(ids)   -- 需要加跳转id todo 
     end
 
-    --new
-    RefreshNew()
-
     --question
     SetQuestion()
 
     isViewDrop = false
+
+    DailyNewRefresh()
 end
 
 function ShowMenuPanel()
@@ -644,6 +646,9 @@ function ShowMenuPanel()
     SetTitle(false)
 
     CSAPI.SetLocalPos(moveNode,0,0)
+
+    UIUtil:SetNewPoint(dailyNew,IsDailyNew())
+    DailyDoubleRefresh()
 end
 
 function SetTitle(isShow,parent,delay)
@@ -1192,6 +1197,8 @@ function ShowExercisePanel()
         LanguageMgr:SetText(txt_eLock1, 1035)
         CSAPI.SetText(txt_eLock2, eLockStr) 
     end
+
+    ExerciseNewRefresh()
 end
 
 function OnClickExerciseL()
@@ -1251,7 +1258,7 @@ function RefreshActivityDatas()
             if typeDatas and #typeDatas > 0 then
                 for i, v in ipairs(typeDatas) do
                     table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),v:GetOpenState()))
-                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower then
+                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower or _type == SectionActivityType.Rogue then
                         local _data = {
                             data = v,
                             type = _type,
@@ -1526,25 +1533,6 @@ function OnClickArrowR()
         MoveToIndex(curActivityItem1.index + 1,nil,200)
     end
 end
-
-function OnRedRefresh()
-    SetRed()
-    if currType == 1 then
-        RefreshMainLineView()
-    elseif currType == 4 then
-        RefreshActivityDatas()
-    end
-end
-
-function ExerciseNewRefresh()
-    local isNew = ExerciseMgr:IsExerciseLNew()
-    if currIndex == 1 then
-        UIUtil:SetNewPoint(eNewObj,isNew,125,24)
-    elseif currIndex == 2 and currType == 3 then
-        UIUtil:SetNewPoint(btnExerciseL,isNew,340,190)
-    end
-end
-
 ------------------------------------右侧信息栏-----------------------------------
 function ShowItemInfo(cb)    
     if (itemInfo == nil) then --没有则异步创建
@@ -2081,32 +2069,32 @@ function CountAngle(p1, p2)
 end
 
 ---------------------------------------------red---------------------------------------------
+function OnRedRefresh()
+    SetRed()
+    if currType == 1 then
+        RefreshMainLineView()
+    elseif currType == 4 then
+        RefreshActivityDatas()
+    end
+end
 
 function SetRed()
-    local isActivityRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower,eTaskType.Story,eTaskType.DupTaoFa})
-    UIUtil:SetRedPoint(SectionTypeItem4,isActivityRed,146,26)
-
-    local isMainRed = DungeonBoxMgr:CheckRed()
-    UIUtil:SetRedPoint(SectionTypeItem1,isMainRed,146,26)
+    UIUtil:SetRedPoint(SectionTypeItem4,DungeonMgr:IsActivityRed(),146,26)
+    UIUtil:SetRedPoint(SectionTypeItem1,DungeonMgr:IsMainLineRed(),146,26)
 end
 ---------------------------------------------new---------------------------------------------
-
-function RefreshNew()
-    DailyNewRefresh()
-    ExerciseNewRefresh()
-end
-
 function DailyNewRefresh()
     if currIndex > 1 and currType == 2 and SectionNewUtil:IsDoubleNew() then
         SectionNewUtil:RefreshDoubleNew()
+        RedPointMgr:ApplyRefresh()
         FuncUtil:Call(function ()
             if gameObject then
                 LanguageMgr:ShowTips(8012)
             end   
         end,nil, 600)
     end
-    UIUtil:SetNewPoint(dailyNew,IsDailyNew())
-    -- CSAPI.SetGOActive(dailyNew, IsDailyNew())
+    isDailyNew = IsDailyNew()
+    UIUtil:SetNewPoint(dailyNew,isDailyNew)
 end
 
 function IsDailyNew()
@@ -2117,6 +2105,40 @@ function IsDailyNew()
     return isNew
 end
 
+function ExerciseNewRefresh()
+    local isNew = ExerciseMgr:IsExerciseLNew()
+    if currIndex == 1 then
+        UIUtil:SetNewPoint(eNewObj,isNew,125,24)
+    elseif currIndex == 2 and currType == 3 then
+        UIUtil:SetNewPoint(btnExerciseL,isNew,340,190)
+    end
+end
+---------------------------------------------limitDouble---------------------------------------------
+function OnDoubleRefresh()
+    DailyDoubleRefresh()
+
+    if currType == 2 then
+        ShowDailyPanel()
+    end
+end
+
+function DailyDoubleRefresh()
+    --UIUtil:SetDoublePoint(dailyDouble, IsLimitDouble())
+	UIUtil:SetDoublePoint(dailyDouble, false)
+end
+
+function IsLimitDouble()
+    if dailyDatas then
+        for i, v in pairs(dailyDatas) do
+            for k, m in ipairs(v) do
+                if DungeonUtil.IsLimitDropAdd(m:GetID()) then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
 ---------------------------------------------question------------------------------------------
 function SetQuestion()
     if currType == nil then

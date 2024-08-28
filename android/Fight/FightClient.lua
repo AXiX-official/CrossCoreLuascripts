@@ -126,7 +126,6 @@ function this:InitFight(data)
             self:SetAutoFight(false);  
         else
             local auto = PlayerPrefs.GetInt("fight_Auto")==1;
-            --LogError(tostring(auto));
             self:SetAutoFight(auto);  
         end
     end    
@@ -213,7 +212,7 @@ function this:Reset()
     self.playSpeed = nil;
     defaultPlaySpeed = nil;
 
-    FireBallMgr:ClearFBs();
+    FireBallMgr:ClearFBs();    
     --self:SetPlaySpeed();
 end
 
@@ -230,6 +229,7 @@ function this:Clean()
 	CharacterMgr:Clean();
 	FightGroundMgr:Clean();
 	FightGridSelMgr.Hide();
+    ClientBuffMgr:Clean();
     NetMgr.netFight:Disconnect();
     
     if(FightActionInputIdle)then
@@ -603,6 +603,13 @@ function this:SetPauseState(state)
     --LogError("state:" .. tostring(state));
     this.IsFightStop=state
     CSAPI.SetTimeScaleByKey(key_fight_pause, state and 0 or 1);
+end
+
+function this:SetTotalDamage(val)
+    self.totalDamage = val;
+end
+function this:GetTotalDamage()
+    return self.totalDamage;
 end
 
 return this; 

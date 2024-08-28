@@ -432,7 +432,7 @@ function this:GetAPIHandler(apiName)
         --回合开始结算
         self.handers[APIType.OnRoundBegin]      = require "FightAPIHandler_RoundBegin";
         --回合结束结算
-        self.handers[APIType.OnRoundOver]       = eventHandler;
+        self.handers[APIType.OnRoundOver]       = require "FightAPIHandler_SplitDatas";;
         -- 行动开始
         self.handers[APIType.OnActionBegin]     = eventSpecialHandler;
         -- 行动结束

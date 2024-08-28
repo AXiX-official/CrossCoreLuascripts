@@ -437,7 +437,7 @@ function PlayPlot()
 			else
 				UpdateRoleImg(pInfos)
 			end		
-			PlotTween.FadeIn(ImgParent,0.25,function ()
+			PlotTween.FadeIn(imgParent,0.25,function ()
 				if not currentPlotData:IsLeft() then
 					CSAPI.SetGOActive(boxParent, true)					
 					PlayContent();
@@ -608,12 +608,12 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 			-- AnimStart()
 			if isFirstChange then --首次切换
 				PlotTween.FadeIn(bg, 0.25, nil, 0.25)
-				PlotTween.FadeIn(ImgParent, 0.25, nil, 0.5)
+				PlotTween.FadeIn(imgParent, 0.25, nil, 0.5)
 				isFirstChange = false
 			else
-				-- PlotTween.Twinkle(ImgParent, 0.5)
+				-- PlotTween.Twinkle(imgParent, 0.5)
 				if cgIndex == 1 then
-					PlotTween.FadeOut(ImgParent, 0.25)
+					PlotTween.FadeOut(imgParent, 0.25)
 					cgDelay = 250
 				end
 				PlotTween.Twinkle(bg, 0.25,nil,cgDelay / 1000)	
@@ -854,7 +854,7 @@ end
 --新增人物立绘
 function CreateRoleImg(roleImgInfo)
 	local roleInfoView = nil;
-	local go = ResUtil:CreateUIGO("Plot/PlotRole", ImgParent.transform);
+	local go = ResUtil:CreateUIGO("Plot/PlotRole", imgParent.transform);
 	roleInfoView = ComUtil.GetLuaTable(go);
 	return roleInfoView;
 end
@@ -1473,7 +1473,7 @@ function ReleaseCSComRefs()
 	bg = nil;
 	bgMask = nil;
 	bottomParent = nil;
-	ImgParent = nil;
+	imgParent = nil;
 	lineObj = nil;
 	boxParent = nil;
 	topParent = nil;

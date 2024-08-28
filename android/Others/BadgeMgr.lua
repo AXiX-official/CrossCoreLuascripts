@@ -14,7 +14,9 @@ function this:InitDatas()
         for _, cfg in pairs(cfgs) do
             local data = BadgeData.New()
             data:Init(cfg)
-            self.datas[cfg.id] = data
+            if not data:IsHide() then
+                self.datas[cfg.id] = data
+            end
         end
     end
 end

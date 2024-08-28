@@ -1087,6 +1087,11 @@ function BuffBase:Cure(effect, caster, target, data, cureTy, percent)
 	target:AddHp(hp, caster)
 	self.log:Add({api="BufferCure", bufferID = self.id, targetID = target.oid, uuid = self.uuid, 
 		attr = "hp", hp = target:Get("hp"), add = hp, effectID = effect.apiSetting})
+
+	local fightMgr = self.fightMgr
+	target.currCureHp = hp -- 当前治疗量
+	fightMgr:DoEventWithLog("OnCure", caster, target, data)
+	target.currCureHp = nil
 end
 
 -- 持续伤害
@@ -1446,7 +1451,10 @@ function BuffBase:OnDelete(bRemoveEvent,eBuffDeleteType)
 			self.log:StartSub("OnRemoveBuff")
 			-- self.caster = caster or self.caster
 			--LogDebugEx("OnRemoveBuff", self.caster.name)
+			local caster = self.caster
+			self.caster = self.owner
 			self:OnRemoveBuff(self.owner)
+			self.caster = caster
 			-- self:OnRemoveBuff(caster, target)
 			self.log:EndSub("OnRemoveBuff")
 		end

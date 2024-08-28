@@ -281,7 +281,6 @@ function this:GetSkinIsL2dElse()
     return false
 end
 
-
 -- 当前使用的皮肤
 function this:GetSkinID()
     if (self:IsBaseCard()) then
@@ -292,17 +291,17 @@ function this:GetSkinID()
 end
 
 function this:GetSkinIDBase()
-    if(self.data and self.data.skin~=nil and self.data.skin~=0) then 
+    if (self.data and self.data.skin ~= nil and self.data.skin ~= 0) then
         return self.data.skin
-    end 
-    return  self.cfg.model
+    end
+    return self.cfg.model
 end
-
+-- 不要用原卡数据直接调用（用这个RoleTool.GetElseSkin()）
 function this:GetSkinIDElse()
-    if(self.data and self.data.skin_a~=nil and self.data.skin_a~=0) then 
+    if (self.data and self.data.skin_a ~= nil and self.data.skin_a ~= 0) then
         return self.data.skin_a
-    end 
-    return  self.cfg.model
+    end
+    return self.cfg.model
 end
 
 -- 返回角色标示
@@ -841,9 +840,12 @@ function this:RoleCardRed()
     return false
 end
 
--- 特性能否升级
+-- 特性能否升级+未查看（进入查看后外面的红点要没）
 function this:IsPassiveRed()
-    return self.passiveRed
+    if (self.passiveRed and not RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "")) then
+        return true
+    end
+    return false
 end
 
 -- 近升级突破跃升
@@ -998,6 +1000,23 @@ function this:CheckNormalSkillUP(skillId)
     return true
 end
 
+function this:LookPassive()
+    if (self.passiveRed and not RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "")) then
+        RoleMgr:SetPassiveRedIsLook(self:GetID() .. "", 1)
+    end
+end
+-- 特性技能能否升级
+-- 非登录时：未满足变成满足，设置未查看
+function this:CheckPassiveUp0(isLogin)
+    self:CheckPassiveUp()
+    if(not isLogin) then 
+        if (self.passiveRed and self.old_passiveRed~=nil and self.old_passiveRed==false and RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "") and not CSAPI.IsViewOpen("RoleCenter")) then
+            RoleMgr:SetPassiveRedIsLook(self:GetID() .. "", 0) --设置为未看
+        end
+    end
+    self.old_passiveRed = self.passiveRed
+end
+
 -- 特性技能能否升级
 function this:CheckPassiveUp()
     self.passiveRed = false
@@ -1064,7 +1083,7 @@ function this:CheckHadSkins()
     if (self.cfg.breakModels ~= nil or self.cfg.skin ~= nil) then
         return true
     end
-    return false 
+    return false
 end
 
 return this;

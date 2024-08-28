@@ -80,14 +80,13 @@ end
 
 -- 位置触摸
 function SetTouch()
-    if (not needClick) then
-        return
-    end
     touchItems = touchItems or {}
     touchDatas = {}
-    local cfg = Cfgs.CfgMultiImageAction:GetByID(cfgID)
-    if (cfg and #cfg.item > 0) then
-        touchDatas = cfg.item
+    if (needClick) then
+        local cfg = Cfgs.CfgMultiImageAction:GetByID(cfgID)
+        if (cfg and #cfg.item > 0) then
+            touchDatas = cfg.item
+        end
     end
     ItemUtil.AddItems("Common/CardTouchItem", touchItems, touchDatas, imgObj, PlayAudio, 1, this)
 end

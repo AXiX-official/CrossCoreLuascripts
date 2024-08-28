@@ -1,31 +1,5 @@
 local this = {};
 
-this.ShowType = {
-    Title = "Title",
-    Title2 = "Title2",
-    Title3 = "Title3",
-    Target = "Target",
-    Target2 = "Target2",
-    Prograss = "Prograss",
-    Output = "Output",
-    Output2 = "Output2",
-    Level = "Level",
-    Level2 = "Level2",
-    Double = "Double",
-    Double2 = "Double2",
-    Details ="Details",
-    Danger = "Danger",
-    Danger2 = "Danger2",
-    Course = "Course",
-    Button = "Button",
-    Button2 = "Button2",
-    Button3 = "Button3",
-    Badge = "Badge",
-    Plot = "Plot",
-    PlotButton = "PlotButton",
-    Total= "Total",
-}
-
 function this.New()
 	this.__index = this.__index or this;
 	local tab = {};
@@ -49,15 +23,9 @@ function this:Show(typeName,parent,callback)
         LogError("未传入父物体！！！")
         return
     end
-    local isCanShow = false
-    for _type, name in pairs(this.ShowType) do
-        if name == typeName then
-            isCanShow = true
-            break
-        end
-    end
-    if not isCanShow then
-        LogError("没有指定类型的模块！！！" .. typeName)
+
+    if typeName == nil or typeName=="" then
+        LogError("未传入组件名！！！")
         return
     end
 

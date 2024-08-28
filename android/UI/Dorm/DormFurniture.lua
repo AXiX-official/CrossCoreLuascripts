@@ -510,15 +510,18 @@ function InSelect(b, _isFirst)
         -- 退出时如果当前位置有冲突，则返回缓存的位置，如果无缓存的位置，则删除
         if (CheckIsInCol()) then
             if (cachePos ~= nil) then
-                data:ResetRotaY(cacheRotaY)
-                CSAPI.SetAngle(gameObject, 0, cacheRotaY, 0)
+                local _cacheRotaY = CSAPI.csGetAngle(gameObject)[1]
+                if (_cacheRotaY ~= cacheRotaY) then
+                    data:ResetRotaY(cacheRotaY)
+                    CSAPI.SetAngle(gameObject, 0, cacheRotaY, 0)
+                    SetOffset()
+                end
                 ChangeGoPos(cachePos)
             else
                 tool:RemoveByID(data:GetID())
             end
         end
     end
-
     -- isDrag = isFirst
     isSelect = b
     SetToTop()
@@ -537,6 +540,13 @@ function SetToTop()
 
         -- 如果有子物体，子物体的层级也要调整
         SetChildToTop()
+
+        -- 提高以显示出底部的蓝色或者红色选择特效
+        if (data:IsGroundFurnitrue()) then
+            local pos = data:GetCfg().modelPos
+            local y = isSelect and pos[2] + 0.2 or pos
+            CSAPI.SetLocalPos(modelGO, pos[1], y, pos[3])
+        end
     end
 end
 

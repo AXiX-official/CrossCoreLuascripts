@@ -532,6 +532,13 @@ function this:IsInBuilding()
     return (roomType ~= nil and roomType == RoomType.building) and true or false
 end
 
+--是否在宿舍
+function this:IsInDorm()
+    local build_id = self:GetRoomBuildID()
+    local roomType = build_id and DormMgr:GetRoomTypeByID(build_id) or nil -- 房间类型
+    return (roomType ~= nil and roomType == RoomType.dorm) and true or false
+end
+
 -- 是否在咨询室
 function this:IsInPhyRoom()
     if (self:IsInBuilding()) then

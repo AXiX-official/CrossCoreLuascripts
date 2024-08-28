@@ -158,6 +158,10 @@ function this:GetIcon()
     return self.cfg and self.cfg.icon or ""
 end
 
+function this:GetType()
+    return self.cfg and self.cfg.type or 1
+end
+
 -----------------------------------------------TaoFa-----------------------------------------------
 function this:GetBGPath()
     local name = self.cfg and self.cfg.bg or ""

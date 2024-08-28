@@ -36,6 +36,9 @@ function InitListener()
     eventMgr:AddListener(EventType.Fight_UI_Enter_Action,PlayEnterAction);    
     eventMgr:AddListener(EventType.Fight_Action_Turn,OnFightActionTurn);    
      
+
+    eventMgr:AddListener(EventType.Fight_Activity_SetInvincible,OnFightActivitySetInvincible); 
+    eventMgr:AddListener(EventType.Fight_Activity_UpdateDamage,OnFightActivityUpdateDamage);    
 end
 function OnDestroy()
     eventMgr:ClearListener();
@@ -88,6 +91,10 @@ function OnCharacterFightInfoChanged(character)
         return;
     end
 
+    if(closeUpdateInfo)then
+        return;
+    end
+    --LogError("aaaaa");
     UpdateInfo();
 end
 
@@ -109,6 +116,108 @@ end
 function OnFightActionTurn()
     UpdateBGM(currHPProgress);
 end
+
+function OnFightActivityUpdateDamage(apiData)
+    --LogError("更新伤害" .. table.tostring(apiData));
+    UpdateActivityHP(apiData and apiData.nStateDamage);
+end
+
+--更新boss阶段信息
+function OnFightActivitySetInvincible(apiData)
+    closeUpdateInfo = 1;    
+    activityAPIData = apiData;
+    --LogError("活动boss阶段信息：" .. table.tostring(apiData));
+    SetBossStage(apiData.state or 1,apiData.totalState or 3);
+    
+    if(goHpText)then
+        CSAPI.SetGOActive(goHpText,false);
+    end
+    --LogError("更新伤害" .. table.tostring(apiData));
+    UpdateActivityHP(apiData and apiData.nStateDamage);
+
+    if(not txtAction)then
+        txtAction = ComUtil.GetCom(actionText,"Text"); 
+    end
+    if(activityAPIData)then
+        UpdateActivityAction(activityAPIData.startopnum,activityAPIData.opnum);
+    end
+
+
+    if(not isInitedForActivity)then
+        isInitedForActivity = true;
+        if(eventMgr)then
+            eventMgr:AddListener(EventType.Fight_Info_Update,OnFightInfoUpdate);
+        end
+    end
+end
+
+function UpdateActivityHP(nStateDamage)
+    if(activityAPIData and target)then
+        local hpTotal = activityAPIData.statehp or 1;
+        local hpCurr = hpTotal - (nStateDamage or 0);
+        --LogError(string.format("更新活动血条生命，当前%s,总%s",hpCurr,hpTotal));
+        target.SetHPLock();  
+        target.UpdateHp(hpCurr,hpTotal);
+        target.SetHPLock(true);  
+        UpdateInfo();         
+    end
+end
+
+function UpdateActivityAction(startopnum,opnum)
+    if(txtAction)then
+        local currTurn = FightClient:GetTurn();
+        local opCurr = math.max(0,(currTurn or 0) - (startopnum or 0));
+        txtAction.text = string.format(LanguageMgr:GetByID(25046),opCurr,opnum or 0);
+    end
+end
+
+function OnFightInfoUpdate()
+    FuncUtil:Call(function ()
+        if(activityAPIData)then
+            UpdateActivityAction(activityAPIData.startopnum,activityAPIData.opnum);
+        end
+    end,nil,20);
+end
+
+--- 设置hp条颜色
+---@param r any
+---@param g any
+---@param b any
+---@param a any
+function SetHpBarColor(r,g,b,a)
+    if(goHp)then
+        CSAPI.SetImgColor(goHp,r,g,b,a);
+    end
+end
+local stageHPColor = 
+{
+    {255,255,255},
+    {0,236,167},
+    {255,255,0},
+    {255,20,20},
+};
+function SetBossStage(curr,max)    
+    CSAPI.SetGOActive(stage,true);
+    curr = curr or 1;
+    stageBar = stageBar or ComUtil.GetCom(stageGO,"BarBase");
+    if(stageBar)then
+        stageBar:SetFullProgress(curr,max); 
+    end 
+
+    local colorData = stageHPColor and stageHPColor[curr];
+    --LogError(colorData);
+    --LogError(curr);
+    local r,g,b = 255,255,255;
+    if(colorData)then
+        r = colorData[1] or 255;
+        g = colorData[2] or 255;
+        b = colorData[3] or 255;
+    end
+    SetHpBarColor(r,g,b,255);
+end
+
+
+
 
 function UpdateInfo()
     if(target == nil)then

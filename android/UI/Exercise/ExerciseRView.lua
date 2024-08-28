@@ -241,7 +241,7 @@ function SetMiddle()
     if (isAsk) then
         -- 匹配成功
         timeBase:Run(askData.endTime, SetTime1)
-        CSAPI.SetText(txtPair3, rIsReady and StringConstant.Exercise80 or StringConstant.Exercise69)
+        CSAPI.SetText(txtPair3, rIsReady and LanguageMgr:GetByID(1077) or LanguageMgr:GetByID(1078))--StringConstant.Exercise80 or StringConstant.Exercise69)
     elseif (isFind) then
         -- 匹配中
         timeBase:Run(TimeUtil:GetTime() + g_ArmyFreeMatchWaitTime, SetTime2)

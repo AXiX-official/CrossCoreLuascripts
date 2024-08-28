@@ -2,6 +2,7 @@
 local this = 
 {
 [-686817241]={
+{time=4000,type=0,cue_sheet="cv/Chalcosma.acb",cue_name="Chalcosma_10",cue_feature=1},
 {delay=550,time=4000,type=1,hit_type=1,camera_shake={time=400,shake_dir=1,range=300,range2=300,hz=30,decay_value=0.3},hits={0,600}},
 {effect="cast1_eff",time=4000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Chalcosoma_attack_skill_01"}
 },
@@ -10,6 +11,7 @@ local this =
 {delay=8820,time=10300,type=1,hit_type=1,hits={0}},
 {effect="cast2_eff",time=11500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Chalcosoma_attack_skill_02"},
 {delay=7653,time=10300,type=1,hit_type=1,hits={0}},
+{time=11500,type=0,cue_sheet="cv/Chalcosma.acb",cue_name="Chalcosma_11",cue_feature=1},
 {effect="cast2_hit",time=11500,type=0,pos_ref={ref_type=6}},
 {delay=8200,time=10300,type=1,hit_type=1,hits={0}},
 {delay=9829,time=10300,type=1,hit_type=1,hits={0}}
@@ -20,7 +22,8 @@ time=2000,type=0
 [958292235]={
 {delay=700,time=4000,type=1,hit_type=1,camera_shake={time=100,shake_dir=1,range=100,range2=100,hz=50,decay_value=0.6},hit_creates={1776661962},hits={0,200}},
 {time=4000,type=0,cue_sheet="fight/effect/fourteen.acb",cue_name="Chalcosoma_attack_skill_03"},
-{effect="cast3_eff",time=4000,type=0,pos_ref={ref_type=6},path_target={ref_type=1}}
+{effect="cast3_eff",time=4000,type=0,pos_ref={ref_type=6},path_target={ref_type=1}},
+{time=4000,type=0,cue_sheet="cv/Chalcosma.acb",cue_name="Chalcosma_12",cue_feature=1}
 },
 [1776661962]={
 effect="cast3_hit",delay=800,time=2000,type=0,pos_ref={ref_type=4,part_index=0}
@@ -28,6 +31,7 @@ effect="cast3_hit",delay=800,time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 [-1609092943]={
 {delay=200,time=4000,type=1,hit_type=1,camera_shake={time=300,shake_dir=1,range=300,range2=300,hz=30,decay_value=0.3},hit_creates={1349028111},hits={0}},
 {delay=600,time=4000,type=1,hit_type=1,camera_shake={time=300,shake_dir=1,range=150,range2=150,hz=30,decay_value=0.6},hit_creates={-1190450118},hits={0}},
+{time=4000,type=0,cue_sheet="cv/Chalcosma.acb",cue_name="Chalcosma_09",cue_feature=1},
 {effect="cast0_eff",time=4000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fourteen.acb",cue_name="Chalcosoma_attack_general"}
 },
 [-1190450118]={

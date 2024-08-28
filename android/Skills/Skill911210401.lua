@@ -49,5 +49,5 @@ function Skill911210401:OnBefourHurt(caster, target, data)
 	-- 8459
 	local count59 = SkillApi:GetAttr(self, caster, target,2,"defense")
 	-- 911210402
-	self:AddTempAttr(SkillEffect[911210402], caster, self.card, data, "damage",math.max((count23-count59)*0.004,0.01))
+	self:AddTempAttr(SkillEffect[911210402], caster, self.card, data, "damage",math.max((count23-count59)*0.002,0.01))
 end

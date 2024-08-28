@@ -256,7 +256,7 @@ end
 
 -- 同角色编成中
 function SetTipsObj(isShow)
-    local str = isShow and StringConstant.role_158 or ""
+    local str = isShow and LanguageMgr:GetByID(1088) or ""
     CSAPI.SetText(txt_tips, str)
     -- CSAPI.SetGOActive(tipsObj, isShow);
 end

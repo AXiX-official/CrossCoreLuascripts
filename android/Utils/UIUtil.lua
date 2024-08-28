@@ -141,8 +141,17 @@ function this:OpenView(sViewName, closeAll, cb)
     end
 end
 
--- 打开掉落奖励 优先检查是否有卡牌，有卡牌的情况下先打开卡牌展示界面
+-- 打开掉落奖励
 function this:OpenReward(data, elseData)
+    self:OpenReward2("RewardPanel",data, elseData)
+end
+
+function this:OpenSummerReward(data, elseData)
+    self:OpenReward2("RewardSummerPanel", data, elseData)
+end
+
+-- 打开掉落奖励 优先检查是否有卡牌，有卡牌的情况下先打开卡牌展示界面
+function this:OpenReward2(viewPath, data, elseData)
     -- LogError("奖励数据：")
     -- LogError(data)
     if data and #data > 0 then
@@ -197,7 +206,7 @@ function this:OpenReward(data, elseData)
                         if #showSkinList >= 1 then
                             UIUtil:ShowSkinList(showSkinList, data, elseData)
                         else
-                            CSAPI.OpenView("RewardPanel", data, elseData)
+                            CSAPI.OpenView(viewPath, data, elseData)
                         end
                     end)
                 end);
@@ -205,7 +214,7 @@ function this:OpenReward(data, elseData)
                 UIUtil:ShowSkinList(showSkinList, data, elseData)
             end
         else
-            CSAPI.OpenView("RewardPanel", data, elseData)
+            CSAPI.OpenView(viewPath, data, elseData)
         end
     end
 end
@@ -287,6 +296,10 @@ function this:TransPos(x, y, anchorIndex)
 
     end
     return x, y
+end
+
+function this:SetDoublePoint(parent, isAdd, x, y, z, scale)
+    return self:SetRedPoint2("Common/Double", parent, isAdd, x, y, z, 1)
 end
 
 -- 添加或者移除new
@@ -470,12 +483,12 @@ end
 function this:SetPerfectScale(obj)
     local baseScale = {1920, 1080}
     local curScale = CSAPI.GetMainCanvasSize()
-    local ratio = (curScale[0] / curScale[1]) / (baseScale[1] / baseScale[2])
+    local nType = self:GetSceneType()
     local scale = 1
-    if (ratio > 1) then
+    if (nType == 1) then
         -- 长屏
         scale = curScale[0] / baseScale[1]
-    elseif (ratio < 1) then
+    elseif (nType == 2) then
         -- 宽屏
         scale = curScale[1] / baseScale[2]
     end
@@ -616,7 +629,7 @@ end
 ---@param reward 购买的物品
 ---@param payFunc 购买函数
 function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFunc)
-    if count <= 0 then
+    if count <= 0 or maxCount<= 0 then
         local dialogData = {}
         local cfg = Cfgs.ItemInfo:GetByID(reward[1][1])
         dialogData.content = LanguageMgr:GetTips(24009)
@@ -639,23 +652,34 @@ end
 
 -- 添加头像+头像框(自己)
 function this:AddHeadFrame(parent, scale)
-    self:AddHeadByID(parent, scale, PlayerClient:GetHeadFrame(), PlayerClient:GetIconId())
+    self:AddHeadByID(parent, scale, PlayerClient:GetHeadFrame(), PlayerClient:GetIconId(),PlayerClient:GetSex())
 end
 
 -- frameID头像框id，iconID头像id
-function this:AddHeadByID(parent, scale, frameID, iconID)
+function this:AddHeadByID(parent, scale, frameID, iconID,sel_card_ix)
+    -- 真实性别和头像 
+    --local isGirl, frameID = self:GetSexAndID(_frameID)
     scale = scale or 1
     local itemGo = parent.transform:Find("RoleHead")
     if (not itemGo) then
         ResUtil:CreateUIGOAsync("Common/RoleHead", parent, function(go)
             local item = ComUtil.GetLuaTable(go)
-            item.Refresh(scale, frameID, iconID)
+            item.Refresh(scale, frameID, iconID, sel_card_ix)
         end)
     else
         local item = ComUtil.GetLuaTable(itemGo.gameObject)
-        item.Refresh(scale, frameID, iconID)
+        item.Refresh(scale, frameID, iconID, sel_card_ix)
     end
 end
+
+-- function this:GetSexAndID(frameID)
+--     if (frameID > 10000) then
+--         -- 女 
+--         return true, frameID / 10
+--     else
+--         return false, frameID
+--     end
+-- end
 
 -- 移除头像（头像+头像框）
 function this:RemoveHead(parent)
@@ -666,7 +690,7 @@ function this:RemoveHead(parent)
 end
 
 -- 打开成就弹窗
-function this:OpenAchieveReward(data,elseData)
+function this:OpenAchieveReward(data, elseData)
     local rewards = elseData
     local closeCallBack = nil
     if rewards then
@@ -674,50 +698,60 @@ function this:OpenAchieveReward(data,elseData)
             self:OpenReward({rewards})
         end
     end
-    
-    CSAPI.OpenView("RewardAchievement",data,{closeCallBack = closeCallBack})
+
+    CSAPI.OpenView("RewardAchievement", data, {
+        closeCallBack = closeCallBack
+    })
 end
 
---临时用,设置RT_mix_v2的材质球属性
-function this.SetRTAlpha(cameraGO,rawGO)
-    if cameraGO==nil or rawGO==nil then
-        do return end;
+-- 临时用,设置RT_mix_v2的材质球属性
+function this.SetRTAlpha(cameraGO, rawGO)
+    if cameraGO == nil or rawGO == nil then
+        do
+            return
+        end
     end
-    local img=ComUtil.GetCom(rawGO,"RawImage");
-    if img==nil then
-        LogError("没找到对应的RawImage脚本！"..tostring(img==nil).."\t"..tostring(img2==nil));
-        do return end;
+    local img = ComUtil.GetCom(rawGO, "RawImage");
+    if img == nil then
+        LogError("没找到对应的RawImage脚本！" .. tostring(img == nil) .. "\t" .. tostring(img2 == nil));
+        do
+            return
+        end
     end
-    local rt=this.CreateRT();
-    local c=ComUtil.GetCom(cameraGO,"Camera");
-    c.targetTexture=rt;
-    img.texture=rt;
+    local rt = this.CreateRT();
+    local c = ComUtil.GetCom(cameraGO, "Camera");
+    c.targetTexture = rt;
+    img.texture = rt;
 end
 
---创建临时用的RT
+-- 创建临时用的RT
 function this.CreateRT()
     if CRT then
         return CRT;
     else
-        local rtSize={x=1334,y=750};
-        local wh = UnityEngine.Screen.width * 1.0 / UnityEngine.Screen.height * 1.0;--当前UI的宽高比
-        local rtWh = (rtSize.x / rtSize.y);--rt尺寸的宽高比
+        local rtSize = {
+            x = 1334,
+            y = 750
+        };
+        local wh = UnityEngine.Screen.width * 1.0 / UnityEngine.Screen.height * 1.0; -- 当前UI的宽高比
+        local rtWh = (rtSize.x / rtSize.y); -- rt尺寸的宽高比
         local v2 = UnityEngine.Vector2(0, 0);
         if (UnityEngine.Mathf.Abs(wh - rtWh) <= 0.2) then
             v2 = UnityEngine.Vector2(rtSize.x, rtSize.y);
         else
             v2 = UnityEngine.Vector2(rtSize.y * wh, rtSize.y);
         end
-        CRT=UnityEngine.RenderTexture(UnityEngine.Mathf.CeilToInt(v2.x), UnityEngine.Mathf.CeilToInt(v2.y), 24,UnityEngine.RenderTextureFormat.ARGB32);
+        CRT = UnityEngine.RenderTexture(UnityEngine.Mathf.CeilToInt(v2.x), UnityEngine.Mathf.CeilToInt(v2.y), 24,
+            UnityEngine.RenderTextureFormat.ARGB32);
         return CRT;
     end
 end
 
---销毁RT
+-- 销毁RT
 function this.DestoryRT()
-    if CRT~=nil then
+    if CRT ~= nil then
         UnityEngine.GameObject.Destroy(CRT);
-        CRT=nil;
+        CRT = nil;
     end
 end
 

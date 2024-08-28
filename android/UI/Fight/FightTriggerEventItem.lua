@@ -24,7 +24,8 @@ function SetData(data)
 --            if(fontRes)then
 --                CSAPI.LoadImg(fontImg, "UIs/Fight/" .. fontRes .. ".png",true,nil,true);                
 --            end
-            local desc = data.desc or (data.typeIndex and StringConstant.fight_trigger_events[data.typeIndex]);
+            local events = StringUtil:split(LanguageMgr:GetByID(1079), ",") or {}
+            local desc = data.desc or (data.typeIndex and events[data.typeIndex]);
             CSAPI.SetGOActive(fontTxt,desc ~= nil);
 
             if(desc)then

@@ -94,7 +94,7 @@ end
 
 function SetLeft()
     listItems = listItems or {}
-    ItemUtil.AddItems("Badge/BadgeListItem",listItems,groupCfgs,grid,OnItemClickCB,1)
+    ItemUtil.AddItems("Badge/BadgeListItem",listItems,groupCfgs,grid,OnItemClickCB,1,nil,SetGridHeight)
 end
 
 function OnItemClickCB(item)
@@ -114,8 +114,24 @@ function OnItemClickCB(item)
     SetRight()
 end
 
+function SetGridHeight()
+    local h = 0
+    if listItems and #listItems > 0 then
+        for i, v in ipairs(listItems) do
+            local _,y =CSAPI.GetAnchor(v.gameObject)
+            local size = CSAPI.GetRTSize(v.gameObject)
+            if size then
+                h = (math.abs(y) + size[1]) > h and math.abs(y) + size[1] or h
+            end
+        end
+        h = h + 40
+    end
+    CSAPI.SetRTSize(grid,0,h)
+end
+
 --定位
 function OnLoadSuccseMove()
+    SetGridHeight()
     if selData then
         for i, v in ipairs(listItems) do
             if v.HasData(selData:GetID()) then

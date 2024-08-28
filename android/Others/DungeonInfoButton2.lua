@@ -39,8 +39,7 @@ function ShowCost()
             end
         else
             ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .. "_3")
-            local costNum = cfg.enterCostHot and cfg.enterCostHot or 0
-            costNum = cfg.winCostHot and costNum + cfg.winCostHot or costNum
+            local costNum = DungeonUtil.GetHot(cfg)
             costNum = StringUtil:SetByColor(costNum .. "", math.abs(costNum) <= PlayerClient:Hot() and "191919" or "CD333E")
             CSAPI.SetText(cost," " .. costNum)
             LanguageMgr:SetText(txt_cost, 15004)
@@ -50,6 +49,9 @@ end
 
 --扫荡状态
 function ShowSweep()
+    if cfg == nil then
+        return
+    end
     if cfg.diff and cfg.diff == 3 then
         CSAPI.SetGOActive(btnSweep,false)
         CSAPI.SetAnchor(btnEnter,0,58)
@@ -71,47 +73,11 @@ function ShowSweep()
 end
 
 function OnClickEnter()
-    OnEnterClick()
-end
-
-function OnEnterClick()
-    if cfg and cfg.arrForceTeam ~= nil then -- 强制上阵编队
-        CSAPI.OpenView("TeamForceConfirm", {
-            dungeonId = cfg.id,
-            teamNum = cfg.teamNum or 1
-        })
-    else
-        CSAPI.OpenView("TeamConfirm", { -- 正常上阵
-            dungeonId = cfg.id,
-            teamNum = cfg.teamNum or 1
-        }, TeamConfirmOpenType.Dungeon)
-    end
-end
-
-function SetBuyFunc(_func)
-    buyFunc = _func
+    
 end
 
 function OnClickSweep()
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-    if openInfo and not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
 
-    if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = cfg.id},{onBuyFunc = buyFunc})
-    else
-        local sweepData = SweepMgr:GetData(cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfg = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
-            if cfg then
-                Tips.ShowTips(cfg.sDescription)
-            end
-        end
-    end
 end
 
 function IsSweepOpen()

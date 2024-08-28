@@ -49,7 +49,7 @@ function this:AddCardRole(roles)
         end
         EventMgr.Dispatch(EventType.CRole_Add)
 
-        --self:CheckNewSkin()
+        -- self:CheckNewSkin()
     end
 end
 -- -- 新皮肤红点 
@@ -183,12 +183,12 @@ function this:GetScriptCfgs(role_id, modelId)
             -- end
         end
     end
-    
+
     return groups
 end
 
 -- 角色音效集合(包含未解锁的和皮肤) --isHave:已拥有
-function this:GetRoleScriptCfgs(role_id,isHave)
+function this:GetRoleScriptCfgs(role_id, isHave)
     local groups = {}
     local data = self:GetData(role_id)
     if data then
@@ -198,23 +198,23 @@ function this:GetRoleScriptCfgs(role_id,isHave)
             for _, skin in pairs(skins) do
                 if isHave then
                     if skin:CheckCanUse() then
-                        table.insert(modelIds,skin:GetSkinID())
+                        table.insert(modelIds, skin:GetSkinID())
                     end
                 else
-                    table.insert(modelIds,skin:GetSkinID())
+                    table.insert(modelIds, skin:GetSkinID())
                 end
             end
         end
 
-
-        if #modelIds> 0 then
-            table.sort(modelIds,function (a,b)
+        if #modelIds > 0 then
+            table.sort(modelIds, function(a, b)
                 return a < b
             end)
             local ids = {}
             for i, modelId in ipairs(modelIds) do
                 local cfg_character = Cfgs.character:GetByID(modelId)
-                if cfg_character and cfg_character.voiceID and (not cfg_character.skinType or cfg_character.skinType ~= 2) then
+                if cfg_character and cfg_character.voiceID and
+                    (not cfg_character.skinType or cfg_character.skinType ~= 2) then
                     local _groups = Cfgs.Sound:GetGroup(cfg_character.voiceID)
                     if _groups and not ids[cfg_character.voiceID] then
                         for i, v in ipairs(_groups) do
@@ -287,8 +287,13 @@ function this:GetCRoleMaxLv()
     return self.cRoleMaxLv
 end
 
+--更换队长，机神(一样的id，不用删)
+function this:ChangeLeader(ocfgid)
+    self.datas[ocfgid] = nil
+end
 
 ----------------------------------------看板位置------------------------------------------------------
+--[[
 -- {type,id,x,y,scale,l2d} a：1角色,2多人插图  l2d：bool
 function this:GetCacheData(_type, _id)
     local cache = FileUtil.LoadByPath("kanban")
@@ -315,6 +320,10 @@ function this:SaveCacheData(panelID, modelID, isL2D, _x, _y, _z)
     })
 end
 
+function this:RemoveData(id)
+    self.datas[id] = nil 
+end
+]]
 ----------------------------------------多人插图------------------------------------------------------
 
 return this

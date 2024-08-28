@@ -35,7 +35,7 @@ ITEM_ID.EX = 10044 --10044_Item##高级勘探
 ITEM_ID.PLUS = 10045 --10045_Item##机密勘探
 ITEM_ID.DIFF = 10046 --10046_Item##勘探差价
 ITEM_ID.TAO_FA_Count = 12005 --讨伐次数
-ITEM_ID.DeductionVoucher=10999 --抵扣券
+ITEM_ID.DeductionVoucher=10999 --抵扣券[ 紫龙使用的 ]
 
 -- save type是数据库保存，不能修改，只能添加
 ITEM_TYPE = {}
@@ -62,7 +62,8 @@ ITEM_TYPE.LIMITED_TIME_ITEM = 20 -- 限时物品
 ITEM_TYPE.ICON = 21  -- 头像(dy_value1 头像配置表的id)
 ITEM_TYPE.CHANGE_SHAPE = 22 -- 形态转换券
 ITEM_TYPE.CHANGE_NAME = 23 -- 改名券
-ITEM_TYPE.BG_ITEM=24 --主界面背景图道具
+ITEM_TYPE.BG_ITEM = 24 --主界面背景图道具
+ITEM_TYPE.VOUCHER = 25 --抵扣券
 
 -- 物品标签
 ITEM_TAG = {}
@@ -86,7 +87,9 @@ PROP_TYPE.IconFrame = 8 -- 头像框(dy_arr[头像框物品id, 有效时间秒�
 PROP_TYPE.CardOpen = 9 -- 形态转换开启 [不能填成自动使用](dy_value1：道具子类型， dy_value2：生效的卡牌，dy_arr: 添加or开启的卡牌id)
 PROP_TYPE.MechaOpen = 10 -- 机神开启   [不能填成自动使用](dy_value1：道具子类型， dy_value2：生效的卡牌，dy_arr: 添加or开启的机神技能id)
 PROP_TYPE.Icon = 13 -- 头像(dy_arr[头像物品id, 有效时间秒（不填 or 0表示不过期）], 可配置为自动使用，客户端不显示)
-
+PROP_TYPE.Pet = 14 -- 宠物(动态值2填宠物id)
+PROP_TYPE.PetItem = 15 -- 宠物道具(动态值2填宠物物品id)
+PROP_TYPE.PetArchive = 16 -- 宠物图鉴（动态值2填宠物图鉴表id）
 
 -- 物品月卡类型
 ItemMemberType = {}
@@ -321,9 +324,9 @@ eTaskType.NewYear = 19 -- 新年任务
 eTaskType.Regression = 20 -- 回归基金任务
 eTaskType.Rogue = 21      -- 乱序演习任务
 eTaskType.RegressionTask = 22     -- 回归任务
--- eTaskType.RegressionBind = 23     -- 回归绑定任务
+eTaskType.RegressionBind = 23     -- 回归绑定任务
 eTaskType.StarPalace = 24     -- 十二星宫任务
-
+-- eTaskType.Pet = 25              -- 夏活宠物图鉴任务
 
 
 -- 任务提示图片： 白、黄、蓝、绿
@@ -349,6 +352,8 @@ eTaskTypeTipsImg[18] = '4'
 eTaskTypeTipsImg[19] = '4'
 eTaskTypeTipsImg[20] = '4'
 eTaskTypeTipsImg[21] = '4'
+eTaskTypeTipsImg[101] = '5' -- 成就
+eTaskTypeTipsImg[201] = '6' -- 徽章
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -412,8 +417,9 @@ cTaskCfgNames = {
     [eTaskType.Regression] = 'CfgRegressionFundTask',
     [eTaskType.Rogue] = 'CfgRogueTask',
     [eTaskType.RegressionTask] = 'CfgRegressionTask',
-    -- [eTaskType.RegressionBind] = 'CfgRegressionBind',
+    [eTaskType.RegressionBind] = 'CfgRegressionBind',
     [eTaskType.StarPalace] = 'CfgTotalBattleTask',
+    -- [eTaskType.Pet] = 'CfgPetArchive',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -435,6 +441,7 @@ eTaskFinishType.CardCreate = 50 -- 卡牌创建
 eTaskFinishType.Task = 60 -- 任务
 eTaskFinishType.Army = 61 -- 军演
 eTaskFinishType.Item = 65 -- 物品
+-- eTaskFinishType.Pet = 67 -- 夏活宠物
 
 -- 任务状态
 eTaskState = {}
@@ -475,6 +482,7 @@ eTaskEventType.Team = 25 -- 队伍
 eTaskEventType.Skill = 26 -- 技能
 eTaskEventType.Board = 27 -- 看板
 eTaskEventType.PassGroup = 28 -- 通关关卡组
+-- eTaskEventType.PetAbility = 29 -- 宠物属性变动
 
 eLockState = {}
 eLockState.No = 0
@@ -484,6 +492,11 @@ eContinueTaskType = {}
 eContinueTaskType.Seven = 1 --七日
 eContinueTaskType.Guide = 2 --阶段
 eContinueTaskType.NewYear = 3 --新年
+
+-- 完成任务后自动领取奖励的任务
+eAutoGainTaskType = {
+    -- [eTaskType.Pet] = 1
+}
 
 -----------------------------好友------------------------------------------------------------------------
 -- 常量类型
@@ -521,7 +534,6 @@ eTeamType = {
     TotalBattle=29,--总力战
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
     ForceFight = 10000 -- 强制上阵索引起始值
-    
 }
 
 eCardMainType = {}
@@ -714,7 +726,14 @@ ActivityListType = {
     Exchange = 1010, --兑换活动
     SignInGold = 1013, --2.0签到
     AccuCharge = 1011, --累计充值
+    SignInZhongQiu = 1014,--中秋签到
+    SignInGift = 1015,--付费签到
 }
+
+ALType = {}
+ALType.Pay = 1 --付费
+ALType.SignInContinue = 2 --连续签到
+
 
 -- 剧情站位
 PlotAlign = {
@@ -1201,7 +1220,7 @@ ChannelType.QOO = 3 -- QOO
 ChannelType.Test = 4 -- 测试人员，内部使用
 ChannelType.All = 5 -- 兑换码使用不限制平台
 ChannelType.ZiLong = 6 -- 紫龙-台湾
-ChannelType.ZiLongRK =7 -- 紫龙-韩国
+ChannelType.ZiLongKR =7 -- 紫龙-韩国
 ChannelType.ZiLongJP =8 -- 紫龙-日本
 
 GenEnumNameByVal('ChannelTypeName', ChannelType)
@@ -1255,7 +1274,7 @@ PlrMixIx.rewardMustUseCnt = 31
 PlrMixIx.cardInfo = 32 -- 如果重新启用重命名，或者增加，需要移出去
 PlrMixIx.freeArmyWin = 33
 PlrMixIx.freeArmyLost = 34
-PlrMixIx.uniqueMailId = 35
+PlrMixIx.createTime = 35 -- 用户创建时间
 PlrMixIx.remouldCount = 36 -- 存储改造芯片次数
 PlrMixIx.equipInfo = 37
 PlrMixIx.friendDelCnt = 38
@@ -1282,6 +1301,8 @@ PlrMixIx.badged = 58 -- 徽章
 PlrMixIx.specialDrops = 59 -- 特殊掉落
 PlrMixIx.background_id = 60 -- 背景ID
 PlrMixIx.starPalace = 61 -- 十二星宫进度
+PlrMixIx.newPanelInfo = 62 -- 新看板信息
+PlrMixIx.openConditionTime = 63 -- 新手教程的完成时间
 
 -- 图鉴
 ArchiveType = {}
@@ -1507,16 +1528,18 @@ TeamConditionLimitType={
 }
 ------------------副本信息------------------
 DungeonInfoType = {}
-DungeonInfoType.Normal = 1
-DungeonInfoType.Tower = 2
-DungeonInfoType.Course = 3
-DungeonInfoType.Trials = 4
-DungeonInfoType.Danger = 5
-DungeonInfoType.Plot = 6
-DungeonInfoType.Feast = 7
-DungeonInfoType.TotalBattle = 8
-DungeonInfoType.Summer = 9
-DungeonInfoType.SummerDanger = 10
+DungeonInfoType.Normal = "Normal"
+DungeonInfoType.Tower = "Tower"
+DungeonInfoType.Course = "Course"
+DungeonInfoType.Trials = "Trials"
+DungeonInfoType.Danger = "Danger"
+DungeonInfoType.Plot = "Plot"
+DungeonInfoType.Feast = "Feast"
+DungeonInfoType.TotalBattle = "TotalBattle"
+DungeonInfoType.Summer = "Summer"
+DungeonInfoType.SummerPlot = "SummerPlot"
+DungeonInfoType.SummerDanger = "SummerDanger"
+DungeonInfoType.SummerSpecial = "SummerSpecial"
 
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
@@ -1561,6 +1584,7 @@ eAchieveFinishType.CardCreate = 50 -- 卡牌创建
 eAchieveFinishType.Task = 60 -- 任务
 eAchieveFinishType.Army = 61 -- 军演
 eAchieveFinishType.Item = 65 -- 物品
+eAchieveFinishType.Pet = 70 -- 宠物
 
 eAchieveEventType = {}
 eAchieveEventType.None = 0
@@ -1623,6 +1647,7 @@ eBadgedFinishType.CardCreate = 50 -- 卡牌创建
 eBadgedFinishType.Task = 60 -- 任务
 eBadgedFinishType.Army = 61 -- 军演
 eBadgedFinishType.Item = 65 -- 物品
+eBadgedFinishType.Pet = 70 -- 物品
 
 eBadgedEventType = {}
 eBadgedEventType.None = 0
@@ -1682,8 +1707,8 @@ eBindLimitType={
 
 --绑定邀请界面打开方式
 eBindInviteOpenType={
-    Invite=1,
-    Request=2,
+    Invite=1, --推荐的
+    Request=2, --请求的
 }
 
 --排行榜
@@ -1691,6 +1716,8 @@ eRankType = {}
 eRankType.StarRank1 = 9001 --十二星宫 9001
 eRankType.StarRank2 = 9002 --十二星宫 9002
 eRankType.StarRank3 = 9003 --十二星宫 9003
+
+eRankType.SummerActiveRank = 10001 --夏活无限血排行榜
 
 --收集活动类型
 eCollectType = {}
@@ -1701,4 +1728,39 @@ eCollectTable[eCollectType.Recharge] = 'CfgRechargeCount'
 
 -- 回归商店id
 eReturnPlrShopType = {}
-eReturnPlrShopType[3001] = true
+eReturnPlrShopType[ShopGroup.RegressionShop] = true
+
+--抵扣券类型
+VoucherType={
+    Common=1,--通用折扣券
+    Skin=2,--时装折扣券
+    Pictrue=3,--插画折扣券
+}
+
+--运营活动活动类型
+eOperateType = {}
+eOperateType.RechargeSign = 1015 --充值签到
+
+-----------------------------------------------------------------------------------------------------------------
+-- 夏日活动宠物属性类型
+ePetAbilityType = {
+    "happy",        -- 心情
+    "food",         -- 饱腹度
+    "wash",        -- 清洁度
+    "feed",         --养成值
+}
+
+-- 夏日活动宠物状态
+ePetState = {
+    "Hunger",   -- 饥饿
+    "Full",     -- 饱腹
+    "Down" ,    -- 心情低落
+    "Dirty",    -- 肮脏
+    "Happy",    -- 高兴
+}
+
+-----------------------------------------------------------------------------------------------------------------
+-- 新手关卡开放类型
+eOpenConditionType = {}
+eOperateType.Lv = 1 --等级
+eOperateType.Dup = 2 --关卡

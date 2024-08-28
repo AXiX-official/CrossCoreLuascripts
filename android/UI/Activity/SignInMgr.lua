@@ -119,6 +119,28 @@ function this:GetDataKeysByType(_type)
     return keys
 end
 
+--获取表数据
+function this:GetCfgByType(aType)
+    local cfgs = Cfgs.CfgSignReward:GetAll()
+    if cfgs then
+        for k, v in pairs(cfgs) do
+            if v.activityID and v.activityID == aType then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
+--获取奖励数据 --只获取第一个
+function this:GetRewardCfgByType(aType)
+    local cfgSignIn = self:GetCfgByType(aType)
+    if cfgSignIn and cfgSignIn.infos and cfgSignIn.infos[1] then
+        local cfg = Cfgs.CfgSignRewardItem:GetByID(cfgSignIn.infos[1].activityRewardId)
+        return cfg
+    end
+end
+
 -- 获取单个活动的数据
 function this:GetData(id, index)
     local key = self:GetDataKey(id, index)
@@ -127,6 +149,19 @@ end
 
 function this:GetDataByKey(key)
     return self.datas[key]
+end
+
+--获取活动对应的签到数据
+function this:GetDataByALType(aType)
+    if self.datas then
+        for i, v in pairs(self.datas) do
+            if aType == ActivityListType.SignIn and v:GetType() == RewardActivityType.DateDay then --月签到
+                return v
+            elseif v:GetActivityID() and v:GetActivityID() == aType then --连续签到
+                return v
+            end
+        end
+    end
 end
 
 -- 某个活动的每日数据   临时封装(用完即删)
@@ -174,15 +209,16 @@ function this:AddSignRet(proto)
 end
 
 -------------------------------------------------签到检测------------------------------------------------------
+--已废弃,走活动的跳转
 function this:OpenSignIn(_type, _key)
-    local isOpen, str = self:SignInIsOpen()
-    if (isOpen) then
-        ActivityMgr:OpenListView(_type, {
-            key = _key
-        })
-    else
-        Tips.ShowTips(str)
-    end
+    -- local isOpen, str = self:SignInIsOpen()
+    -- if (isOpen) then
+    --     ActivityMgr:OpenListView(_type, {
+    --         key = _key
+    --     })
+    -- else
+    --     Tips.ShowTips(str)
+    -- end
 end
 
 -- 签到系统是否已开启
@@ -204,7 +240,7 @@ function this:CheckNeedSignIn()
             if (v:GetType() == RewardActivityType.DateDay) then
                 return true
             elseif (v:GetType() == RewardActivityType.Continuous) then
-                return true
+                return v:GetCfg().regressionType == nil
             elseif (v:GetType() == RewardActivityType.DateMonth) then
                 -- 日签到 todo
                 return false
@@ -234,24 +270,19 @@ function this:CheckAll()
             -- self:AddCacheRecord(_key)
             if (v:GetType() == RewardActivityType.DateDay) then
                 -- 月签到
-                if ActivityMgr:PanelCanJump(ActivityListType.SignIn) then
+                if ActivityMgr:AddNextOpen(ActivityListType.SignIn, _data) then
                     isOpen = true
-                    ActivityMgr:AddNextOpen(ActivityListType.SignIn, _data)
                 end
             elseif (v:GetType() == RewardActivityType.Continuous) then
                 -- 连续签到 todo
                 local activityType = v:GetCfg().activityID
-                if ActivityMgr:PanelCanJump(activityType) and ActivityMgr:CheckIsOpen(activityType) then
+                if ActivityMgr:CheckIsOpen(activityType) and ActivityMgr:AddNextOpen(activityType, _data) then
                     isOpen = true
-                    ActivityMgr:AddNextOpen(activityType, _data)
                 end
             elseif (v:GetType() == RewardActivityType.DateMonth) then
                 -- 日签到 todo
             end
         end
-    end
-    if (isOpen) then
-        CSAPI.OpenView("ActivityListView")
     end
     return isOpen
 end

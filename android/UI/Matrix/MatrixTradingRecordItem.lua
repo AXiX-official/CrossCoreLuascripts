@@ -18,7 +18,7 @@ function Refresh(_data)
         LanguageMgr:SetText(txtDesc, 10117, data.name, 1)
     end
     -- head
-    UIUtil:AddHeadByID(hfParent, 0.6, data.icon_frame, data.icon)
+    UIUtil:AddHeadByID(hfParent, 0.6, data.icon_frame, data.icon,data.sel_card_ix)
 end
 
 -- function SetChild()

@@ -275,9 +275,9 @@ local conf = {
 {'g_DungeonTaoFaDailyNum',	'g_DungeonTaoFaDailyNum',	'',	'int',	'2'},
 {'g_DungeonTaoFaDailyBuy',	'g_DungeonTaoFaDailyBuy',	'',	'int',	'2'},
 {'g_DungeonTaoFaDailyCost',	'g_DungeonTaoFaDailyCost',	'',	'json',	'[[10002,50,2]]'},
-{'g_DungeonArachnidDailyBuy',	'g_DungeonArachnidDailyBuy',	'',	'int',	'6'},
+{'g_DungeonArachnidDailyBuy',	'g_DungeonArachnidDailyBuy',	'',	'int',	'0'},
 {'g_DungeonArachnidDailyCost',	'g_DungeonArachnidDailyCost',	'',	'json',	'[[10002,15,2]]'},
-{'g_DungeonArachnidGets',	'g_DungeonArachnidGets',	'',	'json',	'[[12008,1,2]]'},
+{'g_DungeonArachnidGets',	'g_DungeonArachnidGets',	'',	'json',	'[[12010,1,2]]'},
 {'g_ResetTeamStateDailyTime',	'g_ResetTeamStateDailyTime',	'',	'json',	'[[7001,1],[7002,1]]'},
 {'g_BadgeMax',	'g_BadgeMax',	'',	'int',	'6'},
 {'g_AchieveMenuListNum',	'g_AchieveMenuListNum',	'',	'int',	'10'},
@@ -286,6 +286,11 @@ local conf = {
 {'g_ExploringBattleTiem',	'g_ExploringBattleTiem',	'',	'int',	'3600'},
 {'g_ExploringRankRule',	'g_ExploringRankRule',	'',	'int',	'100'},
 {'g_ExploringTicket',	'g_ExploringTicket',	'',	'int[]',	'12009,10,3'},
+{'g_BulletinBoardOpen',	'g_BulletinBoardOpen',	'',	'int[]',	'0,0,0,2120,2201,1030'},
+{'g_DefaultPet',	'g_DefaultPet',	'',	'int',	'26001'},
+{'g_PetAnimateTime',	'g_PetAnimateTime',	'',	'int',	'10'},
+{'g_PetMoveChangeTime',	'g_PetMoveChangeTime',	'',	'int',	'12'},
+{'g_PetBGM',	'g_PetBGM',	'',	'string',	'Event_SummerMarineRhythm'},
 },
 }
 --cfgglobal_setting = conf

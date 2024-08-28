@@ -139,13 +139,15 @@ function this:GetArr(type)
     if self.datas then
         for k, v in pairs(self.datas) do
             if not type or v:GetType() == type then
-                if v:GetPreposition() then
-                    local prep = self.datas[v:GetPreposition()]
-                    if prep and prep:IsGet() then
+                if v:IsShow() then
+                    if v:GetPreposition() then
+                        local prep = self.datas[v:GetPreposition()]
+                        if prep and prep:IsGet() then
+                            table.insert(_datas,v)
+                        end
+                    else
                         table.insert(_datas,v)
                     end
-                else
-                    table.insert(_datas,v)
                 end
             end
         end
@@ -166,13 +168,15 @@ function this:GetArr2(isFinish,isLimit)
         for k, v in pairs(self.datas) do
             if closeTypes[v:GetType()] == nil then
                 if (isFinish and v:IsFinish()) or (not isFinish and not v:IsFinish()) then
-                    if v:GetPreposition() then
-                        local prep = self.datas[v:GetPreposition()]
-                        if prep and prep:IsGet() then
+                    if v:IsShow() then
+                        if v:GetPreposition() then
+                            local prep = self.datas[v:GetPreposition()]
+                            if prep and prep:IsGet() then
+                                table.insert(_datas,v)
+                            end
+                        else
                             table.insert(_datas,v)
                         end
-                    else
-                        table.insert(_datas,v)
                     end
                 end
             end
@@ -235,7 +239,9 @@ function this:GetArr3(type)
     if self.datas then
         for k, v in pairs(self.datas) do
             if not type or v:GetType() == type then
-                table.insert(_datas,v)
+                if v:IsShow() then
+                    table.insert(_datas,v)
+                end
             end
         end
     end

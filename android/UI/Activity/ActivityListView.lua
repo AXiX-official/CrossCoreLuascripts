@@ -23,6 +23,7 @@ function OnEnable()
     eventMgr:AddListener(EventType.Activity_Click, OnBtnCallBack);
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
     eventMgr:AddListener(EventType.Update_Everyday, OnDayRefresh)
+    eventMgr:AddListener(EventType.Acitivty_List_Pop,CheckNextView)
 end
 
 function OnItemSelect(_type)
@@ -158,6 +159,7 @@ function SetRight()
         curData = nil
 
         PlayerPrefs.SetInt(PlayerClient:GetUid() .."_Activity_Red_" .. cfg.id,1)
+        ActivityMgr:CheckRedPointData(cfg.id)
     end
 end
 
@@ -177,10 +179,13 @@ function ShowTop(_cfg)
 end
 
 function ShowQusetion(_cfg)
-    CSAPI.SetGOActive(qusetion, _cfg.moduleInfo ~= nil)
-    if _cfg.moduleInfo then
+    local info =_cfg.info
+    local isShow = false
+    if info and info[1] and info[1].moduleInfo then
         UIUtil:AddQuestionItem(_cfg.moduleInfo, gameObject, qusetion)
+        isShow = true
     end
+    CSAPI.SetGOActive(qusetion, isShow)
 end
 
 function GetInfo(_cfg)
@@ -201,8 +206,5 @@ function OnClick()
         curItem.OnClickMask()
         isClickMask = false
     end
-    -- if(btnCallBack)then
-    -- 	btnCallBack()
-    -- end
     CSAPI.SetGOActive(clickMask, false)
 end

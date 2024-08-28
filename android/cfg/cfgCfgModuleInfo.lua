@@ -72,6 +72,9 @@ local conf = {
 {'RogueView',	'RogueView',	'1',	'1',	'487,-72',	'2201,2202,2203,2204',	'',	'',	''},
 {'TotalBattle',	'TotalBattle',	'1',	'1',	'487,-72',	'',	'51021,51022',	'',	''},
 {'KishinBreak',	'',	'',	'',	'',	'2301,2302',	'',	'',	''},
+{'PetMain',	'PetMain',	'',	'',	'',	'2501,2502,2503',	'',	'',	''},
+{'PetMainFirst',	'PetMainFirst',	'',	'',	'',	'2501,2502',	'',	'',	''},
+{'FishMan',	'FishMan',	'',	'',	'',	'2601',	'',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

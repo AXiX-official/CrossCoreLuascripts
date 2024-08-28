@@ -619,6 +619,7 @@ function OnStoryPlayComplete()
     EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
     MenuMgr:UpdateDatas() --刷新关卡解锁状态
     EventMgr.Dispatch(EventType.Activity_Open_State);
+    EventMgr.Dispatch(EventType.Dungeon_MainLine_Update,sectionData:GetID());
 
     if currListItem:IsPass() then
         if CheckSectionOver(selItem.GetID()) then

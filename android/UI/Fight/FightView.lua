@@ -40,6 +40,10 @@ function Awake()
         npBar:SetFormat("<color=#FFC146><size=45>{0}</size></color>/{1}");
     end
 
+    if(npText)then
+        CSAPI.SetText(npText,LanguageMgr:GetByID(28014));
+    end
+
     txtName = ComUtil.GetCom(goNameText,"Text");
     txtLv = ComUtil.GetCom(goLvText,"Text");
 
@@ -134,18 +138,18 @@ function InitFightInfo()
     end  
 
     if(g_FightMgr.type == SceneType.PVP)then
-        info = StringConstant.fight_info_pvp;
+        info = LanguageMgr:GetByID(1080)--StringConstant.fight_info_pvp;
     elseif(g_FightMgr.type == SceneType.PVPMirror)then
-        info = StringConstant.fight_info_pvpmirror;
+        info = LanguageMgr:GetByID(1081)--StringConstant.fight_info_pvpmirror;
     elseif(g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.SinglePVE)then
         --info = "副本";
         local dungeonId = DungeonMgr:GetCurrId();
         local cfgDungeon = Cfgs.MainLine:GetByID(dungeonId);
         if(cfgDungeon)then            
             if(cfgDungeon.type == eDuplicateType.MainNormal) then
-                info = StringConstant.fight_info_main_normal .. " " .. tostring(cfgDungeon.chapterID);
+                 info = LanguageMgr:GetByID(15015) .. " " .. tostring(cfgDungeon.chapterID);
             elseif(cfgDungeon.type == eDuplicateType.MainElite) then
-                info = StringConstant.fight_info_main_elite .. " "  .. tostring(cfgDungeon.chapterID);
+                 info = LanguageMgr:GetByID(15016) .. " "  .. tostring(cfgDungeon.chapterID);
             else    
                 info = tostring(cfgDungeon.name);
             end
@@ -196,6 +200,8 @@ function InitListener()
 
     eventMgr:AddListener(EventType.Fight_Action_Turn_Add1,TurnNumAdd);    
     
+    eventMgr:AddListener(EventType.Fight_Activity_UpdateDamage,OnFightActivityUpdateDamage);    
+    
 end
 function OnDestroy()
     eventMgr:ClearListener();
@@ -204,6 +210,11 @@ function OnDestroy()
     if(fightDungeonId)then
         RecordMgr:Save(RecordMode.Fight,recordBeginTime,"duplicateID=" .. fightDungeonId);
     end
+end
+
+function OnFightActivityUpdateDamage(apiData)
+    --LogError("更新伤害信息：" .. table.tostring(apiData));
+    SetTotalDamage(apiData.nTotalDamage  or 0);
 end
 
 function OnSetSettingBtnState(state)
@@ -218,7 +229,7 @@ function OnRelogin()
 
     if(g_FightMgr.type == SceneType.PVP)then
         FightClient:SetStopState(false);
-	    FightActionMgr:Surrender({ fight_error_msg = StringConstant.fight_pvp_disconnect });
+	    FightActionMgr:Surrender({ fight_error_msg = "" });
         --FightProto:RestoreFight();
     else
         
@@ -274,14 +285,14 @@ function ShowCharacter(showCharacter)
     if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
         local isMyTurn = character.IsMine();
         SetTimeOut(g_fightControlTime or 20);
-        CSAPI.SetText(goActionTips,isMyTurn and StringConstant.fight_pvp_time_tips_1 or StringConstant.fight_pvp_time_tips_2);
+        CSAPI.SetText(goActionTips,isMyTurn and "" or "");
 --        else
 --            SetTimeOut(nil);
     end
 
 
     txtName.text = character.GetName();
-    txtLv.text = "<size=25>" .. StringConstant.lv .. "</size>" .. character.GetLv();
+    txtLv.text = "<size=25>" .. LanguageMgr:GetByID(1033) .. "</size>" .. character.GetLv();
     local cfg = character.GetCfgModel();      
     if(cfg == nil)then
         return; 
@@ -431,8 +442,10 @@ end
 
 function UpdateTurn(data)
     if(data)then
-        turnData = data;
-        
+        turnData = data;        
+        if(txtTurn == nil)then
+            txtTurn = ComUtil.GetCom(turn,"Text");
+        end
         local turnNum = data and data.turnNum or 1;
         --turnNum = math.max(1,turnNum);
         local turnNumLimit = data and data.nStepLimit or 0;--"--";
@@ -464,10 +477,6 @@ function UpdateTurn(data)
             end           
         end
         local str = turnNumLimit >= 100 and "" or ("/" .. turnNumLimit);
-
-        if(txtTurn == nil)then
-            txtTurn = ComUtil.GetCom(turn,"Text");
-        end
 
         if(turnData and turnData.add1)then
             turnNum = turnNum + 1;
@@ -687,7 +696,7 @@ function OnClickBtnSpeed()
 
 
    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
-       Tips.ShowTips(StringConstant.fight_pvp_tips_1);
+       --Tips.ShowTips(StringConstant.fight_pvp_tips_1);
        return;
    end   
 
@@ -714,7 +723,7 @@ function OnClickBtnAuto()
 	end    
 
     if(DungeonMgr:IsTutorialDungeon())then
-        Tips.ShowTips("特殊关卡无法使用")
+        Tips.ShowTips(LanguageMgr:GetTips(8021));
         return;
     end
 
@@ -756,6 +765,15 @@ function UpdateAutoFightState()
     --aiSetting.SetShowState(FightClient:IsAutoFight());
 end
 
+function SetTotalDamage(val)
+    FightClient:SetTotalDamage(val);
+    CSAPI.SetGOActive(damageInfoTotal,true);
+    rollTatalDamageValue = rollTatalDamageValue or ComUtil.GetCom(totalDamageValue,"RollValue");
+    if(not IsNil(rollTatalDamageValue))then
+        rollTatalDamageValue:SetCurr(val);
+    end
+end
+
 --添加伤害数值
 function AddDamageValue(value)
     --忽略负数
@@ -767,7 +785,7 @@ function AddDamageValue(value)
         totalDamage = 0;              
 
         damageEnter:Play();
-        rollDamageValue:SetCurr(0);
+        rollDamageValue:SetCurr(0);        
     end
 
     totalDamage = totalDamage or 0;
@@ -948,8 +966,9 @@ function CheckAutoSkipCast2(character)
     local skillID = fightAction and fightAction:GetSkillID();  
     local cfgSkill = Cfgs.skill:GetByID(skillID);
     
-    if(not cfgSkill or (cfgSkill.type ~= SkillType.Summon and cfgSkill.type ~= SkillType.Unite))then--不是召唤和同调
-        
+    --if(not cfgSkill or (cfgSkill.type ~= SkillType.Summon and cfgSkill.type ~= SkillType.Unite))then--不是召唤和同调
+    --if(not cfgSkill)then
+    
         if(skipSettingVal == SettingFightActionType.Close)then
             skipPlay = 1;
         else            
@@ -965,7 +984,7 @@ function CheckAutoSkipCast2(character)
 
             PlayerPrefs.SetString(skillKey,currPlayTime);
         end
-    end
+    --end
 
     if(skipPlay)then
         character.SetSkipSkill(true);

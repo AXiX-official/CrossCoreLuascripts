@@ -95,6 +95,11 @@ function this:GetDesc2()
 	return self.cfg and self.cfg.describeBase or "";
 end
 
+--是否限时类型
+function this:IsExipiryType()
+	return self.cfg and self.cfg.to_item_id~=nil or false;
+end
+
 --获取品质
 function this:GetQuality()
 	return self.cfg and self.cfg.quality or 1;
@@ -346,9 +351,12 @@ function this:GetMoneyJumpID()
 	return id;
 end
 
---返回失效日期
+--返回失效日期(当get_infos有多个的时侯只返回第一个值)
 function this:GetExpiry()
-	if self.cfg and self.cfg.sExpiry then
+	local get_infos=self:GetData() and self:GetData().get_infos or nil;
+	if get_infos and #get_infos>0 then
+		return get_infos[1][2];
+	elseif self.cfg and self.cfg.expiryIx and self.cfg.sExpiry and (get_infos==nil or (get_infos and #get_infos==0)) then
 		return TimeUtil:GetTimeStampBySplit(self.cfg.sExpiry);
 	end
 	return nil;
@@ -358,10 +366,21 @@ function this:GetExpiryTips()
 	local time=self:GetExpiry();
 	if time then
 		local count=TimeUtil:GetDiffHMS(time,TimeUtil.GetTime());
-		if count.day<0 then
+		if count.day>0 then
+			return LanguageMgr:GetTips(16010,count.day);
+		elseif (count.day==nil or count.day<0) and (count.hour==nil or count.hour<0) and (count.minute==nil or count.minute<0) and (count.second==nil or count.second<=0) then
 			return LanguageMgr:GetByID(24027);
+		else
+			if count.hour==0 then
+				return "<color='#FF7781'>"..LanguageMgr:GetTips(16009,count.hour,count.minute,count.second).."</color>"
+			else
+				return LanguageMgr:GetTips(16009,count.hour,count.minute,count.second);
+			end
 		end
-		return count.day>0 and LanguageMgr:GetByID(24024,count.day) or LanguageMgr:GetByID(24024,1);
+		-- if count.day<0 then
+		-- 	return LanguageMgr:GetByID(24027);
+		-- end
+		-- return count.day>0 and LanguageMgr:GetByID(24024,count.day) or LanguageMgr:GetByID(24024,1);
 	end
 	return nil;
 end

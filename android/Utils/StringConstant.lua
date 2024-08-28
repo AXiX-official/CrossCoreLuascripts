@@ -31,8 +31,8 @@ this.lv="LV.";
 this.registerTips="注册成功！";
 this.buy = "购买"
 this.sell = "出售"
-this.np="能量";
-this.sp="同步";
+this.np="NP";
+this.sp="SP";
 this.help = "帮助说明"
 this.weeks = {"一","二","三","四","五","六","日"}
 
@@ -100,7 +100,7 @@ this.auto_fight_on_text = "自律战斗";
 this.auto_fight_off_text = "停止自律";
 
 
-this.fight_np_no_enough = "能量不足";
+this.fight_np_no_enough = "NP不足";
 
 
 this.fight_pvp_time_tips_1 = "思考时间：";
@@ -145,8 +145,8 @@ this.fight_player_skill_cd = "回合后恢复使用";
 
 this.fight_pvp_tips_1 = "对战中无法使用";
 
-this.fight_roleInfo_sp="同步";
-this.fight_roleInfo_np="能量";
+this.fight_roleInfo_sp="SP";
+this.fight_roleInfo_np="NP";
 this.fight_roleInfo_rang="范围";
 this.fight_roleInfo_career1="物理护甲";
 this.fight_roleInfo_career2="能量护甲";

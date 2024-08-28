@@ -168,7 +168,7 @@ function SetBtn()
 			local getCondition = curRoleSkinInfo:GetCfg().getCondition
 			if(getCondition and getCondition[1] == 1) then
 				--购买解锁
-				str = StringConstant.archive10
+				-- str = StringConstant.archive10
 			else
 				--其它解锁
 			end

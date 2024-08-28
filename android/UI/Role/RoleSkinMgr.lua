@@ -39,13 +39,19 @@ function this:GetDatas(cfgid, containJieJin)
     end
 end
 
--- 获取某张卡牌某个皮肤的对象
+-- 获取某张卡牌某个皮肤的对象  ： 角色id，模型id
 function this:GetRoleSkinInfo(cfgId, modelID)
     if cfgId and modelID then
-        local list = self:GetDatas(cfgId);
+        local list = self:GetDatas(cfgId,true)
         return list and list[modelID] or nil
     end
     return nil;
+end
+
+--通过模型表id获取皮肤数据
+function this:GetSkinInfoByModelID(modelID)
+    local cfg = Cfgs.character:GetByID(modelID)
+    return self:GetRoleSkinInfo(cfg.role_id, modelID)
 end
 
 -- 皮肤数量

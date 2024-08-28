@@ -48,6 +48,7 @@ function Refresh(_data,_elseData)
     end
     CSAPI.SetGOActive(tIcon2,false);
     CSAPI.SetGOActive(tBorder,false);
+    CSAPI.SetAnchor(tIcon2,0,0);
     this.data=_data;
     this.elseData=_elseData;
     SetName(this.data:GetName());
@@ -92,13 +93,22 @@ function Refresh(_data,_elseData)
                     if cfg.price_2 then
                         table.insert(costs,{id = cfg.price_2[1][1],num = cfg.price_2[1][2]});
                     end
+                    if cfg.inteActionId~=nil then
+                        CSAPI.SetGOActive(tIcon2,true);
+                        CSAPI.SetAnchor(tIcon2,-132,-85);
+                    end
                 else--主题
                     local themeData = DormMgr:GetThemesByID(ThemeType.Sys, dyVal1)
                     local cfg2=Cfgs.CfgFurnitureTheme:GetByID(dyVal1);
                     num=cfg2.comfort;
-                    isMax=themeData~=nil;
                     --获取主题价格
                     local price1,price2=DormMgr:GetThemePrices(dyVal1);
+                    isMax=themeData~=nil;
+                    -- if _data:GetID()==10403 or _data:GetID()==10401 then
+                    --     LogError(tostring(_data:GetName()).."\t"..tostring(isMax).."\t"..tostring(dyVal1))
+                    --     LogError(cfg2)
+                    --     LogError(themeData)
+                    -- end
                     if cfg.price_1 then
                         table.insert(costs,{id = cfg.price_1[1][1],num = price1});
                     end

@@ -3,8 +3,10 @@ require "MgrBase"
 
 --注册名称(必填)
 local mgrNames = {
+	"MenuBuyMgr",  --充值弹窗
 	"RedPointMgr",  --红点管理
 	"DungeonMgr",	--副本
+	"DungeonActivityMgr", --活动副本
 	"SignInMgr",    --签到
 	"ActivityMgr",  --活动
 	"CRoleMgr",     --卡牌角色
@@ -54,7 +56,8 @@ local mgrNames = {
 	"RogueMgr",
 	"TotalBattleMgr", --十二星宫
 	"AccuChargeMgr", --累计充值
-
+	"PetActivityMgr",--宠物管理类
+	"CRoleDisplayMgr", --看板
 }
 
 

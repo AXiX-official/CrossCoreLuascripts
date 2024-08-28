@@ -174,7 +174,7 @@ function OnClickGridNormal(id)
         if(grid and grid.IsReachable())then
             BattleMgr:ApplyMove(id);
         else
-            Tips.ShowTips(StringConstant.battle_move_limit);
+            Tips.ShowTips(LanguageMgr:GetByID(1074))--StringConstant.battle_move_limit);
         end
     end
    

@@ -3,6 +3,8 @@ local info = nil
 local lastBGM = nil
 local isLoading = false
 local top = nil
+local sectionData = nil
+local redPath = nil
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -11,10 +13,12 @@ function Awake()
     end)
     eventMgr:AddListener(EventType.Bag_Update, function()
         CSAPI.SetText(txtNum, BagMgr:GetCount(info.goodsId) .. "")
+        SetExploreRed()
     end)
 
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
     eventMgr:AddListener(EventType.Scene_Load_Complete, OnLoadComplete)
+    eventMgr:AddListener(EventType.RedPoint_Refresh, SetExploreRed)
 end
 
 function OnViewClosed(viewKey)
@@ -48,13 +52,13 @@ end
 function OnOpen()
     SetBGScale()
     if data then
-        local sectionData = DungeonMgr:GetSectionData(data.id)
+        sectionData = DungeonMgr:GetSectionData(data.id)
         info = sectionData:GetInfo()
         SetTime()
         SetNum()
         SetSpecial()
         SetRed(MissionMgr:CheckDungeonActivityRed(data.id))
-
+        SetExploreRed()
         if top == nil then
             top = UIUtil:AddTop2(info.view ,topParent, OnClickReturn);
         end
@@ -77,7 +81,6 @@ function SetBGScale()
 end
 
 function SetTime()
-    local sectionData = DungeonMgr:GetSectionData(data.id)
     if sectionData then
     openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if openInfo:IsDungeonOpen() then
@@ -96,7 +99,25 @@ function SetNum()
 end
 
 function SetRed(b)
-    UIUtil:SetRedPoint(redParent,b,0,0)
+    if redPath == nil then
+        redPath = sectionData and sectionData:GetRedPath() or "Common/Red2"
+    end
+    if not IsNil(redParent) then
+        UIUtil:SetRedPoint2(redPath,redParent,b,0,0)
+    else
+        CSAPI.SetGOActive(redAnim,b)
+    end
+end
+
+function SetExploreRed()
+    if redAnim2 then
+        local isRed = false
+        if sectionData:GetExploreId() then
+            local exData = ExplorationMgr:GetExData(sectionData:GetExploreId())
+            isRed = exData and exData:HasRevice() or false
+        end
+        CSAPI.SetGOActive(redAnim2,isRed)
+    end
 end
 
 function SetSpecial()
@@ -106,7 +127,11 @@ function SetSpecial()
                 CSAPI.SetGOActive(effObj,true)
             end
         end,nil,300)
-        CSAPI.SetText(txtHard, LanguageMgr:GetTips(24007, openInfo:GetOpenCfg().hardBegTime))
+        if openInfo:GetOpenCfg().hardBegTime then
+            CSAPI.SetText(txtHard, LanguageMgr:GetTips(24007, openInfo:GetOpenCfg().hardBegTime))
+        else
+            CSAPI.SetText(txtHard, "")
+        end
     end
 end
 
@@ -131,6 +156,12 @@ function OnClickDungeon()
         CSAPI.OpenView(info.childView, {
             id = data.id
         })
+    end
+end
+
+function OnClickExploration()
+    if sectionData:GetExploreId() then
+        CSAPI.OpenView("SpecialExploration",sectionData:GetExploreId());
     end
 end
 

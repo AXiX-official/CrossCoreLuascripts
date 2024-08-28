@@ -31,7 +31,7 @@ local tagList={ --二级页签配置
 	{{ ---装备子页签
 		id=1,
 		txt1=LanguageMgr:GetByID(24029),
-		txt2=LanguageMgr:GetByID(24030),
+		txt2=LanguageMgr:GetByType(24029,4),
 		icon1="btn_07_01",
 		icon2="btn_07_02",
 		openSetting=BagOpenSetting.Equipped,
@@ -65,7 +65,7 @@ local lastEquipType=nil;
 local tweenMaskTime=1000;
 function Awake()	
 	--初始化菜单项
-	-- AdaptiveConfiguration.SetLuaObjUIFit("BagView",gameObject)
+	AdaptiveConfiguration.SetLuaObjUIFit("BagView",gameObject)
 	layout = ComUtil.GetCom(sv, "UISV")
 	layout2=ComUtil.GetCom(sv2,"UISV")
 	curLayout=layout;

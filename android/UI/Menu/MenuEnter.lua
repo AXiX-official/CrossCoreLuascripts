@@ -6,6 +6,7 @@ function Refresh(_cfg)
     SetLock()
     -- icon 
     ResUtil.MenuEnter:Load(icon, cfg.mainBtn)
+    SetIcon2();
     CSAPI.SetGOAlpha(icon, isOpen and 1 or 0.5)
     -- name 
     StringUtil:SetColorByName(txtName, cfg.name, isOpen and "ffffff" or "929296")
@@ -13,6 +14,22 @@ function Refresh(_cfg)
     SetRed()
     -- new
     SetNew()
+end
+
+function SetIcon2()
+    local activeIcon2=false;
+    if cfg and cfg.id==16 then
+        local pet=PetActivityMgr:GetCurrPetInfo();
+        if pet then
+            local emojis=pet:GetEmojis();
+            if emojis then
+                local cfg=emojis[1]
+                ResUtil.PetEmoji:Load(icon2,cfg.icon);
+                activeIcon2=true;
+            end
+        end
+    end
+    CSAPI.SetGOActive(icon2,activeIcon2);
 end
 
 function SetLock()

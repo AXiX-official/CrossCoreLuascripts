@@ -56,8 +56,13 @@ function Refresh(_data, _roomId, useIndex)
     sName = data.name or LanguageMgr:GetByID(10455, index)
     input.text = sName
     if (isOpen) then
-        CSAPI.SetGOActive(objUse, useIndex == index)
-        CSAPI.SetGOActive(btnUse, useIndex ~= index)
+        local isSame =  useIndex == index
+        if(isSame) then 
+            local matrixData = MatrixMgr:GetBuildingDataById(roomId)
+            isSame = FuncUtil.TableIsSame(data.roleIds,matrixData:GetRoles())
+        end 
+        CSAPI.SetGOActive(objUse, isSame)
+        CSAPI.SetGOActive(btnUse, not isSame)
     else
         CSAPI.SetGOActive(objUse, false)
         CSAPI.SetGOActive(btnUse, false)
@@ -73,7 +78,7 @@ end
 function SetRoleItems()
     matrixRoleItems = matrixRoleItems or {}
     local datas = GetRoleInfos()
-    ItemUtil.AddItems("CRoleItem/MatrixRole", matrixRoleItems, datas, grids, ClickItemCB, 1, false, function()
+    ItemUtil.AddItems("CRoleItem/MatrixRole2", matrixRoleItems, datas, grids, ClickItemCB, 1, false, function()
         for i, v in ipairs(matrixRoleItems) do
             v.HideTxt()
         end

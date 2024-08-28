@@ -23,6 +23,7 @@ function Awake()
     eventMgr:AddListener(EventType.Fight_Enter_Fail,OnEnterFail)
     -- eventMgr:AddListener(EventType.Team_Confirm_OpenSkill, OnClickSkill)
     CSAPI.SetGOActive(btnAISetting,true);
+    CSAPI.SetGOActive(btnNavi,false)
 end
 
 
@@ -122,14 +123,14 @@ function OnOpen()
     currCostHot=math.ceil((enterCost+successCost) * (100- DungeonUtil.GetExtreHotNum()) / 100);
     SetFighting(dungeonCfg.lvTips);
     SetEnterCost();
-    if dungeonCfg and dungeonCfg.type==eDuplicateType.Teaching then
-        isTeaching=true;
-        CSAPI.SetGOActive(btnNavi,false);
-    elseif dungeonCfg.nGroupID==nil or dungeonCfg.nGroupID=="" then --没有怪物组ID的时候执行逻辑
-        CSAPI.SetGOActive(btnNavi,starNum==3);
-    else
-        CSAPI.SetGOActive(btnNavi,false);
-    end
+    -- if dungeonCfg and dungeonCfg.type==eDuplicateType.Teaching then
+    --     isTeaching=true;
+    --     CSAPI.SetGOActive(btnNavi,false);
+    -- elseif dungeonCfg.nGroupID==nil or dungeonCfg.nGroupID=="" then --没有怪物组ID的时候执行逻辑
+    --     CSAPI.SetGOActive(btnNavi,starNum==3);
+    -- else
+    --     CSAPI.SetGOActive(btnNavi,false);
+    -- end
     Init();
     InitHotItem();
     EventMgr.Dispatch(EventType.Guide_Trigger_View,data);--尝试触发引导

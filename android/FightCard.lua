@@ -90,6 +90,8 @@ function FightCardBase:Init(team, id, teamID, uid, data, typ)
     -- end
 
     self.nUseCount = 0 -- 使用技能次数
+    self.nTotalDamage = 0 -- 总被伤害量统计
+    self.nStateDamage = 0 -- 阶段被伤害量统计
 end
 
 -- 加载角色(从配置)
@@ -568,7 +570,7 @@ function FightCardBase:GetSkillRange(skillID, targetdata)
     LogTable(targetdata, "targetdata = ")
     if oSkill.range_key == "one" then
         local card = mgr:GetPosCard(targetdata.teamID, targetdata.pos)
-        if not card:IsLive() then
+        if not card or not card:IsLive() then
             -- ASSERT("角色死亡")
             -- if oSkill.type == SkillType.Revive then
             -- 	return {card.oid}
@@ -580,7 +582,7 @@ function FightCardBase:GetSkillRange(skillID, targetdata)
     elseif oSkill.range_key == "one_except_self" then
         --LogDebugEx("GetSkillRange one_except_self")
         local card = mgr:GetPosCard(targetdata.teamID, targetdata.pos)
-        if not card:IsLive() then
+        if not card or not card:IsLive() then
             return {}
         end
         if card == self then
@@ -721,7 +723,7 @@ function FightCardBase:AIGetTarget(skillID)
     data.pos = pos
     data.skillID = skillID
 
-    --LogTable(data)
+    --LogTable(data, "AIGetTarget = ")
 
     return data
 end
@@ -1198,6 +1200,13 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent)
         self.nBeSkillDamage = self.nBeSkillDamage or 0
         self.nBeSkillDamage = self.nBeSkillDamage - num
         --LogDebugEx("FightCardBase:AddHpNoShield", self.name, self.nBeSkillDamage)
+        
+        if self.isInvincible then -- 无限血机制统计伤害
+            self.nTotalDamage = self.nTotalDamage - num
+            self.nStateDamage = self.nStateDamage - num
+            self.hp = self:Get("maxhp") -- 恢复血量
+            self.log:Add({ api = "UpdateDamage", targetID = self.oid, nTotalDamage = self.nTotalDamage, nStateDamage = self.nStateDamage})
+        end
     end
 
     -- 免疫死亡

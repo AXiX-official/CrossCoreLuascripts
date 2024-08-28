@@ -20,7 +20,7 @@ function Skill4304901:OnActionOver(caster, target, data)
 		return
 	end
 	-- 4304921
-	self:Cure(SkillEffect[4304921], caster, self.card, data, 2,0.5)
+	self:Cure(SkillEffect[4304921], caster, self.card, data, 2,0.05)
 end
 function Skill4304901:tFunc_4304931_4304901(caster, target, data)
 	-- 8063

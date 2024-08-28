@@ -65,7 +65,7 @@ function this:CheckPoolActive(_poolId)
     local v = self:GetData(_poolId)
     if (v and v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
         return true
-    elseif((v:GetCfg().nType == 4 or v:GetCfg().nType == 5) and not v:CheckIsEnd()) then 
+    elseif((v:GetCfg().nType == 4 or v:GetCfg().nType == 5) and not v:CheckIsEnd() and v:CheckConditions()) then 
         return true 
     end
     return false
@@ -75,11 +75,9 @@ end
 function this:GetArr()
     local arr = {}
     for i, v in pairs(self.datas) do
-        if (v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
-            table.insert(arr, v)
-        elseif((v:GetCfg().nType == 4 or v:GetCfg().nType == 5) and not v:CheckIsEnd()) then 
-            table.insert(arr, v)
-        end
+        if(self:CheckPoolActive(v:GetId())) then 
+            table.insert(arr,v)
+        end 
     end
     if (#arr > 1) then
         table.sort(arr, function(a, b)
@@ -312,7 +310,7 @@ function this:FirstCardCreateAffirmRet(proto)
 
     self.LevelUpdate()
 
-    MenuMgr:Crate30Finish() -- 30抽第一次打开记录 rui
+    MenuBuyMgr:ConditionCheck(2,"create30Finish") --MenuMgr:Crate30Finish() -- 30抽第一次打开记录 rui
 end
 
 -- 累计抽卡统计更新

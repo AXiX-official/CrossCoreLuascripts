@@ -26,6 +26,7 @@ RedPointType.ActiveEntry1 = "ActiveEntry1"  --活动入口  拂晓之战
 RedPointType.ActiveEntry2 = "ActiveEntry2"  --电影惊魂
 RedPointType.ActiveEntry3 = "ActiveEntry3"  --拟真演训
 RedPointType.ActiveEntry4 = "ActiveEntry4"  --迷城蛛影
+RedPointType.ActiveEntry16 = "ActiveEntry16"  --宠物活动
 
 RedPointType.MaterialBag = "MaterialBag" -- 背包
 RedPointType.HeadFrame = "HeadFrame" -- 头像框
@@ -36,6 +37,8 @@ RedPointType.Regression = "Regression" --回归
 RedPointType.Badge = "Badge" --徽章
 RedPointType.Rogue = "Rogue" --乱序演习
 RedPointType.AccuCharge = "AccuCharge" --累计充值
+
+RedPointType.SpecialExploration="SpecialExploration"--特殊勘探
 
 local this = MgrRegister("RedPointMgr")
 

@@ -34,7 +34,7 @@ function Refresh(_info)
 	-- if(_cfg.icon) then
 	-- 	ResUtil.RoleCard:Load(icon, _cfg.icon, true)
 	-- end
-	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID())
+	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID(),info:GetSex())
 
 	CSAPI.SetText(txtDungeon,info:GetPassName())
 end

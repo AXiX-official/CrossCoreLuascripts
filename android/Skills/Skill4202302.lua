@@ -45,10 +45,10 @@ function Skill4202302:OnAttackOver2(caster, target, data)
 	else
 		return
 	end
-	-- 8496
-	local count96 = SkillApi:BuffCount(self, caster, target,3,1,1)
-	-- 8899
-	if SkillJudger:Less(self, caster, target, true,count96,1) then
+	-- 8695
+	local count695 = SkillApi:BuffCount(self, caster, target,3,4,5)
+	-- 8905
+	if SkillJudger:Less(self, caster, target, true,count695,1) then
 	else
 		return
 	end

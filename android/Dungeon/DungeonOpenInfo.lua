@@ -37,6 +37,10 @@ function this:GetCfg()
     return self.cfg
 end
 
+function this:GetType()
+    return self.cfg and self.cfg.type
+end
+
 --活动开启
 function this:IsOpen()
     if self.data and self.data.nBegTime and self.data.nEndTime then
@@ -54,7 +58,7 @@ function this:IsDungeonOpen()
     return false,""
 end
 
---困难本开启
+--困难本开启 --没填默认开启
 function this:IsHardOpen()
     local timeStr = ""
     if self.openCfg and self.openCfg.hardBegTime then
@@ -64,7 +68,7 @@ function this:IsHardOpen()
         local tips = LanguageMgr:GetTips(24007, timeStr)
         return TimeUtil:GetTime() >= self.data.nHardBegTime,tips
     end
-    return false,""
+    return true,""
 end
 
 --EX本开启
@@ -136,6 +140,13 @@ function this:IsSelf(_sid)
         elseif self.cfg.sectionID then
             return self.cfg.sectionID == _sid
         end
+    end
+    return false
+end
+
+function this:CheckIsRed()
+    if self.openCfg and self.openCfg.checkRed then
+        return true
     end
     return false
 end

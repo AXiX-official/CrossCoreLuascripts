@@ -4,7 +4,7 @@
 local selectIDS = {} -- 字典
 local curCount = 0
 local maxCount = 0
-local presetIndex = 1 -- 预设队伍下标
+local presetIndex = nil -- 预设队伍下标
 
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
@@ -118,8 +118,8 @@ function InitDataBase()
         --     end
         -- end
         -- baseDatas = newArr
-        presetIndex = _presetIndex or buildData:GetCurPresetId()
-        oldSelectIDs = buildData:GetPrestRoles(presetIndex)
+        presetIndex = _presetIndex -- or buildData:GetCurPresetId()
+        oldSelectIDs = presetIndex ~= nil and buildData:GetPrestRoles(presetIndex) or buildData:GetRoles()
         maxCount = buildData:GetMaxNum()
     else
         -- 宿舍 看所有人
@@ -436,10 +436,10 @@ function OnClickSure()
                     local _roomType = DormMgr:GetRoomTypeByID(_roomId)
                     if (_roomType == RoomType.dorm) then
                         list[_roomId].roleIds = DormMgr:GetRoomData(_roomId):GetRoles()
-                        list[_roomId].teamId = DormMgr:GetRoomData(_roomId):GetCurPresetId()
+                        list[_roomId].teamId = nil -- DormMgr:GetRoomData(_roomId):GetCurPresetId()
                     else
                         list[_roomId].roleIds = MatrixMgr:GetBuildingDataById(_roomId):GetRoles()
-                        list[_roomId].teamId = MatrixMgr:GetBuildingDataById(_roomId):GetCurPresetId()
+                        list[_roomId].teamId = nil -- MatrixMgr:GetBuildingDataById(_roomId):GetCurPresetId()
                     end
                 end
                 for k, m in ipairs(list[_roomId].roleIds) do
@@ -527,8 +527,14 @@ end
 function SetRoles(infos, curRoleIds)
     if (not buildData) then
         -- 宿舍
-        BuildingProto:BuildSetRole(infos)
-    elseif (presetIndex == buildData:GetCurPresetId()) then
+        if (DormMgr:GetEmptyNum() > #curRoleIds) then
+            BuildingProto:BuildSetRole(infos)
+        else
+            FuncUtil:Call(function()
+                LanguageMgr:ShowTips(21034)
+            end, nil, 100)
+        end
+    elseif (not presetIndex) then -- == buildData:GetCurPresetId()) then
         -- 更改当前队伍
         BuildingProto:BuildSetRole(infos)
     else

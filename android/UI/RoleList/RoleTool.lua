@@ -205,7 +205,8 @@ end
 -- 属性str
 function this.GetStatusValueStr(_key, _num)
     if (_key == "career") then
-        return StringConstant.role_114[math.floor(_num)]
+        local strs = StringUtil:split(LanguageMgr:GetByID(1089), ",") or {}
+        return strs[math.floor(_num)]
     elseif (_key == "maxhp" or _key == "defense" or _key == "attack" or _key == "speed" or _key == "sp") then
         return math.modf(_num) .. ""
     elseif (_key == "nStep" or _key == "nJump") then

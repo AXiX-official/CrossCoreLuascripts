@@ -445,7 +445,9 @@ end
 -- 是否大招技能(被动用)
 function SkillJudger:IsUltimate(oSkill, caster, target, res)
 
-	if caster.currentSkill and (caster.currentSkill.upgrade_type == CardSkillUpType.C or caster.currentSkill.upgrade_type == CardSkillUpType.OverLoad) then
+	if caster.currentSkill and 
+		(caster.currentSkill.upgrade_type == CardSkillUpType.C or 
+			caster.currentSkill.upgrade_type == CardSkillUpType.OverLoad) then
 		return res
 	end
 	return not res
@@ -706,7 +708,7 @@ end
 function SkillJudger:IsCtrlBuff(oBuff, caster, target, res, typ)
 	typ = typ or BuffGroup.Ctrl
 	LogDebugEx("IsCtrlBuff", oBuff.group, BuffGroup.Ctrl)
-	LogTable(oBuff, "IsCtrlBuff")
+	-- LogTable(oBuff, "IsCtrlBuff")
 	if oBuff.group == typ then
 		return res
 	else
@@ -922,12 +924,21 @@ end
 -- 获取当前操作数
 function SkillApi:GetTurnCount(oSkill, caster, target)
 	local mgr = oSkill.team.fightMgr
-	return mgr.nStepPVE or 0
+	LogDebugEx("SkillApi:GetTurnCount", ((mgr.nStepPVE or 0) - (oSkill.card.startopnum or 0)), oSkill.card.startopnum, mgr.nStepPVE, oSkill.card.name)
+	return ((mgr.nStepPVE or 0) - (oSkill.card.startopnum or 0))
 end
+
 -- 总伤害
 function SkillApi:GetTotalDamage(oSkill, caster, target, filter)
 	return oSkill.card.nTotalDamage or 0
 end
+
+-- 阶段伤害
+function SkillApi:GetStateDamage(oSkill, caster, target, filter)
+	LogDebugEx("SkillApi:GetStateDamage", oSkill.card.nStateDamage, oSkill.card.name)
+	return oSkill.card.nStateDamage or 0
+end
+
 ----------------------------------------------
 -- 技能基类
 FightAPI = oo.class()
@@ -938,6 +949,7 @@ end
 
 -- 通用加buff
 function FightAPI:AddBuff(effect, caster, target, data, buffID, nRoundNum)
+	LogDebugEx("FightAPI:AddBuff", buffID, nRoundNum)
 	-- local effect = SkillEffect[effectID]
 	local buff = nil
 
@@ -951,11 +963,11 @@ function FightAPI:AddBuff(effect, caster, target, data, buffID, nRoundNum)
 		return
 	end
 
+	LogDebug("AddBuff = %s, %s, %s, %s", effectID, self.name, caster.name, target.name)
 	if target:IsLive() then
 		local buff = target:AddBuff(caster, buffID, nRoundNum, effect.apiSetting)
 		return buff
 	end
-	-- LogTrace("AddBuff = %s, %s, %s, %s", effectID, self.name, caster.name, target.name)
 end
 
 -- 概率加buffer
@@ -1442,11 +1454,30 @@ end
 function FightAPI:RestoreHP(effect, caster, target, data)
 	-- self.order = self.order + 1
 	LogDebugEx("---FightAPI:RestoreHP---", caster.name, target.name)
+
 	if not target.isInvincible then return end
 	target.hp = target.maxhp
 	self.log:Add({api="RestoreHP", targetID = target.oid, attr = "hp", 
 		hp = target:Get("hp"),  effectID = effect.apiSetting, order = self.order})
-	return spill
+end
+
+-- 无限血机制设置阶段[总阶段数, 阶段, 阶段血量, 操作数]
+function FightAPI:SetInvincible(effect, caster, target, data, totalState, state, statehp, opnum)
+	
+	-- LogDebugEx("---FightAPI:SetInvincible---", caster.name, target.name)
+	local target = self.card
+	if not target.isInvincible then return end
+	target.nStateDamage = 0 -- 当前阶段伤害量
+	target.totalState   = totalState -- 总阶段
+	target.state        = state -- 阶段
+	target.statehp      = statehp -- 阶段血量
+	target.opnum        = opnum -- 操作数
+	target.startopnum   = self.team.fightMgr.nStepPVE or 0 -- 阶段开始时的操作数
+	self.log:Add({api="SetInvincible", targetID = target.oid, 
+		totalState = totalState, state = state, statehp = statehp, opnum = opnum,
+		nStateDamage = target.nStateDamage, nTotalDamage = target.nTotalDamage, startopnum = target.startopnum,
+		effectID = effect.apiSetting, order = self.order})
+
 end
 
 -- 复活
@@ -1998,6 +2029,11 @@ function FightAPI:EnergyCure(effect, caster, target, data, hp)
 	LogDebugEx("能量治疗", energy, hp, cureHP, target.hp)
 	-- 扣能量
 	self.card:SetValue("energy", energy-hp)
+
+	local mgr = self.team.fightMgr
+	target.currCureHp = hp -- 当前治疗量
+	mgr:DoEventWithLog("OnCure", caster, target, data)
+	target.currCureHp = nil
 end
 
 -- 拥有者给目标加buff

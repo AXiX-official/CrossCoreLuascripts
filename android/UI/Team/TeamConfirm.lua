@@ -40,6 +40,7 @@ function Awake()
     eventMgr:AddListener(EventType.Fight_Enter_Fail,OnEnterFail)
     CSAPI.SetGOActive(btnAISetting,true);
     battleCanvas=ComUtil.GetCom(btnBattle,"CanvasGroup");
+    CSAPI.SetGOActive(btnNavi,false)
 end
 
 function OnViewOpened(viewkey)
@@ -529,11 +530,11 @@ function InitDungeon()
     SetFighting(dungeonCfg.lvTips);
     SetEnterCost();
     CSAPI.SetText(txt_move,tostring(moveLimit));
-    if dungeonCfg.nGroupID==nil or dungeonCfg.nGroupID=="" then --没有怪物组ID的时候执行逻辑
-        CSAPI.SetGOActive(btnNavi,starNum==3);
-    else
-        CSAPI.SetGOActive(btnNavi,false);
-    end
+    -- if dungeonCfg.nGroupID==nil or dungeonCfg.nGroupID=="" then --没有怪物组ID的时候执行逻辑
+    --     CSAPI.SetGOActive(btnNavi,starNum==3);
+    -- else
+    --     CSAPI.SetGOActive(btnNavi,false);
+    -- end
     CSAPI.SetGOActive(nameObj,true);
     startTeamIdx = 1;
     endTeamIdx = g_TeamMaxNum;  
@@ -602,7 +603,7 @@ end
 
 function InitMatrix()
     CSAPI.SetGOActive(nameObj,false);
-    CSAPI.SetGOActive(btnNavi,false);
+    -- CSAPI.SetGOActive(btnNavi,false);
     startTeamIdx = 1;
     endTeamIdx = g_TeamMaxNum;  
     teamMax=2;
@@ -619,7 +620,7 @@ end
 
 function InitTower()
     CSAPI.SetGOActive(nameObj,false);
-    CSAPI.SetGOActive(btnNavi,false);
+    -- CSAPI.SetGOActive(btnNavi,false);
     CSAPI.SetGOActive(fightObj,false);
     if dungeonCfg then
         TowerMgr:SetSectionId(dungeonCfg.group)
@@ -650,7 +651,7 @@ end
 function InitRogue()
     SetEnterCost()
     CSAPI.SetGOActive(nameObj,false);
-    CSAPI.SetGOActive(btnNavi,false);
+    -- CSAPI.SetGOActive(btnNavi,false);
     CSAPI.SetGOActive(fightObj,false);
     CSAPI.SetGOActive(hotObj,false)
     startTeamIdx = eTeamType.Rogue;
@@ -698,7 +699,7 @@ function InitTotalBattle()
     end
     SetEnterCost()
     CSAPI.SetGOActive(nameObj,false);
-    CSAPI.SetGOActive(btnNavi,false);
+    -- CSAPI.SetGOActive(btnNavi,false);
     CSAPI.SetGOActive(fightObj,false);
     CSAPI.SetGOActive(hotObj,false)
     startTeamIdx = eTeamType.TotalBattle;
@@ -897,7 +898,7 @@ function OnTowerEnter(dupTeam,item,assistData)
 end
 
 function InitFieldBoss()
-    CSAPI.SetGOActive(btnNavi,false)
+    -- CSAPI.SetGOActive(btnNavi,false)
     startTeamIdx = 1;
     endTeamIdx = g_TeamMaxNum;  
     teamMax=2;

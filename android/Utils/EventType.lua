@@ -158,7 +158,8 @@ this.Login_CD_Down2=11019;
 this.Login_SDK_DelAccount = 11020;
 -- SDK删除账号回调
 this.Login_SDK_DelAccount_CallBack = 11021;
-
+--选择服务器
+this.Login_Switch_Server = 11022;
 ----------------------------SDK
 --调用SDK支付
 this.SDK_Pay = 12000;
@@ -234,6 +235,13 @@ this.Fight_Action_Turn_Add1		= 100017;
 
 --战斗错误，无法继续战斗
 this.Fight_Error_Msg = 100020;
+
+
+--战斗活动，更新boss阶段信息
+this.Fight_Activity_SetInvincible = 100030;
+--战斗活动，更新总伤害
+this.Fight_Activity_UpdateDamage = 100031;
+
 
 ------------------------------------------角色
 --角色创建
@@ -537,7 +545,7 @@ this.Update_Everyday = 180011;
 --打开主界面
 this.Main_Enter=180012;
 -- 玩家累计充值金额发生改变
-this.Pay_Amount_Change=180013;
+--this.Pay_Amount_Change=180013;
 --更换头像框 
 this.Head_Frame_Change=180014;
 --更换头像
@@ -548,7 +556,8 @@ this.Menu_WebView_Enabled=180016;
 this.AccuCharge_Get=180017;
 --活动表动态更改 
 this.CfgActiveEntry_Change=180018;
----------------------------------------
+--MenuBuyPanel关闭
+this.MenuBuy_RechargeCB=180019;
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -657,6 +666,8 @@ this.TeamView_ViewType_Change=190049;
 this.TeamView_DragJoin_Lost=190050;
 --设置子节点变更
 this.TeamView_ChildNode_Change=190051;
+--战斗派遣队伍修改
+this.TeamView_RogueS_Change=190052;
 -------------------------------------------背包
 --物品更新
 this.Bag_Update = 200000;
@@ -728,6 +739,8 @@ this.Equip_Remould_Select=210029;
 this.Equip_TweenMask_State=210030;
 --装备数据更新
 this.Equip_Update=210031;
+--强化动画遮罩
+this.Equip_StrengthTween_State=210032;
 ------------------------------------------战棋系统事件
 --场地初始化完成
 this.Battle_Ground_Inited = 220000;
@@ -786,6 +799,10 @@ this.Mission_Tab_Sel = 240002
 --this.Mission_Reward = 240003
 -- 任务重置 
 this.Mission_ReSet = 240004
+--任务阶段更新
+this.Mission_Stage_Update=240005
+--任务删除
+this.Mission_Delete = 240006
 -------------------------------------------好友
 --刷新
 this.Friend_Update = 250001
@@ -841,7 +858,7 @@ this.Player_Ability_Add = 270006;
 --点击卡牌角色头像
 this.Player_Icon_Click = 270007
 --选择看版背景
-this.Player_Select_BG = 270008;
+--this.Player_Select_BG = 270008;
 --能力点击
 this.Player_Ability_CanClick = 270009;
 --玩家能力信息界面状态
@@ -850,7 +867,10 @@ this.Player_AbilityInfo_ViewActive = 270010;
 this.Player_AbilityInfo_ViewPos = 270011;
 --玩家能力信息界面刷新
 this.Player_AbilityInfo_Refresh = 270012;
-
+--刷新看板界面
+this.CRoleDisplayMain_Refresh = 270013;
+--看板列表更新
+this.CRoleDisplayMain_Change = 270014;
 ----------------------------镜头相关事件
 --当前天空盒变化
 this.SkyBox_Changed = 280001;
@@ -924,6 +944,7 @@ this.Activity_SignIn = 340002 --签到
 this.Activity_OpenQueue = 340003 --活动预开启队列
 this.Activity_Click = 340004 --活动强制点击
 this.Activity_List_Null_Check = 340005 --活动列表检测为空
+this.Acitivty_List_Pop = 340006 --活动弹出
 
 ------------------------------------------背景音乐
 --播放背景音乐
@@ -999,7 +1020,8 @@ this.Shop_Buy_Mask=370014;
 this.Shop_ResetTime_Ret=370015;
 --商店开启时间返回
 this.Shop_OpenTime_Ret=370016;
-
+--抵扣券信息变更
+this.Shop_PayVoucher_Change=370017;
 --------------------------------------------引导
 --引导完成
 this.Guide_Complete = 380001
@@ -1160,6 +1182,9 @@ this.Exploration_Click_Lv=470007;--点击等级
 this.Exploration_Exp_TweenBegin=470008;--播放经验条动画
 this.Exploration_Exp_TweenUp=470009;--播放经验条动画时升级
 this.Exploration_TaskTime_Ret=470010;--获取勘探任务时间返回
+this.SpecialExploration_Revice_Ret=470011;--获取特殊勘探领取返回
+this.SpecialExploration_Info_Ret=470012;--获取特殊勘探数据返回
+this.SpecialExploration_Tween_Over=470013;--特殊勘探无线滚动动画完毕
 
 -----------------------------------爬塔
 this.Tower_Update_Data = 480001
@@ -1174,6 +1199,7 @@ this.TaoFa_Count_BuyRefresh = 490003 --讨伐购买次数刷新
 this.Arachnid_Count_Refresh = 490004 --活动购买次数刷新
 this.Activity_Open_Refresh = 490005 --活动时间刷新
 this.TotalBattle_Rank_Update = 490006 --十二星宫排行榜
+this.Activity_Rank_Update= 490007 --活动排行榜
 
 -----------------------------------战场
 this.BattleField_Show_List = 500001 --战区设置
@@ -1186,6 +1212,7 @@ this.Sweep_Close_Panel = 510002
 
 -----------------------------------------章节
 this.Section_Red_Update = 520001
+this.Section_Daily_Double_Update = 520002
 
 -----------------------------------------等待
 this.Wait_Panel_Close = 530001  --关闭等待界面
@@ -1213,10 +1240,89 @@ this.SpecialDrops_Info_Update = 590001 --掉落更新
 --------------------------------道具池活动相关
 this.ItemPool_Date_Update=600001;--道具池数据刷新
 this.ItemPool_Draw_Ret=600002;--道具池抽卡返回
+--------------------------------回归绑定活动相关
+this.Collaboration_Info_Update=610001;--回归绑定数据刷新
+this.Collaboration_TaskTab_Change=610002;--回归绑定tab变更
+this.Collaboration_BindInvite_Ret=610003;--绑定请求结果返回
+this.Collaboration_BindRecoment_Update=610004;--推荐列表更新
+this.Collaboration_BindInvite_Update=610005;--申请绑定列表更新
+this.Collaboration_BindReward_Ret=610005;--领取阶段奖励回调
+this.Collaboration_InviteOption_Ret=610006;--绑定操作结果返回
+this.Collaboration_StageTaskInfo_Ret=610007;--绑定任务阶段信息返回
+this.Collaboration_Invite_Req=610008;--别人邀请绑定我
 
+----------------------------------夏活宠物活动
+this.PetActivity_Head_Click=620000;--宠物页签2点击
+this.PetActivity_Tab_Click=620001;--宠物页签1点击
+this.PetActivity_PetInfo_Ret=620002;--宠物信息返回
+this.PetActivity_Sport_Ret=620003;--宠物运动返回信息
+this.PetActivity_Switch_Ret=620004;--宠物切换返回
+this.PetActivity_GainReward_Ret=620005;--领取宠物养成奖励返回
+this.PetActivity_GainGift_Ret=620006;--领取宠物礼物奖励返回
+this.PetActivity_UpdatePet_Ret=620007;--宠物更新返回
+this.PetActivity_Bestiary_Ret=620008;--已解锁图鉴更新
+this.PetActivity_BestiaryReward_Ret=620009;--领取图鉴奖励返回
+this.PetActivity_SetLine_State=620010;--领取图鉴奖励返回
+this.PetActivity_UseItem_Ret=620011;--使用物品返回
+this.PetActivity_FSMState_Change=620012;--宠物状态变更
+this.PetActivity_ActionBar_Set=620013;--动作倒计时框
+this.PetActivity_AttrCount_Ret=620014;--本地宠物属性计算更新
+this.PetActivity_TalkCond_Trigger=620015;--台词条件触发
+this.PetActivity_EmojiCond_Trigger=620016;--宠物状态气泡检查条件触发
+this.PetActivity_SportScene_Check=620017;--检查是否变更宠物运动场景
+this.PetActivity_BagSelect_Change=620018;--宠物背包选择变更
+this.PetActivity_TimeStamp_Change=620019;--宠物更新时间戳变更
+this.PetActivity_Click_BookItem=620020;--点击图鉴奖励中的格子
+this.PetActivity_Exit_Sport=620021;--退出运动状态
+----------------------------------夏活宠物活动
+this.Regression_Fund_Buy=630000 --回归基金购买
+----------------------------------爱相随
+this.LovePlus_Chat_Update = 640000 --聊天数据更新
+this.LovePlus_Data_Update = 640001 --章节数据更新
+this.LovePlus_Spine_Select = 640002 --live2d动作选择
+
+----------------------------------------------海外SDK----下-----------------------------------------------------
+---通知SDK初始化
+this.SDK_ShiryuSDK_Init=800001;
+---SDK初始化完成 返回通知
+this.SDK_ShiryuSDK_Init_complete=800002;
+---获取SDK数据结构
+this.SDK_ShiryuSDK_GetSdkProperties=800003;
+---获取SDK数据结构完成数据返回
+this.SDK_ShiryuSDK_GetSdkProperties_complete=800004;
+---通知SDK登录
+this.SDK_ShiryuSDK_Login=800005;
+---通知SDK登录返回
+this.SDK_ShiryuSDK_Login_complete=800006;
+--- 登出---退出账号/切换账号时候
+this.SDK_ShiryuSDK_Logout=800007;
+---游戏退出杀死进程
+this.SDK_ShiryuSDK_ExitGame=800008;
+---SDK登出账号成功，游戏需在此做游戏切换账号操作
+this.DK_ShiryuSDK_SetLogoutCallback=800009;
+---SDK登出账号成功，游戏需在此做游戏切换账号操作完成数据返回结果
+this.SDK_ShiryuSDK_SetLogoutCallback_complete=800010;
+---获取商品列表
+this.SDK_ShiryuSDK_GetGoodsList=800011;
+--- 获取商品列表 返回
+this.SDK_ShiryuSDK_GetGoodsList_complete=800012;
+---支付接口
+this.SDK_ShiryuSDK_Pay=800013;
+--- 支付接口 返回
+this.SDK_ShiryuSDK_Pay_complete=800014;
+---  角色上报_创建角色调用
+this.SDK_ShiryuSDK_OnCreateRole=800015;
+--- 角色上报_角色进入区服
+this.SDK_ShiryuSDK_OnLoginServe=800016;
+--- 角色上报_玩家角色信息更新
+this.SDK_ShiryuSDK_OnRoleInfoUpdate=800017;
+---角色上报_设置角色名称
+this.SDK_ShiryuSDK_OnSetRoleName=800018;
 ---屏幕自适应 关闭 UI页面数据
 this.LuaView_Lua_Closed=800019;
-
+---抵扣券支付完成
+this.SDK_Deduction_voucher_paymentcompleted=800020;
+----------------------------------------------海外SDK----上-----------------------------------------------------
 
 
 return this; 

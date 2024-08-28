@@ -1320,7 +1320,8 @@ function SkillBase:Apply(caster, targets, pos, data)
 	-- for i,target in ipairs(targets) do
 	mgr:DoEventWithLog("OnActionBegin", caster, targets[1], data)
 	-- end
-
+	mgr.currentDeathsBySkill = {} -- 当前回合被击杀对象(技能导致的死亡)
+	
 	if self.isCanHurt then
 		for i,target in ipairs(targets) do
 			mgr:DoEventWithLog("OnAttackBegin", caster, target, data)
@@ -2242,6 +2243,8 @@ function SkillBase:BeatAgain(effect, caster, target, data, skillID)
 	local mgr = self.team.fightMgr
 	-- if mgr.lstCallSkill and #mgr.lstCallSkill > 0 then return end
 	if mgr.bBeatAgain then return end
+	LogDebug("{%s}追击,目标是{%s}, index{%s}",caster.name, target.name, index or "0")
+
 	mgr.lstCallSkill = mgr.lstCallSkill or {}
 
 	--追击在反击前(不是同一方插到前面去)

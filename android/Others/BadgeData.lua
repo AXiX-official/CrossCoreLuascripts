@@ -90,5 +90,8 @@ function this:IsGet()
     end
     return false
 end
+function this:IsHide()
+    return self.cfg and self.cfg.nIsHide
+end
 
 return this;

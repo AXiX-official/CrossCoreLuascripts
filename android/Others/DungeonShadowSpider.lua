@@ -354,7 +354,7 @@ function ShowInfo(item)
             itemInfo.SetIsActive(true)
             itemInfo.Show(cfg,type,function ()
                 if item then
-                    itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
+                    itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
                     itemInfo.SetItemPos("Double",-166,-427)
                 end
             end)
@@ -362,7 +362,7 @@ function ShowInfo(item)
     else
         itemInfo.Show(cfg,type,function ()
             if item then
-                itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
+                itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
                 itemInfo.SetItemPos("Double",-166,-427)
             end
         end)

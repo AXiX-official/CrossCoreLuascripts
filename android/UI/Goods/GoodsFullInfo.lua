@@ -20,6 +20,10 @@ local eventMgr=nil;
 local expiryTime=nil;
 local isUse=false;
 local defaultSize={0,0};
+local endTime=0;
+local fixedTime=1;
+local upTime=0;
+local beforNum=0; --当前物品的数量
 -- local slider=nil;
 
 ---是否移动平台
@@ -123,7 +127,12 @@ function Refresh()
 			if cfg.dy_value1 then
 				local dormCfg=Cfgs.CfgFurniture:GetByID(cfg.dy_value1)
 				CSAPI.SetText(txtComfort, dormCfg.comfort .. "")
-			end
+				local canInte = false 
+				if(dormCfg.intePoints and #dormCfg.intePoints>0)then  
+					canInte = true 
+				end 
+				CSAPI.SetGOActive(imgMove,canInte)
+			end	
 		elseif cfg and (cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon)) then --头像/头像框
 			local goods=BagMgr:GetFakeData(cfg.id);
 			SetDayObj(goods:GetIconDayTips());
@@ -183,7 +192,11 @@ function Refresh()
 		-- else
 		-- 	CSAPI.SetText(txt_currNum, tostring(itemInfo:GetCount()));
 		-- end
-		RefreshLimit();
+		endTime=itemInfo:GetExpiry();
+		if endTime and endTime>0 then
+			endTime=endTime-TimeUtil:GetTime()>0 and endTime-TimeUtil:GetTime() or 0;
+		end
+		RefreshDownTime();
 		CSAPI.SetGOActive(tIcon,false);
 		CSAPI.SetGOActive(tBorder,false);
 		if cfg then
@@ -239,6 +252,13 @@ function Refresh()
 				GridUtil.LoadTIcon(tIcon,tBorder,cfg,true);
 			elseif itemInfo:GetClassType()=="CharacterCardsData" then --卡牌数据类型
 				CSAPI.SetGOActive(tIcon,true);
+			elseif cfg.type==ITEM_TYPE.VOUCHER then --折扣券
+				CSAPI.SetText(txt_open, LanguageMgr:GetByID(1032))
+				CSAPI.SetText(txt_openTips, LanguageMgr:GetByType(1032,4))
+				CSAPI.SetGOActive(bottomObj, true);
+				SetNumObj(false)
+				CSAPI.SetGOActive(btn_ok, true);
+				clickFunc = UseVoucher;
 			end
 			if showGets then
 				--显示获取途径
@@ -261,19 +281,28 @@ end
 
 function Update()
 	CheckVirtualkeys()
+    if endTime and endTime>0 then
+        upTime=upTime+Time.deltaTime;
+        if upTime>=fixedTime then
+            endTime=endTime-fixedTime;
+            RefreshDownTime();
+            upTime=0;
+        end
+    end
 end
 
-function RefreshLimit()
-	if itemInfo.GetExpiryTips==nil then
+function RefreshDownTime()
+	if itemInfo==nil or (itemInfo.IsExipiryType==nil or (itemInfo.GetExpiryTips~=nil and itemInfo:IsExipiryType()~=true) or itemInfo:GetCount()<=0) then
 		CSAPI.SetGOActive(limitObj,false);
 		return
 	end
-	local day=itemInfo:GetExpiryTips();
-	CSAPI.SetGOActive(limitObj,day~=nil);
-	if day then
-		CSAPI.SetText(txt_limit,day);
+	local tips=itemInfo:GetExpiryTips();
+	CSAPI.SetGOActive(limitObj,tips~=nil);
+	if tips then
+		CSAPI.SetText(txt_limit,tips);
 	end
 end
+
 function SetNumObj(isShow)
 	CSAPI.SetGOActive(mUseNode, isShow==true);
 	if isShow then
@@ -403,6 +432,13 @@ function OpenGift()
 	rewardID, useNum)
 	local isCard = GLogicCheck:CheckRewardCapacity(RandRewardType.CARD,
 	RoleMgr:GetMaxSize()-RoleMgr:GetCurSize(),rewardID, useNum)
+	local index=nil;
+	local id= itemInfo:GetID();
+	local data=itemInfo:GetData();
+	if data and data.get_infos then
+		index=data.get_infos[1].index;
+		id=cfg.to_item_id;
+	end
 	if isEquip == nil or isEquip == false then
 		Tips.ShowTips(LanguageMgr:GetTips(12012))
 		Close()
@@ -413,16 +449,24 @@ function OpenGift()
 		Close()
 		return
 	end
-	PlayerProto:UseItem({id = itemInfo:GetID(), cnt = useNum, arg1 = nil}, true)
+	PlayerProto:UseItem({id = id, cnt = useNum,ix=index, arg1 = nil}, true)
 	Close()
 end
 
 --使用道具
 function UseItem()
 	local cfg = itemInfo:GetCfg()
+	local data=itemInfo:GetData();
+	local index=nil;
+	local id=itemInfo:GetID();
+	beforNum=itemInfo:GetCount();
+	if data and data.get_infos then
+		index=data.get_infos[1].index;
+		id=cfg.to_item_id;
+	end
 	if cfg and cfg.is_can_use then
 		isUse=true;
-		PlayerProto:UseItem({id = itemInfo:GetID(), cnt = useNum, arg1 = nil}, false, OnUseItem)
+		PlayerProto:UseItem({id = id,ix=index, cnt = useNum, arg1 = nil}, false, OnUseItem)
 	end
 end
 
@@ -434,6 +478,10 @@ function OnUseItem(proto)
 		Tips.ShowTips(string.format(LanguageMgr:GetTips(12014), fakeData:GetName(), proto.info.cnt))
 		Close();
 		return;
+	end
+	if proto and proto.info.cnt>=beforNum then --处理分开显示的限时商品
+		Close();
+		do return end
 	end
 	local goods = BagMgr:GetData(itemInfo:GetID());
 	Tips.ShowTips(string.format(LanguageMgr:GetTips(12014), itemInfo:GetName(), useNum))
@@ -475,6 +523,17 @@ end
 function OnClickOpen()
 	if clickFunc then
 		clickFunc();
+	end
+end
+
+function UseVoucher()
+	if itemInfo==nil then
+		do return end		
+	end
+	local goods = BagMgr:GetData(itemInfo:GetID());
+	if goods:GetDyVal2()~=nil then
+		ShopMgr:SetJumpVoucherID(goods:GetID());
+		JumpMgr:Jump(goods:GetDyVal2());
 	end
 end
 

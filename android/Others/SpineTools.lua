@@ -112,10 +112,9 @@ function this:Update()
             -- if (v.te.TimeScale ~= 1 or v.te.TimeScale ~= -1) then
             --     v.te.TimeScale = v.progress > v.te.TrackTime and 1 or -1
             -- end
-            if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or
-                (v.te.TimeScale == -1 and v.te.TrackTime <= v.progress)) then
+            if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or (v.te.TimeScale == -1 and v.te.TrackTime <= v.progress)) then
                 v.te.TimeScale = 0
-                if (v.progress == 1 and v.isClicksLast) then
+                if (v.isClicksLast) then
                     -- 首尾相接的，最终动画播完设置为0
                     v.te.TrackTime = 0
                 else

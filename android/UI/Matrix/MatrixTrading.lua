@@ -7,7 +7,7 @@ local timer = 0
 local tNexGiftsEx = nil
 local fid = nil
 local isAnimEnd = false
-
+local maxCount,curCount = 0,0
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     -- layout:AddBarAnim(0.4, false)

@@ -19,7 +19,7 @@ function Skill911200401:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 911200401
-	if self:Rand(8000) then
+	if self:Rand(2000) then
 		self:BeatBack(SkillEffect[911200401], caster, target, data, 911200301)
 	end
 end

@@ -232,4 +232,12 @@ function this:GetChargeID()
     return nil;
 end
 
+function this:CanUseVoucher()
+    return false;
+end
+
+function this:GetUseVoucherTypes()
+    return nil
+end
+
 return this;

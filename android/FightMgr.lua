@@ -189,6 +189,11 @@ function FightMgrBase:RecvCmd(cmd)
     return true
 end
 
+function FightMgrBase:ClientError(uid, err)
+    LogDebugEx('FightMgrBase:ClientError()', uid, err)
+    LogInfo("svn = %s err = %s\n cmds = %s", g_svnVersion, err, table.Encode(self.cmds))
+end
+
 -- 加载怪物组
 function FightMgrBase:LoadConfig(groupID, stage, hpinfo)
     LogDebugEx('FightMgrBase:LoadConfig', self.groupID, groupID)
@@ -220,11 +225,19 @@ function FightMgrBase:LoadConfig(groupID, stage, hpinfo)
     -- 敌方阵型
     self.arrTeam[2]:LoadConfig(self.groupID, self.stage, hpinfo)
     self.totleState = #config.stage
+
+    for i, card in ipairs(self.arrCard) do
+        -- 无限血机制
+        if card.isInvincible then 
+            self.isInvincible = true -- 是否为无限血副本
+        end
+    end
 end
 
 -- 加载玩家数据
 function FightMgrBase:LoadData(teamID, data, typ, tCommanderSkill)
     LogTable(data, 'FightMgrBase:LoadData')
+    --LogTrace()
     --LogTable(tCommanderSkill, "tCommanderSkill")
 
     -- data = Halo:Calc(data)
@@ -396,7 +409,7 @@ end
 
 -- 结束
 function FightMgrBase:Over(stage, winer)
-    LogDebug('FightMgrBase:Over')
+    LogDebug('FightMgrBase:Over', stage, winer)
     -- self:AddCmd(CMD_TYPE.End, stage)
     for i, v in ipairs(self.arrCard) do
         -- 战斗结束, 解除合体角色
@@ -2478,6 +2491,10 @@ function FightMgrClient:DoTurn(data)
         else
             errContent = string.format('数据不一致%s%s', card and '' or ',card is nil', card2 and '' or ',card2 is nil')
         end
+        
+        local proto = {'FightProtocol:ClientError', {errContent = errContent}}
+        self:ClientSend(proto)
+
         LogError(errContent)
         EventMgr.Dispatch(EventType.Fight_Error_Msg, errContent)
         ASSERT('card ~= card2')
@@ -2623,6 +2640,17 @@ function FightMgrClient:RestoreFight()
                 effectID = effectID
             }
         )
+    end
+
+    if self.isInvincible then
+        for i, card in ipairs(self.arrCard) do
+            -- 无限血机制
+            if card.isInvincible then 
+                self.log:Add({api="SetInvincible", targetID = card.oid, 
+                    totalState = card.totalState, state = card.state, statehp = card.statehp, opnum = card.opnum,
+                    nStateDamage = card.nStateDamage, nTotalDamage = card.nTotalDamage, startopnum = card.startopnum})
+            end
+        end
     end
 
     FightActionMgr:PushSkill(self.log:GetAndClean())
@@ -2921,6 +2949,24 @@ function PVEFightMgrServer:Over(stage, winer)
 
         -- LogTable(self.arrNP, "self.arrNP")
         local cardCnt = self.arrTeam[1].nCardCount
+
+        -- 更新无限血排行榜
+        if self.isInvincible then
+            local nTotalDamage = 0
+            for i, card in ipairs(self.arrCard) do
+                -- 无限血机制
+                if card.isInvincible then
+                    nTotalDamage = card.nTotalDamage
+                    break
+                end
+            end
+            -- 更新排行榜
+            local plr = self.oDuplicate.oPlayer
+            RankMgrGs:AddRankData(eRankType.SummerActiveRank, nTotalDamage, plr)
+            plr:UpdateAchieve(eAchieveFinishType.Fight, eAchieveEventType.Rank, {})
+            self.oDuplicate.hisMaxDamage = RankMgrGs:GetScoreByType(eRankType.SummerActiveRank, plr)
+        end
+
         self.oDuplicate:OnFightOver(
             winer,
             {data = data, nNp = self.arrNP[1]},
@@ -2972,6 +3018,7 @@ function PVEFightMgrServer:Over(stage, winer)
     if self.cbOver then
         self:cbOver(winer, self.isForceOver)
     end
+
 end
 
 function PVEFightMgrServer:Destroy()

@@ -32,7 +32,7 @@ function RefreshDownTime()
     if count.day>0 or count.hour>0 or count.minute>0 or count.second>60 then
         CSAPI.SetText(txtTime,string.format("%s%s",LanguageMgr:GetByID(60001),LanguageMgr:GetByID(34039,count.day,count.hour,count.minute)));
     else
-        CSAPI.SetText(txtTime,string.format("%s%s",LanguageMgr:GetByID(60001),LLanguageMgr:GetByID(1062,count.second)));
+        CSAPI.SetText(txtTime,string.format("%s%s",LanguageMgr:GetByID(60001),LanguageMgr:GetByID(1062,count.second)));
     end
     if endTime<=0 then--回到主界面并提示
         HandlerOver();

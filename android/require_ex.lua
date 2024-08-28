@@ -194,13 +194,15 @@ function ReloadFiles(filesArr)
         -- LogDebug("beg")
         -- TimerHelper:PrintTime(CURRENT_TIME, "CURRENT_TIME: " .. nFile .. ":")
 
-        if IsRelease then
-            if nFile ~= 'DBCreater.CreateTables' and nFile ~= 'DBCreater.CreateLogTables' then
-                xpcall(ReloadLua, XpcallCB, nFile)
-            end
-        else
-            xpcall(ReloadLua, XpcallCB, nFile)
-        end
+        xpcall(ReloadLua, XpcallCB, nFile)
+
+        -- if IsRelease then
+        --     if nFile ~= 'DBCreater.CreateTables' and nFile ~= 'DBCreater.CreateLogTables' then
+        --         xpcall(ReloadLua, XpcallCB, nFile)
+        --     end
+        -- else
+        --     xpcall(ReloadLua, XpcallCB, nFile)
+        -- end
 
         -- TimerHelper:PrintTime(CURRENT_TIME, "CURRENT_TIME: " .. nFile .. ":")
         -- LogDebug("end")

@@ -30,10 +30,7 @@ end
 function Refresh(data)
     isSignIn = data.isSingIn ~= nil and data.isSingIn or false
     key = data.key
-    if isSignIn then
-        SignInMgr:AddCacheRecord(key)
-    end
-    CSAPI.SetGOActive(mask, isSignIn)
+    -- CSAPI.SetGOActive(mask, isSignIn)
     if (isSignIn) then
         EventMgr.Dispatch(EventType.Activity_Click)
     end
@@ -76,7 +73,7 @@ function SetItems(datas,closeAnim)
             if i < 7 then
                 ResUtil:CreateUIGOAsync("SignInContinue/SignInContinueItem", grids, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(datas[i], curIndex + 1 == i and isSignIn)
+                    lua.Refresh(datas[i], curIndex == i and isSignIn)
                     lua.SetPos(pos)
                     lua.ShowAnim()
                     table.insert(items, lua)
@@ -84,14 +81,14 @@ function SetItems(datas,closeAnim)
             else
                 ResUtil:CreateUIGOAsync("SignInContinue/SignInContinueItem2", grids, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(datas[i], curIndex + 1 == i and isSignIn)
+                    lua.Refresh(datas[i], curIndex == i and isSignIn)
                     lua.SetPos(pos)
                     lua.ShowAnim()
                     table.insert(items, lua)
                 end)
             end
         else
-            items[i].Refresh(datas[i], curIndex + 1 == i and isSignIn)
+            items[i].Refresh(datas[i], curIndex == i and isSignIn)
             items[i].SetPos(pos)
             if not closeAnim then
                 items[i].ShowAnim()
@@ -102,12 +99,18 @@ end
 
 -- 签到回调
 function ESignCB(proto)
+
     local _key = SignInMgr:GetDataKey(proto.id, proto.index)
     if (key ~= _key) then
         return
     end
+    if proto.isOk == false then
+        EventMgr.Dispatch(EventType.Acitivty_List_Pop)
+        return
+    end
+    SignInMgr:AddCacheRecord(key)
     isSignIn = false
-    CSAPI.SetGOActive(mask, false)
+    -- CSAPI.SetGOActive(mask, false)
     SetDatas(true)
     isClick = false
     ActivityMgr:SetListData(ActivityListType.SignInContinue, {

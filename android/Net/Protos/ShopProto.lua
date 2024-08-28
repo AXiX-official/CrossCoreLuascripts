@@ -17,10 +17,10 @@ function ShopProto:GetShopInfosAdd(proto)
 end
 
 --购买物品
-function ShopProto:Buy(cfgId,time,sum,useCost,callBack)
+function ShopProto:Buy(cfgId,time,sum,useCost,voucherList,callBack)
     self.buyCallBack=callBack;
     useCost=useCost==nil and "price_1" or useCost;
-    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost}}
+    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost,vouchers=voucherList}}
 	NetMgr.net:Send(proto);
     UIUtil:AddNetWeakHandle();
 end

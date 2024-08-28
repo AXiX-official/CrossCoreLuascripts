@@ -36,7 +36,7 @@ end
 function Refresh(data)
     local isSingIn = data.isSingIn ~= nil and data.isSingIn or false
     key = data.key
-    CSAPI.SetGOActive(mask, isSingIn)
+    -- CSAPI.SetGOActive(mask, isSingIn)
     if (isSingIn) then
         EventMgr.Dispatch(EventType.Activity_Click)
     end
@@ -60,16 +60,18 @@ end
 
 -- 签到回调
 function ESignCB(proto)
-    if proto.isOk == false then
-        return
-    end
-    SignInMgr:AddCacheRecord(key)
     -- if(isClick) then return end
     local _key = SignInMgr:GetDataKey(proto.id, proto.index)
     if (key ~= _key) then
         return
     end
-    CSAPI.SetGOActive(mask, false)
+    if proto.isOk == false then
+        EventMgr.Dispatch(EventType.Acitivty_List_Pop)
+        return
+    end
+    SignInMgr:AddCacheRecord(key)
+
+    -- CSAPI.SetGOActive(mask, false)
     -- layout:UpdateList()
     SetDatas()
     isClick = false

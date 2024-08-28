@@ -67,4 +67,8 @@ function this:GetFrameId()
 	return self.data.icon_frame 
 end
 
+function this:GetSex()
+	return self.data.sel_card_ix
+end
+
 return this 

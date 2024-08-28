@@ -39,7 +39,9 @@ end
 function this.OnClickGrid(tab)
 	if tab.data:IsNew() then
 		EquipProto:SetIsNew({tab.data:GetID()}, function()
-			tab.SetNewState(tab.data:IsNew());
+			if tab and tab.data then
+				tab.SetNewState(tab.data:IsNew());
+			end
 		end);
 	end
 	remouldData = tab.data

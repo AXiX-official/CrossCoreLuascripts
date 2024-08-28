@@ -42,9 +42,6 @@ function Refresh(data)
     end
     SetDatas()
     SetTime()
-    if isSingIn then
-        SignInMgr:AddCacheRecord(key)
-    end
 end
 
 -- 如果是12或者倒数12位，则额外加多2个空数据填位
@@ -68,6 +65,12 @@ function ESignCB(proto)
     if (key ~= _key) then
         return
     end
+    if proto.isOk == false then
+        EventMgr.Dispatch(EventType.Acitivty_List_Pop)
+        return
+    end
+    SignInMgr:AddCacheRecord(key)
+
     CSAPI.SetGOActive(mask, false)
     -- layout:UpdateList()
     SetDatas()

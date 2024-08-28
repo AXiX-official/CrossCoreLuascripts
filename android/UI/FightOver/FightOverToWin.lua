@@ -194,9 +194,13 @@ function SetTitleIcon()
     end
     if sceneType == SceneType.PVE then --十二星宫
         local cfg =Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-        if cfg and cfg.type == eDuplicateType.StarPalace and TotalBattleMgr:IsFighting() then
+        if cfg then 
+            if cfg.type == eDuplicateType.StarPalace and TotalBattleMgr:IsFighting() then
             imgName = isDirll and "dirll_end" or "lose"
+            elseif cfg.type == eDuplicateType.StoryActive and cfg.diff and cfg.diff == 4 then
+                -- imgName = "dirll_end"
         end
+    end
     end
     CSAPI.LoadImg(topImg, "UIs/FightOver/img_" .. imgName .. ".png", true, nil, true)
 end
@@ -551,6 +555,8 @@ end
 ------------------------------------主线/副本------------------------------------
 function SetPVEPanel()
     local dungeonType = DungeonMgr:GetCurrDungeonType()
+    local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    local isSpecial = cfgDungeon and cfgDungeon.diff and cfgDungeon.diff == 4
     if dungeonType == eDuplicateType.Tower then
         if DungeonMgr:IsCurrDungeonComplete() then
             CSAPI.SetGOActive(titleObj, true)
@@ -575,11 +581,15 @@ function SetPVEPanel()
         CSAPI.SetGOActive(totalObj,isFight)
         SetTotalBattlePanel()
         return
+    elseif dungeonType == eDuplicateType.StoryActive and isSpecial then
+        CSAPI.SetGOActive(titleObj,true)
+        CSAPI.SetGOActive(damageObj,true)
+        SetPlotSpecialPanle()
+        return
     end
 
-    CSAPI.SetGOActive(titleObj, true)
-    local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
     local isDanger = cfgDungeon and cfgDungeon.diff and cfgDungeon.diff == 3
+    CSAPI.SetGOActive(titleObj, true)
     CSAPI.SetGOActive(starObj, dungeonType ~= eDuplicateType.TaoFa and not isDanger)
     CSAPI.SetGOActive(taskObj, dungeonType ~= eDuplicateType.TaoFa and not isDanger)
 
@@ -819,7 +829,17 @@ function SetTotalBattlePanel()
         end
     end
 end
-
+------------------------------------钓鱼佬------------------------------------
+function SetPlotSpecialPanle()
+    local turn = data.bIsWin and FightClient:GetTurn() + 1 or FightClient:GetTurn()
+    CSAPI.SetText(txtRound, turn .. "")
+    --title
+    LanguageMgr:SetText(txtTitle,25036)
+    local score = FightClient:GetTotalDamage() or 0
+    CSAPI.SetText(txtDamage,score.."")
+    local maxScore = data.totalDamage or 0
+    CSAPI.SetGOActive(txt_topDamage, score>=maxScore)
+end
 ------------------------------------军演------------------------------------
 function SetPVPPanel()
     -- CSAPI.SetGOActive(roundObj, true)

@@ -231,4 +231,12 @@ function this:GetDyEndTime()
     return self.dyEndTime
 end
 
+--是否已满足开启条件
+function this:CheckConditions()
+    if(self:GetCfg().conditions) then 
+        return MenuMgr:CheckConditionIsOK(self:GetCfg().conditions)
+    end 
+    return true 
+end
+
 return this

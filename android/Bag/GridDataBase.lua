@@ -77,4 +77,13 @@ function this:GetExpiry()
 	return nil
 end
 
+--是否是限时物品
+function this:IsExipiryType()
+	return false
+end
+
+function this:GetExpiryTips()
+	return nil
+end
+
 return this

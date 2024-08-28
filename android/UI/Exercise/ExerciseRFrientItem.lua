@@ -49,7 +49,7 @@ function Refresh(_data)
     StringUtil:SetColorByName(txtState, str, colorName)
     CSAPI.LoadImg(imgState, "UIs/ExerciseR/" .. imgName .. ".png", true, nil, true)
     --head
-    UIUtil:AddHeadByID(hfParent, 0.7, data:GetFrameId(), data:GetIconId())
+    UIUtil:AddHeadByID(hfParent, 0.7, data:GetFrameId(), data:GetIconId(),data:GetSex())
 end
 
 -- function AddCRoleItem()

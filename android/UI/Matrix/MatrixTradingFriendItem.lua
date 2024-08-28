@@ -32,7 +32,7 @@ function Refresh(_data, _fid, _cb)
     CSAPI.SetGOActive(btnOk, not isSelect)
     CSAPI.SetGOActive(btnL, isSelect)
     -- head
-    UIUtil:AddHeadByID(hfParent, 0.8, data:GetFrameId(), data:GetIconId())
+    UIUtil:AddHeadByID(hfParent, 0.8, data:GetFrameId(), data:GetIconId(),data:GetSex())
 end
 
 -- function SetIcon(iconName)

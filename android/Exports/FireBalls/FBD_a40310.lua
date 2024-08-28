@@ -10,7 +10,7 @@ local this =
 {effect="cast2_hit",delay=11000,time=3000,type=0,pos_ref={ref_type=1}},
 {delay=5828,time=14000,type=0,cue_sheet="cv/Noctilucent.acb",cue_name="Noctilucent_12",cue_feature=1},
 {delay=12000,time=5000,type=1,hit_type=0,hits={0,300,600,900}},
-{delay=8825,time=14000,type=0,cue_sheet="cv/Noctilucent.acb",cue_name="Noctilucent_12_b",volume_coeff=98,cue_feature=1},
+{delay=8825,time=14000,type=0,cue_sheet="cv/Noctilucent.acb",cue_name="Noctilucent_12_b",cue_feature=1},
 {effect="cast2_eff",time=14000,type=0,pos_ref={ref_type=1,offset_row=-250},cue_sheet="fight/effect/eleventh.acb",cue_name="Noctilucent_attack_skill_02"}
 },
 [-686817241]={

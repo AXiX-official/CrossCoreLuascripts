@@ -123,6 +123,7 @@ end
 function Remove()    
    TryResetMainCamera();
    ResetPlaceCharacters();
+   CSAPI.SetCameraRenderTarget(gameObject);
    CSAPI.RemoveGO(gameObject);    
 
    if(data)then

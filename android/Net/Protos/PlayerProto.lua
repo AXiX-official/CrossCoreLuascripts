@@ -390,9 +390,9 @@ function PlayerProto:SetPlrName(data, callBack)
 end
 
 function PlayerProto:SetPlrNameRet(proto)
-    PlayerClient:SetPanelId(proto.panel_id)
+    --PlayerClient:SetPanelId(proto.panel_id)
     PlayerClient:SetIconId(proto.icon_id)
-    PlayerClient:SetLastRoleID(proto.role_panel_id)
+    --PlayerClient:SetLastRoleID(proto.role_panel_id)
     PlayerClient:SetModifyName(false);
     if self.setNameCallBack then
         self.setNameCallBack(proto);
@@ -429,8 +429,6 @@ function PlayerProto:DailyData(proto)
 
     end
 
-    -- 清空界面弹出记录
-    ActivityMgr:ClearSavePanel()
 
     -- 每日刷新 --放到SystemProto:ActiveZeroNotice
     -- EventMgr.Dispatch(EventType.Update_Everyday)
@@ -1092,7 +1090,7 @@ function PlayerProto:ChangeCardCfgId(_cid, _cfgid)
     NetMgr.net:Send(proto)
 end
 function PlayerProto:ChangeCardCfgIdRet(proto)
-	LanguageMgr:ShowTips(3014)
+    LanguageMgr:ShowTips(3014)
 end
 
 -- 切换卡牌形态
@@ -1105,7 +1103,7 @@ function PlayerProto:ChangeCardTcSkill(_cid, _oldSkillId, _useSkillId)
     NetMgr.net:Send(proto)
 end
 function PlayerProto:ChangeCardTcSkillRet(proto)
-	LanguageMgr:ShowTips(3014)
+    LanguageMgr:ShowTips(3014)
 end
 
 -- 更换头像框
@@ -1125,7 +1123,7 @@ function PlayerProto:CardChangeOpenNotice(proto)
     RoleMgr:AddJieJinDatas(proto)
 end
 
---活动入场卷购买
+-- 活动入场卷购买
 function PlayerProto:BuyArachnidCount(_buy_cnt)
     local proto = {"PlayerProto:BuyArachnidCount", {
         buy_cnt = _buy_cnt
@@ -1137,7 +1135,6 @@ end
 function PlayerProto:BuyArachnidCountRet(proto)
     DungeonMgr:SetArachnidCount(proto)
 end
-
 
 -- 设置头像框
 function PlayerProto:SetIcon(_icon_id)
@@ -1211,11 +1208,16 @@ end
 
 -- 修改主角返回
 function PlayerProto:ChangePlrShpaeRet(proto)
-    PlayerClient:SetPanelId(proto.panel_id)
-    PlayerProto:SetIconRet(proto.icon_id) -- 头像
-    PlayerProto:SetLastRoleID(proto.role_panel_id) -- 头像
-
-    EventMgr.Dispatch(EventType.Player_Select_Card)
+    --PlayerClient:SetPanelId(proto.panel_id)
+    PlayerClient:SetIconId(proto.icon_id)
+    --PlayerClient:SetLastRoleID(proto.role_panel_id)
+    if self.changePlrShpaeCallBack then
+        self.changePlrShpaeCallBack(proto);
+        self.changePlrShpaeCallBack = nil
+    end
+    --更换队长（角色、看板）
+    CRoleMgr:ChangeLeader(proto.ocfgid)
+    CRoleDisplayMgr:ChangeLeader(proto.ocfgid)
 end
 
 -- 回归玩家判断(服务器推送)
@@ -1252,22 +1254,22 @@ function PlayerProto:GetSpecialDropsInfoRet(proto)
     PlayerMgr:UpdateSpecialDrops(proto)
 end
 
--- 修改背景 
-function PlayerProto:SetBackground(id, cb)
-    self.SetBackgroundCB = cb
-    local proto = {"PlayerProto:SetBackground", {
-        background_id = id
-    }}
-    NetMgr.net:Send(proto)
-end
-function PlayerProto:SetBackgroundRet(proto)
-    PlayerClient:SetBG(proto.background_id)
-    EventMgr.Dispatch(EventType.Player_Select_BG)
-    if (self.SetBackgroundCB) then
-        self.SetBackgroundCB(proto.background_id)
-    end
-    self.SetBackgroundCB = nil
-end
+-- -- 修改背景 
+-- function PlayerProto:SetBackground(id, cb)
+--     self.SetBackgroundCB = cb
+--     local proto = {"PlayerProto:SetBackground", {
+--         background_id = id
+--     }}
+--     NetMgr.net:Send(proto)
+-- end
+-- function PlayerProto:SetBackgroundRet(proto)
+--     PlayerClient:SetBG(proto.background_id)
+--     EventMgr.Dispatch(EventType.Player_Select_BG)
+--     if (self.SetBackgroundCB) then
+--         self.SetBackgroundCB(proto.background_id)
+--     end
+--     self.SetBackgroundCB = nil
+-- end
 
 --十二宫获取挑战开启信息
 function PlayerProto:GetStarPalaceInfo()
@@ -1320,4 +1322,65 @@ function PlayerProto:TakeColletRewardRet(proto)
         self.TakeColletRewardCB(proto.id)
     end
     self.TakeColletRewardCB = nil 
+end
+
+--活动排行榜
+function PlayerProto:GetRank(page,sid)
+    local proto = {"PlayerProto:GetRank", {nPage=page,rank_type=sid}}
+    NetMgr.net:Send(proto)
+end
+
+--活动排行榜返回
+function PlayerProto:GetRankRet(proto)
+    DungeonActivityMgr:GetRankRet(proto)
+end
+
+function PlayerProto:GetOpenConditionTime()
+    local proto = {"PlayerProto:GetOpenConditionTime", {}}
+    NetMgr.net:Send(proto)
+end
+
+function PlayerProto:GetOpenConditionTimeRet(proto)
+    PlayerMgr:SetOpenTimes(proto)
+end 
+
+--改性
+function PlayerProto:ChangePlrShpae(data, callBack)
+    local proto = {"PlayerProto:ChangePlrShpae",data}
+    NetMgr.net:Send(proto)
+    self.changePlrShpaeCallBack = callBack
+end
+
+--双人看板
+function PlayerProto:GetNewPanel(b)
+    self.GetNewPanel_Loging = b 
+    local proto = {"PlayerProto:GetNewPanel"}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetNewPanel(_panels,_setting,_random,_using,_cb)
+    self.SetNewPanelCB = _cb 
+    local proto = {"PlayerProto:SetNewPanel",{panels = _panels,	setting=_setting,random=_random,using = _using}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:GetNewPanelRet(proto)
+    local old_curData = CRoleDisplayMgr:GetCopyCurData()
+    CRoleDisplayMgr:GetNewPanelRet(proto)
+    if(self.GetNewPanel_Loging) then
+        CRoleDisplayMgr:LoginCheck()
+    else 
+        CRoleDisplayMgr:NormalCheck1(old_curData)
+        if(self.SetNewPanelCB) then 
+            self.SetNewPanelCB(old_curData)
+        end
+        self.SetNewPanelCB = nil 
+    end 
+    self.GetNewPanel_Loging = nil 
+    EventMgr.Dispatch(EventType.CRoleDisplayMain_Change)
+end
+function PlayerProto:SetNewPanelUsing(_using)
+    local proto = {"PlayerProto:SetNewPanelUsing",{using = _using}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetNewPanelUsingRet(proto)
+    CRoleDisplayMgr:SetNewPanelUsingRet(proto)
 end

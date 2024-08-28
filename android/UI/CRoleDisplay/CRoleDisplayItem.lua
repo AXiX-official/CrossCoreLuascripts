@@ -20,7 +20,6 @@ function Refresh(_data, _curLIndex, _curCRoleID)
     if (select.activeSelf ~= isSelect) then
         CSAPI.SetGOActive(select, isSelect)
     end
-
     -- use 
     isUse = false
     if (_curCRoleID and _curCRoleID == data:GetSkinID()) then

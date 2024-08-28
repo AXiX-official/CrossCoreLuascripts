@@ -559,6 +559,9 @@ function FightProto:DuplicateOver(proto)
         if proto.nPlayerExp then
             self.fightOverData.nPlayerExp = proto.nPlayerExp
         end
+        if self.lastFightOverData.hisMaxDamage then
+            self.fightOverData.totalDamage = self.lastFightOverData.hisMaxDamage
+        end
         self.lastFightOverData = nil
     end
 
@@ -711,7 +714,7 @@ function FightProto:InBattle(proto)
                 CSAPI.OpenView("Dialog", dialogdata);
             else
                 CSAPI.OpenView("Prompt", {
-                    content = StringConstant.data_error,
+                    content = LanguageMgr:GetByID(1072),
                     okCallBack = function()
                         CSAPI.Quit();
                     end
@@ -790,7 +793,7 @@ function FightProto:ShowRestoreFightDialog(isShow)
     -- LogError(id);
     -- end
     CSAPI.OpenView("DialogNoTop", {
-        content = StringConstant.fight_restore,
+        content = LanguageMgr:GetTips(8022),
         okCallBack = function()
             -- if data then
             -- 	local proto = {"FightProtocol:RestoreFight", {nCmdIndex = 0}}

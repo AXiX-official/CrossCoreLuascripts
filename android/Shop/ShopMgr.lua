@@ -553,6 +553,16 @@ function this:GetFixedUpdateTime(updateType)
 	return 0;
 end
 
+--设置当前跳转的折扣券ID
+function this:SetJumpVoucherID(id)
+	self.jumpVoucherID=id;
+end
+
+--返回当前跳转的折扣券ID
+function this:GetJumpVoucherID()
+	return self.jumpVoucherID;
+end
+
 function this:Clear()
 	EventMgr.RemoveListener(EventType.Player_Update,this.OnPlayerUpdate)
 	self.records = {};
@@ -565,6 +575,7 @@ function this:Clear()
 	self.storeVerInfo=nil;
 	self.pagesNewInfo=nil;
 	self.shopOpenTimes={};
+	self.jumpVoucherID=nil;
 end
 
 return this; 

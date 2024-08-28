@@ -10,9 +10,14 @@ local isShowCard=false;
 local addBuffs=nil;
 local commodity=nil;
 local commodityType=nil;
+local voucherItem=nil;
+local voucherList=nil;
+local realPrice=0;
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV")
 	layout:Init("UIs/Shop/ShopPackItem",LayoutCallBack,true)
+	local go= ResUtil:CreateUIGO("Shop/VoucherDropItem",vObj.transform);
+    voucherItem=ComUtil.GetLuaTable(go);
 	InitListener();
 end
 
@@ -23,6 +28,7 @@ function InitListener()
 	eventMgr:AddListener(EventType.Shop_MonthCard_DaysChange,OnMonthCardDaysChange)
 	eventMgr:AddListener(EventType.SDK_QRPay_Over,OnQROver)
 	eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopRefresh)
+    eventMgr:AddListener(EventType.Shop_PayVoucher_Change, OnVoucherChange);
 end
 
 function OnDestroy()
@@ -48,32 +54,7 @@ function OnOpen()
 	-- 根据当前物品数量进行初始化
 	if commodity then
 		local onceMax=commodity:GetOnecBuyLimit() == - 1 and 99 or commodity:GetOnecBuyLimit(); --单次购买上限
-		local normalPrice=commodity:GetPrice();
-		--其余价格显示
-		if normalPrice==nil then --免费
-			CSAPI.SetGOActive(txt_free,true);
-			CSAPI.SetGOActive(txt_nPrice,false);
-			CSAPI.SetGOActive(hPrice,false);
-			CSAPI.SetGOActive(discountObj,false);
-		else
-			CSAPI.SetGOActive(txt_free,false);
-			CSAPI.SetGOActive(txt_nPrice,true);
-			local discount=commodity:GetNowDiscount();
-			if discount~=1 then
-				local realPrice=commodity:GetRealPrice();
-				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
-				SetPrice(realPrice[1].id,realPrice[1].num,nPriceIcon,txt_nPrice);
-				CSAPI.SetGOActive(hPrice,true)
-				CSAPI.SetGOActive(discountObj,true);
-				local dis=math.floor((1-discount)*100);
-				CSAPI.SetText(txt_discount,"-"..dis.."%");
-			else
-				SetPrice(normalPrice[1].id,normalPrice[1].num,nPriceIcon,txt_nPrice);
-				CSAPI.SetGOActive(hPrice,false)
-				CSAPI.SetGOActive(discountObj,false);
-			end
-		end
-		
+		RefreshPrice();
 		--当前剩余数量
 		local num=commodity:GetNum();
 		-- CSAPI.SetGOActive(txt_limit,num~=-1)
@@ -124,8 +105,67 @@ function OnOpen()
 		-- 	CSAPI.SetText(txt_payTips,LanguageMgr:GetTips(15106,commodity:GetName()));
 		-- end
 		-- Log(string.format(LanguageMgr:GetByID(18014),currPrice,currMoneyName,commodity:GetName()));
+		local isShow=false;
+        if voucherItem~=nil then
+            voucherItem.Init(commodity,1,true);
+            if voucherItem.GetOptionsLength()>0 then
+                isShow=true;
+            end
+        end
+        SetVoucherItem(isShow)
 	else
 		UIUtil:ShowAction(childNode,nil,UIUtil.active2);
+	end
+end
+
+function SetVoucherItem(isShow)
+    if isShow then
+        CSAPI.SetRTSize(vsv,680,258);
+        CSAPI.SetAnchor(content,311,122);
+        CSAPI.SetGOActive(vObj,isShow);
+    else
+        CSAPI.SetRTSize(vsv,680,338);
+        CSAPI.SetAnchor(content,311,202);
+        CSAPI.SetGOActive(vObj,isShow);
+    end
+end
+
+function RefreshPrice()
+	local normalPrice=commodity:GetPrice();
+	--其余价格显示
+	if normalPrice==nil or (normalPrice and normalPrice[1].num==0) then --免费
+		CSAPI.SetGOActive(txt_free,true);
+		CSAPI.SetGOActive(txt_nPrice,false);
+		CSAPI.SetGOActive(hPrice,false);
+		CSAPI.SetGOActive(discountObj,false);
+	else
+		CSAPI.SetGOActive(txt_free,false);
+		CSAPI.SetGOActive(txt_nPrice,true);
+		local discount=commodity:GetNowDiscount();
+		if discount~=1 then
+			local rPrice=commodity:GetRealPrice();
+			if voucherList then
+				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				SetPrice(rPrice[1].id,realPrice,nPriceIcon,txt_nPrice);
+			else
+				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				SetPrice(rPrice[1].id,rPrice[1].num,nPriceIcon,txt_nPrice);
+			end
+			CSAPI.SetGOActive(hPrice,true)
+			CSAPI.SetGOActive(discountObj,true);
+			local dis=math.floor((1-discount)*100);
+			CSAPI.SetText(txt_discount,"-"..dis.."%");
+		else
+			if voucherList then --折扣券
+				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				SetPrice(normalPrice[1].id,realPrice,nPriceIcon,txt_nPrice);
+				CSAPI.SetGOActive(hPrice,true)
+			else
+				SetPrice(normalPrice[1].id,normalPrice[1].num,nPriceIcon,txt_nPrice);
+				CSAPI.SetGOActive(hPrice,false)
+			end
+			CSAPI.SetGOActive(discountObj,false);
+		end
 	end
 end
 
@@ -231,7 +271,7 @@ end
 
 --点击购买
 function OnClickPay()
-	ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,OnSuccess);
+	ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,voucherList,OnSuccess);
 	-- Close();
 	-- local priceInfo=commodity:GetRealPrice();
 	-- local channelType=CSAPI.GetChannelType();
@@ -290,6 +330,20 @@ function OnQROver()
 	Close();
 end
 
+function OnVoucherChange(ls)
+    voucherList=ls;
+    if voucherList~=nil then
+        realPrice=0;
+        local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),1,PlayerClient:GetLv());
+        if isOk and res then
+            realPrice=res[1][2];
+        end
+    else
+        realPrice=nil;
+    end
+    RefreshPrice();
+end
+
 function ShowBuffTips()
 	if addBuffs and next(addBuffs) then
 		for k,v in ipairs(addBuffs) do
@@ -324,5 +378,7 @@ vsv=nil;
 -- txt_payTips=nil;
 btn_pay=nil;
 view=nil;
+voucherList=nil;
+voucherItem=nil;
 end
 ----#End#----

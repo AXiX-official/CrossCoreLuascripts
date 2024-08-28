@@ -2,9 +2,9 @@
 local this = 
 {
 [1310282141]={
-{effect="cast2_eff",effect_pack="g91300",time=15000,type=0,pos_ref={ref_type=6}},
+{effect="cast2_eff",time=13800,type=0,pos_ref={ref_type=6}},
 {time=15000,type=1,hit_type=1,hits={6000,7000,8000,12000}},
-{effect="cast2_hit",effect_pack="g91300",time=15000,type=0,pos_ref={ref_type=1,offset_row=-250}}
+{effect="cast2_hit",time=13800,type=0,pos_ref={ref_type=1,offset_row=-250}}
 },
 [-686817241]={
 {effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6}},

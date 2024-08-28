@@ -238,7 +238,7 @@ function SetMonsterInfos(monster)
         if cfg==nil then
             LogError("未找到技能配置："..tostring(v))
         end
-        if cfg then
+        if cfg and cfg.bIsHide~=true then
             if SkillUtil:IsSpecialSkill(cfg.type) and not PlayerClient:IsPassNewPlayerFight() then --如果未通关新手剧情不显示合体技
             else 
                 if cfg.main_type~=SkillMainType.CardSubTalent then
@@ -254,7 +254,7 @@ function SetMonsterInfos(monster)
         if cfg==nil then
             LogError("未找到天赋配置："..tostring(v))
         end
-        if cfg then
+        if cfg and cfg.bIsHide~=true  then
             table.insert(charInfos[2],{cfg=cfg})
         end
     end

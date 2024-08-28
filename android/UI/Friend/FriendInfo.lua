@@ -28,6 +28,10 @@ function this:GetOldName()
 	return self.name or ""
 end
 
+function this:GetSex()
+	return self.sel_card_ix or 1
+end
+
 function this:IsOnLine()
 	return self.is_online or false
 end

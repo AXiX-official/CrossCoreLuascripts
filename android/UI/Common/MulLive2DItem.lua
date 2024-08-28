@@ -11,7 +11,7 @@ local dragTargetPos = nil -- 当前拖放目标位置
 local isDrag = false
 local isHeXie = false -- 和谐了
 local clickCounts = {} -- actions 某段点击次数
-local inter = 1
+local inter = 0.5
 local timer = 0
 
 function Awake()
@@ -42,7 +42,6 @@ function Refresh(_modelId, _posType, _callBack)
     end
     oldModelId = _modelId
     records = {}
-    oldcCfgChild = nil
     if (dragObj) then
         CSAPI.RemoveGO(dragObj)
     end
@@ -95,20 +94,14 @@ end
 
 -- 位置触摸
 function SetTouch()
-    if (Time.time < timer) then
-        return
-    end
-    timer = Time.time + inter
-    
-    if (not needClick) then
-        return
-    end
     touchItems = touchItems or {}
     touchDatas = {}
-    if (cfg and #cfg.item > 0) then
-        for k, v in ipairs(cfg.item) do
-            if (v.sName ~= "in") then
-                table.insert(touchDatas, v)
+    if (needClick) then
+        if (cfg and #cfg.item > 0) then
+            for k, v in ipairs(cfg.item) do
+                if (v.sName ~= "in") then
+                    table.insert(touchDatas, v)
+                end
             end
         end
     end
@@ -117,6 +110,11 @@ end
 
 -- 点击触发
 function TouchItemClickCB(cfgChild)
+    if (Time.time < timer) then
+        return
+    end
+    timer = Time.time + inter
+
     if (isHeXie or isIn or isDrag) then -- or RoleAudioPlayMgr:GetIsPlaying()) then
         return
     end
@@ -598,4 +596,17 @@ end
 
 function OnClickMask()
     MissionMgr:DoClickBoard()
+end
+
+function ClearCache()
+    if (l2dGo) then
+        CSAPI.RemoveGO(l2dGo)
+    end
+    l2dGo = nil
+    if (dragObj) then
+        CSAPI.RemoveGO(dragObj)
+    end
+    dragObj = nil
+    oldModelId = nil
+    records = {}
 end

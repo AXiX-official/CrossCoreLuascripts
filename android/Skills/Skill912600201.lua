@@ -14,13 +14,13 @@ function Skill912600201:DoSkill(caster, target, data)
 end
 -- 攻击结束
 function Skill912600201:OnAttackOver(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end

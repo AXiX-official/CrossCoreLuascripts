@@ -1,8 +1,7 @@
 --复活界面
 
 function Awake()
-    CSAPI.SetText(goTitle,StringConstant.fight_title_relive);
-       
+    LanguageMgr:SetText(goTitle,1086)--CSAPI.SetText(goTitle,StringConstant.fight_title_relive);
 
     local deads = GetReliveList();--CharacterMgr:GetDeadsByTeam(TeamUtil.ourTeamId);
     --LogError(deads);

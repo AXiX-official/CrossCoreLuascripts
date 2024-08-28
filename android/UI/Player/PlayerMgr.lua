@@ -9,6 +9,7 @@ end
 
 function this:Clear()
 	self.dropInfos = {}
+	self.openTimes = {}
 end
 
 
@@ -37,6 +38,8 @@ function this:Sign(_sign)
 	NetMgr.net:Send(proto)
 end
 
+
+--[[
 --修改模型
 function this:ChangeIcon(_panel_id, _icon_id,_cb)
 	self.ChangeIconCB = _cb 
@@ -55,8 +58,7 @@ function this:ChangeIconRet(proto)
 	self.ChangeIconCB = nil 
 
 	LanguageMgr:ShowTips(27002)
-end
-
+]]
 
 function this:PlrPaneInfoRet(proto)
 	--self.data = proto.info
@@ -98,6 +100,18 @@ function this:GetSpecialDrop(goodId)
 	return self.dropInfos[goodId] or 0
 end
 
+---------------------------------------------目标功能开启时间---------------------------------------------
+function this:SetOpenTimes(proto)
+	if proto and proto.times and #proto.times >0 then
+		for i, v in ipairs(proto.times) do
+			self.openTimes[v.first] = v.second
+		end
+	end
+end
+
+function this:GetOpenTime(id)
+	return self.openTimes[id] or 0
+end
 
 return this
 

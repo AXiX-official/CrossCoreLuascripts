@@ -119,6 +119,10 @@ function SetRed()
             isRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower})
         elseif type == SectionActivityType.Plot then
             isRed = MissionMgr:CheckRed({eTaskType.Story})
+            if not isRed and sectionData:GetExploreId() then
+                local exData = ExplorationMgr:GetExData(sectionData:GetExploreId())
+                isRed = exData and exData:HasRevice() or false
+            end
         elseif type == SectionActivityType.TaoFa then
             isRed = MissionMgr:CheckRed({eTaskType.DupTaoFa})
         elseif type == SectionActivityType.Rogue then

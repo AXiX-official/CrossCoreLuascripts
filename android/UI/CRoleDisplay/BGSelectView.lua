@@ -1,6 +1,5 @@
 -- 选择角色
 local BGSelectData = require("BGSelectData")
-local curID = nil
 
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
@@ -23,24 +22,26 @@ function LayoutCallBack(index)
         local _data = curDatas[index]
         lua.SetIndex(index)
         lua.SetClickCB(ItemClickCB)
-        lua.Refresh(_data, curID)
+        lua.Refresh(_data, c_data:GetBG(), old_c_data:GetBG())
     end
 end
 
 function ItemClickCB(_data)
-    if (curID ~= _data:GetID()) then
-        curID = _data:GetID()
-        SetBGFunc(curID, false)
+    if (c_data:GetBG() ~= _data:GetID()) then
+        c_data:GetRet().bg = _data:GetID()
+        OnClickBGSelectViewCB(3, false)
         layout:UpdateList()
         SetBtn(_data)
     end
 end
 
-function OnOpen()
-    SetBGFunc = data
-    useID = PlayerClient:GetBG()
-    curID = useID
+function SetClickCB(_CB)
+    OnClickBGSelectViewCB = _CB
+end
 
+function Refresh(_data)
+    old_c_data = CRoleDisplayMgr:GetCopyData(_data) -- 缓存一份
+    c_data = _data
     RefreshPanel()
 end
 
@@ -66,40 +67,49 @@ function InitData()
     end)
     layout:IEShowList(#curDatas)
 end
+
+function SetBtn(_data)
+    local curData = _data or GetCurData()
+    local lanID = curData:IsGet() and "7012" or "7039"
+    LanguageMgr:SetText(txtS1, lanID)
+    LanguageMgr:SetEnText(txtS2, lanID)
+    local alpha = 1
+    if (not curData:IsGet() and curData:GetCfg().jumpID == nil) then
+        alpha = 0.5
+    end
+    btnS_cg.alpha = alpha
+end
+
 function GetCurData()
     for k, v in pairs(curDatas) do
-        if (v:GetID() == curID) then
+        if (v:GetID() == c_data:GetBG()) then
             return v
         end
     end
 end
 
 function OnClickC()
-    SetBGFunc(useID, true)
-    view:Close()
+    local isSame = c_data:GetBG() == old_c_data:GetBG()
+    c_data:GetRet().bg = old_c_data:GetBG() -- 数据还原进入之前的
+    CSAPI.SetGOActive(gameObject, false)
+    OnClickBGSelectViewCB(1, isSame)
 end
 
 function OnClickS()
-    local curData = _data or GetCurData()
-    if (curData:IsGet()) then
-        PlayerProto:SetBackground(curID, function(id)
-            SetBGFunc(curID, true)
-            view:Close()
-        end)
-    else
-        if (curData:GetCfg().jumpID) then
-            JumpMgr:Jump(curData:GetCfg().jumpID)
+    if (btnS_cg.alpha == 1) then
+        local curData = GetCurData()
+        if (curData:IsGet()) then
+            local isSame = c_data:GetBG() == old_c_data:GetBG()
+            CSAPI.SetGOActive(gameObject, false)
+            OnClickBGSelectViewCB(2, isSame)
+        else
+            if (curData:GetCfg().jumpID) then
+                JumpMgr:Jump(curData:GetCfg().jumpID)
+            end
         end
     end
-    -- SetBGFunc(curID,true)
-    -- PlayerClient:SetBG(curID)
-    -- EventMgr.Dispatch(EventType.Player_Select_BG)
-    -- view:Close()
 end
 
-function OnClickMask()
-    -- OnClickC()
-end
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
 function OnClickVirtualkeysClose()
     ---填写退出代码逻辑/接口
@@ -108,14 +118,3 @@ function OnClickVirtualkeysClose()
     end
 end
 
-function SetBtn(_data)
-    local curData = _data or GetCurData()
-    local lanID = curData:IsGet() and "7012" or "7039"
-    LanguageMgr:SetText(txtS1, lanID)
-    LanguageMgr:SetEnText(txtS2, lanID)
-    local alpha = 1
-    if(not curData:IsGet() and curData:GetCfg().jumpID == nil) then 
-        alpha = 0.5 
-    end 
-    btnS_cg.alpha = alpha
-end

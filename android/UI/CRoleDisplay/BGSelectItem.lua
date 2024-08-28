@@ -13,7 +13,7 @@ function SetClickCB(_cb)
 end
 
 -- CfgMenuBg
-function Refresh(_data, _curID)
+function Refresh(_data, _curID,_useID)
     data = _data
     local cfg = data:GetCfg()
     -- icon 
@@ -25,7 +25,7 @@ function Refresh(_data, _curID)
     -- select 
     CSAPI.SetGOActive(select, cfg.id == _curID)
     -- use 
-    CSAPI.SetGOActive(use, cfg.id == PlayerClient:GetBG())
+    CSAPI.SetGOActive(use, cfg.id == _useID)
     -- lock 
     CSAPI.SetGOActive(lock, not data:IsGet())
     -- 

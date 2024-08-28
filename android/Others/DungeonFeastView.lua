@@ -206,10 +206,10 @@ function InitAnimState()
                 --     isHardOpen = false
                 --     curDatas = datas[currLevel]
                 -- end
-                end
             end
         end
     end
+end
 
 function GetCurIndex(_itemId)
     local index = curIndex
@@ -455,17 +455,16 @@ function ShowInfo(item)
             itemInfo.PlayMoveAction = PlayMoveAction
             itemInfo.Show(cfg,type,function ()
                 if item then
-                    itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
+                    itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
                     itemInfo.SetItemPos("Double",-166,-427)
                 end
-            end)
-            itemInfo.CallFunc("Double","SetIsCanvas",true)
+            end)           
             CSAPI.SetRTSize(itemInfo.layout,579,845)
         end)
     else
         itemInfo.Show(cfg,type,function ()
             if item then
-                itemInfo.ShowDangeLevel(item.IsDanger(),item.GetCfgs(),currDanger)
+                itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
                 itemInfo.SetItemPos("Double",-166,-427)
             end
         end)

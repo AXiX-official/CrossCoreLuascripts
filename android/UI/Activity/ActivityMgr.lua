@@ -71,6 +71,7 @@ function this:Clear()
     self.savePanel = {}
     self.isFirst = nil
     -- self.redInfos = nil
+    self.operateList = {}
 end
 
 function this:Init1(webIp, webPort, time)
@@ -239,14 +240,19 @@ function this:InitListOpenState()
                     end
                 end
             elseif v.id == ActivityListType.MissionContinue then
-                if v.taskType and v.taskType == 2 then
+                local info = v.info
+                if info and info[1] and info[1].taskType and info[1].taskType == 2 then
                     isOpen = not MissionMgr:IsAllGuideMissionGet()
                 else
                     isOpen = not MissionMgr:IsAllSevenMissionGet()
                 end
             elseif v.id == ActivityListType.Investment then
-                local targetTime = PlayerClient:GetCreateTime() + (g_InvestmentTimes * 86400)
+                local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
                 isOpen = targetTime > TimeUtil:GetTime()
+            end
+
+            if v.type == ALType.Pay then
+                isOpen = false
             end
 
             if isOpen and v.sTime and v.eTime then -- 时间限制
@@ -261,6 +267,30 @@ function this:InitListOpenState()
     end
 
     self:CheckOpenDatas()
+    self:CheakPopInfos()
+end
+
+function this:CheckOpenDatas()
+    if (self.isFirst and self.datas) then
+        local datas = self.datas[BackstageFlushType.ActiveSkip]
+        if (datas) then
+            local len = #datas
+            for i = len, 1, -1 do
+                if (datas[i]:PanelId() and not self:CheckIsOpen(tonumber(datas[i]:PanelId()))) then
+                    table.remove(datas, i)
+                end
+            end
+        end
+    end
+    EventMgr.Dispatch(EventType.Main_Activity, BackstageFlushType.ActiveSkip)
+end
+
+function this:CheakPopInfos()
+    self.popInfos = FileUtil.LoadByPath("Activity_Pop_Infos.txt") or {}
+end
+
+function this:GetALData(aType)
+    return self.activityListDatas[aType]
 end
 
 function this:GetArr(group)
@@ -269,17 +299,7 @@ function this:GetArr(group)
         for i, v in pairs(self.activityListDatas) do
             if v.isOpen then
                 if not group or (group and group == v.cfg.group) then
-                    local cfg = v.cfg
-                    -- if cfg.sTime and cfg.eTime then
-                    --     local curTime = TimeUtil:GetBJTime()
-                    --     local sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
-                    --     local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
-                    --     if curTime>sTime and curTime<=eTime then
-                    --         table.insert(datas, cfg)
-                    --     end
-                    -- else
-                    table.insert(datas, cfg)
-                    -- end
+                    table.insert(datas, v.cfg)
                 end
             end
         end
@@ -299,124 +319,6 @@ function this:CheckIsOpen(_type)
     return false
 end
 
-function this:CheckOpenDatas()
-    if (self.isFirst and self.datas) then
-        local datas = self.datas[BackstageFlushType.ActiveSkip]
-        if (datas) then
-            local len = #datas
-            for i = len, 1, -1 do
-                if (datas[i]:PanelId() and not self:CheckIsOpen(tonumber(datas[i]:PanelId()))) then
-                    table.remove(datas, i)
-                end
-            end
-        end
-    end
-    EventMgr.Dispatch(EventType.Main_Activity, BackstageFlushType.ActiveSkip)
-end
-
--- 获取活动列表数据
-function this:TryGetData(_type)
-    self.listDatas = self.listDatas or {}
-    if (self.listDatas[_type] == nil) then
-        if (_type == ActivityListType.SignIn) then -- 每日签到
-            local _key = SignInMgr:GetDataKeyByType(RewardActivityType.DateDay)
-            self.listDatas[_type] = {
-                key = _key
-            }
-        elseif self:IsSignInContinue(_type) then -- 连续签到
-            local keys = SignInMgr:GetDataKeysByType(RewardActivityType.Continuous)
-            self.listDatas[_type] = {
-                key = keys[_type]
-            }
-        end
-    end
-    return self.listDatas[_type]
-end
-
-function this:SetListData(_type, _data)
-    self.listDatas = self.listDatas or {}
-    self.listDatas[_type] = _data
-end
-
--- 添加下一个将要打开的界面
-function this:AddNextOpen(_type, _data)
-    local saveType = tonumber(_type)
-    if (tonumber(_type) > 0 and not self.savePanel[saveType]) then
-        if (_data) then
-            self:SetListData(_type, _data)
-        end
-        self.savePanel[saveType] = 1
-        table.insert(self.nextViewTypes, _type)
-    end
-end
-
--- 不记录界面信息的添加
-function this:AddNextOpen2(_type, _data)
-    if (tonumber(_type) > 0) then
-        if (_data) then
-            self:SetListData(_type, _data)
-        end
-        table.insert(self.nextViewTypes, _type)
-    end
-end
-
--- 获取弹出id
-function this:TryGetNextType(_group)
-    if self.nextViewTypes and #self.nextViewTypes > 0 then
-        for i, v in ipairs(self.nextViewTypes) do
-            local _data = self.activityListDatas[v]
-            if _data and _data.cfg and _data.cfg.group == tonumber(_group) then
-                return table.remove(self.nextViewTypes, i)
-            end
-        end
-    end
-    return nil
-end
-
--- 自动弹出
-function this:OpenListView(_type, _data)
-    if (_data) then
-        self:SetListData(_type, _data)
-    end
-    if (not CSAPI.IsViewOpen("ActivityListView")) then
-        self.listView = CSAPI.OpenView("ActivityListView", _type)
-    elseif (not IsNil(self.listView)) then
-        EventMgr.Dispatch(EventType.Activity_OpenQueue, _type)
-    else
-        LogError("弹出界面失败！" .. _type)
-        return
-    end
-end
-
--- 获取开放时间
-function this:GetActivityTime(_type)
-    local cfgs = self:GetOpenActivities()
-    if (cfgs) then
-        for i, v in ipairs(cfgs) do
-            if (v.id == _type) then
-                return {
-                    sTime = v.sTime,
-                    eTime = v.eTime
-                }
-            end
-        end
-    end
-    return nil
-end
-
--- 获取界面可否弹出
-function this:PanelCanJump(_type)
-    local saveType = tonumber(_type)
-    local isJump = false
-    if (not self.savePanel) or (not self.savePanel[saveType]) then
-        isJump = true
-    end
-    return isJump
-end
-
-function this:ClearSavePanel()
-    self.savePanel = {}
-end
 
 -- 检测红点
 function this:CheckRedPointData(type)
@@ -424,11 +326,10 @@ function this:CheckRedPointData(type)
         local cfg = Cfgs.CfgActiveList:GetByID(type)
         if cfg and cfg.group then
             local redData = RedPointMgr:GetData(RedPointType["ActivityList" .. cfg.group])
-            local isRed = redData ~= nil
-            if self:CheckRed(type) and redData == nil then
-                redData = 1
-            end
-            if isRed ~= (redData ~= nil) then
+            local isRed1 = redData ~= nil
+            local isRed2 = self:CheckRed(type)
+            if isRed1 ~= isRed2 then
+                redData = isRed2 and 1 or nil
                 RedPointMgr:UpdateData(RedPointType["ActivityList" .. cfg.group], redData) 
             end
             return
@@ -479,8 +380,9 @@ function this:CheckRed(type)
     elseif type == ActivityListType.NewYearContinue then
         return MissionMgr:CheckNewYearRed()
     elseif type == ActivityListType.SignIn or self:IsSignInContinue(type) then
-        if self.listDatas and self.listDatas[type] then
-            return self.listDatas[type].isSingIn == true
+        local signData = SignInMgr:GetDataByALType(type)
+        if signData and not signData:CheckIsDone() then
+            return true
         end
         return false
     elseif type == ActivityListType.Investment then
@@ -501,16 +403,6 @@ function this:CheckRed(type)
             return BagMgr:GetCount(ITEM_ID.DIAMOND) >= costCount
         end
         return false
-    -- elseif type == ActivityListType.DropAdd then
-    --     local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.DropAdd)
-    --     if cfg and cfg.info then
-    --         for i, v in ipairs(cfg.info) do
-    --             if v.id and DungeonUtil.HasMultiNum(v.id) then
-    --                 return true
-    --             end
-    --         end
-    --     end
-    --     return false
     elseif type == ActivityListType.Exchange then
         local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.Exchange)
         if cfg and cfg.info and cfg.info[1] and cfg.info[1].shopId then
@@ -554,11 +446,111 @@ function this:IsActivityListNull(viewName, group)
 end
 
 function this:IsSignInContinue(type)
-    local _types = {ActivityListType.SignInContinue,ActivityListType.NewYearSignIn,ActivityListType.SignInCommon,ActivityListType.SignInShadowSpider,ActivityListType.SignInGold,ActivityListType.SignInZhongQiu}
-    for i, _type in ipairs(_types) do
-        if type == _type then
+    local cfg = Cfgs.CfgActiveList:GetByID(type)
+    if cfg and cfg.type == ALType.SignInContinue then
+        return true
+    elseif type == ActivityListType.SignInGift then
+        return true
+    end
+    return false
+end
+
+function this:SetOperateActive(aType,info)
+    if self.activityListDatas[aType] then
+        if aType ==ActivityListType.SignInGift and info.payRate then
+            if info.openTime <= TimeUtil:GetTime() and info.closeTime > TimeUtil:GetTime() then
+                self.activityListDatas[aType].isOpen = true
+                self.activityListDatas[aType].sTime = info.openTime
+                self.activityListDatas[aType].eTime = info.closeTime
+            end
+        end
+    end
+end
+
+----------------------------------------界面弹出---------------------------------------
+function this:CheckPopView()
+    if SignInMgr:CheckAll() then
+        CSAPI.OpenView("ActivityListView")
+        return true
+    end
+    return false
+end
+
+-- 获取活动列表数据
+function this:TryGetData(_type)
+    self.listDatas = self.listDatas or {}
+    if (self.listDatas[_type] == nil) then
+        if (_type == ActivityListType.SignIn) then -- 每日签到
+            local _key = SignInMgr:GetDataKeyByType(RewardActivityType.DateDay)
+            self.listDatas[_type] = {
+                key = _key
+            }
+        elseif self:IsSignInContinue(_type) then -- 连续签到
+            local keys = SignInMgr:GetDataKeysByType(RewardActivityType.Continuous)
+            self.listDatas[_type] = {
+                key = keys[_type]
+            }
+        end
+    end
+    return self.listDatas[_type]
+end
+
+function this:SetListData(_type, _data)
+    self.listDatas = self.listDatas or {}
+    self.listDatas[_type] = _data
+end
+
+-- 添加下一个将要打开的界面
+function this:AddNextOpen(_type, _data)
+    if not self:PanelCanJump(_type) then
+        return false
+    end
+    self.popInfos[_type] = self.popInfos[_type] or {}
+    self.popInfos[_type].recordTime = TimeUtil:GetTime()
+    self:AddNextOpen2(_type, _data)
+    return true
+end
+
+-- 不记录界面信息的添加
+function this:AddNextOpen2(_type, _data)
+    if (tonumber(_type) > 0) then
+        if (_data) then
+            self:SetListData(_type, _data)
+        end
+        table.insert(self.nextViewTypes, _type)
+    end
+end
+
+-- 获取弹出id
+function this:TryGetNextType(_group)
+    if self.nextViewTypes and #self.nextViewTypes > 0 then
+        for i, v in ipairs(self.nextViewTypes) do
+            local _data = self.activityListDatas[v]
+            if _data and _data.cfg and _data.cfg.group == tonumber(_group) then
+                return table.remove(self.nextViewTypes, i)
+            end
+        end
+    end
+    return nil
+end
+
+-- 获取界面可否弹出
+function this:PanelCanJump(_type)
+    if not self.popInfos[_type] or not self.popInfos[_type].recordTime or self.popInfos[_type].recordTime <= 0 then
+        return true
+    end
+    local tab1 = TimeUtil:GetTimeHMS(self.popInfos[_type].recordTime)
+    local tab2 = TimeUtil.GetTimeHMS(TimeUtil:GetTime())
+    if tab2.day - tab1.day > 1 then --超过一天
+        return true
+    elseif tab2.day - tab1.day > 0 then --在前后一天
+        if tab1.hour < g_ActivityDiffDayTime then --前一次记录在每日刷新前
+            return true
+        elseif tab2.hour >= g_ActivityDiffDayTime then --当前在每日刷新后
             return true
         end
+    elseif tab1.hour < g_ActivityDiffDayTime and tab2.hour >= g_ActivityDiffDayTime then --在同一天但在每日刷新前后
+        return true
     end
     return false
 end

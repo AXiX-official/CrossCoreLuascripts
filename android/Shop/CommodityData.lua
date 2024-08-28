@@ -20,6 +20,10 @@ function this:SetCfg(cfgId)
     end
 end
 
+function this:GetCfg()
+    return self.cfg;
+end
+
 function this:SetData(data) 
     if data then 
         self.data = data 
@@ -565,6 +569,14 @@ function this:IsOver()
         elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then
             return true;
         end
+    elseif self:GetType() == CommodityItemType.THEME then
+        local good=self:GetCommodityList()[1];
+        local dyVal1=good.data:GetDyVal1();
+        if self:GetNum() ~= -1 and self:GetNum() <= 0 then 
+            return true 
+        elseif dyVal1 then
+           return ShopCommFunc.GetThemeInfo(dyVal1);
+        end
     elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then 
         return true 
     end
@@ -635,8 +647,19 @@ function this:GetEndBuyTips()
       
 		local count=TimeUtil:GetDiffHMS(buyEndTime,TimeUtil.GetTime());
 
-        if self:GetType()==CommodityItemType.Regression then         
-            return LanguageMgr:GetByID(60005,count.day)
+        if self:GetType()==CommodityItemType.Regression then      
+            if count.day>0 then
+                return LanguageMgr:GetByID(60005,count.day)
+            elseif count.hour>0 then
+                return LanguageMgr:GetByID(60009,count.hour)
+            else
+                if count.minute>=1 then
+                    return LanguageMgr:GetByID(60010,count.minute)
+                else
+                    return LanguageMgr:GetByID(60010,"0")
+                end
+            end   
+            return
         end
 --        if self:GetType()==CommodityItemType.Skin then            
             -- if self:GetID()==50007 then
@@ -697,6 +720,22 @@ function this:IsShowImg()
         return self.cfg.isShowImg==1;
     end
     return false;
+end
+
+--是否可以使用的折扣券类型
+function this:CanUseVoucher(type)
+    if self.cfg and self.cfg.canUseVoucher and type then
+        for k,v in ipairs(self.cfg.canUseVoucher) do
+            if v==type then
+                return true;
+            end
+        end
+    end    
+    return false;
+end
+
+function this:GetUseVoucherTypes()
+    return self.cfg and self.cfg.canUseVoucher or nil;
 end
 
 return this

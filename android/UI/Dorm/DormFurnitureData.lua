@@ -219,4 +219,12 @@ function this:GetGridNum()
     return math.ceil(self:GetCfg().scale[1]*self:GetCfg().scale[3])
 end
 
+--地面家具
+function this:IsGroundFurnitrue()
+    if(self:GetCfg().sType==2 or self:GetCfg().sType==3 or self:GetCfg().sType==4 or self:GetCfg().sType==5 or self:GetCfg().sType==6 or self:GetCfg().sType==9) then 
+        return true
+    end 
+    return false 
+end
+
 return this

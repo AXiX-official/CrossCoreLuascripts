@@ -218,7 +218,7 @@ function this:GetMyRank(sid)
         icon_frame = PlayerClient:GetHeadFrame(),
         score = self.myScore[sid] or 0,
         dupId = cfgDungeon and cfgDungeon.id or 0,
-        -- sel_card_ix = PlayerClient:GetSex()
+        sel_card_ix = PlayerClient:GetSex()
         -- nDamage = self:GetDamage()
     }
     local info = TotalBattleRankInfo.New()

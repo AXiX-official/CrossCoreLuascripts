@@ -539,6 +539,13 @@ function this:Init()
 
     self.DungeonSummer = ResIconUtil.New("DungeonSummer") --夏日选关
     self.DungeonTaoFa = ResIconUtil.New("DungeonTaoFa") --讨伐相关
+
+    self.MultBoardSmall = ResIconUtil.New("MultBoardSmall") --多人看板竖图
+
+    --Pet 宠物气泡
+    self.PetEmoji=ResIconUtil.New("PetEmoji");
+    self.PetIcon=ResIconUtil.New("PetIcon");
+
 end
 
 return this;

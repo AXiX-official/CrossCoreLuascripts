@@ -8,22 +8,9 @@ function Skill334005:Init(skillID, card)
 end
 -- 治疗时
 function Skill334005:OnCure(caster, target, data)
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 334015
-	self:AddBuffCount(SkillEffect[334015], caster, self.card, data, 304900101,1,10)
-	-- 8686
-	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
-	-- 334025
-	if self:Rand(3000) then
-		local targets = SkillFilter:Rand(self, caster, target, 4)
-		for i,target in ipairs(targets) do
-			self:CallSkill(SkillEffect[334025], caster, target, data, 304900100+count686)
-		end
-	end
+	-- 334045
+	self:tFunc_334045_334015(caster, target, data)
+	self:tFunc_334045_334035(caster, target, data)
 end
 -- 入场时
 function Skill334005:OnBorn(caster, target, data)
@@ -34,4 +21,86 @@ function Skill334005:OnBorn(caster, target, data)
 	end
 	-- 334005
 	self:AddBuff(SkillEffect[334005], caster, self.card, data, 334005)
+end
+-- 回合开始时
+function Skill334005:OnRoundBegin(caster, target, data)
+	-- 8686
+	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
+	-- 8697
+	local count697 = SkillApi:BuffCount(self, caster, target,3,4,20080)
+	-- 8907
+	if SkillJudger:Greater(self, caster, target, true,count697,0) then
+	else
+		return
+	end
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 334055
+	if self:Rand(5000) then
+		local targets = SkillFilter:HasBuff(self, caster, target, 4,304900306,4)
+		for i,target in ipairs(targets) do
+			self:CallOwnerSkill(SkillEffect[334055], caster, target, data, 304900100+count686)
+		end
+	end
+end
+-- 行动结束2
+function Skill334005:OnActionOver2(caster, target, data)
+	-- 8686
+	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 334063
+	if self:Rand(3000) then
+		local targets = SkillFilter:HasBuff(self, caster, target, 4,304900306,4)
+		for i,target in ipairs(targets) do
+			self:CallOwnerSkill(SkillEffect[334063], caster, target, data, 304900100+count686)
+		end
+	end
+end
+function Skill334005:tFunc_334045_334015(caster, target, data)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8061
+	if SkillJudger:CasterIsFriend(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8686
+	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
+	-- 334025
+	if self:Rand(5000) then
+		local targets = SkillFilter:HasBuff(self, caster, target, 4,304900306,4)
+		for i,target in ipairs(targets) do
+			self:CallSkill(SkillEffect[334025], caster, target, data, 304900100+count686)
+		end
+	end
+	-- 334015
+	self:AddBuffCount(SkillEffect[334015], caster, self.card, data, 304900101,1,10)
+end
+function Skill334005:tFunc_334045_334035(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8686
+	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
+	-- 334025
+	if self:Rand(5000) then
+		local targets = SkillFilter:HasBuff(self, caster, target, 4,304900306,4)
+		for i,target in ipairs(targets) do
+			self:CallSkill(SkillEffect[334025], caster, target, data, 304900100+count686)
+		end
+	end
+	-- 334035
+	self:AddBuffCount(SkillEffect[334035], caster, self.card, data, 304900101,1,10)
 end

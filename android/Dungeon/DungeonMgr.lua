@@ -172,7 +172,7 @@ function this:AddDungeonData(data)
         data.isPass = false;
     end
     dungeonData:SetData(data);
-    self.dungeonDatas = self.dungeonDatas or {}
+	self.dungeonDatas = self.dungeonDatas or {}
     self.dungeonDatas[data.id] = dungeonData;
     self.maxDungeonID = self.maxDungeonID or 0
     if data.id and data.id > self.maxDungeonID then
@@ -1389,9 +1389,40 @@ function this:CheckRedPointData()
 end
 
 function this:IsActivityRed()
-    local isRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower,eTaskType.Story,eTaskType.DupTaoFa})
-    if not isRed then
+    local isRed = self:CheckActivityRed()
+
+    if not isRed then --十二星宫
+        isRed = MissionMgr:CheckRed({eTaskType.StarPalace})
+    end
+
+    if not isRed then --旧爬塔
+        isRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower})
+    end
+
+    if not isRed then --乱序
         isRed = RogueMgr:IsRed()
+    end
+    
+    return isRed
+end
+
+function this:CheckActivityRed()
+    local isRed = false
+    local openInfos = self:GetActiveOpenInfos()
+    if openInfos then
+        for k, info in pairs(openInfos) do
+            if info:IsOpen() and info:CheckIsRed() then
+                local cfg = info:GetCfg()
+                if cfg and cfg.sectionID then
+                    local _isRed = DungeonActivityMgr:CheckRed(cfg.sectionID)
+                    local openCfg = info:GetOpenCfg()
+                    RedPointMgr:UpdateData("ActiveEntry" .. openCfg.id,_isRed and 1 or nil)
+                    if not isRed then
+                        isRed = _isRed
+                    end
+                end
+            end
+        end
     end
     return isRed
 end

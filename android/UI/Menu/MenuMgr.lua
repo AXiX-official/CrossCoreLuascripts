@@ -59,7 +59,7 @@ function this:Clear()
     self.isInit = nil
     EventMgr.RemoveListener(EventType.View_Lua_Opened, this.OnViewOpened)
     EventMgr.RemoveListener(EventType.View_Lua_Closed, this.OnViewClosed)
-    self:MenuBuyClear()
+    --self:MenuBuyClear()
 end
 
 function this.OnViewOpened(viewKey) -- 当界面开启时，执行一次方法，然后清除引用
@@ -472,7 +472,8 @@ function this:CheckConditionIsOK(conditions)
                     if (not b) then
                         local sectionCfg = Cfgs.MainLine:GetByID(_cfg.val)
                         local str = LanguageMgr:GetTips(1010)
-                        local _s = sectionCfg.chapterID .. "" .. sectionCfg.name
+                        local hardStr = sectionCfg.type==2 and LanguageMgr:GetByID(15016) or ""
+                        local _s = hardStr..sectionCfg.chapterID .. "" .. sectionCfg.name
                         lockStr = string.format(str, _s)
                     end
                 end
@@ -491,21 +492,21 @@ function this:CheckConditionIsOK(conditions)
     end
 end
 
-function this:SetPlayInID(_id)
-    self.oldPlayInID = _id
-end
--- 是否与上一次播放的l2d相同
-function this:CheckIsPlayIn(_id)
-    return self.oldPlayInID ~= nil and self.oldPlayInID == _id
-end
+-- function this:SetPlayInID(_id)
+--     self.oldPlayInID = _id
+-- end
+-- -- 是否与上一次播放的l2d相同
+-- function this:CheckIsPlayIn(_id)
+--     return self.oldPlayInID ~= nil and self.oldPlayInID == _id
+-- end
 
-function this:IsFirst()
-    if (not self.isFirst) then
-        self.isFirst = 1
-        return true
-    end
-    return false
-end
+-- function this:IsFirst()
+--     if (not self.isFirst) then
+--         self.isFirst = 1
+--         return true
+--     end
+--     return false
+-- end
 
 -- 活动入口是否为new (如果之前是)
 function this:CheckIsNew(key, isOpen)
@@ -528,6 +529,8 @@ function this:SetIsNew(key, isOpen)
     self.ActiveEntryNews = self.ActiveEntryNews or {}
     self.ActiveEntryNews[key] = isOpen
 end
+
+--[[
 --------------------------------------------------付费弹窗相关----------------------------------------------------
 
 function this:MenuBuyClear()
@@ -780,6 +783,8 @@ function this:CheckSpringTime()
 end
 
 --------------------------------------------------付费弹窗相关----------------------------------------------------
+
+]]
 -- 是否有l2d
 function this:CheckHadL2dIn(isRole, id, isl2d)
     if (id == nil or not isl2d) then

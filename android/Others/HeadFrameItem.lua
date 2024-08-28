@@ -40,18 +40,24 @@ end
 function SetIcon(cfg)
     CSAPI.SetGOActive(icon, cfg.type == 1)
     CSAPI.SetGOActive(effectParent, cfg.type == 2)
+    local picture = cfg.picture
+    local avatareffect = cfg.avatareffect
+    if(cfg.bySex and PlayerClient:GetSex()==2) then 
+        picture = cfg.picture2
+        avatareffect = cfg.avatareffect2
+    end 
     if (cfg.type == 1) then
-        ResUtil.HeadFrame:Load(icon, cfg.picture, true)
+        ResUtil.HeadFrame:Load(icon, picture, true)
     else
         if (effectGO) then
-            if (effectGO.name == cfg.avatareffect) then
+            if (effectGO.name == avatareffect) then
                 return
             end
             CSAPI.RemoveGO(effectGO)
         end
-        ResUtil:CreateEffect(cfg.avatareffect, 0, 0, 0, effectParent, function(go)
+        ResUtil:CreateEffect(avatareffect, 0, 0, 0, effectParent, function(go)
             effectGO = go
-            effectGO.name = cfg.avatareffect
+            effectGO.name = avatareffect
         end) 
     end
 end

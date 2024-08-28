@@ -79,12 +79,12 @@ end
 function SetInfo()
 	local str = ""
 	for i, v in ipairs(datas) do
-		if(i <= #StringConstant.cRole_5) then
-			str = StringConstant.cRole_5[i]
-			ZYUtil:SetText(this["txt" .. i], str .. "：" .. v)
-		else
-			ZYUtil:SetText(this["txt" .. i], v)
-		end
+		-- if(i <= #StringConstant.cRole_5) then
+		-- 	str = StringConstant.cRole_5[i]
+		-- 	ZYUtil:SetText(this["txt" .. i], str .. "：" .. v)
+		-- else
+		-- 	ZYUtil:SetText(this["txt" .. i], v)
+		-- end
 	end
 end
 

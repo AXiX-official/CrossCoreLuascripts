@@ -35,7 +35,7 @@ function Refresh(_data, _sign)
 		-- 	CSAPI.SetRectSize(icon,148,148)
 		-- end
 		local frame = data:GetFrameId()
-		UIUtil:AddHeadByID(frameParent,0.78,frame,iconId)
+		UIUtil:AddHeadByID(frameParent,0.78,frame,iconId, data:GetSex())
 		-- CSAPI.SetGOActive(icon, iconId ~= nil)
 		--lv
 		CSAPI.SetText(txtLv2, data:GetLv() .. "")

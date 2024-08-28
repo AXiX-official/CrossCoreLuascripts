@@ -124,6 +124,10 @@ function OnOpen()
     SetCurIndex()
     RefreshPanel()
     ChangeCenter(openSetting)
+
+    if (curCenter == "skill") then
+        cardData:LookPassive()
+    end 
 end
 
 function SetCurIndex()

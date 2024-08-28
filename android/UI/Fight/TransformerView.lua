@@ -1,7 +1,7 @@
 --复活界面
 
 function Awake()
-    CSAPI.SetText(goTitle,StringConstant.fight_title_transform);
+    LanguageMgr:SetText(goTitle,1087)--CSAPI.SetText(goTitle,StringConstant.fight_title_transform);
 end
 
 function OnOpen()

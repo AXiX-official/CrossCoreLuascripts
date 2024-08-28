@@ -40,10 +40,10 @@ local isLoading_Complete = false
 local menuBuyItem
 -- local endAnim
 
--- 新春活动
-local isSpring = false
-local springCheckTime = nil
-local isSpringStart = nil
+-- -- 新春活动
+-- local isSpring = false
+-- local springCheckTime = nil
+-- local isSpringStart = nil
 
 local activityRefreshTime = nil
 local enterRefreshTime = nil
@@ -51,11 +51,14 @@ local talkTxtIsShow = true -- 聊天文本框
 local talkTxtIsShowSaveKey = "talkTxtIsShow"
 local isTalk = false
 local isNeedToShowMenuBuy = false
+local menuBuyInfo = nil -- 下次刷新点{time，id}
 local resRecoveryEndTime = nil
-local webCheckTime = nil 
+local webCheckTime = nil
+
+local petStateTime=nil;
 -- 主界面
 function Awake()
-    AdaptiveConfiguration.SetLuaObjUIFit("MenuView",gameObject); --节点添加
+    AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject); -- 节点添加
     cg_node = ComUtil.GetCom(node, "CanvasGroup")
     enterSV_sv = ComUtil.GetCom(enterSV, "ScrollRect")
     groupsv_sv = ComUtil.GetCom(groupsv, "ScrollRect")
@@ -75,9 +78,9 @@ function Awake()
     CSAPI.SetGOActive(btnBuff, false)
 
     -- 
-    isRole = PlayerClient:KBIsRole()
-    CSAPI.SetGOActive(cardIconItem.gameObject, isRole)
-    CSAPI.SetGOActive(mulIconItem.gameObject, not isRole)
+    -- isRole = PlayerClient:KBIsRole()
+    -- CSAPI.SetGOActive(cardIconItem.gameObject, isRole)
+    -- CSAPI.SetGOActive(mulIconItem.gameObject, not isRole)
     -- CSAPI.SetGOActive(bg, isRole)
     CSAPI.SetGOActive(ui_structure, false)
 
@@ -85,6 +88,8 @@ function Awake()
     talkTxtIsShow = value == 0
 
     CSAPI.SetGOActive(mask, true)
+
+    --VerChecker:ApplyCheck();
 end
 
 function InitPanel()
@@ -96,11 +101,10 @@ function InitPanel()
     end, true)
 
     -- 立绘
-    cardIconItem = RoleTool.AddRole(iconParent, PlayCB, EndCB, true)
+    cardIconItem = RoleTool.AddRole(iconParent1, PlayCB, EndCB, true)
     -- 多人插图 
-    mulIconItem = RoleTool.AddMulRole(iconParent, PlayCB, EndCB, true)
-
-    fade_iconParent = ComUtil.GetCom(iconParent, "ActionFade")
+    mulIconItem = RoleTool.AddMulRole(iconParent1, PlayCB, EndCB, true)
+    cardIconItem2 = RoleTool.AddRole(iconParent2, PlayCB, EndCB, true)
 
     -- 台词相关
     voicePlaying = false -- 正在播放
@@ -130,8 +134,13 @@ function InitListener()
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
     -- 更换看板
-    eventMgr:AddListener(EventType.Player_Select_Card, ChangeDisplay)
-    eventMgr:AddListener(EventType.Player_Select_BG, SetBG)
+    eventMgr:AddListener(EventType.Player_Select_Card, function()
+        if (isLoading_Complete) then
+            SetImg()
+            SetBG()
+        end
+    end) -- ChangeDisplay)
+    -- eventMgr:AddListener(EventType.Player_Select_BG, SetBG)
     -- 续战提示
     eventMgr:AddListener(EventType.Fight_Restore, OnFightRestore)
     -- 红点刷新
@@ -189,12 +198,12 @@ function InitListener()
             CheckPopUpWindow()
         end
     end)
-    -- 商店购买回调
+    -- 商店购买回调 商店界面返回就自动触发弹窗了
     eventMgr:AddListener(EventType.Shop_Buy_Ret, SetMenuBuy)
     -- 检测活动列表是否为空
     eventMgr:AddListener(EventType.Activity_List_Null_Check, SetActivityBtn)
     -- 重置金额刷新
-    eventMgr:AddListener(EventType.Pay_Amount_Change, SetMenuBuy)
+    -- eventMgr:AddListener(EventType.Pay_Amount_Change, SetMenuBuy)
     -- 回归判断(3点会更新)
     eventMgr:AddListener(EventType.HuiGui_Check, SetRegressionBtn)
     -- 资源找回 
@@ -203,20 +212,22 @@ function InitListener()
     eventMgr:AddListener(EventType.Player_EditName, function()
         CSAPI.SetText(txtName, PlayerClient:GetName())
     end)
-    -- 
-    eventMgr:AddListener(EventType.Menu_WebView_Enabled, CheckBtnWebView)
     -- 活动表动态更改
     eventMgr:AddListener(EventType.CfgActiveEntry_Change, function()
         enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
         SetEnter()
     end)
-
+    -- 台服web
+    eventMgr:AddListener(EventType.Menu_WebView_Enabled, CheckBtnWebView)
+    eventMgr:AddListener(EventType.CRoleDisplayMain_Change, SetBtnChange)
+    eventMgr:AddListener(EventType.PetActivity_TimeStamp_Change, SetPetTimeStamp)
+    -- 首充界面关闭
+    eventMgr:AddListener(EventType.MenuBuy_RechargeCB, SetMenuBuy)
 end
 
 function OnDestroy()
     eventMgr:ClearListener()
     RoleAudioPlayMgr:StopSound()
-    ReleaseCSComRefs()
 end
 
 -- 按钮添加点击方法
@@ -311,43 +322,44 @@ function OnOpen()
     --
     activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
     enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
+    petStateTime=PetActivityMgr:GetEmotionChangeTimestamp();
 end
 
--- 设置看板回调
-function ChangeDisplay()
-    -- LogError(1)
-    isChangeDisplay = true
-end
-function SetDisplay()
-    if (isChangeDisplay) then
-        SetImg(ToPlayIn)
-        -- LogError(tostring(isIn))
-        -- if (isIn) then
-        --     OnClickHide() -- 隐藏UI元素 
-        --     if (isRole) then
-        --         cardIconItem.PlayIn(OnClickBack, iconParent)
-        --     else
-        --         mulIconItem.PlayIn(OnClickBack, iconParent)
-        --     end
-        -- end
-    end
-    isChangeDisplay = false
-end
+-- -- 设置看板回调
+-- function ChangeDisplay()
+--     -- LogError(1)
+--     isChangeDisplay = true
+-- end
+-- function SetDisplay()
+--     if (isChangeDisplay) then
+--         SetImg(ToPlayIn)
+--         -- LogError(tostring(isIn))
+--         -- if (isIn) then
+--         --     OnClickHide() -- 隐藏UI元素 
+--         --     if (isRole) then
+--         --         cardIconItem.PlayIn(OnClickBack, iconParent)
+--         --     else
+--         --         mulIconItem.PlayIn(OnClickBack, iconParent)
+--         --     end
+--         -- end
+--     end
+--     isChangeDisplay = false
+-- end
 
-function ToPlayIn()
-    OnClickHide() -- 隐藏UI元素 
-    if (isRole) then
-        cardIconItem.PlayIn(OnClickBack, iconParent)
-    else
-        mulIconItem.PlayIn(OnClickBack, iconParent)
-    end
-end
+-- function ToPlayIn()
+--     OnClickHide() -- 隐藏UI元素 
+--     if (isRole) then
+--         cardIconItem.PlayIn(OnClickBack, iconParent)
+--     else
+--         mulIconItem.PlayIn(OnClickBack, iconParent)
+--     end
+-- end
 
 -- 场景加载完成，l2d进场动画
 function L2dIn()
     ActivityMgr:InitListOpenState() -- 检测滚动窗口
-
-    inFirstLoadCB = true -- 允许进入l2d加载后的回调(在手机端l2d的加载比较慢，需要异步处理)
+    MenuBuyMgr:ConditionCheck(1) -- 检测充值弹窗
+    -- inFirstLoadCB = true -- 允许进入l2d加载后的回调(在手机端l2d的加载比较慢，需要异步处理)
 
     MenuMgr:InitDatas() -- 更新一下系统开启信息
     InitLockDatas()
@@ -356,23 +368,23 @@ function L2dIn()
 
     isLoading_Complete = true
 end
-function FirstLoadCB()
-    if (not inFirstLoadCB) then
-        return
-    end
-    inFirstLoadCB = false
+-- function FirstLoadCB()
+--     if (inFirstLoadCB ~= nil) then
+--         return
+--     end
+--     inFirstLoadCB = 1
 
-    if (MenuMgr:IsFirst() and isIn) then
-        CSAPI.SetScale(uis, 0, 0, 0)
-        if (isRole) then
-            cardIconItem.PlayIn(SetTweened, iconParent)
-        else
-            mulIconItem.PlayIn(SetTweened, iconParent)
-        end
-    else
-        SetTweened()
-    end
-end
+--     if (MenuMgr:IsFirst() and isIn) then
+--         CSAPI.SetScale(uis, 0, 0, 0)
+--         if (isRole) then
+--             cardIconItem.PlayIn(SetTweened, iconParent)
+--         else
+--             mulIconItem.PlayIn(SetTweened, iconParent)
+--         end
+--     else
+--         SetTweened()
+--     end
+-- end
 
 -- 动画 全部执行，用延迟隔开
 function SetTweened()
@@ -391,10 +403,12 @@ function SetTweened()
     --     end)
     -- end
 
-    if (isRole) then
+    if (cardIconItem.gameObject.activeSelf) then
         cardIconItem.PlayLC() -- 立绘拉扯
     end
-
+    if (cardIconItem2.gameObject.activeSelf) then
+        cardIconItem2.PlayLC() -- 立绘拉扯
+    end
     animTimer = Time.time
     isAnim = true
     -- 音效
@@ -565,10 +579,10 @@ function Update()
     end
 
     -- 自动播放台词
-    if (isRole and not voicePlaying and cardIconItem and curTime > nextPlayTime) then
+    if (not voicePlaying and curTime > nextPlayTime and mainIconItem and mainIconItem.modelId > 10000) then
         nextPlayTime = curTime + 180
         if (CheckIsTop()) then
-            cardIconItem.PlayVoice()
+            mainIconItem.PlayVoice()
         else
             EndCB() -- 进入下一个循环
         end
@@ -624,16 +638,23 @@ function Update()
         -- 参加次数重置 
         ExerciseMgr:CheckNewJoinCnt()
     end
-    if (isSpring ~= nil and springCheckTime ~= nil and curTime > springCheckTime) then
-        springCheckTime = nil
-        -- 活动开始，强制弹出一次
-        if (isSpringStart) then
-            MenuMgr.isCheckSpringGift = nil
-            if (CheckIsTop()) then
-                CheckPopUpWindow()
-            end
-        end
+    -- if (isSpring ~= nil and springCheckTime ~= nil and curTime > springCheckTime) then
+    --     springCheckTime = nil
+    --     -- 活动开始，强制弹出一次
+    --     if (isSpringStart) then
+    --         MenuMgr.isCheckSpringGift = nil
+    --         if (CheckIsTop()) then
+    --             CheckPopUpWindow()
+    --         end
+    --     end
+    --     SetMenuBuy()
+    -- end
+    if (menuBuyInfo and curTime > menuBuyInfo[1]) then
+        MenuBuyMgr:ConditionCheck2(menuBuyInfo[2])
         SetMenuBuy()
+        if (CheckIsTop()) then
+            CheckPopUpWindow()
+        end
     end
 
     -- 到点活动更新
@@ -667,23 +688,23 @@ function Update()
         end
     end
 
-    -- if (CollaborationMgr:GetNextBeginTime() > 0 and curTime > CollaborationMgr:GetNextBeginTime()) or
-    --     (CollaborationMgr:GetNextEndTime() > 0 and curTime > CollaborationMgr:GetNextEndTime()) then
-    --     CollaborationMgr:Clear();
-    --     RegressionProto:PlrBindInfo();
-    -- end
 
     -- 回归活动
     RegresUpdate()
 
-    --资源找回
-    if(resRecoveryEndTime~=nil and TimeUtil:GetTime()>resRecoveryEndTime) then 
+    -- 资源找回
+    if (resRecoveryEndTime ~= nil and TimeUtil:GetTime() > resRecoveryEndTime) then
         SetResRecoveryBtn()
-    end 
+    end
 
-    if(webCheckTime and curTime>webCheckTime) then 
+    if (webCheckTime and curTime > webCheckTime) then
         CheckBtnWebView()
-    end 
+    end
+
+    if petStateTime and curTime >petStateTime then
+        SetEnter();
+        petStateTime=PetActivityMgr:GetEmotionChangeTimestamp();
+    end
 end
 ----------------------------------------动画+红点-----------------------------------------------】
 -- 处理动画在某个关键帧上的事件
@@ -839,21 +860,21 @@ function OnRedPointRefresh()
     isOpen = lockData["ActivityListView"]
     if (isOpen) then
         local _data = RedPointMgr:GetData(RedPointType.ActivityList1)
-        UIUtil:SetRedPoint2(menuRedPath, btnActivityListView, _data~=nil, 22, 22, 0)
+        UIUtil:SetRedPoint2(menuRedPath, btnActivityListView, _data ~= nil, 22, 22, 0)
     end
 
     -- 活动（阶段...）
     isOpen = true
     if (isOpen) then
         local _data = RedPointMgr:GetData(RedPointType.ActivityList2)
-        UIUtil:SetRedPoint2(menuRedPath, btnPay, _data~=nil, 122, 39, 0)
+        UIUtil:SetRedPoint2(menuRedPath, btnPay, _data ~= nil, 122, 39, 0)
     end
 
     -- 活动（特别...）
     isOpen = true
     if (isOpen) then
         local _data = RedPointMgr:GetData(RedPointType.ActivityList3)
-        UIUtil:SetRedPoint2(menuRedPath, btnSpecialGifts, _data~=nil, 122, 39, 0)
+        UIUtil:SetRedPoint2(menuRedPath, btnSpecialGifts, _data ~= nil, 122, 39, 0)
     end
 
     -- 活动（回归）
@@ -917,6 +938,7 @@ function OnRedPointRefresh()
         UIUtil:SetRedPoint2(menuRedPath, btnAchievement, _pData ~= nil, 51, 19, 0)
     end
 
+
     -- 角色详情 头像框 徽章
     if (true) then
         local _pData = RedPointMgr:GetData(RedPointType.HeadFrame)
@@ -964,9 +986,9 @@ function PlayCB(curCfg)
 end
 
 function SetTalkName(curCfg)
-    if (isRole) then
-        return
-    end
+    -- if (isRole) then
+    --     return
+    -- end
     local str = ""
     if (curCfg.model) then
         local cfg = Cfgs.character:GetByID(curCfg.model)
@@ -994,8 +1016,8 @@ function SetTop()
     InitTopTime()
     SetPower()
 
-    --问卷调查
-    --CheckBtnWebView()
+    -- 问卷调查
+    CheckBtnWebView()
 end
 
 -- 金钱
@@ -1169,8 +1191,9 @@ function SetLeft()
     SetRegressionBtn()
 
 
-
     SetResRecoveryBtn()
+
+    SetBtnChange()
 end
 
 -- 等级经验条
@@ -1266,9 +1289,10 @@ end
 -- 资源找回
 function SetResRecoveryBtn()
     local isShow = false
-    resRecoveryEndTime = nil 
+    resRecoveryEndTime = nil
     local _resRecoveryEndTime = RegressionMgr:GetActivityEndTime(RegressionActiveType.ResourcesRecovery)
-    if (_resRecoveryEndTime>TimeUtil:GetTime() and  RegressionMgr:CheckHadActivity(RegressionActiveType.ResourcesRecovery) and
+    if (_resRecoveryEndTime > TimeUtil:GetTime() and
+        RegressionMgr:CheckHadActivity(RegressionActiveType.ResourcesRecovery) and
         not RegressionMgr:CheckResRecoveryIsGain()) then
         isShow = true
         resRecoveryEndTime = _resRecoveryEndTime
@@ -1278,6 +1302,11 @@ function SetResRecoveryBtn()
         local isRed = not RegressionMgr:CheckResRecoveryIsGain()
         UIUtil:SetRedPoint(btnResRecovery, isRed, 123, 31, 0)
     end
+end
+
+-- 快速更换看板
+function SetBtnChange()
+    CSAPI.SetGOActive(objChange, CRoleDisplayMgr:GetRealLen() > 1)
 end
 
 -- 特别馈赠
@@ -1445,19 +1474,78 @@ end
 
 ----------------------------------------centre-----------------------------------------------
 function SetCenter()
-    SetBG()
     SetImg()
+    SetBG()
     SetObjTalk()
 end
 -- 设置背景
 function SetBG()
-    local curBGID = PlayerClient:GetBG()
-    local cfg = Cfgs.CfgMenuBg:GetByID(curBGID)
+    local curDisplayData = CRoleDisplayMgr:GetCurData()
+    local cfg = Cfgs.CfgMenuBg:GetByID(curDisplayData:GetBG())
     if (cfg and cfg.name) then
         ResUtil:LoadMenuBg(bg, "UIs/" .. cfg.name, false)
     end
 end
 
+function SetImg()
+    -- 停止上一段语音
+    RoleAudioPlayMgr:StopSound()
+    EndCB()
+    isChangeImgPlayVoice = true
+
+    local curDisplayData = CRoleDisplayMgr:GetCurData()
+
+    SetItem(1, curDisplayData:GetIDs()[1], cardIconItem, true, iconParent1, curDisplayData)
+    SetItem(1, curDisplayData:GetIDs()[1], mulIconItem, false, iconParent1, curDisplayData)
+    SetItem(2, curDisplayData:GetIDs()[2], cardIconItem2, true, iconParent2, curDisplayData)
+    -- 
+    local top = iconParent2
+    if (curDisplayData:GetDetail(1) and curDisplayData:GetDetail(1).top) then
+        top = iconParent1
+    end
+    top.transform:SetAsLastSibling()
+end
+
+function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
+    if (id and id ~= 0 and ((roleSlot and id > 10000) or (not roleSlot and id < 10000))) then
+        CSAPI.SetGOActive(item.gameObject, true)
+        local detail = curDisplayData:GetDetail(slot)
+        CSAPI.SetAnchor(iconParent, detail.x, detail.y, 0)
+        CSAPI.SetScale(iconParent, detail.scale, detail.scale, 1)
+        -- 点击 
+        item.EnNeedClick(detail.top)
+        item.Refresh(id, LoadImgType.Main, function()
+            -- 入场动画
+            if (slot == curDisplayData:GetTopSlot()) then
+                mainIconItem = item
+                local isIn = false
+                local hadIn = MenuMgr:CheckHadL2dIn(id > 10000, id, detail.live2d)
+                if (hadIn and not CRoleDisplayMgr:CheckIsPlayIn(id) and mainIconItem.CheckIn()) then
+                    isIn = true
+                end
+                if (inFirstLoadCB ~= nil) then
+                    if (isIn) then
+                        OnClickHide() -- 隐藏UI元素 
+                        mainIconItem.PlayIn(OnClickBack, iconParent)
+                    end
+                else
+                    inFirstLoadCB = 1
+                    if (isIn and CRoleDisplayMgr:IsFirst()) then
+                        CSAPI.SetScale(uis, 0, 0, 0)
+                        mainIconItem.PlayIn(SetTweened, iconParent)
+                    else
+                        SetTweened()
+                    end
+                end
+                CRoleDisplayMgr:SetPlayInID(id)
+            end
+        end, detail.live2d, curDisplayData:IsShowShowImg(slot))
+    else
+        item.ClearCache()
+        CSAPI.SetGOActive(item.gameObject, false)
+    end
+end
+--[[
 -- 设置看板  
 function SetImg(cb)
     -- 加载立绘并且调整到调整过的位置
@@ -1579,10 +1667,15 @@ function SetImg2(cb)
         FirstLoadCB()
     end, l2d)
 end
+]]
+-- 更换看板
+function OnClickChange()
+    CRoleDisplayMgr:Change2()
+end
 
 -- 看板调整
 function OnClickShow()
-    CSAPI.OpenView("CRoleDisplay")
+    CSAPI.OpenView("CRoleDisplayMain")
 end
 
 -- 隐藏语音文本框
@@ -1624,9 +1717,11 @@ function ShowRole(_isShow)
     if (not isShow) then
         CSAPI.SetGOActive(btn_exit, false)
     end
-    CSAPI.SetGOActive(objShow, not isShow)
-    CSAPI.SetGOActive(objHide, not isShow)
-    CSAPI.SetGOActive(objTalk, not isShow)
+
+    CSAPI.SetGOActive(objs, not isShow)
+    -- CSAPI.SetGOActive(objShow, not isShow)
+    -- CSAPI.SetGOActive(objHide, not isShow)
+    -- CSAPI.SetGOActive(objTalk, not isShow)
 
     -- 收缩动画
     if (not anims2.activeSelf and isShow) then
@@ -1651,15 +1746,15 @@ function OnViewOpened(viewKey)
     -- if (viewKey == "CRoleDisplayDetail") then
     --     CSAPI.SetAnchor(centre, 0, 10000, 0)
     -- end
-    if (viewKey == "CRoleDisplay") then
-        CSAPI.SetGOActive(centre, false)
-    end
+    -- if (viewKey == "CRoleDisplayMain") then
+    --     CSAPI.SetGOActive(centre, false)
+    -- end
 
     local cfg = Cfgs.view:GetByKey(viewKey)
     if (not cfg.top_mask) then
         openViews[viewKey] = cfg.is_window and 2 or 1
         local cfg = Cfgs.view:GetByKey(viewKey)
-        if (not cfg.is_window) then
+        if (not cfg.is_window and viewKey ~= "CreateShowView") then
             RoleAudioPlayMgr:StopSound() -- 有其它界面打开则中断语音
         end
         HidePanel(viewKey, true)
@@ -1685,10 +1780,10 @@ function OnViewClosed(viewKey)
     --     CSAPI.SetAnchor(centre, 0, 0, 0)
     -- end
     -- 是否更换了看板
-    if (viewKey == "CRoleDisplay") then
-        CSAPI.SetGOActive(centre, true)
-        SetDisplay()
-    end
+    -- if (viewKey == "CRoleDisplayMain") then
+    --     CSAPI.SetGOActive(centre, true)
+    --     SetDisplay()
+    -- end
 
     -- if (not SceneMgr:IsMajorCity()) then
     --     return
@@ -1817,31 +1912,26 @@ function EActivityGetCB()
         return true
     end
 
-    -- 签到 签到记录接收完毕，检测自动签到 
-    if (SignInMgr:CheckAll()) then
+    -- 活动相关的界面弹窗
+    if (ActivityMgr:CheckPopView()) then
         return true
     end
 
     -- 解禁数据
-    -- if (RoleMgr:GetJieJinDatas()) then
-    --     CSAPI.OpenView("RoleJieJinSuccess")
-    --     return true
-    -- end
+    if (RoleMgr:GetJieJinDatas()) then
+        CSAPI.OpenView("RoleJieJinSuccess")
+        return true
+    end
 
     -- 资源找回 
     if (RegressionMgr:CheckNeedShow()) then
         CSAPI.OpenView("ResRecovery")
         return true
     end
-    
-    if(RoleMgr:GetJieJinDatas()) then
-        CSAPI.OpenView("RoleJieJinSuccess")
-    end
-
+    -- 首冲
     if (isNeedToShowMenuBuy) then
         return true
-    elseif (not isNeedToShowMenuBuy and menuBuyItem ~= nil and menuBuyItem.gameObject.activeSelf and
-        MenuMgr:CheckNeedToShowMenuBuy()) then
+    elseif (not isNeedToShowMenuBuy and objBuy.activeSelf and menuBuyItem ~= nil and MenuBuyMgr:CheckIsNeedShow()) then
         isNeedToShowMenuBuy = true
         FuncUtil:Call(EActivityGetCB2, nil, 100)
         return true
@@ -1955,15 +2045,15 @@ end
 function PlayLoginVoice()
     local isPlay = false
     -- if (isRole and isChangeImgPlayVoice and CheckIsTop() and (not ActivityMgr:CheckIsNeedShow()) and (not SignInMgr:CheckNeedSignIn())) then
-    if (isRole and isChangeImgPlayVoice) then
+    if (mainIconItem and mainIconItem.modelId > 10000 and isChangeImgPlayVoice) then
         if (PlayerClient:IsPlayerBirthDay() and not PlayerClient:IsPlayBirthDayVoice()) then
-            cardIconItem.PlayVoice(RoleAudioType.birthday) -- 玩家生日
+            mainIconItem.PlayVoice(RoleAudioType.birthday) -- 玩家生日
         elseif (MenuMgr:CheckIsFightVier()) then
-            cardIconItem.PlayVoice(RoleAudioType.levelBack) -- 归来语音
+            mainIconItem.PlayVoice(RoleAudioType.levelBack) -- 归来语音
             MenuMgr:SetFightOver(false)
         else
-            if (not cardIconItem.HadInAudio()) then -- 无开场动画语音才会播登录语音
-                cardIconItem.PlayVoice(RoleAudioType.login)
+            if (not mainIconItem.HadInAudio()) then -- 无开场动画语音才会播登录语音
+                mainIconItem.PlayVoice(RoleAudioType.login)
             end
         end
         isPlay = true
@@ -1992,6 +2082,12 @@ function HidePanel(viewKey, open)
             CSAPI.SetScale(gameObject, 1, 1, 1)
             enterSV_sv.enabled = true
             groupsv_sv.enabled = true
+            --
+            local cfg = Cfgs.view:GetByKey(viewKey)
+            if (cfg and not cfg.is_window) then
+                CRoleDisplayMgr:NormalCheck2()
+            end
+            SetLook(viewKey, open)
         end
     else
         if (not openViews[viewKey] or openViews[viewKey] == 2) then
@@ -2001,8 +2097,24 @@ function HidePanel(viewKey, open)
         if (CheckIsOneTop()) then
             enterSV_sv.enabled = false
             groupsv_sv.enabled = false
-            CSAPI.SetScale(gameObject, 0, 0, 0)
+            if (viewKey ~= "CRoleDisplayMain") then
+                CSAPI.SetScale(gameObject, 0, 0, 0)
+            end
+            SetLook(viewKey, open)
         end
+    end
+end
+
+function SetLook(viewKey, open)
+    if (not loadingComplete) then
+        return
+    end
+    if (not open) then
+        CSAPI.SetScale(movePoint, 1, 1, 1)
+        cg_node.alpha = 1
+    else
+        CSAPI.SetScale(movePoint, 0, 0, 0)
+        cg_node.alpha = 0.5
     end
 end
 
@@ -2035,27 +2147,24 @@ end
 
 -- 付费弹窗
 function SetMenuBuy()
-    local isOpen = MenuMgr:CheckMenuBuyIsOpen()
-    if (not isOpen) then
-        return
-    end
-
-    local arr = MenuMgr:GetMenyBuyList()
-    local curCfg = arr[1]
-    if (curCfg) then
-        if (not menuBuyItem) then
-            local go = ResUtil:CreateUIGO("Menu/MenuBuy", objBuy.transform)
-            menuBuyItem = ComUtil.GetLuaTable(go)
-        else
-            CSAPI.SetGOActive(menuBuyItem.gameObject, true)
+    local isHad = false
+    menuBuyInfo = nil
+    local isOpen = MenuBuyMgr:CheckMenuBuyIsOpen()
+    if (isOpen) then
+        local curData = MenuBuyMgr:GetCurData()
+        if (curData) then
+            isHad = true
+            if (not menuBuyItem) then
+                local go = ResUtil:CreateUIGO("Menu/MenuBuy", objBuy.transform)
+                menuBuyItem = ComUtil.GetLuaTable(go)
+            else
+                CSAPI.SetGOActive(menuBuyItem.gameObject, true)
+            end
+            menuBuyItem.Refresh(curData)
         end
-        menuBuyItem.Refresh(curCfg)
-    else
-        if (menuBuyItem) then
-            CSAPI.SetGOActive(menuBuyItem.gameObject, false)
-        end
+        menuBuyInfo = MenuBuyMgr:GetOpenEndTimeInfo()
     end
-    isSpring, springCheckTime, isSpringStart = MenuMgr:CheckSpringTime()
+    CSAPI.SetGOActive(objBuy, isHad)
 end
 
 -- 付费活动
@@ -2064,42 +2173,46 @@ function OnClickBtnBuy2()
     -- Tips.ShowTips("敬请期待")
 end
 
---检查按钮是否显示(等级+显示时间内)
+-- 检查按钮是否显示(等级+显示时间内)
 function CheckBtnWebView()
-    webCheckTime = nil 
-    local b = false 
-    local curTime = TimeUtil:GetTime()
-    local lv = g_ZilongWebBtnLv or 1
-    if (PlayerClient:GetLv()>=lv and 
-     (g_ZilongWebBtnOpen==nil or curTime>=TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) and
-      (g_ZilongWebBtnClose==nil or TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)>curTime)) then
-        b = true 
-    end
-    CSAPI.SetGOActive(btnWebView,b)
-    --
-    if(g_ZilongWebBtnOpen~=nil and  curTime<TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) then 
-        webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)
-    elseif(g_ZilongWebBtnClose~=nil and  curTime<TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)) then 
-        webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)
-    end 
+    webCheckTime = nil
+    --非正式服使用
+    -- local b = false
+    -- local curTime = TimeUtil:GetTime()
+    -- local lv = g_ZilongWebBtnLv or 1
+    -- if (PlayerClient:GetLv() >= lv and
+    --     (g_ZilongWebBtnOpen == nil or curTime >= TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) and
+    --     (g_ZilongWebBtnClose == nil or TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose) > curTime)) then
+    --     b = true
+    -- end
+    -- CSAPI.SetGOActive(btnWebView, b)
+    -- --
+    -- if (g_ZilongWebBtnOpen ~= nil and curTime < TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) then
+    --     webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)
+    -- elseif (g_ZilongWebBtnClose ~= nil and curTime < TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)) then
+    --     webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)
+    -- end
 
-    CheckBtnWebViewRed()
+    -- CheckBtnWebViewRed()
 end
---检查按钮红点
+-- 检查按钮红点
 function CheckBtnWebViewRed()
-    if(btnWebView.activeSelf) then
-        ShiryuSDK.QueryRedDotState(1,function (isAdd)
-            UIUtil:SetRedPoint(btnWebView, isAdd, 22, 22, 0)
-            print("CheckBtnWebViewRed--------："..tostring(isAdd))
+    if (btnWebView.activeSelf) then
+        ShiryuSDK.QueryRedDotState(3, function(isAdd)
+            if (btnWebView) then
+                UIUtil:SetRedPoint(btnWebView, isAdd, 22, 22, 0)
+            end
+            -- print("CheckBtnWebViewRed--------："..tostring(isAdd))
         end)
     else
-    end 
+    end
 end
---打开活动页面
+-- 打开活动页面
 function OnClickWebView()
-    ShiryuSDK.ShowActivityUI(CheckBtnWebViewRed)--关闭时请求一次红点
+    ShiryuSDK.ShowActivityUI(CheckBtnWebViewRed) -- 关闭时请求一次红点
 end
 
+-----------------------------------------------基地数据更新----------------------------------------------------------------
 -- 资源回收
 function OnClickResRecovery()
     CSAPI.OpenView("ResRecovery")
@@ -2115,6 +2228,9 @@ function OnClickRegression()
     CSAPI.OpenView("RegressionList")
 end
 
+function OnClickCollaborationMain()
+    CSAPI.OpenView("CollaborationMain");
+end
 
 -----------------------------------------------基地数据更新----------------------------------------------------------------
 function MatrixUpdate()
@@ -2153,128 +2269,8 @@ function OnClickVirtualkeysClose()
     end
 end
 
-----#Start#----
-----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
-function ReleaseCSComRefs()
-    gameObject = nil;
-    transform = nil;
-    this = nil;
-    node = nil;
-    bg = nil;
-    uiEffectObj = nil;
-    effectGrid = nil;
-    effectGridFlash = nil;
-    centre = nil;
-    movePoint = nil;
-    movePoint2 = nil;
-    iconParent = nil;
-    btnShow = nil;
-    talkBg = nil;
-    txtTalkBg = nil;
-    txtTalk = nil;
-    nameBg = nil;
-    txtTalkName = nil;
-    maskL = nil;
-    maskR = nil;
-    maskT = nil;
-    maskTPoint1 = nil;
-    maskTPoint2 = nil;
-    maskTPoint3 = nil;
-    maskTPoint4 = nil;
-    maskD = nil;
-    top = nil;
-    btnSet = nil;
-    btnSignInView = nil;
-    btnNotice = nil;
-    btnMailView = nil;
-    objMailRed = nil;
-    txtMailCount = nil;
-    btnBuff = nil;
-    topMiddle = nil;
-    txtDay = nil;
-    fillPower = nil;
-    txtPower = nil;
-    btnMoney3 = nil;
-    moneyIconBg3 = nil;
-    moneyIcon3 = nil;
-    txtMoney3 = nil;
-    btnMoney2 = nil;
-    moneyIconBg2 = nil;
-    moneyIcon2 = nil;
-    txtMoney2 = nil;
-    btnMoney1 = nil;
-    moneyIconBg1 = nil;
-    moneyIcon1 = nil;
-    txtMoney1 = nil;
-    txtMax = nil;
-    objAD = nil;
-    objName = nil;
-    btnPlayerView = nil;
-    txtLv = nil;
-    txtName = nil;
-    txtUID = nil;
-    fillLv = nil;
-    objChat = nil;
-    objMessageBG = nil;
-    btnChat = nil;
-    rightBg = nil;
-    rightBgPoint = nil;
-    btnRoleListNormal = nil;
-    txtRole1Bg = nil;
-    txtRole1 = nil;
-    txtRole2 = nil;
-    txtRoleCur = nil;
-    txtRole3 = nil;
-    txtRoleMax = nil;
-    btnTeamView = nil;
-    txtTeam = nil;
-    teamGrid = nil;
-    attackBg = nil;
-    btnAttack = nil;
-    txtAttackCur = nil;
-    txtAttackPercent = nil;
-    objAttackRed = nil;
-    Image = nil;
-    btnCoolView = nil;
-    btnMissionView = nil;
-    txtMissionPercent = nil;
-    fillMission = nil;
-    btnShopView = nil;
-    imgShop = nil;
-    txtShopBg = nil;
-    txtShop = nil;
-    imgNew = nil;
-    btnCreateView = nil;
-    fillCreate = nil;
-    imgCreate = nil;
-    btnBoss = nil;
-    imgBoss = nil;
-    txtBoss = nil;
-    txtBossTime = nil;
-    btnTeamBoss = nil;
-    imgTeamBossBg = nil;
-    imgTeamBoss = nil;
-    txtTeamBoss = nil;
-    txtTeamBossTime = nil;
-    bottom = nil;
-    btnFriendView = nil;
-    txtFriendCount1 = nil;
-    txtFriendCount2 = nil;
-    txtFriend = nil;
-    btnArchiveView = nil;
-    txtArchiveCount1 = nil;
-    txtArchiveCount2 = nil;
-    txtArchive = nil;
-    btnGuildMenu = nil;
-    txtGuildMenu = nil;
-    btnMatrix = nil;
-    txtMatrix = nil;
-    btnBag = nil;
-    txtBag = nil;
-    cGrab = nil;
-    mask = nil;
-    anims = nil;
-    view = nil;
+function SetPetTimeStamp(eventData)
+    if eventData then
+        petStateTime=eventData;
+    end
 end
-----#End#----
-

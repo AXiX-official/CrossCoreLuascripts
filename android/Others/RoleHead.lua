@@ -16,10 +16,12 @@ function OnDestroy()
     eventMgr:ClearListener()
 end
 
-function Refresh(_scale, _frameID, _iconID)
+function Refresh(_scale, _frameID, _iconID, _sel_card_ix)
     scale = _scale
     frameID = _frameID or 1
     iconID = _iconID
+    sel_card_ix = _sel_card_ix or 1
+
     CSAPI.SetScale(node, scale, scale, scale)
     -- 头像框
     CSAPI.SetGOActive(frame, frameID ~= 1)
@@ -27,6 +29,8 @@ function Refresh(_scale, _frameID, _iconID)
         local cfg = Cfgs.AvatarFrame:GetByID(frameID)
         CSAPI.SetGOActive(frame_icon, cfg.type == 1)
         CSAPI.SetGOActive(frame_effect, cfg.type == 2)
+        local picture = sel_card_ix==2 and cfg.picture2 or cfg.picture
+        local avatareffect = sel_card_ix==2 and cfg.avatareffect2 or cfg.avatareffect
         if (cfg.type == 1) then
             ResUtil.HeadFrame:Load(frame_icon, cfg.picture, true)
         else

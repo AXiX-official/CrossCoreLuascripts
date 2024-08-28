@@ -139,7 +139,7 @@ function SetRight()
     end
     local isCanUse, expiry = _data:CheckCanUse()
     -- item
-    UIUtil:AddHeadByID(headParent, 0.8, _data:GetID(), PlayerClient:GetIconId())
+    UIUtil:AddHeadByID(headParent, 0.8, _data:GetID(), PlayerClient:GetIconId(),PlayerClient:GetSex())
     -- if (not rItem) then
     --     ResUtil:CreateUIGOAsync("HeadFrame/HeadFrameItem", headParent, function(go)
     --         rItem = ComUtil.GetLuaTable(go)

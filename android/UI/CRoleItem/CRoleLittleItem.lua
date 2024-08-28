@@ -7,12 +7,12 @@ function SetClickCB(_cb)
 end
 
 -- _elseData 根据key来划分数据
-function Refresh(_data, _elseData)
+function Refresh(_data, _curID)
     data = _data
     elseData = _elseData or {}
 
-    isUse = elseData.useID and elseData.useID == data:GetID() or false
-    isSelect = elseData.curID and elseData.curID == data:GetID() or false
+    --isUse = elseData.useID and elseData.useID == data:GetID() or false
+    isSelect = _curID == data:GetID() or false
 
     -- icon
     -- SetIcon(data:GetIcon())
@@ -20,7 +20,7 @@ function Refresh(_data, _elseData)
     -- name 
     CSAPI.SetText(txtName, data:GetAlias())
     -- use 
-    CSAPI.SetGOActive(use, isUse)
+    --CSAPI.SetGOActive(use, isUse)
     -- select
     CSAPI.SetGOActive(select, isSelect)
 end
@@ -34,12 +34,12 @@ end
 -- 设置角色详情选择的皮肤头像（如果是看板，则用看板的）
 function SetIcon2()
     local modelId = nil
-    if (PlayerClient:KBIsRole()) then
-        local cfg = Cfgs.character:GetByID(PlayerClient:GetIconId())
-        if (cfg and cfg.role_id and cfg.role_id == data:GetID()) then
-            modelId = PlayerClient:GetIconId()
-        end
-    end
+    -- if (PlayerClient:KBIsRole()) then
+    --     local cfg = Cfgs.character:GetByID(PlayerClient:GetIconId())
+    --     if (cfg and cfg.role_id and cfg.role_id == data:GetID()) then
+    --         modelId = PlayerClient:GetIconId()
+    --     end
+    -- end
     if (modelId == nil) then
         modelId = RoleMgr:GetSkinIDByRoleID(data:GetID())
     end

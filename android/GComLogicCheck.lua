@@ -706,4 +706,139 @@ function GLogicCheck:IsPassRule(ruleId, plr, itemId)
 end
 
 
+function GLogicCheck:CheckStrMaxLen(strVal, maxLen)
+    strVal = strVal or ""
+    if strVal:len() > maxLen then
+        strVal = strVal:sub(1, maxLen)
+    end
 
+    return strVal
+end
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- args:
+-- -- productCfg: 商品配置
+-- -- vouchers: 使用的抵扣券列表
+-- -- curTime: 当前时间戳
+-- -- buyNum: 商品购买数量
+-- -- plrLv: 玩家等级
+-- -- isAddVoucher: 消耗那边是否添加入消费券
+
+-- 参数参考
+-- local productCfg = CfgCommodity[50001]
+-- local vouchers = { {id = 11008, num = 1} }
+-- local curTime = nil
+-- local buyNum = 1
+-- local plrLv = 1
+-- local isAddVoucher = false
+
+-- ret:
+-- -- isOk
+-- -- tipStr 提示表 字符id
+-- -- sumReduces { {id, num}, {id, num} }, 抵扣券之后扣除的列表 [isOk 为 true 才会有]
+function GLogicCheck:IsCanUseVoucher(productCfg, vouchers, curTime, buyNum, plrLv, isAddVoucher)
+    if not vouchers or table.empty(vouchers) then
+        return true, 'ok', productCfg.jCosts
+    end
+
+    -- LogTable(productCfg.jCosts, "productCfg cost")
+    if not productCfg.canUseVoucher or table.empty(productCfg.canUseVoucher) then
+        return false, 'voucherCanNotUseVoucher'
+    end
+
+    if not curTime then
+        curTime = os.time()
+    end
+
+    local isDiscount = false
+    if productCfg.fDiscount and cfg.fDiscount > 0 then
+        local disStart, disEnd = productCfg.nDiscountStart, productCfg.nDiscountEnd
+        if self:IsInRange(disStart, disEnd, curTime, true) then
+            isDiscount = true
+        end
+    end
+
+    local sumUseCnt = 0 -- 一共使用多少张优惠券
+    local sumReduces = 0
+
+    local realCost = 0
+    local realCosts = {}
+
+    local voucher = vouchers[1]
+    local iCfg = ItemInfo[voucher.id]
+    local vCfg = CfgVoucher[iCfg.dy_value1]
+    local reduceId = vCfg.reduceId
+    
+    for _, cost in ipairs(productCfg.jCosts or {}) do
+        local costId, costNum = cost[1], cost[2]
+        if costId == -1 then
+            return false, 'voucherCanNotUseVoucher'
+        elseif costId == reduceId then
+            realCost = realCost + buyNum * costNum
+        else
+            table.insert(realCosts, cost)
+        end
+    end
+
+    for _, voucher in ipairs(vouchers) do
+        local iCfg = ItemInfo[voucher.id]
+        if iCfg.type ~= ITEM_TYPE.VOUCHER then
+            return false, 'invalidOp'
+        end
+
+        local vCfg = CfgVoucher[iCfg.dy_value1]
+        -- LogTable(vCfg, "voucher vCfg")
+
+        if not vCfg.mixDiscount and isDiscount then
+            return false, 'voucherCanNotMixDiscount'
+        end
+
+        if not vCfg.voucherType then
+            return false, 'voucherCanNotUseVoucher'
+        end
+    
+        if not GCalHelp:FindArrByFor(productCfg.canUseVoucher, vCfg.voucherType) then
+            return false, 'voucherNotProductType'
+        end
+
+        sumUseCnt = sumUseCnt + voucher.num
+        if not vCfg.mixUse and sumUseCnt > 1 then
+            return false, 'voucherCanNotMixUse'
+        end
+
+        sumReduces = sumReduces + voucher.num * vCfg.reduceNum
+        if reduceId and reduceId ~= vCfg.reduceId then
+            return false, 'voucherMixUseReduceIdErr'
+        else
+            reduceId = vCfg.reduceId
+        end
+        
+        if isAddVoucher then
+            table.insert(realCosts, {voucher.id, voucher.num})
+        end
+
+        if vCfg.minCost and realCost < vCfg.minCost then
+            return false, 'voucherMinCost'
+        end
+    
+        if sumReduces > realCost then
+            return false, 'voucherBiggerThanRealCose'
+        end
+        
+        if vCfg.minLevel and plrLv < vCfg.minLevel then
+            return false, 'voucherMinCost'
+        end        
+    end
+
+    table.insert(realCosts, {reduceId, realCost - sumReduces})
+
+    return true, nil, realCosts
+end
+
+-- voucherCanNotUseVoucher : 商品不支持使用抵扣券
+-- voucherMixUseReduceIdErr : 叠加抵扣券只支持扣除一种物品
+-- voucherCanNotMixUse : 抵扣券不支持叠加使用
+-- voucherCanNotMixDiscount: 不支持与其他折扣一起使用
+-- voucherMinCost: 抵扣券最小消耗限制
+-- voucherNotProductType: 抵扣券不支持该商品类型
+-- voucherBiggerThanRealCose: 抵扣券大于总面值大于需要抵扣的总额

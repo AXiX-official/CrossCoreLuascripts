@@ -4,7 +4,7 @@ local count = 1 -- 选择几件
 function Awake()
     tab = ComUtil.GetCom(tabs, "CTab")
     tab:AddSelChangedCallBack(OnTabChanged)
-    --cg_pay = ComUtil.GetCom(btn_pay, "CanvasGroup")
+    -- cg_pay = ComUtil.GetCom(btn_pay, "CanvasGroup")
 end
 
 function OnOpen()
@@ -71,7 +71,7 @@ function Change()
     CSAPI.SetText(txt_price, need .. "")
     -- btn 
     had = BagMgr:GetCount(price[1])
-    --cg_pay.alpha = had >= need and 1 or 0.3
+    -- cg_pay.alpha = had >= need and 1 or 0.3
 end
 
 function SetImgTabs()
@@ -91,7 +91,7 @@ function SetImgTabs()
             LanguageMgr:SetText(txtItem2, 18111, _cfg2.name) -- 38002
         end
         local width = cfg.price_2 ~= nil and 430 or 821
-        CSAPI.SetRTSize(item1,width,100)
+        CSAPI.SetRTSize(item1, width, 100)
     end
 end
 
@@ -142,27 +142,42 @@ function OnClickPay()
             LanguageMgr:ShowTips(15122)
             return
         end
+        local func = nil
         if openSetting == 2 then -- 商店中的购买
             if data == nil or data.commId == nil then
                 LogError("传入的数据有误！");
                 return
             end
-            ShopProto:Buy(data.commId, TimeUtil:GetTime(), count, tab.selIndex == 0 and "price_1" or "price_2",
-                function(proto)
-                    EventMgr.Dispatch(EventType.Shop_View_Refresh);
-                    if proto and next(proto.gets) then
-                        UIUtil:OpenReward({proto.gets})
-                    end
-                end)
+            func = function()
+                ShopProto:Buy(data.commId, TimeUtil:GetTime(), count, tab.selIndex == 0 and "price_1" or "price_2",nil,
+                    function(proto)
+                        EventMgr.Dispatch(EventType.Shop_View_Refresh);
+                        if proto and next(proto.gets) then
+                            UIUtil:OpenReward({proto.gets})
+                        end
+                    end)
+            end
         else
-            local infos = {{
-                ["id"] = cfg.id,
-                num = count
-            }}
-            DormProto:BuyFurniture(infos, tab.selIndex == 0 and "price_1" or "price_2")
+            func = function()
+                local infos = {{
+                    ["id"] = cfg.id,
+                    num = count
+                }}
+                DormProto:BuyFurniture(infos, tab.selIndex == 0 and "price_1" or "price_2")
+            end
         end
-        Close()
-    else 
+        if (tab.selIndex == 0) then
+            func()
+            Close()
+        else
+            local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
+            local str = LanguageMgr:GetTips(15123, _cfg2.name, need)
+            UIUtil:OpenDialog(str, function()
+                func()
+                view:Close()
+            end)
+        end
+    else
         Tips.ShowTips(string.format(LanguageMgr:GetTips(15000), _cfg.name))
     end
 end

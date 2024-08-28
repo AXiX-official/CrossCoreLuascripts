@@ -312,7 +312,7 @@ function this:GetOpenState()
 			end
 			lockStr = self.cfg.lock_desc
 		elseif self:GetSectionType() == SectionType.Activity then --活动没有未开启显示
-			if self:GetType() ~= SectionActivityType.Tower then
+			if self:GetType() ~= SectionActivityType.Tower and self:GetType() ~= SectionActivityType.Rogue then
 				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
 				if openState > 0 then
 					openState = isActiveOpen and 1 or -2
@@ -373,6 +373,7 @@ function this:GetInfo()
 	return self.cfg and self.cfg.info and self.cfg.info[1]
 end
 
+--界面名
 function this:GetPath()
 	local info = self:GetInfo()
 	local viewKey = ""
@@ -380,6 +381,21 @@ function this:GetPath()
 		viewKey = info.view
 	end
 	return viewKey
+end
+
+--红点路径
+function this:GetRedPath()
+	local info = self:GetInfo()
+	local path = "Common/Red2"
+	if info and info.red then
+		path = info.red
+	end
+	return path
+end
+
+function this:GetExploreId()
+	local info = self:GetInfo()
+	return info and info.exploreId
 end
 
 function this:GetDescKey()

@@ -59,7 +59,7 @@ function SetItems(typeNames, callBack)
                 elseif i == #typeNames then
                     infoUtil:Show(typeName, layout, function(panel)
                         OnButtonClick(panel)
-                        if i == #typeNames and callBack then
+                        if callBack then
                             callBack()
                         end
                     end)
@@ -154,7 +154,7 @@ function SetPanelPos(panelName,x,y)
     end
     local panel = infoUtil:GetPanel(panelName)
     if panel == nil then
-        LogError("没找到对应名称的组件!!" .. panelName)
+        -- LogError("没找到对应名称的组件!!" .. panelName)
         return nil
     end
     CSAPI.SetAnchor(panel.gameObject,x,y)
@@ -174,6 +174,17 @@ function SetFunc(panelName,oldFuncName,newFunc)
     end
 
     panel[oldFuncName] = newFunc
+end
+
+function SetGOActivte(panelName,goName,b)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil or panel[goName] == nil then
+        return nil
+    end
+    CSAPI.SetGOActive(panel[goName].gameObject,b)
 end
 ------------------------------------------------按钮回调
 
@@ -295,21 +306,6 @@ end
 function SetPos(isShow)
     local pos = isShow and enterPos or outPos
     CSAPI.SetLocalPos(childNode, pos[1], pos[2], pos[3])
-end
-
-function ShowDangeLevel(isDanger, cfgs, currDanger, emptyStr)
-    local dangerPanel =infoUtil:GetPanel("Danger")
-    if dangerPanel and isDanger and cfgs then
-        if #cfgs > 1 then
-            dangerPanel.ShowDangeLevel(isDanger, cfgs, currDanger)
-        else
-            if emptyStr~=nil and emptyStr~="" then
-                dangerPanel.SetEmptyStr(emptyStr)
-            end
-            CSAPI.SetGOActive(dangerPanel.node, false)
-            CSAPI.SetGOActive(dangerPanel.empty, true)
-        end
-    end
 end
 
 function SetItemPos(typeName,x,y)

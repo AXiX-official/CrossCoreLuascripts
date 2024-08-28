@@ -141,6 +141,16 @@ function this:IsGet()
 	return self.isGet
 end
 
+function this:IsShow()
+	if self.cfg and self.cfg.showTime then
+		if not self.sTime then
+			self.sTime = TimeUtil:GetTimeStampBySplit(self.cfg.showTime)
+		end
+		return self.sTime <= TimeUtil:GetTime()
+	end
+	return true
+end
+
 --前置
 function this:GetPreposition()
 	return self.cfg and self.cfg.before

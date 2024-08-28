@@ -36,7 +36,7 @@ function Refresh(_cfgChild, _parentLua)
     drag_clickNode.dragGO = nil
     drag_clickNode.move = false
     if (cfgChild.sType == SpineActionType.RoleDrag or cfgChild.sType == SpineActionType.ElseDrag) then
-        if (cfgChild.content.drag ~= nil and cfgChild.content.drag.targetObjName ~= nil) then
+        if (cfgChild.content.drag ~= nil and cfgChild.content.drag.targetObjName ~= nil and parentLua.l2dGo~=nil) then
             local dragObj = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.targetObjName).gameObject
             drag_clickNode.dragGO = dragObj
             drag_clickNode.move = true

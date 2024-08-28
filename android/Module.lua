@@ -94,6 +94,8 @@ _G.ShopSkinInfo=require "ShopSkinInfo"
 _G.RandCommodityData = require "RandCommodityData"
 _G.ShopPromote=require "ShopPromote"
 -- _G.ShopMgr = require "ShopMgr"
+_G.VoucherInfo=require "VoucherInfo"
+
 --剧情
 require "PlotMgr"
 
@@ -143,7 +145,6 @@ _G.RoleImgInfo = require("RoleImgInfo");
 _G.StoryData = require("StoryData");
 _G.PlotTween = require("PlotTween")
 
-
 --左侧栏动画工具
 require "LItemAnimTools" 
 
@@ -173,4 +174,29 @@ _G.BadgeChangeInfo = require "BadgeChangeInfo"
 _G.ItemPoolInfo=require "ItemPoolInfo"
 _G.ItemPoolGoodsInfo=require "ItemPoolGoodsInfo"
 
+--宠物活动
+_G.PetInfo=require "PetInfo"
+_G.PetArchiveInfo=require "PetArchiveInfo"
+_G.PetArchiveRewardInfo=require "PetArchiveRewardInfo"
+_G.PetFeedRewardInfo=require "PetFeedRewardInfo"
+_G.PetItemData=require "PetItemData"
+_G.PetRandomRewardInfo=require "PetRandomRewardInfo"
+_G.PetSportInfo=require "PetSportInfo"
+require "PetEnum"
+_G.PetStateBase=require "PetStateBase"
+_G.PetEatState=require "PetEatState"
+_G.PetSleepState=require "PetSleepState"
+_G.PetIdelState=require "PetIdelState"
+_G.PetWashState=require "PetWashState"
+_G.PetCleanState=require "PetCleanState"
+_G.PetPlayState=require "PetPlayState"
+_G.PetWalkState=require "PetWalkState"
+_G.PetSportState=require "PetSportState"
+_G.PetMoveState=require "PetMoveState"
+_G.PetFSMSystem=require "PetFSMSystem"
+
+--特殊勘探活动
+_G.SpecialExplorationData=require "SpecialExplorationData"
+
 require "SpineTools"
+

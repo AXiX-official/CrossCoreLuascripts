@@ -189,3 +189,23 @@ end
 function HadInAudio()
    return false 
 end
+
+
+function EnNeedClick(b)
+    needClick = b 
+    if (isLive2D) then
+        if (live2DItemLua) then
+            live2DItemLua.needClick = needClick
+        end
+    else
+        if (imgItemLua) then
+            imgItemLua.needClick = needClick
+        end
+    end
+end
+
+function ClearCache()
+    if (isLive2D and live2DItemLua and live2DItemLua.ClearCache~=nil) then
+        live2DItemLua.ClearCache()
+    end 
+end

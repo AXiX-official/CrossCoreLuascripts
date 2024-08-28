@@ -29,7 +29,7 @@ end
 -- 自己
 function SetLeft()
     -- icon
-    SetIconL(PlayerClient:GetLastRoleID())
+    --SetIconL(PlayerClient:GetLastRoleID())
     -- attack
     local teamData = TeamMgr:GetTeamData(eTeamType.PracticeAttack)
     if teamData then
@@ -67,7 +67,12 @@ function SetLTeamItems()
     end
 
     lTeamGrids = lTeamGrids or {}
-    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", lTeamGrids, _newDatas, itemGridL)
+    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", lTeamGrids, _newDatas, itemGridL, nil, 1, {
+        hideFormat = true
+    })
+
+    --icon 
+    SetIconL(_newDatas[1]:GetSkinID())
 end
 
 -- 敌人
@@ -75,9 +80,9 @@ function SetRight()
     lData = ExerciseMgr:GetEnemyInfo(data.uid)
     -- icon
     local icon_id = lData.icon_id
-    if(lData.role_panel_id~=nil and lData.role_panel_id~=0) then 
+    if (lData.role_panel_id ~= nil and lData.role_panel_id ~= 0) then
         icon_id = lData.role_panel_id
-    end 
+    end
     SetIconR(icon_id)
     -- attack
     CSAPI.SetText(txtFightingR2, lData.performance .. "")
@@ -118,11 +123,9 @@ function SetRTeamItems()
         end
     end
     rTeamGrids = rTeamGrids or {}
-    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", rTeamGrids, _newDatas, itemGridR, nil, 1, nil, function()
-        for k, v in pairs(rTeamGrids) do
-            v.SetFormation()
-        end
-    end)
+    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", rTeamGrids, _newDatas, itemGridR, nil, 1, {
+        hideFormat = true
+    })
 end
 
 function OnClickTeam()

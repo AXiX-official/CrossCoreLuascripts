@@ -31,6 +31,7 @@ function this:GetFunc(sName)
         self.funcs["BattleField"] = self.DungeonActivity
         self.funcs["TowerView"] = self.DungeonActivity
         self.funcs["RogueView"] = self.DungeonActivity
+        self.funcs["DungeonSummer"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -151,8 +152,15 @@ end
 
 function this.ActivityListView(cfg)
     this.CheckClose(cfg);
-    ActivityMgr:AddNextOpen2(cfg.val3, {cfg.val1, cfg.val2})
-    CSAPI.OpenView("ActivityListView", nil, cfg.page)
+    local state,tips = this.ActivityListViewState(cfg)
+    if state == JumpModuleState.Normal then
+        ActivityMgr:AddNextOpen2(cfg.val3, {cfg.val1, cfg.val2})
+        CSAPI.OpenView("ActivityListView", nil, cfg.page)    
+    else
+        FuncUtil:Call(function()
+            Tips.ShowTips(tips)
+        end, nil, 100)
+    end
 end
 
 function this.SignInContinue(cfg)
@@ -330,6 +338,13 @@ function this:GetJumpState(id)
     local lockStr = "";
     local cfg = Cfgs.CfgJump:GetByID(id)
     if (cfg and cfg.sName) then
+        if cfg.act then--检查活动开启状态
+            local isOpen=DungeonMgr:IsActiveOpen(cfg.act);
+            LogError(tostring(cfg.act).."\t"..tostring(isOpen))
+            if isOpen~=true then
+                return JumpModuleState.Close;
+            end
+        end
         local func = self:GetStateFunc(cfg.sName)
         -- Log(cfg);
         if (func) then
@@ -344,6 +359,10 @@ end
 function this.DungeonState(cfg)
     if cfg.val2 == 1 or cfg.val2 == 2 then -- 主线
         local sectionData = DungeonMgr:GetSectionData(cfg.val1)
+        local isOpen, tips = sectionData:GetOpen()
+        if not isOpen then
+            return JumpModuleState.Close, tips;
+        end
         local cfgs = sectionData:GetDungeonCfgs(cfg.val2);
         local isOpen = false;
         local tips = nil;
@@ -430,6 +449,9 @@ function this.SectionState(cfg)
 end
 
 function this.ActivityListViewState(cfg)
+    if cfg.val3 and not ActivityMgr:CheckIsOpen(cfg.val3) then
+        return JumpModuleState.Close,LanguageMgr:GetTips(24003)
+    end
     return JumpModuleState.Normal;
 end
 
@@ -448,6 +470,9 @@ end
 
 function this.RegressionState(cfg)
     local isOpen,type = RegressionMgr:IsHuiGui()
+    if RegressionMgr:GetTime() <= 0 then
+        return JumpModuleState.Lock, LanguageMgr:GetTips(38002);
+    end
     if isOpen then
         if cfg.val1 == nil then
             return JumpModuleState.Normal;

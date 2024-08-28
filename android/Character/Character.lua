@@ -751,8 +751,14 @@ function ApplyHitData(hitData)
     if(hitData.death)then
         isDead = true;
     end
-    UpdateHp(hitData.hp);
 
+    if(damage > 0 or shieldDamage > 0)then
+        local currHP = GetHpInfo();
+        if(hitData.hp < currHP)then
+            UpdateHp(hitData.hp);  
+        end
+    end
+    
     if(not hitData.dont_play_sound)then
         if(cfgModel and cfgModel.s_hit)then
             local currTime = CSAPI.GetTime();
@@ -809,9 +815,9 @@ function ApplyCureData(cureData)
     end
 
     UpdateHp(cureData.hp);
---    UpdateHp(cureData.hp,nil,true,true);  
---    FuncUtil:Call(UpdateHp,nil,1000,cureData.hp);  
-
+    --    UpdateHp(cureData.hp,nil,true,true);  
+    --    FuncUtil:Call(UpdateHp,nil,1000,cureData.hp);  
+    
     if(cureData.add and cureData.add > 0)then
         CreateFloatValue("CureValue",cureData.add,GetFloatNode());               
     end
@@ -933,11 +939,18 @@ end
 function AddMaxHp(val)
     hpMax = (hpMax or 0) + val;
 end
+
+function SetHPLock(hpLockState)
+    hpLock = hpLockState;
+end
 --更新信息：HP
 function UpdateHp(curr,max,immediately,onlyFakeBar)
- --[[    if(curr)then
-    LogError("id" .. GetID() .. ":" .. "更新HP" .. tostring(curr));
+    --[[ if(IsEnemy())then
+        LogError("id" .. GetID() .. ":" .. "更新HP" .. tostring(curr));
     end ]]
+    if(hpLock)then
+        return;
+    end
 
     hpMax = max or hpMax or 1;
     if(curr)then    

@@ -61,6 +61,7 @@ function Team:LoadConfig(id, stage, hpinfo)
 			local monsterID = self.monsters[i]
 			if hpinfo[i] and hpinfo[i].hp and hpinfo[i].hp > 0 and monsterID and monsterID ~= 0 then
 				local card = self:AddCard(pos[1], pos[2], monsterID)
+				-- LogTable(hpinfo[i], "direct_hpinfo[i]==============");
 				card.hp = hpinfo[i].hp
 				if hpinfo[i].sp then
 					card.sp = hpinfo[i].sp
@@ -450,7 +451,8 @@ function Team:SetGrids(row, col, card, coordinate)
 		local formation = MonsterFormation[card.gridsID]
 		ASSERT(formation)
 		local ret = self:CheckGrids(row, col, formation.coordinate)
-		ASSERT(ret, "CheckGrids error")
+		ASSERT(ret, "CheckGrids error:%s",self.fightMgr.groupID)
+		--ASSERT(nil, "MonsterFormation==================")
 		-- relative 相对坐标
 		for i, pos in ipairs(formation.coordinate) do
 			local r = row + pos[1]
@@ -550,6 +552,7 @@ function Team:AddUniteCard(row, col, id, parent, data, coordinate)
 	carddata.hit       = mainCard:Get("hit")
 	carddata.level     = mainCard:Get("level")
 	carddata.cuid      = mainCard:Get("cuid")
+	carddata.damage    = mainCard:Get("damage")
 
 	-- @【芯片套装】				
 	-- 	继承主角色芯片触发的套装效果

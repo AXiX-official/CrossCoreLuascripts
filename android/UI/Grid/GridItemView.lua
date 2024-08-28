@@ -27,6 +27,7 @@ function Clean()
 	-- CSAPI.SetGOActive(bg,true);
 	SetCount()	
 	SetDownCount()
+	SetLimitTag();
 	SetIsUp(false)
 	SetDayObj();
 	CSAPI.SetGOActive(tBorder,false)
@@ -52,6 +53,10 @@ function LoadIcon(iconName)
 	if(iconName) then
 		ResUtil.IconGoods:Load(icon, iconName .. "")
 	end
+end
+
+function SetLimitTag(isLimit)
+	CSAPI.SetGOActive(limitObj,isLimit==true);
 end
 
 --自定义的图集加载图片 loader:ResIconUtil.New返回的对象
@@ -158,6 +163,7 @@ function Refresh(data, _elseData)
 			-- 	isLoadIcon=true;
 			-- end
 		end
+		SetLimitTag(data:IsExipiryType());
 		LoadFrame(data:GetQuality());
 		-- SetIcon(data:GetIcon());
 		CSAPI.SetGOActive(icon, true);

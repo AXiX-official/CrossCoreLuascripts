@@ -16,6 +16,12 @@ local disableColor = {77, 77, 77, 255};
 
 local isShowCard=false;
 local addBuffs=nil;
+local voucherList=nil;
+local realPrice=nil;
+local eventMgr=nil;
+local voucherItem=nil
+local onceMax=0;
+
 -- local slider=nil;
 function Awake()
 	okBtn = ComUtil.GetCom(btn_pay, "Button");
@@ -25,6 +31,8 @@ function Awake()
 	-- CSAPI.AddSliderCallBack(numSlider, OnSliderChange)
 	maxBtn = ComUtil.GetCom(btn_max, "Button");
 	minBtn = ComUtil.GetCom(btn_min, "Button");
+	local go= ResUtil:CreateUIGO("Shop/VoucherDropItem",vObj.transform);
+    voucherItem=ComUtil.GetLuaTable(go);
 	-- SetText();
 	InitListener();
 end
@@ -36,6 +44,7 @@ function InitListener()
 	eventMgr:AddListener(EventType.SDK_Pay_Result,OnSDKResult);
 	eventMgr:AddListener(EventType.SDK_QRPay_Over,OnQROver)
 	eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopRefresh)
+	eventMgr:AddListener(EventType.Shop_PayVoucher_Change, OnVoucherChange);
 end
 
 function OnDestroy()
@@ -57,32 +66,9 @@ function OnOpen()
 	local isPackage=false;
 	-- 根据当前物品数量进行初始化
 	if commodity then
-		local onceMax=commodity:GetOnecBuyLimit() == - 1 and 99 or commodity:GetOnecBuyLimit(); --单次购买上限
+		onceMax=commodity:GetOnecBuyLimit() == - 1 and 99 or commodity:GetOnecBuyLimit(); --单次购买上限
 		CSAPI.SetText(txt_name,commodity:GetName());
 		CSAPI.SetText(txt_desc,commodity:GetDesc());
-		local normalPrice=commodity:GetPrice();
-		if normalPrice==nil then --免费
-			CSAPI.SetGOActive(txt_free,true);
-			CSAPI.SetGOActive(txt_nPrice,false);
-			CSAPI.SetGOActive(hPrice,false);
-		else
-			CSAPI.SetGOActive(txt_free,false);
-			CSAPI.SetGOActive(txt_nPrice,true);
-			local discount=commodity:GetNowDiscount();
-			if discount~=1 then
-				local realPrice=commodity:GetRealPrice();
-				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
-				SetPrice(realPrice[1].id,realPrice[1].num,nPriceIcon,txt_nPrice);
-				CSAPI.SetGOActive(hPrice,true)
-				CSAPI.SetGOActive(discountObj,true);
-				local dis=math.floor((1-discount)*100);
-				CSAPI.SetText(txt_discount,"-"..dis.."%");
-			else
-				SetPrice(normalPrice[1].id,normalPrice[1].num,nPriceIcon,txt_nPrice);
-				CSAPI.SetGOActive(hPrice,false)
-				CSAPI.SetGOActive(discountObj,false);
-			end
-		end
 		--当前剩余数量
 		local num=commodity:GetNum();
 		-- CSAPI.SetGOActive(txt_limit,num~=-1)
@@ -114,7 +100,30 @@ function OnOpen()
 		else
 			InitType2();
 		end
+		RefreshPrice();
+		RefreshVoucherItem();
 	end
+end
+
+function RefreshVoucherItem()
+	local isShow=false;
+    if voucherItem~=nil and commodity and commodity:GetUseVoucherTypes()~=nil then
+        voucherItem.Init(commodity,currNum,true);
+        if voucherItem.GetOptionsLength()>0 then
+            isShow=true;
+        end
+    end
+	SetVoucherItem(isShow)
+end
+
+function SetVoucherItem(isShow)
+    if isShow then
+        CSAPI.SetAnchor(content,311,122);
+        CSAPI.SetGOActive(vObj,isShow);
+    else
+		CSAPI.SetAnchor(content,311,202);
+        CSAPI.SetGOActive(vObj,isShow);
+    end
 end
 
 function SetHasNum(num)
@@ -179,13 +188,13 @@ function InitCommodityInfo()
 			CSAPI.SetGOActive(btnDetails,true);
 		end
 		SetDayObj(good.data:GetIconDayTips());
+		if isSmall~=true then
+			CSAPI.SetScale(dayObj,1.3,1.3,1.3);
+		else
+			CSAPI.SetScale(dayObj,1,1,1);
+		end
 	end
 	ShopCommFunc.SetIconBorder(commodity,commodityType,border,icon,tIcon,tBorder,2,isSmall);
-	-- 	CSAPI.SetGOActive(countObj,true)
-	-- 	CSAPI.SetText(txt_count,tostring(getList[1].num));
-	-- else
-	-- 	CSAPI.SetGOActive(countObj,false)
-	-- end
 end
 
 --设置有效天数
@@ -194,26 +203,63 @@ function SetDayObj(txt)
 	CSAPI.SetText(txt_day,txt);
 end
 
+--刷新价格
 function RefreshPrice()
-	local priceInfo=commodity:GetRealPrice();
-	-- local currMoneyName=""
-	if priceInfo then
-		currPrice=priceInfo[1].num*currNum;
-		currPriceType=priceInfo[1].id;
-		-- local num = 0;
-		SetPrice(priceInfo[1].id, currPrice,priceIcon,txt_price);
-		-- local cfg = Cfgs.ItemInfo:GetByID(priceInfo[1].id);
-		-- if cfg then
-		-- 	currMoneyName=cfg.name;
-		-- end
-		-- if priceInfo[1].id == ITEM_ID.GOLD then
-		-- 	num = PlayerClient:GetGold();
-		-- elseif priceInfo[1].id == ITEM_ID.DIAMOND then
-		-- 	num = PlayerClient:GetDiamond();
-		-- else
-		-- 	num = BagMgr:GetCount(priceInfo[1].id);
-		-- end
-		-- okBtn.interactable = currPrice <= num;
+	if commodity==nil then
+		do return end;
+	end
+	local normalPrice=commodity:GetPrice();
+	if normalPrice==nil or (normalPrice and normalPrice[1].num==0) then --免费
+		CSAPI.SetGOActive(txt_free,true);
+		CSAPI.SetGOActive(txt_nPrice,false);
+		CSAPI.SetGOActive(hPrice,false);
+	else
+		CSAPI.SetGOActive(txt_free,false);
+		CSAPI.SetGOActive(txt_nPrice,true);
+		local priceInfo=commodity:GetRealPrice();
+		local disPrice=normalPrice[1].num*currNum;--折扣前价格
+		local curPrice=priceInfo[1].num*currNum;--当前价格
+		local curPID=priceInfo[1].id;
+		if voucherList then
+			disPrice=priceInfo[1].num*currNum;
+			curPrice=realPrice;
+		end
+		local discount=commodity:GetNowDiscount();
+		CSAPI.SetGOActive(discountObj,discount~=1);
+		local isShowHPrice=false;
+		if discount~=1 then
+			local dis=math.floor((1-discount)*100);
+			CSAPI.SetText(txt_discount,"-"..dis.."%");
+		end
+		if discount~=1 or voucherList~=nil then
+			isShowHPrice=true;
+		end
+		if isShowHPrice then
+			if onceMax>1 then
+				if normalPrice[1].num==priceInfo[1].num then
+					SetPrice(curPID,priceInfo[1].num,nPriceIcon,txt_nPrice);
+				else
+					SetPrice(curPID,normalPrice[1].num,hPriceIcon,txt_hPrice);
+					SetPrice(curPID,priceInfo[1].num,nPriceIcon,txt_nPrice);
+				end
+				SetPrice(curPID,disPrice,hPriceIcon2,txt_hPrice2);
+				SetPrice(curPID,curPrice,priceIcon,txt_price);
+			else
+				SetPrice(curPID,disPrice,hPriceIcon,txt_hPrice);
+				SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice);
+			end
+			CSAPI.SetGOActive(p0,onceMax>1);
+			CSAPI.SetGOActive(txt_hPrice2,onceMax>1);
+			CSAPI.SetGOActive(hPrice,isShowHPrice)
+		else
+			SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice);
+			if  onceMax>1 then
+				SetPrice(curPID,curPrice,priceIcon,txt_price);
+			end
+			CSAPI.SetGOActive(p0,false);
+			CSAPI.SetGOActive(txt_hPrice2,false);
+			CSAPI.SetGOActive(hPrice,false)
+		end
 	end
 end
 
@@ -273,9 +319,11 @@ function OnClickAdd()
 	if currNum < currentMaxCount then
 		currNum = currNum + 1;
 		CSAPI.SetText(txt_num, tostring(currNum));		
+		RefreshVoucherItem();
 		-- SetSliderValue();
 	else
 		Tips.ShowTips(LanguageMgr:GetByID(24025));	
+		do return end	
 	end
 	-- SetBtnState(removeBtn,removeImg, currNum > 1);
 	-- SetBtnState(addBtn,addImg, currNum < currentMaxCount);
@@ -288,9 +336,11 @@ function OnClickRemove()
 	if currNum > 1 then
 		currNum = currNum - 1;
 		CSAPI.SetText(txt_num, tostring(currNum));	
+		RefreshVoucherItem();
 		-- SetSliderValue();
 	else
 		Tips.ShowTips(LanguageMgr:GetByID(24026));	
+		do return end	
 	end
 	-- SetBtnState(removeBtn,removeImg, currNum > 1);
 	-- SetBtnState(addBtn,addImg, currNum<currentMaxCount);
@@ -317,7 +367,8 @@ end
 
 function OnClickMax()
 	if currNum==currentMaxCount then
-		Tips.ShowTips(LanguageMgr:GetByID(24025));	
+		Tips.ShowTips(LanguageMgr:GetByID(24025));
+		do return end	
 	end
 	currNum=currentMaxCount;
 	-- SetBtnState(removeBtn,removeImg, currNum > 1);
@@ -326,16 +377,19 @@ function OnClickMax()
 	CSAPI.SetText(txt_num, tostring(currNum));	
 	SetBuyContent();
 	RefreshPrice();
+	RefreshVoucherItem();
 end
 
 function OnClickMin()
 	if currNum==1 then
 		Tips.ShowTips(LanguageMgr:GetByID(24026));	
+		do return end	
 	end
 	currNum=1;
 	CSAPI.SetText(txt_num, tostring(currNum));	
 	SetBuyContent();
 	RefreshPrice();
+	RefreshVoucherItem();
 end
 
 function SetMaxNum()
@@ -370,7 +424,7 @@ end
 
 --点击购买
 function OnClickPay()
-	ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,OnSuccess);
+	ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,voucherList,OnSuccess);
 	-- local priceInfo=commodity:GetRealPrice();
 	-- local channelType=CSAPI.GetChannelType();
 	-- if priceInfo and priceInfo[1].id==-1 and (channelType==ChannelType.Normal or channelType==ChannelType.TapTap) then
@@ -420,7 +474,7 @@ function OnSuccess(proto)
 		if payCallBack then
 			payCallBack(proto);
 		end
-		if isShowCard==false then	
+		if isShowCard==false and openSetting~=2 then --openSetting为2的时候，需要自己调用奖励面板	
 			addBuffs=proto.add_bufs;
 			if next(proto.gets) then
 				UIUtil:OpenReward( {proto.gets})
@@ -430,6 +484,21 @@ function OnSuccess(proto)
 		end
 	end
 end
+
+function OnVoucherChange(ls)
+    voucherList=ls;
+    if voucherList~=nil then
+        realPrice=0;
+        local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),currNum,PlayerClient:GetLv());
+        if isOk and res then
+            realPrice=res[1][2];
+        end
+    else
+        realPrice=nil;
+    end
+    RefreshPrice();
+end
+
 
 function ShowBuffTips()
 	if addBuffs and next(addBuffs) then
@@ -487,5 +556,6 @@ hPrice=nil;
 txt_hPrice=nil;
 hPriceIcon=nil;
 view=nil;
+voucherItem=nil;
 end
 ----#End#----

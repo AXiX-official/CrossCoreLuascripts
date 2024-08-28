@@ -88,6 +88,8 @@ local conf = {
 {'78',	'乱序',	'setRogueDuplicate',	'1',	'乱序选怪物界面，固定选择某个怪物id',	'setRogueDuplicate 关卡ID (在翻怪物卡牌前输入，输入完需保存进度退出界面再重新进入)',	'setRogueDuplicate 40001'},
 {'79',	'重置道具池',	'resetItemPool',	'1',	'重置道具池',	'resetItemPool 道具池ID（没填则默认所有道具池重置）',	'resetItemPool 1001'},
 {'80',	'乱序',	'passRogue',	'1',	'通关乱序演习关卡组,不填id全部通关',	'passRogue 关卡组ID(没填则默认所有乱序关卡)',	'passRogue 15001'},
+{'81',	'添加宠物物品',	'addPetItem',	'1',	'添加所有宠物物品（不包括图鉴）',	'addPetItem 道具ID（没填则默认所有宠物物品）',	'addPetItem'},
+{'82',	'设置宠物属性',	'setPet',	'3',	'设置宠物属性',	'setPet 宠物ID 属性类型 属性值 （宠物id 1-3, 属性类型1心情 2饱腹 3洗漱 4成长）',	'setPet 1 1 100'},
 },
 }
 --cfgGmCmdList = conf

@@ -9,7 +9,10 @@ function this:Init()
     self:Clear()
     -- self:SetSortTab()
     self:CardsData()
-    EventMgr.AddListener(EventType.Bag_Update, this.OnBagUpdate)
+    --EventMgr.AddListener(EventType.Bag_Update, this.OnBagUpdate)
+    --特效技能红点查看记录
+    self.passiveRedIsLookDatas = {}
+    PlayerProto:GetClientData("passiveRed_isLook")
 end
 
 function this:Clear()
@@ -18,14 +21,15 @@ function this:Clear()
     self.scaleTypes = {} -- 大小图
     self.sortTypes = {} -- 排序
     self.orderTypes = {} -- 升降
-    EventMgr.RemoveListener(EventType.Bag_Update, this.OnBagUpdate)
+    --EventMgr.RemoveListener(EventType.Bag_Update, this.OnBagUpdate)
 end
 
 -- 材料更新,跃升突破检查(延迟调用，优化物品大量刷新的情况)
-function this.OnBagUpdate()
+function this.OnBagUpdate(isLogin)
     if (this.applyRefresh) then
         return
     end
+    this.isLogin = isLogin
     this.applyRefresh = 1
     FuncUtil:Call(this.OnBagUpdate2, nil, 100)
 end
@@ -33,7 +37,7 @@ function this.OnBagUpdate2()
     this.applyRefresh = nil
     if (this.cards) then
         for k, v in pairs(this.cards) do
-            v:CheckPassiveUp()
+            v:CheckPassiveUp0(this.isLogin)
             v:GoodsUpdate()
         end
         RoleMgr:CheckRed()
@@ -137,12 +141,12 @@ end
 function this:GetSkinIDByRoleID(roleID)
     local modelId = nil
     local b = false -- 是否已设置看板 
-    if (PlayerClient:KBIsRole()) then
-        local cfg = Cfgs.character:GetByID(PlayerClient:GetIconId())
-        if (cfg and cfg.role_id and cfg.role_id == roleID) then
-            modelId = PlayerClient:GetIconId()
-        end
-    end
+    -- if (PlayerClient:KBIsRole()) then
+    --     local cfg = Cfgs.character:GetByID(PlayerClient:GetIconId())
+    --     if (cfg and cfg.role_id and cfg.role_id == roleID) then
+    --         modelId = PlayerClient:GetIconId()
+    --     end
+    -- end
     if (not modelId) then
         local cRoleInfo = CRoleMgr:GetData(roleID)
         local cfgID = cRoleInfo:GetFirstCardId()
@@ -872,6 +876,21 @@ function this:GetLeader()
         end 
     end
     return nil 
+end
+
+--特效技能红点查看记录
+function this:PassiveRedIsLook(data)
+    self.passiveRedIsLookDatas = data or {}
+end
+function this:CheckPassiveRedIsLook(uidStr)
+    if(self.passiveRedIsLookDatas and self.passiveRedIsLookDatas[uidStr]==1) then 
+        return true
+    end  
+    return false
+end
+function this:SetPassiveRedIsLook(uidStr,num)
+    self.passiveRedIsLookDatas[uidStr] = num
+    PlayerProto:SetClientData("passiveRed_isLook", self.passiveRedIsLookDatas)
 end
 
 return this

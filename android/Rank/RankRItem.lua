@@ -5,7 +5,7 @@ end
 function SetIndex(_i)
 	index = _i
 end
-
+--ExerciseInfo
 function Refresh(_info)
 	info = _info
 	local rank = info:GetRank()
@@ -34,6 +34,6 @@ function Refresh(_info)
 	-- if(_cfg.icon) then
 	-- 	ResUtil.RoleCard:Load(icon, _cfg.icon, true)
 	-- end
-	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID())
+	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID(),info:GetSex()) 
 end
 

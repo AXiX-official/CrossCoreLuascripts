@@ -575,7 +575,7 @@ end
 -- 小队动画
 function TeamMV(mvName)
     criMovie = ResUtil:PlayVideo(mvName, MVParent)
-    UIUtil:SetPerfectScale(criMovie.gameObject)
+    --UIUtil:SetPerfectScale(criMovie.gameObject)
     criMovie:AddCompleteEvent(function()
         EnterMV()
         criMovie = nil

@@ -1,26 +1,8 @@
 local this = {};
 
 function this.GetNames(_type)
-    if _type == DungeonInfoType.Normal then
-        return this.Normal()
-    elseif _type == DungeonInfoType.Tower then
-        return this.Tower()
-    elseif _type == DungeonInfoType.Course then
-        return this.Course()
-    elseif _type == DungeonInfoType.Trials then
-        return this.Trials()
-    elseif _type == DungeonInfoType.Danger then
-        return this.Danger()
-    elseif _type == DungeonInfoType.Plot then
-        return this.Plot()
-    elseif _type == DungeonInfoType.Feast then
-        return this.Feast()
-    elseif _type == DungeonInfoType.TotalBattle then
-        return this.TotalBattle()
-    elseif _type == DungeonInfoType.Summer then
-        return this.Summer()
-    elseif _type == DungeonInfoType.SummerDanger then
-        return this.Summer()
+    if this[_type] then
+        return this[_type]()
     end
 end
 
@@ -58,6 +40,18 @@ end
 
 function this.Summer()
     return {"Title3","Level2","Target2","Output2","Details","Double2","Button2"}
+end
+
+function this.SummerPlot()
+    return {"Title3","Level2","Plot2","Output2","PlotButton"}
+end
+
+function this.SummerDanger()
+    return {"Title3","Level2","Target2","Danger3","Details","Double2","Button2"}
+end
+
+function this.SummerSpecial()
+    return {"Title3","Level2","Plot2","Output2","Details","Button2"}
 end
 
 return this; 

@@ -169,6 +169,18 @@ function this:SetIconId(_icon_id)
     self.data.icon_id = _icon_id
 end
 
+--返回头像框初始化需要结构体
+function this:GetHeadFrameInfo()
+    return {
+        uid=self:GetUid(),
+        name=self:GetName(),
+        lv=self:GetLv(),
+        icon_id=self:GetIconId(),
+        icon_frame=self:GetHeadFrame();
+        sel_card_ix=self:GetSex();
+    }
+end
+
 -- 看板id（）
 function this:GetPanelId()
     return self.data.panel_id
@@ -185,11 +197,11 @@ function this:SetHeadFrame(icon_frame)
     self.icon_frame = icon_frame or 1
 end
 
--- 看板是角色(不在头像表，那就是角色头像)
-function this:KBIsRole()
-    local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(self.data.panel_id)
-    return cfg==nil 
-end
+-- -- 看板是角色(不在头像表，那就是角色头像)
+-- function this:KBIsRole()
+--     local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(self.data.panel_id)
+--     return cfg==nil 
+-- end
 
 -- 队长模型表id
 function this:GetModelId()
@@ -348,22 +360,22 @@ function this:GetCoin(id)
 end
 
 -- 背景
-function this:GetBG()
-    -- local _data = FileUtil.LoadByPath("bgNew.txt")
-    -- local id = 1
-    -- if (_data and _data.id) then
-    --     id = _data.id
-    -- end
-    -- return id
-    return self.data.background_id or 1
-end
+-- function this:GetBG()
+--     -- local _data = FileUtil.LoadByPath("bgNew.txt")
+--     -- local id = 1
+--     -- if (_data and _data.id) then
+--     --     id = _data.id
+--     -- end
+--     -- return id
+--     return self.data.background_id or 1
+-- end
 
-function this:SetBG(_id)
-    -- FileUtil.SaveToFile("bgNew.txt", {
-    --     id = _id
-    -- })
-    self.data.background_id = _id 
-end
+-- function this:SetBG(_id)
+--     -- FileUtil.SaveToFile("bgNew.txt", {
+--     --     id = _id
+--     -- })
+--     self.data.background_id = _id 
+-- end
 
 function this:GetNewPlayerFightStateKey()
     return "new_player_fight_state";
@@ -530,7 +542,7 @@ function this:NewPlayerFight(newPlayerFightIndex)
                 custom_result = 1,
                 new_player_fight = 1,
                 bIsWin = 1,
-                content = StringConstant.fight_result1
+                content = ""
             }));
         end);
     else
@@ -584,7 +596,7 @@ end
 function this:PlayFightOP()
     FightClient.NewPlayerDrasu=false;
     --LogError("开始播放剧情战斗动画");
-    CSAPI.StopSound();
+    --[[ CSAPI.StopSound();
     CSAPI.SetSoundOff(true);
     CSAPI.DisableInput(1000);
     CSAPI.OpenView("VideoPlayer", {
@@ -593,14 +605,15 @@ function this:PlayFightOP()
         caller = self
     });
 
-    BuryingPointMgr:BuryingPoint("after_login", 20066);
+    BuryingPointMgr:BuryingPoint("after_login", 20066); ]]
+    self:OnFightVedioComplete();
 end
 
 -- 剧情战斗动画播放完成
 function this:OnFightVedioComplete()
-    BuryingPointMgr:BuryingPoint("after_login", 30003);
-    CSAPI.CloseView("VideoPlayer");
-    CSAPI.SetSoundOff(false);
+    --BuryingPointMgr:BuryingPoint("after_login", 30003);
+    --CSAPI.CloseView("VideoPlayer");
+    --CSAPI.SetSoundOff(false);
     -- LogError("剧情战斗动画播放完成");
     local fightIds = PlayerClient:GetNewPlayerFightIDs();
     local fightId = fightIds and fightIds[1];
@@ -722,11 +735,13 @@ end
 
 -- 角色累计充值金额
 function this:PayRechargeRet(proto)
-    local _c_amount = self.c_amount
-    self.c_amount = proto.c_amount
-    if (_c_amount == nil or self.c_amount ~= _c_amount) then
-        EventMgr.Dispatch(EventType.Pay_Amount_Change)
-    end
+    --local _c_amount = self.c_amount
+    self.c_amount = proto.c_amount or 0
+    MenuBuyMgr:ConditionCheck3(1,self.c_amount)
+    -- if (_c_amount == nil or self.c_amount ~= _c_amount) then
+    --     --EventMgr.Dispatch(EventType.Pay_Amount_Change)
+    --     MenuBuyMgr:ConditionCheck(2,"amountChange")
+    -- end
 end
 function this:GetPayAmount()
     return self.c_amount or 0
@@ -753,12 +768,21 @@ function this:IsPlayBirthDayVoice()
     return true 
 end
 
+--获取生日 月,日
+function this:GetBirthDay()
+    local birth = self.data.birth
+    if (birth) then
+         return birth[1],birth[2]
+    end
+    return 0,0
+end
+
 --最后设置的角色看板ID
-function this:SetLastRoleID(id)
-    self.data.role_panel_id = id 
-end
-function this:GetLastRoleID()
-    return self.data.role_panel_id
-end
+-- function this:SetLastRoleID(id)
+--     self.data.role_panel_id = id 
+-- end
+-- function this:GetLastRoleID()
+--     return self.data.role_panel_id
+-- end
 
 return this;

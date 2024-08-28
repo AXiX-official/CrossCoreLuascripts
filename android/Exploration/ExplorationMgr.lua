@@ -11,6 +11,34 @@ function this:Init()
             end
         end
     end
+    PermitProto:GetInfo(-1);
+end
+
+function this:UpdateExInfo(proto)
+    if proto and proto.list then
+        self.exInfo=self.exInfo or {}
+        for k,v in ipairs(proto.list) do
+            local exData=SpecialExplorationData.New();
+            exData:SetData(v)
+            self.exInfo[v.id]=exData;
+        end
+        ExplorationMgr:CheckExRedInfo();
+    end
+end
+
+function this:UpdateExRewardInfo(proto)
+    if proto and self.exInfo and self.exInfo[proto.id] then
+        self.exInfo[proto.id]:UpdateGets(proto.gets);
+        ExplorationMgr:CheckExRedInfo();
+    end
+end
+
+function this:GetExData(id)
+    local exData=nil
+    if self.exInfo and id and self.exInfo[id] then
+        exData=self.exInfo[id];
+    end
+    return exData;
 end
 
 function this:SetCurrData(proto)
@@ -170,6 +198,19 @@ end
 
 function this:CheckRedInfo()
     RedPointMgr:UpdateData(RedPointType.Exploration, self:GetRedInfo())
+end
+
+function this:CheckExRedInfo()
+    local redInfo=nil
+    if self.exInfo then
+        redInfo={};
+        for k,v in pairs(self.exInfo) do
+            redInfo=redInfo or {}
+            redInfo[k]=v:HasRevice() and 1 or nil;
+        end
+    end
+    DungeonMgr:CheckActivityRed()
+    RedPointMgr:UpdateData(RedPointType.SpecialExploration, redInfo)
 end
 
 function this:Clear()

@@ -826,7 +826,7 @@ function this:Encounter(data)
     --LogError("Encounter!set to nil");
     self.encounterData = data;
     self:UpdateCharacter(data);
-    CSAPI.OpenView("Prompt", {content = StringConstant.battle_encounter ,okCallBack=function()        
+    CSAPI.OpenView("Prompt", {content = "1075" ,okCallBack=function()        
 		BattleMgr:ConfirmEncounter();
 	end});
 

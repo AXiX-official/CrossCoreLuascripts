@@ -58,7 +58,7 @@ function Refresh(_data)
 end
 
 function SetTime()
-    targetTime = PlayerClient:GetCreateTime() + (g_InvestmentTimes * 86400)
+    targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
     if TimeUtil:GetBJTime() >= targetTime then
         return
     end
@@ -126,7 +126,7 @@ function OnClickPay()
         return 
     end
 
-    ShopCommFunc.HandlePayLogic(commData, 1, CommodityType.Normal, ShowReward)
+    ShopCommFunc.HandlePayLogic(commData, 1, CommodityType.Normal,nil, ShowReward)
 end
 
 function ShowReward(proto)

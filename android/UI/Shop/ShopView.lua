@@ -69,7 +69,7 @@ function Awake()
     CSAPI.SetParent(video.gameObject, videoNode);
     ClientProto:GetMemberRewardInfo();
     ShopProto:GetShopResetTime();
-    MenuMgr:ShopFirstOpen() --商店第一次打开记录 rui
+    MenuBuyMgr:ConditionCheck(2,"shopOpen") --MenuMgr:ShopFirstOpen() --商店第一次打开记录 rui
     UIUtil.SetRTAlpha(rtCamera,sv5Img);
     -- CSAPI.SetRenderTexture(sv5Img,goRT);
 	-- CSAPI.SetCameraRenderTarget(rtCamera,goRT);
@@ -145,6 +145,7 @@ function OnInit()
 end
 
 function OnDestroy()
+    ShopMgr:SetJumpVoucherID();
     eventMgr:ClearListener();
     RoleAudioPlayMgr:StopSound();
     EventMgr.Dispatch(EventType.Replay_BGM);--重播场景背景音乐
@@ -310,29 +311,29 @@ end
 
 --初始化左边二级菜单
 function InitLeftTabs(isJump)
-     -- childTabDatas=currPageData:GetTopTabs(true);
-     if childTabDatas and next(childTabDatas) and currPageData:GetCommodityType()~=CommodityType.Promote  then
-        --     if not isJump then
-        --         childPageID=lastPageIndex==currPageIndex and childPageID or childTabDatas[1].id;
-        --     else
-        --         childPageID=childPageID or childTabDatas[1].id;
-        --     end
-        --     for k,v in ipairs(childTabDatas) do
-        --         if childPageID==v.id then
-        --             currChildPage=v;
-        --             break;
-        --         end
-        --     end
-         --   ItemUtil.AddItems("Shop/ShopTabItem", childTabItems, childTabDatas, leftParent, nil, 1, {sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos});
-            CSAPI.SetGOActive(leftParent,true);
-            layout6:IEShowList(#childTabDatas);
-        -- else
-        --     childTabDatas=nil;
-        --     childPageID=nil;
-        --     currChildPage=nil;
-        else
-            CSAPI.SetGOActive(leftParent,false);
-        end
+    -- childTabDatas=currPageData:GetTopTabs(true);
+    if childTabDatas and next(childTabDatas) and currPageData:GetCommodityType()~=CommodityType.Promote  then
+    --     if not isJump then
+    --         childPageID=lastPageIndex==currPageIndex and childPageID or childTabDatas[1].id;
+    --     else
+    --         childPageID=childPageID or childTabDatas[1].id;
+    --     end
+    --     for k,v in ipairs(childTabDatas) do
+    --         if childPageID==v.id then
+    --             currChildPage=v;
+    --             break;
+    --         end
+    --     end
+     --   ItemUtil.AddItems("Shop/ShopTabItem", childTabItems, childTabDatas, leftParent, nil, 1, {sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos});
+        CSAPI.SetGOActive(leftParent,true);
+        layout6:IEShowList(#childTabDatas);
+    -- else
+    --     childTabDatas=nil;
+    --     childPageID=nil;
+    --     currChildPage=nil;
+    else
+        CSAPI.SetGOActive(leftParent,false);
+    end
 end
 
 function InitPromotes()
@@ -527,15 +528,6 @@ function LayoutCallBack4(index)
     item.SetClickCB(OnClickGrid);
 end
 
-function LayoutCallBack6(index)
-    local _data=childTabDatas[index]
-    local item=layout6:GetItemLua(index);
-    local elseData={sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos}
-    item.Refresh(_data, elseData);
-    -- item.SetIndex(index);
-    -- item.SetClickCB(OnClickSkin);
-end
-
 function LayoutCallBack5(index)
     local _data=curDatas[index]
     local item=layout5:GetItemLua(index);
@@ -544,6 +536,14 @@ function LayoutCallBack5(index)
     item.SetClickCB(OnClickSkin);
 end
 
+function LayoutCallBack6(index)
+    local _data=childTabDatas[index]
+    local item=layout6:GetItemLua(index);
+    local elseData={sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos}
+    item.Refresh(_data, elseData);
+    -- item.SetIndex(index);
+    -- item.SetClickCB(OnClickSkin);
+end
 
 
 --购买月卡
@@ -740,7 +740,6 @@ function SetLayout()
     CSAPI.SetGOActive(sv5,currLayout==layout5);
     CSAPI.SetGOActive(cardPage,currLayout==nil);
     CSAPI.SetGOActive(videoNode,currLayout==nil);
-    CSAPI.SetGOActive(leftParent,hasTabs);
     CSAPI.SetGOActive(bMask,true);
     -- SetArrActive({promoteObj,talkBg},false);
     --临时用

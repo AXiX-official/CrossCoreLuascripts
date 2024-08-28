@@ -24,8 +24,13 @@ function Skill911210501:OnAttackOver(caster, target, data)
 	else
 		return
 	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
 	-- 911210503
-	if self:Rand(4500) then
+	if self:Rand(4000) then
 		self:AddProgress(SkillEffect[911210503], caster, target, data, -1000)
 	end
 end

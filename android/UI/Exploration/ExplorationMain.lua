@@ -482,7 +482,7 @@ end
 
 function OnValueChange()    
     local indexs=layout:GetIndexs();
-    if indexs then
+    if indexs and indexs.Length>0 then
         local cIndex=indexs[indexs.Length-2];
         if currClickLv~=cIndex then
             currClickLv=cIndex;

@@ -252,7 +252,11 @@ function ClientProto:ActiveOpen(proto)
     -- Log(proto);
     if proto then
         DungeonMgr:AddActivityOpenInfo(proto)
+        if not proto.isFromLogin then --不是登录时更新
+            ActivityMgr:RefreshOpenState()
+            EventMgr.Dispatch(EventType.CfgActiveEntry_Change)
     end
+end
 end
 
 --服务器修改表字段

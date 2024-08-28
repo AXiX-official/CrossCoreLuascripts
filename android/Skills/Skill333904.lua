@@ -23,7 +23,7 @@ function Skill333904:OnAddBuff(caster, target, data, buffer)
 	-- 8686
 	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
 	-- 333924
-	if self:Rand(2500) then
+	if self:Rand(4000) then
 		self:CallSkill(SkillEffect[333924], caster, target, data, 304900100+count686)
 	end
 end

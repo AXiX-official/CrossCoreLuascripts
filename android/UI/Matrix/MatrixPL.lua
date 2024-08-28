@@ -8,13 +8,13 @@ function this.New()
     return ins
 end
 
-function this:Init(cRoleData, face, txtPL, slider, imgSlider)
+function this:Init(cRoleData, face, txtPL, slider, imgSlider,onlyCur)
     self.cRoleData = cRoleData
     self.face = face
     self.txtPL = txtPL
     self.slider = slider
     self.imgSlider = imgSlider
-
+    self.onlyCur = onlyCur
     self.outlineBar = nil
     if (self.slider) then
         self.outlineBar = ComUtil.GetCom(self.slider, "OutlineBar")
@@ -49,7 +49,12 @@ function this:SetPL()
         self.curTv = self.cRoleData:GetCurRealTv()
         if (self.txtPL) then
             local code = self.GetColor(self.curTv)
-            local str = string.format("<color=#%s>%s</color><color=#929296>/%s</color>", code, self.curTv, 100)
+            local str = ""
+            if(self.onlyCur) then 
+                str = string.format("<color=#%s>%s</color>", code, self.curTv)
+            else 
+                str = string.format("<color=#%s>%s</color><color=#929296>/%s</color>", code, self.curTv, 100)
+            end 
             CSAPI.SetText(self.txtPL, str)
         end
         local faceName = MatrixMgr:GetFaceName(self.curTv)

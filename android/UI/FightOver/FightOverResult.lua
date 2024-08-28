@@ -20,7 +20,7 @@ function Awake()
         FuncUtil:Call(ApplyQuit, nil, 2000);
     end
 
-    MenuMgr:ReduceMenuBuyChangeNum()
+    MenuBuyMgr:ConditionCheck(3) --MenuMgr:ReduceMenuBuyChangeNum()
 end
 
 function OnEnable()
@@ -86,6 +86,7 @@ function OnOpen()
     if fightOverData then
         data.rewards = fightOverData.rewards or data.rewards
         data.nPlayerExp = fightOverData.nPlayerExp and data.nPlayerExp + fightOverData.nPlayerExp or data.nPlayerExp
+        data.totalDamage = fightOverData.totalDamage
     end
 
     local viewPath = bIsWin and "FightOver/FightOverToWin" or "FightOver/FightOverToLose"
@@ -109,8 +110,12 @@ function GetIsWin(_sceneType)
         return true
     elseif _sceneType == SceneType.PVE then
         local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-        if cfg and cfg.type == eDuplicateType.StarPalace then
+        if cfg then
+            if cfg.type == eDuplicateType.StarPalace then
             return true             
+            elseif cfg.type == eDuplicateType.StoryActive and cfg.diff and cfg.diff == 4 then
+                return true   
+        end
         end
         return data.bIsWin
     else
