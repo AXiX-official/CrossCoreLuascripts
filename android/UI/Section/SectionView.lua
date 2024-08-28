@@ -126,6 +126,7 @@ function Awake()
     eventMgr:AddListener(EventType.Section_Red_Update, OnRedRefresh)
     eventMgr:AddListener(EventType.ExerciseL_New, ExerciseNewRefresh)
     eventMgr:AddListener(EventType.Loading_Complete, CheckModelOpen) --检测功能开启
+    eventMgr:AddListener(EventType.RedPoint_Refresh, RefreshActivityDatas)
     UIMaskGo = CSAPI.GetGlobalGO("UIClickMask")
 
     layout1 = ComUtil.GetCom(sv1, "UIInfinite")

@@ -798,19 +798,17 @@ function FightMgrBase:PrintCardInfo(bt)
     for i, v in ipairs(self.arrCard) do
         -- LogTable(v, "FightMgrBase:PrintCardInfo" .. i .. ":")
         if v:IsLive() then
-            str =
-                str ..
-                v.oid ..
-                    '\t' ..
-                        v.name ..
-                            '_' ..
-                                v.teamID ..
-                                    '\thp[' ..
+            str = str .. v.oid .. '\t' ..
+                        v.name .. '_' .. v.teamID ..'\thp[' ..
                                         v.hp .. ']\tspeed[' .. v:Get('speed') .. ']\tprogress[' .. v.progress .. ']\n'
         end
     end
 
     LogDebugEx(str)
+
+    for i,v in ipairs(self.arrTeam) do
+        v:Print()
+    end
 end
 
 -- 针对一方集体拉条

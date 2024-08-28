@@ -191,6 +191,8 @@ function Team:SummonTeammate(caster, monsterID, pos, data, typ)
 	LogDebugEx("Team:SummonTeammate", monsterID, pos[1], pos[2])
 	-- LogTable(data)
 
+	if not self:CanSummon(pos) then return end
+
 	local card = self:AddSummonCard(pos[1], pos[2], monsterID)
 	card.uid = caster.uid
 	card:LoadMonsterNumerical(caster.level)
@@ -298,7 +300,7 @@ function Team:Resolve(card, bnotlog)
 end
 
 function Team:Print()
-	LogDebugEx("teamID = ", self.teamID, self.col, self.row)
+	LogDebugEx("Print teamID = ", self.teamID, self.col, self.row)
 	local str = "\n"
 	for j = 1, self.col do
 		str = str .. "["
@@ -673,8 +675,9 @@ function Team:GetCard(row, col)
 end
 
 function Team:DelCard(card)
-	--LogDebugEx("DelCard", card.name)
-	--LogTable(card.grids)
+	LogDebugEx("DelCard", card.name)
+	LogTable(card.grids, "card.grids = ")
+	LogTrace()
 	for i, v in ipairs(card.grids) do
 		self.map[v[1]][v[2]] = nil
 	end
