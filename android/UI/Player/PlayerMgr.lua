@@ -105,6 +105,7 @@ function this:SetOpenTimes(proto)
 	if proto and proto.times and #proto.times >0 then
 		for i, v in ipairs(proto.times) do
 			self.openTimes[v.first] = v.second
+			ActivityMgr:UpdateActivityOpen(v.first)
 		end
 	end
 end

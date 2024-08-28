@@ -157,9 +157,9 @@ function Update()
 end
 
 function OnOpen()
-    local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
-    local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
-    offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920 + fit1 + fit2) / 2
+    -- local fit1,fit2 = -CSAPI.UIFitoffsetTop(),-CSAPI.UIFoffsetBottom()
+    -- offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920 + fit1 + fit2) / 2
+    offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920) / 2
     left = left + offsetW
     selIndex = 0
     if data then

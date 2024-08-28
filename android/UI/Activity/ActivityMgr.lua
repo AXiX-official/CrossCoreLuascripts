@@ -291,6 +291,15 @@ function this:CheakPopInfos()
     self.popInfos = FileUtil.LoadByPath("Activity_Pop_Infos.txt") or {}
 end
 
+function this:UpdateActivityOpen(aType)
+    if self.activityListDatas and self.activityListDatas[aType] then
+        if aType == ActivityListType.Investment then
+            local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
+            self.activityListDatas[aType].isOpen = targetTime > TimeUtil:GetTime()
+        end
+    end
+end
+
 function this:GetALData(aType)
     return self.activityListDatas[aType]
 end

@@ -585,6 +585,7 @@ end
 
 --添加活动开启信息 1-战场 2-剧情活动 3-讨伐活动
 function this:AddActivityOpenInfo(proto)
+    self:InitActivityOpenInfos()
     if proto and proto.id then
         if self.ActiveOpenInfos[proto.id] then
             self.ActiveOpenInfos[proto.id]:Init(proto)
@@ -1214,7 +1215,6 @@ function this:Init()
         id = 0
     }) -- 初始化本地缓存
     self:InitDungeonGroupDatas()
-    self:InitActivityOpenInfos()
 end
 
 -- 获取界面打开设置
