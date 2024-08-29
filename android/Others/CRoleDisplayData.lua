@@ -87,7 +87,7 @@ end
 --     return self.slotCanUse[slot]
 -- end
 
--- 角色皮肤能否使用（此时肯定是角色）
+-- 皮肤能否使用
 function this:GetCanUse(slot)
     local id = self:GetIDs()[slot]
     if (id ~= 0) then
@@ -203,13 +203,17 @@ function this:InitDetail(slot, id)
             elseif (slot == 2 and self:GetRet().detail1.top) then
                 isTop = false
             end
-        else 
+        else
             self:GetDetail(_slot).top = false
         end
     end
     local isLive2d = false
-    if (isTop and self:HadL2D(slot) and not self:CheckIsHX(slot)) then
-        isLive2d = true
+    if (isTop and self:HadL2D(slot)) then
+        if(self:GetCanUse(slot)) then 
+            isLive2d = true
+        elseif(not self:CheckIsHX(slot)) then 
+            isLive2d = true
+        end
     end
 
     if (slot == 1) then

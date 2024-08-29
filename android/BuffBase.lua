@@ -803,9 +803,13 @@ function BuffBase:AddHp(effect, caster, target, data, hp, bNotDeathEvent)
 	-- local target = self.owner
 	-- local caster = self.caster
 	-- local apiSetting = BufferEffect[effectID].apiSetting
+
+	-- if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
+
 	if target:GetTempSign("ImmuneDamage") then  
 		return
 	end
+	
 	local isdeath, shield, num = target:AddHpNoShield(hp, caster, bNotDeathEvent)
 	local log = {api="AddHp", death = isdeath, bufferID = self.id, targetID = target.oid, 
 		uuid = self.uuid, attr = "hp", hp = target:Get("hp"), add = num, effectID = effect.apiSetting}
@@ -1101,6 +1105,8 @@ function BuffBase:Damage(effect, caster, target, data, cureTy, percent)
 	if target:GetTempSign("ImmuneDamage") then  
 		return
 	end
+
+	if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
 	
 	local hp = self:CalcCure(caster, target, cureTy, percent)
 	local damageAdjust = caster:Get("damage") * target:Get("bedamage")
@@ -1121,6 +1127,9 @@ function BuffBase:LimitDamage(effect, caster, target, data, percenthp, percentat
 	--LogTrace()
 	caster = self.creater
 	target = self.card
+
+	-- local isdeathPre = target:IsLive()
+	if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
 
 	if target:GetTempSign("ImmuneDamage") then  
 		return
@@ -1149,6 +1158,8 @@ function BuffBase:LimitDamage2(effect, caster, target, data, percenthp, percenta
 	LogTrace()
 	caster = self.creater
 	target = self.card
+
+	if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
 
 	if target:GetTempSign("ImmuneDamage") then  
 		return
@@ -1708,6 +1719,8 @@ end
 function BuffBase:ImmuneBuffFun(effect, caster, target, data, key)
 	-- target:SetTempSign("ImmuneBuffQuality"..buffID)
 	-- local key = "ImmuneBuffQuality"..buffID
+
+	--LogDebugEx("BuffBase:ImmuneBuffFun", key, target.name)
 	target.arrTempBuffEffct[key] = target.arrTempBuffEffct[key] or {}
 	table.insert(target.arrTempBuffEffct[key], self)
 	

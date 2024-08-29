@@ -1775,6 +1775,7 @@ end
 -- isCpuClock: 是否只算占用CPU的时间，线程挂起睡眠不算
 function GCalHelp:Clock(isCpuClock)
     -- CUP 占用时间，线程挂起不算
+    isCpuClock = true
     if isCpuClock then
         return math.floor(os.clock() * 1000)
     else
