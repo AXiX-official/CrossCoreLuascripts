@@ -38,7 +38,6 @@ function this:Sign(_sign)
 	NetMgr.net:Send(proto)
 end
 
-
 --[[
 --修改模型
 function this:ChangeIcon(_panel_id, _icon_id,_cb)
@@ -58,6 +57,7 @@ function this:ChangeIconRet(proto)
 	self.ChangeIconCB = nil 
 
 	LanguageMgr:ShowTips(27002)
+end
 ]]
 
 function this:PlrPaneInfoRet(proto)
@@ -111,7 +111,7 @@ function this:SetOpenTimes(proto)
 end
 
 function this:GetOpenTime(id)
-	return self.openTimes[tostring(id)] or 0
+	return self.openTimes and self.openTimes[tostring(id)] or 0
 end
 
 return this

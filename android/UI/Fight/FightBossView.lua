@@ -92,6 +92,7 @@ function OnCharacterFightInfoChanged(character)
     end
 
     if(closeUpdateInfo)then
+        UpdateBuff();
         return;
     end
     --LogError("aaaaa");

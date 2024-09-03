@@ -65,8 +65,10 @@ end
 
 function this:GetArr()
     local arr = {}
-    for i, v in pairs(self.datas) do
-        table.insert(arr, v)
+    if self.datas then
+        for i, v in pairs(self.datas) do
+            table.insert(arr, v)
+        end
     end
     if (#arr > 1) then
         table.sort(arr, function(a, b)

@@ -11,16 +11,14 @@ end
 
 function this:InitOpenCfg(cfg)
     self.openCfg = cfg
+    if self.openCfg and self.openCfg.config and self.openCfg.nConfigID then
+        self.cfg = Cfgs[self.openCfg.config]:GetByID(self.openCfg.nConfigID)
+end
 end
 
 function this:Init(_data)
     self.data = _data
-    if self.data then
-        if self.openCfg and self.openCfg.config and self.openCfg.nConfigID then
-            self.cfg = Cfgs[self.openCfg.config]:GetByID(self.openCfg.nConfigID)
         end
-    end
-end
 
 function this:GetData()
     return self.data

@@ -28,7 +28,7 @@ function this:SetPush(_b)
     self.push = b
 end
 function this:GetPush()
-    return self.push~=nil and self.push or false
+    return self.push ~= nil and self.push or false
 end
 
 -- 是否有红点
@@ -36,7 +36,7 @@ function this:SetRed(b)
     self.red = b
 end
 function this:GetRed()
-    return self.red~=nil and self.red or false
+    return self.red ~= nil and self.red or false
 end
 
 -- 在线期间进入了该id
@@ -82,13 +82,13 @@ function this:IsEnd()
             return true
         end
     elseif (cfg.nType == 3) then
-        local comm = ShopMgr:GetFixedCommodity(cfg.shopItem)
-        if (comm and comm:IsOver()) then
-            local num = ShopMgr:GetMonthCardDays()
-            if (num <= 7) then
-                return true
-            end
+        -- local comm = ShopMgr:GetFixedCommodity(cfg.shopItem)
+        -- if (comm and comm:IsOver()) then
+        local num = ShopMgr:GetMonthCardDays()
+        if (num >= 7) then
+            return true
         end
+        -- end
     elseif (cfg.nType == 5) then
         local comm = ShopMgr:GetFixedCommodity(cfg.shopItem)
         if (comm and comm:IsOver()) then
@@ -152,9 +152,9 @@ function this:SetAmount(amount)
         if (self:GetID() == 1 and self.oldAmount == 0 and self.amount > 6) then
             self:SetRed(true)
             self:SetPush(true)
-        -- elseif (self:GetID() == 6 and self.oldAmount == 0 and self.amount > 0) then --不需要了 20240801
-        --     self:SetRed(true)
-        --     self:SetPush(true)
+            -- elseif (self:GetID() == 6 and self.oldAmount == 0 and self.amount > 0) then --不需要了 20240801
+            --     self:SetRed(true)
+            --     self:SetPush(true)
         end
     else
         if (self:GetID() == 1 and not self:IsEnd() and amount >= 6) then

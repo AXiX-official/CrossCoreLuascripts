@@ -46,7 +46,12 @@ function this:OnShow()
 
     FuncUtil:Call(self.CreateComboBreakCharacters,self,500);
 
-    FuncUtil:Call(self.Complete,self,1500);
+    FuncUtil:Call(self.ApplyComplete,self,1500);
+end
+
+function this:ApplyComplete()
+    EventMgr.Dispatch(EventType.Character_HeadInfo_Scale_State,true);
+    self:Complete();
 end
 
 --合体者行动动作
@@ -81,7 +86,8 @@ function this:CreateComboBreakCharacters()
                 for _,buffData in ipairs(buffDatas)do
                     ClientBuffMgr:RemoveBuff(buffData.uuid);
                 end 
-              end          
+              end   
+              ClientBuffMgr:ClearRemovedBuffIds();       
               FightActionUtil:PlayAPIsByOrder(buffDatas);
               c.SetShowState(false);
               FuncUtil:Call(c.SetShowState,nil,300,true);

@@ -1762,5 +1762,5 @@ ePetState = {
 -----------------------------------------------------------------------------------------------------------------
 -- 新手关卡开放类型
 eOpenConditionType = {}
-eOperateType.Lv = 1 --等级
-eOperateType.Dup = 2 --关卡
+eOpenConditionType.Lv = 1 --等级
+eOpenConditionType.Dup = 2 --关卡

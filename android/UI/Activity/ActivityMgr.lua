@@ -252,9 +252,9 @@ function this:InitListOpenState()
             end
 
             if v.type == ALType.Pay then
-                if not self.operateActive[v.id] then
-                isOpen = false
-            end
+                if self.operateActive and not self.operateActive[v.id] then
+                    isOpen = false
+                end
             end
 
             if isOpen and v.sTime and v.eTime then -- 时间限制
@@ -263,7 +263,7 @@ function this:InitListOpenState()
                 local eTime = TimeUtil:GetTimeStampBySplit(v.eTime)
                 isOpen = curTime > sTime and curTime <= eTime
             end
-
+            
             self.activityListDatas[v.id].isOpen = isOpen
         end
     end
