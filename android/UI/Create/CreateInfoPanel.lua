@@ -43,7 +43,7 @@ function AddDatas1(id)
     local oCfg = Cfgs.RewardInfo:GetByID(id)
     if (oCfg.quality) then
         qualityDatas[oCfg.quality] = qualityDatas[oCfg.quality] or {}
-        AddDatas2(qualityDatas[oCfg.quality], oCfg.item)
+        AddDatas2(qualityDatas[oCfg.quality], oCfg.item, oCfg.bIsLimit)
     else
         -- 模板
         for i, v in ipairs(oCfg.item) do
@@ -52,10 +52,13 @@ function AddDatas1(id)
     end
 end
 
-function AddDatas2(datas, item)
+function AddDatas2(datas, item, bIsLimit)
     for p, q in ipairs(item) do
         if (tonumber(q.s_probability) ~= 0) then
-            table.insert(datas, q)
+            -- 是否检查开启时间
+            if (not bIsLimit or not q.openTimes or CheckInTime(q.openTimes)) then
+                table.insert(datas, q)
+            end
         end
     end
 end
@@ -96,4 +99,15 @@ function SetItems0()
         CSAPI.SetGOActive(item0.gameObject, count > 0)
         item.Refresh(_datas)
     end
+end
+
+function CheckInTime(openTimes)
+    local curTime = TimeUtil:GetTime()
+    if (openTimes[1] and curTime < TimeUtil:GetTimeStampBySplit(openTimes[1])) then
+        return false
+    end
+    if (openTimes[2] and curTime > TimeUtil:GetTimeStampBySplit(openTimes[2])) then
+        return false
+    end
+    return true
 end
