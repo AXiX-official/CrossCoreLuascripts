@@ -83,7 +83,7 @@ function this.SendToServer(url,data,func)
 				-- LogError("访问"..tostring(url).."时出错！返回结果："..tostring(result));
 			end
 		end
-	end,true,5000,0);
+	end,true,100,0);
 end
 
 function this.GetServerID()
