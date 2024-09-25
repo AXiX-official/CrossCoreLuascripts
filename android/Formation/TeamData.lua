@@ -561,7 +561,13 @@ end
 --返回技能组ID
 function this:GetSkillGroupID()
 	if self.skillGroupID then
-		return self.skillGroupID 
+		local tacticData=TacticsMgr:GetDataByID(self.skillGroupID);
+		if tacticData and tacticData:IsUnLock() then
+			return self.skillGroupID 
+		else
+			self.skillGroupID=nil;
+			return nil
+		end		
 	else
 		local tacticData=TacticsMgr:GetDataByID(g_DefaultAbilityId);
 		if tacticData and tacticData:IsUnLock() then--默认战术解锁则返回默认战术
