@@ -11,6 +11,17 @@ function BuffMgr:Init(card, fightMgr)
 	ASSERT(self.log)
 end
 
+function BuffMgr:Destroy()
+	LogDebugEx("BuffMgr:Destroy()")
+	for i,buffer in ipairs(self.list) do
+		buffer:Destroy()
+	end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 -- 断线恢复战斗buff
 function BuffMgr:Restore()
 
@@ -196,7 +207,7 @@ end
 
 -- 清空buff(复活时)
 function BuffMgr:RemoveAll()
-	LogTrace()
+	-- LogTrace()
 	self.map = {}
 
 	self.fightMgr.oFightEventMgr:PrintBuffer()

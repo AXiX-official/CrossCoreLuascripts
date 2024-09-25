@@ -126,7 +126,9 @@ function SetRed()
         elseif type == SectionActivityType.TaoFa then
             isRed = MissionMgr:CheckRed({eTaskType.DupTaoFa})
         elseif type == SectionActivityType.Rogue then
-            isRed = RogueMgr:IsRed()
+            if(RogueMgr:IsRed() or RogueSMgr:IsRed()) then 
+                isRed = true
+            end
         elseif type == SectionActivityType.TotalBattle then
             isRed = MissionMgr:CheckRed({eTaskType.StarPalace})
         end

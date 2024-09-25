@@ -134,12 +134,13 @@ function SetCurIndex()
     local id = data[2]
 
     -- 跳转进来，如果无选择，则选中第一个
-    if (curCenter == "talent" and id == nil) then
+    if ((curCenter == "skill" or curCenter == "talent") and id == nil) then
         curTalentIndex = 1
         return
     end
 
     if (id) then
+        curTalentIndex = 1
         if (curCenter == "skill") then
             local skillDatas = cardData:GetSkillsForShow()
             for i, v in ipairs(skillDatas) do

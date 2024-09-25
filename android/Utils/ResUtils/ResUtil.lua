@@ -546,6 +546,10 @@ function this:Init()
     self.PetEmoji=ResIconUtil.New("PetEmoji");
     self.PetIcon=ResIconUtil.New("PetIcon");
 
+    self.RogueSNum = ResIconUtil.New("RogueSNum") --战力派遣
+
+     --扭蛋
+     self.GachaBall=ResIconUtil.New("GachaBall");
 end
 
 return this;

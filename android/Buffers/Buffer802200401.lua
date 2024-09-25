@@ -11,5 +11,5 @@ function Buffer802200401:OnCreate(caster, target)
 	-- 802200401
 	self:DelBuffQuality(BufferEffect[802200401], self.caster, target or self.owner, nil,2,3)
 	-- 802200402
-	self:Cure(BufferEffect[802200402], self.caster, target or self.owner, nil,8,0.1)
+	self:Cure(BufferEffect[802200402], self.caster, target or self.owner, nil,8,0.2)
 end

@@ -131,10 +131,12 @@ function OnClick()
                 PlayerProto:LookRole(data:GetID())
                 local count = ArchiveMgr:GetRoleCount()
                 local str = "点亮角色图鉴"
-                BuryingPointMgr:TrackEvents("unlock", {
-                    reason = str,
-                    unlock_num = count
-                })
+                if CSAPI.IsADV()==false then
+                    BuryingPointMgr:TrackEvents("unlock", {
+                        reason = str,
+                        unlock_num = count
+                    })
+                end
             end
             CSAPI.OpenView("ArchiveRole", data)
         else

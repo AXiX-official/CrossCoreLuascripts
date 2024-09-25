@@ -45,6 +45,12 @@ function this:SetData(data)
     end
 end
 
+function this:GetDrawArr()
+    if self.data then
+        return self.data.drawArr;
+    end
+end
+
 function this:GetID()
     return self.cfg and self.cfg.id or nil;
 end
@@ -57,6 +63,11 @@ end
 
 function this:GetRound()
     return self.data and self.data.round or 1;
+end
+
+--返回已抽取次数
+function this:GetDrawCount()
+    return self.data and self.data.drawTimes or 0;
 end
 
 --返回开启条件
@@ -101,6 +112,7 @@ function this:IsOpen()
     end
 end
 
+--canNext:是否可以进入下一轮  hasOther:是否还有下一轮
 function this:CanNext()
     local maxRound=self:GetMaxRounds();
     local canNext=true;
@@ -125,7 +137,7 @@ function this:CanNext()
         end
     else
         canNext=false;
-        hasOther=true;
+        hasOther=maxRound-self:GetRound()>0;
     end
     return canNext,hasOther;
 end
@@ -145,12 +157,63 @@ function this:GetCost()
     return self.cfg and self.cfg.cost or nil;
 end
 
+function this:GetCostType()
+    return self.cfg and self.cfg.costtype or 1;
+end
+
+--返回当前轮次可以抽取的最大次数
+function this:GetRoundDrawCount(round)
+    local maxRound=self:GetMaxRounds();
+    if self:GetRound()>=self.maxRounds and maxRound==-1 then
+        return -1;
+    end
+    local num=0;
+    local list=self:GetInfos(self:GetRound()); --检查是否还有物品可以抽取
+    if list then
+        for k,v in ipairs(list) do
+            num=num+v:GetCurrRewardNum();
+        end
+    end
+    return num;
+end
+
+function this:IsOver()
+    local maxRound=self:GetMaxRounds();
+    if maxRound==-1 then
+        return false;
+    else
+        local canNext,hasOther=self:CanNext();
+        local isOver=false;
+        local drawCount=self:GetRoundDrawCount(self:GetRound())
+        if canNext~=true and hasOther~=true and drawCount==0 then
+            isOver=true
+        end
+        return isOver;
+    end
+end
+
 --返回抽取道具对象
 function this:GetCostGoods()
     local cost=self:GetCost();
     if cost then
-        local goods=GoodsData({id=cost[1],num=1});
-        return goods;
+        if self:GetCostType()==1 then
+            local goods=GoodsData({id=cost[1][1],num=cost[1][2]});
+            return goods;
+        else --根据当前剩余可抽取次数拿当前的消耗物品
+            local index=self:GetDrawCount();
+            local canNext,hasOther=self:CanNext();
+            local isOver=self:IsOver()
+            if isOver~=true then --抽取类型为2时所有道具组都是重要道具
+                index=index+1;
+                if #cost<index then
+                    LogError("配置表错误！无法读取第"..index.."次消耗信息！配置表id："..tostring(self.cfg.id));
+                    do return end;
+                else
+                    local goods=GoodsData({id=cost[index][2],num=cost[index][3]});
+                    return goods;
+                end
+            end
+        end
     end
 end
 
@@ -181,8 +244,8 @@ function this:GetDescInfo()
     return self.cfg and self.cfg.Languageid or nil;
 end
 
---返回每一轮中的道具信息
-function this:GetInfos(round,forceFull)
+--返回每一轮中的道具信息 hasOver:已经抽取完的奖励是否添加到列表中
+function this:GetInfos(round,forceFull,hasOver)
     local list={};
     local realRound=round>self.maxRounds and self.maxRounds or round;
    if self.groups and self.groups[realRound]~=nil then
@@ -201,7 +264,7 @@ function this:GetInfos(round,forceFull)
             else
                 item:SetData(v,n,round,isFull);
             end
-            if item:GetCurrRewardNum()>0 then
+            if item:GetCurrRewardNum()>0 or hasOver==true then
                 table.insert(list,item);
             end
         end
@@ -216,6 +279,37 @@ function this:GetInfos(round,forceFull)
         end);
     end
     return list;
+end
+
+--是否可以抽取
+function this:CanGet()
+    local maxRound=self:GetMaxRounds();
+    local canGet=false;
+    local costGoods=self:GetCostGoods();
+    local needCostNum=costGoods and costGoods:GetCount() or 1;
+    local costNum=costGoods and BagMgr:GetCount(costGoods:GetID()) or 0;
+    if maxRound==-1 then
+        canGet=costNum>=needCostNum;
+    else
+        local curRound=self:GetRound();
+        if curRound==maxRound then
+            local list=self:GetInfos(self:GetRound()); --检查是否还有物品可以抽取
+            local hasNum=true;
+            if list then
+                local num=0;
+                for k,v in ipairs(list) do
+                    num=num+v:GetCurrRewardNum();
+                end
+                hasNum=num>0;
+            end
+            if hasNum and costNum>=needCostNum then
+                canGet=true;
+            end
+        elseif costNum>=needCostNum then
+            canGet=true;
+        end
+    end
+    return canGet;
 end
 
 function this:GetFullInfos()

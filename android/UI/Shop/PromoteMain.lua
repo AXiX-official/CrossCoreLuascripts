@@ -7,6 +7,7 @@ local layoutList={};
 local layoutList2={};
 local layoutList3={};
 local layoutList4={};
+local refreshStamp=0;
 function Awake()
     layout = ComUtil.GetCom(hpage, "UISlideshow")
     if layout then
@@ -30,7 +31,19 @@ function Refresh()
     if layout==nil or layout2==nil or layout3==nil or layout4==nil then
         do return end
     end
-    layoutList=ShopMgr:GetPromoteInfos(101);
+    if CSAPI.IsAppReview() then
+        local info=ShopPromote.New();
+        info.cfg={
+            id=199999,
+            img="default_ads",
+            group=101,
+        }
+        layoutList={
+            info
+        }
+    else
+        layoutList=ShopMgr:GetPromoteInfos(101);
+    end
     layoutList2=ShopMgr:GetPromoteInfos(201);
     layoutList3=ShopMgr:GetPromoteInfos(301);
     layoutList4=ShopMgr:GetPromoteInfos(401);
@@ -55,6 +68,7 @@ function Refresh()
     CSAPI.SetGOActive(mpoints,isMult2);
     CSAPI.SetGOActive(blpoints,isMult3);
     CSAPI.SetGOActive(brpoints,isMult4);
+    refreshStamp=ShopMgr:GetPromoteRefreshTimestamp();
 end
 
 function LayoutCallBack(index)
@@ -91,5 +105,11 @@ function OnClickItem(jumpInfo)
         if jumpInfo.commId~=nil and jumpInfo.commId~="" then
             ShopCommFunc.OpenBuyConfrim(jumpInfo.shopId,jumpInfo.topId,jumpInfo.commId);
         end
+    end
+end
+
+function Update()
+    if refreshStamp and refreshStamp>0 and TimeUtil:GetTime()>=refreshStamp then
+        Refresh();
     end
 end

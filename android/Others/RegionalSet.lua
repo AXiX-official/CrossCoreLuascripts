@@ -13,6 +13,10 @@ function this.RegionalCurrencyType()
         return "￥";
     elseif this.CurrentRegion==2 then
         return "TWD";
+    elseif this.CurrentRegion==3 then
+        return "¥";
+    elseif this.CurrentRegion==4 then
+        return "¥";
     elseif this.CurrentRegion==5 then
         return "KRW";
     else

@@ -2568,6 +2568,11 @@ function this:UpdateMistEff()
         if(not self.mistEff)then
             local parentGO = self.ground and self.ground.gameObject;
             ResUtil:CreateEffect("battle/sandStorm_v3", 0,11.5,0,parentGO,function(go)
+                if(IsNil(parentGO))then
+                    CSAPI.RemoveGO(go);
+                    return;
+                end
+
                 self.mistEffGO = go;
                 CSAPI.SetScale(go,30,30,1);
                 CSAPI.SetAngle(go,90,0,0);

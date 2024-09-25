@@ -50,7 +50,11 @@ end
 function this:GetUid()
     return self.info and self.info.uid or nil
 end
-
+function this:Clearuid()
+    if self.info and self.info.uid then
+        self.info.uid=nil;
+    end
+end
 -- 名称
 function this:GetName()
     return self.info and self.info.name or nil
@@ -305,7 +309,10 @@ end
 function this:GetDiamond()
     return self.info and self.info.diamond or 0
 end
-
+---获取充值获得的钻石 数量
+function this:GetFreeDiamond()
+     return self.info and self.info.diamond_pay or 0
+end
 -- ==============================--
 -- desc:更新货币
 -- time:2019-09-17 10:47:21
@@ -320,6 +327,7 @@ function this:UpdateCoin(id, num)
     elseif (id == ITEM_ID.DIAMOND) then
         -- self.info.diamond = num <= 0 and 0 or num
         self.info.diamond = num or 0;
+        if CSAPI.IsADV() then ShiryuSDK.OnRoleInfoUpdate(); end
     elseif (id == g_ArmyCoinId) then
         self.info.army_coin = num <= 0 and 0 or num
     elseif (id == g_AbilityCoinId) then
@@ -329,6 +337,8 @@ function this:UpdateCoin(id, num)
         self.data.BIND_DIAMOND = num <= 0 and 0 or num
     elseif (id == ITEM_ID.POWER_CEILING) then
         self.data.POWER_CEILING = num <= 0 and 0 or num
+    elseif (id == ITEM_ID.DIAMOND_PAY) then
+        self.info.diamond_pay = num or 0;
     end
 end
 
@@ -355,6 +365,8 @@ function this:GetCoin(id)
         return self.data.BIND_DIAMOND or 0
     elseif (id == ITEM_ID.POWER_CEILING) then
         return self.data.POWER_CEILING or 0
+    elseif (id == ITEM_ID.DIAMOND_PAY) then
+        return self.info.diamond_pay or 0
     end
     return 0
 end
@@ -383,6 +395,9 @@ end
 
 -- 进入游戏
 function this:EnterGame()
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        ShiryuSDK.OnLoginServer();
+    end
     -- 测试用
     if (_G.enter_last_dirll_fight) then
         FuncUtil:Call(function()
@@ -586,7 +601,11 @@ function this:Exit()
     self:SetChangeLine();
 
     MgrCenter:Clear()
-    LoginProto:Logout()
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        ShiryuSDK.Logout()
+    else
+        LoginProto:Logout()
+    end
     FightClient:Reset();
     BattleMgr:SetAIMoveState(false);
     EventMgr.Dispatch(EventType.Login_Quit, nil, true);
@@ -604,8 +623,12 @@ function this:PlayFightOP()
         callBack = self.OnFightVedioComplete,
         caller = self
     });
-
-    BuryingPointMgr:BuryingPoint("after_login", 20066); ]]
+   ]]
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_FIGHT_FINISH);
+    else
+       -- BuryingPointMgr:BuryingPoint("after_login", 20066);
+    end
     self:OnFightVedioComplete();
 end
 

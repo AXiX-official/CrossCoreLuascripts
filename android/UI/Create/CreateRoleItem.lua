@@ -2,6 +2,8 @@
 function Awake()
 	CSAPI.SetGOActive(img6, false)
 	CSAPI.SetGOActive(img7, false)
+	CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+	CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
 end
 
 function SetIndex(_index)
@@ -103,4 +105,18 @@ function SetImg67Anim(timer, delay)
 	wh7.delay = delay
 	wh7.time = timer
 	CSAPI.SetGOActive(img6, true)
+end
+
+---截图前一帧通知
+function ShareView_NoticeTheNextFrameScreenshot(Data)
+	CSAPI.SetGOActive(itemParent, false);
+end
+---截图完成通知
+function ShareView_NoticeScreenshotCompleted(Data)
+	CSAPI.SetGOActive(itemParent, true);
+end
+function OnDestroy()
+	CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+	CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
+
 end

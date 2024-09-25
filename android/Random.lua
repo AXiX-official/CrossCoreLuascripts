@@ -43,6 +43,11 @@ function Random:Init(seed)
 	-- ASSERT()
 end
 
+function Random:Destroy()
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
 -- function Random:RandInit(m)
 -- 	-- self.seed = seed
 -- 	self.count = self.count + 1

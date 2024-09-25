@@ -25,7 +25,7 @@ function Refresh(_cfg)
     cfg = _cfg
     if cfg then       
         lockState,lockStr =GetLockState()
-        local strs = StringUtil:split(cfg.name," ")
+        local strs = StringUtil:split(cfg.name,"-")
         CSAPI.SetGOActive(lockImg, lockState > 1)
         strs[1] = lockState == 1 and LanguageMgr:GetByID(15092,cfg.LockLevel) or strs[1]
         SetTitle(strs[1],strs[2])

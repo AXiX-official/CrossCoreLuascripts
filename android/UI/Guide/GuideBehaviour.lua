@@ -871,4 +871,38 @@ function this:GuideBehaviourStart_Pet_144020()
 end
 
 
+--第三章爬塔第一关引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_TowerBattle_145010()
+    local id = DungeonMgr:GetCurrId();
+    return id == 10201;
+end
+
+function this:GuideBehaviourStart_TowerBattle_145020()
+    UIUtil:OpenQuestion("QuickSand");
+end
+
+--第三章爬塔第二关引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_TowerBattle_146010()
+    local id = DungeonMgr:GetCurrId();
+    return id == 10202;
+end
+
+function this:GuideBehaviourStart_TowerBattle_146020()
+    UIUtil:OpenQuestion("RockFall");
+end
+
+--第三章爬塔第四关引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_TowerBattle_147010()
+    local id = DungeonMgr:GetCurrId();
+    return id == 10204;
+end
+
+function this:GuideBehaviourStart_TowerBattle_147030()
+    UIUtil:OpenQuestion("SandStorm");
+end
+
+
 return this;

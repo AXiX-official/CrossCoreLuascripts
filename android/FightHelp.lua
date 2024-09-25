@@ -179,7 +179,7 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
 end
 
 ---- 开始乱序演习战斗
-function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData)
+function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneTy)
     -- DT(player)
     -- 战斗管理器的id
     --ASSERT(nDuplicateID)
@@ -189,7 +189,7 @@ function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplica
     local fid = UID(10)
     local seed = os.time() + math.random(1000000)
     --print("------------", nDuplicateID)
-    local mgr = CreateFightMgr(fid, groupID, SceneType.Rogue, seed, nDuplicateID)
+    local mgr = CreateFightMgr(fid, groupID, sceneTy, seed, nDuplicateID)
     mgr.nTeamIndex = nTeamIndex
     mgr.oDuplicate = oDuplicate
     mgr.nPlayerLevel = player:Get('level')
@@ -210,7 +210,7 @@ function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplica
         {
             seed = seed,
             fid = fid,
-            stype = SceneType.Rogue,
+            stype = sceneTy,
             groupID = groupID,
             teamID = 1,
             nTeamIndex = nTeamIndex,
@@ -221,7 +221,7 @@ function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplica
     )
     -- DT(mgr.cmds)
     -- 操作日志
-    LogEnterFight(player, fid, SceneType.Rogue, nDuplicateID, groupID, data)
+    LogEnterFight(player, fid, sceneTy, nDuplicateID, groupID, data)
     return mgr
 end
 --------------------------------------------------------------
@@ -939,6 +939,29 @@ function FightHelp:Destroy(uid)
     local mgr = FightHelp.cache[uid] or FightHelp.mapPlayerMgr[uid]
     if mgr then
         FightHelp.lstMgr[mgr.id] = nil
+
+        if mgr.type == SceneType.PVPMirror and not mgr.isOver then
+            -- 紫龙打印bi日志
+            if IsOpenBiLog() then
+                local plr = GetPlayer(uid, false, true)
+                local win = 0
+                local armyInfo = plr:GetTmp('armyInfo', {})
+                BILogMgr:LogImitatefight(
+                    plr,
+                    2,
+                    eTeamType.PracticeAttack,
+                    nil,
+                    1,
+                    win,
+                    plr:GetMix('armyRank', 0),
+                    plr:GetMix('armyRank', 0),
+                    0,
+                    plr:GetTmp('army_score', 0)
+                )
+            end
+        end
+    else
+        LogWarning("FightHelp:Destroy uid=%s not exist", uid)
     end
 
     FightHelp.mapPlayerMgr[uid] = nil

@@ -60,18 +60,14 @@ function OnOpen()
     --如果任意轮是保存进度退出，不用显示结算
     if(sceneType==SceneType.Rogue) then 
         if(data.bIsWin and data.elseData.round<RogueMgr:GetCurData2():GetLimitRound()) then 
-            FriendMgr:ClearAssistData();
-            TeamMgr:ClearAssistTeamIndex();
-            TeamMgr:ClearFightTeamData();
+            ClearTeamData()
             CSAPI.SetScale(gameObject,0,0,0)
             FightClient:Clean()
             RogueMgr:NeedToBuffView(true)
             RogueMgr:FightToBack(false, data.elseData.group)
             return
         elseif(data.elseData.quitType==2 and data.elseData.save)then 
-            FriendMgr:ClearAssistData();
-            TeamMgr:ClearAssistTeamIndex();
-            TeamMgr:ClearFightTeamData();
+            ClearTeamData()
             CSAPI.SetScale(gameObject,0,0,0)
             FightClient:Clean()
             RogueMgr:FightToBack(data.elseData.save, data.elseData.group)
@@ -174,9 +170,7 @@ function ApplyQuit()
                 end);
                 hasCallFunc = true;
             end
-            FriendMgr:ClearAssistData();
-            TeamMgr:ClearAssistTeamIndex();
-            TeamMgr:ClearFightTeamData();
+            ClearTeamData()
             UIUtil:AddFightTeamState(2, "FightOverResult:ApplyQuit()")
         elseif dungeonId ~= nil and dungeonId ~= "" then -- 未结束
             DungeonMgr:ApplyEnter(dungeonId);
@@ -200,11 +194,22 @@ function ApplyQuit()
     elseif (sceneType == SceneType.GuildBOSS) then
         GuildFightMgr:FightQuit();
     elseif (sceneType == SceneType.Rogue) then
-        FriendMgr:ClearAssistData();
-        TeamMgr:ClearAssistTeamIndex();
-        TeamMgr:ClearFightTeamData();
+        ClearTeamData()
         RogueMgr:FightToBack(not data.bIsWin, data.elseData.group) --最终轮
+    elseif (sceneType == SceneType.RogueS) then
+        local len = RogueSMgr:GetLen(data.elseData.group)
+        if(not bIsWin or data.elseData.round>= len) then 
+            ClearTeamData()
+            local group = data.elseData.group
+            if(bIsWin) then 
+                group = RogueSMgr:GetNextGroup(group)
+            end
+            RogueSMgr:Quit(group)
+        else
+            --只能重复挑战或者下一关
+        end   
     end
+
 end
 
 function OnClickMask()
@@ -236,6 +241,12 @@ function OnClickMask()
     else
         ApplyQuit();
     end
+end
+
+function ClearTeamData()
+    FriendMgr:ClearAssistData();
+    TeamMgr:ClearAssistTeamIndex();
+    TeamMgr:ClearFightTeamData();
 end
 
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口

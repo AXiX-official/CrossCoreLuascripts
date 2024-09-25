@@ -20,6 +20,13 @@ function this.PushEnd(_data, _isWin, _team, _rewards, _jf, _exp, _nPlayerExp, _f
 	end
 end
 
+--结果 RogueS
+function this.RogueSInfoUpdate(proto,isForceOver)
+	local team = this.GetTeamData(eTeamType.RogueS+proto.round, false);
+	local exp = this.GetExpList(proto, false);
+	this.PushEnd(nil, proto.bIsWin, team, nil, 0, exp, 0,proto.cardsExp, isForceOver,proto)
+end
+
 --结果 Rogue
 function this.RogueInfoUpdate(proto)
 	local team = this.GetTeamData(eTeamType.Rogue, false);

@@ -790,7 +790,7 @@ function this:GetResetTaskInfo()
     NetMgr.net:Send(proto)
 end
 function this:GetResetTaskInfoRet(proto)
-    self.infos = proto
+    self.infos = proto or {}
     -- EventMgr.Dispatch(EventType.Mission_List)    两条协议基本是同时请求的，所以由GetTasksDataRet来刷新界面
 end
 

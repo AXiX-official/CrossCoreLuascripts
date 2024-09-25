@@ -70,11 +70,16 @@ end
 function OnEnable()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
+    eventMgr:AddListener(EventType.Scene_Load_Complete,OnSceneLoadComplete)
 end
 
 function OnRedPointRefresh()
     local _data = RedPointMgr:GetData(RedPointType.MissionTaoFa)
     UIUtil:SetRedPoint2("Common/Red2", btnMission, _data == 1, 79, 42, 0)
+end
+
+function OnSceneLoadComplete()
+    ShowTips()
 end
 
 function OnDisable()
@@ -106,7 +111,6 @@ function OnOpen()
         SetButtons()
         SetScale()
         RefreshPanel()
-        ShowTips()
     else
         LogError("获取不到副本数据!")
     end
@@ -197,7 +201,7 @@ function SetBg()
     CSAPI.LoadImg(btnEnter,"UIs/DungeonActivity2/btn_01_0" .. curType .. ".png",true, nil, true)
     local bgPath = currGroupData:GetBGPath()
     if bgPath ~= nil and bgPath ~= "" then
-        ResUtil:LoadBigImg(bg, bgPath,false)
+        ResUtil:LoadBigImg2(bg, bgPath,false)
     end
     local imgPath = currGroupData:GetImgPath()
     if imgPath ~= nil and imgPath ~= "" then

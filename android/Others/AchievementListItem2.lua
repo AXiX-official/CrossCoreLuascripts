@@ -66,6 +66,7 @@ end
 function SetName()
     CSAPI.SetText(txtName,data:GetName())
     CSAPI.SetTextColorByCode(txtName,(data:IsFinish() and data:IsGet()) and "929296" or "ffffff")
+    CSAPI.SetAnchor(txtName,0,not data:IsFinish() and 5 or -5)
 end
 
 function SetNum()

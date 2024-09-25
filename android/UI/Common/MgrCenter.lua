@@ -58,6 +58,7 @@ local mgrNames = {
 	"AccuChargeMgr", --累计充值
 	"PetActivityMgr",--宠物管理类
 	"CRoleDisplayMgr", --看板
+	"RogueSMgr",   --战力派遣
 }
 
 

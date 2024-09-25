@@ -4,6 +4,8 @@ local isDontClose = false
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/Matrix/MatrixRemouldItem", LayoutCallBack, true)
+
+    UIUtil:AddQuestionItem("MatrixRemould", gameObject)
 end
 
 function LayoutCallBack(index)

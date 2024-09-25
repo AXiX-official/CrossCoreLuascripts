@@ -14,6 +14,21 @@ function Team:Init(teamID, fightMgr, row, col)
 	ASSERT(self.log)
 end
 
+function Team:Destroy()
+	LogDebugEx("Team:Destroy()")
+
+    for k,v in pairs(self.arrCard) do
+        v:Destroy()
+    end    
+    if self.oCommander then
+    	self.oCommander:Destroy()
+    end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 function Team:InitMap(row, col)
 	self.arrCard = {} -- 可行动的卡牌队列
 	self.map = {} -- 阵容地图

@@ -6,15 +6,20 @@ Skill331203 = oo.class(SkillBase)
 function Skill331203:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束
-function Skill331203:OnActionOver(caster, target, data)
+-- 行动开始
+function Skill331203:OnActionBegin(caster, target, data)
 	-- 8166
 	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
 	else
 		return
 	end
-	-- 331203
-	self:AddBuffCount(SkillEffect[331203], caster, self.card, data, 331203,1,5)
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 330203
+	self:OwnerAddBuff(SkillEffect[330203], caster, caster, data, 330203,1)
 end
 -- 行动结束2
 function Skill331203:OnActionOver2(caster, target, data)
@@ -24,5 +29,15 @@ function Skill331203:OnActionOver2(caster, target, data)
 		return
 	end
 	-- 331206
-	self:AddSp(SkillEffect[331206], caster, self.card, data, 10)
+	self:AddSp(SkillEffect[331206], caster, self.card, data, 15)
+end
+-- 行动结束
+function Skill331203:OnActionOver(caster, target, data)
+	-- 8166
+	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
+	else
+		return
+	end
+	-- 331207
+	self:AddSp(SkillEffect[331207], caster, caster, data, 15)
 end

@@ -20,6 +20,9 @@ function OnInit()
         CSAPI.ClearTimeScaleCtrl();
         CSAPI.SetTimeScale(1);
     end
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        ShiryuSDK.OnRoleOffline()
+    end
 end
 
 function InitListener()
@@ -61,6 +64,9 @@ function CancelRelogin()
 end
 
 function OnDestroy()
+    if CSAPI.IsADV() then
+        ShiryuSDK.OnRoleOnline()
+    end
 	eventMgr:ClearListener();
 	-- text=nil;
 end

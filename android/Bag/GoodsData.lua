@@ -305,9 +305,10 @@ function this:GetCombineGetInfo()
 	if self.cfg and self.cfg.combineGet then
 		infos={};
 		for k,v in ipairs(self.cfg.combineGet) do
-			local jumpId=v;
-			local state,lockStr=JumpMgr:GetJumpState(jumpId);
-			table.insert(infos,{jumpId=jumpId,lockStr=lockStr,state=state});
+			local jumpInfo= self:GetJumpInfo(v);
+			if jumpInfo then
+				table.insert(infos,jumpInfo);
+			end
 		end
 	end
 	return infos;
@@ -319,9 +320,10 @@ function this:GetJOtherGetInfo()
 	if self.cfg and self.cfg.j_otherGet then
 		infos={};
 		for k,v in ipairs(self.cfg.j_otherGet) do
-			local jumpId=v;
-			local state,lockStr=JumpMgr:GetJumpState(jumpId);
-			table.insert(infos,{jumpId=jumpId,lockStr=lockStr,state=state});
+			local jumpInfo= self:GetJumpInfo(v);
+			if jumpInfo then
+				table.insert(infos,jumpInfo);
+			end
 		end
 	end
 	return infos;
@@ -337,6 +339,29 @@ function this:GetTOtherGetInfo()
 			local text=LanguageMgr:GetByID(v);
 			if text~=nil then
 				table.insert(infos,text);
+			end
+		end
+	end
+	return infos;
+end
+
+function this:GetJumpInfo(jumpId)
+	if jumpId then
+		local state,lockStr=JumpMgr:GetJumpState(jumpId);
+		return {jumpId=jumpId,lockStr=lockStr,state=state};
+	end
+	return nil
+end
+
+--返回限时跳转信息
+function this:GetLimitGetInfo()
+	local infos=nil
+	if self.cfg and self.cfg.actInlet then
+		infos={};
+		for k,v in ipairs(self.cfg.actInlet) do
+			local info=self:GetJumpInfo(v)
+			if info and info.state~=JumpModuleState.Close then
+				table.insert(infos,info);
 			end
 		end
 	end

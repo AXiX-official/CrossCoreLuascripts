@@ -13,7 +13,7 @@ function Awake()
 end
 
 function OnNameChange(str)
-	local text=StringUtil:FilterChar(str);
+	local text=StringUtil:FilterChar2(str);
 	input.text=text;
 end
 
@@ -154,7 +154,7 @@ function ReplaceTeam()
 		teamData:RemoveCard(assistCid);
 	end
 	TeamMgr:SaveDataByIndex(teamData.index, teamData);
-	TeamMgr:SaveData(teamData.index,function(proto)
+	TeamMgr:SaveData(teamData,function(proto)
 		if proto then
 			local teamData2=TeamData.New();
 			teamData2:SetData(proto.info);
@@ -237,13 +237,14 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 			teamData:SetTeamName("");
 			teamData.index = TeamMgr.currentIndex;
 		end
+		local teamType=TeamMgr:GetTeamType(TeamMgr.currentIndex);
 		teamData.skill_group_id=teamData.skillGroupID;
 		--判断当前卡牌是否存在于其他队伍，存在的话需要提示是否清空
 		local isEmploy = false;
 		for k, v in ipairs(teamData.data) do
 			local card = RoleMgr:GetData(v.cid);
 			if card then
-				local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID());
+				local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID(),teamType,true);
 				if(teamIndex ~= - 1 and teamIndex ~= TeamMgr.currentIndex) then --该卡牌存在于其他队伍中
 					isEmploy = true;
 					break;
@@ -259,7 +260,7 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 					for k, v in ipairs(teamData.data) do
 						local card = RoleMgr:GetData(v.cid);
 						if card then
-							local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID());
+							local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID(),teamType,true);
 							if(teamIndex ~= - 1 and teamIndex ~= TeamMgr.currentIndex) then      --该卡牌存在于其他队伍中,移除它
 								local tempData = TeamMgr:GetTeamData(teamIndex);
 								tempData:RemoveCard(v.cid);
@@ -272,13 +273,11 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 					for k, v in pairs(teamIds) do
 						table.insert(teams,TeamMgr:GetTeamData(v));
 					end
-					PlayerProto:SaveTeamList(teams);
-					TeamMgr:UpdateDataByIndex(TeamMgr.currentIndex, teamData:GetData());
+					table.insert(teams, teamData);
+					TeamMgr:SaveDatas(teams);
 					if hasMainLeader and TeamMgr.currentIndex~=1 then
 						Tips.ShowTips(LanguageMgr:GetTips(14037));
 					end
-					--保存到服务器
-					TeamMgr:SaveData(TeamMgr.currentIndex);
 					EventMgr.Dispatch(EventType.Team_Preset_Open, nil);
 				end
 			});
@@ -288,7 +287,7 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 			end
 			TeamMgr:UpdateDataByIndex(TeamMgr.currentIndex, teamData:GetData());
 			--保存到服务器
-			TeamMgr:SaveData(TeamMgr.currentIndex);
+			TeamMgr:SaveData(teamData);
 			EventMgr.Dispatch(EventType.Team_Preset_Open, nil);
 		end
 	end
@@ -310,7 +309,7 @@ function UseByPractice() --军演队伍不需要检测是否与副本队伍冲�
 		teamData.skill_group_id=teamData.skillGroupID;
 		TeamMgr:UpdateDataByIndex(TeamMgr.currentIndex, teamData:GetData());
 		--保存到服务器
-		TeamMgr:SaveData(TeamMgr.currentIndex);
+		TeamMgr:SaveData(teamData);
 		EventMgr.Dispatch(EventType.Team_Preset_Open, nil);
 	end
 end

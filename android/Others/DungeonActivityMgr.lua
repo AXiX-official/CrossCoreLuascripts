@@ -128,8 +128,10 @@ function this:CheckRed(sid)
             return MissionMgr:CheckRed2(eTaskType.DupTaoFa,sectionData:GetID())
         elseif sectionData:GetType() == SectionActivityType.TotalBattle then
             return MissionMgr:CheckRed({eTaskType.StarPalace})
-        elseif sectionData:GetType() == SectionActivityType.Rogue then
-            return RogueMgr:IsRed()
+        elseif sectionData:GetType() == SectionActivityType.Rogue then  
+            if(RogueMgr:IsRed() or RogueSMgr:IsRed()) then 
+                return true
+            end 
         end
     end
     return false

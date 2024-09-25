@@ -22,6 +22,13 @@ end
 
 function Init(_goCamera)
     fc_go:SetCamera(_goCamera)
+    isInit = true
+end
+
+function OnEnable()
+    if(not isInit and DormMgr:GetDormGround()) then 
+        Init(DormMgr:GetDormGround().GetCamera().gameObject)
+    end 
 end
 
 -- function Change(_dormRole)

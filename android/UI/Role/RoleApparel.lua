@@ -23,7 +23,10 @@ function Awake()
         useIndex = GetBaseIndex() -- 当前使用的
         RefreshPanel()
     end)
-    eventMgr:AddListener(EventType.Card_Skin_Get, RefreshPanel)
+    eventMgr:AddListener(EventType.Card_Skin_Get, function ()
+        layout:UpdateList()
+        RefreshPanel()
+    end)
 
     CSAPI.SetGOActive(mask, true)
 end

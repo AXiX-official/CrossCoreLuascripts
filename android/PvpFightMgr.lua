@@ -36,6 +36,7 @@ function FightMgrServer:Over(stage, winer)
 	for uid, v in pairs(self.arrPrepare) do
 		PvpMatchMgr:LeaveBattle(uid)
 	end
+	self:Destroy()
 end
 
 ----------------------------------------------

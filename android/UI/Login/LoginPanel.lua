@@ -43,6 +43,9 @@ local currState = uiState.Start
 local isAgree=false
 -- 测试用正式服删除
 local inp_account;
+local tempUid=nil;
+local tempMsg=nil;
+local tipsDisConnect=false;
 function Awake()
     CheckUpdate();--ios旧包强更包体
 
@@ -55,14 +58,14 @@ function Awake()
     -- local goRT = CSAPI.GetGlobalGO("CommonRT")
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
-    _G.g_ver_name = "Ver:2.1.0";
+    --CSAPI.SetText(txtVer, "Ver:1.0.0" .. tostring(UnityEngine.Application.version));
+    _G.g_ver_name = "Ver:2.2.0";
     CSAPI.SetText(txtVer, _G.g_ver_name);
-    --CSAPI.SetText(txtVer, "");
     -- 开启战斗场景镜头
-    local xluaCamera = CameraMgr:GetXLuaCamera();
-    if (xluaCamera) then
-        xluaCamera.SetEnable(true);
-    end
+    -- local xluaCamera = CameraMgr:GetXLuaCamera();
+    -- if (xluaCamera) then
+    --     xluaCamera.SetEnable(true);
+    -- end
 
     -- CameraMgr:ApplyCommonAction(nil,"login");
     CSAPI.SetText(loading, LanguageMgr:GetByID(1024));
@@ -71,13 +74,49 @@ function Awake()
     if CSAPI.IsChannel() and type ~= ChannelType.TapTap and type ~= ChannelType.Normal then -- Taptap包即是官网包
         isChannel = true;
     end
-    CSAPI.SetGOActive(btn_Account, not isChannel);
-    --CSAPI.SetGOActive(btnAge, isChannel)
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        CSAPI.SetGOActive(btn_Account, true);
+        CSAPI.SetGOActive(btnAge, false)--台服关闭
+    else
+        CSAPI.SetGOActive(btn_Account, not isChannel);
+        --CSAPI.SetGOActive(btnAge, isChannel)
+    end
+
     CSAPI.SetGOActive(btnUserAgree, isChannel)
     isAgree=GetAgree();
 	CSAPI.SetGOActive(tick,isAgree);
     -- CSAPI.SetGOActive(btn_Start1,false)
     SetOpenCount();
+    CSAPI.SetGOActive(btn_ScanCode, false)
+    if CSAPI.IsMobileplatform then
+        if type and CSAPI.IsADV() then
+            CSAPI.SetGOActive(btn_ScanCode, true)
+        end
+    end
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        if CSAPI.GetsSDKInitSuccess() then
+            print("  init sdk _complete")
+            CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Init_complete)
+        else
+            print(" no init sdk")
+            CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Init)
+        end
+        local Promptcontent=UnityEngine.Application.version.."_"..CSAPI.APKVersion().."_"..GlobalConfig.HotVersion;
+        _G.g_ver_name =tostring(Promptcontent);
+        CSAPI.SetText(txtVer,Promptcontent);
+
+        local CloseViewTable={"PlotSimple","Plot"};
+        if #CloseViewTable>0 then
+            for i, v in pairs(CloseViewTable) do
+                local UIViewname=i
+                Log("UIViewname:"..UIViewname)
+                local viewGO = CSAPI.GetView(UIViewname)
+                if (viewGO) then
+                    CSAPI.CloseView(UIViewname);
+                end
+            end
+        end
+    end
 end
 
 function OnInit()
@@ -98,7 +137,7 @@ function InitListener()
     eventMgr:AddListener(EventType.Login_Show_Mask, ShowMask);
     eventMgr:AddListener(EventType.Login_Hide_Mask, HideMask);
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadingOver);
-    eventMgr:AddListener(EventType.Net_Connect_Fail, OnNetConnectFail);
+    -- eventMgr:AddListener(EventType.Net_Connect_Fail, OnNetConnectFail);
     eventMgr:AddListener(EventType.Login_SDK_Result, OnLoginSDKResult)
     eventMgr:AddListener(EventType.Login_Wait_Begin, OnLoginWait)
     eventMgr:AddListener(EventType.Login_Wait_Over, OnLoginWaitOver)
@@ -106,8 +145,8 @@ function InitListener()
     eventMgr:AddListener(EventType.Login_State_Agree, OnAgreeState)
 
     eventMgr:AddListener(EventType.Login_White_Mask_FadeOut, ApplyFadeOut)
-
---  eventMgr:AddListener(EventType.Login_Switch_Server, OnClickSwitch)
+    eventMgr:AddListener(EventType.Net_Tips_Disconnect,OnTipsDisConnect)
+    eventMgr:AddListener(EventType.Login_Switch_Server, OnClickSwitch)
     -- eventMgr:AddListener(EventType.Main_Activity,function(key)
     -- 	Log(key)
     -- 	if key==BackstageFlushType.Board then
@@ -158,6 +197,7 @@ function OnClickLoginIn(data)
         local currServer = GetCurrentServer();
         if currServer and currServer.is_open_white == 1 then
             SignWhite(data.account, function(proto)
+                -- LogError(data)
                 LoginSDK(data.account, data.pwd, function(result)
                     -- 登陆SDK成功，登陆游戏服
                     Login(result);
@@ -182,15 +222,15 @@ function LoginSDK(account, pwd, func)
             SignSDK(account, pwd,currServer.id, function(result)
                 -- 登陆SDK成功，登陆游戏服
                 local d = result.data;
+                tempUid=d.uid;
                 SaveLastSDKAccount(d.phone, pwd, d.open_id);
-                SignAccount(d.phone, d.open_id, currServer.id, function(result2)
-                    -- Log(result2)                
-                    SaveLastAccount(result2.data.open_id, result2.data.opwd);
-                    func({
-                        account = result2.data.open_id,
-                        pwd = result2.data.opwd
-                    });
-                end);
+                SaveLastAccount(d.open_id, d.opwd);
+                --缓存登录地址
+                SetSDKIPInfo(d.lsIp,d.lsPort);
+                func({
+                    account = d.open_id,
+                    pwd = d.opwd
+                });
             end);
         end        
         
@@ -207,23 +247,30 @@ function OnLoginPhoneAuthCode(data)
             EventMgr.Dispatch(EventType.Login_Hide_Mask);
             if json~=nil and type(json)=="table" then
                 if(json.code == 0)then
-                    Log("验证码登录成功！");
                     local jsonData = json.data;
                     if(not jsonData)then
                         LogError("验证码登录返回结果出错%s",table.tostring(json,true));
                     end
-
+                    tempUid=jsonData.uid;
                     local loginKey = jsonData.login_key;                
                     SetPhoneLoginKey(loginKey);
                     local currServer = GetCurrentServer();
-                    SignAccount(jsonData.phone, jsonData.open_id, currServer.id, function(result2)
-                        SaveLastSDKAccount(result2.data.oacc_name,  "", result2.data.open_id);
-                        -- SaveLastAccount(result2.data.open_id, result2.data.opwd);
-                        Login({
-                            account = result2.data.open_id,
-                            pwd = result2.data.opwd
-                        });
-                    end);
+                    SetSDKIPInfo(jsonData.lsIp,jsonData.lsPort);
+                    SaveLastSDKAccount(jsonData.oacc_name,  "", jsonData.open_id);
+                    -- SaveLastAccount(jsonData.open_id, jsonData.opwd);
+                    UploadRegEvent(jsonData);
+                    Login({
+                        account = jsonData.open_id,
+                        pwd = jsonData.opwd
+                    });
+                    -- SignAccount(jsonData.phone, jsonData.open_id, currServer.id, function(result2)
+                    --     SaveLastSDKAccount(result2.data.oacc_name,  "", result2.data.open_id);
+                    --     -- SaveLastAccount(result2.data.open_id, result2.data.opwd);
+                    --     Login({
+                    --         account = result2.data.open_id,
+                    --         pwd = result2.data.opwd
+                    --     });
+                    -- end);
 
                 else
                     Tips.ShowTips(json.msg);
@@ -246,9 +293,13 @@ function OnAccountInfo(json)
         local tab = TimeUtil:GetTimeTab(json.left_time)
         local dialogData = {}
         dialogData.content = LanguageMgr:GetTips(json.language,tab[1],tab[2] % 24,tab[3])
-        dialogData.okCallBack = loginCallBack
-        loginCallBack = nil
-        CSAPI.OpenView("Dialog", dialogData)
+        if json.forbit and json.forbit == 1 then
+            CSAPI.OpenView("Prompt", dialogData)
+        else
+            dialogData.okCallBack = loginCallBack
+            loginCallBack = nil    
+            CSAPI.OpenView("Dialog", dialogData)
+        end
     else
         local dialogData = {}
         dialogData.content = LanguageMgr:GetTips(json.language)
@@ -256,14 +307,14 @@ function OnAccountInfo(json)
     end
 end
 
-function OnNetConnectFail()
-    CSAPI.OpenView("Dialog", {
-        content = LanguageMgr:GetTips(1008)
-    });
-    
-    local account, pwd = GetLastAccount();
-    LogError(string.format("connect fail。%s",tostring(account)));
-end
+-- function OnNetConnectFail()
+--     CSAPI.OpenView("Dialog", {
+--         content = LanguageMgr:GetTips(1008)
+--     });
+
+--     local account, pwd = GetLastAccount();
+--     LogError(string.format("connect fail。%s",tostring(account)));
+-- end
 
 function OnLoadingOver()
     if isFirst then
@@ -393,49 +444,131 @@ function OnClickStartBtn()
     -- CSAPI.WebPostRequest("http://sdk.megagamelog.com/php/sdk/mega/",{cmd="register",subcmd="code",phone="15814231992"},function(text)
     -- 	LogError(text);
     -- end);
-    if isChannel then -- 其他渠道调用SDK登陆接口
-        EventMgr.Dispatch(EventType.Login_SDK_Command, nil, true);
-    else
-        -- 检测是否登陆过账号，未登录时显示登陆窗口，否则进入游戏
-        local account, pwd = GetLastAccount();
-        local serverInfo = GetCurrentServer();
-        if IsAccount() then
-            if account ~= "" and account ~= nil and pwd ~= "" and pwd ~= nil and serverInfo then
-                -- 显示登陆
-                Login({
-                    account = account,
-                    pwd = pwd
-                })
-            else
-                -- 显示登陆窗口
-                SetLayout(uiState.ChangeUser);
-            end
-        else            
-            if(TryPhoneLogin())then
-                --手机验证码快捷登录模式               
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        if ShiryuSDK.ShiryuLogin.uid and ShiryuSDK.ShiryuLogin.success then
+            ShowMask();
+            local serverInfo = GetCurrentServer();
+            if serverInfo==nil then
+                local dialogData = {}
+                dialogData.content = LanguageMgr:GetTips(1008)
+                dialogData.okText =LanguageMgr:GetByID(1001)
+                dialogData.cancelText =LanguageMgr:GetByID(1002)
+                dialogData.okCallBack = function() CSAPI.Quit();end
+                dialogData.cancelCallBack = function() CSAPI.Quit(); end
+                CSAPI.OpenView("Dialog", dialogData)
                 return;
             end
-            local token, pwd2, sid = GetLastSDKInfo();       
-            if token ~= "" and token ~= nil and pwd2 ~= "" and pwd2 ~= nil and serverInfo then
-                if serverInfo.is_open_white == 1 then -- 开启了白名单
-                    SignWhite(token, function()
-                        QuerryLastSDK(token, pwd2, sid, serverInfo);
-                    end);
+            
+            -- print("url:"..url)
+            local JsonTable={}
+            JsonTable.uid=ShiryuSDK.ShiryuLogin.uid;
+            JsonTable.token=ShiryuSDK.ShiryuLogin.token;
+            JsonTable.serverId=serverInfo.id;
+            JsonTable.channelExts={};
+            JsonTable.channelExts=ShiryuSDK.ShiryuLogin.channelExts;
+            -- JsonTable.channelExts["nickName"] = "6666"
+
+            ---local url=serverInfo.sdkUrl.."ziLong/login.php"
+            local url = nil
+            if CSAPI.IsADV() then
+                url = serverInfo.sdkUrl..ChannelWebUtil.Extends.sdkDirlogin;
+            else
+                url = serverInfo.sdkUrl..ChannelWebUtil.Extends.sdkDirlogin_gn;
+                JsonTable.nickName = JsonTable.channelExts["nickName"] and JsonTable.channelExts["nickName"] or "";
+            end
+            local SendJson = Json.Encode(JsonTable)
+            CSAPI.WebPostRequestJsonStr(url,SendJson,function(isOK,JsonStr)
+                HideMask();
+                if isOK then
+                    local jsonPackage={};
+                    jsonPackage =Json.decode(JsonStr);
+                    if jsonPackage.code==0 then
+                        ShiryuSDK.Serverlogin=jsonPackage;
+                        Login({
+                            account = jsonPackage.open_id,
+                            pwd =jsonPackage.opwd,
+                        });
+                    elseif jsonPackage.code==1 and jsonPackage.forbitTime then
+                        local dialogData = {}
+                        dialogData.content = LanguageMgr:GetTips(1026,TimeUtil:GetTimeHMS(jsonPackage.forbitTime, "%Y-%m-%d %H:%M"))
+                        CSAPI.OpenView("Prompt", dialogData)
+                    elseif jsonPackage.code==1 and jsonPackage.language then
+                        local dialogData = {}
+                        dialogData.content = LanguageMgr:GetTips(tonumber(jsonPackage.language))
+                        CSAPI.OpenView("Prompt", dialogData)
+                    else
+                        AdvLoginErrorTitle()
+                    end
                 else
-                    QuerryLastSDK(token, pwd2, sid, serverInfo);
+                    AdvLoginErrorTitle()
+                end
+            end);
+        else
+            if ShiryuSDK.SDKinit then
+                CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Login)
+            else
+                ShiryuSDK.LoginSDK()
+            end
+        end
+
+    else
+        if isChannel then -- 其他渠道调用SDK登陆接口
+            EventMgr.Dispatch(EventType.Login_SDK_Command, nil, true);
+        else
+            -- 检测是否登陆过账号，未登录时显示登陆窗口，否则进入游戏
+            local account, pwd = GetLastAccount();
+            local serverInfo = GetCurrentServer();
+            if IsAccount() then
+                if account ~= "" and account ~= nil and pwd ~= "" and pwd ~= nil and serverInfo then
+                    -- 显示登陆
+                    Login({
+                        account = account,
+                        pwd = pwd
+                    })
+                else
+                    -- 显示登陆窗口
+                    SetLayout(uiState.ChangeUser);
                 end
             else
-                SetLayout(uiState.ChangeUser);
+                if(TryPhoneLogin())then
+                    --手机验证码快捷登录模式
+                    return;
+                end
+                local token, pwd2, sid = GetLastSDKInfo();
+                -- LogError(token)
+                -- LogError(pwd2)
+                -- LogError(sid)
+                if token ~= "" and token ~= nil and pwd2 ~= "" and pwd2 ~= nil and serverInfo then
+                    if serverInfo.is_open_white == 1 then -- 开启了白名单
+                        SignWhite(token, function()
+                            QuerryLastSDK(token, pwd2, sid, serverInfo);
+                        end);
+                    else
+                        QuerryLastSDK(token, pwd2, sid, serverInfo);
+                    end
+                else
+                    SetLayout(uiState.ChangeUser);
+                end
             end
         end
     end
 end
 
+function AdvLoginErrorTitle()
+    local dialogData = {}
+    dialogData.content = LanguageMgr:GetTips(1008)
+    dialogData.okText =LanguageMgr:GetByID(1001)
+    dialogData.cancelText =LanguageMgr:GetByID(1002)
+    dialogData.okCallBack = function() OnClickStartBtn() end
+    dialogData.cancelCallBack = function() end
+    CSAPI.OpenView("Dialog", dialogData)
+end
 
 --尝试手机快捷登录
 function TryPhoneLogin()
     local accountName = GetLastSDKInfo();
     local loginKey = GetPhoneLoginKey();
+    local serverInfo=GetCurrentServer();
     if StringUtil:IsEmpty(loginKey) or not accountName then
         return;
     end
@@ -445,7 +578,8 @@ function TryPhoneLogin()
 	    subcmd = "fast_login",
         phone = accountName,
         login_key=loginKey,
-        game_id = gameId
+        game_id = gameId,
+        server_id=tostring(serverInfo.id),
     };
     OnLoginPhoneAuthCode(data);
     return true;
@@ -455,26 +589,28 @@ end
 -- 快速登录最后一次登录的SDK
 function QuerryLastSDK(token, pwd2, sid, serverInfo)
     if token ~= "" and token ~= nil and pwd2 ~= "" and pwd2 ~= nil and serverInfo then
-        if reLoginSDK then -- 需要重新验证
+        -- LogError(tostring(token).."\t"..tostring(pwd2).."\t"..tostring(sid))
+        -- if reLoginSDK then -- 需要重新验证
             LoginSDK(token, pwd2, function(result)
                 Login(result);
             end);
-        else -- 直接登录
-            ShowMask();            
-            SignAccount(token, sid, serverInfo.id, function(result2)
-                if result2==nil or result2.data==nil then
-                    HideMask();
-                    LogError("登录失败，返回的数据有误！result:");
-                    LogError(result2);
-                    do return end
-                end
-                SaveLastAccount(result2.data.open_id, result2.data.opwd);
-                Login({
-                    account = result2.data.open_id,
-                    pwd = result2.data.opwd
-                });
-            end);
-        end
+        -- else -- 直接登录
+        --     ShowMask();            
+
+            -- SignAccount(token, sid, serverInfo.id, function(result2)
+            --     if result2==nil or result2.data==nil then
+            --         HideMask();
+            --         LogError("登录失败，返回的数据有误！result:");
+            --         LogError(result2);
+            --         do return end
+            --     end
+            --     SaveLastAccount(result2.data.open_id, result2.data.opwd);
+            --     Login({
+            --         account = result2.data.open_id,
+            --         pwd = result2.data.opwd
+            --     });
+            -- end);
+        -- end
     else
         SetLayout(uiState.ChangeUser);
     end
@@ -501,6 +637,8 @@ function OnLoginSDKResult(jStr)
         local channelType = GetChannelType();
         if jData ~= nil and currServer then
             local signParams = nil;
+            tempUid=jData["uid"];
+            -- LogError(jData)
             if channelType == ChannelType.BliBli then -- B站登录
                 signParams = {
                     uid=jData["uid"],
@@ -545,7 +683,9 @@ function OnChannelSignResult(json)
         if json.code==ResultCode.Normal then --验证通过
             local open_id = json["open_id"];
             local pwd = json["opwd"];
-            local uid=json["uid"];
+            tempUid=json["uid"];
+            UploadRegEvent(json);
+            SetSDKIPInfo(json.lsIp,json.lsPort);
             Login({
                 account = open_id,
                 pwd = pwd
@@ -588,13 +728,12 @@ function Login(_data)
         return;
     end
     local serverInfo = GetCurrentServer();
-    local ipAndPort=GetLoginIpInfo(serverInfo,_data.account);
-    local serverIp,serverPort = GetIpAndPort(ipAndPort)
+    local serverIp,serverPort =GetLoginIpInfo(serverInfo,_data.account);
     serverPort = serverPort or serverInfo.port;
+    tempMsg=_data;
     if isOnline then
         ShowMask();
-        --LogError(serverIp);
-        --LogError(serverPort);
+        --LogError("Login:"..tostring(serverIp).."\t"..tostring(serverPort));
         NetMgr.net:Connect(serverIp,serverPort, function()
             LoginAccount(_data.account, _data.pwd)
             SaveLastServerInfo(serverInfo.id);
@@ -630,14 +769,93 @@ function OnClickBack()
     end
 end
 
--- 点击切换账号按钮
-function OnClickAccount()
-    -- CSAPI.OpenView("Authentication");
-    if not isChannel then
-        SetLayout(uiState.ChangeUser);
+
+---扫码   必须是手机端 登录后 才能 点击
+---先判断当前是否登录
+---已经登录才能扫码
+---如果没有登录，先登录
+function OnClickScanCode()
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        if ShiryuSDK.ShiryuLogin.uid and ShiryuSDK.ShiryuLogin.success then
+
+            if  UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android then
+                ShiryuSDK.CheckPermission(3,function(success)
+                    if success then
+                        OpenDoStartQRLogin(success);
+                    else
+                        local dialogData = {}
+                        dialogData.content = LanguageMgr:GetTips(1043)
+                        dialogData.okText =LanguageMgr:GetByID(1001)
+                        dialogData.cancelText =LanguageMgr:GetByID(1002)
+                        dialogData.okCallBack = function()  ShiryuSDK.RequestPermission(3,function(success1) OpenDoStartQRLogin(success1); end) end
+                        dialogData.cancelCallBack = function() end
+                        CSAPI.OpenView("Dialog", dialogData)
+                    end
+                end)
+
+            else
+                print("ios ---OpenDoStartQRLogin")
+                OpenDoStartQRLogin(true);
+            end
+        else
+            if ShiryuSDK.SDKinit then
+                CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Login)
+            else
+                ShiryuSDK.LoginSDK()
+            end
+        end
+    else
+        Log("OnClickScanCode")
     end
 end
 
+function OpenDoStartQRLogin(success)
+    if success then
+        ShiryuSDK.DoStartQRLogin(function(Backsuccess)
+            if Backsuccess then
+                print("DoStartQRLogin success1")
+            else
+                print("DoStartQRLogin fail 1")
+            end
+        end);
+    else
+        print("------Deny authorization--------")
+    end
+end
+
+-- 点击切换账号按钮
+function OnClickAccount()
+    -- CSAPI.OpenView("Authentication");
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        -- ShiryuSDK.LoginViewSwitchAccounts=true;
+        --ShiryuSDK.Logout();
+        ShiryuSDK.ShowUserCenter();
+    else
+        if not isChannel then
+            SetLayout(uiState.ChangeUser);
+        end
+    end
+end
+---客户端修复
+function OnClickClientRepair()
+    local dialogData = {}
+    dialogData.content = LanguageMgr:GetTips(1050)
+    dialogData.okText =LanguageMgr:GetByID(1001)
+    dialogData.cancelText =LanguageMgr:GetByID(1002)
+    dialogData.okCallBack = function()
+        Log("点击了客户端修复")
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetString("key_for_unpack",UnityEngine.Application.version);
+        PlayerPrefs.SetInt("UnityRes_ClientRepair",9);
+        if UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.WindowsEditor or UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.OSXEditor then
+            Log("--------------------------------------开发软件自己重新启动进入----------------------------------------------")
+        else
+            UnityEngine.Application.Quit();
+        end
+    end
+    dialogData.cancelCallBack = function()  Log("点击了取消")  end
+    CSAPI.OpenView("Dialog", dialogData)
+end
 function ShowSwitchObj()
     CSAPI.SetGOActive(switchObj, true);
     CSAPI.SetGOActive(starObj, false);
@@ -749,10 +967,68 @@ end
 function OnSwitchLoginView()
     OnClickLoginBtn();
 end
-
+local isFirstFail=true;
 function OnLoginFail()
+    --切换IP再尝试一次登录，无法连接再弹失败提示
+    if isFirstFail and IsAccount()~=true then
+        LogError("切换IP！！！");
+        --发送协议获取新的ip和端口号并再次尝试登陆
+        local result=LoginChangeIPReLink();
+        if result~=true then
+            OnRealFail();
+        end
+        isFirstFail=false;
+        return
+    end
+    OnRealFail();
+end
+
+--更换ip重连
+function LoginChangeIPReLink()
+	local serverInfo=GetCurrentServer();
+    LogError("LoginChangeIPReLink----------------");
+    LogError(tempMsg)
+    LogError(tempUid)
+    LogError(serverInfo);
+    local ip,port=GetLoginIpInfo(serverInfo);
+	if tempMsg~=nil and tempUid~=nil and serverInfo~=nil and ip~=nil and port~=nil then
+		--发送切换ip请求
+        local sendData={
+			uid=tostring(tempUid),
+			server_id=tostring(serverInfo.id),
+            ip=ip,
+            port=tostring(port),
+		};
+        LogError(sendData)
+		ChannelWebUtil.SendToServer2(sendData,ChannelWebUtil.Extends.ChangeLoginArr,function(json)
+			--发送协议给服务器
+            LogError(json)
+            if json.lsIp and json.lsPort and json.lsIp~="" and json.lsPort~="" then
+                SetSDKIPInfo(json.lsIp,json.lsPort);
+                NetMgr.net:Connect(json.lsIp,json.lsPort, function()
+                    LoginAccount(tempMsg.account, tempMsg.pwd,false);
+                end);
+            end
+		end);
+        return true;
+	else
+        tempMsg=nil;
+        return false;
+    end
+end
+
+function OnRealFail()
     NetMgr.net:Disconnect();
     HideMask();
+    if tipsDisConnect~=true then
+        CSAPI.OpenView("Dialog", {
+            content = LanguageMgr:GetTips(1008)
+        });
+        local account, pwd = GetLastAccount();
+        LogError(string.format("connect fail。%s",tostring(account)));
+    end
+    tipsDisConnect=false;
+    isFirstFail=true;
 end
 
 function ShowMask(isNative)
@@ -790,12 +1066,14 @@ function OnClickUserTips(go)
 	local type=1;
 	if go.name=="txt_userTips" then
 		type=1; --注册协议下标
+        if CSAPI.IsADV() then ShiryuSDK.ShowSdkCommonUI(7) end
     elseif go.name=="txt_userTips2" then
         type=3; --个人隐私下标
+        if CSAPI.IsADV() then ShiryuSDK.ShowSdkCommonUI(6) end
 	else
 		type=2; --儿童隐私下标
 	end
-	CSAPI.OpenView("LoginAgreement",nil,type);
+    if CSAPI.IsADV()==false then CSAPI.OpenView("LoginAgreement",nil,type); end
 end
 
 
@@ -810,7 +1088,6 @@ function Update()
         end
     end
 end
-
 
 --检查更新安装包（IOS）
 function CheckUpdate()
@@ -839,5 +1116,11 @@ function OnClickVirtualkeysClose()
     ---填写退出代码逻辑/接口
     if switchObj.gameObject.activeInHierarchy==true and OnClickBack then
         OnClickBack();
+    else
+        if CSAPI.IsADV() then ShiryuSDK.ExitGame(); end
     end
+end
+
+function OnTipsDisConnect()
+    tipsDisConnect=true;
 end

@@ -38,8 +38,25 @@ function this:GetPoolInfo(id)
     return info;
 end
 
+--检查对应ID的道具池是否有红点
+function this:CheckPoolHasRedPoint(id)
+    if id then
+        local data=self:GetPoolInfo(id);
+        return data and data:CanGet() or false;
+    end
+    return false;
+end
+
+--返回扭蛋图标名
+function this:GetGachaBallImgName(_quality,isOpen)
+    if _quality then
+        return isOpen==true and "img_08_0".._quality or "img_09_0".._quality
+    end
+end
+
 function this:Clear()
     self.poolInfos=nil;
 end
+
 
 return this;

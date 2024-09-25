@@ -173,22 +173,20 @@ end
 
 function SetRed()
     for i, v in ipairs(leftPanel.leftItems) do
-        local isRed = false
         if i == 1 then
-            isRed = AchievementMgr:CheckRed()
+            v.SetRed(AchievementMgr:CheckRed())
         elseif leftDatas[i - 1] then
-            isRed = AchievementMgr:CheckRed2(leftDatas[i - 1].id)
+            v.SetRed(AchievementMgr:CheckRed2(leftDatas[i - 1].cfg.id))
         end
-        v.SetRed(isRed)
     end
     for i, v in ipairs(leftPanel.leftChildItems) do
-        local infos = leftDatas[i-1] and leftDatas[i-1].infos or nil
-        for k, m in ipairs(v) do
-            local isRed = false
-            if infos and infos[k] then
-                isRed = AchievementMgr:CheckRed(infos[k].typeNum)
+        if i ~= 1 then
+            local infos = leftDatas[i-1] and leftDatas[i-1].infos or nil
+            for k, m in ipairs(v) do
+                if infos and infos[k] then
+                    m.SetRed(AchievementMgr:CheckRed(infos[k].typeNum))
+                end
             end
-            m.SetRed(isRed)
         end
     end
 end

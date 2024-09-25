@@ -150,46 +150,51 @@ function this.GetStarInfo2(dungeonID, completeNums)
 	return infos;
 end
 
---返回章节当前多倍掉落描述
-function this.GetMultiDesc(id)
-	local str = "";
-	local cfg = this.GetMultiCfg(id)
-	if cfg then
-		local list = {};
-		local infoNum = DungeonMgr:GetSectionMultiNum(id);
-		if cfg.plrExpAdd then
-			local num = cfg.plrExpAdd[2] - infoNum
-			local str = LanguageMgr:GetByID(15066, LanguageMgr:GetByID(15070, cfg.plrExpAdd[1]), num, cfg.plrExpAdd[2])
-			table.insert(list, str);
-		end
-		if cfg.cardExpAdd then
-			local num = cfg.cardExpAdd[2] - infoNum;
-			local str = LanguageMgr:GetByID(15067, LanguageMgr:GetByID(15070, cfg.cardExpAdd[1]), num, cfg.cardExpAdd[2])
-			table.insert(list, str);
-		end
-		if cfg.moneyAdd then
-			local num = cfg.moneyAdd[2] - infoNum;
-			local str = LanguageMgr:GetByID(15068, LanguageMgr:GetByID(15070, cfg.moneyAdd[1]), num, cfg.moneyAdd[2])
-			table.insert(list, str);
-		end
-		if cfg.dropAdd then
-			local extreAdd = this.GetExtreMultiNum() --额外增加的次数
-			local num = cfg.dropAdd[2] - infoNum + extreAdd;
-			local str = LanguageMgr:GetByID(15069, LanguageMgr:GetByID(15070, cfg.dropAdd[1] + extreAdd), num, cfg.dropAdd[2] + extreAdd)
-			table.insert(list, str);
-		end
-		for k, v in ipairs(list) do
-			if k == 1 then
-				str = str .. v;
-			else
-				str = str .. " " .. v;
-			end
-		end
+--战力派遣用
+function this.GetStarInfo3(stars,completeNums)
+	local infos = {};
+	stars = stars or {};
+	completeNums = completeNums or {};
+	for i = 1, #stars do
+		local star = stars[i];
+		local num  = completeNums[i] or 0
+		local info = this.GetInfo3(star[1], star[2], num);
+		table.insert(infos, info);		
 	end
-	return str;
+	return infos;
 end
 
-function this.GetMultiDesc2(id)
+function this.GetInfo3(type, target, num)
+	local info = {};
+	local starTips = {65015, 65016, 65017, 65018, 65019}
+	if type == RogueSStarType.Pass then
+		info = {
+			tips = LanguageMgr:GetByID(starTips[type]),
+			isComplete = num > 0
+		}
+	elseif type == RogueSStarType.KillMonster then
+		local cfg = Cfgs.MonsterData:GetByID(target)
+		local name = cfg and cfg.name or ""
+		info = {
+			tips = LanguageMgr:GetByID(starTips[type], name),
+			isComplete = num > 0
+		}
+	elseif type == RogueSStarType.DeathNum then
+		info = {
+			tips = target == 0 and LanguageMgr:GetByID(65020) or LanguageMgr:GetByID(starTips[type],target),
+			isComplete = num > 0
+		}
+	else	
+		info = {
+			tips = LanguageMgr:GetByID(starTips[type], target),
+			isComplete = num > 0
+		}
+	end
+	return info
+end
+
+--返回章节当前多倍掉落描述
+function this.GetMultiDesc(id)
 	local str = "";
 	local cfg = this.GetMultiCfg(id)
 	if cfg then
@@ -211,9 +216,9 @@ function this.GetMultiDesc2(id)
 			table.insert(list, str);
 		end
 		if cfg.dropAdd then
-			local extreAdd = this.GetExtreMultiNum() --额外增加的次数
-			local num = cfg.dropAdd[2] - infoNum + extreAdd;
-			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. (cfg.dropAdd[2] + extreAdd)
+			local max = DungeonUtil.GetDropAdd(id)
+			local num = max - infoNum ;
+			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. max
 			table.insert(list, str);
 		end
 		for k, v in ipairs(list) do
@@ -227,42 +232,50 @@ function this.GetMultiDesc2(id)
 	return str;
 end
 
---活动增加的额外掉落次数 只针对dropAdd这个字段
-function this.GetExtreMultiNum()
-	local add,regresAdd = 0,0
-	local cfgs = Cfgs.CfgDupDropCntAdd:GetAll()
+--获取回归多倍掉落总次数
+function this.GetRegresAdd()
+	local add = 0
 	local isRegres = RegressionMgr:IsHuiGui()
-	if cfgs then
-		for _, cfg in pairs(cfgs) do
-			if cfg.startTime and cfg.endTime then
-				local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
-				local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
-				if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
-					add = add + cfg.dropAddCnt
-				end
-			elseif cfg.regressionType ~= nil then
-				if isRegres then
-					local arr = RegressionMgr:GetArr()
-					if #arr > 0 then
-						for k, m in ipairs(arr) do
-							if m.type == RegressionActiveType.DropAdd and m.activityId == cfg.id then
-								add = add + cfg.dropAddCnt
-								regresAdd = regresAdd + cfg.dropAddCnt
-							end
+	if isRegres then
+		local cfgs = Cfgs.CfgDupDropCntAdd:GetAll()
+		local arr = RegressionMgr:GetArr()
+		if cfgs then
+			for _, cfg in pairs(cfgs) do
+				if cfg.regressionType ~= nil and #arr> 0 then
+					for _, m in ipairs(arr) do
+						if m.type == RegressionActiveType.DropAdd and m.activityId == cfg.id then
+							add = add + cfg.dropAddCnt
 						end
 					end
-				end	
-			end			
+				end
+			end
 		end
 	end
-	return add,regresAdd
+	return add
+end
+
+--获取多倍掉落总次数 返回：最大多倍次数,额外增加的多倍次数,是否无上限
+function this.GetDropAdd(id)
+	local add,max =0,0
+	local isNotLimit,isUse = false,false
+	if id then
+		local cfgSection = Cfgs.Section:GetByID(id)
+		if cfgSection then
+			add,max,isNotLimit,isUse = GCalHelp:GetMultiDropMaxCnt(cfgSection, DungeonUtil.GetDropAdd())
+		end
+	end
+	return max,add,isNotLimit,isUse
 end
 
 --判断该章节是否有多倍掉落信息
 function this.HasMultiDesc(id)
 	local cfg = this.GetMultiCfg(id)
-	if cfg and(cfg.plrExpAdd or cfg.cardExpAdd or cfg.moneyAdd or cfg.dropAdd) then
+	if cfg and(cfg.plrExpAdd or cfg.cardExpAdd or cfg.moneyAdd) then
 		return true;
+	end
+	local dropNum = this.GetDropAdd(id)
+	if dropNum > 0 then
+		return true
 	end
 	return false;
 end
@@ -272,7 +285,6 @@ function this.GetMultiNum(id)
 	local cfg = this.GetMultiCfg(id)
 	local cur,max = 0,0
 	local infoNum = DungeonMgr:GetSectionMultiNum(id);
-	local extreAdd = this.GetExtreMultiNum()
 	if(cfg and this.HasMultiDesc(id)) then
 		if cfg.plrExpAdd then
 			cur = cfg.plrExpAdd[2] - infoNum
@@ -284,8 +296,8 @@ function this.GetMultiNum(id)
 			cur = cfg.moneyAdd[2] - infoNum
 			max = cfg.moneyAdd[2]
 		elseif cfg.dropAdd then
-			cur = cfg.dropAdd[2] - infoNum + extreAdd
-			max = cfg.dropAdd[2] + extreAdd
+			max = DungeonUtil.GetDropAdd(id)
+			cur = max - infoNum
 		end
 	end
 	return cur,max
@@ -314,6 +326,21 @@ function this.HasMultiNum(cfgId)
 	return false
 end
 
+--获取多倍的时间限制
+function this.GetDropAddTime(id)
+	local _,add =this.GetDropAdd(id)
+	if add > 0 and g_ReCalAddDupMultiTime and g_ReCalAddDupMultiTime > 0 and g_ReCalAddDupMultiTime > TimeUtil:GetTime() then
+		return g_ReCalAddDupMultiTime - TimeUtil:GetTime()
+	end
+	return 0
+end
+
+--是否限时多倍
+function this.IsLimitDropAdd(id)
+	local _,_,_,isLimit =this.GetDropAdd(id)
+	return isLimit
+end
+
 function this.GetViewPath(sectionID)
 	local sectionData = DungeonMgr:GetSectionData(sectionID)
 	if sectionData and sectionData:GetInfo() then
@@ -334,7 +361,7 @@ function this.GetCost(cfg)
 		if cost~=nil and cost[1] == winCost[1] then
 			cost[2] = cost[2] + winCost[2]
 		elseif cost == nil then
-			cost = {winCost[1], winCost[2],winCost[3]}
+			cost = {winCost[1], winCost[2], winCost[3]}
 		end
     end
     return cost
@@ -342,13 +369,16 @@ end
 
 --获取实际消耗体力
 function this.GetHot(cfg)
-	local costNum = cfg.enterCostHot and cfg.enterCostHot or 0
-	costNum = cfg.winCostHot and costNum + cfg.winCostHot or costNum
+	local costNum1 = cfg.enterCostHot and cfg.enterCostHot or 0
+	local costNum2 = cfg.winCostHot and cfg.winCostHot or 0
 	if DungeonUtil.GetExtreHotNum() > 0 then
 		local num = DungeonUtil.GetExtreHotNum() < 100 and DungeonUtil.GetExtreHotNum() or 100
-		costNum = costNum * (100 - DungeonUtil.GetExtreHotNum()) / 100 
-	end
-	return math.ceil(costNum),costNum --因为是负数，所以向上取整
+		costNum1 = costNum1 * (100 - DungeonUtil.GetExtreHotNum()) / 100 
+		costNum2 = costNum2 * (100 - DungeonUtil.GetExtreHotNum()) / 100 
+	end 
+	--因为是负数，所以向上取整
+	local costNum = math.ceil(costNum1) + math.ceil(costNum2)
+	return costNum
 end
 
 --体力消耗减少

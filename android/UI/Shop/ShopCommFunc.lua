@@ -8,6 +8,8 @@ local itemQualitys2 = {"img_06_04", "img_16_04", "img_16_03", "img_16_02", "img_
 local itemQualitys3 = {"img_18_05", "img_18_04", "img_18_03", "img_18_02", "img_18_01", "img_18_06"};
 local packQualitys2 = {"img_25_05", "img_25_04", "img_25_03", "img_25_02", "img_25_01", "img_25_06"};
 local channelType = CSAPI.GetChannelType();
+this.fixedSkinID=50025;
+this.fixedHideTab=1006;
 
 -- 读取图标和边框 （支付页面用）openSetting:支付窗口填2
 function this.SetIconBorder(data, commodityType, border, icon, tIcon, tBorder, openSetting, isSmall)
@@ -308,105 +310,233 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
         end
     end
     if canPay then
-        -- 判断支付类型
-        local priceInfo = commodity:GetRealPrice();
-        if priceInfo and priceInfo[1].id == -1 then -- 使用SDK调用支付
-            if payType == nil then
-                payType = this.GetChannelPayType();
-            end
-            -- LogError("PayType:"..tostring(payType))
-            local priceInfo2 = commodity:GetPrice();
-            if SDKPayMgr:GetIsPaying() and payType == PayType.IOS then -- 目前只针对IOS进行拦截
-                LogError("正在处理支付中...");
-                do
-                    return
+        if CSAPI.IsDomestic() then
+            this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payType, isInstall, voucherList)
+        elseif CSAPI.IsADV() then
+            ---海外------------------------
+            local priceInfo=commodity:GetRealPrice();
+            Log("-------------------canPay------------priceInfo--------"..table.tostring(priceInfo))
+            if priceInfo and priceInfo[1].id==-1 then --使用SDK调用支付
+                SDKPayMgr:SetLastPayInfo(nil,nil);
+                if SDKPayMgr:GetIsPaying()  then --目前只针对IOS进行拦截
+                    Log("正在处理支付中...");
+                    do return end;
                 end
-            end
-            EventMgr.Dispatch(EventType.Shop_Buy_Mask, true);
-            SDKPayMgr:GenOrderID(commodity, payType, isInstall, function(result)
-                -- local result={
-                --     isOk=true,
-                --     id="1",
-                -- };
-                if result and (result.err ~= nil or result.isOk ~= true) then
-                    LogError("获取订单ID时出现错误！信息：" .. tostring(result.err))
-                    Tips.ShowTips(LanguageMgr:GetTips(1011));
-                    EventMgr.Dispatch(EventType.Shop_Buy_Mask, false);
-                    do
-                        return
-                    end
-                elseif result == nil or (result and (result.id == nil or result.id == "")) then
-                    LogError("获取订单ID返回为nil！")
-                    Tips.ShowTips(LanguageMgr:GetTips(1011));
-                    EventMgr.Dispatch(EventType.Shop_Buy_Mask, false);
-                    do
-                        return
-                    end
-                end
-                local data = ShopCommFunc.GetChannelData(commodity, result, payType);
-                -- LogError("申请订单ID数据：")
-                -- LogError(result);
-                -- LogError("下单数据：")
-                -- LogError(data)
-                if data == nil then
-                    LogError("下单数据错误，停止下单：")
-                    LogError(data)
-                    EventMgr.Dispatch(EventType.Shop_Buy_Mask, false);
-                    do
-                        return
-                    end
-                end
-                -- 发送数据，状态为未支付
-                local record = {
-                    goods_id = tostring(commodity:GetID()), -- 商品ID
-                    goods_name = commodity:GetName(), -- 商品名
-                    channel_name = CSAPI.GetChannelName(), -- 渠道名
-                    pay_result = "未支付", -- 支付状态
-                    pay_tips = "已下单", -- 付费流程
-                    goods_num = currNum, -- 数量
-                    cost_type = "人民币", -- 币种
-                    price = priceInfo2[1].num, -- 原价格
-                    pay_price = priceInfo[1].num, -- 实付价格
-                    pay_channel = PayTypeName[payType], -- 支付渠道
-                    create_time = TimeUtil.GetTime(), -- 创建时间
-                    order_id = GCardCalculator:GetPayOrderStrId(result.id, payType, channelType), -- 后台订单ID
-                    sdk_order_id = data.out_trade_no or "", -- sdk交易订单ID
-                    send_time = TimeUtil.GetTime()
-                }
-                -- LogError("上传数数内容：")
-                -- LogError(record)
-                BuryingPointMgr:TrackEvents("store_pay", record);
-                if payType == PayType.AlipayQR or payType == PayType.WeChatQR then
-                    EventMgr.Dispatch(EventType.SDK_Pay_QRURL, data.code_url)
-                elseif payType == PayType.BsAli then
-                    if data.is_install and data.is_install == "1" then -- H5
-                        -- 打开浏览器页面
-                        CSAPI.JumpUri(data.code_url);
-                    else -- 二维码
-                        EventMgr.Dispatch(EventType.SDK_Pay_QRURL, data.code_url)
-                    end
+                local priceInfo2=commodity:GetPrice();
+                if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+                    EventMgr.Dispatch(EventType.Shop_Buy_Mask,true);
                 else
-                    SDKPayMgr:SetIsPaying(true);
-                    EventMgr.Dispatch(EventType.SDK_Pay, data, true);
+                    print("-----PC-----IsGetIsMobileplatform")
                 end
-            end);
-        else -- 正常购买
-            if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
-                local good=BagMgr:GetFakeData(priceInfo[1].id);
-                local rNum=priceInfo[1].num;
-                local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),currNum,PlayerClient:GetLv());
-                if isOk and res  then
-                    rNum=res[1][2];
-                end
-                local dialogData = {
-                    content = LanguageMgr:GetTips(15123,good:GetName(),rNum*currNum),
-                    okCallBack = function()
-                        ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList, callBack);
+
+                --LogError(commodity)
+                print("commodity---------------------"..table.tostring(commodity))
+                --print("payType----"..table.tostring(payType))
+                ClientProto:QueryPrePay(commodity:GetID(),function(proto)
+                    if tostring(proto["productId"])==tostring(commodity:GetID()) then
+                        SDKPayMgr:GenOrderID(commodity,payType,isInstall,function(Backresult)
+                            Log("GenOrderID data back："..table.tostring(Backresult));
+                            local result={};
+                            --LogError(Backresult)
+                            print("GenOrderID  Backresult---------------------"..table.tostring(commodity))
+                            result.is_ok=Backresult["is_ok"];
+                            result.msg=Backresult["msg"];
+                            result.id=Backresult["id"];
+                            result.inc_id=Backresult["inc_id"];
+                            result.key_id=Backresult["key_id"];
+                            result.rand_key=Backresult["rand_key"];
+                            -- LogError(result)
+                            if result and (result.msg~=nil and result.is_ok==false) then
+                                LogError("获取订单ID时出现错误！信息："..tostring(result.msg))
+                                if payType and payType==PayType.ZiLongGitPay and tostring(commodity:GetID())==tostring(30033) then
+                                    if commodity:GetName() then
+                                        LanguageMgr:ShowTips(1046,commodity:GetName())
+                                    end
+                                else
+                                    Tips.ShowTips(LanguageMgr:GetTips(1011));
+                                end
+                                EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+                                do return end;
+                            elseif result==nil or (result and (result.id==nil or result.id=="")) then
+                                LogError("获取订单ID返回为nil！")
+                                if payType and payType==PayType.ZiLongGitPay and tostring(commodity:GetID())==tostring(30033) then
+                                    if commodity:GetName() then
+                                        LanguageMgr:ShowTips(1046,commodity:GetName())
+                                    end
+                                else
+                                    Tips.ShowTips(LanguageMgr:GetTips(1011));
+                                end
+                                EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+                                do return end;
+                            end
+                            --LogError("result.id:"..result.id)
+                            SDKPayMgr:SetLastPayInfo(result.inc_id,PayType.ZiLong);
+                            ---is_ok
+                            ---id  游戏订单
+                            ---key_id
+                            ---rand_key
+                            ---msg
+                            local AdvpriceInfo=commodity:GetPrice();
+                            local payData=
+                            {
+                                skuCode=tostring(commodity:GetID()),---商品id
+                            gameOrderId=result.id,---游戏订单号
+                                --amount=commodity["cfg"]["amount"],---定价价格（单位分）      ------
+                                amount=commodity["cfg"]["amount"] or AdvpriceInfo[1].num*100;---定价价格（单位分）      ------
+                                currency=commodity["cfg"]["displayCurrency"],---定价币种   -----
+                                productName=commodity:GetName(),---商品名称
+                                productDesc=commodity["data"]["sDesc"],---商品描述         -----
+                                --- gameExt=commodity["cfg"]["goodsId"],---游戏传入自定义参数
+                                gameExt=Json.encode(Backresult);---游戏传入自定义参数
+                            }
+                            if payData.productDesc==nil then
+                                payData.productDesc="";
+                            end
+                            payData.currency=RegionalSet.RegionalCurrencyType();
+                            print("GenOrderID  Backresult-----payData---------------"..table.tostring(payData))
+                            if payType~=nil and payType==10 then
+                                Log("--------------抵扣券抵扣--------------")
+                                ---抵扣券接口
+                                ShiryuSDK.PayPoints(payData,function(success,voucherNum)
+                                    Log("---------------ShiryuSDK.PayPoints Back---------------")
+                                    EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+                                    if success then
+                                        AdvDeductionvoucher.SDKvoucherNum=voucherNum;
+                                        AdvDeductionvoucher.QueryPoints(function() CSAPI.DispatchEvent(EventType.Shop_View_Refresh) end);
+                                        CSAPI.DispatchEvent(EventType.SDK_Deduction_voucher_paymentcompleted)
+                                        SDKPayMgr:SearchPayReward(true);
+                                        if callBack then callBack(); end
+                                    else
+                                        Tips.ShowTips(LanguageMgr:GetTips(1011));
+                                    end
+                                end)
+                            elseif payType~=nil and payType==11 then
+                                ShiryuSDK.ClaimGift(payData,function(success,BackJson)
+                                    Log("---------------ShiryuSDK.ClaimGift Back---------------:")
+                                    EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+                                    if success then
+                                        Log("---------------ShiryuSDK.ClaimGift successful---------------:")
+                                        SDKPayMgr:SearchPayReward(true);
+                                        if callBack then callBack(); end
+                                    else
+                                        Tips.ShowTips(LanguageMgr:GetTips(1011));
+                                    end
+                                end)
+                            else
+                                ---正常支付接口
+                                CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Pay,payData)
+                            end
+                        end);
+                    else
+                        LogError("返回订单号异常："..table.tostring(proto))
                     end
-                }
-                CSAPI.OpenView("Dialog", dialogData);
-            else
-                ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList, callBack);
+                end);
+            else --正常购买
+                Log("-------------------canPay--------正常购买------------")
+                ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil, callBack);
+            end
+        else
+            ---国内--------------------------
+            -- 判断支付类型
+            local priceInfo = commodity:GetRealPrice();
+            if priceInfo and priceInfo[1].id == -1 then -- 使用SDK调用支付
+                if payType == nil then
+                    payType = this.GetChannelPayType();
+                end
+                -- LogError("PayType:"..tostring(payType))
+                local priceInfo2 = commodity:GetPrice();
+                if SDKPayMgr:GetIsPaying() and payType == PayType.IOS then -- 目前只针对IOS进行拦截
+                    LogError("正在处理支付中...");
+                    do
+                        return
+                    end
+                end
+                EventMgr.Dispatch(EventType.Shop_Buy_Mask, true);
+                SDKPayMgr:GenOrderID(commodity, payType, isInstall, function(result)
+                    -- local result={
+                    --     isOk=true,
+                    --     id="1",
+                    -- };
+                    if result and (result.err ~= nil or result.isOk ~= true) then
+                        LogError("获取订单ID时出现错误！信息：" .. tostring(result.err))
+                        Tips.ShowTips(LanguageMgr:GetTips(1011));
+                        EventMgr.Dispatch(EventType.Shop_Buy_Mask, false);
+                        do
+                            return
+                        end
+                    elseif result == nil or (result and (result.id == nil or result.id == "")) then
+                        LogError("获取订单ID返回为nil！")
+                        Tips.ShowTips(LanguageMgr:GetTips(1011));
+                        EventMgr.Dispatch(EventType.Shop_Buy_Mask, false);
+                        do
+                            return
+                        end
+                    end
+                    local data = ShopCommFunc.GetChannelData(commodity, result, payType);
+                    -- LogError("申请订单ID数据：")
+                    -- LogError(result);
+                    -- LogError("下单数据：")
+                    -- LogError(data)
+                    if data == nil then
+                        LogError("下单数据错误，停止下单：")
+                        LogError(data)
+                        EventMgr.Dispatch(EventType.Shop_Buy_Mask, false);
+                        do
+                            return
+                        end
+                    end
+                    -- 发送数据，状态为未支付
+                    local record = {
+                        goods_id = tostring(commodity:GetID()), -- 商品ID
+                        goods_name = commodity:GetName(), -- 商品名
+                        channel_name = CSAPI.GetChannelName(), -- 渠道名
+                        pay_result = "未支付", -- 支付状态
+                        pay_tips = "已下单", -- 付费流程
+                        goods_num = currNum, -- 数量
+                        cost_type = "人民币", -- 币种
+                        price = priceInfo2[1].num, -- 原价格
+                        pay_price = priceInfo[1].num, -- 实付价格
+                        pay_channel = PayTypeName[payType], -- 支付渠道
+                        create_time = TimeUtil.GetTime(), -- 创建时间
+                        order_id = GCardCalculator:GetPayOrderStrId(result.id, payType, channelType), -- 后台订单ID
+                        sdk_order_id = data.out_trade_no or "", -- sdk交易订单ID
+                        send_time = TimeUtil.GetTime()
+                    }
+                    -- LogError("上传数数内容：")
+                    -- LogError(record)
+                    BuryingPointMgr:TrackEvents("store_pay", record);
+                    if payType == PayType.AlipayQR or payType == PayType.WeChatQR then
+                        EventMgr.Dispatch(EventType.SDK_Pay_QRURL, data.code_url)
+                    elseif payType == PayType.BsAli then
+                        if data.is_install and data.is_install == "1" then -- H5
+                            -- 打开浏览器页面
+                            CSAPI.JumpUri(data.code_url);
+                        else -- 二维码
+                            EventMgr.Dispatch(EventType.SDK_Pay_QRURL, data.code_url)
+                        end
+                    else
+                        SDKPayMgr:SetIsPaying(true);
+                        EventMgr.Dispatch(EventType.SDK_Pay, data, true);
+                    end
+                end);
+            else -- 正常购买
+                if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
+                    local good=BagMgr:GetFakeData(priceInfo[1].id);
+                    local rNum=priceInfo[1].num;
+                    local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),currNum,PlayerClient:GetLv());
+                    if isOk and res  then
+                        rNum=res[1][2];
+                    end
+                    local dialogData = {
+                        content = LanguageMgr:GetTips(15123,good:GetName(),rNum*currNum),
+                        okCallBack = function()
+                            ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList, callBack);
+                        end
+                    }
+                    CSAPI.OpenView("Dialog", dialogData);
+                else
+                    ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList, callBack);
+                end
             end
         end
     else
@@ -415,6 +545,86 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
         goods:InitCfg(price.id);
         Tips.ShowTips(string.format(LanguageMgr:GetTips(15000), goods:GetName()));
     end
+end
+
+function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payType, isInstall, voucherList)
+
+            ---海外------------------------
+            local priceInfo=commodity:GetRealPrice();
+            Log("-------------------canPay------------priceInfo--------"..table.tostring(priceInfo))
+            if priceInfo and priceInfo[1].id==-1 then --使用SDK调用支付
+                SDKPayMgr:SetLastPayInfo(nil,nil);
+                if SDKPayMgr:GetIsPaying()  then --目前只针对IOS进行拦截
+                    Log("正在处理支付中...");
+                    do return end;
+                end
+                local priceInfo2=commodity:GetPrice();
+                ---2024-09-14 中台SDK 重合 要求去掉游戏加载圈
+                --if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+                --    EventMgr.Dispatch(EventType.Shop_Buy_Mask,true);
+                --else
+                --    print("-----PC-----IsGetIsMobileplatform")
+                --end
+
+                print("commodity---------------------"..table.tostring(commodity))
+                ClientProto:QueryPrePay(commodity:GetID(),function(proto)
+                    if tostring(proto["productId"])==tostring(commodity:GetID()) then
+                        SDKPayMgr:GenOrderID(commodity,payType,isInstall,function(Backresult)
+                            Log("GenOrderID data back："..table.tostring(Backresult));
+                            local result={};
+                            print("GenOrderID  Backresult---------------------"..table.tostring(commodity))
+                            result.is_ok=Backresult["is_ok"];
+                            result.msg=Backresult["msg"];
+                            result.id=Backresult["id"];
+                            -- 订单ID
+                            result.inc_id=Backresult["inc_id"];
+                            result.key_id=Backresult["key_id"];
+                            result.rand_key=Backresult["rand_key"];
+                            -- LogError(result)
+                            if result and (result.msg~=nil and result.is_ok==false) then
+                                LogError("获取订单ID时出现错误！信息："..tostring(result.msg))                                
+                                Tips.ShowTips(LanguageMgr:GetTips(1011));
+                                EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+                                do return end;
+                            elseif result==nil or (result and (result.id==nil or result.id=="")) then
+                                LogError("获取订单ID返回为nil！")
+                                Tips.ShowTips(LanguageMgr:GetTips(1011));
+                                EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+                                do return end;
+                            end
+                            --LogError("result.id:"..result.id)
+                            SDKPayMgr:SetLastPayInfo(result.inc_id,PayType.CenterWeb);
+
+                            local AdvpriceInfo=commodity:GetPrice();
+                            local payData=
+                            {
+                                skuCode=tostring(commodity:GetID()),---商品id
+                                gameOrderId=result.id,---游戏订单号
+                                --amount=commodity["cfg"]["amount"],---定价价格（单位分）      ------
+                                amount=commodity["cfg"]["amount"] or AdvpriceInfo[1].num*100;---定价价格（单位分）      ------
+                                currency=commodity["cfg"]["displayCurrency"],---定价币种   -----
+                                productName=commodity:GetName(),---商品名称
+                                productDesc=commodity["data"]["sDesc"],---商品描述         -----
+                                --- gameExt=commodity["cfg"]["goodsId"],---游戏传入自定义参数
+                                gameExt=Json.encode(Backresult);---游戏传入自定义参数
+                            }
+                            if payData.productDesc==nil then
+                                payData.productDesc="";
+                            end
+                            -- 中台要求此处写死
+                            payData.currency="CNY";
+                            print("GenOrderID  Backresult-----payData---------------"..table.tostring(payData))                            
+                            ---正常支付接口
+                            CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Pay,payData)
+                        end);
+                    else
+                        LogError("返回订单号异常："..table.tostring(proto))
+                    end
+                end);
+            else --正常购买
+                Log("-------------------canPay--------正常购买------------")
+                ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil, callBack);
+            end
 end
 
 -- 返回非官方渠道的支付类型
@@ -691,7 +901,13 @@ end
 function this.HandlePayLogic(commodity, num, commodityType, voucherList, func)
     local priceInfo = commodity:GetRealPrice();
     -- 调用支付渠道选择
-    if priceInfo and priceInfo[1].id == -1 and (channelType == ChannelType.Normal or channelType == ChannelType.TapTap) then
+    if priceInfo and priceInfo[1].id == -1 and CSAPI.IsDomestic()then
+        if commodityType == 1 then -- 购买道具
+            ShopCommFunc.BuyCommodity(commodity, num, func, nil);
+        elseif commodityType == 2 then -- 兑换随机物品
+            ShopCommFunc.ExchangeCommodity(commodity, num, func, nil);
+        end
+    elseif priceInfo and priceInfo[1].id == -1 and (channelType == ChannelType.Normal or channelType == ChannelType.TapTap) then
         if CSAPI.GetPlatform() == 8 then -- IOS
             if commodityType == 1 then -- 购买道具
                 ShopCommFunc.BuyCommodity(commodity, num, func, nil, PayType.IOS);
@@ -705,11 +921,40 @@ function this.HandlePayLogic(commodity, num, commodityType, voucherList, func)
                 func = func
             });
         end
+    elseif priceInfo and priceInfo[1].id==-1 and CSAPI.IsADV() and AdvDeductionvoucher.SDKvoucherNum>=priceInfo[1].num then
+        CSAPI.OpenView("SDKPaySelect",{commodity=commodity,num=num,func=func});
     else
         if commodityType == 1 then -- 购买道具
             ShopCommFunc.BuyCommodity(commodity, num, func, nil, nil, nil, voucherList);
         elseif commodityType == 2 then -- 兑换随机物品
             ShopCommFunc.ExchangeCommodity(commodity, num, func);
+        end
+    end
+end
+
+
+---处理购买/兑换逻辑 海外
+function this.AdvHandlePayLogic(commodity,num,commodityType,func,payType,Isdisplay)
+    local priceInfo=commodity:GetRealPrice();
+    --调用支付渠道选择
+    print("channelType:"..channelType)
+    if priceInfo and priceInfo[1].id==-1 and (channelType==ChannelType.Normal or channelType==ChannelType.TapTap) then
+        if CSAPI.GetPlatform()==8 then--IOS
+            if commodityType==1 then --购买道具
+                ShopCommFunc.BuyCommodity(commodity,num,func,nil,PayType.IOS);
+            elseif commodityType==2 then  --兑换随机物品
+                ShopCommFunc.ExchangeCommodity(commodity,num,func,nil,PayType.IOS);
+            end
+        else
+            CSAPI.OpenView("SDKPaySelect",{commodity=commodity,num=num,func=func});
+        end
+    elseif priceInfo and priceInfo[1].id==-1 and CSAPI.IsADV() and AdvDeductionvoucher.SDKvoucherNum>=priceInfo[1].num and Isdisplay then
+        CSAPI.OpenView("SDKPaySelect",{commodity=commodity,num=num,func=func});
+    else
+        if commodityType==1 then --购买道具
+            ShopCommFunc.BuyCommodity(commodity,num,func,nil,payType);
+        elseif commodityType==2 then  --兑换随机物品
+            ShopCommFunc.ExchangeCommodity(commodity,num,func);
         end
     end
 end

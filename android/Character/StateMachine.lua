@@ -81,6 +81,9 @@ end
 
 --胜利
 function this:Win()  
+    if(not self.character or IsNil(self.character.animator))then
+        return;
+    end
     self.character.animator:Play("win");
     --self.character.animator:SetBool("win",true);
 end

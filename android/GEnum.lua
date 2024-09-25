@@ -27,7 +27,7 @@ ITEM_ID.DIAMOND = 10002 -- 钻石
 ITEM_ID.CARD_STORE_EXP = 10003 -- 角色存储经验
 ITEM_ID.PLR_EXP = 10004
 ITEM_ID.Hot = 10035 -- 体能
-ITEM_ID.BIND_DIAMOND = 10040 -- 微晶(绑定钻石)
+ITEM_ID.BIND_DIAMOND = 10040 -- 微晶
 ITEM_ID.POWER_CEILING = 10041 -- 爬塔报酬上限
 ITEM_ID.EXPLORE_EXP = 10043 -- 勘探经验
 ITEM_ID.MonthCard = 10030 -- 月卡
@@ -36,6 +36,8 @@ ITEM_ID.PLUS = 10045 --10045_Item##机密勘探
 ITEM_ID.DIFF = 10046 --10046_Item##勘探差价
 ITEM_ID.TAO_FA_Count = 12005 --讨伐次数
 ITEM_ID.DeductionVoucher=10999 --抵扣券[ 紫龙使用的 ]
+ITEM_ID.DIAMOND_PAY = 10998 -- 充值获得钻石
+
 
 -- save type是数据库保存，不能修改，只能添加
 ITEM_TYPE = {}
@@ -90,6 +92,7 @@ PROP_TYPE.Icon = 13 -- 头像(dy_arr[头像物品id, 有效时间秒（不填 or
 PROP_TYPE.Pet = 14 -- 宠物(动态值2填宠物id)
 PROP_TYPE.PetItem = 15 -- 宠物道具(动态值2填宠物物品id)
 PROP_TYPE.PetArchive = 16 -- 宠物图鉴（动态值2填宠物图鉴表id）
+--PROP_TYPE.Music = 17 -- 音乐（动态值2音乐表id）
 
 -- 物品月卡类型
 ItemMemberType = {}
@@ -326,7 +329,7 @@ eTaskType.Rogue = 21      -- 乱序演习任务
 eTaskType.RegressionTask = 22     -- 回归任务
 eTaskType.RegressionBind = 23     -- 回归绑定任务
 eTaskType.StarPalace = 24     -- 十二星宫任务
--- eTaskType.Pet = 25              -- 夏活宠物图鉴任务
+--eTaskType.Pet = 25              -- 夏活宠物图鉴任务
 
 
 -- 任务提示图片： 白、黄、蓝、绿
@@ -419,7 +422,7 @@ cTaskCfgNames = {
     [eTaskType.RegressionTask] = 'CfgRegressionTask',
     [eTaskType.RegressionBind] = 'CfgRegressionBind',
     [eTaskType.StarPalace] = 'CfgTotalBattleTask',
-    -- [eTaskType.Pet] = 'CfgPetArchive',
+    --[eTaskType.Pet] = 'CfgPetArchive',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -441,7 +444,7 @@ eTaskFinishType.CardCreate = 50 -- 卡牌创建
 eTaskFinishType.Task = 60 -- 任务
 eTaskFinishType.Army = 61 -- 军演
 eTaskFinishType.Item = 65 -- 物品
--- eTaskFinishType.Pet = 67 -- 夏活宠物
+--eTaskFinishType.Pet = 67 -- 夏活宠物
 
 -- 任务状态
 eTaskState = {}
@@ -482,7 +485,7 @@ eTaskEventType.Team = 25 -- 队伍
 eTaskEventType.Skill = 26 -- 技能
 eTaskEventType.Board = 27 -- 看板
 eTaskEventType.PassGroup = 28 -- 通关关卡组
--- eTaskEventType.PetAbility = 29 -- 宠物属性变动
+--eTaskEventType.PetAbility = 29 -- 宠物属性变动
 
 eLockState = {}
 eLockState.No = 0
@@ -519,9 +522,10 @@ eFriendState.InterBlack = 11 -- 相互拉黑(只有当被拉黑，与黑名单�
 
 GenEnumNameByVal('eFriendStateName', eFriendState)
 
--- 队伍下标起始值
+-- 队伍下标起始值,与CfgTeamTypeEnum表中的起始下标一致
 eTeamType = {
     DungeonFight = 1, -- 副本队伍列表,队伍ID是1-6
+    RogueS = 50, --战力派遣 (50-59)
     Assistance = 20, -- 助战队伍信息，自己分享的助战卡牌列表
     PracticeAttack = 21, -- 军演练习攻击队伍
     PracticeDefine = 22, -- 军演练习防御队伍
@@ -698,6 +702,15 @@ FightStarType = {
     Support = 5 -- 助战
 }
 
+-- 副本条件类型（战力派遣）
+RogueSStarType = {
+    Pass = 1,           -- 通关
+    DeathNum = 2,       -- 角色死亡数量不大于X个（0就是全部存活）
+    Steps = 3,          -- 总操作数
+    RoundAllAlive = 4,  -- 第X轮通关时所有角色全部存活
+    KillMonster = 5,    -- 击败某个角色
+}
+
 -- 副天赋格子开启类型
 SubTalentOpenType = {}
 SubTalentOpenType.Break = 1 -- 突破
@@ -728,6 +741,8 @@ ActivityListType = {
     AccuCharge = 1011, --累计充值
     SignInZhongQiu = 1014,--中秋签到
     SignInGift = 1015,--付费签到
+    SignInNational = 1016,--国庆签到
+    GachaBall=1017,--扭蛋活动
 }
 
 ALType = {}
@@ -1042,6 +1057,7 @@ TeamOpenSetting.PVP = 3 -- pvp编队
 TeamOpenSetting.Tower = 4 --爬塔编成
 TeamOpenSetting.Rogue = 5 --肉鸽
 TeamOpenSetting.TotalBattle=6--总力战
+TeamOpenSetting.RogueS = 7 --战力派遣
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1303,6 +1319,7 @@ PlrMixIx.background_id = 60 -- 背景ID
 PlrMixIx.starPalace = 61 -- 十二星宫进度
 PlrMixIx.newPanelInfo = 62 -- 新看板信息
 PlrMixIx.openConditionTime = 63 -- 新手教程的完成时间
+PlrMixIx.BugFixIndex = 64 -- 已修复Bug下标，对应下标的方法只会运行一次
 
 -- 图鉴
 ArchiveType = {}
@@ -1313,6 +1330,7 @@ ArchiveType.Story = 4 -- 剧情
 ArchiveType.Equip = 5 -- 装备
 ArchiveType.Enemy = 6 -- 敌兵
 ArchiveType.Board = 7 -- 看板
+ArchiveType.Music = 8 --播放器
 
 -- 格子副本进入方式
 BattleEnterType = {}
@@ -1375,6 +1393,7 @@ ExplorationState = {}
 ExplorationState.Normal = 1 -- 普通勘探
 ExplorationState.Ex = 2 -- 高级勘探
 ExplorationState.Plus = 3 -- 机密勘探
+ExplorationState.Post = 4 -- 机密勘探
 
 ExplorationRewardState = {}
 -- 勘探奖励物品状态
@@ -1383,12 +1402,6 @@ ExplorationRewardState.UnLock = 2 -- 已解锁且不可领取
 ExplorationRewardState.Available = 3 -- 已解锁且可领取
 ExplorationRewardState.Received = 4 -- 已领取
 
---付费弹窗
-MenuBuyState = {}
-MenuBuyState.First = 1 --首充礼包
-MenuBuyState.CrateLittle = 2 --新手构建包
-MenuBuyState.Commodity = 3 --星贸凭证（月卡）
-MenuBuyState.CrateMove = 4 --首轮特价构建包
 
 ---------------------------------------------设置
 SettingFightActionType = {} -- 战斗动画开关
@@ -1481,6 +1494,8 @@ PayType.BsAli = 8 --聚合支付-支付宝
 PayType.ZiLong = 9 --紫龙
 PayType.ZiLongDeductionvoucher=10--紫龙抵扣券
 PayType.ZiLongGitPay =11 --紫龙预约和礼品发放
+PayType.CenterWeb = 12 --中台
+
 
 GenEnumNameByVal('PayTypeName', PayType)
 
@@ -1737,7 +1752,7 @@ VoucherType={
     Pictrue=3,--插画折扣券
 }
 
---运营活动活动类型
+--运营活动活动类型(有前置开启条件)
 eOperateType = {}
 eOperateType.RechargeSign = 1015 --充值签到
 
@@ -1764,3 +1779,4 @@ ePetState = {
 eOpenConditionType = {}
 eOpenConditionType.Lv = 1 --等级
 eOpenConditionType.Dup = 2 --关卡
+

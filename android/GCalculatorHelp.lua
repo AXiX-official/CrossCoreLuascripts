@@ -70,13 +70,13 @@ end
 function GCalHelp:GetTbValeByKey(tb, index, key, def)
     local info = tb[index]
     if not info then
-        LogWarning('Can not get by index:%s, key: %s, use def val, %s', index, key, def)
+        -- LogWarning('Can not get by index:%s, key: %s, use def val, %s', index, key, def)
         return def
     end
 
     local val = info[key]
     if not val then
-        LogWarning('Can not get by index:%s, key: %s, use def val, %s', index, key, def)
+        -- LogWarning('Can not get by index:%s, key: %s, use def val, %s', index, key, def)
         return def
     end
 
@@ -2094,6 +2094,86 @@ function GCalHelp:GetRogueEffectingBuff(arrSelectBuffs, nRound)
     return effectingBuffs
 end
 
+-- 肉鸽词条转换成技能跟buff，传入战斗
+function GCalHelp:GetRogueExdata(buffs, exData, cardData)
+    exData.tExBuff = {}         -- 我方buff 数组
+    exData.tMonsterBuff = {}    -- 怪物buff 数组​
+    exData.tAllBuff = {}        -- 双方buff 数组​
+    exData.tRandBuff = {}       -- 随机buff 格式给我方三个人加buff, 敌方1个人加buff
+    if buffs and next(buffs) then        
+        for _, rouguBuff in ipairs(buffs) do
+            local cfg = CfgRogueBuff[rouguBuff]
+            if cfg.target == RogueBuffTarget.TeamAll then
+                -- 我方全体
+                table.merge(exData.tExBuff, cfg.buffId)
+                if cfg.skillId and next(cfg.skillId) then
+                    for k, v in pairs(cardData) do
+                        table.merge(v.data.skills, cfg.skillId)
+                    end
+                end
+            elseif cfg.target == RogueBuffTarget.MonsterAll then
+                -- 敌方全体
+                table.merge(exData.tMonsterBuff, cfg.buffId)
+            elseif cfg.target == RogueBuffTarget.BothAll then
+                -- 敌我全体
+                table.merge(exData.tAllBuff, cfg.buffId)
+                if cfg.skillId and next(cfg.skillId) then
+                    for k, v in pairs(cardData) do
+                        table.merge(v.data.skills, cfg.skillId)
+                    end
+                end
+            elseif cfg.target == RogueBuffTarget.TeamRandom then
+                -- 我方随机
+                table.insert(exData.tRandBuff, {
+                    teamID = 1,
+                    count = cfg.targetValue,
+                    buff = table.copy(cfg.buffId)
+                })
+    
+                local roleNum = #cardData
+                if roleNum <= cfg.targetValue then
+                    -- 上阵角色数少于随机数，全部角色加技能
+                    if cfg.skillId and next(cfg.skillId) then
+                        for idx, v in pairs(cardData) do
+                            table.merge(v.data.skills, cfg.skillId)
+                        end
+                    end
+                else
+                    -- 从上阵角色里面随机N个角色出来加上词条技能
+                    local arr = {}
+                    for i = 1, roleNum do
+                        table.insert(arr, i)
+                    end
+    
+                    local effectRoles = {}
+                    for i = 1, cfg.targetValue do
+                        local r = math.random(1, #arr)
+                        effectRoles[arr[r]] = true
+                        table.remove(arr, r)
+                    end
+    
+                    if cfg.skillId and next(cfg.skillId) then
+                        for idx, v in pairs(cardData) do
+                            if effectRoles[idx] then
+                                table.merge(v.data.skills, cfg.skillId)
+                            end
+                        end
+                    end
+                end
+    
+    
+            elseif cfg.target == RogueBuffTarget.MonsterRandom then
+                -- 敌方随机
+                table.insert(exData.tRandBuff, {
+                    teamID = 2,
+                    count = cfg.targetValue,
+                    buff = table.copy(cfg.buffId)
+                })
+            end
+        end
+    end
+end
+
 --通过技能id获取怪物的基础模型
 function GCalHelp:GetBaseModelBySkillID(skillID)
     local cfg = skill[skillID]
@@ -2305,6 +2385,7 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
     end
 
     local isUseSpecialMulti = false
+    ConfigChecker:CfgDupDropCntAdd(CfgDupDropCntAdd)    
     if cfgSection.specialMultiIds and g_SpecialMultiId then
         -- Tips: 这里是因为 cfgSection.specialMultiIds 只会填一两个值，所以直接用遍历
         if self:FindArrByFor(cfgSection.specialMultiIds, g_SpecialMultiId) then

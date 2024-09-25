@@ -332,9 +332,9 @@ function UpdateBuff()
     if(target)then
         buffs = target.GetBuffs();
     end
-    
-    buffView.UpdateBuff(buffs);
-
+    if(buffView)then
+        buffView.UpdateBuff(buffs);
+    end
     UpdateBuffShield();
 end
 

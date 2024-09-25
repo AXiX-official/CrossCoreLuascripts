@@ -62,6 +62,7 @@ local isShowInfos=false; --是否显示卡牌hp/sp信息
 local refreshClick=nil--刷新点击按钮
 local dungeonCfg=nil;
 local sectionID=nil;
+local battleStrength=0;
 function Awake()
 	BackteamPreset=nil;
 	ResUtil:LoadBigImg(mbg, "UIs/BGs/bg_13/bg", true, function()
@@ -83,6 +84,7 @@ function Awake()
 	svHeight=size[1];
     InitListener()
 	UIUtil:AddQuestionItem("TeamView", gameObject, TopNode)
+	if CSAPI.IsADV() then battleStrength=ShiryuSDK.GetbattleStrength() end
 end
 
 function InitSVObj()
@@ -227,6 +229,12 @@ function OnDisable()
 end
 
 function OnDestroy()
+
+	if CSAPI.IsADV() then
+		if battleStrength~=ShiryuSDK.GetbattleStrength() then
+			ShiryuSDK.OnRoleInfoUpdate();
+		end
+	end
 	CSAPI.RemoveInputFieldCallBack(inp_teamName,OnTeamNameEdit);
 	CSAPI.RemoveInputFieldChange(inp_teamName,OnTeamNameChange);
    eventMgr:ClearListener();
@@ -448,12 +456,12 @@ function SetViewLayout(openSetting)
         CSAPI.SetGOActive(btn_svType2,false);
         CSAPI.SetGOActive(btn_svType,true);
 		CSAPI.SetGOActive(btn_list,false);
-    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle then
+    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS then
 		CSAPI.SetGOActive(btn_svType2,canAssist);
         CSAPI.SetGOActive(btn_svType,true);
 		CSAPI.SetGOActive(btn_list,false);
     end
-	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle then
+	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS then
 		hasPrefab=false;
 	end
 	CSAPI.SetGOActive(btn_prefab,hasPrefab);
@@ -522,12 +530,16 @@ end
 
 function RefreshLeftInfo()
 	if teamData then
-		if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle then
+		if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS then
 			input.interactable=false;
 		else
 			input.interactable=not TeamMgr:GetTeamIsFight(teamData:GetIndex())
 		end
-		input.text=teamData:GetTeamName()==nil and "" or tostring(teamData:GetTeamName());
+		if(openSetting==TeamOpenSetting.RogueS) then 
+			input.text=LanguageMgr:GetByID(65021)
+		else 
+			input.text=teamData:GetTeamName()==nil and "" or tostring(teamData:GetTeamName());
+		end 
 		local haloStrength=teamData:GetHaloStrength();
 		CSAPI.SetText(txt_fightNum, tostring(teamData:GetTeamStrength()+haloStrength));
 		CSAPI.SetText(txt_roleNum,string.format("<color=#ffc146>%s</color>/5",teamData:GetRealCount()));
@@ -710,21 +722,29 @@ end
 
 --检察队伍改动的冲突 func 处理完冲突的回调，func2取消解决冲突的回调
 function CheckTeam(func,func2)
-	if (selectType == TeamSelectType.Normal or selectType==TeamSelectType.Force) and (TeamMgr:IsTeamType(eTeamType.DungeonFight) or TeamMgr:IsTeamType(eTeamType.ForceFight)) then --副本队伍检查是否有冲突
+	if ((selectType == TeamSelectType.Normal or selectType==TeamSelectType.Force) and (TeamMgr:IsTeamType(eTeamType.DungeonFight) or TeamMgr:IsTeamType(eTeamType.ForceFight) or TeamMgr:IsTeamType(eTeamType.RogueS))) then --副本队伍检查是否有冲突
 		local state = 1;--卡牌状态，1表示当前卡牌没有队伍冲突，2表示在其它队伍中上阵，但是可以下阵，3表示在其它队伍中强制上阵
 		for k, v in ipairs(teamData.data) do
 			local card = RoleMgr:GetData(v.cid);
 			if card then
 				local teamIndex = -1;
-				if selectType==TeamSelectType.Force then --强制上阵
-					teamIndex =TeamMgr:GetCardForceIndex(dungeonID,card:GetID());
-				else
+				if(openSetting == TeamOpenSetting.RogueS) then  
 					teamIndex =TeamMgr:GetCardTeamIndex(card:GetID());
-				end
-				if(teamIndex ~= - 1 and teamIndex ~= teamData.index) then --该卡牌存在于其他队伍中
-					state=2;
-					break;
-				end
+					if(teamIndex ~= - 1 and teamIndex>=11 and teamIndex<=19 and  teamIndex ~= teamData.index) then --该卡牌存在于其他队伍中
+						LanguageMgr:ShowTips(14028)
+						return
+					end
+				else
+					if selectType==TeamSelectType.Force then --强制上阵
+						teamIndex =TeamMgr:GetCardForceIndex(dungeonID,card:GetID());
+					else
+						teamIndex =TeamMgr:GetCardTeamIndex(card:GetID());
+					end
+					if(teamIndex ~= - 1 and teamIndex ~= teamData.index) then --该卡牌存在于其他队伍中
+						state=2;
+						break;
+					end 
+				end 
 			end
 		end
 		if state==3 then
@@ -1022,7 +1042,7 @@ function LayoutCallBack(index)
         isSelect=teamData:GetItem(_data:GetID())~=nil,
 		isCost=isCost,
 		listType=listType,
-		isFormation= TeamMgr:GetCardTeamIndex(_data:GetID())~=teamData:GetIndex(),--当前队伍的卡牌不显示队伍信息
+		isFormation= TeamMgr:GetCardTeamIndex(_data:GetID(),TeamMgr:GetTeamType(teamData:GetIndex()),true)~=teamData:GetIndex(),--当前队伍的卡牌不显示队伍信息
 		showTips=isEqual,
 		showNPC=FormationUtil.IsNPCAssist(_data:GetID()),
 		showAttr=isAddtive,
@@ -1031,6 +1051,7 @@ function LayoutCallBack(index)
 		canClick=enableClick,
 		sortId=sortID,
 		disDrag=disDrag,
+		teamType = TeamMgr:GetTeamType(teamData:GetIndex())
     };
 	local grid=layout:GetItemLua(index);
 	grid.SetIndex(index);
@@ -1672,7 +1693,7 @@ function OnChildNodeChange(index)
 end
 
 function OnTeamNameChange(str)
-	local text=StringUtil:FilterChar(str);
+	local text=StringUtil:FilterChar2(str);
 	input.text=text;
 end
 

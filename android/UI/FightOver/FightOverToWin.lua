@@ -176,6 +176,8 @@ function RefreshPanel()
         SetFiledBossPanel()
     elseif sceneType == SceneType.Rogue then
         SetRoguePanel()
+    elseif sceneType == SceneType.RogueS then
+        SetRogueSPanel() 
     else
         SetPVEPanel()
     end
@@ -238,7 +240,9 @@ function SetExp(addExp)
         while oldExp < 0 do
             oldLv = oldLv - 1
             local cfg = Cfgs.CfgPlrUpgrade:GetByID(oldLv)
+            if cfg then
             oldExp = cfg.nNextExp + oldExp
+        end
         end
         local maxExp = GetLvExp(oldLv)
         RefreshTextLv(oldLv)
@@ -537,12 +541,45 @@ function RewardAnimComplete()
     end
 end
 ------------------------------------rogue------------------------------------
+function SetRogueSPanel()
+    CSAPI.SetGOActive(rogueSObj1, true)
+    local cfg = Cfgs.DungeonGroup:GetByID(elseData.group)
+    CSAPI.SetText(txtRogueS1,cfg.name)
+    CSAPI.SetText(txtRogueS2,"0"..elseData.round)
+    LanguageMgr:SetText(txtRogueS3, 50023, elseData.steps or 0)
+    -- 
+    local infos = DungeonUtil.GetStarInfo3(cfg.stars, elseData.star_data)
+    targetItems = targetItems or {}
+    ItemUtil.AddItems("FightTaskItem/RogueSTaskItem", targetItems, infos, rogueSVert)
+    --
+    local len = RogueSMgr:GetLen(elseData.group)
+    CSAPI.SetGOActive(rogueSObj2, elseData.round< len)
+end
+--重新挑战
+function OnClickRogueS1()
+    FightClient:Clean()
+    FightProto:EnterRogueSFight(elseData.round,CloseParent)
+end
+--下一轮
+function OnClickRogueS2()
+    FightClient:Clean()
+    FightProto:EnterRogueSFight(elseData.round+1,CloseParent)
+end
+function CloseParent()
+    local _view = CSAPI.GetView("FightOverResult")
+    if (_view) then
+        local lua = ComUtil.GetLuaTable(_view)
+        lua.view:Close()
+    end
+end
+
+------------------------------------rogue------------------------------------
 function SetRoguePanel()
     CSAPI.SetGOActive(rogueObj, true)
     local section = DungeonMgr:GetActivitySectionDatas(SectionActivityType.Rogue)
     local cfg = Cfgs.DungeonGroup:GetByID(elseData.group)
     CSAPI.SetText(txtRogue1, string.format("%s  %s", section[1]:GetName(), cfg.name))
-    LanguageMgr:SetText(txtRogue2, 50023, elseData.steps or 0)
+    LanguageMgr:SetText(txtRogue2, 65010, elseData.steps or 0)
     -- buffs
     if(elseData.selectBuffs) then 
         items2 = items2 or {}
@@ -598,6 +635,17 @@ function SetPVEPanel()
     if dungeonType == eDuplicateType.BattleField then
         BattleFieldMgr:AddRewardCur(1)
     end
+
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        if cfgDungeon then
+            if cfgDungeon.id == 1001 then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_01_FINISH)
+            elseif cfgDungeon.id == 1002 then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_02_FINISH)
+            end
+        end
+    end
+
 end
 
 function SetPVETitle()

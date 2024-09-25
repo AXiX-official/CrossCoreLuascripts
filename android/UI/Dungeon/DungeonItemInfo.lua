@@ -90,8 +90,9 @@ function CheckDouble(panel, cb)
     end
     local isDouble = panel.IsDouble()
     local multiNum = panel.GetMultiNum()
+    local isLimitDouble = panel.IsLimitDouble()
     local isFirstDouble = DungeonMgr:GetFisrtOpenDouble()
-    if (not isDouble and multiNum > 0 and not isFirstDouble) then
+    if (not isDouble and multiNum > 0 and not isFirstDouble and not isLimitDouble) then
         DungeonMgr:SetFisrtOpenDouble(true)
         local dialogData = {}
         local name = currCfg.name

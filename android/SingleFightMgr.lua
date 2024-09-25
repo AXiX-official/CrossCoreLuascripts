@@ -467,6 +467,7 @@ function CreateSimulateFight(groupID, groupID2, cbOver, seed, cid, model, modelA
         end
         -- g_FightMgrServer = nil
         FightMgrBase.Over(self, stage, winer)
+        self:Destroy()
     end
 
     mgr:AddCmd(
@@ -530,6 +531,7 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
         end
         -- g_FightMgrServer = nil
         FightMgrBase.Over(self, stage, winer)
+        self:Destroy()
     end
 
     mgr:AddCmd(

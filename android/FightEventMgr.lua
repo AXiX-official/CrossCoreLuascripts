@@ -17,6 +17,12 @@ function FightEventMgr:Init(fightMgr)
 	end
 end
 
+function FightEventMgr:Destroy()
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 -- 注册buffer事件
 function FightEventMgr:AddBufferEvent(event, buffer)
 	LogDebugEx("注册buffer事件", event, buffer.id)

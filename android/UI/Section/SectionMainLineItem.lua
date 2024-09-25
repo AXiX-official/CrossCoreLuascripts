@@ -57,7 +57,7 @@ function Refresh(_data, _elseData)
 
         CSAPI.SetGOActive(nol, not (elseData.fakeType > 0))
         CSAPI.SetGOActive(fake, elseData.fakeType > 0)
-        CSAPI.SetGOActive(fakeText, elseData.fakeType > 1)
+        CSAPI.SetGOActive(fakeText, elseData.fakeType > 1 and not CSAPI.IsAppReview())
     end
 end
 
@@ -126,7 +126,7 @@ end
 
 function OnClick()
     if elseData.fakeType > 0 then
-        if elseData.fakeType > 1 then
+        if elseData.fakeType > 1 and not CSAPI.IsAppReview() then
             LanguageMgr:ShowTips(1000)
         end
         return

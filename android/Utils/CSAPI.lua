@@ -803,6 +803,8 @@ this.StopExceptTag = CS.CSAPI.StopExceptTag;
 this.SetVolume = CS.CSAPI.SetVolume;
 --获取音量
 this.GetVolume = CS.CSAPI.GetVolume;
+--移除
+this.RemoveCueSheet = CS.CSAPI.RemoveCueSheet;
 --播放配置声音
 function this.PlayCfgSoundByID(id, feature, tag, volumeCoeff)
 	local cfg = Cfgs.Sound:GetByID(id);
@@ -1136,16 +1138,37 @@ this.IPhonePlayer=CS.UnityEngine.RuntimePlatform.IPhonePlayer;
 this.WindowsEditor=CS.UnityEngine.RuntimePlatform.WindowsEditor;
 
 
-this.IsADV=CS.CSAPI.IsADV;
+--this.IsADV=CS.CSAPI.IsADV;
+--this.IsDomestic=CS.CSAPI.IsDomestic;
+function this.IsADV()
+	return false;
+end
+function this.IsDomestic()
+	return false;
+end
+
 this.SetUIFit=CS.CSAPI.SetUIFit;
 this.AddUIAdaptive=CS.CSAPI.AddUIAdaptive;
 this.RemoveAdaptive=CS.CSAPI.RemoveAdaptive;
 this.AddEventListener=CS.CSAPI.AddEventListener;
 this.RemoveEventListener=CS.CSAPI.RemoveEventListener;
-this.UIFitoffsetTop=CS.CSAPI.UIFitoffsetTop;
-this.UIFoffsetBottom=CS.CSAPI.UIFoffsetBottom;
-this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
-this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
+-- this.UIFitoffsetTop=CS.CSAPI.UIFitoffsetTop;
+-- this.UIFoffsetBottom=CS.CSAPI.UIFoffsetBottom;
+-- this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
+-- this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
+function  this.UIFitoffsetTop()
+	return 0;
+end
+function  this.UIFoffsetBottom()
+	return 0;
+end
+function  this.UIFittopAnchor()
+	return 0;
+end
+function  this.UIbottomAnchor()
+	return 0;
+end
+
 this.QuitGame =CS.CSAPI.QuitGame;
 this.GetDeviceID =CS.CSAPI.GetDeviceID;
 this.GetInside =CS.CSAPI.GetInside;
@@ -1156,6 +1179,12 @@ this.ZLongServerId=CS.ShiryuStreamingAssets.ins.GetServerId
 
 this.PCSetWindow=CS.CSAPI.PCSetWindow;
 this.APKVersion=CS.CSAPI.APKVersion;
+--this.RegionalCode=CS.CSAPI.RegionalCode;
+function this.RegionalCode()
+	return 100;
+end
+
+
 ---是否存在新手引导
 function this.IsBeginnerGuidance()
 	if GuideMgr.IsGuideEnd==true then
@@ -1197,6 +1226,15 @@ function this.Getplatform()
 		this.IsMobileplatform=false;
 	end
 end
+
+
+---是否提审模式
+function this.IsAppReview()
+	return false;
+end
+
+--字符串替换 (string str = "",string pattern = "",bool isMatch = false)
+-- this.FilterChar = CS.CSAPI.FilterChar
 
 return this;
 

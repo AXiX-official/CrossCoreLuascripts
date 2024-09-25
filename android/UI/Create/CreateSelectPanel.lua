@@ -38,6 +38,11 @@ end
 function OnClickOK()
     if (CreateMgr:CheckPoolActive(data.id)) then
         CreateMgr:CardCreate(data.id, data.cnt)
+        if(data.content==LanguageMgr:GetTips(10006)) then
+            if CSAPI.IsADV() or CSAPI.IsDomestic() then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_CONFIRM)
+            end
+        end
     else
         LanguageMgr:ShowTips(10015)
     end

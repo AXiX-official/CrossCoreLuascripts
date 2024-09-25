@@ -347,16 +347,18 @@ end
 
 function LayoutCallBack3(index)
     local _data = curDatas3[index]
-	local isSelect = false;
-    local grid=layout3:GetItemLua(index);
-    local equippdType=_data:GetCardId()==card:GetID() and 2 or 1
-	if _data and currEquip then
-		isSelect =_data:GetID()==currEquip:GetID();
-		selectIndex=isSelect==true and index or selectIndex;
+    if _data then
+        local isSelect = false;
+        local grid=layout3:GetItemLua(index);
+        local equippdType=_data:GetCardId()==card:GetID() and 2 or 1
+        if _data and currEquip then
+            isSelect =_data:GetID()==currEquip:GetID();
+            selectIndex=isSelect==true and index or selectIndex;
+        end
+        grid.SetIndex(index);
+        grid.Refresh(_data,{isClick = true, isSelect = isSelect,selectType=1,showNew=true,equippdType=equippdType});
+        grid.SetClickCB(OnClickEquip);
     end
-	grid.SetIndex(index);
-	grid.Refresh(_data,{isClick = true, isSelect = isSelect,selectType=1,showNew=true,equippdType=equippdType});
-	grid.SetClickCB(OnClickEquip);
 end
 
 --当选择位置更改时

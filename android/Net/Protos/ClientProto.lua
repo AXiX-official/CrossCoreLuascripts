@@ -1,4 +1,7 @@
-ClientProto = {}
+ClientProto =
+{
+    PayQueryAction=nil;
+}
 
 -- 签到记录
 function ClientProto:GetSignInfo(_id, _index)
@@ -286,4 +289,26 @@ function ClientProto:PlrNotice(proto)
     end
 
 
+end
+
+---查询回调
+--ClientProto.PayQueryAction=nil;
+---1056 支付查询（发起生成订单之前发送）
+function ClientProto:QueryPrePay(ShopproductId,action)
+    self.PayQueryAction=nil;
+    if ShopproductId then
+        self.PayQueryAction=action;
+        local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId), }}
+        NetMgr.net:Send(proto)
+    else
+        LogError("ClientProto:PayQuery --ShopproductId:"..tostring(ShopproductId))
+    end
+end
+---1057 支付查询（返回后才发起创建订单，失败返回提示）
+function ClientProto:QueryPrePayRet(proto)
+    if proto then
+        if self.PayQueryAction~=nil then self.PayQueryAction(proto); self.PayQueryAction=nil end
+    else
+        LogError("ClientProto:PayQueryRet")
+    end
 end

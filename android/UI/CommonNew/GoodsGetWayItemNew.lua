@@ -2,9 +2,13 @@
 local state=JumpModuleState.Normal;
 local data=nil;
 local isDisable=false;
+local canSweep=false;
+local jumpCfg=nil;
 function Refresh(_data,_isDisable)
     data=_data;
     isDisable=_isDisable
+    canSweep=false;
+    jumpCfg=nil;
     if data then
         state=data.state;
         if state==JumpModuleState.Lock then
@@ -24,16 +28,30 @@ function Refresh(_data,_isDisable)
             CSAPI.SetGOActive(txt_state,true)
             CSAPI.SetGOActive(btn_jump,true);
         end
-        local jumpCfg=Cfgs.CfgJump:GetByID(data.jumpId)
+        jumpCfg=Cfgs.CfgJump:GetByID(data.jumpId)
         local txt="";
+        local imgName="btn_1_01.png";
+        local txtColor={255,255,255,255};
         if jumpCfg then
             txt=txt..jumpCfg.desc;
             -- CSAPI.SetText(name,jumpCfg.desc);
+                --判定是否是关卡界面，关卡界面需要判定可以扫荡
+            if jumpCfg.Sweep and jumpCfg.Sweep==1 and jumpCfg.val3 then
+                local sweepData = SweepMgr:GetData(jumpCfg.val3)
+                canSweep = sweepData and sweepData:IsOpen() or false
+                if canSweep then
+                    imgName="btn_1_02.png";
+                    txtColor={0,0,0,255};
+                end
+            end
         end
-        if data.outTips then
+        CSAPI.LoadImg(jumpImg,"UIs/GetWayItem/"..imgName,false,nil,true);
+        CSAPI.SetTextColor(txt_state,txtColor[1],txtColor[2],txtColor[3],txtColor[4]);
+        if data.outTips then 
             txt=txt.."    "..data.outTips;
         end
         CSAPI.SetText(tipsContent,txt);
+        CSAPI.SetText(txt_state,LanguageMgr:GetByID(canSweep and 42001 or 1034));
     end
 end
 
@@ -46,6 +64,10 @@ function OnClickJump()
         return
     end
     if state==JumpModuleState.Normal then
+        if canSweep and jumpCfg and jumpCfg.val3 then
+            UIUtil:OpenSweepView(jumpCfg.val3)
+            do return end;
+        end
         if this.jumpCall then
             this.jumpCall(data);
         end

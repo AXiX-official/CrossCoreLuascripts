@@ -11,4 +11,7 @@ function Skill802200101:DoSkill(caster, target, data)
 	-- 12002
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12002], caster, target, data, 0.5,2)
+	-- 80003
+	self.order = self.order + 1
+	self:AddSp(SkillEffect[80003], caster, caster, data, 20)
 end

@@ -52,9 +52,9 @@ function Init(cfgID,_isGreen)
     -- grid
     -- grid_sr.size = UnityEngine.Vector2(3 + width - 1, 3 + height - 1)
     -- red
-    red_sr.size = UnityEngine.Vector2(width, height)
+    GetRed_sr().size = UnityEngine.Vector2(width, height)
     -- green 
-    green_sr.size = UnityEngine.Vector2(width, height)
+    GetGreen_sr().size = UnityEngine.Vector2(width, height)
     SetRed(_isGreen)
 end
 
@@ -72,9 +72,9 @@ function Init2(id,_isGreen)
     -- grid
     -- grid_sr.size = UnityEngine.Vector2(3 + width - 1, 3 + height - 1)
     -- red
-    red_sr.size = UnityEngine.Vector2(width, height)
+    GetRed_sr().size = UnityEngine.Vector2(width, height)
     -- green 
-    green_sr.size = UnityEngine.Vector2(width, height)
+    GetGreen_sr().size = UnityEngine.Vector2(width, height)
     SetRed(_isGreen)
 end
 
@@ -96,4 +96,19 @@ function SetFlicker()
     timer = 0
     curCount = 3
     isFlicker = true
+end
+
+
+function GetRed_sr()
+    if(not red_sr) then 
+        red_sr = ComUtil.GetCom(red, "Renderer")
+    end 
+    return red_sr
+end
+
+function GetGreen_sr()
+    if(not green_sr) then 
+        green_sr = ComUtil.GetCom(green, "Renderer")
+    end 
+    return green_sr
 end

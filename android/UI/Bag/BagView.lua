@@ -282,7 +282,8 @@ function Refresh(list) --刷新列表
 		end
 		list=SortMgr:Sort(sortID,arr);
 		curLayout=layout2;
-		SetCount(#list, EquipMgr.maxSize);
+		-- SetCount(#list, EquipMgr.maxSize);
+		SetCount(EquipMgr.curSize,EquipMgr.maxSize);
 		CSAPI.SetGOActive(SortNone2,#list<=0);
 		CSAPI.SetGOActive(SortNone,false);
 	end
@@ -668,7 +669,8 @@ end
 
 function RefreshNumObj()
 	if GetBagBaseType()==BagType.Equipped then
-		SetCount(#curDatas, EquipMgr.maxSize);
+		-- SetCount(#curDatas, EquipMgr.maxSize);
+		SetCount(EquipMgr.curSize, EquipMgr.maxSize);
 	end
 end
 

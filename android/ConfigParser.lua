@@ -237,7 +237,7 @@ function ConfigParser:ReadOneConfig(filename)
     local config = require(fullfileName)
 
     -- Loader:AddReplaceFile(filename)
-    -- LogInfo("Read[ " .. fullfileName .. " ]from[ " .. config.filename .. " ]->[ " .. config.sheetname .. "]")
+    LogInfo("Read[ " .. fullfileName .. " ]from[ " .. config.filename .. " ]->[ " .. config.sheetname .. "]")
     local takeColInfo = {}
     if config then
         self.m_mapTableInfo[filename] = {
@@ -390,7 +390,8 @@ function ConfigParser:ClientConfig()
         CfgShopPage = 1,
         CfgReturningActivity = 1,
         MainLine = 1,
-        CfgMenuBg = 1
+        CfgMenuBg = 1,
+        CfgItemPool = 1
     }
 
     -- 检查/特殊处理以及设为只读
@@ -399,7 +400,7 @@ function ConfigParser:ClientConfig()
             local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
             if errmsg then
                 print(result, errmsg)
-                ASSERT(false, '配置表出错' .. cfgName)
+                ASSERT(false, '配置表出错' .. cfgName.. "errmsg = "..errmsg)
             end
         end
     end
@@ -411,7 +412,7 @@ function ConfigParser:ClientConfig()
                 local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
                 if errmsg then
                     print(result, errmsg)
-                    ASSERT(false, '配置表出错' .. cfgName)
+                    ASSERT(false, '配置表出错' .. cfgName .. "errmsg = "..errmsg)
                 end
             end
         end

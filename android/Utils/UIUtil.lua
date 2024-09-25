@@ -651,18 +651,19 @@ function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFu
 end
 
 -- 添加头像+头像框(自己)
-function this:AddHeadFrame(parent, scale)
-    self:AddHeadByID(parent, scale, PlayerClient:GetHeadFrame(), PlayerClient:GetIconId(),PlayerClient:GetSex())
+function this:AddHeadFrame(parent, scale,frameID, iconID,sel_card_ix)
+    self:AddHeadByID(parent, scale, frameID or PlayerClient:GetHeadFrame(), iconID or PlayerClient:GetIconId(),sel_card_ix or PlayerClient:GetSex(),"RoleHead0")
 end
 
 -- frameID头像框id，iconID头像id
-function this:AddHeadByID(parent, scale, frameID, iconID,sel_card_ix)
+function this:AddHeadByID(parent, scale, frameID, iconID,sel_card_ix,itemGoName)
     -- 真实性别和头像 
     --local isGirl, frameID = self:GetSexAndID(_frameID)
     scale = scale or 1
-    local itemGo = parent.transform:Find("RoleHead")
+    itemGoName = itemGoName or "RoleHead"
+    local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
-        ResUtil:CreateUIGOAsync("Common/RoleHead", parent, function(go)
+        ResUtil:CreateUIGOAsync("Common/"..itemGoName, parent, function(go)
             local item = ComUtil.GetLuaTable(go)
             item.Refresh(scale, frameID, iconID, sel_card_ix)
         end)
@@ -762,6 +763,36 @@ function this.ChangeRewards(_rewards)
         table.insert(rewards,{id = v[1],num = v[2],type = v[3]})
     end
     return rewards
+end
+
+--- 打开扫荡界面
+---@param cfgId 关卡表id
+function this:OpenSweepView(cfgId,buy,cost,gets,payFunc)
+    buy = buy or g_DungeonArachnidDailyBuy
+    cost = cost or g_DungeonArachnidDailyCost
+    gets = gets or g_DungeonArachnidGets
+    payFunc = payFunc or function(count)
+        PlayerProto:BuyArachnidCount(count)
+    end
+    local sweepData = SweepMgr:GetData(cfgId)
+    if sweepData then
+        if sweepData:IsOpen() then
+            local OnBuyFunc = function()
+                UIUtil:OpenPurchaseView(nil,nil,DungeonMgr:GetArachnidCount(),buy,cost,gets,payFunc)
+            end
+            CSAPI.OpenView("SweepView",{id = cfgId},{onBuyFunc = OnBuyFunc})
+        else
+            Tips.ShowTips(sweepData:GetLockStr())
+        end
+    else
+        local cfg = Cfgs.MainLine:GetByID(cfgId)
+        if cfg then
+            local cfgModUp = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
+            if cfgModUp then
+                Tips.ShowTips(cfgModUp.sDescription)
+            end
+        end
+    end
 end
 
 return this

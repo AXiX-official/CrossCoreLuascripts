@@ -173,11 +173,13 @@ function OnBattleEnter()
                 teamNum = selItem.GetCfg().teamNum or 1
             }, TeamConfirmOpenType.Dungeon)
         end
-        BuryingPointMgr:TrackEvents("main_fight", {
-            reason = "进入副本",
-            world_id = sectionData:GetID(),
-            card_id = selItem.GetID()
-        })
+        if CSAPI.IsADV()==false then
+            BuryingPointMgr:TrackEvents("main_fight", {
+                reason = "进入副本",
+                world_id = sectionData:GetID(),
+                card_id = selItem.GetID()
+            })
+        end
     end
 end
 

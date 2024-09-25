@@ -39,7 +39,7 @@ function this:GetActivityDownAddress(type)
         str2 = "official"
     elseif (CSAPI.GetChannelType() == ChannelType.QOO) then
         str2 = "qoo"
-    elseif (CSAPI.GetChannelType() == ChannelType.ZiLong) then
+    elseif (CSAPI.GetChannelType() == ChannelType.ZiLong or CSAPI.GetChannelType() == ChannelType.ZiLongKR or CSAPI.GetChannelType() == ChannelType.ZiLongJP) then
         str2 = "zilong"
     end
     local fileName = ""
@@ -309,9 +309,16 @@ function this:GetArr(group)
     local datas = {}
     if self.activityListDatas then
         for i, v in pairs(self.activityListDatas) do
-            if v.isOpen then
+            if v.isOpen and self:CheckIsOpenTime(i) then
                 if not group or (group and group == v.cfg.group) then
-                    table.insert(datas, v.cfg)
+                    if i == ActivityListType.Investment then
+                        local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
+                        if targetTime > TimeUtil:GetTime() then
+                            table.insert(datas, v.cfg)
+                        end
+                    else
+                        table.insert(datas, v.cfg)
+                    end
                 end
             end
         end
@@ -331,6 +338,16 @@ function this:CheckIsOpen(_type)
     return false
 end
 
+function this:CheckIsOpenTime(_type)
+    local cfg =Cfgs.CfgActiveList:GetByID(_type)
+    if cfg and cfg.sTime and cfg.eTime then
+        local curTime = TimeUtil:GetTime()
+        local sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
+        local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
+        return curTime > sTime and curTime <= eTime
+    end
+    return true
+end
 
 -- 检测红点
 function this:CheckRedPointData(type)
@@ -341,6 +358,9 @@ function this:CheckRedPointData(type)
             local isRed1 = redData ~= nil
             local isRed2 = self:CheckRed(type)
             if isRed1 ~= isRed2 then
+                if not isRed2 then --如果无红点，检测一遍全组是否都无红点
+                    isRed2 = self:CheckRedByGroup(cfg.group)
+                end
                 redData = isRed2 and 1 or nil
                 RedPointMgr:UpdateData(RedPointType["ActivityList" .. cfg.group], redData) 
             end
@@ -372,14 +392,35 @@ function this:CheckRedPointData(type)
         end
     end
     if isRed1 ~= (redData1 ~= nil) then
+        if not redData1 then
+            redData1 = self:CheckRedByGroup(1) and 1 or nil
+        end
         RedPointMgr:UpdateData(RedPointType.ActivityList1, redData1)
     end
     if isRed2 ~= (redData2 ~= nil) then
+        if not redData2 then
+            redData2 = self:CheckRedByGroup(2) and 1 or nil
+        end
         RedPointMgr:UpdateData(RedPointType.ActivityList2, redData2)
     end
     if isRed3 ~= (redData3 ~= nil) then
+        if not redData3 then
+            redData3 = self:CheckRedByGroup(3) and 1 or nil
+        end
         RedPointMgr:UpdateData(RedPointType.ActivityList3, redData3)
     end
+end
+
+function this:CheckRedByGroup(group)
+    local cfgs = Cfgs.CfgActiveList:GetGroup(group)
+    if cfgs then
+        for _, cfg in pairs(cfgs) do
+            if self:CheckRed(cfg.id) then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 -- type:ActivityListType
@@ -438,6 +479,12 @@ function this:CheckRed(type)
             return true
         end 
         return false          
+    elseif type==ActivityListType.GachaBall then
+        local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.GachaBall)
+        if cfg and cfg.info then
+            return ItemPoolActivityMgr:CheckPoolHasRedPoint(cfg.info[1].cfgId);
+        end
+        return false;
     else
         local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. type) == 0
         return isRed
@@ -534,6 +581,10 @@ function this:AddNextOpen2(_type, _data)
     end
 end
 
+function this:ClearPopInfos()
+    self.nextViewTypes = {}
+end
+
 -- 获取弹出id
 function this:TryGetNextType(_group)
     if self.nextViewTypes and #self.nextViewTypes > 0 then
@@ -553,7 +604,7 @@ function this:PanelCanJump(_type)
         return true
     end
     local tab1 = TimeUtil:GetTimeHMS(self.popInfos[_type].recordTime)
-    local tab2 = TimeUtil.GetTimeHMS(TimeUtil:GetTime())
+    local tab2 = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
     if tab2.day - tab1.day > 1 then --超过一天
         return true
     elseif tab2.day - tab1.day > 0 then --在前后一天

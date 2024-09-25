@@ -13,8 +13,8 @@ function Skill4802201:OnRoundBegin(caster, target, data)
 	else
 		return
 	end
-	-- 4802201
-	self:CallSkillEx(SkillEffect[4802201], caster, target, data, 802200401)
+	-- 4802203
+	self:CallOwnerSkill(SkillEffect[4802203], caster, self.card.oSummonOwner, data, 802200401)
 end
 -- 攻击结束
 function Skill4802201:OnAttackOver(caster, target, data)

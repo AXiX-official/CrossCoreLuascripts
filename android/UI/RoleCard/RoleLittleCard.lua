@@ -57,7 +57,6 @@ function Clean()
     SetFormation()
     SetSelect()
     SetLock()
-    -- SetColor(1, 1)
     SetTime()
     SetTipsObj()
     SetNPCObj();
@@ -66,12 +65,6 @@ function Clean()
     SetBGIcon()
     SetAttrs(false);
     SetBlack(false)
-    -- if #attrs>0 then
-    -- 	for k,v in ipairs(attrs) do
-    -- 		CSAPI.RemoveGO(v.gameObject);
-    -- 	end
-    -- end
-    -- attrs={};
 end
 
 -- _elseData 根据key来划分数据  elseData:{key,isSelect,showAttr,showTips,isPlus:置空时是否显示加号,sr:当启用dragcalllua时用来解决sr拖拽方法被覆盖的问题}
@@ -235,10 +228,8 @@ function RefreshByFormation()
     SetName(cardData:GetName())
     local _index = RoleTool.GetStateStr(cardData)
     if _index == 1 then
-        -- SetColor(cardData:GetQuality(), _index)
         SetState(_index)
     else
-        -- SetColor(cardData:GetQuality())
         SetState()
     end
     if elseData and elseData.isFormation then
@@ -263,7 +254,6 @@ function RefreshByTeamEdit()
     SetLv(cardData:GetLv())
     SetPro();
     SetName(cardData:GetName())
-    -- SetColor(cardData:GetQuality())
     SetBGIcon(cardData:GetQuality())
     SetFormation()
     SetSelect()
@@ -458,7 +448,8 @@ function SetFormation(_cid,_hideFormat)
     end 
 
     local cid = _cid
-    local index = TeamMgr:GetCardTeamIndex(cid)
+    local teamType = elseData and elseData.teamType or nil
+    local index = TeamMgr:GetCardTeamIndex(cid,teamType,true)
     if index ~= -1 then
         CSAPI.SetGOActive(format, true)
         index = index < 10 and "0" .. index or index .. ""

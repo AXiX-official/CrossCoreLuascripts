@@ -10,6 +10,7 @@ SceneType.GuildBOSS	= 7 -- 工会BOSS
 SceneType.TeamBOSS	= 7 -- 组队BOSS
 SceneType.FieldBoss	= 8 -- 战场系统BOSS
 SceneType.Rogue		= 9 -- 乱序演习
+SceneType.RogueS	= 10 -- 战力派遣
 
 
 -- 副本类型
@@ -25,6 +26,7 @@ eDuplicateType.TaoFa           = 8 -- 讨伐
 eDuplicateType.NewTower        = 9 -- 异构空间
 eDuplicateType.Rogue           = 10 -- 乱序演习
 eDuplicateType.StarPalace      = 11 -- 十二星宫
+eDuplicateType.RogueS	       = 12 -- 战力派遣
 
 eDuplicateType.Materials       = 101 -- 材料副本
 eDuplicateType.Equip           = 102 -- 装备副本

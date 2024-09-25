@@ -664,12 +664,19 @@ function OnBattleEnter()
         end
         CSAPI.SetGOActive(mapView.ModelCamera, false);
         SaveDungeonID(selItem.GetID())
-
-        BuryingPointMgr:TrackEvents("main_fight", {
-            reason = "进入副本",
-            world_id = sectionData:GetID(),
-            card_id = selItem.GetID()
-        })
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then
+            if selItem.GetID() == 1001 then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_01_START)
+            elseif selItem.GetID() == 1002 then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_02_START)
+            end
+        else
+            BuryingPointMgr:TrackEvents("main_fight", {
+                reason = "进入副本",
+                world_id = sectionData:GetID(),
+                card_id = selItem.GetID()
+            })
+        end
     end
 end
 
@@ -872,7 +879,7 @@ end
 
 -- 宝箱弹窗
 function SetBoxPanel()
-    if isOpenBoxs then
+    if isOpenBoxs and boxData then
         -- star
         local maxStarNum = boxData:GetMaxStarNum()
         local num = currStarNum > maxStarNum and maxStarNum or currStarNum

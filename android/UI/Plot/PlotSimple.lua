@@ -17,6 +17,11 @@ function OnOpen()
 		LogError("章节ID不能为空！");
 		return;
 	end
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		if tostring(data.storyID)=="10051" then
+			BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_FIGHT_START)
+		end
+	end
 	storyData = StoryData.New();
 	storyData:InitCfg(data.storyID);
 	currentPlotData = storyData:GetBeginPlotData();
@@ -81,6 +86,12 @@ end
 
 --点击跳过
 function OnClickJump()
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		if data and (tostring(data.storyID)=="10051" or tostring(data.storyID)=="10052" or tostring(data.storyID)=="10054") then
+			BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_FIGHT_SKIP)
+		end
+	end
+
 	--渐隐子物体
 	RecordMgr:SaveCount(RecordMode.Count, RecordViews.PlotJump, storyData:GetID());	
 	Close();

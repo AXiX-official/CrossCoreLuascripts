@@ -352,6 +352,29 @@ function this:GetPromoteInfos(group)
 	return list;
 end
 
+--返回推荐商品刷新的下一时间戳
+function this:GetPromoteRefreshTimestamp()
+	local timestamp=0;
+	local sTime=0;
+	local eTime=0;
+	local cTime=TimeUtil:GetTime();
+	for k,v in pairs(Cfgs.CfgShopReCommend:GetAll()) do
+		local info=ShopPromote.New();
+		info:SetCfg(v.id);
+		if (info:GetShowType()==2 and info:IsBuy()~=true) or (info:GetShowType()==1) then
+			sTime=info:GetStartTime();
+			eTime=info:GetEndTime()
+			if sTime~=0 and cTime<sTime and ( sTime<timestamp or timestamp==0 )then
+				timestamp=sTime;
+			end
+			if eTime~=0 and cTime<eTime and (eTime<timestamp or timestamp==0 ) then
+				timestamp=eTime;
+			end
+		end
+	end
+	return timestamp;
+end
+
 -- --group:传入group值
 -- function this:GetPromoteInfo(group)
 -- 	if group then

@@ -435,10 +435,12 @@ function OnClickSure()
                     list[_roomId].id = _roomId
                     local _roomType = DormMgr:GetRoomTypeByID(_roomId)
                     if (_roomType == RoomType.dorm) then
-                        list[_roomId].roleIds = DormMgr:GetRoomData(_roomId):GetRoles()
+                        local _roleIds = DormMgr:GetRoomData(_roomId):GetRoles()
+                        list[_roomId].roleIds = table.copy(_roleIds)
                         list[_roomId].teamId = nil -- DormMgr:GetRoomData(_roomId):GetCurPresetId()
                     else
-                        list[_roomId].roleIds = MatrixMgr:GetBuildingDataById(_roomId):GetRoles()
+                        local _roleIds = MatrixMgr:GetBuildingDataById(_roomId):GetRoles()
+                        list[_roomId].roleIds = table.copy(_roleIds)
                         list[_roomId].teamId = nil -- MatrixMgr:GetBuildingDataById(_roomId):GetCurPresetId()
                     end
                 end

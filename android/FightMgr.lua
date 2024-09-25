@@ -419,16 +419,33 @@ function FightMgrBase:Over(stage, winer)
     end
 
     self.isOver = true
-    self:Destroy()
-    -- LogTrace()
+    -- self:Destroy()
+    --LogTrace()
 end
 
 function FightMgrBase:Destroy()
     LogDebugEx('FightMgrBase:Destroy', self == g_FightMgrServer)
    -- LogTrace()
+
     if g_FightMgrServer and g_FightMgrServer.isOver then
         g_FightMgrServer = nil
     end
+
+    -- -- 释放所有成员变量
+    self.log:Destroy()
+    self.rand:Destroy()
+
+    for i = 1, 2 do
+        self.arrTeam[i]:Destroy()
+    end
+
+    self.oFightEventMgr:Destroy()
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+
+    self.isOver = true
 end
 
 -- 切换周目
@@ -1219,10 +1236,11 @@ function FightMgrBase:CheckOver(isRoundOver)
         local stage = self.stage
 
         if self.arrStateID[stage + 1] then
-            LogTrace()
+            --LogTrace()
             self.needChangeStage = CURRENT_TIME + 3
         else
             self:Over(self.stage, 1)
+            return true
         end
     end
 end
@@ -1297,6 +1315,10 @@ end
 
 function FightMgrBase:OnTimer(tm)
     -- LogDebugEx("FightMgrBase:OnTimer", self.id, self.isStart, self.isOver)
+
+    -- 长时间没用的战斗结束掉
+    -- 玩家在线且玩家所属的战斗是本场战斗则不处理, 其他情况清理掉
+
     if not self.isStart then
         return
     end
@@ -2026,6 +2048,12 @@ function FightMgrServer:OnRoundOver()
     -- FightMgrBase.AfterRoundOver(self)
     end
 end
+
+function FightMgrServer:Destroy()
+    LogDebug('FightMgrServer:Destroy')
+    FightMgrBase.Destroy(self)
+end
+
 ----------------------------------------------
 -- 客户端管理器
 FightMgrClient = oo.class(FightMgrBase)
@@ -2690,6 +2718,9 @@ function FightMgrClient:RestoreFight()
     FightActionMgr:PushSkill(self.log:GetAndClean())
 end
 
+
+
+
 -- 还原一个角色的数据
 function FightMgrClient:RestoreObjBuffer(oid)
     local card = self:GetCardByOID(oid)
@@ -3017,11 +3048,16 @@ function PVEFightMgrServer:Over(stage, winer)
         self:cbOver(winer, self.isForceOver)
     end
 
+    self:Destroy()
 end
 
 function PVEFightMgrServer:Destroy()
     LogDebug('PVEFightMgrServer:Destroy')
     FightHelp:Destroy(self.oDuplicate.oPlayer.uid)
+
+    FightMgrServer.Destroy(self)
+
+    LogDebug('PVEFightMgrServer:Destroy end')
 end
 
 -- 设置使用技能AI策略
@@ -3123,6 +3159,7 @@ function MirrorFightMgrServer:Over(stage, winer)
     --         self.groupID
     --     )
     -- end
+    self:Destroy()
 end
 
 function MirrorFightMgrServer:Destroy()
@@ -3130,6 +3167,7 @@ function MirrorFightMgrServer:Destroy()
     for i, v in ipairs(self.arrPlayer) do
         FightHelp:Destroy(v.uid)
     end
+    FightMgrServer.Destroy(self)
 end
 
 -- 设置使用技能AI策略
@@ -3209,6 +3247,8 @@ function PVPFightMgrServer:Over(stage, winer)
         ASSERT()
     end
     self.isOver = true
+
+    self:Destroy()
 end
 
 function PVPFightMgrServer:Destroy()
@@ -3216,6 +3256,7 @@ function PVPFightMgrServer:Destroy()
     for i, v in ipairs(self.arrPlayer) do
         FightHelp:Destroy(v.uid)
     end
+    FightMgrServer.Destroy(self)
 end
 
 -- 倒计时
@@ -3543,6 +3584,8 @@ function BossFightMgrServer:Over(stage, winer)
     if self.cbOver then
         self:cbOver(winer)
     end
+
+    self:Destroy()
 end
 
 -- 加载Boss
@@ -3630,7 +3673,7 @@ elseif IS_SERVER then
     FightMgr = FightMgrServer
     function CreateFightMgr(id, groupID, ty, seed, nDuplicateID)
         LogDebugEx('CreateFightMgr', id, groupID, ty, seed, nDuplicateID)
-        if ty == SceneType.PVE or ty == SceneType.Rogue then
+        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS then
             return PVEFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild then
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)

@@ -4,23 +4,55 @@ local isFirst = true
 isHideQuestionItem = true -- 外部调用
 
 function Awake()
+    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
     recordBeginTime = CSAPI.GetRealTime()
     -- 立绘
     cardIconItem = RoleTool.AddRole(iconParent, nil, nil, false)
 
     UIUtil:AddQuestionItem("RoleInfo", gameObject, questionP)
+    ShareBtnOpenState();
 end
 
 function OnEnable()
     CSAPI.PlayUISound("ui_popup_open")
 end
-
+---截图前一帧通知
+function ShareView_NoticeTheNextFrameScreenshot(Data)
+    CSAPI.SetGOActive(ShareBtn, false)
+    CSAPI.SetGOActive(btnEquipDetail, false)
+    CSAPI.SetGOActive(btnLv, false)
+    CSAPI.SetGOActive(btnAttributeDetail, false)
+end
+---截图完成通知
+function ShareView_NoticeScreenshotCompleted(Data)
+    ShareBtnOpenState();
+    CSAPI.SetGOActive(btnEquipDetail, true)
+    SetBtnLv()
+    CSAPI.SetGOActive(btnAttributeDetail, true)
+end
+function ShareBtnOpenState()
+    if CSAPI.IsMobileplatform then
+        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+            CSAPI.SetGOActive(ShareBtn, true);
+        else
+            CSAPI.SetGOActive(ShareBtn, false);
+        end
+    else
+        CSAPI.SetGOActive(ShareBtn, false)
+    end
+end
+function OnClickShareBtn()
+    CSAPI.OpenView("ShareView",{LocationSource=3})
+end
 function OnDisable()
     -- if (openSetting) then -- and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
     CSAPI.PlayUISound("ui_cosmetic_adjustment")
     -- end
 end
 function OnDestroy()
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
     RecordMgr:Save(RecordMode.View, recordBeginTime, "ui_id=" .. RecordViews.RoleInfo)
 
     eventMgr:ClearListener()
@@ -253,16 +285,9 @@ function SetLv()
     --     cg_btnLv = ComUtil.GetCom(btnLv, "CanvasGroup")
     -- end
 
-    local curLv = cardData:GetLv()
-    local maxLv = cardData:GetBreakLimitLv() -- cardData:GetCoreLimitLv() 屏蔽
-    local isMax = curLv >= maxLv
-    if (isRealCard and not isMax) then
-        CSAPI.SetGOActive(btnLv, true)
-    else
-        CSAPI.SetGOActive(btnLv, false)
-    end
+    SetBtnLv()
 
-    CSAPI.SetText(txtLv1, curLv .. "")
+    CSAPI.SetText(txtLv1, cardData:GetLv() .. "")
     CSAPI.SetText(txtLv2, "/" .. cardData:GetMaxLv())
     if (isMax) then
         expBar:SetProgress(1)
@@ -274,6 +299,17 @@ function SetLv()
         expBar:SetProgress(cur / max)
         CSAPI.SetText(txtExp, string.format("%s/<color=#929296>%s</color>", cur, max))
         -- cg_btnLv.alpha = 1
+    end
+end
+
+function SetBtnLv()
+    local curLv = cardData:GetLv()
+    local maxLv = cardData:GetBreakLimitLv() -- cardData:GetCoreLimitLv() 屏蔽
+    local isMax = curLv >= maxLv
+    if (isRealCard and not isMax) then
+        CSAPI.SetGOActive(btnLv, true)
+    else
+        CSAPI.SetGOActive(btnLv, false)
     end
 end
 

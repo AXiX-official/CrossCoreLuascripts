@@ -45,7 +45,7 @@ function SetStarInfos()
     end
 
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type == eDuplicateType.NewTower then
+    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type == eDuplicateType.NewTower or cfgDungeon.type == eDuplicateType.RogueS then
         CSAPI.SetGOActive(taskObj, false)
         return
     end
@@ -80,7 +80,7 @@ end
 
 -- 显示再次挑战按钮
 function IsShowAgain()
-    if sceneType == SceneType.Rogue then
+    if sceneType == SceneType.Rogue or sceneType == SceneType.RogueS then
         return true
     end 
     if not DungeonMgr:GetCurrId() then
@@ -139,7 +139,7 @@ function OnClickAgain()
     --     return 
     -- end 
     local num = isDirll and 6 or 5
-    if sceneType == SceneType.Rogue then
+    if sceneType == SceneType.Rogue or sceneType == SceneType.RogueS then
         num = nil 
     end
     ApplyQuit(num)
@@ -196,19 +196,15 @@ function ApplyQuit(jumpType)
                 end);
                 hasCallFunc = true;
             end
-            FriendMgr:ClearAssistData();
-            TeamMgr:ClearAssistTeamIndex();
-            TeamMgr:ClearFightTeamData();
+            ClearTeamData()
             UIUtil:AddFightTeamState(2, "FightOverResult:ApplyQuit()")
         elseif dungeonId ~= nil and dungeonId ~= "" then -- 未结束
             LanguageMgr:ShowTips(8009)
             -- DungeonMgr:ApplyEnter(dungeonId);
             return;
         end
-    elseif sceneType == SceneType.Rogue then 
-        FriendMgr:ClearAssistData();
-        TeamMgr:ClearAssistTeamIndex();
-        TeamMgr:ClearFightTeamData();
+    elseif sceneType == SceneType.Rogue or sceneType == SceneType.RogueS then 
+        ClearTeamData()
     end
     if jumpType then
         local jumpID = nil;
@@ -247,5 +243,13 @@ function ApplyQuit(jumpType)
         GuildFightMgr:FightQuit();
     elseif (sceneType == SceneType.Rogue) then
         RogueMgr:FightToBack(false,elseData.group)
+    elseif (sceneType == SceneType.RogueS) then
+        RogueSMgr:Quit(elseData.group,data.elseData.group)
     end
+end
+
+function ClearTeamData()
+    FriendMgr:ClearAssistData();
+    TeamMgr:ClearAssistTeamIndex();
+    TeamMgr:ClearFightTeamData();
 end

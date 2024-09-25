@@ -25,7 +25,7 @@ function this.OnInit()
 end
 
 function this.LuaView_Lua_Closed(param)
-    -- print("------------------------------"..param)
+    ---- print("------------------------------"..param)
     -- if param~=nil then
     --     if this.IsitinAdaptiveMode(param) then
     --         this.RemoveLuaUIFit(param)
@@ -86,11 +86,11 @@ end
 
 ---屏幕发生旋转调用  IsCheckUp：true 旋转时候进行扭转UI自适应， false 检查是否存在空数据剔除  原因是框架没有统一的 关闭位置
 function this.ScreenRotationOccurs()
-    if #this.AdaptiveSet>0 then
-        for i, v in pairs(this.AdaptiveSet) do
-            CSAPI.SetUIFit(this.AdaptiveSet[i].value.gameObject)
-        end
-    end
+    --if #this.AdaptiveSet>0 then
+    --    for i, v in pairs(this.AdaptiveSet) do
+    --        CSAPI.SetUIFit(this.AdaptiveSet[i].value.gameObject)
+    --    end
+    --end
 end
 
 function this.RemoveLuaUIFit(UIkey)

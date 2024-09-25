@@ -55,7 +55,7 @@ local menuBuyInfo = nil -- 下次刷新点{time，id}
 local resRecoveryEndTime = nil
 local webCheckTime = nil
 
-local petStateTime=nil;
+local petStateTime = nil;
 -- 主界面
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject); -- 节点添加
@@ -71,7 +71,7 @@ function Awake()
     -- 为按钮添加方法
     AddBtnsFunc()
     -- 当前背景
-    SetBG()
+    -- SetBG()
 
     -- 以下暂时不开放 rui/20220608
     CSAPI.SetGOActive(objChat, false)
@@ -89,7 +89,15 @@ function Awake()
 
     CSAPI.SetGOActive(mask, true)
 
-    --VerChecker:ApplyCheck();
+    VerChecker:ApplyCheck();
+
+    if CSAPI.IsADV() then
+        AdvBindingRewards.Querystate();
+        AdvDeductionvoucher.QueryPoints()
+    end
+
+    --审核屏蔽
+    CSAPI.SetGOActive(groupsv,not CSAPI.IsAppReview())
 end
 
 function InitPanel()
@@ -217,6 +225,8 @@ function InitListener()
         enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
         SetEnter()
     end)
+    ---- 回归绑定活动数据更新
+    --eventMgr:AddListener(EventType.Collaboration_Info_Update, SetCollaborationMain)
     -- 台服web
     eventMgr:AddListener(EventType.Menu_WebView_Enabled, CheckBtnWebView)
     eventMgr:AddListener(EventType.CRoleDisplayMain_Change, SetBtnChange)
@@ -322,7 +332,7 @@ function OnOpen()
     --
     activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
     enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
-    petStateTime=PetActivityMgr:GetEmotionChangeTimestamp();
+    petStateTime = PetActivityMgr:GetEmotionChangeTimestamp();
 end
 
 -- -- 设置看板回调
@@ -563,6 +573,8 @@ function OnLoadingComplete()
     if (not b) then
         PlayLoginVoice()
     end
+
+    OpenGoogleRewards()
 end
 
 local curTime = 0
@@ -688,6 +700,11 @@ function Update()
         end
     end
 
+    -- if (CollaborationMgr:GetNextBeginTime() > 0 and curTime > CollaborationMgr:GetNextBeginTime()) or
+        -- (CollaborationMgr:GetNextEndTime() > 0 and curTime > CollaborationMgr:GetNextEndTime()) then
+        -- CollaborationMgr:Clear();
+        -- RegressionProto:PlrBindInfo();
+    -- end
 
     -- 回归活动
     RegresUpdate()
@@ -701,9 +718,9 @@ function Update()
         CheckBtnWebView()
     end
 
-    if petStateTime and curTime >petStateTime then
+    if petStateTime and curTime > petStateTime then
         SetEnter();
-        petStateTime=PetActivityMgr:GetEmotionChangeTimestamp();
+        petStateTime = PetActivityMgr:GetEmotionChangeTimestamp();
     end
 end
 ----------------------------------------动画+红点-----------------------------------------------】
@@ -938,6 +955,10 @@ function OnRedPointRefresh()
         UIUtil:SetRedPoint2(menuRedPath, btnAchievement, _pData ~= nil, 51, 19, 0)
     end
 
+    --if CollaborationMgr:GetCurrInfo() then
+    --    local redInfo = RedPointMgr:GetData(RedPointType.Collaboration);
+    --    UIUtil:SetRedPoint(btnCollaborationMain, redInfo == 1, 250, 80);
+    --end
 
     -- 角色详情 头像框 徽章
     if (true) then
@@ -1052,6 +1073,7 @@ function RefreshMoney()
             -- end
         end
     end
+    ActivityMgr:CheckRedPointData()
     -- 金币最大
     -- CSAPI.SetText(txtMax, "MAX:" .. PlayerClient:GetGoldMax())
 end
@@ -1190,6 +1212,7 @@ function SetLeft()
 
     SetRegressionBtn()
 
+    SetCollaborationMain()
 
     SetResRecoveryBtn()
 
@@ -1322,6 +1345,10 @@ function SetRegressionBtn()
     regresTimer = 0
 end
 
+function SetCollaborationMain()
+    --local currBind = CollaborationMgr:GetCurrInfo();
+    --CSAPI.SetGOActive(btnCollaborationMain, currBind ~= nil)
+end
 
 ----------------------------------------right-----------------------------------------------
 function SetRight()
@@ -1481,7 +1508,7 @@ end
 -- 设置背景
 function SetBG()
     local curDisplayData = CRoleDisplayMgr:GetCurData()
-    local cfg = Cfgs.CfgMenuBg:GetByID(curDisplayData:GetBG())
+    local cfg = curDisplayData and Cfgs.CfgMenuBg:GetByID(curDisplayData:GetBG()) or nil
     if (cfg and cfg.name) then
         ResUtil:LoadMenuBg(bg, "UIs/" .. cfg.name, false)
     end
@@ -1831,6 +1858,21 @@ function OnViewClosed(viewKey)
 
     --
     ShowHint(true)
+    OpenGoogleRewards();
+end
+
+---谷歌奖励
+function OpenGoogleRewards()
+    if CSAPI.IsViewOpen("MenuBuyPanel") then
+        return;
+    end
+    if CSAPI.IsADV() then
+        local isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, "MailView")
+        ShiryuSDK.IsEnterhall = true;
+        if isOpen then
+            AdvGoogleGit.GoogleReservationRewards();
+        end
+    end
 end
 
 function CheckPopUpWindow()
@@ -1929,21 +1971,15 @@ function EActivityGetCB()
         return true
     end
     -- 首冲
-    if (isNeedToShowMenuBuy) then
-        return true
-    elseif (not isNeedToShowMenuBuy and objBuy.activeSelf and menuBuyItem ~= nil and MenuBuyMgr:CheckIsNeedShow()) then
-        isNeedToShowMenuBuy = true
-        FuncUtil:Call(EActivityGetCB2, nil, 100)
-        return true
+    if(not CSAPI.IsAppReview()) then 
+        if (isNeedToShowMenuBuy) then
+            return true
+        elseif (not isNeedToShowMenuBuy and objBuy.activeSelf and menuBuyItem ~= nil and MenuBuyMgr:CheckIsNeedShow()) then
+            isNeedToShowMenuBuy = true
+            FuncUtil:Call(EActivityGetCB2, nil, 100)
+            return true
+        end
     end
-    -- 付费弹窗 所有界面关闭的0.2后才打开界面（因为有可能是跳转触发的关闭所有界面）
-    -- if (isCheckTime == nil or Time.time > (isCheckTime + 0.2)) then
-    --     isCheckTime = Time.time
-    --     FuncUtil:Call(EActivityGetCB2, nil, 200)
-    --     return true 
-    -- else
-    --     CSAPI.SetGOActive(mask, false)
-    -- end
 
     CSAPI.SetGOActive(mask, false)
     return false
@@ -1953,14 +1989,6 @@ function EActivityGetCB2()
     CSAPI.SetGOActive(mask, false)
     isNeedToShowMenuBuy = false
     menuBuyItem.OnClick()
-    -- if (not CheckIsTop()) then
-    --     return
-    -- end
-    -- if (MenuMgr:CheckNeedToShowMenuBuy()) then
-    --     if (menuBuyItem ~= nil and menuBuyItem.gameObject.activeSelf) then
-    --         menuBuyItem.OnClick()
-    --     end
-    -- end
 end
 
 -- --技能升级完成 提示是否打开技能列表
@@ -2091,17 +2119,28 @@ function HidePanel(viewKey, open)
         end
     else
         if (not openViews[viewKey] or openViews[viewKey] == 2) then
-            return
-        end
-        -- 打开viewKey
-        if (CheckIsOneTop()) then
-            enterSV_sv.enabled = false
-            groupsv_sv.enabled = false
-            if (viewKey ~= "CRoleDisplayMain") then
-                CSAPI.SetScale(gameObject, 0, 0, 0)
+        else
+            -- 打开viewKey
+            if (CheckIsOneTop()) then
+                enterSV_sv.enabled = false
+                groupsv_sv.enabled = false
+                if (viewKey ~= "CRoleDisplayMain") then
+                    CSAPI.SetScale(gameObject, 0, 0, 0)
+                end
+                SetLook(viewKey, open)
             end
-            SetLook(viewKey, open)
         end
+    end
+    -- 如果仅Guide在上层则关闭mask
+    if (openViews ~= nil and openViews["Guide"] ~= nil) then
+        local num = 0
+        for k, v in pairs(openViews) do
+            num = num + 1
+            if (num > 1) then
+                return
+            end
+        end
+        CSAPI.SetGOActive(mask, false)
     end
 end
 
@@ -2147,6 +2186,9 @@ end
 
 -- 付费弹窗
 function SetMenuBuy()
+    if(CSAPI.IsAppReview()) then
+        return 
+    end 
     local isHad = false
     menuBuyInfo = nil
     local isOpen = MenuBuyMgr:CheckMenuBuyIsOpen()
@@ -2176,24 +2218,27 @@ end
 -- 检查按钮是否显示(等级+显示时间内)
 function CheckBtnWebView()
     webCheckTime = nil
-    --非正式服使用
-    -- local b = false
-    -- local curTime = TimeUtil:GetTime()
-    -- local lv = g_ZilongWebBtnLv or 1
-    -- if (PlayerClient:GetLv() >= lv and
-    --     (g_ZilongWebBtnOpen == nil or curTime >= TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) and
-    --     (g_ZilongWebBtnClose == nil or TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose) > curTime)) then
-    --     b = true
-    -- end
-    -- CSAPI.SetGOActive(btnWebView, b)
-    -- --
-    -- if (g_ZilongWebBtnOpen ~= nil and curTime < TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) then
-    --     webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)
-    -- elseif (g_ZilongWebBtnClose ~= nil and curTime < TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)) then
-    --     webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)
-    -- end
+    if CSAPI.IsADV() then
+        -- 非正式服使用
+        local b = false
+        local curTime = TimeUtil:GetTime()
+        local lv = g_ZilongWebBtnLv or 1
+        if (PlayerClient:GetLv() >= lv and
+            (g_ZilongWebBtnOpen == nil or curTime >= TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) and
+            (g_ZilongWebBtnClose == nil or TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose) > curTime)) then
+            b = true
+        end
+        CSAPI.SetGOActive(btnWebView, b)
+        --
+        if (g_ZilongWebBtnOpen ~= nil and curTime < TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)) then
+            webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnOpen)
+        elseif (g_ZilongWebBtnClose ~= nil and curTime < TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)) then
+            webCheckTime = TimeUtil:GetTimeStampBySplit(g_ZilongWebBtnClose)
+        end
 
-    -- CheckBtnWebViewRed()
+        CheckBtnWebViewRed()
+    end
+
 end
 -- 检查按钮红点
 function CheckBtnWebViewRed()
@@ -2266,11 +2311,15 @@ function OnClickVirtualkeysClose()
     ---填写退出代码逻辑/接口
     if btnHide.gameObject.activeInHierarchy == false and OnClickBack then
         OnClickBack();
+    else
+        if CSAPI.IsADV() then
+            ShiryuSDK.ExitGame();
+        end
     end
 end
 
 function SetPetTimeStamp(eventData)
     if eventData then
-        petStateTime=eventData;
+        petStateTime = eventData;
     end
 end

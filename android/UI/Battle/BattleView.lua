@@ -18,6 +18,7 @@ local panel = nil --首次入场动效
 local canBlack = true
 local top = nil
 function Awake()
+	AdaptiveConfiguration.SetLuaObjUIFit("Battle",gameObject)
 	--添加问号 rui 211130 --因为不是通过openview打开的，所以要手动添加
 	UIUtil:AddQuestionItem("Battle", gameObject, questionParent)
 	--CSAPI.SetGOActive(right, false);
@@ -362,11 +363,13 @@ function OnClickQuip()
 end
 
 function OnQuipOk()
-	BuryingPointMgr:TrackEvents("main_fight",{
-		reason = "副本撤退",
-		world_id = DungeonMgr:GetCurrSectionData():GetID(),
-		card_id = DungeonMgr:GetCurrId() or 0
-	})
+	if CSAPI.IsADV()==false then
+		BuryingPointMgr:TrackEvents("main_fight",{
+			reason = "副本撤退",
+			world_id = DungeonMgr:GetCurrSectionData():GetID(),
+			card_id = DungeonMgr:GetCurrId() or 0
+		})
+	end
 	DungeonMgr:SendToQuit();
 	FriendMgr:ClearAssistData();
 	TeamMgr:ClearFightTeamData();
@@ -986,7 +989,7 @@ function OnAISetRet(proto)
 		if teamData then
 			teamData:SetReserveNP(proto.nReserveNP);
 			teamData:SetIsReserveSP(proto.bIsReserveSP);
-			TeamMgr:UpdateDataByTeamData(ctrlData.nTeamID,teamData);
+			TeamMgr:SaveDataByIndex(ctrlData.nTeamID,teamData);
 		end
 	end
 end

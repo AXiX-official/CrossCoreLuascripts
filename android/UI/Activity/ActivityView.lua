@@ -12,6 +12,10 @@ function Awake()
     layout:Init("UIs/Activity/ActivityItem", LayoutCallBack, true)
 
     CSAPI.PlayUISound("ui_popup_open")
+    if  CSAPI.IsADV() or CSAPI.IsDomestic() then
+        BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_GAME_ANNOUNCEMENT_SHOWS)
+    end
+    SetShareBtnState();
 end
 
 function LayoutCallBack(index)
@@ -147,14 +151,32 @@ function SetCurInfo()
             SetCurInfo3()
         end
     end
-end
 
+    if curData and curData:can_share() and curData:can_share()=="1" then
+        SetShareBtnState();
+    else
+        CSAPI.SetGOActive(ShareBtn, false)
+    end
+end
+function SetShareBtnState()
+    if CSAPI.IsMobileplatform then
+        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+            CSAPI.SetGOActive(ShareBtn, true);
+        else
+            CSAPI.SetGOActive(ShareBtn, false);
+        end
+    else
+        CSAPI.SetGOActive(ShareBtn, false)
+    end
+end
 function SetCurInfo3()
     local tabs = curData:GetDescTables()
     items3 = items3 or {}
     ItemUtil.AddItems("Activity/ActivityItem3", items3, tabs, Content3, nil, 1, curData)
 end
-
+function OnClickShareBtn()
+    CSAPI.OpenView("ShareView",{LocationSource=5,key="ShareView",bgName=curData:GetImageName2(),url=curData:GetBoardImgUrl()})
+end
 function SetCurInfo2()
     -- icon
     c_MenuADItem2:SetImage(icon2, "activityview", curData:GetImageName2(), curData:GetBoardImgUrl())

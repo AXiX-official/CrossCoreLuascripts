@@ -14,6 +14,7 @@ local clickCounts = {} -- actions 某段点击次数
 local inter = 0.5
 local timer = 0
 
+--不同
 function Awake()
     spineTools = SpineTools.New()
 end
@@ -49,11 +50,12 @@ function Refresh(_modelId, _posType, _callBack)
 
     cfg = Cfgs.CfgSpineMultiImageAction:GetByID(modelId)
 
-    SetTouch()
-
     SetImg()
+
+    -- SetTouch()
 end
 
+--不同
 function SetImg()
     -- 多人插图立绘是会根据异形屏幕做适配的，所以l2d也要按照适配的比例做大小调整，但不是作用在sizeDetail上而是作用在scale上，因为子点击位置是固定的
     rate = UIUtil:GetSceneRate({2240, 1080})
@@ -82,6 +84,9 @@ function SetImg()
             if (not l2d or not l2d.animationState) then
                 isHeXie = true
             end
+
+            SetTouch()
+
             if (callBack) then
                 callBack()
             end
@@ -133,7 +138,7 @@ function TouchItemClickCB(cfgChild)
     local isCan = false
     if (trackIndex == 1) then
         -- 1轨道需要在idle状态下才能点击 或 前后都是同一多动作，并且不是最后一个动作
-        if (spineTools:IsIdle() or content.actions ~= nil) then
+        if (IsIdle() or content.actions ~= nil) then
             isCan = true
         end
     else
@@ -142,12 +147,16 @@ function TouchItemClickCB(cfgChild)
     if (isCan) then
         local b = false
         if (trackIndex ~= 1 and content.clicks ~= nil) then
-            b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress,isClicksLast)
+            b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress, isClicksLast)
         elseif (content.actions ~= nil) then
-            local num = records[cfgChild.index]
-            local startTime = content.actions[num][1]
-            local waitTime = content.actions[num][3]
-            b = spineTools:PlayByActionsClick(sName, trackIndex, timeScale, progress, startTime, waitTime)
+            -- 首次播放或者再次点击
+            local _sName = spineTools:GetNameByTrackIndex(trackIndex)
+            if (sName == _sName) then
+                spineTools:ResetActionsClick(trackIndex, content.actions.stopPerc, content.actions.stopLimit)
+            else
+                b = spineTools:PlayByActionsClick(sName, trackIndex, true, true, nil, content.actions.stopPerc,
+                    content.actions.stopTime, content.actions.stopCount)
+            end
         else
             b = spineTools:PlayByClick(sName, trackIndex, true, true, nil)
         end
@@ -160,20 +169,19 @@ end
 
 -- 拖拽开始
 function ItemDragBeginCB(cfgChild, x, y)
-    if (isHeXie or isIn or isDrag or not spineTools:IsIdle()) then
+    if (isHeXie or isIn or isDrag or not IsIdle()) then
         return
     end
     local content = cfgChild.content or {}
     if (CheckIsDrag(cfgChild)) then
-        if (spineTools:CheckIsClickRecover(cfgChild.sName)) then
-            return
-        end
-        dragObj = l2dGo.transform:FindChild(content.drag.targetObjName)
-        dragStartPos = CSAPI.csGetPos(dragObj)
+        dragObj = l2dGo.transform:Find("pos/" .. content.drag.targetObjName).gameObject
+        dragStartPos = CSAPI.csGetAnchor(dragObj)
         CSAPI.SetGOActive(dragObj, true)
-        local slot = graphic.Skeleton.FindSlot(content.drag.slot)
-        if (slot) then
-            slot.SetColor(UnityEngine.Color.clear)
+        for k, v in pairs(content.drag.slots) do
+            local slot = graphic.Skeleton:FindSlot(v)
+            if (slot) then
+                slot.A = 0
+            end
         end
     end
     PlayAudio(cfgChild)
@@ -185,9 +193,10 @@ function ItemDragCB(cfgChild, x, y)
         return
     end
     if (CheckIsDrag(cfgChild)) then
-        if (dragObj) then
-            CSAPI.SetPos(dragObj, x, y, 0)
-        end
+        -- 在 CardTouchItem中设置dragGO
+        -- if (dragObj) then
+        --     CSAPI.SetAnchor(dragObj, x, y, 0)
+        -- end
     else
         local content = cfgChild.content or {}
         if (content.gestureDatas) then
@@ -208,20 +217,22 @@ function ItemDragEndCB(cfgChild, x, y)
         if (dragObj) then
             local _dragStartPos = CSAPI.csGetPos(dragObj)
             local startPos = UnityEngine.Vector3(_dragStartPos[0], _dragStartPos[1], 0)
-            local targetObj = l2dGo.transform:FindChild(content.drag.targetPosObjName)
+            local targetObj = l2dGo.transform:Find("pos/" .. content.drag.targetPosObjName).gameObject
             local dragTargetPos = CSAPI.csGetPos(targetObj)
             local targetPos = UnityEngine.Vector3(dragTargetPos[0], dragTargetPos[1], 0)
-            local dis = UnityEngine.Vector3(startPos, targetPos)
-            if (dis < 0.1) then
+            local dis = UnityEngine.Vector3.Distance(startPos, targetPos)
+            if (dis < 10) then
                 spineTools:PlayByClick(cfgChild.sName, GetTrackIndex(cfgChild), true, true)
                 PlayAudio(cfgChild)
-                spineTools:ClickRecover(cfgChild.sName, GetTrackIndex(cfgChild), content.drag.stopTime or 0)
+                -- spineTools:ClickRecover(cfgChild.sName, GetTrackIndex(cfgChild), content.drag.stopTime or 0)
             end
-            CSAPI.SetPos(dragObj, _dragStartPos[0], _dragStartPos[1], 0)
+            CSAPI.SetAnchor(dragObj, dragStartPos[0], dragStartPos[1], 0)
             CSAPI.SetGOActive(dragObj, false)
-            local slot = graphic.Skeleton.FindSlot(content.drag.slot)
-            if (slot) then
-                slot.SetColor(UnityEngine.Color.white)
+            for k, v in pairs(content.drag.slots) do
+                local slot = graphic.Skeleton:FindSlot(v)
+                if (slot) then
+                    slot.A = 1
+                end
             end
         end
     else
@@ -229,7 +240,8 @@ function ItemDragEndCB(cfgChild, x, y)
             local forward = false
             local limit = content.gestureDatas.splitPerc or 1
             if (limit ~= 1) then
-                local cur = spineTools:GetTrackTimePercent(cfgChild.trackIndex)
+                local trackIndex = GetTrackIndex(cfgChild)
+                local cur = spineTools:GetTrackTimePercent(trackIndex)
                 if (limit - cur < 0.01) then
                     forward = true
                 end
@@ -254,7 +266,7 @@ function PlayAudio(cfgChild)
     if (audioIds and #audioIds > 0) then
         local index = 1
         if (#audioIds > 1) then
-            if (content.actions or content.clicks or content.randomActions) then
+            if (content.actions or content.clicks or content.randomActions or content.orderActions) then
                 -- 顺序
                 if (records[cfgChild.index]) then
                     index = records[cfgChild.index]
@@ -272,6 +284,7 @@ function PlayAudio(cfgChild)
     end
 end
 
+
 function IsIdle()
     if (spineTools) then
         return spineTools:IsIdle()
@@ -279,17 +292,10 @@ function IsIdle()
     return false
 end
 
--- 能否点击
+-- 能否点击 不同
 function SetClickActive(b)
     isActive = b
     CSAPI.SetGOActive(mask,b)
-end
-
-function PlayVoice(type)
-    type = type == nil and RoleAudioType.touch or type
-    if (not voicePlaying) then
-        RoleAudioPlayMgr:PlayByType(modelId, type, nil, PlayCB, EndCB)
-    end
 end
 
 function PlayVoiceByID(id)
@@ -323,6 +329,12 @@ end
 -- 类型
 function PlayVoice(type)
     type = type == nil and RoleAudioType.touch or type
+    if (type == RoleAudioType.touch) then
+        local cfg = Cfgs.character:GetByID(modelId)
+        if (cfg and cfg.base_voiceID ~= nil) then
+            return -- 如果是商城皮肤并且填了保底台词，则不需要普通触摸语音
+        end
+    end
     if (not RoleAudioPlayMgr:GetIsPlaying()) then
         RoleAudioPlayMgr:PlayByType(modelId, type, nil, PlayCB, EndCB)
     end
@@ -332,28 +344,13 @@ function GetImgScale()
     return imgScale or 1
 end
 
-function GetImgSize()
-    local x = 2240 * rate
-    local y = 1080 * rate
-    return {
-        [0] = x,
-        [1] = y
-    }
-end
-
-function GetIconName()
-    local _cfg = Cfgs.CfgArchiveMultiPicture:GetByID(modelId)
-    return _cfg.icon
-end
-
-
 function SetBlack(isBlack)
     if l2dGo and graphic then
         graphic.color = isBlack and UnityEngine.Color.black or UnityEngine.Color.white
     end
 end
 
---------------------------------------------------进场-------------------------------------------------------------
+-------------进场------------------------
 
 function CheckIn()
     if (not isHeXie and spineTools~=nil and spineTools:CheckAnimExist("in")) then
@@ -377,6 +374,7 @@ function PlayIn(cb, _movePoint)
         end
     end
     HideBtns()
+    PlayInEffect(cfg)
 end
 
 -- 特效1 
@@ -410,6 +408,7 @@ function PlayInCB()
             CSAPI.RemoveGO(go)
         end, nil, 300)
     end)
+    RemoveInEffect()
 end
 
 function Update()
@@ -456,14 +455,37 @@ function SetParentPos(toZero)
     end
 end
 
---------------------------------------------------进场end---------------------------------
---------------------------------------------------新内容-----------------------------------
+-- 入场特效（下次改版得删）
+function PlayInEffect(cfg)
+    for k, v in ipairs(cfg.item) do
+        if (v.sName == "in") then
+            if (v.effect) then
+                local parent = l2dGo.transform:Find("pos").gameObject
+                local low = CSAPI.GetGameLv() <= 2
+                CSAPI.CreateGOAsync("Spine/" .. v.effect, 0, 0, 0, parent, function(go)
+                    inEffectGo = go
+                end, low)
+            end
+            break
+        end
+    end
+end
+
+function RemoveInEffect()
+    if (inEffectGo) then
+        CSAPI.RemoveGO(inEffectGo)
+    end
+end
+------------------进场end----------------------------
+
+------------------------------新内容-----------------------------
+
 
 
 -- 点击 content内容
 function SetContent(cfgChild)
     local content = cfgChild.content
-    local sName, timeScale, progress,isClicksLast = cfgChild.sName, 1, 1,false
+    local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
     -- 激活与隐藏
     if (content.activation) then
         for k, v in pairs(touchItems) do
@@ -482,81 +504,37 @@ function SetContent(cfgChild)
             count = count + v[2] * 100
             if (num <= count) then
                 sName = v[1]
-                _k = k 
+                _k = k
                 break
             end
         end
-        records[cfgChild.index]  = _k
+        records[cfgChild.index] = _k
     end
-    -- 动作组
-    if (content.actions) then
-
+    -- 顺序动作
+    if (content.orderActions) then
+        local index = records[cfgChild.index] or 0
+        index = (index + 1) > #content.orderActions and 1 or  (index + 1)
+        sName = content.orderActions[index]
+        records[cfgChild.index] = index
     end
-    -- -- 动作组 (不是可以多次点击的要在停止时才能继续点击，是多次点击的要在次数未用完时才能点击)
-    -- if (content.actions) then
-    --     local num = 1
-    --     local isNext = false
-    --     local isRecover, isPlay = spineTools:CheckActionsCanClick(GetTrackIndex(cfgChild))
-    --     local _num = records[cfgChild.index] or num
-    --     -- 当前片段可以多次点击
-    --     if (records[cfgChild.index] and content.actions[records[cfgChild.index]][4] ~= nil) then
-    --         local key = cfgChild.index .. "_" .. _num
-    --         if (clickCounts[key] and clickCounts[key] == 0) then
-    --             -- 切换到下一个动画
-    --             clickCounts[key] = content.actions[_num][4]
-    --             isNext = true
-    --         else
-    --             -- 还是当前动画
-    --             if (not clickCounts[key]) then
-    --                 clickCounts[key] = content.actions[_num][4]
-    --             end
-    --             clickCounts[key] = clickCounts[key] - 1
-    --         end
-    --     else
-    --         if (isRecover or isPlay) then
-    --             -- 当前动作不能中断
-    --             sName = nil
-    --         else
-    --             -- 切换到下一个动画
-    --             if (records[cfgChild.index]) then
-    --                 isNext = true
-    --             end
-    --         end
-    --     end
-
-    --     if (sName ~= nil) then
-    --         if (isNext) then
-    --             -- 是不是最后 
-    --             if (_num == #content.actions) then
-    --                 sName = nil
-    --             else
-    --                 num = _num + 1
-    --             end
-    --         else
-    --             num = _num --todo 是否做成点击后直接设置可以播放到最后？
-    --         end
-    --     end
-    --     progress = content.actions[num][2]
-    --     records[cfgChild.index] = num
-    -- end
     -- 播放到指定百分比 
     if (content.clicks) then
-        if(spineTools:CheckMulClickIsPlay(GetTrackIndex(cfgChild))) then 
-            sName = nil 
-        else 
+        if (spineTools:CheckMulClickIsPlay(GetTrackIndex(cfgChild))) then
+            sName = nil
+        else
             local num = 1
             if (records[cfgChild.index] and records[cfgChild.index] < #content.clicks) then
                 num = records[cfgChild.index] + 1
             end
             records[cfgChild.index] = num
             progress = content.clicks[num]
-            timeScale = progress==0 and -1 or 1
-            isClicksLast = num>=#content.clicks
-        end 
+            timeScale = progress == 0 and -1 or 1
+            isClicksLast = num >= #content.clicks
+        end
     end
-    return sName, timeScale, progress,isClicksLast
-end
 
+    return sName, timeScale, progress, isClicksLast
+end
 
 -- 轨道
 function GetTrackIndex(cfgChild)
@@ -574,7 +552,7 @@ function CheckIsDrag(cfgChild)
     return false
 end
 
---------------------------------------------------------------------------------------------------------------
+--------------------------------------
 
 function Reset()
     oldModelId = nil
@@ -594,10 +572,6 @@ function HadInAudio()
 end
 
 
-function OnClickMask()
-    MissionMgr:DoClickBoard()
-end
-
 function ClearCache()
     if (l2dGo) then
         CSAPI.RemoveGO(l2dGo)
@@ -609,4 +583,24 @@ function ClearCache()
     dragObj = nil
     oldModelId = nil
     records = {}
+end
+
+-------------------------------------不同
+
+function GetImgSize()
+    local x = 2240 * rate
+    local y = 1080 * rate
+    return {
+        [0] = x,
+        [1] = y
+    }
+end
+
+function GetIconName()
+    local _cfg = Cfgs.CfgArchiveMultiPicture:GetByID(modelId)
+    return _cfg.icon
+end
+
+function OnClickMask()
+    MissionMgr:DoClickBoard()
 end

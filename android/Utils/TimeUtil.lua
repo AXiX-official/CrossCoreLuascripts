@@ -187,11 +187,13 @@ end
 -- 秒数转时间:  2天 00：00：00
 function this:GetTimeStr3(_timer)
     if (_timer <= 0) then
-        return string.format("%s%s %s", "0", "天", "00:00:00")
+        return LanguageMgr:GetByID(33019,"0","00:00:00")
+        --return string.format("%s%s %s", "0", "天", "00:00:00")
     else
         local d = math.floor(_timer / 86400)
         local str = self:GetTimeStr(_timer - d * 86400)
-        return string.format("%s%s %s", d, "天", str)
+        return LanguageMgr:GetByID(33019,d,str)
+        --return string.format("%s%s %s", d, "天", str)
     end
 end
 
@@ -301,6 +303,12 @@ function this:GetWeekDay(time)
     week = math.floor(week)
     week = week == 0 and 7 or week
     return week, timeData
+end
+
+function this:GetWeekDay2(time)
+    local week = tonumber(os.date("%w", time))
+    week = week == 0 and 7 or week
+    return week
 end
 
 -- 下一天0时1秒时间戳 curTimeData:当前服务器时间数据

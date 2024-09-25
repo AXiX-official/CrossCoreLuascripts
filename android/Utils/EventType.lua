@@ -1126,6 +1126,7 @@ this.Dungeon_MainLine_Update = 420005 --主线更新
 this.Dungeon_Box_Refresh = 420006 --星级奖励更新
 this.Update_Dungeon_Data = 420007;--副本结束
 this.Dungeon_InfoPanel_Update = 420008 --副本信息界面更新
+this.Dungeon_Double_Update = 420009 --副本多倍更新
 
 --------------------------------------组队boss
 this.TeamBoss_List = 430001
@@ -1217,8 +1218,10 @@ this.Section_Daily_Double_Update = 520002
 -----------------------------------------等待
 this.Wait_Panel_Close = 530001  --关闭等待界面
 
------------------------------------------设置
+-----------------------------------------设置,BGM 
 this.Setting_Window_Logout_Agree = 540001
+this.BGM_Select = 540002
+this.BGM_Set = 540003
 -----------------------------------------通用购买窗口
 this.Universal_Purchase_Refresh_Panel = 550001
 
@@ -1279,7 +1282,9 @@ this.Regression_Fund_Buy=630000 --回归基金购买
 ----------------------------------爱相随
 this.LovePlus_Chat_Update = 640000 --聊天数据更新
 this.LovePlus_Data_Update = 640001 --章节数据更新
-this.LovePlus_Spine_Select = 640002 --live2d动作选择
+this.LovePlus_UnLock_Update =640002 --解锁数据更新
+this.LovePlus_Spine_Select = 640003 --live2d动作选择
+this.LovePlus_Story_Select = 640004 --节点选中
 
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
@@ -1322,6 +1327,10 @@ this.SDK_ShiryuSDK_OnSetRoleName=800018;
 this.LuaView_Lua_Closed=800019;
 ---抵扣券支付完成
 this.SDK_Deduction_voucher_paymentcompleted=800020;
+---分享功能通知 下一帧截图
+this.ShareView_NoticeTheNextFrameScreenshot=800021;
+---分享通知截图完成
+this.ShareView_NoticeScreenshotCompleted=800022;
 ----------------------------------------------海外SDK----上-----------------------------------------------------
 
 

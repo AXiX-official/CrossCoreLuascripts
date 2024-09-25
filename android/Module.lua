@@ -200,3 +200,6 @@ _G.SpecialExplorationData=require "SpecialExplorationData"
 
 require "SpineTools"
 
+--版本检测
+require "VerChecker";
+

@@ -86,12 +86,13 @@ end
 function OnClick()
     if (data) then
         if (not isGet and isFinish) then
-            if (MissionMgr:CheckIsReset(data)) then
-                -- LanguageMgr:ShowTips(xxx)
-                LogError("任务已过期")
-            else
-                MissionMgr:GetReward(data:GetID())
-            end
+            -- if (MissionMgr:CheckIsReset(data)) then
+            --     -- LanguageMgr:ShowTips(xxx)
+            --     LogError("任务已过期")
+            -- else
+            MissionMgr:GetReward(data:GetID())
+            if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_MAINTASK_FINISH); end
+            --end
         elseif (not isGet and not isFinish) then
             if (data:GetJumpID()) then
                 JumpMgr:Jump(data:GetJumpID())

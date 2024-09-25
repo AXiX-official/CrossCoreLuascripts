@@ -157,4 +157,8 @@ function this:GetShowType()
     return tonumber(self:GetData().show_type) or 0
 end
 
+--是否显示 分享按钮
+function this:can_share()
+    return self:GetData().can_share
+end
 return this

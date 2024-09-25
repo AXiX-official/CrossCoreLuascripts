@@ -377,40 +377,48 @@ function ApplyUse(data,completeCallBack,caller)
         local atkTargets = data.tParam and data.tParam.targets;
         local delayCallBack = false;
 
-       
+        local isWarmingPoised = data.type == ePropType.WarmingPoised;
          --受击
+        --LogError(atkTargets);
         if(atkTargets)then
              if(atkCom == nil)then
                 atkCom = ComUtil.GetLuaTableInChildren(resParentGO);
             end
 
-            local isWarmingPoised = data.type == ePropType.WarmingPoised;
+            
             --isWarmingPoised = false;
             if(atkCom and isWarmingPoised)then
                 atkCom.ActiveEff(true);
             end            
             
-            local resEff = isWarmingPoised and "battle/LaserExpEffect" or "battle/rock_fall";
+            local resEff = isWarmingPoised and "battle/LaserExpEffect";
             local characterHitDelayTime = not isWarmingPoised and 300; 
+            
             for _,target in ipairs(atkTargets)do
                 local atkTarget = BattleCharacterMgr:GetCharacter(target);  
                 if(atkTarget)then
                     FuncUtil:Call(ApplyCharacterHit,nil,200,atkTarget,resEff,characterHitDelayTime);  
                     delayCallBack = true;
-                end
+                end                
             end                       
         end
-
         --切换范围
         local changeRangeId = data.tParam and data.tParam.changeRange;
         if(changeRangeId)then
+            local effName = (not isWarmingPoised) and "G_03_RockFallWarning1";
             if (delayCallBack) then
-                FuncUtil:Call(ChangeRange,nil,500,changeRangeId);  
+                FuncUtil:Call(ChangeRange,nil,500,changeRangeId,effName);  
             else
-                ChangeRange(changeRangeId);
+                ChangeRange(changeRangeId,effName);
             end            
+        end       
+
+        local triggerRange = data.tParam and data.tParam.triggerRange;
+        if(triggerRange)then
+            local effName = "rock_fall";
+            ChangeRange(triggerRange,effName,true,true);
         end
-      
+              
         local nextRangeId = data.tParam and data.tParam.nextRange;
         if(nextRangeId)then
             if (delayCallBack) then
@@ -419,6 +427,8 @@ function ApplyUse(data,completeCallBack,caller)
                 ChangeRange(nextRangeId,"dungeon_warning_next",true);
             end            
         end
+
+        
 
         if(delayCallBack)then
             FuncUtil:Call(completeCallBack,caller,1000);  
@@ -592,7 +602,9 @@ end
 function ApplyCharacterHit(character,effectName,hitDelay)
     if(effectName)then
         local x,y,z = CSAPI.GetPos(character.gameObject);
-        ResUtil:CreateEffect(effectName,x,y,z);
+        if(effectName)then
+            ResUtil:CreateEffect(effectName,x,y,z);
+        end
     end
 
     if(hitDelay)then
@@ -612,7 +624,7 @@ end
 
 
 --红蓝炮台切换范围
-function ChangeRange(changeRangeId,effName,dontClear)
+function ChangeRange(changeRangeId,effName,dontClear,dontSave)
     if(not cfg )then
         LogError("ChangeRange:not cfg");
         return;
@@ -629,11 +641,11 @@ function ChangeRange(changeRangeId,effName,dontClear)
         return;
     end
 
-    ChangeGridWarningObjs(gridIds,effName,dontClear);
+    ChangeGridWarningObjs(gridIds,effName,dontClear,dontSave);
 end
 
 --切换格子预警对象
-function ChangeGridWarningObjs(gridIds,effName,dontClear)
+function ChangeGridWarningObjs(gridIds,effName,dontClear,dontSave)
     if(not dontClear)then
         RemoveWarningEffs();
     end
@@ -645,7 +657,9 @@ function ChangeGridWarningObjs(gridIds,effName,dontClear)
     for _,gridId in ipairs(gridIds)do
         --if(not BattleMgr:IsInMist(gridId))then
             CreateEff(effName or "dungeon_warning",gridId,function(go)
-                OnWarnEffCreated(go,gridId);
+                if(not dontSave)then
+                    OnWarnEffCreated(go,gridId);
+                end
             end)
         --end
     end

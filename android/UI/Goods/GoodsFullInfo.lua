@@ -15,6 +15,7 @@ local getItems={};
 local buildItems={};
 local otherItems={};
 local otherItems2={};
+local limitGetItems={};
 local itemInfo=nil;
 local eventMgr=nil;
 local expiryTime=nil;
@@ -317,15 +318,17 @@ function CreateGetInfo()
 	local combineInfo=itemInfo.GetCombineGetInfo and itemInfo:GetCombineGetInfo() or nil;
 	local jOhterInfo=itemInfo.GetJOtherGetInfo and itemInfo:GetJOtherGetInfo() or nil;
 	local tOhterInfo=itemInfo.GetTOtherGetInfo and itemInfo:GetTOtherGetInfo() or nil;
-	if infos==nil and combineInfo==nil and jOhterInfo==nil and tOhterInfo==nil then
+	local lActInfo=itemInfo.GetLimitGetInfo and itemInfo:GetLimitGetInfo() or nil;
+	if infos==nil and combineInfo==nil and jOhterInfo==nil and tOhterInfo==nil and lActInfo==nil then
 		hasGet=false;
 	else
 		hasGet=true;
-		local cIsShow,bIsShow,oIsShow=false,false,false;
+		local cIsShow,bIsShow,oIsShow,lIsShow=false,false,false,false;
 		HideItems(getItems);
 		HideItems(buildItems);
 		HideItems(otherItems);
 		HideItems(otherItems2);
+		HideItems(limitGetItems);
 		if infos and #infos>0 then
 			cIsShow=true;
 			CreateGetItem(infos,"GetWayItem/GoodsGetWayItemNew",getItems,chapterRoot,JumpCall);
@@ -347,9 +350,14 @@ function CreateGetInfo()
 			oIsShow=true;
 			CreateGetItem(tOhterInfo,"GetWayItem/GoodsGetWayItemText",otherItems2,otherRoot);
 		end
+		if lActInfo and #lActInfo>0 then
+			lIsShow=true;
+			CreateGetItem(lActInfo,"GetWayItem/GoodsGetWayItemNew",limitGetItems,limitGetRoot,JumpCall);
+		end
 		CSAPI.SetGOActive(chapterGet,cIsShow);
 		CSAPI.SetGOActive(buildGet,bIsShow);
 		CSAPI.SetGOActive(otherGet,oIsShow);
+		CSAPI.SetGOActive(limitGet,lIsShow);
 	end
 end
 

@@ -120,24 +120,43 @@ function ConfigChecker:RewardInfo(cfg)
             if item.type == RandRewardType.ITEM then
                 ASSERT(
                         ItemInfo[item.id],
-                        '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 ItemInfo 找不到配置！'
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 ItemInfo 找不到配置",k, i, item.id)
                 )
             elseif item.type == RandRewardType.CARD then
                 ASSERT(
                         CardData[item.id],
-                        '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 CardData 找不到配置！'
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 CardData 找不到配置",k, i, item.id)
                 )
             elseif item.type == RandRewardType.EQUIP then
                 ASSERT(
                         CfgEquip[item.id],
-                        '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 CfgEquip 找不到配置！'
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 CfgEquip 找不到配置",k, i, item.id)
                 )
             elseif item.type == RandRewardType.TEMPLATE then
                 ASSERT(
                         cfg[item.id],
-                        '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 RewardInfo 找不到配置！'
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 RewardInfo 找不到配置",k, i, item.id)
                 )
             end
+
+            if item.level then
+                if #item.level < 2 then
+                    ASSERT(false, string.format("掉落表id:%s, index:%s, item.id为:%s, item.level 数组程度小于2",k, i, item.id))
+                end
+            end
+
+            if item.openTimes then
+                if #item.openTimes < 2 then
+                    ASSERT(false, string.format("掉落表id:%s, index:%s, item.id为:%s, item.openTimes 数组程度小于2",k, i, item.id))
+                end
+
+                local begTime = GCalHelp:GetTimeStampBySplit(item.openTimes[1], item)
+                local endTime = GCalHelp:GetTimeStampBySplit(item.openTimes[2], item)
+                ASSERT(begTime ~= 0, string.format("掉落表id:%s, index:%s, item.openTimes 开始时间 %s 错误",k, i, item.openTimes[1]))
+                ASSERT(endTime ~= 0, string.format("掉落表id:%s, index:%s, item.openTimes 结束时间 %s 错误",k, i, item.openTimes[2]))
+                ASSERT(begTime <= endTime, string.format("掉落表id:%s, index:%s, item.id为:%s, item.openTimes 开始时间不小于结束时间",k, i, item.id))
+                item.openTimesArr = {begTime, endTime}
+            end            
         end
     end
 end
@@ -595,6 +614,18 @@ function ConfigChecker:MainLine(cfgs)
             else
                 ASSERT(false, string.format('没有该关卡组 关卡id：%s 对应的关卡组ID:%s', v.id, v.dungeonGroup))
             end
+        end
+
+        if v.roundLevel then
+            -- 战力派遣
+            local ccc = DungeonGroup[v.dungeonGroup]
+            if not ccc then
+                ASSERT(false, string.format('战力派遣没有该关卡组 关卡id：%s 对应的关卡组ID:%s', v.id, v.dungeonGroup))
+            end
+            if not ccc.rounds then
+                ccc.rounds = {}
+            end
+            ccc.rounds[v.roundLevel] = v.id
         end
     end
 end
@@ -1535,6 +1566,10 @@ function ConfigChecker:ItemInfo(cfgs)
             elseif cfg.type == ITEM_TYPE.SKIN then
             end
         end
+        if cfg.dy2Times then
+            cfg.dy2StartTimes = GCalHelp:GetTimeStampBySplit(cfg.dy2Times, cfg)
+        end
+
     end
 end
 
@@ -2444,6 +2479,7 @@ end
 function ConfigChecker:CfgDupDropCntAdd(cfgs)
     -- 累计总共添加的次数
     g_AddDupMultiCnt = 0
+    g_SpecialMultiId = nil
     g_ReCalAddDupMultiTime = nil
 
     for _, cfg in pairs(cfgs) do
@@ -2451,9 +2487,17 @@ function ConfigChecker:CfgDupDropCntAdd(cfgs)
         cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
 
         local isInRange = GLogicCheck:IsInRange(cfg.nStart, cfg.nEnd, CURRENT_TIME, true)
-        if isInRange and cfg.dropAddCnt and not cfg.regressionType then
-            g_AddDupMultiCnt = g_AddDupMultiCnt + cfg.dropAddCnt
-            if cfg.nEnd ~= 0 then
+        if isInRange then
+            local isUse = false
+            if cfg.dropAddCnt and not cfg.regressionType then
+                isUse = true
+                g_AddDupMultiCnt = g_AddDupMultiCnt + cfg.dropAddCnt
+            elseif cfg.specialMultiId and not g_SpecialMultiId then
+                isUse = true
+                g_SpecialMultiId = cfg.specialMultiId
+            end
+
+            if isUse and cfg.nEnd ~= 0 then
                 -- 开启的判断结束时间，保存最小的需要计算时间
                 if not g_ReCalAddDupMultiTime or cfg.nEnd < g_ReCalAddDupMultiTime then
                     g_ReCalAddDupMultiTime = cfg.nEnd
@@ -2461,7 +2505,7 @@ function ConfigChecker:CfgDupDropCntAdd(cfgs)
             end
         else
             -- 只需要查看还没开启的
-            if cfg.nStart > CURRENT_TIME then
+            if cfg.nStart and cfg.nStart > CURRENT_TIME then
                 if not g_ReCalAddDupMultiTime or cfg.nStart < g_ReCalAddDupMultiTime then
                     g_ReCalAddDupMultiTime = cfg.nStart
                 end
@@ -2469,11 +2513,11 @@ function ConfigChecker:CfgDupDropCntAdd(cfgs)
         end
     end
 
-    LogDebug(
-            'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s',
-            g_AddDupMultiCnt,
-            g_ReCalAddDupMultiTime
-    )
+    -- LogDebug(
+    --         'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s',
+    --         g_AddDupMultiCnt,
+    --         g_ReCalAddDupMultiTime
+    -- )
 end
 
 function ConfigChecker:CfgDupConsumeReduce(cfgs)
@@ -2706,9 +2750,27 @@ function ConfigChecker:CfgItemPool(cfgs)
             cfg.nStartTime = GCalHelp:GetTimeStampBySplit(cfg.starttime, cfg)
             cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endtime, cfg)
         end
+
+        if cfg.costtype == 2 then
+            -- 每轮消耗都不一致，需要判断消耗长度与实际道具组数量是否一致
+            local timesSum = #cfg.cost
+            
+            local poolRewardCfg = CfgItemPoolReward[cfg.group]
+            assert(poolRewardCfg, string.format("道具池活动表 id:%s,对应的group:%s，在道具组奖励表里找不到对应的ID", id, cfg.group))
+
+            local rewardNum = 0
+            for _, v in ipairs(poolRewardCfg.pool) do
+                assert(v.iskeyreward, string.format("道具池奖励表id:%s，此类型所有的奖励需是关键奖励", cfg.group))
+                rewardNum = rewardNum + v.rewardnum
+            end
+
+            assert(timesSum == rewardNum, string.format("道具池id:%s抽取消耗长度(%s)与道具组奖励表id:%s长度(%s)不符", id, timesSum, cfg.group, rewardNum))
+
+        end
     end
 end
 function ConfigChecker:DungeonGroup(cfgs)
+    g_CalGroupStarIxs = {}
     for id, cfg in pairs(cfgs) do
         if cfg.group == 11001 then
             -- 乱序演习词条数量检查
@@ -2730,6 +2792,11 @@ function ConfigChecker:DungeonGroup(cfgs)
                     )
                 end
             end
+        end
+
+        if cfg.starIx then
+            local arr = GCalHelp:GetTb(g_CalGroupStarIxs, cfg.starIx, {})
+            table.insert(arr, id)
         end
     end
 end

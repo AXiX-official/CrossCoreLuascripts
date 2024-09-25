@@ -17,7 +17,24 @@ function Skill201501301:DoSkill(caster, target, data)
 		-- 11086
 		self:AddOrder(SkillEffect[11086], caster, target, data, nil)
 	end
+end
+-- 伤害后
+function Skill201501301:OnAfterHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
 	-- 201501301
-	self.order = self.order + 1
 	self:HitAddBuff(SkillEffect[201501301], caster, target, data, 4000,3501)
 end

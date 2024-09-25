@@ -89,6 +89,12 @@ function this:CurDayIsExit(curDay)
 	curDay = curDay ~= nil and curDay or SignInMgr:GetCurDay()
 	local rewardCfg = self:GetRewardCfg()
 	if(self:GetType() == RewardActivityType.DateDay) then
+		local tab = TimeUtil:GetTimeHMS(TimeUtil:GetBJTime())
+		if tab.month ~= self:GetIndex() then --不在同一个月，针对最后一天没签并等待到下一天签到的情况
+			if tab.hour >= g_ActivityDiffDayTime then --超过当天刷新时间
+				return false
+			end
+		end
 		return #rewardCfg.infos >= curDay
 	elseif(self:GetType() == RewardActivityType.DateMonth) then
 		return false

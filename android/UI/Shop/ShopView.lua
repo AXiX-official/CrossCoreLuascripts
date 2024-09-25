@@ -44,6 +44,7 @@ local newInfos=nil;--new状态数据
 local lastChildPageIDs=nil;--当前页面的二级页签的id列表
 local lastPageIDs=nil;--当前商店的页面id列表
 local layout6=nil;
+local FirstEnterQuestionItem=false;
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Shop_Tab_Change,OnPageChange)
@@ -74,7 +75,11 @@ function Awake()
     -- CSAPI.SetRenderTexture(sv5Img,goRT);
 	-- CSAPI.SetCameraRenderTarget(rtCamera,goRT);
 end
-
+function OnAddQuestionItem()
+    FirstEnterQuestionItem=true;
+    RefreshDeductionBouchers()
+    SetDeductionBouchersIcon()
+end
 --页签刷新
 function OnShopTagRefresh()
     if CSAPI.IsViewOpen("DormThemePayView") then
@@ -255,6 +260,7 @@ function Refresh(isJump)
     end
     OnMoneyChange(goldInfo);
     CSAPI.SetGOActive(btnExchange,IsShowExchange());
+    QuestionItemSetActive(false)
     if currPageData:GetCommodityType()==CommodityType.Promote then--推荐页
         InitPromotes();
     else
@@ -487,7 +493,25 @@ end
 
 function OnMoneyChange(infos)
     --topTools.SetMoney(goldId or {});
-    topTools.SetMoney(infos and infos or nil);   -- 需要加跳转id todo 
+    if CSAPI.IsADV() then
+        local  tableinfo={};
+        if infos then
+            for i, v in pairs(infos) do
+                if tostring(infos[i][1])==tostring(10999) then
+                    if  BagMgr:GetCount(10999)==0 then
+                        --table.remove(infos,i)
+                    else
+                        table.insert(tableinfo,infos[i]);
+                    end
+                else
+                    table.insert(tableinfo,infos[i]);
+                end
+            end
+        end
+        topTools.SetMoney(tableinfo and tableinfo or nil);   -- 需要加跳转id todo
+    else
+        topTools.SetMoney(infos and infos or nil);   -- 需要加跳转id todo
+    end
 end
 
 function IsShowExchange()
@@ -703,6 +727,7 @@ function SetTimeText(time)
 end
 
 function SetLayout()
+    QuestionItemSetActive(false)
     local isShowSet=false;
     local hasTabs=childTabDatas~=nil and #childTabDatas>1 or false;--当前页面是否有二级菜单
     if currPageData:GetCommodityType()==CommodityType.Promote then--推荐页
@@ -711,18 +736,24 @@ function SetLayout()
         currLayout=hasTabs==true and layout4 or layout;
         currTween=hasTabs==true and layout4Tween or layout1Tween;
     elseif currPageData:GetShowType()==ShopShowType.Package then
+        QuestionItemSetActive(true)
         currLayout=layout2;
         currTween=layout2Tween;
     elseif currPageData:GetShowType()==ShopShowType.Card then
         currLayout=layout2;
         currTween=layout2Tween;
     elseif currPageData:GetShowType()==ShopShowType.Pay then --充值
+        QuestionItemSetActive(true)
         currLayout=layout3;
         currTween=layout3Tween;
     elseif currPageData:GetShowType()==ShopShowType.Skin then--皮肤
         currLayout=layout5;
         currTween=layout5Tween;
-        isShowSet=true
+        if CSAPI.IsAppReview() then
+            isShowSet=false;
+        else
+            isShowSet=true;
+        end
     elseif currPageData:GetShowType()==ShopShowType.MonthCard then
         currLayout=nil;
         if isHideMonthPay then
@@ -753,6 +784,58 @@ function SetLayout()
     end
 end
 
+---设置抵扣券 介绍显示还是隐藏  初始化
+function SetDeductionBouchersIcon()
+    if AdvDeductionvoucher.SDKvoucherNum>0 then
+        --local Item= top.transform:Find("Top").gameObject
+        --Item.transform.anchorMin = UnityEngine.Vector2(0, 0)
+        --Item.transform.anchorMax = UnityEngine.Vector2(1, 1)
+    else
+        if this["QuestionItem"] and this["QuestionItem"]~=1 then
+            CSAPI.SetGOActive(this["QuestionItem"].gameObject, false);
+        end
+    end
+end
+---抵扣券说明书
+function RefreshDeductionBouchers()
+    if CSAPI.IsADV() then
+        if  currPageData:GetShowType()==ShopShowType.Package  then --礼包
+            QuestionItemSetActive(true)
+        elseif currPageData:GetShowType()==ShopShowType.Pay then --充值
+            QuestionItemSetActive(true)
+        else
+            QuestionItemSetActive(false)
+        end
+    else
+        QuestionItemSetActive(false)
+    end
+end
+---控制抵抵扣券说明显示或者隐藏
+function QuestionItemSetActive(Active)
+    if this["QuestionItem"] and this["QuestionItem"]~=1 then
+        if FirstEnterQuestionItem then
+            FirstEnterQuestionItem=false;
+            local Item= this["QuestionItem"].gameObject;
+            Item.transform.localPosition = UnityEngine.Vector3(Item.transform.localPosition.x-CSAPI.UIFitoffsetTop()-CSAPI.UIFoffsetBottom(), Item.transform.localPosition.y,0)
+            local RectTransformItem=Item:GetComponent("RectTransform");
+            RectTransformItem.pivot=UnityEngine.Vector2(1,0.5)
+            RectTransformItem.anchorMax=UnityEngine.Vector2(1,1)
+            RectTransformItem.anchorMin=UnityEngine.Vector2(1,1)
+            RectTransformItem.anchoredPosition=UnityEngine.Vector2(-470,-60)
+        end
+        if AdvDeductionvoucher.SDKvoucherNum>0 then
+            if CSAPI.IsADV() then
+                CSAPI.SetGOActive(this["QuestionItem"].gameObject, Active);
+            else
+                CSAPI.SetGOActive(this["QuestionItem"].gameObject, false);
+            end
+        else
+            CSAPI.SetGOActive(this["QuestionItem"].gameObject, false);
+        end
+    else
+        FirstEnterQuestionItem=true;
+    end
+end
 
 --创建月卡说明物体 测试用，正式版删除
 function CreateMonthItemsTest()
@@ -918,7 +1001,9 @@ function OnBuyRet(proto)
                 cost_type=priceInfo~=nil and tostring(priceInfo[1].id) or "免费",
                 cost_num=currPrice,
             }
-            BuryingPointMgr:TrackEvents("store_buy",record )
+            if CSAPI.IsADV()==false then
+                BuryingPointMgr:TrackEvents("store_buy",record )
+            end
         end
         if comm:GetType()==CommodityItemType.MonthCard then --月卡
             ClientProto:GetMemberRewardInfo();
@@ -959,7 +1044,9 @@ function OnExchangeRet(proto)
                 cost_num=currPrice,
             }
             -- LogError(record)
-            BuryingPointMgr:TrackEvents("store_buy",record )
+            if CSAPI.IsADV()==false then
+                BuryingPointMgr:TrackEvents("store_buy",record )
+            end
         end
     end
     Refresh();

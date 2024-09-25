@@ -209,7 +209,9 @@ function this:InitDatas()
                         local _datas = {}
                         _datas.system_name = (v == "Section") and m.name or m.sName
                         _datas.system_id = m.id .. ""
-                        BuryingPointMgr:TrackEvents("open_system", _datas)
+                        if CSAPI.IsADV()==false then
+                            BuryingPointMgr:TrackEvents("open_system", _datas)
+                        end
                     end
                     -- end
                 end

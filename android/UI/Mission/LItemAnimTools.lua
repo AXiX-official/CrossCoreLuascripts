@@ -3,7 +3,7 @@ local this = LItemAnimTools
 
 local inTimer = 300
 local timer = 200
-local item2Height = 113
+local item2Height = 108.5 --113
 function this.New()
     this.__index = this.__index or this;
     local ins = {};
@@ -117,12 +117,13 @@ end
 -- 父间隔:167  子间隔：93
 function this:GetLeftItemPos(index)
     local y = 0
-    if ((index - 1) == self.panel.GetCurIndex1()) then
+    if (index > self.panel.GetCurIndex1()) then
         local childCount = 0
-        if (self:IsChildExit(index - 1)) then
-            childCount = #self.panel.leftChildItems[index - 1]
+        if (self:IsChildExit(self.panel.GetCurIndex1())) then
+            childCount = #self.panel.leftChildItems[self.panel.GetCurIndex1()]
         end
-        y = -(self.parentScale * (index - 1) + item2Height * childCount)
+        local offsetY = childCount > 0 and 40 or 0
+        y = -(self.parentScale * (index - 1) + item2Height * childCount) + offsetY
     else
         y = -(self.parentScale * (index - 1))
     end
@@ -138,13 +139,13 @@ function this:GetLeftItemPos(index)
     return y
 end
 
--- mask height   -- 60 item大小
+-- mask height  
 function this:GetMaskHeight(index)
     if (not self:IsChildExit(index)) then
         return 0
     end
     local childCount = #self.panel.leftChildItems[index]
-    return item2Height * childCount + 10
+    return item2Height * childCount + 20
     -- return self.parentScale + item2Height * childCount - 62
 end
 

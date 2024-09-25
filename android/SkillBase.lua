@@ -19,6 +19,17 @@ function SkillMgr:Init(card, list, aiSetting)
 	-- ASSERT()
 end
 
+function SkillMgr:Destroy()
+	LogDebugEx("SkillMgr:Destroy()")
+    for k,v in pairs(self.skills) do
+    	v:Destroy()
+    end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 -- 初始化技能
 function SkillMgr:InitSkill()
 	
@@ -2197,6 +2208,8 @@ end
 
 function SkillBase:CallSkill(effect, caster, target, data, skillID, api)
 	--LogTrace()
+	LogDebugEx("CallSkill", caster.name, "攻击", target.name)
+	
 	local data = {
 		obj = self,
 		fun = self.CallSkillEx,

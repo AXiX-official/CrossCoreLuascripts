@@ -73,7 +73,7 @@ function SetMoney(_datas)
             end
             -- add 
 
-            CSAPI.SetGOActive(this["add" .. i], _data[2] ~= nil)
+            -- CSAPI.SetGOActive(this["add" .. i], _data[2] ~= nil)
             if (_data[2] ~= nil) then
                 local colorName = cfg.addColor
                 CSAPI.SetImgColorByCode(this["add" .. i], colorName)
@@ -109,6 +109,11 @@ function OnClickMoney(index)
                 JumpMgr:Jump(jumpID)
             else
                 Tips.ShowTips(desc)
+            end
+        else--打开物品UI
+            local goods=BagMgr:GetFakeData(datas[index][1]);
+            if goods then
+                CSAPI.OpenView("GoodsFullInfo",{data=goods});
             end
         end
     end

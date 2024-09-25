@@ -9,7 +9,10 @@ this.ClickBtn=nil;
 local langID=nil;
 local otherImgName=nil;
 function Awake()
-    roleItem = RoleTool.AddRole(iconParent, PlayCB, nil, false)		
+    roleItem = RoleTool.AddRole(iconParent, PlayCB, nil, false)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
+    ShareView_NoticeScreenshotCompleted(nil);
 end
 
 function OnDestroy()
@@ -92,6 +95,7 @@ function ShowTween2(isL2d)
         CSAPI.SetGOActive(tween3,true);
     else
         CSAPI.SetGOActive(tween2,true);
+        CSAPI.SetGOActive(ShareBtntween,true);
     end
     CSAPI.SetGOActive(clicker,true)
     CSAPI.SetText(txt_desc, skinDesc)	
@@ -204,11 +208,14 @@ function SwitchChange()
     CSAPI.SetText(txt_roleNameTips,modelCfg.englishName);
     CSAPI.SetText(txt_desc, skinDesc)	
 end
-
+function OnClickShareBtn()
+    CSAPI.OpenView("ShareView",{LocationSource=2})
+end
 --------------------------------------------用于奖励弹窗--------------------------------------------
 function Init()
     CSAPI.SetGOActive(tween1, false)
     CSAPI.SetGOActive(tween2, false)
+    CSAPI.SetGOActive(ShareBtntween,false);
     CSAPI.SetGOActive(tween3, false)
     CSAPI.SetGOActive(stars, false)
     CSAPI.SetGOActive(effectNode, false)
@@ -220,4 +227,27 @@ function Init()
     CSAPI.SetScale(bottom,1,0,1)
     CSAPI.SetRTSize(line1,1,600)
     CSAPI.SetRTSize(line2,1,600)
+end
+
+---截图前一帧通知
+function ShareView_NoticeTheNextFrameScreenshot(Data)
+    CSAPI.SetGOActive(ShareBtn, false)
+end
+---截图完成通知
+function ShareView_NoticeScreenshotCompleted(Data)
+    if CSAPI.IsMobileplatform then
+        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+            CSAPI.SetGOActive(ShareBtn, true);
+        else
+            CSAPI.SetGOActive(ShareBtn, false);
+        end
+    else
+        CSAPI.SetGOActive(ShareBtn, false)
+    end
+
+end
+function OnDestroy()
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
+
 end

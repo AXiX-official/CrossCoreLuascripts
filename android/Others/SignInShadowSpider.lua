@@ -131,7 +131,9 @@ function OnClickMask()
                 task_name = data.proto.index,
                 item_gain = rewards
             }
-            BuryingPointMgr:TrackEvents("activity_attend", taData)
+            if CSAPI.IsADV()==false then
+                BuryingPointMgr:TrackEvents("activity_attend", taData)
+            end
         end
     end
 end

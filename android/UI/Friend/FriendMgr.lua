@@ -604,7 +604,9 @@ function this:Op(datas)
 			eventName = "delete_friend"
 		end
 		if(eventName ~= "") then
-			BuryingPointMgr:TrackEvents(eventName, {friend_id = v.uid})
+			if CSAPI.IsADV()==false then
+				BuryingPointMgr:TrackEvents(eventName, {friend_id = v.uid})
+			end
 		end
 	end
 	

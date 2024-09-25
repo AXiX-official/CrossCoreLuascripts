@@ -20,7 +20,9 @@ local conf = {
 {'1013',	'1013',	'2',	'1',	'6',	'2024-07-24 03:00:00',	'2024-08-14 03:00:00',	'[{"id":22060,"path":"ActivityList/icon8"}]',	'SignInContinue5/SignInGold',	'',	'',	'',	''},
 {'1011',	'1011',	'',	'2',	'4',	'2024-07-24 03:00:00',	'2024-08-28 03:00:00',	'[{"id":22054,"path":"ActivityList/icon11"}]',	'AccuCharge/AccuCharge',	'',	'',	'',	''},
 {'1014',	'1014',	'2',	'1',	'5',	'2024-09-13 12:00:00',	'2024-09-23 03:00:00',	'[{"id":22061,"path":"ActivityList/icon12"}]',	'SignInContinue6/SignInZhongQiu',	'',	'',	'',	''},
-{'1015',	'1015',	'1',	'1',	'5',	'2024-02-10 00:00:00',	'2024-09-25 03:00:00',	'[{"id":22062,"path":"ActivityList/icon8"}]',	'SignInContinue7/SignInGift',	'',	'{"signInId":5001,"PaySignTime":15}',	'',	''},
+{'1015',	'1015',	'1',	'1',	'5',	'2024-02-10 00:00:00',	'2024-02-10 00:00:00',	'[{"id":22062,"path":"ActivityList/icon8"}]',	'SignInContinue7/SignInGift',	'',	'{"signInId":5001,"PaySignTime":15}',	'',	''},
+{'1016',	'1016',	'2',	'1',	'6',	'2024-09-30 12:00:00',	'2024-10-10 03:00:00',	'[{"id":22063,"path":"ActivityList/icon13"}]',	'SignInContinue8/SignInNational',	'',	'',	'',	''},
+{'1017',	'1017',	'',	'2',	'1',	'2024-08-25 10:00:00',	'2024-10-16 03:00:00',	'[{"id":67001,"path":"ActivityList/icon14"}]',	'Gacha/GachaMain',	'',	'[{"cfgId":1003,"jumpId":140014}]',	'',	''},
 },
 }
 --cfgCfgActiveList = conf

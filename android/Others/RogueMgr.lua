@@ -5,6 +5,7 @@ local this = MgrRegister("RogueMgr")
 function this:Init()
     self:Clear()
     self:InitMissionTime()
+    self:GetRogueInfo() --红点需求
 end
 
 function this:Clear()
@@ -69,6 +70,12 @@ function this:GetRogueInfoRet(proto)
         self.GetRogueInfoCB()
     end
     self.GetRogueInfoCB = nil
+    --red  
+    local num1 = self:IsRed() and 1 or 0
+    local num2 = RedPointMgr:GetData(RedPointType.Rogue)
+    if(num2==nil or num2~=num1) then 
+        RedPointMgr:UpdateData(RedPointType.Rogue, num2)
+    end
 end
 
 function this:GetData(id)
@@ -182,6 +189,7 @@ function this:FightToBack(save, group,cb)
         CSAPI.OpenView("Section", {
             type = 4
         })
+        CSAPI.OpenView("RogueMain")
         if (save) then
             local cfg = Cfgs.DungeonGroup:GetByID(group)
             CSAPI.OpenView("RogueView",nil,cfg.nType)

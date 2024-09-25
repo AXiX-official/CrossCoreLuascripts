@@ -1,5 +1,5 @@
 local SignInInfo = require "SignInInfo"
-local weekStr = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"}
+local weekStr = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY","SUNDAY"}
 local isSingIn = false
 local curDayInfo = nil
 local curItem = nil
@@ -83,7 +83,7 @@ function SetLeft()
 		month = month - 1
 	end
 	LanguageMgr:SetText(txtTime, 13004, month)
-	local week = TimeUtil:GetWeekDay(TimeUtil:GetBJTime())
+	local week = TimeUtil:GetWeekDay2(TimeUtil:GetBJTime())
 	CSAPI.SetText(txtWeek, weekStr[week])
 end
 
@@ -210,7 +210,9 @@ function ESignCB(proto)
 		task_name = proto.index,
 		item_gain = rewards
 	}
-	BuryingPointMgr:TrackEvents("activity_attend", taData)
+	if CSAPI.IsADV()==false then
+		BuryingPointMgr:TrackEvents("activity_attend", taData)
+	end
 end
 
 --自动签到

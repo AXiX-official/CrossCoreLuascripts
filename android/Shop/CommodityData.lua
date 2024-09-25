@@ -25,12 +25,18 @@ function this:GetCfg()
 end
 
 function this:SetData(data) 
-    if data then 
+    if data then
+        if CSAPI.IsADV() and data["id"]~=nil  then
+            data= ShiryuSDK.ShopDataEdit(data);
+        end
         self.data = data 
     end 
 end
 
 function this:GetData()
+    if CSAPI.IsADV() and self.data~=nil then
+        self.data= ShiryuSDK.ShopDataEdit(self.data);
+    end
     return self.data;
 end
 

@@ -162,6 +162,12 @@ function this.StopTweenShake()
 end
 --------------------------------------------------------震动动画结束---------------------
 function this.FadeIn(go, _time, callBack, _delay)
+	if go == nil then
+		if callBack then
+			callBack()
+		end
+		return 
+	end
 	local fade = ComUtil.GetCom(go, "ActionFade");
 	if fade == nil then
 		fade = go:AddComponent(typeof(CS.ActionFade));
@@ -174,6 +180,12 @@ function this.FadeIn(go, _time, callBack, _delay)
 end
 
 function this.FadeOut(go, _time, callBack, _delay)
+	if go == nil then
+		if callBack then
+			callBack()
+		end
+		return 
+	end
 	local fade = ComUtil.GetCom(go, "ActionFade");
 	if fade == nil then
 		fade = go:AddComponent(typeof(CS.ActionFade));

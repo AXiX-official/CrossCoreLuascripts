@@ -93,6 +93,7 @@ function OnClick()
                 LogError("任务已过期")
             else
                 MissionMgr:GetReward(data:GetID())
+                if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_DAILYTASK_FINISH); end
             end
         else
             if (data:GetJumpID()) then

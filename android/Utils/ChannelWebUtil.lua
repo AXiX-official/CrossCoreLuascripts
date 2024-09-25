@@ -21,6 +21,8 @@ this.Extends={--url额外拼接关键字
 	sdkDirlogin="ziLong/login.php",---海外请求中台验证token
 	ziLongpayClientGetOrderId="ziLong/payClientGetOrderId.php",--生成游戏订单
 	-------------------------------海外相关上----------------------------------------------------
+	sdkDirlogin_gn="centerWeb/login.php",---海外请求中台验证token
+	clientGetOrderId_gn="centerWeb/payClientGetOrderId.php",--生成游戏订单
 };
 --- func 设置服务器信息
 ---@param _serverInfo 登录的服务器信息
@@ -81,7 +83,7 @@ function this.SendToServer(url,data,func)
 				-- LogError("访问"..tostring(url).."时出错！返回结果："..tostring(result));
 			end
 		end
-	end,true,100,0);
+	end,true,5000,0);
 end
 
 function this.GetServerID()

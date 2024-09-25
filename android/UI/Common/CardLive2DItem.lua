@@ -52,7 +52,7 @@ function Refresh(_modelId, _posType, _callBack)
 
     SetImg()
 
-    --SetTouch()
+    -- SetTouch()
 end
 
 function SetImg()
@@ -151,10 +151,6 @@ function TouchItemClickCB(cfgChild)
         if (trackIndex ~= 1 and content.clicks ~= nil) then
             b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress, isClicksLast)
         elseif (content.actions ~= nil) then
-            -- local num = records[cfgChild.index]
-            -- local startTime = content.actions[num][1]
-            -- local waitTime = content.actions[num][3]
-            -- b = spineTools:PlayByActionsClick(sName, trackIndex, timeScale, progress, startTime, waitTime)
             -- 首次播放或者再次点击
             local _sName = spineTools:GetNameByTrackIndex(trackIndex)
             if (sName == _sName) then
@@ -180,9 +176,6 @@ function ItemDragBeginCB(cfgChild, x, y)
     end
     local content = cfgChild.content or {}
     if (CheckIsDrag(cfgChild)) then
-        -- if (spineTools:CheckIsClickRecover(cfgChild.sName)) then
-        --     return
-        -- end
         dragObj = l2dGo.transform:Find("pos/" .. content.drag.targetObjName).gameObject
         dragStartPos = CSAPI.csGetAnchor(dragObj)
         CSAPI.SetGOActive(dragObj, true)
@@ -275,7 +268,7 @@ function PlayAudio(cfgChild)
     if (audioIds and #audioIds > 0) then
         local index = 1
         if (#audioIds > 1) then
-            if (content.actions or content.clicks or content.randomActions) then
+            if (content.actions or content.clicks or content.randomActions or content.orderActions) then
                 -- 顺序
                 if (records[cfgChild.index]) then
                     index = records[cfgChild.index]
@@ -305,13 +298,6 @@ function SetClickActive(b)
     img_imgObj.raycastTarget = b
     CSAPI.SetGOActive(mask, b)
 end
-
--- function PlayVoice(type)
---     type = type == nil and RoleAudioType.touch or type
---     if (not voicePlaying) then
---         RoleAudioPlayMgr:PlayByType(modelId, type, nil, PlayCB, EndCB)
---     end
--- end
 
 function PlayVoiceByID(id)
     if (not voicePlaying) then
@@ -344,14 +330,12 @@ end
 -- 类型
 function PlayVoice(type)
     type = type == nil and RoleAudioType.touch or type
-
     if (type == RoleAudioType.touch) then
         local cfg = Cfgs.character:GetByID(modelId)
         if (cfg and cfg.base_voiceID ~= nil) then
             return -- 如果是商城皮肤并且填了保底台词，则不需要普通触摸语音
         end
     end
-
     if (not RoleAudioPlayMgr:GetIsPlaying()) then
         RoleAudioPlayMgr:PlayByType(modelId, type, nil, PlayCB, EndCB)
     end
@@ -367,7 +351,7 @@ function SetBlack(isBlack)
     end
 end
 
---------------------------------------------------进场-------------------------------------------------------------
+-------------进场------------------------
 
 function CheckIn()
     if (not isHeXie and spineTools and spineTools:CheckAnimExist("in")) then
@@ -494,8 +478,9 @@ function RemoveInEffect()
     end
 end
 
---------------------------------------------------进场end---------------------------------
---------------------------------------------------新内容-----------------------------------
+------------------进场end----------------------------
+
+------------------------------新内容-----------------------------
 
 -- 点击 content内容
 function SetContent(cfgChild)
@@ -519,63 +504,19 @@ function SetContent(cfgChild)
             count = count + v[2] * 100
             if (num <= count) then
                 sName = v[1]
-                _k = k 
+                _k = k
                 break
             end
         end
-        records[cfgChild.index]  = _k
+        records[cfgChild.index] = _k
     end
-    -- 动作组
-    if (content.actions) then
-
+    -- 顺序动作
+    if (content.orderActions) then
+        local index = records[cfgChild.index] or 0
+        index = (index + 1) > #content.orderActions and 1 or  (index + 1)
+        sName = content.orderActions[index]
+        records[cfgChild.index] = index
     end
-
-    -- 动作组 (不是可以多次点击的要在停止时才能继续点击，是多次点击的要在次数未用完时才能点击)
-    -- if (content.actions) then
-    --     local num = 1
-    --     local isNext = false
-    --     local isRecover, isPlay = spineTools:CheckActionsCanClick(GetTrackIndex(cfgChild))
-    --     local _num = records[cfgChild.index] or num
-    --     -- 当前片段可以多次点击
-    --     if (records[cfgChild.index] and content.actions[records[cfgChild.index]][4] ~= nil) then
-    --         local key = cfgChild.index .. "_" .. _num
-    --         if (clickCounts[key] and clickCounts[key] == 0) then
-    --             -- 切换到下一个动画
-    --             clickCounts[key] = content.actions[_num][4]
-    --             isNext = true
-    --         else
-    --             -- 还是当前动画
-    --             if (not clickCounts[key]) then
-    --                 clickCounts[key] = content.actions[_num][4]
-    --             end
-    --             clickCounts[key] = clickCounts[key] - 1
-    --         end
-    --     else
-    --         if (isRecover or isPlay) then
-    --             -- 当前动作不能中断
-    --             sName = nil
-    --         else
-    --             -- 切换到下一个动画
-    --             if (records[cfgChild.index]) then
-    --                 isNext = true
-    --             end
-    --         end
-    --     end
-    --     if (sName ~= nil) then
-    --         if (isNext) then
-    --             -- 是不是最后 
-    --             if (_num == #content.actions) then
-    --                 sName = nil
-    --             else
-    --                 num = _num + 1
-    --             end
-    --         else
-    --             num = _num --todo 是否做成点击后直接设置可以播放到最后？
-    --         end
-    --     end
-    --     progress = content.actions[num][2]
-    --     records[cfgChild.index] = num
-    -- end
     -- 播放到指定百分比 
     if (content.clicks) then
         if (spineTools:CheckMulClickIsPlay(GetTrackIndex(cfgChild))) then
@@ -591,6 +532,7 @@ function SetContent(cfgChild)
             isClicksLast = num >= #content.clicks
         end
     end
+
     return sName, timeScale, progress, isClicksLast
 end
 
@@ -610,7 +552,7 @@ function CheckIsDrag(cfgChild)
     return false
 end
 
---------------------------------------------------------------------------------------------------------------
+-------------------------------------
 
 function Reset()
     oldModelId = nil
@@ -628,7 +570,6 @@ function HadInAudio()
     end
     return false
 end
-
 
 function ClearCache()
     if (l2dGo) then

@@ -107,7 +107,7 @@ function SetDouble()
     local hasMulti = DungeonUtil.HasMultiDesc(sectionData:GetID());
     local dStr = ""
     if hasMulti then
-        dStr = DungeonUtil.GetMultiDesc2(sectionData:GetID())
+        dStr = DungeonUtil.GetMultiDesc(sectionData:GetID())
     end
     CSAPI.SetText(txtDouble, dStr);
 

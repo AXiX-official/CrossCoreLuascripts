@@ -242,7 +242,9 @@ function this:CardCreateFinishRet(proto)
     --     end
     -- end
     _datas.item_use = proto.costs
-    BuryingPointMgr:TrackEvents("draw_card", _datas)
+    if CSAPI.IsADV()==false then
+        BuryingPointMgr:TrackEvents("draw_card", _datas)
+    end
 end
 
 -- 首抽
@@ -274,7 +276,9 @@ function this:FirstCardCreateRet(proto)
     --     table.insert(_datas.item_gain, v)
     -- end
     _datas.item_use = proto.costs
-    BuryingPointMgr:TrackEvents("draw_card", _datas)
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        BuryingPointMgr:TrackEvents("draw_card", _datas)
+    end
 end
 
 -- 首次抽卡添加最后一次为log(返回PlayerProto:FirstCardCreateLogsRet)

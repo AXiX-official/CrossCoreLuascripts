@@ -136,7 +136,18 @@ end
 function LoginProto:SendLoginGame(msg)	
 	msg.SvnVersion = g_svnVersion
 	msg.distinctId=ThinkingAnalyticsMgr:GetDistinctId();
+	 if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		---注释部分海外相关
+		msg.ziLongUserInfo={}
+		msg.ziLongUserInfo.operators=ShiryuSDK.ShiryuLogin.channelExts.operators;--运营商
+		msg.ziLongUserInfo.langue=ShiryuSDK.ShiryuLogin.channelExts.lang;--选择语言
+		msg.ziLongUserInfo.device=ShiryuSDK.ShiryuLogin.channelExts.deviceId;--设备id
+		msg.ziLongUserInfo.gameChannel=ShiryuSDK.ShiryuLogin.channelExts.channelId;--gameChannel
+		msg.centerWebUid=ShiryuSDK.ShiryuLogin.uid;
+		msg.centerWebInfo=ShiryuSDK.ShiryuLogin.channelExts;
+	end
 	local proto = {"ClientProto:LoginGame", msg};
+	print("GM------------------------------------------:"..table.tostring(proto))
 	NetMgr.net:Send(proto);
 end
 
@@ -146,6 +157,9 @@ function LoginProto:LoginGame(proto)
 	-- SDKPayMgr:SearchPayReward();
 	if(self.logined) then
 		Log("重新登录游戏成功==================")
+		if CSAPI.IsADV() or CSAPI.IsDomestic() then
+			ShiryuSDK.OnRoleOnline()
+		end
 		EventMgr.Dispatch(EventType.Relogin_Success, nil, true);
 		--马上通知
         ClientProto:InitFinish(true,true);
@@ -264,7 +278,7 @@ function LoginProto:Logout()
 	self.isOnline=false;
 	self.logined = nil
 	local channelType=CSAPI.GetChannelType();
-	if self.vosQueryAccount.is_anti_addiction==1 and (channelType==ChannelType.Normal or channelType==ChannelType.TapTap)  then
+	if (self.vosQueryAccount and self.vosQueryAccount.is_anti_addiction==1) and (channelType==ChannelType.Normal or channelType==ChannelType.TapTap)  then
 		local signData={
 			pid=self:GetPI(),
 			account=self.account,

@@ -468,7 +468,7 @@ function OnSkillChange(cfgId)
             teamData:SetSkillGroupID(cfgId);
             local teamData2=TeamMgr:GetTeamData(teamData.index);
             teamData2:SetSkillGroupID(cfgId);
-            TeamMgr:UpdateDataByTeamData(index, teamData2)
+            TeamMgr:SaveDataByIndex(index, teamData2)
         end
         SetSkillIcon(cfgId)
     end);

@@ -83,7 +83,7 @@ function OnClickQuit()
         -- func = OnDirllBack;
         OnDirllBack();
         return;
-    elseif (g_FightMgr and g_FightMgr.type == SceneType.PVE) then
+    elseif (g_FightMgr and (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS)) then
         -- if (DungeonMgr:CheckDungeonPass(1004)) then
         func = OnSureDungeonFightQuit;
         --        else

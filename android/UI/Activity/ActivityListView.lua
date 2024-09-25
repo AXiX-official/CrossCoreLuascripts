@@ -52,7 +52,10 @@ function OnRedPointRefresh()
 end
 
 function OnDayRefresh()
-   UIUtil:ToHome()
+    --清除弹出缓存
+    ActivityMgr:ClearPopInfos()
+    
+    UIUtil:ToHome()
 end
 
 function OnDisable()
@@ -76,6 +79,18 @@ function InitLeftPanel()
     end
     local leftDatas = {}
     openCfgs = ActivityMgr:GetArr(tonumber(group))
+    if CSAPI.IsADV() then
+        if AdvBindingRewards.isHadReward==false then
+            if openCfgs then
+                for i, v in ipairs(openCfgs) do
+                    if openCfgs[i].id==2001 then
+                        table.remove(openCfgs,i)
+                        break;
+                    end
+                end
+            end
+        end
+    end
     for i, v in ipairs(openCfgs) do
         list[v.id] = {index = i} --记录当前类型的顺序
         table.insert(leftDatas,{v.leftInfo[1].id, v.leftInfo[1].path})

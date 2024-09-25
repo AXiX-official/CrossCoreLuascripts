@@ -10,6 +10,12 @@ function FightLog:Init()
 	self.allLog = {}
 end
 
+function FightLog:Destroy()
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 function FightLog:Clean()
 	LogDebug("---------FightLog:Clean()-------------")
 	-- LogTrace()

@@ -13,21 +13,56 @@ function this:Init()
 	else
 		self.is3D=options.is3D;
 	end
+	self.datas = {};
+	self.forceDatas ={};--强制上阵数据
+	self.preLoad=false;
+end
+
+--返回队伍范围信息
+function this:GetIndexRangeInfo(eTeamType)
+	if  eTeamType then
+		local cfg=Cfgs.CfgTeamTypeEnum:GetByID(eTeamType);
+		if cfg then
+			return cfg;
+		end
+	end
+	return nil;
+end
+
+--同个队伍类型的队伍范围中检查是否只能存在同一张卡
+function this:CheckSingleCard(index)
+	local teamType=self:GetTeamType(index);
+	local rangeInfo=self:GetIndexRangeInfo(teamType)
+	if rangeInfo and rangeInfo.isSingleCard then
+		return true;
+	end
+	return false;
 end
 
 --设置数据
-function this:SetData(teamData)
-	self.datas = {}; -- 单个数据字段[index]={teamName,leader,data},这是副本队伍数据队列
-	self.forceDatas = {};--强制上阵数据
-	-- self.cardIndex = nil;--队伍卡牌索引，包含了当前所有队伍中的卡牌[cid]=teamIndex
-	if(teamData and teamData.data) then
-		self.presetNum = teamData.count;
-		for k, v in ipairs(teamData.data) do
+function this:SetData(proto)
+	 -- 单个数据字段[index]={teamName,leader,data},这是副本队伍数据队列
+	if(proto and proto.data) then
+		self.presetNum = proto.count;
+		for k, v in ipairs(proto.data) do
 			self:UpdateDataByIndex(v.index, v);
 		end
 	end
-
-    EventMgr.Dispatch(EventType.Team_Data_Setted)--编队数据设置完成
+	if proto.isFinish then
+		if self.preLoad~=true then --第一次获取到队伍数据时预加载队伍
+			-- 预加载第一编队
+			local modelIds = nil;
+			local team1Data = TeamMgr:GetTeamData(1);
+			for k, v in pairs(team1Data.data) do
+				modelIds = modelIds or {};
+				table.insert(modelIds, v:GetModelID());
+			end
+			-- LogError(modelIds);
+			CharacterMgr:Preload(modelIds);
+			self.preLoad=true;
+		end
+		EventMgr.Dispatch(EventType.Team_Data_Setted)--编队数据设置完成
+	end
 end
 
 --根据队伍索引和刷新数据 data:proto:TeamItemData
@@ -46,20 +81,16 @@ function this:UpdateDataByIndex(index, data)
 	end
 end
 
---根据队伍索引和队伍数据进行更新 teamData:TeamData
-function this:UpdateDataByTeamData(index, teamData)
-	if(index and teamData) then
-		self:SaveDataByIndex(index, teamData)
-	end
-end
-
+--根据索引更新队伍缓存
 function this:SaveDataByIndex(index, teamData)
-	self.datas = self.datas or {};
-	self.forceDatas = self.forceDatas or {};
-	if(index >= eTeamType.ForceFight) then--强制上阵
-		self.forceDatas[index] = teamData;
-	else
-		self.datas[index] = teamData;
+	if(index and teamData) then
+		self.datas = self.datas or {};
+		self.forceDatas = self.forceDatas or {};
+		if(index >= eTeamType.ForceFight) then--强制上阵
+			self.forceDatas[index] = teamData;
+		else
+			self.datas[index] = teamData;
+		end
 	end
 end
 
@@ -114,19 +145,12 @@ end
 function this:GetTeamDatasByType(_eTeamType)
 	if _eTeamType<eTeamType.ForceFight and self.datas then
 		local teams={};
-		for k,v in pairs(self.datas) do
-			if _eTeamType==eTeamType.DungeonFight and k>=eTeamType.DungeonFight and k<=g_TeamMaxNum then
-				table.insert(teams,v);
-			elseif _eTeamType==eTeamType.Preset and k>=eTeamType.Preset then
-				table.insert(teams,v);
-			elseif _eTeamType==eTeamType.Tower and k==eTeamType.Tower then
-				table.insert(teams,v);
-			elseif _eTeamType==eTeamType.TowerDifficulty and k==eTeamType.TowerDifficulty then
-				table.insert(teams,v);
-			elseif _eTeamType==eTeamType.Rogue then
-				table.insert(teams,v);
-			elseif _eTeamType==eTeamType.TotalBattle then
-				table.insert(teams,v);
+		local rangeInfo=self:GetIndexRangeInfo(_eTeamType);
+		if rangeInfo then
+			for k,v in pairs(self.datas) do
+				if k>=rangeInfo.id and k<=rangeInfo.endIdx then
+					table.insert(teams,v);
+				end
 			end
 		end
 		return teams;
@@ -165,30 +189,13 @@ end
 ---@param index int 队伍索引
 function this:GetTeamType(index)
 	local type=eTeamType.DungeonFight;
-    if index >= eTeamType.DungeonFight and index <= g_FormationMaxNum then
-		type=eTeamType.DungeonFight;
-	elseif index == eTeamType.Assistance then
-		type=eTeamType.Assistance;
-	elseif index ==eTeamType.PracticeAttack then
-		type=eTeamType.PracticeAttack;
-	elseif index==eTeamType.PracticeDefine then
-		type=eTeamType.PracticeDefine;
-	elseif index==eTeamType.RealPracticeAttack then
-		type=eTeamType.RealPracticeAttack;
-	elseif index==eTeamType.GuildFight then
-		type=eTeamType.GuildFight;
-	elseif index >= eTeamType.Preset and index < 40 then
-		type=eTeamType.Preset;
-	elseif index==eTeamType.Tower then
-		type=eTeamType.Tower;
-	elseif index==eTeamType.TowerDifficulty then
-		type=eTeamType.TowerDifficulty;
-	elseif(index >= eTeamType.ForceFight) then--强制上阵
-		type=eTeamType.ForceFight;
-	elseif index==eTeamType.Rogue then
-		type=eTeamType.Rogue;
-	elseif index==eTeamType.TotalBattle then
-		type=eTeamType.TotalBattle;
+	if index then
+		for k,v in pairs(Cfgs.CfgTeamTypeEnum:GetAll()) do
+			if  index >= v.id and index <=  v.endIdx  then
+				type=v.id;
+				break;
+			end
+		end
 	end
 	return type;
 end
@@ -203,18 +210,6 @@ function this:GetLeader(index)
 		return teamData:GetLeader();
 	end
 	return nil;
-end
-
---返回主线队伍的冷却状态
-function this:GetDuplicateTeamCoolState()
-	local dic={};
-	local teams=self:GetTeamDatasByType(eTeamType.DungeonFight);
-	if teams then
-		for k,v in ipairs(teams) do
-			dic[v:GetIndex()]=v:GetCoolState();
-		end
-	end
-	return dic;
 end
 
 --判断是否是第一队的队长
@@ -233,37 +228,10 @@ function this:GetPresetNum()
 	return self.presetNum;
 end
 
---返回队列中单个卡牌的数据 (只对常规副本队伍查询)
-function this:GetTeamItemData(cid)
-	local teams=self:GetTeamDatasByType(eTeamType.DungeonFight);
-	if cid and teams then
-		for k, v in ipairs(teams) do
-			local card = v:GetItem(cid);
-			if card then
-				return card;
-			end
-		end
-	end
-	return nil;
-end
-
---根据卡牌ID返回队列数据(只对常规副本队伍查询)
-function this:GetTeamDataByCid(cid)
-	local teams=self:GetTeamDatasByType(eTeamType.DungeonFight);
-	if cid and teams then
-		for k, v in ipairs(teams) do
-			local card = v:GetItem(cid);
-			if card then
-				return v;
-			end
-		end
-	end
-	return nil;
-end
-
---返回卡牌所属队伍索引(只对常规副本队伍查询)
-function this:GetCardTeamIndex(cid,hasEdit)
-	local teams=self:GetTeamDatasByType(eTeamType.DungeonFight);
+--返回卡牌所属队伍索引(非强制上阵队伍)
+function this:GetCardTeamIndex(cid,teamType,hasEdit)
+	teamType=teamType==nil and eTeamType.DungeonFight or teamType
+	local teams=self:GetTeamDatasByType(teamType);
 	if cid and teams then
 		for k, v in ipairs(teams) do
 			if hasEdit then
@@ -287,25 +255,6 @@ function this:GetCardTeamIndex(cid,hasEdit)
 	return - 1;
 end
 
---返回卡牌所属队伍索引（只对常规副本队伍和编辑中的队伍进行查询）
-function this:GetCardTeamTempIndex(cid)
-	local teams=self:GetTeamDatasByType(eTeamType.DungeonFight);
-	if cid and teams then
-		for k, v in ipairs(teams) do
-			local card=nil;
-			if self.editTeams and self.editTeams[v:GetIndex()] then
-				card = self.editTeams[v:GetIndex()]:GetItem(cid);
-			else
-				card = v:GetItem(cid);
-			end
-			if card then
-				return v:GetIndex();
-			end
-		end
-	end
-	return - 1;
-end
-
 --返回卡牌所属强制上阵队伍索引（只对强制上阵队伍查询）
 function this:GetCardForceIndex(dungeonId,cid)
 	if dungeonId and cid and self.forceDatas  then
@@ -323,16 +272,37 @@ function this:GetCardForceIndex(dungeonId,cid)
 	return -1;
 end
 
---保存队伍内容
-function this:SaveData(index, callBack)
-	if index == nil then
-		index = self.currentIndex;
+function this:SaveData(teamData,callBack)
+	if teamData==nil or teamData:GetIndex()==nil or teamData:GetIndex()<1 then
+		LogError("队伍数据不得为空！")
+		do return end
 	end
 	--保存到本地
-	local teamData = self:GetTeamData(index);
-	if teamData ~= nil then
-		PlayerProto:SaveTeam(teamData, callBack);
+	local assistCid=teamData:GetAssistID();
+	if assistCid~=nil then--有助战卡牌则去除助战卡牌
+		teamData:RemoveCard(assistCid);
 	end
+	self:SaveDataByIndex(teamData:GetIndex(), teamData)
+	PlayerProto:SaveTeam(teamData, callBack);
+end
+
+function this:SaveDatas(teams,callBack)
+	if teams==nil or #teams==0 then
+		LogError("队伍数据不得为空！")
+		do return end
+	end
+	local list={};
+	for k,v in ipairs(teams) do --删除助战卡并更新本地数据
+		if v:GetIndex()~=nil and v:GetIndex()>=1 then
+			local assistCid=v:GetAssistID();
+			if assistCid~=nil then--有助战卡牌则去除助战卡牌
+				v:RemoveCard(assistCid);
+			end
+			self:SaveDataByIndex(v:GetIndex(), v)
+			table.insert(list,v);
+		end
+	end
+	PlayerProto:SaveTeamList(list, callBack);
 end
 
 -------------------------------------------------------强制上阵的队伍数据(保存在本地)
@@ -378,8 +348,8 @@ end
 -------------------------------------------------------end
 
 --返回修改中的队伍数据(当前所选的队伍)
-function this:GetEditTeam()
-	local index=self.currentIndex;
+function this:GetEditTeam(_index)
+	local index=_index or self.currentIndex;
 	self.editTeams=self.editTeams or {}
 	if index~=nil and index~=-1 and self.editTeams[index]==nil then
 		local teamData=self:GetTeamData(index);
@@ -416,11 +386,12 @@ end
 function this:SaveEditTeam(callBack)
 	local index=self.currentIndex;
 	if self.editTeams and self.editTeams[index] then
-		saveIndex=nil;
-		if (index >= eTeamType.DungeonFight and index <= g_FormationMaxNum) or (index >= eTeamType.ForceFight)then
+		local saveIndex=nil;
+		if (self:CheckSingleCard(index))then
 			--剧情队伍/强制上阵队伍
 			--判断当前队伍中的卡牌是否包含其他队伍的，有的话就将影响到的卡牌一起保存
 			saveIndex=saveIndex or {};
+			local teamType=self:GetTeamType(index)
 			for key,val in ipairs(self.editTeams[index].data) do
 				--检查AI策略是否正确，不正确则修正
 				local realAIIndex=FormationUtil.GetOrderByTeamIndex(index);--获取对应的AI预设ID
@@ -429,12 +400,12 @@ function this:SaveEditTeam(callBack)
 					teamItem:SetStrategyIndex(realAIIndex);
 				end
 				local oldIndex=-1
-				if index>= eTeamType.DungeonFight and index <= g_FormationMaxNum then --普通队伍
-				 	oldIndex=self:GetCardTeamIndex(val.cid);
-				elseif index >= eTeamType.ForceFight then --强制上阵队伍
+				if index >= eTeamType.ForceFight then --强制上阵队伍
 					local dungeonId=tostring(index);
 					dungeonId=tostring(string.sub(dungeonId,1,string.len(dungeonId)-1));
 					oldIndex=self:GetCardForceIndex(dungeonId,val.cid);
+				else --普通队伍
+					oldIndex=self:GetCardTeamIndex(val.cid,teamType);
 				end
 				--从旧队伍中移除卡牌
 				if oldIndex~=-1 and oldIndex~=index then
@@ -478,39 +449,32 @@ function this:SaveEditTeam(callBack)
 			end
 			table.insert(saveIndex,index);
 		end
-		--本地保存修改数据
-		local assistCid=self.editTeams[index]:GetAssistID();
-		if assistCid==nil then --不存在助战卡牌
-			self:SaveDataByIndex(index, self.editTeams[index])
-		else--有助战卡牌则去除助战卡牌
-			self.editTeams[index]:RemoveCard(assistCid);
-			self:SaveDataByIndex(index, self.editTeams[index])
-		end
-		self:DelEditTeam(index);
 		if saveIndex then
 			local teams={};
 			for k,v in ipairs(saveIndex) do
 				local func=k==#saveIndex and callBack or nil;
 				if v == eTeamType.Assistance then
-					self:SaveData(v,func);
+					self:SaveData(self:GetTeamData(v,true),func);
 				elseif(v >= eTeamType.ForceFight) then
 					self:SaveForceTeam(v);
 					if func~=nil then
 						func();
 					end
 				else
-					table.insert(teams,self:GetTeamData(v));
+					table.insert(teams,self:GetTeamData(v,true));
 				end
 			end
 			if #teams>0 then
-				PlayerProto:SaveTeamList(teams,callBack);
+				self:SaveDatas(teams,callBack);
 			end
 			saveIndex=nil;
 		end
+		self:DelEditTeam(index);
 	elseif callBack then
 		callBack();
 	end
 end
+
 
 --删除修改的队伍数据
 function this:DelEditTeam(index)
@@ -701,15 +665,8 @@ function this:DuplicateTeamData(index,teamData)
         LogError(teamData:GetData());
         return
     end
-	-- local config=self:LoadStrategyConfig();
 	local bIsReserveSP=teamData:GetIsReserveSP();
 	local nReserveNP=teamData:GetReserveNP();
-	-- local target=nil;
-	-- if config then
-	-- 	bIsReserveSP=config[string.format("team%sSP",index)]
-	-- 	nReserveNP=config[string.format("team%sNP",index)]
-	-- 	-- target=config.target;
-	-- end
     local duplicateTeamData = {nTeamIndex = teamData.index, team = list,nSkillGroup=teamData.skillGroupID,bIsReserveSP=bIsReserveSP,nReserveNP=nReserveNP}
     return duplicateTeamData;
 end
@@ -780,7 +737,6 @@ function this:ResetFightTeam(data)
 					card = proto.cards[1],
 					index=1,
 				};
-				-- LogError(proto.cards[1])
 				FriendMgr:AddAssistData(assistData);
 			end
 			local data = {
@@ -798,26 +754,6 @@ function this:ResetFightTeam(data)
 			self:AddFightTeamData(fightTeam);
 			UIUtil:AddFightTeamState(1,"TeamMgr:ResetFightTeam()  Step1")
 		end);
-		-- FriendProto:GetAssitInfo(fuid,function(proto)
-		-- 		for k,v in ipairs(proto.assits) do
-		-- 			for _,card in ipairs(v.cards) do
-		-- 				local cardData = Cfgs.CardData:GetByID(card.cfgid)
-		-- 				if cardData ~= nil then
-		-- 					FriendMgr:AddAssistData(
-		-- 					{
-		-- 						uid = v.uid,
-		-- 						name = v.name,
-		-- 						alias = v.alias,
-		-- 						modelId = v.icon_id,
-		-- 						lv = v.level,
-		-- 						index=1,
-		-- 						card = card,
-		-- 						teamIndex = v.cid==assistCid and currTeam:GetIndex() or nil,
-		-- 					});
-		-- 				end
-		-- 			end
-		-- 		end
-		-- end);
 	else
 		local data = {
 			index = currTeam.index,
@@ -881,14 +817,6 @@ end
 -------------------------------------------------------助战卡牌对应队伍数据-----------------
 function this:AddAssistTeamIndex(cid, index)
 	if cid and self.assistTeamIndex then
-		-- local key=nil;
-		-- for k,v in pairs(self.assistTeamIndex) do--删除重复的助战卡
-		-- 	if v==index then
-		-- 		key=k;
-		-- 		break;
-		-- 	end
-		-- end
-		-- self.assistTeamIndex[key]=nil;
 		self.assistTeamIndex[cid] = index
 	end
 end
@@ -931,6 +859,7 @@ function this:ClearAssistTeamIndex()
 end
 -------------------------------------------------------end
 
+-----------------------------------------------------界面数据缓存--------------------------
 function this:SaveStrategyConfig(tab)
 	if tab then
 		FileUtil.SaveToFile("Strategy.txt", tab);
@@ -988,6 +917,22 @@ function this:SaveViewerOption(is3D)
 	self:SetViewerOption(is3D)
 	FileUtil.SaveToFile("TeamViewSelected.txt",{is3D=self:GetViewerOption()})
 end
+-----------------------------------------------------界面数据缓存--------------------------
+
+------------------------------------------待删除-----------------------
+--返回主线队伍的冷却状态 (无用，待删除，目前队伍没有冷却状态)
+function this:GetDuplicateTeamCoolState()
+	local dic={};
+	local teams=self:GetTeamDatasByType(eTeamType.DungeonFight);
+	if teams then
+		for k,v in ipairs(teams) do
+			dic[v:GetIndex()]=v:GetCoolState();
+		end
+	end
+	return dic;
+end
+
+------------------------------------------待删除-----------------------
 
 function this:Clear()
 	self.isAddtive1 = nil
@@ -1002,6 +947,7 @@ function this:Clear()
 	self.assistTeamIndex={};
 	self.assistDatas=nil;
 	self.is3D=false;
+	self.preLoad=false;
 end
 
 return this; 

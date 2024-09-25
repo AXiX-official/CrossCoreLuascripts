@@ -61,7 +61,7 @@ end
 -----------------------------Root1的逻辑-------------------------
 
 function OnNameChange(text)
-    local name=StringUtil:FilterChar(text);
+    local name=StringUtil:FilterChar2(text);
     inpName.text=name;
 end
 

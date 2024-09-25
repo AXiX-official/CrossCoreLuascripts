@@ -153,11 +153,15 @@ function OnClickQuit()
     local tips = {}
 	tips.content = LanguageMgr:GetTips(7000)
 	tips.okCallBack = function()
-		if CSAPI.IsChannel() then
-			EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand, nil, true);
-		else
-			Logout();
-		end
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then
+            Logout();
+        else
+            if CSAPI.IsChannel() then
+                EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand, nil, true);
+            else
+                Logout();
+            end
+        end
 	end
 	CSAPI.OpenView("Dialog", tips)	
 end

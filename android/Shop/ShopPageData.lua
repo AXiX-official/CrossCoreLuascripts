@@ -148,7 +148,11 @@ function this:GetRefreshInfos(topTabID)
 				local endTime=itemData:GetBuyEndTime();
 				local resetTime=itemData:GetResetTime();;
 				-- if itemData:HasData() and ((itemData:GetResetType()~=0 and (resetTime==0 or nowTime<=resetTime)) or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) and ((topTabID~=nil and itemData:GetTabID()==topTabID) or topTabID==nil) then 
-				if itemData:HasData() and ((itemData:GetResetType()~=0 and (itemData:GetResetTime()==0 or nowTime<=itemData:GetResetTime())) or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) and ((topTabID~=nil and itemData:GetTabID()==topTabID) or topTabID==nil) then 
+				local canAdd=true;
+				if CSAPI.IsAppReview() and self:GetShowType()==6 and itemData:GetType()==CommodityItemType.Skin and itemData:GetID()~=ShopCommFunc.fixedSkinID then--皮肤
+					canAdd=false;
+				end
+				if itemData:HasData() and ((itemData:GetResetType()~=0 and (itemData:GetResetTime()==0 or nowTime<=itemData:GetResetTime())) or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) and ((topTabID~=nil and itemData:GetTabID()==topTabID) or topTabID==nil) and canAdd==true then 
 					-- if itemData:GetID()==80001 then
 					-- 	LogError("22222222222222222222");
 					-- end
@@ -181,6 +185,9 @@ function this:GetCommodityInfos(isLimit,topTabID)
 					canAdd=false;
 				end
 				if itemData:IsShow()~=true or (itemData:IsOver() and itemData:ShowOnSoldOut()~=true) then--售罄时不显示的数据
+					canAdd=false;
+				end
+				if CSAPI.IsAppReview() and self:GetShowType()==6 and itemData:GetType()==CommodityItemType.Skin and canAdd==true and itemData:GetID()~=ShopCommFunc.fixedSkinID then--皮肤
 					canAdd=false;
 				end
 				-- if itemData:GetShopID()==4 then
@@ -293,6 +300,14 @@ function this:GetTopTabs(isFitler)
 			end
 		else
 			list=cfgs;
+		end
+		if CSAPI.IsAppReview() and list then
+			for k,v in ipairs(list) do
+				if v.id==ShopCommFunc.fixedHideTab then
+					table.remove(list,k);
+					break;
+				end
+			end
 		end
 		if list then
 			table.sort(list,function(a,b)

@@ -12,12 +12,17 @@ local currIndex=2;
 local currItemData=nil
 local items={};
 function Awake()
+    if CSAPI.IsADV() then
+         currType=PayType.ZiLongDeductionvoucher;--紫龙抵扣券
+         confType=PaySelectConf.AdvPay;--海外类型local commodity=nil;
+    end
     CSAPI.SetText(txt_moneyType,LanguageMgr:GetByID(18013));
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.SDK_Pay_Result,OnSDKPayResult)
     eventMgr:AddListener(EventType.SDK_Pay_QRURL,OnQRResult)
     eventMgr:AddListener(EventType.SDK_QRPay_Over,OnQROver)
     eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopRefresh)
+    eventMgr:AddListener(EventType.SDK_Deduction_voucher_paymentcompleted,OnShopRefresh)
 end
 
 function OnShopRefresh()
@@ -35,19 +40,64 @@ function OnOpen()
     func=data.func or nil;
     SetItemData();
     Refresh();
-    if not CSAPI.IsPCPlatform() then
-        local pName=CSAPI.GetPlatform()==8 and "alipay://" or "com.eg.android.AlipayGphone";
-        CSAPI.IsInstallApp("com.eg.android.AlipayGphone");
-    end 
+    if CSAPI.IsADV() then
+        if AdvDeductionvoucher.SDKvoucherNum>0 then
+            Log("商品信息："..table.tostring(data.commodity))
+            --if AdvDeductionvoucher.IsDeductionvoucher==true then
+            --    OnCloseNode()
+            --end
+        else
+            OnCloseNode()
+        end
+    else
+        if not CSAPI.IsPCPlatform() then
+            local pName=CSAPI.GetPlatform()==8 and "alipay://" or "com.eg.android.AlipayGphone";
+            CSAPI.IsInstallApp("com.eg.android.AlipayGphone");
+        end
+    end
+
 end
+function IsTWOnClickOK()
+    print("拉起支付数据")
+    ---LogError("---------拉起支付数据----------------")
+    local tempType=currType;
+    local isInstall=false;
+    if currItemData then
+        if not CSAPI.IsPCPlatform() then
+            local pName=CSAPI.GetPlatform()==8 and currItemData.iPName or currItemData.pName;
+            isInstall=CSAPI.IsInstallApp(pName);
+        end
+        if not isInstall then --安装微信/支付宝客户端
+            tempType=currItemData.qrType;
+        end
+    end
+    ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall)
+end
+
+
 
 function Refresh()
     SetLayout(false)
     RefreshItems();
     if commodity then
-        CSAPI.SetText(txt_name,commodity:GetName());
-        local realPrice=commodity:GetRealPrice();
-        CSAPI.SetText(txt_price,tostring(realPrice[1].num*num));
+        if CSAPI.IsADV() then
+            CSAPI.SetText(txt_name,commodity:GetName());
+            local displayCurrency=commodity["data"]["displayCurrency"];
+            if displayCurrency==nil then displayCurrency="" end
+            CSAPI.SetText(txt_moneyType,displayCurrency);
+            local realPrice=commodity["data"]["displayPrice"];
+            if realPrice==nil then
+                local realPrice1=commodity:GetRealPrice();
+                realPrice=realPrice1[1].num*num;
+            end
+            CSAPI.SetText(txt_price,tostring(realPrice));
+
+        else
+            CSAPI.SetText(txt_name,commodity:GetName());
+            local realPrice=commodity:GetRealPrice();
+            CSAPI.SetText(txt_moneyType,LanguageMgr:GetByID(18013));
+            CSAPI.SetText(txt_price,tostring(realPrice[1].num*num));
+        end
     end
 end
 
@@ -69,12 +119,50 @@ function SetItemData()
         currType=PayType.BsAli;
         currIndex=2;
         currItemData=itemDatas[currIndex];
+    elseif confType==PaySelectConf.AdvPay then
+        itemDatas={
+            {icon="img_41_03",tipsID=18314,type=PayType.ZiLongDeductionvoucher,qrType=PayType.ZiLongDeductionvoucher,pName="",iPName="",},
+            {icon="img_41_03",tipsID=18315,type=PayType.ZiLong,qrType=PayType.ZiLong,pName="",iPName=""},
+        };
+        currType=PayType.ZiLong;
+        currIndex=2;
+        currItemData=itemDatas[currIndex];
     end
 end
 
 function RefreshItems()
     --初始化子物体
     ItemUtil.AddItems("SDK/SDKPayItem", items, itemDatas, layout, OnSelectType, 1, {currType=currType});
+    if CSAPI.IsADV() then
+        if currType==PayType.ZiLong then
+            if commodity then
+                CSAPI.SetText(txt_name,commodity:GetName());
+                local displayCurrency=commodity["data"]["displayCurrency"];
+                if displayCurrency==nil then displayCurrency="" end
+                CSAPI.SetText(txt_moneyType,displayCurrency);
+                local realPrice=commodity["data"]["displayPrice"];
+                if realPrice==nil then
+                    local realPrice1=commodity:GetRealPrice();
+                    realPrice=realPrice1[1].num*num;
+                end
+                CSAPI.SetText(txt_price,tostring(realPrice));
+            end
+        elseif currType==PayType.ZiLongDeductionvoucher then
+            if commodity then
+                CSAPI.SetText(txt_name,commodity:GetName());
+                local realPrice=commodity["cfg"]["amount"];
+                if realPrice then
+                    CSAPI.SetText(txt_moneyType,"");
+                    CSAPI.SetText(txt_price,tostring(math.floor(realPrice/100)));
+                else
+                    local realPrice1=commodity:GetRealPrice();
+                    realPrice=realPrice1[1].num*num;
+                    CSAPI.SetText(txt_moneyType,"");
+                    CSAPI.SetText(txt_price,tostring(math.floor(realPrice)));
+                end
+            end
+        end
+    end
 end
 
 function SetLayout(isQRCode)
@@ -135,14 +223,19 @@ end
 function OnClickOK()
     local tempType=currType;
     local isInstall=false;
-    if currItemData then
-        if not CSAPI.IsPCPlatform() then
-            local pName=CSAPI.GetPlatform()==8 and currItemData.iPName or currItemData.pName;
-            isInstall=CSAPI.IsInstallApp(pName);
-        end       
-        if not isInstall then --安装微信/支付宝客户端
-            tempType=currItemData.qrType;
+    if  CSAPI.IsADV() and currType==PayType.ZiLongDeductionvoucher then
+        ---海外才有紫龙支付
+        ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall)
+    else
+        if currItemData then
+            if not CSAPI.IsPCPlatform() then
+                local pName=CSAPI.GetPlatform()==8 and currItemData.iPName or currItemData.pName;
+                isInstall=CSAPI.IsInstallApp(pName);
+            end
+            if not isInstall then --安装微信/支付宝客户端
+                tempType=currItemData.qrType;
+            end
         end
+        ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall)
     end
-    ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall)
 end

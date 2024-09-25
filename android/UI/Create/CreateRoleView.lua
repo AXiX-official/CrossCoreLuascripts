@@ -20,9 +20,15 @@ function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.Role_FirstCreate_End, FirstEnd)
+
+    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
 end
 
 function OnDestroy()
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
+    if CSAPI.IsADV() then AdvGuiDeScore.GameAdvGuiDeScore() end
     eventMgr:ClearListener()
     -- SettingMgr:SetMusic(true)
     --EventMgr.Dispatch(EventType.Replay_BGM)
@@ -35,12 +41,26 @@ function OnViewOpened(viewKey)
     end
 end
 
+---判断是否可以打开  分享按钮
+function OpenShareBtn()
+    local rewards = data[1]
+    local quality = GetMaxQuality(rewards)
+    if quality>=6 and  CSAPI.IsMobileplatform then
+        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+            CSAPI.SetGOActive(ShareBtn, true);
+        else
+            CSAPI.SetGOActive(ShareBtn, false);
+        end
+    else
+        CSAPI.SetGOActive(ShareBtn, false)
+    end
+end
 -- {rewards, isFirst10, poolId}
 function OnOpen()
     local rewards = data[1]
     -- local goodsDatas = data[4] or {}
     local quality = GetMaxQuality(rewards)
-
+    OpenShareBtn();
     for i, v in ipairs(items) do
         -- v.Refresh(rewards[i], goodsDatas[rewards[i].id])
         v.Refresh(rewards[i], rewards[i].goodsData)
@@ -70,8 +90,19 @@ function OnOpen()
     end
 
     CSAPI.PlayUICardSound("ui_card_draw_summary_start")
+    if CSAPI.IsADV() then
+        JudgNewPlayer(data)
+    end
 end
-
+---判断新玩家
+function JudgNewPlayer(data)
+    if(1003==data[3]) then
+        local curData = CreateMgr:GetData(1003)
+        if(curData and curData:GetCount()<=1 ) then
+            BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_FIRST)
+        end
+    end
+end
 function GetMaxQuality(rewards)
     local quality = 3
     for i, v in ipairs(rewards) do
@@ -109,7 +140,18 @@ function OnClickMask()
         view:Close()
     end
 end
+function OnClickShareBtn()
+    CSAPI.OpenView("ShareView",{LocationSource=1})
+end
+---截图前一帧通知
+function ShareView_NoticeTheNextFrameScreenshot(Data)
+    CSAPI.SetGOActive(itemParent, false);
+end
 
+---截图完成通知
+function ShareView_NoticeScreenshotCompleted(Data)
+    OpenShareBtn();
+end
 function FirstEnd()
     view:Close()
 end

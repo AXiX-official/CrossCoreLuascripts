@@ -442,8 +442,8 @@ function this.SortFunc_1007(a, b)
     end
 end
 function this.SortFunc_1008(a, b)
-    local i1 = TeamMgr:GetCardTeamIndex(a:GetID(), true)
-    local i2 = TeamMgr:GetCardTeamIndex(b:GetID(), true)
+    local i1 = TeamMgr:GetCardTeamIndex(a:GetID(),eTeamType.DungeonFight, true)
+    local i2 = TeamMgr:GetCardTeamIndex(b:GetID(),eTeamType.DungeonFight, true)
     local index1 = (i1 == nil or i1 == -1) and 10000 or tonumber(i1)
     local index2 = (i2 == nil or i2 == -1) and 10000 or tonumber(i2)
 

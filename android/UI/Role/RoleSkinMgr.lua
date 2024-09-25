@@ -23,32 +23,28 @@ function this:Clear()
     self.newAddCards = {}
 end
 
--- 获取皮肤列表(已混合变身、同调的皮肤) --- 默认不包含解禁的皮肤
+-- 获取皮肤列表(已混合变身、同调的皮肤) --- 默认不包含解禁的皮肤,不显示的皮肤
 function this:GetDatas(cfgid, containJieJin)
-    if (containJieJin) then
-        return self.datas[cfgid]
-    else
-        local dic = {}
-        local _dic = self.datas[cfgid]
-        for k, v in pairs(_dic) do
-            if (not v:CheckIsJieJin()) then
-                dic[k] = v
-            end
+    local dic = {}
+    local _dic = self.datas[cfgid]
+    for k, v in pairs(_dic) do
+        if (not v:IsHide() and (containJieJin or not v:CheckIsJieJin())) then
+            dic[k] = v
         end
-        return dic
     end
+    return dic
 end
 
 -- 获取某张卡牌某个皮肤的对象  ： 角色id，模型id
 function this:GetRoleSkinInfo(cfgId, modelID)
     if cfgId and modelID then
-        local list = self:GetDatas(cfgId,true)
+        local list = self:GetDatas(cfgId, true)
         return list and list[modelID] or nil
     end
     return nil;
 end
 
---通过模型表id获取皮肤数据
+-- 通过模型表id获取皮肤数据
 function this:GetSkinInfoByModelID(modelID)
     local cfg = Cfgs.character:GetByID(modelID)
     return self:GetRoleSkinInfo(cfg.role_id, modelID)

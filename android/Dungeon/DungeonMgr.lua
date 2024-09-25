@@ -31,6 +31,7 @@ SectionActivityType = {
     Trials = 106, --试炼
     TotalBattle = 107, --十二星宫
     Rogue = 108,--乱序演习
+    RogueS = 109,--乱序演习
 }
 
 --章节活动开启类型
@@ -683,7 +684,9 @@ function this:ApplyEnter(id, indexList, duplicateTeamDatas)
     }
     local dungeonCfg = Cfgs.MainLine:GetByID(id);
     -- LogError(data.list)
-    if dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
+    if (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueS) then -- 直接进入战斗的副本
+        FightProto:EnterRogueSFight()
+    elseif dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
         self:SetFightTeamId(indexList[1]); -- 设置正在战斗中的队伍id
 
         self:SetCurrId(id)
@@ -1183,7 +1186,7 @@ function this:SendToQuit()
             nDuplicateID = currId
         });
     end
-    self:SetCurrId()
+    -- self:SetCurrId()
 end
 
 -- 战斗结束数据
@@ -1417,7 +1420,11 @@ function this:IsActivityRed()
     if not isRed then --乱序
         isRed = RogueMgr:IsRed()
     end
-    
+
+    if not isRed then --战力派遣
+        isRed = RogueSMgr:IsRed()
+    end
+
     return isRed
 end
 

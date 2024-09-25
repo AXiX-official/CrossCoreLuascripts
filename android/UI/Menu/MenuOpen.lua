@@ -16,6 +16,7 @@
 -- 		SignInMgr:CheckAll()
 -- 	end
 -- end
+local IsOpenomailbox=false;
 -- 副产品获得的奖励界面
 function Awake()
     fade = ComUtil.GetCom(gameObject, "ActionFade")
@@ -43,12 +44,19 @@ function SetPanel()
     local datas = MenuMgr:GetWaitDatas()
     items = items or {}
     ItemUtil.AddItems("Popup/MenuOpenItem", items, datas, node,ItemClickCB)
-
+    if CSAPI.IsADV() then
+        for i, v in pairs(datas) do
+            if tostring(datas[i]["cfg"]["key"])=="MailView" then
+                IsOpenomailbox=true;
+            end
+        end
+    end
     BD(datas)
 end
 
 function ItemClickCB()
     view:Close()
+    ReservationRewards()
 end
 
 function OnClickMask()
@@ -57,8 +65,20 @@ function OnClickMask()
     end
     fade:Play(1, 0, 167, 0, function()
         view:Close()
+        ReservationRewards()
     end)
 end
+
+function ReservationRewards()
+    if CSAPI.IsADV() then
+        if IsOpenomailbox then
+            IsOpenomailbox=false;
+            ShiryuSDK.IsEnterhall=true;
+            AdvGoogleGit.GoogleReservationRewards();
+        end
+    end
+end
+
 
 function AnimStart()
     CSAPI.SetGOActive(UIMaskGo, true)
@@ -67,7 +87,13 @@ end
 function AnimEnd()
     CSAPI.SetGOActive(UIMaskGo, false)
 end
-
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if ItemClickCB then
+        ItemClickCB();
+    end
+end
 --通关0-1打点一次
 function BD(datas)
     for k, v in pairs(datas) do

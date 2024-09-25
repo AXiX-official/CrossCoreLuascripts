@@ -70,8 +70,11 @@ function EOperate(proto)
             item_gain = item_gains,
             send_time = TimeUtil:GetTimeStr2(data.start_time or 0)
         }
-    
-        BuryingPointMgr:TrackEvents("mail", taData)
+
+        if CSAPI.IsADV() == false then
+            BuryingPointMgr:TrackEvents("mail", taData)
+        end
+
     end  
 end
 

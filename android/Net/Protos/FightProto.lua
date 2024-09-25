@@ -95,7 +95,7 @@ function FightProto:RecvCmd(proto)
     ASSERT(data)
     proto[3] = data
     if cmd == CMD_TYPE.InitData then
-        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue then
+        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS then
             if not g_bRestartFight then
                 FightActionMgr:Start()
             end
@@ -737,7 +737,7 @@ function FightProto:InBattle(proto)
         self:SetRestoreFightProto(proto);
     end
 
-    if (proto.type == SceneType.PVE) then
+    if (proto.type == SceneType.PVE or proto.type == SceneType.RogueS) then
         DungeonMgr:SetCurrId(proto.nDuplicateID);
         DungeonMgr:SetCurrFightId(proto.nDuplicateID);
     end
@@ -758,7 +758,27 @@ end
 
 -- 显示恢复战斗对话框
 function FightProto:ShowRestoreFightDialog(isShow)
+    --RogueS恢复战斗 
+    local _data = RogueSMgr:GetFightingRogueSData()
+    if(_data) then 
+        --有引导
+        local round = _data.round
+        RogueSMgr:FightingRogueSData(nil)
+        if (not isShow) then
+            FightProto:RogueSQuit()
+        else 
+            UIUtil:OpenDialog(LanguageMgr:GetTips(8022), function ()
+                FightProto:EnterRogueSFight(round+1)
+            end, function ()
+                FightProto:RogueSQuit()
+            end)
+        end
+        -- 
+        return 
+    end 
+    -- 
     local id = DungeonMgr:GetCurrFightId();
+    --LogError(id)
     if (not id) then
         id = self.restoreFightProto and self.restoreFightProto.nDuplicateID;
         if (not id) then
@@ -1116,4 +1136,67 @@ function FightProto:RogueOver(proto)
         self.QuitRogueFightCB()
     end
     self.QuitRogueFightCB = nil
+end
+
+-------------------------------战力派遣-----------------------------------------
+function FightProto:GetRogueSInfo()
+    local proto = {"FightProtocol:GetRogueSInfo"}
+    NetMgr.net:Send(proto)
+end
+function FightProto:GetRogueSInfoRet(proto)
+    RogueSMgr:GetRogueSInfoRet(proto)
+end
+
+--在结算时中断 FightingRogueSData     （非战斗中断的线)
+--战斗中断     InBattle               （战斗中断的线)
+function FightProto:FightingRogueSData(proto)
+    if(SceneMgr:IsMajorCity()) then 
+        RogueSMgr:FightingRogueSData(proto)
+    end
+end
+
+--进入战斗
+function FightProto:EnterRogueSDuplicate(_id,_list)
+    local proto = {"FightProtocol:EnterRogueSDuplicate",{id=_id,list=_list}}
+    NetMgr.net:Send(proto)
+end
+
+ --重复本轮或者下一轮
+function FightProto:EnterRogueSFight(_round,_cb)
+    self.EnterRogueSFightCB = _cb
+    local proto = {"FightProtocol:EnterRogueSFight",{round=_round}}
+    NetMgr.net:Send(proto)
+end
+function FightProto:EnterRogueSFightRet(proto)
+    if(self.EnterRogueSFightCB) then 
+        self.EnterRogueSFightCB()
+    end
+    self.EnterRogueSFightCB = nil
+end
+--结束信息
+function FightProto:RogueSOver(proto)
+    local isSurrender = FightClient:IsSurrender();
+    FightOverTool.RogueSInfoUpdate(proto,isSurrender)
+end
+
+--放弃
+function FightProto:RogueSQuit()
+    local proto = {"FightProtocol:RogueSQuit"}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueSQuitRet(proto)
+
+end
+--战力派遣领取星数奖励
+function FightProto:RogueSGain(_ty,_cb)
+    self.RogueSGainCB = _cb 
+    local proto = {"FightProtocol:RogueSGain",{ty= _ty}}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueSGainRet(proto) 
+    RogueSMgr:RogueSGainRet(proto.gained)
+    if(self.RogueSGainCB) then
+        self.RogueSGainCB()
+    end
+    self.RogueSGainCB = nil
 end

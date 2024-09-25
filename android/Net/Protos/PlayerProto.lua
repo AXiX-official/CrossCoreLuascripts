@@ -75,16 +75,6 @@ end
 function PlayerProto:TeamData(proto)
     LogDebug("队伍编成数据===========================")
     TeamMgr:SetData(proto);
-
-    -- 预加载第一编队
-    local modelIds = nil;
-    local team1Data = TeamMgr:GetTeamData(1);
-    for k, v in pairs(team1Data.data) do
-        modelIds = modelIds or {};
-        table.insert(modelIds, v:GetModelID());
-    end
-    -- LogError(modelIds);
-    CharacterMgr:Preload(modelIds);
 end
 
 function PlayerProto:SaveTeam(teamData, callBack)
@@ -221,7 +211,9 @@ function PlayerProto:CardUpgradeRet(proto)
         _datas.hero_id = cardData:GetID()
         _datas.hero_name = cardData:GetName()
         _datas.hero_level = cardData:GetLv()
-        BuryingPointMgr:TrackEvents("roleUpgrade", _datas)
+        if CSAPI.IsADV()==false then
+            BuryingPointMgr:TrackEvents("roleUpgrade", _datas)
+        end
     end
 end
 
@@ -243,7 +235,9 @@ function PlayerProto:CardBreakRet(proto)
         _datas.hero_id = cardData:GetID()
         _datas.hero_name = cardData:GetName()
         _datas.hero_yuesheng = cardData:GetBreakLevel()
-        BuryingPointMgr:TrackEvents("RoleLeap", _datas)
+        if CSAPI.IsADV()==false then
+            BuryingPointMgr:TrackEvents("RoleLeap", _datas)
+        end
     end
 end
 
@@ -317,7 +311,9 @@ function PlayerProto:CardSkillUpgradeFinishRet(proto)
             _datas.skill_oldid = v.ids[1]
             _datas.skill_newid = v.ids[2]
             _datas.skill_level = skillCfg.lv
-            BuryingPointMgr:TrackEvents("SkillUpgrading", _datas)
+            if CSAPI.IsADV()==false then
+                BuryingPointMgr:TrackEvents("SkillUpgrading", _datas)
+            end
         end
     end
 end
@@ -429,7 +425,6 @@ function PlayerProto:DailyData(proto)
 
     end
 
-
     -- 每日刷新 --放到SystemProto:ActiveZeroNotice
     -- EventMgr.Dispatch(EventType.Update_Everyday)
 end
@@ -454,6 +449,10 @@ end
 
 function PlayerProto:SectionMultiInfoRet(proto)
     DungeonMgr:UpdateSectionMultiInfo(proto.infos);
+end
+
+function PlayerProto:NotifyDupDrop(proto)
+    EventMgr.Dispatch(EventType.Dungeon_Double_Update)
 end
 
 --------------------------------玩家
@@ -595,6 +594,8 @@ function PlayerProto:GetClientDataRet(proto)
         LogError(data);
         -- elseif(key == RoleSkillMgr.idDatasKey) then
         -- 	RoleSkillMgr:GetSuccessDatasRet(data)
+    elseif (key=="passiveRed_isLook") then
+        RoleMgr:PassiveRedIsLook(data)
     end
 end
 
@@ -646,7 +647,9 @@ function PlayerProto:MainTalentUpgradeRet(proto)
     _datas.skill_oldid = proto.skill_id
     _datas.skill_newid = proto.new_skill_id
     _datas.skill_level = skillCfg.lv
-    BuryingPointMgr:TrackEvents("SkillUpgrading", _datas)
+    if CSAPI.IsADV()==false then
+        BuryingPointMgr:TrackEvents("SkillUpgrading", _datas)
+    end
 end
 
 -- 随机副天赋(学习)
@@ -775,8 +778,10 @@ function PlayerProto:UpgradeSubTalentRet(proto)
     _datas.hero_name = cardData:GetName()
     _datas.skill_id = ids[proto.index]
     _datas.skill_level = proto.index
-    BuryingPointMgr:TrackEvents("PassiveSkill", _datas)
 
+    if CSAPI.IsADV()==false then
+        BuryingPointMgr:TrackEvents("PassiveSkill", _datas)
+    end
     LanguageMgr:ShowTips(3012)
 end
 -- 副天赋设置(返回卡牌更新)
@@ -906,7 +911,9 @@ function PlayerProto:CardCoreLvRet(proto)
         _datas.hero_id = cardData:GetID()
         _datas.hero_name = cardData:GetName()
         _datas.hero_level_max = cardData:GetMaxLv()
-        BuryingPointMgr:TrackEvents("RoleBreak", _datas)
+        if CSAPI.IsADV()==false then
+            BuryingPointMgr:TrackEvents("RoleBreak", _datas)
+        end
     end
 end
 
@@ -1324,26 +1331,6 @@ function PlayerProto:TakeColletRewardRet(proto)
     self.TakeColletRewardCB = nil 
 end
 
---活动排行榜
-function PlayerProto:GetRank(page,sid)
-    local proto = {"PlayerProto:GetRank", {nPage=page,rank_type=sid}}
-    NetMgr.net:Send(proto)
-end
-
---活动排行榜返回
-function PlayerProto:GetRankRet(proto)
-    DungeonActivityMgr:GetRankRet(proto)
-end
-
-function PlayerProto:GetOpenConditionTime()
-    local proto = {"PlayerProto:GetOpenConditionTime", {}}
-    NetMgr.net:Send(proto)
-end
-
-function PlayerProto:GetOpenConditionTimeRet(proto)
-    PlayerMgr:SetOpenTimes(proto)
-end 
-
 --改性
 function PlayerProto:ChangePlrShpae(data, callBack)
     local proto = {"PlayerProto:ChangePlrShpae",data}
@@ -1383,4 +1370,47 @@ function PlayerProto:SetNewPanelUsing(_using)
 end
 function PlayerProto:SetNewPanelUsingRet(proto)
     CRoleDisplayMgr:SetNewPanelUsingRet(proto)
+end
+
+--活动排行榜
+function PlayerProto:GetRank(page,sid)
+    local proto = {"PlayerProto:GetRank", {nPage=page,rank_type=sid}}
+    NetMgr.net:Send(proto)
+end
+
+--活动排行榜返回
+function PlayerProto:GetRankRet(proto)
+    DungeonActivityMgr:GetRankRet(proto)
+end
+
+function PlayerProto:GetOpenConditionTime()
+    local proto = {"PlayerProto:GetOpenConditionTime", {}}
+    NetMgr.net:Send(proto)
+end
+
+function PlayerProto:GetOpenConditionTimeRet(proto)
+    PlayerMgr:SetOpenTimes(proto)
+end
+
+--获取已拥有的音乐
+function PlayerProto:GetAllMusic()
+    local proto = {"PlayerProto:GetAllMusic"}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:GetAllMusicRet(proto)
+    
+end
+
+---支付完成订单通知	游戏订单id	中台订单id
+------3639
+function PlayerProto:PayFinishOrderId(proto)
+    if proto then
+        if CSAPI.IsDomestic() then
+            if proto.gameOrderId then
+                ShiryuSDK.ClosePurchasePage(proto.gameOrderId)
+            else
+                LogError(" PlayerProto:PayFinishOrderId:"..tostring(proto,true))
+            end
+        end
+    end
 end

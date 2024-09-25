@@ -8,9 +8,9 @@ require "RegionalSet"
 ShiryuSDK={}
 local  this=ShiryuSDK;
 
-if CSAPI.IsADV() then
-    MJSdkManagerImpl=CS.MJSdkBridge.MJSdkManagerImpl:GetInstance();
-    CShiryuSDK=CS.ShiryuSDK.Instance;
+if CSAPI.IsADV() or CSAPI.IsDomestic() then
+MJSdkManagerImpl=CS.MJSdkBridge.MJSdkManagerImpl:GetInstance();
+CShiryuSDK=CS.ShiryuSDK.Instance;
 end
 ---2.SDK获取数据
 this.SdkProperties={}
@@ -56,7 +56,7 @@ this.IsEnterhall=false;
 function this.Init()
     if this.IsInit then return; end
     this.IsInit=true
-    if CSAPI.IsADV() then
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
         Log("zilong SDK Init  ----start")
         CSAPI.AddEventListener(EventType.SDK_ShiryuSDK_Init_complete,this.SDKShiryuSDKInitcomplete)
         CSAPI.AddEventListener(EventType.SDK_ShiryuSDK_GetSdkProperties_complete,this.SDKShiryuSDKGetSdkPropertiescomplete)
@@ -68,8 +68,8 @@ function this.Init()
 end
 ---1.SDK初始化完成返回
 function this.SDKShiryuSDKInitcomplete(datapacket)
-         Log("-zilong--SDK init Success--------end---------------")
-          this.LoginSDK();
+    Log("-zilong--SDK init Success--------end---------------")
+    this.LoginSDK();
 end
 
 function this.LoginSDK()
@@ -97,13 +97,14 @@ function this.GetCommonData()
 end
 ---2.获取SDK数据
 function this.SDKShiryuSDKGetSdkPropertiescomplete(datapacket)
-   --print("--------Lua 输出数据"..table.tostring(datapacket))
+    --print("--------Lua 输出数据"..table.tostring(datapacket))
     this.GetSdkProperties={};
+    local isAdv = CSAPI.IsADV()
     if datapacket then
         for i, v in pairs(datapacket) do
-           -- print("--------Lua--------key:"..i.." value:"..v);
+            -- print("--------Lua--------key:"..i.." value:"..v);
             this.GetSdkProperties[i]=v;
-            if tostring(i)=="ecid" then
+            if isAdv and tostring(i)=="ecid" then
                 AdvGoogleGit.ecid=v;
                 AdvGuiDeScore.Setecid(v)
             end
@@ -118,11 +119,12 @@ function this.SDKShiryuSDKLogincomplete(datapacket)
     this.ShiryuLogin.uid=datapacket.uid;
     this.ShiryuLogin.token=datapacket.token;
     this.ShiryuLogin.channelExts={}
+    local isAdv = CSAPI.IsADV()
     if datapacket.channelExts then
         for i, v in pairs(datapacket.channelExts) do
             --print("key:"..i.." value:"..v);
             this.ShiryuLogin.channelExts[i]=v;
-            if tostring(i)=="ecid" then
+            if isAdv and tostring(i)=="ecid" then
                 AdvGoogleGit.ecid=v;
                 AdvGuiDeScore.Setecid(v)
             end
@@ -145,28 +147,30 @@ end
 ---8.获取商品列表返回
 function this.SDKShiryuSDKGetGoodsListcomplete(datapacket)
 
-    this.ShiryuGoodsList={}
-    this.ShiryuGoodsList.success=datapacket.success;
-    this.ShiryuGoodsList.goodsList= { };
-    if datapacket.goodsList  then
-        local index=0;
-        for i, v in pairs(datapacket.goodsList) do
-            index=index+1
-            local Item={}
-            Item.skuCode=datapacket.goodsList[i].skuCode;
-            Item.productName=datapacket.goodsList[i].productName;
-            Item.amount=datapacket.goodsList[i].amount;
-            Item.currency=datapacket.goodsList[i].currency;
-            Item.productDesc=datapacket.goodsList[i].productDesc;
-            Item.goodsId=datapacket.goodsList[i].goodsId;
-            Item.voucherId=datapacket.goodsList[i].voucherId;
-            Item.type=datapacket.goodsList[i].type;
-            Item.displayCurrency=datapacket.goodsList[i].displayCurrency;
-            Item.displayPrice=datapacket.goodsList[i].displayPrice;
-            table.insert(this.ShiryuGoodsList.goodsList,index,Item)
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then        
+        this.ShiryuGoodsList={}
+        this.ShiryuGoodsList.success=datapacket.success;
+        this.ShiryuGoodsList.goodsList= { };
+        if datapacket.goodsList  then
+            local index=0;
+            for i, v in pairs(datapacket.goodsList) do
+                index=index+1
+                local Item={}
+                Item.skuCode=datapacket.goodsList[i].skuCode;
+                Item.productName=datapacket.goodsList[i].productName;
+                Item.amount=datapacket.goodsList[i].amount;
+                Item.currency=datapacket.goodsList[i].currency;
+                Item.productDesc=datapacket.goodsList[i].productDesc;
+                Item.goodsId=datapacket.goodsList[i].goodsId;
+                Item.voucherId=datapacket.goodsList[i].voucherId;
+                Item.type=datapacket.goodsList[i].type;
+                Item.displayCurrency=datapacket.goodsList[i].displayCurrency;
+                Item.displayPrice=datapacket.goodsList[i].displayPrice;
+                table.insert(this.ShiryuGoodsList.goodsList,index,Item)
+            end
         end
+        this.InitShopData()
     end
-    this.InitShopData()
     --Item:
     ---skuCode string      充值id
     ---productName string  商品名称
@@ -185,7 +189,7 @@ function this.InitShopData()
 
     for i, v in pairs(this.ShiryuGoodsList.goodsList) do
         local id=0;
-         id=tonumber(this.ShiryuGoodsList.goodsList[i].skuCode);
+        id=tonumber(this.ShiryuGoodsList.goodsList[i].skuCode);
         local TableShop=Cfgs.CfgCommodity:GetByID(id)
         if TableShop then
             --Cfgs.CfgCommodity:GetByID(id).sName=this.ShiryuGoodsList.goodsList[i].productName      ---string  商品名称
@@ -205,31 +209,31 @@ function this.InitShopData()
 end
 
 ---节点数据修改
- function this.ShopDataEdit(data)
-     if this.IsShopExist(data["id"]) then
-         --LogError("----------------满足条件的ID-----------"..data["id"])
-         --LogError(data)
-         for i, v in pairs(this.ShiryuGoodsList.goodsList) do
-             local id=tonumber(data["id"]);
-             if tostring(this.ShiryuGoodsList.goodsList[i].skuCode)==tostring(id)  then
---                 data["sName"]=this.ShiryuGoodsList.goodsList[i].sName  ---string  商品名称
---                 data["sDesc"]=this.ShiryuGoodsList.goodsList[i].sDesc  --- string  充值商品描述。
-                 --data["shop_config"]["jCosts"][1][2]=tonumber(this.ShiryuGoodsList.goodsList[i].displayPrice) ---string  显示价格
-                 data["currency"]=this.ShiryuGoodsList.goodsList[i].currency ---string  定价币种
-                 data["amount"]=this.ShiryuGoodsList.goodsList[i].amount ---int  定价商品价格（单位分）
-                 data["goodsId"]=this.ShiryuGoodsList.goodsList[i].goodsId  ---string  应用商店的商品id
-                 data["voucherId"]=this.ShiryuGoodsList.goodsList[i].voucherId  ---string  这个商品对应使用的抵扣劵ID
-                 data["type"]=this.ShiryuGoodsList.goodsList[i].type ---int  1应用内商品，2预注册，3礼品码，4订阅型商品, 5应用外商品, 6抵扣券
-                 data["displayCurrency"]=this.ShiryuGoodsList.goodsList[i].displayCurrency ---string  显示币种的标准货币代码（例如：USD，CNY）
-                 data["displayPrice"]=this.ShiryuGoodsList.goodsList[i].displayPrice  ---string  显示价格
-                 --data["displayPrice"]=tonumber(999) ---string  显示价格
-                 --data["displayCurrency"]="jyp"  ---string  显示价格
-                  return data;
-             end
-         end
-     end
-     return data;
- end
+function this.ShopDataEdit(data)
+    if this.IsShopExist(data["id"]) then
+        --LogError("----------------满足条件的ID-----------"..data["id"])
+        --LogError(data)
+        for i, v in pairs(this.ShiryuGoodsList.goodsList) do
+            local id=tonumber(data["id"]);
+            if tostring(this.ShiryuGoodsList.goodsList[i].skuCode)==tostring(id)  then
+                --                 data["sName"]=this.ShiryuGoodsList.goodsList[i].sName  ---string  商品名称
+                --                 data["sDesc"]=this.ShiryuGoodsList.goodsList[i].sDesc  --- string  充值商品描述。
+                --data["shop_config"]["jCosts"][1][2]=tonumber(this.ShiryuGoodsList.goodsList[i].displayPrice) ---string  显示价格
+                data["currency"]=this.ShiryuGoodsList.goodsList[i].currency ---string  定价币种
+                data["amount"]=this.ShiryuGoodsList.goodsList[i].amount ---int  定价商品价格（单位分）
+                data["goodsId"]=this.ShiryuGoodsList.goodsList[i].goodsId  ---string  应用商店的商品id
+                data["voucherId"]=this.ShiryuGoodsList.goodsList[i].voucherId  ---string  这个商品对应使用的抵扣劵ID
+                data["type"]=this.ShiryuGoodsList.goodsList[i].type ---int  1应用内商品，2预注册，3礼品码，4订阅型商品, 5应用外商品, 6抵扣券
+                data["displayCurrency"]=this.ShiryuGoodsList.goodsList[i].displayCurrency ---string  显示币种的标准货币代码（例如：USD，CNY）
+                data["displayPrice"]=this.ShiryuGoodsList.goodsList[i].displayPrice  ---string  显示价格
+                --data["displayPrice"]=tonumber(999) ---string  显示价格
+                --data["displayCurrency"]="jyp"  ---string  显示价格
+                return data;
+            end
+        end
+    end
+    return data;
+end
 ---判断是否存在
 function this.IsShopExist(id)
     if this.ShiryuGoodsList.goodsList then
@@ -245,21 +249,27 @@ end
 
 ---9. 支付返回
 function this.SDKShiryuSDKPaycomplete(datapacket)
-     EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
-     --  Log("SDKShiryuSDKGetGoodsListcomplete")
+    EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+    --  Log("SDKShiryuSDKGetGoodsListcomplete")
     Log("---------------Payment successful---------------")
     if datapacket.success then
         CSAPI.DispatchEvent(EventType.SDK_Deduction_voucher_paymentcompleted)
         SDKPayMgr:SearchPayReward(true);
     else
-        Tips.ShowTips(LanguageMgr:GetTips(1011));
+        if CSAPI.IsDomestic and  CSAPI.IsDomestic() then
+
+        else
+            Tips.ShowTips(LanguageMgr:GetTips(1011));
+        end
     end
 end
 
 ---SDK 初始化成功，接口监听集合
 function this.SDKinterfacelisten()
     ShiryuSDK.SetLogoutCallback(ShiryuSDK.LogoutCallback)
-    ShiryuSDK.SetCheckGiftCallback(ShiryuSDK.CheckGiftCallback)
+    if CSAPI.IsADV() then
+        ShiryuSDK.SetCheckGiftCallback(ShiryuSDK.CheckGiftCallback)
+    end
 
 end
 ----------------------------------------------SDK监听回调区域下---------------------------------------------------------------------------------------
@@ -272,6 +282,7 @@ function this.LogoutCallback(Success)
         this.ShiryuLogin.uid="";
         this.ShiryuLogin.token="";
         this.ShiryuLogin.channelExts={} ---opcode、operators、appKey、channelId、ecid、deviceId
+        this.IsEnterhall=false;
         if this.LoginViewSwitchAccounts then
             this.LoginViewSwitchAccounts=false;
             CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Login)
@@ -316,9 +327,10 @@ function this.InitSdk(MJSdkEnv,SDKInitCallback)
     MJSdkManagerImpl:InitSdk(MJSdkEnv,SDKInitCallback);
 end
 ---2:获取数据
-if CSAPI.IsADV() then
-    this.GetSdkProperties=MJSdkManagerImpl.GetSdkProperties;
+if CSAPI.IsADV() or CSAPI.IsDomestic() then
+this.GetSdkProperties=MJSdkManagerImpl.GetSdkProperties;
 end
+
 ---3.是否是审核状态接口
 function this.IsReview()
     return CShiryuSDK:IsReview();
@@ -329,6 +341,7 @@ function this.Login(SDKLoginCallback)
 end
 ---5：登出---退出账号/切换账号时候
 function this.Logout()
+    print("====================================unity Logout")
     MJSdkManagerImpl:Logout();
 end
 ---6：SDK登出账号成功，游戏需在此做游戏切换账号操作
@@ -337,26 +350,26 @@ function this.SetLogoutCallback(SDKLogoutCallback)
 end
 ---7_1：角色上报_创建角色
 function this.CreateRole()
-      ---发送结构参考
-     local roleInfoTable={}
-     local serverInfo = GetCurrentServer();
-     roleInfoTable.uid=PlayerClient:GetUid();
-     roleInfoTable.serverId=serverInfo.id;
-     roleInfoTable.serverName=serverInfo.serverName;
-     roleInfoTable.roleId=PlayerClient:GetUid();
-     roleInfoTable.roleLevel=PlayerClient:GetLv();
-     roleInfoTable.roleName=PlayerClient:GetName();
-     roleInfoTable.gameCoins=PlayerClient:GetCoin(10002);
-     roleInfoTable.createSecs=PlayerClient:GetCreateTime();
-     roleInfoTable.battleStrength=0;
-     roleInfoTable.vipLevel=0;
-     roleInfoTable.guildId="";
-     roleInfoTable.guildLeaderName="";
-     roleInfoTable.guildLeaderUid="";
-     roleInfoTable.guildName="";
-     roleInfoTable.guildLeaderRoleId="";
-     roleInfoTable.guildLevel="";
-     CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_OnCreateRole,roleInfoTable)
+    ---发送结构参考
+    local roleInfoTable={}
+    local serverInfo = GetCurrentServer();
+    roleInfoTable.uid=PlayerClient:GetUid();
+    roleInfoTable.serverId=serverInfo.id;
+    roleInfoTable.serverName=serverInfo.serverName;
+    roleInfoTable.roleId=PlayerClient:GetUid();
+    roleInfoTable.roleLevel=PlayerClient:GetLv();
+    roleInfoTable.roleName=PlayerClient:GetName();
+    roleInfoTable.gameCoins=PlayerClient:GetCoin(10002);
+    roleInfoTable.createSecs=PlayerClient:GetCreateTime();
+    roleInfoTable.battleStrength=0;
+    roleInfoTable.vipLevel=0;
+    roleInfoTable.guildId="";
+    roleInfoTable.guildLeaderName="";
+    roleInfoTable.guildLeaderUid="";
+    roleInfoTable.guildName="";
+    roleInfoTable.guildLeaderRoleId="";
+    roleInfoTable.guildLevel="";
+    CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_OnCreateRole,roleInfoTable)
 end
 
 ---7_2：角色登录进入服务器
@@ -448,7 +461,7 @@ end
 function this.TrackEvent(eventName,eventToken,data)
     if eventToken==nil then eventToken="" end
     if data==nil then data= { } end
-     CShiryuSDK:TrackEvent(eventName,eventToken,data);
+    CShiryuSDK:TrackEvent(eventName,eventToken,data);
 end
 ---12.此接口获取当前登录的账号是否已绑定
 ---如果返回False，需要提供一个按钮让用户去绑定页面
@@ -477,20 +490,20 @@ function this.CanShowRateUs()
 end
 -----17.游戏内评分接口 游戏在指定的时机调用游戏内评分功能，引导玩家在appstore或者google play store为游戏进行评分
 function this.RateUs()
-     CShiryuSDK:RateUs();
+    CShiryuSDK:RateUs();
 end
 -----18.游戏权限检查接口
 function this.CheckPermission(mjSdkPermissionType,action)
-     CShiryuSDK:CheckPermission(mjSdkPermissionType,action);
+    CShiryuSDK:CheckPermission(mjSdkPermissionType,action);
 end
 -----19.游戏动态授权接口 游戏在使用权限功能时，如果没有权限，需要先调用sdk接口获取相关权限。
 function this.RequestPermission(mjSdkPermissionType,action)
-     CShiryuSDK:RequestPermission(mjSdkPermissionType,action);
+    CShiryuSDK:RequestPermission(mjSdkPermissionType,action);
 end
 -----20.扫描PC二维码登录接口
 ---Unity编辑器 无法调试
 function this.DoStartQRLogin(action)
-     CShiryuSDK:DoStartQRLogin(action);
+    CShiryuSDK:DoStartQRLogin(action);
 end
 -----21.监听待领取的奖励
 -----此接口在每次进入区服后都要调用
@@ -501,7 +514,7 @@ end
 ---2、不在强制引导/战斗状态。
 ---3、如果收到回调时不满足上面两条件，则在满足上面两条件后马上弹出领取提示窗
 function this.SetCheckGiftCallback(checkGiftCallback)
-     CShiryuSDK:SetCheckGiftCallback(checkGiftCallback);
+    CShiryuSDK:SetCheckGiftCallback(checkGiftCallback);
 end
 -----22.玩家进到游戏后，判断是否有奖励，如果有奖励，在领取奖励页面点击领取调用此接口  需要第21条返回为true 调用
 function this.ClaimGift(paymentInfo,action)
@@ -542,11 +555,86 @@ end
 function this.PayPoints(paymentInfo,action)
     CShiryuSDK:PayPoints(paymentInfo,action);
 end
+---28.分享
+function this.Share(Jsonstr,action)
+    ---参考发送结构 最后转成Json
+    --local ShareTable=
+    --{
+    --    ["Text"]="分享测试内容，分享测试内容",---分享的内容。
+    --    ["Title"]="分享测试标题",---分享的标题。
+    --    ["ImagePath"]="Application.persistentDataPath".."/Share.jpg",---分享的链接。
+    --    ["thumbImagePath"]="Application.persistentDataPath".."thumbShare.jpg",---分享缩略图图片的本地存储地址。要求缩略图为PNG格式大小不超过32k。
+    --    ["Url"]="",---分享的链接。
+    --    ["shareType"]=tonumber(2),---分享类型，具体的值见下面表格。
+    --    ["sharePlatform"]=tonumber(8),---分享平台，具体的值说明见下面表格。
+    --    ["para"]="",---分享参数，个别特殊分享使用。例如社区分享的GaragePainting，GaragePaintingCode
+    --}
+    -- local Jsonstr = Json.Encode(ShareTable)
+    CShiryuSDK:Share(Jsonstr,action);
+end
 
+---在线
+function this.OnRoleOnline()
+    if  this.ShiryuLogin.success then
+
+        local roleInfoTable={}
+        local serverInfo = GetCurrentServer();
+        roleInfoTable.uid=PlayerClient:GetUid();
+        roleInfoTable.serverId=serverInfo.id;
+        roleInfoTable.serverName=serverInfo.serverName;
+        roleInfoTable.roleId=PlayerClient:GetUid();
+        roleInfoTable.roleLevel=PlayerClient:GetLv();
+        roleInfoTable.roleName=PlayerClient:GetName();
+        roleInfoTable.gameCoins=PlayerClient:GetCoin(10002);
+        roleInfoTable.createSecs=PlayerClient:GetCreateTime();
+        roleInfoTable.battleStrength=this.GetbattleStrength();;
+        roleInfoTable.vipLevel=0;
+        roleInfoTable.guildId="";
+        roleInfoTable.guildLeaderName="";
+        roleInfoTable.guildLeaderUid="";
+        roleInfoTable.guildName="";
+        roleInfoTable.guildLeaderRoleId="";
+        roleInfoTable.guildLevel="";
+        CShiryuSDK:OnRoleOnline(roleInfoTable);
+    end
+
+end
+---离线
+function this.OnRoleOffline()
+    if  this.ShiryuLogin.success then
+        local roleInfoTable={}
+        local serverInfo = GetCurrentServer();
+        roleInfoTable.uid=PlayerClient:GetUid();
+        roleInfoTable.serverId=serverInfo.id;
+        roleInfoTable.serverName=serverInfo.serverName;
+        roleInfoTable.roleId=PlayerClient:GetUid();
+        roleInfoTable.roleLevel=PlayerClient:GetLv();
+        roleInfoTable.roleName=PlayerClient:GetName();
+        roleInfoTable.gameCoins=PlayerClient:GetCoin(10002);
+        roleInfoTable.createSecs=PlayerClient:GetCreateTime();
+        roleInfoTable.battleStrength=this.GetbattleStrength();;
+        roleInfoTable.vipLevel=0;
+        roleInfoTable.guildId="";
+        roleInfoTable.guildLeaderName="";
+        roleInfoTable.guildLeaderUid="";
+        roleInfoTable.guildName="";
+        roleInfoTable.guildLeaderRoleId="";
+        roleInfoTable.guildLevel="";
+        CShiryuSDK:OnRoleOffline(roleInfoTable);
+    end
+
+end
+
+---关闭支付页面
+function this.ClosePurchasePage(gameOrderId)
+    if CSAPI.IsDomestic() then
+        CShiryuSDK:ClosePurchasePage(gameOrderId);
+    end
+end
 
 function this.GetDeviceID()
-     local deviceId=this.ShiryuLogin.channelExts["deviceId"];
-      --print("设备 ID："..deviceId)
-      return deviceId;
+    local deviceId=this.ShiryuLogin.channelExts["deviceId"];
+    --print("设备 ID："..deviceId)
+    return deviceId;
 end
 this.Init();

@@ -65,6 +65,8 @@ function Awake()
     CSAPI.SetText(txt_fightRoleInfo, _G.showPvpRoleInfo and "关闭PVP卡牌信息" or "开启PVP卡牌信息");
     SetSearchText(options[selectIndex].desc);
     CSAPI.AddInputFieldChange(search, OnSearch);
+    inputSpecialField = ComUtil.GetCom(inputSpecial,"InputField")
+    CSAPI.AddInputFieldChange(inputSpecial, OnSpecial);
 end
 
 function OnEnable()
@@ -702,14 +704,37 @@ function OnClickSpine()
 end
 
 function OnClickCond()
-    ResUtil:CreateUIGOAsync("GMConditionTest", gameObject)
+    ResUtil:CreateUIGOAsync("GMConditionTest", gameObject);
 end
 
 function OnClickRegres()
     CSAPI.OpenView("RegressionList")
 end
 
---------------------------------------下拉列表逻辑处理完毕------------
+function OnClickLovePlus()
+    CSAPI.OpenView("LovePlusView")
+end
+-- local regex = CS.System.Text.RegularExpressions.Regex("[ \\[ \\] \\^ \\-_*×――(^)$%~!＠@＃#$…&%￥—+=<>《》!！??？:：•`·、。，；,.;/\'\"{}（）‘’“”-]")
+
+function OnClickSpecial()
+    local str = inputSpecialField.text
+    local isPass = false
+    if str ~= "" then
+        -- isPass = not regex:IsMatch(str)
+        str = StringUtil:FilterChar2(str)
+        LogError(str)
+        -- LogError(StringUtil:Utf8Len(str))
+        -- isPass = StringUtil:CheckPassStr(str)
+    end
+    -- local textStr = "字符串检测\n"
+    -- textStr = isPass and textStr .. "（通过）" or textStr .. "（未通过）"
+    -- CSAPI.SetText(txtSpecial, textStr)
+end
+
+function OnSpecial()
+    CSAPI.SetText(txtSpecial, "字符串检测")
+end
+-------------------------下拉列表逻辑处理完毕------------
 -- 关闭
 function OnClickClose()
     view:Close();

@@ -71,6 +71,27 @@ function OnOpen()
 		else
 			CSAPI.SetGOActive(limitTimeObj,false);
 		end
+
+		if CSAPI.IsADV() or CSAPI.IsDomestic() then
+			if commodity and  commodity:GetRealPrice() then
+				if AdvDeductionvoucher.SDKvoucherNum>=commodity:GetRealPrice()[1].num and commodity:GetRealPrice()[1].num>=0 and commodity:GetRealPrice()[1].id==-1 then
+					CSAPI.SetGOActive(Voucherbtn_pay,true);
+					CSAPI.SetGOActive(btn_pay,true);
+					Voucherbtn_pay.transform.localPosition=UnityEngine.Vector3(Voucherbtn_pay.transform.localPosition.x+150,Voucherbtn_pay.transform.localPosition.y,0);
+					btn_pay.transform.localPosition=UnityEngine.Vector3(btn_pay.transform.localPosition.x-150,btn_pay.transform.localPosition.y,0);
+					if commodity:GetRealPrice()[1].id==-1 then
+						local amount=commodity["cfg"]["amount"];
+						if  amount then
+							CSAPI.SetText(Voucherbtn_pay_txt, math.floor(amount/100));
+						else
+							CSAPI.SetText(Voucherbtn_pay_txt,commodity:GetRealPrice()[1].num);
+						end
+					else
+						CSAPI.SetText(Voucherbtn_pay_txt, commodity:GetRealPrice()[1].num);
+					end
+				end
+			end
+		end
 		local showNum=true;
 		if (commodityType==1 and commodity:GetType()==CommodityItemType.Item) then --固定配置
 			local item=commodity:GetCommodityList()[1];
@@ -189,6 +210,15 @@ end
 function SetPrice(id, num,pIcon,pText)
 	if id==-1 then --SDK支付
 		CSAPI.SetText(pText, LanguageMgr:GetByID(18013)..tostring(num));
+		if CSAPI.IsADV() then
+			local StrText=commodity["cfg"]["displayCurrency"];
+			local displayPrice=commodity["cfg"]["displayPrice"];
+			if StrText and displayPrice then
+				CSAPI.SetText(pText, StrText..tostring(displayPrice));
+			else
+				CSAPI.SetText(pText, LanguageMgr:GetByID(18013)..tostring(num));
+			end
+		end
 		CSAPI.SetGOActive(pIcon,false);
 		return;
 	end
@@ -271,7 +301,15 @@ end
 
 --点击购买
 function OnClickPay()
-	ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,voucherList,OnSuccess);
+
+	if CSAPI.IsADV() then
+		AdvDeductionvoucher.IsDeductionvoucher=true;
+		ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+	else
+		ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,voucherList,OnSuccess);
+	end
+
+
 	-- Close();
 	-- local priceInfo=commodity:GetRealPrice();
 	-- local channelType=CSAPI.GetChannelType();
@@ -291,7 +329,9 @@ function OnClickPay()
 	-- 	ShopCommFunc.ExchangeCommodity(commodity,1,OnSuccess);
 	-- end
 end
-
+function OnClickVoucherPay()
+	ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
+end--购买成功
 --购买成功
 function OnSuccess(proto)
 	Close();

@@ -10,8 +10,8 @@ function Awake()
 end
 
 function InputChange(_str)
-	local str = StringUtil:FilterChar(_str)
-	str = StringUtil:SetStringByLen(str, 7)
+	_str = StringUtil:FilterChar(_str)
+	local str = StringUtil:SetStringByLen(_str, 7)
 	inpName.text = str
 end
 

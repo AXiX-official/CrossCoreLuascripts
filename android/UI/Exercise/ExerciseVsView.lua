@@ -78,6 +78,10 @@ end
 -- 敌人
 function SetRight()
     lData = ExerciseMgr:GetEnemyInfo(data.uid)
+    if(not lData) then 
+        LogError("找不到玩家数据："..data.uid)
+        return 
+    end 
     -- icon
     local icon_id = lData.icon_id
     if (lData.role_panel_id ~= nil and lData.role_panel_id ~= 0) then

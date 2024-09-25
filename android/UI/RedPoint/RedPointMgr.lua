@@ -36,6 +36,7 @@ RedPointType.Achievement = "Achievement" --成就
 RedPointType.Regression = "Regression" --回归
 RedPointType.Badge = "Badge" --徽章
 RedPointType.Rogue = "Rogue" --乱序演习
+RedPointType.RogueS = "RogueS" --战斗派遣
 RedPointType.AccuCharge = "AccuCharge" --累计充值
 
 RedPointType.SpecialExploration="SpecialExploration"--特殊勘探

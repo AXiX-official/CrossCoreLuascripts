@@ -405,6 +405,9 @@ end
 ----------------------------------------搜索----------------------------------------------
 -- 查找面板
 function SetFindPanel()
+    -- uid
+    CSAPI.SetText(txtUID, PlayerClient:GetUid() .. "")
+
     isFind = true
     if (findInput.text ~= "") then
         if (findDatas and #findDatas > 0) then
@@ -425,8 +428,6 @@ function SetFindPanel()
             return
         end
     end
-    -- uid
-    CSAPI.SetText(txtUID, PlayerClient:GetUid() .. "")
 end
 
 -- 推荐回调

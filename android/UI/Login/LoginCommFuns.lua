@@ -17,6 +17,12 @@ gameId="1";
 local codeCDTime=0;
 local codeCDTime2=0;
 local openCount=0;--登录界面打开次数
+local s_ip=nil;
+local s_port=nil;
+local tempMsg=nil;
+
+---获取次数
+local GetServerURLfrequency=0;
 --返回图片路径
 function GetImgPath(spriteName)
 	return "UIs/Login/" .. spriteName .. ".png";
@@ -70,7 +76,9 @@ function SignChannelAccount(data,func)
 				--上传热云注册事件
 				ReYunSDK:SetRegisterEvent(account,{channelType=CSAPI.GetChannelName()});
 				--上传数数
-				BuryingPointMgr:TrackEvents("openid_register", {phone=open_id}, TAType.First);
+				if CSAPI.IsADV()==false then
+					BuryingPointMgr:TrackEvents("openid_register", {phone=open_id}, TAType.First);
+				end
 			end
 			if func then
 				func(json.data);
@@ -86,20 +94,43 @@ function GetServerPath()
 	local useJsonFile;
     local isRelease = true;
     if(isRelease)then
-		--媒体用
-		--useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_mt.json";
-		--正式
-		useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";	
-		
+		if CSAPI.IsADV() then
+         ---海外
+	     	 useJsonFile =CSAPI.ZLongServerListUrl;
+		else
+          ---国内
+			--正式
+			useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
+			if(CSAPI.GetPlatform() ==-1)then--审核用
+				useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_1.json";
+			end
+			VerChecker:SetState(true);
+		end
     else
 		--主干
         _G.server_list_enc_close = 1;
-        useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试	     
-		--useJsonFile = "http://mega.megagamelog.com:880/php/res/serverList/serverlist_nw1.json ";--ios提审
-		  
-    end  
-		
-	Log("GetServerPath() useJsonFile is:" .. useJsonFile);
+		if CSAPI.IsADV() then
+			if CSAPI.GetInside()==0 then
+				useJsonFile = "http://mega.megagamelog.com:880/php/res/serverList/serverlist_nw1.json";--测试
+			else
+				if GetServerURLfrequency<=3  then
+					useJsonFile =CSAPI.ZLongServerListUrl;
+				elseif GetServerURLfrequency<=6 then
+					useJsonFile =CSAPI.ZLongBackupsServerListUrl;
+					---如果出现第二个没有配置或者为空，继续用第一个 同时缩短时间
+					if useJsonFile==nil or useJsonFile=="" then
+						GetServerURLfrequency=6;
+						useJsonFile =CSAPI.ZLongServerListUrl;
+					end
+				elseif GetServerURLfrequency>6 then
+					useJsonFile =CSAPI.ZLongServerListUrl;
+				end
+			end
+		else
+			useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试
+		end
+    end
+	Log("useJsonFile is------:" .. useJsonFile);
 	return useJsonFile;
 end
 
@@ -125,7 +156,7 @@ function ValidateAccount(str)
 		return false, 16045;
 	end
 	if IsAccount() then
-		if len < eRegisterLen.AccMin then
+		if len < eRegisterLen.AccMin and len>10 then
 			return false, 16010;
 		end
 		local singlechar;
@@ -205,18 +236,19 @@ end
 
 --通过http获取服务器列表
 function InitServerInfo(callBack,serverListUrl)
+	GetServerURLfrequency=GetServerURLfrequency+1;
 	local path= serverListUrl or GetServerPath();
 	-- Log(path)
 	CSAPI.GetServerInfo(path, function(str)
 		--	LogError(str);
 		if str then
-			
+
 			local dStr=CSAPI.EncyptStr(str);
 			local decodeStr=Base64.dec(dStr);
 
 			if(_G.server_list_enc_close)then
 				decodeStr = str;
-			end			
+			end
 
 			-- local decodeStr=Base64.dec(str)
 			if decodeStr==nil or decodeStr=="" then
@@ -227,62 +259,94 @@ function InitServerInfo(callBack,serverListUrl)
 			local json = Json.decode(decodeStr);
 			--LogError(json)
 			-- local json = Json.decode(str);
-            if(not json)then
-                local dialogData =
-	            {
-		            content = LanguageMgr:GetByID(38011)
-	            };
-	            CSAPI.OpenView("Dialog", dialogData);
-                return;
-            end
-			serverInfo = {};
-			if json.code==0 then
-				local list=json.data
-				--LogError(list);
-				for i = 1, #list do
-					local item = {};
-					item.id = tonumber(list[i] ["id"]);
-					item.state = tonumber(list[i] ["state"]);
-					item.serverName = list[i] ["serverName"];
-					item.isNew = list[i] ["isNew"];
-					item.hasRole = list[i] ["hasRole"];
-					item.serverIp = list[i] ["serverIp"];
-					item.port = tonumber(list[i] ["port"]);
-					item.recommend = list[i] ["recommend"];
-					item.resDir = list[i] ["resDir"];
-					item.gmSvrIp=list[i]["gmSvrIp"];
-					item.gmSvrPort=list[i]["gmSvrPort"];
-					item.index=tonumber(list[i]["index"]);
-					item.sdkUrl=list[i]["SDK_URL"];
-					item.webIp=list[i]["webIp"];
-					item.webPort=tonumber(list[i]["webPort"]);
-					item.mainntentFile=list[i]["mainntentFile"];
-					item.is_open_white=tonumber(list[i]["is_open_white"])
-					table.insert(serverInfo, item);
+			if(not json)then
+				if GetServerURLfrequency<=7 then
+					DetectCallback(callBack)
+				else
+					local dialogData = { content = LanguageMgr:GetByID(38011) };
+					CSAPI.OpenView("Dialog", dialogData);
 				end
+				return;
 			end
-			if callBack then
-				callBack();
+			if json.code==0 then
+				GetServerURLfrequency=0;
+				SetServerLinkData(json)
+				if callBack then callBack(); end
+			else
+				DetectCallback(callBack)
 			end
+		else
+			DetectCallback(callBack)
 		end
 	end);
 end
-
-
---获取IP和端口
-function GetIpAndPort(str)
-    local strs = StringUtil:split(str,":");
-    if(strs == nil)then
-        LogError(string.format("get ip and por fail from %s",str));
-        return;
-    end
-    local ip,port = strs[1],strs[2];
-    if(port)then
-        port = tonumber(port);
-    end
-    return ip,port;
+function DetectCallback(callBack)
+	if GetServerURLfrequency<=3 then
+		--Log("GetServerURLfrequency:---------------------"..GetServerURLfrequency)
+		FuncUtil:Call(function() InitServerInfoCallback(callBack) end,nil,1000);
+	elseif GetServerURLfrequency<=6 then
+		--Log("GetServerURLfrequency:---------------------"..GetServerURLfrequency)
+		FuncUtil:Call(function() InitServerInfoCallback(callBack) end,nil,1000);
+	else
+		--Log("GetServerURLfrequency:-------------Fail--------")
+		GetServerURLfrequency=0;
+		local dialogData = {}
+		dialogData.content = LanguageMgr:GetTips(1008)
+		dialogData.okText =LanguageMgr:GetByID(1001)
+		dialogData.cancelText =LanguageMgr:GetByID(1002)
+		dialogData.okCallBack = function() 	InitServerInfoCallback(callBack) end
+		dialogData.cancelCallBack = function()  CSAPI.DispatchEvent(EventType.Login_Hide_Mask)   end
+		CSAPI.OpenView("Dialog", dialogData)
+	end
 end
 
+function InitServerInfoCallback(callBack)
+	InitServerInfo(callBack,nil)
+end
+function SetServerLinkData(json)
+	serverInfo = {};
+	if json.code==0 then
+		local list=json.data
+		--LogError(list);
+		for i = 1, #list do
+			local item = {};
+			item.id = tonumber(list[i] ["id"]);
+			item.state = tonumber(list[i] ["state"]);
+			item.serverName = list[i] ["serverName"];
+			item.isNew = list[i] ["isNew"];
+			item.hasRole = list[i] ["hasRole"];
+			item.serverIp = list[i] ["serverIp"];
+			item.port = tonumber(list[i] ["port"]);
+			item.recommend = list[i] ["recommend"];
+			item.resDir = list[i] ["resDir"];
+			item.gmSvrIp=list[i]["gmSvrIp"];
+			item.gmSvrPort=list[i]["gmSvrPort"];
+			item.index=tonumber(list[i]["index"]);
+			item.sdkUrl=list[i]["SDK_URL"];
+			item.webIp=list[i]["webIp"];
+			item.webPort=tonumber(list[i]["webPort"]);
+			item.mainntentFile=list[i]["mainntentFile"];
+			item.bgSelect=tonumber(list[i]["bgSelect"])
+			item.is_open_white=tonumber(list[i]["is_open_white"])
+			table.insert(serverInfo, item);
+		end
+		CSAPI.DispatchEvent(EventType.Login_Hide_Mask)
+	end
+end
+---获取指定服务器ID，如果没有返回nil
+function GetserverInfobgSelect()
+	if serverInfo then
+		if #serverInfo>0 then
+			for i, v in pairs(serverInfo) do
+				if tostring(serverInfo[i].bgSelect)==tostring(1) then
+					--LogError(serverInfo[i])
+					return serverInfo[i].id;
+				end
+			end
+		end
+	end
+	return nil;
+end
 function GetServerInfoByID(id)
 	if serverInfo then
 		for i, v in ipairs(serverInfo) do			
@@ -293,7 +357,19 @@ function GetServerInfoByID(id)
 	end
 	return nil;
 end
-
+--获取IP和端口
+function GetIpAndPort(str)
+	local strs = StringUtil:split(str,":");
+	if(strs == nil)then
+		LogError(string.format("get ip and por fail from %s",str));
+		return;
+	end
+	local ip,port = strs[1],strs[2];
+	if(port)then
+		port = tonumber(port);
+	end
+	return ip,port;
+end
 --返回第一个服务器信息
 function GetServerInfoFirst()
 	if serverInfo then
@@ -353,14 +429,22 @@ end
 
 function GetLastServerInfo()
 	--local serverID = 3;--默认打包服
-    --local serverID = 5;--默认媒体服
+	--local serverID = 5;--默认媒体服
 	--local serverID = 22;--默认打包测试服
-    --local serverID = 11;--默认主干外服  	
+	--local serverID = 11;--默认主干外服
 	--local serverID = 16;--默认审核服
 	--local serverID = 19;--内部稳定服
 	--local serverID = 23;--默认ios提审服
 	local serverID = PlayerPrefs.GetInt(lastServerPath);--正式服
 	--LogError(serverID);
+	if CSAPI.IsADV() then
+		if CSAPI.GetInside()==0 then
+			serverID =26;--台服
+		else
+			serverID=tonumber(GetserverInfobgSelect())---服务器读取
+			print("ZLongServerId----:"..tostring(serverID))
+		end
+	end
 	local lastServerInfo = nil;
 	if serverID and type(serverID) == "number" and serverID ~= 0 then
 		lastServerInfo = GetServerInfoByID(serverID);
@@ -395,26 +479,47 @@ function GetCurrentServer()
 	return info;
 end
 
---获取当前登录的IP信息 服务器信息,open_id
+function SetSDKIPInfo(ip,port)
+	s_ip=ip;
+	s_port=port;
+end
+
+--获取当前登录的IP和端口号 服务器信息,open_id
 function GetLoginIpInfo(serverInfo,open_id)
+	if s_ip~=nil and s_port~=nil and IsAccount()~=true then
+		return s_ip,s_port;
+	end
 	local num=tonumber(open_id);
 	if num==nil and type(open_id)=="string" then
 		num=StringUtil:GetUnicodeNum(open_id);
 	end
+	local str=nil;
 	if serverInfo and serverInfo.serverIp and type(serverInfo.serverIp)=="table" and open_id and num then
 		local len=#serverInfo.serverIp;
 		local idx=num%len+1;
-		return serverInfo.serverIp[idx];
+		str=serverInfo.serverIp[idx];
 	else
 		--LogError("获取ip信息时错误！"..tostring(open_id));
 		--LogError(serverInfo);
 		if serverInfo and serverInfo.serverIp then
 			if type(serverInfo.serverIp)=="table" then
-				return serverInfo.serverIp[1];
+				str=serverInfo.serverIp[1];
 			else
-				return serverInfo.serverIp;
+				str=serverInfo.serverIp;
 			end
 		end
+	end
+	if str~=nil and str~="" then
+		local strs = StringUtil:split(str,":");
+		if(strs == nil)then
+			LogError(string.format("get ip and por fail from %s",str));
+			return;
+		end
+		local ip,port = strs[1],strs[2];
+		if(port)then
+			port = tonumber(port);
+		end
+		return ip,port;
 	end
 end
 
@@ -467,9 +572,9 @@ function GetReloginTime()
     return reloginTime;
 end
 
+
 --登录账户
 function LoginAccount(accountName, pwd,relogin)
-
     if(relogin)then
         reloginTime = CSAPI.GetTime();
     else
@@ -483,6 +588,7 @@ function LoginAccount(accountName, pwd,relogin)
 		-- if not CSAPI.IsChannel() then
 				--缓存最后一次登录的账户
 				SaveLastAccount(accountName, pwd);
+				tempMsg=nil;
 			-- end
 	end, function()
         if(relogin)then
@@ -495,7 +601,9 @@ function LoginAccount(accountName, pwd,relogin)
 		SceneMgr:SetLoginLoaded(true);
 		if CSAPI.IsChannel() then
 			ThinkingAnalyticsMgr:TrackStateEvent("open_id",accountName)
-			BuryingPointMgr:TrackEvents("openid_login", {open_id=accountName});
+			if CSAPI.IsADV()==false then
+				BuryingPointMgr:TrackEvents("openid_login", {open_id=accountName});
+			end
 			BuryingPointMgr:SetOpenID(accountName)
 		end
 		ThinkingAnalyticsMgr:Login(accountName);
@@ -519,6 +627,9 @@ function LoginAccount(accountName, pwd,relogin)
         if(playerLv and playerLv > 1)then
         --if(false)then  
 			--2级以上，进入主城            
+			if CSAPI.IsADV() or CSAPI.IsDomestic() then 
+				ShiryuSDK.OnLoginServer(); 
+			end
 			EventMgr.Dispatch(EventType.Scene_Load, "MajorCity");
         else
             if(not relogin)then
@@ -535,8 +646,12 @@ function LoginAccount(accountName, pwd,relogin)
             end            
         end
 	end);	
-end 
-
+end
+function ADVBackToLogin()
+	GuideMgr:Clear();
+	GuideMgr:CloseGuideView();
+	ToLogin();
+end
 function BackToLogin()
     GuideMgr:Clear();
     GuideMgr:CloseGuideView();
@@ -554,21 +669,24 @@ end
 
 --重新登录
 function ReloginAccount()    
-	PlayerClient:SetChangeLine(false);--重新登录了，取消切线
+    Log("重登============================");
+
+    PlayerClient:SetChangeLine(false);--重新登录了，取消切线
     NetMgr.net:Disconnect();
 
     local lastServer = GetLastServerInfo();  
 	if lastServer==nil then
+		GetServerURLfrequency=0;
 		InitServerInfo(function()
-			lastServer = GetLastServerInfo();  
+			lastServer = GetLastServerInfo();
+			GetServerURLfrequency=0;
 			if lastServer==nil then
 				LogError("获取服务器信息失败...终止重连")
 				return;
 			end
 			local accountName,pwd = GetLastAccount();
 
-            local ipAndPort=GetLoginIpInfo(lastServer,accountName);
-            local serverIp,serverPort = GetIpAndPort(ipAndPort)
+            local serverIp,serverPort =GetLoginIpInfo(lastServer,accountName);
             serverPort = serverPort or lastServer.port;
 			NetMgr.net:Connect(serverIp, serverPort, function()
 				-- local accountName,pwd = GetLastAccount();
@@ -581,8 +699,7 @@ function ReloginAccount()
 		Log( "重新连接服务器========================="); 
 		Log( lastServer);
 		local accountName,pwd = GetLastAccount();
-		local ipAndPort=GetLoginIpInfo(lastServer,accountName);
-		local serverIp,serverPort = GetIpAndPort(ipAndPort)
+		local serverIp,serverPort =GetLoginIpInfo(lastServer,accountName);
 		serverPort = serverPort or lastServer.port;
 
 		NetMgr.net:Connect(serverIp, serverPort, function()
@@ -600,7 +717,7 @@ function PlayPV()
 		PlayPVOver();
 	end
 end
-
+local CreateRoleKey="CreateRoleKey";
 function PlayPVOver()
 	--播放第一段剧情
 	local isPlayed=PlotMgr:IsPlayed(10000);
@@ -610,6 +727,16 @@ function PlayPVOver()
 			PlayerClient:EnterGame();
 		end});
 	else
+		if CSAPI.IsADV() or CSAPI.IsDomestic() then
+			local CreateRoleKey=PlayerClient:GetUid()..CreateRoleKey;
+			local IsCreateRole=PlayerPrefs.GetInt(CreateRoleKey);
+			if  IsCreateRole==nil then IsCreateRole=0; end
+			if tostring(IsCreateRole)==tostring(0) then
+				ShiryuSDK.CreateRole();
+				PlayerPrefs.SetInt(CreateRoleKey,1);
+			end
+		end
+
 		CSAPI.OpenView("UserName",{closeFunc=function()
 			--进入主城
 			PlayerClient:EnterGame();
@@ -644,43 +771,38 @@ function GetCodeCD2()
 	return codeCDTime2 or 0;
 end
 
---登陆米茄官方SDK
-function SignSDK(token,pwd,server_id,func)
-	ChannelWebUtil.SendToServer2({cmd=SendCMD.Login,phone=token,password=pwd,game_id=gameId,server_id=server_id},nil,function(json)
-		if json.code==ResultCode.Normal then
-			if func then
-				func(json);
-			end
-			ThinkingAnalyticsMgr:TrackStateEvent("open_id", json.open_id)
-			BuryingPointMgr:TrackEvents("openid_login", {open_id=json.open_id,phone=token});
-			BuryingPointMgr:SetOpenID(json.open_id)
-		else
-			-- BuryingPointMgr:TrackEvents("openid_login", {code=json.code});
-			Tips.ShowTips(json.msg);
-			EventMgr.Dispatch(EventType.Login_Hide_Mask);
-		end
-	end);
+--上传注册事件
+function UploadRegEvent(jsonData)
+	if jsonData==nil then
+		return;
+	end
+	local bnew=jsonData["bnew"];
+	local accountName=jsonData["oacc_name"];
+	if bnew=="1" then --新注册的号
+		--上传热云注册事件
+		local account=string.format("%s_%s",CSAPI.GetChannelStr(),accountName);
+		--LogError("ReYunSDK:Reg------------------->"..tostring(account));
+		ReYunSDK:SetRegisterEvent(account,{channelType=CSAPI.GetChannelName()});
+		JuLiangSDK:Register("官网", true)
+		BuryingPointMgr:TrackEvents("openid_register", {phone=accountName}, TAType.First);
+	end
 end
 
---米茄官方SDK验证账号
-function SignAccount(phone,oid,server_id,func)
-	ChannelWebUtil.SendToServer2({cmd=SendCMD.Sign,phone=phone,game_id=gameId,server_id=tostring(server_id),open_id=tostring(oid),channelType=tostring(GetChannelType())},ChannelWebUtil.Extends.GetAccount,function(json)
+--登陆米茄官方SDK
+function SignSDK(token,pwd,server_id,func)
+	ChannelWebUtil.SendToServer2({cmd=SendCMD.Login,phone=token,password=pwd,game_id=gameId,server_id=tostring(server_id)},nil,function(json)
 		if json.code==ResultCode.Normal then
-			--新号则上传注册事件
-			local bnew=json.data["bnew"];
-			local accountName=json.data["oacc_name"];
-			if bnew=="1" then
-				--上传热云注册事件
-				local account=string.format("%s_%s",CSAPI.GetChannelStr(),accountName);
-				--LogError("ReYunSDK:Reg------------------->"..tostring(account));
-				ReYunSDK:SetRegisterEvent(account,{channelType=CSAPI.GetChannelName()});
-				JuLiangSDK:Register("官网", true)
-				BuryingPointMgr:TrackEvents("openid_register", {phone=accountName}, TAType.First);
-			end
 			if func then
 				func(json);
 			end
+			ThinkingAnalyticsMgr:TrackStateEvent("open_id", json.data.open_id);
+			if CSAPI.IsADV()==false then
+				BuryingPointMgr:TrackEvents("openid_login", {open_id=json.data.open_id,phone=token});
+			end
+			BuryingPointMgr:SetOpenID(json.data.open_id);
+			UploadRegEvent(json.data);
 		else
+			-- BuryingPointMgr:TrackEvents("openid_login", {code=json.code});
 			Tips.ShowTips(json.msg);
 			EventMgr.Dispatch(EventType.Login_Hide_Mask);
 		end
@@ -711,7 +833,9 @@ function SignWhite(phone,func)
 end
 
 function IsAccount()
-	if isAccount==nil then
+	if GetChannelType()~=ChannelType.Normal and GetChannelType()~=ChannelType.TapTap and GetChannelType()~=ChannelType.Test then
+		isAccount=false;
+	else
 		isAccount=not CSAPI.IsPhoneLogin();
 	end
 	return isAccount;

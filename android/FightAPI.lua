@@ -945,6 +945,14 @@ FightAPI = oo.class()
 
 function FightAPI:Init(skillID)
 end
+
+function FightAPI:Destroy()
+	-- LogDebugEx("FightAPI:Destroy()", self.name)
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 ------------------技能和buffer通用api---------------------------------
 
 -- 通用加buff
@@ -1523,7 +1531,7 @@ end
 
 -- 被动复活
 function FightAPI:PassiveRevive(effect, caster, target, data, cureTy, percent, sdata)
-	LogTrace()
+	-- LogTrace()
 	LogDebugEx("被动复活", caster.name, target.name)
 	local caster = self.card
 	if target.isRemove then return end -- 禁止复活

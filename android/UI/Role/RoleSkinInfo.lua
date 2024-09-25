@@ -216,4 +216,9 @@ function this:CheckIsJieJin()
     return self.isJieJin
 end
 
+--是否在看板和头像 隐藏
+function this:IsHide()
+    return self:GetCfg().isHide
+end
+
 return this

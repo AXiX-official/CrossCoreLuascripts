@@ -26,6 +26,12 @@ function OnInit()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Head_Frame_Change, RefreshPanel)
     eventMgr:AddListener(EventType.Shop_RecordInfos_Refresh, Refresh)
+    -- eventMgr:AddListener(EventType.Head_Frame_Change, function(proto)
+    --     Refresh(scale, proto.icon_frame, iconID)
+    -- end)
+    -- eventMgr:AddListener(EventType.Head_Icon_Change, function(proto)
+    --     Refresh(scale, frameID, proto.icon_id)
+    -- end)
 end
 
 function OnDestroy()
@@ -139,7 +145,7 @@ function SetRight()
     end
     local isCanUse, expiry = _data:CheckCanUse()
     -- item
-    UIUtil:AddHeadByID(headParent, 0.8, _data:GetID(), PlayerClient:GetIconId(),PlayerClient:GetSex())
+    UIUtil:AddHeadFrame(headParent, 0.8, _data:GetID(), PlayerClient:GetIconId(),PlayerClient:GetSex())
     -- if (not rItem) then
     --     ResUtil:CreateUIGOAsync("HeadFrame/HeadFrameItem", headParent, function(go)
     --         rItem = ComUtil.GetLuaTable(go)

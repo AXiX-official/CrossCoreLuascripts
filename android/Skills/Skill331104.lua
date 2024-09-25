@@ -25,12 +25,8 @@ function Skill331104:OnBefourHurt(caster, target, data)
 	end
 	-- 331104
 	self:AddTempAttr(SkillEffect[331104], caster, self.card, data, "damage",0.16)
-	-- 8420
-	local count20 = SkillApi:GetAttr(self, caster, target,3,"hp")
-	-- 8467
-	local count67 = SkillApi:GetAttr(self, caster, target,2,"hp")
-	-- 8189
-	if SkillJudger:Greater(self, caster, target, true,count20,count67) then
+	-- 8092
+	if SkillJudger:TargetPercentHp(self, caster, target, true,0.7) then
 	else
 		return
 	end

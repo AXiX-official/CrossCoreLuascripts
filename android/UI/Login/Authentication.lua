@@ -104,7 +104,9 @@ function OnValidResult(proto)
         LanguageMgr:ShowTips(9001);
 	end
     --数数SDK
-    BuryingPointMgr:TrackEvents("name_approve",{number=proto.number});
+    if CSAPI.IsADV()==false then
+        BuryingPointMgr:TrackEvents("name_approve",{number=proto.number});
+    end
     BuryingPointMgr:BuryingPoint("before_login", "10021");
     -- PlayTween(false)
 end

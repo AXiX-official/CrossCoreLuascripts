@@ -8,6 +8,12 @@ function Filter:Init(team, teamID, row, col)
 	self.col = col
 end
 
+function Filter:Destroy()
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 function Filter:GetIDList(list)
 	list = list or {}
 	local res = {}

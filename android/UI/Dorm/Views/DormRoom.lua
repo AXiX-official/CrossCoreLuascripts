@@ -1,3 +1,4 @@
+local isIn = false
 -- 宿舍分区界面(基地界面的子界面)
 -- function Awake()
 -- 	layout = ComUtil.GetCom(vsv, "UIInfinite")
@@ -30,6 +31,10 @@ end
 
 -- data = fid
 function OnOpen()
+    if(isIn) then 
+        return
+    end 
+    isIn = true
     if (data) then
         -- 好友数据 --打开界面时请求
         DormProto:GetOpenDorm(data, function()

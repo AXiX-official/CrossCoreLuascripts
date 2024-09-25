@@ -32,6 +32,7 @@ function this:GetFunc(sName)
         self.funcs["TowerView"] = self.DungeonActivity
         self.funcs["RogueView"] = self.DungeonActivity
         self.funcs["DungeonSummer"] = self.DungeonActivity
+        self.funcs["RogueSView"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -44,6 +45,7 @@ function this:GetFunc(sName)
         self.funcs["SpeicalJump"] = self.SpeicalJump
         self.funcs["AchievementView"] = self.Achievement
         self.funcs["RegressionList"] = self.RegressionList
+        self.funcs["TWWeb"] = self.TWWeb
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -52,15 +54,21 @@ function this:GetFunc(sName)
     end
 end
 
+function this.TWWeb()
+    ShiryuSDK.ShowActivityUI(function()
+        EventMgr.Dispatch(EventType.Menu_WebView_Enabled) -- 主界面的问卷调查
+    end)
+end
+
 function this.Menu()
     CSAPI.CloseAllOpenned()
 end
 
---跳转到链接
+-- 跳转到链接
 function this.SpeicalJump(cfg)
-    if(cfg.page) then 
+    if (cfg.page) then
         UnityEngine.Application.OpenURL(cfg.page)
-    end 
+    end
 end
 
 -- 是否关闭所有上级界面
@@ -152,10 +160,10 @@ end
 
 function this.ActivityListView(cfg)
     this.CheckClose(cfg);
-    local state,tips = this.ActivityListViewState(cfg)
+    local state, tips = this.ActivityListViewState(cfg)
     if state == JumpModuleState.Normal then
         ActivityMgr:AddNextOpen2(cfg.val3, {cfg.val1, cfg.val2})
-        CSAPI.OpenView("ActivityListView", nil, cfg.page)    
+        CSAPI.OpenView("ActivityListView", nil, cfg.page)
     else
         FuncUtil:Call(function()
             Tips.ShowTips(tips)
@@ -249,18 +257,22 @@ function this.DungeonActivity(cfg)
                 end
             else
                 this.CheckClose(cfg);
+                FuncUtil:Call(function ()
                 CSAPI.OpenView(viewName, {
                     id = cfg.val1,
                     type = cfg.val2,
                     itemId = cfg.val3
                 }, nil)
+                end,nil,100)
             end
         else
-            if(cfg.sName=="RogueView" and cfg.page~=nil) then 
-                CSAPI.OpenView(cfg.sName,nil,tonumber(cfg.page))
-            else 
+            if (cfg.sName == "RogueView" or cfg.sName == "RogueSView") then
+                local page = cfg.page ~= nil and tonumber(cfg.page) or nil
+                CSAPI.OpenView("RogueMain")
+                CSAPI.OpenView(cfg.sName, cfg.val1, page)
+            else
                 CSAPI.OpenView(cfg.sName)
-            end 
+            end
             -- LogError("缺少跳转的章节数据!跳转id:" .. cfg.id)
         end
     else
@@ -278,7 +290,11 @@ function this.Shop(cfg)
         if cfg.val1 and cfg.val1 ~= 0 and cfg.val2 == nil and cfg.val3 == nil then -- 打开单个商店
             CSAPI.OpenView(cfg.sName, cfg.val1);
         else
-            CSAPI.OpenView(cfg.sName, nil, {[1]=cfg.val2, [2]=cfg.val3,[3]=cfg.val5}); --val5是要打开购买界面的商品名称
+            CSAPI.OpenView(cfg.sName, nil, {
+                [1] = cfg.val2,
+                [2] = cfg.val3,
+                [3] = cfg.val5
+            }); -- val5是要打开购买界面的商品名称
         end
     else
         FuncUtil:Call(function()
@@ -294,14 +310,37 @@ end
 
 function this.Achievement(cfg)
     this.CheckClose(cfg);
-    CSAPI.OpenView(cfg.sName, nil, {group = cfg.val1,itemId = cfg.val2})
+    CSAPI.OpenView(cfg.sName, nil, {
+        group = cfg.val1,
+        itemId = cfg.val2
+    })
 end
 
 function this.RegressionList(cfg)
     local state, lockStr = this.RegressionState(cfg);
     if state == JumpModuleState.Normal then
         this.CheckClose(cfg);
-        CSAPI.OpenView(cfg.sName, {group = cfg.val1,id = cfg.val2})
+        CSAPI.OpenView(cfg.sName, {
+            group = cfg.val1,
+            id = cfg.val2
+        })
+    else
+        FuncUtil:Call(function()
+            Tips.ShowTips(lockStr)
+        end, nil, 100)
+    end
+end
+
+function this.LovePlus(cfg)
+    local state, lockStr = this.LovePlusState(cfg);
+    if state == JumpModuleState.Normal then
+        this.CheckClose(cfg);
+        CSAPI.OpenView(cfg.sName, {
+            id = cfg.page
+        }, {
+            type = cfg.val1,
+            id = cfg.val2
+        })
     else
         FuncUtil:Call(function()
             Tips.ShowTips(lockStr)
@@ -338,10 +377,9 @@ function this:GetJumpState(id)
     local lockStr = "";
     local cfg = Cfgs.CfgJump:GetByID(id)
     if (cfg and cfg.sName) then
-        if cfg.act then--检查活动开启状态
-            local isOpen=DungeonMgr:IsActiveOpen(cfg.act);
-            LogError(tostring(cfg.act).."\t"..tostring(isOpen))
-            if isOpen~=true then
+        if cfg.act then -- 检查活动开启状态
+            local isOpen = DungeonMgr:IsActiveOpen(cfg.act);
+            if isOpen ~= true then
                 return JumpModuleState.Close;
             end
         end
@@ -402,7 +440,7 @@ function this.DungeonActivityState(cfg)
         local isOpen, _lockStr = sectionData:GetOpen()
         local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if isOpen and openInfo then
-            if string.match(cfg.sName,"DungeonActivity") then 
+            if string.match(cfg.sName, "DungeonActivity") then
                 if not openInfo:IsOpen() then
                     isOpen = false
                     _lockStr = LanguageMgr:GetTips(24001)
@@ -422,6 +460,17 @@ function this.DungeonActivityState(cfg)
             isOpen, _lockStr = DungeonMgr:IsDungeonOpen(cfg.val3)
             if not isOpen then -- 关卡开启检测
                 return JumpModuleState.Close, _lockStr
+            end
+        end
+    elseif cfg.val5 then
+        local _cfg = Cfgs.CfgActiveEntry:GetByID(cfg.val5)
+        if _cfg and _cfg.begTime and _cfg.endTime then
+            local sTime = TimeUtil:GetTimeStampBySplit(_cfg.begTime)
+            local eTime = TimeUtil:GetTimeStampBySplit(_cfg.endTime)
+            if sTime < TimeUtil:GetTime() and eTime >= TimeUtil:GetTime() then
+                return JumpModuleState.Normal
+            else
+                return JumpModuleState.Close, LanguageMgr:GetTips(24003)
             end
         end
     end
@@ -445,12 +494,18 @@ function this.SectionState(cfg)
             return JumpModuleState.Close, _str;
         end
     end
+    if cfg.val2 then --有具体关卡
+        local _isOpen,_str = DungeonMgr:IsDungeonOpen(cfg.val2)
+        if not _isOpen then
+            return JumpModuleState.Close, _str;
+        end
+    end
     return JumpModuleState.Normal;
 end
 
 function this.ActivityListViewState(cfg)
     if cfg.val3 and not ActivityMgr:CheckIsOpen(cfg.val3) then
-        return JumpModuleState.Close,LanguageMgr:GetTips(24003)
+        return JumpModuleState.Close, LanguageMgr:GetTips(24003)
     end
     return JumpModuleState.Normal;
 end
@@ -469,7 +524,7 @@ function this.ModuleState(cfg)
 end
 
 function this.RegressionState(cfg)
-    local isOpen,type = RegressionMgr:IsHuiGui()
+    local isOpen, type = RegressionMgr:IsHuiGui()
     if RegressionMgr:GetTime() <= 0 then
         return JumpModuleState.Lock, LanguageMgr:GetTips(38002);
     end
@@ -485,7 +540,7 @@ function this.RegressionState(cfg)
             if _cfg and _cfg.infos and #_cfg.infos > 0 then
                 for i, info in ipairs(_cfg.infos) do
                     if info.index == cfg.val2 then
-                        if not info.IsHide and RegressionMgr:GetActivityEndTime(info.type) > TimeUtil:GetTime() then --超过持续时间不显示
+                        if not info.IsHide and RegressionMgr:GetActivityEndTime(info.type) > TimeUtil:GetTime() then -- 超过持续时间不显示
                             return JumpModuleState.Normal;
                         else
                             return JumpModuleState.Lock, LanguageMgr:GetTips(38003);

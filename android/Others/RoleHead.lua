@@ -2,19 +2,19 @@
 local frame_effectObj
 local head_effectObj
 
-function Awake()
-    eventMgr = ViewEvent.New()
-    eventMgr:AddListener(EventType.Head_Frame_Change, function(proto)
-        Refresh(scale, proto.icon_frame, iconID)
-    end)
-    eventMgr:AddListener(EventType.Head_Icon_Change, function(proto)
-        Refresh(scale, frameID, proto.icon_id)
-    end)
-end
+-- function Awake()
+--     eventMgr = ViewEvent.New()
+--     eventMgr:AddListener(EventType.Head_Frame_Change, function(proto)
+--         Refresh(scale, proto.icon_frame, iconID)
+--     end)
+--     eventMgr:AddListener(EventType.Head_Icon_Change, function(proto)
+--         Refresh(scale, frameID, proto.icon_id)
+--     end)
+-- end
 
-function OnDestroy()
-    eventMgr:ClearListener()
-end
+-- function OnDestroy()
+--     eventMgr:ClearListener()
+-- end
 
 function Refresh(_scale, _frameID, _iconID, _sel_card_ix)
     scale = _scale

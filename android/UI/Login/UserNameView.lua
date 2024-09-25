@@ -19,8 +19,14 @@ local animMask = nil
 local btnFade1 = nil
 local btnFade2 = nil
 local canvasGroup = nil
-
+---国内超时1.5秒， 国外2.5秒
+local TimeOutCount=1500;
 function Awake()
+	if CSAPI.IsADV() then
+		TimeOutCount=2500;
+	else
+		TimeOutCount=1500;
+	end
 	canvasGroup = ComUtil.GetCom(node,"CanvasGroup")
 
 	inpName = ComUtil.GetCom(inp_name, "InputField");
@@ -126,9 +132,11 @@ function OnClickOK()
 		Tips.ShowTips(LanguageMgr:GetByID(16005));
 		return
 	end
-	if IsEmoji(playerName) then
-		Tips.ShowTips(LanguageMgr:GetByID(16064));
-		return
+	if CSAPI.IsADV()==false then
+		if IsEmoji(playerName) then
+			Tips.ShowTips(LanguageMgr:GetByID(16064));
+			return
+		end
 	end
 	if currSex == nil then
 		Tips.ShowTips(LanguageMgr:GetByID(16007));
@@ -139,11 +147,16 @@ function OnClickOK()
 		return
 	end
 	local b = MsgParser:CheckContain(playerName)
+
+	-- if not b then
+	-- 	b = StringUtil:CheckPassStr(playerName)
+	-- end
+	
 	if(b) then
 		LanguageMgr:ShowTips(9003)
 		return
 	end
-	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_check",time=1500,
+	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_check",time=TimeOutCount,
 	timeOutCallBack=function ()
 		-- Tips.ShowTips("检查姓名超时,请点击重试！")
 		LanguageMgr:ShowTips(6016)
@@ -239,8 +252,8 @@ function IsEmoji(_str)
 end
 
 function InputChange(_str)
-	local str = StringUtil:FilterChar(_str)
-	str = StringUtil:SetStringByLen(str, 7)
+	_str = StringUtil:FilterChar(_str)
+	local str = StringUtil:SetStringByLen(_str, 7,"")
 	inpName.text = str
 end
 
@@ -306,12 +319,16 @@ function OnClickCancel()
 end
 
 function OnClickConfirm()
-	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_set",time=1500,
+	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_set",time=TimeOutCount,
 	timeOutCallBack=function ()
 		LanguageMgr:ShowTips(1014)
 		-- Tips.ShowTips("网络连接超时，即将返回重新登录")
 		SceneMgr:SetLoginLoaded(false);
-		BackToLogin()
+		if CSAPI.IsADV() then
+			ADVBackToLogin()
+		else
+			BackToLogin()
+		end
 	end});
 
 	PlayerProto:SetPlrName({name = playerName, index = currSex, month = currMonth, day = currDay,
@@ -321,11 +338,14 @@ function OnClickConfirm()
 		EventMgr.Dispatch(EventType.Player_EditName);
 		EventMgr.Dispatch(EventType.Login_Create_Role, {name = playerName, uid = PlayerClient:GetUid()}, true)
 		EventMgr.Dispatch(EventType.Net_Msg_Getted,"name_set");
-		
-		--数数接入		
-		ThinkingAnalyticsMgr:SetUser({ADID = CSAPI.GetADID()},TAUserType.Once)	
-		BuryingPointMgr:TrackEvents("register", {gender = currSex == 1 and "男" or "女",createTime = TimeUtil:GetTime() .. ""})
-
+		if CSAPI.IsADV() or CSAPI.IsDomestic() then
+			ShiryuSDK.OnRoleInfoUpdate();
+			BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ROLE_CONFIRM,{image = tostring(currSex)})
+		else
+			--数数接入
+			ThinkingAnalyticsMgr:SetUser({ADID = CSAPI.GetADID()},TAUserType.Once)
+			BuryingPointMgr:TrackEvents("register", {gender = currSex == 1 and "男" or "女",createTime = TimeUtil:GetTime() .. ""})
+		end
 		if closeFunc then
 			closeFunc();
 		else

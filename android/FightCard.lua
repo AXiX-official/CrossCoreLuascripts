@@ -94,6 +94,21 @@ function FightCardBase:Init(team, id, teamID, uid, data, typ)
     self.nStateDamage = 0 -- 阶段被伤害量统计
 end
 
+function FightCardBase:Destroy()
+    -- LogDebugEx("FightCardBase:Destroy()", self.name)
+    if self.bIsCommander then
+        -- 指挥官技能
+        self.skillMgr:Destroy()
+    else
+        self.skillMgr:Destroy()
+        self.bufferMgr:Destroy()
+    end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 -- 加载角色(从配置)
 function FightCardBase:LoadConfig()
     local config = MonsterData[self.id]

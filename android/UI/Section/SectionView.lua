@@ -120,6 +120,7 @@ function Awake()
     eventMgr:AddListener(EventType.Dungeon_DailyData_Update, DailyNewRefresh)
     --限时多倍
     eventMgr:AddListener(EventType.Section_Daily_Double_Update, OnDoubleRefresh)
+    eventMgr:AddListener(EventType.Dungeon_Double_Update, OnDoubleRefresh)
     --red
     eventMgr:AddListener(EventType.Dungeon_Box_Refresh, OnRedRefresh)
     eventMgr:AddListener(EventType.Mission_List, OnRedRefresh)
@@ -244,11 +245,11 @@ end
 function OnOpen()
     jumpData = data
     local baseScale = {1920, 1080}
-	local curScale = CSAPI.GetMainCanvasSize()
+	 local curScale = CSAPI.GetMainCanvasSize()
     -- local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
     -- local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
     -- offset.x =  (curScale[0] - baseScale[1] + fit1 + fit2)/2
-    offset.x =  (curScale[0] - baseScale[1])/2
+    offset.x = (curScale[0] - baseScale[1])/2
     offset.y = (curScale[1] - baseScale[2])/2 
 
     InitViewInfo()
@@ -1039,13 +1040,13 @@ function RefreshItemNew()
     if currDailyIndexL1 then
         local lua = layout2:GetItemLua(currDailyIndexL1)
         if lua then
-            lua.RefreshNew()
+            lua.RefreshTag()
         end
     end
     if currDailyIndexL2 then
         local lua = layout3:GetItemLua(currDailyIndexL2)
         if lua then
-            lua.RefreshNew()
+            lua.RefreshTag()
         end
     end
     RedPointMgr:ApplyRefresh()
@@ -1388,6 +1389,8 @@ function OnEnterCB1(item)
     end
     if sectionData:GetType() == SectionActivityType.Tower or sectionData:GetType() == SectionActivityType.NewTower then
         CSAPI.OpenView(path)
+    elseif sectionData:GetType() == SectionActivityType.Rogue then
+        CSAPI.OpenView("RogueMain")
     else
         CSAPI.OpenView(path, {id = item.GetID()})
     end
@@ -2124,8 +2127,7 @@ function OnDoubleRefresh()
 end
 
 function DailyDoubleRefresh()
-    --UIUtil:SetDoublePoint(dailyDouble, IsLimitDouble())
-	UIUtil:SetDoublePoint(dailyDouble, false)
+    UIUtil:SetDoublePoint(dailyDouble, IsLimitDouble())
 end
 
 function IsLimitDouble()
