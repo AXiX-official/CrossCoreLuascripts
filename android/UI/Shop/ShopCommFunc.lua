@@ -646,7 +646,8 @@ function this.GetChannelData(commodity, result, payType)
         local game_money = "1";
         local out_trade_no = result.out_trade_no;
         local subject = tostring(commodity:GetName());
-        local body = commodity:GetDesc();
+        -- local body = commodity:GetDesc();
+        local body="";
         local serverInfo = ChannelWebUtil.GetServerInfo();
         local extension_info = string.format("server_id=%s", serverInfo.id);
         t = {
