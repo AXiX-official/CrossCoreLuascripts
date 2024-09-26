@@ -52,7 +52,7 @@ function OnOpen()
 	if data then
 		itemInfo=data:GetCostGoods();
         local costInfo=data:GetCost();
-        costNum=costInfo and costInfo[2];
+        costNum=costInfo and costInfo[1][2];
         useNum=data:GetDefaultCostNum();
         onceLimit=data:GetMaxCostNum();
 	end

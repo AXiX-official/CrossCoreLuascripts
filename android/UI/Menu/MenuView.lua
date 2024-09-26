@@ -1803,26 +1803,34 @@ end
 
 -- 其它界面关闭
 function OnViewClosed(viewKey)
-    -- if (viewKey == "CRoleDisplayDetail") then
-    --     CSAPI.SetAnchor(centre, 0, 0, 0)
-    -- end
-    -- 是否更换了看板
-    -- if (viewKey == "CRoleDisplayMain") then
-    --     CSAPI.SetGOActive(centre, true)
-    --     SetDisplay()
-    -- end
+    closeViews = closeViews or {}
+    table.insert(closeViews,viewKey)
+    if (isApplyRefresh) then
+        return
+    end
+    isApplyRefresh = 1
+    FuncUtil:Call(OnViewCloseds, nil, 10)
+end 
 
-    -- if (not SceneMgr:IsMajorCity()) then
+-- 其它界面关闭
+function OnViewCloseds()
+    isApplyRefresh = nil
+    local isContain = false
+    for k, v in ipairs(closeViews) do
+        if (openViews[v]) then
+            openViews[v] = nil
+            isContain = true
+            HidePanel(v, false)
+        end
+    end
+    closeViews = nil
+    -- if (not openViews[viewKey]) then
+    --     -- 是不影响的界面，将不处理下面的逻辑	
     --     return
     -- end
 
-    if (not openViews[viewKey]) then
-        -- 是不影响的界面，将不处理下面的逻辑	
-        return
-    end
-
-    openViews[viewKey] = nil
-    HidePanel(viewKey, false)
+    -- openViews[viewKey] = nil
+    --HidePanel(viewKey, false)
 
     if (not CheckIsTop()) then
         return

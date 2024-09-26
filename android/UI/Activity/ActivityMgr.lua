@@ -255,15 +255,15 @@ function this:InitListOpenState()
                 if self.operateActive and not self.operateActive[v.id] then
                     isOpen = false
                 end
+            else
+                if isOpen and v.sTime and v.eTime then -- 时间限制
+                    local curTime = TimeUtil:GetTime()
+                    local sTime = TimeUtil:GetTimeStampBySplit(v.sTime)
+                    local eTime = TimeUtil:GetTimeStampBySplit(v.eTime)
+                    isOpen = curTime > sTime and curTime <= eTime
+                end
             end
 
-            if isOpen and v.sTime and v.eTime then -- 时间限制
-                local curTime = TimeUtil:GetTime()
-                local sTime = TimeUtil:GetTimeStampBySplit(v.sTime)
-                local eTime = TimeUtil:GetTimeStampBySplit(v.eTime)
-                isOpen = curTime > sTime and curTime <= eTime
-            end
-            
             self.activityListDatas[v.id].isOpen = isOpen
         end
     end
@@ -341,10 +341,12 @@ end
 function this:CheckIsOpenTime(_type)
     local cfg =Cfgs.CfgActiveList:GetByID(_type)
     if cfg and cfg.sTime and cfg.eTime then
-        local curTime = TimeUtil:GetTime()
-        local sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
-        local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
-        return curTime > sTime and curTime <= eTime
+        if not cfg.type or cfg.type ~= ALType.Pay then
+            local curTime = TimeUtil:GetTime()
+            local sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
+            local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
+            return curTime > sTime and curTime <= eTime    
+        end
     end
     return true
 end
@@ -515,16 +517,24 @@ function this:IsSignInContinue(type)
 end
 
 function this:SetOperateActive(aType,info)
-    if self.activityListDatas[aType] then
+    local _aType = tonumber(aType)
+    if self.activityListDatas[_aType] then
         if aType ==ActivityListType.SignInGift and info.payRate then
             if info.openTime <= TimeUtil:GetTime() and info.closeTime > TimeUtil:GetTime() then
-                self.activityListDatas[aType].isOpen = true
-                self.activityListDatas[aType].sTime = info.openTime
-                self.activityListDatas[aType].eTime = info.closeTime
-                self.operateActive[aType] = 1
+                self.activityListDatas[_aType].isOpen = true
+                self.activityListDatas[_aType].sTime = info.openTime
+                self.activityListDatas[_aType].eTime = info.closeTime
+                self.operateActive[_aType] = self.operateActive[_aType] or {}
+                self.operateActive[_aType].sTime = info.openTime
+                self.operateActive[_aType].eTime = info.closeTime
             end
         end
     end
+end
+
+function this:GetOperateActive(aType)
+    local _aType = tonumber(aType)
+    return self.operateActive[_aType]
 end
 
 ----------------------------------------界面弹出---------------------------------------

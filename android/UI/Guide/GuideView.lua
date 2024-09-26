@@ -222,7 +222,7 @@ function Show()
         resName = resName .. "_Match";
     end
 
-    if(resName)then
+    if(resName and posNode)then
         local posGO = ResUtil:CreateUIGO("Guide/" .. resName,posNode.transform);
         posLua = ComUtil.GetLuaTable(posGO);
         --LogError(cfg);
@@ -259,9 +259,9 @@ function Show()
 
     CSAPI.SetText(guiderName,showCfg.iconName or "");
 
-    local desc = showCfg.desc or "";
-    desc = string.format(desc,PlayerClient:GetName() or "");
-    CSAPI.SetText(descText,desc);
+    local descContent = showCfg.desc or "";
+    descContent = string.format(descContent,PlayerClient:GetName() or "");
+    CSAPI.SetText(descText,descContent);
 
     local hasIcon = not StringUtil:IsEmpty(showCfg.icon);
     
@@ -284,7 +284,7 @@ function Show()
 
     local descW = cfg.desc_size and cfg.desc_size[1] or 1000;
     local descH = cfg.desc_size and cfg.desc_size[2] or 197;
-
+    
     CSAPI.SetRTSize(desc,descW,descH);
 
     if(cfg.to_next)then

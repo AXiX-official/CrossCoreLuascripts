@@ -81,7 +81,7 @@ function ESignCB(proto)
 end
 
 function SetTime()
-    local _data = ActivityMgr:GetALData(ActivityListType.SignInGift)
+    local _data = ActivityMgr:GetOperateActive(ActivityListType.SignInGift)
     if _data and _data.sTime and _data.eTime then
         local tab1 = TimeUtil:GetTimeHMS(_data.sTime,"%Y/%m/%d %H:%M")
         local tab2 = TimeUtil:GetTimeHMS(_data.eTime,"%Y/%m/%d %H:%M")
