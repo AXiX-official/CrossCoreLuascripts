@@ -92,9 +92,15 @@ end
 
 function CheckItemShow(info)
 	if info.shopId then
-		local recordInfo = ShopMgr:GetRecordInfos(info.shopId)
-		if recordInfo and recordInfo.last_buy_time > 0 then --有记录
-			return true
+		-- local recordInfo = ShopMgr:GetRecordInfos(info.shopId)
+		-- if recordInfo and recordInfo.last_buy_time > 0 then --有记录
+		-- 	return true
+		-- end
+		local cfgBoard = Cfgs.CfgArchiveMultiPicture:GetByID(info.board_id)
+		if cfgBoard and cfgBoard.itemId then 
+			if BagMgr:GetCount(cfgBoard.itemId) > 0 then --查询背包
+				return true
+			end
 		end
 		if ShopMgr:HasBuyRecord(info.shopId) then --当期已购买
 			return true

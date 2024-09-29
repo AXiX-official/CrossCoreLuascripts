@@ -162,7 +162,12 @@ function this:GetBoardCountByID(id)
         for i, v in ipairs(cfg.infos) do
             local data = MulPicMgr:GetData(v.board_id)
             if v.shopId then
-                if ShopMgr:HasBuyRecord(v.shopId) then --已购买
+                local cfgBoard = Cfgs.CfgArchiveMultiPicture:GetByID(v.board_id)
+                if cfgBoard and cfgBoard.itemId then 
+                    if BagMgr:GetCount(cfgBoard.itemId) > 0 then --查询背包
+                        count = count + 1
+                        max = max + 1
+                    elseif ShopMgr:HasBuyRecord(v.shopId) then --已购买
                     if data and data:IsHad() then
                         count = count + 1
                     end
@@ -175,6 +180,7 @@ function this:GetBoardCountByID(id)
                         end
                         max = max + 1
                     end
+                end
                 end
             else
                 if data and data:IsHad() then

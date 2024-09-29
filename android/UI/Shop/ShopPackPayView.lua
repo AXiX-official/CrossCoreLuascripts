@@ -13,6 +13,8 @@ local commodityType=nil;
 local voucherItem=nil;
 local voucherList=nil;
 local realPrice=0;
+local endTime=0;--结束时间戳
+local countTime=0;
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV")
 	layout:Init("UIs/Shop/ShopPackItem",LayoutCallBack,true)
@@ -101,6 +103,13 @@ function OnOpen()
 			SetHasNum(0)
 			showNum=false;
 			SetDays(ShopMgr:GetMonthCardDays());
+			--自动刷新时间戳
+			for k, v in ipairs(commodity:GetCommodityList()) do
+				if v.data:GetType()==ITEM_TYPE.PROP and v.data:GetDyVal1()==PROP_TYPE.MemberReward and v.data:GetDy2Times() and TimeUtil:GetTime()<v.data:GetDy2Times() then --月卡
+					endTime=v.data:GetDy2Times();
+					break;
+				end
+			end
 		elseif (commodityType==2 and commodity:GetType()==RandRewardType.ITEM) then --随机配置
 			local bagNum=BagMgr:GetCount(commodity:GetID());
 			SetHasNum(bagNum)
@@ -239,16 +248,36 @@ function SetPrice(id, num,pIcon,pText)
 	CSAPI.SetText(pText, tostring(math.floor(num+0.5)));
 end
 
+function Update()
+	if endTime and endTime~=0 then
+		countTime=countTime+Time.deltaTime;
+		if countTime>=1 then
+			countTime=0;
+			if TimeUtil:GetTime()>=endTime then
+				InitSV();
+				endTime=0;
+			end
+		end
+	end
+end
+
 --创建物品列表
 function InitSV()
     --显示礼包中的所有数据
 	curDatas={};
     for k, v in ipairs(commodity:GetCommodityList()) do
-        if v.data:GetType()==ITEM_TYPE.PROP and v.data:GetDyVal1()==PROP_TYPE.MemberReward then
-            for key,val in ipairs(v.data:GetCfg().dy_tb) do
-				local itemData=GridUtil.RandRewardConvertToGridObjectData({id=val[1],num = val[2],type=val[3]});
-				table.insert(curDatas,{itemData=itemData,desc=LanguageMgr:GetByID(24021)});
-            end
+        if v.data:GetType()==ITEM_TYPE.PROP and v.data:GetDyVal1()==PROP_TYPE.MemberReward then --月卡
+			if v.data:GetDy2Times() and TimeUtil:GetTime()>=v.data:GetDy2Times() then
+				for key,val in ipairs(v.data:GetDy2Tb()) do
+					local itemData=GridUtil.RandRewardConvertToGridObjectData({id=val[1],num = val[2],type=val[3]});
+					table.insert(curDatas,{itemData=itemData,desc=LanguageMgr:GetByID(24021)});
+				end
+			else
+				for key,val in ipairs(v.data:GetCfg().dy_tb) do
+					local itemData=GridUtil.RandRewardConvertToGridObjectData({id=val[1],num = val[2],type=val[3]});
+					table.insert(curDatas,{itemData=itemData,desc=LanguageMgr:GetByID(24021)});
+				end
+			end
         else
 			local itemData=GridUtil.RandRewardConvertToGridObjectData({id=v.cid,num = v.num,type=v.type});
 			table.insert(curDatas,{itemData=itemData,desc=LanguageMgr:GetByID(24020)});

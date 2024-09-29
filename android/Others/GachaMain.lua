@@ -58,6 +58,8 @@ function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.ItemPool_Draw_Ret, OnDrawRet);
     eventMgr:AddListener(EventType.Bag_Update, OnBagUpdate);
+    RedPointMgr:SetDayRedToday(RedPointDayOnceType.GachaBall);
+    EventMgr.Dispatch(EventType.RedPoint_Refresh);
 end
 
 function OnDestroy()
@@ -358,7 +360,16 @@ function OnClick()
             end
         end
         if count == 0 then
-            Tips.ShowTips(LanguageMgr:GetTips(37001));
+            -- Tips.ShowTips(LanguageMgr:GetTips(37001));
+            local dialogData={
+                content = LanguageMgr:GetByID(67005),
+                okCallBack = function()
+                    if jumpId then
+                        JumpMgr:Jump(jumpId)
+                    end
+                end
+            }
+		    CSAPI.OpenView("Dialog", dialogData);
             do
                 return
             end

@@ -51,7 +51,7 @@ local conf = {
 {'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
 {'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
 {'8',	'8',	'arch_camping_with_fireworks',	'闲适假日',	'',	'',	'',	'',	''},
-{'8',	'8',	'',	'',	'',	'4',	'29',	'arch_camping_with_fireworks',	'80418'},
+{'8',	'8',	'',	'',	'',	'1',	'29',	'arch_camping_with_fireworks',	'80418'},
 {'9',	'9',	'arch_law_of_the_streets',	'都市掠影',	'',	'',	'',	'',	''},
 {'9',	'9',	'',	'',	'',	'1',	'39',	'arch_law_of_the_streets',	'80419'},
 },

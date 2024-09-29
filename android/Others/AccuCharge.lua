@@ -58,17 +58,22 @@ function SetTime()
     local startTime = cfgActiveList.sTime and TimeUtil:GetTimeStampBySplit(cfgActiveList.sTime) or nil
     local endTime = cfgActiveList.eTime and TimeUtil:GetTimeStampBySplit(cfgActiveList.eTime) or nil
     local str1, str2, str3, str4 = "00", "00", "00", "00"
+    local str21, str22, str23, str24 = "00", "00", "00", "00"
     if (startTime) then
         local data1 = TimeUtil:GetTimeHMS(startTime)
         str1 = data1.month
         str2 = data1.day
+        str3 = data1.hour<10 and "0"..data1.hour or data1.hour
+        str4 = data1.min<10 and "0"..data1.min or data1.min 
     end
     if (endTime) then
         local data1 = TimeUtil:GetTimeHMS(endTime)
-        str3 = data1.month
-        str4 = data1.day
+        str21 = data1.month
+        str22 = data1.day
+        str23 = data1.hour<10 and "0"..data1.hour or data1.hour
+        str24 = data1.min<10 and "0"..data1.min or data1.min
     end
-    CSAPI.SetText(txtTime, string.format("%s/%s--%s/%s", str1, str2, str3, str4))
+    CSAPI.SetText(txtTime, string.format("%s/%s %s:%s--%s/%s %s:%s", str1, str2, str3, str4,str21, str22, str23, str24))
 end
 
 function RefreshPanel()

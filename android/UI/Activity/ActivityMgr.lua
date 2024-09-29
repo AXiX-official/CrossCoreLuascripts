@@ -484,7 +484,13 @@ function this:CheckRed(type)
     elseif type==ActivityListType.GachaBall then
         local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.GachaBall)
         if cfg and cfg.info then
-            return ItemPoolActivityMgr:CheckPoolHasRedPoint(cfg.info[1].cfgId);
+            local cfgId=cfg.info[1].cfgId;
+            local info=ItemPoolActivityMgr:CheckPoolHasRedPoint(cfgId);
+            local pool=ItemPoolActivityMgr:GetPoolInfo(cfgId);
+            local info2=RedPointMgr:GetDayRedState(RedPointDayOnceType.GachaBall)
+            if pool and pool:IsOver()~=true and (info or info2) then
+                return true;
+            end
         end
         return false;
     else

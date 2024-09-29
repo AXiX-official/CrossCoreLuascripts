@@ -423,6 +423,21 @@ function this:GetHeadFrameExpiry()
 	return self.data.expiry
 end
 
+--是否是dy2_tb奖励生效日期
+function this:GetDy2Times()
+	if self.cfg and self.cfg.dy2Times then
+		return TimeUtil:GetTimeStampBySplit(self.cfg.dy2Times)
+	end
+	return nil
+end
+
+function this:GetDy2Tb()
+	if self.cfg and self.cfg.dy2_tb then
+		return self.cfg.dy2_tb;
+	end
+	return nil;
+end
+
 -- ----------------------------------------状态记录--------------------------------------
 -- --是否被选择为素材
 -- function this:GetIsSelect()

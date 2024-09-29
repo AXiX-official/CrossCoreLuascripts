@@ -1780,3 +1780,7 @@ eOpenConditionType = {}
 eOpenConditionType.Lv = 1 --等级
 eOpenConditionType.Dup = 2 --关卡
 
+-- 活动入口id
+eActiveEntryId = {}
+eActiveEntryId.STAR = 13 --十二星宫
+eActiveEntryId.PET = 16 --宠物

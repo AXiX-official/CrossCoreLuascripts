@@ -524,6 +524,7 @@ function this:SetCommResetInfo(id,topTabID)
 	if isIn then--是的话获取最新商品重置时间
 		local infos=pageData:GetCommRefreshInfos(topTabID);
 		if topTabID then
+			self.localRecords = self.localRecords or {};
 			self.localRecords[id]=self.localRecords[id] or {}
 			self.localRecords[id][topTabID]=infos;
 		else

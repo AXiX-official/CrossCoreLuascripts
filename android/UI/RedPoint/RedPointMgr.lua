@@ -41,10 +41,15 @@ RedPointType.AccuCharge = "AccuCharge" --累计充值
 
 RedPointType.SpecialExploration="SpecialExploration"--特殊勘探
 
+--每日固定显示一次红点的类型
+RedPointDayOnceType={}
+RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机
+
 local this = MgrRegister("RedPointMgr")
 
 function this:Clear()
     self.rps = nil;
+    self.dayRedList=nil;
 end
 
 function this:UpdateData(rpType, data)
@@ -72,6 +77,48 @@ end
 function this:Refresh()
     self.applyRefresh = nil;
     EventMgr.Dispatch(EventType.RedPoint_Refresh);
+end
+
+function this:SetDayRedToday(_dayOnceType)
+    self.dayRedList=self.dayRedList or {};
+    if _dayOnceType then
+        local stamp=TimeUtil.GetTime();
+        local time = nil
+        local t=TimeUtil:GetTimeHMS(stamp,"*t");
+        local time2=self.dayRedList[_dayOnceType];
+        if (t and t.hour<3) then--往前退12小时拿日期比较
+            time=TimeUtil:GetTimeHMS((stamp-43200), "%Y:%m:%d");
+        else
+            time=TimeUtil:GetTimeHMS(stamp, "%Y:%m:%d")
+        end
+        if ((time2 and time2~=time) or time2==nil)then --3点后才记录
+            self.dayRedList[_dayOnceType]=time;
+            FileUtil.SaveToFile("dayRedList.txt",self.dayRedList)
+        end
+    end
+end
+
+--是否需要显示红点的状态，true为要显示
+function this:GetDayRedState(_dayOnceType)
+    if self.dayRedList==nil then
+        self.dayRedList=FileUtil.LoadByPath("dayRedList.txt");
+    end
+    self.dayRedList=self.dayRedList or {};
+    local isRed=true;
+    if _dayOnceType and self.dayRedList[_dayOnceType] then --判断记录日是否和今天相同
+        local stamp=TimeUtil.GetTime();
+        local time = nil
+        local t=TimeUtil:GetTimeHMS(stamp,"*t");
+        if (t and t.hour<3) then--往前退12小时拿日期比较
+            time=TimeUtil:GetTimeHMS((stamp-43200), "%Y:%m:%d");
+        else
+            time=TimeUtil:GetTimeHMS(stamp, "%Y:%m:%d")
+        end
+        if time==self.dayRedList[_dayOnceType] then
+            return false;
+        end
+    end
+    return isRed;
 end
 
 return this;

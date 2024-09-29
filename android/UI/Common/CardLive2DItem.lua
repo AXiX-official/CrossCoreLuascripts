@@ -325,10 +325,12 @@ function OnClick()
         return
     end
     PlayVoice()
+    MissionMgr:DoClickBoard()
 end
 
 -- 类型
 function PlayVoice(type)
+    hideTxt = false
     type = type == nil and RoleAudioType.touch or type
     if (type == RoleAudioType.touch) then
         local cfg = Cfgs.character:GetByID(modelId)
