@@ -409,7 +409,7 @@ function this:SaveEditTeam(callBack)
 				end
 				--从旧队伍中移除卡牌
 				if oldIndex~=-1 and oldIndex~=index then
-					local teamData=self:GetTeamData(oldIndex);
+					local teamData=self:GetTeamData(oldIndex,true);
 					if teamData~=nil then
 						local isLeader=teamData:IsLeader(val.cid);
 						teamData:RemoveCard(val.cid);
