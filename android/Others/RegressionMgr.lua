@@ -13,6 +13,7 @@ function this:Clear()
     self.checkReturningPlrProto = {}
     self.closeTime = 0
     self.activityInfos = {}
+    self.fundTime = 0
 end
 
 -- 回归数据
@@ -192,6 +193,18 @@ function this:GetActivityEndTime(type)
     return 0
 end
 
+function this:SetFundTime(proto)
+    self.fundTime = proto.validity
+    EventMgr.Dispatch(EventType.Regression_Fund_Buy)
+end
+
+function this:IsBuyFund()
+    if self.fundTime > 0 and self.fundTime > TimeUtil:GetTime() then
+        return true
+    end
+    return false
+end
+
 ------------------------------------------------------------------红点---------------------------------------------------------------------
 
 function this:CheckRedPointData()
@@ -225,22 +238,22 @@ function this:CheckRed(_type,_activityId,redInfos,_info)
         return DungeonUtil.HasMultiNum(_activityId)
     elseif _type == RegressionActiveType.Fund then
         local shopId = (_info and _info.infos and _info.infos[1]) and _info.infos[1].shopId or 0
-        local recordInfo = ShopMgr:GetRecordInfos(shopId)
-        local isBuy = recordInfo and recordInfo.last_buy_time > 0    
+        local isBuy = self:IsBuyFund()
         local datas = MissionMgr:GetDatas(eTaskType.Regression)
         if #datas > 0 then
             for i, v in ipairs(datas) do
                 if (not MissionMgr:CheckIsReset(v) and v:CheckIsOpen() and v:IsFinish() and not v:IsGet()) then
                     if v:GetFundId() then 
+                        return true
+                    else
                         if isBuy then --有购买基金
                             return true
                         end
-                    else
-                        return true
                     end
                 end
             end
         end
+        return false
     elseif _type == RegressionActiveType.Tasks then
         return MissionMgr:CheckRed2(eTaskType.RegressionTask,_activityId)
     elseif _type == RegressionActiveType.Sign then

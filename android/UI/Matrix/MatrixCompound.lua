@@ -5,6 +5,7 @@ local priceUD = 2 -- 价格  1：由高到高低  2：由低到高
 local qualityUD = 1 -- 品质
 
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("MatrixCompound",gameObject)
     UIUtil:AddTop2("MatrixCompound", gameObject, function()
         view:Close()
     end, nil, {ITEM_ID.GOLD})
@@ -19,7 +20,7 @@ function Awake()
         lua.Init(15, RefreshPanel)
     end)
     
-	AdaptiveConfiguration.SetLuaObjUIFit("MatrixCompound",gameObject)
+
 end
 
 function LayoutCallBack(index)
@@ -49,6 +50,8 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
+    AdaptiveConfiguration.LuaView_Lua_Closed("MatrixCompound")
+
 end
 
 function OnOpen()

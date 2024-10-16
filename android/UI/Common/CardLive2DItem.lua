@@ -61,7 +61,6 @@ function SetImg()
     CSAPI.SetScale(prefabObj, scale, scale, 1)
     if (l2dName) then
         if (l2dGo) then
-            SetBlack(false)
             CSAPI.RemoveGO(l2dGo)
             l2dGo = nil
         end
@@ -69,7 +68,6 @@ function SetImg()
             l2dGo = go
             local l2d = ComUtil.GetCom(l2dGo, "CSpine")
             graphic = ComUtil.GetComInChildren(l2dGo, "SkeletonGraphic")
-            SetBlack(false)
             if (l2d) then
                 spineTools:Init(l2d)
             end
@@ -77,7 +75,7 @@ function SetImg()
             if (not l2d or not l2d.animationState) then
                 isHeXie = true
             end
-
+            SetBlack()
             SetTouch()
 
             if (callBack) then
@@ -270,8 +268,9 @@ function PlayAudio(cfgChild)
         if (#audioIds > 1) then
             if (content.actions or content.clicks or content.randomActions or content.orderActions) then
                 -- 顺序
-                if (records[cfgChild.index]) then
-                    index = records[cfgChild.index]
+                local realIndex = GetRealIndex(cfgChild)
+                if (records[realIndex]) then
+                    index = records[realIndex]
                 end
             else
                 -- 随机 
@@ -348,11 +347,10 @@ function GetImgScale()
 end
 
 function SetBlack(isBlack)
-    if l2dGo and graphic then
-        graphic.color = isBlack and UnityEngine.Color.black or UnityEngine.Color.white
+    if l2dGo then
+        UIUtil:SetLiveBroadcast(l2dGo,isBlack)
     end
 end
-
 -------------进场------------------------
 
 function CheckIn()
@@ -515,7 +513,7 @@ function SetContent(cfgChild)
     -- 顺序动作
     if (content.orderActions) then
         local index = records[cfgChild.index] or 0
-        index = (index + 1) > #content.orderActions and 1 or  (index + 1)
+        index = (index + 1) > #content.orderActions and 1 or (index + 1)
         sName = content.orderActions[index]
         records[cfgChild.index] = index
     end
@@ -524,11 +522,12 @@ function SetContent(cfgChild)
         if (spineTools:CheckMulClickIsPlay(GetTrackIndex(cfgChild))) then
             sName = nil
         else
+            local realIndex = GetRealIndex(cfgChild)
             local num = 1
-            if (records[cfgChild.index] and records[cfgChild.index] < #content.clicks) then
-                num = records[cfgChild.index] + 1
+            if (records[realIndex] and records[realIndex] < #content.clicks) then
+                num = records[realIndex] + 1
             end
-            records[cfgChild.index] = num
+            records[realIndex] = num
             progress = content.clicks[num]
             timeScale = progress == 0 and -1 or 1
             isClicksLast = num >= #content.clicks
@@ -538,11 +537,21 @@ function SetContent(cfgChild)
     return sName, timeScale, progress, isClicksLast
 end
 
+function GetRealIndex(cfgChild)
+    if(cfgChild.content and cfgChild.content.trackIndex) then 
+        return cfgChild.content.trackIndex
+     end 
+     return cfgChild.index
+end
+
 -- 轨道
 function GetTrackIndex(cfgChild)
     if (cfgChild.sType < 6) then
         return 1
     end
+    if(cfgChild.content and cfgChild.content.trackIndex) then 
+       return cfgChild.content.trackIndex
+    end 
     return cfgChild.index
 end
 

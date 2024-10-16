@@ -27,6 +27,8 @@ function this:InitLocalCfg()
     self:SetData(s_fight_action_key, s_fight_action_default)
     self:SetData(s_fight_simple_key, s_fight_simple_default)
     self:SetData(s_language_key, s_language_key_default) -- 语音
+    self:SetData(s_other_live_key, s_other_live_default) -- 语音
+    self:SetData(s_other_equipLock_key, s_other_equipLock_default) -- 语音
     -- todo addmore
 end
 
@@ -95,6 +97,7 @@ end
 function this:UpdateTargetFPS()
     --local rate = self.isHigh and FightClient:IsFightting() and self:GetHighFPS() or 30;
     local rate = self.isHigh and self:GetHighFPS() or 30;
+    --LogError(rate);
     CSAPI.SetTargetFrameRate(rate);
 end
 function this:SetHighFPS(isHigh)

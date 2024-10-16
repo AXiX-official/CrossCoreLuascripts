@@ -1,4 +1,4 @@
-local childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel", "SettingCDKPanel"}
+local childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "SettingCDKPanel"}
 local panels = {}
 local curPanel = nil
 local curIndex = 1
@@ -68,11 +68,11 @@ function OnOpen()
 			   view:Close()
 		   end)
 		   if CSAPI.IsADV() then
-			   childPanels = { "SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel", "CustomerServiceCenter" }
-			   leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14045, "Setting/icon5"}}
+			   childPanels = { "SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "CustomerServiceCenter" }
+			   leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14070,"Setting/icon6"},{14045, "Setting/icon5"}}
 		   else
-			   childPanels = { "SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel", "SettingCDKPanel" }
-			   leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14002,"Setting/icon4"}}
+			   childPanels = { "SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "SettingCDKPanel" }
+			   leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14070,"Setting/icon6"},{14002,"Setting/icon4"}}
 		   end
 		   if CSAPI.IsADV() then
 			   CSAPI.SetGOActive(btnSign, true)
@@ -99,11 +99,10 @@ function OnOpen()
 			UIUtil:AddTop2("SettingView", backNode, function()
 				view:Close()
 			end)
-			leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14002,"Setting/icon4"}}
+			leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14070,"Setting/icon6"},{14002,"Setting/icon4"}}
 			if CSAPI.IsAppReview() then
 				leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"}}
-			end
-			CSAPI.SetGOActive(btnSign, true)
+			end			CSAPI.SetGOActive(btnSign, true)
 			CSAPI.SetGOActive(btnExit, false)
 		end
 	end
@@ -117,7 +116,7 @@ function InitLeftPanel()
 		leftPanel = ComUtil.GetLuaTable(go)
 	end
 	-- local leftDatas = {{14000, "Setting/icon1"}, {14001, "Friend/icon2"}, {14002, "Friend/icon3"}, {14003, "Friend/icon4"}, {}, {14004, "Friend/icon4"}} --多语言id，需要配置英文
-	leftPanel.Init(this, leftDatas)
+	leftPanel.Init(this, leftDatas, nil, 140)
 end
 
 function RefreshPanel()
@@ -137,6 +136,9 @@ function RefreshPanel()
 		local itemName=nil;
 		if(panels[index]) then
 			panels[index].SetFade(true)
+			if panels[index].Refresh then
+				panels[index].Refresh(data)
+			end
 		else
 			itemName = childPanels[index]
 			if itemName==nil or itemName=="" or itemName=="CustomerServiceCenter" then
@@ -152,6 +154,9 @@ function RefreshPanel()
 			else
 				local go = ResUtil:CreateUIGO("Setting/" .. itemName, node.transform)
 				local panel = ComUtil.GetLuaTable(go)
+				if panel.Refresh then
+					panel.Refresh(data)
+				end
 				if index ~= 4 then
 					local screenCount= SettingMgr:GetScreenCount()
 					CSAPI.SetLocalPos(go,-screenCount,0)
@@ -171,10 +176,16 @@ function RefreshPanel()
 	---国内逻辑-----------------------
 		if(panels[index]) then
 			panels[index].SetFade(true)
+			if panels[index].Refresh then
+				panels[index].Refresh(data)
+			end
 		else
 			local itemName = childPanels[index]
 			local go = ResUtil:CreateUIGO("Setting/" .. itemName, node.transform)
 			local panel = ComUtil.GetLuaTable(go)
+			if panel.Refresh then
+				panel.Refresh(data)
+			end
 			if index ~= 4 then
 				local screenCount= SettingMgr:GetScreenCount()
 				CSAPI.SetLocalPos(go,-screenCount,0)
@@ -187,9 +198,6 @@ function RefreshPanel()
 			curPanel.CloseSelectLanguage()
 		end
 	end
-
-
-
 end
 
 --重登
@@ -212,8 +220,8 @@ function OnClickSign()
 			Logout();
 		end
 		CSAPI.OpenView("Dialog", tips)
-	elseif CSAPI.IsDomestic() then
-		ShiryuSDK.ShowUserCenter();
+		elseif CSAPI.IsDomestic() then
+			ShiryuSDK.ShowUserCenter();
 	else
 		CSAPI.OpenView("SettingWindow")
 	end

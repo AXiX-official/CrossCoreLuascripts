@@ -79,6 +79,7 @@ end
 
 -- 开始战斗
 function OnClickGO()
+    CheckReady()
     if (isReady) then
         FightProto:EnterRogueSDuplicate(curData:GetID(), teamlist)
     end

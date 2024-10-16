@@ -68,7 +68,6 @@ function SetImg()
     CSAPI.SetScale(prefabObj, scale, scale, 1)
     if (l2dName) then
         if (l2dGo) then
-            --SetBlack(false)
             CSAPI.RemoveGO(l2dGo)
             l2dGo = nil
         end
@@ -76,7 +75,6 @@ function SetImg()
             l2dGo = go
             local l2d = ComUtil.GetCom(l2dGo, "CSpine")
             graphic = ComUtil.GetComInChildren(l2dGo, "SkeletonGraphic")
-            --SetBlack(false)
             if(l2d) then 
                 spineTools:Init(l2d)
             end 
@@ -84,7 +82,7 @@ function SetImg()
             if (not l2d or not l2d.animationState) then
                 isHeXie = true
             end
-
+            SetBlack()
             SetTouch()
 
             if (callBack) then
@@ -345,11 +343,10 @@ function GetImgScale()
 end
 
 function SetBlack(isBlack)
-    if l2dGo and graphic then
-        graphic.color = isBlack and UnityEngine.Color.black or UnityEngine.Color.white
+    if l2dGo then
+        UIUtil:SetLiveBroadcast(l2dGo,isBlack)
     end
 end
-
 -------------进场------------------------
 
 function CheckIn()

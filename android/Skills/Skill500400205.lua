@@ -9,7 +9,7 @@ end
 -- 回合结束时
 function Skill500400205:OnRoundOver(caster, target, data)
 	-- 500400205
-	if self:Rand(2000) then
+	if self:Rand(2500) then
 		self:tFunc_500400205_500400206(caster, target, data)
 		self:tFunc_500400205_500400207(caster, target, data)
 	end

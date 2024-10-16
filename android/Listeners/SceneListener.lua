@@ -30,13 +30,25 @@ function OnSceneLoadStart(param)
     cfgScene = Cfgs.scene:GetByID(param);
 
     if(cfgScene and cfgScene.bgm)then
-         PlayBGM(cfgScene.bgm);
+        --PlayBGM(cfgScene.bgm);
+        OnSceneLoadStart_PlayBGM(cfgScene)
     end
     
     if(cfgScene and SceneMgr)then     
         SceneMgr:SetCurrScene(cfgScene);        
     end
 end
+
+function OnSceneLoadStart_PlayBGM(cfgScene)
+    if(cfgScene.key=="MajorCity") then 
+        --主城音乐走音乐表
+        local cfg = BGMMgr:GetMajorCityMusicCfg()
+        PlayBGM(cfg.cue_name_2)
+    else 
+        PlayBGM(cfgScene.bgm)
+    end
+end
+
 --释放资源
 function Release() 
     if(not ReleaseMgr)then

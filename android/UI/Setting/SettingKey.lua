@@ -47,3 +47,11 @@ s_fight_simple_default = 2
 
 s_language_key = "s_language_key"
 s_language_key_default = 0  --日：0  中：1 
+
+--直播 1：开  2：关
+s_other_live_key = "s_other_live_key"
+s_other_live_default = 2
+
+--芯片自动上锁 1：开  2：关
+s_other_equipLock_key = "s_other_equipLock_key"
+s_other_equipLock_default = 1

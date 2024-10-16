@@ -2,10 +2,17 @@ local selectDatas = {}
 local isDontClose = false
 
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("MatrixRemould", gameObject)
+
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/Matrix/MatrixRemouldItem", LayoutCallBack, true)
 
     UIUtil:AddQuestionItem("MatrixRemould", gameObject)
+end
+
+function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("MatrixRemould")
+
 end
 
 function LayoutCallBack(index)

@@ -54,7 +54,7 @@ function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
         end
     end
     oldModelId = _modelId
-
+    SetBlack()
     SetTouch()
 
     SetImg()
@@ -184,7 +184,9 @@ function PlayLC()
 end
 
 function SetBlack(isBlack)
-
+    if imgObj then
+        UIUtil:SetLiveBroadcast(imgObj,isBlack)
+    end
 end
 
 function GetIconName()

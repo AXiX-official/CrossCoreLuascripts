@@ -9,7 +9,7 @@ end
 -- 伤害前
 function Buffer332605:OnBefourHurt(caster, target)
 	-- 332605
-	self:AddAttr(BufferEffect[332605], self.caster, self.card, nil, "bedamage",-0.10*self.nCount)
+	self:AddTempAttr(BufferEffect[332605], self.caster, self.card, nil, "bedamage",-0.10*self.nCount)
 end
 -- 行动结束
 function Buffer332605:OnActionOver(caster, target)

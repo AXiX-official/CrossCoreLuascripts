@@ -72,9 +72,11 @@ function SetFaceItem()
         ResUtil:CreateUIGOAsync("Common/CharacterImgItem", faceNode, function(go)
             faceLua = ComUtil.GetLuaTable(go)
             faceLua.Init(modelId, CreateFaceCB, isUseShopImg)
+            SetBlack()
         end)
     else
         faceLua.Init(modelId, CreateFaceCB, isUseShopImg)
+        SetBlack()
     end
 end
 

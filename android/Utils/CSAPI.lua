@@ -656,7 +656,7 @@ this.GetCurrUIEventObj=CS.CSAPI.GetCurrUIEventObj;
 this.ReleaseSound = CS.CSAPI.ReleaseSound;
 --播放声音
 this.csPlaySound = CS.CSAPI.PlaySound;
-function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff)
+function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff,startTime)
 --	--屏蔽人声
 --	if(cueSheet and string.find(cueSheet, "cv/"))then
 --        LogError(cueSheet);    
@@ -677,7 +677,8 @@ function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, call
 	fadeSpeed = fadeSpeed or - 1;
 	--LogError(tostring(cueSheet) .. ":" .. tostring(cueName) .. ",isLoop:" .. tostring(isLoop) .. ",tag:" .. tostring(tag));
 	volumeCoeff = volumeCoeff or 100;
-	this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff);
+	startTime = startTime or 0
+	return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime);
 end
 
 --播放UI声音
@@ -745,7 +746,7 @@ function this.PlayBGM(bgm, fadeDelay, volumeCoeff, lockKey)
 	local cueSheet = "bgms/" .. bgm .. ".acb";	
 	
 	local isLoop = false;
-	CSAPI.PlaySound(cueSheet, bgm, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff);
+	this.sound = CSAPI.PlaySound(cueSheet, bgm, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff);
 	return _bgm
 end
 function this.StopBGM(fadeSpeed)
@@ -760,6 +761,10 @@ function this.ReplayBGM(bgm)
 	if(bgm) then 
 		CSAPI.PlayBGM(bgm)
 	end 
+end
+
+function this.GetSound()
+	return this.sound
 end
 
 --设置声音语言后缀
@@ -1138,36 +1143,37 @@ this.IPhonePlayer=CS.UnityEngine.RuntimePlatform.IPhonePlayer;
 this.WindowsEditor=CS.UnityEngine.RuntimePlatform.WindowsEditor;
 
 
---this.IsADV=CS.CSAPI.IsADV;
---this.IsDomestic=CS.CSAPI.IsDomestic;
-function this.IsADV()
-	return false;
-end
-function this.IsDomestic()
-	return false;
-end
+this.IsADV=CS.CSAPI.IsADV;
+this.IsDomestic=CS.CSAPI.IsDomestic;
+--function this.IsADV()
+--	return false;
+--end
+--function this.IsDomestic()
+--	return false;
+--end
 
 this.SetUIFit=CS.CSAPI.SetUIFit;
 this.AddUIAdaptive=CS.CSAPI.AddUIAdaptive;
 this.RemoveAdaptive=CS.CSAPI.RemoveAdaptive;
 this.AddEventListener=CS.CSAPI.AddEventListener;
 this.RemoveEventListener=CS.CSAPI.RemoveEventListener;
--- this.UIFitoffsetTop=CS.CSAPI.UIFitoffsetTop;
--- this.UIFoffsetBottom=CS.CSAPI.UIFoffsetBottom;
--- this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
--- this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
-function  this.UIFitoffsetTop()
-	return 0;
-end
-function  this.UIFoffsetBottom()
-	return 0;
-end
-function  this.UIFittopAnchor()
-	return 0;
-end
-function  this.UIbottomAnchor()
-	return 0;
-end
+this.UIFitoffsetTop=CS.CSAPI.UIFitoffsetTop;
+this.UIFoffsetBottom=CS.CSAPI.UIFoffsetBottom;
+this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
+this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
+this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
+--function  this.UIFitoffsetTop()
+--	return 0;
+--end
+--function  this.UIFoffsetBottom()
+--	return 0;
+--end
+--function  this.UIFittopAnchor()
+--	return 0;
+--end
+--function  this.UIbottomAnchor()
+--	return 0;
+--end
 
 this.QuitGame =CS.CSAPI.QuitGame;
 this.GetDeviceID =CS.CSAPI.GetDeviceID;
@@ -1179,10 +1185,10 @@ this.ZLongServerId=CS.ShiryuStreamingAssets.ins.GetServerId
 
 this.PCSetWindow=CS.CSAPI.PCSetWindow;
 this.APKVersion=CS.CSAPI.APKVersion;
---this.RegionalCode=CS.CSAPI.RegionalCode;
-function this.RegionalCode()
-	return 100;
-end
+this.RegionalCode=CS.CSAPI.RegionalCode;
+--function this.RegionalCode()
+--	return 100;
+--end
 
 
 ---是否存在新手引导

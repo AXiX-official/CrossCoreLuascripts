@@ -593,24 +593,46 @@ end
 
 -- 注销
 function this:Exit()
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        ShiryuSDK.Logout()
+    else
+        PlayerClient:PlayerClientExitClear()
+        PlayerClient:EndGameExitBackLogin()
+        --self.canEnter = nil;
+        --self.switchState = nil;
+        --self.openSummon = nil;
+        --self.newPlayerFightIndex = nil;
+        --self.sdkInfo = nil;
+        --self:SetChangeLine();
+        --MgrCenter:Clear()
+        --LoginProto:Logout()
+        --FightClient:Reset();
+        --BattleMgr:SetAIMoveState(false);
+        --EventMgr.Dispatch(EventType.Login_Quit, nil, true);
+    end
+end
+---清除本脚本变量
+function this:PlayerClientExitClear()
     self.canEnter = nil;
     self.switchState = nil;
     self.openSummon = nil;
     self.newPlayerFightIndex = nil;
     self.sdkInfo = nil;
     self:SetChangeLine();
-
+end
+---离开游戏返回登录需要清除的变量
+function this:EndGameExitBackLogin()
     MgrCenter:Clear()
-    if CSAPI.IsADV() or CSAPI.IsDomestic() then
-        ShiryuSDK.Logout()
-    else
-        LoginProto:Logout()
-    end
+    LoginProto:Logout()
     FightClient:Reset();
     BattleMgr:SetAIMoveState(false);
     EventMgr.Dispatch(EventType.Login_Quit, nil, true);
 end
-
+---SDK退登返回 调用
+function this:SDKExit()
+    PlayerClient:PlayerClientExitClear()
+    PlayerClient:EndGameExitBackLogin()
+end
 -- 播放战斗OP
 function this:PlayFightOP()
     FightClient.NewPlayerDrasu=false;

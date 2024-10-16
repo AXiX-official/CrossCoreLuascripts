@@ -117,7 +117,7 @@ function this:SearchBeastEquips(cardId)
                 local slot=v:GetSlot();
                 local score=v:GetScore();
 				slotEquips[key]=slotEquips[key] or {};
-				-- Log(key.."\t"..v:GetName().."\t"..slot.."\t"..score)
+				-- Log(key.."\tName："..v:GetName().."\tID："..v:GetID().."\tSlot："..slot.."\tScore："..score)
 				-- Log(slotEquips[key][slot])
                 if slotEquips[key][slot]==nil or (slotEquips[key][slot]~=nil and slotEquips[key][slot].score<score) then
 					local isBig=false;
@@ -137,7 +137,7 @@ function this:SearchBeastEquips(cardId)
 						slotEquips[1][slot].score=score;
 					end
 					-- Log(slotEquips[1][slot])
-					-- slotEquips[key][slot].slot=slot;
+					slotEquips[key][slot].slot=slot;
                 end
             end
         end
@@ -183,7 +183,9 @@ function this:SearchBeastEquips(cardId)
 	for k,v in ipairs(tmpList) do --找到优先度最高的五个装备id
 		local isBreak=false;
 		for key,val in pairs(v.info) do
-			realEquips[key]=val;
+			if realEquips[key]==nil then
+				realEquips[key]=val;
+			end
 			local isFull=true;
 			for i=1,5 do
 				if realEquips[i]==nil then
@@ -214,6 +216,8 @@ function this:SearchBeastEquips(cardId)
             end
         end
         if hasEquip==false then
+			-- local equip=self:GetEquip(v.id);
+			-- Log("名字："..tostring(equip:GetName()));
             table.insert(ids,v.id);
         end
     end
@@ -262,12 +266,18 @@ function this:GetEquipByCfgID(cfgId)
 	return equip;
 end
 
---返回套装分类的装备数据 返回的数据结构：{{cfg=套装配置表数据,equips1,equip2,...}} qualityFilters:品质筛选 配置表中show不等于1则不返回
+--返回套装分类的装备数据 返回的数据结构：{{cfg=套装配置表数据,equips1,equip2,...}} qualityFilters:品质筛选 配置表中show不等于1则不返回，配置表中时间字段大于当前时间时不返回
 function this:GetEquipSuitData2(qualityFilters,hasEquipped,notContainID)
 	local arr={};
 	if self.equips then
+		local currTime=TimeUtil:GetTime();
 		for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do
-			if cfg.show==1 then
+			local canAdd=true;
+			if cfg.limitTime then
+				local lTime=TimeUtil:GetTimeStampBySplit(cfg.limitTime)
+				canAdd=currTime>=lTime;
+			end
+			if cfg.show==1 and canAdd then
 				local list={};
 				list.cfg=cfg;
 				for _, v in pairs(self.equips) do
@@ -304,8 +314,14 @@ end
 function this:GetEquipSuitData(qualityFilters,hasEquipped,notContainID)
 	local arr={};
 	if self.equips then
+		local currTime=TimeUtil:GetTime();
 		for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do
-			if cfg.show==1 then
+			local canAdd=true;
+			if cfg.limitTime then
+				local lTime=TimeUtil:GetTimeStampBySplit(cfg.limitTime)
+				canAdd=currTime>=lTime;
+			end
+			if cfg.show==1 and canAdd then
 				local list={};
 				list.cfg=cfg;
 				for _, v in pairs(self.equips) do
@@ -375,6 +391,7 @@ end
 function this:GetEquipSuitDataByStr(str,qualityFilters,notContainID,hasEquipped)
 	local arr={};
 	if self.equips then
+		local currTime=TimeUtil:GetTime();
 		for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do
             if string.match(cfg.name,str) then
 				local list={};
@@ -392,7 +409,12 @@ function this:GetEquipSuitDataByStr(str,qualityFilters,notContainID,hasEquipped)
 					if hasEquipped~=true and v:IsEquipped() then
 						isFilter=false;
 					end
-					if isFilter~=true and v:GetSuitID()==cfg.id and v:GetType()~=EquipType.Material and v.show==1 then
+					local canAdd=true;
+					if cfg.limitTime then
+						local lTime=TimeUtil:GetTimeStampBySplit(cfg.limitTime)
+						canAdd=currTime>=lTime;
+					end
+					if isFilter~=true and v:GetSuitID()==cfg.id and v:GetType()~=EquipType.Material and v.show==1 and canAdd then
 						if qualityFilters==nil or (qualityFilters and #qualityFilters==0) then
 							list[v:GetSlot()]=list[v:GetSlot()] or {};
 							table.insert(list[v:GetSlot()],v);

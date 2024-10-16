@@ -259,6 +259,19 @@ function this:GetTimeStr8(_timer)
     end
 end
 
+-- 秒数转 分秒 00:00
+function this:GetTimeStr9(_timer)
+    if (_timer and _timer <= 0) then
+        return "00:00"
+    else
+        local m = math.floor(_timer / 60)
+        local s = math.floor((_timer % 60))
+        m = m < 10 and "0" .. m or m
+        s = s < 10 and "0" .. s or s
+        return string.format("%s:%s", m, s)
+    end
+end
+
 -- 返回简短时间描述，取当前最大单位的值做显示
 function this:GetTimeShortStr(_timer)
     local hms = self:GetTimeHMS(_timer);

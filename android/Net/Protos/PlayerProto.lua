@@ -1414,3 +1414,20 @@ function PlayerProto:PayFinishOrderId(proto)
         end
     end
 end
+
+
+--设置 isEquip:R5上锁状态
+function PlayerProto:Setting(isEquip,callback)
+    self.SettingCallBack = callback
+    local proto = {"PlayerProto:Setting",{equip_state = isEquip}}
+    NetMgr.net:Send(proto)
+end
+
+--设置返回
+function PlayerProto:SettingRet(proto)
+    if self.SettingCallBack then
+        self.SettingCallBack(proto and proto.res or false)
+        self.SettingCallBack = nil
+    end
+end
+

@@ -5,6 +5,7 @@ function this:Init()
 	--self:PlrPaneInfo()
 	self:Clear()
 	PlayerProto:GetSpecialDropsInfo()
+	self:SetSettingLock()
 end
 
 function this:Clear()
@@ -112,6 +113,12 @@ end
 
 function this:GetOpenTime(id)
 	return self.openTimes and self.openTimes[tostring(id)] or 0
+end
+
+---------------------------------------------自动上锁---------------------------------------------
+function this:SetSettingLock() --每次登录都设置一次以防止和服务器设置不一致
+	local index = SettingMgr:GetValue(s_other_equipLock_key) or s_other_equipLock_default
+	PlayerProto:Setting(index == 1)
 end
 
 return this

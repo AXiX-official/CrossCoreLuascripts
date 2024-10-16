@@ -4,6 +4,7 @@ local this = ThinkingAnalyticsMgr
 local isOpen = true
 local appId,url = nil,nil
 local isEnableLog = false
+local isInited = false
 
 TAType = {
 	Normal = 1, --普通事件
@@ -32,6 +33,7 @@ function this:Init()
 			end
 			self:EnableAutoTrack() -- 开启自动采集
 			self:ClearStateEvents() -- 清理缓存
+			isInited = true
 		end
 	end	
 
@@ -46,6 +48,7 @@ function this:Clear()
 		-- self:Flush()
 		-- self:ClearStateEvents()
 		self:LogOut()
+		isInited = false
 	end
 	if(self.mgr) then
 		self.mgr:Clear()
@@ -95,7 +98,7 @@ function this:TrackEvents(_eventName, _datas, _type, _eventId, isNoRefresh)
 		return;
 	end
 
-	if isOpen then
+	if isOpen and isInited then
 		if not isNoRefresh then
 			self:RefreshDatas()
 		end
@@ -113,7 +116,7 @@ end
 
 --刷新缓存数据
 function this:RefreshDatas()
-	if isOpen then
+	if isOpen and isInited then
 		local datas = {}
 		datas.level = PlayerClient:GetLv()
 		datas.exp = PlayerClient:GetExp()

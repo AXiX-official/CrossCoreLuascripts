@@ -59,6 +59,7 @@ local mgrNames = {
 	"PetActivityMgr",--宠物管理类
 	"CRoleDisplayMgr", --看板
 	"RogueSMgr",   --战力派遣
+	"BGMMgr",
 }
 
 

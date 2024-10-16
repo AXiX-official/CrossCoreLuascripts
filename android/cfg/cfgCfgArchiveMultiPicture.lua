@@ -37,7 +37,7 @@ local conf = {
 {'27',	'27',	'61029',	'欢欣鼓舞',	'27',	'',	'',	'7',	'dance_for_joy',	'',	'board_dance_for_joy',	'Small_dance_for_joy',	'加油喝彩2024',	'-70,-20,0.88',	'CG0024_DanceForJoy_spine',	'55,-51,1.23',	'',	'1'},
 {'28',	'28',	'61030',	'暑夏清凉',	'28',	'',	'',	'1',	'coolness_of_summer',	'',	'board_coolness_of_summer',	'Small_coolness_of_summer',	'高级勘测奖励',	'36,-27,0.47',	'fulagelake',	'-143,-175,1.18',	'',	'1'},
 {'29',	'29',	'61031',	'焰火露营',	'29',	'',	'',	'8',	'camping_with_fireworks',	'camping_with_fireworks_replace',	'board_camping_with_fireworks',	'Small_camping_with_fireworks',	'商店购买',	'-240,-30,1.13',	'CG0021_CampingWithFireworks_spine',	'55,0,1',	'1',	'80418'},
-{'30',	'30',	'61032',	'星天莲火',	'30',	'2024-10-09 03:00:00',	'2026-10-09 03:00:00',	'3',	'starry_lotus_fire',	'',	'board_starry_lotus_fire',	'Small_starry_lotus_fire',	'高级勘测奖励',	'-10,-20,1',	'xiudie',	'0,0,1.38',	'',	'1'},
+{'30',	'30',	'61032',	'星天莲火',	'30',	'',	'',	'3',	'starry_lotus_fire',	'',	'board_starry_lotus_fire',	'Small_starry_lotus_fire',	'高级勘测奖励',	'-10,-20,1',	'xiudie',	'0,0,1.38',	'',	'1'},
 {'31',	'31',	'61033',	'异变征兆',	'32',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'sign_of_mutation',	'',	'board_sign_of_mutation',	'Small_sign_of_mutation',	'幸运扭蛋机奖励',	'6,-16,1.18',	'hela',	'0,0,1.2',	'',	'1'},
 {'32',	'32',	'61034',	'怒涛汹涌',	'33',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'waves_tumble',	'',	'board_waves_tumble',	'Small_waves_tumble',	'幸运扭蛋机奖励',	'129,55,1.06',	'bosaidong',	'0,0,1.2',	'',	'1'},
 {'33',	'33',	'61035',	'青空虹影',	'34',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'rainbow_in_the_sky',	'',	'board_rainbow_in_the_sky',	'Small_rainbow_in_the_sky',	'幸运扭蛋机奖励',	'7,1,0.93',	'hong',	'0,0,1',	'',	'1'},

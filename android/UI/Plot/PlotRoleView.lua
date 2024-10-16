@@ -155,10 +155,12 @@ end
 --返回当前朝向的立绘位置
 function GetTargetPos()
 	local posList = roleImgInfo:GetRoleImgPos();
+	local posList2 = roleImgInfo:GetMaskOffset();
 	local pos = {0, 0};
 	if posList and posList[this.data.pos] then
 		--由于子物体使用了中间的坐标，这里返回的父物体位置需要减去子物体的坐标偏移
-		pos = {posList[this.data.pos] [1] - posList[2] [1], posList[this.data.pos] [2] - posList[2] [2]};
+		-- pos = {posList[this.data.pos] [1] - posList2[1]*-1, posList[this.data.pos] [2]};
+		pos=posList[this.data.pos];
 	end
 	return pos;
 end

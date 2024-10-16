@@ -34,6 +34,6 @@ end
 function OnClick()
     if (not isSelect and cb) then
         cb(index)
-        view:Close()
+        --view:Close()
     end
 end

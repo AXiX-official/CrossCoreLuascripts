@@ -11,6 +11,8 @@ local curID = nil -- 当前角色id或多人插图id
 local isRole = true -- curID是否是角色
 
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("CRoleSelectView", AdaptiveScreen)
+
     layout1 = ComUtil.GetCom(vsv1, "UIInfinite")
     layout1:Init("UIs/CRoleItem/CRoleLittleItem", LayoutCallBack, true)
     tlua1 = UIInfiniteUtil:AddUIInfiniteAnim(layout1, UIInfiniteAnimType.Normal)
@@ -24,6 +26,11 @@ function Awake()
 
     cg_btns = ComUtil.GetOrAddCom(btnS, "CanvasGroup")
 end
+
+function OnDestroy()
+
+end
+
 function LayoutCallBack(index)
     local layout = curTabIndex == 1 and layout1 or layout2
     local lua = layout:GetItemLua(index)

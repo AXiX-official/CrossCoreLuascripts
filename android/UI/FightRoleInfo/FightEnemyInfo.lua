@@ -173,14 +173,8 @@ function SetInfo(monster)
     local iconName = career == 1 and "img_12_02" or "img_12_01"
     CSAPI.LoadImg(armorIcon,string.format("UIs/FightRoleInfo/%s.png",iconName),true,nil,true)
     --显示说明
-    local cardCfg=monster:GetCardCfg();
-    if cardCfg then
-        -- if lastIndex==1 then
-            CSAPI.SetText(txt_desc,cardCfg.m_Desc or "");
-        -- else
-        --     CSAPI.SetText(txt_desc,cardCfg.m_Desc.."\n"..cardCfg.m_Desc..cardCfg.m_Desc);
-        -- end
-    end
+    local desc=monster:GetDesc();
+    CSAPI.SetText(txt_desc,desc);
     FuncUtil:Call(function()
         local txtSize=CSAPI.GetRealRTSize(iContent);
         infoScroll.normalizedPosition=UnityEngine.Vector2(1,1);

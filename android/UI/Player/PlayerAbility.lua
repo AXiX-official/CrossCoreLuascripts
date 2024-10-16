@@ -218,7 +218,7 @@ function OnClickReset()
             str2 = StringUtil:SetColor(cfg.name, "orange")
         end
         local dialogData = {}
-        dialogData.content = string.format(LanguageMgr:GetByID(9008), str1, str2)
+        dialogData.content = PlayerAbilityMgr:IsFreeReset() and LanguageMgr:GetByID(9013) or string.format(LanguageMgr:GetByID(9008), str1, str2)
         dialogData.okCallBack = function()
             CSAPI.PlayUISound("ui_page_battle_start")
             AbilityProto:ResetAbility()

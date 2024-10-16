@@ -209,3 +209,15 @@ function ClearCache()
         live2DItemLua.ClearCache()
     end 
 end
+
+function SetLiveBroadcast()
+    if (isLive2D) then
+        if (live2DItemLua) then
+            live2DItemLua.SetBlack()
+        end
+    else
+        if (imgItemLua) then
+            imgItemLua.SetBlack()
+        end
+    end
+end

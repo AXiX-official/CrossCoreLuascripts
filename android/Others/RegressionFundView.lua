@@ -29,6 +29,7 @@ function Awake()
             UIUtil:OpenReward({rewards})
         end
     end);
+    eventMgr:AddListener(EventType.Regression_Fund_Buy,RefreshPanel)
 end
 
 function LayoutCallBack(index)
@@ -112,8 +113,7 @@ end
 
 function SetShop()
     local shopId = (info.infos and info.infos[1]) and info.infos[1].shopId or 0
-    local recordInfo = ShopMgr:GetRecordInfos(shopId)
-    isBuy = recordInfo and recordInfo.last_buy_time > 0
+    isBuy = RegressionMgr:IsBuyFund()
     CSAPI.SetGOActive(btnShop, not isBuy)
     CSAPI.SetGOActive(txtBuy, isBuy)
 
@@ -141,11 +141,11 @@ function OnClickCB()
         for i, v in ipairs(datas) do
             if v:IsFinish() and not v:IsGet() then
                 if v:GetFundId() then
-                    if isBuy then
-                        table.insert(ids,v:GetID())
-                    end
-                else
                     table.insert(ids,v:GetID())
+                else
+                    if isBuy then
+                        table.insert(ids,v:GetID()) 
+                    end
                 end
             end
         end
@@ -155,6 +155,6 @@ end
 
 function OnShopCallBuy()
     if commData then
-        ShopCommFunc.OpenPayView2(commData:GetID(),RefreshPanel)
+        ShopCommFunc.OpenPayView2(commData:GetID(),nil,true)
     end
 end

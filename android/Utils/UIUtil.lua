@@ -143,7 +143,7 @@ end
 
 -- 打开掉落奖励
 function this:OpenReward(data, elseData)
-    self:OpenReward2("RewardPanel",data, elseData)
+    self:OpenReward2("RewardPanel", data, elseData)
 end
 
 function this:OpenSummerReward(data, elseData)
@@ -259,15 +259,15 @@ function this:AddQuestionItem(viewKey, go, father, prefabName)
         end
         if (tab["QuestionItem"] == nil) then
             tab["QuestionItem"] = 1 -- 防止异步生成时有额外的进入
-            local parent = father --== nil and go or father
-            if(parent == nil) then 
+            local parent = father -- == nil and go or father
+            if (parent == nil) then
                 local tran = go.transform:Find("AdaptiveScreen")
-                if(tran~=nil) then 
-                    parent = tran.gameObject 
-                else 
-                    parent = go 
-                end 
-            end 
+                if (tran ~= nil) then
+                    parent = tran.gameObject
+                else
+                    parent = go
+                end
+            end
             ResUtil:CreateUIGOAsync("ModuleInfo/" .. prefabName, parent, function(itemGo)
                 tab["QuestionItem"] = ComUtil.GetLuaTable(itemGo)
                 tab["QuestionItem"].Refresh(cfg)
@@ -347,7 +347,16 @@ end
 function this:AddLoginMovie(gameObject)
     -- local isReset = false;
     if IsNil(self.videoGo) then
-        local video = ResUtil:PlayVideo("login", gameObject);
+        local videoName = "login";
+        local channelStr = CSAPI.GetChannelStr();
+        if (not StringUtil:IsEmpty(channelStr)) then
+            local settingVideoName = _G["login_video_" .. channelStr];
+            if (not StringUtil:IsEmpty(settingVideoName)) then
+                videoName = settingVideoName;
+            end
+        end
+
+        local video = ResUtil:PlayVideo(videoName, gameObject);
         self.videoGo = video.gameObject;
         --	isReset = true
     end
@@ -629,7 +638,7 @@ end
 ---@param reward 购买的物品
 ---@param payFunc 购买函数
 function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFunc)
-    if count <= 0 or maxCount<= 0 then
+    if count <= 0 or maxCount <= 0 then
         local dialogData = {}
         local cfg = Cfgs.ItemInfo:GetByID(reward[1][1])
         dialogData.content = LanguageMgr:GetTips(24009)
@@ -651,19 +660,20 @@ function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFu
 end
 
 -- 添加头像+头像框(自己)
-function this:AddHeadFrame(parent, scale,frameID, iconID,sel_card_ix)
-    self:AddHeadByID(parent, scale, frameID or PlayerClient:GetHeadFrame(), iconID or PlayerClient:GetIconId(),sel_card_ix or PlayerClient:GetSex(),"RoleHead0")
+function this:AddHeadFrame(parent, scale, frameID, iconID, sel_card_ix)
+    self:AddHeadByID(parent, scale, frameID or PlayerClient:GetHeadFrame(), iconID or PlayerClient:GetIconId(),
+        sel_card_ix or PlayerClient:GetSex(), "RoleHead0")
 end
 
 -- frameID头像框id，iconID头像id
-function this:AddHeadByID(parent, scale, frameID, iconID,sel_card_ix,itemGoName)
+function this:AddHeadByID(parent, scale, frameID, iconID, sel_card_ix, itemGoName)
     -- 真实性别和头像 
-    --local isGirl, frameID = self:GetSexAndID(_frameID)
+    -- local isGirl, frameID = self:GetSexAndID(_frameID)
     scale = scale or 1
     itemGoName = itemGoName or "RoleHead"
     local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
-        ResUtil:CreateUIGOAsync("Common/"..itemGoName, parent, function(go)
+        ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
             local item = ComUtil.GetLuaTable(go)
             item.Refresh(scale, frameID, iconID, sel_card_ix)
         end)
@@ -760,14 +770,18 @@ end
 function this.ChangeRewards(_rewards)
     local rewards = {}
     for k, v in ipairs(_rewards) do
-        table.insert(rewards,{id = v[1],num = v[2],type = v[3]})
+        table.insert(rewards, {
+            id = v[1],
+            num = v[2],
+            type = v[3]
+        })
     end
     return rewards
 end
 
 --- 打开扫荡界面
 ---@param cfgId 关卡表id
-function this:OpenSweepView(cfgId,buy,cost,gets,payFunc)
+function this:OpenSweepView(cfgId, buy, cost, gets, payFunc)
     buy = buy or g_DungeonArachnidDailyBuy
     cost = cost or g_DungeonArachnidDailyCost
     gets = gets or g_DungeonArachnidGets
@@ -778,9 +792,13 @@ function this:OpenSweepView(cfgId,buy,cost,gets,payFunc)
     if sweepData then
         if sweepData:IsOpen() then
             local OnBuyFunc = function()
-                UIUtil:OpenPurchaseView(nil,nil,DungeonMgr:GetArachnidCount(),buy,cost,gets,payFunc)
+                UIUtil:OpenPurchaseView(nil, nil, DungeonMgr:GetArachnidCount(), buy, cost, gets, payFunc)
             end
-            CSAPI.OpenView("SweepView",{id = cfgId},{onBuyFunc = OnBuyFunc})
+            CSAPI.OpenView("SweepView", {
+                id = cfgId
+            }, {
+                onBuyFunc = OnBuyFunc
+            })
         else
             Tips.ShowTips(sweepData:GetLockStr())
         end
@@ -792,6 +810,42 @@ function this:OpenSweepView(cfgId,buy,cost,gets,payFunc)
                 Tips.ShowTips(cfgModUp.sDescription)
             end
         end
+    end
+end
+
+-- 直播模式(图片;spine;图片+粒子)
+function this:SetLiveBroadcast(obj, isBlack)
+    if (not obj) then
+        return
+    end
+    local num = 0
+    if (not isBlack) then
+        local value = SettingMgr:GetValue(s_other_live_key)
+        num = value == 1 and 0.1 or 1
+    end
+    -- spine
+    local graphics = ComUtil.GetComsInChildren(obj, "SkeletonGraphic")
+    if (graphics ~= nil and graphics.Length > 0) then
+        for i = 0, graphics.Length - 1 do
+            graphics[i].color = UnityEngine.Color(num, num, num, 1)
+        end
+    else
+        -- 图片+特效
+        local _num = num == 1 and 255 or 25
+        local images = ComUtil.GetComsInChildren(obj, "Image")
+        if (images ~= nil and images.Length > 0) then
+            for i = 0, images.Length - 1 do
+                CSAPI.SetImgColor(images[i].gameObject, _num, _num, _num, 255)
+            end
+        end
+        -- 隐藏特效
+        local systems = ComUtil.GetComsInChildren(obj, "ParticleSystem")
+        if (systems ~= nil and systems.Length > 0) then
+            for i = 0, systems.Length - 1 do
+                CSAPI.SetGOActive(systems[i].gameObject,_num==255)
+            end
+        end
+        
     end
 end
 

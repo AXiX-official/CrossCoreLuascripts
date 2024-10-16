@@ -67,8 +67,15 @@ function ShowDialog(languageId,okCB,canelCB)
 end
 
 function SetFade(isOpen,callback)
-    CSAPI.SetGOActive(gameObject, isOpen)
-    if callback then
-        callback()
+    if isOpen then
+        CSAPI.SetGOActive(gameObject, true)
+        UIUtil:SetObjFade(gameObject,0, 1,callback,200)
+    else
+        UIUtil:SetObjFade(gameObject,1, 0,function ()
+            CSAPI.SetGOActive(gameObject, false)
+            if callback then
+                callback()
+            end
+        end,200)
     end
 end

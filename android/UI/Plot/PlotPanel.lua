@@ -935,7 +935,9 @@ function RecordFrameInfo(plotInfo)
 					black = v.black;
 				};
 			elseif v.move then
-				jumpRecord.roles[key].pos = v.move;
+				if type(v.move)=="number" then
+					jumpRecord.roles[key].pos = v.move;
+				end
 			elseif v.black then
 				jumpRecord.roles[key].black = v.black;
 			end

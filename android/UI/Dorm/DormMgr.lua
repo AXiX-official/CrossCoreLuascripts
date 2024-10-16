@@ -36,7 +36,7 @@ function this:Init()
     self.defaultGroundID = 1001
     self.defaultWallID = 1002
 
-    --self:InitCfgs()
+    -- self:InitCfgs()
 end
 
 function this:RequestDormProtoServerData()
@@ -133,12 +133,15 @@ end
 
 -- 获取房间数据列表
 function this:GetDormDatas(fid)
-    return fid ~= nil and self.friendRoomDatas or self.roomDatas
+    if(fid~=nil) then 
+        return self.friendRoomDatas[fid] 
+    end 
+    return self.roomDatas
 end
 
 -- 获取房间数据{id, fid}
 function this:GetRoomData(id, fid)
-    local curOpenData = self:GetCurOpenData()
+    --local curOpenData = self:GetCurOpenData()
     local datas = self:GetDormDatas(fid)
     return datas[id]
 end
@@ -644,9 +647,11 @@ end
 
 -- 初始化好友房间数据（仅保存当前查看的好友数据）
 function this:InitFriendDatas(fid)
-    if (not self.friendRoomDatas[fid]) then
-        self.friendRoomDatas = {}
-    end
+    -- if (not self.friendRoomDatas[fid]) then
+    --     self.friendRoomDatas[fid] = {}
+    -- end
+    self.friendRoomDatas[fid] = self.friendRoomDatas[fid] or {}
+    return self.friendRoomDatas[fid]
 end
 
 -- 更新房间简单数据
@@ -854,8 +859,8 @@ function this:GetOpenDormRet(proto)
     local fid = proto.fid
     if (fid) then
         -- 好友数据
-        self:InitFriendDatas(fid)
-        rootDatas = self.friendRoomDatas
+        rootDatas = self:InitFriendDatas(fid)
+        --rootDatas = self.friendRoomDatas[fid]
     else
         -- 自己的数据
         rootDatas = self.roomDatas
@@ -864,11 +869,11 @@ function this:GetOpenDormRet(proto)
 end
 
 function this:GetDormRet(proto)
-    local rootDatas
+    local rootDatas = {}
     local fid = proto.fid
     if (fid ~= nil) then
-        self:InitFriendDatas(fid)
-        rootDatas = self.friendRoomDatas
+        rootDatas = self:InitFriendDatas(fid)
+        --rootDatas = self.friendRoomDatas
     else
         rootDatas = self.roomDatas
     end
@@ -930,11 +935,13 @@ end
 
 function this:BuyThemeRet(proto)
     -- 刷新系统主题列表
-    if(proto.isFullBuy) then 
+    if (proto.isFullBuy) then
         self.themeDatas = self.themeDatas or {}
         self.themeDatas[ThemeType.Sys] = self.themeDatas[ThemeType.Sys] or {}
-        self.themeDatas[ThemeType.Sys][proto.themeId] = {id = proto.themeId}
-    end 
+        self.themeDatas[ThemeType.Sys][proto.themeId] = {
+            id = proto.themeId
+        }
+    end
     -- local sysDatas = self.themeDatas[ThemeType.Sys] or {}
     -- sysDatas[proto.themeId] = {
     --     id = proto.themeId
@@ -1040,6 +1047,7 @@ function this:SetOpenSceen(sceenKey)
 end
 -- 退出宿舍
 function this:Quit()
+    self.friendRoomDatas = {}--清空好友的数据防止数据过多
     if (self.sceenKey) then
         SceneLoader:Load(self.sceenKey)
         self.sceenKey = nil
@@ -1094,10 +1102,10 @@ function this:GetThemePrices(themeId)
         local num = v[2] > v[3] and (v[2] - v[3]) or 0
         if (num > 0) then
             local _cfg = Cfgs.CfgFurniture:GetByID(v[1])
-            if(not _cfg.special) then 
+            if (not _cfg.special) then
                 price1 = price1 + _cfg.price_1[1][2] * num
                 price2 = price2 + _cfg.price_2[1][2] * num
-            end 
+            end
         end
     end
     return price1, price2
@@ -1190,40 +1198,40 @@ function this:GetEmptyNum()
     return 256 - self:GetFurnitureGridNum()
 end
 
---当前所有家具占地格子数量
+-- 当前所有家具占地格子数量
 function this:GetFurnitureGridNum()
     local num = 0
-    local furnitureDatas = self:GetCurRoomCopyDatas() or  self:GetCopyFurnitureDatas2()
-    if(furnitureDatas) then 
+    local furnitureDatas = self:GetCurRoomCopyDatas() or self:GetCopyFurnitureDatas2()
+    if (furnitureDatas) then
         for i, v in pairs(furnitureDatas) do
             num = num + v:GetGridNum()
         end
     end
-    return num 
+    return num
 end
 
---某保存主体的占地数量
+-- 某保存主体的占地数量
 function this:GetSaveThemeGridNun(id)
-    local num = 0 
+    local num = 0
     local themeData = DormMgr:GetThemesByID(ThemeType.Save, id)
     local furnitureDatas = themeData.furnitures or {}
     for k, v in pairs(furnitureDatas) do
-        if(v.parentID==nil) then 
+        if (v.parentID == nil) then
             local cfgID = GCalHelp:GetDormFurCfgId(v.id)
             local cfg = Cfgs.CfgFurniture:GetByID(cfgID)
-            if(cfg.sType~=0 and  cfg.sType~=1 and cfg.sType~=7 and cfg.sType~=8) then 
-                num=num+math.ceil(cfg.scale[1]*cfg.scale[3])
+            if (cfg.sType ~= 0 and cfg.sType ~= 1 and cfg.sType ~= 7 and cfg.sType ~= 8) then
+                num = num + math.ceil(cfg.scale[1] * cfg.scale[3])
             end
         end
     end
-    return num 
+    return num
 end
 
---临时复制一份当前真实数据
+-- 临时复制一份当前真实数据
 function this:GetCopyFurnitureDatas2(_roomID)
-    local roomID = _roomID or  GCalHelp:GetDormId(1, 1) 
+    local roomID = _roomID or GCalHelp:GetDormId(1, 1)
     local roomDatas = self:GetDormDatas()
-    local roomData = roomDatas[roomID] 
+    local roomData = roomDatas[roomID]
     local dic = table.copy(roomData:GetFurnitures())
     local datas = {}
     for i, v in pairs(dic) do
@@ -1234,16 +1242,31 @@ function this:GetCopyFurnitureDatas2(_roomID)
     return datas
 end
 
---是否在开放时间段内
+-- 是否在开放时间段内
 function this:CheckIsOpen(cfg)
     local curTime = TimeUtil:GetTime()
-    if(cfg.sStart and curTime<TimeUtil:GetTimeStampBySplit(cfg.sStart)) then 
-        return false
-    end 
-    if(cfg.sEnd and curTime>=TimeUtil:GetTimeStampBySplit(cfg.sEnd)) then 
+    if (cfg.sStart and curTime < TimeUtil:GetTimeStampBySplit(cfg.sStart)) then
         return false
     end
-    return true 
+    if (cfg.sEnd and curTime >= TimeUtil:GetTimeStampBySplit(cfg.sEnd)) then
+        return false
+    end
+    return true
+end
+
+-- 新房间2-1红点
+function this:CheckNewRoomRedNum()
+    if (not self.newroomisred) then
+        local key = PlayerClient:GetID() .. "_newroomisred"
+        local num = PlayerPrefs.GetInt(key) or 0
+        self.newroomisred = num == 0
+    end
+    return self.newroomisred
+end
+function this:SetNewRoomRedNum()
+    local key = PlayerClient:GetID() .. "_newroomisred"
+    PlayerPrefs.SetInt(key, 1)
+    self.newroomisred = false
 end
 
 return this

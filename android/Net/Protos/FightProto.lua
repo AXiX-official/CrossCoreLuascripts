@@ -895,7 +895,6 @@ end
 
 -- 进入副本失败
 function FightProto:EntryDupResult(proto)
-    -- LogError("EntryDupResult")
     -- 清理战斗队伍信息
     if proto and proto.isOk ~= true then
         FriendMgr:ClearAssistData();
@@ -903,7 +902,10 @@ function FightProto:EntryDupResult(proto)
         TeamMgr:ClearFightTeamData();
         UIUtil:AddFightTeamState(2, "FightProto:EntryDupResult()")
         TeamMgr:ClearFightID();
-        EventMgr.Dispatch(EventType.Fight_Enter_Fail)
+        EventMgr.Dispatch(EventType.Net_Msg_Getted,"fight");
+        FuncUtil:Call(function()
+            EventMgr.Dispatch(EventType.Fight_Enter_Fail)
+        end,nil,1000);   
     end
 end
 

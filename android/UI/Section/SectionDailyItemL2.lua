@@ -60,7 +60,7 @@ function InitPanel()
     -- title
     CSAPI.SetText(txtTitle, cfg.name)
     -- desc
-    CSAPI.SetText(txtDesc, cfg.lock_desc)
+    CSAPI.SetText(txtDesc, cfg.desc)
 end
 
 function RefreshPanel()
@@ -78,8 +78,8 @@ function SetLock()
     if not isOpen then
         CSAPI.SetGOActive(lockImg,false)
         local color = {146,146,150,255}
-        local openStr = LanguageMgr:GetByID(15095)
-        local state= data:GetOpenState()
+        -- local openStr = LanguageMgr:GetByID(15095)
+        local state, openStr= data:GetOpenState()
         if state == -1.5 then
             color = {255,255,255,255}
             openStr = LanguageMgr:GetByID(15093)

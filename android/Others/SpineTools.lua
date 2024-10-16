@@ -117,6 +117,9 @@ function this:Update()
                 if (v.isClicksLast) then
                     -- 首尾相接的，最终动画播完设置为0
                     v.te.TrackTime = 0
+                    self:ClearTrack(k)
+                    self.mulClickDic[k] = nil 
+                    break
                 else
                     v.te.TrackTime = v.progress
                 end
@@ -483,7 +486,7 @@ function this:GetTrackTimePercent(trackIndex)
 end
 
 function this:ClearTrack(trackIndex)
-    self.anim:ClearTrack(1)
+    self.anim:ClearTrack(trackIndex)
     self.l2d.sg.Skeleton:SetToSetupPose()
 end
 

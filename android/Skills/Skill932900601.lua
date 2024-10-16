@@ -20,6 +20,13 @@ function Skill932900601:OnAfterHurt(caster, target, data)
 	end
 	-- 932900601
 	self:HitAddBuff(SkillEffect[932900601], caster, target, data, 2500,5106,2)
+	-- 8451
+	local count51 = SkillApi:BuffCount(self, caster, target,2,4,22)
+	-- 8129
+	if SkillJudger:Greater(self, caster, target, true,count51,0) then
+	else
+		return
+	end
 	-- 932900602
 	self:HitAddBuff(SkillEffect[932900602], caster, target, data, 2500,1003,2)
 end

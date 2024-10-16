@@ -246,10 +246,10 @@ function OnOpen()
     jumpData = data
     local baseScale = {1920, 1080}
 	 local curScale = CSAPI.GetMainCanvasSize()
-    -- local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
-    -- local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
-    -- offset.x =  (curScale[0] - baseScale[1] + fit1 + fit2)/2
-    offset.x = (curScale[0] - baseScale[1])/2
+    local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
+    local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
+    offset.x =  (curScale[0] - baseScale[1] + fit1 + fit2)/2
+    -- offset.x = (curScale[0] - baseScale[1])/2
     offset.y = (curScale[1] - baseScale[2])/2 
 
     InitViewInfo()

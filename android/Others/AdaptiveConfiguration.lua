@@ -25,62 +25,62 @@ function this.OnInit()
 end
 
 function this.LuaView_Lua_Closed(param)
-    ---- print("------------------------------"..param)
-    -- if param~=nil then
-    --     if this.IsitinAdaptiveMode(param) then
-    --         this.RemoveLuaUIFit(param)
-    --     end
-    -- end
+    -- print("------------------------------"..param)
+    --if param~=nil then
+    --    if this.IsitinAdaptiveMode(param) then
+    --        this.RemoveLuaUIFit(param)
+    --    end
+    --end
 end
 ---监听执行数据
 function this.MonitorExecutiondata()
-     --if orientation~=Screen.orientation then
-     --    --print("屏幕发生变化："..tostring(Screen.orientation))
-     --    orientation=Screen.orientation;
-     --    this.ScreenRotationOccurs()
-     --end
+    --if orientation~=Screen.orientation then
+    --    --print("屏幕发生变化："..tostring(Screen.orientation))
+    --    orientation=Screen.orientation;
+    --    this.ScreenRotationOccurs()
+    --end
 end
 ----指传入 主页面节点 需要自己查找节点
 function this.SetLuaObjUIFit(UIkey,ObjItem)
-     --if ObjItem~=nil then
-     --    if ObjItem.transform:Find("AdaptiveScreen")~=nil then
-     --        local AdaptiveScreen=ObjItem.transform:Find("AdaptiveScreen").gameObject
-     --        if AdaptiveScreen~=nil then
-     --            ---print("存在指定节点-------AdaptiveScreen-----："..UIkey)
-     --            this.SetLuaUIFit(UIkey,AdaptiveScreen)
-     --        end
-     --    end
-     --end
+    --if ObjItem~=nil then
+    --    if ObjItem.transform:Find("AdaptiveScreen")~=nil then
+    --        local AdaptiveScreen=ObjItem.transform:Find("AdaptiveScreen").gameObject
+    --        if AdaptiveScreen~=nil then
+    --            ---print("存在指定节点-------AdaptiveScreen-----："..UIkey)
+    --            this.SetLuaUIFit(UIkey,AdaptiveScreen)
+    --        end
+    --    end
+    --end
 end
 ---自适应UI集合
 this.AdaptiveSet={};
 --自适应
 function this.SetLuaUIFit(UIkey,Item)
-     --CSAPI.SetUIFit(Item)
-     --local tableItem=
-     --{
-     --    key=UIkey,
-     --    value=Item.gameObject,
-     --};
-     -----执行规避重复传入key
-     --this.RepeatUIkey(UIkey,tableItem)
-     -----print("打印："..table.tostring(this.AdaptiveSet))
+    --CSAPI.SetUIFit(Item)
+    --local tableItem=
+    --{
+    --    key=UIkey,
+    --    value=Item.gameObject,
+    --};
+    -----执行规避重复传入key
+    --this.RepeatUIkey(UIkey,tableItem)
+    -----print("打印："..table.tostring(this.AdaptiveSet))
 end
 
 ---如果key 重复， 那么使用最后最新的
 function this.RepeatUIkey(UIkey,Item)
-    if this.IsitinAdaptiveMode(UIkey) then
-        print("AdaptiveConfiguration Repeat  ---key:"..UIkey)
-        for i, v in pairs(this.AdaptiveSet) do
-            ---有这个key
-            if tostring(this.AdaptiveSet[i].key)==tostring(UIkey) then
-                this.AdaptiveSet[i].value=Item;
-                return;
-            end
-        end
-    else
-        table.insert(this.AdaptiveSet,Item);
-    end
+    --if this.IsitinAdaptiveMode(UIkey) then
+    --    print("AdaptiveConfiguration Repeat  ---key:"..UIkey)
+    --    for i, v in pairs(this.AdaptiveSet) do
+    --        ---有这个key
+    --        if tostring(this.AdaptiveSet[i].key)==tostring(UIkey) then
+    --            this.AdaptiveSet[i].value=Item.value;
+    --            return;
+    --        end
+    --    end
+    --else
+    --    table.insert(this.AdaptiveSet,Item);
+    --end
 end
 
 
@@ -95,26 +95,26 @@ end
 
 function this.RemoveLuaUIFit(UIkey)
     ---print("RemoveLuaUIFit: "..table.tostring(this.AdaptiveSet))
-    if #this.AdaptiveSet>0 then
-        local index=0;
-        for i, v in pairs(this.AdaptiveSet) do
-            index=index+1
-            ---print("  输出："..this.AdaptiveSet[i].key)
-            if tostring( this.AdaptiveSet[i].key)==tostring(UIkey) then
-                -- print("移除key："..UIkey);
-                if #this.AdaptiveSet>=index then
-                    table.remove(this.AdaptiveSet,index);
-                else
-
-                    LogError("  出现越界情况："..UIkey.."index:"..index)
-                    LogError(this.AdaptiveSet)
-                    this.AdaptiveSet={}
-                end
-                -- print("打印："..table.tostring(this.AdaptiveSet))
-                return;
-            end
-        end
-    end
+    --if #this.AdaptiveSet>0 then
+    --    local index=0;
+    --    for i, v in pairs(this.AdaptiveSet) do
+    --        index=index+1
+    --        ---print("  输出："..this.AdaptiveSet[i].key)
+    --        if tostring( this.AdaptiveSet[i].key)==tostring(UIkey) then
+    --            -- print("移除key："..UIkey);
+    --            if #this.AdaptiveSet>=index then
+    --                table.remove(this.AdaptiveSet,index);
+    --            else
+    --
+    --                LogError("  出现越界情况："..UIkey.."index:"..index)
+    --                LogError(this.AdaptiveSet)
+    --                this.AdaptiveSet={}
+    --            end
+    --            -- print("打印："..table.tostring(this.AdaptiveSet))
+    --            return;
+    --        end
+    --    end
+    --end
 end
 
 ---是否处于自适应中 当前需要引导的页面

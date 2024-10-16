@@ -166,5 +166,17 @@ function this:GetTalents()
     return self:GetCfg() and self:GetCfg().subTfSkills or {};
 end
 
+--返回怪物信息说明
+function this:GetDesc()
+    if self.cfg then
+        if self.cfg.isUseDesc then
+            return self.cfg.desc
+        elseif self.cardCfg then
+            return self.cardCfg.m_Desc;
+        end
+    end
+    return ""
+end
+
 
 return this;

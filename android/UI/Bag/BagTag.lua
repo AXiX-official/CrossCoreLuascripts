@@ -7,7 +7,7 @@ local index=0;
 local count=0;
 local isPlaying=false;
 local func=nil;
-local tagStartPos={300,56};
+local tagStartPos={1000,56};
 local tagLineHegiht=108;
 function Awake()
     t_enter=ComUtil.GetCom(eTabsOnAnima,"ActionMoveByCurve");
@@ -61,7 +61,7 @@ function PlayTween(isEnter,addDelayTime)
         local delay=delayTime*(index-1)+addDelayTime
         if t_enter then
             isPlaying=true;
-            t_enter:SetStartPos(300,y,0);
+            t_enter:SetStartPos(tagStartPos[1],y,0);
             t_enter:SetTargetPos(-20,y,0);
             t_enter.delay=delay;
             t_enter:ToPlay(function ()
@@ -73,7 +73,7 @@ function PlayTween(isEnter,addDelayTime)
         if t_out then
             isPlaying=true;
             t_out:SetStartPos(-20,y,0);
-            t_out:SetTargetPos(300,y,0);
+            t_out:SetTargetPos(tagStartPos[1],y,0);
             t_out.delay=delay;
             t_out:ToPlay(function ()
                 isPlaying=false;

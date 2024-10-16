@@ -30,6 +30,11 @@ local isSwitch=false;
 local sortID=12;
 local sortView=nil;
 local isInit=true
+local fixedTime=1;
+local countTime=0;
+local currSuitNum=0;
+local countSuitNum=0;
+local loadOver=false;
 function Awake()
     ResUtil:CreateUIGOAsync("EquipInfo/EquipReplaceInfo",rTObj,function(go)
         lEquip=ComUtil.GetLuaTable(go);
@@ -156,6 +161,25 @@ function Update()
             OnClickRepalceMask()
         end
     end
+    countTime=countTime+Time.deltaTime;
+    if countTime>=fixedTime and curDatas2~=nil and not isSingle and loadOver then
+        countSuitNum=0;
+        local currTime=TimeUtil:GetTime();
+        local screenType = suitScreenIdx == nil and nil or suitScreenList[suitScreenIdx]
+        for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do --计算可以显示的套装数量
+			local canAdd=true;
+			if cfg.limitTime then
+				local lTime=TimeUtil:GetTimeStampBySplit(cfg.limitTime)
+				canAdd=currTime>=lTime;
+			end
+			if cfg.show==1 and canAdd and (screenType==nil or (screenType~=nil and cfg.SuitType==screenType.id)) then
+                countSuitNum=countSuitNum+1;
+            end
+        end
+        if countSuitNum~=#curDatas2 then--刷新界面
+            RefreshList();
+        end
+    end
 end
 
 function OnClickRepalceMask()
@@ -218,6 +242,7 @@ function RefreshList()
         end
     else
         CSAPI.SetGOActive(sv3,false);
+        loadOver=false;
         local list = EquipMgr:GetEquipSuitData2({}, not isHide, nil);
         table.sort(list, EquipSortUtil.SuitSort);
         curDatas2 = {};
@@ -302,7 +327,9 @@ end
 
 function RefreshSuitList()
     --创建/刷新子物体
-    ItemUtil.AddItems("EquipSelect/EquipSuitItem",suitItems,curDatas2,Content,OnClickSuitItem,1,{equippdType=2,cardId=card:GetID()});
+    ItemUtil.AddItems("EquipSelect/EquipSuitItem",suitItems,curDatas2,Content,OnClickSuitItem,1,{equippdType=2,cardId=card:GetID()},function()
+        loadOver=true;
+    end);
     -- layout2:IEShowList(#curDatas2);
 end
 

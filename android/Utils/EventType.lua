@@ -1285,6 +1285,8 @@ this.LovePlus_Data_Update = 640001 --章节数据更新
 this.LovePlus_UnLock_Update =640002 --解锁数据更新
 this.LovePlus_Spine_Select = 640003 --live2d动作选择
 this.LovePlus_Story_Select = 640004 --节点选中
+----------------------------------设置
+this.Setting_Live_Change = 660000 --直播设置
 
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化

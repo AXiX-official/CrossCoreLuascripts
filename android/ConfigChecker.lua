@@ -1540,6 +1540,9 @@ function ConfigChecker:ItemInfo(cfgs)
             --     ASSERT(CfgPetItem[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物物品在宠物物品表没有对应的id：%s", id, cfg.dy_value2))
             -- elseif cfg.dy_value1 == PROP_TYPE.PetArchive then
             --     ASSERT(CfgPetArchive[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物图鉴在宠物图鉴表没有对应的id：%s", id, cfg.dy_value2))
+            elseif cfg.dy_value1 == PROP_TYPE.Music then
+                    ASSERT(cfg.dy_value2, string.format("物品id：%s使用后获得的音乐在ItemInfo没配dy_value2", id))
+                    ASSERT(CfgMusic[cfg.dy_value2], string.format("音乐id：%s使用后获得的音乐在音乐表[CfgMusic]没有对应的id：%s", id, cfg.dy_value2))
             end
         elseif cfg.type == ITEM_TYPE.VOUCHER then
             if cfg.dy_value1 then

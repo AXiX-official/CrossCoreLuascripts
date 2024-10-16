@@ -57,6 +57,11 @@ end
 
 function RefreshPanel()
     curID = nil
+    if(openSetting) then 
+        curID = openSetting
+    else 
+        curID = curDatas[1].infos[1].id
+    end 
     -- 最大人数
     local cfg = Cfgs.CfgDormRoom:GetByID(1)
     local maxLv = cfg.maxRole or 5
@@ -65,7 +70,7 @@ function RefreshPanel()
         CSAPI.SetText(txtRoom, v.sName)
         for n, m in ipairs(v.infos) do
             CSAPI.SetText(txtRole, string.format("<color=#ffc146>%s</color><color=#929296>/%s</color>", m.roleNum, maxLv))
-            curID = m.id
+            --curID = m.id
         end
     end
 

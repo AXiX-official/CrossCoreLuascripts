@@ -233,9 +233,12 @@ function InitListener()
     eventMgr:AddListener(EventType.PetActivity_TimeStamp_Change, SetPetTimeStamp)
     -- 首充界面关闭
     eventMgr:AddListener(EventType.MenuBuy_RechargeCB, SetMenuBuy)
+    -- 直播模式
+    eventMgr:AddListener(EventType.Setting_Live_Change, SetLiveBroadcast)
 end
 
 function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("MenuView")
     eventMgr:ClearListener()
     RoleAudioPlayMgr:StopSound()
 end
@@ -536,6 +539,8 @@ function RefreshUI()
     SetBottom()
     -- cnetre
     SetCenter()
+    --直播模式
+    SetImgLive()
 end
 
 -- 加载完
@@ -572,9 +577,10 @@ function OnLoadingComplete()
     EventMgr.Dispatch(EventType.Main_Enter);
     if (not b) then
         PlayLoginVoice()
+        VerChecker:ApplyCheck()
     end
 
-    OpenGoogleRewards()
+    --OpenGoogleRewards()
 end
 
 local curTime = 0
@@ -1572,6 +1578,23 @@ function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
         CSAPI.SetGOActive(item.gameObject, false)
     end
 end
+
+function SetLiveBroadcast()
+    if(cardIconItem and cardIconItem.gameObject.activeSelf) then 
+        cardIconItem.SetLiveBroadcast()
+    end 
+    if(mulIconItem and mulIconItem.gameObject.activeSelf) then 
+        mulIconItem.SetLiveBroadcast()
+    end 
+    if(cardIconItem2 and cardIconItem2.gameObject.activeSelf) then 
+        cardIconItem2.SetLiveBroadcast()
+    end
+    SetImgLive()
+end
+
+function SetImgLive()
+    CSAPI.SetGOActive(imgLive,SettingMgr:GetValue(s_other_live_key)==1)
+end
 --[[
 -- 设置看板  
 function SetImg(cb)
@@ -1809,11 +1832,16 @@ function OnViewClosed(viewKey)
         return
     end
     isApplyRefresh = 1
-    FuncUtil:Call(OnViewCloseds, nil, 10)
+    if(gameObject~=nil) then 
+        FuncUtil:Call(OnViewCloseds, nil, 10)
+    end 
 end 
 
 -- 其它界面关闭
 function OnViewCloseds()
+    if(not gameObject) then 
+        return
+    end 
     isApplyRefresh = nil
     local isContain = false
     for k, v in ipairs(closeViews) do
@@ -1866,21 +1894,25 @@ function OnViewCloseds()
 
     --
     ShowHint(true)
-    OpenGoogleRewards();
+    --OpenGoogleRewards();
+
+    --检测是否强制更新
+    VerChecker:ApplyCheck()
 end
 
 ---谷歌奖励
 function OpenGoogleRewards()
     if CSAPI.IsViewOpen("MenuBuyPanel") then
-        return;
+        return false
     end
     if CSAPI.IsADV() then
         local isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, "MailView")
         ShiryuSDK.IsEnterhall = true;
         if isOpen then
-            AdvGoogleGit.GoogleReservationRewards();
+            return AdvGoogleGit.GoogleReservationRewards();
         end
     end
+    return false
 end
 
 function CheckPopUpWindow()
@@ -1988,7 +2020,9 @@ function EActivityGetCB()
             return true
         end
     end
-
+    if(OpenGoogleRewards()) then 
+        return true
+    end 
     CSAPI.SetGOActive(mask, false)
     return false
 end

@@ -52,6 +52,8 @@ function SetIconL(icon_id)
     CSAPI.SetRTSize(iconMaskL, width, arr.y)
     -- CSAPI.SetAnchor(iconMaskL, - arr.x / 4)
     RoleTool.LoadImg(iconL, icon_id, LoadImgType.ExerciseLView)
+    -- 
+    UIUtil:SetLiveBroadcast(iconL)
 end
 
 function SetLTeamItems()
@@ -108,6 +110,8 @@ function SetIconR(icon_id)
         local x, y = CSAPI.GetAnchor(iconR)
         CSAPI.SetAnchor(iconR, -x, y)
     end)
+    -- 
+    UIUtil:SetLiveBroadcast(iconR)
 end
 function SetRTeamItems()
     local cardDatas = {}

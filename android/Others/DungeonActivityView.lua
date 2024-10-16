@@ -6,6 +6,8 @@ local top = nil
 local sectionData = nil
 local redPath = nil
 
+local cTime,cTimer = 0,0
+
 function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Mission_List, function ()
@@ -46,6 +48,24 @@ function Update()
         openInfo = nil
         LanguageMgr:ShowTips(24001)
         UIUtil:ToHome()   
+        return
+    end
+
+    if cTime > 0 and Time.time > cTimer then
+        cTimer = Time.time + 1
+        cTime = openInfo:GetEndTime() - TimeUtil:GetTime()
+        local tab = TimeUtil:GetTimeHMS(cTime)
+        if txtTime2~=nil then
+            if tab.day > 0 then
+                LanguageMgr:SetText(txtTime2,22073,tab.day,tab.hour .. ":" .. tab.min .. ":" .. tab.sec)
+            else
+                if tab.hour > 0 or tab.min > 0 then
+                    LanguageMgr:SetText(txtTime2,22074,tab.hour .. ":" ..tab.min .. ":" .. tab.sec)
+                else
+                    LanguageMgr:SetText(txtTime2,22074,LanguageMgr:GetByID(51016))
+                end
+            end
+        end
     end
 end
 
@@ -73,10 +93,16 @@ end
 function SetBGScale()
     local size = CSAPI.GetMainCanvasSize()
     local offset1,offset2 = size[0] / 1920,size[1] / 1080
-    local offset = offset1>offset2 and offset1 or offset2
+    local offset = offset1 > offset2 and offset1 or offset2
     local child = bg.transform:GetChild(0)
     if child then
         CSAPI.SetScale(child.gameObject,offset,offset,offset)
+    end
+    
+    if offset1>offset2 then
+        CSAPI.SetRTSize(bg,size[0],1080*offset)
+    elseif offset1<offset2 then
+        CSAPI.SetRTSize(bg,1920*offset,size[1])
     end
 end
 
@@ -90,6 +116,11 @@ function SetTime()
         else
             local str = openInfo:GetCloseTimeStr()
             CSAPI.SetText(txtTime,str)
+        end
+
+        if TimeUtil:GetTime() < openInfo:GetEndTime() then
+            cTimer = 0
+            cTime = openInfo:GetEndTime() - TimeUtil:GetTime()
         end
     end
 end
@@ -127,11 +158,7 @@ function SetSpecial()
                 CSAPI.SetGOActive(effObj,true)
             end
         end,nil,300)
-        if openInfo:GetOpenCfg().hardBegTime then
-            CSAPI.SetText(txtHard, LanguageMgr:GetTips(24007, openInfo:GetOpenCfg().hardBegTime))
-        else
-            CSAPI.SetText(txtHard, "")
-        end
+        CSAPI.SetText(txtHard, LanguageMgr:GetTips(24007, openInfo:GetOpenCfg().hardBegTime))
     end
 end
 

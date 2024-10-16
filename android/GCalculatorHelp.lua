@@ -2408,3 +2408,26 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
     return sumMulti, sumMaxCnt, notDelCnt, isUseSpecialMulti
 end
 
+-- 检查两个时间戳是否处于同个月份
+--- func desc
+---@param time number 传入的时间A
+---@param curTime number 时间B，不传默认当前时间
+---@return boolean true 同个月份， false 不同月份
+function GCalHelp:CheckSameMonth(time, curTime)
+    if not time or time == 0 then
+        return false
+    end
+    curTime = CURRENT_TIME or curTime
+    local zero1 = self:GetActiveResetTime(PeriodType.Month, 1, time)
+    local zero2 = self:GetActiveResetTime(PeriodType.Month, 1, curTime)
+    if zero1 ~= zero2 then
+        return false
+    end
+    return true
+end
+function GCalHelp:GetActiveResetTime(setType, diff, curTime)
+    curTime = curTime or CURRENT_TIME
+    local dayDiffs = g_ActivityDiffDayTime * 3600
+
+    return GCalHelp:GetCycleResetTime(setType, diff, curTime - dayDiffs) + dayDiffs
+end

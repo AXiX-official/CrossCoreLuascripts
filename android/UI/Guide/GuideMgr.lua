@@ -463,7 +463,7 @@ function this:InputEventTrigger()
     --引导记录
     local recordId = doingGuide.cfg.record_id; 
     if(recordId)then
-        if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        if CSAPI.IsADV() then
             local cfg =Cfgs.UpdateData:GetByID(tonumber(recordId))
             if cfg and cfg.TE_event then
                 BuryingPointMgr:TrackEvents(cfg.TE_event)
@@ -471,7 +471,6 @@ function this:InputEventTrigger()
         else
             BuryingPointMgr:BuryingPoint("after_login", recordId);
         end
-
     end
 
     EventMgr.Dispatch(EventType.Guide_Scroll_Switch,true,true);

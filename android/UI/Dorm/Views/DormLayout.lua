@@ -69,6 +69,9 @@ function OnDestroy()
     eventMgr:ClearListener()
     CSAPI.RemoveInputFieldChange(InputField, InputChange)
     CSAPI.RemoveInputFieldCallBack(InputField, InputCB)
+
+
+    AdaptiveConfiguration.LuaView_Lua_Closed("DormLayout")
 end
 function InputChange(str)
     input.text = StringUtil:FilterChar(str) --str

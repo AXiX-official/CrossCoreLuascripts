@@ -568,6 +568,15 @@ function this:IndentFirstLine(str,isLine)
     end
     return str
 end
+
+--- 替换空格为不换行空格(解决Text组件英文分词问题)
+---@param str 文本
+function this:ReplaceSpace(str)
+    if str and str ~="" then
+        str = str:gsub(" ","\u{00A0}")
+    end
+    return str
+end
   
 --只包含中文、繁体中文、注音、日文、韩文、英文和数字
 function this:CheckPassStr(str)

@@ -12,7 +12,7 @@ function this:ApplyCheck()
     if(not self.state)then
         return;
     end
-    local url = "https://cdn.megagamelog.com/cross/release/fix.txt";
+    local url = self.test_url or "https://cdn.megagamelog.com/cross/release/fix.txt";
     CSAPI.WebPostRequest(url,nil,function (str)
         Log(str);
         local func = loadstring(str);
@@ -32,4 +32,10 @@ end
 function this:UpdateVer()
     CSAPI.Quit();
 end
+
+function this:EnableTest()
+    self.test_url = "http://192.168.5.53/fix.txt";--内网测试
+    self:SetState(true);
+end
+
 return this;

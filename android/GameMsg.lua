@@ -2996,9 +2996,9 @@ GameMsg.map["AbilityProto:GetAbility"] = {
 	{ },
 }
 GameMsg.map["AbilityProto:GetAbilityRet"] = {
-	--能力点                 
-	{ "uint","list|sAbility",},
-	{ "num", "abilitys",     },
+	--能力点                 最后重置能力时间 
+	{ "uint","list|sAbility","uint",          },
+	{ "num", "abilitys",     "lastResetTime", },
 }
 GameMsg.map["AbilityProto:AddAbility"] = {
 	--能力id  
@@ -4189,6 +4189,16 @@ GameMsg.map["PlayerProto:PayFinishOrderId"] = {
 	--游戏订单id    中台订单id         
 	{ "string",     "string",          },
 	{ "gameOrderId","centerWebOrderId",},
+}
+GameMsg.map["PlayerProto:Setting"] = {
+	--R5锁定状态    
+	{ "bool",       },
+	{ "equip_state",},
+}
+GameMsg.map["PlayerProto:SettingRet"] = {
+	--设置状态 
+	{ "bool",  },
+	{ "res",   },
 }
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 

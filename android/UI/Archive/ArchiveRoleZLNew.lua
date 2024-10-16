@@ -95,10 +95,12 @@ function SetD()
 	CSAPI.SetGOActive(txtD1, cfg.sRecord1 ~= nil)
 	local str1 =cfg.sRecord1 or ""
 	str1 = str1:gsub("%%s",PlayerClient:GetName())
+	str1 = StringUtil:ReplaceSpace(str1)
 	CSAPI.SetText(txtD1, str1)
 	CSAPI.SetGOActive(txtD2, cfg.sRecord2 ~= nil)
 	local str2 =cfg.sRecord2 or ""
 	str2 = str2:gsub("%%s",PlayerClient:GetName())
+	str2 = StringUtil:ReplaceSpace(str2)
 	CSAPI.SetText(txtD2, str2)
 end
 
@@ -117,12 +119,15 @@ function SetE()
 	end
 	--访谈1
 	local str1 =cfg.sInterview1 and string.format(cfg.sInterview1,PlayerClient:GetName()) or ""
+	str1 = StringUtil:ReplaceSpace(str1)
 	CSAPI.SetText(txtE1, str1)
 	--访谈2
 	local str2 =cfg.sInterview2 and string.format(cfg.sInterview2,PlayerClient:GetName()) or ""
+	str2 = StringUtil:ReplaceSpace(str2)
 	CSAPI.SetText(txtE2, str2)
 	--访谈3
 	local str3 =cfg.sInterview3 and string.format(cfg.sInterview3,PlayerClient:GetName()) or ""
+	str3 = StringUtil:ReplaceSpace(str3)
 	CSAPI.SetText(txtE3, str3)
 end
 

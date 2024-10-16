@@ -85,6 +85,11 @@ function Awake()
     InitListener()
 	UIUtil:AddQuestionItem("TeamView", gameObject, TopNode)
 	if CSAPI.IsADV() then battleStrength=ShiryuSDK.GetbattleStrength() end
+	local topWidth=CSAPI.UIFitoffsetTop();
+	local bottomWidth=CSAPI.UIFoffsetBottom();
+	local addWidth=topWidth>bottomWidth and  topWidth or bottomWidth
+	local rtSize2=CSAPI.GetRTSize(roleListBg);
+	CSAPI.SetRectSize(roleListBg,rtSize2[0]+math.abs(addWidth),rtSize2[1]);
 end
 
 function InitSVObj()
@@ -1254,39 +1259,6 @@ function RefreshFormationView()
 		formationView.Init(teamData,canDragLeave,false,nil,isAddtive,infoNode,isShowInfos);
 		formationView.SetHaloEnable(true);
 	end
-end
-
---清空队伍
-function OnClickClean()
-	if IsDisClick() then
-		return;
-	end
-	if teamData and TeamMgr:GetTeamIsFight(teamData:GetIndex()) then
-		Tips.ShowTips(LanguageMgr:GetTips(14001));
-		return;
-	end
-    local removeCid={};
-	for i=1,#teamData.data do
-		local item=teamData.data[i];
-        if (teamData:GetIndex()==1 or canEmpty~=true) and item:IsLeader()==false then--不能为空的队伍或者编队1会留下队长卡
-            table.insert(removeCid,item.cid);
-		elseif teamData:GetIndex()~=1 and canEmpty and item:IsForce()~=true and item:IsNPC()~=true then --不清空助战队员和强制上阵卡牌
-			table.insert(removeCid,item.cid);
-		end
-	end
-	local assistData=teamData:GetAssistData();
-	for k,v in ipairs(removeCid) do
-		if assistData and assistData.cid==v then
-			TeamMgr:RemoveAssistTeamIndex(v);
-		end
-		teamData:RemoveCard(v);
-	end
-	-- Log( teamData:GetData());
-	RefreshFormationView()
-	RefreshCardList();
-	clickID=nil;
-    isChange=true;
-	SetCurrIndex()
 end
 
 --有卡牌加入队伍时

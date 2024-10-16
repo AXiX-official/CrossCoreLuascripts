@@ -26,11 +26,11 @@ function Awake()
     ac_count = ComUtil.GetCom(count, "ActionBase")
     time = Time.time
 
-    AdaptiveConfiguration.SetLuaObjUIFit("DormView",gameObject)
+    AdaptiveConfiguration.SetLuaObjUIFit("DormView", gameObject)
 end
 
 function OnInit()
-    top=UIUtil:AddTop2("DormView", topParent, Back1, Back2, {})
+    top = UIUtil:AddTop2("DormView", topParent, Back1, Back2, {})
 
     eventMgr = ViewEvent.New()
     -- 添加说话文本
@@ -82,6 +82,7 @@ function LoadingComplete()
 end
 
 function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("DormView")
     Exit1() -- 可能会删不干净  界面会因为场景跳转而关闭
     eventMgr:ClearListener()
 end
@@ -189,14 +190,27 @@ function RefreshPanel()
     -- CSAPI.SetText(txtSpeed2, num .. "%")
     -- 数量(由DormMain实时推送)
     -- SetCount()
+    -- red
+    SetReds()
+end
+
+function SetReds()
+    local isRed = DormMgr:CheckNewRoomRedNum()
+    UIUtil:SetRedPoint(btnDorm, isRed, 110.8, 31.5, 0)
 end
 
 function SetComfort()
-    local comfort = DormMgr:GetCopyDatasComfort()
-    CSAPI.SetText(txtComfort, comfort .. "")
+    local isOnlyShow = curRoomData:IsOnlyShow()
+    CSAPI.SetGOActive(comfortObj, not isOnlyShow)
+    if (not isOnlyShow) then
+        local comfort = DormMgr:GetCopyDatasComfort()
+        local maxComfort = curRoomData:GetLvCfg().maxComfort
+        local _comfort = comfort>maxComfort and maxComfort or comfort
+        CSAPI.SetText(txtComfort, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
 
-    local num = GCalHelp:DormTiredAddPerent(comfort)
-    CSAPI.SetText(txtSpeed2, num .. "%")
+        local num = GCalHelp:DormTiredAddPerent(_comfort)
+        CSAPI.SetText(txtSpeed2, num .. "%")
+    end
 end
 
 function SetCount(isAnim)
@@ -351,12 +365,18 @@ function OnClickBuilding()
     if (Time.time - time < time2) then
         return
     end
-    CSAPI.SetAngle(imgBtn1, 0, 180, 0)
-    CSAPI.OpenView("MatrixBuildingSelect") -- todo 要修改位置
+    CSAPI.SetAngle(imgBtn1, 0, 0, 180)
+    CSAPI.OpenView("MatrixBuildingSelect") 
+    CSAPI.SetGOActive(btnDorm,false)
 end
 function OnViewClosed(view)
     if (view == "MatrixBuildingSelect") then
         CSAPI.SetAngle(imgBtn1, 0, 0, 0)
+        CSAPI.SetGOActive(btnDorm,true)
+        SetReds()
+    elseif (view == "MatrixDormSelect") then
+        CSAPI.SetAngle(imgBtn2, 0, 0, 0)
+        CSAPI.SetAngle(imgBtn3, 0, 0, 0)
     end
 end
 
@@ -410,7 +430,7 @@ end
 
 -- 好友拜访
 function OnClickFriend()
-    --CSAPI.OpenView("MatrixTradingFriend", {"DormView"})
+    -- CSAPI.OpenView("MatrixTradingFriend", {"DormView"})
     OpenSelectFriend()
 end
 -- 模板分享（暂屏蔽） 
@@ -509,7 +529,7 @@ end
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
 function OnClickVirtualkeysClose()
     ---填写退出代码逻辑/接口
-    if  top.OnClickBack then
+    if top.OnClickBack then
         top.OnClickBack();
     end
 end
@@ -525,4 +545,15 @@ function OpenSelectFriend(fid)
             matrixTradingFriend.Refresh({"DormView", fid})
         end)
     end
+end
+
+-- 宿舍列表
+function OnClickDorm()
+    if (Time.time - time < time2) then
+        return
+    end
+    CSAPI.SetAngle(imgBtn2, 0, 0, 180)
+    CSAPI.SetAngle(imgBtn3, 0, 0, 180)
+    local fid = curRoomData:GetFid()
+    CSAPI.OpenView("MatrixDormSelect", fid)
 end

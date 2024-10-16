@@ -25,7 +25,7 @@ function this:BuryingPoint(_eventName, _stepID)
             datas = self:GetDefautDatas() 
         end
         datas.step_id = _stepID
-        if curType==SDKType.TA then
+        if curType==SDKType.TA or curType==SDKType.Domestic then
             self:TrackEvents(_eventName, datas,nil,nil,_eventName == "before_login")
         elseif curType == SDKType.Shiryu then
             ---  LogError("输出ID："..tostring(_stepID))
@@ -76,9 +76,43 @@ end
 function this:TrackEvents(_eventName, _datas, _type, _eventId,isNoRefresh)
     if curType == SDKType.TA then
         ThinkingAnalyticsMgr:TrackEvents(_eventName, _datas, _type, _eventId,isNoRefresh)
-    elseif curType == SDKType.Shiryu or curType == SDKType.Domestic then
+    elseif curType == SDKType.Shiryu then
         ShiryuSDK.TrackEvent(_eventName, nil, _datas)
+    elseif curType == SDKType.Domestic then      
+        -- ThinkingAnalyticsMgr:TrackEvents(_eventName, _datas, _type, _eventId,isNoRefresh)
+        -- ShiryuSDK.TrackEvent(_eventName, nil, _datas)
+        -- 区别与紫龙，中台国内的打点需要兼容数数，数数的打点需要正常发送，同时也需要将数数的打点加上adid等信息
+        -- 同步发给中台  
+        if _datas then
+            ThinkingAnalyticsMgr:TrackEvents(_eventName, _datas, _type, _eventId,isNoRefresh)
+        end
+
+        local ZTPreStr = "mj_"
+        if _datas or string.sub(_eventName,1,string.len(ZTPreStr)) == ZTPreStr then
+            if _datas then
+                _datas = self:GetDomesticPointData(_datas)
+            end
+            ShiryuSDK.TrackEvent(_eventName, nil, _datas)
+            -- LogError("上报事件 " .. _eventName)
+            -- LogError(_datas)
+        end
     end
+end
+
+function this:GetDomesticPointData(_datas)    
+    if PlayerClient then
+        _datas.level = tostring(PlayerClient:GetLv())
+        _datas.exp = tostring(PlayerClient:GetExp())
+        _datas.uid = tostring(PlayerClient:GetID())
+        _datas.role_id = tostring(PlayerClient:GetUid())
+        _datas.role_name = tostring(PlayerClient:GetName())
+        _datas.gold = tostring(PlayerClient:GetGold())
+        _datas.diamond = tostring(PlayerClient:GetDiamond())
+        _datas.max_battle_id = tostring(DungeonMgr:GetMaxDungeonID())
+        _datas.channel = tostring(CSAPI.GetChannelType())
+        _datas.ADID = tostring(CSAPI.GetADID())
+    end
+    return _datas;
 end
 
 return this

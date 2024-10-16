@@ -92,7 +92,7 @@ PROP_TYPE.Icon = 13 -- 头像(dy_arr[头像物品id, 有效时间秒（不填 or
 PROP_TYPE.Pet = 14 -- 宠物(动态值2填宠物id)
 PROP_TYPE.PetItem = 15 -- 宠物道具(动态值2填宠物物品id)
 PROP_TYPE.PetArchive = 16 -- 宠物图鉴（动态值2填宠物图鉴表id）
---PROP_TYPE.Music = 17 -- 音乐（动态值2音乐表id）
+PROP_TYPE.Music = 17 -- 音乐（动态值2音乐表id）
 
 -- 物品月卡类型
 ItemMemberType = {}

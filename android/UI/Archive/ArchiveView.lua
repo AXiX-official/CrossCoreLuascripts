@@ -1,6 +1,7 @@
 
-local newName = {"roleNew", "courseNew", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew"}
+local newName = {"roleNew", "", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew","musicNew"}
 local top=nil;
+local records = {}
 function OnInit()
 	top=UIUtil:AddTop2("ArchiveView", gameObject, function()
 		view:Close()
@@ -18,6 +19,7 @@ function InitPanel()
 	InitMemoryPanel()
 	
 	InitNew()
+	-- Log(records)
 end
 
 --角色
@@ -28,6 +30,7 @@ function InitRolePanel()
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtRoleNum3, percent .. "%")
 	CSAPI.SetRTSize(roleLine, 298 * percent / 100, 36)
+	records["role"] = percent
 end
 
 function OnRoleDown()
@@ -63,6 +66,7 @@ function InitEnemyPanel()
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtEnemyNum3, percent .. "%")
 	CSAPI.SetRTSize(enemyLine, 396 * percent / 100, 36)
+	records["enemy"] = percent
 end
 
 function OnEnemyDown()
@@ -105,6 +109,7 @@ function InitMemoryPanel()
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtMemoryNum3, percent .. "%")
 	CSAPI.SetRTSize(memoryLine, 470 * percent / 100, 36)
+	records["memory"] = percent
 end
 
 function OnMemoryDown()
@@ -202,9 +207,39 @@ function OnClickBoard()
 	end
 end
 
+function OnMusicDown()
+	CSAPI.SetUIScaleTo(btnMusic, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not musicT then
+		musicT = ComUtil.GetCom(musicFadeT, "ActionFadeT")
+	end
+	musicT:Play()
+end
+
+function OnMusicUp()
+	CSAPI.SetUIScaleTo(btnMusic, nil, 1, 1, 1, function()
+		OnClickMusic()
+	end, 0.15)
+end
+
+function OnClickMusic()
+	-- LanguageMgr:ShowTips(1000)
+	-- CSAPI.OpenView("MulPictureView",1)
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Music)
+	if isNew then
+		CSAPI.SetGOActive(musicNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Music, false)
+	end
+	if not CSAPI.IsViewOpen("BgmView") then
+		CSAPI.OpenView("BgmView")
+	end
+	-- LanguageMgr:ShowTips(1000)
+end
+
 function InitNew()
 	for i = 1, #newName do
-		CSAPI.SetGOActive(this[newName[i]].gameObject, ArchiveMgr:GetIsNew(i))
+		if newName[i] ~= "" then
+			CSAPI.SetGOActive(this[newName[i]].gameObject, ArchiveMgr:GetIsNew(i))
+		end
 	end
 end
 

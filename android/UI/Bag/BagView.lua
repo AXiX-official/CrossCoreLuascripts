@@ -65,7 +65,7 @@ local lastEquipType=nil;
 local tweenMaskTime=1000;
 function Awake()	
 	--初始化菜单项
-	AdaptiveConfiguration.SetLuaObjUIFit("BagView",gameObject)
+	AdaptiveConfiguration.SetLuaObjUIFit("Bag",gameObject)
 	layout = ComUtil.GetCom(sv, "UISV")
 	layout2=ComUtil.GetCom(sv2,"UISV")
 	curLayout=layout;

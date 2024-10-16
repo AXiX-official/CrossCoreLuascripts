@@ -287,14 +287,20 @@ function this.LogoutCallback(Success)
             this.LoginViewSwitchAccounts=false;
             CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Login)
         else
-            ClientProto:Offline()
-            MgrCenter:Clear();
-            EventMgr.Dispatch(EventType.Login_Quit,nil,true);
             if CSAPI.IsChannel() then
                 EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand,nil,true)
             end
-            LoginProto:Logout();
-            PlayerClient:Clearuid()
+            PlayerClient:SDKExit();
+            PlayerClient:Clearuid();
+
+            --ClientProto:Offline()
+            --MgrCenter:Clear();
+            --EventMgr.Dispatch(EventType.Login_Quit,nil,true);
+            --if CSAPI.IsChannel() then
+            --    EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand,nil,true)
+            --end
+            --LoginProto:Logout();
+            --PlayerClient:Clearuid()
         end
 
     else
@@ -441,7 +447,7 @@ function this.OnSetRoleName(roleInfo)
     roleInfoTable.roleName=PlayerClient:GetName();
     roleInfoTable.gameCoins=PlayerClient:GetCoin(10002);
     roleInfoTable.createSecs=PlayerClient:GetCreateTime();
-    roleInfoTable.battleStrength=this.GetbattleStrength();;
+    roleInfoTable.battleStrength=this.GetbattleStrength();
     roleInfoTable.vipLevel=0;
     roleInfoTable.guildId="";
     roleInfoTable.guildLeaderName="";
@@ -587,7 +593,7 @@ function this.OnRoleOnline()
         roleInfoTable.roleName=PlayerClient:GetName();
         roleInfoTable.gameCoins=PlayerClient:GetCoin(10002);
         roleInfoTable.createSecs=PlayerClient:GetCreateTime();
-        roleInfoTable.battleStrength=this.GetbattleStrength();;
+        roleInfoTable.battleStrength=this.GetbattleStrength();
         roleInfoTable.vipLevel=0;
         roleInfoTable.guildId="";
         roleInfoTable.guildLeaderName="";
@@ -612,7 +618,7 @@ function this.OnRoleOffline()
         roleInfoTable.roleName=PlayerClient:GetName();
         roleInfoTable.gameCoins=PlayerClient:GetCoin(10002);
         roleInfoTable.createSecs=PlayerClient:GetCreateTime();
-        roleInfoTable.battleStrength=this.GetbattleStrength();;
+        roleInfoTable.battleStrength=this.GetbattleStrength();
         roleInfoTable.vipLevel=0;
         roleInfoTable.guildId="";
         roleInfoTable.guildLeaderName="";

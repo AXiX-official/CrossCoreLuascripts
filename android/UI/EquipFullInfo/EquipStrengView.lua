@@ -375,6 +375,7 @@ function OnClickAuto()
 	-- Log(totalExp)
 	--计算需要的素材
 	local stuffs=EquipMgr:GetMaterialEquips();
+	stuffs=SortMgr:Sort(sortID,stuffs);
 	if stuffs then
 		local tempExp=0;
 		local mpInfo=nil;--记录冒泡排序最接近的值和素材信息
@@ -410,6 +411,7 @@ function OnClickAuto()
 	if stuffList.stuffTotalExp<totalExp and stuffList:GetStuffIsMax()==false then
 		--获取装备列表
 		local list=EquipMgr:GetNotEquippedItem(data.equip:GetID(),false,false);
+		list=SortMgr:Sort(sortID,list);
 		--排序
 		table.sort(list,EquipSortUtil.SortEquipRevers);
 		for k,v in ipairs(list) do

@@ -11,54 +11,10 @@ function Skill24401:OnActionOver(caster, target, data)
 	-- 24401
 	self:tFunc_24401_24411(caster, target, data)
 	self:tFunc_24401_24421(caster, target, data)
-	self:tFunc_24401_24431(caster, target, data)
-end
-function Skill24401:tFunc_24401_24431(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8202
-	if SkillJudger:IsNormal(self, caster, target, true) then
-	else
-		return
-	end
-	-- 24431
-	self:DelBufferTypeForce(SkillEffect[24431], caster, self.card, data, 24401)
-end
-function Skill24401:tFunc_24401_24421(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
-	else
-		return
-	end
-	-- 24421
-	self:AddBuff(SkillEffect[24421], caster, self.card, data, 24401)
 end
 function Skill24401:tFunc_24401_24411(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
@@ -69,4 +25,18 @@ function Skill24401:tFunc_24401_24411(caster, target, data)
 	end
 	-- 24411
 	self:AddBuff(SkillEffect[24411], caster, self.card, data, 24401)
+end
+function Skill24401:tFunc_24401_24421(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8219
+	if SkillJudger:IsUltimate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 24421
+	self:AddBuff(SkillEffect[24421], caster, self.card, data, 24401)
 end

@@ -10,6 +10,7 @@ local overloadCount = nil;
 
 
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("Skill",gameObject); --节点添加
     --timeBar = ComUtil.GetCom(goTimeBar,"BarBase");
     --txtTime = ComUtil.GetCom(timeText,"Text");
     actionOn = ComUtil.GetCom(onAction,"ActionBase")
@@ -27,7 +28,7 @@ function Awake()
     --txtOverload_cost1 = ComUtil.GetCom(overload_cost1,"Text");
     
     SetOverload();
-    AdaptiveConfiguration.SetLuaObjUIFit("Skill",gameObject); --节点添加
+
 end
 
 function OnInit()

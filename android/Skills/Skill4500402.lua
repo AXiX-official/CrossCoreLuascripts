@@ -29,7 +29,7 @@ function Skill4500402:OnAfterHurt(caster, target, data)
 		return
 	end
 	-- 4500402
-	if self:Rand(2500) then
+	if self:Rand(3500) then
 		self:AddBuff(SkillEffect[4500402], caster, target, data, 4500401)
 	end
 end

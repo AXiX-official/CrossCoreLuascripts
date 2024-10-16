@@ -7,7 +7,7 @@ function Awake()
 end
 
 function OnDestroy()
-	EventMgr.Dispatch(LuaView_Lua_Closed,"RoleTalent")
+    AdaptiveConfiguration.LuaView_Lua_Closed("RoleTalent")
 end
 
 function Refresh(_cardData, _curData)

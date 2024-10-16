@@ -2,7 +2,7 @@ local sectionData = nil
 local canvasHeight = 0
 local openInfo = nil
 local jumpID = 0
-local isTurnLoad,isItemLoad,isLoadComplite= false,false,false
+local isTurnLoad, isItemLoad, isLoadComplite = false, false, false
 -- 背景
 local bgItem = nil
 local isCreateBG = false
@@ -40,7 +40,7 @@ function Awake()
     InitAnim()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadComplete)
-    eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
+    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
 end
 
 function OnLoadComplete()
@@ -54,11 +54,11 @@ end
 
 function OnViewClosed(viewKey)
     if viewKey == "Plot" or viewKey == "ShopView" then
-        FuncUtil:Call(function ()
+        FuncUtil:Call(function()
             if gameObject then
                 CSAPI.PlayBGM("Sys_Hesitant_Cage", 1)
             end
-        end,nil,200)
+        end, nil, 200)
     end
 end
 
@@ -104,12 +104,12 @@ function OnOpen()
             LogError("缺少活动时间数据！id" .. sectionData:GetID())
             return
         end
-        isHardTimeOpen,hardTimeTips = openInfo:IsHardOpen()
+        isHardTimeOpen, hardTimeTips = openInfo:IsHardOpen()
         isHardTimeOpen = true
 
         InitDatas()
         InitState()
-        if sectionData:GetStoryID() and (not PlotMgr:IsPlayed(sectionData:GetStoryID())) then --第一次观看入场剧情
+        if sectionData:GetStoryID() and (not PlotMgr:IsPlayed(sectionData:GetStoryID())) then -- 第一次观看入场剧情
             PlotMgr:TryPlay(sectionData:GetStoryID(), function()
                 PlotMgr:Save()
                 InitPanel()
@@ -141,19 +141,19 @@ function InitRightPanel()
 end
 
 function InitState()
-    if data.itemId then --跳转进入
+    if data.itemId then -- 跳转进入
         SetInfoByJump()
-    else --正常进入
+    else -- 正常进入
         SetInfo()
     end
-    if openSetting and openSetting.isDungeonOver then  
+    if openSetting and openSetting.isDungeonOver then
         local groupData = currDatas[currTurnNum]
-        local ids = groupData:GetDungeonGroups() 
+        local ids = groupData:GetDungeonGroups()
         if DungeonMgr:GetCurrDungeonIsFirst() then
             DungeonMgr:SetCurrDungeonNoFirst()
             if ids[#ids] == data.itemId then
                 if currTurnNum < turnNum then
-                    isOpenNextTurn = true --解锁动效
+                    isOpenNextTurn = true -- 解锁动效
                     jumpID = 0
                 elseif currTurnNum == turnNum then
                     if currLevel == 1 and isHardOpen and isHardTimeOpen then
@@ -161,12 +161,12 @@ function InitState()
                         currTurnNum = 1
                         currDatas = datas[currLevel]
                         jumpID = 0
-                   end 
+                    end
                 end
             else
                 isOpenNewDungeon = true
             end
-        end         
+        end
     end
 end
 
@@ -189,7 +189,7 @@ function SetInfo()
         end
     end
 
-    --获取上次退出前状态
+    -- 获取上次退出前状态
     local info = LoadInfo()
     currTurnNum = info.turn or currTurnNum
     currLevel = info.level or currLevel
@@ -216,12 +216,13 @@ function SetInfoByJump()
 end
 
 function RefreshPanel()
+    SetTurnOpenList()
     SetItems()
 end
 -----------------------------------------------背景-----------------------------------------------
 function SetBG()
     if bgItem then
-        bgItem.Refresh(sectionData,currTurnNum)
+        bgItem.Refresh(sectionData, currTurnNum)
     elseif not isCreateBG then
         isCreateBG = true
         ResUtil:CreateUIGOAsync("DungeonRole/DungeonRoleImg", bgParent, function(go)
@@ -251,9 +252,9 @@ function InitDatas()
         end)
     end
 
-    if datas[2] and #datas[2]>0 then
-        local _data =  datas[2][1]
-        isHardOpen,hardTips = _data:IsOpen()
+    if datas[2] and #datas[2] > 0 then
+        local _data = datas[2][1]
+        isHardOpen, hardTips = _data:IsOpen()
     end
 
     currDatas = datas[1] or {}
@@ -266,7 +267,13 @@ function SetItems(b)
         return
     end
 
-    local pos = {{x = -301.5,y = 120}, {x = -301.5,y = -111}}
+    if #items > 0 then
+        for i, v in ipairs(items) do
+            CSAPI.SetGOActive(v.node,false)
+        end
+    end
+
+    local pos = {{x = -301.5,y = 120}, {x = -301.5,y = -111},{x = -301.5,y = 4.5}}
     local _datas = currDatas[currTurnNum]:GetDungeonGroups()
     local groupCfg = currDatas[currTurnNum]:GetCfg()
     if _datas then
@@ -274,11 +281,20 @@ function SetItems(b)
             local cfg = Cfgs.MainLine:GetByID(v)
             if cfg then
                 if items[i] then
-                    items[i].SetIndex(i == 1 and currTurnNum * 2 - 1 or currTurnNum * 2)
-                    items[i].Refresh(cfg,currLevel)
+                    CSAPI.SetGOActive(items[i].node ,true)
+                    if #_datas > 1 then
+                        items[i].SetIndex(i == 1 and currTurnNum * 2 - 1 or currTurnNum * 2)
+                    else
+                        items[i].SetIndex(currTurnNum)
+                    end
+                    items[i].Refresh(cfg, currLevel)
                     items[i].SetIcon(groupCfg.Icon and groupCfg.Icon[i] or "")
-                    CSAPI.SetAnchor(items[i].gameObject, pos[i].x, pos[i].y)
-                    if isActive  then
+                    if #_datas == 1 then
+                        CSAPI.SetAnchor(items[i].gameObject, pos[3].x, pos[3].y)
+                    else
+                        CSAPI.SetAnchor(items[i].gameObject, pos[i].x, pos[i].y)
+                    end
+                    if isActive then
                         if not items[1].GetLock() then
                             itemInfo.ClearLastItem()
                             OnItemClick(items[1])
@@ -289,12 +305,19 @@ function SetItems(b)
                 else
                     ResUtil:CreateUIGOAsync("DungeonRole/DungeonRoleItem2", itemParent, function(go)
                         local lua = ComUtil.GetLuaTable(go)
-                        lua.SetIndex(i == 1 and currTurnNum * 2 - 1 or currTurnNum * 2)
-                        lua.SetClickCB(OnItemClick)
-                        lua.Refresh(cfg,currLevel)
+                        if #_datas > 1 then
+                            lua.SetIndex(i == 1 and currTurnNum * 2 - 1 or currTurnNum * 2)
+                        else
+                            lua.SetIndex(currTurnNum)
+                        end                        lua.SetClickCB(OnItemClick)
+                        lua.Refresh(cfg, currLevel)
                         lua.SetIcon(groupCfg.Icon and groupCfg.Icon[i] or "")
                         items[i] = lua
-                        CSAPI.SetAnchor(go, pos[i].x, pos[i].y)
+                        if #_datas == 1 then
+                            CSAPI.SetAnchor(go, pos[3].x, pos[3].y)
+                        else
+                            CSAPI.SetAnchor(go, pos[i].x, pos[i].y)
+                        end
                         if i == #_datas then
                             isItemLoad = true
                             StartAnim()
@@ -303,7 +326,7 @@ function SetItems(b)
                 end
             end
         end
-    end 
+    end
 end
 
 function OnItemClick(item)
@@ -313,48 +336,7 @@ function OnItemClick(item)
 
     currItem = item
     currItem.SetSelect(true)
-
-    if not currItem.IsStory() then
-        currItem.SetSelect(true)
-        ShowInfo(item)
-    else
-        -- 剧情关卡
-        if currItem.GetCfg().storyID == nil then
-            LogError("找不到当前关卡的剧情ID，当前关卡ID：" .. currItem.GetID())
-            return
-        end
-
-        local dialogData = {}
-        dialogData.content = LanguageMgr:GetTips(8020)
-        dialogData.okCallBack = function()
-            local dungeonData = DungeonMgr:GetDungeonData(currItem.GetCfg().id)
-
-            isStoryFirst = (not dungeonData) or (not dungeonData.data.isPass)
-
-            PlotMgr:TryPlay(currItem.GetCfg().storyID, OnStoryPlayComplete, this, true);
-        end
-        CSAPI.OpenView("Dialog", dialogData)
-    end
-end
-
-function OnStoryPlayComplete()
-    PlotMgr:Save() -- 播放完毕后保存剧情id
-    FightProto:QuitDuplicate({
-        index = 1,
-        nDuplicateID = currItem.GetDungeonID()
-    });
-    local data = {};
-    data.id = currItem.GetDungeonID();
-    data.star = 1;
-    data.isPass = true;
-    DungeonMgr:AddDungeonData(data);
-    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
-    -- if currItem.GetData() == groupDatas[#groupDatas] and currHardLv == 1 and isStoryFirst then
-    --     currHardLv = 2
-    -- end
-    currItem = nil
-
-    RefreshPanel()
+    ShowInfo(item)
 end
 
 function OnClickLevel()
@@ -365,14 +347,14 @@ function OnClickLevel()
         Tips.ShowTips(str)
         return
     end
-    SetLevel(currLevel,isHardOpen and isHardTimeOpen)
+    SetLevel(currLevel, isHardOpen and isHardTimeOpen)
     turnItem.SetHard(currLevel)
 
     currDatas = datas[currLevel]
     SetTurnOpenList()
     SetItems()
     ItemChangeAnim()
-    turnItem.ScaleTo(function ()
+    turnItem.ScaleTo(function()
         SetTurn()
     end)
 end
@@ -385,18 +367,17 @@ function SetLevel(lv, isHardOpen)
         iconName = "normal_unLock"
     end
     CSAPI.LoadImg(btnLevel, "UIs/DungeonRole/" .. iconName .. ".png", true, nil, true)
-    CSAPI.SetGOActive(hardImg,lv == 2)
+    CSAPI.SetGOActive(hardImg, lv == 2)
 end
 
 function UpdateHardState()
     if not isHardTimeOpen and openInfo and openInfo:IsHardOpen() then
         isHardTimeOpen = true
         if isHardOpen then
-            SetLevel(currLevel,isHardOpen and isHardTimeOpen)
+            SetLevel(currLevel, isHardOpen and isHardTimeOpen)
         end
     end
 end
-
 
 -----------------------------------------------轮盘-----------------------------------------------
 function InitTurn()
@@ -455,7 +436,7 @@ function OnNumCallBack(num)
         return
     end
 
-    --找位置，对位顺时针旋转
+    -- 找位置，对位顺时针旋转
     local isUp = false
     local angle = 0
     if num - currTurnNum == 1 or num - currTurnNum == -3 then
@@ -475,8 +456,8 @@ function OnNumCallBack(num)
     isTurnRotate = true
     TurnChangeAnim(isUp)
     if turnItem then
-        PlayAnim(800,nil,true)
-        turnItem.PlayRotateAnim(isUp, math.abs(angle)  - 0.01)
+        PlayAnim(800, nil, true)
+        turnItem.PlayRotateAnim(isUp, math.abs(angle) - 0.01)
         turnItem.ScaleIn()
         -- turnItem.ScaleTo(function ()
         --     SetTurn()
@@ -558,8 +539,8 @@ function RotateToTarget()
             if currTurnNum ~= lastTurnNum then
                 SetItems()
 
-                if isOpenNextTurn then       
-                    turnItem.ScaleOut(function ()
+                if isOpenNextTurn then
+                    turnItem.ScaleOut(function()
                         SetBG()
                         SetLockTurn()
                         turnItem.PlayTurnFade()
@@ -567,14 +548,14 @@ function RotateToTarget()
                     end)
                     isOpenNextTurn = false
                 else
-                    turnItem.ScaleOut(function ()
+                    turnItem.ScaleOut(function()
                         SetBG()
                         SetTurn()
                         turnItem.PlayTurnFade()
                     end)
                 end
                 lastTurnNum = currTurnNum
-            end            
+            end
         end
 
         -- local y = currAngle / 360 * (turnNum * canvasHeight) + canvasHeight * 2
@@ -592,7 +573,8 @@ function GetTargetAngle()
         for i = 1, turnNum do
             if currAngle % 360 <= offset * (0.5 + i - 1) and currAngle % 360 > offset * (0.5 + (i - 2)) then
                 angle = (i - 1) * offset
-            elseif currAngle % 360 >= -(offset*(0.5 +(turnNum - (i - 1)))) and currAngle % 360 < -(offset*(0.5 +(turnNum - i))) then
+            elseif currAngle % 360 >= -(offset * (0.5 + (turnNum - (i - 1)))) and currAngle % 360 <
+                -(offset * (0.5 + (turnNum - i))) then
                 angle = -(turnNum - (i - 1)) * offset
             end
             -- if currAngle >= offset * (0.5 + (i - 2)) and currAngle < offset * (0.5 + (i - 1)) then
@@ -618,20 +600,26 @@ end
 function ShowInfo(item)
     isActive = item ~= nil;
     local cfg = item and item.GetCfg() or nil
+    local type = item and item.GetType()
     -- CSAPI.SetGOActive(infoMask, isActive)
     if itemInfo == nil then
         ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.SetClickCB(OnBattleEnter)
-            itemInfo.Show(cfg)
-            CSAPI.MoveTo(node,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
-            CSAPI.MoveTo(svMove,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
+            itemInfo.Show(cfg, type, OnLoadCallBack)
+            CSAPI.MoveTo(node, "UI_Local_Move", isActive and -576 or 0, 0, 0, nil, 0.1)
+            CSAPI.MoveTo(svMove, "UI_Local_Move", isActive and -576 or 0, 0, 0, nil, 0.1)
         end)
     else
-        itemInfo.Show(cfg)
-        CSAPI.MoveTo(node,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
-        CSAPI.MoveTo(svMove,"UI_Local_Move",isActive and -576 or 0,0,0,nil,0.1)
+        itemInfo.Show(cfg, type)
+        CSAPI.MoveTo(node, "UI_Local_Move", isActive and -576 or 0, 0, 0, nil, 0.1)
+        CSAPI.MoveTo(svMove, "UI_Local_Move", isActive and -576 or 0, 0, 0, nil, 0.1)
     end
+end
+
+function OnLoadCallBack()
+    itemInfo.SetFunc("Button2", "OnClickEnter", OnBattleEnter)
+    itemInfo.SetFunc("PlotButton", "OnClickStory",OnStoryEnter)
+    itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
 end
 
 -- 进入
@@ -656,6 +644,53 @@ function OnBattleEnter()
     end
 end
 
+function OnStoryEnter()
+    itemInfo.CallFunc("PlotButton","OnStoryClick")
+    if currItem and currItem.GetCfg() then
+        local dungeonData = DungeonMgr:GetDungeonData(currItem.GetCfg().id)
+        if not dungeonData or not dungeonData:IsPass() then --未看过剧情
+            itemInfo.Show()
+        end
+    end
+end
+
+function OnStoryCB()
+    if not itemInfo.IsStoryFirst() then
+        return
+    end
+    local id = currItem.GetCfg().id
+    local groupData = currDatas[currTurnNum]
+    local ids = groupData:GetDungeonGroups()
+    if id == ids[#ids] then
+        if currTurnNum < turnNum then
+            isOpenNextTurn = true -- 解锁动效
+            jumpID = 0
+        elseif currTurnNum == turnNum then
+            if currLevel == 1 and isHardTimeOpen then
+                isHardOpen = true
+                currLevel = 2
+                currTurnNum = 1
+                currDatas = datas[currLevel]
+                currAngle = 0
+                targetAngle = 0
+                turnItem.Rotate(currAngle)
+                jumpID = 0
+            end
+        end
+    else
+        jumpID = ids[#ids]
+        isOpenNewDungeon = true
+    end
+
+    RefreshPanel()
+
+    if isOpenNextTurn then
+        InitDungeonOverAnim()
+    else
+        StartAnim()
+    end
+end
+
 function OnClickBack()
     if itemInfo and itemInfo.IsShow() then
         if currItem then
@@ -665,7 +700,7 @@ function OnClickBack()
         ShowInfo()
         return
     end
-    
+
     view:Close()
 end
 
@@ -695,7 +730,7 @@ function OnPressRUp()
         isTurnRotate = true
         TurnChangeAnim(lenY > 0)
         if turnItem then
-            PlayAnim(700,nil,true)
+            PlayAnim(700, nil, true)
             turnItem.PlayRotateAnim(lenY > 0, 89)
             turnItem.ScaleIn()
             angleSpeed = 6
@@ -733,10 +768,10 @@ function OnPressLUp()
             CSAPI.SetScriptEnable(sv, "ScrollRect", false)
             isTurnRotate = true
             if lastTurnNum ~= currTurnNum then
-                TurnChangeAnim(targetAngle - currAngle>0)
+                TurnChangeAnim(targetAngle - currAngle > 0)
                 if turnItem then
-                    PlayAnim(700,nil,true)
-                    turnItem.PlayRotateAnim(targetAngle - currAngle>0, currAngle)
+                    PlayAnim(700, nil, true)
+                    turnItem.PlayRotateAnim(targetAngle - currAngle > 0, currAngle)
                     -- SetTurn()
                     -- SetBG()
                     turnItem.ScaleIn()
@@ -750,22 +785,22 @@ function OnPressLUp()
 end
 
 -----------------------------------------------动效-----------------------------------------------
-local contentFade,contentMove
+local contentFade, contentMove
 
 function InitAnim()
-    CSAPI.SetGOActive(animMask,false)
-    CSAPI.SetGOActive(enterAction,false)
-    CSAPI.SetGOActive(turnChangeAction,false)
-    contentFade = ComUtil.GetCom(contentAction,"ActionFade")
-    contentMove = ComUtil.GetCom(contentAction,"ActionMoveByCurve")
+    CSAPI.SetGOActive(animMask, false)
+    CSAPI.SetGOActive(enterAction, false)
+    CSAPI.SetGOActive(turnChangeAction, false)
+    contentFade = ComUtil.GetCom(contentAction, "ActionFade")
+    contentMove = ComUtil.GetCom(contentAction, "ActionMoveByCurve")
 end
 
-function PlayAnim(time,callBack,ignore)
-    CSAPI.SetGOActive(animMask,true)
+function PlayAnim(time, callBack, ignore)
+    CSAPI.SetGOActive(animMask, true)
     if not ignore then
         isAnim = true
     end
-    FuncUtil:Call(function ()
+    FuncUtil:Call(function()
         if gameObject then
             CSAPI.SetGOActive(animMask, false)
             isAnim = false
@@ -773,7 +808,7 @@ function PlayAnim(time,callBack,ignore)
                 callBack()
             end
         end
-    end,this,time)
+    end, this, time)
 end
 
 function StartAnim()
@@ -784,16 +819,16 @@ function StartAnim()
     if openSetting and openSetting.isDungeonOver and not isLoadComplite then
         return
     end
-    
+
     if not isOpenNextTurn then
         EnterAnim()
     end
 end
 
---正常进入
+-- 正常进入
 function EnterAnim()
     -- PlayAnim(450,function ()
-    if jumpID > 0 and #items > 0 then --跳转进入不播放入场动画
+    if jumpID > 0 and #items > 0 then -- 跳转进入不播放入场动画
         for i, v in ipairs(items) do
             if v.GetCfg().id == jumpID then
                 v.OnClick()
@@ -801,13 +836,13 @@ function EnterAnim()
                     if #items > 0 then
                         items[2].SetLock(true)
                         items[2].SetNew(false)
-                        FuncUtil:Call(function ()
+                        FuncUtil:Call(function()
                             if gameObject then
                                 items[2].PlayUnLockAnim()
                             end
-                        end,nil,200)  
-                    end       
-                    isOpenNewDungeon = false        
+                        end, nil, 200)
+                    end
+                    isOpenNewDungeon = false
                 end
                 return
             end
@@ -816,8 +851,8 @@ function EnterAnim()
     -- end)
 
     PlayAnim(700)
-    CSAPI.SetGOActive(enterAction,false)
-    CSAPI.SetGOActive(enterAction,true)
+    CSAPI.SetGOActive(enterAction, false)
+    CSAPI.SetGOActive(enterAction, true)
     if turnItem then
         turnItem.PlayEnterAnim()
         SetTurn()
@@ -831,11 +866,10 @@ function EnterAnim()
     end
 end
 
-
---关卡结束后进入
+-- 关卡结束后进入
 function InitDungeonOverAnim()
-    PlayAnim(800,nil,true)
-    
+    PlayAnim(800, nil, true)
+
     targetAngle = currAngle + 360 / turnNum
     -- CSAPI.SetScriptEnable(sv, "ScrollRect", false)
     isTurnRotate = true
@@ -857,48 +891,48 @@ function PlayDungeonOverAnim()
     turnItem.PlayUnLockAnim(currTurnNum, turnOpenList)
 
     if #items > 0 then
-        FuncUtil:Call(function ()
+        FuncUtil:Call(function()
             if gameObject then
                 items[1].PlayUnLockAnim()
             end
-        end,nil,100) 
+        end, nil, 100)
     end
 end
 
---切换区域
+-- 切换区域
 function TurnChangeAnim(isUp)
     PlayAnim(1400, nil, true)
-    CSAPI.SetGOActive(turnChangeAction,false)
-    CSAPI.SetGOActive(turnChangeAction,true)
+    CSAPI.SetGOActive(turnChangeAction, false)
+    CSAPI.SetGOActive(turnChangeAction, true)
     local distance1 = isUp and 1000 or -1000
     local distance2 = isUp and -1000 or 1000
     FadePingPong(imgObj.gameObject, 200, 440)
     FadePingPong(bgParent.gameObject, 200, 440)
-    contentFade:Play(1,0,100)
+    contentFade:Play(1, 0, 100)
     contentMove.time = 200
-    contentMove.startPos = UnityEngine.Vector3(0,0,0)
+    contentMove.startPos = UnityEngine.Vector3(0, 0, 0)
     -- contentMove.targetPos = UnityEngine.Vector3(0,isUp and itemHeight or -itemHeight,0)
-    contentMove.targetPos = UnityEngine.Vector3(0,distance1,0)
-    contentMove:Play(function ()
+    contentMove.targetPos = UnityEngine.Vector3(0, distance1, 0)
+    contentMove:Play(function()
         contentFade:Play(0, 1, 540)
         contentMove.time = 350
         -- contentMove.startPos = UnityEngine.Vector3(0,isUp and -itemHeight or itemHeight,0)
-        contentMove.startPos = UnityEngine.Vector3(0,distance2,0)
-        contentMove.targetPos = UnityEngine.Vector3(0,0,0)
+        contentMove.startPos = UnityEngine.Vector3(0, distance2, 0)
+        contentMove.targetPos = UnityEngine.Vector3(0, 0, 0)
         contentMove:Play()
     end)
 end
 
-function FadePingPong(go,time1,time2)
-    local _fade = ComUtil.GetOrAddCom(go,"ActionFade")
+function FadePingPong(go, time1, time2)
+    local _fade = ComUtil.GetOrAddCom(go, "ActionFade")
     time1 = time1 or 100
     time2 = time2 or 100
-    _fade:Play(1,0,time1,0,function ()
-        _fade:Play(0,1,time2)
+    _fade:Play(1, 0, time1, 0, function()
+        _fade:Play(0, 1, time2)
     end)
 end
 
---子物体改变动效
+-- 子物体改变动效
 function ItemChangeAnim()
     PlayAnim(450, nil, true)
     if #items > 0 then
@@ -912,9 +946,9 @@ function SaveInfo()
     local info = LoadInfo()
     info.level = currLevel
     info.turn = currTurnNum
-    FileUtil.SaveToFile("DungeonRole_" .. PlayerClient:GetUid()..".txt", info)
+    FileUtil.SaveToFile("DungeonRole_" .. PlayerClient:GetUid() .. ".txt", info)
 end
 
 function LoadInfo()
-    return FileUtil.LoadByPath("DungeonRole_" .. PlayerClient:GetUid()..".txt") or {}
+    return FileUtil.LoadByPath("DungeonRole_" .. PlayerClient:GetUid() .. ".txt") or {}
 end

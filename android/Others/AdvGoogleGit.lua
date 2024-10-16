@@ -15,7 +15,7 @@ this.SDKBackAdvGoogleGitTrue=false;
 function this.GoogleReservationRewards()
     if this.OpenGoogleEnableRules()==false then
        ---print("----------GoogleReservationRewards-------------------")
-        return ;
+        return false;
     end
     local commodity= ShopMgr:GetFixedCommodity(30033)
     --print("commodity:"..table.tostring(commodity))
@@ -30,6 +30,7 @@ function this.GoogleReservationRewards()
     end
     dialogData.cancelCallBack = function()  end
     CSAPI.OpenView("Dialog", dialogData)
+    return true
 end
 
 function this.OnSuccess(proto)

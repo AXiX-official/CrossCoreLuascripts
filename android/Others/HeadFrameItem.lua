@@ -42,7 +42,7 @@ function SetIcon(cfg)
     CSAPI.SetGOActive(effectParent, cfg.type == 2)
     local picture = cfg.picture
     local avatareffect = cfg.avatareffect
-    if(cfg.bySex and PlayerClient:GetSex()==2) then 
+    if(PlayerClient:GetSex()==2 and (cfg.picture2~=nil or cfg.avatareffect2~=nil)) then 
         picture = cfg.picture2
         avatareffect = cfg.avatareffect2
     end 

@@ -1,6 +1,6 @@
 local conf = {
 	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '头像',
+	["sheetname"] = '角色头像筛选',
 	["types"] = {
 'int','string','string'
 },

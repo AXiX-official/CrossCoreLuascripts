@@ -20,6 +20,8 @@ function OnOpen()
     else
         CSAPI.SetImgColor(mask,0,0,0,0);
     end
+    --
+    UIUtil:SetLiveBroadcast(img)
 end
 
 function OnClickMask()

@@ -204,6 +204,8 @@ function InitListener()
     
 end
 function OnDestroy()
+
+    AdaptiveConfiguration.LuaView_Lua_Closed("FigHtView");
     eventMgr:ClearListener();
 
     local fightDungeonId = DungeonMgr:GetCurrFightId() or 0;
@@ -1008,6 +1010,14 @@ function ActiveCast2Mask(starLv,isOverLoad,skipSkill)
     else
         FuncUtil:Call(ActiveToWhite,nil,1650);    
         FuncUtil:Call(ActiveCast2MaskComplete,nil,1950);
+    end
+    --直播模式 
+    local value = SettingMgr:GetValue(s_other_live_key)
+    if(value==1) then 
+        CSAPI.SetGOActive(this["Cast2ShowRole_" .. starLv],false)
+        CSAPI.SetScale(Role,0,0,0)
+    else 
+        CSAPI.SetScale(Role,150,150,1)
     end
 end
 

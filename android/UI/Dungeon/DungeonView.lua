@@ -642,10 +642,9 @@ function ShowInfo(item)
     local cfg = item and item.GetCfg() or nil
     CSAPI.SetGOActive(infoMask, isActive)
     CSAPI.SetGOActive(normal, not isActive)
+    CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
-    if itemInfo then
-        itemInfo.Show(cfg)
-    end
+    itemInfo.Show(cfg)
 end
 
 -- 进入

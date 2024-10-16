@@ -105,6 +105,22 @@ function this:GetNowDiscount()
     return num
 end
 
+--返回当前折扣说明
+function this:GetNowDiscountTips()
+    local code=CSAPI.RegionalCode();
+    local discount=self:GetNowDiscount();
+    if discount==1 then
+        return nil;
+    end
+    -- if code~=1 and code~=2 then --国内外统一修改为-n%格式
+    local dis=math.floor((1-discount)*100+0.5);
+    return string.format(LanguageMgr:GetByID(18122),dis);
+    -- else
+    --     local dis=math.floor(discount*10+0.5);
+    --     return string.format(LanguageMgr:GetByID(18074),dis);
+    -- end
+end
+
 --显示优先级，值越小越先显示
 function this:GetSort()
     return self.cfg and self.cfg.sort or 9999;

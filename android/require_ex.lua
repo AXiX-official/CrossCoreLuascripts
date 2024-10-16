@@ -98,8 +98,11 @@ function ReloadLua(nFile)
     local oldOrignModule = {}
 
     if hadLoadVals then
+        LogInfo("hadLoadVals start[遍历 %s 注册的全局变量，保存一份]", moduleName)
         -- 遍历这个文件注册的所有全局变量，保存一份
+        local cnt = 0
         for key, oType in pairs(hadLoadVals) do
+            cnt = cnt + 1
             if Loader:IsReplaceFile(key) then
                 hadLoadVals[key] = nil
             else
@@ -107,6 +110,7 @@ function ReloadLua(nFile)
                 oldOrignModule[key] = _G[key]
             end
         end
+        LogInfo("hadLoadVals finish cnt:%s[遍历 %s 注册的全局变量，保存一份]", cnt, moduleName)
     end
 
     -- LogTable(oldOrignModule, "oldOrignModule:")

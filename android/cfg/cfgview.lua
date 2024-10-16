@@ -378,6 +378,7 @@ local conf = {
 {'368',	'RogueSBuffDetail',	'RogueS/RogueSBuffDetail',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 {'369',	'RogueMain',	'RogueMain/RogueMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'370',	'MatrixDormSelect',	'Matrix/MatrixDormSelect',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
+{'374',	'DungeonActivity8',	'DungeonActivity8/DungeonActivityView8',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 },
 }
 --cfgview = conf

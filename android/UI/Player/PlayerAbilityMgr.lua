@@ -4,6 +4,7 @@ local this = MgrRegister("PlayerAbilityMgr")
 
 -----------------------------------------------协议发------------------------
 function this:Init()
+    self.lastResetTime = nil
     self.datas = {}
     local cfgs = Cfgs.CfgPlrAbility:GetAll()
     for i, v in ipairs(cfgs) do
@@ -27,6 +28,7 @@ function this:SetData(data)
             self.datas[v.id]:SetLock(false)
         end
     end
+    self.lastResetTime = data.lastResetTime
     self:CheckRedPointData()
 
     EventMgr.Dispatch(EventType.Update_PlayerAbility)
@@ -291,6 +293,13 @@ function this:GetFightOverBuff()
         table.insert(buffs, m)
     end
     return buffs
+end
+
+function this:IsFreeReset()
+    if self.lastResetTime then
+       return not GCalHelp:CheckSameMonth(self.lastResetTime, TimeUtil:GetTime())
+    end
+    return false
 end
 
 return this

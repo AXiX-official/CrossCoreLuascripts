@@ -52,10 +52,10 @@ function this:ConditionCheck(type, elseData)
         if (curID ~= nil and curID == 1) then
             local curData = self:GetCurData()
             if (not curData:GetPush()) then
-                if (elseData == "shopOpen" and not curData:GetShopOpen()) then -- 从商店出来
+                if (elseData == "shopOpen" and not curData:GetShopOpen() and not curData:IsTick()) then -- 从商店出来
                     curData:SetShopOpen()
                     curData:SetPush()
-                elseif (elseData == "create30Finish") then -- 30连返回
+                elseif (elseData == "create30Finish" and not curData:IsTick()) then -- 30连返回
                     curData:SetPush()
                 end
             end

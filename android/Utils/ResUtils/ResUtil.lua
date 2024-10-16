@@ -550,6 +550,8 @@ function this:Init()
 
      --扭蛋
      self.GachaBall=ResIconUtil.New("GachaBall");
+
+    self.Bgm=ResIconUtil.New("Bgm");
 end
 
 return this;

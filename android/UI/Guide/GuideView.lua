@@ -22,9 +22,9 @@ function InitListener()
     --eventMgr:AddListener(EventType.Net_Disconnect,OnNetDisconnect);
 end
 function OnDestroy()
-    eventMgr:ClearListener();    
+    AdaptiveConfiguration.LuaView_Lua_Closed("GuiDeView")
+    eventMgr:ClearListener();
     --EventMgr.Dispatch(EventType.Guide_State_Changed,false);
-    --AdaptiveConfiguration.RemoveLuaUIFit("GuiDeView")
 end
 
 --网络断开连接

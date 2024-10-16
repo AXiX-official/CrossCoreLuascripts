@@ -5,7 +5,7 @@ function Awake()
 end
 
 function OnDestroy()
-    EventMgr.Dispatch(LuaView_Lua_Closed, "Top" .. topIndex)
+    AdaptiveConfiguration.LuaView_Lua_Closed("Top" .. topIndex)
 end
 
 function OnEnable()

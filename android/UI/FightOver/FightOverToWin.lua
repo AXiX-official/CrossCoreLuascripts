@@ -377,7 +377,7 @@ end
 function SetRole(_id)
     if (_id) then
         RoleTool.LoadImg(icon, _id, LoadImgType.Main) -- 立绘
-
+        UIUtil:SetLiveBroadcast(icon)
         if (sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP) and not elseData.bIsWin then -- pvp战斗失败不播放语音
             return
         end

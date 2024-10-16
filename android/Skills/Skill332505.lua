@@ -6,8 +6,8 @@ Skill332505 = oo.class(SkillBase)
 function Skill332505:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 伤害前
-function Skill332505:OnBefourHurt(caster, target, data)
+-- 攻击结束
+function Skill332505:OnAttackOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -18,18 +18,11 @@ function Skill332505:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8416
-	local count16 = SkillApi:BuffCount(self, caster, target,2,2,2)
-	-- 8108
-	if SkillJudger:Greater(self, caster, self.card, true,count16,0) then
+	-- 8260
+	if SkillJudger:IsTypeOf(self, caster, target, true,5) then
 	else
 		return
 	end
-	-- 8248
-	if SkillJudger:IsBeatAgain(self, caster, target, true) then
-	else
-		return
-	end
-	-- 332505
-	self:AddTempAttr(SkillEffect[332505], caster, self.card, data, "damage",0.50)
+	-- 332515
+	self:AddBuff(SkillEffect[332515], caster, target, data, 332515)
 end
