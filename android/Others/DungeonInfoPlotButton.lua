@@ -40,6 +40,6 @@ function OnStoryPlayComplete()
     MenuMgr:UpdateDatas() --刷新关卡解锁状态
     EventMgr.Dispatch(EventType.Activity_Open_State);
     if cb then
-        cb()
+        cb(isStoryFirst)
     end
 end

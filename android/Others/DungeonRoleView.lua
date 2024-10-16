@@ -654,9 +654,9 @@ function OnStoryEnter()
     end
 end
 
-function OnStoryCB()
-    if not itemInfo.IsStoryFirst() then
-        return
+function OnStoryCB(isStoryFirst)
+    if not isStoryFirst then
+        -- return
     end
     local id = currItem.GetCfg().id
     local groupData = currDatas[currTurnNum]
@@ -670,6 +670,7 @@ function OnStoryCB()
                 isHardOpen = true
                 currLevel = 2
                 currTurnNum = 1
+                lastTurnNum = 1
                 currDatas = datas[currLevel]
                 currAngle = 0
                 targetAngle = 0

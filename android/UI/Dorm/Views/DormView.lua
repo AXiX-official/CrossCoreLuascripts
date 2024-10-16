@@ -205,10 +205,10 @@ function SetComfort()
     if (not isOnlyShow) then
         local comfort = DormMgr:GetCopyDatasComfort()
         local maxComfort = curRoomData:GetLvCfg().maxComfort
-        local _comfort = comfort>maxComfort and maxComfort or comfort
-        CSAPI.SetText(txtComfort, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
-
-        local num = GCalHelp:DormTiredAddPerent(_comfort)
+        -- local _comfort = comfort>maxComfort and maxComfort or comfort
+        -- CSAPI.SetText(txtComfort, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
+        CSAPI.SetText(txtComfort,comfort.."")
+        local num = GCalHelp:DormTiredAddPerent(comfort)
         CSAPI.SetText(txtSpeed2, num .. "%")
     end
 end

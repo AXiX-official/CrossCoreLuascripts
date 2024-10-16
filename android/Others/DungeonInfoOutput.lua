@@ -61,8 +61,9 @@ function GetRewardDatas()
     local _datas = {}
     local dungeonData = DungeonMgr:GetDungeonData(cfg.id)
     local isTeaching = cfg.type == eDuplicateType.Teaching -- 教程关
+    local isPlot = cfg.sub_type ~= nil    
     local specialRewards = RewardUtil.GetSpecialReward(cfg.group)
-    if (specialRewards and #specialRewards > 0) then
+    if not isPlot and (specialRewards and #specialRewards > 0) then
         for i, v in ipairs(specialRewards) do
             local _data = {
                 id = v[1],

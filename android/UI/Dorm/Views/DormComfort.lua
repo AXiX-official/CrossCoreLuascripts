@@ -22,10 +22,11 @@ function OnOpen()
     -- comfort
     local comfort = DormMgr:GetCopyDatasComfort() -- curRoomData:GetComfort()
     local maxComfort = DormMgr:GetCurRoomData():GetLvCfg().maxComfort
-    local _comfort = comfort>maxComfort and maxComfort or comfort
-    CSAPI.SetText(txtComfort2, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
+    -- local _comfort = comfort>maxComfort and maxComfort or comfort
+    -- CSAPI.SetText(txtComfort2, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
+    CSAPI.SetText(txtComfort2,comfort.."")
     -- effect
-    local num = GCalHelp:DormTiredAddPerent(_comfort)
+    local num = GCalHelp:DormTiredAddPerent(comfort)
     LanguageMgr:SetText(txtEffect3, 32015, "+" .. num .. "%")
     -- grids
     Grids()
@@ -34,7 +35,7 @@ function OnOpen()
     if (maxComfort and comfort >= maxComfort) then
         isMax = true
     end
-    CSAPI.SetGOActive(objMaxComfort, isMax)
+    --CSAPI.SetGOActive(objMaxComfort, isMax)
 end
 
 function Grids()
