@@ -610,7 +610,7 @@ function ShowInfo(item)
             CSAPI.MoveTo(svMove, "UI_Local_Move", isActive and -576 or 0, 0, 0, nil, 0.1)
         end)
     else
-        itemInfo.Show(cfg, type)
+        itemInfo.Show(cfg, type, OnLoadCallBack)
         CSAPI.MoveTo(node, "UI_Local_Move", isActive and -576 or 0, 0, 0, nil, 0.1)
         CSAPI.MoveTo(svMove, "UI_Local_Move", isActive and -576 or 0, 0, 0, nil, 0.1)
     end
@@ -656,7 +656,7 @@ end
 
 function OnStoryCB(isStoryFirst)
     if not isStoryFirst then
-        -- return
+        return
     end
     local id = currItem.GetCfg().id
     local groupData = currDatas[currTurnNum]
