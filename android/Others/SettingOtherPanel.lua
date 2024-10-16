@@ -8,11 +8,11 @@ function Awake()
     
     curIndex1 = SettingMgr:GetValue(s_other_live_key) or s_other_live_default
     curIndex2 = SettingMgr:GetValue(s_other_equipLock_key) or s_other_equipLock_default
-    if curIndex1 == 0 then
+    if not curIndex1 or curIndex1 == 0 then
         curIndex1 = s_other_live_default
     end
-    if curIndex2 == 0 then
-        curIndex1 = s_other_equipLock_default
+    if not curIndex2 or curIndex2 == 0 then
+        curIndex2 = s_other_equipLock_default
     end
 
     SetLive()

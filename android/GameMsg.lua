@@ -4475,4 +4475,14 @@ GameMsg.map["PlayerProto:SetClientData"] = {
 	{ "string","string",    "byte",             },
 	{ "key",   "data",      "type",             },
 }
+GameMsg.map["shareReward"] = {
+	--物品id 数量   类型   
+	{ "uint","uint","byte",},
+	{ "id",  "num", "type",},
+}
+GameMsg.map["ShareProto:AddShareCount"] = {
+	--
+	{ },
+	{ },
+}
 

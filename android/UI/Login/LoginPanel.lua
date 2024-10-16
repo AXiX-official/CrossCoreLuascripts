@@ -46,6 +46,8 @@ local inp_account;
 local tempUid=nil;
 local tempMsg=nil;
 local tipsDisConnect=false;
+local isFirstFail=true;
+
 function Awake()
     CheckUpdate();--ios旧包强更包体
 
@@ -136,7 +138,7 @@ function InitListener()
     eventMgr:AddListener(EventType.Login_Click_In, OnClickLoginIn);
     eventMgr:AddListener(EventType.Login_Phone_Auth_Code, OnLoginPhoneAuthCode);
     eventMgr:AddListener(EventType.Net_Connect_Fail, OnLoginFail);
-    eventMgr:AddListener(EventType.Login_Fial, OnLoginFail);
+    eventMgr:AddListener(EventType.Login_Fial, OnTipError);
     eventMgr:AddListener(EventType.Login_Show_Mask, ShowMask);
     eventMgr:AddListener(EventType.Login_Hide_Mask, HideMask);
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadingOver);
@@ -970,7 +972,14 @@ end
 function OnSwitchLoginView()
     OnClickLoginBtn();
 end
-local isFirstFail=true;
+
+function OnTipError()
+    NetMgr.net:Disconnect();
+    HideMask();
+    tipsDisConnect=false;
+    isFirstFail=true;
+end
+
 function OnLoginFail()
     --切换IP再尝试一次登录，无法连接再弹失败提示
     if isFirstFail and IsAccount()~=true then

@@ -894,6 +894,8 @@ GMsgNo["sOperateActive"]=4703		-- 获取徽章的数据
 GMsgNo["PlayerProto:GetClientData"]=9003		-- 客户端获取自定义数据
 GMsgNo["PlayerProto:GetClientDataRet"]=9004		-- 客户端获取自定义数据返回
 GMsgNo["PlayerProto:SetClientData"]=9005		-- 客户端设置自定义数据
+GMsgNo["shareReward"]=4900		-- 奖励结构
+GMsgNo["ShareProto:AddShareCount"]=4901		-- 分享次数加一
 
 GMsgKey = {}
 GMsgKey[9999]="Test"		-- 测试协议
@@ -1791,4 +1793,6 @@ GMsgKey[4703]="sOperateActive"		-- 获取徽章的数据
 GMsgKey[9003]="PlayerProto:GetClientData"		-- 客户端获取自定义数据
 GMsgKey[9004]="PlayerProto:GetClientDataRet"		-- 客户端获取自定义数据返回
 GMsgKey[9005]="PlayerProto:SetClientData"		-- 客户端设置自定义数据
+GMsgKey[4900]="shareReward"		-- 奖励结构
+GMsgKey[4901]="ShareProto:AddShareCount"		-- 分享次数加一
 

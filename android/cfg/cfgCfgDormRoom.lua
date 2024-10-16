@@ -8,7 +8,7 @@ local conf = {
 'id','key','scale','costs','limit','maxRole','maxComfort'
 },
 	["data"] = {
-{'1',	'',	'16,16',	'',	'45',	'5',	'6000'},
+{'1',	'',	'16,16',	'',	'45',	'5',	''},
 },
 }
 --cfgCfgDormRoom = conf
