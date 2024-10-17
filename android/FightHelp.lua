@@ -285,7 +285,7 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     local player = plr
 
     mgr.cbOver = function(self, winer, isForceOver)
-        LogTrace('FightHelp:StartPvpMirrorFight() cbOver')
+        -- LogTrace('FightHelp:StartPvpMirrorFight() cbOver')
         LogDebug('StartPvpMirrorFight cbOver winer:%s, isForceOver:%s', winer, isForceOver)
 
         local isWiner = false
@@ -934,31 +934,40 @@ function FightHelp:SendInBattle(uid, notiteConn)
     end
 end
 
-function FightHelp:Destroy(uid)
+function FightHelp:Destroy(uid, player)
+    --LogTrace()
     -- local uid = player.id
     local mgr = FightHelp.cache[uid] or FightHelp.mapPlayerMgr[uid]
+    -- LogTable(mgr, "FightHelp:Destroy mgr:")
     if mgr then
         FightHelp.lstMgr[mgr.id] = nil
 
         if mgr.type == SceneType.PVPMirror and not mgr.isOver then
             -- 紫龙打印bi日志
-            if IsOpenBiLog() then
-                local plr = GetPlayer(uid, false, true)
-                local win = 0
-                local armyInfo = plr:GetTmp('armyInfo', {})
-                BILogMgr:LogImitatefight(
-                    plr,
-                    2,
-                    eTeamType.PracticeAttack,
-                    nil,
-                    1,
-                    win,
-                    plr:GetMix('armyRank', 0),
-                    plr:GetMix('armyRank', 0),
-                    0,
-                    plr:GetTmp('army_score', 0)
-                )
-            end
+            xpcall(
+                function ()
+                    if IsOpenBiLog() then
+                        local plr = player or GetPlayer(uid, false, true)
+                        local win = 0
+                        if plr then
+                            local armyInfo = plr:GetTmp('armyInfo', {})
+                            BILogMgr:LogImitatefight(
+                                plr,
+                                2,
+                                eTeamType.PracticeAttack,
+                                nil,
+                                1,
+                                win,
+                                plr:GetMix('armyRank', 0),
+                                plr:GetMix('armyRank', 0),
+                                0,
+                                plr:GetTmp('army_score', 0)
+                            )
+                        end
+                    end
+                end,
+                XpcallCB
+            )
         end
     else
         LogWarning("FightHelp:Destroy uid=%s not exist", uid)

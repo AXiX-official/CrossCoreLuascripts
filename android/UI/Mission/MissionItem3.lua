@@ -71,6 +71,8 @@ function SetBtn()
 
     LanguageMgr:SetText(txtBtn1, isFinish and 6011 or 6012)
     LanguageMgr:SetEnText(txtBtn2, isFinish and 6011 or 6012)
+    LanguageMgr:SetText(txtSuccess1, isGet and 6013 or 6017)
+    LanguageMgr:SetEnText(txtSuccess2, isGet and 6013 or 6017)
     -- end
     local b = false
     if (isAdd and not isMax) then

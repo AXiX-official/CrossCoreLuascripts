@@ -197,7 +197,7 @@ end
 
 function OnBattleChangeRound(isPlayer)
 	-- if isPlayerLast ~= isPlayer then
-	local str = isPlayer and "我方回合" or "敌方回合"
+	local str = LanguageMgr:GetByID(isPlayer and 25047 or 25048) 
 	--CSAPI.SetText(txtRound, str)
 	CSAPI.SetText(txtRound,	StringUtil:SetByColor(str, isPlayer and "ffc146" or "fe5353"))
 	-- CSAPI.SetGOActive(roundObj, true)
