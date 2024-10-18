@@ -586,10 +586,13 @@ end
 
 --匹配非特殊字符的文本 --支持空格 
 local regex = CS.System.Text.RegularExpressions.Regex("[^\\p{L}\\p{N}\\s+]+")
+local regex2 = CS.System.Text.RegularExpressions.Regex("[\\t+]+") 
 function this:FilterChar2(str)
     local result=""
     if str ~= "" and str ~= nil then
-        result=regex:Replace(str,"");
+        result = regex:Replace(str,"");
+        result = regex2:Replace(result,"") --剔除tab
+        -- result = result:gsub("^%s*(.-)%s*$", "%1") --去掉前后空格
     end
     return result;
 end

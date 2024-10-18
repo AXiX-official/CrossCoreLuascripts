@@ -341,8 +341,10 @@ function OnClickConfirm()
 		if CSAPI.IsADV() or CSAPI.IsDomestic() then
 			ShiryuSDK.OnRoleInfoUpdate();
 			BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ROLE_CONFIRM,{image = tostring(currSex)})
-		else
-			--数数接入
+		end		
+		if CSAPI.IsADV()==false then
+			-- 国内、中台国内需要走数数
+			-- 数数接入
 			ThinkingAnalyticsMgr:SetUser({ADID = CSAPI.GetADID()},TAUserType.Once)
 			BuryingPointMgr:TrackEvents("register", {gender = currSex == 1 and "男" or "女",createTime = TimeUtil:GetTime() .. ""})
 		end

@@ -384,7 +384,8 @@ function FightProto:EnterFight(data)
         msg = "fight",
         timeOutCallBack = function()
             local dialogdata = {
-                content = "进入战斗失败，点击重试",
+                --content = "进入战斗失败，点击重试",
+                content = LanguageMgr:GetTips(8046),
                 okCallBack = function()
                     FightProto:EnterFight(data);
                 end,
