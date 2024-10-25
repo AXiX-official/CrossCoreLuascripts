@@ -1,7 +1,7 @@
 --等待指定网络消息，等待期间禁用点击
 --超时回调（默认3秒）
 --成功无事发生
-
+local netWait_maskIcon = nil
 function OnInit()
 	InitListener();
 end
@@ -10,6 +10,7 @@ function InitListener()
 	eventMgr = ViewEvent.New();
 	eventMgr:AddListener(EventType.Net_Msg_Wait, OnMsgWait);	
     eventMgr:AddListener(EventType.Net_Msg_Getted, OnMsgGetted);	
+    netWait_maskIcon = transform:Find("mask/subMask/icon").gameObject
 end
 
 function OnMsgWait(data)
@@ -19,6 +20,9 @@ function OnMsgWait(data)
     local msgName = data and data.msg;
     if(not msgName)then
         return;
+    end
+    if netWait_maskIcon and CSAPI.IsDomestic() then
+        CSAPI.SetGOActive(netWait_maskIcon,not msgName == "pay_wait");
     end
 
     if(waitingDic and waitingDic[msgName])then

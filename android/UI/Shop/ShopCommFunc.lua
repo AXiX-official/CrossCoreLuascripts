@@ -560,11 +560,12 @@ function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payTy
                 end
                 local priceInfo2=commodity:GetPrice();
                 ---2024-09-14 中台SDK 重合 要求去掉游戏加载圈
-                --if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer then
-                --    EventMgr.Dispatch(EventType.Shop_Buy_Mask,true);
-                --else
-                --    print("-----PC-----IsGetIsMobileplatform")
-                --end
+                ---2024-10-23 中台SDK 要求去掉游戏加载圈，保留遮罩
+                if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+                   EventMgr.Dispatch(EventType.Shop_Buy_Mask,true);
+                else
+                   print("-----PC-----IsGetIsMobileplatform")
+                end
 
                 print("commodity---------------------"..table.tostring(commodity))
                 ClientProto:QueryPrePay(commodity:GetID(),function(proto)

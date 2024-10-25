@@ -45,6 +45,7 @@ local conf = {
 {'36',	'36',	'61038',	'携手重建',	'36',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'rebuilding_together',	'',	'board_rebuilding_together',	'Small_rebuilding_together',	'幸运扭蛋机奖励',	'-36,-16,1.23',	'houqin',	'-44,-22,1',	'',	'1'},
 {'39',	'39',	'61041',	'街头法则',	'31',	'',	'',	'9',	'law_of_the_streets',	'law_of_the_streets_replace',	'board_law_of_the_streets',	'Small_law_of_the_streets',	'商店购买',	'50,50,1',	'CG0016_LawOfTheStreets_spine',	'0,0,1',	'1',	'80419'},
 {'40',	'40',	'61042',	'绝境逢生',	'37',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'a_narrow_escape',	'',	'board_a_narrow_escape',	'Small_a_narrow_escape',	'幸运扭蛋机奖励',	'-98,-41,0.88',	'Katina',	'0,0,1',	'',	'1'},
+{'41',	'41',	'61043',	'黑茧蝶梦',	'41',	'2024-11-13 03:00:00',	'2026-10-16 03:00:00',	'6',	'black_cocoon_rebecca',	'',	'board_black_cocoon_rebecca',	'Small_black_cocoon_rebecca',	'高级勘测奖励',	'19,56,1.25',	'jufeng_1',	'-7,129,2.03',	'',	'1'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf
