@@ -51,6 +51,7 @@ end
 
 --设置变黑
 function SetBlack(black, isTween)
+	isBlack= black and black==1;
 	cImg.SetRoleBlack(black, isTween);
 end
 

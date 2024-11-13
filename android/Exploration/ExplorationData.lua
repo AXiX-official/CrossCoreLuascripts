@@ -347,4 +347,12 @@ function this:GetMaxLv()
     return self.maxLv or 0;
 end
 
+function this:GetBackImg()
+    return self.cfg and self.cfg.backResource or nil;
+end
+
+function this:GetBackPos()
+    return self.cfg and self.cfg.backPos or {0,0,1};
+end
+
 return this;

@@ -216,6 +216,23 @@ function this.Twinkle(go, _time, callBack, _delay)
 	this.InsertActionToList(PlotTweenType.Twinkle, fade)
 end
 
+function this.Twinkle2(go,_time1,_time2,callBack,_delay1,_delay2)
+	local fade = ComUtil.GetOrAddCom(go, "ActionFade");
+	fade.target = go;
+	local time1 = _time1 and _time1 * 1000 or 250;
+	local time2 = _time2 and _time2 * 1000 or 250;
+	local delay1 = _delay1 and _delay1 * 1000 or 0;
+	local delay2 = _delay2 and _delay2 * 1000 or 0;
+	fade.enabled = true
+	fade:Play(1,0,_time1,_delay1,function ()
+		fade:Play(0, 1, _time2,nil,_delay2)
+		if callBack then
+			callBack()
+		end		
+	end,_delay1)
+	this.InsertActionToList(PlotTweenType.Twinkle, fade)
+end
+
 --------------------------------------添加动画---------------------------------------
 function this.ApplyAction(go, actionName, callBack)
 	local _action = CSAPI.ApplyAction(go, actionName, callBack)

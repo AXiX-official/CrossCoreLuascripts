@@ -510,6 +510,7 @@ function this:Init()
     self.MenuEnter = ResIconUtil.New("MenuEnter")  
     self.HeadFrame = ResIconUtil.New("HeadFrame")  --头像框
     self.Head = ResIconUtil.New("Head")  --头像框
+    self.HeadTitle = ResIconUtil.New("HeadTitle")  --称号
     -- img
     self.ImgCharacter = ResImgUtil.New("Character");
     self.ModuleInfo = ResImgUtil.New("ModuleInfo");
@@ -539,6 +540,7 @@ function this:Init()
 
     self.DungeonSummer = ResIconUtil.New("DungeonSummer") --夏日选关
     self.DungeonTaoFa = ResIconUtil.New("DungeonTaoFa") --讨伐相关
+    self.DungeonNight = ResIconUtil.New("DungeonNight") --奇妙之夜
 
     self.MultBoardSmall = ResIconUtil.New("MultBoardSmall") --多人看板竖图
 
@@ -548,10 +550,13 @@ function this:Init()
 
     self.RogueSNum = ResIconUtil.New("RogueSNum") --战力派遣
 
-     --扭蛋
-     self.GachaBall=ResIconUtil.New("GachaBall");
+    --扭蛋
+    self.GachaBall=ResIconUtil.New("GachaBall");
 
     self.Bgm=ResIconUtil.New("Bgm");
+
+    --剧情
+    self.PlotTop = ResIconUtil.New("Plot/PlotTop");
 end
 
 return this;

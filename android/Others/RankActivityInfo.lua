@@ -47,4 +47,8 @@ function this:GetPassName()
     return ""
 end
 
+function this:GetTitle()
+    return self.info and self.info.icon_title
+end
+
 return this

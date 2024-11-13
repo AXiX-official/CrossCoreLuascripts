@@ -178,9 +178,9 @@ function OnOpen()
     CheckOpenSection()  
     InitJumpState()
     if not isFirst then
-        layout:IEShowList(#sectionDatas,OnLoadSuccess,currIndex)
         isFirst = true
-    else
+        layout:IEShowList(#sectionDatas,OnLoadSuccess,currIndex)
+    else    
         layout:UpdateList()
     end
     SetRed(MissionMgr:CheckRed({eTaskType.StarPalace}))
@@ -437,8 +437,8 @@ function OnSweepClick()
 end
 
 function OnBuyFunc()
-    local curCount = DungeonMgr:GetArachnidCount()
-    UIUtil:OpenPurchaseView(nil,nil,curCount,g_DungeonArachnidDailyBuy,g_DungeonArachnidDailyCost,g_DungeonArachnidGets,OnPayFunc)
+    local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
+    UIUtil:OpenPurchaseView(nil,nil,curCount,sectionData:GetBuyCount(),sectionData:GetBuyCost(),sectionData:GetBuyGets(),OnPayFunc)
 end
 
 function OnDirllClick()

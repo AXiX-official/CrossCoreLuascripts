@@ -141,13 +141,17 @@ function SetRed(b)
 end
 
 function SetExploreRed()
-    if redAnim2 then
-        local isRed = false
-        if sectionData:GetExploreId() then
-            local exData = ExplorationMgr:GetExData(sectionData:GetExploreId())
-            isRed = exData and exData:HasRevice() or false
+    if sectionData:GetExploreId() then
+        if redPath == nil then
+            redPath = sectionData and sectionData:GetRedPath() or "Common/Red2"
         end
-        CSAPI.SetGOActive(redAnim2,isRed)
+        local exData = ExplorationMgr:GetExData(sectionData:GetExploreId())
+        local isRed = exData and exData:HasRevice() or false
+        if redAnim2 then
+            CSAPI.SetGOActive(redAnim2,isRed)
+        else
+            UIUtil:SetRedPoint2(redPath,redParent2,isRed,0,0)
+        end
     end
 end
 
@@ -171,7 +175,17 @@ function OnClickMission()
 end
 
 function OnClickShop()
-    CSAPI.OpenView("ShopView",openInfo:GetShopID())
+    if sectionData:GetExploreId() then
+        CSAPI.OpenView("SpecialExploration",sectionData:GetExploreId());
+    else
+        CSAPI.OpenView("ShopView",openInfo:GetShopID())
+    end
+end
+
+function OnClickExploration()
+    if sectionData:GetExploreId() then
+        CSAPI.OpenView("SpecialExploration",sectionData:GetExploreId());
+    end
 end
 
 function OnClickDungeon()
@@ -183,12 +197,6 @@ function OnClickDungeon()
         CSAPI.OpenView(info.childView, {
             id = data.id
         })
-    end
-end
-
-function OnClickExploration()
-    if sectionData:GetExploreId() then
-        CSAPI.OpenView("SpecialExploration",sectionData:GetExploreId());
     end
 end
 

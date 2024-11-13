@@ -407,7 +407,8 @@ function ConfigChecker:CardData(cfgs)
                         end
                     end
                 end
-                if (count >= #v.uniteLabel and _cfg.get_from_gm) then
+                -- if (count >= #v.uniteLabel and _cfg.get_from_gm) then
+                if (count >= #v.uniteLabel) then
                     table.insert(uniteIDs, _cfg.id)
                 end
             end
@@ -1490,6 +1491,14 @@ function ConfigChecker:ItemInfo(cfgs)
             else
                 ASSERT(false, string.format('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
+        elseif cfg.type == ITEM_TYPE.ICON_TITLE then
+            local titleCfg = CfgIconTitle[cfg.dy_value2]
+            if titleCfg then
+                ASSERT(not titleCfg.item_id, string.format('该称号id=%s已有对应的物品id=%s,称号表配置冲突', cfg.dy_value2, id))
+                titleCfg.item_id = id
+            else
+                ASSERT(false, string.format('称号表里找不到该物品id:%s对应的玩家称号id：%s', id, cfg.dy_value2))
+            end
         elseif cfg.type == ITEM_TYPE.BG_ITEM then
             local menuBgCfg = CfgMenuBg[cfg.dy_value1]
             if menuBgCfg then
@@ -1543,6 +1552,20 @@ function ConfigChecker:ItemInfo(cfgs)
             elseif cfg.dy_value1 == PROP_TYPE.Music then
                     ASSERT(cfg.dy_value2, string.format("物品id：%s使用后获得的音乐在ItemInfo没配dy_value2", id))
                     ASSERT(CfgMusic[cfg.dy_value2], string.format("音乐id：%s使用后获得的音乐在音乐表[CfgMusic]没有对应的id：%s", id, cfg.dy_value2))
+            elseif cfg.dy_value1 == PROP_TYPE.IconTitle then
+                local item_id = cfg.dy_arr[1]
+                local iconItem = cfgs[item_id]
+                ASSERT(
+                        iconItem.dy_value2 == cfg.dy_value2,
+                        string.format(
+                                '称号道具id:%s的对应的称号id:%s 与 使用后获得的称号物品id:%s对应的称号id：%s 不符',
+                                id,
+                                cfg.dy_value2,
+                                item_id,
+                                iconItem.dy_value2
+                        )
+                )
+                ASSERT(iconItem.type == ITEM_TYPE.ICON_TITLE, string.format('道具id:%s的物品对应的称号物品:%s，类型不对', id, item_id))
             end
         elseif cfg.type == ITEM_TYPE.VOUCHER then
             if cfg.dy_value1 then
@@ -1589,6 +1612,15 @@ function ConfigChecker:CfgAvatar(cfgs)
     for id, cfg in pairs(cfgs) do
         -- 道具头像要有对应的物品id
         ASSERT(cfg.item_id, string.format('头像id:%s无对应的的物品id,配置不对', id))
+    end
+end
+
+function ConfigChecker:CfgIconTitle(cfgs)
+    for id, cfg in pairs(cfgs) do
+        -- 称号要有对应的物品id
+        if id ~= 1 then
+            ASSERT(cfg.item_id, string.format('称号id:%s无对应的的物品id,配置不对', id))
+        end
     end
 end
 
@@ -1857,12 +1889,76 @@ function ConfigChecker:CfgCommodity(cfgs)
                 for _, limitedTime in pairs(limitedTimes) do
                     local tarLimit = CfgLimitedTime[tonumber(limitedTime)]
                     if tarLimit then
+                        if tarLimit.times then
+                            local times = SplitString(tarLimit.times, '-')
+                            if times then
+                                local start_time = times[1]
+                                if start_time then
+                                    local start_times = SplitString(start_time, ':')
+                                    if start_times and #start_times == 3 then
+                                        local s_time = {}
+                                        s_time.time = start_time
+                                        s_time.time_h = start_times[1]
+                                        s_time.time_m = start_times[2]
+                                        s_time.time_s = start_times[3]
+                                        tarLimit.s_time = s_time
+                                    end
+                                end
+
+                                local end_time = times[2]
+                                if end_time then
+                                    local end_times = SplitString(end_time, ':')
+                                    if end_times and #end_times == 3 then
+                                        local e_time = {}
+                                        e_time.time = end_time
+                                        e_time.time_h = end_times[1]
+                                        e_time.time_m = end_times[2]
+                                        e_time.time_s = end_times[3]
+                                        tarLimit.e_time = e_time
+                                    end
+                                end
+
+                                if tarLimit.s_time and tarLimit.e_time then
+                                    local startTime = GCalHelp:GetTimestampByTime(tarLimit.s_time.time_h, tarLimit.s_time.time_m, tarLimit.s_time.time_s)
+                                    local endTime = GCalHelp:GetTimestampByTime(tarLimit.e_time.time_h, tarLimit.e_time.time_m, tarLimit.e_time.time_s)
+
+                                    if startTime >= endTime then
+                                        assert(false, string.format('CfgLimitedTime 的 id = %s，开始时间：%s 必须小于结束时间：%s 晚', tarLimit.id, tarLimit.s_time.time, tarLimit.e_time.time))
+                                    end
+                                end
+
+
+                            end
+                        end
+
+
                         if not v.limitedWeek[tarLimit.week] then
                             v.limitedWeek[tarLimit.week] = {}
                         end
                         v.limitedWeek[tarLimit.week][tarLimit.id] = tarLimit
                     end
                 end
+
+                local target = {}
+                for week, val in pairs(v.limitedWeek) do
+                    local timeWeek = {}
+                    local limitedWeekTable = {}
+                    for _, time in pairs(val) do
+                        local startTime = GCalHelp:GetTimestampByTime(time.s_time.time_h, time.s_time.time_m, time.s_time.time_s)
+                        table.insert(timeWeek, startTime)
+                        limitedWeekTable[startTime] = time
+                        --LogI("id:%s,week:%s,times:%s", time.id, time.week, time.times)
+                    end
+
+                    table.sort(timeWeek)
+                    target[week] = {}
+                    for _, startTime in pairs(timeWeek) do
+                        local time = limitedWeekTable[startTime]
+                        table.insert(target[week], time)
+                    end
+
+                end
+                v.limitedWeek = target
             end
             if v.group then
                 if v.tabID then

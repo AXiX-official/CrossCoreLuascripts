@@ -22,7 +22,7 @@ function Refresh(_info)
 	CSAPI.SetText(txtName, info:GetName())
 	--等级
 	local lvStr = LanguageMgr:GetByID(1033) or "LV."
-	CSAPI.SetText(txtLv, lvStr .. info:GetLevel())
+	CSAPI.SetText(txtLv, "" .. info:GetLevel())
 	--排名
 	CSAPI.SetText(txtRank1, rank < 4 and rank .. "" or "")
 	CSAPI.SetText(txtRank2, rank >= 4 and rank .. "" or "")
@@ -35,5 +35,6 @@ function Refresh(_info)
 	-- 	ResUtil.RoleCard:Load(icon, _cfg.icon, true)
 	-- end
 	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID(),info:GetSex()) 
+	UIUtil:AddTitleByID(titleParent,1,info:GetIconTitle())
 end
 

@@ -44,27 +44,28 @@ function Refresh(cfg, _elseData, callBack)
     infoUtil:Set(cfg)
     infoUtil:Hidden()
     local type = _elseData or DungeonInfoType.Normal
-    local names = DungeonInfoNameUtil.GetNames(type)
-    SetItems(names, callBack)
+    local names,path = DungeonInfoNameUtil.GetNames(type)
+    path = path or "DungeonItemInfo"
+    SetItems(names,path,callBack)
 end
 
-function SetItems(typeNames, callBack)
+function SetItems(typeNames,path,callBack)
     if typeNames and #typeNames > 0 then
         for i, typeName in ipairs(typeNames) do
             if typeName ~= "" then
                 if typeName == "Double" or typeName == "Double2" then
                     if IsShowDouble() then
-                        infoUtil:Show(typeName, doubleParent)
+                        infoUtil:Show(typeName, doubleParent, path)
                     end
                 elseif i == #typeNames then
-                    infoUtil:Show(typeName, layout, function(panel)
+                    infoUtil:Show(typeName, layout, path, function(panel)
                         OnButtonClick(panel)
                         if callBack then
                             callBack()
                         end
                     end)
                 else
-                    infoUtil:Show(typeName, layout)
+                    infoUtil:Show(typeName, layout, path)
                 end
             end
         end

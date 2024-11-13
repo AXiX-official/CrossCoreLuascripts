@@ -6,8 +6,10 @@ function LogEnterFight(oPlayer, fid, sceneType, nDuplicateID, groupID, data)
         local item = {v.cid, v.data.cuid}
         item.fuid = v.fuid
         item.npcid = v.npcid
+        item.skills = v.data.skills
         table.insert(logdata, item)
     end
+    -- LogTable(logdata, "logdata")
 
     -- 操作日志
     -- StatsMgr:AddLogRecord(oPlayer, LogItem.EnterFight, fid, sceneType, nDuplicateID, groupID, table.Encode(logdata))
@@ -19,7 +21,7 @@ function LogEnterFight(oPlayer, fid, sceneType, nDuplicateID, groupID, data)
             duplicate_id = nDuplicateID,
             sceneType = sceneType,
             groupID = groupID,
-            team_data = logdata
+            team_data = logdata,
         }
     )
 end
@@ -119,6 +121,64 @@ function FightHelp:StartPveFight(player, nDuplicateID, groupID, data, exData)
     -- end
     -- 操作日志
     LogEnterFight(player, fid, SceneType.PVEBuild, nDuplicateID, groupID, data)
+    -- StatsMgr:AddLogRecord(
+    --     player,
+    --     LogItem.EnterFight,
+    --     fid,
+    --     SceneType.PVEBuild,
+    --     nDuplicateID,
+    --     groupID,
+    --     table.Encode(logdata)
+    -- )
+    return mgr
+end
+
+function FightHelp:FightByData(player, oData)
+        -- DT(player)
+    -- 战斗管理器的id
+    --ASSERT(nDuplicateID)
+    -- LogTable(data)
+    -- ASSERT()
+    local fid = UID(10)
+    local seed = os.time() + math.random(10000)
+    --print("------------", nDuplicateID)
+    local mgr = CreateFightMgr(fid, oData.groupID, SceneType.PVEBuild, seed, PveDupId.Build)
+    mgr.nPlayerLevel = player:Get('level')
+    mgr.uid = player.id
+
+    mgr:AddPlayer(player.id, 1)
+    self:AddFightMgr({player.id}, mgr)
+
+    mgr:LoadConfig(oData.groupID, 1)
+
+    mgr:LoadData(1, oData.data.data, nil, oData.data.tCommanderSkill)
+
+    mgr:AfterLoadData(oData.exData)
+    -- mgr.cbOver = function(self, winer, isForceOver)
+    -- end
+    mgr:AddCmd(
+        CMD_TYPE.InitData,
+        {
+            seed = seed,
+            fid = fid,
+            stype = SceneType.PVEBuild,
+            groupID = oData.groupID,
+            teamID = 1,
+            data = oData.data,
+            exData = oData.exData,
+            level = player:Get('level')
+        }
+    )
+    -- -- LogTable(info)
+    -- local logdata = {}
+    -- for tid,info in ipairs(data.data) do
+    -- 	local item = {v.cid, v.data.cuid}
+    -- 	item.fuid  = v.fuid
+    -- 	item.npcid = v.npcid
+    -- 	table.insert(logdata , item)
+    -- end
+    -- 操作日志
+    LogEnterFight(player, fid, SceneType.PVEBuild, PveDupId.Build, oData.groupID, oData.data)
     -- StatsMgr:AddLogRecord(
     --     player,
     --     LogItem.EnterFight,
@@ -287,6 +347,10 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     mgr.cbOver = function(self, winer, isForceOver)
         -- LogTrace('FightHelp:StartPvpMirrorFight() cbOver')
         LogDebug('StartPvpMirrorFight cbOver winer:%s, isForceOver:%s', winer, isForceOver)
+
+        if isForceOver then
+
+        end
 
         local isWiner = false
         if winer == 1 then
@@ -626,7 +690,7 @@ function FightHelp:AddLiveBuff(data, damage, bedamage)
         if data.damage < 0 then
             data.damage = 0
         end
-        --data.damage_add = damage
+        data.damage_add = damage
     end
 
     -- 受到的伤害增加的百分比
@@ -636,7 +700,7 @@ function FightHelp:AddLiveBuff(data, damage, bedamage)
         if data.bedamage < 0 then
             data.bedamage = 0
         end
-        --data.bedamage_add = bedamage
+        data.bedamage_add = bedamage
     end
 end
 
@@ -694,6 +758,9 @@ function FightHelp:GetDataFromMonsterCfg(plr, cid, cfgId, row, col, sceneType)
     for _, f in ipairs({'jcSkills', 'tfSkills', 'subTfSkills'}) do
         for _, skillId in ipairs(mCfg[f] or {}) do
             local skillCfg = skill[skillId]
+            if not skillCfg then
+                LogInfo(">>>>>>>>>>>>>>>cfgId(%d),skillId(%d)",cfgId,skillId)
+            end
             if skillCfg.upgrade_type and skillCfg.upgrade_type < CardSkillUpType.OverLoad then
                 cardData.skillsByUpType[skillCfg.upgrade_type] = skillCfg.id
             end
@@ -905,7 +972,7 @@ function FightHelp:OnPlayerLogin(uid, ispvp, notiteConn)
         if oDuplicate and oDuplicate.nEndTime and oDuplicate.nEndTime <= CURRENT_TIME then
             -- LogDebug("--------------------11111")
             FightHelp:Destroy(uid)
-        -- 副本过期, 战斗一并销毁
+            -- 副本过期, 战斗一并销毁
             local oPlayer = GetPlayer(uid)
             if oPlayer then
                 local dupMgr = oPlayer.oDuplicateMgr
@@ -935,6 +1002,7 @@ function FightHelp:SendInBattle(uid, notiteConn)
 end
 
 function FightHelp:Destroy(uid, player)
+    LogDebugEx("FightHelp:Destroy", uid)
     --LogTrace()
     -- local uid = player.id
     local mgr = FightHelp.cache[uid] or FightHelp.mapPlayerMgr[uid]

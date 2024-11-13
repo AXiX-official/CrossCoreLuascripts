@@ -974,18 +974,19 @@ function this:GetCurPresetId()
 end
 
 function this:SetPresetRoles(sPresetRoleTeam)
-    local presetRoles = self:GetData().presetRoles or {}
-    local isIn = false
-    for k, v in pairs(presetRoles) do
-        if (v.teamId == sPresetRoleTeam.teamId) then
-            v.roleIds = sPresetRoleTeam.roleIds
-            isIn = true
-            break
-        end
-    end
-    if (not isIn) then
-        table.insert(self:GetData().presetRoles, sPresetRoleTeam.teamId, sPresetRoleTeam)
-    end
+    self:GetData().presetRoles = self:GetData().presetRoles or {}
+    self:GetData().presetRoles[sPresetRoleTeam.teamId] = sPresetRoleTeam
+    -- local isIn = false
+    -- for k, v in pairs(self:GetData().presetRoles) do
+    --     if (v.teamId == sPresetRoleTeam.teamId) then
+    --         v.roleIds = sPresetRoleTeam.roleIds
+    --         isIn = true
+    --         break
+    --     end
+    -- end
+    -- if (not isIn) then
+    --     table.insert(self:GetData().presetRoles, sPresetRoleTeam.teamId, sPresetRoleTeam)
+    -- end
 end
 
 function this:SetCurPresetId(id)
@@ -993,18 +994,60 @@ function this:SetCurPresetId(id)
 end
 
 function this:SetTeamName(sPresetRoleTeam)
-    local presetRoles = self:GetData().presetRoles or {}
-    local isIn = false
-    for k, v in pairs(presetRoles) do
-        if (v.teamId == sPresetRoleTeam.teamId) then
-            v.name = sPresetRoleTeam.name
-            isIn = true
-            break
+    self:GetData().presetRoles = self:GetData().presetRoles or {}
+    self:GetData().presetRoles[sPresetRoleTeam.teamId] = sPresetRoleTeam
+    -- local isIn = false
+    -- for k, v in pairs(self:GetData().presetRoles) do
+    --     if (v.teamId == sPresetRoleTeam.teamId) then
+    --         v.name = sPresetRoleTeam.name
+    --         isIn = true
+    --         break
+    --     end
+    -- end
+    -- if (not isIn) then
+    --     table.insert(self:GetData().presetRoles, sPresetRoleTeam.teamId, sPresetRoleTeam)
+    -- end
+end
+
+-- 待机时会更新的时间
+function this:StandbyTime()
+    if (not self:CheckRunning()) then
+        return nil
+    end
+    local timer = nil
+    if (self:GetType() == BuildsType.ProductionCenter) then
+        timer = self:GetFlushTime()
+    elseif (self:GetType() == BuildsType.TradingCenter) then
+        timer = self:GetFlushTime()
+    elseif (self:GetType() == BuildsType.Remould) then
+        local gifts = self.data and self.data.gifts or {}
+        for k, v in pairs(gifts) do
+            if (timer == nil or (v.tf > TimeUtil:GetTime() and v.tf < timer)) then
+                timer = v.tf
+            end
         end
     end
-    if (not isIn) then
-        table.insert(self:GetData().presetRoles, sPresetRoleTeam.teamId, sPresetRoleTeam)
+    return timer
+end
+
+-- 生产中心资源是否已满
+function this:IsGiftMax()
+    local arrGifts = self:GetMaterials()
+    if (not arrGifts) then
+        return false
     end
+    local limits = self:GetCfg().rewardLimits
+    local limitsDic = {}
+    for k, v in pairs(limits) do
+        limitsDic[v[1]] = v[2]
+    end
+    for i, v in ipairs(arrGifts) do
+        local max = limitsDic[v.id]
+        if (v.num >= max) then
+            return true
+        end
+    end
+    return false
 end
 
 return this

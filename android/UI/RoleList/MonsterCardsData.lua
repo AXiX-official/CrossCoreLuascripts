@@ -124,4 +124,8 @@ function this:GetCardCfg()
     return self.cardCfg
 end
 
+function this:GetEnName()
+    return self:GetCardCfg().nameEng or ""
+end
+
 return this

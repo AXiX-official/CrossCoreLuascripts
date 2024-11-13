@@ -197,6 +197,28 @@ function Team:Summon(caster, monsterID, pos, data, isSummon2Summon)
 		end
 	end
 
+	--- [[ 给召唤物添加生活buff加成
+    local damage = caster.damage_add or 0
+    local bedamage = caster.bedamage_add or 0
+    -- 对敌方的伤害增加的百分比
+    if damage ~= 0 then
+        card.damage = card.damage or 1
+        card.damage = card.damage + damage
+        if card.damage < 0 then
+            card.damage = 0
+        end
+    end
+
+    -- 受到的伤害增加的百分比
+    if bedamage ~= 0 then
+        card.bedamage = card.bedamage or 1
+        card.bedamage = card.bedamage + bedamage
+        if card.bedamage < 0 then
+            card.bedamage = 0
+        end
+    end
+    --- 给召唤物添加生活buff加成 ]]
+
 	return card
 end
 
@@ -207,6 +229,9 @@ function Team:SummonTeammate(caster, monsterID, pos, data, typ)
 	-- LogTable(data)
 
 	if not self:CanSummon(pos) then return end
+
+	LogTable(pos, "SummonTeammate pos = ")
+	self:Print()
 
 	local card = self:AddSummonCard(pos[1], pos[2], monsterID)
 	card.uid = caster.uid
@@ -370,6 +395,17 @@ function Team:LiveCount(exclude)
 	local count = 0
 	for k, v in pairs(self.arrCard) do
 		if v:IsLive() and v.type ~= exclude then
+			count = count + 1
+		end
+	end
+	return count
+end
+
+-- 获取所属小队成员数量
+function Team:ClassCount(nClass)
+	local count = 0
+	for k, v in pairs(self.arrCard) do
+		if v:IsLive() and v.nClass == nClass then
 			count = count + 1
 		end
 	end
@@ -692,10 +728,15 @@ end
 function Team:DelCard(card)
 	LogDebugEx("DelCard", card.name)
 	LogTable(card.grids, "card.grids = ")
-	LogTrace()
+	-- LogTrace()
+	self:Print()
+	if card.bRemove then return end -- 防止重复删除
+	card.bRemove = true
+	
 	for i, v in ipairs(card.grids) do
 		self.map[v[1]][v[2]] = nil
 	end
+	self:Print()
 
 	self.fightMgr:DelCard(card)
 

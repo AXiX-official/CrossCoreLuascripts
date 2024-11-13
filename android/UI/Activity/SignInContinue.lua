@@ -5,6 +5,7 @@ local descFade = nil
 local modelId = 0
 local soundIndex = 1
 local isSignIn = false
+local cfg = nil
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -27,9 +28,10 @@ function OnDisable()
     RoleAudioPlayMgr:StopSound()
 end
 
-function Refresh(data)
+function Refresh(data,elseData)
     isSignIn = data.isSingIn ~= nil and data.isSingIn or false
     key = data.key
+    cfg = elseData and elseData.cfg or nil
     -- CSAPI.SetGOActive(mask, isSignIn)
     if (isSignIn) then
         EventMgr.Dispatch(EventType.Activity_Click)
@@ -45,7 +47,6 @@ function SetDatas(closeAnim)
     local info = SignInMgr:GetDataByKey(key)
     local curDay = info:GetRealDay()
     datas = SignInMgr:GetDayInfos(key)
-
     for i, v in ipairs(datas) do
         table.insert(curDatas, v)
     end
@@ -73,7 +74,7 @@ function SetItems(datas,closeAnim)
             if i < 7 then
                 ResUtil:CreateUIGOAsync("SignInContinue/SignInContinueItem", grids, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(datas[i], curIndex == i and isSignIn)
+                    lua.Refresh(datas[i], curIndex  == i and isSignIn)
                     lua.SetPos(pos)
                     lua.ShowAnim()
                     table.insert(items, lua)
@@ -81,14 +82,14 @@ function SetItems(datas,closeAnim)
             else
                 ResUtil:CreateUIGOAsync("SignInContinue/SignInContinueItem2", grids, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(datas[i], curIndex == i and isSignIn)
+                    lua.Refresh(datas[i], curIndex  == i and isSignIn)
                     lua.SetPos(pos)
                     lua.ShowAnim()
                     table.insert(items, lua)
                 end)
             end
         else
-            items[i].Refresh(datas[i], curIndex == i and isSignIn)
+            items[i].Refresh(datas[i], curIndex  == i and isSignIn)
             items[i].SetPos(pos)
             if not closeAnim then
                 items[i].ShowAnim()
@@ -113,7 +114,7 @@ function ESignCB(proto)
     -- CSAPI.SetGOActive(mask, false)
     SetDatas(true)
     isClick = false
-    ActivityMgr:SetListData(ActivityListType.SignInContinue, {
+    ActivityMgr:SetListData(cfg.id, {
         key = _key
     })
     ActivityMgr:CheckRedPointData(ActivityListType.SignInContinue)

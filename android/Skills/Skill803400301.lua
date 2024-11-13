@@ -1,4 +1,4 @@
--- 脉冲风暴
+-- 仲裁者3
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -31,17 +31,4 @@ function Skill803400301:OnAttackOver(caster, target, data)
 	end
 	-- 803400301
 	self:HitAddBuff(SkillEffect[803400301], caster, target, data, 6000,3004)
-end
--- 特殊入场时(复活，召唤，合体)
-function Skill803400301:OnBornSpecial(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 803400402
-	local targets = SkillFilter:All(self, caster, target, 3)
-	for i,target in ipairs(targets) do
-		self:AddSkill(SkillEffect[803400402], caster, target, data, 803400401)
-	end
 end

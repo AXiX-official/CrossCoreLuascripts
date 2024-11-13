@@ -37,7 +37,7 @@ function SetCount(cur, max)
 end
 
 function SetBtn()
-    CSAPI.SetGOActive(btn, isFinish or (not isGet and data:GetJumpID() ~= nil))
+    CSAPI.SetGOActive(btn, (not isGet and (isFinish or data:GetJumpID() ~= nil)))
     CSAPI.SetGOActive(success, isGet)
     if (isFinish or (not isGet and data:GetJumpID() ~= nil)) then
         CSAPI.SetGOActive(btnBg1, isFinish)
@@ -91,8 +91,10 @@ function OnClick()
             --     LogError("任务已过期")
             -- else
             MissionMgr:GetReward(data:GetID())
-            if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_MAINTASK_FINISH); end
-            --end
+            if CSAPI.IsADV() or CSAPI.IsDomestic() then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_MAINTASK_FINISH);
+            end
+            -- end
         elseif (not isGet and not isFinish) then
             if (data:GetJumpID()) then
                 JumpMgr:Jump(data:GetJumpID())

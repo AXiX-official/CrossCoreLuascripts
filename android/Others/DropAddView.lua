@@ -20,14 +20,15 @@ function Update()
     end
 end
 
-function Refresh(_data)
+function Refresh(_data,elseData)
     ShowAnim()
-    cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.DropAdd)
+    cfg = elseData and elseData.cfg or nil
     SetRed()
+    PlayerPrefs.SetInt(PlayerClient:GetUid() .."_Activity_Red_" .. cfg.id, 1)
 end
 
 function SetRed()
-    local isRed = ActivityMgr:CheckRed(ActivityListType.DropAdd)
+    local isRed = ActivityMgr:CheckRed(cfg.id)
     UIUtil:SetRedPoint(redParent,isRed)
 end
 

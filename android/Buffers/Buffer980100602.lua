@@ -9,7 +9,7 @@ end
 -- 创建时
 function Buffer980100602:OnCreate(caster, target)
 	-- 980100601
-	self:AddAttr(BufferEffect[980100601], self.caster, self.card, nil, "defense",500)
+	self:AddAttr(BufferEffect[980100601], self.caster, self.card, nil, "defense",750)
 	-- 980100602
-	self:AddAttr(BufferEffect[980100602], self.caster, self.card, nil, "speed",-50)
+	self:AddAttr(BufferEffect[980100602], self.caster, self.card, nil, "speed",-80)
 end

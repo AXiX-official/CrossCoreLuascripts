@@ -37,7 +37,7 @@ function Awake()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadComplete)
     eventMgr:AddListener(EventType.Arachnid_Count_Refresh,function () --购买刷新
-        local curCount = DungeonMgr:GetArachnidCount()
+        local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
         EventMgr.Dispatch(EventType.Universal_Purchase_Refresh_Panel, curCount)
     end)
 end
@@ -483,8 +483,8 @@ function OnBattleEnter()
         if cost then
             local cur = BagMgr:GetCount(cost[1])
             if cur < cost[2] then
-                local curCount = DungeonMgr:GetArachnidCount()
-                UIUtil:OpenPurchaseView(nil,nil,curCount,g_DungeonArachnidDailyBuy,g_DungeonArachnidDailyCost,g_DungeonArachnidGets,OnPayFunc)
+                local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
+                UIUtil:OpenPurchaseView(nil,nil,curCount,sectionData:GetBuyCount(),sectionData:GetBuyCost(),sectionData:GetBuyGets(),OnPayFunc)
                 return 
             end
         end
@@ -535,7 +535,7 @@ function OnStoryCB()
 end
 
 function OnPayFunc(count)
-    PlayerProto:BuyArachnidCount(count)
+    PlayerProto:BuyArachnidCount(count,sectionData:GetID())
 end
 
 function EnterNextView()
@@ -560,8 +560,8 @@ function EnterNextView()
 end
 
 function OnBuyFunc()
-    local curCount = DungeonMgr:GetArachnidCount()
-    UIUtil:OpenPurchaseView(nil,nil,curCount,g_DungeonArachnidDailyBuy,g_DungeonArachnidDailyCost,g_DungeonArachnidGets,OnPayFunc)
+    local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
+    UIUtil:OpenPurchaseView(nil,nil,curCount,sectionData:GetBuyCount(),sectionData:GetBuyCost(),sectionData:GetBuyGets(),OnPayFunc)
 end
 
 

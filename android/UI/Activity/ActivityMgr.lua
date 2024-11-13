@@ -1,15 +1,7 @@
 -- 活动管理
 local ActivityInfo = require "ActivityInfo"
+local ActivityData = require "ActivityData"
 local this = MgrRegister("ActivityMgr")
-
---function this:Init()
-    --     self.listDatas = {}
-    --     self.listView = nil
-    --     self.nextViewTypes = {}
-    --     self.savePanel = {}
-    --     self.isFirst = false
-    --     -- self.redInfos = self:GetRedInfo()
---end
 
 function this:GetBaseUrl()
     return self.url .. "/php"
@@ -67,11 +59,12 @@ function this:Clear()
     self.datas = {}
     self.listDatas = {}
     self.listView = nil
-    self.nextViewTypes = {}
+    self.nextViewIds = {}
     self.savePanel = {}
     self.isFirst = nil
     -- self.redInfos = nil
     self.operateActive = {}
+    self.ALDatas = nil
 end
 
 function this:Init1(webIp, webPort, time)
@@ -84,6 +77,7 @@ function this:Init1(webIp, webPort, time)
     -- end
     self:InitData(BackstageFlushType.Board, time)
     self:InitData(BackstageFlushType.ActiveSkip, time)
+    self:InitActivityListData()
 end
 
 function this:InitData(type, time)
@@ -211,6 +205,21 @@ function this:IsSetToSkip()
 end
 
 ----------------------------------------活动列表---------------------------------------
+
+function this:InitActivityListData()
+    self.ALDatas = {}
+    local cfgs = Cfgs.CfgActiveList:GetAll()
+    if cfgs then
+        for i, v in pairs(cfgs) do
+            local data = ActivityData.New()
+            data:Init(v)
+            if data:GetGroup() ~= nil then
+                self.ALDatas[v.id] = data
+            end
+        end
+    end
+end
+
 function this:RefreshOpenState()
     self.isFirst = false
     self:InitListOpenState()
@@ -221,52 +230,6 @@ function this:InitListOpenState()
         return
     end
     self.isFirst = true
-
-    local cfgs = Cfgs.CfgActiveList:GetAll()
-    self.activityListDatas = {}
-    if cfgs then
-        for i, v in pairs(cfgs) do
-            self.activityListDatas[v.id] = {
-                cfg = v
-            }
-            local isOpen = true
-
-            if v.id == ActivityListType.SignInContinue then
-                isOpen = false
-                if (SignInMgr:SignInIsOpen()) then
-                    local signData = SignInMgr:GetSignInContinueData()
-                    if signData and (not signData:CheckIsDone() or signData:GetRealDay() < 7) then
-                        isOpen = true
-                    end
-                end
-            elseif v.id == ActivityListType.MissionContinue then
-                local info = v.info
-                if info and info[1] and info[1].taskType and info[1].taskType == 2 then
-                    isOpen = not MissionMgr:IsAllGuideMissionGet()
-                else
-                    isOpen = not MissionMgr:IsAllSevenMissionGet()
-                end
-            elseif v.id == ActivityListType.Investment then
-                local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
-                isOpen = targetTime > TimeUtil:GetTime()
-            end
-
-            if v.type == ALType.Pay then
-                if self.operateActive and not self.operateActive[v.id] then
-                    isOpen = false
-                end
-            else
-                if isOpen and v.sTime and v.eTime then -- 时间限制
-                    local curTime = TimeUtil:GetTime()
-                    local sTime = TimeUtil:GetTimeStampBySplit(v.sTime)
-                    local eTime = TimeUtil:GetTimeStampBySplit(v.eTime)
-                    isOpen = curTime > sTime and curTime <= eTime
-                end
-            end
-
-            self.activityListDatas[v.id].isOpen = isOpen
-        end
-    end
 
     self:CheckOpenDatas()
     self:CheakPopInfos()
@@ -291,83 +254,73 @@ function this:CheakPopInfos()
     self.popInfos = FileUtil.LoadByPath("Activity_Pop_Infos.txt") or {}
 end
 
-function this:UpdateActivityOpen(aType)
-    aType = tonumber(aType)
-    if self.activityListDatas and self.activityListDatas[aType] then
-        if aType == ActivityListType.Investment then
-            local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
-            self.activityListDatas[aType].isOpen = targetTime > TimeUtil:GetTime()
-        end
-    end
+function this:GetALData(id)
+    return self.ALDatas[id]
 end
 
-function this:GetALData(aType)
-    return self.activityListDatas[aType]
+function this:GetALDatasByType(_type)
+    local datas = {}
+    if self.ALDatas then
+        for k, v in pairs(self.ALDatas) do
+            if v:GetType() == _type then
+                table.insert(datas,v)
+            end
+        end
+    end
+    return datas
 end
 
 function this:GetArr(group)
     local datas = {}
-    if self.activityListDatas then
-        for i, v in pairs(self.activityListDatas) do
-            if v.isOpen and self:CheckIsOpenTime(i) then
-                if not group or (group and group == v.cfg.group) then
-                    if i == ActivityListType.Investment then
-                        local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
-                        if targetTime > TimeUtil:GetTime() then
-                            table.insert(datas, v.cfg)
-                        end
-                    else
-                        table.insert(datas, v.cfg)
-                    end
+    if self.ALDatas then
+        for i, v in pairs(self.ALDatas) do
+            if v:IsOpen() then
+                if not group or group == v:GetGroup() then
+                    table.insert(datas, v)
                 end
             end
         end
 
-        table.sort(datas, function(a, b)
-            return a.index < b.index
-        end)
+        if #datas > 0 then
+            table.sort(datas, function(a, b)
+                return a:GetIndex() < b:GetIndex()
+            end)
+        end
     end
     return datas
 end
 
 -- 活动开启
-function this:CheckIsOpen(_type)
-    if self.activityListDatas and self.activityListDatas[_type] then
-        return self.activityListDatas[_type].isOpen
+function this:CheckIsOpen(id)
+    if self.ALDatas and self.ALDatas[id] then
+        return self.ALDatas[id]:IsOpen()
     end
     return false
-end
-
-function this:CheckIsOpenTime(_type)
-    local cfg =Cfgs.CfgActiveList:GetByID(_type)
-    if cfg and cfg.sTime and cfg.eTime then
-        if not cfg.type or cfg.type ~= ALType.Pay then
-            local curTime = TimeUtil:GetTime()
-            local sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
-            local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
-            return curTime > sTime and curTime <= eTime    
-        end
-    end
-    return true
 end
 
 -- 检测红点
 function this:CheckRedPointData(type)
     if type then
-        local cfg = Cfgs.CfgActiveList:GetByID(type)
-        if cfg and cfg.group then
-            local redData = RedPointMgr:GetData(RedPointType["ActivityList" .. cfg.group])
+        local datas = self:GetALDatasByType(type)
+        if #datas > 0 then
+            local redData = RedPointMgr:GetData(RedPointType["ActivityList" .. datas[1]:GetGroup()])
             local isRed1 = redData ~= nil
-            local isRed2 = self:CheckRed(type)
+            local isRed2 = false
+            for i, v in ipairs(datas) do
+                if self:CheckRed(v:GetID()) then
+                    isRed2 = true
+                    break
+                end
+            end
             if isRed1 ~= isRed2 then
                 if not isRed2 then --如果无红点，检测一遍全组是否都无红点
-                    isRed2 = self:CheckRedByGroup(cfg.group)
+                    isRed2 = self:CheckRedByGroup(datas[1]:GetGroup())
                 end
                 redData = isRed2 and 1 or nil
-                RedPointMgr:UpdateData(RedPointType["ActivityList" .. cfg.group], redData) 
+                RedPointMgr:UpdateData(RedPointType["ActivityList" .. datas[1]:GetGroup()], redData) 
             end
-            return
         end
+        return
     end
     local redData1 = RedPointMgr:GetData(RedPointType.ActivityList1)
     local redData2 = RedPointMgr:GetData(RedPointType.ActivityList2)
@@ -375,49 +328,34 @@ function this:CheckRedPointData(type)
     local isRed1 = redData1 ~= nil
     local isRed2 = redData2 ~= nil
     local isRed3 = redData3 ~= nil
-    if ActivityListType then
-        for k, v in pairs(ActivityListType) do
-            local cfg = Cfgs.CfgActiveList:GetByID(v)
-            if cfg then
-                if cfg.group then
-                    if self:CheckRed(v) then
-                        if cfg.group == 2 and redData2 == nil then
-                            redData2 = 1
-                        elseif cfg.group == 3 and redData3 == nil then
-                            redData3 = 1
-                        elseif cfg.group == 1 and redData1 == nil then
-                            redData1 = 1
-                        end
-                    end
+    if self.ALDatas then
+        for k, v in pairs(self.ALDatas) do
+            if self:CheckRed(v:GetID()) then
+                if v:GetGroup() == 2 and redData2 == nil then
+                    redData2 = 1
+                elseif v:GetGroup() == 3 and redData3 == nil then
+                    redData3 = 1
+                elseif v:GetGroup() == 1 and redData1 == nil then
+                    redData1 = 1
                 end
             end
         end
     end
     if isRed1 ~= (redData1 ~= nil) then
-        if not redData1 then
-            redData1 = self:CheckRedByGroup(1) and 1 or nil
-        end
         RedPointMgr:UpdateData(RedPointType.ActivityList1, redData1)
     end
     if isRed2 ~= (redData2 ~= nil) then
-        if not redData2 then
-            redData2 = self:CheckRedByGroup(2) and 1 or nil
-        end
         RedPointMgr:UpdateData(RedPointType.ActivityList2, redData2)
     end
     if isRed3 ~= (redData3 ~= nil) then
-        if not redData3 then
-            redData3 = self:CheckRedByGroup(3) and 1 or nil
-        end
         RedPointMgr:UpdateData(RedPointType.ActivityList3, redData3)
     end
 end
 
 function this:CheckRedByGroup(group)
-    local cfgs = Cfgs.CfgActiveList:GetGroup(group)
-    if cfgs then
-        for _, cfg in pairs(cfgs) do
-            if self:CheckRed(cfg.id) then
+    if self.ALDatas and group then
+        for k, v in pairs(self.ALDatas) do
+            if v:GetGroup() == group and self:CheckRed(v:GetID()) then
                 return true
             end
         end
@@ -425,86 +363,89 @@ function this:CheckRedByGroup(group)
     return false
 end
 
--- type:ActivityListType
-function this:CheckRed(type)
-    if not self.activityListDatas or not self.activityListDatas[type] or (not self.activityListDatas[type].isOpen) then
-        return false
-    end
-    if type == ActivityListType.MissionContinue then
-        return MissionMgr:CheckGuideRed()
-    elseif type == ActivityListType.NewYearContinue then
-        return MissionMgr:CheckNewYearRed()
-    elseif type == ActivityListType.SignIn or self:IsSignInContinue(type) then
-        local signData = SignInMgr:GetDataByALType(type)
-        if signData and not signData:CheckIsDone() then
-            return true
-        end
-        return false
-    elseif type == ActivityListType.Investment then
-        local pageData = ShopMgr:GetPageByID(1001)
-        if pageData == nil then
-            LogError("找不到对应商店页的商品数据！1001")
+function this:CheckRed(id)
+    local data = self:GetALData(id)
+    if data then
+        if not data:IsOpen() then
             return false
         end
-
-        local comms = pageData:GetCommodityInfos(true)
-        if comms and #comms < 1 then
+        if data:GetType() == ActivityListType.MissionContinue then
+            return MissionMgr:CheckGuideRed()
+        elseif data:GetType() == ActivityListType.NewYearContinue then
+            return MissionMgr:CheckNewYearRed()
+        elseif data:GetType() == ActivityListType.SignIn or self:IsSignInContinue(id) then
+            local signData = SignInMgr:GetDataByALType(id)
+            if signData and not signData:CheckIsDone() then
+                return true
+            end
             return false
-        end
-
-        local commodity = comms[1]
-        if commodity:GetPrice() and #commodity:GetPrice() > 0 then
-            local costCount = commodity:GetPrice()[1].num
-            return BagMgr:GetCount(ITEM_ID.DIAMOND) >= costCount
-        end
-        return false
-    elseif type == ActivityListType.Exchange then
-        local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.Exchange)
-        if cfg and cfg.info and cfg.info[1] and cfg.info[1].shopId then
-            local page = ShopMgr:GetPageByID(cfg.info[1].shopId)
-            if page then
-                local datas = page:GetCommodityInfos(true)
-                if datas and #datas > 0 then
-                    local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
-                    for i, v in ipairs(datas) do
-                        if infos[v:GetID()] and infos[v:GetID()] == 1 and v:GetNum() > 0 and ShopCommFunc.CheckCanPay(v,1) then
-                            return true
+        elseif data:GetType() == ActivityListType.Investment then
+            local pageData = ShopMgr:GetPageByID(1001)
+            if pageData == nil then
+                LogError("找不到对应商店页的商品数据！1001")
+                return false
+            end
+    
+            local comms = pageData:GetCommodityInfos(true)
+            if comms and #comms < 1 then
+                return false
+            end
+    
+            local commodity = comms[1]
+            if commodity:GetPrice() and #commodity:GetPrice() > 0 then
+                local costCount = commodity:GetPrice()[1].num
+                return BagMgr:GetCount(ITEM_ID.DIAMOND) >= costCount
+            end
+            return false
+        elseif data:GetType() == ActivityListType.Exchange then
+            local info = data:GetInfo()
+            if info and info[1] and info[1].shopId then
+                local page = ShopMgr:GetPageByID(info[1].shopId)
+                if page then
+                    local datas = page:GetCommodityInfos(true)
+                    if datas and #datas > 0 then
+                        local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
+                        for i, v in ipairs(datas) do
+                            if infos[v:GetID()] and infos[v:GetID()] == 1 and v:GetNum() > 0 and ShopCommFunc.CheckCanPay(v,1) then
+                                return true
+                            end
                         end
                     end
                 end
             end
-        end
-        return false
-    elseif type == ActivityListType.AccuCharge then
-        local num = RedPointMgr:GetData(RedPointType.AccuCharge)
-        if(num and num==1) then 
-            return true
-        end 
-        return false          
-    elseif type==ActivityListType.GachaBall then
-        local cfg = Cfgs.CfgActiveList:GetByID(ActivityListType.GachaBall)
-        if cfg and cfg.info then
-            local cfgId=cfg.info[1].cfgId;
-            local info=ItemPoolActivityMgr:CheckPoolHasRedPoint(cfgId);
-            local pool=ItemPoolActivityMgr:GetPoolInfo(cfgId);
-            local info2=RedPointMgr:GetDayRedState(RedPointDayOnceType.GachaBall)
-            if pool and pool:IsOver()~=true and (info or info2) then
-                return true;
+            return false
+        elseif data:GetType() == ActivityListType.AccuCharge then
+            local num = RedPointMgr:GetData(RedPointType.AccuCharge)
+            if(num and num==1) then 
+                return true
+            end 
+            return false          
+        elseif data:GetType()==ActivityListType.GachaBall then
+            local info = data:GetInfo()
+            if info and info[1] then
+                local cfgId=info[1].cfgId;
+                local info=ItemPoolActivityMgr:CheckPoolHasRedPoint(cfgId);
+                local pool=ItemPoolActivityMgr:GetPoolInfo(cfgId);
+                local info2=RedPointMgr:GetDayRedState(RedPointDayOnceType.GachaBall)
+                if pool and pool:IsOver()~=true and (info or info2) then
+                    return true;
+                end
             end
+            return false;
+        else
+            local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. id) == 0
+            return isRed
         end
-        return false;
-    else
-        local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. type) == 0
-        return isRed
     end
+    return false
 end
 
 -- 活动内容为空
 function this:IsActivityListNull(viewName, group)
     local isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, viewName)
-    if isOpen and self.activityListDatas then
-        for i, v in pairs(self.activityListDatas) do
-            if v.cfg and v.cfg.group == group and v.isOpen then
+    if isOpen and self.ALDatas then
+        for i, v in pairs(self.ALDatas) do
+            if v:GetGroup() == group and v:IsOpen() then
                 return false
             end
         end
@@ -512,35 +453,31 @@ function this:IsActivityListNull(viewName, group)
     return true
 end
 
-function this:IsSignInContinue(type)
-    local cfg = Cfgs.CfgActiveList:GetByID(type)
-    if cfg and cfg.type == ALType.SignInContinue then
-        return true
-    elseif type == ActivityListType.SignInGift then
-        return true
+function this:IsSignInContinue(id)
+    local data = self:GetALData(id)
+    if data then
+        if data:GetSpecType() == ALType.SignInContinue then
+            return true
+        elseif data:GetType() == ActivityListType.SignInGift then
+            return true
+        end
     end
     return false
 end
 
-function this:SetOperateActive(aType,info)
-    local _aType = tonumber(aType)
-    if self.activityListDatas[_aType] then
-        if aType ==ActivityListType.SignInGift and info.payRate then
-            if info.openTime <= TimeUtil:GetTime() and info.closeTime > TimeUtil:GetTime() then
-                self.activityListDatas[_aType].isOpen = true
-                self.activityListDatas[_aType].sTime = info.openTime
-                self.activityListDatas[_aType].eTime = info.closeTime
-                self.operateActive[_aType] = self.operateActive[_aType] or {}
-                self.operateActive[_aType].sTime = info.openTime
-                self.operateActive[_aType].eTime = info.closeTime
-            end
+function this:SetOperateActive(id,info)
+    local data= self:GetALData(tonumber(id))
+    if data and data:GetType() ==ActivityListType.SignInGift and info.payRate then
+        if info.openTime <= TimeUtil:GetTime() and info.closeTime > TimeUtil:GetTime() then
+            self.operateActive[tonumber(id)] = self.operateActive[tonumber(id)] or {}
+            self.operateActive[tonumber(id)].sTime = info.openTime
+            self.operateActive[tonumber(id)].eTime = info.closeTime
         end
     end
 end
 
-function this:GetOperateActive(aType)
-    local _aType = tonumber(aType)
-    return self.operateActive[_aType]
+function this:GetOperateActive(id)
+    return self.operateActive[tonumber(id)]
 end
 
 ----------------------------------------界面弹出---------------------------------------
@@ -553,61 +490,62 @@ function this:CheckPopView()
 end
 
 -- 获取活动列表数据
-function this:TryGetData(_type)
+function this:TryGetData(_id)
     self.listDatas = self.listDatas or {}
-    if (self.listDatas[_type] == nil) then
-        if (_type == ActivityListType.SignIn) then -- 每日签到
+    if (self.listDatas[_id] == nil) then
+        local data =self:GetALData(_id)
+        if (data:GetType() == ActivityListType.SignIn) then -- 每日签到
             local _key = SignInMgr:GetDataKeyByType(RewardActivityType.DateDay)
-            self.listDatas[_type] = {
+            self.listDatas[_id] = {
                 key = _key
             }
-        elseif self:IsSignInContinue(_type) then -- 连续签到
+        elseif self:IsSignInContinue(_id) then -- 连续签到
             local keys = SignInMgr:GetDataKeysByType(RewardActivityType.Continuous)
-            self.listDatas[_type] = {
-                key = keys[_type]
+            self.listDatas[_id] = {
+                key = keys[_id]
             }
         end
     end
-    return self.listDatas[_type]
+    return self.listDatas[_id]
 end
 
-function this:SetListData(_type, _data)
+function this:SetListData(_id, _data)
     self.listDatas = self.listDatas or {}
-    self.listDatas[_type] = _data
+    self.listDatas[_id] = _data
 end
 
 -- 添加下一个将要打开的界面
-function this:AddNextOpen(_type, _data)
-    if not self:PanelCanJump(_type) then
+function this:AddNextOpen(_id, _data)
+    if not self:PanelCanJump(_id) then
         return false
     end
-    self.popInfos[_type] = self.popInfos[_type] or {}
-    self.popInfos[_type].recordTime = TimeUtil:GetTime()
-    self:AddNextOpen2(_type, _data)
+    self.popInfos[_id] = self.popInfos[_id] or {}
+    self.popInfos[_id].recordTime = TimeUtil:GetTime()
+    self:AddNextOpen2(_id, _data)
     return true
 end
 
 -- 不记录界面信息的添加
-function this:AddNextOpen2(_type, _data)
-    if (tonumber(_type) > 0) then
+function this:AddNextOpen2(_id, _data)
+    if (tonumber(_id) > 0) then
         if (_data) then
-            self:SetListData(_type, _data)
+            self:SetListData(_id, _data)
         end
-        table.insert(self.nextViewTypes, _type)
+        table.insert(self.nextViewIds, _id)
     end
 end
 
 function this:ClearPopInfos()
-    self.nextViewTypes = {}
+    self.nextViewIds = {}
 end
 
 -- 获取弹出id
-function this:TryGetNextType(_group)
-    if self.nextViewTypes and #self.nextViewTypes > 0 then
-        for i, v in ipairs(self.nextViewTypes) do
-            local _data = self.activityListDatas[v]
-            if _data and _data.cfg and _data.cfg.group == tonumber(_group) then
-                return table.remove(self.nextViewTypes, i)
+function this:TryGetNextId(_group)
+    if self.nextViewIds and #self.nextViewIds > 0 then
+        for i, id in ipairs(self.nextViewIds) do
+            local _data = self:GetALData(id)
+            if _data and _data:GetGroup() == tonumber(_group) then
+                return table.remove(self.nextViewIds, i)
             end
         end
     end
@@ -615,11 +553,11 @@ function this:TryGetNextType(_group)
 end
 
 -- 获取界面可否弹出
-function this:PanelCanJump(_type)
-    if not self.popInfos[_type] or not self.popInfos[_type].recordTime or self.popInfos[_type].recordTime <= 0 then
+function this:PanelCanJump(_id)
+    if not self.popInfos[_id] or not self.popInfos[_id].recordTime or self.popInfos[_id].recordTime <= 0 then
         return true
     end
-    local tab1 = TimeUtil:GetTimeHMS(self.popInfos[_type].recordTime)
+    local tab1 = TimeUtil:GetTimeHMS(self.popInfos[_id].recordTime)
     local tab2 = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
     if tab2.day - tab1.day > 1 then --超过一天
         return true

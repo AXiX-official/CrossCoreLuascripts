@@ -10,6 +10,8 @@ function Awake()
 	lua=l;
 	fade = ComUtil.GetCom(gameObject, "ActionFade")
 	move = ComUtil.GetCom(node, "ActionMoveByCurve")
+
+	CSAPI.SetGOActive(specImg, false)
 end
 
 function SetIndex(idx)
@@ -81,6 +83,10 @@ function SetClickCB(cb)
 	if lua then
 		--lua.SetClickCB(cb);
 	end
+end
+
+function SetSpecial(b)
+	CSAPI.SetGOActive(specImg, b)
 end
 
 function PlayFade(idx)

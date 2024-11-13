@@ -19,13 +19,27 @@ function this:Clear()
 end
 
 ---------------------------------------------rank----------------------------------------------
+--本地清空
 function this:ClearRankData(type)
     self.clearTime[type] = self.clearTime[type] or 0
     if(self.clearTime[type] <= TimeUtil:GetTime()) then 
         self.cur_rank = {}
         self.rankInfos = {}
+        self.myRank = {}
+        self.myScore = {}
         self.clearTime[type] = self.rankTime[type]
     end 
+end
+
+--服务器发协议清空
+function this:ClearRank(proto)
+    if proto and proto.rank_type then
+        self.cur_rank[proto.rank_type] = nil
+        self.rankInfos[proto.rank_type] = nil
+        self.myRank[proto.rank_type] = nil
+        self.myScore[proto.rank_type] = nil
+        EventMgr.Dispatch(EventType.Activity_Rank_Update)
+    end
 end
 
 --获取排行榜信息
@@ -89,12 +103,13 @@ function this:GetMyRank(type)
         id = PlayerClient:GetUid(),
         name = PlayerClient:GetName(),
         level = PlayerClient:GetLv(),
-        rank = self.myRank[type] or 101,
+        rank = self.myRank[type] or 0,
         icon_id = PlayerClient:GetIconId(),
         icon_frame = PlayerClient:GetHeadFrame(),
         score = self.myScore[type] or 0,
         dupId = cfgDungeon and cfgDungeon.id or 0,
-        sel_card_ix = PlayerClient:GetSex()
+        sel_card_ix = PlayerClient:GetSex(),
+        icon_title = PlayerClient:GetIconTitle(),
         -- nDamage = self:GetDamage()
     }
     local info = RankActivityInfo.New()

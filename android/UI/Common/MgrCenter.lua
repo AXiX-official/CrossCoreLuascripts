@@ -60,6 +60,7 @@ local mgrNames = {
 	"CRoleDisplayMgr", --看板
 	"RogueSMgr",   --战力派遣
 	"BGMMgr",
+	"HeadTitleMgr",
 }
 
 

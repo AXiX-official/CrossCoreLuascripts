@@ -45,7 +45,11 @@ local conf = {
 {'36',	'36',	'61038',	'携手重建',	'36',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'rebuilding_together',	'',	'board_rebuilding_together',	'Small_rebuilding_together',	'幸运扭蛋机奖励',	'-36,-16,1.23',	'houqin',	'-44,-22,1',	'',	'1'},
 {'39',	'39',	'61041',	'街头法则',	'31',	'',	'',	'9',	'law_of_the_streets',	'law_of_the_streets_replace',	'board_law_of_the_streets',	'Small_law_of_the_streets',	'商店购买',	'50,50,1',	'CG0016_LawOfTheStreets_spine',	'0,0,1',	'1',	'80419'},
 {'40',	'40',	'61042',	'绝境逢生',	'37',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'a_narrow_escape',	'',	'board_a_narrow_escape',	'Small_a_narrow_escape',	'幸运扭蛋机奖励',	'-98,-41,0.88',	'Katina',	'0,0,1',	'',	'1'},
-{'41',	'41',	'61043',	'黑茧蝶梦',	'41',	'2024-11-13 03:00:00',	'2026-10-16 03:00:00',	'6',	'black_cocoon_rebecca',	'',	'board_black_cocoon_rebecca',	'Small_black_cocoon_rebecca',	'高级勘测奖励',	'19,56,1.25',	'jufeng_1',	'-7,129,2.03',	'',	'1'},
+{'41',	'41',	'61043',	'黑茧蝶梦',	'41',	'2024-11-13 03:00:00',	'2026-10-16 03:00:00',	'6',	'black_cocoon_rebecca',	'black_cocoon_rebecca_replace',	'board_black_cocoon_rebecca',	'Small_black_cocoon_rebecca',	'高级勘测奖励',	'19,56,1.25',	'jufeng_1',	'-7,129,2.03',	'',	'1'},
+{'43',	'43',	'61045',	'孤泳者集结！',	'43',	'',	'',	'6',	'swimmer_assemble',	'',	'board_swimmer_assemble',	'Small_swimmer_assemble',	'【奇迹之夜】活动奖励',	'-18,-23,1.03',	'CG0028_SwimmerAssemble_spine',	'82,-18,1',	'',	'1'},
+{'44',	'44',	'61046',	'幻梦帷幕',	'44',	'',	'',	'6',	'fantastic_curtain_raiser',	'fantastic_curtain_raiser_replace',	'board_fantastic_curtain_raiser',	'Small_fantastic_curtain_raiser',	'商店购买',	'-63,-72,1.2',	'CG0025_FantasticCurtainRaiser',	'0,0,1',	'1',	'80420'},
+{'45',	'45',	'61047',	'案卷迷踪',	'45',	'',	'',	'6',	'trail_of_cases',	'trail_of_cases_replace',	'board_trail_of_cases',	'Small_trail_of_cases',	'商店购买',	'-17,82,1.2',	'CG0027_TrailOfCases',	'0,0,1',	'1',	'80421'},
+{'46',	'46',	'61048',	'双重联映',	'46',	'',	'',	'6',	'double_feature',	'double_feature_replace',	'board_double_feature',	'Small_double_feature',	'商店购买',	'-118,63,1.08',	'CG0026_DoubleFeature_spine',	'0,0,1',	'1',	'80422'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf

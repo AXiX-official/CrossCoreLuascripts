@@ -201,8 +201,9 @@ end
 8：操作电脑
 ]]
 function this:GetInteActionID(targetGO)
-    local inteActionId = self:GetCfg().inteActionId or 0
-    local key = DormAction3[inteActionId + 1]
+    -- local inteActionId = self:GetCfg().inteActionId or 0
+    -- local key = DormAction3[inteActionId + 1]
+    local key = self:GetCfg().inteActionId or ""
     if (key == "furniture_sleep_0" and targetGO) then
         local inteBoxIndex = targetGO.transform:GetSiblingIndex()
         key = inteBoxIndex == 0 and "furniture_sleep_01" or "furniture_sleep_02"

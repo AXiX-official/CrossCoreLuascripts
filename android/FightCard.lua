@@ -131,6 +131,8 @@ function FightCardBase:LoadConfig()
         self.team.fightMgr:BossAppear(true) -- boss出现
         LogDebugEx("boss出现", self.id)
     end
+
+    self.isMonster = true -- 从怪物表读取数据
 end
 
 -- 加载角色(从数据)
@@ -143,6 +145,9 @@ function FightCardBase:LoadData(data, typ)
     ASSERT(config)
 
     table.copy(config, self)
+    if not IsRelease then
+        ASSERT(self.name, "FightCardBase:LoadData() name is empty!")
+    end
     self.name = self.name or "None"
 
     -- 通用属性
@@ -157,6 +162,7 @@ function FightCardBase:LoadData(data, typ)
     self.hp = data.hp or self.maxhp
     self.grids = {} -- 所占格子
 
+    self.isMonster = data.npcid and true
     -- LogTable(config.canFly, "FightCardBase:LoadData"..self.id)
 end
 
@@ -1198,6 +1204,7 @@ function FightCardBase:AddHp(num, killer, bNotDeathEvent, bNotDealShield)
             num = math.floor(num * mgr.nTPCastRate)
         end
         mgr:DamageStat(killer, -num)
+
     end
 
     return tisdeath, shield, num, abnormalities
@@ -1249,6 +1256,8 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent)
         if not bNotDeathEvent then
             self:OnDeath(killer)
         end
+
+
         --LogTrace()
         return true, shield, num
     end
@@ -1748,10 +1757,10 @@ function FightCardBase:Transform(state)
                 end
             end
             -- LogTable(tmpSkills)
-            for i, skillID in ipairs(cfgNewCardData.jcSkills) do
+            for i, skillID in ipairs(cfgNewCardData.jcSkills or {}) do
                 -- LogDebugEx("-------", skillID)
                 local cfgSkill = skill[skillID]
-                ASSERT(cfgSkill, "找不到变身技能配置 id = " .. skillID)
+                ASSERT(cfgSkill, "找不到变身技能配置jc id = " .. skillID)
                 -- LogTable(cfgSkill)
                 local sold = tmpSkills[cfgSkill.upgrade_type]
                 local flag = true
@@ -1768,9 +1777,9 @@ function FightCardBase:Transform(state)
                 end
             end
 
-            for i, skillID in ipairs(cfgNewCardData.tfSkills) do
+            for i, skillID in ipairs(cfgNewCardData.tfSkills or {}) do
                 local cfgSkill = skill[skillID]
-                ASSERT(cfgSkill, "找不到变身技能配置 id = " .. skillID)
+                ASSERT(cfgSkill, "找不到变身技能配置tf id = " .. skillID)
                 local sold = tmpSkills[5]
                 local flag = true
                 if sold then

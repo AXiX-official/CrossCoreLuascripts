@@ -234,6 +234,7 @@ end
 -- 读取配置表到内存
 function ConfigParser:ReadOneConfig(filename)
     local fullfileName = 'cfg' .. filename
+    package.loaded[fullfileName] = nil
     local config = require(fullfileName)
 
     -- Loader:AddReplaceFile(filename)
@@ -391,7 +392,8 @@ function ConfigParser:ClientConfig()
         CfgReturningActivity = 1,
         MainLine = 1,
         CfgMenuBg = 1,
-        CfgItemPool = 1
+        CfgItemPool = 1,
+        CfgIconTitle = 1
     }
 
     -- 检查/特殊处理以及设为只读
@@ -400,7 +402,7 @@ function ConfigParser:ClientConfig()
             local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
             if errmsg then
                 print(result, errmsg)
-                ASSERT(false, '配置表出错' .. cfgName.. "errmsg = "..errmsg)
+                ASSERT(false, '配置表出错' .. cfgName.. ", errmsg = "..errmsg)
             end
         end
     end
@@ -412,7 +414,7 @@ function ConfigParser:ClientConfig()
                 local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
                 if errmsg then
                     print(result, errmsg)
-                    ASSERT(false, '配置表出错' .. cfgName .. "errmsg = "..errmsg)
+                    ASSERT(false, '配置表出错' .. cfgName .. ", errmsg = "..errmsg)
                 end
             end
         end

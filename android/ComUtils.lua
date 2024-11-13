@@ -2,6 +2,46 @@ Loader:Require("ConfigChecker")
 
 if IS_CLIENT then
 
+    -- table转字符串, 带美化格式
+    function table.tostring(t)
+        if type(t) ~= 'table' then
+            return tostring(t)
+        end
+        -- LogTrace()
+        local mark = {}
+        local assign = {}
+        local function ser_table(tbl, parent, deep)
+            mark[tbl] = parent
+            local tmp = {}
+            local head = ''
+            if deep > 0 then
+                for i = 1, (deep - 1) * 4 do
+                    head = ' ' .. head
+                end
+            end
+
+            for k, v in pairs(tbl) do
+                local key = type(k) == 'number' and '[' .. k .. ']' or '[' .. string.format('%q', k) .. ']' -- k为function时报错
+                key = head .. '    ' .. key
+
+                if type(v) == 'table' then
+                    local dotkey = parent .. key
+                    if mark[v] then
+                        table.insert(assign, dotkey .. "='" .. mark[v] .. "'")
+                    else
+                        table.insert(tmp, key .. '=' .. ser_table(v, dotkey, deep + 1))
+                    end
+                elseif type(v) == 'string' then
+                    table.insert(tmp, key .. '=' .. string.format('%q', v))
+                elseif type(v) == 'number' or type(v) == 'boolean' then
+                    table.insert(tmp, key .. '=' .. tostring(v))
+                end
+            end
+            return '\n' .. head .. '{\n' .. table.concat(tmp, ',\n') .. '\n' .. head .. '}'
+        end
+        return ser_table(t, 'ret', 1) .. table.concat(assign, ' ')
+    end
+
     function assert(c, str)
         if c then return end
         if str then LogError(str) end

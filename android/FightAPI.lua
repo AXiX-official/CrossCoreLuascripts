@@ -413,6 +413,14 @@ function SkillJudger:IsOnHelp(oSkill, caster, target, res, percent)
 	return not res
 end
 
+-- 是否为CallSkill技能
+function SkillJudger:IsCallSkill(oSkill, caster, target, res, percent)
+	if caster.currentSkill.callSkillType then
+		return res
+	end
+	return not res
+end
+
 -- 是否为指挥官技能(被动用)
 function SkillJudger:IsCommander(oSkill, caster, target, res, percent)
 	--LogDebugEx("SkillJudger:IsNormal", caster.currentSkill.id, caster.currentSkill.isNormal)
@@ -452,6 +460,37 @@ function SkillJudger:IsUltimate(oSkill, caster, target, res)
 	end
 	return not res
 end
+
+-- 是否为全体攻击技能(被动用)
+function SkillJudger:IsALLRange(oSkill, caster, target, res, ty)
+	--LogDebugEx("SkillJudger:IsALLRange", caster.currentSkill.id, caster.currentSkill.range_key)
+	--LogTable(skill[caster.currentSkill.id])
+
+	if caster.currentSkill and caster.currentSkill.range_key == "all" then
+		return res
+	end
+	return not res
+end
+
+local littleRange = {}
+littleRange.one_row = true
+littleRange.one_col = true
+littleRange.tian    = true
+littleRange.shizi   = true
+-- littleRange.two_row = true
+-- littleRange.two_col = true
+
+-- 是否为小范围攻击技能(被动用)
+function SkillJudger:IsLittleRange(oSkill, caster, target, res, ty)
+	--LogDebugEx("SkillJudger:IsLittleRange", caster.currentSkill.id, caster.currentSkill.range_key)
+	--LogTable(skill[caster.currentSkill.id])
+
+	if caster.currentSkill and littleRange[caster.currentSkill.range_key] then
+		return res
+	end
+	return not res
+end
+
 
 -- 控制类型
 function SkillJudger:IsCtrlType(oSkill, caster, target, res, typ)
@@ -806,6 +845,13 @@ function SkillApi:LiveCount(oSkill, caster, target, teamID)
 
 	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
 	return team:LiveCount(CardType.Summon)
+end
+
+
+-- 获取所属小队成员数量
+function SkillApi:ClassCount(oSkill, caster, target, teamID, nClass)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	return team:ClassCount(nClass)
 end
 
 -- 死亡数量
@@ -2328,6 +2374,41 @@ function FightAPI:Custom(effect, caster, target, data, action, param)
 	local log = {api="custom", targetID = target.oid, effectID = effect.apiSetting, 
 	action=action, param=param}
 	self.log:Add(log)
+end
+
+-- 给队友增加一个技能
+function FightAPI:AddSkill(effect, caster, target, data, skillID)
+	if not target:IsLive() then return end
+	local skillMgr = target.skillMgr
+	local oSkill = skillMgr:GetSkill(skillID)
+	if oSkill then return end
+
+	LogDebugEx("FightAPI:AddSkill", caster.name, target.name, skillID)
+
+	oSkill = skillMgr:CreateSkillEx(skillID) -- 没有技能就创建技能
+	oSkill.bIsCanDel = true
+	-- 注册技能事件
+	oSkill:RegisterEvent(self)
+
+	-- local log = {api="AddSkill", targetID = target.oid, effectID = effect.apiSetting, skillID=skillID}
+	-- self.log:Add(log)
+end
+
+-- 给队友删除一个技能
+function FightAPI:DelSkill(effect, caster, target, data, skillID)
+	-- if not target:IsLive() then return end
+	local skillMgr = target.skillMgr
+	local oSkill = skillMgr:GetSkill(skillID)
+
+	if not oSkill then return end
+	if not oSkill.bIsCanDel then return end -- 不可删除的技能
+
+	LogDebugEx("FightAPI:DelSkill", caster.name, target.name, skillID)
+	oSkill.bIsCanDel = nil
+	skillMgr:DelSkillEx(skillID) 
+
+	-- local log = {api="DelSkill", targetID = target.oid, effectID = effect.apiSetting, skillID=skillID}
+	-- self.log:Add(log)
 end
 
 -- ---------------------------------------------------

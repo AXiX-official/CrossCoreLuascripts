@@ -54,4 +54,20 @@ function this.SummerSpecial()
     return {"Title3","Level2","Plot2","Output2","Details","Button2"}
 end
 
+function this.Night()
+    return {"NightTitle","NightLevel","NightTarget","NightOutput","NightDetails","Double","NightButton"},"DungeonActivity9"
+end
+
+function this.NightPlot()
+    return {"NightTitle","NightPlot","NightOutput","NightPlotButton"},"DungeonActivity9"
+end
+
+function this.NightDanger()
+    return {"NightTitle","NightLevel","NightTarget","NightDanger","NightDetails","Double","NightButton"},"DungeonActivity9"
+end
+
+function this.NightSpecial()
+    return {"NightTitle","NightLevel","NightPlot","NightOutput","NightDetails","NightButton"},"DungeonActivity9"
+end
+
 return this; 

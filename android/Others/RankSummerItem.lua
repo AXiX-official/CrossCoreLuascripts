@@ -6,8 +6,9 @@ function SetIndex(_i)
 	index = _i
 end
 
-function Refresh(_info)
+function Refresh(_info,elseData)
 	info = _info
+	isOpenReplace = elseData and elseData.isOpenReplace or false
 	local rank = info:GetRank()
 
 	--bg
@@ -22,7 +23,7 @@ function Refresh(_info)
 	CSAPI.SetText(txtName, info:GetName())
 	--等级
 	local lvStr = LanguageMgr:GetByID(1033) or "LV."
-	CSAPI.SetText(txtLv, lvStr .. info:GetLevel())
+	CSAPI.SetText(txtLv, info:GetLevel() .. "")
 	--排名
 	CSAPI.SetText(txtRank1, rank < 4 and rank .. "" or "")
 	CSAPI.SetText(txtRank2, rank >= 4 and rank .. "" or "")
@@ -35,4 +36,18 @@ function Refresh(_info)
 	-- 	ResUtil.RoleCard:Load(icon, _cfg.icon, true)
 	-- end
 	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID(),info:GetSex())
+	--title
+	UIUtil:AddTitleByID(titleParent,0.6,info:GetTitle())
+
+	CSAPI.SetGOActive(btnOpen,isOpenReplace)
+end
+
+function GetName()
+	return info and info:GetName() or ""
+end
+
+function OnClick()
+	if cb then
+		cb(this)
+	end
 end

@@ -1,4 +1,4 @@
--- 艾穆尔
+-- 放逐者
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -6,20 +6,23 @@ Skill4803401 = oo.class(SkillBase)
 function Skill4803401:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 攻击结束
-function Skill4803401:OnAttackOver(caster, target, data)
+-- 特殊入场时(复活，召唤，合体)
+function Skill4803401:OnBornSpecial(caster, target, data)
+	-- 8239
+	if SkillJudger:IsCasterMech(self, caster, self.card, true,6) then
+	else
+		return
+	end
 	-- 8062
 	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8244
-	if SkillJudger:IsBeatBack(self, caster, target, true) then
-	else
-		return
-	end
 	-- 4803401
-	self:AddProgress(SkillEffect[4803401], caster, self.card, data, 200)
+	local targets = SkillFilter:Group(self, caster, target, 3,6)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[4803401], caster, target, data, 4803401)
+	end
 end
 -- 伤害前
 function Skill4803401:OnBefourHurt(caster, target, data)
@@ -33,25 +36,21 @@ function Skill4803401:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8407
-	local count7 = SkillApi:GetAttr(self, caster, target,1,"speed")
-	-- 8408
-	local count8 = SkillApi:GetAttr(self, caster, target,2,"speed")
-	-- 4802801
-	self:AddTempAttr(SkillEffect[4802801], caster, self.card, data, "damage",(count7-count8)*0.005)
-end
--- 攻击结束
-function Skill4803401:OnAttackOver(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8071
-	if SkillJudger:TargetIsFriend(self, caster, target, true) then
-	else
-		return
-	end
 	-- 4803403
-	self:BeatBack(SkillEffect[4803403], caster, target, data, nil,12)
+	self:AddTempAttr(SkillEffect[4803403], caster, target, data, "defense",-200)
+end
+-- 行动结束
+function Skill4803401:OnActionOver(caster, target, data)
+	-- 8239
+	if SkillJudger:IsCasterMech(self, caster, self.card, true,6) then
+	else
+		return
+	end
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4803402
+	self:AddProgress(SkillEffect[4803402], caster, self.card, data, 100)
 end

@@ -4,13 +4,19 @@ local girds={};
 local click=nil;
 local action=nil;
 local action2=nil;
+local  imgInfos={
+    bg="img_07_01",
+    bg2="img_08_01",
+    nodeImg="img_15_01",
+    over="img_13_01",  
+};
 function Awake()
     action=ComUtil.GetCom(enterTween,"ActionMoveByCurve");
     action2=ComUtil.GetCom(enterTween2,"ActionMoveByCurve");
 end
 
 --_d:CfgExtraExploration
-function Refresh(_d,state,upExp)
+function Refresh(_d,state,upExp,uiInfo)
     data=_d
     if data then
         --设置代币数量
@@ -42,12 +48,33 @@ function Refresh(_d,state,upExp)
             end
         end
         --初始化物品信息和领取状况
-        if data.tag then
-            CSAPI.LoadImg(top,"UIs/SpecialExploration/img_09_01.png",true,nil,true);
-            CSAPI.LoadImg(root,"UIs/SpecialExploration/img_07_02.png",true,nil,true);
-        else
-            CSAPI.LoadImg(top,"UIs/SpecialExploration/img_08_01.png",true,nil,true);
-            CSAPI.LoadImg(root,"UIs/SpecialExploration/img_08_02.png",true,nil,true);
+        if uiInfo then
+            for i=1,3 do
+                local nodeKey="nodeImg"..i;
+                local overKey="over"..i;
+                CSAPI.LoadImg(this[nodeKey],string.format("UIs/%s/%s.png",uiInfo.floder,imgInfos.nodeImg),false,function()
+                    CSAPI.SetScale(this[nodeKey],1,1,1);
+                end,true);
+                CSAPI.LoadImg(this[overKey],string.format("UIs/%s/%s.png",uiInfo.floder,imgInfos.over),false,function()
+                    CSAPI.SetScale(this[overKey],1,1,1);
+                end,true);
+            end
+            local path="";
+            if data.tag then
+               path=string.format("UIs/%s/%s.png",uiInfo.floder,imgInfos.bg);
+               CSAPI.SetTextColorByCode(txtNum,uiInfo.txts.levelNum1);
+                -- CSAPI.LoadImg(top,"UIs/SpecialExploration/img_09_01.png",true,nil,true);
+                -- CSAPI.LoadImg(root,"UIs/SpecialExploration/img_07_02.png",true,nil,true);
+            else
+                path=string.format("UIs/%s/%s.png",uiInfo.floder,imgInfos.bg2);
+                CSAPI.SetTextColorByCode(txtNum,uiInfo.txts.levelNum2);
+                -- CSAPI.LoadImg(top,"UIs/SpecialExploration/img_08_01.png",true,nil,true);
+                -- CSAPI.LoadImg(root,"UIs/SpecialExploration/img_08_02.png",true,nil,true);
+            end
+            CSAPI.SetGOAlpha(txtNum,state==2 and 1 or 0.5);
+            CSAPI.LoadImg(bg,path,false,function()
+                CSAPI.SetScale(bg,1,1,1);
+            end,true);
         end
     end
     CSAPI.SetGOActive(lockObj,state==1);

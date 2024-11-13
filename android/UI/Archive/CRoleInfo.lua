@@ -124,9 +124,9 @@ function this:GetSkinTypeArr()
 end
 
 -- 所有皮肤 字典 [moduleid] = RoleSkinInfo 
-function this:GetAllSkins()
+function this:GetAllSkins(containJieJin)
     local skins = {}
-    local _skins = RoleSkinMgr:GetDatas(self.cfg.id)
+    local _skins = RoleSkinMgr:GetDatas(self.cfg.id,containJieJin)
     for n, m in pairs(_skins) do
         skins[n] = m
     end
@@ -294,7 +294,19 @@ end
 
 -- 在图集中是否显示
 function this:IsShowInAltas()
-    return self.cfg and self.cfg.bShowInAltas or false
+    local isShow = false
+    if self.cfg then
+        if self.cfg.bShowInAltas then
+            isShow = true
+        end
+        if isShow and self.cfg.sShowTime then
+            if self.showTime == nil then
+                self.showTime = TimeUtil:GetTimeStampBySplit(self.cfg.sShowTime)
+            end
+            isShow = self.showTime <= TimeUtil:GetTime()
+        end
+    end
+    return isShow
 end
 
 -- 在该建筑时能力是否生效  

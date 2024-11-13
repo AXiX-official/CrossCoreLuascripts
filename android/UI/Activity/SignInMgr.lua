@@ -82,8 +82,9 @@ function this:GetSignInContinueData()
     local arr = self:GetArr()
     for i, v in ipairs(arr) do
         if v:GetType() == RewardActivityType.Continuous then
-            local activityType = v:GetCfg().activityID
-            if activityType and activityType == ActivityListType.SignInContinue then
+            local activityID = v:GetCfg().activityID
+            local data = ActivityMgr:GetALData(activityID)
+            if data and data:GetType() == ActivityListType.SignInContinue then
                 return v
             end
         end
@@ -154,12 +155,13 @@ function this:GetDataByKey(key)
 end
 
 --获取活动对应的签到数据
-function this:GetDataByALType(aType)
-    if self.datas then
+function this:GetDataByALType(_id)
+    local data = ActivityMgr:GetALData(_id)
+    if self.datas and data then
         for i, v in pairs(self.datas) do
-            if aType == ActivityListType.SignIn and v:GetType() == RewardActivityType.DateDay then --月签到
+            if data:GetID() == ActivityListType.SignIn and v:GetType() == RewardActivityType.DateDay then --月签到
                 return v
-            elseif v:GetActivityID() and v:GetActivityID() == aType then --连续签到
+            elseif v:GetActivityID() and v:GetActivityID() == data:GetType() then --连续签到
                 return v
             end
         end

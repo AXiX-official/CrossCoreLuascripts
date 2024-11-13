@@ -16,6 +16,75 @@ function GLogicCheck:PlrNameLen(name)
     return true
 end
 
+-- UTF8的编码规则：
+-- 1.字符的第一个字节范围：(0-127)、(194-244)
+-- 2.字符的第二个字节及以后范围(针对多字节编码，如汉字)：(128-191)
+-- 3.(192，193和245-255)不会出现在UTF8编码中
+
+-- 判断名字是否合法, 只检查名字里的ASCLL码（0-127）
+-- 如果不是英文字母与数字则返回false，其余中文默认合法
+
+-- 检查名字是否合法，只能包含中日韩文、数字、大小写字母、空格
+function GLogicCheck:CheckNameLegal(plr, str)
+    if not str or type(str) ~= 'string' or #str <= 0 then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return
+    end
+
+    local k = 1
+    while true do
+        if k > #str then
+            break
+        end
+        local c = string.byte(str, k)
+        if not c then
+            break
+        end
+        if c < 192 then
+            if (c >= 48 and c <= 57) or (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c == 32) then
+                k = k + 1
+            else
+                GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+                return false
+            end
+        elseif c < 224 then
+            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+            return false
+        elseif c < 240 then
+            if c >= 228 and c <= 233 then
+                local c1 = string.byte(str, k + 1)
+                local c2 = string.byte(str, k + 2)
+                if c1 and c2 then
+                    local a1, a2, a3, a4 = 128, 191, 128, 191
+                    if c == 228 then
+                        a1 = 184
+                    elseif c == 233 then
+                        a2, a4 = 190, c1 ~= 190 and 191 or 165
+                    end
+                    if c1 >= a1 and c1 <= a2 and c2 >= a3 and c2 <= a4 then
+                        k = k + 3
+                    end
+                end
+            else
+                GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+                return false
+            end
+        elseif c < 248 then
+            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+            return false
+        elseif c < 252 then
+            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+            return false
+        elseif c < 254 then
+            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+            return false
+        end
+    end
+
+    return true
+end
+
+
 --获取字符串长度和字符数组
 function GLogicCheck:GetStringLen(inputStr)
     if not inputStr or type(inputStr) ~= 'string' or #inputStr <= 0 then

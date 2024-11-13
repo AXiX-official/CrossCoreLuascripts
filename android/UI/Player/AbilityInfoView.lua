@@ -208,6 +208,10 @@ function OnClickUp()
 end
 
 function OnClick()
+    CloseGrid()
+end
+
+function CloseGrid()
     if (currGrid) then
         CSAPI.SetGOActive(skillMask, false)
         CSAPI.SetParent(skillMask.gameObject, gameObject, false)
@@ -217,6 +221,60 @@ function OnClick()
     end
 end
 
+function IsGrid()
+    return currGrid ~= nil
+end
+
+function SetIsRight(b)
+    isRight = b
+end
+
 function Close()
     view:Close()
+end
+
+--TacticsData
+function ShowInfo(_data)
+    fade:SetAlpha(1)
+    CSAPI.SetGOActive(node, true)
+    CSAPI.SetGOActive(skillMask, true)
+    CSAPI.SetGOActive(btnUp,false)
+    CSAPI.SetGOActive(lvObj, true)
+    CSAPI.SetAnchor(node,-408,0)
+    CSAPI.SetGOActive(txtLock,false)
+    if _data then
+        CSAPI.SetText(txtName, _data:GetName())
+        local cfg =Cfgs.CfgPlrSkillGroupUpgrade:GetByID(_data:GetCfgID())
+        local idx = _data:GetLv() or 1
+        CSAPI.SetText(txtDesc, _data:GetDesc())
+        -- skills
+        local skills =_data:GetSkills()
+        local isMax,maxLv = _data:IsMaxLv()
+        local curLv = _data:GetLv()
+        grids = grids or {};
+        for k, v in ipairs(skills) do
+            local item = nil;
+            if k <= #grids then
+                item = grids[k];
+                item.Refresh(v, {
+                    isRight = isRight
+                })
+                item.SetClickCB(OnSkillClick)
+            else
+                ResUtil:CreateUIGOAsync("PlayerAbility/AbilityGrid", layout, function(go)
+                    local tab = ComUtil.GetLuaTable(go);
+                    table.insert(grids, tab);
+                    item = tab;
+                    item.Refresh(v, {
+                        isRight = isRight
+                    })
+                    item.SetClickCB(OnSkillClick)
+                end)
+            end
+        end
+        -- lv
+        CSAPI.SetText(txtLv1, curLv .. "")
+        maxLv = maxLv or ""
+        CSAPI.SetText(txtLv2, maxLv .. "")
+    end
 end

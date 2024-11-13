@@ -77,6 +77,7 @@ local conf = {
 {'67',	'cast2_cure01_o20230',	'o20230/cast2_cure01',	'',	'',	'1',	'1',	'2',	''},
 {'68',	'buff_eff2_o20230',	'o20230/buff_eff2',	'',	'',	'1',	'1',	'1',	''},
 {'69',	'cast2_buff_g91060',	'g91060/cast_shield',	'',	'',	'',	'',	'',	''},
+{'70',	'cast1_buff_g91340',	'g91340/cast1_buff',	'',	'',	'1',	'',	'',	''},
 },
 }
 --cfgbuff_effect = conf

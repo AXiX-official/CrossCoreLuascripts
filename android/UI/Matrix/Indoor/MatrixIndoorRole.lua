@@ -728,3 +728,10 @@ function AddBubble(desc, timer)
         dormUI.AddBubble(desc, timer)
     end
 end
+
+--清除家具动作
+function ClearFurnitureAnim()
+    if(dormColData) then 
+        dormColData:FurnitureAction(false)
+    end 
+end

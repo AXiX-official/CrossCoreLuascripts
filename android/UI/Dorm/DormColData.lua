@@ -131,6 +131,17 @@ function this:Action()
 
         self.lua1.AddChilds(actionType)
     end
+    -- 家具动作
+    self:FurnitureAction(true)
+end
+
+function this:FurnitureAction(b)
+    if (self.colType == DormGoType.furniture) then
+        local cfg2 = self.lua2.data:GetCfg()
+        if (cfg2.playAnim) then
+            self.lua2.PlayAnim(b)
+        end
+    end 
 end
 
 -- 退出动作 （起身动作）

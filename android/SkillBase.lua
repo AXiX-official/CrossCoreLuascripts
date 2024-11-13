@@ -318,6 +318,31 @@ function SkillMgr:CreateSkillEx(skillID)
 		self.initiativeSkills[skillID] = skl
 		self.mapSkills[skl.skillGroup] = skl
 	end
+	return skl
+end
+
+
+-- 删除技能
+function SkillMgr:DelSkillEx(skillID)
+	LogDebugEx("SkillMgr.DelSkillEx", skillID)
+	local oSkill = self:GetSkill(skillID)
+
+	if not oSkill then return end
+	if not oSkill.bIsCanDel then return end -- 不可删除的技能
+
+	-- LogDebugEx("SkillMgr:DelSkill", caster.name, target.name, skillID)
+	oSkill:DeleteEvent() -- 删除事件
+
+	-- if self.mapSkills[oSkill.skillGroup] == oSkill then 
+		self.mapSkills[oSkill.skillGroup] = nil
+	-- end
+	self.initiativeSkills[skillID] = nil
+	for i,v in ipairs(self.skills) do
+		if v == oSkill then 
+			table.remove(self.skills, i)
+			break
+		end
+	end
 end
 
 -- 获取可用技能(AI使用) 
@@ -1327,7 +1352,10 @@ function SkillBase:Apply(caster, targets, pos, data)
 	end
 
 	-- 某些技能使源对象死亡
-	ASSERT(targets[1], "没有攻击对象"..self.id)
+	if not targets[1] then 
+		mgr:ClientError(caster.uid or "", "没有攻击对象"..self.id)
+	end
+	ASSERT(targets[1], "没有攻击对象"..self.id)   -- 某些玩家死了, 还能调用到死亡事件, 导致删掉了这个位置的怪物
 	-- for i,target in ipairs(targets) do
 	mgr:DoEventWithLog("OnActionBegin", caster, targets[1], data)
 	-- end
@@ -1576,6 +1604,8 @@ function SkillBase:OnCallSkill(effectID, caster, targets, pos, data, api)
 		
 		self:DoDeathEventWithLog()
 
+		self.currentAtkTargets = self.currentAtkTargets or {} -- 这里不知道什么事件把他清掉了
+		
 		for i,target in ipairs(self.currentAtkTargets) do
 			target:OnBeAttack(caster)
 			-- mgr:DoEventWithLog("OnAttackOver", caster, target, data)

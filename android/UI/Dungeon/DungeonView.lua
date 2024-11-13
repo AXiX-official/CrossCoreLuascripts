@@ -625,6 +625,7 @@ function OnStoryPlayComplete()
         if CheckSectionOver(selItem.GetID()) then
             -- isNextScetion = true
             ShowDungeon()
+            SetHard()
             return
         end
         if isStoryFirst then

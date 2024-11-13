@@ -59,7 +59,7 @@ function this:Clear()
     self.isInit = nil
     EventMgr.RemoveListener(EventType.View_Lua_Opened, this.OnViewOpened)
     EventMgr.RemoveListener(EventType.View_Lua_Closed, this.OnViewClosed)
-    --self:MenuBuyClear()
+    -- self:MenuBuyClear()
 end
 
 function this.OnViewOpened(viewKey) -- 当界面开启时，执行一次方法，然后清除引用
@@ -148,11 +148,11 @@ end
 
 -- 当前登录第一次打开主界面 
 function this:GetIsPlay()
-    if(self.isPlayNum~=nil) then
-        return true --已播放
-    else 
-        return false 
-    end 
+    if (self.isPlayNum ~= nil) then
+        return true -- 已播放
+    else
+        return false
+    end
 end
 function this:SetPlay(n)
     self.isPlayNum = n
@@ -209,7 +209,7 @@ function this:InitDatas()
                         local _datas = {}
                         _datas.system_name = (v == "Section") and m.name or m.sName
                         _datas.system_id = m.id .. ""
-                        if CSAPI.IsADV()==false then
+                        if CSAPI.IsADV() == false then
                             BuryingPointMgr:TrackEvents("open_system", _datas)
                         end
                     end
@@ -474,8 +474,8 @@ function this:CheckConditionIsOK(conditions)
                     if (not b) then
                         local sectionCfg = Cfgs.MainLine:GetByID(_cfg.val)
                         local str = LanguageMgr:GetTips(1010)
-                        local hardStr = sectionCfg.type==2 and LanguageMgr:GetByID(15016) or ""
-                        local _s = hardStr..sectionCfg.chapterID .. "" .. sectionCfg.name
+                        local hardStr = sectionCfg.type == 2 and LanguageMgr:GetByID(15016) or ""
+                        local _s = hardStr .. sectionCfg.chapterID .. "" .. sectionCfg.name
                         lockStr = string.format(str, _s)
                     end
                 end
@@ -803,21 +803,30 @@ function this:CheckHadL2dIn(isRole, id, isl2d)
     return false
 end
 
---有一次战斗结束
+-- 有一次战斗结束
 function this:SetFightOver(b)
-    self.isFightOver = b 
+    self.isFightOver = b
 end
 function this:CheckIsFightVier()
-    if(self.isFightOver) then 
-        return true 
+    if (self.isFightOver) then
+        return true
     end
-    return false 
+    return false
 end
 
 function this:GetTopIndex()
     self.topIndex = self.topIndex or 1
-    self.topIndex = self.topIndex+1
+    self.topIndex = self.topIndex + 1
     return self.topIndex
+end
+
+function this:GetNextStandbyTimer()
+    local num = SettingMgr:GetValue(s_wait_scale.waitTime) or 0
+    local min = g_HoldOnTime[num + 1]
+    if (min == -1) then
+        return nil
+    end
+    return (Time.time + min * 60)
 end
 
 return this

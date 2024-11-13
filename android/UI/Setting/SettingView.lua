@@ -68,10 +68,10 @@ function OnOpen()
 			   view:Close()
 		   end)
 		   if CSAPI.IsADV() then
-			   childPanels = { "SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "CustomerServiceCenter" }
+			   childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "CustomerServiceCenter" }
 			   leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14070,"Setting/icon6"},{14045, "Setting/icon5"}}
 		   else
-			   childPanels = { "SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "SettingCDKPanel" }
+			   childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "SettingCDKPanel" }
 			   leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14070,"Setting/icon6"},{14002,"Setting/icon4"}}
 		   end
 		   if CSAPI.IsADV() then
@@ -85,6 +85,7 @@ function OnOpen()
 		---国内----------------------------------------------------------------------------------
 		if data == SettingEnterType.Login then
 			leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}}
+			childPanels = {"SettingFpsPanel", "SettingMusicPanel"}
 			CSAPI.SetGOActive(btnSign, false)
 			CSAPI.SetGOActive(btnExit, true)
 		elseif data == SettingEnterType.FightMenu then
@@ -93,6 +94,7 @@ function OnOpen()
 			end,nil,{})
 			CSAPI.SetGOActive(top.btn_home, false)
 			leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"}}
+			childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel"}
 			CSAPI.SetGOActive(btnSign, false)
 			CSAPI.SetGOActive(btnExit, false)
 		else
@@ -101,8 +103,10 @@ function OnOpen()
 			end)
 			leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"},{14070,"Setting/icon6"},{14002,"Setting/icon4"}}
 			if CSAPI.IsAppReview() then
+				childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel"}
 				leftDatas = {{14000, "Setting/icon1"}, {14001, "Setting/icon2"}, {14003,"Setting/icon3"}}
-			end			CSAPI.SetGOActive(btnSign, true)
+			end
+			CSAPI.SetGOActive(btnSign, true)
 			CSAPI.SetGOActive(btnExit, false)
 		end
 	end
@@ -186,16 +190,19 @@ function RefreshPanel()
 			if panel.Refresh then
 				panel.Refresh(data)
 			end
+			if panel.SetCloseCallBack then
+				panel.SetCloseCallBack(OnClickBack)
+			end
 			if index ~= 4 then
 				local screenCount= SettingMgr:GetScreenCount()
-				CSAPI.SetLocalPos(go,-screenCount,0)
+				CSAPI.SetLocalPos(go,-screenCount,0)				
 			end
 			panels[index] = panel
 		end
 		curPanel = panels[index]
 		curIndex = index
 		if curIndex == 2 and data == SettingEnterType.Login then
-			curPanel.CloseSelectLanguage()
+			curPanel.CloseSelectLanguage()			
 		end
 	end
 end
@@ -220,8 +227,8 @@ function OnClickSign()
 			Logout();
 		end
 		CSAPI.OpenView("Dialog", tips)
-		elseif CSAPI.IsDomestic() then
-			ShiryuSDK.ShowUserCenter();
+	elseif CSAPI.IsDomestic() then
+		ShiryuSDK.ShowUserCenter();
 	else
 		CSAPI.OpenView("SettingWindow")
 	end

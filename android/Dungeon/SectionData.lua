@@ -304,6 +304,9 @@ function this:GetOpenState()
 				openState = 0
 			end
 		end
+		if self.openInfo == nil then
+			self.openInfo = DungeonMgr:GetActiveOpenInfo2(self:GetID())
+		end
 		if self:GetSectionType() == SectionType.Daily and openState > 0 then
 			local isOpen,isNextOpen = DungeonMgr:IsDailyOpenTime(self.cfg.openTime)
 			openState = isOpen and 1 or -1
@@ -313,7 +316,7 @@ function this:GetOpenState()
 			lockStr = self.cfg.lock_desc
 		elseif self:GetSectionType() == SectionType.Activity then --活动没有未开启显示
 			if self:GetType() ~= SectionActivityType.Tower and self:GetType() ~= SectionActivityType.Rogue then
-				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
+				local isActiveOpen = self.openInfo and self.openInfo:IsOpen()
 				if openState > 0 then
 					openState = isActiveOpen and 1 or -2
 					lockStr = LanguageMgr:GetTips(24001)
@@ -321,6 +324,15 @@ function this:GetOpenState()
 					openState = isActiveOpen and openState or -2
 					lockStr = isActiveOpen and lockStr or LanguageMgr:GetTips(24001)
 				end
+			end
+		elseif self:GetSectionType() == SectionType.MainLine and self.openInfo then
+			local isActiveOpen = self.openInfo:IsOpen()
+			if openState > 0 then
+				openState = isActiveOpen and 1 or -2
+				lockStr = LanguageMgr:GetTips(24001)
+			else
+				openState = isActiveOpen and openState or -2
+				lockStr = isActiveOpen and lockStr or LanguageMgr:GetTips(24001)
 			end
 		end
 	end
@@ -404,6 +416,22 @@ end
 
 function this:IsShowOnly()
 	return self.cfg and self.cfg.onlyOne and self.cfg.onlyOne == 1
+end
+
+function this:GetOpenInfo()
+	return self.openInfo
+end
+---------------------------------------------门票购买---------------------------------------------
+function this:GetBuyCount()
+	return self.cfg and self.cfg.DungeonArachnidDailyBuy or 0
+end
+
+function this:GetBuyCost()
+	return self.cfg and self.cfg.DungeonArachnidDailyCost
+end
+
+function this:GetBuyGets()
+	return self.cfg and self.cfg.DungeonArachnidGets
 end
 
 return this; 

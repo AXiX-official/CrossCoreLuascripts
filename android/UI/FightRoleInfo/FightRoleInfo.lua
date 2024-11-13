@@ -345,11 +345,11 @@ function SetCharInfos(character)
                     else
                         LogError("怪物的副天赋配置有误！技能ID："..tostring(v));
                     end
-                elseif cfg.main_type==SkillMainType.Equip then
-                    local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
-                    if skillCfg then
-                        table.insert( charInfos[4], skillCfg);
-                    end
+                -- elseif cfg.main_type==SkillMainType.Equip then
+                --     local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                --     if skillCfg then
+                --         table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
+                --     end
                 else
                     table.insert( charInfos[1], {cfg=cfg});
                 end
@@ -359,11 +359,20 @@ function SetCharInfos(character)
     --装备技能
     if charData.eskills then
         for k,v in ipairs(charData.eskills) do
-            local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
-            if skillCfg and skillCfg.bIsHide~=true  then
-                -- LogError("装备技能：")
-                -- LogError(skillCfg);
-                table.insert( charInfos[4], skillCfg);
+            if character.IsEnemy()==false and charData.isNpc~=true then
+                local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                if skillCfg and skillCfg.bIsHide~=true  then
+                    -- LogError("装备技能：")
+                    -- LogError(skillCfg);
+                    table.insert( charInfos[4], {skillCfg});
+                end
+            else
+                local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                if skillCfg and skillCfg.bIsHide~=true then
+                    -- LogError("装备技能：")
+                    -- LogError(skillCfg);
+                    table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
+                end
             end
         end
     end
@@ -437,10 +446,10 @@ function SetCharInfos(character)
         return a.cfg.id<b.cfg.id;
     end);
     table.sort(charInfos[4],function(a,b)
-        if a.nLv==b.nLv then
-            return a.group<b.group
+        if a[1].nLv==b[1].nLv then
+            return a[1].group<b[1].group
         else
-            return a.nLv>b.nLv
+            return a[1].nLv>b[1].nLv
         end
     end);
 end

@@ -20,8 +20,8 @@ function Skill4202402:OnActionOver(caster, target, data)
 	end
 	-- 4202402
 	self:AddProgress(SkillEffect[4202402], caster, self.card, data, 100)
-	-- 4202411
-	self:OwnerAddBuffCount(SkillEffect[4202411], caster, self.card, data, 4202401,1,5)
+	-- 4202412
+	self:OwnerAddBuffCount(SkillEffect[4202412], caster, self.card, data, 4202402,1,5)
 	-- 4202414
 	self:OwnerAddBuffCount(SkillEffect[4202414], caster, self.card, data, 4202404,1,5)
 end

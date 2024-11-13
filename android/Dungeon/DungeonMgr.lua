@@ -18,7 +18,9 @@ SectionType = {
     -- 活动
     Activity = 3,
     -- 教程
-    Course = 4
+    Course = 4,
+    -- 角斗场
+    Colosseum = 5
 };
 
 --章节活动类型
@@ -173,13 +175,23 @@ function this:AddDungeonData(data)
         data.isPass = false;
     end
     dungeonData:SetData(data);
-	self.dungeonDatas = self.dungeonDatas or {}
-    self.dungeonDatas[data.id] = dungeonData;
+	self.dungeonDatas = self.dungeonDatas or {}    self.dungeonDatas[data.id] = dungeonData;
     self.maxDungeonID = self.maxDungeonID or 0
     if data.id and data.id > self.maxDungeonID then
         local cfg = Cfgs.MainLine:GetByID(data.id)
         if cfg and cfg.type == eDuplicateType.MainNormal then
             self.maxDungeonID = data.id
+        end
+    end
+end
+
+--清除部分副本数据
+function this:ClearDungeonData(ids)
+    if ids and #ids>0 then
+        for i, id in ipairs(ids) do
+            if self.dungeonDatas and self.dungeonDatas[id] then
+                self.dungeonDatas[id] = nil
+            end
         end
     end
 end
@@ -456,7 +468,7 @@ end
 --初始化关卡组
 function this:InitDungeonGroupDatas()
     if self.dungeonGroupDatas == nil then
-        self.dungeonGroupDatas =  {}
+        self.dungeonGroupDatas = {}
         local cfgs = Cfgs.DungeonGroup:GetAll()
         if cfgs then
             for _, cfg in pairs(cfgs) do           
@@ -1107,6 +1119,11 @@ function this:OnQuit(isExit, jumpType)
             end
         elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then
             CSAPI.OpenView("CourseView",1)  
+        --elseif DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Colosseum then
+            --CSAPI.OpenView("Section",{type = 3})
+            --ColosseumMgr:Quit(self.currId)
+            --self:SetCurrId()
+            --return
         else  -- 主线章节
             if isExit and self.currFightId then
                 -- 回到战斗中的章节
@@ -1425,6 +1442,10 @@ function this:IsActivityRed()
         isRed = RogueSMgr:IsRed()
     end
 
+    if not isRed then
+        --isRed = ColosseumMgr:IsRed()
+    end
+
     return isRed
 end
 
@@ -1451,6 +1472,10 @@ end
 
 function this:IsMainLineRed()
     return DungeonBoxMgr:CheckRed()
+end
+
+function this:IsExerciseRed()
+    --return ColosseumMgr:IsRed()
 end
 
 ---------------------------------------------new---------------------------------------------
@@ -1480,13 +1505,14 @@ end
 
 function this:SetArachnidCount(proto)
     if proto and proto.can_buy_cnt then
-        self.ArachnidCount = proto.can_buy_cnt or 0
+        self.ArachnidCount = self.ArachnidCount or {}
+        self.ArachnidCount[proto.sectionId] = proto.can_buy_cnt
     end
     EventMgr.Dispatch(EventType.Arachnid_Count_Refresh)
 end
 
-function this:GetArachnidCount()
-    return self.ArachnidCount or 0
+function this:GetArachnidCount(sid)
+    return self.ArachnidCount and self.ArachnidCount[sid] or 0
 end
 
 function this:Clear()
@@ -1514,6 +1540,7 @@ function this:Clear()
     self.ActivityPlotDatas = nil
     self.hardInfo = nil
     self.ActiveOpenInfos = nil
+    self.ArachnidCount = {}
 end
 
 this:Init()

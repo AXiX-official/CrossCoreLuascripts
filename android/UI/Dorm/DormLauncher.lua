@@ -129,20 +129,23 @@ DormRoleActionType.normal_clean = "DormRoleActionLeisure"
 DormRoleActionType.normal_stretch = "DormRoleActionLeisure"
 DormRoleActionType.normal_fatigue = "DormRoleActionLeisure"
 
--- 家具触发人物动作 编辑器对应
---[[
-0：睡觉（要区分左右） furniture_sleep_01 furniture_sleep_02
-1：坐沙发
-2：坐椅子
-3：坐睡
-4：观看
-5：玩模型
-6：浇水
-7: 跳舞
-8：操作电脑
-]]
-DormAction3 = {"furniture_sleep_0", "furniture_sit_01", "furniture_sit_02", "furniture_sit_03", "furniture_watch",
-               "furniture_gundam", "furniture_Watering","furniture_Dance","base_operatePC_01","furniture_sit_04","furniture_sit_05"}
+-- -- 家具触发人物动作 编辑器对应
+-- --[[
+-- 0：睡觉（要区分左右） furniture_sleep_01 furniture_sleep_02
+-- 1：坐沙发
+-- 2：坐椅子
+-- 3：坐睡
+-- 4：观看
+-- 5：玩模型
+-- 6：浇水
+-- 7: 跳舞
+-- 8：操作电脑
+-- 9: 有靠背的椅子
+-- 10：无靠背的椅子
+-- 11：棺材
+-- ]]
+-- DormAction3 = {"furniture_sleep_0", "furniture_sit_01", "furniture_sit_02", "furniture_sit_03", "furniture_watch",
+--                "furniture_gundam", "furniture_Watering","furniture_Dance","base_operatePC_01","furniture_sit_04","furniture_sit_05","furniture_revive01"}
 
 -- 基础时间+持续时间
 function Dorm_Action_Time(_dormAction2)

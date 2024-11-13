@@ -1,4 +1,4 @@
--- 反击
+-- 仲裁者反击
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -30,7 +30,7 @@ function Skill803400401:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 803400401
-	if self:Rand(7000) then
+	if self:Rand(4000) then
 		self:BeatBack(SkillEffect[803400401], caster, self.card, data, nil,11)
 	end
 end

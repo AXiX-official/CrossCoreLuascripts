@@ -95,6 +95,7 @@ local conf = {
 {'g_CardAutoCoolInfo',	'g_CardAutoCoolInfo',	'',	'int[]',	'300,1'},
 {'g_CardCreateLogsCnt',	'g_CardCreateLogsCnt',	'',	'int',	'5'},
 {'g_MutiLookScale',	'g_MutiLookScale',	'',	'float[]',	'0.7,2.0'},
+{'g_CaptainRoleId',	'g_CaptainRoleId',	'',	'int[]',	'71010,71012,71020,71022'},
 {'g_EquipGridInitSize',	'g_EquipGridInitSize',	'',	'int',	'500'},
 {'g_EquipGridMaxSize',	'g_EquipGridMaxSize',	'',	'int',	'2000'},
 {'g_EquipSlotCnt',	'g_EquipSlotCnt',	'',	'int',	'5'},
@@ -291,6 +292,7 @@ local conf = {
 {'g_PetAnimateTime',	'g_PetAnimateTime',	'',	'int',	'10'},
 {'g_PetMoveChangeTime',	'g_PetMoveChangeTime',	'',	'int',	'12'},
 {'g_PetBGM',	'g_PetBGM',	'',	'string',	'Event_SummerMarineRhythm'},
+{'g_HoldOnTime',	'g_HoldOnTime',	'',	'int[]',	'3,5,10,-1'},
 },
 }
 --cfgglobal_setting = conf

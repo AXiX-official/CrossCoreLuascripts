@@ -23,13 +23,17 @@ local width=187;
 local progressTween=nil;
 local action=nil;
 local action2=nil;
+local imgInfos=nil;--图片和目标的对应
+local uiInfo=nil;
+local isFirst=true;
 function Awake()
     UIUtil:AddTop2("ExplorationMain",gameObject, OnClickReturn,OnClickHome,{})
     layout=ComUtil.GetCom(hsv,"UISV");
     layout:Init("UIs/SpecialExploration/SpecialExplorationItem",LayoutCallBack,true)
     -- layout:AddToCenterFunc(OnSRChange);
     layout:AddOnValueChangeFunc(OnValueChange);
-    layout:AddOnOpenFunc(PlayEnterTween);
+    -- layout:AddOnOpenFunc(PlayEnterTween);
+    layout:AddOnOpenFunc(LoadImgs);
     layout.animTotalTime=0.6
     progress=ComUtil.GetCom(progressBar,"Slider")
     slider=ComUtil.GetCom(expBar,"Slider")
@@ -38,7 +42,7 @@ function Awake()
     eventMgr:AddListener(EventType.SpecialExploration_Info_Ret,Refresh)
     eventMgr:AddListener(EventType.SpecialExploration_Revice_Ret,Refresh)
     eventMgr:AddListener(EventType.SpecialExploration_Tween_Over,OnTweenOver);
-    animator=ComUtil.GetComInChildren(btn_change,"Animator");
+    -- animator=ComUtil.GetComInChildren(btn_change,"Animator");
     action=ComUtil.GetCom(enterTween,"ActionMoveByCurve");
     action2=ComUtil.GetCom(enterTween2,"ActionMoveByCurve");
     progressTween=ComUtil.GetCom(progressBar,"ActionScaleT");
@@ -63,6 +67,11 @@ function Refresh()
     -- LogError(exData:GetLevelUpExp(32));
     local hasRevice=false;
     if exData then
+        uiInfo=exData:GetUIChange();
+        if isFirst then
+            LoadBgs();
+            isFirst=false;
+        end
         --初始化规则、剩余时间
         hasRevice=exData:HasRevice();
         CSAPI.SetText(txtRule2,exData:GetDesc());
@@ -131,7 +140,7 @@ function LayoutCallBack(index)
     if d.isInfinite then
         realExp=exData:GetLevelUpExp(index);
     end
-    item.Refresh(d,state,realExp);
+    item.Refresh(d,state,realExp,uiInfo);
     item.SetClickCB(OnClickItem);
     if isPlayTween then
         local posX=width*index*-1;
@@ -177,7 +186,7 @@ function SetProgressBar()
         do return end
     end
     local x=CSAPI.GetAnchor(Content)
-    local val=(exData:GetCurrLv()*187+x-38)/1590;
+    local val=(exData:GetCurrLv()*187+x-82)/1590;
     val=isSpecial and 0 or val;
     progress.value=val;
     CSAPI.SetGOActive(fillEff,val>0.1);
@@ -234,6 +243,10 @@ function SetFixedObj(_d)
     else
         CSAPI.SetText(txtNum,tostring(_d.exp));
     end
+    if uiInfo and uiInfo.txts then
+        CSAPI.SetTextColorByCode(txtNum,_d.tag and uiInfo.txts.levelNum1 or uiInfo.txts.levelNum2);
+    end
+    CSAPI.SetGOAlpha(txtNum,state==2 and 1 or 0.4);
     local list=GridUtil.GetGridObjectDatas2(_d.reward);
     local cb=state==2 and OnClickFixed or GridClickFunc.OpenInfoSmiple;
     -- ItemUtil.AddItems("Grid/GridItem", fixedGirds, list, spLayout, OnClickFixed, 1)
@@ -275,7 +288,7 @@ function RefreshDownTime()
     local t=TimeUtil:GetTimeStampBySplit(exData:GetEndTime());
     local count=TimeUtil:GetDiffHMS(t,TimeUtil.GetTime());
     if count.day>0 or count.hour>0 or count.minute>0 or count.second>60 then
-        CSAPI.SetText(txtTime,string.format(LanguageMgr:GetByID(34039),count.day,count.hour,count.minute));
+        CSAPI.SetText(txtTime,string.format(LanguageMgr:GetByID(34042),count.day,count.hour,count.minute));
     else
         CSAPI.SetText(txtTime,LanguageMgr:GetByID(1062,count.second));
     end
@@ -313,4 +326,78 @@ function OnClickJump()
     if exData then
         exData:Jump()
     end
+end
+
+function LoadBgs()
+   if uiInfo then
+     --设置颜色
+        if uiInfo.txts then
+            CSAPI.SetTextColorByCode(txtTime,uiInfo.txts.time);
+            CSAPI.SetTextColorByCode(txtRule2,uiInfo.txts.rule);
+            CSAPI.SetTextColorByCode(txt_currLv,uiInfo.txts.coinName);
+            CSAPI.SetTextColorByCode(txtCoin,uiInfo.txts.coinNum1);
+            CSAPI.SetTextColorByCode(txtLvCoin,uiInfo.txts.coinNum2);
+        end
+        --加载背景
+        ResUtil:LoadBigImg(bg,string.format("UIs/BGs/%s/bg",uiInfo.bg),false,function()
+            local bgScale=CSAPI.GetSizeOffset();
+            CSAPI.SetScale(bg,bgScale,bgScale,bgScale);
+        end);
+        --加载动画
+        ResUtil:CreateUIGOAsync(string.format("%s/Bg_effect",uiInfo.floder),bgEffectNode)
+        ResUtil:CreateUIGOAsync(string.format("%s/Btn_flod",uiInfo.floder),btn_change,function(go)
+            animator=ComUtil.GetCom(go,"Animator");
+        end)
+        ResUtil:CreateUIGOAsync(string.format("%s/ProgressBar_particular",uiInfo.floder),fillEff)
+   end 
+end
+
+function LoadImgs()
+    local ls=GetImgInfos();
+    local oIdx=1;
+    local nIdx=1;
+    if uiInfo then
+        --加载图片
+        for k,v in pairs(ls) do
+            local key=""
+            if k=="over" then
+                key=k..oIdx;
+                oIdx=oIdx+1;
+            elseif k=="nodeImg" then
+                key=k..nIdx;
+                nIdx=nIdx+1;
+            else
+                key=k
+            end
+            if IsNil(this[key])~=true then
+                CSAPI.LoadImg(this[key],string.format("UIs/%s/%s.png",uiInfo.floder,v),false,function()
+                    CSAPI.SetScale(this[key],1,1,1);
+                end,true);
+            end
+        end
+    end
+    PlayEnterTween();
+end
+
+function GetImgInfos()
+    if imgInfos==nil then
+        imgInfos={
+            titleObj="img_01_01",
+            imgRule1="img_01_02",
+            expBg="img_04_01",
+            expFill="img_05_01",
+            coinIcon="img_03_01",
+            coinIcon2="img_03_02",
+            btn_receive="btn_01_02",
+            btn_jump="btn_01_01",
+            btn_change="img_14_01",
+            fillImg="img_05_02",
+            lBg="img_06_01",
+            spBg="img_07_01",
+            nodeImg="img_15_01",
+            over="img_13_01",  
+            tImg="img_98_01",
+        };
+    end
+    return imgInfos;
 end

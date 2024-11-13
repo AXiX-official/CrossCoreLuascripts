@@ -685,6 +685,13 @@ function this:IsLog() -- 是否统计信息
 end
 
 --------------------------------------体能------------------------------------------
+--是否已达上限
+function this:IsMaxHot()
+    local cur = self:Hot()
+    local max1,max2 = self:MaxHot()
+    return cur>=max1,cur>=max2
+end
+
 -- 自动回复
 function this:AddHot()
     self.info.hot = self.info.hot + 1
@@ -829,5 +836,14 @@ end
 -- function this:GetLastRoleID()
 --     return self.data.role_panel_id
 -- end
+
+--称号
+function this:SetIconTitle(title)
+    self.data.icon_title = title
+end
+function this:GetIconTitle()
+    return self.data.icon_title or 1
+end
+
 
 return this;

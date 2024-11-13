@@ -558,6 +558,8 @@ this.AccuCharge_Get=180017;
 this.CfgActiveEntry_Change=180018;
 --MenuBuyPanel关闭
 this.MenuBuy_RechargeCB=180019;
+--更换称号
+this.Head_Title_Change=180020;
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -945,7 +947,7 @@ this.Activity_OpenQueue = 340003 --活动预开启队列
 this.Activity_Click = 340004 --活动强制点击
 this.Activity_List_Null_Check = 340005 --活动列表检测为空
 this.Acitivty_List_Pop = 340006 --活动弹出
-
+this.Activity_List_Panel_Refresh = 340007 --活动界面刷新
 ------------------------------------------背景音乐
 --播放背景音乐
 this.Play_BGM = 350001

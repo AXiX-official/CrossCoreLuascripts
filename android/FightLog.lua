@@ -123,7 +123,7 @@ function FightLog:GetAndClean()
 	local log = self:Get()
 	-- LogTrace()
 	-- LogTable(self.log, "ff9977 self.log=")
-	-- LogTable(log, "ff9977 log=")
+	-- LogTable(log, "GetAndClean ff9977 log=")
 	if g_FightMgr then
 		local card = g_FightMgr.currTurn
 		-- if not card then return end

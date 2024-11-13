@@ -16,9 +16,9 @@ GameMsg.map["CardPoint"] = {
 	{ "id", "row", "col", },
 }
 GameMsg.map["CardData"] = {
-	--卡牌index 卡牌id 行     列     阵营     玩家id 模型    名字     技能        np    等级    攻击     最大血量 防御      速度    暴击     暴击率      命中     抵抗     同步率 同步率    同步率     血量  被伤害系数 伤害系数 被治疗系数 治疗系数 物理攻击系数    光线攻击系数  是否使用普攻  是否队长   好友id 玩家卡牌index npcid   突破等级      强化等级          技能        策略             变身同调机神皮肤 副天赋           
-	{ "byte",   "int", "byte","byte","byte",  "long","int",  "string","array|int","int","short","int",   "int",   "int",    "int",  "double","double",   "double","double","int", "double", "double",  "int","double",  "double","double",  "double","double",       "double",     "int",        "bool",    "int", "int",        "int",  "short",      "short",          "array|int","byte",          "int",           "array|int",     },
-	{ "oid",    "id",  "row", "col", "teamID","uid", "model","name",  "skills",   "np", "level","attack","maxhp", "defense","speed","crit",  "crit_rate","hit",   "resist","sp",  "sp_race","sp_race2","hp", "bedamage","damage","becure",  "cure",  "damagePhysics","damageLight","isUseCommon","isLeader","fuid","cuid",       "npcid","break_level","intensify_level","eskills",  "nStrategyIndex","modelA",        "use_sub_talent",},
+	--卡牌index 卡牌id 行     列     阵营     玩家id 模型    名字     技能        np    等级    攻击     最大血量 防御      速度    暴击     暴击率      命中     抵抗     同步率 同步率    同步率     血量  被伤害系数 伤害系数 被治疗系数 治疗系数 物理攻击系数    光线攻击系数  是否使用普攻  是否队长   好友id 玩家卡牌index npcid   突破等级      强化等级          技能        策略             变身同调机神皮肤 副天赋           被伤害系数(生活buff) 伤害系数     
+	{ "byte",   "int", "byte","byte","byte",  "long","int",  "string","array|int","int","short","int",   "int",   "int",    "int",  "double","double",   "double","double","int", "double", "double",  "int","double",  "double","double",  "double","double",       "double",     "int",        "bool",    "int", "int",        "int",  "short",      "short",          "array|int","byte",          "int",           "array|int",     "double",            "double",    },
+	{ "oid",    "id",  "row", "col", "teamID","uid", "model","name",  "skills",   "np", "level","attack","maxhp", "defense","speed","crit",  "crit_rate","hit",   "resist","sp",  "sp_race","sp_race2","hp", "bedamage","damage","becure",  "cure",  "damagePhysics","damageLight","isUseCommon","isLeader","fuid","cuid",       "npcid","break_level","intensify_level","eskills",  "nStrategyIndex","modelA",        "use_sub_talent","bedamage_add",      "damage_add",},
 }
 GameMsg.map["FightCardData"] = {
 	--卡牌id 玩家id 行     列     卡牌数据          
@@ -116,9 +116,9 @@ GameMsg.map["sReward"] = {
 	{ "id",  "num", "type","c_id","eSkills",   },
 }
 GameMsg.map["sPlrPaneInfo"] = {
-	--头像模型  角色量     最大副本进度 创建时间 最大爬塔进度 军演历史最高段位 基地行星指挥部等级 头像框       性别序号      
-	{ "uint",   "uint",    "uint",      "uint",  "uint",      "uint",          "short",           "uint",      "byte",       },
-	{ "icon_id","role_num","max_dup",   "c_time","max_tower", "max_rank_level","build_control_lv","icon_frame","sel_card_ix",},
+	--头像模型  角色量     最大副本进度 创建时间 最大爬塔进度 军演历史最高段位 基地行星指挥部等级 头像框       性别序号      玩家称号     
+	{ "uint",   "uint",    "uint",      "uint",  "uint",      "uint",          "short",           "uint",      "byte",       "uint",      },
+	{ "icon_id","role_num","max_dup",   "c_time","max_tower", "max_rank_level","build_control_lv","icon_frame","sel_card_ix","icon_title",},
 }
 GameMsg.map["sCardCreateLog"] = {
 	--获得的奖励(物品id,数量) 花费(物品id,数量) 品质提升     
@@ -406,9 +406,9 @@ GameMsg.map["sPlrData"] = {
 	{ "uid", "name",  "hot",  "level","gold","diamond","currtime",  "exp","sign",  "create_time","army_coin","tp",   "tpBeginTime","notLog",            "diamond_pay",},
 }
 GameMsg.map["LoginProto:LoginGame"] = {
-	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     最后设置的角色看板ID 背景ID          性别序号      
-	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      "uint",              "uint",         "byte",       },
-	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame","role_panel_id",     "background_id","sel_card_ix",},
+	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     最后设置的角色看板ID 背景ID          玩家称号     
+	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      "uint",              "uint",         "uint",      },
+	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame","role_panel_id",     "background_id","icon_title",},
 }
 GameMsg.map["LoginProto:PlrUpdate"] = {
 	--更新信息(不是所有字段都有) 添加的经验 下次体能恢复时间 
@@ -1081,9 +1081,9 @@ GameMsg.map["TeamItemData"] = {
 	{ "cid",       "index","row",  "col",  "card_info",         "nStrategyIndex",},
 }
 GameMsg.map["TeamItem"] = {
-	--队伍类型 数据                队长cid  队伍名字 技能组id         性能          预留sp         预留np       
-	{ "byte",  "list|TeamItemData","uint",  "string","uint",          "uint",       "bool",        "byte",      },
-	{ "index", "data",             "leader","name",  "skill_group_id","performance","bIsReserveSP","nReserveNP",},
+	--队伍类型 数据                队长cid  队伍名字 技能组id         技能组等级       性能          预留sp         预留np       
+	{ "byte",  "list|TeamItemData","uint",  "string","uint",          "uint",          "uint",       "bool",        "byte",      },
+	{ "index", "data",             "leader","name",  "skill_group_id","skill_group_lv","performance","bIsReserveSP","nReserveNP",},
 }
 GameMsg.map["PlayerProto:TeamData"] = {
 	--数据            可以使用的数量 是否发完   
@@ -1316,9 +1316,9 @@ GameMsg.map["PlayerProto:CardFactoryInfo"] = {
 	{ },
 }
 GameMsg.map["PlayerProto:CardFactoryInfoRet"] = {
-	--是否已经首次十连     保底设置(id：卡池id, num:已中次数 ,type:设置的保底卡牌) 今日抽卡次数    服务器累计抽卡次数 建造次数(卡池id,建造次数) 动态开启的卡池 建造中的             等待中的             完成                 
-	{ "map|sFirstCreateInfo|card_pool_id","map|sNumInfo|id",   "ushort",       "list|sNumInfo",   "json",               "json",        "list|sCardCreateInfo","list|sCardCreateInfo","list|sCardCreateInfo",},
-	{ "firt_create_infos", "sel_infos",         "daily_use_cnt","sum_pool_cnts",   "create_cnts",        "dy_open_pool","buildings",         "waitings",          "finishs",           },
+	--是否已经首次十连     保底设置(id：卡池id, num:已中次数 ,type:设置的保底卡牌) 今日抽卡次数    服务器累计抽卡次数 建造次数(卡池id,建造次数) 动态开启的卡池 剩余可用免费次数 建造中的             等待中的             完成                 
+	{ "map|sFirstCreateInfo|card_pool_id","map|sNumInfo|id",   "ushort",       "list|sNumInfo",   "json",               "json",        "ushort",        "list|sCardCreateInfo","list|sCardCreateInfo","list|sCardCreateInfo",},
+	{ "firt_create_infos", "sel_infos",         "daily_use_cnt","sum_pool_cnts",   "create_cnts",        "dy_open_pool","free_cnt",      "buildings",         "waitings",          "finishs",           },
 }
 GameMsg.map["PlayerProto:CardPoolOpen"] = {
 	--服务器累计抽卡次数 
@@ -1906,14 +1906,14 @@ GameMsg.map["PlayerProto:SetIconFrameRet"] = {
 	{ "icon_frame",},
 }
 GameMsg.map["PlayerProto:BuyArachnidCount"] = {
-	--数量      
-	{ "uint",   },
-	{ "buy_cnt",},
+	--数量      章节id      
+	{ "uint",   "uint",     },
+	{ "buy_cnt","sectionId",},
 }
 GameMsg.map["PlayerProto:BuyArachnidCountRet"] = {
-	--返回剩余可购买的次数 
-	{ "uint",              },
-	{ "can_buy_cnt",       },
+	--返回剩余可购买的次数 章节id      
+	{ "uint",              "uint",     },
+	{ "can_buy_cnt",       "sectionId",},
 }
 GameMsg.map["PlayerProto:CardChangeOpenNotice"] = {
 	--                                  
@@ -2371,9 +2371,9 @@ GameMsg.map["sPracticeInfo"] = {
 	{ "start_time",        "end_time",    "can_join_cnt","t_join_cnt",        "flush_cnt",   "rank_level","max_rank_level","rank","max_rank","score","can_join_buy_cnt",},
 }
 GameMsg.map["sPracticeObjInfo"] = {
-	--id     姓名     玩家等级 段位         排名   综合能力      头像模型id 头像框       最后设置的角色看板ID 是否机器人 积分    性别序号      
-	{ "uint","string","uint",  "short",     "uint","uint",       "uint",    "uint",      "uint",              "byte",    "uint", "byte",       },
-	{ "uid", "name",  "level", "rank_level","rank","performance","icon_id", "icon_frame","role_panel_id",     "is_robot","score","sel_card_ix",},
+	--id     姓名     玩家等级 段位         排名   综合能力      头像模型id 头像框       最后设置的角色看板ID 是否机器人 积分    性别序号      玩家称号     
+	{ "uint","string","uint",  "short",     "uint","uint",       "uint",    "uint",      "uint",              "byte",    "uint", "byte",       "uint",      },
+	{ "uid", "name",  "level", "rank_level","rank","performance","icon_id", "icon_frame","role_panel_id",     "is_robot","score","sel_card_ix","icon_title",},
 }
 GameMsg.map["sPracticeBaseTeam"] = {
 	--是否机器人                   好友id 
@@ -2526,9 +2526,9 @@ GameMsg.map["ArmyProto:QuitFreeArmyRet"] = {
 	{ },
 }
 GameMsg.map["ArmyProto:FreeArmyMatch"] = {
-	--对手id 队伍信息          战胜次数  战败次数                     头像框       最后设置的角色看板ID          对方排名 性别序号      
-	{ "uint","struts|TeamItem","uint",   "uint",    "uint", "uint",   "uint",      "uint",              "string","uint",  "byte",       },
-	{ "uid", "team",           "win_cnt","lost_cnt","level","icon_id","icon_frame","role_panel_id",     "name",  "rank",  "sel_card_ix",},
+	--对手id 队伍信息          战胜次数  战败次数                     头像框       最后设置的角色看板ID          对方排名 性别序号      玩家称号     
+	{ "uint","struts|TeamItem","uint",   "uint",    "uint", "uint",   "uint",      "uint",              "string","uint",  "byte",       "uint",      },
+	{ "uid", "team",           "win_cnt","lost_cnt","level","icon_id","icon_frame","role_panel_id",     "name",  "rank",  "sel_card_ix","icon_title",},
 }
 GameMsg.map["ArmyProto:GetSelfPracticeInfo"] = {
 	--
@@ -2841,9 +2841,9 @@ GameMsg.map["BuildingProto:GetOneRewardRet"] = {
 	{ "id",  "rewards",     },
 }
 GameMsg.map["sBuildOpLog"] = {
-	--好友id          头像   头像         操作类型 操作时间 等级   
-	{ "uint","string","uint","uint",      "byte",  "uint",  "uint",},
-	{ "fid", "name",  "icon","icon_frame","type",  "time",  "lv",  },
+	--好友id          头像   头像         操作类型 操作时间 等级   创建时候选择的性别序号 玩家称号     
+	{ "uint","string","uint","uint",      "byte",  "uint",  "uint","byte",               "uint",      },
+	{ "fid", "name",  "icon","icon_frame","type",  "time",  "lv",  "sel_card_ix",        "icon_title",},
 }
 GameMsg.map["BuildingProto:GetBuildOpLog"] = {
 	--起始下标 [1,100) 获取数量 
@@ -3736,9 +3736,9 @@ GameMsg.map["DormProto:SearchThemeRet"] = {
 	{ "info",         },
 }
 GameMsg.map["sFriendInfo"] = {
-	--好友id 头像id    头像框       名称     别名     好友度        状态    改变时间      是否在线    离线时间         等级    添加时间   请求信息    是否已读  战胜次数  战败次数   上次拒绝时间       是否在战斗中 卡牌信息携带 equip_ids 签名     基地开放情况  性别序号      
-	{ "long","uint",   "uint",      "string","string","uint",       "byte", "long",       "bool",     "long",          "uint", "long",    "string",   "byte",   "uint",   "uint",    "uint",            "bool",      "struts|TeamItem",   "string","array|byte", "byte",       },
-	{ "uid", "icon_id","icon_frame","name",  "alias", "friend_rate","state","chagne_time","is_online","last_save_time","level","add_time","apply_msg","is_read","win_cnt","lost_cnt","army_refuse_time","in_pvp",    "assit_team",        "sign",  "build_opens","sel_card_ix",},
+	--好友id 头像id    头像框       名称     别名     好友度        状态    改变时间      是否在线    离线时间         等级    添加时间   请求信息    是否已读  战胜次数  战败次数   上次拒绝时间       是否在战斗中 卡牌信息携带 equip_ids 签名     基地开放情况  性别序号      玩家称号     
+	{ "long","uint",   "uint",      "string","string","uint",       "byte", "long",       "bool",     "long",          "uint", "long",    "string",   "byte",   "uint",   "uint",    "uint",            "bool",      "struts|TeamItem",   "string","array|byte", "byte",       "uint",      },
+	{ "uid", "icon_id","icon_frame","name",  "alias", "friend_rate","state","chagne_time","is_online","last_save_time","level","add_time","apply_msg","is_read","win_cnt","lost_cnt","army_refuse_time","in_pvp",    "assit_team",        "sign",  "build_opens","sel_card_ix","icon_title",},
 }
 GameMsg.map["FriendProto:GetFriendsData"] = {
 	--
@@ -3846,9 +3846,9 @@ GameMsg.map["FriendProto:SetIsRead"] = {
 	{ "uid",       },
 }
 GameMsg.map["sAssitInfo"] = {
-	--好友id 玩家名称 别名     助战的卡牌(获取单个玩家时，返回全部信息，否则只有 cfgid 和 cid)                                协战次数    最后登录时间     是否在线 是否好友 性别序号      
-	{ "long","string","string","list|sCardsData",   "uint",   "uint",      "uint", "byte",     "uint",          "bool",  "bool",  "byte",       },
-	{ "uid", "name",  "alias", "cards",             "icon_id","icon_frame","level","assit_cnt","last_save_time","online","is_fls","sel_card_ix",},
+	--好友id 玩家名称 别名     助战的卡牌(获取单个玩家时，返回全部信息，否则只有 cfgid 和 cid)                                协战次数    最后登录时间     是否在线 是否好友 性别序号      玩家称号     
+	{ "long","string","string","list|sCardsData",   "uint",   "uint",      "uint", "byte",     "uint",          "bool",  "bool",  "byte",       "uint",      },
+	{ "uid", "name",  "alias", "cards",             "icon_id","icon_frame","level","assit_cnt","last_save_time","online","is_fls","sel_card_ix","icon_title",},
 }
 GameMsg.map["FriendProto:GetAssitInfo"] = {
 	--好友id(无为获取全部) 
@@ -4076,9 +4076,9 @@ GameMsg.map["PlayerProto:GetStarRank"] = {
 	{ "nPage","rank_type",         },
 }
 GameMsg.map["sStarRank"] = {
-	--排名   当前积分  名字    等级    头像      通关的最大副本id 头像框       性别序号      
-	{ "int", "int",   "string","short","int",    "int",           "int",       "byte",       },
-	{ "rank","score", "name",  "level","icon_id","dupId",         "icon_frame","sel_card_ix",},
+	--排名   当前积分  名字    等级    头像      通关的最大副本id 头像框       性别序号      玩家称号     
+	{ "int", "int",   "string","short","int",    "int",           "int",       "byte",       "uint",      },
+	{ "rank","score", "name",  "level","icon_id","dupId",         "icon_frame","sel_card_ix","icon_title",},
 }
 GameMsg.map["PlayerProto:GetStarRankRet"] = {
 	--排名数据         我的排名 排行榜类型（章节id） 当前积分 
@@ -4199,6 +4199,31 @@ GameMsg.map["PlayerProto:SettingRet"] = {
 	--设置状态 
 	{ "bool",  },
 	{ "res",   },
+}
+GameMsg.map["PlayerProto:GetRankTeamInfo"] = {
+	--排行榜类型(eRankType) 第几名    
+	{ "int",               "int",    },
+	{ "rankType",          "rankIdx",},
+}
+GameMsg.map["PlayerProto:GetRankTeamInfoRet"] = {
+	--排行榜类型(eRankType) 第几名    队伍数据        
+	{ "int",               "int",    "list|TeamItem",},
+	{ "rankType",          "rankIdx","data",         },
+}
+GameMsg.map["PlayerProto:CopyRankTeam"] = {
+	--排行榜类型(eRankType) 第几名    
+	{ "int",               "int",    },
+	{ "rankType",          "rankIdx",},
+}
+GameMsg.map["PlayerProto:SetIconTitle"] = {
+	--玩家称号ID   
+	{ "uint",      },
+	{ "icon_title",},
+}
+GameMsg.map["PlayerProto:SetIconTitleRet"] = {
+	--玩家称号ID   
+	{ "uint",      },
+	{ "icon_title",},
 }
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 

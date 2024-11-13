@@ -300,6 +300,19 @@ function SingleFightMgrClient:SendCmd(cmd, data)
     d.uid = self.uid
     data.uid = self.uid
     LogTable(d, 'FightMgrServer RecvCmd=')
+
+    -- [[调试代码
+    if CMD_TYPE.Skill == cmd then  -- 出现发送命令服务器没有对象,可能是客户端重复发??
+        if not g_FightMgrServer.currTurn then
+            if not self.currTurn then
+                ASSERT(nil, Json.Encode(data))
+            end
+            ASSERT(nil, Json.Encode(data))
+            return
+        end
+    end
+    -- 调试代码]]
+
     ret = g_FightMgrServer:RecvCmd(d)
 end
 

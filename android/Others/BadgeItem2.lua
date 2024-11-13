@@ -64,8 +64,7 @@ function Refresh(_data)
         SetText()
         SetIcon()
         SetCurrIndex()
-        SetType()
-        ShowEffect(selObjAction)
+        SetType()       
     else
         lastType = nil
         ShowEffect(emptyAction)
@@ -158,5 +157,9 @@ end
 function ShowEffect(go)
     CSAPI.SetGOActive(go,false)
     CSAPI.SetGOActive(go,true)
+end
+
+function ShowSelAnim()
+    ShowEffect(selObjAction)
 end
 

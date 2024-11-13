@@ -1,4 +1,4 @@
--- 轰击之星
+-- 缇尔锋3
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -31,4 +31,16 @@ function Skill601500303:OnActionOver(caster, target, data)
 	end
 	-- 601500303
 	self:AddBuffCount(SkillEffect[601500303], caster, self.card, data, 601500303,1,3)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 601500306
+	self:HitAddBuff(SkillEffect[601500306], caster, target, data, 5000,3004)
 end

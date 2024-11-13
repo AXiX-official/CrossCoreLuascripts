@@ -17,7 +17,8 @@ function this:InitLocalCfg()
         isSetting = false
         PlayerPrefs.SetString(s_isSetting, "isSet")
     end
-    self:SetDatas(s_audio_scale)
+    self:SetDatas(s_audio_scale,s_audio_value)
+    self:SetDatas(s_wait_scale,s_wait_value)
     self:SetData(s_quality_key, s_quality_value)
     -- local _value = CSAPI.IsIphoneX() and 40 or s_screen_scale_default
     self:SetData(s_screen_scale_key, s_screen_scale_default)
@@ -32,9 +33,9 @@ function this:InitLocalCfg()
     -- todo addmore
 end
 
-function this:SetDatas(tab)
-    for i, v in pairs(tab) do
-        self:SetData(v, s_audio_value[v])
+function this:SetDatas(tab1,tab2)
+    for i, v in pairs(tab1) do
+        self:SetData(v, tab2[v])
     end
 end
 

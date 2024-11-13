@@ -5,6 +5,7 @@ local curDayInfo = nil
 local curItem = nil
 local isSelect = false
 local key = nil
+local cfg = nil
 
 function Awake()
 	-- UIUtil:AddTop2("SignInView", top, OnClickClose)
@@ -37,10 +38,11 @@ end
 -- 		end)
 -- 	end
 -- end
-function Refresh(data)	
+function Refresh(data,elseData)	
 	CSAPI.PlayUISound("ui_popup_open")	
 	isSingIn = data.isSingIn ~= nil and data.isSingIn or false
 	key = data.key	
+	cfg = elseData and elseData.cfg or nil
 	-- CSAPI.SetGOActive(mask, isSingIn)
 	if(isSingIn) then
 		EventMgr.Dispatch(EventType.Activity_Click)
@@ -200,7 +202,7 @@ function ESignCB(proto)
 	--if(proto.isOk) then
 	-- CSAPI.SetGOActive(mask, false)
 	RefreshPanel()--刷新列表
-	ActivityMgr:SetListData(ActivityListType.SignIn, {key = _key})
+	ActivityMgr:SetListData(cfg.id, {key = _key})
 	ActivityMgr:CheckRedPointData(ActivityListType.SignIn)
 
 	local taData = {

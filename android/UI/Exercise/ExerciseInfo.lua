@@ -71,4 +71,8 @@ function this:GetSex()
 	return self.data.sel_card_ix
 end
 
+function this:GetIconTitle()
+	return self.data.icon_title or 1
+end
+
 return this 

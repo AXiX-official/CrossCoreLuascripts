@@ -14,7 +14,7 @@ function Skill9026:OnActionOver(caster, target, data)
 		return
 	end
 	-- 8243
-	if SkillJudger:IsSibling(self, caster, target, true,1023001) then
+	if SkillJudger:IsSibling(self, caster, target, true,10230) then
 	else
 		return
 	end

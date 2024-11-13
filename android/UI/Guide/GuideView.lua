@@ -1,7 +1,7 @@
 --引导界面
 
 function Awake()
-    AdaptiveConfiguration.SetLuaUIFit("GuiDeView", node.gameObject)
+    --AdaptiveConfiguration.SetLuaUIFit("GuiDeView", node.gameObject)
     transPanel = transform.parent.parent;
     canvasGroup = ComUtil.GetCom(node,"CanvasGroup");
 end
@@ -22,8 +22,8 @@ function InitListener()
     --eventMgr:AddListener(EventType.Net_Disconnect,OnNetDisconnect);
 end
 function OnDestroy()
-    AdaptiveConfiguration.LuaView_Lua_Closed("GuiDeView")
-    eventMgr:ClearListener();
+    --AdaptiveConfiguration.LuaView_Lua_Closed("GuiDeView")
+    eventMgr:ClearListener();    
     --EventMgr.Dispatch(EventType.Guide_State_Changed,false);
 end
 
@@ -163,7 +163,7 @@ end
 
 function InitParent()
 
-    originParent = originParent or transPanel.parent;
+    originParent = originParent or (transPanel and transPanel.parent);
 
     local cfg = data.cfg;
     if(not cfg.origin_parent and cfg.view_open)then

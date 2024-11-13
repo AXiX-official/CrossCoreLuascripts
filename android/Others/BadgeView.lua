@@ -112,6 +112,7 @@ function OnItemClickCB(item)
         selData = item.GetData()
     end
     SetRight()
+    ShowRightAnim()
 end
 
 function SetGridHeight()
@@ -235,6 +236,7 @@ end
 function OnShowItemClickCB(item)
     if currItem == nil then
         selData = item.GetData()
+        ShowRightAnim()
     end
     selIndex = item.index
     SetRight()
@@ -307,4 +309,10 @@ function PlayItemsAnim()
         end
     end
     ShowEffect(enterAction)
+end
+
+function ShowRightAnim()
+    if infoItem then
+        infoItem.ShowSelAnim()
+    end
 end

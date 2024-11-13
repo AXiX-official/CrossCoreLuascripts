@@ -46,6 +46,7 @@ function Update()
             LanguageMgr:SetText(txtDouble2,15129,0,0,1) 
         end
         if limitTime <= 0 then
+            
             ShowDoublePanel()
             EventMgr.Dispatch(EventType.Section_Daily_Double_Update)
         end
@@ -180,4 +181,13 @@ end
 
 function SetPos(x,y)
     CSAPI.SetAnchor(doubleObj,x,y)
+end
+
+function SetTextColor(code1,code2)
+    if code1 and code1~="" then
+        CSAPI.SetTextColorByCode(txt_double,code1)
+    end
+    if code2 and code2~="" then
+        CSAPI.SetTextColorByCode(txtDouble,code2)
+    end
 end

@@ -126,6 +126,13 @@ function Refresh(disExpTween)
         HandlerOver();
         do return end
     end
+    if data:GetBackImg() then
+        ResUtil.MultiImg:Load(roleImg,data:GetBackImg(),function()
+            local info=data:GetBackPos();
+            CSAPI.SetAnchor(roleImg,info[1],info[2]);
+            CSAPI.SetScale(roleImg,info[3],info[3],info[3]);
+        end,true);
+    end
     --计算当前最新的显示页面
     -- local pageIdx,cIdx=GetIdxs(data:GetCurrLv());
     -- currClickLv=cIdx;

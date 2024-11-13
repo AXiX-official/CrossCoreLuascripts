@@ -18,6 +18,7 @@ function Awake()
 	descTxts={{txt_topAdd,txt_topAddVal,upTween},{txt_downAdd,txt_downAddVal,downTween}};
 	hpBarImg=ComUtil.GetCom(hpBar, "Image");
     spBarImg=ComUtil.GetCom(spBar, "Image");
+	SetTopMask(false)
 end
 
 --设置数据 k:当前 _isShowInfos:是否显示hp/sp条

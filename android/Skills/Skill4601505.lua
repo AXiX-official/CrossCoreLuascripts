@@ -1,4 +1,4 @@
--- 艾穆尔
+-- 缇尔锋
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -21,8 +21,8 @@ function Skill4601505:OnBefourHurt(caster, target, data)
 	-- 4601505
 	self:AddTempAttr(SkillEffect[4601505], caster, caster, data, "damage",0.5)
 end
--- 行动结束
-function Skill4601505:OnActionOver(caster, target, data)
+-- 攻击结束
+function Skill4601505:OnAttackOver(caster, target, data)
 	-- 8071
 	if SkillJudger:TargetIsFriend(self, caster, target, true) then
 	else
@@ -35,48 +35,16 @@ function Skill4601505:OnActionOver(caster, target, data)
 	end
 	-- 8220
 	if SkillJudger:IsCanHurt(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8201
-	if SkillJudger:IsSingle(self, caster, target, true) then
 	else
 		return
 	end
 	-- 4601515
-	if self:Rand(3500) then
+	if self:Rand(8000) then
 		self:BeatBack(SkillEffect[4601515], caster, self.card, data, nill,7)
 	end
 end
--- 行动结束2
-function Skill4601505:OnActionOver2(caster, target, data)
-	-- 8071
-	if SkillJudger:TargetIsFriend(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8220
-	if SkillJudger:IsCanHurt(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8203
-	if SkillJudger:IsSingle(self, caster, target, false) then
-	else
-		return
-	end
-	-- 4601525
-	if self:Rand(8000) then
-		self:BeatBack(SkillEffect[4601525], caster, self.card, data, nill,8)
-	end
-end
--- 攻击结束
-function Skill4601505:OnAttackOver(caster, target, data)
+-- 行动结束
+function Skill4601505:OnActionOver(caster, target, data)
 	-- 8062
 	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else
@@ -87,6 +55,6 @@ function Skill4601505:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 4601535
-	self:AddBuffCount(SkillEffect[4601535], caster, self.card, data, 4601505,1,20)
+	-- 4601525
+	self:AddBuffCount(SkillEffect[4601525], caster, self.card, data, 4601505,1,999)
 end

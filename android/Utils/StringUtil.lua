@@ -586,7 +586,7 @@ end
 
 --匹配非特殊字符的文本 --支持空格 
 local regex = CS.System.Text.RegularExpressions.Regex("[^\\p{L}\\p{N}\\s+]+")
-local regex2 = CS.System.Text.RegularExpressions.Regex("[\\t+]+") 
+local regex2 = CS.System.Text.RegularExpressions.Regex("[\\r?\\n|\\r\\t+]+") 
 function this:FilterChar2(str)
     local result=""
     if str ~= "" and str ~= nil then

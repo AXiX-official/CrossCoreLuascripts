@@ -14,7 +14,14 @@ function this:Init()
     local _all = Cfgs.CfgCardRole:GetAll()
     for i, v in pairs(_all) do
         if (v.bShowInAltas) then
-            self.max = self.max + 1
+            if v.sShowTime then
+                local time = TimeUtil:GetTimeStampBySplit(v.sShowTime)
+                if TimeUtil:GetTime() >= time then
+                    self.max = self.max + 1
+                end
+            else
+                self.max = self.max + 1
+            end
         end
     end
     PlayerProto:GetCardRole()
@@ -255,7 +262,7 @@ function this:GetCG(cRoleId)
     return cfgs or {}
 end
 
--- 不显示在图鉴的不计算
+-- 不显示在图鉴的和不到开发时间的不计算 
 function this:GetCount()
     return self.count, self.max
 end

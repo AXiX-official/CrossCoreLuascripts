@@ -148,7 +148,7 @@ function SetBg()
     end
     CSAPI.SetGOActive(bg,currGroupData:GetShowType() ==1 )
     CSAPI.SetGOActive(before,currGroupData:GetShowType() > 2 and currGroupData:GetShowType() ~= 4)
-    CSAPI.SetGOActive(mask,currGroupData:GetShowType() ==1)
+    -- CSAPI.SetGOActive(mask,currGroupData:GetShowType() ==1)
 
     local iconName = currGroupData:GetIcon()
     if iconName~=nil and iconName~="" then

@@ -168,4 +168,8 @@ function this:GetFrameId()
 	return self.icon_frame or 1
 end
 
+function this:GetTitle()
+	return self.icon_title or 1
+end
+
 return this 

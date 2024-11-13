@@ -99,6 +99,15 @@ function FightMgrBase:Init(id, groupID, ty, seed, nDuplicateID)
 
     -- 事件处理
     self.oFightEventMgr = FightEventMgr(self)
+    self.tmpIdx = 0
+end
+
+function FightMgrBase:SetTmpIdx(idx)
+    self.tmpIdx = idx
+end
+
+function FightMgrBase:GetTmpIdx()
+    return self.tmpIdx
 end
 
 function FightMgrBase:AddPlayer(uid, teamID)
@@ -494,6 +503,12 @@ function FightMgrBase:ChangeStage(stage)
 
     -- 清除额外回合
     self.oForceNext = nil
+
+    if not self.nextTime then self.nextTime = 0 end
+
+    if self.currTurn then
+    end
+
 end
 
 function FightMgrBase:AfterChangeStage(stage)
@@ -1172,7 +1187,7 @@ function FightMgrBase:DoDeathEvent()
 end
 
 function FightMgrBase:CheckOver(isRoundOver)
-    -- LogDebugEx("FightMgrBase:CheckOver", self.nStep , self.nStepLimit, isRoundOver)
+    -- LogDebugEx("FightMgrBase:CheckOver", self.nStep , self.nStepLimit, isRoundOver or "false", self.needCheckOver and true or false)
 
     if self:IsPVE() then
         if self.nStepPVE > self.nStepLimit then
@@ -1228,6 +1243,7 @@ function FightMgrBase:CheckOver(isRoundOver)
     end
 
     self.needCheckOver = false
+    LogDebugEx("count ---", count[1], count[2])
 
     if count[1] == 0 then
         self:Over(self.stage, 2)
@@ -1236,7 +1252,7 @@ function FightMgrBase:CheckOver(isRoundOver)
         local stage = self.stage
 
         if self.arrStateID[stage + 1] then
-            --LogTrace()
+            -- LogTrace()
             self.needChangeStage = CURRENT_TIME + 3
         else
             self:Over(self.stage, 1)
@@ -1299,6 +1315,7 @@ function FightMgrBase:OnRoundOver()
     -- end
     local currTurn = self.currTurn
     self.currTurn = nil
+    -- LogTrace()
     return currTurn
 end
 
@@ -1352,7 +1369,9 @@ function FightMgrBase:OnTurnNext()
     LogDebugEx('FightMgrBase:OnTurnNext()')
 
     self:OnRoundOver() -- 由于回合结束触发了技能打死怪物, 导致切换切换周目
-    LogTable(self.log:GetAndClean())
+    if DEBUG then
+        LogTable(self.log:GetAndClean())
+    end
 
     -- 由于回合结束触发了技能打死怪物, 导致切换切换周目, 所以回合结束之后判断一次切换回合
     if self:AfterRoundOver() then
@@ -1918,10 +1937,17 @@ function FightMgrServer:DoSkill(data)
     LogDebug('客户端释放技能--')
     local caster = self:GetCardByOID(data.casterID)
     if caster ~= self.currTurn then
+        if not self.currTurn then
+            ASSERT(nil, "DoSkill:"..table.tostring(data))
+        end
         LogDebugEx(
             '当前发命令者:' .. caster.name .. '_' .. caster:GetTeamID(),
             '当前轮到:' .. self.currTurn.name .. '_' .. caster:GetTeamID()
         )
+        if not self.isSaveLog and IS_SERVER then  -- 这里可能是单机战斗
+            self:ClientError(self.uid or caster.uid or "", "数据不一致")
+        end
+        self.isSaveLog = true
         ASSERT(nil, '数据不一致')
     end
     local target
@@ -2043,6 +2069,7 @@ function FightMgrServer:OnRoundOver()
         self:PrintCardInfo('FightMgrServer:DoTurn---')
         LogDebug('##############玩家行动结束#################' .. currTurn.name)
         self.currTurn = nil
+        -- LogTrace()
         self:ResetTempSign()
 
     -- FightMgrBase.AfterRoundOver(self)
@@ -2168,6 +2195,7 @@ end
 function FightMgrClient:DoSkill(data)
     LogDebug('FightMgrClient:DoSkill')
     local caster = self:GetCardByOID(data.casterID)
+    caster.isDoSkill = true
     local target, pos
     -- 此处不一定是选中的是一个对象, 可能是一个空格子或死亡对象或非战斗对象,  需要根据技能再筛选出受技能的对象
     if data.target then
@@ -2546,13 +2574,17 @@ function FightMgrClient:ChangeStage(stage)
     local list = self.arrTeam[2].arrCard
     local datas = {}
 
+
+    self:PrintCardInfo("FightMgrClient:ChangeStage")
+
     for i, v in ipairs(list) do
         local data = v:GetShowData()
         table.insert(datas, data)
     end
 
+    LogTable(datas, "FightMgrClient:ChangeStage"..self.stage)
     FightActionMgr:PushSkill({{api = 'ChangeStage', round = self.stage, datas = datas, bgm = self:GetBgm()}})
-    Log('--切换周目-----------------------------------------------------------------', 'ffff00')
+    Log('--切换周目'..self.stage..'-----------------------------------------------------------------', 'ffff00')
 
     FightActionMgr:PushSkill(self.log:GetAndClean())
     self:AfterChangeStage()
@@ -2610,6 +2642,19 @@ end
 
 function FightMgrClient:OnRoundOver()
     local currTurn = self.currTurn
+    -- LogTrace()
+
+    -- 处理回合开始就弄死对面切换周目 前端无法结束--------
+    if currTurn and not currTurn.isDoSkill then
+        -- ASSERT(nil , "客户端还没有输入")
+        LogDebugEx("客户端还没有输入")
+        FightActionMgr:PushSkill({api = 'skip',targetID = currTurn.oid})
+    end
+    for i, v in ipairs(self.arrCard) do
+        v.isDoSkill = nil  -- 是否执行过技能
+    end
+    -- 处理结束----------------
+
 
     if FightMgrBase.OnRoundOver(self) then
         local log = {api = 'OnRoundOver'}
@@ -2827,6 +2872,7 @@ function FightMgrClient:GetCharData(oid)
     tAttr.fuid = card.fuid -- 好友id
     tAttr.isNpc = card.isNpc -- 是否npc
     tAttr.nStrategyIndex = card.nStrategyIndex -- ai方案ai策略
+    tAttr.isMonster = card.isMonster -- 是否从怪物表读取数据
 
     tAttr.nIndex = card.nIndex -- 卡牌在队伍中的排序,前端用的属性(后端无用, 在Team:LoadData赋值)
 
@@ -2921,7 +2967,7 @@ function PVEFightMgrServer:Over(stage, winer)
         local grade = {0, 0, 0} -- 评级
         local hpinfo = nil
         local nMinHpPercent = 1
-
+        local fCard = nil
         if winer == 1 then
             grade[1] = 1
             for i, v in ipairs(self.arrCard) do
@@ -2932,6 +2978,9 @@ function PVEFightMgrServer:Over(stage, winer)
                     if v.fuid then
                         -- arrSp[0] = v.sp
                         data[0] = {hp = math.floor(v.hp), maxhp = v.maxhp, sp = v.sp}
+                        fCard = {}
+                        fCard.data = {index = 6,col = v.col,row = v.row,cid = v.real_cid,nStrategyIndex = v.nStrategyIndex}
+                        fCard.fuid = v.fuid
                     elseif v.npcid then
                         -- arrSp[v.npcid] = v.sp
                         data[v.npcid] = {hp = math.floor(v.hp), maxhp = v.maxhp, sp = v.sp}
@@ -2971,6 +3020,10 @@ function PVEFightMgrServer:Over(stage, winer)
                     if v.configIndex then
                         data[v.configIndex] = v.hp
                     end
+                elseif v:GetTeamID() == 1 and v:IsCard() and v.fuid then
+                    fCard = {}
+                    fCard.data = {index = 6,col = v.col,row = v.row,cid = v.real_cid,nStrategyIndex = v.nStrategyIndex}
+                    fCard.fuid = v.fuid
                 end
             end
             hpinfo = {stage = self.stage, data = data}
@@ -2978,7 +3031,7 @@ function PVEFightMgrServer:Over(stage, winer)
 
         -- LogTable(self.arrNP, "self.arrNP")
         local cardCnt = self.arrTeam[1].nCardCount
-
+        local teamIdx = self.oDuplicate:GetTeamIndex() or 1
         -- 更新无限血排行榜
         if self.isInvincible then
             local nTotalDamage = 0
@@ -2991,9 +3044,19 @@ function PVEFightMgrServer:Over(stage, winer)
             end
             -- 更新排行榜
             local plr = self.oDuplicate.oPlayer
-            RankMgrGs:AddRankData(eRankType.SummerActiveRank, nTotalDamage, plr)
-            plr:UpdateAchieve(eAchieveFinishType.Fight, eAchieveEventType.Rank, {})
-            self.oDuplicate.hisMaxDamage = RankMgrGs:GetScoreByType(eRankType.SummerActiveRank, plr)
+            local rankType
+            if dupCfg.group then
+                if dupCfg.group == 3005 then
+                    rankType = eRankType.SummerActiveRank
+                elseif dupCfg.group == 3006 then
+                    rankType = eRankType.CentaurRank
+                end
+                if rankType then
+                    RankMgrGs:AddRankData(rankType, nTotalDamage, plr, teamIdx,fCard)
+                    plr:UpdateAchieve(eAchieveFinishType.Fight, eAchieveEventType.Rank, { rankType })
+                    self.oDuplicate.hisMaxDamage = RankMgrGs:GetScoreByType(rankType, plr)
+                end
+            end
         end
 
         self.oDuplicate:OnFightOver(
@@ -3164,6 +3227,7 @@ end
 
 function MirrorFightMgrServer:Destroy()
     LogDebug('MirrorFightMgrServer:Destroy')
+    LogTable(self.arrPlayer)
     for i, v in ipairs(self.arrPlayer) do
         FightHelp:Destroy(v.uid)
     end

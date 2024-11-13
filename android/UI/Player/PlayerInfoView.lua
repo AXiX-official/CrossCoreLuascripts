@@ -123,6 +123,8 @@ function Show(_data)
         end
         SetBadge(datas)
     end
+
+    UIUtil:AddTitleByID(titleParent,0.8,info.icon_title)
 end
 
 function OnOpen()

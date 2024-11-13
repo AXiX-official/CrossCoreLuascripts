@@ -33,6 +33,7 @@ function this:GetFunc(sName)
         self.funcs["RogueView"] = self.DungeonActivity
         self.funcs["DungeonSummer"] = self.DungeonActivity
         self.funcs["RogueSView"] = self.DungeonActivity
+        self.funcs["DungeonNight"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -45,7 +46,9 @@ function this:GetFunc(sName)
         self.funcs["SpeicalJump"] = self.SpeicalJump
         self.funcs["AchievementView"] = self.Achievement
         self.funcs["RegressionList"] = self.RegressionList
+        self.funcs["LovePlus"] = self.LovePlus
         self.funcs["TWWeb"] = self.TWWeb
+        self.funcs["ColosseumView"] = self.ColosseumView
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -82,6 +85,15 @@ end
 function this.Normal(cfg)
     this.CheckClose(cfg);
     CSAPI.OpenView(cfg.sName, nil, tonumber(cfg.page))
+end
+
+function this.ColosseumView(cfg)
+    this.CheckClose(cfg);
+    CSAPI.OpenView(cfg.sName, nil, tonumber(cfg.page))
+    --
+    if(CSAPI.IsViewOpen("ColosseumMissionView"))then 
+        CSAPI.CloseView("ColosseumMissionView")
+    end 
 end
 
 -- 设置类型或分页
@@ -257,13 +269,11 @@ function this.DungeonActivity(cfg)
                 end
             else
                 this.CheckClose(cfg);
-                FuncUtil:Call(function ()
                 CSAPI.OpenView(viewName, {
                     id = cfg.val1,
                     type = cfg.val2,
                     itemId = cfg.val3
                 }, nil)
-                end,nil,100)
             end
         else
             if (cfg.sName == "RogueView" or cfg.sName == "RogueSView") then
@@ -554,6 +564,10 @@ function this.RegressionState(cfg)
     else
         return JumpModuleState.Lock, LanguageMgr:GetTips(38002);
     end
+end
+
+function this.LovePlusState(cfg)
+    return JumpModuleState.Normal
 end
 
 -- 是否禁止跳转

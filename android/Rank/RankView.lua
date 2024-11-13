@@ -93,7 +93,7 @@ function SetMyData()
     CSAPI.SetText(txtName, info:GetName())
     -- 等级
     local lvStr = LanguageMgr:GetByID(1033) or "LV."
-    CSAPI.SetText(txtLv, lvStr .. info:GetLevel())
+    CSAPI.SetText(txtLv, "" .. info:GetLevel())
     -- 排名
     CSAPI.SetGOActive(txtRank1, rank < 4)
     CSAPI.SetText(txtRank1, (rank < 4 and rank ~= 0) and rank .. "" or "-")
@@ -107,5 +107,6 @@ function SetMyData()
     --     ResUtil.RoleCard:Load(icon, _cfg.icon, true)
     -- end
     UIUtil:AddHeadFrame(hfParent, 0.9)
+    UIUtil:AddTitle(titleParent,1)
 end
 

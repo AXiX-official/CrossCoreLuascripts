@@ -35,6 +35,7 @@ function SetCount()
     end
 end
 
+
 function OnClickOK()
 	local cfg = Cfgs.ItemInfo:GetByID(25001)
 	if cfg then
@@ -44,8 +45,25 @@ function OnClickOK()
 			return
 		end
 	end
+	playerName = inpName.text
+	if CSAPI.IsADV() then
+		local Len1 = GLogicCheck:GetStringLen(playerName)
+		playerName = playerName:gsub("^%s*(.-)%s*$", "%1")
+		local Len2 = GLogicCheck:GetStringLen(playerName)
+		if Len1 ~= Len2 then
+			local dialogData = {}
+			dialogData.content = LanguageMgr:GetTips(9011)
+			dialogData.okCallBack = OnNameCheck
+			CSAPI.OpenView("Dialog",dialogData)
+		else
+			OnNameCheck()
+		end
+	else
+		OnNameCheck()
+	end
+end
 
-    playerName = inpName.text
+function OnNameCheck()
 	if playerName == nil or playerName == "" then
 		Tips.ShowTips(LanguageMgr:GetByID(16005));
 		return
@@ -70,10 +88,12 @@ function OnClickOK()
 
 		PlayerProto:PlrNameCheckUse({name = playerName},function(proto)
 			EventMgr.Dispatch(EventType.Net_Msg_Getted,"name_change_check");
-			if proto and not proto.isUse then
-				PlayerProto:ChangePlrName(playerName, 25001)
-			else
-				Tips.ShowTips(LanguageMgr:GetByID(16076));
+			if proto and proto.isUse ~= nil then
+				if proto.isUse == false then
+					PlayerProto:ChangePlrName(playerName, 25001)
+				else
+					Tips.ShowTips(LanguageMgr:GetByID(16076));
+				end
 			end
 		end)
 	end

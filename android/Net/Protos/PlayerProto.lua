@@ -1131,9 +1131,10 @@ function PlayerProto:CardChangeOpenNotice(proto)
 end
 
 -- 活动入场卷购买
-function PlayerProto:BuyArachnidCount(_buy_cnt)
+function PlayerProto:BuyArachnidCount(_buy_cnt,_sectionId)
     local proto = {"PlayerProto:BuyArachnidCount", {
-        buy_cnt = _buy_cnt
+        buy_cnt = _buy_cnt,
+        sectionId = _sectionId
     }}
     NetMgr.net:Send(proto)
 end
@@ -1368,6 +1369,7 @@ function PlayerProto:SetNewPanelUsing(_using)
     local proto = {"PlayerProto:SetNewPanelUsing",{using = _using}}
     NetMgr.net:Send(proto)
 end
+
 function PlayerProto:SetNewPanelUsingRet(proto)
     CRoleDisplayMgr:SetNewPanelUsingRet(proto)
 end
@@ -1381,6 +1383,37 @@ end
 --活动排行榜返回
 function PlayerProto:GetRankRet(proto)
     DungeonActivityMgr:GetRankRet(proto)
+end
+
+--请求查看排行榜阵容
+function PlayerProto:GetRankTeamInfo(type,index,cb)
+    self.RankTeamInfoCallBack = cb
+    local proto = {"PlayerProto:GetRankTeamInfo", {rankType=type,rankIdx=index}}
+    NetMgr.net:Send(proto)
+end
+
+--请求查看排行榜阵容返回
+function PlayerProto:GetRankTeamInfoRet(proto)
+    if self.RankTeamInfoCallBack then
+        self.RankTeamInfoCallBack(proto)
+        self.RankTeamInfoCallBack = nil
+    end
+    if self.CopyRankTeamCallBack then
+        self.CopyRankTeamCallBack(proto)
+        self.CopyRankTeamCallBack = nil
+    end
+end
+
+--请求替换排行榜阵容
+function PlayerProto:CopyRankTeam(type,index,cb)
+    self.CopyRankTeamCallBack = cb
+    local proto = {"PlayerProto:CopyRankTeam", {rankType=type,rankIdx=index}}
+    NetMgr.net:Send(proto)
+end
+
+--请求替换排行榜阵容
+function PlayerProto:ClearRank(proto)
+    DungeonActivityMgr:ClearRank(proto)
 end
 
 function PlayerProto:GetOpenConditionTime()
@@ -1405,11 +1438,14 @@ end
 ------3639
 function PlayerProto:PayFinishOrderId(proto)
     if proto then
-        if CSAPI.IsDomestic() then
-            if proto.gameOrderId then
-                ShiryuSDK.ClosePurchasePage(proto.gameOrderId)
-            else
-                LogError(" PlayerProto:PayFinishOrderId:"..tostring(proto,true))
+        if CSAPI.IsADV() then
+        else
+            if CSAPI.IsDomestic() then
+                if proto.gameOrderId then
+                    ShiryuSDK.ClosePurchasePage(proto.gameOrderId)
+                else
+                    LogError(" PlayerProto:PayFinishOrderId:"..tostring(proto,true))
+                end
             end
         end
     end
@@ -1431,3 +1467,12 @@ function PlayerProto:SettingRet(proto)
     end
 end
 
+--称号
+function PlayerProto:SetIconTitle(_icon_title)
+    local proto = {"PlayerProto:SetIconTitle",{icon_title = _icon_title}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetIconTitleRet(proto)
+    PlayerClient:SetIconTitle(proto.icon_title)
+    EventMgr.Dispatch(EventType.Head_Title_Change, proto)
+end

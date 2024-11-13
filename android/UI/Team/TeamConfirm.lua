@@ -657,6 +657,7 @@ function InitRogue()
     startTeamIdx = eTeamType.Rogue;
     endTeamIdx =  eTeamType.Rogue;
     teamMax=1;
+    LanguageMgr:SetText(txtRogue,50011)
     CSAPI.SetGOActive(txtRogue,true)
     CSAPI.SetGOActive(rogueMonster,true)
     CSAPI.CreateGOAsync("UIs/DungeonItemInfo/DungeonInfoDetailsRogue", 0, 0, 0, rogueMonster, function(go)

@@ -56,6 +56,8 @@ local resRecoveryEndTime = nil
 local webCheckTime = nil
 
 local petStateTime = nil;
+local menuStandbyTimer = nil
+
 -- 主界面
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject); -- 节点添加
@@ -123,6 +125,9 @@ function InitPanel()
 
     -- 锁屏动画
     uiEffect = ComUtil.GetCom(node, "UIEffectControl")
+     
+    --待机界面
+    menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
 
     cg_node.alpha = 0
     CSAPI.SetGOActive(anims, false)
@@ -728,6 +733,16 @@ function Update()
         SetEnter();
         petStateTime = PetActivityMgr:GetEmotionChangeTimestamp();
     end
+
+    --待机界面
+    if (menuStandbyTimer and Time.time > menuStandbyTimer) then
+        menuStandbyTimer = nil
+        if (openViews["Guide"] ~= nil) then
+            menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
+        else
+            CSAPI.OpenView("MenuStandby")
+        end
+    end
 end
 ----------------------------------------动画+红点-----------------------------------------------】
 -- 处理动画在某个关键帧上的事件
@@ -971,8 +986,9 @@ function OnRedPointRefresh()
         local _pData = RedPointMgr:GetData(RedPointType.HeadFrame)
         local _pData2 = RedPointMgr:GetData(RedPointType.Head)
         local _pData3 = RedPointMgr:GetData(RedPointType.Badge)
+        local _pData4 = RedPointMgr:GetData(RedPointType.Title)
         local _isRed = false
-        if (_pData ~= nil or _pData2 ~= nil or _pData3 ~= nil) then
+        if (_pData ~= nil or _pData2 ~= nil or _pData3 ~= nil or _pData4 ~= nil) then
             _isRed = true
         end
         UIUtil:SetRedPoint2(menuRedPath, btnPlayerView, _isRed, 169.4, -6.1, 0)
@@ -1799,7 +1815,14 @@ function OnViewOpened(viewKey)
     -- if (viewKey == "CRoleDisplayMain") then
     --     CSAPI.SetGOActive(centre, false)
     -- end
-
+    closeViews = closeViews or {}
+    for k, v in ipairs(closeViews) do
+        if(v==viewKey)then 
+            table.remove(closeViews,k)
+            break
+        end 
+    end
+    
     local cfg = Cfgs.view:GetByKey(viewKey)
     if (not cfg.top_mask) then
         openViews[viewKey] = cfg.is_window and 2 or 1
@@ -1833,7 +1856,7 @@ function OnViewClosed(viewKey)
     end
     isApplyRefresh = 1
     if(gameObject~=nil) then 
-        FuncUtil:Call(OnViewCloseds, nil, 10)
+        FuncUtil:Call(OnViewCloseds, nil, 50)
     end 
 end 
 
@@ -2158,6 +2181,7 @@ function HidePanel(viewKey, open)
                 CRoleDisplayMgr:NormalCheck2()
             end
             SetLook(viewKey, open)
+            menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
         end
     else
         if (not openViews[viewKey] or openViews[viewKey] == 2) then
@@ -2171,6 +2195,7 @@ function HidePanel(viewKey, open)
                 end
                 SetLook(viewKey, open)
             end
+            menuStandbyTimer = nil
         end
     end
     -- 如果仅Guide在上层则关闭mask
@@ -2187,7 +2212,7 @@ function HidePanel(viewKey, open)
 end
 
 function SetLook(viewKey, open)
-    if (not loadingComplete) then
+    if (not loadingComplete or viewKey=="MenuStandby") then
         return
     end
     if (not open) then

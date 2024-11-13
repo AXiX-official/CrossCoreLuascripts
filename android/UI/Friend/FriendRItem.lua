@@ -44,6 +44,8 @@ function Refresh(_data, _sign)
 		--id
 		-- CSAPI.SetText(txtID, "ID:" .. data:GetUid() .. "")
 		CSAPI.SetText(txtID,LanguageMgr:GetByID(8028) .. data:GetUid())
+		--title
+		UIUtil:AddTitleByID(titleParent,0.6,data:GetTitle())
 		--online
 		local onlineName =	data:IsOnLine()	and "online" or "offline"
 		CSAPI.LoadImg(lineImg, "UIs/Friend/" .. onlineName .. ".png", true, nil, true)

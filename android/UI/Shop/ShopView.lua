@@ -434,9 +434,10 @@ function InitSV(donReset)
             else--固定商品排序
                 table.sort(curDatas,ShopCommFunc.SortComm)
             end
-            if ShopCommFunc.IsRecordRefreshInfo(currPageData:GetID()) then --记录一次当前列表刷新时间
+            local childID=currChildPage and currChildPage.id or nil;
+            local key=childID and currPageData:GetID().."_"..childID or currPageData:GetID();
+            if ShopCommFunc.IsRecordRefreshInfo(key) then --记录一次当前列表刷新时间
                 local nowTime=TimeUtil:GetTime();
-                local childID=currChildPage and currChildPage.id or nil;
                 local checkList=currPageData:GetRefreshInfos(childID);
                 ShopCommFunc.IsRefreshCommodityInfos(checkList,nowTime);
             end
@@ -908,6 +909,7 @@ function OnChildTabChange(eventData)
     --     info:SetRed(false);
     --     RoleAudioPlayMgr:StopSound();
     -- end
+    
     Refresh();
 end
 

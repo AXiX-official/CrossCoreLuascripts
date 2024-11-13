@@ -27,6 +27,8 @@ eDuplicateType.NewTower        = 9 -- 异构空间
 eDuplicateType.Rogue           = 10 -- 乱序演习
 eDuplicateType.StarPalace      = 11 -- 十二星宫
 eDuplicateType.RogueS	       = 12 -- 战力派遣
+eDuplicateType.AbattoirSelect  = 13 -- 角斗场自选模式
+eDuplicateType.AbattoirRand	   = 14 -- 角斗场随机模式
 
 eDuplicateType.Materials       = 101 -- 材料副本
 eDuplicateType.Equip           = 102 -- 装备副本
@@ -34,7 +36,8 @@ eDuplicateType.Gold            = 103 --金币
 eDuplicateType.Exp             = 104 --经验
 eDuplicateType.Skill           = 105 --技能材料
 eDuplicateType.StoryActive     = 106 --剧情活动
-
+--eDuplicateType.Rogue           = 108 --乱序、战力派遣
+--eDuplicateType.Colosseum       = 109 --角斗场
 GenEnumNameByVal('eDuplicateTypeName', eDuplicateType)
 
 eDuplicateTypeChName                 = {}

@@ -1,8 +1,7 @@
 local cfgs = nil
 local curIndex = 0
 local rightItems = {}
-local openCfgs = {} -- 开启的活动
-local list = {}
+local datas = {} -- 开启的活动
 local curItem = nil
 local btnCallBack = nil
 local top = nil
@@ -24,6 +23,7 @@ function OnEnable()
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
     eventMgr:AddListener(EventType.Update_Everyday, OnDayRefresh)
     eventMgr:AddListener(EventType.Acitivty_List_Pop,CheckNextView)
+    eventMgr:AddListener(EventType.Activity_List_Panel_Refresh,OnPanelRefresh)
 end
 
 function OnItemSelect(_type)
@@ -45,7 +45,7 @@ end
 
 function OnRedPointRefresh()
     for i, v in ipairs(leftPanel.leftItems) do
-        local isRed = ActivityMgr:CheckRed(openCfgs[i].id)
+        local isRed = ActivityMgr:CheckRed(datas[i]:GetID())
         isRed = i == curIndex1 and false or isRed
         v.SetRed(isRed)
     end
@@ -58,6 +58,17 @@ function OnDayRefresh()
     UIUtil:ToHome()
 end
 
+function OnPanelRefresh()
+    local _data = datas[curIndex]
+    if not _data:IsOpen() then
+        curIndex = 0
+        curIndex1 = 1
+        InitLeftPanel()
+        CSAPI.SetGOActive(emptyObj,datas == nil or #datas < 1)
+    end
+    CheckNextView()
+end
+
 function OnDisable()
     eventMgr:ClearListener();
 end
@@ -65,11 +76,11 @@ end
 function OnOpen()
     group = openSetting or 1
     InitLeftPanel()
-    if openCfgs and #openCfgs > 0 then
+    if datas and #datas > 0 then
         CheckNextView(data)
     end
 
-    CSAPI.SetGOActive(emptyObj,openCfgs == nil or #openCfgs < 1)
+    CSAPI.SetGOActive(emptyObj,datas == nil or #datas < 1)
 end
 
 function InitLeftPanel()
@@ -78,38 +89,42 @@ function InitLeftPanel()
         leftPanel = ComUtil.GetLuaTable(go)
     end
     local leftDatas = {}
-    openCfgs = ActivityMgr:GetArr(tonumber(group))
+    datas = ActivityMgr:GetArr(tonumber(group))
     if CSAPI.IsADV() then
         if AdvBindingRewards.isHadReward==false then
-            if openCfgs then
-                for i, v in ipairs(openCfgs) do
-                    if openCfgs[i].id==2001 then
-                        table.remove(openCfgs,i)
+            if #datas > 0 then
+                for i, v in ipairs(datas) do
+                    if v:GetID()==2001 then
+                        table.remove(datas,i)
                         break;
                     end
                 end
             end
         end
     end
-    for i, v in ipairs(openCfgs) do
-        list[v.id] = {index = i} --记录当前类型的顺序
-        table.insert(leftDatas,{v.leftInfo[1].id, v.leftInfo[1].path})
+    if #datas > 0 then
+        for i, v in ipairs(datas) do
+            if v:GetLeftInfos() then
+                table.insert(leftDatas,{v:GetLeftInfos()[1].id, v:GetLeftInfos()[1].path})
+            end
+        end
     end
+
     leftPanel.Init(this, leftDatas)
 end
 
-function CheckNextView(_type)
-    local nextType = ActivityMgr:TryGetNextType(group)
-    if (_type == nil and nextType) then
-        _type = nextType
+function CheckNextView(_id)
+    local nextId = ActivityMgr:TryGetNextId(group)
+    if (_id == nil and nextId) then
+        _id = nextId
     end
-    SetRightPanel(_type)
+    SetRightPanel(_id)
 end
 
-function SetRightPanel(_type)
-    if (_type and openCfgs) then
-        for i, v in ipairs(openCfgs) do
-            if (v.id == _type) then
+function SetRightPanel(_id)
+    if (_id and datas) then
+        for i, v in ipairs(datas) do
+            if (v:GetID() == _id) then
                 curIndex1 = i
                 break
             end
@@ -139,50 +154,50 @@ function RefreshPanel()
 end
 
 function SetRight()
-    local cfg = openCfgs[curIndex]
-    if (cfg) then
-        if cfg.path and (cfg.id == ActivityListType.SignInContinue or cfg.id == ActivityListType.Investment or ActivityListType.DropAdd) then
+    local _data = datas[curIndex]
+    if (_data) then
+        if _data:GetPath() and (_data:GetType() == ActivityListType.SignInContinue or _data:GetType() == ActivityListType.Investment or _data:GetType() == ActivityListType.DropAdd) then
             CSAPI.SetGOActive(imgParent,false)
         else
             CSAPI.SetGOActive(imgParent,true)
         end
 
-        ShowTop(cfg)
-        ShowQusetion(cfg)
+        ShowTop(_data)
+        ShowQusetion(_data)
 
-        local data,esleData = GetInfo(cfg)
+        local info,esleData = GetInfo(_data)
 
-        if (rightItems[cfg.id]) then
-            CSAPI.SetGOActive(rightItems[cfg.id].gameObject, true)
-            rightItems[cfg.id].isFirst = false
-            rightItems[cfg.id].Refresh(data, esleData)
-            UIUtil:SetObjFade(rightItems[cfg.id].gameObject,0,1,nil,200)
-            curItem = rightItems[cfg.id]
+        if (rightItems[_data:GetID()]) then
+            CSAPI.SetGOActive(rightItems[_data:GetID()].gameObject, true)
+            rightItems[_data:GetID()].isFirst = false
+            rightItems[_data:GetID()].Refresh(info, esleData)
+            UIUtil:SetObjFade(rightItems[_data:GetID()].gameObject,0,1,nil,200)
+            curItem = rightItems[_data:GetID()]
         else
-            if (cfg.path) then
-                ResUtil:CreateUIGOAsync(cfg.path, right, function(go)
+            if (_data:GetPath()) then
+                ResUtil:CreateUIGOAsync(_data:GetPath(), right, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(data, esleData)
+                    lua.Refresh(info, esleData)
                     UIUtil:SetObjFade(go,0,1,nil,200)
-                    rightItems[cfg.id] = lua
+                    rightItems[_data:GetID()] = lua
                     curItem = lua
                 end)
             else
-                LogError("找不到对应位置的预设体！！！" .. cfg.id)
+                LogError("找不到对应位置的预设体！！！" .. _data:GetID())
             end
         end
         curData = nil
 
-        PlayerPrefs.SetInt(PlayerClient:GetUid() .."_Activity_Red_" .. cfg.id,1)
-        ActivityMgr:CheckRedPointData(cfg.id)
+        PlayerPrefs.SetInt(PlayerClient:GetUid() .."_Activity_Red_" .. _data:GetID(),1)
+        ActivityMgr:CheckRedPointData(_data:GetType())
     end
 end
 
-function ShowTop(_cfg)
-    if _cfg.path and _cfg.id == ActivityListType.Investment then
+function ShowTop(_data)
+    if _data:GetPath() and _data:GetType() == ActivityListType.Investment then
         top.SetMoney({{ITEM_ID.DIAMOND,140001}})
-    elseif _cfg.id == ActivityListType.Exchange then
-        local info =_cfg.info and _cfg.info[1] or nil
+    elseif _data:GetType() == ActivityListType.Exchange then
+        local info =_data:GetInfo() and _data:GetInfo()[1] or nil
         local tab = {}
         if info and info.goodId then
             tab = {{info.goodId}}
@@ -193,18 +208,18 @@ function ShowTop(_cfg)
     end
 end
 
-function ShowQusetion(_cfg)
-    local info =_cfg.info
+function ShowQusetion(_data)
+    local info =_data:GetInfo()
     local isShow = false
     if info and info[1] and info[1].moduleInfo then
-        UIUtil:AddQuestionItem(_cfg.moduleInfo, gameObject, qusetion)
+        UIUtil:AddQuestionItem(info[1].moduleInfo, gameObject, qusetion)
         isShow = true
     end
     CSAPI.SetGOActive(qusetion, isShow)
 end
 
-function GetInfo(_cfg)
-    local data,elseData = ActivityMgr:TryGetData(_cfg.id),{cfg = _cfg}
+function GetInfo(_data)
+    local data,elseData = ActivityMgr:TryGetData(_data:GetID()),{cfg = _data:GetCfg()}
     return data,elseData
 end
 

@@ -136,7 +136,8 @@ function GCalHelp:GetTimeStampBySplit(sDate, tModule)
         return rt[1] * 3600 + rt[2] * 60 + rt[3]
     elseif len == 6 then
         local parm = {year = rt[1], month = rt[2], day = rt[3], hour = rt[4], min = rt[5], sec = rt[6]}
-        local dt = os.time(parm)
+        local isOk, dt = pcall(os.time, parm)
+        ASSERT(isOk, table.Encode({ errMsg = dt, parm = parm, sDate = sDate, tModule = tModule }))
         return dt
     else
         LogError('sDate %s split error!!!!!!!', sDate)
@@ -759,6 +760,7 @@ function GCalHelp:CalAccTypeByInfo(info, curTime)
 
     -- LogInfo("GCalHelp:CalAccTypeByInfo age:%s", age)
     local cfgs = CfgAccTypeLimit[AccType.Plr]
+    -- LogTable(CfgAccTypeLimit, "CfgAccTypeLimit:")
     -- LogTable(cfgs, "cfgs:")
     for index, cfg in pairs(cfgs.infos) do
         if GLogicCheck:IsInRange(cfg.ageLimitA, cfg.ageLimitB, age) then
@@ -2425,9 +2427,34 @@ function GCalHelp:CheckSameMonth(time, curTime)
     end
     return true
 end
+
 function GCalHelp:GetActiveResetTime(setType, diff, curTime)
     curTime = curTime or CURRENT_TIME
     local dayDiffs = g_ActivityDiffDayTime * 3600
 
     return GCalHelp:GetCycleResetTime(setType, diff, curTime - dayDiffs) + dayDiffs
+end
+
+
+function GCalHelp:GetTimestampByTime(hour, minute, second)
+    -- 获取当前日期
+    local current_date = os.date("*t")
+
+    -- 构造特定时间
+    current_date.hour = hour
+    current_date.min = minute
+    current_date.sec = second
+
+    -- 转换为时间戳
+    local timestamp = os.time(current_date)
+
+    return timestamp
+end
+
+function GCalHelp:CalMailFrom(baseFrom, acc, logId)
+    if not acc and not logId then
+        return baseFrom
+    end
+    
+    return string.format("%s_acc[%s]_logId[%s]", baseFrom, acc, logId)
 end

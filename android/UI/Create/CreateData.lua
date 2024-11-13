@@ -239,4 +239,18 @@ function this:CheckConditions()
     return true 
 end
 
+----------------------------------免费抽卡-------------------------------------------
+function this:IsOneFree()
+    -- 在时间内
+    if (not CreateMgr:IsFreeInTime()) then
+        return false
+    end
+    -- 是免费抽卡的卡池，有次数
+    if (self:GetCfg().canFreeUse and CreateMgr:GetFreeCnt() > 0) then
+        return true
+    end
+    return false
+end
+
+
 return this

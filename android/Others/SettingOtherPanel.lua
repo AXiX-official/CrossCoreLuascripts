@@ -1,54 +1,61 @@
-local tab1 = nil
-local tab2 = nil
-local curIndex1 = nil
-local curIndex2 = nil
+local liveIndex = nil
+local equipIndex = nil
+
+local names ={s_wait_scale.waitTime,s_wait_scale.timeFormat,s_wait_scale.style,s_wait_scale.tips,s_wait_scale.time,s_wait_scale.electric,s_wait_scale.date,s_wait_scale.rotate}
+local tabNames = {"djsjTab","sjgsTab","djfgTab","gntsTab","sjxsTab","dlxsTab","rqxsTab","lhxsTab"}
+
+function SetCloseCallBack(_cb)
+    cb = _cb
+end
 
 function Awake()
     CSAPI.SetGOActive(mask ,false)
     
-    curIndex1 = SettingMgr:GetValue(s_other_live_key) or s_other_live_default
-    curIndex2 = SettingMgr:GetValue(s_other_equipLock_key) or s_other_equipLock_default
-    if not curIndex1 or curIndex1 == 0 then
-        curIndex1 = s_other_live_default
+    liveIndex = SettingMgr:GetValue(s_other_live_key) or s_other_live_default
+    equipIndex = SettingMgr:GetValue(s_other_equipLock_key) or s_other_equipLock_default
+    if not liveIndex or liveIndex == 0 then
+        liveIndex = s_other_live_default
     end
-    if not curIndex2 or curIndex2 == 0 then
-        curIndex2 = s_other_equipLock_default
+    if not equipIndex or equipIndex == 0 then
+        equipIndex = s_other_equipLock_default
     end
 
     SetLive()
     SetAuto()
+
+    InitWaitSetting()
 end
 
 --直播模式
 function SetLive()
-    CSAPI.SetGOActive(zbms_open,curIndex1 == 1)
-    CSAPI.SetGOActive(zbms_close,curIndex1 == 2)
+    CSAPI.SetGOActive(zbms_open,liveIndex == 1)
+    CSAPI.SetGOActive(zbms_close,liveIndex == 2)
 end
 
 --自动上锁
 function SetAuto()
-    CSAPI.SetGOActive(zdss_open,curIndex2 == 1)
-    CSAPI.SetGOActive(zdss_close,curIndex2 == 2)
+    CSAPI.SetGOActive(zdss_open,equipIndex == 1)
+    CSAPI.SetGOActive(zdss_close,equipIndex == 2)
 end
 
 function OnClickLive()
-    local index = curIndex1 == 1 and 2 or 1
+    local index = liveIndex == 1 and 2 or 1
     if index == 1 then
         local dialogData = {}
         dialogData.content = LanguageMgr:GetTips(7008)
         dialogData.okCallBack=function ()
-            curIndex1 = 1
+            liveIndex = 1
             SetLive()
-            SettingMgr:SaveValue(s_other_live_key, curIndex1)
-            EventMgr.Dispatch(EventType.Setting_Live_Change, curIndex1)
+            SettingMgr:SaveValue(s_other_live_key, liveIndex)
+            EventMgr.Dispatch(EventType.Setting_Live_Change, liveIndex)
             LanguageMgr:ShowTips(7011)
         end
         CSAPI.OpenView("Dialog",dialogData)
     else
-        curIndex1 = 2
+        liveIndex = 2
         SetLive()
-        SettingMgr:SaveValue(s_other_live_key, curIndex1)
-        EventMgr.Dispatch(EventType.Setting_Live_Change, curIndex1)
+        SettingMgr:SaveValue(s_other_live_key, liveIndex)
+        EventMgr.Dispatch(EventType.Setting_Live_Change, liveIndex)
         LanguageMgr:ShowTips(7010)
     end
 end
@@ -60,7 +67,7 @@ function OnClickTips()
 end
 
 function OnClickAuto()
-    local index = curIndex2 == 1 and 2 or 1
+    local index = equipIndex == 1 and 2 or 1
     CSAPI.SetGOActive(mask ,true)
     EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="zdss",time=1000,
     timeOutCallBack=function()
@@ -72,9 +79,9 @@ function OnClickAuto()
         CSAPI.SetGOActive(mask ,false)
         if b then
             EventMgr.Dispatch(EventType.Net_Msg_Getted,"zdss")
-            curIndex2 = index
+            equipIndex = index
             SetAuto()    
-            SettingMgr:SaveValue(s_other_equipLock_key, curIndex2)
+            SettingMgr:SaveValue(s_other_equipLock_key, equipIndex)
             LanguageMgr:ShowTips(index == 1 and 7011 or 7010)
         else
             LanguageMgr:ShowTips(7012)
@@ -96,3 +103,116 @@ function SetFade(isOpen,callback)
     end
 end
 
+--------------------------------------------待机设置--------------------------------------------
+function InitWaitSetting()
+    local info = g_HoldOnTime
+    if info then
+        LanguageMgr:SetText(txtDjsj1,68010,info[1])
+        LanguageMgr:SetText(txtDjsj2,68010,info[2])
+        LanguageMgr:SetText(txtDjsj3,68010,info[3])
+    end
+    for i, v in ipairs(names) do
+        this["curIndex" .. i] = SettingMgr:GetValue(v)
+        this["tab" .. i] = ComUtil.GetCom(this[tabNames[i]].gameObject,"CTab")
+        this["tab" .. i].defaultSelIndex = this["curIndex" .. i]
+        this["tab" .. i]:AddSelChangedCallBack(this["OnTabChanged" .. i])
+    end
+end
+
+function OnTabChanged1(index)
+    if CheckIsChange(1,index) then
+        
+    end
+end
+
+function OnTabChanged2(index)
+    if CheckIsChange(2,index) then
+        
+    end
+end
+
+function OnTabChanged3(index)
+    if CheckIsChange(3,index) then
+        SetUnity()
+    end
+end
+
+function OnTabChanged4(index)
+    if CheckIsChange(4,index) then
+        SetCustom(index)
+    end
+end
+
+function OnTabChanged5(index)
+    if CheckIsChange(5,index) then
+        SetCustom(index)
+    end
+end
+
+function OnTabChanged6(index)
+    if CheckIsChange(6,index) then
+        SetCustom(index)
+    end
+end
+
+function OnTabChanged7(index)
+    if CheckIsChange(7,index) then
+        SetCustom(index)
+    end
+end
+
+function OnTabChanged8(index)
+    if CheckIsChange(8,index) then
+        SetCustom(index)
+    end
+end
+
+function CheckIsChange(curIndex,index)
+    if this["curIndex" .. curIndex] ~= index then
+        this["curIndex" .. curIndex] = index
+        SettingMgr:SaveValue(names[curIndex], index)
+        return true
+    end
+    return false
+end
+
+--统一设置
+function SetUnity()
+    if this["curIndex3"] < 2 then
+        local index = this["curIndex3"]
+        for i = 4, 8 do
+            if CheckIsChange(i,index) then
+                this["tab" .. i].selIndex = index
+            end
+        end
+    end
+end
+
+--自定义设置
+function SetCustom(index)
+    local isCustom = false
+    for i = 4, 8 do
+        if this["curIndex" .. i] ~= index then
+            isCustom = true
+            break
+        end
+    end
+    if isCustom then
+        if this["curIndex3"] < 2 then
+            CheckIsChange(3,2)
+            this["tab2"].selIndex = 2    
+        end
+    else
+        if this["curIndex3"] == 2 then
+            CheckIsChange(3,index)
+            this["tab2"].selIndex = index    
+        end
+    end
+end
+
+function OnClickEnter()
+    CSAPI.OpenView("MenuStandby")
+    if cb then
+        cb()
+    end
+end

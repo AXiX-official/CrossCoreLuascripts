@@ -21,6 +21,9 @@ local btnFade2 = nil
 local canvasGroup = nil
 ---国内超时1.5秒， 国外2.5秒
 local TimeOutCount=1500;
+--正则
+local regex = nil
+local regex2 = nil --特殊控制字符
 function Awake()
 	if CSAPI.IsADV() then
 		TimeOutCount=2500;
@@ -128,6 +131,24 @@ end
 function OnClickOK()
 	isBirthday = false
 	playerName = inpName.text
+	if CSAPI.IsADV() then
+		local Len1 = GLogicCheck:GetStringLen(playerName)
+		playerName = playerName:gsub("^%s*(.-)%s*$", "%1")
+		local Len2 = GLogicCheck:GetStringLen(playerName)
+		if Len1 ~= Len2 then
+			local dialogData = {}
+			dialogData.content = LanguageMgr:GetTips(9011)
+			dialogData.okCallBack = OnNameCheck
+			CSAPI.OpenView("Dialog",dialogData)
+		else
+			OnNameCheck()
+		end
+	else
+		OnNameCheck()
+	end
+end
+
+function OnNameCheck()
 	if playerName == nil or playerName == "" then
 		Tips.ShowTips(LanguageMgr:GetByID(16005));
 		return
@@ -164,10 +185,12 @@ function OnClickOK()
 
 	PlayerProto:PlrNameCheckUse({name = playerName},function(proto)
 		EventMgr.Dispatch(EventType.Net_Msg_Getted,"name_check");
-		if proto and not proto.isUse then
-			SetConfirm(true);
-		else
-			Tips.ShowTips(LanguageMgr:GetByID(16076));
+		if proto and proto.isUse ~= nil then
+			if proto.isUse == false then
+				SetConfirm(true);
+			else
+				Tips.ShowTips(LanguageMgr:GetByID(16076));
+			end
 		end
 	end)
 	BuryingPointMgr:BuryingPoint("after_login",20031)

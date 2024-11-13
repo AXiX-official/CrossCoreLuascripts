@@ -1,5 +1,6 @@
 local key = nil
 local targetTime = 0
+local cfg = nil
 function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Activity_SignIn, ESignCB)
@@ -33,9 +34,10 @@ function OnDestroy()
     ReleaseCSComRefs()
 end
 
-function Refresh(data)
+function Refresh(data,elseData)
     local isSingIn = data.isSingIn ~= nil and data.isSingIn or false
     key = data.key
+    cfg = elseData and elseData.cfg or nil
     -- CSAPI.SetGOActive(mask, isSingIn)
     if (isSingIn) then
         EventMgr.Dispatch(EventType.Activity_Click)
@@ -75,13 +77,13 @@ function ESignCB(proto)
     -- layout:UpdateList()
     SetDatas()
     isClick = false
-    ActivityMgr:SetListData(ActivityListType.SignInGift, {
+    ActivityMgr:SetListData(cfg.id, {
         key = _key
     })
 end
 
 function SetTime()
-    local _data = ActivityMgr:GetOperateActive(ActivityListType.SignInGift)
+    local _data = ActivityMgr:GetOperateActive(cfg.id)
     if _data and _data.sTime and _data.eTime then
         local tab1 = TimeUtil:GetTimeHMS(_data.sTime,"%Y/%m/%d %H:%M")
         local tab2 = TimeUtil:GetTimeHMS(_data.eTime,"%Y/%m/%d %H:%M")

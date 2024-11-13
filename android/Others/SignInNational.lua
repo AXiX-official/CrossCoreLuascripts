@@ -1,5 +1,6 @@
 local key = nil
 local targetTime = 0
+local cfg = nil
 function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Activity_SignIn, ESignCB)
@@ -33,9 +34,11 @@ function OnDestroy()
     ReleaseCSComRefs()
 end
 
-function Refresh(data)
+function Refresh(data,elseData)
     local isSingIn = data.isSingIn ~= nil and data.isSingIn or false
     key = data.key
+    cfg = elseData and elseData.cfg or nil
+
     -- CSAPI.SetGOActive(mask, isSingIn)
     if (isSingIn) then
         EventMgr.Dispatch(EventType.Activity_Click)
@@ -74,7 +77,7 @@ function ESignCB(proto)
     -- layout:UpdateList()
     SetDatas()
     isClick = false
-    ActivityMgr:SetListData(ActivityListType.SignInNational, {
+    ActivityMgr:SetListData(cfg.id, {
         key = _key
     })
 end

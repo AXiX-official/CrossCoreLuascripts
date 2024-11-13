@@ -220,6 +220,8 @@ function BuffMgr:RemoveAll()
 	self.fightMgr.oFightEventMgr:PrintBuffer()
 
 	self.list = {}
+
+	self.card.bRemove = nil
 end
 
 -- 获取buff数量(按组)
@@ -845,6 +847,7 @@ end
 
 -- 属性直加
 function BuffBase:AddAttr(effect, caster, target, data, attr, val)
+	LogDebugEx("BuffBase:AddAttr", self.id, target.name, attr, val, self.nCount)
 	if target == self.owner then -- 给自己加的属性删除时自动删掉
 		self.addAttrattr[attr] = self.addAttrattr[attr] or 0
 		self.addAttrattr[attr] = self.addAttrattr[attr] + val
@@ -1459,6 +1462,7 @@ end
 
 -- 删除事件
 function BuffBase:OnDelete(bRemoveEvent,eBuffDeleteType)
+	-- LogDebugEx("BuffBase:OnDelete", bRemoveEvent,eBuffDeleteType)
 	local target = self.owner
 	local caster = self.caster
 	self:OnPreDelete()
@@ -1473,10 +1477,10 @@ function BuffBase:OnDelete(bRemoveEvent,eBuffDeleteType)
 			self.log:StartSub("OnRemoveBuff")
 			-- self.caster = caster or self.caster
 			--LogDebugEx("OnRemoveBuff", self.caster.name)
-			local caster = self.caster
-			self.caster = self.owner
+			-- local caster = self.caster
+			-- self.caster = self.owner
 			self:OnRemoveBuff(self.owner)
-			self.caster = caster
+			-- self.caster = caster
 			-- self:OnRemoveBuff(caster, target)
 			self.log:EndSub("OnRemoveBuff")
 		end

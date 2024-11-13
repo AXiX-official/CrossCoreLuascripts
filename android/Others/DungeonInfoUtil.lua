@@ -18,7 +18,7 @@ function this:Set(cfg)
     self.datas = {cfg =self.cfg,data =self.data,sectionData =self.sectionData}
 end
 
-function this:Show(typeName,parent,callback)
+function this:Show(typeName,parent,path,callback)
     if not parent then
         LogError("未传入父物体！！！")
         return
@@ -41,7 +41,10 @@ function this:Show(typeName,parent,callback)
             return
         end
         self.create[typeName] = true
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonInfo" .. typeName,parent,function (go)
+        if typeName == "Double" or typeName == "Double2" then
+            path = "DungeonItemInfo"
+        end
+        ResUtil:CreateUIGOAsync(path .. "/DungeonInfo" .. typeName,parent,function (go)
             local lua = ComUtil.GetLuaTable(go)
             lua.Refresh(self.datas)
             self.panel[typeName] = lua

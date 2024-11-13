@@ -116,6 +116,9 @@ function this:UpdateDataBase(data,setNew)
     if(goodsData:GetItemType()==ITEM_TYPE.ICON) then 
         HeadIconMgr:UpdateGoodsData(goodsData,setNew)
     end 
+    if(goodsData:GetItemType()==ITEM_TYPE.ICON_TITLE) then 
+        HeadTitleMgr:UpdateGoodsData(goodsData,setNew)
+    end 
 end
 
 -- 更新货币类

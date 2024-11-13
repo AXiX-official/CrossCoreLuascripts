@@ -37,7 +37,7 @@ ITEM_ID.DIFF = 10046 --10046_Item##勘探差价
 ITEM_ID.TAO_FA_Count = 12005 --讨伐次数
 ITEM_ID.DeductionVoucher=10999 --抵扣券[ 紫龙使用的 ]
 ITEM_ID.DIAMOND_PAY = 10998 -- 充值获得钻石
-
+ITEM_ID.DORM_FUR_COIN = 10013 -- 家具币
 
 -- save type是数据库保存，不能修改，只能添加
 ITEM_TYPE = {}
@@ -66,6 +66,7 @@ ITEM_TYPE.CHANGE_SHAPE = 22 -- 形态转换券
 ITEM_TYPE.CHANGE_NAME = 23 -- 改名券
 ITEM_TYPE.BG_ITEM = 24 --主界面背景图道具
 ITEM_TYPE.VOUCHER = 25 --抵扣券
+ITEM_TYPE.ICON_TITLE = 26 --玩家称号
 
 -- 物品标签
 ITEM_TAG = {}
@@ -93,6 +94,7 @@ PROP_TYPE.Pet = 14 -- 宠物(动态值2填宠物id)
 PROP_TYPE.PetItem = 15 -- 宠物道具(动态值2填宠物物品id)
 PROP_TYPE.PetArchive = 16 -- 宠物图鉴（动态值2填宠物图鉴表id）
 PROP_TYPE.Music = 17 -- 音乐（动态值2音乐表id）
+PROP_TYPE.IconTitle = 18 -- 玩家称号（动态值2称号表id）
 
 -- 物品月卡类型
 ItemMemberType = {}
@@ -330,6 +332,9 @@ eTaskType.RegressionTask = 22     -- 回归任务
 eTaskType.RegressionBind = 23     -- 回归绑定任务
 eTaskType.StarPalace = 24     -- 十二星宫任务
 --eTaskType.Pet = 25              -- 夏活宠物图鉴任务
+--eTaskType.AbattoirMoon = 26     -- 角斗场月任务
+--eTaskType.AbattoirSeason = 27     -- 角斗场赛季任务
+
 
 
 -- 任务提示图片： 白、黄、蓝、绿
@@ -423,6 +428,8 @@ cTaskCfgNames = {
     [eTaskType.RegressionBind] = 'CfgRegressionBind',
     [eTaskType.StarPalace] = 'CfgTotalBattleTask',
     --[eTaskType.Pet] = 'CfgPetArchive',
+    --[eTaskType.AbattoirMoon] = 'cfgColosseumMission',
+    --[eTaskType.AbattoirSeason] = 'cfgColosseumSeasonMission',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -486,6 +493,8 @@ eTaskEventType.Skill = 26 -- 技能
 eTaskEventType.Board = 27 -- 看板
 eTaskEventType.PassGroup = 28 -- 通关关卡组
 --eTaskEventType.PetAbility = 29 -- 宠物属性变动
+--eTaskEventType.AbattoirStar = 30 -- 角斗场星数
+--eTaskEventType.AbattoirPass = 31 -- 角斗场通关
 
 eLockState = {}
 eLockState.No = 0
@@ -498,7 +507,7 @@ eContinueTaskType.NewYear = 3 --新年
 
 -- 完成任务后自动领取奖励的任务
 eAutoGainTaskType = {
-    -- [eTaskType.Pet] = 1
+    --[eTaskType.Pet] = 1
 }
 
 -----------------------------好友------------------------------------------------------------------------
@@ -537,6 +546,7 @@ eTeamType = {
     Rogue = 28,  --乱序演习
     TotalBattle=29,--总力战
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
+--    Colosseum = 60, --角斗场(60-61) 60:自选模式 61：随机模式
     ForceFight = 10000 -- 强制上阵索引起始值
 }
 
@@ -743,6 +753,7 @@ ActivityListType = {
     SignInGift = 1015,--付费签到
     SignInNational = 1016,--国庆签到
     GachaBall=1017,--扭蛋活动
+--    AccuCharge2 = 1022, --累计充值2
 }
 
 ALType = {}
@@ -1058,6 +1069,7 @@ TeamOpenSetting.Tower = 4 --爬塔编成
 TeamOpenSetting.Rogue = 5 --肉鸽
 TeamOpenSetting.TotalBattle=6--总力战
 TeamOpenSetting.RogueS = 7 --战力派遣
+--TeamOpenSetting.Colosseum = 8 --角斗场
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1320,6 +1332,7 @@ PlrMixIx.starPalace = 61 -- 十二星宫进度
 PlrMixIx.newPanelInfo = 62 -- 新看板信息
 PlrMixIx.openConditionTime = 63 -- 新手教程的完成时间
 PlrMixIx.BugFixIndex = 64 -- 已修复Bug下标，对应下标的方法只会运行一次
+PlrMixIx.icon_title = 65 -- 玩家称号
 
 -- 图鉴
 ArchiveType = {}
@@ -1381,6 +1394,8 @@ eRecordType.ArmyCalFinishOnceCnt = 19 -- [军演服使用] 结算进度值，每
 eRecordType.ArmyCalFinishUseTime = 20 -- [军演服使用] 结算使用的时间戳
 eRecordType.OffLineMailMysqlTbChange = 21 -- [中心服] 玩家离线邮件转移表数据
 eRecordType.BindPlrActiveId = 22 -- [游戏服] 绑定活动id
+--eRecordType.ZiLongPayDelIx = 23 -- 紫龙支付处理空订单的最大值
+--eRecordType.CenterWebPayDelIx = 24 -- 中台支付处理空订单的最大值
 
 GmInitPlrType = {}
 GmInitPlrType.Item = 1 -- 物品
@@ -1402,6 +1417,12 @@ ExplorationRewardState.UnLock = 2 -- 已解锁且不可领取
 ExplorationRewardState.Available = 3 -- 已解锁且可领取
 ExplorationRewardState.Received = 4 -- 已领取
 
+--付费弹窗
+-- MenuBuyState = {}
+-- MenuBuyState.First = 1 --首充礼包
+-- MenuBuyState.CrateLittle = 2 --新手构建包
+-- MenuBuyState.Commodity = 3 --星贸凭证（月卡）
+-- MenuBuyState.CrateMove = 4 --首轮特价构建包
 
 ---------------------------------------------设置
 SettingFightActionType = {} -- 战斗动画开关
@@ -1480,6 +1501,7 @@ ShopGroup = {
     ArmyShop = 904, -- 演习兑换
     GiftShop = 3, -- 礼包商店
     RegressionShop = 3001, -- 复归商店
+--    AbattoirShop = 4001, -- 角斗场商店
 }
 
 PayType = {}
@@ -1555,7 +1577,10 @@ DungeonInfoType.Summer = "Summer"
 DungeonInfoType.SummerPlot = "SummerPlot"
 DungeonInfoType.SummerDanger = "SummerDanger"
 DungeonInfoType.SummerSpecial = "SummerSpecial"
-
+DungeonInfoType.Night = "Night"
+DungeonInfoType.NightPlot = "NightPlot"
+DungeonInfoType.NightDanger = "NightDanger"
+DungeonInfoType.NightSpecial = "NightSpecial"
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
 RegressionPlrType = {}
@@ -1626,6 +1651,8 @@ eAchieveEventType.OverLoad = 34 -- OverLoad
 eAchieveEventType.Friend = 35 -- Friend
 eAchieveEventType.PowerAdd = 37 -- 电力总数
 eAchieveEventType.PowerFull = 38 -- 电力充裕
+--eAchieveEventType.PassDup = 39 -- 角斗场通关
+--eAchieveEventType.PassDupStar = 40 -- 角斗场通关获得星数
 
 -- 肉鸽玩法词条对象类型
 RogueBuffTarget = {}
@@ -1689,6 +1716,8 @@ eBadgedEventType.OverLoad = 34 -- OverLoad
 eBadgedEventType.Friend = 35 -- Friend
 eBadgedEventType.PowerAdd = 37 -- 电力总数
 eBadgedEventType.PowerFull = 38 -- 电力充裕
+--eBadgedEventType.PassDup = 39 -- 角斗场通关
+--eBadgedEventType.PassDupStar = 40 -- 角斗场通关获得星数
 
 --道具池相关
 --抽取类型
@@ -1733,13 +1762,32 @@ eRankType.StarRank2 = 9002 --十二星宫 9002
 eRankType.StarRank3 = 9003 --十二星宫 9003
 
 eRankType.SummerActiveRank = 10001 --夏活无限血排行榜
+-- eRankType.Abattoir = 10002 -- 角斗场
+eRankType.CentaurRank = 10003 --人马无限血排行榜
+
+cRankCfgNames = {
+    { id = eRankType.StarRank1, name = '十二星宫 9001' },
+    { id = eRankType.StarRank2, name = '十二星宫 9002' },
+    { id = eRankType.StarRank3, name = '十二星宫 9003' },
+    { id = eRankType.SummerActiveRank, name = '夏活无限血 10001' },
+    { id = eRankType.Abattoir, name = '角斗场 10002' },
+    { id = eRankType.CentaurRank, name = '人马无限血 10003' },
+}
 
 --收集活动类型
 eCollectType = {}
-eCollectType.Recharge = 1 --累计充值
+eCollectType.Recharge = 1 --累计充值 1011
+--eCollectType.Recharge1 = 2 --累计充值 1022
 
 eCollectTable = {}
 eCollectTable[eCollectType.Recharge] = 'CfgRechargeCount'
+--eCollectTable[eCollectType.Recharge1] = 'CfgRechargeCount2'
+
+--eCollectTypeActiveId = {}
+--eCollectTypeActiveId[eCollectType.Recharge] = 1011 --累计充值 1011
+--eCollectTypeActiveId[eCollectType.Recharge1] = 1022 --累计充值 1022
+
+--GenEnumNameByVal('eCollectTypeActive', eCollectTypeActiveId)
 
 -- 回归商店id
 eReturnPlrShopType = {}
@@ -1755,6 +1803,13 @@ VoucherType={
 --运营活动活动类型(有前置开启条件)
 eOperateType = {}
 eOperateType.RechargeSign = 1015 --充值签到
+--eOperateType.PayNotice7 = 1018 --充值弹窗7
+--eOperateType.PayNotice8 = 1019 --充值弹窗8
+--eOperateType.PayNotice1 = 1020 --充值弹窗1
+
+
+eActiveListId = {}
+eActiveListId.FreeCreateCard = 1021
 
 -----------------------------------------------------------------------------------------------------------------
 -- 夏日活动宠物属性类型
@@ -1784,3 +1839,4 @@ eOpenConditionType.Dup = 2 --关卡
 eActiveEntryId = {}
 eActiveEntryId.STAR = 13 --十二星宫
 eActiveEntryId.PET = 16 --宠物
+

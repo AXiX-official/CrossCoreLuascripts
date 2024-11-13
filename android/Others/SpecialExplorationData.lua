@@ -290,5 +290,9 @@ function this:GetLoopReviceNum()
     return 0;
 end
 
+--返回UI替换内容
+function this:GetUIChange()
+    return self.cfg and self.cfg.uiChange or nil;
+end
 
 return this;

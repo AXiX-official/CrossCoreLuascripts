@@ -61,6 +61,7 @@ local blinkNum = 0
 local isChangeBg = false
 local isFirstChange = true
 
+local isCamera = false
 
 local myBGMLockKey = "plot_bgm";
 
@@ -354,6 +355,7 @@ function PlayPlot()
 	
 	PlayShake()
 	PlayVideo()
+	PlayTopImg()
 	
 	--判断是否存在图片内容
 	if cgList ~= nil then--播放图片内容
@@ -458,18 +460,23 @@ function PlayEffect()
 	end
 end
 
-
-
 --播放镜头动画
 function PlayCameraTween(func)
 	local cameraInfo = currentPlotData:GetCameraInfo();
 	if cameraInfo then
-		PlotTween.PlayCameraTween(childs, cameraInfo, func);
+		PlotTween.FadeOut(childs)
+		PlotTween.PlayCameraTween(bg, cameraInfo, function ()
+			PlotTween.FadeIn(childs)
+			if func then
+				func()
+			end
+		end);
 		local timer1 = cameraInfo.time1 or 0;
 		local timer2 = cameraInfo.time2 or 0;
 		local timer3 = cameraInfo.time3 or 0;
 		table.insert(timers,(timer1 + timer2 + timer3));
 	end
+	isCamera = cameraInfo ~= nil
 end
 
 --显示图片内容
@@ -574,7 +581,7 @@ end
 
 --点击任意地方
 function OnClickAnyway()		
-	if isOpenTween or isJump or isPlotEnd then
+	if isOpenTween or isJump or isPlotEnd or isCamera then
 		do return end
 	end
 
@@ -1019,9 +1026,11 @@ function UpdateRoleImg(pInfos)
 			key = v.id .. "_" .. tag
 			local roleView = roleList[key];	
 			if v.out and roleView then--退场
+				local _key = key
 				roleView.SetImg(v);
-				roleView.PlayImgLeave(v.time, nil, v.delay, isChangeBg); --当进行背景切换时出现退场直接退场
-				roleList[key] = nil;
+				roleView.PlayImgLeave(v.time, function ()
+					roleList[_key] = nil;
+				end, v.delay, isChangeBg); --当进行背景切换时出现退场直接退场
 				roleCount = roleCount - 1
 			elseif v.move then--移动
 				roleView.PlayImgMove(v.move, v.time);
@@ -1063,7 +1072,7 @@ function UpdateRoleImg(pInfos)
 					posRoleView.PlayImgLeave(v.time, leaveFunc, v.delay);
 				end				
 			elseif v.black then --变色
-				v.SetBlack(v.black, false);
+				roleView.SetBlack(v.black, false);
 			end
 		end
 	end
@@ -1318,6 +1327,18 @@ function CheckFinishBlink()
 		return true
 	end	
 	return false
+end
+------------------------------------------------顶层图片------------------------------------------------
+function PlayTopImg()
+	if topImg == nil then
+		ResUtil:CreateUIGOAsync("Plot/PlotTopImg",topImgParent,function (go)
+			local lua = ComUtil.GetLuaTable(go)
+			lua.Refresh(currentPlotData)
+			topImg = lua
+		end)
+	else
+		topImg.Refresh(currentPlotData)
+	end
 end
 --------------------------------------------------记录--------------------------------------------------
 function RecordInfo(str)

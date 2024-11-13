@@ -249,7 +249,6 @@ function OnOpen()
     local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
     local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
     offset.x =  (curScale[0] - baseScale[1] + fit1 + fit2)/2
-    -- offset.x = (curScale[0] - baseScale[1])/2
     offset.y = (curScale[1] - baseScale[2])/2 
 
     InitViewInfo()
@@ -368,7 +367,7 @@ function RefreshMainLineView()
     if mainLineCfgs then
         for _, cfg in pairs(mainLineCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfg.id)
-            if sectionData then
+            if sectionData and sectionData:GetOpenState() > -2 then
                 table.insert(mainLineDatas, sectionData)
             end
         end
@@ -537,14 +536,14 @@ function InitExerciseView()
         CSAPI.SetText(txt_eLock2, eLockStr)
     end
 
-    CSAPI.SetGOActive(eLockImg2, false)
-    isExerciseROpen = g_FightOnlineUnlock
+    
+    local sectionData = DungeonMgr:GetSectionData(13001)
+    -- isExerciseROpen,eLockStr2 = sectionData:GetOpen()
     if not isExerciseROpen then
-        LanguageMgr:SetText(txt_exercise3,36013)
-        LanguageMgr:SetEnText(txt_exercise4,36013)
-        CSAPI.SetGOActive(eLockImg2, true)
-        -- CSAPI.SetScriptEnable(btnExerciseR, "Button", false)
-        ResUtil:LoadBigImg(btnExerciseR, "UIs/Exercise/1/bg3")
+        CSAPI.SetText(txt_eLock4, eLockStr)
+    else
+        CSAPI.SetGOActive(eLockImg2, false)
+        CSAPI.SetGOActive(eLockObj2, false)
     end
     isPvpRet = ExerciseMgr:GetEndTime() ~= 0
 end
@@ -785,6 +784,8 @@ function ShowDailyPanel()
     -- scale
     if currIndex == 1 then
         CSAPI.SetScale(sv2, 0.7, 0.7, 1)
+    else --刷新配置
+        ConfigChecker:CfgDupDropCntAdd(Cfgs.CfgDupDropCntAdd:GetAll())
     end
 
     layout2:UpdateList()
@@ -1042,13 +1043,7 @@ function RefreshItemNew()
         if lua then
             lua.RefreshTag()
         end
-    end
-    if currDailyIndexL2 then
-        local lua = layout3:GetItemLua(currDailyIndexL2)
-        if lua then
-            lua.RefreshTag()
-        end
-    end
+    end   
     RedPointMgr:ApplyRefresh()
 end
 
@@ -1223,7 +1218,7 @@ end
 function OnClickExerciseR()
     --LanguageMgr:ShowTips(1000)
     if isExerciseROpen then
-        CSAPI.OpenView("ExerciseRView")      
+        CSAPI.OpenView("ColosseumView")       --CSAPI.OpenView("ExerciseRView")      
     else
         LanguageMgr:ShowTips(1000)
     end
@@ -2085,6 +2080,8 @@ end
 function SetRed()
     UIUtil:SetRedPoint(SectionTypeItem4,DungeonMgr:IsActivityRed(),146,26)
     UIUtil:SetRedPoint(SectionTypeItem1,DungeonMgr:IsMainLineRed(),146,26)
+    -- UIUtil:SetRedPoint(SectionTypeItem3,DungeonMgr:IsExerciseRed(),146,26)
+    -- UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
 end
 ---------------------------------------------new---------------------------------------------
 function DailyNewRefresh()
