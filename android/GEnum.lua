@@ -37,7 +37,10 @@ ITEM_ID.DIFF = 10046 --10046_Item##勘探差价
 ITEM_ID.TAO_FA_Count = 12005 --讨伐次数
 ITEM_ID.DeductionVoucher=10999 --抵扣券[ 紫龙使用的 ]
 ITEM_ID.DIAMOND_PAY = 10998 -- 充值获得钻石
-ITEM_ID.DORM_FUR_COIN = 10013 -- 家具币
+
+-- ITEMS_ID 枚举不要与 ITEM_ID 的定义重复数值
+ITEMS_ID = {}
+ITEMS_ID.DORM_FUR_COIN = 10013 -- 家具币
 
 -- save type是数据库保存，不能修改，只能添加
 ITEM_TYPE = {}
