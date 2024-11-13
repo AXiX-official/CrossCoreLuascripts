@@ -1,1 +1,1 @@
-g_svnVersion = "8522"
+g_svnVersion = "8552"
