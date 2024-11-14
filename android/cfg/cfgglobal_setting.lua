@@ -293,6 +293,8 @@ local conf = {
 {'g_PetMoveChangeTime',	'g_PetMoveChangeTime',	'',	'int',	'12'},
 {'g_PetBGM',	'g_PetBGM',	'',	'string',	'Event_SummerMarineRhythm'},
 {'g_HoldOnTime',	'g_HoldOnTime',	'',	'int[]',	'3,5,10,-1'},
+{'g_FHXOpenRole',	'g_FHXOpenRole',	'',	'bool',	'1'},
+{'g_FHXOpenPicture',	'g_FHXOpenPicture',	'',	'bool',	'1'},
 },
 }
 --cfgglobal_setting = conf

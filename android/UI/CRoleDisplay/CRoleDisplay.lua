@@ -49,7 +49,7 @@ function ItemClickCB(index)
     c_data:GetRet().ids[slot] = lDatas[lIndex]:GetSkinID()
     -- l2d 
     local l2d = false
-    if (c_data:ShowBtnL2D(slot)) then
+    if (c_data:CanShowL2d(slot)) then
         l2d = true
     end
     c_data:GetDetail(slot).live2d = l2d
@@ -413,6 +413,11 @@ end
 -----------------------------------------------------------------------------------------------
 -- 动态开关
 function OnClickL2D()
+    if(not c_data:CanShowL2d(slot))then 
+        LanguageMgr:ShowTips(3015)
+        return 
+    end
+    --
     if (slot == 1) then
         c_data:GetDetail(1).live2d = not c_data:GetDetail(1).live2d
     else

@@ -216,9 +216,25 @@ function this:CheckIsJieJin()
     return self.isJieJin
 end
 
---是否在看板和头像 隐藏
+-- 是否在看板和头像 隐藏
 function this:IsHide()
     return self:GetCfg().isHide
+end
+
+function this:GetL2dName()
+    local cfgModel = Cfgs.character:GetByID(self:GetSkinID())
+    return cfgModel.l2dName
+end
+
+-- 突破皮肤能否展示l2d (g_FHXOpenRole为true，突破模型要先突破，商店皮肤不用管)
+function this:CanShowL2d()
+    if (self:CheckIsBreakType()) then
+        if (self:GetL2dName() ~= nil and (not g_FHXOpenRole or self:CheckCanUse())) then
+            return true
+        end
+        return false
+    end
+    return self:GetL2dName() ~= nil
 end
 
 return this

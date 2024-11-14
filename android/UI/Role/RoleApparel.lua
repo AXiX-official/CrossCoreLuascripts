@@ -122,9 +122,9 @@ end
 function RefreshPanel(isCheck)
     curModeId = curDatas[curIndex]:GetSkinID()
     cfgModel = Cfgs.character:GetByID(curModeId)
-
     if (isCheck) then
-        if (cfgModel.l2dName ~= nil) then
+        isLive2D = false
+        if (curDatas[curIndex]:CanShowL2d()) then
             isLive2D = true
         end
         -- 如果是当前选择并且没选择l2d
@@ -354,6 +354,11 @@ function OnClickKey()
 end
 
 function OnClickL2D()
+    if(not isLive2D and not curDatas[curIndex]:CanShowL2d())then 
+        LanguageMgr:ShowTips(3015)
+        return
+    end
+
     isLive2D = not isLive2D
     RefreshPanel()
 end

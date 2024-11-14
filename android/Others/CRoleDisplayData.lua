@@ -165,6 +165,31 @@ function this:ShowBtnL2D(slot)
     return false
 end
 
+-- 能否展示l2d
+function this:CanShowL2d(slot)
+    if (self:ShowBtnL2D(slot)) then
+        -- 突破皮肤未突破不能展示
+        local id = self:GetIDs()[slot]
+        if (id ~= 0) then
+            if (id > 10000) then
+                local _data = RoleSkinMgr:GetSkinInfoByModelID(id)
+                if (_data == nil or not _data:CanShowL2d()) then
+                    return false
+                end
+            else
+                if (g_FHXOpenPicture) then
+                    local _data = MulPicMgr:GetData(id)
+                    if (_data == nil or not _data:IsHad()) then
+                        return false
+                    end
+                end
+            end
+        end
+        return true
+    end
+    return false
+end
+
 -- {[id] =1,[id] =2} 
 function this:GetRealIDsDic()
     local idsDic, len = {}, 0
@@ -213,9 +238,23 @@ function this:InitDetail(slot, id)
             isLive2d = true
         elseif(not self:CheckIsHX(slot)) then 
             isLive2d = true
+            -- 突破皮肤  g_FHXOpenRole==true 并且可用
+            -- 多人插图 g_FHXOpenPicture==true 并且可用
+            if (id > 10000) then
+                local _data = RoleSkinMgr:GetSkinInfoByModelID(id)
+                if (_data == nil or not _data:CanShowL2d()) then
+                    isLive2d = false
+                end
+            else
+                if (g_FHXOpenPicture) then
+                    local _data = MulPicMgr:GetData(id)
+                    if (_data == nil or not _data:IsHad()) then
+                        isLive2d = false
+                    end
+                end
+            end
         end
     end
-
     if (slot == 1) then
         self:GetRet().detail1 = {
             live2d = isLive2d,

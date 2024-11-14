@@ -18,7 +18,7 @@ end
 MAX_INT = 2000000000
 MAX_UNSIGNED_INT = MAX_INT * 2
 
--- 货币
+-- 货币[ 定义了这个客户端就不会把这个物品显示在背包，如果需要显示在背包定义在 ITEMS_ID = {} ]
 ITEM_ID = {}
 ITEM_ID.GOLD = 10001 -- 金币
 ITEM_ID.DIAMOND = 10002 -- 钻石
@@ -1505,6 +1505,11 @@ ShopGroup = {
     GiftShop = 3, -- 礼包商店
     RegressionShop = 3001, -- 复归商店
 --    AbattoirShop = 4001, -- 角斗场商店
+}
+
+ShopPriceKey={
+    jCosts="jCosts",
+    jCosts1="jCosts1",
 }
 
 PayType = {}
