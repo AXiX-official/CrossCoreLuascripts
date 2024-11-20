@@ -100,8 +100,8 @@ function InitData()
     local career = 1
     -- 形态切换、同调 --等级继承，技能、被动技能继承等级，副天赋继承主体，变更皮肤
     if (cfg.type == SkillType.Transform or cfg.type == SkillType.Unite) then
-        local cardId = cfg.type == SkillType.Transform and oldCardData:GetCfg().tTransfo[1] or
-                           oldCardData:GetCfg().fit_result
+        local cardId = cfg.type == SkillType.Transform and oldCardData:GetCardCfg().tTransfo[1] or
+                           oldCardData:GetCardCfg().fit_result
         local cardCfg = Cfgs.CardData:GetByID(cardId)
         -- 普通技能需要重新封装
         local newSkillDatas = {}
@@ -162,17 +162,19 @@ function InitData()
             type = SkillMainType.CardTalent
         })
 
-        -- 重新封装
-        local newInfo = {}
-        local key = string.format("%s_%s", cardCfg.numerical, oldCardData:GetLv())
-        local _cfg = Cfgs.MonsterNumerical:GetByKey(key)
-        newInfo = table.copy(_cfg)
-        newInfo.cfgid = cardId
-        newInfo.skills = newSkillDatas
-        newInfo.break_level = 1
-        newInfo.intensify_level = 1
-        local monsterCardsData = require "MonsterCardsData"
-        cardData = MonsterCardsData(newInfo)
+        -- -- 重新封装
+        -- local newInfo = {}
+        -- local key = string.format("%s_%s", cardCfg.numerical, oldCardData:GetLv())
+        -- LogError(key)
+        -- local _cfg = Cfgs.MonsterNumerical:GetByKey(key)
+        -- newInfo = table.copy(_cfg)
+        -- newInfo.cfgid = cardId
+        -- newInfo.skills = newSkillDatas
+        -- newInfo.break_level = 1
+        -- newInfo.intensify_level = 1
+        -- local monsterCardsData = require "MonsterCardsData"
+        -- cardData = MonsterCardsData(newInfo)
+        cardData = RoleTool.GetNewCardData2(oldCardData, cardId)
     end
 end
 
@@ -338,14 +340,14 @@ function SetBuff()
     end
 
     -- grid
-    if (cardData:GetCfg().gridsIcon) then
-        ResUtil.RoleSkillGrid:Load(imgGrid, cardData:GetCfg().gridsIcon)
+    if (cardData:GetCardCfg().gridsIcon) then
+        ResUtil.RoleSkillGrid:Load(imgGrid, cardData:GetCardCfg().gridsIcon)
     end
     local scale = cfg.type == SkillType.Summon and 1.1 or 1.5
     CSAPI.SetScale(imgGrid, scale, scale, scale)
 
     -- nums
-    local haloID = cardData:GetCfg().halo
+    local haloID = cardData:GetCardCfg().halo
     local cfg = haloID and Cfgs.cfgHalo:GetByID(haloID[1]) or nil
     local types = cfg and cfg.use_types or {}
     for i = 1, 2 do
@@ -386,7 +388,7 @@ end
 -- 角色定位
 function SetPosEnum()
     local enums = {}
-    local _nums = cardData:GetCfg().pos_enum
+    local _nums = cardData:GetCardCfg().pos_enum
     if (_nums) then
         for i, v in ipairs(_nums) do
             local cfg = Cfgs.CfgRolePosEnum:GetByID(v)
@@ -620,7 +622,8 @@ function SetTips()
         if (not layoutAuto) then
             layoutAuto = ComUtil.GetCom(labelObj, "LayoutAuto")
         end
-        local strs = RoleUniteUtil:GetStrs(oldCardData:GetCfg())
+        local _cfg = oldCardData.isMonster and oldCardData:GetCardCfg() or oldCardData:GetCardCfg()
+        local strs = RoleUniteUtil:GetStrs(_cfg)
         if (#strs > 0) then
             labelGos = labelGos or {}
             if (#labelGos < 1) then

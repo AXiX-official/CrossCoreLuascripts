@@ -904,5 +904,22 @@ function this:GuideBehaviourStart_TowerBattle_147030()
     UIUtil:OpenQuestion("SandStorm");
 end
 
+--角斗场引导----------------------------------------------------------------------------
+-- function this:GuideBehaviourCondition_Colosseum_149010()
+--     local id = DungeonMgr:GetCurrId();
+--     return id == 10204;
+-- end
+
+-- function this:GuideBehaviourCondition_Colosseum_151010()
+--     return GuideMgr:IsGuided(1500);
+-- end
+-- function this:GuideBehaviourCondition_Colosseum_151510()
+--     return GuideMgr:IsGuided(1510);
+-- end
+
+function this:GuideBehaviourStart_Colosseum_149010()
+    UIUtil:OpenQuestion("ColosseumView");
+end
+
 
 return this;

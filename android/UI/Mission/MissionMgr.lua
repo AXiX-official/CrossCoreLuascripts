@@ -56,18 +56,17 @@ function this:GetSelTabIndex()
     return index1, index2
 end
 
-function this:GetArr(index)
+--集合，已领取的是否显示
+function this:GetArr(indexs,showGet)
     local arr = {}
     if (self.datas) then
         for i, v in pairs(self.datas) do
-            if (index == v:GetType()) then
-                if (index == eTaskType.Daily or index == eTaskType.Weekly or index==eTaskType.Rogue) then
-                    if (not self.CheckIsReset(v) and v:CheckIsOpen()) then -- 每日每周的已领取的要显示在后面 
-                        table.insert(arr, v)
-                    end
-                else
-                    if (not self.CheckIsReset(v) and not v:IsGet() and v:CheckIsOpen()) then
-                        table.insert(arr, v)
+            for p, q in ipairs(indexs) do
+                if (q == v:GetType()) then
+                    if (showGet or not v:IsGet()) then 
+                        if (not self.CheckIsReset(v) and v:CheckIsOpen()) then 
+                            table.insert(arr, v)
+                        end
                     end
                 end
             end
@@ -589,6 +588,9 @@ function this:CheckRedPointData()
     --rogue 
     local rogueRedNum =  self:CheckRed({eTaskType.Rogue}) and 1 or 0
     RedPointMgr:UpdateData(RedPointType.Rogue, rogueRedNum)
+
+    --Colosseum
+    ColosseumMgr:CheckMissionRed()
 end
 
 -- 任务添加通知
@@ -831,6 +833,15 @@ function this:CheckRed2(_type,_nGroup)
                 end
             end
         end
+    end
+    return false
+end
+
+function this:CheckRed3(_types,_nGroup)
+    for k, v in pairs(_types) do
+        if(self:CheckRed2(v,_nGroup)) then 
+            return true
+        end 
     end
     return false
 end

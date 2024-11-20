@@ -2387,7 +2387,6 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
     end
 
     local isUseSpecialMulti = false
-    ConfigChecker:CfgDupDropCntAdd(CfgDupDropCntAdd)    
     if cfgSection.specialMultiIds and g_SpecialMultiId then
         -- Tips: 这里是因为 cfgSection.specialMultiIds 只会填一两个值，所以直接用遍历
         if self:FindArrByFor(cfgSection.specialMultiIds, g_SpecialMultiId) then

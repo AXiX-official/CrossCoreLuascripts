@@ -315,7 +315,7 @@ function this:GetOpenState()
 			end
 			lockStr = self.cfg.lock_desc
 		elseif self:GetSectionType() == SectionType.Activity then --活动没有未开启显示
-			if self:GetType() ~= SectionActivityType.Tower and self:GetType() ~= SectionActivityType.Rogue then
+			if not self:IsResident() then
 				local isActiveOpen = self.openInfo and self.openInfo:IsOpen()
 				if openState > 0 then
 					openState = isActiveOpen and 1 or -2
@@ -327,6 +327,15 @@ function this:GetOpenState()
 			end
 		elseif self:GetSectionType() == SectionType.MainLine and self.openInfo then
 			local isActiveOpen = self.openInfo:IsOpen()
+			if openState > 0 then
+				openState = isActiveOpen and 1 or -2
+				lockStr = LanguageMgr:GetTips(24001)
+			else
+				openState = isActiveOpen and openState or -2
+				lockStr = isActiveOpen and lockStr or LanguageMgr:GetTips(24001)
+			end
+		elseif self:GetSectionType() == SectionType.Colosseum then
+			local isActiveOpen = self.openInfo and self.openInfo:IsOpen()
 			if openState > 0 then
 				openState = isActiveOpen and 1 or -2
 				lockStr = LanguageMgr:GetTips(24001)
@@ -420,6 +429,11 @@ end
 
 function this:GetOpenInfo()
 	return self.openInfo
+end
+
+--常驻
+function this:IsResident()
+	return self.cfg and self.cfg.specType and self.cfg.specType == 1
 end
 ---------------------------------------------门票购买---------------------------------------------
 function this:GetBuyCount()

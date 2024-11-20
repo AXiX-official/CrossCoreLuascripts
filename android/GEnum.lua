@@ -155,6 +155,7 @@ PeriodType.MonthCard = 6 -- 6：月卡重置购买
 DungeonResetType = {}
 
 DungeonResetType.Confrontation = 1 -- 1：镜像作战,竞技场
+DungeonResetType.Abattoir = 2 -- 2：角斗场赛季
 
 -------------------------------------------------------------------------------------------------
 -- 布尔类型
@@ -335,8 +336,8 @@ eTaskType.RegressionTask = 22     -- 回归任务
 eTaskType.RegressionBind = 23     -- 回归绑定任务
 eTaskType.StarPalace = 24     -- 十二星宫任务
 --eTaskType.Pet = 25              -- 夏活宠物图鉴任务
---eTaskType.AbattoirMoon = 26     -- 角斗场月任务
---eTaskType.AbattoirSeason = 27     -- 角斗场赛季任务
+eTaskType.AbattoirMoon = 26     -- 角斗场月任务
+eTaskType.AbattoirSeason = 27     -- 角斗场赛季任务
 
 
 
@@ -431,8 +432,8 @@ cTaskCfgNames = {
     [eTaskType.RegressionBind] = 'CfgRegressionBind',
     [eTaskType.StarPalace] = 'CfgTotalBattleTask',
     --[eTaskType.Pet] = 'CfgPetArchive',
-    --[eTaskType.AbattoirMoon] = 'cfgColosseumMission',
-    --[eTaskType.AbattoirSeason] = 'cfgColosseumSeasonMission',
+    [eTaskType.AbattoirMoon] = 'cfgColosseumMission',
+    [eTaskType.AbattoirSeason] = 'cfgColosseumSeasonMission',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -496,8 +497,12 @@ eTaskEventType.Skill = 26 -- 技能
 eTaskEventType.Board = 27 -- 看板
 eTaskEventType.PassGroup = 28 -- 通关关卡组
 --eTaskEventType.PetAbility = 29 -- 宠物属性变动
---eTaskEventType.AbattoirStar = 30 -- 角斗场星数
---eTaskEventType.AbattoirPass = 31 -- 角斗场通关
+eTaskEventType.AbattoirStar = 30 -- 角斗场星数(重置前累计星数)
+eTaskEventType.AbattoirPass = 31 -- 角斗场通关
+eTaskEventType.AbattoirPassStar = 32 -- 角斗场单次通关获得星数
+eTaskEventType.AbattoirTotalStar = 33 -- 角斗场赛季累计获得星数
+eTaskEventType.AbattoirJoin = 34 -- 角斗场参与次数
+eTaskEventType.AbattoirJoinStar = 35 -- 角斗场单次获得星数(不需要通关才算)
 
 eLockState = {}
 eLockState.No = 0
@@ -549,7 +554,7 @@ eTeamType = {
     Rogue = 28,  --乱序演习
     TotalBattle=29,--总力战
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
---    Colosseum = 60, --角斗场(60-61) 60:自选模式 61：随机模式
+    Colosseum = 60, --角斗场(60-61) 60:自选模式 61：随机模式
     ForceFight = 10000 -- 强制上阵索引起始值
 }
 
@@ -1072,7 +1077,7 @@ TeamOpenSetting.Tower = 4 --爬塔编成
 TeamOpenSetting.Rogue = 5 --肉鸽
 TeamOpenSetting.TotalBattle=6--总力战
 TeamOpenSetting.RogueS = 7 --战力派遣
---TeamOpenSetting.Colosseum = 8 --角斗场
+TeamOpenSetting.Colosseum = 8 --角斗场
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1504,7 +1509,7 @@ ShopGroup = {
     ArmyShop = 904, -- 演习兑换
     GiftShop = 3, -- 礼包商店
     RegressionShop = 3001, -- 复归商店
---    AbattoirShop = 4001, -- 角斗场商店
+    AbattoirShop = 4001, -- 角斗场商店
 }
 
 ShopPriceKey={
@@ -1589,6 +1594,7 @@ DungeonInfoType.Night = "Night"
 DungeonInfoType.NightPlot = "NightPlot"
 DungeonInfoType.NightDanger = "NightDanger"
 DungeonInfoType.NightSpecial = "NightSpecial"
+DungeonInfoType.Colosseum = "Colosseum" 
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
 RegressionPlrType = {}
@@ -1659,8 +1665,8 @@ eAchieveEventType.OverLoad = 34 -- OverLoad
 eAchieveEventType.Friend = 35 -- Friend
 eAchieveEventType.PowerAdd = 37 -- 电力总数
 eAchieveEventType.PowerFull = 38 -- 电力充裕
---eAchieveEventType.PassDup = 39 -- 角斗场通关
---eAchieveEventType.PassDupStar = 40 -- 角斗场通关获得星数
+eAchieveEventType.PassDup = 39 -- 角斗场通关
+eAchieveEventType.PassDupStar = 40 -- 角斗场通关获得星数
 
 -- 肉鸽玩法词条对象类型
 RogueBuffTarget = {}
@@ -1724,8 +1730,8 @@ eBadgedEventType.OverLoad = 34 -- OverLoad
 eBadgedEventType.Friend = 35 -- Friend
 eBadgedEventType.PowerAdd = 37 -- 电力总数
 eBadgedEventType.PowerFull = 38 -- 电力充裕
---eBadgedEventType.PassDup = 39 -- 角斗场通关
---eBadgedEventType.PassDupStar = 40 -- 角斗场通关获得星数
+eBadgedEventType.PassDup = 39 -- 角斗场通关
+eBadgedEventType.PassDupStar = 40 -- 角斗场通关获得星数
 
 --道具池相关
 --抽取类型
@@ -1770,7 +1776,7 @@ eRankType.StarRank2 = 9002 --十二星宫 9002
 eRankType.StarRank3 = 9003 --十二星宫 9003
 
 eRankType.SummerActiveRank = 10001 --夏活无限血排行榜
--- eRankType.Abattoir = 10002 -- 角斗场
+eRankType.Abattoir = 10002 -- 角斗场
 eRankType.CentaurRank = 10003 --人马无限血排行榜
 
 cRankCfgNames = {
@@ -1843,6 +1849,11 @@ eOpenConditionType = {}
 eOpenConditionType.Lv = 1 --等级
 eOpenConditionType.Dup = 2 --关卡
 
+-- 角斗场状态
+eAbattoirState = {}
+eAbattoirState.START = 1
+eAbattoirState.OVER = 2
+eAbattoirState.REFRESH = 3
 -- 活动入口id
 eActiveEntryId = {}
 eActiveEntryId.STAR = 13 --十二星宫

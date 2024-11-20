@@ -110,6 +110,7 @@ end
 
 function OnLoadComplete()
     if isDungeonOver then
+        -- isHardUnLockAnim = true
         if isHardUnLockAnim then
             isHardOpen = true
             ShowUnLockHardAnim()
@@ -799,9 +800,12 @@ end
 
 function ShowUnLockHardAnim()
     PlayAnim(400)
+    -- CSAPI.SetGOActive(hardLock,true)
     UIUtil:SetObjFade(hardLock,1,0,function ()
         isHardOpen = true
         SetLevel()
+        curIndex = 1
+        OnClickLevel(btnHard.gameObject)
     end,400)
 end
 

@@ -33,7 +33,8 @@ SectionActivityType = {
     Trials = 106, --试炼
     TotalBattle = 107, --十二星宫
     Rogue = 108,--乱序演习
-    RogueS = 109,--乱序演习
+    Colosseum = 109,--
+    GlobalBoss = 110,--世界boss
 }
 
 --章节活动开启类型
@@ -175,7 +176,7 @@ function this:AddDungeonData(data)
         data.isPass = false;
     end
     dungeonData:SetData(data);
-	self.dungeonDatas = self.dungeonDatas or {}    self.dungeonDatas[data.id] = dungeonData;
+    self.dungeonDatas[data.id] = dungeonData;
     self.maxDungeonID = self.maxDungeonID or 0
     if data.id and data.id > self.maxDungeonID then
         local cfg = Cfgs.MainLine:GetByID(data.id)
@@ -1119,11 +1120,11 @@ function this:OnQuit(isExit, jumpType)
             end
         elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then
             CSAPI.OpenView("CourseView",1)  
-        --elseif DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Colosseum then
-            --CSAPI.OpenView("Section",{type = 3})
-            --ColosseumMgr:Quit(self.currId)
-            --self:SetCurrId()
-            --return
+        elseif DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Colosseum then
+            CSAPI.OpenView("Section",{type = 3})
+            ColosseumMgr:Quit(self.currId)
+            self:SetCurrId()
+            return
         else  -- 主线章节
             if isExit and self.currFightId then
                 -- 回到战斗中的章节
@@ -1417,7 +1418,8 @@ function this:CheckRedPointData()
     local redData = {}
     redData.isMain = DungeonMgr:IsMainLineRed()
     redData.isActivity = DungeonMgr:IsActivityRed()
-    if not redData.isMain and not redData.isActivity then
+    redData.isExercise = DungeonMgr:IsExerciseRed()
+    if not redData.isMain and not redData.isActivity and not redData.isExercise then
         redData = nil
     end
     RedPointMgr:UpdateData(RedPointType.Attack, redData)
@@ -1443,7 +1445,7 @@ function this:IsActivityRed()
     end
 
     if not isRed then
-        --isRed = ColosseumMgr:IsRed()
+        isRed = ColosseumMgr:IsRed()
     end
 
     return isRed
@@ -1475,7 +1477,7 @@ function this:IsMainLineRed()
 end
 
 function this:IsExerciseRed()
-    --return ColosseumMgr:IsRed()
+    return ColosseumMgr:IsRed()
 end
 
 ---------------------------------------------new---------------------------------------------

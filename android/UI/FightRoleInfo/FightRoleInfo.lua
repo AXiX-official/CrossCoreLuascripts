@@ -337,7 +337,7 @@ function SetCharInfos(character)
                 --         table.insert( charInfos[4], skillCfg);
                 --     end
                 end
-            elseif cfg.upgrade_type~=CardSkillUpType.OverLoad  then --不再次显示Overload技能
+            elseif cfg and cfg.upgrade_type~=CardSkillUpType.OverLoad  then --不再次显示Overload技能
                 if cfg.main_type==SkillMainType.CardSubTalent then --怪物的副天赋技能
                     local cfg2=Cfgs.CfgSubTalentSkill:GetByID(v);
                     if cfg2~=nil then
@@ -345,11 +345,11 @@ function SetCharInfos(character)
                     else
                         LogError("怪物的副天赋配置有误！技能ID："..tostring(v));
                     end
-                -- elseif cfg.main_type==SkillMainType.Equip then
-                --     local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
-                --     if skillCfg then
-                --         table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
-                --     end
+                elseif cfg.main_type==SkillMainType.Equip then
+                    local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                    if skillCfg then
+                        table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
+                    end
                 else
                     table.insert( charInfos[1], {cfg=cfg});
                 end

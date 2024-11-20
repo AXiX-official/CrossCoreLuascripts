@@ -294,11 +294,11 @@ end
 ---查询回调
 --ClientProto.PayQueryAction=nil;
 ---1056 支付查询（发起生成订单之前发送）
-function ClientProto:QueryPrePay(ShopproductId,action)
+function ClientProto:QueryPrePay(ShopproductId,amountVave,action)
     self.PayQueryAction=nil;
-    if ShopproductId then
+    if ShopproductId and amountVave then
         self.PayQueryAction=action;
-        local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId), }}
+        local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId),amount=tonumber(amountVave), }}
         NetMgr.net:Send(proto)
     else
         LogError("ClientProto:PayQuery --ShopproductId:"..tostring(ShopproductId))
@@ -309,6 +309,6 @@ function ClientProto:QueryPrePayRet(proto)
     if proto then
         if self.PayQueryAction~=nil then self.PayQueryAction(proto); self.PayQueryAction=nil end
     else
-        LogError("ClientProto:PayQueryRet")
+        LogError("ClientProto:PayQueryRet",table.tostring(proto,true))
     end
 end

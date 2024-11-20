@@ -87,6 +87,7 @@ function SetCard()
         ResUtil:CreateUIGOAsync("RoleLittleCard/RoleSmallCard", itemNode, function(go)
             local lua = ComUtil.GetLuaTable(go)
             lua.Refresh(cardData);
+            lua.ActiveClick(false);
             CSAPI.SetGOActive(lua.txt_lv, false)
             grid = lua
         end)

@@ -64,7 +64,7 @@ function this:GetProperties()
     if self.properties==nil then
         if self:GetMonsterNumericalID() then
             local curData=GCardCalculator:CalPropertys(
-                self:GetMonsterNumericalID(),
+                self:GetCfg().id,-- self:GetMonsterNumericalID(),
                 self:GetLv(),
                 1,
                 1,

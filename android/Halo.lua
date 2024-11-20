@@ -164,7 +164,7 @@ function Halo:CalcAttr(data, key, add)
 	-- attack	maxhp	defense	speed
 	-- 整数取整, 浮点保留, 比率改为相加(0-1)
 	if needFloor[key] then
-		local calRet = GCardCalculator:CalLvlPropertys(data.id, data.level, data.intensify_level, data.break_level)
+		local calRet = GCardCalculator:CalLvlPropertys(data.id, data.level, data.intensify_level, data.break_level,data.isMonster)
 		if calRet and calRet[key] then
 			LogDebug("CalcAttr name[%s] key[%s] val[%s] cfg[%s] src[%s] des[%s]", data.name, key, add, calRet[key], data[key], data[key] + math.floor(calRet[key]*add))
 			data[key] = data[key] + math.floor(calRet[key]*add)

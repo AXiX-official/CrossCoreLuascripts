@@ -70,4 +70,8 @@ function this.NightSpecial()
     return {"NightTitle","NightLevel","NightPlot","NightOutput","NightDetails","NightButton"},"DungeonActivity9"
 end
 
+function this.Colosseum()
+    return {"Title4","Target","Output","Details","Button4"}
+end
+
 return this; 

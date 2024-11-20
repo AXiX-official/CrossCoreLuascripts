@@ -331,8 +331,16 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
 
                 --LogError(commodity)
                 print("commodity---------------------"..table.tostring(commodity))
-                --print("payType----"..table.tostring(payType))
-                ClientProto:QueryPrePay(commodity:GetID(),function(proto)
+                local AdvpriceInfo=commodity:GetPrice();
+                local Advcommodityprice=AdvpriceInfo[1].num*100;---单位元
+                local SDKamount=commodity["cfg"]["amount"];---单位分
+                ---如果没有这个字段，那么传 策划配置 商品价格 给服务端
+                if SDKamount==nil or tostring(SDKamount)==tostring(0) then
+                    SDKamount=Advcommodityprice;
+                    LogError("存在定价表数据异常："..table.tostring(commodity,true))
+                end
+                Log("商品价格分："..Advcommodityprice)
+                ClientProto:QueryPrePay(commodity:GetID(),SDKamount,function(proto)
                     if tostring(proto["productId"])==tostring(commodity:GetID()) then
                         SDKPayMgr:GenOrderID(commodity,payType,isInstall,function(Backresult)
                             Log("GenOrderID data back："..table.tostring(Backresult));
@@ -376,13 +384,13 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
                             ---key_id
                             ---rand_key
                             ---msg
-                            local AdvpriceInfo=commodity:GetPrice();
                             local payData=
                             {
                                 skuCode=tostring(commodity:GetID()),---商品id
                             gameOrderId=result.id,---游戏订单号
                                 --amount=commodity["cfg"]["amount"],---定价价格（单位分）      ------
-                                amount=commodity["cfg"]["amount"] or AdvpriceInfo[1].num*100;---定价价格（单位分）      ------
+                                --amount=commodity["cfg"]["amount"] or AdvpriceInfo[1].num*100;---定价价格（单位分）      ------
+                                amount=Advcommodityprice;---定价价格（单位分）      ------
                                 currency=commodity["cfg"]["displayCurrency"],---定价币种   -----
                                 productName=commodity:GetName(),---商品名称
                                 productDesc=commodity["data"]["sDesc"],---商品描述         -----
@@ -568,7 +576,17 @@ function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payTy
                 end
 
                 print("commodity---------------------"..table.tostring(commodity))
-                ClientProto:QueryPrePay(commodity:GetID(),function(proto)
+
+                local AdvpriceInfo=commodity:GetPrice();
+                local Advcommodityprice=AdvpriceInfo[1].num*100;---单位元
+                local SDKamount=commodity["cfg"]["amount"];---单位分
+                ---如果没有这个字段，那么传 策划配置 商品价格 给服务端
+                if SDKamount==nil or tostring(SDKamount)==tostring(0) then
+                    SDKamount=Advcommodityprice;
+                    LogError("存在定价表数据异常："..table.tostring(commodity,true))
+                end
+                Log("商品价格分："..Advcommodityprice)
+                ClientProto:QueryPrePay(commodity:GetID(),SDKamount,function(proto)
                     if tostring(proto["productId"])==tostring(commodity:GetID()) then
                         SDKPayMgr:GenOrderID(commodity,payType,isInstall,function(Backresult)
                             Log("GenOrderID data back："..table.tostring(Backresult));
@@ -602,7 +620,7 @@ function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payTy
                                 skuCode=tostring(commodity:GetID()),---商品id
                                 gameOrderId=result.id,---游戏订单号
                                 --amount=commodity["cfg"]["amount"],---定价价格（单位分）      ------
-                                amount=commodity["cfg"]["amount"] or AdvpriceInfo[1].num*100;---定价价格（单位分）      ------
+                                amount=Advcommodityprice;---定价价格（单位分）      ------
                                 currency=commodity["cfg"]["displayCurrency"],---定价币种   -----
                                 productName=commodity:GetName(),---商品名称
                                 productDesc=commodity["data"]["sDesc"],---商品描述         -----

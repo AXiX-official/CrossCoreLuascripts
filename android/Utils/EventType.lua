@@ -793,7 +793,7 @@ this.Mail_Click = 230002;
 --列表更新
 this.Mission_List = 240001
 --选择标签
-this.Mission_Tab_Sel = 240002
+--this.Mission_Tab_Sel = 240002
 
 --刷新
 --this.MIssion_Update = 240002
@@ -1287,9 +1287,13 @@ this.LovePlus_Data_Update = 640001 --章节数据更新
 this.LovePlus_UnLock_Update =640002 --解锁数据更新
 this.LovePlus_Spine_Select = 640003 --live2d动作选择
 this.LovePlus_Story_Select = 640004 --节点选中
+----------------------------------角斗场
+this.Colosseum_Refresh_Time = 650000 --时间刷新
+this.Colosseum_SelectCard = 650001 --选卡回调
+this.Colosseum_RandomReward = 650002 --随机模式领奖
+this.Colosseum_GetData = 650003 --获取赛季数据
 ----------------------------------设置
 this.Setting_Live_Change = 660000 --直播设置
-
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
 this.SDK_ShiryuSDK_Init=800001;

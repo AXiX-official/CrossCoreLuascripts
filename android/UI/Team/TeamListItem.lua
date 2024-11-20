@@ -517,12 +517,13 @@ function PushAssistCard(assist)
         formatTab:AddCardPosInfo(v);
     end
     local teamItemData = TeamItemData.New();
+    local isNpc,s1,s2=FormationUtil.CheckNPCID(card:GetID());
     local tempData={
         cid=card:GetID(),
         row=assist.row,
         col=assist.col,
         fuid=assist.fuid,
-        bIsNpc=FormationUtil.IsNPCAssist(card:GetID()),
+        bIsNpc=isNpc,
         index=6,
     }
     teamItemData:SetData(tempData);

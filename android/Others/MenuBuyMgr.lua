@@ -83,8 +83,10 @@ end
 --充值检测 --id: 1、6 的 登录/充值成功 推送 (分)
 function this:ConditionCheck3(id,num)
     local data = self.datas[id]
-    data:SetAmount(math.floor(num/100))
-    EventMgr.Dispatch(EventType.MenuBuy_RechargeCB)
+    if(data)then  
+        data:SetAmount(math.floor(num/100))
+        EventMgr.Dispatch(EventType.MenuBuy_RechargeCB)
+    end
 end 
 
 

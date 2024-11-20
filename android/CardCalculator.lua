@@ -69,8 +69,15 @@ function GCardCalculator:CalLvlPropertys(cfgid, level, intensify_level, break_le
     -- LogDebug("CalLvlPropertys(%s, %s, %s, %s)", cfgid, level, intensify_level, break_level)
     -- 基本属性
     local cfg = nil
-    if (isMonster) then
-        cfg = MonsterNumerical[cfgid]
+    if isMonster then
+        local monsterCfg = MonsterData[cfgid]
+        cfg = monsterCfg
+        if monsterCfg.numerical then
+            local monsterNumberCfg = MonsterNumerical[monsterCfg.numerical * 1000 + level]
+            if monsterNumberCfg then
+                cfg = monsterNumberCfg
+            end
+        end
     else
         cfg = CardData[cfgid]
     end

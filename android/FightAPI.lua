@@ -706,12 +706,23 @@ end
 -- 是否兄妹
 function SkillJudger:IsSibling(oSkill, caster, target, res, charID)
 
-	if target.model == charID then
+	if target.id == charID then
 		return res
 	else
 		return not res
 	end
 end
+
+-- 攻击方是否兄妹
+function SkillJudger:IsCasterSibling(oSkill, caster, target, res, charID)
+
+	if caster.id == charID then
+		return res
+	else
+		return not res
+	end
+end
+
 
 -- 判断护盾是否被打暴
 function SkillJudger:IsShieldDestroy(oSkill, caster, target, res)

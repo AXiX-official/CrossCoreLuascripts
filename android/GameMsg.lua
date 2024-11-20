@@ -366,14 +366,14 @@ GameMsg.map["ClientProto:PlrNotice"] = {
 	{ "notice",},
 }
 GameMsg.map["ClientProto:QueryPrePay"] = {
-	--商品id      
-	{ "uint",     },
-	{ "productId",},
+	--商品id      配置表的支付价格 
+	{ "uint",     "uint",          },
+	{ "productId","amount",        },
 }
 GameMsg.map["ClientProto:QueryPrePayRet"] = {
-	--商品id      
-	{ "uint",     },
-	{ "productId",},
+	--商品id      配置表的支付价格 
+	{ "uint",     "uint",          },
+	{ "productId","amount",        },
 }
 GameMsg.map["ClientProto:QueryAccount"] = {
 	--账号      版本号                
@@ -1076,9 +1076,9 @@ GameMsg.map["PlayerProto:UseItemRet"] = {
 	{ "info",              "isMerge",       },
 }
 GameMsg.map["TeamItemData"] = {
-	--卡牌的唯一id 位置    行      列      卡牌的信息(实时战斗才设置) 策略             
-	{ "uint",      "byte", "short","short","struts|sCardsData", "byte",          },
-	{ "cid",       "index","row",  "col",  "card_info",         "nStrategyIndex",},
+	--卡牌的唯一id 位置    行      列      卡牌的信息(实时战斗才设置) 策略             是否是NPC 
+	{ "uint",      "byte", "short","short","struts|sCardsData", "byte",          "bool",   },
+	{ "cid",       "index","row",  "col",  "card_info",         "nStrategyIndex","bIsNpc", },
 }
 GameMsg.map["TeamItem"] = {
 	--队伍类型 数据                队长cid  队伍名字 技能组id         技能组等级       性能          预留sp         预留np       
@@ -4225,6 +4225,11 @@ GameMsg.map["PlayerProto:SetIconTitleRet"] = {
 	{ "uint",      },
 	{ "icon_title",},
 }
+GameMsg.map["PlayerProto:ClearDuplicateRet"] = {
+	--关卡id       
+	{ "array|uint",},
+	{ "dupIds",    },
+}
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 
 	{ "long",  "array|long",  "uint",  "string","uint",  "byte",  "string", "string",            "json",              },
@@ -4484,6 +4489,91 @@ GameMsg.map["sOperateActive"] = {
 	--活动id（eOperateType） 开始时间   结束时间    充值金额（分） 
 	{ "uint",               "int",     "int",      "int",         },
 	{ "id",                 "openTime","closeTime","payRate",     },
+}
+GameMsg.map["sRandCard"] = {
+	--卡牌id   装备信息      对应怪物id   
+	{ "uint",  "list|sEquip","uint",      },
+	{ "cardId","equips",     "monsterIdx",},
+}
+GameMsg.map["sScoreData"] = {
+	--模式类型  总星数    最高回合 困难最高回合 
+	{ "uint",   "uint",   "uint",  "uint",      },
+	{ "modType","starNum","maxLv", "maxHardLv", },
+}
+GameMsg.map["sRandLevels"] = {
+	--第几关 关卡id       已选关卡id 
+	{ "uint","array|uint","uint",    },
+	{ "idx", "dupIds",    "selectId",},
+}
+GameMsg.map["sSelectCard"] = {
+	--待选卡牌组数据    已选卡牌数据     
+	{ "list|sRandCard", "list|sRandCard",},
+	{ "waitSelectCards","selectCards",   },
+}
+GameMsg.map["sRandModData"] = {
+	--随机关卡数据       选卡数据             领奖状态 是否结束 
+	{ "list|sRandLevels","struts|sSelectCard","bool",  "bool",  },
+	{ "randLvs",         "selectCardData",    "isGet", "isOver",},
+}
+GameMsg.map["AbattoirProto:GetSeasonData"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["AbattoirProto:GetSeasonDataRet"] = {
+	--当前赛季id 开始时间    结束时间  结算时间     随机模式刷新时间  自选模式刷新时间    战绩数据          随机模式数据         随机模式是否已买门票 自选模式是否已买门票 免费次数  
+	{ "uint",    "uint",     "uint",   "uint",      "uint",           "uint",             "list|sScoreData","struts|sRandModData","bool",              "bool",              "uint",   },
+	{ "id",      "startTime","endTime","rewardTime","randRefreshTime","selectRefreshTime","scoreData",      "randModData",       "isRandPay",         "isSelectPay",       "freeCnt",},
+}
+GameMsg.map["AbattoirProto:StartMod"] = {
+	--模式类型  门票类型 
+	{ "uint",   "uint",  },
+	{ "modType","tType", },
+}
+GameMsg.map["AbattoirProto:StartModRet"] = {
+	--模式类型  门票类型 选卡数据             随机关卡数据       免费次数  
+	{ "uint",   "uint",  "struts|sSelectCard","list|sRandLevels","uint",   },
+	{ "modType","tType", "selectCardData",    "randLvs",         "freeCnt",},
+}
+GameMsg.map["AbattoirProto:SelectCard"] = {
+	--选的第几张卡牌 
+	{ "uint",        },
+	{ "cardIdx",     },
+}
+GameMsg.map["AbattoirProto:SelectCardRet"] = {
+	--选卡数据             选的第几张卡牌 
+	{ "struts|sSelectCard","uint",        },
+	{ "selectCardData",    "cardIdx",     },
+}
+GameMsg.map["AbattoirProto:SaveRoute"] = {
+	--是否保存 
+	{ "bool",  },
+	{ "isSave",},
+}
+GameMsg.map["AbattoirProto:SaveRouteRet"] = {
+	--是否保存 
+	{ "bool",  },
+	{ "isSave",},
+}
+GameMsg.map["AbattoirProto:RandModQuit"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["AbattoirProto:RandModQuitRet"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["AbattoirProto:RandModeGetRwd"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["AbattoirProto:RandModeGetRwdRet"] = {
+	--领奖状态 
+	{ "bool",  },
+	{ "isGet", },
 }
 GameMsg.map["PlayerProto:GetClientData"] = {
 	--键值     

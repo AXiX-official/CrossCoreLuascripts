@@ -61,7 +61,12 @@ end
 function SetRed()
     isRed = false
     if (isOpen) then
-        local data = RedPointMgr:GetData(key)
+        local data = nil
+        if(key=="ActiveEntry26") then 
+            data = ColosseumMgr:IsRed() 
+        else
+            data = RedPointMgr:GetData(key) 
+        end 
         if (data and data ~= 0) then
             isRed = true
         end

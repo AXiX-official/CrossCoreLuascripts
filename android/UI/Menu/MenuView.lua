@@ -56,6 +56,7 @@ local resRecoveryEndTime = nil
 local webCheckTime = nil
 
 local petStateTime = nil;
+local colosseumRefreshTimes = nil
 local menuStandbyTimer = nil
 
 -- 主界面
@@ -98,8 +99,8 @@ function Awake()
         AdvDeductionvoucher.QueryPoints()
     end
 
-    --审核屏蔽
-    CSAPI.SetGOActive(groupsv,not CSAPI.IsAppReview())
+    -- 审核屏蔽
+    CSAPI.SetGOActive(groupsv, not CSAPI.IsAppReview())
 end
 
 function InitPanel()
@@ -125,8 +126,8 @@ function InitPanel()
 
     -- 锁屏动画
     uiEffect = ComUtil.GetCom(node, "UIEffectControl")
-     
-    --待机界面
+
+    -- 待机界面
     menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
 
     cg_node.alpha = 0
@@ -231,7 +232,7 @@ function InitListener()
         SetEnter()
     end)
     ---- 回归绑定活动数据更新
-    --eventMgr:AddListener(EventType.Collaboration_Info_Update, SetCollaborationMain)
+    -- eventMgr:AddListener(EventType.Collaboration_Info_Update, SetCollaborationMain)
     -- 台服web
     eventMgr:AddListener(EventType.Menu_WebView_Enabled, CheckBtnWebView)
     eventMgr:AddListener(EventType.CRoleDisplayMain_Change, SetBtnChange)
@@ -240,6 +241,10 @@ function InitListener()
     eventMgr:AddListener(EventType.MenuBuy_RechargeCB, SetMenuBuy)
     -- 直播模式
     eventMgr:AddListener(EventType.Setting_Live_Change, SetLiveBroadcast)
+    --
+    eventMgr:AddListener(EventType.Colosseum_GetData, function()
+        colosseumRefreshTimes = ColosseumMgr:GetRefreshTimes()
+    end)
 end
 
 function OnDestroy()
@@ -341,6 +346,8 @@ function OnOpen()
     activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
     enterRefreshTime = TimeUtil:GetRefreshTime("CfgActiveEntry", "begTime", "endTime")
     petStateTime = PetActivityMgr:GetEmotionChangeTimestamp();
+    -- 角斗场 
+    colosseumRefreshTimes = ColosseumMgr:GetRefreshTimes()
 end
 
 -- -- 设置看板回调
@@ -544,7 +551,7 @@ function RefreshUI()
     SetBottom()
     -- cnetre
     SetCenter()
-    --直播模式
+    -- 直播模式
     SetImgLive()
 end
 
@@ -585,7 +592,7 @@ function OnLoadingComplete()
         VerChecker:ApplyCheck()
     end
 
-    --OpenGoogleRewards()
+    -- OpenGoogleRewards()
 end
 
 local curTime = 0
@@ -712,9 +719,9 @@ function Update()
     end
 
     -- if (CollaborationMgr:GetNextBeginTime() > 0 and curTime > CollaborationMgr:GetNextBeginTime()) or
-        -- (CollaborationMgr:GetNextEndTime() > 0 and curTime > CollaborationMgr:GetNextEndTime()) then
-        -- CollaborationMgr:Clear();
-        -- RegressionProto:PlrBindInfo();
+    -- (CollaborationMgr:GetNextEndTime() > 0 and curTime > CollaborationMgr:GetNextEndTime()) then
+    -- CollaborationMgr:Clear();
+    -- RegressionProto:PlrBindInfo();
     -- end
 
     -- 回归活动
@@ -733,8 +740,8 @@ function Update()
         SetEnter();
         petStateTime = PetActivityMgr:GetEmotionChangeTimestamp();
     end
-
-    --待机界面
+    
+    -- 待机界面
     if (menuStandbyTimer and Time.time > menuStandbyTimer) then
         menuStandbyTimer = nil
         if (openViews["Guide"] ~= nil) then
@@ -742,6 +749,12 @@ function Update()
         else
             CSAPI.OpenView("MenuStandby")
         end
+    end
+    -- 角斗场 
+    if (colosseumRefreshTimes and curTime > colosseumRefreshTimes[1]) then
+        local type = colosseumRefreshTimes[2]
+        colosseumRefreshTimes = ColosseumMgr:GetRefreshTimes()
+        EventMgr.Dispatch(EventType.Colosseum_Refresh_Time, type)
     end
 end
 ----------------------------------------动画+红点-----------------------------------------------】
@@ -976,10 +989,10 @@ function OnRedPointRefresh()
         UIUtil:SetRedPoint2(menuRedPath, btnAchievement, _pData ~= nil, 51, 19, 0)
     end
 
-    --if CollaborationMgr:GetCurrInfo() then
+    -- if CollaborationMgr:GetCurrInfo() then
     --    local redInfo = RedPointMgr:GetData(RedPointType.Collaboration);
     --    UIUtil:SetRedPoint(btnCollaborationMain, redInfo == 1, 250, 80);
-    --end
+    -- end
 
     -- 角色详情 头像框 徽章
     if (true) then
@@ -1368,8 +1381,8 @@ function SetRegressionBtn()
 end
 
 function SetCollaborationMain()
-    --local currBind = CollaborationMgr:GetCurrInfo();
-    --CSAPI.SetGOActive(btnCollaborationMain, currBind ~= nil)
+    -- local currBind = CollaborationMgr:GetCurrInfo();
+    -- CSAPI.SetGOActive(btnCollaborationMain, currBind ~= nil)
 end
 
 ----------------------------------------right-----------------------------------------------
@@ -1596,20 +1609,20 @@ function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
 end
 
 function SetLiveBroadcast()
-    if(cardIconItem and cardIconItem.gameObject.activeSelf) then 
+    if (cardIconItem and cardIconItem.gameObject.activeSelf) then
         cardIconItem.SetLiveBroadcast()
-    end 
-    if(mulIconItem and mulIconItem.gameObject.activeSelf) then 
+    end
+    if (mulIconItem and mulIconItem.gameObject.activeSelf) then
         mulIconItem.SetLiveBroadcast()
-    end 
-    if(cardIconItem2 and cardIconItem2.gameObject.activeSelf) then 
+    end
+    if (cardIconItem2 and cardIconItem2.gameObject.activeSelf) then
         cardIconItem2.SetLiveBroadcast()
     end
     SetImgLive()
 end
 
 function SetImgLive()
-    CSAPI.SetGOActive(imgLive,SettingMgr:GetValue(s_other_live_key)==1)
+    CSAPI.SetGOActive(imgLive, SettingMgr:GetValue(s_other_live_key) == 1)
 end
 --[[
 -- 设置看板  
@@ -1817,12 +1830,12 @@ function OnViewOpened(viewKey)
     -- end
     closeViews = closeViews or {}
     for k, v in ipairs(closeViews) do
-        if(v==viewKey)then 
-            table.remove(closeViews,k)
+        if (v == viewKey) then
+            table.remove(closeViews, k)
             break
-        end 
+        end
     end
-    
+
     local cfg = Cfgs.view:GetByKey(viewKey)
     if (not cfg.top_mask) then
         openViews[viewKey] = cfg.is_window and 2 or 1
@@ -1850,21 +1863,21 @@ end
 -- 其它界面关闭
 function OnViewClosed(viewKey)
     closeViews = closeViews or {}
-    table.insert(closeViews,viewKey)
+    table.insert(closeViews, viewKey)
     if (isApplyRefresh) then
         return
     end
     isApplyRefresh = 1
-    if(gameObject~=nil) then 
+    if (gameObject ~= nil) then
         FuncUtil:Call(OnViewCloseds, nil, 50)
-    end 
-end 
+    end
+end
 
 -- 其它界面关闭
 function OnViewCloseds()
-    if(not gameObject) then 
+    if (not gameObject) then
         return
-    end 
+    end
     isApplyRefresh = nil
     local isContain = false
     for k, v in ipairs(closeViews) do
@@ -1881,7 +1894,7 @@ function OnViewCloseds()
     -- end
 
     -- openViews[viewKey] = nil
-    --HidePanel(viewKey, false)
+    -- HidePanel(viewKey, false)
 
     if (not CheckIsTop()) then
         return
@@ -1917,9 +1930,9 @@ function OnViewCloseds()
 
     --
     ShowHint(true)
-    --OpenGoogleRewards();
+    -- OpenGoogleRewards();
 
-    --检测是否强制更新
+    -- 检测是否强制更新
     VerChecker:ApplyCheck()
 end
 
@@ -2034,7 +2047,7 @@ function EActivityGetCB()
         return true
     end
     -- 首冲
-    if(not CSAPI.IsAppReview()) then 
+    if (not CSAPI.IsAppReview()) then
         if (isNeedToShowMenuBuy) then
             return true
         elseif (not isNeedToShowMenuBuy and objBuy.activeSelf and menuBuyItem ~= nil and MenuBuyMgr:CheckIsNeedShow()) then
@@ -2043,9 +2056,9 @@ function EActivityGetCB()
             return true
         end
     end
-    if(OpenGoogleRewards()) then 
+    if (OpenGoogleRewards()) then
         return true
-    end 
+    end
     CSAPI.SetGOActive(mask, false)
     return false
 end
@@ -2212,7 +2225,7 @@ function HidePanel(viewKey, open)
 end
 
 function SetLook(viewKey, open)
-    if (not loadingComplete or viewKey=="MenuStandby") then
+    if (not loadingComplete or viewKey == "MenuStandby") then
         return
     end
     if (not open) then
@@ -2253,9 +2266,9 @@ end
 
 -- 付费弹窗
 function SetMenuBuy()
-    if(CSAPI.IsAppReview()) then
-        return 
-    end 
+    if (CSAPI.IsAppReview()) then
+        return
+    end
     local isHad = false
     menuBuyInfo = nil
     local isOpen = MenuBuyMgr:CheckMenuBuyIsOpen()

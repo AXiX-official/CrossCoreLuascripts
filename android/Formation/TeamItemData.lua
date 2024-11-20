@@ -370,6 +370,30 @@ function this:GetFormatData()
     return nil;
 end
 
+function this:GetSaveData()
+    if self.cid and self.row and self.col then
+        local cid=self.cid;
+        local isNpc,s1,s2=FormationUtil.CheckNPCID(cid);
+        if isNpc and s2 then
+            cid=tonumber(s2);
+        end
+        return {
+            cid=cid,
+            row=self.row,
+            col=self.col,
+            fuid=self.fuid,
+            card_info=self.card_info,
+            type=self.type,
+            index=self.index,
+            bIsNpc=self.bIsNpc,
+            isForce=self.isForce,
+            isLeader=self.isLeader,
+            nStrategyIndex=self:GetStrategyIndex(),
+        }; 
+    end
+    return nil;
+end
+
 function this:GetFightCardData()
     local card=self:GetCard();
     if card then

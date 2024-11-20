@@ -664,6 +664,10 @@ function FightMgrBase:GetRand()
     return self.rand
 end
 
+function FightMgrBase:GetDupId()
+    return self.nDuplicateID
+end
+
 -- 获取进度条
 function FightMgrBase:GetProgress(showNest)
     local list = {}

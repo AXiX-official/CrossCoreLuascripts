@@ -394,6 +394,13 @@ local conf = {
 {'387',	'CRoleDisplayS',	'CRoleDisplay/CRoleDisplayS',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'388',	'CRoleDisplaySet',	'CRoleDisplay/CRoleDisplaySet',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
 {'389',	'SDKPayJPlimitLevel',	'SDK/SDKPayJPlimitLevel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'390',	'ColosseumM',	'Colosseum/ColosseumM',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'391',	'ColosseumReward',	'Dungeon/ColosseumReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'392',	'ASMRView',	'ASMR/ASMRView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'393',	'ASMRShow',	'ASMR/ASMRShow',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'394',	'GlobalBossView',	'GlobalBoss/GlobalBossView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'395',	'GlobalBossList',	'GlobalBoss/GlobalBossListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'396',	'ShopMultPayView',	'Shop/ShopMultPayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 },
 }
 --cfgview = conf

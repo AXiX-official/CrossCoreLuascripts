@@ -144,7 +144,7 @@ end
 
 function this.IsFirendCardID(cid)
     local strs = StringUtil:split(cid, "_");
-    if strs ~= nil and strs[1] ~= "npc" and #strs > 1 then
+    if strs ~= nil and tonumber(strs[1])~=nil and #strs > 1 then
         return true
     end
     return false;
@@ -195,10 +195,20 @@ function this.Load2DImg(go, cfg, gridType)
     end
 end
 
--- 判断当前卡牌是否是NPC
-function this.IsNPCAssist(cid)
-    local strs = StringUtil:split(cid, "_");
-    return strs == nil and false or strs[1] == "npc";
+---判断当前卡牌是否是NPC,并返回对应的key和id
+---@param cid any
+function this.CheckNPCID(cid)
+    if cid then
+        local strs = StringUtil:split(cid, "_");
+        if strs and #strs>1 then
+            if (tonumber(strs[1])~=nil) then
+                return false,strs[1],strs[2];
+            else
+                return true,strs[1],strs[2];
+            end
+        end
+    end
+    return false,cid;
 end
 
 -- 查找队伍中的卡牌数据
@@ -224,7 +234,7 @@ end
 function this.FindNPC(cid)
     if cid then
         local cardCfg = Cfgs.MonsterData:GetByID(cid)
-        if cardCfg == nil or (cardCfg and cardCfg.numerical == nil) then
+        if cardCfg == nil then--or (cardCfg and cardCfg.numerical == nil) then
             return nil;
         end
         local newSkillDatas = {}
@@ -244,11 +254,19 @@ function this.FindNPC(cid)
             exp = 0,
             type = SkillMainType.CardTalent
         })
-
+        --特殊技能
+        local tSkillID = cardCfg.tcSkills and cardCfg.tcSkills[1] or nil
+        if(tSkillID)then 
+            table.insert(newSkillDatas, {
+                id = tSkillID,
+                exp = 0,
+                type = SkillMainType.CardSpecial
+            })
+        end 
         local newInfo = {};
         newInfo.cid = this.FormatNPCID(cid) -- 自定义NPC的id
         newInfo.cfgid = cid
-        newInfo.break_level = 1
+        newInfo.break_level = cardCfg.break_level or 1
         newInfo.intensify_level = 1
         newInfo.level = cardCfg.level or 1;
         newInfo.skills = newSkillDatas;
@@ -462,7 +480,7 @@ function this.LookCard(cid)
         end
     else
         -- local openType=RoleInfoOpenType.Normal;
-        -- if this.IsNPCAssist(cid) then
+        -- if this.CheckNPCID(cid) then
         -- 	openType=RoleInfoOpenType.LookOther
         -- end
         -- CSAPI.OpenView("RoleInfo", cardData,openType)
@@ -536,6 +554,8 @@ function this.GetOrderByTeamIndex(index)
     local type = TeamMgr:GetTeamType(index)
     if this.orderList[type]~=nil then
         return this.orderList[type];
+    elseif index==61 then
+        return nil;
     else
         return 6;
     end
@@ -607,6 +627,8 @@ function this.GetDefaultName(teamIndex,name)
         teamName = LanguageMgr:GetByID(51007);
     elseif teamType == eTeamType.Tower or teamType==eTeamType.TowerDifficulty then
         teamName = LanguageMgr:GetByID(49021);
+    elseif teamType==eTeamType.Colosseum or teamType==(eTeamType.Colosseum+1) then
+        teamName = LanguageMgr:GetByID( 64047)
     elseif teamName==nil or teamName=="" then
         teamName = string.format(LanguageMgr:GetTips(14017), teamIndex)
     end

@@ -234,8 +234,7 @@ function OnDisable()
 end
 
 function OnDestroy()
-
-	if CSAPI.IsADV() then
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
 		if battleStrength~=ShiryuSDK.GetbattleStrength() then
 			ShiryuSDK.OnRoleInfoUpdate();
 		end
@@ -455,21 +454,28 @@ function SetViewLayout(openSetting)
 	local hasPrefab=true;
     if openSetting==TeamOpenSetting.Normal then
 		CSAPI.SetGOActive(btn_svType2,false);
-        CSAPI.SetGOActive(btn_svType,true);
+        CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,selectType==TeamSelectType.Normal and true or false);
     elseif openSetting==TeamOpenSetting.PVP then
         CSAPI.SetGOActive(btn_svType2,false);
-        CSAPI.SetGOActive(btn_svType,true);
+        CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
-    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS then
+    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum then
 		CSAPI.SetGOActive(btn_svType2,canAssist);
-        CSAPI.SetGOActive(btn_svType,true);
+        CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
     end
-	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS then
+	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum then
 		hasPrefab=false;
 	end
 	CSAPI.SetGOActive(btn_prefab,hasPrefab);
+	--AI和战术
+	local b = true
+	if(TeamMgr.currentIndex ==eTeamType.Colosseum or TeamMgr.currentIndex ==(eTeamType.Colosseum + 1)) then 
+		b = false
+	end 
+	CSAPI.SetGOActive(btn_ai,b)
+	CSAPI.SetGOActive(btn_skill,b)
 end
 
 --刷新面板 isReset:是否重置卡牌列表，notLoadModel：是否不刷新阵盘
@@ -498,12 +504,12 @@ function Refresh(isReset,notLoadModel)
 		SetTabState(isMember)
 		if isMember then --成员
 			CSAPI.SetGOActive(btnTool,true);
-			CSAPI.SetGOActive(btn_svType,true);
+			-- CSAPI.SetGOActive(btn_svType,true);
 			CSAPI.SetGOActive(vsv2,false);
 			CSAPI.SetGOActive(vsv,true);
 		else --支援卡
 			CSAPI.SetGOActive(btnTool,false);
-			CSAPI.SetGOActive(btn_svType,false);
+			-- CSAPI.SetGOActive(btn_svType,false);
 			CSAPI.SetGOActive(vsv2,true);
 			CSAPI.SetGOActive(vsv,false);
 		end
@@ -734,7 +740,7 @@ function CheckTeam(func,func2)
 			if card then
 				local teamIndex = -1;
 				if(openSetting == TeamOpenSetting.RogueS) then  
-					teamIndex =TeamMgr:GetCardTeamIndex(card:GetID());
+					teamIndex =TeamMgr:GetCardTeamIndex(card:GetID(),eTeamType.RogueS,true);
 					if(teamIndex ~= - 1 and teamIndex>=11 and teamIndex<=19 and  teamIndex ~= teamData.index) then --该卡牌存在于其他队伍中
 						LanguageMgr:ShowTips(14028)
 						return
@@ -875,6 +881,11 @@ function SetSVList()
 				arr[i].canDrag=TotalBattleMgr:IsShowCard(arr[i]:GetID());
 			end
 			svList=SortMgr:Sort2(sortID,arr,{isTotalBattle=openSetting==TeamOpenSetting.TotalBattle})
+		elseif openSetting==TeamOpenSetting.Colosseum then
+			if(TeamMgr.currentIndex ==(eTeamType.Colosseum + 1)) then 
+				arr = ColosseumMgr:GetEditTeamArr() --改用选择的卡牌
+			end 
+			svList=SortMgr:Sort(sortID,arr)
 		else
 			svList=SortMgr:Sort(sortID,arr)
 		end
@@ -975,6 +986,7 @@ function SetAssistList()
 	if next(svList) then
 		CSAPI.SetGOActive(txt_noneAssist,false)
 	else
+		CSAPI.SetText(txt_noneAssist,LanguageMgr:GetTips(14038));
 		CSAPI.SetGOActive(txt_noneAssist,true)
 	end
 end
@@ -1043,13 +1055,21 @@ function LayoutCallBack(index)
 		disDrag=TotalBattleMgr:IsShowCard(_data:GetID())~=true
 		isEqual=disDrag;
 	end
+	local isNpc,s1,s2=FormationUtil.CheckNPCID(_data:GetID());
+	local showNpc=false;
+	if isNpc and s1=="npc" then
+		showNpc=true;
+	end
+	if(openSetting==TeamOpenSetting.Colosseum)then 
+		showNpc = false
+	end 
 	local _elseData={
         isSelect=teamData:GetItem(_data:GetID())~=nil,
 		isCost=isCost,
 		listType=listType,
 		isFormation= TeamMgr:GetCardTeamIndex(_data:GetID(),TeamMgr:GetTeamType(teamData:GetIndex()),true)~=teamData:GetIndex(),--当前队伍的卡牌不显示队伍信息
 		showTips=isEqual,
-		showNPC=FormationUtil.IsNPCAssist(_data:GetID()),
+		showNPC=showNpc,
 		showAttr=isAddtive,
 		sr=scroll,
 		key=key,
@@ -1085,10 +1105,15 @@ function LayoutCallBack2(index)
 	elseif openSetting==TeamOpenSetting.TotalBattle then
 		canDrag=TotalBattleMgr:IsShowCard(_data:GetID());
 	end
+	local isNpc,s1,s2=FormationUtil.CheckNPCID(_data:GetID());
+	local showNpc=false;
+	if isNpc and s1=="npc" then
+		showNpc=true;
+	end
 	local _elseData={
         isSelect=teamData:GetItem(_data:GetID())~=nil,
 		showTips=isEqual,
-		showNPC=FormationUtil.IsNPCAssist(_data:GetID()),
+		showNPC=isNpc,
 		showAttr=isAddtive,
 		checkTeam=true,
 		sr=scroll2,
@@ -1344,7 +1369,7 @@ function JoinCard(card,row,col,index,isReplace)
 		row = row,
 		col = col,
 	}
-	
+	local isNpc=FormationUtil.CheckNPCID(card:GetID());
 	if selectType == TeamSelectType.Support then
 		tempData.index = 6;
 		local assistData = FormationUtil.FindTeamCard(card:GetID());
@@ -1352,10 +1377,11 @@ function JoinCard(card,row,col,index,isReplace)
 		if assData then
 			tempData.fuid = assData.uid;
 		end
-		tempData.bIsNpc=FormationUtil.IsNPCAssist(card:GetID());
+		tempData.bIsNpc=isNpc;
 	else
 		tempData.index = index;
 		tempData.isForce = IsForcePos();
+		tempData.bIsNpc=isNpc;
 	end
 	teamItem:SetData(tempData);
 	if formationView.formatTab:PushCardByPos(teamItem,isReplace) then
@@ -1665,7 +1691,7 @@ function OnChildNodeChange(index)
 end
 
 function OnTeamNameChange(str)
-	local text=StringUtil:FilterChar2(str);
+	local text=StringUtil:FilterChar(str);
 	input.text=text;
 end
 

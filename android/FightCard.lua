@@ -132,6 +132,13 @@ function FightCardBase:LoadConfig()
         LogDebugEx("boss出现", self.id)
     end
 
+    local dupId = self.team.fightMgr:GetDupId()
+    if dupId and dupId > 0 then
+        local dupCfg = MainLine[dupId]
+        if dupCfg and (dupCfg.type == eDuplicateType.AbattoirRand or dupCfg.type == eDuplicateType.AbattoirSelect) then
+            self.type = CardType.Mirror
+        end
+    end
     self.isMonster = true -- 从怪物表读取数据
 end
 

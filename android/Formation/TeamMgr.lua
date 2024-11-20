@@ -71,7 +71,14 @@ function this:UpdateDataByIndex(index, data)
 		local teamData = TeamData.New();
 		--剔除不存在的卡牌
 		for k,v in ipairs(data.data) do
-			local card=FormationUtil.FindTeamCard(v.cid);
+			local cid=v.cid;
+			if  v.bIsNpc==true then
+				local isNpc,s1,s2=FormationUtil.CheckNPCID(cid);
+				if isNpc~=true then
+					cid=FormationUtil.FormatNPCID(cid)
+				end
+			end
+			local card=FormationUtil.FindTeamCard(cid);
 			if card==nil then
 				data.data[k]=nil;
 			end
@@ -634,28 +641,35 @@ function this:DuplicateTeamData(index,teamData)
 	end
     for k, v in ipairs(teamData.data) do
         local item = {cid = v.cid, row = v.row, col = v.col}
-        if assistID~=nil and v.cid == assistID then
-            local ids=StringUtil:split(v.cid, "_");
-            item.cid = tonumber(ids[2])
-            if v.bIsNpc then
+		local isNpc,s1,s2=FormationUtil.CheckNPCID(v.cid);
+		local index=v.index;
+		if assistID~=nil and v.cid == assistID then
+			index=6;
+		end
+        if s1 and s2 then           
+            item.cid = tonumber(s2)
+            if isNpc then
+				--LogError(v:GetCfgID().."\t"..tostring(v.bIsNpc))
                 item.id=v:GetCfgID();
                 item.npcid=v.bIsNpc and v:GetCfgID() or nil;
                 item.bIsNpc=true;
-                item.index=6;
+                item.index=index;
 			elseif assistCard then
-                item.fuid =tonumber(ids[1])
+                item.fuid =tonumber(s1)
                 item.id=assistCard:GetCfgID();
-                item.index=6;
+                item.index=index;
             end
 			--助战卡需要带上AI数据
-			local aiPrefs=AIStrategyMgr:GetAssistAIPrefs(v.cid,teamData:GetIndex(),1);
-			if aiPrefs then
-				item.aiSetting=aiPrefs:GetStrategyData();
+			if index==6 then
+				local aiPrefs=AIStrategyMgr:GetAssistAIPrefs(v.cid,teamData:GetIndex(),1);
+				if aiPrefs then
+					item.aiSetting=aiPrefs:GetStrategyData();
+				end
 			end
         else
             local cardData=FormationUtil.FindTeamCard(v.cid);
             item.id=cardData:GetCfgID();
-            item.index=v.index;
+            item.index=index;
         end
 		item.nStrategyIndex=v:GetStrategyIndex();
         table.insert(list, item)
@@ -693,17 +707,21 @@ function this:ResetFightTeam(data)
 	local fuid=nil;
 	local assistCid=nil;
 	local assistItem=nil;
+	local npcID=nil;
 	for k,val in ipairs(data.data.data) do
 		if currTeam:GetItem(val.data.cuid)==nil and val.data.npcid~=nil then--当前队伍未找到的NPC卡暂时判定为助战NPC卡
-			assistItem={
-				cid=FormationUtil.FormatNPCID(val.data.cuid),
-				row=val.data.row,
-				col=val.data.col,
-				fuid=fuid,
-				index=6,
-				bIsNpc=true,
-				isForce=false,
-			}
+			npcID=FormationUtil.FormatNPCID(val.data.cuid);
+			if currTeam:GetItem(npcID)==nil then
+				assistItem={
+					cid=npcID,
+					row=val.data.row,
+					col=val.data.col,
+					fuid=fuid,
+					index=6,
+					bIsNpc=true,
+					isForce=false,
+				}
+			end
 			break;
 		elseif val.data.fuid~=nil then --获取助战卡牌数据
 			fuid=val.data.fuid;

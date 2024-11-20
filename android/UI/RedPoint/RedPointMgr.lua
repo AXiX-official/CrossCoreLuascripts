@@ -41,6 +41,8 @@ RedPointType.AccuCharge = "AccuCharge" --累计充值
 
 RedPointType.SpecialExploration="SpecialExploration"--特殊勘探
 
+RedPointType.Colosseum="Colosseum"--角斗场任务
+RedPointType.ActiveEntry26 = "ActiveEntry26"  --角斗场随机模式通关奖励
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机

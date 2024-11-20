@@ -95,7 +95,7 @@ function PlayerProto:SaveTeam(teamData, callBack)
         end
         -- table.insert(sendData.data, v:GetFormatData());
     end
-    local sendData = teamData:GetData();
+    local sendData = teamData:GetSaveData();
     Log(sendData);
     local proto = {"PlayerProto:SetTeamData", {
         info = sendData
@@ -137,7 +137,7 @@ function PlayerProto:SaveTeamList(teamDatas, callBack)
             end
             -- table.insert(sendData.data, val:GetFormatData());
         end
-        local sendData = v:GetData();
+        local sendData = v:GetSaveData();
         table.insert(sendDatas, sendData);
     end
     local proto = {"PlayerProto:MultSetTeamData", {
@@ -1475,4 +1475,9 @@ end
 function PlayerProto:SetIconTitleRet(proto)
     PlayerClient:SetIconTitle(proto.icon_title)
     EventMgr.Dispatch(EventType.Head_Title_Change, proto)
+end
+
+--清除关卡数据
+function PlayerProto:ClearDuplicateRet(proto)
+    DungeonMgr:ClearDungeonData(proto.dupIds)
 end

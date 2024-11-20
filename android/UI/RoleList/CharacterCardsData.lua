@@ -69,7 +69,11 @@ end
 
 -- 获取id
 function this:GetID()
-    return self.data and self.data.cid or -1;
+    if (self.data and self.data.cid) then
+        return self.data.cid
+    else
+        return self:GetCfgID()
+    end
 end
 -- 获取数据
 function this:GetData()
@@ -1009,9 +1013,10 @@ end
 -- 非登录时：未满足变成满足，设置未查看
 function this:CheckPassiveUp0(isLogin)
     self:CheckPassiveUp()
-    if(not isLogin) then 
-        if (self.passiveRed and self.old_passiveRed~=nil and self.old_passiveRed==false and RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "") and not CSAPI.IsViewOpen("RoleCenter")) then
-            RoleMgr:SetPassiveRedIsLook(self:GetID() .. "", 0) --设置为未看
+    if (not isLogin) then
+        if (self.passiveRed and self.old_passiveRed ~= nil and self.old_passiveRed == false and
+            RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "") and not CSAPI.IsViewOpen("RoleCenter")) then
+            RoleMgr:SetPassiveRedIsLook(self:GetID() .. "", 0) -- 设置为未看
         end
     end
     self.old_passiveRed = self.passiveRed
@@ -1084,6 +1089,10 @@ function this:CheckHadSkins()
         return true
     end
     return false
+end
+
+function this:GetCardCfg()
+    return self.cfg
 end
 
 return this;

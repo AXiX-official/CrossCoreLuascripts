@@ -54,13 +54,13 @@ function Update()
     if cTime > 0 and Time.time > cTimer then
         cTimer = Time.time + 1
         cTime = openInfo:GetEndTime() - TimeUtil:GetTime()
-        local tab = TimeUtil:GetTimeHMS(cTime)
+        local tab = TimeUtil:GetTimeTab(cTime)
         if txtTime2~=nil then
-            if tab.day > 0 then
-                LanguageMgr:SetText(txtTime2,22073,tab.day,tab.hour .. ":" .. tab.min .. ":" .. tab.sec)
+            if tab[1] > 0 then
+                LanguageMgr:SetText(txtTime2,22073,tab[1],tab[2] .. ":" .. tab[3] .. ":" .. tab[4])
             else
                 if tab.hour > 0 or tab.min > 0 then
-                    LanguageMgr:SetText(txtTime2,22074,tab.hour .. ":" ..tab.min .. ":" .. tab.sec)
+                    LanguageMgr:SetText(txtTime2,22074,tab[2] .. ":" ..tab[3] .. ":" .. tab[4])
                 else
                     LanguageMgr:SetText(txtTime2,22074,LanguageMgr:GetByID(51016))
                 end

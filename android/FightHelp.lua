@@ -217,7 +217,12 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
     if table.empty(exData) then
         exData = nil
     end
+    local dupCfg = MainLine[nDuplicateID]
 
+    if dupCfg and (dupCfg.type == eDuplicateType.AbattoirRand or dupCfg.type == eDuplicateType.AbattoirSelect) then
+        exData = exData or {}
+        exData.dupId = nDuplicateID
+    end
     mgr:AddCmd(
         CMD_TYPE.InitData,
         {

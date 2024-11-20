@@ -443,7 +443,7 @@ function SetAngle(angle,speed)
     end
     speed = speed or rotateSpeed;
     comRotate:RotateToTargetAngle(0,angle,0,speed);
-    LogError(GetModelName() .. ":angle:" .. tostring(angle));
+    --LogError(GetModelName() .. ":angle:" .. tostring(angle));
 end
 --面向指定目标
 function FaceTo(go,speed)
@@ -749,7 +749,7 @@ function ApplyHitData(hitData)
 --        LogError(hitData);
     end
     if(hitData.death)then
-        isDead = true;
+        SetDeadState(true);        
     end
 
     if(damage > 0 or shieldDamage > 0)then
@@ -802,6 +802,9 @@ end
 
 function SetDeadState(deadState)
     isDead = deadState;
+    if(isDead)then
+        PutOut();
+    end
 end
 --治疗
 function ApplyCureData(cureData)
@@ -1249,6 +1252,11 @@ function PlayDead()
         ShowDeadEffect();
     end
 end
+
+function GetBodySize()
+    return cfgModel and cfgModel.body_size;
+end
+
 
 function Clean()
     if(beModule ~= nil)then
@@ -1731,7 +1739,7 @@ end
 function GetComboTargets()
     local cfgCharacter = GetCfg();
     local unite = cfgCharacter.unite;
-  
+    --LogError(unite);
     local list = nil;
     if(unite ~= nil)then
         local uniteList = {};
@@ -1742,6 +1750,7 @@ function GetComboTargets()
         local all = CharacterMgr:GetAll();
         for id,targetCharacter in pairs(all) do
             if(targetCharacter ~= nil and targetCharacter.IsMine())then
+                --LogError("cfg id：" .. targetCharacter.GetCfgID());
                 if(uniteList[targetCharacter.GetCfgID()] ~= nil)then
                     local targetSP,targetSPMax = targetCharacter.GetSpInfo()
                     --不在判定SP
@@ -1762,11 +1771,11 @@ function GetComboRangeLimit()
     local range_limit = nil;
  
     --合体技能范围限制
-    local cfgCharacter = GetCfg();
-    local comboId = cfgCharacter.fit_result;
+  --  local cfgCharacter = GetCfg();
+  --[[   local comboId = cfgCharacter.fit_result;
     if(comboId == nil)then
         LogError("没有合体结果" .. cfgCharacter.id);
-    end
+    end ]]
 
 --    local cfgMonster = Cfgs.MonsterData:GetByID(comboId);
 --    if(cfgMonster == nil)then
@@ -1791,7 +1800,7 @@ function GetComboRangeLimit()
             end
         end
     end
-  
+    --LogError(range_limit);
     return range_limit;
 end
 

@@ -77,7 +77,9 @@ local eRectL = nil
 local eRectR = nil
 local isExerciseLOpen = false
 local isExerciseROpen = false
+local isExerciseRShow = true
 local eLockStr = ""
+local eLockStr2 = ""
 local isPvpRet = false
 
 --活动
@@ -536,11 +538,15 @@ function InitExerciseView()
         CSAPI.SetText(txt_eLock2, eLockStr)
     end
 
-    
     local sectionData = DungeonMgr:GetSectionData(13001)
-    -- isExerciseROpen,eLockStr2 = sectionData:GetOpen()
+    isExerciseROpen,eLockStr2 = sectionData:GetOpen()
     if not isExerciseROpen then
-        CSAPI.SetText(txt_eLock4, eLockStr)
+        isExerciseRShow = sectionData:GetOpenState() > -2
+        CSAPI.SetText(txt_eLock4, eLockStr2)
+        CSAPI.SetGOActive(btnExerciseR, isExerciseRShow)
+        if not isExerciseRShow and exerciseMoveL then
+            exerciseMoveL.targetPos = UnityEngine.Vector3(0,0,0)
+        end
     else
         CSAPI.SetGOActive(eLockImg2, false)
         CSAPI.SetGOActive(eLockObj2, false)
@@ -1164,7 +1170,7 @@ function ShowExercisePanel()
         CSAPI.SetScale(btnExerciseR, 0.73, 0.73, 1)   
 
         --pos
-        CSAPI.SetAnchor(btnExerciseL,241,0)
+        CSAPI.SetAnchor(btnExerciseL,241,isExerciseRShow and 153 or 0)
         CSAPI.SetAnchor(btnExerciseR,241,-153)       
     end
 
@@ -1220,7 +1226,8 @@ function OnClickExerciseR()
     if isExerciseROpen then
         CSAPI.OpenView("ColosseumView")       --CSAPI.OpenView("ExerciseRView")      
     else
-        LanguageMgr:ShowTips(1000)
+        Tips.ShowTips(eLockStr2)
+        -- LanguageMgr:ShowTips(1000)
     end
 end
 
@@ -1250,12 +1257,13 @@ function RefreshActivityDatas()
         end
 
         local logStrs = {}
+        local stateStr ={"未在活动开放时间内","","未达成开启条件","已开启"}
         for _, _type in pairs(SectionActivityType) do
             local typeDatas = activityTypeDatas[_type]           
             if typeDatas and #typeDatas > 0 then
                 for i, v in ipairs(typeDatas) do
-                    table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),v:GetOpenState()))
-                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower or _type == SectionActivityType.Rogue then
+                    table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),stateStr[v:GetOpenState()+3]))
+                    if v:GetOpenState() > -1 or v:IsResident() then
                         local _data = {
                             data = v,
                             type = _type,
@@ -2080,8 +2088,8 @@ end
 function SetRed()
     UIUtil:SetRedPoint(SectionTypeItem4,DungeonMgr:IsActivityRed(),146,26)
     UIUtil:SetRedPoint(SectionTypeItem1,DungeonMgr:IsMainLineRed(),146,26)
-    -- UIUtil:SetRedPoint(SectionTypeItem3,DungeonMgr:IsExerciseRed(),146,26)
-    -- UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
+    UIUtil:SetRedPoint(SectionTypeItem3,DungeonMgr:IsExerciseRed(),146,26)
+    UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
 end
 ---------------------------------------------new---------------------------------------------
 function DailyNewRefresh()

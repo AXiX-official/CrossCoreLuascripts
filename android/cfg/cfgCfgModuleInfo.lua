@@ -79,6 +79,7 @@ local conf = {
 {'RockFall',	'RockFall',	'',	'',	'',	'2402',	'',	'',	''},
 {'SandStorm',	'SandStorm',	'',	'',	'',	'2403',	'',	'',	''},
 {'RogueSView',	'RogueSView',	'1',	'1',	'487,-72',	'2701,2702',	'',	'',	''},
+{'ColosseumView',	'ColosseumView',	'1',	'1',	'487,-72',	'2801,2802,2803,2804',	'',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

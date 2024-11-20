@@ -148,7 +148,7 @@ end
 
 function SetItems()
     curDatas = {}
-    allDatas = MissionMgr:GetArr(eTaskType.Rogue)
+    allDatas = MissionMgr:GetArr({eTaskType.Rogue},true)
     if (curIndex1 == 1) then
         for k, v in ipairs(allDatas) do
             if (v:GetCfg().nStage == nil) then

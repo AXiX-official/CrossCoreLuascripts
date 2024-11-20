@@ -87,7 +87,7 @@ function SendProto()
             if not isSendProto then
                 local ids ={};
                 for k,v in ipairs(teamData.data) do
-                    if not v:IsAssist() then
+                    if not v:IsAssist() and not v:IsNPC() then
                         table.insert(ids,v:GetID())
                     end
                 end

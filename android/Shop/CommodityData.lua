@@ -26,7 +26,7 @@ end
 
 function this:SetData(data) 
     if data then
-        if CSAPI.IsADV() and data["id"]~=nil  then
+        if (CSAPI.IsADV() or CSAPI.IsDomestic()) and data["id"]~=nil  then
             data= ShiryuSDK.ShopDataEdit(data);
         end
         self.data = data 
@@ -34,7 +34,7 @@ function this:SetData(data)
 end
 
 function this:GetData()
-    if CSAPI.IsADV() and self.data~=nil then
+    if (CSAPI.IsADV() or CSAPI.IsDomestic()) and self.data~=nil then
         self.data= ShiryuSDK.ShopDataEdit(self.data);
     end
     return self.data;
@@ -217,12 +217,17 @@ end
 function this:GetResetTips()
     local str = ""
     local str1,str2="","";
-    local time = GCalHelp:GetCycleResetTime(self:GetResetType(),
+    local time = 0;
+    if self:GetResetType()==PeriodType.OnFlush then
+        time=self:GetResetTime();
+    else
+        time = GCalHelp:GetCycleResetTime(self:GetResetType(),
                                             self:GetResetValue(),
                                             TimeUtil:GetTime())
+    end
     if time > 0 then
         local type=self:GetResetType();
-        local id=18022;
+        local id=18024;
         if type==1 then
             id=18022;
         elseif type==2 then

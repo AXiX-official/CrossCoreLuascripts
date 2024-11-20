@@ -554,9 +554,10 @@ function this:Init()
     self.GachaBall=ResIconUtil.New("GachaBall");
 
     self.Bgm=ResIconUtil.New("Bgm");
-
+    
     --剧情
     self.PlotTop = ResIconUtil.New("Plot/PlotTop");
+    self.Colosseum = ResIconUtil.New("Colosseum") --角色场小队主题
 end
 
 return this;

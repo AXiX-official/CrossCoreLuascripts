@@ -27,6 +27,10 @@ end
 function this:GetDatas(cfgid, containJieJin)
     local dic = {}
     local _dic = self.datas[cfgid]
+    if(not _dic) then 
+        Log("找不到该角色的皮肤数据："..cfgid)
+        return {}
+    end 
     for k, v in pairs(_dic) do
         if (not v:IsHide() and (containJieJin or not v:CheckIsJieJin())) then
             dic[k] = v

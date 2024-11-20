@@ -841,15 +841,15 @@ function OnJoinDragBegin(eventData)
 			joinModel=modelNode;
 			local teamItemData=TeamItemData.New();
 			--是否是NPC
-			local isNpc=FormationUtil.IsNPCAssist(card:GetID());
+			local isNpc,s1,s2=FormationUtil.CheckNPCID(card:GetID());
 			--是否是助战卡
 			local fuid=nil;
 			local index=nil;
 			if FormationUtil.IsFirendCardID(card:GetID()) then
 				local strs=StringUtil:split(card:GetID(),"_");
 				fuid=tonumber(strs[1])
-			elseif eventData.isAssist and FormationUtil.IsNPCAssist(card:GetID()) then
-				fuid="npc";
+			elseif eventData.isAssist and isNpc then
+				fuid=s1;
 				index=6;
 			end
 			local tempData={

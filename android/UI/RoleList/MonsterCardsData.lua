@@ -56,23 +56,18 @@ function this:GetLv()
 end
 
 function this:GetBaseProperty()
-	if(not self.fighting) then
-		self.curData = GCardCalculator:CalPropertys(
-		self:GetMonsterNumericalID(),
-		self:GetLv(),
-		1,
-		1,
-		nil,
-		self.data.skills,
-		nil, true)
-		self.fighting = self.curData.performance or 0
-	end
-	-- local baseData = GCardCalculator:CalLvlPropertys(
-	-- self:GetMonsterNumericalID(),
-	-- self:GetLv(),
-	-- 1,
-	-- 1, true)
-	return self.curData
+    --self:GetMonsterNumericalID()
+    if (not self.fighting) then
+        self.curData = GCardCalculator:CalPropertys(self:GetCfg().id, self:GetLv(), 1, 1, nil,
+            self.data.skills, nil, true)
+        self.fighting = self.curData.performance or 0
+    end
+    -- local baseData = GCardCalculator:CalLvlPropertys(
+    -- self:GetMonsterNumericalID(),
+    -- self:GetLv(),
+    -- 1,
+    -- 1, true)
+    return self.curData
 end
 
 --计算卡牌的最终属性
@@ -124,8 +119,10 @@ function this:GetCardCfg()
     return self.cardCfg
 end
 
-function this:GetEnName()
-    return self:GetCardCfg().nameEng or ""
+-- 获取阵营 小队
+function this:GetCamp()
+    return self:GetCardCfg().nClass or 1
 end
+
 
 return this

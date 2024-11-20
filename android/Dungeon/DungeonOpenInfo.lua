@@ -1,24 +1,23 @@
---活动副本开启
-
+-- 活动副本开启
 local this = {};
 
 function this.New()
     this.__index = this.__index or this;
-	local ins = {};
-	setmetatable(ins,this);	    
-	return ins;
+    local ins = {};
+    setmetatable(ins, this);
+    return ins;
 end
 
 function this:InitOpenCfg(cfg)
     self.openCfg = cfg
     if self.openCfg and self.openCfg.config and self.openCfg.nConfigID then
         self.cfg = Cfgs[self.openCfg.config]:GetByID(self.openCfg.nConfigID)
-end
+    end
 end
 
 function this:Init(_data)
     self.data = _data
-        end
+end
 
 function this:GetData()
     return self.data
@@ -28,12 +27,12 @@ function this:GetID()
     return self.data and self.data.id
 end
 
---开启相关配置
+-- 开启相关配置
 function this:GetOpenCfg()
     return self.openCfg
 end
 
---关联配置
+-- 关联配置
 function this:GetCfg()
     return self.cfg
 end
@@ -42,7 +41,7 @@ function this:GetType()
     return self.cfg and self.cfg.type
 end
 
---活动开启
+-- 活动开启
 function this:IsOpen()
     if self.data and self.data.nBegTime and self.data.nEndTime then
         local time = TimeUtil:GetTime()
@@ -51,28 +50,29 @@ function this:IsOpen()
     return false
 end
 
---副本开启
+-- 副本开启
 function this:IsDungeonOpen()
     if self.data and self.data.nBegTime and self.data.nBattleendTime then
-        return TimeUtil:GetTime() >= self.data.nBegTime and TimeUtil:GetTime() < self.data.nBattleendTime,LanguageMgr:GetTips(24003)
+        return TimeUtil:GetTime() >= self.data.nBegTime and TimeUtil:GetTime() < self.data.nBattleendTime,
+            LanguageMgr:GetTips(24003)
     end
-    return false,""
+    return false, ""
 end
 
---困难本开启 --没填默认开启
+-- 困难本开启 --没填默认开启
 function this:IsHardOpen()
     local timeStr = ""
     if self.openCfg and self.openCfg.hardBegTime then
         timeStr = self.openCfg.hardBegTime
     end
-    if self.data and self.data.nHardBegTime and self:IsDungeonOpen()  then
+    if self.data and self.data.nHardBegTime and self:IsDungeonOpen() then
         local tips = LanguageMgr:GetTips(24007, timeStr)
-        return TimeUtil:GetTime() >= self.data.nHardBegTime,tips
+        return TimeUtil:GetTime() >= self.data.nHardBegTime, tips
     end
-    return true,""
+    return true, ""
 end
 
---EX本开启
+-- EX本开启
 function this:IsExtreOpen()
     local timeStr = ""
     if self.openCfg and self.openCfg.exBegTime then
@@ -80,25 +80,25 @@ function this:IsExtreOpen()
     end
     if self.data and self.data.nExBegTime and self:IsDungeonOpen() then
         local tips = LanguageMgr:GetTips(24007, timeStr)
-        return TimeUtil:GetTime() >= self.data.nExBegTime,tips
+        return TimeUtil:GetTime() >= self.data.nExBegTime, tips
     end
-    return false,""
+    return false, ""
 end
 
 function this:GetTimeStrs()
     local strs = {}
-    if self.cfg and self.cfg.actionTime  then
-        local s1 = StringUtil:split(self.cfg.actionTime,"-")
-        if #s1>1 then
-            local s2 = StringUtil:split(s1[1]," ")
+    if self.cfg and self.cfg.actionTime then
+        local s1 = StringUtil:split(self.cfg.actionTime, "-")
+        if #s1 > 1 then
+            local s2 = StringUtil:split(s1[1], " ")
             if #s2 > 1 then
-                table.insert(strs,s2[1])
-                table.insert(strs,s2[2])
+                table.insert(strs, s2[1])
+                table.insert(strs, s2[2])
             end
-            local s3 = StringUtil:split(s1[2]," ")
+            local s3 = StringUtil:split(s1[2], " ")
             if #s3 > 1 then
-                table.insert(strs,s3[1])
-                table.insert(strs,s3[2])
+                table.insert(strs, s3[1])
+                table.insert(strs, s3[2])
             end
         end
     end
@@ -121,7 +121,7 @@ function this:GetHardTime()
     return self.data and self.data.nHardBegTime
 end
 
---获取剩余时间
+-- 获取剩余时间
 function this:GetEndTime()
     return self.data and self.data.nEndTime or 0
 end
@@ -154,40 +154,40 @@ end
 -----------------------------------------------十二星宫-----------------------------------------------
 function this:GetInfos()
     local infos = {}
-    if self.data and self.data.sectionTables and #self.data.sectionTables>0 then
+    if self.data and self.data.sectionTables and #self.data.sectionTables > 0 then
         for k, v in pairs(self.data.sectionTables) do
-            table.insert(infos,v)
+            table.insert(infos, v)
         end
     end
-    if #infos>0 then
-        table.sort(infos,function (a,b)
+    if #infos > 0 then
+        table.sort(infos, function(a, b)
             return a.id < b.id
         end)
     end
     return infos
 end
 
---获取最近的开启关闭时间，若关闭中会向后获取最新开启时间，若开启中会向后获取最新关闭时间
+-- 获取最近的开启关闭时间，若关闭中会向后获取最新开启时间，若开启中会向后获取最新关闭时间
 function this:IsSectionOpen(sid)
     local infos = self:GetInfos()
     if sid and infos and #infos > 0 then
         for i, v in ipairs(infos) do
             if v.id == sid then
-                if v.startTime > self:GetEndTime() then --防止开启时间在活动结束后
-                    return false,0,0
+                if v.startTime > self:GetEndTime() then -- 防止开启时间在活动结束后
+                    return false, 0, 0
                 end
                 if v.startTime <= TimeUtil:GetTime() and v.closeTime > TimeUtil:GetTime() then
-                    if v.closeTime > self:GetEndTime() then --防止结束时间在活动结束后
-                        return true,v.startTime,self:GetEndTime()
+                    if v.closeTime > self:GetEndTime() then -- 防止结束时间在活动结束后
+                        return true, v.startTime, self:GetEndTime()
                     else
-                        return true,v.startTime,v.closeTime
+                        return true, v.startTime, v.closeTime
                     end
                 else
-                    return false,v.startTime,v.closeTime
+                    return false, v.startTime, v.closeTime
                 end
             end
         end
     end
-    return false,0,0
+    return false, 0, 0
 end
-return this 
+return this

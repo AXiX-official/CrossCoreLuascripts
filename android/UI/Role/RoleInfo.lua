@@ -363,7 +363,8 @@ function SetSpecialSkill()
     if (type and type == SpecialSkillType.Fit) then
         local str1 = LanguageMgr:GetByID(4053)
         str1 = str1 .. ":"
-        local _data, str2 = RoleUniteUtil:GetStrs(cardData:GetCfg())
+        local _cfg = cardData.isMonster and cardData:GetCardCfg() or cardData:GetCfg()
+        local _data, str2 = RoleUniteUtil:GetStrs(_cfg)
         CSAPI.SetText(txtTT1, str1)
         CSAPI.SetText(txtTT2, str2[1])
     end

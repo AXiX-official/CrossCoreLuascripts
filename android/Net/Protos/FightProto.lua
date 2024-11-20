@@ -108,7 +108,10 @@ function FightProto:RecvCmd(proto)
             g_FightMgr = CreateFightMgr(data.fid, data.groupID, data.stype, data.seed)
             g_FightMgr.nPlayerLevel = data.level
             g_FightMgr.uid = PlayerClient:GetID()
-
+            
+            if data.exData.dupId then
+                g_FightMgr.nDuplicateID = data.exData.dupId
+            end
             g_FightMgr:LoadConfig(data.groupID, data.exData.stage or 1, data.exData.hpinfo)
             g_FightMgr:LoadData(data.teamID, data.data.data, nil, data.data.tCommanderSkill)
 

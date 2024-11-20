@@ -501,6 +501,86 @@ function ConfigChecker:MonsterData(cfg)
             end
         end
         v.skills = skills
+
+        if (v.card_id and CardData[v.card_id] and CardData[v.card_id].uniteLabel) then
+            local removeIDs = {}
+            local uniteIDs = {}
+            for _, _cfg in pairs(MonsterData) do
+                --需要剔除的id
+                if (_cfg.fit_result) then --合体id
+                    removeIDs[_cfg.fit_result] = _cfg.fit_result
+                end
+                if (_cfg.tTransfo) then --变身id
+                    for _, _id in ipairs(_cfg.tTransfo) do
+                        removeIDs[_id] = _id
+                    end
+                end
+
+                local count = 0
+                for _, _info in ipairs(CardData[v.card_id].uniteLabel) do
+                    local cfgLabel = CfgUniteLabel[_info[1]]
+                    local cfg1 = nil
+                    if (_cfg.card_id and CardData[_cfg.card_id] and CardData[_cfg.card_id].role_id and cfgLabel.cfgType == 1) then
+                        cfg1 = CfgCardRole[CardData[_cfg.card_id].role_id]
+                    else
+                        cfg1 = CardData[_cfg.card_id]
+                    end
+                    if (cfg1) then
+                        --判断条件
+                        local num = 0
+                        if (cfgLabel.key) then
+                            for _, content in ipairs(_info[2]) do
+                                if (cfgLabel.type ~= 2) then
+                                    if (cfg1[cfgLabel.key] == content) then
+                                        num = num + 1
+                                    end
+                                else --区间类型
+                                    if
+                                    (content[1] < 0 and content[2] < 0) or
+                                            (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+                                            (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+                                            (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+                                    then
+                                        num = num + 1
+                                    end
+                                end
+                            end
+                        end
+                        if (num > 0) then
+                            if (_info[3] == 1) then --或条件
+                                count = count + 1
+                            else --与条件
+                                if (num >= #_info[2]) then
+                                    count = count + 1
+                                end
+                            end
+                        end
+                    end
+                end
+
+                -- if (count >= #v.uniteLabel and _cfg.get_from_gm) then
+                if (count >= #CardData[v.card_id].uniteLabel) then
+                    table.insert(uniteIDs, _cfg.id)
+                end
+            end
+            if (#uniteIDs > 0) then
+                table.sort(
+                        uniteIDs,
+                        function(a, b)
+                            return a < b
+                        end
+                )
+                local lastID = 0
+                local ids = {}
+                for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
+                    if (not (removeIDs[uniteID]) and not (uniteID == v.id) and not (uniteID == lastID)) then
+                        table.insert(ids, uniteID)
+                    end
+                    lastID = uniteID
+                end
+                v.unite = ids
+            end
+        end
     end
 end
 
@@ -538,6 +618,7 @@ function ConfigChecker:MainLine(cfgs)
     -- LogDebug("IS_CLIENT:" .. IS_CLIENT)
     g_CalMainLineStarIxs = {}
     g_CalMainLineCount = {}
+    g_AbattoirSeason = {}
 
     for k, v in pairs(cfgs) do
         if v.starIx then
@@ -627,6 +708,13 @@ function ConfigChecker:MainLine(cfgs)
                 ccc.rounds = {}
             end
             ccc.rounds[v.roundLevel] = v.id
+        end
+        if v.season and v.turn and v.type and v.type == 14 and v.weight and v.themeType then
+            g_AbattoirSeason[v.season] = g_AbattoirSeason[v.season] or {}
+            g_AbattoirSeason[v.season][v.turn] =  g_AbattoirSeason[v.season][v.turn] or {}
+
+            local tCfg = {id = v.id,weight = v.weight,themeType = v.themeType}
+            table.insert(g_AbattoirSeason[v.season][v.turn],tCfg)
         end
     end
 end
@@ -2488,6 +2576,25 @@ function ConfigChecker:CfgPetArchive(cfgs)
     CommCalCfgTasks(cfgs, eTaskType.Pet)
 end
 
+
+function ConfigChecker:cfgColosseumMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.AbattoirMoon)
+end
+
+function ConfigChecker:cfgColosseumSeasonMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.AbattoirSeason)
+end
+
 function ConfigChecker:CfgExtraExploration(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -2938,5 +3045,44 @@ function ConfigChecker:CfgRogueBuff(cfgs)
             assert(false, string.format("词条表，CfgRogueBuff id:%s 没有配出现概率", cfg.id))
         end
 
+    end
+end
+function ConfigChecker:cfgColosseum(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+    for _, cfg in pairs(cfgs) do
+        cfg.nBegTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        cfg.nRewardTime = GCalHelp:GetTimeStampBySplit(cfg.rewardTime, cfg)
+
+
+        cfg.randRefreshList = cfg.randRefreshList or {}
+        for k,v in ipairs(cfg.randomRefresh or {}) do
+            local lastRefresh = cfg.randRefreshList[k - 1] or cfg.nBegTime
+            local refreshTime = lastRefresh + v * TimerHelper.cDaySeconds
+            table.insert(cfg.randRefreshList,refreshTime)
+        end
+        table.insert(cfg.randRefreshList,cfg.nEndTime)
+        cfg.selectRefreshList = cfg.selectRefreshList or {}
+        for k,v in ipairs(cfg.optionalRefresh or {}) do
+            local lastRefresh = cfg.selectRefreshList[k - 1] or cfg.nBegTime 
+            local refreshTime = lastRefresh + v * TimerHelper.cDaySeconds
+            table.insert(cfg.selectRefreshList,refreshTime)
+        end
+        table.insert(cfg.selectRefreshList,cfg.nEndTime)
+    end
+end
+
+function ConfigChecker:cfgColosseumEquip(cfgs)
+    for _, cfg in pairs(cfgs) do
+        GCalHelp:CalArrWeight(cfg.infos, 'weight', 'sumWeight')
+        local sumWeight = 0
+        for _, info in pairs(cfg.infos) do
+            local weight = info.weight
+            info.sumWeight = weight + sumWeight
+            sumWeight = sumWeight + info.weight
+        end
     end
 end

@@ -29,7 +29,7 @@ function Refresh(teamItem,_isShowInfos)
 	if _isShowInfos then
 		local cardInfo=nil;
 		local strs = StringUtil:split(data:GetID(), "_");
-		if strs and #strs>1 and strs[1]~="npc" then
+		if isNpc and strs[1]~="npc" then
 			cardInfo=FormationUtil.GetTowerCardInfo(tonumber(strs[2]),tonumber(strs[1]),TeamMgr.currentIndex);
 		else
 			cardInfo=FormationUtil.GetTowerCardInfo(data:GetID(),nil,TeamMgr.currentIndex);
