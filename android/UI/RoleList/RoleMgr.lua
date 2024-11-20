@@ -878,6 +878,27 @@ function this:GetLeader()
     return nil
 end
 
+-- 获取总队长
+function this:GetLeader2()
+    for k, v in ipairs(g_CaptainRoleId) do
+        local data = self:GetData(v)
+        if (data) then
+            return data
+        end
+    end
+    return nil
+end
+
+-- 判断总队长
+function this:IsLeader(cfgId)
+    for i, v in ipairs(g_CaptainRoleId) do
+        if cfgId == v then
+            return true
+        end
+    end
+    return false
+end
+
 -- 特效技能红点查看记录
 function this:PassiveRedIsLook(data)
     self.passiveRedIsLookDatas = data or {}
