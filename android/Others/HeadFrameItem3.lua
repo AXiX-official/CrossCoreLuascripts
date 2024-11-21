@@ -24,7 +24,7 @@ function Refresh0(_data, _selectID)
     CSAPI.SetGOActive(use, data:CheckUse())
     -- red 
     isAdd = HeadTitleMgr:CheckRed(data:GetItemID())
-    UIUtil:SetRedPoint(node, isAdd, 47.4, 49.7, 0)
+    UIUtil:SetRedPoint(node, isAdd, 131, 32, 0)
     -- 
     CSAPI.SetGOAlpha(icon,data:CheckCanUse() and 1 or 0.5)
 end
