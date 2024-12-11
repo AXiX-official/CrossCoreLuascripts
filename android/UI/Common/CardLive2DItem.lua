@@ -153,7 +153,7 @@ function TouchItemClickCB(cfgChild)
             local _sName = spineTools:GetNameByTrackIndex(trackIndex)
             if (sName == _sName) then
                 spineTools:ResetActionsClick(trackIndex, content.actions.stopPerc, content.actions.stopLimit)
-            else
+            elseif (not _sName) then
                 b = spineTools:PlayByActionsClick(sName, trackIndex, true, true, nil, content.actions.stopPerc,
                     content.actions.stopTime, content.actions.stopCount)
             end

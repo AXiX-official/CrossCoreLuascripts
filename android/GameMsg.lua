@@ -4486,9 +4486,9 @@ GameMsg.map["OperateActiveProto:GetOperateActiveRet"] = {
 	{ "operateActiveList", },
 }
 GameMsg.map["sOperateActive"] = {
-	--活动id（eOperateType） 开始时间   结束时间    充值金额（分） 
-	{ "uint",               "int",     "int",      "int",         },
-	{ "id",                 "openTime","closeTime","payRate",     },
+	--活动id（eOperateType） 开始时间   结束时间（-1或者nil，无限开） 充值金额（分） 弹窗id     开启状态(0未开，1已开） 
+	{ "uint",               "int",     "int",               "int",         "int",     "int",               },
+	{ "id",                 "openTime","closeTime",         "payRate",     "noticeId","state",             },
 }
 GameMsg.map["sRandCard"] = {
 	--卡牌id   装备信息      对应怪物id   

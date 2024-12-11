@@ -62,6 +62,7 @@ local mgrNames = {
 	"BGMMgr",
 	"ColosseumMgr",
 	"HeadTitleMgr",
+	"ASMRMgr",
 }
 
 

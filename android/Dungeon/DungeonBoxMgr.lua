@@ -33,6 +33,7 @@ function this:GetDatas()
 end
 
 function this:GetData(id)
+    self.datas = self.datas or {}
     if self.datas[id] == nil then --没有则创建一个
         local data =  DungeonBoxData.New()
         data:Init({id = id})

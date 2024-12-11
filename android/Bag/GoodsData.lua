@@ -240,7 +240,7 @@ end
 --返回头像和头像框的剩余天数描述
 function this:GetIconDayTips()
 	local tips=nil;
-	if self:GetItemType()==ITEM_TYPE.PROP and (self:GetDyVal1()==PROP_TYPE.IconFrame or self:GetDyVal1()==PROP_TYPE.Icon) then
+	if self:GetItemType()==ITEM_TYPE.PROP and (self:GetDyVal1()==PROP_TYPE.IconFrame or self:GetDyVal1()==PROP_TYPE.Icon or self:GetDyVal1()==PROP_TYPE.IconTitle) then
 		local dyArr=self:GetDyArr();
 		if dyArr and dyArr[2]~=0 then
 			local result=TimeUtil:GetTimeTab(dyArr[2]);

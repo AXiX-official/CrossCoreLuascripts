@@ -65,8 +65,8 @@ function SetIcon()
 end
 
 function SetStar()
-    CSAPI.SetGOActive(starObj,not IsStory())
-    if not IsStory() then
+    CSAPI.SetGOActive(starObj,not IsStory() and not IsDanger())
+    if not IsStory() and not IsDanger() then
         local star = 0
         if dungeonData then
             star = dungeonData:GetStar()

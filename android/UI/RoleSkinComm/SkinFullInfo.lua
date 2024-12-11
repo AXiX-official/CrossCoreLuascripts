@@ -20,6 +20,8 @@ local countDown=0.46;
 local hasL2d=false;
 local isShowImg=false;
 local changeInfo=nil;
+local comm=nil;
+local bindComm=nil;
 
 function Awake()
     layout = ComUtil.GetCom(hsv, "UISV")
@@ -31,6 +33,8 @@ function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Card_Update, OnCardUpdate)
     eventMgr:AddListener(EventType.Card_Skin_Get, Refresh)
+    eventMgr:AddListener(EventType.Shop_RecordInfos_Refresh,OnBuyRet)
+    eventMgr:AddListener(EventType.Shop_Buy_Ret,OnBuyRet);
 end
 
 function OnDestroy()
@@ -73,7 +77,7 @@ function Refresh()
                 card=cards[1]
             end
             local useL2d=l2dOn;
-            local comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
+            comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
             isShowImg=false;
             if comm and comm:IsShowImg() and rSkinInfo and rSkinInfo:CheckCanUse()~=true then
                 useL2d=false; 
@@ -88,6 +92,7 @@ function Refresh()
             SetL2DState(useL2d);
             --设置描述
             CSAPI.SetText(txt_desc,currSkinInfo:GetDesc());
+            SetASMRInfo();
             SetContent();
             changeInfo=currSkinInfo:GetChangeInfo();
             SetChangeInfo();
@@ -102,6 +107,28 @@ function Refresh()
         LogError("无皮肤列表");
     end
     SetArrow(nowIdx);
+end
+
+function SetASMRInfo()
+    if comm then
+        local bindID=comm:GetBundlingID();
+        CSAPI.SetGOActive(btnASMR,bindID~=nil);
+        if bindID then --初始化绑定物品信息
+            bindComm=ShopMgr:GetFixedCommodity(bindID);
+            if bindComm then
+                local isLock=bindComm:GetBuySum()<=0
+                --加载图标
+                ResUtil.ASMRShop:Load(asmrIcon,bindComm:GetIcon());
+                CSAPI.SetGOActive(asmrLock,isLock);
+                CSAPI.SetAnchor(asmrDisk,isLock and 0 or 72,0);
+            end
+        end
+    end
+end
+
+function OnBuyRet()
+    --SetASMRInfo();
+    Refresh();
 end
 
 function SetChangeInfo()
@@ -160,7 +187,11 @@ function SetContent()
         if getType==SkinGetType.Store then
             CSAPI.SetText(txtS1,LanguageMgr:GetByID(18053));
             CSAPI.SetText(txtS2,LanguageMgr:GetByType(18053,4));
-            CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18067),curModelCfg.key,curModelCfg.desc));
+            if comm~=nil and comm:GetBundlingType()==ShopCommBindType.Bindling and bindComm then
+                CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18123),curModelCfg.key,curModelCfg.desc,bindComm:GetName()));
+            else
+                CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18067),curModelCfg.key,curModelCfg.desc));
+            end
             SetClickFuncS(OnClickBuy);
             CSAPI.SetGOActive(btnCurrent,false);
             --判断商品是否在购买期限内
@@ -416,6 +447,40 @@ function Update()
         if countDown<=0 then
             isFirst=false;
             CSAPI.SetGOActive(mask,false);
+        end
+    end
+end
+
+function OnClickASMR()
+    if bindComm and comm then
+        local isLock=bindComm:GetBuySum()<=0
+        if isLock then --根据绑定类型做逻辑
+            if comm:GetBundlingType()== ShopCommBindType.Show then--点击弹出购买窗口
+                local pageData=ShopMgr:GetPageByID(bindComm:GetShopID());
+                if CSAPI.IsADV() then
+                    if CSAPI.RegionalCode()==3 then
+                        if CSAPI.PayAgeTitle() then
+                            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function() ShopCommFunc.OpenPayView(bindComm,pageData);  end})
+                        else
+                            ShopCommFunc.OpenPayView(bindComm,pageData);
+                        end
+                    else
+                        ShopCommFunc.OpenPayView(bindComm,pageData);
+                    end
+                else
+                    ShopCommFunc.OpenPayView(bindComm,pageData);
+                end
+            else
+                OnClickBuy();
+            end
+        else --弹出跳转确认窗口
+            local dialogdata = {
+                content = LanguageMgr:GetTips(46003),
+                okCallBack = function()
+                   JumpMgr:Jump(80003);
+                end
+            }
+            CSAPI.OpenView("Dialog", dialogdata);
         end
     end
 end

@@ -15,5 +15,5 @@ end
 -- 攻击结束
 function Skill980101001:OnAttackOver(caster, target, data)
 	-- 980101001
-	self:DelBufferGroup(SkillEffect[980101001], caster, target, data, 2,10)
+	self:DelBufferGroup(SkillEffect[980101001], caster, target, data, 2,2)
 end

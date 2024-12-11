@@ -9,7 +9,7 @@ local conf = {
 },
 	["data"] = {
 {'1',	'',	'镜像竞技',	'3',	'',	'',	'',	'',	'',	'',	'chapter_51',	'',	'INSTANT',	'CONFRONTATION',	'p_title_001',	'1'},
-{'2',	'',	'实时作战',	'3',	'',	'',	'',	'',	'',	'',	'chapter_52',	'',	'BATTLE',	'BATTLE?SIMULATION',	'p_title_002',	'2'},
+{'2',	'',	'实时作战',	'3',	'',	'',	'',	'',	'',	'',	'chapter_52',	'',	'BATTLE',	'BATTLE SIMULATION',	'p_title_002',	'2'},
 },
 }
 --cfgSectionOther = conf

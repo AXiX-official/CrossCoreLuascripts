@@ -215,7 +215,10 @@ function InitListener()
     -- 商店购买回调 商店界面返回就自动触发弹窗了
     eventMgr:AddListener(EventType.Shop_Buy_Ret, SetMenuBuy)
     -- 检测活动列表是否为空
-    eventMgr:AddListener(EventType.Activity_List_Null_Check, SetActivityBtn)
+    eventMgr:AddListener(EventType.Activity_List_Null_Check, function ()
+        SetActivityBtn()
+        SetSpecialGiftsBtn()
+    end)
     -- 重置金额刷新
     -- eventMgr:AddListener(EventType.Pay_Amount_Change, SetMenuBuy)
     -- 回归判断(3点会更新)
@@ -2067,6 +2070,7 @@ function EActivityGetCB2()
     CSAPI.SetGOActive(mask, false)
     isNeedToShowMenuBuy = false
     menuBuyItem.OnClick()
+
 end
 
 -- --技能升级完成 提示是否打开技能列表

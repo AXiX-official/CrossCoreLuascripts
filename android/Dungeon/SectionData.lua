@@ -428,6 +428,9 @@ function this:IsShowOnly()
 end
 
 function this:GetOpenInfo()
+	if self.openInfo == nil then
+		self.openInfo = DungeonMgr:GetActiveOpenInfo2(self:GetID())
+	end
 	return self.openInfo
 end
 

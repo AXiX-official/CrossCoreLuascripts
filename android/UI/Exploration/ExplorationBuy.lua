@@ -218,19 +218,59 @@ function CreateRewards(itemList,curList,parent)
 end
 
 function OnClickPlus()
-    OnClickBuy(ExplorationState.Plus);
+    if CSAPI.RegionalCode()==3 then
+        if CSAPI.PayAgeTitle() then
+            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+                OnClickBuy(ExplorationState.Plus);
+            end})
+        else
+            OnClickBuy(ExplorationState.Plus);
+        end
+    else
+        OnClickBuy(ExplorationState.Plus);
+    end
 end
 
 function OnClickNormal()
-    OnClickBuy(ExplorationState.Ex);
+    if CSAPI.RegionalCode()==3 then
+        if CSAPI.PayAgeTitle() then
+            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+                OnClickBuy(ExplorationState.Ex);
+            end})
+        else
+            OnClickBuy(ExplorationState.Ex);
+        end
+    else
+        OnClickBuy(ExplorationState.Ex);
+    end
 end
 
 function OnClickPlusVoucher()
-    OnClickBuy(ExplorationState.Plus,true);
+    if CSAPI.RegionalCode()==3 then
+        if CSAPI.PayAgeTitle() then
+            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+                OnClickBuy(ExplorationState.Plus,true);
+            end})
+        else
+            OnClickBuy(ExplorationState.Plus,true);
+        end
+    else
+        OnClickBuy(ExplorationState.Plus,true);
+    end
 end
 
 function OnClickNormalVoucher()
-    OnClickBuy(ExplorationState.Ex,true);
+    if CSAPI.RegionalCode()==3 then
+        if CSAPI.PayAgeTitle() then
+            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+                OnClickBuy(ExplorationState.Ex,true);
+            end})
+        else
+            OnClickBuy(ExplorationState.Ex,true);
+        end
+    else
+        OnClickBuy(ExplorationState.Ex,true);
+    end
 end
 function OnClickBuy(type,IsDeductionvoucher)
     --获取真实价格

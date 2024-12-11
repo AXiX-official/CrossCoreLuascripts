@@ -23,6 +23,13 @@ function Skill304602:OnAttackOver(caster, target, data)
 	else
 		return
 	end
+	-- 8429
+	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
+	-- 8822
+	if SkillJudger:Less(self, caster, self.card, true,count29,1) then
+	else
+		return
+	end
 	-- 304602
 	self:HitAddBuff(SkillEffect[304602], caster, target, data, 4000,1003)
 end

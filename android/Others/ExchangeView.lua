@@ -5,6 +5,12 @@ local page = nil
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/Activity6/EXchangeItem", LayoutCallBack, true)
+    tlua = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Normal)
+
+    eventMgr = ViewEvent.New()
+    eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
+    eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClose)
+    eventMgr:AddListener(EventType.SpecialDrops_Info_Update,OnInfoUpdate)
 end
 
 function LayoutCallBack(index)
@@ -23,8 +29,32 @@ function OnItemClickCB(item)
 end
 
 function OnSuccess()
-    SetItems()
-    ActivityMgr:CheckRedPointData(ActivityListType.Exchange)
+    SetData()
+end
+
+function OnViewOpened(viewKey)
+    if (viewKey == "RewardPanel") then
+        layout:IEShowList(0)
+        ActivityMgr:CheckRedPointData(ActivityListType.Exchange)
+    end
+end
+
+function OnViewClose(viewKey)
+    if (viewKey == "RewardPanel") then
+        CSAPI.SetGOActive(animMask, true)
+        tlua:AnimAgain()
+        layout:IEShowList(#curDatas, function ()
+            CSAPI.SetGOActive(animMask, false)
+        end)
+    end
+end
+
+function OnInfoUpdate()
+    SetNum()
+end
+
+function OnDestroy()
+    eventMgr:ClearListener()
 end
 
 function Refresh(_data,_elseData)
@@ -33,7 +63,9 @@ function Refresh(_data,_elseData)
         info = cfg.info and cfg.info[1] or nil
         SetTime()
         SetNum()
+        SetData()
         SetItems()
+        PlayAnim(600)
     end
 end
 
@@ -70,7 +102,7 @@ function SetNum()
     CSAPI.SetText(txtNum,str)
 end
 
-function SetItems()
+function SetData()
     if info and info.shopId  then
         page = ShopMgr:GetPageByID(info.shopId)
         if page then
@@ -84,7 +116,19 @@ function SetItems()
                     end
                 end)
             end
-            layout:IEShowList(#curDatas)
         end
     end
 end
+
+function SetItems() 
+    tlua:AnimAgain()
+    layout:IEShowList(#curDatas)
+end
+
+function PlayAnim(time)
+    CSAPI.SetGOActive(animMask,true)
+    FuncUtil:Call(function ()
+        CSAPI.SetGOActive(animMask,false)
+    end,this,time)
+end
+

@@ -51,6 +51,8 @@ local ConfigList =
 	'CfgArchiveMultiPicture',
 	'CfgArchiveStory',
 	'CfgArchiveStoryGroup',
+	'CfgASMR',
+	'CfgAsmrVoice',
 	'cfgAutoFight',
 	'CfgAvatar',
 	'CfgBadge',
@@ -457,4 +459,3 @@ function ReadAllConfig()
     collectgarbage("collect")
     return cf
 end
-

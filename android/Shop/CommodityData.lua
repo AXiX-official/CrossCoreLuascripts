@@ -541,6 +541,13 @@ function this:GetExGets()
     return jExGets;
 end
 
+function this:GetBuySum()
+    if self.data and self.data.buy_sum then
+        return self.data.buy_sum
+    end
+    return 0;
+end
+
 -- 返回商品剩余数量
 function this:GetNum()
     local num = 0
@@ -763,6 +770,24 @@ end
 
 function this:GetUseVoucherTypes()
     return self.cfg and self.cfg.canUseVoucher or nil;
+end
+
+function this:GetBundlingType()
+    -- if self.data and self.data.shop_config  then
+    --     return self.data.shop_config.bundingType or nil;
+    -- end
+    if self.cfg then
+        return self.cfg and self.cfg.bundlingType or nil
+    end
+end
+
+function this:GetBundlingID()
+    -- if self.data and self.data.shop_config  then
+    --     return self.data.shop_config.bundlingID or nil;
+    -- end
+    if self.cfg then
+        return self.cfg and self.cfg.bundlingID or nil
+    end
 end
 
 return this

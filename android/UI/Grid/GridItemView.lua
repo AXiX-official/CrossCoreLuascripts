@@ -127,7 +127,7 @@ function Refresh(data, _elseData)
 				if checkRed then
 					redObj=UIUtil:SetRedPoint(root,true,78,78);
 				end
-			elseif cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon) then --头像框/头像
+			elseif cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon or cfg.dy_value1==PROP_TYPE.IconTitle) then --头像框/头像
 				local dayTips=nil;
 				local dyArr=cfg.dy_arr;
 				if dyArr and dyArr[2]~=0 then

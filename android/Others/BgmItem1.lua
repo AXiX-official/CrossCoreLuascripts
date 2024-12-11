@@ -39,6 +39,11 @@ function Refresh(_cfg, _curMusicID)
     --ResUtil.MultiImg:Load(icon, cfg.img)
     CSAPI.SetAnchor(icon, cfg.offices[1], cfg.offices[2], 0)
     CSAPI.SetScale(icon, cfg.offices[3], cfg.offices[3], 1)
+    --
+    if(oldCurMusicID and oldCurMusicID~=curMusicID)then 
+        layout:UpdateList()
+    end 
+    oldCurMusicID = curMusicID
 end
 
 function SetSelect(b)

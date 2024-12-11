@@ -24,12 +24,12 @@ time=2000,type=0
 },
 [-1485114200]={
 {time=10000,type=1,hit_type=1,hit_creates={-454591178},hits={5000,5400,5800}},
-{effect="cast4_hit01",time=15000,type=0,pos_ref={ref_type=6}},
-{effect="cast4_eff",time=15000,type=0,pos_ref={ref_type=6}},
+{effect="cast4_hit01",time=12000,type=0,pos_ref={ref_type=6}},
+{effect="cast4_eff",time=12000,type=0,pos_ref={ref_type=6}},
 {time=10000,type=1,hit_type=1,hits={9300}}
 },
 [-454591178]={
-effect="cast4_hit02",time=10000,type=0,pos_ref={ref_type=6}
+effect="cast4_hit02",time=10000,type=0,pos_ref={ref_type=4,offset_row=-250,part_index=1}
 },
 [-1609092943]={
 {delay=1355,time=5000,type=1,hit_type=1,camera_shake={time=200,shake_dir=1,range=200,range2=200,hz=50,decay_value=0.6},hit_creates={1349028111},hits={0,350}},

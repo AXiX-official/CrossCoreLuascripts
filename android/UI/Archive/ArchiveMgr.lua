@@ -42,7 +42,7 @@ end
 
 -- 获取数量
 function this:GetCount(_type)
-    return self:GetData(_type).count or 0
+    return self:GetData(_type) and self:GetData(_type).count or 0
 end
 
 -- 设置数量
@@ -168,19 +168,19 @@ function this:GetBoardCountByID(id)
                         count = count + 1
                         max = max + 1
                     elseif ShopMgr:HasBuyRecord(v.shopId) then --已购买
-                    if data and data:IsHad() then
-                        count = count + 1
-                    end
-                    max = max + 1
-                else
-                    local commodity =ShopMgr:GetFixedCommodity(v.shopId)
-                    if commodity and commodity:GetNowTimeCanBuy() then --当前商品是否在销售
                         if data and data:IsHad() then
                             count = count + 1
                         end
                         max = max + 1
+                    else
+                        local commodity =ShopMgr:GetFixedCommodity(v.shopId)
+                        if commodity and commodity:GetNowTimeCanBuy() then --当前商品是否在销售
+                            if data and data:IsHad() then
+                                count = count + 1
+                            end
+                            max = max + 1
+                        end
                     end
-                end
                 end
             else
                 if data and data:IsHad() then
@@ -257,6 +257,9 @@ function this:CheckRedPoint(_type)
         self:GetRoleCount()
     end
     local redData = self:GetIsNew() and 1 or nil
+    if redData == nil then
+        redData = ASMRMgr:IsRed() and 1 or nil
+    end
     RedPointMgr:UpdateData(RedPointType.Archive, redData)
 end
 

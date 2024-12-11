@@ -156,7 +156,10 @@ end
 function SetRight()
     local _data = datas[curIndex]
     if (_data) then
-        if _data:GetPath() and (_data:GetType() == ActivityListType.SignInContinue or _data:GetType() == ActivityListType.Investment or _data:GetType() == ActivityListType.DropAdd) then
+        if _data:GetPath() and (_data:GetType() == ActivityListType.SignInContinue 
+        or _data:GetType() == ActivityListType.Investment or _data:GetType() == ActivityListType.DropAdd 
+        or _data:GetType() == ActivityListType.AccuCharge or _data:GetType() == ActivityListType.AccuCharge2 or _data:GetType() == ActivityListType.AccuCharge3
+        or _data:GetType() == ActivityListType.Exchange) then
             CSAPI.SetGOActive(imgParent,false)
         else
             CSAPI.SetGOActive(imgParent,true)

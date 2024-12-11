@@ -241,13 +241,26 @@ end
 function this:GetCommodityInfos2()
 	local itemDatas = {};
 	local cfgs=Cfgs.CfgCommodity:GetGroup(self:GetID());
+	local lastItem = nil
 	if cfgs then
 		for k, v in ipairs(cfgs) do
 			local itemData = ShopMgr:GetFixedCommodity(v.id);
 			local canAdd=true;
-			if itemData:IsOver() and itemData:ShowOnSoldOut()~=true then--售罄时不显示的数据
-				canAdd=false;
+			if itemData:GetPreLimitID() then
+				local _itemData = ShopMgr:GetFixedCommodity(itemData:GetPreLimitID())
+				if _itemData and not _itemData:IsOver() then
+					--上一个商品已开放购买
+					if _itemData:GetPreLimitID() then
+						local _itemData2 = ShopMgr:GetFixedCommodity(_itemData:GetPreLimitID())
+						if _itemData2 and not _itemData2:IsOver() then
+							canAdd = false
+						end
+					end
+				end
 			end
+			-- if itemData:IsOver() and itemData:ShowOnSoldOut()~=true then--售罄时不显示的数据
+			-- 	canAdd=false;
+			-- end
 			if canAdd then
 				table.insert(itemDatas, itemData);
 			end

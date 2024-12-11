@@ -332,8 +332,22 @@ end
 function OnClickPay()
 
 	if CSAPI.IsADV() then
-		AdvDeductionvoucher.IsDeductionvoucher=true;
-		ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+		if CSAPI.RegionalCode()==3 then
+			if CSAPI.PayAgeTitle() then
+				CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+					AdvDeductionvoucher.IsDeductionvoucher=true;
+					ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+				end})
+			else
+				AdvDeductionvoucher.IsDeductionvoucher=true;
+				ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+			end
+		else
+			AdvDeductionvoucher.IsDeductionvoucher=true;
+			ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+		end
+		--AdvDeductionvoucher.IsDeductionvoucher=true;
+		--ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
 	else
 		ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,voucherList,OnSuccess);
 	end
@@ -359,7 +373,18 @@ function OnClickPay()
 	-- end
 end
 function OnClickVoucherPay()
-	ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
+	if CSAPI.RegionalCode()==3 then
+		if CSAPI.PayAgeTitle() then
+			CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+				ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false)
+			end})
+		else
+			ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
+		end
+	else
+		ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
+	end
+	---ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
 end--购买成功
 --购买成功
 function OnSuccess(proto)

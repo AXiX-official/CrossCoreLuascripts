@@ -874,6 +874,9 @@ this.IsLocalMode = CS.CSAPI.IsLocalMode;
 
 this.Quit = CS.CSAPI.Quit;
 
+function this.UnityQuit()
+ 	 UnityEngine.Application.Quit();
+end
 
 this.ChangeConstraintCount = CS.CSAPI.ChangeConstraintCount
 
@@ -1145,13 +1148,9 @@ this.WindowsEditor=CS.UnityEngine.RuntimePlatform.WindowsEditor;
 
 this.IsADV=CS.CSAPI.IsADV;
 this.IsDomestic=CS.CSAPI.IsDomestic;
---function this.IsADV()
---	return false;
---end
 --function this.IsDomestic()
 --	return false;
 --end
-
 this.SetUIFit=CS.CSAPI.SetUIFit;
 this.AddUIAdaptive=CS.CSAPI.AddUIAdaptive;
 this.RemoveAdaptive=CS.CSAPI.RemoveAdaptive;
@@ -1161,20 +1160,6 @@ this.UIFitoffsetTop=CS.CSAPI.UIFitoffsetTop;
 this.UIFoffsetBottom=CS.CSAPI.UIFoffsetBottom;
 this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
 this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
-this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
---function  this.UIFitoffsetTop()
---	return 0;
---end
---function  this.UIFoffsetBottom()
---	return 0;
---end
---function  this.UIFittopAnchor()
---	return 0;
---end
---function  this.UIbottomAnchor()
---	return 0;
---end
-
 this.QuitGame =CS.CSAPI.QuitGame;
 this.GetDeviceID =CS.CSAPI.GetDeviceID;
 this.GetInside =CS.CSAPI.GetInside;
@@ -1186,11 +1171,6 @@ this.ZLongServerId=CS.ShiryuStreamingAssets.ins.GetServerId
 this.PCSetWindow=CS.CSAPI.PCSetWindow;
 this.APKVersion=CS.CSAPI.APKVersion;
 this.RegionalCode=CS.CSAPI.RegionalCode;
---function this.RegionalCode()
---	return 100;
---end
-
-
 ---是否存在新手引导
 function this.IsBeginnerGuidance()
 	if GuideMgr.IsGuideEnd==true then
@@ -1233,14 +1213,118 @@ function this.Getplatform()
 	end
 end
 
-
 ---是否提审模式
 function this.IsAppReview()
 	return false;
 end
-
+---获取当前平台指定热更新文件夹路径(指定文件夹内)
+this.PlatformURL=CS.CSAPI.PlatformURL;
+---获取当前平台指定热更新文件夹路径
+this.HotFileUrl=CS.CSAPI.HotFileUrl;
 --字符串替换 (string str = "",string pattern = "",bool isMatch = false)
--- this.FilterChar = CS.CSAPI.FilterChar
+this.FilterChar = CS.CSAPI.FilterChar
+
+--- 海外日服璨晶购买提示
+function this.ADVJPTitle(consume,action)
+	---璨晶总数
+	local  TotalDiamonds=PlayerClient:GetCoin(ITEM_ID.DIAMOND);
+	--- 充值获得的璨晶
+	local RechargeDiamonds=PlayerClient:GetCoin(ITEM_ID.DIAMOND_PAY);
+	---免费璨晶
+	local FreeDiamonds=TotalDiamonds-RechargeDiamonds;
+	---需要消耗的璨晶
+	local consume=consume;
+	---免费减去  消耗 等于剩余
+	local RemainderDiamonds=FreeDiamonds-consume;
+	---如果 得到的 是负数，需要和充值的相加得到剩余的
+	if 0>RemainderDiamonds then
+		--- RemainderDiamonds=RemainderDiamonds+RechargeDiamonds;
+		RechargeDiamonds=RemainderDiamonds+RechargeDiamonds;
+		--不可能剩余负数，只能为0，代表免费的使用完毕
+		RemainderDiamonds=0;
+	end
+
+	local JPTitleTable=
+	{
+		TotalDiamonds,---总璨晶
+	FreeDiamonds, ---免费璨晶
+		RechargeDiamonds,---充值的璨晶
+		RemainderDiamonds,---使用后剩余的免费璨晶
+		RechargeDiamonds,---使用后剩余的充值璨晶
+	}
+	local dialogData = {}
+	dialogData.title=LanguageMgr:GetByID(66003);
+	dialogData.content =LanguageMgr:GetTips(15124,JPTitleTable[1],JPTitleTable[2],JPTitleTable[3],JPTitleTable[4],JPTitleTable[5])
+	dialogData.okText =LanguageMgr:GetByID(1001)
+	dialogData.cancelText =LanguageMgr:GetByID(1002)
+	dialogData.okCallBack = function() if action~=nil then action(); end end
+	dialogData.cancelCallBack = function()  end
+	CSAPI.OpenView("Dialog", dialogData)
+end
+
+---海外指定地区判断
+function this.IsADVRegional(RegionalCode)
+	if CSAPI.IsADV() and CSAPI.RegionalCode()==RegionalCode then
+		return true;
+	else
+		return false
+	end
+end
+
+
+---JP 支付年龄显示
+function this.PayAgeTitle()
+	local Age=PlayerPrefs.GetInt(CSAPI.GetSetkey("JPChooseAgeNotdisplay"));
+	if Age==1 then
+		return  false;
+	else
+		return true;
+	end
+end
+
+---获取JP支付限制类型
+function this.JPGetTypelimit()
+	if CSAPI.PayAgeTitle()==false then
+		return 0;  ---如果满足不显示  就是 18岁以上
+	end
+	local AgeType=PlayerPrefs.GetInt(CSAPI.GetSetkey("JPSelectAge"));
+	Log("AgeType-----------------:"..AgeType)
+	if AgeType==0 then
+		return 0;   ----  没有也默认18岁以上
+	elseif AgeType==1 then
+		return 1    ----16岁以上
+	elseif AgeType==2 then
+		return 2    ---16-17岁以上
+	elseif AgeType==3 then
+		return 0  ---18岁随以上
+	else
+		return 0   ------错误 也默认 18岁随以上
+	end
+end
+
+---服务器id_玩家UID_缓存key 组成的  缓存记录
+function this.GetSetkey(key)
+	local  Backkey=tostring(this.ServerID).."_"..tostring(this.PlayerUID).."_"..tostring(key)
+	return Backkey;
+end
+
+---所选服务器id
+this.ServerID=0;
+---设置服务器id
+function this.SetServerID(id)
+	if id~=nil then
+		this.ServerID=id;
+	end
+end
+---玩家UID
+this.PlayerUID=0;
+---设置游戏UID
+function this.SetGameUID(id)
+	if id~=nil then
+		this.PlayerUID=id;
+	end
+end
+
 
 return this;
 

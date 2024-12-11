@@ -254,20 +254,34 @@ function this:CheakPopInfos()
     self.popInfos = FileUtil.LoadByPath("Activity_Pop_Infos.txt") or {}
 end
 
-function this:GetALData(id)
-    return self.ALDatas[id]
-end
-
-function this:GetALDatasByType(_type)
-    local datas = {}
+--获取某一组活动的最前开始时间和最后结束时间
+function this:GetActivityTime(group)
+    local sTime,eTime = nil,nil
     if self.ALDatas then
         for k, v in pairs(self.ALDatas) do
-            if v:GetType() == _type then
-                table.insert(datas,v)
+            if group and v:GetGroup() == group then
+                if v:GetCfg() and v:GetCfg().sTime and v:GetCfg().eTime then
+                    local _sTime = TimeUtil:GetTimeStampBySplit(v:GetCfg().sTime)
+                    local _eTime = TimeUtil:GetTimeStampBySplit(v:GetCfg().eTime)
+                    if sTime == nil then
+                        sTime = _sTime
+                    else
+                        sTime = sTime > _sTime and _sTime or sTime
+                    end
+                    if eTime == nil then
+                        eTime = _eTime
+                    else
+                        eTime = eTime < _eTime and _eTime or eTime
+                    end
+                end
             end
         end
     end
-    return datas
+    return sTime,eTime
+end
+
+function this:GetALData(id)
+    return self.ALDatas[id]
 end
 
 function this:GetArr(group)
@@ -301,23 +315,27 @@ end
 -- 检测红点
 function this:CheckRedPointData(type)
     if type then
-        local datas = self:GetALDatasByType(type)
-        if #datas > 0 then
-            local redData = RedPointMgr:GetData(RedPointType["ActivityList" .. datas[1]:GetGroup()])
-            local isRed1 = redData ~= nil
-            local isRed2 = false
-            for i, v in ipairs(datas) do
-                if self:CheckRed(v:GetID()) then
-                    isRed2 = true
-                    break
+        if self.ALDatas then
+            local redData1,redData2 = nil,nil
+            local group = 1
+            for i, v in pairs(self.ALDatas) do
+                if v:GetType() == type then
+                    if redData1 == nil then
+                        redData1 = RedPointMgr:GetData(RedPointType["ActivityList" .. v:GetGroup()])
+                        group = v:GetGroup()
+                    end
+                    if self:CheckRed(v:GetID()) then
+                        redData2 = 1
+                        break
+                    end
                 end
             end
-            if isRed1 ~= isRed2 then
-                if not isRed2 then --如果无红点，检测一遍全组是否都无红点
-                    isRed2 = self:CheckRedByGroup(datas[1]:GetGroup())
+            if redData1 ~= redData2 then
+                if redData2 == nil then --如果无红点，检测一遍全组是否都无红点
+                    redData2 = self:CheckRedByGroup(group) and 1 or nil
                 end
-                redData = isRed2 and 1 or nil
-                RedPointMgr:UpdateData(RedPointType["ActivityList" .. datas[1]:GetGroup()], redData) 
+                redData1 = redData2
+                RedPointMgr:UpdateData(RedPointType["ActivityList" .. group], redData1) 
             end
         end
         return
@@ -325,30 +343,30 @@ function this:CheckRedPointData(type)
     local redData1 = RedPointMgr:GetData(RedPointType.ActivityList1)
     local redData2 = RedPointMgr:GetData(RedPointType.ActivityList2)
     local redData3 = RedPointMgr:GetData(RedPointType.ActivityList3)
-    local isRed1 = redData1 ~= nil
-    local isRed2 = redData2 ~= nil
-    local isRed3 = redData3 ~= nil
+    local redData4 = nil
+    local redData5 = nil
+    local redData6 = nil
     if self.ALDatas then
         for k, v in pairs(self.ALDatas) do
             if self:CheckRed(v:GetID()) then
-                if v:GetGroup() == 2 and redData2 == nil then
-                    redData2 = 1
-                elseif v:GetGroup() == 3 and redData3 == nil then
-                    redData3 = 1
-                elseif v:GetGroup() == 1 and redData1 == nil then
-                    redData1 = 1
+                if v:GetGroup() == 2 and redData5 == nil then
+                    redData5 = 1
+                elseif v:GetGroup() == 3 and redData6 == nil then
+                    redData6 = 1
+                elseif v:GetGroup() == 1 and redData4 == nil then
+                    redData4 = 1
                 end
             end
         end
     end
-    if isRed1 ~= (redData1 ~= nil) then
-        RedPointMgr:UpdateData(RedPointType.ActivityList1, redData1)
+    if redData1 ~= redData4 then
+        RedPointMgr:UpdateData(RedPointType.ActivityList1, redData4)
     end
-    if isRed2 ~= (redData2 ~= nil) then
-        RedPointMgr:UpdateData(RedPointType.ActivityList2, redData2)
+    if redData2 ~= redData5 then
+        RedPointMgr:UpdateData(RedPointType.ActivityList2, redData5)
     end
-    if isRed3 ~= (redData3 ~= nil) then
-        RedPointMgr:UpdateData(RedPointType.ActivityList3, redData3)
+    if redData3 ~= redData6 then
+        RedPointMgr:UpdateData(RedPointType.ActivityList3, redData6)
     end
 end
 
@@ -393,6 +411,13 @@ function this:CheckRed(id)
     
             local commodity = comms[1]
             if commodity:GetPrice() and #commodity:GetPrice() > 0 then
+                if commodity:GetBuyLimitType() == ShopBuyLimitType.FirstRecharge then
+                    local amount = PlayerClient:GetPayAmount() / 100 
+                    local maxAmount = commodity:GetBuyLimitVal()
+                    if amount < maxAmount then
+                        return false
+                    end
+                end
                 local costCount = commodity:GetPrice()[1].num
                 return BagMgr:GetCount(ITEM_ID.DIAMOND) >= costCount
             end
@@ -406,7 +431,7 @@ function this:CheckRed(id)
                     if datas and #datas > 0 then
                         local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
                         for i, v in ipairs(datas) do
-                            if infos[v:GetID()] and infos[v:GetID()] == 1 and v:GetNum() > 0 and ShopCommFunc.CheckCanPay(v,1) then
+                            if (not infos[v:GetID()] or infos[v:GetID()] == 1) and v:GetNum() ~= 0 and ShopCommFunc.CheckCanPay(v,1) then
                                 return true
                             end
                         end
@@ -432,6 +457,18 @@ function this:CheckRed(id)
                 end
             end
             return false;
+        elseif data:GetType() == ActivityListType.AccuCharge2 then
+            local num = RedPointMgr:GetData(RedPointType.AccuCharge2)
+            if(num and num==1) then 
+                return true
+            end 
+            return false   
+        elseif data:GetType() == ActivityListType.AccuCharge3 then
+            local num = RedPointMgr:GetData(RedPointType.AccuCharge3)
+            if(num and num==1) then 
+                return true
+            end 
+            return false   
         else
             local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. id) == 0
             return isRed

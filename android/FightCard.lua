@@ -1203,7 +1203,7 @@ function FightCardBase:AddHp(num, killer, bNotDeathEvent, bNotDealShield)
         end
     end
 
-    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent, true)
+    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent)
     if num < 0 then
         -- 传给统计接口
         local mgr = self.team.fightMgr
@@ -1293,10 +1293,12 @@ function FightCardBase:AddHpProtect(num, killer, bNotDeathEvent, bNotDealShield)
         LogDebug(string.format("血量保护,血[%d]保[%d],原扣[%d]实扣[%d]", self.hp, self:GetTempSign("HpProtect"), num, self:GetTempSign("HpProtect") - self.hp))
         num = self:GetTempSign("HpProtect") - self.hp
         self.hp = self:GetTempSign("HpProtect")
+        self.nBeSkillDamage = self.nBeSkillDamage or 0
+        self.nBeSkillDamage = self.nBeSkillDamage - num
         return false, shield, num, "HpProtect"
     end
 
-    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent, true)
+    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent)
     return tisdeath, shield, num, abnormalities
 end
 

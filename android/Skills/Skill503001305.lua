@@ -31,6 +31,12 @@ function Skill503001305:OnAttackOver(caster, target, data)
 	end
 	-- 503001301
 	self:ClosingBuffByID(SkillEffect[503001301], caster, target, data, 1,1003)
+	-- 503001302
+	self:ClosingBuffByID(SkillEffect[503001302], caster, target, data, 1,1051)
+	-- 503001303
+	self:ClosingBuffByID(SkillEffect[503001303], caster, target, data, 5,1001)
+	-- 503001304
+	self:ClosingBuffByID(SkillEffect[503001304], caster, target, data, 1,1002)
 end
 -- 暴击伤害前(OnBefourHurt之前)
 function Skill503001305:OnBefourCritHurt(caster, target, data)

@@ -12,7 +12,7 @@ function Refresh(_data,_elseData)
     currPrice=priceObj3
     local num=this.data:GetNum()
     RefreshTime();
-    SetDiscount(this.data:GetNowDiscount())
+    SetDiscount(this.data:GetNowDiscountTips())
     if skinInfo then
         changeInfo=skinInfo:GetChangeInfo();
         local hasMore=changeInfo~=nil and true or false;
@@ -51,6 +51,7 @@ function Refresh(_data,_elseData)
         CSAPI.SetGOActive(otherIcon,showOtherIcon);
         CSAPI.SetGOActive(bg,showBg1);
         CSAPI.SetGOActive(bg2,not showBg1);
+        CSAPI.SetGOActive(asmrIcon,this.data:GetBundlingID()~=nil);
         SetName(skinInfo:GetRoleName());
         SetL2dTag(skinInfo:HasL2D());
         SetAnimaTag(skinInfo:HasEnterTween());
@@ -79,9 +80,13 @@ function Refresh(_data,_elseData)
 end
 
 function SetDiscount(discount)
-    local dis=math.floor(discount*10+0.5);
-    CSAPI.SetGOActive(discountObj,discount~=1);
-    CSAPI.SetText(txt_discount,string.format(LanguageMgr:GetByID(18074),dis));
+    CSAPI.SetGOActive(discountObj,discount~=nil);
+    if discount then
+        CSAPI.SetText(txt_discount,discount);
+    end
+    -- local dis=math.floor(discount*10+0.5);
+    -- CSAPI.SetGOActive(discountObj,discount~=1);
+    -- CSAPI.SetText(txt_discount,string.format(LanguageMgr:GetByID(18074),dis));
 end
 
 function Update()

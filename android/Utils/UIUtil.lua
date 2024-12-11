@@ -154,7 +154,7 @@ end
 function this:OpenReward2(viewPath, data, elseData)
     -- LogError("奖励数据：")
     -- LogError(data)
-    if data and #data > 0 then
+    if data and #data > 0 and #data[1] > 0 then 
         local showRoleList = {};
         local showSkinList = {}
         for k, v in ipairs(data[1]) do -- data[1]是奖励数据
@@ -863,7 +863,7 @@ function this:SetLiveBroadcast(obj, isBlack)
         num = value == 1 and 0.1 or 1
     end
     -- spine
-    local graphics = ComUtil.GetComsInChildren(obj, "SkeletonGraphic")
+    local graphics = ComUtil.GetComsInChildren(obj, "SkeletonGraphic", true)
     if (graphics ~= nil and graphics.Length > 0) then
         for i = 0, graphics.Length - 1 do
             graphics[i].color = UnityEngine.Color(num, num, num, 1)
@@ -871,14 +871,14 @@ function this:SetLiveBroadcast(obj, isBlack)
     else
         -- 图片+特效
         local _num = num == 1 and 255 or 25
-        local images = ComUtil.GetComsInChildren(obj, "Image")
+        local images = ComUtil.GetComsInChildren(obj, "Image", true)
         if (images ~= nil and images.Length > 0) then
             for i = 0, images.Length - 1 do
                 CSAPI.SetImgColor(images[i].gameObject, _num, _num, _num, 255)
             end
         end
         -- 隐藏特效
-        local systems = ComUtil.GetComsInChildren(obj, "ParticleSystem")
+        local systems = ComUtil.GetComsInChildren(obj, "ParticleSystem", true)
         if (systems ~= nil and systems.Length > 0) then
             for i = 0, systems.Length - 1 do
                 CSAPI.SetGOActive(systems[i].gameObject,_num==255)

@@ -209,9 +209,11 @@ end
 -- 整体是否有红点
 function this:IsRed()
     local isRed = false
-    for k = 1, 2 do
-        if (self:CheckRedByNType(k)) then
-            isRed = true
+    if (self.sectionDatas ~= nil) then
+        for k = 1, 2 do
+            if (self:CheckRedByNType(k)) then
+                isRed = true
+            end
         end
     end
     return isRed

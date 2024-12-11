@@ -50,6 +50,7 @@ local conf = {
 {'6',	'6',	'',	'',	'',	'9',	'36',	'arch_rebuilding_together',	''},
 {'6',	'6',	'',	'',	'',	'10',	'40',	'arch_a_narrow_escape',	''},
 {'6',	'6',	'',	'',	'',	'11',	'41',	'arch_black_cocoon_rebecca',	''},
+{'6',	'6',	'',	'',	'',	'12',	'42',	'arch_wave_and_vortex',	''},
 {'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
 {'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
 {'8',	'8',	'arch_camping_with_fireworks',	'闲适假日',	'',	'',	'',	'',	''},

@@ -1,6 +1,6 @@
 local cur = 1
 local bs = 10 --1个数量对应的个数
-
+local quantitynum=0;  ---数据量
 function Awake()
 	CSAPI.SetText(txtCancel, LanguageMgr:GetByID(1002))
 	CSAPI.SetText(txtOk, LanguageMgr:GetByID(1001))
@@ -32,6 +32,7 @@ end
 
 function SetPanel()
 	local num = math.floor(cur * bs)
+	quantitynum=num;
 	CSAPI.SetText(txtCount, math.floor(cur) .. "")
 	local str = "";
 	if openSetting == nil or openSetting == 1 then
@@ -72,7 +73,11 @@ function OnClickOK()
 	if openSetting == nil or openSetting == 1 then
 		RoleMgr:CardGirdAdd(cur * bs)	
 	else
-		EquipProto:AddGrid(cur * bs);
+		if CSAPI.IsADVRegional(3) then
+			CSAPI.ADVJPTitle(quantitynum * g_EquipGridAddCost[2],function() EquipProto:AddGrid(cur * bs); end)
+		else
+			EquipProto:AddGrid(cur * bs);
+		end
 	end
 	Close()
 end

@@ -114,6 +114,8 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener();
+
+    ActivityMgr:CheckRedPointData(ActivityListType.Exchange)
 end
 
 function Update()

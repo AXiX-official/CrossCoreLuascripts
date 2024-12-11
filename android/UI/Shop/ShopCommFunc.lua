@@ -404,6 +404,9 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
                             print("GenOrderID  Backresult-----payData---------------"..table.tostring(payData))
                             if payType~=nil and payType==10 then
                                 Log("--------------抵扣券抵扣--------------")
+                                if CSAPI.RegionalCode()==3 then
+                                    ShiryuSDK.SetPayLimitLevel(CSAPI.JPGetTypelimit());
+                                end
                                 ---抵扣券接口
                                 ShiryuSDK.PayPoints(payData,function(success,voucherNum)
                                     Log("---------------ShiryuSDK.PayPoints Back---------------")
@@ -432,6 +435,9 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
                                 end)
                             else
                                 ---正常支付接口
+                                if CSAPI.RegionalCode()==3 then
+                                    ShiryuSDK.SetPayLimitLevel(CSAPI.JPGetTypelimit());
+                                end
                                 CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Pay,payData)
                             end
                         end);
@@ -441,7 +447,16 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
                 end);
             else --正常购买
                 Log("-------------------canPay--------正常购买------------")
-                ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil, callBack);
+                if CSAPI.IsADVRegional(3) then
+                    if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
+                        print("--------------------BuyCommodity----------------------------")
+                        CSAPI.ADVJPTitle(priceInfo[1].num,function() ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost, callBack); end)
+                    else
+                        ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost, callBack);
+                    end
+                else
+                    ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil, callBack);
+                end
             end
         else
             ---国内--------------------------
@@ -748,19 +763,30 @@ function this.ExchangeCommodity(commodity, currNum, callBack)
     end
     local canPay = this.CheckCanPay(commodity, currNum);
     if canPay then
-        -- 兑换商店的ID
-        local priceInfo=commodity:GetRealPrice();
-        if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
-            local good=BagMgr:GetFakeData(priceInfo[1].id);
-            local dialogData = {
-                content = LanguageMgr:GetTips(15123,good:GetName(),priceInfo[1].num*currNum),
-                okCallBack = function()
-                    ShopProto:Exchange(commodity:GetShopID(), commodity:GetExchangeIndex(), commodity:GetID(), currNum, callBack);
-                end
-            }
-            CSAPI.OpenView("Dialog", dialogData);
+        if CSAPI.IsADVRegional(3) then
+            -- 兑换商店的ID
+            local priceInfo=commodity:GetRealPrice();
+            if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
+                print("--------------------ExchangeCommodity----------------------------")
+                CSAPI.ADVJPTitle(priceInfo[1].num,function() ShopProto:Exchange(commodity:GetShopID(), commodity:GetExchangeIndex(), commodity:GetID(), currNum, callBack); end)
+            else
+                ShopProto:Exchange(commodity:GetShopID(), commodity:GetExchangeIndex(), commodity:GetID(), currNum, callBack);
+            end
         else
-            ShopProto:Exchange(commodity:GetShopID(), commodity:GetExchangeIndex(), commodity:GetID(), currNum, callBack);
+            -- 兑换商店的ID
+            local priceInfo=commodity:GetRealPrice();
+            if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
+                local good=BagMgr:GetFakeData(priceInfo[1].id);
+                local dialogData = {
+                    content = LanguageMgr:GetTips(15123,good:GetName(),priceInfo[1].num*currNum),
+                    okCallBack = function()
+                        ShopProto:Exchange(commodity:GetShopID(), commodity:GetExchangeIndex(), commodity:GetID(), currNum, callBack);
+                    end
+                }
+                CSAPI.OpenView("Dialog", dialogData);
+            else
+                ShopProto:Exchange(commodity:GetShopID(), commodity:GetExchangeIndex(), commodity:GetID(), currNum, callBack);
+            end
         end
     else
         local goods = GoodsData();
@@ -874,7 +900,20 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
                 callBack = callBack
             });
         else -- 其它，直接调用支付
-            this.HandlePayLogic(commodityData, 1, commodityType, callBack);
+
+            if CSAPI.IsADV() then
+                if CSAPI.RegionalCode()==3 then
+                    if CSAPI.PayAgeTitle() then
+                        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()     this.HandlePayLogic(commodityData,1,commodityType,callBack); end})
+                    else
+                        this.HandlePayLogic(commodityData,1,commodityType,callBack);
+                    end
+                else
+                    this.HandlePayLogic(commodityData,1,commodityType,callBack);
+                end
+            else
+                this.HandlePayLogic(commodityData, 1, commodityType, callBack);
+            end
             -- this.BuyCommodity(commodityData,1,callBack);
         end
     elseif commodityData:GetType() == CommodityItemType.FORNITURE and
@@ -1136,16 +1175,26 @@ function this.OpenBuyConfrim(shopId, topId, commID)
         local list = pageData:GetCommodityInfos(true, topId);
         local commData = nil;
         if list then
+            local idx=-1;
             for k, v in ipairs(list) do
                 if v:GetID() == commID then
                     commData = v;
+                    idx=k;
                     break
                 end
             end
             if commData == nil then
                 return;
             end
-            ShopCommFunc.OpenPayView(commData, pageData);
+            if commData:GetType()==CommodityItemType.Skin and idx~=-1 then --皮肤界面
+                local list2={};
+                for k,v in ipairs(list) do
+                    table.insert(list2,ShopCommFunc.GetSkinInfo(v));
+                end
+                CSAPI.OpenView("SkinFullInfo",{list=list2,idx=idx})
+            elseif commData:GetType()~=CommodityItemType.Skin then
+                ShopCommFunc.OpenPayView(commData, pageData);
+            end
         end
     end
 end

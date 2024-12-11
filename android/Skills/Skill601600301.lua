@@ -87,6 +87,6 @@ function Skill601600301:OnAttackOver2(caster, target, data)
 	-- 601600317
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:OwnerAddBuff(SkillEffect[601600317], caster, target, data, 4601611)
+		self:OwnerAddBuffCount(SkillEffect[601600317], caster, target, data, 4601611,1,99)
 	end
 end

@@ -177,6 +177,7 @@ function LoginProto:LoginGame(proto)
 	--self.vosLoginGame = proto;  
 	-- TacticsMgr:Init();
 	PlayerClient:SetInfo(proto);
+	if CSAPI.IsADV() then CSAPI.SetGameUID(PlayerClient:GetUid()) end
 	PlayerProto:SectionMultiInfo();
 	PlayerProto:GetLifeBuff();
 	EquipProto:GetEquips()

@@ -1,10 +1,14 @@
 -- 背景图的位置
-local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}}
-local closePos = {{662, 310}, {537.8, 322.1}, {716,321}, {537.8, 322.1}, {568.1, 249.6}, {657, 237}}
-local skipPos = {{607.2, -415.6}, {229, -430},  {283, -442}, {229, -430}, {513.1, -365.6}, {590.9, -327.8}}
+local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}}
+local closePos = {{662, 310}, {537.8, 322.1}, {716, 321}, {537.8, 322.1}, {568.1, 249.6}, {657, 237}, {662, 310},
+                  {662, 310}}
+local skipPos = {{607.2, -415.6}, {229, -430}, {283, -442}, {229, -430}, {513.1, -365.6}, {590.9, -327.8},
+                 {607.2, -415.6}, {607.2, -415.6}}
 
 local curItem = nil
 local endTime = nil
+
+local timer = nil
 
 function OnInit()
     eventMgr = ViewEvent.New()
@@ -29,10 +33,15 @@ function Update()
         endTime = nil
         view:Close()
     end
+    if (timer ~= nil and endTime ~= nil and Time.time >= timer) then
+        timer = Time.time + 0.5
+        SetTimes()
+    end
 end
 
 function RefreshPanel()
     cfg = data:GetCfg()
+    endTime = data:GetEndTime()
 
     SetBg()
     -- node
@@ -45,12 +54,12 @@ function RefreshPanel()
     --
     SetClose()
     SetTips()
-    -- time
-    endTime = data:GetEndTime()
 end
 
 function SetBg()
-    local bgRes = "UIs/MenuBuy/" .. data:GetID() .. "/bg"
+    local num = data:GetID()
+    num = num == 7 and 1 or num
+    local bgRes = "UIs/MenuBuy/" .. num .. "/bg"
     ResUtil:LoadBigImg(bg, bgRes, true, function()
         local pos = bgPos[data:GetID()]
         CSAPI.SetAnchor(bg, pos[1], pos[2])
@@ -125,7 +134,7 @@ function SetNode6()
     -- desc 
     CSAPI.SetText(txtDesc6, cfg.des)
     -- items
-    local rewardCfg =SignInMgr:GetRewardCfgByType(ActivityListType.SignInGift) or {}
+    local rewardCfg = SignInMgr:GetRewardCfgByType(ActivityListType.SignInGift) or {}
     items6 = items6 or {}
     for k, v in ipairs(rewardCfg.infos) do
         local item = items6[k]
@@ -141,6 +150,47 @@ function SetNode6()
     end
     -- red 
     UIUtil:SetRedPoint(btn6, data:GetRed(), 124, 33.5, 0)
+end
+
+-- 首冲奖励2 有时间
+function SetNode7()
+    local isEnough = data:IsEnough()
+    LanguageMgr:SetText(txtBtn7, isEnough and 38015 or 38014)
+    --
+    UIUtil:SetRedPoint(btn7, isEnough, 150, 43, 0)
+    -- time 
+    if(not endTime or TimeUtil:GetTime()>=endTime) then 
+        timer = nil
+    else 
+        timer = Time.time
+    end
+    CSAPI.SetGOActive(time7,timer~=nil)
+end
+
+-- 首冲奖励2 有时间
+function SetNode8()
+    local isEnough = data:IsEnough()
+    LanguageMgr:SetText(txtBtn8, isEnough and 38015 or 38014)
+    --
+    UIUtil:SetRedPoint(btn8, isEnough, 150, 43, 0)
+    -- time 
+    if(not endTime or TimeUtil:GetTime()>=endTime) then 
+        timer = nil
+    else 
+        timer = Time.time
+    end
+    CSAPI.SetGOActive(time8,timer~=nil)
+end
+
+function SetTimes()
+    if (cfg.id == 7 or cfg.id == 8) then
+        local timeTab = TimeUtil:GetTimeTab(endTime - TimeUtil:GetTime())
+        local h = timeTab[2] > 9 and timeTab[2] or "0" .. timeTab[2]
+        local m = timeTab[3] > 9 and timeTab[3] or "0" .. timeTab[3]
+        local s = timeTab[4] > 9 and timeTab[4] or "0" .. timeTab[4]
+        local str = string.format("%s:%s:%s", h, m, s)
+        LanguageMgr:SetText(this["txtTime" .. cfg.id], 13020, timeTab[1], str)
+    end
 end
 
 function SetClose()

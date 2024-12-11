@@ -70,6 +70,7 @@ ITEM_TYPE.CHANGE_NAME = 23 -- 改名券
 ITEM_TYPE.BG_ITEM = 24 --主界面背景图道具
 ITEM_TYPE.VOUCHER = 25 --抵扣券
 ITEM_TYPE.ICON_TITLE = 26 --玩家称号
+ITEM_TYPE.ASMR = 27 --ASMR音频
 
 -- 物品标签
 ITEM_TAG = {}
@@ -179,6 +180,11 @@ SkinGetType.None = 9999 -- 暂无获取方式
 SkinGetType.Store = 1 -- 商店购买
 SkinGetType.Archive = 2 -- 活动获取
 SkinGetType.Other = 3 -- 周边获得
+
+--ASMR商品绑定类型
+ShopCommBindType={}
+ShopCommBindType.Show=1 --仅展示
+ShopCommBindType.Bindling=2 --绑定销售
 
 -----------------------副本地图--------------------------------------------------------------------------
 -- 枚举:副本角色类型
@@ -1352,6 +1358,7 @@ ArchiveType.Equip = 5 -- 装备
 ArchiveType.Enemy = 6 -- 敌兵
 ArchiveType.Board = 7 -- 看板
 ArchiveType.Music = 8 --播放器
+ArchiveType.Asmr = 9 --ASMR音频
 
 -- 格子副本进入方式
 BattleEnterType = {}
@@ -1817,14 +1824,20 @@ VoucherType={
 --运营活动活动类型(有前置开启条件)
 eOperateType = {}
 eOperateType.RechargeSign = 1015 --充值签到
---eOperateType.PayNotice7 = 1018 --充值弹窗7
---eOperateType.PayNotice8 = 1019 --充值弹窗8
---eOperateType.PayNotice1 = 1020 --充值弹窗1
+eOperateType.PayNotice7 = 1018 --充值弹窗7
+eOperateType.PayNotice8 = 1019 --充值弹窗8
+eOperateType.PayNotice1 = 1020 --充值弹窗1
 
 
 eActiveListId = {}
 eActiveListId.FreeCreateCard = 1021
 
+
+--运营活动活动类型(到时间直接开启无需前置条件)
+eOperateActiveType = {}
+eOperateActiveType.PayNotice1 = eOperateType.PayNotice1
+eOperateActiveType.PayNotice7 = eOperateType.PayNotice7
+eOperateActiveType.PayNotice8 = eOperateType.PayNotice8
 -----------------------------------------------------------------------------------------------------------------
 -- 夏日活动宠物属性类型
 ePetAbilityType = {

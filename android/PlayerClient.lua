@@ -789,7 +789,7 @@ end
 function this:PayRechargeRet(proto)
     --local _c_amount = self.c_amount
     self.c_amount = proto.c_amount or 0
-    MenuBuyMgr:ConditionCheck3(1,self.c_amount)
+    --MenuBuyMgr:ConditionCheck3(1,self.c_amount) --改到那里
     -- if (_c_amount == nil or self.c_amount ~= _c_amount) then
     --     --EventMgr.Dispatch(EventType.Pay_Amount_Change)
     --     MenuBuyMgr:ConditionCheck(2,"amountChange")

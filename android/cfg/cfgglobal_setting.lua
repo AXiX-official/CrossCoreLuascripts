@@ -270,7 +270,7 @@ local conf = {
 {'g_ExplorationPlusShopID',	'g_ExplorationPlusShopID',	'',	'int',	'31002'},
 {'g_ExplorationArbitrageShopID',	'g_ExplorationArbitrageShopID',	'',	'int',	'31003'},
 {'g_PhysicalStrengthList',	'g_PhysicalStrengthList',	'',	'int[]',	'10035,10036,10037'},
-{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2024-10-01 12:00:00","2024-11-13 03:00:00"]]'},
+{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2024-12-11 10:00:00","2024-12-25 03:00:00"]]'},
 {'g_FightOnlineUnlock',	'g_FightOnlineUnlock',	'',	'bool',	'1'},
 {'g_TimeZone',	'g_TimeZone',	'',	'float',	'8'},
 {'g_DungeonTaoFaDailyNum',	'g_DungeonTaoFaDailyNum',	'',	'int',	'2'},
@@ -295,6 +295,7 @@ local conf = {
 {'g_HoldOnTime',	'g_HoldOnTime',	'',	'int[]',	'3,5,10,-1'},
 {'g_FHXOpenRole',	'g_FHXOpenRole',	'',	'bool',	'1'},
 {'g_FHXOpenPicture',	'g_FHXOpenPicture',	'',	'bool',	'1'},
+{'g_FHXArchiveRole',	'g_FHXArchiveRole',	'',	'bool',	'1'},
 },
 }
 --cfgglobal_setting = conf

@@ -405,7 +405,7 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
         end
     end
 
-    self.listPvp[tData.uid] = tData.data
+    -- self.listPvp[tData.uid] = tData.data
     -- player:Send("FightProto:PvpFightResult", {tData = data, tMirror = tMirror}, encod)
     mgr:AddPlayer(player.id, 1)
     self:AddFightMgr({tData.uid}, mgr)

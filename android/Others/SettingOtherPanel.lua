@@ -200,12 +200,12 @@ function SetCustom(index)
     if isCustom then
         if this["curIndex3"] < 2 then
             CheckIsChange(3,2)
-            this["tab2"].selIndex = 2    
+            this["tab3"].selIndex = 2    
         end
     else
         if this["curIndex3"] == 2 then
             CheckIsChange(3,index)
-            this["tab2"].selIndex = index    
+            this["tab3"].selIndex = index    
         end
     end
 end

@@ -99,7 +99,7 @@ function OnClickBuy()
 end
 
 function OnSuccess(proto)
-    EventMgr.Dispatch(EventType.Card_Skin_Get)
+    -- EventMgr.Dispatch(EventType.Card_Skin_Get)
     -- LogError(proto.gets[1])
     OnClickAnyway();
     if currSkinInfo and proto and next(proto.gets) then
@@ -228,5 +228,13 @@ function RefreshPrice()
         CSAPI.SetText(tg1,moneyName);
         CSAPI.SetText(tp2, tostring(0));
         CSAPI.SetText(tg2,moneyName);
+    end
+    if data and data:GetBundlingType()==ShopCommBindType.Bindling and data:GetBundlingID()~=nil then
+        CSAPI.SetGOActive(txt_tips4,true);
+        local bindComm=ShopMgr:GetFixedCommodity(data:GetBundlingID());
+        local str=LanguageMgr:GetByID(18125,bindComm:GetName());
+        CSAPI.SetText(txt_tips4,str);
+    else
+        CSAPI.SetGOActive(txt_tips4,false);
     end
 end

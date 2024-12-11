@@ -255,4 +255,19 @@ function this:GetUseVoucherTypes()
     return nil
 end
 
+function this:GetBundlingType()
+    return  nil
+end
+
+function this:GetBundlingID()
+    return  nil
+end
+
+function this:GetBuySum()
+    if self.data and self.data.had_get then
+        return self.data.had_get
+    end
+    return 0;
+end
+
 return this;

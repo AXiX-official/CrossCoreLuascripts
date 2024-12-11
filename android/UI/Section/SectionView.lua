@@ -1237,6 +1237,7 @@ function RefreshActivityDatas()
     local activityCfgs = Cfgs.Section:GetGroup(SectionType.Activity)
     if activityCfgs then
         local activityTypeDatas = {}
+        local openState1,openState2 = 0,0
         for _, cfg in pairs(activityCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfg.id)   
             if sectionData then
@@ -1244,7 +1245,13 @@ function RefreshActivityDatas()
                 if sectionData:IsShowOnly() then
                     if #activityTypeDatas[sectionData:GetType()] > 0 then
                         local id = activityTypeDatas[sectionData:GetType()][1]:GetID()
-                        if id > sectionData:GetID() then
+                        openState1 = activityTypeDatas[sectionData:GetType()][1]:GetOpenState()
+                        openState2 = sectionData:GetOpenState()
+                        if openState1 ~= openState2 then
+                            if openState2 > 0 and openState2 > openState1 then
+                                activityTypeDatas[sectionData:GetType()][1] = sectionData
+                            end
+                        elseif id > sectionData:GetID() then
                             activityTypeDatas[sectionData:GetType()][1] = sectionData
                         end
                     else

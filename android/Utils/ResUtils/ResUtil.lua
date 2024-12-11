@@ -94,7 +94,7 @@ function this:CreateEffectImmediately(res, x, y, z, resParent)
     return CSAPI.CreateGO(res, x or 0, y or 0, z or 0, resParent);
 end
 -- 创建Buff特效
-function this:CreateBuffEff(res, resParent, callBack)
+function this:CreateBuffEff(res, resParent, callBack,postfix)
     if (not res) then
         return;
     end
@@ -511,6 +511,7 @@ function this:Init()
     self.HeadFrame = ResIconUtil.New("HeadFrame")  --头像框
     self.Head = ResIconUtil.New("Head")  --头像框
     self.HeadTitle = ResIconUtil.New("HeadTitle")  --称号
+    
     -- img
     self.ImgCharacter = ResImgUtil.New("Character");
     self.ModuleInfo = ResImgUtil.New("ModuleInfo");
@@ -555,9 +556,16 @@ function this:Init()
 
     self.Bgm=ResIconUtil.New("Bgm");
     
+
     --剧情
     self.PlotTop = ResIconUtil.New("Plot/PlotTop");
     self.Colosseum = ResIconUtil.New("Colosseum") --角色场小队主题
+    --商店用途
+    self.ASMRShop=ResIconUtil.New("AsmrShop")
+    self.ASMR=ResIconUtil.New("ASMR")
+
+    --投资方晶
+    self.Investment = ResImgUtil.New("UIs/ActivityList/Investment")
 end
 
 return this;

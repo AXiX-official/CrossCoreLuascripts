@@ -1,5 +1,5 @@
 -- ID对应=>1首充礼包;2新手构建包;3星贸凭证;4首轮特价构建包;5新春奖励;6充值签到
---所有条件检测后都可以不用推送，在商店界面关闭回到主界面就会自动触发，时间的在时间倒计时完自动检测一次
+-- 所有条件检测后都可以不用推送，在商店界面关闭回到主界面就会自动触发，时间的在时间倒计时完自动检测一次
 local MenuBuyBase = require "MenuBuyBase"
 local this = MgrRegister("MenuBuyMgr")
 
@@ -33,7 +33,7 @@ end
 -- 设置等待弹出的数据
 -- 弹出销毁条件
 -- 1、全部    【登录+未勾】
--- 2、ID:1   【不可领取变可领取（强制)；不可领取时首次从商店出来；不可领取时30连后返回主界面】
+-- 2、ID:178   【不可领取变可领取（强制)；不可领取时首次从商店出来；不可领取时30连后返回主界面】
 -- 3、ID:234 【在线期间进入，后进行了2场任意战斗】
 -- 4：ID:5  【到点弹出和销毁（强制）】
 -- 5、ID:6  【到点弹出和销毁（强制）；不可领取变可领取（强制)】
@@ -49,7 +49,7 @@ function this:ConditionCheck(type, elseData)
         end
     elseif (type == 2) then
         local curID = self:GetCurID()
-        if (curID ~= nil and curID == 1) then
+        if (curID ~= nil and (curID == 1 or curID == 7 or curID == 8)) then
             local curData = self:GetCurData()
             if (not curData:GetPush()) then
                 if (elseData == "shopOpen" and not curData:GetShopOpen() and not curData:IsTick()) then -- 从商店出来
@@ -64,7 +64,7 @@ function this:ConditionCheck(type, elseData)
         local curID = self:GetCurID()
         if (curID ~= nil and (curID == 2 or curID == 3 or curID == 4)) then
             local curData = self:GetCurData()
-            if (curData:GetOnlineIn() and not curData:GetPush()) then
+            if (curData:GetOnlineIn() and not curData:GetPush() and not curData:IsTick()) then
                 curData:SetFightNum()
             end
         end
@@ -80,15 +80,25 @@ function this:ConditionCheck2(id)
         data:SetPush()
     end
 end
---充值检测 --id: 1、6 的 登录/充值成功 推送 (分)
-function this:ConditionCheck3(id,num)
+-- 充值检测 --id: 1、6 的 登录/充值成功 推送 (分)
+function this:ConditionCheck3(id, num)
     local data = self.datas[id]
-    if(data)then  
-        data:SetAmount(math.floor(num/100))
-        EventMgr.Dispatch(EventType.MenuBuy_RechargeCB)
+    if (data) then
+        data:SetAmount(math.floor(num / 100))
+        -- EventMgr.Dispatch(EventType.MenuBuy_RechargeCB)
     end
-end 
-
+end
+-- 充值检测（7，8）
+function this:ConditionCheck4(id, proto)
+    local data = self.datas[id]
+    if (data) then
+        local payRate = proto.payRate or 0
+        data:SetState(proto.state)
+        data:SetTimes(proto.openTime, proto.closeTime)
+        data:SetAmount(math.floor(payRate / 100))
+        -- EventMgr.Dispatch(EventType.MenuBuy_RechargeCB)
+    end
+end
 
 -- 开放、结束时间检测
 function this:GetOpenEndTimeInfo()
@@ -99,8 +109,8 @@ function this:GetOpenEndTimeInfo()
             break
         end
         for k, v in pairs(self.datas) do
-            local timeStr = n == 1 and v:GetCfg().startTime or v:GetCfg().endTime
-            local _time = TimeUtil:GetTimeStampBySplit(timeStr)
+            --local timeStr = n == 1 and v:GetCfg().startTime or v:GetCfg().endTime
+            local _time = n == 1 and v:GetStartTime() or v:GetEndTime()--TimeUtil:GetTimeStampBySplit(timeStr)
             if (_time and _time > curTime and (time == nil or _time < time)) then
                 time = _time
                 id = v:GetID()
@@ -146,6 +156,5 @@ function this:CheckIsNeedShow()
     end
     return false
 end
-
 
 return this

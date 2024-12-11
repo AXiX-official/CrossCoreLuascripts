@@ -1367,12 +1367,13 @@ function FightMgrBase:OnTimer(tm)
 end
 
 function FightMgrBase:OnTurnNext()
-    if self.isOver then
-        return
-    end
+    if self.isOver then return end
+
     LogDebugEx('FightMgrBase:OnTurnNext()')
 
     self:OnRoundOver() -- 由于回合结束触发了技能打死怪物, 导致切换切换周目
+    if self.isOver then return end
+    
     if DEBUG then
         LogTable(self.log:GetAndClean())
     end
@@ -1381,9 +1382,7 @@ function FightMgrBase:OnTurnNext()
     if self:AfterRoundOver() then
         return true
     end
-    if self.isOver then
-        return
-    end
+    if self.isOver then return end
 
     self.nextTime = nil
     local t, card = self:CalcNext()

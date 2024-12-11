@@ -11,5 +11,5 @@ function Buffer4601611:OnCreate(caster, target)
 	-- 8739
 	local c135 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,46016)
 	-- 4601601
-	self:AddAttr(BufferEffect[4601601], self.caster, self.card, nil, "attack",150*c135)
+	self:AddAttr(BufferEffect[4601601], self.caster, self.card, nil, "attack",150*c135*self.nCount)
 end

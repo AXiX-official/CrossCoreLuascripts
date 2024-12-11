@@ -13,7 +13,8 @@ function Awake()
     local lua = ComUtil.GetLuaTable(GridItem)
     local data={{id=valueTable[1][1],num=valueTable[1][2],type=valueTable[1][3]}}
     local dataNew=GridUtil.GetGridObjectDatas(data)
-    lua.Refresh(dataNew[1]);
+    lua.Refresh(dataNew[1],{isClick=true});
+    lua.SetClickCB(GridClickFunc.OpenInfo)
 
 ---MissionContinueItem2
 end
@@ -41,8 +42,14 @@ function OnClickBtn()
         end)
     else
         AdvBindingRewards.Claimstatus(function()
-            BindButton:SetActive(false)
-            ReceiveButton:SetActive(false)
+            if gameObject==nil then
+                print("返回时候  页面已经被删除------绑定有奖页面-----------")
+            else
+                BindButton:SetActive(false)
+                ReceiveButton:SetActive(false)
+                CSAPI.SetGOActive(CompleteIcon,true);
+                Icon:GetComponent("Image").enabled=false;
+            end
         end);
     end
 end

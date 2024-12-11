@@ -134,7 +134,7 @@ function Refresh()
 				end 
 				CSAPI.SetGOActive(imgMove,canInte)
 			end	
-		elseif cfg and (cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon)) then --头像/头像框
+		elseif cfg and (cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon or cfg.dy_value1==PROP_TYPE.IconTitle)) then --头像/头像框
 			local goods=BagMgr:GetFakeData(cfg.id);
 			SetDayObj(goods:GetIconDayTips());
 			local loader=itemInfo:GetIconLoader();

@@ -3,7 +3,7 @@ local isLive2D = true
 local isFirst1 = false
 -- local countDown = 0.46
 -- local isFirst2 = true
-local svUtil = nil;
+local svUtil = nil
 function Awake()
     UIUtil:AddTop2("RoleApparel", gameObject, function()
         view:Close()
@@ -23,10 +23,12 @@ function Awake()
         useIndex = GetBaseIndex() -- 当前使用的
         RefreshPanel()
     end)
-    eventMgr:AddListener(EventType.Card_Skin_Get, function ()
+    eventMgr:AddListener(EventType.Card_Skin_Get, function()
         layout:UpdateList()
         RefreshPanel()
     end)
+    eventMgr:AddListener(EventType.Shop_RecordInfos_Refresh,SetASMRInfo)
+    eventMgr:AddListener(EventType.Shop_Buy_Ret,SetASMRInfo)
 
     CSAPI.SetGOActive(mask, true)
 end
@@ -65,11 +67,11 @@ end
 function InitSkinData()
     curDatas = {}
     local _curDatas = {}
-    local cardCfgID =  cardData:GetCfgID()
-    if(isMonster) then 
+    local cardCfgID = cardData:GetCfgID()
+    if (isMonster) then
         cardCfgID = cardData:GetCfg().card_id
     end
-    local infos = RoleSkinMgr:GetDatas(cardData:GetRoleID(),true)
+    local infos = RoleSkinMgr:GetDatas(cardData:GetRoleID(), true)
     for i, v in pairs(infos) do
         if (v:IsThisCard(cardCfgID)) then
             table.insert(_curDatas, v)
@@ -143,6 +145,8 @@ function RefreshPanel(isCheck)
     SetBtn()
 
     SetArrow()
+
+    SetASMRInfo()
 end
 
 function SetArrow()
@@ -287,7 +291,7 @@ function OnValueChange()
         curIndex = index + 1
         local item = layout:GetItemLua(curIndex)
         if (item) then
-            item.SetSelect(true);
+            item.SetSelect(true)
         end
         -- if not isFirst2 then
         --     FuncUtil:Call(function()
@@ -354,7 +358,7 @@ function OnClickKey()
 end
 
 function OnClickL2D()
-    if(not isLive2D and not curDatas[curIndex]:CanShowL2d())then 
+    if (not isLive2D and not curDatas[curIndex]:CanShowL2d()) then
         LanguageMgr:ShowTips(3015)
         return
     end
@@ -363,3 +367,75 @@ function OnClickL2D()
     RefreshPanel()
 end
 
+function SetASMRInfo()
+    comm = nil
+    bindComm = nil
+    --
+    comm = ShopCommFunc.GetSkinCommodity(curModeId)
+    local bindID = nil
+    if comm then
+        bindID = comm:GetBundlingID()
+        if bindID then -- 初始化绑定物品信息
+            bindComm = ShopMgr:GetFixedCommodity(bindID)
+            if bindComm then
+                local isLock = bindComm:GetBuySum() <= 0
+                -- 加载图标
+                ResUtil.ASMRShop:Load(asmrIcon, bindComm:GetIcon())
+                CSAPI.SetGOActive(asmrLock, isLock)
+                CSAPI.SetAnchor(asmrDisk, isLock and 0 or 72, 0)
+            end
+        end
+    end
+    CSAPI.SetGOActive(btnASMR, bindID ~= nil)
+end
+
+function OnClickASMR()
+    if bindComm and comm then
+        local isLock = bindComm:GetBuySum() <= 0
+        if isLock then -- 根据绑定类型做逻辑
+            if comm:GetBundlingType() == ShopCommBindType.Show then -- 点击弹出购买窗口
+                local pageData = ShopMgr:GetPageByID(bindComm:GetShopID());
+                if CSAPI.IsADV() then
+                    if CSAPI.RegionalCode() == 3 then
+                        if CSAPI.PayAgeTitle() then
+                            CSAPI.OpenView("SDKPayJPlimitLevel", {
+                                ExitMain = function()
+                                    ShopCommFunc.OpenPayView(bindComm, pageData);
+                                end
+                            })
+                        else
+                            ShopCommFunc.OpenPayView(bindComm, pageData);
+                        end
+                    else
+                        ShopCommFunc.OpenPayView(bindComm, pageData);
+                    end
+                else
+                    ShopCommFunc.OpenPayView(bindComm, pageData);
+                end
+            else
+                OnClickBuy();
+            end
+        else -- 弹出跳转确认窗口
+            local dialogdata = {
+                content = LanguageMgr:GetTips(46003),
+                okCallBack = function()
+                    JumpMgr:Jump(80003);
+                end
+            }
+            CSAPI.OpenView("Dialog", dialogdata);
+        end
+    end
+end
+
+
+--购买
+function OnClickBuy()
+    if comm then
+        local cost=comm:GetRealPrice(shopPriceKey)[1];
+        if cost==nil or cost.id~=-1 then
+            CSAPI.OpenView("ShopSkinBuy",comm,shopPriceKey);
+        else
+            ShopCommFunc.HandlePayLogic(comm,1,1,nil,OnSuccess,shopPriceKey);
+        end
+    end
+end

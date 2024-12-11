@@ -99,7 +99,8 @@ function this:ShowMsg(data)
 					if CSAPI.IsChannel() then --渠道注销
 						EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand, nil,true);
 					end
-					ShiryuSDK.Logout()
+					ShiryuSDK.Logout();
+					CSAPI.UnityQuit();
 				else
 					CSAPI.Quit();
 				end

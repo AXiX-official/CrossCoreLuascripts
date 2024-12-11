@@ -170,12 +170,19 @@ function OnClickPay()
             func()
             Close()
         else
-            local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
-            local str = LanguageMgr:GetTips(15123, _cfg2.name, need)
-            UIUtil:OpenDialog(str, function()
-                func()
-                view:Close()
-            end)
+            if CSAPI.IsADVRegional(3) then
+                CSAPI.ADVJPTitle(need,function()
+                    func()
+                    view:Close()
+                end)
+            else
+                local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
+                local str = LanguageMgr:GetTips(15123, _cfg2.name, need)
+                UIUtil:OpenDialog(str, function()
+                    func()
+                    view:Close()
+                end)
+            end
         end
     else
         Tips.ShowTips(string.format(LanguageMgr:GetTips(15000), _cfg.name))

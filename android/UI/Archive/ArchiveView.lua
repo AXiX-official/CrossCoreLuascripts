@@ -1,7 +1,27 @@
 
-local newName = {"roleNew", "", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew","musicNew"}
+local newName = {"roleNew", "", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew","musicNew","asmrNew"}
 local top=nil;
 local records = {}
+function Awake()
+	eventMgr = ViewEvent.New()
+	eventMgr:AddListener(EventType.RedPoint_Refresh,OnRedRefresh)
+
+	-- if CSAPI.GetPublishType() ~= 1 then
+		CSAPI.SetGOActive(btnGoods, false)
+	-- end
+	CSAPI.SetGOActive(btnAsmr, false)
+	CSAPI.SetGOActive(img8Obj, false)
+end
+
+function OnRedRefresh()
+	CSAPI.SetGOActive(asmrNew, ASMRMgr:IsRed())
+	ArchiveMgr:SetIsNew(ArchiveType.Asmr, ASMRMgr:IsRed())
+end
+
+function OnDestroy()
+	eventMgr:ClearListener()
+end
+
 function OnInit()
 	top=UIUtil:AddTop2("ArchiveView", gameObject, function()
 		view:Close()
@@ -235,7 +255,37 @@ function OnClickMusic()
 	-- LanguageMgr:ShowTips(1000)
 end
 
+function OnAsmrDown()
+	CSAPI.SetUIScaleTo(btnAsmr, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not asmrT then
+		asmrT = ComUtil.GetCom(asmrFadeT, "ActionFadeT")
+	end
+	asmrT:Play()
+end
+
+function OnAsmrUp()
+	CSAPI.SetUIScaleTo(btnAsmr, nil, 1, 1, 1, function()
+		OnClickASMR()
+	end, 0.15)
+end
+
+function OnClickASMR()
+	-- LanguageMgr:ShowTips(1000)
+	-- CSAPI.OpenView("MulPictureView",1)
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Asmr)
+	if isNew then
+		CSAPI.SetGOActive(asmrNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Asmr, false)
+	end
+	if not CSAPI.IsViewOpen("ASMRView") then
+		CSAPI.OpenView("ASMRView")
+	end
+	-- LanguageMgr:ShowTips(1000)
+end
+
 function InitNew()
+	ArchiveMgr:SetIsNew(ArchiveType.Asmr, ASMRMgr:IsRed())
+
 	for i = 1, #newName do
 		if newName[i] ~= "" then
 			CSAPI.SetGOActive(this[newName[i]].gameObject, ArchiveMgr:GetIsNew(i))

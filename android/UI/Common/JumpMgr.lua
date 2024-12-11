@@ -300,6 +300,14 @@ function this.Shop(cfg)
         if cfg.val1 and cfg.val1 ~= 0 and cfg.val2 == nil and cfg.val3 == nil then -- 打开单个商店
             CSAPI.OpenView(cfg.sName, cfg.val1);
         else
+            if cfg.val5 then
+                local cId=tonumber(cfg.val5);
+                local comm=ShopMgr:GetFixedCommodity(cId);
+                if comm:GetType()==CommodityItemType.Skin then --皮肤购买界面不打开商店
+                    ShopCommFunc.OpenBuyConfrim(cfg.val2, cfg.val3, cId)
+                    do return end;
+                end
+            end
             CSAPI.OpenView(cfg.sName, nil, {
                 [1] = cfg.val2,
                 [2] = cfg.val3,

@@ -29,7 +29,7 @@ this.ShiryuLogin.channelExts={} ---opcode、operators、appKey、channelId、eci
 this.ShiryuGoodsList={}
 this.ShiryuGoodsList.success=false;
 this.ShiryuGoodsList.goodsList= { };
-
+this.ShiryuGoodsList.goodsidDic= { };
 this.GetSdkProperties={};
 --Item:
 ---skuCode string      充值id
@@ -151,6 +151,8 @@ function this.SDKShiryuSDKGetGoodsListcomplete(datapacket)
         this.ShiryuGoodsList={}
         this.ShiryuGoodsList.success=datapacket.success;
         this.ShiryuGoodsList.goodsList= { };
+        this.ShiryuGoodsList.goodsidDic= { };
+
         if datapacket.goodsList  then
             local index=0;
             for i, v in pairs(datapacket.goodsList) do
@@ -167,6 +169,7 @@ function this.SDKShiryuSDKGetGoodsListcomplete(datapacket)
                 Item.displayCurrency=datapacket.goodsList[i].displayCurrency;
                 Item.displayPrice=datapacket.goodsList[i].displayPrice;
                 table.insert(this.ShiryuGoodsList.goodsList,index,Item)
+                this.ShiryuGoodsList.goodsidDic[tostring(Item.skuCode)]=Item;
             end
         end
         this.InitShopData()
@@ -210,40 +213,37 @@ end
 
 ---节点数据修改
 function this.ShopDataEdit(data)
-    if this.IsShopExist(data["id"]) then
-        --LogError("----------------满足条件的ID-----------"..data["id"])
-        --LogError(data)
-        for i, v in pairs(this.ShiryuGoodsList.goodsList) do
-            local id=tonumber(data["id"]);
-            if tostring(this.ShiryuGoodsList.goodsList[i].skuCode)==tostring(id)  then
-                --                 data["sName"]=this.ShiryuGoodsList.goodsList[i].sName  ---string  商品名称
-                --                 data["sDesc"]=this.ShiryuGoodsList.goodsList[i].sDesc  --- string  充值商品描述。
-                --data["shop_config"]["jCosts"][1][2]=tonumber(this.ShiryuGoodsList.goodsList[i].displayPrice) ---string  显示价格
-                data["currency"]=this.ShiryuGoodsList.goodsList[i].currency ---string  定价币种
-                data["amount"]=this.ShiryuGoodsList.goodsList[i].amount ---int  定价商品价格（单位分）
-                data["goodsId"]=this.ShiryuGoodsList.goodsList[i].goodsId  ---string  应用商店的商品id
-                data["voucherId"]=this.ShiryuGoodsList.goodsList[i].voucherId  ---string  这个商品对应使用的抵扣劵ID
-                data["type"]=this.ShiryuGoodsList.goodsList[i].type ---int  1应用内商品，2预注册，3礼品码，4订阅型商品, 5应用外商品, 6抵扣券
-                data["displayCurrency"]=this.ShiryuGoodsList.goodsList[i].displayCurrency ---string  显示币种的标准货币代码（例如：USD，CNY）
-                data["displayPrice"]=this.ShiryuGoodsList.goodsList[i].displayPrice  ---string  显示价格
-                --data["displayPrice"]=tonumber(999) ---string  显示价格
-                --data["displayCurrency"]="jyp"  ---string  显示价格
-                return data;
-            end
-        end
+    if data["id"]==nil then
+        return data;
+    end
+    local id=tonumber(data["id"]);
+    if this.IsShopExist(id)  then
+        ---LogError("----------------满足条件的ID----修改前-------"..id..table.tostring(data))
+        local ShopItem=this.ShiryuGoodsList.goodsidDic[tostring(id)]
+        --data["sName"]=ShopItem.sName  ---string  商品名称
+        -- data["sDesc"]=ShopItem.sDesc  --- string  充值商品描述。
+        --data["shop_config"]["jCosts"][1][2]=tonumber(ShopItem.displayPrice) ---string  显示价格
+        data["currency"]=ShopItem.currency ---string  定价币种
+        data["amount"]=ShopItem.amount ---int  定价商品价格（单位分）
+        data["goodsId"]=ShopItem.goodsId  ---string  应用商店的商品id
+        data["voucherId"]=ShopItem.voucherId  ---string  这个商品对应使用的抵扣劵ID
+        data["type"]=ShopItem.type ---int  1应用内商品，2预注册，3礼品码，4订阅型商品, 5应用外商品, 6抵扣券
+        data["displayCurrency"]=ShopItem.displayCurrency ---string  显示币种的标准货币代码（例如：USD，CNY）
+        data["displayPrice"]=ShopItem.displayPrice  ---string  显示价格
+        --data["displayPrice"]=tonumber(999) ---string  显示价格
+        --data["displayCurrency"]="jyp"  ---string  显示价格
+        --- LogError("----------------满足条件的ID-----修改后------"..id..table.tostring(data))
+        return data;
     end
     return data;
 end
 ---判断是否存在
 function this.IsShopExist(id)
-    if this.ShiryuGoodsList.goodsList then
-        for i, v in pairs(this.ShiryuGoodsList.goodsList) do
-            if tostring(this.ShiryuGoodsList.goodsList[i].skuCode)==tostring(id) then
-                return true;
-            end
-        end
+    if this.ShiryuGoodsList.goodsidDic and this.ShiryuGoodsList.goodsidDic[tostring(id)]~=nil then
+        return true;
+    else
+        return false;
     end
-    return false;
 end
 
 
@@ -578,7 +578,12 @@ function this.Share(Jsonstr,action)
     -- local Jsonstr = Json.Encode(ShareTable)
     CShiryuSDK:Share(Jsonstr,action);
 end
-
+---28.设置支付限额接口（日本专用）
+---0: 18岁以上，无限制; 1: 16岁以下，每月5000日元; 2: 16~17岁，每月30000日元
+function this.SetPayLimitLevel(limitLevel)
+    Log("发生支付限制类型："..limitLevel)
+    CShiryuSDK:SetPayLimitLevel(limitLevel);
+end
 ---在线
 function this.OnRoleOnline()
     if  this.ShiryuLogin.success then

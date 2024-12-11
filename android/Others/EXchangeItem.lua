@@ -14,9 +14,9 @@ end
 function OnValueChanged(b)
     CSAPI.SetGOActive(toggleImg,b)
     local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
-    if not b and infos[data:GetID()] == nil then 
-        return
-    end
+    -- if not b and infos[data:GetID()] == nil then 
+    --     return
+    -- end
     local i = b and 1 or 0
     if infos[data:GetID()] and infos[data:GetID()] == i then --已有不需要记录
         return
@@ -24,6 +24,8 @@ function OnValueChanged(b)
     infos[data:GetID()] = i
     FileUtil.SaveToFile("Activity_ExChange_Tip",infos)
     ActivityMgr:CheckRedPointData(ActivityListType.Exchange)
+
+    UIUtil:SetRedPoint(btnItem,isCanBuy and i == 1,105,28)
 end
 
 function OnDestroy()
@@ -50,7 +52,7 @@ function Refresh(_data)
 end
 
 function SetExchange()
-    CSAPI.SetText(txtNum,LanguageMgr:GetByID(22044) .. data:GetNum())
+    CSAPI.SetText(txtNum,LanguageMgr:GetByID(22044) .. (data:GetNum()== -1 and "∞" or data:GetNum()))
 end
 
 function SetGrid()
@@ -71,6 +73,7 @@ function SetGrid()
         end
         local cur = BagMgr:GetCount(gridData.data.id)
         local max = gridData.data.num
+        cur = cur < max and StringUtil:SetByColor(cur,"ff7781") or cur
         CSAPI.SetText(txtCount1,cur.."/"..max)
     end
     local gridDatas2 = data:GetCommodityList()
@@ -80,12 +83,13 @@ function SetGrid()
         gridData = GridFakeData(gridData)
         if gridItem2 then
             gridItem2.Refresh(gridData)
+            gridItem2.SetCount()
         else
             ResUtil:CreateUIGOAsync("Grid/GridItem",grid2,function (go)
                 local lua = ComUtil.GetLuaTable(go)
                 lua.SetClickCB(GridClickFunc.OpenInfoSmiple)
                 lua.Refresh(gridData)
-                CSAPI.SetGOActive(lua.countObj, false);
+                lua.SetCount()
                 gridItem2 = lua
             end)
         end
@@ -104,9 +108,12 @@ function SetState()
     CSAPI.SetGOActive(txt_exchange2,not data:IsOver())
 
     local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
-    tgl.isOn = infos[data:GetID()] and infos[data:GetID()] == 1 or false
+    local isShowRed = not infos[data:GetID()] or infos[data:GetID()] == 1
+    tgl.isOn = isShowRed
 
-    CSAPI.SetGOAlpha(gameObject,data:IsOver() and 0.6 or 1)
+    CSAPI.SetGOAlpha(node,data:IsOver() and 0.6 or 1)
+
+    UIUtil:SetRedPoint(btnItem,isCanBuy and isShowRed,105,28)
 end
 
 function OnClickExchange()

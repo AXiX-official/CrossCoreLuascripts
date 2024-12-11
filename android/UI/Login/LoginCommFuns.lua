@@ -93,48 +93,69 @@ end
 function GetServerPath()
 	local useJsonFile;
     local isRelease = true;
-    if(isRelease)then
-		if CSAPI.IsADV() then
-         ---海外
-	     	 useJsonFile =CSAPI.ZLongServerListUrl;
-		else
-          ---国内
-			--媒体用
-			--useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_mt.json";
-			--正式
-			useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
-			if(CSAPI.GetPlatform() ==-1)then--审核用
-				useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_1.json";
-			end
-			VerChecker:SetState(true);
-		end
-    else
+	if(isRelease)then
+		 ---  正式配置 StreamingAssets文件夹下MJEnv.txt  配置，正常情况下   测试使用 SDKEnvironment:0  使用默认配置， 文本其它字段不生效
+		 --- 当SDKEnvironment字段值不等于0时候， 其它字段生效
+		-----正式
+		--useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
+		--if(CSAPI.GetPlatform() ==-1)then--审核用
+		--	useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_1.json";
+		--end
+		VerChecker:SetState(true);
+	else
 		--主干
-        _G.server_list_enc_close = 1;
-		VerChecker:EnableTest();
-		if CSAPI.IsADV() then
-			if CSAPI.GetInside()==0 then
-				useJsonFile = "http://mega.megagamelog.com:880/php/res/serverList/serverlist_nw1.json";--测试
-			else
-				if GetServerURLfrequency<=3  then
-					useJsonFile =CSAPI.ZLongServerListUrl;
-				elseif GetServerURLfrequency<=6 then
-					useJsonFile =CSAPI.ZLongBackupsServerListUrl;
-					---如果出现第二个没有配置或者为空，继续用第一个 同时缩短时间
-					if useJsonFile==nil or useJsonFile=="" then
-						GetServerURLfrequency=6;
-						useJsonFile =CSAPI.ZLongServerListUrl;
-					end
-				elseif GetServerURLfrequency>6 then
-					useJsonFile =CSAPI.ZLongServerListUrl;
-				end
-			end
-		else
-			--useJsonFile = "http://139.224.250.93/php/res/serverList/serverlist_release.json";--测试
-			useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试	     
-		end
-    end
+		_G.server_list_enc_close = 1;
+	end
+
+      ---115405
+	if CSAPI.GetInside()==0 then
+		---SDKEnvironment:0   时候进入这里
+		---useJsonFile = "http://mega.megagamelog.com:880/php/res/serverList/serverlist_nw1.json";--测试
+		useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试
+	else
+
+		  ---审核用 打开当前，注释下面 isRelease设置为true
+		  --if(CSAPI.GetPlatform() ==-1)then
+		  --	useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_1.json";
+		  --end
+
+		  if CSAPI.ZLongServerListUrl=="None" and isRelease then
+			  Log("enter url ---1")
+			  ---兼容旧版本处理
+			  useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
+		  elseif  CSAPI.ZLongServerListUrl=="None" and isRelease==false then
+			  Log("enter url ---2")
+			  ---兼容旧版本处理
+			  useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试
+		  elseif isRelease==false then
+			  Log("enter url ---2-1")
+			  ---兼容旧版本处理
+			  useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试
+		  else
+			  Log("enter url ---3")
+			  ---SDKEnvironment:1或者其它数字时候，进入这里
+			  if GetServerURLfrequency<=3  then
+				  useJsonFile =CSAPI.ZLongServerListUrl;
+			  elseif GetServerURLfrequency<=6 then
+				  useJsonFile =CSAPI.ZLongBackupsServerListUrl;
+				  ---如果出现第二个没有配置或者为空，继续用第一个 同时缩短时间
+				  if useJsonFile==nil or useJsonFile=="" then
+					  GetServerURLfrequency=6;
+					  useJsonFile =CSAPI.ZLongServerListUrl;
+				  end
+			  elseif GetServerURLfrequency>6 then
+				  useJsonFile =CSAPI.ZLongServerListUrl;
+			  end
+		  end
+	end
 	Log("useJsonFile is------:" .. useJsonFile);
+	
+	--ios提审服
+	if(CSAPI.IsAppReview())then
+		_G.server_list_enc_close = 1;
+		useJsonFile = "http://139.224.250.93/php/res/serverList/serverlist_release.json";--交错战线（ios）
+	end
+	--LogError(useJsonFile);
 	return useJsonFile;
 end
 
@@ -440,8 +461,12 @@ function GetLastServerInfo()
 	--local serverID = 16;--默认审核服
 	--local serverID = 19;--内部稳定服
 	--local serverID = 23;--默认ios提审服
-	local serverID = PlayerPrefs.GetInt(lastServerPath);--正式服
-	--LogError(serverID);
+	local serverID = 1;--PlayerPrefs.GetInt(lastServerPath);--正式服	--LogError(serverID);
+	if(CSAPI.IsAppReview())then
+		serverID = 102;--ios提审服
+	end
+
+	--local serverID = 16;--默认打包服
 	if CSAPI.IsADV() then
 		if CSAPI.GetInside()==0 then
 			serverID =26;--台服
@@ -451,6 +476,7 @@ function GetLastServerInfo()
 		end
 	end
 	local lastServerInfo = nil;
+	if CSAPI.IsADV() then CSAPI.SetServerID(serverID) end
 	if serverID and type(serverID) == "number" and serverID ~= 0 then
 		lastServerInfo = GetServerInfoByID(serverID);
 		--LogError(lastServerInfo);

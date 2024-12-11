@@ -9,6 +9,7 @@ local  imgInfos={
     bg2="img_08_01",
     nodeImg="img_15_01",
     over="img_13_01",  
+    maskImg="img_10_01",
 };
 function Awake()
     action=ComUtil.GetCom(enterTween,"ActionMoveByCurve");
@@ -71,10 +72,11 @@ function Refresh(_d,state,upExp,uiInfo)
                 -- CSAPI.LoadImg(top,"UIs/SpecialExploration/img_08_01.png",true,nil,true);
                 -- CSAPI.LoadImg(root,"UIs/SpecialExploration/img_08_02.png",true,nil,true);
             end
-            CSAPI.SetGOAlpha(txtNum,state==2 and 1 or 0.5);
+            CSAPI.SetGOAlpha(txtNum,state==2 and 1 or 0.4);
             CSAPI.LoadImg(bg,path,false,function()
                 CSAPI.SetScale(bg,1,1,1);
             end,true);
+            CSAPI.LoadImg(mask,string.format("UIs/%s/%s.png",uiInfo.floder,imgInfos.maskImg),false,nil,true);
         end
     end
     CSAPI.SetGOActive(lockObj,state==1);

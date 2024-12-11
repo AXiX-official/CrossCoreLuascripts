@@ -321,7 +321,11 @@ function OnClickOpen()
 		local dialogdata = {}
 		dialogdata.content = content
 		dialogdata.okCallBack = function()
-			PlayerProto:BuyTeam();
+			if CSAPI.IsADVRegional(3) then
+				CSAPI.ADVJPTitle(g_FormationPriceList[2],function() PlayerProto:BuyTeam(); end)
+			else
+				PlayerProto:BuyTeam();
+			end
 		end
 		CSAPI.OpenView("Dialog", dialogdata)
 	else

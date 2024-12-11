@@ -46,6 +46,7 @@ local lastPageIDs=nil;--当前商店的页面id列表
 local layout6=nil;
 local FirstEnterQuestionItem=false;
 function Awake()
+    ADVJPTxt(false);
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Shop_Tab_Change,OnPageChange)
     eventMgr:AddListener(EventType.Shop_TopTab_Change,OnChildTabChange)
@@ -262,6 +263,7 @@ function Refresh(isJump)
     CSAPI.SetGOActive(btnExchange,IsShowExchange());
     QuestionItemSetActive(false)
     if currPageData:GetCommodityType()==CommodityType.Promote then--推荐页
+        ADVJPTxt(false)
         InitPromotes();
     else
         InitSV();
@@ -729,6 +731,7 @@ end
 
 function SetLayout()
     QuestionItemSetActive(false)
+    ADVJPTxt(false)
     local isShowSet=false;
     local hasTabs=childTabDatas~=nil and #childTabDatas>1 or false;--当前页面是否有二级菜单
     if currPageData:GetCommodityType()==CommodityType.Promote then--推荐页
@@ -737,6 +740,7 @@ function SetLayout()
         currLayout=hasTabs==true and layout4 or layout;
         currTween=hasTabs==true and layout4Tween or layout1Tween;
     elseif currPageData:GetShowType()==ShopShowType.Package then
+        ADVJPTxt(true)
         QuestionItemSetActive(true)
         currLayout=layout2;
         currTween=layout2Tween;
@@ -744,6 +748,7 @@ function SetLayout()
         currLayout=layout2;
         currTween=layout2Tween;
     elseif currPageData:GetShowType()==ShopShowType.Pay then --充值
+        ADVJPTxt(true)
         QuestionItemSetActive(true)
         currLayout=layout3;
         currTween=layout3Tween;
@@ -957,7 +962,19 @@ end
 
 --点击商品
 function OnClickGrid(lua)
-    ShopCommFunc.OpenPayView(lua.data,currPageData);
+    if CSAPI.IsADV() then
+        if CSAPI.RegionalCode()==3 then
+            if CSAPI.PayAgeTitle() then
+                CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function() ShopCommFunc.OpenPayView(lua.data,currPageData);  end})
+            else
+                ShopCommFunc.OpenPayView(lua.data,currPageData);
+            end
+        else
+            ShopCommFunc.OpenPayView(lua.data,currPageData);
+        end
+    else
+        ShopCommFunc.OpenPayView(lua.data,currPageData);
+    end
 end
 
 --点击礼包类型展示的商品
@@ -1070,7 +1087,11 @@ function OnClickRefresh()
             local dialogdata = {}
             dialogdata.content = content
             dialogdata.okCallBack = function()
-                SetRandCommodity(true);
+                if CSAPI.IsADVRegional(3) then
+                    CSAPI.ADVJPTitle(costInfo[2],function() SetRandCommodity(true); end)
+                else
+                    SetRandCommodity(true);
+                end
             end
             CSAPI.OpenView("Dialog", dialogdata)
         end
@@ -1193,7 +1214,26 @@ function SetNewInfo(infos)
     newInfos=infos;
     -- Refresh();
 end
+function OnClickJPPayServices()
+    print("ShopView_OnClickJPPayServices")
+    if CSAPI.RegionalCode()==3 then
+        ShiryuSDK.ShowSdkCommonUI(9);
+    end
+end
 
+function OnClickJPBusiness()
+    print("ShopView_OnClickJPBusiness")
+    if CSAPI.RegionalCode()==3 then
+        ShiryuSDK.ShowSdkCommonUI(10);
+    end
+end
+function ADVJPTxt(Active)
+    if CSAPI.IsADV() and CSAPI.RegionalCode()==3 then
+        CSAPI.SetGOActive(ADVJP,Active);
+    else
+        CSAPI.SetGOActive(ADVJP,false);
+    end
+end
 function ReleaseCSComRefs()     
     gameObject=nil;
     transform=nil;

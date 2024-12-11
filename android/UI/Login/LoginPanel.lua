@@ -70,7 +70,7 @@ function Awake()
     -- end
 
     -- CameraMgr:ApplyCommonAction(nil,"login");
-    CSAPI.SetText(loading, LanguageMgr:GetByID(1024));
+
     isChannel = false;
     local type = GetChannelType();
     if CSAPI.IsChannel() and type ~= ChannelType.TapTap and type ~= ChannelType.Normal then -- Taptap包即是官网包
@@ -123,7 +123,13 @@ function Awake()
 
     SetLive()
 end
-
+function Start()
+    SetLoadText()
+end
+---根据反馈 存在首次赋值获取错误，封装进行重复赋值
+function SetLoadText()
+    CSAPI.SetText(loading, LanguageMgr:GetByID(1024));
+end
 function OnInit()
     InitListener();
 end

@@ -597,4 +597,37 @@ function this:FilterChar2(str)
     return result;
 end
 
+--根据数字获取罗马数字
+function this:IntToRoman(num)
+    if num <= 0 or num >= 4000 then
+        return "Invalid number"
+    end
+
+    local romanNumeral = ""
+    local romanNumerals = {
+        {1000, "M"},
+        {900, "CM"},
+        {500, "D"},
+        {400, "CD"},
+        {100, "C"},
+        {90, "XC"},
+        {50, "L"},
+        {40, "XL"},
+        {10, "X"},
+        {9, "IX"},
+        {5, "V"},
+        {4, "IV"},
+        {1, "I"}
+    }
+
+    for _, v in ipairs(romanNumerals) do
+        while num >= v[1] do
+            romanNumeral = romanNumeral .. v[2]
+            num = num - v[1]
+        end
+    end
+
+    return romanNumeral
+end
+
 return this;

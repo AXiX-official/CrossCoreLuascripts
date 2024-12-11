@@ -211,17 +211,26 @@ function OnClickReset()
     else
         local str1 = "XXX"
         local str2 = "XXX"
+        local CostValue=0;
         if (g_ResetAbilityCost) then
             local cost = g_ResetAbilityCost[1]
             local cfg = Cfgs.ItemInfo:GetByID(cost[1])
+            CostValue=cost[2];
             str1 = StringUtil:SetColor(cost[2], "orange")
             str2 = StringUtil:SetColor(cfg.name, "orange")
         end
         local dialogData = {}
         dialogData.content = PlayerAbilityMgr:IsFreeReset() and LanguageMgr:GetByID(9013) or string.format(LanguageMgr:GetByID(9008), str1, str2)
         dialogData.okCallBack = function()
-            CSAPI.PlayUISound("ui_page_battle_start")
-            AbilityProto:ResetAbility()
+            if CSAPI.IsADVRegional(3) then
+                CSAPI.ADVJPTitle(CostValue,function()
+                    CSAPI.PlayUISound("ui_page_battle_start")
+                    AbilityProto:ResetAbility()
+                end)
+            else
+                CSAPI.PlayUISound("ui_page_battle_start")
+                AbilityProto:ResetAbility()
+            end
         end
         CSAPI.OpenView("Dialog", dialogData)
     end

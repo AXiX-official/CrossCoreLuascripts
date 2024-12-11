@@ -89,8 +89,12 @@ function SetEnemy()
     if cfg.unlock_type == 1 then -- 关卡		
         if not IsLock() then
             local cfgModel = Cfgs.character:GetByID(cfg.aModels)
-            SetIcon(cfgModel.Card_head)
-            SetHei(false)
+            if cfgModel then
+                SetIcon(cfgModel.Card_head)
+                SetHei(false)
+            else
+                LogError("没找到对应的模型表数据！！！id:" .. cfg.aModels)
+            end
         else
             SetIcon("enemy_chead")
             SetEmpty()
@@ -142,9 +146,12 @@ function OnClick()
         else
             -- local cardData = RoleMgr:GetMaxFakeData(cfg.id)
             -- CSAPI.OpenView("RoleInfo", cardData)
-
-            local cRoleInfo = CRoleMgr:GetFakeData(cfg.id)
-            CSAPI.OpenView("ArchiveRole", cRoleInfo, 2)
+            if g_FHXArchiveRole ~= nil then
+                LanguageMgr:ShowTips(18001)
+            else
+                local cRoleInfo = CRoleMgr:GetFakeData(cfg.id)
+                CSAPI.OpenView("ArchiveRole", cRoleInfo, 2)    
+            end
             -- LanguageMgr:ShowTips(18000)
             -- Tips.ShowTips(18001)
         end

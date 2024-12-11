@@ -118,7 +118,11 @@ function OnClickOpen()
     local dialogdata = {}
     dialogdata.content = content
     dialogdata.okCallBack = function()
-        BuildingProto:BuildAddPresetTeam(roomId)
+        if CSAPI.IsADVRegional(3) then
+            CSAPI.ADVJPTitle(g_BuildPresetTeamBuyCost[2],function()   BuildingProto:BuildAddPresetTeam(roomId) end)
+        else
+            BuildingProto:BuildAddPresetTeam(roomId)
+        end
     end
     CSAPI.OpenView("Dialog", dialogdata)
 end

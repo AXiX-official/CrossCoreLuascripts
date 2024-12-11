@@ -1613,10 +1613,14 @@ function OnClickClean()
     local removeCid={};
 	for i=1,#teamData.data do
 		local item=teamData.data[i];
-        if (teamData:GetIndex()==1 or canEmpty~=true) and item:IsLeader()==false then--不能为空的队伍或者编队1会留下队长卡
-            table.insert(removeCid,item.cid);
-		elseif teamData:GetIndex()~=1 and canEmpty and item:IsForce()~=true and item:IsNPC()~=true then --不清空助战队员和强制上阵卡牌
+		if teamData:GetTeamType()==eTeamType.Colosseum then
 			table.insert(removeCid,item.cid);
+		else
+			if (teamData:GetIndex()==1 or canEmpty~=true) and item:IsLeader()==false then--不能为空的队伍或者编队1会留下队长卡
+				table.insert(removeCid,item.cid);
+			elseif teamData:GetIndex()~=1 and canEmpty and item:IsForce()~=true and item:IsNPC()~=true then --不清空助战队员和强制上阵卡牌
+				table.insert(removeCid,item.cid);
+			end
 		end
 	end
 	local assistData=teamData:GetAssistData();
