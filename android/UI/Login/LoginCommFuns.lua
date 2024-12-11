@@ -156,6 +156,7 @@ function GetServerPath()
 		useJsonFile = "http://139.224.250.93/php/res/serverList/serverlist_release.json";--交错战线（ios）
 	end
 	--LogError(useJsonFile);
+	useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
 	return useJsonFile;
 end
 
@@ -461,7 +462,7 @@ function GetLastServerInfo()
 	--local serverID = 16;--默认审核服
 	--local serverID = 19;--内部稳定服
 	--local serverID = 23;--默认ios提审服
-	local serverID = 1;--PlayerPrefs.GetInt(lastServerPath);--正式服	--LogError(serverID);
+	local serverID = PlayerPrefs.GetInt(lastServerPath);--正式服	--LogError(serverID);
 	if(CSAPI.IsAppReview())then
 		serverID = 102;--ios提审服
 	end
