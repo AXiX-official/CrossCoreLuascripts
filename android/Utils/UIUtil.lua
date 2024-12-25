@@ -917,5 +917,19 @@ function this:SetLiveBroadcast(obj, isBlack)
 
     end
 end
+-- 直播模式(图片)
+function this:SetLiveBroadcast2(obj, isBlack)
+    if (not obj) then
+        return
+    end
+    local num = 0
+    if (not isBlack) then
+        local value = SettingMgr:GetValue(s_other_live_key)
+        num = value == 1 and 0.1 or 1
+    end
+   -- 图片+特效
+   local _num = num == 1 and 255 or 25
+   CSAPI.SetImgColor(obj, _num, _num, _num, 255)
+end
 
 return this

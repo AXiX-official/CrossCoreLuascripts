@@ -188,7 +188,7 @@ end
 
 function SetBlack(isBlack)
     if imgObj then
-        UIUtil:SetLiveBroadcast(imgObj,isBlack)
+        UIUtil:SetLiveBroadcast2(imgObj,isBlack)
     end
 end
 
