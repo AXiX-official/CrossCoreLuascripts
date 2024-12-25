@@ -1035,6 +1035,51 @@ GameMsg.map["FightProto:RogueSGainRet"] = {
 	{ "uint","list|sGetDupSumStarReward",},
 	{ "ty",  "gained",            },
 }
+GameMsg.map["FightProto:GlobalBossInfoRet"] = {
+	--bossid   开始时间    结束时间  
+	{ "int",   "uint",     "uint",   },
+	{ "bossId","beginTime","endTime",},
+}
+GameMsg.map["FightProtocol:GetGlobalBossData"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["FightProto:GetGlobalBossDataRet"] = {
+	--血量     最大血量 玩家排名 今日已挑战次数   
+	{ "double","double","uint",  "uint",          },
+	{ "hp",    "maxHp", "rank",  "challengeTimes",},
+}
+GameMsg.map["FightProtocol:EnterGlobalBossFight"] = {
+	--队伍         
+	{ "uint",      },
+	{ "nTeamIndex",},
+}
+GameMsg.map["FightProtocol:GetGlobalBossRank"] = {
+	--第几页  
+	{ "int",  },
+	{ "nPage",},
+}
+GameMsg.map["sGlobalBossRankItem"] = {
+	--排名   伤害       名字    等级    头像      头像框       玩家称号     阵容卡牌缩略数据  
+	{ "int", "int",    "string","short","int",    "int",       "uint",      "list|sCardsData",},
+	{ "rank","nDamage","name",  "level","icon_id","icon_frame","icon_title","cardInfos",      },
+}
+GameMsg.map["FightProto:GetGlobalBossRankRet"] = {
+	--排名数据             我的排名 我的伤害  
+	{ "list|sGlobalBossRankItem","int",   "int",    },
+	{ "data",              "rank",  "nDamage",},
+}
+GameMsg.map["FightProtocol:GetGlobalBossRankTeam"] = {
+	--第几名    
+	{ "int",    },
+	{ "rankIdx",},
+}
+GameMsg.map["FightProto:GetGlobalBossRankTeamRet"] = {
+	--第几名    队伍数据        
+	{ "int",    "list|TeamItem",},
+	{ "rankIdx","data",         },
+}
 GameMsg.map["ItemData"] = {
 	--id     数量  第一个获取时间 有效期序列值(结合配置表的sExpiry使用, 导表工具会生成nExpiry) 过期时间，不需要分开堆叠显示的使用[头像框] 分批获取的信息 
 	{ "uint","int","uint",        "short",             "uint",               "json",        },
@@ -2151,14 +2196,14 @@ GameMsg.map["ShopProto:GetShopInfosAdd"] = {
 	{ "infos",             "m_cnt",         "is_finish",},
 }
 GameMsg.map["ShopProto:Buy"] = {
-	--配置id 购买时间   购买总量  扣费方式[ price_1 / price_2 ] 使用的抵扣券    
-	{ "uint","uint",    "uint",   "string",            "list|sNumInfo",},
-	{ "id",  "buy_time","buy_sum","useCost",           "vouchers",     },
+	--配置id 购买时间   购买总量  扣费方式[ price_1 / price_2 ] 使用的抵扣券    扣费方式[ jCosts / jCosts1 ] 
+	{ "uint","uint",    "uint",   "string",            "list|sNumInfo","string",            },
+	{ "id",  "buy_time","buy_sum","useCost",           "vouchers",     "useJCost",          },
 }
 GameMsg.map["ShopProto:BuyRet"] = {
-	--配置id 购买记录信息         获得的物品      新加bufId的物品 月卡剩余有效时间 
-	{ "uint","struts|sShopCommodityData","list|sNumInfo","list|sNumInfo","uint",          },
-	{ "id",  "info",              "gets",         "add_bufs",     "m_cnt",         },
+	--配置id 购买记录信息         获得的物品      新加bufId的物品 月卡剩余有效时间 扣费方式[ jCosts / jCosts1 ] 
+	{ "uint","struts|sShopCommodityData","list|sNumInfo","list|sNumInfo","uint",          "string",            },
+	{ "id",  "info",              "gets",         "add_bufs",     "m_cnt",         "useJCost",          },
 }
 GameMsg.map["sExchangeItem"] = {
 	--奖励id      奖励品id 能领取多少个                     折扣    掉落列表的下标 已经领取的(没领取过之前为nil) 可以兑换数量(不限购为nil) 
@@ -2226,9 +2271,9 @@ GameMsg.map["sShopOpenTimeData"] = {
 	{ "shop_id","group_id","open_time","close_time",},
 }
 GameMsg.map["sShopCommodityCfg"] = {
-	--折扣开始时间     折扣结束时间   折扣        获得的物品id及数量 额外获得  消耗货币id 单次购买上限    总购买上限     重置类型     重置类型值    是否显示在列表 
-	{ "uint",          "uint",        "float",    "json",            "json",   "json",    "uint",         "uint",        "uint",      "uint",       "uint",        },
-	{ "nDiscountStart","nDiscountEnd","fDiscount","jGets",           "jExGets","jCosts",  "nOnecBuyLimit","nSumBuyLimit","nResetType","nResetValue","isShow",      },
+	--折扣开始时间     折扣结束时间   折扣        获得的物品id及数量 额外获得  消耗货币id 单次购买上限    总购买上限     重置类型     重置类型值    是否显示在列表 消耗货币id 
+	{ "uint",          "uint",        "float",    "json",            "json",   "json",    "uint",         "uint",        "uint",      "uint",       "uint",        "json",    },
+	{ "nDiscountStart","nDiscountEnd","fDiscount","jGets",           "jExGets","jCosts",  "nOnecBuyLimit","nSumBuyLimit","nResetType","nResetValue","isShow",      "jCosts1", },
 }
 GameMsg.map["sMailContent"] = {
 	--邮件名称 发件人名称 描述     获得的奖励(物品id,数量) 阅读后多少秒删除 
@@ -4100,10 +4145,15 @@ GameMsg.map["PlayerProto:TakeColletReward"] = {
 	{ "int", },
 	{ "id",  },
 }
+GameMsg.map["PlayerProto:TakeColletRewardRet"] = {
+	--表的id 
+	{ "int", },
+	{ "id",  },
+}
 GameMsg.map["sNewPanel"] = {
-	--位置   看板ids      细节      细节      背景ID 
-	{ "uint","array|uint","json",   "json",   "uint",},
-	{ "idx", "ids",       "detail1","detail2","bg",  },
+	--位置   看板ids      细节      细节      背景ID 所属看板类型 
+	{ "uint","array|uint","json",   "json",   "uint","uint",      },
+	{ "idx", "ids",       "detail1","detail2","bg",  "ty",        },
 }
 GameMsg.map["PlayerProto:GetNewPanel"] = {
 	--
@@ -4116,9 +4166,14 @@ GameMsg.map["PlayerProto:SetNewPanel"] = {
 	{ "panels",           "setting","random","using", },
 }
 GameMsg.map["PlayerProto:GetNewPanelRet"] = {
-	--看板信息            轮换设置  是否随机 当前使用 最后更新时间  
-	{ "map|sNewPanel|idx","uint",   "uint",  "uint",  "uint",       },
-	{ "panels",           "setting","random","using", "update_time",},
+	--看板信息            轮换设置  是否随机 当前使用 最后更新时间  当前随机看板类型 当前随机看板信息   
+	{ "map|sNewPanel|idx","uint",   "uint",  "uint",  "uint",       "uint",          "struts|sNewPanel",},
+	{ "panels",           "setting","random","using", "update_time","random_type",   "random_panel",    },
+}
+GameMsg.map["PlayerProto:GetRandomPanelRet"] = {
+	--随机看板信息        随机看板自增下标 是否发送完成 
+	{ "map|sNewPanel|idx","uint",          "bool",      },
+	{ "random_panels",    "random_idx",    "finish",    },
 }
 GameMsg.map["PlayerProto:SetNewPanelUsing"] = {
 	--使用看板位置 
@@ -4126,14 +4181,49 @@ GameMsg.map["PlayerProto:SetNewPanelUsing"] = {
 	{ "using",     },
 }
 GameMsg.map["PlayerProto:SetNewPanelUsingRet"] = {
-	--当前使用 最后更新时间  
-	{ "uint",  "uint",       },
-	{ "using", "update_time",},
+	--当前使用 最后更新时间  当前看板信息       
+	{ "uint",  "uint",       "struts|sNewPanel",},
+	{ "using", "update_time","random_panel",    },
 }
-GameMsg.map["PlayerProto:TakeColletRewardRet"] = {
-	--表的id 
-	{ "int", },
-	{ "id",  },
+GameMsg.map["PlayerProto:SetRandomPanel"] = {
+	--随机看板信息       
+	{ "struts|sNewPanel",},
+	{ "random_panel",    },
+}
+GameMsg.map["PlayerProto:SetRandomPanelRet"] = {
+	--随机看板信息       随机看板自增下标 
+	{ "struts|sNewPanel","uint",          },
+	{ "random_panel",    "random_idx",    },
+}
+GameMsg.map["PlayerProto:GetRandomPanelDetail"] = {
+	--随机看板下标 
+	{ "uint",      },
+	{ "idx",       },
+}
+GameMsg.map["PlayerProto:GetRandomPanelDetailRet"] = {
+	--随机看板自增下标 随机看板信息       
+	{ "uint",          "struts|sNewPanel",},
+	{ "idx",           "random_panel",    },
+}
+GameMsg.map["PlayerProto:SetPanelRandomType"] = {
+	--当前随机看板类型 
+	{ "uint",          },
+	{ "random_type",   },
+}
+GameMsg.map["PlayerProto:SetPanelRandomTypeRet"] = {
+	--当前随机看板类型 
+	{ "uint",          },
+	{ "random_type",   },
+}
+GameMsg.map["PlayerProto:RemoveRandomPanel"] = {
+	--随机看板下标 
+	{ "uint",      },
+	{ "idx",       },
+}
+GameMsg.map["PlayerProto:RemoveRandomPanelRet"] = {
+	--随机看板下标 
+	{ "uint",      },
+	{ "idx",       },
 }
 GameMsg.map["sStarPalaceInfo"] = {
 	--章节id    当前排名 当前章节的子副本数据 下次刷新时间        
@@ -4230,6 +4320,26 @@ GameMsg.map["PlayerProto:ClearDuplicateRet"] = {
 	{ "array|uint",},
 	{ "dupIds",    },
 }
+GameMsg.map["PlayerProto:GetColletDataByType"] = {
+	--活动类型（eCollectType） 
+	{ "uint",              },
+	{ "type",              },
+}
+GameMsg.map["PlayerProto:GetColletDataByTypeRet"] = {
+	--活动类型（eCollectType） 开始时间(0则还没开启) 结束时间（-1或者nil，无限开） 当前累充金额 已领取的     
+	{ "uint",              "int",               "int",               "int",       "array|uint",},
+	{ "type",              "openTime",          "closeTime",         "score",     "data",      },
+}
+GameMsg.map["PlayerProto:TakeColletRewardByType"] = {
+	--活动类型（eCollectType） 表的id 
+	{ "uint",              "int", },
+	{ "type",              "id",  },
+}
+GameMsg.map["PlayerProto:TakeColletRewardByTypeRet"] = {
+	--活动类型（eCollectType） 表的id 
+	{ "uint",              "int", },
+	{ "type",              "id",  },
+}
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 
 	{ "long",  "array|long",  "uint",  "string","uint",  "byte",  "string", "string",            "json",              },
@@ -4304,6 +4414,86 @@ GameMsg.map["RegressionProto:ItemPoolDrawRet"] = {
 	--道具池信息         本次抽取奖励 抽取时的轮次 
 	{ "struts|sItemPool","array|uint","uint",      },
 	{ "info",            "drawArr",   "drawRound", },
+}
+GameMsg.map["RegressionProto:PlrBindInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["RegressionProto:PlrBindInfoRet"] = {
+	--当前绑定活动id 邀请码[ 玩家类型_UID ] 绑定的其他玩家 绑定任务领取累计 申请次数   申请次数重置时间 当前阶段 任务完成总数  
+	{ "uint",        "string",            "json",        "json",          "uint",    "uint",          "uint",  "uint",       },
+	{ "activeId",    "code",              "plrs",        "taskGets",      "applyCnt","applyResetTime","stage", "doneTaskNum",},
+}
+GameMsg.map["RegressionProto:PlrBindInvite"] = {
+	--邀请码          
+	{ "string","uint",},
+	{ "code",  "uid", },
+}
+GameMsg.map["RegressionProto:PlrBindInviteRet"] = {
+	--是否邀请成功 被邀请人uid 
+	{ "bool",      "uint",     },
+	{ "isOk",      "beInviter",},
+}
+GameMsg.map["RegressionProto:PlrBindBeInvite"] = {
+	--邀请人uid 
+	{ "uint",   },
+	{ "inviter",},
+}
+GameMsg.map["RegressionProto:PlrBindBeInviteRet"] = {
+	--是否接受 邀请人uid 
+	{ "bool",  "uint",   },
+	{ "isOk",  "inviter",},
+}
+GameMsg.map["RegressionProto:PlrBindInviteResult"] = {
+	--是否接受 被邀请人uid 
+	{ "bool",  "uint",     },
+	{ "isOk",  "beInviter",},
+}
+GameMsg.map["RegressionProto:PlrBindInviteList"] = {
+	--页面值0开始 
+	{ "uint",     },
+	{ "page",     },
+}
+GameMsg.map["RegressionProto:PlrBindInviteListRet"] = {
+	--页面值0开始 g_PlrBindListOnceCnt 配置返回数量         
+	{ "uint",     "list|sFriendInfo",  "bool", },
+	{ "page",     "friends",           "isEnd",},
+}
+GameMsg.map["RegressionProto:PlrBindRecoment"] = {
+	--页面值0开始 
+	{ "uint",     },
+	{ "page",     },
+}
+GameMsg.map["RegressionProto:PlrBindRecomentRet"] = {
+	--页面值0开始 g_PlrBindListOnceCnt 配置返回数量         
+	{ "uint",     "list|sFriendInfo",  "bool", },
+	{ "page",     "friends",           "isEnd",},
+}
+GameMsg.map["RegressionProto:PlrBindGainReward"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["RegressionProto:PlrBindGainRewardRet"] = {
+	--阶段    任务完成总数  
+	{ "uint", "uint",       },
+	{ "stage","doneTaskNum",},
+}
+GameMsg.map["RegressionProto:PlrBindBeInviteRetNotice"] = {
+	--是否接受 邀请人uid 操作成功  
+	{ "bool",  "uint",   "bool",   },
+	{ "isOk",  "inviter","success",},
+}
+GameMsg.map["RegressionProto:PlrBindStageTaskInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["RegressionProto:PlrBindStageTaskInfoRet"] = {
+	--当前阶段 任务完成总数  
+	{ "uint",  "uint",       },
+	{ "stage", "doneTaskNum",},
 }
 GameMsg.map["AchievementProto:GetFinishInfo"] = {
 	--

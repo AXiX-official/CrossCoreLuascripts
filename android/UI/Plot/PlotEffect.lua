@@ -32,7 +32,7 @@ function Refresh(_data, _elseData)
                     if(cfgVideo) then				
                         local plotID = plotData:GetID()						
                         FuncUtil:Call(function()
-                            if(gameObject and not effectInfos[plotID].isJumpVideo and plotData) then
+                            if(gameObject and not effectInfos[plotID]["Video"] and plotData) then
                                 if(v.stop == 1) then --暂停循环
                                     if(lastVideoInfos[v.id] ~= nil) then
                                         if lastVideoInfos[v.id].go ~= nil then

@@ -6,10 +6,10 @@ Skill332902 = oo.class(SkillBase)
 function Skill332902:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 攻击结束
-function Skill332902:OnAttackOver(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+-- 伤害前
+function Skill332902:OnBefourHurt(caster, target, data)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else
 		return
 	end
@@ -18,31 +18,13 @@ function Skill332902:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8214
-	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
+	-- 8437
+	local count37 = SkillApi:BuffCount(self, caster, target,2,3,3008)
+	-- 8120
+	if SkillJudger:Greater(self, caster, self.card, true,count37,0) then
 	else
 		return
 	end
 	-- 332902
-	self:HitAddBuff(SkillEffect[332902], caster, target, data, 3500,5104,2)
-end
--- 伤害前
-function Skill332902:OnBefourHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8214
-	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
-	else
-		return
-	end
-	-- 332906
-	self:AddTempAttr(SkillEffect[332906], caster, self.card, data, "damage",0.10)
+	self:AddTempAttr(SkillEffect[332902], caster, target, data, "bedamage",0.06)
 end

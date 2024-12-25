@@ -2,7 +2,7 @@
 local this = 
 {
 [-1183793042]={
-{delay=400,time=2000,type=0}
+{effect="enter",time=2000,type=0,pos_ref={ref_type=6}}
 },
 [1310282141]={
 {time=4000,type=0,cue_sheet="fight/effect/seventh.acb",cue_name="Frost_guard_attack_skill_02"},

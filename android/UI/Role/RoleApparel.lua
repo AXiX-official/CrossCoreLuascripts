@@ -23,14 +23,22 @@ function Awake()
         useIndex = GetBaseIndex() -- 当前使用的
         RefreshPanel()
     end)
-    eventMgr:AddListener(EventType.Card_Skin_Get, function()
-        layout:UpdateList()
-        RefreshPanel()
-    end)
-    eventMgr:AddListener(EventType.Shop_RecordInfos_Refresh,SetASMRInfo)
-    eventMgr:AddListener(EventType.Shop_Buy_Ret,SetASMRInfo)
-
+    -- eventMgr:AddListener(EventType.Card_Skin_Get, function()
+    --     layout:UpdateList()
+    --     RefreshPanel()
+    -- end)
+    -- eventMgr:AddListener(EventType.Shop_RecordInfos_Refresh,SetASMRInfo)
+    -- eventMgr:AddListener(EventType.Shop_Buy_Ret,SetASMRInfo)
+    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
     CSAPI.SetGOActive(mask, true)
+end
+-- 其它界面关闭
+function OnViewClosed(viewKey)
+    if (viewKey == "ShopView") then
+        layout:UpdateList()
+        local b = curDatas[curIndex]:CanShowL2d()
+        RefreshPanel(b)
+    end
 end
 
 function OnDestroy()
@@ -427,15 +435,14 @@ function OnClickASMR()
     end
 end
 
-
---购买
+-- 购买
 function OnClickBuy()
     if comm then
-        local cost=comm:GetRealPrice(shopPriceKey)[1];
-        if cost==nil or cost.id~=-1 then
-            CSAPI.OpenView("ShopSkinBuy",comm,shopPriceKey);
+        local cost = comm:GetRealPrice(shopPriceKey)[1];
+        if cost == nil or cost.id ~= -1 then
+            CSAPI.OpenView("ShopSkinBuy", comm, shopPriceKey);
         else
-            ShopCommFunc.HandlePayLogic(comm,1,1,nil,OnSuccess,shopPriceKey);
+            ShopCommFunc.HandlePayLogic(comm, 1, 1, nil, OnSuccess, shopPriceKey);
         end
     end
 end

@@ -18,6 +18,7 @@ function Refresh(cfg,elseData)
         this.cfg=cfg;
         CSAPI.SetText(txt_name,cfg.name);
         SetIcon(cfg.icon);
+        SetLimit(cfg.endTime~=nil);
     else
         this.cfg=nil;
     end
@@ -40,12 +41,16 @@ function SetState(_isOn)
     CSAPI.SetGOActive(onObj,_isOn);
 end
 
+function SetLimit(_isShow)
+    CSAPI.SetGOActive(limit,_isShow);
+end
+
 function SetIcon(_iconName)
     if (_iconName) then
         CSAPI.SetGOActive(icon1,true);
         CSAPI.SetGOActive(icon2,true);
-        ResUtil.IconGoods:Load(icon1, _iconName.."_1")
-        ResUtil.IconGoods:Load(icon2, _iconName.."_1")
+        ResUtil.ShopTab:Load(icon1,_iconName)
+        ResUtil.ShopTab:Load(icon2,_iconName)
     else
         CSAPI.SetGOActive(icon1,false);
         CSAPI.SetGOActive(icon2,false);
@@ -70,8 +75,14 @@ end
 --检测红点数据
 function SetRedInfo()
     local rd=RedPointMgr:GetData(RedPointType.Shop);
-    if rd and this.cfg and rd[this.cfg.id] then
-        SetRed(true);
+    if rd and this.cfg then
+        if rd[this.cfg.id] then
+            SetRed(true);
+        elseif (this.cfg.group and rd[this.cfg.group] and this.cfg.isAll==1) or (rd.cTab and rd.cTab[this.cfg.id])  then
+            SetRed(true);
+        else
+            SetRed(false);
+        end
     else
         SetRed(false);
     end

@@ -1,6 +1,7 @@
 local data = nil
 local canvasGroup = nil
 local isLock = false
+local lockStr = ""
 local openInfo = nil
 local currState = 0
 local lastState = 0
@@ -30,6 +31,14 @@ local isTotal = false
 local totalTimer = 0
 local totalTime = 0
 local sliderTotal = nil
+
+--世界boss
+local isGlobalBoss = false
+local globalBossTimer = 0
+local globalBossTime = 0
+local globalBossCloseTime = 0
+local isGlobalBossClose = false
+local globalBossDesc = ""
 
 -- 动效
 local textRand = nil
@@ -70,6 +79,7 @@ function Refresh(_data, elseData)
         SetTitle()
         SetLock()
         SetRed()
+        SetGlobalBoss()
     end
 
     itemX = CSAPI.GetAnchor(gameObject)
@@ -84,6 +94,8 @@ function Update()
         UpdateRogue()
     elseif isTotal then
         UpdateTotalBattle()
+    elseif isGlobalBoss then
+        UpdateGlobalBoss()
     end
 end
 
@@ -101,14 +113,17 @@ function SetTitle()
 end
 
 function SetLock()
-    local isLock = currState < 1
-    canvasGroup.alpha = isLock and 0.3 or 1
-    CSAPI.SetGOActive(lockImg, isLock)
-    CSAPI.SetGOActive(lockObj, isLock)
-    CSAPI.SetGOActive(unLockImg, not isLock)
+    isLock = currState < 1
+    _, lockStr = sectionData:GetOpen()
+    SetLockPanel(isLock,lockStr)
+end
 
-    local _, lockStr = sectionData:GetOpen()
-    CSAPI.SetText(txtLock, lockStr)
+function SetLockPanel(b,str)
+    canvasGroup.alpha = b and 0.3 or 1
+    CSAPI.SetGOActive(lockImg, b)
+    CSAPI.SetGOActive(lockObj, b)
+    CSAPI.SetGOActive(unLockImg, not b)
+    CSAPI.SetText(txtLock, str)
 end
 
 function SetRed()
@@ -157,6 +172,10 @@ function GetItemX()
 end
 
 function OnClick()
+    if globalBossTime > 0 then
+        Tips.ShowTips(lockStr)
+        return
+    end
     if cb then
         cb(this)
     end
@@ -321,6 +340,33 @@ function UpdateRogue()
         LanguageMgr:SetText(txtRogueTime, 50001, timeData[1], timeData[2], timeData[3])
         if rogueTime <= 0 then
             CSAPI.SetGOActive(rogueObj,false)
+        end
+    end
+end
+-------------------------------------------世界boss
+function SetGlobalBoss()
+    isGlobalBoss = data.type == SectionActivityType.GlobalBoss
+    if isGlobalBoss then
+        globalBossTimer = 0
+        isGlobalBossClose,globalBossCloseTime,globalBossDesc=DungeonUtil.IsGlobalBossCloseTime(sectionData:GetID())
+        if isGlobalBossClose then
+            globalBossTime = globalBossCloseTime - TimeUtil:GetTime()
+            if not isLock then
+                SetLockPanel(true, globalBossDesc)
+                lockStr = globalBossDesc
+            end
+        end
+    end
+end
+
+function UpdateGlobalBoss()
+    if (globalBossTime > 0 and Time.time > globalBossTimer) then
+        globalBossTimer = Time.time + 1
+        globalBossTime = globalBossCloseTime - TimeUtil:GetTime()
+        if globalBossTime <= 0 then
+            if not isLock then
+                SetLockPanel(false, "")
+            end
         end
     end
 end

@@ -19,7 +19,7 @@ function this.Course()
 end
 
 function this.Trials()
-    return {"Title", "Level", "Target", "Badge", "Danger", "Details","Double","Button"}
+    return {"Title", "Level", "Target", "Badge", "Danger2", "Details","Double","Button"}
 end
 
 function this.Danger()
@@ -72,6 +72,14 @@ end
 
 function this.Colosseum()
     return {"Title4","Target","Output","Details","Button4"}
+end
+
+function this.GlobalBoss()
+    return {"BossTitle","BossLevel","BossState","BossTime","BossButton1","BossDetails","BossButton2"},"GlobalBoss"
+end
+
+function this.RogueT()
+    return {"Title2","Target3","Output","Details","Button5"}
 end
 
 return this; 

@@ -470,12 +470,16 @@ function SetViewLayout(openSetting)
 	end
 	CSAPI.SetGOActive(btn_prefab,hasPrefab);
 	--AI和战术
-	local b = true
+	local isSkill = true
+	local isAI = true
 	if(TeamMgr.currentIndex ==eTeamType.Colosseum or TeamMgr.currentIndex ==(eTeamType.Colosseum + 1)) then 
-		b = false
+		isSkill = false		
+		isAI= false
+	elseif openSetting==TeamOpenSetting.GlobalBoss then
+		isSkill = false		
 	end 
-	CSAPI.SetGOActive(btn_ai,b)
-	CSAPI.SetGOActive(btn_skill,b)
+	CSAPI.SetGOActive(btn_ai,isAI)
+	CSAPI.SetGOActive(btn_skill,isSkill)
 end
 
 --刷新面板 isReset:是否重置卡牌列表，notLoadModel：是否不刷新阵盘

@@ -217,10 +217,9 @@ function Update()
 		if cgIndex <= #cgList and isFull then
 			cgTimer = 0;
 			if cgIndex == #cgList then				
-				CSAPI.SetGOActive(boxParent, false)
+				CSAPI.SetGOAlpha(boxParent,0)
 				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType(), cgCall);
 				anyWayObj.enabled = true;
-				CSAPI.SetTimeScale(playPower[powerIndex]);--还原快进速度							
 			else
 				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType());
 			end
@@ -374,11 +373,12 @@ function PlayPlot()
 			end		
 			PlotTween.FadeIn(imgParent,0.25,function ()
 				if not currentPlotData:IsLeft() then
-					CSAPI.SetGOActive(boxParent, true)					
+					CSAPI.SetGOAlpha(boxParent,1)				
 					PlayContent();
 					isCGPlay = false
 					isChangeBg = false
 				end
+				CSAPI.SetTimeScale(playPower[powerIndex]);--还原快进速度							
 				cgCall=nil
 			end, 0.5)
 		end		
@@ -440,7 +440,8 @@ end
 function PlayBGM()
 	local bgmName = currentPlotData:GetBGM();
 	if bgmName == "none" then
-		CSAPI.StopBGM(1000);
+		CSAPI.StopBGM(0.5);
+		currBgName = ""
 	elseif bgmName ~= nil and bgmName ~= "none" and currBgName ~= bgmName then
 		--切换BGM	
 		CSAPI.SetBGMLock(myBGMLockKey);
@@ -485,6 +486,7 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 		isChangeBg = true
 		if changeType == ImgChangeType.Fade then
 			local plotID = currentPlotData:GetID()
+			local actionTime = currentPlotData:GetImgActionTime()
 			if isFirstChange then --首次切换
 				PlotTween.FadeIn(bg, 0.25, nil, 0.25)
 				PlotTween.FadeIn(imgParent, 0.25, nil, 0.5)
@@ -494,21 +496,21 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 					PlotTween.FadeOut(imgParent, 0.25)
 					cgDelay = 250
 				end
-				PlotTween.Twinkle(bg, 0.25,nil,cgDelay / 1000)	
+				PlotTween.Twinkle(bg, actionTime,nil,cgDelay / 1000)	
 			end
 			FuncUtil:Call(function()
 				if(gameObject and currentPlotData) then
-					CSAPI.SetGOActive(grayEffect, currentPlotData ~= nil and currentPlotData:IsGray() or false);
+					CSAPI.SetGOActive(grayEffect,currentPlotData:IsGray());
 					SetBackGround(imgPath);
 					if roleCB then
 						roleCB()
 					end
 					RecordInfo("CG")
 				end
-			end, nil, 250 + cgDelay)
+			end, this,(actionTime * 1000) + cgDelay)
 			if currentPlotData:IsLeft() then
 				FuncUtil:Call(function ()
-					CSAPI.SetGOActive(boxParent, true)					
+					CSAPI.SetGOAlpha(boxParent,1)
 					PlayContent();
 					isCGPlay = false
 					isChangeBg = false
@@ -864,6 +866,7 @@ function JumpToPlot(plotID)
 			currentPlotData = plotInfo;
 		end
 	end
+	isFirstChange = false
 	ShowLastFrame();
 	PlayPlot();
 end
@@ -895,7 +898,7 @@ function RecordFrameInfo(plotInfo)
 		for k, v in ipairs(pInfos) do
 			tag = v.tag or 1
 			key = v.id .. "_" .. tag
-			if v.enter and jumpRecord.roles[key] then
+			if (v.enter) and jumpRecord.roles[key] then
 				local roleImgInfo = RoleImgInfo.New();
 				roleImgInfo:InitCfg(v.id);
 				local posList = roleImgInfo:GetRoleImgPos();
@@ -1030,10 +1033,22 @@ function UpdateRoleImg(pInfos)
 				roleView.SetImg(v);
 				roleView.PlayImgLeave(v.time, function ()
 					roleList[_key] = nil;
-				end, v.delay, isChangeBg); --当进行背景切换时出现退场直接退场
+				end, v.delay, isChangeBg, v.pos2); --当进行背景切换时出现退场直接退场
 				roleCount = roleCount - 1
 			elseif v.move then--移动
 				roleView.PlayImgMove(v.move, v.time);
+			elseif v.moveTo then --渐变移动
+				local posRoleView,posRoleKey = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
+				local leaveFunc = function()
+					roleView.SetImg(v)
+					roleView.PlayImgMoveByFade(v.time,nil,nil,v.pos2)	
+				end
+				if posRoleView and posRoleKey then  --播放旧立绘退场之后再播放新立绘入场
+					roleList[posRoleKey] = nil;
+					posRoleView.PlayImgLeave(v.time, leaveFunc, v.delay);
+				else
+					leaveFunc()
+				end	
 			elseif v.pingPong then
 				roleView.PlayImgMoveByPingPong(v.pingPong, v.time)
 			elseif v.enter then--入场
@@ -1053,7 +1068,7 @@ function UpdateRoleImg(pInfos)
 					leaveFunc = function()
 						--同一个位置上替换新的人物立绘
 						CSAPI.SetGOActive(roleView.gameObject, true);
-						roleView.PlayImgEntrance(v.time);
+						roleView.PlayImgEntrance(v.time,nil,nil,v.pos2);
 					end
 					roleList[key] = roleView;
 				elseif roleView ~= nil then
@@ -1062,7 +1077,7 @@ function UpdateRoleImg(pInfos)
 				else
 					roleView = CreateRoleImg(v);
 					roleView.SetImg(v);
-					roleView.PlayImgEntrance(v.time, nil, v.delay);
+					roleView.PlayImgEntrance(v.time, nil, v.delay, v.pos2);
 					roleView.SetImgState(isTalk);
 					roleList[key] = roleView;
 					roleCount = roleCount + 1

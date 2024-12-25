@@ -144,6 +144,10 @@ function this:CheckRedInfo()
 				data= data or {};
 				data[page:GetID()]=data[page:GetID()] or {}
 				data[page:GetID()][v:GetID()]=data[page:GetID()][v:GetID()] or true;
+				if v:GetTabID()~=nil then
+					data.cTab=data.cTab or {};
+					data.cTab[v:GetTabID()]=data.cTab[v:GetTabID()] or true;
+				end
 			end
 		end
 	end

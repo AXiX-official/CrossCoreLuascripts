@@ -22,6 +22,9 @@ end
 function SetItems()
     local teamItemInfos = data[1]
     local tacticas = data[2]
+    if openSetting and openSetting.isHideTactics then
+        tacticas = nil
+    end
     local num = #teamItemInfos
     if tacticas then
         num = num + 1

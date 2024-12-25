@@ -683,7 +683,8 @@ end
 
 function OnClickServerList()
     --LogError("aaaa");
-    _G.server_list_enc_close = 1;
+    ---_G.server_list_enc_close = 1;
+    CSAPI.server_list_enc_close=true;
     InitServerInfo(nil, "http://192.168.5.86/php/res/serverList/serverlist_nw1.json");
     OnClickClose();
      
@@ -691,7 +692,7 @@ function OnClickServerList()
         local go = CSAPI.GetView("Login");
         local lua = ComUtil.GetLuaTable(go);
         lua.OnClickSwitch();
-    end,nil,1000); 
+    end,nil,1000);
 
     end
 

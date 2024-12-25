@@ -17,6 +17,7 @@ local conf = {
 {'1',	'1',	'',	'',	'',	'6',	'26',	'arch_warm_summer',	'80417'},
 {'1',	'1',	'',	'',	'',	'7',	'28',	'arch_coolness_of_summer',	''},
 {'1',	'1',	'',	'',	'',	'8',	'43',	'arch_swimmer_assemble',	''},
+{'1',	'1',	'',	'',	'',	'9',	'49',	'arch_beach_playtime',	''},
 {'2',	'2',	'arch_three_people',	'宿舍故事',	'',	'',	'',	'',	''},
 {'2',	'2',	'',	'',	'',	'1',	'1',	'arch_three_people',	''},
 {'2',	'2',	'',	'',	'',	'2',	'3',	'arch_kadya_liedown',	''},
@@ -51,8 +52,10 @@ local conf = {
 {'6',	'6',	'',	'',	'',	'10',	'40',	'arch_a_narrow_escape',	''},
 {'6',	'6',	'',	'',	'',	'11',	'41',	'arch_black_cocoon_rebecca',	''},
 {'6',	'6',	'',	'',	'',	'12',	'42',	'arch_wave_and_vortex',	''},
+{'6',	'6',	'',	'',	'',	'13',	'47',	'arch_golden_celebration',	'80423'},
 {'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
 {'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
+{'7',	'7',	'',	'',	'',	'2',	'51',	'arch_anniversary_party',	''},
 {'8',	'8',	'arch_camping_with_fireworks',	'闲适假日',	'',	'',	'',	'',	''},
 {'8',	'8',	'',	'',	'',	'1',	'29',	'arch_camping_with_fireworks',	'80418'},
 {'8',	'8',	'',	'',	'',	'2',	'45',	'arch_trail_of_cases',	'80421'},
@@ -60,6 +63,8 @@ local conf = {
 {'9',	'9',	'',	'',	'',	'1',	'39',	'arch_law_of_the_streets',	'80419'},
 {'9',	'9',	'',	'',	'',	'2',	'44',	'arch_fantastic_curtain_raiser',	'80420'},
 {'9',	'9',	'',	'',	'',	'3',	'46',	'arch_double_feature',	'80422'},
+{'9',	'9',	'',	'',	'',	'4',	'48',	'arch_alley_corner_crisis',	'80424'},
+{'9',	'9',	'',	'',	'',	'4',	'50',	'arch_twilight_invitation',	'80426'},
 },
 }
 --cfgCfgArchiveIllustration = conf

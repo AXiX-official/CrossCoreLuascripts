@@ -51,8 +51,5 @@ function Skill980101301:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 980101302
-	local targets = SkillFilter:Group(self, caster, target, 4,3)
-	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[980101302], caster, target, data, 980101301)
-	end
+	self:AddBuff(SkillEffect[980101302], caster, caster, data, 980101301)
 end

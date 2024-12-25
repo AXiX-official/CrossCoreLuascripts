@@ -293,7 +293,7 @@ function this:GetCollaborationData(_type,_val)
     if (self.datas) then
         for i, v in pairs(self.datas) do
             if (_type == v:GetType() and _type==eTaskType.RegressionBind) then
-                if (not self.CheckIsReset(v) and v:CheckIsOpen()) and (_val==nil or (_val~=nil and _val==v:GetCfg().type==_val)) then
+                if (not self.CheckIsReset(v) and v:CheckIsOpen()) and (_val==nil or (_val~=nil and _val==v:GetCfg().type)) then
                     table.insert(arr, v)
                 end
             end
@@ -591,6 +591,8 @@ function this:CheckRedPointData()
 
     --Colosseum
     ColosseumMgr:CheckMissionRed()
+    --回归绑定
+    CollaborationMgr:CheckRedInfo();
 end
 
 -- 任务添加通知

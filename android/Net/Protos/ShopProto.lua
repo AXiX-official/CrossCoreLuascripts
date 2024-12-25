@@ -17,10 +17,10 @@ function ShopProto:GetShopInfosAdd(proto)
 end
 
 --购买物品
-function ShopProto:Buy(cfgId,time,sum,useCost,voucherList,callBack)
+function ShopProto:Buy(cfgId,time,sum,useCost,voucherList,useJCost,callBack)
     self.buyCallBack=callBack;
     useCost=useCost==nil and "price_1" or useCost;
-    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost,vouchers=voucherList}}
+    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost,vouchers=voucherList,useJCost=useJCost}}
 	NetMgr.net:Send(proto);
     UIUtil:AddNetWeakHandle();
 end
@@ -37,6 +37,12 @@ function ShopProto:BuyRet(proto)
     ShopMgr:UpdateData(proto.id,proto.info,true);
     ShopMgr:UpdateMonthDays(proto.m_cnt);
     EventMgr.Dispatch(EventType.Shop_Buy_Ret,proto)
+    if proto and proto.gets and proto.id then
+       local comm=ShopMgr:GetFixedCommodity(proto.id);
+       if comm and comm:GetType()==CommodityItemType.Skin then
+            EventMgr.Dispatch(EventType.Card_Skin_Get)
+       end
+    end
     if self.buyCallBack then
         self.buyCallBack(proto);
         self.buyCallBack=nil

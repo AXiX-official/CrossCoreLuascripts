@@ -255,6 +255,10 @@ function this:GetUseVoucherTypes()
     return nil
 end
 
+function this:HasOtherPrice(shopPriceKey)
+    return false
+end
+
 function this:GetBundlingType()
     return  nil
 end

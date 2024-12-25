@@ -11,6 +11,7 @@ SceneType.TeamBOSS	= 7 -- 组队BOSS
 SceneType.FieldBoss	= 8 -- 战场系统BOSS
 SceneType.Rogue		= 9 -- 乱序演习
 SceneType.RogueS	= 10 -- 战力派遣
+SceneType.GlobalBoss= 11 -- 新世界boss
 
 
 -- 副本类型

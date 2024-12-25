@@ -31,15 +31,15 @@ function Skill980101101:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 9727
-	local count816 = SkillApi:GetAttr(self, caster, target,1,"defense")
 	-- 9713
 	local count802 = SkillApi:ClassCount(self, caster, target,1,1)
+	-- 9727
+	local count816 = SkillApi:GetAttr(self, caster, target,1,"defense")
 	-- 8229
 	if SkillJudger:IsCasterMech(self, caster, self.card, true,1) then
 	else
 		return
 	end
-	-- 980101102
-	self:AddHp(SkillEffect[980101102], caster, target, data, -1*count816*count802)
+	-- 980101103
+	self:LimitDamage(SkillEffect[980101103], caster, target, data, 0.06,((2*count816*count802)/3500))
 end

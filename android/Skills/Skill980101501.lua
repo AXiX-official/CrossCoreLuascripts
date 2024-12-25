@@ -36,6 +36,13 @@ function Skill980101501:OnAttackOver(caster, target, data)
 	else
 		return
 	end
+	-- 8219
+	if SkillJudger:IsUltimate(self, caster, target, true) then
+	else
+		return
+	end
 	-- 980101502
-	self:AddBuff(SkillEffect[980101502], caster, caster, data, 980101502)
+	if self:Rand(4000) then
+		self:AddBuff(SkillEffect[980101502], caster, caster, data, 980101502)
+	end
 end

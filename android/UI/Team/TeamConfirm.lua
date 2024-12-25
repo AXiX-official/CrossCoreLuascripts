@@ -105,6 +105,8 @@ function OnOpen()
         InitRogue();
     elseif openSetting==TeamConfirmOpenType.TotalBattle then
         InitTotalBattle();
+    elseif TeamConfirmOpenType.GlobalBoss then
+        InitGlobalBoss()
     end
     InitChoosieIDs();--初始化已选择的队伍id
     InitOptions();
@@ -425,6 +427,8 @@ function OnClickBattle()
         OnRogue();
     elseif openSetting==TeamConfirmOpenType.TotalBattle then
         OnTotalBattle();
+    elseif openSetting== TeamConfirmOpenType.GlobalBoss then
+        OnGlobalBoss()
     end
 end
 
@@ -487,23 +491,23 @@ function InitDungeon()
     --读取强制NPC的id，该支援位只有队伍一存在
     local starNum=0;
     local dungeonData= DungeonMgr:GetDungeonData(currDungeonID);
-    local enterCost=0;
-    local successCost=0;
+    -- local enterCost=0;
+    -- local successCost=0;
     local moveLimit=0;
     local warnDesc=nil;
     if dungeonData and dungeonData:IsPass() then--已通关
         forceNPC=nil;
         assistNPCList=dungeonData:GetAssistNPCList();
         starNum=dungeonData:GetStar();
-        enterCost=dungeonData:GetCfg().enterCostHot or 0;
-        successCost=dungeonData:GetCfg().winCostHot or 0;
+        -- enterCost=dungeonData:GetCfg().enterCostHot or 0;
+        -- successCost=dungeonData:GetCfg().winCostHot or 0;
         moveLimit=dungeonData:GetActionNum();
         warnDesc=dungeonData:GetCfg().teamDescription
     else
         forceNPC=dungeonCfg.forceNPC;
         assistNPCList=dungeonCfg.arrNPC;
-        enterCost=dungeonCfg.enterCostHot or 0;
-        successCost=dungeonCfg.winCostHot or 0;
+        -- enterCost=dungeonCfg.enterCostHot or 0;
+        -- successCost=dungeonCfg.winCostHot or 0;
         local winNum=10000
         local type = dungeonCfg.jWinCon[1];
         if type == 3 then
@@ -526,7 +530,8 @@ function InitDungeon()
     CSAPI.SetText(txt_tipsWarn,warnDesc==nil and "" or warnDesc);
     --如果配置表中存在cost值，则读取cost信息，否则直接当热值处理
     currCostInfo=DungeonUtil.GetCost(dungeonCfg);
-    currCostHot=math.ceil((enterCost+successCost) * (100- DungeonUtil.GetExtreHotNum()) / 100);
+    currCostHot=DungeonUtil.GetHot(dungeonCfg);
+    -- math.ceil((enterCost+successCost) * (100- DungeonUtil.GetExtreHotNum()) / 100);
     SetFighting(dungeonCfg.lvTips);
     SetEnterCost();
     CSAPI.SetText(txt_move,tostring(moveLimit));
@@ -722,7 +727,6 @@ function OnTotalBattle()
             do return end;
         end
         local dirllData={}
-        dirllData={};
         local tCommanderSkill=nil;
         local skillGroupID=teamData:GetSkillGroupID();
         if skillGroupID and dungeonCfg and dungeonCfg.tacticsSwitch~=1 then
@@ -789,7 +793,6 @@ function OnTower()
         end
         --LogError(assistData)
         local dirllData={}
-        dirllData={};
         local tCommanderSkill=nil;
         local skillGroupID=teamData:GetSkillGroupID();
         if skillGroupID and dungeonCfg and dungeonCfg.tacticsSwitch~=1 then
@@ -910,6 +913,57 @@ function OnFieldBoss()
     if item.CanBattle()==true then
         local index = item.GetTeamIndex()
         FightProto:EnterBattleFieldBossFight({nTeamIndex = index})
+    end
+end
+
+function InitGlobalBoss()
+    -- CSAPI.SetGOActive(btnNavi,false)
+    startTeamIdx = 1;
+    endTeamIdx = g_TeamMaxNum;  
+    teamMax=1;
+    SetEnterCost();
+    SetFighting(dungeonCfg and dungeonCfg.lvTips or 0);
+end
+
+function OnGlobalBoss()
+    local item=teamItems[1];
+    local teamData=TeamMgr:GetEditTeam();
+    if item.CanBattle()==true then
+        if data.isDirll == true and dungeonCfg and dungeonCfg.nGroupID then --模拟战
+            if teamData:GetRealCount()<=0 then
+                Tips.ShowTips(LanguageMgr:GetTips(14005));
+                do return end;
+            end
+            local dirllData={}
+            local tCommanderSkill=nil;
+            -- local skillGroupID=teamData:GetSkillGroupID();
+            -- if skillGroupID and dungeonCfg and dungeonCfg.tacticsSwitch~=1 then
+            --     local tacticData=TacticsMgr:GetDataByID(skillGroupID);
+            --     if tacticData and  tacticData:IsUnLock() then
+            --         tCommanderSkill={};
+            --         tCommanderSkill=tacticData:GetSkillsIds();
+            --     end
+            -- end
+            for k,v in ipairs(teamData.data) do
+                local itemData=v:GetFightCardData();
+                itemData.data.nStrategyIndex = v:GetStrategyIndex()
+                table.insert(dirllData,itemData);
+            end
+            TeamMgr:AddFightTeamData(teamData);
+            DungeonMgr:SetFightTeamId(teamData:GetIndex());
+            local exData = {}
+            -- if GlobalBossMgr:GetMaxHp() > 0 then --赋予模拟boss血量，队列表示第几只boss怪
+            --     exData.hpinfo = {{hp = GlobalBossMgr:GetMaxHp(),maxhp}}
+            -- end
+            CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill,exData);
+        else
+            if GlobalBossMgr:IsKill() then
+                LanguageMgr:ShowTips(47001)
+                return
+            end
+            local index = item.GetTeamIndex()
+            FightProto:EnterGlobalBossFight(index)    
+        end
     end
 end
 

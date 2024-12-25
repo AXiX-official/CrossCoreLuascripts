@@ -11,5 +11,5 @@ function Buffer980101601:OnCreate(caster, target)
 	-- 8745
 	local c141 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,6)
 	-- 980101601
-	self:AddAttrPercent(BufferEffect[980101601], self.caster, target or self.owner, nil,"attack",0.1*c141)
+	self:AddAttrPercent(BufferEffect[980101601], self.caster, target or self.owner, nil,"attack",0.08*c141)
 end

@@ -132,6 +132,17 @@ function this.OnGuildBossOver(proto, isForceOver)
 	this.PushEnd(_data, bIsWin, team, rewards, 0, exp, 0,proto.cardsExp, isForceOver, proto.winner)
 end
 
+--世界boss  FightProto:OnBossOver
+function this.OnGlobalBossOver(proto, isForceOver)
+	local team = this.GetTeamData(eTeamType.DungeonFight, false)  --暂时默认队伍1 todo
+	local exp = this.GetExpList(proto, false)
+	local bIsWin = true
+	local _data = {}
+	_data.damage = proto.nDamage
+	_data.hDamage = proto.nHightest
+	this.PushEnd(_data, bIsWin, team, proto.reward , 0, exp, 0, proto.cardsExp, isForceOver)
+end
+
 --主线、每日
 function this.OnDuplicate(proto, isForceOver)
 	local team = this.GetTeamData(DungeonMgr:GetFightTeamId(), true);
@@ -149,6 +160,8 @@ function this.ApplyEnd(sceneType)
 		this.OnBossOver({}, true)
 	elseif(sceneType==SceneType.GuildBOSS) then
 		this.OnGuildBossOver({}, true)
+	elseif (sceneType==SceneType.GlobalBoss) then
+		this.OnGlobalBossOver({},true)
 	else
         this.OnDuplicate({bIsWin = false}, true)
 	end
@@ -188,6 +201,14 @@ function this.OnDirllOver(stage, winer)
 	local team = this.GetTeamData(DungeonMgr:GetFightTeamId(), true); 
 	local data = {}
 	this.PushEnd(data,winer == 1,team,nil, 0, {}, 0,{},false,{isDirll = true,isWin = winer == 1})
+end
+
+--世界boss模拟使用
+function this.OnGlobalBossDirllOver(stage, winer,damage)
+	local team = this.GetTeamData(DungeonMgr:GetFightTeamId(), true); 
+	local data = {}
+	data.damage = damage
+	this.PushEnd(data,true,team,nil, 0, {}, 0,{},false,{isBossDirll = true,isWin = true})
 end
 
 --返回编队数据

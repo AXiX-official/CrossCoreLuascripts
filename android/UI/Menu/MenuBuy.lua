@@ -18,7 +18,7 @@ function Refresh(_data)
 end
 
 function SetRed()
-    UIUtil:SetRedPoint(clickNode, data:GetRed(), 179, 72, 0)
+    UIUtil:SetRedPoint(clickNode, data:GetRed(), 130.5, 44, 0)
 end
 
 function OnClick()

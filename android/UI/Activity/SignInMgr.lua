@@ -101,25 +101,13 @@ function this:GetDataDayKey()
     end
 end
 
--- 获取指定类型的key
-function this:GetDataKeyByType(_type)
+-- 获取活动签到的key
+function this:GetDataKeyById(activityId)
     for i, v in pairs(self.datas) do
-        if (v:GetType() == _type) then
+        if (v:GetActivityID() and v:GetActivityID() == activityId) then
             return v:GetKey()
         end
     end
-end
-
---获取指定类型的key列表
-function this:GetDataKeysByType(_type)
-    local keys = {}
-    for i, v in pairs(self.datas) do
-        if (v:GetType() == _type) then
-            local activityID = v:GetActivityID() or 0
-            keys[activityID] = v:GetKey()
-        end
-    end
-    return keys
 end
 
 --获取表数据
@@ -156,12 +144,9 @@ end
 
 --获取活动对应的签到数据
 function this:GetDataByALType(_id)
-    local data = ActivityMgr:GetALData(_id)
-    if self.datas and data then
+    if self.datas then
         for i, v in pairs(self.datas) do
-            if data:GetID() == ActivityListType.SignIn and v:GetType() == RewardActivityType.DateDay then --月签到
-                return v
-            elseif v:GetActivityID() and v:GetActivityID() == data:GetType() then --连续签到
+            if v:GetActivityID() and v:GetActivityID() == _id then --连续签到
                 return v
             end
         end
@@ -171,8 +156,8 @@ end
 -- 某个活动的每日数据   临时封装(用完即删)
 function this:GetDayInfos(key)
     local data = self:GetDataByKey(key)
-    if (data == nil or not data:CheckInTime()) then
-        -- 数据为空或者不在活动时间段内
+    if (data == nil) then
+        -- 数据为空
         return
     end
     local infos = {}
@@ -189,7 +174,7 @@ function this:GetDayInfos(key)
             local isDone = data:CheckIndexIsDone(i) -- 是否已签
             local isEnd = (curDay - i) > 0 -- 是否已过期
             if (data:GetType() == RewardActivityType.Continuous) then
-                isEnd = false -- 连续签到不会过期
+                isEnd = data:CheckIsEnd()
             end
             local isCurDay = curDay == i -- 是否是当天
             local isNextDay = i - 1 == curDay
@@ -269,20 +254,17 @@ function this:CheckAll()
     local isOpen = false
     for i, v in ipairs(arr) do
         if (not v:CheckIsDone()) then
-            local _key = v:GetKey()
-            local _data = {key = _key, isSingIn = true}
-            -- self:AddCacheRecord(_key)
+            local _data = {key = v:GetKey(), isSingIn = true}
+            if v:GetCfg() and v:GetCfg().activityID then
+                local id = v:GetCfg().activityID
+                if ActivityMgr:CheckIsOpen(id) and ActivityMgr:AddNextOpen(id, _data) then
+                    isOpen = true
+                end
+            end
             if (v:GetType() == RewardActivityType.DateDay) then
                 -- 月签到
-                if ActivityMgr:AddNextOpen(ActivityListType.SignIn, _data) then
-                    isOpen = true
-                end
             elseif (v:GetType() == RewardActivityType.Continuous) then
                 -- 连续签到 todo
-                local activityType = v:GetCfg().activityID
-                if ActivityMgr:CheckIsOpen(activityType) and ActivityMgr:AddNextOpen(activityType, _data) then
-                    isOpen = true
-                end
             elseif (v:GetType() == RewardActivityType.DateMonth) then
                 -- 日签到 todo
             end

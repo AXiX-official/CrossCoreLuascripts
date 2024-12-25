@@ -30,5 +30,5 @@ function Skill984210501:OnAfterHurt(caster, target, data)
 		return
 	end
 	-- 984210501
-	self:ClosingBuffByID(SkillEffect[984210501], caster, target, data, 1,1003)
+	self:ClosingBuffByID(SkillEffect[984210501], caster, target, data, 5,1003)
 end

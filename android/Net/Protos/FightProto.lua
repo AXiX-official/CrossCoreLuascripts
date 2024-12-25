@@ -232,7 +232,7 @@ function FightProto:RecvCmd(proto)
             end
             local fightActionData1 = g_FightMgr:GetInitData()
             FightActionMgr:PushSkill(fightActionData1);
-        elseif data.stype == SceneType.BOSS then
+        elseif data.stype == SceneType.BOSS or data.stype == SceneType.GlobalBoss then
             if not g_bRestartFight then
                 FightActionMgr:Start()
             end
@@ -248,6 +248,7 @@ function FightProto:RecvCmd(proto)
             g_FightMgr.nBossLevel = data.exData.nBossLevel
             g_FightMgr.nCastTP = data.exData.nCastTP
             g_FightMgr.nTPCastRate = g_TPCastRate[g_FightMgr.nCastTP] or 1
+            g_FightMgr.uid = PlayerClient:GetID()
 
             local oboss = g_FightMgr:LoadBossConfig(data.groupID, 1)
             if data.exData.bossHp then
@@ -782,7 +783,6 @@ function FightProto:ShowRestoreFightDialog(isShow)
     end 
     -- 
     local id = DungeonMgr:GetCurrFightId();
-    --LogError(id)
     if (not id) then
         id = self.restoreFightProto and self.restoreFightProto.nDuplicateID;
         if (not id) then
@@ -957,6 +957,8 @@ function FightProto:OnBossOver(proto)
         FightOverTool.OnFieldBossOver(proto)
     elseif g_FightMgr.type == SceneType.GuildBOSS then
         FightOverTool.OnGuildBossOver(proto);
+    elseif g_FightMgr.type == SceneType.GlobalBoss then
+        FightOverTool.OnGlobalBossOver(proto);
     end
 end
 
@@ -1205,4 +1207,50 @@ function FightProto:RogueSGainRet(proto)
         self.RogueSGainCB()
     end
     self.RogueSGainCB = nil
+end
+
+
+------------------------------------世界boss------------------------------------
+--新世界boss信息返回
+function FightProto:GlobalBossInfoRet(proto)
+    GlobalBossMgr:SetInfo(proto)
+end
+
+--请求新世界boss数据
+function FightProto:GetGlobalBossData()
+    local proto = {"FightProtocol:GetGlobalBossData"}
+    NetMgr.net:Send(proto)
+end
+
+--请求新世界boss数据返回
+function FightProto:GetGlobalBossDataRet(proto)
+    GlobalBossMgr:SetData(proto)
+end
+
+--请求进入新世界boss战斗
+function FightProto:EnterGlobalBossFight(index)
+    local proto = {"FightProtocol:EnterGlobalBossFight",{nTeamIndex = index}}
+    NetMgr.net:Send(proto)
+end
+
+function FightProto:GetGlobalBossRank(index)
+    local proto = {"FightProtocol:GetGlobalBossRank",{nPage = index}}
+    NetMgr.net:Send(proto)
+end
+
+function FightProto:GetGlobalBossRankRet(proto)
+    GlobalBossMgr:GetRankRet(proto)
+end
+
+function FightProto:GetGlobalBossRankTeam(index,callBack)
+    self.GlobalBossRankTeamCallBack = callBack
+    local proto = {"FightProtocol:GetGlobalBossRankTeam",{rankIdx = index}}
+    NetMgr.net:Send(proto)
+end
+
+function FightProto:GetGlobalBossRankTeamRet(proto)
+    if self.GlobalBossRankTeamCallBack then
+        self.GlobalBossRankTeamCallBack(proto)
+        self.GlobalBossRankTeamCallBack = nil
+    end
 end

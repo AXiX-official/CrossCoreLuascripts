@@ -38,7 +38,9 @@ RedPointType.Badge = "Badge" --徽章
 RedPointType.Rogue = "Rogue" --乱序演习
 RedPointType.RogueS = "RogueS" --战斗派遣
 RedPointType.AccuCharge = "AccuCharge" --累计充值
-
+RedPointType.AccuCharge2 = "AccuCharge2" --累计充值2
+RedPointType.AccuCharge3 = "AccuCharge3" --累计充值2
+RedPointType.Collaboration="Collaboration" --回归绑定活动
 RedPointType.SpecialExploration="SpecialExploration"--特殊勘探
 
 RedPointType.Colosseum="Colosseum"--角斗场任务
@@ -47,7 +49,7 @@ RedPointType.ASMR="ASMR"--
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机
-
+RedPointType.ResRecovery = "ResRecovery" --遗落的补给
 
 local this = MgrRegister("RedPointMgr")
 

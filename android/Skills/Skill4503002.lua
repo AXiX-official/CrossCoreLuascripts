@@ -101,6 +101,13 @@ function Skill4503002:tFunc_4503042_4503032(caster, target, data)
 	else
 		return
 	end
+	-- 8702
+	local count702 = SkillApi:BuffCount(self, caster, target,2,3,1051)
+	-- 8917
+	if SkillJudger:Less(self, caster, target, true,count702,1) then
+	else
+		return
+	end
 	-- 4503032
 	self:HitAddBuff(SkillEffect[4503032], caster, target, data, 2500,1051,2)
 end

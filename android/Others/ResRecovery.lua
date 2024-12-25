@@ -3,16 +3,16 @@ function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/ResRecovery/ResRecoveryItem", LayoutCallBack, true)
 
-    eventMgr = ViewEvent.New()
-    eventMgr:AddListener(EventType.HuiGui_Res_Recovery, function()
-        isGain = RegressionMgr:CheckResRecoveryIsGain()
-        CSAPI.SetGOAlpha(btnS, isGain and 0.3 or 1)
-    end)
+    -- eventMgr = ViewEvent.New()
+    -- eventMgr:AddListener(EventType.HuiGui_Res_Recovery, function()
+    --     isGain = RegressionMgr:CheckResRecoveryIsGain()
+    --     CSAPI.SetGOAlpha(btnS, isGain and 0.3 or 1)
+    -- end)
 end
 
-function OnDestroy()
-    eventMgr:ClearListener()
-end
+-- function OnDestroy()
+--     eventMgr:ClearListener()
+-- end
 
 local elseData = {}
 function LayoutCallBack(index)

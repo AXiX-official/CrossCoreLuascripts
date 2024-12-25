@@ -266,7 +266,7 @@ function ViewClose()
             if (b) then
                 UIUtil:OpenDialog(LanguageMgr:GetByID(64029), ToSave1, ToSave2)
             else
-                ToSave2(false)
+                ToSave2()
             end
         end
     else
@@ -298,12 +298,34 @@ function ToSave(b)
     end)
 end
 
+function ToHome()
+    if (randModData.isOver) then
+        if (randModData.isGet) then
+            local b = ColosseumMgr:IsNeedSaveRoute()
+            if (b) then
+                UIUtil:OpenDialog(LanguageMgr:GetByID(64029), function()
+                    ToSave1()
+                    UIUtil:ToHome()
+                end, function()
+                    ToSave2()
+                    UIUtil:ToHome()
+                end)
+            else
+                ToSave2()
+                UIUtil:ToHome()
+            end
+            return
+        end
+    end
+    UIUtil:ToHome()
+end
+
 function OnClickReward()
     if (randModData.isOver) then
         if (not randModData.isGet) then
             AbattoirProto:RandModeGetRwd(SetReward)
         else
-            --LogError("无奖励")
+            -- LogError("无奖励")
         end
     end
 end

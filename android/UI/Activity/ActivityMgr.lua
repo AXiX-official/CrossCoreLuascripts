@@ -65,6 +65,8 @@ function this:Clear()
     -- self.redInfos = nil
     self.operateActive = {}
     self.ALDatas = nil
+    self.isCloseWindow = false
+    self.windowInfos = {}
 end
 
 function this:Init1(webIp, webPort, time)
@@ -259,7 +261,7 @@ function this:GetActivityTime(group)
     local sTime,eTime = nil,nil
     if self.ALDatas then
         for k, v in pairs(self.ALDatas) do
-            if group and v:GetGroup() == group then
+            if group and v:GetGroup() == group and v:IsOpen() then
                 if v:GetCfg() and v:GetCfg().sTime and v:GetCfg().eTime then
                     local _sTime = TimeUtil:GetTimeStampBySplit(v:GetCfg().sTime)
                     local _eTime = TimeUtil:GetTimeStampBySplit(v:GetCfg().eTime)
@@ -391,7 +393,7 @@ function this:CheckRed(id)
             return MissionMgr:CheckGuideRed()
         elseif data:GetType() == ActivityListType.NewYearContinue then
             return MissionMgr:CheckNewYearRed()
-        elseif data:GetType() == ActivityListType.SignIn or self:IsSignInContinue(id) then
+        elseif self:IsSignIn(id) then
             local signData = SignInMgr:GetDataByALType(id)
             if signData and not signData:CheckIsDone() then
                 return true
@@ -463,12 +465,12 @@ function this:CheckRed(id)
                 return true
             end 
             return false   
-        elseif data:GetType() == ActivityListType.AccuCharge3 then
-            local num = RedPointMgr:GetData(RedPointType.AccuCharge3)
-            if(num and num==1) then 
+        elseif data:GetType() == ActivityListType.Collaboration then
+            local num=RedPointMgr:GetData(RedPointType.Collaboration);
+            if(num ~= nil) then 
                 return true
             end 
-            return false   
+            return false  
         else
             local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. id) == 0
             return isRed
@@ -490,10 +492,10 @@ function this:IsActivityListNull(viewName, group)
     return true
 end
 
-function this:IsSignInContinue(id)
+function this:IsSignIn(id)
     local data = self:GetALData(id)
     if data then
-        if data:GetSpecType() == ALType.SignInContinue then
+        if data:GetSpecType() == ALType.SignIn then
             return true
         elseif data:GetType() == ActivityListType.SignInGift then
             return true
@@ -530,18 +532,13 @@ end
 function this:TryGetData(_id)
     self.listDatas = self.listDatas or {}
     if (self.listDatas[_id] == nil) then
-        local data =self:GetALData(_id)
-        if (data:GetType() == ActivityListType.SignIn) then -- 每日签到
-            local _key = SignInMgr:GetDataKeyByType(RewardActivityType.DateDay)
-            self.listDatas[_id] = {
-                key = _key
-            }
-        elseif self:IsSignInContinue(_id) then -- 连续签到
-            local keys = SignInMgr:GetDataKeysByType(RewardActivityType.Continuous)
-            self.listDatas[_id] = {
-                key = keys[_id]
-            }
+        local _key = nil
+        if self:IsSignIn(_id) then
+            _key = SignInMgr:GetDataKeyById(_id)
         end
+        self.listDatas[_id] = {
+            key = _key
+        }
     end
     return self.listDatas[_id]
 end
@@ -610,5 +607,82 @@ function this:PanelCanJump(_id)
     return false
 end
 
+--检测所有活动弹窗
+function this:CheckWindowShow()
+    for k, v in pairs(eAEShowType) do
+        local id = eAEShowIdType[v]
+        if DungeonMgr:IsActiveOpen(id) and self:CheckWindowNeedShow("AcitivtyEntryWindow_" .. v) then
+            if v == eAEShowType.Anniversary then
+                CSAPI.OpenView("AnniversaryWindow")
+            end
+            return true
+        end
+    end
+    return false
+end
+
+--检测弹窗是否需要弹出
+function this:CheckWindowNeedShow(key)
+    if not key or key == "" then
+        return false
+    end
+    self.windowInfos = self.windowInfos or {}
+    if self.windowInfos[key] and self.windowInfos[key] == 1 then --已经弹过一次
+        return false
+    end
+    self.windowInfos[key] = 1
+    local infos = FileUtil.LoadByPath("Menu_Window_Show") or {}
+    if infos[key] == nil or infos[key].time == nil then --默认弹出
+        self:SaveWindowInfos(key,false)
+        return true
+    end
+    local offsetTab = TimeUtil:GetTimeTab(TimeUtil:GetTime() - infos[key].time)
+    if offsetTab[1] > 0 then --超过一天
+        self:SaveWindowInfos(key,false)
+        return true
+    else
+        local timeTab1 = TimeUtil:GetTimeHMS(infos[key].time)
+        local timeTab2 = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
+        if timeTab1.day == timeTab2.day then --同一天
+            if timeTab1.hour < g_ActivityDiffDayTime and timeTab2.hour >= g_ActivityDiffDayTime then --刷新前后
+                self:SaveWindowInfos(key,false)
+                return true
+            end
+        elseif timeTab2.day > timeTab1.day then --前后一天
+            if timeTab1.hour < g_ActivityDiffDayTime then --刷新前
+                self:SaveWindowInfos(key,false)
+                return true
+            elseif timeTab2.hour >= g_ActivityDiffDayTime then --刷新后
+                self:SaveWindowInfos(key,false)
+                return true
+            end
+        end
+    end
+    if infos[key].isClose then
+        return false
+    end
+    return true
+end
+
+--保存弹窗状态
+function this:SaveWindowInfos(key,isClose)
+    if not key or key == "" then
+        return
+    end
+    local infos = FileUtil.LoadByPath("Menu_Window_Show") or {}
+    infos[key] = infos[key] or {}
+    infos[key].isClose = isClose
+    infos[key].time = TimeUtil:GetTime()
+    FileUtil.SaveToFile("Menu_Window_Show",infos)
+end
+
+--获取弹窗状态
+function this:GetWindowInfo(key)
+    if not key or key == "" then
+        return {}
+    end
+    local infos = FileUtil.LoadByPath("Menu_Window_Show") or {}
+    return infos[key] or {}
+end
 
 return this

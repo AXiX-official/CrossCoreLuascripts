@@ -34,6 +34,7 @@ function this:GetFunc(sName)
         self.funcs["DungeonSummer"] = self.DungeonActivity
         self.funcs["RogueSView"] = self.DungeonActivity
         self.funcs["DungeonNight"] = self.DungeonActivity
+        self.funcs["GlobalBossView"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -174,7 +175,15 @@ function this.ActivityListView(cfg)
     this.CheckClose(cfg);
     local state, tips = this.ActivityListViewState(cfg)
     if state == JumpModuleState.Normal then
-        ActivityMgr:AddNextOpen2(cfg.val3, {cfg.val1, cfg.val2})
+        local data = ActivityMgr:GetALData(cfg.val3)
+        if data then
+            if data:GetSpecType() == ALType.SignIn then
+                local key = SignInMgr:GetDataKeyById(data:GetID())
+                ActivityMgr:AddNextOpen2(cfg.val3,{key = key})
+            else
+                ActivityMgr:AddNextOpen2(cfg.val3, {cfg.val1, cfg.val2})
+            end
+        end
         CSAPI.OpenView("ActivityListView", nil, cfg.page)
     else
         FuncUtil:Call(function()
@@ -473,6 +482,14 @@ function this.DungeonActivityState(cfg)
         if not isOpen then -- 章节开启检测
             return JumpModuleState.Close, _lockStr
         end
+        
+        if sectionData:GetType() == SectionActivityType.GlobalBoss then
+            if DungeonUtil.IsGlobalBossCloseTime(sectionData:GetID()) then
+                local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
+                local _cfg = openInfo:GetCfg()
+                return JumpModuleState.Close, _cfg.desc
+            end
+        end
 
         if cfg.val3 then
             isOpen, _lockStr = DungeonMgr:IsDungeonOpen(cfg.val3)
@@ -641,7 +658,8 @@ function this:CheckCanJump(id)
             return MenuMgr:CheckModelOpen(OpenViewType.main, cfg.sName)
         end
     end
-    return false, "跳转界面不存在"
+    -- return false, "跳转界面不存在"
+    return false,LanguageMgr:GetTips(1052);
 end
 
 this.Init();

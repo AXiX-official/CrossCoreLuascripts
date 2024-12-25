@@ -4,6 +4,9 @@ local tacItem = nil
 local isNotClick = false
 local teamData = nil
 local tacticsData = nil
+local cfgRankTeam = nil
+
+local isGlobalBoss = false
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -37,6 +40,8 @@ end
 
 function OnOpen()
     teamInfo = data.data and data.data[1]
+    isGlobalBoss = openSetting and openSetting.isGlobalBoss
+    cfgRankTeam = Cfgs.CfgRankTeam:GetByID(data.rankType)
     if teamInfo then
         SetTitle()
         SetCP()
@@ -56,6 +61,10 @@ function SetCP()
 end
 
 function SetTactics()
+    if cfgRankTeam and cfgRankTeam.isHideTactics then
+        CSAPI.SetGOActive(tacticsObj,false)
+        return
+    end
     if teamInfo.skill_group_id and teamInfo.skill_group_id > 0 then
         tacticsData = TacticsData.New();
         tacticsData:InitCfg(teamInfo.skill_group_id);
@@ -110,13 +119,15 @@ end
 
 function SetButton()
     local info = DungeonActivityMgr:GetMyRank(data.rankType)
+    if isGlobalBoss then
+        info = GlobalBossMgr:GetMyRank()
+    end
     local rank = info:GetRank()
     if rank == data.rankIdx then
         CSAPI.SetGOAlpha(btn_replace,0.5)
         isNotClick = true
     end
-    local cfg = Cfgs.CfgRankTeam:GetByID(data.rankType)
-    if cfg and cfg.isClose then
+    if cfgRankTeam and cfgRankTeam.isClose then
         CSAPI.SetGOAlpha(btn_replace,0.5)
         isNotClick = true
     end
@@ -172,7 +183,7 @@ function OnTeamReplace()
     timeOutCallBack=function()
         LanguageMgr:ShowTips(24012)
         view:Close()
-        local viewGO = CSAPI.GetView("RankTeamReplace")
+        local viewGO = CSAPI.GetView("RankTeamReplace",nil,{isHideTactics = cfgRankTeam and cfgRankTeam.isHideTactics})
         if viewGO ~= nil then
             local lua = ComUtil.GetLuaTable(viewGO)
             lua.OnClickClose()

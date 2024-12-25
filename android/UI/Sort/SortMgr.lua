@@ -376,6 +376,21 @@ function this.Filter_CfgAchieveQualitySort(newDatas, dic)
     return _newDatas
 end
 
+--看板 角色，多人插图
+function this.Filter_CfgRandomRoleType(newDatas, dic)
+    local _newDatas = {}
+    for i, v in pairs(newDatas) do
+        for k, val in pairs(dic) do
+            if (v:GetRoleType() and dic[v:GetRoleType()]) then
+                table.insert(_newDatas, v)
+                break
+            end
+        end
+    end
+    return _newDatas
+end
+
+
 --------------------------------------------------筛选end-----------------------------------------------------
 
 --------------------------------------------------排序-----------------------------------------------------
@@ -799,6 +814,14 @@ function this.SortFunc_9004(a, b)
         return nil
     else
         return a:GetFinishTime() > b:GetFinishTime()
+    end
+end
+
+function this.SortFunc_10001(a, b)
+    if a:GetIdx() == b:GetIdx() then
+        return nil
+    else
+        return a:GetIdx() > b:GetIdx()
     end
 end
 --------------------------------------------------排序end-----------------------------------------------------

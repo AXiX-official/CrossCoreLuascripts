@@ -1162,11 +1162,16 @@ this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
 this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
 this.QuitGame =CS.CSAPI.QuitGame;
 this.GetDeviceID =CS.CSAPI.GetDeviceID;
-this.GetInside =CS.CSAPI.GetInside;
+--this.GetInside =CS.CSAPI.GetInside;
+
 this.GetsSDKInitSuccess =CS.CSAPI.GetsSDKInitSuccess;
 
 this.ZLongServerListUrl=CS.ShiryuStreamingAssets.ins.GetServerListUrl
 this.ZLongServerId=CS.ShiryuStreamingAssets.ins.GetServerId
+this.GetSdkEnvironmentType=CS.ShiryuStreamingAssets.ins.GetSdkEnvironmentType
+function this.GetInside()
+	return this.GetSdkEnvironmentType
+end
 
 this.PCSetWindow=CS.CSAPI.PCSetWindow;
 this.APKVersion=CS.CSAPI.APKVersion;
@@ -1224,33 +1229,55 @@ this.HotFileUrl=CS.CSAPI.HotFileUrl;
 --字符串替换 (string str = "",string pattern = "",bool isMatch = false)
 this.FilterChar = CS.CSAPI.FilterChar
 
+this.server_list_enc_close=false;
+
 --- 海外日服璨晶购买提示
 function this.ADVJPTitle(consume,action)
 	---璨晶总数
 	local  TotalDiamonds=PlayerClient:GetCoin(ITEM_ID.DIAMOND);
 	--- 充值获得的璨晶
 	local RechargeDiamonds=PlayerClient:GetCoin(ITEM_ID.DIAMOND_PAY);
+	---Log("A----TotalDiamonds:"..TotalDiamonds.." RechargeDiamonds:"..RechargeDiamonds)
 	---免费璨晶
 	local FreeDiamonds=TotalDiamonds-RechargeDiamonds;
+	---Log("A----FreeDiamonds:"..FreeDiamonds)
+	if 0>FreeDiamonds then
+		LogError("A----数据异常，服务器并未及时更新璨晶总数和充值璨晶总数:".."璨晶总数:"..TotalDiamonds.." 充值获得的璨晶:"..RechargeDiamonds)
+		FreeDiamonds=0;
+	end
 	---需要消耗的璨晶
-	local consume=consume;
+	local consumeIcon=consume;
+	---Log("A----consumeIcon:"..consumeIcon)
 	---免费减去  消耗 等于剩余
-	local RemainderDiamonds=FreeDiamonds-consume;
+	local RemainderDiamonds=FreeDiamonds-consumeIcon;
+	---Log("A----RemainderDiamonds:"..RemainderDiamonds)
+	---剩余充值钻石
+	local RemainrechargeDiamonds=RemainderDiamonds;
+	---Log("A----RemainrechargeDiamonds:"..RemainrechargeDiamonds)
 	---如果 得到的 是负数，需要和充值的相加得到剩余的
 	if 0>RemainderDiamonds then
 		--- RemainderDiamonds=RemainderDiamonds+RechargeDiamonds;
-		RechargeDiamonds=RemainderDiamonds+RechargeDiamonds;
+		---充值钻石 数量
+		RechargeDiamonds=TotalDiamonds-FreeDiamonds;
+		---Log("A----RechargeDiamonds:"..RechargeDiamonds)
+		--使用后 剩余充值钻石
+		RemainrechargeDiamonds=RemainderDiamonds+RechargeDiamonds;
+		---Log("A----RemainrechargeDiamonds:"..RemainrechargeDiamonds)
 		--不可能剩余负数，只能为0，代表免费的使用完毕
 		RemainderDiamonds=0;
+
+	else
+		RemainrechargeDiamonds=RechargeDiamonds;
+		---Log("A----*RemainrechargeDiamonds:"..RemainrechargeDiamonds)
 	end
 
 	local JPTitleTable=
 	{
 		TotalDiamonds,---总璨晶
-	FreeDiamonds, ---免费璨晶
+	    FreeDiamonds, ---免费璨晶
 		RechargeDiamonds,---充值的璨晶
 		RemainderDiamonds,---使用后剩余的免费璨晶
-		RechargeDiamonds,---使用后剩余的充值璨晶
+		RemainrechargeDiamonds,---使用后剩余的充值璨晶
 	}
 	local dialogData = {}
 	dialogData.title=LanguageMgr:GetByID(66003);
@@ -1324,7 +1351,26 @@ function this.SetGameUID(id)
 		this.PlayerUID=id;
 	end
 end
-
+---通用打点版本号
+function this.UnityClientVersion(uid)
+	if CSAPI.IsADV() then
+		local platform="PC"
+		if CSAPI.Currentplatform == CSAPI.Android then
+			platform="Android"
+		elseif CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+			platform="IPhonePlayer"
+		else
+			platform="PC"
+		end
+		local ClientVersion=
+		{
+			ClientVersion=_G.g_ver_name,
+			ClientPlatform=platform,
+			UID=tostring(uid),
+		};
+		BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_Client_Version,ClientVersion)
+	end
+end
 
 return this;
 

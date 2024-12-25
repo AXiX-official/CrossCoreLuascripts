@@ -27,6 +27,10 @@ function this:GetScore()
     return self.info and self.info.score or ""
 end
 
+function this:GetDamage()
+    return self.info and self.info.nDamage or ""
+end
+
 function this:GetIconID()
     return  self.info and self.info.icon_id
 end
@@ -49,6 +53,10 @@ end
 
 function this:GetTitle()
     return self.info and self.info.icon_title
+end
+
+function this:GetCardList()
+    return self.info and self.info.cardInfos
 end
 
 return this

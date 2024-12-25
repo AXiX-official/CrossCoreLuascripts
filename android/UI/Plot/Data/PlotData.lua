@@ -108,9 +108,18 @@ end
 function this:GetImgDelay()
 	local delay = 0;
 	if self.cfg.imgContent ~= nil and self.cfg.imgDelay then
-		delay = self.cfg.imgDelay or 2;
+		delay = self.cfg.imgDelay[1] or 2;
 	end
 	return delay;
+end
+
+--返回Cg动画时间
+function this:GetImgActionTime()
+	local time = 0
+	if self.cfg.imgContent ~= nil and self.cfg.imgDelay then
+		time = self.cfg.imgDelay[2] or 0.25;
+	end
+	return time
 end
 
 --返回

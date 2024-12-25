@@ -34,6 +34,7 @@ local isHasBuff = false
 
 -- 模拟
 local isDirll = false
+local isBossDirll = false
 
 -- anim
 local isJumpToEnd = false
@@ -42,8 +43,6 @@ local actions = {}
 function Awake()
     fillExpBar = ComUtil.GetCom(expSlider, "Slider")
     fillExerBar = ComUtil.GetCom(exerSlider, "Slider")
-
-    gridLayout = ComUtil.GetCom()
 
     expBar = ExpBar.New();
     exerBar = ExpBar.New();
@@ -139,6 +138,7 @@ function Refresh(_data, _elseData)
     elseData = _elseData
     isSweep = elseData and elseData.isSweep
     isDirll = elseData and elseData.isDirll
+    isBossDirll = elseData and elseData.isBossDirll
     if data then
         -- reward
         rewards = data.rewards or nil
@@ -172,6 +172,8 @@ function RefreshPanel()
         SetSweepPanel()
     elseif isDirll then
         SetDirllPanel()
+    elseif isBossDirll then
+        SetDirllBossPanel()
     elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
         SetPVPPanel()
     elseif sceneType == SceneType.BOSS then
@@ -180,6 +182,10 @@ function RefreshPanel()
         SetRoguePanel()
     elseif sceneType == SceneType.RogueS then
         SetRogueSPanel() 
+    elseif sceneType == SceneType.GlobalBoss then
+        SetGlobalBossPanel()
+    elseif sceneType == SceneType.RogueT then
+        SetRogueTPanel()
     else
         SetPVEPanel()
     end
@@ -192,6 +198,8 @@ function SetTitleIcon()
             imgName = "sweep"
         elseif isDirll then
             imgName = "dirll_win"
+        elseif isBossDirll then
+            imgName = "end"
         elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
             imgName = elseData.bIsWin and imgName or "lose"
         end
@@ -200,11 +208,13 @@ function SetTitleIcon()
         local cfg =Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
         if cfg then 
             if cfg.type == eDuplicateType.StarPalace and TotalBattleMgr:IsFighting() then
-            imgName = isDirll and "dirll_end" or "lose"
+                imgName = isDirll and "dirll_end" or "lose"
             elseif cfg.type == eDuplicateType.StoryActive and cfg.diff and cfg.diff == 4 then
                 -- imgName = "dirll_end"
+            end
         end
-    end
+    elseif sceneType == SceneType.GlobalBoss then
+        imgName = "end"
     end
     CSAPI.LoadImg(topImg, "UIs/FightOver/img_" .. imgName .. ".png", true, nil, true)
 end
@@ -243,8 +253,8 @@ function SetExp(addExp)
             oldLv = oldLv - 1
             local cfg = Cfgs.CfgPlrUpgrade:GetByID(oldLv)
             if cfg then
-            oldExp = cfg.nNextExp + oldExp
-        end
+                oldExp = cfg.nNextExp + oldExp
+            end
         end
         local maxExp = GetLvExp(oldLv)
         RefreshTextLv(oldLv)
@@ -1049,7 +1059,25 @@ function UpdateBossDamage()
 
     CSAPI.SetText(txtDamage, curDamage .. "")
 end
+----------------------------------能力测验--------------------------------------
+function SetRogueTPanel()
+    
+end
 
+----------------------------------世界boss--------------------------------------
+function SetGlobalBossPanel()
+    CSAPI.SetGOActive(roundObj, true)
+    CSAPI.SetGOActive(titleObj,true)
+    CSAPI.SetGOActive(damageObj,true)
+    local turn = data.bIsWin and FightClient:GetTurn() + 1 or FightClient:GetTurn()
+    CSAPI.SetText(txtRound, turn .. "")
+    --title
+    LanguageMgr:SetText(txtTitle,25036)
+    local score = data.damage or 0
+    CSAPI.SetText(txtDamage,score.."")
+    local maxScore = data.hDamage or 0
+    CSAPI.SetGOActive(txt_topDamage,score>0 and score>=maxScore)
+end
 ------------------------------------扫荡------------------------------------
 function SetSweepPanel()
     CSAPI.SetGOActive(roleParent, false)
@@ -1060,6 +1088,7 @@ function SetSweepPanel()
         lua.Refresh(elseData)
         sweepView = lua
     end)
+    EventMgr.Dispatch(EventType.Sweep_Close_Panel)
 end
 
 function SweepAnimComplete()
@@ -1106,6 +1135,20 @@ function SetDirllPanel()
             CSAPI.SetText(txtRound, turn .. "")
         end
     end
+end
+
+function SetDirllBossPanel()
+    CSAPI.SetGOActive(roundObj, true)
+    CSAPI.SetGOActive(titleObj,true)
+    CSAPI.SetGOActive(damageObj,true)
+    local turn = data.bIsWin and FightClient:GetTurn() + 1 or FightClient:GetTurn()
+    CSAPI.SetText(txtRound, turn .. "")
+    --title
+    LanguageMgr:SetText(txtTitle,25036)
+    local score = data.damage or 0
+    CSAPI.SetText(txtDamage,score.."")
+    -- local maxScore = data.hDamage or 0
+    CSAPI.SetGOActive(txt_topDamage, false)
 end
 
 ------------------------------------加成------------------------------------

@@ -284,7 +284,7 @@ function this:GetUpdateTime()
 	return self.cfg and self.cfg.updateTime or ShopFixedUpdateType.None;
 end
 
---返回二级菜单 isFitler:为true时去掉不在显示时间内的数据
+--返回二级菜单 isFitler:为true时去掉不在显示时间内的数据，且页签下无可购买数据时也隐藏
 function this:GetTopTabs(isFitler)
 	local list=nil;
 	if self.cfg and self.cfg.topGroup then
@@ -300,11 +300,16 @@ function this:GetTopTabs(isFitler)
 					endTime=timeInfo.close_time;
 				end
 				if startTime == 0 and endTime == 0 then
-					isOpen = true;
-				else
-					isOpen = ShopCommFunc.TimeIsBetween2(startTime,endTime);
+					-- isOpen = true;
 					local itemList=self:GetCommodityInfos(true,v.id);
 					isOpen=#itemList>0 and true or false;
+				else
+					local itemList=self:GetCommodityInfos(true,v.id);
+					if #itemList>0 then
+						isOpen = ShopCommFunc.TimeIsBetween2(startTime,endTime);
+					else
+						isOpen=false;
+					end
 				end
 				if isOpen then
 					list=list or {};

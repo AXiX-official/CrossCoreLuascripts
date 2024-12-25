@@ -12,3 +12,25 @@ function Skill984210301:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11004], caster, target, data, 0.25,4)
 end
+-- 伤害后
+function Skill984210301:OnAfterHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 984210802
+	if self:Rand(8000) then
+		self:AddBuff(SkillEffect[984210802], caster, target, data, 1003)
+	end
+end

@@ -92,73 +92,103 @@ end
 
 function GetServerPath()
 	local useJsonFile;
+	local DomainNameswitch=false;
     local isRelease = true;
 	if(isRelease)then
 		 ---  正式配置 StreamingAssets文件夹下MJEnv.txt  配置，正常情况下   测试使用 SDKEnvironment:0  使用默认配置， 文本其它字段不生效
 		 --- 当SDKEnvironment字段值不等于0时候， 其它字段生效
 		-----正式
-		--useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
-		--if(CSAPI.GetPlatform() ==-1)then--审核用
-		--	useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_1.json";
-		--end
+		---9.20号版本兼容   正式版本
+		if CSAPI.GetInside()==0 or CSAPI.PlatformURL==nil then
+			Log("enter  Release--------url---------1")
+			useJsonFile =GetReleasedUrl();--正式
+		else
+			--CSAPI.APKVersion() 大于或者等于2版本
+			Log("----------------CSAPI.APKVersion() 大于或者等于2版本---------------------")
+			 if CSAPI.ZLongServerListUrl=="None" then
+				 Log("enter  Release--------url---------1")
+				 ---兼容旧版本处理
+				 useJsonFile =GetReleasedUrl();--正式
+			 else
+				 Log("enter  Release--------url---------2")
+				 if CSAPI.GetInside()==1 then
+					 CSAPI.server_list_enc_close=false;
+				 else
+					 CSAPI.server_list_enc_close=true;
+				 end
+				 DomainNameswitch=true;
+			 end
+		end
 		VerChecker:SetState(true);
 	else
 		--主干
-		_G.server_list_enc_close = 1;
+		---_G.server_list_enc_close = 1;
+		---CSAPI.server_list_enc_close=true;
+		--CSAPI.APKVersion() 大于或者等于2版本
+		Log("----------------主干url---------------------")
+		if CSAPI.GetInside()==0 then
+			---SDKEnvironment:0   时候进入这里
+			Log("enter  test--------url---------2")
+			useJsonFile =GetLocalTestUrl();--测试
+			Log("enter url ---CSAPI.GetInside()==0")
+		else
+			if  CSAPI.ZLongServerListUrl=="None" then
+				Log("enter  test--------url---------3")
+				---兼容旧版本处理
+				useJsonFile =GetLocalTestUrl();--测试
+			else
+				Log("enter  test--------url---------4")
+				if CSAPI.GetInside()==1 then
+					CSAPI.server_list_enc_close=false;
+				else
+					CSAPI.server_list_enc_close=true;
+				end
+				DomainNameswitch=true;
+			end
+		end
 	end
 
-      ---115405
-	if CSAPI.GetInside()==0 then
-		---SDKEnvironment:0   时候进入这里
-		---useJsonFile = "http://mega.megagamelog.com:880/php/res/serverList/serverlist_nw1.json";--测试
-		useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试
-	else
-
-		  ---审核用 打开当前，注释下面 isRelease设置为true
-		  --if(CSAPI.GetPlatform() ==-1)then
-		  --	useJsonFile = "https://cdn.megagamelog.com/cross/release/sl_1.json";
-		  --end
-
-		  if CSAPI.ZLongServerListUrl=="None" and isRelease then
-			  Log("enter url ---1")
-			  ---兼容旧版本处理
-			  useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
-		  elseif  CSAPI.ZLongServerListUrl=="None" and isRelease==false then
-			  Log("enter url ---2")
-			  ---兼容旧版本处理
-			  useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试
-		  elseif isRelease==false then
-			  Log("enter url ---2-1")
-			  ---兼容旧版本处理
-			  useJsonFile = "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";--测试
-		  else
-			  Log("enter url ---3")
-			  ---SDKEnvironment:1或者其它数字时候，进入这里
-			  if GetServerURLfrequency<=3  then
-				  useJsonFile =CSAPI.ZLongServerListUrl;
-			  elseif GetServerURLfrequency<=6 then
-				  useJsonFile =CSAPI.ZLongBackupsServerListUrl;
-				  ---如果出现第二个没有配置或者为空，继续用第一个 同时缩短时间
-				  if useJsonFile==nil or useJsonFile=="" then
-					  GetServerURLfrequency=6;
-					  useJsonFile =CSAPI.ZLongServerListUrl;
-				  end
-			  elseif GetServerURLfrequency>6 then
-				  useJsonFile =CSAPI.ZLongServerListUrl;
-			  end
-		  end
+	 ---满足域名切换
+	if DomainNameswitch then
+		 Log("enter------DomainNameswitch---url")
+		---SDKEnvironment:1或者其它数字时候，进入这里
+		if GetServerURLfrequency<=3  then
+			useJsonFile =CSAPI.ZLongServerListUrl;
+		elseif GetServerURLfrequency<=6 then
+			useJsonFile =CSAPI.ZLongBackupsServerListUrl;
+			---如果出现第二个没有配置或者为空，继续用第一个 同时缩短时间
+			if useJsonFile==nil or useJsonFile=="" then
+				GetServerURLfrequency=6;
+				useJsonFile =CSAPI.ZLongServerListUrl;
+			end
+		elseif GetServerURLfrequency>6 then
+			useJsonFile =CSAPI.ZLongServerListUrl;
+		end
 	end
 	Log("useJsonFile is------:" .. useJsonFile);
-	
 	--ios提审服
 	if(CSAPI.IsAppReview())then
-		_G.server_list_enc_close = 1;
+		---_G.server_list_enc_close = 1;
+		CSAPI.server_list_enc_close=true;
 		useJsonFile = "http://139.224.250.93/php/res/serverList/serverlist_release.json";--交错战线（ios）
 	end
-	--LogError(useJsonFile);
-	useJsonFile = "https://cdn.megagamelog.com/cross/release/sl.json";--正式
+     Log("Result url--"..useJsonFile)
+	---useJsonFile = GetReleasedUrl();--正式
 	return useJsonFile;
 end
+
+---测试 Url
+function GetLocalTestUrl()
+	  CSAPI.server_list_enc_close=true;
+	   return "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";
+end
+
+---正式发布url
+function GetReleasedUrl()
+	CSAPI.server_list_enc_close=false;
+	return "https://cdn.megagamelog.com/cross/release/sl.json";
+end
+
 
 --返回服务器状态对于的颜色
 function GetStateImgColor(state)
@@ -272,7 +302,7 @@ function InitServerInfo(callBack,serverListUrl)
 			local dStr=CSAPI.EncyptStr(str);
 			local decodeStr=Base64.dec(dStr);
 
-			if(_G.server_list_enc_close)then
+			if(CSAPI.server_list_enc_close)then
 				decodeStr = str;
 			end
 

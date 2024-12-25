@@ -1,6 +1,5 @@
 
----热更新资源版本号控制
-_G.g_HotResVersion=1;
+
 --版本检测
 VerChecker = {};
 local this = VerChecker;

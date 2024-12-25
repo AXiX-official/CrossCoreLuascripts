@@ -65,6 +65,11 @@ function this:CheckIsDone()
 	if(not self:CurDayIsExit()) then
 		return true
 	end
+
+	--不在签到时间内
+	if not self:CheckInTime() then
+		return true
+	end
 	
     local rewardsInfos = self:GetRewardsInfos();
 	local time = rewardsInfos and rewardsInfos.lastSingTime 
@@ -151,6 +156,16 @@ end
 
 function this:GetActivityID()
 	return self:GetCfg() and self:GetCfg().activityID
+end
+
+--连续签到结束签到
+function this:CheckIsEnd()
+	local cfg = self:GetCfg()
+	if cfg and cfg.endTime then
+		local eTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+		return eTime < TimeUtil:GetTime()
+	end
+	return false
 end
 
 return this 

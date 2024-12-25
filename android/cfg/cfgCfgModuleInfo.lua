@@ -80,6 +80,8 @@ local conf = {
 {'SandStorm',	'SandStorm',	'',	'',	'',	'2403',	'',	'',	''},
 {'RogueSView',	'RogueSView',	'1',	'1',	'487,-72',	'2701,2702',	'',	'',	''},
 {'ColosseumView',	'ColosseumView',	'1',	'1',	'487,-72',	'2801,2802,2803,2804',	'',	'',	''},
+{'GlobalBossView',	'GlobalBossView',	'1',	'1',	'487,-72',	'',	'70022,70023',	'',	''},
+{'CollaborationMain',	'CollaborationMain',	'1',	'1',	'487,-72',	'',	'61040,61041',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

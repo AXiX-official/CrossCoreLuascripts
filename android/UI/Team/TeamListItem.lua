@@ -96,6 +96,8 @@ function SetOpenSetting(op)
         openSetting=TeamOpenSetting.TotalBattle
     elseif op==TeamConfirmOpenType.Rogue then
         openSetting=TeamOpenSetting.Rogue
+    elseif TeamConfirmOpenType.GlobalBoss then
+        openSetting=TeamOpenSetting.GlobalBoss
     else
         openSetting=TeamOpenSetting.PVE
     end
@@ -422,6 +424,12 @@ function SetState(_state)
         dropClick.raycastTarget=false;
         dropClick2.raycastTarget=false;
         CSAPI.SetGOActive(dropTirangle,false);
+    elseif data.openSetting==TeamConfirmOpenType.GlobalBoss then
+        dropClick.raycastTarget=dropCanClicker;
+        dropClick2.raycastTarget=dropCanClicker;
+        CSAPI.SetGOActive(dropTirangle,dropCanClicker);
+        CSAPI.SetGOActive(btnSkill,false);
+        CSAPI.SetAnchor(btnAI,738,-40)
     else
         dropClick.raycastTarget=dropCanClicker;
         dropClick2.raycastTarget=dropCanClicker;

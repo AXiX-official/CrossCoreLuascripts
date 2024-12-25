@@ -10,7 +10,7 @@ local dragStartPos = nil -- 当前拖放开始的位置
 local dragTargetPos = nil -- 当前拖放目标位置
 local isDrag = false
 local isHeXie = false -- 和谐了
-local clickCounts = {} -- actions 某段点击次数
+-- local clickCounts = {} -- actions 某段点击次数
 local inter = 0.5
 local timer = 0
 
@@ -26,14 +26,16 @@ function Init(_playCB, _endCB, _needClick)
     isInit = true
 end
 
-function Refresh(_modelId, _posType, _callBack)
+function Refresh(_modelId, _posType, _callBack, _needClick)
     if (not isInit or _modelId == nil or _posType == nil) then
         return
     end
     modelId = _modelId
     posType = _posType
     callBack = _callBack
-
+    if (_needClick ~= nil) then
+        needClick = _needClick
+    end
     -- 重置点击记录
     if (oldModelId and oldModelId == _modelId) then
         if (callBack) then
@@ -77,7 +79,6 @@ function SetImg()
             end
             SetBlack()
             SetTouch()
-
             if (callBack) then
                 callBack()
             end
@@ -125,14 +126,6 @@ function TouchItemClickCB(cfgChild)
     end
     local content = cfgChild.content or {}
 
-    local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
-    -- content内容
-    if (cfgChild.content) then
-        sName, timeScale, progress, isClicksLast = SetContent(cfgChild)
-    end
-    if (not sName) then
-        return
-    end
     -- 轨道
     local trackIndex = GetTrackIndex(cfgChild)
     local isCan = false
@@ -144,6 +137,19 @@ function TouchItemClickCB(cfgChild)
     else
         isCan = true
     end
+    if (not isCan) then
+        return
+    end
+
+    local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
+    -- content内容
+    if (cfgChild.content) then
+        sName, timeScale, progress, isClicksLast = SetContent(cfgChild)
+    end
+    if (not sName) then
+        return
+    end
+
     if (isCan) then
         local b = false
         if (trackIndex ~= 1 and content.clicks ~= nil) then
@@ -158,6 +164,20 @@ function TouchItemClickCB(cfgChild)
                     content.actions.stopTime, content.actions.stopCount)
             end
         else
+            -- 切换idle(移除除了自身动作轨道和忽略的动作轨道外的所有轨道)
+            if (content.changeIdle) then
+                FuncUtil:Call(function()
+                    --
+                    local trackIndexs, indexs,revoverNames = GetTrackIndexs(cfgChild)
+                    spineTools:ImmClearTracks(trackIndexs,revoverNames)
+                    ClearRecords(indexs)
+                    --
+                    if (spineTools ~= nil) then
+                        spineTools:ChangeIdle(content.changeIdle[1])
+                    end
+                end, nil, content.changeIdle[2])
+            end
+            --
             b = spineTools:PlayByClick(sName, trackIndex, true, true, nil)
         end
         if (b) then
@@ -348,7 +368,7 @@ end
 
 function SetBlack(isBlack)
     if l2dGo then
-        UIUtil:SetLiveBroadcast(l2dGo,isBlack)
+        UIUtil:SetLiveBroadcast(l2dGo, isBlack)
     end
 end
 -------------进场------------------------
@@ -533,15 +553,14 @@ function SetContent(cfgChild)
             isClicksLast = num >= #content.clicks
         end
     end
-
     return sName, timeScale, progress, isClicksLast
 end
 
 function GetRealIndex(cfgChild)
-    if(cfgChild.content and cfgChild.content.trackIndex) then 
+    if (cfgChild.content and cfgChild.content.trackIndex) then
         return cfgChild.content.trackIndex
-     end 
-     return cfgChild.index
+    end
+    return cfgChild.index
 end
 
 -- 轨道
@@ -549,9 +568,9 @@ function GetTrackIndex(cfgChild)
     if (cfgChild.sType < 6) then
         return 1
     end
-    if(cfgChild.content and cfgChild.content.trackIndex) then 
-       return cfgChild.content.trackIndex
-    end 
+    if (cfgChild.content and cfgChild.content.trackIndex) then
+        return cfgChild.content.trackIndex
+    end
     return cfgChild.index
 end
 
@@ -594,4 +613,34 @@ function ClearCache()
     dragObj = nil
     oldModelId = nil
     records = {}
+end
+
+--
+function GetTrackIndexs(childCfg)
+    local trackIndexs, indexs, revoverNames = {}, {}, {}
+    local ignore1 = GetTrackIndex(childCfg)
+    local ignore2 = nil
+
+    if (childCfg.content.changeIdle and childCfg.content.changeIdle[3]) then
+        ignore2 = GetTrackIndex(cfg.item[childCfg.content.changeIdle[3]])
+    end
+    for k, v in ipairs(cfg.item) do
+        local trackIndex = GetTrackIndex(v)
+        if (trackIndex ~= ignore1 and (ignore2 == nil or trackIndex ~= ignore2)) then
+            table.insert(trackIndexs, trackIndex)
+            table.insert(indexs, v.index)
+            table.insert(revoverNames, v.sName)
+        end
+    end
+    return trackIndexs, indexs,revoverNames
+end
+
+function ClearRecords(indexs)
+    if (records) then
+        for k, v in pairs(indexs) do
+            if (records[v]) then
+                records[v] = nil
+            end
+        end
+    end
 end

@@ -1,5 +1,7 @@
 local curTab = nil
 local isAnim = true
+local oldRandom
+local oldUsing
 
 function Awake()
     mTab = ComUtil.GetCom(tabs, "CTab")
@@ -17,6 +19,9 @@ end
 
 function Level(isHome)
     CSAPI.SetGOActive(mask, true)
+
+    CRoleDisplayMgr:SetRandon(oldRandom, oldUsing)
+
     local isSame = false
     if (FuncUtil.TableIsSame(c_panelRet, CRoleDisplayMgr:GetPanelRet()) and
         FuncUtil.TableIsSame(c_datas, CRoleDisplayMgr:GetDatas())) then
@@ -49,7 +54,7 @@ function OnTabChanged(index)
     curTab = index
     c_panelRet.setting = curTab
     if (curTab == 0) then
-        c_panelRet.random = 0
+        -- c_panelRet.random = 0
         SetDown()
     end
 end
@@ -61,6 +66,9 @@ function OnOpen()
     RefreshPanel()
 
     isAnim = false
+
+    oldRandom = c_panelRet.random
+    oldUsing = c_panelRet.using
 end
 
 function RefreshPanel()
@@ -114,16 +122,35 @@ function SetDown()
     sjIndex = c_panelRet.random or 0
     CSAPI.SetGOActive(objSJNormal, sjIndex == 0)
     CSAPI.SetGOActive(objSJSel, sjIndex == 1)
+    CSAPI.SetGOActive(randomMask, sjIndex == 1)
 end
 
 function OnClickSJ()
+    if (sjIndex == 0) then
+        -- 先判断是否已有设置好的随机看板
+        local b, idx = CRoleDisplayMgr:CheckCanRandom()
+        if (not b) then
+            LanguageMgr:ShowTips(27007)
+            return
+        end
+        c_panelRet.using = idx
+        LanguageMgr:ShowTips(27005)
+    else
+        LanguageMgr:ShowTips(27006)
+        c_panelRet.using = CRoleDisplayMgr:GetUsefulUsing()
+    end
     sjIndex = sjIndex == 0 and 1 or 0
     CSAPI.SetGOActive(objSJNormal, sjIndex == 0)
     CSAPI.SetGOActive(objSJSel, sjIndex == 1)
+    CSAPI.SetGOActive(randomMask, sjIndex == 1)
     c_panelRet.random = sjIndex
     if (sjIndex == 1 and curTab == 0) then
         mTab.selIndex = 1
     end
+    --
+    SetItems()
+    -- 触发保存
+    ToSave()
 end
 
 function OnViewOpened(viewKey)
@@ -140,4 +167,31 @@ end
 ---返回虚拟键公共接口
 function OnClickVirtualkeysClose()
     Level()
+end
+
+-- 更多设置
+function OnClickSet()
+    CSAPI.OpenView("CRoleDisplaySet")
+end
+
+function ToSave()
+    -- local isSame = false
+    -- if (FuncUtil.TableIsSame(c_panelRet, CRoleDisplayMgr:GetPanelRet()) and
+    --     FuncUtil.TableIsSame(c_datas, CRoleDisplayMgr:GetDatas())) then
+    --     isSame = true -- 数据无改动
+    -- end
+    -- if (not isSame) then
+    --     local panels = {}
+    --     for k, v in pairs(c_datas) do
+    --         panels[v:GetIndex()] = v:GetRet()
+    --     end
+    --     PlayerProto:SetNewPanel(panels, c_panelRet.setting, c_panelRet.random, c_panelRet.using)
+    -- end
+    CRoleDisplayMgr:SetRandon(c_panelRet.random, c_panelRet.using)
+    SetItems()
+end
+
+-- 编辑
+function OnClickBJ()
+    CSAPI.OpenView("CRoleDisplayS")
 end

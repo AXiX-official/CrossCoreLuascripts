@@ -212,6 +212,9 @@ function Refresh(isJump)
     childTabDatas=currPageData:GetTopTabs(true);
     RecordChildPageIDs();
     --查找默认子页面
+    if childPageID==nil and childTabDatas then
+        childPageID=childTabDatas[1].id;
+    end
     if childTabDatas and next(childTabDatas) and currPageData:GetCommodityType()~=CommodityType.Promote  then
         if not isJump then
             childPageID=lastPageIndex==currPageIndex and childPageID or childTabDatas[1].id;
@@ -243,8 +246,6 @@ function Refresh(isJump)
     ShopMgr:SetCommResetInfo(currPageData:GetID(),childPageID);
     ShopMgr:CheckCommReset();--检测一次商店的新商品
     InitHeadTabs();
-    InitLeftTabs(isJump);
-    isPlayTween=lastPageIndex~=currPageIndex;
     if currPageData:GetCommodityType()==CommodityType.Rand then
         local exchangeCfg=Cfgs.CfgRandCommodity:GetGroup(currPageData:GetID())[1];
         if exchangeCfg then
@@ -268,6 +269,8 @@ function Refresh(isJump)
     else
         InitSV();
     end
+    InitLeftTabs(isJump);
+    isPlayTween=lastPageIndex~=currPageIndex;
     if isPlayTween then
         --播放动画
         PlayTween();
@@ -334,6 +337,10 @@ function InitLeftTabs(isJump)
     --     end
      --   ItemUtil.AddItems("Shop/ShopTabItem", childTabItems, childTabDatas, leftParent, nil, 1, {sID=childPageID,pageID=currPageData:GetID(),newInfos=newInfos});
         CSAPI.SetGOActive(leftParent,true);
+        if not IsNil(currLayout) then
+            CSAPI.SetRectSize(currLayout.gameObject,1430,732);
+            CSAPI.SetAnchor(currLayout.gameObject,149.87,-49);
+        end
         layout6:IEShowList(#childTabDatas);
     -- else
     --     childTabDatas=nil;
@@ -341,6 +348,10 @@ function InitLeftTabs(isJump)
     --     currChildPage=nil;
     else
         CSAPI.SetGOActive(leftParent,false);
+        if not IsNil(currLayout) then
+            CSAPI.SetRectSize(currLayout.gameObject,1830,710);
+            CSAPI.SetAnchor(currLayout.gameObject,-5,-60);
+        end
     end
 end
 
@@ -805,9 +816,9 @@ end
 ---抵扣券说明书
 function RefreshDeductionBouchers()
     if CSAPI.IsADV() then
-        if  currPageData:GetShowType()==ShopShowType.Package  then --礼包
+        if  currPageData and currPageData:GetShowType()==ShopShowType.Package  then --礼包
             QuestionItemSetActive(true)
-        elseif currPageData:GetShowType()==ShopShowType.Pay then --充值
+        elseif currPageData and currPageData:GetShowType()==ShopShowType.Pay then --充值
             QuestionItemSetActive(true)
         else
             QuestionItemSetActive(false)
@@ -1026,6 +1037,14 @@ function OnBuyRet(proto)
         end
         if comm:GetType()==CommodityItemType.MonthCard then --月卡
             ClientProto:GetMemberRewardInfo();
+        end
+        --判断该页签是否为空
+        if currPageData~=nil and currChildPage~=nil then
+           local currList=currPageData:GetCommodityInfos(true,currChildPage.id);
+           if currList==nil or (currList and #currList==0) then --子页签数据为空时隐藏
+                childPageID=nil;
+                currChildPage=nil;
+           end
         end
     end
     Refresh();

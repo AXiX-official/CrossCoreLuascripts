@@ -86,7 +86,7 @@ function SetVoucherItem(isShow)
 end
 
 function OnClickBuy()
-    ShopCommFunc.HandlePayLogic(data,1,1,voucherList,OnSuccess);
+    ShopCommFunc.HandlePayLogic(data,1,1,voucherList,OnSuccess,openSetting);
     -- local priceInfo=data:GetRealPrice();
 	-- local channelType=CSAPI.GetChannelType();
 	-- if priceInfo and priceInfo[1].id==-1 and (channelType==ChannelType.Normal or channelType==ChannelType.TapTap) then
@@ -180,7 +180,7 @@ function RefreshPrice()
     tips2=string.format("%s<color=\'#ffc146\'>%s</color>",tips2,curModelCfg.desc)
     CSAPI.SetText(txt_tips2,tips2);
     -- CSAPI.SetText(txt_name,curModelCfg.desc)
-    local priceInfo=data:GetRealPrice();
+    local priceInfo=data:GetRealPrice(openSetting);
     local money=0;
     local moneyName="";
     local currMoney=nil;

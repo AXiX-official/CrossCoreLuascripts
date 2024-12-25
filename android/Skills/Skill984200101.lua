@@ -11,6 +11,9 @@ function Skill984200101:DoSkill(caster, target, data)
 	-- 11002
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11002], caster, target, data, 0.5,2)
+end
+-- 伤害后
+function Skill984200101:OnAfterHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -27,19 +30,5 @@ function Skill984200101:DoSkill(caster, target, data)
 		return
 	end
 	-- 984200801
-	self.order = self.order + 1
-	self:AddValue(SkillEffect[984200801], caster, target, data, "shoulie",1,0,30)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 984200803
-	self.order = self.order + 1
-	self:AddBuffCount(SkillEffect[984200803], caster, target, data, 984200803,1,30)
+	self:OwnerAddBuffCount(SkillEffect[984200801], caster, target, data, 984200803,1,30)
 end

@@ -454,8 +454,13 @@ function OnClickBC()
     ChangeToDetail()
     local isSame = FuncUtil.TableIsSame(data, c_data)
     if (not isSame) then
+        CRoleDisplayMgr:SetCRoleDisplayS()
         data:InitRet(c_data:GetRet())
-        EventMgr.Dispatch(EventType.CRoleDisplayMain_Refresh)
+        if (data:GetTy() ~= 1) then
+            PlayerProto:SetRandomPanel(data:GetRet())
+        else
+            EventMgr.Dispatch(EventType.CRoleDisplayMain_Refresh)
+        end
     end
     view:Close()
 end

@@ -269,7 +269,7 @@ function ConfigParser:ReadOneConfig(filename)
 
             local isCallOk = xpcall(tmpRetOnLineFun, TmpXpcallCB)
             if not isCallOk then
-                ASSERT(false)
+                ASSERT(false, config.filename .. '的 ' .. config.sheetname .. ' 第' .. (k + 5) .. '行')
             end
         end
 

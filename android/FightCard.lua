@@ -1203,7 +1203,7 @@ function FightCardBase:AddHp(num, killer, bNotDeathEvent, bNotDealShield)
         end
     end
 
-    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent)
+    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent,true)
     if num < 0 then
         -- 传给统计接口
         local mgr = self.team.fightMgr
@@ -1218,9 +1218,14 @@ function FightCardBase:AddHp(num, killer, bNotDeathEvent, bNotDealShield)
 end
 
 -- 加血扣血(不扣盾)
-function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent)
+function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
     -- LogDebugEx("FightCardBase:AddHpNoShield", num, self.hp, bNotDeathEvent)
     -- LogTrace()
+    local mgr = self.team.fightMgr
+    if mgr.isSingleFight and not isFromAddHp and num < 0 then
+        -- 传给统计接口
+        mgr:DamageStat(killer, -num)
+    end
 
     local onum = num
     local shield = 0 --盾吸收的伤害
@@ -1298,7 +1303,7 @@ function FightCardBase:AddHpProtect(num, killer, bNotDeathEvent, bNotDealShield)
         return false, shield, num, "HpProtect"
     end
 
-    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent)
+    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent,true)
     return tisdeath, shield, num, abnormalities
 end
 
@@ -2318,7 +2323,7 @@ end
 WorldBossCardClient = oo.class(FightCardServer)
 function WorldBossCardClient:Init(team, id, teamID, uid, data, typ)
     FightCardServer.Init(self, team, id, teamID, uid, data, typ)
-    self.showhp = 999999999
+    self.showhp = 100000000000000
 end
 
 --主要是处理血量和显示血量的问题

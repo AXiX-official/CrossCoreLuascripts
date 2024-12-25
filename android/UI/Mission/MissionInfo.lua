@@ -165,7 +165,7 @@ end
 
 --是否已开启
 function this:CheckIsOpen()
-	if(self.cfg and self.cfg.nOpenLevel and PlayerClient:GetLv() < self.cfg.nOpenLevel) then
+	if(self.cfg and self.cfg.nOpenLevel~=nil and PlayerClient:GetLv() < self.cfg.nOpenLevel) then
 		return false
 	end
 	return true

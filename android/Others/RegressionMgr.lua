@@ -22,7 +22,7 @@ function this:CheckReturningPlr(proto)
     if proto and proto.activity_times and #proto.activity_times > 0 then
         for i, v in ipairs(proto.activity_times) do
             self.activityInfos[v.ty] = {
-                id=v.id,
+                id = v.id,
                 sTime = v.start_time,
                 eTime = v.end_time
             }
@@ -119,6 +119,7 @@ end
 -- 设置回归资源的领取状态
 function this:SetResRecoveryGain(resourcesIsGain)
     self.getInfoRetProto.resourcesIsGain = resourcesIsGain
+    RedPointMgr:UpdateData(RedPointType.ResRecovery, nil)
 end
 
 -- 是否需要弹出（仅弹出一次）
@@ -141,31 +142,31 @@ end
 ------------------------------------------------------------------回归活动---------------------------------------------------------------------
 function this:GetArr(group)
     group = group or 1
-    local isRegress,id = self:IsHuiGui()
+    local isRegress, id = self:IsHuiGui()
     local datas = {}
     self.closeTime = self.closeTime or 0
     if isRegress then
         local cfg = Cfgs.CfgReturningActivity:GetByID(id)
         if cfg and cfg.infos and #cfg.infos > 0 then
             for _, info in ipairs(cfg.infos) do
-                if info.group and info.group == group and not info.IsHide then --有隐藏字段不显示
+                if info.group and info.group == group and not info.IsHide then -- 有隐藏字段不显示
                     local aInfo = self.activityInfos[info.type]
-                    if aInfo and aInfo.sTime and aInfo.eTime and TimeUtil:GetTime() >= aInfo.sTime 
-                    and TimeUtil:GetTime() < aInfo.eTime then
+                    if aInfo and aInfo.sTime and aInfo.eTime and TimeUtil:GetTime() >= aInfo.sTime and
+                        TimeUtil:GetTime() < aInfo.eTime then
                         if info.type == RegressionActiveType.Tasks then
                             local missionDatas = MissionMgr:GetActivityDatas(eTaskType.RegressionTask, info.activityId)
-                            if missionDatas and #missionDatas> 0 then
-                                table.insert(datas,info)
+                            if missionDatas and #missionDatas > 0 then
+                                table.insert(datas, info)
                             end
                         else
-                            table.insert(datas,info)
+                            table.insert(datas, info)
                         end
                         self.closeTime = aInfo.eTime > self.closeTime and aInfo.eTime or self.closeTime
                     end
                 end
             end
             if #datas > 0 then
-                table.sort(datas,function (a,b)
+                table.sort(datas, function(a, b)
                     if a.sort == b.sort then
                         return a.index < b.index
                     else
@@ -185,9 +186,9 @@ function this:GetTime()
     return 0
 end
 
---RegressionActiveType    
+-- RegressionActiveType    
 function this:GetActivityEndTime(type)
-    if self.activityInfos[type] and self.activityInfos[type].eTime then
+    if self.activityInfos and self.activityInfos[type] and self.activityInfos[type].eTime then
         return self.activityInfos[type].eTime
     end
     return 0
@@ -205,10 +206,30 @@ function this:IsBuyFund()
     return false
 end
 
+-- 遗落的补给是否显示出来（是回归并且未领取）
+function this:GetResRecoveryTime()
+    local begTime, endTime = nil, nil
+    local resRecoveryEndTime = self:GetActivityEndTime(RegressionActiveType.ResourcesRecovery)
+    if (resRecoveryEndTime > TimeUtil:GetTime() and self:CheckHadActivity(RegressionActiveType.ResourcesRecovery) and
+        not self:CheckResRecoveryIsGain()) then
+        begTime = 0
+        endTime = resRecoveryEndTime
+    end
+    return begTime, endTime
+end
+
+--活动关闭时间
+function this:GetActivityTime()
+    if self:IsHuiGui() and #self:GetArr() > 0 then
+        return nil,self.closeTime
+    end
+    return nil,nil
+end
+
 ------------------------------------------------------------------红点---------------------------------------------------------------------
 
 function this:CheckRedPointData()
-    local isCheck,type = self:IsHuiGui()
+    local isCheck, type = self:IsHuiGui()
     local redData1 = nil
     if isCheck then
         local _cfgs = Cfgs.CfgReturningActivity:GetAll()
@@ -218,22 +239,29 @@ function this:CheckRedPointData()
                 if v.id == type and v.infos and #v.infos > 0 then
                     for _, _info in ipairs(v.infos) do
                         local aInfo = self.activityInfos[_info.type]
-                        if aInfo and aInfo.sTime and aInfo.eTime and TimeUtil:GetTime() >= aInfo.sTime 
-                        and TimeUtil:GetTime() < aInfo.eTime then
-                            if _info.group and self:CheckRed(_info.type,_info.activityId,redInfos,_info) then
+                        if aInfo and aInfo.sTime and aInfo.eTime and TimeUtil:GetTime() >= aInfo.sTime and
+                            TimeUtil:GetTime() < aInfo.eTime then
+                            if _info.group and self:CheckRed(_info.type, _info.activityId, redInfos, _info) then
                                 redData1 = 1
                                 break
                             end
-                        end 
+                        end
                     end
                 end
             end
-        end  
+        end
     end
     RedPointMgr:UpdateData(RedPointType.Regression, redData1)
+    -- 遗落的补给
+    local _data = nil
+    local begTime, endTime = self:GetResRecoveryTime()
+    if (endTime ~= nil) then
+        _data = self:CheckResRecoveryIsGain() and 1 or nil
+    end
+    RedPointMgr:UpdateData(RedPointType.ResRecovery, _data)
 end
 
-function this:CheckRed(_type,_activityId,redInfos,_info)
+function this:CheckRed(_type, _activityId, redInfos, _info)
     if _type == RegressionActiveType.DropAdd then
         return DungeonUtil.HasMultiNum(_activityId)
     elseif _type == RegressionActiveType.Fund then
@@ -243,10 +271,10 @@ function this:CheckRed(_type,_activityId,redInfos,_info)
         if #datas > 0 then
             for i, v in ipairs(datas) do
                 if (not MissionMgr:CheckIsReset(v) and v:CheckIsOpen() and v:IsFinish() and not v:IsGet()) then
-                    if v:GetFundId() then 
+                    if v:GetFundId() then
                         return true
                     else
-                        if isBuy then --有购买基金
+                        if isBuy then -- 有购买基金
                             return true
                         end
                     end
@@ -255,16 +283,18 @@ function this:CheckRed(_type,_activityId,redInfos,_info)
         end
         return false
     elseif _type == RegressionActiveType.Tasks then
-        return MissionMgr:CheckRed2(eTaskType.RegressionTask,_activityId)
+        return MissionMgr:CheckRed2(eTaskType.RegressionTask, _activityId)
     elseif _type == RegressionActiveType.Sign then
         return not SignInMgr:CheckIsDone(_activityId)
     elseif _type == RegressionActiveType.Show then
-        return false 
+        return false
+    elseif _type == RegressionActiveType.ItemPool then
+        return ItemPoolActivityMgr:CheckPoolHasRedPoint(_activityId);
     else
         if redInfos == nil then
             redInfos = FileUtil.LoadByPath("Regression_RedInfo.txt") or {}
         end
-        return (redInfos[_type] == nil or  redInfos[_type] == 0)
+        return (redInfos[_type] == nil or redInfos[_type] == 0)
     end
 end
 return this

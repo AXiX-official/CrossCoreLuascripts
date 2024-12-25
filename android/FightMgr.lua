@@ -1895,7 +1895,9 @@ end
 function FightMgrBase:OnPlayerLogin(uid)
     -- LogTrace("FightMgrBase:OnPlayerLogin:")
     -- if self.type ~= SceneType.Rogue then
-    self:Send(uid, 'FightProto:InBattle', {type = self.type, nDuplicateID = self.nDuplicateID})
+    if self.type ~= SceneType.GlobalBoss then
+        self:Send(uid, 'FightProto:InBattle', {type = self.type, nDuplicateID = self.nDuplicateID})
+    end
     -- end
 end
 
@@ -3698,6 +3700,9 @@ end
 
 -- 伤害统计
 function BossFightMgrServer:DamageStat(caster, nDamage)
+    if caster:GetTeamID() ~= 1 then
+        return 
+    end
     self.nTotalDamage = self.nTotalDamage + nDamage
 
     local oBoss = WordBossMgrGs:GetBoss(self.bossUUID)
@@ -3746,7 +3751,7 @@ elseif IS_SERVER then
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVP then
             return PVPFightMgrServer(id, groupID, ty, seed, nDuplicateID)
-        elseif ty == SceneType.BOSS or ty == SceneType.GuildBOSS or SceneType.FieldBoss then
+        elseif ty == SceneType.BOSS or ty == SceneType.GuildBOSS or SceneType.FieldBoss or SceneType.GlobalBoss then
             return BossFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         end
         ASSERT()

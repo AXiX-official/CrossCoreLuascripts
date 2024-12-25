@@ -193,6 +193,13 @@ function this.GetInfo3(type, target, num)
 	return info
 end
 
+function this.GetStarInfo4(dungeonID)
+	local infos = {};
+	local dungeonData = DungeonMgr:GetDungeonData(dungeonID)
+	infos = DungeonUtil.GetStarInfo2(dungeonID,dungeonData and dungeonData:GetNGrade() or {})
+	return infos
+end
+
 --返回章节当前多倍掉落描述
 function this.GetMultiDesc(id)
 	local str = "";
@@ -261,7 +268,7 @@ function this.GetDropAdd(id)
 	if id then
 		local cfgSection = Cfgs.Section:GetByID(id)
 		if cfgSection then
-			add,max,isNotLimit,isUse = GCalHelp:GetMultiDropMaxCnt(cfgSection, DungeonUtil.GetDropAdd())
+			add,max,isNotLimit,isUse = GCalHelp:GetMultiDropMaxCnt(cfgSection, DungeonUtil.GetRegresAdd())
 		end
 	end
 	return max,add,isNotLimit,isUse
@@ -436,6 +443,53 @@ function this.IsEnough(cfg)
 		end
 	end
 	return isEnough,str
+end
+
+function this.GetHotChangeTime()
+	local cfgs = Cfgs.CfgDupConsumeReduce:GetAll()
+	local sTime,eTime = 0,0
+	if cfgs then
+		for _, cfg in pairs(cfgs) do
+			if cfg.startTime and cfg.endTime then
+				local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
+				local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+				if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
+					-- sTime = (sTime == 0 or sTime > startTime ) and startTime or sTime --获取最小开始时间
+					-- eTime = (eTime == 0 or eTime < endTime) and endTime or eTime --获取最大结束时间
+					sTime = startTime
+					eTime = endTime
+					break
+				end 
+			end
+		end
+	end
+	return sTime,eTime
+end
+
+function this.IsGlobalBossCloseTime(sid)
+	local openInfo = DungeonMgr:GetActiveOpenInfo2(sid)
+	local globalBossCloseTime = 0
+	local desc = ""
+	if openInfo then
+		local _cfg = openInfo:GetCfg()
+		if _cfg and _cfg.closeStartTime and _cfg.closeEndTime then
+			desc = _cfg.desc
+			local curTab = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
+			local ss1 = StringUtil:split(_cfg.closeStartTime," ")
+			local ss2 = StringUtil:split(_cfg.closeEndTime," ")
+			if curTab.day == tonumber(ss1[1]) and curTab.day <= tonumber(ss2[1]) then
+				local tab1 = TimeUtil:SplitTime(ss1[2])
+				if curTab.hour >= tonumber(tab1[1]) then
+					local tab2 = TimeUtil:SplitTime(ss2[2])
+					globalBossCloseTime = TimeUtil:GetTime2(curTab.year,curTab.month,curTab.day,tab2[1],tab2[2],tab2[3])
+					if TimeUtil:GetTime() < globalBossCloseTime then
+						return true,globalBossCloseTime,desc
+					end
+				end
+			end
+		end
+	end
+	return false,globalBossCloseTime,desc
 end
 
 return this; 

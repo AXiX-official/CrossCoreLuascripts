@@ -253,8 +253,8 @@ function Show()
     CSAPI.SetGOActive(btnSkipAll,not StringUtil:IsEmpty(showCfg.desc));
 
     --LogError(cfg);
-    --CSAPI.SetGOActive(btnSkipLine,cfg.skip and true or false);
-    CSAPI.SetGOActive(btnSkipLine,true);
+    CSAPI.SetGOActive(btnSkipLine,cfg.skip and true or false);
+    --CSAPI.SetGOActive(btnSkipLine,true);
     --CSAPI.SetGOActive(btnSkipLine,not StringUtil:IsEmpty(showCfg.desc));
 
     CSAPI.SetText(guiderName,showCfg.iconName or "");

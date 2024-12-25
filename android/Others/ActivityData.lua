@@ -67,6 +67,8 @@ function this:IsOpen()
     elseif self:GetType() == ActivityListType.Investment then
         local targetTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
         isOpen = targetTime > TimeUtil:GetTime()
+    elseif self:GetType() == ActivityListType.AccuCharge2 then
+        isOpen = AccuChargeMgr:IsOpen2()
     end
 
     if self:GetSpecType() == ALType.Pay then
@@ -89,6 +91,10 @@ function this:IsOpenTime()
         isOpen = TimeUtil:GetTime() > sTime and TimeUtil:GetTime() <= eTime
     end
     return isOpen
+end
+
+function this:IsShowImg()
+    return self.cfg and self.cfg.bIsShow ~= nil
 end
 
 return this

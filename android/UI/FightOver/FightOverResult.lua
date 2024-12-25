@@ -102,16 +102,16 @@ function OnOpen()
 end
 
 function GetIsWin(_sceneType)
-    if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror) then
+    if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror or _sceneType == SceneType.GlobalBoss or _sceneType == SceneType.RogueT) then
         return true
     elseif _sceneType == SceneType.PVE then
         local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
         if cfg then
             if cfg.type == eDuplicateType.StarPalace then
-            return true             
+                return true       
             elseif cfg.type == eDuplicateType.StoryActive and cfg.diff and cfg.diff == 4 then
                 return true   
-        end
+            end
         end
         return data.bIsWin
     else
@@ -208,8 +208,22 @@ function ApplyQuit()
         else
             --只能重复挑战或者下一关
         end   
+    elseif(sceneType == SceneType.GlobalBoss) then
+        GlobalBossMgr:Quit()
+    elseif (sceneType == SceneType.RogueT) then
+        local nDuplicateID = data.elseData.nDuplicateID
+        if(RogueTMgr:IsInfinity(nDuplicateID))then 
+            RogueTMgr:Quit()
+        else
+            if(data.elseData.bIsWin and RogueTMgr:IsMainLineLast(nDuplicateID) and RogueTMgr:CheckCanSave(nDuplicateID) )then 
+                --最后一关触发保存buff
+                local cfg = Cfgs.MainLine:GetByID(nDuplicateID)
+                CSAPI.OpenView("RogueTBuff", cfg.dungeonGroup,3)
+            else
+                RogueTMgr:Quit()
+            end 
+        end 
     end
-
 end
 
 function OnClickMask()

@@ -47,12 +47,21 @@ function Update()
 end
 
 function OnOpen()
+    -- --
+    -- local go0 = CSAPI.GetView("MenuMore")
+    -- if (go0) then
+    --     local menuMore = ComUtil.GetLuaTable(go0)
+    --     menuMore.OnClickMask()
+    -- end
+    --
     local go = CSAPI.GetView("Menu")
     menu = ComUtil.GetLuaTable(go)
     -- 
     CSAPI.SetScale(menu.gameObject, 0, 0, 0)
     -- role
-    CSAPI.SetParent(menu.movePoint, centre)
+    movePointX = CSAPI.GetAnchor(menu.movePoint)
+    CSAPI.SetAnchor(menu.movePoint, 0, 0, 0)
+    CSAPI.SetParent(menu.movePoint, center)
     --
     SetBG()
     InitTime()
@@ -230,10 +239,27 @@ function OnClickBlack()
     CSAPI.SetScale(menu.gameObject, 1, 1, 1)
     CSAPI.SetGOAlpha(gameObject, 0)
     CSAPI.SetGOActive(mask, true)
-    CSAPI.SetParent(menu.movePoint, menu.centre)
+    CSAPI.SetAnchor(menu.movePoint, movePointX or 0,0,0)
+    CSAPI.SetParent(menu.movePoint, menu.center)
     menu.movePoint.transform:SetAsFirstSibling()
-    CSAPI.SetGOActive(menu.anims, false)
-    CSAPI.SetGOActive(menu.anims, true)
+
+    -- 查看状态
+    if (menu.GetIsHideUI()) then
+        view:Close()
+        return
+    end
+
+    -- 入场
+    local viewDic = menu.GetOpenViews()
+    local len = 0
+    for k, v in pairs(viewDic) do
+        len = len + 1
+    end
+    if (len == 1) then
+        menu.HideAnimRD()
+        CSAPI.SetGOActive(menu.uis, false)
+        CSAPI.SetGOActive(menu.uis, true)
+    end
 
     FuncUtil:Call(function()
         view:Close()

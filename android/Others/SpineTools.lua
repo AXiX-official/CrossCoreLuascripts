@@ -74,9 +74,13 @@ function this:Init(l2d)
 
     -- self.actionsDic = {} -- 角色多段 
     self.stopDic = {}
+    self.isUpdate = true
 end
 
 function this:Update()
+    if (not self.isUpdate) then
+        return
+    end
     -- 淡入,逐渐增加动画的权重
     if (self.teFadeInClickDic) then
         for k, v in pairs(self.teFadeInClickDic) do
@@ -112,13 +116,14 @@ function this:Update()
             -- if (v.te.TimeScale ~= 1 or v.te.TimeScale ~= -1) then
             --     v.te.TimeScale = v.progress > v.te.TrackTime and 1 or -1
             -- end
-            if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or (v.te.TimeScale == -1 and v.te.TrackTime <= v.progress)) then
+            if ((v.te.TimeScale == 1 and v.te.TrackTime >= v.progress) or
+                (v.te.TimeScale == -1 and v.te.TrackTime <= v.progress)) then
                 v.te.TimeScale = 0
                 if (v.isClicksLast) then
                     -- 首尾相接的，最终动画播完设置为0
                     v.te.TrackTime = 0
                     self:ClearTrack(k)
-                    self.mulClickDic[k] = nil 
+                    self.mulClickDic[k] = nil
                     break
                 else
                     v.te.TrackTime = v.progress
@@ -258,7 +263,7 @@ function this:PlayByClick1(animName, trackIndex, fadeIn, fadeOut, complete)
     if (fadeOut) then
         self.anim:AddEmptyAnimation(trackIndex, self.fadeOutTime, 0)
     end
-    return true
+    return true, te.Animation.Duration
 end
 
 -- 物件的点击（无渐入渐出）
@@ -490,6 +495,43 @@ function this:ClearTrack(trackIndex)
     self.l2d.sg.Skeleton:SetToSetupPose()
 end
 
+-- 立即清楚轨道及其数据
+function this:ImmClearTracks(trackIndexs, revoverNames)
+    self.isUpdate = false
+    for k, v in pairs(trackIndexs) do
+        if (self.teFadeInClickDic) then
+            self.teFadeInClickDic[v] = nil
+        end
+        if (self.teFadeInBaclClickDic) then
+            self.teFadeInBaclClickDic[v] = nil
+        end
+        if (self.mulClickDic) then
+            self.mulClickDic[v] = nil
+        end
+        if (self.dragDic) then
+            self.dragDic[v] = nil
+        end
+
+        if (self.clickRevoverDic) then
+            self.clickRevoverDic[v] = nil
+        end
+        if (self.stopDic) then
+            self.stopDic[v] = nil
+        end
+        if (self.teClickCompleteDic) then
+            self.teClickCompleteDic[v] = nil
+        end
+        self.anim:ClearTrack(v)
+    end
+    for k, v in pairs(revoverNames) do
+        if (self.revoverDragDic) then
+            self.revoverDragDic[v] = nil
+        end
+    end
+    --self.l2d.sg.Skeleton:SetToSetupPose()
+    self.isUpdate = true
+end
+
 -- 拖放还原
 function this:ClickRecover(animName, trackIndex, stay, complete)
     if (self.clickRevoverDic[animName]) then
@@ -515,6 +557,17 @@ function this:GetNameByTrackIndex(trackIndex)
         return te.Animation.Name
     end
     return nil
+end
+
+-- 切换idle
+function this:ChangeIdle(animName)
+    local te = self.anim:SetAnimation(0, animName, true)
+    -- te.MixDuration = self.fadeInTime
+    -- te.Alpha = 0
+    -- if (true) then
+    --     self.teFadeInClickDic[0] = te
+    -- end
+    return true
 end
 
 return this

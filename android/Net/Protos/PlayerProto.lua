@@ -1365,13 +1365,18 @@ function PlayerProto:GetNewPanelRet(proto)
     self.GetNewPanel_Loging = nil 
     EventMgr.Dispatch(EventType.CRoleDisplayMain_Change)
 end
-function PlayerProto:SetNewPanelUsing(_using)
+function PlayerProto:GetRandomPanelRet(proto)
+    CRoleDisplayMgr:GetRandomPanelRet(proto)
+end
+
+function PlayerProto:SetNewPanelUsing(_using,_noIn)
+    self.SetNewPanelUsing_noIn = _noIn
     local proto = {"PlayerProto:SetNewPanelUsing",{using = _using}}
     NetMgr.net:Send(proto)
 end
-
 function PlayerProto:SetNewPanelUsingRet(proto)
-    CRoleDisplayMgr:SetNewPanelUsingRet(proto)
+    CRoleDisplayMgr:SetNewPanelUsingRet(proto,self.SetNewPanelUsing_noIn)
+    self.SetNewPanelUsing_noIn = nil
 end
 
 --活动排行榜
@@ -1480,4 +1485,79 @@ end
 --清除关卡数据
 function PlayerProto:ClearDuplicateRet(proto)
     DungeonMgr:ClearDungeonData(proto.dupIds)
+end
+--------------------------------------------------------------------------------------------------------
+--设置随机看板(新增或者修改)
+function PlayerProto:SetRandomPanel(_random_panel)
+    local proto = {"PlayerProto:SetRandomPanel",{random_panel = _random_panel}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetRandomPanelRet(proto)
+    CRoleDisplayMgr:SetRandomPanelRet(proto)
+    EventMgr.Dispatch(EventType.CRoleDisplayS_Change)
+end
+
+--获取随机看板详细
+function PlayerProto:GetRandomPanelDetail(_idx,cb)
+    self.GetRandomPanelDetailCB = cb
+    local proto = {"PlayerProto:GetRandomPanelDetail",{idx = _idx}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:GetRandomPanelDetailRet(proto)
+    CRoleDisplayMgr:GetRandomPanelDetailRet(proto)
+    if(self.GetRandomPanelDetailCB) then 
+        self.GetRandomPanelDetailCB(proto)
+    end 
+    self.GetRandomPanelDetailCB = nil
+end
+
+--移除随机看板
+function PlayerProto:RemoveRandomPanel(_idx)
+    local proto = {"PlayerProto:RemoveRandomPanel",{idx = _idx}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:RemoveRandomPanelRet(proto)
+    CRoleDisplayMgr:RemoveRandomPanelRet(proto.idx)
+    EventMgr.Dispatch(EventType.CRoleDisplayS_Change)
+end
+
+--设置当前看板随机类型
+function PlayerProto:SetPanelRandomType(_using_type,cb)
+    self.SetPanelRandomTypeCB = cb
+    local proto = {"PlayerProto:SetPanelRandomType",{random_type = _using_type}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetPanelRandomTypeRet(proto)
+    CRoleDisplayMgr:SetPanelRandomTypeRet(proto.random_type)
+    if(self.SetPanelRandomTypeCB) then 
+        self.SetPanelRandomTypeCB()
+    end     
+    self.SetPanelRandomTypeCB = nil
+end
+
+--获取累充的领取状态
+function PlayerProto:GetColletDataByType(_type)
+    local proto = {"PlayerProto:GetColletDataByType",{type = _type}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:GetColletDataByTypeRet(proto)
+    if(proto.type==eCollectType.Recharge1)then 
+        AccuChargeMgr:GetColletDataByTypeRet(proto)
+    elseif(proto.type==eCollectType.Recharge2)then 
+        AccuChargeMgr:GetColletDataByTypeRet3(proto)
+    end 
+end
+
+--领取奖励(会先返回GetColletDataByTypeRet)
+function PlayerProto:TakeColletRewardByType(_type,_id,_cb)
+    self.TakeColletRewardByTypeCB = _cb
+    local proto = {"PlayerProto:TakeColletRewardByType",{type = _type,id = _id}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:TakeColletRewardByTypeRet(proto)
+    if(self.TakeColletRewardByTypeCB) then 
+        self.TakeColletRewardByTypeCB(proto.id)
+    end 
+    self.TakeColletRewardByTypeCB = nil
+    EventMgr.Dispatch(EventType.Activity_List_Panel_Refresh)
 end

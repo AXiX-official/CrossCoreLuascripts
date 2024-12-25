@@ -36,7 +36,7 @@ end
 -- @_isUseShopImg:是否使用特殊宣传图
 -- @return 
 -- ==============================--
-function Refresh(_modelId, _posType, _callBack, _isUseShopImg)
+function Refresh(_modelId, _posType, _callBack, _isUseShopImg,_needClick)
 
     if (not isInit and _modelId == nil or _posType == nil) then
         return
@@ -49,6 +49,9 @@ function Refresh(_modelId, _posType, _callBack, _isUseShopImg)
         oldModelId = "";
     end
     isUseShopImg = _isUseShopImg;
+    if(_needClick~=nil)then 
+        needClick = _needClick
+    end 
     -- 重置点击记录
     if (oldModelId ~= nil) then
         if (oldModelId ~= _modelId) then

@@ -330,62 +330,48 @@ end
 
 --点击购买
 function OnClickPay()
-
 	if CSAPI.IsADV() then
 		if CSAPI.RegionalCode()==3 then
-			if CSAPI.PayAgeTitle() then
+			local priceInfo=commodity:GetRealPrice();
+			if priceInfo and priceInfo[1].id==-1 and priceInfo[1].num>0 and CSAPI.PayAgeTitle() then
 				CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
-					AdvDeductionvoucher.IsDeductionvoucher=true;
-					ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+					OnClickPayADVMain();
 				end})
 			else
-				AdvDeductionvoucher.IsDeductionvoucher=true;
-				ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+				OnClickPayADVMain();
 			end
 		else
-			AdvDeductionvoucher.IsDeductionvoucher=true;
-			ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+			OnClickPayADVMain();
 		end
-		--AdvDeductionvoucher.IsDeductionvoucher=true;
-		--ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
 	else
 		ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,voucherList,OnSuccess);
 	end
-
-
-	-- Close();
-	-- local priceInfo=commodity:GetRealPrice();
-	-- local channelType=CSAPI.GetChannelType();
-	-- if priceInfo and priceInfo[1].id==-1 and (channelType==ChannelType.Normal or channelType==ChannelType.TapTap) then
-	-- 	 CSAPI.OpenView("SDKPaySelect",commodity);
-	-- else
-	-- 	if commodityType==1 then --购买道具
-	-- 		ShopCommFunc.BuyCommodity(commodity,currNum,OnSuccess);
-	-- 	elseif commodityType==2 then  --兑换随机物品
-	-- 		ShopCommFunc.ExchangeCommodity(commodity,currNum,OnSuccess);
-	-- 	end
-	-- end
-	-- if commodityType==1 then --购买道具
-	-- 	ShopCommFunc.BuyCommodity(commodity,currNum,OnSuccess);
-	-- elseif commodityType==2 then  --兑换随机物品
-	-- 	currNum=1;
-	-- 	ShopCommFunc.ExchangeCommodity(commodity,1,OnSuccess);
-	-- end
 end
+---方法整合 ---点击购买
+function OnClickPayADVMain()
+	AdvDeductionvoucher.IsDeductionvoucher=true;
+	ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+end
+---抵扣卷支付按钮事件
 function OnClickVoucherPay()
 	if CSAPI.RegionalCode()==3 then
-		if CSAPI.PayAgeTitle() then
+		local priceInfo=commodity:GetRealPrice();
+		if priceInfo and priceInfo[1].id==-1 and priceInfo[1].num>0 and CSAPI.PayAgeTitle() then
 			CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
-				ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false)
+				OnClickVoucherPayADVMain();
 			end})
 		else
-			ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
+			OnClickVoucherPayADVMain();
 		end
 	else
-		ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
+		OnClickVoucherPayADVMain();
 	end
-	---ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
-end--购买成功
+end
+---方法整合 抵扣卷
+function OnClickVoucherPayADVMain()
+	ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false);
+end
+
 --购买成功
 function OnSuccess(proto)
 	Close();

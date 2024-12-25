@@ -1248,7 +1248,7 @@ function RefreshActivityDatas()
                         openState1 = activityTypeDatas[sectionData:GetType()][1]:GetOpenState()
                         openState2 = sectionData:GetOpenState()
                         if openState1 ~= openState2 then
-                            if openState2 > 0 and openState2 > openState1 then
+                            if openState2 > openState1 then
                                 activityTypeDatas[sectionData:GetType()][1] = sectionData
                             end
                         elseif id > sectionData:GetID() then

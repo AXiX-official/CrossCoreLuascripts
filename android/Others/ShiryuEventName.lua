@@ -98,7 +98,12 @@ ShiryuEventName = {
     MJ_RESTRUCTURE_REPLACE = "mj_restructure_replace";
     ---44.点击“确定”构建结果
     MJ_RESTRUCTURE_RESULT = "mj_restructure_result";
-
+    ---Unity 客户端运行版本
+    Unity_Client_Version="Client_Version";
+    ---Unity 客户端Lua 接收登录返回数据打点
+    Unity_SDK_LuaLoginData="Unity_SDK_LuaLoginData";
+    ---Unity 客户端Lua  LoginProto_SendLoginGame 发送给服务端数据打点
+    Unity_LoginProto_SendLoginGame="Unity_LoginProto_SendLoginGame";
 
 }
 local this = ShiryuEventName

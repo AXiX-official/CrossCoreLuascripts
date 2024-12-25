@@ -14,9 +14,11 @@ function Skill980101701:OnBorn(caster, target, data)
 		return
 	end
 	-- 980101701
-	local targets = SkillFilter:Group(self, caster, target, 4,7)
-	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[980101701], caster, target, data, 980101701)
+	if self:Rand(6000) then
+		local targets = SkillFilter:Group(self, caster, target, 4,7)
+		for i,target in ipairs(targets) do
+			self:AddBuff(SkillEffect[980101701], caster, target, data, 980101701)
+		end
 	end
 end
 -- 攻击结束

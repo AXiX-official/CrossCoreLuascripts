@@ -19,6 +19,13 @@ function Skill602800205:OnRoundOver(caster, target, data)
 	else
 		return
 	end
+	-- 8670
+	local count670 = SkillApi:GetCount(self, caster, target,3,602800206)
+	-- 8879
+	if SkillJudger:Less(self, caster, target, true,count670,8) then
+	else
+		return
+	end
 	-- 602800215
 	self:CallOwnerSkill(SkillEffect[602800215], caster, self.card, data, 602800405)
 end

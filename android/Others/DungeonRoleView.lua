@@ -68,7 +68,7 @@ function OnDestroy()
 end
 
 function OnInit()
-    UIUtil:AddTop2("DungeonRoleView", topParent, OnClickBack)
+    UIUtil:AddTop2("DungeonRole", topParent, OnClickBack)
 end
 
 function Update()

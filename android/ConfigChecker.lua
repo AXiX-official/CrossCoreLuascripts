@@ -166,11 +166,13 @@ function ConfigChecker:CardData(cfgs)
     ---------------------------------------------------------------------
     -- 遍历所有卡牌
     g_fightCardCnt = 0
+    g_cardNumByQuality = {}
 
     for k, v in pairs(cfgs) do
         if v.get_from_gm then
             if CARD_TYPE.FIGHT == v.card_type then
                 g_fightCardCnt = g_fightCardCnt + 1
+                GCalHelp:Add(g_cardNumByQuality, v.quality, 1)
             end
         end
 
@@ -563,6 +565,7 @@ function ConfigChecker:MonsterData(cfg)
                     table.insert(uniteIDs, _cfg.id)
                 end
             end
+
             if (#uniteIDs > 0) then
                 table.sort(
                         uniteIDs,
@@ -1735,37 +1738,42 @@ function ConfigChecker:CfgActive(cfgs)
 end
 
 function ConfigChecker:CfgActiveEntry(cfgs)
-    local battleEndTimeTable = {}
-    for _, v in pairs(cfgs) do
-        if v.begTime then
+    if IS_SERVER then
+        local battleEndTimeTable = {}
+        for _, v in pairs(cfgs) do
+
+            ASSERT(v.begTime, string.format("CfgActiveEntry() not begTime:%s", v.begTime))
             v.nBegTime = GCalHelp:GetTimeStampBySplit(v.begTime, v)
-        end
-        if v.endTime then
+
+            ASSERT(v.endTime, string.format("CfgActiveEntry() not nEndTime:%s", v.endTime))
             v.nEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
-        end
-        if v.hardBegTime then
-            v.nHardBegTime = GCalHelp:GetTimeStampBySplit(v.hardBegTime, v)
-        end
-        if v.exBegTime then
-            v.nExBegTime = GCalHelp:GetTimeStampBySplit(v.exBegTime, v)
-        end
-        if v.battleendTime then
-            v.nBattleendTime = GCalHelp:GetTimeStampBySplit(v.battleendTime, v)
-            if v.config and v.nConfigID then
-                local config_table = _G[v.config]
-                if config_table and config_table[v.nConfigID] then
-                    local tar_config = config_table[v.nConfigID]
-                    if tar_config.sectionID then
-                        if not battleEndTimeTable[tar_config.sectionID] then
-                            battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
-                        else
-                            LogWarning('CfgActiveEntry sectionID出现重复%s:%s', v.config, v.nConfigID)
+
+            if v.hardBegTime then
+                v.nHardBegTime = GCalHelp:GetTimeStampBySplit(v.hardBegTime, v)
+            end
+
+            if v.exBegTime then
+                v.nExBegTime = GCalHelp:GetTimeStampBySplit(v.exBegTime, v)
+            end
+
+            if v.battleendTime then
+                v.nBattleendTime = GCalHelp:GetTimeStampBySplit(v.battleendTime, v)
+                if v.config and v.nConfigID then
+                    local config_table = _G[v.config]
+                    if config_table and config_table[v.nConfigID] then
+                        local tar_config = config_table[v.nConfigID]
+                        if tar_config.sectionID then
+                            if not battleEndTimeTable[tar_config.sectionID] then
+                                battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
+                            else
+                                LogI('CfgActiveEntry sectionID出现重复,id:' .. v.id .. ',config:' .. v.config .. ',nConfigID:' .. v.nConfigID)
+                            end
                         end
                     end
                 end
             end
+            _G['DupActiveBattleEndTime'] = battleEndTimeTable
         end
-        _G['DupActiveBattleEndTime'] = battleEndTimeTable
     end
 end
 
@@ -1954,8 +1962,15 @@ function ConfigChecker:CfgCommodity(cfgs)
 
     -- 计算操作
     for id, v in pairs(cfgs) do
-        if v.jCosts and v.jCosts[1] and v.jCosts[1][1] and v.jCosts[1][1] == -1 then
-            table.insert(g_ShopIsPayIds, id)
+        local isPayCommodity = false
+        for _, costKey in pairs(ShopPriceKey) do
+            if (v[costKey] and v[costKey][1] and v[costKey][1][1] and v[costKey][1][1] == -1) then
+                table.insert(g_ShopIsPayIds, id)
+                if isPayCommodity then
+                    ASSERT(false, string.format('商品id：%s 的jcost和jcost1不允许都为-1直购', v.id))
+                end
+                isPayCommodity = true
+            end
         end
 
         v.limitedTimes = {}
@@ -1967,7 +1982,7 @@ function ConfigChecker:CfgCommodity(cfgs)
         v.nBuyEnd = GCalHelp:GetTimeStampBySplit(v.sBuyEnd, v)
         if v.limitedTimeID then
             if v.nBuyStart > 0 or v.nBuyEnd > 0 then
-                LogE('CfgCommodity 的 v.id = %s，配置了limitedTimeID，不需要配v.sBuyStart和v.sBuyEnd', v.id)
+                ASSERT(false, string.format('CfgCommodity 的 v.id = %s，配置了limitedTimeID，不需要配v.sBuyStart和v.sBuyEnd', v.id))
                 break
             end
 
@@ -2095,6 +2110,8 @@ function ConfigChecker:CfgShopTab(cfgs)
         end
         local pageStartTime = GCalHelp:GetTimeStampBySplit(v.startTime, v)
         local pageEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
+        v.nStartTime = pageStartTime
+        v.nEndTime = pageEndTime
         table.insert(g_CfgShopTabOpenTime[v.group], {id = v.id, open_time = pageStartTime, close_time = pageEndTime})
     end
 end
@@ -2106,6 +2123,8 @@ function ConfigChecker:CfgShopPage(cfgs)
     for _, v in pairs(cfgs) do
         local pageStartTime = GCalHelp:GetTimeStampBySplit(v.openTime, v)
         local pageEndTime = GCalHelp:GetTimeStampBySplit(v.closeTime, v)
+        v.nStartTime = pageStartTime
+        v.nEndTime = pageEndTime
         table.insert(
                 g_CfgShopPageOpenTime,
                 {shop_id = v.id, group_id = nil, open_time = pageStartTime, close_time = pageEndTime}
@@ -2233,6 +2252,7 @@ function ConfigChecker:CfgSignReward(cfgs)
         info.nBegTime = GCalHelp:GetTimeStampBySplit(info.begTime, info)
         info.nEndTime = GCalHelp:GetTimeStampBySplit(info.endTime, info)
         info.nSendTime = GCalHelp:GetTimeStampBySplit(info.sendTime, info)
+        info.nSendTimeStop = GCalHelp:GetTimeStampBySplit(info.sendTimeStop, info)
     end
 end
 
@@ -2277,6 +2297,7 @@ function CommCalCfgTasks(cfgs, t)
     local stageTasks = {}
     --LogI("eStageTaskType:%s", t)
     local resetTypeTasks = {}
+    local returnTypeTasks = {}
 
     for _, cfg in pairs(cfgs) do
         if eStageTask[t] then
@@ -2288,12 +2309,22 @@ function CommCalCfgTasks(cfgs, t)
 
         if t == eTaskType.RegressionBind then
             local resetType = cfg.type
+            local returnType = cfg.playertype
+            if not returnTypeTasks[returnType] then
+                returnTypeTasks[returnType] = {}
+            end
+            table.insert(returnTypeTasks[returnType], cfg)
+
             if resetType == PeriodType.Day or resetType == PeriodType.Week then
                 -- 只有每日或每周刷新的任务才插入
-                if not resetTypeTasks[resetType] then
-                    resetTypeTasks[resetType] = {}
+                if not resetTypeTasks[returnType] then
+                    resetTypeTasks[returnType] = {}
                 end
-                table.insert(resetTypeTasks[resetType], cfg)
+                if not resetTypeTasks[returnType][resetType] then
+                    resetTypeTasks[returnType][resetType] = {}
+                end
+
+                table.insert(resetTypeTasks[returnType][resetType], cfg)
             end
         end
 
@@ -2338,6 +2369,7 @@ function CommCalCfgTasks(cfgs, t)
         CommSetTaskFirstIdByList(firstTasks, cfgs)
     end
     if t == eTaskType.RegressionBind then
+        cfgs.returnTypeTasks = returnTypeTasks
         cfgs.resetTypeTasks = resetTypeTasks
     end
 end
@@ -2540,23 +2572,23 @@ function ConfigChecker:CfgRogueTask(cfgs)
     CommCalCfgTasks(cfgs, eTaskType.Rogue)
 end
 
--- function ConfigChecker:CfgRegressionBind(cfgs)
---     if IS_CLIENT then
---         -- IS_SERVER
---         return
---     end
+function ConfigChecker:CfgRegressionBind(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
 
---     CommCalCfgTasks(cfgs, eTaskType.RegressionBind)
--- end
+    CommCalCfgTasks(cfgs, eTaskType.RegressionBind)
+end
 
--- function ConfigChecker:CfgRegressionBindStage(cfgs)
---     if IS_CLIENT then
---         -- IS_SERVER
---         return
---     end
+function ConfigChecker:CfgRegressionBindStage(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
 
---     CommCalCfgTasks(cfgs, eTaskType.RegressionBindStage)
--- end
+    CommCalCfgTasks(cfgs, eTaskType.RegressionBindStage)
+end
 
 function ConfigChecker:CfgTotalBattleTask(cfgs)
     if IS_CLIENT then
@@ -2622,8 +2654,14 @@ function ConfigChecker:CfgTaskFinishVal(cfgs)
 end
 
 function ConfigChecker:CfgFurniture(cfgs)
-    -- for k, cfg in pairs(cfgs) do
-    -- end
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+    for k, cfg in pairs(cfgs) do
+        cfg.nBuyStart = GCalHelp:GetTimeStampBySplit(cfg.sBuyStart, cfg)
+        cfg.nBuyEnd = GCalHelp:GetTimeStampBySplit(cfg.sBuyEnd, cfg)
+    end
 end
 
 -- 计算主题表的舒适度和价格
@@ -2649,6 +2687,8 @@ function ConfigChecker:CfgFurnitureTheme(cfgs)
         cfg.comfort = comfort
         cfg.price_1 = {{id1, price_1}}
         cfg.price_2 = {{id2, price_2}}
+        cfg.nBuyStart = GCalHelp:GetTimeStampBySplit(cfg.sStart, cfg)
+        cfg.nBuyEnd = GCalHelp:GetTimeStampBySplit(cfg.sEnd, cfg)
     end
 end
 
@@ -2719,11 +2759,12 @@ function ConfigChecker:CfgDupDropCntAdd(cfgs)
         end
     end
 
-    -- LogDebug(
-    --         'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s',
-    --         g_AddDupMultiCnt,
-    --         g_ReCalAddDupMultiTime
-    -- )
+    -- LogTrace("ConfigChecker:CfgDupDropCntAdd()")
+    LogDebug(
+            'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s',
+            g_AddDupMultiCnt,
+            g_ReCalAddDupMultiTime
+    )
 end
 
 function ConfigChecker:CfgDupConsumeReduce(cfgs)
@@ -2928,6 +2969,9 @@ function ConfigChecker:CfgReturningActivity(cfgs)
                     end
                 end
             end
+
+            ccc.nStartTime = GCalHelp:GetTimeStampBySplit(ccc.starttime, ccc)
+            ccc.nEndTime = GCalHelp:GetTimeStampBySplit(ccc.endtime, ccc)
         end
     end
 end
@@ -2975,6 +3019,39 @@ function ConfigChecker:CfgItemPool(cfgs)
         end
     end
 end
+
+--- 绑定活动
+function ConfigChecker:CfgBindActive(cfgs)
+    g_curBindActiveId = nil
+    g_curBindActiveCloseTime = nil
+
+    for id, cfg in pairs(cfgs) do
+        LogTable(cfg, 'ConfigChecker:CfgBindActive cfg')
+
+        table.sort(cfg.bindTypes)
+
+        cfg.nStartTime = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        local isInRange = GLogicCheck:IsInRange(cfg.nStartTime, cfg.nEndTime, CURRENT_TIME, true)
+        if isInRange and not g_curBindActiveId then
+            g_curBindActiveId = cfg.id
+            g_curBindActiveCloseTime = cfg.nEndTime
+        end
+
+        for _, info in pairs(cfg.infos) do
+            -- LogTable(info, 'ConfigChecker:CfgBindActive')
+            info.teskGetLimit = {}
+            for _, limit in ipairs(info.taskRewardLimit) do
+                local resetType, id, num = limit[1], limit[2], limit[3]
+                if resetType then
+                    local limitInfo = GCalHelp:GetTb(info.teskGetLimit, resetType)
+                    GCalHelp:Add(limitInfo, id, num)
+                end
+            end
+        end
+    end
+end
+
 function ConfigChecker:DungeonGroup(cfgs)
     g_CalGroupStarIxs = {}
     for id, cfg in pairs(cfgs) do
@@ -3084,5 +3161,12 @@ function ConfigChecker:cfgColosseumEquip(cfgs)
             info.sumWeight = weight + sumWeight
             sumWeight = sumWeight + info.weight
         end
+    end
+end
+function ConfigChecker:cfgGlobalBoss(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.nBeginTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.nEndTime, cfg)
+        assert(cfg.nBeginTime < cfg.nEndTime, "boss开启时间范围有误")
     end
 end

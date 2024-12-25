@@ -114,6 +114,7 @@ end
 
 ---4.登录数据返回
 function this.SDKShiryuSDKLogincomplete(datapacket)
+    if  this.ShiryuLogin.success then  LogError("存在账号重复登录未退登行为！主动退登")   this.Logout() return ; end
     this.ShiryuLogin={}
     this.ShiryuLogin.success=datapacket.success;
     this.ShiryuLogin.uid=datapacket.uid;
@@ -137,6 +138,8 @@ function this.SDKShiryuSDKLogincomplete(datapacket)
     else
         Log("-------------Login -fail-----------------------")
     end
+    local LoginBackData=table.tostring(this.ShiryuLogin,true);
+    BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_SDK_LuaLoginData,{SDKShiryuLoginBackData=LoginBackData})
 end
 
 ---5.退出登录成功返回

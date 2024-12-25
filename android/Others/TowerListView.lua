@@ -210,8 +210,7 @@ function SetBtnState()
             end 
         else
             ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .. "_3")
-            local costNum = cfg.enterCostHot and cfg.enterCostHot or 0
-            costNum = cfg.winCostHot and costNum + cfg.winCostHot or costNum
+            local costNum = DungeonUtil.GetHot(cfg)
             costNum = StringUtil:SetByColor(costNum .. "", math.abs(costNum) <= PlayerClient:Hot() and "191919" or "CD333E")
             CSAPI.SetText(txtCost, costNum .. "")
             LanguageMgr:SetText(txt_cost, 15004)
@@ -261,7 +260,7 @@ function OnClickDirll()
     end
 end
 
-function OnFightOverCB(stage, winer)
+function OnFightOverCB(stage, winer, nDamage)
     if currItem and currItem.GetCfg() and currItem.GetCfg().id then
         DungeonMgr:SetCurrId1(currItem.GetCfg().id)
     end
@@ -303,8 +302,8 @@ function OnClickRecover()
             local hour = timeTab.hour > 0 and timeTab.hour or "0"
             local min = timeTab.minute > 0 and timeTab.minute  or "0"
             Tips.ShowTips(LanguageMgr:GetByID(49016,hour,min))
+        end
     end
-end
 end
 
 function OnClickReturn()

@@ -26,5 +26,5 @@ function Buffer4102102:OnBefourHurt(caster, target)
 	-- 8447
 	local c47 = SkillApi:GetAttr(self, self.caster, target or self.owner,4,"defense")
 	-- 4102102
-	self:AddTempAttr(BufferEffect[4102102], self.caster, target or self.owner, nil,"damage",-(0.1+c47/7500))
+	self:AddTempAttr(BufferEffect[4102102], self.caster, self.caster, nil, "damage",-(0.1+c47/7500))
 end

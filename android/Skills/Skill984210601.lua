@@ -23,5 +23,15 @@ function Skill984210601:OnBefourHurt(caster, target, data)
 	-- 8459
 	local count59 = SkillApi:GetAttr(self, caster, target,2,"defense")
 	-- 984210601
-	self:AddTempAttr(SkillEffect[984210601], caster, self.card, data, "damage",count816-count59)
+	self:AddTempAttr(SkillEffect[984210601], caster, self.card, data, "attack",math.max((count816-count59)*10,0))
+end
+-- 入场时
+function Skill984210601:OnBorn(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 984210603
+	self:AddBuff(SkillEffect[984210603], caster, self.card, data, 980100607)
 end

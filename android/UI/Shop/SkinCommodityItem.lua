@@ -68,11 +68,18 @@ function Refresh(_data,_elseData)
         elseif getType~=SkinGetType.Store then
             SetGetTips(getTips);
         else
-            local cost=this.data:GetRealPrice();
-            if cost and cost[1].id==-1 then
+            local costs={};
+            if this.data:HasOtherPrice(ShopPriceKey.jCosts1) then
+                costs={this.data:GetRealPrice()[1],this.data:GetRealPrice(ShopPriceKey.jCosts1)[1]};
+            else
+                costs=this.data:GetRealPrice();
+            end
+            if costs and #costs>1 then
+                currPrice=dPriceObj;
+            elseif costs and costs[1].id==-1 then
                 currPrice=priceObj2;
             end
-            SetCost(cost,isOver);
+            SetCost(costs,isOver);
         end
     else
         LogError("未找到对应的模型Id");
@@ -130,6 +137,7 @@ function SetOver(isOver)
     CSAPI.SetGOActive(priceObj,false);
     CSAPI.SetGOActive(priceObj2,false);
     CSAPI.SetGOActive(priceObj3,false);
+    CSAPI.SetGOActive(dPriceObj,false);
     CSAPI.SetGOActive(freeObj,true);
     CSAPI.SetText(txt_free,LanguageMgr:GetByID(18068));
 end
@@ -150,6 +158,23 @@ function SetCost(cost,isOver)
                 LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
             end
             CSAPI.SetText(txt_price,tostring(cost[1].num));
+        elseif currPrice==dPriceObj then
+            CSAPI.SetGOActive(dMNode,cost[1].id~=-1 )
+            CSAPI.SetGOActive(pnIcon1,cost[1].id==-1 )
+            if cost[1].id~=-1 then
+                ShopCommFunc.SetPriceIcon(dMIcon1,cost[1]);
+            else
+                CSAPI.SetText(pnIcon1,LanguageMgr:GetByID(18013));
+            end
+            CSAPI.SetGOActive(dMNode2,cost[2].id~=-1 )
+            CSAPI.SetGOActive(pnIcon2,cost[2].id==-1 )
+            if cost[2].id~=-1 then
+                ShopCommFunc.SetPriceIcon(dMIcon2,cost[2]);
+            else
+                CSAPI.SetText(pnIcon2,LanguageMgr:GetByID(18013));
+            end
+            CSAPI.SetText(txt_dPrice1,tostring(cost[1].num));
+            CSAPI.SetText(txt_dPrice2,tostring(cost[2].num));
         else
             local cfg = Cfgs.ItemInfo:GetByID(cost[1].id);
             if cfg and cfg.icon then
@@ -164,16 +189,19 @@ function SetCost(cost,isOver)
             CSAPI.SetGOActive(priceObj,currPrice==priceObj);
             CSAPI.SetGOActive(priceObj2,currPrice==priceObj2);
             CSAPI.SetGOActive(priceObj3,currPrice==priceObj3);
+            CSAPI.SetGOActive(dPriceObj,currPrice==dPriceObj);
         else
             CSAPI.SetGOActive(priceObj,false);
             CSAPI.SetGOActive(priceObj2,false);
             CSAPI.SetGOActive(priceObj3,false);
+            CSAPI.SetGOActive(dPriceObj,false);
             CSAPI.SetGOActive(freeObj,true);
         end
     else
         CSAPI.SetGOActive(priceObj,false);
         CSAPI.SetGOActive(priceObj2,false);
         CSAPI.SetGOActive(priceObj3,false);
+        CSAPI.SetGOActive(dPriceObj,false);
         CSAPI.SetGOActive(freeObj,true);
     end
 end

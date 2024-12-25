@@ -14,7 +14,7 @@ function Skill980100601:OnBorn(caster, target, data)
 		return
 	end
 	-- 980100601
-	self:AddBuffCount(SkillEffect[980100601], caster, self.card, data, 980100601,30,30)
+	self:AddBuffCount(SkillEffect[980100601], caster, self.card, data, 980100601,15,15)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -31,14 +31,14 @@ function Skill980100601:OnRoundOver(caster, target, data)
 		return
 	end
 	-- 980100602
-	self:AddBuffCount(SkillEffect[980100602], caster, self.card, data, 980100601,-1,30)
+	self:AddBuffCount(SkillEffect[980100602], caster, self.card, data, 980100601,-1,15)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
 	-- 980100604
-	self:AddBuffCount(SkillEffect[980100604], caster, self.card, data, 980100603,1,30)
+	self:AddBuffCount(SkillEffect[980100604], caster, self.card, data, 980100603,1,15)
 end
 -- 攻击结束
 function Skill980100601:OnAttackOver(caster, target, data)
@@ -58,7 +58,7 @@ function Skill980100601:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 980100605
-	self:OwnerAddBuffCount(SkillEffect[980100605], caster, self.card, data, 980100601,-1,30)
+	self:OwnerAddBuffCount(SkillEffect[980100605], caster, self.card, data, 980100601,-1,15)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -75,5 +75,5 @@ function Skill980100601:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 980100606
-	self:OwnerAddBuffCount(SkillEffect[980100606], caster, self.card, data, 980100603,1,30)
+	self:OwnerAddBuffCount(SkillEffect[980100606], caster, self.card, data, 980100603,1,15)
 end

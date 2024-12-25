@@ -149,7 +149,7 @@ function OnClickPay()
                 return
             end
             func = function()
-                ShopProto:Buy(data.commId, TimeUtil:GetTime(), count, tab.selIndex == 0 and "price_1" or "price_2",nil,
+                ShopProto:Buy(data.commId, TimeUtil:GetTime(), count, tab.selIndex == 0 and "price_1" or "price_2",nil,nil,
                     function(proto)
                         EventMgr.Dispatch(EventType.Shop_View_Refresh);
                         if proto and next(proto.gets) then

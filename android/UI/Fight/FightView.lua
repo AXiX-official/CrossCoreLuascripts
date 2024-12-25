@@ -204,7 +204,6 @@ function InitListener()
     
 end
 function OnDestroy()
-
     AdaptiveConfiguration.LuaView_Lua_Closed("FigHtView");
     eventMgr:ClearListener();
 
@@ -617,10 +616,28 @@ function UpdateInfo()
         end
 
         local currHp,maxHp,buffHp = character.GetHpInfo();
-               
+   
         UpdateBar(hpBar,nil,currHp,maxHp,false);
-        --txtHp.text = "<color=#ffffff><size=30>" .. currHp .. "</size></color>/" .. maxHp;
-        
+
+        local overflow = maxHp > 100000000;--血量溢出
+        if(overflow)then
+            if(not txtHp)then
+                CSAPI.SetGOActive(goHpText,false);
+                CSAPI.SetGOActive(goHpText1,true);
+
+                txtHp = ComUtil.GetCom(goHpText1,"Text");                
+            end
+            if(txtHp)then
+                txtHp.text = "<color=#ffffff><size=45>" .. currHp .. "</size></color>/" .. maxHp;
+            end
+        else
+            if(txtHp)then
+                CSAPI.SetGOActive(goHpText,true);
+                CSAPI.SetGOActive(goHpText1,false);
+                
+                txtHp = nil;
+            end             
+        end
         --UpdateBar(shieldBar,nil,currHp + buffHp,maxHp,true);
         --UpdateBar(spBar,nil,character.sp,character.spMax,true);
         

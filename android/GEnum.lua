@@ -157,6 +157,7 @@ DungeonResetType = {}
 
 DungeonResetType.Confrontation = 1 -- 1：镜像作战,竞技场
 DungeonResetType.Abattoir = 2 -- 2：角斗场赛季
+DungeonResetType.Shop = 3 -- 3：按对应商店的结束时间
 
 -------------------------------------------------------------------------------------------------
 -- 布尔类型
@@ -591,6 +592,7 @@ RewardRandomType.RANDOM_PERCENT = 2 -- 概率产出一个
 RewardRandomType.RANDOM_WEIGHT = 3 -- 多个物品按权重产出其中一个
 RewardRandomType.SINGLE_SELECT = 4 -- 单选择类型
 RewardRandomType.RANDOM_MULTI = 5 -- 随机多个， 根据品质决定掉落几个
+RewardRandomType.RANDOM_PLR_NOT_GET = 6 -- 还未获得的随机一个
 
 -- 跳转模块状态类型
 JumpModuleState = {
@@ -767,12 +769,14 @@ ActivityListType = {
     SignInGift = 1015,--付费签到
     SignInNational = 1016,--国庆签到
     GachaBall=1017,--扭蛋活动
---    AccuCharge2 = 1022, --累计充值2
+    AccuCharge2 = 1022, --累计充值2
+    AccuCharge3 = 1023, --累计充值3
+    Collaboration=1012,--回归绑定
 }
 
 ALType = {}
 ALType.Pay = 1 --付费
-ALType.SignInContinue = 2 --连续签到
+ALType.SignIn = 2 --签到
 
 
 -- 剧情站位
@@ -786,14 +790,16 @@ PlotAlign = {
 
 -- 剧情立绘动画类型
 PlotImgTweenType = {
-    None = 1,
     -- 无
-    Fade = 2,
+    None = 1,
     -- 淡入淡出
-    Move = 3,
+    Fade = 2,
     -- 移动
-    SplitImg = 4
+    Move = 3,
     -- 切割图片
+    SplitImg = 4,
+    -- 移动和渐变
+    MoveAndFade = 5,
 }
 
 -- 剧情类型
@@ -961,6 +967,7 @@ TeamConfirmOpenType.FieldBoss = 3 -- 战场boss
 TeamConfirmOpenType.Tower=4 --塔本
 TeamConfirmOpenType.Rogue=5 --
 TeamConfirmOpenType.TotalBattle =6 --十二星宫
+TeamConfirmOpenType.GlobalBoss = 7 --世界boss
 
 -- 商店商品的展示方式
 ShopShowType = {}
@@ -1084,6 +1091,8 @@ TeamOpenSetting.Rogue = 5 --肉鸽
 TeamOpenSetting.TotalBattle=6--总力战
 TeamOpenSetting.RogueS = 7 --战力派遣
 TeamOpenSetting.Colosseum = 8 --角斗场
+TeamOpenSetting.GlobalBoss= 9 --世界boss
+TeamOpenSetting.RogueT= 10 --限制版爬塔
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1347,6 +1356,8 @@ PlrMixIx.newPanelInfo = 62 -- 新看板信息
 PlrMixIx.openConditionTime = 63 -- 新手教程的完成时间
 PlrMixIx.BugFixIndex = 64 -- 已修复Bug下标，对应下标的方法只会运行一次
 PlrMixIx.icon_title = 65 -- 玩家称号
+PlrMixIx.globalBossUUID = 66 -- 当前挑战的世界bossUUID
+
 
 -- 图鉴
 ArchiveType = {}
@@ -1409,8 +1420,9 @@ eRecordType.ArmyCalFinishOnceCnt = 19 -- [军演服使用] 结算进度值，每
 eRecordType.ArmyCalFinishUseTime = 20 -- [军演服使用] 结算使用的时间戳
 eRecordType.OffLineMailMysqlTbChange = 21 -- [中心服] 玩家离线邮件转移表数据
 eRecordType.BindPlrActiveId = 22 -- [游戏服] 绑定活动id
---eRecordType.ZiLongPayDelIx = 23 -- 紫龙支付处理空订单的最大值
---eRecordType.CenterWebPayDelIx = 24 -- 中台支付处理空订单的最大值
+eRecordType.ZiLongPayDelIx = 23 -- 紫龙支付处理空订单的最大值
+eRecordType.CenterWebPayDelIx = 24 -- 中台支付处理空订单的最大值
+eRecordType.GlobalBossFindIx = 25 -- [中心服]新世界boss处理结算的批数
 
 GmInitPlrType = {}
 GmInitPlrType.Item = 1 -- 物品
@@ -1580,6 +1592,13 @@ TeamConditionLimitType={
     CoreType=4,--核心类型
     Territory=5,--地域
     Faction=6,--所属
+    LevelGreater=7,--大于等于等级
+    LevelLess=8,--小于等于等级
+    SuitType=9,--套装类型,需要五件装备都是该芯片
+    SuitQualityGreater=10,--大于等于套装稀有度
+    SuitQualityLess=11,--小于等于套装稀有度
+    SuitLevelGreater=12,--大于等于套装总等级
+    SuitLevelLess=13,--小于等于套装总等级
     CardID=98,--卡牌ID
     TeamItemNum=99,--队伍人数
 }
@@ -1602,6 +1621,8 @@ DungeonInfoType.NightPlot = "NightPlot"
 DungeonInfoType.NightDanger = "NightDanger"
 DungeonInfoType.NightSpecial = "NightSpecial"
 DungeonInfoType.Colosseum = "Colosseum" 
+DungeonInfoType.GlobalBoss = "GlobalBoss"
+DungeonInfoType.RogueT = "RogueT"
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
 RegressionPlrType = {}
@@ -1653,6 +1674,7 @@ eAchieveEventType.Upgrade = 1 -- 升级[参数 obj]
 eAchieveEventType.Break = 2 -- 突破[参数 obj]
 eAchieveEventType.PassCounterpart = 5 -- 副本通关[参数 obj]
 eAchieveEventType.TaskFinish = 8 -- 任务完成[参数 obj]
+eAchieveEventType.GlobalBoss = 11 -- 世界boss
 eAchieveEventType.Collect = 14 -- 收集
 eAchieveEventType.PassClass = 17 -- 副本通关卡牌阵营
 eAchieveEventType.PassCard = 18 -- 副本通关指定卡牌
@@ -1718,6 +1740,7 @@ eBadgedEventType.Upgrade = 1 -- 升级[参数 obj]
 eBadgedEventType.Break = 2 -- 突破[参数 obj]
 eBadgedEventType.PassCounterpart = 5 -- 副本通关[参数 obj]
 eBadgedEventType.TaskFinish = 8 -- 任务完成[参数 obj]
+eBadgedEventType.GlobalBoss = 11 -- 世界boss
 eBadgedEventType.Collect = 14 -- 收集
 eBadgedEventType.PassClass = 17 -- 副本通关卡牌阵营
 eBadgedEventType.PassCard = 18 -- 副本通关指定卡牌
@@ -1781,6 +1804,8 @@ eRankType = {}
 eRankType.StarRank1 = 9001 --十二星宫 9001
 eRankType.StarRank2 = 9002 --十二星宫 9002
 eRankType.StarRank3 = 9003 --十二星宫 9003
+eRankType.StarRank4 = 9004 --十二星宫 9004
+eRankType.StarRank5 = 9005 --十二星宫 9005
 
 eRankType.SummerActiveRank = 10001 --夏活无限血排行榜
 eRankType.Abattoir = 10002 -- 角斗场
@@ -1790,25 +1815,31 @@ cRankCfgNames = {
     { id = eRankType.StarRank1, name = '十二星宫 9001' },
     { id = eRankType.StarRank2, name = '十二星宫 9002' },
     { id = eRankType.StarRank3, name = '十二星宫 9003' },
+    { id = eRankType.StarRank4, name = '十二星宫 9004' },
+    { id = eRankType.StarRank5, name = '十二星宫 9005' },
     { id = eRankType.SummerActiveRank, name = '夏活无限血 10001' },
     { id = eRankType.Abattoir, name = '角斗场 10002' },
     { id = eRankType.CentaurRank, name = '人马无限血 10003' },
+    { id = eRankType.GlobalBoss, name = '新世界boss 10004' },
 }
 
 --收集活动类型
 eCollectType = {}
 eCollectType.Recharge = 1 --累计充值 1011
---eCollectType.Recharge1 = 2 --累计充值 1022
+eCollectType.Recharge1 = 2 --累计充值 1022
+eCollectType.Recharge2 = 3 --累计充值 1023
 
 eCollectTable = {}
 eCollectTable[eCollectType.Recharge] = 'CfgRechargeCount'
---eCollectTable[eCollectType.Recharge1] = 'CfgRechargeCount2'
+eCollectTable[eCollectType.Recharge1] = 'CfgRechargeCount2'
+eCollectTable[eCollectType.Recharge2] = 'CfgRechargeCount'
 
---eCollectTypeActiveId = {}
---eCollectTypeActiveId[eCollectType.Recharge] = 1011 --累计充值 1011
---eCollectTypeActiveId[eCollectType.Recharge1] = 1022 --累计充值 1022
+eCollectTypeActiveId = {}
+eCollectTypeActiveId[eCollectType.Recharge] = 1011 --累计充值 1011
+eCollectTypeActiveId[eCollectType.Recharge1] = 1022 --累计充值 1022
+eCollectTypeActiveId[eCollectType.Recharge2] = 1023 --累计充值 1023
 
---GenEnumNameByVal('eCollectTypeActive', eCollectTypeActiveId)
+GenEnumNameByVal('eCollectTypeActive', eCollectTypeActiveId)
 
 -- 回归商店id
 eReturnPlrShopType = {}
@@ -1862,13 +1893,48 @@ eOpenConditionType = {}
 eOpenConditionType.Lv = 1 --等级
 eOpenConditionType.Dup = 2 --关卡
 
+-----------------------------------------------------------------------------------------------------------------
+--爱相随解锁类型
+eLovePlusUnLockType = {}
+eLovePlusUnLockType.CG = 1 
+eLovePlusUnLockType.Img = 2
+eLovePlusUnLockType.Chat = 3
+eLovePlusUnLockType.Label = 4
+eLovePlusUnLockType.Story = 5
+-----------------------------------------------------------------------------------------------------------------
 -- 角斗场状态
 eAbattoirState = {}
 eAbattoirState.START = 1
 eAbattoirState.OVER = 2
 eAbattoirState.REFRESH = 3
+
 -- 活动入口id
 eActiveEntryId = {}
 eActiveEntryId.STAR = 13 --十二星宫
 eActiveEntryId.PET = 16 --宠物
 
+-- 随机看板类型
+eRandomPanelType = {}
+eRandomPanelType.SINGLE = 1 --单人随机看板
+eRandomPanelType.DOUBLE = 2 --双人随机看板
+eRandomPanelType.ALL = 3 --全部一起勾选
+
+-- 新世界boss最大上榜人数
+GLOBAL_BOSS_MAX_RANK = 50
+
+--活动弹窗类型 
+eAEShowType = {}
+eAEShowType.Anniversary = 1
+
+--关联活动弹窗类型 活动入口表id
+eAEShowIdType = {}
+eAEShowIdType[1] = 31
+
+-----------------------------------------------------------------------------------------------------------------
+-- 物品数据数组下标枚举
+eItemArrIx = {}
+eItemArrIx.num = 1             -- 数量
+eItemArrIx.fixExpiryIx = 2     -- 固定过期时间值
+eItemArrIx.createTime = 3      -- 首次创建时间
+eItemArrIx.fixExpiryTime = 4   -- 固定过期时间
+eItemArrIx.dyExpiryArr = 5     -- 多堆叠过期动态时间 { {数量，过期时间}, {数量，过期时间} }

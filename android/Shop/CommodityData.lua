@@ -422,14 +422,15 @@ function this:GetBuyLimit()
     return canBuy
 end
 
--- 返回未打折的价格
-function this:GetPrice()
+-- 返回未打折的价格 key:ShopPriceKey
+function this:GetPrice(key)
     local priceInfo = nil
     local jCosts=nil;
+    key=key==nil and ShopPriceKey.jCosts or key
     if self.data and self.data.shop_config then
-        jCosts=self.data.shop_config.jCosts;
+        jCosts=self.data.shop_config[key] or nil;
     elseif self.cfg then
-        jCosts=self.cfg.jCosts;
+        jCosts=self.cfg.jCosts[key] or nil;
     end
     if jCosts then
         priceInfo = {}
@@ -443,10 +444,22 @@ function this:GetPrice()
     return priceInfo
 end
 
--- 返回打折的价格
-function this:GetRealPrice()
+function this:HasOtherPrice(shopPriceKey)
+    if shopPriceKey then
+        if self.data and self.data.shop_config  then
+            return self.data.shop_config[shopPriceKey]~=nil
+        elseif self.cfg and self.cfg[shopPriceKey] then
+            return true
+        end
+    end
+    return false
+end
+
+-- 返回打折的价格 key:ShopPriceKey
+function this:GetRealPrice(key)
+    key=key==nil and ShopPriceKey.jCosts or key
     local infos = nil
-    local priceInfo = self:GetPrice()
+    local priceInfo = self:GetPrice(key)
     local discount = self:GetNowDiscount()
     if priceInfo then
         infos = {}

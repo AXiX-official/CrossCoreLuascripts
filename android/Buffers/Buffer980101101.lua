@@ -8,8 +8,8 @@ function Buffer980101101:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer980101101:OnCreate(caster, target)
-	-- 8747
-	local c143 = SkillApi:ClassCount(self, self.caster, target or self.owner,4,1)
+	-- 8740
+	local c136 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,1)
 	-- 980101101
-	self:AddAttrPercent(BufferEffect[980101101], self.caster, target or self.owner, nil,"defense",0.2*c143)
+	self:AddAttrPercent(BufferEffect[980101101], self.caster, target or self.owner, nil,"defense",0.3*c136)
 end

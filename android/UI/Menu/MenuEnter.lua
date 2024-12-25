@@ -90,6 +90,8 @@ function OnClick()
             CSAPI.SetGOActive(newObj, isNew)
         end
         if (cfg.JumpID) then
+            Log("入口配置表信息:")
+            Log(cfg)
             JumpMgr:Jump(cfg.JumpID)
         end
     end

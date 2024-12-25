@@ -26,14 +26,16 @@ function Init(_playCB, _endCB, _needClick)
     isInit = true
 end
 
-function Refresh(_modelId, _posType, _callBack)
+function Refresh(_modelId, _posType, _callBack,_needClick)
     if (not isInit or _modelId == nil) then
         return
     end
     modelId = _modelId
     posType = _posType
     callBack = _callBack
-
+    if(_needClick~=nil)then 
+        needClick = _needClick
+    end 
     -- 重置点击记录
     if (oldModelId and oldModelId == _modelId) then
         if (callBack) then

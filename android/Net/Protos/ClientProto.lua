@@ -169,8 +169,9 @@ function ClientProto:InitFinishRet(proto)
     --服务器压力大，延迟到这里请求
     DormMgr:RequestDormProtoServerData();--先不请求试试看
 
+    CollaborationMgr:InitData();--初始化回归绑定活动
     ActivityMgr:CheckRedPointData() --用于活动
-    RegressionMgr:CheckRedPointData() --用于回归活动
+    RegressionMgr:CheckRedPointData() -- 回归活动
     EventMgr.Dispatch(EventType.InitFinishRet)
 end
 
@@ -258,8 +259,8 @@ function ClientProto:ActiveOpen(proto)
         if not proto.isFromLogin then --不是登录时更新
             ActivityMgr:RefreshOpenState()
             EventMgr.Dispatch(EventType.CfgActiveEntry_Change)
+        end
     end
-end
 end
 
 --服务器修改表字段

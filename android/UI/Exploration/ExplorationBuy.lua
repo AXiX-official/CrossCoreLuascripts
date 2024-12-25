@@ -218,56 +218,40 @@ function CreateRewards(itemList,curList,parent)
 end
 
 function OnClickPlus()
-    if CSAPI.RegionalCode()==3 then
-        if CSAPI.PayAgeTitle() then
-            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
-                OnClickBuy(ExplorationState.Plus);
-            end})
-        else
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
             OnClickBuy(ExplorationState.Plus);
-        end
+        end})
     else
         OnClickBuy(ExplorationState.Plus);
     end
 end
 
 function OnClickNormal()
-    if CSAPI.RegionalCode()==3 then
-        if CSAPI.PayAgeTitle() then
-            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
-                OnClickBuy(ExplorationState.Ex);
-            end})
-        else
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
             OnClickBuy(ExplorationState.Ex);
-        end
+        end})
     else
         OnClickBuy(ExplorationState.Ex);
     end
 end
 
 function OnClickPlusVoucher()
-    if CSAPI.RegionalCode()==3 then
-        if CSAPI.PayAgeTitle() then
-            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
-                OnClickBuy(ExplorationState.Plus,true);
-            end})
-        else
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
             OnClickBuy(ExplorationState.Plus,true);
-        end
+        end})
     else
         OnClickBuy(ExplorationState.Plus,true);
     end
 end
 
 function OnClickNormalVoucher()
-    if CSAPI.RegionalCode()==3 then
-        if CSAPI.PayAgeTitle() then
-            CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
-                OnClickBuy(ExplorationState.Ex,true);
-            end})
-        else
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
             OnClickBuy(ExplorationState.Ex,true);
-        end
+        end})
     else
         OnClickBuy(ExplorationState.Ex,true);
     end

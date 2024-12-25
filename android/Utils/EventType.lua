@@ -560,6 +560,8 @@ this.CfgActiveEntry_Change=180018;
 this.MenuBuy_RechargeCB=180019;
 --更换称号
 this.Head_Title_Change=180020;
+--累充领取s
+this.AccuChargeS_Get=180021;
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -873,6 +875,8 @@ this.Player_AbilityInfo_Refresh = 270012;
 this.CRoleDisplayMain_Refresh = 270013;
 --看板列表更新
 this.CRoleDisplayMain_Change = 270014;
+--随机看板刷新（移除，添加）
+this.CRoleDisplayS_Change = 270015;
 ----------------------------镜头相关事件
 --当前天空盒变化
 this.SkyBox_Changed = 280001;
@@ -1231,7 +1235,7 @@ this.Client_Init_Finish=550001;--客户端初始化完成
 
 -----------------------------------------回归相关 
 this.HuiGui_Check = 560001 --回归判断
-this.HuiGui_Res_Recovery = 560002 --资源找回 
+--this.HuiGui_Res_Recovery = 560002 --资源找回 
 
 -----------------------------------------成就
 this.Achievement_Data_Update = 570001 --数据更新
@@ -1251,7 +1255,7 @@ this.Collaboration_TaskTab_Change=610002;--回归绑定tab变更
 this.Collaboration_BindInvite_Ret=610003;--绑定请求结果返回
 this.Collaboration_BindRecoment_Update=610004;--推荐列表更新
 this.Collaboration_BindInvite_Update=610005;--申请绑定列表更新
-this.Collaboration_BindReward_Ret=610005;--领取阶段奖励回调
+this.Collaboration_BindReward_Ret=610009;--领取阶段奖励回调
 this.Collaboration_InviteOption_Ret=610006;--绑定操作结果返回
 this.Collaboration_StageTaskInfo_Ret=610007;--绑定任务阶段信息返回
 this.Collaboration_Invite_Req=610008;--别人邀请绑定我
@@ -1294,6 +1298,9 @@ this.Colosseum_RandomReward = 650002 --随机模式领奖
 this.Colosseum_GetData = 650003 --获取赛季数据
 ----------------------------------设置
 this.Setting_Live_Change = 660000 --直播设置
+----------------------------------新世界boss
+this.GlobalBoss_Data_Update = 670000 --数据刷新
+this.GlobalBoss_Rank_Update = 670001 --活动排名刷新
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
 this.SDK_ShiryuSDK_Init=800001;

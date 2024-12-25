@@ -58,7 +58,7 @@ function Refresh(_data,_elseData)
     -- ShopCommFunc.SetIconBorder(_data,_elseData.commodityType,border,icon)
     SetLimitTag(this.data:IsLimitTime(),this.data:GetEndBuyTips());
     
-    SetDiscount(this.data:GetNowDiscount())
+    SetDiscount(this.data:GetNowDiscountTips())
     local exStr=""
     local isDouble=false;
     if this.data:GetType()==CommodityItemType.Deposit then--充值类型,首充双倍逻辑
@@ -165,9 +165,13 @@ function SetAlpha(val)
 end
 
 function SetDiscount(discount)
-    local dis=math.floor(discount*10+0.5);
-    CSAPI.SetGOActive(discountObj,discount~=1);
-    CSAPI.SetText(txt_discount,string.format(LanguageMgr:GetByID(18074),dis));
+    CSAPI.SetGOActive(discountObj,discount~=nil);
+    if discount then
+        CSAPI.SetText(txt_discount,discount);
+    end
+    -- local dis=math.floor(discount*10+0.5);
+    -- CSAPI.SetGOActive(discountObj,discount~=1);
+    -- CSAPI.SetText(txt_discount,string.format(LanguageMgr:GetByID(18074),dis));
 end
 
 function SetCount(str)

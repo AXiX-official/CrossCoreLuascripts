@@ -9,19 +9,19 @@ end
 -- 创建时
 function Buffer980101801:OnCreate(caster, target)
 	-- 8756
-	local c150 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
+	local c152 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
 	-- 980101801
 	self:AddAttrPercent(BufferEffect[980101801], self.caster, target or self.owner, nil,"attack",1)
 	-- 8756
-	local c150 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
+	local c152 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
 	-- 980101802
 	self:AddAttr(BufferEffect[980101802], self.caster, target or self.owner, nil,"crit",1)
 	-- 8756
-	local c150 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
+	local c152 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
 	-- 980101803
 	self:AddAttr(BufferEffect[980101803], self.caster, target or self.owner, nil,"damage",1)
 	-- 8756
-	local c150 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
+	local c152 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,8)
 	-- 980101804
 	self:AddAttr(BufferEffect[980101804], self.caster, target or self.owner, nil,"bedamage",-0.5)
 end

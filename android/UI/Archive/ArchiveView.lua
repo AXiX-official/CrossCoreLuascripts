@@ -49,7 +49,7 @@ function InitRolePanel()
 	CSAPI.SetText(txtRoleNum2, "/" .. max)
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtRoleNum3, percent .. "%")
-	CSAPI.SetRTSize(roleLine, 298 * percent / 100, 36)
+	CSAPI.SetRTSize(roleLine, 27 + 271 * percent / 100, 36)
 	records["role"] = percent
 end
 
@@ -85,7 +85,7 @@ function InitEnemyPanel()
 	CSAPI.SetText(txtEnemyNum2, "/" .. max)
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtEnemyNum3, percent .. "%")
-	CSAPI.SetRTSize(enemyLine, 396 * percent / 100, 36)
+	CSAPI.SetRTSize(enemyLine, 27 + 369 * percent / 100, 36)
 	records["enemy"] = percent
 end
 
@@ -128,7 +128,7 @@ function InitMemoryPanel()
 	CSAPI.SetText(txtMemoryNum2, "/" .. max)
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtMemoryNum3, percent .. "%")
-	CSAPI.SetRTSize(memoryLine, 470 * percent / 100, 36)
+	CSAPI.SetRTSize(memoryLine, 27 + 443 * percent / 100, 36)
 	records["memory"] = percent
 end
 

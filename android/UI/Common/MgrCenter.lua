@@ -56,6 +56,7 @@ local mgrNames = {
 	"RogueMgr",
 	"TotalBattleMgr", --十二星宫
 	"AccuChargeMgr", --累计充值
+	"CollaborationMgr",--回归绑定
 	"PetActivityMgr",--宠物管理类
 	"CRoleDisplayMgr", --看板
 	"RogueSMgr",   --战力派遣
@@ -63,6 +64,7 @@ local mgrNames = {
 	"ColosseumMgr",
 	"HeadTitleMgr",
 	"ASMRMgr",
+	"GlobalBossMgr", --新世界boss
 }
 
 

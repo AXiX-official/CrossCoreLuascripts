@@ -11,5 +11,5 @@ function Buffer980101401:OnCreate(caster, target)
 	-- 8743
 	local c139 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,4)
 	-- 980101401
-	self:AddAttr(BufferEffect[980101401], self.caster, target or self.owner, nil,"speed",30*c139)
+	self:AddAttr(BufferEffect[980101401], self.caster, target or self.owner, nil,"speed",20*c139)
 end

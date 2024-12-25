@@ -60,7 +60,7 @@ function Skill4503001:OnBefourCritHurt(caster, target, data)
 		return
 	end
 	-- 4503021
-	self:AddTempAttr(SkillEffect[4503021], caster, caster, data, "crit",0.8)
+	self:AddTempAttr(SkillEffect[4503021], caster, caster, data, "crit",0.08)
 end
 function Skill4503001:tFunc_4503041_4503001(caster, target, data)
 	-- 8060
@@ -98,6 +98,13 @@ function Skill4503001:tFunc_4503041_4503031(caster, target, data)
 	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
 	-- 8112
 	if SkillJudger:Greater(self, caster, self.card, true,count29,0) then
+	else
+		return
+	end
+	-- 8702
+	local count702 = SkillApi:BuffCount(self, caster, target,2,3,1051)
+	-- 8917
+	if SkillJudger:Less(self, caster, target, true,count702,1) then
 	else
 		return
 	end

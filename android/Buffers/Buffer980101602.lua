@@ -6,29 +6,10 @@ Buffer980101602 = oo.class(BuffBase)
 function Buffer980101602:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 伤害前
-function Buffer980101602:OnBefourHurt(caster, target)
-	-- 8747
-	local c143 = SkillApi:ClassCount(self, self.caster, target or self.owner,4,1)
-	-- 8754
-	local c150 = SkillApi:GetAttr(self, self.caster, target or self.owner,1,"defense")
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, self.caster, target, true) then
-	else
-		return
-	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, self.caster, target, true) then
-	else
-		return
-	end
-	-- 980101102
-	self:AddHp(BufferEffect[980101102], self.caster, target or self.owner, nil,-1*c150*c143)
-end
 -- 创建时
 function Buffer980101602:OnCreate(caster, target)
 	-- 8745
 	local c141 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,6)
 	-- 980101602
-	self:AddAttr(BufferEffect[980101602], self.caster, target or self.owner, nil,"crit",0.1*c141)
+	self:AddAttr(BufferEffect[980101602], self.caster, target or self.owner, nil,"crit",0.08*c141)
 end

@@ -6,8 +6,8 @@ Skill984200701 = oo.class(SkillBase)
 function Skill984200701:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 攻击结束
-function Skill984200701:OnAttackOver(caster, target, data)
+-- 行动结束
+function Skill984200701:OnActionOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -19,5 +19,7 @@ function Skill984200701:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 984200701
-	self:AddBuff(SkillEffect[984200701], caster, target, data, 984200701)
+	if self:Rand(5000) then
+		self:AddBuff(SkillEffect[984200701], caster, target, data, 984200701)
+	end
 end

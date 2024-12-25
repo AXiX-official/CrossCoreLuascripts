@@ -401,6 +401,12 @@ local conf = {
 {'394',	'GlobalBossView',	'GlobalBoss/GlobalBossView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'395',	'GlobalBossList',	'GlobalBoss/GlobalBossListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'396',	'ShopMultPayView',	'Shop/ShopMultPayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'397',	'DungeonActivity10',	'DungeonActivity10/DungeonActivityView10',	'',	'',	'[[10035,140010]]',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'398',	'SneakMain',	'Sneak/SneakMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'399',	'MenuMore',	'Menu/MenuMore',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
+{'400',	'AnniversaryView',	'Activity7/AnniversaryView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'401',	'AnniversaryWindow',	'AnniversaryWindow/AnniversaryWindow',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'402',	'PackGetInfo',	'Goods/PackGetInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 },
 }
 --cfgview = conf

@@ -31,6 +31,9 @@ function this:UpdateInfo(proto)
         self.data.t_hot = proto.t_hot
         EventMgr.Dispatch(EventType.Player_HotChange) -- 推送体能刷新
     end
+    if(self.oldLv~=nil and self.oldLv~=self:GetLv())then 
+        MenuMgr:UpdateDatas() --刷新关卡解锁状态
+    end
     EventMgr.Dispatch(EventType.Player_Update)
 end
 

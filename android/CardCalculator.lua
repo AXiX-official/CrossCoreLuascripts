@@ -83,7 +83,7 @@ function GCardCalculator:CalLvlPropertys(cfgid, level, intensify_level, break_le
     end
 
     if not cfg then
-        LogWarning('CardData not find config: %d.', cfgid)
+        LogWarning('CardData not find config: %d, isMonster:%s.', cfgid, isMonster)
         return nil
     end
 

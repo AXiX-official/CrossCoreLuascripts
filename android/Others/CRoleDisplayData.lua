@@ -6,11 +6,12 @@ function this.New()
     return ins
 end
 
-function this:InitIndex(index)
+function this:InitIndex(index, ty)
     self.index = index
     -- 默认数据
     self.sNewPanel = {}
     self.sNewPanel.idx = index
+    self.sNewPanel.ty = ty or 1 -- 分类 1:6位置  2：随机单人  3：随机双人
     self.sNewPanel.ids = self:IsTwoRole() and {0, 0} or {0}
     self.sNewPanel.bg = 1
     self.sNewPanel.detail1 = {
@@ -32,7 +33,10 @@ function this:InitIndex(index)
 end
 
 function this:IsTwoRole()
-    return self.index == 6
+    if (self.sNewPanel.ty == 1) then
+        return self.index == 6
+    end
+    return self.sNewPanel.ty == 3
 end
 
 -- 服务器数据
@@ -45,6 +49,10 @@ function this:GetIndex()
 end
 function this:GetRet()
     return self.sNewPanel
+end
+
+function this:GetIdx()
+    return self.sNewPanel.idx
 end
 
 function this:GetIDs()
@@ -234,9 +242,9 @@ function this:InitDetail(slot, id)
     end
     local isLive2d = false
     if (isTop and self:HadL2D(slot)) then
-        if(self:GetCanUse(slot)) then 
+        if (self:GetCanUse(slot)) then
             isLive2d = true
-        elseif(not self:CheckIsHX(slot)) then 
+        elseif (not self:CheckIsHX(slot)) then
             isLive2d = true
             -- 突破皮肤  g_FHXOpenRole==true 并且可用
             -- 多人插图 g_FHXOpenPicture==true 并且可用
@@ -297,6 +305,79 @@ end
 
 function this:GetBG()
     return self:GetRet().bg or 1
+end
+
+----------------------------------------排序相关（仅单人）-------------------------------------------------
+
+-- 看板所属页  123：常规，单人页，多人页
+function this:GetTy()
+    return self.sNewPanel.ty or 1
+end
+
+-- 角色类型
+function this:GetRoleType()
+    if (not self.s_roleType) then
+        local id = self:GetIDs()[1]
+        self.s_roleType = id < 10000 and 2 or 1
+    end
+    return self.s_roleType
+end
+
+function this:InitSort()
+    if (self:GetRoleType() == 1) then
+        local id = self:GetIDs()[1]
+        local cfg = Cfgs.character:GetByID(id)
+        local roleCfg = Cfgs.CardData:GetByID(cfg.card_id)
+        self.s_skinType = cfg.skinType
+        self.s_camp = roleCfg.nClass
+        self.s_quality = roleCfg.quality
+    else
+        self.s_skinType = 0
+        self.s_camp = 0
+        self.s_quality = 0
+    end
+end
+
+-- 所属小队
+function this:GetCamp()
+    if (not self.s_camp) then
+        self:InitSort()
+    end
+    return self.s_camp
+end
+
+-- 皮肤类型
+function this:GetSkinType()
+    if (not self.s_skinType) then
+        self:InitSort()
+    end
+    return self.s_skinType
+end
+
+function this:GetQuality()
+    if (not self.s_quality) then
+        self:InitSort()
+    end
+    return self.s_quality
+end
+
+function this:GetThemeType()
+    if (not self.s_teamType) then
+        if (self:GetRoleType() == 2) then
+            local id = self:GetIDs()[1]
+            local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(id)
+            self.s_teamType = cfg.theme_type
+        else
+            self.s_teamType = 0
+        end
+    end
+    return self.s_teamType
+end
+
+--  {1商店皮肤  2跃升皮肤  3同调皮肤}
+function this:GetSkinTypeArr()
+    local arr = {self:GetSkinType()}
+    return arr
 end
 
 return this

@@ -11,6 +11,7 @@ end
 function SetImg()
 	local imgName = data:GetImageName()
 	if(imgName and imgName ~= "") then
+		--LogError(data:GetImgUrl().."/"..imgName)
 		c_MenuADItem:SetImage(clickNode, "menuaditem", imgName, data:GetImgUrl(), function()
 			CSAPI.SetScale(clickNode, 1, 1, 1)
 		end)

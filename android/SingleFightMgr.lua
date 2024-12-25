@@ -7,6 +7,7 @@ function SingleFightMgrServer:Init(...)
     FightMgrServer.Init(self, ...)
     self.nKillMonster = 0
     self.isServerMgr = true
+    self.nTotalDamage = 0
 end
 
 -- 广播消息
@@ -506,6 +507,13 @@ function CreateDirllFight(groupID, groupID2, cbOver, cid, model, modelA, skills)
     return CreateSimulateFight(groupID, groupID2, cbOver, os.time(), cid, model, modelA, skills)
 end
 
+function SingleFightMgrServer:DamageStat(caster, nDamage)
+    if caster:GetTeamID() ~= 1 then
+        return 
+    end
+    self.nTotalDamage = self.nTotalDamage + nDamage
+end
+
 -- 创建一个单机模拟战斗
 function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill, exData)
     LogDebugEx('CreateSimulateFight', groupID, groupID2, seed)
@@ -535,12 +543,12 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
     mgr:LoadConfig(groupID2, 1, exData.hpinfo)
     mgr:LoadData(1, data.data, nil, tCommanderSkill)
     mgr:AfterLoadData(exData)
-
+    mgr.isSingleFight = true
     mgr.Over = function(self, stage, winer)
-        LogDebugEx('CreateSimulateFight:Over', self.type, self.nDuplicateID, winer)
+        LogDebugEx('CreateSimulateFight:Over', self.type, self.nDuplicateID, winer,self.nTotalDamage)
         self:AddCmd(CMD_TYPE.End, {stage = stage, winer = winer})
         if cbOver then
-            cbOver(stage, winer)
+            cbOver(stage, winer,self.nTotalDamage)
         end
         -- g_FightMgrServer = nil
         FightMgrBase.Over(self, stage, winer)

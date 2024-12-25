@@ -13,5 +13,5 @@ function Buffer980100602:OnCreate(caster, target)
 	-- 980100602
 	self:AddAttr(BufferEffect[980100602], self.caster, self.card, nil, "speed",-90)
 	-- 980100605
-	self:AddAttr(BufferEffect[980100605], self.caster, self.card, nil, "attack",-12000)
+	self:AddAttr(BufferEffect[980100605], self.caster, self.card, nil, "attack",-9000)
 end

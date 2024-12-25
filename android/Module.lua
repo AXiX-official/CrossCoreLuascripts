@@ -174,6 +174,9 @@ _G.BadgeChangeInfo = require "BadgeChangeInfo"
 _G.ItemPoolInfo=require "ItemPoolInfo"
 _G.ItemPoolGoodsInfo=require "ItemPoolGoodsInfo"
 
+--回归绑定
+_G.CollaborationInfo=require "CollaborationInfo"
+
 --宠物活动
 _G.PetInfo=require "PetInfo"
 _G.PetArchiveInfo=require "PetArchiveInfo"

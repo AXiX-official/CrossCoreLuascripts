@@ -10,10 +10,10 @@ end
 function Skill102100301:DoSkill(caster, target, data)
 	-- 11121
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11121], caster, target, data, 0.2,4)
+	self:DamagePhysics(SkillEffect[11121], caster, target, data, 0.1667,4)
 	-- 11122
 	self.order = self.order + 1
-	self:DamageLight(SkillEffect[11122], caster, target, data, 0.4,1)
+	self:DamageLight(SkillEffect[11122], caster, target, data, 0.333,1)
 end
 -- 行动结束
 function Skill102100301:OnActionOver(caster, target, data)
@@ -30,5 +30,5 @@ function Skill102100301:OnActionOver(caster, target, data)
 		return
 	end
 	-- 102100301
-	self:RandAddBuff(SkillEffect[102100301], caster, self.card, data, 500+count63,6113,2)
+	self:RandAddBuff(SkillEffect[102100301], caster, self.card, data, 500+count63,6113,1)
 end

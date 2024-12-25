@@ -298,19 +298,19 @@ function this:TransPos(x, y, anchorIndex)
     return x, y
 end
 
---体力增幅
+-- 体力增幅
 function this:SetHotPoint(parent, isAdd, x, y, z, scale)
     return self:SetRedPoint2("Common/HotChange", parent, isAdd, x, y, z, 1)
 end
 
---限时多倍
+-- 限时多倍
 function this:SetDoublePoint(parent, isAdd, x, y, z, scale)
     return self:SetRedPoint2("Common/Double", parent, isAdd, x, y, z, 1)
 end
 
 -- 添加或者移除new
 function this:SetNewPoint(parent, isAdd, x, y, z, scale)
-    return self:SetRedPoint2("Common/NewP", parent, isAdd, x, y, z, 1)
+    return self:SetRedPoint2("Common/NewP", parent, isAdd, x, y, z, 1,"_new")
 end
 
 -- 添加或者移除红点
@@ -318,8 +318,13 @@ function this:SetRedPoint(parent, isAdd, x, y, z)
     return self:SetRedPoint2("Common/Red2", parent, isAdd, x, y, z, 1)
 end
 
+-- 添加或移除锁
+function this:SetLockPoint(parent, isAdd, x, y, z)
+    return self:SetRedPoint2("Common/Lock", parent, isAdd, x, y, z, 1, "_lock")
+end
+
 -- 添加或者移除红点
-function this:SetRedPoint2(path, parent, isAdd, x, y, z, scale)
+function this:SetRedPoint2(path, parent, isAdd, x, y, z, scale, eStr)
     if (parent) then
         local go = nil
         isAdd = isAdd == nil and true or isAdd
@@ -327,7 +332,7 @@ function this:SetRedPoint2(path, parent, isAdd, x, y, z, scale)
         y = y or 0
         z = z or 0
         scale = scale or 1
-        local redName = string.format("%s_%s_%s", x, y, z)
+        local redName = string.format("%s_%s_%s%s", x, y, z, eStr or "")
         local red = parent.transform:Find(redName)
         if (not isAdd) then
             if (red) then
@@ -425,6 +430,31 @@ function this:OpenPoputSpendView(titleID, desc, itemID, surecb, cancelcb)
     dialogdata.surecb = surecb
     dialogdata.cancelcb = cancelcb
     CSAPI.OpenView("PopupSpendView", dialogdata)
+end
+
+-- 今天不再提示弹窗
+function this:OpenTipsDialog(_key,_content, _okFunc, _cancelFunc,_titleID)
+    if(self:IsTipsDialogTick(_key))then 
+        if(_okFunc)then 
+            _okFunc()
+        end 
+        return
+    end
+    local dialogdata = {}
+    dialogdata.titleID = _titleID or 1045
+    dialogdata.key = _key
+    dialogdata.content = _content
+    dialogdata.okCallBack = _okFunc
+    dialogdata.cancelCallBack = _cancelFunc
+    CSAPI.OpenView("CreateSelectPanel", dialogdata)
+end
+function this:IsTipsDialogTick(_key)
+    local day = TimeUtil:GetTime3("day")
+    local dayRecord = PlayerPrefs.GetString(PlayerClient:GetUid() .. _key, "0")
+    if (dayRecord ~= "0" and dayRecord == tostring(day)) then
+        return true
+    end
+    return false
 end
 
 -- 移动
@@ -695,23 +725,23 @@ end
 
 -- 添加头像+头像框(自己)
 function this:AddTitle(parent, scale)
-    self:AddTitleByID(parent,scale,PlayerClient:GetIconTitle(),true)
+    self:AddTitleByID(parent, scale, PlayerClient:GetIconTitle(), true)
 end
 
 -- frameID头像框id，iconID头像id
-function this:AddTitleByID(parent,scale,titleID,isMy)
+function this:AddTitleByID(parent, scale, titleID, isMy)
     -- 真实性别和头像 
     scale = scale or 1
-    local itemGoName =  "RoleTitle"
+    local itemGoName = "RoleTitle"
     local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
         ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
             local item = ComUtil.GetLuaTable(go)
-            item.Refresh(scale, titleID,isMy)
+            item.Refresh(scale, titleID, isMy)
         end)
     else
         local item = ComUtil.GetLuaTable(itemGo.gameObject)
-        item.Refresh(scale, titleID,isMy)
+        item.Refresh(scale, titleID, isMy)
     end
 end
 
@@ -823,7 +853,7 @@ function this:OpenSweepView(cfgId, payFunc)
             local gets = sectionData:GetBuyGets()
             local cur = DungeonMgr:GetArachnidCount(sectionData:GetID())
             payFunc = payFunc or function(count)
-                PlayerProto:BuyArachnidCount(count, sectionData:GetID()) 
+                PlayerProto:BuyArachnidCount(count, sectionData:GetID())
             end
             local sweepData = SweepMgr:GetData(cfgId)
             if sweepData then
@@ -881,10 +911,10 @@ function this:SetLiveBroadcast(obj, isBlack)
         local systems = ComUtil.GetComsInChildren(obj, "ParticleSystem", true)
         if (systems ~= nil and systems.Length > 0) then
             for i = 0, systems.Length - 1 do
-                CSAPI.SetGOActive(systems[i].gameObject,_num==255)
+                CSAPI.SetGOActive(systems[i].gameObject, _num == 255)
             end
         end
-        
+
     end
 end
 

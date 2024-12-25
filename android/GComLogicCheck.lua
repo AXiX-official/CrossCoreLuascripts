@@ -21,64 +21,44 @@ end
 -- 2.字符的第二个字节及以后范围(针对多字节编码，如汉字)：(128-191)
 -- 3.(192，193和245-255)不会出现在UTF8编码中
 
--- 判断名字是否合法, 只检查名字里的ASCLL码（0-127）
--- 如果不是英文字母与数字则返回false，其余中文默认合法
-
 -- 检查名字是否合法，只能包含中日韩文、数字、大小写字母、空格
+-- 检查名字里是否前后有空格，或者是全空格的情况
 function GLogicCheck:CheckNameLegal(plr, str)
     if not str or type(str) ~= 'string' or #str <= 0 then
         GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
         return
     end
 
-    local k = 1
-    while true do
-        if k > #str then
-            break
-        end
-        local c = string.byte(str, k)
-        if not c then
-            break
-        end
-        if c < 192 then
-            if (c >= 48 and c <= 57) or (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c == 32) then
-                k = k + 1
-            else
-                GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
-                return false
-            end
-        elseif c < 224 then
-            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
-            return false
-        elseif c < 240 then
-            if c >= 228 and c <= 233 then
-                local c1 = string.byte(str, k + 1)
-                local c2 = string.byte(str, k + 2)
-                if c1 and c2 then
-                    local a1, a2, a3, a4 = 128, 191, 128, 191
-                    if c == 228 then
-                        a1 = 184
-                    elseif c == 233 then
-                        a2, a4 = 190, c1 ~= 190 and 191 or 165
-                    end
-                    if c1 >= a1 and c1 <= a2 and c2 >= a3 and c2 <= a4 then
-                        k = k + 3
-                    end
-                end
-            else
-                GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
-                return false
-            end
-        elseif c < 248 then
-            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
-            return false
-        elseif c < 252 then
-            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
-            return false
-        elseif c < 254 then
-            GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
-            return false
-        end
+    -- 检测头尾是空格的情况
+    if string.byte(str, 1) == 32
+        or string.byte(str, -1) == 32
+        then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return false
+    end
+
+    -- 检查纯空格的情况
+    local s =  string.match(str, "%s+")
+    if s == str then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return false
+    end
+
+    -- 检查是否是中日韩文、数字、大小写字母、空格
+    -- u20 空格
+    -- 4e00-9fff、3400-4dbf 中文
+    -- 3040-309f  日文
+    -- ac00-d7af  韩文
+    -- IsHangul   韩文
+    -- IsHiragana 日文平假名
+    -- IsKatakana 日文片假名
+    -- a-zA-Z0-9  大小写+数字
+    local pattern = "^[\u{20}\u{4e00}-\u{9fff}\u{3400}-\u{4dbf}\u{3040}-\u{309f}\u{ac00}-\u{d7af}\z{IsHangul}\z{IsHiragana}\z{IsKatakana}a-zA-Z0-9]*$"
+    local ok = string.match(str, pattern)
+
+    if not ok then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return false
     end
 
     return true
@@ -792,6 +772,7 @@ end
 -- -- buyNum: 商品购买数量
 -- -- plrLv: 玩家等级
 -- -- isAddVoucher: 消耗那边是否添加入消费券
+-- -- costsKey: 表示使用配置表的哪个字段扣费 ShopPriceKey枚举
 
 -- 参数参考
 -- local productCfg = CfgCommodity[50001]
@@ -800,17 +781,18 @@ end
 -- local buyNum = 1
 -- local plrLv = 1
 -- local isAddVoucher = false
+-- local costsKey = ShopPriceKey.jCosts
 
 -- ret:
 -- -- isOk
 -- -- tipStr 提示表 字符id
 -- -- sumReduces { {id, num}, {id, num} }, 抵扣券之后扣除的列表 [isOk 为 true 才会有]
-function GLogicCheck:IsCanUseVoucher(productCfg, vouchers, curTime, buyNum, plrLv, isAddVoucher)
+function GLogicCheck:IsCanUseVoucher(productCfg, vouchers, curTime, buyNum, plrLv, isAddVoucher, costsKey)
     if not vouchers or table.empty(vouchers) then
-        return true, 'ok', productCfg.jCosts
+        return true, 'ok', productCfg[costsKey]
     end
 
-    -- LogTable(productCfg.jCosts, "productCfg cost")
+    -- LogTable(productCfg[costsKey], "productCfg cost")
     if not productCfg.canUseVoucher or table.empty(productCfg.canUseVoucher) then
         return false, 'voucherCanNotUseVoucher'
     end
@@ -820,7 +802,7 @@ function GLogicCheck:IsCanUseVoucher(productCfg, vouchers, curTime, buyNum, plrL
     end
 
     local isDiscount = false
-    if productCfg.fDiscount and cfg.fDiscount > 0 then
+    if productCfg.fDiscount and productCfg.fDiscount > 0 then
         local disStart, disEnd = productCfg.nDiscountStart, productCfg.nDiscountEnd
         if self:IsInRange(disStart, disEnd, curTime, true) then
             isDiscount = true
@@ -838,7 +820,7 @@ function GLogicCheck:IsCanUseVoucher(productCfg, vouchers, curTime, buyNum, plrL
     local vCfg = CfgVoucher[iCfg.dy_value1]
     local reduceId = vCfg.reduceId
     
-    for _, cost in ipairs(productCfg.jCosts or {}) do
+    for _, cost in ipairs(productCfg[costsKey] or {}) do
         local costId, costNum = cost[1], cost[2]
         if costId == -1 then
             return false, 'voucherCanNotUseVoucher'

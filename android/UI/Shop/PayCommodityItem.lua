@@ -7,7 +7,7 @@ function Refresh(_data,_elseData)
     ResUtil.VCommodity:Load(icon,this.data:GetPackageIcon());
     SetLimitTag(this.data:IsLimitTime(),this.data:GetEndBuyTips());
     local getList=this.data:GetCommodityList();
-    SetDiscount(this.data:GetNowDiscount())
+    SetDiscount(this.data:GetNowDiscountTips())
     local isOver=this.data:IsOver();
     local cost=this.data:GetRealPrice();
     if cost and cost[1].id==-1 then
@@ -142,9 +142,13 @@ function SetExTips()
 end
 
 function SetDiscount(discount)
-    local dis=math.floor(discount*100+0.5);
-    CSAPI.SetGOActive(discountObj,discount~=1);
-    CSAPI.SetText(txt_discount,dis.."%");
+    -- local dis=math.floor(discount*100+0.5);
+    -- CSAPI.SetGOActive(discountObj,discount~=1);
+    -- CSAPI.SetText(txt_discount,dis.."%");
+    CSAPI.SetGOActive(discountObj,discount~=nil);
+    if discount then
+        CSAPI.SetText(txt_discount,discount);
+    end
 end
 
 --限时标签

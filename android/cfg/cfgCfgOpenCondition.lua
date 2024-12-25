@@ -39,6 +39,7 @@ local conf = {
 {'PetMain',	'PetMain',	'萌宠进化论',	'',	'',	'2007',	'',	''},
 {'RogueSView',	'RogueSView',	'战力调遣',	'',	'',	'2120',	'',	''},
 {'ColosseumView',	'ColosseumView',	'角斗场',	'',	'',	'2120',	'',	''},
+{'CollaborationMain',	'CollaborationMain',	'协同作战',	'',	'',	'2007',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

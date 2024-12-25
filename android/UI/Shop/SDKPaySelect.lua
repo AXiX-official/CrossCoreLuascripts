@@ -11,6 +11,8 @@ local itemDatas=nil;
 local currIndex=2;
 local currItemData=nil
 local items={};
+local shopPriceKey=ShopPriceKey.jCosts;
+
 function Awake()
     if CSAPI.IsADV() then
          currType=PayType.ZiLongDeductionvoucher;--紫龙抵扣券
@@ -38,6 +40,7 @@ function OnOpen()
     commodity=data.commodity;
     num=data.num or 1;
     func=data.func or nil;
+    shopPriceKey=data.shopPriceKey or ShopPriceKey.jCosts;
     SetItemData();
     Refresh();
     if CSAPI.IsADV() then
@@ -87,14 +90,14 @@ function Refresh()
             CSAPI.SetText(txt_moneyType,displayCurrency);
             local realPrice=commodity["data"]["displayPrice"];
             if realPrice==nil then
-                local realPrice1=commodity:GetRealPrice();
+                local realPrice1=commodity:GetRealPrice(shopPriceKey);
                 realPrice=realPrice1[1].num*num;
             end
             CSAPI.SetText(txt_price,tostring(realPrice));
 
         else
             CSAPI.SetText(txt_name,commodity:GetName());
-            local realPrice=commodity:GetRealPrice();
+            local realPrice=commodity:GetRealPrice(shopPriceKey);
             CSAPI.SetText(txt_moneyType,LanguageMgr:GetByID(18013));
             CSAPI.SetText(txt_price,tostring(realPrice[1].num*num));
         end
@@ -142,7 +145,7 @@ function RefreshItems()
                 CSAPI.SetText(txt_moneyType,displayCurrency);
                 local realPrice=commodity["data"]["displayPrice"];
                 if realPrice==nil then
-                    local realPrice1=commodity:GetRealPrice();
+                    local realPrice1=commodity:GetRealPrice(shopPriceKey);
                     realPrice=realPrice1[1].num*num;
                 end
                 CSAPI.SetText(txt_price,tostring(realPrice));
@@ -155,7 +158,7 @@ function RefreshItems()
                     CSAPI.SetText(txt_moneyType,"");
                     CSAPI.SetText(txt_price,tostring(math.floor(realPrice/100)));
                 else
-                    local realPrice1=commodity:GetRealPrice();
+                    local realPrice1=commodity:GetRealPrice(shopPriceKey);
                     realPrice=realPrice1[1].num*num;
                     CSAPI.SetText(txt_moneyType,"");
                     CSAPI.SetText(txt_price,tostring(math.floor(realPrice)));
@@ -225,7 +228,7 @@ function OnClickOK()
     local isInstall=false;
     if  CSAPI.IsADV() and currType==PayType.ZiLongDeductionvoucher then
         ---海外才有紫龙支付
-        ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall)
+        ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall,nil,shopPriceKey)
     else
         if currItemData then
             if not CSAPI.IsPCPlatform() then
@@ -236,6 +239,6 @@ function OnClickOK()
                 tempType=currItemData.qrType;
             end
         end
-        ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall)
+        ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall,nil,shopPriceKey)
     end
 end

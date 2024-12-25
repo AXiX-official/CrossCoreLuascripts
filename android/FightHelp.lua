@@ -545,6 +545,7 @@ function FightHelp:StartRoomBossFight(player, nDuplicateID, groupID, data, exDat
     local mgr = CreateFightMgr(fid, groupID, nSceneType, seed, nDuplicateID)
     mgr.nPlayerLevel = player:Get('level')
     mgr.playerID = player.uid
+    mgr.uid = player.id
     mgr.oPlayer = player
 
     mgr:AddPlayer(player.id, 1)

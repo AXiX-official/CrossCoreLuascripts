@@ -89,14 +89,31 @@ function this:TrackEvents(_eventName, _datas, _type, _eventId,isNoRefresh)
 
         local ZTPreStr = "mj_"
         if _datas or string.sub(_eventName,1,string.len(ZTPreStr)) == ZTPreStr then
+            local cache = nil
             if _datas then
-                _datas = self:GetDomesticPointData(_datas)
+                cache = self:DeepCopy(_datas)
+                cache = self:GetDomesticPointData(cache)
             end
-            ShiryuSDK.TrackEvent(_eventName, nil, _datas)
+            ShiryuSDK.TrackEvent(_eventName, nil, cache)
             -- LogError("上报事件 " .. _eventName)
-            -- LogError(_datas)
         end
     end
+end
+
+function this:DeepCopy(obj)
+    local InTable = {};
+    local function Func(obj)
+        if type(obj) ~= "table" then   --判断表中是否有表
+            return obj;
+        end
+        local NewTable = {};  --定义一个新表
+        InTable[obj] = NewTable;  --若表中有表，则先把表给InTable，再用NewTable去接收内嵌的表
+        for k,v in pairs(obj) do  --把旧表的key和Value赋给新表
+            NewTable[Func(k)] = Func(v);
+        end
+        return setmetatable(NewTable, getmetatable(obj))--赋值元表
+    end
+    return Func(obj) --若表中有表，则把内嵌的表也复制了
 end
 
 function this:GetDomesticPointData(_datas)    

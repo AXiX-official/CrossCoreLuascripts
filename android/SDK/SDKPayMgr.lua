@@ -24,7 +24,7 @@ end
 function this.ClientInitFinish()
 	--检查一次发货信息
 	if CSAPI.IsADV() or CSAPI.IsDomestic() then
-         --海外和中台SDK 短线重连初始化 不清空
+		--海外和中台SDK 短线重连初始化 不清空
 	else
 		SDKPayMgr:SetLastPayInfo(nil,nil);
 	end
@@ -103,13 +103,18 @@ function this:HandleSDKPayResult(data)
 			local orderId=GCardCalculator:GetPayOrderStrId(data.OrderID, data.SDKType, channelType);
 			if data.GoodsID~=nil then
 				local comm=ShopMgr:GetFixedCommodity(tonumber(data.GoodsID));
-				if comm~=nil then
+				if comm~=nil then		
 					local priceInfo=comm:GetRealPrice();
-					-- LogError(orderId);
-					-- LogError(data.GoodsID);
-					--LogError("ReYunSDK:Pay------------------->"..tostring(orderId));
-					--ReYunSDK:SetPayEvent(orderId,payType,moneyType,priceInfo[1].num,{channelType=CSAPI.GetChannelName()});--传入价格，单位：元
-					JuLiangSDK:Purchase(comm:GetType(),comm:GetName(),comm:GetID(),1,payType,moneyType,true,  math.ceil(priceInfo[1].num)) --传入价格，单位：元,整数且向上取整
+					if priceInfo[1].id~=-1 and comm:HasOtherPrice(ShopPriceKey.jCosts1) then
+						priceInfo=comm:GetRealPrice(ShopPriceKey.jCosts1);
+						if priceInfo[1].id==-1 then
+							-- LogError(orderId);
+							-- LogError(data.GoodsID);
+							--LogError("ReYunSDK:Pay------------------->"..tostring(orderId));
+							--ReYunSDK:SetPayEvent(orderId,payType,moneyType,priceInfo[1].num,{channelType=CSAPI.GetChannelName()});--传入价格，单位：元
+							JuLiangSDK:Purchase(comm:GetType(),comm:GetName(),comm:GetID(),1,payType,moneyType,true,  math.ceil(priceInfo[1].num)) --传入价格，单位：元,整数且向上取整
+						end
+					end			
 				end
 			end
 		end
@@ -354,7 +359,7 @@ function this.IsMailReward(is_notice)
 end
 
 --获取订单ID func：回调
-function this:GenOrderID(commodity,payType,isInstall,func)
+function this:GenOrderID(commodity,payType,isInstall,shopPriceKey,func)
 	if commodity==nil then
 		LogError("传入的道具ID为nil!");
 		return;
@@ -366,6 +371,7 @@ function this:GenOrderID(commodity,payType,isInstall,func)
 		LogError("调用支付时获取当前服务器信息失败!终止支付流程...");
 		do return end;
 	end
+	local amout=commodity:GetRealPrice(shopPriceKey)[1].num;
 	if CSAPI.IsADV() or CSAPI.IsDomestic() then
 		local data = {}
 		local orderUrl = nil
@@ -378,12 +384,13 @@ function this:GenOrderID(commodity,payType,isInstall,func)
 				server_id=tostring(serverInfo.id),---服务器id
 				product_id=tostring(commodity["cfg"]["id"]),---商品id
 				subject=tostring(commodity:GetName()),---商品名称（读配置表）
-				amount=tostring(commodity["cfg"]["jCosts"][1][2]),---商品价格 元（读配置表）
+				amount=tostring(amout),---商品价格 元（读配置表）
 				--amount=tostring(6),---商品价格 元（读配置表）
 				zi_long_open_id=tostring(ShiryuSDK.ShiryuLogin.channelExts["openId"]),--- 紫龙用户 open_id
 				center_web_uid=tostring(ShiryuSDK.ShiryuLogin.uid),---中台 uid
 				channel=tostring(6),---固定值
 				pay_type=tostring(9),---固定值
+				useJCost=shopPriceKey,
 			}
 			orderUrl = ChannelWebUtil.Extends.ziLongpayClientGetOrderId;
 		else
@@ -395,12 +402,13 @@ function this:GenOrderID(commodity,payType,isInstall,func)
 				server_id=tostring(serverInfo.id),---服务器id
 				product_id=tostring(commodity["cfg"]["id"]),---商品id
 				subject=tostring(commodity:GetName()),---商品名称（读配置表）
-				amount=tostring(commodity["cfg"]["jCosts"][1][2]),---商品价格 元（读配置表）
+				amount=tostring(amout),---商品价格 元（读配置表）
 				--amount=tostring(6),---商品价格 元（读配置表）
 				thirty_part_id=tostring(ShiryuSDK.ShiryuLogin.channelExts["openId"]),--- 紫龙用户 open_id
 				center_web_uid=tostring(ShiryuSDK.ShiryuLogin.uid),---中台 uid
 				channel=tostring(6),---固定值
 				pay_type=tostring(12),---固定值   国内要求固定 12
+				useJCost=shopPriceKey,
 			}
 			orderUrl = ChannelWebUtil.Extends.clientGetOrderId_gn;
 		end
@@ -438,9 +446,10 @@ function this:GenOrderID(commodity,payType,isInstall,func)
 				ipv6=tostring(json.ipv6),
 				model=tostring(json.deviceName),
 				pkgname=tostring(CSAPI.GetPackageName()),
-				is_install=isInstall and "1" or "2"
+				is_install=isInstall and "1" or "2",
+				useJCost=shopPriceKey,
 			}
-			local realPrice=commodity:GetRealPrice();--各渠道传递给服务器的价格单位统一为元，后端处理不同渠道所需的实际单位
+			local realPrice=commodity:GetRealPrice(shopPriceKey);--各渠道传递给服务器的价格单位统一为元，后端处理不同渠道所需的实际单位
 			if payType==PayType.Alipay or payType==PayType.WeChat or payType==PayType.AlipayQR or payType==PayType.WeChatQR or payType==PayType.BsAli then
 				data.total_amount=tostring(realPrice[1].num);
 				data.currency="CNY";

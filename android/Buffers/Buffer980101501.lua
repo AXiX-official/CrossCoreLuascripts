@@ -11,5 +11,5 @@ function Buffer980101501:OnCreate(caster, target)
 	-- 8744
 	local c140 = SkillApi:ClassCount(self, self.caster, target or self.owner,3,5)
 	-- 980101501
-	self:AddAttr(BufferEffect[980101501], self.caster, target or self.owner, nil,"damage",0.1*c140)
+	self:AddAttr(BufferEffect[980101501], self.caster, target or self.owner, nil,"damage",0.05*c140)
 end

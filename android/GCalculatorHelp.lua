@@ -425,7 +425,7 @@ function GCalHelp:GetPeriodCnt(preTime, needDiff, curTime)
     end
 
     LogDebug(
-        'GCalHelp:GetPeriodCnt() preTime: %s, needDiff: %s, curTime: %s, diff: %s， periodCnt:%s, reduceTime:%s',
+        'GCalHelp:GetPeriodCnt() preTime: %s, needDiff: %s, curTime: %s, diff: %s, periodCnt:%s, reduceTime:%s',
         preTime,
         needDiff,
         curTime,
@@ -2372,6 +2372,7 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
     local sumMaxCnt = 0
 
     local notDelCnt = false
+    local isAddReturnAdd = false
 
     if cfgSection.multiId then
         local dropMultiCfg = CfgDupDropMulti[cfgSection.multiId]
@@ -2380,6 +2381,7 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
             sumMulti = sumMulti + dropMulti
             if dropCnt > 0 then
                 sumMaxCnt = sumMaxCnt + dropCnt
+                isAddReturnAdd = true
             else
                 notDelCnt = true
             end
@@ -2398,6 +2400,7 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
                 sumMulti = sumMulti + specialDropMulti
                 if specialDropCnt > 0 then
                     sumMaxCnt = sumMaxCnt + specialDropCnt
+                    isAddReturnAdd = true
                 else
                     notDelCnt = true
                 end
@@ -2405,7 +2408,12 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
         end
     end
 
-    sumMaxCnt = sumMaxCnt + returnAdd
+    if isAddReturnAdd then
+        sumMaxCnt = sumMaxCnt + returnAdd + g_AddDupMultiCnt
+    end
+
+    -- LogTrace("GCalHelp:GetMultiDropMaxCnt()")
+    -- LogDebug("sumMulti:%s, sumMaxCnt:%s, notDelCnt:%s, isUseSpecialMulti:%s, returnAdd:%s", sumMulti, sumMaxCnt, notDelCnt, isUseSpecialMulti, returnAdd)
     return sumMulti, sumMaxCnt, notDelCnt, isUseSpecialMulti
 end
 

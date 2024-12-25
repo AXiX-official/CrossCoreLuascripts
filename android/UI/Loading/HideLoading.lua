@@ -50,7 +50,7 @@ function ChangeBG()
         end
         ResUtil:LoadBigImg2(bg,"UIs/BGs/"..bgs[currIdx].."/bg",false);
     else
-        CSAPI.LoadImg(bg,"UIs/Loading/bg.png",false,nil,true);
+        ---CSAPI.LoadImg(bg,"UIs/Loading/bg.png",false,nil,true);
     end
 end
 

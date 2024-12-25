@@ -6,8 +6,8 @@ Buffer980101102 = oo.class(BuffBase)
 function Buffer980101102:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 伤害前
-function Buffer980101102:OnBefourHurt(caster, target)
+-- 创建时
+function Buffer980101102:OnCreate(caster, target)
 	-- 8747
 	local c143 = SkillApi:ClassCount(self, self.caster, target or self.owner,4,1)
 	-- 8754
@@ -23,5 +23,5 @@ function Buffer980101102:OnBefourHurt(caster, target)
 		return
 	end
 	-- 980101102
-	self:AddHp(BufferEffect[980101102], self.caster, target or self.owner, nil,-1*c150*c143)
+	self:AddHp(BufferEffect[980101102], self.caster, target or self.owner, nil,-(2*c150*c143))
 end

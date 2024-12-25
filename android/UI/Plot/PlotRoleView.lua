@@ -167,7 +167,7 @@ function GetTargetPos()
 end
 
 --入场动画
-function PlayImgEntrance(time,callBack, delay)
+function PlayImgEntrance(time,callBack, delay, pos2)
 	local pos = GetTargetPos();
 	CSAPI.SetLocalPos(gameObject, pos[1], pos[2], 0);
 	-- view.myLocalPosX = pos[1];
@@ -180,6 +180,12 @@ function PlayImgEntrance(time,callBack, delay)
 				callBack();
 			end
 		end, delay);
+	elseif this.data.enter == PlotImgTweenType.MoveAndFade then
+		time = time or 0.17
+		pos2 = pos2 or {0,0}
+		CSAPI.SetLocalPos(gameObject, pos[1] + pos2[1], pos[2]+ pos2[2], 0);
+		PlotTween.TweenMove(gameObject, pos, time)
+		PlotTween.FadeIn(cImg.gameObject, time, callBack, delay);
 	end
 end
 
@@ -193,8 +199,36 @@ function PlayImgMoveByPingPong(pos, time, callBack, delay)
 	PlotTween.TweenMoveByPingPong(view,pos, time, callBack, delay)
 end
 
+--渐变移动动画
+function PlayImgMoveByFade(time, callBack, delay, pos2)
+	local pos = GetTargetPos();
+	time = time or 0.17
+	if this.data.moveTo == PlotImgTweenType.Fade then
+		local _callback = function()
+			CSAPI.SetLocalPos(gameObject, pos[1], pos[2], 0);
+			if callBack then
+				callBack()
+			end
+		end
+		PlotTween.Twinkle(cImg.gameObject, time, _callback, delay)
+	elseif this.data.moveTo == PlotImgTweenType.MoveAndFade then --入场加入移动
+		pos2 = pos2 or {0,0}
+		local _callback = function()
+			CSAPI.SetLocalPos(gameObject, pos[1] + pos2[1], pos[2]+ pos2[2], 0);
+			PlotTween.TweenMove(gameObject,pos,time)
+			if callBack then
+				callBack()
+			end
+		end
+		PlotTween.Twinkle(cImg.gameObject, time, _callback, delay)
+	else
+		CSAPI.SetLocalPos(gameObject, pos[1], pos[2], 0);
+	end
+end
+
+
 --退场动画
-function PlayImgLeave(time, callBack, delay, isBgChange)
+function PlayImgLeave(time, callBack, delay, isBgChange,pos2)
 	onLeave = callBack;
 	if isBgChange then --当背景进行切换时取消人物退场动画改为直接退场
 		OnLeave()
@@ -211,6 +245,13 @@ function PlayImgLeave(time, callBack, delay, isBgChange)
 		SetMask(false);
 		local go1, go2 = cImg.DoSplitImg(this.data.splitTweenPoint, this.data.splitAngel);
 		PlotTween.TweenSplit(go1, go2, OnLeave, delay);
+	elseif this.data.out == PlotImgTweenType.MoveAndFade then
+		time = time or 0.17
+		local pos = GetTargetPos();
+		pos2 = pos2 or {0,0}
+		CSAPI.SetLocalPos(gameObject, pos[1], pos[2], 0);
+		PlotTween.TweenMove(gameObject, {pos[1] + pos2[1],pos[2]+ pos2[2]}, time)
+		PlotTween.FadeOut(cImg.gameObject, time, callBack, delay);
 	else
 		OnLeave();
 	end

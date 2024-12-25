@@ -88,7 +88,7 @@ function OnClickPay()
 		UseSDK();
 	else
 		--发送充值协议
-		ShopProto:Buy(data.commodity:GetCfgID(),TimeUtil:GetTime(),1,nil,nil,OnSuccess);
+		ShopProto:Buy(data.commodity:GetCfgID(),TimeUtil:GetTime(),1,nil,nil,nil,OnSuccess);
 	end
 end
 

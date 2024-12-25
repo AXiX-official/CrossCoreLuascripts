@@ -22,7 +22,13 @@ end
 function LoginProto:QueryAccount(proto)
 	Log("查询账号响应：==================")
 	Log(proto);
-	self.vosQueryAccount = proto;	
+	if CSAPI.IsADV() then
+		if proto and proto["uid"]~=nil then
+			CSAPI.UnityClientVersion(proto["uid"]);
+		end
+	end
+	self.vosQueryAccount = proto;
+
 	-- local locken=agreenLoken.."_"..proto.uid;
 	-- local agreeVal = PlayerPrefs.GetInt(agreenLoken.."_"..proto.uid);
 	-- if agreeVal==nil or agreeVal~=1 then
@@ -145,10 +151,13 @@ function LoginProto:SendLoginGame(msg)
 		msg.ziLongUserInfo.gameChannel=ShiryuSDK.ShiryuLogin.channelExts.channelId;--gameChannel
 		msg.centerWebUid=ShiryuSDK.ShiryuLogin.uid;
 		msg.centerWebInfo=ShiryuSDK.ShiryuLogin.channelExts;
+		 local SendLoginGamestr=table.tostring(msg,true);
+		BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_LoginProto_SendLoginGame, { LoginGamesStr=SendLoginGamestr,})
 	end
 	local proto = {"ClientProto:LoginGame", msg};
 	print("GM------------------------------------------:"..table.tostring(proto))
 	NetMgr.net:Send(proto);
+
 end
 
 function LoginProto:LoginGame(proto)

@@ -529,6 +529,7 @@ function this:Init()
     --Trials
     self.TrialsList = ResIconUtil.New("Trials/List")
     self.TrialsPage = ResIconUtil.New("Trials/Page")
+    self.TrialsHead = ResIconUtil.New("Trials/Head")
     --Achievement
     self.AchievementQua = ResIconUtil.New("Achievement/Quality") --成就品质
     self.Achievement = ResIconUtil.New("Achievement/Icon") --成就图标
@@ -555,17 +556,23 @@ function this:Init()
     self.GachaBall=ResIconUtil.New("GachaBall");
 
     self.Bgm=ResIconUtil.New("Bgm");
-    
+    self.Colosseum = ResIconUtil.New("Colosseum") --角色场小队主题
 
     --剧情
     self.PlotTop = ResIconUtil.New("Plot/PlotTop");
-    self.Colosseum = ResIconUtil.New("Colosseum") --角色场小队主题
-    --商店用途
-    self.ASMRShop=ResIconUtil.New("AsmrShop")
     self.ASMR=ResIconUtil.New("ASMR")
 
+    --新世界boss
+    self.GlobalBoss = ResIconUtil.New("GlobalBoss")
+    --商店用途
+    self.ASMRShop=ResIconUtil.New("AsmrShop")
     --投资方晶
     self.Investment = ResImgUtil.New("UIs/ActivityList/Investment")
+
+    self.ShopTab=ResIconUtil.New("ShopTab")
+
+    --周年活动
+    self.Anniversary = ResIconUtil.New("Anniversary")
 end
 
 return this;

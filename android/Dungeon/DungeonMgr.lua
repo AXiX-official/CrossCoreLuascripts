@@ -1117,6 +1117,8 @@ function this:OnQuit(isExit, jumpType)
                 end
             elseif  cfg.type == eDuplicateType.StarPalace then
                 CSAPI.OpenView(path1,{id = cfg.group,itemId = cfg.id},{isDungeonOver = true})
+            else
+                CSAPI.OpenView(path1)
             end
         elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then
             CSAPI.OpenView("CourseView",1)  
@@ -1157,7 +1159,7 @@ function this:OnQuit(isExit, jumpType)
         local cfgDungeon = Cfgs.MainLine:GetByID(self.currId)
         local OnFightOverCB = nil
         if jumpType == 6 then --模拟
-            OnFightOverCB = function (stage, winer)
+            OnFightOverCB = function (stage, winer, nDamage)
                 if self.currId then
                     DungeonMgr:SetCurrId1(self.currId)
                 end
@@ -1459,11 +1461,12 @@ function this:CheckActivityRed()
             if info:IsOpen() and info:CheckIsRed() then
                 local cfg = info:GetCfg()
                 if cfg and cfg.sectionID then
-                    local _isRed = DungeonActivityMgr:CheckRed(cfg.sectionID)
                     local openCfg = info:GetOpenCfg()
-                    RedPointMgr:UpdateData("ActiveEntry" .. openCfg.id,_isRed and 1 or nil)
-                    if not isRed then
-                        isRed = _isRed
+                    local redData1 = RedPointMgr:GetData("ActiveEntry" .. openCfg.id)
+                    local redData2 = DungeonActivityMgr:CheckRed(cfg.sectionID) and 1 or nil
+                    if redData1 ~= redData2 then
+                        RedPointMgr:UpdateData("ActiveEntry" .. openCfg.id,redData2)
+                        isRed = redData2 ~= nil
                     end
                 end
             end

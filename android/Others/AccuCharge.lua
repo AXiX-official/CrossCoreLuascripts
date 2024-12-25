@@ -1,4 +1,3 @@
-local AccuChargeData = require("AccuChargeData")
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/AccuCharge/AccuChargeItem", LayoutCallBack, true)

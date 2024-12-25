@@ -464,7 +464,7 @@ function OnDirllClick()
     end
 end
 
-function OnFightOverCB(stage, winer)
+function OnFightOverCB(stage, winer, nDamage)
     if currId and currId> 0 then
         DungeonMgr:SetCurrId1(currId)
     end
