@@ -56,8 +56,13 @@ end
 
 --邀请绑定
 function RegressionProto:PlrBindInvite(code,uid)
-    local proto = {"RegressionProto:PlrBindInvite",{code=code,uid=uid}}
-    NetMgr.net:Send(proto)
+    code=string.match(code,"%d+_%d+");
+    if code~=nil then
+        local proto = {"RegressionProto:PlrBindInvite",{code=code,uid=uid}}
+        NetMgr.net:Send(proto)
+    else
+        LanguageMgr:ShowTips(40005);
+    end
 end
 
 --邀请绑定返回(我邀请别人)

@@ -34,15 +34,19 @@ end
 
 function OnOpen()
     leftPanel.Anim();
-    if openSetting==nil then
-        os=eBindInviteOpenType.Invite;
-    else
-        os=openSetting;
+    if openSetting==1 then
+        os=eBindInviteOpenType.Invite
+        CSAPI.SetText(txt_tDesc,LanguageMgr:GetByID(61019));
+        CSAPI.SetText(txtNOFriend,LanguageMgr:GetByID(61030));
+    elseif openSetting==2 then
+        os=eBindInviteOpenType.Request
+        CSAPI.SetText(txt_tDesc,LanguageMgr:GetByID(61021));
+        CSAPI.SetText(txtNOFriend,LanguageMgr:GetByID(61031));
     end
-    Refresh(true)
+    RefreshList(true)
 end
 
-function Refresh(isForceRefresh)
+function Refresh()
     leftPanel.Anim();
     SetRedInfo();
     --根据当前类型初始化列表
@@ -55,7 +59,7 @@ function Refresh(isForceRefresh)
         CSAPI.SetText(txt_tDesc,LanguageMgr:GetByID(61021));
         CSAPI.SetText(txtNOFriend,LanguageMgr:GetByID(61031));
     end
-    RefreshList(isForceRefresh);
+    RefreshList(true);
 end
 
 function AnimStart()
@@ -124,7 +128,7 @@ function OnClickRefresh()
     end
 end
 
-function RefreshList(isForceRefresh,isLoaded)
+function RefreshList(isForceRefresh)
     curDatas=nil;
     if isForceRefresh~=true then
         if curType==1 then
@@ -159,7 +163,7 @@ function RefreshList(isForceRefresh,isLoaded)
     local isReLoad=false;
     if curDatas~=nil  then
         isEmpty=#curDatas==0
-    elseif isLoaded~=true or isForceRefresh==true then
+    elseif  isForceRefresh==true then
         SendGetList(0);
         isReLoad=true;
     end
@@ -177,12 +181,12 @@ end
 
 --推荐列表更新
 function OnRecomentListUpdate()
-    RefreshList();
+    RefreshList(nil);
 end
 
 --申请绑定列表更新
 function OnInviteListUpdate()
-    RefreshList(nil,true);
+    RefreshList(nil);
 end
 
 function OnDestroy()
@@ -195,12 +199,12 @@ function OnInviteOptionRet(proto)
             view:Close();
         end
     else
-        RefreshList(nil,true);
+        RefreshList(nil);
     end
 end
 
 function OnInfoUpdate()
-    RefreshList(nil,true);
+    RefreshList(nil);
 end
 
 --重新获取一次邀请列表

@@ -56,6 +56,7 @@ function Awake()
     eventMgr:AddListener(EventType.Collaboration_InviteOption_Ret,OnBindRet);
     eventMgr:AddListener(EventType.Mission_List,OnTaskRefresh);
     eventMgr:AddListener(EventType.Collaboration_StageTaskInfo_Ret,OnStageTaskRet);
+    eventMgr:AddListener(EventType.Bag_Update,OnCoinUpdate);
 end
 
 function InitLeft()
@@ -406,6 +407,11 @@ function SetLimitObj(icon,txtLimit,txtNum)
     end
     CSAPI.SetText(txtLimit,typeStr);
     CSAPI.SetText(txtNum,strNum);
+end
+
+function OnCoinUpdate()
+    SetLimitObj(shopCostIcon2,txtShopDesc2,txtPointNum2);
+    SetLimitObj(shopCostIcon,txtShopDesc,txtPointNum);
 end
 
 --查看奖励

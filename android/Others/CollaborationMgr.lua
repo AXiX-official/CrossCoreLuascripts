@@ -40,7 +40,7 @@ end
 
 function this:OnBindInfoRet(proto)
     self.currActivity=nil;
-    if proto then
+    if proto and next(proto)~=nil then
         local tempInfo=CollaborationInfo.New();
         tempInfo:SetData(proto);
         self.currActivity=tempInfo;

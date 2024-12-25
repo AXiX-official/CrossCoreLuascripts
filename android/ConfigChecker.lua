@@ -3024,6 +3024,7 @@ end
 function ConfigChecker:CfgBindActive(cfgs)
     g_curBindActiveId = nil
     g_curBindActiveCloseTime = nil
+    g_nextBindActiveOpenTime = nil
 
     for id, cfg in pairs(cfgs) do
         LogTable(cfg, 'ConfigChecker:CfgBindActive cfg')
@@ -3036,6 +3037,16 @@ function ConfigChecker:CfgBindActive(cfgs)
         if isInRange and not g_curBindActiveId then
             g_curBindActiveId = cfg.id
             g_curBindActiveCloseTime = cfg.nEndTime
+        else
+            if cfg.nStartTime > CURRENT_TIME then
+                if g_nextBindActiveOpenTime then
+                    if cfg.nStartTime < g_nextBindActiveOpenTime then
+                        g_nextBindActiveOpenTime = cfg.nStartTime
+                    end
+                else
+                    g_nextBindActiveOpenTime = cfg.nStartTime
+                end
+            end
         end
 
         for _, info in pairs(cfg.infos) do

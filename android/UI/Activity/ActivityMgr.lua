@@ -465,6 +465,12 @@ function this:CheckRed(id)
                 return true
             end 
             return false   
+        elseif data:GetType() == ActivityListType.AccuCharge3 then
+            local num = RedPointMgr:GetData(RedPointType.AccuCharge3)
+            if(num and num==1) then 
+                return true
+            end 
+            return false   
         elseif data:GetType() == ActivityListType.Collaboration then
             local num=RedPointMgr:GetData(RedPointType.Collaboration);
             if(num ~= nil) then 

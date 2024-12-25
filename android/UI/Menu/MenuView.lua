@@ -729,7 +729,7 @@ function SetLTSV()
     end
     if(#ltSVDatas>1)then 
        table.sort(ltSVDatas, function(a, b)
-            return a:GetCfg().nType < a:GetCfg().nType
+            return a:GetCfg().sort < b:GetCfg().sort
         end)
     end
     ltSVItems = ltSVItems or {}

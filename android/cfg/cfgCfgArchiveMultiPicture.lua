@@ -55,7 +55,7 @@ local conf = {
 {'48',	'48',	'61050',	'暗巷危机',	'48',	'',	'',	'9',	'alley_corner_crisis',	'alley_corner_crisis_replace',	'board_alley_corner_crisis',	'Small_alley_corner_crisis',	'商店购买',	'-5,-34,1.32',	'CG0031_AlleyCornerCrisis_spine',	'0,0,1',	'1',	'80424'},
 {'49',	'49',	'61051',	'沙趣时光',	'49',	'',	'',	'1',	'beach_playtime',	'beach_playtime_replace',	'board_beach_playtime',	'Small_beach_playtime',	'商店购买',	'-49,-23,1.13',	'CG0029_BeachPlaytime_spine',	'0,0,1',	'1',	'80425'},
 {'50',	'50',	'61052',	'暮光之约',	'50',	'',	'',	'9',	'twilight_invitation',	'twilight_invitation_replace',	'board_twilight_invitation',	'Small_twilight_invitation',	'商店购买',	'-9,-38,1.18',	'CG0032_TwilightInvitation_spine',	'0,0,1',	'1',	'80426'},
-{'51',	'51',	'61053',	'周年欢聚',	'51',	'',	'',	'7',	'anniversary_party',	'anniversary_party_replace',	'board_anniversary_party',	'Small_anniversary_party',	'【周年狂欢】活动',	'44,15,1.03',	'CG0039_AnniversaryParty_spine',	'90,0,1',	'',	'1'},
+{'51',	'51',	'61053',	'周年欢聚',	'51',	'',	'',	'7',	'anniversary_party',	'',	'board_anniversary_party',	'Small_anniversary_party',	'【周年狂欢】活动',	'44,15,1.03',	'CG0039_AnniversaryParty_spine',	'90,0,1',	'',	'1'},
 {'52',	'52',	'61054',	'旷野之声',	'52',	'2025/1/22 03:00:00',	'2027/1/22 3:00:00',	'6',	'voice_of_the_wild',	'voice_of_the_wild_replace',	'board_voice_of_the_wild',	'small_voice_of_the_wild',	'高级勘测奖励',	'-21,-21,0.69',	'wulin',	'-23,-27,1.36',	'',	'1'},
 },
 }
