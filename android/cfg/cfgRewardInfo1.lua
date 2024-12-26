@@ -2,7 +2,7 @@ local conf = {
 	["filename"] = 'j-奖励表.xlsx',
 	["sheetname"] = '奖励表-常规',
 	["types"] = {
-'int','string','int','string','int','table#9','int','int','int[]','int[]','int','int','int','int','int','int'
+'int','string','int','string','int','table#10','int','int','int[]','int[]','int','int','int','int','int','int'
 },
 	["names"] = {
 'id','name','type','icon','dropCnt','item','index','type','level','dupID','id','probability','count','countUplimit','mustUseCnt','notUseCnt'

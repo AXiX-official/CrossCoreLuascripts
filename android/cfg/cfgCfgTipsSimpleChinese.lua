@@ -325,7 +325,7 @@ local conf = {
 {'315',	'mailExpiry',	'1',	'',	'邮件已失效，请重新进入界面查看。',	''},
 {'316',	'plrBindApplyLimitCnt',	'1',	'',	'申请频繁，请稍后再试',	''},
 {'317',	'plrBindBeApplyLimitCnt',	'1',	'',	'该玩家被申请次数频繁，切换玩家目标重试',	''},
-{'318',	'notPlrBindInviteLog',	'1',	'',	'没有找到邀请信息',	''},
+{'318',	'notPlrBindInviteLog',	'1',	'',	'该邀请已失效',	''},
 {'319',	'hadBindPlrCanNotAgree',	'1',	'',	'已绑定玩家无法接受申请',	''},
 {'320',	'plrUnfinishBinding',	'1',	'',	'未完成绑定',	''},
 {'321',	'voucherCanNotUseVoucher',	'1',	'',	'商品不支持使用抵扣券',	''},

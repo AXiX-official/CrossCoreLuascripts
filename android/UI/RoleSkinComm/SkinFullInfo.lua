@@ -423,10 +423,10 @@ function OnClickBuy()
     --打开购买界面
     -- local comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
     if comm then
-        local cost=comm:GetRealPrice(shopPriceKey)[1];
-        if cost==nil or cost.id~=-1 then
+        local cost=comm:GetRealPrice(shopPriceKey);
+        if cost==nil or(cost~=nil and cost[1].id~=-1)  then
             CSAPI.OpenView("ShopSkinBuy",comm,shopPriceKey);
-        else
+        elseif (cost~=nil and cost[1].id==-1) then
             ShopCommFunc.HandlePayLogic(comm,1,1,nil,OnSuccess,shopPriceKey);
         end
     end
