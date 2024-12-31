@@ -209,7 +209,7 @@ function this:CheckExRedInfo()
             redInfo[k]=v:HasRevice() and 1 or nil;
         end
     end
-    DungeonMgr:CheckActivityRed()
+    DungeonMgr:CheckActivityRed(true)
     RedPointMgr:UpdateData(RedPointType.SpecialExploration, redInfo)
 end
 

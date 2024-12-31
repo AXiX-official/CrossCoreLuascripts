@@ -430,7 +430,7 @@ function SetReds()
             elseif (v == "Section") then
                 isNew = SectionNewUtil:IsSectionNew()
                 if (not isNew) then
-                    isRed = RedPointMgr:GetData(RedPointType.Attack)
+                    isRed = RedPointMgr:GetData(RedPointType.Attack) ~= nil
                 end
             end
         end

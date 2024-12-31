@@ -51,6 +51,11 @@ RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机
 RedPointType.ResRecovery = "ResRecovery" --遗落的补给
 
+RedPointType.SectionMain = "SectionMain" --章节主线
+RedPointType.SectionDaily = "SectionDaily" --章节日常
+RedPointType.SectionExercise = "SectionExercise" --章节演习
+RedPointType.SectionActivity = "SectionActivity" --章节活动
+
 local this = MgrRegister("RedPointMgr")
 
 function this:Clear()

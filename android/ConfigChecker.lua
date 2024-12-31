@@ -168,11 +168,22 @@ function ConfigChecker:CardData(cfgs)
     g_fightCardCnt = 0
     g_cardNumByQuality = {}
 
+    g_openCardCnt = 0
+    g_openCardCntByQuality = {}
+
     for k, v in pairs(cfgs) do
         if v.get_from_gm then
             if CARD_TYPE.FIGHT == v.card_type then
                 g_fightCardCnt = g_fightCardCnt + 1
                 GCalHelp:Add(g_cardNumByQuality, v.quality, 1)
+            end
+
+            if v.role_id then
+                local roleCfg = CfgCardRole[v.role_id]
+                if roleCfg and roleCfg.bShowInAltas then
+                    g_openCardCnt = g_openCardCnt + 1
+                    GCalHelp:Add(g_openCardCntByQuality, v.quality, 1)                    
+                end
             end
         end
 
@@ -1545,9 +1556,13 @@ end
 function ConfigChecker:ItemInfo(cfgs)
     GCfgEquipItemId = {}
 
+    g_toItemArr = {}
+
     for id, cfg in pairs(cfgs) do
         if cfg.to_item_id then
             ASSERT(cfgs[cfg.to_item_id], string.format('物品id:%s, 的 to_item_id:%s 找不到物品配置信息', id, cfg.to_item_id))
+            local arr = GCalHelp:GetTb(g_toItemArr, cfg.to_item_id)
+            table.insert(arr, id)
         else
             -- 填了 to_item_id 可以只填 sExpiry 不填 expiryIx
             if cfg.sExpiry then

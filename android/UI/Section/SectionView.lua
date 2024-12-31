@@ -124,12 +124,9 @@ function Awake()
     eventMgr:AddListener(EventType.Section_Daily_Double_Update, OnDoubleRefresh)
     eventMgr:AddListener(EventType.Dungeon_Double_Update, OnDoubleRefresh)
     --red
-    eventMgr:AddListener(EventType.Dungeon_Box_Refresh, OnRedRefresh)
-    eventMgr:AddListener(EventType.Mission_List, OnRedRefresh)
-    eventMgr:AddListener(EventType.Section_Red_Update, OnRedRefresh)
     eventMgr:AddListener(EventType.ExerciseL_New, ExerciseNewRefresh)
     eventMgr:AddListener(EventType.Loading_Complete, CheckModelOpen) --检测功能开启
-    eventMgr:AddListener(EventType.RedPoint_Refresh, RefreshActivityDatas)
+    eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedRefresh)
     UIMaskGo = CSAPI.GetGlobalGO("UIClickMask")
 
     layout1 = ComUtil.GetCom(sv1, "UIInfinite")
@@ -1237,9 +1234,9 @@ function RefreshActivityDatas()
     local activityCfgs = Cfgs.Section:GetGroup(SectionType.Activity)
     if activityCfgs then
         local activityTypeDatas = {}
-        local openState1,openState2 = 0,0
         for _, cfg in pairs(activityCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfg.id)   
+            local openState1,openState2 = 0,0
             if sectionData then
                 activityTypeDatas[sectionData:GetType()] = activityTypeDatas[sectionData:GetType()] or {}
                 if sectionData:IsShowOnly() then
@@ -1282,8 +1279,9 @@ function RefreshActivityDatas()
                 end
             end
         end
-        Log("活动信息:")
-        Log(logStrs)
+        LogTable(logStrs,"活动信息")
+        -- Log("活动信息:")
+        -- Log(logStrs)
     end
     table.sort(datas, function(a, b)      
         local pos1 = a.pos or 99
@@ -2093,9 +2091,18 @@ function OnRedRefresh()
 end
 
 function SetRed()
-    UIUtil:SetRedPoint(SectionTypeItem4,DungeonMgr:IsActivityRed(),146,26)
-    UIUtil:SetRedPoint(SectionTypeItem1,DungeonMgr:IsMainLineRed(),146,26)
-    UIUtil:SetRedPoint(SectionTypeItem3,DungeonMgr:IsExerciseRed(),146,26)
+    local redData1 = RedPointMgr:GetData(RedPointType.SectionMain)
+    UIUtil:SetRedPoint(SectionTypeItem1,redData1 ~= nil,146,26)
+
+    local redData2= RedPointMgr:GetData(RedPointType.SectionDaily)
+    UIUtil:SetRedPoint(SectionTypeItem2,redData2 ~= nil,146,26)
+
+    local redData3= RedPointMgr:GetData(RedPointType.SectionExercise)
+    UIUtil:SetRedPoint(SectionTypeItem3,redData3 ~= nil,146,26)
+
+    local redData4= RedPointMgr:GetData(RedPointType.SectionActivity)
+    UIUtil:SetRedPoint(SectionTypeItem4,redData4 ~= nil,146,26)
+
     UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
 end
 ---------------------------------------------new---------------------------------------------

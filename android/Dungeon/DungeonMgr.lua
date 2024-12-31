@@ -1417,18 +1417,20 @@ end
 
 ---------------------------------------------red---------------------------------------------
 function this:CheckRedPointData()
-    local redData = {}
-    redData.isMain = DungeonMgr:IsMainLineRed()
-    redData.isActivity = DungeonMgr:IsActivityRed()
-    redData.isExercise = DungeonMgr:IsExerciseRed()
-    if not redData.isMain and not redData.isActivity and not redData.isExercise then
-        redData = nil
-    end
-    RedPointMgr:UpdateData(RedPointType.Attack, redData)
+    local isMainRed = DungeonMgr:IsMainLineRed()
+    local isDaily = DungeonMgr:IsDailyRed()
+    local isExercise = DungeonMgr:IsExerciseRed()
+    local isActivity = DungeonMgr:IsActivityRed(true)
+
+    RedPointMgr:UpdateData(RedPointType.Attack, (isMainRed or isDaily or isExercise or isActivity) and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionMain, isMainRed and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionDaily, isDaily and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionExercise, isExercise and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionActivity, isActivity and 1 or nil)
 end
 
-function this:IsActivityRed()
-    local isRed = self:CheckActivityRed()
+function this:IsActivityRed(isUpdate)
+    local isRed = DungeonMgr:CheckActivityRed(isUpdate)
 
     if not isRed then --十二星宫
         isRed = MissionMgr:CheckRed({eTaskType.StarPalace})
@@ -1453,7 +1455,7 @@ function this:IsActivityRed()
     return isRed
 end
 
-function this:CheckActivityRed()
+function this:CheckActivityRed(isUpdate)
     local isRed = false
     local openInfos = self:GetActiveOpenInfos()
     if openInfos then
@@ -1464,9 +1466,11 @@ function this:CheckActivityRed()
                     local openCfg = info:GetOpenCfg()
                     local redData1 = RedPointMgr:GetData("ActiveEntry" .. openCfg.id)
                     local redData2 = DungeonActivityMgr:CheckRed(cfg.sectionID) and 1 or nil
-                    if redData1 ~= redData2 then
+                    if redData1 ~= redData2 and isUpdate then
                         RedPointMgr:UpdateData("ActiveEntry" .. openCfg.id,redData2)
-                        isRed = redData2 ~= nil
+                    end
+                    if not isRed and redData2 ~= nil then
+                        isRed = true
                     end
                 end
             end
@@ -1481,6 +1485,10 @@ end
 
 function this:IsExerciseRed()
     return ColosseumMgr:IsRed()
+end
+
+function this:IsDailyRed()
+    return false
 end
 
 ---------------------------------------------new---------------------------------------------
