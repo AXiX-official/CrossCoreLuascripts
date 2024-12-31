@@ -471,6 +471,7 @@ end
 
 function ConfigChecker:CfgCardRole(cfgs)
     g_CardRoleShowCnt = 0
+    g_CardPoleShowByQuality = {}
 
     for id, cfg in pairs(cfgs) do
         ASSERT(cfg.aModels, 'CfgCardRole id：' .. id .. '没填 aModels')
@@ -480,8 +481,16 @@ function ConfigChecker:CfgCardRole(cfgs)
             ASSERT(character[cfg.aModels], 'CfgCardRole id：' .. id .. ', 的aModels:' .. '在角色模型表 character 找不到数据。')
         end
 
-        if cfg.bShowInAltas then
+        if cfg.bShowInAltas and cfg.aCards and #cfg.aCards > 0 then
             g_CardRoleShowCnt = g_CardRoleShowCnt + 1
+            for _, cardId in ipairs(cfg.aCards) do
+                local cardCfg = CardData[cardId]
+                if cardCfg and CARD_TYPE.FIGHT == cardCfg.card_type then
+                    GCalHelp:Add(g_CardPoleShowByQuality, cardCfg.quality, 1)
+                    break
+                end
+            end
+
         end
     end
 end

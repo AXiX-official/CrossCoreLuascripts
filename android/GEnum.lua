@@ -1357,6 +1357,8 @@ PlrMixIx.openConditionTime = 63 -- 新手教程的完成时间
 PlrMixIx.BugFixIndex = 64 -- 已修复Bug下标，对应下标的方法只会运行一次
 PlrMixIx.icon_title = 65 -- 玩家称号
 PlrMixIx.globalBossUUID = 66 -- 当前挑战的世界bossUUID
+PlrMixIx.resetDoubleRechargeTime = 67 -- 重置双倍首充的时间
+PlrMixIx.bindPlrType = 68 -- 回归绑定活动，绑定时玩家的回归类型
 
 
 -- 图鉴
