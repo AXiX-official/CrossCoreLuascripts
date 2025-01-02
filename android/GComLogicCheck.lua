@@ -570,6 +570,9 @@ function GLogicCheck:CheckArmyAddJoinCnt(info)
                 -- 下次刷新时间就是这个了
                 nextFlushHour = hour
             end
+        elseif curYDay < preYDay then
+            addCnt = addCnt + curYDay
+            info.can_join_cnt_flush_log[index] = curYDay
         end
 
         -- LogDebug('CheckArmyAddJoinCnt() B curHour:%s, hour:%s, addCnt:%s', curHour, hour, addCnt)
