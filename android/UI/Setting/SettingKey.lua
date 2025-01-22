@@ -54,7 +54,7 @@ s_other_live_default = 2
 
 --芯片自动上锁 1：开  2：关
 s_other_equipLock_key = "s_other_equipLock_key"
-s_other_equipLock_default = 1
+s_other_equipLock_default = 2
 
 s_wait_scale = {}
 s_wait_value = {}
