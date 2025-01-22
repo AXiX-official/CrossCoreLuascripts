@@ -144,7 +144,7 @@ function this:CheckCard(teamData,cardData)
                 end
             end
             passNum=tempResult==true and passNum+1 or passNum;
-            -- LogError("TeamLimit检测22222----------->"..tostring(tempResult));
+            -- LogError("TeamLimit检测22222----------->"..tostring(tempResult).."\t"..tostring(v.limit).."\t"..tostring(self:GetOperator()));
             if self:GetOperator()==TeamConditionOperator.And then
                 if tempResult~=true then
                     isPass=false;
@@ -218,7 +218,7 @@ function this:CheckPass(teamData)
         elseif v.limit==TeamConditionLimitEditType.Must then --必须编入
             isTrueNum=num>=targetCount and true or false;
         end
-        -- LogError("队伍限制条件检测：目标数量："..tostring(targetCount).."\t当前数量："..tostring(num).."\t当前限制条件："..tostring(v.limit));
+        -- LogError("队伍限制条件检测：目标数量："..tostring(targetCount).."\t当前数量："..tostring(num).."\t当前限制条件："..tostring(v.limit).."\t"..tostring(isTrueNum));
         if isTrueNum then
             if self:GetOperator()==TeamConditionOperator.Or then
                 isPass=true;

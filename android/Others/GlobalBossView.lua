@@ -54,6 +54,9 @@ function OnOpen()
     if bossData then
         InitPanel()
     end
+
+    RedPointMgr:SetDayRedToday(RedPointDayOnceType.GloBalBoss)
+    DungeonMgr:CheckRedPointData()
 end
 
 function InitData()
@@ -67,9 +70,9 @@ end
 
 function InitEffect()
     if bossData:GetEffectName() then
-        ResUtil:CreateEffect("GlobalBoss/" .. bossData:GetEffectName(), 0,0,0,effectParent,function (go)
+        ResUtil:CreateBGEffect(bossData:GetEffectName(), 0,0,0,effectParent,function (go)
             SetEffectScale()
-        end);
+        end)
     end
 end
 

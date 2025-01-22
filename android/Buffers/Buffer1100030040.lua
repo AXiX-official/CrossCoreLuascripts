@@ -1,4 +1,4 @@
--- 乐团阵营所有buff
+-- 持续作战
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -9,7 +9,7 @@ end
 -- 创建时
 function Buffer1100030040:OnCreate(caster, target)
 	-- 1100030040
-	self:AddAttr(BufferEffect[1100030040], self.caster, target or self.owner, nil,"attack",0.02)
+	self:AddAttrPercent(BufferEffect[1100030040], self.caster, target or self.owner, nil,"attack",0.02*self.nCount)
 	-- 1100030043
-	self:AddAttr(BufferEffect[1100030043], self.caster, target or self.owner, nil,"defense",0.02)
+	self:AddAttrPercent(BufferEffect[1100030043], self.caster, target or self.owner, nil,"defense",0.02*self.nCount)
 end

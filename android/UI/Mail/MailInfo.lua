@@ -29,15 +29,20 @@ function this:InitData(sMailInfo)
 	self.start_time = sMailInfo.start_time
 	self.end_time = sMailInfo.end_time
 	self.cfgid = sMailInfo.cfgid
+	self.rewards = sMailInfo.data and sMailInfo.data.rewards or {}
 	if(self.cfgid == 0) then
 		self.name = sMailInfo.data and sMailInfo.data.name or ""
+		self.name = string.gsub(self.name,"</101>","\'")
+		self.name = string.gsub(self.name,"</102>","\"")
 		self.from = sMailInfo.data and sMailInfo.data.from or ""
+		self.mCfgId = sMailInfo.data and sMailInfo.data.mCfgId or nil
 		if(sMailInfo.data and sMailInfo.data.desc) then
 			self.desc = string.gsub(sMailInfo.data.desc, "<br>", "\n")
+			self.desc = string.gsub(self.desc,"</101>","\'")
+			self.desc = string.gsub(self.desc,"</102>","\"")
 		else
 			self.desc = ""
 		end
-		self.rewards = sMailInfo.data and sMailInfo.data.rewards or {}
 		self.del_time = sMailInfo.data and sMailInfo.data.read_del_sec or nil
 		if self.del_time and self.end_time == 0 then
 			if (self.is_read ==MailReadType.Yes and #self.rewards < 1) or self.is_get ==MailGetType.Yes then
@@ -57,6 +62,8 @@ function this:InitData(sMailInfo)
 					table.insert(self.rewards, {id = v[1], num = v[2], type = v[3]})
 				end
 			end
+			self.nameArgs = sMailInfo.data and sMailInfo.data.nameArgs or nil
+			self.desArgs = sMailInfo.data and sMailInfo.data.desArgs or nil		
 		end
 	end
 	self.sortIndex = nil
@@ -121,7 +128,41 @@ function this:IsEnd()
 end
 
 function this:GetName()
-	return self.name or ""
+	local name = self.name or ""
+	if self.nameArgs then
+		local item=nil
+		local str = ""
+		for k, v in pairs(self.nameArgs) do
+			str = ""
+			item=nil
+			if v.type == TipAargType.OnlyParm then
+				str = v.param .. ""
+			elseif v.type == TipAargType.EmptyParm then
+				str = ""
+			elseif v.type == TipAargType.ItemId then
+				item=BagMgr:GetData(tonumber(v.param));
+				str = item and item:GetName() or ""
+			elseif v.type == TipAargType.CardId then
+				item=RoleMgr:GetData(tonumber(v.param));
+				str=item and item:GetName() or "";	
+			elseif v.type == TipAargType.EquipId then
+				str = ""
+			elseif v.type == TipAargType.DupId then
+				item=Cfgs.MainLine:GetByID(tonumber(v.param));
+				str=item and item.name or ""	
+			elseif v.type == TipAargType.Role then
+				item=Cfgs.CfgCardRole:GetByID(v.param);
+				str=item and item.sAliasName or ""	
+			elseif v.type == TipAargType.SectionId then
+				item =Cfgs.Section:GetByID(tonumber(v.param))
+				str=item and item.name or ""	
+			else    --不对的参数类型
+				LogError("不支持的参数类型:"..tostring(data.type));	
+			end
+			name = StringUtil:StrReplace(name,"{"..tostring(k).."}",str)
+		end
+	end
+	return name
 end
 
 function this:GetFrom()
@@ -129,7 +170,25 @@ function this:GetFrom()
 end
 
 function this:Desc()
-	return self.desc or ""
+	local desc = self.desc or ""
+	if self.desArgs then
+		if self.desArgs.isRepeat == true and self.desArgs.argsArr and #self.desArgs.argsArr > 0 then
+			local _desc = tostring(desc)
+			for i, v in ipairs(self.desArgs.argsArr) do
+				for k, m in pairs(v) do
+					desc = StringUtil:StrReplace(desc,"{"..tostring(k).."}",MailMgr:GetMailStr(m))
+				end
+				if i ~= #self.desArgs.argsArr then
+					desc = desc .. "\n" .. _desc
+				end
+			end
+		else
+			for k, v in pairs(self.desArgs) do			
+				desc = StringUtil:StrReplace(desc,"{"..tostring(k).."}",MailMgr:GetMailStr(v))
+			end
+		end
+	end
+	return desc
 end
 
 function this:GetIsRead()
@@ -142,6 +201,10 @@ end
 
 function this:GetRewards()
 	return self.rewards
+end
+
+function this:GetMCfgId()
+	return self.mCfgId
 end
 
 --------------------------------set

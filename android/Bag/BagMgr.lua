@@ -187,16 +187,63 @@ end
 function this:CheckBagRedInfo()
 	local tagValue=nil;
     if self.datas then
+        local currTime=TimeUtil:GetTime();
+        local isRecord=false;
+        local limitTime=nil;
         for k, v in pairs(self.datas) do
-            if v:GetCfgTag()==5 then --5是消耗品,将需要显示红点的tag值加入数组
-                tagValue=tagValue or {};
-                table.insert(tagValue,v:GetCfgTag());
-                break;
+            if v:GetCfgTag()==2 then --2是消耗品,将需要显示红点的tag值加入数组
+                if isRecord~=true then
+                    tagValue=tagValue or {};
+                    table.insert(tagValue,v:GetCfgTag());
+                    isRecord=true;
+                end    
+            end
+            if v:IsExipiryType() then--限时物品记录最近的一个快要到期的时间
+                limitTime=v:GetExpiry();
+                if v:GetData().get_infos and #v:GetData().get_infos>1 then
+                    for _, val in ipairs(v:GetData().get_infos) do
+                        local tempData=table.copy(v:GetData());
+						tempData.num=val[1];
+						tempData.id=val[3];
+						tempData.get_infos={val};
+						local tempGoods=GoodsData(tempData);
+                        limitTime=tempGoods:GetExpiry();
+                    end
+                end
+                if self.lessLimitTime ~= nil then
+                    if limitTime > currTime and limitTime < self.lessLimitTime then
+                        self.lessLimitTime = limitTime
+                    end
+                elseif limitTime > currTime then
+                    self.lessLimitTime = limitTime
+                end
+                if limitTime>currTime then
+                    tagValue=tagValue or {};
+                    tagValue.limitTags=tagValue.limitTags or {};
+                    tagValue.limitTags[v:GetCfgTag()]=true;
+                end
             end
         end
     end
 	local data=tagValue~=nil and {tagList=tagValue} or nil
     RedPointMgr:UpdateData(RedPointType.MaterialBag,data);
+end
+
+--返回最接近当前时间的物品时间
+function this:GetLessLimitTime()
+    return self.lessLimitTime or nil;
+end
+
+--是否显示limitIcon
+function this:IsShowLimit()
+    local lessTime=self:GetLessLimitTime();
+    if lessTime then
+        local curTime=TimeUtil.GetTime();
+        if lessTime>curTime and lessTime-curTime<=172800 then --小于48小时都显示
+            return true;
+        end
+    end
+    return false;
 end
 
 -- ==============================--
@@ -461,6 +508,7 @@ function this:Clear()
     self.selectEquipCond = nil;
     self.tabIndex = nil;
     self.conditions = nil;
+    self.childTabIndex=nil;
 end
 
 return this;

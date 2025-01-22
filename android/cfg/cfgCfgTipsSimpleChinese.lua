@@ -345,6 +345,7 @@ local conf = {
 {'335',	'plrBindHadInvite',	'1',	'',	'已邀请',	''},
 {'336',	'globalBossOver',	'1',	'',	'活动已结束',	''},
 {'337',	'checkNameError',	'1',	'',	'输入的文字中不得含有敏感字符',	''},
+{'338',	'checkMyNameError',	'1',	'',	'无法命名为当前名字',	''},
 },
 }
 --cfgCfgTipsSimpleChinese = conf

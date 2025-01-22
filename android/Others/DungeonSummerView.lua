@@ -26,7 +26,9 @@ local currItem = nil
 local itemInfo = nil
 local infoAnim = nil
 
-function Awake()
+function Awake()    
+    InitCanvas()
+
     CSAPI.SetGOActive(infoMask, false)
     layout = ComUtil.GetCom(hsv, "UIInfinite")
     layout:Init("UIs/DungeonActivity7/DungeonSummerItem", LayoutCallBack, true)
@@ -42,6 +44,26 @@ function Awake()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed) 
 
     InitAnim()
+end
+
+function InitCanvas()
+    local rect1 = ComUtil.GetCom(canvas1,"RectTransform")
+    if not IsNil(rect1) then
+        rect1.anchorMin = UnityEngine.Vector2(0,0)
+        rect1.anchorMax = UnityEngine.Vector2(1,1)
+    end
+    CSAPI.SetScale(canvas1,1,1,1)
+    CSAPI.SetAnchor(canvas1,0,0)
+    CSAPI.SetRTSize(canvas1,0,0)
+
+    local rect2 = ComUtil.GetCom(canvas2,"RectTransform")
+    if not IsNil(rect2) then
+        rect2.anchorMin = UnityEngine.Vector2(0,0)
+        rect2.anchorMax = UnityEngine.Vector2(1,1)
+    end
+    CSAPI.SetScale(canvas2,1,1,1)
+    CSAPI.SetAnchor(canvas2,0,0)
+    CSAPI.SetRTSize(canvas2,0,0)
 end
 
 function LayoutCallBack(index)
@@ -112,6 +134,7 @@ function OnViewClosed(viewKey)
         end,this,300)
     end
 end
+
 
 function OnDestroy()
     eventMgr:ClearListener()
@@ -461,8 +484,8 @@ function OnLoadCallBack()
     itemInfo.CallFunc("PlotButton","SetStoryCB",OnStoryCB)
     if currItem then
         itemInfo.CallFunc("Danger3","ShowDangeLevel",currItem.IsDanger(),currItem.GetCfgs(),currDanger)
-        itemInfo.SetGOActivte("Level2","img2",not currItem.IsPlot())
-        itemInfo.SetGOActivte("Level2","txtLevel",not currItem.IsPlot())
+        itemInfo.SetGOActive("Level2","img2",not currItem.IsPlot())
+        itemInfo.SetGOActive("Level2","txtLevel",not currItem.IsPlot())
         itemInfo.CallFunc("Level2","SetTitle",LanguageMgr:GetByID(currItem.IsPlot() and 22033 or 15035))
     end
     SetInfoItemPos()
@@ -731,7 +754,7 @@ end
 
 function ShowDungeonUnLockAnim()
     if curIndex > 2 then
-        ShowEffect(dungeonUnLockAction)
+        -- ShowEffect(dungeonUnLockAction)
     end
     if curIndex + 1 <= #curDatas then
         local lua = layout:GetItemLua(curIndex + 1)

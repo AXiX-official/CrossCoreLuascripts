@@ -59,6 +59,7 @@ function SetMoney(_datas)
         if _data ~= nil then
             -- icon
             local cfg = Cfgs.ItemInfo:GetByID(_data[1])
+            if cfg==nil then LogError("物品表不存在物品id："..table.tostring(_data,true)); end
             ResUtil.IconGoods:Load(this["moneyIcon" .. i], cfg.icon .. "_1")
             -- num
             if (_data[1] == ITEM_ID.Hot) then

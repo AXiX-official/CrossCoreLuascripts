@@ -68,3 +68,8 @@ function OnClick()
         cb(this)
     end
 end
+
+
+function HideLv(b)
+    CSAPI.SetGOActive(txt_lv, b) 
+end

@@ -202,6 +202,8 @@ function SetTitleIcon()
             imgName = "end"
         elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
             imgName = elseData.bIsWin and imgName or "lose"
+        elseif sceneType == SceneType.RogueT then
+            imgName = "32_01"
         end
     end
     if sceneType == SceneType.PVE then --十二星宫
@@ -1061,7 +1063,16 @@ function UpdateBossDamage()
 end
 ----------------------------------能力测验--------------------------------------
 function SetRogueTPanel()
-    
+    CSAPI.SetGOActive(damageObj, true)
+    CSAPI.SetGOActive(txt_topDamage,false)
+    CSAPI.SetGOActive(titleObj,true)
+    local lanID,num = 54050,elseData.score or 0
+    if(RogueTMgr:IsInfinity(elseData.nDuplicateID))then 
+        lanID = 54051
+        num = elseData.damage or 0
+    end
+    CSAPI.SetText(txtDamage,num.."")
+    LanguageMgr:SetText(txtTitle,lanID)
 end
 
 ----------------------------------世界boss--------------------------------------

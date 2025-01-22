@@ -1,4 +1,4 @@
--- 储备II级
+-- 我方单位使用非伤害技能时，70%的概率额外NP额外+5
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -6,10 +6,10 @@ Skill1100010111 = oo.class(SkillBase)
 function Skill1100010111:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 入场时
-function Skill1100010111:OnBorn(caster, target, data)
-	-- 8062
-	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+-- 行动结束
+function Skill1100010111:OnActionOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end

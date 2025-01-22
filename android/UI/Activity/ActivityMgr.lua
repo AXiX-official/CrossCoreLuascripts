@@ -283,7 +283,7 @@ function this:GetActivityTime(group)
 end
 
 function this:GetALData(id)
-    return self.ALDatas[id]
+    return self.ALDatas and self.ALDatas[id]
 end
 
 function this:GetArr(group)

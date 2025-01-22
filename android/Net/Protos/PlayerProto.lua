@@ -1390,6 +1390,15 @@ function PlayerProto:GetRankRet(proto)
     DungeonActivityMgr:GetRankRet(proto)
 end
 
+function PlayerProto:GetMineRankInfo(type)
+    local proto = {"PlayerProto:GetMineRankInfo", {rank_type = type}}
+    NetMgr.net:Send(proto)
+end
+
+function PlayerProto:GetMineRankInfoRet(proto)
+    EventMgr.Dispatch(EventType.Dungeon_Activity_RankInfo,proto)
+end
+
 --请求查看排行榜阵容
 function PlayerProto:GetRankTeamInfo(type,index,cb)
     self.RankTeamInfoCallBack = cb
@@ -1444,6 +1453,7 @@ end
 function PlayerProto:PayFinishOrderId(proto)
     if proto then
         if CSAPI.IsADV() then
+            EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
         else
             if CSAPI.IsDomestic() then
                 if proto.gameOrderId then

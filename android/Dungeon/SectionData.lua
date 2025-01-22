@@ -60,14 +60,6 @@ function this:GetIcon()
 	return self.cfg.icon;
 end
 
-function this:GetIcon1()
-	return self.cfg.icon1;
-end
-
-function this:GetIcon2()
-	return self.cfg.icon2;
-end
-
 function this:GetSectionBG()
 	return self.cfg.sBg;
 end
@@ -438,6 +430,12 @@ end
 function this:IsResident()
 	return self.cfg and self.cfg.specType and self.cfg.specType == 1
 end
+
+--任务类型
+function this:GetTaskType()
+	local info = self:GetInfo()
+	return info and info.taskType 
+end
 ---------------------------------------------门票购买---------------------------------------------
 function this:GetBuyCount()
 	return self.cfg and self.cfg.DungeonArachnidDailyBuy or 0
@@ -449,6 +447,24 @@ end
 
 function this:GetBuyGets()
 	return self.cfg and self.cfg.DungeonArachnidGets
+end
+---------------------------------------------试炼---------------------------------------------
+--列表图标
+function this:GetIcon1()
+	return self.cfg.icon1;
+end
+--切页图标
+function this:GetIcon2()
+	return self.cfg.icon2;
+end
+--角标图标
+function this:GetIcon3()
+	return self.cfg.icon3;
+end
+
+function this:GetRankType()
+	local info = self:GetInfo()
+	return info and info.rankType 
 end
 
 return this; 

@@ -443,7 +443,7 @@ end
 -- 	return isOpen
 -- end
 -- 某条件集合是否已达成 conditions是int[]
-function this:CheckConditionIsOK(conditions,mainLineLanID)
+function this:CheckConditionIsOK(conditions, mainLineLanID)
     if (conditions == nil) then
         return true, ""
     else
@@ -453,36 +453,36 @@ function this:CheckConditionIsOK(conditions,mainLineLanID)
             local _cfg = Cfgs.CfgOpenRules:GetByID(v)
             if (_cfg.type == OpenConditionType.lv) then
                 b = PlayerClient:GetLv() >= _cfg.val
-                if (not b) then
-                    local str = LanguageMgr:GetTips(1001)
-                    lockStr = string.format(str, _cfg.val)
-                end
+                -- if (not b) then
+                local str = LanguageMgr:GetTips(1001)
+                lockStr = string.format(str, _cfg.val)
+                -- end
             elseif (_cfg.type == OpenConditionType.section) then
                 if (_cfg.openTime) then
                     local weekIndex = CSAPI.GetWeekIndex()
                     b = m.openTime[weekIndex] == 1
-                    if (not b) then
-                        lockStr = _cfg.lock_desc
-                    end
+                    -- if (not b) then
+                    lockStr = _cfg.lock_desc
+                    -- end
                 end
                 if (b) then
                     b = DungeonMgr:CheckDungeonPass(_cfg.val)
-                    if (not b) then
-                        local sectionCfg = Cfgs.MainLine:GetByID(_cfg.val)
-                        local str = LanguageMgr:GetTips(1010)
-                        local hardStr = sectionCfg.type == 2 and LanguageMgr:GetByID(mainLineLanID or 15016) or ""
-                        local _s = hardStr .. sectionCfg.chapterID
-                        if(not mainLineLanID)then 
-                            _s = _s .. "" .. sectionCfg.name
-                        end
-                        lockStr = string.format(str, _s)
+                    -- if (not b) then
+                    local sectionCfg = Cfgs.MainLine:GetByID(_cfg.val)
+                    local str = LanguageMgr:GetTips(1010)
+                    local hardStr = sectionCfg.type == 2 and LanguageMgr:GetByID(mainLineLanID or 15016) or ""
+                    local _s = hardStr .. sectionCfg.chapterID
+                    if (not mainLineLanID) then
+                        _s = _s .. "" .. sectionCfg.name
                     end
+                    lockStr = string.format(str, _s)
+                    -- end
                 end
             elseif (_cfg.type == OpenConditionType.guide) then
                 b = GuideMgr:IsComplete(_cfg.val)
-                if (not b) then
-                    lockStr = _cfg.guide_tips
-                end
+                -- if (not b) then
+                lockStr = _cfg.guide_tips
+                -- end
             end
             -- 有一个条件不符合，则为false
             if (not b) then
@@ -829,7 +829,7 @@ function this:GetNextStandbyTimer()
 end
 
 function this:GetMenuRDType()
-    return self.menuRDType or 1  -- 1：展开 2：收缩
+    return self.menuRDType or 1 -- 1：展开 2：收缩
 end
 function this:SetMenuRDType(type)
     self.menuRDType = type

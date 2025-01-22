@@ -950,7 +950,7 @@ end
 
 -- 是否pve关卡
 function FightMgrBase:IsPVE()
-    if self.type == SceneType.PVP or self.type == SceneType.BOSS or self.type == SceneType.GuildBOSS then
+    if self.type == SceneType.PVP or self.type == SceneType.BOSS or self.type == SceneType.GuildBOSS then  --or self.type == SceneType.GlobalBoss 
         return false
     end
     return true
@@ -2967,6 +2967,7 @@ function PVEFightMgrServer:Over(stage, winer)
     local cardIds = {}
     if self.oDuplicate then
         local data = {}
+        local exData = {}
         -- local arrSp = {}
         local deathcount = 0
         local grade = {0, 0, 0} -- 评级
@@ -3047,6 +3048,7 @@ function PVEFightMgrServer:Over(stage, winer)
                     break
                 end
             end
+            exData.invincibleDamage = nTotalDamage
             -- 更新排行榜
             local plr = self.oDuplicate.oPlayer
             local rankType
@@ -3055,15 +3057,21 @@ function PVEFightMgrServer:Over(stage, winer)
                     rankType = eRankType.SummerActiveRank
                 elseif dupCfg.group == 3006 then
                     rankType = eRankType.CentaurRank
+                elseif dupCfg.group == 6001 then
+                    rankType = eRankType.TrialsRank
+                elseif dupCfg.group == 15001 then
+                    rankType = eRankType.RogueTRank
                 end
+                local dungeonGroup = dupCfg.dungeonGroup or 0
                 if rankType then
-                    RankMgrGs:AddRankData(rankType, nTotalDamage, plr, teamIdx,fCard)
+                    RankMgrGs:AddRankData(rankType, nTotalDamage, plr, teamIdx,fCard, dungeonGroup)
                     plr:UpdateAchieve(eAchieveFinishType.Fight, eAchieveEventType.Rank, { rankType })
                     self.oDuplicate.hisMaxDamage = RankMgrGs:GetScoreByType(rankType, plr)
                 end
             end
         end
 
+        -- 后续尽量不新增参数，全部丢在exData里面，需要的自己读出来
         self.oDuplicate:OnFightOver(
             winer,
             {data = data, nNp = self.arrNP[1]},
@@ -3075,7 +3083,8 @@ function PVEFightMgrServer:Over(stage, winer)
             deathcount,
             cardCnt,
             cardIds,
-            nMinHpPercent * 100
+            nMinHpPercent * 100,
+            exData
         )
 
         --LogDebugEx("PVEFightMgrServer:Over", deathcount, cardCnt, nMinHpPercent * 100)
@@ -3745,7 +3754,7 @@ elseif IS_SERVER then
     FightMgr = FightMgrServer
     function CreateFightMgr(id, groupID, ty, seed, nDuplicateID)
         LogDebugEx('CreateFightMgr', id, groupID, ty, seed, nDuplicateID)
-        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS then
+        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT then
             return PVEFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild then
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)

@@ -10,6 +10,10 @@ function Awake()
     canvasGroup = ComUtil.GetCom(node, "CanvasGroup")
 end
 
+function SetClickCB(_cb)
+    cb = _cb
+end
+
 function SetIndex(idx)
     index = idx
 end
@@ -53,6 +57,10 @@ end
 
 function OnClickBtn()
     if (info) then
+        if cb then
+            cb(info)
+            return
+        end
         if (not info:IsGet() and info:IsFinish()) then
             if (MissionMgr:CheckIsReset(info)) then
                 -- LanguageMgr:ShowTips(xxx)

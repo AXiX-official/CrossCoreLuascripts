@@ -562,6 +562,7 @@ eTeamType = {
     TotalBattle=29,--总力战
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
     Colosseum = 60, --角斗场(60-61) 60:自选模式 61：随机模式
+    RogueT = 70,    --限制版爬塔 70-89 
     ForceFight = 10000 -- 强制上阵索引起始值
 }
 
@@ -968,6 +969,7 @@ TeamConfirmOpenType.Tower=4 --塔本
 TeamConfirmOpenType.Rogue=5 --
 TeamConfirmOpenType.TotalBattle =6 --十二星宫
 TeamConfirmOpenType.GlobalBoss = 7 --世界boss
+TeamConfirmOpenType.RogueT = 8 -- 能力测验
 
 -- 商店商品的展示方式
 ShopShowType = {}
@@ -1359,6 +1361,7 @@ PlrMixIx.icon_title = 65 -- 玩家称号
 PlrMixIx.globalBossUUID = 66 -- 当前挑战的世界bossUUID
 PlrMixIx.resetDoubleRechargeTime = 67 -- 重置双倍首充的时间
 PlrMixIx.bindPlrType = 68 -- 回归绑定活动，绑定时玩家的回归类型
+PlrMixIx.actZeroMonth = 69 -- 下个月1号凌晨3点，重置时间
 
 
 -- 图鉴
@@ -1372,6 +1375,20 @@ ArchiveType.Enemy = 6 -- 敌兵
 ArchiveType.Board = 7 -- 看板
 ArchiveType.Music = 8 --播放器
 ArchiveType.Asmr = 9 --ASMR音频
+
+--图鉴入口名
+ArchiveNameType = {
+    [ArchiveType.Role] = "Role",
+    [ArchiveType.Course] = "Course",
+    [ArchiveType.Goods] = "Goods",
+    [ArchiveType.Story] = "Memory",
+    [ArchiveType.Equip] = "Equip",
+    [ArchiveType.Enemy] = "Enemy",
+    [ArchiveType.Board] = "Board",
+    [ArchiveType.Music] = "Music",
+    [ArchiveType.Asmr] = "Asmr",
+}
+
 
 -- 格子副本进入方式
 BattleEnterType = {}
@@ -1421,10 +1438,13 @@ eRecordType.ArmyCalFinishIx = 18 -- [军演服使用] 结算进度值
 eRecordType.ArmyCalFinishOnceCnt = 19 -- [军演服使用] 结算进度值，每次结算的人数
 eRecordType.ArmyCalFinishUseTime = 20 -- [军演服使用] 结算使用的时间戳
 eRecordType.OffLineMailMysqlTbChange = 21 -- [中心服] 玩家离线邮件转移表数据
-eRecordType.BindPlrActiveId = 22 -- [游戏服] 绑定活动id
-eRecordType.ZiLongPayDelIx = 23 -- 紫龙支付处理空订单的最大值
-eRecordType.CenterWebPayDelIx = 24 -- 中台支付处理空订单的最大值
-eRecordType.GlobalBossFindIx = 25 -- [中心服]新世界boss处理结算的批数
+eRecordType.BindPlrActiveId = 22          -- [游戏服] 绑定活动id
+eRecordType.ZiLongPayDelIx = 23           -- [Code服使用]紫龙支付处理空订单的最大值
+eRecordType.CenterWebPayDelIx = 24        -- [Code服使用]中台支付处理空订单的最大值
+eRecordType.GlobalBossFindIx = 25         -- [中心服]新世界boss处理结算的批数
+eRecordType.ResetDoubleRecharge = 26      -- [中心服]重置双倍充值次数设置
+eRecordType.ResetDoubleRechargeToken = 27 -- [中心服]重置双倍充值次数设置
+eRecordType.OneTypeCodeMultiUse = 28      -- [Code服使用]一个码多人使用
 
 GmInitPlrType = {}
 GmInitPlrType.Item = 1 -- 物品
@@ -1529,6 +1549,7 @@ SendSubCMD.Change = 'change'
 ShopGroup = {
     ArmyShop = 904, -- 演习兑换
     GiftShop = 3, -- 礼包商店
+    RechargeShop = 2, -- 充值商店
     RegressionShop = 3001, -- 复归商店
     AbattoirShop = 4001, -- 角斗场商店
 }
@@ -1812,7 +1833,10 @@ eRankType.StarRank5 = 9005 --十二星宫 9005
 eRankType.SummerActiveRank = 10001 --夏活无限血排行榜
 eRankType.Abattoir = 10002 -- 角斗场
 eRankType.CentaurRank = 10003 --人马无限血排行榜
+eRankType.TrialsRank = 10005 --试炼无限血排行榜
+eRankType.RogueTRank = 10006 --限制肉鸽爬塔排行榜
 
+-- 用户后台清理排行榜的选项（不影响游戏内的功能逻辑）
 cRankCfgNames = {
     { id = eRankType.StarRank1, name = '十二星宫 9001' },
     { id = eRankType.StarRank2, name = '十二星宫 9002' },
@@ -1822,7 +1846,8 @@ cRankCfgNames = {
     { id = eRankType.SummerActiveRank, name = '夏活无限血 10001' },
     { id = eRankType.Abattoir, name = '角斗场 10002' },
     { id = eRankType.CentaurRank, name = '人马无限血 10003' },
-    { id = eRankType.GlobalBoss, name = '新世界boss 10004' },
+    { id = eRankType.TrialsRank, name = '试炼无限血排行榜 10005' },
+    { id = eRankType.RogueTRank, name = '限制肉鸽爬塔排行榜 10006' },
 }
 
 --收集活动类型
@@ -1831,11 +1856,13 @@ eCollectType.Recharge = 1 --累计充值 1011
 eCollectType.Recharge1 = 2 --累计充值 1022
 eCollectType.Recharge2 = 3 --累计充值 1023
 
+--eCollectType活动对应的配置表
 eCollectTable = {}
 eCollectTable[eCollectType.Recharge] = 'CfgRechargeCount'
 eCollectTable[eCollectType.Recharge1] = 'CfgRechargeCount2'
 eCollectTable[eCollectType.Recharge2] = 'CfgRechargeCount'
 
+--eCollectType活动对应的活动列表的id
 eCollectTypeActiveId = {}
 eCollectTypeActiveId[eCollectType.Recharge] = 1011 --累计充值 1011
 eCollectTypeActiveId[eCollectType.Recharge1] = 1022 --累计充值 1022
@@ -1940,3 +1967,8 @@ eItemArrIx.fixExpiryIx = 2     -- 固定过期时间值
 eItemArrIx.createTime = 3      -- 首次创建时间
 eItemArrIx.fixExpiryTime = 4   -- 固定过期时间
 eItemArrIx.dyExpiryArr = 5     -- 多堆叠过期动态时间 { {数量，过期时间}, {数量，过期时间} }
+
+-----------------------------------------------------------------------------------------------------------------
+--汇总枚举
+eSummaryType = {}
+eSummaryType.NewYear = 1

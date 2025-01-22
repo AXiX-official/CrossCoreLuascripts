@@ -1,4 +1,4 @@
--- 狂战II级
+-- 每次暴击后40%概率使自身暴击伤害+10%（可叠加10层，持续到战斗结束）
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -13,8 +13,8 @@ function Skill1100010311:OnAfterHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8138
-	if SkillJudger:OwnerPercentHp(self, caster, target, true,0.8) then
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end

@@ -1,4 +1,4 @@
--- 肉鸽不朽阵营同调伤害增加3（金色3级别）
+-- 同调角色不再虚弱，同调角色后伤害提高80%，使用大招技能血量减少10%
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -18,11 +18,38 @@ function Skill1100030012:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 9736
-	self:tFunc_9736_9732(caster, target, data)
-	self:tFunc_9736_9734(caster, target, data)
-	self:tFunc_9736_9735(caster, target, data)
-	self:tFunc_9736_9736(caster, target, data)
+	-- 9732
+	if SkillJudger:IsCasterSibling(self, caster, target, true,30481) then
+	else
+		-- 8060
+		if SkillJudger:CasterIsSelf(self, caster, target, true) then
+		else
+			return
+		end
+		-- 9733
+		if SkillJudger:IsCasterSibling(self, caster, target, true,30431) then
+		else
+			-- 8060
+			if SkillJudger:CasterIsSelf(self, caster, target, true) then
+			else
+				return
+			end
+			-- 9734
+			if SkillJudger:IsCasterSibling(self, caster, target, true,50041) then
+			else
+				-- 8060
+				if SkillJudger:CasterIsSelf(self, caster, target, true) then
+				else
+					return
+				end
+				-- 9735
+				if SkillJudger:IsCasterSibling(self, caster, target, true,50011) then
+				else
+					return
+				end
+			end
+		end
+	end
 	-- 8073
 	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
@@ -55,112 +82,6 @@ function Skill1100030012:OnBorn(caster, target, data)
 	else
 		return
 	end
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9741
-	self:tFunc_9741_9737(caster, target, data)
-	self:tFunc_9741_9738(caster, target, data)
-	self:tFunc_9741_9739(caster, target, data)
-	self:tFunc_9741_9740(caster, target, data)
 	-- 1100030016
 	self:AddBuff(SkillEffect[1100030016], caster, self.card, data, 1100030016)
-end
-function Skill1100030012:tFunc_9741_9740(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9740
-	if SkillJudger:IsCasterSibling(self, caster, target, true,50010) then
-	else
-		return
-	end
-end
-function Skill1100030012:tFunc_9736_9734(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9734
-	if SkillJudger:IsCasterSibling(self, caster, target, true,50041) then
-	else
-		return
-	end
-end
-function Skill1100030012:tFunc_9736_9732(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9732
-	if SkillJudger:IsCasterSibling(self, caster, target, true,30481) then
-	else
-		return
-	end
-end
-function Skill1100030012:tFunc_9736_9735(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9735
-	if SkillJudger:IsCasterSibling(self, caster, target, true,50011) then
-	else
-		return
-	end
-end
-function Skill1100030012:tFunc_9736_9736(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9736
-	self:tFunc_9736_9732(caster, target, data)
-	self:tFunc_9736_9734(caster, target, data)
-	self:tFunc_9736_9735(caster, target, data)
-	self:tFunc_9736_9736(caster, target, data)
-end
-function Skill1100030012:tFunc_9741_9739(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9739
-	if SkillJudger:IsCasterSibling(self, caster, target, true,50040) then
-	else
-		return
-	end
-end
-function Skill1100030012:tFunc_9741_9738(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9738
-	if SkillJudger:IsCasterSibling(self, caster, target, true,30430) then
-	else
-		return
-	end
-end
-function Skill1100030012:tFunc_9741_9737(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 9737
-	if SkillJudger:IsCasterSibling(self, caster, target, true,30480) then
-	else
-		return
-	end
 end

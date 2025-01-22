@@ -721,7 +721,7 @@ function ConfigChecker:MainLine(cfgs)
             end
         end
 
-        if v.roundLevel then
+        if v.roundLevel and v.type == 12 then
             -- 战力派遣
             local ccc = DungeonGroup[v.dungeonGroup]
             if not ccc then
@@ -731,6 +731,22 @@ function ConfigChecker:MainLine(cfgs)
                 ccc.rounds = {}
             end
             ccc.rounds[v.roundLevel] = v.id
+        end
+
+        if v.type == 15 then
+            -- 限制肉鸽爬塔
+            local ccc = DungeonGroup[v.dungeonGroup]
+            if not ccc then
+                ASSERT(false, string.format('限制肉鸽爬塔没有该关卡组 关卡id：%s 对应的关卡组ID:%s', v.id, v.dungeonGroup))
+            end
+
+            ccc.rounds = GCalHelp:GetTb(ccc, 'rounds',{})
+
+            if v.isInfinity then
+                ccc.boss = v.id
+            else
+                ccc.rounds[v.roundLevel] = v.id
+            end
         end
         if v.season and v.turn and v.type and v.type == 14 and v.weight and v.themeType then
             g_AbattoirSeason[v.season] = g_AbattoirSeason[v.season] or {}
@@ -1784,13 +1800,26 @@ function ConfigChecker:CfgActiveEntry(cfgs)
                 v.nBattleendTime = GCalHelp:GetTimeStampBySplit(v.battleendTime, v)
                 if v.config and v.nConfigID then
                     local config_table = _G[v.config]
-                    if config_table and config_table[v.nConfigID] then
-                        local tar_config = config_table[v.nConfigID]
-                        if tar_config.sectionID then
-                            if not battleEndTimeTable[tar_config.sectionID] then
-                                battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
-                            else
-                                LogI('CfgActiveEntry sectionID出现重复,id:' .. v.id .. ',config:' .. v.config .. ',nConfigID:' .. v.nConfigID)
+                    if v.period and v.period == 2 then
+                        local tarCfg = config_table[v.nConfigID]
+                        --LogTable(tarCfg, "config_table")
+                        if tarCfg.infos then
+                            for _, info in ipairs(tarCfg.infos) do
+                                if info.sectionID then
+                                    battleEndTimeTable[info.sectionID] = v.nBattleendTime
+                                end
+                            end
+                        end
+                    else
+                        if config_table and config_table[v.nConfigID] then
+                            local tar_config = config_table[v.nConfigID]
+                            if tar_config.sectionID then
+
+                                if not battleEndTimeTable[tar_config.sectionID] then
+                                    battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
+                                else
+                                    LogI('CfgActiveEntry sectionID出现重复,id:' .. v.id .. ',config:' .. v.config .. ',nConfigID:' .. v.nConfigID)
+                                end
                             end
                         end
                     end
@@ -3120,6 +3149,21 @@ function ConfigChecker:DungeonGroup(cfgs)
 end
 
 function ConfigChecker:CfgTotalBattle(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if cfg.infos then
+            for _, v in pairs(cfg.infos) do
+                if v.begTime then
+                    v.nBegTime = GCalHelp:GetTimeStampBySplit(v.begTime, v)
+                end
+                if v.endTime then
+                    v.nEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
+                end
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgTrials(cfgs)
     for _, cfg in pairs(cfgs) do
         if cfg.infos then
             for _, v in pairs(cfg.infos) do

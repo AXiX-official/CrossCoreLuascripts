@@ -22,9 +22,9 @@ function this:Init(_id)
 end
 
 function this:SetFirstLastIDs()
-    local cfgs = Cfgs.CfgMusic:GetGroup(self.cfg.group)
-    self.firstID = cfgs[1].id
-    self.lastID = cfgs[#cfgs].id
+    local arr = BGMMgr:GetMusics(self.cfg.group)
+    self.firstID = arr[1].id
+    self.lastID = arr[#arr].id
 end
 
 function this:GetCfg()
@@ -32,19 +32,19 @@ function this:GetCfg()
 end
 
 function this:GetPer()
-    local cfgs = Cfgs.CfgMusic:GetGroup(self.cfg.group)
-    for k, v in ipairs(cfgs) do
+    local arr = BGMMgr:GetMusics(self.cfg.group)
+    for k, v in ipairs(arr) do
         if (v.id == self.cfg.id) then
-            return cfgs[k - 1].id
+            return arr[k - 1].id
         end
     end
 end
 
 function this:GetNext()
-    local cfgs = Cfgs.CfgMusic:GetGroup(self.cfg.group)
-    for k, v in ipairs(cfgs) do
+    local arr = BGMMgr:GetMusics(self.cfg.group)
+    for k, v in ipairs(arr) do
         if (v.id == self.cfg.id) then
-            return cfgs[k + 1].id
+            return arr[k + 1].id
         end
     end
 end

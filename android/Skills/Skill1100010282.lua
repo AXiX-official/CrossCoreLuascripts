@@ -1,4 +1,4 @@
--- 破晓III级
+-- 攻击时100%几率驱散目标1-2个增益效果
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,7 +19,7 @@ function Skill1100010282:OnAttackBegin(caster, target, data)
 		return
 	end
 	-- 1100010282
-	if self:Rand(5000) then
+	if self:Rand(10000) then
 		self:DelBufferGroup(SkillEffect[1100010282], caster, target, data, 2,1,2)
 	end
 end

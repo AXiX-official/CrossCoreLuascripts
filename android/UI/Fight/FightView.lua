@@ -157,6 +157,8 @@ function InitFightInfo()
     elseif(g_FightMgr.type == SceneType.Rogue)then
         items2 = items2 or {}
         ItemUtil.AddItems("Rogue/RogueBuffSelectItem2", items2, RogueMgr:GetSelectBuffs(), rogueBuffs)
+    elseif (g_FightMgr.type == SceneType.RogueT) then
+        CSAPI.SetGOActive(rogutTBuff,true);
     end
     --CSAPI.SetText(fightInfoText,info);
 end
@@ -1100,7 +1102,9 @@ function OnClickQuestion()
 end
 
 
-
+function OnClickRogutTBuff()
+    CSAPI.OpenView("RogueTCurBuff",nil,1)
+end
 
 -----------------------------------------------虚拟返回键代码 下-------------------------------------------------------------
 

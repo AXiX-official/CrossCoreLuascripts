@@ -1,4 +1,4 @@
--- 广域I级
+-- 范围技能攻击伤害加深10%，全体范围技能攻击时根据目标数量额外提升攻击，当目标数量为3时，攻击提升10%，当目标数为2时，攻击提升15%，当目标数为1时，攻击提升20%
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -8,6 +8,21 @@ function Skill1100010190:Init(skillID, card)
 end
 -- 伤害前
 function Skill1100010190:OnBefourHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8265
+	if SkillJudger:IsALLRange(self, caster, target, true) then
+	else
+		return
+	end
 	-- 1100010190
 	self:tFunc_1100010190_11000101900(caster, target, data)
 	self:tFunc_1100010190_11000101901(caster, target, data)
@@ -57,7 +72,7 @@ function Skill1100010190:tFunc_1100010190_11000101900(caster, target, data)
 		return
 	end
 	-- 11000101900
-	self:AddTempAttr(SkillEffect[11000101900], caster, self.card, data, "damage",0.10)
+	self:AddTempAttr(SkillEffect[11000101900], caster, self.card, data, "damage",0.1)
 end
 function Skill1100010190:tFunc_1100010190_11000101902(caster, target, data)
 	-- 8060

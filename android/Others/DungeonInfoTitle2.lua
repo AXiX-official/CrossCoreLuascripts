@@ -7,7 +7,7 @@ function Refresh(tab)
     data = tab.data
     sectionData = tab.sectionData
     if cfg then
-        
+        SetName(cfg.name or "")
     end
 end
 

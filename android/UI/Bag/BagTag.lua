@@ -85,6 +85,7 @@ end
 
 function SetRedInfo()
 	local redInfo2=RedPointMgr:GetData(RedPointType.MaterialBag);
+    local isShow=false;
     if this.data and redInfo2~=nil and redInfo2.tagList~=nil then
         local isRed2=false;
         for k, v in ipairs(redInfo2.tagList) do
@@ -94,9 +95,13 @@ function SetRedInfo()
             end
         end
         UIUtil:SetRedPoint(gameObject,isRed2,110,20);
+        if redInfo2.tagList.limitTags~=nil then
+            isShow=redInfo2.tagList.limitTags[this.data.tag]==true;
+        end
     else
         UIUtil:SetRedPoint(gameObject,false,110,20);
     end
+    CSAPI.SetGOActive(limitObj,isShow);
 end
 
 function OnClick()

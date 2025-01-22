@@ -9,7 +9,7 @@ end
 -- 战斗开始
 function Skill913100801:OnStart(caster, target, data)
 	-- 913100803
-	self:SetInvincible(SkillEffect[913100803], caster, target, data, 2,1,99999999,20)
+	self:SetInvincible(SkillEffect[913100803], caster, target, data, 2,1,999999999,20)
 end
 -- 行动结束
 function Skill913100801:OnActionOver(caster, target, data)
@@ -23,7 +23,7 @@ function Skill913100801:OnActionOver(caster, target, data)
 	-- 913100808
 	self:CallOwnerSkill(SkillEffect[913100808], caster, self.card, data, 913100802)
 	-- 913100804
-	self:SetInvincible(SkillEffect[913100804], caster, target, data, 2,2,99999999,30)
+	self:SetInvincible(SkillEffect[913100804], caster, target, data, 2,2,999999999,30)
 end
 -- 入场时
 function Skill913100801:OnBorn(caster, target, data)

@@ -11,20 +11,20 @@ function Skill704100303:DoSkill(caster, target, data)
 	-- 11125
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11125], caster, target, data, 0.2,5)
-	-- 8418
-	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
-	-- 8152
-	if SkillJudger:Greater(self, caster, self.card, true,count18,60) then
+	-- 8703
+	local count703 = SkillApi:GetCount(self, caster, target,3,704100101)
+	-- 8918
+	if SkillJudger:Greater(self, caster, target, true,count703,2) then
 	else
 		return
 	end
 	-- 11126
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11126], caster, target, data, 0.2,1)
-	-- 8418
-	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
-	-- 8170
-	if SkillJudger:Greater(self, caster, self.card, true,count18,80) then
+	-- 8703
+	local count703 = SkillApi:GetCount(self, caster, target,3,704100101)
+	-- 8919
+	if SkillJudger:Greater(self, caster, target, true,count703,5) then
 	else
 		return
 	end

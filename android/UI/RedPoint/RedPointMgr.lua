@@ -50,11 +50,16 @@ RedPointType.ASMR="ASMR"--
 RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机
 RedPointType.ResRecovery = "ResRecovery" --遗落的补给
+RedPointType.RogueT = "RogueT" --
 
 RedPointType.SectionMain = "SectionMain" --章节主线
 RedPointType.SectionDaily = "SectionDaily" --章节日常
 RedPointType.SectionExercise = "SectionExercise" --章节演习
 RedPointType.SectionActivity = "SectionActivity" --章节活动
+--每日固定显示一次红点的类型
+RedPointDayOnceType={}
+RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机
+RedPointDayOnceType.GloBalBoss = "GloBalBoss" --世界boss
 
 local this = MgrRegister("RedPointMgr")
 

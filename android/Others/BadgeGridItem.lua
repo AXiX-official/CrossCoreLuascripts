@@ -68,11 +68,13 @@ function GetData()
 end
 
 function OnClick()
-    local newInfos = FileUtil.LoadByPath("Badge_new_info.txt") or {} -- 记录new
-    if data and newInfos[data:GetID()] and newInfos[data:GetID()]==1 then
-        UIUtil:SetNewPoint(newParent, false)
-        newInfos[data:GetID()]= 0
-        FileUtil.SaveToFile("Badge_new_info.txt",newInfos)
+    if not isHideNew then
+        local newInfos = FileUtil.LoadByPath("Badge_new_info.txt") or {} -- 记录new
+        if data and newInfos[data:GetID()] and newInfos[data:GetID()]==1 then
+            UIUtil:SetNewPoint(newParent, false)
+            newInfos[data:GetID()]= 0
+            FileUtil.SaveToFile("Badge_new_info.txt",newInfos)
+        end
     end
     if cb then
         cb(this)

@@ -46,7 +46,7 @@ function SetCount()
 end
 
 function OnClickDirll()
-    if DungeonUtil.IsGlobalBossCloseTime(sectionData:GetID()) then
+    if GlobalBossMgr:IsClose() then
         LanguageMgr:ShowTips(47001)
         return
     end
@@ -77,7 +77,7 @@ function OnClickEnter()
         LanguageMgr:ShowTips(47001)
         return
     end
-    if DungeonUtil.IsGlobalBossCloseTime(sectionData:GetID()) then
+    if GlobalBossMgr:IsClose() then
         LanguageMgr:ShowTips(47001)
         return
     end

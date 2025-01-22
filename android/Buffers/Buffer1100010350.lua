@@ -1,4 +1,4 @@
--- 山脉阵营虫洞buff
+-- 地裂猛击
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -18,16 +18,16 @@ function Buffer1100010350:OnBefourHurt(caster, target)
 	else
 		return
 	end
-	-- 8234
-	if SkillJudger:IsCasterMech(self, self.caster, target, true,5) then
-	else
-		return
-	end
 	-- 8259
 	if SkillJudger:IsCanHurt(self, self.caster, target, true) then
 	else
 		return
 	end
+	-- 8227
+	if SkillJudger:IsCasterMech(self, self.caster, target, false,1) then
+	else
+		return
+	end
 	-- 1100010350
-	self:HitAddBuff(BufferEffect[1100010350], self.caster, target or self.owner, nil,10000,1001,2)
+	self:AddBuff(BufferEffect[1100010350], self.caster, self.card, nil, 1001,2)
 end

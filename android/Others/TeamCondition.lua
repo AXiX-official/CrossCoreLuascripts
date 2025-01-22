@@ -44,13 +44,13 @@ function this:CheckCard(teamData,cardData)
             local result=v:CheckCard(teamData,cardData);
             --检测当前还剩几个可以上阵的位置,当前条件检测为失效且还有其他位置可以任意放置时，继续检测，否则直接返回结果
             -- if result~=true then
-            --     LogError("TeamCondition检测----------->失败\t 条件位置:"..tostring(k).."\t 总条件数:"..tostring(#self.conds))
+            --     LogError("TeamCondition检测----------->失败\t 条件位置:"..tostring(k).."\t 总条件数:"..tostring(#self.conds).."\t")
             -- else
             --     LogError("TeamCondition检测----------->通过:\t 条件位置:"..tostring(k).."\t 总条件数:"..tostring(#self.conds))
             -- end
             if result~=true then
                 isPass=false;
-                if (teamMemberNum~=0 and (teamMemberNum-teamData:GetCount())<=1) or (teamMemberNum==0 and teamData:GetCount()>=g_TeamMemberMaxNum)  then--不限数量则有6张卡可以上阵
+                if (teamMemberNum~=0 and (teamMemberNum-teamData:GetCount())<=1) or (teamMemberNum==0 and teamData:GetCount()>=g_TeamMemberMaxNum) or (#self.conds>1) then--不限数量则有6张卡可以上阵,条件数大于1则是筛选出条件的并集，否则继续进行判定
                     break;
                 end
             elseif result and k==#self.conds then

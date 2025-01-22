@@ -24,6 +24,11 @@ function Skill702600102:OnAfterHurt(caster, target, data)
 	else
 		return
 	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
 	-- 702600101
 	self:HitAddBuff(SkillEffect[702600101], caster, target, data, 2500,3004,1)
 end

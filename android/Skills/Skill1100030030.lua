@@ -1,4 +1,4 @@
--- 肉鸽不朽阵营不再过热（金色1级别）
+-- 角色每段攻击积累标记，每20层引爆伤害，造成角色1000%真实伤害
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -6,20 +6,83 @@ Skill1100030030 = oo.class(SkillBase)
 function Skill1100030030:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束
-function Skill1100030030:OnActionOver(caster, target, data)
+-- 伤害后
+function Skill1100030030:OnAfterHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8420
-	local count20 = SkillApi:GetAttr(self, caster, target,3,"hp")
-	-- 1100030013
-	self:AddHp(SkillEffect[1100030013], caster, caster, data, -count20*0.4)
+	-- 1100030030
+	self:OwnerAddBuffCount(SkillEffect[1100030030], caster, target, data, 1100030030,1,16)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 1100030035
+	local buxiubiaoji = SkillApi:GetCount(self, caster, target,2,1100030030)
+	-- 1100030033
+	if SkillJudger:Greater(self, caster, target, true,buxiubiaoji,15) then
+	else
+		return
+	end
+	-- 1100030031
+	self:LimitDamage(SkillEffect[1100030031], caster, target, data, 0.2,10)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 1100030032
+	self:DelBufferForce(SkillEffect[1100030032], caster, target, data, 1100030030)
+end
+-- 攻击结束
+function Skill1100030030:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 1100030035
+	local buxiubiaoji = SkillApi:GetCount(self, caster, target,2,1100030030)
+	-- 1100030033
+	if SkillJudger:Greater(self, caster, target, true,buxiubiaoji,15) then
+	else
+		return
+	end
+	-- 1100030031
+	self:LimitDamage(SkillEffect[1100030031], caster, target, data, 0.2,10)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 1100030032
+	self:DelBufferForce(SkillEffect[1100030032], caster, target, data, 1100030030)
 end

@@ -93,6 +93,13 @@ function this:CreateEffectImmediately(res, x, y, z, resParent)
     res = self:GenEffectRes(res);
     return CSAPI.CreateGO(res, x or 0, y or 0, z or 0, resParent);
 end
+
+--创建背景特效
+function this:CreateBGEffect(name, x, y, z, resParent, callBack)
+    local res = "bg" .."/" .. name .."/" .. name
+    return self:CreateEffect(res, x, y, z, resParent, callBack)
+end
+
 -- 创建Buff特效
 function this:CreateBuffEff(res, resParent, callBack,postfix)
     if (not res) then
@@ -571,8 +578,8 @@ function this:Init()
 
     self.ShopTab=ResIconUtil.New("ShopTab")
 
-    --周年活动
-    self.Anniversary = ResIconUtil.New("Anniversary")
+    --汇总
+    self.Summary = ResIconUtil.New("Summary")
 end
 
 return this;

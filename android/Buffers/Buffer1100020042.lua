@@ -1,4 +1,4 @@
--- 乐团阵营所有buff2
+-- 慈爱
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1100020042:OnCreate(caster, target)
 	-- 1100020042
-	self:AddAttr(BufferEffect[1100020042], self.caster, target or self.owner, nil,"attack",0.5)
+	self:AddAttrPercent(BufferEffect[1100020042], self.caster, target or self.owner, nil,"attack",0.8*self.nCount)
 end

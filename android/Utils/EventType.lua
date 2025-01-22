@@ -672,6 +672,14 @@ this.TeamView_DragJoin_Lost=190050;
 this.TeamView_ChildNode_Change=190051;
 --战斗派遣队伍修改
 this.TeamView_RogueS_Change=190052;
+--编队界面左边按钮&UI元素刷新
+this.TeamView_Left_Refresh=190053;
+--编队列表刷新
+this.TeamView_List_Refresh=190054;
+--队伍数据是否有更改
+this.TeamView_Has_Change=190055;
+--队伍预设名字更改
+this.Team_PresetName_Change = 190056;
 -------------------------------------------背包
 --物品更新
 this.Bag_Update = 200000;
@@ -915,6 +923,8 @@ this.Exercise_End = 290013 --本赛季结束
 this.ExerciseL_New = 290014 --参加此时重置
 this.ExerciseL_BuyCount = 290015 --购买挑战次数
 this.Rogue_CancelBack = 290016 --放弃
+this.RogueS_phase_Change = 290017 --战力派遣期数变更
+this.RogueT_Buff_Upgrade = 290018 --buff升级回调
 --------------------------------------------------物品合成
 --合成成功
 this.Goods_Combine_Success = 300001
@@ -1207,6 +1217,9 @@ this.Arachnid_Count_Refresh = 490004 --活动购买次数刷新
 this.Activity_Open_Refresh = 490005 --活动时间刷新
 this.TotalBattle_Rank_Update = 490006 --十二星宫排行榜
 this.Activity_Rank_Update= 490007 --活动排行榜
+this.Trials_Panel_Refresh = 490008 --试炼界面刷新
+this.Trials_List_Refresh = 490009 --试炼界面刷新
+this.Dungeon_Activity_RankInfo = 490010 --活动排行榜信息
 
 -----------------------------------战场
 this.BattleField_Show_List = 500001 --战区设置

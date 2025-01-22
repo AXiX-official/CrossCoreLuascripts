@@ -35,6 +35,7 @@ function this:GetFunc(sName)
         self.funcs["RogueSView"] = self.DungeonActivity
         self.funcs["DungeonNight"] = self.DungeonActivity
         self.funcs["GlobalBossView"] = self.DungeonActivity
+        self.funcs["TrialsListView"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -312,6 +313,12 @@ function this.Shop(cfg)
             if cfg.val5 then
                 local cId=tonumber(cfg.val5);
                 local comm=ShopMgr:GetFixedCommodity(cId);
+                --todo
+                if(cId==50056 and not comm:GetNowTimeCanBuy())then 
+                    LanguageMgr:ShowTips(15007)
+                    return 
+                end
+                -- 
                 if comm:GetType()==CommodityItemType.Skin then --皮肤购买界面不打开商店
                     ShopCommFunc.OpenBuyConfrim(cfg.val2, cfg.val3, cId)
                     do return end;
@@ -465,7 +472,7 @@ function this.DungeonActivityState(cfg)
     local sectionData = DungeonMgr:GetSectionData(cfg.val1);
     if sectionData then
         local isOpen, _lockStr = sectionData:GetOpen()
-        local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
+        local openInfo = sectionData:GetOpenInfo()
         if isOpen and openInfo then
             if string.match(cfg.sName, "DungeonActivity") then
                 if not openInfo:IsOpen() then
@@ -484,10 +491,8 @@ function this.DungeonActivityState(cfg)
         end
         
         if sectionData:GetType() == SectionActivityType.GlobalBoss then
-            if DungeonUtil.IsGlobalBossCloseTime(sectionData:GetID()) then
-                local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-                local _cfg = openInfo:GetCfg()
-                return JumpModuleState.Close, _cfg.desc
+            if GlobalBossMgr:IsClose() then
+                return JumpModuleState.Close, GlobalBossMgr:GetCloseDesc()
             end
         end
 

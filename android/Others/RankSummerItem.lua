@@ -40,6 +40,8 @@ function Refresh(_info,elseData)
 	UIUtil:AddTitleByID(titleParent,0.6,info:GetTitle())
 
 	CSAPI.SetGOActive(btnOpen,isOpenReplace)
+	--
+	CSAPI.SetText(txtHard,info:GetHard())
 end
 
 function GetName()

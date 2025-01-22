@@ -1,4 +1,4 @@
--- 肉体摧毁
+-- 伏笔
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -15,8 +15,8 @@ function Buffer4503101:OnBefourHurt(caster, target)
 	else
 		return
 	end
-	-- 8135
-	if SkillJudger:OwnerPercentHp(self, self.caster, target, true,0.5) then
+	-- 8133
+	if SkillJudger:OwnerPercentHp(self, self.caster, target, true,0.3) then
 	else
 		return
 	end

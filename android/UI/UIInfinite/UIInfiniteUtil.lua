@@ -22,6 +22,9 @@ UIInfiniteAnimType.MoveLeftEnter = "UIInfiniteAnimMoveLeftEnter"
 -- 合成，上到下，小到大 
 UIInfiniteAnimType.MatrixCompound = "UIInfiniteAnimCompound"
 
+UIInfiniteAnimType.RogueT = "UIInfiniteAnimRogueT"
+UIInfiniteAnimType.RogueTM = "UIInfiniteAnimRogueTM"
+
 local this = {}
 
 function this:AddUIInfiniteAnim(layout, type, param, addListener)

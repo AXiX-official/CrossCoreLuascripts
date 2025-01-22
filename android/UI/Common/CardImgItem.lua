@@ -138,7 +138,7 @@ function PlayAudio(cfgChild)
             audioId = audioIds[1]
             newIndex = 1
         else
-            local newIndex = oldIndex
+            newIndex = oldIndex
             while audioId == nil do
                 newIndex = (newIndex + 1) > len and 1 or (newIndex + 1)
                 if (newIndex == oldIndex) then

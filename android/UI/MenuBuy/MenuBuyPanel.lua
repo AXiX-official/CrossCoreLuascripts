@@ -1,9 +1,9 @@
 -- 背景图的位置
-local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}}
+local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}, {-32, 17.5}}
 local closePos = {{662, 310}, {537.8, 322.1}, {716, 321}, {537.8, 322.1}, {568.1, 249.6}, {657, 237}, {662, 310},
-                  {662, 310}}
+                  {662, 310}, {0, 100000}}
 local skipPos = {{607.2, -415.6}, {229, -430}, {283, -442}, {229, -430}, {513.1, -365.6}, {590.9, -327.8},
-                 {607.2, -415.6}, {607.2, -415.6}}
+                 {607.2, -415.6}, {607.2, -415.6}, {486.6, -385}}
 
 local curItem = nil
 local endTime = nil
@@ -159,12 +159,12 @@ function SetNode7()
     --
     UIUtil:SetRedPoint(btn7, isEnough, 150, 43, 0)
     -- time 
-    if(not endTime or TimeUtil:GetTime()>=endTime) then 
+    if (not endTime or TimeUtil:GetTime() >= endTime) then
         timer = nil
-    else 
+    else
         timer = Time.time
     end
-    CSAPI.SetGOActive(time7,timer~=nil)
+    CSAPI.SetGOActive(time7, timer ~= nil)
 end
 
 -- 首冲奖励2 有时间
@@ -174,12 +174,24 @@ function SetNode8()
     --
     UIUtil:SetRedPoint(btn8, isEnough, 150, 43, 0)
     -- time 
-    if(not endTime or TimeUtil:GetTime()>=endTime) then 
+    if (not endTime or TimeUtil:GetTime() >= endTime) then
         timer = nil
-    else 
+    else
         timer = Time.time
     end
-    CSAPI.SetGOActive(time8,timer~=nil)
+    CSAPI.SetGOActive(time8, timer ~= nil)
+end
+
+-- 2025新年礼包
+function SetNode9()
+    CSAPI.SetText(txtDesc9, cfg.title)
+    endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+    local reward = cfg.item[1]
+    curItem = BagMgr:GetFakeData(reward[1], reward[2])
+    -- icon 
+    ResUtil.IconGoods:Load(icon9, curItem:GetIcon() .. "_3")
+    -- num
+    CSAPI.SetText(txt9_Num, reward[2] .. "")
 end
 
 function SetTimes()
@@ -271,6 +283,12 @@ function OnClickBtn6()
     else
         JumpMgr:Jump(180005) -- 跳到签到
     end
+    view:Close()
+end
+
+-- 立即领取
+function OnClickBtn9()
+    ShopProto:Buy2(cfg.shopItem, {})
     view:Close()
 end
 

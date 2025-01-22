@@ -101,7 +101,7 @@ GridFakeData = function(reward,disRealData)
 			result = EquipMgr:GetEquipByCfgID(reward.id)
 		end
 		if(result == nil) then
-			result = EquipMgr:GetFakeData(reward.id,reward.num)
+			result = EquipMgr:GetFakeData(reward.id)
 		end
 		clickCB = GridClickFunc.EquipDetails
 	end
@@ -155,8 +155,8 @@ function this.RandRewardConvertToGridObjectData(_d)
 	local data = nil;
 	if(_d.type == RandRewardType.TEMPLATE) then
 		local rewardCfg = Cfgs.RewardInfo:GetByID(_d.id);
-		local goodCfgs = Cfgs.ItemInfo:GetByID(tonumber(self.cfg.icon));
-		local icon=goodsCfgs.icon
+		local goodCfgs = Cfgs.ItemInfo:GetByID(tonumber(rewardCfg.icon));
+		local icon=goodCfgs.icon
 		if goodCfgs.type==ITEM_TYPE.CARD_CORE_ELEM then
 			icon=string.format("%s_%s",goodCfgs.icon,goodCfgs.quality);
 		end

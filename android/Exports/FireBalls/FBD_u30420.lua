@@ -2,11 +2,11 @@
 local this = 
 {
 [-865403415]={
-{delay=2364,time=12000,type=0,cue_sheet="cv/Lynx.acb",cue_name="Lynx_41",cue_feature=1},
+{delay=2164,time=12000,type=0,cue_sheet="cv/Lynx.acb",cue_name="Lynx_41",cue_feature=1},
 {time=12000,type=0,cue_sheet="fight/effect/twelfth.acb",cue_name="Lynx_Summon"},
 {delay=600,time=12000,type=0,cue_sheet="cv/Lynx.acb",cue_name="Lynx_40",cue_feature=1},
 {effect="summon_eff",time=12000,type=0,pos_ref={ref_type=6}},
-{delay=9724,time=12000,type=0,cue_sheet="cv/Lynx.acb",cue_name="Lynx_43",cue_feature=1},
+{delay=9524,time=12000,type=0,cue_sheet="cv/Lynx.acb",cue_name="Lynx_43",cue_feature=1},
 {delay=3000,time=12000,type=0,cue_sheet="cv/Lynx.acb",cue_name="Lynx_42",cue_feature=1}
 },
 [1310282141]={

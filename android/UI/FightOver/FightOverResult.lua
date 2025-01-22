@@ -211,6 +211,7 @@ function ApplyQuit()
     elseif(sceneType == SceneType.GlobalBoss) then
         GlobalBossMgr:Quit()
     elseif (sceneType == SceneType.RogueT) then
+        ClearTeamData()
         local nDuplicateID = data.elseData.nDuplicateID
         if(RogueTMgr:IsInfinity(nDuplicateID))then 
             RogueTMgr:Quit()
@@ -218,7 +219,7 @@ function ApplyQuit()
             if(data.elseData.bIsWin and RogueTMgr:IsMainLineLast(nDuplicateID) and RogueTMgr:CheckCanSave(nDuplicateID) )then 
                 --最后一关触发保存buff
                 local cfg = Cfgs.MainLine:GetByID(nDuplicateID)
-                CSAPI.OpenView("RogueTBuff", cfg.dungeonGroup,3)
+                CSAPI.OpenView("RogueTSaveBuff", cfg.dungeonGroup)
             else
                 RogueTMgr:Quit()
             end 

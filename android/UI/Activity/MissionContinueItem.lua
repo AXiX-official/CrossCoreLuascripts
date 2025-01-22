@@ -9,6 +9,8 @@ local mType = nil
 function Awake()
     CSAPI.SetGOActive(selObj, false)
     text = ComUtil.GetCom(txtTitle, "Text")
+
+    SetSel(false)
 end
 
 function SetIndex(idx)

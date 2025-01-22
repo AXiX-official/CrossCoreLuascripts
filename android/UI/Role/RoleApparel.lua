@@ -376,6 +376,13 @@ function OnClickL2D()
 end
 
 function SetASMRInfo()
+    local b, sIcon = IsShowASMRBtn()
+    CSAPI.SetGOActive(btnASMR, b)
+    if (not b) then
+        return
+    end
+    ResUtil.ASMRShop:Load(asmrIcon, sIcon)
+
     comm = nil
     bindComm = nil
     --
@@ -388,50 +395,62 @@ function SetASMRInfo()
             if bindComm then
                 local isLock = bindComm:GetBuySum() <= 0
                 -- 加载图标
-                ResUtil.ASMRShop:Load(asmrIcon, bindComm:GetIcon())
-                CSAPI.SetGOActive(asmrLock, isLock)
+                -- ResUtil.ASMRShop:Load(asmrIcon, bindComm:GetIcon())
+                -- CSAPI.SetGOActive(asmrLock, isLock)
                 CSAPI.SetAnchor(asmrDisk, isLock and 0 or 72, 0)
             end
         end
     end
-    CSAPI.SetGOActive(btnASMR, bindID ~= nil)
+end
+
+function IsShowASMRBtn()
+    local cfg = Cfgs.character:GetByID(curModeId)
+    if (cfg.shopId) then
+        local cfg2 = Cfgs.CfgCommodity:GetByID(cfg.shopId)
+        if (cfg2.bundlingID ~= nil) then
+            local cfg3 = Cfgs.CfgCommodity:GetByID(cfg2.bundlingID)
+            return true, cfg3.sIcon
+        end
+    end
+    return false
 end
 
 function OnClickASMR()
     if bindComm and comm then
         local isLock = bindComm:GetBuySum() <= 0
         if isLock then -- 根据绑定类型做逻辑
-            if comm:GetBundlingType() == ShopCommBindType.Show then -- 点击弹出购买窗口
-                local pageData = ShopMgr:GetPageByID(bindComm:GetShopID());
-                if CSAPI.IsADV() then
-                    if CSAPI.RegionalCode() == 3 then
-                        if CSAPI.PayAgeTitle() then
-                            CSAPI.OpenView("SDKPayJPlimitLevel", {
-                                ExitMain = function()
-                                    ShopCommFunc.OpenPayView(bindComm, pageData);
-                                end
-                            })
-                        else
-                            ShopCommFunc.OpenPayView(bindComm, pageData);
-                        end
-                    else
-                        ShopCommFunc.OpenPayView(bindComm, pageData);
-                    end
-                else
-                    ShopCommFunc.OpenPayView(bindComm, pageData);
-                end
-            else
-                OnClickBuy();
-            end
-        else -- 弹出跳转确认窗口
-            local dialogdata = {
-                content = LanguageMgr:GetTips(46003),
-                okCallBack = function()
-                    JumpMgr:Jump(80003);
-                end
-            }
-            CSAPI.OpenView("Dialog", dialogdata);
+            -- if comm:GetBundlingType() == ShopCommBindType.Show then -- 点击弹出购买窗口
+            --     local pageData = ShopMgr:GetPageByID(bindComm:GetShopID());
+            --     if CSAPI.IsADV() then
+            --         if CSAPI.RegionalCode() == 3 then
+            --             if CSAPI.PayAgeTitle() then
+            --                 CSAPI.OpenView("SDKPayJPlimitLevel", {
+            --                     ExitMain = function()
+            --                         ShopCommFunc.OpenPayView(bindComm, pageData);
+            --                     end
+            --                 })
+            --             else
+            --                 ShopCommFunc.OpenPayView(bindComm, pageData);
+            --             end
+            --         else
+            --             ShopCommFunc.OpenPayView(bindComm, pageData);
+            --         end
+            --     else
+            --         ShopCommFunc.OpenPayView(bindComm, pageData);
+            --     end
+            -- else
+            --     OnClickBuy();
+            -- end
+            JumpMgr:Jump(140201)
         end
+    else -- 弹出跳转确认窗口
+        local dialogdata = {
+            content = LanguageMgr:GetTips(46003),
+            okCallBack = function()
+                JumpMgr:Jump(80003);
+            end
+        }
+        CSAPI.OpenView("Dialog", dialogdata);
     end
 end
 

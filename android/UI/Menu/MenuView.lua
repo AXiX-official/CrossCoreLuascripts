@@ -22,7 +22,7 @@ local lockPoss = {
 -- 入口拿取红点的key值，没有的特殊处理
 local redsRef = {
     ["MailView"] = RedPointType.Mail,
-    ["Bag"] = RedPointType.Bag,
+    --["Bag"] = RedPointType.Bag,
     ["ActivityListView"] = RedPointType.ActivityList1,
     -- ["Section"] = RedPointType.Attack,
     ["Matrix"] = RedPointType.Matrix,
@@ -81,6 +81,8 @@ local barLen = 0.5
 local anim_create
 local anim_shop
 local rdLNR = {}
+local globalBossTime = 0
+local bagLimitTime 
 
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
@@ -187,6 +189,11 @@ function Update()
             CSAPI.SetGOActive(btnBack, false)
         end
     end
+    
+    --重置待机时间
+    if (menuStandbyTimer~=nil and CS.UnityEngine.Input.GetMouseButton(0)) then
+        menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
+    end
 
     -- 经验
     if (barTime) then
@@ -276,6 +283,18 @@ function Update()
             CSAPI.OpenView("MenuStandby")
         end
     end
+    -- 世界boss
+    if globalBossTime > 0 then
+        globalBossTime = GlobalBossMgr:GetCloseTime()
+        if globalBossTime <= 0 then
+            DungeonMgr:CheckRedPointData()
+        end
+    end
+    --背包限时物品
+    if (bagLimitTime and curTime > bagLimitTime) then
+        bagLimitTime = BagMgr:GetLessLimitTime()
+        BagMgr:CheckBagRedInfo()
+    end
 end
 
 -- 界面逻辑不在这里处理，在Loading_Complete后再处理,这里处理初始化数据操作
@@ -297,6 +316,8 @@ function OnOpen()
     activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
     menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
     exerciseLTime = ExerciseMgr:GetRefreshTime()
+    globalBossTime = GlobalBossMgr:GetCloseTime()
+    bagLimitTime = BagMgr:GetLessLimitTime()
 end
 
 function LoadingComplete()
@@ -408,6 +429,7 @@ function SetReds()
     for i, v in ipairs(views) do
         local isNew = false
         local isRed = false
+        local isLimit = false --是否限时
         if (not lockDatasDic[v]) then
             if (redsRef[v]) then
                 local _data = RedPointMgr:GetData(redsRef[v])
@@ -432,8 +454,13 @@ function SetReds()
                 if (not isNew) then
                     isRed = RedPointMgr:GetData(RedPointType.Attack) ~= nil
                 end
+            elseif (v == "Bag") then
+                isLimit = BagMgr:IsShowLimit()
+                if (not isLimit) then
+                    isRed = RedPointMgr:GetData(RedPointType.Bag) ~= nil
+                end
             end
-        end
+        end 
         local obj = this["btn" .. v]
         local pos = redPoss[v]
         -- if (obj.transform.parent.name == "rdBtns") then
@@ -444,10 +471,12 @@ function SetReds()
         -- else
         local newObj = UIUtil:SetNewPoint(obj, isNew, pos[1], pos[2])
         local redObj = UIUtil:SetRedPoint(obj, isRed, pos[1], pos[2])
+        local limitObj = UIUtil:SetLimitPoint(obj, isLimit, pos[1], pos[2])
         -- end
         if (obj.transform.parent.name == "rdBtns") then
             rdLNR[v .. "_new"] = newObj
             rdLNR[v .. "_red"] = redObj
+            rdLNR[v .. "_limit"] = limitObj
         end
     end
 end
@@ -616,7 +645,7 @@ function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
         local detail = curDisplayData:GetDetail(slot)
         CSAPI.SetAnchor(iconParent, detail.x, detail.y, 0)
         CSAPI.SetScale(iconParent, detail.scale, detail.scale, 1)
-        --item.EnNeedClick(detail.top) -- 启禁点击 
+        -- item.EnNeedClick(detail.top) -- 启禁点击 
         item.Refresh(id, LoadImgType.Main, function()
             -- 入场动画
             if (slot == curDisplayData:GetTopSlot()) then
@@ -663,7 +692,7 @@ function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
                 end
                 CRoleDisplayMgr:SetPlayInID(id)
             end
-        end, detail.live2d, curDisplayData:IsShowShowImg(slot),detail.top)
+        end, detail.live2d, curDisplayData:IsShowShowImg(slot), detail.top)
     else
         item.ClearCache()
         CSAPI.SetGOActive(item.gameObject, false)
@@ -727,17 +756,21 @@ function SetLTSV()
             lvSV_time = _time
         end
     end
-    if(#ltSVDatas>1)then 
-       table.sort(ltSVDatas, function(a, b)
+    if (#ltSVDatas > 1) then
+        table.sort(ltSVDatas, function(a, b)
             return a:GetCfg().sort < b:GetCfg().sort
         end)
     end
     ltSVItems = ltSVItems or {}
+    local len = #ltSVDatas
     ItemUtil.AddItems("Menu/MenuLBtn", ltSVItems, ltSVDatas, ltSVContent, nil, 1, nil, function()
         if (not ltSVItems_timer and #ltSVItems > 1) then
-            for k, v in ipairs(ltSVItems) do
-                CSAPI.SetGOActive(ltSVItems[k].gameObject, false)
-                FuncUtil:Call(ShowLTSVItem, nil, 33 * (k - 1) + 1, k)
+            local len = #ltSVDatas
+            for k = 1, len do
+                if (ltSVItems[k]) then
+                    CSAPI.SetGOActive(ltSVItems[k].gameObject, false)
+                    FuncUtil:Call(ShowLTSVItem, nil, 33 * (k - 1) + 1, k)
+                end
             end
         end
     end)
@@ -920,13 +953,13 @@ function EActivityGetCB()
             return true
         end
     end
-    
+
     if (OpenGoogleRewards()) then
         return true
     end
 
-    --周年活动  
-    if (ActivityMgr:CheckWindowShow()) then 
+    -- 周年活动  
+    if (ActivityMgr:CheckWindowShow()) then
         return true
     end
 
@@ -1045,18 +1078,18 @@ function OnViewCloseds()
     if (not CheckIsTop()) then
         return
     end
-    -- 不在主场景
-    if (not SceneMgr:IsMajorCity()) then
-        return
-    end
-    -- 入场动画
-    if (isPlayIn) then
-        return
-    end
-    -- ui动画
-    if (not isAnimSuccess) then
-        return
-    end
+    -- -- 不在主场景
+    -- if (not SceneMgr:IsMajorCity()) then
+    --     return
+    -- end
+    -- -- 入场动画
+    -- if (isPlayIn) then
+    --     return
+    -- end
+    -- -- ui动画
+    -- if (not isAnimSuccess) then
+    --     return
+    -- end
     -- 弹窗
     if (CheckPopUpWindow()) then
         return
@@ -1068,6 +1101,20 @@ function OnViewCloseds()
 end
 
 function CheckPopUpWindow()
+
+    -- 不在主场景
+    if (not SceneMgr:IsMajorCity()) then
+        return true
+    end
+    -- 入场动画
+    if (isPlayIn) then
+        return true
+    end
+    -- ui动画
+    if (not isAnimSuccess) then
+        return true
+    end
+
     local isGuide = GuideMgr:HasGuide("Menu") or GuideMgr:IsGuiding()
     if (isGuide) then
         TriggerGuide()
@@ -1084,9 +1131,9 @@ function PlayCB(curCfg)
         local script = SettingMgr:GetSoundScript(curCfg) or ""
         CSAPI.SetText(txtTalk1, script)
         CSAPI.SetText(txtTalk2, script)
-        --SetTalkName(curCfg)
-        CSAPI.SetGOActive(txtTalkBg1,curCfg.menuPos==nil)
-        CSAPI.SetGOActive(txtTalkBg2,curCfg.menuPos==1)
+        -- SetTalkName(curCfg)
+        CSAPI.SetGOActive(txtTalkBg1, curCfg.menuPos == nil)
+        CSAPI.SetGOActive(txtTalkBg2, curCfg.menuPos == 1)
         isTalking = true
         SetTalkBg()
     end
@@ -1229,8 +1276,8 @@ end
 function InitAnims()
     anim_uis = ComUtil.GetCom(uis, "Animator")
     anim_rd = ComUtil.GetCom(RD, "Animator")
-    --anim_center_ctl = ComUtil.GetCom(center_ctl, "ActionBase")
-    --anim_center_ltc = ComUtil.GetCom(center_ltc, "ActionBase")
+    -- anim_center_ctl = ComUtil.GetCom(center_ctl, "ActionBase")
+    -- anim_center_ltc = ComUtil.GetCom(center_ltc, "ActionBase")
     anim_create = ComUtil.GetCom(imgCreate, "Animator")
     anim_shop = ComUtil.GetCom(imgShop, "Animator")
     -- 根据历史记录初始化RD
@@ -1264,35 +1311,35 @@ function Anim_RD(b)
     if ((rdType == 1 and b)) or ((rdType ~= 1 and not b)) then
         anim_rd.enabled = true
         anim_rd:Play(animNam)
-        if(b)then 
-            FuncUtil:Call(SetRDLockNexRed,nil,300,b)
-        else 
+        if (b) then
+            FuncUtil:Call(SetRDLockNexRed, nil, 300, b)
+        else
             SetRDLockNexRed(b)
-        end   
+        end
     end
 end
 function SetRDLockNexRed(b)
     for key, obj in pairs(rdLNR) do
-        CSAPI.SetGOActive(obj,b)
+        CSAPI.SetGOActive(obj, b)
     end
 end
 function HideAnimRD()
-    if(rdType==2)then 
+    if (rdType == 2) then
         anim_rd.enabled = false
-    end 
+    end
 end
 
 -- b:还原
 function Anim_center(b, isPlay)
-    CSAPI.SetGOActive(center_ctl,false)
-    CSAPI.SetGOActive(center_ltc,false)
+    CSAPI.SetGOActive(center_ctl, false)
+    CSAPI.SetGOActive(center_ltc, false)
     if (isPlay) then
         if (b) then
-            --anim_center_ltc:ToPlay()
-            CSAPI.SetGOActive(center_ltc,true)
+            -- anim_center_ltc:ToPlay()
+            CSAPI.SetGOActive(center_ltc, true)
         else
-            --anim_center_ctl:ToPlay()
-            CSAPI.SetGOActive(center_ctl,true)
+            -- anim_center_ctl:ToPlay()
+            CSAPI.SetGOActive(center_ctl, true)
         end
     else
         CSAPI.SetAnchor(center, b and 0 or -350, 0, 0)

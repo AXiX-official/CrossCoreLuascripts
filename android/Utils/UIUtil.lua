@@ -154,7 +154,7 @@ end
 function this:OpenReward2(viewPath, data, elseData)
     -- LogError("奖励数据：")
     -- LogError(data)
-    if data and #data > 0 and #data[1] > 0 then 
+    if data and #data > 0 and #data[1] > 0 then
         local showRoleList = {};
         local showSkinList = {}
         for k, v in ipairs(data[1]) do -- data[1]是奖励数据
@@ -310,7 +310,7 @@ end
 
 -- 添加或者移除new
 function this:SetNewPoint(parent, isAdd, x, y, z, scale)
-    return self:SetRedPoint2("Common/NewP", parent, isAdd, x, y, z, 1,"_new")
+    return self:SetRedPoint2("Common/NewP", parent, isAdd, x, y, z, 1, "_new")
 end
 
 -- 添加或者移除红点
@@ -321,6 +321,11 @@ end
 -- 添加或移除锁
 function this:SetLockPoint(parent, isAdd, x, y, z)
     return self:SetRedPoint2("Common/Lock", parent, isAdd, x, y, z, 1, "_lock")
+end
+
+-- 添加或移限时
+function this:SetLimitPoint(parent, isAdd, x, y, z)
+    return self:SetRedPoint2("Common/Limit", parent, isAdd, x, y, z, 1, "_limit")
 end
 
 -- 添加或者移除红点
@@ -455,6 +460,22 @@ function this:IsTipsDialogTick(_key)
         return true
     end
     return false
+end
+
+--打开徽章信息界面
+function this:OpenBadgeTips(badgeId,x,y)
+    if badgeId == nil then
+        LogError("输入徽章id为空!!!")
+        return
+    end
+    local badgeData = BadgeMgr:GetData(badgeId)
+    if badgeData == nil then
+        LogError("获取不到徽章数据!!!"..badgeId)
+        return
+    end
+    x = x or 0
+    y = y or 0
+    CSAPI.OpenView("BadgeTips",badgeData,{x,y})
 end
 
 -- 移动

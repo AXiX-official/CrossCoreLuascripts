@@ -17,7 +17,7 @@ local mgrNames = {
 	--"CoolMgr",      --热值冷却
 	"CreateMgr",    --角色工厂
 	"MailMgr",      --邮件
-	"MissionMgr",   --任务
+	--"MissionMgr",   --任务
 	"JumpMgr",      --跳转
 	"RoleMgr",      --卡牌
 	"RoleSkillMgr", --卡牌技能
@@ -65,6 +65,9 @@ local mgrNames = {
 	"HeadTitleMgr",
 	"ASMRMgr",
 	"GlobalBossMgr", --新世界boss
+	"RogueTMgr",
+
+	"MissionMgr",   --任务  --------------------------------------必须放到最后
 }
 
 

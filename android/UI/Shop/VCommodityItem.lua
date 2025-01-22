@@ -2,7 +2,8 @@
 local descPos={{-94.63,-99},{-94.63,-145.5}}
 local currPrice=priceObj;
 local eventMgr=nil;
-
+local StrText=nil;
+local displayPrice=nil;
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Shop_MonthCard_DaysChange,OnMonthCardDaysChange)

@@ -18,7 +18,7 @@ end
 
 function SetIcon()
     if cfg.icon then
-        ResUtil.Anniversary:Load(icon,cfg.icon)
+        ResUtil.Summary:Load(icon,cfg.icon)
     end
 end
 

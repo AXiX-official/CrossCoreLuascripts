@@ -14,6 +14,8 @@ local ScreenShotSaveAllPath="";
 local ScreenShotSavePath="";
 ---截图保存项目名称
 local ScreenShotSaveName="";
+---分享内容
+local Sharecontent="";
 ---调用 参考  CSAPI.OpenView("ShareView",{LocationSource=1})
 --分享页面操作
 function Awake()
@@ -27,23 +29,28 @@ function OnOpen()
     -- LocationSource=0;  ---1.抽卡分享 2.皮肤/插画 3.副本胜利分享 4.竞技场胜利分享
     if data and data.LocationSource and data.LocationSource>0 then
         if tonumber(data.LocationSource)==1 then
+            Sharecontent=LanguageMgr:GetByID(1064);
             ---抽卡分享
             CSAPI.SetText(Titlecontent,LanguageMgr:GetByID(1064));
             IsCameraScreenshot=true;
         elseif tonumber(data.LocationSource)==2 then
+            Sharecontent=LanguageMgr:GetByID(1065);
             ---皮肤/插画
             CSAPI.SetText(Titlecontent,LanguageMgr:GetByID(1065));
             IsCameraScreenshot=true;
         elseif tonumber(data.LocationSource)==3 then
+            Sharecontent=LanguageMgr:GetByID(1066);
             ---副本胜利分享
             CSAPI.SetText(Titlecontent,LanguageMgr:GetByID(1066));
             IsCameraScreenshot=true;
         elseif tonumber(data.LocationSource)==4 then
+            Sharecontent="";
             ---竞技场胜利分享
             CSAPI.SetText(Titlecontent,"");
             IsCameraScreenshot=true;
         elseif tonumber(data.LocationSource)==5 then
             CSAPI.SetText(Titlecontent,"");
+            Sharecontent="";
             ---公告截图分享
             local  ImageBG_MenuADIltem= ComUtil.GetCom(ImageBGDwon, "MenuADItem")
             ImageBG_MenuADIltem:SetImage(ImageBG,data.key, data.bgName,data.url,function()
@@ -55,10 +62,12 @@ function OnOpen()
                 IsCameraScreenshot=true;
             end)
         else
+            Sharecontent="";
             CSAPI.SetText(Titlecontent,"");
             IsCameraScreenshot=true;
         end
     else
+        Sharecontent="";
         CSAPI.SetText(Titlecontent,"");
         IsCameraScreenshot=true;
     end
@@ -145,7 +154,7 @@ function CameraScreenshot()
             print("ReadLocalimage："..tostring(back))
             if back then
 
-                SDKShare("分享测试内容","分享测试内容标题",ScreenShotSaveAllPath,ScreenShotSaveAllPath,"",tonumber(2),tonumber(8),"");
+                SDKShare(Sharecontent,"",ScreenShotSaveAllPath,ScreenShotSaveAllPath,"",tonumber(2),tonumber(8),"");
             else
                  LogError("读取资源失败："..ScreenShotSaveAllPath);
             end

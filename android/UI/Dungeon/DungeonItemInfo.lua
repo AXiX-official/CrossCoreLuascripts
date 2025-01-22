@@ -19,13 +19,18 @@ end
 
 function InitInfo()
     infoUtil = DungeonInfoUtil.New()
-    local x, y, z = CSAPI.GetLocalPos(childNode);
-    enterPos = {x, y, z}
-    outPos = {4000, y, 0};
+    _, goY, _ = CSAPI.GetLocalPos(childNode);
+    outPos = {4000, goY, 0};
+    enterPos = GetEnterPos()
     CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
     CSAPI.SetGOActive(gameObject, false);
     CSAPI.SetGOActive(clickMask, false)
     CSAPI.SetGOActive(mask, false)
+end
+
+function GetEnterPos()
+    canvasSize = CSAPI.GetMainCanvasSize()
+    return {canvasSize[0] / 2, goY, 0}
 end
 
 function OnDestroy()
@@ -178,7 +183,7 @@ function SetFunc(panelName,oldFuncName,newFunc)
     panel[oldFuncName] = newFunc
 end
 
-function SetGOActivte(panelName,goName,b)
+function SetGOActive(panelName,goName,b)
     if panelName == nil or panelName == "" then
         return nil
     end
@@ -254,7 +259,7 @@ function PlayInfoMove(isShow, callBack)
             infoFade:Play(1, 0, 100, 0, function()
                 CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
                 infoCG.alpha = 1
-                PlayMoveAction(childNode, enterPos)
+                PlayMoveAction(childNode, GetEnterPos())
                 if callBack then
                     callBack()
                 end
@@ -263,7 +268,7 @@ function PlayInfoMove(isShow, callBack)
         else
             lastCfg = currCfg
             infoFade:Play(0, 1)
-            PlayMoveAction(childNode, enterPos, function()
+            PlayMoveAction(childNode, GetEnterPos(), function()
                 isInfoShow = true
             end)
             if callBack then
@@ -306,7 +311,7 @@ function ShowAnim()
 end
 
 function SetPos(isShow)
-    local pos = isShow and enterPos or outPos
+    local pos = isShow and GetEnterPos() or outPos
     CSAPI.SetLocalPos(childNode, pos[1], pos[2], pos[3])
 end
 

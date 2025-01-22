@@ -32,10 +32,10 @@ function Skill4503005:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 4503013
-	if self:Rand(3000) then
+	if self:Rand(4000) then
 		self:AlterBufferByID(SkillEffect[4503013], caster, target, data, 1003,1)
 		-- 4503053
-		if self:Rand(3000) then
+		if self:Rand(4000) then
 			self:AlterBufferByID(SkillEffect[4503053], caster, target, data, 1051,1)
 		end
 	end

@@ -82,6 +82,18 @@ local conf = {
 {'ColosseumView',	'ColosseumView',	'1',	'1',	'487,-72',	'2801,2802,2803,2804',	'',	'',	''},
 {'GlobalBossView',	'GlobalBossView',	'1',	'1',	'487,-72',	'',	'70022,70023',	'',	''},
 {'CollaborationMain',	'CollaborationMain',	'1',	'1',	'487,-72',	'',	'61040,61041',	'',	''},
+{'TrialsView',	'TrialsView',	'1',	'1',	'487,-72',	'',	'37041,37042',	'',	''},
+{'TrialsListView',	'TrialsView',	'1',	'1',	'487,-72',	'',	'37041,37042',	'',	''},
+{'RogueTView',	'RogueTView',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTReward',	'RogueTReward',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTScore',	'RogueTScore',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTHard',	'RogueTHard',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTSelectBuff',	'RogueTSelectBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTBuffSelect',	'RogueTBuffSelect',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTCurBuff',	'RogueTCurBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTShopBuff',	'RogueTShopBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTEnemySelect',	'RogueTEnemySelect',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
+{'RogueTSaveBuff',	'RogueTSaveBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

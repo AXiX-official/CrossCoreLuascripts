@@ -99,7 +99,72 @@ function this:CheckCard(cardData)
         isPass=roleInfo:GetBelonging()==limitVal;
         tempVal=roleInfo:GetBelonging();
     elseif limitType==TeamConditionLimitType.TeamItemNum then--队伍人数,需要与传入的数量做对比
-        isPass=true;
+        isPass=true;        
+    elseif limitType==TeamConditionLimitType.LevelGreater then
+        isPass=cardData:GetLv()>=limitVal;
+        tempVal=cardData:GetLv();
+    elseif limitType==TeamConditionLimitType.LevelLess then
+        isPass=cardData:GetLv()<=limitVal;
+        tempVal=cardData:GetLv();
+    elseif limitType==TeamConditionLimitType.SuitType then --五件装备均为同一套装才算通过
+        local equips=cardData:GetEquips();
+        if equips~=nil and #equips==5 then
+            isPass=true;
+            for k,v in ipairs(equips) do
+                if v:GetSuitID()~=limitVal then
+                    isPass=false;
+                    break;
+                end
+            end
+        else
+            isPass=false;
+        end
+    elseif limitType==TeamConditionLimitType.SuitQualityGreater then --装备品质，有空槽位也能通过测试
+        local equips=cardData:GetEquips();
+        if equips~=nil then
+            isPass=true;
+            for k,v in ipairs(equips) do
+                if v:GetQuality()<limitVal then
+                    isPass=false;
+                    break;
+                end
+            end
+        else
+            isPass=true;
+        end
+    elseif limitType==TeamConditionLimitType.SuitQualityLess then--装备品质，有空槽位也能通过测试
+        local equips=cardData:GetEquips();
+        if equips~=nil then
+            isPass=true;
+            for k,v in ipairs(equips) do
+                if v:GetQuality()>limitVal then
+                    isPass=false;
+                    break;
+                end
+            end
+        else
+            isPass=true;
+        end
+    elseif limitType==TeamConditionLimitType.SuitLevelGreater then--装备等级，有空槽位也能通过测试
+        local equips=cardData:GetEquips();
+        local lv=0;
+        if equips~=nil then
+            for k,v in ipairs(equips) do
+                lv=lv+v:GetLv();
+            end
+        end
+        isPass=lv>=limitVal;
+        tempVal=lv;
+    elseif limitType==TeamConditionLimitType.SuitLevelLess then--装备等级，有空槽位也能通过测试
+        local equips=cardData:GetEquips();
+        local lv=0;
+        if equips~=nil then
+            for k,v in ipairs(equips) do
+                lv=lv+v:GetLv();
+            end
+        end
+        isPass=lv<=limitVal;
+        tempVal=lv;
     end
     -- LogError("条件ID："..tostring(self.cfg.id).."卡牌ID："..tostring(cardData:GetCfgID()).."\t限制类型："..tostring(limitType).."\t限制值："..tostring(limitVal).."\t当前值："..tostring(tempVal).."\t验证结果："..tostring(isPass))
     return isPass;

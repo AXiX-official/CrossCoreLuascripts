@@ -7,11 +7,11 @@ function Skill704100401:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
 function Skill704100401:CanSummon()
-	return self.card:CanSummon(10000027,1,{4,1},{progress=1001})
+	return self.card:CanSummon(10000032,1,{4,1},{progress=1001})
 end
 -- 执行技能
 function Skill704100401:DoSkill(caster, target, data)
-	-- 40019
+	-- 40024
 	self.order = self.order + 1
-	self:Summon(SkillEffect[40019], caster, target, data, 10000027,1,{4,1},{progress=1001})
+	self:Summon(SkillEffect[40024], caster, target, data, 10000032,1,{4,1},{progress=1001})
 end

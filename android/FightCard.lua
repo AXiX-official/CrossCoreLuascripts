@@ -1202,7 +1202,6 @@ function FightCardBase:AddHp(num, killer, bNotDeathEvent, bNotDealShield)
             return false, shield, num
         end
     end
-
     local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent,true)
     if num < 0 then
         -- 传给统计接口
@@ -1233,7 +1232,7 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
     if num < 0 then
         self.nBeSkillDamage = self.nBeSkillDamage or 0
         self.nBeSkillDamage = self.nBeSkillDamage - num
-        --LogDebugEx("FightCardBase:AddHpNoShield", self.name, self.nBeSkillDamage)
+        -- LogDebugEx("FightCardBase:AddHpNoShield", self.name, self.nBeSkillDamage, num, self.nTotalDamage)
         
         if self.isInvincible then -- 无限血机制统计伤害
             self.nTotalDamage = self.nTotalDamage - num
@@ -2081,7 +2080,6 @@ function FightCardServer:DoAI(isAutoFight)
     data.targetIDs = targetIDs
     data.pos = pos
     data.skillID = skillID
-
     LogTable(data, "AI Attack data= ")
     mgr:Attack(self, targetIDs, data, pos)
     mgr:AddCmd(CMD_TYPE.Skill, data)

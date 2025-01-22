@@ -9,6 +9,9 @@ local attrs = {}; -- 光环属性子物体
 local isEvent=false;
 local isDrag=false;
 local eventMgr=nil;
+local Input=CS.UnityEngine.Input;
+local fingerId=nil;
+
 function Awake()
     eventMgr = ViewEvent.New();
     dragScript = ComUtil.GetCom(btnClick, "DragCallLua");
@@ -38,6 +41,7 @@ function OnRecycle()
     if (cg_go~=nil) then
         cg_go.alpha = 1
     end
+    fingerId=nil;
 end
 
 function SetClickCB(_cb)
@@ -65,6 +69,8 @@ function Clean()
     SetBGIcon()
     SetAttrs(false);
     SetBlack(false)
+    --
+    CSAPI.SetGOActive(imgStar,false)
 end
 
 -- _elseData 根据key来划分数据  elseData:{key,isSelect,showAttr,showTips,isPlus:置空时是否显示加号,sr:当启用dragcalllua时用来解决sr拖拽方法被覆盖的问题}
@@ -131,6 +137,11 @@ function Refresh(_cardData, _elseData)
         else
             CSAPI.SetScriptEnable(btnClick, "DragCallLua", false);
         end
+        --
+        CSAPI.SetGOActive(imgStar,cardData.isStar)
+        if(cardData.isStar)then 
+            CSAPI.SetGOActive(npcObj,false)
+        end 
     else
         Clean();
         local imgName="btn_3_04";
@@ -452,6 +463,9 @@ function SetFormation(_cid,_hideFormat)
     local index = TeamMgr:GetCardTeamIndex(cid,teamType,true)
     if index ~= -1 then
         CSAPI.SetGOActive(format, true)
+        if(teamType and teamType==eTeamType.RogueS) then 
+            index = index - eTeamType.RogueS
+        end 
         index = index < 10 and "0" .. index or index .. ""
         CSAPI.SetText(txtFormat1, index)
     else
@@ -512,12 +526,19 @@ local pressTime=0;
 local cDeltaX=0;
 local cDeltaY=0;
 function OnBeginDragXY(x, y, deltaX, deltaY)
-    if isEvent == true then
-        return;
-    end
-    if elseData and elseData.disDrag==true then
-		return;
-	end
+    if isEvent == true or (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+     end
+     if elseData and elseData.disDrag==true then
+         do return end;
+     end
+     if Input.touchCount>0 and TeamMgr:GetDragFingerID()==nil then
+         fingerId=Input:GetTouch(0).fingerId;
+         TeamMgr:SetDragFingerID(fingerId)
+        --  for i=1,Input.touchCount do
+        --       LogError(Input:GetTouch(i-1).fingerId);
+        --   end
+      end
     pressTime=0;
     cDeltaX=deltaX;
     cDeltaY=deltaY;
@@ -547,6 +568,9 @@ end
 -- 左右移动为上阵，上下移动为滑动
 function OnDragXY(x, y, deltaX, deltaY)
     -- Log("OnDrag....")
+    if  (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+    end
     if elseData and elseData.disDrag==true then
 		return;
 	end
@@ -584,9 +608,14 @@ function OnDragXY(x, y, deltaX, deltaY)
 end
 
 function OnEndDragXY(x, y, deltaX, deltaY)
+    if  (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+    end
     if elseData and elseData.disDrag==true then
 		return;
 	end
+    TeamMgr:SetDragFingerID(nil);
+    fingerId=nil;
     EventMgr.Dispatch(EventType.TeamView_DragMask_Change, false)
     -- Log("OnEndDrag....")
     -- Log("isEvent:"..tostring(isEvent))

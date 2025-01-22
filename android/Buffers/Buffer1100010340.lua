@@ -1,4 +1,4 @@
--- 山脉阵营不朽buff
+-- 群峦之力
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -18,11 +18,6 @@ function Buffer1100010340:OnBefourHurt(caster, target)
 	else
 		return
 	end
-	-- 8238
-	if SkillJudger:IsCasterMech(self, self.caster, target, true,7) then
-	else
-		return
-	end
 	-- 8259
 	if SkillJudger:IsCanHurt(self, self.caster, target, true) then
 	else
@@ -30,6 +25,11 @@ function Buffer1100010340:OnBefourHurt(caster, target)
 	end
 	-- 8754
 	local c150 = SkillApi:GetAttr(self, self.caster, target or self.owner,1,"defense")
+	-- 8227
+	if SkillJudger:IsCasterMech(self, self.caster, target, false,1) then
+	else
+		return
+	end
 	-- 1100010340
-	self:LimitDamage(BufferEffect[1100010340], self.caster, self.caster, nil, 0.3,(c150/400))
+	self:LimitDamage(BufferEffect[1100010340], self.caster, self.caster, nil, 0.3,(c150*0.002))
 end

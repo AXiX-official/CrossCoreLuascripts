@@ -19,6 +19,12 @@ function this.PushEnd(_data, _isWin, _team, _rewards, _jf, _exp, _nPlayerExp, _f
 		FightActionMgr:Push(FightActionMgr:Apply(FightActionType.FightEnd, data))
 	end
 end
+--结果 RogueT
+function this.RogueTInfoUpdate(proto,isForceOver)
+	local team = this.GetTeamData(RogueTMgr:GetTeamIndex2(proto.nDuplicateID), false);
+	local exp = this.GetExpList(proto, false);
+	this.PushEnd(nil, proto.bIsWin, team, proto.rewards, 0, exp, 0,proto.cardsExp, isForceOver,proto)
+end
 
 --结果 RogueS
 function this.RogueSInfoUpdate(proto,isForceOver)

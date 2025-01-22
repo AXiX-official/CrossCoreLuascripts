@@ -32,6 +32,8 @@ local conf = {
 {'22',	'22',	'HeadFramePanel',	'8000',	'8000',	'8000',	'[[1061,"CfgIsAvatar"]]',	''},
 {'23',	'23',	'AchievementView',	'9003,9001',	'9003',	'9002,9003,9001,9000',	'[[3024,"CfgAchieveQualitySort"]]',	''},
 {'24',	'24',	'CRoleDisplayS',	'10001',	'10001',	'10001',	'[[7072,"CfgRandomRoleType"],[3022,"CfgTeamEnum"],[1053,"CfgIsSkin"],[3024,"CfgCardSortQuality"],[1054,"CfgMultiImageThemeType"]]',	''},
+{'25',	'25',	'TeamView',	'1002,1001,1005,1004,1006,1003,1008',	'1002',	'1010,1002,1001,1005,1008,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
+{'26',	'26',	'TeamView',	'1002,1001,1005,1004,1006,1003,1008',	'1002',	'1011,1010,1002,1001,1005,1008,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
 },
 }
 --cfgCfgSortFilter = conf

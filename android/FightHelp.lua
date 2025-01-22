@@ -304,7 +304,7 @@ function FightHelp:StartPvpFight(data, fightIndex)
     end
     --LogTable(data,"StartPvpFight222222222222222222222")
     for i, v in ipairs(data) do
-        self.listPvp[v.uid] = v.data
+        -- self.listPvp[v.uid] = v.data
 
         local conn = ArmyFighDataMgr:GetPlrConn(v.uid)
         conn:send({'FightProto:PvpFightResult', {data = data}})
@@ -1044,7 +1044,7 @@ function FightHelp:Destroy(uid, player)
             )
         end
     else
-        LogWarning("FightHelp:Destroy uid=%s not exist", uid)
+        LogInfo("FightHelp:Destroy uid=%s not exist", uid)
     end
 
     FightHelp.mapPlayerMgr[uid] = nil

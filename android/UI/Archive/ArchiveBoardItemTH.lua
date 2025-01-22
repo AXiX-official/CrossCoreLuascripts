@@ -62,7 +62,7 @@ end
 
 function OnClick()
 	if isUnLock then		
-		CSAPI.OpenView("MulPictureView", {id=data.board_id})
+		CSAPI.OpenView("MulPictureView", {id=data.board_id,showMask=true})
 	end
 end
 function OnDestroy()	

@@ -2,6 +2,7 @@
 local items={};
 local input=nil;
 local group=nil;
+
 function Awake()
 	input=ComUtil.GetCom(inp_teamName,"InputField");
 	CSAPI.AddInputFieldCallBack(inp_teamName,OnTeamNameEdit);
@@ -27,7 +28,7 @@ function OnTeamNameEdit(str)
 	if elseData and elseData.team and isFirst==false then
 		if not MsgParser:CheckContain(str) then
             elseData.team:SetTeamName(str);
-            isChange=true;
+            EventMgr.Dispatch(EventType.Team_PresetName_Change,{isChange=true,idx=elseData.team.index});
 		else
             Tips.ShowTips(LanguageMgr:GetTips(9003))
             input.text=elseData.team:GetTeamName();
@@ -165,6 +166,7 @@ function ReplaceTeam()
 			isLock=false,
 			index=GetIndex(),
 		}
+		EventMgr.Dispatch(EventType.Team_PresetName_Change,{isChange=false,idx=teamData.index});
 		Refresh(data,elseData);
 	end);
 end

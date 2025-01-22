@@ -14,6 +14,8 @@ function this:Clear()
     self.rank = 0
     self.useCount = 0
     self.data = nil
+    self.closeDesc = ""
+    self.closeTime = 0
 
     --rank
     self.clearTime = 0
@@ -30,6 +32,7 @@ function this:SetInfo(proto)
         self.info = {}
         self.info.sTime = proto.beginTime
         self.info.eTime = proto.endTime
+        self.hp = proto.hp and math.floor(proto.hp) or 0
         if proto.bossId then
             if self.data == nil then
                 local data = GlobalBossData.New()
@@ -41,6 +44,7 @@ function this:SetInfo(proto)
             end
         end
     end
+    self:CheckCloseTime()
     EventMgr.Dispatch(EventType.GlobalBoss_Data_Update,isOffset)
 end
 
@@ -202,6 +206,55 @@ function this:GetMyRank(type)
     local info = RankActivityInfo.New()
     info:Init(data)
     return info
+end
+
+------------------------------------red------------------------------------
+function this:IsRed()
+    if self.data then
+        if not self:IsClose() and self:IsOpen() and not self:IsKill() then
+            return RedPointMgr:GetDayRedState(RedPointDayOnceType.GloBalBoss)
+        end
+    end
+    return false
+end
+------------------------------------openTime------------------------------------
+function this:CheckCloseTime()
+    self.closeDesc = ""
+    self.closeTime = 0
+    if self.data then
+        local openInfo = DungeonMgr:GetActiveOpenInfo2(self.data:GetDungeonCfg().group)
+        if openInfo then
+            local _cfg = openInfo:GetCfg()
+            if _cfg and _cfg.closeStartTime and _cfg.closeEndTime then
+                self.closeDesc = _cfg.desc
+                local curTab = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
+                local ss1 = StringUtil:split(_cfg.closeStartTime," ")
+                local ss2 = StringUtil:split(_cfg.closeEndTime," ")
+                if curTab.day == tonumber(ss1[1]) and curTab.day <= tonumber(ss2[1]) then
+                    local tab1 = TimeUtil:SplitTime(ss1[2])
+                    if curTab.hour >= tonumber(tab1[1]) then
+                        local tab2 = TimeUtil:SplitTime(ss2[2])
+                        self.closeTime = TimeUtil:GetTime2(curTab.year,curTab.month,curTab.day,tab2[1],tab2[2],tab2[3])
+                    end
+                end
+            end    
+        end
+    end
+end
+
+function this:GetCloseTime()
+    if self.closeTime > TimeUtil:GetTime() then
+        return self.closeTime - TimeUtil:GetTime()
+    end
+    return 0
+end
+
+function this:GetCloseDesc()
+    return self.closeDesc
+end
+
+function this:IsClose()
+    return self.closeTime > TimeUtil:GetTime()
 end
 
 return this

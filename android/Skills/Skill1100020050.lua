@@ -1,4 +1,4 @@
--- 肉鸽乐团阵营技能附带血量伤害（金色1级别）
+-- 每次伤害时每段伤害附带自身当前血量5%的真实伤害，对自身造成3%真实伤害
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -35,5 +35,5 @@ function Skill1100020050:OnBefourHurt(caster, target, data)
 	-- 8420
 	local count20 = SkillApi:GetAttr(self, caster, target,3,"hp")
 	-- 1100020053
-	self:AddHp(SkillEffect[1100020053], caster, caster, data, -count20*0.02)
+	self:AddHp(SkillEffect[1100020053], caster, caster, data, -count20*0.03)
 end

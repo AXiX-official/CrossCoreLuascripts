@@ -1,4 +1,4 @@
--- 破势II级
+-- 击杀目标时NP+15
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,5 +19,5 @@ function Skill1100010121:OnDeath(caster, target, data)
 		return
 	end
 	-- 1100010121
-	self:AddNp(SkillEffect[1100010121], caster, self.card, data, 7)
+	self:AddNp(SkillEffect[1100010121], caster, self.card, data, 15)
 end

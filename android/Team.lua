@@ -437,6 +437,15 @@ function Team:HasBuff(buffID, typ)
 	return false
 end
 
+-- 判断是否存在角色
+function Team:HasRole(cId)
+	for i,v in ipairs(self.arrCard) do
+		if v:IsLive() and v:GetID() == cId then
+			return true
+		end
+	end	
+	return false
+end
 ------------------------------------------
 -- 检测卡牌站位(坐标包含关系)
 function Team:CheckGridsEx(coordinate, gridsID, minpos)
@@ -548,7 +557,6 @@ function Team:AddCard(row, col, id)
 	end
 	local card = FightCard(self, id, self.teamID)
 	self:SetGrids(row, col, card)
-
 	-- 加载数值模板
 	if self.fightMgr.nPlayerLevel then
 		card:LoadMonsterNumerical(self.fightMgr.nPlayerLevel)

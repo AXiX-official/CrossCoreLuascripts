@@ -524,10 +524,10 @@ function SetInfoItemPos()
         itemInfo.SetPanelPos("NightButton",21,-431)
         if currItem and currItem.GetType() == DungeonInfoType.NightSpecial then
             itemInfo.SetPanelPos("NightPlot",71,269)
-            itemInfo.SetGOActivte("NightPlot","titleObj",false)
+            itemInfo.SetGOActive("NightPlot","titleObj",false)
         else
             itemInfo.SetPanelPos("NightPlot",71,317)
-            itemInfo.SetGOActivte("NightPlot","titleObj",true)
+            itemInfo.SetGOActive("NightPlot","titleObj",true)
         end
         itemInfo.SetPanelPos("NightPlotButton",-276,-415)
         itemInfo.SetPanelPos("NightDanger",0,-52)

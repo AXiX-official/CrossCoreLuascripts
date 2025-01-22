@@ -337,7 +337,7 @@ function PlayEffect()
     local name = currGroupData:GetEffectName()
     local goEffect = effectGos[name]
     if not goEffect then
-        goEffect = ResUtil:CreateEffect("Trials/" .. name, 0,0,0,effectObj,function (go)
+        ResUtil:CreateBGEffect(name, 0,0,0,effectObj,function (go)
             effectGos[name] = go
         end);
     else

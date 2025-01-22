@@ -133,7 +133,7 @@ function ReloadLua(nFile)
             -- 不用理 newModule, 因为这里不进去，newModule 就会保存在 _G 里面的了
             if oldModule then
                 local nType = type(newModule)
-                if oType ~= nType then
+                if key ~= '_' and oType ~= nType then
                     LogError(
                         'ReloadLua(%s) key: %s new type: %s ~= old type: %s ?????? ',
                         moduleName,

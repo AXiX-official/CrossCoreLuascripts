@@ -12,6 +12,8 @@ local isDrag=false;
 local eventMgr=nil;
 local hpBarImg=nil;
 local spBarImg=nil;
+local fingerId=nil;
+local Input=CS.UnityEngine.Input;
 function Awake()
     eventMgr = ViewEvent.New();
     dragScript = ComUtil.GetCom(btnClick, "DragCallLua");
@@ -522,12 +524,19 @@ local pressTime=0;
 local cDeltaX=0;
 local cDeltaY=0;
 function OnBeginDragXY(x, y, deltaX, deltaY)
-    if isEvent == true then
-        return;
-    end
-    if elseData and elseData.disDrag==true then
-		return;
-	end
+    if isEvent == true or (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+     end
+     if elseData and elseData.disDrag==true then
+         do return end;
+     end
+     if Input.touchCount>0 and TeamMgr:GetDragFingerID()==nil then
+         fingerId=Input:GetTouch(0).fingerId;
+         TeamMgr:SetDragFingerID(fingerId)
+        --  for i=1,Input.touchCount do
+        --       LogError(Input:GetTouch(i-1).fingerId);
+        --   end
+      end
     pressTime=0;
     cDeltaX=deltaX;
     cDeltaY=deltaY;
@@ -557,8 +566,11 @@ end
 -- 左右移动为上阵，上下移动为滑动
 function OnDragXY(x, y, deltaX, deltaY)
     -- Log("OnDrag....")
+    if  (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+    end
     if elseData and elseData.disDrag==true then
-		return;
+		do return end;
 	end
     cDeltaX=cDeltaX+deltaX;
     cDeltaY=cDeltaY+deltaY;
@@ -594,9 +606,14 @@ function OnDragXY(x, y, deltaX, deltaY)
 end
 
 function OnEndDragXY(x, y, deltaX, deltaY)
+    if  (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+    end
     if elseData and elseData.disDrag==true then
 		return;
 	end
+    TeamMgr:SetDragFingerID(nil);
+    fingerId=nil;
     EventMgr.Dispatch(EventType.TeamView_DragMask_Change, false)
     -- Log("OnEndDrag....")
     -- Log("isEvent:"..tostring(isEvent))
@@ -675,5 +692,6 @@ function ReleaseCSComRefs()
     topmask = nil;
     attrNode = nil;
     view = nil;
+    fingerId=nil;
 end
 ----#End#----

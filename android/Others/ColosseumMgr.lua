@@ -158,7 +158,7 @@ end
 -- 当前所在回合
 function this:GetRandomCurIdx2()
     local index = self:GetRandomCurIdx()
-    return (index+1) > 9 and 9 or (index+1)
+    return (index + 1) > 9 and 9 or (index + 1)
 end
 
 -- 模式表
@@ -322,7 +322,7 @@ function this:GetFreeInfo()
 end
 
 function this:GetFreeCnt()
-    return self:GetCfg().freeNum,self:GetCfg().freeMax
+    return self:GetCfg().freeNum, self:GetCfg().freeMax
 end
 
 -----------------------------------------------------------------------------------------
@@ -348,6 +348,7 @@ function this:CheckMissionRed()
     local data = RedPointMgr:GetData(RedPointType.Colosseum)
     if (data ~= _data) then
         RedPointMgr:UpdateData(RedPointType.Colosseum, _data)
+        -- EventMgr.Dispatch(EventType.Section_Red_Update)
     end
 end
 -- 任务红点
@@ -363,6 +364,7 @@ function this:CheckRewardRed()
     local data = RedPointMgr:GetData(RedPointType.ActiveEntry26)
     if (data ~= _data) then
         RedPointMgr:UpdateData(RedPointType.ActiveEntry26, _data)
+        -- EventMgr.Dispatch(EventType.Section_Red_Update)
     end
 end
 -- 奖励红点
@@ -388,6 +390,23 @@ function this:IsSaveSelect()
         return true
     end
     return false
+end
+
+-- 入口是否显示，即下次刷新时间
+function this:CheckEnterOpen()
+    local isOpen, refreshTime = false, nil
+    local cfgs = Cfgs.cfgColosseum:GetAll()
+    local curTime = TimeUtil:GetTime()
+    for k, v in ipairs(cfgs) do
+        local endTime = TimeUtil:GetTimeStampBySplit(v.endTime)
+        if(endTime > curTime)then 
+            local begTime = TimeUtil:GetTimeStampBySplit(v.begTime)
+            isOpen = curTime>=begTime
+            refreshTime = isOpen and endTime or begTime
+            break 
+        end 
+    end
+    return isOpen, refreshTime
 end
 
 return this

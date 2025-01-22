@@ -378,14 +378,21 @@ end
 function this.GetHot(cfg)
 	local costNum1 = cfg.enterCostHot and cfg.enterCostHot or 0
 	local costNum2 = cfg.winCostHot and cfg.winCostHot or 0
-	if DungeonUtil.GetExtreHotNum() > 0 then
-		local num = DungeonUtil.GetExtreHotNum() < 100 and DungeonUtil.GetExtreHotNum() or 100
-		costNum1 = costNum1 * (100 - DungeonUtil.GetExtreHotNum()) / 100 
-		costNum2 = costNum2 * (100 - DungeonUtil.GetExtreHotNum()) / 100 
-	end 
+	local percent,num = DungeonUtil.GetExtreHotNum()
+	local isHotUp = false
+	if percent > 0 then
+		percent = percent < 100 and percent or 100
+		costNum1 = costNum1 * (100 - percent) / 100 
+		costNum2 = costNum2 * (100 - percent) / 100 
+		isHotUp = true
+	end
 	--因为是负数，所以向上取整
 	local costNum = math.ceil(costNum1) + math.ceil(costNum2)
-	return costNum
+	if num > 0 then
+		costNum = costNum + num > 0 and 0 or costNum + num
+		isHotUp = true
+	end
+	return costNum,isHotUp
 end
 
 --体力消耗减少

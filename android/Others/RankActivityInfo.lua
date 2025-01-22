@@ -59,4 +59,16 @@ function this:GetCardList()
     return self.info and self.info.cardInfos
 end
 
+--难度（RogueT）
+function this:GetHard()
+    local dupId = self.info and self.info.dupId or nil 
+    if(dupId)then 
+        local cfg = Cfgs.DungeonGroup:GetByID(self.info.dupId)
+        if(cfg and cfg.hard)then 
+            return LanguageMgr:GetByID(54049,cfg.hard)
+        end 
+    end 
+    return ""
+end
+
 return this

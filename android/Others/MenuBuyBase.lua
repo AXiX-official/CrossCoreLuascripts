@@ -36,6 +36,9 @@ function this:SetRed(b)
     self.red = b
 end
 function this:GetRed()
+    if (self:GetCfg().nType == 5 or self:GetCfg().nType == 9) then
+        return true
+    end
     if (self.red ~= nil) then
         return self.red
     end

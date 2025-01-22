@@ -487,7 +487,7 @@ function this.OnPayWait(isWait)
 			EventMgr.Dispatch(EventType.Net_Msg_Getted,"pay_wait");
 		end
 		 local PayWaitTime=60000;
-		if CSAPI.IsADV() then PayWaitTime=5000; end
+		if CSAPI.IsADV() then PayWaitTime=20000; end
 		EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="pay_wait",time=PayWaitTime,timeOutCallBack=function()
 			this.isWait=false;
 			SDKPayMgr:SetIsPaying(false);--超时

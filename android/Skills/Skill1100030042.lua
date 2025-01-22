@@ -1,4 +1,4 @@
--- 肉鸽不朽阵营角色回复或者受到伤害加buff（金色3级别）
+-- 肉鸽不朽阵营角色回复或者受到伤害加buff，每层4%攻击力，4%防御力，最高100层，使用大招技能血量减少10%
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -26,15 +26,18 @@ function Skill1100030042:OnCure(caster, target, data)
 	else
 		return
 	end
-	-- 8616
-	local count616 = SkillApi:GetBeDamage(self, caster, target,3)
-	-- 8816
-	if SkillJudger:Greater(self, caster, target, true,count616,0) then
+	-- 9752
+	if SkillJudger:IsTargetMech(self, caster, self.card, true,3) then
+	else
+		return
+	end
+	-- 9752
+	if SkillJudger:IsTargetMech(self, caster, self.card, true,3) then
 	else
 		return
 	end
 	-- 1100030045
-	self:OwnerAddBuffCount(SkillEffect[1100030045], caster, self.card, data, 1100030042,1,50)
+	self:OwnerAddBuffCount(SkillEffect[1100030045], caster, self.card, data, 1100030042,1,100)
 end
 -- 行动结束
 function Skill1100030042:OnActionOver(caster, target, data)
@@ -71,8 +74,13 @@ function Skill1100030042:tFunc_11000300402_1100030042(caster, target, data)
 	else
 		return
 	end
+	-- 9752
+	if SkillJudger:IsTargetMech(self, caster, self.card, true,3) then
+	else
+		return
+	end
 	-- 1100030042
-	self:OwnerAddBuffCount(SkillEffect[1100030042], caster, self.card, data, 1100030042,1,50)
+	self:OwnerAddBuffCount(SkillEffect[1100030042], caster, self.card, data, 1100030042,1,100)
 end
 function Skill1100030042:tFunc_11000300402_1100030045(caster, target, data)
 	-- 8062
@@ -80,13 +88,16 @@ function Skill1100030042:tFunc_11000300402_1100030045(caster, target, data)
 	else
 		return
 	end
-	-- 8616
-	local count616 = SkillApi:GetBeDamage(self, caster, target,3)
-	-- 8816
-	if SkillJudger:Greater(self, caster, target, true,count616,0) then
+	-- 9752
+	if SkillJudger:IsTargetMech(self, caster, self.card, true,3) then
+	else
+		return
+	end
+	-- 9752
+	if SkillJudger:IsTargetMech(self, caster, self.card, true,3) then
 	else
 		return
 	end
 	-- 1100030045
-	self:OwnerAddBuffCount(SkillEffect[1100030045], caster, self.card, data, 1100030042,1,50)
+	self:OwnerAddBuffCount(SkillEffect[1100030045], caster, self.card, data, 1100030042,1,100)
 end

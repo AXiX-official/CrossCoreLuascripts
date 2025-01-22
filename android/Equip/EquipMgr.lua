@@ -558,10 +558,10 @@ function this:GetEquipResult(equipIds)
 end
 
 --创建假数据
-function this:GetFakeData(_cfgId)
+function this:GetFakeData(_cfgId,_level)
 	local data = {}
 	data.cfgid = _cfgId
-	data.level = 0
+	data.level = _level or 0
 	data.exp = 0
 	data.num = 0
 	local equipData = EquipData(data);

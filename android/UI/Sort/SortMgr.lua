@@ -147,60 +147,60 @@ function this:Sort(id, datas, elseData)
     end
 end
 
--- 排序总表 id ； datas : 需要排序筛选的数据  elseData:辅助排序的自定义参数
-function this:Sort2(id, datas, elseData)
-    local newDatas = {}
-    for k, v in pairs(datas) do
-        table.insert(newDatas, v)
-    end
-    local sortData = self:GetData(id)
-    -- 筛选 
-    local filter = sortData.Filter
-    if (filter) then
-        for k, v in pairs(filter) do
-            if (v[1] ~= 0) then
-                local func = this["Filter_" .. k]
-                local dic = self.ToDic(v)
-                newDatas = func(newDatas, dic)
-            end
-        end
-    end
-    -- 排序方法
-    local sortFuncs = {}
-    local ids = sortData.Sort
-    if id==4 and elseData and (elseData.isTower==true or elseData.isTotalBattle) then
-        table.insert(sortFuncs,function(a,b)
-            local aNum=a.canDrag and 1 or 0;
-            local bNum=b.canDrag and 1 or 0;
-            if aNum~=bNum then
-                return aNum>bNum;
-            end
-        end);
-    end
-    for k, v in ipairs(ids) do
-        table.insert(sortFuncs, this["SortFunc_" .. v])
-    end
-    table.sort(newDatas, function(a, b)
-        local result = nil
-        for k, v in ipairs(sortFuncs) do
-            if (result == nil) then
-                result = v(a, b, sortData, elseData) -- 传值
-            else
-                break
-            end
-        end
-        if (result == nil) then
-            return false
-        end
-        return result
-    end)
-    -- 上下
-    if (sortData.UD == 1) then
-        return newDatas
-    else
-        return FuncUtil.Reverse(newDatas)
-    end
-end
+-- -- 排序总表 id ； datas : 需要排序筛选的数据  elseData:辅助排序的自定义参数
+-- function this:Sort2(id, datas, elseData)
+--     local newDatas = {}
+--     for k, v in pairs(datas) do
+--         table.insert(newDatas, v)
+--     end
+--     local sortData = self:GetData(id)
+--     -- 筛选 
+--     local filter = sortData.Filter
+--     if (filter) then
+--         for k, v in pairs(filter) do
+--             if (v[1] ~= 0) then
+--                 local func = this["Filter_" .. k]
+--                 local dic = self.ToDic(v)
+--                 newDatas = func(newDatas, dic)
+--             end
+--         end
+--     end
+--     -- 排序方法
+--     local sortFuncs = {}
+--     local ids = sortData.Sort
+--     if id==4 and elseData and (elseData.isTower==true or elseData.isTotalBattle or elseData.isRogueT) then
+--         table.insert(sortFuncs,function(a,b)
+--             local aNum=a.canDrag and 1 or 0;
+--             local bNum=b.canDrag and 1 or 0;
+--             if aNum~=bNum then
+--                 return aNum>bNum;
+--             end
+--         end);
+--     end
+--     for k, v in ipairs(ids) do
+--         table.insert(sortFuncs, this["SortFunc_" .. v])
+--     end
+--     table.sort(newDatas, function(a, b)
+--         local result = nil
+--         for k, v in ipairs(sortFuncs) do
+--             if (result == nil) then
+--                 result = v(a, b, sortData, elseData) -- 传值
+--             else
+--                 break
+--             end
+--         end
+--         if (result == nil) then
+--             return false
+--         end
+--         return result
+--     end)
+--     -- 上下
+--     if (sortData.UD == 1) then
+--         return newDatas
+--     else
+--         return FuncUtil.Reverse(newDatas)
+--     end
+-- end
 
 -- 筛选数据转成字典
 function this.ToDic(arr)
@@ -480,6 +480,24 @@ function this.SortFunc_1009(a, b) -- 助战中
         return nil
     else
         return a:SupportSortNum() > b:SupportSortNum()
+    end
+end
+function this.SortFunc_1010(a, b) -- 可拖拽
+    local n1 = a.canDrag and 1 or 0
+    local n2 = b.canDrag and 1 or 0
+    if (n1 == n2) then
+        return nil
+    else
+        return n1 > n2
+    end
+end
+function this.SortFunc_1011(a, b) -- 是推荐角色
+    local n1 = a.isStar and 1 or 0
+    local n2 = b.isStar and 1 or 0
+    if (n1 == n2) then
+        return nil
+    else
+        return n1 > n2
     end
 end
 -- 道具/仓库

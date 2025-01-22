@@ -1,4 +1,4 @@
--- 普攻暴击1
+-- 普攻时忽略目标5%的防御
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -15,11 +15,6 @@ function Skill1100010010:OnBefourHurt(caster, target, data)
 	end
 	-- 8073
 	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8213
-	if SkillJudger:IsCrit(self, caster, target, true) then
 	else
 		return
 	end

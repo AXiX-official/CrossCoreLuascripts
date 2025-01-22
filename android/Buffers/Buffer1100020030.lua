@@ -1,4 +1,4 @@
--- 乐团阵营灭刃buff1
+-- 乐章·灭刃
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1100020030:OnCreate(caster, target)
 	-- 1100020030
-	self:AddAttr(BufferEffect[1100020030], self.caster, target or self.owner, nil,"crit",0.1)
+	self:AddAttr(BufferEffect[1100020030], self.caster, target or self.owner, nil,"crit",0.2)
 end

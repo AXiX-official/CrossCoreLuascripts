@@ -63,6 +63,7 @@ local refreshClick=nil--刷新点击按钮
 local dungeonCfg=nil;
 local sectionID=nil;
 local battleStrength=0;
+local platformType=nil;
 function Awake()
 	BackteamPreset=nil;
 	ResUtil:LoadBigImg(mbg, "UIs/BGs/bg_13/bg", true, function()
@@ -90,6 +91,7 @@ function Awake()
 	local addWidth=topWidth>bottomWidth and  topWidth or bottomWidth
 	local rtSize2=CSAPI.GetRTSize(roleListBg);
 	CSAPI.SetRectSize(roleListBg,rtSize2[0]+math.abs(addWidth),rtSize2[1]);
+	platformType=CSAPI.GetPlatform();
 end
 
 function InitSVObj()
@@ -365,6 +367,7 @@ end
 --closeFun 关闭回调，返回支援卡牌数据
 --}
 function OnOpen()
+	--SetSortID()
 	InitSVObj();
 	CSAPI.PlayUISound("ui_window_open_load");
 	openSetting=openSetting or TeamOpenSetting.Normal;
@@ -460,12 +463,12 @@ function SetViewLayout(openSetting)
         CSAPI.SetGOActive(btn_svType2,false);
         CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
-    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum then
+    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT then
 		CSAPI.SetGOActive(btn_svType2,canAssist);
         CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
     end
-	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum then
+	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT then
 		hasPrefab=false;
 	end
 	CSAPI.SetGOActive(btn_prefab,hasPrefab);
@@ -477,6 +480,10 @@ function SetViewLayout(openSetting)
 		isAI= false
 	elseif openSetting==TeamOpenSetting.GlobalBoss then
 		isSkill = false		
+	elseif openSetting==TeamOpenSetting.RogueT then
+		if(data.isSkill~=nil)then 
+			isSkill = data.isSkill
+		end 
 	end 
 	CSAPI.SetGOActive(btn_ai,isAI)
 	CSAPI.SetGOActive(btn_skill,isSkill)
@@ -873,26 +880,42 @@ function SetSVList()
 	local teamType=TeamMgr:GetTeamType(teamIndex);
 	isTeamDup=teamType==eTeamType.DungeonFight;
 	if selectType == nil or selectType == TeamSelectType.Normal then
-		local arr = RoleMgr:GetArr();
+		local arr = {}
+		arr = RoleMgr:GetArr();
 		-- svList = RoleSortUtil:SortByCondition(listType, arr,teamIndex,isTeamDup)
 		if openSetting==TeamOpenSetting.Tower then
 			for i=1,#arr do
 				arr[i].canDrag=CheckCardCanPass(arr[i]);
 			end
-			svList=SortMgr:Sort2(sortID,arr,{isTower=openSetting==TeamOpenSetting.Tower})
+			--svList=SortMgr:Sort2(sortID,arr,{isTower=openSetting==TeamOpenSetting.Tower})
 		elseif openSetting==TeamOpenSetting.TotalBattle then
 			for i=1,#arr do
 				arr[i].canDrag=TotalBattleMgr:IsShowCard(arr[i]:GetID());
 			end
-			svList=SortMgr:Sort2(sortID,arr,{isTotalBattle=openSetting==TeamOpenSetting.TotalBattle})
+			--svList=SortMgr:Sort2(sortID,arr,{isTotalBattle=openSetting==TeamOpenSetting.TotalBattle})
 		elseif openSetting==TeamOpenSetting.Colosseum then
 			if(TeamMgr.currentIndex ==(eTeamType.Colosseum + 1)) then 
 				arr = ColosseumMgr:GetEditTeamArr() --改用选择的卡牌
 			end 
-			svList=SortMgr:Sort(sortID,arr)
-		else
-			svList=SortMgr:Sort(sortID,arr)
+			--svList=SortMgr:Sort(sortID,arr)
+		elseif openSetting==TeamOpenSetting.RogueT then
+			local _newArr = {}
+			for i=1,#arr do
+				arr[i].canDrag=CheckCardCanPass(arr[i]);
+				table.insert(_newArr,arr[i])
+			end
+			--推荐的
+			local starRoles = RogueTMgr:GetStarRoles()
+            for k, v in pairs(starRoles) do
+				v.canDrag=CheckCardCanPass(v);
+				table.insert(_newArr,v)
+			end
+			arr = _newArr
+			--svList=SortMgr:Sort2(sortID,arr,{isRogueT=openSetting==TeamOpenSetting.RogueT})
+		-- else
+		-- 	svList=SortMgr:Sort(sortID,arr)
 		end
+		svList=SortMgr:Sort(sortID,arr)
 	elseif selectType == TeamSelectType.Force then
 		local arr = {}
 		--强制上阵时剔除同队强制上阵的roleTag类型卡牌，剔除已强制上阵的别队卡牌	
@@ -1058,6 +1081,9 @@ function LayoutCallBack(index)
 		key="TotalBattle";
 		disDrag=TotalBattleMgr:IsShowCard(_data:GetID())~=true
 		isEqual=disDrag;
+	elseif openSetting==TeamOpenSetting.RogueT then
+		disDrag=not _data.canDrag;
+		isEqual=disDrag;
 	end
 	local isNpc,s1,s2=FormationUtil.CheckNPCID(_data:GetID());
 	local showNpc=false;
@@ -1157,7 +1183,7 @@ function Update()
 		CSAPI.SetGOActive(refreshObj,false);
 		cdTime=0
 	end
-	if isDrag==true and CSAPI.GetCurrUIEventObj()==nil then
+	if platformType==7 and isDrag==true and CSAPI.GetCurrUIEventObj()==nil then
 		EventMgr.Dispatch(EventType.TeamView_DragJoin_Lost)
 		isDrag=false;
 	end
@@ -1344,19 +1370,21 @@ function CheckCardCanPass(card)
 	if card==nil then
 		return false;
 	end
-	local info=nil;
-	local assistData=card:GetAssistData();
-	if assistData~=nil then
-		info=FormationUtil.GetTowerCardInfo(card:GetData().old_cid, assistData.uid,TeamMgr.currentIndex);
-	else
-		info=FormationUtil.GetTowerCardInfo(card:GetID(),nil,TeamMgr.currentIndex);
-	end
-	if info and info.tower_hp<=0  then --HP为0，无法上阵
-		return false;
-	end
+	if(openSetting==TeamOpenSetting.Tower)then 
+		local info=nil;
+		local assistData=card:GetAssistData();
+		if assistData~=nil then
+			info=FormationUtil.GetTowerCardInfo(card:GetData().old_cid, assistData.uid,TeamMgr.currentIndex);
+		else
+			info=FormationUtil.GetTowerCardInfo(card:GetID(),nil,TeamMgr.currentIndex);
+		end
+		if info and info.tower_hp<=0  then --HP为0，无法上阵
+			return false;
+		end
+	end 
 	if cond then
 		local result=cond:CheckCard(teamData,card);
-		-- LogError("检测限制--------------->"..tostring(result))
+		-- LogError(tostring(card:GetID()).."检测限制--------------->"..tostring(result))
 		return result;
 	end
 	return true;
@@ -1759,9 +1787,14 @@ function SetSortObj()
 		tempID=2;
 	elseif openSetting== TeamOpenSetting.PVE then
 		tempID=3;
+	elseif(openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.TotalBattle)then 	
+		tempID = 25
+	elseif(openSetting==TeamOpenSetting.RogueT)then 
+		tempID = 26
 	else
 		tempID=4;
 	end
+	--
 	local isChange=tempID~=sortID
 	sortID=tempID;
 	if sortView==nil and isLoadSortView~=true then

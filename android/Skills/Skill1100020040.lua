@@ -1,4 +1,4 @@
--- 肉鸽乐团阵营回复技能buff1（金色1级别）
+-- 使用回复技能时，全队提高30%攻击力，持续2回合，最多叠加2层，之后消耗30np
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,7 +19,7 @@ function Skill1100020040:OnActionOver(caster, target, data)
 		return
 	end
 	-- 1100020040
-	local targets = SkillFilter:Group(self, caster, target, 3)
+	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
 		self:OwnerAddBuffCount(SkillEffect[1100020040], caster, target, data, 1100020040,1,2)
 	end

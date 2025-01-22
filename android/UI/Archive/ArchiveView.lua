@@ -5,12 +5,6 @@ local records = {}
 function Awake()
 	eventMgr = ViewEvent.New()
 	eventMgr:AddListener(EventType.RedPoint_Refresh,OnRedRefresh)
-
-	-- if CSAPI.GetPublishType() ~= 1 then
-		CSAPI.SetGOActive(btnGoods, false)
-	-- end
-	CSAPI.SetGOActive(btnAsmr, false)
-	CSAPI.SetGOActive(img8Obj, false)
 end
 
 function OnRedRefresh()
@@ -40,6 +34,23 @@ function InitPanel()
 	
 	InitNew()
 	-- Log(records)
+	SetButtonOpen()
+end
+
+function SetButtonOpen()
+	local cfgs = Cfgs.CfgArchive:GetAll()
+	if cfgs and #cfgs > 0 then
+		local sTime,eTime = 0,0
+		for k, cfg in ipairs(cfgs) do
+			if cfg.sTime and cfg.eTime then
+				sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
+				eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
+				if TimeUtil:GetTime() < sTime or TimeUtil:GetTime() >= eTime then
+					CSAPI.SetGOActive(this["btn" .. ArchiveNameType[cfg.id]].gameObject,false)
+				end
+			end
+		end
+	end
 end
 
 --角色

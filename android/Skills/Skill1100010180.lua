@@ -1,4 +1,4 @@
--- 痛击I级
+-- 单体技能攻击时攻击增加10%
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -24,5 +24,5 @@ function Skill1100010180:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 1100010180
-	self:AddTempAttr(SkillEffect[1100010180], caster, self.card, data, "attack",0.1)
+	self:AddTempAttrPercent(SkillEffect[1100010180], caster, self.card, data, "attack",0.1)
 end

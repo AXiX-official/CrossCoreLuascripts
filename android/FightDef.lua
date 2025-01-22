@@ -12,7 +12,7 @@ SceneType.FieldBoss	= 8 -- 战场系统BOSS
 SceneType.Rogue		= 9 -- 乱序演习
 SceneType.RogueS	= 10 -- 战力派遣
 SceneType.GlobalBoss= 11 -- 新世界boss
-
+SceneType.RogueT 	= 12 -- 能力测验
 
 -- 副本类型
 eDuplicateType                 = {}
@@ -30,6 +30,7 @@ eDuplicateType.StarPalace      = 11 -- 十二星宫
 eDuplicateType.RogueS	       = 12 -- 战力派遣
 eDuplicateType.AbattoirSelect  = 13 -- 角斗场自选模式
 eDuplicateType.AbattoirRand	   = 14 -- 角斗场随机模式
+eDuplicateType.RogueT	       = 15 -- 能力测验
 
 eDuplicateType.Materials       = 101 -- 材料副本
 eDuplicateType.Equip           = 102 -- 装备副本
@@ -62,6 +63,12 @@ eDuplicateTypeChName.StoryActive     ="剧情活动"
 -- 副本关卡副类型
 eDupSubType = {}
 eDupSubType.Story	= 1 -- 剧情
+
+-- 正在进行的副本战斗下标类型
+eDupIdxType = {}
+eDupIdxType.Normal	= 1 -- 普通战斗，以关卡ID为key
+eDupIdxType.Rogue	= 2 -- 乱序演习，
+eDupIdxType.RogueT	= 3 -- 限制肉鸽爬塔
 
 
 -- 卡牌类型

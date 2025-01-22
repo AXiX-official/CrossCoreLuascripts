@@ -95,7 +95,7 @@ function FightProto:RecvCmd(proto)
     ASSERT(data)
     proto[3] = data
     if cmd == CMD_TYPE.InitData then
-        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS then
+        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS or data.stype == SceneType.RogueT then
             if not g_bRestartFight then
                 FightActionMgr:Start()
             end
@@ -1253,4 +1253,146 @@ function FightProto:GetGlobalBossRankTeamRet(proto)
         self.GlobalBossRankTeamCallBack(proto)
         self.GlobalBossRankTeamCallBack = nil
     end
+end
+
+
+-------------------------------限制肉鸽爬塔-----------------------------------------
+
+-- 初始数据
+function FightProto:GetRogueTInfo()
+    local proto = {"FightProtocol:GetRogueTInfo"}
+    NetMgr.net:Send(proto)
+end
+function FightProto:GetRogueTInfoRet(proto)
+    RogueTMgr:GetRogueTInfoRet(proto)
+end
+-- 正在进行中的限制肉鸽信息(后端返回)
+function FightProto:FightingRogueTData(proto)
+    RogueTMgr:FightingRogueTData(proto)
+    if (self.EnterRogueTDuplicateCB) then
+        self.EnterRogueTDuplicateCB()
+    end
+    self.EnterRogueTDuplicateCB = nil
+end
+-- 请求进入限制肉鸽（开始新肉鸽才请求）
+function FightProto:EnterRogueTDuplicate(_id, _boss, _cb)
+    self.EnterRogueTDuplicateCB = _cb
+    local proto = {"FightProtocol:EnterRogueTDuplicate", {
+        id = _id,
+        boss = _boss,
+    }}
+    NetMgr.net:Send(proto)
+end
+-- 限制肉鸽选BUFF
+function FightProto:RogueTSelectBuff(_id, _cb)
+    self.RogueTSelectBuffCB = _cb
+    local proto = {"FightProtocol:RogueTSelectBuff", {
+        id = _id
+    }}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTSelectBuffRet(proto)
+    RogueTMgr:SetSelectBuffs(proto.selectBuffs)
+    if (self.RogueTSelectBuffCB) then
+        self.RogueTSelectBuffCB()
+    end
+    self.RogueTSelectBuffCB = nil
+end
+--升级buff
+function FightProto:RogueTBuffUp(_id,_cb)
+    self.RogueTBuffUpCB = _cb
+    local proto = {"FightProtocol:RogueTBuffUp", {
+        id = _id
+    }}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTBuffUpRet(proto)
+    RogueTMgr:RogueTBuffUpRet(proto)
+    if (self.RogueTBuffUpCB) then
+        self.RogueTBuffUpCB(proto.new_id)
+    end
+    self.RogueTBuffUpCB = nil
+    EventMgr.Dispatch(EventType.RogueT_Buff_Upgrade)
+end
+
+--buff存档
+function FightProto:RogueTBuffSave(_save,_idx,_cb)
+    self.RogueTBuffSaveCB = _cb
+    local proto = {"FightProtocol:RogueTBuffSave", {
+        save = _save,
+        idx = _idx,
+    }}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTBuffSaveRet(proto)
+    if (self.RogueTBuffSaveCB) then
+        self.RogueTBuffSaveCB()
+    end
+    self.RogueTBuffSaveCB = nil
+end
+-- 请求进入限制肉鸽战斗
+function FightProto:EnterRogueTFight(_list)
+    local proto = {"FightProtocol:EnterRogueTFight",{list = _list}}
+    NetMgr.net:Send(proto)
+end
+--使用buff存档
+function FightProto:RogueTUseBuff(_id,_useBuff,_cb)
+    self.RogueTUseBuffCB = _cb
+    local proto = {"FightProtocol:RogueTUseBuff", {
+        id = _id,
+        useBuff = _useBuff,
+    }}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTUseBuffRet(proto)
+    RogueTMgr:RogueTUseBuffRet(proto)
+    if (self.RogueTUseBuffCB) then
+        self.RogueTUseBuffCB()
+    end
+    self.RogueTUseBuffCB = nil
+end
+--领取限制肉鸽爬塔奖励
+function FightProto:RogueTGainReward(_ty,_cb)
+    self.RogueTGainRewardCB = _cb
+    local proto = {"FightProtocol:RogueTGainReward", {
+        ty = _ty,
+    }}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTGainRewardRet(proto)
+    RogueTMgr:RogueTGainRewardRet(proto)
+    if (self.RogueTGainRewardCB) then
+        self.RogueTGainRewardCB()
+    end
+    self.RogueTGainRewardCB = nil
+end
+
+function FightProto:RogueTQuit(_cb)
+    self.RogueTQuitCB = _cb
+    local proto = {"FightProtocol:RogueTQuit"}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTQuitRet(_cb)
+    if (self.RogueTQuitCB) then
+        self.RogueTQuitCB()
+    end
+    self.RogueTQuitCB = nil
+end
+-- 限制肉鸽战斗副本结束
+function FightProto:RogueTOver(proto)
+    FightOverTool.RogueTInfoUpdate(proto)
+end
+
+--删除存档
+function FightProto:RogueTDelBuff(_id,_idx,_cb)
+    self.RogueTDelBuff = _cb
+    local proto = {"FightProtocol:RogueTDelBuff",{id = _id,idx = _idx}}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTDelBuffRet(proto)
+    RogueTMgr:RogueTDelBuffRet(proto)
+    if( self.RogueTDelBuff)then 
+        self.RogueTDelBuff()
+    end 
+    self.RogueTDelBuff = nil
 end

@@ -11,8 +11,3 @@ function Buffer980101403:OnRoundBegin(caster, target)
 	-- 6112
 	self:ImmuneBuffID(BufferEffect[6112], self.caster, target or self.owner, nil,3003)
 end
--- 创建时
-function Buffer980101403:OnCreate(caster, target)
-	-- 402900301
-	self:AddSp(BufferEffect[402900301], self.caster, target or self.owner, nil,50)
-end

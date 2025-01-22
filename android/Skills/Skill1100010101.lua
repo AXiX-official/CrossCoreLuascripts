@@ -1,4 +1,4 @@
--- 击杀加攻II级
+-- 击杀目标时永久增加30%攻击力
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,5 +19,5 @@ function Skill1100010101:OnDeath(caster, target, data)
 		return
 	end
 	-- 1100010101
-	self:AddAttr(SkillEffect[1100010101], caster, self.card, data, "attack",0.15)
+	self:AddBuff(SkillEffect[1100010101], caster, self.card, data, 1100010101)
 end

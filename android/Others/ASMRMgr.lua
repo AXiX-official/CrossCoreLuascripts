@@ -66,9 +66,9 @@ end
 ------------------------------------------------------bgm播放---------------------------------------------------------
 
 -- 播放
-function this:PlayBGM(_id, index)
+function this:PlayBGM(_id, index, startTime)
     local cfg = Cfgs.CfgASMR:GetByID(_id)
-    return self:_PlayBGM(cfg["cue_sheet" .. index], cfg["cue_name" .. index], 0, nil, nil, false, 0)
+    return self:_PlayBGM(cfg["cue_sheet" .. index], cfg["cue_name" .. index], 0, nil, nil, false, startTime)
 end
 
 function this:_PlayBGM(cueSheet, cueName, fadeDelay, volumeCoeff, lockKey, isLoop, startTime)
@@ -183,6 +183,16 @@ end
 function this:SetASMRMusicScale(num)
     local key = "asmrmusicscale"
     PlayerPrefs.SetString(key, tostring(num))
+end
+
+--0:单次播放   1:循环播放（本身）  2:循环播放（所有已获得的ASMR）
+function this:GetASMRMusicPType()
+    local key = "asmrmusicptype"
+    return PlayerPrefs.GetInt(key) or 0
+end
+function this:SetASMRMusicPType(num)
+    local key = "asmrmusicptype"
+    PlayerPrefs.SetInt(key, num)
 end
 
 return this

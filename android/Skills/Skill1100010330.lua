@@ -1,4 +1,4 @@
--- 顺势I级
+-- 自身HP大于80％时，攻击时攻击增加12％
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -18,8 +18,8 @@ function Skill1100010330:OnActionBegin(caster, target, data)
 	else
 		return
 	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end

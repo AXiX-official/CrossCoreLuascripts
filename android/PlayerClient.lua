@@ -330,7 +330,7 @@ function this:UpdateCoin(id, num)
     elseif (id == ITEM_ID.DIAMOND) then
         -- self.info.diamond = num <= 0 and 0 or num
         self.info.diamond = num or 0;
-        if CSAPI.IsADV() then ShiryuSDK.OnRoleInfoUpdate(); end
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then ShiryuSDK.OnRoleInfoUpdate(); end
     elseif (id == g_ArmyCoinId) then
         self.info.army_coin = num <= 0 and 0 or num
     elseif (id == g_AbilityCoinId) then

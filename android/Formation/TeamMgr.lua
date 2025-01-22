@@ -649,7 +649,6 @@ function this:DuplicateTeamData(index,teamData)
         if s1 and s2 then           
             item.cid = tonumber(s2)
             if isNpc then
-				--LogError(v:GetCfgID().."\t"..tostring(v.bIsNpc))
                 item.id=v:GetCfgID();
                 item.npcid=v.bIsNpc and v:GetCfgID() or nil;
                 item.bIsNpc=true;
@@ -935,6 +934,14 @@ function this:SaveViewerOption(is3D)
 	self:SetViewerOption(is3D)
 	FileUtil.SaveToFile("TeamViewSelected.txt",{is3D=self:GetViewerOption()})
 end
+
+function this:SetDragFingerID(id)
+	self.dragFingerID=id;
+end
+
+function this:GetDragFingerID()
+	return self.dragFingerID or nil;
+end
 -----------------------------------------------------界面数据缓存--------------------------
 
 ------------------------------------------待删除-----------------------
@@ -966,6 +973,7 @@ function this:Clear()
 	self.assistDatas=nil;
 	self.is3D=false;
 	self.preLoad=false;
+	self.dragFingerID=nil;
 end
 
 return this; 

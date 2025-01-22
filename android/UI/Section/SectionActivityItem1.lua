@@ -36,9 +36,6 @@ local sliderTotal = nil
 local isGlobalBoss = false
 local globalBossTimer = 0
 local globalBossTime = 0
-local globalBossCloseTime = 0
-local isGlobalBossClose = false
-local globalBossDesc = ""
 
 -- 动效
 local textRand = nil
@@ -127,28 +124,7 @@ function SetLockPanel(b,str)
 end
 
 function SetRed()
-    local type = data.type
-    local isRed = false
-    if type and currState > 0 then
-        if type == SectionActivityType.Tower then
-            isRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower})
-        elseif type == SectionActivityType.Plot then
-            isRed = MissionMgr:CheckRed({eTaskType.Story})
-            if not isRed and sectionData:GetExploreId() then
-                local exData = ExplorationMgr:GetExData(sectionData:GetExploreId())
-                isRed = exData and exData:HasRevice() or false
-            end
-        elseif type == SectionActivityType.TaoFa then
-            isRed = MissionMgr:CheckRed({eTaskType.DupTaoFa})
-        elseif type == SectionActivityType.Rogue then
-            if(RogueMgr:IsRed() or RogueSMgr:IsRed()) then 
-                isRed = true
-            end
-        elseif type == SectionActivityType.TotalBattle then
-            isRed = MissionMgr:CheckRed({eTaskType.StarPalace})
-        end
-    end
-    UIUtil:SetRedPoint(redParent, isRed, 0, 0)
+    UIUtil:SetRedPoint(redParent, DungeonActivityMgr:CheckRed(sectionData:GetID()))
 end
 
 function GetData()
@@ -348,12 +324,11 @@ function SetGlobalBoss()
     isGlobalBoss = data.type == SectionActivityType.GlobalBoss
     if isGlobalBoss then
         globalBossTimer = 0
-        isGlobalBossClose,globalBossCloseTime,globalBossDesc=DungeonUtil.IsGlobalBossCloseTime(sectionData:GetID())
-        if isGlobalBossClose then
-            globalBossTime = globalBossCloseTime - TimeUtil:GetTime()
+        if GlobalBossMgr:IsClose() then
+            globalBossTime = GlobalBossMgr:GetCloseTime()
             if not isLock then
-                SetLockPanel(true, globalBossDesc)
-                lockStr = globalBossDesc
+                SetLockPanel(true, GlobalBossMgr:GetCloseDesc())
+                lockStr = GlobalBossMgr:GetCloseDesc()
             end
         end
     end
@@ -362,10 +337,11 @@ end
 function UpdateGlobalBoss()
     if (globalBossTime > 0 and Time.time > globalBossTimer) then
         globalBossTimer = Time.time + 1
-        globalBossTime = globalBossCloseTime - TimeUtil:GetTime()
+        globalBossTime = GlobalBossMgr:GetCloseTime()
         if globalBossTime <= 0 then
             if not isLock then
                 SetLockPanel(false, "")
+                DungeonMgr:CheckRedPoint()
             end
         end
     end

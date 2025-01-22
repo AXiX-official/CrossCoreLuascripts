@@ -1,4 +1,4 @@
--- 限制I级
+-- 自身HP大于80％时，受到攻击时防御增加12％
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -8,8 +8,8 @@ function Skill1100010320:Init(skillID, card)
 end
 -- 行动开始
 function Skill1100010320:OnActionBegin(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
@@ -18,6 +18,13 @@ function Skill1100010320:OnActionBegin(caster, target, data)
 	else
 		return
 	end
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
 	-- 1100010320
-	self:AddBuff(SkillEffect[1100010320], caster, self.card, data, 1100010320)
+	if self:Rand(4000) then
+		self:AddBuff(SkillEffect[1100010320], caster, self.card, data, 1100010320)
+	end
 end

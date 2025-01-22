@@ -202,6 +202,12 @@ function SkillFilter:HasBuff(oSkill, caster, target, teamID, buffID, typ)
 	-- 
 	return team.filter:GetRand(rand)
 end
+
+-- 返回某个角色对象
+function SkillFilter:HasRole(oSkill, caster, target, teamID, cId)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	return team.filter:HasRole(cId)
+end
 ------------------条件判断---------------------------------
 SkillJudger = {}
 
@@ -610,6 +616,7 @@ end
 -- 判断目标兵种
 function SkillJudger:IsTargetMech(oSkill, caster, target, res, typ)
 
+	LogDebugEx("SkillJudger:IsTargetMech", caster.name, caster.sMech, typ)
 	if target.sMech == typ then 
 		return res
 	end
@@ -620,6 +627,8 @@ end
 -- 判断施法者兵种
 function SkillJudger:IsCasterMech(oSkill, caster, target, res, typ)
 
+
+	LogDebugEx("SkillJudger:IsCasterMech", caster.name, caster.sMech, typ)
 	if caster.sMech == typ then 
 		return res
 	end
@@ -703,6 +712,17 @@ function SkillJudger:HasBuff(oSkill, caster, target, res, teamID, buffID, typ)
 	end
 end
 
+-- 判断是否存在角色
+function SkillJudger:HasRole(oSkill, caster, target, res, teamID, cId)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	if team:HasRole(cId) then
+		return res
+	else
+		return not res
+	end
+end
+
+
 -- 是否兄妹
 function SkillJudger:IsSibling(oSkill, caster, target, res, charID)
 
@@ -754,12 +774,24 @@ function SkillJudger:TargetIndex(oSkill, caster, target, res, nIndex)
 	end
 end
 
--- 是否控制buff
+-- 是否控制buff(group)
 function SkillJudger:IsCtrlBuff(oBuff, caster, target, res, typ)
 	typ = typ or BuffGroup.Ctrl
 	LogDebugEx("IsCtrlBuff", oBuff.group, BuffGroup.Ctrl)
 	-- LogTable(oBuff, "IsCtrlBuff")
 	if oBuff.group == typ then
+		return res
+	else
+		return not res
+	end
+end
+
+-- 是否控制buff(type)
+function SkillJudger:IsCtrlBuffType(oBuff, caster, target, res, typ)
+	typ = typ or BuffGroup.Ctrl
+	LogDebugEx("IsCtrlBuff", oBuff.type, BuffGroup.Ctrl)
+	-- LogTable(oBuff, "IsCtrlBuff")
+	if oBuff.type == typ then
 		return res
 	else
 		return not res
@@ -1387,6 +1419,8 @@ end
 
 -- 拉条
 function FightAPI:AddProgress(effect, caster, target, data, progress, max)
+
+	LogDebugEx("拉条 AddProgress", target.name, max)
 	if target:IsLive() then
 		target:AddProgress(progress, max, effect.apiSetting)
 	end
@@ -1906,6 +1940,11 @@ function FightAPI:AddSkillAttr(effect, caster, target, data, attr, val)
 	mgr:AddSkillAttr(attr, val)
 end
 
+function FightAPI:AddOneSkillAttr(effect, caster, target, data, attr, val, t)
+	local mgr = caster.skillMgr
+	mgr:AddOneSkillAttr(attr, val, t)
+end
+
 -- 结算伤害并删除buff(按type)
 function FightAPI:ClosingBuff(effect, caster, target, data, num, type)
 	local oBuffMgr = target.bufferMgr
@@ -2158,7 +2197,7 @@ function FightAPI:SetShareDamage(effect, caster, target, data, percent)
 	LogDebugEx("设置分摊伤害比例", percent)
 	if percent > 1 then percent = 1 end
 	if percent < 0 then percent = 0 end
-
+	LogDebugEx("设置分摊伤害比例", percent, target.name)
 	target:SetValue("rateShareDamage", percent)
 end
 

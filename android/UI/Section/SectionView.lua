@@ -78,9 +78,13 @@ local eRectR = nil
 local isExerciseLOpen = false
 local isExerciseROpen = false
 local isExerciseRShow = true
+local isColosseumOpen = false
 local eLockStr = ""
 local eLockStr2 = ""
 local isPvpRet = false
+local cRefreshTime = 0
+local cTimer = 0
+local cTime = 0
 
 --活动
 local layout4 =nil
@@ -280,6 +284,8 @@ function Update()
         UpdateItemAngle(contentX)
         UpdatePrograss(contentX)      
     end 
+
+    UpdateColosseum()
 
     if currType == 4 and items4 and #items4 > 0 then
         local contentX = CSAPI.GetAnchor(content4)      
@@ -534,11 +540,19 @@ function InitExerciseView()
     if not isExerciseLOpen then
         CSAPI.SetText(txt_eLock2, eLockStr)
     end
+    --Colosseum
+    isColosseumOpen,cRefreshTime = ColosseumMgr:CheckEnterOpen()
+    if cRefreshTime ~= nil then
+        cTime = cRefreshTime - TimeUtil:GetTime()
+    end
 
     local sectionData = DungeonMgr:GetSectionData(13001)
     isExerciseROpen,eLockStr2 = sectionData:GetOpen()
-    if not isExerciseROpen then
+    if not isExerciseROpen or not isColosseumOpen then
         isExerciseRShow = sectionData:GetOpenState() > -2
+        if isExerciseRShow then
+            isExerciseRShow = isColosseumOpen
+        end
         CSAPI.SetText(txt_eLock4, eLockStr2)
         CSAPI.SetGOActive(btnExerciseR, isExerciseRShow)
         if not isExerciseRShow and exerciseMoveL then
@@ -1225,6 +1239,16 @@ function OnClickExerciseR()
     else
         Tips.ShowTips(eLockStr2)
         -- LanguageMgr:ShowTips(1000)
+    end
+end
+
+function UpdateColosseum()
+    if cTime > 0 and Time.time > cTimer then
+        cTimer = Time.time + 1
+        cTime = cRefreshTime - TimeUtil:GetTime()
+        if cTime <= 0 then
+            InitExerciseView()
+        end
     end
 end
 

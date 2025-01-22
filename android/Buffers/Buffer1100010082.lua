@@ -11,5 +11,5 @@ function Buffer1100010082:OnCreate(caster, target)
 	-- 1100010083
 	self:AddShield(BufferEffect[1100010083], self.caster, self.card, nil, 6,0.2)
 	-- 1100010086
-	self:AddAttrPercent(BufferEffect[1100010086], self.caster, self.card, nil, "attack",0.1)
+	self:AddAttrPercent(BufferEffect[1100010086], self.caster, self.card, nil, "attack",0.5)
 end

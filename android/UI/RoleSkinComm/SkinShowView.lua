@@ -65,6 +65,7 @@ function OnClickAnyway()
 end
 
 function CloseView()
+    RoleAudioPlayMgr:StopSound();
     view:Close();
 end
 
@@ -249,5 +250,4 @@ end
 function OnDestroy()
     CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
     CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
-
 end

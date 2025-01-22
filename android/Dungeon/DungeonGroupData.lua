@@ -26,7 +26,11 @@ function this:GetID()
 end
 
 function this:GetName()
-    return self.cfg and self.cfg.name
+    return self.cfg and self.cfg.name or ""
+end
+
+function this:GetEnName()
+    return self.cfg and self.cfg.enName or ""
 end
 
 function this:GetGroup()

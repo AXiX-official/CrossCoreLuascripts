@@ -116,7 +116,10 @@ end
 
 ---------------------------------------------自动上锁---------------------------------------------
 function this:SetSettingLock() --每次登录都设置一次以防止和服务器设置不一致
-	local index = SettingMgr:GetValue(s_other_equipLock_key) or s_other_equipLock_default
+	local index = SettingMgr:GetValue(s_other_equipLock_key)
+	if index == nil or index == 0 then
+        index = s_other_equipLock_default
+    end
 	PlayerProto:Setting(index == 1)
 end
 

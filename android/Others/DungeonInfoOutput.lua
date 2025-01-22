@@ -80,6 +80,7 @@ function GetRewardDatas()
             if (isTeaching and dungeonData and dungeonData.data) then
                 _isPass = dungeonData.data.isPass
             end
+            _isPass = CheckRogueTFirstPass(_isPass)
             local _data = {
                 id = v[1],
                 elseData = {
@@ -141,4 +142,15 @@ function OnClickOutput()
         return
     end
     CSAPI.OpenView("DungeonDetail", {cfg, DungeonDetailsType.MainLineOutPut})
+end
+
+----------------------------------能力测验判断的是关卡组是否通关--------------------------------------------------
+function CheckRogueTFirstPass(_isPass)
+    if(RogueTMgr:CheckISDungeonGroupCfg(cfg))then 
+        local _data = RogueTMgr:GetData(cfg.id)
+        if(_data~=nil)then 
+            _isPass = _data:CheckIsFirstPass()
+        end 
+    end
+    return _isPass
 end

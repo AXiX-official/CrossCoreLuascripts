@@ -46,6 +46,9 @@ end
 function OnNameChange()
     CSAPI.SetText(txtName, PlayerClient:GetName() .. "")
     LanguageMgr:ShowTips(30002)
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        ShiryuSDK.OnRoleInfoUpdate();
+    end
 end
 
 function OnOpen()

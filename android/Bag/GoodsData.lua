@@ -280,6 +280,21 @@ function this:GetMemberCardType()
 	end
 end
 
+--是否显示红点
+function this:CheckRed()
+	local isRed=false;
+	if self:GetType()==ITEM_TYPE.SEL_BOX  then
+		isRed=true;
+	elseif self:IsExipiryType() then
+		local curTime=TimeUtil.GetTime();
+		local exTime=self:GetExpiry()
+        if exTime>curTime and exTime-curTime<=172800 then --小于48小时都显示
+            isRed=true;
+        end
+	end
+	return isRed;
+end
+
 --返回关卡掉落信息 
 function this:GetGetWayInfo()
 	local infos=nil;
@@ -390,22 +405,27 @@ end
 function this:GetExpiryTips()
 	local time=self:GetExpiry();
 	if time then
-		local count=TimeUtil:GetDiffHMS(time,TimeUtil.GetTime());
-		if count.day>0 then
-			return LanguageMgr:GetTips(16010,count.day);
-		elseif (count.day==nil or count.day<0) and (count.hour==nil or count.hour<0) and (count.minute==nil or count.minute<0) and (count.second==nil or count.second<=0) then
-			return LanguageMgr:GetByID(24027);
-		else
-			if count.hour==0 then
-				return "<color='#FF7781'>"..LanguageMgr:GetTips(16009,count.hour,count.minute,count.second).."</color>"
+		local curTime=TimeUtil.GetTime();
+		if time>curTime then
+			local count=TimeUtil:GetDiffHMS(time,curTime);
+			if count.day>0 then
+				return LanguageMgr:GetTips(16010,count.day);
+			elseif (count.day==nil or count.day<0) and (count.hour==nil or count.hour<0) and (count.minute==nil or count.minute<0) and (count.second==nil or count.second<=0) then
+				return LanguageMgr:GetByID(24027);
 			else
-				return LanguageMgr:GetTips(16009,count.hour,count.minute,count.second);
+				if count.hour==0 then
+					return "<color='#FF7781'>"..LanguageMgr:GetTips(16009,count.hour,count.minute,count.second).."</color>"
+				else
+					return LanguageMgr:GetTips(16009,count.hour,count.minute,count.second);
+				end
 			end
+			-- if count.day<0 then
+			-- 	return LanguageMgr:GetByID(24027);
+			-- end
+			-- return count.day>0 and LanguageMgr:GetByID(24024,count.day) or LanguageMgr:GetByID(24024,1);
+		else
+			return LanguageMgr:GetByID(24027);
 		end
-		-- if count.day<0 then
-		-- 	return LanguageMgr:GetByID(24027);
-		-- end
-		-- return count.day>0 and LanguageMgr:GetByID(24024,count.day) or LanguageMgr:GetByID(24024,1);
 	end
 	return nil;
 end
@@ -434,6 +454,13 @@ end
 function this:GetDy2Tb()
 	if self.cfg and self.cfg.dy2_tb then
 		return self.cfg.dy2_tb;
+	end
+	return nil;
+end
+
+function this:GetObtainrateState()
+	if self.cfg and self.cfg.is_obtainrate_showed then
+		return self.cfg.is_obtainrate_showed;
 	end
 	return nil;
 end

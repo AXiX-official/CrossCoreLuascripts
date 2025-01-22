@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1100010320:OnCreate(caster, target)
 	-- 1100010320
-	self:AddAttrPercent(BufferEffect[1100010320], self.caster, self.card, nil, "defense",0.12)
+	self:AddAttrPercent(BufferEffect[1100010320], self.caster, self.card, nil, "defense",0.1)
 end

@@ -226,7 +226,8 @@ function AddPanel(i)
 	if(i == 3) then
 		-- local voiceInfo = CRoleMgr:GetScriptCfg(data:GetID(), curSkinData:GetSkinID())
 		-- curDatas = voiceInfo and voiceInfo:GetArr() or {}
-		curDatas = CRoleMgr:GetScriptCfgs(data:GetID(), curSkinData:GetSkinID())
+		-- curDatas = CRoleMgr:GetScriptCfgs(data:GetID(), curSkinData:GetSkinID())
+		curDatas = CRoleMgr:GetRoleScriptCfgs(data:GetID(), true)
 	elseif(i == 4) then
 		curDatas = CRoleMgr:GetStory(data:GetID(), curSkinData:GetSkinID())
 	elseif(i == 5) then

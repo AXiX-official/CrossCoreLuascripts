@@ -6,8 +6,8 @@ Buffer1000010040 = oo.class(BuffBase)
 function Buffer1000010040:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 回合开始时
-function Buffer1000010040:OnRoundBegin(caster, target)
+-- 创建时
+function Buffer1000010040:OnCreate(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else

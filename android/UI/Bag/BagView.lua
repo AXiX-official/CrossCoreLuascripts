@@ -18,6 +18,7 @@ local tagList={ --二级页签配置
 		txt2=LanguageMgr:GetByType(24037,4),
 		icon1="btn_11_01",
 		icon2="btn_11_02",
+		tag=1,
 		openSetting=BagOpenSetting.Material,
 	},{
 		id=2,
@@ -25,7 +26,7 @@ local tagList={ --二级页签配置
 		txt2=LanguageMgr:GetByType(24038,4),
 		icon1="img_10_01",
 		icon2="img_10_02",
-		tag=5,
+		tag=2,
 		openSetting=BagOpenSetting.Props,
 	}},
 	{{ ---装备子页签
@@ -243,7 +244,6 @@ function SetCurModule(_isFirst)
 		InitTagState(tagData,_isFirst,isEnter);
 	end
 	curModule.Refresh();
-
 end
 
 function Refresh(list) --刷新列表
@@ -255,9 +255,9 @@ function Refresh(list) --刷新列表
 		local arr={};
 		for k,v in ipairs(list) do
 			local cfgGoods=v:GetCfg();
-			if isProp and (v:GetCfgTag()==5) then--消耗道具
+			if isProp and (v:GetCfgTag()==2) then--消耗道具
 				table.insert(arr, v);
-			elseif isProp~=true and (v:GetCfgTag()~=5) then
+			elseif isProp~=true and (v:GetCfgTag()~=2) then
 				table.insert(arr, v);
 			end
 		end

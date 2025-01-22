@@ -96,8 +96,10 @@ function SetOpenSetting(op)
         openSetting=TeamOpenSetting.TotalBattle
     elseif op==TeamConfirmOpenType.Rogue then
         openSetting=TeamOpenSetting.Rogue
-    elseif TeamConfirmOpenType.GlobalBoss then
-        openSetting=TeamOpenSetting.GlobalBoss
+    elseif op==TeamConfirmOpenType.GlobalBoss then
+        openSetting=TeamOpenSetting.GlobalBoss    
+    elseif op==TeamConfirmOpenType.RogueT then
+        openSetting=TeamOpenSetting.RogueT 
     else
         openSetting=TeamOpenSetting.PVE
     end

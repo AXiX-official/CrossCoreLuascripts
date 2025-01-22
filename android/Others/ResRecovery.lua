@@ -43,9 +43,13 @@ function OnOpen()
     ResUtil.IconGoods:Load(icon, itemCfg.icon)
     CSAPI.SetGOActive(imgNum, cfg.discount ~= nil)
     if (cfg.discount ~= nil) then
+        local tens = math.floor(cfg.discount / 10)
+        local ones = cfg.discount % 10
         CSAPI.SetText(txtCount, cost[2] .. "")
-        local imgName = "img_05_0" .. math.ceil(cfg.discount / 10)
-        CSAPI.LoadImg(imgNum, "UIs/ResRecovery/" .. imgName .. ".png", true, nil, true);
+        local imgName1 = "img_05_0" ..tens 
+        CSAPI.LoadImg(imgNum1, "UIs/ResRecovery/" .. imgName1 .. ".png", true, nil, true)
+        local imgName2 = "img_05_0" ..ones 
+        CSAPI.LoadImg(imgNum2, "UIs/ResRecovery/" .. imgName2 .. ".png", true, nil, true)
     end
     -- btn 
     CSAPI.SetGOAlpha(btnS, isGain and 0.3 or 1)

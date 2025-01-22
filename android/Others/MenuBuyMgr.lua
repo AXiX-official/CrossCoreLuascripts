@@ -29,7 +29,7 @@ end
 function this:CheckMenuBuyIsOpen()
     return MenuMgr:CheckModelOpen(OpenViewType.special, "special16")
 end
-
+--id:5、9是新年
 -- 设置等待弹出的数据
 -- 弹出销毁条件
 -- 1、全部    【登录+未勾】

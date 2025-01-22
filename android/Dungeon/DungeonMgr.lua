@@ -699,6 +699,8 @@ function this:ApplyEnter(id, indexList, duplicateTeamDatas)
     -- LogError(data.list)
     if (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueS) then -- 直接进入战斗的副本
         FightProto:EnterRogueSFight()
+    elseif (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueT) then -- 直接进入战斗的副本
+        FightProto:EnterRogueTFight(duplicateTeamDatas)
     elseif dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
         self:SetFightTeamId(indexList[1]); -- 设置正在战斗中的队伍id
 
@@ -1090,7 +1092,7 @@ function this:OnQuit(isExit, jumpType)
     isExit = isExit ~= nil and isExit or false;
     local cfg= Cfgs.MainLine:GetByID(self.currId)
     if cfg then
-        local path1,paht2 = DungeonUtil.GetViewPath(cfg.group)
+        local path1,path2 = DungeonUtil.GetViewPath(cfg.group)
         if DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Daily then
             CSAPI.OpenView("Section", {type = 2,group = cfg.group, id = cfg.id});
         elseif DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Activity then
@@ -1101,9 +1103,12 @@ function this:OnQuit(isExit, jumpType)
                 CSAPI.OpenView(path1, {id = cfg.group})
             elseif cfg.type == eDuplicateType.StoryActive then --剧情
                 CSAPI.OpenView(path1, {id = cfg.group},{isDungeonOver = true})
-                CSAPI.OpenView(paht2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
+                CSAPI.OpenView(path2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
             elseif cfg.type == eDuplicateType.TaoFa then --讨伐
                 CSAPI.OpenView(path1,{id = cfg.group, itemId = cfg.id})
+                if path2 and path2~="" then --试炼
+                    CSAPI.OpenView(path2,{id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
+                end
             elseif cfg.type == eDuplicateType.NewTower then
                 CSAPI.OpenView("TowerView") --默认最新关卡        
                 local datas = DungeonMgr:GetActivitySectionDatas(SectionActivityType.NewTower) 
@@ -1447,9 +1452,15 @@ function this:IsActivityRed(isUpdate)
     if not isRed then --战力派遣
         isRed = RogueSMgr:IsRed()
     end
-
+    if not isRed then --能力测验
+        isRed = RogueTMgr:IsRed()
+    end
     if not isRed then
         isRed = ColosseumMgr:IsRed()
+    end
+
+    if not isRed then --世界boss
+        isRed = GlobalBossMgr:IsRed()
     end
 
     return isRed

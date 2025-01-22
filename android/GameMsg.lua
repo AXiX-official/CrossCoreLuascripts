@@ -1036,9 +1036,9 @@ GameMsg.map["FightProto:RogueSGainRet"] = {
 	{ "ty",  "gained",            },
 }
 GameMsg.map["FightProto:GlobalBossInfoRet"] = {
-	--bossid   开始时间    结束时间  
-	{ "int",   "uint",     "uint",   },
-	{ "bossId","beginTime","endTime",},
+	--bossid   开始时间    结束时间  血量     
+	{ "int",   "uint",     "uint",   "double",},
+	{ "bossId","beginTime","endTime","hp",    },
 }
 GameMsg.map["FightProtocol:GetGlobalBossData"] = {
 	--
@@ -1079,6 +1079,116 @@ GameMsg.map["FightProto:GetGlobalBossRankTeamRet"] = {
 	--第几名    队伍数据        
 	{ "int",    "list|TeamItem",},
 	{ "rankIdx","data",         },
+}
+GameMsg.map["sRogueTBuffs"] = {
+	--下标   单个存档的buff数组 
+	{ "uint","array|uint",      },
+	{ "idx", "tBuff",           },
+}
+GameMsg.map["sRogueTDuplicateData"] = {
+	--关卡组ID（难度ID） 历史最高伤害 已存档buff          首通奖励          是否通关(解锁无限血关) 当前使用buff组下标 
+	{ "uint",            "uint",      "list|sRogueTBuffs","bool",           "bool",              "uint",            },
+	{ "id",              "maxDamage", "buffs",            "firstPassReward","pass",              "useBuff",         },
+}
+GameMsg.map["FightProtocol:GetRogueTInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["FightProto:GetRogueTInfoRet"] = {
+	--关卡组数据                       总积分（不重置） 阶段奖励等级（不重置） 本期累计分数（月重置） 周期奖励下标（月重置） 最大通关难度 打过的最大无限血关难度(关卡组ID)，只显示在排行榜 
+	{ "list|sRogueTDuplicateData","bool",     "uint",          "uint",               "uint",               "uint",               "uint",      "uint",               },
+	{ "data",              "is_finish","score",         "stageIdx",           "monthScore",         "periodIdx",          "maxGroup",  "maxBoss",            },
+}
+GameMsg.map["FightProtocol:EnterRogueTDuplicate"] = {
+	--关卡组ID（难度ID） 是否无限血关 
+	{ "uint",            "bool",      },
+	{ "id",              "boss",      },
+}
+GameMsg.map["FightProto:FightingRogueTData"] = {
+	--关卡组ID（难度ID） 当前关卡       当前积分 随机buffs     已选择buffs   剩余货币 已刷新buff次数 
+	{ "uint",            "uint",        "uint",  "array|uint", "array|uint", "uint",  "uint",        },
+	{ "id",              "nDuplicateID","score", "randomBuffs","selectBuffs","coin",  "times",       },
+}
+GameMsg.map["FightProtocol:EnterRogueTFight"] = {
+	--编队信息             
+	{ "list|sDuplicateTeamData",},
+	{ "list",              },
+}
+GameMsg.map["FightProtocol:RogueTSelectBuff"] = {
+	--buffid 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["FightProto:RogueTSelectBuffRet"] = {
+	--已选择buffs   
+	{ "array|uint", },
+	{ "selectBuffs",},
+}
+GameMsg.map["FightProtocol:RogueTBuffUp"] = {
+	--buffID 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["FightProto:RogueTBuffUpRet"] = {
+	--原buffid 升级后的Buffid 
+	{ "uint",  "uint",        },
+	{ "id",    "new_id",      },
+}
+GameMsg.map["FightProto:RogueTOver"] = {
+	--输赢     当前关卡       已选择buffs   本次获得货币 总货币 总积分  本次获得积分 玩家经验     参与战斗的卡牌(id：卡牌id, num:添加的好感度) 奖励           无限血关伤害 
+	{ "bool",  "uint",        "array|uint", "uint",      "uint","uint", "uint",      "uint",      "list|sNumInfo",     "list|sReward","uint",      },
+	{ "bIsWin","nDuplicateID","selectBuffs","coinGet",   "coin","score","scoreGet",  "nPlayerExp","cardsExp",          "rewards",     "damage",    },
+}
+GameMsg.map["FightProtocol:RogueTBuffSave"] = {
+	--是否存档 存档下标 
+	{ "bool",  "uint",  },
+	{ "save",  "idx",   },
+}
+GameMsg.map["FightProto:RogueTBuffSaveRet"] = {
+	--是否存档 存档下标 已选择buffs   
+	{ "bool",  "uint",  "array|uint", },
+	{ "save",  "idx",   "selectBuffs",},
+}
+GameMsg.map["FightProtocol:RogueTQuit"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["FightProto:RogueTQuitRet"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["FightProtocol:RogueTUseBuff"] = {
+	--关卡组ID（难度ID） 当前使用buff组下标 
+	{ "uint",            "uint",            },
+	{ "id",              "useBuff",         },
+}
+GameMsg.map["FightProto:RogueTUseBuffRet"] = {
+	--关卡组ID（难度ID） 当前使用buff组下标 
+	{ "uint",            "uint",            },
+	{ "id",              "useBuff",         },
+}
+GameMsg.map["FightProtocol:RogueTDelBuff"] = {
+	--关卡组ID（难度ID） 存档下标 
+	{ "uint",            "uint",  },
+	{ "id",              "idx",   },
+}
+GameMsg.map["FightProto:RogueTDelBuffRet"] = {
+	--关卡组ID（难度ID） 存档下标 
+	{ "uint",            "uint",  },
+	{ "id",              "idx",   },
+}
+GameMsg.map["FightProtocol:RogueTGainReward"] = {
+	--类型   
+	{ "uint",},
+	{ "ty",  },
+}
+GameMsg.map["FightProto:RogueTGainRewardRet"] = {
+	--类型   对应类型的奖励下标 
+	{ "uint","uint",            },
+	{ "ty",  "idx",             },
 }
 GameMsg.map["ItemData"] = {
 	--id     数量  第一个获取时间 有效期序列值(结合配置表的sExpiry使用, 导表工具会生成nExpiry) 过期时间，不需要分开堆叠显示的使用[头像框] 分批获取的信息 
@@ -2276,9 +2386,9 @@ GameMsg.map["sShopCommodityCfg"] = {
 	{ "nDiscountStart","nDiscountEnd","fDiscount","jGets",           "jExGets","jCosts",  "nOnecBuyLimit","nSumBuyLimit","nResetType","nResetValue","isShow",      "jCosts1", },
 }
 GameMsg.map["sMailContent"] = {
-	--邮件名称 发件人名称 描述     获得的奖励(物品id,数量) 阅读后多少秒删除 
-	{ "string","string",  "string","list|sNumInfo",      "uint",          },
-	{ "name",  "from",    "desc",  "rewards",            "read_del_sec",  },
+	--邮件名称 发件人名称 描述     获得的奖励(物品id,数量) 阅读后多少秒删除 附带邮件id 发件人名称参数列表 描述参数列表 
+	{ "string","string",  "string","list|sNumInfo",      "uint",          "uint",    "json",            "json",      },
+	{ "name",  "from",    "desc",  "rewards",            "read_del_sec",  "mCfgId",  "nameArgs",        "desArgs",   },
 }
 GameMsg.map["sMailInfo"] = {
 	--邮件id（排序依据） 表id(无id则为gm邮件) 状态(1:未读 2:已读) 是否已领取(1:未领 2：已领取) 发件人     开始时间 -秒 完成时间 -秒 数据结构             创建时间      
@@ -2324,6 +2434,11 @@ GameMsg.map["MailProto:QueryMailRet"] = {
 	--
 	{ },
 	{ },
+}
+GameMsg.map["MailProto:GetAttachMail"] = {
+	--邮件id 附带邮件id 
+	{ "uint","uint",    },
+	{ "id",  "mCfgId",  },
 }
 GameMsg.map["sTaskInfo"] = {
 	--任务唯一索引 任务id  类型   是否已领 奖励物品        状态    列表(id =finishId, num =cnt) 
@@ -2409,6 +2524,16 @@ GameMsg.map["TaskProto:TaskDelete"] = {
 	--被删除的任务列表   
 	{ "list|sDeleteTask",},
 	{ "tasks",           },
+}
+GameMsg.map["sTaskType"] = {
+	--任务类型 辅助字段[任务中细分类型] 
+	{ "uint",  "uint",              },
+	{ "type",  "nGroup",            },
+}
+GameMsg.map["TaskProto:GetRewardByTypes"] = {
+	--任务类型         
+	{ "list|sTaskType",},
+	{ "taskType",      },
 }
 GameMsg.map["sPracticeInfo"] = {
 	--本季赛开始时间(时间前的都是休息时间） 本季赛结束时间 可以参加的计数 下次参加次数重置时间 已使用刷新次数 段位         最高段位         排名   最高排名   积分    可购买军演挑战次数 
@@ -4339,6 +4464,21 @@ GameMsg.map["PlayerProto:TakeColletRewardByTypeRet"] = {
 	--活动类型（eCollectType） 表的id 
 	{ "uint",              "int", },
 	{ "type",              "id",  },
+}
+GameMsg.map["PlayerProto:ClearRank"] = {
+	--排行榜类型（eRankType） 
+	{ "int",               },
+	{ "rank_type",         },
+}
+GameMsg.map["PlayerProto:GetMineRankInfo"] = {
+	--排行榜类型（eRankType） 
+	{ "int",               },
+	{ "rank_type",         },
+}
+GameMsg.map["PlayerProto:GetMineRankInfoRet"] = {
+	--排行榜类型（eRankType） 当前积分 当前排名 下次刷新时间        
+	{ "int",               "uint",  "uint",  "int",              },
+	{ "rank_type",         "score", "rank",  "next_refresh_time",},
 }
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 

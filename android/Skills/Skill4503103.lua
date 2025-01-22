@@ -35,13 +35,6 @@ function Skill4503103:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8437
-	local count37 = SkillApi:BuffCount(self, caster, target,2,3,3008)
-	-- 8884
-	if SkillJudger:Less(self, caster, self.card, true,count37,1) then
-	else
-		return
-	end
 	-- 4503113
 	self:HitAddBuff(SkillEffect[4503113], caster, target, data, 2000,4503101)
 end

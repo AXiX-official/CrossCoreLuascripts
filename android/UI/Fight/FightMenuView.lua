@@ -83,7 +83,7 @@ function OnClickQuit()
         -- func = OnDirllBack;
         OnDirllBack();
         return;
-    elseif (g_FightMgr and (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS)) then
+    elseif (g_FightMgr and (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS or g_FightMgr.type == SceneType.RogueT)) then
         -- if (DungeonMgr:CheckDungeonPass(1004)) then
         func = OnSureDungeonFightQuit;
         --        else
@@ -109,6 +109,8 @@ function OnClickQuit()
             quitStr = LanguageMgr:GetTips(19004)
         elseif (g_FightMgr.type == SceneType.Rogue) then
             quitStr = LanguageMgr:GetByID(50010)
+        elseif (g_FightMgr.type == SceneType.RogueT) then
+            quitStr = LanguageMgr:GetByID(54046) 
         end
     end
     local dialogData = {}

@@ -921,5 +921,17 @@ function this:GuideBehaviourStart_Colosseum_149010()
     UIUtil:OpenQuestion("ColosseumView");
 end
 
+--能力检测引导----------------------------------------------------------------------------
 
+
+function this:GuideBehaviourStart_AbilityTest_154040()
+    UIUtil:OpenQuestion("RogueTView");
+end
+function this:GuideBehaviourCondition_AbilityTest_155010()
+    return GuideMgr:IsGuided(1530);
+end
+
+function this:GuideBehaviourCondition_AbilityTest_156010()
+    return GuideMgr:IsGuided(1530);
+end
 return this;

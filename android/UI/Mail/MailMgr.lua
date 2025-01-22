@@ -100,7 +100,17 @@ end
 
 --检查红点数据
 function this:CheckRedPointData()
-	local ids = self:CanGetIDs()
+	local ids = {}
+	local arr = self:GetArr()
+	if(arr and #arr > 0) then
+		for i, v in ipairs(arr) do
+			if v:GetIsRead() == MailReadType.No then
+				table.insert(ids, v:GetID())
+			elseif v:GetIsGet() == MailGetType.No and v:GetRewards() and #v:GetRewards() > 0 then
+				table.insert(ids, v:GetID())
+			end
+		end
+	end
 	RedPointMgr:UpdateData(RedPointType.Mail, #ids > 0 and #ids or nil)
 end
 
@@ -183,6 +193,36 @@ function this:MailAddNotice(proto)
 		EventMgr.Dispatch(EventType.Mail_AddNotice)
 	end
 	self:CheckRedPointData()
+end
+
+function this:GetMailStr(v)
+	local str = ""
+	local item=nil
+	if v.type == TipAargType.OnlyParm then
+		str = v.param .. ""
+	elseif v.type == TipAargType.EmptyParm then
+		str = ""
+	elseif v.type == TipAargType.ItemId then
+		item=BagMgr:GetFakeData(tonumber(v.param));
+		str = item and item:GetName() or ""
+	elseif v.type == TipAargType.CardId then
+		item=RoleMgr:GetFakeData(tonumber(v.param));
+		str=item and item:GetName() or "";	
+	elseif v.type == TipAargType.EquipId then
+		str = ""
+	elseif v.type == TipAargType.DupId then
+		item=Cfgs.MainLine:GetByID(tonumber(v.param));
+		str=item and item.name or ""	
+	elseif v.type == TipAargType.Role then
+		item=Cfgs.CfgCardRole:GetByID(v.param);
+		str=item and item.sAliasName or ""	
+	elseif v.type == TipAargType.SectionId then
+		item =Cfgs.Section:GetByID(tonumber(v.param))
+		str=item and item.name or ""	
+	else    --不对的参数类型
+		LogError("不支持的参数类型:"..tostring(data.type));	
+	end
+	return str
 end
 
 return this 

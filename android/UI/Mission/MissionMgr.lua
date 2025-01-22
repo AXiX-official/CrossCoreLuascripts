@@ -522,6 +522,19 @@ function this:GetReward(_id)
     NetMgr.net:Send(proto)
 end
 
+--领取指定组下的类型奖励
+function this:GetRewardByType(types,group)
+    local datas = {}
+    if types and #types > 0 and group then
+        for i, v in ipairs(types) do
+            table.insert(datas,{type = v,nGroup = group})
+        end
+    end
+    if #datas > 0 then
+        TaskProto:GetRewardByTypes(datas)
+    end
+end
+
 function this:GetSevenTaskDay(_type)
     local proto = {"TaskProto:GetSevenTasksDay", {
         type = _type

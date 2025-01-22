@@ -1,4 +1,4 @@
--- 防护III级
+-- 战斗开始时，全体增加30%耐久上限
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -8,12 +8,11 @@ function Skill1100010132:Init(skillID, card)
 end
 -- 入场时
 function Skill1100010132:OnBorn(caster, target, data)
-	-- 1100010132
-	if SkillJudger:AddBuff(self, caster, self.card, 1100010132) then
-		-- 2203
-		local targets = SkillFilter:All(self, caster, target, 1)
-		for i,target in ipairs(targets) do
-			self:AddBuff(SkillEffect[2203], caster, target, data, 2114)
-		end
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
 	end
+	-- 1100010132
+	self:OwnerAddBuff(SkillEffect[1100010132], caster, self.card, data, 1100010132)
 end

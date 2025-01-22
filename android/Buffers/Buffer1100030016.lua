@@ -8,6 +8,6 @@ function Buffer1100030016:Init(mgr, id, target, caster)
 end
 -- 回合开始时
 function Buffer1100030016:OnRoundBegin(caster, target)
-	-- 6112
-	self:ImmuneBuffID(BufferEffect[6112], self.caster, target or self.owner, nil,3003)
+	-- 6209
+	self:ImmuneBuffID(BufferEffect[6209], self.caster, target or self.owner, nil,3601)
 end

@@ -28,6 +28,7 @@ function Update()
         time = refreshTime - TimeUtil:GetTime()
         if time <= 0 then
             SetTime()
+            SetItems()
         end
     end
 end

@@ -1,4 +1,4 @@
--- 高血加伤3
+-- 对耐久大于70%的单位攻击伤害加深20%
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -18,6 +18,11 @@ function Skill1100010032:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
 	-- 1100010032
-	self:AddTempAttr(SkillEffect[1100010032], caster, self.card, data, "damage",0.15)
+	self:AddTempAttr(SkillEffect[1100010032], caster, self.card, data, "damage",0.2)
 end

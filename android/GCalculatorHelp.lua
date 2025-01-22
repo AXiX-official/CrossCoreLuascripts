@@ -2021,25 +2021,33 @@ end
 ---- curTime: 当前时间[秒]
 -- ret:
 ---- leftNum: 返回剩余的数量
-function GCalHelp:RemoveItemExpirys(hadNum, itemGets, curTime)
+function GCalHelp:CheckSubItemExpirys(hadNum, itemGets, curTime, exiprySubs, isDelExpiry)
     local leftNum = hadNum
+    local sumRemove = 0
 
     -- 数组末尾的先过期
     for ix = #itemGets, 1, -1 do
         -- statements
         local info = itemGets[ix]
-        local num, expiry = info[1], info[2]
+        local num, expiry, cfgId = info[1], info[2], info[3]
         if curTime >= expiry then
-            -- LogDebug('GCalHelp:RemoveItemExpirys() leftNum:%s, remove ix:%s, num:%s, expiry:%s', leftNum, ix, num, expiry)
-            -- 删除过期的部分
-            table.remove(itemGets, ix)
+            -- LogDebug('GCalHelp:CheckSubItemExpirys() leftNum:%s, remove ix:%s, num:%s, expiry:%s', leftNum, ix, num, expiry)
+            if isDelExpiry then
+                -- 删除过期的部分
+                table.remove(itemGets, ix)
+            end
+
             leftNum = leftNum - num
+            sumRemove = sumRemove + num
+            if exiprySubs then
+                table.insert(exiprySubs, {id = cfgId, num = num})
+            end
         else
             break
         end
     end
 
-    return leftNum
+    return leftNum, sumRemove
 end
 
 --警告 主角真实数据不能用这个方法，因为主角解限，机神数据不是读表的，而是通过服务器发
@@ -2464,4 +2472,16 @@ function GCalHelp:CalMailFrom(baseFrom, acc, logId)
     end
     
     return string.format("%s_acc[%s]_logId[%s]", baseFrom, acc, logId)
+end
+
+-- 能力测验特殊处理
+-- 2025年2月不刷新，所以跳过
+function GCalHelp:GetRogueTNextMonth(curTime)
+    curTime = curTime or CURRENT_TIME
+    local nextMonthTime = self:GetActiveResetTime(PeriodType.Month, 1, curTime)
+    local date = os.date("*t", nextMonthTime)
+    if date.year == 2025 and date.month == 2 then
+        date.month = date.month + 1
+    end
+    return os.time{year = date.year, month = date.month, day = date.day, hour = date.hour, min = 0, sec = 0}
 end

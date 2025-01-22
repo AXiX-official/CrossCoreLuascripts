@@ -64,6 +64,14 @@ function LayoutCallBack(index)
     end
 end
 function OnClickItem(index)
+    if (oldIndex and oldIndex == index) then
+        OnClickR2()
+        return
+    end
+    --
+    if(isClick)then 
+        return
+    end 
     isClick = true
     --
     if (oldIndex and oldIndex ~= index) then
@@ -74,7 +82,7 @@ function OnClickItem(index)
         local item = layout:GetItemLua(index)
         item.SelectAnim(true)
     end
-    oldIndex = index
+    -- oldIndex = index
     --
     layout:MoveToCenter(index)
 end
@@ -98,6 +106,9 @@ function ToCenterCB(index)
     FuncUtil:Call(function()
         CSAPI.SetGOActive(mask, false)
     end, nil, 801)
+    --
+    CSAPI.SetGOAlpha(btnR1, curIndex <= 1 and 0.5 or 1)
+    CSAPI.SetGOAlpha(btnR3, curIndex >= #curDatas and 0.5 or 1)
     --
     isClick = false
     oldIndex = curIndex
@@ -260,14 +271,21 @@ function OnBeginDrag()
     isDrag = true
 end
 
+-- 滑动范围0-255
 function OnDrag()
     if (not isDrag) then
         return
     end
     SetLContentPos()
     local angle = calculate_angle(dragX, dragY) -- [218,322] [255,360]
+
     angle = (angle >= 255 and angle < 307) and 255 or angle
     angle = (angle >= 307 and angle <= 360) and 0 or angle
+    if (oldAngle and math.abs(angle - oldAngle) > 30) then
+        return
+    end
+    oldAngle = angle
+
     CSAPI.SetAngle(imgProg, 0, 0, angle)
     curMusicScale = math.floor((255 - angle) / 255 * 100)
     SettingMgr:SetAudioScale(s_audio_scale.music, curMusicScale)
@@ -346,6 +364,7 @@ function GetCurPos()
 end
 
 function OnViewOpened(viewKey)
+    source:Pause(true)
     if (viewKey == "ShopView") then
         SettingMgr:SetAudioScale(s_audio_scale.music, musicScale)
     end
@@ -353,6 +372,7 @@ end
 
 -- 其它界面关闭
 function OnViewClosed(viewKey)
+    source:Pause(false)
     if (viewKey == "ShopView") then
         SettingMgr:SetAudioScale(s_audio_scale.music, curMusicScale)
     end

@@ -345,7 +345,7 @@ function SetCharInfos(character)
                     else
                         LogError("怪物的副天赋配置有误！技能ID："..tostring(v));
                     end
-                elseif cfg.main_type==SkillMainType.Equip then
+                elseif cfg.main_type==SkillMainType.Equip and charData.isMonster then
                     local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
                     if skillCfg then
                         table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});

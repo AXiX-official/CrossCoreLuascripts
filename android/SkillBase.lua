@@ -567,6 +567,28 @@ function SkillMgr:AddSkillAttr(attr, val)
 	end
 end
 
+-- 减少一个技能属性
+function SkillMgr:AddOneSkillAttr(attr, val, upgrade_type, limit)
+	self.tRestoreLog = self.tRestoreLog or {}
+	local log		= self.team.fightMgr.log
+	limit = limit or 1
+
+	local oSkill = self.mapSlotSkills[upgrade_type]
+	if oSkill then return end
+	-- if oSkill.bAddOneSkillAttr or oSkill.bAddOneSkillAttr >= limit then return end
+
+	for k,skill in pairs(self.initiativeSkills) do
+		oSkill[attr] = oSkill[attr] or 0
+		oSkill[attr] = oSkill[attr] + val
+		if val<0 and oSkill[attr] < 0 then oSkill[attr] = 0 end
+
+		-- 修改技能属性
+		local tlog = {api="UpdateSkill", id = self.card.oid, skillID = oSkill.id, attr = attr, val = oSkill[attr]}
+		table.insert(self.tRestoreLog, tlog)
+		log:Add(tlog)
+	end
+end
+
 function SkillMgr:Restore()
 	if not self.tRestoreLog then return end
 

@@ -123,10 +123,6 @@ function Refresh(data, _elseData)
 				CSAPI.SetGOActive(tIcon,true)
 				GridUtil.LoadCIcon(icon,tIcon,cfg,false);
 				isLoadIcon=true;
-			elseif cfg.type==ITEM_TYPE.SEL_BOX then
-				if checkRed then
-					redObj=UIUtil:SetRedPoint(root,true,78,78);
-				end
 			elseif cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon or cfg.dy_value1==PROP_TYPE.IconTitle) then --头像框/头像
 				local dayTips=nil;
 				local dyArr=cfg.dy_arr;
@@ -145,6 +141,9 @@ function Refresh(data, _elseData)
 				SetDayObj(dayTips);
 			end
 			scale=data:GetIconScale();
+			if checkRed then
+				redObj=UIUtil:SetRedPoint(root,this.data:CheckRed(),78,78);
+			end
 		elseif data:GetClassType()=="EquipData" then
 			frameList=EquipQualityFrame
 			scale=data:GetIconScale();

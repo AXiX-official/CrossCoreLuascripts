@@ -12,7 +12,7 @@ local conf = {
 {'1002',	'1002',	'1002',	'2',	'1',	'301',	'',	'',	'',	'[{"id":22004,"path":"ActivityList/icon2"}]',	'SignInContinue/SignInContinue',	'',	'',	'',	'',	'',	''},
 {'1003',	'1003',	'1003',	'',	'1',	'201',	'',	'',	'',	'[{"id":22017,"path":"ActivityList/icon4"}]',	'Activity2/MissionContinue',	'2',	'[{"taskType":2}]',	'',	'',	'',	'1'},
 {'1004',	'1004',	'1004',	'',	'2',	'3',	'',	'',	'',	'[{"id":22022,"path":"ActivityList/icon5"}]',	'Activity3/InvestmentView',	'',	'[{"moduleInfo":"CrystalInvest"}]',	'CrystalInvest',	'2002',	'',	''},
-{'1005',	'1005',	'1005',	'',	'1',	'202',	'2024-02-07 10:00:00',	'2024-02-21 03:00:00',	'',	'[{"id":22025,"path":"ActivityList/icon7"}]',	'Activity4/MissionNewYearStage',	'3',	'',	'',	'',	'',	'1'},
+{'1005',	'1005',	'1005',	'',	'1',	'202',	'2024-02-07 10:00:00',	'2025-02-19 03:00:00',	'',	'[{"id":22025,"path":"ActivityList/icon7"}]',	'Activity4/MissionNewYearStage',	'3',	'',	'',	'',	'',	'1'},
 {'1006',	'1006',	'1006',	'2',	'1',	'302',	'2024-02-07 10:00:00',	'2024-02-21 03:00:00',	'',	'[{"id":22026,"path":"ActivityList/icon6"}]',	'SignInContinue2/SignInActivity',	'',	'',	'',	'',	'',	''},
 {'1007',	'1007',	'1007',	'2',	'1',	'302',	'2022-11-19 03:00:00',	'2022-11-19 03:00:00',	'',	'[{"id":22029,"path":"ActivityList/icon8"}]',	'SignInContinue3/SignInCommon',	'',	'',	'',	'',	'',	''},
 {'1008',	'1008',	'1008',	'2',	'1',	'302',	'2024-04-08 10:00:00',	'2024-04-17 03:00:00',	'',	'[{"id":22030,"path":"ActivityList/icon9"}]',	'SignInContinue4/SignInShadowSpider',	'',	'',	'',	'',	'',	''},
@@ -34,6 +34,7 @@ local conf = {
 {'1025',	'1025',	'1025',	'2',	'1',	'302',	'2024-1-25 12:00:00',	'2025-01-12 03:00:00',	'',	'[{"id":22091,"path":"ActivityList/icon2"}]',	'SignInContinue9/SignInAnniversary1',	'',	'',	'',	'',	'',	'1'},
 {'1026',	'1026',	'1026',	'2',	'1',	'302',	'2024-1-25 12:00:00',	'2025-01-08 03:00:00',	'',	'[{"id":22092,"path":"ActivityList/icon3"}]',	'SignInContinue10/SignInAnniversary2',	'',	'',	'',	'',	'',	'1'},
 {'1027',	'1027',	'1027',	'2',	'1',	'302',	'2024-1-25 12:00:00',	'2025-01-22 03:00:00',	'',	'[{"id":22093,"path":"ActivityList/icon3"}]',	'SignInContinue12/SignInAnniversary4',	'',	'',	'',	'',	'',	'1'},
+{'1028',	'1028',	'1028',	'2',	'1',	'303',	'2025-1-27 03:00:00',	'2025-02-06 23:59:59',	'',	'[{"id":22026,"path":"ActivityList/icon6"}]',	'SignInContinue2/SignInActivity',	'',	'',	'',	'',	'',	''},
 },
 }
 --cfgCfgActiveList = conf

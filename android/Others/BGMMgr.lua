@@ -6,6 +6,10 @@ function this:Init()
 end
 
 function this:Clear()
+    self.viewID = nil
+    self.fightID = nil
+    self.bgmLockKey = nil  
+    self.curCueName = nil
     self.datas = {}
 end
 
@@ -70,9 +74,15 @@ function this:SetFightMusicID(id)
     PlayerPrefs.SetInt(key, id)
 end
 
--- 根据专辑获取所有音乐
+-- 根据专辑获取所有音乐(需要拥有道具的则要判断)
 function this:GetMusics(group)
-    local arr = Cfgs.CfgMusic:GetGroup(group)
+    local arr = {}
+    local _arr = Cfgs.CfgMusic:GetGroup(group)
+    for k, v in pairs(_arr) do
+        if(v.display==nil or BagMgr:GetCount(v.item_id)>0)then 
+            table.insert(arr, v)
+        end 
+    end
     if (#arr > 1) then
         table.sort(arr, function(a, b)
             return a.id < b.id

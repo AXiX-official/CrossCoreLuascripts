@@ -29,7 +29,6 @@ function this:InitCfg(cfgid)
 	if(cfgid == nil) then
 		LogError("初始化物品配置失败！无效配置idCGD");		
 	end
-	
 	if(self.cfg == nil) then		
 		self.cfg = Cfgs.MonsterData:GetByID(cfgid);  --持有引用
 		if self.cfg then

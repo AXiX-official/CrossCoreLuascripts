@@ -24,7 +24,7 @@ local disChoosie=false;--禁用下来选择
 -- {-5.22988,-200}
 -- {-5.22988,250}
 function Awake()
-    UIUtil:AddQuestionItem("TeamConfirm", gameObject, questionParent)
+    UIUtil:AddQuestionItem("TeamConfirm", gameObject, AdaptiveScreen)
     -- slider=ComUtil.GetCom(hotSlider, "OutlineBar")
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Team_Confirm_Refreh, RefreshItems)
@@ -105,8 +105,10 @@ function OnOpen()
         InitRogue();
     elseif openSetting==TeamConfirmOpenType.TotalBattle then
         InitTotalBattle();
-    elseif TeamConfirmOpenType.GlobalBoss then
+    elseif openSetting==TeamConfirmOpenType.GlobalBoss then
         InitGlobalBoss()
+    elseif openSetting==TeamConfirmOpenType.RogueT then
+        InitRogueT();
     end
     InitChoosieIDs();--初始化已选择的队伍id
     InitOptions();
@@ -429,6 +431,8 @@ function OnClickBattle()
         OnTotalBattle();
     elseif openSetting== TeamConfirmOpenType.GlobalBoss then
         OnGlobalBoss()
+    elseif openSetting==TeamConfirmOpenType.RogueT then
+        OnRogueT();
     end
 end
 
@@ -669,7 +673,27 @@ function InitRogue()
         local lua = ComUtil.GetLuaTable(go)
         lua.Refresh(data.rogueData)
     end)
-    CSAPI.SetGOActive(questionParent,false)
+end
+
+--无限血关
+function InitRogueT()
+    SetEnterCost()
+    CSAPI.SetGOActive(nameObj,false);
+    -- CSAPI.SetGOActive(btnNavi,false);
+    CSAPI.SetGOActive(fightObj,false);
+    CSAPI.SetGOActive(hotObj,false)
+    if(dungeonCfg and dungeonCfg.teamLimted)then 
+        cond = TeamCondition.New()
+        cond:Init(dungeonCfg.teamLimted)
+    end
+    startTeamIdx = eTeamType.RogueT;
+    endTeamIdx =  eTeamType.RogueT;
+    teamMax=1;
+    CSAPI.SetGOActive(rogueMonster,true)
+    CSAPI.CreateGOAsync("UIs/DungeonItemInfo/DungeonInfoDetailsRogue", 0, 0, 0, rogueMonster, function(go)
+        local lua = ComUtil.GetLuaTable(go)
+        lua.Refresh(data.rogueTData)
+    end)
 end
 
 function OnRogue()
@@ -681,6 +705,19 @@ function OnRogue()
                 view:Close()
                 CSAPI.OpenView("RogueBuffSelect",data.rogueData)
             end)
+        else
+            Tips.ShowTips(LanguageMgr:GetTips(14005)) 
+        end 
+    end
+end
+
+function OnRogueT()
+    local item=teamItems[1];
+    if item.CanBattle()==true then
+        local teamData = item.GetDuplicateTeamData()
+        if(teamData) then
+            FightProto:EnterRogueTDuplicate(data.rogueTData:GetID(), true)
+            FightProto:EnterRogueTFight({teamData})
         else
             Tips.ShowTips(LanguageMgr:GetTips(14005)) 
         end 

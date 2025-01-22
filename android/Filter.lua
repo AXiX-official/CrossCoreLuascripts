@@ -699,3 +699,15 @@ function Filter:GetUnite(card)
 	-- LogDebugEx("同队角色个数:", )
 	return res
 end
+
+-- 获取某个角色对象
+function Filter:HasRole(cId)
+	local arr = self.team.arrCard
+	local res = {}
+	for i,v in ipairs(arr) do
+		if v:IsLive() and v:GetID() == cId then
+			return {v}
+		end
+	end
+	return res
+end

@@ -60,7 +60,7 @@ function this:GetRankRet(proto)
         end
         self.myRank[proto.rank_type] = proto.rank or self.myRank[proto.rank_type]
         self.myScore[proto.rank_type] = proto.score or self.myScore[proto.rank_type]
-        self.rankTime[proto.rank_type] = proto.next_refresh_time or 0
+        self.rankTime[proto.rank_type] = proto.next_refresh_time and proto.next_refresh_time + 10 or 0 --延后10秒用于获取服务器数据
     end
     EventMgr.Dispatch(EventType.Activity_Rank_Update)
 end
@@ -127,7 +127,7 @@ end
 ---------------------------------------------red----------------------------------------------
 function this:CheckRed(sid)
     local sectionData = DungeonMgr:GetSectionData(sid)
-    if sectionData then
+    if sectionData and sectionData:GetOpen() then
         if sectionData:GetType() == SectionActivityType.Tower then
             return MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower})
         elseif sectionData:GetType() == SectionActivityType.Plot then
@@ -144,9 +144,11 @@ function this:CheckRed(sid)
         elseif sectionData:GetType() == SectionActivityType.TotalBattle then
             return MissionMgr:CheckRed({eTaskType.StarPalace})
         elseif sectionData:GetType() == SectionActivityType.Rogue then  
-            if(RogueMgr:IsRed() or RogueSMgr:IsRed()) then 
+            if(RogueMgr:IsRed() or RogueSMgr:IsRed() or RogueTMgr:IsRed()) then 
                 return true
             end 
+        elseif sectionData:GetType() == SectionActivityType.GlobalBoss then
+            return GlobalBossMgr:IsRed()
         end
     end
     return false

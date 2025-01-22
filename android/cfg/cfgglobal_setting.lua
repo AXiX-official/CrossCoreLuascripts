@@ -272,7 +272,7 @@ local conf = {
 {'g_ExplorationPlusShopID',	'g_ExplorationPlusShopID',	'',	'int',	'31002'},
 {'g_ExplorationArbitrageShopID',	'g_ExplorationArbitrageShopID',	'',	'int',	'31003'},
 {'g_PhysicalStrengthList',	'g_PhysicalStrengthList',	'',	'int[]',	'10035,10036,10037'},
-{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2024-12-11 10:00:00","2024-12-25 03:00:00"]]'},
+{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2024-12-11 10:00:00","2025-02-19 03:00:00"]]'},
 {'g_FightOnlineUnlock',	'g_FightOnlineUnlock',	'',	'bool',	'1'},
 {'g_TimeZone',	'g_TimeZone',	'',	'float',	'8'},
 {'g_DungeonTaoFaDailyNum',	'g_DungeonTaoFaDailyNum',	'',	'int',	'2'},
@@ -291,7 +291,7 @@ local conf = {
 {'g_ExploringTicket',	'g_ExploringTicket',	'',	'int[]',	'12009,10,3'},
 {'g_PlrBindListOnceCnt',	'g_PlrBindListOnceCnt',	'',	'int',	'10'},
 {'g_PlrBindRecomentMaxCnt',	'g_PlrBindRecomentMaxCnt',	'',	'int',	'10'},
-{'g_BulletinBoardOpen',	'g_BulletinBoardOpen',	'',	'int[]',	'0,0,0,2120,2201,1030'},
+{'g_BulletinBoardOpen',	'g_BulletinBoardOpen',	'',	'int[]',	'0,0,0,2120,3222,1030'},
 {'g_DefaultPet',	'g_DefaultPet',	'',	'int',	'26001'},
 {'g_PetAnimateTime',	'g_PetAnimateTime',	'',	'int',	'10'},
 {'g_PetMoveChangeTime',	'g_PetMoveChangeTime',	'',	'int',	'12'},
@@ -302,6 +302,8 @@ local conf = {
 {'g_FHXArchiveRole',	'g_FHXArchiveRole',	'',	'bool',	'1'},
 {'g_BosssTart',	'g_BosssTart',	'',	'int',	'1'},
 {'g_BosscLose',	'g_BosscLose',	'',	'int',	'21'},
+{'g_RogueT_Coin',	'g_RogueT_Coin',	'',	'int',	'10501'},
+{'g_ItemReturnMail',	'g_ItemReturnMail',	'',	'json',	'[[33043003,2010,"2024/05/27 10:00:00","2024/05/28 10:00:00"]]'},
 },
 }
 --cfgglobal_setting = conf
