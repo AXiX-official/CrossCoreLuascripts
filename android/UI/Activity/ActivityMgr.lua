@@ -275,6 +275,9 @@ function this:GetActivityTime(group)
                     else
                         eTime = eTime < _eTime and _eTime or eTime
                     end
+                elseif v:GetType() == ActivityListType.Investment then
+                    sTime = PlayerMgr:GetOpenTime(ActivityListType.Investment)
+                    eTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
                 end
             end
         end

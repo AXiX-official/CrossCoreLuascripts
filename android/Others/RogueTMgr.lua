@@ -292,7 +292,7 @@ function this:CheckReds()
     local num1 = self:IsRed() and 1 or nil
     local num2 = RedPointMgr:GetData(RedPointType.RogueT)
     if (num2 ~= num1) then
-        RedPointMgr:UpdateData(RedPointType.RogueT, num2)
+        RedPointMgr:UpdateData(RedPointType.RogueT, num1)
     end
 end
 

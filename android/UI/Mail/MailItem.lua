@@ -55,10 +55,10 @@ function SetAlpha(_selectID)
 	local alpha = 0.3
 	if(_selectID and _selectID == data:GetID()) then
 		alpha = 1
-	elseif data:GetRewards() and #data:GetRewards() > 0 then
-		alpha = data:GetIsGet() == MailGetType.No and 1 or 0.3
 	elseif data:GetIsRead() == MailReadType.No then
 		alpha = 1
+	elseif data:GetRewards() and #data:GetRewards() > 0 then
+		alpha = data:GetIsGet() == MailGetType.No and 1 or 0.3
 	end
 	canvasGroup.alpha = alpha
 end

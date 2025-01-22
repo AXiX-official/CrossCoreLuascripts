@@ -54,5 +54,5 @@ function Skill904000111:OnBefourHurt(caster, target, data)
 	-- 8585
 	local countdot = SkillApi:BuffCount(self, caster, target,3,4,1)
 	-- 8584
-	self:AddTempAttr(SkillEffect[8584], caster, self.card, data, "bedamage",0.5*countdot)
+	self:AddTempAttr(SkillEffect[8584], caster, self.card, data, "bedamage",0.05*countdot)
 end

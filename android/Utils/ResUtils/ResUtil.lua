@@ -97,7 +97,8 @@ end
 --创建背景特效
 function this:CreateBGEffect(name, x, y, z, resParent, callBack)
     local res = "bg" .."/" .. name .."/" .. name
-    return self:CreateEffect(res, x, y, z, resParent, callBack)
+    res = self:GenEffectRes(res);
+    CSAPI.CreateGOAsync(res, x or 0, y or 0, z or 0, resParent, callBack);
 end
 
 -- 创建Buff特效

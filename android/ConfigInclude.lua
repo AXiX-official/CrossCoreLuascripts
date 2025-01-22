@@ -485,4 +485,3 @@ function ReadAllConfig()
     collectgarbage("collect")
     return cf
 end
-
