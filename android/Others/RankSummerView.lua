@@ -127,6 +127,7 @@ function RefreshPanel()
     SetState()
     leftPanel.Anim()
     ShowList()
+    SetQuestion()
 end
 
 function SetTitle()
@@ -211,4 +212,18 @@ end
 
 function OnClickReturn()
     view:Close()
+end
+
+-----------------------------------------------------
+
+function SetQuestion()
+    local cfg = Cfgs.CfgModuleInfo:GetByID(rankType.."")
+    CSAPI.SetGOActive(btnQuestion,cfg~=nil)
+end
+
+function OnClickQuestion()
+    local cfg = Cfgs.CfgModuleInfo:GetByID(rankType.."")
+    if(cfg)then 
+        CSAPI.OpenView("ModuleInfoView", cfg)
+    end
 end

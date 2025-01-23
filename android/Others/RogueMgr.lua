@@ -11,7 +11,7 @@ end
 function this:Clear()
     self.datasDic = {} -- 各关数据
     self.curData = nil -- 当前进行中的数据
-    self.sectionID = nil -- 所属章节id
+    self.sectionID = 11001 -- 所属章节id
 end
 
 -- 活动任务结束时间
@@ -35,8 +35,6 @@ end
 
 function this:InitCfg()
     self.datasDic = {}
-    local section = DungeonMgr:GetActivitySectionDatas(SectionActivityType.Rogue)
-    self.sectionID = section[1]:GetID()
     local cfgs = Cfgs.DungeonGroup:GetGroup(self.sectionID)
     for k, v in ipairs(cfgs) do
         local _data = RogueData.New()

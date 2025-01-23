@@ -12,7 +12,7 @@ function this:Clear()
     self.datasDic = {} -- 各关数据
     self.proto = nil
     self.fightData = nil
-    self.sectionID = nil -- 所属章节id
+    self.sectionID = 15001 -- 所属章节id
     self.maxGroup = nil -- 已通关的最高难度
     self.oldMaxGroup = nil -- 之前的最高难度
     self.maxBoss = nil
@@ -20,8 +20,6 @@ end
 
 function this:InitCfg()
     self.datasDic = {}
-    local section = DungeonMgr:GetActivitySectionDatas(SectionActivityType.Rogue)
-    self.sectionID = section[4]:GetID()
     local cfgs = Cfgs.DungeonGroup:GetGroup(self.sectionID)
     for k, v in ipairs(cfgs) do
         local _data = RogueTData.New()
@@ -419,7 +417,7 @@ function this:GetBigRewardID()
 end
 
 function this:GetSectionData()
-    return DungeonMgr:GetActivitySectionDatas(SectionActivityType.Rogue)[4]
+    return DungeonMgr:GetSectionData(self.sectionID)
 end
 
 function this:GetSectionID()

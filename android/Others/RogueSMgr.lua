@@ -16,15 +16,12 @@ end
 
 function this:InitCfg()
     self.datasDic = {}
-    local section = DungeonMgr:GetActivitySectionDatas(SectionActivityType.Rogue)
-    for k, v in ipairs(self.sectionDatas) do
-        if (k ~= 1) then
-            local cfgs = Cfgs.DungeonGroup:GetGroup(v:GetID())
-            for k, v in ipairs(cfgs) do
-                local _data = RogueSData.New()
-                _data:InitCfg(v)
-                self.datasDic[v.id] = _data
-            end
+    for k, v in pairs(self.sectionDatas) do
+        local cfgs = Cfgs.DungeonGroup:GetGroup(v:GetID())
+        for k, v in ipairs(cfgs) do
+            local _data = RogueSData.New()
+            _data:InitCfg(v)
+            self.datasDic[v.id] = _data
         end
     end
 end
@@ -33,7 +30,9 @@ end
 function this:InitMissionTime()
     self.endTime = nil
     --
-    self.sectionDatas = DungeonMgr:GetActivitySectionDatas(SectionActivityType.Rogue)
+    self.sectionDatas = {}
+    self.sectionDatas[1] = DungeonMgr:GetSectionData(12001)
+    self.sectionDatas[2] = DungeonMgr:GetSectionData(12002)
 end
 -- 限时任务剩余时间 秒
 function this:GetRogueTime()
@@ -176,7 +175,7 @@ end
 -- 根据难道获取星表id
 function this:GetStarIxByNType(nType)
     local starIx = 1601
-    local cfgs = Cfgs.DungeonGroup:GetGroup(self.sectionDatas[nType + 1]:GetID())
+    local cfgs = Cfgs.DungeonGroup:GetGroup(self.sectionDatas[nType]:GetID())
     for k, v in pairs(cfgs) do
         if (v.nType == nType) then
             starIx = v.starIx
@@ -235,8 +234,8 @@ end
 
 -- 困难模式前置章节是否已通
 function this:CheckPerOpen()
-    if (self.sectionDatas[3]) then
-        local preSection = self.sectionDatas[3]:GetCfg().preSection
+    if (self.sectionDatas[2]) then
+        local preSection = self.sectionDatas[2]:GetCfg().preSection
         if (preSection) then
             local preSectionData = DungeonMgr:GetSectionData(preSection)
             if preSectionData:GetState() ~= 2 then

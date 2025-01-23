@@ -28,7 +28,7 @@ function Update()
     if (waitInfos and TimeUtil:GetTime() >= waitInfos[1][2]) then
         if (waitInfos[1][1] == 7) then
             local buildingData = MatrixMgr:GetBuildingDataByType(BuildsType.ProductionCenter)
-            if (buildingData:IsGiftMax()) then
+            if (buildingData~=nil and buildingData:IsGiftMax()) then
                 table.insert(ids, waitInfos[1][1])
             end
         else
@@ -202,7 +202,7 @@ end
 
 function InitBuildingInfo(dic, index, buildingType)
     local buildingData = MatrixMgr:GetBuildingDataByType(buildingType)
-    if (buildingData and buildingData:StandbyTime() and buildingData:StandbyTime() > TimeUtil:GetTime()) then
+    if (buildingData~=nil and buildingData:StandbyTime() and buildingData:StandbyTime() > TimeUtil:GetTime()) then
         dic[index] = {index, buildingData:StandbyTime()}
     end
 end

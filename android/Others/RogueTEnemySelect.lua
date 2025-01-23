@@ -142,7 +142,7 @@ function DItemClickCB(item)
         canEmpty = true,
         is2D = true,
         cond = _cond,
-        isSkill = false,
+        --isSkill = false,
     }, TeamOpenSetting.RogueT)
 end
 

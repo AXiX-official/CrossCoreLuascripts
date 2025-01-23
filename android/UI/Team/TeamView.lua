@@ -481,9 +481,10 @@ function SetViewLayout(openSetting)
 	elseif openSetting==TeamOpenSetting.GlobalBoss then
 		isSkill = false		
 	elseif openSetting==TeamOpenSetting.RogueT then
-		if(data.isSkill~=nil)then 
-			isSkill = data.isSkill
-		end 
+		-- if(data.isSkill~=nil)then 
+		-- 	isSkill = data.isSkill
+		-- end 
+		isSkill = false
 	end 
 	CSAPI.SetGOActive(btn_ai,isAI)
 	CSAPI.SetGOActive(btn_skill,isSkill)
