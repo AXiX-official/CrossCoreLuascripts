@@ -1936,12 +1936,12 @@ function FightAPI:ReduceSkillAttr(effect, caster, target, data, attr, val)
 end
 
 function FightAPI:AddSkillAttr(effect, caster, target, data, attr, val)
-	local mgr = caster.skillMgr
+	local mgr = target.skillMgr
 	mgr:AddSkillAttr(attr, val)
 end
 
 function FightAPI:AddOneSkillAttr(effect, caster, target, data, attr, val, t)
-	local mgr = caster.skillMgr
+	local mgr = target.skillMgr
 	mgr:AddOneSkillAttr(attr, val, t)
 end
 

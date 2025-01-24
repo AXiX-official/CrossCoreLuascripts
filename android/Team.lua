@@ -235,6 +235,7 @@ function Team:SummonTeammate(caster, monsterID, pos, data, typ)
 
 	local card = self:AddSummonCard(pos[1], pos[2], monsterID)
 	card.uid = caster.uid
+	card.oSummonOwner = caster -- 设置召唤主
 	card:LoadMonsterNumerical(caster.level)
 	card.type = typ or caster.type
 	card.bSummonTeammate = true -- 召唤出来的, 结束不要用到这个卡牌的数据

@@ -42,6 +42,7 @@ function OnOpen()
     -- 折扣
     ResUtil.IconGoods:Load(icon, itemCfg.icon)
     CSAPI.SetGOActive(imgNum, cfg.discount ~= nil)
+    
     if (cfg.discount ~= nil) then
         local tens = math.floor(cfg.discount / 10)
         local ones = cfg.discount % 10
