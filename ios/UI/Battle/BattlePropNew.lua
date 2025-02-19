@@ -67,6 +67,11 @@ function SetShowState(isShow)
     end
 end
 
+--设置迷雾状态
+function SetMistState(state)
+    SetShowState(state);
+end
+
 --设置数据
 function SetData(targetData)
     data = targetData;
@@ -367,40 +372,53 @@ function ApplyUse(data,completeCallBack,caller)
                 end                
             end
         end
-    elseif(data.type == ePropType.WarmingPoised)then--红蓝炮台攻击     
+    elseif(data.type == ePropType.WarmingPoised or data.type == ePropType.Rockfall)then--红蓝炮台攻击     
 
         local atkTargets = data.tParam and data.tParam.targets;
         local delayCallBack = false;
 
+        local isWarmingPoised = data.type == ePropType.WarmingPoised;
          --受击
+        --LogError(atkTargets);
         if(atkTargets)then
              if(atkCom == nil)then
                 atkCom = ComUtil.GetLuaTableInChildren(resParentGO);
             end
-            if(atkCom)then
+
+            
+            --isWarmingPoised = false;
+            if(atkCom and isWarmingPoised)then
                 atkCom.ActiveEff(true);
-            end
-
-
+            end            
+            
+            local resEff = isWarmingPoised and "battle/LaserExpEffect";
+            local characterHitDelayTime = not isWarmingPoised and 300; 
+            
             for _,target in ipairs(atkTargets)do
                 local atkTarget = BattleCharacterMgr:GetCharacter(target);  
                 if(atkTarget)then
-                    FuncUtil:Call(ApplyCharacterHit,nil,200,atkTarget,"battle/LaserExpEffect");  
+                    FuncUtil:Call(ApplyCharacterHit,nil,200,atkTarget,resEff,characterHitDelayTime);  
                     delayCallBack = true;
-                end
+                end                
             end                       
         end
-
         --切换范围
         local changeRangeId = data.tParam and data.tParam.changeRange;
         if(changeRangeId)then
+            local effName = (not isWarmingPoised) and "G_03_RockFallWarning1";
             if (delayCallBack) then
-                FuncUtil:Call(ChangeRange,nil,500,changeRangeId);  
+                FuncUtil:Call(ChangeRange,nil,500,changeRangeId,effName);  
             else
-                ChangeRange(changeRangeId);
+                ChangeRange(changeRangeId,effName);
             end            
+        end       
+
+        local triggerRange = data.tParam and data.tParam.triggerRange;
+        if(triggerRange)then
+            local effName = "rock_fall";
+            ChangeRange(triggerRange,effName,true,true);
         end
-      
+              
         local nextRangeId = data.tParam and data.tParam.nextRange;
         if(nextRangeId)then
             if (delayCallBack) then
@@ -409,6 +427,8 @@ function ApplyUse(data,completeCallBack,caller)
                 ChangeRange(nextRangeId,"dungeon_warning_next",true);
             end            
         end
+
+        
 
         if(delayCallBack)then
             FuncUtil:Call(completeCallBack,caller,1000);  
@@ -579,11 +599,22 @@ function AttackTargets(atkTargets,completeCallBack,caller,hitDelay,callBackDelay
     end
 end
 
-function ApplyCharacterHit(character,effectName)
+function ApplyCharacterHit(character,effectName,hitDelay)
     if(effectName)then
         local x,y,z = CSAPI.GetPos(character.gameObject);
-        ResUtil:CreateEffect(effectName,x,y,z);
+        if(effectName)then
+            ResUtil:CreateEffect(effectName,x,y,z);
+        end
     end
+
+    if(hitDelay)then
+        FuncUtil:Call(CharacterHit,nil,hitDelay,character); 
+    else
+        CharacterHit(character);
+    end    
+end
+
+function CharacterHit(character)
     character.ApplyHit();
     ApplyShake(); 
     if(cfg and cfg.float_content)then 
@@ -593,7 +624,7 @@ end
 
 
 --红蓝炮台切换范围
-function ChangeRange(changeRangeId,effName,dontClear)
+function ChangeRange(changeRangeId,effName,dontClear,dontSave)
     if(not cfg )then
         LogError("ChangeRange:not cfg");
         return;
@@ -610,11 +641,11 @@ function ChangeRange(changeRangeId,effName,dontClear)
         return;
     end
 
-    ChangeGridWarningObjs(gridIds,effName,dontClear);
+    ChangeGridWarningObjs(gridIds,effName,dontClear,dontSave);
 end
 
 --切换格子预警对象
-function ChangeGridWarningObjs(gridIds,effName,dontClear)
+function ChangeGridWarningObjs(gridIds,effName,dontClear,dontSave)
     if(not dontClear)then
         RemoveWarningEffs();
     end
@@ -624,7 +655,13 @@ function ChangeGridWarningObjs(gridIds,effName,dontClear)
     end
 
     for _,gridId in ipairs(gridIds)do
-        CreateEff(effName or "dungeon_warning",gridId,OnWarnEffCreated)
+        --if(not BattleMgr:IsInMist(gridId))then
+            CreateEff(effName or "dungeon_warning",gridId,function(go)
+                if(not dontSave)then
+                    OnWarnEffCreated(go,gridId);
+                end
+            end)
+        --end
     end
 end
 
@@ -636,7 +673,7 @@ end
 
 function RemoveWarningEffs()  
     if(warnEffs)then        
-        for _,warnEff in ipairs(warnEffs)do
+        for _,warnEff in pairs(warnEffs)do
             if(not IsNil(warnEff))then
                 CSAPI.RemoveGO(warnEff);
             end
@@ -644,6 +681,15 @@ function RemoveWarningEffs()
 
         warnEffs = nil;
     end  
+end
+
+function UpdateWarningEffsShowState(mistGridId)
+    if(warnEffs)then        
+        for gridId,warnEff in pairs(warnEffs)do
+            local isShow = not BattleMgr:IsInMist(gridId,mistGridId);
+            CSAPI.SetLocalPos(warnEff,0,isShow and 0.5 or 1000,0);
+        end
+    end 
 end
 
 --创建攻击特效（机关陷阱）
@@ -672,14 +718,17 @@ function GetLuaRes()
     return luaRes;
 end
 
-function OnWarnEffCreated(go)   
+function OnWarnEffCreated(go,gridId)   
     warnEffs = warnEffs or {};
-    table.insert(warnEffs,go);
-
+    if(gridId)then
+        warnEffs[gridId] = go;
+    else
+        table.insert(warnEffs,go);
+    end
     if(IsNil(gameObject))then
         CSAPI.RemoveGO(go);
     else
-       
+        UpdateWarningEffsShowState();
     end
 end
 

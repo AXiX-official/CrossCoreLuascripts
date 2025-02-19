@@ -6,6 +6,7 @@ function Refresh(_cfg)
     SetLock()
     -- icon 
     ResUtil.MenuEnter:Load(icon, cfg.mainBtn)
+    SetIcon2();
     CSAPI.SetGOAlpha(icon, isOpen and 1 or 0.5)
     -- name 
     StringUtil:SetColorByName(txtName, cfg.name, isOpen and "ffffff" or "929296")
@@ -15,12 +16,34 @@ function Refresh(_cfg)
     SetNew()
 end
 
+function SetIcon2()
+    local activeIcon2=false;
+    if cfg and cfg.id==16 then
+        local pet=PetActivityMgr:GetCurrPetInfo();
+        if pet then
+            local emojis=pet:GetEmojis();
+            if emojis then
+                local cfg=emojis[1]
+                ResUtil.PetEmoji:Load(icon2,cfg.icon);
+                activeIcon2=true;
+            end
+        end
+    end
+    CSAPI.SetGOActive(icon2,activeIcon2);
+end
+
 function SetLock()
     isOpen = true
     if (cfg.nConfigID) then
         local cfg = Cfgs[cfg.config]:GetByID(cfg.nConfigID)
-        if (cfg and cfg.sectionID) then
-            local sectionData = DungeonMgr:GetSectionData(cfg.sectionID)
+        if (cfg) then
+            local sid = 0
+            if cfg.sectionID then
+                sid = cfg.sectionID
+            elseif cfg.infos and cfg.infos[1] and cfg.infos[1].sectionID then
+                sid = cfg.infos[1].sectionID
+            end
+            local sectionData = DungeonMgr:GetSectionData(sid)
             if (sectionData ~= nil) then
                 isOpen = sectionData:GetOpen()
             end
@@ -38,7 +61,12 @@ end
 function SetRed()
     isRed = false
     if (isOpen) then
-        local data = RedPointMgr:GetData(key)
+        local data = nil
+        if(key=="ActiveEntry26") then 
+            data = ColosseumMgr:IsRed() 
+        else
+            data = RedPointMgr:GetData(key) 
+        end 
         if (data and data ~= 0) then
             isRed = true
         end
@@ -62,6 +90,8 @@ function OnClick()
             CSAPI.SetGOActive(newObj, isNew)
         end
         if (cfg.JumpID) then
+            Log("入口配置表信息:")
+            Log(cfg)
             JumpMgr:Jump(cfg.JumpID)
         end
     end

@@ -53,7 +53,7 @@ end
 function OnItemClickCB(_type, data)
 	if(_type == 1) then
 		--打开驻员列表
-		CSAPI.OpenView("DormSetRoleList", curBuildData:GetID())
+		CSAPI.OpenView("DormSetRoleList", {curBuildData:GetID()})
 	else
 		--移除单个
 		local ids = curBuildData:GetRoles()

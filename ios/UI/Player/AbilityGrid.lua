@@ -36,10 +36,11 @@ function SetSelect(isShow)
 end
 
 function SetContent(d)
-    CSAPI.SetText(txtName, d.name)
+    local cfg = Cfgs.CfgSkillDesc:GetByID(d.id)
+    CSAPI.SetText(txtName, cfg and cfg.name or "")
+    CSAPI.SetText(txtDesc, cfg and cfg.desc or "")
     local lvStr = LanguageMgr:GetByID(1033) or "LV."
     CSAPI.SetText(txtLv, lvStr .. d.lv)
-    CSAPI.SetText(txtDesc, d.desc)
 end
 
 function OnClick()

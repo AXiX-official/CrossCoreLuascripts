@@ -101,7 +101,7 @@ GridFakeData = function(reward,disRealData)
 			result = EquipMgr:GetEquipByCfgID(reward.id)
 		end
 		if(result == nil) then
-			result = EquipMgr:GetFakeData(reward.id,reward.num)
+			result = EquipMgr:GetFakeData(reward.id)
 		end
 		clickCB = GridClickFunc.EquipDetails
 	end
@@ -155,8 +155,8 @@ function this.RandRewardConvertToGridObjectData(_d)
 	local data = nil;
 	if(_d.type == RandRewardType.TEMPLATE) then
 		local rewardCfg = Cfgs.RewardInfo:GetByID(_d.id);
-		local goodCfgs = Cfgs.ItemInfo:GetByID(tonumber(self.cfg.icon));
-		local icon=goodsCfgs.icon
+		local goodCfgs = Cfgs.ItemInfo:GetByID(tonumber(rewardCfg.icon));
+		local icon=goodCfgs.icon
 		if goodCfgs.type==ITEM_TYPE.CARD_CORE_ELEM then
 			icon=string.format("%s_%s",goodCfgs.icon,goodCfgs.quality);
 		end
@@ -355,6 +355,29 @@ function this.LoadCIconByCard(go1,go,cfg,isBig)
 	else
 		CSAPI.SetScale(go,0.36,0.36,0.36);
 		CSAPI.SetAnchor(go,-4,-11);
+	end
+end
+
+--加载物品信息界面的装备图标 cfg:ItemInfo isShopPre:是否是商店购买预览界面
+function this.LoadEquipIcon(go1,go,iconName,quality,isMatiral,isBig,isShopPre)
+	if go1==nil or go==nil or iconName==nil then
+		return;
+	end
+	if isMatiral then
+		-- ResUtil.IconGoods:Load(go1, "rolecard_"..tostring(cfg.quality));
+		ResUtil.IconGoods:Load(go1, iconName.."_02");
+		CSAPI.SetAnchor(go1,0,0);
+	else
+		ResUtil.IconGoods:Load(go1, "btn_12_0"..tostring(quality));
+		ResUtil.IconGoods:Load(go,iconName);
+		CSAPI.SetAnchor(go,0,0);
+	end
+	if isBig then
+		CSAPI.SetScale(go1,1,1,1)
+		CSAPI.SetScale(go,1,1,1)
+	else
+		CSAPI.SetScale(go1,0.8,0.8,0.8)
+		CSAPI.SetScale(go,0.8,0.8,0.8)
 	end
 end
 

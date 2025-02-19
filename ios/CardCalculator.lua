@@ -69,14 +69,21 @@ function GCardCalculator:CalLvlPropertys(cfgid, level, intensify_level, break_le
     -- LogDebug("CalLvlPropertys(%s, %s, %s, %s)", cfgid, level, intensify_level, break_level)
     -- 基本属性
     local cfg = nil
-    if (isMonster) then
-        cfg = MonsterNumerical[cfgid]
+    if isMonster then
+        local monsterCfg = MonsterData[cfgid]
+        cfg = monsterCfg
+        if monsterCfg.numerical then
+            local monsterNumberCfg = MonsterNumerical[monsterCfg.numerical * 1000 + level]
+            if monsterNumberCfg then
+                cfg = monsterNumberCfg
+            end
+        end
     else
         cfg = CardData[cfgid]
     end
 
     if not cfg then
-        LogWarning('CardData not find config: %d.', cfgid)
+        LogWarning('CardData not find config: %d, isMonster:%s.', cfgid, isMonster)
         return nil
     end
 
@@ -378,6 +385,8 @@ function GCardCalculator:CalSumPropery(cardCalResult, equipsCalResult, skillMap,
 end
 
 function GCardCalculator:CalPerformance(ret, skillSumLevel)
+    -- print(string.format("GCardCalculator:CalPerformance skillSumLevel:%s", skillSumLevel))
+    -- LogTable(ret, "GCardCalculator:CalPerformance")
     -- （攻击+生命*0.24+防御*6）/2+（速度-100）*8.6+（暴击伤害-1.5）*540+（暴击+效果命中+效果抵抗）*859+（技能等级-3）*24
     local performance =
         (ret.attack + ret.maxhp * 0.2 + ret.defense * 5) / 2 + (ret.speed - 100) * 8.6 + (ret.crit - 1.5) * 540 +

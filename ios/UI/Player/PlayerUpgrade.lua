@@ -29,6 +29,8 @@ function OnOpen()
     local oldHotCfg = Cfgs.CfgPlrHot:GetByID(oldLv)
     local newHotCfg = Cfgs.CfgPlrHot:GetByID(newLv)
     SetHot(oldHotCfg, newHotCfg)
+
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then ShiryuSDK.OnRoleInfoUpdate(); end
 end
 
 -- lv

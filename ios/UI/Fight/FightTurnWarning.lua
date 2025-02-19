@@ -15,7 +15,7 @@ function SetValue(leftTurnNum)
 end
 
 function Close() 
-    if(not IsNil(view))then
+    if(not IsNil(view) and view.Close)then
         view:Close();
     end
 end

@@ -73,7 +73,8 @@ UIUtil = require "UIUtil"
 ZYUtil = require "ZYUtil" --注音
 
 require "ViewModelMgr"
-
+--全局配置
+require "GlobalConfig"
 --声音
 require "SoundMgr"
 --场景加载器
@@ -110,3 +111,10 @@ require "SettingMgr"
 
 --埋点管理
 require "BuryingPointMgr"
+
+--无限不规则滚动
+--UIInfiniteUnlimited = require "UIInfiniteUnlimited"
+
+--紫龙事件名
+require "ShiryuEventName"
+

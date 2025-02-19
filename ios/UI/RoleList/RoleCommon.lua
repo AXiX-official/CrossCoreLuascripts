@@ -54,6 +54,7 @@ CardUpdateType.CoreUpgrade = 9               --核心升级
 
 --roleinfo 界面打开类型
 RoleInfoOpenType = {}
+RoleInfoOpenType.RoleListNormal = 1
 -- RoleInfoOpenType.LookSelf = 1  --查看自己的卡（根据是否战斗中，对按钮进行显示或隐藏）
 -- RoleInfoOpenType.LookOther = 2 --查看别人的卡 
 RoleInfoOpenType.LookNoGet = 3 --查看未获得的卡 

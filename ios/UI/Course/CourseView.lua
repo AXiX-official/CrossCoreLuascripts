@@ -5,7 +5,7 @@ local selItem = nil
 local itemInfo = nil
 local selIndex = nil
 local numSlider = nil
-
+local top=nil
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/Course/CourseItem", LayoutCallBack, true)
@@ -14,7 +14,7 @@ function Awake()
 end
 
 function OnInit()
-   local top = UIUtil:AddTop2("CourseView", gameObject, OnClickReturn, nil)
+    top = UIUtil:AddTop2("CourseView", gameObject, OnClickReturn, nil)
    top.SetMoney({{ITEM_ID.DIAMOND,140001}})
 end
 
@@ -152,7 +152,7 @@ function ShowItemInfo(item)
     if itemInfo then
         itemInfo.Show(item and item.GetCfg() or nil,DungeonInfoType.Course)
     else
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
             itemInfo.Show(item and item.GetCfg() or nil,DungeonInfoType.Course)
@@ -173,11 +173,13 @@ function OnBattleEnter()
                 teamNum = selItem.GetCfg().teamNum or 1
             }, TeamConfirmOpenType.Dungeon)
         end
-        BuryingPointMgr:TrackEvents("main_fight", {
-            reason = "进入副本",
-            world_id = sectionData:GetID(),
-            card_id = selItem.GetID()
-        })
+        if CSAPI.IsADV()==false then
+            BuryingPointMgr:TrackEvents("main_fight", {
+                reason = "进入副本",
+                world_id = sectionData:GetID(),
+                card_id = selItem.GetID()
+            })
+        end
     end
 end
 
@@ -203,5 +205,14 @@ function OnClickReturn()
         ShowSV()
     else 
         view:Close()
+    end
+end
+
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if  top.OnClickBack then
+        top.OnClickBack();
     end
 end

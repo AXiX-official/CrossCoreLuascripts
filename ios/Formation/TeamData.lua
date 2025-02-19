@@ -17,7 +17,6 @@ end
 function this:SetData(data)
 	if data then
 		self.teamName = data.name;
-		self.leader = data.leader;
 		self.index = data.index;
 		self.backUp = nil;--备份数据
 		self.bIsReserveSP=data.bIsReserveSP;
@@ -27,11 +26,19 @@ function this:SetData(data)
 		-- self.skillGroupID=data.skill_group_id;
 		self:SetSkillGroupID(data.skill_group_id);
 		self.data = {};
+		local lBIsNpc=false;
 		if data.data~=nil then
 			for k, v in ipairs(data.data) do
 				local itemData=TeamItemData.New();
+				local cid=v.cid;
+				if v.bIsNpc then
+					local isNpc=FormationUtil.CheckNPCID(cid);
+					if isNpc~=true then
+						cid=FormationUtil.FormatNPCID(cid);
+					end
+				end
 				local tempData={
-					cid=v.cid,
+					cid=cid,
 					row=v.row,
 					col=v.col,
 					fuid=v.fuid,
@@ -42,12 +49,23 @@ function this:SetData(data)
 					isLeader=v.cid==data.leader,
 					nStrategyIndex=v.nStrategyIndex,
 				}
+				if v.cid==data.leader then
+					lBIsNpc=v.bIsNpc;
+				end
 				itemData:SetData(tempData);
 				table.insert(self.data, itemData);
 			end
 			self:SortByLeader();
 			-- self:RefreshIndex();
 		end
+		local leaderID=data.leader;
+		if lBIsNpc then
+			local isNpc=FormationUtil.CheckNPCID(leaderID);
+			if isNpc~=true then
+				leaderID=FormationUtil.FormatNPCID(leaderID);
+			end
+		end
+		self.leader = leaderID;
 	end
 end
 
@@ -255,6 +273,30 @@ function this:GetData()
 	return tab;
 end
 
+--返回保存时用到的数据
+function this:GetSaveData()
+	local tempData = {};
+	for k, v in ipairs(self.data) do
+		table.insert(tempData, v:GetSaveData());
+	end
+	local leaderID=self.leader;
+    local isNpc,s1,s2=FormationUtil.CheckNPCID(leaderID);
+	if isNpc and s2 then
+		leaderID=tonumber(s2);
+	end
+	local tab = {
+		index = self.index,
+		leader = leaderID,
+		name = self.teamName,
+		skill_group_id=self:GetSkillGroupID(),
+		data = tempData,
+		performance=self.preformance,
+		bIsReserveSP=self.bIsReserveSP,
+		nReserveNP=self.nReserveNP,
+	};
+	return tab;
+end
+
 --刷新卡牌在数组中的的下标
 -- function this:RefreshIndex()
 -- 	self.indexTab = {};
@@ -398,7 +440,7 @@ end
 --设置队伍名
 function this:SetTeamName(name)
 	if name==nil or name=="" then
-		name=string.format( LanguageMgr:GetTips(14017),self.index)
+		name=FormationUtil.GetDefaultName(self.index);
 	else
 		name=tostring(name)
 	end
@@ -407,7 +449,9 @@ end
 
 --返回队伍名称
 function this:GetTeamName()
-	return self.teamName==nil and string.format( LanguageMgr:GetTips(14017),self.index) or self.teamName;
+	local teamName=self.teamName
+	teamName=FormationUtil.GetDefaultName(self.index,self.teamName);
+	return teamName;
 end
 
 --返回队伍COST值
@@ -559,7 +603,13 @@ end
 --返回技能组ID
 function this:GetSkillGroupID()
 	if self.skillGroupID then
-		return self.skillGroupID 
+		local tacticData=TacticsMgr:GetDataByID(self.skillGroupID);
+		if tacticData and tacticData:IsUnLock() then
+			return self.skillGroupID 
+		else
+			self.skillGroupID=nil;
+			return nil
+		end		
 	else
 		local tacticData=TacticsMgr:GetDataByID(g_DefaultAbilityId);
 		if tacticData and tacticData:IsUnLock() then--默认战术解锁则返回默认战术
@@ -597,20 +647,21 @@ function this:CheckTeamForce(forceCfg)
 		return isTrue;
 	end
 	for k,v in ipairs(forceCfg) do
-		if v.nForceID~=nil then
+		local nForceID=FormationUtil.GetNForceID(v);
+		if nForceID~=nil then
 			local data=nil;
 			if v.bIsNpc then
-				data=self:GetItem(FormationUtil.FormatNPCID(v.nForceID));
+				data=self:GetItem(FormationUtil.FormatNPCID(nForceID));
 			else
-				data=self:GetItemByCfgID(v.nForceID);
+				data=self:GetItemByCfgID(nForceID);
 			end
 			if data==nil or data.index~=v.index then
-				local cfg=Cfgs.CardData:GetByID(v.nForceID);
+				local cfg=Cfgs.CardData:GetByID(nForceID);
 				if cfg.role_tag=="lead" then --队长需要另外判断
-					local nForceID=v.nForceID;
-					if RoleMgr:IsSexInitCardIDs(nForceID) then--判断当前卡牌是否是主角卡，是的话替换为当前性别的对应卡牌ID
-						nForceID=RoleMgr:GetCurrSexCardCfgId();
-					end
+					-- local nForceID=v.nForceID;
+					-- if RoleMgr:IsSexInitCardIDs(nForceID) then--判断当前卡牌是否是主角卡，是的话替换为当前性别的对应卡牌ID
+					-- 	nForceID=RoleMgr:GetCurrSexCardCfgId();
+					-- end
 					data=self:GetItemByCfgID(nForceID);
 					if data~=nil and data.index==v.index then
 						isTrue=true;

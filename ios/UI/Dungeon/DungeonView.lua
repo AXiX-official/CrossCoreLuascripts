@@ -102,7 +102,7 @@ end
 -- 初始化右侧栏
 function InitInfo()
     if (itemInfo == nil) then
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
         end)
@@ -348,10 +348,11 @@ function CreateAllLine()
             if k ~= 1 then
                 local x1, y1 = CSAPI.GetLocalPos(listItems[lastID].gameObject)
                 local x2, y2 = CSAPI.GetLocalPos(listItems[k].gameObject)
+                local scale = CSAPI.GetSizeOffset()
                 local pos = {{x1, y1}}
                 if v:GetTurnPos() and #v:GetTurnPos() > 0 then
                     for _, _pos in ipairs(v:GetTurnPos()) do
-                        table.insert(pos, _pos)
+                        table.insert(pos, {_pos[1] * scale,_pos[2] * scale})
                     end
                 end
                 table.insert(pos, {x2, y2})
@@ -439,13 +440,17 @@ function ShowDungeon(_id)
     if groups and #groups > 0 then
         for i, v in pairs(groups) do
             local cfg = Cfgs.MainLine:GetByID(v)
-            local lua = GetItem()
-            items = items or {}
-            items[cfg.id] = lua
-            lua.Set(cfg)
-            lua.SetNext(i ~= #groups)
-            lua.SetSort(i)
-            CSAPI.SetGOActive(lua.gameObject, true)
+            if cfg then
+                local lua = GetItem()
+                items = items or {}
+                items[cfg.id] = lua
+                lua.Set(cfg)
+                lua.SetNext(i ~= #groups)
+                lua.SetSort(i)
+                CSAPI.SetGOActive(lua.gameObject, true)
+            else
+                LogError("没找到关卡表数据！！！id:" .. v)
+            end
         end
         local cur,max = currListItem:GetPassCount()
         CSAPI.SetText(txtPrograss, math.floor(cur/max * 100) .. "%")
@@ -587,12 +592,11 @@ function OnClickItem(item)
                 local dungeonData = DungeonMgr:GetDungeonData(selItem.cfg.id)
 
                 isStoryFirst = (not dungeonData) or (not dungeonData.data.isPass)
-                
-                PlotMgr:TryPlay(selItem.cfg.storyID, OnStoryPlayComplete, this, true);
+
                 if isActive then
-                    OnClickBack()
-                    selItem = item
+                    ShowInfo(nil);
                 end
+                PlotMgr:TryPlay(selItem.cfg.storyID, OnStoryPlayComplete, this, true);
             end
             CSAPI.OpenView("Dialog",dialogData)
         end
@@ -614,11 +618,12 @@ function OnStoryPlayComplete()
     EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
     MenuMgr:UpdateDatas() --刷新关卡解锁状态
     EventMgr.Dispatch(EventType.Activity_Open_State);
+    EventMgr.Dispatch(EventType.Dungeon_MainLine_Update,sectionData:GetID());
 
     if currListItem:IsPass() then
         if CheckSectionOver(selItem.GetID()) then
-            -- isNextScetion = true
             ShowDungeon()
+            SetHard()
             return
         end
         if isStoryFirst then
@@ -636,6 +641,7 @@ function ShowInfo(item)
     local cfg = item and item.GetCfg() or nil
     CSAPI.SetGOActive(infoMask, isActive)
     CSAPI.SetGOActive(normal, not isActive)
+    CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
     itemInfo.Show(cfg)
 end
@@ -656,12 +662,19 @@ function OnBattleEnter()
         end
         CSAPI.SetGOActive(mapView.ModelCamera, false);
         SaveDungeonID(selItem.GetID())
-
-        BuryingPointMgr:TrackEvents("main_fight", {
-            reason = "进入副本",
-            world_id = sectionData:GetID(),
-            card_id = selItem.GetID()
-        })
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then
+            if selItem.GetID() == 1001 then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_01_START)
+            elseif selItem.GetID() == 1002 then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_02_START)
+            end
+        else
+            BuryingPointMgr:TrackEvents("main_fight", {
+                reason = "进入副本",
+                world_id = sectionData:GetID(),
+                card_id = selItem.GetID()
+            })
+        end
     end
 end
 
@@ -864,7 +877,7 @@ end
 
 -- 宝箱弹窗
 function SetBoxPanel()
-    if isOpenBoxs then
+    if isOpenBoxs and boxData then
         -- star
         local maxStarNum = boxData:GetMaxStarNum()
         local num = currStarNum > maxStarNum and maxStarNum or currStarNum
@@ -993,8 +1006,8 @@ function CheckSectionOver(_id) -- 检查章节是否完成
                 -- 要显示的信息
                 local openStrs = _sectionData:GetNextOpenDesc()
                 table.insert(changeInfo, {
-                    title = openStrs[1],
-                    content = openStrs[2]
+                    title = (openStrs and openStrs[1]) and openStrs[1] or "" ,
+                    content = (openStrs and openStrs[2]) and openStrs[2] or ""
                 })
                 changeID = nextCfgDungeon.group;
                 changeHard = nextCfgDungeon.type;
@@ -1008,8 +1021,8 @@ function CheckSectionOver(_id) -- 检查章节是否完成
                 selItem = nil
             end
         end
-        if mapView.currIdx == 2 then
-            OnClickBack()
+        if mapView.currIdx == 2 and not mapView.isMove then
+            ClickBack()
         end
 
         -- changeIndex = 1;

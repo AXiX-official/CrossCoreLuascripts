@@ -4,16 +4,16 @@ local count = 1 -- 选择几件
 function Awake()
     tab = ComUtil.GetCom(tabs, "CTab")
     tab:AddSelChangedCallBack(OnTabChanged)
-    cg_pay = ComUtil.GetCom(btn_pay, "CanvasGroup")
+    -- cg_pay = ComUtil.GetCom(btn_pay, "CanvasGroup")
 end
 
 function OnOpen()
-    if  openSetting and openSetting==2  then
+    if openSetting and openSetting == 2 then
         cfg = Cfgs.CfgFurniture:GetByID(data.id)
     else
         cfg = Cfgs.CfgFurniture:GetByID(data)
     end
-    
+
     -- name 
     CSAPI.SetText(txt_name, cfg.sName)
     -- comfort
@@ -24,6 +24,8 @@ function OnOpen()
     CSAPI.SetText(txt_desc, cfg.desc)
     -- tab 
     tab.selIndex = 0
+    -- imgMove
+    CSAPI.SetGOActive(imgMove, cfg.inteActionId ~= nil)
 end
 
 function OnTabChanged(_index)
@@ -39,7 +41,7 @@ function RefreshPanel()
     price = tab.selIndex == 0 and cfg.price_1[1] or cfg.price_2[1]
 
     -- price 单价
-    local _cfg = Cfgs.ItemInfo:GetByID(price[1])
+    _cfg = Cfgs.ItemInfo:GetByID(price[1])
     iconName = _cfg and _cfg.icon or nil
     if (iconName) then
         ResUtil.IconGoods:Load(nPriceIcon, iconName .. "_1", true)
@@ -69,16 +71,27 @@ function Change()
     CSAPI.SetText(txt_price, need .. "")
     -- btn 
     had = BagMgr:GetCount(price[1])
-    cg_pay.alpha = had >= need and 1 or 0.3
+    -- cg_pay.alpha = had >= need and 1 or 0.3
 end
 
 function SetImgTabs()
     if (not isSetTab) then
-        local _cfg1 = Cfgs.ItemInfo:GetByID(cfg.price_1[1][1])
-        ResUtil.IconGoods:Load(imtTab1, _cfg1.icon .. "_1", true)
-
-        local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
-        ResUtil.IconGoods:Load(imtTab2, _cfg2.icon .. "_1", true)
+        -- item1
+        CSAPI.SetGOActive(item1, cfg.price_1 ~= nil)
+        if (cfg.price_1 ~= nil) then
+            local _cfg1 = Cfgs.ItemInfo:GetByID(cfg.price_1[1][1])
+            ResUtil.IconGoods:Load(imtTab1, _cfg1.icon .. "_1", true)
+            LanguageMgr:SetText(txtItem1, 18111, _cfg1.name) -- 38001
+        end
+        -- item2
+        CSAPI.SetGOActive(item2, cfg.price_2 ~= nil)
+        if (cfg.price_2 ~= nil) then
+            local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
+            ResUtil.IconGoods:Load(imtTab2, _cfg2.icon .. "_1", true)
+            LanguageMgr:SetText(txtItem2, 18111, _cfg2.name) -- 38002
+        end
+        local width = cfg.price_2 ~= nil and 430 or 821
+        CSAPI.SetRTSize(item1, width, 100)
     end
 end
 
@@ -86,7 +99,7 @@ function OnClickRemove()
     if (count > 1) then
         count = count - 1
         Change()
-    else 
+    else
         LanguageMgr:ShowTips(2309)
     end
 end
@@ -95,7 +108,7 @@ function OnClickAdd()
     if (count < (max - cur)) then
         count = count + 1
         Change()
-    else 
+    else
         LanguageMgr:ShowTips(2308)
     end
 end
@@ -104,7 +117,7 @@ function OnClickMax()
     if (count ~= (max - cur)) then
         count = max - cur
         Change()
-    else 
+    else
         LanguageMgr:ShowTips(2308)
     end
 end
@@ -113,7 +126,7 @@ function OnClickMin()
     if (count ~= 1) then
         count = 1
         Change()
-    else 
+    else
         LanguageMgr:ShowTips(2309)
     end
 end
@@ -124,32 +137,61 @@ end
 
 function OnClickPay()
     if (had >= need) then
-        if openSetting==2 then --商店中的购买
-            if data==nil or data.commId==nil then
+        if (need <= 0) then
+            -- 特殊家具 
+            LanguageMgr:ShowTips(15122)
+            return
+        end
+        local func = nil
+        if openSetting == 2 then -- 商店中的购买
+            if data == nil or data.commId == nil then
                 LogError("传入的数据有误！");
                 return
             end
-            ShopProto:Buy(data.commId,TimeUtil:GetTime(),count,tab.selIndex == 0 and "price_1" or "price_2",function(proto)
-                EventMgr.Dispatch(EventType.Shop_View_Refresh);
-                if proto and next(proto.gets)  then
-                    UIUtil:OpenReward( {proto.gets})
-                end
-            end)
+            func = function()
+                ShopProto:Buy(data.commId, TimeUtil:GetTime(), count, tab.selIndex == 0 and "price_1" or "price_2",nil,nil,
+                    function(proto)
+                        EventMgr.Dispatch(EventType.Shop_View_Refresh);
+                        if proto and next(proto.gets) then
+                            UIUtil:OpenReward({proto.gets})
+                        end
+                    end)
+            end
         else
-            local infos = {{
-                ["id"] = cfg.id,
-                num = count
-            }}
-            DormProto:BuyFurniture(infos, tab.selIndex == 0 and "price_1" or "price_2")
+            func = function()
+                local infos = {{
+                    ["id"] = cfg.id,
+                    num = count
+                }}
+                DormProto:BuyFurniture(infos, tab.selIndex == 0 and "price_1" or "price_2")
+            end
         end
-        Close()
+        if (tab.selIndex == 0) then
+            func()
+            Close()
+        else
+            if CSAPI.IsADVRegional(3) then
+                CSAPI.ADVJPTitle(need,function()
+                    func()
+                    view:Close()
+                end)
+            else
+                local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
+                local str = LanguageMgr:GetTips(15123, _cfg2.name, need)
+                UIUtil:OpenDialog(str, function()
+                    func()
+                    view:Close()
+                end)
+            end
+        end
+    else
+        Tips.ShowTips(string.format(LanguageMgr:GetTips(15000), _cfg.name))
     end
 end
 
-
 function Close()
-	CSAPI.SetGOActive(tweenObj2,true);
-	FuncUtil:Call(function()
-		view:Close();
-	end,nil,180);
+    CSAPI.SetGOActive(tweenObj2, true);
+    FuncUtil:Call(function()
+        view:Close();
+    end, nil, 180);
 end

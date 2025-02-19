@@ -34,7 +34,7 @@ end
 -- @_needFace:
 -- @return 
 -- ==============================--
-function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
+function Refresh(_modelId, _posType, _callBack,_isUseShopImg,_needClick)
     if (not isInit and _modelId == nil) then
         return
     end
@@ -42,6 +42,9 @@ function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
     posType = _posType
     callBack = _callBack
     isUseShopImg = _isUseShopImg
+    if(_needClick~=nil)then 
+        needClick = _needClick
+    end 
     -- 重置点击记录
     if (oldModelId) then
         if (oldModelId ~= _modelId) then
@@ -54,7 +57,7 @@ function Refresh(_modelId, _posType, _callBack,_isUseShopImg)
         end
     end
     oldModelId = _modelId
-
+    SetBlack()
     SetTouch()
 
     SetImg()
@@ -80,19 +83,19 @@ end
 
 -- 位置触摸
 function SetTouch()
-    if (not needClick) then
-        return
-    end
     touchItems = touchItems or {}
     touchDatas = {}
-    local cfg = Cfgs.CfgMultiImageAction:GetByID(cfgID)
-    if (cfg and #cfg.item > 0) then
-        touchDatas = cfg.item
+    if (needClick) then
+        local cfg = Cfgs.CfgMultiImageAction:GetByID(cfgID)
+        if (cfg and #cfg.item > 0) then
+            touchDatas = cfg.item
+        end
     end
     ItemUtil.AddItems("Common/CardTouchItem", touchItems, touchDatas, imgObj, PlayAudio, 1, this)
 end
 
 function PlayAudio(cfgChild)
+    MissionMgr:DoClickBoard()
     if (RoleAudioPlayMgr:GetIsPlaying()) then
         return
     end
@@ -105,7 +108,7 @@ function PlayAudio(cfgChild)
             audioId = audioIds[1]
             newIndex = 1
         else
-            local newIndex = oldIndex
+            newIndex = oldIndex
             while audioId == nil do
                 newIndex = (newIndex + 1) > len and 1 or (newIndex + 1)
                 if (newIndex == oldIndex) then
@@ -134,7 +137,7 @@ end
 
 -- 点击
 function OnClick()
-
+    MissionMgr:DoClickBoard()
 end
 
 -- 类型
@@ -184,7 +187,9 @@ function PlayLC()
 end
 
 function SetBlack(isBlack)
-
+    if imgObj then
+        UIUtil:SetLiveBroadcast2(imgObj,isBlack)
+    end
 end
 
 function GetIconName()

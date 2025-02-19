@@ -443,7 +443,7 @@ function SetAngle(angle,speed)
     end
     speed = speed or rotateSpeed;
     comRotate:RotateToTargetAngle(0,angle,0,speed);
-    LogError(GetModelName() .. ":angle:" .. tostring(angle));
+    --LogError(GetModelName() .. ":angle:" .. tostring(angle));
 end
 --面向指定目标
 function FaceTo(go,speed)
@@ -479,6 +479,8 @@ function ResetPlace(fadeToIdle)
     ResetAngle();
     
     ApplyIdle(fadeToIdle);
+
+    CSAPI.SetScale(gameObject,1,1,1);
 end
 
 --获取方向
@@ -747,10 +749,16 @@ function ApplyHitData(hitData)
 --        LogError(hitData);
     end
     if(hitData.death)then
-        isDead = true;
+        SetDeadState(true);        
     end
-    UpdateHp(hitData.hp);
 
+    if(damage > 0 or shieldDamage > 0)then
+        local currHP = GetHpInfo();
+        if(hitData.hp < currHP)then
+            UpdateHp(hitData.hp);  
+        end
+    end
+    
     if(not hitData.dont_play_sound)then
         if(cfgModel and cfgModel.s_hit)then
             local currTime = CSAPI.GetTime();
@@ -794,6 +802,9 @@ end
 
 function SetDeadState(deadState)
     isDead = deadState;
+    if(isDead)then
+        PutOut();
+    end
 end
 --治疗
 function ApplyCureData(cureData)
@@ -807,9 +818,9 @@ function ApplyCureData(cureData)
     end
 
     UpdateHp(cureData.hp);
---    UpdateHp(cureData.hp,nil,true,true);  
---    FuncUtil:Call(UpdateHp,nil,1000,cureData.hp);  
-
+    --    UpdateHp(cureData.hp,nil,true,true);  
+    --    FuncUtil:Call(UpdateHp,nil,1000,cureData.hp);  
+    
     if(cureData.add and cureData.add > 0)then
         CreateFloatValue("CureValue",cureData.add,GetFloatNode());               
     end
@@ -846,7 +857,21 @@ function CreateFloatValue(res,value,floatNode,color)
     floatNode = floatNode or gameObject; 
     local floatData = {go = floatNode,res = res,value = value,color = color};
 
-    EventMgr.Dispatch(EventType.Fight_Float_Num,floatData);    
+
+    local currTime = CSAPI.GetTime();
+    local nextCanCreateTime = lastCreateNumTime and (lastCreateNumTime + 0.1) or 0;
+    local delay = nil;      
+  
+    if(currTime > nextCanCreateTime)then
+        lastCreateNumTime = currTime;
+        delay = 0;
+    else
+        lastCreateNumTime = nextCanCreateTime;
+        delay = math.floor((nextCanCreateTime - currTime) * 1000);            
+    end
+
+    FuncUtil:Call(EventMgr.Dispatch,nil,delay,EventType.Fight_Float_Num,floatData);
+    --EventMgr.Dispatch(EventType.Fight_Float_Num,floatData);    
 
     AddSkipFloatData(floatData);
 end
@@ -917,10 +942,18 @@ end
 function AddMaxHp(val)
     hpMax = (hpMax or 0) + val;
 end
+
+function SetHPLock(hpLockState)
+    hpLock = hpLockState;
+end
 --更新信息：HP
 function UpdateHp(curr,max,immediately,onlyFakeBar)
-    --LogError("更新HP" .. tostring(curr) .. "/" .. tostring(max));
-
+    --[[ if(IsEnemy())then
+        LogError("id" .. GetID() .. ":" .. "更新HP" .. tostring(curr));
+    end ]]
+    if(hpLock)then
+        return;
+    end
 
     hpMax = max or hpMax or 1;
     if(curr)then    
@@ -1220,6 +1253,11 @@ function PlayDead()
     end
 end
 
+function GetBodySize()
+    return cfgModel and cfgModel.body_size;
+end
+
+
 function Clean()
     if(beModule ~= nil)then
         beModule:Clean();
@@ -1320,6 +1358,7 @@ end
 
 --播放FightAction
 function PlayFightAction(fightAction,callBack)
+    SetSkipSkill(false);
     fapModule:Play(fightAction,callBack);
 end
 
@@ -1448,20 +1487,20 @@ function ApplyCast(castName)
 end
 
 function ApplyCastPreFB(castName)
-    fbModule:CreateCastPreFB(castName);
+    if(fbModule)then
+        fbModule:CreateCastPreFB(castName);
+    end
 end
 
---function ApplyStateMoveData(moveData)
---   if(moveModule)then
---       moveModule:ApplyStateMoveData(moveData);
---   end 
---end
+function SetSkipSkill(skipSkill)
+    isSkipShowSkill = skipSkill;
+end
+function IsSkipSkill()
+    return isSkipShowSkill;
+end
 
---创建召唤特效
---function CreateSummonEffect()
---    local res = GetModelName() .. "/summon_effect";    
---    ResUtil:CreateEffect(res,0,0,0,gameObject);
---end
+
+
 --召唤出场
 function ApplySummon()    
     
@@ -1700,7 +1739,7 @@ end
 function GetComboTargets()
     local cfgCharacter = GetCfg();
     local unite = cfgCharacter.unite;
-  
+    --LogError(unite);
     local list = nil;
     if(unite ~= nil)then
         local uniteList = {};
@@ -1711,6 +1750,7 @@ function GetComboTargets()
         local all = CharacterMgr:GetAll();
         for id,targetCharacter in pairs(all) do
             if(targetCharacter ~= nil and targetCharacter.IsMine())then
+                --LogError("cfg id：" .. targetCharacter.GetCfgID());
                 if(uniteList[targetCharacter.GetCfgID()] ~= nil)then
                     local targetSP,targetSPMax = targetCharacter.GetSpInfo()
                     --不在判定SP
@@ -1731,11 +1771,11 @@ function GetComboRangeLimit()
     local range_limit = nil;
  
     --合体技能范围限制
-    local cfgCharacter = GetCfg();
-    local comboId = cfgCharacter.fit_result;
+  --  local cfgCharacter = GetCfg();
+  --[[   local comboId = cfgCharacter.fit_result;
     if(comboId == nil)then
         LogError("没有合体结果" .. cfgCharacter.id);
-    end
+    end ]]
 
 --    local cfgMonster = Cfgs.MonsterData:GetByID(comboId);
 --    if(cfgMonster == nil)then
@@ -1760,7 +1800,7 @@ function GetComboRangeLimit()
             end
         end
     end
-  
+    --LogError(range_limit);
     return range_limit;
 end
 

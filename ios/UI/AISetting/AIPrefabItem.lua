@@ -48,7 +48,7 @@ function Refresh(_data,_maxOrder,_skillCfg)
         if tCfg then
             SetTarget(tCfg.description);
         else
-            LogError("获取AI配置失败!配置表：cfgAutoFight 表ID:"..tostring(data.cid));
+            LogError("获取AI配置失败!配置表：cfgAutoFight 表ID:"..tostring(data.cid).."\t数据："..table.tostring(d));
         end
         local num=conCfgs==nil and 0 or #conCfgs;
         SetEnable(conImg,conCanvas,num>1)

@@ -15,13 +15,28 @@ local getItems={};
 local buildItems={};
 local otherItems={};
 local otherItems2={};
+local limitGetItems={};
 local itemInfo=nil;
 local eventMgr=nil;
 local expiryTime=nil;
 local isUse=false;
 local defaultSize={0,0};
+local endTime=0;
+local fixedTime=1;
+local upTime=0;
+local beforNum=0; --当前物品的数量
 -- local slider=nil;
+
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=CS.UnityEngine.Input
+local KeyCode=CS.UnityEngine.KeyCode
+
+
 function Awake()
+	CSAPI.Getplatform();
+	IsMobileplatform=CSAPI.IsMobileplatform;
 	addBtn = ComUtil.GetCom(btn_add, "Button");
 	removeBtn = ComUtil.GetCom(btn_remove, "Button");
 	maxBtn = ComUtil.GetCom(btn_max, "Button");
@@ -113,13 +128,37 @@ function Refresh()
 			if cfg.dy_value1 then
 				local dormCfg=Cfgs.CfgFurniture:GetByID(cfg.dy_value1)
 				CSAPI.SetText(txtComfort, dormCfg.comfort .. "")
+				local canInte = false 
+				if(dormCfg.intePoints and #dormCfg.intePoints>0)then  
+					canInte = true 
+				end 
+				CSAPI.SetGOActive(imgMove,canInte)
+			end	
+		elseif cfg and (cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon or cfg.dy_value1==PROP_TYPE.IconTitle)) then --头像/头像框
+			local goods=BagMgr:GetFakeData(cfg.id);
+			SetDayObj(goods:GetIconDayTips());
+			local loader=itemInfo:GetIconLoader();
+			if loader then
+				loader:Load(icon, itemInfo:GetIcon())
 			end
+			CSAPI.SetScale(icon,1,1,1);
+			CSAPI.SetGOActive(btnDetails,false);
+		elseif cfg and (cfg.type==ITEM_TYPE.EQUIP_MATERIAL or cfg.type==ITEM_TYPE.EQUIP) then
+			GridUtil.LoadEquipIcon(icon,tIcon,itemInfo:GetCfg().icon,itemInfo:GetCfg().quality,cfg.type==ITEM_TYPE.EQUIP_MATERIAL,false);
 		elseif cfg and cfg.type==ITEM_TYPE.CARD then --卡牌，特殊处理
 			GridUtil.LoadCIcon(icon,tIcon,itemInfo:GetCfg(),false);
 			CSAPI.SetScale(icon,1,1,1);
 		elseif itemInfo:GetClassType()=="CharacterCardsData" then --卡牌数据类型
 			GridUtil.LoadCIconByCard(icon,tIcon,itemInfo:GetCfg(),false)
 			CSAPI.SetScale(icon,1,1,1);
+		elseif itemInfo:GetClassType()=="EquipData" and itemInfo:GetType()==EquipType.Material then--素材芯片特殊处理
+			GridUtil.LoadEquipIcon(icon,tIcon,itemInfo:GetIcon(),itemInfo:GetQuality(),true,false);
+			-- local loader=itemInfo:GetIconLoader();
+			-- if loader then
+			-- 	loader:Load(icon, itemInfo:GetIcon().."_02")
+			-- end
+			-- CSAPI.SetScale(icon,0.8,0.8,0.8);
+			CSAPI.SetGOActive(btnDetails,false);
 		else
 			local loader=itemInfo:GetIconLoader();
 			if loader then
@@ -145,6 +184,8 @@ function Refresh()
 			if (itemInfo:GetClassType()~="EquipData" and itemInfo.GetType~=nil and itemInfo:GetType()==ITEM_TYPE.EQUIP_MATERIAL) or (itemInfo:GetClassType()=="EquipData" and itemInfo.GetType~=nil and itemInfo:GetType()==EquipType.Material)  then
 				local info=EquipMgr:GetEquipByCfgID(itemInfo:GetCfgID());
 				count=info~=nil and info:GetCount() or 0;
+			elseif itemInfo:GetCount()>0 and openSetting==nil then
+				count=itemInfo:GetCount();
 			else
 				count=BagMgr:GetCount(itemInfo:GetID());
 			end
@@ -152,7 +193,11 @@ function Refresh()
 		-- else
 		-- 	CSAPI.SetText(txt_currNum, tostring(itemInfo:GetCount()));
 		-- end
-		RefreshLimit();
+		endTime=itemInfo:GetExpiry();
+		if endTime and endTime>0 then
+			endTime=endTime-TimeUtil:GetTime()>0 and endTime-TimeUtil:GetTime() or 0;
+		end
+		RefreshDownTime();
 		CSAPI.SetGOActive(tIcon,false);
 		CSAPI.SetGOActive(tBorder,false);
 		if cfg then
@@ -179,6 +224,8 @@ function Refresh()
 				SetNumObj(false)
 				clickFunc = OpenSelBox;
 				showGets=false;
+			elseif cfg.type==ITEM_TYPE.EQUIP then
+				CSAPI.SetGOActive(tIcon,true);
 			elseif cfg.is_can_use then --可以使用的道具
 				CSAPI.SetText(txt_open, LanguageMgr:GetByID(1032))
 				CSAPI.SetText(txt_openTips, LanguageMgr:GetByType(1032,4))
@@ -206,6 +253,13 @@ function Refresh()
 				GridUtil.LoadTIcon(tIcon,tBorder,cfg,true);
 			elseif itemInfo:GetClassType()=="CharacterCardsData" then --卡牌数据类型
 				CSAPI.SetGOActive(tIcon,true);
+			elseif cfg.type==ITEM_TYPE.VOUCHER then --折扣券
+				CSAPI.SetText(txt_open, LanguageMgr:GetByID(1032))
+				CSAPI.SetText(txt_openTips, LanguageMgr:GetByType(1032,4))
+				CSAPI.SetGOActive(bottomObj, true);
+				SetNumObj(false)
+				CSAPI.SetGOActive(btn_ok, true);
+				clickFunc = UseVoucher;
 			end
 			if showGets then
 				--显示获取途径
@@ -220,15 +274,33 @@ function Refresh()
 	-- SetBgHeight();
 end
 
-function RefreshLimit()
-	if itemInfo.GetExpiryTips==nil then
+--设置有效天数
+function SetDayObj(txt)
+	CSAPI.SetGOActive(dayObj,txt~=nil)
+	CSAPI.SetText(txt_day,txt);
+end
+
+function Update()
+	CheckVirtualkeys()
+    if endTime and endTime>0 then
+        upTime=upTime+Time.deltaTime;
+        if upTime>=fixedTime then
+            endTime=endTime-fixedTime;
+            RefreshDownTime();
+            upTime=0;
+        end
+    end
+end
+
+function RefreshDownTime()
+	if itemInfo==nil or (itemInfo.IsExipiryType==nil or (itemInfo.GetExpiryTips~=nil and itemInfo:IsExipiryType()~=true) or itemInfo:GetCount()<=0) then
 		CSAPI.SetGOActive(limitObj,false);
 		return
 	end
-	local day=itemInfo:GetExpiryTips();
-	CSAPI.SetGOActive(limitObj,day~=nil);
-	if day then
-		CSAPI.SetText(txt_limit,day);
+	local tips=itemInfo:GetExpiryTips();
+	CSAPI.SetGOActive(limitObj,tips~=nil);
+	if tips then
+		CSAPI.SetText(txt_limit,tips);
 	end
 end
 
@@ -246,15 +318,17 @@ function CreateGetInfo()
 	local combineInfo=itemInfo.GetCombineGetInfo and itemInfo:GetCombineGetInfo() or nil;
 	local jOhterInfo=itemInfo.GetJOtherGetInfo and itemInfo:GetJOtherGetInfo() or nil;
 	local tOhterInfo=itemInfo.GetTOtherGetInfo and itemInfo:GetTOtherGetInfo() or nil;
-	if infos==nil and combineInfo==nil and jOhterInfo==nil and tOhterInfo==nil then
+	local lActInfo=itemInfo.GetLimitGetInfo and itemInfo:GetLimitGetInfo() or nil;
+	if infos==nil and combineInfo==nil and jOhterInfo==nil and tOhterInfo==nil and lActInfo==nil then
 		hasGet=false;
 	else
 		hasGet=true;
-		local cIsShow,bIsShow,oIsShow=false,false,false;
+		local cIsShow,bIsShow,oIsShow,lIsShow=false,false,false,false;
 		HideItems(getItems);
 		HideItems(buildItems);
 		HideItems(otherItems);
 		HideItems(otherItems2);
+		HideItems(limitGetItems);
 		if infos and #infos>0 then
 			cIsShow=true;
 			CreateGetItem(infos,"GetWayItem/GoodsGetWayItemNew",getItems,chapterRoot,JumpCall);
@@ -276,9 +350,14 @@ function CreateGetInfo()
 			oIsShow=true;
 			CreateGetItem(tOhterInfo,"GetWayItem/GoodsGetWayItemText",otherItems2,otherRoot);
 		end
+		if lActInfo and #lActInfo>0 then
+			lIsShow=true;
+			CreateGetItem(lActInfo,"GetWayItem/GoodsGetWayItemNew",limitGetItems,limitGetRoot,JumpCall);
+		end
 		CSAPI.SetGOActive(chapterGet,cIsShow);
 		CSAPI.SetGOActive(buildGet,bIsShow);
 		CSAPI.SetGOActive(otherGet,oIsShow);
+		CSAPI.SetGOActive(limitGet,lIsShow);
 	end
 end
 
@@ -361,6 +440,13 @@ function OpenGift()
 	rewardID, useNum)
 	local isCard = GLogicCheck:CheckRewardCapacity(RandRewardType.CARD,
 	RoleMgr:GetMaxSize()-RoleMgr:GetCurSize(),rewardID, useNum)
+	local index=nil;
+	local id= itemInfo:GetID();
+	local data=itemInfo:GetData();
+	if data and data.get_infos then
+		index=data.get_infos[1].index;
+		id=cfg.to_item_id;
+	end
 	if isEquip == nil or isEquip == false then
 		Tips.ShowTips(LanguageMgr:GetTips(12012))
 		Close()
@@ -371,16 +457,24 @@ function OpenGift()
 		Close()
 		return
 	end
-	PlayerProto:UseItem({id = itemInfo:GetID(), cnt = useNum, arg1 = nil}, true)
+	PlayerProto:UseItem({id = id, cnt = useNum,ix=index, arg1 = nil}, true)
 	Close()
 end
 
 --使用道具
 function UseItem()
 	local cfg = itemInfo:GetCfg()
+	local data=itemInfo:GetData();
+	local index=nil;
+	local id=itemInfo:GetID();
+	beforNum=itemInfo:GetCount();
+	if data and data.get_infos then
+		index=data.get_infos[1].index;
+		id=cfg.to_item_id;
+	end
 	if cfg and cfg.is_can_use then
 		isUse=true;
-		PlayerProto:UseItem({id = itemInfo:GetID(), cnt = useNum, arg1 = nil}, false, OnUseItem)
+		PlayerProto:UseItem({id = id,ix=index, cnt = useNum, arg1 = nil}, false, OnUseItem)
 	end
 end
 
@@ -393,10 +487,14 @@ function OnUseItem(proto)
 		Close();
 		return;
 	end
+	if proto and proto.info.cnt>=beforNum then --处理分开显示的限时商品
+		Close();
+		do return end
+	end
 	local goods = BagMgr:GetData(itemInfo:GetID());
 	Tips.ShowTips(string.format(LanguageMgr:GetTips(12014), itemInfo:GetName(), useNum))
 	if goods and goods:GetCount() > 0 then
-		maxNum=itemInfo:GetCount()<g_MaxUseItem and itemInfo:GetCount() or g_MaxUseItem;
+		maxNum=goods:GetCount()<g_MaxUseItem and goods:GetCount() or g_MaxUseItem;
 		useNum = 1;
 		-- slider.value=0;
 		if data then
@@ -433,6 +531,17 @@ end
 function OnClickOpen()
 	if clickFunc then
 		clickFunc();
+	end
+end
+
+function UseVoucher()
+	if itemInfo==nil then
+		do return end		
+	end
+	local goods = BagMgr:GetData(itemInfo:GetID());
+	if goods:GetDyVal2()~=nil then
+		ShopMgr:SetJumpVoucherID(goods:GetID());
+		JumpMgr:Jump(goods:GetDyVal2());
 	end
 end
 
@@ -519,6 +628,19 @@ function OnClickDetails()
 	end
 end
 
+
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+	--仅仅安卓或者苹果平台生效
+	if IsMobileplatform then
+		if(Input.GetKeyDown(KeyCode.Escape))then
+			--  OnVirtualkey()   调关闭
+			if CSAPI.IsBeginnerGuidance()==false then
+				OnClickReturn();
+			end
+		end
+	end
+end
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
 function ReleaseCSComRefs()     

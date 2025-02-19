@@ -18,6 +18,7 @@ local panel = nil --首次入场动效
 local canBlack = true
 local top = nil
 function Awake()
+	AdaptiveConfiguration.SetLuaObjUIFit("Battle",gameObject)
 	--添加问号 rui 211130 --因为不是通过openview打开的，所以要手动添加
 	UIUtil:AddQuestionItem("Battle", gameObject, questionParent)
 	--CSAPI.SetGOActive(right, false);
@@ -48,8 +49,6 @@ function Awake()
 	
 	CSAPI.SetGOActive(bg, false)
 	CSAPI.SetGOActive(node, false)
-
-
 end
 
 function OnInit()
@@ -98,7 +97,7 @@ function InitListener()
 	eventMgr:AddListener(EventType.Battle_UI_BlackShow, OnBlackClose);
 	eventMgr:AddListener(EventType.AIPreset_Battle_SetRet,OnAISetRet)
 
-	eventMgr:AddListener(EventType.Mission_List, OnTowerRedRefresh)
+	eventMgr:AddListener(EventType.Mission_List, OnRedPointRefresh)
 end
 
 --锁定点击
@@ -198,7 +197,7 @@ end
 
 function OnBattleChangeRound(isPlayer)
 	-- if isPlayerLast ~= isPlayer then
-	local str = isPlayer and "我方回合" or "敌方回合"
+	local str = LanguageMgr:GetByID(isPlayer and 25047 or 25048) 
 	--CSAPI.SetText(txtRound, str)
 	CSAPI.SetText(txtRound,	StringUtil:SetByColor(str, isPlayer and "ffc146" or "fe5353"))
 	-- CSAPI.SetGOActive(roundObj, true)
@@ -249,6 +248,8 @@ function OnViewShow(isShow)
 		-- 	isLeftHide = false;
 		-- end);
 	end	
+
+	BattleMgr:UpdateMistViewDis();--更新迷雾视野距离
 end
 
 --初始化战场
@@ -360,11 +361,13 @@ function OnClickQuip()
 end
 
 function OnQuipOk()
-	BuryingPointMgr:TrackEvents("main_fight",{
-		reason = "副本撤退",
-		world_id = DungeonMgr:GetCurrSectionData():GetID(),
-		card_id = DungeonMgr:GetCurrId() or 0
-	})
+	if CSAPI.IsADV()==false then
+		BuryingPointMgr:TrackEvents("main_fight",{
+			reason = "副本撤退",
+			world_id = DungeonMgr:GetCurrSectionData():GetID(),
+			card_id = DungeonMgr:GetCurrId() or 0
+		})
+	end
 	DungeonMgr:SendToQuit();
 	FriendMgr:ClearAssistData();
 	TeamMgr:ClearFightTeamData();
@@ -597,6 +600,8 @@ function RefreshStarInfo(data)
 			if data.num > maxNum then
 				BattleMgr:SetInputState(false);
 			end
+
+			BattleMgr:UpdateMistViewDis();
 		end
 	end
 end
@@ -616,7 +621,7 @@ end
 
 --初始化关卡信息
 function InitDungeonInfo()
-	OnTowerRedRefresh()
+	OnRedPointRefresh()
 	-- local dungeonCfg=dungeonData:GetCfg();
 	--初始化特殊条件
 	-- InitStarInfo();
@@ -911,23 +916,32 @@ function OnClickSetting()
 	end
 end
 
-function OnTowerRedRefresh()
-	local isRed = false
+function OnRedPointRefresh()
 	if dungeonData then
-		local missionDatas = MissionMgr:GetActivityDatas(eTaskType.TmpDupTower, dungeonData:GetCfg().missionID)
-		if missionDatas then
-			for _, missData in ipairs(missionDatas) do
-				if missData:IsFinish() and not missData:IsGet() then
-					isRed = true
-					break
-				end
+		local cfg = dungeonData:GetCfg()
+		local isRed = false
+		if cfg.type == eDuplicateType.Tower then
+			isRed = CheckRed(eTaskType.TmpDupTower,cfg.missionID)
+		elseif cfg.type == eDuplicateType.TaoFa then
+			isRed = CheckRed(eTaskType.DupTaoFa,cfg.group)
+		end
+		SetRed(isRed)
+	end
+end
+
+function CheckRed(_type, _group)
+	local datas = MissionMgr:GetActivityDatas(_type, _group)
+	if datas and #datas > 0 then
+		for i, v in ipairs(datas) do
+			if v:IsFinish() and not v:IsGet() then
+				return true
 			end
 		end
 	end
-	SetTowerRed(isRed)
+	return false
 end
 
-function SetTowerRed(b)
+function SetRed(b)
 	UIUtil:SetRedPoint2("Common/Red2", redParent, b, 0,0, 0)
 end
 
@@ -935,10 +949,16 @@ function OnClickMission()
 	if dungeonData then
 		local cfg = dungeonData:GetCfg()
 		if cfg then
+			local _type = eTaskType.TmpDupTower
+			local _group = cfg.missionID
+			if cfg.type == eDuplicateType.TaoFa then
+				_type = eTaskType.DupTaoFa
+				_group = cfg.group
+			end
 			CSAPI.OpenView("MissionActivity", {
-				type = eTaskType.TmpDupTower,
+				type = _type,
 				title = LanguageMgr:GetByID(6018, cfg.name),
-				group = cfg.missionID
+				group = _group
 			})
 		end
 	end
@@ -967,10 +987,20 @@ function OnAISetRet(proto)
 		if teamData then
 			teamData:SetReserveNP(proto.nReserveNP);
 			teamData:SetIsReserveSP(proto.bIsReserveSP);
-			TeamMgr:UpdateDataByTeamData(ctrlData.nTeamID,teamData);
+			TeamMgr:SaveDataByIndex(ctrlData.nTeamID,teamData);
 		end
 	end
 end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+	---填写退出代码逻辑/接口
+	if  top.OnClickBack then
+		top.OnClickBack();
+	end
+end
+
+
 --[[
 function InitAIMove()
 	--自动寻路

@@ -8,9 +8,9 @@ function Skill908800201:Init(skillID, card)
 end
 -- 执行技能
 function Skill908800201:DoSkill(caster, target, data)
-	-- 12002
+	-- 12003
 	self.order = self.order + 1
-	self:DamageLight(SkillEffect[12002], caster, target, data, 0.5,2)
+	self:DamageLight(SkillEffect[12003], caster, target, data, 0.333,3)
 end
 -- 攻击结束
 function Skill908800201:OnAttackOver(caster, target, data)
@@ -30,5 +30,5 @@ function Skill908800201:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 908800201
-	self:HitAddBuff(SkillEffect[908800201], caster, target, data, 10000,3008,1)
+	self:HitAddBuff(SkillEffect[908800201], caster, target, data, 10000,3702,2)
 end

@@ -45,7 +45,13 @@ function this:PlayByType(modelId, roleAudioType, type_child, playCB, endCB, _cfg
     local cfg_character = Cfgs.character:GetByID(modelId)
     local voiceID = cfg_character and cfg_character.voiceID or nil
     if (voiceID) then
-        local groups = cfg:GetGroup(voiceID) or {}
+        -- 底
+        local voiceID1 = cfg_character and cfg_character.base_voiceID or nil
+        local groups1 = voiceID1 ~= nil and cfg:GetGroup(voiceID1) or nil
+        -- 上层(如果有底，则)
+        local groups2 = cfg:GetGroup(voiceID) or {}
+        local groups = self:GetCorrectGroup(groups1, groups2)
+        -- local groups = cfg:GetGroup(voiceID) or {}
         local selectCfgs = {}
         local count = 0
         for i, v in ipairs(groups) do
@@ -199,6 +205,36 @@ function this:CheckAndioIsOpen(modelId, id, _cfg)
         return true
     end
     return false
+end
+
+--上层音效覆盖底层音效（有则覆盖，没则保留）
+function this:GetCorrectGroup(groups1, groups2)
+    if (groups1 == nil) then
+        return groups2
+    end
+    local groups = {}
+    local types = {}
+    for k, v in pairs(groups2) do
+        if (v.type) then
+            if (v.type_child) then
+                types[v.type] = types[v.type] or {}
+                types[v.type][v.type_child[1]] = 1
+            else
+                if (not types[v.type]) then
+                    types[v.type] = {}
+                end
+            end
+        end
+    end
+    for k, v in pairs(groups1) do
+        if (v.type == nil or not types[v.type] or (v.type_child and types[v.type][v.type_child[1]] == nil)) then
+            table.insert(groups, v)
+        end
+    end
+    for k, v in pairs(groups2) do
+        table.insert(groups, v)
+    end
+    return groups
 end
 
 return this

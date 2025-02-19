@@ -116,7 +116,7 @@ end
 
 function this:IsMe(selectID)
     if (self:IsRoleIcon()) then
-        local infoDic = self.cRoleInfo:GetAllSkins()
+        local infoDic = self.cRoleInfo:GetAllSkins(true)
         return infoDic[selectID] ~= nil
     else
         return self:GetCfg().id == selectID
@@ -140,7 +140,7 @@ end
 
 function this:IsSelect(selectID)
     if (self:IsRoleIcon()) then
-        local infoDic = self.cRoleInfo:GetAllSkins()
+        local infoDic = self.cRoleInfo:GetAllSkins(true)
         return infoDic[selectID] ~= nil
     else
         return self:GetCfg().id == selectID

@@ -1,14 +1,14 @@
 -- 背景图的位置
-local bgPos = {{14, 0}, {-78, 19}, {-48, 19}, {-78, 19}, {-23.8, 22.5}}
-local closePos = {{662, 310}, {537.8, 322.1}, {714.5, 320.6}, {537.8, 322.1}, {568.1, 249.6}}
-local skipPos = {{607.2, -415.6}, {229, -430}, {275.7, -430}, {229, -430}, {513.1, -365.6}}
+local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}, {-32, 17.5}}
+local closePos = {{662, 310}, {537.8, 322.1}, {716, 321}, {537.8, 322.1}, {568.1, 249.6}, {657, 237}, {662, 310},
+                  {662, 310}, {0, 100000}}
+local skipPos = {{607.2, -415.6}, {229, -430}, {283, -442}, {229, -430}, {513.1, -365.6}, {590.9, -327.8},
+                 {607.2, -415.6}, {607.2, -415.6}, {486.6, -385}}
 
-local isSet = false
 local curItem = nil
-
-local isSpring = false
 local endTime = nil
-local type = 1
+
+local timer = nil
 
 function OnInit()
     eventMgr = ViewEvent.New()
@@ -23,35 +23,45 @@ function OnDestroy()
 end
 
 function OnOpen()
-    type = data or 1
-
+    data = MenuBuyMgr:GetCurData()
+    data:SetPush(false)
     RefreshPanel()
 end
 
 function Update()
-    if (isSpring and endTime and TimeUtil:GetTime() > endTime) then
+    if (endTime and TimeUtil:GetTime() > endTime) then
         endTime = nil
         view:Close()
+    end
+    if (timer ~= nil and endTime ~= nil and Time.time >= timer) then
+        timer = Time.time + 0.5
+        SetTimes()
     end
 end
 
 function RefreshPanel()
-    cfg = Cfgs.CfgPayNoticeWindow:GetByID(type)
+    cfg = data:GetCfg()
+    endTime = data:GetEndTime()
 
     SetBg()
-    for i = 1, 5 do
-        CSAPI.SetGOActive(this["node" .. i], type == i)
+    -- node
+    local len = #Cfgs.CfgPayNoticeWindow:GetAll()
+    for i = 1, len do
+        CSAPI.SetGOActive(this["node" .. i], data:GetID() == i)
     end
-    local func = this["SetNode" .. type]
+    local func = this["SetNode" .. data:GetID()]
     func()
+    --
     SetClose()
     SetTips()
 end
 
 function SetBg()
-    local bgRes = "UIs/MenuBuy/" .. type .. "/bg"
+    local num = data:GetID()
+    num = num == 7 and 1 or num
+    local bgRes = "UIs/MenuBuy/" .. num .. "/bg"
     ResUtil:LoadBigImg(bg, bgRes, true, function()
-        local pos = bgPos[type]
+        local pos = bgPos[data:GetID()]
         CSAPI.SetAnchor(bg, pos[1], pos[2])
     end)
 end
@@ -63,11 +73,7 @@ function SetNode1()
     -- items1 = items1 or {}
     -- ItemUtil.AddItems("MenuBuy/MenuBuyItem1", items1, rewards, itemParent1)
     -- btn 
-    isEnough = false
-    local amount = PlayerClient:GetPayAmount()
-    if (amount / 100 >= 6) then
-        isEnough = true
-    end
+    local isEnough = data:IsEnough()
     LanguageMgr:SetText(txtBtn1, isEnough and 38015 or 38014)
     --
     UIUtil:SetRedPoint(btn1, isEnough, 150, 43, 0)
@@ -120,48 +126,127 @@ end
 function SetNode5()
     CSAPI.SetText(txtDesc5, cfg.des)
     endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
-    isSpring = true
+end
+
+function SetNode6()
+    -- time 
+    CSAPI.SetText(txtTime6, cfg.title)
+    -- desc 
+    CSAPI.SetText(txtDesc6, cfg.des)
+    -- items
+    local rewardCfg = SignInMgr:GetRewardCfgByType(ActivityListType.SignInGift) or {}
+    items6 = items6 or {}
+    for k, v in ipairs(rewardCfg.infos) do
+        local item = items6[k]
+        if (item) then
+            CSAPI.SetGOActive(item.gameObject, true)
+            item.Refresh(v)
+        else
+            ResUtil:CreateUIGOAsync("MenuBuy/MenuBuyItem6", this["grids6" .. k], function(go)
+                local item = ComUtil.GetLuaTable(go)
+                item.Refresh(v)
+            end)
+        end
+    end
+    -- red 
+    UIUtil:SetRedPoint(btn6, data:GetRed(), 124, 33.5, 0)
+end
+
+-- 首冲奖励2 有时间
+function SetNode7()
+    local isEnough = data:IsEnough()
+    LanguageMgr:SetText(txtBtn7, isEnough and 38015 or 38014)
+    --
+    UIUtil:SetRedPoint(btn7, isEnough, 150, 43, 0)
+    -- time 
+    if (not endTime or TimeUtil:GetTime() >= endTime) then
+        timer = nil
+    else
+        timer = Time.time
+    end
+    CSAPI.SetGOActive(time7, timer ~= nil)
+end
+
+-- 首冲奖励2 有时间
+function SetNode8()
+    local isEnough = data:IsEnough()
+    LanguageMgr:SetText(txtBtn8, isEnough and 38015 or 38014)
+    --
+    UIUtil:SetRedPoint(btn8, isEnough, 150, 43, 0)
+    -- time 
+    if (not endTime or TimeUtil:GetTime() >= endTime) then
+        timer = nil
+    else
+        timer = Time.time
+    end
+    CSAPI.SetGOActive(time8, timer ~= nil)
+end
+
+-- 2025新年礼包
+function SetNode9()
+    CSAPI.SetText(txtDesc9, cfg.title)
+    endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+    local reward = cfg.item[1]
+    curItem = BagMgr:GetFakeData(reward[1], reward[2])
+    -- icon 
+    ResUtil.IconGoods:Load(icon9, curItem:GetIcon() .. "_3")
+    -- num
+    CSAPI.SetText(txt9_Num, reward[2] .. "")
+end
+
+function SetTimes()
+    if (cfg.id == 7 or cfg.id == 8) then
+        local timeTab = TimeUtil:GetTimeTab(endTime - TimeUtil:GetTime())
+        local h = timeTab[2] > 9 and timeTab[2] or "0" .. timeTab[2]
+        local m = timeTab[3] > 9 and timeTab[3] or "0" .. timeTab[3]
+        local s = timeTab[4] > 9 and timeTab[4] or "0" .. timeTab[4]
+        local str = string.format("%s:%s:%s", h, m, s)
+        LanguageMgr:SetText(this["txtTime" .. cfg.id], 13020, timeTab[1], str)
+    end
 end
 
 function SetClose()
-    local pos = closePos[type]
+    local pos = closePos[data:GetID()]
     CSAPI.SetAnchor(btnClose, pos[1], pos[2])
 end
-function SetTips()
-    -- 如果是首充并且在可领状态，则隐藏
-    if (cfg.nType == MenuBuyState.First) then
-        local amount = PlayerClient:GetPayAmount()
-        if (amount / 100 >= 6) then
-            CSAPI.SetGOActive(btnSkip, false)
-            return
-        end
-    end
-    CSAPI.SetGOActive(btnSkip, true)
 
-    local pos = skipPos[type]
+function SetTips()
+    -- -- 如果是首充并且在可领状态，则隐藏
+    -- if (cfg.nType == MenuBuyState.First) then
+    --     local amount = PlayerClient:GetPayAmount()
+    --     if (amount / 100 >= 6) then
+    --         CSAPI.SetGOActive(btnSkip, false)
+    --         return
+    --     end
+    -- end
+    -- CSAPI.SetGOActive(btnSkip, true)
+    --
+    local pos = skipPos[data:GetID()]
     CSAPI.SetAnchor(btnSkip, pos[1], pos[2])
 
     -- tick 
-    day = TimeUtil:GetTime3("day")
-    local dayRecord = PlayerPrefs.GetString(MenuMgr:GetMenuBuySaveStr(cfg.id), "0")
-    if (dayRecord ~= "0" and dayRecord == tostring(day)) then
-        isSet = true
-    end
-    CSAPI.SetGOActive(skip, isSet)
+    -- day = TimeUtil:GetTime3("day")
+    -- local dayRecord = PlayerPrefs.GetString(MenuMgr:GetMenuBuySaveStr(cfg.id), "0")
+    -- if (dayRecord ~= "0" and dayRecord == tostring(day)) then
+    --     isSet = true
+    -- end
+    CSAPI.SetGOActive(skip, data:IsTick())
 end
 
 function OnClickSkip()
-    if (not isSet) then
-        PlayerPrefs.SetString(MenuMgr:GetMenuBuySaveStr(cfg.id), tostring(day))
-    else
-        PlayerPrefs.SetString(MenuMgr:GetMenuBuySaveStr(cfg.id), "0")
-    end
-    isSet = not isSet
+    -- if (not isSet) then
+    --     PlayerPrefs.SetString(MenuMgr:GetMenuBuySaveStr(cfg.id), tostring(day))
+    -- else
+    --     PlayerPrefs.SetString(MenuMgr:GetMenuBuySaveStr(cfg.id), "0")
+    -- end
+    data:SetTick()
+    -- isSet = not isSet
     SetTips()
 end
 
 -- 前往充值/领取
 function OnClickBtn1()
+    local isEnough = data:IsEnough()
     if (not isEnough) then
         JumpMgr:Jump(140001) -- 跳到商店
     else
@@ -189,6 +274,24 @@ function OnClickBtn5()
     ShopProto:Buy2(cfg.shopItem, {})
     view:Close()
 end
+
+-- 前往  商城/签到
+function OnClickBtn6()
+    local isEnough = data:IsEnough()
+    if (not isEnough) then
+        JumpMgr:Jump(140001) -- 跳到商店
+    else
+        JumpMgr:Jump(180005) -- 跳到签到
+    end
+    view:Close()
+end
+
+-- 立即领取
+function OnClickBtn9()
+    ShopProto:Buy2(cfg.shopItem, {})
+    view:Close()
+end
+
 function OnClickIcon2()
     if (curItem) then
         GridRewardGridFunc({

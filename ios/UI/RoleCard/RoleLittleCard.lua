@@ -9,6 +9,9 @@ local attrs = {}; -- 光环属性子物体
 local isEvent=false;
 local isDrag=false;
 local eventMgr=nil;
+local Input=CS.UnityEngine.Input;
+local fingerId=nil;
+
 function Awake()
     eventMgr = ViewEvent.New();
     dragScript = ComUtil.GetCom(btnClick, "DragCallLua");
@@ -38,6 +41,7 @@ function OnRecycle()
     if (cg_go~=nil) then
         cg_go.alpha = 1
     end
+    fingerId=nil;
 end
 
 function SetClickCB(_cb)
@@ -57,7 +61,6 @@ function Clean()
     SetFormation()
     SetSelect()
     SetLock()
-    -- SetColor(1, 1)
     SetTime()
     SetTipsObj()
     SetNPCObj();
@@ -66,12 +69,8 @@ function Clean()
     SetBGIcon()
     SetAttrs(false);
     SetBlack(false)
-    -- if #attrs>0 then
-    -- 	for k,v in ipairs(attrs) do
-    -- 		CSAPI.RemoveGO(v.gameObject);
-    -- 	end
-    -- end
-    -- attrs={};
+    --
+    CSAPI.SetGOActive(imgStar,false)
 end
 
 -- _elseData 根据key来划分数据  elseData:{key,isSelect,showAttr,showTips,isPlus:置空时是否显示加号,sr:当启用dragcalllua时用来解决sr拖拽方法被覆盖的问题}
@@ -87,10 +86,18 @@ function Refresh(_cardData, _elseData)
     ActiveClick(true)
     if (cardData and cardData.data ~= nil) then
         CSAPI.SetGOActive(Image, true)
+        if elseData and elseData.disDrag==true  then
+            CSAPI.SetText(txt_tips,LanguageMgr:GetByID(49027));
+            canClick=false;
+        else
+            CSAPI.SetText(txt_tips,LanguageMgr:GetByID(26024));
+        end
         if elseData and elseData.key == "TeamEdit" then
             RefreshByTeamEdit()
         elseif elseData and elseData.key == "TeamFormation" then
             RefreshByFormation()
+        elseif elseData and elseData.key=="TotalBattle" then
+            RefreshByTotalBattle();
         else
             SetIcon(cardData:GetSmallImg())
             SetTag(cardData:GetData().tag)
@@ -109,7 +116,7 @@ function Refresh(_cardData, _elseData)
             SetName(cardData:GetName())
             local _index = RoleTool.GetStateStr(cardData)
             SetState(_index)
-            SetFormation(cardData:GetID())
+            SetFormation(cardData:GetID(),elseData and elseData.hideFormat)
             SetSelect(elseData and elseData.isSelect)
             SetLock(cardData:IsLock())
             -- SetColor(cardData:GetQuality(), _index)
@@ -130,6 +137,11 @@ function Refresh(_cardData, _elseData)
         else
             CSAPI.SetScriptEnable(btnClick, "DragCallLua", false);
         end
+        --
+        CSAPI.SetGOActive(imgStar,cardData.isStar)
+        if(cardData.isStar)then 
+            CSAPI.SetGOActive(npcObj,false)
+        end 
     else
         Clean();
         local imgName="btn_3_04";
@@ -141,6 +153,33 @@ function Refresh(_cardData, _elseData)
         end
         SetEmpty(imgName)
     end
+end
+
+function RefreshByTotalBattle()
+    SetIcon(cardData:GetSmallImg())
+    SetTag(cardData:GetData().tag)
+    SetLv(cardData:GetLv())
+    SetPro();
+    SetBGIcon(cardData:GetQuality())
+    SetName(cardData:GetName())
+    local _index = RoleTool.GetStateStr(cardData)
+    if _index == 1 then
+        -- SetColor(cardData:GetQuality(), _index)
+        SetState(_index)
+    else
+        -- SetColor(cardData:GetQuality())
+        SetState()
+    end
+    SetFormation();
+    SetAttrs(elseData and elseData.showAttr)
+    SetGridIcon(cardData:GetCfg().gridsIcon);
+    SetSelect(elseData and elseData.isSelect)
+    SetLock()
+    SetTime()
+    SetTipsObj(elseData and elseData.showTips);
+    SetNPCObj(elseData and elseData.showNPC);
+    SetIcon(cardData:GetSmallImg())
+    SetName(cardData:GetName())
 end
 
 function SetEmpty(imgName)
@@ -200,10 +239,8 @@ function RefreshByFormation()
     SetName(cardData:GetName())
     local _index = RoleTool.GetStateStr(cardData)
     if _index == 1 then
-        -- SetColor(cardData:GetQuality(), _index)
         SetState(_index)
     else
-        -- SetColor(cardData:GetQuality())
         SetState()
     end
     if elseData and elseData.isFormation then
@@ -228,7 +265,6 @@ function RefreshByTeamEdit()
     SetLv(cardData:GetLv())
     SetPro();
     SetName(cardData:GetName())
-    -- SetColor(cardData:GetQuality())
     SetBGIcon(cardData:GetQuality())
     SetFormation()
     SetSelect()
@@ -257,50 +293,6 @@ function SetBGIcon(_quality)
     end
     ResUtil.CardBorder:Load(bgIcon, name);
 end
-
--- -- 稀有度:1 > 等级:2 > 好感度:3 > 入手顺序:4 > 性能:5 > 保护:6 > 热值：7>属性：8>9：表id
--- function SetPro()
---     if (elseData and (elseData.listType or elseData.isCost)) then
---         CSAPI.SetGOActive(pro, true)
---         local str = ""
---         local sort = RoleMgr:GetSortType(elseData.listType).Sort[1]
---         local iconName = Cfgs.CfgRoleSortEnum:GetByID(sort).icon
---         if elseData.isCost then
---             -- 热值
---             local cur, max = cardData:GetHot(), cardData:GetCurDataByKey("hot")
---             cur = cur <= 10 and StringUtil:SetByColor(cur, "FF381E") or cur
---             str = string.format("%s/%s", cur, max)
---             iconName = Cfgs.CfgRoleSortEnum:GetByID(7).icon
---         elseif (sort == 3) then
---             -- 好感
---             local cur = cardData:GetFavorability()
---             local max = CRoleMgr:GetCRoleMaxLv()
---             -- str = string.format("%s/%s", cur, max)
---             str=tostring(cur)
---         elseif (sort == 5) then
---             -- 性能
---             str = cardData:GetProperty() .. ""
---         elseif (sort == 8) then
---             -- 属性
---             local mulID = RoleMgr:GetMultiID(elseData.listType)
---             local proCfg = Cfgs.CfgCardPropertyEnum:GetByID(mulID)
---             str = cardData:GetCurDataByKey(proCfg.sFieldName) .. ""
---             iconName = proCfg.icon
---         else
---             CSAPI.SetGOActive(pro, false)
---             return
---         end
---         CSAPI.SetGOActive(lvObj, false);
---         CSAPI.SetText(txtPro, str)
---         if (iconName) then
---             iconName = string.format("UIs/AttributeNew2/%s.png", iconName)
---             CSAPI.LoadImg(pro, iconName, true, nil, true)
---         end
---     else
---         CSAPI.SetGOActive(pro, false)
---     end
--- end
-
 
 -- 筛选值条
 function SetPro()
@@ -342,9 +334,6 @@ function SetPro()
     end
 end
 
-
-
-
 -- 是否激活碰撞体
 function ActiveClick(active)
     CSAPI.SetGOActive(btnClick, active)
@@ -367,6 +356,9 @@ function OnClick()
 end
 
 function OnHolder()
+    if elseData~=nil and elseData.disDrag==true then
+        return;
+    end
     if elseData~=nil and elseData.hcb ~= nil then
         elseData.hcb(this);
     else
@@ -438,13 +430,14 @@ function SetName(str)
 end
 
 function SetState(_index)
-    if _index then
-        CSAPI.SetGOActive(imgState, true)
-        local str = LanguageMgr:GetByID(2999 + _index)
-        CSAPI.SetText(txtState, "· " .. str)
-    else
-        CSAPI.SetGOActive(imgState, false)
-    end
+    --用不到了，统一隐藏
+    -- if _index then
+    --     CSAPI.SetGOActive(imgState, true)
+    --     local str = LanguageMgr:GetByID(2999 + _index)
+    --     CSAPI.SetText(txtState, "· " .. str)
+    -- else
+    --     CSAPI.SetGOActive(imgState, false)
+    -- end
 end
 
 -- 编队使用的设置状态，用于显示卡牌是NPC还是强制出战还是支援
@@ -458,11 +451,21 @@ function SetState2(str)
 end
 
 -- 第几编队
-function SetFormation(_cid)
+function SetFormation(_cid,_hideFormat)
+    local hideFormat = _hideFormat==nil and false or _hideFormat
+    if(hideFormat) then 
+        CSAPI.SetGOActive(format, false)
+        return 
+    end 
+
     local cid = _cid
-    local index = TeamMgr:GetCardTeamIndex(cid)
+    local teamType = elseData and elseData.teamType or nil
+    local index = TeamMgr:GetCardTeamIndex(cid,teamType,true)
     if index ~= -1 then
         CSAPI.SetGOActive(format, true)
+        if(teamType and teamType==eTeamType.RogueS) then 
+            index = index - eTeamType.RogueS
+        end 
         index = index < 10 and "0" .. index or index .. ""
         CSAPI.SetText(txtFormat1, index)
     else
@@ -476,16 +479,6 @@ end
 function SetLock(b)
     CSAPI.SetGOActive(lockImg, b)
 end
-
--- 颜色
--- function SetColor(_quality, _index)
---     local name = "btn_1_03";
---     if _quality then
---         _quality = _quality >= 3 and _quality or 3;
---         name = "btn_1_0" .. tostring(_quality);
---     end
---     ResUtil.CardBorder:Load(color, name);
--- end
 
 function SetTipsObj(isShow)
     CSAPI.SetGOActive(tipsObj, isShow == true);
@@ -533,9 +526,19 @@ local pressTime=0;
 local cDeltaX=0;
 local cDeltaY=0;
 function OnBeginDragXY(x, y, deltaX, deltaY)
-    if isEvent == true then
-        return;
-    end
+    if isEvent == true or (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+     end
+     if elseData and elseData.disDrag==true then
+         do return end;
+     end
+     if Input.touchCount>0 and TeamMgr:GetDragFingerID()==nil then
+         fingerId=Input:GetTouch(0).fingerId;
+         TeamMgr:SetDragFingerID(fingerId)
+        --  for i=1,Input.touchCount do
+        --       LogError(Input:GetTouch(i-1).fingerId);
+        --   end
+      end
     pressTime=0;
     cDeltaX=deltaX;
     cDeltaY=deltaY;
@@ -565,6 +568,12 @@ end
 -- 左右移动为上阵，上下移动为滑动
 function OnDragXY(x, y, deltaX, deltaY)
     -- Log("OnDrag....")
+    if  (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+    end
+    if elseData and elseData.disDrag==true then
+		return;
+	end
     cDeltaX=cDeltaX+deltaX;
     cDeltaY=cDeltaY+deltaY;
     pressTime=pressTime+Time.deltaTime;
@@ -599,6 +608,14 @@ function OnDragXY(x, y, deltaX, deltaY)
 end
 
 function OnEndDragXY(x, y, deltaX, deltaY)
+    if  (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
+        do return end;
+    end
+    if elseData and elseData.disDrag==true then
+		return;
+	end
+    TeamMgr:SetDragFingerID(nil);
+    fingerId=nil;
     EventMgr.Dispatch(EventType.TeamView_DragMask_Change, false)
     -- Log("OnEndDrag....")
     -- Log("isEvent:"..tostring(isEvent))

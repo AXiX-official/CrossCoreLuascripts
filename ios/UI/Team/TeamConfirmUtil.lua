@@ -1,7 +1,7 @@
 local this={};
 
 --创建并显示格子信息
-function this.CreateGrids(teamData, grids,parent, cb)
+function this.CreateGrids(teamData, grids,parent, cb,openSetting)
     for i=1,6 do
         local data=nil;
         if teamData then
@@ -10,13 +10,13 @@ function this.CreateGrids(teamData, grids,parent, cb)
         if i>#grids then
             ResUtil:CreateUIGOAsync("TeamConfirm/TeamConfirmGrid",parent,function(go)
                 local lua=ComUtil.GetLuaTable(go);
-                lua.Refresh(data,i);
+                lua.Refresh(data,i,openSetting);
                 lua.SetCB(cb);
                 table.insert(grids,lua);
             end);
         else
             lua=grids[i]
-            lua.Refresh(data,i);
+            lua.Refresh(data,i,openSetting);
             lua.SetCB(cb);
         end
         -- for k,v in ipairs(grids) do --设置层级

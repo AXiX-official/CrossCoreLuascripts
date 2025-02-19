@@ -1,18 +1,8 @@
 local this = {};
 
 function this.GetNames(_type)
-    if _type == DungeonInfoType.Normal then
-        return this.Normal()
-    elseif _type == DungeonInfoType.Tower then
-        return this.Tower()
-    elseif _type == DungeonInfoType.Course then
-        return this.Course()
-    elseif _type == DungeonInfoType.Trials then
-        return this.Trials()
-    elseif _type == DungeonInfoType.Danger then
-        return this.Danger()
-    elseif _type == DungeonInfoType.Plot then
-        return this.Plot()
+    if this[_type] then
+        return this[_type]()
     end
 end
 
@@ -29,7 +19,7 @@ function this.Course()
 end
 
 function this.Trials()
-    return {"Title", "Level", "Target", "Badge", "Danger", "Details","Double","Button"}
+    return {"Title", "Level", "Target", "Danger4", "Details","Double","Button"}
 end
 
 function this.Danger()
@@ -38,6 +28,58 @@ end
 
 function this.Plot()
     return  {"Title", "Level", "Plot", "Output","PlotButton"}
+end
+
+function this.Feast()
+    return  {"Title", "Level", "Target", "Output", "Details","Double","Button2"}
+end
+
+function this.TotalBattle()
+    return  {"Title2", "Level", "Total", "Output","Danger2" ,"Details","Button3"}
+end
+
+function this.Summer()
+    return {"Title3","Level2","Target2","Output2","Details","Double2","Button2"}
+end
+
+function this.SummerPlot()
+    return {"Title3","Level2","Plot2","Output2","PlotButton"}
+end
+
+function this.SummerDanger()
+    return {"Title3","Level2","Target2","Danger3","Details","Double2","Button2"}
+end
+
+function this.SummerSpecial()
+    return {"Title3","Level2","Plot2","Output2","Details","Button2"}
+end
+
+function this.Night()
+    return {"NightTitle","NightLevel","NightTarget","NightOutput","NightDetails","Double","NightButton"},"DungeonActivity9"
+end
+
+function this.NightPlot()
+    return {"NightTitle","NightPlot","NightOutput","NightPlotButton"},"DungeonActivity9"
+end
+
+function this.NightDanger()
+    return {"NightTitle","NightLevel","NightTarget","NightDanger","NightDetails","Double","NightButton"},"DungeonActivity9"
+end
+
+function this.NightSpecial()
+    return {"NightTitle","NightLevel","NightPlot","NightOutput","NightDetails","NightButton"},"DungeonActivity9"
+end
+
+function this.Colosseum()
+    return {"Title4","Target","Output","Details","Button4"}
+end
+
+function this.GlobalBoss()
+    return {"BossTitle","BossLevel","BossState","BossTime","BossButton1","BossDetails","BossButton2"},"GlobalBoss"
+end
+
+function this.RogueT()
+    return {"Title5","Target3","Output3","Details2","Button5"}
 end
 
 return this; 

@@ -27,7 +27,9 @@ function Clean()
 	-- CSAPI.SetGOActive(bg,true);
 	SetCount()	
 	SetDownCount()
+	SetLimitTag();
 	SetIsUp(false)
+	SetDayObj();
 	CSAPI.SetGOActive(tBorder,false)
 	CSAPI.SetGOActive(tIcon,false)
 	if redObj~=nil then
@@ -51,6 +53,10 @@ function LoadIcon(iconName)
 	if(iconName) then
 		ResUtil.IconGoods:Load(icon, iconName .. "")
 	end
+end
+
+function SetLimitTag(isLimit)
+	CSAPI.SetGOActive(limitObj,isLimit==true);
 end
 
 --自定义的图集加载图片 loader:ResIconUtil.New返回的对象
@@ -102,6 +108,13 @@ function Refresh(data, _elseData)
 		if data:GetClassType()=="GoodsData" then
 			local cfg=data:GetCfg();
 			if cfg.type==ITEM_TYPE.EQUIP or cfg.type==ITEM_TYPE.EQUIP_MATERIAL then
+				if cfg.type==ITEM_TYPE.EQUIP_MATERIAL then
+					CSAPI.SetImgColor(bg, 255, 255, 255, 0);
+					GridUtil.LoadEquipIcon(icon,tIcon,data:GetIcon(),data:GetQuality(),cfg.type==ITEM_TYPE.EQUIP_MATERIAL,false)
+					isLoadIcon=true;
+				else
+					CSAPI.SetImgColor(bg, 255, 255, 255, 255);
+				end
 				frameList=EquipQualityFrame
 			elseif cfg.type==ITEM_TYPE.CARD_CORE_ELEM then
 				CSAPI.SetGOActive(tIcon,true)
@@ -110,12 +123,27 @@ function Refresh(data, _elseData)
 				CSAPI.SetGOActive(tIcon,true)
 				GridUtil.LoadCIcon(icon,tIcon,cfg,false);
 				isLoadIcon=true;
-			elseif cfg.type==ITEM_TYPE.SEL_BOX then
-				if checkRed then
-					redObj=UIUtil:SetRedPoint(root,true,78,78);
+			elseif cfg.type==ITEM_TYPE.PROP and (cfg.dy_value1==PROP_TYPE.IconFrame or cfg.dy_value1==PROP_TYPE.Icon or cfg.dy_value1==PROP_TYPE.IconTitle) then --头像框/头像
+				local dayTips=nil;
+				local dyArr=cfg.dy_arr;
+				if dyArr and dyArr[2]~=0 then
+					local result=TimeUtil:GetTimeTab(dyArr[2]);
+					if result[1]>0 then
+						dayTips=LanguageMgr:GetByID(46006,result[1]);
+					elseif result[2]>0 then
+						dayTips=LanguageMgr:GetByID(46007,result[2]);
+					elseif result[3]>0 then
+						dayTips=LanguageMgr:GetByID(46008,result[3]);
+					end
+				-- elseif dyArr and dyArr[2]==0 then
+				-- 	dayTips=LanguageMgr:GetByID(46009);
 				end
+				SetDayObj(dayTips);
 			end
 			scale=data:GetIconScale();
+			if checkRed then
+				redObj=UIUtil:SetRedPoint(root,this.data:CheckRed(),78,78);
+			end
 		elseif data:GetClassType()=="EquipData" then
 			frameList=EquipQualityFrame
 			scale=data:GetIconScale();
@@ -134,6 +162,7 @@ function Refresh(data, _elseData)
 			-- 	isLoadIcon=true;
 			-- end
 		end
+		SetLimitTag(data:IsExipiryType());
 		LoadFrame(data:GetQuality());
 		-- SetIcon(data:GetIcon());
 		CSAPI.SetGOActive(icon, true);
@@ -192,6 +221,12 @@ end
 
 function SetIconScale(scale)
 	CSAPI.SetScale(icon, scale, scale, scale);
+end
+
+--设置有效天数
+function SetDayObj(txt)
+	CSAPI.SetGOActive(dayObj,txt~=nil)
+	CSAPI.SetText(txt_day,txt);
 end
 
 function SetCountText(num)

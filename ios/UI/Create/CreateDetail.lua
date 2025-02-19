@@ -65,8 +65,8 @@ function RefreshPanel()
         SetRecord()
     end
 
-    CSAPI.SetGOActive(Image1, curIndex1 == 2)
-    CSAPI.SetGOActive(Image2, curIndex1 == 1)
+    CSAPI.SetGOActive(Image1, curIndex1 == 1)
+    CSAPI.SetGOActive(Image2, curIndex1 == 2)
     CSAPI.SetGOActive(Image3, curIndex1 == 3)
 end
 
@@ -74,7 +74,7 @@ function SetRule()
     --
     local ruleIDs = data:GetCfg().cardRule
     ruleItems = ruleItems or {}
-    ItemUtil.AddItems("Create/CreaterRuleItem", ruleItems, ruleIDs, ruleGrid)
+    ItemUtil.AddItems("Create/CreaterRuleItem", ruleItems, ruleIDs, ruleGrid,nil,1, data:GetCfg().sName)
     --
     curPanelGO = sr
     SetCruGOActive(true)

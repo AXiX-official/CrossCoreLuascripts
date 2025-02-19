@@ -3,13 +3,16 @@
 function OnOpen()
     UIUtil:ShowAction(rootNode, nil, UIUtil.active2);
     if data then
-        CSAPI.SetText(text_skillName,data.name);
-        CSAPI.SetText(text_lv,string.format(LanguageMgr:GetTips(1009),tostring(data.lv)));
-        CSAPI.SetText(text_lv2,"");
-        -- CSAPI.SetText(text_lv2,data.lv ~= nil and "LV." or "");
-        CSAPI.SetText(text_desc,data.desc);
-        -- ResUtil.IconSkill:Load(icon,data.icon,true);
-        -- CSAPI.SetRTSize(icon,120,120)
+        local cfg = Cfgs.CfgSkillDesc:GetByID(data.id)
+        if cfg then
+            CSAPI.SetText(text_skillName,cfg.name);
+            CSAPI.SetText(text_lv,string.format(LanguageMgr:GetTips(1009),tostring(data.lv)));
+            CSAPI.SetText(text_lv2,"");
+            -- CSAPI.SetText(text_lv2,data.lv ~= nil and "LV." or "");
+            CSAPI.SetText(text_desc,cfg.desc);
+            -- ResUtil.IconSkill:Load(icon,data.icon,true);
+            -- CSAPI.SetRTSize(icon,120,120)
+        end
     end
 end
 

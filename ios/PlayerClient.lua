@@ -7,8 +7,8 @@ function this:SetInfo(proto)
     self.data = proto
     self.info = proto.infos;
     self.can_modify_name = proto.can_modify_name;
-    self:SetPanelId(proto.panel_id)
-    self:SetIconId(proto.icon_id)
+    -- self:SetPanelId(proto.panel_id)
+    -- self:SetIconId(proto.icon_id)
     self.add_exp = proto.add_exp or 0
     self.add_cost = 0; -- cost值上限buff
     self.add_gold = 0; -- 金币上限buff
@@ -31,6 +31,9 @@ function this:UpdateInfo(proto)
         self.data.t_hot = proto.t_hot
         EventMgr.Dispatch(EventType.Player_HotChange) -- 推送体能刷新
     end
+    if(self.oldLv~=nil and self.oldLv~=self:GetLv())then 
+        MenuMgr:UpdateDatas() --刷新关卡解锁状态
+    end
     EventMgr.Dispatch(EventType.Player_Update)
 end
 
@@ -50,7 +53,11 @@ end
 function this:GetUid()
     return self.info and self.info.uid or nil
 end
-
+function this:Clearuid()
+    if self.info and self.info.uid then
+        self.info.uid=nil;
+    end
+end
 -- 名称
 function this:GetName()
     return self.info and self.info.name or nil
@@ -162,19 +169,31 @@ end
 
 -- 头像id(头像表id或模型表id)
 function this:GetIconId()
-    return self.icon_id
+    return self.data.icon_id
 end
 --选择男女主后会返回一次
 function this:SetIconId(_icon_id)
-    self.icon_id = _icon_id
+    self.data.icon_id = _icon_id
+end
+
+--返回头像框初始化需要结构体
+function this:GetHeadFrameInfo()
+    return {
+        uid=self:GetUid(),
+        name=self:GetName(),
+        lv=self:GetLv(),
+        icon_id=self:GetIconId(),
+        icon_frame=self:GetHeadFrame();
+        sel_card_ix=self:GetSex();
+    }
 end
 
 -- 看板id（）
 function this:GetPanelId()
-    return self.panel_id
+    return self.data.panel_id
 end
 function this:SetPanelId(_panel_id)
-    self.panel_id = _panel_id
+    self.data.panel_id = _panel_id
 end
 
 --头像框id
@@ -185,11 +204,11 @@ function this:SetHeadFrame(icon_frame)
     self.icon_frame = icon_frame or 1
 end
 
--- 看板是角色(不在头像表，那就是角色头像)
-function this:KBIsRole()
-    local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(self.panel_id)
-    return cfg==nil 
-end
+-- -- 看板是角色(不在头像表，那就是角色头像)
+-- function this:KBIsRole()
+--     local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(self.data.panel_id)
+--     return cfg==nil 
+-- end
 
 -- 队长模型表id
 function this:GetModelId()
@@ -293,7 +312,10 @@ end
 function this:GetDiamond()
     return self.info and self.info.diamond or 0
 end
-
+---获取充值获得的钻石 数量
+function this:GetFreeDiamond()
+     return self.info and self.info.diamond_pay or 0
+end
 -- ==============================--
 -- desc:更新货币
 -- time:2019-09-17 10:47:21
@@ -308,6 +330,7 @@ function this:UpdateCoin(id, num)
     elseif (id == ITEM_ID.DIAMOND) then
         -- self.info.diamond = num <= 0 and 0 or num
         self.info.diamond = num or 0;
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then ShiryuSDK.OnRoleInfoUpdate(); end
     elseif (id == g_ArmyCoinId) then
         self.info.army_coin = num <= 0 and 0 or num
     elseif (id == g_AbilityCoinId) then
@@ -317,6 +340,8 @@ function this:UpdateCoin(id, num)
         self.data.BIND_DIAMOND = num <= 0 and 0 or num
     elseif (id == ITEM_ID.POWER_CEILING) then
         self.data.POWER_CEILING = num <= 0 and 0 or num
+    elseif (id == ITEM_ID.DIAMOND_PAY) then
+        self.info.diamond_pay = num or 0;
     end
 end
 
@@ -343,25 +368,29 @@ function this:GetCoin(id)
         return self.data.BIND_DIAMOND or 0
     elseif (id == ITEM_ID.POWER_CEILING) then
         return self.data.POWER_CEILING or 0
+    elseif (id == ITEM_ID.DIAMOND_PAY) then
+        return self.info.diamond_pay or 0
     end
     return 0
 end
 
 -- 背景
-function this:GetBG()
-    local _data = FileUtil.LoadByPath("bgNew.txt")
-    local id = 1
-    if (_data and _data.id) then
-        id = _data.id
-    end
-    return id
-end
+-- function this:GetBG()
+--     -- local _data = FileUtil.LoadByPath("bgNew.txt")
+--     -- local id = 1
+--     -- if (_data and _data.id) then
+--     --     id = _data.id
+--     -- end
+--     -- return id
+--     return self.data.background_id or 1
+-- end
 
-function this:SetBG(_id)
-    FileUtil.SaveToFile("bgNew.txt", {
-        id = _id
-    })
-end
+-- function this:SetBG(_id)
+--     -- FileUtil.SaveToFile("bgNew.txt", {
+--     --     id = _id
+--     -- })
+--     self.data.background_id = _id 
+-- end
 
 function this:GetNewPlayerFightStateKey()
     return "new_player_fight_state";
@@ -369,6 +398,9 @@ end
 
 -- 进入游戏
 function this:EnterGame()
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        ShiryuSDK.OnLoginServer();
+    end
     -- 测试用
     if (_G.enter_last_dirll_fight) then
         FuncUtil:Call(function()
@@ -503,7 +535,7 @@ function this:NewPlayerFight(newPlayerFightIndex)
     newPlayerFightIndex = newPlayerFightIndex or 2;
     newPlayerFightIndex = math.max(2, newPlayerFightIndex);
     self.newPlayerFightIndex = newPlayerFightIndex;
-
+    FightClient.NewPlayerDrasu=true;
     -- LogError("新手战斗" .. newPlayerFightIndex);
     -- 新手强制战斗
     local fightGroupIDs = self:GetNewPlayerFightIDs(newPlayerFightIndex);
@@ -522,12 +554,13 @@ function this:NewPlayerFight(newPlayerFightIndex)
             PlayerClient:SetNewPlayerFightStateKey(nextNewPlayerFightIndex);
             if (not PlayerClient:HasNextNewPlayerFight()) then -- 巅峰战斗最后一场新手战斗
                 EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "new_player_fight_pass");
+
             end
             FightActionMgr:Push(FightActionMgr:Apply(FightActionType.FightEnd, {
                 custom_result = 1,
                 new_player_fight = 1,
                 bIsWin = 1,
-                content = StringConstant.fight_result1
+                content = ""
             }));
         end);
     else
@@ -563,24 +596,51 @@ end
 
 -- 注销
 function this:Exit()
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        ShiryuSDK.Logout()
+    else
+        PlayerClient:PlayerClientExitClear()
+        PlayerClient:EndGameExitBackLogin()
+        --self.canEnter = nil;
+        --self.switchState = nil;
+        --self.openSummon = nil;
+        --self.newPlayerFightIndex = nil;
+        --self.sdkInfo = nil;
+        --self:SetChangeLine();
+        --MgrCenter:Clear()
+        --LoginProto:Logout()
+        --FightClient:Reset();
+        --BattleMgr:SetAIMoveState(false);
+        --EventMgr.Dispatch(EventType.Login_Quit, nil, true);
+    end
+end
+---清除本脚本变量
+function this:PlayerClientExitClear()
     self.canEnter = nil;
     self.switchState = nil;
     self.openSummon = nil;
     self.newPlayerFightIndex = nil;
     self.sdkInfo = nil;
     self:SetChangeLine();
-
+end
+---离开游戏返回登录需要清除的变量
+function this:EndGameExitBackLogin()
     MgrCenter:Clear()
     LoginProto:Logout()
     FightClient:Reset();
     BattleMgr:SetAIMoveState(false);
     EventMgr.Dispatch(EventType.Login_Quit, nil, true);
 end
-
+---SDK退登返回 调用
+function this:SDKExit()
+    PlayerClient:PlayerClientExitClear()
+    PlayerClient:EndGameExitBackLogin()
+end
 -- 播放战斗OP
 function this:PlayFightOP()
-    -- LogError("开始播放剧情战斗动画");
-    CSAPI.StopSound();
+    FightClient.NewPlayerDrasu=false;
+    --LogError("开始播放剧情战斗动画");
+    --[[ CSAPI.StopSound();
     CSAPI.SetSoundOff(true);
     CSAPI.DisableInput(1000);
     CSAPI.OpenView("VideoPlayer", {
@@ -588,15 +648,20 @@ function this:PlayFightOP()
         callBack = self.OnFightVedioComplete,
         caller = self
     });
-
-    BuryingPointMgr:BuryingPoint("after_login", 20066);
+   ]]
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_FIGHT_FINISH);
+    else
+       -- BuryingPointMgr:BuryingPoint("after_login", 20066);
+    end
+    self:OnFightVedioComplete();
 end
 
 -- 剧情战斗动画播放完成
 function this:OnFightVedioComplete()
-    BuryingPointMgr:BuryingPoint("after_login", 30003);
-    CSAPI.CloseView("VideoPlayer");
-    CSAPI.SetSoundOff(false);
+    --BuryingPointMgr:BuryingPoint("after_login", 30003);
+    --CSAPI.CloseView("VideoPlayer");
+    --CSAPI.SetSoundOff(false);
     -- LogError("剧情战斗动画播放完成");
     local fightIds = PlayerClient:GetNewPlayerFightIDs();
     local fightId = fightIds and fightIds[1];
@@ -623,6 +688,13 @@ function this:IsLog() -- 是否统计信息
 end
 
 --------------------------------------体能------------------------------------------
+--是否已达上限
+function this:IsMaxHot()
+    local cur = self:Hot()
+    local max1,max2 = self:MaxHot()
+    return cur>=max1,cur>=max2
+end
+
 -- 自动回复
 function this:AddHot()
     self.info.hot = self.info.hot + 1
@@ -718,11 +790,13 @@ end
 
 -- 角色累计充值金额
 function this:PayRechargeRet(proto)
-    local _c_amount = self.c_amount
-    self.c_amount = proto.c_amount
-    if (_c_amount == nil or self.c_amount ~= _c_amount) then
-        EventMgr.Dispatch(EventType.Pay_Amount_Change)
-    end
+    --local _c_amount = self.c_amount
+    self.c_amount = proto.c_amount or 0
+    --MenuBuyMgr:ConditionCheck3(1,self.c_amount) --改到那里
+    -- if (_c_amount == nil or self.c_amount ~= _c_amount) then
+    --     --EventMgr.Dispatch(EventType.Pay_Amount_Change)
+    --     MenuBuyMgr:ConditionCheck(2,"amountChange")
+    -- end
 end
 function this:GetPayAmount()
     return self.c_amount or 0
@@ -748,5 +822,31 @@ function this:IsPlayBirthDayVoice()
     end 
     return true 
 end
+
+--获取生日 月,日
+function this:GetBirthDay()
+    local birth = self.data.birth
+    if (birth) then
+         return birth[1],birth[2]
+    end
+    return 0,0
+end
+
+--最后设置的角色看板ID
+-- function this:SetLastRoleID(id)
+--     self.data.role_panel_id = id 
+-- end
+-- function this:GetLastRoleID()
+--     return self.data.role_panel_id
+-- end
+
+--称号
+function this:SetIconTitle(title)
+    self.data.icon_title = title
+end
+function this:GetIconTitle()
+    return self.data.icon_title or 1
+end
+
 
 return this;

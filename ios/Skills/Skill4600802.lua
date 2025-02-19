@@ -11,8 +11,8 @@ function Skill4600802:OnBorn(caster, target, data)
 	-- 4600806
 	self:AddBuff(SkillEffect[4600806], caster, self.card, data, 6111)
 end
--- 行动结束2
-function Skill4600802:OnActionOver2(caster, target, data)
+-- 行动结束
+function Skill4600802:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else

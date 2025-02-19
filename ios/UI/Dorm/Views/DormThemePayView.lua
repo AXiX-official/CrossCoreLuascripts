@@ -116,31 +116,56 @@ function CheckEnough()
         local num = v[2] > v[3] and (v[2] - v[3]) or 0
         if (num > 0) then
             local _cfg = Cfgs.CfgFurniture:GetByID(v[1])
-            local _price = tab.selIndex == 0 and _cfg.price_1[1] or _cfg.price_2[1]
-            need = need + _price[2] * num
+            if (not _cfg.special) then
+                local _prices = tab.selIndex == 0 and _cfg.price_1 or _cfg.price_2
+                local _price = _prices and _prices[1] or nil
+                if (_price) then
+                    need = need + _price[2] * num
+                end
+            end
         end
     end
 end
 
 function OnClickPay()
     if (had >= need) then
+        if (need <= 0) then
+            -- 特殊家具 
+            LanguageMgr:ShowTips(15122)
+            return
+        end
+        local func = nil
         if openSetting == 2 then
             if data == nil or data.commId == nil then
                 LogError("传入的数据有误！");
                 return
             end
-            ShopProto:Buy(data.commId, TimeUtil:GetTime(), 1, tab.selIndex == 0 and "price_1" or "price_2",
-                function(proto)
-                    EventMgr.Dispatch(EventType.Shop_View_Refresh);
-                    if proto and next(proto.gets) then
-                        UIUtil:OpenReward({proto.gets})
-                    end
-                end)
+            func = function()
+                ShopProto:Buy(data.commId, TimeUtil:GetTime(), 1, tab.selIndex == 0 and "price_1" or "price_2",nil,nil,
+                    function(proto)
+                        EventMgr.Dispatch(EventType.Shop_View_Refresh);
+                        if proto and next(proto.gets) then
+                            UIUtil:OpenReward({proto.gets})
+                        end
+                    end)
+            end
         else
-            local str = tab.selIndex == 0 and "price_1" or "price_2"
-            DormProto:BuyTheme(cfg.id, str)
+            func = function()
+                local str = tab.selIndex == 0 and "price_1" or "price_2"
+                DormProto:BuyTheme(cfg.id, str)
+            end
         end
-        Close()
+        if (tab.selIndex == 0) then
+            func()
+            Close()
+        else
+            local _cfg2 = Cfgs.ItemInfo:GetByID(cfg.price_2[1][1])
+            local str = LanguageMgr:GetTips(15123, _cfg2.name, need)
+            UIUtil:OpenDialog(str, function()
+                func()
+                view:Close()
+            end)
+        end
     end
 end
 

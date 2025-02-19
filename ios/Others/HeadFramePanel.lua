@@ -1,4 +1,4 @@
-local panelNames = {"HeadFramePanel1", "HeadFramePanel2"}
+local panelNames = {"HeadFramePanel1", "HeadFramePanel2","HeadFramePanel3"}
 local panels = {}
 local curPanel
 local curIndex
@@ -50,6 +50,9 @@ function SetRed()
     -- red 2
     local _pData2 = RedPointMgr:GetData(RedPointType.Head)
     UIUtil:SetRedPoint(page2, _pData2 ~= nil, 112, 21, 0)
+    -- red 2
+    local _pData3 = RedPointMgr:GetData(RedPointType.Title)
+    UIUtil:SetRedPoint(page3, _pData3 ~= nil, 112, 21, 0)
 end
 
 function OnClickClose()

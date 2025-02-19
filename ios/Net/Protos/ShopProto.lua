@@ -12,15 +12,15 @@ end
 
 --获取购买记录返回
 function ShopProto:GetShopInfosAdd(proto)
-    ShopMgr:OnCommodityInfoRet(proto);
-    EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
+    -- ShopMgr:OnCommodityInfoRet(proto);
+    -- EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
 end
 
 --购买物品
-function ShopProto:Buy(cfgId,time,sum,useCost,callBack)
+function ShopProto:Buy(cfgId,time,sum,useCost,voucherList,useJCost,callBack)
     self.buyCallBack=callBack;
     useCost=useCost==nil and "price_1" or useCost;
-    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost}}
+    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost,vouchers=voucherList,useJCost=useJCost}}
 	NetMgr.net:Send(proto);
     UIUtil:AddNetWeakHandle();
 end
@@ -37,6 +37,12 @@ function ShopProto:BuyRet(proto)
     ShopMgr:UpdateData(proto.id,proto.info,true);
     ShopMgr:UpdateMonthDays(proto.m_cnt);
     EventMgr.Dispatch(EventType.Shop_Buy_Ret,proto)
+    if proto and proto.gets and proto.id then
+       local comm=ShopMgr:GetFixedCommodity(proto.id);
+       if comm and comm:GetType()==CommodityItemType.Skin then
+            EventMgr.Dispatch(EventType.Card_Skin_Get)
+       end
+    end
     if self.buyCallBack then
         self.buyCallBack(proto);
         self.buyCallBack=nil
@@ -77,7 +83,9 @@ end
 function ShopProto:GetExchangeInfoRet(proto)
     ShopMgr:SetExchangeData(proto);
     if proto and proto.is_flush then --手动刷新 记录数数
-        BuryingPointMgr:TrackEvents("store_refresh", {store_type=tostring(proto.cfgid)})
+        if CSAPI.IsADV()==false then
+            BuryingPointMgr:TrackEvents("store_refresh", {store_type=tostring(proto.cfgid)})
+        end
     end
     EventMgr.Dispatch(EventType.Shop_RandComm_Refresh)
 end
@@ -93,14 +101,18 @@ function ShopProto:GetShopResetTimeRet(proto)
 end
 
 --获取商店页的开启时间
-function ShopProto:GetShopOpenTime()
+function ShopProto:GetShopOpenTime(isRelink)
     local proto={"ShopProto:GetShopOpenTime",{}};
+    self.isRelink=isRelink;
     NetMgr.net:Send(proto);
 end
 
 function ShopProto:GetShopOpenTimeRet(proto)
     ShopMgr:InitShopOpenTime(proto);
-    EventMgr.Dispatch(EventType.Shop_OpenTime_Ret);
+    if self.isRelink~=true then
+        EventMgr.Dispatch(EventType.Shop_OpenTime_Ret);
+    end
+    self.isRelink=nil;
 end
 
 --获取商店售卖的商品列表，id不发等获取所有商品内容
@@ -114,5 +126,7 @@ end
 
 function ShopProto:GetShopCommodityRet(proto)
     ShopMgr:OnCommodityInfoRet(proto);
-    EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
+    if  proto and proto.is_finish then
+        EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
+    end
 end

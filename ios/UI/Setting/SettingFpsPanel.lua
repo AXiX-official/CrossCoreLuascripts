@@ -33,13 +33,25 @@ end
 function Start()
     -- 画质
     SetHzItems()
-
-    -- 边距
-    if (not jmItem) then
-        local go = ResUtil:CreateUIGO("Setting/SettingSliderItem", bjParent.transform)
-        jmItem = ComUtil.GetLuaTable(go)
-        jmItem.Init(s_screen_scale_key)
+    if CSAPI.IsADV() then
+        if 	UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.WindowsEditor or
+                UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.WindowsPlayer then
+            if (not PCResolution) then
+                local go = ResUtil:CreateUIGO("Setting/SettingPCResolution", bjParent.transform)
+                PCResolution = ComUtil.GetLuaTable(go)
+                picture.transform.localPosition=UnityEngine.Vector3( picture.transform.localPosition.x, picture.transform.localPosition.y-180,0)
+                bjParent.transform.localPosition=UnityEngine.Vector3( bjParent.transform.localPosition.x, bjParent.transform.localPosition.y+480,0)
+            end
+        end
+    else
+        -- 边距
+        if (not jmItem) then
+            local go = ResUtil:CreateUIGO("Setting/SettingSliderItem", bjParent.transform)
+            jmItem = ComUtil.GetLuaTable(go)
+            jmItem.Init(s_screen_scale_key)
+        end
     end
+
 
     -- 帧数
     local zsValue = SettingMgr:GetValue(s_toggle_zs_key)

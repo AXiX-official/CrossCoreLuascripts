@@ -455,3 +455,44 @@ function BuildingProto:PhySleepRet(proto)
         EventMgr.Dispatch(EventType.Favour_CM_Success, proto)
     end
 end
+
+----------------------------------------队伍预设------------------------------------------
+-- 预设队伍角色设置
+function BuildingProto:BuildSetPresetRole(_id, _teamId, _roleIds)
+    local proto = {"BuildingProto:BuildSetPresetRole", {
+        id = _id,
+        teamId = _teamId,
+        roleIds = _roleIds
+    }}
+    NetMgr.net:Send(proto)
+end
+function BuildingProto:BuildSetPresetRoleRet(proto)
+    local matrixData = MatrixMgr:GetBuildingDataById(proto.id)
+    matrixData:SetPresetRoles(proto.infos)
+    EventMgr.Dispatch(EventType.Matrix_Add_PresetTeam)
+end
+
+-- 更改预设队伍名字
+function BuildingProto:BuildSetPresetTeamName(_id, _teamId, _name)
+    local proto = {"BuildingProto:BuildSetPresetTeamName", {
+        id = _id,
+        teamId = _teamId,
+        name = _name
+    }}
+    NetMgr.net:Send(proto)
+end
+function BuildingProto:BuildSetPresetTeamNameRet(proto)
+    local matrixData = MatrixMgr:GetBuildingDataById(proto.id)
+    matrixData:SetTeamName(proto.infos)
+    EventMgr.Dispatch(EventType.Matrix_Add_PresetTeam)
+end
+
+-- 新增预设队伍
+function BuildingProto:BuildAddPresetTeam(_id)
+    local proto = {"BuildingProto:BuildAddPresetTeam"}
+    NetMgr.net:Send(proto)
+end
+function BuildingProto:BuildAddPresetTeamRet(proto)
+    MatrixMgr:SetExtraPresetTeamNum(proto.extraPresetTeamNum)
+    EventMgr.Dispatch(EventType.Matrix_Add_PresetTeam)
+end

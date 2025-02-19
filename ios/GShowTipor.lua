@@ -78,6 +78,20 @@ function GCTipTool:AddArg(t, v, args)
     return args
 end
 
+-- 添加一个参数
+function GCTipTool:AddKeyArg(t, k, v, args)
+    local key = TipAargType[t]
+    if not key then
+        LogError("GCTipTool:AddArg type %s error!", t)
+        return
+    end
+    
+    args = args or {}
+    
+    args[k] = {type = t, param = v}
+    return args
+end
+
 -- 添加一个卡牌id参数
 function GCTipTool:OneCardArg(id, args)
     return self:AddArg(TipAargType.CardId, id, args)

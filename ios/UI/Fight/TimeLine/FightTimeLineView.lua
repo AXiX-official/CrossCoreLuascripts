@@ -20,7 +20,8 @@ function InitListener()
     eventMgr:AddListener(EventType.Fight_Time_Line_Update,OnFightTimeLineUpdate);
     eventMgr:AddListener(EventType.Fight_View_Main_Info_Show_State, SetShowState);
     eventMgr:AddListener(EventType.Fight_Reset_TimeLineIndex, ResetItemIndex);    
-    eventMgr:AddListener(EventType.Input_Select_Target_Character_Changed,OnInputSelectTargetCharacterChanged);           
+    eventMgr:AddListener(EventType.Input_Select_Target_Character_Changed,OnInputSelectTargetCharacterChanged);
+    AdaptiveConfiguration.SetLuaObjUIFit("FightTimeLine",gameObject); --节点添加
 end
 function OnDestroy()
     eventMgr:ClearListener();

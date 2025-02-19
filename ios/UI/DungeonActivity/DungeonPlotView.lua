@@ -503,7 +503,7 @@ function ShowInfo(item)
     local _cfg = item and item.GetCfg() or nil
     CSAPI.SetGOActive(infoMask, isActive)
     if itemInfo == nil then
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter,OnSweepClick)
             itemInfo.Show(_cfg)

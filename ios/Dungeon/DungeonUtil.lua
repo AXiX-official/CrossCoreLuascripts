@@ -150,45 +150,58 @@ function this.GetStarInfo2(dungeonID, completeNums)
 	return infos;
 end
 
---返回章节当前多倍掉落描述
-function this.GetMultiDesc(id)
-	local str = "";
-	local cfg = this.GetMultiCfg(id)
-	if cfg then
-		local list = {};
-		local infoNum = DungeonMgr:GetSectionMultiNum(id);
-		if cfg.plrExpAdd then
-			local num = cfg.plrExpAdd[2] - infoNum
-			local str = LanguageMgr:GetByID(15066, LanguageMgr:GetByID(15070, cfg.plrExpAdd[1]), num, cfg.plrExpAdd[2])
-			table.insert(list, str);
-		end
-		if cfg.cardExpAdd then
-			local num = cfg.cardExpAdd[2] - infoNum;
-			local str = LanguageMgr:GetByID(15067, LanguageMgr:GetByID(15070, cfg.cardExpAdd[1]), num, cfg.cardExpAdd[2])
-			table.insert(list, str);
-		end
-		if cfg.moneyAdd then
-			local num = cfg.moneyAdd[2] - infoNum;
-			local str = LanguageMgr:GetByID(15068, LanguageMgr:GetByID(15070, cfg.moneyAdd[1]), num, cfg.moneyAdd[2])
-			table.insert(list, str);
-		end
-		if cfg.dropAdd then
-			local num = cfg.dropAdd[2] - infoNum;
-			local str = LanguageMgr:GetByID(15069, LanguageMgr:GetByID(15070, cfg.dropAdd[1]), num, cfg.dropAdd[2])
-			table.insert(list, str);
-		end
-		for k, v in ipairs(list) do
-			if k == 1 then
-				str = str .. v;
-			else
-				str = str .. " " .. v;
-			end
-		end
+--战力派遣用
+function this.GetStarInfo3(stars,completeNums)
+	local infos = {};
+	stars = stars or {};
+	completeNums = completeNums or {};
+	for i = 1, #stars do
+		local star = stars[i];
+		local num  = completeNums[i] or 0
+		local info = this.GetInfo3(star[1], star[2], num);
+		table.insert(infos, info);		
 	end
-	return str;
+	return infos;
 end
 
-function this.GetMultiDesc2(id)
+function this.GetInfo3(type, target, num)
+	local info = {};
+	local starTips = {65015, 65016, 65017, 65018, 65019}
+	if type == RogueSStarType.Pass then
+		info = {
+			tips = LanguageMgr:GetByID(starTips[type]),
+			isComplete = num > 0
+		}
+	elseif type == RogueSStarType.KillMonster then
+		local cfg = Cfgs.MonsterData:GetByID(target)
+		local name = cfg and cfg.name or ""
+		info = {
+			tips = LanguageMgr:GetByID(starTips[type], name),
+			isComplete = num > 0
+		}
+	elseif type == RogueSStarType.DeathNum then
+		info = {
+			tips = target == 0 and LanguageMgr:GetByID(65020) or LanguageMgr:GetByID(starTips[type],target),
+			isComplete = num > 0
+		}
+	else	
+		info = {
+			tips = LanguageMgr:GetByID(starTips[type], target),
+			isComplete = num > 0
+		}
+	end
+	return info
+end
+
+function this.GetStarInfo4(dungeonID)
+	local infos = {};
+	local dungeonData = DungeonMgr:GetDungeonData(dungeonID)
+	infos = DungeonUtil.GetStarInfo2(dungeonID,dungeonData and dungeonData:GetNGrade() or {})
+	return infos
+end
+
+--返回章节当前多倍掉落描述
+function this.GetMultiDesc(id)
 	local str = "";
 	local cfg = this.GetMultiCfg(id)
 	if cfg then
@@ -200,18 +213,19 @@ function this.GetMultiDesc2(id)
 			table.insert(list, str);
 		end
 		if cfg.cardExpAdd then
-			local num = cfg.cardExpAdd[2] - infoNum;
+			local num = cfg.cardExpAdd[2] - infoNum
 			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. cfg.cardExpAdd[2]			
 			table.insert(list, str);
 		end
 		if cfg.moneyAdd then
-			local num = cfg.moneyAdd[2] - infoNum;
+			local num = cfg.moneyAdd[2] - infoNum
 			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. cfg.moneyAdd[2]
 			table.insert(list, str);
 		end
 		if cfg.dropAdd then
-			local num = cfg.dropAdd[2] - infoNum;
-			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. cfg.dropAdd[2]
+			local max = DungeonUtil.GetDropAdd(id)
+			local num = max - infoNum ;
+			local str = StringUtil:SetByColor(num, num > 0 and"FFC146" or "FF7781") .. "/" .. max
 			table.insert(list, str);
 		end
 		for k, v in ipairs(list) do
@@ -225,11 +239,50 @@ function this.GetMultiDesc2(id)
 	return str;
 end
 
+--获取回归多倍掉落总次数
+function this.GetRegresAdd()
+	local add = 0
+	local isRegres = RegressionMgr:IsHuiGui()
+	if isRegres then
+		local cfgs = Cfgs.CfgDupDropCntAdd:GetAll()
+		local arr = RegressionMgr:GetArr()
+		if cfgs then
+			for _, cfg in pairs(cfgs) do
+				if cfg.regressionType ~= nil and #arr> 0 then
+					for _, m in ipairs(arr) do
+						if m.type == RegressionActiveType.DropAdd and m.activityId == cfg.id then
+							add = add + cfg.dropAddCnt
+						end
+					end
+				end
+			end
+		end
+	end
+	return add
+end
+
+--获取多倍掉落总次数 返回：最大多倍次数,额外增加的多倍次数,是否无上限
+function this.GetDropAdd(id)
+	local add,max =0,0
+	local isNotLimit,isUse = false,false
+	if id then
+		local cfgSection = Cfgs.Section:GetByID(id)
+		if cfgSection then
+			add,max,isNotLimit,isUse = GCalHelp:GetMultiDropMaxCnt(cfgSection, DungeonUtil.GetRegresAdd())
+		end
+	end
+	return max,add,isNotLimit,isUse
+end
+
 --判断该章节是否有多倍掉落信息
 function this.HasMultiDesc(id)
 	local cfg = this.GetMultiCfg(id)
-	if cfg and(cfg.plrExpAdd or cfg.cardExpAdd or cfg.moneyAdd or cfg.dropAdd) then
+	if cfg and(cfg.plrExpAdd or cfg.cardExpAdd or cfg.moneyAdd) then
 		return true;
+	end
+	local dropNum = this.GetDropAdd(id)
+	if dropNum > 0 then
+		return true
 	end
 	return false;
 end
@@ -250,8 +303,8 @@ function this.GetMultiNum(id)
 			cur = cfg.moneyAdd[2] - infoNum
 			max = cfg.moneyAdd[2]
 		elseif cfg.dropAdd then
-			cur = cfg.dropAdd[2] - infoNum
-			max = cfg.dropAdd[2]
+			max = DungeonUtil.GetDropAdd(id)
+			cur = max - infoNum
 		end
 	end
 	return cur,max
@@ -264,6 +317,35 @@ function this.GetMultiCfg(sectionID)
 		cfg = Cfgs.CfgDupDropMulti:GetByID(cfgSection.multiId)
 	end
 	return cfg
+end
+
+--查询剩余的多倍数量
+function this.HasMultiNum(cfgId)
+	local datas = DungeonMgr:GetAllSectionDatas()
+	if datas and #datas > 0 then
+		for i, v in pairs(datas) do
+			if v:GetMultiID() and v:GetMultiID() == cfgId then
+				local num = DungeonUtil.GetMultiNum(v:GetID())
+				return num > 0
+			end
+		end
+	end
+	return false
+end
+
+--获取多倍的时间限制
+function this.GetDropAddTime(id)
+	local _,add =this.GetDropAdd(id)
+	if add > 0 and g_ReCalAddDupMultiTime and g_ReCalAddDupMultiTime > 0 and g_ReCalAddDupMultiTime > TimeUtil:GetTime() then
+		return g_ReCalAddDupMultiTime - TimeUtil:GetTime()
+	end
+	return 0
+end
+
+--是否限时多倍
+function this.IsLimitDropAdd(id)
+	local _,_,_,isLimit =this.GetDropAdd(id)
+	return isLimit
 end
 
 function this.GetViewPath(sectionID)
@@ -280,16 +362,141 @@ function this.GetCost(cfg)
     local winCost = cfg.winCost and cfg.winCost[1] or nil
     local cost = nil
     if enterCost then
-        cost = enterCost
+        cost = {enterCost[1],enterCost[2],enterCost[3]}
     end
     if winCost then
 		if cost~=nil and cost[1] == winCost[1] then
 			cost[2] = cost[2] + winCost[2]
 		elseif cost == nil then
-			cost = winCost
+			cost = {winCost[1], winCost[2], winCost[3]}
 		end
     end
     return cost
+end
+
+--获取实际消耗体力
+function this.GetHot(cfg)
+	local costNum1 = cfg.enterCostHot and cfg.enterCostHot or 0
+	local costNum2 = cfg.winCostHot and cfg.winCostHot or 0
+	local percent,num = DungeonUtil.GetExtreHotNum()
+	local isHotUp = false
+	if percent > 0 then
+		percent = percent < 100 and percent or 100
+		costNum1 = costNum1 * (100 - percent) / 100 
+		costNum2 = costNum2 * (100 - percent) / 100 
+		isHotUp = true
+	end
+	--因为是负数，所以向上取整
+	local costNum = math.ceil(costNum1) + math.ceil(costNum2)
+	if num > 0 then
+		costNum = costNum + num > 0 and 0 or costNum + num
+		isHotUp = true
+	end
+	return costNum,isHotUp
+end
+
+--体力消耗减少
+function this.GetExtreHotNum()
+	local add,regresAdd = 0,0
+	local cfgs = Cfgs.CfgDupConsumeReduce:GetAll()
+	local isRegres = RegressionMgr:IsHuiGui()
+	if cfgs then
+		for _, cfg in pairs(cfgs) do
+			if cfg.startTime and cfg.endTime then
+				local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
+				local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+				if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
+					add = add + cfg.consumeReduce
+				end
+			elseif cfg.regressionType ~= nil then
+				if isRegres then
+					local arr = RegressionMgr:GetArr()
+					if #arr > 0 then
+						for k, m in ipairs(arr) do
+							if m.type == RegressionActiveType.ConsumeReduce and m.activityId == cfg.id then
+								add = add + cfg.consumeReduce
+								regresAdd = regresAdd + cfg.consumeReduce			
+							end
+						end
+					end
+				end	
+			end			
+		end
+	end
+	return add,regresAdd
+end
+
+function this.IsEnough(cfg)
+	local isEnough,str = false,""
+	if cfg then
+		local cost = DungeonUtil.GetCost(cfg)
+		if cost then
+			local cur = BagMgr:GetCount(cost[1])
+			local need = cost[2]
+			isEnough = cur >= need
+			if not isEnough then
+				local _cfg = Cfgs.ItemInfo:GetByID(cost[1])
+				if _cfg and _cfg.name then
+					str = LanguageMgr:GetTips(15000,_cfg.name)
+				end
+			end
+		else
+			local cur = PlayerClient:Hot()
+			local need = math.abs(DungeonUtil.GetHot(cfg))
+			isEnough = cur >= need
+			if not isEnough then
+				str = LanguageMgr:GetTips(8013)
+			end
+		end
+	end
+	return isEnough,str
+end
+
+function this.GetHotChangeTime()
+	local cfgs = Cfgs.CfgDupConsumeReduce:GetAll()
+	local sTime,eTime = 0,0
+	if cfgs then
+		for _, cfg in pairs(cfgs) do
+			if cfg.startTime and cfg.endTime then
+				local startTime = TimeUtil:GetTimeStampBySplit(cfg.startTime)
+				local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+				if TimeUtil:GetTime() >= startTime and TimeUtil:GetTime() < endTime then
+					-- sTime = (sTime == 0 or sTime > startTime ) and startTime or sTime --获取最小开始时间
+					-- eTime = (eTime == 0 or eTime < endTime) and endTime or eTime --获取最大结束时间
+					sTime = startTime
+					eTime = endTime
+					break
+				end 
+			end
+		end
+	end
+	return sTime,eTime
+end
+
+function this.IsGlobalBossCloseTime(sid)
+	local openInfo = DungeonMgr:GetActiveOpenInfo2(sid)
+	local globalBossCloseTime = 0
+	local desc = ""
+	if openInfo then
+		local _cfg = openInfo:GetCfg()
+		if _cfg and _cfg.closeStartTime and _cfg.closeEndTime then
+			desc = _cfg.desc
+			local curTab = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
+			local ss1 = StringUtil:split(_cfg.closeStartTime," ")
+			local ss2 = StringUtil:split(_cfg.closeEndTime," ")
+			if curTab.day == tonumber(ss1[1]) and curTab.day <= tonumber(ss2[1]) then
+				local tab1 = TimeUtil:SplitTime(ss1[2])
+				if curTab.hour >= tonumber(tab1[1]) then
+					local tab2 = TimeUtil:SplitTime(ss2[2])
+					globalBossCloseTime = TimeUtil:GetTime2(curTab.year,curTab.month,curTab.day,tab2[1],tab2[2],tab2[3])
+					if TimeUtil:GetTime() < globalBossCloseTime then
+						return true,globalBossCloseTime,desc
+					end
+				end
+			end
+		end
+	end
+	return false,globalBossCloseTime,desc
 end
 
 return this; 

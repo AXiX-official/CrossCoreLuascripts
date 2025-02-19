@@ -74,6 +74,11 @@ function SetShowState(isShow,ignoreTypeCheck)
     end
 end
 
+--设置迷雾状态
+function SetMistState(state)
+    SetShowState(state);
+end
+
 function SetIceState(targetIceState,playEff)
     if(not cAnimator == nil)then
         return;
@@ -113,7 +118,9 @@ end
 --出生特效
 function ApplyBorn()
     if(GetType() == eDungeonCharType.MonsterGroup and not IsInviside())then
-        BattleMgr:CreateEff("monster_born",currGridId);
+        if(not BattleMgr:IsInMist(currGridId))then
+            BattleMgr:CreateEff("monster_born",currGridId);
+        end
     end 
 end
 --受击动作
@@ -496,13 +503,17 @@ end
 
 --移动
 function MoveTo(targetGridId,pathGos,callBack,caller,slide)   
+    --LogError("move to" .. targetGridId);
     if(IsInviside())then
        SetAppear();       
        FuncUtil:Call(DoMoveTo,nil,1500,targetGridId,pathGos,callBack,caller,slide);
        return;
     end    
     if(GetType() == eDungeonCharType.MonsterGroup and not slide)then
-        BattleMgr:CreateEff("Grid_VFX_2Op_Indicator_Enemy",GetCurrGridId());
+        local currGridId = GetCurrGridId();
+        if(not BattleMgr:IsInMist(currGridId))then
+            BattleMgr:CreateEff("Grid_VFX_2Op_Indicator_Enemy",currGridId);
+        end
         FuncUtil:Call(DoMoveTo,nil,1000,targetGridId,pathGos,callBack,caller,slide);
 
         if(GetTriggerPropId() and infoView)then--截击怪
@@ -719,7 +730,7 @@ function OnEnterGrid(goGrid)
     if(IsNil(goGrid))then
         return;
     end
-
+    
     local lua = ComUtil.GetLuaTable(goGrid);
     if(lua)then
         lua.PlayAni(GetType() == eDungeonCharType.MonsterGroup);        
@@ -727,7 +738,15 @@ function OnEnterGrid(goGrid)
 
     local grid = BattleMgr:GetGridByGO(goGrid);
     if(grid)then
-        UpdateGridTrailEffState(grid,true);
+        local gridId = grid.GetID();
+        if(not BattleMgr:IsInMist(gridId))then
+            UpdateGridTrailEffState(grid,true);
+        end        
+
+        if(GetType() == eDungeonCharType.MyCard)then
+            --LogError(gridId);
+            BattleMgr:UpdateCharactersMistState(gridId);--更新迷雾显示
+        end
     end
 end
 

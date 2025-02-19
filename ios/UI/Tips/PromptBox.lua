@@ -1,7 +1,17 @@
 --带确认的提示框
 local canvasGroup=nil;
 local isOpening=false;
+
+
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=CS.UnityEngine.Input
+local KeyCode=CS.UnityEngine.KeyCode
+
 function Awake()
+    CSAPI.Getplatform();
+    IsMobileplatform=CSAPI.IsMobileplatform;
     canvasGroup=ComUtil.GetCom(gameObject,"CanvasGroup");
 end
 
@@ -72,6 +82,25 @@ function HideAction(callBack)
 end
 function OnDestroy()    
     ReleaseCSComRefs();
+end
+
+
+
+
+function Update()
+    CheckVirtualkeys()
+end
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+    --仅仅安卓或者苹果平台生效
+    if IsMobileplatform then
+        if(Input.GetKeyDown(KeyCode.Escape))then
+            if CSAPI.IsBeginnerGuidance()==false then
+                OnClickOK();
+            end
+
+        end
+    end
 end
 
 ----#Start#----

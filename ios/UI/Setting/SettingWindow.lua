@@ -153,11 +153,15 @@ function OnClickQuit()
     local tips = {}
 	tips.content = LanguageMgr:GetTips(7000)
 	tips.okCallBack = function()
-		if CSAPI.IsChannel() then
-			EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand, nil, true);
-		else
-			Logout();
-		end
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then
+            Logout();
+        else
+            if CSAPI.IsChannel() then
+                EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand, nil, true);
+            else
+                Logout();
+            end
+        end
 	end
 	CSAPI.OpenView("Dialog", tips)	
 end
@@ -435,4 +439,14 @@ end
 function CloseWindow()
     EventMgr.Dispatch(EventType.Login_Hide_Mask)
     view:Close()
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if btnBack.gameObject.activeInHierarchy==true and OnClickBack then
+        OnClickBack();
+    else
+        OnClickClose();
+    end
 end

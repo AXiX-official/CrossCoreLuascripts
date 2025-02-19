@@ -126,6 +126,13 @@ function Refresh(disExpTween)
         HandlerOver();
         do return end
     end
+    if data:GetBackImg() then
+        ResUtil.MultiImg:Load(roleImg,data:GetBackImg(),function()
+            local info=data:GetBackPos();
+            CSAPI.SetAnchor(roleImg,info[1],info[2]);
+            CSAPI.SetScale(roleImg,info[3],info[3],info[3]);
+        end,true);
+    end
     --计算当前最新的显示页面
     -- local pageIdx,cIdx=GetIdxs(data:GetCurrLv());
     -- currClickLv=cIdx;
@@ -169,7 +176,11 @@ function RefreshDownTime()
     -- local timeStr=TimeUtil:GetTimeShortStr2(endTime);
     local t=TimeUtil:GetTimeStampBySplit(data:GetEndTime());
     local count=TimeUtil:GetDiffHMS(t,TimeUtil.GetTime());
-	CSAPI.SetText(txt_limit,string.format(LanguageMgr:GetByID(34039),count.day,count.hour,count.minute));
+    if count.day>0 or count.hour>0 or count.minute>0 or count.second>60 then
+        CSAPI.SetText(txt_limit,string.format(LanguageMgr:GetByID(34039),count.day,count.hour,count.minute));
+    else
+        CSAPI.SetText(txt_limit,LanguageMgr:GetByID(1062,count.second));
+    end
     if endTime<=0 then--回到主界面并提示
         HandlerOver();
     end
@@ -478,7 +489,7 @@ end
 
 function OnValueChange()    
     local indexs=layout:GetIndexs();
-    if indexs then
+    if indexs and indexs.Length>0 then
         local cIndex=indexs[indexs.Length-2];
         if currClickLv~=cIndex then
             currClickLv=cIndex;

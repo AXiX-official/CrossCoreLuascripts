@@ -24,7 +24,7 @@ function Buffer702600204:OnBefourHurt(caster, target)
 		return
 	end
 	-- 702600204
-	self:AddTempAttr(BufferEffect[702600204], self.caster, self.card, nil, "damage",0.05*self.nCount)
+	self:AddTempAttr(BufferEffect[702600204], self.caster, self.card, nil, "damage",0.08*self.nCount)
 end
 -- 行动结束
 function Buffer702600204:OnActionOver(caster, target)

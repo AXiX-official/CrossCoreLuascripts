@@ -26,6 +26,7 @@ end
 --加载完成
 function this.OnLoadingComplete()
     BattleMgr:LoadingComplete();    
+    
 end
 function this:LoadingComplete()  
     self.loadingComplete = 1;
@@ -54,6 +55,8 @@ function this:LoadingComplete()
     end
 
     self:LoadingViewClose();
+
+    self:UpdateMistViewDis();
 end
 
 function this.OnLoadingViewClose()
@@ -124,6 +127,9 @@ end
 
 --重置
 function this:Reset()
+
+    --LogError("小地图重置");
+
     if(self.clearFlag)then
         self.clearFlag = nil;
         self.datas = nil;
@@ -139,6 +145,9 @@ function this:Reset()
     self.isFighting = nil; 
     self.isReverting = nil;
     self.isReverted = nil;
+    if(self.ground)then
+        self.ground.Remove();
+    end
     self.ground = nil;
     self.moveCtrlTargetId = nil;
     self.dontAutoTriggerGuide = nil;
@@ -150,7 +159,10 @@ function this:Reset()
     self.autoCheckGridId = nil;
     self.applyFightTime = nil;
     self.triggerFight = nil;
-
+    self.mistDis = nil;
+    self.mistEffGO = nil;
+    self.mistEff = nil;
+    self:SetMistDis();
 
     if(self.isInitedListener == nil)then
         self.isInitedListener = 1;
@@ -220,6 +232,7 @@ function this:TryShowExplore()
 
         self.bIsNewWave = nil;
         self:SetEnemyShowState(false);
+        self:UpdateCharactersMistState();
         --LogError("aa");
         self:Explore();        
         return true;
@@ -287,7 +300,7 @@ function this:ExploreNextWave()
     self:UpdateInputState("explore");    
 
     self:SetEnemyShowState(true);
-
+    self:UpdateCharactersMistState();
     FuncUtil:Call(self.RefreshComplete,self,1200);
     --self:RefreshComplete();
 end
@@ -557,6 +570,8 @@ function this:Init(data)
     if(not self.bIsNewWave)then
         self:UpdateCtrlState(true);
     end
+
+    --self:UpdateMistViewDis();
 end
 
 
@@ -811,7 +826,7 @@ function this:Encounter(data)
     --LogError("Encounter!set to nil");
     self.encounterData = data;
     self:UpdateCharacter(data);
-    CSAPI.OpenView("Prompt", {content = StringConstant.battle_encounter ,okCallBack=function()        
+    CSAPI.OpenView("Prompt", {content = "1075" ,okCallBack=function()        
 		BattleMgr:ConfirmEncounter();
 	end});
 
@@ -950,7 +965,7 @@ function this:AskMoveTo(data)
     self.moveData = data;
 
     self:SetMoveCtrlTarget(nil);
-    self.ground.ApplyMove(character,data.pos);
+    self.ground.ApplyMove(character,data.pos,data.specialMove);
     self:SetFollow(character.gameObject);
     --玩家移动
     -- local cData=character.GetData();
@@ -1315,6 +1330,8 @@ function this:SetMoveCtrlTarget(id,noEff)
 
         self:UpdateActionTurn(true);
     end
+
+    self:UpdateCharactersMistState();
 end
 
 function this:SetFollow(go)
@@ -2539,6 +2556,131 @@ function this:GetMoveWeight(mapData, nMoveType, pos1, pos2)
 
     -- 其他情况
     return 1
+end
+
+
+function this:SetMistDis(mistDis)
+    self.mistDis = mistDis;
+end
+
+function this:UpdateMistEff()
+    if(self.mistDis)then
+        if(not self.mistEff)then
+            local parentGO = self.ground and self.ground.gameObject;
+            ResUtil:CreateEffect("battle/sandStorm_v3", 0,11.5,0,parentGO,function(go)
+                if(IsNil(parentGO))then
+                    CSAPI.RemoveGO(go);
+                    return;
+                end
+
+                self.mistEffGO = go;
+                CSAPI.SetScale(go,30,30,1);
+                CSAPI.SetAngle(go,90,0,0);
+                self.mistEff = ComUtil.GetCom(go,"SetMaterialUV");   
+            end);
+        end
+
+        if(self.mistEffGO)then
+            CSAPI.SetGOActive(self.mistEffGO,true);
+            local character = self:GetCtrlCharacter();
+            if(not character)then
+                local defaultCtrlId = self:GetDefaultCtrlId();
+                --LogError("设置默认跟谁角色" .. tostring(defaultCtrlId));
+                character = BattleCharacterMgr:GetCharacter(defaultCtrlId);
+            end
+            if(character and character.GetType() == eDungeonCharType.MyCard)then
+                self.mistEff.target = character.gameObject;
+            end
+        end
+    else
+        if(self.mistEffGO)then
+            CSAPI.SetGOActive(self.mistEffGO,false);
+        end    
+    end    
+end
+--- 更新迷雾角色显示状态
+---@param gridId any
+---@param dis any
+function this:UpdateCharactersMistState(targetGridId,dis)
+    self:UpdateMistEff();
+
+    local gridIds = self:GetMistOuterGridIds(targetGridId);
+    if(not gridIds)then
+        return;
+    end   
+    
+    local allCharacters = BattleCharacterMgr:GetAll();
+    if(allCharacters)then
+        for id,character in pairs(allCharacters)do
+            if(not character.IsDead())then
+                local gridId = character.GetCurrGridId();
+                local state = gridIds[gridId] and true or false;
+                character.SetMistState(state);
+
+                if(character.UpdateWarningEffsShowState)then
+                    --LogError(targetGridId);
+                    character.UpdateWarningEffsShowState(targetGridId);
+                end
+            end
+        end
+    end
+end
+
+function this:IsInMist(gridId,mistGridId)
+    local gridIds = self:GetMistOuterGridIds(mistGridId);
+    return gridIds and not gridIds[gridId];
+end
+
+function this:GetMistOuterGridIds(gridId)
+    local dis = self.mistDis;
+    if(not dis or dis <= 0)then
+        return;
+    end
+
+    if(not gridId)then
+        local character = self:GetCtrlCharacter();
+        if(not character)then
+            local defaultCtrlId = self:GetDefaultCtrlId();
+            character = BattleCharacterMgr:GetCharacter(defaultCtrlId);
+        end
+        gridId = character and character.GetCurrGridId();
+        if(not gridId)then
+            return;
+        end
+    end
+    
+    local gridIds = {};
+
+    for i = -dis,dis do
+        for j = -dis,dis do
+            local targetGridId = gridId + i * 100 + j;
+            gridIds[targetGridId] = 1;
+        end
+    end
+
+    return gridIds;
+end
+
+function this:UpdateMistViewDis()
+    local currRound = self:GetStepNum() or 0;
+    local battleDungeonData = self.ground and self.ground.GetBattleDungeonData();
+    local mists = battleDungeonData and battleDungeonData.mists;
+    --mists = {{round = 0,view = 1}};
+    if(not mists)then
+        return;
+    end
+    local viewDis = nil;
+    local tmpRound = -1;
+    for _,mistData in ipairs(mists)do
+        --LogError(mistData);
+        --LogError("currRound:" .. tostring(currRound));LogError("tmpRound:" .. tostring(tmpRound));
+        if(mistData.round <= currRound and mistData.round > tmpRound)then
+            tmpRound = mistData.round;
+            viewDis = mistData.view;
+        end
+    end
+    self:SetMistDis(viewDis);
+    self:UpdateCharactersMistState();
 end
 
 -- BattleMgr:ApplyAIMove

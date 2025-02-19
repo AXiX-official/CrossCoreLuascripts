@@ -115,12 +115,16 @@ function this:SummonShow()
     local fbName = "common/character_appear";
     if(fbData)then
         local packName = fbData.effect_pack or summoner.GetModelName();
-        fbName = packName .. "/" .. fbData.effect;
+        if(fbData.effect)then
+            fbName = packName .. "/" .. tostring(fbData.effect);
+        end
     end
     self:SetSummonsShowState(true);
     for _,character in ipairs(self.summons)do      
         local x,y,z = character.GetPos();
-        ResUtil:CreateEffect(fbName,x,y,z);
+        if(fbName)then
+            ResUtil:CreateEffect(fbName,x,y,z);
+        end
         --local soundActionName = "lokotunjailurus_recruit_move_02";
         --CSAPI.PlaySound("fight/effect/lokotunjailurus.acb",soundActionName,false,false,nil,nil,nil,nil,100);
         --character.PlayActionSound();

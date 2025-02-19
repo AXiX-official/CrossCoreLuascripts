@@ -32,6 +32,7 @@ function Awake()
     eventMgr:AddListener(EventType.Tower_Update_Data, RefresTopPanel)
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
     eventMgr:AddListener(EventType.Mission_List, OnTowerRefresh)
+    eventMgr:AddListener(EventType.CfgActiveEntry_Change, OnTowerRefresh)
 
     m_Slider = ComUtil.GetCom(slider, "Slider")
 
@@ -77,7 +78,7 @@ end
 -- 初始化右侧栏
 function InitInfo()
     if (itemInfo == nil) then
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
             itemInfo.SetClickMaskCB(OnClickBack)
@@ -97,7 +98,7 @@ function OnBattleEnter()
         if isMax or isAddToMax then
             local dialogData = {}
             dialogData.content = isMax and LanguageMgr:GetByID(15079) or LanguageMgr:GetByID(15078)
-            -- dialogData.okText = LanguageMgr:GetByID(1031)
+            dialogData.okText = LanguageMgr:GetByID(1031)
             dialogData.cancelText = LanguageMgr:GetByID(1003)
             dialogData.okCallBack = function()
                 EnterNextView(currItem2)
@@ -157,6 +158,7 @@ end
 
 function OnOpen()
     offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920) / 2
+    -- offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920) / 2
     left = left + offsetW
     selIndex = 0
     if data then
@@ -175,7 +177,14 @@ function InitTowerItems()
     if datas then
         for k, v in pairs(datas) do
             if v:GetType() == SectionActivityType.Tower then
-                table.insert(sectionDatas, v)
+                local openInfo = DungeonMgr:GetActiveOpenInfo2(v:GetID())
+                if openInfo then
+                    if openInfo:IsOpen() then
+                        table.insert(sectionDatas, v)
+                    end
+                else
+                    table.insert(sectionDatas, v)
+                end
             end
         end
     end

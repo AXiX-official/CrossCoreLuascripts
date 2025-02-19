@@ -135,7 +135,7 @@ function this:GetGoldType()
 end
 
 --返回固定类型中需要检测刷新的数据列表
-function this:GetRefreshInfos()
+function this:GetRefreshInfos(topTabID)
 	local itemDatas = {};
 	if self:GetCommodityType()==CommodityType.Normal then
 		--固定道具
@@ -146,7 +146,16 @@ function this:GetRefreshInfos()
 				local itemData =ShopMgr:GetFixedCommodity(v.id)
 				local beginTime=itemData:GetBuyStartTime();
 				local endTime=itemData:GetBuyEndTime();
-				if itemData:HasData() and (itemData:GetResetType()~=0 or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) then 
+				local resetTime=itemData:GetResetTime();;
+				-- if itemData:HasData() and ((itemData:GetResetType()~=0 and (resetTime==0 or nowTime<=resetTime)) or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) and ((topTabID~=nil and itemData:GetTabID()==topTabID) or topTabID==nil) then 
+				local canAdd=true;
+				if CSAPI.IsAppReview() and self:GetShowType()==6 and itemData:GetType()==CommodityItemType.Skin and itemData:GetID()~=ShopCommFunc.fixedSkinID then--皮肤
+					canAdd=false;
+				end
+				if itemData:HasData() and ((itemData:GetResetType()~=0 and (itemData:GetResetTime()==0 or nowTime<=itemData:GetResetTime())) or (beginTime~=nil and nowTime<=beginTime) or (endTime~=nil and nowTime<=endTime)) and ((topTabID~=nil and itemData:GetTabID()==topTabID) or topTabID==nil) and canAdd==true then 
+					-- if itemData:GetID()==80001 then
+					-- 	LogError("22222222222222222222");
+					-- end
 					table.insert(itemDatas, itemData);
 				end
 			end
@@ -176,6 +185,9 @@ function this:GetCommodityInfos(isLimit,topTabID)
 					canAdd=false;
 				end
 				if itemData:IsShow()~=true or (itemData:IsOver() and itemData:ShowOnSoldOut()~=true) then--售罄时不显示的数据
+					canAdd=false;
+				end
+				if CSAPI.IsAppReview() and self:GetShowType()==6 and itemData:GetType()==CommodityItemType.Skin and canAdd==true and itemData:GetID()~=ShopCommFunc.fixedSkinID then--皮肤
 					canAdd=false;
 				end
 				-- if itemData:GetShopID()==4 then
@@ -229,13 +241,26 @@ end
 function this:GetCommodityInfos2()
 	local itemDatas = {};
 	local cfgs=Cfgs.CfgCommodity:GetGroup(self:GetID());
+	local lastItem = nil
 	if cfgs then
 		for k, v in ipairs(cfgs) do
 			local itemData = ShopMgr:GetFixedCommodity(v.id);
 			local canAdd=true;
-			if itemData:IsOver() and itemData:ShowOnSoldOut()~=true then--售罄时不显示的数据
-				canAdd=false;
+			if itemData:GetPreLimitID() then
+				local _itemData = ShopMgr:GetFixedCommodity(itemData:GetPreLimitID())
+				if _itemData and not _itemData:IsOver() then
+					--上一个商品已开放购买
+					if _itemData:GetPreLimitID() then
+						local _itemData2 = ShopMgr:GetFixedCommodity(_itemData:GetPreLimitID())
+						if _itemData2 and not _itemData2:IsOver() then
+							canAdd = false
+						end
+					end
+				end
 			end
+			-- if itemData:IsOver() and itemData:ShowOnSoldOut()~=true then--售罄时不显示的数据
+			-- 	canAdd=false;
+			-- end
 			if canAdd then
 				table.insert(itemDatas, itemData);
 			end
@@ -259,7 +284,7 @@ function this:GetUpdateTime()
 	return self.cfg and self.cfg.updateTime or ShopFixedUpdateType.None;
 end
 
---返回二级菜单 isFitler:为true时去掉不在显示时间内的数据
+--返回二级菜单 isFitler:为true时去掉不在显示时间内的数据，且页签下无可购买数据时也隐藏
 function this:GetTopTabs(isFitler)
 	local list=nil;
 	if self.cfg and self.cfg.topGroup then
@@ -267,10 +292,24 @@ function this:GetTopTabs(isFitler)
 		if isFitler then
 			for k,v in ipairs(cfgs) do
 				local isOpen=false;
-				if v.startTime == nil and v.endTime == nil then
-					isOpen = true;
+				local timeInfo=ShopMgr:GetPageTimeInfo(self:GetID(),v.id);
+				local startTime=v.startTime==nil and 0 or TimeUtil:GetTimeStampBySplit(v.startTime);
+				local endTime=v.endTime==nil and 0 or TimeUtil:GetTimeStampBySplit(v.endTime);
+				if timeInfo then
+					startTime=timeInfo.open_time;
+					endTime=timeInfo.close_time;
+				end
+				if startTime == 0 and endTime == 0 then
+					-- isOpen = true;
+					local itemList=self:GetCommodityInfos(true,v.id);
+					isOpen=#itemList>0 and true or false;
 				else
-					isOpen = ShopCommFunc.TimeIsBetween(v.startTime,v.endTime);
+					local itemList=self:GetCommodityInfos(true,v.id);
+					if #itemList>0 then
+						isOpen = ShopCommFunc.TimeIsBetween2(startTime,endTime);
+					else
+						isOpen=false;
+					end
 				end
 				if isOpen then
 					list=list or {};
@@ -279,6 +318,14 @@ function this:GetTopTabs(isFitler)
 			end
 		else
 			list=cfgs;
+		end
+		if CSAPI.IsAppReview() and list then
+			for k,v in ipairs(list) do
+				if v.id==ShopCommFunc.fixedHideTab then
+					table.remove(list,k);
+					break;
+				end
+			end
 		end
 		if list then
 			table.sort(list,function(a,b)

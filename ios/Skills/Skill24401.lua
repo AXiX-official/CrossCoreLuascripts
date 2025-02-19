@@ -19,27 +19,17 @@ function Skill24401:tFunc_24401_24431(caster, target, data)
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8202
-	if SkillJudger:IsNormal(self, caster, target, true) then
+	-- 8260
+	if SkillJudger:IsTypeOf(self, caster, target, true,5) then
 	else
 		return
 	end
 	-- 24431
-	self:DelBufferTypeForce(SkillEffect[24431], caster, self.card, data, 24401)
+	self:AddBuff(SkillEffect[24431], caster, self.card, data, 24401)
 end
 function Skill24401:tFunc_24401_24421(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
@@ -54,11 +44,6 @@ end
 function Skill24401:tFunc_24401_24411(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end

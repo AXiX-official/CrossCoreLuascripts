@@ -3,6 +3,7 @@ local currPrice=priceObj;
 local skinInfo=nil;
 local countTime=0;
 local updateTime=600;
+local changeInfo=nil;
 
 function Refresh(_data,_elseData)
     this.data=_data;
@@ -10,10 +11,47 @@ function Refresh(_data,_elseData)
     skinInfo=ShopCommFunc.GetSkinInfo(this.data);
     currPrice=priceObj3
     local num=this.data:GetNum()
-    ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
     RefreshTime();
-    SetDiscount(this.data:GetNowDiscount())
+    SetDiscount(this.data:GetNowDiscountTips())
     if skinInfo then
+        changeInfo=skinInfo:GetChangeInfo();
+        local hasMore=changeInfo~=nil and true or false;
+        local showBg1=true;
+        local showOtherIcon=false;
+        -- if this.data:GetIcon2()~=nil then
+        --     --加载SpriteRenderer
+        --     ResUtil.SkinMall:LoadSR(Role_A,this.data:GetIcon());
+        --     ResUtil.SkinMall:LoadSR(Role_B,this.data:GetIcon2());
+        --     showBg1=false  
+        -- else
+        --     local index= this.data:GetID()%2==0 and 2 or 1;
+        --     local imgA=index==1 and "60020_Skin101_mall" or "20070_Skin104_mall";
+        --     local imgB=index==1 and "40050_Skin108_mall" or "60110_Skin102_mall";
+        --     ResUtil.SkinMall:LoadSR(Role_A,imgA);
+        --     ResUtil.SkinMall:LoadSR(Role_B,imgB);
+        --     showBg1=false  
+        -- end
+        if hasMore~=true then
+            ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
+        else
+            if changeInfo[1].cfg.skinType~=5 then --形切或者同调
+                if this.data:GetIcon2()~=nil then
+                    --加载SpriteRenderer
+                    ResUtil.SkinMall:LoadSR(Role_A,this.data:GetIcon());
+                    ResUtil.SkinMall:LoadSR(Role_B,this.data:GetIcon2());
+                    showBg1=false  
+                end
+            else
+                ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
+                --加载机神icon
+                showBg1=true
+                showOtherIcon=true;
+            end
+        end
+        CSAPI.SetGOActive(otherIcon,showOtherIcon);
+        CSAPI.SetGOActive(bg,showBg1);
+        CSAPI.SetGOActive(bg2,not showBg1);
+        CSAPI.SetGOActive(asmrIcon,this.data:GetBundlingID()~=nil);
         SetName(skinInfo:GetRoleName());
         SetL2dTag(skinInfo:HasL2D());
         SetAnimaTag(skinInfo:HasEnterTween());
@@ -30,11 +68,18 @@ function Refresh(_data,_elseData)
         elseif getType~=SkinGetType.Store then
             SetGetTips(getTips);
         else
-            local cost=this.data:GetRealPrice();
-            if cost and cost[1].id==-1 then
+            local costs={};
+            if this.data:HasOtherPrice(ShopPriceKey.jCosts1) then
+                costs={this.data:GetRealPrice()[1],this.data:GetRealPrice(ShopPriceKey.jCosts1)[1]};
+            else
+                costs=this.data:GetRealPrice();
+            end
+            if costs and #costs>1 then
+                currPrice=dPriceObj;
+            elseif costs and costs[1].id==-1 then
                 currPrice=priceObj2;
             end
-            SetCost(cost,isOver);
+            SetCost(costs,isOver);
         end
     else
         LogError("未找到对应的模型Id");
@@ -42,9 +87,13 @@ function Refresh(_data,_elseData)
 end
 
 function SetDiscount(discount)
-    local dis=math.floor(discount*10+0.5);
-    CSAPI.SetGOActive(discountObj,discount~=1);
-    CSAPI.SetText(txt_discount,string.format(LanguageMgr:GetByID(18074),dis));
+    CSAPI.SetGOActive(discountObj,discount~=nil);
+    if discount then
+        CSAPI.SetText(txt_discount,discount);
+    end
+    -- local dis=math.floor(discount*10+0.5);
+    -- CSAPI.SetGOActive(discountObj,discount~=1);
+    -- CSAPI.SetText(txt_discount,string.format(LanguageMgr:GetByID(18074),dis));
 end
 
 function Update()
@@ -88,6 +137,7 @@ function SetOver(isOver)
     CSAPI.SetGOActive(priceObj,false);
     CSAPI.SetGOActive(priceObj2,false);
     CSAPI.SetGOActive(priceObj3,false);
+    CSAPI.SetGOActive(dPriceObj,false);
     CSAPI.SetGOActive(freeObj,true);
     CSAPI.SetText(txt_free,LanguageMgr:GetByID(18068));
 end
@@ -108,6 +158,23 @@ function SetCost(cost,isOver)
                 LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
             end
             CSAPI.SetText(txt_price,tostring(cost[1].num));
+        elseif currPrice==dPriceObj then
+            CSAPI.SetGOActive(dMNode,cost[1].id~=-1 )
+            CSAPI.SetGOActive(pnIcon1,cost[1].id==-1 )
+            if cost[1].id~=-1 then
+                ShopCommFunc.SetPriceIcon(dMIcon1,cost[1]);
+            else
+                CSAPI.SetText(pnIcon1,LanguageMgr:GetByID(18013));
+            end
+            CSAPI.SetGOActive(dMNode2,cost[2].id~=-1 )
+            CSAPI.SetGOActive(pnIcon2,cost[2].id==-1 )
+            if cost[2].id~=-1 then
+                ShopCommFunc.SetPriceIcon(dMIcon2,cost[2]);
+            else
+                CSAPI.SetText(pnIcon2,LanguageMgr:GetByID(18013));
+            end
+            CSAPI.SetText(txt_dPrice1,tostring(cost[1].num));
+            CSAPI.SetText(txt_dPrice2,tostring(cost[2].num));
         else
             local cfg = Cfgs.ItemInfo:GetByID(cost[1].id);
             if cfg and cfg.icon then
@@ -122,17 +189,22 @@ function SetCost(cost,isOver)
             CSAPI.SetGOActive(priceObj,currPrice==priceObj);
             CSAPI.SetGOActive(priceObj2,currPrice==priceObj2);
             CSAPI.SetGOActive(priceObj3,currPrice==priceObj3);
+            CSAPI.SetGOActive(dPriceObj,currPrice==dPriceObj);
         else
             CSAPI.SetGOActive(priceObj,false);
             CSAPI.SetGOActive(priceObj2,false);
             CSAPI.SetGOActive(priceObj3,false);
+            CSAPI.SetGOActive(dPriceObj,false);
             CSAPI.SetGOActive(freeObj,true);
+            CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
         end
     else
         CSAPI.SetGOActive(priceObj,false);
         CSAPI.SetGOActive(priceObj2,false);
         CSAPI.SetGOActive(priceObj3,false);
+        CSAPI.SetGOActive(dPriceObj,false);
         CSAPI.SetGOActive(freeObj,true);
+        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
     end
 end
 

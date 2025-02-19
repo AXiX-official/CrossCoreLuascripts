@@ -2,6 +2,13 @@ local itemPath = "UIs/Archive2/RoleArchiveCard"
 local curIndex = 0
 local teamDatas = {}
 curIndex1, curIndex2 = 1,1
+local top=nil;
+
+--定时刷新
+local currShowTime = 0
+local showTime = 0
+local showTimer = 0
+local timeInfos = nil
 
 function Awake()	
 	layout = ComUtil.GetCom(sv1, "UIInfinite")
@@ -23,9 +30,25 @@ end
 -- function OnItemClickCB()
 -- end
 function OnInit()
-	UIUtil:AddTop2("ArchiveRoleListView", gameObject, function()
+	top=UIUtil:AddTop2("ArchiveRoleListView", gameObject, function()
 		view:Close()
 	end, nil, "")
+end
+
+function Update()
+	if showTime > 0 and showTimer < Time.time then
+		showTime = currShowTime - TimeUtil:GetTime()
+		showTimer = Time.time + 1
+		if showTime <= 0 then
+			if elseData == ArchiveType.Role then
+				SetRoleDatas()
+			else
+				SetEnemyDatas()
+			end
+			SetShowTime()
+			RefreshPanel()
+		end
+	end
 end
 
 function OnOpen()
@@ -37,6 +60,7 @@ function OnOpen()
 	else
 		SetEnemyDatas()
 	end
+	SetShowTime()
 	-- SetTeamDatas()
 	-- SetDatas()
 	InitLeftPanel()
@@ -51,7 +75,13 @@ function SetRoleDatas()
 	--去除不可在图鉴显示的
 	for i, v in ipairs(_datas) do
 		if (v.bShowInAltas) then			
-			table.insert(datas, v)
+			if v.sShowTime then --有显示时间
+				if CheckShowTime(v.sShowTime) then
+					table.insert(datas, v)
+				end
+			else
+				table.insert(datas, v)
+			end
 		end
 	end
 	--排序
@@ -65,6 +95,7 @@ function SetRoleDatas()
 		end
 	end)
 	
+	teamDatas = {}
 	for i, v in ipairs(datas) do --分组
 		teamDatas[v.sTeam] = teamDatas[v.sTeam] or {}
 		table.insert(teamDatas[v.sTeam], v)
@@ -118,7 +149,6 @@ function SetEnemyDatas()
 	end
 	teamCfgs = cfgDatas
 end
-
 
 function InitLeftPanel()
 	if(not leftPanel) then
@@ -194,6 +224,37 @@ function GetLock(ids)
 	return isLock
 end
 
+function CheckShowTime(str)
+	local sTime = TimeUtil:GetTimeStampBySplit(str) 
+	if sTime > TimeUtil:GetTime() then
+		timeInfos = timeInfos or {}
+		timeInfos[sTime] = sTime
+		return false 
+	end
+	return true
+end
+
+function SetShowTime()
+	if timeInfos then
+		local infos = {}
+		for k, v in pairs(timeInfos) do
+			table.insert(infos,v)
+		end
+		timeInfos = nil
+		if #infos > 0 then
+			table.sort(infos,function (a,b)
+				return a < b
+			end)
+			currShowTime = infos[1]
+			showTime = currShowTime - TimeUtil:GetTime()
+			showTimer = 0
+		else
+			showTime = 0
+			showTimer = 0
+		end
+	end
+end
+
 function AnimStart()
 	if not UIMask then
 		UIMask = CSAPI.GetGlobalGO("UIClickMask")
@@ -207,7 +268,17 @@ end
 function OnDestroy()    
     ReleaseCSComRefs();
 end
-
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+	---填写退出代码逻辑/接口
+	if  top.OnClickBack then
+		top.OnClickBack();
+		if not UIMask then
+			UIMask = CSAPI.GetGlobalGO("UIClickMask")
+		end
+		CSAPI.SetGOActive(UIMask, false)
+	end
+end
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
 function ReleaseCSComRefs()     

@@ -21,8 +21,8 @@ function Skill4202301:OnActionOver(caster, target, data)
 	-- 4202316
 	self:CallOwnerSkill(SkillEffect[4202316], caster, self.card, data, 202300406)
 end
--- 攻击结束
-function Skill4202301:OnAttackOver(caster, target, data)
+-- 攻击结束2
+function Skill4202301:OnAttackOver2(caster, target, data)
 	-- 8071
 	if SkillJudger:TargetIsFriend(self, caster, target, true) then
 	else
@@ -45,10 +45,10 @@ function Skill4202301:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8496
-	local count96 = SkillApi:BuffCount(self, caster, target,3,1,1)
-	-- 8899
-	if SkillJudger:Less(self, caster, target, true,count96,1) then
+	-- 8695
+	local count695 = SkillApi:BuffCount(self, caster, target,3,4,5)
+	-- 8905
+	if SkillJudger:Less(self, caster, target, true,count695,1) then
 	else
 		return
 	end

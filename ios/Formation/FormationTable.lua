@@ -183,7 +183,7 @@ function this:IsUnite(itemData)
 	if itemData == nil then
 		return 0;
 	end
-	local upCard, downCard, leftCard, rightCard = nil;
+	local upCard, downCard, leftCard, rightCard = nil,nil,nil,nil;
 	upCard = self:GetPosData(itemData.row + 1, itemData.col);
 	downCard = self:GetPosData(itemData.row - 1, itemData.col);
 	leftCard = self:GetPosData(itemData.row, itemData.col + 1);
@@ -252,7 +252,7 @@ end
 --==============================--
 function this:GetFitRange(teamItem, fitState)
 	local list = nil;
-	local upPos, downPos, leftPos, rightPos = nil;
+	local upPos, downPos, leftPos, rightPos = nil,nil,nil,nil;
 	upPos = {row = teamItem.row + 1, col = teamItem.col};
 	downPos = {row = teamItem.row - 1, col = teamItem.col};
 	leftPos = {row = teamItem.row, col = teamItem.col + 1};

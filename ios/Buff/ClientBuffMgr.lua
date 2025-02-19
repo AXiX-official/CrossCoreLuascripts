@@ -18,6 +18,9 @@ function this:Clean()
         end
     end
     self.datas = {};
+    
+    self:ClearRemovedBuffIds();
+    --LogError("清理buff");
 end
 ----获取Buff
 function this:GetBuff(uid)
@@ -41,10 +44,27 @@ function this:UpdateBuff(buffData)
 
     if(buff ~= nil)then
         buff:SetData(buffData);
+
+        if(self:IsRemoved(uid))then
+            --LogError("已经移除的buff" .. uid);
+            self:RemoveBuff(uid); 
+        end
     end         
+end
+function this:IsRemoved(uid)
+    return self.removedIds and self.removedIds[uid];
+end
+function this:ClearRemovedBuffIds()
+    self.removedIds = nil;
 end
 --移除Buff
 function this:RemoveBuff(uid)
+    if(not uid)then
+        return;
+    end
+    self.removedIds = self.removedIds or {};
+    self.removedIds[uid] = 1;
+
     local buff = self:GetBuff(uid);
 
     if(buff)then

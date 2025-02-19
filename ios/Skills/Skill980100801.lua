@@ -6,8 +6,8 @@ Skill980100801 = oo.class(SkillBase)
 function Skill980100801:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 攻击结束
-function Skill980100801:OnAttackOver(caster, target, data)
+-- 行动结束
+function Skill980100801:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -18,11 +18,11 @@ function Skill980100801:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8143
-	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.3) then
+	-- 8201
+	if SkillJudger:IsSingle(self, caster, target, true) then
 	else
 		return
 	end
-	-- 980100801
-	self:AddUplimitBuff(SkillEffect[980100801], caster, self.card, data, 3,3,980100801,1,980100801)
+	-- 980100804
+	self:AddBuff(SkillEffect[980100804], caster, self.card, data, 980100804)
 end

@@ -8,7 +8,7 @@ function Refresh(d,elseData)
     data=d;
     this.isLock=not data:IsUnLock();
     CSAPI.SetText(text_name,data:GetName());
-    local x=-288;
+    -- local x=-288;
     if data:IsUnLock() then
         CSAPI.SetText(text_levelTips,string.format(LanguageMgr:GetTips(1009),tostring(data:GetLv())));
     else
@@ -20,9 +20,9 @@ function Refresh(d,elseData)
             end
         end
         CSAPI.SetText(text_levelTips,string.format(LanguageMgr:GetTips(26101),s));
-        x=-305
+        -- x=-305
     end
-    CSAPI.SetAnchor(text_levelTips,x,-17.1);
+    -- CSAPI.SetAnchor(text_levelTips,x,-17.1);
     isSelect=elseData and elseData.isSelect or false;
     SetBtnState(isSelect)
     ResUtil.Ability:Load(icon, data:GetIcon());

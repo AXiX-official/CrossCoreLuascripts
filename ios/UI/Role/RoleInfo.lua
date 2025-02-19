@@ -4,23 +4,55 @@ local isFirst = true
 isHideQuestionItem = true -- 外部调用
 
 function Awake()
+    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
     recordBeginTime = CSAPI.GetRealTime()
     -- 立绘
-    cardIconItem = RoleTool.AddRole(iconParent,nil,nil,false)
+    cardIconItem = RoleTool.AddRole(iconParent, nil, nil, false)
 
     UIUtil:AddQuestionItem("RoleInfo", gameObject, questionP)
+    ShareBtnOpenState();
 end
 
 function OnEnable()
     CSAPI.PlayUISound("ui_popup_open")
 end
-
-function OnDisable()
-    if (openSetting and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
-        CSAPI.PlayUISound("ui_cosmetic_adjustment")
+---截图前一帧通知
+function ShareView_NoticeTheNextFrameScreenshot(Data)
+    CSAPI.SetGOActive(ShareBtn, false)
+    CSAPI.SetGOActive(btnEquipDetail, false)
+    CSAPI.SetGOActive(btnLv, false)
+    CSAPI.SetGOActive(btnAttributeDetail, false)
+end
+---截图完成通知
+function ShareView_NoticeScreenshotCompleted(Data)
+    ShareBtnOpenState();
+    CSAPI.SetGOActive(btnEquipDetail, true)
+    SetBtnLv()
+    CSAPI.SetGOActive(btnAttributeDetail, true)
+end
+function ShareBtnOpenState()
+    if CSAPI.IsMobileplatform then
+        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+            CSAPI.SetGOActive(ShareBtn, true);
+        else
+            CSAPI.SetGOActive(ShareBtn, false);
+        end
+    else
+        CSAPI.SetGOActive(ShareBtn, false)
     end
 end
+function OnClickShareBtn()
+    CSAPI.OpenView("ShareView",{LocationSource=3})
+end
+function OnDisable()
+    -- if (openSetting) then -- and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
+    CSAPI.PlayUISound("ui_cosmetic_adjustment")
+    -- end
+end
 function OnDestroy()
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
     RecordMgr:Save(RecordMode.View, recordBeginTime, "ui_id=" .. RecordViews.RoleInfo)
 
     eventMgr:ClearListener()
@@ -39,9 +71,9 @@ function OpenAnim(b)
     CSAPI.SetGOActive(mask, b)
     CSAPI.SetGOActive(anim_open, b)
     timer = b and Time.time + 0.7 or nil
-    if(b)then 
+    if (b) then
         isFirst = true
-    end 
+    end
 end
 
 function OnInit()
@@ -63,9 +95,9 @@ function OnInit()
         RefreshPanel()
     end)
 
-    --卸载装备
-    eventMgr:AddListener(EventType.Equip_Down_Ret,RefreshPanel)
-    
+    -- 卸载装备
+    eventMgr:AddListener(EventType.Equip_Down_Ret, RefreshPanel)
+
     -- 卡牌刷新
     eventMgr:AddListener(EventType.Card_Update, RefreshPanel)
     eventMgr:AddListener(EventType.Role_Tag_Update, SetTag)
@@ -133,6 +165,8 @@ function RefreshPanel()
     end
 
     cardData:SetIsNew(false) -- 已查看,这不是新卡了
+
+    SetChangeBtn()
 end
 
 function SetRed()
@@ -174,7 +208,7 @@ function ChangeRole()
 end
 
 function SetRole()
-    CSAPI.SetGOActive(iconParent, false)
+    -- CSAPI.SetGOActive(iconParent, false)
     -- RoleTool.LoadImg(img, cardData:GetSkinID(), LoadImgType.RoleInfo, function()
     --     CSAPI.SetGOActive(iconParent, true)
     --     if (isFirst) then
@@ -189,10 +223,10 @@ function SetRole()
         CSAPI.SetGOActive(iconParent, true)
         if (isFirst) then
             isFirst = false
-            if(iconNode~=nil) then 
+            if (iconNode ~= nil) then
                 UIUtil:SetObjFade(iconNode, 0, 1, nil, 300, 1, 0)
                 UIUtil:SetPObjMove(iconNode, 400, 0, 0, 0, 0, 0, nil, 300, 1)
-            end 
+            end
         end
     end, cardData:GetSkinIsL2d())
 end
@@ -251,16 +285,9 @@ function SetLv()
     --     cg_btnLv = ComUtil.GetCom(btnLv, "CanvasGroup")
     -- end
 
-    local curLv = cardData:GetLv()
-    local maxLv = cardData:GetBreakLimitLv() -- cardData:GetCoreLimitLv() 屏蔽
-    local isMax = curLv >= maxLv
-    if (isRealCard and not isMax) then
-        CSAPI.SetGOActive(btnLv, true)
-    else
-        CSAPI.SetGOActive(btnLv, false)
-    end
+    SetBtnLv()
 
-    CSAPI.SetText(txtLv1, curLv .. "")
+    CSAPI.SetText(txtLv1, cardData:GetLv() .. "")
     CSAPI.SetText(txtLv2, "/" .. cardData:GetMaxLv())
     if (isMax) then
         expBar:SetProgress(1)
@@ -272,6 +299,17 @@ function SetLv()
         expBar:SetProgress(cur / max)
         CSAPI.SetText(txtExp, string.format("%s/<color=#929296>%s</color>", cur, max))
         -- cg_btnLv.alpha = 1
+    end
+end
+
+function SetBtnLv()
+    local curLv = cardData:GetLv()
+    local maxLv = cardData:GetBreakLimitLv() -- cardData:GetCoreLimitLv() 屏蔽
+    local isMax = curLv >= maxLv
+    if (isRealCard and not isMax) then
+        CSAPI.SetGOActive(btnLv, true)
+    else
+        CSAPI.SetGOActive(btnLv, false)
     end
 end
 
@@ -325,10 +363,18 @@ function SetSpecialSkill()
     if (type and type == SpecialSkillType.Fit) then
         local str1 = LanguageMgr:GetByID(4053)
         str1 = str1 .. ":"
-        local _data, str2 = RoleUniteUtil:GetStrs(cardData:GetCfg())
+        local _cfg = cardData.isMonster and cardData:GetCardCfg() or cardData:GetCfg()
+        local _data, str2 = RoleUniteUtil:GetStrs(_cfg)
         CSAPI.SetText(txtTT1, str1)
         CSAPI.SetText(txtTT2, str2[1])
     end
+    -- red
+    local isRed = false
+    local twoCardID = GCalHelp:GetElseCfgID(cardData:GetCfgID())
+    if (twoCardID and _data and not isFighting and RoleSkinMgr:CheckIsNewAdd(twoCardID)) then
+        isRed = true
+    end
+    UIUtil:SetRedPoint(btnSpecialSkill, isRed, 119.4, 22.5, 0)
 end
 
 -- 角色定位
@@ -578,14 +624,17 @@ function SetBtns()
     isHideQuestionItem = not isRealCard
 
     -- 战斗中时
-    if(openSetting and openSetting==10) then 
+    if (openSetting and openSetting == 10) then
         topLua.SetHomeActive(false)
-    else 
+    else
         topLua.SetHomeActive(not isFighting)
     end
     CSAPI.SetGOActive(btnDirll, not isFighting)
     CSAPI.SetGOActive(questionP, not isFighting)
     CSAPI.SetGOActive(btnApparel, not isFighting)
+    -- red 
+    local isRed = RoleSkinMgr:CheckIsNewAdd(cardData:GetCfgID())
+    UIUtil:SetRedPoint(btnApparel, isRed, 58.3, 26.2, 0)
 end
 
 -------------------------------------------------------------------------------------------------------------------------
@@ -628,6 +677,9 @@ function OnClickApparel()
         CSAPI.PlayUISound("ui_generic_tab_2") -- todo 
         CSAPI.OpenView("RoleApparel", cardData)
     end
+    -- 
+    RoleSkinMgr:SetIsNewAdd(cardData:GetCfgID())
+    UIUtil:SetRedPoint(btnApparel, false, 58.3, 26.2, 0)
 end
 
 -- 训练
@@ -688,7 +740,7 @@ function OnClickSpecialSkill()
             LanguageMgr:ShowTips(1006)
             return
         else
-            CSAPI.OpenView("RoleInfoFussion", {cardData, _data},openSetting)
+            CSAPI.OpenView("RoleInfoFussion", {cardData, _data, isRealCard, isFighting}, openSetting)
         end
     end
 end
@@ -740,6 +792,7 @@ function OnClickTalentDetail()
     CSAPI.OpenView("RoleCenter", {cardData}, "talent")
 end
 
+local RoleMatrixSkillInfoLua = nil;
 -- 基建技能
 function OnClickMatrixSkill()
     if (not cardData:GetCRoleData()) then
@@ -747,6 +800,35 @@ function OnClickMatrixSkill()
     end
     ResUtil:CreateUIGOAsync("Role/RoleMatrixSkillInfo", gameObject, function(go)
         local lua = ComUtil.GetLuaTable(go)
+        RoleMatrixSkillInfoLua = lua;
         lua.Refresh(cardData:GetCRoleData())
     end)
+end
+
+-- 换角色、机神---------------------------------------------------------------------------------------------------------------------
+
+function SetChangeBtn()
+    local b = false
+    if ((cardData:GetCfg().changeCardIds~=nil and #cardData:GetCfg().changeCardIds > 0) or (cardData:GetCfg().allTcSkills~=nil and #cardData:GetCfg().allTcSkills > 0)) then
+        b = true
+    end
+    CSAPI.SetGOActive(btnJieJin, b)
+end
+
+-- 解禁
+function OnClickJieJin()
+    CSAPI.OpenView("RoleJieJin", cardData)
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if RoleMatrixSkillInfoLua and RoleMatrixSkillInfoLua.OnClickMask then
+        RoleMatrixSkillInfoLua.OnClickMask()
+        RoleMatrixSkillInfoLua = nil
+    else
+        if topLua.OnClickBack then
+            topLua.OnClickBack();
+        end
+    end
 end

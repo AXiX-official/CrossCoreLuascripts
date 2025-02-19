@@ -46,6 +46,7 @@ function OnClickOK()
         cb()
     end
     --view:Close()
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_RESULT) end
 end
 
 function FirstEnd()

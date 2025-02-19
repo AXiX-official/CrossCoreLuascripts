@@ -23,8 +23,8 @@ function Skill4503102:OnBorn(caster, target, data)
 	-- 4503106
 	self:AddBuff(SkillEffect[4503106], caster, self.card, data, 6210,1)
 end
--- 攻击结束
-function Skill4503102:OnAttackOver(caster, target, data)
+-- 伤害前
+function Skill4503102:OnBefourHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -35,13 +35,6 @@ function Skill4503102:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8437
-	local count37 = SkillApi:BuffCount(self, caster, target,2,3,3008)
-	-- 8884
-	if SkillJudger:Less(self, caster, self.card, true,count37,1) then
-	else
-		return
-	end
 	-- 4503112
-	self:HitAddBuff(SkillEffect[4503112], caster, target, data, 3500,4503101)
+	self:HitAddBuff(SkillEffect[4503112], caster, target, data, 1500,4503101)
 end

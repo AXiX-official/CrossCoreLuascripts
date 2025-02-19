@@ -2,12 +2,17 @@
 local canvasGroup = nil
 local isShowAgain = false
 local isTimeOut = false
+local isDirll = false
 
 function Awake()
     canvasGroup = ComUtil.GetCom(btnAgain, "CanvasGroup")
 end
 
 function Refresh(_data, _elseData)
+    data = _data 
+    elseData = _elseData 
+
+    isDirll = _elseData and _elseData.isDirll
     -- anim
     CSAPI.SetGOActive(animMask, true)
     FuncUtil:Call(function()
@@ -20,6 +25,9 @@ function Refresh(_data, _elseData)
 
     -- icon
     ResUtil.IconGoods:Load(costIcon, ITEM_ID.Hot .. "_1", true)
+    if isDirll then
+        CSAPI.LoadImg(titleImg, "UIs/FightOver/img_dirll_lose.png", true, nil, true)
+    end
 
     -- starInfo
     SetStarInfos()
@@ -37,7 +45,7 @@ function SetStarInfos()
     end
 
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa then
+    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type == eDuplicateType.NewTower or cfgDungeon.type == eDuplicateType.RogueS then
         CSAPI.SetGOActive(taskObj, false)
         return
     end
@@ -72,6 +80,9 @@ end
 
 -- 显示再次挑战按钮
 function IsShowAgain()
+    if sceneType == SceneType.Rogue or sceneType == SceneType.RogueS then
+        return true
+    end 
     if not DungeonMgr:GetCurrId() then
         return false
     end
@@ -84,13 +95,13 @@ function IsShowAgain()
 
     local dungeonType = cfgDungeon.type
     if sceneType == SceneType.PVE then
-        if dungeonType == eDuplicateType.Tower then
-            if DungeonMgr:IsCurrDungeonComplete() then
-                CSAPI.SetGOActive(costObj, true)
-                CSAPI.SetText(txtCost, "0")
-                return true
-            end
+        if not DungeonMgr:IsCurrDungeonComplete() then
             return false
+        end
+        if dungeonType == eDuplicateType.Tower then
+            CSAPI.SetGOActive(costObj, true)
+            CSAPI.SetText(txtCost, "0")
+            return true
         elseif dungeonType == eDuplicateType.StoryActive or dungeonType == eDuplicateType.TaoFa then --检测副本开启时间是否过了
             local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
             if sectionData == nil then
@@ -105,9 +116,8 @@ function IsShowAgain()
         end
         CSAPI.SetGOActive(costObj, true)
 
-        local winCost = cfgDungeon and cfgDungeon.winCostHot or 0
-        local enterCost = cfgDungeon and cfgDungeon.enterCostHot or 0
-        CSAPI.SetText(txtCost, math.abs(winCost + enterCost) .. "")
+        local costNum = DungeonUtil.GetHot(cfgDungeon)
+        CSAPI.SetText(txtCost, costNum .. "")
         return true
     end
 
@@ -124,25 +134,15 @@ function OnClickAgain()
         return
     end
 
-    FightClient:Reset();
-
-    if sceneType == SceneType.PVE then
-        local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-        -- 进入副本前编队
-        if cfgDungeon then
-            if cfgDungeon.arrForceTeam ~= nil then -- 强制上阵编队
-                CSAPI.OpenView("TeamForceConfirm", {
-                    dungeonId = cfgDungeon.id,
-                    teamNum = cfgDungeon.teamNum or 1
-                })
-            else
-                CSAPI.OpenView("TeamConfirm", { -- 正常上阵
-                    dungeonId = cfgDungeon.id,
-                    teamNum = cfgDungeon.teamNum or 1
-                }, TeamConfirmOpenType.Dungeon)
-            end
-        end
+    -- if sceneType == SceneType.Rogue then
+    --     RogueMgr:FightToBack(false,elseData.group)
+    --     return 
+    -- end 
+    local num = isDirll and 6 or 5
+    if sceneType == SceneType.Rogue or sceneType == SceneType.RogueS then
+        num = nil 
     end
+    ApplyQuit(num)
 end
 
 -- 等级提升
@@ -196,15 +196,15 @@ function ApplyQuit(jumpType)
                 end);
                 hasCallFunc = true;
             end
-            FriendMgr:ClearAssistData();
-            TeamMgr:ClearAssistTeamIndex();
-            TeamMgr:ClearFightTeamData();
+            ClearTeamData()
             UIUtil:AddFightTeamState(2, "FightOverResult:ApplyQuit()")
         elseif dungeonId ~= nil and dungeonId ~= "" then -- 未结束
             LanguageMgr:ShowTips(8009)
             -- DungeonMgr:ApplyEnter(dungeonId);
             return;
         end
+    elseif sceneType == SceneType.Rogue or sceneType == SceneType.RogueS then 
+        ClearTeamData()
     end
     if jumpType then
         local jumpID = nil;
@@ -217,11 +217,11 @@ function ApplyQuit(jumpType)
         elseif jumpType == 4 then
             jumpID = 80002;
         end
-        if sceneType == SceneType.PVE then
+        --if sceneType == SceneType.PVE then
             DungeonMgr:Quit(false, jumpType)
-        else
-            JumpMgr:Jump(jumpID);
-        end
+        --else
+            --JumpMgr:Jump(jumpID);
+        --end
         return
     end
 
@@ -241,5 +241,15 @@ function ApplyQuit(jumpType)
         DungeonMgr:Quit(not bIsWin);
     elseif (sceneType == SceneType.GuildBOSS) then
         GuildFightMgr:FightQuit();
+    elseif (sceneType == SceneType.Rogue) then
+        RogueMgr:FightToBack(false,elseData.group)
+    elseif (sceneType == SceneType.RogueS) then
+        RogueSMgr:Quit(elseData.group,data.elseData.group)
     end
+end
+
+function ClearTeamData()
+    FriendMgr:ClearAssistData();
+    TeamMgr:ClearAssistTeamIndex();
+    TeamMgr:ClearFightTeamData();
 end

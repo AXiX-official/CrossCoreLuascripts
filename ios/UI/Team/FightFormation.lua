@@ -52,8 +52,6 @@ end
 
 --初始化多语言
 function SetText()
-	-- CSAPI.SetText(text_taskTips, StringConstant.taskTips1);
-	-- CSAPI.SetText(text_auto, StringConstant.autoTips);
 end
 
 --初始化
@@ -171,7 +169,8 @@ function InitFightTask()
 		ResUtil:CreateUIGOAsync("FightTaskItem/FightTaskItem",taskParent,function(go)
 			taskItems=taskItem or {};
 			local item=ComUtil.GetLuaTable(go);
-			item.Init(StringConstant.taskInfo[i],true);
+			local strs = StringUtil:split(LanguageMgr:GetByID(1093), ",") or {}
+			item.Init(strs[i],true);
 			CSAPI.SetAnchor(go,0+15*(i-1),0-lineHight*(i-1));
 			table.insert(taskItems,item);
 		end);

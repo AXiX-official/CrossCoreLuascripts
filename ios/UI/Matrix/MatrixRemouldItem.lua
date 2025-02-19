@@ -72,8 +72,9 @@ function SetTime()
         if (not buildRun and data.tLeft and data.tLeft > 0) then
             needTime = data.tLeft
         else
-            local runLen = oldLen + (TimeUtil:GetTime() - openTime) * timeMul
-            needTime = data.num - data.tCur - runLen
+            --local runLen = oldLen + (TimeUtil:GetTime() - openTime) * timeMul
+            -- needTime = data.num - data.tCur - runLen
+            needTime = data.tf - TimeUtil:GetTime()
             needTime = needTime > 0 and needTime or 0
             runTime = needTime > 0
         end

@@ -208,10 +208,10 @@ function OnClickGrid(tab)
         if assistData then
             cid=assistData.card:GetID();
         end
-        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,dungeonID=data.dungeonID,NPCList=data.NPCList,forceCfg=forceCfg,closeFunc=OnChange,selectType=TeamSelectType.Support,is2D=true,canAssist=canAddAssist},TeamOpenSetting.PVE);
+        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,dungeonID=data.dungeonID,NPCList=data.NPCList,forceCfg=forceCfg,closeFunc=OnChange,selectType=TeamSelectType.Support,canAssist=canAddAssist},TeamOpenSetting.PVE);
     else
         SetTeamData(teamData:GetIndex());
-        CSAPI.OpenView("TeamView",{team=teamData,dungeonID=data.dungeonID,forceCfg=forceCfg,NPCList=data.NPCList,excludIds=excludIds,canEmpty=false,closeFunc=OnChange,selectType=TeamSelectType.Force,is2D=true,canAssist=canAddAssist},TeamOpenSetting.PVE);
+        CSAPI.OpenView("TeamView",{team=teamData,dungeonID=data.dungeonID,forceCfg=forceCfg,NPCList=data.NPCList,excludIds=excludIds,canEmpty=false,closeFunc=OnChange,selectType=TeamSelectType.Force,canAssist=canAddAssist},TeamOpenSetting.PVE);
     end
 end
 
@@ -340,6 +340,10 @@ end
 
 function OnClickAI()
     if teamData then
+        if teamData:GetRealCount()<=0 then
+            Tips.ShowTips(LanguageMgr:GetByID(26047))
+            do return end
+        end
         local isOpen,lockStr=MenuMgr:CheckModelOpen(OpenViewType.special, FormationUtil.AIModuleKey)
         if isOpen~=true then
             Tips.ShowTips(lockStr);
@@ -347,7 +351,7 @@ function OnClickAI()
         end
         CSAPI.OpenView("AIPrefabSetting",{teamData=teamData});
     else
-        Tips.ShowTips("请先选择要使用的队伍")
+        Tips.ShowTips(LanguageMgr:GetByID(26048))
     end
 end
 
@@ -442,15 +446,17 @@ function CheckModelOpen()
 end
 
 function OnClickSkill()
-    if teamData then
+    if teamData and teamData:GetRealCount()>0 then
         local isOpen,lockStr=MenuMgr:CheckModelOpen(OpenViewType.main, FormationUtil.SkillModuleKey)
         if isOpen~=true then
             Tips.ShowTips(lockStr);
             return
         end
         CSAPI.OpenView("TacticsView",{teamData=teamData,closeFunc=OnSkillChange});
+    elseif teamData and teamData:GetRealCount()==0 then
+        Tips.ShowTips(LanguageMgr:GetByID(26047))
     else
-        Tips.ShowTips("请先选择要使用的队伍")
+        Tips.ShowTips(LanguageMgr:GetByID(26048))
     end
 end
 
@@ -501,12 +507,13 @@ function PushAssistCard(assist)
     local hasRecord=formatTab:HasRecord(assist.row, assist.col,card:GetID(),holderInfo);
     if not hasRecord then
         local teamItemData = TeamItemData.New();
+        local isNpc,s1,s2=FormationUtil.CheckNPCID(card:GetID());
         local tempData={
             cid=card:GetID(),
             row=assist.row,
             col=assist.col,
             fuid=assist.fuid,
-            bIsNpc=FormationUtil.IsNPCAssist(card:GetID()),
+            bIsNpc=isNpc,
             index=6,
         }
         teamItemData:SetData(tempData);
@@ -604,13 +611,14 @@ function LoadDefaultForceTeam()
     if forceCfg~=nil then
         --根据表中配置先加载相应的队伍数据
 		for k,v in ipairs(forceCfg) do
-			if v.nForceID~=nil then
-                local cid,grids=TeamConfirmUtil.GetBetterCards(v.bIsNpc,v.nForceID);
+            local nForceID = FormationUtil.GetNForceID(v);
+			if nForceID~=nil then
+                local cid,grids=TeamConfirmUtil.GetBetterCards(v.bIsNpc,nForceID);
                 if cid==nil then
-                    local nForceID=v.nForceID;
-                    if RoleMgr:IsSexInitCardIDs(nForceID) then--判断当前卡牌是否是主角卡，是的话替换为当前性别的对应卡牌ID
-                        nForceID=RoleMgr:GetCurrSexCardCfgId();
-                    end
+                    -- local nForceID=v.nForceID;
+                    -- if RoleMgr:IsSexInitCardIDs(nForceID) then--判断当前卡牌是否是主角卡，是的话替换为当前性别的对应卡牌ID
+                    --     nForceID=RoleMgr:GetCurrSexCardCfgId();
+                    -- end
                     local cfg=Cfgs.CardData:GetByID(nForceID);
                     if v.bIsNpc==false and cfg and cfg.role_tag=="lead" then --主角例外，如果没有找到男主，则去找女主，反之亦然
 					    cid,grids=TeamConfirmUtil.GetBetterCards(v.bIsNpc,nForceID);

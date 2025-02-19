@@ -27,12 +27,15 @@ function InitItem(cfgSkill,skillData)
     CSAPI.SetGOActive(name,useState);
     CSAPI.SetGOActive(cdMask,not useState);
     if(skillData and skillData.cd)then
-        txtCD.text = skillData.cd .. StringConstant.fight_player_skill_cd; 
+        txtCD.text = skillData.cd .. (LanguageMgr:GetByID(25045) or "");
     else
         txtCD.text = "";
     end
-    txtName.text = cfgSkill and cfgSkill.name or "";
-    txtDesc.text = cfgSkill and cfgSkill.desc or "";
+    
+
+    local cfgSkillDesc = cfgSkill and Cfgs.CfgSkillDesc:GetByID(cfgSkill.id);
+    txtName.text = cfgSkillDesc and cfgSkillDesc.name or "";
+    txtDesc.text = cfgSkillDesc and cfgSkillDesc.desc or "";
 end
 
 function SetColorIndex(index)

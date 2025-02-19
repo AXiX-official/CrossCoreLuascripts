@@ -9,8 +9,12 @@ local isSelecting = false -- 选中一件家具编辑中
 local isInWall = false -- 当前选中的家具在墙
 local themeSort = {1, 1} -- 1:默认 2:舒适度  3：价格    ； 1：降序 2：升序
 local funitureSort = {1, 1} -- 1:默认 2:舒适度  3：价格 ； 1：降序 2：升序
+local needToFirst = false 
 
 function Awake()
+    sr1_sr = ComUtil.GetComInChildren(hsv,"ScrollRect")
+    sr2_sr = ComUtil.GetComInChildren(vsv,"ScrollRect")
+
     layout1 = ComUtil.GetCom(hsv, "UIInfinite")
     layout1:Init("UIs/Dorm2/DormLayoutItem", LayoutCallBack1, true)
     sr1 = layout1:GetSR()
@@ -41,6 +45,8 @@ function Awake()
         local y = num == 1 and 100000 or 0
         CSAPI.SetAnchor(gameObject, 0, y, 0)
     end)
+    
+    AdaptiveConfiguration.SetLuaObjUIFit("DormLayout",gameObject)
 end
 
 function OnDisable()
@@ -63,6 +69,9 @@ function OnDestroy()
     eventMgr:ClearListener()
     CSAPI.RemoveInputFieldChange(InputField, InputChange)
     CSAPI.RemoveInputFieldCallBack(InputField, InputCB)
+
+
+    AdaptiveConfiguration.LuaView_Lua_Closed("DormLayout")
 end
 function InputChange(str)
     input.text = StringUtil:FilterChar(str) --str
@@ -91,6 +100,7 @@ function LayoutCallBack2(index)
     end
 end
 function ItemClickCB1(item)
+    needToFirst = true 
     local _data = item.data
     if (curDataType == 1) then
         -- 点选某主题
@@ -114,14 +124,16 @@ function ItemClickCB2(item)
         Refresh()
         return
     end
-    --是否还有位置 
-    local roleNum = DormMgr:GetCurRoomData():GetNum()
-    local fNum = DormMgr:GetFurnitureGridNum()
-    local hadNum = 256-fNum
-    local needNum = math.ceil(_data.scale[1]*_data.scale[3])
-    if(hadNum<=needNum) then 
-        LanguageMgr:ShowTips(21035)
-        return 
+    --是否还有位置 (墙、地面、墙饰忽略；地毯单独算)
+    if(_data.sType~=0 and _data.sType~=1 and _data.sType~=7 and _data.sType~=8) then 
+        local roleNum = DormMgr:GetCurRoomData():GetNum()
+        local fNum = DormMgr:GetFurnitureGridNum()
+        local hadNum = 256-fNum-roleNum
+        local needNum = math.ceil(_data.scale[1]*_data.scale[3])
+        if(hadNum<=needNum) then 
+            LanguageMgr:ShowTips(21035)
+            return 
+        end
     end 
     -- 已放置高亮
     if (item.iSet) then
@@ -227,7 +239,7 @@ function SetMain()
         themeCfgLen = 0
         local cfgThemeDatas = Cfgs.CfgFurnitureTheme:GetAll()
         for k, v in pairs(cfgThemeDatas) do
-            if(not v.hide) then 
+            if(DormMgr:CheckIsOpen(v) and  not v.hide) then 
                 themeCfgLen = themeCfgLen + 1
             end 
         end
@@ -314,11 +326,17 @@ function SetNode()
 
     -- curDatas 
     SetCurDatas()
+    local _index = needToFirst and 1 or 0
     if (isDetail) then
-        layout2:IEShowList(#curDatas)
+        sr2_sr.enabled = false 
+        sr2_sr.enabled = true 
+        layout2:IEShowList(#curDatas,nil,_index)
     else
-        layout1:IEShowList(#curDatas)
-    end
+        sr1_sr.enabled = false 
+        sr1_sr.enabled = true 
+        layout1:IEShowList(#curDatas,nil,_index)
+    end 
+    
     -- title 
     local titleImgName = nil
     local titleName1, titleName2 = "", ""
@@ -340,10 +358,10 @@ function SetNode()
         end
     elseif (mainIndex == 2) then
         titleName1 = LanguageMgr:GetByID(32071)
-        titleName2 = LanguageMgr:GetByType(32071, 3)
+        titleName2 = LanguageMgr:GetByType(32071, 4)
     elseif (mainIndex == 3) then
         titleName1 = LanguageMgr:GetByID(32072)
-        titleName2 = LanguageMgr:GetByType(32072, 3)
+        titleName2 = LanguageMgr:GetByType(32072, 4)
     end
     CSAPI.SetGOActive(imgTitleBg, titleImgName ~= nil)
     if (titleImgName) then
@@ -432,7 +450,7 @@ function SetCurDatas()
                 themeCfgsArr = {}
                 local themeCfgs = Cfgs.CfgFurnitureTheme:GetAll()
                 for k, v in pairs(themeCfgs) do
-                    if(not v.hide) then 
+                    if(DormMgr:CheckIsOpen(v) and  not v.hide) then 
                         table.insert(themeCfgsArr, v)
                     end 
                 end

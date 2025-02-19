@@ -26,34 +26,14 @@ function Skill4702403:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 4702405
-	self:AddTempAttr(SkillEffect[4702405], caster, self.card, data, "damage",0.3)
+	self:AddTempAttr(SkillEffect[4702405], caster, self.card, data, "damage",0.4)
 end
 -- 伤害后
 function Skill4702403:OnAfterHurt(caster, target, data)
 	-- 8649
 	local count649 = SkillApi:SkillLevel(self, caster, target,3,3291)
-	-- 8853
-	if SkillJudger:Greater(self, caster, target, true,count649,0) then
-	else
-		return
-	end
-	-- 8650
-	local count650 = SkillApi:GetAttr(self, caster, target,2,"resist")
-	-- 4702415
-	if SkillJudger:Less(self, caster, target, true,count650,0.3) then
-		-- 8060
-		if SkillJudger:CasterIsSelf(self, caster, target, true) then
-		else
-			return
-		end
-		-- 8073
-		if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-		else
-			return
-		end
-		-- 4702412
-		self:HitAddBuff(SkillEffect[4702412], caster, target, data, 700+count649*100,3005)
-	else
+	-- 4702418
+	if SkillJudger:Less(self, caster, target, true,count649,1) then
 		-- 8060
 		if SkillJudger:CasterIsSelf(self, caster, target, true) then
 		else
@@ -65,6 +45,44 @@ function Skill4702403:OnAfterHurt(caster, target, data)
 			return
 		end
 		-- 4702402
-		self:HitAddBuff(SkillEffect[4702402], caster, target, data, 700,3005)
+		self:HitAddBuff(SkillEffect[4702402], caster, target, data, 800,3005)
+	else
+		-- 8649
+		local count649 = SkillApi:SkillLevel(self, caster, target,3,3291)
+		-- 8853
+		if SkillJudger:Greater(self, caster, target, true,count649,0) then
+		else
+			return
+		end
+		-- 8650
+		local count650 = SkillApi:GetAttr(self, caster, target,2,"resist")
+		-- 4702415
+		if SkillJudger:Less(self, caster, target, true,count650,0.3) then
+			-- 8060
+			if SkillJudger:CasterIsSelf(self, caster, target, true) then
+			else
+				return
+			end
+			-- 8073
+			if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+			else
+				return
+			end
+			-- 4702412
+			self:HitAddBuff(SkillEffect[4702412], caster, target, data, 800+count649*100,3005)
+		else
+			-- 8060
+			if SkillJudger:CasterIsSelf(self, caster, target, true) then
+			else
+				return
+			end
+			-- 8073
+			if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+			else
+				return
+			end
+			-- 4702402
+			self:HitAddBuff(SkillEffect[4702402], caster, target, data, 800,3005)
+		end
 	end
 end

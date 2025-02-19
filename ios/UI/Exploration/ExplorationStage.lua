@@ -209,7 +209,11 @@ function OnClickPay()
 		local dialogdata = {
 			content = LanguageMgr:GetByID(18312,currPrice),
 			okCallBack = function()
-				ExplorationProto:Upgrade(data:GetCfgID(),currLv+math.floor(upLv));
+				if CSAPI.IsADVRegional(3)  and costID==ITEM_ID.DIAMOND then
+					CSAPI.ADVJPTitle(currPrice,function()   ExplorationProto:Upgrade(data:GetCfgID(),currLv+math.floor(upLv)); end)
+				else
+					ExplorationProto:Upgrade(data:GetCfgID(),currLv+math.floor(upLv));
+				end
 			end
 		}
 		CSAPI.OpenView("Dialog", dialogdata);

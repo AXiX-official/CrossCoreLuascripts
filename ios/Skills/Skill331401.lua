@@ -29,6 +29,19 @@ function Skill331401:OnDeath(caster, target, data)
 	-- 331406
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:DelBufferTypeForce(SkillEffect[331406], caster, target, data, 4701301)
+		self:DelBufferTypeForce(SkillEffect[331406], caster, target, data, 331401)
+	end
+end
+-- 特殊入场时(复活，召唤，合体)
+function Skill331401:OnBornSpecial(caster, target, data)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 331411
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[331411], caster, target, data, 331401)
 	end
 end

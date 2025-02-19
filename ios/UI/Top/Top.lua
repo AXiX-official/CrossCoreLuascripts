@@ -1,3 +1,13 @@
+local topIndex = 0
+function Awake()
+    topIndex = MenuMgr:GetTopIndex()
+    AdaptiveConfiguration.SetLuaUIFit("Top" .. topIndex, gameObject)
+end
+
+function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("Top" .. topIndex)
+end
+
 function OnEnable()
     if (eventMgr) then
         eventMgr:ClearListener()
@@ -49,6 +59,7 @@ function SetMoney(_datas)
         if _data ~= nil then
             -- icon
             local cfg = Cfgs.ItemInfo:GetByID(_data[1])
+            if cfg==nil then LogError("物品表不存在物品id："..table.tostring(_data,true)); end
             ResUtil.IconGoods:Load(this["moneyIcon" .. i], cfg.icon .. "_1")
             -- num
             if (_data[1] == ITEM_ID.Hot) then
@@ -63,7 +74,7 @@ function SetMoney(_datas)
             end
             -- add 
 
-            CSAPI.SetGOActive(this["add" .. i], _data[2] ~= nil)
+            -- CSAPI.SetGOActive(this["add" .. i], _data[2] ~= nil)
             if (_data[2] ~= nil) then
                 local colorName = cfg.addColor
                 CSAPI.SetImgColorByCode(this["add" .. i], colorName)
@@ -99,6 +110,11 @@ function OnClickMoney(index)
                 JumpMgr:Jump(jumpID)
             else
                 Tips.ShowTips(desc)
+            end
+        else--打开物品UI
+            local goods=BagMgr:GetFakeData(datas[index][1]);
+            if goods then
+                CSAPI.OpenView("GoodsFullInfo",{data=goods});
             end
         end
     end

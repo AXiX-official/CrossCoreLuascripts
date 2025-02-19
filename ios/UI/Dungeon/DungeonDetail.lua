@@ -181,8 +181,10 @@ function CreateMainLineOutPutGrids()
 	local fixedList = GetRewardCfgGoods(info.fixedReward, true)
 	local randomList = GetRewardCfgGoods(info.randomReward, true)
 	local littleList = GetRewardCfgGoods(info.littleReward, true)
-	local timeLimitList = GetRewardCfgGoods(RewardUtil.GetSpecialReward(info.group))
-	
+	local timeLimitList = {}
+	if info.sub_type == nil then
+		timeLimitList = GetRewardCfgGoods(RewardUtil.GetSpecialReward(info.group))
+	end
 	local LanguageIDs = {15019, 15041, 15042, 15044}
 	local lists = {passList, fixedList, randomList, littleList}
 	

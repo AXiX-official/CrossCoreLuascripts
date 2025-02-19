@@ -3,10 +3,16 @@ local roleItem=nil;
 local effect=nil;
 local skinDesc=""
 local modelID=nil
- 
+local changeInfo=nil;
+local changeData=nil;
 this.ClickBtn=nil;
+local langID=nil;
+local otherImgName=nil;
 function Awake()
-    roleItem = RoleTool.AddRole(iconParent, PlayCB, nil, false)		
+    roleItem = RoleTool.AddRole(iconParent, PlayCB, nil, false)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
+    ShareView_NoticeScreenshotCompleted(nil);
 end
 
 function OnDestroy()
@@ -20,7 +26,7 @@ function OnOpen()
         local hasEnter=data:HasEnterTween();
         -- local hasEnter=data:HasL2D();
         modelID=data:GetModelID();
-        roleItem.Refresh(data:GetModelID(), LoadImgType.SkinReward,function()
+        roleItem.Refresh(modelID, LoadImgType.SkinReward,function()
             if roleItem.CheckIn() and CSAPI.IsInternation() then --有反和谐且有入场动画
                 roleItem.PlayIn(function()
                     ShowTween2(roleItem.CheckIn())
@@ -36,6 +42,7 @@ function OnOpen()
         CSAPI.SetText(txt_roleName,modelCfg.key);
         CSAPI.SetText(txt_roleNameTips,modelCfg.englishName);
         skinDesc = data:GetSkinDesc()
+        changeInfo=data:GetChangeInfo()
     end
 end
 
@@ -58,6 +65,7 @@ function OnClickAnyway()
 end
 
 function CloseView()
+    RoleAudioPlayMgr:StopSound();
     view:Close();
 end
 
@@ -88,11 +96,43 @@ function ShowTween2(isL2d)
         CSAPI.SetGOActive(tween3,true);
     else
         CSAPI.SetGOActive(tween2,true);
+        CSAPI.SetGOActive(ShareBtntween,true);
     end
     CSAPI.SetGOActive(clicker,true)
     CSAPI.SetText(txt_desc, skinDesc)	
+    if changeInfo then
+        SetChangeInfo(changeInfo[1].cfg);
+    end
     --播放语音
     -- roleItem.PlayVoice(RoleAudioType.get);
+end
+
+function SetChangeInfo(cfg)
+    if cfg then
+        local type=cfg.skinType;
+        if type==3 then
+            langID=18105;
+            otherImgName="img_12_02";
+        elseif type==4 then --形切
+            langID=18106;
+            otherImgName="img_12_03";
+        elseif type==5 then
+            langID=18104;
+            otherImgName="img_12_01";
+        end
+        if langID~=nil then
+            CSAPI.SetText(txt_other,LanguageMgr:GetByID(langID));
+        end
+        --加载图
+        ResUtil.Card:Load(otherIcon, cfg.List_head);
+        if otherImgName~=nil then
+            local tempName=string.format("UIs/RoleSkinComm/%s.png",otherImgName);
+            CSAPI.LoadImg(otherImgTips,tempName,true,nil,true);
+        end
+        CSAPI.SetGOActive(btnOther,true);
+    else
+        CSAPI.SetGOActive(btnOther,false);
+    end
 end
 
 function ShowEffect(func)
@@ -122,10 +162,61 @@ function ShowEffect(func)
     end, nil, 350)
 end
 
+function OpenSearchView(data,loadImgType)
+    if data~=nil then
+        CSAPI.OpenView("RoleInfoAmplification", data,loadImgType)
+    end
+end
+
+function OnClickOther()
+    if changeInfo then
+        local cfg=changeInfo[1].cfg;
+        local type=changeInfo[1].type;
+        if type==5 then --机神
+            OpenSearchView({ cfg.id, type==SkinChangeResourceType.Spine,false}, LoadImgType.Main)
+        elseif changeData then --变更展示信息
+            changeData=nil;
+            SetChangeInfo(cfg);
+            SwitchChange();
+        else
+            changeData=changeInfo[1];
+            SetChangeInfo(data:GetModelCfg());
+            SwitchChange();
+        end
+    end
+end
+
+function SwitchChange()
+    local modelCfg=nil;
+    local hasEnter=false;
+    if changeData then
+        --刷新皮肤信息、加载新的皮肤
+        modelCfg=changeData.cfg;
+        skinDesc = modelCfg.skin_desc;
+        modelID=modelCfg.id;
+        hasEnter=modelCfg.hadAni==1;
+    else
+        hasEnter=data:HasEnterTween();
+        -- local hasEnter=data:HasL2D();
+        modelID=data:GetModelID();
+        modelCfg=data:GetModelCfg();
+        skinDesc = data:GetSkinDesc()
+    end
+    roleItem.Refresh(modelID, LoadImgType.SkinReward,nil,hasEnter);
+    --刷新皮肤信息、加载新的皮肤
+    CSAPI.SetText(txt_set,modelCfg.desc);
+    CSAPI.SetText(txt_roleName,modelCfg.key);
+    CSAPI.SetText(txt_roleNameTips,modelCfg.englishName);
+    CSAPI.SetText(txt_desc, skinDesc)	
+end
+function OnClickShareBtn()
+    CSAPI.OpenView("ShareView",{LocationSource=2})
+end
 --------------------------------------------用于奖励弹窗--------------------------------------------
 function Init()
     CSAPI.SetGOActive(tween1, false)
     CSAPI.SetGOActive(tween2, false)
+    CSAPI.SetGOActive(ShareBtntween,false);
     CSAPI.SetGOActive(tween3, false)
     CSAPI.SetGOActive(stars, false)
     CSAPI.SetGOActive(effectNode, false)
@@ -137,4 +228,26 @@ function Init()
     CSAPI.SetScale(bottom,1,0,1)
     CSAPI.SetRTSize(line1,1,600)
     CSAPI.SetRTSize(line2,1,600)
+end
+
+---截图前一帧通知
+function ShareView_NoticeTheNextFrameScreenshot(Data)
+    CSAPI.SetGOActive(ShareBtn, false)
+end
+---截图完成通知
+function ShareView_NoticeScreenshotCompleted(Data)
+    if CSAPI.IsMobileplatform then
+        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+            CSAPI.SetGOActive(ShareBtn, true);
+        else
+            CSAPI.SetGOActive(ShareBtn, false);
+        end
+    else
+        CSAPI.SetGOActive(ShareBtn, false)
+    end
+
+end
+function OnDestroy()
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
 end

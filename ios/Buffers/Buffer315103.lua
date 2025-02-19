@@ -8,6 +8,6 @@ function Buffer315103:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer315103:OnCreate(caster, target)
-	-- 4500603
-	self:AddAttrPercent(BufferEffect[4500603], self.caster, target or self.owner, nil,"defense",0.08)
+	-- 315103
+	self:AddAttrPercent(BufferEffect[315103], self.caster, target or self.owner, nil,"defense",0.06)
 end

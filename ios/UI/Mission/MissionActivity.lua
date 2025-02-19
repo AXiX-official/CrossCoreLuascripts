@@ -82,6 +82,9 @@ function SetTopBtn()
         elseif data.group == 3003 then
             table.insert(ids,{10016})
             table.insert(ids,{12007,140014})
+        elseif data.group == 3005 then
+            table.insert(ids,{10103})
+            table.insert(ids,{12010,140021})
         end
     elseif type == eTaskType.DupTaoFa then
         table.insert(ids,{10040})
@@ -149,7 +152,9 @@ function OnClickAllGet()
         if type == eTaskType.TmpDupTower then
             local ids = {}
             for k, v in ipairs(mDatas) do
-                table.insert(ids,v:GetID())
+                if v:IsFinish() and not v:IsGet() then
+                    table.insert(ids, v:GetID())
+                end
             end
             TaskProto:GetReward(nil, ids)
         else

@@ -10,6 +10,12 @@ function FightLog:Init()
 	self.allLog = {}
 end
 
+function FightLog:Destroy()
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 function FightLog:Clean()
 	LogDebug("---------FightLog:Clean()-------------")
 	-- LogTrace()
@@ -117,7 +123,7 @@ function FightLog:GetAndClean()
 	local log = self:Get()
 	-- LogTrace()
 	-- LogTable(self.log, "ff9977 self.log=")
-	-- LogTable(log, "ff9977 log=")
+	-- LogTable(log, "GetAndClean ff9977 log=")
 	if g_FightMgr then
 		local card = g_FightMgr.currTurn
 		-- if not card then return end

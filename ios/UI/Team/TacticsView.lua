@@ -32,7 +32,7 @@ function Close()
         Tips.ShowTips(LanguageMgr:GetTips(26104));
         currID=g_DefaultAbilityId;
     end
-    if closeFunc then
+    if closeFunc and currID~=oldID then
         closeFunc(currID);
         closeFunc=nil;
     end

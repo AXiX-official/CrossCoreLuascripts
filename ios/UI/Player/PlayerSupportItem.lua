@@ -52,7 +52,7 @@ function OnClickSureCB(curSupportCids)
 	end
 	TeamMgr:UpdateDataByIndex(eTeamType.Assistance, teamData)
 	--保存
-	TeamMgr:SaveData(eTeamType.Assistance, nil)
+	TeamMgr:SaveData(teamData, nil)
 	
 	EventMgr.Dispatch(EventType.Role_Card_Support)
 end

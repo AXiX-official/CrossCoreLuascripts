@@ -31,15 +31,31 @@ function this:OnClean()
     self.comboer = nil;
 end
 
+function this:IsSkip()
+    local character = self:GetComber();
+
+    local state = character and character.IsSkipSkill();
+    --LogError(state and "tt" or "ff");
+    return state;
+end
+
 function this:ApplyStart()
     if(self.preloadComplete == nil or self.isStart == nil)then
         return;
     end
+
     local comber = self:GetComber();
     EventMgr.Dispatch(EventType.Fight_Mask,comber and comber.GetID()); 
-    FuncUtil:Call(self.ShowCombo,self,FightClient:GetFightMaskDelayTime());
+    FuncUtil:Call(self.ShowCombo,self,FightClient:GetFightMaskDelayTime());    
 end
 function this:ShowCombo()
+    if(self:IsSkip())then
+        self:RemoveCombos();
+        self:ShowComboCharacter();
+        return;
+    end
+
+
     EventMgr.Dispatch(EventType.Fight_Skill_Skip,true); 
 
     self:SetUIState(false);
@@ -110,7 +126,7 @@ function this:ShowComboCharacter()
         luaCamera = nil;
     end
     CharacterMgr:SetAllShowState(true);
-    FuncUtil:Call(self.ApplyComplete,self,2000);    
+    FuncUtil:Call(self.ApplyComplete,self,self:IsSkip() and 500 or 2000);    
     self:SetUIState(true);
     EventMgr.Dispatch(EventType.Character_HeadInfo_Scale_State,false);     
     --EventMgr.Dispatch(EventType.Scene_Mask_Changed,false);
@@ -209,9 +225,10 @@ function this:RemoveCombos()
         character.PutOut();
         local removeDelay = 3000;
         if(data and data.id == character.GetID())then                   
-            removeDelay = 4800;
+            removeDelay = 4800;            
             FuncUtil:Call(self.DisableComboEff,self,removeDelay - 50,character);
         end
+        removeDelay = self:IsSkip() and 0 or removeDelay;
         FuncUtil:Call(character.Remove,nil,removeDelay);
     end
 end

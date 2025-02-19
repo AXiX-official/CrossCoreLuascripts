@@ -6,8 +6,8 @@ Buffer24402 = oo.class(BuffBase)
 function Buffer24402:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 行动开始
-function Buffer24402:OnActionBegin(caster, target)
+-- 暴击伤害前(OnBefourHurt之前)
+function Buffer24402:OnBefourCritHurt(caster, target)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else
@@ -24,7 +24,7 @@ function Buffer24402:OnActionBegin(caster, target)
 		return
 	end
 	-- 24402
-	self:AddAttr(BufferEffect[24402], self.caster, self.card, nil, "crit_rate",1)
+	self:AddTempAttr(BufferEffect[24402], self.caster, self.card, nil, "crit_rate",1)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
 	else
@@ -41,7 +41,5 @@ function Buffer24402:OnActionBegin(caster, target)
 		return
 	end
 	-- 24412
-	self:AddAttr(BufferEffect[24412], self.caster, self.card, nil, "damage",0.3)
-	-- 24414
-	self:ShowTips(BufferEffect[24414], self.caster, self.card, nil, 2,"蛮力",true)
+	self:AddTempAttr(BufferEffect[24412], self.caster, self.card, nil, "damage",0.3)
 end

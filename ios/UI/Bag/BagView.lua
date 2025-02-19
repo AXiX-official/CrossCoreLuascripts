@@ -18,6 +18,7 @@ local tagList={ --二级页签配置
 		txt2=LanguageMgr:GetByType(24037,4),
 		icon1="btn_11_01",
 		icon2="btn_11_02",
+		tag=1,
 		openSetting=BagOpenSetting.Material,
 	},{
 		id=2,
@@ -25,13 +26,13 @@ local tagList={ --二级页签配置
 		txt2=LanguageMgr:GetByType(24038,4),
 		icon1="img_10_01",
 		icon2="img_10_02",
-		tag=5,
+		tag=2,
 		openSetting=BagOpenSetting.Props,
 	}},
 	{{ ---装备子页签
 		id=1,
 		txt1=LanguageMgr:GetByID(24029),
-		txt2=LanguageMgr:GetByID(24030),
+		txt2=LanguageMgr:GetByType(24029,4),
 		icon1="btn_07_01",
 		icon2="btn_07_02",
 		openSetting=BagOpenSetting.Equipped,
@@ -45,9 +46,9 @@ local tagList={ --二级页签配置
 	}}
 }
 ----------------------------------动画相关
-local tagNodeDelayTime=840; --装备Tab的动画延迟时间
-local sellBtnDelayTime=900;--出售按钮的动画延迟时间
-local tabNodeDelayTime=540;--TabNode的动画延迟时间
+local tagNodeDelayTime=540; --装备Tab的动画延迟时间
+local sellBtnDelayTime=600;--出售按钮的动画延迟时间
+local tabNodeDelayTime=340;--TabNode的动画延迟时间
 local tabNodeTweens={};
 local equipTabTweens={}; --装备Tab的动画脚本对象
 local sellBtnTweens={};--出售按钮的动画脚本对象
@@ -62,8 +63,10 @@ local tweenLua=nil;
 local isFirst=true;
 local sortID=9;
 local lastEquipType=nil;
+local tweenMaskTime=1000;
 function Awake()	
 	--初始化菜单项
+	AdaptiveConfiguration.SetLuaObjUIFit("Bag",gameObject)
 	layout = ComUtil.GetCom(sv, "UISV")
 	layout2=ComUtil.GetCom(sv2,"UISV")
 	curLayout=layout;
@@ -252,9 +255,9 @@ function Refresh(list) --刷新列表
 		local arr={};
 		for k,v in ipairs(list) do
 			local cfgGoods=v:GetCfg();
-			if isProp and (v:GetCfgTag()==5) then--消耗道具
+			if isProp and (v:GetCfgTag()==2) then--消耗道具
 				table.insert(arr, v);
-			elseif isProp~=true and (v:GetCfgTag()~=5) then
+			elseif isProp~=true and (v:GetCfgTag()~=2) then
 				table.insert(arr, v);
 			end
 		end
@@ -279,25 +282,34 @@ function Refresh(list) --刷新列表
 		end
 		list=SortMgr:Sort(sortID,arr);
 		curLayout=layout2;
-		SetCount(#list, EquipMgr.maxSize);
+		-- SetCount(#list, EquipMgr.maxSize);
+		SetCount(EquipMgr.curSize,EquipMgr.maxSize);
 		CSAPI.SetGOActive(SortNone2,#list<=0);
 		CSAPI.SetGOActive(SortNone,false);
 	end
 	-- RefreshSortBar();
+	CSAPI.SetGOActive(mask,true);
+	FuncUtil:Call(function()
+		CSAPI.SetGOActive(mask,false);
+	end,nil,tweenMaskTime);
 	if list then
 		curDatas = list;
 		selectIndex =nil;
 		SortDataBySortUD();
 		-- layout:Init("UIs/Grid/GridItem",LayoutCallBack,true)
 		if isFirst then
-			CSAPI.SetGOActive(mask,true);
-			FuncUtil:Call(function()--动画所需的延迟
-				tweenLua:AnimAgain();
-				if curLayout then
-					curLayout:IEShowList(#curDatas,TweenCall,1)
-				end
-			end,nil,80)
+			-- CSAPI.SetGOActive(mask,true);
+			-- FuncUtil:Call(function()--动画所需的延迟
+			-- 	tweenLua:AnimAgain();
+			-- 	if curLayout then
+			-- 		curLayout:IEShowList(#curDatas,TweenCall,1)
+			-- 	end
+			-- end,nil,80)
 			isFirst=false;
+			tweenLua:AnimAgain();
+			if curLayout then
+				curLayout:IEShowList(#curDatas,nil,1)
+			end
 		else
 			curLayout:IEShowList(#curDatas)
 		end
@@ -657,7 +669,8 @@ end
 
 function RefreshNumObj()
 	if GetBagBaseType()==BagType.Equipped then
-		SetCount(#curDatas, EquipMgr.maxSize);
+		-- SetCount(#curDatas, EquipMgr.maxSize);
+		SetCount(EquipMgr.curSize, EquipMgr.maxSize);
 	end
 end
 

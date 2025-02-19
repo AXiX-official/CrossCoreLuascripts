@@ -45,6 +45,7 @@ local isTemp = false;
 function Awake()
     inputField = ComUtil.GetCom(input, "InputField");
     txtPlot = ComUtil.GetCom(TxtPlot, "InputField");
+    txtPlot.text = PlotMgr.recordId or ""
     txt_vibrate = ComUtil.GetCom(TxtVibrate, "InputField");
     txt_jump = ComUtil.GetCom(TxtJump, "InputField");
     -- 初始化下拉列表
@@ -65,6 +66,11 @@ function Awake()
     CSAPI.SetText(txt_fightRoleInfo, _G.showPvpRoleInfo and "关闭PVP卡牌信息" or "开启PVP卡牌信息");
     SetSearchText(options[selectIndex].desc);
     CSAPI.AddInputFieldChange(search, OnSearch);
+    inputSpecialField = ComUtil.GetCom(inputSpecial,"InputField")
+    CSAPI.AddInputFieldChange(inputSpecial, OnSpecial);
+	txtUnite = ComUtil.GetCom(TxtUnite, "InputField");
+	btn_ChangeEnv_text_comp = ComUtil.GetCom(sdkEnv, "Text");
+    UpdateCurrentSDKEnv();
 end
 
 function OnEnable()
@@ -104,6 +110,7 @@ function btnAddJQ()
         local story = StoryData.New();
         story:InitCfg(pID);
         if story ~= nil then
+            PlotMgr.recordId = str
             if story:GetType() == PlotType.Normal then
                 CSAPI.OpenView("Plot", {
                     storyID = pID,
@@ -139,8 +146,10 @@ end
 
 function OnBtnNewPlayerFight0()
     -- GuideMgr:SkipTo(3010);
-    PlayerPrefs.SetInt(PlayerClient:GetNewPlayerFightStateKey() .. "_" .. PlayerClient:GetID(), 0);
-    PlayerClient:NewPlayerFight(1);
+    -- PlayerPrefs.SetInt(PlayerClient:GetNewPlayerFightStateKey() .. "_" .. PlayerClient:GetID(), 0);
+    -- PlayerClient:NewPlayerFight(1);
+
+    CSAPI.OpenView("ExerciseRView")
 end
 
 function btnJump()
@@ -529,18 +538,6 @@ function OnClickNetwork()
     -- FuncUtil:Call(CSAPI.SendToNetworkServer, nil, 500, "测试发送信息");
 end
 
-function OnClickURL()
-    local url = "https://itunes.apple.com/in/app/id6443983362";
-    LogError("打开URL" .. url);
-    CSAPI.OpenWebBrowser(url);
-end
-
-function OnClickURL1()
-    local url = "hhttps://itunes.apple.com/in/app/id6443983362";
-    LogError("Application.OpenURL：" .. url);
-    UnityEngine.Application.OpenURL(url);
-end
-
 function OnClickUI()
     if (_G.fightViewState == nil) then
         _G.fightViewState = true;
@@ -602,13 +599,9 @@ end
 -- end
 
 function OnClickMatrix()
-    -- CSAPI.OpenView("DormBuilding")
-    -- UIUtil:ToMatrix()
-    -- view:Close()
-    --
-    -- ResUtil:CreateUIGOAsync("Test/TestUISV2", gameObject)
-    PlayerPrefs.SetInt(s_mobie_lv_key, 0)
-	LogError("已重置，请重新登录游戏")
+    CSAPI.OpenView("RogueSView")
+    -- PlayerPrefs.SetInt(s_mobie_lv_key, 0)
+	-- LogError("已重置，请重新登录游戏")
 end
 
 -- 测试内置网页
@@ -689,13 +682,19 @@ function OnClickFightRecord()
 end
 
 function OnClickServerList()
-    _G.server_list_enc_close = 1;
-    -- InitServerInfo(nil, "219.135.170.30/php/serverlist.php?cmd=get&zone=1");
-    InitServerInfo(nil, "http://219.135.170.30/php/res/serverList/serverlist_nw1.json");
+    --LogError("aaaa");
+    ---_G.server_list_enc_close = 1;
+    CSAPI.server_list_enc_close=true;
+    InitServerInfo(nil, "http://192.168.5.86/php/res/serverList/serverlist_nw1.json");
     OnClickClose();
      
-    FuncUtil:Call(function() EventMgr.Dispatch(EventType.Login_Switch_Server) end,nil,500);   
-end
+    FuncUtil:Call(function()
+        local go = CSAPI.GetView("Login");
+        local lua = ComUtil.GetLuaTable(go);
+        lua.OnClickSwitch();
+    end,nil,1000);
+
+    end
 
 function OnClickLoadingList()
     local go = CSAPI.GetView("Loading");
@@ -703,7 +702,166 @@ function OnClickLoadingList()
     lua.RefreshLoadContent();
 end
 
---------------------------------------下拉列表逻辑处理完毕------------
+function OnClickSpine()
+    -- ResUtil:CreateUIGOAsync("SpineTest", gameObject)
+    CSAPI.OpenView("PetMain");
+    -- CSAPI.OpenView("SpecialExploration",2001);
+    -- --批量添加折扣券
+    -- local index=5;
+    -- for i=11008,11016 do
+    --     local proto = {"ClientProto:GmCmd", {
+    --         cmd = string.format("additem %s %s",i,index);
+    --     }};
+    --     NetMgr.net:Send(proto);
+    --     index=index+1;
+    -- end
+end
+
+function OnHideFightUI()
+    ChangeUIState("Fight");
+    ChangeUIState("Skill");
+    ChangeUIState("FightTimeLine");
+    --ChangeUIState("Fight");
+end
+
+function ChangeUIState(uiName)
+    local go = CSAPI.GetViewPanel(uiName);
+    local canvasGroup = ComUtil.GetOrAddCom(go,"CanvasGroup");
+    canvasGroup.alpha = canvasGroup.alpha == 1 and 0 or 1;
+end
+
+function OnClickCond()
+    ResUtil:CreateUIGOAsync("GMConditionTest", gameObject);
+end
+
+function OnClickLovePlus()
+    CSAPI.OpenView("LovePlusView")
+end
+-- local regex = CS.System.Text.RegularExpressions.Regex("[ \\[ \\] \\^ \\-_*×――(^)$%~!＠@＃#$…&%￥—+=<>《》!！??？:：•`·、。，；,.;/\'\"{}（）‘’“”-]")
+
+function OnClickSpecial()
+    local str = inputSpecialField.text
+    local isPass = false
+    if str ~= "" then
+        -- isPass = not regex:IsMatch(str)
+        str = StringUtil:FilterChar2(str)
+        LogError(str)
+        -- LogError(StringUtil:Utf8Len(str))
+        -- isPass = StringUtil:CheckPassStr(str)
+    end
+    -- local textStr = "字符串检测\n"
+    -- textStr = isPass and textStr .. "（通过）" or textStr .. "（未通过）"
+    -- CSAPI.SetText(txtSpecial, textStr)
+end
+
+function OnSpecial()
+    CSAPI.SetText(txtSpecial, "字符串检测")
+end
+
+function OnClickSneak()
+    EventMgr.Dispatch(EventType.Scene_Load, "Sneak_1")
+end
+
+function OnClickUnite()
+    local id,type = 0,1
+    local str = txtUnite.text
+    if str == "" then
+        return
+    end
+
+    local ss = StringUtil:split(str," ")
+    id = tonumber(ss[1])
+    type = ss[2] or 1
+    if tonumber(type) == 2 then
+        local cfgMonster = Cfgs.MonsterData:GetByID(id)
+        if cfgMonster and cfgMonster.card_id then
+            id = cfgMonster.card_id
+        else
+            LogError("未找到对应id的怪物表数据!!!" .. id)
+            return
+        end
+    end
+    local cfgCard = Cfgs.CardData:GetByID(id)
+    if cfgCard and cfgCard.uniteLabel then
+        if cfgCard then
+            if cfgCard.uniteLabel then
+                local logStrs = {
+                    string.format("卡牌名：%s，卡牌id：%s",cfgCard.name,cfgCard.id)
+                }
+                local str = ""
+                for i, _info in ipairs(cfgCard.uniteLabel) do
+                    local cfgLabel = Cfgs.CfgUniteLabel:GetByID(_info[1])
+                    if cfgLabel then
+                        if i == 1 then
+                            str = "条件：".. cfgLabel.typeName .. ":"
+                        else
+                            str = str .. "|" .. cfgLabel.typeName .. ":"
+                        end
+                        for k, content in ipairs(_info[2]) do
+                            if k == #_info[2] then
+                                str = str .. content
+                            else
+                                str = str .. content .. ","
+                            end
+                        end
+                        str = str .. " 对应" .. (cfgLabel.cfgType == 1 and "卡牌角色表" or "卡牌配置表") .."的" .. cfgLabel.key .."字段"
+                    end
+                end
+                str = str .. "。符合的卡牌有："
+                table.insert(logStrs,str)
+                if cfgCard.unite then
+                    for i, v in ipairs(cfgCard.unite) do
+                        local _cfgCard = Cfgs.CardData:GetByID(v)
+                        if _cfgCard then
+                            table.insert(logStrs,"name：" .. _cfgCard.name..",id:" .. _cfgCard.id)
+                        end
+                    end
+                else
+                    LogError("当前卡牌没有可同调的对象！！！" .. cfgCard.id)
+                    return
+                end
+                for i, v in ipairs(logStrs) do
+                    LogError(v)
+                end
+            else
+                LogError("当前卡牌表数据未配置同调标签数据！！！" .. cfgCard.id)
+            end
+        else
+            LogError("未找到对应id的卡牌表数据!!!" .. id)
+            return
+        end
+    else
+        LogError("当前卡牌表数据未配置同调标签数据！！！" .. cfgCard.id)
+    end
+end
+
+-------------------------下拉列表逻辑处理完毕------------
+-- 切换中台sdk环境
+function OnBtnChangeEnv()
+    local haskey = PlayerPrefs.HasKey("DomesticSdkEnvirment")    
+    local currentVal = tonumber(PlayerPrefs.GetInt("DomesticSdkEnvirment",4))
+    -- currentVal = currentVal + 1
+    -- if currentVal > 5 then currentVal = 0 end
+
+    if currentVal == 0 then currentVal = 1
+    elseif currentVal == 1 then currentVal = 4
+    elseif currentVal == 4 then currentVal = 0
+    else currentVal = 0
+    end
+
+    PlayerPrefs.SetInt("DomesticSdkEnvirment",currentVal);
+    LogError("当前的sdk环境Env修改为：" .. tostring(currentVal))
+    UpdateCurrentSDKEnv();
+end
+function UpdateCurrentSDKEnv()
+    local haskey = PlayerPrefs.HasKey("DomesticSdkEnvirment")
+    if haskey then
+        btn_ChangeEnv_text_comp.text = string.format("%s%d","当前Env:",PlayerPrefs.GetInt("DomesticSdkEnvirment"));
+    else
+        btn_ChangeEnv_text_comp.text = string.format("%s","当前Env为默认值");
+    end
+end
+
 -- 关闭
 function OnClickClose()
     view:Close();
@@ -732,5 +890,6 @@ function ReleaseCSComRefs()
     inputScene = nil;
     txt_fightRoleInfo = nil;
     view = nil;
+    btn_ChangeEnv_text_comp = nil;
 end
 ----#End#----

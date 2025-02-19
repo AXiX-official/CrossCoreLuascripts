@@ -23,7 +23,11 @@ end
 --在ClientInitFinishRet回调后调用
 function this.ClientInitFinish()
 	--检查一次发货信息
-	SDKPayMgr:SetLastPayInfo(nil,nil);
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		--海外和中台SDK 短线重连初始化 不清空
+	else
+		SDKPayMgr:SetLastPayInfo(nil,nil);
+	end
 	SDKPayMgr:SearchPayReward(true);
 	if CSAPI.GetChannelType()==ChannelType.QOO then
 		SDKPayMgr:CheckSDKOrder();--检查SDK订单信息
@@ -88,7 +92,9 @@ function this:HandleSDKPayResult(data)
 		self:SearchPayReward()
 		-- LogError("支付成功！sdk订单号："..tostring(sdk_order_id).."\t订单号："..tostring(data.OrderID).."\tGoodsID:"..tostring(data.GoodsID).."\t isPC:"..tostring(CSAPI.IsPCPlatform()))
 		if record~=nil then --上传SDK订单号
-			BuryingPointMgr:TrackEvents("store_pay",record);
+			if CSAPI.IsADV()==false then
+				BuryingPointMgr:TrackEvents("store_pay",record);
+			end
 		end
 		if not CSAPI.IsPCPlatform() then --非PC才上传信息
 			local payType=PayTypeName[data.SDKType];
@@ -97,13 +103,18 @@ function this:HandleSDKPayResult(data)
 			local orderId=GCardCalculator:GetPayOrderStrId(data.OrderID, data.SDKType, channelType);
 			if data.GoodsID~=nil then
 				local comm=ShopMgr:GetFixedCommodity(tonumber(data.GoodsID));
-				if comm~=nil then
+				if comm~=nil then		
 					local priceInfo=comm:GetRealPrice();
-					-- LogError(orderId);
-					-- LogError(data.GoodsID);
-					--LogError("ReYunSDK:Pay------------------->"..tostring(orderId));
-					--ReYunSDK:SetPayEvent(orderId,payType,moneyType,priceInfo[1].num,{channelType=CSAPI.GetChannelName()});--传入价格，单位：元
-					JuLiangSDK:Purchase(comm:GetType(),comm:GetName(),comm:GetID(),1,payType,moneyType,true,  math.ceil(priceInfo[1].num)) --传入价格，单位：元,整数且向上取整
+					if priceInfo[1].id~=-1 and comm:HasOtherPrice(ShopPriceKey.jCosts1) then
+						priceInfo=comm:GetRealPrice(ShopPriceKey.jCosts1);
+						if priceInfo[1].id==-1 then
+							-- LogError(orderId);
+							-- LogError(data.GoodsID);
+							--LogError("ReYunSDK:Pay------------------->"..tostring(orderId));
+							--ReYunSDK:SetPayEvent(orderId,payType,moneyType,priceInfo[1].num,{channelType=CSAPI.GetChannelName()});--传入价格，单位：元
+							JuLiangSDK:Purchase(comm:GetType(),comm:GetName(),comm:GetID(),1,payType,moneyType,true,  math.ceil(priceInfo[1].num)) --传入价格，单位：元,整数且向上取整
+						end
+					end			
 				end
 			end
 		end
@@ -131,7 +142,9 @@ function this:HandleSDKPayResult(data)
 		EventMgr.Dispatch(EventType.Shop_Buy_Mask,false)
 		-- LogError("上传数数数据:")
 		-- LogError(record)
-		BuryingPointMgr:TrackEvents("store_pay",record);
+		if CSAPI.IsADV()==false then
+			BuryingPointMgr:TrackEvents("store_pay",record);
+		end
     else --支付失败上传数数数据
 		-- LogError("支付失败！")
 		-- LogError(tostring(data.Info))
@@ -161,7 +174,9 @@ function this:HandleSDKPayResult(data)
 			CSAPI.OpenView("Prompt", dialogdata)
 			-- LogError("上传数数数据:")
 			-- LogError(record)
-			BuryingPointMgr:TrackEvents("store_pay",record);
+			if CSAPI.IsADV()==false then
+				BuryingPointMgr:TrackEvents("store_pay",record);
+			end
 		end
     end
 end
@@ -344,7 +359,7 @@ function this.IsMailReward(is_notice)
 end
 
 --获取订单ID func：回调
-function this:GenOrderID(commodity,payType,isInstall,func)
+function this:GenOrderID(commodity,payType,isInstall,shopPriceKey,func)
 	if commodity==nil then
 		LogError("传入的道具ID为nil!");
 		return;
@@ -356,60 +371,112 @@ function this:GenOrderID(commodity,payType,isInstall,func)
 		LogError("调用支付时获取当前服务器信息失败!终止支付流程...");
 		do return end;
 	end
-	CSAPI.GetSystemInfo(function(js)
-		local accountName = GetLastAccount();
-		local deviceid=ReYunSDK:GetDeviceID();
-		-- LogError(deviceid)
-		-- LogError(js);
-		local json=Json.decode(js);
-		local data={
-			uid=tostring(PlayerClient:GetUid()),
-			product_id=tostring(commodity:GetID()),
-			server_id=tostring(serverInfo.id),
-			pay_type=tostring(payType),
-			account=tostring(accountName),
-			channel=tostring(channelType),
-			web_ip=tostring(serverInfo.webIp),
-			web_port=tostring(serverInfo.webPort),
-			sdk_url=tostring(serverInfo.sdkUrl),
-			subject=tostring(commodity:GetName()),
-			deviceid=tostring(deviceid),
-			idfa=tostring(deviceid),
-			imei=tostring(deviceid),
-			androidid=tostring(deviceid),
-			oaid=tostring(deviceid),
-			mac=tostring(json.netMac),
-			ip=tostring(json.ipv4),
-			ipv6=tostring(json.ipv6),
-			model=tostring(json.deviceName),
-			pkgname=tostring(CSAPI.GetPackageName()),
-			is_install=isInstall and "1" or "2"
-		}
-		local realPrice=commodity:GetRealPrice();--各渠道传递给服务器的价格单位统一为元，后端处理不同渠道所需的实际单位
-		if payType==PayType.Alipay or payType==PayType.WeChat or payType==PayType.AlipayQR or payType==PayType.WeChatQR or payType==PayType.BsAli then
-			data.total_amount=tostring(realPrice[1].num);
-			data.currency="CNY";
-		elseif payType==PayType.BiliBili then
-			local userInfo=PlayerClient:GetSDKUserInfo();
-			if userInfo==nil then
-				LogError("未找到SDK用户信息，支付失败！");
-				do return end;
-			end
-			data.user_id=userInfo.uid;
-			data.total_amount=tostring(realPrice[1].num);
-			data.game_money="1";
-		elseif payType==PayType.IOS then--IOS
-			data.total_amount=tostring(realPrice[1].num);
-			data.currency="CNY";
+	local amout=commodity:GetRealPrice(shopPriceKey)[1].num;
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		local data = {}
+		local orderUrl = nil
+		if CSAPI.IsADV() then
+			---海外流程
+			data=
+			{
+				uid=tostring(PlayerClient:GetUid()),---游戏uid
+				account=tostring(ShiryuSDK.Serverlogin.open_id), ---游戏账号
+				server_id=tostring(serverInfo.id),---服务器id
+				product_id=tostring(commodity["cfg"]["id"]),---商品id
+				subject=tostring(commodity:GetName()),---商品名称（读配置表）
+				amount=tostring(amout),---商品价格 元（读配置表）
+				--amount=tostring(6),---商品价格 元（读配置表）
+				zi_long_open_id=tostring(ShiryuSDK.ShiryuLogin.channelExts["openId"]),--- 紫龙用户 open_id
+				center_web_uid=tostring(ShiryuSDK.ShiryuLogin.uid),---中台 uid
+				channel=tostring(6),---固定值
+				pay_type=tostring(9),---固定值
+				useJCost=shopPriceKey,
+			}
+			orderUrl = ChannelWebUtil.Extends.ziLongpayClientGetOrderId;
+		else
+			-- 国内
+			data=
+			{
+				uid=tostring(PlayerClient:GetUid()),---游戏uid
+				account=tostring(ShiryuSDK.Serverlogin.open_id), ---游戏账号
+				server_id=tostring(serverInfo.id),---服务器id
+				product_id=tostring(commodity["cfg"]["id"]),---商品id
+				subject=tostring(commodity:GetName()),---商品名称（读配置表）
+				amount=tostring(amout),---商品价格 元（读配置表）
+				--amount=tostring(6),---商品价格 元（读配置表）
+				thirty_part_id=tostring(ShiryuSDK.ShiryuLogin.channelExts["openId"]),--- 紫龙用户 open_id
+				center_web_uid=tostring(ShiryuSDK.ShiryuLogin.uid),---中台 uid
+				channel=tostring(6),---固定值
+				pay_type=tostring(12),---固定值   国内要求固定 12
+				useJCost=shopPriceKey,
+			}
+			orderUrl = ChannelWebUtil.Extends.clientGetOrderId_gn;
 		end
-		-- LogError("GenOrderID：");
-		-- LogError(data)
-		-- if this.currPlatform==7 or this.currPlatform==0  then
-		-- 	Log("编辑器下无法调用sdk支付！");
-		-- 	do return end
-		-- end
-		ChannelWebUtil.SendToServer2(data,ChannelWebUtil.Extends.GetOrderID,func);
-	end);
+		Log("------------Send GenOrderID--to-SDK------------------")
+		---LogError(data)
+		print("Send GenOrderID--to-SDK---------------"..table.tostring(data))
+
+		ChannelWebUtil.SendToServer2(data,orderUrl,func);
+	else
+        ---国内流程
+		CSAPI.GetSystemInfo(function(js)
+			local accountName = GetLastAccount();
+			local deviceid=ReYunSDK:GetDeviceID();
+			-- LogError(deviceid)
+			-- LogError(js);
+			local json=Json.decode(js);
+			local data={
+				uid=tostring(PlayerClient:GetUid()),
+				product_id=tostring(commodity:GetID()),
+				server_id=tostring(serverInfo.id),
+				pay_type=tostring(payType),
+				account=tostring(accountName),
+				channel=tostring(channelType),
+				web_ip=tostring(serverInfo.webIp),
+				web_port=tostring(serverInfo.webPort),
+				sdk_url=tostring(serverInfo.sdkUrl),
+				subject=tostring(commodity:GetName()),
+				deviceid=tostring(deviceid),
+				idfa=tostring(deviceid),
+				imei=tostring(deviceid),
+				androidid=tostring(deviceid),
+				oaid=tostring(deviceid),
+				mac=tostring(json.netMac),
+				ip=tostring(json.ipv4),
+				ipv6=tostring(json.ipv6),
+				model=tostring(json.deviceName),
+				pkgname=tostring(CSAPI.GetPackageName()),
+				is_install=isInstall and "1" or "2",
+				useJCost=shopPriceKey,
+			}
+			local realPrice=commodity:GetRealPrice(shopPriceKey);--各渠道传递给服务器的价格单位统一为元，后端处理不同渠道所需的实际单位
+			if payType==PayType.Alipay or payType==PayType.WeChat or payType==PayType.AlipayQR or payType==PayType.WeChatQR or payType==PayType.BsAli then
+				data.total_amount=tostring(realPrice[1].num);
+				data.currency="CNY";
+			elseif payType==PayType.BiliBili then
+				local userInfo=PlayerClient:GetSDKUserInfo();
+				if userInfo==nil then
+					LogError("未找到SDK用户信息，支付失败！");
+					do return end;
+				end
+				data.user_id=userInfo.uid;
+				data.total_amount=tostring(realPrice[1].num);
+				data.game_money="1";
+			elseif payType==PayType.IOS then--IOS
+				data.total_amount=tostring(realPrice[1].num);
+				data.currency="CNY";
+			end
+			-- LogError("GenOrderID：");
+			-- LogError(data)
+			-- if this.currPlatform==7 or this.currPlatform==0  then
+			-- 	Log("编辑器下无法调用sdk支付！");
+			-- 	do return end
+			-- end
+			ChannelWebUtil.SendToServer2(data,ChannelWebUtil.Extends.GetOrderID,func);
+		end);
+	end
+
+
 end
 
 --支付锁屏
@@ -419,7 +486,9 @@ function this.OnPayWait(isWait)
 		if this.isWait then --已经在等待中时先取消再启动
 			EventMgr.Dispatch(EventType.Net_Msg_Getted,"pay_wait");
 		end
-		EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="pay_wait",time=60000,timeOutCallBack=function()
+		 local PayWaitTime=60000;
+		if CSAPI.IsADV() then PayWaitTime=20000; end
+		EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="pay_wait",time=PayWaitTime,timeOutCallBack=function()
 			this.isWait=false;
 			SDKPayMgr:SetIsPaying(false);--超时
 		end});

@@ -9,7 +9,10 @@ function this:Init()
     self:Clear()
     -- self:SetSortTab()
     self:CardsData()
-    EventMgr.AddListener(EventType.Bag_Update, this.OnBagUpdate)
+    -- EventMgr.AddListener(EventType.Bag_Update, this.OnBagUpdate)
+    -- 特效技能红点查看记录
+    self.passiveRedIsLookDatas = {}
+    PlayerProto:GetClientData("passiveRed_isLook")
 end
 
 function this:Clear()
@@ -18,14 +21,15 @@ function this:Clear()
     self.scaleTypes = {} -- 大小图
     self.sortTypes = {} -- 排序
     self.orderTypes = {} -- 升降
-    EventMgr.RemoveListener(EventType.Bag_Update, this.OnBagUpdate)
+    -- EventMgr.RemoveListener(EventType.Bag_Update, this.OnBagUpdate)
 end
 
 -- 材料更新,跃升突破检查(延迟调用，优化物品大量刷新的情况)
-function this.OnBagUpdate()
+function this.OnBagUpdate(isLogin)
     if (this.applyRefresh) then
         return
     end
+    this.isLogin = isLogin
     this.applyRefresh = 1
     FuncUtil:Call(this.OnBagUpdate2, nil, 100)
 end
@@ -33,7 +37,7 @@ function this.OnBagUpdate2()
     this.applyRefresh = nil
     if (this.cards) then
         for k, v in pairs(this.cards) do
-            v:CheckPassiveUp()
+            v:CheckPassiveUp0(this.isLogin)
             v:GoodsUpdate()
         end
         RoleMgr:CheckRed()
@@ -137,12 +141,12 @@ end
 function this:GetSkinIDByRoleID(roleID)
     local modelId = nil
     local b = false -- 是否已设置看板 
-    if (PlayerClient:KBIsRole()) then
-        local cfg = Cfgs.character:GetByID(PlayerClient:GetIconId())
-        if (cfg and cfg.role_id and cfg.role_id == roleID) then
-            modelId = PlayerClient:GetIconId()
-        end
-    end
+    -- if (PlayerClient:KBIsRole()) then
+    --     local cfg = Cfgs.character:GetByID(PlayerClient:GetIconId())
+    --     if (cfg and cfg.role_id and cfg.role_id == roleID) then
+    --         modelId = PlayerClient:GetIconId()
+    --     end
+    -- end
     if (not modelId) then
         local cRoleInfo = CRoleMgr:GetData(roleID)
         local cfgID = cRoleInfo:GetFirstCardId()
@@ -320,13 +324,13 @@ function this:GetFakeData(cfgId, num)
 end
 
 -- 满级的假数据 
-function this:GetMaxFakeData(cfgId)
+function this:GetMaxFakeData(cfgId, level, break_level)
     local cfgData = Cfgs.CardData:GetByID(cfgId)
     local data = {}
     table.copy(cfgData, data)
     data.cfgid = cfgId
-    data.level = RoleTool.GetMaxLv()
-    data.break_level = RoleTool.GetMaxBreakLv()
+    data.level = break_level or RoleTool.GetMaxLv()
+    data.break_level = break_level or RoleTool.GetMaxBreakLv()
     data.skin = nil -- 与表的冲突
     -- 封装技能天赋
     local skillDatas = {}
@@ -707,7 +711,7 @@ function this:CardDisintegrateRet(proto)
         EventMgr.Dispatch(EventType.Role_Create_Disintegrate, proto)
 
         -- 移除技能升级红点
-        --RoleSkillMgr:RemoveDeleteCard(proto.card_ids)
+        -- RoleSkillMgr:RemoveDeleteCard(proto.card_ids)
     end
 end
 
@@ -830,10 +834,84 @@ function this:SetRoleListSortData()
     self.roleListData = table.copy(SortMgr:GetData(1))
 end
 function this:GetRoleListSortData()
-   return self.roleListData 
+    return self.roleListData
 end
 function this:ClearRoleListSortData()
-    self.roleListData  = nil 
+    self.roleListData = nil
+end
+
+-- 解禁数据（用于弹出界面展示）
+function this:AddJieJinDatas(proto)
+    if (proto == nil) then
+        self.jiejinDatas = nil
+        return
+    end
+    if (self.jiejinDatas) then
+        if (proto.open_cards) then
+            self.jiejinDatas.open_cards = self.jiejinDatas.open_cards or {}
+            for k, v in pairs(proto.open_cards) do
+                table.insert(self.jiejinDatas.open_cards, v)
+            end
+        end
+        if (proto.open_mechas) then
+            self.jiejinDatas.open_mechas = self.jiejinDatas.open_mechas or {}
+            for k, v in pairs(proto.open_mechas) do
+                table.insert(self.jiejinDatas.open_mechas, v)
+            end
+        end
+    else
+        self.jiejinDatas = proto
+    end
+end
+function this:GetJieJinDatas()
+    return self.jiejinDatas
+end
+
+-- 获取总队长
+function this:GetLeader()
+    for k, v in ipairs(g_InitRoleId) do
+        local data = self:GetData(v)
+        if (data) then
+            return data
+        end
+    end
+    return nil
+end
+
+-- 获取总队长
+function this:GetLeader2()
+    for k, v in ipairs(g_CaptainRoleId) do
+        local data = self:GetData(v)
+        if (data) then
+            return data
+        end
+    end
+    return nil
+end
+
+-- 判断总队长
+function this:IsLeader(cfgId)
+    for i, v in ipairs(g_CaptainRoleId) do
+        if cfgId == v then
+            return true
+        end
+    end
+    return false
+end
+
+-- 特效技能红点查看记录
+function this:PassiveRedIsLook(data)
+    self.passiveRedIsLookDatas = data or {}
+end
+function this:CheckPassiveRedIsLook(uidStr)
+    if (self.passiveRedIsLookDatas and self.passiveRedIsLookDatas[uidStr] == 1) then
+        return true
+    end
+    return false
+end
+function this:SetPassiveRedIsLook(uidStr, num)
+    self.passiveRedIsLookDatas[uidStr] = num
+    PlayerProto:SetClientData("passiveRed_isLook", self.passiveRedIsLookDatas)
 end
 
 return this

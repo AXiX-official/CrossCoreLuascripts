@@ -197,10 +197,13 @@ end
 4：观看
 5：玩模型
 6：浇水
+7: 跳舞机
+8：操作电脑
 ]]
 function this:GetInteActionID(targetGO)
-    local inteActionId = self:GetCfg().inteActionId or 0
-    local key = DormAction3[inteActionId + 1]
+    -- local inteActionId = self:GetCfg().inteActionId or 0
+    -- local key = DormAction3[inteActionId + 1]
+    local key = self:GetCfg().inteActionId or ""
     if (key == "furniture_sleep_0" and targetGO) then
         local inteBoxIndex = targetGO.transform:GetSiblingIndex()
         key = inteBoxIndex == 0 and "furniture_sleep_01" or "furniture_sleep_02"
@@ -215,6 +218,14 @@ function this:GetGridNum()
         return 0
     end 
     return math.ceil(self:GetCfg().scale[1]*self:GetCfg().scale[3])
+end
+
+--地面家具
+function this:IsGroundFurnitrue()
+    if(self:GetCfg().sType==2 or self:GetCfg().sType==3 or self:GetCfg().sType==4 or self:GetCfg().sType==5 or self:GetCfg().sType==6 or self:GetCfg().sType==9) then 
+        return true
+    end 
+    return false 
 end
 
 return this

@@ -1,6 +1,7 @@
 local itemName = "Mail/MailItem"
 local itemName2 = "Mail/MailItem2"
 local itemPath = "UIs/Mail/MailItem"
+local currItem = nil
 local selectID = nil
 local layout = nil
 
@@ -48,7 +49,7 @@ function EOperate(proto)
         end
         RefreshPanel()
     else
-        SetPanel()
+        OnOpen()
     end
 
     local data = MailMgr:GetData(selectID)
@@ -69,8 +70,11 @@ function EOperate(proto)
             item_gain = item_gains,
             send_time = TimeUtil:GetTimeStr2(data.start_time or 0)
         }
-    
-        BuryingPointMgr:TrackEvents("mail", taData)
+
+        if CSAPI.IsADV() == false then
+            BuryingPointMgr:TrackEvents("mail", taData)
+        end
+
     end  
 end
 

@@ -93,8 +93,16 @@ function this:CreateEffectImmediately(res, x, y, z, resParent)
     res = self:GenEffectRes(res);
     return CSAPI.CreateGO(res, x or 0, y or 0, z or 0, resParent);
 end
+
+--创建背景特效
+function this:CreateBGEffect(name, x, y, z, resParent, callBack)
+    local res = "bg" .."/" .. name .."/" .. name
+    res = self:GenEffectRes(res);
+    CSAPI.CreateGOAsync(res, x or 0, y or 0, z or 0, resParent, callBack);
+end
+
 -- 创建Buff特效
-function this:CreateBuffEff(res, resParent, callBack)
+function this:CreateBuffEff(res, resParent, callBack,postfix)
     if (not res) then
         return;
     end
@@ -376,6 +384,12 @@ function this:LoadBigImg2(target, res, nativeSize, callBack)
     CSAPI.LoadImg(target, res, nativeSize, callBack);
 end
 
+-- 加载大图jpg
+function this:LoadMenuBg(target, res, nativeSize, callBack)
+    res = self.bigImg .. "/" .. res;
+    CSAPI.LoadImg(target, res, nativeSize, callBack);
+end
+
 function this:LoadBigSR(target, res, nativeSize, callBack)
     res = self.bigImg .. "/" .. res .. ".png";
     CSAPI.LoadSR(target, res, nativeSize, callBack);
@@ -501,9 +515,11 @@ function this:Init()
     self.MultiIcon = ResIconUtil.New("MultiIcon")  --多人插入缩列图
     self.MultBoard=ResIconUtil.New("MultBoard") --多人插入缩列图 看板
 
-    self.MenuEnter = ResIconUtil.New("MenuEnter")
+    self.MenuEnter = ResIconUtil.New("MenuEnter")  
     self.HeadFrame = ResIconUtil.New("HeadFrame")  --头像框
     self.Head = ResIconUtil.New("Head")  --头像框
+    self.HeadTitle = ResIconUtil.New("HeadTitle")  --称号
+    
     -- img
     self.ImgCharacter = ResImgUtil.New("Character");
     self.ModuleInfo = ResImgUtil.New("ModuleInfo");
@@ -514,12 +530,57 @@ function this:Init()
     self.SkinMall=ResIconUtil.New("RoleSkinMall")
     self.SkinSetIcon=ResIconUtil.New("SkinSetIcon")
     self.Tag=ResIconUtil.New("Tag")
+    self.StorePromote = ResImgUtil.New("UIs/ShopPromote");--商店推荐页
+    --badge
+    self.BadgeBg = ResIconUtil.New("Badge/BG") --徽章组背景
+    self.Badge = ResIconUtil.New("Badge/Icon") --徽章图片
     --Trials
     self.TrialsList = ResIconUtil.New("Trials/List")
     self.TrialsPage = ResIconUtil.New("Trials/Page")
-    --Trials
-    self.TrialsList = ResIconUtil.New("Trials/List")
-    self.TrialsPage = ResIconUtil.New("Trials/Page")
+    self.TrialsHead = ResIconUtil.New("Trials/Head")
+    --Achievement
+    self.AchievementQua = ResIconUtil.New("Achievement/Quality") --成就品质
+    self.Achievement = ResIconUtil.New("Achievement/Icon") --成就图标
+    self.AchievementType = ResIconUtil.New("Achievement/Type") --类型
+    --feast
+    self.Feast = ResIconUtil.New("Feast")
+
+    self.RogueIcon = ResIconUtil.New("RogueIcon")
+    self.RogueBuff = ResIconUtil.New("RogueBuff")
+
+    self.DungeonSummer = ResIconUtil.New("DungeonSummer") --夏日选关
+    self.DungeonTaoFa = ResIconUtil.New("DungeonTaoFa") --讨伐相关
+    self.DungeonNight = ResIconUtil.New("DungeonNight") --奇妙之夜
+
+    self.MultBoardSmall = ResIconUtil.New("MultBoardSmall") --多人看板竖图
+
+    --Pet 宠物气泡
+    self.PetEmoji=ResIconUtil.New("PetEmoji");
+    self.PetIcon=ResIconUtil.New("PetIcon");
+
+    self.RogueSNum = ResIconUtil.New("RogueSNum") --战力派遣
+
+    --扭蛋
+    self.GachaBall=ResIconUtil.New("GachaBall");
+
+    self.Bgm=ResIconUtil.New("Bgm");
+    self.Colosseum = ResIconUtil.New("Colosseum") --角色场小队主题
+
+    --剧情
+    self.PlotTop = ResIconUtil.New("Plot/PlotTop");
+    self.ASMR=ResIconUtil.New("ASMR")
+
+    --新世界boss
+    self.GlobalBoss = ResIconUtil.New("GlobalBoss")
+    --商店用途
+    self.ASMRShop=ResIconUtil.New("AsmrShop")
+    --投资方晶
+    self.Investment = ResImgUtil.New("UIs/ActivityList/Investment")
+
+    self.ShopTab=ResIconUtil.New("ShopTab")
+
+    --汇总
+    self.Summary = ResIconUtil.New("Summary")
 end
 
 return this;

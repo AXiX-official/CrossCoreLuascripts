@@ -256,4 +256,21 @@ function this:GetSceneKey()
     return "Dorm"
 end
 
+----------------------------------------队伍预设------------------------------------------
+-- 当前使用的预设队伍id（默认1）
+function this:GetCurPresetId()
+    return 1
+end
+
+
+function this:GetCfgIDIndex()
+    return self.cfgID, self.index
+end
+
+--是仅摆设的房间
+function this:IsOnlyShow()
+    return self:GetIndexCfg().onlyShow
+end
+
+
 return this

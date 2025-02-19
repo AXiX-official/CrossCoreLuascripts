@@ -52,6 +52,8 @@ function this.DoCallBack(fileName, dataStr)
     _data.res_dir = GetCurrentServer().resDir
     _data.data = dataStr
     _data.module = "dorm"
+    _data.gmaccount = "mega_client"
+    _data.logPwd = "client_pwd"
     local s = Json.Encode(_data)
     CSAPI.PostUpload(ActivityMgr:GetDormUploadAddress(), s)
 end
@@ -64,6 +66,8 @@ function this.RemoveScreenshot(fileName)
     _data.res_dir = GetCurrentServer().resDir
     _data.data = dataStr
     _data.module = "dorm"
+    _data.gmaccount = "mega_client"
+    _data.logPwd = "client_pwd"
     local s = Json.Encode(_data)
     CSAPI.PostUpload(ActivityMgr:GetDormUploadAddress(), s)
 end

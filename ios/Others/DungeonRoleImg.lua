@@ -4,11 +4,9 @@ function Refresh(sectionData,num)
     if cfg then
         local index = cfg.index or 1
         index = index < 10 and "0" .. index or index .. ""
-        if cfg.turnIcon then
-            local iconName = cfg.turnIcon[cfg.index]
-            if iconName ~= nil and iconName ~= "" then
-                ResUtil:LoadBigImg(icon,"UIs/DungeonActivity/Role/icon_02_" .. index .. "/" .. iconName .."/img")    
-            end
+        local iconName = cfg.turnIcon
+        if iconName ~= nil and iconName ~= "" then
+            ResUtil:LoadBigImg(icon,"UIs/DungeonActivity/Role/icon_02_" .. index .. "/" .. iconName .."/img")    
         end
     end
 end

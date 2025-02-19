@@ -77,7 +77,7 @@ function this:PlayByActionType(_type, _loopTime)
             end
         end
         self:ActionBool(cfg.sType, true)
-        self:ActionPlay(cfg.id)
+        self:ActionPlay(cfg)
     end
 
     -- 调整 
@@ -192,9 +192,10 @@ function this:UpdateSpeed()
     end
 end
 
-function this:ActionPlay(name)
-    local cfg = Cfgs.CfgCardRoleAction:GetByID(name)
+function this:ActionPlay(_cfg)
+    local cfg = Cfgs.CfgCardRoleAction:GetByID(_cfg.id)
     local animators = self.roleLua.animators
+    local name = self:GetCorrectName(_cfg)
     for i = 0, animators.Length - 1 do
         self.roleLua.animators[i]:Play(name)
         --分层的表情
@@ -226,6 +227,13 @@ function this:GetSpeed()
         return self.roleLua.animators[0]:GetFloat("Speed")
     end
     return 0
+end
+
+function this:GetCorrectName(cfg)
+    if(cfg.id=="base_operatePC1") then 
+        return  "base_operatePC"
+    end 
+    return cfg.id 
 end
 
 return this

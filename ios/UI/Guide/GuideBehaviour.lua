@@ -800,5 +800,139 @@ function this:GuideBehaviourStart_TowerBattle_126010()
     UIUtil:OpenQuestion("Inject");
 end
 
+--乱序空间引导----------------------------------------------------------------------------
+function this:GuideBehaviourCondition_RogueBattle_130010()
+    return GuideMgr:IsGuided(1270);--检测之前的引导是否通过
+end
 
+--机神解限关卡引导----------------------------------------------------------------------------
+function this:GuideBehaviourCondition_KishinBreak_141010()  
+   if(FightClient:GetDirll())then
+       return false;
+   end
+   local id = DungeonMgr:GetCurrId();      
+   return id and id == 1319;
+end
+--引导机神召唤
+function this:GuideBehaviour_KishinBreak_141020()
+   EventMgr.Dispatch(EventType.Input_Select_Skill_Item,4);
+   FightGridSelMgr.CloseInput(true);
+end
+function this:GuideBehaviour_KishinBreak_141030()
+   FightGridSelMgr.CloseInput(false);
+   EventMgr.Dispatch(EventType.Input_Select_Skill_Item,4);
+end
+
+--引导机神技能释放
+function this:GuideBehaviour_KishinBreak_141040()
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,2);
+    FightGridSelMgr.CloseInput(true);
+ end
+ function this:GuideBehaviour_KishinBreak_141050()
+    FightGridSelMgr.CloseInput(false);
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,2);
+ end
+
+--机神解限强制引导
+function this:GuideBehaviourSkip_KishinBreak_141510()    
+    return GuideMgr:IsGuided(1420);--检测是否需要引导
+end
+function this:GuideBehaviourCondition_KishinBreak_141510()
+    return DungeonMgr:CheckDungeonPass(1319) and GuideMgr:IsGuided(1410);
+end
+
+function this:GuideBehaviourCondition_KishinBreak_142010()     
+    return DungeonMgr:CheckDungeonPass(1319) and GuideMgr:IsGuided(1410);
+end
+function this:GuideBehaviourStart_KishinBreak_142030() 
+    local roleListData = table.copy(SortMgr:GetData(1))
+    roleListData["Filter"]["CfgTeamEnum"] = {8}
+    SortMgr:SetData(1, roleListData)
+    EventMgr.Dispatch(EventType.Role_Captain_ToFirst);
+end
+function this:GuideBehaviourStart_KishinBreak_142050()
+    UIUtil:OpenQuestion("KishinBreak");
+end
+
+--钓鱼佬编队关卡引导
+function this:GuideBehaviourCondition_FishMan_143010()
+    local data = GuideMgr:GetViewTriggerData();
+    return data and data.dungeonId == 96114;
+end
+function this:GuideBehaviourStart_FishMan_143020()
+    UIUtil:OpenQuestion("FishMan");
+end
+--宠物首次引导
+function this:GuideBehaviourCondition_Pet_144010()
+    return DungeonMgr:CheckDungeonPass(1008);--检测是否需要引导
+end
+function this:GuideBehaviourStart_Pet_144020()
+    UIUtil:OpenQuestion("PetMainFirst");
+end
+
+
+--第三章爬塔第一关引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_TowerBattle_145010()
+    local id = DungeonMgr:GetCurrId();
+    return id == 10201;
+end
+
+function this:GuideBehaviourStart_TowerBattle_145020()
+    UIUtil:OpenQuestion("QuickSand");
+end
+
+--第三章爬塔第二关引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_TowerBattle_146010()
+    local id = DungeonMgr:GetCurrId();
+    return id == 10202;
+end
+
+function this:GuideBehaviourStart_TowerBattle_146020()
+    UIUtil:OpenQuestion("RockFall");
+end
+
+--第三章爬塔第四关引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_TowerBattle_147010()
+    local id = DungeonMgr:GetCurrId();
+    return id == 10204;
+end
+
+function this:GuideBehaviourStart_TowerBattle_147030()
+    UIUtil:OpenQuestion("SandStorm");
+end
+
+--角斗场引导----------------------------------------------------------------------------
+function this:GuideBehaviourSkip_Colosseum_150010()    
+    return GuideMgr:IsGuided(1505);--检测跳过本身的情况
+end
+function this:GuideBehaviourCondition_Colosseum_150010()
+    return not GuideMgr:IsGuided(1505);
+end
+function this:GuideBehaviourSkip_Colosseum_150025()    
+    return GuideMgr:IsGuided(1500);--检测跳过本身的情况
+end
+function this:GuideBehaviourCondition_Colosseum_150025()
+    return not GuideMgr:IsGuided(1500);
+end
+
+
+function this:GuideBehaviourStart_Colosseum_152030()
+    UIUtil:OpenQuestion("ColosseumView");
+end
+--能力检测引导----------------------------------------------------------------------------
+
+
+function this:GuideBehaviourStart_AbilityTest_154040()
+    UIUtil:OpenQuestion("RogueTView");
+end
+function this:GuideBehaviourCondition_AbilityTest_155010()
+    return GuideMgr:IsGuided(1530);
+end
+
+function this:GuideBehaviourCondition_AbilityTest_156010()
+    return GuideMgr:IsGuided(1530);
+end
 return this;

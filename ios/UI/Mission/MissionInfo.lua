@@ -81,6 +81,11 @@ end
 function this:GetJumpID()
 	return self.cfg and self.cfg.nTransferPath or nil
 end
+
+--获取基金任务id
+function this:GetFundId()
+	return self.cfg and self.cfg.fundId
+end
 --------------------------set
 function this:SetIsGet(is_get)
 	self.is_get = is_get
@@ -150,7 +155,7 @@ function this:GetSortIndex()
 		elseif(self:IsFinish()) then
 			self.sortIndex = 1000
 		elseif(self.cfg and self.cfg.index)then
-			self.sortIndex = self.cfg.index
+			self.sortIndex = 1000 - self.cfg.index
 		else
 			self.sortIndex = 100 - self:GetType()
 		end
@@ -160,7 +165,7 @@ end
 
 --是否已开启
 function this:CheckIsOpen()
-	if(self.cfg and self.cfg.nOpenLevel and PlayerClient:GetLv() < self.cfg.nOpenLevel) then
+	if(self.cfg and self.cfg.nOpenLevel~=nil and PlayerClient:GetLv() < self.cfg.nOpenLevel) then
 		return false
 	end
 	return true
@@ -193,6 +198,13 @@ function this:GetIndex()
 		return self.cfg and self.cfg.nStage
 	elseif self.type == eTaskType.NewYear then
 		return self.cfg and self.cfg.nStage
+	end
+	return nil
+end
+
+function this:GetFinishCfg()
+	if(self.finish_ids) then
+		return Cfgs.CfgTaskFinishVal:GetByID(self.finish_ids[1].id)
 	end
 	return nil
 end

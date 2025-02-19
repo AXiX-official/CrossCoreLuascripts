@@ -3,6 +3,11 @@ function Awake()
     cg_btnUp = ComUtil.GetCom(btnUp, "CanvasGroup")
 
     EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleTalent"); -- 引导用
+    AdaptiveConfiguration.SetLuaObjUIFit("RoleTalent",gameObject)
+end
+
+function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("RoleTalent")
 end
 
 function Refresh(_cardData, _curData)

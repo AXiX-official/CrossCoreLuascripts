@@ -3,6 +3,10 @@ local info = nil
 local lastBGM = nil
 local isLoading = false
 local top = nil
+local sectionData = nil
+local redPath = nil
+
+local cTime,cTimer = 0,0
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -11,10 +15,12 @@ function Awake()
     end)
     eventMgr:AddListener(EventType.Bag_Update, function()
         CSAPI.SetText(txtNum, BagMgr:GetCount(info.goodsId) .. "")
+        SetExploreRed()
     end)
 
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
     eventMgr:AddListener(EventType.Scene_Load_Complete, OnLoadComplete)
+    eventMgr:AddListener(EventType.RedPoint_Refresh, SetExploreRed)
 end
 
 function OnViewClosed(viewKey)
@@ -42,19 +48,37 @@ function Update()
         openInfo = nil
         LanguageMgr:ShowTips(24001)
         UIUtil:ToHome()   
+        return
+    end
+
+    if cTime > 0 and Time.time > cTimer then
+        cTimer = Time.time + 1
+        cTime = openInfo:GetEndTime() - TimeUtil:GetTime()
+        local tab = TimeUtil:GetTimeTab(cTime)
+        if txtTime2~=nil then
+            if tab[1] > 0 then
+                LanguageMgr:SetText(txtTime2,22073,tab[1],tab[2] .. ":" .. tab[3] .. ":" .. tab[4])
+            else
+                if tab.hour > 0 or tab.min > 0 then
+                    LanguageMgr:SetText(txtTime2,22074,tab[2] .. ":" ..tab[3] .. ":" .. tab[4])
+                else
+                    LanguageMgr:SetText(txtTime2,22074,LanguageMgr:GetByID(51016))
+                end
+            end
+        end
     end
 end
 
 function OnOpen()
     SetBGScale()
     if data then
-        local sectionData = DungeonMgr:GetSectionData(data.id)
+        sectionData = DungeonMgr:GetSectionData(data.id)
         info = sectionData:GetInfo()
         SetTime()
         SetNum()
         SetSpecial()
         SetRed(MissionMgr:CheckDungeonActivityRed(data.id))
-
+        SetExploreRed()
         if top == nil then
             top = UIUtil:AddTop2(info.view ,topParent, OnClickReturn);
         end
@@ -69,15 +93,20 @@ end
 function SetBGScale()
     local size = CSAPI.GetMainCanvasSize()
     local offset1,offset2 = size[0] / 1920,size[1] / 1080
-    local offset = offset1>offset2 and offset1 or offset2
+    local offset = offset1 > offset2 and offset1 or offset2
     local child = bg.transform:GetChild(0)
     if child then
         CSAPI.SetScale(child.gameObject,offset,offset,offset)
     end
+    
+    if offset1>offset2 then
+        CSAPI.SetRTSize(bg,size[0],1080*offset)
+    elseif offset1<offset2 then
+        CSAPI.SetRTSize(bg,1920*offset,size[1])
+    end
 end
 
 function SetTime()
-    local sectionData = DungeonMgr:GetSectionData(data.id)
     if sectionData then
     openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         if openInfo:IsDungeonOpen() then
@@ -88,6 +117,11 @@ function SetTime()
             local str = openInfo:GetCloseTimeStr()
             CSAPI.SetText(txtTime,str)
         end
+
+        if TimeUtil:GetTime() < openInfo:GetEndTime() then
+            cTimer = 0
+            cTime = openInfo:GetEndTime() - TimeUtil:GetTime()
+        end
     end
 end
 
@@ -96,7 +130,29 @@ function SetNum()
 end
 
 function SetRed(b)
-    UIUtil:SetRedPoint(redParent,b,0,0)
+    if redPath == nil then
+        redPath = sectionData and sectionData:GetRedPath() or "Common/Red2"
+    end
+    if not IsNil(redParent) then
+        UIUtil:SetRedPoint2(redPath,redParent,b,0,0)
+    else
+        CSAPI.SetGOActive(redAnim,b)
+    end
+end
+
+function SetExploreRed()
+    if sectionData:GetExploreId() then
+        if redPath == nil then
+            redPath = sectionData and sectionData:GetRedPath() or "Common/Red2"
+        end
+        local exData = ExplorationMgr:GetExData(sectionData:GetExploreId())
+        local isRed = exData and exData:HasRevice() or false
+        if redAnim2 then
+            CSAPI.SetGOActive(redAnim2,isRed)
+        else
+            UIUtil:SetRedPoint2(redPath,redParent2,isRed,0,0)
+        end
+    end
 end
 
 function SetSpecial()
@@ -119,7 +175,17 @@ function OnClickMission()
 end
 
 function OnClickShop()
-    CSAPI.OpenView("ShopView",openInfo:GetShopID())
+    if sectionData:GetExploreId() then
+        CSAPI.OpenView("SpecialExploration",sectionData:GetExploreId());
+    else
+        CSAPI.OpenView("ShopView",openInfo:GetShopID())
+    end
+end
+
+function OnClickExploration()
+    if sectionData:GetExploreId() then
+        CSAPI.OpenView("SpecialExploration",sectionData:GetExploreId());
+    end
 end
 
 function OnClickDungeon()

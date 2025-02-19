@@ -22,6 +22,10 @@ function this:OnPlay()
     else
         self:TurnContinue();
     end
+
+    local faDeadCheck = FightActionMgr:Apply(FightActionType.DeadChecker);
+    faDeadCheck.queueType = QUEUE_TYPE.Green;
+    FightActionMgr:Push(faDeadCheck);
 end
 function this:TurnContinue()
     EventMgr.Dispatch(EventType.Input_Target_Changed,self);

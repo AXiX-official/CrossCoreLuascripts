@@ -46,8 +46,8 @@ end
 
 function Refresh()
     curData=ExplorationMgr:GetCurrData();
-    SetContents(ExplorationState.Ex,txt_normalTitle,txt_normalTips,txt_normalDesc,txt_normalDesc2,txt_normalPrice,txt_normalPriceType,txt_normalOver,btn_normalBuy);
-    SetContents(ExplorationState.Plus,txt_plusTitle,txt_plusTips,txt_plusDesc,txt_plusDesc2,txt_plusPrice,txt_plusPriceType,txt_plusOver,btn_plusBuy);
+    SetContents(ExplorationState.Ex,txt_normalTitle,txt_normalTips,txt_normalDesc,txt_normalDesc2,txt_normalPrice,txt_normalPriceType,txt_normalOver,btn_normalBuy,normal_VoucherBuy);
+    SetContents(ExplorationState.Plus,txt_plusTitle,txt_plusTips,txt_plusDesc,txt_plusDesc2,txt_plusPrice,txt_plusPriceType,txt_plusOver,btn_plusBuy,plus_VoucherBuy);
     local firstReward=curData:GetFirstRewardInfo();
     SetNormalStyle(firstReward~=nil);
     if firstReward then
@@ -104,9 +104,27 @@ function LayoutCallBack(index)
 	grid.SetClickCB(GridClickFunc.OpenInfoSmiple);
 end
 
-function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_priceType,txt_over,btn_buy)
+function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_priceType,txt_over,btn_buy,VoucherBuy)
+
     -- local isShowTips=false;
     local plusPrice=curData and curData:GetTargetPrice(type);
+    local displayPrice=nil;
+    local Price=nil;
+    if CSAPI.IsADV() then
+        local amountPrice=curData and curData:GetTargetPrice(type);
+        local TwdData=curData:GetTWDDataPrice(type);
+        if TwdData and TwdData["data"]["displayCurrency"]~=nil then
+            Price=TwdData["data"]["displayCurrency"];--描述字符
+        end
+        if TwdData and TwdData["data"]["displayPrice"]~=nil then
+            displayPrice=TwdData["data"]["displayPrice"];--显示价格
+            amountPrice=TwdData["cfg"]["amount"];
+            amountPrice=math.floor(amountPrice/100);
+        end
+        if displayPrice~=nil then plusPrice=displayPrice; end
+    end
+
+
     if type==ExplorationState.Ex then
         -- CSAPI.LoadImg(bg,"UIs/ExplorationCard/img_15_1.png",true,nil,true);
         CSAPI.SetText(txt_title,LanguageMgr:GetByID(18042));
@@ -114,6 +132,7 @@ function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_pr
         CSAPI.SetText(txt_desc,LanguageMgr:GetByID(34032));
         CSAPI.SetText(txt_desc2,LanguageMgr:GetByID(34033));
         CSAPI.SetText(txt_price,tostring(plusPrice));
+        if CSAPI.IsADV() then CSAPI.SetText(normal_VoucherPrice,tostring(amountPrice)); end
         -- isShowTips=true;
     elseif type==ExplorationState.Plus then
         -- CSAPI.LoadImg(bg,"UIs/ExplorationCard/img_15_2.png",true,nil,true);
@@ -122,9 +141,14 @@ function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_pr
         CSAPI.SetText(txt_desc,LanguageMgr:GetByID(34035));
         CSAPI.SetText(txt_desc2,LanguageMgr:GetByID(34036));
         CSAPI.SetText(txt_price,tostring(plusPrice));
+        if CSAPI.IsADV() then CSAPI.SetText(plus_VoucherPrice,tostring(amountPrice)); end
         -- isShowTips=false;
     end
     CSAPI.SetText(txt_priceType,LanguageMgr:GetByID(18013));
+    if CSAPI.IsADV() and Price~=nil then
+        CSAPI.SetText(txt_priceType,Price);
+        txt_priceType.transform.localPosition=UnityEngine.Vector3(-47,0,0);
+    end
     local isOver=false;
     local curList=nil;
     if curData then
@@ -141,6 +165,28 @@ function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_pr
     end
     CSAPI.SetGOActive(txt_over,isOver);
     CSAPI.SetGOActive(btn_buy,not isOver);
+    if CSAPI.IsADV() then
+        CSAPI.SetGOActive(VoucherBuy,not isOver);
+        if not isOver then
+            if type==ExplorationState.Ex then
+                if plusPrice and  tonumber(AdvDeductionvoucher.SDKvoucherNum)>= tonumber(amountPrice) then
+                    btn_buy.transform.localPosition=UnityEngine.Vector3(-130, btn_buy.transform.localPosition.y,0);
+                    VoucherBuy.transform.localPosition=UnityEngine.Vector3(130, VoucherBuy.transform.localPosition.y,0);
+                else
+                    btn_buy.transform.localPosition=UnityEngine.Vector3(0, btn_buy.transform.localPosition.y,0);
+                    CSAPI.SetGOActive(VoucherBuy,false);
+                end
+            elseif type==ExplorationState.Plus then
+                if  plusPrice and tonumber(AdvDeductionvoucher.SDKvoucherNum)>= tonumber(amountPrice) then
+                    btn_buy.transform.localPosition=UnityEngine.Vector3(-130, btn_buy.transform.localPosition.y,0);
+                    VoucherBuy.transform.localPosition=UnityEngine.Vector3(130, VoucherBuy.transform.localPosition.y,0);
+                else
+                    btn_buy.transform.localPosition=UnityEngine.Vector3(0, btn_buy.transform.localPosition.y,0);
+                    CSAPI.SetGOActive(VoucherBuy,false);
+                end
+            end
+        end
+    end
 end
 
 function GetFakeList(curList)
@@ -172,14 +218,45 @@ function CreateRewards(itemList,curList,parent)
 end
 
 function OnClickPlus()
-    OnClickBuy(ExplorationState.Plus);
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+            OnClickBuy(ExplorationState.Plus);
+        end})
+    else
+        OnClickBuy(ExplorationState.Plus);
+    end
 end
 
 function OnClickNormal()
-    OnClickBuy(ExplorationState.Ex);
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+            OnClickBuy(ExplorationState.Ex);
+        end})
+    else
+        OnClickBuy(ExplorationState.Ex);
+    end
 end
 
-function OnClickBuy(type)
+function OnClickPlusVoucher()
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+            OnClickBuy(ExplorationState.Plus,true);
+        end})
+    else
+        OnClickBuy(ExplorationState.Plus,true);
+    end
+end
+
+function OnClickNormalVoucher()
+    if CSAPI.RegionalCode()==3 and CSAPI.PayAgeTitle() then
+        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
+            OnClickBuy(ExplorationState.Ex,true);
+        end})
+    else
+        OnClickBuy(ExplorationState.Ex,true);
+    end
+end
+function OnClickBuy(type,IsDeductionvoucher)
     --获取真实价格
     curData=ExplorationMgr:GetCurrData();
     -- if CSAPI.IsChannel() then
@@ -192,7 +269,15 @@ function OnClickBuy(type)
                     okCallBack = function()
                         local commInfo=curData:GetTargetCommInfo(type);
                         if commInfo~=nil then
-                            ShopCommFunc.HandlePayLogic(commInfo,1,1);
+                            if CSAPI.IsADV() then
+                                if IsDeductionvoucher then
+                                    ShopCommFunc.AdvHandlePayLogic(commInfo,1,1,nil,PayType.ZiLongDeductionvoucher,false);
+                                else
+                                    ShopCommFunc.AdvHandlePayLogic(commInfo,1,1,nil,PayType.ZiLong,false);
+                                end
+                            else
+                                ShopCommFunc.HandlePayLogic(commInfo,1,1);
+                            end
                         else
                             Tips.ShowTips(LanguageMgr:GetTips(9006));
                         end
@@ -202,7 +287,16 @@ function OnClickBuy(type)
             else
                 local commInfo=curData:GetTargetCommInfo(type);
                 if commInfo~=nil then
-                    ShopCommFunc.HandlePayLogic(commInfo,1,1);
+                    if CSAPI.IsADV() then
+                        if IsDeductionvoucher then
+                            ShopCommFunc.AdvHandlePayLogic(commInfo,1,1,nil,PayType.ZiLongDeductionvoucher,false);
+                        else
+                            ShopCommFunc.AdvHandlePayLogic(commInfo,1,1,nil,PayType.ZiLong,false);
+                        end
+                    else
+                        ShopCommFunc.HandlePayLogic(commInfo,1,1);
+                    end
+
                 else
                     Tips.ShowTips(LanguageMgr:GetTips(9006));
                 end

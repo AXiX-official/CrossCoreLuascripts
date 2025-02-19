@@ -99,9 +99,17 @@ end
 --点击购买
 function OnClickOpen()
 	if selectID~=nil then
+		local index=nil;
+		local id= item:GetID();
+		local data=item:GetData();
+		if data and data.get_infos then
+			index=data.get_infos[1].index;
+			id=item:GetCfg().to_item_id;
+		end
 		--打开礼包
 		PlayerProto:UseItem({
-			id=item:GetID(),
+			id=id,
+			ix=index,
 			cnt=useNum,
 			arg1=selectID,
 		}, true);

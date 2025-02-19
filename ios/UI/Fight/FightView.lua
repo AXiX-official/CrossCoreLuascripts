@@ -2,11 +2,17 @@ local character = nil;
 local timeOutValue = nil;
 local recordBeginTime = 0;
 local currTotalDamage=0;--当前战斗对敌方造成的总伤害值
-
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=UnityEngine.Input
+local KeyCode=UnityEngine.KeyCode
 function Awake()    
  	--添加问号 rui 211130 --因为不是通过openview打开的，所以要手动添加
 	--UIUtil:AddQuestionItem("Fight",gameObject, rt,"QuestionItem2")
-     
+    CSAPI.Getplatform();
+    IsMobileplatform=CSAPI.IsMobileplatform;
+
     currShowState = false;--当前状态
     ctrlShowState = false;--控制状态
 
@@ -37,7 +43,6 @@ function Awake()
     if(npText)then
         CSAPI.SetText(npText,LanguageMgr:GetByID(28014));
     end
-
 
     txtName = ComUtil.GetCom(goNameText,"Text");
     txtLv = ComUtil.GetCom(goLvText,"Text");
@@ -123,7 +128,7 @@ function Awake()
     if(not speedState)then
         CSAPI.SetGOActive(speedMask,true);
     end
-    
+    AdaptiveConfiguration.SetLuaObjUIFit("FigHtView",gameObject);
 end
 
 function InitFightInfo()
@@ -133,22 +138,27 @@ function InitFightInfo()
     end  
 
     if(g_FightMgr.type == SceneType.PVP)then
-        info = StringConstant.fight_info_pvp;
+        info = LanguageMgr:GetByID(1080)--StringConstant.fight_info_pvp;
     elseif(g_FightMgr.type == SceneType.PVPMirror)then
-        info = StringConstant.fight_info_pvpmirror;
+        info = LanguageMgr:GetByID(1081)--StringConstant.fight_info_pvpmirror;
     elseif(g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.SinglePVE)then
         --info = "副本";
         local dungeonId = DungeonMgr:GetCurrId();
         local cfgDungeon = Cfgs.MainLine:GetByID(dungeonId);
         if(cfgDungeon)then            
             if(cfgDungeon.type == eDuplicateType.MainNormal) then
-                info = StringConstant.fight_info_main_normal .. " " .. tostring(cfgDungeon.chapterID);
+                 info = LanguageMgr:GetByID(15015) .. " " .. tostring(cfgDungeon.chapterID);
             elseif(cfgDungeon.type == eDuplicateType.MainElite) then
-                info = StringConstant.fight_info_main_elite .. " "  .. tostring(cfgDungeon.chapterID);
+                 info = LanguageMgr:GetByID(15016) .. " "  .. tostring(cfgDungeon.chapterID);
             else    
                 info = tostring(cfgDungeon.name);
             end
         end
+    elseif(g_FightMgr.type == SceneType.Rogue)then
+        items2 = items2 or {}
+        ItemUtil.AddItems("Rogue/RogueBuffSelectItem2", items2, RogueMgr:GetSelectBuffs(), rogueBuffs)
+    elseif (g_FightMgr.type == SceneType.RogueT) then
+        CSAPI.SetGOActive(rogutTBuff,true);
     end
     --CSAPI.SetText(fightInfoText,info);
 end
@@ -190,15 +200,24 @@ function InitListener()
 
     eventMgr:AddListener(EventType.Fight_SkipCast2,OnPlayCastSkipSound);    
 
-    eventMgr:AddListener(EventType.Fight_Action_Turn_Add1,TurnNumAdd);        
+    eventMgr:AddListener(EventType.Fight_Action_Turn_Add1,TurnNumAdd);    
+    
+    eventMgr:AddListener(EventType.Fight_Activity_UpdateDamage,OnFightActivityUpdateDamage);    
+    
 end
 function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("FigHtView");
     eventMgr:ClearListener();
 
     local fightDungeonId = DungeonMgr:GetCurrFightId() or 0;
     if(fightDungeonId)then
         RecordMgr:Save(RecordMode.Fight,recordBeginTime,"duplicateID=" .. fightDungeonId);
     end
+end
+
+function OnFightActivityUpdateDamage(apiData)
+    --LogError("更新伤害信息：" .. table.tostring(apiData));
+    SetTotalDamage(apiData.nTotalDamage  or 0);
 end
 
 function OnSetSettingBtnState(state)
@@ -213,7 +232,7 @@ function OnRelogin()
 
     if(g_FightMgr.type == SceneType.PVP)then
         FightClient:SetStopState(false);
-	    FightActionMgr:Surrender({ fight_error_msg = StringConstant.fight_pvp_disconnect });
+	    FightActionMgr:Surrender({ fight_error_msg = "" });
         --FightProto:RestoreFight();
     else
         
@@ -269,15 +288,14 @@ function ShowCharacter(showCharacter)
     if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
         local isMyTurn = character.IsMine();
         SetTimeOut(g_fightControlTime or 20);
-        CSAPI.SetText(goActionTips,isMyTurn and StringConstant.fight_pvp_time_tips_1 or StringConstant.fight_pvp_time_tips_2);
+        CSAPI.SetText(goActionTips,isMyTurn and "" or "");
 --        else
 --            SetTimeOut(nil);
     end
 
 
     txtName.text = character.GetName();
-    --txtLv.text = "<size=25>" .. StringConstant.lv .. "</size>" .. character.GetLv();
-    txtLv.text = string.format(LanguageMgr:GetByID(26000),character.GetLv());
+    txtLv.text = "<size=25>" .. LanguageMgr:GetByID(1033) .. "</size>" .. character.GetLv();
     local cfg = character.GetCfgModel();      
     if(cfg == nil)then
         return; 
@@ -419,7 +437,8 @@ end
 --回合数+1
 function TurnNumAdd()
     if(turnData)then
-        turnData.add1 = 1;        
+        turnData.add1 = 1;
+        --LogError(turnData.turnNum + 1);
         UpdateTurn(turnData);
     end
 end
@@ -461,9 +480,11 @@ function UpdateTurn(data)
             end           
         end
         local str = turnNumLimit >= 100 and "" or ("/" .. turnNumLimit);
+
         if(turnData and turnData.add1)then
             turnNum = turnNum + 1;
         end
+
         txtTurn.text = string.format("<color=#%s>%s</color>%s",colorStr,turnNum,str);                   
     end
     
@@ -574,7 +595,7 @@ function UpdateTriggerEvent(data)
 end
 
 --回城
-function OnClickBtnBack() 
+function OnClickBtnBack()
     if(DungeonMgr:IsTutorialDungeon() and GuideMgr:HasGuide("Fight"))then      
         --Tips.ShowTips("特殊关卡，暂不能操作")
         return;
@@ -597,10 +618,28 @@ function UpdateInfo()
         end
 
         local currHp,maxHp,buffHp = character.GetHpInfo();
-               
+   
         UpdateBar(hpBar,nil,currHp,maxHp,false);
-        --txtHp.text = "<color=#ffffff><size=30>" .. currHp .. "</size></color>/" .. maxHp;
-        
+
+        local overflow = maxHp > 100000000;--血量溢出
+        if(overflow)then
+            if(not txtHp)then
+                CSAPI.SetGOActive(goHpText,false);
+                CSAPI.SetGOActive(goHpText1,true);
+
+                txtHp = ComUtil.GetCom(goHpText1,"Text");                
+            end
+            if(txtHp)then
+                txtHp.text = "<color=#ffffff><size=45>" .. currHp .. "</size></color>/" .. maxHp;
+            end
+        else
+            if(txtHp)then
+                CSAPI.SetGOActive(goHpText,true);
+                CSAPI.SetGOActive(goHpText1,false);
+                
+                txtHp = nil;
+            end             
+        end
         --UpdateBar(shieldBar,nil,currHp + buffHp,maxHp,true);
         --UpdateBar(spBar,nil,character.sp,character.spMax,true);
         
@@ -678,7 +717,7 @@ function OnClickBtnSpeed()
 
 
    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
-       Tips.ShowTips(StringConstant.fight_pvp_tips_1);
+       --Tips.ShowTips(StringConstant.fight_pvp_tips_1);
        return;
    end   
 
@@ -705,7 +744,7 @@ function OnClickBtnAuto()
 	end    
 
     if(DungeonMgr:IsTutorialDungeon())then
-        Tips.ShowTips("特殊关卡无法使用")
+        Tips.ShowTips(LanguageMgr:GetTips(8021));
         return;
     end
 
@@ -747,6 +786,15 @@ function UpdateAutoFightState()
     --aiSetting.SetShowState(FightClient:IsAutoFight());
 end
 
+function SetTotalDamage(val)
+    FightClient:SetTotalDamage(val);
+    CSAPI.SetGOActive(damageInfoTotal,true);
+    rollTatalDamageValue = rollTatalDamageValue or ComUtil.GetCom(totalDamageValue,"RollValue");
+    if(not IsNil(rollTatalDamageValue))then
+        rollTatalDamageValue:SetCurr(val);
+    end
+end
+
 --添加伤害数值
 function AddDamageValue(value)
     --忽略负数
@@ -758,7 +806,7 @@ function AddDamageValue(value)
         totalDamage = 0;              
 
         damageEnter:Play();
-        rollDamageValue:SetCurr(0);
+        rollDamageValue:SetCurr(0);        
     end
 
     totalDamage = totalDamage or 0;
@@ -898,7 +946,7 @@ end
 function OnFightMask(characterID)
     CSAPI.SetGOActive(cast2Mask,true);
     local delayCloseTime = 1500;
-
+    --LogError(tostring(characterID));
     local character = characterID and CharacterMgr:Get(characterID);
     if(character)then
         delayCloseTime = 2200;
@@ -912,9 +960,11 @@ function OnFightMask(characterID)
         local cfg = character.GetCfg();
         local starLv = cfg and cfg.quality or 3;     
         local isOverLoad = character.GetOverloadState();
-        ActiveCast2Mask(starLv,isOverLoad);      
-        
-        CheckAutoSkipCast2(character);      
+
+        CheckAutoSkipCast2(character);  
+
+        ActiveCast2Mask(starLv,isOverLoad,character.IsSkipSkill());    
+                    
     else
         delayCloseTime = 1000;
         CSAPI.SetGOActive(Cast2ShowRole_ToWhite,true);
@@ -933,31 +983,38 @@ function CheckAutoSkipCast2(character)
     local skipPlay = nil;
     local skipSettingVal = SettingMgr:GetValue(s_fight_action_key);
 
-    if(skipSettingVal == SettingFightActionType.Close)then
-        skipPlay = 1;
-    else
-        local fightAction = character.GetFightAction();
-        local skillID = fightAction and fightAction:GetSkillID();   
-        local skillKey = tostring(skillID); 
-        local currPlayTime = os.date("%d");   
+    local fightAction = character.GetFightAction();
+    local skillID = fightAction and fightAction:GetSkillID();  
+    local cfgSkill = Cfgs.skill:GetByID(skillID);
+    
+    --if(not cfgSkill or (cfgSkill.type ~= SkillType.Summon and cfgSkill.type ~= SkillType.Unite))then--不是召唤和同调
+    --if(not cfgSkill)then
+    
+        if(skipSettingVal == SettingFightActionType.Close)then
+            skipPlay = 1;
+        else            
+            local skillKey = tostring(skillID); 
+            local currPlayTime = os.date("%d");   
+            
+            if(skipSettingVal == SettingFightActionType.Once)then                   
+                local lastPlayTime = PlayerPrefs.GetString(skillKey);
+                if(lastPlayTime == currPlayTime)then
+                    skipPlay = 1;
+                end                
+            end       
 
-        if(skipSettingVal == SettingFightActionType.Once)then                   
-            local lastPlayTime = PlayerPrefs.GetString(skillKey);
-            if(lastPlayTime == currPlayTime)then
-                skipPlay = 1;
-            end                
-        end       
-
-        PlayerPrefs.SetString(skillKey,currPlayTime);
-    end
+            PlayerPrefs.SetString(skillKey,currPlayTime);
+        end
+    --end
 
     if(skipPlay)then
-        EventMgr.Dispatch(EventType.Fight_Skill_Skip_Next);
+        character.SetSkipSkill(true);
+        --EventMgr.Dispatch(EventType.Fight_Skill_Skip_Next);
     end 
 end
 
 
-function ActiveCast2Mask(starLv,isOverLoad)
+function ActiveCast2Mask(starLv,isOverLoad,skipSkill)
     CSAPI.SetGOActive(this["Cast2ShowRole_" .. starLv],true);
 --    if(not roleAnimator)then
 --        roleAnimator = ComUtil.GetComInChildren(Cast2ShowRole_Role,"Animator");
@@ -967,8 +1024,20 @@ function ActiveCast2Mask(starLv,isOverLoad)
     if(isOverLoad)then
         CSAPI.SetGOActive(Cast2ShowRole_OverLoad,isOverLoad);
     end
-    FuncUtil:Call(ActiveToWhite,nil,1650);    
-    FuncUtil:Call(ActiveCast2MaskComplete,nil,1750);
+    if(skipSkill)then
+        FuncUtil:Call(RecoverCast2Mask,nil,2400);
+    else
+        FuncUtil:Call(ActiveToWhite,nil,1650);    
+        FuncUtil:Call(ActiveCast2MaskComplete,nil,1950);
+    end
+    --直播模式 
+    local value = SettingMgr:GetValue(s_other_live_key)
+    if(value==1) then 
+        CSAPI.SetGOActive(this["Cast2ShowRole_" .. starLv],false)
+        CSAPI.SetScale(Role,0,0,0)
+    else 
+        CSAPI.SetScale(Role,150,150,1)
+    end
 end
 
 function ActiveToWhite()
@@ -1031,3 +1100,33 @@ function OnClickQuestion()
         CSAPI.OpenView("ModuleInfoView", cfg)
     end 
 end
+
+
+function OnClickRogutTBuff()
+    CSAPI.OpenView("RogueTCurBuff",nil,1)
+end
+
+-----------------------------------------------虚拟返回键代码 下-------------------------------------------------------------
+
+--OnClickBtnBack
+function Update()
+    CheckVirtualkeys()
+end
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+    --仅仅安卓或者苹果平台生效
+    if IsMobileplatform then
+        if(Input.GetKeyDown(KeyCode.Escape))then
+            if  OnClickBtnBack then
+                if CSAPI.IsBeginnerGuidance()==false then
+                    if FightClient.IsFightStop and FightClient.IsFightOver==false then
+                        OnClickBtnBack();
+                    else
+                        FightClient.IsFightStop=true;
+                    end
+                end
+            end
+        end
+    end
+end
+-----------------------------------------------虚拟返回键代码 上-------------------------------------------------------------

@@ -16,7 +16,7 @@ function this.Refresh()
 		selectDic[v:GetID()] = 1
 	end
 
-	local list = EquipMgr:GetNotEquippedItem(nil, false);
+	local list = EquipMgr:GetNotEquippedItem(nil,false,false);
 	local len = list ~= nil and #list or 0
 	for i = len, 1, - 1 do
 		if(list[i]:GetQuality() == 5 or selectDic[list[i]:GetID()] or list[i]:IsLock() ) then --最高品质不用改造
@@ -39,7 +39,9 @@ end
 function this.OnClickGrid(tab)
 	if tab.data:IsNew() then
 		EquipProto:SetIsNew({tab.data:GetID()}, function()
-			tab.SetNewState(tab.data:IsNew());
+			if tab and tab.data then
+				tab.SetNewState(tab.data:IsNew());
+			end
 		end);
 	end
 	remouldData = tab.data

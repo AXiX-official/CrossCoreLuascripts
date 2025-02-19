@@ -98,8 +98,11 @@ function ReloadLua(nFile)
     local oldOrignModule = {}
 
     if hadLoadVals then
+        LogInfo("hadLoadVals start[遍历 %s 注册的全局变量，保存一份]", moduleName)
         -- 遍历这个文件注册的所有全局变量，保存一份
+        local cnt = 0
         for key, oType in pairs(hadLoadVals) do
+            cnt = cnt + 1
             if Loader:IsReplaceFile(key) then
                 hadLoadVals[key] = nil
             else
@@ -107,6 +110,7 @@ function ReloadLua(nFile)
                 oldOrignModule[key] = _G[key]
             end
         end
+        LogInfo("hadLoadVals finish cnt:%s[遍历 %s 注册的全局变量，保存一份]", cnt, moduleName)
     end
 
     -- LogTable(oldOrignModule, "oldOrignModule:")
@@ -129,7 +133,7 @@ function ReloadLua(nFile)
             -- 不用理 newModule, 因为这里不进去，newModule 就会保存在 _G 里面的了
             if oldModule then
                 local nType = type(newModule)
-                if oType ~= nType then
+                if key ~= '_' and oType ~= nType then
                     LogError(
                         'ReloadLua(%s) key: %s new type: %s ~= old type: %s ?????? ',
                         moduleName,
@@ -194,13 +198,15 @@ function ReloadFiles(filesArr)
         -- LogDebug("beg")
         -- TimerHelper:PrintTime(CURRENT_TIME, "CURRENT_TIME: " .. nFile .. ":")
 
-        if IsRelease then
-            if nFile ~= 'DBCreater.CreateTables' and nFile ~= 'DBCreater.CreateLogTables' then
-                xpcall(ReloadLua, XpcallCB, nFile)
-            end
-        else
-            xpcall(ReloadLua, XpcallCB, nFile)
-        end
+        xpcall(ReloadLua, XpcallCB, nFile)
+
+        -- if IsRelease then
+        --     if nFile ~= 'DBCreater.CreateTables' and nFile ~= 'DBCreater.CreateLogTables' then
+        --         xpcall(ReloadLua, XpcallCB, nFile)
+        --     end
+        -- else
+        --     xpcall(ReloadLua, XpcallCB, nFile)
+        -- end
 
         -- TimerHelper:PrintTime(CURRENT_TIME, "CURRENT_TIME: " .. nFile .. ":")
         -- LogDebug("end")

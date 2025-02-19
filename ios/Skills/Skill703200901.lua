@@ -35,6 +35,8 @@ function Skill703200901:OnAttackOver(caster, target, data)
 	self:AddBuff(SkillEffect[703200904], caster, target, data, 703200101)
 	-- 703200902
 	self:AddSp(SkillEffect[703200902], caster, target, data, -100)
+	-- 703201101
+	self:DelBufferGroup(SkillEffect[703201101], caster, target, data, 2,10)
 end
 -- 行动结束
 function Skill703200901:OnActionOver(caster, target, data)

@@ -202,6 +202,12 @@ function SkillFilter:HasBuff(oSkill, caster, target, teamID, buffID, typ)
 	-- 
 	return team.filter:GetRand(rand)
 end
+
+-- 返回某个角色对象
+function SkillFilter:HasRole(oSkill, caster, target, teamID, cId)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	return team.filter:HasRole(cId)
+end
 ------------------条件判断---------------------------------
 SkillJudger = {}
 
@@ -252,7 +258,7 @@ end
 -- 攻击方是召唤主
 function SkillJudger:CasterIsSummoner(oSkill, caster, target, res)
 	local summon = oSkill.card
-	if summon.type == CardType.Summon and summon.oSummonOwner and summon.oSummonOwner == caster then
+	if (summon.type == CardType.Summon or summon.bSummonTeammate) and summon.oSummonOwner and summon.oSummonOwner == caster then
 		return res
 	end
 	return not res
@@ -261,7 +267,8 @@ end
 -- 攻击方是自己的召唤物
 function SkillJudger:CasterIsOwnSummon(oSkill, caster, target, res)
 	local summon = oSkill.card
-	if caster.type == CardType.Summon and caster.oSummonOwner and caster.oSummonOwner == summon  then
+	-- LogDebugEx("CasterIsOwnSummon", summon.name)  --oSummoner
+	if (caster.type == CardType.Summon or caster.bSummonTeammate) and caster.oSummonOwner and caster.oSummonOwner == summon  then
 		return res
 	end
 	return not res
@@ -314,7 +321,7 @@ end
 -- 受击方是召唤主
 function SkillJudger:TargetIsSummoner(oSkill, caster, target, res)
 	local summon = oSkill.card
-	if summon.type == CardType.Summon and summon.oSummonOwner and summon.oSummonOwner == target then
+	if (summon.type == CardType.Summon or summon.bSummonTeammate) and summon.oSummonOwner and summon.oSummonOwner == target then
 		return res
 	end
 	return not res
@@ -413,6 +420,14 @@ function SkillJudger:IsOnHelp(oSkill, caster, target, res, percent)
 	return not res
 end
 
+-- 是否为CallSkill技能
+function SkillJudger:IsCallSkill(oSkill, caster, target, res, percent)
+	if caster.currentSkill.callSkillType then
+		return res
+	end
+	return not res
+end
+
 -- 是否为指挥官技能(被动用)
 function SkillJudger:IsCommander(oSkill, caster, target, res, percent)
 	--LogDebugEx("SkillJudger:IsNormal", caster.currentSkill.id, caster.currentSkill.isNormal)
@@ -445,11 +460,44 @@ end
 -- 是否大招技能(被动用)
 function SkillJudger:IsUltimate(oSkill, caster, target, res)
 
-	if caster.currentSkill and (caster.currentSkill.upgrade_type == CardSkillUpType.C or caster.currentSkill.upgrade_type == CardSkillUpType.OverLoad) then
+	if caster.currentSkill and 
+		(caster.currentSkill.upgrade_type == CardSkillUpType.C or 
+			caster.currentSkill.upgrade_type == CardSkillUpType.OverLoad) then
 		return res
 	end
 	return not res
 end
+
+-- 是否为全体攻击技能(被动用)
+function SkillJudger:IsALLRange(oSkill, caster, target, res, ty)
+	--LogDebugEx("SkillJudger:IsALLRange", caster.currentSkill.id, caster.currentSkill.range_key)
+	--LogTable(skill[caster.currentSkill.id])
+
+	if caster.currentSkill and caster.currentSkill.range_key == "all" then
+		return res
+	end
+	return not res
+end
+
+local littleRange = {}
+littleRange.one_row = true
+littleRange.one_col = true
+littleRange.tian    = true
+littleRange.shizi   = true
+-- littleRange.two_row = true
+-- littleRange.two_col = true
+
+-- 是否为小范围攻击技能(被动用)
+function SkillJudger:IsLittleRange(oSkill, caster, target, res, ty)
+	--LogDebugEx("SkillJudger:IsLittleRange", caster.currentSkill.id, caster.currentSkill.range_key)
+	--LogTable(skill[caster.currentSkill.id])
+
+	if caster.currentSkill and littleRange[caster.currentSkill.range_key] then
+		return res
+	end
+	return not res
+end
+
 
 -- 控制类型
 function SkillJudger:IsCtrlType(oSkill, caster, target, res, typ)
@@ -569,6 +617,7 @@ end
 -- 判断目标兵种
 function SkillJudger:IsTargetMech(oSkill, caster, target, res, typ)
 
+	LogDebugEx("SkillJudger:IsTargetMech", caster.name, caster.sMech, typ)
 	if target.sMech == typ then 
 		return res
 	end
@@ -579,6 +628,8 @@ end
 -- 判断施法者兵种
 function SkillJudger:IsCasterMech(oSkill, caster, target, res, typ)
 
+
+	LogDebugEx("SkillJudger:IsCasterMech", caster.name, caster.sMech, typ)
 	if caster.sMech == typ then 
 		return res
 	end
@@ -662,15 +713,37 @@ function SkillJudger:HasBuff(oSkill, caster, target, res, teamID, buffID, typ)
 	end
 end
 
--- 是否兄妹
-function SkillJudger:IsSibling(oSkill, caster, target, res, charID)
-
-	if target.model == charID then
+-- 判断是否存在角色
+function SkillJudger:HasRole(oSkill, caster, target, res, teamID, cId)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	if team:HasRole(cId) then
 		return res
 	else
 		return not res
 	end
 end
+
+
+-- 是否兄妹
+function SkillJudger:IsSibling(oSkill, caster, target, res, charID)
+
+	if target.id == charID then
+		return res
+	else
+		return not res
+	end
+end
+
+-- 攻击方是否兄妹
+function SkillJudger:IsCasterSibling(oSkill, caster, target, res, charID)
+
+	if caster.id == charID then
+		return res
+	else
+		return not res
+	end
+end
+
 
 -- 判断护盾是否被打暴
 function SkillJudger:IsShieldDestroy(oSkill, caster, target, res)
@@ -702,12 +775,24 @@ function SkillJudger:TargetIndex(oSkill, caster, target, res, nIndex)
 	end
 end
 
--- 是否控制buff
+-- 是否控制buff(group)
 function SkillJudger:IsCtrlBuff(oBuff, caster, target, res, typ)
 	typ = typ or BuffGroup.Ctrl
 	LogDebugEx("IsCtrlBuff", oBuff.group, BuffGroup.Ctrl)
-	LogTable(oBuff, "IsCtrlBuff")
+	-- LogTable(oBuff, "IsCtrlBuff")
 	if oBuff.group == typ then
+		return res
+	else
+		return not res
+	end
+end
+
+-- 是否控制buff(type)
+function SkillJudger:IsCtrlBuffType(oBuff, caster, target, res, typ)
+	typ = typ or BuffGroup.Ctrl
+	LogDebugEx("IsCtrlBuff", oBuff.type, BuffGroup.Ctrl)
+	-- LogTable(oBuff, "IsCtrlBuff")
+	if oBuff.type == typ then
 		return res
 	else
 		return not res
@@ -804,6 +889,13 @@ function SkillApi:LiveCount(oSkill, caster, target, teamID)
 
 	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
 	return team:LiveCount(CardType.Summon)
+end
+
+
+-- 获取所属小队成员数量
+function SkillApi:ClassCount(oSkill, caster, target, teamID, nClass)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	return team:ClassCount(nClass)
 end
 
 -- 死亡数量
@@ -922,22 +1014,40 @@ end
 -- 获取当前操作数
 function SkillApi:GetTurnCount(oSkill, caster, target)
 	local mgr = oSkill.team.fightMgr
-	return mgr.nStepPVE or 0
+	LogDebugEx("SkillApi:GetTurnCount", ((mgr.nStepPVE or 0) - (oSkill.card.startopnum or 0)), oSkill.card.startopnum, mgr.nStepPVE, oSkill.card.name)
+	return ((mgr.nStepPVE or 0) - (oSkill.card.startopnum or 0))
 end
+
 -- 总伤害
 function SkillApi:GetTotalDamage(oSkill, caster, target, filter)
 	return oSkill.card.nTotalDamage or 0
 end
+
+-- 阶段伤害
+function SkillApi:GetStateDamage(oSkill, caster, target, filter)
+	LogDebugEx("SkillApi:GetStateDamage", oSkill.card.nStateDamage, oSkill.card.name)
+	return oSkill.card.nStateDamage or 0
+end
+
 ----------------------------------------------
 -- 技能基类
 FightAPI = oo.class()
 
 function FightAPI:Init(skillID)
 end
+
+function FightAPI:Destroy()
+	-- LogDebugEx("FightAPI:Destroy()", self.name)
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 ------------------技能和buffer通用api---------------------------------
 
 -- 通用加buff
 function FightAPI:AddBuff(effect, caster, target, data, buffID, nRoundNum)
+	LogDebugEx("FightAPI:AddBuff", buffID, nRoundNum)
 	-- local effect = SkillEffect[effectID]
 	local buff = nil
 
@@ -951,11 +1061,11 @@ function FightAPI:AddBuff(effect, caster, target, data, buffID, nRoundNum)
 		return
 	end
 
+	LogDebug("AddBuff = %s, %s, %s, %s", effectID, self.name, caster.name, target.name)
 	if target:IsLive() then
 		local buff = target:AddBuff(caster, buffID, nRoundNum, effect.apiSetting)
 		return buff
 	end
-	-- LogTrace("AddBuff = %s, %s, %s, %s", effectID, self.name, caster.name, target.name)
 end
 
 -- 概率加buffer
@@ -1310,6 +1420,8 @@ end
 
 -- 拉条
 function FightAPI:AddProgress(effect, caster, target, data, progress, max)
+
+	LogDebugEx("拉条 AddProgress", target.name, max)
 	if target:IsLive() then
 		target:AddProgress(progress, max, effect.apiSetting)
 	end
@@ -1442,11 +1554,30 @@ end
 function FightAPI:RestoreHP(effect, caster, target, data)
 	-- self.order = self.order + 1
 	LogDebugEx("---FightAPI:RestoreHP---", caster.name, target.name)
+
 	if not target.isInvincible then return end
 	target.hp = target.maxhp
 	self.log:Add({api="RestoreHP", targetID = target.oid, attr = "hp", 
 		hp = target:Get("hp"),  effectID = effect.apiSetting, order = self.order})
-	return spill
+end
+
+-- 无限血机制设置阶段[总阶段数, 阶段, 阶段血量, 操作数]
+function FightAPI:SetInvincible(effect, caster, target, data, totalState, state, statehp, opnum)
+	
+	-- LogDebugEx("---FightAPI:SetInvincible---", caster.name, target.name)
+	local target = self.card
+	if not target.isInvincible then return end
+	target.nStateDamage = 0 -- 当前阶段伤害量
+	target.totalState   = totalState -- 总阶段
+	target.state        = state -- 阶段
+	target.statehp      = statehp -- 阶段血量
+	target.opnum        = opnum -- 操作数
+	target.startopnum   = self.team.fightMgr.nStepPVE or 0 -- 阶段开始时的操作数
+	self.log:Add({api="SetInvincible", targetID = target.oid, 
+		totalState = totalState, state = state, statehp = statehp, opnum = opnum,
+		nStateDamage = target.nStateDamage, nTotalDamage = target.nTotalDamage, startopnum = target.startopnum,
+		effectID = effect.apiSetting, order = self.order})
+
 end
 
 -- 复活
@@ -1492,7 +1623,7 @@ end
 
 -- 被动复活
 function FightAPI:PassiveRevive(effect, caster, target, data, cureTy, percent, sdata)
-	LogTrace()
+	-- LogTrace()
 	LogDebugEx("被动复活", caster.name, target.name)
 	local caster = self.card
 	if target.isRemove then return end -- 禁止复活
@@ -1806,8 +1937,13 @@ function FightAPI:ReduceSkillAttr(effect, caster, target, data, attr, val)
 end
 
 function FightAPI:AddSkillAttr(effect, caster, target, data, attr, val)
-	local mgr = caster.skillMgr
+	local mgr = target.skillMgr
 	mgr:AddSkillAttr(attr, val)
+end
+
+function FightAPI:AddOneSkillAttr(effect, caster, target, data, attr, val, t)
+	local mgr = target.skillMgr
+	mgr:AddOneSkillAttr(attr, val, t)
 end
 
 -- 结算伤害并删除buff(按type)
@@ -1998,6 +2134,11 @@ function FightAPI:EnergyCure(effect, caster, target, data, hp)
 	LogDebugEx("能量治疗", energy, hp, cureHP, target.hp)
 	-- 扣能量
 	self.card:SetValue("energy", energy-hp)
+
+	local mgr = self.team.fightMgr
+	target.currCureHp = hp -- 当前治疗量
+	mgr:DoEventWithLog("OnCure", caster, target, data)
+	target.currCureHp = nil
 end
 
 -- 拥有者给目标加buff
@@ -2057,7 +2198,7 @@ function FightAPI:SetShareDamage(effect, caster, target, data, percent)
 	LogDebugEx("设置分摊伤害比例", percent)
 	if percent > 1 then percent = 1 end
 	if percent < 0 then percent = 0 end
-
+	LogDebugEx("设置分摊伤害比例", percent, target.name)
 	target:SetValue("rateShareDamage", percent)
 end
 
@@ -2284,6 +2425,41 @@ function FightAPI:Custom(effect, caster, target, data, action, param)
 	local log = {api="custom", targetID = target.oid, effectID = effect.apiSetting, 
 	action=action, param=param}
 	self.log:Add(log)
+end
+
+-- 给队友增加一个技能
+function FightAPI:AddSkill(effect, caster, target, data, skillID)
+	if not target:IsLive() then return end
+	local skillMgr = target.skillMgr
+	local oSkill = skillMgr:GetSkill(skillID)
+	if oSkill then return end
+
+	LogDebugEx("FightAPI:AddSkill", caster.name, target.name, skillID)
+
+	oSkill = skillMgr:CreateSkillEx(skillID) -- 没有技能就创建技能
+	oSkill.bIsCanDel = true
+	-- 注册技能事件
+	oSkill:RegisterEvent(self)
+
+	-- local log = {api="AddSkill", targetID = target.oid, effectID = effect.apiSetting, skillID=skillID}
+	-- self.log:Add(log)
+end
+
+-- 给队友删除一个技能
+function FightAPI:DelSkill(effect, caster, target, data, skillID)
+	-- if not target:IsLive() then return end
+	local skillMgr = target.skillMgr
+	local oSkill = skillMgr:GetSkill(skillID)
+
+	if not oSkill then return end
+	if not oSkill.bIsCanDel then return end -- 不可删除的技能
+
+	LogDebugEx("FightAPI:DelSkill", caster.name, target.name, skillID)
+	oSkill.bIsCanDel = nil
+	skillMgr:DelSkillEx(skillID) 
+
+	-- local log = {api="DelSkill", targetID = target.oid, effectID = effect.apiSetting, skillID=skillID}
+	-- self.log:Add(log)
 end
 
 -- ---------------------------------------------------

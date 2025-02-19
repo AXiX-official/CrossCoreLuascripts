@@ -52,7 +52,7 @@ end
 --状态Hash值
 function this:OnStateEnter(stateHash)
     --self.currStateHash = stateHash;
-    
+
     self:CreateStateFB(stateHash);
 end
 
@@ -64,7 +64,6 @@ function this:CreateStateFB(stateHash)
 --        LogError("==================================================");   
 --        LogError(self.character.GetModelName() .. ",state;" .. stateHash);   
 --        LogError(fbDatas);
-       
         for _,v in pairs(fbDatas) do
             self:ApplyCreateFireBall(v);
         end
@@ -109,8 +108,12 @@ function this:ApplyCreateFireBall(data)
     if(delay < 0)then
         return;
     end
-    
-    FuncUtil:Call(self.CreateFireBall,self,delay,data,fightAction);
+
+    if(self.character.IsSkipSkill())then
+        self:CreateFireBall(data,fightAction);
+    else        
+        FuncUtil:Call(self.CreateFireBall,self,delay,data,fightAction);
+    end
 end
 
 

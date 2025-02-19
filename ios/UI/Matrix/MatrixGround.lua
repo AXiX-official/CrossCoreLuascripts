@@ -40,7 +40,8 @@ end
 -- 非XLuaView，OnInit不会执行
 function InitListener()
     if (eventMgr ~= nil) then
-        return
+        eventMgr:ClearListener()
+        eventMgr = nil
     end
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Input_Scene_Matrix_Building_Down, OnClickGrid) -- 在ios有问题(待检测)
@@ -57,6 +58,7 @@ function InitListener()
     -- 	end)
     -- end)
     eventMgr:AddListener(EventType.Matrix_Building_Update, RefreshBuildingUI)
+    eventMgr:AddListener(EventType.Dorm_Update, RefreshBuildingUI)
 end
 
 -- --相机进场动画

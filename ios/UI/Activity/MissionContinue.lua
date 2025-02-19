@@ -100,7 +100,7 @@ function Refresh(_data,_elseData)
     RefreshTopItems()
 
     -- red
-    ActivityMgr:CheckRedPointData()
+    CheckRed()
 end
 
 function GetTaskType(cfg)
@@ -294,6 +294,14 @@ function SetRewards()
     rewardItems = rewardItems or {}
     ItemUtil.AddItems("Activity2/MissionContinueReward", rewardItems, gridDatas, rewardParent,
         GridClickFunc.OpenInfoSmiple, 1)
+end
+
+function CheckRed()
+    local type = ActivityListType.MissionContinue
+    if mType == eTaskType.NewYear then
+        type = ActivityListType.NewYearContinue
+    end
+    ActivityMgr:CheckRedPointData(type)
 end
 
 function OnDestroy()

@@ -10,7 +10,14 @@ end
 
 function SetItems()
     items = items or {}
-    ItemUtil.AddItems("Sort/SortFilterItem", items, cfg.filter, Content, nil, 1, copyFilterDatas)
+    ItemUtil.AddItems("Sort/SortFilterItem", items, cfg.filter, Content, nil, 1, copyFilterDatas, Anim)
+end
+
+function Anim()
+    for k, v in ipairs(items) do
+        UIUtil:SetObjFade(items[k].gameObject, 0, 1, nil, 300, 40 * (k - 1) + 1, 0)
+        UIUtil:SetObjScale(items[k].line, 0, 1, 1, 1, 1, 1, nil, 300, 100 * (k - 1) + 1)
+    end
 end
 
 -- 重置

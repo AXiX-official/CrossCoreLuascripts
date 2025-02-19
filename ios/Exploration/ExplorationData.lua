@@ -262,6 +262,12 @@ function this:GetTargetPrice(targetState)
     end
 end
 
+---台服
+function this:GetTWDDataPrice(targetState)
+    local commInfo=self:GetTargetCommInfo(targetState);
+    return commInfo;
+end
+
 function this:GetTargetCommInfo(targetState)
     local curState=self:GetState();
     local commId=nil;
@@ -339,6 +345,14 @@ end
 
 function this:GetMaxLv()
     return self.maxLv or 0;
+end
+
+function this:GetBackImg()
+    return self.cfg and self.cfg.backResource or nil;
+end
+
+function this:GetBackPos()
+    return self.cfg and self.cfg.backPos or {0,0,1};
 end
 
 return this;

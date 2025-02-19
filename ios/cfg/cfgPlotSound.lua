@@ -64,6 +64,10 @@ local conf = {
 {'10054',	'amb_forest',	'plot_effect/plot_effect.acb',	'amb_forest',	''},
 {'10055',	'short_sixgun',	'plot_effect/plot_effect.acb',	'short_sixgun',	''},
 {'10056',	'amb_Radio_wave_loop',	'plot_effect/plot_effect.acb',	'amb_Radio_wave_loop',	''},
+{'10057',	'ticking_1s',	'plot_effect/plot_effect.acb',	'ticking_1s',	''},
+{'10058',	'ticking_4s',	'plot_effect/plot_effect.acb',	'ticking_4s',	''},
+{'10059',	'ticking_12s',	'plot_effect/plot_effect.acb',	'ticking_12s',	''},
+{'10060',	'ticking_12s_loop',	'plot_effect/plot_effect.acb',	'ticking_12s_loop',	'1'},
 },
 }
 --cfgPlotSound = conf

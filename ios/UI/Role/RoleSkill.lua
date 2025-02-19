@@ -5,6 +5,11 @@ local iconColors = {"white", "green", "blue", "purple", "yellow", "red"};
 --引导用 todo 
 function Awake()
     EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleSkill");
+	AdaptiveConfiguration.SetLuaObjUIFit("RoleSkill",gameObject)
+end
+
+function OnDestroy()
+	AdaptiveConfiguration.LuaView_Lua_Closed("RoleSkill")
 end
 
 function Refresh(_cardData, _curData)

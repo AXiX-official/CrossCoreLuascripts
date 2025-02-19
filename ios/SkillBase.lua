@@ -19,6 +19,17 @@ function SkillMgr:Init(card, list, aiSetting)
 	-- ASSERT()
 end
 
+function SkillMgr:Destroy()
+	LogDebugEx("SkillMgr:Destroy()")
+    for k,v in pairs(self.skills) do
+    	v:Destroy()
+    end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 -- 初始化技能
 function SkillMgr:InitSkill()
 	
@@ -307,6 +318,31 @@ function SkillMgr:CreateSkillEx(skillID)
 		self.initiativeSkills[skillID] = skl
 		self.mapSkills[skl.skillGroup] = skl
 	end
+	return skl
+end
+
+
+-- 删除技能
+function SkillMgr:DelSkillEx(skillID)
+	LogDebugEx("SkillMgr.DelSkillEx", skillID)
+	local oSkill = self:GetSkill(skillID)
+
+	if not oSkill then return end
+	if not oSkill.bIsCanDel then return end -- 不可删除的技能
+
+	-- LogDebugEx("SkillMgr:DelSkill", caster.name, target.name, skillID)
+	oSkill:DeleteEvent() -- 删除事件
+
+	-- if self.mapSkills[oSkill.skillGroup] == oSkill then 
+		self.mapSkills[oSkill.skillGroup] = nil
+	-- end
+	self.initiativeSkills[skillID] = nil
+	for i,v in ipairs(self.skills) do
+		if v == oSkill then 
+			table.remove(self.skills, i)
+			break
+		end
+	end
 end
 
 -- 获取可用技能(AI使用) 
@@ -526,6 +562,28 @@ function SkillMgr:AddSkillAttr(attr, val)
 
 		-- 修改技能属性
 		local tlog = {api="UpdateSkill", id = self.card.oid, skillID = skill.id, attr = attr, val = skill[attr]}
+		table.insert(self.tRestoreLog, tlog)
+		log:Add(tlog)
+	end
+end
+
+-- 减少一个技能属性
+function SkillMgr:AddOneSkillAttr(attr, val, upgrade_type, limit)
+	self.tRestoreLog = self.tRestoreLog or {}
+	local log		= self.team.fightMgr.log
+	limit = limit or 1
+
+	local oSkill = self.mapSlotSkills[upgrade_type]
+	if oSkill then return end
+	-- if oSkill.bAddOneSkillAttr or oSkill.bAddOneSkillAttr >= limit then return end
+
+	for k,skill in pairs(self.initiativeSkills) do
+		oSkill[attr] = oSkill[attr] or 0
+		oSkill[attr] = oSkill[attr] + val
+		if val<0 and oSkill[attr] < 0 then oSkill[attr] = 0 end
+
+		-- 修改技能属性
+		local tlog = {api="UpdateSkill", id = self.card.oid, skillID = oSkill.id, attr = attr, val = oSkill[attr]}
 		table.insert(self.tRestoreLog, tlog)
 		log:Add(tlog)
 	end
@@ -962,6 +1020,7 @@ function SkillBase:LoadConfig()
 	end
 
 	self.aiStrategy = config.aiStrategy
+	self.aiStrategy_src = config.aiStrategy -- 原配置的ai, 用于技能调用
 	
 	if config.skillStrategy then
 		self.skillStrategy = table.copy(config.skillStrategy)
@@ -1215,7 +1274,7 @@ function SkillBase:Cost()
 
 	if self.sp and self.sp > 0 then
 		if self.card:CheckSP(self.sp) then
-			self.card:AddSP(-self.sp)
+			self.card:AddSP(-self.sp, nil, true)
 		else
 			LogDebugEx("Cost", self.sp)
 			return
@@ -1315,11 +1374,15 @@ function SkillBase:Apply(caster, targets, pos, data)
 	end
 
 	-- 某些技能使源对象死亡
-	ASSERT(targets[1], "没有攻击对象"..self.id)
+	if not targets[1] then 
+		mgr:ClientError(caster.uid or "", "没有攻击对象"..self.id)
+	end
+	ASSERT(targets[1], "没有攻击对象"..self.id)   -- 某些玩家死了, 还能调用到死亡事件, 导致删掉了这个位置的怪物
 	-- for i,target in ipairs(targets) do
 	mgr:DoEventWithLog("OnActionBegin", caster, targets[1], data)
 	-- end
-
+	mgr.currentDeathsBySkill = {} -- 当前回合被击杀对象(技能导致的死亡)
+	
 	if self.isCanHurt then
 		for i,target in ipairs(targets) do
 			mgr:DoEventWithLog("OnAttackBegin", caster, target, data)
@@ -1334,7 +1397,15 @@ function SkillBase:Apply(caster, targets, pos, data)
 
 		for i,target in ipairs(self.currentAtkTargets) do
 			target:OnBeAttack(caster)
+		end
+
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
 			mgr:DoEventWithLog("OnAttackOver", caster, target, data)-- 攻击者表现还没完成, 还有镜头
+		end
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
+			mgr:DoEventWithLog("OnAttackOver2", caster, target, data)-- 攻击者表现还没完成, 还有镜头
 		end
 
 		self.currentAtkTargets = nil
@@ -1555,10 +1626,21 @@ function SkillBase:OnCallSkill(effectID, caster, targets, pos, data, api)
 		
 		self:DoDeathEventWithLog()
 
+		self.currentAtkTargets = self.currentAtkTargets or {} -- 这里不知道什么事件把他清掉了
+		
 		for i,target in ipairs(self.currentAtkTargets) do
 			target:OnBeAttack(caster)
+			-- mgr:DoEventWithLog("OnAttackOver", caster, target, data)
+		end
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
 			mgr:DoEventWithLog("OnAttackOver", caster, target, data)
 		end
+		for i,target in ipairs(self.currentAtkTargets) do
+			-- target:OnBeAttack(caster)
+			mgr:DoEventWithLog("OnAttackOver2", caster, target, data)
+		end
+
 		self.currentAtkTargets = nil
 	-- else
 	-- 	if mgr.currentDeathsBySkill then
@@ -1947,6 +2029,9 @@ function SkillBase:Summon(effect, caster, target, data, monsterID, ty, pos, sdat
 	local teamID = 0
 	if ty == 1 then
 		teamID = caster:GetTeamID()
+		if mgr.oDuplicate then
+			mgr.oDuplicate:OnBorn({ caster.cuid })
+		end
 	elseif ty == 2 then
 		teamID = target:GetTeamID()
 	else
@@ -1985,6 +2070,10 @@ function SkillBase:Unite(effect, caster, target, data, monsterID, sdata)
 	-- 修改合体模型(合体皮肤)
 	if caster.modelA and caster.modelA > 0 then 
 		card.model = caster.modelA
+	end
+
+	if mgr.oDuplicate then
+		mgr.oDuplicate:Unite({ caster.cuid })
 	end
 
 	self.log:Add({api="Unite", id = caster.oid, ids ={caster.oid,target.oid}, 
@@ -2171,6 +2260,8 @@ end
 
 function SkillBase:CallSkill(effect, caster, target, data, skillID, api)
 	--LogTrace()
+	LogDebugEx("CallSkill", caster.name, "攻击", target.name)
+	
 	local data = {
 		obj = self,
 		fun = self.CallSkillEx,
@@ -2217,6 +2308,8 @@ function SkillBase:BeatAgain(effect, caster, target, data, skillID)
 	local mgr = self.team.fightMgr
 	-- if mgr.lstCallSkill and #mgr.lstCallSkill > 0 then return end
 	if mgr.bBeatAgain then return end
+	LogDebug("{%s}追击,目标是{%s}, index{%s}",caster.name, target.name, index or "0")
+
 	mgr.lstCallSkill = mgr.lstCallSkill or {}
 
 	--追击在反击前(不是同一方插到前面去)

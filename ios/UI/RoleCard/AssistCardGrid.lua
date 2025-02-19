@@ -11,6 +11,7 @@ local isEvent=false;
 local cDeltaX=0;
 local cDeltaY=0;
 local pressTime=0;
+local canDrag=true;
 function Awake()
 	dragScript = ComUtil.GetCom(btnClick, "DragCallLua");
 end
@@ -50,6 +51,7 @@ function Clean()
 		end
 	end
 	attrs={};
+	canDrag=true;
 end
 
 -- _elseData 根据key来划分数据  elseData:{key,isSelect,ShowHot,showTips,isPlus:置空时是否显示加号,sr:当启用dragcalllua时用来解决sr拖拽方法被覆盖的问题}
@@ -70,12 +72,17 @@ function Refresh(_cardData, _elseData)
 			SetAssistPlayerInfos(cardData:GetAssistData())
 		end
 		local teamIndex=TeamMgr:GetAssistTeamIndex(cardData:GetID());
+		canDrag=true;
 		if elseData and elseData.isSelect then
+			canDrag=false;
 			SetTipsObj(1);
 		elseif elseData and elseData.showTips then
 			SetTipsObj(2);
 		elseif teamIndex~=nil then
 			SetTipsObj(3);
+		elseif elseData and elseData.disDrag==true  then
+			canDrag=false;
+			SetTipsObj(4);
 		else
 			SetTipsObj();
 		end
@@ -275,6 +282,9 @@ function OnClick()
 end
 
 function OnHolder()
+	if canDrag~=true then
+        return;
+    end
 	if elseData and elseData.hcb ~= nil then
 		elseData.hcb(this);
 	else
@@ -343,11 +353,16 @@ function SetTipsObj(state)
 		CSAPI.SetText(txt_tips,LanguageMgr:GetByID(26024));
 	elseif state==3 then
 		CSAPI.SetText(txt_tips,LanguageMgr:GetByID(15077));
+	elseif state==4 then
+		CSAPI.SetText(txt_tips,LanguageMgr:GetByID(49027));
 	end
 end
 
 function OnBeginDragXY(x, y, deltaX, deltaY)
 	if isEvent == true then
+		return;
+	end
+	if canDrag~=true then
 		return;
 	end
 	pressTime=0;
@@ -371,6 +386,9 @@ end
 
 --左右移动为上阵，上下移动为滑动
 function OnDragXY(x, y, deltaX, deltaY)
+	if canDrag~=true then
+		return;
+	end
 	cDeltaX=cDeltaX+deltaX;
     cDeltaY=cDeltaY+deltaY;
     pressTime=pressTime+Time.deltaTime;
@@ -400,6 +418,9 @@ function OnDragXY(x, y, deltaX, deltaY)
 end
 
 function OnEndDragXY(x, y, deltaX, deltaY)
+	if canDrag~=true then
+		return;
+	end
 	EventMgr.Dispatch(EventType.TeamView_DragMask_Change, false)
 	if isEvent == true then
 		EventMgr.Dispatch(EventType.Team_Join_DragEnd, {card = cardData, x = x, y = y});

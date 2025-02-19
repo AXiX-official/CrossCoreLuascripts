@@ -36,9 +36,9 @@ function OnClickGrid(tab)
 		-- local cardData = RoleMgr:GetMaxFakeData(tab.data:GetCfgID())
     	-- CSAPI.OpenView("RoleInfo", cardData)
 		CSAPI.OpenView("RoleInfo", tab.data)
-	elseif tab.data:GetClassType()=="EquipData" then
-		-- GridClickFunc.EquipDetails(tab);
-		CSAPI.OpenView("EquipDetails",tab);
+	-- elseif tab.data:GetClassType()=="EquipData" then
+	-- 	-- GridClickFunc.EquipDetails(tab);
+	-- 	CSAPI.OpenView("EquipDetails",tab);
 	else
 		local goods=BagMgr:GetFakeData(tab.data:GetCfgID());
 		UIUtil:OpenGoodsInfo(goods, 4);

@@ -11,6 +11,17 @@ function BuffMgr:Init(card, fightMgr)
 	ASSERT(self.log)
 end
 
+function BuffMgr:Destroy()
+	LogDebugEx("BuffMgr:Destroy()")
+	for i,buffer in ipairs(self.list) do
+		buffer:Destroy()
+	end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 -- 断线恢复战斗buff
 function BuffMgr:Restore()
 
@@ -196,7 +207,7 @@ end
 
 -- 清空buff(复活时)
 function BuffMgr:RemoveAll()
-	LogTrace()
+	-- LogTrace()
 	self.map = {}
 
 	self.fightMgr.oFightEventMgr:PrintBuffer()
@@ -209,6 +220,8 @@ function BuffMgr:RemoveAll()
 	self.fightMgr.oFightEventMgr:PrintBuffer()
 
 	self.list = {}
+
+	self.card.bRemove = nil
 end
 
 -- 获取buff数量(按组)
@@ -803,9 +816,13 @@ function BuffBase:AddHp(effect, caster, target, data, hp, bNotDeathEvent)
 	-- local target = self.owner
 	-- local caster = self.caster
 	-- local apiSetting = BufferEffect[effectID].apiSetting
+
+	-- if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
+
 	if target:GetTempSign("ImmuneDamage") then  
 		return
 	end
+	
 	local isdeath, shield, num = target:AddHpNoShield(hp, caster, bNotDeathEvent)
 	local log = {api="AddHp", death = isdeath, bufferID = self.id, targetID = target.oid, 
 		uuid = self.uuid, attr = "hp", hp = target:Get("hp"), add = num, effectID = effect.apiSetting}
@@ -830,6 +847,7 @@ end
 
 -- 属性直加
 function BuffBase:AddAttr(effect, caster, target, data, attr, val)
+	LogDebugEx("BuffBase:AddAttr", self.id, target.name, attr, val, self.nCount)
 	if target == self.owner then -- 给自己加的属性删除时自动删掉
 		self.addAttrattr[attr] = self.addAttrattr[attr] or 0
 		self.addAttrattr[attr] = self.addAttrattr[attr] + val
@@ -1087,6 +1105,11 @@ function BuffBase:Cure(effect, caster, target, data, cureTy, percent)
 	target:AddHp(hp, caster)
 	self.log:Add({api="BufferCure", bufferID = self.id, targetID = target.oid, uuid = self.uuid, 
 		attr = "hp", hp = target:Get("hp"), add = hp, effectID = effect.apiSetting})
+
+	local fightMgr = self.fightMgr
+	target.currCureHp = hp -- 当前治疗量
+	fightMgr:DoEventWithLog("OnCure", caster, target, data)
+	target.currCureHp = nil
 end
 
 -- 持续伤害
@@ -1096,6 +1119,8 @@ function BuffBase:Damage(effect, caster, target, data, cureTy, percent)
 	if target:GetTempSign("ImmuneDamage") then  
 		return
 	end
+
+	if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
 	
 	local hp = self:CalcCure(caster, target, cureTy, percent)
 	local damageAdjust = caster:Get("damage") * target:Get("bedamage")
@@ -1116,6 +1141,9 @@ function BuffBase:LimitDamage(effect, caster, target, data, percenthp, percentat
 	--LogTrace()
 	caster = self.creater
 	target = self.card
+
+	-- local isdeathPre = target:IsLive()
+	if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
 
 	if target:GetTempSign("ImmuneDamage") then  
 		return
@@ -1141,9 +1169,11 @@ end
 function BuffBase:LimitDamage2(effect, caster, target, data, percenthp, percentatt)
 	LogDebugEx("-----限制最大伤害LimitDamage2-----", self.id, self.owner.name, percenthp, percentatt)
 	LogDebugEx("target目标",target.name, caster.name, self.uuid)
-	LogTrace()
+	-- LogTrace()
 	caster = self.creater
 	target = self.card
+
+	if not target:IsLive() then return end -- 死了就不要伤害否则会重复掉死亡事件
 
 	if target:GetTempSign("ImmuneDamage") then  
 		return
@@ -1432,6 +1462,7 @@ end
 
 -- 删除事件
 function BuffBase:OnDelete(bRemoveEvent,eBuffDeleteType)
+	-- LogDebugEx("BuffBase:OnDelete", bRemoveEvent,eBuffDeleteType)
 	local target = self.owner
 	local caster = self.caster
 	self:OnPreDelete()
@@ -1446,7 +1477,10 @@ function BuffBase:OnDelete(bRemoveEvent,eBuffDeleteType)
 			self.log:StartSub("OnRemoveBuff")
 			-- self.caster = caster or self.caster
 			--LogDebugEx("OnRemoveBuff", self.caster.name)
+			-- local caster = self.caster
+			-- self.caster = self.owner
 			self:OnRemoveBuff(self.owner)
+			-- self.caster = caster
 			-- self:OnRemoveBuff(caster, target)
 			self.log:EndSub("OnRemoveBuff")
 		end
@@ -1700,6 +1734,8 @@ end
 function BuffBase:ImmuneBuffFun(effect, caster, target, data, key)
 	-- target:SetTempSign("ImmuneBuffQuality"..buffID)
 	-- local key = "ImmuneBuffQuality"..buffID
+
+	--LogDebugEx("BuffBase:ImmuneBuffFun", key, target.name)
 	target.arrTempBuffEffct[key] = target.arrTempBuffEffct[key] or {}
 	table.insert(target.arrTempBuffEffct[key], self)
 	

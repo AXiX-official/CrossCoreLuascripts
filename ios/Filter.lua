@@ -8,6 +8,12 @@ function Filter:Init(team, teamID, row, col)
 	self.col = col
 end
 
+function Filter:Destroy()
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 function Filter:GetIDList(list)
 	list = list or {}
 	local res = {}
@@ -683,7 +689,7 @@ function Filter:GetUnite(card)
 	local arr = self.team.arrCard
 	local res = {}
 	for i,v in ipairs(arr) do
-		if v:IsLive() and v ~= card and v.nClass == card.nClass then
+		if v:IsLive() and v ~= card and v.nClass == card.nClass and v.type ~= CardType.Unite then -- 必须是同小队并且不是同调角色
 			-- table.insert(res, v)
 			LogDebugEx("同队角色:", v.name)
 			return {v}
@@ -691,5 +697,17 @@ function Filter:GetUnite(card)
 	end
 
 	-- LogDebugEx("同队角色个数:", )
+	return res
+end
+
+-- 获取某个角色对象
+function Filter:HasRole(cId)
+	local arr = self.team.arrCard
+	local res = {}
+	for i,v in ipairs(arr) do
+		if v:IsLive() and v:GetID() == cId then
+			return {v}
+		end
+	end
 	return res
 end

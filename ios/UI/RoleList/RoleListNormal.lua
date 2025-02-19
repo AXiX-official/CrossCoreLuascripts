@@ -14,6 +14,7 @@ local recordBeginTime = 0
 local isAnimEnd = false -- 动画是否已展示完毕
 -- local scrollBarIsShow=true
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("RoleListNormal",gameObject)
     -- 记录
     recordBeginTime = CSAPI.GetRealTime()
 
@@ -70,6 +71,10 @@ function LayoutCallBack(index)
         elseData.listType = listType
         lua.SetIndex(index)
         lua.Refresh(_data, elseData)
+        if(index==1) then 
+            local x1, y1 = CSAPI.GetAnchor(lua.gameObject)
+            CSAPI.SetAnchor(firstPoint,x1,y1,0)
+        end 
     end
 end
 
@@ -127,6 +132,12 @@ function InitEvent()
     -- 红点刷新
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
     -- eventMgr:AddListener(EventType.Bag_SellQuality_Change, OnSellQualityChange);
+    eventMgr:AddListener(EventType.Role_Captain_ToFirst, function ()
+        local roleListData = table.copy(SortMgr:GetData(1))
+        roleListData["Filter"]["CfgTeamEnum"] = {8}
+        SortMgr:SetData(1, roleListData)
+        RefreshPanel()
+    end)
 end
 
 function OnDestroy()

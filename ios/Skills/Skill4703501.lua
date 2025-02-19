@@ -19,7 +19,7 @@ function Skill4703501:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 4703501
-	self:OwnerHitAddBuff(SkillEffect[4703501], caster, caster, data, 3000,3002,2)
+	self:OwnerHitAddBuff(SkillEffect[4703501], caster, caster, data, 4000,3002,2)
 end
 -- 伤害后
 function Skill4703501:OnAfterHurt(caster, target, data)

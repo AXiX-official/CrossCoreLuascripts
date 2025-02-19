@@ -3,6 +3,7 @@ local itemList = nil;
 local layout=nil;
 local eventMgr=nil;
 local stateList={};
+local changeList={};
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV")
 	layout:Init("UIs/FormatPreset/TeamPresetItem",LayoutCallBack,true)
@@ -10,6 +11,7 @@ function Awake()
 	eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Team_Preset_Open, OnOpenPreset);
 	eventMgr:AddListener(EventType.Team_Preset_Buy, OnPresetBuyRet);
+	eventMgr:AddListener(EventType.Team_PresetName_Change, OnItemNameChange);
 end
 
 function OnEnable()
@@ -50,6 +52,16 @@ function OnClickItem(lua,isOn)
 end
 
 function OnClickReturn()
+	--保存数据到服务器
+	if changeList then
+		local list={};
+		for k,v in pairs(changeList) do
+			table.insert(list,TeamMgr:GetTeamData(k));
+		end
+		if list~=nil and #list>0 then
+			PlayerProto:SaveTeamList(list);
+		end
+	end
 	CSAPI.ApplyAction(gameObject, "Fade_Out_100",function()
 		CSAPI.SetGOActive(gameObject, false);
 	end);
@@ -61,6 +73,16 @@ end
 
 function OnPresetBuyRet()
 	layout:UpdateList();
+end
+
+function OnItemNameChange(eventData)
+	if eventData and eventData.idx then
+		if eventData.isChange then
+			changeList[eventData.idx]=true
+		elseif changeList[eventData.idx] then
+			changeList[eventData.idx]=nil;
+		end
+	end
 end
 
 ----#Start#----

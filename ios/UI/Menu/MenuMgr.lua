@@ -59,7 +59,7 @@ function this:Clear()
     self.isInit = nil
     EventMgr.RemoveListener(EventType.View_Lua_Opened, this.OnViewOpened)
     EventMgr.RemoveListener(EventType.View_Lua_Closed, this.OnViewClosed)
-    self:MenuBuyClear()
+    -- self:MenuBuyClear()
 end
 
 function this.OnViewOpened(viewKey) -- 当界面开启时，执行一次方法，然后清除引用
@@ -148,13 +148,9 @@ end
 
 -- 当前登录第一次打开主界面 
 function this:GetIsPlay()
-    if(self.isPlayNum~=nil) then
-        return true --已播放
-    else 
-        return false 
-    end 
+    return self.isPlayNum or 0
 end
-function this:SetPlay(n)
+function this:SetIsPlay(n)
     self.isPlayNum = n
 end
 
@@ -209,7 +205,9 @@ function this:InitDatas()
                         local _datas = {}
                         _datas.system_name = (v == "Section") and m.name or m.sName
                         _datas.system_id = m.id .. ""
-                        BuryingPointMgr:TrackEvents("open_system", _datas)
+                        if CSAPI.IsADV() == false then
+                            BuryingPointMgr:TrackEvents("open_system", _datas)
+                        end
                     end
                     -- end
                 end
@@ -445,7 +443,7 @@ end
 -- 	return isOpen
 -- end
 -- 某条件集合是否已达成 conditions是int[]
-function this:CheckConditionIsOK(conditions)
+function this:CheckConditionIsOK(conditions, mainLineLanID)
     if (conditions == nil) then
         return true, ""
     else
@@ -455,32 +453,36 @@ function this:CheckConditionIsOK(conditions)
             local _cfg = Cfgs.CfgOpenRules:GetByID(v)
             if (_cfg.type == OpenConditionType.lv) then
                 b = PlayerClient:GetLv() >= _cfg.val
-                if (not b) then
-                    local str = LanguageMgr:GetTips(1001)
-                    lockStr = string.format(str, _cfg.val)
-                end
+                -- if (not b) then
+                local str = LanguageMgr:GetTips(1001)
+                lockStr = string.format(str, _cfg.val)
+                -- end
             elseif (_cfg.type == OpenConditionType.section) then
                 if (_cfg.openTime) then
                     local weekIndex = CSAPI.GetWeekIndex()
                     b = m.openTime[weekIndex] == 1
-                    if (not b) then
-                        lockStr = _cfg.lock_desc
-                    end
+                    -- if (not b) then
+                    lockStr = _cfg.lock_desc
+                    -- end
                 end
                 if (b) then
                     b = DungeonMgr:CheckDungeonPass(_cfg.val)
-                    if (not b) then
-                        local sectionCfg = Cfgs.MainLine:GetByID(_cfg.val)
-                        local str = LanguageMgr:GetTips(1010)
-                        local _s = sectionCfg.chapterID .. "" .. sectionCfg.name
-                        lockStr = string.format(str, _s)
+                    -- if (not b) then
+                    local sectionCfg = Cfgs.MainLine:GetByID(_cfg.val)
+                    local str = LanguageMgr:GetTips(1010)
+                    local hardStr = sectionCfg.type == 2 and LanguageMgr:GetByID(mainLineLanID or 15016) or ""
+                    local _s = hardStr .. sectionCfg.chapterID
+                    if (not mainLineLanID) then
+                        _s = _s .. "" .. sectionCfg.name
                     end
+                    lockStr = string.format(str, _s)
+                    -- end
                 end
             elseif (_cfg.type == OpenConditionType.guide) then
                 b = GuideMgr:IsComplete(_cfg.val)
-                if (not b) then
-                    lockStr = _cfg.guide_tips
-                end
+                -- if (not b) then
+                lockStr = _cfg.guide_tips
+                -- end
             end
             -- 有一个条件不符合，则为false
             if (not b) then
@@ -491,21 +493,21 @@ function this:CheckConditionIsOK(conditions)
     end
 end
 
-function this:SetPlayInID(_id)
-    self.oldPlayInID = _id
-end
--- 是否与上一次播放的l2d相同
-function this:CheckIsPlayIn(_id)
-    return self.oldPlayInID ~= nil and self.oldPlayInID == _id
-end
+-- function this:SetPlayInID(_id)
+--     self.oldPlayInID = _id
+-- end
+-- -- 是否与上一次播放的l2d相同
+-- function this:CheckIsPlayIn(_id)
+--     return self.oldPlayInID ~= nil and self.oldPlayInID == _id
+-- end
 
-function this:IsFirst()
-    if (not self.isFirst) then
-        self.isFirst = 1
-        return true
-    end
-    return false
-end
+-- function this:IsFirst()
+--     if (not self.isFirst) then
+--         self.isFirst = 1
+--         return true
+--     end
+--     return false
+-- end
 
 -- 活动入口是否为new (如果之前是)
 function this:CheckIsNew(key, isOpen)
@@ -528,6 +530,8 @@ function this:SetIsNew(key, isOpen)
     self.ActiveEntryNews = self.ActiveEntryNews or {}
     self.ActiveEntryNews[key] = isOpen
 end
+
+--[[
 --------------------------------------------------付费弹窗相关----------------------------------------------------
 
 function this:MenuBuyClear()
@@ -780,6 +784,8 @@ function this:CheckSpringTime()
 end
 
 --------------------------------------------------付费弹窗相关----------------------------------------------------
+
+]]
 -- 是否有l2d
 function this:CheckHadL2dIn(isRole, id, isl2d)
     if (id == nil or not isl2d) then
@@ -796,15 +802,37 @@ function this:CheckHadL2dIn(isRole, id, isl2d)
     return false
 end
 
---有一次战斗结束
+-- 有一次战斗结束
 function this:SetFightOver(b)
-    self.isFightOver = b 
+    self.isFightOver = b
 end
 function this:CheckIsFightVier()
-    if(self.isFightOver) then 
-        return true 
+    if (self.isFightOver) then
+        return true
     end
-    return false 
+    return false
+end
+
+function this:GetTopIndex()
+    self.topIndex = self.topIndex or 1
+    self.topIndex = self.topIndex + 1
+    return self.topIndex
+end
+
+function this:GetNextStandbyTimer()
+    local num = SettingMgr:GetValue(s_wait_scale.waitTime) or 0
+    local min = g_HoldOnTime[num + 1]
+    if (min == -1) then
+        return nil
+    end
+    return (Time.time + min * 60)
+end
+
+function this:GetMenuRDType()
+    return self.menuRDType or 1 -- 1：展开 2：收缩
+end
+function this:SetMenuRDType(type)
+    self.menuRDType = type
 end
 
 return this

@@ -31,6 +31,16 @@ local conf = {
 {'GuildMenu',	'GuildMenu',	'公会',	'',	'',	'2110',	'',	''},
 {'ExerciseLView',	'ExerciseLView',	'镜像竞技',	'1',	'Arena',	'2114',	'',	''},
 {'ExtraActivityView',	'ExtraActivityView',	'付费活动',	'',	'',	'2002',	'',	''},
+{'TowerListView',	'TowerListView',	'异构空间',	'',	'',	'2120',	'',	''},
+{'BadgeView',	'BadgeView',	'徽章',	'1',	'Badge',	'2001',	'',	''},
+{'Achievement',	'Achievement',	'成就',	'1',	'Achievement',	'2105',	'',	''},
+{'TowerView',	'TowerView',	'异构空间',	'',	'',	'2120',	'',	''},
+{'RogueView',	'RogueView',	'乱序演习',	'',	'',	'2120',	'',	''},
+{'PetMain',	'PetMain',	'萌宠进化论',	'',	'',	'2007',	'',	''},
+{'RogueSView',	'RogueSView',	'战力调遣',	'',	'',	'2120',	'',	''},
+{'ColosseumView',	'ColosseumView',	'角斗场',	'',	'',	'2120',	'',	''},
+{'CollaborationMain',	'CollaborationMain',	'协同作战',	'',	'',	'2007',	'',	''},
+{'RogueTView',	'RogueTView',	'能力测验',	'',	'',	'2120',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

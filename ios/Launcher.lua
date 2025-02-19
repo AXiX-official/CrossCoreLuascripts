@@ -2,13 +2,12 @@ require("oo")
 -- require("LuaPanda").start("127.0.0.1", 8818) 
 --通用工具
 require "CommonUtil"
-
 --战斗启动
 require "FightLauncher"
 require("GCalculatorHelp");
-
+--SDK
+require "ShiryuSDK"
 cfgLaucher = nil
-
 function Awake()	
     if(not CSAPI.GetSingletonGO())then
         LogError("singleton gameObject is nil");
@@ -36,6 +35,9 @@ function Launcher()
     CSAPI.AddPersistentABs(cfgLaucher.base_abs);
     CSAPI.AddPersistentABs(cfgLaucher.auto_load_abs);
     CSAPI.AddPersistentABs(cfgLaucher.persistent_abs);
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_START_PRELOADING_RESOURCES)
+	end
 	--加载基础资源包
 	LoadABs(cfgLaucher.base_abs)
 end
@@ -47,6 +49,9 @@ function LoadABs(abs)
 end
 
 function OnLoadABsComplete()
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_FINISH_PRELOADING_RESOURCES)
+	end
 	--LogTime("加载基础资源完成");
 	local parent = CSAPI.GetSingletonGO();
 	

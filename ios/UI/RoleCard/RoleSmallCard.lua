@@ -55,7 +55,7 @@ function SetQuality(_quality)
 end
 
 function InitNull()
-    SetQuality()
+    SetQuality(1)
     SetIcon()
     SetLv()
     CSAPI.SetGOActive(nilObj, true)
@@ -67,4 +67,9 @@ function OnClick()
     if cb then
         cb(this)
     end
+end
+
+
+function HideLv(b)
+    CSAPI.SetGOActive(txt_lv, b) 
 end

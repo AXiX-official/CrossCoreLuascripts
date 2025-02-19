@@ -11,3 +11,8 @@ function Buffer6102:OnRoundBegin(caster, target)
 	-- 6102
 	self:ImmuneBuffQuality(BufferEffect[6102], self.caster, target or self.owner, nil,1)
 end
+-- 创建时
+function Buffer6102:OnCreate(caster, target)
+	-- 6102
+	self:ImmuneBuffQuality(BufferEffect[6102], self.caster, target or self.owner, nil,1)
+end

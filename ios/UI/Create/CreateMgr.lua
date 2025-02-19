@@ -65,7 +65,7 @@ function this:CheckPoolActive(_poolId)
     local v = self:GetData(_poolId)
     if (v and v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
         return true
-    elseif(v:GetCfg().nType == 4 and not v:CheckIsEnd()) then 
+    elseif((v:GetCfg().nType == 4 or v:GetCfg().nType == 5) and not v:CheckIsEnd() and v:CheckConditions()) then 
         return true 
     end
     return false
@@ -75,11 +75,9 @@ end
 function this:GetArr()
     local arr = {}
     for i, v in pairs(self.datas) do
-        if (v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
-            table.insert(arr, v)
-        elseif(v:GetCfg().nType == 4 and not v:CheckIsEnd()) then 
-            table.insert(arr, v)
-        end
+        if(self:CheckPoolActive(v:GetId())) then 
+            table.insert(arr,v)
+        end 
     end
     if (#arr > 1) then
         table.sort(arr, function(a, b)
@@ -193,6 +191,8 @@ function this:CardFactoryInfoRet(proto)
             end
         end
     end
+
+    self.free_cnt = proto.free_cnt
 end
 
 -- 获取首次抽卡logs
@@ -244,7 +244,9 @@ function this:CardCreateFinishRet(proto)
     --     end
     -- end
     _datas.item_use = proto.costs
-    BuryingPointMgr:TrackEvents("draw_card", _datas)
+    if CSAPI.IsADV()==false then
+        BuryingPointMgr:TrackEvents("draw_card", _datas)
+    end
 end
 
 -- 首抽
@@ -276,7 +278,9 @@ function this:FirstCardCreateRet(proto)
     --     table.insert(_datas.item_gain, v)
     -- end
     _datas.item_use = proto.costs
-    BuryingPointMgr:TrackEvents("draw_card", _datas)
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        BuryingPointMgr:TrackEvents("draw_card", _datas)
+    end
 end
 
 -- 首次抽卡添加最后一次为log(返回PlayerProto:FirstCardCreateLogsRet)
@@ -312,7 +316,7 @@ function this:FirstCardCreateAffirmRet(proto)
 
     self.LevelUpdate()
 
-    MenuMgr:Crate30Finish() -- 30抽第一次打开记录 rui
+    MenuBuyMgr:ConditionCheck(2,"create30Finish") --MenuMgr:Crate30Finish() -- 30抽第一次打开记录 rui
 end
 
 -- 累计抽卡统计更新
@@ -346,6 +350,47 @@ function this:GetExchangeCount(cfgID)
     local cost = cfg.costs[1]
     local curNum = BagMgr:GetCount(cost[1])
     return math.floor(curNum / cost[2]) -- 可兑换数量
+end
+
+--是否在免费抽空时间段内
+function this:IsFreeInTime()
+    local cfg = Cfgs.CfgActiveList:GetByID(1021) --固定1021
+    if(cfg) then 
+        local curTime = TimeUtil:GetTime()
+        local sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
+        if(sTime and curTime<sTime) then 
+            return false
+        end 
+        local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
+        if(eTime and curTime>=eTime) then 
+            return false
+        end 
+        return true
+    end 
+    return false
+end
+
+--要 IsFreeInTime 为true才能用
+function this:FreeRemainDay()
+    local cfg = Cfgs.CfgActiveList:GetByID(1021) --固定1021
+    if(cfg and cfg.eTime) then 
+        local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
+        local time = eTime - TimeUtil:GetTime()
+        return math.ceil(time/86400)
+    end
+    return 1
+end
+
+--免费抽总次数
+function this:GetFreeCnt()
+    return self.free_cnt or 0
+end
+--服务器3点更新
+function this:SetFreeCnt(free_cnt)
+    self.free_cnt = free_cnt
+end
+function this:SetDailyUseCnt(daily_use_cnt)
+    self.daily_use_cnt = daily_use_cnt
 end
 
 return this

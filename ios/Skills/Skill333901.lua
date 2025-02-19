@@ -20,6 +20,12 @@ function Skill333901:OnAddBuff(caster, target, data, buffer)
 	end
 	-- 333911
 	self:AddBuffCount(SkillEffect[333911], caster, self.card, data, 304900101,1,10)
+	-- 8686
+	local count686 = SkillApi:SkillLevel(self, caster, target,3,3049001)
+	-- 333921
+	if self:Rand(1000) then
+		self:CallSkill(SkillEffect[333921], caster, target, data, 304900100+count686)
+	end
 end
 -- 伤害前
 function Skill333901:OnBefourHurt(caster, target, data)

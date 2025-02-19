@@ -18,6 +18,10 @@ function this:SetData(cfg)
     self.last_op = nil -- 最后一次数据，中途重登时使用，如果没有，则从logs中获取
     self.isSave = false -- 当前抽卡结果是否已保存到logs
     self.isDy = false
+    if(self.cfg.nType==4 or self.cfg.nType==5) then 
+        self.isDy = true 
+        self.dyEndTime = 0 
+    end 
 end
 
 function this:GetCfg()
@@ -226,5 +230,27 @@ end
 function this:GetDyEndTime()
     return self.dyEndTime
 end
+
+--是否已满足开启条件
+function this:CheckConditions()
+    if(self:GetCfg().conditions) then 
+        return MenuMgr:CheckConditionIsOK(self:GetCfg().conditions)
+    end 
+    return true 
+end
+
+----------------------------------免费抽卡-------------------------------------------
+function this:IsOneFree()
+    -- 在时间内
+    if (not CreateMgr:IsFreeInTime()) then
+        return false
+    end
+    -- 是免费抽卡的卡池，有次数
+    if (self:GetCfg().canFreeUse and CreateMgr:GetFreeCnt() > 0) then
+        return true
+    end
+    return false
+end
+
 
 return this

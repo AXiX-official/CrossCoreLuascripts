@@ -141,11 +141,20 @@ function this:OpenView(sViewName, closeAll, cb)
     end
 end
 
--- 打开掉落奖励 优先检查是否有卡牌，有卡牌的情况下先打开卡牌展示界面
+-- 打开掉落奖励
 function this:OpenReward(data, elseData)
+    self:OpenReward2("RewardPanel", data, elseData)
+end
+
+function this:OpenSummerReward(data, elseData)
+    self:OpenReward2("RewardSummerPanel", data, elseData)
+end
+
+-- 打开掉落奖励 优先检查是否有卡牌，有卡牌的情况下先打开卡牌展示界面
+function this:OpenReward2(viewPath, data, elseData)
     -- LogError("奖励数据：")
     -- LogError(data)
-    if data and #data > 0 then
+    if data and #data > 0 and #data[1] > 0 then
         local showRoleList = {};
         local showSkinList = {}
         for k, v in ipairs(data[1]) do -- data[1]是奖励数据
@@ -197,7 +206,7 @@ function this:OpenReward(data, elseData)
                         if #showSkinList >= 1 then
                             UIUtil:ShowSkinList(showSkinList, data, elseData)
                         else
-                            CSAPI.OpenView("RewardPanel", data, elseData)
+                            CSAPI.OpenView(viewPath, data, elseData)
                         end
                     end)
                 end);
@@ -205,7 +214,7 @@ function this:OpenReward(data, elseData)
                 UIUtil:ShowSkinList(showSkinList, data, elseData)
             end
         else
-            CSAPI.OpenView("RewardPanel", data, elseData)
+            CSAPI.OpenView(viewPath, data, elseData)
         end
     end
 end
@@ -250,14 +259,28 @@ function this:AddQuestionItem(viewKey, go, father, prefabName)
         end
         if (tab["QuestionItem"] == nil) then
             tab["QuestionItem"] = 1 -- 防止异步生成时有额外的进入
-            local parent = father == nil and go or father
+            local parent = father -- == nil and go or father
+            if (parent == nil) then
+                local tran = go.transform:Find("AdaptiveScreen")
+                if (tran ~= nil) then
+                    parent = tran.gameObject
+                else
+                    parent = go
+                end
+            end
             ResUtil:CreateUIGOAsync("ModuleInfo/" .. prefabName, parent, function(itemGo)
                 tab["QuestionItem"] = ComUtil.GetLuaTable(itemGo)
                 tab["QuestionItem"].Refresh(cfg)
+                if tab.OnAddQuestionItem then
+                    tab:OnAddQuestionItem(1);
+                end
             end)
         else
             if (tab["QuestionItem"] ~= 1) then
                 tab["QuestionItem"].Refresh(cfg)
+                if tab.OnAddQuestionItem then
+                    tab:OnAddQuestionItem(2);
+                end
             end
         end
     end
@@ -275,9 +298,19 @@ function this:TransPos(x, y, anchorIndex)
     return x, y
 end
 
+-- 体力增幅
+function this:SetHotPoint(parent, isAdd, x, y, z, scale)
+    return self:SetRedPoint2("Common/HotChange", parent, isAdd, x, y, z, 1)
+end
+
+-- 限时多倍
+function this:SetDoublePoint(parent, isAdd, x, y, z, scale)
+    return self:SetRedPoint2("Common/Double", parent, isAdd, x, y, z, 1)
+end
+
 -- 添加或者移除new
 function this:SetNewPoint(parent, isAdd, x, y, z, scale)
-    return self:SetRedPoint2("Common/NewP", parent, isAdd, x, y, z, 1)
+    return self:SetRedPoint2("Common/NewP", parent, isAdd, x, y, z, 1, "_new")
 end
 
 -- 添加或者移除红点
@@ -285,8 +318,18 @@ function this:SetRedPoint(parent, isAdd, x, y, z)
     return self:SetRedPoint2("Common/Red2", parent, isAdd, x, y, z, 1)
 end
 
+-- 添加或移除锁
+function this:SetLockPoint(parent, isAdd, x, y, z)
+    return self:SetRedPoint2("Common/Lock", parent, isAdd, x, y, z, 1, "_lock")
+end
+
+-- 添加或移限时
+function this:SetLimitPoint(parent, isAdd, x, y, z)
+    return self:SetRedPoint2("Common/Limit", parent, isAdd, x, y, z, 1, "_limit")
+end
+
 -- 添加或者移除红点
-function this:SetRedPoint2(path, parent, isAdd, x, y, z, scale)
+function this:SetRedPoint2(path, parent, isAdd, x, y, z, scale, eStr)
     if (parent) then
         local go = nil
         isAdd = isAdd == nil and true or isAdd
@@ -294,7 +337,7 @@ function this:SetRedPoint2(path, parent, isAdd, x, y, z, scale)
         y = y or 0
         z = z or 0
         scale = scale or 1
-        local redName = string.format("%s_%s_%s", x, y, z)
+        local redName = string.format("%s_%s_%s%s", x, y, z, eStr or "")
         local red = parent.transform:Find(redName)
         if (not isAdd) then
             if (red) then
@@ -320,7 +363,16 @@ end
 function this:AddLoginMovie(gameObject)
     -- local isReset = false;
     if IsNil(self.videoGo) then
-        local video = ResUtil:PlayVideo("login", gameObject);
+        local videoName = "login";
+        local channelStr = CSAPI.GetChannelStr();
+        if (not StringUtil:IsEmpty(channelStr)) then
+            local settingVideoName = _G["login_video_" .. channelStr];
+            if (not StringUtil:IsEmpty(settingVideoName)) then
+                videoName = settingVideoName;
+            end
+        end
+
+        local video = ResUtil:PlayVideo(videoName, gameObject);
         self.videoGo = video.gameObject;
         --	isReset = true
     end
@@ -383,6 +435,47 @@ function this:OpenPoputSpendView(titleID, desc, itemID, surecb, cancelcb)
     dialogdata.surecb = surecb
     dialogdata.cancelcb = cancelcb
     CSAPI.OpenView("PopupSpendView", dialogdata)
+end
+
+-- 今天不再提示弹窗
+function this:OpenTipsDialog(_key,_content, _okFunc, _cancelFunc,_titleID)
+    if(self:IsTipsDialogTick(_key))then 
+        if(_okFunc)then 
+            _okFunc()
+        end 
+        return
+    end
+    local dialogdata = {}
+    dialogdata.titleID = _titleID or 1045
+    dialogdata.key = _key
+    dialogdata.content = _content
+    dialogdata.okCallBack = _okFunc
+    dialogdata.cancelCallBack = _cancelFunc
+    CSAPI.OpenView("CreateSelectPanel", dialogdata)
+end
+function this:IsTipsDialogTick(_key)
+    local day = TimeUtil:GetTime3("day")
+    local dayRecord = PlayerPrefs.GetString(PlayerClient:GetUid() .. _key, "0")
+    if (dayRecord ~= "0" and dayRecord == tostring(day)) then
+        return true
+    end
+    return false
+end
+
+--打开徽章信息界面
+function this:OpenBadgeTips(badgeId,x,y)
+    if badgeId == nil then
+        LogError("输入徽章id为空!!!")
+        return
+    end
+    local badgeData = BadgeMgr:GetData(badgeId)
+    if badgeData == nil then
+        LogError("获取不到徽章数据!!!"..badgeId)
+        return
+    end
+    x = x or 0
+    y = y or 0
+    CSAPI.OpenView("BadgeTips",badgeData,{x,y})
 end
 
 -- 移动
@@ -456,12 +549,12 @@ end
 function this:SetPerfectScale(obj)
     local baseScale = {1920, 1080}
     local curScale = CSAPI.GetMainCanvasSize()
-    local ratio = (curScale[0] / curScale[1]) / (baseScale[1] / baseScale[2])
+    local nType = self:GetSceneType()
     local scale = 1
-    if (ratio > 1) then
+    if (nType == 1) then
         -- 长屏
         scale = curScale[0] / baseScale[1]
-    elseif (ratio < 1) then
+    elseif (nType == 2) then
         -- 宽屏
         scale = curScale[1] / baseScale[2]
     end
@@ -602,14 +695,18 @@ end
 ---@param reward 购买的物品
 ---@param payFunc 购买函数
 function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFunc)
-    if count <= 0 then
-        local dialogData = {}
+    if count <= 0 or maxCount <= 0 then
         local cfg = Cfgs.ItemInfo:GetByID(reward[1][1])
-        dialogData.content = LanguageMgr:GetTips(24009)
-        dialogData.okCallBack = function()
+        if BagMgr:GetCount(cfg.id) > 0 then
             JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
+        else
+            local dialogData = {}
+            dialogData.content = LanguageMgr:GetTips(24009)
+            dialogData.okCallBack = function()
+                JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
+            end
+            CSAPI.OpenView("Dialog", dialogData)
         end
-        CSAPI.OpenView("Dialog", dialogData)
         return
     end
     local data = {}
@@ -624,24 +721,59 @@ function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFu
 end
 
 -- 添加头像+头像框(自己)
-function this:AddHeadFrame(parent, scale)
-    self:AddHeadByID(parent, scale, PlayerClient:GetHeadFrame(), PlayerClient:GetIconId())
+function this:AddHeadFrame(parent, scale, frameID, iconID, sel_card_ix)
+    self:AddHeadByID(parent, scale, frameID or PlayerClient:GetHeadFrame(), iconID or PlayerClient:GetIconId(),
+        sel_card_ix or PlayerClient:GetSex(), "RoleHead0")
 end
 
 -- frameID头像框id，iconID头像id
-function this:AddHeadByID(parent, scale, frameID, iconID)
+function this:AddHeadByID(parent, scale, frameID, iconID, sel_card_ix, itemGoName)
+    -- 真实性别和头像 
+    -- local isGirl, frameID = self:GetSexAndID(_frameID)
     scale = scale or 1
-    local itemGo = parent.transform:Find("RoleHead")
+    itemGoName = itemGoName or "RoleHead"
+    local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
-        ResUtil:CreateUIGOAsync("Common/RoleHead", parent, function(go)
+        ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
             local item = ComUtil.GetLuaTable(go)
-            item.Refresh(scale, frameID, iconID)
+            item.Refresh(scale, frameID, iconID, sel_card_ix)
         end)
     else
         local item = ComUtil.GetLuaTable(itemGo.gameObject)
-        item.Refresh(scale, frameID, iconID)
+        item.Refresh(scale, frameID, iconID, sel_card_ix)
     end
 end
+
+-- 添加头像+头像框(自己)
+function this:AddTitle(parent, scale)
+    self:AddTitleByID(parent, scale, PlayerClient:GetIconTitle(), true)
+end
+
+-- frameID头像框id，iconID头像id
+function this:AddTitleByID(parent, scale, titleID, isMy)
+    -- 真实性别和头像 
+    scale = scale or 1
+    local itemGoName = "RoleTitle"
+    local itemGo = parent.transform:Find(itemGoName)
+    if (not itemGo) then
+        ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
+            local item = ComUtil.GetLuaTable(go)
+            item.Refresh(scale, titleID, isMy)
+        end)
+    else
+        local item = ComUtil.GetLuaTable(itemGo.gameObject)
+        item.Refresh(scale, titleID, isMy)
+    end
+end
+
+-- function this:GetSexAndID(frameID)
+--     if (frameID > 10000) then
+--         -- 女 
+--         return true, frameID / 10
+--     else
+--         return false, frameID
+--     end
+-- end
 
 -- 移除头像（头像+头像框）
 function this:RemoveHead(parent)
@@ -649,6 +781,176 @@ function this:RemoveHead(parent)
     if (itemGo) then
         CSAPI.RemoveGO(itemGo.gameObject)
     end
+end
+
+-- 打开成就弹窗
+function this:OpenAchieveReward(data, elseData)
+    local rewards = elseData
+    local closeCallBack = nil
+    if rewards then
+        closeCallBack = function()
+            self:OpenReward({rewards})
+        end
+    end
+
+    CSAPI.OpenView("RewardAchievement", data, {
+        closeCallBack = closeCallBack
+    })
+end
+
+-- 临时用,设置RT_mix_v2的材质球属性
+function this.SetRTAlpha(cameraGO, rawGO)
+    if cameraGO == nil or rawGO == nil then
+        do
+            return
+        end
+    end
+    local img = ComUtil.GetCom(rawGO, "RawImage");
+    if img == nil then
+        LogError("没找到对应的RawImage脚本！" .. tostring(img == nil) .. "\t" .. tostring(img2 == nil));
+        do
+            return
+        end
+    end
+    local rt = this.CreateRT();
+    local c = ComUtil.GetCom(cameraGO, "Camera");
+    c.targetTexture = rt;
+    img.texture = rt;
+end
+
+-- 创建临时用的RT
+function this.CreateRT()
+    if CRT then
+        return CRT;
+    else
+        local rtSize = {
+            x = 1334,
+            y = 750
+        };
+        local wh = UnityEngine.Screen.width * 1.0 / UnityEngine.Screen.height * 1.0; -- 当前UI的宽高比
+        local rtWh = (rtSize.x / rtSize.y); -- rt尺寸的宽高比
+        local v2 = UnityEngine.Vector2(0, 0);
+        if (UnityEngine.Mathf.Abs(wh - rtWh) <= 0.2) then
+            v2 = UnityEngine.Vector2(rtSize.x, rtSize.y);
+        else
+            v2 = UnityEngine.Vector2(rtSize.y * wh, rtSize.y);
+        end
+        CRT = UnityEngine.RenderTexture(UnityEngine.Mathf.CeilToInt(v2.x), UnityEngine.Mathf.CeilToInt(v2.y), 24,
+            UnityEngine.RenderTextureFormat.ARGB32);
+        return CRT;
+    end
+end
+
+-- 销毁RT
+function this.DestoryRT()
+    if CRT ~= nil then
+        UnityEngine.GameObject.Destroy(CRT);
+        CRT = nil;
+    end
+end
+
+-- 奖励转成带key的 [[10040,30,2]]=》 {{id= 10010,num = 30,type = 2}}
+function this.ChangeRewards(_rewards)
+    local rewards = {}
+    for k, v in ipairs(_rewards) do
+        table.insert(rewards, {
+            id = v[1],
+            num = v[2],
+            type = v[3]
+        })
+    end
+    return rewards
+end
+
+--- 打开扫荡界面
+---@param cfgId 关卡表id
+function this:OpenSweepView(cfgId, payFunc)
+    local cfg = Cfgs.MainLine:GetByID(cfgId)
+    if cfg and cfg.group then
+        local sectionData = DungeonMgr:GetSectionData(cfg.group)
+        if sectionData then
+            local buy = sectionData:GetBuyCount()
+            local cost = sectionData:GetBuyCost()
+            local gets = sectionData:GetBuyGets()
+            local cur = DungeonMgr:GetArachnidCount(sectionData:GetID())
+            payFunc = payFunc or function(count)
+                PlayerProto:BuyArachnidCount(count, sectionData:GetID())
+            end
+            local sweepData = SweepMgr:GetData(cfgId)
+            if sweepData then
+                if sweepData:IsOpen() then
+                    local OnBuyFunc = function()
+                        UIUtil:OpenPurchaseView(nil, nil, cur, buy, cost, gets, payFunc)
+                    end
+                    CSAPI.OpenView("SweepView", {
+                        id = cfgId
+                    }, {
+                        onBuyFunc = OnBuyFunc
+                    })
+                else
+                    Tips.ShowTips(sweepData:GetLockStr())
+                end
+            else
+                local cfg = Cfgs.MainLine:GetByID(cfgId)
+                if cfg then
+                    local cfgModUp = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
+                    if cfgModUp then
+                        Tips.ShowTips(cfgModUp.sDescription)
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- 直播模式(图片;spine;图片+粒子)
+function this:SetLiveBroadcast(obj, isBlack)
+    if (not obj) then
+        return
+    end
+    local num = 0
+    if (not isBlack) then
+        local value = SettingMgr:GetValue(s_other_live_key)
+        num = value == 1 and 0.1 or 1
+    end
+    -- spine
+    local graphics = ComUtil.GetComsInChildren(obj, "SkeletonGraphic", true)
+    if (graphics ~= nil and graphics.Length > 0) then
+        for i = 0, graphics.Length - 1 do
+            graphics[i].color = UnityEngine.Color(num, num, num, 1)
+        end
+    else
+        -- 图片+特效
+        local _num = num == 1 and 255 or 25
+        local images = ComUtil.GetComsInChildren(obj, "Image", true)
+        if (images ~= nil and images.Length > 0) then
+            for i = 0, images.Length - 1 do
+                CSAPI.SetImgColor(images[i].gameObject, _num, _num, _num, 255)
+            end
+        end
+        -- 隐藏特效
+        local systems = ComUtil.GetComsInChildren(obj, "ParticleSystem", true)
+        if (systems ~= nil and systems.Length > 0) then
+            for i = 0, systems.Length - 1 do
+                CSAPI.SetGOActive(systems[i].gameObject, _num == 255)
+            end
+        end
+
+    end
+end
+-- 直播模式(图片)
+function this:SetLiveBroadcast2(obj, isBlack)
+    if (not obj) then
+        return
+    end
+    local num = 0
+    if (not isBlack) then
+        local value = SettingMgr:GetValue(s_other_live_key)
+        num = value == 1 and 0.1 or 1
+    end
+   -- 图片+特效
+   local _num = num == 1 and 255 or 25
+   CSAPI.SetImgColor(obj, _num, _num, _num, 255)
 end
 
 return this

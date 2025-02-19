@@ -60,7 +60,7 @@ function InitPanel()
     -- title
     CSAPI.SetText(txtTitle, cfg.name)
     -- desc
-    CSAPI.SetText(txtDesc, cfg.lock_desc)
+    CSAPI.SetText(txtDesc, cfg.desc)
 end
 
 function RefreshPanel()
@@ -68,7 +68,7 @@ function RefreshPanel()
         isOpen = data:GetOpen()
         SetLock()
         SetText()
-        RefreshNew()
+        RefreshTag()
     end
 end
 
@@ -78,8 +78,8 @@ function SetLock()
     if not isOpen then
         CSAPI.SetGOActive(lockImg,false)
         local color = {146,146,150,255}
-        local openStr = LanguageMgr:GetByID(15095)
-        local state= data:GetOpenState()
+        -- local openStr = LanguageMgr:GetByID(15095)
+        local state, openStr= data:GetOpenState()
         if state == -1.5 then
             color = {255,255,255,255}
             openStr = LanguageMgr:GetByID(15093)
@@ -172,7 +172,7 @@ function OnClick()
     end
 end
 
-function RefreshNew()
+function RefreshTag()
     local dungeonCfgs = data:GetDungeonCfgs()
     local isNew = false
     if dungeonCfgs then
@@ -184,8 +184,26 @@ function RefreshNew()
         end
     end
     isNew = isOpen and isNew or false
-    UIUtil:SetNewPoint(newParent, isNew)
+    SetNew(isNew)
+
+    local isLimitDouble = DungeonUtil.IsLimitDropAdd(data:GetID())
+    SetLimitDouble(isLimitDouble)
+    if isLimitDouble and isNew then
+        CSAPI.SetAnchor(newParent,-34,65)
+    else
+        CSAPI.SetAnchor(newParent,-34,39)
+    end
+
 end
+
+function SetNew(b)
+    UIUtil:SetNewPoint(newParent, b)
+end
+
+function SetLimitDouble(b)
+    UIUtil:SetDoublePoint(doubleParent, b)
+end
+
 
 function OnDestroy()
     ReleaseCSComRefs();

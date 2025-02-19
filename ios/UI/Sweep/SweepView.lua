@@ -27,6 +27,11 @@ local isHasBuff = nil
 local hasMulti = false
 local multiNum = 0
 local isMultiReward = false
+local isLimitDouble = false
+local limitTime = 0
+local limitTimer = 0
+local multiLimitNum = 0
+local isUnLimit = false
 
 --net
 local isStarLoading = nil
@@ -68,6 +73,8 @@ function OnEnable()
     eventMgr:AddListener(EventType.Player_HotChange, OnHotChange);
     eventMgr:AddListener(EventType.Sweep_Close_Panel, OnSweepPanelClose);
     eventMgr:AddListener(EventType.Bag_Update, RefreshSweepPanel)
+    eventMgr:AddListener(EventType.Dungeon_Double_Update, OnDailyDataUpdate)
+
 
     CSAPI.AddSliderCallBack(leftSlider, SliderCB)
 end
@@ -135,6 +142,21 @@ function Update()
             CSAPI.SetGOActive(loadObj, false)
             loadingTime = 30
             isStarLoading = false
+        end
+    end
+
+    if isLimitDouble and limitTime > 0 and limitTimer <= Time.time then
+        limitTimer = Time.time + 1
+        limitTime = DungeonUtil.GetDropAddTime(cfgDungeon.group)
+        if limitTime > 60 then
+            local tab = TimeUtil:GetTimeTab(limitTime)
+            LanguageMgr:SetText(txtLimitTime,15129,tab[1],tab[2],tab[3]) 
+        else
+            LanguageMgr:SetText(txtLimitTime,15129,0,0,1) 
+        end
+        if limitTime <= 0 then
+            InitDouble()
+            EventMgr.Dispatch(EventType.Section_Daily_Double_Update)
         end
     end
 
@@ -279,11 +301,21 @@ end
 function InitDouble()
     local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
     hasMulti = DungeonUtil.HasMultiDesc(sectionData:GetID());
+    CSAPI.SetText(txtLimitTime,"")
     CSAPI.SetGOActive(txt_double, hasMulti)
     if hasMulti then
-        local max = 0
-        multiNum, max = DungeonUtil.GetMultiNum(sectionData:GetID())
-        CSAPI.SetText(txtDouble, multiNum .. "/" .. max)
+        multiLimitNum,_,isUnLimit,isLimitDouble = DungeonUtil.GetDropAdd(sectionData:GetID())
+        if isLimitDouble then
+            local limit = isUnLimit and "∞" or multiLimitNum..""
+            limitTime = DungeonUtil.GetDropAddTime(sectionData:GetID())
+            LanguageMgr:SetText(txt_double, 15130, limit)
+            CSAPI.SetText(txtDouble, "")
+        else
+            local max = 0
+            multiNum, max = DungeonUtil.GetMultiNum(sectionData:GetID())
+            CSAPI.SetText(txtDouble, multiNum .. "/" .. max)    
+            LanguageMgr:SetText(txt_double,42003)
+        end
     end
 end
 
@@ -382,30 +414,32 @@ function RefreshCost(value)
     if isHas then
         CSAPI.SetText(txtHot1, currHot .. "")
         CSAPI.SetText(txtHot2, targetHot .. "")
-        CSAPI.SetText(cost,"-" .. str)
+        CSAPI.SetText(cost, str .. "")
     elseif isHot then    
         CSAPI.SetText(txtHot2, currHot .. "")
         CSAPI.SetText(txtMat2, targetHot .. "")
-        CSAPI.SetText(cost, "-" .. str)
+        CSAPI.SetText(cost, str .. "")
     end
 end
 
 --单次体力消耗
 function GetHotCost()
-    local cost = cfgDungeon.enterCostHot and cfgDungeon.enterCostHot or 0
-    cost = cfgDungeon.winCostHot and cost + cfgDungeon.winCostHot or cost
-    return cost
+    local costNum = DungeonUtil.GetHot(cfgDungeon)
+    return costNum
 end
 
 function GetMatCost()
     local cost1 = cfgDungeon.modUpCost and cfgDungeon.modUpCost[1] or nil
     local cost2 = DungeonUtil.GetCost(cfgDungeon)
+    local cost = nil
     if cost1 then
-        cost1[2] = (cost2~=nil and cost1[1] == cost2[1]) and cost1[2] + cost2[2] or cost1[2]
-    else
-        cost1 = cost2
+        cost= {}
+        cost[1] = cost1[1]
+        cost[2] = (cost2~=nil and cost1[1] == cost2[1]) and cost1[2] + cost2[2] or cost1[2]
+    elseif cost2 then
+        cost= {cost2[1],cost2[2]}
     end
-    return cost1
+    return cost
 end
 
 --材料
@@ -415,18 +449,18 @@ function RefreshMaterial(value)
     end
     local taoFaNum = taoFaInfo and taoFaInfo.count or 0
     local currMat = isTaoFaMat and taoFaNum or BagMgr:GetCount(matCost.id)
-    local matCost = value * matCost.num
-    local tagetMat = currMat - matCost
+    local matCostNum = value * matCost.num
+    local tagetMat = currMat - matCostNum
     isMatEnough = tagetMat >= 0
     tagetMat = StringUtil:SetByColor(tagetMat .. "", tagetMat >= 0 and "ffffff" or "CD333E")
-    local str = StringUtil:SetByColor(matCost .. "", math.abs(matCost) <= currMat and "191919" or "CD333E")
+    local str = StringUtil:SetByColor(matCostNum .. "", math.abs(matCostNum) <= currMat and "191919" or "CD333E")
     if isHas then
         CSAPI.SetText(txtMat1, currMat .. "")
         CSAPI.SetText(txtMat2, tagetMat .. "")    
     elseif isMat then
         CSAPI.SetText(txtHot2, currMat .. "")
         CSAPI.SetText(txtMat2, tagetMat .. "")
-        CSAPI.SetText(cost, "-" .. str)
+        CSAPI.SetText(cost, "" .. str)
     end
 end
 
@@ -476,7 +510,7 @@ function OnClickSweep()
         LanguageMgr:ShowTips(8014, goodsData and goodsData:GetName() or "")
         return
     end
-    if hasMulti and multiNum > 0 then
+    if hasMulti and multiNum > 0 and not isLimitDouble then
         local dialogData = {}
         dialogData.content = string.format(LanguageMgr:GetByID(15072), cfgDungeon.name, multiNum)
         dialogData.okText = LanguageMgr:GetByID(1031)

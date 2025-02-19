@@ -65,6 +65,11 @@ function this:CheckIsDone()
 	if(not self:CurDayIsExit()) then
 		return true
 	end
+
+	--不在签到时间内
+	if not self:CheckInTime() then
+		return true
+	end
 	
     local rewardsInfos = self:GetRewardsInfos();
 	local time = rewardsInfos and rewardsInfos.lastSingTime 
@@ -89,6 +94,12 @@ function this:CurDayIsExit(curDay)
 	curDay = curDay ~= nil and curDay or SignInMgr:GetCurDay()
 	local rewardCfg = self:GetRewardCfg()
 	if(self:GetType() == RewardActivityType.DateDay) then
+		local tab = TimeUtil:GetTimeHMS(TimeUtil:GetBJTime())
+		if tab.month ~= self:GetIndex() then --不在同一个月，针对最后一天没签并等待到下一天签到的情况
+			if tab.hour >= g_ActivityDiffDayTime then --超过当天刷新时间
+				return false
+			end
+		end
 		return #rewardCfg.infos >= curDay
 	elseif(self:GetType() == RewardActivityType.DateMonth) then
 		return false
@@ -112,6 +123,9 @@ end
 --活动是否在有效时间段内
 function this:CheckInTime()
 	local cfg = self:GetCfg()
+	if cfg and not cfg.begTime and not cfg.endTime then
+		return true
+	end
 	local begTime = TimeUtil:GetTimeStampBySplit(cfg.begTime)
 	local entTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
 	local curTime = TimeUtil:GetTime()
@@ -142,6 +156,16 @@ end
 
 function this:GetActivityID()
 	return self:GetCfg() and self:GetCfg().activityID
+end
+
+--连续签到结束签到
+function this:CheckIsEnd()
+	local cfg = self:GetCfg()
+	if cfg and cfg.endTime then
+		local eTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
+		return eTime < TimeUtil:GetTime()
+	end
+	return false
 end
 
 return this 

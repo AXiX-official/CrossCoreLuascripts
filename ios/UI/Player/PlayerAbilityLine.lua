@@ -151,7 +151,13 @@ end
 function PlayDotAction(_view)
     view = _view
     local go = view.GetDot()
+    if go == nil then
+        return
+    end
     dotItem = ComUtil.GetLuaTable(go)
+    if dotItem == nil then
+        return
+    end
     -- size
     dotItem.SetRTSize(w, math.abs(h))
     -- pos

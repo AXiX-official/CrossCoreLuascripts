@@ -4,6 +4,10 @@
 -- OPENDEBUG()
 ConfigChecker = {}
 
+if not CURRENT_TIME then
+    CURRENT_TIME = os.time()
+end
+
 -- 检查副本数据
 function ConfigChecker:CheckDungeon()
     -- for duplicateID,v in pairs(MainLine) do
@@ -36,9 +40,9 @@ end
 function ConfigChecker:ShowCheckPrimaryKeyErr(checkCfg, errCfg, findKey)
     LogTable(errCfg, '报错的哪一行数据为:')
     if checkCfg.cfgFieldKey2 then
-        LogInfo('配日志表:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey .. '.' .. checkCfg.cfgFieldKey2)
+        LogInfo('配置表:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey .. '.' .. checkCfg.cfgFieldKey2)
     else
-        LogInfo('配日志的:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey)
+        LogInfo('配置表:' .. checkCfg.cfgName .. '.' .. checkCfg.cfgFieldKey)
     end
 
     LogInfo('在表[' .. checkCfg.relevance .. ']中找不到主键为' .. findKey .. '的配置')
@@ -115,32 +119,100 @@ function ConfigChecker:RewardInfo(cfg)
 
             if item.type == RandRewardType.ITEM then
                 ASSERT(
-                    ItemInfo[item.id],
-                    '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 ItemInfo 找不到配置！'
+                        ItemInfo[item.id],
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 ItemInfo 找不到配置",k, i, item.id)
                 )
             elseif item.type == RandRewardType.CARD then
                 ASSERT(
-                    CardData[item.id],
-                    '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 CardData 找不到配置！'
+                        CardData[item.id],
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 CardData 找不到配置",k, i, item.id)
                 )
             elseif item.type == RandRewardType.EQUIP then
                 ASSERT(
-                    CfgEquip[item.id],
-                    '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 CfgEquip 找不到配置！'
+                        CfgEquip[item.id],
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 CfgEquip 找不到配置",k, i, item.id)
                 )
             elseif item.type == RandRewardType.TEMPLATE then
                 ASSERT(
-                    cfg[item.id],
-                    '掉落表id:' .. k .. ',index:' .. i .. ', item.id为:' .. item.id .. ', 表 RewardInfo 找不到配置！'
+                        cfg[item.id],
+                        string.format("掉落表id:%s,index:%s, item.id为:%s, 表 RewardInfo 找不到配置",k, i, item.id)
                 )
             end
+
+            if item.level then
+                if #item.level < 2 then
+                    ASSERT(false, string.format("掉落表id:%s, index:%s, item.id为:%s, item.level 数组程度小于2",k, i, item.id))
+                end
+            end
+
+            if item.openTimes then
+                if #item.openTimes < 2 then
+                    ASSERT(false, string.format("掉落表id:%s, index:%s, item.id为:%s, item.openTimes 数组程度小于2",k, i, item.id))
+                end
+
+                local begTime = GCalHelp:GetTimeStampBySplit(item.openTimes[1], item)
+                local endTime = GCalHelp:GetTimeStampBySplit(item.openTimes[2], item)
+                ASSERT(begTime ~= 0, string.format("掉落表id:%s, index:%s, item.openTimes 开始时间 %s 错误",k, i, item.openTimes[1]))
+                ASSERT(endTime ~= 0, string.format("掉落表id:%s, index:%s, item.openTimes 结束时间 %s 错误",k, i, item.openTimes[2]))
+                ASSERT(begTime <= endTime, string.format("掉落表id:%s, index:%s, item.id为:%s, item.openTimes 开始时间不小于结束时间",k, i, item.id))
+                item.openTimesArr = {begTime, endTime}
+            end            
         end
     end
 end
 
 -- 卡牌表
 function ConfigChecker:CardData(cfgs)
+    ---------------------------------------------------------------------
+    -- 遍历所有卡牌
+    g_fightCardCnt = 0
+    g_cardNumByQuality = {}
+
+    g_openCardCnt = 0
+    g_openCardCntByQuality = {}
+
     for k, v in pairs(cfgs) do
+        if v.get_from_gm then
+            if CARD_TYPE.FIGHT == v.card_type then
+                g_fightCardCnt = g_fightCardCnt + 1
+                GCalHelp:Add(g_cardNumByQuality, v.quality, 1)
+            end
+
+            if v.role_id then
+                local roleCfg = CfgCardRole[v.role_id]
+                if roleCfg and roleCfg.bShowInAltas then
+                    g_openCardCnt = g_openCardCnt + 1
+                    GCalHelp:Add(g_openCardCntByQuality, v.quality, 1)                    
+                end
+            end
+        end
+
+        -- 检查天赋技能
+        if v.tfSkills then
+            for _, talentId in ipairs(v.tfSkills) do
+                local skilCfg = _G['skill'][talentId]
+                if not skilCfg then
+                    LogInfo(
+                            string.format(
+                                    'Error Card id: %d, talent skill id: %d in tfSkills not find skill info from skill cfg!',
+                                    v.id,
+                                    talentId
+                            )
+                    )
+                elseif skilCfg.main_type ~= SkillMainType.CardTalent then
+                    LogInfo(
+                            string.format(
+                                    'Error Card id: %d, talent skill id: %d type is: %d, not：%d error!',
+                                    v.id,
+                                    talentId,
+                                    skilCfg.main_type,
+                                    SkillMainType.CardTalent
+                            )
+                    )
+                end
+            end
+        end
+
         local skills = {}
         if v.jcSkills then
             for i, skillID in ipairs(v.jcSkills) do
@@ -160,11 +232,67 @@ function ConfigChecker:CardData(cfgs)
             end
         end
 
+        v.skills = skills
+
+        -- 检测转换形态转换相关
+        v.notBuyChangeCardIds = {}
+        v.changeCardIds = v.changeCardIds or {}
+        for _, arr in ipairs(v.changeCardIds) do
+            local cfgId = arr[1]
+            local openId = arr[2]
+
+            local cfg = cfgs[cfgId]
+            if not cfg then
+                assert(false, string.format('卡牌id %s 的 changeCardIds 中的卡牌ID %s, 找不到配置', k, cfgId))
+            end
+
+            if openId and openId ~= 0 then
+                local openCfg = CfgOpenRules[openId]
+                if not openCfg then
+                    assert(false, string.format('卡牌id %s 的 changeCardIds 中的 openId %s, 找不到配置', k, openId))
+                end
+            end
+
+            local cpNumArr = {'jcSkills', 'tfSkills', 'tcSkills'}
+            for _, f in ipairs(cpNumArr) do
+                local lhs = v[f] or {}
+                local rhs = cfg[f] or {}
+                if #lhs ~= #rhs then
+                    assert(false, string.format('卡牌id %s 与 %s 的 %s 字段，长度不相等，转换角色技能需要一样长度', k, cfgId, f))
+                end
+            end
+
+            if not openId or openId ~= OpenRuleType.Add then
+                table.insert(v.notBuyChangeCardIds, arr)
+            end
+        end
+
+        v.notBuyAllTcSkills = {}
+        v.allTcSkills = v.allTcSkills or {}
+        for _, arr in ipairs(v.allTcSkills) do
+            local skillId = arr[1]
+            local openId = arr[2]
+
+            local cfg = skill[skillId]
+            if not cfg then
+                assert(false, string.format('卡牌id %s 的 allTcSkills 中的技能ID %s, 技能表中找不到配置', k, skillId))
+            end
+
+            if openId and openId ~= 0 then
+                local openCfg = CfgOpenRules[openId]
+                if not openCfg then
+                    assert(false, string.format('卡牌id %s 的 allTcSkills 中的 openId %s, 找不到配置', k, openId))
+                end
+            end
+
+            if not openId or openId ~= OpenRuleType.Add then
+                table.insert(v.notBuyAllTcSkills, arr)
+            end
+        end
+
         if v.fit_result then
             assert(cfgs[v.fit_result], '卡牌id:' .. v.id .. ' 的 v.fit_result 值：' .. v.fit_result .. ' 在卡牌表找不到对应配置')
         end
-
-        v.skills = skills
 
         if v.skin then
             table.sort(v.skin)
@@ -178,10 +306,10 @@ function ConfigChecker:CardData(cfgs)
             local useId = v.break_id + i
             if not CardBreakMaterial[useId] then
                 ASSERT(
-                    false,
-                    '卡牌cfgId:' ..
-                        v.id ..
-                            ', break_id:' ..
+                        false,
+                        '卡牌cfgId:' ..
+                                v.id ..
+                                ', break_id:' ..
                                 v.break_id .. '的第[ ' .. i + 1 .. ' ]级id:' .. useId .. '在CardBreakMaterial找不到配置'
                 )
             end
@@ -227,93 +355,96 @@ function ConfigChecker:CardData(cfgs)
             end
 
             ASSERT(
-                isFind,
-                string.format(
-                    '卡牌 %s 的 coreItemId [%s] 对应物品的 itemCfg.dy_arr 里面需要包含卡牌id:%s.',
-                    v.id,
-                    v.coreItemId,
-                    table.tostring(itemCfg.dy_arr)
-                )
+                    isFind,
+                    string.format(
+                            '卡牌 %s 的 coreItemId [%s] 对应物品的 itemCfg.dy_arr 里面需要包含卡牌id:%s.',
+                            v.id,
+                            v.coreItemId,
+                            table.tostring(itemCfg.dy_arr)
+                    )
             )
         end
-
         if (v.uniteLabel) then
-            local removeIDs = {}
-            local uniteIDs = {}
-            for _, _cfg in pairs(CardData) do
-                --需要剔除的id
-                if (_cfg.fit_result) then --合体id
-                    removeIDs[_cfg.fit_result] = _cfg.fit_result
-                end
-                if (_cfg.tTransfo) then --变身id
-                    for _, _id in ipairs(_cfg.tTransfo) do
-                        removeIDs[_id] = _id
-                    end
-                end
-
-                local count = 0
-                for _, _info in ipairs(v.uniteLabel) do
-                    local cfgLabel = CfgUniteLabel[_info[1]]
-                    local cfg1 = nil
-                    if (_cfg.role_id and cfgLabel.cfgType == 1) then
-                        cfg1 = CfgCardRole[_cfg.role_id]
-                    else
-                        cfg1 = _cfg
-                    end
-                    if (cfg1) then
-                        --判断条件
-                        local num = 0
-                        if (cfgLabel.key) then
-                            for _, content in ipairs(_info[2]) do
-                                if (cfgLabel.type ~= 2) then
-                                    if (cfg1[cfgLabel.key] == content) then
-                                        num = num + 1
-                                    end
-                                else --区间类型
-                                    if
-                                        (content[1] < 0 and content[2] < 0) or
-                                            (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
-                                            (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
-                                            (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
-                                     then
-                                        num = num + 1
-                                    end
-                                end
-                            end
-                        end
-                        if (num > 0) then
-                            if (_info[3] == 1) then --或条件
-                                count = count + 1
-                            else --与条件
-                                if (num >= #_info[2]) then
-                                    count = count + 1
-                                end
-                            end
-                        end
-                    end
-                end
-                if (count >= #v.uniteLabel and _cfg.get_from_gm) then
-                    table.insert(uniteIDs, _cfg.id)
-                end
-            end
-            if (#uniteIDs > 0) then
-                table.sort(
-                    uniteIDs,
-                    function(a, b)
-                        return a < b
-                    end
-                )
-                local lastID = 0
-                local ids = {}
-                for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
-                    if (not (removeIDs[uniteID]) and not (uniteID == v.id) and not (uniteID == lastID)) then
-                        table.insert(ids, uniteID)
-                    end
-                    lastID = uniteID
-                end
-                v.unite = ids
-            end
+            v.unite = GetUnites(v.uniteLabel,v.id)
         end
+        -- if (v.uniteLabel) then
+        --     local removeIDs = {}
+        --     local uniteIDs = {}
+        --     for _, _cfg in pairs(CardData) do
+        --         --需要剔除的id
+        --         if (_cfg.fit_result) then --合体id
+        --             removeIDs[_cfg.fit_result] = _cfg.fit_result
+        --         end
+        --         if (_cfg.tTransfo) then --变身id
+        --             for _, _id in ipairs(_cfg.tTransfo) do
+        --                 removeIDs[_id] = _id
+        --             end
+        --         end
+
+        --         local count = 0
+        --         for _, _info in ipairs(v.uniteLabel) do
+        --             local cfgLabel = CfgUniteLabel[_info[1]]
+        --             local cfg1 = nil
+        --             if (_cfg.role_id and cfgLabel.cfgType == 1) then
+        --                 cfg1 = CfgCardRole[_cfg.role_id]
+        --             else
+        --                 cfg1 = _cfg
+        --             end
+        --             if (cfg1) then
+        --                 --判断条件
+        --                 local num = 0
+        --                 if (cfgLabel.key) then
+        --                     for _, content in ipairs(_info[2]) do
+        --                         if (cfgLabel.type ~= 2) then
+        --                             if (cfg1[cfgLabel.key] == content) then
+        --                                 num = num + 1
+        --                             end
+        --                         else --区间类型
+        --                             if
+        --                             (content[1] < 0 and content[2] < 0) or
+        --                                     (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+        --                                     (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+        --                                     (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+        --                             then
+        --                                 num = num + 1
+        --                             end
+        --                         end
+        --                     end
+        --                 end
+        --                 if (num > 0) then
+        --                     if (_info[3] == 1) then --或条件
+        --                         count = count + 1
+        --                     else --与条件
+        --                         if (num >= #_info[2]) then
+        --                             count = count + 1
+        --                         end
+        --                     end
+        --                 end
+        --             end
+        --         end
+        --         -- if (count >= #v.uniteLabel and _cfg.get_from_gm) then
+        --         if (count >= #v.uniteLabel) then
+        --             table.insert(uniteIDs, _cfg.id)
+        --         end
+        --     end
+        --     if (#uniteIDs > 0) then
+        --         table.sort(
+        --                 uniteIDs,
+        --                 function(a, b)
+        --                     return a < b
+        --                 end
+        --         )
+        --         local lastID = 0
+        --         local ids = {}
+        --         for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
+        --             if (not (removeIDs[uniteID]) and not (uniteID == v.id) and not (uniteID == lastID)) then
+        --                 table.insert(ids, uniteID)
+        --             end
+        --             lastID = uniteID
+        --         end
+        --         v.unite = ids
+        --     end
+        -- end
 
         -- if v.id == 50010 then
         -- 	LogTable(v)
@@ -326,27 +457,42 @@ function ConfigChecker:CardData(cfgs)
 
         if v.role_id then
             ASSERT(
-                CfgCardRole[v.role_id],
-                '卡牌配置表的id:' .. v.id .. ', 的 role_id:' .. v.role_id .. ', 在 CfgCardRole 表格找不到数据'
+                    CfgCardRole[v.role_id],
+                    '卡牌配置表的id:' .. v.id .. ', 的 role_id:' .. v.role_id .. ', 在 CfgCardRole 表格找不到数据'
             )
         end
 
         if v.add_role_id then
             ASSERT(
-                CfgCardRole[v.add_role_id],
-                '卡牌配置表的id:' .. v.id .. ', 的 add_role_id:' .. v.add_role_id .. ', 在 CfgCardRole 表格找不到数据'
+                    CfgCardRole[v.add_role_id],
+                    '卡牌配置表的id:' .. v.id .. ', 的 add_role_id:' .. v.add_role_id .. ', 在 CfgCardRole 表格找不到数据'
             )
         end
     end
 end
 
 function ConfigChecker:CfgCardRole(cfgs)
+    g_CardRoleShowCnt = 0
+    g_CardPoleShowByQuality = {}
+
     for id, cfg in pairs(cfgs) do
         ASSERT(cfg.aModels, 'CfgCardRole id：' .. id .. '没填 aModels')
 
         if character then
             -- 服务器没这个表
             ASSERT(character[cfg.aModels], 'CfgCardRole id：' .. id .. ', 的aModels:' .. '在角色模型表 character 找不到数据。')
+        end
+
+        if cfg.bShowInAltas and cfg.aCards and #cfg.aCards > 0 then
+            g_CardRoleShowCnt = g_CardRoleShowCnt + 1
+            for _, cardId in ipairs(cfg.aCards) do
+                local cardCfg = CardData[cardId]
+                if cardCfg and CARD_TYPE.FIGHT == cardCfg.card_type then
+                    GCalHelp:Add(g_CardPoleShowByQuality, cardCfg.quality, 1)
+                    break
+                end
+            end
+
         end
     end
 end
@@ -379,7 +525,149 @@ function ConfigChecker:MonsterData(cfg)
             end
         end
         v.skills = skills
+        if (v.card_id and CardData[v.card_id] and CardData[v.card_id].uniteLabel) then
+            v.unite = GetUnites(CardData[v.card_id].uniteLabel,v.id)
+        end
     end
+end
+
+--获取卡牌表和怪物表同调id组
+function GetUnites(uniteLabels,cfgId)
+    cfgId = cfgId or 0
+    if (uniteLabels) then
+        local removeIDs = {}
+        local uniteIDs = {}
+        for _, _cfg in pairs(CardData) do
+            --需要剔除的id
+            if (_cfg.fit_result) then --合体id
+                removeIDs[_cfg.fit_result] = _cfg.fit_result
+            end
+            if (_cfg.tTransfo) then --变身id
+                for _, _id in ipairs(_cfg.tTransfo) do
+                    removeIDs[_id] = _id
+                end
+            end
+
+            local count = 0
+            for _, _info in ipairs(uniteLabels) do
+                local cfgLabel = CfgUniteLabel[_info[1]]
+                local cfg1 = nil
+                if (_cfg.role_id and cfgLabel.cfgType == 1) then
+                    cfg1 = CfgCardRole[_cfg.role_id]
+                else
+                    cfg1 = _cfg
+                end
+                if (cfg1) then
+                    --判断条件
+                    local num = 0
+                    if (cfgLabel.key) then
+                        for _, content in ipairs(_info[2]) do
+                            if (cfgLabel.type ~= 2) then
+                                if (cfg1[cfgLabel.key] == content) then
+                                    num = num + 1
+                                end
+                            else --区间类型
+                                if
+                                (content[1] < 0 and content[2] < 0) or
+                                        (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+                                        (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+                                        (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+                                then
+                                    num = num + 1
+                                end
+                            end
+                        end
+                    end
+                    if (num > 0) then
+                        if (_info[3] == 1) then --或条件
+                            count = count + 1
+                        else --与条件
+                            if (num >= #_info[2]) then
+                                count = count + 1
+                            end
+                        end
+                    end
+                end
+            end
+            if (count >= #uniteLabels) then
+                table.insert(uniteIDs, _cfg.id)
+            end
+        end
+
+        for _, _cfg in pairs(MonsterData) do
+            --需要剔除的id
+            if (_cfg.fit_result) then --合体id
+                removeIDs[_cfg.fit_result] = _cfg.fit_result
+            end
+            if (_cfg.tTransfo) then --变身id
+                for _, _id in ipairs(_cfg.tTransfo) do
+                    removeIDs[_id] = _id
+                end
+            end
+
+            local count = 0
+            for _, _info in ipairs(uniteLabels) do
+                local cfgLabel = CfgUniteLabel[_info[1]]
+                local cfg1 = nil
+                if (_cfg.card_id and CardData[_cfg.card_id] and CardData[_cfg.card_id].role_id and cfgLabel.cfgType == 1) then
+                    cfg1 = CfgCardRole[CardData[_cfg.card_id].role_id]
+                else
+                    cfg1 = CardData[_cfg.card_id]
+                end
+                if (cfg1) then
+                    --判断条件
+                    local num = 0
+                    if (cfgLabel.key) then
+                        for _, content in ipairs(_info[2]) do
+                            if (cfgLabel.type ~= 2) then
+                                if (cfg1[cfgLabel.key] == content) then
+                                    num = num + 1
+                                end
+                            else --区间类型
+                                if
+                                (content[1] < 0 and content[2] < 0) or
+                                        (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+                                        (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+                                        (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+                                then
+                                    num = num + 1
+                                end
+                            end
+                        end
+                    end
+                    if (num > 0) then
+                        if (_info[3] == 1) then --或条件
+                            count = count + 1
+                        else --与条件
+                            if (num >= #_info[2]) then
+                                count = count + 1
+                            end
+                        end
+                    end
+                end
+            end
+
+            if (count >= #uniteLabels) then
+                table.insert(uniteIDs, _cfg.id)
+            end
+        end
+
+        if (#uniteIDs > 0) then
+            table.sort(uniteIDs,function(a, b)
+                        return a < b
+                    end)
+            local lastID = 0
+            local ids = {}
+            for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
+                if (not (removeIDs[uniteID]) and not (uniteID == cfgId) and not (uniteID == lastID)) then
+                    table.insert(ids, uniteID)
+                end
+                lastID = uniteID
+            end
+            return ids
+        end
+    end
+    return nil
 end
 
 function ConfigChecker:skill(cfg)
@@ -402,9 +690,9 @@ function ConfigChecker:skill(cfg)
 
             if ovloadCfg.type ~= 9 then
                 ASSERT(
-                    false,
-                    '技能id:' ..
-                        v.id .. '没有找到对应的overload技能id:' .. ovloadId .. ', 的技能类型为：' .. ovloadCfg.type .. ', 约定类型应该为：9.'
+                        false,
+                        '技能id:' ..
+                                v.id .. '没有找到对应的overload技能id:' .. ovloadId .. ', 的技能类型为：' .. ovloadCfg.type .. ', 约定类型应该为：9.'
                 )
             end
         end
@@ -412,14 +700,32 @@ function ConfigChecker:skill(cfg)
 end
 
 -- 关卡表
-function ConfigChecker:MainLine(cfg)
+function ConfigChecker:MainLine(cfgs)
     -- LogDebug("IS_CLIENT:" .. IS_CLIENT)
-    for k, v in pairs(cfg) do
+    g_CalMainLineStarIxs = {}
+    g_CalMainLineCount = {}
+    g_AbattoirSeason = {}
+
+    for k, v in pairs(cfgs) do
+        if v.starIx then
+            local arr = GCalHelp:GetTb(g_CalMainLineStarIxs, v.starIx, {})
+            table.insert(arr, k)
+        end
+        if v.group and v.type then
+            -- 1剧情副本不算星
+            if not v.sub_type or v.sub_type ~= 1 then
+                local groupArr = GCalHelp:GetTb(g_CalMainLineCount, v.group, {})
+                local typeArr = GCalHelp:GetTb(groupArr, v.type, {})
+                table.insert(typeArr, k)
+            end
+        end
+
         if v.forceSkill then
             table.sort(v.forceSkill)
         end
 
-        if v.nGroupID then -- 直接进入战斗
+        if v.nGroupID then
+            -- 直接进入战斗
         else
             v.star = {}
             v.mapStar = {}
@@ -455,12 +761,63 @@ function ConfigChecker:MainLine(cfg)
             v.encounterMonster = encounterMonster
         end
 
-        if v.nBegTime then -- 期效副本开始结束时间
+        if v.nBegTime then
+            -- 期效副本开始结束时间
             v.nBegTime = GCalHelp:GetTimeStampBySplit(v.begTime, v)
             v.nEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
         end
 
         v.enterLimitHot = (v.enterCostHot or 0) + (v.winCostHot or 0)
+
+        if v.chapterLevel and v.dungeonGroup then
+            --乱序演习关卡难度
+            local ccc = DungeonGroup[v.dungeonGroup]
+            if ccc then
+                if not ccc.randomChapters then
+                    ccc.randomChapters = {}
+                end
+
+                local arr = GCalHelp:GetTb(ccc.randomChapters, v.chapterLevel, {})
+                table.insert(arr, v.id)
+            else
+                ASSERT(false, string.format('没有该关卡组 关卡id：%s 对应的关卡组ID:%s', v.id, v.dungeonGroup))
+            end
+        end
+
+        if v.roundLevel and v.type == 12 then
+            -- 战力派遣
+            local ccc = DungeonGroup[v.dungeonGroup]
+            if not ccc then
+                ASSERT(false, string.format('战力派遣没有该关卡组 关卡id：%s 对应的关卡组ID:%s', v.id, v.dungeonGroup))
+            end
+            if not ccc.rounds then
+                ccc.rounds = {}
+            end
+            ccc.rounds[v.roundLevel] = v.id
+        end
+
+        if v.type == 15 then
+            -- 限制肉鸽爬塔
+            local ccc = DungeonGroup[v.dungeonGroup]
+            if not ccc then
+                ASSERT(false, string.format('限制肉鸽爬塔没有该关卡组 关卡id：%s 对应的关卡组ID:%s', v.id, v.dungeonGroup))
+            end
+
+            ccc.rounds = GCalHelp:GetTb(ccc, 'rounds',{})
+
+            if v.isInfinity then
+                ccc.boss = v.id
+            else
+                ccc.rounds[v.roundLevel] = v.id
+            end
+        end
+        if v.season and v.turn and v.type and v.type == 14 and v.weight and v.themeType then
+            g_AbattoirSeason[v.season] = g_AbattoirSeason[v.season] or {}
+            g_AbattoirSeason[v.season][v.turn] =  g_AbattoirSeason[v.season][v.turn] or {}
+
+            local tCfg = {id = v.id,weight = v.weight,themeType = v.themeType}
+            table.insert(g_AbattoirSeason[v.season][v.turn],tCfg)
+        end
     end
 end
 
@@ -486,7 +843,8 @@ function CheckFormation(formation, list)
         if monsterID and monsterID ~= 0 then
             local monster = MonsterData[monsterID]
             ASSERT(monster, '怪物配置不存在' .. monsterID)
-            if monster.grids then -- 占多格
+            if monster.grids then
+                -- 占多格
                 local cfgGrids = MonsterFormation[monster.grids]
                 ASSERT(cfgGrids, '没有配置阵型' .. monster.grids)
                 -- if cfgGrids.relative == 0 then ASSERT(nil, "怪物占格阵型应该用相对坐标"..formation) end
@@ -494,7 +852,8 @@ function CheckFormation(formation, list)
                     local row = coor[1] + v[1]
                     local col = coor[2] + v[2]
                     -- LogDebugEx(string.format("coordinate%s, %s, %s", monsterID, row, col))
-                    if cfgGrids.relative == 0 then -- 绝对坐标
+                    if cfgGrids.relative == 0 then
+                        -- 绝对坐标
                         row = coor[1]
                         col = coor[2]
                     end
@@ -924,11 +1283,17 @@ end
 
 function ConfigChecker:CfgBuidingBase(cfgs)
     local buildByType = {}
+    g_BuildCenterCfgId = nil
+
     for _, cfg in pairs(cfgs) do
         if not cfg.needAbilitys then
             cfg.needAbilitys = {}
         end
         buildByType[cfg.type] = cfg
+
+        if cfg.type == BuildsType.ControlTower then
+            g_BuildCenterCfgId = cfg.id
+        end
     end
 
     for id, cfg in pairs(CfgCardRoleAbilityPool) do
@@ -947,6 +1312,40 @@ function ConfigChecker:CfgBuidingBase(cfgs)
     end
 
     -- LogTable(CfgBuidingBase, "CfgBuidingBase:")
+end
+
+function ConfigChecker:CfgBControlTowerLvl(cfgs)
+    if not IS_SERVER then
+        return
+    end
+
+    for _, cfg in pairs(cfgs) do
+        cfg.buildNumLimit = GCalHelp:ArrToMap(cfg.buildNumLimit, 1)
+        -- LogTable(cfg, "cfg:")
+    end
+end
+
+function ConfigChecker:CfgBProductLvl(cfgs)
+    if not IS_SERVER then
+        return
+    end
+
+    for _, cfg in pairs(cfgs) do
+        cfg.rewardLimits = GCalHelp:ArrToMap(cfg.rewardLimits, 1)
+        -- LogTable(cfg, "cfg:")
+    end
+end
+
+function ConfigChecker:CfgBCompoundLvl(cfgs)
+    if not IS_SERVER then
+        return
+    end
+
+    for _, cfg in pairs(cfgs) do
+        if cfg.rewardTimes then
+            table.sort(cfg.rewardTimes)
+        end
+    end
 end
 
 -- 操作日志
@@ -985,6 +1384,8 @@ function ConfigChecker:CfgClothes(cfgs)
 end
 
 function ConfigChecker:CfgEquip(cfgs)
+    g_EquipBySuit = {}
+
     for _, cfg in pairs(cfgs) do
         -- 检查随机技能
         if cfg.randSkills then
@@ -998,6 +1399,27 @@ function ConfigChecker:CfgEquip(cfgs)
                     ASSERT(false, 'CfgEquipRandSkill cfg id：' .. randId .. ' field infos is empty!')
                 end
             end
+        end
+
+        if cfg.suitId then
+            local bySuitId = GCalHelp:GetTb(g_EquipBySuit, cfg.suitId, {})
+            local byQuality = GCalHelp:GetTb(bySuitId, cfg.nQuality, {})
+            table.insert(byQuality, cfg)
+        end
+    end
+
+    -- 按照位置排序一下
+    for suitId, infoA in pairs(g_EquipBySuit) do
+        for quality, equipArr in pairs(infoA) do
+            -- 按位置从小到大排序
+            table.sort(
+                    equipArr,
+                    function(lhs, rhs)
+                        return lhs.nSlot < rhs.nSlot
+                    end
+            )
+
+            -- LogTable(equipArr, "equipArr:")
         end
     end
 end
@@ -1038,6 +1460,8 @@ function ConfigChecker:CfgEquipRandSkillLv(cfgs)
 end
 
 function ConfigChecker:CfgEquipSkill(cfgs)
+    g_CalExcludeSkillIds = {}
+
     for id, cfg in pairs(cfgs) do
         local baseId, lv = GCalHelp:GetEquipBaseIdAndLv(cfg.id)
 
@@ -1052,10 +1476,37 @@ function ConfigChecker:CfgEquipSkill(cfgs)
         -- if skilInfo then
         --     ASSERT(false, "装备技能id, 与技能表id重复，值为：" .. id)
         -- end
+        if cfg.nExcludeId and cfg.nType == EquipSkillType.Fight and cfg.nGetSkillId then
+            g_CalExcludeSkillIds[id] = {nExcludeId = cfg.nExcludeId, nEquipSkillId = id, nSkillId = cfg.nGetSkillId}
+        end
     end
 end
 
+function CalCardPoolIdByCnt(jCfg)
+    local ret = {}
+    if jCfg then
+        -- LogTable(jCfg, "GobalCfg:CalIdByCnt:")
+        for _, v in pairs(jCfg) do
+            local cnt, rewardId = v[1], v[2]
+            -- 操作次数, 使用id
+            if 0 == cnt then
+                ret.default = rewardId
+            elseif -1 == cnt then
+                ret.first10 = rewardId
+            else
+                ret[cnt] = rewardId
+            end
+        end
+    end
+
+    return ret
+end
+
 function ConfigChecker:CfgCardPool(cfgs)
+    g_defSelCardPoolIdArr = {}
+    g_gobalOpenCardPoolIdArr = {}
+    g_fixTimeOpenCardPoolIdArr = {}
+
     for id, cfg in pairs(cfgs) do
         if cfg.childIds then
             for _, arr in ipairs(cfg.childIds) do
@@ -1089,11 +1540,12 @@ function ConfigChecker:CfgCardPool(cfgs)
         -- 查看奖励
         local hadFirstReward = false
         for _, arr in ipairs(cfg.jCardsId) do
+            -- LogTable(cfg, "ConfigChecker:CfgCardPool cfg:")
             local cnt, rewardId = arr[1], arr[2]
             if not RewardInfo[rewardId] then
                 ASSERT(
-                    false,
-                    string.format('CfgCardPool 配置表 id :%s 中 jCardsId 的 rewardId:%s 在奖励表 RewardInfo 中找不到', id, rewardId)
+                        false,
+                        string.format('CfgCardPool 配置表 id :%s 中 jCardsId 的 rewardId:%s 在奖励表 RewardInfo 中找不到', id, rewardId)
                 )
             end
 
@@ -1124,6 +1576,43 @@ function ConfigChecker:CfgCardPool(cfgs)
 
         cfg.nStart = GCalHelp:GetTimeStampBySplit(cfg.sStart, cfg)
         cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.sEnd, cfg)
+
+        if IS_SERVER then
+            -- 额外卡池奖励模板
+            cfg.rewardIdInfos = CalCardPoolIdByCnt(cfg.jCardsId)
+
+            -- 额外奖励
+            cfg.exRewardIdInfos = CalCardPoolIdByCnt(cfg.jReward)
+
+            -- 设置父卡池id
+            if cfg.childIds then
+                for ix, arr in ipairs(cfg.childIds) do
+                    local cId = arr[2]
+                    local cCfg = CfgCardPool[cId]
+                    cCfg.parentId = id
+                end
+                table.insert(g_gobalOpenCardPoolIdArr, id)
+            end
+
+            if cfg.def_sel_card_ix and cfg.sel_quality and cfg.sel_card_ids then
+                if not table.empty(cfg.sel_card_ids) and cfg.def_sel_card_ix <= #cfg.sel_card_ids then
+                    if not cfg.nEnd or cfg.nEnd == 0 or cfg.nEnd > CURRENT_TIME then
+                        table.insert(g_defSelCardPoolIdArr, id)
+                        LogDebug(
+                                string.format(
+                                        'CardGetLog:CheckInitData() cfg.nStart:%s, cfg.nEnd:%s add to defSelCardPoolIdArr',
+                                        cfg.nStart,
+                                        cfg.nEnd
+                                )
+                        )
+                    end
+                end
+            end
+
+            if cfg.nType == CardPoolType.FixTimeFirstLogin then
+                table.insert(g_fixTimeOpenCardPoolIdArr, id)
+            end
+        end
     end
 end
 
@@ -1136,23 +1625,12 @@ function ConfigChecker:CfgDorm(cfgs)
         for _, info in pairs(cfg.infos) do
             if info.index < 1 or info.index >= 100 then
                 ASSERT(
-                    false,
-                    string.format('CfgDorm 配置表 id 为:%s index 为: %s, index 允许范围为 0 < index < 100', cfg.id, info.index)
+                        false,
+                        string.format('CfgDorm 配置表 id 为:%s index 为: %s, index 允许范围为 0 < index < 100', cfg.id, info.index)
                 )
             end
         end
     end
-end
-
-function ConfigChecker:global_setting(cfgs)
-    -- LogDebug("global_setting: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    table.sort(g_BuildTradeFlushTimes)
-    -- LogTable(g_BuildTradeFlushTimes, "g_BuildTradeFlushTimes:")
-
-    table.sort(g_WeekHoliday)
-    -- LogTable(g_WeekHoliday, "g_WeekHoliday:")
-
-    table.sort(g_ArmyFightListScoreRange)
 end
 
 function ConfigChecker:CfgExploration(cfgs)
@@ -1164,17 +1642,40 @@ function ConfigChecker:CfgExploration(cfgs)
 end
 
 function ConfigChecker:ItemInfo(cfgs)
+    GCfgEquipItemId = {}
+
+    g_toItemArr = {}
+
     for id, cfg in pairs(cfgs) do
-        if cfg.sExpiry then
-            cfg.nExpiry = GCalHelp:GetTimeStampBySplit(cfg.sExpiry, cfg)
+        if cfg.to_item_id then
+            ASSERT(cfgs[cfg.to_item_id], string.format('物品id:%s, 的 to_item_id:%s 找不到物品配置信息', id, cfg.to_item_id))
+            local arr = GCalHelp:GetTb(g_toItemArr, cfg.to_item_id)
+            table.insert(arr, id)
+        else
+            -- 填了 to_item_id 可以只填 sExpiry 不填 expiryIx
+            if cfg.sExpiry then
+                cfg.nExpiry = GCalHelp:GetTimeStampBySplit(cfg.sExpiry, cfg)
+                ASSERT(cfg.expiryIx, string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
+            end
+
+            if cfg.expiryIx then
+                ASSERT(cfg.sExpiry, string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
+            end
         end
+
+        if cfg.exipiry_type then
+            if cfg.exipiry_type[1] < 1 or cfg.exipiry_type[1] > 3 then
+                ASSERT(false, string.format('物品id:%s, 的 exipiry_type 类型错误', id, cfg.to_item_id))
+            end
+        end
+
         if cfg.type == ITEM_TYPE.ICON_FRAME then
             local frameCfg = AvatarFrame[cfg.dy_value2]
             if frameCfg then
                 ASSERT(not frameCfg.item_id, string.format('该头像框id=%s已有对应的物品id=%s,头像框配置冲突', cfg.dy_value2, id))
                 frameCfg.item_id = id
             else
-                ASSERT('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2)
+                ASSERT(false, string.format('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
         elseif cfg.type == ITEM_TYPE.ICON then
             local avatarCfg = CfgAvatar[cfg.dy_value2]
@@ -1182,40 +1683,91 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(not avatarCfg.item_id, string.format('该头像id=%s已有对应的物品id=%s,头像表配置冲突', cfg.dy_value2, id))
                 avatarCfg.item_id = id
             else
-                ASSERT('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2)
+                ASSERT(false, string.format('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
+            end
+        elseif cfg.type == ITEM_TYPE.ICON_TITLE then
+            local titleCfg = CfgIconTitle[cfg.dy_value2]
+            if titleCfg then
+                ASSERT(not titleCfg.item_id, string.format('该称号id=%s已有对应的物品id=%s,称号表配置冲突', cfg.dy_value2, id))
+                titleCfg.item_id = id
+            else
+                ASSERT(false, string.format('称号表里找不到该物品id:%s对应的玩家称号id：%s', id, cfg.dy_value2))
+            end
+        elseif cfg.type == ITEM_TYPE.BG_ITEM then
+            local menuBgCfg = CfgMenuBg[cfg.dy_value1]
+            if menuBgCfg then
+                ASSERT(not menuBgCfg.item_id, string.format('该主界面背景id=%s已有对应的物品id=%s,主界面背景表配置冲突', cfg.dy_value1, id))
+                menuBgCfg.item_id = id
+            else
+                ASSERT(false, string.format('主界面背景表里找不到该物品id:%s对应的主界面背景id：%s', id, cfg.dy_value1))
+            end
+        elseif cfg.type == ITEM_TYPE.EQUIP then
+            if cfg.dy_value1 then
+                GCfgEquipItemId[cfg.dy_value1] = id
             end
         elseif cfg.type == ITEM_TYPE.PROP then
             if cfg.dy_value1 == PROP_TYPE.IconFrame then
                 local item_id = cfg.dy_arr[1]
                 local iconFrameItem = cfgs[item_id]
                 ASSERT(
-                    iconFrameItem.dy_value2 == cfg.dy_value2,
-                    string.format(
-                        '头像框道具id:%s的对应的头像框id:%s 与 使用后获得的头像框物品id:%s对应的头像框id：%s 不符',
-                        id,
-                        cfg.dy_value2,
-                        item_id,
-                        iconFrameItem.dy_value2
-                    )
+                        iconFrameItem.dy_value2 == cfg.dy_value2,
+                        string.format(
+                                '头像框道具id:%s的对应的头像框id:%s 与 使用后获得的头像框物品id:%s对应的头像框id：%s 不符',
+                                id,
+                                cfg.dy_value2,
+                                item_id,
+                                iconFrameItem.dy_value2
+                        )
                 )
                 ASSERT(
-                    iconFrameItem.type == ITEM_TYPE.ICON_FRAME,
-                    string.format('道具id:%s的物品对应的头像框物品:%s，类型不对', id, item_id)
+                        iconFrameItem.type == ITEM_TYPE.ICON_FRAME,
+                        string.format('道具id:%s的物品对应的头像框物品:%s，类型不对', id, item_id)
                 )
             elseif cfg.dy_value1 == PROP_TYPE.Icon then
                 local item_id = cfg.dy_arr[1]
                 local iconItem = cfgs[item_id]
                 ASSERT(
-                    iconItem.dy_value2 == cfg.dy_value2,
-                    string.format(
-                        '头像道具id:%s的对应的头像id:%s 与 使用后获得的头像物品id:%s对应的头像id：%s 不符',
-                        id,
-                        cfg.dy_value2,
-                        item_id,
-                        iconItem.dy_value2
-                    )
+                        iconItem.dy_value2 == cfg.dy_value2,
+                        string.format(
+                                '头像道具id:%s的对应的头像id:%s 与 使用后获得的头像物品id:%s对应的头像id：%s 不符',
+                                id,
+                                cfg.dy_value2,
+                                item_id,
+                                iconItem.dy_value2
+                        )
                 )
                 ASSERT(iconItem.type == ITEM_TYPE.ICON, string.format('道具id:%s的物品对应的头像物品:%s，类型不对', id, item_id))
+            -- elseif cfg.dy_value1 == PROP_TYPE.Pet then
+            --     ASSERT(CfgPet[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物在宠物表没有对应的id：%s", id, cfg.dy_value2))
+            -- elseif cfg.dy_value1 == PROP_TYPE.PetItem then
+            --     ASSERT(CfgPetItem[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物物品在宠物物品表没有对应的id：%s", id, cfg.dy_value2))
+            -- elseif cfg.dy_value1 == PROP_TYPE.PetArchive then
+            --     ASSERT(CfgPetArchive[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物图鉴在宠物图鉴表没有对应的id：%s", id, cfg.dy_value2))
+            elseif cfg.dy_value1 == PROP_TYPE.Music then
+                    ASSERT(cfg.dy_value2, string.format("物品id：%s使用后获得的音乐在ItemInfo没配dy_value2", id))
+                    ASSERT(CfgMusic[cfg.dy_value2], string.format("音乐id：%s使用后获得的音乐在音乐表[CfgMusic]没有对应的id：%s", id, cfg.dy_value2))
+            elseif cfg.dy_value1 == PROP_TYPE.IconTitle then
+                local item_id = cfg.dy_arr[1]
+                local iconItem = cfgs[item_id]
+                ASSERT(
+                        iconItem.dy_value2 == cfg.dy_value2,
+                        string.format(
+                                '称号道具id:%s的对应的称号id:%s 与 使用后获得的称号物品id:%s对应的称号id：%s 不符',
+                                id,
+                                cfg.dy_value2,
+                                item_id,
+                                iconItem.dy_value2
+                        )
+                )
+                ASSERT(iconItem.type == ITEM_TYPE.ICON_TITLE, string.format('道具id:%s的物品对应的称号物品:%s，类型不对', id, item_id))
+            end
+        elseif cfg.type == ITEM_TYPE.VOUCHER then
+            if cfg.dy_value1 then
+                if not CfgVoucher[cfg.dy_value1] then
+                    ASSERT(false, string.format('物品%s 的 dy_value1 配置的抵扣券id, 在 CfgVoucher 表中找不到配置', cfg.id, cfg.dy_value1))
+                end
+            else
+                ASSERT(false, string.format('物品%s的 dy_value1 为抵扣券id，没有填写', cfg.id))
             end
         end
 
@@ -1223,17 +1775,21 @@ function ConfigChecker:ItemInfo(cfgs)
         if IS_CLIENT and not cfg.hide then
             if cfg.type == ITEM_TYPE.CARD then
                 ASSERT(
-                    CardData[cfg.dy_value1],
-                    '物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CardData 找不到配置！'
+                        CardData[cfg.dy_value1],
+                        '物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CardData 找不到配置！'
                 )
             elseif cfg.type == ITEM_TYPE.EQUIP then
                 ASSERT(
-                    CfgEquip[cfg.dy_value1],
-                    '物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CfgEquip 找不到配置！'
+                        CfgEquip[cfg.dy_value1],
+                        '物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CfgEquip 找不到配置！'
                 )
             elseif cfg.type == ITEM_TYPE.SKIN then
             end
         end
+        if cfg.dy2Times then
+            cfg.dy2StartTimes = GCalHelp:GetTimeStampBySplit(cfg.dy2Times, cfg)
+        end
+
     end
 end
 
@@ -1253,6 +1809,26 @@ function ConfigChecker:CfgAvatar(cfgs)
     end
 end
 
+function ConfigChecker:CfgIconTitle(cfgs)
+    for id, cfg in pairs(cfgs) do
+        -- 称号要有对应的物品id
+        if id ~= 1 then
+            ASSERT(cfg.item_id, string.format('称号id:%s无对应的的物品id,配置不对', id))
+        end
+    end
+end
+
+function ConfigChecker:CfgMenuBg(cfgs)
+    g_MenuBGDefault = {}
+    for id, cfg in pairs(cfgs) do
+        -- 主界面背景要有对应的物品id
+        ASSERT(cfg.item_id, string.format('主界面背景id:%s无对应的的物品id,配置不对', id))
+        if cfg.is_Open == 1 then
+            table.insert(g_MenuBGDefault, cfg.item_id)
+        end
+    end
+end
+
 function ConfigChecker:CfgActive(cfgs)
     for k, v in pairs(cfgs) do
         if v.begTime then
@@ -1265,37 +1841,55 @@ function ConfigChecker:CfgActive(cfgs)
 end
 
 function ConfigChecker:CfgActiveEntry(cfgs)
-    local battleEndTimeTable = {}
-    for _, v in pairs(cfgs) do
-        if v.begTime then
+    if IS_SERVER then
+        local battleEndTimeTable = {}
+        for _, v in pairs(cfgs) do
+
+            ASSERT(v.begTime, string.format("CfgActiveEntry() not begTime:%s", v.begTime))
             v.nBegTime = GCalHelp:GetTimeStampBySplit(v.begTime, v)
-        end
-        if v.endTime then
+
+            ASSERT(v.endTime, string.format("CfgActiveEntry() not nEndTime:%s", v.endTime))
             v.nEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
-        end
-        if v.hardBegTime then
-            v.nHardBegTime = GCalHelp:GetTimeStampBySplit(v.hardBegTime, v)
-        end
-        if v.exBegTime then
-            v.nExBegTime = GCalHelp:GetTimeStampBySplit(v.exBegTime, v)
-        end
-        if v.battleendTime then
-            v.nBattleendTime = GCalHelp:GetTimeStampBySplit(v.battleendTime, v)
-            if v.config and v.nConfigID then
-                local config_table = _G[v.config]
-                if config_table and config_table[v.nConfigID] then
-                    local tar_config = config_table[v.nConfigID]
-                    if tar_config.sectionID then
-                        if not battleEndTimeTable[tar_config.sectionID] then
-                            battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
-                        else
-                            LogWarning('CfgActiveEntry sectionID出现重复%s:%s', v.config, v.nConfigID)
+
+            if v.hardBegTime then
+                v.nHardBegTime = GCalHelp:GetTimeStampBySplit(v.hardBegTime, v)
+            end
+
+            if v.exBegTime then
+                v.nExBegTime = GCalHelp:GetTimeStampBySplit(v.exBegTime, v)
+            end
+
+            if v.battleendTime then
+                v.nBattleendTime = GCalHelp:GetTimeStampBySplit(v.battleendTime, v)
+                if v.config and v.nConfigID then
+                    local config_table = _G[v.config]
+                    if v.period and v.period == 2 then
+                        local tarCfg = config_table[v.nConfigID]
+                        --LogTable(tarCfg, "config_table")
+                        if tarCfg.infos then
+                            for _, info in ipairs(tarCfg.infos) do
+                                if info.sectionID then
+                                    battleEndTimeTable[info.sectionID] = v.nBattleendTime
+                                end
+                            end
+                        end
+                    else
+                        if config_table and config_table[v.nConfigID] then
+                            local tar_config = config_table[v.nConfigID]
+                            if tar_config.sectionID then
+
+                                if not battleEndTimeTable[tar_config.sectionID] then
+                                    battleEndTimeTable[tar_config.sectionID] = v.nBattleendTime
+                                else
+                                    LogI('CfgActiveEntry sectionID出现重复,id:' .. v.id .. ',config:' .. v.config .. ',nConfigID:' .. v.nConfigID)
+                                end
+                            end
                         end
                     end
                 end
             end
+            _G['DupActiveBattleEndTime'] = battleEndTimeTable
         end
-        _G['DupActiveBattleEndTime'] = battleEndTimeTable
     end
 end
 
@@ -1315,7 +1909,7 @@ function ConfigChecker:CfgCardRoleUpgrade(cfgs)
         for i, cfg in ipairs(cfgs) do
             if sumNeedExp ~= cfg.mExp then
                 local msg =
-                    string.format('CfgCardRoleUpgrade, id:%s, mExp:%s is wrong, will be %s', i, cfg.mExp, sumNeedExp)
+                string.format('CfgCardRoleUpgrade, id:%s, mExp:%s is wrong, will be %s', i, cfg.mExp, sumNeedExp)
                 assert(fasle, msg)
             end
 
@@ -1359,5 +1953,1362 @@ function ConfigChecker:CfgLimitedTime(cfgs)
                 end
             end
         end
+    end
+end
+
+function ConfigChecker:CfgDySetOpenCfgs(cfgs)
+    for _, cfg in pairs(cfgs) do
+        local cfgName = cfg.id
+        local cfgStructInfo = ConfigParser.m_mapTableInfo[cfgName]
+
+        cfg.key = nil
+        cfg.sheetName = cfgStructInfo.sheetname
+
+        -- 这个控制的字段，后端不一定有，但是前端一定需要有的，因为是更新给前端用的
+        if IS_SERVER then
+            if cfg.show_ids then
+                table.sort(cfg.show_ids)
+            end
+        else
+            -- IS_CLIENT
+            -- IS_SERVER
+            local fields = cfg.fields
+            local checkCfgs = _G[cfgName]
+
+            local _, checkCfg = next(checkCfgs)
+
+            for _, info in pairs(fields) do
+                if info.sub_tb then
+                    local _, subCheckCfg = next(checkCfg[info.sub_tb])
+                    ASSERT(
+                            subCheckCfg,
+                            string.format('CfgDySetOpenCfgs 配置的表格 %s 的 %s 中的字段 %s 找不到', cfgName, info.sub_tb, info.field)
+                    )
+
+                    if not GCalHelp:FindArrByFor(cfgStructInfo.names, info.sub_tb) then
+                        ASSERT(false, string.format('CfgDySetOpenCfgs 配置的表格 %s 中的字段 %s 找不到', cfgName, info.sub_tb))
+                    end
+
+                    if info.sub_index_type then
+                        if info.sub_index_type ~= 'number' and info.sub_index_type ~= 'string' then
+                            ASSERT(
+                                    false,
+                                    string.format(
+                                            'CfgDySetOpenCfgs 配置的表格 %s 中的字段 %s, sub_index_type 只能是 string or number',
+                                            cfgName,
+                                            info.field
+                                    )
+                            )
+                        end
+                    else
+                        ASSERT(
+                                false,
+                                string.format('CfgDySetOpenCfgs 配置的表格 %s 中的字段 %s 没有配置 sub_index_type', cfgName, info.sub_tb)
+                        )
+                    end
+                end
+
+                if not info.field_type then
+                    ASSERT(false, string.format('CfgDySetOpenCfgs 配置的表格 %s 中的字段 field_type 没有配置', cfgName))
+                else
+                    if
+                    info.field_type ~= 'date' and info.field_type ~= 'json' and info.field_type ~= 'number' and
+                            info.field_type ~= 'string' and
+                            info.field_type ~= 'bool'
+                    then
+                        ASSERT(false, string.format('CfgDySetOpenCfgs 配置的表格 %s 中的字段 %s 不正确', cfgName, info.field_type))
+                    end
+                end
+
+                if not GCalHelp:FindArrByFor(cfgStructInfo.names, info.field) then
+                    ASSERT(false, string.format('CfgDySetOpenCfgs 配置的表格 %s 中的字段 %s 找不到', cfgName, info.field))
+                end
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgActiveList(cfgs)
+    g_ActiveSign = {}
+    g_OpenConditionRecordTime = {}
+    for _, fCfg in pairs(cfgs) do
+        if fCfg.sTime then
+            fCfg.nStartTime = GCalHelp:GetTimeStampBySplit(fCfg.sTime, fCfg)
+        end
+        if fCfg.eTime then
+            fCfg.nEndTime = GCalHelp:GetTimeStampBySplit(fCfg.eTime, fCfg)
+        end
+        if fCfg.info and fCfg.info.signInId then
+            g_ActiveSign[fCfg.info.signInId] = fCfg.id
+        end
+        if fCfg.time and not table.empty(fCfg.time) then
+            table.insert(g_OpenConditionRecordTime, fCfg.id)
+        end
+    end
+end
+
+function ConfigChecker:CfgSpecialDrops(cfgs)
+    for _, fCfg in pairs(cfgs) do
+        if fCfg.DropsStartTime then
+            fCfg.nStartTime = GCalHelp:GetTimeStampBySplit(fCfg.DropsStartTime, fCfg)
+        end
+        if fCfg.DropsEndTime then
+            fCfg.nEndTime = GCalHelp:GetTimeStampBySplit(fCfg.DropsEndTime, fCfg)
+        end
+    end
+end
+
+function ConfigChecker:CfgThemeLayout(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.mFurniture = {}
+        for _, info in pairs(cfg.infos) do
+            local cfgId = info.cfgID
+            local val = cfg.mFurniture[cfgId] or 0
+            cfg.mFurniture[cfgId] = val + 1
+        end
+    end
+end
+
+function ConfigChecker:CfgCommodity(cfgs)
+    g_CanByShop = {shop = {}, tab = {}}
+    g_CheckTimeShop = {shop = {}, tab = {}}
+
+    -- 记录所有需要支付的商品id
+    g_ShopIsPayIds = {}
+
+    -- 计算操作
+    for id, v in pairs(cfgs) do
+        local isPayCommodity = false
+        for _, costKey in pairs(ShopPriceKey) do
+            if (v[costKey] and v[costKey][1] and v[costKey][1][1] and v[costKey][1][1] == -1) then
+                table.insert(g_ShopIsPayIds, id)
+                if isPayCommodity then
+                    ASSERT(false, string.format('商品id：%s 的jcost和jcost1不允许都为-1直购', v.id))
+                end
+                isPayCommodity = true
+            end
+        end
+
+        v.limitedTimes = {}
+        v.limitedWeek = {}
+        v.nDiscountStart = GCalHelp:GetTimeStampBySplit(v.sDiscountStart, v)
+        v.nDiscountEnd = GCalHelp:GetTimeStampBySplit(v.sDiscountEnd, v)
+
+        v.nBuyStart = GCalHelp:GetTimeStampBySplit(v.sBuyStart, v)
+        v.nBuyEnd = GCalHelp:GetTimeStampBySplit(v.sBuyEnd, v)
+        if v.limitedTimeID then
+            if v.nBuyStart > 0 or v.nBuyEnd > 0 then
+                ASSERT(false, string.format('CfgCommodity 的 v.id = %s，配置了limitedTimeID，不需要配v.sBuyStart和v.sBuyEnd', v.id))
+                break
+            end
+
+            local limitedTimes = SplitString(v.limitedTimeID, ',')
+            if limitedTimes and #limitedTimes > 0 then
+                v.limitedTimes = limitedTimes
+                for _, limitedTime in pairs(limitedTimes) do
+                    local tarLimit = CfgLimitedTime[tonumber(limitedTime)]
+                    if tarLimit then
+                        if tarLimit.times then
+                            local times = SplitString(tarLimit.times, '-')
+                            if times then
+                                local start_time = times[1]
+                                if start_time then
+                                    local start_times = SplitString(start_time, ':')
+                                    if start_times and #start_times == 3 then
+                                        local s_time = {}
+                                        s_time.time = start_time
+                                        s_time.time_h = start_times[1]
+                                        s_time.time_m = start_times[2]
+                                        s_time.time_s = start_times[3]
+                                        tarLimit.s_time = s_time
+                                    end
+                                end
+
+                                local end_time = times[2]
+                                if end_time then
+                                    local end_times = SplitString(end_time, ':')
+                                    if end_times and #end_times == 3 then
+                                        local e_time = {}
+                                        e_time.time = end_time
+                                        e_time.time_h = end_times[1]
+                                        e_time.time_m = end_times[2]
+                                        e_time.time_s = end_times[3]
+                                        tarLimit.e_time = e_time
+                                    end
+                                end
+
+                                if tarLimit.s_time and tarLimit.e_time then
+                                    local startTime = GCalHelp:GetTimestampByTime(tarLimit.s_time.time_h, tarLimit.s_time.time_m, tarLimit.s_time.time_s)
+                                    local endTime = GCalHelp:GetTimestampByTime(tarLimit.e_time.time_h, tarLimit.e_time.time_m, tarLimit.e_time.time_s)
+
+                                    if startTime >= endTime then
+                                        assert(false, string.format('CfgLimitedTime 的 id = %s，开始时间：%s 必须小于结束时间：%s 晚', tarLimit.id, tarLimit.s_time.time, tarLimit.e_time.time))
+                                    end
+                                end
+
+
+                            end
+                        end
+
+
+                        if not v.limitedWeek[tarLimit.week] then
+                            v.limitedWeek[tarLimit.week] = {}
+                        end
+                        v.limitedWeek[tarLimit.week][tarLimit.id] = tarLimit
+                    end
+                end
+
+                local target = {}
+                for week, val in pairs(v.limitedWeek) do
+                    local timeWeek = {}
+                    local limitedWeekTable = {}
+                    for _, time in pairs(val) do
+                        local startTime = GCalHelp:GetTimestampByTime(time.s_time.time_h, time.s_time.time_m, time.s_time.time_s)
+                        table.insert(timeWeek, startTime)
+                        limitedWeekTable[startTime] = time
+                        --LogI("id:%s,week:%s,times:%s", time.id, time.week, time.times)
+                    end
+
+                    table.sort(timeWeek)
+                    target[week] = {}
+                    for _, startTime in pairs(timeWeek) do
+                        local time = limitedWeekTable[startTime]
+                        table.insert(target[week], time)
+                    end
+
+                end
+                v.limitedWeek = target
+            end
+            if v.group then
+                if v.tabID then
+                    if not g_CheckTimeShop.tab[v.group] then
+                        g_CheckTimeShop.tab[v.group] = {}
+                    end
+                    if not g_CheckTimeShop.tab[v.group][v.tabID] then
+                        g_CheckTimeShop.tab[v.group][v.tabID] = {}
+                    end
+                    table.insert(g_CheckTimeShop.tab[v.group][v.tabID], v.id)
+                else
+                    if not g_CheckTimeShop.shop[v.group] then
+                        g_CheckTimeShop.shop[v.group] = {}
+                    end
+                    table.insert(g_CheckTimeShop.shop[v.group], v.id)
+                end
+            end
+        else
+            if v.nBuyEnd == 0 or CURRENT_TIME < v.nBuyEnd then
+                if v.group then
+                    if v.tabID then
+                        if not g_CanByShop.tab[v.group] then
+                            g_CanByShop.tab[v.group] = {}
+                        end
+                        if not g_CanByShop.tab[v.group][v.tabID] then
+                            g_CanByShop.tab[v.group][v.tabID] = {}
+                        end
+                        table.insert(g_CanByShop.tab[v.group][v.tabID], v.id)
+                    else
+                        if not g_CanByShop.shop[v.group] then
+                            g_CanByShop.shop[v.group] = {}
+                        end
+                        table.insert(g_CanByShop.shop[v.group], v.id)
+                    end
+                end
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgShopTab(cfgs)
+    g_CfgShopTabOpenTime = {}
+    for _, v in pairs(cfgs) do
+        if not g_CfgShopTabOpenTime[v.group] then
+            g_CfgShopTabOpenTime[v.group] = {}
+        end
+        local pageStartTime = GCalHelp:GetTimeStampBySplit(v.startTime, v)
+        local pageEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
+        v.nStartTime = pageStartTime
+        v.nEndTime = pageEndTime
+        table.insert(g_CfgShopTabOpenTime[v.group], {id = v.id, open_time = pageStartTime, close_time = pageEndTime})
+    end
+end
+
+function ConfigChecker:CfgShopPage(cfgs)
+    g_CfgShopPageOpenTime = {}
+    g_CfgShopPageStoreVer = {}
+
+    for _, v in pairs(cfgs) do
+        local pageStartTime = GCalHelp:GetTimeStampBySplit(v.openTime, v)
+        local pageEndTime = GCalHelp:GetTimeStampBySplit(v.closeTime, v)
+        v.nStartTime = pageStartTime
+        v.nEndTime = pageEndTime
+        table.insert(
+                g_CfgShopPageOpenTime,
+                {shop_id = v.id, group_id = nil, open_time = pageStartTime, close_time = pageEndTime}
+        )
+
+        v.tabPage = {}
+
+        if v.topGroup then
+            if g_CfgShopTabOpenTime[v.topGroup] then
+                for _, tabOpenTime in pairs(g_CfgShopTabOpenTime[v.topGroup]) do
+                    table.insert(v.tabPage, v.id)
+                    table.insert(
+                            g_CfgShopPageOpenTime,
+                            {
+                                shop_id = v.id,
+                                group_id = tabOpenTime.id,
+                                open_time = tabOpenTime.open_time,
+                                close_time = tabOpenTime.close_time
+                            }
+                    )
+                end
+            end
+        end
+
+        if v.storeVer then
+            g_CfgShopPageStoreVer[v.id] = v.storeVer
+        end
+    end
+end
+
+function ConfigChecker:CfgMail(cfgs)
+    if IS_CLIENT then
+        return
+    end
+
+    for _, v in pairs(cfgs) do
+        v.start_time = GCalHelp:GetTimeStampBySplit(v.start_time, v)
+    end
+end
+
+function ConfigChecker:CfgRoleDormitoryEvents(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    GCalHelp:CalArrWeight(cfgs, 'weight', 'sumWeight')
+
+    g_DormNotStoryEvents = {}
+    for id, cfg in ipairs(cfgs) do
+        if not cfg.story then
+            table.insert(g_DormNotStoryEvents, cfg)
+        end
+    end
+    -- LogTable(cfgs, 'CfgRoleDormitoryEvents:')
+end
+
+function ConfigChecker:CfgLifeBuffer(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    for _, cfg in pairs(cfgs) do
+        cfg.sFieldName = CfgCardPropertyEnum[cfg.nType].sFieldName
+        if cfg.jVal then
+            if cfg.sFieldName == 'add_get_item_num' or cfg.sFieldName == 'add_get_item_pct' then
+                cfg.jValMap = {}
+
+                -- 这两个是根据掉落id来的，所以弄称map
+                for _, arr in ipairs(cfg.jVal) do
+                    cfg.jValMap[arr[1]] = table.copy(arr)
+                end
+            else
+                cfg.jValMap = cfg.jVal
+            end
+        end
+
+        ASSERT(cfg.sFieldName, 'Type id: ' .. cfg.nType .. ' not find sFieldName in CfgCardPropertyEnum')
+    end
+end
+
+function ConfigChecker:CfgBAssault(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    for i, cfg in pairs(cfgs) do
+        GCalHelp:CalArrWeight(cfg.teamInfos, 'weight', 'sumWeight')
+
+        -- 计算好突袭的时间点
+        cfg.openTimeStamps = {}
+        if cfg.openTimes then
+            for _, arr in ipairs(cfg.openTimes) do
+                local begHour = arr[1]
+                local endHour = arr[2]
+                local joinDiff = arr[3]
+
+                local begTime = TimerHelper:CalTimeStamp(nil, nil, nil, begHour, 0, 0)
+                local endTime = TimerHelper:CalTimeStamp(nil, nil, nil, endHour, 0, 0)
+                local joinDiffTime = endTime - joinDiff
+
+                table.insert(cfg.openTimeStamps, {begTime, endTime, joinDiffTime})
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgActiveRankReward(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.ranks = {}
+        local curRank = 1
+        for _, info in ipairs(cfg.infos) do
+            for randIndex = curRank, info.maxRank, 1 do
+                cfg.ranks[randIndex] = info.rewards
+                curRank = randIndex
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgSignReward(cfgs)
+    for id, info in pairs(cfgs) do
+        info.nBegTime = GCalHelp:GetTimeStampBySplit(info.begTime, info)
+        info.nEndTime = GCalHelp:GetTimeStampBySplit(info.endTime, info)
+        info.nSendTime = GCalHelp:GetTimeStampBySplit(info.sendTime, info)
+        info.nSendTimeStop = GCalHelp:GetTimeStampBySplit(info.sendTimeStop, info)
+    end
+end
+
+function ConfigChecker:CfgCardPropertyEnum(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    g_cardFieldToIndex = {}
+
+    for _, cfg in ipairs(cfgs) do
+        g_cardFieldToIndex[cfg.sFieldName] = cfg.id
+    end
+end
+
+function CommSetTaskFirstIdByList(tasks, cfgs)
+    --给所有任务赋值任务链的第一个任务id（从第一个任务递归下去）
+    for _, cfg in pairs(tasks) do
+        --给第一个任务赋值
+        local taskCfg = cfgs[cfg.id]
+        taskCfg.nFirstTaskId = cfg.id
+        --后置任务
+        CommSetTaskFirstId(cfg.aNexTasks, cfgs, cfg.id)
+    end
+end
+
+--给所有任务赋值任务链的第一个任务id（递归设置）
+function CommSetTaskFirstId(nextTasks, cfgs, firstId)
+    if nextTasks and table.size(nextTasks) > 0 then
+        for _, nextTask in pairs(nextTasks) do
+            local nextCfg = cfgs[nextTask.id]
+            nextCfg.nFirstTaskId = firstId
+            CommSetTaskFirstId(nextCfg.aNexTasks, cfgs, firstId)
+        end
+    end
+end
+
+function CommCalCfgTasks(cfgs, t)
+    local firstTasks = {}
+    local stageFirstTasks = {}
+    local stageTasks = {}
+    --LogI("eStageTaskType:%s", t)
+    local resetTypeTasks = {}
+    local returnTypeTasks = {}
+
+    for _, cfg in pairs(cfgs) do
+        if eStageTask[t] then
+            if cfg.nStage then
+                local old = stageTasks[cfg.nStage] or 0
+                stageTasks[cfg.nStage] = old + 1
+            end
+        end
+
+        if t == eTaskType.RegressionBind then
+            local resetType = cfg.type
+            local returnType = cfg.playertype
+            if not returnTypeTasks[returnType] then
+                returnTypeTasks[returnType] = {}
+            end
+            table.insert(returnTypeTasks[returnType], cfg)
+
+            if resetType == PeriodType.Day or resetType == PeriodType.Week then
+                -- 只有每日或每周刷新的任务才插入
+                if not resetTypeTasks[returnType] then
+                    resetTypeTasks[returnType] = {}
+                end
+                if not resetTypeTasks[returnType][resetType] then
+                    resetTypeTasks[returnType][resetType] = {}
+                end
+
+                table.insert(resetTypeTasks[returnType][resetType], cfg)
+            end
+        end
+
+        if not cfg.nPreTaskId or cfg.nPreTaskId == 0 then
+            if eStageTask[t] then
+                --LogTable(cfg, "cfg")
+                if cfg.nStage then
+                    if not stageFirstTasks[cfg.nStage] then
+                        stageFirstTasks[cfg.nStage] = {}
+                    end
+                    table.insert(stageFirstTasks[cfg.nStage], cfg)
+                else
+                    LogW('阶段类型任务%s：%s 缺少nStage的配置', t, cfg.id)
+                end
+            else
+                -- 设置初始任务id
+                table.insert(firstTasks, cfg)
+            end
+        else
+            local preTask = cfgs[cfg.nPreTaskId]
+            if preTask then
+                if not preTask.aNexTasks then
+                    preTask.aNexTasks = {}
+                end
+                -- 设置后置任务id
+                table.insert(preTask.aNexTasks, cfg)
+            end
+        end
+        cfg.nOpenTime = GCalHelp:GetTimeStampBySplit(cfg.sOpenTime, cfg)
+        cfg.nCloseTime = GCalHelp:GetTimeStampBySplit(cfg.sCloseTime, cfg)
+    end
+
+    if eStageTask[t] then
+        --LogTable(stageFirstTasks, "stageFirstTasks")
+        cfgs.stageFirstTasks = stageFirstTasks
+        cfgs.stageTasks = stageTasks
+        for _, v in ipairs(stageFirstTasks) do
+            CommSetTaskFirstIdByList(v, cfgs)
+        end
+    else
+        cfgs.aFirstTasks = firstTasks
+        CommSetTaskFirstIdByList(firstTasks, cfgs)
+    end
+    if t == eTaskType.RegressionBind then
+        cfgs.returnTypeTasks = returnTypeTasks
+        cfgs.resetTypeTasks = resetTypeTasks
+    end
+end
+
+function ConfigChecker:CfgTaskMain(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Main)
+end
+
+function ConfigChecker:CfgTaskSub(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Sub)
+end
+
+function ConfigChecker:CfgTaskDaily(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Daily)
+end
+
+function ConfigChecker:CfgTaskWeekly(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Weekly)
+end
+
+function ConfigChecker:CfgTaskActivity(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Activity)
+end
+
+function ConfigChecker:CfgDupTower(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.DupTower)
+end
+
+function ConfigChecker:CfgTmpDupTower(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.TmpDupTower)
+end
+
+function ConfigChecker:CfgDupTaoFa(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.DupTaoFa)
+end
+
+function ConfigChecker:CfgDupStory(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Story)
+end
+
+function ConfigChecker:CfgDupFight(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.DupFight)
+end
+
+function ConfigChecker:CfgSevenDayTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Seven)
+end
+
+function ConfigChecker:CfgSevenDayFinish(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.SevenStage)
+end
+
+function ConfigChecker:CfgTaskDayExploration(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.DayExplore)
+end
+
+function ConfigChecker:CfgTaskWeekExploration(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.WeekExplore)
+end
+
+function ConfigChecker:CfgTaskExploration(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Explore)
+end
+
+function ConfigChecker:CfgGuideTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Guide)
+end
+
+function ConfigChecker:CfgGuideFinish(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.GuideStage)
+end
+
+function ConfigChecker:CfgNewYearFinish(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.NewYearFinish)
+end
+
+function ConfigChecker:CfgRegressionTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.RegressionTask)
+end
+
+function ConfigChecker:CfgNewYearTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.NewYear)
+end
+
+function ConfigChecker:CfgRegressionFundTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Regression)
+end
+
+function ConfigChecker:CfgRogueTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Rogue)
+end
+
+function ConfigChecker:CfgRegressionBind(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.RegressionBind)
+end
+
+function ConfigChecker:CfgRegressionBindStage(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.RegressionBindStage)
+end
+
+function ConfigChecker:CfgTotalBattleTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.StarPalace)
+end
+
+function ConfigChecker:CfgPetArchive(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Pet)
+end
+
+
+function ConfigChecker:cfgColosseumMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.AbattoirMoon)
+end
+
+function ConfigChecker:cfgColosseumSeasonMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.AbattoirSeason)
+end
+
+function ConfigChecker:CfgExtraExploration(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    for _, cfg in pairs(cfgs) do
+        cfg.nStart = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+    end
+end
+
+function ConfigChecker:CfgTaskFinishVal(cfgs)
+    local sN = 2
+    local eN = 10
+    for _, fCfg in pairs(cfgs) do
+        for n = sN, eN, 1 do
+            local sField = 'aVal' .. n
+            local cfgArr = fCfg[sField]
+            if cfgArr then
+                table.sort(cfgArr)
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgFurniture(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+    for k, cfg in pairs(cfgs) do
+        cfg.nBuyStart = GCalHelp:GetTimeStampBySplit(cfg.sBuyStart, cfg)
+        cfg.nBuyEnd = GCalHelp:GetTimeStampBySplit(cfg.sBuyEnd, cfg)
+    end
+end
+
+-- 计算主题表的舒适度和价格
+function ConfigChecker:CfgFurnitureTheme(cfgs)
+    for k, cfg in pairs(cfgs) do
+        local comfort, price_1, price_2 = 0, 0, 0
+        local id1, id2 = nil, nil
+        local layoutCfg = CfgThemeLayout[cfg.layoutId]
+        if (layoutCfg) then
+            for n, m in ipairs(layoutCfg.infos) do
+                local furCfg = CfgFurniture[m.cfgID]
+                if (not furCfg.special) then
+                    comfort = comfort + furCfg.comfort
+                    price_1 = price_1 + furCfg.price_1[1][2]
+                    price_2 = price_2 + furCfg.price_2[1][2]
+                    if (id1 == nil) then
+                        id1, id2 = furCfg.price_1[1][1], furCfg.price_2[1][1]
+                    end
+                end
+            end
+        end
+
+        cfg.comfort = comfort
+        cfg.price_1 = {{id1, price_1}}
+        cfg.price_2 = {{id2, price_2}}
+        cfg.nBuyStart = GCalHelp:GetTimeStampBySplit(cfg.sStart, cfg)
+        cfg.nBuyEnd = GCalHelp:GetTimeStampBySplit(cfg.sEnd, cfg)
+    end
+end
+
+-- 家具类型表重新排序
+function ConfigChecker:CfgFurnitureEnum(cfgs)
+    table.sort(
+            cfgs,
+            function(a, b)
+                return a.index < b.index
+            end
+    )
+end
+
+function ConfigChecker:CardExpAddRand(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    -- 卡牌经验暴击表特殊处理
+    GCalHelp:CalArrWeight(cfgs, 'weight', 'sumWeight')
+end
+
+function ConfigChecker:CfgEquipExpRand(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    -- 装备经验暴击表特殊处理
+    GCalHelp:CalArrWeight(cfgs, 'nWeight', 'sumWeight')
+end
+
+function ConfigChecker:CfgDupDropCntAdd(cfgs)
+    -- 累计总共添加的次数
+    g_AddDupMultiCnt = 0
+    g_SpecialMultiId = nil
+    g_ReCalAddDupMultiTime = nil
+
+    for _, cfg in pairs(cfgs) do
+        cfg.nStart = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+
+        local isInRange = GLogicCheck:IsInRange(cfg.nStart, cfg.nEnd, CURRENT_TIME, true)
+        if isInRange then
+            local isUse = false
+            if cfg.dropAddCnt and not cfg.regressionType then
+                isUse = true
+                g_AddDupMultiCnt = g_AddDupMultiCnt + cfg.dropAddCnt
+            elseif cfg.specialMultiId and not g_SpecialMultiId then
+                isUse = true
+                g_SpecialMultiId = cfg.specialMultiId
+            end
+
+            if isUse and cfg.nEnd ~= 0 then
+                -- 开启的判断结束时间，保存最小的需要计算时间
+                if not g_ReCalAddDupMultiTime or cfg.nEnd < g_ReCalAddDupMultiTime then
+                    g_ReCalAddDupMultiTime = cfg.nEnd
+                end
+            end
+        else
+            -- 只需要查看还没开启的
+            if cfg.nStart and cfg.nStart > CURRENT_TIME then
+                if not g_ReCalAddDupMultiTime or cfg.nStart < g_ReCalAddDupMultiTime then
+                    g_ReCalAddDupMultiTime = cfg.nStart
+                end
+            end
+        end
+    end
+
+    -- LogTrace("ConfigChecker:CfgDupDropCntAdd()")
+    LogDebug(
+            'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s',
+            g_AddDupMultiCnt,
+            g_ReCalAddDupMultiTime
+    )
+end
+
+function ConfigChecker:CfgDupConsumeReduce(cfgs)
+    -- 累计减少体力消耗百分比
+    g_DupConsumeReduce = 0
+    g_ReCalDupConRedTime = nil
+
+    for _, cfg in pairs(cfgs) do
+        cfg.nStart = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+
+        local isInRange = GLogicCheck:IsInRange(cfg.nStart, cfg.nEnd, CURRENT_TIME, true)
+        if isInRange and not cfg.regressionType then
+            g_DupConsumeReduce = g_DupConsumeReduce + cfg.consumeReduce
+            if cfg.nEnd ~= 0 then
+                -- 开启的判断结束时间，保存最小的需要计算时间
+                if not g_ReCalDupConRedTime or cfg.nEnd < g_ReCalDupConRedTime then
+                    g_ReCalDupConRedTime = cfg.nEnd
+                end
+            end
+        else
+            -- 只需要查看还没开启的
+            if cfg.nStart > CURRENT_TIME then
+                if not g_ReCalDupConRedTime or cfg.nStart < g_ReCalDupConRedTime then
+                    g_ReCalDupConRedTime = cfg.nStart
+                end
+            end
+        end
+    end
+
+    LogDebug(
+            'ConfigChecker:CfgDupConsumeReduce() g_DupConsumeReduce:%s, g_ReCalDupConRedTime:%s',
+            g_DupConsumeReduce,
+            g_ReCalDupConRedTime
+    )
+end
+
+function ConfigChecker:global_setting(cfgs)
+    LogDebugEx('load global_setting:')
+    for k, v in pairs(cfgs) do
+        if v.key ~= '' then
+            LogDebugEx('load global_setting:' .. v.key)
+            local val = ConfigParser:FormatValue(v.value, v.type)
+
+            -- print(IS_CLIENT, v.user, v.user == 1)
+            if IS_CLIENT and (v.user == 1 or not v.user) then
+                _G[v.key] = val
+            elseif IS_SERVER and (v.user == 2 or not v.user) then
+                _G[v.key] = val
+                Loader:AddReplaceFile(v.key)
+            end
+        end
+    end
+    -- LogDebug("global_setting: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    table.sort(g_BuildTradeFlushTimes)
+    -- LogTable(g_BuildTradeFlushTimes, "g_BuildTradeFlushTimes:")
+
+    table.sort(g_WeekHoliday)
+    -- LogTable(g_WeekHoliday, "g_WeekHoliday:")
+
+    table.sort(g_ArmyFightListScoreRange)
+
+end
+
+function ConfigChecker:CfgAchieve(cfgs)
+    local achievementFinishIds = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local aFinishIds = cfg.aFinishIds
+        if not aFinishIds then
+            LogError('CfgAchieve id:%s 的aFinishIds不允许为空', cfgid)
+        end
+
+        local aFinishId = aFinishIds[1]
+        local finishCount = aFinishIds[2]
+        if not aFinishId then
+            LogError('CfgAchieve id:%s 的条件Id不允许为空', cfgid)
+        end
+        if not finishCount then
+            LogError('CfgAchieve id:%s 的完成次数不允许为空', cfgid)
+        end
+
+        if not achievementFinishIds[aFinishId] then
+            achievementFinishIds[aFinishId] = {}
+        end
+        cfg.aFinishId = aFinishId
+        cfg.finishCount = finishCount
+        table.insert(achievementFinishIds[aFinishId], cfgid)
+    end
+    cfgs.achievementFinishIds = achievementFinishIds
+end
+
+function ConfigChecker:CfgAchieveFinishVal(cfgs)
+    local achieveGroup = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local nType = cfg.nType
+        if not nType then
+            LogError('CfgAchieveFinishVal id:%s 的nType不允许为空', cfgid)
+        end
+        if cfg.aVal2 then
+            table.sort(cfg.aVal2)
+        end
+
+        local group = eAchieveFinishType.GetTypeById(nType)
+
+        if not achieveGroup[group] then
+            achieveGroup[group] = {}
+        end
+        table.insert(achieveGroup[group], cfgid)
+    end
+    cfgs.achieveGroup = achieveGroup
+end
+
+function ConfigChecker:CfgBadge(cfgs)
+    local badgedFinishIds = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local aFinishIds = cfg.aFinishIds
+        if not aFinishIds then
+            LogError('CfgBadge id:%s 的aFinishIds不允许为空', cfgid)
+        end
+
+        local aFinishId = aFinishIds[1]
+        local finishCount = aFinishIds[2]
+        if not aFinishId then
+            LogError('CfgBadge id:%s 的条件Id不允许为空', cfgid)
+        end
+        if not finishCount then
+            LogError('CfgBadge id:%s 的完成次数不允许为空', cfgid)
+        end
+
+        if not badgedFinishIds[aFinishId] then
+            badgedFinishIds[aFinishId] = {}
+        end
+        cfg.aFinishId = aFinishId
+        cfg.finishCount = finishCount
+        table.insert(badgedFinishIds[aFinishId], cfgid)
+    end
+    cfgs.badgedFinishIds = badgedFinishIds
+end
+
+function ConfigChecker:CfgBadgeFinishVal(cfgs)
+    local badgedGroup = {}
+    for cfgid, cfg in pairs(cfgs) do
+        local nType = cfg.nType
+        if not nType then
+            LogError('CfgBadgeFinishVal id:%s 的nType不允许为空', cfgid)
+        end
+        if cfg.aVal2 then
+            table.sort(cfg.aVal2)
+        end
+        local group = eBadgedFinishType.GetTypeById(nType)
+
+        --LogI("group:%s", group)
+
+        if not badgedGroup[group] then
+            badgedGroup[group] = {}
+        end
+        table.insert(badgedGroup[group], cfgid)
+    end
+    cfgs.badgedGroup = badgedGroup
+end
+
+function ConfigChecker:CfgReturningActivity(cfgs)
+    for returnType, cfg in pairs(cfgs) do
+        for idx, ccc in pairs(cfg.infos) do
+            if ccc.activityId then
+                if ccc.type == RegressionActiveType.DropAdd then
+                    ASSERT(
+                            CfgDupDropCntAdd[ccc.activityId],
+                            string.format(
+                                    'CfgReturningActivity id:%s, sub index:%s 填写的活动关联ID(%s)在掉落次数加成表CfgDupDropCntAdd里找不到',
+                                    returnType,
+                                    idx,
+                                    ccc.activityId
+                            )
+                    )
+                    ccc.relateCfg = CfgDupDropCntAdd[ccc.activityId]
+                elseif ccc.type == RegressionActiveType.ConsumeReduce then
+                    ASSERT(
+                            CfgDupConsumeReduce[ccc.activityId],
+                            string.format(
+                                    'CfgReturningActivity id:%s, sub index:%s 填写的活动关联ID(%s)在体力消耗减少表CfgDupConsumeReduce里找不到',
+                                    returnType,
+                                    idx,
+                                    ccc.activityId
+                            )
+                    )
+                    ccc.relateCfg = CfgDupConsumeReduce[ccc.activityId]
+                elseif ccc.type == RegressionActiveType.Banner then
+                    -- 回归卡池
+                    local cardPoolCfg = CfgCardPool[ccc.activityId]
+                    if not cardPoolCfg or cardPoolCfg.nType ~= CardPoolType.Regression then
+                        ASSERT(
+                                false,
+                                string.format(
+                                        'CfgReturningActivity id:%s, sub index:%s 填写的对应的卡池id：%s找不到配置或者卡池类型不是%s[CardPoolType.Regression].',
+                                        returnType,
+                                        idx,
+                                        ccc.activityId,
+                                        CardPoolType.Regression
+                                )
+                        )
+                    end
+                end
+            end
+
+            ccc.nStartTime = GCalHelp:GetTimeStampBySplit(ccc.starttime, ccc)
+            ccc.nEndTime = GCalHelp:GetTimeStampBySplit(ccc.endtime, ccc)
+        end
+    end
+end
+
+function ConfigChecker:CfgItemPoolReward(cfgs)
+    for id, cfg in pairs(cfgs) do
+        cfg.roundPool = {}
+        local roundPool = cfg.roundPool
+        for idx, v in pairs(cfg.pool) do
+            for _, round in ipairs(v.rounds) do
+                if not roundPool[round] then
+                    roundPool[round] = {}
+                end
+                roundPool[round][idx] = v
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgItemPool(cfgs)
+    for id, cfg in pairs(cfgs) do
+        if cfg.Proptype == 1 then
+            ASSERT(cfg.starttime, string.format('道具池活动表 CfgItemPool, id %s 没有配置 starttime', id))
+            ASSERT(cfg.endtime, string.format('道具池活动表 CfgItemPool, id:%s 没有配置 endTime', id))
+
+            cfg.nStartTime = GCalHelp:GetTimeStampBySplit(cfg.starttime, cfg)
+            cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endtime, cfg)
+        end
+
+        if cfg.costtype == 2 then
+            -- 每轮消耗都不一致，需要判断消耗长度与实际道具组数量是否一致
+            local timesSum = #cfg.cost
+            
+            local poolRewardCfg = CfgItemPoolReward[cfg.group]
+            assert(poolRewardCfg, string.format("道具池活动表 id:%s,对应的group:%s，在道具组奖励表里找不到对应的ID", id, cfg.group))
+
+            local rewardNum = 0
+            for _, v in ipairs(poolRewardCfg.pool) do
+                assert(v.iskeyreward, string.format("道具池奖励表id:%s，此类型所有的奖励需是关键奖励", cfg.group))
+                rewardNum = rewardNum + v.rewardnum
+            end
+
+            assert(timesSum == rewardNum, string.format("道具池id:%s抽取消耗长度(%s)与道具组奖励表id:%s长度(%s)不符", id, timesSum, cfg.group, rewardNum))
+
+        end
+    end
+end
+
+--- 绑定活动
+function ConfigChecker:CfgBindActive(cfgs)
+    g_curBindActiveId = nil
+    g_curBindActiveCloseTime = nil
+    g_nextBindActiveOpenTime = nil
+
+    for id, cfg in pairs(cfgs) do
+        LogTable(cfg, 'ConfigChecker:CfgBindActive cfg')
+
+        table.sort(cfg.bindTypes)
+
+        cfg.nStartTime = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        local isInRange = GLogicCheck:IsInRange(cfg.nStartTime, cfg.nEndTime, CURRENT_TIME, true)
+        if isInRange and not g_curBindActiveId then
+            g_curBindActiveId = cfg.id
+            g_curBindActiveCloseTime = cfg.nEndTime
+        else
+            if cfg.nStartTime > CURRENT_TIME then
+                if g_nextBindActiveOpenTime then
+                    if cfg.nStartTime < g_nextBindActiveOpenTime then
+                        g_nextBindActiveOpenTime = cfg.nStartTime
+                    end
+                else
+                    g_nextBindActiveOpenTime = cfg.nStartTime
+                end
+            end
+        end
+
+        for _, info in pairs(cfg.infos) do
+            -- LogTable(info, 'ConfigChecker:CfgBindActive')
+            info.teskGetLimit = {}
+            for _, limit in ipairs(info.taskRewardLimit) do
+                local resetType, id, num = limit[1], limit[2], limit[3]
+                if resetType then
+                    local limitInfo = GCalHelp:GetTb(info.teskGetLimit, resetType)
+                    GCalHelp:Add(limitInfo, id, num)
+                end
+            end
+        end
+    end
+end
+
+function ConfigChecker:DungeonGroup(cfgs)
+    g_CalGroupStarIxs = {}
+    for id, cfg in pairs(cfgs) do
+        if cfg.group == 11001 then
+            -- 乱序演习词条数量检查
+            local buffnum = cfg.buffNum
+            if buffnum ~= #cfg.Num then
+                ASSERT(false, string.format('乱序演习关卡组表，词条池数量buffNum(%s)与选择数量Num长度(%s)对不上 ', buffnum, #cfg.Num))
+            end
+
+            for i = 1, buffnum do
+                local buffPond = cfg['buffPond' .. i]
+                if not buffPond then
+                    ASSERT(false, string.format('乱序演习关卡组表，词条池数量buffNum为(%s)，但没有配置第%s词条池 ', buffnum, i))
+                end
+
+                if cfg.Num[i] > #buffPond then
+                    ASSERT(
+                            false,
+                            string.format('乱序演习关卡组表，第%s词条池词条数量（%s）不足以随机词条，至少需要的词条数量：%s ', i, #buffPond, cfg.Num[i])
+                    )
+                end
+            end
+        end
+
+        if cfg.starIx then
+            local arr = GCalHelp:GetTb(g_CalGroupStarIxs, cfg.starIx, {})
+            table.insert(arr, id)
+        end
+    end
+end
+
+function ConfigChecker:CfgTotalBattle(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if cfg.infos then
+            for _, v in pairs(cfg.infos) do
+                if v.begTime then
+                    v.nBegTime = GCalHelp:GetTimeStampBySplit(v.begTime, v)
+                end
+                if v.endTime then
+                    v.nEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
+                end
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgTrials(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if cfg.infos then
+            for _, v in pairs(cfg.infos) do
+                if v.begTime then
+                    v.nBegTime = GCalHelp:GetTimeStampBySplit(v.begTime, v)
+                end
+                if v.endTime then
+                    v.nEndTime = GCalHelp:GetTimeStampBySplit(v.endTime, v)
+                end
+            end
+        end
+    end
+end
+
+function ConfigChecker:CfgRogueBuff(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if not cfg.skillId and not cfg.buffId then
+            assert(false, string.format("词条表，CfgRogueBuff id:%s 没有配对应的技能或BUFF", cfg.id))
+        end
+
+        if cfg.lifeType == 2 then
+            assert(cfg.lifeValue, string.format("词条表，CfgRogueBuff id:%s 没有配对应的词条生命参数", cfg.id))
+        end
+
+        if cfg.target == 3 or cfg.target == 4 then
+            -- 我方随机或敌方随机，需要配对应的随机个数
+            assert(cfg.targetValue, string.format("词条表，CfgRogueBuff id:%s 没有配对应的对象参数", cfg.id))
+        end
+
+        if cfg.preConditions then
+            assert(cfg.preConditionsValue, string.format("词条表，CfgRogueBuff id:%s 没有配对应的前置条件参数", cfg.id))
+        end
+
+        if not cfg.probability then
+            assert(false, string.format("词条表，CfgRogueBuff id:%s 没有配出现概率", cfg.id))
+        end
+
+    end
+end
+function ConfigChecker:cfgColosseum(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+    for _, cfg in pairs(cfgs) do
+        cfg.nBegTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        cfg.nRewardTime = GCalHelp:GetTimeStampBySplit(cfg.rewardTime, cfg)
+
+
+        cfg.randRefreshList = cfg.randRefreshList or {}
+        for k,v in ipairs(cfg.randomRefresh or {}) do
+            local lastRefresh = cfg.randRefreshList[k - 1] or cfg.nBegTime
+            local refreshTime = lastRefresh + v * TimerHelper.cDaySeconds
+            table.insert(cfg.randRefreshList,refreshTime)
+        end
+        table.insert(cfg.randRefreshList,cfg.nEndTime)
+        cfg.selectRefreshList = cfg.selectRefreshList or {}
+        for k,v in ipairs(cfg.optionalRefresh or {}) do
+            local lastRefresh = cfg.selectRefreshList[k - 1] or cfg.nBegTime 
+            local refreshTime = lastRefresh + v * TimerHelper.cDaySeconds
+            table.insert(cfg.selectRefreshList,refreshTime)
+        end
+        table.insert(cfg.selectRefreshList,cfg.nEndTime)
+    end
+end
+
+function ConfigChecker:cfgColosseumEquip(cfgs)
+    for _, cfg in pairs(cfgs) do
+        GCalHelp:CalArrWeight(cfg.infos, 'weight', 'sumWeight')
+        local sumWeight = 0
+        for _, info in pairs(cfg.infos) do
+            local weight = info.weight
+            info.sumWeight = weight + sumWeight
+            sumWeight = sumWeight + info.weight
+        end
+    end
+end
+function ConfigChecker:cfgGlobalBoss(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.nBeginTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.nEndTime, cfg)
+        assert(cfg.nBeginTime < cfg.nEndTime, "boss开启时间范围有误")
     end
 end

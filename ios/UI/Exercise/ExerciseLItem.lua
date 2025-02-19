@@ -12,8 +12,12 @@ function Refresh(_data)
     data = _data
     if (data) then
         -- role
-        if (data.icon_id) then
-            local cfg = Cfgs.character:GetByID(data.icon_id)
+        local icon_id = data.icon_id
+        if(data.role_panel_id~=nil and data.role_panel_id~=0) then 
+            icon_id = data.role_panel_id
+        end 
+        if (icon_id) then
+            local cfg = Cfgs.character:GetByID(icon_id)
             SetIcon(cfg.Fight_head)
         end
         -- attack

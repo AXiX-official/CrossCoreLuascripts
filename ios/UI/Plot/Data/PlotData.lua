@@ -108,9 +108,18 @@ end
 function this:GetImgDelay()
 	local delay = 0;
 	if self.cfg.imgContent ~= nil and self.cfg.imgDelay then
-		delay = self.cfg.imgDelay or 2;
+		delay = self.cfg.imgDelay[1] or 2;
 	end
 	return delay;
+end
+
+--返回Cg动画时间
+function this:GetImgActionTime()
+	local time = 0
+	if self.cfg.imgContent ~= nil and self.cfg.imgDelay then
+		time = self.cfg.imgDelay[2] or 0.25;
+	end
+	return time
 end
 
 --返回
@@ -460,6 +469,30 @@ end
 --头像渐变
 function this:IsIconGradient()
 	return self.cfg and self.cfg.useGradient == 1
+end
+
+------------------------------------------上层图片-------------------------------------------
+function this:GetTopImgInfo()
+	local info = nil
+	if self.cfg and self.cfg.imgTop then
+		local _info = nil
+		if #self.cfg.imgTop > 1 and self.cfg.imgType then
+			_info = self.cfg.imgTop[PlayerClient:GetSex()]
+		else
+			_info = self.cfg.imgTop[1]
+		end
+
+		if _info and _info.name and _info.name ~= "" then
+			info = _info
+			local pointIdx = string.find(_info.name, "[.]");
+			local folderName = _info.name;
+			if pointIdx then
+				folderName = string.sub(_info.name, 1, pointIdx - 1);
+			end
+			info.name = folderName
+		end
+	end
+	return info
 end
 
 return this; 

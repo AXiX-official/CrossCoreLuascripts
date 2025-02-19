@@ -48,6 +48,7 @@ function Refresh(_data,_elseData)
     end
     CSAPI.SetGOActive(tIcon2,false);
     CSAPI.SetGOActive(tBorder,false);
+    CSAPI.SetAnchor(tIcon2,0,0);
     this.data=_data;
     this.elseData=_elseData;
     SetName(this.data:GetName());
@@ -62,7 +63,11 @@ function Refresh(_data,_elseData)
     -- end
     local good=this.data:GetCommodityList()[1];
     local costs={};
-    costs=this.data:GetRealPrice();
+    if this.data:HasOtherPrice(ShopPriceKey.jCosts1) then
+        costs={this.data:GetRealPrice()[1],this.data:GetRealPrice(ShopPriceKey.jCosts1)[1]};
+    else
+        costs=this.data:GetRealPrice();
+    end
     local getList=this.data:GetCommodityList();
     local type=1;
     local num=getList and getList[1].num or 0;
@@ -92,25 +97,23 @@ function Refresh(_data,_elseData)
                     if cfg.price_2 then
                         table.insert(costs,{id = cfg.price_2[1][1],num = cfg.price_2[1][2]});
                     end
+                    if cfg.inteActionId~=nil then
+                        CSAPI.SetGOActive(tIcon2,true);
+                        CSAPI.SetAnchor(tIcon2,-132,-85);
+                    end
                 else--主题
                     local themeData = DormMgr:GetThemesByID(ThemeType.Sys, dyVal1)
                     local cfg2=Cfgs.CfgFurnitureTheme:GetByID(dyVal1);
                     num=cfg2.comfort;
-                    isMax=themeData~=nil;
                     --获取主题价格
                     local price1,price2=DormMgr:GetThemePrices(dyVal1);
+                    isMax=themeData~=nil;
                     if cfg.price_1 then
                         table.insert(costs,{id = cfg.price_1[1][1],num = price1});
                     end
                     if cfg.price_2 then
                         table.insert(costs,{id = cfg.price_2[1][1],num = price2});
                     end
-                    -- if cfg.price_1 then
-                    --     table.insert(costs,{id = cfg.price_1[1][1],num = cfg.price_1[1][2]});
-                    -- end
-                    -- if cfg.price_2 then
-                    --     table.insert(costs,{id = cfg.price_2[1][1],num = cfg.price_2[1][2]});
-                    -- end
                 end
             end
             if isOver==false and isMax==true then --达到持有上限
@@ -118,10 +121,14 @@ function Refresh(_data,_elseData)
                 overType=2;
             end
         end
+        SetDayObj(good.data:GetIconDayTips());
+    else
+        SetDayObj();
     end
     SetGoodsNum(num,type);
     -- SetTIcon(this.data:GetTIcon());
-    SetDiscount(this.data:GetNowDiscount())
+    -- SetDiscount(this.data:GetNowDiscount())
+    SetDiscount(this.data:GetNowDiscountTips())
     SetQuality(this.data:GetQuality())
     SetCost(costs,isOver);
     SetAlpha(isOver and 0.4 or 1);
@@ -129,6 +136,12 @@ function Refresh(_data,_elseData)
     local isLock=not this.data:GetBuyLimit();
     SetLockObj(isLock,this.data:GetBuyLimitDesc());
     SetRedInfo();
+end
+
+--设置有效天数
+function SetDayObj(txt)
+	CSAPI.SetGOActive(dayObj,txt~=nil)
+	CSAPI.SetText(txt_day,txt);
 end
 
 -- function SetTIcon(iconName)
@@ -141,9 +154,11 @@ function SetName(str)
 end
 
 function SetDiscount(discount)
-    local dis=math.floor(discount*10+0.5);
-    CSAPI.SetGOActive(discountObj,discount~=1);
-    CSAPI.SetText(txt_discount,string.format(LanguageMgr:GetByID(18074),dis));
+    -- local dis=math.floor(discount*10+0.5);
+    CSAPI.SetGOActive(discountObj,discount~=nil);
+    if discount then
+        CSAPI.SetText(txt_discount,discount);
+    end
 end
 
 function SetLimit(str,str2)
@@ -211,8 +226,20 @@ function SetCost(costs,isOver)
             CSAPI.SetGOActive(priceObj,false);
             CSAPI.SetGOActive(freeObj,false);
             CSAPI.SetGOActive(dPriceObj,true);
-            ShopCommFunc.SetPriceIcon(dMIcon1,costs[1]);
-            ShopCommFunc.SetPriceIcon(dMIcon2,costs[2]);
+            CSAPI.SetGOActive(dMNode,costs[1].id~=-1 )
+            CSAPI.SetGOActive(pnIcon1,costs[1].id==-1 )
+            if costs[1].id~=-1 then
+                ShopCommFunc.SetPriceIcon(dMIcon1,costs[1]);
+            else
+                CSAPI.SetText(pnIcon1,LanguageMgr:GetByID(18013));
+            end
+            CSAPI.SetGOActive(dMNode2,costs[2].id~=-1 )
+            CSAPI.SetGOActive(pnIcon2,costs[2].id==-1 )
+            if costs[2].id~=-1 then
+                ShopCommFunc.SetPriceIcon(dMIcon2,costs[2]);
+            else
+                CSAPI.SetText(pnIcon2,LanguageMgr:GetByID(18013));
+            end
             CSAPI.SetText(txt_dPrice1,tostring(costs[1].num));
             CSAPI.SetText(txt_dPrice2,tostring(costs[2].num));
         end

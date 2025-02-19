@@ -8,6 +8,11 @@ function this.New()
     return ins
 end
 
+--[[
+CardSkinType = {}
+CardSkinType.Break = 1 -- 突破皮肤
+CardSkinType.Skin = 2 -- 额外
+]]
 -- ==============================--
 -- desc:
 -- time:2019-08-19 11:34:07
@@ -15,20 +20,23 @@ end
 -- @_skinid:皮肤id
 -- @_minBreakLv:最低可用的突破等级
 -- @_type:皮肤类型
--- @_typeNum:0:正常的皮肤， 1：变身的皮肤，2：合体的皮肤
+-- @_typeNum:         
 -- @return
 -- ==============================--
-function this:Set(_cardId, _skinid, _minBreakLv, _type, _typeNum)
-    self.cardId = _cardId
-    self.skinid = _skinid
+function this:Set(_roleID, _cardID, _skinID, _minBreakLv, _type, _isJieJin, _jiejinCondition)
+    self.roleID = _roleID
+    self.cardID = _cardID
+    self.skinID = _skinID
     self.minBreakLv = _minBreakLv or 2
     self.type = _type or CardSkinType.Break
-    self.typeNum = _typeNum
+    -- self.typeNum = _typeNum
+    self.isJieJin = _isJieJin
+    self.jiejinCondition = _jiejinCondition
     self:SetIndex()
 end
 
 function this:GetSkinID()
-    return self.skinid
+    return self.skinID
 end
 
 function this:SetIndex()
@@ -44,14 +52,23 @@ end
 -- 某卡牌是否可以使用这个皮肤
 -- function this:CheckCanUse(cardData)
 function this:CheckCanUse()
+    if (self.isJieJin and self.jiejinCondition ~= nil and not MenuMgr:CheckConditionIsOK({self.jiejinCondition})) then
+        return false
+    end
     if (self.type == CardSkinType.Break) then
-        local cardData = RoleMgr:GetData(self.cardId)
-        local lv = cardData and cardData:GetBreakLevel() or 1
-        if (self.minBreakLv > 1 and lv < self.minBreakLv) then
-            return false
-        else
+        -- local cardData = RoleMgr:GetData(self.cardID)
+        -- local lv = cardData and cardData:GetBreakLevel() or 1
+        -- if (self.minBreakLv > 1 and lv < self.minBreakLv) then
+        --     return false
+        -- else
+        --     return true
+        -- end
+        local cRoleData = CRoleMgr:GetData(self.roleID)
+        local lv = cRoleData and cRoleData:GetBreakLevel() or 1
+        if (lv >= self.minBreakLv) then
             return true
         end
+        return false
     else
         return self:GetCanUse()
     end
@@ -60,7 +77,7 @@ end
 -- 皮肤是否已解锁或获得
 function this:CheckCanUseByMaxLV()
     if (self.type == CardSkinType.Break) then
-        local cRoleData = CRoleMgr:GetData(self:GetCfg().role_id)
+        local cRoleData = CRoleMgr:GetData(self.roleID)
         local lv = cRoleData and cRoleData:GetBreakLevel() or 1
         if (lv >= self.minBreakLv) then
             return true
@@ -103,7 +120,7 @@ function this:GetDesc()
 end
 
 function this:GetCardId()
-    return self.cardId or nil
+    return self.cardID or nil
 end
 
 function this:SetRoleId(_id)
@@ -114,9 +131,9 @@ function this:GetRoleId()
     return self.roleId
 end
 
-function this:GetTypeNum()
-    return self.typeNum
-end
+-- function this:GetTypeNum()
+--     return self.typeNum
+-- end
 
 function this:CheckIsNew()
     if (not self:CheckCanUse()) then
@@ -152,7 +169,7 @@ function this:IsInSell()
         -- local sBuyEnd = cfg.sBuyEnd and TimeUtil:GetTimeStampBySplit(cfg.sBuyEnd) or nil
         local itemData = ShopMgr:GetFixedCommodity(shopId)
         if (itemData and itemData:GetNowTimeCanBuy() and itemData:IsShow()) then
-            return true 
+            return true
         end
     end
     return false
@@ -186,6 +203,38 @@ end
 
 function this:GetTxt()
     return self:GetCfg().get_txt
+end
+
+-- 
+function this:IsThisCard(cardID)
+    if (self.cardID == cardID) then
+        return true
+    end
+end
+
+function this:CheckIsJieJin()
+    return self.isJieJin
+end
+
+-- 是否在看板和头像 隐藏
+function this:IsHide()
+    return self:GetCfg().isHide
+end
+
+function this:GetL2dName()
+    local cfgModel = Cfgs.character:GetByID(self:GetSkinID())
+    return cfgModel.l2dName
+end
+
+-- 突破皮肤能否展示l2d (g_FHXOpenRole为true，突破模型要先突破，商店皮肤不用管)
+function this:CanShowL2d()
+    if (self:CheckIsBreakType()) then
+        if (self:GetL2dName() ~= nil and (not g_FHXOpenRole or self:CheckCanUse())) then
+            return true
+        end
+        return false
+    end
+    return self:GetL2dName() ~= nil
 end
 
 return this

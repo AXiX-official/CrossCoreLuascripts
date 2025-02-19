@@ -19,15 +19,28 @@ local animMask = nil
 local btnFade1 = nil
 local btnFade2 = nil
 local canvasGroup = nil
-
+---国内超时1.5秒， 国外2.5秒
+local TimeOutCount=1500;
+--正则
+local regex = nil
+local regex2 = nil --特殊控制字符
 function Awake()
+	if CSAPI.IsADV() then
+		TimeOutCount=2500;
+	else
+		TimeOutCount=1500;
+	end
 	canvasGroup = ComUtil.GetCom(node,"CanvasGroup")
 
 	inpName = ComUtil.GetCom(inp_name, "InputField");
 	CSAPI.AddInputFieldChange(inp_name, InputChange)
-	
-	tab = ComUtil.GetCom(sexTab, "CTab")
-	tab:AddSelChangedCallBack(OnTabChanged)
+	if CSAPI.RegionalCode() == 3 or CSAPI.RegionalCode() == 5 then
+		CSAPI.SetGOActive(sexTab,false)
+		CSAPI.SetGOActive(sexObj,false)
+	else
+		tab = ComUtil.GetCom(sexTab, "CTab")
+		tab:AddSelChangedCallBack(OnTabChanged)	
+	end
 	--sex
 	for k, v in ipairs(g_SexInitCardIds) do --读取男女主立绘
 		local img = k == 1 and mRoleImg or wRoleImg
@@ -122,13 +135,33 @@ end
 function OnClickOK()
 	isBirthday = false
 	playerName = inpName.text
+	if CSAPI.IsADV() then
+		local Len1 = GLogicCheck:GetStringLen(playerName)
+		playerName = playerName:gsub("^%s*(.-)%s*$", "%1")
+		local Len2 = GLogicCheck:GetStringLen(playerName)
+		if Len1 ~= Len2 then
+			local dialogData = {}
+			dialogData.content = LanguageMgr:GetTips(9011)
+			dialogData.okCallBack = OnNameCheck
+			CSAPI.OpenView("Dialog",dialogData)
+		else
+			OnNameCheck()
+		end
+	else
+		OnNameCheck()
+	end
+end
+
+function OnNameCheck()
 	if playerName == nil or playerName == "" then
 		Tips.ShowTips(LanguageMgr:GetByID(16005));
 		return
 	end
-	if IsEmoji(playerName) then
-		Tips.ShowTips(LanguageMgr:GetByID(16064));
-		return
+	if CSAPI.IsADV()==false then
+		if IsEmoji(playerName) then
+			Tips.ShowTips(LanguageMgr:GetByID(16064));
+			return
+		end
 	end
 	if currSex == nil then
 		Tips.ShowTips(LanguageMgr:GetByID(16007));
@@ -139,11 +172,16 @@ function OnClickOK()
 		return
 	end
 	local b = MsgParser:CheckContain(playerName)
+
+	-- if not b then
+	-- 	b = StringUtil:CheckPassStr(playerName)
+	-- end
+	
 	if(b) then
 		LanguageMgr:ShowTips(9003)
 		return
 	end
-	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_check",time=1500,
+	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_check",time=TimeOutCount,
 	timeOutCallBack=function ()
 		-- Tips.ShowTips("检查姓名超时,请点击重试！")
 		LanguageMgr:ShowTips(6016)
@@ -151,10 +189,12 @@ function OnClickOK()
 
 	PlayerProto:PlrNameCheckUse({name = playerName},function(proto)
 		EventMgr.Dispatch(EventType.Net_Msg_Getted,"name_check");
-		if proto and not proto.isUse then
-			SetConfirm(true);
-		else
-			Tips.ShowTips(LanguageMgr:GetByID(16076));
+		if proto and proto.isUse ~= nil then
+			if proto.isUse == false then
+				SetConfirm(true);
+			else
+				Tips.ShowTips(LanguageMgr:GetByID(16076));
+			end
 		end
 	end)
 	BuryingPointMgr:BuryingPoint("after_login",20031)
@@ -239,8 +279,8 @@ function IsEmoji(_str)
 end
 
 function InputChange(_str)
-	local str = StringUtil:FilterChar(_str)
-	str = StringUtil:SetStringByLen(str, 7)
+	_str = StringUtil:FilterChar(_str)
+	local str = StringUtil:SetStringByLen(_str, 7,"")
 	inpName.text = str
 end
 
@@ -306,11 +346,16 @@ function OnClickCancel()
 end
 
 function OnClickConfirm()
-	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_set",time=1500,
+	EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="name_set",time=TimeOutCount,
 	timeOutCallBack=function ()
 		LanguageMgr:ShowTips(1014)
 		-- Tips.ShowTips("网络连接超时，即将返回重新登录")
-		BackToLogin()
+		SceneMgr:SetLoginLoaded(false);
+		if CSAPI.IsADV() then
+			ADVBackToLogin()
+		else
+			BackToLogin()
+		end
 	end});
 
 	PlayerProto:SetPlrName({name = playerName, index = currSex, month = currMonth, day = currDay,
@@ -320,10 +365,16 @@ function OnClickConfirm()
 		EventMgr.Dispatch(EventType.Player_EditName);
 		EventMgr.Dispatch(EventType.Login_Create_Role, {name = playerName, uid = PlayerClient:GetUid()}, true)
 		EventMgr.Dispatch(EventType.Net_Msg_Getted,"name_set");
-		
-		--数数接入		
-		BuryingPointMgr:TrackEvents("register", {gender = currSex == 1 and "男" or "女",createTime = TimeUtil:GetTime() .. ""})
-
+		if CSAPI.IsADV() or CSAPI.IsDomestic() then
+			ShiryuSDK.OnRoleInfoUpdate();
+			BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ROLE_CONFIRM,{image = tostring(currSex)})
+		end		
+		if CSAPI.IsADV()==false then
+			-- 国内、中台国内需要走数数
+			-- 数数接入
+			ThinkingAnalyticsMgr:SetUser({ADID = CSAPI.GetADID()},TAUserType.Once)
+			BuryingPointMgr:TrackEvents("register", {gender = currSex == 1 and "男" or "女",createTime = TimeUtil:GetTime() .. ""})
+		end
 		if closeFunc then
 			closeFunc();
 		else
@@ -389,7 +440,12 @@ function SetDayOptions()
 			CSAPI.SetGOActive(dayGos[i], false)
 		end
 	end
-	if currDay > days then
+	
+	if not currDayText then
+		currDayText = ComUtil.GetCom(txtSel, "Text")
+	end
+	local _day = tonumber(currDayText.text)
+	if (currDay > days) or (_day > days) then
 		SetSelectDay(days)
 	end
 end

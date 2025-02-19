@@ -60,14 +60,6 @@ function this:GetIcon()
 	return self.cfg.icon;
 end
 
-function this:GetIcon1()
-	return self.cfg.icon1;
-end
-
-function this:GetIcon2()
-	return self.cfg.icon2;
-end
-
 function this:GetSectionBG()
 	return self.cfg.sBg;
 end
@@ -304,6 +296,9 @@ function this:GetOpenState()
 				openState = 0
 			end
 		end
+		if self.openInfo == nil then
+			self.openInfo = DungeonMgr:GetActiveOpenInfo2(self:GetID())
+		end
 		if self:GetSectionType() == SectionType.Daily and openState > 0 then
 			local isOpen,isNextOpen = DungeonMgr:IsDailyOpenTime(self.cfg.openTime)
 			openState = isOpen and 1 or -1
@@ -312,9 +307,8 @@ function this:GetOpenState()
 			end
 			lockStr = self.cfg.lock_desc
 		elseif self:GetSectionType() == SectionType.Activity then --活动没有未开启显示
-			if self:GetType() ~= SectionActivityType.Tower then
-				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
-				local isActiveOpen = DungeonMgr:IsActiveOpen2(self:GetID())
+			if not self:IsResident() then
+				local isActiveOpen = self.openInfo and self.openInfo:IsOpen()
 				if openState > 0 then
 					openState = isActiveOpen and 1 or -2
 					lockStr = LanguageMgr:GetTips(24001)
@@ -323,13 +317,27 @@ function this:GetOpenState()
 					lockStr = isActiveOpen and lockStr or LanguageMgr:GetTips(24001)
 				end
 			end
+		elseif self:GetSectionType() == SectionType.MainLine and self.openInfo then
+			local isActiveOpen = self.openInfo:IsOpen()
+			if openState > 0 then
+				openState = isActiveOpen and 1 or -2
+				lockStr = LanguageMgr:GetTips(24001)
+			else
+				openState = isActiveOpen and openState or -2
+				lockStr = isActiveOpen and lockStr or LanguageMgr:GetTips(24001)
+			end
+		elseif self:GetSectionType() == SectionType.Colosseum then
+			local isActiveOpen = self.openInfo and self.openInfo:IsOpen()
+			if openState > 0 then
+				openState = isActiveOpen and 1 or -2
+				lockStr = LanguageMgr:GetTips(24001)
+			else
+				openState = isActiveOpen and openState or -2
+				lockStr = isActiveOpen and lockStr or LanguageMgr:GetTips(24001)
+			end
 		end
 	end
 	return openState, lockStr
-end
-
-function this:IsActiveOpen()
-	
 end
 
 --掉落奖励
@@ -378,6 +386,7 @@ function this:GetInfo()
 	return self.cfg and self.cfg.info and self.cfg.info[1]
 end
 
+--界面名
 function this:GetPath()
 	local info = self:GetInfo()
 	local viewKey = ""
@@ -385,6 +394,77 @@ function this:GetPath()
 		viewKey = info.view
 	end
 	return viewKey
+end
+
+--红点路径
+function this:GetRedPath()
+	local info = self:GetInfo()
+	local path = "Common/Red2"
+	if info and info.red then
+		path = info.red
+	end
+	return path
+end
+
+function this:GetExploreId()
+	local info = self:GetInfo()
+	return info and info.exploreId
+end
+
+function this:GetDescKey()
+	return self.cfg and self.cfg.descKey or ""
+end
+
+function this:IsShowOnly()
+	return self.cfg and self.cfg.onlyOne and self.cfg.onlyOne == 1
+end
+
+function this:GetOpenInfo()
+	if self.openInfo == nil then
+		self.openInfo = DungeonMgr:GetActiveOpenInfo2(self:GetID())
+	end
+	return self.openInfo
+end
+
+--常驻
+function this:IsResident()
+	return self.cfg and self.cfg.specType and self.cfg.specType == 1
+end
+
+--任务类型
+function this:GetTaskType()
+	local info = self:GetInfo()
+	return info and info.taskType 
+end
+---------------------------------------------门票购买---------------------------------------------
+function this:GetBuyCount()
+	return self.cfg and self.cfg.DungeonArachnidDailyBuy or 0
+end
+
+function this:GetBuyCost()
+	return self.cfg and self.cfg.DungeonArachnidDailyCost
+end
+
+function this:GetBuyGets()
+	return self.cfg and self.cfg.DungeonArachnidGets
+end
+---------------------------------------------试炼---------------------------------------------
+--列表图标
+function this:GetIcon1()
+	return self.cfg.icon1;
+end
+--切页图标
+function this:GetIcon2()
+	return self.cfg.icon2;
+end
+--角标图标
+function this:GetIcon3()
+	return self.cfg.icon3;
+end
+
+function this:GetRankType()
+	local info = self:GetInfo()
+	return info and info.rankType 
 end
 
 return this; 

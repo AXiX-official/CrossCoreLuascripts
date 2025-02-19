@@ -30,3 +30,25 @@ function Skill304900305:OnActionBegin(caster, target, data)
 	-- 304900305
 	self:AddBuff(SkillEffect[304900305], caster, self.card, data, 304900305)
 end
+-- 暴击伤害前(OnBefourHurt之前)
+function Skill304900305:OnBefourCritHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8620
+	local count620 = SkillApi:GetAttr(self, caster, target,3,"hit")
+	-- 8900
+	if SkillJudger:Greater(self, caster, target, true,count620,0.5) then
+	else
+		return
+	end
+	-- 304900306
+	self:AddTempAttr(SkillEffect[304900306], caster, self.card, data, "crit",0.25)
+end

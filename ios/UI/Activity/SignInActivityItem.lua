@@ -38,6 +38,13 @@ function SetItems()
 	local rewards = data:GetRewards()
 	items = items or {}
 	ItemUtil.AddItems("SignInContinue2/SignInActivityItem2",items,rewards,grid)
+
+	if isSpecial then
+		CSAPI.LoadImg(spec,"UIs/SignInContinue2/img_07_0"..((rewards and #rewards == 1) and 5 or 2)..".png",true,nil,true)
+	else
+		CSAPI.LoadImg(nol,"UIs/SignInContinue2/img_07_0"..((rewards and #rewards == 1) and 4 or 1)..".png",true,nil,true)
+	end
+	CSAPI.SetAnchor(grid,0,(rewards and #rewards == 1) and 0 or -45.2)
 end
 
 function OnDestroy()	

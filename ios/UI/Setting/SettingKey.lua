@@ -47,3 +47,38 @@ s_fight_simple_default = 2
 
 s_language_key = "s_language_key"
 s_language_key_default = 0  --日：0  中：1 
+
+--直播 1：开  2：关
+s_other_live_key = "s_other_live_key"
+s_other_live_default = 2
+
+--芯片自动上锁 1：开  2：关
+s_other_equipLock_key = "s_other_equipLock_key"
+s_other_equipLock_default = 2
+
+s_wait_scale = {}
+s_wait_value = {}
+--时间格式 0:12小时 1:24小时
+s_wait_scale.timeFormat = "timeFormat"
+s_wait_value.timeFormat = 0
+--待机界面风格 0：默认 1：纯净 2：自定义
+s_wait_scale.style = "style"
+s_wait_value.style = 0
+--功能提示 0：开启 1：关闭
+s_wait_scale.tips = "tips"
+s_wait_value.tips = 0
+--时间显示 0：开启 1：关闭
+s_wait_scale.time = "time"
+s_wait_value.time = 0
+--电量显示 0：开启 1：关闭
+s_wait_scale.electric = "electric"
+s_wait_value.electric = 0
+--日期显示 0：开启 1：关闭
+s_wait_scale.date = "date"
+s_wait_value.date = 0
+--轮换显示 0：开启 1：关闭
+s_wait_scale.rotate = "rotate"
+s_wait_value.rotate = 0
+--待机时间设置 g_HoldOnTime 0：3分钟（对应第一个下标） 1：5分钟（对应第二个下标） 2：10分钟（对应第三个下标） 3：从不（对应第四个下标）
+s_wait_scale.waitTime = "waitTime"
+s_wait_value.waitTime = 0

@@ -45,7 +45,7 @@ function Refresh(_data)
     if cfgEnum then
         InitPanel()
     end
-    RefreshNew()
+    RefreshTag()
 end
 
 function InitPanel()
@@ -127,21 +127,23 @@ function OnClick()
     end
 end
 
-function RefreshNew()
+function RefreshTag()
     local dailyCfgs = Cfgs.Section:GetGroup(SectionType.Daily)
     local isNew = false
+    local isLimitDouble= false
     if dailyCfgs then
         for _, cfg in pairs(dailyCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfg.id)
-            if sectionData and sectionData:GetOpen() then
-                local type = sectionData:GetDailyType()
-                if type == data then
+            if sectionData:GetDailyType() == data then
+                if not isLimitDouble then
+                    isLimitDouble = DungeonUtil.IsLimitDropAdd(sectionData:GetID())
+                end
+                if not isNew and sectionData and sectionData:GetOpen() then
                     local dungeonCfgs = sectionData:GetDungeonCfgs()
                     if dungeonCfgs then
                         for i, dungeonCfg in ipairs(dungeonCfgs) do
                             if DungeonMgr:GetIsNew(dungeonCfg.id) then
                                 isNew = true
-                                break
                             end
                         end
                     end
@@ -149,8 +151,23 @@ function RefreshNew()
             end
         end
     end  
-    UIUtil:SetNewPoint(newParent, isNew)
+    SetNew(isNew)
+    SetLimitDouble(isLimitDouble)
+    if isLimitDouble and isNew then
+        CSAPI.SetAnchor(newParent,-34,65)
+    else
+        CSAPI.SetAnchor(newParent,-49,102)
+    end
 end
+
+function SetNew(b)
+    UIUtil:SetNewPoint(newParent, b)
+end
+
+function SetLimitDouble(b)
+    UIUtil:SetDoublePoint(doubleParent, b)
+end
+
 
 function OnDestroy()
     ReleaseCSComRefs();

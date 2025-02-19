@@ -3,7 +3,7 @@ local this = LItemAnimTools
 
 local inTimer = 300
 local timer = 200
-
+local item2Height = 108.5 --113
 function this.New()
     this.__index = this.__index or this;
     local ins = {};
@@ -41,7 +41,7 @@ function this:AnimFirst()
         end
         -- node 
         UIUtil:SetPObjMove(v.node, -200, 0, 0, 0, 0, 0, nil, 300, 125 * (i - 1))
-		UIUtil:SetObjFade(v.node, 0, 1, nil, 300,  125 * (i - 1), 0)
+        UIUtil:SetObjFade(v.node, 0, 1, nil, 300, 125 * (i - 1), 0)
         -- clickNode		
         UIUtil:SetPObjMove(v.clickNode, -18, 0, 0, 0, 0, 0, nil, inTimer)
     end
@@ -117,25 +117,36 @@ end
 -- 父间隔:167  子间隔：93
 function this:GetLeftItemPos(index)
     local y = 0
-    if (self.panel.GetCurIndex1() == index or index <= self.panel.GetCurIndex1()) then
-        y = -(self.parentScale * (index - 1))
-    else
-        if (not self:IsChildExit(index)) then
-            y = -(self.parentScale * (index - 1))
-        else
-            y = -(self.parentScale * (index - 1) + 93 * #self.panel.leftChildItems[index])
+    if (index > self.panel.GetCurIndex1()) then
+        local childCount = 0
+        if (self:IsChildExit(self.panel.GetCurIndex1())) then
+            childCount = #self.panel.leftChildItems[self.panel.GetCurIndex1()]
         end
+        local offsetY = childCount > 0 and 40 or 0
+        y = -(self.parentScale * (index - 1) + item2Height * childCount) + offsetY
+    else
+        y = -(self.parentScale * (index - 1))
     end
+    -- if (index <= self.panel.GetCurIndex1()) then
+    --     y = -(self.parentScale * (index - 1))
+    -- else
+    --     if (not self:IsChildExit(index)) then
+    --         y = -(self.parentScale * (index - 1))
+    --     else
+    --         y = -(self.parentScale * (index - 1) + item2Height * #self.panel.leftChildItems[index])
+    --     end
+    -- end
     return y
 end
 
--- mask height   -- 60 item大小
+-- mask height  
 function this:GetMaskHeight(index)
     if (not self:IsChildExit(index)) then
         return 0
     end
     local childCount = #self.panel.leftChildItems[index]
-    return self.parentScale + 93 * childCount - 62
+    return item2Height * childCount + 20
+    -- return self.parentScale + item2Height * childCount - 62
 end
 
 -- point 移动高度 41 --GameObject位置的一半
@@ -144,7 +155,7 @@ function this:GetPointHeight(index)
         return 0
     end
     local childCount = #self.panel.leftChildItems[index]
-    return 93 * childCount + 50
+    return item2Height * childCount + 50
 end
 
 function this:IsChildExit(index)

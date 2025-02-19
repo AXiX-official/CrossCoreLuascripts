@@ -4,6 +4,7 @@ local currLevel = 1
 local blackFade = nil
 local blackFade2 = nil
 local videoGOs = nil
+local effectGos = nil
 local openInfo = nil
 local info = nil
 local groupDatas = nil
@@ -69,11 +70,16 @@ end
 function OnEnable()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
+    eventMgr:AddListener(EventType.Scene_Load_Complete,OnSceneLoadComplete)
 end
 
 function OnRedPointRefresh()
     local _data = RedPointMgr:GetData(RedPointType.MissionTaoFa)
     UIUtil:SetRedPoint2("Common/Red2", btnMission, _data == 1, 79, 42, 0)
+end
+
+function OnSceneLoadComplete()
+    ShowTips()
 end
 
 function OnDisable()
@@ -105,7 +111,6 @@ function OnOpen()
         SetButtons()
         SetScale()
         RefreshPanel()
-        ShowTips()
     else
         LogError("获取不到副本数据!")
     end
@@ -136,8 +141,8 @@ function SetDatas()
                 for k, m in ipairs(ids) do
                     if data.itemId and data.itemId == m then
                         curType = i
-                        if k > 1 then
-                            currLevel = 1
+                        if #ids > 1 then
+                            currLevel = k
                         end
                     end
                 end
@@ -181,7 +186,9 @@ function RefreshPanel()
     currGroupData = groupDatas[curType]
     if currGroupData then
         SetBg()
+        SetBGScale()
         PlayVideo()
+        PlayEffect()
         SetTitle()
         SetState()
         SetLevel()
@@ -194,14 +201,14 @@ function SetBg()
     CSAPI.LoadImg(btnEnter,"UIs/DungeonActivity2/btn_01_0" .. curType .. ".png",true, nil, true)
     local bgPath = currGroupData:GetBGPath()
     if bgPath ~= nil and bgPath ~= "" then
-        ResUtil:LoadBigImg(bg, bgPath,false)
+        ResUtil:LoadBigImg2(bg, bgPath,false)
     end
     local imgPath = currGroupData:GetImgPath()
     if imgPath ~= nil and imgPath ~= "" then
         ResUtil:LoadBigImg(before, imgPath, false)
     end
-    CSAPI.SetGOActive(bg,currGroupData:GetShowType() < 2)
-    CSAPI.SetGOActive(before,currGroupData:GetShowType() > 2)
+    CSAPI.SetGOActive(bg,currGroupData:GetShowType() ~= 3 and currGroupData:GetShowType() ~= 2)
+    CSAPI.SetGOActive(before,currGroupData:GetShowType() > 2 and currGroupData:GetShowType() ~= 4)
 end
 
 function SetTitle()
@@ -401,6 +408,36 @@ function PlayVideo()
         videoGOs[name] = goVideo.gameObject
     else
         CSAPI.SetGOActive(goVideo, true)
+    end
+end
+-------------------------------------------effect-------------------------------------------
+function PlayEffect()
+    effectGos = effectGos or {}
+    for i, v in pairs(effectGos) do
+        CSAPI.SetGOActive(v, false)
+    end
+    if currGroupData:GetShowType() < 3 or not currGroupData:GetEffectName() then
+        return
+    end
+
+    local name = currGroupData:GetEffectName()
+    local goEffect = effectGos[name]
+    if not goEffect then
+        ResUtil:CreateBGEffect(name, 0,0,0,effectObj,function (go)
+            effectGos[name] = go
+        end);
+    else
+        CSAPI.SetGOActive(goEffect, true)
+    end
+end
+
+function SetBGScale()
+    local size = CSAPI.GetMainCanvasSize()
+    local offset1,offset2 = size[0] / 1920,size[1] / 1080
+    local offset = offset1>offset2 and offset1 or offset2
+    local child = bg.transform:GetChild(0)
+    if child then
+        CSAPI.SetScale(child.gameObject,offset,offset,offset)
     end
 end
 

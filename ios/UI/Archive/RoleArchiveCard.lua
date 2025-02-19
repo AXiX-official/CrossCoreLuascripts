@@ -89,8 +89,12 @@ function SetEnemy()
     if cfg.unlock_type == 1 then -- 关卡		
         if not IsLock() then
             local cfgModel = Cfgs.character:GetByID(cfg.aModels)
-            SetIcon(cfgModel.Card_head)
-            SetHei(false)
+            if cfgModel then
+                SetIcon(cfgModel.Card_head)
+                SetHei(false)
+            else
+                LogError("没找到对应的模型表数据！！！id:" .. cfg.aModels)
+            end
         else
             SetIcon("enemy_chead")
             SetEmpty()
@@ -131,24 +135,29 @@ function OnClick()
                 PlayerProto:LookRole(data:GetID())
                 local count = ArchiveMgr:GetRoleCount()
                 local str = "点亮角色图鉴"
-                BuryingPointMgr:TrackEvents("unlock", {
-                    reason = str,
-                    unlock_num = count
-                })
+                if CSAPI.IsADV()==false then
+                    BuryingPointMgr:TrackEvents("unlock", {
+                        reason = str,
+                        unlock_num = count
+                    })
+                end
             end
             CSAPI.OpenView("ArchiveRole", data)
         else
             -- local cardData = RoleMgr:GetMaxFakeData(cfg.id)
             -- CSAPI.OpenView("RoleInfo", cardData)
-
-            local cRoleInfo = CRoleMgr:GetFakeData(cfg.id)
-            CSAPI.OpenView("ArchiveRole", cRoleInfo, 2)
+            if g_FHXArchiveRole ~= nil then
+                LanguageMgr:ShowTips(18001)
+            else
+                local cRoleInfo = CRoleMgr:GetFakeData(cfg.id)
+                CSAPI.OpenView("ArchiveRole", cRoleInfo, 2)    
+            end
             -- LanguageMgr:ShowTips(18000)
             -- Tips.ShowTips(18001)
         end
     elseif elseData == ArchiveType.Enemy then
         if dungeonData and dungeonData:IsPass() then
-            CSAPI.OpenView("Archive3/ArchiveEnemy", cfg)
+            CSAPI.OpenView("ArchiveEnemy", cfg)
         else
             LanguageMgr:ShowTips(18000)
             -- Tips.ShowTips(18001)

@@ -7,6 +7,7 @@ local this = SettingMgr
 function this:Init()
     self.datas = {}
     self:InitLocalCfg()
+    SettingMgr:SaveValue(s_fight_simple_key, SettingFightSimpleType.Close) --强制关闭简要描述
 end
 
 -- 读取本地配置（未设置的默认赋初始值保存一次）
@@ -16,7 +17,8 @@ function this:InitLocalCfg()
         isSetting = false
         PlayerPrefs.SetString(s_isSetting, "isSet")
     end
-    self:SetDatas(s_audio_scale)
+    self:SetDatas(s_audio_scale,s_audio_value)
+    self:SetDatas(s_wait_scale,s_wait_value)
     self:SetData(s_quality_key, s_quality_value)
     -- local _value = CSAPI.IsIphoneX() and 40 or s_screen_scale_default
     self:SetData(s_screen_scale_key, s_screen_scale_default)
@@ -26,12 +28,14 @@ function this:InitLocalCfg()
     self:SetData(s_fight_action_key, s_fight_action_default)
     self:SetData(s_fight_simple_key, s_fight_simple_default)
     self:SetData(s_language_key, s_language_key_default) -- 语音
+    self:SetData(s_other_live_key, s_other_live_default) -- 语音
+    self:SetData(s_other_equipLock_key, s_other_equipLock_default) -- 语音
     -- todo addmore
 end
 
-function this:SetDatas(tab)
-    for i, v in pairs(tab) do
-        self:SetData(v, s_audio_value[v])
+function this:SetDatas(tab1,tab2)
+    for i, v in pairs(tab1) do
+        self:SetData(v, tab2[v])
     end
 end
 
@@ -94,6 +98,7 @@ end
 function this:UpdateTargetFPS()
     --local rate = self.isHigh and FightClient:IsFightting() and self:GetHighFPS() or 30;
     local rate = self.isHigh and self:GetHighFPS() or 30;
+    --LogError(rate);
     CSAPI.SetTargetFrameRate(rate);
 end
 function this:SetHighFPS(isHigh)

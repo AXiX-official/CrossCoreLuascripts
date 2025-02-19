@@ -3,10 +3,14 @@ local click=nil;
 function Refresh(_data,_click)
     data=_data;
     click=_click;
-    if data.img then
-        CSAPI.LoadImg(gameObject,string.format("UIs/ShopPromote/%s.png",data.img),true,function()
+    if data~=nil then
+        -- ResUtil.StorePromote:Load(gameObject,data:GetImg());
+        ResUtil:LoadBigImg(gameObject, string.format("UIs/ShopPromote/%s", data:GetImg()), true,function()
             CSAPI.SetImgColor(gameObject,255,255,255,255);
-        end,true);
+        end);
+        -- CSAPI.LoadImg(gameObject,string.format("UIs/ShopPromote/%s.png",data.img),true,function()
+        --     CSAPI.SetImgColor(gameObject,255,255,255,255);
+        -- end,true);
     end
 end
 
@@ -16,7 +20,7 @@ function OnClick()
     -- end
     if click then
         if data then
-            click(data.jumpId,data.shopId,data.topId,data.commId);
+            click(data:GetJumpInfo());
         else
             click();
         end

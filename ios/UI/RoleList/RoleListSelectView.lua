@@ -9,6 +9,7 @@ local cur, max = 0, 0
 local isAuto = false
 
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("RoleListSelectView",gameObject)
     layout = ComUtil.GetCom(sv, "UIInfinite")
 
     -- layout:AddBarAnim(0.4, false)

@@ -5,6 +5,7 @@ local this =
 {time=3500,type=0}
 },
 [-686817241]={
+{time=3500,type=0,cue_sheet="cv/Nut.acb",cue_name="Nut_10",cue_feature=1},
 {delay=1600,time=4000,type=1,hit_type=1,camera_shake={time=500,shake_dir=1,range=200,range2=200,hz=30,decay_value=0.5},hit_creates={1192467788},hits={0,100,150,250}},
 {effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Nut_attack_skill_01"}
 },
@@ -12,6 +13,8 @@ local this =
 effect="cast1_hit",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [1310282141]={
+{delay=1000,time=9000,type=0,cue_sheet="cv/Nut.acb",cue_name="Nut_11",cue_feature=1},
+{delay=6000,time=9000,type=0,cue_sheet="cv/Nut.acb",cue_name="Nut_12",cue_feature=1},
 {delay=6628,time=4000,type=1,hit_type=1,hit_creates={2124325257},hits={0,100,200,300,400,500,600,700}},
 {effect="cast2_eff",time=9000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Nut_attack_skill_02"}
 },
@@ -19,6 +22,7 @@ effect="cast1_hit",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 time=2000,type=0
 },
 [-1609092943]={
+{delay=500,time=3500,type=0,cue_sheet="cv/Nut.acb",cue_name="Nut_09",cue_feature=1},
 {delay=1120,time=4000,type=1,hit_type=1,camera_shake={time=500,shake_dir=1,range=200,range2=200,hz=30,decay_value=0.3},hit_creates={1349028111},hits={0,150}},
 {effect="cast0_eff",delay=950,time=3500,type=0,pos_ref={ref_type=6}},
 {time=3500,type=0,cue_sheet="fight/effect/thirteen.acb",cue_name="Nut_attack_general"}

@@ -33,6 +33,7 @@ function this:GetDatas()
 end
 
 function this:GetData(id)
+    self.datas = self.datas or {}
     if self.datas[id] == nil then --没有则创建一个
         local data =  DungeonBoxData.New()
         data:Init({id = id})
@@ -42,13 +43,11 @@ function this:GetData(id)
 end
 
 function this:CheckRedPointData()
-    local isRed = self:CheckRed()
-    local redData = RedPointMgr:GetData(RedPointType.Attack) or {}
-    redData.isMain = isRed
-    if not isRed and not redData.isActivity then
-        redData = nil
+    local redData1 = self:CheckRed() and 1 or 2
+    local redData2 = RedPointMgr:GetData(RedPointType.Attack)
+    if redData1 ~= redData2 then
+        RedPointMgr:UpdateData(RedPointType.Attack, redData)
     end
-    RedPointMgr:UpdateData(RedPointType.Attack, redData)
 end
 
 function this:CheckRed(sectionID, _hardLv)

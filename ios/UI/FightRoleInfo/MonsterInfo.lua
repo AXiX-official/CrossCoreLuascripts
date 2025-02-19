@@ -29,7 +29,6 @@ function this:InitCfg(cfgid)
 	if(cfgid == nil) then
 		LogError("初始化物品配置失败！无效配置idCGD");		
 	end
-	
 	if(self.cfg == nil) then		
 		self.cfg = Cfgs.MonsterData:GetByID(cfgid);  --持有引用
 		if self.cfg then
@@ -64,7 +63,7 @@ function this:GetProperties()
     if self.properties==nil then
         if self:GetMonsterNumericalID() then
             local curData=GCardCalculator:CalPropertys(
-                self:GetMonsterNumericalID(),
+                self:GetCfg().id,-- self:GetMonsterNumericalID(),
                 self:GetLv(),
                 1,
                 1,
@@ -164,6 +163,18 @@ end
 --返回天赋配置id
 function this:GetTalents()
     return self:GetCfg() and self:GetCfg().subTfSkills or {};
+end
+
+--返回怪物信息说明
+function this:GetDesc()
+    if self.cfg then
+        if self.cfg.isUseDesc then
+            return self.cfg.desc
+        elseif self.cardCfg then
+            return self.cardCfg.m_Desc;
+        end
+    end
+    return ""
 end
 
 

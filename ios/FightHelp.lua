@@ -1,13 +1,15 @@
 function LogEnterFight(oPlayer, fid, sceneType, nDuplicateID, groupID, data)
-    -- LogTable(info)
+    -- LogTable(data)
     --LogDebugEx("LogEnterFight", fid, sceneType, nDuplicateID, groupID)
     local logdata = {}
     for tid, v in ipairs(data.data) do
         local item = {v.cid, v.data.cuid}
         item.fuid = v.fuid
         item.npcid = v.npcid
+        item.skills = v.data.skills
         table.insert(logdata, item)
     end
+    -- LogTable(logdata, "logdata")
 
     -- 操作日志
     -- StatsMgr:AddLogRecord(oPlayer, LogItem.EnterFight, fid, sceneType, nDuplicateID, groupID, table.Encode(logdata))
@@ -19,7 +21,7 @@ function LogEnterFight(oPlayer, fid, sceneType, nDuplicateID, groupID, data)
             duplicate_id = nDuplicateID,
             sceneType = sceneType,
             groupID = groupID,
-            team_data = logdata
+            team_data = logdata,
         }
     )
 end
@@ -41,6 +43,11 @@ end
 
 function FightHelp:AddFightMgr(uids, mgr)
     for i, uid in ipairs(uids) do
+        if FightHelp:GetFightMgrEx(uid) then 
+            FightHelp:Destroy(uid)
+            -- ASSERT(nil, "查bug用, 该玩家有战斗未销毁")
+        end
+
         FightHelp.mapPlayerMgr[uid] = mgr
     end
 
@@ -126,17 +133,128 @@ function FightHelp:StartPveFight(player, nDuplicateID, groupID, data, exData)
     return mgr
 end
 
--- 开始主线战斗
-function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData)
-    -- DT(player)
+function FightHelp:FightByData(player, oData)
+        -- DT(player)
     -- 战斗管理器的id
     --ASSERT(nDuplicateID)
     -- LogTable(data)
     -- ASSERT()
     local fid = UID(10)
+    local seed = os.time() + math.random(10000)
+    --print("------------", nDuplicateID)
+    local mgr = CreateFightMgr(fid, oData.groupID, SceneType.PVEBuild, seed, PveDupId.Build)
+    mgr.nPlayerLevel = player:Get('level')
+    mgr.uid = player.id
+
+    mgr:AddPlayer(player.id, 1)
+    self:AddFightMgr({player.id}, mgr)
+
+    mgr:LoadConfig(oData.groupID, 1)
+
+    mgr:LoadData(1, oData.data.data, nil, oData.data.tCommanderSkill)
+
+    mgr:AfterLoadData(oData.exData)
+    -- mgr.cbOver = function(self, winer, isForceOver)
+    -- end
+    mgr:AddCmd(
+        CMD_TYPE.InitData,
+        {
+            seed = seed,
+            fid = fid,
+            stype = SceneType.PVEBuild,
+            groupID = oData.groupID,
+            teamID = 1,
+            data = oData.data,
+            exData = oData.exData,
+            level = player:Get('level')
+        }
+    )
+    -- -- LogTable(info)
+    -- local logdata = {}
+    -- for tid,info in ipairs(data.data) do
+    -- 	local item = {v.cid, v.data.cuid}
+    -- 	item.fuid  = v.fuid
+    -- 	item.npcid = v.npcid
+    -- 	table.insert(logdata , item)
+    -- end
+    -- 操作日志
+    LogEnterFight(player, fid, SceneType.PVEBuild, PveDupId.Build, oData.groupID, oData.data)
+    -- StatsMgr:AddLogRecord(
+    --     player,
+    --     LogItem.EnterFight,
+    --     fid,
+    --     SceneType.PVEBuild,
+    --     nDuplicateID,
+    --     groupID,
+    --     table.Encode(logdata)
+    -- )
+    return mgr
+end
+
+-- 开始主线战斗
+function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData)
+    -- DT(player)
+    -- 战斗管理器的id
+    --ASSERT(nDuplicateID)
+    -- LogTable(data, "StartMainLineFight data =")
+    -- LogTable(exData, "exData")
+    -- ASSERT()
+    local fid = UID(10)
     local seed = os.time() + math.random(1000000)
     --print("------------", nDuplicateID)
     local mgr = CreateFightMgr(fid, groupID, SceneType.PVE, seed, nDuplicateID)
+    mgr.nTeamIndex = nTeamIndex
+    mgr.oDuplicate = oDuplicate
+    mgr.nPlayerLevel = player:Get('level')
+    mgr.uid = player.id
+
+    mgr:AddPlayer(player.id, 1)
+    self:AddFightMgr({player.id}, mgr)
+
+    mgr:LoadConfig(groupID, exData.stage or 1, exData.hpinfo)
+    mgr:LoadData(1, data.data, nil, data.tCommanderSkill)
+    mgr:AfterLoadData(exData)
+    if table.empty(exData) then
+        exData = nil
+    end
+    local dupCfg = MainLine[nDuplicateID]
+
+    if dupCfg and (dupCfg.type == eDuplicateType.AbattoirRand or dupCfg.type == eDuplicateType.AbattoirSelect) then
+        exData = exData or {}
+        exData.dupId = nDuplicateID
+    end
+    mgr:AddCmd(
+        CMD_TYPE.InitData,
+        {
+            seed = seed,
+            fid = fid,
+            stype = SceneType.PVE,
+            groupID = groupID,
+            teamID = 1,
+            nTeamIndex = nTeamIndex,
+            data = data,
+            exData = exData,
+            level = player:Get('level')
+        }
+    )
+    -- DT(mgr.cmds)
+    -- 操作日志
+    LogEnterFight(player, fid, SceneType.PVE, nDuplicateID, groupID, data)
+    return mgr
+end
+
+---- 开始乱序演习战斗
+function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneTy)
+    -- DT(player)
+    -- 战斗管理器的id
+    --ASSERT(nDuplicateID)
+    -- LogTable(data, "StartMainLineFight data =")
+    -- LogTable(exData, "exData")
+    -- ASSERT()
+    local fid = UID(10)
+    local seed = os.time() + math.random(1000000)
+    --print("------------", nDuplicateID)
+    local mgr = CreateFightMgr(fid, groupID, sceneTy, seed, nDuplicateID)
     mgr.nTeamIndex = nTeamIndex
     mgr.oDuplicate = oDuplicate
     mgr.nPlayerLevel = player:Get('level')
@@ -157,7 +275,7 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
         {
             seed = seed,
             fid = fid,
-            stype = SceneType.PVE,
+            stype = sceneTy,
             groupID = groupID,
             teamID = 1,
             nTeamIndex = nTeamIndex,
@@ -168,7 +286,7 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
     )
     -- DT(mgr.cmds)
     -- 操作日志
-    LogEnterFight(player, fid, SceneType.PVE, nDuplicateID, groupID, data)
+    LogEnterFight(player, fid, sceneTy, nDuplicateID, groupID, data)
     return mgr
 end
 --------------------------------------------------------------
@@ -186,7 +304,7 @@ function FightHelp:StartPvpFight(data, fightIndex)
     end
     --LogTable(data,"StartPvpFight222222222222222222222")
     for i, v in ipairs(data) do
-        self.listPvp[v.uid] = v.data
+        -- self.listPvp[v.uid] = v.data
 
         local conn = ArmyFighDataMgr:GetPlrConn(v.uid)
         conn:send({'FightProto:PvpFightResult', {data = data}})
@@ -232,8 +350,12 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     local player = plr
 
     mgr.cbOver = function(self, winer, isForceOver)
-        LogTrace('FightHelp:StartPvpMirrorFight() cbOver')
+        -- LogTrace('FightHelp:StartPvpMirrorFight() cbOver')
         LogDebug('StartPvpMirrorFight cbOver winer:%s, isForceOver:%s', winer, isForceOver)
+
+        if isForceOver then
+
+        end
 
         local isWiner = false
         if winer == 1 then
@@ -283,7 +405,7 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
         end
     end
 
-    self.listPvp[tData.uid] = tData.data
+    -- self.listPvp[tData.uid] = tData.data
     -- player:Send("FightProto:PvpFightResult", {tData = data, tMirror = tMirror}, encod)
     mgr:AddPlayer(player.id, 1)
     self:AddFightMgr({tData.uid}, mgr)
@@ -423,6 +545,7 @@ function FightHelp:StartRoomBossFight(player, nDuplicateID, groupID, data, exDat
     local mgr = CreateFightMgr(fid, groupID, nSceneType, seed, nDuplicateID)
     mgr.nPlayerLevel = player:Get('level')
     mgr.playerID = player.uid
+    mgr.uid = player.id
     mgr.oPlayer = player
 
     mgr:AddPlayer(player.id, 1)
@@ -573,6 +696,7 @@ function FightHelp:AddLiveBuff(data, damage, bedamage)
         if data.damage < 0 then
             data.damage = 0
         end
+        data.damage_add = damage
     end
 
     -- 受到的伤害增加的百分比
@@ -582,6 +706,7 @@ function FightHelp:AddLiveBuff(data, damage, bedamage)
         if data.bedamage < 0 then
             data.bedamage = 0
         end
+        data.bedamage_add = bedamage
     end
 end
 
@@ -639,6 +764,9 @@ function FightHelp:GetDataFromMonsterCfg(plr, cid, cfgId, row, col, sceneType)
     for _, f in ipairs({'jcSkills', 'tfSkills', 'subTfSkills'}) do
         for _, skillId in ipairs(mCfg[f] or {}) do
             local skillCfg = skill[skillId]
+            if not skillCfg then
+                LogInfo(">>>>>>>>>>>>>>>cfgId(%d),skillId(%d)",cfgId,skillId)
+            end
             if skillCfg.upgrade_type and skillCfg.upgrade_type < CardSkillUpType.OverLoad then
                 cardData.skillsByUpType[skillCfg.upgrade_type] = skillCfg.id
             end
@@ -777,6 +905,19 @@ function FightHelp:RestoreFight(uid, data)
         return
     end
 end
+
+-- 客户端战斗出错
+function FightHelp:ClientError(uid, data)
+    local mgr = self:GetFightMgr(uid)
+    local ret
+    if mgr then
+        mgr:ClientError(uid, data)
+    else
+        -- 提示错误
+        return
+    end
+end
+
 --------------------------------------------------------------
 function FightHelp:OnTimer()
     -- LogDebug("1111111111111111 FightHelp:OnTimer()")
@@ -790,6 +931,12 @@ function FightHelp:OnTimer()
             -- if not ret then LogError(err) end
         end
         -- LogInfo("FightHelp:OnTimer() %s", GameApp:GetTickCount()-t)
+        FightHelp.count = FightHelp.count or 0
+        FightHelp.count = FightHelp.count + 1
+        if FightHelp.count > 100 then 
+            FightHelp.count = 0
+            LogInfo("FightHelp:OnTimer size(lstMgr) = %s, size(mapPlayerMgr)=%s", table.size(FightHelp.lstMgr), table.size(FightHelp.mapPlayerMgr))
+        end
     end
 
     return f
@@ -831,7 +978,7 @@ function FightHelp:OnPlayerLogin(uid, ispvp, notiteConn)
         if oDuplicate and oDuplicate.nEndTime and oDuplicate.nEndTime <= CURRENT_TIME then
             -- LogDebug("--------------------11111")
             FightHelp:Destroy(uid)
-        -- 副本过期, 战斗一并销毁
+            -- 副本过期, 战斗一并销毁
             local oPlayer = GetPlayer(uid)
             if oPlayer then
                 local dupMgr = oPlayer.oDuplicateMgr
@@ -860,11 +1007,44 @@ function FightHelp:SendInBattle(uid, notiteConn)
     end
 end
 
-function FightHelp:Destroy(uid)
+function FightHelp:Destroy(uid, player)
+    LogDebugEx("FightHelp:Destroy", uid)
+    --LogTrace()
     -- local uid = player.id
     local mgr = FightHelp.cache[uid] or FightHelp.mapPlayerMgr[uid]
+    -- LogTable(mgr, "FightHelp:Destroy mgr:")
     if mgr then
         FightHelp.lstMgr[mgr.id] = nil
+
+        if mgr.type == SceneType.PVPMirror and not mgr.isOver then
+            -- 紫龙打印bi日志
+            xpcall(
+                function ()
+                    if IsOpenBiLog() then
+                        local plr = player or GetPlayer(uid, false, true)
+                        local win = 0
+                        if plr then
+                            local armyInfo = plr:GetTmp('armyInfo', {})
+                            BILogMgr:LogImitatefight(
+                                plr,
+                                2,
+                                eTeamType.PracticeAttack,
+                                nil,
+                                1,
+                                win,
+                                plr:GetMix('armyRank', 0),
+                                plr:GetMix('armyRank', 0),
+                                0,
+                                plr:GetTmp('army_score', 0)
+                            )
+                        end
+                    end
+                end,
+                XpcallCB
+            )
+        end
+    else
+        LogInfo("FightHelp:Destroy uid=%s not exist", uid)
     end
 
     FightHelp.mapPlayerMgr[uid] = nil

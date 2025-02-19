@@ -22,6 +22,10 @@ end
 --状态事件
 --状态Hash值
 function this:OnStateEnter(stateHash)    
+    if(self.character.IsSkipSkill())then
+        return;
+    end
+
     if(self.datas == nil)then
         return;
     end

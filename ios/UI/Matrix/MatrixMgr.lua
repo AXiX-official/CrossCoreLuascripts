@@ -1083,4 +1083,13 @@ function this:GetEnterAnim()
     return self.enterAnim
 end
 
+----------------------------------------队伍预设------------------------------------------
+-- 额外预设队伍数
+function this:GetExtraPresetTeamNum()
+    return self.matrixInfo.extraPresetTeamNum or 1
+end
+function this:SetExtraPresetTeamNum(num)
+    self.matrixInfo.extraPresetTeamNum = num
+end
+
 return this

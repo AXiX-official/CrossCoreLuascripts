@@ -326,42 +326,53 @@ function SetCharInfos(character)
         local cfg=Cfgs.skill:GetByID(v);
         -- LogError("主动、被动、特殊技：");
         -- LogError(cfg)
-        if cfg and character.IsEnemy()==false and charData.isNpc~=true and (charData.cid==nil or charData.cid>0) then --剔除副天赋 charData的cid为负数时表示在试玩模式
-            if SkillUtil:IsSpecialSkill(cfg.type) and not PlayerClient:IsPassNewPlayerFight() then --如果未通关新手剧情不显示合体技
-            elseif cfg.main_type~=SkillMainType.CardSubTalent and cfg.main_type~=SkillMainType.Equip and cfg.upgrade_type~=CardSkillUpType.OverLoad then
-                table.insert( charInfos[1], {cfg=cfg});
-            -- elseif cfg.main_type==SkillMainType.Equip then
-            --     local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
-            --     if skillCfg then
-            --         table.insert( charInfos[4], skillCfg);
-            --     end
-            end
-        elseif cfg.upgrade_type~=CardSkillUpType.OverLoad  then --不再次显示Overload技能
-            if cfg.main_type==SkillMainType.CardSubTalent then --怪物的副天赋技能
-                local cfg2=Cfgs.CfgSubTalentSkill:GetByID(v);
-                if cfg2~=nil then
-                    table.insert( charInfos[3], {cfg=cfg2});
+        if cfg.bIsHide~=true then
+            if cfg and character.IsEnemy()==false and charData.isNpc~=true and (charData.cid==nil or charData.cid>0) then --剔除副天赋 charData的cid为负数时表示在试玩模式
+                if SkillUtil:IsSpecialSkill(cfg.type) and not PlayerClient:IsPassNewPlayerFight() then --如果未通关新手剧情不显示合体技
+                elseif cfg.main_type~=SkillMainType.CardSubTalent and cfg.main_type~=SkillMainType.Equip and cfg.upgrade_type~=CardSkillUpType.OverLoad then
+                    table.insert( charInfos[1], {cfg=cfg});
+                -- elseif cfg.main_type==SkillMainType.Equip then
+                --     local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                --     if skillCfg then
+                --         table.insert( charInfos[4], skillCfg);
+                --     end
+                end
+            elseif cfg and cfg.upgrade_type~=CardSkillUpType.OverLoad  then --不再次显示Overload技能
+                if cfg.main_type==SkillMainType.CardSubTalent then --怪物的副天赋技能
+                    local cfg2=Cfgs.CfgSubTalentSkill:GetByID(v);
+                    if cfg2~=nil then
+                        table.insert( charInfos[3], {cfg=cfg2});
+                    else
+                        LogError("怪物的副天赋配置有误！技能ID："..tostring(v));
+                    end
+                elseif cfg.main_type==SkillMainType.Equip and charData.isMonster then
+                    local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                    if skillCfg then
+                        table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
+                    end
                 else
-                    LogError("怪物的副天赋配置有误！技能ID："..tostring(v));
+                    table.insert( charInfos[1], {cfg=cfg});
                 end
-            elseif cfg.main_type==SkillMainType.Equip then
-                local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
-                if skillCfg then
-                    table.insert( charInfos[4], skillCfg);
-                end
-            else
-                table.insert( charInfos[1], {cfg=cfg});
             end
         end
     end
     --装备技能
     if charData.eskills then
         for k,v in ipairs(charData.eskills) do
-            local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
-            if skillCfg then
-                -- LogError("装备技能：")
-                -- LogError(skillCfg);
-                table.insert( charInfos[4], skillCfg);
+            if character.IsEnemy()==false and charData.isNpc~=true then
+                local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                if skillCfg and skillCfg.bIsHide~=true  then
+                    -- LogError("装备技能：")
+                    -- LogError(skillCfg);
+                    table.insert( charInfos[4], {skillCfg});
+                end
+            else
+                local skillCfg = Cfgs.CfgEquipSkill:GetByID(v);
+                if skillCfg and skillCfg.bIsHide~=true then
+                    -- LogError("装备技能：")
+                    -- LogError(skillCfg);
+                    table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
+                end
             end
         end
     end
@@ -435,10 +446,10 @@ function SetCharInfos(character)
         return a.cfg.id<b.cfg.id;
     end);
     table.sort(charInfos[4],function(a,b)
-        if a.nLv==b.nLv then
-            return a.group<b.group
+        if a[1].nLv==b[1].nLv then
+            return a[1].group<b[1].group
         else
-            return a.nLv>b.nLv
+            return a[1].nLv>b[1].nLv
         end
     end);
 end

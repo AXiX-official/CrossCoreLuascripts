@@ -20,6 +20,13 @@ function this:Init(characterData, isRealCard)
         self:GetTotalProperty()
         -- 能否跃升突破
         self:CheckRed()
+        -- 解禁数据 
+        if (self.data.open_cards and #self.data.open_cards > 0) then
+            RoleSkinMgr:AddRoleJieJinSkin(self.cfg.role_id, self.data.open_cards)
+        end
+        if (self.data.open_mechas and #self.data.open_mechas > 0) then
+            RoleSkinMgr:AddMechaJieJinSkin(self.cfg.add_role_id, self.data.open_mechas)
+        end
     end
 end
 -- 初始化配置
@@ -62,7 +69,11 @@ end
 
 -- 获取id
 function this:GetID()
-    return self.data and self.data.cid or -1;
+    if (self.data and self.data.cid) then
+        return self.data.cid
+    else
+        return self:GetCfgID()
+    end
 end
 -- 获取数据
 function this:GetData()
@@ -79,8 +90,8 @@ end
 
 -- 获取名称
 function this:GetName()
-    return self.cfg and self.cfg.name or "" 
-    --return self.data and self.data.name or self.cfg.name
+    return self.cfg and self.cfg.name or ""
+    -- return self.data and self.data.name or self.cfg.name
 end
 
 -- 获取名称
@@ -254,8 +265,22 @@ end
 
 -- 当前使用的皮肤是否使用l2d
 function this:GetSkinIsL2d()
+    if (self:IsBaseCard()) then
+        return self:GetSkinIsL2dBase()
+    else
+        return self:GetSkinIsL2dElse()
+    end
+end
+
+function this:GetSkinIsL2dBase()
     if (self.data and self.data.skinIsl2d ~= nil) then
         return self.data.skinIsl2d == BoolType.Yes
+    end
+    return false
+end
+function this:GetSkinIsL2dElse()
+    if (self.data and self.data.skinIsl2d_a ~= nil) then
+        return self.data.skinIsl2d_a == BoolType.Yes
     end
     return false
 end
@@ -270,11 +295,17 @@ function this:GetSkinID()
 end
 
 function this:GetSkinIDBase()
-    return self.data and self.data.skin or self.cfg.model
+    if (self.data and self.data.skin ~= nil and self.data.skin ~= 0) then
+        return self.data.skin
+    end
+    return self.cfg.model
 end
-
+-- 不要用原卡数据直接调用（用这个RoleTool.GetElseSkin()）
 function this:GetSkinIDElse()
-    return self.data and self.data.skin_a or self.cfg.model
+    if (self.data and self.data.skin_a ~= nil and self.data.skin_a ~= 0) then
+        return self.data.skin_a
+    end
+    return self.cfg.model
 end
 
 -- 返回角色标示
@@ -813,9 +844,12 @@ function this:RoleCardRed()
     return false
 end
 
--- 特性能否升级
+-- 特性能否升级+未查看（进入查看后外面的红点要没）
 function this:IsPassiveRed()
-    return self.passiveRed
+    if (self.passiveRed and not RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "")) then
+        return true
+    end
+    return false
 end
 
 -- 近升级突破跃升
@@ -970,6 +1004,24 @@ function this:CheckNormalSkillUP(skillId)
     return true
 end
 
+function this:LookPassive()
+    if (self.passiveRed and not RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "")) then
+        RoleMgr:SetPassiveRedIsLook(self:GetID() .. "", 1)
+    end
+end
+-- 特性技能能否升级
+-- 非登录时：未满足变成满足，设置未查看
+function this:CheckPassiveUp0(isLogin)
+    self:CheckPassiveUp()
+    if (not isLogin) then
+        if (self.passiveRed and self.old_passiveRed ~= nil and self.old_passiveRed == false and
+            RoleMgr:CheckPassiveRedIsLook(self:GetID() .. "") and not CSAPI.IsViewOpen("RoleCenter")) then
+            RoleMgr:SetPassiveRedIsLook(self:GetID() .. "", 0) -- 设置为未看
+        end
+    end
+    self.old_passiveRed = self.passiveRed
+end
+
 -- 特性技能能否升级
 function this:CheckPassiveUp()
     self.passiveRed = false
@@ -1029,6 +1081,18 @@ function this:SupportSortNum()
         end
     end
     return 0
+end
+
+-- 额外（机神，同调，形切） 是否与皮肤
+function this:CheckHadSkins()
+    if (self.cfg.breakModels ~= nil or self.cfg.skin ~= nil) then
+        return true
+    end
+    return false
+end
+
+function this:GetCardCfg()
+    return self.cfg
 end
 
 return this;

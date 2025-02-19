@@ -106,7 +106,11 @@ function OnClickR()
             num = needNum,
             type = RandRewardType.ITEM
         }}
-        ClientProto:ExchangeItem(datas, ChangeCB)
+        if CSAPI.IsADVRegional(3) and cfgID==1003 then
+            CSAPI.ADVJPTitle(needCostNum,function()  ClientProto:ExchangeItem(datas, ChangeCB) end)
+        else
+            ClientProto:ExchangeItem(datas, ChangeCB)
+        end
     end
 end
 function ChangeCB(proto)

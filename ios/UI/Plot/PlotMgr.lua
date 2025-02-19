@@ -72,7 +72,7 @@ function this:IsPlayed(id)
     if(cfgStoryInfo)then
         local storyType = cfgStoryInfo.storyType or 1
         local key = lineKey .. (cfgStoryInfo.line or storyType);
-        local storyLineVal = self.data[key] or -1;
+        local storyLineVal = self.data and self.data[key] or -1;
            
         if(id <= storyLineVal)then                
             return true;

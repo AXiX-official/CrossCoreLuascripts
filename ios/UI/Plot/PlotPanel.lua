@@ -19,28 +19,14 @@ local cgDelay = 0
 local isCGPlay = false --用于背景动画执行时禁止点击部分按钮
 
 local shakeObjs = nil;--震动脚本对象
-
-local lastFrameInfo = nil;--最后一帧的信息
-
-local eventMgr;
-
-local isJump = false
-
-local sceneInfo = nil;--背景图片切换信息
-
-local effectTimer = 0;--特效计时器
-local lineEffect = nil;--百叶穿效果脚本
-local lineTween = nil;--百叶窗动画脚本
-
 local lastShakeInfo = nil --上一个震动信息
 
+local isJump = false
 local jumpRecord = nil;--跳过的数据缓存
 local effectLayer = nil;--特效层级父物体
-local bgImg = nil;--背景图片
 
 local timers = {};--用来统计各部分的播放时长的
 local delayTimer = 0; --当前信息的播放时长，不包括对话信息
-local recordBeginTime = 0;
 local hideMode = false;
 local optionDic = {};--用来记录玩家当前选择的选项信息，用于显示回放记录
 local isOptions = false;--开启选项
@@ -57,13 +43,6 @@ local plotSound = nil --音效
 local plotVideo = nil
 
 local effectInfos = {} --用于记录已播放的特效
-
---动画脚本
-local bgFade
-local lineFade
-local imgFade
-local nodeFade
-local boxFade
 
 --模糊
 local blur = nil
@@ -82,16 +61,13 @@ local blinkNum = 0
 local isChangeBg = false
 local isFirstChange = true
 
+local isCamera = false
 
 local myBGMLockKey = "plot_bgm";
 
 function Awake()
-	recordBeginTime = CSAPI.GetRealTime();
 	anyWayObj = ComUtil.GetCom(gameObject, "Button");
 	text_desc = ComUtil.GetCom(DescText, "Text");
-	lineEffect = ComUtil.GetCom(effCamera, "ScreenTransitionSimpleSoft");
-	lineTween = ComUtil.GetCom(effCamera, "ActionBlindEffect");
-	bgImg = ComUtil.GetCom(bg, "Image");
 	effectLayer = {
 		bottomParent,
 		topParent,
@@ -99,29 +75,13 @@ function Awake()
 	CSAPI.SetGOActive(DescContent, false);
 	InitShakeObjs();
 	CSAPI.SetText(txt_forwardVal, "×" .. playPower[powerIndex]);
-	
-	bgFade = ComUtil.GetCom(bg_fade, "ActionFade")
-	lineFade = ComUtil.GetCom(line_fade, "ActionFade")
-	imgFade = ComUtil.GetCom(img_fade, "ActionFade")
-	nodeFade = ComUtil.GetCom(node_fade, "ActionFade")
-	boxFade = ComUtil.GetCom(box_fade, "ActionFade")
-	
+		
 	--底图
 	local goRT = CSAPI.GetGlobalGO("CommonRT")
 	CSAPI.SetRenderTexture(bg, goRT);
 	CSAPI.SetCameraRenderTarget(bgCamera, goRT);
 	
 	blur = ComUtil.GetCom(bgCamera, "SuperBlur")
-end
-
---添加震动动画预制物
-function InitShakeObjs()
-	shakeObjs = {};
-	for i = 0, shakes.transform.childCount - 1 do
-		local go = shakes.transform:GetChild(i).gameObject;
-		local shakeObj = ComUtil.GetCom(go, "ActionShake");
-		table.insert(shakeObjs, shakeObj);
-	end
 end
 
 function OnInit()
@@ -135,14 +95,35 @@ function InitListener()
 	eventMgr:AddListener(EventType.Plot_Close_Delay, OnCloseDelay);
 end
 
+--当选择剧情选项后
+function OnSelectPlotOption(plot)
+	isOptions = false
+	if plot ~= nil then
+		if(not isAuto) then
+			plotBox.SetNextTween(false, true)
+		end
+		optionDic[currentPlotData:GetID()] = plot:GetID();
+		currentPlotData = plot:GetNextPlotInfo();
+		PlayPlot();
+	else
+		PlotPlayOver();
+	end
+end
+
+function OnViewClosed(viewKey)
+	if viewKey == "PlotStory" then
+		ContiuePlay();
+	end
+end
+
+function OnCloseDelay(delay)
+	closeDelayTime = delay;
+end
+
 function OnDisable()
 	--重置timeScale
 	CSAPI.SetTimeScale(1);
-	--LogError("播放结束");	
 	TryCallBack();
-	--CSAPI.StopBGM();
-    EventMgr.Dispatch(EventType.Replay_BGM, 50);
-	data = nil;
 end
 
 --完成回调
@@ -160,39 +141,18 @@ end
 
 function OnDestroy()   
     local key = CSAPI.GetBGMLock();
---    LogError(key); 
---    LogError(myBGMLockKey); 
     if(CSAPI.GetBGMLock() == myBGMLockKey)then
 	    CSAPI.SetBGMLock();
         EventMgr.Dispatch(EventType.Replay_BGM, 50);
     end
 	
 	eventMgr:ClearListener();
-	eventMgr = nil;
-	storyData = nil;
-	currentPlotData = nil;
-	anyWayObj = nil;
-	plotBox = nil;
-	jumpRecord = nil;
-	timers = {};
-	blurTimer = 0
-	blurSpeed = 0
-	effectInfos = {}
 	PlayerPrefs.SetInt(GetSpeedKey(), powerIndex);
-	RecordMgr:Save(RecordMode.View, recordBeginTime, "ui_id=" .. RecordViews.Plot);	
 	ReleaseCSComRefs()
 end
 
---数据
-function InitData(storyID)
-	--初始化数据
-	storyData = StoryData.New();
-	storyData:InitCfg(storyID);
-	currentPlotData = storyData:GetBeginPlotData();
-end
-
 function OnOpen()
-	-- ResUtil:PlayVideo("plot_burn1", gameObject)
+	if CSAPI.IsADV() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ANIMATION_START) end
 	CSAPI.StopBGM(500)
 	if data == nil then
 		LogError("章节ID不能为空！");
@@ -231,6 +191,14 @@ function OnOpen()
 	SetTween(true)
 end
 
+--数据
+function InitData(storyID)
+	--初始化数据
+	storyData = StoryData.New();
+	storyData:InitCfg(storyID);
+	currentPlotData = storyData:GetBeginPlotData();
+end
+
 function GetSpeedKey()
 	return PlayerClient and "Plot_Speed_" .. tostring(PlayerClient:GetUid()) or "Plot_Speed_Default";
 end
@@ -249,14 +217,9 @@ function Update()
 		if cgIndex <= #cgList and isFull then
 			cgTimer = 0;
 			if cgIndex == #cgList then				
-				CSAPI.SetGOActive(boxParent, false)
-				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType(), cgCall, function()
-					-- CSAPI.SetGOActive(boxParent, true)					
-					-- PlayContent();
-					-- isCGPlay = false
-				end);
+				CSAPI.SetGOAlpha(boxParent,0)
+				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType(), cgCall);
 				anyWayObj.enabled = true;
-				CSAPI.SetTimeScale(playPower[powerIndex]);--还原快进速度							
 			else
 				ShowImgContent(cgList[cgIndex], currentPlotData:GetImgChangeType());
 			end
@@ -282,45 +245,11 @@ function Update()
 			plotBox.InitSelectObj(options)
 		end	
 	end
-	--模糊动画
-	if blurTimer > 0 then
-		blurTimer = blurTimer - Time.deltaTime
-	end
-	if blurTimer > 0 then
-		blur.Progress = blur.Progress + blurSpeed
-		if blur.Progress > 1 then
-			blur.Progress = 1
-		elseif blur.Progress < 0 then
-			blur.Progress = 0
-		end
-	end
-	
+	--模糊
+	UpdateBlur()
 	--眨眼动画
-	if isBlink and blinkNum > 0 then --从闭眼开始到睁眼结束
-		isBlink = false
-		local plotID = currentPlotData:GetID()
-		PlotTween.Twinkle(effectEye, 0.5, function()
-			FuncUtil:Call(function()
-				if(gameObject and not effectInfos[plotID].isJumpBlink and currentPlotData) then
-					if blinkNum == 1 then
-						PlayContent()
-						blinkNum = 0
-						CSAPI.SetGOActive(effectEye, false)
-					else
-						blinkNum = blinkNum - 1
-						isBlink = true
-					end
-				end								
-			end, nil, 500)
-		end)
-	end
+	UpdateBlink()
 end
-
-function SetBlink(num)
-	isBlink = num > 0
-	blinkNum = num
-end
-
 
 --进入和退出的动画 
 --进入：背景->立绘和边框->按钮和文本框->文字播放 
@@ -328,14 +257,13 @@ end
 function SetTween(isOpen)
 	if isOpen then
 		AnimStart()
-		local boxTime = currentPlotData:IsLeft() and 250 or 500
-		bgFade:Play(0, 1, 250, 0)
-		lineFade:Play(0, 1, 250, 250)
-		imgFade:Play(0, 1, 250, 250)
-		nodeFade:Play(0, 1, 250, boxTime)
-		boxFade:Play(0, 1, 250, boxTime, function()	
+		local boxTime = currentPlotData:IsLeft() and 0.25 or 0.5
+		PlotTween.FadeIn(bg, 0.25)
+		PlotTween.FadeIn(lineObj, 0.25)
+		PlotTween.FadeIn(imgParent, 0.25,nil,0.25)
+		PlotTween.FadeIn(node, 0.25,nil,boxTime)
+		PlotTween.FadeIn(boxParent, 0.25,function()	
 			CSAPI.SetGOActive(leftButton, true)
-			-- PlayContent()
 			if data.talkID then
 				JumpToPlot(data.talkID);
 			else
@@ -344,18 +272,18 @@ function SetTween(isOpen)
 			
 			isOpenTween = false
 			AnimEnd()
-		end)
+		end,boxTime)
 	else
 		AnimStart()
-		nodeFade:Play(1, 0, 250, 0)
-		boxFade:Play(1, 0, 250, 0)
-		lineFade:Play(1, 0, 250, 250)
-		imgFade:Play(1, 0, 250, 250)
-		bgFade:Play(1, 0, 250, 250, function()
+		PlotTween.FadeOut(bg, 0.25)
+		PlotTween.FadeOut(lineObj, 0.25)
+		PlotTween.FadeOut(imgParent, 0.25,nil,0.25)
+		PlotTween.FadeOut(node, 0.25,nil,0.25)
+		PlotTween.FadeOut(boxParent, 0.25,function()
 			CSAPI.SetGOActive(bgCamera, false)
 			AnimEnd()
 			CloseView();
-		end)
+		end,0.25)
 	end
 end
 
@@ -363,8 +291,13 @@ end
 function PlotPlayOver()
 	if isAuto then
 		isAuto = false;
-	end	
-	BuryingPointMgr:TrackEvents("plot_dialogue", {reason = "完成对话", plot_id = storyData:GetID()})
+	end
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ANIMATION_END)
+	else
+
+		BuryingPointMgr:TrackEvents("plot_dialogue", {reason = "完成对话", plot_id = storyData:GetID()})
+	end
 	isPlotEnd = true
 	SetTween(false)
 end
@@ -421,17 +354,14 @@ function PlayPlot()
 	
 	PlayShake()
 	PlayVideo()
+	PlayTopImg()
 	
 	--判断是否存在图片内容
 	if cgList ~= nil then--播放图片内容
-		--播放图片内容时将所有立绘退场
-		-- ClearImg();
 		--开始播放cg
 		anyWayObj.enabled = false;
-		-- CSAPI.SetGOActive(buttonChild, false);
 		isCGPlay = true
 		CSAPI.SetTimeScale(1);--设置速度
-		-- isAuto=false;
 		cgIndex = 1;
 		local cgTimer2 = currentPlotData:GetImgDelay();
 		table.insert(timers, #cgList * cgTimer2);
@@ -441,13 +371,15 @@ function PlayPlot()
 			else
 				UpdateRoleImg(pInfos)
 			end		
-			PlotTween.FadeIn(ImgParent,0.25,function ()
+			PlotTween.FadeIn(imgParent,0.25,function ()
 				if not currentPlotData:IsLeft() then
-					CSAPI.SetGOActive(boxParent, true)					
+					CSAPI.SetGOAlpha(boxParent,1)				
 					PlayContent();
 					isCGPlay = false
 					isChangeBg = false
 				end
+				CSAPI.SetTimeScale(playPower[powerIndex]);--还原快进速度							
+				cgCall=nil
 			end, 0.5)
 		end		
 	else
@@ -464,7 +396,6 @@ function PlayPlot()
 		else
 			UpdateRoleImg(pInfos)
 		end
-		--SetTween(true)
 		PlayContent();
 		table.insert(timers, delayCount);
 	end
@@ -504,58 +435,13 @@ function PlayPlot()
 	end
 end
 
---播放震动
-function PlayShake()	
-	if lastShakeInfo and #lastShakeInfo > 0 then --停止持续震动
-		for k, v in ipairs(lastShakeInfo) do
-			if v.time == - 1 then
-				PlotTween.StopTweenShake()
-				lastShakeInfo = nil
-				break
-			end
-		end
-	end
-	
-	local shakeDelay = cgList ~= nil and bgActionTime or 0.1
-	local shakeInfo = GetShakeInfo(currentPlotData.cfg.shakeInfos);
-	if shakeInfo then --震动
-		local plotID = currentPlotData:GetID()
-		FuncUtil:Call(function()			
-			if( gameObject and not effectInfos[plotID].isJumpShake and currentPlotData) then
-				lastShakeInfo = shakeInfo
-				PlotTween.TweenShake(shakeInfo);
-				table.insert(timers, shakeInfo.time);		
-			end
-		end, nil, shakeDelay)
-	end	
-end
-
-function PlayVideo()
-	if plotVideo == nil then
-		ResUtil:CreateUIGOAsync("Plot/PlotEffect", videoParent, function (go)
-			local lua = ComUtil.GetLuaTable(go)
-			lua.Refresh(currentPlotData,effectInfos)
-			plotVideo = lua
-
-			local videoTime = lua.GetCurrTime()
-			if videoTime then
-				table.insert(timers, videoTime);
-			end
-		end)
-	else
-		plotVideo.Refresh(currentPlotData,effectInfos)
-		local videoTime = plotVideo.GetCurrTime()
-		if videoTime then
-			table.insert(timers, videoTime);
-		end
-	end
-end
 
 --播放bgm
 function PlayBGM()
 	local bgmName = currentPlotData:GetBGM();
 	if bgmName == "none" then
-		CSAPI.StopBGM(1000);
+		CSAPI.StopBGM(0.5);
+		currBgName = ""
 	elseif bgmName ~= nil and bgmName ~= "none" and currBgName ~= bgmName then
 		--切换BGM	
 		CSAPI.SetBGMLock(myBGMLockKey);
@@ -571,22 +457,7 @@ function PlayEffect()
 		local parent = effectLayer[effectCfg.layer];
 		--加载特效
 		ResUtil:CreateEffect(effectCfg.path, 0, 0, 0, parent);
-		-- ResUtil:CreateEffect(effectCfg.path,0,0,0,parent,function(go)
-		--设置粒子层级
-		-- effectTimer=effectCfg.time or 3;
-		-- end);
 		table.insert(timers, effectCfg.time or 3);
-	end
-end
-
---播放模糊效果
-function PlayBlur()
-	local sBlur, eBlur, blurTime = currentPlotData:GetBlur()
-	if blurTime > 0 then
-		blur.Progress = sBlur / 100
-		blurTimer = blurTime / 1000
-		blurSpeed =((eBlur - sBlur) / blurTime) / 10 * 2
-		table.insert(timers, blurTimer);
 	end
 end
 
@@ -594,12 +465,19 @@ end
 function PlayCameraTween(func)
 	local cameraInfo = currentPlotData:GetCameraInfo();
 	if cameraInfo then
-		PlotTween.PlayCameraTween(childs, cameraInfo, func);
+		PlotTween.FadeOut(childs)
+		PlotTween.PlayCameraTween(bg, cameraInfo, function ()
+			PlotTween.FadeIn(childs)
+			if func then
+				func()
+			end
+		end);
 		local timer1 = cameraInfo.time1 or 0;
 		local timer2 = cameraInfo.time2 or 0;
 		local timer3 = cameraInfo.time3 or 0;
 		table.insert(timers,(timer1 + timer2 + timer3));
 	end
+	isCamera = cameraInfo ~= nil
 end
 
 --显示图片内容
@@ -608,32 +486,31 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 		isChangeBg = true
 		if changeType == ImgChangeType.Fade then
 			local plotID = currentPlotData:GetID()
-			-- AnimStart()
+			local actionTime = currentPlotData:GetImgActionTime()
 			if isFirstChange then --首次切换
 				PlotTween.FadeIn(bg, 0.25, nil, 0.25)
-				PlotTween.FadeIn(ImgParent, 0.25, nil, 0.5)
+				PlotTween.FadeIn(imgParent, 0.25, nil, 0.5)
 				isFirstChange = false
 			else
-				-- PlotTween.Twinkle(ImgParent, 0.5)
 				if cgIndex == 1 then
-					PlotTween.FadeOut(ImgParent, 0.25)
+					PlotTween.FadeOut(imgParent, 0.25)
 					cgDelay = 250
 				end
-				PlotTween.Twinkle(bg, 0.25,nil,cgDelay / 1000)	
+				PlotTween.Twinkle(bg, actionTime,nil,cgDelay / 1000)	
 			end
 			FuncUtil:Call(function()
-				if(gameObject and not effectInfos[plotID].isJumpCG and currentPlotData) then
-					CSAPI.SetGOActive(grayEffect, currentPlotData ~= nil and currentPlotData:IsGray() or false);
+				if(gameObject and currentPlotData) then
+					CSAPI.SetGOActive(grayEffect,currentPlotData:IsGray());
 					SetBackGround(imgPath);
 					if roleCB then
 						roleCB()
 					end
-					effectInfos[plotID].isJumpCG = true
+					RecordInfo("CG")
 				end
-			end, nil, 250 + cgDelay)
+			end, this,(actionTime * 1000) + cgDelay)
 			if currentPlotData:IsLeft() then
 				FuncUtil:Call(function ()
-					CSAPI.SetGOActive(boxParent, true)					
+					CSAPI.SetGOAlpha(boxParent,1)
 					PlayContent();
 					isCGPlay = false
 					isChangeBg = false
@@ -647,27 +524,6 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 				cgIndex = cgIndex + 1
 			end
 			cgDelay = 0
-		elseif changeType == ImgChangeType.Line then
-			PlayLineTween(- 1, 1, 500, function()
-				CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
-				SetBackGround(imgPath);
-				if roleCB then
-					roleCB()
-				end
-				PlayLineTween(1, - 1, 500, function()
-					isChangeBg = false
-					if boxCB then
-						boxCB()
-					end
-				end);
-				if cgIndex + 1 > #cgList then
-					cgIndex = - 1;
-					cgList = nil;
-					cgTimer = 0;
-				else
-					cgIndex = cgIndex + 1
-				end
-			end);
 		end
 	else
 		CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
@@ -690,17 +546,7 @@ end
 
 --设置背景图
 function SetBackGround(path)
-	for _, val in pairs(PlotColorImg) do
-		if val.type == path then
-			isFind = true;
-			bgImg.sprite = nil;
-			CSAPI.SetImgColor(bg, val.color[1], val.color[2], val.color[3], val.color[4]);
-			do return end
-		end
-	end
-	ResUtil:LoadBigSR2ByExtend(bgModel, path, true, function()
-		CSAPI.SetImgColor(bg, 255, 255, 255, 255);
-	end);
+	ResUtil:LoadBigSR2ByExtend(bgModel, path, true);
 end
 
 --自适应背景 --以1920为标准进行等比缩放
@@ -715,11 +561,9 @@ function PlayContent()
 	if(not currentPlotData) then
 		return
 	end
+
 	--眨眼动画
-	if currentPlotData:GetBlinkNum() ~= nil and currentPlotData:GetBlinkNum() > 0 and blinkNum == 0 then
-		HideDialogBox()
-		CSAPI.SetGOActive(effectEye, true)
-		SetBlink(currentPlotData:GetBlinkNum())
+	if CheckPlayBlink() then
 		return
 	end
 	
@@ -732,164 +576,17 @@ function PlayContent()
 	end
 end
 
---清理所有的立绘
-function ClearImg(tween)
-	for k, v in pairs(roleList) do
-		if tween then
-			v.SetOut(tween)
-		end
-		--播放退场动画
-		v.PlayImgLeave();
-		roleList[k] = nil;
-	end
-end
-
---更新立绘信息
-function UpdateRoleImg(pInfos)	
-	if(not currentPlotData) then
-		return
-	end
-	--更新立绘视图数组数据
-	-- Log( "PlotID:"..tostring(currentPlotData.cfg.id))
-	-- Log( "立绘信息：");
-	-- Log(pInfos)
-	if pInfos ~= nil then
-		local tag = 1
-		local key = 1
-		--处理入场、移动、退场
-		for k, v in ipairs(pInfos) do	
-			tag = v.tag or 1
-			key = v.id .. "_" .. tag
-			local roleView = roleList[key];	
-			if v.out and roleView then--退场
-				roleView.SetImg(v);
-				roleView.PlayImgLeave(v.time, nil, v.delay, isChangeBg); --当进行背景切换时出现退场直接退场
-				roleList[key] = nil;
-				roleCount = roleCount - 1
-			elseif v.move then--移动
-				roleView.PlayImgMove(v.move, v.time);
-			elseif v.pingPong then
-				roleView.PlayImgMoveByPingPong(v.pingPong, v.time)
-			elseif v.enter then--入场
-				local isTalk = currentPlotData:IsTalkID(key);
-				local posRoleView,posRoleKey = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
-				local leaveFunc = nil;
-				if roleView ~= nil and posRoleView ~= nil then--执行操作
-					leaveFunc = function()
-						roleView.SetImg(v);
-						roleView.PlayImgMove(roleView.GetTargetPos(), v.time)
-					end
-				elseif roleView == nil and posRoleView ~= nil then
-					roleView = CreateRoleImg(v);
-					roleView.SetImg(v);
-					roleView.SetImgState(isTalk);
-					CSAPI.SetGOActive(roleView.gameObject, false);
-					leaveFunc = function()
-						--同一个位置上替换新的人物立绘
-						CSAPI.SetGOActive(roleView.gameObject, true);
-						roleView.PlayImgEntrance(v.time);
-					end
-					roleList[key] = roleView;
-				elseif roleView ~= nil then
-					roleView.SetImg(v);
-					roleView.PlayImgMove(roleView.GetTargetPos(), v.time, nil, v.delay)
-				else
-					roleView = CreateRoleImg(v);
-					roleView.SetImg(v);
-					roleView.PlayImgEntrance(v.time, nil, v.delay);
-					roleView.SetImgState(isTalk);
-					roleList[key] = roleView;
-					roleCount = roleCount + 1
-				end
-				if posRoleView and posRoleKey then  --播放旧立绘退场之后再播放新立绘入场
-					roleList[posRoleKey] = nil;
-					posRoleView.PlayImgLeave(v.time, leaveFunc, v.delay);
-				end				
-			elseif v.black then --变色
-				v.SetBlack(v.black, false);
-			end
-		end
-	end
-	--更新立绘队列表情
-	if roleList then
-		local hasMasks = currentPlotData:HasMask()
-		for k, v in pairs(roleList) do
-			local currFaceIDs = currentPlotData:GetFaceIDs()
-			local currEmojis = currentPlotData:GetEmojiIDs()
-			local currPos = v.GetPos()
-			local index = - 1;
-			local talkIds = currentPlotData:GetTalkID();
-			local talkTags = currentPlotData:GetTag() or {}
-			if talkIds then
-				local tag,key = 1,1
-				for ix, id in ipairs(talkIds) do
-					tag = talkTags[ix] or tag
-					key = id.."_" ..tag
-					if k == key then
-						index = ix;
-						break;
-					end
-				end
-			end
-			v.SetImgState(index > 0);
-			v.SetMask(hasMasks[currPos]>0); --设置遮罩
-			v.SetFace(currFaceIDs[currPos])
-			v.SetEmoji(currEmojis[currPos])
-		end
-	end
-	if(bgMask) then
-		CSAPI.csSetUIColorByTime(bgMask.gameObject, "action_UIColor_to_front", 0, 0, 0, 0, nil, 0.15, 0)
-	end
-end
-
---根据位置返回立绘面板对象
-function GetRoleViewByPos(pos)
-	if roleList then
-		for k, v in pairs(roleList) do
-			if v.data.pos == pos then
-				return v,k;
-			end
-		end
-	end
-	return nil,nil;
-end
-
---新增人物立绘
-function CreateRoleImg(roleImgInfo)
-	local roleInfoView = nil;
-	local go = ResUtil:CreateUIGO("Plot/PlotRole", ImgParent.transform);
-	roleInfoView = ComUtil.GetLuaTable(go);
-	return roleInfoView;
-end
-
 --对话显示完成时
 function OnPlayOver()
-	--更新表情
-	-- if isAuto then
-	-- boxPlayOver=true;
-	-- FuncUtil:Call(function()
-	-- 	if isJump~=true then
-	-- 		PlayNext();
-	-- 	end
-	-- 	end,nil,300);
-	-- PlayNext();
-	-- end
+	
 end
 
 --点击任意地方
 function OnClickAnyway()		
-	if isOpenTween then
+	if isOpenTween or isJump or isPlotEnd or isCamera then
 		do return end
 	end
 
-	if isJump then
-		do return end
-	end
-
-	if isPlotEnd then
-		return 
-	end
-	
 	if hideMode then--隐藏UI的情况下,退出隐藏模式
 		SetHideMode(false);
 		ContiuePlay();
@@ -908,7 +605,7 @@ function OnClickAnyway()
 	if(FinshEffect()) then --跳过特效
 		do return end
 	end
-	
+
 	if not isAuto and not plotBox.IsTween() then		
 		delayTimer = 0
 		if IsPlayOver() then		
@@ -928,6 +625,10 @@ end
 
 --提前终止所有效果
 function FinshEffect()	
+	if cgCall then  --存在cg动画不能跳过
+		return true
+	end
+
 	if(IsPlayOver()) then --已经播放完就不需要跳过特效
 		return false
 	end
@@ -940,88 +641,22 @@ function FinshEffect()
 		isEffect = true
 	end
 	
-	if(cgList) then --背景
-		if(not effectInfos[plotID].isJumpCG) then			
-			CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
-			SetBackGround(cgList[#cgList]);
-			if cgCall then
-				-- cgCall()
-				local clearRoles = currentPlotData:GetClearRoles()
-				local pInfos = currentPlotData:GetAllRoleInfos();
-				if clearRoles then
-					ClearImg(clearRoles)
-				else
-					UpdateRoleImg(pInfos)
-				end	
-			end			
-			cgIndex = - 1;
-			cgList = nil;
-			cgTimer = 0;
-			anyWayObj.enabled = true;
-			CSAPI.SetTimeScale(playPower[powerIndex])
-			isCGPlay = false
-			isChangeBg = false
-			CSAPI.SetGOActive(boxParent, true)
-			PlayContent();
-			effectInfos[plotID].isJumpCG = true
-			isEffect = true
-		end
-		-- if(not effectInfos[plotID].isPlayBox) then
-		-- 	isCGPlay = false
-		-- 	isChangeBg = false
-		-- 	CSAPI.SetGOActive(boxParent, true)
-		-- 	PlayContent();
-		-- 	effectInfos[plotID].isPlayBox = true
-		-- 	isEffect = true
-		-- end
-	end
-	
-	if(blurTimer > 0) then --模糊
-		blur.Progress = blur.Progress + blurTimer * blurSpeed
-		blurTimer = 0
+	if CheckFinishBlur() then --模糊
 		isEffect = true
 	end	
 	
-	if(blinkNum > 0) then --眨眼
-		PlayContent()
-		blinkNum = 0
-		CSAPI.SetGOActive(effectEye, false)
-		effectInfos[plotID].isJumpBlink = true
+	if CheckFinishBlink() then --眨眼
 		isEffect = true
-	end	
-	
-	local shakeInfo = GetShakeInfo(currentPlotData.cfg.shakeInfos);
-	if(shakeInfo) then --震动
-		if(not effectInfos[plotID].isJumpShake) then
-			lastShakeInfo = shakeInfo
-			for i, v in ipairs(shakeInfo) do
-				if v.time and v.time == - 1 then
-					v.shakeObj.enabled = true;
-					v.shakeObj.time = 9999000;
-					if v.force then
-						v.shakeObj.range = UnityEngine.Vector3(v.force[1], v.force[2], 0);
-					end
-					if v.interval then
-						v.shakeObj.intervalTime = v.interval;
-					end
-					v.shakeObj:Play()
-				end
-			end
-			effectInfos[plotID].isJumpShake = true
-			isEffect = true
-		end
 	end
-	
-	if(currentPlotData:GetVideoInfo()) then --视频
-		if(not effectInfos[plotID].isJumpVideo) then
-			if plotVideo then
-				plotVideo.SkipVideo()
-			end
-			effectInfos[plotID].isJumpVideo = true
-			isEffect = true
-		end
+
+	if CheckFinishShake() then --震动
+		isEffect = true
 	end
-	
+
+	if CheckFinishVideo() then --特效
+		isEffect = true
+	end
+
 	return isEffect
 end
 
@@ -1039,25 +674,9 @@ function PlayNext()
 	end	
 end
 
---当选择剧情选项后
-function OnSelectPlotOption(plot)
-	isOptions = false
-	if plot ~= nil then
-		if(not isAuto) then
-			plotBox.SetNextTween(false, true)
-		end
-		optionDic[currentPlotData:GetID()] = plot:GetID();
-		currentPlotData = plot:GetNextPlotInfo();
-		PlayPlot();
-	else
-		PlotPlayOver();
-	end
-end
-
 --当前对话是否播放完毕
 function IsPlayOver()
 	local playOver = false;
-	-- Log( "对话:"..tostring(plotBox.IsPlaying()).."\tEffect:"..effectTimer.."\tCg:"..cgIndex);
 	if plotBox.IsPlaying() == false and delayTimer <= 0 and cgIndex == - 1 and isChangeBg == false then
 		playOver = true;
 	end
@@ -1130,27 +749,21 @@ function OnClickJump()
 	end
 end
 
-function PlayJumpBlur()
-	blur.Progress = 0
-	blurTimer = 0.25
-	blurSpeed =(50 / 250) / 10 * 2
-end
-
 function OnClickSure()	
 	-- 停止背景音效
 	plotSound.StopAllSound();
 	
-	-- isJump = false
-	lastFrameInfo = {};--清空记录
-	RecordMgr:SaveCount(RecordMode.Count, RecordViews.PlotJump, storyData:GetID());	
 	CSAPI.SetGOActive(blackMask, true)
 	PlotTween.FadeIn(blackMask, nil, function()
 		CloseView()
 	end)
-	BuryingPointMgr:TrackEvents("plot_dialogue", {reason = "跳过对话", plot_id = storyData:GetID()})
+	if CSAPI.IsADV()==false then
+		BuryingPointMgr:TrackEvents("plot_dialogue", {reason = "跳过对话", plot_id = storyData:GetID()})
+	end
 	if storyData.cfg and storyData.cfg.record_id then
 		BuryingPointMgr:BuryingPoint("after_login", storyData.cfg.record_id)
 	end
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ANIMATION_SKIP) end
 end
 
 function OnClickCancel()
@@ -1161,36 +774,77 @@ function OnClickCancel()
 	ShowDescContent(false)
 end
 
---跳过剧情判定	------------------旧代码，对话、特效无法跳过-----------
--- function JumpPlot()
--- 	if currentPlotData:CanJump()==false then
--- 		return
--- 	end
--- 	local plotInfo = currentPlotData:GetNextPlotInfo();
--- 	if plotInfo == nil then --播放中断
--- 		PlotPlayOver();
--- 		return
--- 	end
--- 	local canJump = plotInfo:CanJump();
--- 	currentPlotData = plotInfo;
--- 	if canJump and plotInfo:GetNextPlotInfo() == nil then --跳跃完整段剧情
--- 		--显示剧情最后一帧的登场人物立绘、背景图片
--- 		-- ShowLastFrame();
--- 		if jumpRecord and jumpRecord.lastCGPath then
--- 			SetBackGround(jumpRecord.lastCGPath);
--- 		end
--- 		--显示剧情简介
--- 		ShowDescContent();
--- 	elseif canJump and plotInfo:GetNextPlotInfo() ~= nil then --还能跳
--- 		--继续跳     
--- 		RecordFrameInfo(plotInfo);
--- 		JumpPlot();
--- 	elseif canJump==false then --无法继续跳跃
--- 		--跳到不能调的剧情
--- 		ShowLastFrame();
--- 		PlayPlot();
--- 	end
--- end
+function PausePlay()
+	isTimeStop = true
+	CSAPI.SetTimeScale(0);
+end
+
+function ContiuePlay()
+	isTimeStop = false
+	CSAPI.SetTimeScale(playPower[powerIndex]);
+end
+
+function CloseView()
+	if not gameObject then
+		return
+	end
+
+	TryCallBack();
+	
+	if(closeDelayTime) then
+		local delay = closeDelayTime;
+		closeDelayTime = nil;
+		FuncUtil:Call(CloseView, nil, delay);
+		return;
+	end
+		
+	--停止音效
+	plotSound.StopAllSound();
+	PlotTween.StopAllAction()
+	
+	CSAPI.SetGOActive(bgModel, false)
+	CSAPI.SetGOActive(blackMask, false);
+	if(not IsNil(view)) then
+		view:Close();
+	end
+end
+
+function OnClickStory()
+	if(isCGPlay) then return end
+	--暂停播放
+	PausePlay();
+	--显示已完的对话
+	CSAPI.OpenView("PlotStory", {story = storyData, currPlot = currentPlotData, options = optionDic})
+end
+
+function OnClickHide()
+	if(isCGPlay) then return end
+	--暂停播放
+	PausePlay();
+	--隐藏按钮和对话框
+	SetHideMode(true);
+end
+
+--隐藏UI
+function SetHideMode(isHide)
+	if hideMode then--隐藏UI的情况下,退出隐藏模式
+		hideMode = false
+		ContiuePlay();
+	else
+		hideMode = isHide;
+	end
+	local time = 0.1
+	CSAPI.SetGOActive(hideMask, hideMode)
+	if hideMode then
+		PlotTween.FadeIn(leftButton, time)
+		PlotTween.FadeIn(boxParent, time)
+		PlotTween.FadeIn(hideImg, time)
+		PlotTween.FadeIn(buttonChild, time)
+		PlotTween.FadeIn(shakes, time)
+		PlotTween.FadeIn(lineObj, time)
+	end
+end
+--------------------------------------------------跳转--------------------------------------------------
 --用于测试 跳到指定对话ID
 function JumpToPlot(plotID)
 	while(true) do
@@ -1212,6 +866,7 @@ function JumpToPlot(plotID)
 			currentPlotData = plotInfo;
 		end
 	end
+	isFirstChange = false
 	ShowLastFrame();
 	PlayPlot();
 end
@@ -1243,7 +898,7 @@ function RecordFrameInfo(plotInfo)
 		for k, v in ipairs(pInfos) do
 			tag = v.tag or 1
 			key = v.id .. "_" .. tag
-			if v.enter and jumpRecord.roles[key] then
+			if (v.enter) and jumpRecord.roles[key] then
 				local roleImgInfo = RoleImgInfo.New();
 				roleImgInfo:InitCfg(v.id);
 				local posList = roleImgInfo:GetRoleImgPos();
@@ -1290,17 +945,12 @@ function RecordFrameInfo(plotInfo)
 					black = v.black;
 				};
 			elseif v.move then
-				jumpRecord.roles[key].pos = v.move;
+				if type(v.move)=="number" then
+					jumpRecord.roles[key].pos = v.move;
+				end
 			elseif v.black then
 				jumpRecord.roles[key].black = v.black;
 			end
-			-- if v.header then --表情
-			-- 	jumpRecord.roles[v.id].header = v.header
-			-- end
-			-- if v.emoji then --气泡
-			-- 	jumpRecord.roles[v.id].emoji = v.emoji
-			-- 	jumpRecord.roles[v.id].emojiPos = v.emojiPos or 1
-			-- end
 		end
 	end
 end
@@ -1348,6 +998,221 @@ function ShowLastFrame()
 	end
 	jumpRecord = nil;
 end
+--------------------------------------------------立绘--------------------------------------------------
+--清理所有的立绘
+function ClearImg(tween)
+	for k, v in pairs(roleList) do
+		if tween then
+			v.SetOut(tween)
+		end
+		--播放退场动画
+		v.PlayImgLeave();
+		roleList[k] = nil;
+	end
+end
+
+--更新立绘信息
+function UpdateRoleImg(pInfos)	
+	if(not currentPlotData) then
+		return
+	end
+	--更新立绘视图数组数据
+	-- Log( "PlotID:"..tostring(currentPlotData.cfg.id))
+	-- Log( "立绘信息：");
+	-- Log(pInfos)
+	if pInfos ~= nil then
+		local tag = 1
+		local key = 1
+		--处理入场、移动、退场
+		for k, v in ipairs(pInfos) do	
+			tag = v.tag or 1
+			key = v.id .. "_" .. tag
+			local roleView = roleList[key];	
+			if v.out and roleView then--退场
+				local _key = key
+				roleView.SetImg(v);
+				roleView.PlayImgLeave(v.time, function ()
+					roleList[_key] = nil;
+				end, v.delay, isChangeBg, v.pos2); --当进行背景切换时出现退场直接退场
+				roleCount = roleCount - 1
+			elseif v.move then--移动
+				roleView.PlayImgMove(v.move, v.time);
+			elseif v.moveTo then --渐变移动
+				local posRoleView,posRoleKey = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
+				local leaveFunc = function()
+					roleView.SetImg(v)
+					roleView.PlayImgMoveByFade(v.time,nil,nil,v.pos2)	
+				end
+				if posRoleView and posRoleKey then  --播放旧立绘退场之后再播放新立绘入场
+					roleList[posRoleKey] = nil;
+					posRoleView.PlayImgLeave(v.time, leaveFunc, v.delay);
+				else
+					leaveFunc()
+				end	
+			elseif v.pingPong then
+				roleView.PlayImgMoveByPingPong(v.pingPong, v.time)
+			elseif v.enter then--入场
+				local isTalk = currentPlotData:IsTalkID(key);
+				local posRoleView,posRoleKey = GetRoleViewByPos(v.pos); --获取当前位置上的其他立绘
+				local leaveFunc = nil;
+				if roleView ~= nil and posRoleView ~= nil then--执行操作
+					leaveFunc = function()
+						roleView.SetImg(v);
+						roleView.PlayImgMove(roleView.GetTargetPos(), v.time)
+					end
+				elseif roleView == nil and posRoleView ~= nil then
+					roleView = CreateRoleImg(v);
+					roleView.SetImg(v);
+					roleView.SetImgState(isTalk);
+					CSAPI.SetGOActive(roleView.gameObject, false);
+					leaveFunc = function()
+						--同一个位置上替换新的人物立绘
+						CSAPI.SetGOActive(roleView.gameObject, true);
+						roleView.PlayImgEntrance(v.time,nil,nil,v.pos2);
+					end
+					roleList[key] = roleView;
+				elseif roleView ~= nil then
+					roleView.SetImg(v);
+					roleView.PlayImgMove(roleView.GetTargetPos(), v.time, nil, v.delay)
+				else
+					roleView = CreateRoleImg(v);
+					roleView.SetImg(v);
+					roleView.PlayImgEntrance(v.time, nil, v.delay, v.pos2);
+					roleView.SetImgState(isTalk);
+					roleList[key] = roleView;
+					roleCount = roleCount + 1
+				end
+				if posRoleView and posRoleKey then  --播放旧立绘退场之后再播放新立绘入场
+					roleList[posRoleKey] = nil;
+					posRoleView.PlayImgLeave(v.time, leaveFunc, v.delay);
+				end				
+			elseif v.black then --变色
+				roleView.SetBlack(v.black, false);
+			end
+		end
+	end
+	--更新立绘队列表情
+	if roleList then
+		local hasMasks = currentPlotData:HasMask()
+		for k, v in pairs(roleList) do
+			local currFaceIDs = currentPlotData:GetFaceIDs()
+			local currEmojis = currentPlotData:GetEmojiIDs()
+			local currPos = v.GetPos()
+			local index = - 1;
+			local talkIds = currentPlotData:GetTalkID();
+			local talkTags = currentPlotData:GetTag() or {}
+			if talkIds then
+				local tag,key = 1,1
+				for ix, id in ipairs(talkIds) do
+					tag = talkTags[ix] or tag
+					key = id.."_" ..tag
+					if k == key then
+						index = ix;
+						break;
+					end
+				end
+			end
+			v.SetImgState(index > 0);
+			v.SetMask(hasMasks[currPos]>0); --设置遮罩
+			v.SetFace(currFaceIDs[currPos])
+			v.SetEmoji(currEmojis[currPos])
+		end
+	end
+	if(bgMask) then
+		CSAPI.csSetUIColorByTime(bgMask.gameObject, "action_UIColor_to_front", 0, 0, 0, 0, nil, 0.15, 0)
+	end
+end
+
+--根据位置返回立绘面板对象
+function GetRoleViewByPos(pos)
+	if roleList then
+		for k, v in pairs(roleList) do
+			if v.data.pos == pos then
+				return v,k;
+			end
+		end
+	end
+	return nil,nil;
+end
+
+--新增人物立绘
+function CreateRoleImg(roleImgInfo)
+	local roleInfoView = nil;
+	local go = ResUtil:CreateUIGO("Plot/PlotRole", imgParent.transform);
+	roleInfoView = ComUtil.GetLuaTable(go);
+	return roleInfoView;
+end
+--------------------------------------------------特效--------------------------------------------------
+function PlayVideo()
+	if plotVideo == nil then
+		ResUtil:CreateUIGOAsync("Plot/PlotEffect", videoParent, function (go)
+			local lua = ComUtil.GetLuaTable(go)
+			lua.Refresh(currentPlotData,effectInfos)
+			plotVideo = lua
+
+			local videoTime = lua.GetCurrTime()
+			if videoTime then
+				table.insert(timers, videoTime);
+			end
+		end)
+	else
+		plotVideo.Refresh(currentPlotData,effectInfos)
+		local videoTime = plotVideo.GetCurrTime()
+		if videoTime then
+			table.insert(timers, videoTime);
+		end
+	end
+end
+
+function CheckFinishVideo()
+	if(currentPlotData:GetVideoInfo()) then --视频
+		if not CheckIsRecord("Video") then
+			if plotVideo then
+				plotVideo.SkipVideo()
+			end
+			RecordInfo("Video")
+			return true
+		end
+	end
+	return false
+end
+
+--------------------------------------------------震动--------------------------------------------------
+--添加震动动画预制物
+function InitShakeObjs()
+	shakeObjs = {};
+	for i = 0, shakes.transform.childCount - 1 do
+		local go = shakes.transform:GetChild(i).gameObject;
+		local shakeObj = ComUtil.GetCom(go, "ActionShake");
+		table.insert(shakeObjs, shakeObj);
+	end
+end
+
+--播放震动
+function PlayShake()	
+	if lastShakeInfo and #lastShakeInfo > 0 then --停止持续震动
+		for k, v in ipairs(lastShakeInfo) do
+			if v.time == - 1 then
+				PlotTween.StopTweenShake()
+				lastShakeInfo = nil
+				break
+			end
+		end
+	end
+	
+	local shakeDelay = cgList ~= nil and bgActionTime or 0.1
+	local shakeInfo = GetShakeInfo(currentPlotData.cfg.shakeInfos);
+	if shakeInfo then --震动
+		local plotID = currentPlotData:GetID()
+		FuncUtil:Call(function()			
+			if gameObject and not CheckIsRecord("Shake") then
+				lastShakeInfo = shakeInfo
+				PlotTween.TweenShake(shakeInfo);
+				table.insert(timers, shakeInfo.time);	
+			end
+		end, nil, shakeDelay)
+	end	
+end
 
 --返回震动信息
 function GetShakeInfo(shakeInfo)
@@ -1367,98 +1232,143 @@ function GetShakeInfo(shakeInfo)
 	return tab;
 end
 
---播放百叶窗动画
-function PlayLineTween(starVal, endVal, time, callBack)
-	if lineTween then
-		isLine = true;
-		lineTween:Play(starVal, endVal, time, callBack);
+function CheckFinishShake()
+	local shakeInfo = GetShakeInfo(currentPlotData.cfg.shakeInfos);
+	if(shakeInfo) then --震动
+		if(gameObject and not CheckIsRecord("Shake")) then
+			lastShakeInfo = shakeInfo
+			for i, v in ipairs(shakeInfo) do
+				if v.time and v.time == - 1 then
+					v.shakeObj.enabled = true;
+					v.shakeObj.time = 9999000;
+					if v.force then
+						v.shakeObj.range = UnityEngine.Vector3(v.force[1], v.force[2], 0);
+					end
+					if v.interval then
+						v.shakeObj.intervalTime = v.interval;
+					end
+					v.shakeObj:Play()
+				end
+			end
+			RecordInfo("Shake")
+			return true
+		end
+	end
+	return false
+end
+--------------------------------------------------模糊--------------------------------------------------
+--模糊动画
+function UpdateBlur()
+	if blurTimer > 0 then
+		blurTimer = blurTimer - Time.deltaTime
+	end
+	if blurTimer > 0 then
+		blur.Progress = blur.Progress + blurSpeed
+		if blur.Progress > 1 then
+			blur.Progress = 1
+		elseif blur.Progress < 0 then
+			blur.Progress = 0
+		end
 	end
 end
 
-function PausePlay()
-	isTimeStop = true
-	CSAPI.SetTimeScale(0);
-end
-
-function ContiuePlay()
-	isTimeStop = false
-	CSAPI.SetTimeScale(playPower[powerIndex]);
-end
-
-function OnCloseDelay(delay)
-	closeDelayTime = delay;
-	--LogError(delay);
-end
-function CloseView()
-	if not gameObject then
-		return
-	end
-
-	TryCallBack();
-	
-	if(closeDelayTime) then
-		local delay = closeDelayTime;
-		closeDelayTime = nil;
-		FuncUtil:Call(CloseView, nil, delay);
-		return;
-	end
-		
-	--停止音效
-	plotSound.StopAllSound();
-	--CSAPI.StopBGM()
-    EventMgr.Dispatch(EventType.Replay_BGM, 50);
-	PlotTween.StopAllAction()
-	
-	CSAPI.SetGOActive(bgModel, false)
-	CSAPI.SetGOActive(blackMask, false);
-	if(not IsNil(view)) then
-		view:Close();
+--播放模糊效果
+function PlayBlur()
+	local sBlur, eBlur, blurTime = currentPlotData:GetBlur()
+	if blurTime > 0 then
+		blur.Progress = sBlur / 100
+		blurTimer = blurTime / 1000
+		blurSpeed =((eBlur - sBlur) / blurTime) / 10 * 2
+		table.insert(timers, blurTimer);
 	end
 end
 
-function OnViewClosed(viewKey)
-	if viewKey == "PlotStory" then
-		ContiuePlay();
+function PlayJumpBlur()
+	blur.Progress = 0
+	blurTimer = 0.25
+	blurSpeed =(50 / 250) / 10 * 2
+end
+
+function CheckFinishBlur()
+	if(blurTimer > 0) then --模糊
+		blur.Progress = blur.Progress + blurTimer * blurSpeed
+		blurTimer = 0
+		return true
+	end
+	return false	
+end
+--------------------------------------------------眨眼--------------------------------------------------
+function UpdateBlink()
+	--眨眼动画
+	if isBlink and blinkNum > 0 then --从闭眼开始到睁眼结束
+		isBlink = false
+		local plotID = currentPlotData:GetID()
+		PlotTween.Twinkle(effectEye, 0.5, function()
+			FuncUtil:Call(function()
+				if gameObject and not CheckIsRecord("Blink") then
+					if blinkNum == 1 then
+						PlayContent()
+						blinkNum = 0
+						CSAPI.SetGOActive(effectEye, false)
+					else
+						blinkNum = blinkNum - 1
+						isBlink = true
+					end
+				end							
+			end, this, 500)
+		end)
 	end
 end
 
-function OnClickStory()
-	if(isCGPlay) then return end
-	--暂停播放
-	PausePlay();
-	--显示已完的对话
-	CSAPI.OpenView("PlotStory", {story = storyData, currPlot = currentPlotData, options = optionDic})
+--眨眼动画
+function CheckPlayBlink()
+	if currentPlotData:GetBlinkNum() ~= nil and currentPlotData:GetBlinkNum() > 0 and blinkNum == 0 then
+		HideDialogBox()
+		CSAPI.SetGOActive(effectEye, true)
+		local num = currentPlotData:GetBlinkNum()
+		isBlink = num > 0
+		blinkNum = num
+		return true
+	end
+	return false
 end
 
-function OnClickHide()
-	if(isCGPlay) then return end
-	--暂停播放
-	PausePlay();
-	--隐藏按钮和对话框
-	SetHideMode(true);
+function CheckFinishBlink()
+	if(blinkNum > 0) then --眨眼
+		PlayContent()
+		blinkNum = 0
+		CSAPI.SetGOActive(effectEye, false)
+		RecordInfo("Blink")
+		return true
+	end	
+	return false
 end
-
---隐藏UI
-function SetHideMode(isHide)
-	if hideMode then--隐藏UI的情况下,退出隐藏模式
-		hideMode = false
-		ContiuePlay();
+------------------------------------------------顶层图片------------------------------------------------
+function PlayTopImg()
+	if topImg == nil then
+		ResUtil:CreateUIGOAsync("Plot/PlotTopImg",topImgParent,function (go)
+			local lua = ComUtil.GetLuaTable(go)
+			lua.Refresh(currentPlotData)
+			topImg = lua
+		end)
 	else
-		hideMode = isHide;
+		topImg.Refresh(currentPlotData)
 	end
-	local time = 0.1
-	CSAPI.SetGOActive(hideMask, hideMode)
-	if hideMode then
-		PlotTween.FadeIn(leftButton, time)
-		PlotTween.FadeIn(boxParent, time)
-		PlotTween.FadeIn(hideImg, time)
-		PlotTween.FadeIn(buttonChild, time)
-		PlotTween.FadeIn(shakes, time)
-		PlotTween.FadeIn(lineObj, time)
+end
+--------------------------------------------------记录--------------------------------------------------
+function RecordInfo(str)
+	if currentPlotData and currentPlotData:GetID() then
+		effectInfos[currentPlotData:GetID()][str] = 1
 	end
 end
 
------------------------------------动画-------------------------
+function CheckIsRecord(str)
+	if currentPlotData and currentPlotData:GetID() then
+		return effectInfos[currentPlotData:GetID()][str] ~= nil
+	end
+	return false
+end
+--------------------------------------------------动画--------------------------------------------------
 function AnimStart()
 	CSAPI.SetGOActive(animMask, true)
 end
@@ -1480,7 +1390,6 @@ function ReleaseCSComRefs()
 	bg = nil;
 	bgMask = nil;
 	bottomParent = nil;
-	ImgParent = nil;
 	lineObj = nil;
 	boxParent = nil;
 	topParent = nil;

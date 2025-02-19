@@ -202,21 +202,34 @@ end
 
 --设置为黑色
 function SetBlack(isBlack)
-	local color = isBlack == true and {0, 0, 0, 255} or {255, 255, 255, 255};
-	CSAPI.SetImgColor(img, color[1], color[2], color[3], color[4]);
+	-- local color = isBlack == true and {0, 0, 0, 255} or {255, 255, 255, 255};
+	-- CSAPI.SetImgColor(img, color[1], color[2], color[3], color[4]);
+	if img then
+        UIUtil:SetLiveBroadcast(img,isBlack)
+    end
 end
 
 function SetRoleBlack(isBlack,isTween)
-	local color = isBlack == 1 and {0, 0, 0, 255} or {255, 255, 255, 255};
-	if isTween then
-		CSAPI.csSetUIColorByTime(img, "action_UIColor_to_front", color[1], color[2], color[3], color[4], nil, 0.5);
+	local value = SettingMgr:GetValue(s_other_live_key)
+	if(value==1) then 
+		UIUtil:SetLiveBroadcast(img,isBlack)
 	else
-		CSAPI.SetImgColor(img, color[1], color[2], color[3], color[4], true);
-	end
+		local color = isBlack == 1 and {0, 0, 0, 255} or {255, 255, 255, 255};
+		if isTween then
+			CSAPI.csSetUIColorByTime(img, "action_UIColor_to_front", color[1], color[2], color[3], color[4], nil, 0.5);
+		else
+			CSAPI.SetImgColor(img, color[1], color[2], color[3], color[4], true);
+		end 
+	end 
 end
 
 function SetRoleColorByTime(r,g,b,a,func,time)
-	CSAPI.csSetUIColorByTime(img, "action_UIColor_to_front", r,g,b,a,func,time);
+	local value = SettingMgr:GetValue(s_other_live_key)
+	if(value==1) then 
+		UIUtil:SetLiveBroadcast(img,isBlack)
+	else 
+		CSAPI.csSetUIColorByTime(img, "action_UIColor_to_front", r,g,b,a,func,time);
+	end 
 end
 
 function SetRoleScaleByTime(actionName, x, y, z, callBack, time)

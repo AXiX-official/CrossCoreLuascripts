@@ -55,15 +55,32 @@ function this:OnPlotComplete()
     local enterAniName,enterSound = self:GetEnterAni();
     if(enterAniName)then       
         FuncUtil:Call(function()   
-            CSAPI.StopBGM();        
+            CSAPI.StopBGM();
+            CSAPI.SetBGMLock("boss_enter");
+            CameraMgr:EnableMainCamera(false);  
             
-            local enterAni = ResUtil:PlayVideo(enterAniName);
+   --[[          local enterAni = ResUtil:PlayVideo(enterAniName);
             CameraMgr:EnableMainCamera(false);
             enterAni:AddCompleteEvent(function()    
                 CameraMgr:EnableMainCamera(true);       
                 self:PlayEnter();
                 EventMgr.Dispatch(EventType.Replay_BGM);
-            end); 
+            end);  ]]
+
+            CSAPI.OpenView("VideoPlayer", {
+                videoName = enterAniName,
+                callBack = function()
+                    CSAPI.CloseView("VideoPlayer");
+                    CameraMgr:EnableMainCamera(true);
+                    CSAPI.SetBGMLock();
+                    CSAPI.StopSound();
+                    EventMgr.Dispatch(EventType.Replay_BGM);
+
+                    self:PlayEnter();
+                end,
+            });
+
+
             if(enterSound)then
                 CSAPI.PlaySound("fight/effect/" .. enterSound .. ".acb",enterSound);
             end

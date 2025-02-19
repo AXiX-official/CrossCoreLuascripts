@@ -2,7 +2,13 @@ local this = {};
 
 this.data = nil;
 this.isStarted = nil;
-
+--返回虚拟键标记
+this.IsFightStop=true;
+this.IsFightOver=false;
+--处于放大招中
+this.Intheamplificationmove=false;
+---德拉苏
+this.NewPlayerDrasu=false;
 --初始化战斗
 function this:Init(data,initCallBack,initCaller)
     --LogError("进入战斗==========================");
@@ -201,12 +207,12 @@ function this:QuitFihgt()
     end
 end
 function this:Reset()    
-    self:SetAutoFight(false);
+    self:SetAutoFight(false,true);
     self:Clean();
     self.playSpeed = nil;
     defaultPlaySpeed = nil;
 
-    FireBallMgr:ClearFBs();
+    FireBallMgr:ClearFBs();    
     --self:SetPlaySpeed();
 end
 
@@ -223,6 +229,7 @@ function this:Clean()
 	CharacterMgr:Clean();
 	FightGroundMgr:Clean();
 	FightGridSelMgr.Hide();
+    ClientBuffMgr:Clean();
     NetMgr.netFight:Disconnect();
     
     if(FightActionInputIdle)then
@@ -353,7 +360,7 @@ function this:AddPlaySpeed(addValue)
 	this:SetPlaySpeed(playSpeed);
 end
 function this:SetPlaySpeed(playSpeed,dontSave)
-    --LogError("playSpeed:" .. tostring(playSpeed));
+    --LogError(string.format("playSpeed:%s,dontSave:%s",tostring(playSpeed),tostring(dontSave)));
 
     local slowestPlaySpeed,fastestPlaySpeed = self:GetPlaySpeedSetting();
 
@@ -409,17 +416,22 @@ function this:ChangedAutoFight()
     EventMgr.Dispatch(EventType.Fight_Auto_Changed);	
 end
 --设置自动战斗
-function this:SetAutoFight(autoFight)
+function this:SetAutoFight(autoFight,dontSave)
     --LogError("AutoFight:" .. tostring(autoFight));
 
 	self.autoFight = autoFight;
     
-    if(g_FightMgr)then
+    if(dontSave)then
+        return;
+    end
+    if(g_FightMgr)then      
         if(g_FightMgr.type ~= SceneType.PVP and g_FightMgr.type ~= SceneType.PVPMirror and not self:GetDirll())then           
 	        PlayerPrefs.SetInt("fight_Auto", autoFight==true and 1 or 0);
+            --LogError("set auto state:" .. tostring(autoFight));
         end
     else
         PlayerPrefs.SetInt("fight_Auto", autoFight==true and 1 or 0);
+        --LogError("set auto state:" .. tostring(autoFight));
     end
 end
 --是否自动战斗
@@ -589,8 +601,15 @@ end
 local key_fight_pause = "fight_pause";
 function this:SetPauseState(state)
     --LogError("state:" .. tostring(state));
-
+    this.IsFightStop=state
     CSAPI.SetTimeScaleByKey(key_fight_pause, state and 0 or 1);
+end
+
+function this:SetTotalDamage(val)
+    self.totalDamage = val;
+end
+function this:GetTotalDamage()
+    return self.totalDamage;
 end
 
 return this; 

@@ -88,9 +88,9 @@ function OnInit()
         end
         -- end
     end)
-    eventMgr:AddListener(EventType.Mission_Tab_Sel, function(index)
-        leftPanel.Item1Select(index)
-    end)
+    -- eventMgr:AddListener(EventType.Mission_Tab_Sel, function(index)
+    --     leftPanel.Item1Select(index)
+    -- end)
 
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
@@ -199,7 +199,7 @@ end
 function SetRight()
     CSAPI.SetGOActive(panel1, curIndex1 == 2)
     CSAPI.SetGOActive(panel2, curIndex1 == 1)
-    curDatas = MissionMgr:GetArr(GetTypeIndex())
+    curDatas = MissionMgr:GetArr({GetTypeIndex()},curIndex1==1)
     RefreshList(GetTypeIndex())
 end
 

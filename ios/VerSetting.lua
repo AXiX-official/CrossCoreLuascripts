@@ -1,9 +1,13 @@
 --版本设置
 local this = {};
-
 function this:Init()
     --语言设置
-    LanguageMgr:ChangeLanguage(1) --1234  中文，繁体，日语，英文
+    ---1:中国内陆
+    ---2：港澳台
+    ---3：日语
+    ---4：英文
+    ---5：韩国
+    LanguageMgr:ChangeLanguage(RegionalSet.CurrentRegion)
 end
 
 

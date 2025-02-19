@@ -525,7 +525,7 @@ function this:ClearCurPosCache(index)
 end
 
 function this:GetUsablePos(index)
-    return self.aStar:GetRandomPos(index)
+    return self.aStar:GetRandomPos2(index)
 end
 
 -- 位置当前是否有其他角色
@@ -630,6 +630,7 @@ function this:InLayout(isChange)
         -- 编辑家具、人员时,移除所有碰撞关联
         for i, v in pairs(self.roleModels) do
             v.ChangeAction(DormRoleActionType.Hide)
+            v.ClearFurnitureAnim() --清楚关联的家具动作
             v.RemoveAllInte()
         end
     else

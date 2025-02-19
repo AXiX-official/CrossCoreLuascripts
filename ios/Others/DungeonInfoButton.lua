@@ -4,15 +4,32 @@ local sectionData = nil
 local isSweepOpen = false
 local buyFunc = nil
 
+local time = 0
+local timer = 0
+local hotTime = 0
+
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Sweep_Show_Panel, ShowSweep)
     eventMgr:AddListener(EventType.Player_HotChange, ShowCost)
-    eventMgr:AddListener(EventType.Bag_Update, ShowCost)
+    eventMgr:AddListener(EventType.Bag_Update, function ()
+        ShowCost()
+        ShowTicket()
+    end)
 end
 
 function OnDestroy()
     eventMgr:ClearListener()
+end
+
+function Update()
+    if time > 0 and timer < Time.time then
+        timer = Time.time + 1
+        time = hotTime - TimeUtil:GetTime()
+        if time <= 0 then
+            ShowHotChange(false)
+        end
+    end
 end
 
 function Refresh(tab)
@@ -41,17 +58,32 @@ function ShowCost()
         else
             ResUtil.IconGoods:Load(ticketIcon, ITEM_ID.Hot .. "_1")
             ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .. "_3")
-            local costNum = cfg.enterCostHot and cfg.enterCostHot or 0
-            costNum = cfg.winCostHot and costNum + cfg.winCostHot or costNum
+            local costNum,isHotChange = DungeonUtil.GetHot(cfg)
+            ShowHotChange(isHotChange)
             costNum = StringUtil:SetByColor(costNum .. "", math.abs(costNum) <= PlayerClient:Hot() and "191919" or "CD333E")
             CSAPI.SetText(cost," " .. costNum)
-            LanguageMgr:SetText(txt_cost, 15004)
+        end
+    end
+end
+
+function ShowHotChange(b)
+    local info =sectionData:GetInfo()
+    local isHide = info and info.isHideExtre ~= nil
+    UIUtil:SetHotPoint(btnEnter,b and not isHide,170,51)
+    if b then
+        _,hotTime = DungeonUtil.GetHotChangeTime()
+        if hotTime > 0  then
+            time = hotTime - TimeUtil:GetTime()
+            timer = 0
         end
     end
 end
 
 --扫荡状态
 function ShowSweep()
+    if cfg == nil then
+        return
+    end
     if cfg.diff and cfg.diff == 3 then
         CSAPI.SetGOActive(btnSweep,false)
         CSAPI.SetAnchor(btnEnter,0,58)

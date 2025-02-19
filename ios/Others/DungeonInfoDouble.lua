@@ -5,10 +5,17 @@ local multiUpdateTime = 0
 local isMultiUpdate = false
 local isDoubleOpen = false
 local multiNum = 0
+--限时多倍
+local isUnLimit = false
+local multiLimitNum = 0
+local limitTime = 0
+local limitTimer = 0
+local isLimitDouble = false --限时多倍
 
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Dungeon_DailyData_Update, OnDailyDataUpdate)
+    eventMgr:AddListener(EventType.Dungeon_Double_Update, OnDailyDataUpdate)
 
     ShowMask(false)
     ShowDesc(false)
@@ -19,12 +26,30 @@ function OnDailyDataUpdate()
 end
 
 function Update()
+
     if isMultiUpdate or not sectionData then
         return
     end
+    
     if multiUpdateTime and TimeUtil:GetTime() >= multiUpdateTime then
         isMultiUpdate = true
         PlayerProto:SectionMultiInfo()
+    end
+
+    if isLimitDouble and limitTime>0 and limitTimer < Time.time then
+        limitTimer = Time.time + 1
+        limitTime = DungeonUtil.GetDropAddTime(sectionData:GetID())
+        if limitTime > 60 then
+            local tab = TimeUtil:GetTimeTab(limitTime)
+            LanguageMgr:SetText(txtDouble2,15129,tab[1],tab[2],tab[3]) 
+        else
+            LanguageMgr:SetText(txtDouble2,15129,0,0,1) 
+        end
+        if limitTime <= 0 then
+            
+            ShowDoublePanel()
+            EventMgr.Dispatch(EventType.Section_Daily_Double_Update)
+        end
     end
 end
 
@@ -42,13 +67,24 @@ function ShowDoublePanel()
     if multiUpdateTime and TimeUtil:GetTime() < multiUpdateTime then
         isMultiUpdate = false
     end
+
     -- double		
     local hasMulti = DungeonUtil.HasMultiDesc(sectionData:GetID());
     CSAPI.SetGOActive(gameObject,hasMulti)
     if not hasMulti then
         return
     end
-    local dStr = DungeonUtil.GetMultiDesc2(sectionData:GetID())
+
+    multiLimitNum,_,isUnLimit,isLimitDouble = DungeonUtil.GetDropAdd(sectionData:GetID())
+    CSAPI.SetGOActive(double1,not isLimitDouble)
+    CSAPI.SetGOActive(double2,isLimitDouble)
+
+    if isLimitDouble then
+        limitTime = DungeonUtil.GetDropAddTime(sectionData:GetID())
+        return
+    end
+
+    local dStr = DungeonUtil.GetMultiDesc(sectionData:GetID())
     CSAPI.SetText(txtDouble, dStr);
 
     multiNum = DungeonUtil.GetMultiNum(sectionData:GetID())
@@ -96,6 +132,10 @@ function IsDouble()
     return isDoubleOpen
 end
 
+function IsLimitDouble()
+    return isLimitDouble
+end
+
 function GetMultiNum()
     return multiNum
 end
@@ -112,6 +152,17 @@ end
 function ShowDesc(b)
     isDescOpen = true
     CSAPI.SetGOActive(descObj,b)
+    CSAPI.SetGOActive(descObj2,b)
+    if b then
+        if isLimitDouble then
+            CSAPI.SetGOActive(descObj, false)
+            local limit = isUnLimit and "∞" or multiLimitNum..""
+            LanguageMgr:SetText(txtDesc2,15130,limit)
+        else
+            CSAPI.SetGOActive(descObj2, false)
+            LanguageMgr:SetText(txtDesc,15098)
+        end
+    end
 end
 
 function ShowMask(b)
@@ -130,4 +181,13 @@ end
 
 function SetPos(x,y)
     CSAPI.SetAnchor(doubleObj,x,y)
+end
+
+function SetTextColor(code1,code2)
+    if code1 and code1~="" then
+        CSAPI.SetTextColorByCode(txt_double,code1)
+    end
+    if code2 and code2~="" then
+        CSAPI.SetTextColorByCode(txtDouble,code2)
+    end
 end

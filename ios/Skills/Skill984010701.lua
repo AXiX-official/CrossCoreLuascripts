@@ -24,5 +24,5 @@ function Skill984010701:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 984010502
-	self:AddProgress(SkillEffect[984010502], caster, self.card, data, 250)
+	self:AddProgress(SkillEffect[984010502], caster, self.card, data, 500)
 end

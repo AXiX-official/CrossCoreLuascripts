@@ -36,7 +36,8 @@ end
 
 
 function OnGameQualityChanged(param)    
-    FuncUtil:Call(InitRT,nil,50);
+    FuncUtil:Call(InitRT,nil,50); 
+    InitRT();    
 end
 
 function OnCameraEff(actionName)

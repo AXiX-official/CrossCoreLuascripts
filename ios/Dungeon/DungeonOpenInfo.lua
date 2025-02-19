@@ -9,18 +9,27 @@ function this.New()
 	return ins;
 end
 
+function this:InitOpenCfg(cfg)
+    self.openCfg = cfg
+    if self.openCfg and self.openCfg.config and self.openCfg.nConfigID then
+        if Cfgs[self.openCfg.config] == nil then
+            LogError("活动入口表获取不到表数据！！！" .. self.openCfg.config)
+            return 
+        end
+        self.cfg = Cfgs[self.openCfg.config]:GetByID(self.openCfg.nConfigID)
+    end
+end
+
 function this:Init(_data)
     self.data = _data
-    if self.data then
-        self.openCfg = Cfgs.CfgActiveEntry:GetByID(self.data.id)
-        if self.openCfg then
-            self.cfg = Cfgs[self.openCfg.config]:GetByID(self.openCfg.nConfigID)
-        end
-    end
 end
 
 function this:GetData()
     return self.data
+end
+
+function this:GetID()
+    return self.data and self.data.id
 end
 
 --开启相关配置
@@ -31,6 +40,10 @@ end
 --关联配置
 function this:GetCfg()
     return self.cfg
+end
+
+function this:GetType()
+    return self.cfg and self.cfg.type
 end
 
 --活动开启
@@ -60,7 +73,7 @@ function this:IsHardOpen()
         local tips = LanguageMgr:GetTips(24007, timeStr)
         return TimeUtil:GetTime() >= self.data.nHardBegTime,tips
     end
-    return false,""
+    return true,""
 end
 
 --EX本开启
@@ -112,12 +125,99 @@ function this:GetHardTime()
     return self.data and self.data.nHardBegTime
 end
 
-function this:GetSectionID()
-    return self.cfg and self.cfg.sectionID
+--获取剩余时间
+function this:GetEndTime()
+    return self.data and self.data.nEndTime or 0
 end
 
 function this:GetSectionID()
     return self.cfg and self.cfg.sectionID
+end
+
+function this:IsSelf(_sid)
+    if self.cfg and _sid then
+        if self.cfg.infos and #self.cfg.infos > 0 then
+            for i, v in ipairs(self.cfg.infos) do
+                if v.sectionID and v.sectionID == _sid then
+                    return true
+                end
+            end
+        elseif self.cfg.sectionID then
+            return self.cfg.sectionID == _sid
+        end
+    end
+    return false
+end
+
+function this:CheckIsRed()
+    if self.openCfg and self.openCfg.checkRed then
+        return true
+    end
+    return false
+end
+-----------------------------------------------十二星宫-----------------------------------------------
+function this:GetInfos()
+    local infos = {}
+    if self.data and self.data.sectionTables and #self.data.sectionTables>0 then
+        for k, v in pairs(self.data.sectionTables) do
+            table.insert(infos,v)
+        end
+    end
+    if #infos>0 then
+        table.sort(infos,function (a,b)
+            return a.id < b.id
+        end)
+    end
+    return infos
+end
+
+--获取最近的开启关闭时间，若关闭中会向后获取最新开启时间，若开启中会向后获取最新关闭时间
+function this:IsSectionOpen(sid)
+    local infos = self:GetInfos()
+    if sid and infos and #infos > 0 then
+        for i, v in ipairs(infos) do
+            if v.id == sid then
+                if v.startTime > self:GetEndTime() then --防止开启时间在活动结束后
+                    return false,0,0
+                end
+                if v.startTime <= TimeUtil:GetTime() and v.closeTime > TimeUtil:GetTime() then
+                    if v.closeTime > self:GetEndTime() then --防止结束时间在活动结束后
+                        return true,v.startTime,self:GetEndTime()
+                    else
+                        return true,v.startTime,v.closeTime
+                    end
+                else
+                    return false,v.startTime,v.closeTime
+                end
+            end
+        end
+    end
+    return false,0,0
+end
+-----------------------------------------------试炼-----------------------------------------------
+function this:GetUpTime(sid)
+    if self.upTimes and self.upTimes[sid] then
+        return self.upTimes[sid] - TimeUtil:GetTime()
+    else
+        self.upTimes = self.upTimes or {}
+        local infos = self.cfg and self.cfg.infos
+        if sid and infos and #infos > 0 then
+            for i, v in ipairs(infos) do
+                if v.sectionID == sid  then
+                    if v.upStartTime and v.upEndTime then
+                        local sTime = TimeUtil:GetTimeStampBySplit(v.upStartTime)
+                        local eTime = TimeUtil:GetTimeStampBySplit(v.upEndTime)
+                        if TimeUtil:GetTime() >= sTime and TimeUtil:GetTime() < eTime then
+                            self.upTimes[sid] = eTime
+                            return eTime - TimeUtil:GetTime()
+                        end
+                    end
+                    break
+                end
+            end
+        end
+    end
+    return 0
 end
 
 return this 

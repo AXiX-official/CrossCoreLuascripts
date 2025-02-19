@@ -7,7 +7,7 @@ function Awake()
     --	    FightClient:SetStopState(true);	
     --    end
     fade = ComUtil.GetCom(btnObj, "ActionFade")
-    canvasGroup =ComUtil.GetCom(btnQuit,"CanvasGroup")
+    canvasGroup = ComUtil.GetCom(btnQuit, "CanvasGroup")
 end
 
 function OnLoadBgCallBack()
@@ -17,36 +17,35 @@ end
 function OnOpen()
     -- CSAPI.SetGOActive(btnQuit,g_FightMgr.type~=SceneType.PVPMirror) 
     ResUtil:CreateUIGOAsync("FightAction/FightPauseOrCut", itemParent.gameObject, function(go)
-        SetClickMaskState(true);--屏蔽点击
-        
+        SetClickMaskState(true); -- 屏蔽点击
+
         panel = ComUtil.GetLuaTable(go)
         local descStr = FightClient:GetDirll() and "" or LanguageMgr:GetByID(25031)
         panel.Init({LanguageMgr:GetByID(25034)}, descStr, true)
-        fade:Play(0, 1, 250, 150,OnPlayEnterComplete)    
-    end) 
-       
+        fade:Play(0, 1, 250, 150, OnPlayEnterComplete)
+    end)
+
     canvasGroup.alpha = GetQuitState() and 1 or 0.7
-    --FuncUtil:Call(OnPlayEnterComplete,nil,500);
+    -- FuncUtil:Call(OnPlayEnterComplete,nil,500);
 end
---等待入场动画结束，暂停，关闭点击遮罩
+-- 等待入场动画结束，暂停，关闭点击遮罩
 function OnPlayEnterComplete()
-    if(FightActionUtil:IsHangup())then
+    if (FightActionUtil:IsHangup()) then
         OnClickExit();
         FightClient:SetPauseState(false);
-        return;        
+        return;
     end
-
 
     SetClickMaskState(false);
     FightClient:SetPauseState(true);
 end
 function SetClickMaskState(state)
-    CSAPI.SetGOActive(clickMask,state);
+    CSAPI.SetGOActive(clickMask, state);
 end
 
 function GetQuitState()
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon and (cfgDungeon.type == eDuplicateType.MainNormal or cfgDungeon.type == eDuplicateType.MainElite)  then
+    if cfgDungeon and (cfgDungeon.type == eDuplicateType.MainNormal or cfgDungeon.type == eDuplicateType.MainElite) then
         return MenuMgr:CheckModelOpen(OpenViewType.special, SpecialOpenViewType.AutoFight);
     end
     return true
@@ -66,21 +65,31 @@ function OnClickQuit()
         LanguageMgr:ShowTips(19000)
         return;
     end
-    local func = g_FightMgr and  (g_FightMgr.type == SceneType.PVP or g_FightMgr.type == SceneType.PVEBuild) and OnSureBack_PVP or
-                     OnSureBack;
+    local func,func2= OnSureBack,nil
+    local str1,str2 = nil,nil
+    if (g_FightMgr) then
+        if(g_FightMgr.type == SceneType.PVP or g_FightMgr.type == SceneType.PVEBuild) then 
+            func= OnSureBack_PVP
+        elseif(g_FightMgr.type == SceneType.Rogue) then
+            func= OnSureBack_Rogue
+            func2 = OnSureBack_Rogue2
+            str1 = LanguageMgr:GetByID(50022)
+            str2 = LanguageMgr:GetByID(50009)
+        end
+    end
 
     local isDirll = FightClient:GetDirll() and true or false
     if (isDirll) then
-        --func = OnDirllBack;
+        -- func = OnDirllBack;
         OnDirllBack();
         return;
-    elseif (g_FightMgr and g_FightMgr.type == SceneType.PVE) then
-        --if (DungeonMgr:CheckDungeonPass(1004)) then
-            func = OnSureDungeonFightQuit;
---        else
---            Tips.ShowTips("通关0-4后开启");
---            return;
---        end
+    elseif (g_FightMgr and (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS or g_FightMgr.type == SceneType.RogueT)) then
+        -- if (DungeonMgr:CheckDungeonPass(1004)) then
+        func = OnSureDungeonFightQuit;
+        --        else
+        --            Tips.ShowTips("通关0-4后开启");
+        --            return;
+        --        end
     end
 
     local teamCount = BattleMgr:GetTeamCount();
@@ -96,18 +105,56 @@ function OnClickQuit()
         quitStr = LanguageMgr:GetTips(19003)
     end
 
-    local dialogData = {
-        content = g_FightMgr and g_FightMgr.type == SceneType.PVPMirror and LanguageMgr:GetTips(19004) or quitStr,
-        okCallBack = function()
+    if (g_FightMgr) then
+        if(g_FightMgr.nDuplicateID and DungeonMgr:GetDungeonSectionType(g_FightMgr.nDuplicateID)==SectionType.Colosseum)then 
+            quitStr = LanguageMgr:GetByID(64049) 
+        else
+            if (g_FightMgr.type == SceneType.PVPMirror) then
+                quitStr = LanguageMgr:GetTips(19004)
+            elseif (g_FightMgr.type == SceneType.Rogue) then
+                quitStr = LanguageMgr:GetByID(50010)
+            elseif (g_FightMgr.type == SceneType.RogueT) then
+                quitStr = LanguageMgr:GetByID(54046) 
+            end
+        end 
+    end
+    local dialogData = {}
+    dialogData.content = quitStr
+    dialogData.okCallBack = function()
+        panel.ExitTween()
+        if (not IsNil(fade)) then
+            fade:Play(1, 0, 200, 300, function()
+                func()
+            end)
+        end
+    end
+    if(func2~=nil) then 
+        dialogData.cancelCallBack = function()
             panel.ExitTween()
-            if(not IsNil(fade))then
+            if (not IsNil(fade)) then
                 fade:Play(1, 0, 200, 300, function()
-                    func()
+                    func2()
                 end)
             end
         end
-    };
+    end
+    if(str1~=nil) then 
+        dialogData.okText = str1
+    end 
+    if(str2~=nil) then 
+        dialogData.cancelText =str2
+    end 
     CSAPI.OpenView("Dialog", dialogData);
+end
+
+function OnSureBack_Rogue()
+    FightProto:QuitRogueFight(true, 2)
+    OnClickExit();
+end
+
+function OnSureBack_Rogue2()
+    FightProto:QuitRogueFight(false, 2)
+    OnClickExit();
 end
 
 -- 训练退出
@@ -154,7 +201,7 @@ function OnClickBack()
     panel.ExitTween()
     fade:Play(1, 0, 200, 300, function()
         view:Close();
-    end) 
+    end)
 end
 
 function OnClickExit()
@@ -170,6 +217,14 @@ end
 
 function OnDestroy()
     ReleaseCSComRefs();
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if OnClickBack then
+        OnClickBack();
+    end
 end
 
 ----#Start#----

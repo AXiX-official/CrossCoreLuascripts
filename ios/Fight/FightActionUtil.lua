@@ -127,6 +127,7 @@ APIType =
     OnActionOver     = "OnActionOver",  -- 行动结束 
     OnAttackBegin    = "OnAttackBegin",  -- 攻击开始前
     OnAttackOver     = "OnAttackOver",  -- 攻击结束后 
+    OnAttackOver2     = "OnAttackOver2",  -- 攻击结束后 
     --OnBefourHurt     = "OnBefourHurt",  -- 伤害前
     --OnAfterHurt      = "OnAfterHurt", -- 伤害后
     OnDeath          = "OnDeath", -- 死亡时
@@ -167,6 +168,9 @@ APIType =
     ClosingBuff = "ClosingBuff";
 
     Custom = "custom";
+
+    SetInvincible = "SetInvincible";--设置活动boss阶段信息
+    UpdateDamage = "UpdateDamage"--更新总伤害
 }
 
 
@@ -379,7 +383,10 @@ function this:GetAPIHandler(apiName)
         self.handers[APIType.AddLightShield] = apiHandler;
         --加物理盾
         self.handers[APIType.AddPhysicsShield] = apiHandler;
-       
+        
+        self.handers[APIType.SetInvincible] = apiHandler;
+        self.handers[APIType.UpdateDamage] = apiHandler;
+        
 
         --拉条
         self.handers[APIType.AddProgress] = apiHandler;
@@ -425,7 +432,7 @@ function this:GetAPIHandler(apiName)
         --回合开始结算
         self.handers[APIType.OnRoundBegin]      = require "FightAPIHandler_RoundBegin";
         --回合结束结算
-        self.handers[APIType.OnRoundOver]       = eventHandler;
+        self.handers[APIType.OnRoundOver]       = require "FightAPIHandler_SplitDatas";;
         -- 行动开始
         self.handers[APIType.OnActionBegin]     = eventSpecialHandler;
         -- 行动结束
@@ -433,7 +440,8 @@ function this:GetAPIHandler(apiName)
          --攻击开始前
         self.handers[APIType.OnAttackBegin]     = eventSpecialHandler;
         -- 攻击结束后
-        self.handers[APIType.OnAttackOver]      = eventSpecialHandler;       
+        self.handers[APIType.OnAttackOver]      = eventSpecialHandler;   
+        self.handers[APIType.OnAttackOver2]      = eventSpecialHandler;       
        -- 角色出生时   
         self.handers[APIType.OnBorn]           = eventSpecialHandler;
 

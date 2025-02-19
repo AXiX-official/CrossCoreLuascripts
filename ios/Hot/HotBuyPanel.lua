@@ -34,7 +34,18 @@ end
 
 --购买体能
 function OnClickSure()
-	PlayerProto:ChangePlrHot()
+	local costCfg = PlayerClient:GetHotCostCfg()
+	if CSAPI.IsADVRegional(3) and costCfg then
+		if costCfg.costs[1][1]==ITEM_ID.DIAMOND then
+			CSAPI.ADVJPTitle(costCfg.costs[1][2],function()
+				PlayerProto:ChangePlrHot()
+			end)
+		else
+			PlayerProto:ChangePlrHot()
+		end
+	else
+		PlayerProto:ChangePlrHot()
+	end
 end
 
 --明细

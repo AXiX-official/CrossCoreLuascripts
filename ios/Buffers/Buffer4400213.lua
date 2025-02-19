@@ -11,5 +11,5 @@ function Buffer4400213:OnCreate(caster, target)
 	-- 8492
 	local c92 = SkillApi:GetCount(self, self.caster, target or self.owner,4,4400203)
 	-- 4400213
-	self:LimitDamage(BufferEffect[4400213], self.caster, target or self.owner, nil,1,0.25*c92)
+	self:LimitDamage(BufferEffect[4400213], self.caster, target or self.owner, nil,1,0.20*c92)
 end

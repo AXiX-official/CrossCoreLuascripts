@@ -5,7 +5,7 @@ local conf = {
 'int','string','string','string','int','json','int','string','json','json','bool','int','string','bool'
 },
 	["names"] = {
-'id','key','name','oldName','nType','jVal','iͬ����ercent','sDesc','jValiTime','jOpenDups','bIsAdd','nSeconds','icon','bIsShow'
+'id','key','name','oldName','nType','jVal','isPercent','sDesc','jValiTime','jOpenDups','bIsAdd','nSeconds','icon','bIsShow'
 },
 	["data"] = {
 {'1',	'1',	'角色EXP',	'角色EXP',	'22',	'[0.2]',	'1',	'同伴经验加成20%（装备用）',	'',	'',	'0',	'',	'2011',	'0'},

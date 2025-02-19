@@ -26,7 +26,11 @@ function this:GetID()
 end
 
 function this:GetName()
-    return self.cfg and self.cfg.name
+    return self.cfg and self.cfg.name or ""
+end
+
+function this:GetEnName()
+    return self.cfg and self.cfg.enName or ""
 end
 
 function this:GetGroup()
@@ -58,6 +62,20 @@ function this:GetDungeonGroups()
         return self.isHard and self.cfg.hDungeonGroups or self.cfg.dungeonGroups
     end
     return nil
+end
+
+function this:GetDungeonCfgs()
+    local ids = self:GetDungeonGroups()
+    local cfgs = {}
+    if ids and #ids > 0 then
+        for i, v in ipairs(ids) do
+            local cfg = Cfgs.MainLine:GetByID(v)
+            if cfg then
+                table.insert(cfgs,cfg)
+            end
+        end
+    end
+    return cfgs
 end
 
 --获取星数
@@ -140,6 +158,14 @@ function this:GetTargetJson()
     return self.cfg and self.cfg.target
 end
 
+function this:GetIcon()
+    return self.cfg and self.cfg.icon or ""
+end
+
+function this:GetType()
+    return self.cfg and self.cfg.type or 1
+end
+
 -----------------------------------------------TaoFa-----------------------------------------------
 function this:GetBGPath()
     local name = self.cfg and self.cfg.bg or ""
@@ -153,6 +179,10 @@ function this:GetVideoName()
     return self.cfg and self.cfg.video
 end
 
+function this:GetEffectName()
+    return self.cfg and self.cfg.effect
+end
+
 function this:GetImgPath()
     local name = self.cfg and self.cfg.img or ""
     if name ~= "" then
@@ -163,6 +193,10 @@ end
 
 function this:GetShowType()
     return self.cfg and self.cfg.showType or 1
+end
+
+function this:GetIcon()
+    return self.cfg and self.cfg.icon
 end
 
 return this;

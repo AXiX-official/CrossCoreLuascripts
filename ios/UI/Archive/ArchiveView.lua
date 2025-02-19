@@ -1,8 +1,23 @@
 
-local newName = {"roleNew", "courseNew", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew"}
+local newName = {"roleNew", "", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew","musicNew","asmrNew"}
+local top=nil;
+local records = {}
+function Awake()
+	eventMgr = ViewEvent.New()
+	eventMgr:AddListener(EventType.RedPoint_Refresh,OnRedRefresh)
+end
+
+function OnRedRefresh()
+	CSAPI.SetGOActive(asmrNew, ASMRMgr:IsRed())
+	ArchiveMgr:SetIsNew(ArchiveType.Asmr, ASMRMgr:IsRed())
+end
+
+function OnDestroy()
+	eventMgr:ClearListener()
+end
 
 function OnInit()
-	UIUtil:AddTop2("ArchiveView", gameObject, function()
+	top=UIUtil:AddTop2("ArchiveView", gameObject, function()
 		view:Close()
 	end, nil, "")
 end
@@ -18,6 +33,24 @@ function InitPanel()
 	InitMemoryPanel()
 	
 	InitNew()
+	-- Log(records)
+	SetButtonOpen()
+end
+
+function SetButtonOpen()
+	local cfgs = Cfgs.CfgArchive:GetAll()
+	if cfgs and #cfgs > 0 then
+		local sTime,eTime = 0,0
+		for k, cfg in ipairs(cfgs) do
+			if cfg.sTime and cfg.eTime then
+				sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
+				eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
+				if TimeUtil:GetTime() < sTime or TimeUtil:GetTime() >= eTime then
+					CSAPI.SetGOActive(this["btn" .. ArchiveNameType[cfg.id]].gameObject,false)
+				end
+			end
+		end
+	end
 end
 
 --角色
@@ -27,7 +60,8 @@ function InitRolePanel()
 	CSAPI.SetText(txtRoleNum2, "/" .. max)
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtRoleNum3, percent .. "%")
-	CSAPI.SetRTSize(roleLine, 298 * percent / 100, 36)
+	CSAPI.SetRTSize(roleLine, 27 + 271 * percent / 100, 36)
+	records["role"] = percent
 end
 
 function OnRoleDown()
@@ -62,7 +96,8 @@ function InitEnemyPanel()
 	CSAPI.SetText(txtEnemyNum2, "/" .. max)
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtEnemyNum3, percent .. "%")
-	CSAPI.SetRTSize(enemyLine, 396 * percent / 100, 36)
+	CSAPI.SetRTSize(enemyLine, 27 + 369 * percent / 100, 36)
+	records["enemy"] = percent
 end
 
 function OnEnemyDown()
@@ -104,7 +139,8 @@ function InitMemoryPanel()
 	CSAPI.SetText(txtMemoryNum2, "/" .. max)
 	local percent = math.floor(count / max * 100)
 	CSAPI.SetText(txtMemoryNum3, percent .. "%")
-	CSAPI.SetRTSize(memoryLine, 470 * percent / 100, 36)
+	CSAPI.SetRTSize(memoryLine, 27 + 443 * percent / 100, 36)
+	records["memory"] = percent
 end
 
 function OnMemoryDown()
@@ -202,16 +238,86 @@ function OnClickBoard()
 	end
 end
 
+function OnMusicDown()
+	CSAPI.SetUIScaleTo(btnMusic, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not musicT then
+		musicT = ComUtil.GetCom(musicFadeT, "ActionFadeT")
+	end
+	musicT:Play()
+end
+
+function OnMusicUp()
+	CSAPI.SetUIScaleTo(btnMusic, nil, 1, 1, 1, function()
+		OnClickMusic()
+	end, 0.15)
+end
+
+function OnClickMusic()
+	-- LanguageMgr:ShowTips(1000)
+	-- CSAPI.OpenView("MulPictureView",1)
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Music)
+	if isNew then
+		CSAPI.SetGOActive(musicNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Music, false)
+	end
+	if not CSAPI.IsViewOpen("BgmView") then
+		CSAPI.OpenView("BgmView")
+	end
+	-- LanguageMgr:ShowTips(1000)
+end
+
+function OnAsmrDown()
+	CSAPI.SetUIScaleTo(btnAsmr, nil, 1.06, 1.06, 1, nil, 0.14)
+	if not asmrT then
+		asmrT = ComUtil.GetCom(asmrFadeT, "ActionFadeT")
+	end
+	asmrT:Play()
+end
+
+function OnAsmrUp()
+	CSAPI.SetUIScaleTo(btnAsmr, nil, 1, 1, 1, function()
+		OnClickASMR()
+	end, 0.15)
+end
+
+function OnClickASMR()
+	-- LanguageMgr:ShowTips(1000)
+	-- CSAPI.OpenView("MulPictureView",1)
+	local isNew = ArchiveMgr:GetIsNew(ArchiveType.Asmr)
+	if isNew then
+		CSAPI.SetGOActive(asmrNew, false)
+		ArchiveMgr:SetIsNew(ArchiveType.Asmr, false)
+	end
+	if not CSAPI.IsViewOpen("ASMRView") then
+		CSAPI.OpenView("ASMRView")
+	end
+	-- LanguageMgr:ShowTips(1000)
+end
+
 function InitNew()
+	ArchiveMgr:SetIsNew(ArchiveType.Asmr, ASMRMgr:IsRed())
+
 	for i = 1, #newName do
-		CSAPI.SetGOActive(this[newName[i]].gameObject, ArchiveMgr:GetIsNew(i))
+		if newName[i] ~= "" then
+			CSAPI.SetGOActive(this[newName[i]].gameObject, ArchiveMgr:GetIsNew(i))
+		end
 	end
 end
 
 function OnDestroy()	
 	ReleaseCSComRefs();
 end
-
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+	---填写退出代码逻辑/接口
+	if  top.OnClickBack then
+		top.OnClickBack();
+		if not UIMask then
+			UIMask = CSAPI.GetGlobalGO("UIClickMask")
+		end
+		CSAPI.SetGOActive(UIMask, false)
+	end
+end
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
 function ReleaseCSComRefs()	

@@ -1,20 +1,3 @@
-local infoUtil = nil
-local enterPos = nil
-local outPos = nil
-local isInfoShow = nil
-local lastCfg = nil
-local currCfg = nil
-local infoFade = nil
-local infoCG = nil
-local infoMove = nil
-local isActive = false
-local enterCB = nil
-local sweepCB = nil
-local maskCB = nil
-local buyFunc = nil
--- 多倍
-local isDouble = true
-local multiNum = 0
 
 function Awake()
     eventMgr = ViewEvent.New();
@@ -28,18 +11,26 @@ function Awake()
 end
 
 function OnPanelUpdate(_data)
-    infoUtil.RefreshPanel()
+    if _data then
+        infoUtil:Set(_data)
+    end
+    infoUtil:RefreshPanel()
 end
 
 function InitInfo()
     infoUtil = DungeonInfoUtil.New()
-    local x, y, z = CSAPI.GetLocalPos(childNode);
-    enterPos = {x, y, z}
-    outPos = {4000, y, 0};
+    _, goY, _ = CSAPI.GetLocalPos(childNode);
+    outPos = {4000, goY, 0};
+    enterPos = GetEnterPos()
     CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
     CSAPI.SetGOActive(gameObject, false);
     CSAPI.SetGOActive(clickMask, false)
     CSAPI.SetGOActive(mask, false)
+end
+
+function GetEnterPos()
+    canvasSize = CSAPI.GetMainCanvasSize()
+    return {canvasSize[0] / 2, goY, 0}
 end
 
 function OnDestroy()
@@ -58,27 +49,28 @@ function Refresh(cfg, _elseData, callBack)
     infoUtil:Set(cfg)
     infoUtil:Hidden()
     local type = _elseData or DungeonInfoType.Normal
-    local names = DungeonInfoNameUtil.GetNames(type)
-    SetItems(names, callBack)
+    local names,path = DungeonInfoNameUtil.GetNames(type)
+    path = path or "DungeonItemInfo"
+    SetItems(names,path,callBack)
 end
 
-function SetItems(typeNames, callBack)
+function SetItems(typeNames,path,callBack)
     if typeNames and #typeNames > 0 then
         for i, typeName in ipairs(typeNames) do
             if typeName ~= "" then
-                if typeName == "Double" then
+                if typeName == "Double" or typeName == "Double2" then
                     if IsShowDouble() then
-                        infoUtil:Show(typeName, doubleParent)    
+                        infoUtil:Show(typeName, doubleParent, path)
                     end
                 elseif i == #typeNames then
-                    infoUtil:Show(typeName, layout, function(panel)
+                    infoUtil:Show(typeName, layout, path, function(panel)
                         OnButtonClick(panel)
-                        if i == #typeNames and callBack then
+                        if callBack then
                             callBack()
                         end
                     end)
                 else
-                    infoUtil:Show(typeName, layout)
+                    infoUtil:Show(typeName, layout, path)
                 end
             end
         end
@@ -90,7 +82,7 @@ function IsShowDouble()
         return false
     end
     local sectionData = DungeonMgr:GetSectionData(currCfg.group)
-    if sectionData and DungeonUtil.GetMultiNum(sectionData:GetID()) > 0 then
+    if sectionData and DungeonUtil.HasMultiDesc(sectionData:GetID())then
         CSAPI.SetRTSize(layout,579,880)
         return true
     end
@@ -104,8 +96,9 @@ function CheckDouble(panel, cb)
     end
     local isDouble = panel.IsDouble()
     local multiNum = panel.GetMultiNum()
+    local isLimitDouble = panel.IsLimitDouble()
     local isFirstDouble = DungeonMgr:GetFisrtOpenDouble()
-    if (not isDouble and multiNum > 0 and not isFirstDouble) then
+    if (not isDouble and multiNum > 0 and not isFirstDouble and not isLimitDouble) then
         DungeonMgr:SetFisrtOpenDouble(true)
         local dialogData = {}
         local name = currCfg.name
@@ -139,11 +132,73 @@ end
 function ClearLastItem()
     lastCfg = nil
 end
+
+function SetLayoutPos(pos)
+    CSAPI.SetAnchor(layout,pos[1],pos[2])
+end
+
+function CallFunc(panelName,panelFuncName,...)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil then
+        -- LogError("没找到对应名称的组件!!" .. panelName)
+        return nil
+    end
+
+    if panel[panelFuncName] == nil then
+        -- LogError("没找到对应方法名的方法!!" .. panelFuncName)
+        return nil
+    end
+
+    return panel[panelFuncName](...)
+end
+
+function SetPanelPos(panelName,x,y)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil then
+        -- LogError("没找到对应名称的组件!!" .. panelName)
+        return nil
+    end
+    CSAPI.SetAnchor(panel.gameObject,x,y)
+end
+
+function SetFunc(panelName,oldFuncName,newFunc)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil then
+        return nil
+    end
+
+    if panel[oldFuncName] == nil then
+        return nil
+    end
+
+    panel[oldFuncName] = newFunc
+end
+
+function SetGOActive(panelName,goName,b)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil or panel[goName] == nil then
+        return nil
+    end
+    CSAPI.SetGOActive(panel[goName].gameObject,b)
+end
 ------------------------------------------------按钮回调
 
-function SetClickCB(_cb1, _cb2)
+function SetClickCB(_cb1, _cb2,_cb3)
     enterCB = _cb1
     sweepCB = _cb2
+    storyCB = _cb3
     if enterCB then
         local _enterCB = enterCB
         enterCB = function()
@@ -160,7 +215,10 @@ function OnButtonClick(panel)
     if sweepCB then
         panel.OnClickSweep = sweepCB
     end
-    if buyFunc then
+    if storyCB and panel.SetStoryCB then
+        panel.SetStoryCB(storyCB)
+    end
+    if buyFunc and panel.SetBuyFunc then
         panel.SetBuyFunc(buyFunc)
     end
 end
@@ -201,7 +259,7 @@ function PlayInfoMove(isShow, callBack)
             infoFade:Play(1, 0, 100, 0, function()
                 CSAPI.SetLocalPos(childNode, outPos[1], outPos[2], outPos[3])
                 infoCG.alpha = 1
-                PlayMoveAction(childNode, enterPos)
+                PlayMoveAction(childNode, GetEnterPos())
                 if callBack then
                     callBack()
                 end
@@ -210,7 +268,7 @@ function PlayInfoMove(isShow, callBack)
         else
             lastCfg = currCfg
             infoFade:Play(0, 1)
-            PlayMoveAction(childNode, enterPos, function()
+            PlayMoveAction(childNode, GetEnterPos(), function()
                 isInfoShow = true
             end)
             if callBack then
@@ -253,20 +311,26 @@ function ShowAnim()
 end
 
 function SetPos(isShow)
-    local pos = isShow and enterPos or outPos
+    local pos = isShow and GetEnterPos() or outPos
     CSAPI.SetLocalPos(childNode, pos[1], pos[2], pos[3])
-end
-
-function ShowDangeLevel(isDanger, cfgs, currDanger)
-    local dangerPanel =infoUtil:GetPanel("Danger")
-    if isDanger and cfgs then
-        dangerPanel.ShowDangeLevel(isDanger, cfgs, currDanger)
-    end
 end
 
 function SetItemPos(typeName,x,y)
     local panel = infoUtil:GetPanel(typeName)
     if panel then
         panel.SetPos(x,y)
+    end
+end
+
+function GetCurrDanger()
+    local panel = infoUtil:GetPanel("Danger")
+    return panel and panel.GetCurrDanger() or 1
+end
+
+------------------------------------------------剧情
+function IsStoryFirst()
+    local plotButton = infoUtil:GetPanel("PlotButton")
+    if plotButton then
+        return plotButton.isStoryFirst
     end
 end

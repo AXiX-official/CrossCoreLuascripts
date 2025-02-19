@@ -29,7 +29,7 @@ end
 -- 自己
 function SetLeft()
     -- icon
-    SetIconL(PlayerClient:GetIconId())
+    --SetIconL(PlayerClient:GetLastRoleID())
     -- attack
     local teamData = TeamMgr:GetTeamData(eTeamType.PracticeAttack)
     if teamData then
@@ -52,6 +52,8 @@ function SetIconL(icon_id)
     CSAPI.SetRTSize(iconMaskL, width, arr.y)
     -- CSAPI.SetAnchor(iconMaskL, - arr.x / 4)
     RoleTool.LoadImg(iconL, icon_id, LoadImgType.ExerciseLView)
+    -- 
+    UIUtil:SetLiveBroadcast(iconL)
 end
 
 function SetLTeamItems()
@@ -67,14 +69,27 @@ function SetLTeamItems()
     end
 
     lTeamGrids = lTeamGrids or {}
-    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", lTeamGrids, _newDatas, itemGridL)
+    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", lTeamGrids, _newDatas, itemGridL, nil, 1, {
+        hideFormat = true
+    })
+
+    --icon 
+    SetIconL(_newDatas[1]:GetSkinID())
 end
 
 -- 敌人
 function SetRight()
     lData = ExerciseMgr:GetEnemyInfo(data.uid)
+    if(not lData) then 
+        LogError("找不到玩家数据："..data.uid)
+        return 
+    end 
     -- icon
-    SetIconR(lData.icon_id)
+    local icon_id = lData.icon_id
+    if (lData.role_panel_id ~= nil and lData.role_panel_id ~= 0) then
+        icon_id = lData.role_panel_id
+    end
+    SetIconR(icon_id)
     -- attack
     CSAPI.SetText(txtFightingR2, lData.performance .. "")
     -- rank
@@ -95,6 +110,8 @@ function SetIconR(icon_id)
         local x, y = CSAPI.GetAnchor(iconR)
         CSAPI.SetAnchor(iconR, -x, y)
     end)
+    -- 
+    UIUtil:SetLiveBroadcast(iconR)
 end
 function SetRTeamItems()
     local cardDatas = {}
@@ -114,11 +131,9 @@ function SetRTeamItems()
         end
     end
     rTeamGrids = rTeamGrids or {}
-    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", rTeamGrids, _newDatas, itemGridR, nil, 1, nil, function()
-        for k, v in pairs(rTeamGrids) do
-            v.SetFormation()
-        end
-    end)
+    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", rTeamGrids, _newDatas, itemGridR, nil, 1, {
+        hideFormat = true
+    })
 end
 
 function OnClickTeam()

@@ -48,7 +48,7 @@ function OnClick()
 	if(data) then
 		CSAPI.OpenView("ArchiveRole", data)
 	else
-		Tips.ShowTips(StringConstant.archive9)
+		-- Tips.ShowTips(StringConstant.archive9)
 	end
 end 
 function OnDestroy()    

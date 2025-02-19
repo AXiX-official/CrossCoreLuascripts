@@ -9,6 +9,10 @@ SceneType.PVEBuild	= 6 -- pve(非副本)
 SceneType.GuildBOSS	= 7 -- 工会BOSS
 SceneType.TeamBOSS	= 7 -- 组队BOSS
 SceneType.FieldBoss	= 8 -- 战场系统BOSS
+SceneType.Rogue		= 9 -- 乱序演习
+SceneType.RogueS	= 10 -- 战力派遣
+SceneType.GlobalBoss= 11 -- 新世界boss
+SceneType.RogueT 	= 12 -- 能力测验
 
 -- 副本类型
 eDuplicateType                 = {}
@@ -20,13 +24,22 @@ eDuplicateType.Tower           = 5 -- 爬塔
 eDuplicateType.BattleField     = 6 -- 战场
 eDuplicateType.BattleFieldBoss = 7 -- 战场boss
 eDuplicateType.TaoFa           = 8 -- 讨伐
+eDuplicateType.NewTower        = 9 -- 异构空间
+eDuplicateType.Rogue           = 10 -- 乱序演习
+eDuplicateType.StarPalace      = 11 -- 十二星宫
+eDuplicateType.RogueS	       = 12 -- 战力派遣
+eDuplicateType.AbattoirSelect  = 13 -- 角斗场自选模式
+eDuplicateType.AbattoirRand	   = 14 -- 角斗场随机模式
+eDuplicateType.RogueT	       = 15 -- 能力测验
+
 eDuplicateType.Materials       = 101 -- 材料副本
 eDuplicateType.Equip           = 102 -- 装备副本
 eDuplicateType.Gold            = 103 --金币
 eDuplicateType.Exp             = 104 --经验
 eDuplicateType.Skill           = 105 --技能材料
 eDuplicateType.StoryActive     = 106 --剧情活动
-
+--eDuplicateType.Rogue           = 108 --乱序、战力派遣
+--eDuplicateType.Colosseum       = 109 --角斗场
 GenEnumNameByVal('eDuplicateTypeName', eDuplicateType)
 
 eDuplicateTypeChName                 = {}
@@ -50,6 +63,12 @@ eDuplicateTypeChName.StoryActive     ="剧情活动"
 -- 副本关卡副类型
 eDupSubType = {}
 eDupSubType.Story	= 1 -- 剧情
+
+-- 正在进行的副本战斗下标类型
+eDupIdxType = {}
+eDupIdxType.Normal	= 1 -- 普通战斗，以关卡ID为key
+eDupIdxType.Rogue	= 2 -- 乱序演习，
+eDupIdxType.RogueT	= 3 -- 限制肉鸽爬塔
 
 
 -- 卡牌类型
@@ -133,6 +152,8 @@ ePassiveTiming.OnAfterRoundBegin = 21 -- 回合开始处理完成后
 ePassiveTiming.OnActionOver2     = 22 -- 行动结束2
 ePassiveTiming.OnResolve         = 23 -- 解体
 ePassiveTiming.OnBefourCritHurt  = 24  -- 暴击伤害前(OnBefourHurt之前)
+ePassiveTiming.OnAttackOver2     = 25  -- 攻击结束2
+
 
 -- 被动时机(数组)
 arrPassiveTiming = {}

@@ -14,10 +14,11 @@ function Refresh(tab)
 end
 
 function SetName()
-    CSAPI.SetText(txtName,cfg.name)
+    local str = cfg.name:gsub("-","\u{3000}")
+    CSAPI.SetText(txtName,str)
     CSAPI.SetText(txtStage,cfg.chapterID and cfg.chapterID .. "" or "")
-    CSAPI.SetGOActive(txtStage,cfg.type ~= eDuplicateType.Tower)
-    CSAPI.SetGOActive(txt_stage,cfg.type ~= eDuplicateType.Tower)
+    CSAPI.SetGOActive(txtStage,cfg.type ~= eDuplicateType.Tower and cfg.type ~= eDuplicateType.TaoFa)
+    CSAPI.SetGOActive(txt_stage,cfg.type ~= eDuplicateType.Tower and cfg.type ~= eDuplicateType.TaoFa)
 end
 
 function SetHard()

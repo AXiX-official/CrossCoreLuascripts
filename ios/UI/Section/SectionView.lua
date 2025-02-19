@@ -70,14 +70,21 @@ local lastPosY={0,0,0}
 local currDailyIndexL1 = 0
 local currDailyIndexL2 = 0
 local currDailyIndexR = 0
+local isDailyNew = false
 
 --军演
 local eRectL = nil
 local eRectR = nil
 local isExerciseLOpen = false
 local isExerciseROpen = false
+local isExerciseRShow = true
+local isColosseumOpen = false
 local eLockStr = ""
+local eLockStr2 = ""
 local isPvpRet = false
+local cRefreshTime = 0
+local cTimer = 0
+local cTime = 0
 
 --活动
 local layout4 =nil
@@ -117,12 +124,13 @@ function Awake()
     eventMgr:AddListener(EventType.Exercise_Update, OnExerciseRefresh)
     --new
     eventMgr:AddListener(EventType.Dungeon_DailyData_Update, DailyNewRefresh)
+    --限时多倍
+    eventMgr:AddListener(EventType.Section_Daily_Double_Update, OnDoubleRefresh)
+    eventMgr:AddListener(EventType.Dungeon_Double_Update, OnDoubleRefresh)
     --red
-    eventMgr:AddListener(EventType.Dungeon_Box_Refresh, OnRedRefresh)
-    eventMgr:AddListener(EventType.Mission_List, OnRedRefresh)
-    eventMgr:AddListener(EventType.Section_Red_Update, OnRedRefresh)
     eventMgr:AddListener(EventType.ExerciseL_New, ExerciseNewRefresh)
     eventMgr:AddListener(EventType.Loading_Complete, CheckModelOpen) --检测功能开启
+    eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedRefresh)
     UIMaskGo = CSAPI.GetGlobalGO("UIClickMask")
 
     layout1 = ComUtil.GetCom(sv1, "UIInfinite")
@@ -240,8 +248,10 @@ end
 function OnOpen()
     jumpData = data
     local baseScale = {1920, 1080}
-	local curScale = CSAPI.GetMainCanvasSize()
-    offset.x =  (curScale[0] - baseScale[1])/2
+	 local curScale = CSAPI.GetMainCanvasSize()
+    local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
+    local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
+    offset.x =  (curScale[0] - baseScale[1] + fit1 + fit2)/2
     offset.y = (curScale[1] - baseScale[2])/2 
 
     InitViewInfo()
@@ -274,6 +284,8 @@ function Update()
         UpdateItemAngle(contentX)
         UpdatePrograss(contentX)      
     end 
+
+    UpdateColosseum()
 
     if currType == 4 and items4 and #items4 > 0 then
         local contentX = CSAPI.GetAnchor(content4)      
@@ -360,7 +372,7 @@ function RefreshMainLineView()
     if mainLineCfgs then
         for _, cfg in pairs(mainLineCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfg.id)
-            if sectionData then
+            if sectionData and sectionData:GetOpenState() > -2 then
                 table.insert(mainLineDatas, sectionData)
             end
         end
@@ -528,15 +540,27 @@ function InitExerciseView()
     if not isExerciseLOpen then
         CSAPI.SetText(txt_eLock2, eLockStr)
     end
+    --Colosseum
+    isColosseumOpen,cRefreshTime = ColosseumMgr:CheckEnterOpen()
+    if cRefreshTime ~= nil then
+        cTime = cRefreshTime - TimeUtil:GetTime()
+    end
 
-    CSAPI.SetGOActive(eLockImg2, false)
-    isExerciseROpen = g_FightOnlineUnlock
-    if not isExerciseROpen then
-        LanguageMgr:SetText(txt_exercise3,36013)
-        LanguageMgr:SetEnText(txt_exercise4,36013)
-        CSAPI.SetGOActive(eLockImg2, true)
-        -- CSAPI.SetScriptEnable(btnExerciseR, "Button", false)
-        ResUtil:LoadBigImg(btnExerciseR, "UIs/Exercise/1/bg3")
+    local sectionData = DungeonMgr:GetSectionData(13001)
+    isExerciseROpen,eLockStr2 = sectionData:GetOpen()
+    if not isExerciseROpen or not isColosseumOpen then
+        isExerciseRShow = sectionData:GetOpenState() > -2
+        if isExerciseRShow then
+            isExerciseRShow = isColosseumOpen
+        end
+        CSAPI.SetText(txt_eLock4, eLockStr2)
+        CSAPI.SetGOActive(btnExerciseR, isExerciseRShow)
+        if not isExerciseRShow and exerciseMoveL then
+            exerciseMoveL.targetPos = UnityEngine.Vector3(0,0,0)
+        end
+    else
+        CSAPI.SetGOActive(eLockImg2, false)
+        CSAPI.SetGOActive(eLockObj2, false)
     end
     isPvpRet = ExerciseMgr:GetEndTime() ~= 0
 end
@@ -627,13 +651,12 @@ function ShowPanel(type)
         top.SetMoney(ids)   -- 需要加跳转id todo 
     end
 
-    --new
-    RefreshNew()
-
     --question
     SetQuestion()
 
     isViewDrop = false
+
+    DailyNewRefresh()
 end
 
 function ShowMenuPanel()
@@ -641,6 +664,9 @@ function ShowMenuPanel()
     SetTitle(false)
 
     CSAPI.SetLocalPos(moveNode,0,0)
+
+    UIUtil:SetNewPoint(dailyNew,IsDailyNew())
+    DailyDoubleRefresh()
 end
 
 function SetTitle(isShow,parent,delay)
@@ -664,6 +690,9 @@ function ShowMainPanel()
     end
 
     -- move
+    if viewInfo.Main == nil then
+        InitViewInfo()
+    end
     MoveTo(viewInfo.Main[currIndex], SectionViewType.MainLine, pType, 0)
     
     if currIndex == 1 then
@@ -761,6 +790,9 @@ function ShowDailyPanel()
 
     -- move
     if curState > 0 then
+        if viewInfo.Daily == nil then
+            InitViewInfo()
+        end
         MoveTo(viewInfo.Daily[currIndex], SectionViewType.Daily, pType, offsetX)    
         CSAPI.SetAnchor(dailyPanel.selectObj, offset.x + 920 , 0)  
         CSAPI.SetAnchor(sv3, offset.x + 310, -6.5)
@@ -769,6 +801,8 @@ function ShowDailyPanel()
     -- scale
     if currIndex == 1 then
         CSAPI.SetScale(sv2, 0.7, 0.7, 1)
+    else --刷新配置
+        ConfigChecker:CfgDupDropCntAdd(Cfgs.CfgDupDropCntAdd:GetAll())
     end
 
     layout2:UpdateList()
@@ -1024,15 +1058,9 @@ function RefreshItemNew()
     if currDailyIndexL1 then
         local lua = layout2:GetItemLua(currDailyIndexL1)
         if lua then
-            lua.RefreshNew()
+            lua.RefreshTag()
         end
-    end
-    if currDailyIndexL2 then
-        local lua = layout3:GetItemLua(currDailyIndexL2)
-        if lua then
-            lua.RefreshNew()
-        end
-    end
+    end   
     RedPointMgr:ApplyRefresh()
 end
 
@@ -1131,9 +1159,7 @@ end
 ------------------------------------军演-----------------------------------
 function OnExerciseRefresh()
     isPvpRet = true
-    if currIndex < 3 then
-        ShowExercisePanel()
-    end
+    ShowExercisePanel()
 end
 
 function ShowExercisePanel()
@@ -1143,15 +1169,19 @@ function ShowExercisePanel()
     end
 
     -- move
+    if viewInfo.Exercise == nil then
+        InitViewInfo()
+    end
     MoveTo(viewInfo.Exercise[currIndex], SectionViewType.Exercise, pType, 0)
 
+    
     if currIndex == 1 then
         -- scale
         CSAPI.SetScale(btnExerciseL, 0.73, 0.73, 1)
         CSAPI.SetScale(btnExerciseR, 0.73, 0.73, 1)   
 
         --pos
-        CSAPI.SetAnchor(btnExerciseL,241,0)
+        CSAPI.SetAnchor(btnExerciseL,241,isExerciseRShow and 153 or 0)
         CSAPI.SetAnchor(btnExerciseR,241,-153)       
     end
 
@@ -1181,6 +1211,8 @@ function ShowExercisePanel()
         LanguageMgr:SetText(txt_eLock1, 1035)
         CSAPI.SetText(txt_eLock2, eLockStr) 
     end
+
+    ExerciseNewRefresh()
 end
 
 function OnClickExerciseL()
@@ -1203,9 +1235,20 @@ end
 function OnClickExerciseR()
     --LanguageMgr:ShowTips(1000)
     if isExerciseROpen then
-        CSAPI.OpenView("ExerciseRView")      
+        CSAPI.OpenView("ColosseumView")       --CSAPI.OpenView("ExerciseRView")      
     else
-        LanguageMgr:ShowTips(1000)
+        Tips.ShowTips(eLockStr2)
+        -- LanguageMgr:ShowTips(1000)
+    end
+end
+
+function UpdateColosseum()
+    if cTime > 0 and Time.time > cTimer then
+        cTimer = Time.time + 1
+        cTime = cRefreshTime - TimeUtil:GetTime()
+        if cTime <= 0 then
+            InitExerciseView()
+        end
     end
 end
 
@@ -1217,10 +1260,22 @@ function RefreshActivityDatas()
         local activityTypeDatas = {}
         for _, cfg in pairs(activityCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfg.id)   
+            local openState1,openState2 = 0,0
             if sectionData then
                 activityTypeDatas[sectionData:GetType()] = activityTypeDatas[sectionData:GetType()] or {}
-                if sectionData:GetType() == SectionActivityType.Tower or sectionData:GetType() == SectionActivityType.NewTower  then --爬塔只显示一个
-                    if #activityTypeDatas[sectionData:GetType()] < 1 then
+                if sectionData:IsShowOnly() then
+                    if #activityTypeDatas[sectionData:GetType()] > 0 then
+                        local id = activityTypeDatas[sectionData:GetType()][1]:GetID()
+                        openState1 = activityTypeDatas[sectionData:GetType()][1]:GetOpenState()
+                        openState2 = sectionData:GetOpenState()
+                        if openState1 ~= openState2 then
+                            if openState2 > openState1 then
+                                activityTypeDatas[sectionData:GetType()][1] = sectionData
+                            end
+                        elseif id > sectionData:GetID() then
+                            activityTypeDatas[sectionData:GetType()][1] = sectionData
+                        end
+                    else
                         table.insert(activityTypeDatas[sectionData:GetType()],sectionData)
                     end
                 else
@@ -1230,12 +1285,13 @@ function RefreshActivityDatas()
         end
 
         local logStrs = {}
+        local stateStr ={"未在活动开放时间内","","未达成开启条件","已开启"}
         for _, _type in pairs(SectionActivityType) do
             local typeDatas = activityTypeDatas[_type]           
             if typeDatas and #typeDatas > 0 then
                 for i, v in ipairs(typeDatas) do
-                    table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),v:GetOpenState()))
-                    if v:GetOpenState() > -1 or _type == SectionActivityType.Tower or _type == SectionActivityType.NewTower then
+                    table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),stateStr[v:GetOpenState()+3]))
+                    if v:GetOpenState() > -1 or v:IsResident() then
                         local _data = {
                             data = v,
                             type = _type,
@@ -1247,8 +1303,9 @@ function RefreshActivityDatas()
                 end
             end
         end
-        --Log("活动信息:")
-        --Log(logStrs)
+        LogTable(logStrs,"活动信息")
+        -- Log("活动信息:")
+        -- Log(logStrs)
     end
     table.sort(datas, function(a, b)      
         local pos1 = a.pos or 99
@@ -1271,6 +1328,9 @@ function ShowActivityPanel()
 
     -- move
     CSAPI.SetLocalPos(activityNode,0,0)
+    if viewInfo.Activity == nil then
+        InitViewInfo()
+    end
     MoveTo(viewInfo.Activity[currIndex], SectionViewType.Activity, pType, 0)
 
     if items4 and #items4>0 then
@@ -1359,10 +1419,12 @@ function OnEnterCB1(item)
         LogError("缺少界面路径!!!" .. sectionData:GetCfg().id)
         return
     end
-    if sectionData:GetType() == SectionActivityType.Tower then
+    if sectionData:GetType() == SectionActivityType.Tower or sectionData:GetType() == SectionActivityType.NewTower then
         CSAPI.OpenView(path)
+    elseif sectionData:GetType() == SectionActivityType.Rogue then
+        CSAPI.OpenView("RogueMain")
     else
-        CSAPI.OpenView(path,{id = item.GetID()})
+        CSAPI.OpenView(path, {id = item.GetID()})
     end
 end
 
@@ -1507,29 +1569,10 @@ function OnClickArrowR()
         MoveToIndex(curActivityItem1.index + 1,nil,200)
     end
 end
-
-function OnRedRefresh()
-    SetRed()
-    if currType == 1 then
-        RefreshMainLineView()
-    elseif currType == 4 then
-        RefreshActivityDatas()
-    end
-end
-
-function ExerciseNewRefresh()
-    local isNew = ExerciseMgr:IsExerciseLNew()
-    if currIndex == 1 then
-        UIUtil:SetNewPoint(eNewObj,isNew,125,24)
-    elseif currIndex == 2 and currType == 3 then
-        UIUtil:SetNewPoint(btnExerciseL,isNew,340,190)
-    end
-end
-
 ------------------------------------右侧信息栏-----------------------------------
 function ShowItemInfo(cb)    
     if (itemInfo == nil) then --没有则异步创建
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
             CSAPI.SetGOActive(itemInfo.bg, false)
@@ -1643,6 +1686,7 @@ function RecycleLines()
 end
 
 ------------------------------------点击-----------------------------------
+
 function OnClickBack()
     if currType == SectionViewType.Daily and currIndex > 2 then
         currIndex = currIndex - 1
@@ -2061,32 +2105,44 @@ function CountAngle(p1, p2)
 end
 
 ---------------------------------------------red---------------------------------------------
+function OnRedRefresh()
+    SetRed()
+    if currType == 1 then
+        RefreshMainLineView()
+    elseif currType == 4 then
+        RefreshActivityDatas()
+    end
+end
 
 function SetRed()
-    local isActivityRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower,eTaskType.Story,eTaskType.DupTaoFa})
-    UIUtil:SetRedPoint(SectionTypeItem4,isActivityRed,146,26)
+    local redData1 = RedPointMgr:GetData(RedPointType.SectionMain)
+    UIUtil:SetRedPoint(SectionTypeItem1,redData1 ~= nil,146,26)
 
-    local isMainRed = DungeonBoxMgr:CheckRed()
-    UIUtil:SetRedPoint(SectionTypeItem1,isMainRed,146,26)
+    local redData2= RedPointMgr:GetData(RedPointType.SectionDaily)
+    UIUtil:SetRedPoint(SectionTypeItem2,redData2 ~= nil,146,26)
+
+    local redData3= DungeonMgr:IsExerciseRed() and 1 or nil
+    UIUtil:SetRedPoint(SectionTypeItem3,redData3 ~= nil,146,26)
+
+    local redData4= RedPointMgr:GetData(RedPointType.SectionActivity)
+    UIUtil:SetRedPoint(SectionTypeItem4,redData4 ~= nil,146,26)
+
+
+    UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
 end
 ---------------------------------------------new---------------------------------------------
-
-function RefreshNew()
-    DailyNewRefresh()
-    ExerciseNewRefresh()
-end
-
 function DailyNewRefresh()
     if currIndex > 1 and currType == 2 and SectionNewUtil:IsDoubleNew() then
         SectionNewUtil:RefreshDoubleNew()
+        RedPointMgr:ApplyRefresh()
         FuncUtil:Call(function ()
             if gameObject then
                 LanguageMgr:ShowTips(8012)
             end   
         end,nil, 600)
     end
-    UIUtil:SetNewPoint(dailyNew,IsDailyNew())
-    -- CSAPI.SetGOActive(dailyNew, IsDailyNew())
+    isDailyNew = IsDailyNew()
+    UIUtil:SetNewPoint(dailyNew,isDailyNew)
 end
 
 function IsDailyNew()
@@ -2097,6 +2153,39 @@ function IsDailyNew()
     return isNew
 end
 
+function ExerciseNewRefresh()
+    local isNew = ExerciseMgr:IsExerciseLNew()
+    if currIndex == 1 then
+        UIUtil:SetNewPoint(eNewObj,isNew,125,24)
+    elseif currIndex == 2 and currType == 3 then
+        UIUtil:SetNewPoint(btnExerciseL,isNew,340,190)
+    end
+end
+---------------------------------------------limitDouble---------------------------------------------
+function OnDoubleRefresh()
+    DailyDoubleRefresh()
+
+    if currType == 2 then
+        ShowDailyPanel()
+    end
+end
+
+function DailyDoubleRefresh()
+    UIUtil:SetDoublePoint(dailyDouble, IsLimitDouble())
+end
+
+function IsLimitDouble()
+    if dailyDatas then
+        for i, v in pairs(dailyDatas) do
+            for k, m in ipairs(v) do
+                if DungeonUtil.IsLimitDropAdd(m:GetID()) then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
 ---------------------------------------------question------------------------------------------
 function SetQuestion()
     if currType == nil then
@@ -2117,9 +2206,31 @@ function CheckModelOpen()
 end
 
 
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if isAnim then
+        return
+    end
+    if  top.OnClickBack then
+        top.OnClickBack();
+        if not UIMask then
+            UIMask = CSAPI.GetGlobalGO("UIClickMask")
+        end
+        CSAPI.SetGOActive(UIMask, false)
+    end
+end
+
+
+
 function OnDestroy()
     eventMgr:ClearListener();
     ReleaseCSComRefs()
+    if not UIMask then
+        UIMask = CSAPI.GetGlobalGO("UIClickMask")
+    end
+    CSAPI.SetGOActive(UIMask, false)
 end
 
 ----#Start#----

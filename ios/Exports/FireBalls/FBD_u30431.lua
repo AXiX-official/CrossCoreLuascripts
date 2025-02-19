@@ -1,11 +1,6 @@
 --FireBall数据
 local this = 
 {
-[-1183793042]={
-{time=13000,type=0,cue_sheet="cv/Lepus.acb",cue_name="Lepus_41",cue_feature=1},
-{time=13000,type=0,cue_sheet="fight/effect/Lepus_merge.acb",cue_name="Lepus_merge"},
-{time=3500,type=0}
-},
 [1120628288]={
 {time=3000,type=0,cue_sheet="cv/Lepus.acb",cue_name="Lepus_42",cue_feature=1}
 },

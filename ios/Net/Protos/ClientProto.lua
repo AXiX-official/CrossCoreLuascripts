@@ -1,4 +1,7 @@
-ClientProto = {}
+ClientProto =
+{
+    PayQueryAction=nil;
+}
 
 -- 签到记录
 function ClientProto:GetSignInfo(_id, _index)
@@ -165,6 +168,11 @@ function ClientProto:InitFinishRet(proto)
 
     --服务器压力大，延迟到这里请求
     DormMgr:RequestDormProtoServerData();--先不请求试试看
+
+    CollaborationMgr:InitData();--初始化回归绑定活动
+    ActivityMgr:CheckRedPointData() --用于活动
+    RegressionMgr:CheckRedPointData() -- 回归活动
+    EventMgr.Dispatch(EventType.InitFinishRet)
 end
 
 -- 未收到InitFinishRet前每隔几秒发一次直到成功为止
@@ -244,9 +252,64 @@ end
 
 -- {id,type,nBegTime,nEndTime} -type:1.战场
 function ClientProto:ActiveOpen(proto)
-    Log("ClientProto:ActiveOpen")
-    Log(proto);
+    -- Log("ClientProto:ActiveOpen")
+    -- Log(proto);
     if proto then
         DungeonMgr:AddActivityOpenInfo(proto)
+        if not proto.isFromLogin then --不是登录时更新
+            ActivityMgr:RefreshOpenState()
+            EventMgr.Dispatch(EventType.CfgActiveEntry_Change)
+        end
+    end
+end
+
+--服务器修改表字段
+function ClientProto:DySetCfgNotice(proto)
+    GCalHelp:DyModifyCfgs(proto.infos)
+    for k, v in pairs(proto.infos) do
+        if(v.name=="global_setting" and (v.row_id=="g_ZilongWebBtnOpen" or v.row_id=="g_ZilongWebBtnClose" or v.row_id=="g_ZilongWebBtnLv")) then
+            EventMgr.Dispatch(EventType.Menu_WebView_Enabled) --主界面的问卷调查
+        end
+        if (v.name == "CfgActiveEntry") then
+            EventMgr.Dispatch(EventType.CfgActiveEntry_Change) --活动表动态更改
+        end
+    end
+end
+
+
+---1055 后台通知
+function ClientProto:PlrNotice(proto)
+    if proto["notice"]["type"] then
+        if proto["notice"]["type"]=="points" then
+            ---proto["notice"]["value"]
+            ---  Log("解析成功")
+            AdvDeductionvoucher.QueryPoints(function()
+                CSAPI.DispatchEvent(EventType.Shop_View_Refresh)
+            end)
+        end
+    end
+
+
+end
+
+---查询回调
+--ClientProto.PayQueryAction=nil;
+---1056 支付查询（发起生成订单之前发送）
+function ClientProto:QueryPrePay(ShopproductId,amountVave,action)
+    self.PayQueryAction=nil;
+    if ShopproductId and amountVave then
+        self.PayQueryAction=action;
+        local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId),amount=tonumber(amountVave), }}
+        NetMgr.net:Send(proto)
+    else
+        LogError("ClientProto:PayQuery --ShopproductId:"..tostring(ShopproductId))
+    end
+end
+---1057 支付查询（返回后才发起创建订单，失败返回提示）
+function ClientProto:QueryPrePayRet(proto)
+    if proto then
+        if self.PayQueryAction~=nil then self.PayQueryAction(proto); self.PayQueryAction=nil end
+    else
+        LogError("ClientProto:PayQueryRet",table.tostring(proto,true))
     end
 end

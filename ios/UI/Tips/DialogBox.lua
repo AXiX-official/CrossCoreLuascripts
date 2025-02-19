@@ -1,7 +1,16 @@
 --带确认取消的提示框
 local canvasGroup = nil;
 local isOpening=false;
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=CS.UnityEngine.Input
+local KeyCode=CS.UnityEngine.KeyCode
+
+
 function Awake()
+	CSAPI.Getplatform();
+	IsMobileplatform=CSAPI.IsMobileplatform;
 	canvasGroup = ComUtil.GetCom(gameObject, "CanvasGroup");
 end
 
@@ -36,9 +45,11 @@ end
 
 function OnClickCancel()
 	local callBack = data and data.cancelCallBack;
-	if data.cancelCallBack then
+
+	if data and data.cancelCallBack then
 		data.cancelCallBack = nil;
-	end	
+	end
+
 	Close();
 
     if(callBack) then		
@@ -97,4 +108,23 @@ function HideAction(callBack)
 	else
 		close_tween = CSAPI.ApplyAction(gameObject, "View_Close_Fade", callBack);
 	end
-end 
+end
+
+
+
+function Update()
+	CheckVirtualkeys()
+end
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+	--仅仅安卓或者苹果平台生效
+	if IsMobileplatform then
+		if(Input.GetKeyDown(KeyCode.Escape))then
+			if CSAPI.IsBeginnerGuidance()==false then
+				OnClickCancel();
+			end
+		end
+	end
+end
+
+

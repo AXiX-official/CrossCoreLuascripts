@@ -9,15 +9,20 @@ local currTime=0;
 local loopTime=6;--循环时间
 local haloInfos=nil;
 local descTxts=nil;
+local hpBarImg=nil;
+local spBarImg=nil;
 function Awake()
 	local imgs = ComUtil.GetComsInChildren(gameObject, "Image", true);
 	upTween = ComUtil.GetCom(txt_topAddVal, "ActionNumberRunner");
     downTween = ComUtil.GetCom(txt_downAddVal, "ActionNumberRunner");
 	descTxts={{txt_topAdd,txt_topAddVal,upTween},{txt_downAdd,txt_downAddVal,downTween}};
+	hpBarImg=ComUtil.GetCom(hpBar, "Image");
+    spBarImg=ComUtil.GetCom(spBar, "Image");
+	SetTopMask(false)
 end
 
---设置数据 k:当前
-function InitData(data,isLeader,_isMini,_isMirror)
+--设置数据 k:当前 _isShowInfos:是否显示hp/sp条
+function InitData(data,isLeader,_isMini,_isMirror,_isShowInfos)
 	isMirror = _isMirror==nil and false or _isMirror
 	if(isMirror) then 
 		SetDragEnable()
@@ -32,7 +37,9 @@ function InitData(data,isLeader,_isMini,_isMirror)
 
 	if data.bIsNpc==false and not isMirror then
 		local cfg=data:GetModelCfg();
-		FormationUtil.Load2DImg(icon,cfg.formation_icon,data:GetGrids());
+		if cfg~=nil then
+			FormationUtil.Load2DImg(icon,cfg,data:GetGrids());
+		end
 		-- ResUtil.FormationIcon:Load(icon,cfg.formation_icon);
 		SetGridSize(data:GetGrids());
 	else
@@ -41,10 +48,29 @@ function InitData(data,isLeader,_isMini,_isMirror)
 			skinID=cfg.model;
         end
         local modelCfg=Cfgs.character:GetByID(skinID);
-		FormationUtil.Load2DImg(icon,modelCfg.formation_icon,data:GetGrids());
+		if modelCfg then
+			FormationUtil.Load2DImg(icon,modelCfg,data:GetGrids());
+		end
         -- ResUtil.FormationIcon:Load(icon,modelCfg.formation_icon);
         SetGridSize(cfg.grids);
     end
+	if _isShowInfos then
+		local cardInfo=nil;
+		local strs = StringUtil:split(data:GetID(), "_");
+		if strs and #strs>1 and strs[1]~="npc" then
+			cardInfo=FormationUtil.GetTowerCardInfo(tonumber(strs[2]),tonumber(strs[1]),TeamMgr.currentIndex);
+		else
+			cardInfo=FormationUtil.GetTowerCardInfo(data:GetID(),nil,TeamMgr.currentIndex);
+		end
+		local currHp,currSp=0,0;
+		if cardInfo then
+			currHp=cardInfo.tower_hp/100;
+			currSp=cardInfo.tower_sp/100;
+		end
+		SetCardInfos(currHp,currSp);
+	else
+		SetCardInfos();
+	end
 	SetHaloCfg();
 	CSAPI.SetText(txt_lv,tostring(data:GetLv()));
 	SetSupport(data:IsAssist());
@@ -53,6 +79,16 @@ function InitData(data,isLeader,_isMini,_isMirror)
 	SetTips();
 	-- CSAPI.SetGOActive(attrObj,false);
 	ShowArrow(false);
+end
+
+function SetCardInfos(hp,sp)
+    if hp and sp then
+        CSAPI.SetGOActive(infos,true);
+        hpBarImg.fillAmount=hp;
+        spBarImg.fillAmount=sp;
+    else
+        CSAPI.SetGOActive(infos,false);
+    end
 end
 
 function SetHaloCfg()

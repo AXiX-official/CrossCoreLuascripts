@@ -14,19 +14,28 @@ function LayoutCallBack(index)
 end
 
 function OnOpen()
-    curRoomData = DormMgr:GetCurRoomCopyDatas()--DormMgr:GetCurRoomData()
+    furnitureDatas = DormMgr:GetCurRoomCopyDatas() -- DormMgr:GetCurRoomData() --使用即时布局的数据
     -- furnitureDatas = curRoomData:GetFurnitureDatas()
     -- num
-    local cur, max = DormMgr:GetCurRoomCopyNum()--curRoomData:GetFurnitureNum()
+    local cur, max = DormMgr:GetCurRoomCopyNum() -- curRoomData:GetFurnitureNum()
     CSAPI.SetText(txtNum2, cur .. "/" .. max)
     -- comfort
-    local comfort =DormMgr:GetCopyDatasComfort() --curRoomData:GetComfort()
-    CSAPI.SetText(txtComfort2, string.format(comfort .. ""))
+    local comfort = DormMgr:GetCopyDatasComfort() -- curRoomData:GetComfort()
+    local maxComfort = DormMgr:GetCurRoomData():GetLvCfg().maxComfort
+    -- local _comfort = comfort>maxComfort and maxComfort or comfort
+    -- CSAPI.SetText(txtComfort2, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
+    CSAPI.SetText(txtComfort2,comfort.."")
     -- effect
-    local num = GCalHelp:DormTiredAddPerent(comfort) 
+    local num = GCalHelp:DormTiredAddPerent(comfort)
     LanguageMgr:SetText(txtEffect3, 32015, "+" .. num .. "%")
     -- grids
     Grids()
+    -- obj
+    local isMax = false
+    if (maxComfort and comfort >= maxComfort) then
+        isMax = true
+    end
+    --CSAPI.SetGOActive(objMaxComfort, isMax)
 end
 
 function Grids()
@@ -55,11 +64,11 @@ function ItemClickCB(item)
     curIndex = item.index
     items[curIndex].Select(true)
     curDatas = {}
-    local furnitureDatas = curRoomData--curRoomData:GetFurnitures()
+    -- local furnitureDatas = copyFurnitureDatas -- curRoomData:GetFurnitures()
     for i, v in pairs(furnitureDatas) do
-        --local cfgID = GCalHelp:GetDormFurCfgId(v.id)
-        --local cfg = Cfgs.CfgFurniture:GetByID(cfgID)
-        if (item.data.id == 0 or v:GetCfg().sType == (item.data.id-1)) then
+        -- local cfgID = GCalHelp:GetDormFurCfgId(v.id)
+        -- local cfg = Cfgs.CfgFurniture:GetByID(cfgID)
+        if (item.data.id == 0 or v:GetCfg().sType == (item.data.id - 1)) then
             table.insert(curDatas, v:GetCfg())
         end
     end

@@ -1,10 +1,11 @@
-function Refresh(_cfg)
-    cfg = _cfg
+function Refresh(_data)
+    data = _data
+
     -- icon 
-    CSAPI.LoadImg(icon, "UIs/Menu/" .. cfg.img .. ".png", true, nil, true)
+    CSAPI.LoadImg(icon, "UIs/Menu/" .. data:GetCfg().img .. ".png", true, nil, true)
     -- time
     local isShowTime = false
-    if (cfg.nType == MenuBuyState.Commodity) then
+    if (data:GetID() == 3) then
         local num = ShopMgr:GetMonthCardDays()
         if (num > 0 and num <= 7) then
             isShowTime = true
@@ -14,23 +15,12 @@ function Refresh(_cfg)
     CSAPI.SetGOActive(imgTime, isShowTime)
     -- red 
     SetRed()
-
-    MenuMgr:SetMenuBuyID(cfg.id)
 end
 
 function SetRed()
-    local isRed = false
-    if (cfg.nType == MenuBuyState.First) then
-        local amount = PlayerClient:GetPayAmount()
-        if (amount / 100 >= 6) then
-            isRed = true
-        end
-    end
-    UIUtil:SetRedPoint(clickNode, isRed, 179, 72, 0)
+    UIUtil:SetRedPoint(clickNode, data:GetRed(), 130.5, 44, 0)
 end
 
 function OnClick()
-    if (cfg) then
-        CSAPI.OpenView("MenuBuyPanel", cfg.id)
-    end
+    CSAPI.OpenView("MenuBuyPanel")
 end

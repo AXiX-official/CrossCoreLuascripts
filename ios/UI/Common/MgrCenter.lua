@@ -3,8 +3,10 @@ require "MgrBase"
 
 --注册名称(必填)
 local mgrNames = {
+	"MenuBuyMgr",  --充值弹窗
 	"RedPointMgr",  --红点管理
 	"DungeonMgr",	--副本
+	"DungeonActivityMgr", --活动副本
 	"SignInMgr",    --签到
 	"ActivityMgr",  --活动
 	"CRoleMgr",     --卡牌角色
@@ -15,7 +17,7 @@ local mgrNames = {
 	--"CoolMgr",      --热值冷却
 	"CreateMgr",    --角色工厂
 	"MailMgr",      --邮件
-	"MissionMgr",   --任务
+	--"MissionMgr",   --任务
 	"JumpMgr",      --跳转
 	"RoleMgr",      --卡牌
 	"RoleSkillMgr", --卡牌技能
@@ -46,6 +48,26 @@ local mgrNames = {
 	"SDKPayMgr",--SDK支付
 	"HeadFrameMgr",
 	"HeadIconMgr",
+	"AchievementMgr", --成就
+	"TowerMgr", --新爬塔
+	"BadgeMgr", --徽章
+	"RegressionMgr", --回归相关
+	"ItemPoolActivityMgr",--道具池相关
+	"RogueMgr",
+	"TotalBattleMgr", --十二星宫
+	"AccuChargeMgr", --累计充值
+	"CollaborationMgr",--回归绑定
+	"PetActivityMgr",--宠物管理类
+	"CRoleDisplayMgr", --看板
+	"RogueSMgr",   --战力派遣
+	"BGMMgr",
+	"ColosseumMgr",
+	"HeadTitleMgr",
+	"ASMRMgr",
+	"GlobalBossMgr", --新世界boss
+	"RogueTMgr",
+
+	"MissionMgr",   --任务  --------------------------------------必须放到最后
 }
 
 

@@ -19,7 +19,7 @@ function OnFightSkipStateChanged(state)
         return;
     end
 
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then           
+    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
         return;
     end
 
@@ -27,14 +27,14 @@ function OnFightSkipStateChanged(state)
         OnClickSkip();
         return;
     end
-
+    FightClient.Intheamplificationmove=state;
     CSAPI.SetGOActive(btnSkip,state);
 end
 
 function OnFightSkipNext()
     SetSkipNext(1);
 
-    FuncUtil:Call(SetMaskState,nil,1600,true);
+    FuncUtil:Call(SetMaskState,nil,1200,true);
 end
 function SetSkipNext(skipNext)
     autoSkipNext = skipNext;
@@ -69,7 +69,6 @@ end
 
 
 function SkipComplete()
-    
     if(transAni == nil)then
         transAni = ComUtil.GetCom(transition,"Animator");
     end

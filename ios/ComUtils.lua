@@ -2,6 +2,46 @@ Loader:Require("ConfigChecker")
 
 if IS_CLIENT then
 
+    -- table转字符串, 带美化格式
+    function table.tostring(t)
+        if type(t) ~= 'table' then
+            return tostring(t)
+        end
+        -- LogTrace()
+        local mark = {}
+        local assign = {}
+        local function ser_table(tbl, parent, deep)
+            mark[tbl] = parent
+            local tmp = {}
+            local head = ''
+            if deep > 0 then
+                for i = 1, (deep - 1) * 4 do
+                    head = ' ' .. head
+                end
+            end
+
+            for k, v in pairs(tbl) do
+                local key = type(k) == 'number' and '[' .. k .. ']' or '[' .. string.format('%q', k) .. ']' -- k为function时报错
+                key = head .. '    ' .. key
+
+                if type(v) == 'table' then
+                    local dotkey = parent .. key
+                    if mark[v] then
+                        table.insert(assign, dotkey .. "='" .. mark[v] .. "'")
+                    else
+                        table.insert(tmp, key .. '=' .. ser_table(v, dotkey, deep + 1))
+                    end
+                elseif type(v) == 'string' then
+                    table.insert(tmp, key .. '=' .. string.format('%q', v))
+                elseif type(v) == 'number' or type(v) == 'boolean' then
+                    table.insert(tmp, key .. '=' .. tostring(v))
+                end
+            end
+            return '\n' .. head .. '{\n' .. table.concat(tmp, ',\n') .. '\n' .. head .. '}'
+        end
+        return ser_table(t, 'ret', 1) .. table.concat(assign, ' ')
+    end
+
     function assert(c, str)
         if c then return end
         if str then LogError(str) end
@@ -322,6 +362,76 @@ function WeakTable()
     setmetatable(t, {__mode = "kv"})
     return t
 end
+
+------------------------------------------------------------------------------------------------
+-- 弱引用表
+
+-- 使用示例
+-- LogInfo("Test weak table")
+-- local tbA = {}
+-- local tbB = {}
+-- local TestWeakTableFun = function()
+--     local tmbA = { 1, 2, 3, 4, 5}
+--     local tmbB = { 1, 2, 3, 4, 5, fbFun = function() LogInfo("fun or tmbB") end}
+
+--     tbA = tmbA
+--     tbB = WeakObjTable(tmbB)
+    
+--     tbB:fbFun()
+-- end
+
+-- TestWeakTableFun()
+
+-- collectgarbage('collect')
+
+-- LogTable(tbA, "tbA:")
+-- LogTable(tbB, "tbB:")
+
+-- 结果： 回收资源后，tmbB 被回收，所以 tbB 里面的 回收资源后，tmbB 被自动删除， 但是 tbA 保持引用
+-- [16:29:13][INFO] Test weak table
+-- [16:29:13][INFO] fun or tmbB
+-- [16:29:13][DEBUG] tbA:
+--     {
+--         [ 1 ]n = [ 1 ]f
+--         [ 2 ]n = [ 2 ]f
+--         [ 3 ]n = [ 3 ]f
+--         [ 4 ]n = [ 4 ]f
+--         [ 5 ]n = [ 5 ]f
+--     }
+-- [16:29:13][DEBUG] tbB:
+--     {
+
+--     }
+
+function WeakObjTable(tb)
+    -- t : 为代理table
+    local t = {
+        Obj = function()
+            return t[1]
+        end
+    }
+
+    -- 将 t 设置为一个弱表，那么 tb 引用为0的时候，会自动从 t 里面移除
+    setmetatable(t, {
+        __mode = "kv",
+        __index = function (self, k)
+            -- 索引变量与函数的时候，转给 tb
+            local obj = self[1]
+            return obj[k]
+        end,
+        __newindex = function (self, k, v)
+            -- 新建变量时转给 tb
+            local obj = self[1]
+            obj[k] = v
+        end
+    })
+    
+    -- 将 tb 保存到 t 的第一个位置
+    table.insert(t, tb)
+
+    return t
+end
+
 mapDebugTable = {}
 function table.CreateDebug(t)
     local res = {table = t, debug = {}}

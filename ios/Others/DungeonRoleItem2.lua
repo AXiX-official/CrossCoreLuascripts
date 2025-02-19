@@ -65,6 +65,8 @@ function SetTitle()
 
     local name = cfgDungeon.name
     CSAPI.SetText(txtName, name)
+
+    CSAPI.SetGOActive(txt_plot, IsStory())
 end
 
 function SetColor(b)
@@ -78,12 +80,15 @@ function SetColor(b)
 end
 
 function SetStar()
-    local cur = dungeonData and dungeonData:GetStar() or 0
-    local max = StringUtil:SetByColor("/3","FFC146")
-    if cur >= 3 then
-        cur =  StringUtil:SetByColor(cur,"FFC146")
+    CSAPI.SetGOActive(txtStar,not IsStory())
+    if not IsStory() then
+        local cur = dungeonData and dungeonData:GetStar() or 0
+        local max = StringUtil:SetByColor("/3","FFC146")
+        if cur >= 3 then
+            cur =  StringUtil:SetByColor(cur,"FFC146")
+        end
+        CSAPI.SetText(txtStar,cur .. max)
     end
-    CSAPI.SetText(txtStar,cur .. max)
 end
 
 function SetHard()
@@ -101,7 +106,7 @@ function SetLock(_isLock)
 end
 
 function IsStory()
-    return dungeonData and dungeonData:IsStory()
+    return cfgDungeon and cfgDungeon.sub_type == DungeonFlagType.Story
 end
 
 function GetCfg()
@@ -110,6 +115,10 @@ end
 
 function GetLock()
     return isLock
+end
+
+function GetType() 
+    return IsStory() and DungeonInfoType.Plot or DungeonInfoType.Normal
 end
 
 function OnClick()

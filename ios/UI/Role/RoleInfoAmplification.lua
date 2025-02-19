@@ -19,13 +19,18 @@ function OnOpen()
     end
 
 	--local cardData = data[1]
-	curCRoleId =data[1]--cardData:GetRoleID()
-	curModeId = data[2]--cardData:GetSkinID()
-	local isLive2D = data[3] or false
-	local isShopImg= data[4] or false
+	--curCRoleId =data[1]--cardData:GetRoleID()
+	curModeId = data[1]--cardData:GetSkinID()
+	local isLive2D = data[2] or false
+	local isShopImg= data[3] or false
 	if isShopImg then
 		isLive2D=false;
 	end
+	local desc=data[4] or false;
+	if desc~=nil then
+		CSAPI.SetText(txtInfo,desc);
+	end
+	CSAPI.SetGOActive(infoObj,desc~=nil)
 	pos = openSetting ~= nil and openSetting or LoadImgType.RoleInfo
 	
 	cardIconItem.Refresh(curModeId, pos, nil, isLive2D,isShopImg)
@@ -62,6 +67,7 @@ function SetAmplification(_show)
 	cardIconItem.SetClickActive(false)
 	if(not uiHandle) then
 		uiHandle = ComUtil.GetCom(showBg, "UIHandle")
+		uiHandle.isMoveLimit = false 
 	end
 	
 	--移动限制

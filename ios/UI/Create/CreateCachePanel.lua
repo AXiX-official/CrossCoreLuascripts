@@ -1,5 +1,8 @@
+---剩余次数
+local Remainingtimes=0;
 -- 抽次抽卡的缓存界面
 function Awake()
+    Remainingtimes=0;
     CSAPI.SetGOActive(mask, false)
     -- curItems = {}
     -- for i = 1, 10 do
@@ -83,6 +86,7 @@ function SetBtns()
     -- count
     local num = max - cur
     LanguageMgr:SetText(txtCount, 17038, num)
+    Remainingtimes=num;
     -- CSAPI.SetText(txtCount, cur .. "/" .. max)
     -- 再次构建
     btnAgainCanvasGroup.alpha = cur >= max and 0.3 or 1
@@ -98,6 +102,7 @@ function OnClickL()
         UIUtil:OpenDialog(str, function()
             CreateMgr:FirstCardCreateAddLog(poolId)
             btnRCanvasGroup.alpha = (ogs and #logs > 0) and 1 or 0.3
+            if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_REPLACE) end
         end)
     end
 end
@@ -131,7 +136,11 @@ function OnClickAgain()
 
     CreateMgr:CardCreate(poolId, 10) -- 继续10连
     -- cb() --由CreataShowView 的打开来关闭 CreateRoleView 
-    CSAPI.SetGOActive(mask, true) -- 放置延迟期间玩家继续点击 
+    CSAPI.SetGOActive(mask, true) -- 放置延迟期间玩家继续点击
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        local Datable= { times=tostring(Remainingtimes), };
+        BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_NEXT,Datable)
+    end
 end
 
 -- -- 结束构建

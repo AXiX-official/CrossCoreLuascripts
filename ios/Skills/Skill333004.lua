@@ -21,5 +21,5 @@ function Skill333004:OnBefourHurt(caster, target, data)
 	-- 8620
 	local count620 = SkillApi:GetAttr(self, caster, target,3,"hit")
 	-- 333004
-	self:AddTempAttr(SkillEffect[333004], caster, self.card, data, "crit",count620*0.4)
+	self:AddTempAttr(SkillEffect[333004], caster, self.card, data, "attack",count620*100*16)
 end

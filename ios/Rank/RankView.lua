@@ -93,7 +93,7 @@ function SetMyData()
     CSAPI.SetText(txtName, info:GetName())
     -- 等级
     local lvStr = LanguageMgr:GetByID(1033) or "LV."
-    CSAPI.SetText(txtLv, lvStr .. info:GetLevel())
+    CSAPI.SetText(txtLv, "" .. info:GetLevel())
     -- 排名
     CSAPI.SetGOActive(txtRank1, rank < 4)
     CSAPI.SetText(txtRank1, (rank < 4 and rank ~= 0) and rank .. "" or "-")
@@ -101,10 +101,12 @@ function SetMyData()
     -- 战斗力
     CSAPI.SetText(txtFighting, info:GetScore() .. "")
     -- icon
-    ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")
-    local _cfg = Cfgs.character:GetByID(info:GetModuleID())
-    if (_cfg.icon) then
-        ResUtil.RoleCard:Load(icon, _cfg.icon, true)
-    end
+    -- ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")
+    -- local _cfg = Cfgs.character:GetByID(info:GetModuleID())
+    -- if (_cfg.icon) then
+    --     ResUtil.RoleCard:Load(icon, _cfg.icon, true)
+    -- end
+    UIUtil:AddHeadFrame(hfParent, 0.9)
+    UIUtil:AddTitle(titleParent,1)
 end
 

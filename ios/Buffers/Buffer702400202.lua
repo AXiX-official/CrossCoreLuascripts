@@ -23,7 +23,7 @@ function Buffer702400202:OnActionOver(caster, target)
 	-- 702400201
 	self:OwnerHitAddBuff(BufferEffect[702400201], self.caster, self.caster, nil, 1000+c77*200,3005,1)
 	-- 8478
-	local c78 = SkillApi:BuffCount(self, self.caster, target or self.owner,1,4,2003)
+	local c78 = SkillApi:BuffCount(self, self.caster, target or self.owner,1,4,23)
 	-- 8625
 	if SkillJudger:Greater(self, self.caster, self.card, true,c78,0) then
 	else
@@ -39,7 +39,7 @@ function Buffer702400202:OnActionOver(caster, target)
 	-- 702400204
 	self:AddBuff(BufferEffect[702400204], self.caster, self.caster, nil, 3005,1)
 	-- 702400205
-	self:DelBufferTypeForce(BufferEffect[702400205], self.caster, self.caster, nil, 2003,2)
+	self:DelBufferTypeForce(BufferEffect[702400205], self.caster, self.caster, nil, 23,2)
 end
 -- 创建时
 function Buffer702400202:OnCreate(caster, target)

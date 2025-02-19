@@ -42,8 +42,8 @@ end
 function SetState()
     local missionDatas = MissionMgr:GetActivityDatas(eTaskType.TmpDupTower, cfg.missionID)
     if missionDatas then
-        isRed = false
         cur = 0
+        isRed = false
         max = #missionDatas
         for _, missData in ipairs(missionDatas) do
             if missData:IsGet() then

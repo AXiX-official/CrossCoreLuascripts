@@ -124,9 +124,9 @@ function this:GetSkinTypeArr()
 end
 
 -- 所有皮肤 字典 [moduleid] = RoleSkinInfo 
-function this:GetAllSkins()
+function this:GetAllSkins(containJieJin)
     local skins = {}
-    local _skins = RoleSkinMgr:GetDatas(self.cfg.id)
+    local _skins = RoleSkinMgr:GetDatas(self.cfg.id,containJieJin)
     for n, m in pairs(_skins) do
         skins[n] = m
     end
@@ -136,7 +136,7 @@ end
 -- onlyInSell: true:非突破皮肤未获得时，在商店出售时才插入列表  false:都插入列表
 function this:GetAllSkinsArr(onlyInSell)
     local skins = {}
-    local _skins = RoleSkinMgr:GetDatas(self.cfg.id)
+    local _skins = RoleSkinMgr:GetDatas(self.cfg.id,true)
     for n, v in pairs(_skins) do
         if (onlyInSell) then
             if (v:CheckIsBreakType() or v:CheckCanUse() or v:IsInSell()) then
@@ -148,7 +148,11 @@ function this:GetAllSkinsArr(onlyInSell)
     end
     if (#skins > 1) then
         table.sort(skins, function(a, b)
-            return a:GetIndex() < b:GetIndex()
+            if(a:CheckCanUse()==b:CheckCanUse()) then 
+                return a:GetIndex() < b:GetIndex()
+            else 
+                return a:CheckCanUse()
+            end 
         end)
     end
     return skins
@@ -237,6 +241,10 @@ function this:GetBlood()
     return self.cfg and self.cfg.sBirthPlace or 1
 end
 
+function this:GetBelonging()
+    return self.cfg and self.cfg.sBelonging or  1
+end
+
 -- 取第一个能力
 function this:GetAbilityId()
     return self.cfg.nAbilityId and self.cfg.nAbilityId[1] or nil
@@ -286,7 +294,19 @@ end
 
 -- 在图集中是否显示
 function this:IsShowInAltas()
-    return self.cfg and self.cfg.bShowInAltas or false
+    local isShow = false
+    if self.cfg then
+        if self.cfg.bShowInAltas then
+            isShow = true
+        end
+        if isShow and self.cfg.sShowTime then
+            if self.showTime == nil then
+                self.showTime = TimeUtil:GetTimeStampBySplit(self.cfg.sShowTime)
+            end
+            isShow = self.showTime <= TimeUtil:GetTime()
+        end
+    end
+    return isShow
 end
 
 -- 在该建筑时能力是否生效  
@@ -522,6 +542,13 @@ function this:IsInBuilding()
     local build_id = self:GetRoomBuildID()
     local roomType = build_id and DormMgr:GetRoomTypeByID(build_id) or nil -- 房间类型
     return (roomType ~= nil and roomType == RoomType.building) and true or false
+end
+
+--是否在宿舍
+function this:IsInDorm()
+    local build_id = self:GetRoomBuildID()
+    local roomType = build_id and DormMgr:GetRoomTypeByID(build_id) or nil -- 房间类型
+    return (roomType ~= nil and roomType == RoomType.dorm) and true or false
 end
 
 -- 是否在咨询室

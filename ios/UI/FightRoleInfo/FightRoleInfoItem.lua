@@ -137,35 +137,45 @@ function Refresh(data,type)
             SetIsBuff(false);
             CSAPI.SetGOActive(points,true);
             CSAPI.SetGOActive(img,true);
+            local eSkillCfg=data[1];
+            local curLv=0;
+            if #data==1 then
+                curLv=eSkillCfg.nLv;
+                SetDesc(eSkillCfg.sShort);
+            else
+                curLv=(eSkillCfg.id%100)*3;
+                local descCfg=Cfgs.CfgSkillDesc:GetByID(eSkillCfg.id);
+                local desc, cfgs2 = StringUtil:SkillDescFormat(descCfg.desc);
+                SetDesc(desc);
+            end
             local iconName,borderName,lvStr="","",""
-            borderName=data.nQuality and EquipQualityFrame[data.nQuality] or EquipQualityFrame[1];
-            local eCfg=Cfgs.CfgEquipSkillTypeEnum:GetByID(data.group);
+            borderName=eSkillCfg.nQuality and EquipQualityFrame[eSkillCfg.nQuality] or EquipQualityFrame[1];
+            local eCfg=Cfgs.CfgEquipSkillTypeEnum:GetByID(eSkillCfg.group);
             if eCfg then
                 if eCfg.icon then
                     iconName=eCfg.icon;
                     -- ResUtil.EquipSkillIcon:Load(icon,eCfg.icon);
                 end
             else
-                LogError("不存在类型为:"..data.group.."的装备技能类型！");
+                LogError("不存在类型为:"..eSkillCfg.group.."的装备技能类型！");
             end
-            local cfgs=Cfgs.CfgEquipSkill:GetGroup(data.group);
+            local cfgs=Cfgs.CfgEquipSkill:GetGroup(eSkillCfg.group);
             if cfgs then
                 for i=0,pList.Length-1 do
                     local go=pList[i].gameObject;
                     CSAPI.SetGOActive(go,i+1<=#cfgs);
-                    if i<=data.nLv-1 then
+                    if i<=curLv-1 then
                         CSAPI.SetImgColor(go,255,170,0,255);
                     else
                         CSAPI.SetImgColor(go,112,112,112,255);
                     end
                 end
-                lvStr="<color=#FFC432>"..data.nLv.."</color>/"..#cfgs;
+                lvStr="<color=#FFC432>"..curLv.."</color>/"..#cfgs;
             else
-                LogError("不存在类型为:"..data.group.."的装备技能类型！");
+                LogError("不存在类型为:"..eSkillCfg.group.."的装备技能类型！");
             end
             SetInfoGrid(iconName,borderName,lvStr,ResUtil.EquipSkillIcon);
-            SetName(data.sSkillType);
-            SetDesc(data.sShort);
+            SetName(eSkillCfg.sSkillType);
             SetRound();
             SetDesc2()
             SetType(LanguageMgr:GetByID(28010))

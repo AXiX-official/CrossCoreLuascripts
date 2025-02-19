@@ -494,14 +494,16 @@ function this.OpenView(viewKey, data, openSetting, callBack, closeAll, jump)
 		UIUtil:OpenView(viewKey, closeAll, function()
 			this.csOpenView(viewKey, data, openSetting, function(go)
 				UIUtil:AddQuestionItem(viewKey, go)
+				AdaptiveConfiguration.SetLuaObjUIFit(viewKey,go.gameObject)
 				if(callBack) then
 					callBack(go)
 				end
 			end)
 		end)
 	else
-		this.csOpenView(viewKey, data, openSetting, function()
+		this.csOpenView(viewKey, data, openSetting, function(go)
 			UIUtil:AddQuestionItem(viewKey, go)
+			AdaptiveConfiguration.SetLuaObjUIFit(viewKey,go.gameObject)
 			if(callBack) then
 				callBack(go)
 			end
@@ -654,7 +656,7 @@ this.GetCurrUIEventObj=CS.CSAPI.GetCurrUIEventObj;
 this.ReleaseSound = CS.CSAPI.ReleaseSound;
 --播放声音
 this.csPlaySound = CS.CSAPI.PlaySound;
-function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff)
+function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff,startTime)
 --	--屏蔽人声
 --	if(cueSheet and string.find(cueSheet, "cv/"))then
 --        LogError(cueSheet);    
@@ -675,7 +677,8 @@ function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, call
 	fadeSpeed = fadeSpeed or - 1;
 	--LogError(tostring(cueSheet) .. ":" .. tostring(cueName) .. ",isLoop:" .. tostring(isLoop) .. ",tag:" .. tostring(tag));
 	volumeCoeff = volumeCoeff or 100;
-	this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff);
+	startTime = startTime or 0
+	return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime);
 end
 
 --播放UI声音
@@ -729,7 +732,6 @@ function this.PlayBGM(bgm, fadeDelay, volumeCoeff, lockKey)
 		return;
 	end
 	
-	--LogError("播放BGM " .. tostring(bgm));
 	if(not bgm) then
 		return;
 	end
@@ -744,7 +746,7 @@ function this.PlayBGM(bgm, fadeDelay, volumeCoeff, lockKey)
 	local cueSheet = "bgms/" .. bgm .. ".acb";	
 	
 	local isLoop = false;
-	CSAPI.PlaySound(cueSheet, bgm, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff);
+	this.sound = CSAPI.PlaySound(cueSheet, bgm, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff);
 	return _bgm
 end
 function this.StopBGM(fadeSpeed)
@@ -759,6 +761,10 @@ function this.ReplayBGM(bgm)
 	if(bgm) then 
 		CSAPI.PlayBGM(bgm)
 	end 
+end
+
+function this.GetSound()
+	return this.sound
 end
 
 --设置声音语言后缀
@@ -802,6 +808,8 @@ this.StopExceptTag = CS.CSAPI.StopExceptTag;
 this.SetVolume = CS.CSAPI.SetVolume;
 --获取音量
 this.GetVolume = CS.CSAPI.GetVolume;
+--移除
+this.RemoveCueSheet = CS.CSAPI.RemoveCueSheet;
 --播放配置声音
 function this.PlayCfgSoundByID(id, feature, tag, volumeCoeff)
 	local cfg = Cfgs.Sound:GetByID(id);
@@ -866,6 +874,9 @@ this.IsLocalMode = CS.CSAPI.IsLocalMode;
 
 this.Quit = CS.CSAPI.Quit;
 
+function this.UnityQuit()
+ 	 UnityEngine.Application.Quit();
+end
 
 this.ChangeConstraintCount = CS.CSAPI.ChangeConstraintCount
 
@@ -909,6 +920,17 @@ this.GetScreenSize = CS.CSAPI.GetScreenSize
 --主画布分辨率
 function this.GetMainCanvasSize()
 	return CS.UIUtil.mainCanvasRectTransform.sizeDelta
+end
+
+--获取与主画布分辨率比例差
+function this.GetSizeOffset()
+	local size = CSAPI.GetMainCanvasSize()
+	local xScale,yScale = 1,1
+	if size then
+		xScale = size[0] / 1920
+		yScale = size[1] / 1080	
+	end
+	return xScale > yScale and xScale or yScale
 end
 
 --是否是宽屏（平板之类）
@@ -991,6 +1013,8 @@ function this.GetChannelName()
 		return "TAPTAP"
 	elseif channelType==ChannelType.QOO then
 		return "QOO"
+	elseif channelType==ChannelType.ZiLong then
+		return "台服"
 	end
 end
 
@@ -1005,6 +1029,8 @@ function this.GetChannelStr()
         return "taptap"
     elseif channelType==ChannelType.QOO then
         return "qoo"
+	elseif channelType==ChannelType.ZiLong then
+		return "tw"
     end
 end
 
@@ -1035,6 +1061,7 @@ end
 this.OpenWebBrowser = CS.CSAPI.OpenWebBrowser
 this.InitViewData = CS.CSAPI.InitViewData;
 this.WebPostRequest = CS.CSAPI.WebPostRequest;
+this.WebPostRequestJsonStr=CS.CSAPI.WebPostRequestJsonStr;
 --this.csWebPostRequest = CS.CSAPI.WebPostRequest;
 --function this.WebPostRequest(url,formData,func)
 --    LogError(string.format("Post内容：%s\n参数：%s",url,table.tostring(formData)));
@@ -1061,7 +1088,20 @@ this.GetPublishType = CS.CSAPI.GetPublishType
 
 this.SetImgClicker=CS.CSAPI.SetImgClicker;
 
-this.GetSystemInfo=CS.CSAPI.GetSystemInfo;
+this.GetSystemInfo=function(func)
+	if this.systemInfo~=nil then
+		if(func)then
+			func(this.systemInfo);
+		end
+	else
+		CS.CSAPI.GetSystemInfo(function(js)
+			this.systemInfo=js;
+			if(func)then
+				func(js);
+			end
+		end);
+	end
+end;
 
 _G.ReYunSDK=CS.ReYunSDK.ins;
 
@@ -1099,7 +1139,240 @@ function this.GetADID()
 	end
 	return 0;
 end
+this.DispatchEvent=CS.CSAPI.DispatchEvent;
+this.Currentplatform=CS.UnityEngine.Application.platform;
+this.Android=CS.UnityEngine.RuntimePlatform.Android;
+this.IPhonePlayer=CS.UnityEngine.RuntimePlatform.IPhonePlayer;
+this.WindowsEditor=CS.UnityEngine.RuntimePlatform.WindowsEditor;
+this.OpenHarmony=CS.UnityEngine.RuntimePlatform.OpenHarmony;
 
+
+this.IsADV=CS.CSAPI.IsADV;
+this.IsDomestic=CS.CSAPI.IsDomestic;
+--function this.IsDomestic()
+--	return false;
+--end
+this.SetUIFit=CS.CSAPI.SetUIFit;
+this.AddUIAdaptive=CS.CSAPI.AddUIAdaptive;
+this.RemoveAdaptive=CS.CSAPI.RemoveAdaptive;
+this.AddEventListener=CS.CSAPI.AddEventListener;
+this.RemoveEventListener=CS.CSAPI.RemoveEventListener;
+this.UIFitoffsetTop=CS.CSAPI.UIFitoffsetTop;
+this.UIFoffsetBottom=CS.CSAPI.UIFoffsetBottom;
+this.UIFittopAnchor=CS.CSAPI.UIFittopAnchor;
+this.UIbottomAnchor=CS.CSAPI.UIbottomAnchor;
+this.QuitGame =CS.CSAPI.QuitGame;
+this.GetDeviceID =CS.CSAPI.GetDeviceID;
+--this.GetInside =CS.CSAPI.GetInside;
+
+this.GetsSDKInitSuccess =CS.CSAPI.GetsSDKInitSuccess;
+
+this.ZLongServerListUrl=CS.ShiryuStreamingAssets.ins.GetServerListUrl
+this.ZLongServerId=CS.ShiryuStreamingAssets.ins.GetServerId
+this.GetSdkEnvironmentType=CS.ShiryuStreamingAssets.ins.GetSdkEnvironmentType
+function this.GetInside()
+	return this.GetSdkEnvironmentType
+end
+
+this.PCSetWindow=CS.CSAPI.PCSetWindow;
+this.APKVersion=CS.CSAPI.APKVersion;
+this.RegionalCode=CS.CSAPI.RegionalCode;
+---是否存在新手引导
+function this.IsBeginnerGuidance()
+	if GuideMgr.IsGuideEnd==true then
+		return true;
+	end
+	local PlotSimple = CSAPI.GetView("PlotSimple")
+	if (PlotSimple) then
+		return true;
+	end
+	local Plot = CSAPI.GetView("Plot")
+	if (Plot) then
+		return true;
+	end
+	local VideoPlayer = CSAPI.GetView("VideoPlayer")
+	if (VideoPlayer) then
+		return true;
+	end
+	if  FightClient.Intheamplificationmove then
+		return true;
+	end
+	if  FightClient.NewPlayerDrasu then
+		return true;
+	end
+
+	return false;
+end
+
+---是否是移动平台
+this.IsMobileplatform=false;
+--获取平台
+function this.Getplatform()
+	this.IsMobileplatform=false;
+	if UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android or
+			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.IPhonePlayer or
+			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.OpenHarmony or
+			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.WindowsEditor
+	then
+		this.IsMobileplatform=true;
+	else
+		this.IsMobileplatform=false;
+	end
+end
+
+---是否提审模式
+function this.IsAppReview()
+	return false;
+end
+---获取当前平台指定热更新文件夹路径(指定文件夹内)
+this.PlatformURL=CS.CSAPI.PlatformURL;
+---获取当前平台指定热更新文件夹路径
+this.HotFileUrl=CS.CSAPI.HotFileUrl;
+--字符串替换 (string str = "",string pattern = "",bool isMatch = false)
+this.FilterChar = CS.CSAPI.FilterChar
+
+this.server_list_enc_close=false;
+
+--- 海外日服璨晶购买提示
+function this.ADVJPTitle(consume,action)
+	---璨晶总数
+	local  TotalDiamonds=PlayerClient:GetCoin(ITEM_ID.DIAMOND);
+	--- 充值获得的璨晶
+	local RechargeDiamonds=PlayerClient:GetCoin(ITEM_ID.DIAMOND_PAY);
+	---Log("A----TotalDiamonds:"..TotalDiamonds.." RechargeDiamonds:"..RechargeDiamonds)
+	---免费璨晶
+	local FreeDiamonds=TotalDiamonds-RechargeDiamonds;
+	---Log("A----FreeDiamonds:"..FreeDiamonds)
+	if 0>FreeDiamonds then
+		LogError("A----数据异常，服务器并未及时更新璨晶总数和充值璨晶总数:".."璨晶总数:"..TotalDiamonds.." 充值获得的璨晶:"..RechargeDiamonds)
+		FreeDiamonds=0;
+	end
+	---需要消耗的璨晶
+	local consumeIcon=consume;
+	---Log("A----consumeIcon:"..consumeIcon)
+	---免费减去  消耗 等于剩余
+	local RemainderDiamonds=FreeDiamonds-consumeIcon;
+	---Log("A----RemainderDiamonds:"..RemainderDiamonds)
+	---剩余充值钻石
+	local RemainrechargeDiamonds=RemainderDiamonds;
+	---Log("A----RemainrechargeDiamonds:"..RemainrechargeDiamonds)
+	---如果 得到的 是负数，需要和充值的相加得到剩余的
+	if 0>RemainderDiamonds then
+		--- RemainderDiamonds=RemainderDiamonds+RechargeDiamonds;
+		---充值钻石 数量
+		RechargeDiamonds=TotalDiamonds-FreeDiamonds;
+		---Log("A----RechargeDiamonds:"..RechargeDiamonds)
+		--使用后 剩余充值钻石
+		RemainrechargeDiamonds=RemainderDiamonds+RechargeDiamonds;
+		---Log("A----RemainrechargeDiamonds:"..RemainrechargeDiamonds)
+		--不可能剩余负数，只能为0，代表免费的使用完毕
+		RemainderDiamonds=0;
+
+	else
+		RemainrechargeDiamonds=RechargeDiamonds;
+		---Log("A----*RemainrechargeDiamonds:"..RemainrechargeDiamonds)
+	end
+
+	local JPTitleTable=
+	{
+		TotalDiamonds,---总璨晶
+	    FreeDiamonds, ---免费璨晶
+		RechargeDiamonds,---充值的璨晶
+		RemainderDiamonds,---使用后剩余的免费璨晶
+		RemainrechargeDiamonds,---使用后剩余的充值璨晶
+	}
+	local dialogData = {}
+	dialogData.title=LanguageMgr:GetByID(66003);
+	dialogData.content =LanguageMgr:GetTips(15124,JPTitleTable[1],JPTitleTable[2],JPTitleTable[3],JPTitleTable[4],JPTitleTable[5])
+	dialogData.okText =LanguageMgr:GetByID(1001)
+	dialogData.cancelText =LanguageMgr:GetByID(1002)
+	dialogData.okCallBack = function() if action~=nil then action(); end end
+	dialogData.cancelCallBack = function()  end
+	CSAPI.OpenView("Dialog", dialogData)
+end
+
+---海外指定地区判断
+function this.IsADVRegional(RegionalCode)
+	if CSAPI.IsADV() and CSAPI.RegionalCode()==RegionalCode then
+		return true;
+	else
+		return false
+	end
+end
+
+
+---JP 支付年龄显示
+function this.PayAgeTitle()
+	local Age=PlayerPrefs.GetInt(CSAPI.GetSetkey("JPChooseAgeNotdisplay"));
+	if Age==1 then
+		return  false;
+	else
+		return true;
+	end
+end
+
+---获取JP支付限制类型
+function this.JPGetTypelimit()
+	if CSAPI.PayAgeTitle()==false then
+		return 0;  ---如果满足不显示  就是 18岁以上
+	end
+	local AgeType=PlayerPrefs.GetInt(CSAPI.GetSetkey("JPSelectAge"));
+	Log("AgeType-----------------:"..AgeType)
+	if AgeType==0 then
+		return 0;   ----  没有也默认18岁以上
+	elseif AgeType==1 then
+		return 1    ----16岁以上
+	elseif AgeType==2 then
+		return 2    ---16-17岁以上
+	elseif AgeType==3 then
+		return 0  ---18岁随以上
+	else
+		return 0   ------错误 也默认 18岁随以上
+	end
+end
+
+---服务器id_玩家UID_缓存key 组成的  缓存记录
+function this.GetSetkey(key)
+	local  Backkey=tostring(this.ServerID).."_"..tostring(this.PlayerUID).."_"..tostring(key)
+	return Backkey;
+end
+
+---所选服务器id
+this.ServerID=0;
+---设置服务器id
+function this.SetServerID(id)
+	if id~=nil then
+		this.ServerID=id;
+	end
+end
+---玩家UID
+this.PlayerUID=0;
+---设置游戏UID
+function this.SetGameUID(id)
+	if id~=nil then
+		this.PlayerUID=id;
+	end
+end
+---通用打点版本号
+function this.UnityClientVersion(uid)
+	if CSAPI.IsADV() then
+		local platform="PC"
+		if CSAPI.Currentplatform == CSAPI.Android then
+			platform="Android"
+		elseif CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+			platform="IPhonePlayer"
+		else
+			platform="PC"
+		end
+		local ClientVersion=
+		{
+			ClientVersion=_G.g_ver_name,
+			ClientPlatform=platform,
+			UID=tostring(uid),
+		};
+		BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_Client_Version,ClientVersion)
+	end
+end
 
 return this;
 

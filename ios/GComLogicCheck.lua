@@ -16,6 +16,55 @@ function GLogicCheck:PlrNameLen(name)
     return true
 end
 
+-- UTF8的编码规则：
+-- 1.字符的第一个字节范围：(0-127)、(194-244)
+-- 2.字符的第二个字节及以后范围(针对多字节编码，如汉字)：(128-191)
+-- 3.(192，193和245-255)不会出现在UTF8编码中
+
+-- 检查名字是否合法，只能包含中日韩文、数字、大小写字母、空格
+-- 检查名字里是否前后有空格，或者是全空格的情况
+function GLogicCheck:CheckNameLegal(plr, str)
+    if not str or type(str) ~= 'string' or #str <= 0 then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return
+    end
+
+    -- 检测头尾是空格的情况
+    if string.byte(str, 1) == 32
+        or string.byte(str, -1) == 32
+        then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return false
+    end
+
+    -- 检查纯空格的情况
+    local s =  string.match(str, "%s+")
+    if s == str then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return false
+    end
+
+    -- 检查是否是中日韩文、数字、大小写字母、空格
+    -- u20 空格
+    -- 4e00-9fff、3400-4dbf 中文
+    -- 3040-309f  日文
+    -- ac00-d7af  韩文
+    -- IsHangul   韩文
+    -- IsHiragana 日文平假名
+    -- IsKatakana 日文片假名
+    -- a-zA-Z0-9  大小写+数字
+    local pattern = "^[\u{20}\u{4e00}-\u{9fff}\u{3400}-\u{4dbf}\u{3040}-\u{309f}\u{ac00}-\u{d7af}\z{IsHangul}\z{IsHiragana}\z{IsKatakana}a-zA-Z0-9]*$"
+    local ok = string.match(str, pattern)
+
+    if not ok then
+        GCTipTool:SendToPlr(plr, 'GLogicCheck:CheckName', 'checkNameError')
+        return false
+    end
+
+    return true
+end
+
+
 --获取字符串长度和字符数组
 function GLogicCheck:GetStringLen(inputStr)
     if not inputStr or type(inputStr) ~= 'string' or #inputStr <= 0 then
@@ -312,7 +361,12 @@ end
 
 ----------------------------------------------------------------------------------
 -- 任务是否还在有效期
-function GLogicCheck:TaskIsPassTimeLimit(cfg)
+function GLogicCheck:TaskIsPassTimeLimit(cfg, openTime, closeTime)
+    if openTime and closeTime then
+        local isOk = self:IsInRange(openTime, closeTime, CURRENT_TIME)
+        return isOk
+    end
+
     if cfg.nOpenTime == 0 then
         return true
     elseif cfg.nCloseTime == 0 then
@@ -462,6 +516,8 @@ function GLogicCheck:CheckItemExpiryByCfg(cfg, expiryIx, curTime)
     if curTime >= cfg.nExpiry then
         return true
     end
+
+    return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------------------------
@@ -516,6 +572,9 @@ function GLogicCheck:CheckArmyAddJoinCnt(info)
                 -- 下次刷新时间就是这个了
                 nextFlushHour = hour
             end
+        elseif curYDay < preYDay then
+            addCnt = addCnt + curYDay
+            info.can_join_cnt_flush_log[index] = curYDay
         end
 
         -- LogDebug('CheckArmyAddJoinCnt() B curHour:%s, hour:%s, addCnt:%s', curHour, hour, addCnt)
@@ -701,4 +760,141 @@ function GLogicCheck:IsPassRule(ruleId, plr, itemId)
 end
 
 
+function GLogicCheck:CheckStrMaxLen(strVal, maxLen)
+    strVal = strVal or ""
+    if strVal:len() > maxLen then
+        strVal = strVal:sub(1, maxLen)
+    end
 
+    return strVal
+end
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- args:
+-- -- productCfg: 商品配置
+-- -- vouchers: 使用的抵扣券列表
+-- -- curTime: 当前时间戳
+-- -- buyNum: 商品购买数量
+-- -- plrLv: 玩家等级
+-- -- isAddVoucher: 消耗那边是否添加入消费券
+-- -- costsKey: 表示使用配置表的哪个字段扣费 ShopPriceKey枚举
+
+-- 参数参考
+-- local productCfg = CfgCommodity[50001]
+-- local vouchers = { {id = 11008, num = 1} }
+-- local curTime = nil
+-- local buyNum = 1
+-- local plrLv = 1
+-- local isAddVoucher = false
+-- local costsKey = ShopPriceKey.jCosts
+
+-- ret:
+-- -- isOk
+-- -- tipStr 提示表 字符id
+-- -- sumReduces { {id, num}, {id, num} }, 抵扣券之后扣除的列表 [isOk 为 true 才会有]
+function GLogicCheck:IsCanUseVoucher(productCfg, vouchers, curTime, buyNum, plrLv, isAddVoucher, costsKey)
+    if not vouchers or table.empty(vouchers) then
+        return true, 'ok', productCfg[costsKey]
+    end
+
+    -- LogTable(productCfg[costsKey], "productCfg cost")
+    if not productCfg.canUseVoucher or table.empty(productCfg.canUseVoucher) then
+        return false, 'voucherCanNotUseVoucher'
+    end
+
+    if not curTime then
+        curTime = os.time()
+    end
+
+    local isDiscount = false
+    if productCfg.fDiscount and productCfg.fDiscount > 0 then
+        local disStart, disEnd = productCfg.nDiscountStart, productCfg.nDiscountEnd
+        if self:IsInRange(disStart, disEnd, curTime, true) then
+            isDiscount = true
+        end
+    end
+
+    local sumUseCnt = 0 -- 一共使用多少张优惠券
+    local sumReduces = 0
+
+    local realCost = 0
+    local realCosts = {}
+
+    local voucher = vouchers[1]
+    local iCfg = ItemInfo[voucher.id]
+    local vCfg = CfgVoucher[iCfg.dy_value1]
+    local reduceId = vCfg.reduceId
+    
+    for _, cost in ipairs(productCfg[costsKey] or {}) do
+        local costId, costNum = cost[1], cost[2]
+        if costId == -1 then
+            return false, 'voucherCanNotUseVoucher'
+        elseif costId == reduceId then
+            realCost = realCost + buyNum * costNum
+        else
+            table.insert(realCosts, cost)
+        end
+    end
+
+    for _, voucher in ipairs(vouchers) do
+        local iCfg = ItemInfo[voucher.id]
+        if iCfg.type ~= ITEM_TYPE.VOUCHER then
+            return false, 'invalidOp'
+        end
+
+        local vCfg = CfgVoucher[iCfg.dy_value1]
+        -- LogTable(vCfg, "voucher vCfg")
+
+        if not vCfg.mixDiscount and isDiscount then
+            return false, 'voucherCanNotMixDiscount'
+        end
+
+        if not vCfg.voucherType then
+            return false, 'voucherCanNotUseVoucher'
+        end
+    
+        if not GCalHelp:FindArrByFor(productCfg.canUseVoucher, vCfg.voucherType) then
+            return false, 'voucherNotProductType'
+        end
+
+        sumUseCnt = sumUseCnt + voucher.num
+        if not vCfg.mixUse and sumUseCnt > 1 then
+            return false, 'voucherCanNotMixUse'
+        end
+
+        sumReduces = sumReduces + voucher.num * vCfg.reduceNum
+        if reduceId and reduceId ~= vCfg.reduceId then
+            return false, 'voucherMixUseReduceIdErr'
+        else
+            reduceId = vCfg.reduceId
+        end
+        
+        if isAddVoucher then
+            table.insert(realCosts, {voucher.id, voucher.num})
+        end
+
+        if vCfg.minCost and realCost < vCfg.minCost then
+            return false, 'voucherMinCost'
+        end
+    
+        if sumReduces > realCost then
+            return false, 'voucherBiggerThanRealCose'
+        end
+        
+        if vCfg.minLevel and plrLv < vCfg.minLevel then
+            return false, 'voucherMinCost'
+        end        
+    end
+
+    table.insert(realCosts, {reduceId, realCost - sumReduces})
+
+    return true, nil, realCosts
+end
+
+-- voucherCanNotUseVoucher : 商品不支持使用抵扣券
+-- voucherMixUseReduceIdErr : 叠加抵扣券只支持扣除一种物品
+-- voucherCanNotMixUse : 抵扣券不支持叠加使用
+-- voucherCanNotMixDiscount: 不支持与其他折扣一起使用
+-- voucherMinCost: 抵扣券最小消耗限制
+-- voucherNotProductType: 抵扣券不支持该商品类型
+-- voucherBiggerThanRealCose: 抵扣券大于总面值大于需要抵扣的总额

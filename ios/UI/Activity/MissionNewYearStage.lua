@@ -63,7 +63,26 @@ function LayoutCallBack(index)
     if (lua) then
         local _data = currDatas[index]
         lua.SetIndex(index)
+        lua.SetClickCB(OnItemClickCB)
         lua.Refresh(_data)
+    end
+end
+
+function OnItemClickCB(info)
+    if info then
+        if (not info:IsGet() and info:IsFinish()) then
+            if (MissionMgr:CheckIsReset(info)) then
+                -- LanguageMgr:ShowTips(xxx)
+                LogError("任务已过期")
+            else
+                MissionMgr:GetRewardByType({eTaskType.NewYear,eTaskType.NewYearFinish},info:GetGroup())
+                -- MissionMgr:GetReward(info:GetID())
+            end
+        elseif (not info:IsGet() and not info:IsFinish()) then
+            if (info:GetJumpID()) then
+                JumpMgr:Jump(info:GetJumpID())
+            end
+        end
     end
 end
 
@@ -100,7 +119,7 @@ function Refresh(_data,_elseData)
     RefreshTopItems()
 
     -- red
-    ActivityMgr:CheckRedPointData()
+    ActivityMgr:CheckRedPointData(ActivityListType.NewYearContinue)
 end
 
 function GetTaskType(cfg)
@@ -308,7 +327,8 @@ function OnClickGet()
                 -- LanguageMgr:ShowTips(xxx)
                 LogError("任务已过期")
             else
-                MissionMgr:GetReward(data:GetID())
+                MissionMgr:GetRewardByType({eTaskType.NewYear,eTaskType.NewYearFinish},data:GetGroup())
+                -- MissionMgr:GetReward(data:GetID())
             end
         end
     end

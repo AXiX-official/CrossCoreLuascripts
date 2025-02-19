@@ -14,7 +14,7 @@ function OnClickOK()
         data.okCallBack(data.caller);
     end
     data = nil;
-    view:Close();
+view:Close();
 end
 
 function OnClickCancel()

@@ -35,7 +35,7 @@ function Refresh(_data, _sign)
 		-- 	CSAPI.SetRectSize(icon,148,148)
 		-- end
 		local frame = data:GetFrameId()
-		UIUtil:AddHeadByID(frameParent,0.78,frame,iconId)
+		UIUtil:AddHeadByID(frameParent,0.78,frame,iconId, data:GetSex())
 		-- CSAPI.SetGOActive(icon, iconId ~= nil)
 		--lv
 		CSAPI.SetText(txtLv2, data:GetLv() .. "")
@@ -43,7 +43,9 @@ function Refresh(_data, _sign)
 		CSAPI.SetText(txtName, data:GetName())
 		--id
 		-- CSAPI.SetText(txtID, "ID:" .. data:GetUid() .. "")
-		CSAPI.SetText(txtID,data:GetUid() .. "")
+		CSAPI.SetText(txtID,LanguageMgr:GetByID(8028) .. data:GetUid())
+		--title
+		UIUtil:AddTitleByID(titleParent,0.6,data:GetTitle())
 		--online
 		local onlineName =	data:IsOnLine()	and "online" or "offline"
 		CSAPI.LoadImg(lineImg, "UIs/Friend/" .. onlineName .. ".png", true, nil, true)
@@ -120,7 +122,8 @@ function OnCardInfoCallBack(proto)
 	-- end
 	if _cards then	
 		local _card = CharacterCardsData(_cards[1])	
-		CSAPI.OpenView("RoleInfo", _card, RoleInfoOpenType.LookOther)
+		--CSAPI.OpenView("RoleInfo", _card, RoleInfoOpenType.LookOther)
+		CSAPI.OpenView("RoleInfo", _card)
 	end
 end
 

@@ -6,7 +6,6 @@ local hasCallFunc = false;
 local isShowLvBar = false
 
 local bIsWin = false
-local isPVPWin = false
 local fightOverData = nil
 local sceneType = nil
 
@@ -21,13 +20,14 @@ function Awake()
         FuncUtil:Call(ApplyQuit, nil, 2000);
     end
 
-    MenuMgr:ReduceMenuBuyChangeNum()
+    MenuBuyMgr:ConditionCheck(3) --MenuMgr:ReduceMenuBuyChangeNum()
 end
 
 function OnEnable()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadComplete)
+    FightClient.IsFightOver=true;
 end
 
 function OnViewOpened(viewKey)
@@ -43,6 +43,7 @@ function OnLoadComplete()
 end
 
 function OnDisable()
+    FightClient.IsFightOver=false;
     eventMgr:ClearListener();
 end
 
@@ -55,6 +56,25 @@ function OnOpen()
     
     sceneType = data.sceneType -- 在FightActionFightEnd添加的
 
+    --如果是肉鸽,如果是非最终轮胜利,不用显示结算
+    --如果任意轮是保存进度退出，不用显示结算
+    if(sceneType==SceneType.Rogue) then 
+        if(data.bIsWin and data.elseData.round<RogueMgr:GetCurData2():GetLimitRound()) then 
+            ClearTeamData()
+            CSAPI.SetScale(gameObject,0,0,0)
+            FightClient:Clean()
+            RogueMgr:NeedToBuffView(true)
+            RogueMgr:FightToBack(false, data.elseData.group)
+            return
+        elseif(data.elseData.quitType==2 and data.elseData.save)then 
+            ClearTeamData()
+            CSAPI.SetScale(gameObject,0,0,0)
+            FightClient:Clean()
+            RogueMgr:FightToBack(data.elseData.save, data.elseData.group)
+            return
+        end 
+    end 
+
     bIsWin = GetIsWin(sceneType)
 
     --FightProto:DuplicateOver整合的数据
@@ -62,6 +82,7 @@ function OnOpen()
     if fightOverData then
         data.rewards = fightOverData.rewards or data.rewards
         data.nPlayerExp = fightOverData.nPlayerExp and data.nPlayerExp + fightOverData.nPlayerExp or data.nPlayerExp
+        data.totalDamage = fightOverData.totalDamage
     end
 
     local viewPath = bIsWin and "FightOver/FightOverToWin" or "FightOver/FightOverToLose"
@@ -81,11 +102,18 @@ function OnOpen()
 end
 
 function GetIsWin(_sceneType)
-    if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror) then
+    if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror or _sceneType == SceneType.GlobalBoss or _sceneType == SceneType.RogueT) then
         return true
-    elseif _sceneType == SceneType.PVP then
-        isPVPWin = data.bIsWin
-        return true
+    elseif _sceneType == SceneType.PVE then
+        local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+        if cfg then
+            if cfg.type == eDuplicateType.StarPalace then
+                return true       
+            elseif cfg.type == eDuplicateType.StoryActive and cfg.diff and cfg.diff == 4 then
+                return true   
+            end
+        end
+        return data.bIsWin
     else
         return data.bIsWin
     end
@@ -142,9 +170,7 @@ function ApplyQuit()
                 end);
                 hasCallFunc = true;
             end
-            FriendMgr:ClearAssistData();
-            TeamMgr:ClearAssistTeamIndex();
-            TeamMgr:ClearFightTeamData();
+            ClearTeamData()
             UIUtil:AddFightTeamState(2, "FightOverResult:ApplyQuit()")
         elseif dungeonId ~= nil and dungeonId ~= "" then -- 未结束
             DungeonMgr:ApplyEnter(dungeonId);
@@ -167,6 +193,37 @@ function ApplyQuit()
         DungeonMgr:Quit(not bIsWin);
     elseif (sceneType == SceneType.GuildBOSS) then
         GuildFightMgr:FightQuit();
+    elseif (sceneType == SceneType.Rogue) then
+        ClearTeamData()
+        RogueMgr:FightToBack(not data.bIsWin, data.elseData.group) --最终轮
+    elseif (sceneType == SceneType.RogueS) then
+        local len = RogueSMgr:GetLen(data.elseData.group)
+        if(not bIsWin or data.elseData.round>= len) then 
+            ClearTeamData()
+            local group = data.elseData.group
+            if(bIsWin) then 
+                group = RogueSMgr:GetNextGroup(group)
+            end
+            RogueSMgr:Quit(group)
+        else
+            --只能重复挑战或者下一关
+        end   
+    elseif(sceneType == SceneType.GlobalBoss) then
+        GlobalBossMgr:Quit()
+    elseif (sceneType == SceneType.RogueT) then
+        ClearTeamData()
+        local nDuplicateID = data.elseData.nDuplicateID
+        if(RogueTMgr:IsInfinity(nDuplicateID))then 
+            RogueTMgr:Quit()
+        else
+            if(data.elseData.bIsWin and RogueTMgr:IsMainLineLast(nDuplicateID) and RogueTMgr:CheckCanSave(nDuplicateID) )then 
+                --最后一关触发保存buff
+                local cfg = Cfgs.MainLine:GetByID(nDuplicateID)
+                CSAPI.OpenView("RogueTSaveBuff", cfg.dungeonGroup)
+            else
+                RogueTMgr:Quit()
+            end 
+        end 
     end
 end
 
@@ -198,6 +255,20 @@ function OnClickMask()
         PlotMgr:TryPlay(cfg.storyID2, ApplyQuit, nil, false);
     else
         ApplyQuit();
+    end
+end
+
+function ClearTeamData()
+    FriendMgr:ClearAssistData();
+    TeamMgr:ClearAssistTeamIndex();
+    TeamMgr:ClearFightTeamData();
+end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    ---填写退出代码逻辑/接口
+    if  OnClickMask then
+        OnClickMask();
     end
 end
 

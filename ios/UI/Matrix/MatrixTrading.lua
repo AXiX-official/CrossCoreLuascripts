@@ -7,14 +7,22 @@ local timer = 0
 local tNexGiftsEx = nil
 local fid = nil
 local isAnimEnd = false
+local maxCount, curCount = 0, 0
+local friends = {}
+local friendsLen = 0
 
 function Awake()
+    --初始化菜单项
+	AdaptiveConfiguration.SetLuaObjUIFit("MatrixTrading",gameObject)
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     -- layout:AddBarAnim(0.4, false)
     layout:Init("UIs/Matrix/MatrixTradingItem", LayoutCallBack, true)
     animLua = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Diagonal)
 
     CSAPI.SetGOActive(mask, true)
+
+    friends = FriendMgr:GetDatasByState(eFriendState.Pass)
+    friendsLen = #friends
 end
 
 function LayoutCallBack(index)
@@ -56,6 +64,7 @@ function OnInit()
 end
 
 function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("MatrixTrading")
     eventMgr:ClearListener()
 end
 
@@ -99,13 +108,13 @@ function FlrTradeOrdersCB(proto)
     else
         fid = data
         -- 关闭好友列表
-        --local go = CSAPI.GetView("MatrixTradingFriend")
+        -- local go = CSAPI.GetView("MatrixTradingFriend")
         -- if (matrixf) then
         --     local lua = ComUtil.GetLuaTable(go)
         --     lua.view:Close()
         -- end
-        if(matrixTradingFriend) then 
-            CSAPI.SetGOActive(matrixTradingFriend.gameObject,false)
+        if (matrixTradingFriend) then
+            CSAPI.SetGOActive(matrixTradingFriend.gameObject, false)
         end
         --
         SetFidDatas(proto)
@@ -125,6 +134,9 @@ function RefreshPanel()
     -- CSAPI.SetGOActive(objTitle3, fid == nil)
     local langID = fid == nil and 10103 or 10216
     LanguageMgr:SetText(txtTitle3, langID)
+
+    --
+    SetBtnLR()
 end
 
 -- 订单长度
@@ -180,9 +192,9 @@ end
 
 -- 自己的订单数据（实单+空单/假单+锁单）
 function SetDatas()
-    if(not buildingData) then 
-        return 
-    end 
+    if (not buildingData) then
+        return
+    end
     buildLv = buildingData:GetCfg().id
     SetMaxCount()
     tNexGiftsEx = buildingData:GetData().tNexGiftsEx
@@ -331,11 +343,14 @@ function TradingItemCB(itemData)
     local enough, alsoNeed = itemData:IsEnough()
     if (id) then
         if (enough) then
-            if (fid) then
-                BuildingProto:TradeFlrOrder(fid, id, TradeFlrOrderCB)
-            else
-                BuildingProto:Trade(buildId, id)
-            end
+            local str = LanguageMgr:GetTips(2316)
+            UIUtil:OpenDialog(str, function()
+                if (fid) then
+                    BuildingProto:TradeFlrOrder(fid, id, TradeFlrOrderCB)
+                else
+                    BuildingProto:Trade(buildId, id)
+                end
+            end)
         else
             local str = LanguageMgr:GetTips(2102)
             UIUtil:OpenDialog(str, function()
@@ -433,5 +448,54 @@ function OnClickFriend()
             matrixTradingFriend = ComUtil.GetLuaTable(go)
             matrixTradingFriend.Refresh({"MatrixTrading", fid})
         end)
+    end
+end
+
+function SetBtnLR()
+    CSAPI.SetGOActive(btnL, fid ~= nil)
+    CSAPI.SetGOActive(btnR, fid ~= nil)
+end
+
+function OnClickL()
+    if (fid) then
+        local index = 1
+        for k, v in ipairs(friends) do
+            if (fid == v:GetUid()) then
+                index = k
+            end
+        end
+        data = nil
+        for k = index - 1, 1, -1 do
+            if (friends[k]:IsDormOpen()) then
+                data = friends[k]:GetUid()
+                break
+            end
+        end
+        if (not data) then
+            LanguageMgr:ShowTips(2317)
+        end
+        OnOpen()
+    end
+end
+
+function OnClickR()
+    if (fid) then
+        local index = 1
+        for k, v in ipairs(friends) do
+            if (fid == v:GetUid()) then
+                index = k
+            end
+        end
+        data = nil
+        for k = index + 1, friendsLen do
+            if (friends[k]:IsDormOpen()) then
+                data = friends[k]:GetUid()
+                break
+            end
+        end
+        if (not data) then
+            LanguageMgr:ShowTips(2317)
+        end
+        OnOpen()
     end
 end

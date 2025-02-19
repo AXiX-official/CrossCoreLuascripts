@@ -8,8 +8,8 @@ function Skill8575:Init(skillID, card)
 end
 -- 入场时
 function Skill8575:OnBorn(caster, target, data)
-	-- 22803
-	self:AddBuff(SkillEffect[22803], caster, self.card, data, 6111)
+	-- 22814
+	self:AddBuff(SkillEffect[22814], caster, self.card, data, 6112)
 end
 -- 行动结束2
 function Skill8575:OnActionOver2(caster, target, data)

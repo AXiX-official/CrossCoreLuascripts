@@ -12,6 +12,7 @@ RedPointType.PlayerAbility = "PlayerAbility";
 RedPointType.Activity = "Activity" -- 活动
 RedPointType.ActivityList1 = "ActivityList1" -- 活动列表1
 RedPointType.ActivityList2 = "ActivityList2" -- 活动列表2
+RedPointType.ActivityList3 = "ActivityList3" -- 特别活动
 RedPointType.Exploration = "Exploration" -- 勘探
 RedPointType.Attack = "Attack" -- 出击
 RedPointType.Bag = "Bag" -- 背包
@@ -25,15 +26,46 @@ RedPointType.ActiveEntry1 = "ActiveEntry1"  --活动入口  拂晓之战
 RedPointType.ActiveEntry2 = "ActiveEntry2"  --电影惊魂
 RedPointType.ActiveEntry3 = "ActiveEntry3"  --拟真演训
 RedPointType.ActiveEntry4 = "ActiveEntry4"  --迷城蛛影
+RedPointType.ActiveEntry16 = "ActiveEntry16"  --宠物活动
 
 RedPointType.MaterialBag = "MaterialBag" -- 背包
 RedPointType.HeadFrame = "HeadFrame" -- 头像框
 RedPointType.Head = "Head" -- 头像
+RedPointType.Title = "Title" -- 称号
+RedPointType.Achievement = "Achievement" --成就
+RedPointType.Regression = "Regression" --回归
+RedPointType.Badge = "Badge" --徽章
+RedPointType.Rogue = "Rogue" --乱序演习
+RedPointType.RogueS = "RogueS" --战斗派遣
+RedPointType.AccuCharge = "AccuCharge" --累计充值
+RedPointType.AccuCharge2 = "AccuCharge2" --累计充值2
+RedPointType.AccuCharge3 = "AccuCharge3" --累计充值2
+RedPointType.Collaboration="Collaboration" --回归绑定活动
+RedPointType.SpecialExploration="SpecialExploration"--特殊勘探
+
+RedPointType.Colosseum="Colosseum"--角斗场任务
+RedPointType.ActiveEntry26 = "ActiveEntry26"  --角斗场随机模式通关奖励
+RedPointType.ASMR="ASMR"--
+--每日固定显示一次红点的类型
+RedPointDayOnceType={}
+RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机
+RedPointType.ResRecovery = "ResRecovery" --遗落的补给
+RedPointType.RogueT = "RogueT" --
+
+RedPointType.SectionMain = "SectionMain" --章节主线
+RedPointType.SectionDaily = "SectionDaily" --章节日常
+RedPointType.SectionExercise = "SectionExercise" --章节演习
+RedPointType.SectionActivity = "SectionActivity" --章节活动
+--每日固定显示一次红点的类型
+RedPointDayOnceType={}
+RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机
+RedPointDayOnceType.GloBalBoss = "GloBalBoss" --世界boss
 
 local this = MgrRegister("RedPointMgr")
 
 function this:Clear()
     self.rps = nil;
+    self.dayRedList=nil;
 end
 
 function this:UpdateData(rpType, data)
@@ -61,6 +93,48 @@ end
 function this:Refresh()
     self.applyRefresh = nil;
     EventMgr.Dispatch(EventType.RedPoint_Refresh);
+end
+
+function this:SetDayRedToday(_dayOnceType)
+    self.dayRedList=self.dayRedList or {};
+    if _dayOnceType then
+        local stamp=TimeUtil.GetTime();
+        local time = nil
+        local t=TimeUtil:GetTimeHMS(stamp,"*t");
+        local time2=self.dayRedList[_dayOnceType];
+        if (t and t.hour<3) then--往前退12小时拿日期比较
+            time=TimeUtil:GetTimeHMS((stamp-43200), "%Y:%m:%d");
+        else
+            time=TimeUtil:GetTimeHMS(stamp, "%Y:%m:%d")
+        end
+        if ((time2 and time2~=time) or time2==nil)then --3点后才记录
+            self.dayRedList[_dayOnceType]=time;
+            FileUtil.SaveToFile("dayRedList.txt",self.dayRedList)
+        end
+    end
+end
+
+--是否需要显示红点的状态，true为要显示
+function this:GetDayRedState(_dayOnceType)
+    if self.dayRedList==nil then
+        self.dayRedList=FileUtil.LoadByPath("dayRedList.txt");
+    end
+    self.dayRedList=self.dayRedList or {};
+    local isRed=true;
+    if _dayOnceType and self.dayRedList[_dayOnceType] then --判断记录日是否和今天相同
+        local stamp=TimeUtil.GetTime();
+        local time = nil
+        local t=TimeUtil:GetTimeHMS(stamp,"*t");
+        if (t and t.hour<3) then--往前退12小时拿日期比较
+            time=TimeUtil:GetTimeHMS((stamp-43200), "%Y:%m:%d");
+        else
+            time=TimeUtil:GetTimeHMS(stamp, "%Y:%m:%d")
+        end
+        if time==self.dayRedList[_dayOnceType] then
+            return false;
+        end
+    end
+    return isRed;
 end
 
 return this;

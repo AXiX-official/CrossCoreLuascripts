@@ -1,21 +1,5 @@
 local this = {};
 
-this.ShowType = {
-    Title = "Title",
-    Target = "Target",
-    Prograss = "Prograss",
-    Output = "Output",
-    Level = "Level",
-    Double = "Double",
-    Details ="Details",
-    Danger = "Danger",
-    Course = "Course",
-    Button = "Button",
-    Badge = "Badge",
-    Plot = "Plot",
-    PlotButton = "PlotButton",
-}
-
 function this.New()
 	this.__index = this.__index or this;
 	local tab = {};
@@ -28,26 +12,20 @@ function this:Set(cfg)
     if cfg then
         self.data = DungeonMgr:GetDungeonData(cfg.id)
         self.sectionData = DungeonMgr:GetSectionData(cfg.group)
-        self.panel = self.panel or {}
-        self.create = self.create or {}
     end
+    self.panel = self.panel or {}
+    self.create = self.create or {}
     self.datas = {cfg =self.cfg,data =self.data,sectionData =self.sectionData}
 end
 
-function this:Show(typeName,parent,callback)
+function this:Show(typeName,parent,path,callback)
     if not parent then
         LogError("未传入父物体！！！")
         return
     end
-    local isCanShow = false
-    for _type, name in pairs(this.ShowType) do
-        if name == typeName then
-            isCanShow = true
-            break
-        end
-    end
-    if not isCanShow then
-        LogError("没有指定类型的模块！！！" .. typeName)
+
+    if typeName == nil or typeName=="" then
+        LogError("未传入组件名！！！")
         return
     end
 
@@ -63,7 +41,10 @@ function this:Show(typeName,parent,callback)
             return
         end
         self.create[typeName] = true
-        ResUtil:CreateUIGOAsync("DungeonItemInfo/DungeonInfo" .. typeName,parent,function (go)
+        if typeName == "Double" or typeName == "Double2" then
+            path = "DungeonItemInfo"
+        end
+        ResUtil:CreateUIGOAsync(path .. "/DungeonInfo" .. typeName,parent,function (go)
             local lua = ComUtil.GetLuaTable(go)
             lua.Refresh(self.datas)
             self.panel[typeName] = lua
@@ -96,11 +77,13 @@ function this:ShowPanels(typeNames)
 end
 
 function this:GetPanel(typeName)
-    return self.panel and self.panel[typeName]
+    if self.panel and self.panel[typeName] and self.panel[typeName].gameObject.activeSelf == true then
+        return self.panel[typeName]
+    end
 end
 
 function this:RefreshPanel()
-    if this.panel then
+    if self.panel then
         for _, lua in pairs(self.panel) do
             if lua.gameObject.activeSelf then
                 lua.Refresh(self.datas)

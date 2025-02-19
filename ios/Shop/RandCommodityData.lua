@@ -30,12 +30,14 @@ function this:SetCfg(rewardId,itemId,itemIndex)
     if rewardCfg then
         self.icon=rewardCfg.icon;
         self.quality=rewardCfg.quality;
-        for k,v in ipairs(rewardCfg.item) do
-            if v.id==itemId and k==itemIndex then
-                self.cfg=v;
-                break;
+        if rewardCfg.item then
+            for k,v in ipairs(rewardCfg.item) do
+                if v.id==itemId and k==itemIndex then
+                    self.cfg=v;
+                    break;
+                end
             end
-        end
+        end        
     end
 end
 
@@ -139,6 +141,21 @@ function this:GetNowDiscount()
     return self.data and self.data.dis or 0;
 end
 
+function this:GetNowDiscountTips()
+    local code=CSAPI.RegionalCode();
+    local discount=self:GetNowDiscount();
+    if discount==1 then
+        return nil;
+    end
+    -- if code~=1 and code~=2 then
+        local dis=math.floor((1-discount)*100+0.5);
+        return string.format(LanguageMgr:GetByID(18122),dis);
+    -- else
+    --     local dis=math.floor(discount*10+0.5);
+    --     return string.format(LanguageMgr:GetByID(18074),dis);
+    -- end
+end
+
 function this:GetDesc()
     return self.cfg and self.cfg.desc or nil;
 end
@@ -228,6 +245,33 @@ function this:GetChargeID()
     --     return chargeCfg.iosID;
     -- end
     return nil;
+end
+
+function this:CanUseVoucher()
+    return false;
+end
+
+function this:GetUseVoucherTypes()
+    return nil
+end
+
+function this:HasOtherPrice(shopPriceKey)
+    return false
+end
+
+function this:GetBundlingType()
+    return  nil
+end
+
+function this:GetBundlingID()
+    return  nil
+end
+
+function this:GetBuySum()
+    if self.data and self.data.had_get then
+        return self.data.had_get
+    end
+    return 0;
 end
 
 return this;

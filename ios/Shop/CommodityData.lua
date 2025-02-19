@@ -20,13 +20,23 @@ function this:SetCfg(cfgId)
     end
 end
 
+function this:GetCfg()
+    return self.cfg;
+end
+
 function this:SetData(data) 
-    if data then 
+    if data then
+        if (CSAPI.IsADV() or CSAPI.IsDomestic()) and data["id"]~=nil  then
+            data= ShiryuSDK.ShopDataEdit(data);
+        end
         self.data = data 
     end 
 end
 
 function this:GetData()
+    if (CSAPI.IsADV() or CSAPI.IsDomestic()) and self.data~=nil then
+        self.data= ShiryuSDK.ShopDataEdit(self.data);
+    end
     return self.data;
 end
 
@@ -52,6 +62,9 @@ function this:GetType() return self.cfg and self.cfg.nType or 1 end
 
 -- 返回ICON
 function this:GetIcon() return self.cfg and self.cfg.sIcon or "" end
+
+-- 返回ICON2
+function this:GetIcon2() return self.cfg and self.cfg.sIcon_2 or nil end
 
 -- 格子图标
 function this:GetGirdIcon() return self.cfg and self.cfg.sGridIcon or "" end
@@ -90,6 +103,22 @@ function this:GetNowDiscount()
         end
     end
     return num
+end
+
+--返回当前折扣说明
+function this:GetNowDiscountTips()
+    local code=CSAPI.RegionalCode();
+    local discount=self:GetNowDiscount();
+    if discount==1 then
+        return nil;
+    end
+    -- if code~=1 and code~=2 then --国内外统一修改为-n%格式
+    local dis=math.floor((1-discount)*100+0.5);
+    return string.format(LanguageMgr:GetByID(18122),dis);
+    -- else
+    --     local dis=math.floor(discount*10+0.5);
+    --     return string.format(LanguageMgr:GetByID(18074),dis);
+    -- end
 end
 
 --显示优先级，值越小越先显示
@@ -188,12 +217,17 @@ end
 function this:GetResetTips()
     local str = ""
     local str1,str2="","";
-    local time = GCalHelp:GetCycleResetTime(self:GetResetType(),
+    local time = 0;
+    if self:GetResetType()==PeriodType.OnFlush then
+        time=self:GetResetTime();
+    else
+        time = GCalHelp:GetCycleResetTime(self:GetResetType(),
                                             self:GetResetValue(),
                                             TimeUtil:GetTime())
+    end
     if time > 0 then
         local type=self:GetResetType();
-        local id=18022;
+        local id=18024;
         if type==1 then
             id=18022;
         elseif type==2 then
@@ -388,12 +422,15 @@ function this:GetBuyLimit()
     return canBuy
 end
 
--- 返回未打折的价格
-function this:GetPrice()
+-- 返回未打折的价格 key:ShopPriceKey
+function this:GetPrice(key)
     local priceInfo = nil
     local jCosts=nil;
-    if self.data and self.data.shop_config and self.data.shop_config.jCosts then
-        jCosts=self.data.shop_config.jCosts;
+    key=key==nil and ShopPriceKey.jCosts or key
+    if self.data and self.data.shop_config then
+        jCosts=self.data.shop_config[key] or nil;
+    elseif self.cfg then
+        jCosts=self.cfg.jCosts[key] or nil;
     end
     if jCosts then
         priceInfo = {}
@@ -407,10 +444,22 @@ function this:GetPrice()
     return priceInfo
 end
 
--- 返回打折的价格
-function this:GetRealPrice()
+function this:HasOtherPrice(shopPriceKey)
+    if shopPriceKey then
+        if self.data and self.data.shop_config  then
+            return self.data.shop_config[shopPriceKey]~=nil
+        elseif self.cfg and self.cfg[shopPriceKey] then
+            return true
+        end
+    end
+    return false
+end
+
+-- 返回打折的价格 key:ShopPriceKey
+function this:GetRealPrice(key)
+    key=key==nil and ShopPriceKey.jCosts or key
     local infos = nil
-    local priceInfo = self:GetPrice()
+    local priceInfo = self:GetPrice(key)
     local discount = self:GetNowDiscount()
     if priceInfo then
         infos = {}
@@ -505,6 +554,13 @@ function this:GetExGets()
     return jExGets;
 end
 
+function this:GetBuySum()
+    if self.data and self.data.buy_sum then
+        return self.data.buy_sum
+    end
+    return 0;
+end
+
 -- 返回商品剩余数量
 function this:GetNum()
     local num = 0
@@ -518,6 +574,10 @@ function this:GetNum()
     if num~=-1 and (self:GetType()==CommodityItemType.THEME or self:GetType()==CommodityItemType.FORNITURE) then --家具的可剩余购买次数需要减去持有数
         local list=self:GetCommodityList();
         if list then
+            -- if list[1].data==nil then
+            --     LogError(self:GetID())
+            --     LogError(list[1])
+            -- end
             local dyVal1=list[1].data:GetDyVal1();
             --查询宿舍表
             local buyCount=num; --持有上限值
@@ -555,6 +615,14 @@ function this:IsOver()
             return true;
         elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then
             return true;
+        end
+    elseif self:GetType() == CommodityItemType.THEME then
+        local good=self:GetCommodityList()[1];
+        local dyVal1=good.data:GetDyVal1();
+        if self:GetNum() ~= -1 and self:GetNum() <= 0 then 
+            return true 
+        elseif dyVal1 then
+           return ShopCommFunc.GetThemeInfo(dyVal1);
         end
     elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then 
         return true 
@@ -626,6 +694,20 @@ function this:GetEndBuyTips()
       
 		local count=TimeUtil:GetDiffHMS(buyEndTime,TimeUtil.GetTime());
 
+        if self:GetType()==CommodityItemType.Regression then      
+            if count.day>0 then
+                return LanguageMgr:GetByID(60005,count.day)
+            elseif count.hour>0 then
+                return LanguageMgr:GetByID(60009,count.hour)
+            else
+                if count.minute>=1 then
+                    return LanguageMgr:GetByID(60010,count.minute)
+                else
+                    return LanguageMgr:GetByID(60010,"0")
+                end
+            end   
+            return
+        end
 --        if self:GetType()==CommodityItemType.Skin then            
             -- if self:GetID()==50007 then
             --    LogError("Before:"..tostring(self:GetBuyEndTime())) 
@@ -685,6 +767,40 @@ function this:IsShowImg()
         return self.cfg.isShowImg==1;
     end
     return false;
+end
+
+--是否可以使用的折扣券类型
+function this:CanUseVoucher(type)
+    if self.cfg and self.cfg.canUseVoucher and type then
+        for k,v in ipairs(self.cfg.canUseVoucher) do
+            if v==type then
+                return true;
+            end
+        end
+    end    
+    return false;
+end
+
+function this:GetUseVoucherTypes()
+    return self.cfg and self.cfg.canUseVoucher or nil;
+end
+
+function this:GetBundlingType()
+    -- if self.data and self.data.shop_config  then
+    --     return self.data.shop_config.bundingType or nil;
+    -- end
+    if self.cfg then
+        return self.cfg and self.cfg.bundlingType or nil
+    end
+end
+
+function this:GetBundlingID()
+    -- if self.data and self.data.shop_config  then
+    --     return self.data.shop_config.bundlingID or nil;
+    -- end
+    if self.cfg then
+        return self.cfg and self.cfg.bundlingID or nil
+    end
 end
 
 return this

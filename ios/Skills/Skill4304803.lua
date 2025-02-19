@@ -1,4 +1,4 @@
--- 参数生成
+-- 盈能抢修
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -33,8 +33,8 @@ function Skill4304803:OnAttackOver(caster, target, data)
 		self:OwnerAddBuffCount(SkillEffect[4304812], caster, self.card, data, 304800101,1,8)
 	end
 end
--- 行动结束2
-function Skill4304803:OnActionOver2(caster, target, data)
+-- 行动结束
+function Skill4304803:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -47,10 +47,10 @@ function Skill4304803:OnActionOver2(caster, target, data)
 	else
 		return
 	end
-	-- 8424
-	local count24 = SkillApi:BuffCount(self, caster, target,3,3,6111)
-	-- 8107
-	if SkillJudger:Greater(self, caster, self.card, true,count24,0) then
+	-- 8684
+	local count684 = SkillApi:GetCount(self, caster, target,3,304800101)
+	-- 8897
+	if SkillJudger:Greater(self, caster, target, true,count684,4) then
 	else
 		return
 	end
@@ -68,8 +68,8 @@ function Skill4304803:OnActionOver2(caster, target, data)
 	-- 4304828
 	self:OwnerAddBuffCount(SkillEffect[4304828], caster, self.card, data, 304800101,-5,8)
 end
--- 行动结束
-function Skill4304803:OnActionOver(caster, target, data)
+-- 行动结束2
+function Skill4304803:OnActionOver2(caster, target, data)
 	-- 8684
 	local count684 = SkillApi:GetCount(self, caster, target,3,304800101)
 	-- 8897

@@ -9,10 +9,13 @@ function OnOpen()
 	AnimStart()
 
 	if data then
-		Refresh();
+		if openSetting and openSetting.isLovePlus then
+			RefreshLovePlus()
+		else
+			Refresh();
+		end
 	end
 end
-
 
 function Refresh()
 	local plot = data.story:GetBeginPlotData();
@@ -61,6 +64,59 @@ function Refresh()
 	CSAPI.SetRTSize(Content, 1681, math.abs(currY));
 	if index > 4 then
 		CSAPI.SetAnchor(Content, 0, math.abs(currY) - 956)
+	end
+end
+
+function RefreshLovePlus()
+	local plot = data.story:GetBeginPlotData();
+	local index = 1;
+	items = {}
+	fade:Play(0, 1, 250, 0,AnimEnd)
+	while(plot:GetNextPlotInfo() ~= nil) do
+		if plot:GetContent() ~= nil and plot:GetShowStory() ~= nil then
+			ResUtil:CreateUIGOAsync("Plot/PlotStoryItem", Content, function(go)
+				local lua = ComUtil.GetLuaTable(go);
+				lua.Refresh(plot);
+				SetPos(lua, index);	
+				table.insert(items, 1, lua)
+			end);
+
+			if data.currPlot and plot:GetID() == data.currPlot:GetID() then
+				break
+			end
+
+			local options = plot:GetOptions()
+			if options ~= nil then			
+				if #options > 1 then
+					for i, v in ipairs(options) do
+						if LovePlusMgr:IsPlotRead(v:GetID()) then
+							plot = v
+						end
+					end
+				else
+					plot= options[1]
+				end
+			else
+				plot = plot:GetNextPlotInfo()
+			end
+			index = index + 1;
+		else
+			plot = plot:GetNextPlotInfo()
+		end
+	end
+	--只对最后4个做动效
+	for i = 1, #items do
+		if #items <= 4 then
+			items[#items - i + 1].SetFadeIn(i)
+		elseif i > #items - 4 then
+			items[#items - i + 1].SetFadeIn(i -(#items - 4))
+		end
+	end
+	
+	if index > 4 then
+		CSAPI.SetAnchor(Content, 0, math.abs(currY) - 956)
+	else
+		CSAPI.SetRTSize(Content, 0, math.abs(currY));
 	end
 end
 

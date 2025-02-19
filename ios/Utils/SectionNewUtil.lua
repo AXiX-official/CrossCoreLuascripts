@@ -11,6 +11,9 @@ function this:IsSectionNew()
 end
 
 function this:IsDailyNew()
+    if PlayerClient:GetUid() == nil then
+        return
+    end
     local newInfo = FileUtil.LoadByPath("Dungeon_new_Info" .. PlayerClient:GetUid() .. ".txt") or {}
     local sectionCfgs = Cfgs.Section:GetGroup(SectionType.Daily)
     if sectionCfgs then
@@ -32,6 +35,9 @@ function this:IsDailyNew()
 end
 
 function this:IsDoubleNew()
+    if PlayerClient:GetUid() == nil then
+        return
+    end
     local newInfo = FileUtil.LoadByPath("Section_Daily_New"..PlayerClient:GetUid().. ".txt") or {}
     if not newInfo.resetTime then
         self:RefreshDoubleNew()
@@ -44,6 +50,9 @@ function this:IsDoubleNew()
 end
 
 function this:RefreshDoubleNew()
+    if PlayerClient:GetUid() == nil then
+        return
+    end
     local newInfo = FileUtil.LoadByPath("Section_Daily_New"..PlayerClient:GetUid().. ".txt") or {}
     local dayDiffs = g_ActivityDiffDayTime * 3600
     newInfo.resetTime = TimeUtil:GetResetTime(dayDiffs)
@@ -53,6 +62,9 @@ end
 function this:IsNew(str, dayDiffs)
     if str == nil or str == "" then
         return false
+    end
+    if PlayerClient:GetUid() == nil then
+        return
     end
     local newInfo = FileUtil.LoadByPath(str.."_".. PlayerClient:GetUid().. ".txt") or {}
     self:RefreshNew(str,dayDiffs)
@@ -67,6 +79,9 @@ end
 
 function this:RefreshNew(str, dayDiffs)
     if str == nil or str == "" then
+        return
+    end
+    if PlayerClient:GetUid() == nil then
         return
     end
     local newInfo = FileUtil.LoadByPath(str.."_"..PlayerClient:GetUid().. ".txt") or {}

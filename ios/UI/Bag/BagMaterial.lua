@@ -22,10 +22,32 @@ function this.GetShowGoods()
 	local arr = {};
 	if(bagDatas) then
 		for _, data in pairs(bagDatas) do
-			if(data) then
-				local cfgGoods = data:GetCfg();
-				if cfgGoods and cfgGoods.hide == nil then
-					table.insert(arr, data);
+			if(data~=nil) then 
+				if data:IsExipiryType() then--判断是否是限时物品，限时物品特殊处理
+					--判断当前物品的get_infos中有多少个分栏显示道具
+					if data:GetData().get_infos and #data:GetData().get_infos>1 then
+						for k,v in ipairs(data:GetData().get_infos) do
+							local tempData=table.copy(data:GetData());
+							tempData.num=v[1];
+							tempData.id=v[3];
+							tempData.get_infos={v};
+							local tempGoods=GoodsData(tempData);
+							local cfgGoods = tempGoods:GetCfg();
+							if cfgGoods and cfgGoods.hide == nil and tempData.num>0 then
+								table.insert(arr, tempGoods);
+							end
+						end
+					else
+						local cfgGoods = data:GetCfg();
+						if cfgGoods and cfgGoods.hide == nil then
+							table.insert(arr, data);
+						end
+					end
+				else
+					local cfgGoods = data:GetCfg();
+					if cfgGoods and cfgGoods.hide == nil then
+						table.insert(arr, data);
+					end
 				end
 			end
 		end

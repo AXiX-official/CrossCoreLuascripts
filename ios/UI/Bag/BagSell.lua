@@ -13,7 +13,7 @@ end
 
 
 function this.Refresh()
-    local list = EquipMgr:GetNotEquippedItem(nil, false);
+    local list = EquipMgr:GetNotEquippedItem(nil,false, false);
 	root.Refresh(list);
 	this.CountSellPrice();
 end

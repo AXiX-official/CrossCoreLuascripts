@@ -7,19 +7,18 @@ function SetClickCB(_cb)
 end
 
 -- _data: CfgArchiveMultiPicture  _elseData 根据key来划分数据
-function Refresh(_data, _elseData)
+function Refresh(_data, curID)
     data = _data
-    elseData = _elseData or {}
 
-    isUse = elseData.useID and elseData.useID == data:GetID() or false
-    isSelect = elseData.curID and elseData.curID == data:GetID() or false
+    --isUse = elseData.useID and elseData.useID == data:GetID() or false
+    isSelect = curID == data:GetID() or false
 
     -- icon
     ResUtil.MultBoard:Load(icon, data:GetIcon())
     -- name 
     CSAPI.SetText(txtName, data:GetName())
     -- use 
-    CSAPI.SetGOActive(use, isUse)
+    --CSAPI.SetGOActive(use, isUse)
     -- select
     CSAPI.SetGOActive(select, isSelect)
     -- objs

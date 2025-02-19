@@ -9,10 +9,12 @@ end
 -- 伤害前
 function Buffer332602:OnBefourHurt(caster, target)
 	-- 332602
-	self:AddAttr(BufferEffect[332602], self.caster, self.card, nil, "bedamage",-0.04*self.nCount)
+	self:AddTempAttr(BufferEffect[332602], self.caster, self.card, nil, "bedamage",-0.04*self.nCount)
 end
 -- 行动结束
 function Buffer332602:OnActionOver(caster, target)
 	-- 332612
 	self:AddProgress(BufferEffect[332612], self.caster, self.card, nil, 80*self.nCount)
+	-- 332621
+	self:DelBufferTypeForce(BufferEffect[332621], self.caster, self.card, nil, 332601)
 end

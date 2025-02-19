@@ -28,7 +28,7 @@ end
 --end
 
 function this:GetBuff()
-    return ClientBuffMgr:GetBuff(self.data.uuid);
+    return self.data and ClientBuffMgr:GetBuff(self.data.uuid);
 end
 
 --获取行动者

@@ -10,6 +10,7 @@ local overloadCount = nil;
 
 
 function Awake()
+    AdaptiveConfiguration.SetLuaObjUIFit("Skill",gameObject); --节点添加
     --timeBar = ComUtil.GetCom(goTimeBar,"BarBase");
     --txtTime = ComUtil.GetCom(timeText,"Text");
     actionOn = ComUtil.GetCom(onAction,"ActionBase")
@@ -20,12 +21,14 @@ function Awake()
         overloadBar:SetFormat("<color=#FFC146><size=35>{0}</size></color>/{1}");
     end
     --txtShowName = ComUtil.GetCom(showNameText,"Text");    
-    --txtOverload = ComUtil.GetCom(goOverloadText,"Text");    
-    CSAPI.SetText(overload_cost,LanguageMgr:GetByID(28012));   
-    CSAPI.SetText(title,StringConstant.fight_player_skill_title);       
+    --txtOverload = ComUtil.GetCom(goOverloadText,"Text");   
+    local _spStr = LanguageMgr:GetByID(28001) or "SP" 
+    CSAPI.SetText(overload_cost,_spStr);   
+    --CSAPI.SetText(title,StringConstant.fight_player_skill_title);       
     --txtOverload_cost1 = ComUtil.GetCom(overload_cost1,"Text");
     
     SetOverload();
+
 end
 
 function OnInit()
@@ -569,7 +572,7 @@ function SelectItem(targetItem)
     --合体技能
     if(targetItem.IsCombo())then     
         if(currCharacter and not currCharacter.IsCanCombo())then
-            Tips.ShowTips(StringConstant.fight_combo_tips);
+            Tips.ShowTips(LanguageMgr:GetByID(1091));
             return;
         end
     end
@@ -613,7 +616,7 @@ function OnClickBtnOK()
         local np = FightClient:GetNp();
         npCost = selItem.GetCostNP();
         if(np < npCost)then
-            Tips.ShowTips(StringConstant.fight_np_no_enough);
+            --Tips.ShowTips(StringConstant.fight_np_no_enough);
             return;
         end
 

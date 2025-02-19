@@ -14,7 +14,7 @@ local isOverlay = false -- 是否放置在家具之上
 local isReceive = false -- 上面是否放置有家具
 local inteRole = nil -- 当前与这个家具交互的角色
 local isFirst = false
-
+local animators = nil
 function Awake()
     Input, GetMouseButton, GetMouseButtonDown, GetMouseButtonUp, Physics = UIUtil:GetFuncs()
 
@@ -131,6 +131,8 @@ function AddModel()
         CSAPI.SetAngle(modelGO, 0, data:GetCfg().modelRot or 0, 0)
         local pos = data:GetCfg().modelPos
         CSAPI.SetLocalPos(modelGO, pos[1], pos[2], pos[3])
+        -- 
+        animators = ComUtil.GetComsInChildren(modelGO, "Animator")
     end)
 end
 
@@ -510,15 +512,18 @@ function InSelect(b, _isFirst)
         -- 退出时如果当前位置有冲突，则返回缓存的位置，如果无缓存的位置，则删除
         if (CheckIsInCol()) then
             if (cachePos ~= nil) then
-                data:ResetRotaY(cacheRotaY)
-                CSAPI.SetAngle(gameObject, 0, cacheRotaY, 0)
+                local _cacheRotaY = CSAPI.csGetAngle(gameObject)[1]
+                if (_cacheRotaY ~= cacheRotaY) then
+                    data:ResetRotaY(cacheRotaY)
+                    CSAPI.SetAngle(gameObject, 0, cacheRotaY, 0)
+                    SetOffset()
+                end
                 ChangeGoPos(cachePos)
             else
                 tool:RemoveByID(data:GetID())
             end
         end
     end
-
     -- isDrag = isFirst
     isSelect = b
     SetToTop()
@@ -537,6 +542,13 @@ function SetToTop()
 
         -- 如果有子物体，子物体的层级也要调整
         SetChildToTop()
+
+        -- 提高以显示出底部的蓝色或者红色选择特效
+        if (data:IsGroundFurnitrue()) then
+            local pos = data:GetCfg().modelPos
+            local y = isSelect and pos[2] + 0.2 or pos
+            CSAPI.SetLocalPos(modelGO, pos[1], y, pos[3])
+        end
     end
 end
 
@@ -728,3 +740,39 @@ end
 -- 	end
 -- 	return true
 -- end
+
+-- 播放动作
+function PlayAnim(b)
+    if (animators and animators.Length > 0) then
+        local len = animators.Length
+        for i = 0, len - 1 do
+            if (b) then
+                animators[i]:SetTrigger("furniture")
+            else
+                animators[i]:Play("idle")
+            end
+        end
+        CreateEffect(b)
+    end
+end
+
+function CreateEffect(b)
+    if (effObj) then
+        CSAPI.RemoveGO(effObj)
+        effObj = nil
+    end
+    if (not b) then
+        return
+    end
+    local eff = data:GetCfg().eff
+    if (eff) then
+        CSAPI.CreateGOAsync("Scenes/" ..eff, 0, 0, 0, model, function(go)
+            effObj = go
+            local modelScale = data:GetCfg().modelScale
+            CSAPI.SetScale(effObj, modelScale, modelScale, modelScale)
+            CSAPI.SetAngle(effObj, 0, data:GetCfg().modelRot or 0, 0)
+            local pos = data:GetCfg().modelPos
+            CSAPI.SetLocalPos(effObj, pos[1], pos[2], pos[3])
+        end)
+    end
+end

@@ -27,7 +27,7 @@ effect="cast0_hit01",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 effect="cast0_hit02",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [2122942999]={
-{effect="enter",time=10000,type=0,pos_ref={ref_type=6}}
+{effect="enter",time=10000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/Schwarz_enter.acb",cue_name="Schwarz_enter"}
 }
 };
 

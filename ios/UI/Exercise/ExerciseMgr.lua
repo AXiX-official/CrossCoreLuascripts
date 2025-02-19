@@ -96,6 +96,17 @@ function this:IsLeisureTime()
     return true
 end
 
+--下次刷新时间
+function this:GetRefreshTime()
+    local isExerciseLOpen = MenuMgr:CheckModelOpen(OpenViewType.main, "ExerciseLView")
+    if(isExerciseLOpen)then 
+        if(not self:IsLeisureTime())then 
+            return self:GetEndTime()
+        end 
+    end 
+    return nil
+end
+
 ----------------------------------------新赛季new------------------------------------
 -- 演习 new 
 function this:IsExerciseLNew()

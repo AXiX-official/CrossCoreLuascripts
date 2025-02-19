@@ -138,5 +138,12 @@ function this.Reverse(datas)
     return datas
 end
 
+--数值 保留2为小数
+function this.Round2Num(num)
+    if(num and num ~= 0) then 
+        return math.floor(num * 100 + 0.5) / 100
+    end 
+    return num 
+end
 
 return this; 

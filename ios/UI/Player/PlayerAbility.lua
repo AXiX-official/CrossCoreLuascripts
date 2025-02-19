@@ -12,7 +12,16 @@ local intervalTime = 0
 local dotIntervalTime = 10
 local dotPool = {}
 
+local top=nil;
+---是否移动平台
+local IsMobileplatform=false;
+--inpt
+local Input=UnityEngine.Input
+local KeyCode=UnityEngine.KeyCode
+
 function Awake()
+    CSAPI.Getplatform();
+    IsMobileplatform=CSAPI.IsMobileplatform;
     CSAPI.SetGOActive(right, false)
     local iconName = Cfgs.ItemInfo:GetByID(g_ResetAbilityCost[1][1]).icon
     if (iconName) then
@@ -21,7 +30,7 @@ function Awake()
 end
 
 function OnInit()
-    UIUtil:AddTop2("PlayerAbility", topNode, OnClickBack, OnClickHome, {})
+    top=UIUtil:AddTop2("PlayerAbility", topNode, OnClickBack, OnClickHome, {})
 end
 
 function OnEnable()
@@ -37,7 +46,27 @@ function OnDisable()
     --EventMgr.Dispatch(EventType.Matrix_View_Show_Changed, true)
 end
 
+---判断检测是否按了返回键
+function CheckVirtualkeys()
+    --仅仅安卓或者苹果平台生效
+    if IsMobileplatform then
+        if(Input.GetKeyDown(KeyCode.Escape))then
+            --  OnVirtualkey()   调关闭
+            if CSAPI.IsBeginnerGuidance()==false then
+                if isShow then
+                    OnClickReturn()
+                else
+                    if  top.OnClickBack then
+                        top.OnClickBack();
+                    end
+                end
+            end
+
+        end
+    end
+end
 function Update()
+    CheckVirtualkeys()
     if intervalTime > 0 then
         intervalTime = intervalTime - (Time.deltaTime * 1000)
     else
@@ -182,17 +211,26 @@ function OnClickReset()
     else
         local str1 = "XXX"
         local str2 = "XXX"
+        local CostValue=0;
         if (g_ResetAbilityCost) then
             local cost = g_ResetAbilityCost[1]
             local cfg = Cfgs.ItemInfo:GetByID(cost[1])
+            CostValue=cost[2];
             str1 = StringUtil:SetColor(cost[2], "orange")
             str2 = StringUtil:SetColor(cfg.name, "orange")
         end
         local dialogData = {}
-        dialogData.content = string.format(LanguageMgr:GetByID(9008), str1, str2)
+        dialogData.content = PlayerAbilityMgr:IsFreeReset() and LanguageMgr:GetByID(9013) or string.format(LanguageMgr:GetByID(9008), str1, str2)
         dialogData.okCallBack = function()
-            CSAPI.PlayUISound("ui_page_battle_start")
-            AbilityProto:ResetAbility()
+            if CSAPI.IsADVRegional(3) then
+                CSAPI.ADVJPTitle(CostValue,function()
+                    CSAPI.PlayUISound("ui_page_battle_start")
+                    AbilityProto:ResetAbility()
+                end)
+            else
+                CSAPI.PlayUISound("ui_page_battle_start")
+                AbilityProto:ResetAbility()
+            end
         end
         CSAPI.OpenView("Dialog", dialogData)
     end

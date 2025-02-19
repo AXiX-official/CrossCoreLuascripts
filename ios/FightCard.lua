@@ -90,6 +90,23 @@ function FightCardBase:Init(team, id, teamID, uid, data, typ)
     -- end
 
     self.nUseCount = 0 -- 使用技能次数
+    self.nTotalDamage = 0 -- 总被伤害量统计
+    self.nStateDamage = 0 -- 阶段被伤害量统计
+end
+
+function FightCardBase:Destroy()
+    -- LogDebugEx("FightCardBase:Destroy()", self.name)
+    if self.bIsCommander then
+        -- 指挥官技能
+        self.skillMgr:Destroy()
+    else
+        self.skillMgr:Destroy()
+        self.bufferMgr:Destroy()
+    end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
 end
 
 -- 加载角色(从配置)
@@ -114,6 +131,15 @@ function FightCardBase:LoadConfig()
         self.team.fightMgr:BossAppear(true) -- boss出现
         LogDebugEx("boss出现", self.id)
     end
+
+    local dupId = self.team.fightMgr:GetDupId()
+    if dupId and dupId > 0 then
+        local dupCfg = MainLine[dupId]
+        if dupCfg and (dupCfg.type == eDuplicateType.AbattoirRand or dupCfg.type == eDuplicateType.AbattoirSelect) then
+            self.type = CardType.Mirror
+        end
+    end
+    self.isMonster = true -- 从怪物表读取数据
 end
 
 -- 加载角色(从数据)
@@ -126,6 +152,9 @@ function FightCardBase:LoadData(data, typ)
     ASSERT(config)
 
     table.copy(config, self)
+    if not IsRelease then
+        ASSERT(self.name, "FightCardBase:LoadData() name is empty!")
+    end
     self.name = self.name or "None"
 
     -- 通用属性
@@ -140,6 +169,7 @@ function FightCardBase:LoadData(data, typ)
     self.hp = data.hp or self.maxhp
     self.grids = {} -- 所占格子
 
+    self.isMonster = data.npcid and true
     -- LogTable(config.canFly, "FightCardBase:LoadData"..self.id)
 end
 
@@ -508,7 +538,7 @@ function FightCardBase:AIStrategySelectTarget4CallSkill(team, oSkill, exclude)
     --LogDebugEx("AIStrategySelectTarget", oSkill.id)
 
     --LogTable(skill[oSkill.id], "skill")
-    local aiStrategy = oSkill.aiStrategy or {}
+    local aiStrategy = oSkill.aiStrategy_src or {} --oSkill.aiStrategy or {}  -- 后端没有同步ai到前端, 导致数据不一致
     local ts = {}
     --LogTable(oSkill.aiStrategy, "oSkill.aiStrategy")
 
@@ -568,7 +598,7 @@ function FightCardBase:GetSkillRange(skillID, targetdata)
     LogTable(targetdata, "targetdata = ")
     if oSkill.range_key == "one" then
         local card = mgr:GetPosCard(targetdata.teamID, targetdata.pos)
-        if not card:IsLive() then
+        if not card or not card:IsLive() then
             -- ASSERT("角色死亡")
             -- if oSkill.type == SkillType.Revive then
             -- 	return {card.oid}
@@ -580,7 +610,7 @@ function FightCardBase:GetSkillRange(skillID, targetdata)
     elseif oSkill.range_key == "one_except_self" then
         --LogDebugEx("GetSkillRange one_except_self")
         local card = mgr:GetPosCard(targetdata.teamID, targetdata.pos)
-        if not card:IsLive() then
+        if not card or not card:IsLive() then
             return {}
         end
         if card == self then
@@ -721,7 +751,7 @@ function FightCardBase:AIGetTarget(skillID)
     data.pos = pos
     data.skillID = skillID
 
-    --LogTable(data)
+    --LogTable(data, "AIGetTarget = ")
 
     return data
 end
@@ -739,7 +769,6 @@ function FightCardBase:CanSummon(monsterID, target_camp, pos)
     end
     return true
 end
-
 
 ---------buffer接口---------------------------------------------------
 -- 属性直加
@@ -1172,8 +1201,7 @@ function FightCardBase:AddHp(num, killer, bNotDeathEvent, bNotDealShield)
             return false, shield, num
         end
     end
-
-    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent, true)
+    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent,true)
     if num < 0 then
         -- 传给统计接口
         local mgr = self.team.fightMgr
@@ -1181,15 +1209,21 @@ function FightCardBase:AddHp(num, killer, bNotDeathEvent, bNotDealShield)
             num = math.floor(num * mgr.nTPCastRate)
         end
         mgr:DamageStat(killer, -num)
+
     end
 
     return tisdeath, shield, num, abnormalities
 end
 
 -- 加血扣血(不扣盾)
-function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent)
+function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
     -- LogDebugEx("FightCardBase:AddHpNoShield", num, self.hp, bNotDeathEvent)
     -- LogTrace()
+    local mgr = self.team.fightMgr
+    if mgr.isSingleFight and not isFromAddHp and num < 0 then
+        -- 传给统计接口
+        mgr:DamageStat(killer, -num)
+    end
 
     local onum = num
     local shield = 0 --盾吸收的伤害
@@ -1197,7 +1231,14 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent)
     if num < 0 then
         self.nBeSkillDamage = self.nBeSkillDamage or 0
         self.nBeSkillDamage = self.nBeSkillDamage - num
-        --LogDebugEx("FightCardBase:AddHpNoShield", self.name, self.nBeSkillDamage)
+        -- LogDebugEx("FightCardBase:AddHpNoShield", self.name, self.nBeSkillDamage, num, self.nTotalDamage)
+        
+        if self.isInvincible then -- 无限血机制统计伤害
+            self.nTotalDamage = self.nTotalDamage - num
+            self.nStateDamage = self.nStateDamage - num
+            self.hp = self:Get("maxhp") -- 恢复血量
+            self.log:Add({ api = "UpdateDamage", targetID = self.oid, nTotalDamage = self.nTotalDamage, nStateDamage = self.nStateDamage})
+        end
     end
 
     -- 免疫死亡
@@ -1225,6 +1266,8 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent)
         if not bNotDeathEvent then
             self:OnDeath(killer)
         end
+
+
         --LogTrace()
         return true, shield, num
     end
@@ -1253,10 +1296,12 @@ function FightCardBase:AddHpProtect(num, killer, bNotDeathEvent, bNotDealShield)
         LogDebug(string.format("血量保护,血[%d]保[%d],原扣[%d]实扣[%d]", self.hp, self:GetTempSign("HpProtect"), num, self:GetTempSign("HpProtect") - self.hp))
         num = self:GetTempSign("HpProtect") - self.hp
         self.hp = self:GetTempSign("HpProtect")
+        self.nBeSkillDamage = self.nBeSkillDamage or 0
+        self.nBeSkillDamage = self.nBeSkillDamage - num
         return false, shield, num, "HpProtect"
     end
 
-    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent, true)
+    local tisdeath, shield2, num2, abnormalities = self:AddHpNoShield(num, killer, bNotDeathEvent,true)
     return tisdeath, shield, num, abnormalities
 end
 
@@ -1289,7 +1334,7 @@ function FightCardBase:CheckXP(num)
     end
 end
 
-function FightCardBase:AddSP(num, effectID)
+function FightCardBase:AddSP(num, effectID, isCost)
     LogDebugEx("FightCardBase:AddSP", self.sp, num)
 
     local sign = self:GetSign("signAddSP") -- 无法获取NP/SP标记
@@ -1724,10 +1769,10 @@ function FightCardBase:Transform(state)
                 end
             end
             -- LogTable(tmpSkills)
-            for i, skillID in ipairs(cfgNewCardData.jcSkills) do
+            for i, skillID in ipairs(cfgNewCardData.jcSkills or {}) do
                 -- LogDebugEx("-------", skillID)
                 local cfgSkill = skill[skillID]
-                ASSERT(cfgSkill, "找不到变身技能配置 id = " .. skillID)
+                ASSERT(cfgSkill, "找不到变身技能配置jc id = " .. skillID)
                 -- LogTable(cfgSkill)
                 local sold = tmpSkills[cfgSkill.upgrade_type]
                 local flag = true
@@ -1744,9 +1789,9 @@ function FightCardBase:Transform(state)
                 end
             end
 
-            for i, skillID in ipairs(cfgNewCardData.tfSkills) do
+            for i, skillID in ipairs(cfgNewCardData.tfSkills or {}) do
                 local cfgSkill = skill[skillID]
-                ASSERT(cfgSkill, "找不到变身技能配置 id = " .. skillID)
+                ASSERT(cfgSkill, "找不到变身技能配置tf id = " .. skillID)
                 local sold = tmpSkills[5]
                 local flag = true
                 if sold then
@@ -2034,7 +2079,6 @@ function FightCardServer:DoAI(isAutoFight)
     data.targetIDs = targetIDs
     data.pos = pos
     data.skillID = skillID
-
     LogTable(data, "AI Attack data= ")
     mgr:Attack(self, targetIDs, data, pos)
     mgr:AddCmd(CMD_TYPE.Skill, data)
@@ -2183,6 +2227,25 @@ end
 -- 	end
 -- end
 
+-- isCost :是否为技能消耗
+function UniteCard:AddSP(num, effectID, isCost)
+    LogDebugEx("UniteCard:AddSP", self.sp, num, isCost)
+    FightCardBase.AddSP(self, num, effectID, isCost)
+
+    -- 通过buff扣减sp也可能触发解体
+    if isCost then return end -- 技能消耗, 返回
+    if num >= 0 then return end -- 增加, 返回
+    local mgr = self.team.fightMgr
+    if mgr.bIsApply then return end -- 技能中, 返回
+    if self.hp <= 1 or self.sp < g_resolveSp then
+        -- 非正常的解体需要设置为技能内
+        mgr.bIsApply = true
+        -- mgr:Resolve(self, ret)
+        self:Resolve(ret)
+        mgr.bIsApply = nil
+    end
+end
+
 -- 主动攻击后
 function UniteCard:AfterAttack(caster, target, oSkill, ret)
     FightCardBase.AfterAttack(self, caster, target, oSkill, ret)
@@ -2276,7 +2339,7 @@ end
 WorldBossCardClient = oo.class(FightCardServer)
 function WorldBossCardClient:Init(team, id, teamID, uid, data, typ)
     FightCardServer.Init(self, team, id, teamID, uid, data, typ)
-    self.showhp = 999999999
+    self.showhp = 100000000000000
 end
 
 --主要是处理血量和显示血量的问题

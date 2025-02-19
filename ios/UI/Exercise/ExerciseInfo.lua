@@ -59,4 +59,20 @@ function this:GetScore()
 	return self.data.score or 0
 end
 
+function this:GetRolePanelID( )
+	return self.data.role_panel_id or nil
+end
+
+function this:GetFrameId()
+	return self.data.icon_frame 
+end
+
+function this:GetSex()
+	return self.data.sel_card_ix
+end
+
+function this:GetIconTitle()
+	return self.data.icon_title or 1
+end
+
 return this 

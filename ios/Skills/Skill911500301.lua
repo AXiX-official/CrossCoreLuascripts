@@ -30,5 +30,5 @@ function Skill911500301:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 911500301
-	self:DelBufferGroup(SkillEffect[911500301], caster, target, data, 2,3)
+	self:HitAddBuff(SkillEffect[911500301], caster, target, data, 4000,1003,2)
 end

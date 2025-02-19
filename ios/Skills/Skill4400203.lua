@@ -6,8 +6,8 @@ Skill4400203 = oo.class(SkillBase)
 function Skill4400203:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动开始
-function Skill4400203:OnActionBegin(caster, target, data)
+-- 行动结束2
+function Skill4400203:OnActionOver2(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -18,8 +18,8 @@ function Skill4400203:OnActionBegin(caster, target, data)
 	else
 		return
 	end
-	-- 4400202
-	self:OwnerAddBuffCount(SkillEffect[4400202], caster, self.card, data, 4400202,1,3)
+	-- 4400203
+	self:OwnerAddBuffCount(SkillEffect[4400203], caster, self.card, data, 4400203,1,3)
 end
 -- 攻击结束
 function Skill4400203:OnAttackOver(caster, target, data)
@@ -40,6 +40,8 @@ function Skill4400203:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 4400212
-	self:OwnerAddBuff(SkillEffect[4400212], caster, target, data, 4400212)
+	-- 8691
+	local count691 = SkillApi:GetCount(self, caster, target,3,4400203)
+	-- 4400213
+	self:LimitDamage(SkillEffect[4400213], caster, target, data, 1,0.20*count691)
 end

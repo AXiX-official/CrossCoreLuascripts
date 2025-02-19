@@ -714,7 +714,7 @@ function LoadUI()
     if (not dormUI) then
         CSAPI.CreateGOAsync("Scenes/Dorm/DormUI", 0, 1.5, 0, gameObject, function(go)
             dormUI = ComUtil.GetLuaTable(go)
-            dormUI.Init(tool:SceneCamera().gameObject)
+            --dormUI.Init(tool:SceneCamera().gameObject)
             dormUI.Refresh(data:CheckIsRealCard() and data or nil)
         end)
     else
@@ -727,4 +727,11 @@ function AddBubble(desc, timer)
     if (dormUI) then
         dormUI.AddBubble(desc, timer)
     end
+end
+
+--清除家具动作
+function ClearFurnitureAnim()
+    if(dormColData) then 
+        dormColData:FurnitureAction(false)
+    end 
 end

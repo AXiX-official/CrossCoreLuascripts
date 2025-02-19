@@ -9,8 +9,9 @@ local eventMgr=nil;
 local isSuitSelect=nil;
 local card=nil;
 local slotEffs={};
+local ViewTop
 function Awake()
-    UIUtil:AddTop2("RoleEquip",gameObject,OnClickReturn,OnClickHomeFunc,{})
+    ViewTop=UIUtil:AddTop2("RoleEquip",gameObject,OnClickReturn,OnClickHomeFunc,{})
     slotNodes={top,left,center,right,bottom};
     slotEffs={
         {t=tt_eff,b=tb_eff},
@@ -410,6 +411,26 @@ end
 function OnClickReturn()
     view:Close();
 end
+
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    if(not IsNil(selectView)) then
+        ---填写退出代码逻辑/接口
+        if  selectView.OnClickRepalceMask and selectView.repalceMask.gameObject.activeInHierarchy then
+            selectView.OnClickRepalceMask();
+        else
+            if  ViewTop.OnClickBack then
+                ViewTop.OnClickBack();
+            end
+        end
+    else
+        if  ViewTop.OnClickBack then
+            ViewTop.OnClickBack();
+        end
+    end
+end
+
+
 
 ----#Start#----
 ----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）

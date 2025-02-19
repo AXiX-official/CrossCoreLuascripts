@@ -56,10 +56,11 @@ end
 
 function SetData()
     if data then
-        for _,item in ipairs(data) do
+        for index,item in ipairs(data) do
             local cardData = MonsterInfo.New();
             cardData:Init(item.id);	
-            table.insert(curDatas,{monster=cardData,isBoss=item.isBoss});
+            table.insert(curDatas,{monster=cardData,isBoss=item.isBoss,isDead = item.isDead});
+            lastIndex = item.isSel and index or lastIndex
         end
     end
 end
@@ -111,6 +112,7 @@ function RefreshTabs()
                 icon=v.monster:GetIcon(),
                 isEnemy=true,
                 isBoss=v.isBoss,
+                isDead = v.isDead
             },lastIndex);
             y=k==1 and y or y-item.GetLineHeight()-normalY;
             sizeY=sizeY+normalY+item.GetLineHeight();
@@ -171,14 +173,8 @@ function SetInfo(monster)
     local iconName = career == 1 and "img_12_02" or "img_12_01"
     CSAPI.LoadImg(armorIcon,string.format("UIs/FightRoleInfo/%s.png",iconName),true,nil,true)
     --显示说明
-    local cardCfg=monster:GetCardCfg();
-    if cardCfg then
-        -- if lastIndex==1 then
-            CSAPI.SetText(txt_desc,cardCfg.m_Desc or "");
-        -- else
-        --     CSAPI.SetText(txt_desc,cardCfg.m_Desc.."\n"..cardCfg.m_Desc..cardCfg.m_Desc);
-        -- end
-    end
+    local desc=monster:GetDesc();
+    CSAPI.SetText(txt_desc,desc);
     FuncUtil:Call(function()
         local txtSize=CSAPI.GetRealRTSize(iContent);
         infoScroll.normalizedPosition=UnityEngine.Vector2(1,1);
@@ -236,7 +232,7 @@ function SetMonsterInfos(monster)
         if cfg==nil then
             LogError("未找到技能配置："..tostring(v))
         end
-        if cfg then
+        if cfg and cfg.bIsHide~=true then
             if SkillUtil:IsSpecialSkill(cfg.type) and not PlayerClient:IsPassNewPlayerFight() then --如果未通关新手剧情不显示合体技
             else 
                 if cfg.main_type~=SkillMainType.CardSubTalent then
@@ -252,7 +248,7 @@ function SetMonsterInfos(monster)
         if cfg==nil then
             LogError("未找到天赋配置："..tostring(v))
         end
-        if cfg then
+        if cfg and cfg.bIsHide~=true  then
             table.insert(charInfos[2],{cfg=cfg})
         end
     end

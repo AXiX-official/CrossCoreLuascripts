@@ -21,8 +21,24 @@ function Awake()
     -- ResUtil:PlayVideo("create_bg", bg)
     -- SettingMgr:SetMusic(false)
     -- CSAPI.StopBGM() --  EventMgr.Dispatch(EventType.Replay_BGM) 恢复
+    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
 end
-
+---截图前一帧通知
+function ShareView_NoticeTheNextFrameScreenshot(Data)
+    CSAPI.SetGOActive(skip, false);
+    CSAPI.SetGOActive(down, false);
+    CSAPI.SetGOActive(ShareBtn, false)
+end
+---截图完成通知
+function ShareView_NoticeScreenshotCompleted(Data)
+    CSAPI.SetGOActive(skip, true);
+    CSAPI.SetGOActive(down, true);
+    OpenShareBtn();
+end
+function OnClickShareBtn()
+    CSAPI.OpenView("ShareView",{LocationSource=1})
+end
 function OnInit()
     eventMgr = ViewEvent.New();
     -- eventMgr:AddListener(EventType.Card_Update, EClickLock)
@@ -30,6 +46,8 @@ function OnInit()
 end
 
 function OnDestroy()
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
     eventMgr:ClearListener()
     RoleAudioPlayMgr:StopSound()
 
@@ -66,6 +84,7 @@ function OnOpen()
 
     infos = data[1]
     poolId = data[2]
+    if CSAPI.IsADV() then AdvGuiDeScore.SetpoolId(poolId) end
     quality_up = data[3] -- 品质提升 array [1]:前 [2]:后
 
     -- 开箱动画不带跳过按钮
@@ -118,6 +137,9 @@ function Show2()
         curData = curInfo and GetCardData(curInfo) or nil
         hadPer = curData ~= nil
         if (curData) then
+            if CSAPI.IsADV() or CSAPI.IsDomestic() then
+                BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_STRUCTURE_FINISH)
+            end
             local cfg = curData:GetQuality() > 5 and Cfgs.CfgTeamEnum:GetByID(curData:GetCamp()) or nil
             if (cfg and cfg.mvName) then
                 TeamMV(cfg.mvName)
@@ -277,7 +299,7 @@ end
 
 function SetDOP()
     local time = TimeUtil:GetTimeHMS(TimeUtil:GetTime(), " %Y.%m.%d")
-    CSAPI.SetText(txtDOP, string.format("//:%s", time)) --DOP//:%s
+    CSAPI.SetText(txtDOP, string.format("DOP//:%s", time)) --DOP//:%s
 
     local x = -30
     local _q = curData:GetQuality() or 3
@@ -373,6 +395,11 @@ function SetRewardDatas()
                 isNew = v.num < 2,
                 goodsData = v.items
             })
+
+            if CSAPI.IsADV() then
+                local Quality=cfg["quality"]
+                AdvGuiDeScore.SetQuality(Quality)
+            end
         end
     end
 end
@@ -382,6 +409,7 @@ function ShowRewardPanel()
     if (#rewards == 10) then
         CSAPI.OpenView("CreateRoleView", {rewards, isFirst10, poolId})
     else
+        if CSAPI.IsADV() then AdvGuiDeScore.GameAdvGuiDeScore() end
         -- SettingMgr:SetMusic(true)
         -- EventMgr.Dispatch(EventType.Replay_BGM)
         --CSAPI.ReplayBGM(bgm)
@@ -416,6 +444,7 @@ function SetAmplification(_show)
         CSAPI.SetParent(iconParent, showBg)
         if (not uiHandle) then
             uiHandle = ComUtil.GetCom(showBg, "UIHandle")
+            uiHandle.isMoveLimit = false 
         end
         uiHandle:InitParm(1, 1, g_CardLookScale[1] / imgScale, g_CardLookScale[2] / imgScale) -- 对应的是父类不是role
         uiHandle:Init(iconParent, function()
@@ -505,8 +534,21 @@ function EnterMV()
     else
         CSAPI.PlayUICardSound("ui_card_draw_hero_bule")
     end
+    OpenShareBtn();
 end
-
+---判断是否可以打开分享按钮
+function OpenShareBtn()
+    local quality = curData:GetQuality() or 3
+    if quality>=6 and CSAPI.IsMobileplatform then
+        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+            CSAPI.SetGOActive(ShareBtn, true);
+        else
+            CSAPI.SetGOActive(ShareBtn, false);
+        end
+    else
+        CSAPI.SetGOActive(ShareBtn, false);
+    end
+end
 -- 星星特效
 function AddEnterMV(quality)
     if (curStarEffect) then
@@ -530,9 +572,9 @@ function AddEnterMV(quality)
         end)
     end
 
-    FuncUtil:Call(function()
-        isCanShowNext = true
-    end, nil, 1000)
+    -- FuncUtil:Call(function()
+    --     isCanShowNext = true
+    -- end, nil, 1500)
 end
 
 function HideEnterMV()
@@ -569,12 +611,15 @@ function HideExitMV()
     --     CSAPI.SetGOActive(exitEffect, false)
     -- end
     Show3()
+    FuncUtil:Call(function()
+        isCanShowNext = true
+    end, nil, 1500)
 end
 
 -- 小队动画
 function TeamMV(mvName)
     criMovie = ResUtil:PlayVideo(mvName, MVParent)
-    UIUtil:SetPerfectScale(criMovie.gameObject)
+    --UIUtil:SetPerfectScale(criMovie.gameObject)
     criMovie:AddCompleteEvent(function()
         EnterMV()
         criMovie = nil

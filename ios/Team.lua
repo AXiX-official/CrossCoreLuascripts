@@ -14,6 +14,21 @@ function Team:Init(teamID, fightMgr, row, col)
 	ASSERT(self.log)
 end
 
+function Team:Destroy()
+	LogDebugEx("Team:Destroy()")
+
+    for k,v in pairs(self.arrCard) do
+        v:Destroy()
+    end    
+    if self.oCommander then
+    	self.oCommander:Destroy()
+    end
+
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 function Team:InitMap(row, col)
 	self.arrCard = {} -- 可行动的卡牌队列
 	self.map = {} -- 阵容地图
@@ -30,6 +45,8 @@ function Team:InitMap(row, col)
 end
 
 function Team:LoadConfig(id, stage, hpinfo)
+	LogTable(hpinfo, "Team:LoadConfig:hpinfo")
+	-- LogTrace()
 	-- LogDebugEx("Team:LoadConfig", id, stage)
 	self.id = id
 	local config = MonsterGroup[self.id]
@@ -57,12 +74,17 @@ function Team:LoadConfig(id, stage, hpinfo)
 	if hpinfo then
 		for i, pos in ipairs(formation.coordinate) do
 			local monsterID = self.monsters[i]
-			if hpinfo[i] and hpinfo[i] > 0 and monsterID and monsterID ~= 0 then
+			if hpinfo[i] and hpinfo[i].hp and hpinfo[i].hp > 0 and monsterID and monsterID ~= 0 then
 				local card = self:AddCard(pos[1], pos[2], monsterID)
-				card.hp = hpinfo[i]
+				-- LogTable(hpinfo[i], "direct_hpinfo[i]==============");
+				card.hp = hpinfo[i].hp
+				if hpinfo[i].sp then
+					card.sp = hpinfo[i].sp
+				end
 				card.configIndex = i
 			end
 		end
+
 	else
 		for i, pos in ipairs(formation.coordinate) do
 			local monsterID = self.monsters[i]
@@ -142,9 +164,9 @@ function Team:Summon(caster, monsterID, pos, data, isSummon2Summon)
 
 	LogDebugEx("card.model", caster.modelA)
 	-- 购买皮肤后, 机神皮肤也需要更换(此处确认没有机神皮肤, 先屏蔽)
-	-- if caster.modelA then 
-	-- 	card.model = caster.modelA
-	-- end
+	if caster.modelA then 
+		card.model = caster.modelA
+	end
 	-- -- self.fightMgr:OnBorn(card, true)
 
 	if data then
@@ -175,6 +197,28 @@ function Team:Summon(caster, monsterID, pos, data, isSummon2Summon)
 		end
 	end
 
+	--- [[ 给召唤物添加生活buff加成
+    local damage = caster.damage_add or 0
+    local bedamage = caster.bedamage_add or 0
+    -- 对敌方的伤害增加的百分比
+    if damage ~= 0 then
+        card.damage = card.damage or 1
+        card.damage = card.damage + damage
+        if card.damage < 0 then
+            card.damage = 0
+        end
+    end
+
+    -- 受到的伤害增加的百分比
+    if bedamage ~= 0 then
+        card.bedamage = card.bedamage or 1
+        card.bedamage = card.bedamage + bedamage
+        if card.bedamage < 0 then
+            card.bedamage = 0
+        end
+    end
+    --- 给召唤物添加生活buff加成 ]]
+
 	return card
 end
 
@@ -184,8 +228,14 @@ function Team:SummonTeammate(caster, monsterID, pos, data, typ)
 	LogDebugEx("Team:SummonTeammate", monsterID, pos[1], pos[2])
 	-- LogTable(data)
 
+	if not self:CanSummon(pos) then return end
+
+	LogTable(pos, "SummonTeammate pos = ")
+	self:Print()
+
 	local card = self:AddSummonCard(pos[1], pos[2], monsterID)
 	card.uid = caster.uid
+	card.oSummonOwner = caster -- 设置召唤主
 	card:LoadMonsterNumerical(caster.level)
 	card.type = typ or caster.type
 	card.bSummonTeammate = true -- 召唤出来的, 结束不要用到这个卡牌的数据
@@ -291,7 +341,7 @@ function Team:Resolve(card, bnotlog)
 end
 
 function Team:Print()
-	LogDebugEx("teamID = ", self.teamID, self.col, self.row)
+	LogDebugEx("Print teamID = ", self.teamID, self.col, self.row)
 	local str = "\n"
 	for j = 1, self.col do
 		str = str .. "["
@@ -352,6 +402,17 @@ function Team:LiveCount(exclude)
 	return count
 end
 
+-- 获取所属小队成员数量
+function Team:ClassCount(nClass)
+	local count = 0
+	for k, v in pairs(self.arrCard) do
+		if v:IsLive() and v.nClass == nClass then
+			count = count + 1
+		end
+	end
+	return count
+end
+
 -- 死亡数量
 function Team:DeathCount(exclude)
 	local count = 0
@@ -377,6 +438,15 @@ function Team:HasBuff(buffID, typ)
 	return false
 end
 
+-- 判断是否存在角色
+function Team:HasRole(cId)
+	for i,v in ipairs(self.arrCard) do
+		if v:IsLive() and v:GetID() == cId then
+			return true
+		end
+	end	
+	return false
+end
 ------------------------------------------
 -- 检测卡牌站位(坐标包含关系)
 function Team:CheckGridsEx(coordinate, gridsID, minpos)
@@ -444,7 +514,8 @@ function Team:SetGrids(row, col, card, coordinate)
 		local formation = MonsterFormation[card.gridsID]
 		ASSERT(formation)
 		local ret = self:CheckGrids(row, col, formation.coordinate)
-		ASSERT(ret, "CheckGrids error")
+		ASSERT(ret, "CheckGrids error:%s",self.fightMgr.groupID)
+		--ASSERT(nil, "MonsterFormation==================")
 		-- relative 相对坐标
 		for i, pos in ipairs(formation.coordinate) do
 			local r = row + pos[1]
@@ -487,7 +558,6 @@ function Team:AddCard(row, col, id)
 	end
 	local card = FightCard(self, id, self.teamID)
 	self:SetGrids(row, col, card)
-
 	-- 加载数值模板
 	if self.fightMgr.nPlayerLevel then
 		card:LoadMonsterNumerical(self.fightMgr.nPlayerLevel)
@@ -544,6 +614,7 @@ function Team:AddUniteCard(row, col, id, parent, data, coordinate)
 	carddata.hit       = mainCard:Get("hit")
 	carddata.level     = mainCard:Get("level")
 	carddata.cuid      = mainCard:Get("cuid")
+	carddata.damage    = mainCard:Get("damage")
 
 	-- @【芯片套装】				
 	-- 	继承主角色芯片触发的套装效果
@@ -644,6 +715,14 @@ function Team:AddUniteCard(row, col, id, parent, data, coordinate)
 	LogDebugEx("card.hp", card:Get("maxhp"), card:Get("hp"))
 	--LogDebugEx("card.progress", card.progress)
 	-- self.fightMgr:OnBorn(card, true)
+
+
+	-- 设置同调皮肤
+	if mainCard.modelA then 
+		card.model = mainCard.modelA
+	end
+
+
 	return card
 end
 
@@ -656,11 +735,17 @@ function Team:GetCard(row, col)
 end
 
 function Team:DelCard(card)
-	--LogDebugEx("DelCard", card.name)
-	--LogTable(card.grids)
+	LogDebugEx("DelCard", card.name)
+	LogTable(card.grids, "card.grids = ")
+	-- LogTrace()
+	self:Print()
+	if card.bRemove then return end -- 防止重复删除
+	card.bRemove = true
+	
 	for i, v in ipairs(card.grids) do
 		self.map[v[1]][v[2]] = nil
 	end
+	self:Print()
 
 	self.fightMgr:DelCard(card)
 
@@ -671,6 +756,36 @@ function Team:DelCard(card)
 		end
 	end
 end
+
+function Team:RandNum(len,num)
+	local temp = {}
+	for i=1,len do
+		table.insert(temp, i)
+	end
+
+	local res = {}
+	for i=1,num do
+		local r = self.fightMgr.rand:Rand(#temp)+1
+		table.insert(res, temp[r])
+		table.remove(temp, r)
+	end	
+	return res
+end
+
+function Team:GetRandCard(num)
+	num = num or 1
+
+	if num >= #self.arrCard then return self.arrCard end
+	local res = Team:RandNum(#self.arrCard,num)
+	local ret = {}
+	for i,v in ipairs(res) do
+		table.insert(ret, self.arrCard[v])
+	end
+	
+	return ret
+end
+
+
 ----------event------------
 function Team:OnTimer(tm)
 end

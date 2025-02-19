@@ -126,3 +126,15 @@ end
 function TaskProto:GetTasksDataRet()
     MissionMgr:GetTasksDataRet()
 end
+
+function TaskProto:TaskDelete(proto)
+    MissionMgr:TaskDelete(proto)
+end
+
+--多类型一键领取
+function TaskProto:GetRewardByTypes(datas)
+    local proto = {"TaskProto:GetRewardByTypes", {
+        taskType = datas
+    }}
+    NetMgr.net:Send(proto)
+end

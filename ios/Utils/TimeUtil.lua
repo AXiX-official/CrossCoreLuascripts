@@ -45,24 +45,24 @@ end
 -- _typeStr = %Y:%m:%d %H:%M%S  >  返回 0000:00:00 00:00:00
 function this:GetTimeHMS(_time, _typeStr)
     _typeStr = _typeStr or "*t"
-    return os.date(_typeStr, _time)
+    return os.date(_typeStr, _time)  
 end
 
--- 将字符串转换的本地时区的时间戳转成服务器时区的时间戳
-function this:GetTimeStampBySplit(_str)
-    local serverTimeZone = g_TimeZone or 8 -- 服务器时区
-    local timestamp = GCalHelp:GetTimeStampBySplit(_str);
-    if timestamp == nil then
-        LogError("转换的时间不是有效时间！");
-        return 0;
-    end
-    local currTimeZone = os.difftime(os.time(), os.time(os.date("!*t", os.time()))) / 3600
-    -- 本地时区
-    local serverTime = timestamp - (serverTimeZone - currTimeZone) * 3600 -- 不受时区影响的服务器时间
-    local isDst = os.date("*t").isdst
-    serverTime = serverTime - (isDst and 1 or 0) * 60 * 60
-    return serverTime;
-end
+-- -- 将字符串转换的本地时区的时间戳转成服务器时区的时间戳
+-- function this:GetTimeStampBySplit(_str)
+--     local serverTimeZone = g_TimeZone or 8 -- 服务器时区
+--     local timestamp = GCalHelp:GetTimeStampBySplit(_str);
+--     if timestamp == nil then
+--         LogError("转换的时间不是有效时间！");
+--         return 0;
+--     end
+--     local currTimeZone = os.difftime(os.time(), os.time(os.date("!*t", os.time()))) / 3600
+--     -- 本地时区
+--     local serverTime = timestamp - (serverTimeZone - currTimeZone) * 3600 -- 不受时区影响的服务器时间
+--     local isDst = os.date("*t").isdst
+--     serverTime = serverTime - (isDst and 1 or 0) * 60 * 60
+--     return serverTime;
+-- end
 
 -- 匹配获取  
 -- str:  年=year 月=month 。。。。 
@@ -120,26 +120,26 @@ function this:GetTimeTab(_timer)
     end
 end
 
--- 秒数转时间: 00：00：00 (时间不能大于1天)
-function this:GetTimeTab2(_timer)
-    if (_timer <= 0) then
-        return {"00", "00", "00"}
-    else
-        local num = 0 -- 秒
-        local d = math.floor(_timer / 86400)
-        num = _timer - d * 86400
-        local h = math.floor(num / 3600)
-        num = num - h * 3600
-        local m = math.floor(num / 60)
-        num = num - m * 60
-        local s = num
-        d = d < 10 and "0" .. d or d
-        h = h < 10 and "0" .. h or h
-        m = m < 10 and "0" .. m or m
-        s = s < 10 and "0" .. s or s
-        return {h, m, s}
-    end
-end
+-- -- 秒数转时间: 00：00：00 (时间不能大于1天)
+-- function this:GetTimeTab2(_timer)
+--     if (_timer <= 0) then
+--         return {"00", "00", "00"}
+--     else
+--         local num = 0 -- 秒
+--         local d = math.floor(_timer / 86400)
+--         num = _timer - d * 86400
+--         local h = math.floor(num / 3600)
+--         num = num - h * 3600
+--         local m = math.floor(num / 60)
+--         num = num - m * 60
+--         local s = num
+--         d = d < 10 and "0" .. d or d
+--         h = h < 10 and "0" .. h or h
+--         m = m < 10 and "0" .. m or m
+--         s = s < 10 and "0" .. s or s
+--         return {h, m, s}
+--     end
+-- end
 
 -- 秒数转时间: 00：00：00
 function this:GetTimeStr(_timer)
@@ -187,11 +187,13 @@ end
 -- 秒数转时间:  2天 00：00：00
 function this:GetTimeStr3(_timer)
     if (_timer <= 0) then
-        return string.format("%s%s %s", "0", "天", "00:00:00")
+        return LanguageMgr:GetByID(33019,"0","00:00:00")
+        --return string.format("%s%s %s", "0", "天", "00:00:00")
     else
         local d = math.floor(_timer / 86400)
         local str = self:GetTimeStr(_timer - d * 86400)
-        return string.format("%s%s %s", d, "天", str)
+        return LanguageMgr:GetByID(33019,d,str)
+        --return string.format("%s%s %s", d, "天", str)
     end
 end
 
@@ -257,14 +259,28 @@ function this:GetTimeStr8(_timer)
     end
 end
 
+-- 秒数转 分秒 00:00
+function this:GetTimeStr9(_timer)
+    if (_timer and _timer <= 0) then
+        return "00:00"
+    else
+        local m = math.floor(_timer / 60)
+        local s = math.floor((_timer % 60))
+        m = m < 10 and "0" .. m or m
+        s = s < 10 and "0" .. s or s
+        return string.format("%s:%s", m, s)
+    end
+end
+
 -- 返回简短时间描述，取当前最大单位的值做显示
 function this:GetTimeShortStr(_timer)
     local hms = self:GetTimeHMS(_timer);
     local tab = {hms.day, hms.hour, hms.min, hms.sec};
     local str = "";
+    local strs = StringUtil:split(LanguageMgr:GetByID(1094), ",") or {}
     for k, v in ipairs(tab) do
         if v > 0 then
-            str = string.format("%s %s", v, StringConstant.common_tab1[(k + 2)]);
+            str = string.format("%s %s", v, strs[(k + 2)]);
             break
         end
     end
@@ -276,9 +292,10 @@ function this:GetTimeShortStr2(_timer)
     local hms = self:GetTimeTab(_timer);
     local tab = {hms[1], hms[2], hms[3], hms[4]};
     local str = "";
+    local strs = StringUtil:split(LanguageMgr:GetByID(1094), ",") or {}
     for k, v in ipairs(tab) do
         if v > 0 then
-            str = string.format("%s %s", v, StringConstant.common_tab1[(k + 2)]);
+            str = string.format("%s %s", v, strs[(k + 2)]);
             break
         end
     end
@@ -299,6 +316,12 @@ function this:GetWeekDay(time)
     week = math.floor(week)
     week = week == 0 and 7 or week
     return week, timeData
+end
+
+function this:GetWeekDay2(time)
+    local week = tonumber(os.date("%w", time))
+    week = week == 0 and 7 or week
+    return week
 end
 
 -- 下一天0时1秒时间戳 curTimeData:当前服务器时间数据
@@ -374,7 +397,6 @@ end
 -- 将字符串转换的本地时区的时间戳转成服务器时区的时间戳
 function this:GetTimeStampBySplit(_str)
     local originalTime = GCalHelp:GetTimeStampBySplit(_str);
-
     local num = g_TimeZone - self:GetUTCNum()
     -- 计算时区偏移量（秒）
     local timeZoneOffsetSeconds = num * 3600
@@ -382,6 +404,18 @@ function this:GetTimeStampBySplit(_str)
     -- 调整时间戳到服务器时区
     local time = originalTime - timeZoneOffsetSeconds
     return time
+end
+
+--某个月有多少天（下个月的第0天，也就是本月的最后一天）
+function this:DaysInMonth(year, month)
+    return os.date("*t", os.time({year=year, month=month+1, day=0})).day
+end
+
+--是否是同一天
+function this:IsSameDay(_timeA,_timeB)
+    local timeA = os.date("*t", _timeA)
+    local timeB = os.date("*t", _timeB)
+    return timeA.day==timeB.day
 end
 
 return this

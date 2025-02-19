@@ -18,7 +18,9 @@ SectionType = {
     -- 活动
     Activity = 3,
     -- 教程
-    Course = 4
+    Course = 4,
+    -- 角斗场
+    Colosseum = 5
 };
 
 --章节活动类型
@@ -28,7 +30,11 @@ SectionActivityType = {
     Plot = 103,
     TaoFa = 104,
     NewTower = 105, -- 新爬塔
-    Trials = 106 --试炼
+    Trials = 106, --试炼
+    TotalBattle = 107, --十二星宫
+    Rogue = 108,--乱序演习
+    Colosseum = 109,--
+    GlobalBoss = 110,--世界boss
 }
 
 --章节活动开启类型
@@ -139,7 +145,7 @@ function this:GetDungeonSectionType(id)
     local cfgDungeon = Cfgs.MainLine:GetByID(id);
     if (cfgDungeon) then
         local sectionData = self:GetSectionData(cfgDungeon.group);
-        return sectionData:GetSectionType();
+        return sectionData and sectionData:GetSectionType();
     end
     return nil;
 end
@@ -180,19 +186,32 @@ function this:AddDungeonData(data)
     end
 end
 
+--清除部分副本数据
+function this:ClearDungeonData(ids)
+    if ids and #ids>0 then
+        for i, id in ipairs(ids) do
+            if self.dungeonDatas and self.dungeonDatas[id] then
+                self.dungeonDatas[id] = nil
+            end
+        end
+    end
+end
+
 function this:GetMaxDungeonID()
     return self.maxDungeonID or 0
 end
 
 -- 初始化章节
 function this:InitSectionDatas()
-    self.sectionDatas = {};
-    -- 初始化主线章节
-    local cfgs = Cfgs.Section:GetAll();
-    for _, cfg in pairs(cfgs) do
-        local sectionData = SectionData.New();
-        sectionData:Init(cfg);
-        self.sectionDatas[cfg.id] = sectionData;
+    if self.sectionDatas == nil then
+        self.sectionDatas = {};
+        -- 初始化主线章节
+        local cfgs = Cfgs.Section:GetAll();
+        for _, cfg in pairs(cfgs) do
+            local sectionData = SectionData.New();
+            sectionData:Init(cfg);
+            self.sectionDatas[cfg.id] = sectionData;
+        end
     end
 end
 
@@ -311,6 +330,23 @@ function this:GetLastOpenDungeon(_type)
 		end
 	end
 	return dungeonCfg;
+end
+
+--获取最后通关的副本 --sid：章节id
+function this:GetLastPassDungeon(sid)
+    local cfgs = Cfgs.MainLine:GetGroup(sid)
+    local cfg = nil
+    if cfgs and #cfgs>0 then
+        for i, v in ipairs(cfgs) do
+            local dungeonData = self:GetDungeonData(v.id)
+            if dungeonData and dungeonData:IsPass() then
+                if cfg == nil or cfg.id < v.id then
+                    cfg = v
+                end
+            end
+        end
+    end
+    return cfg
 end
 
 --主线进度
@@ -432,13 +468,15 @@ end
 
 --初始化关卡组
 function this:InitDungeonGroupDatas()
-    local cfgs = Cfgs.DungeonGroup:GetAll()
-    if cfgs then
-        self.dungeonGroupDatas = self.dungeonGroupDatas or {}
-        for _, cfg in pairs(cfgs) do           
-            local data = DungeonGroupData.New()
-            data:Init(cfg)
-            self.dungeonGroupDatas[cfg.id] = data
+    if self.dungeonGroupDatas == nil then
+        self.dungeonGroupDatas = {}
+        local cfgs = Cfgs.DungeonGroup:GetAll()
+        if cfgs then
+            for _, cfg in pairs(cfgs) do           
+                local data = DungeonGroupData.New()
+                data:Init(cfg)
+                self.dungeonGroupDatas[cfg.id] = data
+            end
         end
     end
 end
@@ -545,25 +583,28 @@ function this:IsCurrTower()
     return cfgDungeon and cfgDungeon.type == eDuplicateType.Tower;
 end
 ------------------------------------活动------------------------------------
+function this:InitActivityOpenInfos()
+    if self.ActiveOpenInfos == nil then
+        self.ActiveOpenInfos = {}
+        local cfgs = Cfgs.CfgActiveEntry:GetAll()
+        if cfgs then
+            for k, v in pairs(cfgs) do
+                local info = DungeonOpenInfo.New()
+                info:InitOpenCfg(v)
+                self.ActiveOpenInfos[v.id] = info
+            end
+        end
+    end
+end
+
 --添加活动开启信息 1-战场 2-剧情活动 3-讨伐活动
 function this:AddActivityOpenInfo(proto)
-    self.ActiveOpenInfos = self.ActiveOpenInfos or {}
+    self:InitActivityOpenInfos()
     if proto and proto.id then
-        local data = {
-            id = proto.id,
-            type = proto.type,
-            nBegTime = proto.nBegTime,
-            nEndTime = proto.nEndTime,
-            nHardBegTime = proto.nHardBegTime,
-            nExBegTime = proto.nExBegTime,
-            nBattleendTime = proto.nBattleendTime
-        }
-        local activeOpenInfo = self.ActiveOpenInfos[data.id]
-        if activeOpenInfo == nil then
-            activeOpenInfo = DungeonOpenInfo.New()
+        if self.ActiveOpenInfos[proto.id] then
+            self.ActiveOpenInfos[proto.id]:Init(proto)
         end
-        activeOpenInfo:Init(data)
-        self.ActiveOpenInfos[data.id] = activeOpenInfo
+        EventMgr.Dispatch(EventType.Activity_Open_Refresh,proto.id)
     end
 end
 
@@ -581,7 +622,7 @@ end
 function this:GetActiveOpenInfo2(_id)
     if self.ActiveOpenInfos then
         for k, v in pairs(self.ActiveOpenInfos) do
-            if v:GetSectionID() and v:GetSectionID() == _id then
+            if v:IsSelf(_id) then
                 return v
             end
         end
@@ -656,7 +697,11 @@ function this:ApplyEnter(id, indexList, duplicateTeamDatas)
     }
     local dungeonCfg = Cfgs.MainLine:GetByID(id);
     -- LogError(data.list)
-    if dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
+    if (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueS) then -- 直接进入战斗的副本
+        FightProto:EnterRogueSFight()
+    elseif (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueT) then -- 直接进入战斗的副本
+        FightProto:EnterRogueTFight(duplicateTeamDatas)
+    elseif dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
         self:SetFightTeamId(indexList[1]); -- 设置正在战斗中的队伍id
 
         self:SetCurrId(id)
@@ -719,7 +764,7 @@ function this:EnterDungeon(proto)
             -- 有战斗进行中，直接进战斗
             BattleMgr:SetBattleData(proto)
         else
-            if (not SceneMgr:IsBattleDungeon()) then
+            if (not SceneMgr:IsBattleDungeon() or (proto and proto.nStep and proto.nStep == 0) ) then
                 BattleMgr:Reset();
                 EventMgr.Dispatch(EventType.Scene_Load, "Battle");
                 BattleMgr:PushData(proto, BattleMgr.Init);
@@ -1009,13 +1054,16 @@ function this:GetCurrDungeonIsWin()
 end
 
 -- 回到主场并打开副本界面
-function this:Quit(isExit, jumpType)
+function this:Quit(isExit, jumpType, callBack)
     DebugLog("副本结束退出，回到副本选择界面");
     SceneLoader:Load("MajorCity", function()
         -- MenuMgr:UpdateData()
         -- if(not MenuMgr:CheckOpenList()) then --如果存在功能解锁则不跳转
         self:OnQuit(isExit, jumpType);
         -- end
+        if callBack then
+            callBack()
+        end
     end)
     -- EventMgr.Dispatch(EventType.Scene_Load,"MajorCity");
 end
@@ -1036,61 +1084,119 @@ function this:OnQuit(isExit, jumpType)
         elseif jumpType == 4 then
             JumpMgr:Jump(80002);
         end
-        return
+        if jumpType < 5 then
+            return
+        end
     end
 
     isExit = isExit ~= nil and isExit or false;
-    if DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Daily then
-        -- 活动副本
-        local cfgDungeon = Cfgs.MainLine:GetByID(self.currId);
-        CSAPI.OpenView("Section", {type = 2,group = cfgDungeon.group, id = cfgDungeon.id});
-    elseif DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Activity then
-        CSAPI.OpenView("Section",{type = 4});
-        local cfg = Cfgs.MainLine:GetByID(self.currId)
-        if cfg then
+    local cfg= Cfgs.MainLine:GetByID(self.currId)
+    if cfg then
+        local path1,path2 = DungeonUtil.GetViewPath(cfg.group)
+        if DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Daily then
+            CSAPI.OpenView("Section", {type = 2,group = cfg.group, id = cfg.id});
+        elseif DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Activity then
+            CSAPI.OpenView("Section",{type = 4});
             if cfg.type == eDuplicateType.Tower then --爬塔
-                CSAPI.OpenView("DungeonTower",{id = cfg.group,itemId = cfg.id})
+                CSAPI.OpenView(path1,{id = cfg.group,itemId = cfg.id})
             elseif cfg.type == eDuplicateType.BattleField then --战场
-                CSAPI.OpenView("BattleField", {id = cfg.group})
+                CSAPI.OpenView(path1, {id = cfg.group})
             elseif cfg.type == eDuplicateType.StoryActive then --剧情
-                local path1,paht2 = DungeonUtil.GetViewPath(cfg.group)
-                if path1~="" then
-                    CSAPI.OpenView(path1, {id = cfg.group},{isDungeonOver = true})
-                end
-                if paht2~=""  then
-                    CSAPI.OpenView(paht2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
-                end
-                
+                CSAPI.OpenView(path1, {id = cfg.group},{isDungeonOver = true})
+                CSAPI.OpenView(path2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
             elseif cfg.type == eDuplicateType.TaoFa then --讨伐
-                CSAPI.OpenView("DungeonActivity2",{id = cfg.group, itemId = cfg.id})
-            end
-        end
-    elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then
-        CSAPI.OpenView("CourseView",1)
-    else  -- 主线章节
-        if isExit and self.currFightId then
-            -- 回到战斗中的章节
-            local id = self:GetCurrFightSectionId();
-            if id then
-                CSAPI.OpenView("Section",{type = 1})
-                CSAPI.OpenView("Dungeon", {
-                    id = id
-                });
-            end
-        else
-            local currSection = self:GetCurrSectionData();
-            if currSection then
-                -- 设置打开界面后的状态
-                local _state = self:GetCurrDungeonIsWin() and DungeonOpenType.Finish or DungeonOpenType.Retreat
-                if _state == DungeonOpenType.Finish then
-                    _state = self:GetCurrDungeonIsFirst() and DungeonOpenType.Normal or DungeonOpenType.Finish
+                CSAPI.OpenView(path1,{id = cfg.group, itemId = cfg.id})
+                if path2 and path2~="" then --试炼
+                    CSAPI.OpenView(path2,{id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
                 end
-                CSAPI.OpenView("Section",{type = 1})
-                CSAPI.OpenView("Dungeon", {
-                    id = currSection:GetID(),
-                    state = _state
-                });
+            elseif cfg.type == eDuplicateType.NewTower then
+                CSAPI.OpenView("TowerView") --默认最新关卡        
+                local datas = DungeonMgr:GetActivitySectionDatas(SectionActivityType.NewTower) 
+                if #datas>0 then
+                    for i, v in ipairs(datas) do
+                        if v:GetID() == cfg.group then
+                            CSAPI.OpenView("TowerListView", {id = cfg.group}, i)
+                            break
+                        end
+                    end
+                end
+            elseif  cfg.type == eDuplicateType.StarPalace then
+                CSAPI.OpenView(path1,{id = cfg.group,itemId = cfg.id},{isDungeonOver = true})
+            else
+                CSAPI.OpenView(path1)
             end
+        elseif  DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Course then
+            CSAPI.OpenView("CourseView",1)  
+        elseif DungeonMgr:GetDungeonSectionType(self.currId) == SectionType.Colosseum then
+            CSAPI.OpenView("Section",{type = 3})
+            ColosseumMgr:Quit(self.currId)
+            self:SetCurrId()
+            return
+        else  -- 主线章节
+            if isExit and self.currFightId then
+                -- 回到战斗中的章节
+                local id = self:GetCurrFightSectionId();
+                if id then
+                    CSAPI.OpenView("Section",{type = 1})
+                    CSAPI.OpenView("Dungeon", {
+                        id = id
+                    });
+                end
+            else
+                local currSection = self:GetCurrSectionData();
+                if currSection then
+                    -- 设置打开界面后的状态
+                    local _state = self:GetCurrDungeonIsWin() and DungeonOpenType.Finish or DungeonOpenType.Retreat
+                    if _state == DungeonOpenType.Finish then
+                        _state = self:GetCurrDungeonIsFirst() and DungeonOpenType.Normal or DungeonOpenType.Finish
+                    end
+                    CSAPI.OpenView("Section",{type = 1})
+                    CSAPI.OpenView("Dungeon", {
+                        id = currSection:GetID(),
+                        state = _state
+                    });
+                end
+            end  
+        end
+    end
+    
+    if jumpType and (jumpType == 5 or jumpType == 6 or jumpType == 7) then --失败重开或下一关
+        local cfgDungeon = Cfgs.MainLine:GetByID(self.currId)
+        local OnFightOverCB = nil
+        if jumpType == 6 then --模拟
+            OnFightOverCB = function (stage, winer, nDamage)
+                if self.currId then
+                    DungeonMgr:SetCurrId1(self.currId)
+                end
+                FightOverTool.OnDirllOver(stage, winer)
+            end   
+        elseif jumpType == 7 and cfgDungeon and cfgDungeon.lasChapterID then --下一关
+            cfgDungeon = DungeonMgr:IsDungeonOpen(cfgDungeon.id) and Cfgs.MainLine:GetByID(cfgDungeon.lasChapterID[1]) or cfgDungeon
+        end
+        if cfgDungeon then
+            if cfgDungeon.arrForceTeam ~= nil then -- 强制上阵编队
+                CSAPI.OpenView("TeamForceConfirm", {
+                    dungeonId = cfgDungeon.id,
+                    teamNum = cfgDungeon.teamNum or 1
+                })
+            else
+                local type = TeamConfirmOpenType.Dungeon
+                local _disChoosie = false
+                if cfgDungeon.type == eDuplicateType.NewTower then
+                    type = TeamConfirmOpenType.Tower
+                    _disChoosie= true
+                elseif cfgDungeon.type  == eDuplicateType.Rogue then
+                    type = TeamConfirmOpenType.Rogue
+                    _disChoosie= true
+                end                
+                CSAPI.OpenView("TeamConfirm", { -- 正常上阵
+                    dungeonId = cfgDungeon.id,
+                    teamNum = cfgDungeon.teamNum or 1,
+                    isDirll = OnFightOverCB ~= nil,
+                    disChoosie=_disChoosie,
+                    overCB = OnFightOverCB
+                }, type)
+            end 
         end
     end
     self:SetCurrId()
@@ -1105,7 +1211,7 @@ function this:SendToQuit()
             nDuplicateID = currId
         });
     end
-    self:SetCurrId()
+    -- self:SetCurrId()
 end
 
 -- 战斗结束数据
@@ -1316,13 +1422,85 @@ end
 
 ---------------------------------------------red---------------------------------------------
 function this:CheckRedPointData()
-    local redData = {}
-    redData.isMain = DungeonBoxMgr:CheckRed()
-    redData.isActivity = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower,eTaskType.Story,eTaskType.DupTaoFa})
-    if not redData.isMain and not redData.isActivity then
-        redData = nil
+    local isMainRed = DungeonMgr:IsMainLineRed()
+    local isDaily = DungeonMgr:IsDailyRed()
+    local isExercise = DungeonMgr:IsExerciseRed()
+    local isActivity = DungeonMgr:IsActivityRed(true)
+
+    RedPointMgr:UpdateData(RedPointType.Attack, (isMainRed or isDaily or isExercise or isActivity) and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionMain, isMainRed and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionDaily, isDaily and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionExercise, isExercise and 1 or nil)
+    RedPointMgr:UpdateData(RedPointType.SectionActivity, isActivity and 1 or nil)
+end
+
+function this:IsActivityRed(isUpdate)
+    local isRed = DungeonMgr:CheckActivityRed(isUpdate)
+
+    if not isRed then --十二星宫
+        isRed = MissionMgr:CheckRed({eTaskType.StarPalace})
     end
-    RedPointMgr:UpdateData(RedPointType.Attack, redData)
+
+    if not isRed then --旧爬塔
+        isRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower})
+    end
+
+    if not isRed then --乱序
+        isRed = RogueMgr:IsRed()
+    end
+
+    if not isRed then --战力派遣
+        isRed = RogueSMgr:IsRed()
+    end
+    if not isRed then --能力测验
+        isRed = RogueTMgr:IsRed()
+    end
+
+    -- if not isRed then
+    --     isRed = ColosseumMgr:IsRed()
+    -- end
+
+    if not isRed then --世界boss
+        isRed = GlobalBossMgr:IsRed()
+    end
+
+    return isRed
+end
+
+function this:CheckActivityRed(isUpdate)
+    local isRed = false
+    local openInfos = self:GetActiveOpenInfos()
+    if openInfos then
+        for k, info in pairs(openInfos) do
+            if info:IsOpen() and info:CheckIsRed() then
+                local cfg = info:GetCfg()
+                if cfg and cfg.sectionID then
+                    local openCfg = info:GetOpenCfg()
+                    local redData1 = RedPointMgr:GetData("ActiveEntry" .. openCfg.id)
+                    local redData2 = DungeonActivityMgr:CheckRed(cfg.sectionID) and 1 or nil
+                    if redData1 ~= redData2 and isUpdate then
+                        RedPointMgr:UpdateData("ActiveEntry" .. openCfg.id,redData2)
+                    end
+                    if not isRed and redData2 ~= nil then
+                        isRed = true
+                    end
+                end
+            end
+        end
+    end
+    return isRed
+end
+
+function this:IsMainLineRed()
+    return DungeonBoxMgr:CheckRed()
+end
+
+function this:IsExerciseRed()
+    return ColosseumMgr:IsRed()
+end
+
+function this:IsDailyRed()
+    return false
 end
 
 ---------------------------------------------new---------------------------------------------
@@ -1352,13 +1530,14 @@ end
 
 function this:SetArachnidCount(proto)
     if proto and proto.can_buy_cnt then
-        self.ArachnidCount = proto.can_buy_cnt or 0
+        self.ArachnidCount = self.ArachnidCount or {}
+        self.ArachnidCount[proto.sectionId] = proto.can_buy_cnt
     end
     EventMgr.Dispatch(EventType.Arachnid_Count_Refresh)
 end
 
-function this:GetArachnidCount()
-    return self.ArachnidCount or 0
+function this:GetArachnidCount(sid)
+    return self.ArachnidCount and self.ArachnidCount[sid] or 0
 end
 
 function this:Clear()
@@ -1385,8 +1564,10 @@ function this:Clear()
     self.dungeonGroupDatas = nil
     self.ActivityPlotDatas = nil
     self.hardInfo = nil
+    self.ActiveOpenInfos = nil
+    self.ArachnidCount = {}
 end
 
-this:Init();
+this:Init()
 
 return this;

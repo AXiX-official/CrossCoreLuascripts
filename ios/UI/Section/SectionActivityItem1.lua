@@ -1,6 +1,7 @@
 local data = nil
 local canvasGroup = nil
 local isLock = false
+local lockStr = ""
 local openInfo = nil
 local currState = 0
 local lastState = 0
@@ -13,10 +14,28 @@ local isSelect = false
 -- 爬塔
 local isTower = false
 local resetTime = 0
+local timer = 0
 
 -- 爬塔
 local isNewTower = false
 local towerResetTime = 0
+local towerTimer = 0
+
+-- rogue
+local isRogue = false
+local rogueTimer = 0
+local rogueTime = 0
+
+-- 十二星宫
+local isTotal = false
+local totalTimer = 0
+local totalTime = 0
+local sliderTotal = nil
+
+--世界boss
+local isGlobalBoss = false
+local globalBossTimer = 0
+local globalBossTime = 0
 
 -- 动效
 local textRand = nil
@@ -37,6 +56,7 @@ end
 function Awake()
     canvasGroup = ComUtil.GetCom(node, "CanvasGroup")
     textRand = ComUtil.GetCom(action, "ActionTextRand")
+    sliderTotal = ComUtil.GetCom(totalSlider, "Slider")
 
     CSAPI.SetGOActive(selectObj, false)
 end
@@ -51,9 +71,12 @@ function Refresh(_data, elseData)
         SetBG()
         SetTower()
         SetNewTower()
+        SetTotalBattle()
+        SetRogue()
         SetTitle()
         SetLock()
         SetRed()
+        SetGlobalBoss()
     end
 
     itemX = CSAPI.GetAnchor(gameObject)
@@ -64,8 +87,12 @@ function Update()
         UpdateTower()
     elseif isNewTower then
         UpdateNewTower()
-    else
-        -- UpdateActivity()
+    elseif isRogue then
+        UpdateRogue()
+    elseif isTotal then
+        UpdateTotalBattle()
+    elseif isGlobalBoss then
+        UpdateGlobalBoss()
     end
 end
 
@@ -78,34 +105,26 @@ end
 
 function SetTitle()
     CSAPI.SetText(txtTitle1, data.chaperName)
-    -- CSAPI.SetText(txtTitle2,data:GetEName())
+    CSAPI.SetText(txtTitle2,sectionData:GetEName())
     textRand.targetStr = sectionData and sectionData:GetEName() or ""
 end
 
 function SetLock()
-    local isLock = currState < 1
-    canvasGroup.alpha = isLock and 0.3 or 1
-    CSAPI.SetGOActive(lockImg, isLock)
-    CSAPI.SetGOActive(lockObj, isLock)
-    CSAPI.SetGOActive(unLockImg, not isLock)
+    isLock = currState < 1
+    _, lockStr = sectionData:GetOpen()
+    SetLockPanel(isLock,lockStr)
+end
 
-    local _, lockStr = sectionData:GetOpen()
-    CSAPI.SetText(txtLock, lockStr)
+function SetLockPanel(b,str)
+    canvasGroup.alpha = b and 0.3 or 1
+    CSAPI.SetGOActive(lockImg, b)
+    CSAPI.SetGOActive(lockObj, b)
+    CSAPI.SetGOActive(unLockImg, not b)
+    CSAPI.SetText(txtLock, str)
 end
 
 function SetRed()
-    local type = data.type
-    local isRed = false
-    if type and currState > 0 then
-        if type == SectionActivityType.Tower then
-            isRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower})
-        elseif type == SectionActivityType.Plot then
-            isRed = MissionMgr:CheckRed({eTaskType.Story})
-        elseif type == SectionActivityType.TaoFa then
-            isRed = MissionMgr:CheckRed({eTaskType.DupTaoFa})
-        end
-    end
-    UIUtil:SetRedPoint(redParent, isRed, 0, 0)
+    UIUtil:SetRedPoint(redParent, DungeonActivityMgr:CheckRed(sectionData:GetID()))
 end
 
 function GetData()
@@ -129,6 +148,10 @@ function GetItemX()
 end
 
 function OnClick()
+    if globalBossTime > 0 then
+        Tips.ShowTips(lockStr)
+        return
+    end
     if cb then
         cb(this)
     end
@@ -163,6 +186,7 @@ function RefreshTower(info)
         CSAPI.SetText(txtTowerMax, info.max .. "")
         -- time
         resetTime = info.resetTime
+        timer = 0
     end
 end
 
@@ -170,17 +194,21 @@ function UpdateTower()
     if isTower then
         if TimeUtil:GetTime() > resetTime then
             local info = DungeonMgr:GetTowerData()
-            info = DungeonMgr:AddTowerCur(-info.cur)
-            RefreshTower(info)
+            if info then
+                info = DungeonMgr:AddTowerCur(-info.cur)
+                RefreshTower(info)
+            end
             resetTime = resetTime + 604800 -- 7天秒数
+            timer = 0
         end
 
-        if (resetTime >= 0) then
+        if (resetTime >= 0 and Time.time > timer) then
+            timer = Time.time + 1
             local timeTab = TimeUtil:GetDiffHMS(resetTime, TimeUtil:GetTime())
             local day = timeTab.day > 0 and timeTab.day .. LanguageMgr:GetByID(11010) or ""
             local hour = timeTab.hour > 0 and timeTab.hour .. LanguageMgr:GetByID(11009) or ""
             local min = timeTab.minute > 0 and timeTab.minute .. LanguageMgr:GetByID(11011) or ""
-            LanguageMgr:SetText(txtTowerTime, 36006, day .. hour .. min)
+            LanguageMgr:SetText(txtTowerTime,36006 , day .. hour .. min)
         end
     end
 end
@@ -202,6 +230,7 @@ end
 function RefreshNewTower()
     if openInfo then
         towerResetTime = openInfo:GetEndTime()
+        towerTimer = 0
     end
     local tab = TowerMgr:GetCounts()
     tab[1] = tab[1] or {}
@@ -209,7 +238,7 @@ function RefreshNewTower()
     CSAPI.SetText(txtTowerNol2,(tab[1].cur or 0) .. "")
     tab[2] = tab[2] or {}
     CSAPI.SetText(txtTowerHard1,"/" .. (tab[2].max or 0))
-    CSAPI.SetText(txtTowerHard2,(tab[2].cur or 0) .. "")    
+    CSAPI.SetText(txtTowerHard2,(tab[2].cur or 0) .. "")
 end
 
 function UpdateNewTower()
@@ -218,16 +247,105 @@ function UpdateNewTower()
             return
         end
 
-        if (towerResetTime >= 0) then
+        if (towerResetTime >= 0 and Time.time > towerTimer) then
+            towerTimer = Time.time + 1
             local timeTab = TimeUtil:GetDiffHMS(towerResetTime, TimeUtil:GetTime())
             local day = timeTab.day > 0 and timeTab.day .. LanguageMgr:GetByID(11010) or ""
             local hour = timeTab.hour > 0 and timeTab.hour .. LanguageMgr:GetByID(11009) or ""
             local min = timeTab.minute > 0 and timeTab.minute .. LanguageMgr:GetByID(11011) or ""
-            LanguageMgr:SetText(txtTowerTime2, 36006, day .. hour .. min)
+            LanguageMgr:SetText(txtTowerTime2, 49032, day .. hour .. min)
         end
     end
 end
 
+-------------------------------------------十二星宫
+function SetTotalBattle()
+    isTotal = data.type == SectionActivityType.TotalBattle and TotalBattleMgr:IsFighting()
+    CSAPI.SetGOActive(totalObj, isTotal)
+    if isTotal then
+        local fightInfo = TotalBattleMgr:GetFightInfo()
+        if fightInfo then
+            local cfg = Cfgs.MainLine:GetByID(fightInfo.id)
+            if cfg then
+                local sectionData = DungeonMgr:GetSectionData(cfg.group)
+                CSAPI.SetText(txtTotalName,sectionData:GetName())
+                local max= cfg.hp or 1
+                local cur =TotalBattleMgr:GetFightBossHp() or 0
+                sliderTotal.value = cur/max
+                CSAPI.SetText(txtTotalNum,cur.."/"..max)
+                totalTime = TotalBattleMgr:GetFightTime()
+                totalTimer = 0
+                if totalTime <= 0 then
+                    CSAPI.SetGOActive(totalObj, false)
+                end
+            end
+        end
+    end
+end
+
+function UpdateTotalBattle()
+    if (totalTime > 0 and Time.time > totalTimer) then
+        totalTimer = Time.time + 1
+        totalTime = TotalBattleMgr:GetFightTime()
+        local timeData = TimeUtil:GetTimeTab(totalTime)
+        local day = timeData[1] > 0 and timeData[1] .. LanguageMgr:GetByID(11010) or ""
+        local hour = timeData[2] > 0 and timeData[2] .. LanguageMgr:GetByID(11009) or ""
+        local min = timeData[3] > 0 and timeData[3] .. LanguageMgr:GetByID(11011) or ""
+        LanguageMgr:SetText(txtTotalTime, 49032, day .. hour .. min)
+        if totalTime <= 0 then
+            CSAPI.SetGOActive(totalObj,false)
+        end
+    end
+end
+-------------------------------------------乱序演习
+function SetRogue()
+    isRogue = data.type == SectionActivityType.Rogue
+    CSAPI.SetGOActive(rogueObj,isRogue)
+    rogueTimer = 0
+    rogueTime = RogueMgr:GetRogueTime()
+    if rogueTime <= 0 then
+        CSAPI.SetGOActive(rogueObj,false)
+    end
+end
+
+function UpdateRogue()
+    if (rogueTime > 0 and Time.time > rogueTimer) then
+        rogueTimer = Time.time + 1
+        rogueTime = RogueMgr:GetRogueTime()
+        local timeData = TimeUtil:GetTimeTab(rogueTime)
+        LanguageMgr:SetText(txtRogueTime, 50001, timeData[1], timeData[2], timeData[3])
+        if rogueTime <= 0 then
+            CSAPI.SetGOActive(rogueObj,false)
+        end
+    end
+end
+-------------------------------------------世界boss
+function SetGlobalBoss()
+    isGlobalBoss = data.type == SectionActivityType.GlobalBoss
+    if isGlobalBoss then
+        globalBossTimer = 0
+        if GlobalBossMgr:IsClose() then
+            globalBossTime = GlobalBossMgr:GetCloseTime()
+            if not isLock then
+                SetLockPanel(true, GlobalBossMgr:GetCloseDesc())
+                lockStr = GlobalBossMgr:GetCloseDesc()
+            end
+        end
+    end
+end
+
+function UpdateGlobalBoss()
+    if (globalBossTime > 0 and Time.time > globalBossTimer) then
+        globalBossTimer = Time.time + 1
+        globalBossTime = GlobalBossMgr:GetCloseTime()
+        if globalBossTime <= 0 then
+            if not isLock then
+                SetLockPanel(false, "")
+                DungeonMgr:CheckRedPoint()
+            end
+        end
+    end
+end
 ------------------------------------动效----------------------------------------
 
 function PlayAnim()

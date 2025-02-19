@@ -93,7 +93,7 @@ end
 -- 点击空置
 function ClickItemCB()
     -- CSAPI.OpenView("MatrixRoleSet", _matrixData)
-    CSAPI.OpenView("DormSetRoleList", roomID)
+    CSAPI.OpenView("DormSetRoleList", {roomID})
 end
 
 -- =====================================pl=========================================================

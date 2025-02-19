@@ -57,7 +57,7 @@ function Refresh(_data, _elseData)
 
         CSAPI.SetGOActive(nol, not (elseData.fakeType > 0))
         CSAPI.SetGOActive(fake, elseData.fakeType > 0)
-        CSAPI.SetGOActive(fakeText, elseData.fakeType > 1)
+        CSAPI.SetGOActive(fakeText, elseData.fakeType > 1 and not CSAPI.IsAppReview())
     end
 end
 
@@ -83,8 +83,7 @@ end
 function SetPart()
     local _titleIdx = titleIdx - 1
     local indexStr = _titleIdx > 9 and _titleIdx .. "" or "0" .. _titleIdx
-    -- CSAPI.SetText(txtPart, "PART " .. indexStr)
-    CSAPI.SetText(txtPart, "")
+    CSAPI.SetText(txtPart, "PART " .. indexStr)
     CSAPI.SetText(txtIndex, indexStr)
 end
 
@@ -127,16 +126,25 @@ end
 
 function OnClick()
     if elseData.fakeType > 0 then
-        if elseData.fakeType > 1 then
+        if elseData.fakeType > 1 and not CSAPI.IsAppReview() then
             LanguageMgr:ShowTips(1000)
         end
         return
     end
-    if isLock and data:GetCfg().preSection then
-        local preSectionData = DungeonMgr:GetSectionData(data:GetCfg().preSection)
-        -- local str = elseData.hardLv > 1 and "("..")" or ""
-        LanguageMgr:ShowTips(25001, preSectionData:GetName())
-        return
+
+    if isLock then
+        if data:GetCfg().preSection  then
+            local preSectionData = DungeonMgr:GetSectionData(data:GetCfg().preSection)
+            if preSectionData:GetState() ~= 2 then
+                LanguageMgr:ShowTips(25001, preSectionData:GetName())
+                return
+            end
+        end
+        local _,lockStr = data:GetOpen()
+        if lockStr and lockStr~="" then
+            Tips.ShowTips(lockStr)
+            return
+        end
     end
     if cb and not isLock then
         cb(this)

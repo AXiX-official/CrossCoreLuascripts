@@ -232,49 +232,53 @@ end
 
 -- 获取字符串中的中英文和数字
 function this:FilterChar(s)
-    local ss = {}
-    local k = 1
-    while true do
-        if k > #s then
-            break
-        end
-        local c = string.byte(s, k)
-        if not c then
-            break
-        end
-        if c < 192 then
-            if (c >= 48 and c <= 57) or (c >= 65 and c <= 90) or (c >= 97 and c <= 122) then
-                table.insert(ss, string.char(c))
+    if CSAPI.IsADV() then
+        return self:FilterChar2(s);
+    else
+        local ss = {}
+        local k = 1
+        while true do
+            if k > #s then
+                break
             end
-            k = k + 1
-        elseif c < 224 then
-            k = k + 2
-        elseif c < 240 then
-            if c >= 228 and c <= 233 then
-                local c1 = string.byte(s, k + 1)
-                local c2 = string.byte(s, k + 2)
-                if c1 and c2 then
-                    local a1, a2, a3, a4 = 128, 191, 128, 191
-                    if c == 228 then
-                        a1 = 184
-                    elseif c == 233 then
-                        a2, a4 = 190, c1 ~= 190 and 191 or 165
-                    end
-                    if c1 >= a1 and c1 <= a2 and c2 >= a3 and c2 <= a4 then
-                        table.insert(ss, string.char(c, c1, c2))
+            local c = string.byte(s, k)
+            if not c then
+                break
+            end
+            if c < 192 then
+                if (c >= 48 and c <= 57) or (c >= 65 and c <= 90) or (c >= 97 and c <= 122) then
+                    table.insert(ss, string.char(c))
+                end
+                k = k + 1
+            elseif c < 224 then
+                k = k + 2
+            elseif c < 240 then
+                if c >= 228 and c <= 233 then
+                    local c1 = string.byte(s, k + 1)
+                    local c2 = string.byte(s, k + 2)
+                    if c1 and c2 then
+                        local a1, a2, a3, a4 = 128, 191, 128, 191
+                        if c == 228 then
+                            a1 = 184
+                        elseif c == 233 then
+                            a2, a4 = 190, c1 ~= 190 and 191 or 165
+                        end
+                        if c1 >= a1 and c1 <= a2 and c2 >= a3 and c2 <= a4 then
+                            table.insert(ss, string.char(c, c1, c2))
+                        end
                     end
                 end
+                k = k + 3
+            elseif c < 248 then
+                k = k + 4
+            elseif c < 252 then
+                k = k + 5
+            elseif c < 254 then
+                k = k + 6
             end
-            k = k + 3
-        elseif c < 248 then
-            k = k + 4
-        elseif c < 252 then
-            k = k + 5
-        elseif c < 254 then
-            k = k + 6
         end
+        return table.concat(ss)
     end
-    return table.concat(ss)
 end
 
 -- 获取字符串中的简体中文(不含标点符号)
@@ -551,6 +555,79 @@ function this:ReplacePlaceholders(str, replacements)
 	  return tostring(value)
 	end)
 end
+
+---首行缩进 
+---@param str 文本
+---@param isLine 包含换行
+function this:IndentFirstLine(str,isLine)
+    if str and str ~="" then
+        str = "\u{3000}\u{3000}" .. str
+        if isLine then
+            str = str:gsub("\n","\n\u{3000}\u{3000}")
+        end
+    end
+    return str
+end
+
+--- 替换空格为不换行空格(解决Text组件英文分词问题)
+---@param str 文本
+function this:ReplaceSpace(str)
+    if str and str ~="" then
+        str = str:gsub(" ","\u{00A0}")
+    end
+    return str
+end
   
+--只包含中文、繁体中文、注音、日文、韩文、英文和数字
+function this:CheckPassStr(str)
+    local pattern = "^[\u{4e00}-\u{9fff}\u{3400}-\u{4dbf}\u{3040}-\u{309f}\u{ac00}-\u{d7af}\z{IsHiragana}\z{IsKatakana}a-zA-Z0-9]*$"
+    return string.match(str, pattern)
+end
+
+--匹配非特殊字符的文本 --支持空格 
+local regex = CS.System.Text.RegularExpressions.Regex("[^\\p{L}\\p{N}\\s+]+")
+local regex2 = CS.System.Text.RegularExpressions.Regex("[\\r?\\n|\\r\\t+]+") 
+function this:FilterChar2(str)
+    local result=""
+    if str ~= "" and str ~= nil then
+        result = regex:Replace(str,"");
+        result = regex2:Replace(result,"") --剔除tab
+        -- result = result:gsub("^%s*(.-)%s*$", "%1") --去掉前后空格
+    end
+    return result;
+end
+
+--根据数字获取罗马数字
+function this:IntToRoman(num)
+    if num <= 0 or num >= 4000 then
+        return "Invalid number"
+    end
+
+    local romanNumeral = ""
+    local romanNumerals = {
+        {1000, "M"},
+        {900, "CM"},
+        {500, "D"},
+        {400, "CD"},
+        {100, "C"},
+        {90, "XC"},
+        {50, "L"},
+        {40, "XL"},
+        {10, "X"},
+        {9, "IX"},
+        {5, "V"},
+        {4, "IV"},
+        {1, "I"}
+    }
+
+    for _, v in ipairs(romanNumerals) do
+        while num >= v[1] do
+            romanNumeral = romanNumeral .. v[2]
+            num = num - v[1]
+        end
+    end
+
+    return romanNumeral
+end
 
 return this;

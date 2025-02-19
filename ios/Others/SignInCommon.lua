@@ -1,5 +1,6 @@
 local key = nil
 local targetTime = 0
+local cfg = nil
 function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Activity_SignIn, ESignCB)
@@ -33,18 +34,16 @@ function OnDestroy()
     ReleaseCSComRefs()
 end
 
-function Refresh(data)
+function Refresh(data,elseData)
     local isSingIn = data.isSingIn ~= nil and data.isSingIn or false
     key = data.key
-    CSAPI.SetGOActive(mask, isSingIn)
+    cfg = elseData and elseData.cfg or nil
+    -- CSAPI.SetGOActive(mask, isSingIn)
     if (isSingIn) then
         EventMgr.Dispatch(EventType.Activity_Click)
     end
     SetDatas()
     SetTime()
-    if isSingIn then
-        SignInMgr:AddCacheRecord(key)
-    end
 end
 
 -- 如果是12或者倒数12位，则额外加多2个空数据填位
@@ -63,16 +62,22 @@ end
 
 -- 签到回调
 function ESignCB(proto)
+
     -- if(isClick) then return end
     local _key = SignInMgr:GetDataKey(proto.id, proto.index)
     if (key ~= _key) then
         return
     end
-    CSAPI.SetGOActive(mask, false)
+    if proto.isOk == false then
+        EventMgr.Dispatch(EventType.Acitivty_List_Pop)
+        return
+    end
+    SignInMgr:AddCacheRecord(key)
+    -- CSAPI.SetGOActive(mask, false)
     -- layout:UpdateList()
     SetDatas()
     isClick = false
-    ActivityMgr:SetListData(ActivityListType.SignInCommon, {
+    ActivityMgr:SetListData(cfg.id, {
         key = _key
     })
 end
@@ -128,7 +133,9 @@ function OnClickMask()
                 task_name = data.proto.index,
                 item_gain = rewards
             }
-            BuryingPointMgr:TrackEvents("activity_attend", taData)
+            if CSAPI.IsADV()==false then
+                BuryingPointMgr:TrackEvents("activity_attend", taData)
+            end
         end
     end
 end

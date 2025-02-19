@@ -12,6 +12,7 @@ function this:SetData(bagData)
         EventMgr.Dispatch(EventType.Bag_Update)
     end
     self:CheckBagRedInfo();
+    RoleMgr.OnBagUpdate(true)
 end
 -- 更新数据
 function this:UpdateData(newData)
@@ -24,39 +25,103 @@ function this:UpdateData(newData)
         EventMgr.Dispatch(EventType.Bag_Update)
     end
     self:CheckBagRedInfo();
+    RoleMgr.OnBagUpdate(false)
 end
 
 -- 更新物品数据
 function this:UpdateGoodsData(data, setNew)
     self.datas = self.datas or {}
     if (self:UpdateCoin(data) == false) then
-        local goodsData = self:GetData(data.id);
-        if (goodsData) then
-            if (data.num and data.num <= 0) then
-                -- 移除            
-                goodsData:GetData().num = data.num --头像相关会继续调用数量进行判断       
-                self:RemoveGoods(data.id);
-            else
-                -- 更新
-                for k, v in pairs(data) do
-                    goodsData:GetData()[k] = v; -- mo 
+        if data then
+            -- if data.id==10036 then
+            --     data.get_infos={
+            --         {3,TimeUtil:GetTime()+120,100351},
+            --         {5,TimeUtil:GetTime()+(3600*24*7),100354},
+            --         {3,TimeUtil:GetTime()+(3600*22),100351},
+            --     }
+            -- end
+            if data.get_infos then --带限时道具的物品
+                --分类统计限时物品数量            
+                local tempList={};
+                local fixedNum=data.num;
+                local index=1;
+                for k,v in ipairs(data.get_infos) do
+                    local id=v[3];
+                    local num=v[1];
+                    tempList[id]=tempList[id] or {};
+                    tempList[id].id=id;
+                    if tempList[id].num then
+                        tempList[id].num=tempList[id].num+num;
+                    else
+                        tempList[id].num=num;
+                    end
+                    tempList[id].get_infos=tempList[id].get_infos or {};
+                    v.index=index;
+                    table.insert(tempList[id].get_infos,v);
+                    if tempList[id].num>0 then
+                        index=index+1;
+                    end
+                    fixedNum=fixedNum-num;
                 end
-            end
-        else
-            -- 新增物品
-            goodsData = GoodsData(data);
-            self.datas[data.id] = goodsData;
-            if (setNew) then
-                self:SetNewState(data.id, true);
+                --限时道具
+                for k,v in pairs(tempList) do
+                    local tempData=table.copy(data);
+                    tempData.num=v.num;
+                    tempData.id=v.id;
+                    tempData.get_infos=v.get_infos;
+                    self:UpdateDataBase(tempData,setNew)
+                end
+                --固定道具
+                if fixedNum>0 then
+                    local tempData=table.copy(data);
+                    tempData.get_infos=nil;
+                    tempData.num=fixedNum;
+                    self:UpdateDataBase(tempData,setNew)
+                end
+            else
+               self:UpdateDataBase(data,setNew);
             end
         end
-        if(goodsData:GetItemType()==ITEM_TYPE.ICON_FRAME) then 
-            HeadFrameMgr:UpdateGoodsData(goodsData,setNew)
-        end 
-        if(goodsData:GetItemType()==ITEM_TYPE.ICON) then 
-            HeadIconMgr:UpdateGoodsData(goodsData,setNew)
-        end 
     end
+end
+
+function this:UpdateDataBase(data,setNew)
+    if data==nil then
+        LogError("传入的物品数据不得为空！")
+        return;
+    end
+    local goodsData = self:GetData(data.id);
+    if (goodsData) then
+        if (data.num and data.num <= 0) then
+            -- 移除     
+            goodsData:GetData().num = data.num --头像相关会继续调用数量进行判断   
+            self:RemoveGoods(data.id);
+        else
+            -- 更新
+            for k, v in pairs(data) do
+                goodsData:GetData()[k] = v; -- mo 
+            end
+        end
+    else
+        -- 新增物品
+        goodsData = GoodsData(data);
+        self.datas[data.id] = goodsData;
+        if (setNew) then
+            self:SetNewState(data.id, true);
+        end
+    end
+    if(goodsData:GetItemType()==ITEM_TYPE.ICON_FRAME) then 
+        HeadFrameMgr:UpdateGoodsData(goodsData,setNew)
+    end 
+    if(goodsData:GetItemType()==ITEM_TYPE.ICON) then 
+        HeadIconMgr:UpdateGoodsData(goodsData,setNew)
+    end 
+    if(goodsData:GetItemType()==ITEM_TYPE.ICON_TITLE) then 
+        HeadTitleMgr:UpdateGoodsData(goodsData,setNew)
+    end 
+    if(goodsData:GetItemType()==ITEM_TYPE.ASMR) then 
+        ASMRMgr:UpdateGoodsData(goodsData,setNew)
+    end 
 end
 
 -- 更新货币类
@@ -122,16 +187,63 @@ end
 function this:CheckBagRedInfo()
 	local tagValue=nil;
     if self.datas then
+        local currTime=TimeUtil:GetTime();
+        local isRecord=false;
+        local limitTime=nil;
         for k, v in pairs(self.datas) do
-            if v:GetCfgTag()==5 then --5是消耗品,将需要显示红点的tag值加入数组
-                tagValue=tagValue or {};
-                table.insert(tagValue,v:GetCfgTag());
-                break;
+            if v:GetCfgTag()==2 then --2是消耗品,将需要显示红点的tag值加入数组
+                if isRecord~=true then
+                    tagValue=tagValue or {};
+                    table.insert(tagValue,v:GetCfgTag());
+                    isRecord=true;
+                end    
+            end
+            if v:IsExipiryType() then--限时物品记录最近的一个快要到期的时间
+                limitTime=v:GetExpiry();
+                if v:GetData().get_infos and #v:GetData().get_infos>1 then
+                    for _, val in ipairs(v:GetData().get_infos) do
+                        local tempData=table.copy(v:GetData());
+						tempData.num=val[1];
+						tempData.id=val[3];
+						tempData.get_infos={val};
+						local tempGoods=GoodsData(tempData);
+                        limitTime=tempGoods:GetExpiry();
+                    end
+                end
+                if self.lessLimitTime ~= nil then
+                    if limitTime > currTime and limitTime < self.lessLimitTime then
+                        self.lessLimitTime = limitTime
+                    end
+                elseif limitTime > currTime then
+                    self.lessLimitTime = limitTime
+                end
+                if limitTime>currTime then
+                    tagValue=tagValue or {};
+                    tagValue.limitTags=tagValue.limitTags or {};
+                    tagValue.limitTags[v:GetCfgTag()]=true;
+                end
             end
         end
     end
 	local data=tagValue~=nil and {tagList=tagValue} or nil
     RedPointMgr:UpdateData(RedPointType.MaterialBag,data);
+end
+
+--返回最接近当前时间的物品时间
+function this:GetLessLimitTime()
+    return self.lessLimitTime or nil;
+end
+
+--是否显示limitIcon
+function this:IsShowLimit()
+    local lessTime=self:GetLessLimitTime();
+    if lessTime then
+        local curTime=TimeUtil.GetTime();
+        if lessTime>curTime and lessTime-curTime<=172800 then --小于48小时都显示
+            return true;
+        end
+    end
+    return false;
 end
 
 -- ==============================--
@@ -153,12 +265,14 @@ function this:IsCoin(id)
 end
 
 -- 通过类型获取数据
-function this:GetDataByType(type)
+function this:GetDataByType(type,propType)
     local newArr = {}
     if (self.datas) then
         for _, v in pairs(self.datas) do
             if (v:GetType() == type) then
-                table.insert(newArr, v)
+                if (propType==nil) or (propType and v:GetDyVal1()==propType) then
+                    table.insert(newArr, v)
+                end
             end
         end
     end
@@ -394,6 +508,7 @@ function this:Clear()
     self.selectEquipCond = nil;
     self.tabIndex = nil;
     self.conditions = nil;
+    self.childTabIndex=nil;
 end
 
 return this;

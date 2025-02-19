@@ -37,7 +37,7 @@ function this:GetCurDay(timer)
             -- 上一天
             -- 可能是上个月最后一天，亦有可能是上一年
             -- 通过时间戳来换算
-            local time = TimeUtil:GetBJTime() - 86400
+            local time = timer - 86400
             curDay = tonumber(TimeUtil:GetTime3("day", time))
         end
     end
@@ -65,8 +65,10 @@ end
 
 function this:GetArr()
     local arr = {}
-    for i, v in pairs(self.datas) do
-        table.insert(arr, v)
+    if self.datas then
+        for i, v in pairs(self.datas) do
+            table.insert(arr, v)
+        end
     end
     if (#arr > 1) then
         table.sort(arr, function(a, b)
@@ -80,8 +82,9 @@ function this:GetSignInContinueData()
     local arr = self:GetArr()
     for i, v in ipairs(arr) do
         if v:GetType() == RewardActivityType.Continuous then
-            local activityType = v:GetCfg().activityID
-            if activityType and activityType == ActivityListType.SignInContinue then
+            local activityID = v:GetCfg().activityID
+            local data = ActivityMgr:GetALData(activityID)
+            if data and data:GetType() == ActivityListType.SignInContinue then
                 return v
             end
         end
@@ -98,25 +101,35 @@ function this:GetDataDayKey()
     end
 end
 
--- 获取指定类型的key
-function this:GetDataKeyByType(_type)
+-- 获取活动签到的key
+function this:GetDataKeyById(activityId)
     for i, v in pairs(self.datas) do
-        if (v:GetType() == _type) then
+        if (v:GetActivityID() and v:GetActivityID() == activityId) then
             return v:GetKey()
         end
     end
 end
 
---获取指定类型的key列表
-function this:GetDataKeysByType(_type)
-    local keys = {}
-    for i, v in pairs(self.datas) do
-        if (v:GetType() == _type) then
-            local activityID = v:GetActivityID() or 0
-            keys[activityID] = v:GetKey()
+--获取表数据
+function this:GetCfgByType(aType)
+    local cfgs = Cfgs.CfgSignReward:GetAll()
+    if cfgs then
+        for k, v in pairs(cfgs) do
+            if v.activityID and v.activityID == aType then
+                return v
+            end
         end
     end
-    return keys
+    return nil
+end
+
+--获取奖励数据 --只获取第一个
+function this:GetRewardCfgByType(aType)
+    local cfgSignIn = self:GetCfgByType(aType)
+    if cfgSignIn and cfgSignIn.infos and cfgSignIn.infos[1] then
+        local cfg = Cfgs.CfgSignRewardItem:GetByID(cfgSignIn.infos[1].activityRewardId)
+        return cfg
+    end
 end
 
 -- 获取单个活动的数据
@@ -129,11 +142,22 @@ function this:GetDataByKey(key)
     return self.datas[key]
 end
 
+--获取活动对应的签到数据
+function this:GetDataByALType(_id)
+    if self.datas then
+        for i, v in pairs(self.datas) do
+            if v:GetActivityID() and v:GetActivityID() == _id then --连续签到
+                return v
+            end
+        end
+    end
+end
+
 -- 某个活动的每日数据   临时封装(用完即删)
 function this:GetDayInfos(key)
     local data = self:GetDataByKey(key)
-    if (data == nil or not data:CheckInTime()) then
-        -- 数据为空或者不在活动时间段内
+    if (data == nil) then
+        -- 数据为空
         return
     end
     local infos = {}
@@ -150,7 +174,7 @@ function this:GetDayInfos(key)
             local isDone = data:CheckIndexIsDone(i) -- 是否已签
             local isEnd = (curDay - i) > 0 -- 是否已过期
             if (data:GetType() == RewardActivityType.Continuous) then
-                isEnd = false -- 连续签到不会过期
+                isEnd = data:CheckIsEnd()
             end
             local isCurDay = curDay == i -- 是否是当天
             local isNextDay = i - 1 == curDay
@@ -174,15 +198,16 @@ function this:AddSignRet(proto)
 end
 
 -------------------------------------------------签到检测------------------------------------------------------
+--已废弃,走活动的跳转
 function this:OpenSignIn(_type, _key)
-    local isOpen, str = self:SignInIsOpen()
-    if (isOpen) then
-        ActivityMgr:OpenListView(_type, {
-            key = _key
-        })
-    else
-        Tips.ShowTips(str)
-    end
+    -- local isOpen, str = self:SignInIsOpen()
+    -- if (isOpen) then
+    --     ActivityMgr:OpenListView(_type, {
+    --         key = _key
+    --     })
+    -- else
+    --     Tips.ShowTips(str)
+    -- end
 end
 
 -- 签到系统是否已开启
@@ -204,7 +229,7 @@ function this:CheckNeedSignIn()
             if (v:GetType() == RewardActivityType.DateDay) then
                 return true
             elseif (v:GetType() == RewardActivityType.Continuous) then
-                return true
+                return v:GetCfg().regressionType == nil
             elseif (v:GetType() == RewardActivityType.DateMonth) then
                 -- 日签到 todo
                 return false
@@ -219,42 +244,31 @@ function this:CheckAll()
     if (GuideMgr:HasGuide() or GuideMgr:IsGuiding()) then
         return false
     end
-
     if (not self:SignInIsOpen()) then
         return false
     end
-
     if not self.datas then
         return false
     end
-
     local arr = self:GetArr()
     local isOpen = false
     for i, v in ipairs(arr) do
         if (not v:CheckIsDone()) then
-            local _key = v:GetKey()
-            local _data = {key = _key, isSingIn = true}
-            -- self:AddCacheRecord(_key)
+            local _data = {key = v:GetKey(), isSingIn = true}
+            if v:GetCfg() and v:GetCfg().activityID then
+                local id = v:GetCfg().activityID
+                if ActivityMgr:CheckIsOpen(id) and ActivityMgr:AddNextOpen(id, _data) then
+                    isOpen = true
+                end
+            end
             if (v:GetType() == RewardActivityType.DateDay) then
                 -- 月签到
-                if ActivityMgr:PanelCanJump(ActivityListType.SignIn) then
-                    isOpen = true
-                    ActivityMgr:AddNextOpen(ActivityListType.SignIn, _data)
-                end
             elseif (v:GetType() == RewardActivityType.Continuous) then
                 -- 连续签到 todo
-                local activityType = v:GetCfg().activityID
-                if ActivityMgr:PanelCanJump(activityType) and ActivityMgr:CheckIsOpen(activityType) then
-                    isOpen = true
-                    ActivityMgr:AddNextOpen(activityType, _data)
-                end
             elseif (v:GetType() == RewardActivityType.DateMonth) then
                 -- 日签到 todo
             end
         end
-    end
-    if (isOpen) then
-        CSAPI.OpenView("ActivityListView")
     end
     return isOpen
 end
@@ -285,6 +299,17 @@ function this:GetNewTimeData()
         newTimeData = TimeUtil:GetTimeHMS(time, "*t")
     end
     return newTimeData
+end
+
+function this:CheckIsDone(id)
+    local arr = self:GetArr() or {}
+    if #arr > 0 then
+        for i, v in ipairs(arr) do
+            if v:GetID() == id then
+                return v:CheckIsDone(),v:GetKey()
+            end
+        end
+    end
 end
 
 return this

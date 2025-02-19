@@ -13,17 +13,10 @@ function Skill602800403:DoSkill(caster, target, data)
 	else
 		return
 	end
-	-- 8670
-	local count670 = SkillApi:GetCount(self, caster, target,3,602800206)
-	-- 8879
-	if SkillJudger:Less(self, caster, target, true,count670,4) then
-	else
-		return
-	end
 	-- 602800203
 	self.order = self.order + 1
-	self:AddBuffCount(SkillEffect[602800203], caster, self.card, data, 602800203,1,4)
+	self:AddBuffCount(SkillEffect[602800203], caster, self.card, data, 602800203,1,8)
 	-- 602800206
 	self.order = self.order + 1
-	self:AddBuffCount(SkillEffect[602800206], caster, self.card, data, 602800206,1,4)
+	self:AddBuffCount(SkillEffect[602800206], caster, self.card, data, 602800206,1,8)
 end

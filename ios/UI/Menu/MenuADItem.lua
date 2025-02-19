@@ -11,6 +11,7 @@ end
 function SetImg()
 	local imgName = data:GetImageName()
 	if(imgName and imgName ~= "") then
+		--LogError(data:GetImgUrl().."/"..imgName)
 		c_MenuADItem:SetImage(clickNode, "menuaditem", imgName, data:GetImgUrl(), function()
 			CSAPI.SetScale(clickNode, 1, 1, 1)
 		end)
@@ -23,6 +24,9 @@ function OnClick()
 		JumpMgr:Jump(tonumber(jumpId))
 		--统计点击次数
 		RecordMgr:SaveCount(RecordMode.Count, RecordViews.AD, jumpId)
+		if CSAPI.IsADV() or CSAPI.IsDomestic() then
+			BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_CLICK_ANNOUNCEMENT_BUTTON)
+		end
 	end
 end
 

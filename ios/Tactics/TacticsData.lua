@@ -36,6 +36,11 @@ function this:GetName()
 	return self.cfg and self.cfg.sName or "";
 end
 
+--返回战术内容
+function this:GetDesc()
+	return self.cfg and self.cfg.desc or "";
+end
+
 --是否解锁
 function this:IsUnLock()
 	return self.data ~= nil;
@@ -85,6 +90,12 @@ end
 --返回图标
 function this:GetIcon()
 	return self.cfg and self.cfg.sIcon or nil;
+end
+
+function this:GetSkillsIds()
+	local cfgs = {}
+	local ids =(self:IsUnLock() and self.data) and self.data.skill_ids or self.cfg.aSkillIds;
+	return ids;
 end
 
 return this; 

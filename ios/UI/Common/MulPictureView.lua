@@ -2,6 +2,10 @@
 -- data ->CfgArchiveMultiPicture 的 id
 function OnOpen()
     local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(data.id)
+    if cfg==nil then
+        LogError(string.format("未在配置表CfgArchiveMultiPicture中找到id为%s的配置",data.id));
+        do return end;
+    end
     local imgName=cfg.img;
     if openSetting==1 then
         imgName=cfg.img_replace or cfg.img;
@@ -16,6 +20,8 @@ function OnOpen()
     else
         CSAPI.SetImgColor(mask,0,0,0,0);
     end
+    --
+    UIUtil:SetLiveBroadcast(img)
 end
 
 function OnClickMask()

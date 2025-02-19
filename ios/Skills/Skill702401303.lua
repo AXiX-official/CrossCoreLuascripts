@@ -36,9 +36,9 @@ function Skill702401303:OnAddBuff(caster, target, data, buffer)
 	else
 		return
 	end
-	-- 702400303
-	if self:Rand(5000) then
-		self:AddNp(SkillEffect[702400303], caster, target, data, -5)
+	-- 702400302
+	if self:Rand(4000) then
+		self:AddNp(SkillEffect[702400302], caster, target, data, -5)
 	end
 end
 -- 攻击结束

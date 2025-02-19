@@ -30,14 +30,11 @@ local isDrag=false;
 local addtiveState=false;--是否显示加成状态
 local joinDragView=nil;--加入卡牌拖拽时的dragview对象
 local infoNode=nil;--信息框节点
-local mixCtrl=require "RTMixCtrl_Temp";
+local isShowInfos=false;--是否显示hp/sp
 function Awake()
 	-- local goRT = CSAPI.GetGlobalGO("CommonRT")
     -- CSAPI.SetRenderTexture(goRaw,goRT);
 	-- CSAPI.SetCameraRenderTarget(modelRoot,goRT);
-	if mixCtrl then
-		mixCtrl.SetRT(ModelCamera,AplhaCamera,goRaw);
-	end
 	formationEventMgr=ComUtil.GetCom(goRaw,"Formation3DEventMgr");
 	formationEventMgr:AddZoomCall(OnZoom);
 	eventMgr = ViewEvent.New();
@@ -171,9 +168,6 @@ function OnDestroy()
 	if infoView then
 		CSAPI.RemoveGO(infoView.gameObject);
 	end
-	if mixCtrl then
-		mixCtrl.OnDestory();
-	end
 	formatTab = nil;
 	eventMgr = nil;
 	pivotList = nil;
@@ -242,7 +236,7 @@ function PlaySwitch(is3D)
 end
 
 --初始化阵型 生成卡牌放到对应位置上,_canDragLeave:是否可以拖拽下阵,infoParent:信息框挂载点
-function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode)    
+function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode,_isShowInfos)    
 	SetParentSibling(0);
 	CloseInfoView();
 	dragList=nil;
@@ -250,6 +244,7 @@ function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode)
 	playTween=_playTween;
 	addtiveState=_addtiveState;
 	infoNode=_infoNode
+	isShowInfos=_isShowInfos
 	formatTab = FormationTable.New(3, 3);
 	formatTab:SetForceTab(forceTab);
 	-- CSAPI.SetGOActive(leaderObj,false)
@@ -276,7 +271,7 @@ function Init(data,_canDragLeave,_playTween,_clickID,_addtiveState,_infoNode)
 				--创建展示的UI信息
 				CreateUIElment(function(go)
 					local lua=ComUtil.GetLuaTable(go);
-					lua.Refresh(v);
+					lua.Refresh(v,isShowInfos);
 					uiItems[v:GetID()]=lua;
 					if addtiveState then
 						local gets=FormationUtil.CountHaloGet(teamData,v); --受到的光环加成
@@ -404,7 +399,10 @@ function GetGridsState(_row,_col)
 				-- 	currentDragData.index=nil;
 				-- end
 				local isSuccess,isReplace=formatTab:PushCardByPos(currentDragData,true,true);
-				local maxNum = currentDragData.fuid~=nil and g_TeamMemberMaxNum + 1 or g_TeamMemberMaxNum;
+				local maxNum =g_TeamMemberMaxNum;
+				if currentDragData.fuid~=nil or currentDragData.bIsNpc==true  then
+					maxNum=g_TeamMemberMaxNum+1;
+				end
 				--获取当前相同的卡牌
 				local eqItem=formatTab:GetPosDataByRoleTag(currentDragData:GetRoleTag());
 				-- Log(tostring(isSuccess).."\t"..tostring(isReplace).."\t"..tostring(eqItem==nil));
@@ -585,10 +583,10 @@ function OnEndDragXY(x,y,detalX,detalY)
 		end
 		CSAPI.PlayUISound("ui_cosmetic_adjustment");
 	end
-	SetModelFoucs();
-	SetHaloAttrState(addtiveState)
 	dragObj=nil;
 	currentDragData=nil;
+	SetModelFoucs();
+	SetHaloAttrState(addtiveState)
 	SetIsDrag(false);
 	SetClickState();
 	RefreshGrids();
@@ -807,7 +805,8 @@ end
 
 --设置父节点层级
 function SetParentSibling(index)
-	transform.parent:SetSiblingIndex(index);
+	-- transform.parent:SetSiblingIndex(index);
+	EventMgr.Dispatch(EventType.TeamView_ChildNode_Change,index);
 end
 
 function SetIsDrag(_isDrag)
@@ -842,15 +841,15 @@ function OnJoinDragBegin(eventData)
 			joinModel=modelNode;
 			local teamItemData=TeamItemData.New();
 			--是否是NPC
-			local isNpc=FormationUtil.IsNPCAssist(card:GetID());
+			local isNpc,s1,s2=FormationUtil.CheckNPCID(card:GetID());
 			--是否是助战卡
 			local fuid=nil;
 			local index=nil;
 			if FormationUtil.IsFirendCardID(card:GetID()) then
 				local strs=StringUtil:split(card:GetID(),"_");
 				fuid=tonumber(strs[1])
-			elseif eventData.isAssist and FormationUtil.IsNPCAssist(card:GetID()) then
-				fuid="npc";
+			elseif eventData.isAssist and isNpc then
+				fuid=s1;
 				index=6;
 			end
 			local tempData={
@@ -863,7 +862,7 @@ function OnJoinDragBegin(eventData)
 			modelNode.SetData(teamItemData,playTween);
 			CreateUIElment(function(go) --创建2dui
 				local lua=ComUtil.GetLuaTable(go);
-				lua.Refresh(teamItemData);
+				lua.Refresh(teamItemData,isShowInfos);
 				-- uiItems[teamItemData:GetID()]=lua;
 				joinDragView=lua;
 				CSAPI.AddUISceneElement(lua.GetNode(),modelNode.gameObject,ModelCamera);
@@ -924,15 +923,14 @@ end
 --移除拖拽的模型
 function RemoveJoinModel()
 	if joinModel then
-		SetModelFoucs();
 		joinModel.Remove();
+		joinModel=nil;
+		SetModelFoucs();
 	end
+	currentDragData=nil;
 	if formationEventMgr then
 		formationEventMgr:SetRayEnable(false);
 	end
-	
-	joinModel=nil;
-	currentDragData=nil;
 	RefreshGrids();
 end
 

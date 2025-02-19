@@ -44,10 +44,10 @@ function ShowByRewardID(data)
 	local cfgGoodsPack = Cfgs.RewardInfo:GetByID(cfgId)
 	if(cfgGoodsPack and cfgGoodsPack.item) then
 		for _, v in ipairs(cfgGoodsPack.item) do
-			if v.probability and v.probability ~= 0 then
+			-- if v.probability and v.probability ~= 0 then
 				local itemData = GridUtil.RandRewardConvertToGridObjectData(v);
 				CreateGrid(itemData, false, false);
-			end
+			-- end
 		end
 	end
 end

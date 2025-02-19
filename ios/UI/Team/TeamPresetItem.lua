@@ -2,6 +2,7 @@
 local items={};
 local input=nil;
 local group=nil;
+
 function Awake()
 	input=ComUtil.GetCom(inp_teamName,"InputField");
 	CSAPI.AddInputFieldCallBack(inp_teamName,OnTeamNameEdit);
@@ -13,14 +14,8 @@ function Awake()
 end
 
 function OnNameChange(str)
-	local text=StringUtil:FilterChar(str);
+	local text=StringUtil:FilterChar2(str);
 	input.text=text;
-end
-
-function OnDisable()
-	if isChange and elseData and elseData.team then
-		PlayerProto:SaveTeam(elseData.team);
-	end
 end
 
 function OnDestroy()
@@ -33,7 +28,7 @@ function OnTeamNameEdit(str)
 	if elseData and elseData.team and isFirst==false then
 		if not MsgParser:CheckContain(str) then
             elseData.team:SetTeamName(str);
-            isChange=true;
+            EventMgr.Dispatch(EventType.Team_PresetName_Change,{isChange=true,idx=elseData.team.index});
 		else
             Tips.ShowTips(LanguageMgr:GetTips(9003))
             input.text=elseData.team:GetTeamName();
@@ -53,7 +48,7 @@ function Refresh(_data,_elseData)
 			-- CSAPI.LoadImg(renameImg,"UIs/FormatPreset/write.png",true,nil,true);
 			isFirst=true;
 			local teamName=elseData.team:GetTeamName();
-			input.text=teamName==nil and string.format( LanguageMgr:GetTips(14017),elseData.team.index) or tostring(teamName);
+			input.text=teamName==nil and FormationUtil.GetDefaultName(elseData.team.index) or tostring(teamName);
 			isFirst=false;
 			local datas={};
 			for i=1,5 do
@@ -133,13 +128,13 @@ function OnClickItem()
 		if clickFunc then
 			clickFunc(this,btnObj.activeSelf);
 		end
-	else
-		local dialogdata = {}
-		dialogdata.content = string.format(LanguageMgr:GetTips(14034),input.text)
-		dialogdata.okCallBack = function()
-			ReplaceTeam();
-		end
-        CSAPI.OpenView("Dialog", dialogdata)
+	-- else
+	-- 	local dialogdata = {}
+	-- 	dialogdata.content = string.format(LanguageMgr:GetTips(14034),input.text)
+	-- 	dialogdata.okCallBack = function()
+	-- 		ReplaceTeam();
+	-- 	end
+    --     CSAPI.OpenView("Dialog", dialogdata)
 	end
 end
 
@@ -160,7 +155,7 @@ function ReplaceTeam()
 		teamData:RemoveCard(assistCid);
 	end
 	TeamMgr:SaveDataByIndex(teamData.index, teamData);
-	TeamMgr:SaveData(teamData.index,function(proto)
+	TeamMgr:SaveData(teamData,function(proto)
 		if proto then
 			local teamData2=TeamData.New();
 			teamData2:SetData(proto.info);
@@ -171,6 +166,7 @@ function ReplaceTeam()
 			isLock=false,
 			index=GetIndex(),
 		}
+		EventMgr.Dispatch(EventType.Team_PresetName_Change,{isChange=false,idx=teamData.index});
 		Refresh(data,elseData);
 	end);
 end
@@ -243,13 +239,14 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 			teamData:SetTeamName("");
 			teamData.index = TeamMgr.currentIndex;
 		end
+		local teamType=TeamMgr:GetTeamType(TeamMgr.currentIndex);
 		teamData.skill_group_id=teamData.skillGroupID;
 		--判断当前卡牌是否存在于其他队伍，存在的话需要提示是否清空
 		local isEmploy = false;
 		for k, v in ipairs(teamData.data) do
 			local card = RoleMgr:GetData(v.cid);
 			if card then
-				local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID());
+				local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID(),teamType,true);
 				if(teamIndex ~= - 1 and teamIndex ~= TeamMgr.currentIndex) then --该卡牌存在于其他队伍中
 					isEmploy = true;
 					break;
@@ -265,7 +262,7 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 					for k, v in ipairs(teamData.data) do
 						local card = RoleMgr:GetData(v.cid);
 						if card then
-							local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID());
+							local teamIndex = TeamMgr:GetCardTeamIndex(card:GetID(),teamType,true);
 							if(teamIndex ~= - 1 and teamIndex ~= TeamMgr.currentIndex) then      --该卡牌存在于其他队伍中,移除它
 								local tempData = TeamMgr:GetTeamData(teamIndex);
 								tempData:RemoveCard(v.cid);
@@ -278,13 +275,11 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 					for k, v in pairs(teamIds) do
 						table.insert(teams,TeamMgr:GetTeamData(v));
 					end
-					PlayerProto:SaveTeamList(teams);
-					TeamMgr:UpdateDataByIndex(TeamMgr.currentIndex, teamData:GetData());
+					table.insert(teams, teamData);
+					TeamMgr:SaveDatas(teams);
 					if hasMainLeader and TeamMgr.currentIndex~=1 then
 						Tips.ShowTips(LanguageMgr:GetTips(14037));
 					end
-					--保存到服务器
-					TeamMgr:SaveData(TeamMgr.currentIndex);
 					EventMgr.Dispatch(EventType.Team_Preset_Open, nil);
 				end
 			});
@@ -294,7 +289,7 @@ function UseByDuplication() --副本队伍使用时需要检测卡牌是否冲�
 			end
 			TeamMgr:UpdateDataByIndex(TeamMgr.currentIndex, teamData:GetData());
 			--保存到服务器
-			TeamMgr:SaveData(TeamMgr.currentIndex);
+			TeamMgr:SaveData(teamData);
 			EventMgr.Dispatch(EventType.Team_Preset_Open, nil);
 		end
 	end
@@ -316,7 +311,7 @@ function UseByPractice() --军演队伍不需要检测是否与副本队伍冲�
 		teamData.skill_group_id=teamData.skillGroupID;
 		TeamMgr:UpdateDataByIndex(TeamMgr.currentIndex, teamData:GetData());
 		--保存到服务器
-		TeamMgr:SaveData(TeamMgr.currentIndex);
+		TeamMgr:SaveData(teamData);
 		EventMgr.Dispatch(EventType.Team_Preset_Open, nil);
 	end
 end
@@ -328,7 +323,11 @@ function OnClickOpen()
 		local dialogdata = {}
 		dialogdata.content = content
 		dialogdata.okCallBack = function()
-			PlayerProto:BuyTeam();
+			if CSAPI.IsADVRegional(3) then
+				CSAPI.ADVJPTitle(g_FormationPriceList[2],function() PlayerProto:BuyTeam(); end)
+			else
+				PlayerProto:BuyTeam();
+			end
 		end
 		CSAPI.OpenView("Dialog", dialogdata)
 	else

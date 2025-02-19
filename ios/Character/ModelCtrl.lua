@@ -47,7 +47,7 @@ end
 function GetPartGO(partIndex)
     local go = nil;
     if(partIndex)then
-        go = goParts[partIndex];
+        go = goParts and partIndex and goParts[partIndex];
     end
     go = go or gameObject;
     return go;

@@ -56,18 +56,17 @@ function this:GetSelTabIndex()
     return index1, index2
 end
 
-function this:GetArr(index)
+--集合，已领取的是否显示
+function this:GetArr(indexs,showGet)
     local arr = {}
     if (self.datas) then
         for i, v in pairs(self.datas) do
-            if (index == v:GetType()) then
-                if (index == eTaskType.Daily or index == eTaskType.Weekly) then
-                    if (not self.CheckIsReset(v) and v:CheckIsOpen()) then -- 每日每周的已领取的要显示在后面 
-                        table.insert(arr, v)
-                    end
-                else
-                    if (not self.CheckIsReset(v) and not v:IsGet() and v:CheckIsOpen()) then
-                        table.insert(arr, v)
+            for p, q in ipairs(indexs) do
+                if (q == v:GetType()) then
+                    if (showGet or not v:IsGet()) then 
+                        if (not self.CheckIsReset(v) and v:CheckIsOpen()) then 
+                            table.insert(arr, v)
+                        end
                     end
                 end
             end
@@ -85,6 +84,18 @@ function this:GetArr(index)
     return arr
 end
 
+function this:GetDatas(type)
+    local datas = {}
+    if (self.datas) then
+        for i, v in pairs(self.datas) do
+            if (type == v:GetType()) then
+                table.insert(datas, v)
+            end
+        end
+    end
+    return datas
+end
+
 function this:GetData(id)
     if (id == nil) then
         Log("获取数据失败！！id无效");
@@ -96,31 +107,50 @@ function this:GetData(id)
     return nil;
 end
 
+function this:GetData2(cfgId)
+    if cfgId == nil then
+        Log("获取数据失败！！cfgId无效");
+        return nil
+    end
+    if (self.datas) then
+        for k, v in pairs(self.datas) do
+            if v:GetCfgID() == cfgId then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
 -- 获取该任务配置表
 function this:GetCfg(type, cfgID)
-    if (self.Cfgs == nil) then
-        self.Cfgs = {}
-        self.Cfgs[1] = CfgTaskMain
-        self.Cfgs[2] = CfgTaskSub
-        self.Cfgs[3] = CfgTaskDaily
-        self.Cfgs[4] = CfgTaskWeekly
-        self.Cfgs[5] = CfgTaskActivity
-        self.Cfgs[6] = CfgDupTower
-        self.Cfgs[7] = CfgTmpDupTower
-        self.Cfgs[8] = CfgDupTaoFa
-        self.Cfgs[9] = CfgDupStory
-        self.Cfgs[10] = CfgDupFight
-        self.Cfgs[11] = CfgSevenDayTask
-        self.Cfgs[12] = CfgSevenDayFinish
-        self.Cfgs[13] = CfgTaskDayExploration
-        self.Cfgs[14] = CfgTaskWeekExploration
-        self.Cfgs[15] = CfgTaskExploration
-        self.Cfgs[16] = CfgGuideFinish
-        self.Cfgs[17] = CfgGuideTask
-        self.Cfgs[18] = CfgNewYearFinish
-        self.Cfgs[19] = CfgNewYearTask
-    end
-    local cfg = type <= #self.Cfgs and self.Cfgs[type] or nil
+    -- if (self.Cfgs == nil) then
+    --     self.Cfgs = {}
+    --     self.Cfgs[1] = CfgTaskMain
+    --     self.Cfgs[2] = CfgTaskSub
+    --     self.Cfgs[3] = CfgTaskDaily
+    --     self.Cfgs[4] = CfgTaskWeekly
+    --     self.Cfgs[5] = CfgTaskActivity
+    --     self.Cfgs[6] = CfgDupTower
+    --     self.Cfgs[7] = CfgTmpDupTower
+    --     self.Cfgs[8] = CfgDupTaoFa
+    --     self.Cfgs[9] = CfgDupStory
+    --     self.Cfgs[10] = CfgDupFight
+    --     self.Cfgs[11] = CfgSevenDayTask
+    --     self.Cfgs[12] = CfgSevenDayFinish
+    --     self.Cfgs[13] = CfgTaskDayExploration
+    --     self.Cfgs[14] = CfgTaskWeekExploration
+    --     self.Cfgs[15] = CfgTaskExploration
+    --     self.Cfgs[16] = CfgGuideFinish
+    --     self.Cfgs[17] = CfgGuideTask
+    --     self.Cfgs[18] = CfgNewYearFinish
+    --     self.Cfgs[19] = CfgNewYearTask
+    --     self.Cfgs[20] = CfgRegressionFundTask
+    --     self.Cfgs[22] = CfgRegressionTask
+    -- end
+    --local cfg = type <= #self.Cfgs and self.Cfgs[type] or nil
+    local cfgName = cTaskCfgNames[type]  
+    local cfg = cfgName and Cfgs[cfgName]:GetAll() or nil 
     if (cfg) then
         return cfg[cfgID]
     end
@@ -222,15 +252,8 @@ function this:GetExplorationTasks(missionType)
     if (self.datas) then
         for i, v in pairs(self.datas) do
             if (missionType == v:GetType()) then
-                if (index == eTaskType.DayExplore or index == eTaskType.WeekExplore) then
-                    if (not self.CheckIsReset(v) and v:CheckIsOpen()) then
-                        table.insert(arr, v)
-                    end
-                else
-                    -- if (not self.CheckIsReset(v) and not v:IsGet() and v:CheckIsOpen()) then
-                    if (not self.CheckIsReset(v) and v:CheckIsOpen()) then
-                        table.insert(arr, v)
-                    end
+                if (not self.CheckIsReset(v) and v:CheckIsOpen()) then
+                    table.insert(arr, v)
                 end
             end
         end
@@ -261,6 +284,31 @@ function this:HasExplorationGet(missionType)
         end
     end
     return hasGet;
+end
+
+---------------------------------------回归绑定任务--------------------------
+--获取回归绑定任务相关的数据： _type:任务枚举类型，_val:筛选条件值，普通任务是type
+function this:GetCollaborationData(_type,_val)
+    local arr = {}
+    if (self.datas) then
+        for i, v in pairs(self.datas) do
+            if (_type == v:GetType() and _type==eTaskType.RegressionBind) then
+                if (not self.CheckIsReset(v) and v:CheckIsOpen()) and (_val==nil or (_val~=nil and _val==v:GetCfg().type)) then
+                    table.insert(arr, v)
+                end
+            end
+        end
+    end
+    if (arr and #arr > 1) then
+        table.sort(arr, function(a, b)
+            if (a:GetSortIndex() == b:GetSortIndex()) then
+                return a:GetCfgID() < b:GetCfgID()
+            else
+                return a:GetSortIndex() > b:GetSortIndex()
+            end
+        end)
+    end
+    return arr
 end
 
 ---------------------------------------------活动任务------------------------
@@ -346,7 +394,7 @@ function this:GetActivityIndex(_type)
         return self.dayIndex or 1
     elseif _type == eTaskType.Guide or _type == eTaskType.GuideStage then
         return self.guideIndex or 1
-    elseif _type == eTaskType.NewYear or _type == eTaskType.NewYearFinish then        
+    elseif _type == eTaskType.NewYear or _type == eTaskType.NewYearFinish then
         return self.newYearIndex or 1
     end
     return 1
@@ -463,7 +511,7 @@ function this:GetTasksData()
 end
 function this:GetTasksDataRet()
     EventMgr.Dispatch(EventType.Mission_List)
-    ActivityMgr:RefreshOpenState() --用于到点刷新活动状态
+    ActivityMgr:RefreshOpenState() -- 用于到点刷新活动状态
 end
 
 -- 领取奖励
@@ -472,6 +520,19 @@ function this:GetReward(_id)
         id = _id
     }}
     NetMgr.net:Send(proto)
+end
+
+--领取指定组下的类型奖励
+function this:GetRewardByType(types,group)
+    local datas = {}
+    if types and #types > 0 and group then
+        for i, v in ipairs(types) do
+            table.insert(datas,{type = v,nGroup = group})
+        end
+    end
+    if #datas > 0 then
+        TaskProto:GetRewardByTypes(datas)
+    end
 end
 
 function this:GetSevenTaskDay(_type)
@@ -528,11 +589,23 @@ function this:CheckRedPointData()
     -- 活动
     ActivityMgr:CheckRedPointData()
 
+    --回归
+    RegressionMgr:CheckRedPointData()
+
     -- 勘探
     ExplorationMgr:CheckRedInfo();
 
     -- 关卡
     DungeonMgr:CheckRedPointData()
+
+    --rogue 
+    local rogueRedNum =  self:CheckRed({eTaskType.Rogue}) and 1 or 0
+    RedPointMgr:UpdateData(RedPointType.Rogue, rogueRedNum)
+
+    --Colosseum
+    ColosseumMgr:CheckMissionRed()
+    --回归绑定
+    CollaborationMgr:CheckRedInfo();
 end
 
 -- 任务添加通知
@@ -587,13 +660,13 @@ function this:GetSevenTaskDayRet(proto)
             self.dayIndex = proto.c_day
         elseif proto.type == eTaskType.Guide or proto.type == eTaskType.GuideStage then
             self.guideIndex = proto.c_day
-        elseif proto.type == eTaskType.NewYearFinish or proto.type == eTaskType.NewYear then --写死全开
+        elseif proto.type == eTaskType.NewYearFinish or proto.type == eTaskType.NewYear then -- 写死全开
             -- self.newYearIndex = proto.c_day
         end
         -- 活动
         ActivityMgr:CheckRedPointData()
 
-        --ActivityMgr:InitListOpenState()
+        -- ActivityMgr:InitListOpenState()
     end
 end
 
@@ -707,10 +780,10 @@ end
 
 -- 任务奖励  
 function this:GetRewardRet(datas, dailyStar, weeklyStar, rewards)
-    if(self.infos) then 
+    if (self.infos) then
         self.infos.dailyStar = dailyStar
         self.infos.weeklyStar = weeklyStar
-    end 
+    end
     local type = nil
     if (datas and #datas > 0) then
         for i, v in ipairs(datas) do
@@ -734,8 +807,8 @@ function this:GetResetTaskInfo()
     NetMgr.net:Send(proto)
 end
 function this:GetResetTaskInfoRet(proto)
-    self.infos = proto
-    --EventMgr.Dispatch(EventType.Mission_List)    两条协议基本是同时请求的，所以由GetTasksDataRet来刷新界面
+    self.infos = proto or {}
+    -- EventMgr.Dispatch(EventType.Mission_List)    两条协议基本是同时请求的，所以由GetTasksDataRet来刷新界面
 end
 
 -- 是否有未领取
@@ -760,6 +833,30 @@ function this:CheckRed(types)
                 end
             end
         end
+    end
+    return false
+end
+
+function this:CheckRed2(_type,_nGroup)
+    if (self.datas) then
+        for i, v in pairs(self.datas) do
+            if (_type == v:GetType()) then
+                if (not self.CheckIsReset(v) and v:CheckIsOpen() and v:IsFinish() and not v:IsGet()) then
+                    if (v:GetCfg().nGroup == nil or v:GetCfg().nGroup == _nGroup) then
+                        return true
+                    end
+                end
+            end
+        end
+    end
+    return false
+end
+
+function this:CheckRed3(_types,_nGroup)
+    for k, v in pairs(_types) do
+        if(self:CheckRed2(v,_nGroup)) then 
+            return true
+        end 
     end
     return false
 end
@@ -841,7 +938,7 @@ function this:CheckNewYearRed()
     return false
 end
 
---活动副本任务红点
+-- 活动副本任务红点
 function this:CheckDungeonActivityRed(sectionId)
     if (self.datas) then
         for i, v in pairs(self.datas) do
@@ -853,6 +950,36 @@ function this:CheckDungeonActivityRed(sectionId)
         end
     end
     return false
+end
+
+-- 日常的点击操作任务是否未完成
+function this:CheckDoClickBoard()
+    local datas = self:GetDatas(eTaskType.Daily)
+    if (datas) then
+        for k, v in pairs(datas) do
+            if (v:GetFinishCfg() and v:GetFinishCfg().nType==10027 and not self.CheckIsReset(v) and v:CheckIsOpen() and not v:IsFinish()) then
+                return 1 
+            end
+        end
+    end
+    return 0
+end
+
+function this:DoClickBoard()
+    if(self:CheckDoClickBoard()==1) then 
+        PlayerProto:ClickBoard()
+    end 
+end
+
+function this:TaskDelete(proto)
+    if self.datas and proto and proto.tasks and #proto.tasks > 0 then
+        for i, v in ipairs(proto.tasks) do
+            if self.datas[v.id] then
+                self.datas[v.id] = nil
+            end
+        end
+        EventMgr.Dispatch(EventType.Mission_Delete)
+    end
 end
 
 return this

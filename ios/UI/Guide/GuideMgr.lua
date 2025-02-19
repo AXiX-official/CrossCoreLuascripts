@@ -4,7 +4,7 @@ local GuideBehaviour = require "GuideBehaviour";
 
 GuideMgr = {};
 local this = GuideMgr;
-
+this.IsGuideEnd=false;
 function this:GetGuideKey()
     return "guide_data_key";
 end
@@ -92,7 +92,9 @@ function this:Record(group)
         local _data = {};
         _data["guide_step"] = groupName;
         _data["guide_id"] = group;
-        BuryingPointMgr:TrackEvents("guide_completed", _data);
+        if CSAPI.IsADV()==false then
+            BuryingPointMgr:TrackEvents("guide_completed", _data);
+        end
     end
 end
 
@@ -303,8 +305,8 @@ function this:TrySkipStep(cfg)
     end  
 end
 
-function this:DoGuide(data,flag)    
-
+function this:DoGuide(data,flag)
+    this.IsGuideEnd=true;
     if(self:CheckRoll(data.cfg))then--回滚到指定引导
         self:CheckGuide(flag);
         return;
@@ -329,7 +331,7 @@ function this:DoGuide(data,flag)
     end
     --LogError("执行引导" .. table.tostring(data,true));
 
-    CSAPI.OpenView("Guide",data);    
+    CSAPI.OpenView("Guide",data);
 
      --引导步骤开始时处理
     local guideName = data.cfg.name;
@@ -461,7 +463,14 @@ function this:InputEventTrigger()
     --引导记录
     local recordId = doingGuide.cfg.record_id; 
     if(recordId)then
-        BuryingPointMgr:BuryingPoint("after_login", recordId);
+        if CSAPI.IsADV() then
+            local cfg =Cfgs.UpdateData:GetByID(tonumber(recordId))
+            if cfg and cfg.TE_event then
+                BuryingPointMgr:TrackEvents(cfg.TE_event)
+            end
+        else
+            BuryingPointMgr:BuryingPoint("after_login", recordId);
+        end
     end
 
     EventMgr.Dispatch(EventType.Guide_Scroll_Switch,true,true);
@@ -535,7 +544,7 @@ end
 function this:GuideComplete()
 --    LogError("引导完成========================");
 --    LogError(self.doingGuide);
-
+    this.IsGuideEnd=false;
     local doingGuide = self.doingGuide;    
     if(not doingGuide)then
         return;
@@ -568,6 +577,28 @@ function this:GuideSkipLine()
     if(not doingGuide or not doingGuide.cfg)then
         return;
     end
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        local key=doingGuide["cfg"]["key"]
+        if tostring(key)=="11310" then
+            ---39.构建 跳过
+            BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_SKIP)
+        elseif tostring(key)=="6010" then
+            ---28.出击跳过
+            BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_SORTIE_SKIP)
+        elseif tostring(key)=="11020" then
+            ---35.常规任务
+            BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_TASK_SKIP)
+        elseif tostring(key)=="5010" then
+            ---25.编队跳过
+            BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_FORMATION_SKIP)
+        elseif tostring(key)=="11320" then
+            ---22.点击“确认”跳过构建引导
+            BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_STRUCTURE_SKIP)
+        else
+            --LogError("------跳过：-----"..key)
+        end
+    end
+
     local cfgs = Cfgs.Guide:GetAll();
     --LogError(doingGuide.cfg.line);
     local guideData = self.guideData;

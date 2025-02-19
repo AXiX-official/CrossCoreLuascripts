@@ -13,16 +13,16 @@ function Skill327702:OnRoundBegin(caster, target, data)
 	else
 		return
 	end
-	-- 8496
-	local count96 = SkillApi:BuffCount(self, caster, target,3,1,1)
-	-- 8193
-	if SkillJudger:Greater(self, caster, target, true,count96,0) then
+	-- 8415
+	local count15 = SkillApi:BuffCount(self, caster, target,1,2,2)
+	-- 8896
+	if SkillJudger:Greater(self, caster, target, true,count15,0) then
 	else
 		return
 	end
 	-- 327702
 	if self:Rand(3500) then
-		self:DelBufferGroup(SkillEffect[327702], caster, self.card, data, 1,1)
+		self:DelBuffQuality(SkillEffect[327702], caster, self.card, data, 2,1)
 		-- 327712
 		self:AddBuff(SkillEffect[327712], caster, self.card, data, 327702)
 	end

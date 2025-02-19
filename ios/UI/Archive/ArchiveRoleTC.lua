@@ -8,6 +8,8 @@ function Awake()
 	tlua = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Normal)
 	leftFade = ComUtil.GetCom(left, "ActionFade")
 	CSAPI.SetGOActive(left, false)
+
+	CSAPI.SetGOActive(animMask,false)
 end
 
 function LayoutCallBack(index)	
@@ -24,7 +26,8 @@ function Refresh(_data, _selectSkin)
 	data = _data
 	curDatas = CRoleMgr:GetRoleScriptCfgs(data:GetID(), true)
 	tlua:AnimAgain()
-	layout:IEShowList(#curDatas)
+	AnimStart()
+	layout:IEShowList(#curDatas,AnimEnd)
 end
 
 function SelectItemCB(item)
@@ -59,6 +62,14 @@ function EndCB()
 		leftFade:Play(1, 0, 200, 0)
 		layout:UpdateList()
 	end
+end
+
+function AnimStart()
+	CSAPI.SetGOActive(animMask,true)
+end
+
+function AnimEnd()
+	CSAPI.SetGOActive(animMask,false)
 end
 
 function SetCardIconItem(_cardIconItem)

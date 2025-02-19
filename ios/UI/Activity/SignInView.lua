@@ -1,10 +1,11 @@
 local SignInInfo = require "SignInInfo"
-local weekStr = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"}
+local weekStr = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY","SUNDAY"}
 local isSingIn = false
 local curDayInfo = nil
 local curItem = nil
 local isSelect = false
 local key = nil
+local cfg = nil
 
 function Awake()
 	-- UIUtil:AddTop2("SignInView", top, OnClickClose)
@@ -37,11 +38,12 @@ end
 -- 		end)
 -- 	end
 -- end
-function Refresh(data)	
+function Refresh(data,elseData)	
 	CSAPI.PlayUISound("ui_popup_open")	
 	isSingIn = data.isSingIn ~= nil and data.isSingIn or false
 	key = data.key	
-	CSAPI.SetGOActive(mask, isSingIn)
+	cfg = elseData and elseData.cfg or nil
+	-- CSAPI.SetGOActive(mask, isSingIn)
 	if(isSingIn) then
 		EventMgr.Dispatch(EventType.Activity_Click)
 	end
@@ -56,7 +58,6 @@ function Refresh(data)
 		rightItemFade:Play(0, 1, 1000, 0, function()
 			isSelect = false
 		end)
-		SignInMgr:AddCacheRecord(key)
 	end
 end
 
@@ -84,7 +85,7 @@ function SetLeft()
 		month = month - 1
 	end
 	LanguageMgr:SetText(txtTime, 13004, month)
-	local week = TimeUtil:GetWeekDay(TimeUtil:GetBJTime())
+	local week = TimeUtil:GetWeekDay2(TimeUtil:GetBJTime())
 	CSAPI.SetText(txtWeek, weekStr[week])
 end
 
@@ -192,11 +193,17 @@ function ESignCB(proto)
 	if(key ~= _key) then
 		return
 	end
+	if proto.isOk == false then
+		EventMgr.Dispatch(EventType.Acitivty_List_Pop)
+        return
+    end
+    SignInMgr:AddCacheRecord(key)
+
 	--if(proto.isOk) then
-	CSAPI.SetGOActive(mask, false)
+	-- CSAPI.SetGOActive(mask, false)
 	RefreshPanel()--刷新列表
-	ActivityMgr:SetListData(ActivityListType.SignIn, {key = _key})
-	ActivityMgr:CheckRedPointData()
+	ActivityMgr:SetListData(cfg.id, {key = _key})
+	ActivityMgr:CheckRedPointData(ActivityListType.SignIn)
 
 	local taData = {
 		reson = "领取活动奖励",
@@ -205,7 +212,9 @@ function ESignCB(proto)
 		task_name = proto.index,
 		item_gain = rewards
 	}
-	BuryingPointMgr:TrackEvents("activity_attend", taData)
+	if CSAPI.IsADV()==false then
+		BuryingPointMgr:TrackEvents("activity_attend", taData)
+	end
 end
 
 --自动签到

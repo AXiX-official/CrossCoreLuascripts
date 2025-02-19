@@ -35,6 +35,8 @@ function this:Handle(effEventData)
         self.effFuncArr[APIType.ForceDeath] = self.EffAction_ForceDeath;  
         self.effFuncArr[APIType.Piaozi] = self.EffAction_Piaozi;  
         self.effFuncArr[APIType.ShowTips] = self.EffAction_ShowTips;  
+        self.effFuncArr[APIType.SetInvincible] = self.EffAction_SetInvincible;  
+        self.effFuncArr[APIType.UpdateDamage] = self.EffAction_UpdateDamage;  
         
 
         self.effFuncArr[APIType.UpdateValue] = self.EffAction_UpdateValue;  
@@ -61,6 +63,7 @@ function this:Handle(effEventData)
 
         self.effFuncArr[APIType.OnAttackBegin] = self.EffAction_Nothing;   
         self.effFuncArr[APIType.OnAttackOver] = self.EffAction_Nothing;   
+        self.effFuncArr[APIType.OnAttackOver2] = self.EffAction_Nothing;   
 
         self.effFuncArr[APIType.OnDeath] = self.EffAction_Nothing;   
         self.effFuncArr[APIType.OnCure] = self.EffAction_Nothing;   
@@ -338,6 +341,12 @@ function this:EffAction_ShowTips(effEventData)
             EventMgr.Dispatch(EventType.Fight_Trigger_Event_Update,{ character = targetCharacter,desc = content});
         end
     end
+end
+function this:EffAction_SetInvincible(effEventData)
+    EventMgr.Dispatch(EventType.Fight_Activity_SetInvincible,effEventData);
+end
+function this:EffAction_UpdateDamage(effEventData)
+    EventMgr.Dispatch(EventType.Fight_Activity_UpdateDamage,effEventData);
 end
 
 function this:EffAction_UpdateValue(effEventData)

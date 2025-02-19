@@ -35,6 +35,7 @@ function OnInit()
     -- eventMgr:AddListener(EventType.Bag_Update, SetTop2)
     --
     -- SetTop2()
+    eventMgr:AddListener(EventType.Update_Everyday, RefreshPanel)
 end
 
 function OnDestroy()
@@ -63,6 +64,7 @@ function ERoleCreateFinish(proto)
         -- ECardCoolCntsUpdate()
     end
     SetBtnBD()
+    SetFree()
 end
 
 -- 首抽10连回调/完成回调
@@ -190,6 +192,23 @@ function ClickBtnItemCB(index)
 
     --
     SetShowTime()
+    -- 每日免费抽卡
+    SetFree()
+end
+
+function SetFree()
+    isOneFree = curData:IsOneFree()
+    local str1 = ""
+    if (isOneFree) then
+        str1 = LanguageMgr:GetByID(16108, CreateMgr:FreeRemainDay())
+    end
+    CSAPI.SetText(txtFree1, str1)
+    CSAPI.SetGOActive(txtFree2, isOneFree)
+    CSAPI.SetGOActive(txtExpend1, not isOneFree)
+    local spend1Name = isOneFree and "UIs/Create/btn_4_05.png" or "UIs/Create/btn_4_04.png"
+    CSAPI.LoadImg(spend1, spend1Name, true, nil, true)
+    -- red 
+    UIUtil:SetRedPoint(btn1, isOneFree, 166, 44, 0)
 end
 
 function SetShowTime()
@@ -345,7 +364,7 @@ function SetDowns()
     local conditions = curData:GetCfg().conditions
     -- CSAPI.SetGOActive(down, conditions == nil)
     -- CSAPI.SetGOActive(down2, conditions ~= nil)	
-    if (conditions) then
+    if (conditions and curData:GetCfg().nType == 1) then
         SetDown2(conditions)
     else
         SetDown1()
@@ -392,7 +411,7 @@ function SetDown2(conditions)
 
     CSAPI.SetGOActive(btnTips, true)
 
-    local _isOpen, lockStr = MenuMgr:CheckConditionIsOK(conditions)
+    local _isOpen, lockStr = MenuMgr:CheckConditionIsOK(conditions, 15094)
     local multiCnt = curData:GetCfg().multiCnt -- 多抽是否存在
     CSAPI.SetGOActive(btn3, multiCnt ~= nil)
 
@@ -504,6 +523,11 @@ function CheckEndough(costs, cnt)
 end
 
 function OnClickCreate1()
+    if (isOneFree) then
+        Create(_str, 1)
+        return
+    end
+
     local enough, _str = CheckEndough(curData:GetCfg().jCost, 1)
     if (enough) then
         Create(_str, 1)
@@ -559,13 +583,21 @@ function Create(_str, _cnt)
         end
     end
 
-    -- 提示面板
-    local jump = false
-    local day = TimeUtil:GetTime3("day")
-    local dayRecord = PlayerPrefs.GetString(PlayerClient:GetUid() .. "CreateTips_Day", "0")
-    if (dayRecord ~= "0" and dayRecord == tostring(day)) then
-        jump = true
+    -- 免费单抽
+    if (_cnt == 1 and isOneFree) then
+        CreateMgr:CardCreate(curData:GetCfg().id, _cnt)
+        return
     end
+
+    -- 提示面板
+    -- local jump = false
+    -- local day = TimeUtil:GetTime3("day")
+    -- local dayRecord = PlayerPrefs.GetString(PlayerClient:GetUid() .. "CreateTips_Day", "0")
+    -- if (dayRecord ~= "0" and dayRecord == tostring(day)) then
+    --     jump = true
+    -- end
+    local key = "CreateTips_Day"
+    local jump = UIUtil:IsTipsDialogTick(key)
     if (not jump) then
         local str = ""
         if (_cnt == 10 and not curData:GetCfg().multiCost) then
@@ -573,11 +605,26 @@ function Create(_str, _cnt)
         else
             str = LanguageMgr:GetTips(10000, _str, _cnt)
         end
-        CSAPI.OpenView("CreateSelectPanel", {
-            content = str,
-            id = curData:GetCfg().id,
-            cnt = _cnt
-        })
+        --
+        local _id = curData:GetCfg().id
+        UIUtil:OpenTipsDialog(key, str, function()
+            if (CreateMgr:CheckPoolActive(_id)) then
+                CreateMgr:CardCreate(_id, _cnt)
+                if (str == LanguageMgr:GetTips(10006)) then
+                    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+                        BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_CONFIRM)
+                    end
+                end
+            else
+                LanguageMgr:ShowTips(10015)
+            end
+        end,nil,17031)
+        --
+        -- CSAPI.OpenView("CreateSelectPanel", {
+        --     content = str,
+        --     id = curData:GetCfg().id,
+        --     cnt = _cnt
+        -- })
     else
         CreateMgr:CardCreate(curData:GetCfg().id, _cnt)
     end
