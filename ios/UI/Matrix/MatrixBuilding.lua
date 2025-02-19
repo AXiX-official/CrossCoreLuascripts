@@ -20,7 +20,7 @@ function Awake()
 end
 
 function OnInit()
-    Top=UIUtil:AddTop2("MatrixBuilding", node, Back1, Back2, {})
+    Top=UIUtil:AddTop2("MatrixBuilding", gameObject, Back1, Back2, {})
 
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
@@ -401,11 +401,13 @@ end
 function OnClickLook()
     CSAPI.SetGOActive(node, false)
     CSAPI.SetGOActive(mask, true)
+    CSAPI.SetGOActive(Top.gameObject, false)
 end
 
 function OnClickMask()
     CSAPI.SetGOActive(node, true)
     CSAPI.SetGOActive(mask, false)
+    CSAPI.SetGOActive(Top.gameObject, true)
 end
 
 -- function OnClickTitle()
