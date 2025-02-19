@@ -1273,8 +1273,10 @@ ChannelType.QOO = 3 -- QOO
 ChannelType.Test = 4 -- 测试人员，内部使用
 ChannelType.All = 5 -- 兑换码使用不限制平台
 ChannelType.ZiLong = 6 -- 紫龙-台湾
-ChannelType.ZiLongKR =7 -- 紫龙-韩国
-ChannelType.ZiLongJP =8 -- 紫龙-日本
+ChannelType.ZiLongKR = 7 -- 紫龙-韩国
+ChannelType.ZiLongJP = 8 -- 紫龙-日本
+ChannelType.Harmony = 9  -- 华为鸿蒙
+
 
 GenEnumNameByVal('ChannelTypeName', ChannelType)
 

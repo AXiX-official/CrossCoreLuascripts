@@ -28,9 +28,9 @@ function Refresh(_data)
     -- lv
     CSAPI.SetText(txtLv, cardData:GetLv() .. "")
     -- grid
-    if (cardData:GetCfg().gridsIcon) then
-        ResUtil.RoleSkillGrid:Load(imgGrid, cardData:GetCfg().gridsIcon)
-    end
+    -- if (cardData:GetCfg().gridsIcon) then
+    --     ResUtil.RoleSkillGrid:Load(imgGrid, cardData:GetCfg().gridsIcon)
+    -- end
     -- equip
     SetEquip()
     -- star
@@ -40,6 +40,9 @@ function Refresh(_data)
     CSAPI.LoadImg(starBG, "UIs/Colosseum/" .. bgName .. ".png", true, nil, true)
     local starName = "img_01_0" .. quality
     ResUtil.RoleCard_BG:Load(star, starName)
+    --
+    SetTJObj()
+    SetPosVlg()
 end
 
 function SetEquip()
@@ -121,4 +124,56 @@ function OnClickS()
     if (cb) then
         cb(index)
     end
+end
+
+function SetTJObj()
+    local recommend = {}
+    local cfg = Cfgs.cfgColosseumEquip:GetByID(data.cardId)
+    for k, v in pairs(cfg.infos) do
+        if (v.monsterIdx == data.monsterIdx) then
+            recommend = v.recommend or {}
+            break
+        end
+    end
+    CSAPI.SetGOActive(tjObj, #recommend > 0)
+    if (#recommend > 0) then
+        local tab = {}
+        for k, v in pairs(recommend) do
+            tab[v] = 1
+        end
+        for k = 1, 3 do
+            CSAPI.SetGOActive(this["imgTJ" .. k], tab[k] ~= nil)
+        end
+    end
+end
+
+function SetPosVlg()
+    local enums = {}
+    local monsterCfg = Cfgs.MonsterData:GetByID(data.monsterIdx)
+    local _nums = monsterCfg.pos_enum
+    if (_nums) then
+        for i, v in ipairs(_nums) do
+            local cfg = Cfgs.CfgRolePosEnum:GetByID(v)
+            table.insert(enums, cfg)
+        end
+        local len = #enums
+        if (len > 0) then
+            local childCount = posVlg.transform.childCount
+            local origin = posVlg.transform:GetChild(0).gameObject
+            for i, v in ipairs(enums) do
+                if (i <= childCount) then
+                    local _tran = posVlg.transform:GetChild(i - 1)
+                    CSAPI.SetGOActive(_tran.gameObject, true)
+                    ResUtil.RolePos:Load(_tran:GetChild(0).gameObject, v.icon)
+                else
+                    local go = CSAPI.CloneGO(origin, posVlg.transform)
+                    ResUtil.RolePos:Load(go.transform:GetChild(0).gameObject, v.icon)
+                end
+            end
+            for i = len + 1, childCount do
+                CSAPI.SetGOActive(posVlg.transform:GetChild(i - 1).gameObject, false)
+            end
+        end
+    end
+    CSAPI.SetGOActive(posVlg, #enums > 0)
 end

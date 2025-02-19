@@ -13,6 +13,7 @@ end
 
 --设置数据
 function this:SetData(fightActionData)
+    self:Clean();
     if(fightActionData == nil)then
         LogError("FightAction数据为空！！！");
         LogError(a.b);

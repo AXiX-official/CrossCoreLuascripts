@@ -113,7 +113,13 @@ function OnClickItem(go)
     if slot~=-1 and data then
         local equip=data:GetEquipBySlot(slot);
         if equip then
-            CSAPI.OpenView("EquipFullInfo",equip,openSetting==EquipCoreSetting.Search and 3 or 2);
+            local os=3;
+            if data and data:CheckIsRealCard()~=true then
+                os=5;
+            else
+                os=openSetting==EquipCoreSetting.Search and 3 or 2;
+            end
+            CSAPI.OpenView("EquipFullInfo",equip,os);
         elseif openSetting~=EquipCoreSetting.Search and CanEdit() then
             CSAPI.OpenView("RoleEquip",{card=RoleMgr:GetData(data:GetID()),slot=slot},openSetting);
         end

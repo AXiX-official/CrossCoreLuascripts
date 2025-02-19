@@ -258,7 +258,7 @@ end
 -- 攻击方是召唤主
 function SkillJudger:CasterIsSummoner(oSkill, caster, target, res)
 	local summon = oSkill.card
-	if summon.type == CardType.Summon and summon.oSummonOwner and summon.oSummonOwner == caster then
+	if (summon.type == CardType.Summon or summon.bSummonTeammate) and summon.oSummonOwner and summon.oSummonOwner == caster then
 		return res
 	end
 	return not res
@@ -267,7 +267,8 @@ end
 -- 攻击方是自己的召唤物
 function SkillJudger:CasterIsOwnSummon(oSkill, caster, target, res)
 	local summon = oSkill.card
-	if caster.type == CardType.Summon and caster.oSummonOwner and caster.oSummonOwner == summon  then
+	-- LogDebugEx("CasterIsOwnSummon", summon.name)  --oSummoner
+	if (caster.type == CardType.Summon or caster.bSummonTeammate) and caster.oSummonOwner and caster.oSummonOwner == summon  then
 		return res
 	end
 	return not res
@@ -320,7 +321,7 @@ end
 -- 受击方是召唤主
 function SkillJudger:TargetIsSummoner(oSkill, caster, target, res)
 	local summon = oSkill.card
-	if summon.type == CardType.Summon and summon.oSummonOwner and summon.oSummonOwner == target then
+	if (summon.type == CardType.Summon or summon.bSummonTeammate) and summon.oSummonOwner and summon.oSummonOwner == target then
 		return res
 	end
 	return not res

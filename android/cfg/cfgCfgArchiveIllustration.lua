@@ -31,6 +31,8 @@ local conf = {
 {'2',	'2',	'',	'',	'',	'9',	'17',	'arch_intoxicated_shadow',	'80410'},
 {'2',	'2',	'',	'',	'',	'10',	'18',	'arch_weightless_space',	'80411'},
 {'2',	'2',	'',	'',	'',	'11',	'56',	'arch_dress_up_game',	'80427'},
+{'2',	'2',	'',	'',	'',	'12',	'59',	'arch_pink_love',	'80429'},
+{'2',	'2',	'',	'',	'',	'13',	'60',	'arch_cozy_cooking',	'80430'},
 {'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
 {'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},
@@ -55,6 +57,7 @@ local conf = {
 {'6',	'6',	'',	'',	'',	'12',	'42',	'arch_wave_and_vortex',	''},
 {'6',	'6',	'',	'',	'',	'13',	'47',	'arch_golden_celebration',	'80423'},
 {'6',	'6',	'',	'',	'',	'14',	'52',	'arch_voice_of_the_wild',	''},
+{'6',	'6',	'',	'',	'',	'15',	'53',	'arch_a_sweet_moment',	''},
 {'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
 {'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
 {'7',	'7',	'',	'',	'',	'2',	'51',	'arch_anniversary_party',	''},
@@ -68,6 +71,7 @@ local conf = {
 {'9',	'9',	'',	'',	'',	'3',	'46',	'arch_double_feature',	'80422'},
 {'9',	'9',	'',	'',	'',	'4',	'48',	'arch_alley_corner_crisis',	'80424'},
 {'9',	'9',	'',	'',	'',	'4',	'50',	'arch_twilight_invitation',	'80426'},
+{'9',	'9',	'',	'',	'',	'5',	'38',	'arch_rainy_night_jeopardy',	'80428'},
 },
 }
 --cfgCfgArchiveIllustration = conf

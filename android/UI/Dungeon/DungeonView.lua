@@ -592,12 +592,11 @@ function OnClickItem(item)
                 local dungeonData = DungeonMgr:GetDungeonData(selItem.cfg.id)
 
                 isStoryFirst = (not dungeonData) or (not dungeonData.data.isPass)
-                
-                PlotMgr:TryPlay(selItem.cfg.storyID, OnStoryPlayComplete, this, true);
+
                 if isActive then
-                    OnClickBack()
-                    selItem = item
+                    ShowInfo(nil);
                 end
+                PlotMgr:TryPlay(selItem.cfg.storyID, OnStoryPlayComplete, this, true);
             end
             CSAPI.OpenView("Dialog",dialogData)
         end
@@ -623,7 +622,6 @@ function OnStoryPlayComplete()
 
     if currListItem:IsPass() then
         if CheckSectionOver(selItem.GetID()) then
-            -- isNextScetion = true
             ShowDungeon()
             SetHard()
             return
@@ -1008,8 +1006,8 @@ function CheckSectionOver(_id) -- 检查章节是否完成
                 -- 要显示的信息
                 local openStrs = _sectionData:GetNextOpenDesc()
                 table.insert(changeInfo, {
-                    title = openStrs[1],
-                    content = openStrs[2]
+                    title = (openStrs and openStrs[1]) and openStrs[1] or "" ,
+                    content = (openStrs and openStrs[2]) and openStrs[2] or ""
                 })
                 changeID = nextCfgDungeon.group;
                 changeHard = nextCfgDungeon.type;
@@ -1023,8 +1021,8 @@ function CheckSectionOver(_id) -- 检查章节是否完成
                 selItem = nil
             end
         end
-        if mapView.currIdx == 2 then
-            OnClickBack()
+        if mapView.currIdx == 2 and not mapView.isMove then
+            ClickBack()
         end
 
         -- changeIndex = 1;

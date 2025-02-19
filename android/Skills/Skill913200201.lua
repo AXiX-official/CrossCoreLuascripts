@@ -12,8 +12,8 @@ function Skill913200201:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12004], caster, target, data, 0.25,4)
 end
--- 行动结束
-function Skill913200201:OnActionOver(caster, target, data)
+-- 攻击结束
+function Skill913200201:OnAttackOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else

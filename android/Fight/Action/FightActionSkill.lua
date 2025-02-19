@@ -164,6 +164,7 @@ function this:OnComplete()
     end 
 end
 function this:OnClean()      
+        
     --self:CleanFightActionArr(self.faDamageArr);
     self.faDamageArr = nil;
     --self:CleanFightActionArr(self.faCureArr);
@@ -190,7 +191,9 @@ function this:OnClean()
     self.faBeforeDeathEvent = nil;
     --协战
     if(self.faHelp)then
+        --LogError("清理协战数据" .. table.tostring(self.faHelp.data));
         FightActionMgr:Recycle(self.faHelp);
+        --self.tt = nil;
     end
     self.faHelp = nil;
     self.faHelpCaller = nil;
@@ -800,8 +803,20 @@ end
 ---------------------------------------------------协战
 --设置协助
 function this:SetHelp(fightAction)
-    self.faHelp = fightAction;
-    self.faHelp:SetHelpCaller(self);
+
+    if(fightAction)then
+        fightAction:SetHelpCaller(self);
+    elseif(self.faHelp)then
+        self.faHelp:SetHelpCaller();
+        FightActionMgr:Recycle(self.faHelp);
+    end
+    self.faHelp = fightAction; 
+
+    --[[ if(self.faHelp)then
+        LogError("设置协战数据----------------------------" .. table.tostring(fightAction.data));
+    else
+        LogError("清除协战");
+    end ]]
 end
 --获取协助FightAction
 function this:GetHelp()

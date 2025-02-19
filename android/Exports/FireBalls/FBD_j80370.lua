@@ -22,10 +22,11 @@ local this =
 time=2000,type=0
 },
 [-1609092943]={
+{delay=200,time=3500,type=0,cue_sheet="fight/effect/seventeen.acb",cue_name="Blade_Stream_attack_general"},
 {effect="cast0_hit",time=4000,type=0,pos_ref={ref_type=1,lock_col=1}},
 {delay=2500,time=4000,type=1,hit_type=1,camera_shake={time=500,shake_dir=1,range=200,range2=200,hz=50,decay_value=0.6},hits={0}},
 {delay=1000,time=4000,type=1,hit_type=0,camera_shake={time=400,shake_dir=1,range=200,range2=200,hz=10,decay_value=0.6},hits={0}},
-{effect="cast0_eff",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Blade_Stream_attack_general"}
+{effect="cast0_eff",time=3500,type=0,pos_ref={ref_type=6}}
 },
 [-1328923786]={
 {time=3500,type=0}

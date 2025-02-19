@@ -1274,7 +1274,7 @@ function SkillBase:Cost()
 
 	if self.sp and self.sp > 0 then
 		if self.card:CheckSP(self.sp) then
-			self.card:AddSP(-self.sp)
+			self.card:AddSP(-self.sp, nil, true)
 		else
 			LogDebugEx("Cost", self.sp)
 			return

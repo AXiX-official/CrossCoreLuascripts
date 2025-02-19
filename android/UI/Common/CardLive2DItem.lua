@@ -168,8 +168,8 @@ function TouchItemClickCB(cfgChild)
             if (content.changeIdle) then
                 FuncUtil:Call(function()
                     --
-                    local trackIndexs, indexs,revoverNames = GetTrackIndexs(cfgChild)
-                    spineTools:ImmClearTracks(trackIndexs,revoverNames)
+                    local trackIndexs, indexs, revoverNames = GetTrackIndexs(cfgChild)
+                    spineTools:ImmClearTracks(trackIndexs, revoverNames)
                     ClearRecords(indexs)
                     --
                     if (spineTools ~= nil) then
@@ -227,7 +227,7 @@ function ItemDragCB(cfgChild, x, y)
     end
 end
 -- 拖拽结束
-function ItemDragEndCB(cfgChild, x, y)
+function ItemDragEndCB(cfgChild, x, y, index)
     if (isDrag == nil or not isDrag) then
         return
     end
@@ -242,17 +242,32 @@ function ItemDragEndCB(cfgChild, x, y)
             local targetPos = UnityEngine.Vector3(dragTargetPos[0], dragTargetPos[1], 0)
             local dis = UnityEngine.Vector3.Distance(startPos, targetPos)
             if (dis < 10) then
+                -- 播放动作
                 spineTools:PlayByClick(cfgChild.sName, GetTrackIndex(cfgChild), true, true)
                 PlayAudio(cfgChild)
-                -- spineTools:ClickRecover(cfgChild.sName, GetTrackIndex(cfgChild), content.drag.stopTime or 0)
-            end
-            CSAPI.SetAnchor(dragObj, dragStartPos[0], dragStartPos[1], 0)
-            CSAPI.SetGOActive(dragObj, false)
-            for k, v in pairs(content.drag.slots) do
-                local slot = graphic.Skeleton:FindSlot(v)
-                if (slot) then
-                    slot.A = 1
+                -- 显示主体隐藏额外
+                CSAPI.SetAnchor(dragObj, dragStartPos[0], dragStartPos[1], 0)
+                CSAPI.SetGOActive(dragObj, false)
+                for k, v in pairs(content.drag.slots) do
+                    local slot = graphic.Skeleton:FindSlot(v)
+                    if (slot) then
+                        slot.A = 1
+                    end
                 end
+            else
+                -- 只是隐藏鞋子
+                CSAPI.SetAnchor(dragObj, dragStartPos[0], dragStartPos[1], 0)
+                CSAPI.SetGOActive(dragObj, false)
+                --
+                touchItems[index].SetHideShoe(function()
+                    --点击还原鞋
+                    for k, v in pairs(content.drag.slots) do
+                        local slot = graphic.Skeleton:FindSlot(v)
+                        if (slot) then
+                            slot.A = 1
+                        end
+                    end
+                end)
             end
         end
     else
@@ -632,7 +647,7 @@ function GetTrackIndexs(childCfg)
             table.insert(revoverNames, v.sName)
         end
     end
-    return trackIndexs, indexs,revoverNames
+    return trackIndexs, indexs, revoverNames
 end
 
 function ClearRecords(indexs)

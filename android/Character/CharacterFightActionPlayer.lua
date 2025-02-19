@@ -810,6 +810,9 @@ function this:StartAction()
             self.character.OnStateEnter(CSAPI.StringToHash(self.castName));
             self:ShowHitEffs();
         else
+            --LogError(self.castName .. "========================");
+            --LogError(self.fightAction.data);
+            --LogError(self.castStateData);
             self.character.ApplyCast(self.castName);  
         end
         local backDelay = self.castStateData and self.castStateData.back_delay;
@@ -1155,7 +1158,7 @@ end
 --启动协战
 function this:StartHelp()
     local helpFightAction = self.fightAction:GetHelp();
-    if(helpFightAction)then
+    if(helpFightAction)then        
          if(self.fightAction:IsHelp())then
             LogError("协战无法再次触发协战！");
             LogError(a.b)
@@ -1176,6 +1179,8 @@ function this:StartHelp()
             self.isTeleportBack = 1;
             FuncUtil:Call(self.TeleportBack,self,300);            
         end
+
+        --LogError("协战触发，有没进大招场景：" .. (self:HasCustomCamera() and "有" or "没"))        
     end   
 end
 
@@ -1207,6 +1212,7 @@ end
 
 function this:HelpComplete()
     self:ActionTimeOver();
+    self.fightAction:SetHelp();--清理协战
 end
 
 return this;

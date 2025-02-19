@@ -17,7 +17,7 @@ function Awake()
             infoPanel.CallFunc("Button4", "SetBtn")
         end
     end)
-    eventMgr:AddListener(EventType.Colosseum_RandomReward, SetReward)
+    eventMgr:AddListener(EventType.Colosseum_RandomReward, Close1)
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
 end
 
@@ -275,12 +275,12 @@ function SetReward()
     CSAPI.SetText(txtStar2, "/" .. max)
     star_fill.fillAmount = max == 0 and 0 or cur / max
     -- red
-    local isRed = false
+    isRed = false
     if (selectType == 2) then
         isRed = ColosseumMgr:IsRewardRed()
     end
     UIUtil:SetRedPoint(btnStar, isRed, -160, 35, 0)
-    CSAPI.SetGOActive(Btn3_effect,isRed)
+    CSAPI.SetGOActive(Btn3_effect, isRed)
 end
 
 -----------------------------------------------------------------------------------------------------
@@ -299,6 +299,11 @@ end
 function OnViewClosed(viewKey)
     if (gameObject ~= nil and viewKey == "TeamView") then
         EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "ColosseumM")
+    elseif (gameObject ~= nil and viewKey == "Loading") then
+        -- 自动弹出奖励界面
+        if (isRed) then
+            OnClickStar()
+        end
     end
 end
 

@@ -6,6 +6,27 @@ Skill913200301 = oo.class(SkillBase)
 function Skill913200301:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
+function Skill913200301:CanSummon()
+	return self.card:CanSummon(10000209,3,{1,3},{progress=300},nil,nil)
+end
+function Skill913200301:CanSummon()
+	return self.card:CanSummon(10000208,3,{1,2},{progress=400},nil,nil)
+end
+function Skill913200301:CanSummon()
+	return self.card:CanSummon(10000207,3,{1,1},{progress=500},nil,nil)
+end
+-- 执行技能
+function Skill913200301:DoSkill(caster, target, data)
+	-- 913200302
+	self.order = self.order + 1
+	self:SummonTeammate(SkillEffect[913200302], caster, target, data, 10000207,3,{1,1},{progress=500},nil,nil)
+	-- 913200303
+	self.order = self.order + 1
+	self:SummonTeammate(SkillEffect[913200303], caster, target, data, 10000208,3,{1,2},{progress=400},nil,nil)
+	-- 913200304
+	self.order = self.order + 1
+	self:SummonTeammate(SkillEffect[913200304], caster, target, data, 10000209,3,{1,3},{progress=300},nil,nil)
+end
 -- 行动结束
 function Skill913200301:OnActionOver(caster, target, data)
 	-- 8060

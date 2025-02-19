@@ -324,7 +324,7 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
                     do return end;
                 end
                 local priceInfo2=commodity:GetPrice(shopPriceKey);
-                if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+                if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer or CSAPI.Currentplatform == CSAPI.OpenHarmony then
                     EventMgr.Dispatch(EventType.Shop_Buy_Mask,true);
                 else
                     print("-----PC-----IsGetIsMobileplatform")
@@ -589,7 +589,7 @@ function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payTy
                 end
                 local priceInfo2=commodity:GetPrice(shopPriceKey);
                 ---2024-09-14 中台SDK 重合 要求去掉游戏加载圈
-                if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+                if CSAPI.Currentplatform == CSAPI.Android or CSAPI.Currentplatform == CSAPI.IPhonePlayer or (CSAPI.OpenHarmony ~= nil and CSAPI.Currentplatform == CSAPI.OpenHarmony) then
                     EventMgr.Dispatch(EventType.Shop_Buy_Mask,true);
                 else
                    print("-----PC-----IsGetIsMobileplatform")

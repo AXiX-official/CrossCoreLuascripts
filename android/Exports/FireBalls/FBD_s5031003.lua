@@ -13,8 +13,8 @@ local this =
 {delay=10032,time=4000,type=1,hit_type=0,camera_shake={time=200,shake_dir=1,range=200,hz=200,decay_value=0.25},hits={0,480}},
 {effect="cast2_eff",effect_pack="s50310",time=12500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/fifteen.acb",cue_name="Orchid_attack_skill_02"},
 {delay=7416,time=4000,type=1,hit_type=1,hits={0,633}},
-{delay=4000,time=12500,type=0,cue_sheet="cv/Orchid.acb",cue_name="Orchid_12",cue_feature=1},
-{time=12500,type=0,cue_sheet="cv/Orchid.acb",cue_name="Orchid_11",cue_feature=1}
+{delay=4710,time=12500,type=0,cue_sheet="cv/Orchid.acb",cue_name="Orchid_12",cue_feature=1},
+{delay=960,time=12500,type=0,cue_sheet="cv/Orchid.acb",cue_name="Orchid_11",cue_feature=1}
 },
 [2124325257]={
 time=4000,type=0

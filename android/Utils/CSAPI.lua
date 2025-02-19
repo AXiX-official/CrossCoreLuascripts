@@ -1144,6 +1144,7 @@ this.Currentplatform=CS.UnityEngine.Application.platform;
 this.Android=CS.UnityEngine.RuntimePlatform.Android;
 this.IPhonePlayer=CS.UnityEngine.RuntimePlatform.IPhonePlayer;
 this.WindowsEditor=CS.UnityEngine.RuntimePlatform.WindowsEditor;
+this.OpenHarmony=CS.UnityEngine.RuntimePlatform.OpenHarmony;
 
 
 this.IsADV=CS.CSAPI.IsADV;
@@ -1210,6 +1211,7 @@ function this.Getplatform()
 	this.IsMobileplatform=false;
 	if UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android or
 			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.IPhonePlayer or
+			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.OpenHarmony or
 			UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.WindowsEditor
 	then
 		this.IsMobileplatform=true;

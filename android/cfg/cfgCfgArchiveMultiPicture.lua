@@ -43,6 +43,7 @@ local conf = {
 {'33',	'33',	'61035',	'青空虹影',	'34',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'rainbow_in_the_sky',	'',	'board_rainbow_in_the_sky',	'Small_rainbow_in_the_sky',	'幸运扭蛋机奖励',	'7,1,0.93',	'hong',	'0,0,1',	'',	'1'},
 {'35',	'35',	'61037',	'暗域之人',	'35',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'person_on_the_darknet',	'',	'board_person_on_the_darknet',	'Small_person_on_the_darknet',	'幸运扭蛋机奖励',	'-6,-4,1',	'hatuoli',	'0,-5,1',	'',	'1'},
 {'36',	'36',	'61038',	'携手重建',	'36',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'rebuilding_together',	'',	'board_rebuilding_together',	'Small_rebuilding_together',	'幸运扭蛋机奖励',	'-36,-16,1.23',	'houqin',	'-44,-22,1',	'',	'1'},
+{'38',	'38',	'61040',	'雨夜危情',	'57',	'',	'',	'9',	'rainy_night_jeopardy',	'rainy_night_jeopardy_replace',	'board_rainy_night_jeopardy',	'Small_rainy_night_jeopardy',	'商店购买',	'-135,-46,0.83',	'CG0022_RainyNightJeopardy_spine',	'0,0,0.83',	'1',	'80428'},
 {'39',	'39',	'61041',	'街头法则',	'31',	'',	'',	'9',	'law_of_the_streets',	'law_of_the_streets_replace',	'board_law_of_the_streets',	'Small_law_of_the_streets',	'商店购买',	'50,50,1',	'CG0016_LawOfTheStreets_spine',	'0,0,1',	'1',	'80419'},
 {'40',	'40',	'61042',	'绝境逢生',	'37',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'6',	'a_narrow_escape',	'',	'board_a_narrow_escape',	'Small_a_narrow_escape',	'幸运扭蛋机奖励',	'-98,-41,0.88',	'Katina',	'0,0,1',	'',	'1'},
 {'41',	'41',	'61043',	'黑茧蝶梦',	'41',	'',	'',	'6',	'black_cocoon_rebecca',	'black_cocoon_rebecca_replace',	'board_black_cocoon_rebecca',	'Small_black_cocoon_rebecca',	'高级勘测奖励',	'19,56,1.25',	'jufeng_1',	'-7,129,2.03',	'',	'1'},
@@ -56,9 +57,12 @@ local conf = {
 {'49',	'49',	'61051',	'沙趣时光',	'49',	'',	'',	'1',	'beach_playtime',	'beach_playtime_replace',	'board_beach_playtime',	'Small_beach_playtime',	'商店购买',	'-49,-23,1.13',	'CG0029_BeachPlaytime_spine',	'0,0,1',	'1',	'80425'},
 {'50',	'50',	'61052',	'暮光之约',	'50',	'',	'',	'9',	'twilight_invitation',	'twilight_invitation_replace',	'board_twilight_invitation',	'Small_twilight_invitation',	'商店购买',	'-9,-38,1.18',	'CG0032_TwilightInvitation_spine',	'0,0,1',	'1',	'80426'},
 {'51',	'51',	'61053',	'周年欢聚',	'51',	'',	'',	'7',	'anniversary_party',	'',	'board_anniversary_party',	'Small_anniversary_party',	'【周年狂欢】活动',	'44,15,1.03',	'CG0039_AnniversaryParty_spine',	'90,0,1',	'',	'1'},
-{'52',	'52',	'61054',	'旷野之声',	'52',	'2025/1/22 03:00:00',	'2027/1/22 3:00:00',	'6',	'voice_of_the_wild',	'voice_of_the_wild_replace',	'board_voice_of_the_wild',	'small_voice_of_the_wild',	'高级勘测奖励',	'-21,-21,0.69',	'wulin',	'-23,-27,1.36',	'',	'1'},
+{'52',	'52',	'61054',	'旷野之声',	'52',	'',	'',	'6',	'voice_of_the_wild',	'voice_of_the_wild_replace',	'board_voice_of_the_wild',	'small_voice_of_the_wild',	'高级勘测奖励',	'-21,-21,0.69',	'wulin',	'-23,-27,1.36',	'',	'1'},
+{'53',	'53',	'61055',	'甜蜜一瞬',	'53',	'2025/2/26 03:00:00',	'2027/2/26 3:00:00',	'6',	'a_sweet_moment',	'a_sweet_moment_replace',	'board_a_sweet_moment',	'Small_a_sweet_moment',	'高级勘测奖励',	'44,-42,1.04',	'niaoyun',	'-96,-35,1.33',	'',	'1'},
 {'55',	'55',	'61057',	'合家欢乐',	'55',	'',	'',	'7',	'whole_family_have_fun',	'',	'board_whole_family_have_fun',	'Small_whole_family_have_fun',	'新年活动',	'-102,3,0.95',	'CG0040_WholeFamilyHaveFun',	'0,0,0.93',	'',	'1'},
 {'56',	'56',	'61058',	'换装游戏',	'56',	'',	'',	'6',	'dress_up_game',	'dress_up_game_replace',	'board_dress_up_game',	'Small_dress_up_game',	'商店购买',	'44,-7,0.93',	'CG0036_DressUpGame_spine',	'147,0,0.93',	'1',	'80427'},
+{'59',	'59',	'61061',	'粉红爱意',	'59',	'',	'',	'2',	'pink_love',	'pink_love_replace',	'board_pink_love',	'Small_pink_love',	'商店购买',	'113,-147,1.39',	'CG0037_PinkLove_spine',	'0,0,1',	'1',	'80429'},
+{'60',	'60',	'61062',	'惬意烹饪',	'60',	'',	'',	'2',	'cozy_cooking',	'cozy_cooking_replace',	'board_cozy_cooking',	'Small_cozy_cooking',	'商店购买',	'-91,28,1.08',	'CG0048_CozyCooking_spine',	'0,0,1',	'1',	'80430'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf

@@ -22,8 +22,13 @@ function Skill1100010361:OnBefourHurt(caster, target, data)
 	local count802 = SkillApi:ClassCount(self, caster, target,1,1)
 	-- 1100010363
 	local dqzdnaijiu = SkillApi:GetAttr(self, caster, target,3,"maxhp")
+	-- 8229
+	if SkillJudger:IsCasterMech(self, caster, self.card, true,1) then
+	else
+		return
+	end
 	-- 1100010364
-	self:LimitDamage(SkillEffect[1100010364], caster, target, data, 0.06,((dqzdnaijiu)*0.2))
+	self:LimitDamage(SkillEffect[1100010364], caster, target, data, 0.06,((dqzdnaijiu)*0.00002))
 end
 -- 入场时
 function Skill1100010361:OnBorn(caster, target, data)

@@ -196,6 +196,7 @@ function SetCost(cost,isOver)
             CSAPI.SetGOActive(priceObj3,false);
             CSAPI.SetGOActive(dPriceObj,false);
             CSAPI.SetGOActive(freeObj,true);
+            CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
         end
     else
         CSAPI.SetGOActive(priceObj,false);
@@ -203,6 +204,7 @@ function SetCost(cost,isOver)
         CSAPI.SetGOActive(priceObj3,false);
         CSAPI.SetGOActive(dPriceObj,false);
         CSAPI.SetGOActive(freeObj,true);
+        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
     end
 end
 

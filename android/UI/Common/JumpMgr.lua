@@ -313,14 +313,15 @@ function this.Shop(cfg)
             if cfg.val5 then
                 local cId=tonumber(cfg.val5);
                 local comm=ShopMgr:GetFixedCommodity(cId);
-                --todo
-                if(cId==50056 and not comm:GetNowTimeCanBuy())then 
-                    LanguageMgr:ShowTips(15007)
-                    return 
-                end
-                -- 
-                if comm:GetType()==CommodityItemType.Skin then --皮肤购买界面不打开商店
-                    ShopCommFunc.OpenBuyConfrim(cfg.val2, cfg.val3, cId)
+                if comm and comm:GetNowTimeCanBuy() then --皮肤购买界面不打开商店
+                    if comm:IsOver() then --售罄
+                        LanguageMgr:ShowTips(15125);
+                    elseif comm:GetType()==CommodityItemType.Skin then
+                        ShopCommFunc.OpenBuyConfrim(cfg.val2, cfg.val3, cId)
+                    end
+                    do return end;
+                else
+                    LanguageMgr:ShowTips(15007);
                     do return end;
                 end
             end

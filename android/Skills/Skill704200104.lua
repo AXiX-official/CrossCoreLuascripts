@@ -14,8 +14,8 @@ function Skill704200104:DoSkill(caster, target, data)
 end
 -- 行动结束
 function Skill704200104:OnActionOver(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end

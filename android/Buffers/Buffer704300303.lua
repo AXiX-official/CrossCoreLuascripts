@@ -1,4 +1,4 @@
--- 熔铄
+-- 运势
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -24,5 +24,5 @@ function Buffer704300303:OnBefourCritHurt(caster, target)
 		return
 	end
 	-- 704300303
-	self:AddTempAttr(BufferEffect[704300303], self.caster, self.card, nil, "damage",-0.25)
+	self:AddTempAttr(BufferEffect[704300303], self.caster, self.caster, nil, "damage",-0.25)
 end

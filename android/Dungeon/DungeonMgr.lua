@@ -1455,9 +1455,10 @@ function this:IsActivityRed(isUpdate)
     if not isRed then --能力测验
         isRed = RogueTMgr:IsRed()
     end
-    if not isRed then
-        isRed = ColosseumMgr:IsRed()
-    end
+
+    -- if not isRed then
+    --     isRed = ColosseumMgr:IsRed()
+    -- end
 
     if not isRed then --世界boss
         isRed = GlobalBossMgr:IsRed()

@@ -364,85 +364,87 @@ function ConfigChecker:CardData(cfgs)
                     )
             )
         end
-
         if (v.uniteLabel) then
-            local removeIDs = {}
-            local uniteIDs = {}
-            for _, _cfg in pairs(CardData) do
-                --需要剔除的id
-                if (_cfg.fit_result) then --合体id
-                    removeIDs[_cfg.fit_result] = _cfg.fit_result
-                end
-                if (_cfg.tTransfo) then --变身id
-                    for _, _id in ipairs(_cfg.tTransfo) do
-                        removeIDs[_id] = _id
-                    end
-                end
-
-                local count = 0
-                for _, _info in ipairs(v.uniteLabel) do
-                    local cfgLabel = CfgUniteLabel[_info[1]]
-                    local cfg1 = nil
-                    if (_cfg.role_id and cfgLabel.cfgType == 1) then
-                        cfg1 = CfgCardRole[_cfg.role_id]
-                    else
-                        cfg1 = _cfg
-                    end
-                    if (cfg1) then
-                        --判断条件
-                        local num = 0
-                        if (cfgLabel.key) then
-                            for _, content in ipairs(_info[2]) do
-                                if (cfgLabel.type ~= 2) then
-                                    if (cfg1[cfgLabel.key] == content) then
-                                        num = num + 1
-                                    end
-                                else --区间类型
-                                    if
-                                    (content[1] < 0 and content[2] < 0) or
-                                            (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
-                                            (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
-                                            (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
-                                    then
-                                        num = num + 1
-                                    end
-                                end
-                            end
-                        end
-                        if (num > 0) then
-                            if (_info[3] == 1) then --或条件
-                                count = count + 1
-                            else --与条件
-                                if (num >= #_info[2]) then
-                                    count = count + 1
-                                end
-                            end
-                        end
-                    end
-                end
-                -- if (count >= #v.uniteLabel and _cfg.get_from_gm) then
-                if (count >= #v.uniteLabel) then
-                    table.insert(uniteIDs, _cfg.id)
-                end
-            end
-            if (#uniteIDs > 0) then
-                table.sort(
-                        uniteIDs,
-                        function(a, b)
-                            return a < b
-                        end
-                )
-                local lastID = 0
-                local ids = {}
-                for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
-                    if (not (removeIDs[uniteID]) and not (uniteID == v.id) and not (uniteID == lastID)) then
-                        table.insert(ids, uniteID)
-                    end
-                    lastID = uniteID
-                end
-                v.unite = ids
-            end
+            v.unite = GetUnites(v.uniteLabel,v.id)
         end
+        -- if (v.uniteLabel) then
+        --     local removeIDs = {}
+        --     local uniteIDs = {}
+        --     for _, _cfg in pairs(CardData) do
+        --         --需要剔除的id
+        --         if (_cfg.fit_result) then --合体id
+        --             removeIDs[_cfg.fit_result] = _cfg.fit_result
+        --         end
+        --         if (_cfg.tTransfo) then --变身id
+        --             for _, _id in ipairs(_cfg.tTransfo) do
+        --                 removeIDs[_id] = _id
+        --             end
+        --         end
+
+        --         local count = 0
+        --         for _, _info in ipairs(v.uniteLabel) do
+        --             local cfgLabel = CfgUniteLabel[_info[1]]
+        --             local cfg1 = nil
+        --             if (_cfg.role_id and cfgLabel.cfgType == 1) then
+        --                 cfg1 = CfgCardRole[_cfg.role_id]
+        --             else
+        --                 cfg1 = _cfg
+        --             end
+        --             if (cfg1) then
+        --                 --判断条件
+        --                 local num = 0
+        --                 if (cfgLabel.key) then
+        --                     for _, content in ipairs(_info[2]) do
+        --                         if (cfgLabel.type ~= 2) then
+        --                             if (cfg1[cfgLabel.key] == content) then
+        --                                 num = num + 1
+        --                             end
+        --                         else --区间类型
+        --                             if
+        --                             (content[1] < 0 and content[2] < 0) or
+        --                                     (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+        --                                     (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+        --                                     (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+        --                             then
+        --                                 num = num + 1
+        --                             end
+        --                         end
+        --                     end
+        --                 end
+        --                 if (num > 0) then
+        --                     if (_info[3] == 1) then --或条件
+        --                         count = count + 1
+        --                     else --与条件
+        --                         if (num >= #_info[2]) then
+        --                             count = count + 1
+        --                         end
+        --                     end
+        --                 end
+        --             end
+        --         end
+        --         -- if (count >= #v.uniteLabel and _cfg.get_from_gm) then
+        --         if (count >= #v.uniteLabel) then
+        --             table.insert(uniteIDs, _cfg.id)
+        --         end
+        --     end
+        --     if (#uniteIDs > 0) then
+        --         table.sort(
+        --                 uniteIDs,
+        --                 function(a, b)
+        --                     return a < b
+        --                 end
+        --         )
+        --         local lastID = 0
+        --         local ids = {}
+        --         for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
+        --             if (not (removeIDs[uniteID]) and not (uniteID == v.id) and not (uniteID == lastID)) then
+        --                 table.insert(ids, uniteID)
+        --             end
+        --             lastID = uniteID
+        --         end
+        --         v.unite = ids
+        --     end
+        -- end
 
         -- if v.id == 50010 then
         -- 	LogTable(v)
@@ -523,88 +525,149 @@ function ConfigChecker:MonsterData(cfg)
             end
         end
         v.skills = skills
-
         if (v.card_id and CardData[v.card_id] and CardData[v.card_id].uniteLabel) then
-            local removeIDs = {}
-            local uniteIDs = {}
-            for _, _cfg in pairs(MonsterData) do
-                --需要剔除的id
-                if (_cfg.fit_result) then --合体id
-                    removeIDs[_cfg.fit_result] = _cfg.fit_result
-                end
-                if (_cfg.tTransfo) then --变身id
-                    for _, _id in ipairs(_cfg.tTransfo) do
-                        removeIDs[_id] = _id
-                    end
-                end
-
-                local count = 0
-                for _, _info in ipairs(CardData[v.card_id].uniteLabel) do
-                    local cfgLabel = CfgUniteLabel[_info[1]]
-                    local cfg1 = nil
-                    if (_cfg.card_id and CardData[_cfg.card_id] and CardData[_cfg.card_id].role_id and cfgLabel.cfgType == 1) then
-                        cfg1 = CfgCardRole[CardData[_cfg.card_id].role_id]
-                    else
-                        cfg1 = CardData[_cfg.card_id]
-                    end
-                    if (cfg1) then
-                        --判断条件
-                        local num = 0
-                        if (cfgLabel.key) then
-                            for _, content in ipairs(_info[2]) do
-                                if (cfgLabel.type ~= 2) then
-                                    if (cfg1[cfgLabel.key] == content) then
-                                        num = num + 1
-                                    end
-                                else --区间类型
-                                    if
-                                    (content[1] < 0 and content[2] < 0) or
-                                            (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
-                                            (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
-                                            (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
-                                    then
-                                        num = num + 1
-                                    end
-                                end
-                            end
-                        end
-                        if (num > 0) then
-                            if (_info[3] == 1) then --或条件
-                                count = count + 1
-                            else --与条件
-                                if (num >= #_info[2]) then
-                                    count = count + 1
-                                end
-                            end
-                        end
-                    end
-                end
-
-                -- if (count >= #v.uniteLabel and _cfg.get_from_gm) then
-                if (count >= #CardData[v.card_id].uniteLabel) then
-                    table.insert(uniteIDs, _cfg.id)
-                end
-            end
-
-            if (#uniteIDs > 0) then
-                table.sort(
-                        uniteIDs,
-                        function(a, b)
-                            return a < b
-                        end
-                )
-                local lastID = 0
-                local ids = {}
-                for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
-                    if (not (removeIDs[uniteID]) and not (uniteID == v.id) and not (uniteID == lastID)) then
-                        table.insert(ids, uniteID)
-                    end
-                    lastID = uniteID
-                end
-                v.unite = ids
-            end
+            v.unite = GetUnites(CardData[v.card_id].uniteLabel,v.id)
         end
     end
+end
+
+--获取卡牌表和怪物表同调id组
+function GetUnites(uniteLabels,cfgId)
+    cfgId = cfgId or 0
+    if (uniteLabels) then
+        local removeIDs = {}
+        local uniteIDs = {}
+        for _, _cfg in pairs(CardData) do
+            --需要剔除的id
+            if (_cfg.fit_result) then --合体id
+                removeIDs[_cfg.fit_result] = _cfg.fit_result
+            end
+            if (_cfg.tTransfo) then --变身id
+                for _, _id in ipairs(_cfg.tTransfo) do
+                    removeIDs[_id] = _id
+                end
+            end
+
+            local count = 0
+            for _, _info in ipairs(uniteLabels) do
+                local cfgLabel = CfgUniteLabel[_info[1]]
+                local cfg1 = nil
+                if (_cfg.role_id and cfgLabel.cfgType == 1) then
+                    cfg1 = CfgCardRole[_cfg.role_id]
+                else
+                    cfg1 = _cfg
+                end
+                if (cfg1) then
+                    --判断条件
+                    local num = 0
+                    if (cfgLabel.key) then
+                        for _, content in ipairs(_info[2]) do
+                            if (cfgLabel.type ~= 2) then
+                                if (cfg1[cfgLabel.key] == content) then
+                                    num = num + 1
+                                end
+                            else --区间类型
+                                if
+                                (content[1] < 0 and content[2] < 0) or
+                                        (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+                                        (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+                                        (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+                                then
+                                    num = num + 1
+                                end
+                            end
+                        end
+                    end
+                    if (num > 0) then
+                        if (_info[3] == 1) then --或条件
+                            count = count + 1
+                        else --与条件
+                            if (num >= #_info[2]) then
+                                count = count + 1
+                            end
+                        end
+                    end
+                end
+            end
+            if (count >= #uniteLabels) then
+                table.insert(uniteIDs, _cfg.id)
+            end
+        end
+
+        for _, _cfg in pairs(MonsterData) do
+            --需要剔除的id
+            if (_cfg.fit_result) then --合体id
+                removeIDs[_cfg.fit_result] = _cfg.fit_result
+            end
+            if (_cfg.tTransfo) then --变身id
+                for _, _id in ipairs(_cfg.tTransfo) do
+                    removeIDs[_id] = _id
+                end
+            end
+
+            local count = 0
+            for _, _info in ipairs(uniteLabels) do
+                local cfgLabel = CfgUniteLabel[_info[1]]
+                local cfg1 = nil
+                if (_cfg.card_id and CardData[_cfg.card_id] and CardData[_cfg.card_id].role_id and cfgLabel.cfgType == 1) then
+                    cfg1 = CfgCardRole[CardData[_cfg.card_id].role_id]
+                else
+                    cfg1 = CardData[_cfg.card_id]
+                end
+                if (cfg1) then
+                    --判断条件
+                    local num = 0
+                    if (cfgLabel.key) then
+                        for _, content in ipairs(_info[2]) do
+                            if (cfgLabel.type ~= 2) then
+                                if (cfg1[cfgLabel.key] == content) then
+                                    num = num + 1
+                                end
+                            else --区间类型
+                                if
+                                (content[1] < 0 and content[2] < 0) or
+                                        (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+                                        (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+                                        (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+                                then
+                                    num = num + 1
+                                end
+                            end
+                        end
+                    end
+                    if (num > 0) then
+                        if (_info[3] == 1) then --或条件
+                            count = count + 1
+                        else --与条件
+                            if (num >= #_info[2]) then
+                                count = count + 1
+                            end
+                        end
+                    end
+                end
+            end
+
+            if (count >= #uniteLabels) then
+                table.insert(uniteIDs, _cfg.id)
+            end
+        end
+
+        if (#uniteIDs > 0) then
+            table.sort(uniteIDs,function(a, b)
+                        return a < b
+                    end)
+            local lastID = 0
+            local ids = {}
+            for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
+                if (not (removeIDs[uniteID]) and not (uniteID == cfgId) and not (uniteID == lastID)) then
+                    table.insert(ids, uniteID)
+                end
+                lastID = uniteID
+            end
+            return ids
+        end
+    end
+    return nil
 end
 
 function ConfigChecker:skill(cfg)

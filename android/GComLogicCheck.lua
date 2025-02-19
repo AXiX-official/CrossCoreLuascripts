@@ -516,6 +516,8 @@ function GLogicCheck:CheckItemExpiryByCfg(cfg, expiryIx, curTime)
     if curTime >= cfg.nExpiry then
         return true
     end
+
+    return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------------------------

@@ -104,14 +104,19 @@ function OnClickQuit()
     else
         quitStr = LanguageMgr:GetTips(19003)
     end
+
     if (g_FightMgr) then
-        if (g_FightMgr.type == SceneType.PVPMirror) then
-            quitStr = LanguageMgr:GetTips(19004)
-        elseif (g_FightMgr.type == SceneType.Rogue) then
-            quitStr = LanguageMgr:GetByID(50010)
-        elseif (g_FightMgr.type == SceneType.RogueT) then
-            quitStr = LanguageMgr:GetByID(54046) 
-        end
+        if(g_FightMgr.nDuplicateID and DungeonMgr:GetDungeonSectionType(g_FightMgr.nDuplicateID)==SectionType.Colosseum)then 
+            quitStr = LanguageMgr:GetByID(64049) 
+        else
+            if (g_FightMgr.type == SceneType.PVPMirror) then
+                quitStr = LanguageMgr:GetTips(19004)
+            elseif (g_FightMgr.type == SceneType.Rogue) then
+                quitStr = LanguageMgr:GetByID(50010)
+            elseif (g_FightMgr.type == SceneType.RogueT) then
+                quitStr = LanguageMgr:GetByID(54046) 
+            end
+        end 
     end
     local dialogData = {}
     dialogData.content = quitStr

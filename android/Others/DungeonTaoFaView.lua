@@ -140,7 +140,7 @@ end
 function SetBg()
     local bgPath = currGroupData:GetBGPath()
     if bgPath ~= nil and bgPath ~= "" then
-        ResUtil:LoadBigImg(bg, bgPath,false)
+        ResUtil:LoadBigImg2(bg, bgPath,false)
     end
     local imgPath = currGroupData:GetImgPath()
     if imgPath ~= nil and imgPath ~= "" then

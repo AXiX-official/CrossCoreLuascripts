@@ -23,7 +23,10 @@ function this:GetActivityDownAddress(type)
         str1 = "ios"
     elseif(currPlatform == 11) then 
         str1 = "android"
+    elseif(currPlatform == 51) then 
+        str1 = "harmony"
     end 
+    str1 = "harmony"
     local str2 = "text"
     if (CSAPI.GetChannelType() == ChannelType.BliBli) then
         str2 = "bilibili"

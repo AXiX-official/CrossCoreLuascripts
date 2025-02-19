@@ -905,22 +905,23 @@ function this:GuideBehaviourStart_TowerBattle_147030()
 end
 
 --角斗场引导----------------------------------------------------------------------------
--- function this:GuideBehaviourCondition_Colosseum_149010()
---     local id = DungeonMgr:GetCurrId();
---     return id == 10204;
--- end
-
--- function this:GuideBehaviourCondition_Colosseum_151010()
---     return GuideMgr:IsGuided(1500);
--- end
--- function this:GuideBehaviourCondition_Colosseum_151510()
---     return GuideMgr:IsGuided(1510);
--- end
-
-function this:GuideBehaviourStart_Colosseum_149010()
-    UIUtil:OpenQuestion("ColosseumView");
+function this:GuideBehaviourSkip_Colosseum_150010()    
+    return GuideMgr:IsGuided(1505);--检测跳过本身的情况
+end
+function this:GuideBehaviourCondition_Colosseum_150010()
+    return not GuideMgr:IsGuided(1505);
+end
+function this:GuideBehaviourSkip_Colosseum_150025()    
+    return GuideMgr:IsGuided(1500);--检测跳过本身的情况
+end
+function this:GuideBehaviourCondition_Colosseum_150025()
+    return not GuideMgr:IsGuided(1500);
 end
 
+
+function this:GuideBehaviourStart_Colosseum_152030()
+    UIUtil:OpenQuestion("ColosseumView");
+end
 --能力检测引导----------------------------------------------------------------------------
 
 

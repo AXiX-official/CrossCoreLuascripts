@@ -16,7 +16,7 @@ function Skill4803402:OnBornSpecial(caster, target, data)
 	-- 4803405
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[4803405], caster, target, data, 4803405)
+		self:AddBuff(SkillEffect[4803405], caster, target, data, 4803401)
 	end
 end
 -- 伤害前

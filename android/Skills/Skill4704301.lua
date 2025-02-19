@@ -39,13 +39,13 @@ function Skill4704301:OnBorn(caster, target, data)
 	for i,target in ipairs(targets) do
 		self:AddSkillAttr(SkillEffect[4704321], caster, target, data, "np",-1)
 	end
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
 	-- 8706
-	local count706 = SkillApi:SkillLevel(self, caster, target,3,7043003)
+	local count706 = SkillApi:SkillLevel(self, caster, target,3,7043002)
 	-- 4704311
-	self:CallSkillEx(SkillEffect[4704311], caster, self.card, data, 704300300+count706)
+	self:CallSkillEx(SkillEffect[4704311], caster, self.card, data, 704300200+count706)
 end

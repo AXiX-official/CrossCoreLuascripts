@@ -127,7 +127,10 @@ function InitListener()
         SetLocks()
     end)
     -- 背包
-    eventMgr:AddListener(EventType.Bag_Update, SetMoneys)
+    eventMgr:AddListener(EventType.Bag_Update, function ()
+        bagLimitTime = BagMgr:GetLessLimitTime()
+        SetMoneys()
+    end)
     -- 体力变更
     eventMgr:AddListener(EventType.Player_HotChange, SetHot)
     -- 强制弹出公告
@@ -311,6 +314,19 @@ function OnOpen()
     InitHot()
     InitMatrixRTime()
     InitAnims()
+end
+
+function LoadingComplete()
+    InitTimers()
+    MenuMgr:InitDatas() -- 系统解锁数据
+    MenuBuyMgr:ConditionCheck(1) -- 检测充值弹窗
+    ActivityMgr:InitListOpenState() -- 检测滚动窗口
+    --
+    RefreshPanel()
+    InitListener()
+end
+
+function InitTimers()
     colosseumRTime = ColosseumMgr:GetRefreshTimes()
     -- petStateTime = PetActivityMgr:GetEmotionChangeTimestamp()
     activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
@@ -318,15 +334,6 @@ function OnOpen()
     exerciseLTime = ExerciseMgr:GetRefreshTime()
     globalBossTime = GlobalBossMgr:GetCloseTime()
     bagLimitTime = BagMgr:GetLessLimitTime()
-end
-
-function LoadingComplete()
-    MenuMgr:InitDatas() -- 系统解锁数据
-    MenuBuyMgr:ConditionCheck(1) -- 检测充值弹窗
-    ActivityMgr:InitListOpenState() -- 检测滚动窗口
-    --
-    RefreshPanel()
-    InitListener()
 end
 
 function RefreshPanel()
@@ -764,7 +771,8 @@ function SetLTSV()
     ltSVItems = ltSVItems or {}
     local len = #ltSVDatas
     ItemUtil.AddItems("Menu/MenuLBtn", ltSVItems, ltSVDatas, ltSVContent, nil, 1, nil, function()
-        if (not ltSVItems_timer and #ltSVItems > 1) then
+        if (not isltSVItemsIn and #ltSVItems > 1) then
+            isltSVItemsIn = 1
             local len = #ltSVDatas
             for k = 1, len do
                 if (ltSVItems[k]) then

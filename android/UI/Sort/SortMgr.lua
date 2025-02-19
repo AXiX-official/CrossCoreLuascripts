@@ -690,10 +690,10 @@ end
 
 -- 多人看板 
 function this.SortFunc_5000(a, b)
-    if (a:GetID() == b:GetID()) then
+    if (a:GetSort() == b:GetSort()) then
         return nil
     else
-        return a:GetID() < b:GetID()
+        return a:GetSort() < b:GetSort()
     end
 end
 function this.SortFunc_5001(a, b)

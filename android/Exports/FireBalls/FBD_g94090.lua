@@ -2,6 +2,7 @@
 local this = 
 {
 [-686817241]={
+{time=3500,type=3,hits={1500}},
 {effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6}},
 {time=3500,type=0,cue_sheet="fight/effect/monsters_cast.acb",cue_name="romaz4_attack_skill_01"},
 {time=3500,type=4,hit_creates={806661594},hits={1500}}

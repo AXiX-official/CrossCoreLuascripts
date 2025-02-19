@@ -221,10 +221,10 @@ function OnClickGrid(tab)
         if assistData then
             cid=assistData.card:GetID();
         end
-        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
+        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
     else
         SetTeamData(teamData:GetIndex());
-        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,is2D=true,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
+        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
     end
 end
 
@@ -478,7 +478,7 @@ function OnSkillChange(cfgId)
             teamData:SetSkillGroupID(cfgId);
             local teamData2=TeamMgr:GetTeamData(teamData.index);
             teamData2:SetSkillGroupID(cfgId);
-            TeamMgr:SaveDataByIndex(index, teamData2)
+            TeamMgr:SaveDataByIndex(teamData.index, teamData2)
         end
         SetSkillIcon(cfgId)
     end);

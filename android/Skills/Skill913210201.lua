@@ -13,11 +13,6 @@ function Skill913210201:OnActionOver(caster, target, data)
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
 	-- 8200
 	if SkillJudger:IsCurrSkill(self, caster, target, true) then
 	else
@@ -26,6 +21,6 @@ function Skill913210201:OnActionOver(caster, target, data)
 	-- 913210201
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[913210201], caster, target, data, nil)
+		self:AddBuff(SkillEffect[913210201], caster, target, data, 4004)
 	end
 end

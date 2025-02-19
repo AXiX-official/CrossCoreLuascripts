@@ -1169,7 +1169,7 @@ end
 function BuffBase:LimitDamage2(effect, caster, target, data, percenthp, percentatt)
 	LogDebugEx("-----限制最大伤害LimitDamage2-----", self.id, self.owner.name, percenthp, percentatt)
 	LogDebugEx("target目标",target.name, caster.name, self.uuid)
-	LogTrace()
+	-- LogTrace()
 	caster = self.creater
 	target = self.card
 

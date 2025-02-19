@@ -407,7 +407,7 @@ function IsShowASMRBtn()
     local cfg = Cfgs.character:GetByID(curModeId)
     if (cfg.shopId) then
         local cfg2 = Cfgs.CfgCommodity:GetByID(cfg.shopId)
-        if (cfg2.bundlingID ~= nil) then
+        if (cfg2 and cfg2.bundlingID ~= nil) then
             local cfg3 = Cfgs.CfgCommodity:GetByID(cfg2.bundlingID)
             return true, cfg3.sIcon
         end

@@ -163,7 +163,7 @@ function SetTimes()
 end
 
 function OnViewClosed(viewKey)
-    if (gameObject ~= nil and viewKey == "ColosseumM") then
+    if (gameObject ~= nil and (viewKey == "ColosseumM" or viewKey == "ColosseumMRandom")) then
         EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "ColosseumView")
     end
 end
@@ -185,14 +185,24 @@ function OnClickZX()
     if (isBuy) then
         CSAPI.OpenView("ColosseumM", data, 1)
     else
-        CSAPI.OpenView("ColosseumBuy", {seasonData.id, RefreshPanel}, 1)
+        local cfg = Cfgs.cfgColosseum:GetByID(seasonData.id)
+        if (cfg.cost) then
+            CSAPI.OpenView("ColosseumBuy", {seasonData.id, RefreshPanel}, 1)
+        else
+            AbattoirProto:StartMod(1, 1, BuyCB)
+        end
     end
+end
+
+function BuyCB(proto)
+    CSAPI.OpenView("ColosseumM", nil, 1)
+    RefreshPanel()
 end
 
 function OnClickSJ()
     local isBuy = ColosseumMgr:CheckIsBuy(2)
     if (isBuy) then
-        CSAPI.OpenView("ColosseumM", data, 2)
+        CSAPI.OpenView("ColosseumMRandom", data, 2)
     else
         -- 
         RemoveTeam()

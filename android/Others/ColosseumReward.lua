@@ -65,7 +65,7 @@ end
 
 function OnClickGet()
     if (not randModData.isGet) then
-        AbattoirProto:RandModeGetRwd(RefreshPanel)
+        AbattoirProto:RandModeGetRwd(OnClickMask)
     end
 end
 

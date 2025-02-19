@@ -1,6 +1,6 @@
 --是否屏蔽日志
 -- noLog = 1;
---debug_model = 1;
+debug_model = 1;
 
 
 -- table转字符串, 带美化格式

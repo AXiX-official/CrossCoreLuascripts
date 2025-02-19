@@ -42,7 +42,10 @@ end
 
 function RefreshPanel()
     curData = ASMRMgr:GetData(data)
-    Play()
+    FuncUtil:Call(SetRole,nil,100) 
+end
+
+function SetRole()
     local l2dName = curData:GetCfg().l2d
     if (l2dName) then
         SetL2d(l2dName)
@@ -74,6 +77,7 @@ function SetModel()
     CSAPI.SetGOActive(mulIconItem.gameObject, model < 10000)
     local item = model >= 10000 and cardIconItem or mulIconItem
     item.Refresh(model, LoadImgType.Main, nil, false)
+    Play()
 end
 
 function Play()
@@ -86,6 +90,7 @@ function Play()
     source = ASMRMgr:PlayBGM(curData:GetCfg().id, 2)
     max = source:GetMaxTime()
     voiceTimer = Time.time
+    CSAPI.SetGOActive(mask,false)
 end
 
 function Update()
@@ -132,7 +137,9 @@ function OnClickBG()
     source:Pause(not isPlay)
     voiceTimer = isPlay and Time.time + 0.1 or nil
     if (l2d) then
-        local te = l2d.animationState:GetCurrent(0)
+        local te0 = l2d.animationState:GetCurrent(0)
+        te0.TimeScale = isPlay and 1 or 0
+        local te = l2d.animationState:GetCurrent(1)
         if (te) then
             if (isPlay) then
                 te.TrackTime = te.Animation.Duration * (cur / slider_sd.maxValue)
@@ -151,6 +158,8 @@ function SetL2d(l2dName)
     l2d = nil
     ResUtil:CreateSpine(l2dName .. "/" .. l2dName, 0, 0, 0, bg, function(go)
         l2d = ComUtil.GetCom(go, "CSpine")
+        l2d.animationState:SetAnimation(1, curData:GetCfg().e_anim, false)
+        FuncUtil:Call(Play,nil,100) 
     end)
 end
 
@@ -162,6 +171,7 @@ function SetMusic(isOpen)
         SettingMgr:SetAudioScale(s_audio_scale.music, scale)
     end
 end
+
 
 ----------------------------------------------------------------------------------------
 
@@ -202,7 +212,9 @@ function OnPressUp() -- OnPointerUp()
     isPress = true
     --
     if (l2d) then
-        local te = l2d.animationState:GetCurrent(0)
+        local te0 = l2d.animationState:GetCurrent(0)
+        te0.TimeScale = isPlay and 1 or 0
+        local te = l2d.animationState:GetCurrent(1)
         if (te) then
             te.TimeScale = isPlay and 1 or 0
             te.TrackTime = te.Animation.Duration * (cur / slider_sd.maxValue)

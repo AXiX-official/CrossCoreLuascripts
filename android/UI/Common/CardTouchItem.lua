@@ -1,4 +1,8 @@
-local isDrag = false
+local restoreShoeCB = nil 
+
+function SetIndex(_index)
+    index = _index
+end
 
 function Awake()
     click_clickNode = ComUtil.GetCom(clickNode, "Button")
@@ -49,6 +53,14 @@ function OnClick()
         JumpASMR()
         return
     end
+
+    if(restoreShoeCB)then 
+        restoreShoeCB()
+        click_clickNode.enabled = false
+        drag_clickNode.enabled = true
+        restoreShoeCB = nil
+    end
+
     if (cb) then
         cb(cfgChild)
     end
@@ -77,7 +89,7 @@ function OnDragXY(_x, _y)
 end
 
 function OnEndDragXY(_x, _y)
-    parentLua.ItemDragEndCB(cfgChild, _x, _y)
+    parentLua.ItemDragEndCB(cfgChild, _x, _y,index)
 end
 
 function GetIndex()
@@ -101,4 +113,11 @@ function JumpASMR()
             end)
         end
     end
+end
+
+--隐藏鞋相关逻辑
+function SetHideShoe(_restoreShoeCB)
+    restoreShoeCB = _restoreShoeCB
+    click_clickNode.enabled = true
+    drag_clickNode.enabled = false
 end

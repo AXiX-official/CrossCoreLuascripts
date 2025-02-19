@@ -3,7 +3,7 @@ function Awake()
         if (not isMax and data) then
             data.closeCB()
         else
-            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "ColosseumM")
+            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "ColosseumMRandom")
         end
         view:Close()
     end, nil, {})
@@ -72,7 +72,7 @@ function RefreshPanel()
             end
             --
             view:Close()
-            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "ColosseumM")
+            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "ColosseumMRandom")
         end, nil, 500)
     end
 end

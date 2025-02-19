@@ -52,6 +52,12 @@ function SetLayout()
         CSAPI.SetGOActive(btns2,true);
         btn1Func=nil;
         btn2Func=nil;
+    elseif openSetting==5 then --非自己的卡牌
+        CSAPI.SetGOActive(btns,false);
+        CSAPI.SetGOActive(btns2,false);
+        CSAPI.SetGOActive(lockBtn,false);
+        btn1Func=nil;
+        btn2Func=nil;
     end
 end
 

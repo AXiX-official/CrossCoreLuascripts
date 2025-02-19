@@ -69,7 +69,8 @@ function OnClickR()
 end
 
 function BuyCB(proto)
-    CSAPI.OpenView("ColosseumM", nil, proto.modType)
+    local panelName = proto.modType==1 and "ColosseumM" or "ColosseumMRandom"
+    CSAPI.OpenView(panelName, nil, proto.modType)
     if (parentP) then
         parentP()
     end

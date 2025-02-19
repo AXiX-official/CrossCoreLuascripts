@@ -770,7 +770,6 @@ function FightCardBase:CanSummon(monsterID, target_camp, pos)
     return true
 end
 
-
 ---------buffer接口---------------------------------------------------
 -- 属性直加
 function FightCardBase:AddBuffAttr(key, val)
@@ -1335,7 +1334,7 @@ function FightCardBase:CheckXP(num)
     end
 end
 
-function FightCardBase:AddSP(num, effectID)
+function FightCardBase:AddSP(num, effectID, isCost)
     LogDebugEx("FightCardBase:AddSP", self.sp, num)
 
     local sign = self:GetSign("signAddSP") -- 无法获取NP/SP标记
@@ -2227,6 +2226,25 @@ end
 -- 		self.needResolve = true
 -- 	end
 -- end
+
+-- isCost :是否为技能消耗
+function UniteCard:AddSP(num, effectID, isCost)
+    LogDebugEx("UniteCard:AddSP", self.sp, num, isCost)
+    FightCardBase.AddSP(self, num, effectID, isCost)
+
+    -- 通过buff扣减sp也可能触发解体
+    if isCost then return end -- 技能消耗, 返回
+    if num >= 0 then return end -- 增加, 返回
+    local mgr = self.team.fightMgr
+    if mgr.bIsApply then return end -- 技能中, 返回
+    if self.hp <= 1 or self.sp < g_resolveSp then
+        -- 非正常的解体需要设置为技能内
+        mgr.bIsApply = true
+        -- mgr:Resolve(self, ret)
+        self:Resolve(ret)
+        mgr.bIsApply = nil
+    end
+end
 
 -- 主动攻击后
 function UniteCard:AfterAttack(caster, target, oSkill, ret)
