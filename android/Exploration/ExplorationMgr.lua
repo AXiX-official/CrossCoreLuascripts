@@ -181,9 +181,9 @@ function this:GetRedInfo()
                 end
             end
         end
-        if curData:GetInfiniteRewardNum() then
+        if curData:GetInfiniteRewardNum() and curData:GetInfiniteRewardNum()>0 then
             info=info or {};
-            info.hasInfiniteReward=curData:GetInfiniteRewardNum()>0;
+            info.hasInfiniteReward=true;
         end
         if curData:HasInfiniteLv() or curData:IsMaxLv()~=true then --满级以后且没有无限等级的情况下不显示红点
             --任务判定

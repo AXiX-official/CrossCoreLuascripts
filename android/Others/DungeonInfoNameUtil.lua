@@ -95,7 +95,7 @@ function this.CloudDanger()
 end
 
 function this.CloudSpecial()
-    return {"CloudTitle","CloudLevel","CloudPlot","CloudOutput","CloudDetails","CloudButton"},"DungeonActivity11"
+    return {"CloudTitle","CloudLevel","CloudSpecial","CloudOutput","CloudDetails","CloudButton"},"DungeonActivity11"
 end
 
 return this; 

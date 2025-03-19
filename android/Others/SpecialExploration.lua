@@ -356,37 +356,44 @@ end
 
 function LoadImgs()
     local ls=GetImgInfos();
-    local oIdx=1;
-    local nIdx=1;
     if uiInfo then
+        local sMode=nil;
         --加载图片
         for k,v in pairs(ls) do
             local key=""
-            if k=="over" then
-                key=k..oIdx;
-                oIdx=oIdx+1;
-            elseif k=="nodeImg" then
-                key=k..nIdx;
-                nIdx=nIdx+1;
+            if k=="expFill" then
+                sMode=uiInfo.expFill;
+            else
+                sMode=false;
+            end
+            if k=="over" or k=="nodeImg" then
+                for i=1,3 do
+                    key=k..i;
+                    LoadImgSource(key,uiInfo.floder,v,sMode)
+                end
             else
                 key=k
-            end
-            if IsNil(this[key])~=true then
-                CSAPI.LoadImg(this[key],string.format("UIs/%s/%s.png",uiInfo.floder,v),false,function()
-                    CSAPI.SetScale(this[key],1,1,1);
-                    if k=="expFill" then
-                        --设置拉伸模式
-                        if uiInfo.expFill==true then
-                            fillImage.type=0;
-                        else
-                            fillImage.type=2;
-                        end
-                    end
-                end,true);
+                LoadImgSource(key,uiInfo.floder,v,sMode);
             end
         end
     end
     PlayEnterTween();
+end
+
+function LoadImgSource(key,floder,sName,sMode)
+    if key and floder and IsNil(this[key])~=true then
+        CSAPI.LoadImg(this[key],string.format("UIs/%s/%s.png",floder,sName),false,function()
+            CSAPI.SetScale(this[key],1,1,1);
+            --设置拉伸模式
+            if key=="expFill" then
+                if sMode==true then
+                    fillImage.type=0;
+                else
+                    fillImage.type=2;
+                end
+            end
+        end,true);
+    end
 end
 
 function GetImgInfos()

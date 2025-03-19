@@ -528,13 +528,8 @@ function SetInfoItemPos()
         itemInfo.SetPanelPos("CloudOutput",47,-26)
         itemInfo.SetPanelPos("CloudDetails",47,-194)
         itemInfo.SetPanelPos("CloudButton",47,-335)
-        if currItem and currItem.GetType() == DungeonInfoType.CloudSpecial then
-            itemInfo.SetPanelPos("CloudPlot",47,185)
-            itemInfo.SetGOActive("CloudPlot","txtObj",false)
-        else
-            itemInfo.SetPanelPos("CloudPlot",47,245)
-            itemInfo.SetGOActive("CloudPlot","txtObj",true)
-        end
+        itemInfo.SetPanelPos("CloudPlot",47,245)
+        itemInfo.SetPanelPos("CloudSpecial",47,182)
         itemInfo.SetPanelPos("CloudPlotButton",47,-350)
         itemInfo.SetPanelPos("CloudDanger",47,-24)
         itemInfo.SetItemPos("Double",-246,-433)
