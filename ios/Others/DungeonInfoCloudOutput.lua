@@ -30,8 +30,10 @@ function ShowOutput()
     end
     CSAPI.SetGOActive(empty, not rewardDatas or #rewardDatas < 1)
     if (not rewardDatas or #rewardDatas < 1) then
+        CSAPI.SetGOActive(img,false)
         return
     end
+    CSAPI.SetGOActive(img,true)
     for i = 1, 4 do
         local goodsData = GoodsData();
         if (not rewardDatas[i]) then

@@ -97,7 +97,7 @@ function OnOpen()
 				bagNum=BagMgr:GetCount(item.cid)
 			end
 			SetHasNum(bagNum)
-		elseif (commodityType==2 and commodity:GetType()==CommodityItemType.ITEM) then --随机配置
+		elseif (commodityType==2 and commodity:GetType()==RandRewardType.ITEM) then --随机配置
 			local bagNum=BagMgr:GetCount(commodity:GetID());
 			SetHasNum(bagNum)
 		else

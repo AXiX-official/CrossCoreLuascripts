@@ -95,7 +95,7 @@ function SetStar()
         local iconName = ""
         for i = 1, 3 do
             iconName = i <= starNum and "star_01" or "star_02"
-            CSAPI.LoadImg(this["star" .. i].gameObject,"UIs/DungeonActivity9/" .. iconName .. ".png",true,nil,true)
+            CSAPI.LoadImg(this["star" .. i].gameObject,"UIs/DungeonActivity11/" .. iconName .. ".png",true,nil,true)
         end
     end
 end
