@@ -3,10 +3,10 @@ local this =
 {
 [-865403415]={
 {effect="Summon_eff",delay=-1,time=11000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/sixth.acb",cue_name="Ares_summon"},
-{delay=500,time=11000,type=0,cue_sheet="cv/Ares.acb",cue_name="Ares_40_b",cue_feature=1}
+{delay=500,time=11000,type=0,cue_sheet="cv/Ares.acb",cue_name="Ares_40",cue_feature=1}
 },
 [1522982806]={
-{delay=500,time=11000,type=0,cue_sheet="cv/Ares.acb",cue_name="Ares_40_b",cue_feature=1},
+{delay=500,time=11000,type=0,cue_sheet="cv/Ares.acb",cue_name="Ares_40",cue_feature=1},
 {effect="Summon1_eff",delay=-1,time=11000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/sixth.acb",cue_name="Ares_summon"}
 },
 [1310282141]={

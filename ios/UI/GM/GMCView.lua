@@ -772,66 +772,29 @@ function OnClickUnite()
     local ss = StringUtil:split(str," ")
     id = tonumber(ss[1])
     type = ss[2] or 1
+    local str = ""
     if tonumber(type) == 2 then
-        local cfgMonster = Cfgs.MonsterData:GetByID(id)
-        if cfgMonster and cfgMonster.card_id then
-            id = cfgMonster.card_id
-        else
-            LogError("未找到对应id的怪物表数据!!!" .. id)
-            return
-        end
-    end
-    local cfgCard = Cfgs.CardData:GetByID(id)
-    if cfgCard and cfgCard.uniteLabel then
-        if cfgCard then
-            if cfgCard.uniteLabel then
-                local logStrs = {
-                    string.format("卡牌名：%s，卡牌id：%s",cfgCard.name,cfgCard.id)
-                }
-                local str = ""
-                for i, _info in ipairs(cfgCard.uniteLabel) do
-                    local cfgLabel = Cfgs.CfgUniteLabel:GetByID(_info[1])
-                    if cfgLabel then
-                        if i == 1 then
-                            str = "条件：".. cfgLabel.typeName .. ":"
-                        else
-                            str = str .. "|" .. cfgLabel.typeName .. ":"
-                        end
-                        for k, content in ipairs(_info[2]) do
-                            if k == #_info[2] then
-                                str = str .. content
-                            else
-                                str = str .. content .. ","
-                            end
-                        end
-                        str = str .. " 对应" .. (cfgLabel.cfgType == 1 and "卡牌角色表" or "卡牌配置表") .."的" .. cfgLabel.key .."字段"
-                    end
-                end
-                str = str .. "。符合的卡牌有："
-                table.insert(logStrs,str)
-                if cfgCard.unite then
-                    for i, v in ipairs(cfgCard.unite) do
-                        local _cfgCard = Cfgs.CardData:GetByID(v)
-                        if _cfgCard then
-                            table.insert(logStrs,"name：" .. _cfgCard.name..",id:" .. _cfgCard.id)
-                        end
-                    end
-                else
-                    LogError("当前卡牌没有可同调的对象！！！" .. cfgCard.id)
-                    return
-                end
-                for i, v in ipairs(logStrs) do
-                    LogError(v)
-                end
+        local cfg = Cfgs.MonsterData:GetByID(id)
+        if cfg then
+            if cfg.unite then
+                LogTable(cfg.unite,string.format("怪物id：%s，怪物名称：%s",cfg.id,cfg.name))
             else
-                LogError("当前卡牌表数据未配置同调标签数据！！！" .. cfgCard.id)
+                LogError("没可同调的怪物或卡牌！！！" .. id)
             end
         else
-            LogError("未找到对应id的卡牌表数据!!!" .. id)
-            return
+            LogError("找不到对应怪物数据！！！" .. id)
         end
     else
-        LogError("当前卡牌表数据未配置同调标签数据！！！" .. cfgCard.id)
+        local cfg = Cfgs.CardData:GetByID(id)
+        if cfg then
+            if cfg.unite then
+                LogTable(cfg.unite,string.format("卡牌id：%s，卡牌名称：%s",cfg.id,cfg.name))
+            else
+                LogError("没可同调的怪物或卡牌！！！" .. id)
+            end
+        else
+            LogError("找不到对应卡牌数据！！！" .. id)
+        end
     end
 end
 

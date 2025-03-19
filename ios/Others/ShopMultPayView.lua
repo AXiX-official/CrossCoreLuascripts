@@ -479,13 +479,13 @@ function OnClickVoucherPay()
 	if CSAPI.RegionalCode()==3 then
 		if CSAPI.PayAgeTitle() then
 			CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()
-				ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,shopPriceKey)
+				ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,nil,shopPriceKey)
 			end})
 		else
-			ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,shopPriceKey);
+			ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,nil,shopPriceKey);
 		end
 	else
-		ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,shopPriceKey);
+		ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,nil,shopPriceKey);
 	end
 	---ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,shopPriceKey);
 end--购买成功

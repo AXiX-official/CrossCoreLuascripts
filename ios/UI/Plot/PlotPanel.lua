@@ -152,7 +152,7 @@ function OnDestroy()
 end
 
 function OnOpen()
-	if CSAPI.IsADV() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ANIMATION_START) end
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_ANIMATION_START) end
 	CSAPI.StopBGM(500)
 	if data == nil then
 		LogError("章节ID不能为空！");

@@ -420,6 +420,8 @@ local conf = {
 {'413',	'BadgeTips',	'Tips/BadgeTips',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'414',	'RogueTSelectBuff',	'RogueT/RogueTSelectBuff',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'415',	'SummaryNewYear',	'Summary1/SummaryNewYear',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'417',	'DungeonActivity11',	'DungeonActivity11/DungeonActivityView11',	'',	'',	'[[10106],[12012,140024]]',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'418',	'DungeonCloud',	'DungeonActivity11/DungeonCloudView',	'',	'',	'[[10106],[12012,140024]]',	'',	'',	'',	'',	'',	'',	'1',	''},
 },
 }
 --cfgview = conf

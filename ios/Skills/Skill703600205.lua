@@ -10,5 +10,5 @@ end
 function Skill703600205:DoSkill(caster, target, data)
 	-- 703600205
 	self.order = self.order + 1
-	self:Revive(SkillEffect[703600205], caster, target, data, 1,0.5,{progress=700})
+	self:Revive(SkillEffect[703600205], caster, target, data, 1,0.5,{progress=800})
 end

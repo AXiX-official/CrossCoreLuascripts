@@ -174,7 +174,10 @@ function ClientProto:InitFinishRet(proto)
     RegressionMgr:CheckRedPointData() -- 回归活动
     EventMgr.Dispatch(EventType.InitFinishRet)
 end
-
+---中途打断清理数据
+function ClientProto:ClearLoginData()
+    self.finishRet = false;
+end
 -- 未收到InitFinishRet前每隔几秒发一次直到成功为止
 function ClientProto:SendInitFinish()
     if self.finishRet then
@@ -272,6 +275,11 @@ function ClientProto:DySetCfgNotice(proto)
         end
         if (v.name == "CfgActiveEntry") then
             EventMgr.Dispatch(EventType.CfgActiveEntry_Change) --活动表动态更改
+        end
+        if v.name == "CfgActiveList" then
+            ActivityMgr:SetData(v.row_id)
+            ActivityMgr:RefreshOpenState()
+            EventMgr.Dispatch(EventType.Activity_List_Cfg_Change)
         end
     end
 end

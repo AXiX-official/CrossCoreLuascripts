@@ -848,5 +848,18 @@ function this:GetIconTitle()
     return self.data.icon_title or 1
 end
 
+---首次进入 设置true   注销退出 设置false
+function this:SetEnterHall( IsEnter)
+    self.IsEnter=IsEnter;
+end
+
+---获取是否进入过
+function this:IsEnterHall()
+    if (not self.IsEnter) then
+        return false;
+    else
+        return self.IsEnter
+    end
+end
 
 return this;

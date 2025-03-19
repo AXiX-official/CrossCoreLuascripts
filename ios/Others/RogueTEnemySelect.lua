@@ -205,13 +205,23 @@ function OnClickEnemy()
     local _monsters = monsterGroupCfg.monsters or {}
     for k, v in ipairs(monsterGroupCfg.stage) do
         for p, q in ipairs(v.monsters) do
+            local monsterCfg = Cfgs.MonsterData:GetByID(q)
             table.insert(monsters, {
                 id = q,
                 -- level = mainLineCfg.previewLv,
-                isBoss = q == monsterGroupCfg.monster
+                isBoss = monsterCfg.isboss==1
             })
         end
     end
+    if(#monsters>1)then 
+        table.sort(monsters,function (a,b)
+            if(a.isBoss~=b.isBoss)then 
+                return a.isBoss
+            else 
+                return a.id > b.id
+            end 
+        end)
+    end 
     CSAPI.OpenView("FightEnemyInfo", monsters)
 end
 

@@ -113,10 +113,13 @@ end
 function this:UpdateSectionMultiInfo(proto)
     self.multiInfo = self.multiInfo or {};
     if proto then
-        for k, v in ipairs(proto) do
-            self.multiInfo[v.id] = v.cnt;
-            self.multiUpdateTime = v.pt
+        if proto.infos and #proto.infos>0 then
+            for i, v in ipairs(proto.infos) do
+                self.multiInfo[v.id] = v.cnt;
+                self.multiUpdateTime = v.pt
+            end
         end
+        self.limitMultiInfo = proto.cntInfos or nil
     end
     EventMgr.Dispatch(EventType.Dungeon_DailyData_Update)
 end
@@ -124,11 +127,30 @@ end
 -- 返回副本中的多倍掉落信息
 function this:GetSectionMultiNum(_id)
     local num = 0;
+    local limitTime = 0
     local id = self.sectionDatas[_id] and self.sectionDatas[_id]:GetMultiID() or 0
     if self.multiInfo and self.multiInfo[id] then
         num = self.multiInfo[id]
     end
-    return num;
+    if self.limitMultiInfo and #self.limitMultiInfo > 0 then
+        for i, v in ipairs(self.limitMultiInfo) do
+            if v.time and v.time - TimeUtil:GetTime() > 0 then
+                if limitTime <= 0 then
+                    limitTime = v.time
+                elseif  limitTime > v.time then
+                    limitTime = v.time
+                end
+                if v.cnt then
+                    num = num - v.cnt
+                end
+            end
+        end
+    end
+    return num,limitTime
+end
+
+function this:GetLimitMultiInfo()
+    return self.limitMultiInfo
 end
 
 function this:GetMultiUpdateTime()
@@ -1455,7 +1477,6 @@ function this:IsActivityRed(isUpdate)
     if not isRed then --能力测验
         isRed = RogueTMgr:IsRed()
     end
-
     -- if not isRed then
     --     isRed = ColosseumMgr:IsRed()
     -- end
@@ -1547,6 +1568,7 @@ function this:Clear()
     self.viewOpenSetting = {};
     self.cfgFightMonsterGroup = {};
     self.multiInfo = nil;
+    self.limitMultiInfo = nil
     self.dungeonDatas = nil;
     self.dailyData = nil;
     self.multiUpdateTime = nil

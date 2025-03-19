@@ -8,6 +8,13 @@ local this =
 {delay=14415,time=4000,type=1,hit_type=1,hits={0}},
 {delay=6300,time=17000,type=0,cue_sheet="cv/Collapsar.acb",cue_name="Collapsar_40",cue_feature=1}
 },
+[1715947755]={
+{effect="cast2_eff",effect_pack="j8028002",time=17000,type=0,pos_ref={ref_type=6}},
+{delay=12807,time=4000,type=1,hit_type=1,hits={0}},
+{delay=400,time=17000,type=0,cue_sheet="fight/effect/twelfth.acb",cue_name="DarkMatter_attack_skill_02"},
+{delay=14415,time=4000,type=1,hit_type=1,hits={0}},
+{delay=6300,time=17000,type=0,cue_sheet="cv/Collapsar.acb",cue_name="Collapsar_40",cue_feature=1}
+},
 [-686817241]={
 {effect="cast1_eff",time=6000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/twelfth.acb",cue_name="DarkMatter_attack_skill_01"},
 {effect="cast1_eff2",delay=2200,time=6000,type=0,pos_ref={ref_type=6}},

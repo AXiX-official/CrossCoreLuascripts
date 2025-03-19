@@ -41,6 +41,12 @@ function OnOpen()
         CSAPI.SetText(txt_set,modelCfg.desc);
         CSAPI.SetText(txt_roleName,modelCfg.key);
         CSAPI.SetText(txt_roleNameTips,modelCfg.englishName);
+        local skin=RoleSkinMgr:GetSkinInfoByModelID(modelID);
+        if skin~=nil then
+            CSAPI.SetGOActive(limitObj,skin:IsLimitSkin());
+        else
+            CSAPI.SetGOActive(limitObj,false);
+        end
         skinDesc = data:GetSkinDesc()
         changeInfo=data:GetChangeInfo()
     end

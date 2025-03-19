@@ -6,22 +6,20 @@ Skill331804 = oo.class(SkillBase)
 function Skill331804:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 伤害前
-function Skill331804:OnBefourHurt(caster, target, data)
-	-- 8166
-	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
+-- 行动结束
+function Skill331804:OnActionOver(caster, target, data)
+	-- 8074
+	if SkillJudger:TargetIsSummon(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8449
-	local count49 = SkillApi:GetAttr(self, caster, target,3,"maxhp")
 	-- 331804
-	self:AddTempAttr(SkillEffect[331804], caster, self.card, data, "attack",count49*0.08)
+	self:AddProgress(SkillEffect[331804], caster, target, data, 250)
 end
 -- 攻击结束
 function Skill331804:OnAttackOver(caster, target, data)
@@ -41,7 +39,7 @@ function Skill331804:tFunc_331808_331806(caster, target, data)
 		return
 	end
 	-- 331806
-	self:AddSp(SkillEffect[331806], caster, self.card, data, 10)
+	self:AddSp(SkillEffect[331806], caster, self.card, data, 20)
 end
 function Skill331804:tFunc_331808_331807(caster, target, data)
 	-- 8063
@@ -55,5 +53,5 @@ function Skill331804:tFunc_331808_331807(caster, target, data)
 		return
 	end
 	-- 331807
-	self:AddSp(SkillEffect[331807], caster, target, data, 10)
+	self:AddSp(SkillEffect[331807], caster, target, data, 20)
 end

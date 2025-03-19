@@ -8,6 +8,8 @@ local costID=nil;
 local currPrice=0;
 local eventMgr=nil;;
 local layout=nil;
+local hasInfinite=false;
+local btns={};
 function Awake()
 	layout=ComUtil.GetCom(hsv,"UISV");
 	layout:Init("UIs/Grid/GridItem",LayoutCallBack,true,0.8)
@@ -23,10 +25,15 @@ function OnOpen()
     --初始化等级
     data=ExplorationMgr:GetCurrData();
 	Refresh();
+	SetBtnState(btn_remove,removeImg, upLv > 1);
+	SetBtnState(btn_add,addImg,hasInfinite and true or upLv < maxLv);
+	SetBtnState(btn_max,maxImg, upLv<maxLv);
+	SetBtnState(btn_min,minImg, upLv > 1);
 end
 
 function Refresh()
     CSAPI.SetText(txt_stage1,tostring(data:GetCurrLv()));
+	hasInfinite=data:HasInfiniteLv();
     nextLv=data:GetNextLv();
 	currLv=data:GetCurrLv();
 	maxLv=data:GetMaxLv()-currLv;
@@ -84,7 +91,8 @@ end
 
 function RefreshPrice()
     --获得升级所需消耗
-    local cfgs=data:GetUpExpCfgs(currLv+upLv-1);
+	local targetLv=currLv+upLv-1;
+    local cfgs=data:GetUpExpCfgs(targetLv);
     if cfgs then
         local id=nil;
         local num=0;
@@ -118,7 +126,7 @@ function SetPrice(id, num)
 	if (num >= 100000) then
         CSAPI.SetText(txt_hasNum, math.floor(num / 10000) .. "W")
     else
-        CSAPI.SetText(txt_hasNum, tostring( num))
+        CSAPI.SetText(txt_hasNum, tostring(num))
     end
 end
 
@@ -132,22 +140,41 @@ end
 
 function SetBtnState(btn,img, enable)
 	if btn then
-		if enable then
-			btn.enabled = enable;
+		CSAPI.SetGOAlpha(btn,enable and 1 or 0.5);
+		local com=nil;
+		if btns and btns[btn.name]~=nil then
+			com=btns[btn.name]
 		else
-			btn.enabled = false;
+			btns=btns or {}
+			com=ComUtil.GetCom(btn,"Image");
+			btns[btn.name]=com;
+		end
+		if com then
+			if enable then
+				com.raycastTarget = enable;
+			else
+				com.raycastTarget = false;
+			end
 		end
 	end
 end 
 
 function OnClickAdd()
-	if upLv < maxLv then
-		upLv = upLv + 1;
-		CSAPI.SetText(txt_num,tostring(math.floor(upLv)));		
+	if data then
+		if data:HasInfiniteLv() or upLv < maxLv then --无限等级没有上限升级
+			upLv = upLv + 1;
+			CSAPI.SetText(txt_num,tostring(math.floor(upLv)));		
+		end
+	else
+		if upLv < maxLv then
+			upLv = upLv + 1;
+			CSAPI.SetText(txt_num,tostring(math.floor(upLv)));		
+		end
 	end
-	SetBtnState(removeBtn,removeImg, upLv > 1);
-	SetBtnState(addBtn,addImg, upLv < maxLv);
-	SetBtnState(maxBtn,maxImg, upLv < maxLv);
+	SetBtnState(btn_remove,removeImg, upLv > 1);
+	SetBtnState(btn_add,addImg,hasInfinite and true or upLv < maxLv);
+	SetBtnState(btn_max,maxImg, upLv<maxLv);
+	SetBtnState(btn_min,minImg, upLv > 1);
 	RefreshPrice();
 	RefreshRewards();
 	RefreshNextStage()
@@ -159,9 +186,10 @@ function OnClickRemove()
 		CSAPI.SetText(txt_num, tostring(math.floor(upLv)));	
 	end
 	local tempLv=currLv+upLv;
-	SetBtnState(removeBtn,removeImg, tempLv > nextLv);
-	SetBtnState(addBtn,addImg, tempLv<maxLv);
-	SetBtnState(maxBtn,maxImg, tempLv<maxLv);
+	SetBtnState(btn_remove,removeImg, upLv>1);
+	SetBtnState(btn_add,addImg,hasInfinite and true or tempLv<maxLv);
+	SetBtnState(btn_max,maxImg, upLv<maxLv);
+	SetBtnState(btn_min,minImg, upLv>1);
 	RefreshPrice();
 	RefreshRewards();
 	RefreshNextStage()
@@ -169,9 +197,10 @@ end
 
 function OnClickMax()
 	upLv=maxLv;
-	SetBtnState(removeBtn,removeImg, upLv > nextLv);
-	SetBtnState(addBtn,addImg, false);
-	SetBtnState(maxBtn,maxImg, false);
+	SetBtnState(btn_remove,removeImg, upLv>1);
+	SetBtnState(btn_add,addImg, hasInfinite and true or false);
+	SetBtnState(btn_max,maxImg, upLv<maxLv);
+	SetBtnState(btn_min,minImg, true);
 	CSAPI.SetText(txt_num, tostring(math.floor(upLv)));	
 	RefreshPrice();
 	RefreshRewards();
@@ -181,10 +210,10 @@ end
 function OnClickMin()
 	upLv=1;
 	local tempLv=currLv+upLv;
-	SetBtnState(removeBtn,removeImg, currLv > nextLv);
-	SetBtnState(addBtn,addImg, currLv<maxLv);
-	SetBtnState(maxBtn,maxImg, currLv<maxLv);
-	SetBtnState(minBtn,minImg, false);
+	SetBtnState(btn_remove,removeImg, upLv>1);
+	SetBtnState(btn_add,addImg, hasInfinite and true or currLv<maxLv);
+	SetBtnState(btn_max,maxImg, upLv<maxLv);
+	SetBtnState(btn_min,minImg, upLv>1);
 	CSAPI.SetText(txt_num, tostring(math.floor(upLv)));	
 	RefreshPrice();
 	RefreshRewards();

@@ -4,9 +4,16 @@ local isFirst1 = false
 -- local countDown = 0.46
 -- local isFirst2 = true
 local svUtil = nil
+local isExist = true -- 卡牌是否已获得
+local isLimitSkin, limitTime = false, nil
+local timer = nil
+
 function Awake()
-    UIUtil:AddTop2("RoleApparel", gameObject, function()
+    top = UIUtil:AddTop2("RoleApparel", gameObject, function()
         view:Close()
+        if (openSetting and openSetting == 2 and data[2] ~= nil) then
+            data[2]()
+        end
     end, nil, {})
 
     cardIconItem = RoleTool.AddRole(item1, nil, nil, false)
@@ -66,19 +73,59 @@ function RefreshSkinInfo()
 end
 
 function OnOpen()
-    cardData = data
-    isMonster = openSetting
-    InitSkinData()
+    if (openSetting and openSetting == 2) then
+        CSAPI.SetScale(arrow1, 0, 0, 0)
+        CSAPI.SetScale(arrow2, 0, 0, 0)
+        top.SetHomeActive(false)
+        UIUtil:ShowSkin(data[1])
+        InitLimitSkin()
+    else
+        cardData = data
+        -- isMonster = openSetting
+        InitSkinData()
+    end
     RefreshPanel()
 end
 
+function Update()
+    if (isLimitSkin and timer and Time.time >= timer) then
+        timer = Time.time + 1
+        local need = limitTime - TimeUtil:GetTime()
+        local timeData = TimeUtil:GetTimeTab(need)
+        LanguageMgr:SetText(txtLimitTime, 18127, timeData[1], timeData[2], timeData[3])
+        if (need <= 0) then
+            timer = nil
+            SetBtn()
+        end
+    end
+end
+
+-- 限时皮肤领取 data: {模型表id,cb}
+function InitLimitSkin()
+    local modelID = data[1]
+    local caracterCfg = Cfgs.character:GetByID(modelID)
+    isExist, cardData = RoleMgr:CheckCfgIdExist(caracterCfg.card_id)
+    if (not cardData) then
+        cardData = RoleMgr:GetFakeData(caracterCfg.card_id)
+    end
+    curDatas = {} -- 仅展示当前解锁的限时皮肤
+    table.insert(curDatas, RoleSkinMgr:GetRoleSkinInfo(caracterCfg.role_id, modelID))
+
+    useIndex = GetBaseIndex() -- 当前使用的
+    curIndex = 1
+    -- items 
+    svUtil:Init(layout, #curDatas, {274, 422}, 7, 0.1, 0.5)
+    layout:IEShowList(#curDatas, FirstCB, curIndex)
+end
+
+-- data : CharacterCardsData
 function InitSkinData()
     curDatas = {}
     local _curDatas = {}
     local cardCfgID = cardData:GetCfgID()
-    if (isMonster) then
-        cardCfgID = cardData:GetCfg().card_id
-    end
+    -- if (isMonster) then
+    --     cardCfgID = cardData:GetCfg().card_id
+    -- end
     local infos = RoleSkinMgr:GetDatas(cardData:GetRoleID(), true)
     for i, v in pairs(infos) do
         if (v:IsThisCard(cardCfgID)) then
@@ -155,6 +202,15 @@ function RefreshPanel(isCheck)
     SetArrow()
 
     SetASMRInfo()
+
+    SetLimitSkin()
+end
+
+function SetLimitSkin()
+    isLimitSkin, limitTime = curDatas[curIndex]:IsLimitSkin()
+    CSAPI.SetGOActive(txtLimit1, isLimitSkin)
+    CSAPI.SetGOActive(txtLimit2, not isExist)
+    timer = isLimitSkin and Time.time or nil
 end
 
 function SetArrow()
@@ -202,17 +258,21 @@ function SetImg()
 end
 
 function SetBtn()
-    local is1, lanId, tips, isShow = true, 4020, "", true -- 黄色，替换,提示,显示按钮
+    local is1, lanId, tips, isShow = true, 18128, "", true -- 黄色，替换,提示,显示按钮
     -- 皮肤是否可用
     canUse = curDatas[curIndex]:CheckCanUse()
     jumId = nil
     if (canUse) then
-        -- 可用  已用/未用
-        if (useIndex == curIndex) then
-            local isL2d = cardData:GetSkinIsL2d()
-            if (isL2d == isLive2D) then
-                is1, lanId = false, 18085
+        if (isExist) then
+            -- 可用  已用/未用
+            if (useIndex == curIndex) then
+                local isL2d = cardData:GetSkinIsL2d()
+                if (isL2d == isLive2D) then
+                    is1, lanId = false, 18085
+                end
             end
+        else
+            is1, lanId = false, 18131
         end
     else
         -- 不可用 突破解锁/其他跳转途径
@@ -222,18 +282,6 @@ function SetBtn()
         else
             local getCondition = curDatas[curIndex]:GetCfg().getCondition
             if (getCondition) then
-                -- 有跳转
-                -- shopCfg = Cfgs.CfgCommodity:GetByID(getCondition[2])
-                -- if (shopCfg and shopCfg.jCosts) then
-                --     itemCfg = Cfgs.ItemInfo:GetByID(shopCfg.jCosts[1][1])
-                --     ResUtil.IconGoods:Load(imgMoney, itemCfg.icon, true)
-                --     CSAPI.SetText(txtMoney, shopCfg.jCosts[1][2] .. "")
-                --     local had = BagMgr:GetCount(shopCfg.jCosts[1][1])
-                --     if (canvasGroup == nil) then
-                --         canvasGroup = ComUtil.GetCom(btnSure, "CanvasGroup")
-                --     end
-                --     canvasGroup.alpha = had >= shopCfg.jCosts[1][2] and 1 or 0.3
-                -- end
                 is1, lanId = false, 18038
                 jumId = getCondition[1]
             else
@@ -242,18 +290,29 @@ function SetBtn()
             end
         end
     end
-    CSAPI.SetGOActive(btnSure, isShow)
-    if (isShow) then
-        CSAPI.SetGOActive(btnImg1, is1)
-        CSAPI.SetGOActive(btnImg2, not is1)
-        LanguageMgr:SetText(txtSure1, lanId)
-        LanguageMgr:SetEnText(txtSure2, lanId)
+    --
+    if (lanId == 18131) then --未获得角色
+        CSAPI.SetGOActive(txtNoGet, true)
+        CSAPI.SetGOActive(btnSure, false)
+    else
+        CSAPI.SetGOActive(txtNoGet, false)
+        CSAPI.SetGOActive(btnSure, isShow)
+        if (isShow) then
+            CSAPI.SetGOActive(btnImg1, is1)
+            CSAPI.SetGOActive(btnImg2, not is1)
+            LanguageMgr:SetText(txtSure1, lanId)
+            LanguageMgr:SetEnText(txtSure2, lanId)
+        end
     end
+    --
     CSAPI.SetText(txt_tips, tips)
 end
 
 -- 更换
 function OnClickSure()
+    if (not isExist) then
+        return -- 卡牌未获得
+    end
     if (canUse) then
         -- if (cardData:IsBaseCard()) then
         --     RoleSkinMgr:UseSkin(cardData:GetID(), curModeId, cardData:GetSkinIDElse(), isLive2D)
@@ -261,6 +320,11 @@ function OnClickSure()
         --     RoleSkinMgr:UseSkin(cardData:GetID(), cardData:GetSkinIDBase(), curDatas[curIndex]:GetSkinID(),
         --         cardData:GetSkinIsL2dBase(), isLive2D)
         -- end
+        local isLimitSkin, limitTime = curDatas[curIndex]:IsLimitSkin()
+        if(isLimitSkin and (limitTime - TimeUtil:GetTime()<=0))then 
+            LanguageMgr:ShowTips(1054)
+            return 
+        end 
         -- 改为按绑定关系切换
         local skin_a = RoleTool.GetBDSkin_a(cardData:GetCfgID(), curModeId)
         RoleSkinMgr:UseSkin(cardData:GetID(), curModeId, skin_a, isLive2D, isLive2D)
@@ -354,7 +418,7 @@ end
 -------------------------------------------------------放大
 -- 放大
 function OnClickSearch()
-    CSAPI.OpenView("RoleInfoAmplification", {curModeId, isLive2D}, LoadImgType.RoleInfo)
+    CSAPI.OpenView("RoleInfoAmplification", {curModeId, isLive2D,nil,nil,true}, LoadImgType.RoleInfo)
 end
 
 -- 动态开关

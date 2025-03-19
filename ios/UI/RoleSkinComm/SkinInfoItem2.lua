@@ -20,6 +20,7 @@ function Refresh(_data)
     SetSIcon()
     SetGetTag()
     SetHas(data:CheckCanUse())
+    SetLimitSkin()
 end
 
 function SetIcon()
@@ -154,4 +155,10 @@ function GetPos()
     local x, y, z = CSAPI.GetPos(alphaNode)
     pos = {x, y, z}
     return pos
+end
+
+
+function SetLimitSkin()
+    local isLimitSkin = data:IsLimitSkin()
+    UIUtil:SetRedPoint2("Common/Red4", alphaNode, isLimitSkin, 88, 204, 0)
 end

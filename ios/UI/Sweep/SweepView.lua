@@ -32,6 +32,10 @@ local limitTime = 0
 local limitTimer = 0
 local multiLimitNum = 0
 local isUnLimit = false
+--vip限时多倍
+local vipEndTime = 0
+local vipTime = 0
+local vipTimer = 0
 
 --net
 local isStarLoading = nil
@@ -157,6 +161,14 @@ function Update()
         if limitTime <= 0 then
             InitDouble()
             EventMgr.Dispatch(EventType.Section_Daily_Double_Update)
+        end
+    end
+
+    if vipTime > 0 and vipTimer < Time.time then
+        vipTimer = Time.time + 1
+        vipTime = vipEndTime - TimeUtil:GetTime()
+        if vipTime <= 0 then
+            ShowDoublePanel()
         end
     end
 
@@ -312,8 +324,9 @@ function InitDouble()
             CSAPI.SetText(txtDouble, "")
         else
             local max = 0
-            multiNum, max = DungeonUtil.GetMultiNum(sectionData:GetID())
-            CSAPI.SetText(txtDouble, multiNum .. "/" .. max)    
+            multiNum,max,vipEndTime = DungeonUtil.GetMultiNum(sectionData:GetID())
+            vipTime = vipEndTime and vipEndTime - TimeUtil:GetTime() or 0
+            CSAPI.SetText(txtDouble, multiNum .. "/" .. max)
             LanguageMgr:SetText(txt_double,42003)
         end
     end
@@ -460,7 +473,7 @@ function RefreshMaterial(value)
     elseif isMat then
         CSAPI.SetText(txtHot2, currMat .. "")
         CSAPI.SetText(txtMat2, tagetMat .. "")
-        CSAPI.SetText(cost, "" .. str)
+        CSAPI.SetText(cost, "-" .. str)
     end
 end
 

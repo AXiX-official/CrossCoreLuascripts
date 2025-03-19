@@ -58,11 +58,14 @@ local conf = {
 {'50',	'50',	'61052',	'暮光之约',	'50',	'',	'',	'9',	'twilight_invitation',	'twilight_invitation_replace',	'board_twilight_invitation',	'Small_twilight_invitation',	'商店购买',	'-9,-38,1.18',	'CG0032_TwilightInvitation_spine',	'0,0,1',	'1',	'80426'},
 {'51',	'51',	'61053',	'周年欢聚',	'51',	'',	'',	'7',	'anniversary_party',	'',	'board_anniversary_party',	'Small_anniversary_party',	'【周年狂欢】活动',	'44,15,1.03',	'CG0039_AnniversaryParty_spine',	'90,0,1',	'',	'1'},
 {'52',	'52',	'61054',	'旷野之声',	'52',	'',	'',	'6',	'voice_of_the_wild',	'voice_of_the_wild_replace',	'board_voice_of_the_wild',	'small_voice_of_the_wild',	'高级勘测奖励',	'-21,-21,0.69',	'wulin',	'-23,-27,1.36',	'',	'1'},
-{'53',	'53',	'61055',	'甜蜜一瞬',	'53',	'2025/2/26 03:00:00',	'2027/2/26 3:00:00',	'6',	'a_sweet_moment',	'a_sweet_moment_replace',	'board_a_sweet_moment',	'Small_a_sweet_moment',	'高级勘测奖励',	'44,-42,1.04',	'niaoyun',	'-96,-35,1.33',	'',	'1'},
+{'53',	'53',	'61055',	'甜蜜一瞬',	'53',	'',	'',	'6',	'a_sweet_moment',	'a_sweet_moment_replace',	'board_a_sweet_moment',	'Small_a_sweet_moment',	'高级勘测奖励',	'44,-42,1.04',	'niaoyun',	'-96,-35,1.33',	'',	'1'},
 {'55',	'55',	'61057',	'合家欢乐',	'55',	'',	'',	'7',	'whole_family_have_fun',	'',	'board_whole_family_have_fun',	'Small_whole_family_have_fun',	'新年活动',	'-102,3,0.95',	'CG0040_WholeFamilyHaveFun',	'0,0,0.93',	'',	'1'},
 {'56',	'56',	'61058',	'换装游戏',	'56',	'',	'',	'6',	'dress_up_game',	'dress_up_game_replace',	'board_dress_up_game',	'Small_dress_up_game',	'商店购买',	'44,-7,0.93',	'CG0036_DressUpGame_spine',	'147,0,0.93',	'1',	'80427'},
 {'59',	'59',	'61061',	'粉红爱意',	'59',	'',	'',	'2',	'pink_love',	'pink_love_replace',	'board_pink_love',	'Small_pink_love',	'商店购买',	'113,-147,1.39',	'CG0037_PinkLove_spine',	'0,0,1',	'1',	'80429'},
 {'60',	'60',	'61062',	'惬意烹饪',	'60',	'',	'',	'2',	'cozy_cooking',	'cozy_cooking_replace',	'board_cozy_cooking',	'Small_cozy_cooking',	'商店购买',	'-91,28,1.08',	'CG0048_CozyCooking_spine',	'0,0,1',	'1',	'80430'},
+{'61',	'61',	'61063',	'蜜意投喂',	'61',	'',	'',	'2',	'feeding_with_affection',	'feeding_with_affection_replace',	'board_feeding_with_affection',	'Small_feeding_with_affection',	'商店购买',	'-43,30,1.28',	'CG0038_FeedingWithAffection_spine',	'0,0,1',	'1',	'80431'},
+{'62',	'62',	'61064',	'夏日黄昏',	'62',	'',	'',	'8',	'dusk_of_summer',	'dusk_of_summer_replace',	'board_dusk_of_summer',	'Small_dusk_of_summer',	'商店购买',	'-43,-32,1.15',	'CG0041_DuskOfSummer_spine',	'62,0,1',	'1',	'80432'},
+{'63',	'63',	'61065',	'靡丽倩影',	'63',	'2025/4/2 03:00:00',	'2027/2/26 3:00:00',	'6',	'mirage_of_splendor',	'mirage_of_splendor_replace',	'board_mirage_of_splendor',	'Small_mirage_of_splendor',	'高级勘测奖励',	'0,0,0.98',	'Aerbeisi_2',	'0,0,1',	'',	'1'},
 },
 }
 --cfgCfgArchiveMultiPicture = conf

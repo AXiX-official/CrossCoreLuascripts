@@ -169,7 +169,7 @@ function SetPriceNode(isShow)
         local cost=comm:GetRealPrice(ShopPriceKey.jCosts)[1];
         local cost2=comm:GetRealPrice(ShopPriceKey.jCosts1)[1];
         --加载图标和内容
-        CSAPI.SetGOActive(dMNode,cost.id~=-1 )
+        CSAPI.SetGOActive(dMNode1,cost.id~=-1 )
         CSAPI.SetGOActive(pnIcon1,cost.id==-1 )
         if cost.id~=-1 then
             ShopCommFunc.SetPriceIcon(dMIcon1,cost);
@@ -215,7 +215,10 @@ function SetContent()
         return;
     end
     local getType,getTips=currSkinInfo:GetWayInfo();
-    local has=rSkinInfo and rSkinInfo:CheckCanUse() or false;
+    local has=false;
+    if rSkinInfo and rSkinInfo:CheckCanUse() and rSkinInfo:IsLimitSkin()~=true then
+        has=true;
+    end
     SetPriceNode(false);
     if has then
         if card then
@@ -239,10 +242,14 @@ function SetContent()
         if getType==SkinGetType.Store then
             CSAPI.SetText(txtS1,LanguageMgr:GetByID(18053));
             CSAPI.SetText(txtS2,LanguageMgr:GetByType(18053,4));
-            if comm~=nil and comm:GetBundlingType()==ShopCommBindType.Bindling and bindComm then
-                CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18123),curModelCfg.key,curModelCfg.desc,bindComm:GetName()));
+            if comm~=nil and comm:GetNowTimeCanBuy() then
+                if comm:GetBundlingType()==ShopCommBindType.Bindling and bindComm then
+                    CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18123),curModelCfg.key,curModelCfg.desc,bindComm:GetName()));
+                else
+                    CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18067),curModelCfg.key,curModelCfg.desc));
+                end
             else
-                CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18067),curModelCfg.key,curModelCfg.desc));
+                CSAPI.SetText(txt_tips,LanguageMgr:GetByID(18056));
             end
             SetClickFuncS(OnClickBuy);
             CSAPI.SetGOActive(btnCurrent,false);

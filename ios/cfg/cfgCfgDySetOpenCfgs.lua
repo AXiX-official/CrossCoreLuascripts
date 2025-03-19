@@ -30,6 +30,12 @@ local conf = {
 {'CfgCommodity',	'CfgCommodity',	'',	'',	'',	'',	'',	'',	'',	''},
 {'CfgCommodity',	'',	'',	'1',	'sBuyStart',	'',	'',	'string',	'购买开始时间',	''},
 {'CfgCommodity',	'',	'',	'2',	'sBuyEnd',	'',	'',	'string',	'购买结束时间',	''},
+{'ItemInfo',	'ItemInfo',	'',	'',	'',	'',	'',	'',	'',	''},
+{'ItemInfo',	'',	'',	'1',	'sExpiry',	'',	'',	'string',	'失效日期',	''},
+{'ItemInfo',	'',	'',	'2',	'expiryIx',	'',	'',	'number',	'失效序列值',	''},
+{'CfgActiveList',	'CfgActiveList',	'',	'',	'',	'',	'',	'',	'',	''},
+{'CfgActiveList',	'',	'',	'1',	'sTime',	'',	'',	'string',	'开始时间',	''},
+{'CfgActiveList',	'',	'',	'2',	'eTime',	'',	'',	'string',	'结束时间',	''},
 },
 }
 --cfgCfgDySetOpenCfgs = conf

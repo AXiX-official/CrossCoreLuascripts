@@ -21,7 +21,7 @@ function Buffer922800103:OnActionOver2(caster, target)
 	-- 922800105
 	local turncount = SkillApi:GetTurnCount(self, self.caster, target or self.owner,nil)
 	-- 922800106
-	if SkillJudger:Equal(self, self.caster, self.card, true,turncount,3) then
+	if SkillJudger:Equal(self, self.caster, self.card, true,turncount,30) then
 	else
 		return
 	end

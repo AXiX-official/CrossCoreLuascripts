@@ -12,20 +12,3 @@ function Skill704400405:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11002], caster, target, data, 0.5,2)
 end
--- 攻击结束
-function Skill704400405:OnAttackOver(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 704400405
-	if self:Rand(5000) then
-		self:OwnerAddBuffCount(SkillEffect[704400405], caster, self.card, data, 704400101,1,3)
-	end
-end

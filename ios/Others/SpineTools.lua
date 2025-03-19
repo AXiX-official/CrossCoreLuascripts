@@ -528,7 +528,6 @@ function this:ImmClearTracks(trackIndexs, revoverNames)
             self.revoverDragDic[v] = nil
         end
     end
-    --self.l2d.sg.Skeleton:SetToSetupPose()
     self.isUpdate = true
 end
 

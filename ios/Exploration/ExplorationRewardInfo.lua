@@ -22,6 +22,11 @@ function this:SetData(_d)
     self.data=_d;
 end
 
+--是否是无限奖励
+function this:IsInfinite()
+    return self.cfg and self.cfg.isInfinite==1 or false;
+end
+
 --当前奖励状态： ExplorationRewardState
 function this:GetState()
     return self.data and self.data.state or ExplorationRewardState.Lock;

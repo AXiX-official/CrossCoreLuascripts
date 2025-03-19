@@ -109,6 +109,7 @@ end
 
 --连接到游戏逻辑服
 function LoginProto:OnConnectGameServer()
+	Log("OnConnectGameServer：==================")
 	--机型信息
 	local isEmulator = CSAPI.CheckEmulator()
 	local lv, _score = SettingMgr:GetMobieLv()
@@ -164,7 +165,14 @@ function LoginProto:LoginGame(proto)
 	self.isOnline=true;
 	--不管是重连还是登陆，都要查询一次订单信息
 	-- SDKPayMgr:SearchPayReward();
-	if(self.logined) then
+	if PlayerClient:IsEnterHall() then
+		---Log("已经进入过大厅--------")
+	else
+		Log("显示正常--------首次登录")
+		ClientProto:ClearLoginData();
+	end
+	if(self.logined) and PlayerClient:IsEnterHall() then
+	---if(self.logined) then
 		Log("重新登录游戏成功==================")
 		if CSAPI.IsADV() or CSAPI.IsDomestic() then
 			ShiryuSDK.OnRoleOnline()

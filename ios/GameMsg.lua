@@ -1196,9 +1196,9 @@ GameMsg.map["ItemData"] = {
 	{ "id",  "num","time",        "ix",                "expiry",             "get_infos",   },
 }
 GameMsg.map["PlayerProto:ItemBag"] = {
-	--物品列表        
-	{ "list|ItemData",},
-	{ "item",         },
+	--物品列表        序列值，每次发送从1开始 是否完结    
+	{ "list|ItemData","short",             "bool",     },
+	{ "item",         "ix",                "is_finish",},
 }
 GameMsg.map["PlayerProto:ItemFull"] = {
 	--id     
@@ -1346,9 +1346,9 @@ GameMsg.map["PlayerProto:SectionMultiInfo"] = {
 	{ "id",                },
 }
 GameMsg.map["PlayerProto:SectionMultiInfoRet"] = {
-	--                     
-	{ "list|sSectionMultiInfo",},
-	{ "infos",             },
+	--                     有时效的双倍掉落次数 
+	{ "list|sSectionMultiInfo","list|sTimeSectionMultiInfo",},
+	{ "infos",             "cntInfos",          },
 }
 GameMsg.map["DuplicateItemData"] = {
 	--副本id 星级    条件数据    副本配置表可以使用物品的的下标 副本使用物品是否开启 星级数据    
@@ -1691,9 +1691,9 @@ GameMsg.map["PlayerProto:GetLifeBuffRet"] = {
 	{ "buffs",           },
 }
 GameMsg.map["sSkin"] = {
-	--卡牌配置id              是否新增 
-	{ "uint",    "array|uint","bool",  },
-	{ "cfgid",   "info",      "is_add",},
+	--卡牌配置id              是否新增 限时皮肤             
+	{ "uint",    "array|uint","bool",  "list|sLimitedTimeSkins",},
+	{ "cfgid",   "info",      "is_add","ltSkins",           },
 }
 GameMsg.map["PlayerProto:GetSkins"] = {
 	--卡牌配置id(0获取全部) 
@@ -2134,6 +2134,11 @@ GameMsg.map["sDupMonsterInfo"] = {
 	--副本id MonsterFormation.coordinate的第几个 
 	{ "uint","list|sMonsterInfo", },
 	{ "id",  "monster_infos",     },
+}
+GameMsg.map["sTimeSectionMultiInfo"] = {
+	--有效的时间 可用次数 道具id    
+	{ "uint",    "uint",  "uint",   },
+	{ "time",    "cnt",   "item_id",},
 }
 GameMsg.map["sEquip"] = {
 	--配置id  装备的唯一id 等级    经验   是否锁定 随机技能点类型    随机技能点值       所属卡牌id(非空表示被装备了) 是否新   数量    技能ids数组  
@@ -3192,22 +3197,22 @@ GameMsg.map["ExplorationProto:GetInfo"] = {
 }
 GameMsg.map["sExplorationInfo"] = {
 	--勘探奖励模板id 已经领取的下标 [1,2,3,5] 
-	{ "uint",        "array|byte",        },
+	{ "uint",        "array|uint",        },
 	{ "rid",         "gets",              },
 }
 GameMsg.map["ExplorationProto:GetInfoRet"] = {
-	--勘探表id               勘探类型 领取情况             
-	{ "uint",  "byte","uint","byte",  "map|sExplorationInfo|rid",},
-	{ "id",    "lv",  "exp", "type",  "get_infos",         },
+	--勘探表id               勘探类型 领取情况             超过上线等级可领取次数 超过上线等级可领取次数 
+	{ "uint",  "uint","uint","byte",  "map|sExplorationInfo|rid","uint",               "uint",               },
+	{ "id",    "lv",  "exp", "type",  "get_infos",         "can_get_cnt",        "ex_can_get_cnt",     },
 }
 GameMsg.map["ExplorationProto:Update"] = {
-	--勘探表id               
-	{ "uint",  "byte","uint",},
-	{ "id",    "lv",  "exp", },
+	--勘探表id               超过上线等级可领取次数 超过上线等级可领取次数 
+	{ "uint",  "uint","uint","uint",               "uint",               },
+	{ "id",    "lv",  "exp", "can_get_cnt",        "ex_can_get_cnt",     },
 }
 GameMsg.map["ExplorationProto:GetReward"] = {
 	--勘探表id 勘探奖励模板id(-1:全部领取) 领取下标 
-	{ "uint",  "int",                "byte",  },
+	{ "uint",  "int",                "uint",  },
 	{ "id",    "rid",                "ix",    },
 }
 GameMsg.map["ExplorationProto:GetRewardRet"] = {
@@ -3217,12 +3222,12 @@ GameMsg.map["ExplorationProto:GetRewardRet"] = {
 }
 GameMsg.map["ExplorationProto:Upgrade"] = {
 	--勘探表id 提升到多少级 
-	{ "uint",  "byte",      },
+	{ "uint",  "uint",      },
 	{ "id",    "lv",        },
 }
 GameMsg.map["ExplorationProto:UpgradeRet"] = {
 	--勘探表id 升级后等级 
-	{ "uint",  "byte",    },
+	{ "uint",  "uint",    },
 	{ "id",    "lv",      },
 }
 GameMsg.map["ExplorationProto:Open"] = {
@@ -4479,6 +4484,31 @@ GameMsg.map["PlayerProto:GetMineRankInfoRet"] = {
 	--排行榜类型（eRankType） 当前积分 当前排名 下次刷新时间        
 	{ "int",               "uint",  "uint",  "int",              },
 	{ "rank_type",         "score", "rank",  "next_refresh_time",},
+}
+GameMsg.map["PlayerProto:ConverItem"] = {
+	--物品id 多过期时间，选择使用的下标 使用数量 
+	{ "uint","short",              "uint",  },
+	{ "id",  "ix",                 "cnt",   },
+}
+GameMsg.map["PlayerProto:ConverItemRet"] = {
+	--物品id 多过期时间，选择使用的下标 使用数量 
+	{ "uint","short",              "uint",  },
+	{ "id",  "ix",                 "cnt",   },
+}
+GameMsg.map["sLimitedTimeSkins"] = {
+	--皮肤   到期时间 是否新增 
+	{ "uint","uint",  "bool",  },
+	{ "id",  "t",     "is_add",},
+}
+GameMsg.map["PlayerProto:SkinExpired"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["PlayerProto:SkinExpiredRet"] = {
+	--过期的皮肤ID 
+	{ "array|uint",},
+	{ "ids",       },
 }
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 

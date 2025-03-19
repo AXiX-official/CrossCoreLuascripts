@@ -380,4 +380,16 @@ function this:GetSkinTypeArr()
     return arr
 end
 
+function this:CheckLimitSkin(index)
+    index = index or 1
+    if(index==1 or (index==2 and self:IsTwoRole()))then 
+        local id = self:GetIDs()[index]
+        if(id>10000)then 
+            local skin = RoleSkinMgr:GetSkinInfoByModelID(id)
+            return skin:IsLimitSkin()
+        end 
+    end 
+    return false
+end
+
 return this

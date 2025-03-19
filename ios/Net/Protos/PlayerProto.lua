@@ -448,7 +448,7 @@ function PlayerProto:SectionMultiInfo(id)
 end
 
 function PlayerProto:SectionMultiInfoRet(proto)
-    DungeonMgr:UpdateSectionMultiInfo(proto.infos);
+    DungeonMgr:UpdateSectionMultiInfo(proto);
 end
 
 function PlayerProto:NotifyDupDrop(proto)
@@ -1571,3 +1571,29 @@ function PlayerProto:TakeColletRewardByTypeRet(proto)
     self.TakeColletRewardByTypeCB = nil
     EventMgr.Dispatch(EventType.Activity_List_Panel_Refresh)
 end
+
+--手动转换物品
+function PlayerProto:ConverItem(_id,_ix,_cnt)
+    if _id and _ix and _cnt then
+        local proto = {"PlayerProto:ConverItem",{id = _id,ix = _ix,cnt=_cnt}}
+        NetMgr.net:Send(proto)
+    end
+end
+
+function PlayerProto:ConverItemRet(proto)
+    -- if proto then--更新背包数据
+        
+    -- end
+    EventMgr.Dispatch(EventType.Goods_Converted_Success,proto)
+end
+
+--通知服务端有皮肤到期
+function PlayerProto:SkinExpired()
+    local proto = {"PlayerProto:SkinExpired"}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SkinExpiredRet(proto)
+    LanguageMgr:ShowTips(1054)
+    RoleSkinMgr:SkinExpiredRet(proto.ids)
+end
+

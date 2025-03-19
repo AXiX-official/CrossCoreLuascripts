@@ -101,7 +101,9 @@ end
 
 function OnClickItem(jumpInfo)
     if jumpInfo then
-        JumpMgr:Jump(jumpInfo.id);
+        if jumpInfo.id then
+            JumpMgr:Jump(jumpInfo.id);
+        end
         if jumpInfo.commId~=nil and jumpInfo.commId~="" then
             ShopCommFunc.OpenBuyConfrim(jumpInfo.shopId,jumpInfo.topId,jumpInfo.commId);
         end

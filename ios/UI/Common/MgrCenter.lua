@@ -41,7 +41,6 @@ local mgrNames = {
 
 	"MenuMgr", --主界面相关(需要先收到关卡数据)
 	"AIStrategyMgr",--AI预设
-	"ExplorationMgr",--勘探
 	"FavourMgr",--好感度
 	"MulPicMgr",--好感度
 	"SortMgr",
@@ -66,7 +65,7 @@ local mgrNames = {
 	"ASMRMgr",
 	"GlobalBossMgr", --新世界boss
 	"RogueTMgr",
-
+	"ExplorationMgr",--勘探
 	"MissionMgr",   --任务  --------------------------------------必须放到最后
 }
 

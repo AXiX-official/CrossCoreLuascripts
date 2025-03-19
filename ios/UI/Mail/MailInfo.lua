@@ -28,7 +28,7 @@ function this:InitData(sMailInfo)
 	self.from_uid = sMailInfo.from_uid
 	self.start_time = sMailInfo.start_time
 	self.end_time = sMailInfo.end_time
-	self.cfgid = sMailInfo.cfgid
+	self.cfgid = sMailInfo.cfgid or 0
 	self.rewards = sMailInfo.data and sMailInfo.data.rewards or {}
 	if(self.cfgid == 0) then
 		self.name = sMailInfo.data and sMailInfo.data.name or ""

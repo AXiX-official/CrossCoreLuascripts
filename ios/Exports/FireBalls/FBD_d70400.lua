@@ -35,6 +35,12 @@ effect="cast1_buff1",time=9000,type=0,pos_ref={ref_type=4,part_index=1}
 {effect="cast0_hit",delay=1250,time=9000,type=0,pos_ref={ref_type=1}},
 {time=9000,type=0,cue_sheet="cv/Lycoris_Radiata.acb",cue_name="Lycoris_Radiata_09",cue_feature=1},
 {effect="cast0_eff",time=9000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Lycoris_Radiata_attack_general"}
+},
+[-1183793042]={
+{effect="enter",time=9000,type=0,pos_ref={ref_type=6}}
+},
+[-1328923786]={
+{effect="win",time=9000,type=0,pos_ref={ref_type=6}}
 }
 };
 

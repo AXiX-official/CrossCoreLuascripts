@@ -11,6 +11,8 @@ function Refresh(_data)
     if (index ~= 1) then
         CSAPI.SetGOActive(btnRemove, data:GetIdx() ~= CRoleDisplayMgr:GetPanelRet().using)
     end
+    --
+    SetLimitSkin()
 end
 
 function SetSlot(_id, _empty, _entity, _icon, _txtName1, _txtName2)
@@ -64,4 +66,9 @@ function OnClickRemove()
     UIUtil:OpenTipsDialog("CRoleDisplaySItem_Day", str, function()
         PlayerProto:RemoveRandomPanel(data:GetIdx())
     end)
+end
+
+function SetLimitSkin()
+    local isLimitSkin = ids[1] ~= 0 and data:CheckLimitSkin(1) or false
+    UIUtil:SetRedPoint2("Common/Red4", node, isLimitSkin, -77.6, 158, 0)
 end

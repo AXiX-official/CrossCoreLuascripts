@@ -34,7 +34,7 @@ end
 
 function OnOpen()
     leftPanel.Anim();
-    if openSetting==1 then
+    if openSetting==1 or openSetting==nil then
         os=eBindInviteOpenType.Invite
         CSAPI.SetText(txt_tDesc,LanguageMgr:GetByID(61019));
         CSAPI.SetText(txtNOFriend,LanguageMgr:GetByID(61030));
@@ -44,6 +44,7 @@ function OnOpen()
         CSAPI.SetText(txtNOFriend,LanguageMgr:GetByID(61031));
     end
     RefreshList(true)
+    SetRedInfo();
 end
 
 function Refresh()

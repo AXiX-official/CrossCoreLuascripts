@@ -1,4 +1,4 @@
--- 皮肤 data : RoleSkinInfo
+-- 皮肤 data : CRoleInfo
 function SetIndex(_index)
     index = _index
 end
@@ -23,6 +23,8 @@ function Refresh(_data, _curID)
     --CSAPI.SetGOActive(use, isUse)
     -- select
     CSAPI.SetGOActive(select, isSelect)
+    --
+    UIUtil:SetRedPoint2("Common/Red4", node, data:IsHadLimitSkin(), -86, 58, 0)
 end
 
 -- function SetIcon(_iconName)

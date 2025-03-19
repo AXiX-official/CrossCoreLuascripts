@@ -71,6 +71,8 @@ ITEM_TYPE.BG_ITEM = 24 --主界面背景图道具
 ITEM_TYPE.VOUCHER = 25 --抵扣券
 ITEM_TYPE.ICON_TITLE = 26 --玩家称号
 ITEM_TYPE.ASMR = 27 --ASMR音频
+ITEM_TYPE.SECTION_MULTI = 28 --双倍掉落道具
+ITEM_TYPE.LIMITED_TIME_SKIN = 29 --限时皮肤
 
 -- 物品标签
 ITEM_TAG = {}
@@ -346,6 +348,7 @@ eTaskType.StarPalace = 24     -- 十二星宫任务
 eTaskType.AbattoirMoon = 26     -- 角斗场月任务
 eTaskType.AbattoirSeason = 27     -- 角斗场赛季任务
 
+GenEnumNameByVal('eTaskTypeName', eTaskType)
 
 
 -- 任务提示图片： 白、黄、蓝、绿
@@ -374,7 +377,6 @@ eTaskTypeTipsImg[21] = '4'
 eTaskTypeTipsImg[101] = '5' -- 成就
 eTaskTypeTipsImg[201] = '6' -- 徽章
 
-GenEnumNameByVal('eTaskTypeName', eTaskType)
 
 eTaskTypeChName = {}
 eTaskTypeChName.Main = '主线'
@@ -1276,7 +1278,8 @@ ChannelType.ZiLong = 6 -- 紫龙-台湾
 ChannelType.ZiLongKR = 7 -- 紫龙-韩国
 ChannelType.ZiLongJP = 8 -- 紫龙-日本
 ChannelType.Harmony = 9  -- 华为鸿蒙
-
+ChannelType.QQ = 10      -- QQ
+ChannelType.WeChat = 11  -- WeChat
 
 GenEnumNameByVal('ChannelTypeName', ChannelType)
 
@@ -1364,6 +1367,8 @@ PlrMixIx.globalBossUUID = 66 -- 当前挑战的世界bossUUID
 PlrMixIx.resetDoubleRechargeTime = 67 -- 重置双倍首充的时间
 PlrMixIx.bindPlrType = 68 -- 回归绑定活动，绑定时玩家的回归类型
 PlrMixIx.actZeroMonth = 69 -- 下个月1号凌晨3点，重置时间
+PlrMixIx.limitedTimeSkins = 70 -- 限时皮肤
+PlrMixIx.sectionMultiInfo = 71 -- 有时效双倍掉落
 
 
 -- 图鉴
@@ -1648,6 +1653,11 @@ DungeonInfoType.NightSpecial = "NightSpecial"
 DungeonInfoType.Colosseum = "Colosseum" 
 DungeonInfoType.GlobalBoss = "GlobalBoss"
 DungeonInfoType.RogueT = "RogueT"
+DungeonInfoType.Cloud = "Cloud"
+DungeonInfoType.CloudPlot = "CloudPlot"
+DungeonInfoType.CloudDanger = "CloudDanger"
+DungeonInfoType.CloudSpecial = "CloudSpecial"
+
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
 RegressionPlrType = {}
@@ -1832,11 +1842,17 @@ eRankType.StarRank3 = 9003 --十二星宫 9003
 eRankType.StarRank4 = 9004 --十二星宫 9004
 eRankType.StarRank5 = 9005 --十二星宫 9005
 
-eRankType.SummerActiveRank = 10001 --夏活无限血排行榜
+eRankType.SummerActiveRank = 10001 --夏活无限血排行榜，钓鱼老
 eRankType.Abattoir = 10002 -- 角斗场
 eRankType.CentaurRank = 10003 --人马无限血排行榜
+--eRankType.GlobalBoss = 10004(已占用)
 eRankType.TrialsRank = 10005 --试炼无限血排行榜
 eRankType.RogueTRank = 10006 --限制肉鸽爬塔排行榜
+eRankType.CloudRank = 10007 --云端行迹排行榜
+eRankType.TrialsRank2 = 10008 --尤弥尔排行榜
+eRankType.TrialsRank3 = 10009 --德拉苏排行榜
+eRankType.TrialsRank4 = 10010 --瑞尔排行榜
+eRankType.TrialsRank5 = 10011 --冰霜禁卫排行榜
 
 -- 用户后台清理排行榜的选项（不影响游戏内的功能逻辑）
 cRankCfgNames = {
@@ -1850,6 +1866,19 @@ cRankCfgNames = {
     { id = eRankType.CentaurRank, name = '人马无限血 10003' },
     { id = eRankType.TrialsRank, name = '试炼无限血排行榜 10005' },
     { id = eRankType.RogueTRank, name = '限制肉鸽爬塔排行榜 10006' },
+    { id = eRankType.CloudRank, name = '云端行迹排行榜 10007' },
+    { id = eRankType.TrialsRank2, name = '尤弥尔排行榜 10008' },
+    { id = eRankType.TrialsRank3, name = '德拉苏排行榜 10009' },
+    { id = eRankType.TrialsRank4, name = '瑞尔排行榜 10010' },
+    { id = eRankType.TrialsRank5, name = '冰霜禁卫排行榜 10011' },
+}
+-- 十二星宫的排行榜
+eStarGroupId = {
+    eRankType.StarRank1,
+    eRankType.StarRank2,
+    eRankType.StarRank3,
+    eRankType.StarRank4,
+    eRankType.StarRank5,
 }
 
 --收集活动类型
@@ -1974,3 +2003,8 @@ eItemArrIx.dyExpiryArr = 5     -- 多堆叠过期动态时间 { {数量，过期
 --汇总枚举
 eSummaryType = {}
 eSummaryType.NewYear = 1
+
+--双倍掉落道具类型
+eItemSectionMultiType = {}
+eItemSectionMultiType.cnt = 1 --指定时间内只有一个可以生效
+eItemSectionMultiType.time = 2 --使用之后延长有效时间

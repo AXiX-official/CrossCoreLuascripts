@@ -615,8 +615,8 @@ function OnStoryPlayComplete()
     data.isPass = true;
     DungeonMgr:AddDungeonData(data);
     selItem.Set(selItem.cfg);
-    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
     MenuMgr:UpdateDatas() --刷新关卡解锁状态
+    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
     EventMgr.Dispatch(EventType.Activity_Open_State);
     EventMgr.Dispatch(EventType.Dungeon_MainLine_Update,sectionData:GetID());
 

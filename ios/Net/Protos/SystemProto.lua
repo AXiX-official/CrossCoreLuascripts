@@ -41,7 +41,13 @@ function SystemProto:ActiveZeroNotice(proto)
     if (proto.datas and proto.datas.phy_game_cnt) then
         FavourMgr:DailyData(proto.datas.phy_game_cnt)
     end
-
+    --抽卡相关
+    if (proto.datas and proto.datas.card_pool_daily_use_cnt) then
+        CreateMgr:SetDailyUseCnt(proto.datas.card_pool_daily_use_cnt)
+    end
+    if (proto.datas and proto.datas.card_pool_free_cnt) then
+        CreateMgr:SetFreeCnt(proto.datas.card_pool_free_cnt)
+    end
     --刷新活动时间
 	ActivityMgr:RefreshOpenState()
 

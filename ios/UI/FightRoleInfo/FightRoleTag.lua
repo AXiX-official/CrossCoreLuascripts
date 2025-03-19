@@ -15,9 +15,15 @@ function Refresh(data,_elseData)
     else
         SetSelect(false,true);
     end
-    ResUtil.RoleCard:Load(icon,data.icon);
-    local imgName= data.isEnemy and "UIs/FightRoleInfo/btn_5_2.png" or "UIs/FightRoleInfo/btn_5_1.png";
-    CSAPI.LoadImg(border,imgName,true,nil,true);
+    -- ResUtil.RoleCard:Load(icon,data.icon);
+    ResUtil.RoleCard2:Load(icon,data.icon,false);
+    -- local imgName= data.isEnemy and "UIs/FightRoleInfo/btn_5_2.png" or "UIs/FightRoleInfo/btn_5_1.png";
+    -- local imgName= data.isEnemy and "UIs/Icons/RoleHead/Normal_head/Normal2/btn_5_2.png" or "UIs/Icons/RoleHead/Normal_head/Normal2/btn_5_1.png";    
+    -- CSAPI.LoadImg(border,imgName,true,nil,true);
+    
+    local imgName= data.isEnemy and "btn_5_2" or "btn_5_1";    
+    ResUtil.RoleCard2:Load(border,imgName,false);
+
     SetIsBoss(data.isBoss)
     SetIsDead(data.isDead)
     -- CSAPI.SetGOActive(boss,this.data.GetCharacterType() == CardType.Boss);

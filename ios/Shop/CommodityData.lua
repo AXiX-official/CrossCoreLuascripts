@@ -611,7 +611,7 @@ function this:IsOver()
         end
         local curModelCfg=skinInfo:GetModelCfg();
         local rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(curModelCfg.role_id,curModelCfg.id);
-        if rSkinInfo and rSkinInfo:CheckCanUse() then
+        if rSkinInfo and rSkinInfo:CheckCanUse() and rSkinInfo:IsLimitSkin()~=true then
             return true;
         elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then
             return true;

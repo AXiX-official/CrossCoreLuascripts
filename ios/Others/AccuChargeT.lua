@@ -4,7 +4,7 @@ function Awake()
     layout:Init("UIs/AccuCharge/AccuChargeItemT", LayoutCallBack, true)
     tlua = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Normal)
 
-    CSAPI.CreateGOAsync("UIs/AccuCharge/effect_img",0,0,0,AdaptiveScreen)
+    --CSAPI.CreateGOAsync("UIs/AccuCharge/effect_img",0,0,0,AdaptiveScreen)
 end
 
 function OnEnable()

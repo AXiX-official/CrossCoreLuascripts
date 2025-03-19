@@ -82,4 +82,20 @@ function this.RogueT()
     return {"Title5","Target3","Output3","Details2","Button5"}
 end
 
+function this.Cloud()
+    return {"CloudTitle","CloudLevel","CloudTarget","CloudOutput","CloudDetails","Double","CloudButton"},"DungeonActivity11"
+end
+
+function this.CloudPlot()
+    return {"CloudTitle","CloudPlot","CloudOutput","CloudPlotButton"},"DungeonActivity11"
+end
+
+function this.CloudDanger()
+    return {"CloudTitle","CloudLevel","CloudTarget","CloudDanger","CloudDetails","Double","CloudButton"},"DungeonActivity11"
+end
+
+function this.CloudSpecial()
+    return {"CloudTitle","CloudLevel","CloudPlot","CloudOutput","CloudDetails","CloudButton"},"DungeonActivity11"
+end
+
 return this; 

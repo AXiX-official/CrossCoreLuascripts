@@ -263,6 +263,14 @@ function this:GetCRoleData()
     return nil
 end
 
+--是否含有限时皮肤
+function this:CheckLimitSkin()
+    if (self:GetRoleID()) then
+        return RoleSkinMgr:IsHadLimitSkin(self:GetRoleID())
+    end
+    return false
+end
+
 -- 当前使用的皮肤是否使用l2d
 function this:GetSkinIsL2d()
     if (self:IsBaseCard()) then

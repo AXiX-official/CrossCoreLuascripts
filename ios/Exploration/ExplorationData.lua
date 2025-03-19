@@ -14,11 +14,20 @@ function this:SetCfg(cfgId)
     end
     if (self.cfg == nil) then
         self.cfg = Cfgs.CfgExploration:GetByID(cfgId)
-        local upExps=self:GetUpExpCfgs();
-        self.maxLv=upExps and #upExps or 0;
         if (self.cfg == nil) then
             LogError("找不到勘探配置数据！id = " .. cfgId)
+            do return end
         end
+        local upExps=self:GetUpExpCfgs();
+        for i=#upExps,1,-1 do
+            if upExps[i].isInfinite~=1 then
+                self.maxLv=i;
+                break;
+            else
+                self.infiniteLv=i;
+            end
+        end
+        -- self.maxLv=upExps and #upExps or 0;
     end
 end
 
@@ -41,6 +50,36 @@ end
 --返回测绘状态
 function this:GetState()
     return self.data and self.data.type or ExplorationState.Normal;
+end
+
+function this:HasInfiniteLv()
+    return self.infiniteLv~=nil;
+end
+
+--无限奖励可领取次数,根据协议里的次数做显示
+function this:GetInfiniteRewardNum(explorationState)
+    if self.data then
+        if self.data.can_get_cnt>0 and ((explorationState~=nil and explorationState==ExplorationState.Normal) or explorationState==nil) then
+            return self.data.can_get_cnt;
+        elseif self.data.ex_can_get_cnt>0 and self:GetState()>=ExplorationState.Ex and ((explorationState~=nil and explorationState>=ExplorationState.Ex) or explorationState==nil) then
+            return self.data.ex_can_get_cnt;
+        end
+    end
+    return 0;
+end
+
+function this:GetInfiniteLv()
+    return self.infiniteLv;
+end
+
+--返回无限档位的可领取状态
+function this:GetInfiniteRewardState(explorationState)
+    if self:HasInfiniteLv() then
+        if self:GetInfiniteRewardNum(explorationState)>0 then
+           return ExplorationRewardState.Available;
+        end
+    end
+    return self:GetCurrLv()>=self.maxLv and ExplorationRewardState.UnLock or ExplorationRewardState.Lock;
 end
 
 --返回解锁状态下奖励的可领取状态：rId:奖励模板ID，index：奖励下标
@@ -137,27 +176,40 @@ end
 function this:GetUpExpCfgs(lv)
     local expCfgs=nil;
     local currLv=self:GetCurrLv();
-    local lvID=self:GetLevelID();
-    local cfg=Cfgs.CfgExplorationExp:GetByID(lvID);
-    if cfg==nil then
-        return nil;
-    end
     if lv and currLv and lv>=currLv then
-        for i=currLv,#cfg.item do
-            if cfg.item[i].lv<=lv then
+        for i=currLv,lv do
+            local cfg=self:GetExpCfg(i);
+            if cfg~=nil then
                 expCfgs=expCfgs or {}
-                table.insert(expCfgs,cfg.item[i])
+                table.insert(expCfgs,self:GetExpCfg(i))
             end
         end  
     else
+        local lvID=self:GetLevelID();
+        local cfg=Cfgs.CfgExplorationExp:GetByID(lvID);
         expCfgs= cfg.item;
     end
     return expCfgs;
 end
 
+function this:GetExpCfg(lv)
+    local lvID=self:GetLevelID();
+    local cfg=Cfgs.CfgExplorationExp:GetByID(lvID);
+    if cfg==nil or lv==nil then
+        return nil;
+    end
+    if lv>=self:GetMaxLv() then
+        lv=self:HasInfiniteLv() and self:GetInfiniteLv() or self:GetMaxLv();
+    end
+    return cfg.item[lv];
+end
+
 --返回目标等级的配置信息 expType:ExplorationState勘探解锁类型 lv:目标等级奖励
 function this:GetRewardCfg(expType,lv)
     if expType and lv then
+        if self:HasInfiniteLv() and lv>=self:GetInfiniteLv() then
+            lv=self:GetInfiniteLv();
+        end
         local cfgId=self:GetBaseRewardID();
         local isUnLock=false;
         if expType==ExplorationState.Normal then
@@ -186,8 +238,8 @@ function this:GetRewardCfg(expType,lv)
     return nil;
 end
 
---返回奖励对象 lv:传入目标等级则会获取从当前等级到目标等级的所有配置，否则返回所有配置
-function this:GetRewardCfgs(expType,lv)
+--返回奖励对象 lv:传入目标等级则会获取从当前等级到目标等级的所有配置，否则返回到最大等级的配置 hasFirst:为true时获取从1级到目标等级的所有配置
+function this:GetRewardCfgs(expType,lv,hasFirst)
     local currLv=self:GetCurrLv();
     local cfg=Cfgs.CfgExplorationReward:GetByID(self:GetBaseRewardID());
     if cfg==nil then
@@ -195,8 +247,10 @@ function this:GetRewardCfgs(expType,lv)
     end
     local startIdx=1
     local endIdx=#cfg.item;
-    if lv and currLv and lv>=currLv then
-        startIdx=currLv+1;
+    if lv then
+        if hasFirst~=true then
+            startIdx=currLv+1;
+        end
         endIdx=lv;
     end
     local list={}
@@ -210,18 +264,18 @@ function this:GetRewardCfgs(expType,lv)
 end
 
 --返回基础奖励配置表,传入目标等级则会获取从当前等级到目标等级的所有配置，否则返回所有配置
-function this:GetBaseRewardCfgs(lv)
-    return self:GetRewardCfgs(ExplorationState.Normal,lv);
+function this:GetBaseRewardCfgs(lv,hasFirst)
+    return self:GetRewardCfgs(ExplorationState.Normal,lv,hasFirst);
 end
 
 --返回高级奖励配置表,传入目标等级则会获取从当前等级到目标等级的所有配置，否则返回所有配置
-function this:GetExRewardCfgs(lv)
-    return self:GetRewardCfgs(ExplorationState.Ex,lv);
+function this:GetExRewardCfgs(lv,hasFirst)
+    return self:GetRewardCfgs(ExplorationState.Ex,lv,hasFirst);
 end
 
 --返回特殊奖励配置表,传入目标等级则会获取从当前等级到目标等级的所有配置，否则返回所有配置
-function this:GetPlusRewardCfgs(lv)
-    return self:GetRewardCfgs(ExplorationState.Plus,lv);
+function this:GetPlusRewardCfgs(lv,hasFirst)
+    return self:GetRewardCfgs(ExplorationState.Plus,lv,hasFirst);
 end
 
 --返回当前期首次购买额外奖励配置信息 ExplorationRewardInfo
@@ -293,7 +347,11 @@ end
 
 --是否达到最大等级
 function this:IsMaxLv()
-    return self:GetCurrLv()>=self.maxLv;
+    if self.maxLv~=nil then
+        return self:GetCurrLv()>=self.maxLv;
+    else
+        return true;
+    end
 end
 
 --返回下一个等级值,满级后只返回满级的值
@@ -303,7 +361,10 @@ end
 
 function this:GetNextExp()
     local expCfg=nil;
-    local currLv=self:GetCurrLv();
+    local idx=self:GetCurrLv();
+    if self:HasInfiniteLv() and idx>=self:GetInfiniteLv() then
+        idx=self:GetInfiniteLv();
+    end
     local lvID=self:GetLevelID();
     local cfg=Cfgs.CfgExplorationExp:GetByID(lvID);
     if cfg==nil then
@@ -318,7 +379,7 @@ function this:GetNextExp()
     end  
     return expCfg;
     ]]
-    return cfg.item[currLv];
+    return cfg.item[idx];
 end
 
 --返回当前显示的阶段性奖励等级
@@ -332,7 +393,7 @@ function this:GetFixedSPLv(lv)
     local list={};
     local index=1;
     for i=1,#cfg.item do
-        if cfg.item[i].isSpecial then
+        if cfg.item[i].isSpecial or cfg.item[i].isInfinite==1 then --特殊奖励和无限奖励
             table.insert(list,cfg.item[i].lv)
             if cfg.item[i].lv<=currLv then
                 index=index+1;

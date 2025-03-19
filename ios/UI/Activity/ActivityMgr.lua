@@ -224,6 +224,25 @@ function this:InitActivityListData()
     end
 end
 
+function this:SetData(cfgId)
+    if cfgId == nil then
+        return
+    end
+    self.ALDatas = self.ALDatas or {}
+    local cfg = Cfgs.CfgActiveList:GetByID(cfgId)
+    if cfg then
+        if self.ALDatas[cfgId] then
+            self.ALDatas[cfgId]:Init(cfg)
+        else    
+            local data = ActivityData.New()
+            data:Init(cfg)
+            if data:GetGroup() ~= nil then
+                self.ALDatas[cfgId] = data
+            end
+        end
+    end
+end
+
 function this:RefreshOpenState()
     self.isFirst = false
     self:InitListOpenState()
@@ -255,7 +274,7 @@ function this:CheckOpenDatas()
 end
 
 function this:CheakPopInfos()
-    self.popInfos = FileUtil.LoadByPath("Activity_Pop_Infos.txt") or {}
+    self.popInfos = {}
 end
 
 --获取某一组活动的最前开始时间和最后结束时间
@@ -518,7 +537,7 @@ end
 function this:SetOperateActive(id,info)
     local data= self:GetALData(tonumber(id))
     if data and data:GetType() ==ActivityListType.SignInGift and info.payRate then
-        if info.openTime <= TimeUtil:GetTime() and info.closeTime > TimeUtil:GetTime() then
+        if info.openTime and info.openTime <= TimeUtil:GetTime() and info.closeTime and info.closeTime > TimeUtil:GetTime() then
             self.operateActive[tonumber(id)] = self.operateActive[tonumber(id)] or {}
             self.operateActive[tonumber(id)].sTime = info.openTime
             self.operateActive[tonumber(id)].eTime = info.closeTime

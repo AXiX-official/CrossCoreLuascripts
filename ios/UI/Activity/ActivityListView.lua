@@ -24,6 +24,7 @@ function OnEnable()
     eventMgr:AddListener(EventType.Update_Everyday, OnDayRefresh)
     eventMgr:AddListener(EventType.Acitivty_List_Pop,CheckNextView)
     eventMgr:AddListener(EventType.Activity_List_Panel_Refresh,OnPanelRefresh)
+    eventMgr:AddListener(EventType.Activity_List_Cfg_Change,OnPanelRefresh)
 end
 
 function OnItemSelect(_type)

@@ -20,6 +20,12 @@ time=2000,type=0
 {effect="cast0_hit",time=2000,type=0,pos_ref={ref_type=0,offset_row=-200,offset_height=-80}},
 {time=3500,type=0,cue_sheet="cv/Smelt.acb",cue_name="Smelt_09",cue_feature=1},
 {effect="cast0_eff",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Smelt_attack_general"}
+},
+[-1183793042]={
+{effect="enter",time=3500,type=0,pos_ref={ref_type=6}}
+},
+[-1328923786]={
+{effect="win",time=3500,type=0,pos_ref={ref_type=6}}
 }
 };
 

@@ -81,6 +81,7 @@ function Refresh(_cardData, _elseData)
         end
         --  
         SetJieJin()
+        SetLimitSkin()
     end
     SetSelect(elseData.isSelect)
     -- 天赋升级，分解，支援卡,批量锁定  
@@ -368,4 +369,9 @@ function SetJieJin()
         ActiveClick(false)
         CSAPI.SetGOActive(new, false)
     end 
+end
+
+function SetLimitSkin()
+    local isLimitSkin = cardData:CheckLimitSkin()
+    UIUtil:SetRedPoint2("Common/Red4", node, isLimitSkin, -74, -14, 0)
 end

@@ -462,9 +462,20 @@ function this:GetIcon3()
 	return self.cfg.icon3;
 end
 
+---------------------------------------------排行榜---------------------------------------------
 function this:GetRankType()
 	local info = self:GetInfo()
 	return info and info.rankType 
+end
+
+function this:GetRankIcon()
+	local info = self:GetInfo()
+	return info and info.rankIcon or "" 
+end
+
+function this:GetRankID()
+	local info = self:GetInfo()
+	return info and info.rankId or 0
 end
 
 return this; 

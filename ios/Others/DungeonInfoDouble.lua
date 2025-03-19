@@ -11,6 +11,10 @@ local multiLimitNum = 0
 local limitTime = 0
 local limitTimer = 0
 local isLimitDouble = false --限时多倍
+--vip限时多倍
+local vipEndTime = 0
+local vipTime = 0
+local vipTimer = 0
 
 function Awake()
     eventMgr = ViewEvent.New();
@@ -46,9 +50,16 @@ function Update()
             LanguageMgr:SetText(txtDouble2,15129,0,0,1) 
         end
         if limitTime <= 0 then
-            
             ShowDoublePanel()
             EventMgr.Dispatch(EventType.Section_Daily_Double_Update)
+        end
+    end
+
+    if vipTime > 0 and vipTimer < Time.time then
+        vipTimer = Time.time + 1
+        vipTime = vipEndTime - TimeUtil:GetTime()
+        if vipTime <= 0 then
+            ShowDoublePanel()
         end
     end
 end
@@ -87,7 +98,9 @@ function ShowDoublePanel()
     local dStr = DungeonUtil.GetMultiDesc(sectionData:GetID())
     CSAPI.SetText(txtDouble, dStr);
 
-    multiNum = DungeonUtil.GetMultiNum(sectionData:GetID())
+    multiNum,_,vipEndTime = DungeonUtil.GetMultiNum(sectionData:GetID())
+    vipTime = vipEndTime> 0 and vipEndTime - TimeUtil:GetTime() or 0
+
     CSAPI.SetGOActive(btnMask, multiNum <= 0)
     if (multiNum > 0) then
         local doubleState = LoadDoubleState(sectionData:GetID())
@@ -160,7 +173,7 @@ function ShowDesc(b)
             LanguageMgr:SetText(txtDesc2,15130,limit)
         else
             CSAPI.SetGOActive(descObj2, false)
-            LanguageMgr:SetText(txtDesc,15098)
+            CSAPI.SetText(txtDesc,string.format("%s\n%s",LanguageMgr:GetByID(15098),vipTime > 0 and DungeonUtil.GetVipMultiDesc(sectionData:GetID()) or ""))
         end
     end
 end

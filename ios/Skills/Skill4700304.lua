@@ -49,6 +49,30 @@ function Skill4700304:OnBefourHurt(caster, target, data)
 	-- 4700394
 	self:tFunc_4700394_4700369(caster, target, data)
 	self:tFunc_4700394_4700379(caster, target, data)
+	self:tFunc_4700394_4700389(caster, target, data)
+end
+function Skill4700304:tFunc_4700384_4700364(caster, target, data)
+	-- 8263
+	if SkillJudger:IsCasterSibling(self, caster, target, true,70050) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8701
+	local count701 = SkillApi:SkillLevel(self, caster, target,3,7003001)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4700364
+	if self:Rand(5000) then
+		self:CallOwnerSkill(SkillEffect[4700364], caster, target, data, 700300100+count701)
+	end
 end
 function Skill4700304:tFunc_4700394_4700379(caster, target, data)
 	-- 8062
@@ -102,28 +126,24 @@ function Skill4700304:tFunc_4700394_4700369(caster, target, data)
 	-- 4700369
 	self:AddTempAttr(SkillEffect[4700369], caster, target, data, "bedamage",1.2)
 end
-function Skill4700304:tFunc_4700384_4700364(caster, target, data)
-	-- 8263
-	if SkillJudger:IsCasterSibling(self, caster, target, true,70050) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8701
-	local count701 = SkillApi:SkillLevel(self, caster, target,3,7003001)
+function Skill4700304:tFunc_4700394_4700389(caster, target, data)
 	-- 8062
 	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else
 		return
 	end
-	-- 4700364
-	if self:Rand(5000) then
-		self:CallOwnerSkill(SkillEffect[4700364], caster, target, data, 700300100+count701)
+	-- 8246
+	if SkillJudger:IsTargetMech(self, caster, target, true,10) then
+	else
+		return
 	end
+	-- 8269
+	if SkillJudger:IsCtrlType(self, caster, target, true,14) then
+	else
+		return
+	end
+	-- 4700389
+	self:AddTempAttr(SkillEffect[4700389], caster, target, data, "bedamage",0.48)
 end
 function Skill4700304:tFunc_4700384_4700354(caster, target, data)
 	-- 8262

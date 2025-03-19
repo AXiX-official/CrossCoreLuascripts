@@ -164,7 +164,7 @@ end
 function this:CheckCfgIdExist(cfgId)
     for i, v in pairs(self.cards) do
         if (v:GetCfgID() == cfgId) then
-            return true
+            return true,v
         end
     end
     return false

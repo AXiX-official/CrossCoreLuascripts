@@ -196,9 +196,11 @@ function SetItem(slot, id, item, roleSlot, iconParent)
     if (id ~= nil and id ~= 0 and ((roleSlot and id > 10000) or (not roleSlot and id < 10000))) then
         CSAPI.SetGOActive(item.gameObject, true)
         local detail = c_data:GetDetail(slot)
-        CSAPI.SetAnchor(iconParent, detail.x, detail.y, 0)
-        CSAPI.SetScale(iconParent, detail.scale, detail.scale, 1)
-        item.Refresh(id, LoadImgType.Main, nil, detail.live2d, c_data:IsShowShowImg(slot))
+        CSAPI.SetScale(iconParent, 0, 0, 0)--预防残留突变
+        item.Refresh(id, LoadImgType.Main, function()
+            CSAPI.SetAnchor(iconParent, detail.x, detail.y, 0)
+            CSAPI.SetScale(iconParent, detail.scale, detail.scale, 1)
+        end, detail.live2d, c_data:IsShowShowImg(slot))
     else
         CSAPI.SetGOActive(item.gameObject, false)
     end
@@ -413,9 +415,9 @@ end
 -----------------------------------------------------------------------------------------------
 -- 动态开关
 function OnClickL2D()
-    if(not c_data:CanShowL2d(slot))then 
+    if (not c_data:CanShowL2d(slot)) then
         LanguageMgr:ShowTips(3015)
-        return 
+        return
     end
     --
     if (slot == 1) then

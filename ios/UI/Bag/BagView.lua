@@ -64,6 +64,8 @@ local isFirst=true;
 local sortID=9;
 local lastEquipType=nil;
 local tweenMaskTime=1000;
+local baseItems={};
+local skillItems=nil;
 function Awake()	
 	--初始化菜单项
 	AdaptiveConfiguration.SetLuaObjUIFit("Bag",gameObject)
@@ -398,6 +400,7 @@ function SetEquipLayout()
 		CSAPI.SetGOActive(numObj, true);
 		CSAPI.SetGOActive(tabNode, false);
 		CSAPI.SetGOActive(sellObj,true);
+		CSAPI.SetGOActive(infoNode,false);
 		-- CSAPI.SetGOActive(tagNode,false);
 		CSAPI.SetGOActive(btnCancelSellBtn,true);
 		CSAPI.SetGOActive(sellTips,true);
@@ -614,6 +617,61 @@ function SetSellPrice(cNum,price,price2)
 	CSAPI.SetText(txt_sellNum, tostring(cNum).." / <color='#FFD426'>"..maxNum.."</color>");
 	CSAPI.SetText(txt_price, tostring(price));
 	CSAPI.SetText(txt_price2, tostring(price2));
+end
+
+--设置显示的装备数据
+function SetSellEquipInfo(equipData)
+	CSAPI.SetGOActive(infoNode,equipData~=nil)
+	if equipData then --初始化信息
+		if equipData:GetLv()>0 then
+			CSAPI.SetText(txt_infoName,string.format("%s+%s",equipData:GetName(),equipData:GetLv()));
+		else
+			CSAPI.SetText(txt_infoName,equipData:GetName());
+		end
+		local l1={};
+        for i=1,g_EquipMaxAttrNum do
+            local id,add,upAdd=equipData:GetBaseAddInfo(i);
+            if id and add and upAdd then
+                local addition=add+upAdd*equipData:GetLv();
+                local text=EquipCommon.FormatAddtion(id,addition);
+                table.insert(l1,{id=id,val1="+"..text});
+            end
+        end
+		ItemUtil.AddItems("AttributeNew2/AttributeItem11",baseItems,l1,baseRoot,nil,1);
+		local list={};
+		local index=0;
+			for i=1,g_EquipMaxSkillNum do
+				local cfg=equipData:GetSkillInfo(i);
+				if cfg then
+					if index<=g_EquipMaxSkillNum then
+						table.insert(list,cfg);
+						index=index+1;
+					else
+						LogError("技能数量超过上限！！");
+					end
+				end       
+			end
+		skillItems=skillItems or {};
+		for i=1,g_EquipMaxSkillNum  do
+			if skillItems and i <= #skillItems then
+				skillItems[i].Refresh(list[i]);
+				skillItems[i].SetClickCB(OnClickSkillItem);
+			else
+				ResUtil:CreateUIGOAsync("EquipInfo/EquipSkillAttribute3",skillRoot,function(go)
+					local tab=ComUtil.GetLuaTable(go);
+					tab.Refresh(list[i]);
+					tab.SetClickCB(OnClickSkillItem);
+					table.insert(skillItems,tab);
+				end);
+			end
+		end
+	end
+end
+
+function OnClickSkillItem(cfg)
+    if cfg then
+        CSAPI.OpenView("RoleEquipSkillInfo",cfg);
+    end
 end
 
 --背包数据更新

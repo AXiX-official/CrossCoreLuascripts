@@ -13,6 +13,8 @@ function Refresh(_data)
         CSAPI.SetGOActive(btnRemove1, data:GetIdx() ~= CRoleDisplayMgr:GetPanelRet().using)
         CSAPI.SetGOActive(btnRemove2, data:GetIdx() ~= CRoleDisplayMgr:GetPanelRet().using)
     end
+    --
+    SetLimitSkin()
 end
 
 function SetSlot(_id, _empty, _entity, _icon, _txtName1, _txtName2)
@@ -92,4 +94,12 @@ function OnClickRemove2()
             PlayerProto:RemoveRandomPanel(data:GetIdx())
         end
     end)
+end
+
+function SetLimitSkin()
+    local isLimitSkin1 = data:CheckLimitSkin(1)
+    UIUtil:SetRedPoint2("Common/Red4", node1, isLimitSkin1, -77.6, 158, 0)
+
+    local isLimitSkin2 = data:CheckLimitSkin(2)
+    UIUtil:SetRedPoint2("Common/Red4", node2, isLimitSkin2, -77.6, 158, 0)
 end

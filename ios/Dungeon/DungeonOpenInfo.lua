@@ -130,6 +130,10 @@ function this:GetEndTime()
     return self.data and self.data.nEndTime or 0
 end
 
+function this:GetDungeonEndTime()
+    return self.data and self.data.nBattleendTime or 0
+end
+
 function this:GetSectionID()
     return self.cfg and self.cfg.sectionID
 end
