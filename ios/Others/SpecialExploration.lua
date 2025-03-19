@@ -26,6 +26,7 @@ local action2=nil;
 local imgInfos=nil;--图片和目标的对应
 local uiInfo=nil;
 local isFirst=true;
+local fillImage=nil;
 function Awake()
     UIUtil:AddTop2("ExplorationMain",gameObject, OnClickReturn,OnClickHome,{})
     layout=ComUtil.GetCom(hsv,"UISV");
@@ -46,6 +47,7 @@ function Awake()
     action=ComUtil.GetCom(enterTween,"ActionMoveByCurve");
     action2=ComUtil.GetCom(enterTween2,"ActionMoveByCurve");
     progressTween=ComUtil.GetCom(progressBar,"ActionScaleT");
+    fillImage=ComUtil.GetCom(expFill,"Image");
 end
 
 function OnDestroy()
@@ -372,6 +374,14 @@ function LoadImgs()
             if IsNil(this[key])~=true then
                 CSAPI.LoadImg(this[key],string.format("UIs/%s/%s.png",uiInfo.floder,v),false,function()
                     CSAPI.SetScale(this[key],1,1,1);
+                    if k=="expFill" then
+                        --设置拉伸模式
+                        if uiInfo.expFill==true then
+                            fillImage.type=0;
+                        else
+                            fillImage.type=2;
+                        end
+                    end
                 end,true);
             end
         end
