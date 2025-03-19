@@ -13,6 +13,16 @@ function Skill4802301:OnBornSpecial(caster, target, data)
 	else
 		return
 	end
+	-- 4802306
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[4802306], caster, target, data, 4802302)
+	end
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
 	-- 4802304
 	self:AddBuff(SkillEffect[4802304], caster, self.card, data, 4802301,5)
 	-- 4802301
@@ -20,6 +30,23 @@ function Skill4802301:OnBornSpecial(caster, target, data)
 end
 -- 行动结束2
 function Skill4802301:OnActionOver2(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8673
+	local count673 = SkillApi:BuffCount(self, caster, target,3,4,4802301)
+	-- 8883
+	if SkillJudger:Less(self, caster, target, true,count673,1) then
+	else
+		return
+	end
+	-- 4802307
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[4802307], caster, target, data, 4802302)
+	end
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else

@@ -239,6 +239,45 @@ function this.GetMultiDesc(id)
 	return str;
 end
 
+function this.GetVipMultiDesc(id)
+	local cur,max = DungeonUtil.GetMultiNum(id)
+	local info = DungeonMgr:GetLimitMultiInfo()
+	if info and #info > 0 then
+		local extraNum = 0
+		local extraInfos = {}
+		for i, v in ipairs(info) do
+			if v.time > TimeUtil:GetTime() then
+				table.insert(extraInfos,{
+					num = v.cnt,
+					id = v.item_id
+				})
+				extraNum = extraNum + v.cnt
+			end
+		end
+		local str = LanguageMgr:GetByID(15133,cur) .. "\n"
+		if #extraInfos > 0 then
+			local count = max
+			local use = max + extraNum - cur
+			local num = 0
+			local name = ""
+			for i, v in ipairs(extraInfos) do
+				local cfg = Cfgs.ItemInfo:GetByID(v.id)
+				name = cfg and cfg.name or ""
+				if count - use > 0  then
+					num = v.num
+				else
+					num = v.num + count - use > 0 and v.num + count - use or 0
+				end
+				str = str .. LanguageMgr:GetByID(15134,num,name) .. "\n"
+				count = count + v.num
+			end
+		end
+		return str
+	else
+		return ""
+	end
+end
+
 --获取回归多倍掉落总次数
 function this.GetRegresAdd()
 	local add = 0
@@ -291,7 +330,7 @@ end
 function this.GetMultiNum(id)
 	local cfg = this.GetMultiCfg(id)
 	local cur,max = 0,0
-	local infoNum = DungeonMgr:GetSectionMultiNum(id);
+	local infoNum,limitTime = DungeonMgr:GetSectionMultiNum(id);
 	if(cfg and this.HasMultiDesc(id)) then
 		if cfg.plrExpAdd then
 			cur = cfg.plrExpAdd[2] - infoNum
@@ -307,7 +346,7 @@ function this.GetMultiNum(id)
 			cur = max - infoNum
 		end
 	end
-	return cur,max
+	return cur,max,limitTime
 end
 
 function this.GetMultiCfg(sectionID)

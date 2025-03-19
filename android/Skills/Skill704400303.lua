@@ -12,9 +12,9 @@ function Skill704400303:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	local targets = SkillFilter:All(self, caster, target, 2)
 	for i,target in ipairs(targets) do
-		self:DamagePhysics(SkillEffect[11201], caster, target, data, 0.2,5)
+		self:DamagePhysics(SkillEffect[11201], caster, target, data, 0.21,5)
 	end
 	-- 11202
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11202], caster, target, data, 0.5,3)
+	self:DamagePhysics(SkillEffect[11202], caster, target, data, 0.53,3)
 end

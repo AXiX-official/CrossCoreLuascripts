@@ -36,6 +36,7 @@ function this:GetFunc(sName)
         self.funcs["DungeonNight"] = self.DungeonActivity
         self.funcs["GlobalBossView"] = self.DungeonActivity
         self.funcs["TrialsListView"] = self.DungeonActivity
+        self.funcs["DungeonCloud"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -316,10 +317,11 @@ function this.Shop(cfg)
                 if comm and comm:GetNowTimeCanBuy() then --皮肤购买界面不打开商店
                     if comm:IsOver() then --售罄
                         LanguageMgr:ShowTips(15125);
+                        do return end;
                     elseif comm:GetType()==CommodityItemType.Skin then
                         ShopCommFunc.OpenBuyConfrim(cfg.val2, cfg.val3, cId)
+                        do return end;
                     end
-                    do return end;
                 else
                     LanguageMgr:ShowTips(15007);
                     do return end;

@@ -223,5 +223,8 @@ function OnClickVirtualkeysClose()
 end
 
 function OnClickShop()
-    CSAPI.OpenView("ShopView", 4001)
+    local cfg = Cfgs.cfgColosseum:GetByID(seasonData.id)
+    if(cfg.shopId)then 
+        CSAPI.OpenView("ShopView", cfg.shopId)
+    end
 end

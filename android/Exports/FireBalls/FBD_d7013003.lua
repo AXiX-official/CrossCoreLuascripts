@@ -13,7 +13,7 @@ effect="cure",effect_pack="common",time=8000,type=0,pos_ref={ref_type=4,part_ind
 {time=8000,type=2,hits={4000}}
 },
 [-686817241]={
-{time=4000,type=0,cue_sheet="cv/Hera.acb",cue_name="Hera_37_2",cue_feature=1},
+{time=4000,type=0,cue_sheet="cv/Hera.acb",cue_name="Hera_37",cue_feature=1},
 {effect="cast1_eff",effect_pack="d70130",time=3499,type=0,pos_ref={ref_type=6}},
 {delay=1000,time=3000,type=3,hit_creates={1082022229,806661594},hits={0}},
 {delay=1500,time=3500,type=3,hits={0}},

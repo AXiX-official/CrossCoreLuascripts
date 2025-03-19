@@ -503,7 +503,8 @@ function GCalHelp:GetArmyRobotSimpleTeams(uid, teamIds)
                 cfgid = mCfg.card_id,
                 level = mCfg.level,
                 break_level = mCfg.break_level,
-                name = mCfg.name
+                name = mCfg.name,
+                skin = 0,
             }
             table.insert(ret.team, robotCard)
         end
@@ -1796,6 +1797,10 @@ function GCalHelp:FindObjArrByKey(arr, key, val)
 end
 
 function GCalHelp:FindArrByFor(arr, val)
+    if not arr or type(arr) ~= 'table' then
+        return nil
+    end
+
     for _, aVal in ipairs(arr) do
         if aVal == val then
             return aVal

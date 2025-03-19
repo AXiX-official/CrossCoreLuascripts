@@ -350,7 +350,7 @@ end
 ---方法整合 ---点击购买
 function OnClickPayADVMain()
 	AdvDeductionvoucher.IsDeductionvoucher=true;
-	ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false);
+	ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false,voucherList);
 end
 ---抵扣卷支付按钮事件
 function OnClickVoucherPay()

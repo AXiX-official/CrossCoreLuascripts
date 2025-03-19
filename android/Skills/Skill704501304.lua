@@ -8,13 +8,22 @@ function Skill704501304:Init(skillID, card)
 end
 -- 执行技能
 function Skill704501304:DoSkill(caster, target, data)
-	-- 11301
+	-- 12005
 	self.order = self.order + 1
-	local targets = SkillFilter:All(self, caster, target, 2)
-	for i,target in ipairs(targets) do
-		self:DamageLight(SkillEffect[11301], caster, target, data, 0.2,5)
+	self:DamageLight(SkillEffect[12005], caster, target, data, 0.2,5)
+end
+-- 攻击开始
+function Skill704501304:OnAttackBegin(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
 	end
-	-- 11302
-	self.order = self.order + 1
-	self:DamageLight(SkillEffect[11302], caster, target, data, 0.5,3)
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 704500302
+	self:HitAddBuff(SkillEffect[704500302], caster, target, data, 10000,5604,2)
 end

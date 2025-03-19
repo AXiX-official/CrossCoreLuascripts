@@ -1651,16 +1651,15 @@ function ConfigChecker:ItemInfo(cfgs)
             ASSERT(cfgs[cfg.to_item_id], string.format('物品id:%s, 的 to_item_id:%s 找不到物品配置信息', id, cfg.to_item_id))
             local arr = GCalHelp:GetTb(g_toItemArr, cfg.to_item_id)
             table.insert(arr, id)
-        else
-            -- 填了 to_item_id 可以只填 sExpiry 不填 expiryIx
-            if cfg.sExpiry then
-                cfg.nExpiry = GCalHelp:GetTimeStampBySplit(cfg.sExpiry, cfg)
-                ASSERT(cfg.expiryIx, string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
-            end
+        end
 
-            if cfg.expiryIx then
-                ASSERT(cfg.sExpiry, string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
-            end
+        if cfg.sExpiry then
+            cfg.nExpiry = GCalHelp:GetTimeStampBySplit(cfg.sExpiry, cfg)
+            ASSERT(cfg.expiryIx, string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
+        end
+
+        if cfg.expiryIx then
+            ASSERT(cfg.sExpiry and cfg.sExpiry ~= '', string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
         end
 
         if cfg.exipiry_type then
@@ -1960,6 +1959,7 @@ function ConfigChecker:CfgDySetOpenCfgs(cfgs)
     for _, cfg in pairs(cfgs) do
         local cfgName = cfg.id
         local cfgStructInfo = ConfigParser.m_mapTableInfo[cfgName]
+        -- LogTable(cfgStructInfo, "ConfigChecker:CfgDySetOpenCfgs cfgStructInfo:")
 
         cfg.key = nil
         cfg.sheetName = cfgStructInfo.sheetname
@@ -2037,6 +2037,9 @@ function ConfigChecker:CfgActiveList(cfgs)
         end
         if fCfg.eTime then
             fCfg.nEndTime = GCalHelp:GetTimeStampBySplit(fCfg.eTime, fCfg)
+        end
+        if fCfg.data then
+            fCfg.resetKey = GCalHelp:GetTimeStampBySplit(fCfg.data, fCfg)
         end
         if fCfg.info and fCfg.info.signInId then
             g_ActiveSign[fCfg.info.signInId] = fCfg.id

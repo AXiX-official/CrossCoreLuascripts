@@ -98,7 +98,7 @@ function ReloadLua(nFile)
     local oldOrignModule = {}
 
     if hadLoadVals then
-        LogInfo("hadLoadVals start[遍历 %s 注册的全局变量，保存一份]", moduleName)
+        LogInfo("hadLoadVals start[遍历 %s 注册的全局变量，重新加载前临时保存一份]", moduleName)
         -- 遍历这个文件注册的所有全局变量，保存一份
         local cnt = 0
         for key, oType in pairs(hadLoadVals) do
@@ -110,7 +110,7 @@ function ReloadLua(nFile)
                 oldOrignModule[key] = _G[key]
             end
         end
-        LogInfo("hadLoadVals finish cnt:%s[遍历 %s 注册的全局变量，保存一份]", cnt, moduleName)
+        LogInfo("hadLoadVals finish cnt:%s[遍历 %s 注册的全局变量，重新加载前临时保存一份]", cnt, moduleName)
     end
 
     -- LogTable(oldOrignModule, "oldOrignModule:")
@@ -132,50 +132,57 @@ function ReloadLua(nFile)
 
             -- 不用理 newModule, 因为这里不进去，newModule 就会保存在 _G 里面的了
             if oldModule then
-                local nType = type(newModule)
-                if key ~= '_' and oType ~= nType then
-                    LogError(
-                        'ReloadLua(%s) key: %s new type: %s ~= old type: %s ?????? ',
-                        moduleName,
-                        key,
-                        nType,
-                        oType
-                    )
-
-                    _G[key] = oldModule
-                else
-                    if oType == 'table' then
-                        -- LogTable(newModule, "newModule[" .. key .. "]:")
-                        -- LogTable(oldModule, "oldModule[" .. key .. "]:")
-
-                        -- 不是全局对象才可以修改
-                        for nTbKey, nTbVal in pairs(newModule) do
-                            local oTbVal = oldModule[nTbKey]
-                            if oTbVal then
-                                if IsUseNewReloadVal(type(oTbVal), nTbKey, oTbVal, nTbVal) then
-                                    -- LogInfo("[Yes]File %s.%s.%s old:%s => new:%s update", nFile, key, nTbKey, oTbVal, nTbVal)
-                                    oldModule[nTbKey] = nTbVal
-                                    --newModule[nTbKey] = nil
-                                else
-                                    -- LogInfo("[NO]File %s.%s.%s type %s ignore not update", nFile, key, nTbKey, oType)
+                xpcall(
+                    function()
+                        local nType = type(newModule)
+                        if oType ~= nType then
+                            if key ~= '_' then
+                                LogError(
+                                    'ReloadLua(%s) key: %s new type: %s ~= old type: %s ?????? ',
+                                    moduleName,
+                                    key,
+                                    nType,
+                                    oType
+                                )
+                            end
+        
+                            _G[key] = oldModule
+                        else
+                            if oType == 'table' then
+                                -- LogTable(newModule, "newModule[" .. key .. "]:")
+                                -- LogTable(oldModule, "oldModule[" .. key .. "]:")
+        
+                                -- 不是全局对象才可以修改
+                                for nTbKey, nTbVal in pairs(newModule) do
+                                    local oTbVal = oldModule[nTbKey]
+                                    if oTbVal then
+                                        if IsUseNewReloadVal(type(oTbVal), nTbKey, oTbVal, nTbVal) then
+                                            -- LogInfo("[Yes]File %s.%s.%s old:%s => new:%s update", nFile, key, nTbKey, oTbVal, nTbVal)
+                                            oldModule[nTbKey] = nTbVal
+                                            --newModule[nTbKey] = nil
+                                        else
+                                            -- LogInfo("[NO]File %s.%s.%s type %s ignore not update", nFile, key, nTbKey, oType)
+                                        end
+                                    else
+                                        -- LogInfo("[Yes]File %s.%s.%s old:%s => new:%s add", nFile, key, nTbKey, oTbVal, nTbVal)
+                                        -- 旧表没有的，就直接赋值过来
+                                        oldModule[nTbKey] = nTbVal
+                                        --newModule[nTbKey] = nil
+                                    end
                                 end
+        
+                                _G[key] = oldModule
+                            elseif IsUseNewReloadVal(oType, key, oldModule, newModule) then
+                                -- 函数类的直接替换就好
+                                -- LogInfo("[Yes]File %s.%s old:%s => new:%s update", nFile, key, oldModule, newModule)
                             else
-                                -- LogInfo("[Yes]File %s.%s.%s old:%s => new:%s add", nFile, key, nTbKey, oTbVal, nTbVal)
-                                -- 旧表没有的，就直接赋值过来
-                                oldModule[nTbKey] = nTbVal
-                                --newModule[nTbKey] = nil
+                                -- LogInfo("[NO]File %s.%s type %s ignore not update", nFile, key, oType)
+                                _G[key] = oldModule
                             end
                         end
-
-                        _G[key] = oldModule
-                    elseif IsUseNewReloadVal(oType, key, oldModule, newModule) then
-                        -- 函数类的直接替换就好
-                        -- LogInfo("[Yes]File %s.%s old:%s => new:%s update", nFile, key, oldModule, newModule)
-                    else
-                        -- LogInfo("[NO]File %s.%s type %s ignore not update", nFile, key, oType)
-                        _G[key] = oldModule
                     end
-                end
+                    , XpcallCB
+                )
             end
         end
     end

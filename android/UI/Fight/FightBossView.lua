@@ -120,6 +120,10 @@ end
 
 function OnFightActivityUpdateDamage(apiData)
     --LogError("更新伤害" .. table.tostring(apiData));
+    if(activityAPIData and (activityAPIData.type == 2 or activityAPIData.type == 3))then
+        activityAPIData.nTotalDamage = apiData.nTotalDamage;
+        activityAPIData.nStateDamage = apiData.nStateDamage;
+    end
     UpdateActivityHP(apiData and apiData.nStateDamage);
 end
 
@@ -140,7 +144,11 @@ function OnFightActivitySetInvincible(apiData)
         txtAction = ComUtil.GetCom(actionText,"Text"); 
     end
     if(activityAPIData)then
-        UpdateActivityAction(activityAPIData.startopnum,activityAPIData.opnum);
+        if(activityAPIData.type == 2 or activityAPIData.type == 3)then
+            UpdateActivityActionHP(activityAPIData);
+        else
+            UpdateActivityAction(activityAPIData.startopnum,activityAPIData.opnum);
+        end
     end
 
 
@@ -150,6 +158,10 @@ function OnFightActivitySetInvincible(apiData)
             eventMgr:AddListener(EventType.Fight_Info_Update,OnFightInfoUpdate);
         end
     end
+
+    CSAPI.SetGOActive(goXp,false);
+    CSAPI.SetGOActive(xpLine,false);
+    
 end
 
 function UpdateActivityHP(nStateDamage)
@@ -160,7 +172,27 @@ function UpdateActivityHP(nStateDamage)
         target.SetHPLock();  
         target.UpdateHp(hpCurr,hpTotal);
         target.SetHPLock(true);  
-        UpdateInfo();         
+        UpdateInfo();     
+                
+        UpdateActivityActionHP1(hpCurr,hpTotal); 
+        --LogError(activityAPIData);
+        if(activityAPIData and (activityAPIData.type == 2 or activityAPIData.type == 3))then
+            local enemys = GetAllEnemys();            
+            if(enemys)then
+                for _,enemy in ipairs(enemys)do
+                    if(enemy.GetCharacterType() == CardType.Boss)then
+                        enemy.SetHPLock();
+                        enemy.UpdateHp(hpCurr,hpTotal);
+                        enemy.SetHPLock(true);
+
+                        local infoView = enemy.GetInfoView();
+                        local key = "activity_hp";
+                        infoView.SetHPLockState(key);
+                        infoView.SetHp(hpCurr,hpTotal,true,false,key);
+                    end
+                end
+            end
+        end
     end
 end
 
@@ -171,11 +203,44 @@ function UpdateActivityAction(startopnum,opnum)
         txtAction.text = string.format(LanguageMgr:GetByID(25046),opCurr,opnum or 0);
     end
 end
+function UpdateActivityActionHP(targetData)
+    local hpTotal = targetData.statehp or 1;
+    local hpCurr = math.max(0,hpTotal - (targetData.nStateDamage or 0));
+    UpdateActivityActionHP1(hpCurr,hpTotal)
+end
+function UpdateActivityActionHP1(hpCurr,hpTotal)
+    if(txtAction)then
+        --local opCurr = math.max(0,(currTurn or 0) - (startopnum or 0));     
+        --LogError(hpCurr .. "::aabbbcc");  
+        hpCurr = math.max(0,(hpCurr or 0));
+        txtAction.text = string.format(LanguageMgr:GetByID(25049),hpCurr or 0,hpTotal or 0);
+    end
+end
+
+--获取所有敌人的头顶信息界面
+function GetAllEnemys()
+    local list = {};
+    local characters = CharacterMgr:GetAll();
+    for _,character in pairs(characters)do
+        if(character and character.IsEnemy())then
+            --LogError(character.GetModelName() .. "=============");
+            table.insert(list,character);
+        end   
+    end
+
+    return list;
+end
+
 
 function OnFightInfoUpdate()
     FuncUtil:Call(function ()
         if(activityAPIData)then
-            UpdateActivityAction(activityAPIData.startopnum,activityAPIData.opnum);
+            --UpdateActivityAction(activityAPIData.startopnum,activityAPIData.opnum);
+            if(activityAPIData.type == 2 or activityAPIData.type == 3)then
+                UpdateActivityActionHP(activityAPIData);
+            else
+                UpdateActivityAction(activityAPIData.startopnum,activityAPIData.opnum);
+            end
         end
     end,nil,20);
 end

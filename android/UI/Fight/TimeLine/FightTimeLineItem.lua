@@ -154,7 +154,8 @@ function UpdateInfo(character,nextFlag)
 
     local cfg = character.GetCfgModel();
     --ResUtil.Card:Load(icon, cfg.card_icon);
-    ResUtil.RoleCard:Load(icon, cfg.icon);
+    -- ResUtil.RoleCard:Load(icon, cfg.icon);
+    ResUtil.RoleCard2:Load(icon, cfg.icon,false);
 
     local teamId = character.GetTeam();
    

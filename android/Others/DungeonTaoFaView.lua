@@ -29,7 +29,7 @@ end
 
 function OnRedPointRefresh()
     local _data = RedPointMgr:GetData(RedPointType.MissionTaoFa)
-    UIUtil:SetRedPoint2("Common/Red2", btnMission, _data == 1, 79, 42, 0)
+    UIUtil:SetRedPoint2("Common/Red2", btnMission, _data == 1, 108, 32, 0)
 end
 
 function OnDisable()

@@ -617,7 +617,7 @@ end
 -- 判断目标兵种
 function SkillJudger:IsTargetMech(oSkill, caster, target, res, typ)
 
-	LogDebugEx("SkillJudger:IsTargetMech", caster.name, caster.sMech, typ)
+	LogDebugEx("SkillJudger:IsTargetMech", target.name, target.sMech, typ)
 	if target.sMech == typ then 
 		return res
 	end
@@ -1020,13 +1020,15 @@ end
 
 -- 总伤害
 function SkillApi:GetTotalDamage(oSkill, caster, target, filter)
-	return oSkill.card.nTotalDamage or 0
+	local mgr = oSkill.team.fightMgr
+	return mgr.nInvTotalDamage or 0
 end
 
 -- 阶段伤害
 function SkillApi:GetStateDamage(oSkill, caster, target, filter)
 	LogDebugEx("SkillApi:GetStateDamage", oSkill.card.nStateDamage, oSkill.card.name)
-	return oSkill.card.nStateDamage or 0
+	local mgr = oSkill.team.fightMgr
+	return mgr.nInvStateDamage or 0
 end
 
 ----------------------------------------------
@@ -1567,17 +1569,53 @@ function FightAPI:SetInvincible(effect, caster, target, data, totalState, state,
 	-- LogDebugEx("---FightAPI:SetInvincible---", caster.name, target.name)
 	local target = self.card
 	if not target.isInvincible then return end
-	target.nStateDamage = 0 -- 当前阶段伤害量
-	target.totalState   = totalState -- 总阶段
-	target.state        = state -- 阶段
-	target.statehp      = statehp -- 阶段血量
-	target.opnum        = opnum -- 操作数
-	target.startopnum   = self.team.fightMgr.nStepPVE or 0 -- 阶段开始时的操作数
-	self.log:Add({api="SetInvincible", targetID = target.oid, 
+
+
+	local mgr = self.team.fightMgr
+	mgr:SetInvincible(effect, caster, target, data, totalState, state, statehp, opnum)
+	-- target.nStateDamage = 0 -- 当前阶段伤害量
+	-- target.totalState   = totalState -- 总阶段
+	-- target.state        = state -- 阶段
+	-- target.statehp      = statehp -- 阶段血量
+	-- target.opnum        = opnum -- 操作数
+	-- target.startopnum   = self.team.fightMgr.nStepPVE or 0 -- 阶段开始时的操作数
+	self.log:Add({api="SetInvincible", --[[targetID = target.oid, ]]
 		totalState = totalState, state = state, statehp = statehp, opnum = opnum,
-		nStateDamage = target.nStateDamage, nTotalDamage = target.nTotalDamage, startopnum = target.startopnum,
+		nStateDamage = 0, nTotalDamage = mgr.nInvTotalDamage, startopnum = mgr.nInvStartopnum, type= mgr.isInvincible,
 		effectID = effect.apiSetting, order = self.order})
 
+end
+
+-- 强制结算 1胜利
+function FightAPI:ForceOver(effect, caster, target, data, ret)
+
+	-- if IS_CLIENT then return end
+	local mgr = self.team.fightMgr
+	if ret == 1 then
+		-- -- mgr:Over(mgr.stage, 1)
+		-- mgr.oForceOver = 1
+		local team = mgr:GetTeam(2)
+		-- if not team then
+		-- 	mgr.oForceOver = 1
+		-- end
+		for i,v in ipairs(team.arrCard) do
+			if v:IsLive() then
+				v:ForceDeath(caster)
+			end
+		end
+	else
+		-- -- mgr:Over(mgr.stage, 2)
+		-- mgr.oForceOver = 2
+		local team = mgr:GetTeam(1)
+		-- if not team then
+		-- 	mgr.oForceOver = 2
+		-- end
+		for i,v in ipairs(team.arrCard) do
+			if v:IsLive() then
+				v:ForceDeath(caster)
+			end
+		end
+	end
 end
 
 -- 复活

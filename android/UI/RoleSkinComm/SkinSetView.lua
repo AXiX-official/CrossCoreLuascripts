@@ -74,9 +74,8 @@ function IsSkinCommShow(shopSkinInfo)
     if hideType==nil or hideType==3 then --type==3表示一定隐藏
         isShow=false;
     elseif hideType==1 then--原始图
-        local modelCfg=shopSkinInfo:GetModelCfg();
         --判断是否在商品上架期限
-        local commodity=ShopMgr:GetFixedCommodity(modelCfg.shopId);
+        local commodity=ShopCommFunc.GetSkinCommodity(shopSkinInfo:GetModelID());
         if commodity==nil then
             return isShow;
         end
@@ -87,9 +86,8 @@ function IsSkinCommShow(shopSkinInfo)
             isShow=true
         end
     elseif hideType==2 then--和谐图
-        local modelCfg=shopSkinInfo:GetModelCfg();
         --判断是否在商品上架期限
-        local commodity=ShopMgr:GetFixedCommodity(modelCfg.shopId);
+        local commodity=ShopCommFunc.GetSkinCommodity(shopSkinInfo:GetModelID());
         if commodity==nil then
             return isShow;
         end

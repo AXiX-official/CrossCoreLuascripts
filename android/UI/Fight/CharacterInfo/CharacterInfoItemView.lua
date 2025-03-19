@@ -46,6 +46,8 @@ function OnRecycle()
 
     isInited = nil;
     currState = nil;
+
+    SetHPLockState();
 end
 
 --头顶信息显示状态切换
@@ -199,8 +201,17 @@ function SetScaleState(state)
     CSAPI.SetScale(nodes,targetScale,targetScale,targetScale);
 end
 
+--锁住hp更新
+function SetHPLockState(key)
+    lockKey = key;
+end
+
 --设置HP
-function SetHp(curr,max,immediately,onlyFakeBar)    
+function SetHp(curr,max,immediately,onlyFakeBar,key)
+    if(lockKey and lockKey ~= key)then
+        return;
+    end    
+    --LogError(curr .. " / " .. max);
     local value = curr / max;   
     if(not onlyFakeBar)then
         hpBar:SetProgress(value,immediately ~= nil);

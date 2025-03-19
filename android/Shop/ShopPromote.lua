@@ -106,6 +106,24 @@ function this:GetJumpInfo()
                 topId=jumpCfg.val3,--二级页签ID
             }
         end
+    else --根据商品ID进行跳转
+        local commId=self.cfg and self.cfg.commID or nil;
+        if commId then
+            local comm=ShopMgr:GetFixedCommodity(commId);
+            if comm and comm:GetNowTimeCanBuy() then
+                if comm:IsOver() then
+                    LanguageMgr:ShowTips(15125);
+                else
+                    jumpInfo={
+                        commId=self.cfg.commID,
+                        shopId=comm:GetShopID(),
+                        topId=comm:GetTabID(),--二级页签ID
+                    }
+                end
+            else
+                LanguageMgr:ShowTips(15007);
+            end
+        end
     end
     return jumpInfo;
 end

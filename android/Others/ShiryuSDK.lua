@@ -295,17 +295,9 @@ function this.LogoutCallback(Success)
             end
             PlayerClient:SDKExit();
             PlayerClient:Clearuid();
-
-            --ClientProto:Offline()
-            --MgrCenter:Clear();
-            --EventMgr.Dispatch(EventType.Login_Quit,nil,true);
-            --if CSAPI.IsChannel() then
-            --    EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand,nil,true)
-            --end
-            --LoginProto:Logout();
-            --PlayerClient:Clearuid()
         end
-
+        ClientProto:ClearLoginData()
+        PlayerClient:SetEnterHall(false);
     else
         Log("接收到异常退出 失败")
     end

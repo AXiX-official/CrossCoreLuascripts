@@ -31,6 +31,9 @@ local addtiveState=false;--是否显示加成状态
 local joinDragView=nil;--加入卡牌拖拽时的dragview对象
 local infoNode=nil;--信息框节点
 local isShowInfos=false;--是否显示hp/sp
+local enableAlphaCamera=false
+local alphaCameraTimer=0
+local alphaCameraInterval=0.2
 function Awake()
 	-- local goRT = CSAPI.GetGlobalGO("CommonRT")
     -- CSAPI.SetRenderTexture(goRaw,goRT);
@@ -58,7 +61,7 @@ end
 function OnModelLoadOver()
 	if isLoadOver==false then
 		CSAPI.SetGOActive(formationGrids,true);
-		isLoadOver=true;
+		isLoadOver=true;		
 	end
 end
 
@@ -66,6 +69,7 @@ function OnEnable()
 	if ViewModelMgr:GetCurrModelCreater()~= this then
 		ViewModelMgr:SetModelCreater(this);
 	end
+	ShowAplhaCameraWithTime(1.5)
 end
 
 function SetScale(_scale)
@@ -496,6 +500,9 @@ function GetHaloRange(_row,_col)
 	return posInfo;
 end
 function OnBeginDragXY(x,y,detalX,detalY)
+
+	ShowAplhaCameraWithTime(1000)
+	
 	dragObj=nil;
 	-- Log(x.."\t"..y.."\t"..z);
 	-- local r,c=GetCurrKey(x,0,z)
@@ -564,6 +571,8 @@ end
 
 --停止拖拽
 function OnEndDragXY(x,y,detalX,detalY)
+	
+	ShowAplhaCameraWithTime(0)	
 	-- Log("End...........")
 	EventMgr.Dispatch(EventType.TeamView_DragMask_Change,false)
 	if dragObj then
@@ -824,6 +833,8 @@ end
 
 --拖拽卡牌加入队伍
 function OnJoinDragBegin(eventData)
+	
+	ShowAplhaCameraWithTime(1000)
 	--创建对应角色的模型，并设置为formationView的DragObj
 	local card=eventData and eventData.card or nil;
 	if card and CanEditTeam() then
@@ -883,6 +894,7 @@ function OnJoinDragBegin(eventData)
 end
 
 function OnJoinDragEnd(eventData)
+	ShowAplhaCameraWithTime(0)
 	SetIsDrag(false);
 	local card=eventData and eventData.card or nil;
 	if	joinModel and card then
@@ -1003,6 +1015,7 @@ function GetCurrKey(x,y,z)
 end
 
 function OnZoom(delta)
+	ShowAplhaCameraWithTime(2)	
 	infoViewScale=infoViewScale+delta*0.08;
 	if infoView then
 		CSAPI.SetScale(infoView.gameObject,infoViewScale,infoViewScale,infoViewScale);
@@ -1129,6 +1142,34 @@ function Update()
 			SetClickState();
 		end
 	end
+
+	-- 	if alphaCameraTimer ~= -1 then
+	-- 		if alphaCameraTimer > 0 then
+	-- 			alphaCameraTimer = alphaCameraTimer - Time.deltaTime;
+	-- 		else
+	-- 			alphaCameraTimer = -1
+	-- 			CSAPI.SetGOActive(AplhaCamera.gameObject,false)
+	-- 		end
+	-- 	end
+	
+	alphaCameraTimer = alphaCameraTimer + Time.deltaTime;
+	if alphaCameraTimer / alphaCameraInterval > 1 then
+		local cacheState = AplhaCamera.gameObject.activeSelf
+		if cacheState == true then
+			CSAPI.SetGOActive(AplhaCamera.gameObject,false)
+			alphaCameraTimer = 0
+		else
+			CSAPI.SetGOActive(AplhaCamera.gameObject,true)
+			alphaCameraTimer = alphaCameraInterval - 0.01
+		end
+	end
+end
+
+function ShowAplhaCameraWithTime(timeCache)
+	if timeCache ~= 0 then CSAPI.SetGOActive(AplhaCamera.gameObject,true) end
+	alphaCameraTimer = -timeCache
+	-- CSAPI.SetGOActive(AplhaCamera.gameObject,true)
+	-- alphaCameraTimer = timeCache
 end
 
 function CleanCache()

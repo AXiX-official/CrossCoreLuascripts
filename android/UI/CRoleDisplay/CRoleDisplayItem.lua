@@ -31,7 +31,10 @@ function Refresh(_data, _curLIndex, _curCRoleID)
     CSAPI.SetGOActive(txtNo, not isCanUse)
     canvasGroup.alpha = isCanUse and 1 or 0.3
 
-    --SetNew()
+    -- SetNew()
+
+    --限时皮肤
+    SetLimitSkin()
 end
 
 function SetItem()
@@ -70,4 +73,9 @@ function OnClick()
     if (cb) then
         cb(index)
     end
+end
+
+function SetLimitSkin()
+    local isLimitSkin = data:IsLimitSkin()
+    UIUtil:SetRedPoint2("Common/Red4", clickNode, isLimitSkin, -71, 74, 0)
 end

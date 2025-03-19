@@ -21,16 +21,18 @@ end
 function this:Clear()
     self.datas = {}
     self.newAddCards = {}
+    self.limitSkins = {} -- 限时皮肤
+    self.wTSlimitSkins = {}
 end
 
 -- 获取皮肤列表(已混合变身、同调的皮肤) --- 默认不包含解禁的皮肤,不显示的皮肤
 function this:GetDatas(cfgid, containJieJin)
     local dic = {}
     local _dic = self.datas[cfgid]
-    if(not _dic) then 
-        Log("找不到该角色的皮肤数据："..cfgid)
+    if (not _dic) then
+        Log("找不到该角色的皮肤数据：" .. cfgid)
         return {}
-    end 
+    end
     for k, v in pairs(_dic) do
         if (not v:IsHide() and (containJieJin or not v:CheckIsJieJin())) then
             dic[k] = v
@@ -197,30 +199,95 @@ function this:GetSkinsRet(proto)
         for key, value in ipairs(proto.info) do
             local cardID = value.cfgid -- 卡牌id
             local cfg = Cfgs.CardData:GetByID(cardID)
-            --
-            -- self:InitCfgData(cfg.role_id, cardID)
-            -- 
             if (value.info) then
                 for i, v in ipairs(value.info) do
                     if (self.datas[cfg.role_id][v]) then
                         self.datas[cfg.role_id][v]:SetCanUse(true)
                     else
-                        LogError("卡牌角色" .. cfg.role_id .. "的aCards未配置：" .. cardID)
-                        -- local skin4 = RoleSkinInfo.New()
-                        -- skin4:Set(cardID, v, i, CardSkinType.Add)
-                        -- skin4:SetCanUse(true)
-                        -- self.datas[cardID][v] = skin4
+                        LogError(
+                            "卡牌角色表" .. cfg.role_id .. "的aCards未配置：" .. cardID .. "\t modelId:" ..
+                                tostring(v))
                     end
                 end
             end
             -- new 
-            if (proto.is_add and not CSAPI.IsViewOpen("RoleInfo")) then
+            if (value.is_add and not CSAPI.IsViewOpen("RoleInfo")) then
                 self.newAddCards[cardID] = 1
+            end
+            -- 限时皮肤
+            if (value.ltSkins) then
+                for k, v in pairs(value.ltSkins) do
+                    if (self.datas[cfg.role_id][v.id]) then
+                        self.datas[cfg.role_id][v.id]:SetCanUse(true, v.t)
+
+                        self.limitSkins[v.id] = v.t
+                        if (v.is_add) then
+                            local characterCfg = Cfgs.character:GetByID(v.id)
+                            if(characterCfg and characterCfg.skinType==1)then 
+                                table.insert(self.wTSlimitSkins, v)
+                            end 
+                        end
+                    else
+                        LogError(
+                            "卡牌角色表" .. cfg.role_id .. "的aCards未配置：" .. cardID .. "\t modelId:" ..
+                                tostring(v.id))
+                    end
+                end
             end
         end
     end
     -- CRoleMgr:CheckNewSkin()
     -- EventMgr.Dispatch(EventType.Card_Skin_Get)
+    EventMgr.Dispatch(EventType.Role_LimitSkin_Refresh)
+end
+
+-- 展示限时皮肤(打开换肤界面，展示界面作为子物体)
+function this:ShowLimitSkins(cb)
+    if (#self.wTSlimitSkins > 0) then
+        local modelID = self.wTSlimitSkins[1].id
+        table.remove(self.wTSlimitSkins, 1)
+        CSAPI.OpenView("RoleApparel",{modelID,cb},2)
+        return true
+    end
+    return false
+end
+
+function this:RemoveWTSlimitSkins()
+    self.wTSlimitSkins = {}
+end
+
+-- 移除过期皮肤
+function this:SkinExpiredRet(ids)
+    for k, v in ipairs(ids) do
+        local cfg = Cfgs.character:GetByID(v)
+        if (self.datas[cfg.role_id][v]) then
+            self.datas[cfg.role_id][v]:SetCanUse(false)
+            self.limitSkins[v] = nil
+        else
+            LogError("卡牌角色表" .. cfg.role_id .. "的aCards未配置：" .. cardID .. "\t modelId:" ..
+                         tostring(v))
+        end
+    end
+    EventMgr.Dispatch(EventType.Role_LimitSkin_Refresh)
+end
+
+-- 限时皮肤最小刷新时间
+function this:GetSkinMinLimitTime()
+    local timer = nil
+    for k, v in pairs(self.limitSkins) do
+        if (timer == nil or timer > v) then
+            timer = v
+        end
+    end
+    return timer
+end
+
+-- 是否有皮肤过期(通知服务器刷新)
+function this:CheckLimitSkin()
+    local timer = self:GetSkinMinLimitTime()
+    if (timer and TimeUtil:GetTime() >= timer) then
+        PlayerProto:SkinExpired()
+    end
 end
 
 -- 使用皮肤
@@ -274,6 +341,17 @@ function this:AddMechaJieJinSkin(add_role_id, open_mechas)
             _data[model]:SetCanUse(true)
         end
     end
+end
+
+-- 卡牌是否有限时皮肤
+function this:IsHadLimitSkin(roleID)
+    local list = self:GetDatas(roleID, true)
+    for k, v in pairs(list) do
+        if (v:IsLimitSkin()) then
+            return true
+        end
+    end
+    return false
 end
 
 return this

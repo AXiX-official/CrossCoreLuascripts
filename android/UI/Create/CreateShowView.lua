@@ -265,6 +265,7 @@ end
 function SetName()
     local _name = curData and curData:GetName() or ""
     CSAPI.SetText(txtName, _name)
+    CSAPI.SetText(txtName2, curData:GetCfg().nameEng)
 end
 
 function SetTeam()

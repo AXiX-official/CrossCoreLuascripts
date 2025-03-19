@@ -43,13 +43,23 @@ function this:GetMonsters()
     -- local _monsters = monsterGroupCfg.monsters or {}
     for k, v in ipairs(monsterGroupCfg.stage) do
         for p, q in ipairs(v.monsters) do
+            local monsterCfg = Cfgs.MonsterData:GetByID(q)
             table.insert(monsters, {
                 id = q,
                 -- level = mainLineCfg.previewLv,
-                isBoss = q == monsterGroupCfg.monster
+                isBoss = monsterCfg.isboss==1
             })
         end
     end
+    if(#monsters>1)then 
+        table.sort(monsters,function (a,b)
+            if(a.isBoss~=b.isBoss)then 
+                return a.isBoss
+            else 
+                return a.id > b.id
+            end 
+        end)
+    end 
     return monsters
 end
 
@@ -64,21 +74,31 @@ function this:GetMonsters2()
     end
     local monsters = {}
     if (cfgs) then
-        if (#cfgs > 1) then
-            table.sort(cfgs, function(a, b)
-                return a.id > b.id
-            end)
-        end
-        for k, v in ipairs(cfgs) do
+        -- if (#cfgs > 1) then
+        --     table.sort(cfgs, function(a, b)
+        --         return a.id > b.id
+        --     end)
+        -- end
+        for k, v in pairs(cfgs) do
             for p, q in pairs(v.enemyPreview) do
                 local monsterGroupCfg = Cfgs.MonsterGroup:GetByID(q)
+                local monsterCfg = Cfgs.MonsterData:GetByID(monsterGroupCfg.monster)
                 table.insert(monsters, {
                     id = monsterGroupCfg.monster,
                     level = v.previewLv,
-                    isBoss = false
+                    isBoss = monsterCfg.isboss==1
                 })
             end
         end
+        if(#monsters>1)then 
+            table.sort(monsters,function (a,b)
+                if(a.isBoss~=b.isBoss)then 
+                    return a.isBoss
+                else 
+                    return a.id > b.id
+                end 
+            end)
+        end 
     end
     return monsters
 end

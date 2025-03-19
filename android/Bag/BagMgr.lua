@@ -3,16 +3,22 @@ local this = MgrRegister("BagMgr")
 
 -- 设置数据
 function this:SetData(bagData)
-    self.datas = nil;
-    self.arr = nil;
-    if (bagData and bagData.item) then
-        for index, data in ipairs(bagData.item) do
-            self:UpdateGoodsData(data);
+    if (bagData~=nil) then
+        if bagData.ix==1 then
+            self.datas=nil;
+            self.arr=nil;
         end
-        EventMgr.Dispatch(EventType.Bag_Update)
+        if bagData.item then
+            for index, data in ipairs(bagData.item) do
+                self:UpdateGoodsData(data);
+            end
+        end
+        if bagData.is_finish then
+            self:CheckBagRedInfo();
+            EventMgr.Dispatch(EventType.Bag_Update)
+            RoleMgr.OnBagUpdate(true)
+        end
     end
-    self:CheckBagRedInfo();
-    RoleMgr.OnBagUpdate(true)
 end
 -- 更新数据
 function this:UpdateData(newData)
@@ -22,9 +28,9 @@ function this:UpdateData(newData)
         for _, data in ipairs(newData.data) do
             self:UpdateGoodsData(data, true);
         end
+        self:CheckBagRedInfo();
         EventMgr.Dispatch(EventType.Bag_Update)
     end
-    self:CheckBagRedInfo();
     RoleMgr.OnBagUpdate(false)
 end
 
@@ -186,12 +192,14 @@ end
 --检查是否显示背包红点
 function this:CheckBagRedInfo()
 	local tagValue=nil;
+    self.lessLimitTime=nil;
     if self.datas then
         local currTime=TimeUtil:GetTime();
         local isRecord=false;
         local limitTime=nil;
+        local limitID=nil;
         for k, v in pairs(self.datas) do
-            if v:GetCfgTag()==2 then --2是消耗品,将需要显示红点的tag值加入数组
+            if v:GetCfgTag()==2 then --5是消耗品,将需要显示红点的tag值加入数组
                 if isRecord~=true then
                     tagValue=tagValue or {};
                     table.insert(tagValue,v:GetCfgTag());
@@ -207,7 +215,9 @@ function this:CheckBagRedInfo()
 						tempData.id=val[3];
 						tempData.get_infos={val};
 						local tempGoods=GoodsData(tempData);
-                        limitTime=tempGoods:GetExpiry();
+                        if limitTime==nil or  (limitTime and limitTime>tempGoods:GetExpiry()) then
+                            limitTime=tempGoods:GetExpiry();
+                        end
                     end
                 end
                 if self.lessLimitTime ~= nil then
@@ -244,6 +254,39 @@ function this:IsShowLimit()
         end
     end
     return false;
+end
+
+--记录24小时内限时物品的提示是否有过
+function this:RecordDayLimitTips()
+    self.dayLimitTime=TimeUtil:GetTime();
+    self.hasDayLimitTips=true;
+    FileUtil.SaveToFile("DayLimitRecord.txt",{dayLimitTime=self.dayLimitTime});
+end
+
+--返回24小时内是否已经弹过提示
+function this:IsDayLimitTipsDone()
+    if self.hasDayLimitTips==true then
+        return self.hasDayLimitTips;
+    else
+        self.hasDayLimitTips=false;
+    end
+    if self.dataLimitTime==nil or self.dataLimitTime==0 then
+        local info=FileUtil.LoadByPath("DayLimitRecord.txt");
+        if info and info.dayLimitTime~=nil then
+            self.dataLimitTime=info.dayLimitTime;
+        else
+            self.dataLimitTime=0;
+        end
+    end
+    local curTime=TimeUtil:GetTimeHMS(TimeUtil:GetTime());
+    local dTime=TimeUtil:GetTimeHMS(self.dataLimitTime);
+    if curTime and dTime then
+        if curTime.year==dTime.year and curTime.yday==dTime.yday then
+            self.dataLimitTime=TimeUtil:GetTime();
+            self.hasDayLimitTips=true;
+        end
+    end
+    return self.hasDayLimitTips;
 end
 
 -- ==============================--
@@ -508,7 +551,10 @@ function this:Clear()
     self.selectEquipCond = nil;
     self.tabIndex = nil;
     self.conditions = nil;
+    self.lessLimitTime=nil;
     self.childTabIndex=nil;
+    self.dataLimitTime=nil;
+    self.hasDayLimitTips=nil;
 end
 
 return this;

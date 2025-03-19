@@ -8,8 +8,13 @@ function Skill331701:Init(skillID, card)
 end
 -- 伤害前
 function Skill331701:OnBefourHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	-- 331701
+	self:tFunc_331701_331721(caster, target, data)
+	self:tFunc_331701_331711(caster, target, data)
+end
+function Skill331701:tFunc_331701_331711(caster, target, data)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else
 		return
 	end
@@ -20,6 +25,22 @@ function Skill331701:OnBefourHurt(caster, target, data)
 	end
 	-- 8449
 	local count49 = SkillApi:GetAttr(self, caster, target,3,"maxhp")
-	-- 331701
-	self:AddTempAttr(SkillEffect[331701], caster, self.card, data, "attack",count49*0.02)
+	-- 331711
+	self:AddTempAttr(SkillEffect[331711], caster, caster, data, "attack",count49*0.01)
+end
+function Skill331701:tFunc_331701_331721(caster, target, data)
+	-- 8064
+	if SkillJudger:CasterIsSummon(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8449
+	local count49 = SkillApi:GetAttr(self, caster, target,3,"maxhp")
+	-- 331721
+	self:AddTempAttr(SkillEffect[331721], caster, caster, data, "attack",count49*0.02)
 end

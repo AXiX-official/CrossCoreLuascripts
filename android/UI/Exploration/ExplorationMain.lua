@@ -67,19 +67,27 @@ end
 
 function OnReveice(proto)
     --刷新列表
-    curBaseList=data:GetBaseRewardCfgs();
-    curPlusList=data:GetExRewardCfgs();
+    curBaseList=data:GetBaseRewardCfgs(data:GetMaxLv(),true);
+    curPlusList=data:GetExRewardCfgs(data:GetMaxLv(),true);
     isTween=true;
     layout:UpdateList();
     SetSPReward();
     --包含特殊奖励且未开启付费档时，弹出购买界面
     local hasSP=false;
     if proto and proto.get_infos then
+        local infiniteLv=0;
+        if data:HasInfiniteLv() then
+            infiniteLv=data:GetInfiniteLv();
+        end
+        local cfg=Cfgs.CfgExplorationExp:GetByID(data:GetLevelID());
         for k,v in pairs(proto.get_infos) do
             if v.rid then
-                local cfg=Cfgs.CfgExplorationExp:GetByID(data:GetLevelID());
                 for _,val in pairs(v.gets) do
-                    if cfg and cfg.item[val].isSpecial then
+                    local idx=val;
+                    if val>=infiniteLv and infiniteLv>0 then
+                        idx=infiniteLv;
+                    end
+                    if cfg and cfg.item[idx].isSpecial then
                         hasSP=true
                         break;
                     end
@@ -109,6 +117,13 @@ function SetRedInfo()
             hasReward=redInfo.hasReward;
             layout:UpdateList();
         end
+        if redInfo.hasInfiniteReward then
+            hasReward=true;
+            local fixedLv=data:GetFixedSPLv(currClickLv);
+            if fixedLv==data:GetInfiniteLv() then
+                SetSPReward();
+            end
+        end
     end
     CSAPI.SetGOActive(btn_receive,hasReward);
     CSAPI.SetGOActive(taskRedPoint,isTaskRed)
@@ -136,13 +151,12 @@ function Refresh(disExpTween)
     --计算当前最新的显示页面
     -- local pageIdx,cIdx=GetIdxs(data:GetCurrLv());
     -- currClickLv=cIdx;
-    currClickLv=data:GetCurrLv();
+    currClickLv=data:GetCurrLv()>=data:GetMaxLv() and data:GetMaxLv() or data:GetCurrLv();
     currState=data:GetState();
     -- SetDropIndex(pageIdx) 
     RefreshExp(disExpTween);
     --刷新高级测绘状态
     SetState();
-    SetSPReward();
     -- Log(data.cfg)
     local st= TimeUtil:GetTimeStampBySplit(data:GetStartTime())
     local et=TimeUtil:GetTimeStampBySplit(data:GetEndTime())
@@ -154,8 +168,8 @@ function Refresh(disExpTween)
     RefreshDownTime();
     CSAPI.SetText(txt_time,txt);
     --刷新列表
-    curBaseList=data:GetBaseRewardCfgs();
-    curPlusList=data:GetExRewardCfgs();
+    curBaseList=data:GetBaseRewardCfgs(data:GetMaxLv(),true);
+    curPlusList=data:GetExRewardCfgs(data:GetMaxLv(),true);
     -- CreateLvList();
     -- SetTitleImg(pageIdx)
     -- layout:IEShowList(#curBaseList,nil,pageIdx);
@@ -163,9 +177,11 @@ function Refresh(disExpTween)
     for k, v in ipairs(curBaseList) do
         if v:GetState()==ExplorationRewardState.Available then
             lv=v:GetLv();
+            currClickLv=v:GetLv();
             break;
         end
     end
+    SetSPReward();
     layout:IEShowList(#curBaseList,function()
         SetProgressBar();
     end,lv);
@@ -230,13 +246,26 @@ function SetSPReward()
     local fixedLv=data:GetFixedSPLv(currClickLv);
     currNormalReward=data:GetRewardCfg(ExplorationState.Normal,fixedLv);
     currPlusReward=data:GetRewardCfg(ExplorationState.Ex,fixedLv);
-    CSAPI.SetText(txt_spTips,string.format(LanguageMgr:GetByID(34024),fixedLv));
-    local rState=currNormalReward:GetState();
-    local isUnLock=false;
-    if rState==ExplorationRewardState.Available or rState==ExplorationRewardState.UnLock  then
-        isUnLock=true;
-    end
     if currNormalReward then
+        local rState=nil;
+        if currNormalReward:IsInfinite() then --无限档位
+            rState=data:GetInfiniteRewardState(ExplorationState.Normal);
+            CSAPI.SetText(txt_spTips,LanguageMgr:GetByID(22094));
+            CSAPI.SetGOActive(spRedObj,data:GetInfiniteRewardNum()>0);
+            if data:GetInfiniteRewardNum()>99 then
+                CSAPI.SetText(txt_spRed,"99+");
+            else
+                CSAPI.SetText(txt_spRed,tostring(data:GetInfiniteRewardNum()));
+            end
+        else
+            rState=currNormalReward:GetState();
+            CSAPI.SetGOActive(spRedObj,false);
+            CSAPI.SetText(txt_spTips,string.format(LanguageMgr:GetByID(34024),fixedLv));
+        end
+        local isUnLock=false;
+        if rState==ExplorationRewardState.Available or rState==ExplorationRewardState.UnLock  then
+            isUnLock=true;
+        end
         SetFixedGrid(nGrid,currNormalReward:GetRewardData()[1],rState,currNormalReward.cfg.tag~=nil,isUnLock,normalObj,OnClickNormal,function(grid)
             nGrid=grid
         end);
@@ -254,6 +283,9 @@ function SetSPReward()
             hasEff2=true;
         end
         local isUnLock=false;
+        if data:HasInfiniteLv() and data:GetState()>=ExplorationState.Ex and data:GetCurrLv()>=data:GetMaxLv() and currPlusReward:IsInfinite() then --无限档位且解锁了高级勘探
+            rState2=data:GetInfiniteRewardState(ExplorationState.Ex);
+        end
         if rState2==ExplorationRewardState.Available or rState2==ExplorationRewardState.UnLock  then
             isUnLock=true;
         end
@@ -298,7 +330,10 @@ end
 function OnClickPlus(tab)
     if data and currPlusReward then
         local state=currPlusReward:GetState();
-        if state==ExplorationRewardState.Available then
+        if currPlusReward:IsInfinite() and data:GetInfiniteRewardNum()>0 then
+            state=ExplorationRewardState.Available;
+            OnClickAvailable(state,data:GetCfgID(),data:GetExRewardID(),data:GetCurrLv());
+        elseif state==ExplorationRewardState.Available then
             OnClickAvailable(state,data:GetCfgID(),data:GetExRewardID(),currPlusReward:GetLv());
         else
             GridClickFunc.OpenNotGet(tab);
@@ -309,7 +344,10 @@ end
 function OnClickNormal(tab)
     if data and currNormalReward then
         local state=currNormalReward:GetState();
-        if state==ExplorationRewardState.Available then
+        if currPlusReward:IsInfinite() and data:GetInfiniteRewardNum()>0 then
+            state=ExplorationRewardState.Available;
+            OnClickAvailable(state,data:GetCfgID(),data:GetBaseRewardID(),data:GetCurrLv());
+        elseif state==ExplorationRewardState.Available then
             OnClickAvailable(state,data:GetCfgID(),data:GetBaseRewardID(),currNormalReward:GetLv());
         else
             GridClickFunc.OpenNotGet(tab);
@@ -349,7 +387,7 @@ function RefreshExp(disTween)
     local percent=0;
     --刷新经验
     local expCfg=data:GetNextExp();
-    if data:IsMaxLv() then
+    if data:IsMaxLv() and data:HasInfiniteLv()~=true then
         CSAPI.SetText(txt_exp,LanguageMgr:GetByID(34004));
         CSAPI.SetText(txt_upExp,LanguageMgr:GetByID(34004));
         percent=1;
@@ -490,7 +528,7 @@ end
 function OnValueChange()    
     local indexs=layout:GetIndexs();
     if indexs and indexs.Length>0 then
-        local cIndex=indexs[indexs.Length-2];
+        local cIndex=data:HasInfiniteLv() and indexs[indexs.Length-1] or indexs[indexs.Length-2];
         if currClickLv~=cIndex then
             currClickLv=cIndex;
             SetSPReward();
@@ -529,7 +567,7 @@ end
 
 --跳转购买等级界面
 function OnClickUpLv()
-    if data:IsMaxLv() then
+    if data:IsMaxLv() and data:HasInfiniteLv()~=true then
         LanguageMgr:ShowTips(22002);
     else
         CSAPI.OpenView("ExplorationStage")

@@ -85,7 +85,10 @@ function SetClickCB(cb)
 	end
 end
 
-function SetSpecial(b)
+function SetSpecial(b,iconName)
+	if iconName and iconName~="" then
+		CSAPI.LoadImg(specImg,"UIs/DungeonDetail/"..iconName..".png",true,nil,true)
+	end
 	CSAPI.SetGOActive(specImg, b)
 end
 

@@ -61,6 +61,7 @@ function this.OnClickGrid(tab)
             end
         end
     end
+	this.SetEquipInfo(tab.IsSelect() and tab.data or nil);
     this.CountSellPrice();
 end
 
@@ -116,6 +117,7 @@ function this.OnSellRet()
 	this.CountSellPrice();
 	this.Refresh();
 	root.RefreshNumObj();
+	this.SetEquipInfo();
 end
 
 function this.ClearSellList()
@@ -171,6 +173,17 @@ function this.AutoSelect(_qualitys)
 				table.insert(sellList, v);
 			end
 		end
+	end
+	this.SetEquipInfo();
+end
+
+function this.SetEquipInfo(equip)
+	if equip~=nil then
+		root.SetSellEquipInfo(equip);
+	elseif sellList~=nil and #sellList>0 then
+		root.SetSellEquipInfo(sellList[1]);
+	else
+		root.SetSellEquipInfo();
 	end
 end
 

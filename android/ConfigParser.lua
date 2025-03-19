@@ -181,7 +181,8 @@ function ConfigParser:Union()
 
         local unionTb = {}
 
-        local mapTb = {arrUnion = {}, sheetname = v.sUnionName}
+        local allNames = {}
+        local mapTb = {arrUnion = {}, sheetname = v.sUnionName, names = {}}
         self.m_mapTableInfo[v.sUnionName] = mapTb
 
         for _, item in ipairs(v.item) do
@@ -200,10 +201,20 @@ function ConfigParser:Union()
                 _G[cfgName] = nil
 
                 self.m_mapConfigList[cfgName] = nil
-                table.insert(mapTb.arrUnion, self.m_mapTableInfo[cfgName])
-                self.m_mapTableInfo[v.sUnionName].filename = self.m_mapTableInfo[cfgName].filename
-                mapTb.filename = self.m_mapTableInfo[cfgName].filename
+
+                local tmpCfgStructInfo = self.m_mapTableInfo[cfgName]
+                table.insert(mapTb.arrUnion, tmpCfgStructInfo)
+                mapTb.filename = tmpCfgStructInfo.filename
+
+                -- 记录字段名字
+                for _, name in ipairs(tmpCfgStructInfo.names) do
+                    allNames[name] = 1
+                end
             end
+        end
+
+        for name, _ in pairs(allNames) do
+            table.insert(mapTb.names, name)
         end
 
         _G[v.sUnionName] = unionTb

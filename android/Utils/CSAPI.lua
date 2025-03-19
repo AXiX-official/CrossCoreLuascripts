@@ -1355,7 +1355,7 @@ function this.SetGameUID(id)
 end
 ---通用打点版本号
 function this.UnityClientVersion(uid)
-	if CSAPI.IsADV() then
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
 		local platform="PC"
 		if CSAPI.Currentplatform == CSAPI.Android then
 			platform="Android"

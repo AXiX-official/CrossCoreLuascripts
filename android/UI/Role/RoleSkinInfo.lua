@@ -88,9 +88,10 @@ function this:CheckCanUseByMaxLV()
     end
 end
 
--- 设置额外皮肤是否可用
-function this:SetCanUse(b)
+-- 设置额外皮肤是否可用,过期时间
+function this:SetCanUse(b,t)
     self.canUse = b
+    self.limitTime = t
 end
 
 function this:GetCanUse()
@@ -235,6 +236,14 @@ function this:CanShowL2d()
         return false
     end
     return self:GetL2dName() ~= nil
+end
+
+--是否是限时皮肤，是否过期，过期时间
+function this:IsLimitSkin()
+    if(self.limitTime)then 
+        return true,self.limitTime
+    end
+    return false
 end
 
 return this

@@ -916,13 +916,13 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
                     if priceInfo and priceInfo[1].id==-1 and priceInfo[1].num>0 and CSAPI.PayAgeTitle() then
                         CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()     this.HandlePayLogic(commodityData,1,commodityType,callBack); end})
                     else
-                        this.HandlePayLogic(commodityData,1,commodityType,callBack);
+                        this.HandlePayLogic(commodityData,1,commodityType,nil,callBack);
                     end
                 else
-                    this.HandlePayLogic(commodityData,1,commodityType,callBack);
+                    this.HandlePayLogic(commodityData,1,commodityType,nil,callBack);
                 end
             else
-                this.HandlePayLogic(commodityData, 1, commodityType, callBack);
+                this.HandlePayLogic(commodityData, 1, commodityType,nil, callBack);
             end
             -- this.BuyCommodity(commodityData,1,callBack);
         end
@@ -1020,7 +1020,7 @@ end
 
 
 ---处理购买/兑换逻辑 海外
-function this.AdvHandlePayLogic(commodity,num,commodityType,func,payType,Isdisplay,shopPriceKey)
+function this.AdvHandlePayLogic(commodity,num,commodityType,func,payType,Isdisplay,voucherList,shopPriceKey)
     local priceInfo=commodity:GetRealPrice(shopPriceKey);
     --调用支付渠道选择
     print("channelType:"..channelType)
@@ -1038,7 +1038,7 @@ function this.AdvHandlePayLogic(commodity,num,commodityType,func,payType,Isdispl
         CSAPI.OpenView("SDKPaySelect",{commodity=commodity,shopPriceKey=shopPriceKey,num=num,func=func});
     else
         if commodityType==1 then --购买道具
-            ShopCommFunc.BuyCommodity(commodity,num,func,nil,payType,nil,nil,shopPriceKey);
+            ShopCommFunc.BuyCommodity(commodity,num,func,nil,payType,nil,voucherList,shopPriceKey);
         elseif commodityType==2 then  --兑换随机物品
             ShopCommFunc.ExchangeCommodity(commodity,num,func);
         end
@@ -1095,23 +1095,11 @@ end
 -- 根据皮肤表ID获取商店配置表中对应的商品信息
 function this.GetSkinCommodity(modelID)
     if modelID then
-        for k, v in pairs(Cfgs.CfgCommodity:GetAll()) do
-            if v.nType == CommodityItemType.Skin then
-                local comm = ShopMgr:GetFixedCommodity(v.id)
-                local gets = comm:GetCommodityList();
-                if gets then
-                    for _, item in ipairs(gets) do
-                        if item.type == RandRewardType.ITEM and item.data:GetType() == ITEM_TYPE.SKIN and
-                            item.data:GetDyVal2() == modelID then
-                            local record = ShopMgr:GetRecordInfos(v.id);
-                            comm:SetData(record);
-                            return comm;
-                        end
-                    end
-                end
-            end
+        local modelCfg=Cfgs.character:GetByID(modelID);
+        if modelCfg~=nil and modelCfg.shopId then
+            --判断是否在商品上架期限
+            return ShopMgr:GetFixedCommodity(modelCfg.shopId);
         end
-        return nil;
     end
     return nil;
 end
@@ -1141,10 +1129,10 @@ function this.SortSkinComm(a, b)
     local rSkinInfo2 = RoleSkinMgr:GetRoleSkinInfo(skinInfo2:GetModelCfg().role_id, skinInfo2:GetModelCfg().id);
     local r1 = 0;
     local r2 = 0;
-    if rSkinInfo1 ~= nil and rSkinInfo1:CheckCanUse() then
+    if rSkinInfo1 ~= nil and rSkinInfo1:CheckCanUse() and rSkinInfo1:IsLimitSkin()~=true then
         r1 = 1;
     end
-    if rSkinInfo2 ~= nil and rSkinInfo2:CheckCanUse() then
+    if rSkinInfo2 ~= nil and rSkinInfo2:CheckCanUse() and rSkinInfo2:IsLimitSkin()~=true then
         r2 = 1;
     end
     -- Log(skinInfo:GetSkinName().."\t"..r1.."\t"..r2.."\t"..getType1.."\t"..getType2.."\t"..a:GetSort().."\t"..b:GetSort())

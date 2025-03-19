@@ -633,8 +633,15 @@ function SetBtns()
     CSAPI.SetGOActive(questionP, not isFighting)
     CSAPI.SetGOActive(btnApparel, not isFighting)
     -- red 
-    local isRed = RoleSkinMgr:CheckIsNewAdd(cardData:GetCfgID())
-    UIUtil:SetRedPoint(btnApparel, isRed, 58.3, 26.2, 0)
+    if(btnApparel.activeSelf)then 
+        local isRed = RoleSkinMgr:CheckIsNewAdd(cardData:GetCfgID())
+        UIUtil:SetRedPoint2("Common/Red2",btnApparel, isRed, 58, 26, 0)
+        local isLimitSkin = false 
+        if(not isRed)then 
+            isLimitSkin = cardData:CheckLimitSkin()
+        end 
+        UIUtil:SetRedPoint2("Common/Red4", btnApparel, isLimitSkin,57, 26, 0)
+    end
 end
 
 -------------------------------------------------------------------------------------------------------------------------

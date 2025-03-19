@@ -193,11 +193,9 @@ end
 
 function EnNeedClick(b)
     needClick = b 
-    LogError(11)
     if (isLive2D) then
         if (live2DItemLua) then
             live2DItemLua.needClick = needClick
-            LogError(tostring(needClick))
         end
     else
         if (imgItemLua) then

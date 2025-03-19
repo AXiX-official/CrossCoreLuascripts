@@ -14,7 +14,7 @@ end
 function this:Clean()
     if(self.datas ~= nil)then
         for id,buff in pairs(self.datas)do
-            buff:Remove();
+            buff:Remove(true);
         end
     end
     self.datas = {};

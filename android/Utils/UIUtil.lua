@@ -153,11 +153,12 @@ end
 -- 打开掉落奖励 优先检查是否有卡牌，有卡牌的情况下先打开卡牌展示界面
 function this:OpenReward2(viewPath, data, elseData)
     -- LogError("奖励数据：")
-    -- LogError(data)
     if data and #data > 0 and #data[1] > 0 then
         local showRoleList = {};
         local showSkinList = {}
-        for k, v in ipairs(data[1]) do -- data[1]是奖励数据
+        local len = #data[1]
+        for k = len, 1,-1 do -- data[1]是奖励数据
+            v = data[1][k]
             if v.type == RandRewardType.CARD then
                 local card = RoleMgr:GetData(v.c_id);
                 if card == nil then
@@ -195,6 +196,9 @@ function this:OpenReward2(viewPath, data, elseData)
                     local skinInfo = ShopSkinInfo.New()
                     skinInfo:InitCfg(cfg.dy_value2)
                     table.insert(showSkinList, skinInfo)
+                elseif cfg.type == ITEM_TYPE.LIMITED_TIME_SKIN then
+                    --限时皮肤在GetSkinsRet统计，物品不展示，要移除
+                    table.remove(data[1],k)
                 end
             end
         end
@@ -206,7 +210,7 @@ function this:OpenReward2(viewPath, data, elseData)
                         if #showSkinList >= 1 then
                             UIUtil:ShowSkinList(showSkinList, data, elseData)
                         else
-                            CSAPI.OpenView(viewPath, data, elseData)
+                            self:ShowLimitSkins(viewPath, data, elseData)
                         end
                     end)
                 end);
@@ -214,7 +218,7 @@ function this:OpenReward2(viewPath, data, elseData)
                 UIUtil:ShowSkinList(showSkinList, data, elseData)
             end
         else
-            CSAPI.OpenView(viewPath, data, elseData)
+            self:ShowLimitSkins(viewPath, data, elseData)
         end
     end
 end
@@ -229,11 +233,34 @@ function this:ShowSkinList(list, data, elseData)
                 lua.Init()
                 UIUtil:ShowSkinList(list, data, elseData)
             else
-                CSAPI.OpenView("RewardPanel", data, elseData)
+                --CSAPI.OpenView("RewardPanel", data, elseData)
+                self:ShowLimitSkins("RewardPanel", data, elseData)
                 lua.CloseView();
             end
         end
     end)
+end
+
+--展示限时皮肤
+function this:ShowLimitSkins(viewPath, data, elseData)
+    if(not RoleSkinMgr:ShowLimitSkins(function ()
+        self:ShowLimitSkins(viewPath, data, elseData)
+    end))then
+        if(#data[1]>0)then 
+            CSAPI.OpenView(viewPath, data, elseData)  ----------------------物品最终展示位置------------------------
+        end  
+    end 
+end
+
+--cfgId=CfgSkinInfo.id
+function this:ShowSkin(cfgId,cb)
+    if cfgId then
+        local skinInfo=ShopSkinInfo.New();
+        skinInfo:InitCfg(cfgId);
+        if skinInfo then
+            CSAPI.OpenView("SkinShowView", skinInfo)
+        end
+    end
 end
 
 function this:OpenQuestion(viewKey)

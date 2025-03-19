@@ -172,7 +172,7 @@ function CheckSatisfy()
     end
 
     local tacData = TacticsMgr:GetDataByID(teamInfo.skill_group_id)
-    if not (tacData and tacData:IsUnLock() and tacData:GetLv() >= tacticsData:GetLv()) then
+    if not (tacData and tacData:IsUnLock() and tacticsData and tacData:GetLv() >= tacticsData:GetLv()) then
         tactics = tacticsData
     end
     return #teams < 1 and tactics ==nil,teams,tactics,#teams == teamCount

@@ -68,6 +68,8 @@ function this:Update(proto)
             local data=self.currData:GetData();
             data.lv=proto.lv;
             data.exp=proto.exp
+            data.can_get_cnt=proto.can_get_cnt;
+            data.ex_can_get_cnt=proto.ex_can_get_cnt;
             self.currData:SetData(data);
         else
             self.currData=ExplorationData.New();
@@ -179,7 +181,11 @@ function this:GetRedInfo()
                 end
             end
         end
-        if curData:IsMaxLv()~=true then --满级以后不显示红点
+        if curData:GetInfiniteRewardNum() then
+            info=info or {};
+            info.hasInfiniteReward=curData:GetInfiniteRewardNum()>0;
+        end
+        if curData:HasInfiniteLv() or curData:IsMaxLv()~=true then --满级以后且没有无限等级的情况下不显示红点
             --任务判定
             local has1=MissionMgr:HasExplorationGet(eTaskType.DayExplore);
             local has2=MissionMgr:HasExplorationGet(eTaskType.WeekExplore);
@@ -209,7 +215,7 @@ function this:CheckExRedInfo()
             redInfo[k]=v:HasRevice() and 1 or nil;
         end
     end
-    DungeonMgr:CheckActivityRed(true)
+    DungeonMgr:CheckRedPointData()
     RedPointMgr:UpdateData(RedPointType.SpecialExploration, redInfo)
 end
 

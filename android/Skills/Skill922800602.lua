@@ -21,13 +21,6 @@ function Skill922800602:OnBorn(caster, target, data)
 	end
 	-- 922800103
 	self:AddBuff(SkillEffect[922800103], caster, self.card, data, 922800103)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 922800203
-	self:AddBuff(SkillEffect[922800203], caster, self.card, data, 922800203)
 end
 -- 行动结束
 function Skill922800602:OnActionOver(caster, target, data)

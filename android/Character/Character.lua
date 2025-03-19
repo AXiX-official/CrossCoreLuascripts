@@ -257,6 +257,10 @@ function SetInfoView(view)
     UpdateSp(data.sp,data.maxsp,true);
 end
 
+function GetInfoView()
+    return infoView;
+end
+
 function SetInfoViewShowState(state)
 --    if(infoView)then
 --        infoView.SetShowState(state);
@@ -1476,10 +1480,24 @@ end
 --    idleStateName = nil;
 --end
 
+--设置技能状态替换
+function SetReplaceCastState(oldCastState,newCastState)
+    replaceCastStates = replaceCastStates or {};
+    replaceCastStates[oldCastState] = newCastState;
+end
+--获取技能状态替换
+function GetReplaceCastState(castName)
+    local newCastName = replaceCastStates and castName and replaceCastStates[castName] or castName;
+    return newCastName;
+end
+
 --使用技能
 function ApplyCast(castName)
     --LogError(GetModelName() .. "使用技能：" .. tostring(castName));
     --idleStateName = nil;
+
+    castName = GetReplaceCastState(castName);
+
     stateMachine:Cast(castName);
 
     --fbModule:CreateCastPreFB(castName);

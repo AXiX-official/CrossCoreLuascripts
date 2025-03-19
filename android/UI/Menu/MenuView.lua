@@ -12,17 +12,17 @@ local redPoss = {
     ["TeamView"] = {33.8, 43.5},
     ["CreateView"] = {33.8, 43.5},
     ["ShopView"] = {33.8, 43.5},
-    ["activeityEnter"] = {130, -12} -- 版本活动入口
+    ["ActiveityEnter"] = {112.4, 59.6} -- 版本活动入口
 }
 -- 上锁位置，下面没有就用红点的位置
 local lockPoss = {
     ["ActivityListView"] = {0, 0},
-    ["activeityEnter"] = {0, 0} -- 版本活动入口
+    ["ActiveityEnter"] = {0, 0} -- 版本活动入口
 }
 -- 入口拿取红点的key值，没有的特殊处理
 local redsRef = {
     ["MailView"] = RedPointType.Mail,
-    --["Bag"] = RedPointType.Bag,
+    -- ["Bag"] = RedPointType.Bag,
     ["ActivityListView"] = RedPointType.ActivityList1,
     -- ["Section"] = RedPointType.Attack,
     ["Matrix"] = RedPointType.Matrix,
@@ -53,7 +53,7 @@ local curTime = nil
 local isHideUI = false -- 隐藏ui
 local showTime = nil
 local isShowTalk = true -- 台词文本
-local activeEnter_tab = nil -- {cfg:CfgActiveEntry,刷新时间,是否开启}
+local activeEnter_tab = {} -- {cfg:CfgActiveEntry,刷新时间,是否开启}
 local menuBuy_tab = nil -- 下次刷新点{time，id}
 local isTalking = false -- 正在说话
 local lvSV_time = nil
@@ -82,7 +82,8 @@ local anim_create
 local anim_shop
 local rdLNR = {}
 local globalBossTime = 0
-local bagLimitTime 
+local bagLimitTime
+local skinLimitTime = nil
 
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
@@ -102,8 +103,14 @@ function Awake()
     eventMgr:AddListener(EventType.Loading_Complete, LoadingComplete) -- 关闭loading
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
+    if CSAPI.IsADV() then
+        AdvBindingRewards.Querystate();
+        AdvDeductionvoucher.QueryPoints()
+    end
 end
-
+function OnEnable()
+    PlayerClient:SetEnterHall(true);
+end
 function InitListener()
     if (isInitListener) then
         return
@@ -113,6 +120,7 @@ function InitListener()
     eventMgr:AddListener(EventType.RedPoint_Refresh, function()
         SetReds()
         SetLTSV()
+        SetActivityEnter()
     end)
     -- 更换看板
     eventMgr:AddListener(EventType.Player_Select_Card, function()
@@ -127,7 +135,7 @@ function InitListener()
         SetLocks()
     end)
     -- 背包
-    eventMgr:AddListener(EventType.Bag_Update, function ()
+    eventMgr:AddListener(EventType.Bag_Update, function()
         bagLimitTime = BagMgr:GetLessLimitTime()
         SetMoneys()
     end)
@@ -136,7 +144,11 @@ function InitListener()
     -- 强制弹出公告
     eventMgr:AddListener(EventType.Main_Activity, ShowActivity)
     -- 刷新当前关卡
-    eventMgr:AddListener(EventType.Dungeon_PlotPlay_Over, SetAttack)
+    eventMgr:AddListener(EventType.Dungeon_PlotPlay_Over, function()
+        SetAttack()
+        InitActivityEnter()
+        SetActivityEnter()
+    end)
     -- 副本数据设置完
     eventMgr:AddListener(EventType.Dungeon_Data_Setted, SetAttack)
     -- 基地 
@@ -172,6 +184,9 @@ function InitListener()
     -- 台服web
     eventMgr:AddListener(EventType.Menu_WebView_Enabled, SetLTSV)
     -- rtSV相关 END
+    eventMgr:AddListener(EventType.Role_LimitSkin_Refresh, function()
+        skinLimitTime = RoleSkinMgr:CheckLimitSkin()
+    end)
 end
 
 function OnDestroy()
@@ -192,9 +207,9 @@ function Update()
             CSAPI.SetGOActive(btnBack, false)
         end
     end
-    
-    --重置待机时间
-    if (menuStandbyTimer~=nil and CS.UnityEngine.Input.GetMouseButton(0)) then
+
+    -- 重置待机时间
+    if (menuStandbyTimer ~= nil and CS.UnityEngine.Input.GetMouseButton(0)) then
         menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
     end
 
@@ -210,8 +225,9 @@ function Update()
     timer = Time.time + 1
     curTime = TimeUtil:GetTime()
     -- 活动入口
-    if (activeEnter_tab and curTime >= activeEnter_tab[2]) then
+    if (activeEnter_tab[2]~=nil and curTime >= activeEnter_tab[2]) then
         InitActivityEnter()
+        SetActivityEnter()
     end
     -- 刷新rtSV
     if (lvSV_time and curTime >= lvSV_time) then
@@ -293,10 +309,33 @@ function Update()
             DungeonMgr:CheckRedPointData()
         end
     end
-    --背包限时物品
-    if (bagLimitTime and curTime > bagLimitTime) then
-        bagLimitTime = BagMgr:GetLessLimitTime()
-        BagMgr:CheckBagRedInfo()
+    -- 背包限时物品
+       if (bagLimitTime) then
+        -- 检测时间是否小于24小时
+        if curTime < bagLimitTime and (bagLimitTime - curTime) <= 86400 and BagMgr:IsDayLimitTipsDone() ~= true then
+            -- 弹提示
+            local dialogData = {};
+            dialogData.content = LanguageMgr:GetByID(24045);
+            dialogData.title = LanguageMgr:GetByID(24046);
+            dialogData.okText = LanguageMgr:GetByID(24044);
+            dialogData.hasClose = true;
+            dialogData.okCallBack = function()
+                -- 跳转到背包
+                JumpMgr:Jump(80001);
+            end;
+            CSAPI.OpenView("Prompt", dialogData);
+            -- 记录一次时间戳
+            BagMgr:RecordDayLimitTips();
+        end
+        if curTime > bagLimitTime then
+            bagLimitTime = BagMgr:GetLessLimitTime()
+            BagMgr:CheckBagRedInfo()
+        end
+    end
+    -- 限时皮肤
+    if (skinLimitTime and curTime > skinLimitTime and not skinLimitTime and CheckIsTop()) then
+        skinLimitTime = nil
+        RoleSkinMgr:CheckLimitSkin()
     end
 end
 
@@ -309,21 +348,28 @@ function OnOpen()
     CSAPI.SetGOActive(uis, false)
     CSAPI.SetGOActive(mask, false)
     CSAPI.SetGOActive(btnBack, false)
+
+end
+
+function LoadingComplete()
+    MenuMgr:InitDatas() -- 系统解锁数据
+    MenuBuyMgr:ConditionCheck(1) -- 检测充值弹窗
+    ActivityMgr:InitListOpenState() -- 检测滚动窗口
+    --
+    Init()
+    --
+    InitTimers()
+    --
+    RefreshPanel()
+    InitListener()
+end
+
+function Init()
     InitOnClick()
     InitActivityEnter()
     InitHot()
     InitMatrixRTime()
     InitAnims()
-end
-
-function LoadingComplete()
-    InitTimers()
-    MenuMgr:InitDatas() -- 系统解锁数据
-    MenuBuyMgr:ConditionCheck(1) -- 检测充值弹窗
-    ActivityMgr:InitListOpenState() -- 检测滚动窗口
-    --
-    RefreshPanel()
-    InitListener()
 end
 
 function InitTimers()
@@ -334,6 +380,7 @@ function InitTimers()
     exerciseLTime = ExerciseMgr:GetRefreshTime()
     globalBossTime = GlobalBossMgr:GetCloseTime()
     bagLimitTime = BagMgr:GetLessLimitTime()
+    skinLimitTime = RoleSkinMgr:GetSkinMinLimitTime()
 end
 
 function RefreshPanel()
@@ -419,12 +466,13 @@ function SetLocks()
             --     local y = 43.5
             --     UIUtil:SetLockPoint(rdBtnsRedPoint, not isOpen, x, y)
             -- else
-            local lockObj = UIUtil:SetLockPoint(obj, not isOpen, pos[1], pos[2])
+            local isShow = not isOpen
+            local lockObj = UIUtil:SetLockPoint(obj, isShow, pos[1], pos[2])
             -- end
             CSAPI.SetGOAlpha(obj, isOpen and 1 or 0.5)
             --
             if (obj.transform.parent.name == "rdBtns") then
-                rdLNR[v .. "_lock"] = lockObj
+                rdLNR[v .. "_lock"] = {lockObj, isShow}
             end
         end
     end
@@ -436,7 +484,7 @@ function SetReds()
     for i, v in ipairs(views) do
         local isNew = false
         local isRed = false
-        local isLimit = false --是否限时
+        local isLimit = false -- 是否限时
         if (not lockDatasDic[v]) then
             if (redsRef[v]) then
                 local _data = RedPointMgr:GetData(redsRef[v])
@@ -467,7 +515,7 @@ function SetReds()
                     isRed = RedPointMgr:GetData(RedPointType.Bag) ~= nil
                 end
             end
-        end 
+        end
         local obj = this["btn" .. v]
         local pos = redPoss[v]
         -- if (obj.transform.parent.name == "rdBtns") then
@@ -481,9 +529,9 @@ function SetReds()
         local limitObj = UIUtil:SetLimitPoint(obj, isLimit, pos[1], pos[2])
         -- end
         if (obj.transform.parent.name == "rdBtns") then
-            rdLNR[v .. "_new"] = newObj
-            rdLNR[v .. "_red"] = redObj
-            rdLNR[v .. "_limit"] = limitObj
+            rdLNR[v .. "_new"] = {newObj, isNew}
+            rdLNR[v .. "_red"] = {redObj, isRed}
+            rdLNR[v .. "_limit"] = {limitObj, isLimit}
         end
     end
 end
@@ -553,7 +601,7 @@ function InitOnClick()
 end
 
 function InitActivityEnter()
-    activeEnter_tab = nil
+    activeEnter_tab = {}
     local ativeEnter = {}
     local curTime = TimeUtil:GetTime()
     local cfgs = Cfgs.CfgActiveEntry:GetAll()
@@ -576,15 +624,21 @@ function InitActivityEnter()
             if (curTime >= begTime) then
                 index = k
                 break
-
             end
         end
         local cfg = ativeEnter[index]
+        activeEnter_tab = {cfg}
+        local begTime = TimeUtil:GetTimeStampBySplit(cfg.begTime)
         local endTime = TimeUtil:GetTimeStampBySplit(cfg.endTime)
-        activeEnter_tab = {cfg, endTime}
         --
-        local isOpen = true
+        local isOpen = curTime >= TimeUtil:GetTimeStampBySplit(cfg.begTime)
+        activeEnter_tab[3] = isOpen
+        --
+        activeEnter_tab[2] = isOpen and endTime or begTime
+        --
+        local isLock = false
         if (cfg.nConfigID) then
+            isLock = true
             local _cfg = Cfgs[cfg.config]:GetByID(cfg.nConfigID)
             if (_cfg) then
                 local sid = 0
@@ -595,11 +649,11 @@ function InitActivityEnter()
                 end
                 local sectionData = DungeonMgr:GetSectionData(sid)
                 if (sectionData ~= nil) then
-                    isOpen = sectionData:GetOpen()
+                    isLock = not sectionData:GetOpen()
                 end
             end
         end
-        activeEnter_tab[3] = isOpen
+        activeEnter_tab[4] = isLock
     end
 end
 
@@ -686,7 +740,11 @@ function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
                     if (isIn) then
                         OnClickHide() -- 隐藏UI元素 
                         isPlayIn = true
-                        mainIconItem.PlayIn(OnClickBack, iconParent)
+                        mainIconItem.PlayIn(function()
+                            isPlayIn = false
+                            OnClickBack()
+                            CheckPopUpWindow()
+                        end, iconParent)
                     end
                 else
                     inFirstLoadCB = 1
@@ -874,15 +932,15 @@ function SetAttack()
 end
 
 function SetActivityEnter()
-    CSAPI.SetGOActive(btnActiveityEnter, activeEnter_tab ~= nil)
-    if (activeEnter_tab) then
+    CSAPI.SetGOActive(btnActiveityEnter, activeEnter_tab[3])
+    if (activeEnter_tab[3]) then
         local imgName = activeEnter_tab[1].mainBtn
         ResUtil.MenuEnter:Load(img_activity, imgName)
-        local isOpen = activeEnter_tab[3]
-        CSAPI.SetGOAlpha(btnActiveityEnter, isOpen and 1 or mAlpha)
-        SetLock("activeityEnter", isOpen)
+        local isLock = activeEnter_tab[4]
+        CSAPI.SetGOAlpha(btnActiveityEnter, not isLock and 1 or mAlpha)
+        SetLock("ActiveityEnter", isLock)
         local isRed = false
-        if (isOpen) then
+        if (not isLock) then
             local key = "ActiveEntry" .. activeEnter_tab[1].id
             if (key == "ActiveEntry26") then
                 data = ColosseumMgr:IsRed()
@@ -893,7 +951,7 @@ function SetActivityEnter()
                 isRed = true
             end
         end
-        SetRed("activeityEnter", isRed)
+        SetRed("ActiveityEnter", isRed)
     end
 end
 
@@ -918,9 +976,9 @@ function CheckIsTop2()
     return true
 end
 
-function SetLock(key, add)
+function SetLock(key, isLock)
     local pos = lockPoss[key] or redPoss[key]
-    UIUtil:SetLockPoint(this["btn" .. key], not add, pos[1], pos[2])
+    UIUtil:SetLockPoint(this["btn" .. key], isLock, pos[1], pos[2])
 end
 
 function SetRed(key, add)
@@ -970,6 +1028,9 @@ function EActivityGetCB()
     if (ActivityMgr:CheckWindowShow()) then
         return true
     end
+
+    -- 皮肤是否过期
+    RoleSkinMgr:CheckLimitSkin()
 
     CSAPI.SetGOActive(mask, false)
     return false
@@ -1109,7 +1170,6 @@ function OnViewCloseds()
 end
 
 function CheckPopUpWindow()
-
     -- 不在主场景
     if (not SceneMgr:IsMajorCity()) then
         return true
@@ -1327,8 +1387,12 @@ function Anim_RD(b)
     end
 end
 function SetRDLockNexRed(b)
-    for key, obj in pairs(rdLNR) do
-        CSAPI.SetGOActive(obj, b)
+    for key, v in pairs(rdLNR) do
+        local isShow = false
+        if (b and v[2]) then
+            isShow = true
+        end
+        CSAPI.SetGOActive(v[1], isShow)
     end
 end
 function HideAnimRD()
@@ -1400,14 +1464,12 @@ function OnClickRDBack()
 end
 
 function OnClickActiveityEnter()
-    if (activeEnter_tab) then
-        if (activeEnter_tab[3]) then
-            if (activeEnter_tab[1].JumpID) then
-                JumpMgr:Jump(activeEnter_tab[1].JumpID)
-            end
-        else
-            Tips.ShowTips(activeEnter_tab[1].desc) -- 未开启
+    if (not activeEnter_tab[4]) then
+        if (activeEnter_tab[1].JumpID) then
+            JumpMgr:Jump(activeEnter_tab[1].JumpID)
         end
+    else
+        Tips.ShowTips(activeEnter_tab[1].desc) -- 未开启
     end
 end
 

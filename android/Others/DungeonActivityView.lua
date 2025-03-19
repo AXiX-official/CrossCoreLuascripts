@@ -5,8 +5,10 @@ local isLoading = false
 local top = nil
 local sectionData = nil
 local redPath = nil
-
-local cTime,cTimer = 0,0
+--时间
+local dTime,dTimer = 0,0 --选关
+local sTime,sTimer = 0,0 --商店
+local mTime,mTimer = 0,0 --任务
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -21,6 +23,18 @@ function Awake()
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
     eventMgr:AddListener(EventType.Scene_Load_Complete, OnLoadComplete)
     eventMgr:AddListener(EventType.RedPoint_Refresh, SetExploreRed)
+
+    if not IsNil(endImg) then
+        CSAPI.SetGOActive(endImg,false)
+    end
+
+    if not IsNil(timeObj3) then
+        CSAPI.SetGOActive(timeObj3,false)
+    end
+
+    if not IsNil(timeObj2) then
+        CSAPI.SetGOActive(timeObj2,false)
+    end
 end
 
 function OnViewClosed(viewKey)
@@ -50,23 +64,7 @@ function Update()
         UIUtil:ToHome()   
         return
     end
-
-    if cTime > 0 and Time.time > cTimer then
-        cTimer = Time.time + 1
-        cTime = openInfo:GetEndTime() - TimeUtil:GetTime()
-        local tab = TimeUtil:GetTimeTab(cTime)
-        if txtTime2~=nil then
-            if tab[1] > 0 then
-                LanguageMgr:SetText(txtTime2,22073,tab[1],tab[2] .. ":" .. tab[3] .. ":" .. tab[4])
-            else
-                if tab.hour > 0 or tab.min > 0 then
-                    LanguageMgr:SetText(txtTime2,22074,tab[2] .. ":" ..tab[3] .. ":" .. tab[4])
-                else
-                    LanguageMgr:SetText(txtTime2,22074,LanguageMgr:GetByID(51016))
-                end
-            end
-        end
-    end
+    UpdateTime()
 end
 
 function OnOpen()
@@ -103,25 +101,6 @@ function SetBGScale()
         CSAPI.SetRTSize(bg,size[0],1080*offset)
     elseif offset1<offset2 then
         CSAPI.SetRTSize(bg,1920*offset,size[1])
-    end
-end
-
-function SetTime()
-    if sectionData then
-    openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-        if openInfo:IsDungeonOpen() then
-            local strs = openInfo:GetTimeStrs()
-            local str = LanguageMgr:GetByID(22021) .. strs[1] .. " " .. strs[2] .. "-" .. strs[3] .. " " .. strs[4]
-            CSAPI.SetText(txtTime, str)
-        else
-            local str = openInfo:GetCloseTimeStr()
-            CSAPI.SetText(txtTime,str)
-        end
-
-        if TimeUtil:GetTime() < openInfo:GetEndTime() then
-            cTimer = 0
-            cTime = openInfo:GetEndTime() - TimeUtil:GetTime()
-        end
     end
 end
 
@@ -166,6 +145,117 @@ function SetSpecial()
     end
 end
 
+---------------------------------------------时间---------------------------------------------
+function SetTime()
+    if sectionData then
+        openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
+        if openInfo then
+            SetViewTime()
+            SetDungeonTime()
+            SetShopTime()
+            SetMissionTime()
+        end
+    end
+end
+
+function SetViewTime()
+    if openInfo:IsDungeonOpen() then
+        local strs = openInfo:GetTimeStrs()
+        local str = LanguageMgr:GetByID(22021) .. strs[1] .. " " .. strs[2] .. "-" .. strs[3] .. " " .. strs[4]
+        CSAPI.SetText(txtTime, str)
+    else
+        local str = openInfo:GetCloseTimeStr()
+        CSAPI.SetText(txtTime,str)
+    end
+end
+
+function SetDungeonTime()
+    if TimeUtil:GetTime() < openInfo:GetDungeonEndTime() then
+        dTimer = 0
+        dTime = openInfo:GetDungeonEndTime() - TimeUtil:GetTime()
+        if dTime <= 0 and not IsNil(endImg) and not IsNil(txtTime2) and not IsNil(timeObj2) then
+            CSAPI.SetGOActive(timeObj2,true)
+            CSAPI.SetGOActive(endImg,true)
+            LanguageMgr:SetText(txtTime2,39002)
+        end
+    elseif not IsNil(endImg) and not IsNil(txtTime2) and not IsNil(timeObj2) then
+        CSAPI.SetGOActive(timeObj2,true)
+        CSAPI.SetGOActive(endImg,true)
+        LanguageMgr:SetText(txtTime2,39002)
+    end
+end
+
+function SetShopTime()
+    if dTime <= 0 then
+        sTimer = 0
+        sTime = openInfo:GetEndTime() - TimeUtil:GetTime()
+        if not IsNil(timeObj3) then
+            CSAPI.SetGOActive(timeObj3,sTime > 0)
+        end
+    end
+end
+
+function SetMissionTime()
+    if TimeUtil:GetTime() < openInfo:GetEndTime() then
+        mTimer = 0
+        mTime = openInfo:GetEndTime() - TimeUtil:GetTime()
+    end
+end
+
+function UpdateTime()
+    UpdateDungeonTime()
+    UpdateShopTime()
+    UpdateMissionTime()
+end
+
+function UpdateDungeonTime()
+    if dTime > 0 and Time.time > dTimer then
+        dTimer = Time.time + 1
+        dTime = openInfo:GetDungeonEndTime() - TimeUtil:GetTime()
+        -- SetTxtTime(txtTime2,dTime)
+        if dTime <= 0 and not IsNil(endImg) and not IsNil(txtTime2) and not IsNil(timeObj2) then
+            CSAPI.SetGOActive(timeObj2,true)
+            CSAPI.SetGOActive(endImg,true)
+            LanguageMgr:SetText(txtTime2,39002)
+            SetShopTime()
+        end
+    end
+end
+
+function UpdateShopTime()
+    if sTime > 0 and Time.time > sTimer then
+        sTimer = Time.time + 1
+        sTime = openInfo:GetEndTime() - TimeUtil:GetTime()
+        SetTxtTime(txtTime3,sTime)
+    end
+end
+
+function UpdateMissionTime()
+    if mTime > 0 and Time.time > mTimer then
+        mTimer = Time.time + 1
+        mTime = openInfo:GetEndTime() - TimeUtil:GetTime()
+        SetTxtTime(txtTime4,mTime)
+    end
+end
+
+function SetTxtTime(go,time)
+    if IsNil(go) or time <= 0 then
+        return
+    end
+    local tab = TimeUtil:GetTimeTab(time)
+    if tab[1] > 0 then
+        LanguageMgr:SetText(go,22073,tab[1],tab[2] .. ":" .. tab[3] .. ":" .. tab[4])
+    else
+        CSAPI.SetTextColorByCode(go,"ff7166")
+        if tab[2] > 0 or tab[3] > 0 then
+            LanguageMgr:SetText(go,22074,tab[2] .. ":" ..tab[3] .. ":" .. tab[4])
+        else
+            LanguageMgr:SetText(go,22074,LanguageMgr:GetByID(51016))
+        end
+    end
+end
+
+---------------------------------------------点击---------------------------------------------
 function OnClickMission()
     CSAPI.OpenView("MissionActivity", {
         type = info.taskType,
@@ -183,8 +273,11 @@ function OnClickShop()
 end
 
 function OnClickExploration()
-    if sectionData:GetExploreId() then
+    local exData = ExplorationMgr:GetExData(sectionData:GetExploreId())
+    if exData and exData:IsOpen() then
         CSAPI.OpenView("SpecialExploration",sectionData:GetExploreId());
+    else
+        LanguageMgr:ShowTips(24003)
     end
 end
 

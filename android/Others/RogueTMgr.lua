@@ -10,7 +10,7 @@ end
 
 function this:Clear()
     self.datasDic = {} -- 各关数据
-    self.proto = nil
+    self.proto = {}
     self.fightData = nil
     self.sectionID = 15001 -- 所属章节id
     self.maxGroup = nil -- 已通关的最高难度

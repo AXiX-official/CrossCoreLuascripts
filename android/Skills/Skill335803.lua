@@ -16,9 +16,9 @@ function Skill335803:OnActionOver(caster, target, data)
 	-- 8710
 	local count710 = SkillApi:SkillLevel(self, caster, target,3,7044001)
 	-- 8709
-	local count709 = SkillApi:GetCount(self, caster, target,1,704400101)
+	local count709 = SkillApi:GetCount(self, caster, target,3,704400101)
 	-- 8922
-	if SkillJudger:Greater(self, caster, target, true,count709,2) then
+	if SkillJudger:Greater(self, caster, target, true,count709,5) then
 	else
 		return
 	end

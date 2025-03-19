@@ -758,6 +758,11 @@ function this:RemoveNewSkin(id)
     end
 end
 
+-- 卡牌是否有限时皮肤
+function this:IsHadLimitSkin()
+    return RoleSkinMgr:IsHadLimitSkin(self:GetID())
+end
+
 -- --身体模型 body face hair
 -- function this:GetModelNames()
 -- 	local modleNames = {}

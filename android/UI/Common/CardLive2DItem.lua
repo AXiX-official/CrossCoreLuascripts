@@ -149,7 +149,6 @@ function TouchItemClickCB(cfgChild)
     if (not sName) then
         return
     end
-
     if (isCan) then
         local b = false
         if (trackIndex ~= 1 and content.clicks ~= nil) then
@@ -397,6 +396,11 @@ end
 
 -- 进场动画 
 function PlayIn(cb, _movePoint)
+    local indexs,names = GetIndexs()
+    spineTools:ImmClearTracks(indexs,names)
+    graphic.Skeleton:SetToSetupPose()
+    records = {}
+    --
     isIn = true
     inCB = cb
     movePoint = _movePoint or transform.parent.parent.gameObject
@@ -658,4 +662,18 @@ function ClearRecords(indexs)
             end
         end
     end
+end
+
+function GetIndexs()
+    local indexs,names = {},{}
+    local dic = {}
+    for k, v in pairs(cfg.item) do
+        local trackIndex = GetTrackIndex(v)
+        if (not dic[trackIndex]) then
+            table.insert(indexs, trackIndex)
+            table.insert(names, v.sName)
+            dic[trackIndex] = 1
+        end
+    end
+    return indexs,names
 end

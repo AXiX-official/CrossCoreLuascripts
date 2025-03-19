@@ -515,6 +515,7 @@ this.Role_Jump_Break = 170041 --跳转到指定突破页面
 
 this.Role_FirstCreate_End = 170042
 this.Role_Captain_ToFirst = 170043  --队长排在最前面
+this.Role_LimitSkin_Refresh = 170044 --限时皮肤
 ------------------------------------------主界面
 --切换显示状态
 this.Main_Menu_Show			= 180000;
@@ -962,6 +963,7 @@ this.Activity_Click = 340004 --活动强制点击
 this.Activity_List_Null_Check = 340005 --活动列表检测为空
 this.Acitivty_List_Pop = 340006 --活动弹出
 this.Activity_List_Panel_Refresh = 340007 --活动界面刷新
+this.Activity_List_Cfg_Change = 340008 --活动表配置修改
 ------------------------------------------背景音乐
 --播放背景音乐
 this.Play_BGM = 350001

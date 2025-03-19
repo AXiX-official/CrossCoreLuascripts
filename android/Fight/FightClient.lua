@@ -12,6 +12,7 @@ this.NewPlayerDrasu=false;
 --初始化战斗
 function this:Init(data,initCallBack,initCaller)
     --LogError("进入战斗==========================");
+    self:SetTotalDamage(0);
 
     if(data)then
         EventMgr.Dispatch(EventType.Play_BGM, data.bgm);

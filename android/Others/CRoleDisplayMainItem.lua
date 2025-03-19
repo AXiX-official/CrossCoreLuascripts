@@ -27,6 +27,8 @@ function Refresh(_id, _data)
     else
         CSAPI.SetText(txtLock, lockStr)
     end
+    --
+    SetLimitSkin()
 end
 
 function SetEntity()
@@ -59,4 +61,10 @@ end
 
 function OnClickRemove()
     cb(index, 2)
+end
+
+
+function SetLimitSkin()
+    local isLimitSkin = data:CheckLimitSkin(index)
+    UIUtil:SetRedPoint2("Common/Red4", clickNode, isLimitSkin, -82.4, 161, 0)
 end

@@ -12,8 +12,13 @@ TipAargType.Role = 6 -- 6：角色Id
 TipAargType.SectionId = 7 -- 7：章节Id
 
 -- 使用值对应key的名字
+local tmpTb = {}
 for k, v in pairs(TipAargType) do
-    TipAargType[v] = k
+    tmpTb[v] = k
+end
+
+for k, v in pairs(tmpTb) do
+    TipAargType[k] = v
 end
 
 GCTipTool = {}

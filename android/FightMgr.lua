@@ -235,11 +235,23 @@ function FightMgrBase:LoadConfig(groupID, stage, hpinfo)
     self.arrTeam[2]:LoadConfig(self.groupID, self.stage, hpinfo)
     self.totleState = #config.stage
 
+
+
+    -- 无限血必须只能有一个周目
     for i, card in ipairs(self.arrCard) do
         -- 无限血机制
         if card.isInvincible then 
-            self.isInvincible = true -- 是否为无限血副本
+            self.isInvincible = card.isInvincible -- 是否为无限血副本
         end
+    end
+
+    if self.isInvincible then
+        self.nInvStateDamage  = 0 -- 当前阶段伤害量
+        self.nInvTotalDamage   = 0 -- 总害量
+        -- self.nInvState        = state -- 阶段
+        -- self.nInvStatehp      = statehp -- 阶段血量
+        -- self.nInvOpnum        = opnum -- 操作数
+        -- self.nInvStartopnum   = self.nStepPVE or 0 -- 阶段开始时的操作数
     end
 end
 
@@ -1193,6 +1205,11 @@ end
 function FightMgrBase:CheckOver(isRoundOver)
     -- LogDebugEx("FightMgrBase:CheckOver", self.nStep , self.nStepLimit, isRoundOver or "false", self.needCheckOver and true or false)
 
+    -- if self.oForceOver then
+    --     self:Over(self.stage, self.oForceOver)
+    --     return true
+    -- end
+
     if self:IsPVE() then
         if self.nStepPVE > self.nStepLimit then
             self:Over(self.stage, 0)
@@ -1918,6 +1935,36 @@ end
 function FightMgrBase:DamageStat(caster, damage)
     --LogDebug(string.format("DamageStat name = %s damage = %s", caster.name, damage))
 end
+
+-- 无限血相关接口
+-- 无限血机制设置阶段[总阶段数, 阶段, 阶段血量, 操作数]
+function FightMgrBase:SetInvincible(effect, caster, target, data, totalState, state, statehp, opnum)
+    
+    if not self.isInvincible then return end
+
+    self.nInvStateDamage  = 0 -- 当前阶段伤害量
+    self.nInvTotalState   = totalState -- 总阶段
+    self.nInvState        = state -- 阶段
+    self.nInvStatehp      = statehp -- 阶段血量
+    self.nInvOpnum        = opnum -- 操作数
+    self.nInvStartopnum   = self.nStepPVE or 0 -- 阶段开始时的操作数
+end
+
+-- 统计无限血伤害
+function FightMgrBase:AddInvincibleDamage(num)
+    if not self.isInvincible then return end
+
+    self.nInvStateDamage  = self.nInvStateDamage + num
+    self.nInvTotalDamage   = self.nInvTotalDamage + num
+end
+
+-- target.nStateDamage = 0 -- 当前阶段伤害量
+-- target.totalState   = totalState -- 总阶段
+-- target.state        = state -- 阶段
+-- target.statehp      = statehp -- 阶段血量
+-- target.opnum        = opnum -- 操作数
+-- target.startopnum   = self.team.fightMgr.nStepPVE or 0 -- 阶段开始时的操作数
+
 
 ----------------------------------------------
 -- 服务端管理器
@@ -2719,14 +2766,11 @@ function FightMgrClient:RestoreFight()
     end
 
     if self.isInvincible then
-        for i, card in ipairs(self.arrCard) do
-            -- 无限血机制
-            if card.isInvincible then 
-                self.log:Add({api="SetInvincible", targetID = card.oid, 
-                    totalState = card.totalState, state = card.state, statehp = card.statehp, opnum = card.opnum,
-                    nStateDamage = card.nStateDamage, nTotalDamage = card.nTotalDamage, startopnum = card.startopnum})
-            end
-        end
+        local mgr = self
+        self.log:Add({api="SetInvincible", --[[targetID = target.oid, ]]
+            totalState = mgr.nInvTotalState, state = mgr.nInvState, statehp = mgr.nInvStatehp, opnum = mgr.nInvOpnum,
+            nStateDamage = mgr.nInvStateDamage, nTotalDamage = mgr.nInvTotalDamage, startopnum = mgr.nInvStartopnum, type= mgr.isInvincible})
+
     end
 
     FightActionMgr:PushSkill(self.log:GetAndClean())
@@ -3038,16 +3082,16 @@ function PVEFightMgrServer:Over(stage, winer)
         -- LogTable(self.arrNP, "self.arrNP")
         local cardCnt = self.arrTeam[1].nCardCount
         local teamIdx = self.oDuplicate:GetTeamIndex() or 1
-        -- 更新无限血排行榜
-        if self.isInvincible then
-            local nTotalDamage = 0
-            for i, card in ipairs(self.arrCard) do
-                -- 无限血机制
-                if card.isInvincible then
-                    nTotalDamage = card.nTotalDamage
-                    break
-                end
-            end
+        -- 更新无限血排行榜 无限血机制统计伤害 1钓鱼佬  2可杀死共用血条  3无限血共用血条
+        if self.isInvincible and self.isInvincible ~= 2 then
+            local nTotalDamage = self.nInvTotalDamage or 0
+            -- for i, card in ipairs(self.arrCard) do
+            --     -- 无限血机制
+            --     if card.isInvincible then
+            --         nTotalDamage = card.nTotalDamage
+            --         break
+            --     end
+            -- end
             exData.invincibleDamage = nTotalDamage
             -- 更新排行榜
             local plr = self.oDuplicate.oPlayer
@@ -3059,8 +3103,18 @@ function PVEFightMgrServer:Over(stage, winer)
                     rankType = eRankType.CentaurRank
                 elseif dupCfg.group == 6001 then
                     rankType = eRankType.TrialsRank
+                elseif dupCfg.group == 6002 then
+                    rankType = eRankType.TrialsRank2
+                elseif dupCfg.group == 6003 then
+                    rankType = eRankType.TrialsRank3
+                elseif dupCfg.group == 6004 then
+                    rankType = eRankType.TrialsRank4
+                elseif dupCfg.group == 6005 then
+                    rankType = eRankType.TrialsRank5
                 elseif dupCfg.group == 15001 then
                     rankType = eRankType.RogueTRank
+                elseif dupCfg.group == 3007 then
+                    rankType = eRankType.CloudRank
                 end
                 local dungeonGroup = dupCfg.dungeonGroup or 0
                 if rankType then

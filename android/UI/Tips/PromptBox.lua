@@ -25,6 +25,7 @@ function OnOpen()
         CSAPI.SetText(txtTitle, data.title or LanguageMgr:GetByID(1045))
         CSAPI.SetText(content,data.content or "");
         CSAPI.SetText(text_ok,data.okText or LanguageMgr:GetByID(1001));
+        CSAPI.SetGOActive(btn_close,data.hasClose==true);
     end
     CSAPI.PlayUISound("ui_popup_open");
     ShowAction(nil);  
@@ -84,8 +85,9 @@ function OnDestroy()
     ReleaseCSComRefs();
 end
 
-
-
+function OnClickClose()
+    Close();
+end
 
 function Update()
     CheckVirtualkeys()

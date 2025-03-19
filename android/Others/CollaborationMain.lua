@@ -227,12 +227,12 @@ function InitContentNode()
         SetEmpty(true,currActivty:GetPreTimeDesc());
     else
         --判断是否绑定
-        SetTaskList();
         if currActivty:IsBindOver() then
             SetEmpty(false);
         else
             SetEmpty(true,LanguageMgr:GetByID(61026));
         end
+        SetTaskList();
     end
     if currActivty:IsBindOver() then --已绑定则隐藏前往绑定按钮
         CSAPI.SetGOActive(bindingNode,true)
@@ -523,8 +523,9 @@ function OnTaskRefresh(eventData)
     if eventData and eventData[1]==eTaskType.RegressionBind  then
         UIUtil:OpenReward({eventData[2]},{isNoShrink=true});
     end
-    InitTabs();
-    SetTaskList();
+    -- InitTabs();
+    -- SetTaskList();
+    InitContentNode();
 end
 
 function OnInfoUpdate()

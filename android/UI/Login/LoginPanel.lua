@@ -122,6 +122,7 @@ function Awake()
     end
 
     SetLive()
+    if PlayerClient then PlayerClient:SetEnterHall(false); end
 end
 function Start()
     SetLoadText()
@@ -1055,7 +1056,7 @@ function ShowMask(isNative)
     if isNative then
         netDelayTime = 9999
     else
-        netDelayTime = 20
+        netDelayTime =30
     end
     CSAPI.SetGOActive(clickMask, true);
     isLink = true;

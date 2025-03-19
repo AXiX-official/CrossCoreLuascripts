@@ -482,6 +482,7 @@ function this:Init()
     self.CardIcon = ResIconUtil.New("RoleHead/Card_head") --上半身
     self.Card = ResIconUtil.New("RoleHead/List_head")          --矩形
     self.RoleCard = ResIconUtil.New("RoleHead/Normal_head/Normal") --正方形
+    self.RoleCard2 = ResIconUtil.New("RoleHead/Normal_head/Normal2") --正方形
     self.RoleCardCustom = ResIconUtil.New("RoleHead/Normal_head"); -- 多占位头像
     self.Cast2Card = ResIconUtil.New("RoleHead/Overload_head"); -- 技能2卡牌框
     self.FightCard = ResIconUtil.New("RoleHead/Fight_head"); -- 卡牌框
@@ -548,9 +549,10 @@ function this:Init()
     self.RogueIcon = ResIconUtil.New("RogueIcon")
     self.RogueBuff = ResIconUtil.New("RogueBuff")
 
-    self.DungeonSummer = ResIconUtil.New("DungeonSummer") --夏日选关
-    self.DungeonTaoFa = ResIconUtil.New("DungeonTaoFa") --讨伐相关
-    self.DungeonNight = ResIconUtil.New("DungeonNight") --奇妙之夜
+    self.DungeonSummer = ResIconUtil.New("DungeonActivity/Summer") --夏日选关
+    self.DungeonTaoFa = ResIconUtil.New("DungeonActivity/TaoFa") --讨伐相关
+    self.DungeonNight = ResIconUtil.New("DungeonActivity/Night") --奇妙之夜
+    self.DungeonCloud = ResIconUtil.New("DungeonActivity/Cloud") --云端行迹
 
     self.MultBoardSmall = ResIconUtil.New("MultBoardSmall") --多人看板竖图
 

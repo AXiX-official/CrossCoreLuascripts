@@ -26,5 +26,5 @@ end
 -- 创建时
 function Buffer802300202:OnCreate(caster, target)
 	-- 802300201
-	self:AddAttr(BufferEffect[802300201], self.caster, self.card, nil, "speed",30)
+	self:AddProgress(BufferEffect[802300201], self.caster, self.card, nil, 500)
 end

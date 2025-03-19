@@ -90,8 +90,9 @@ function FightCardBase:Init(team, id, teamID, uid, data, typ)
     -- end
 
     self.nUseCount = 0 -- 使用技能次数
-    self.nTotalDamage = 0 -- 总被伤害量统计
-    self.nStateDamage = 0 -- 阶段被伤害量统计
+    -- -- 无限血机制
+    -- self.nTotalDamage = 0 -- 总被伤害量统计
+    -- self.nStateDamage = 0 -- 阶段被伤害量统计
 end
 
 function FightCardBase:Destroy()
@@ -1233,11 +1234,18 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
         self.nBeSkillDamage = self.nBeSkillDamage - num
         -- LogDebugEx("FightCardBase:AddHpNoShield", self.name, self.nBeSkillDamage, num, self.nTotalDamage)
         
-        if self.isInvincible then -- 无限血机制统计伤害
-            self.nTotalDamage = self.nTotalDamage - num
-            self.nStateDamage = self.nStateDamage - num
-            self.hp = self:Get("maxhp") -- 恢复血量
-            self.log:Add({ api = "UpdateDamage", targetID = self.oid, nTotalDamage = self.nTotalDamage, nStateDamage = self.nStateDamage})
+        if self.isInvincible then -- 无限血机制统计伤害 1钓鱼佬  2可杀死共用血条  3无限血共用血条
+            mgr:AddInvincibleDamage(- num)
+            -- self.nTotalDamage = self.nTotalDamage - num
+            -- self.nStateDamage = self.nStateDamage - num
+            if self.isInvincible == 2 then 
+            else
+                self.hp = self:Get("maxhp") -- 恢复血量
+            end
+            LogDebugEx("AddHpNoShield", self.isInvincible, self.hp, self:Get("maxhp") )
+            self.log:Add({ api = "UpdateDamage", --[[targetID = self.oid, statehp = mgr.nInvStatehp, ]]nTotalDamage = mgr.nInvTotalDamage, nStateDamage = mgr.nInvStateDamage})
+            
+            return false, 0, num
         end
     end
 
@@ -1267,12 +1275,22 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
             self:OnDeath(killer)
         end
 
-
         --LogTrace()
         return true, shield, num
     end
 
     return false, shield, num
+end
+
+-- 强制死亡
+function FightCardBase:ForceDeath(killer)
+    -- LogDebugEx("FightCardBase:ForceDeath", self:Get("hp"))
+    self.log:Add({api="AddHp", death = true, targetID = self.oid, casterID = self.oid,
+    attr = "hp", hp = 0, add = -self:Get("hp")}) 
+
+    self.hp = 0
+    self.isLive = false
+    self.team.fightMgr.needCheckOver = self
 end
 
 -- 加血扣血(血量保护)
