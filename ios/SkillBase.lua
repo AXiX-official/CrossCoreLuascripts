@@ -1585,6 +1585,11 @@ end
 function SkillBase:OnCallSkill(effectID, caster, targets, pos, data, api)
 	self.currentAtkTargets = self.currentAtkTargets or {}
 	if not targets or not targets[1] then return end
+	if not caster:IsLive() then 
+		-- 二段伤害攻击方可能被在第一次攻击时已经被反伤致死
+		LogDebugEx("OnCallSkill攻击方死亡")
+		return 
+	end
 
 	api=api or "OnHelp"
 	LogDebug("调用技能{%s}id{%s}", api, self.id)

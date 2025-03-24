@@ -586,7 +586,9 @@ function PlayerProto:GetClientDataRet(proto)
             PlayerClient:EnterMajor();
             PlayerClient:SetLocalNewPlayerFightState(data);
         else
-            PlayerClient:NewPlayerFight(data);
+            if(not FightClient:IsFightting())then
+                PlayerClient:NewPlayerFight(data);
+            end
         end
 
     elseif (string.find(key, FightActionDataMgr.fight_data_key)) then
