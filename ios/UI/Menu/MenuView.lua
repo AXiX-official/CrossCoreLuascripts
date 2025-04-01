@@ -353,6 +353,7 @@ end
 
 function LoadingComplete()
     MenuMgr:InitDatas() -- 系统解锁数据
+    DungeonMgr:CheckRedPointData() -- 关卡红点检测
     MenuBuyMgr:ConditionCheck(1) -- 检测充值弹窗
     ActivityMgr:InitListOpenState() -- 检测滚动窗口
     --
