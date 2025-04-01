@@ -2122,13 +2122,16 @@ function SetRed()
     UIUtil:SetRedPoint(SectionTypeItem2,redData2 ~= nil,146,26)
 
     local redData3= DungeonMgr:IsExerciseRed() and 1 or nil
+    if isExerciseLOpen and isExerciseROpen then
     UIUtil:SetRedPoint(SectionTypeItem3,redData3 ~= nil,146,26)
+    end
 
     local redData4= RedPointMgr:GetData(RedPointType.SectionActivity)
     UIUtil:SetRedPoint(SectionTypeItem4,redData4 ~= nil,146,26)
 
-
+    if isExerciseROpen then
     UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
+end
 end
 ---------------------------------------------new---------------------------------------------
 function DailyNewRefresh()

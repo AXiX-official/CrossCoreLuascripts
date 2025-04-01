@@ -66,7 +66,9 @@ function this:Set(proto)
 
     if (proto.is_finish) then
         EventMgr.Dispatch(EventType.Dungeon_Data_Setted) -- 副本数据设置完成
-        self:CheckRedPointData()
+        if MenuMgr.isInit then
+            self:CheckRedPointData()
+        end
     end
 end
 
@@ -1517,6 +1519,13 @@ function this:IsMainLineRed()
 end
 
 function this:IsExerciseRed()
+    if not MenuMgr:CheckModelOpen(OpenViewType.main, "ExerciseLView") then
+        return false
+    end
+
+    if DungeonMgr:GetSectionData(13001) and not  DungeonMgr:GetSectionData(13001):GetOpen() then
+        return false
+    end
     return ColosseumMgr:IsRed()
 end
 

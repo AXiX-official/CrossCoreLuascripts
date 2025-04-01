@@ -596,7 +596,9 @@ function this:CheckRedPointData()
     ExplorationMgr:CheckRedInfo();
 
     -- 关卡
+    if MenuMgr.isInit then --防止未初始化完成就检测数据
     DungeonMgr:CheckRedPointData()
+    end
 
     --rogue 
     local rogueRedNum =  self:CheckRed({eTaskType.Rogue}) and 1 or 0

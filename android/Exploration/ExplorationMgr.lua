@@ -215,7 +215,10 @@ function this:CheckExRedInfo()
             redInfo[k]=v:HasRevice() and 1 or nil;
         end
     end
-    DungeonMgr:CheckRedPointData()
+    -- 关卡
+    if MenuMgr.isInit then --防止未初始化完成就检测数据
+        DungeonMgr:CheckRedPointData()
+    end
     RedPointMgr:UpdateData(RedPointType.SpecialExploration, redInfo)
 end
 
