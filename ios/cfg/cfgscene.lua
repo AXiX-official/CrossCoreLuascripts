@@ -8,7 +8,7 @@ local conf = {
 'id','key','name','res','type','views','camera_setting','bgm','bgm_boss','far_camera','item_jump','loading_type','loading_res','loading_random'
 },
 	["data"] = {
-{'301001001',	'Login',	'登录',	'',	'3',	'Login',	'',	'',	'',	'',	'',	'1',	'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20',	'1'},
+{'301001001',	'Login',	'登录',	'',	'3',	'Login',	'',	'Sys_Login',	'',	'',	'',	'1',	'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20',	'1'},
 {'301001002',	'Battle',	'战棋',	'',	'3',	'Battle',	'',	'',	'',	'',	'',	'1',	'1',	'2'},
 {'301001003',	'Matrix',	'基地',	'',	'3',	'Matrix',	'',	'',	'',	'',	'',	'1',	'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20',	'2'},
 {'301001004',	'CharacterPreview',	'角色预览',	'Scenes/03_Outside/Main,Scenes/03_Outside/SceneSetting,Scenes/03_Outside/Effects,CharacterPreview',	'3',	'Common/CharacterPreview',	'',	'',	'',	'',	'',	'2',	'21',	''},
