@@ -89,7 +89,7 @@ function this:CheckCanUseByMaxLV()
 end
 
 -- 设置额外皮肤是否可用,过期时间
-function this:SetCanUse(b,t)
+function this:SetCanUse(b, t)
     self.canUse = b
     self.limitTime = t
 end
@@ -227,21 +227,35 @@ function this:GetL2dName()
     return cfgModel.l2dName
 end
 
--- 突破皮肤能否展示l2d (g_FHXOpenRole为true，突破模型要先突破，商店皮肤不用管)
+-- 能否展示l2d 
 function this:CanShowL2d()
-    if (self:CheckIsBreakType()) then
-        if (self:GetL2dName() ~= nil and (not g_FHXOpenRole or self:CheckCanUse())) then
-            return true
+    if (self:GetL2dName() ~= nil) then
+        if (self:CheckIsBreakType()) then
+            if(g_FHXOpenRole)then 
+                return self:CheckCanUse()
+            end
         end
-        return false
+        return true
     end
-    return self:GetL2dName() ~= nil
+    return false
 end
 
---是否是限时皮肤，是否过期，过期时间
+--是否展示l2d(g_FHXOpenRole为true，突破模型要先突破，商店皮肤不用管)
+function this:ToShowL2d()
+    if(self:CanShowL2d())then 
+        if (self:CheckIsBreakType()) then
+            return true
+        else
+            return g_FHXOpenSkin==nil
+        end
+    end 
+    return false
+end
+
+-- 是否是限时皮肤，是否过期，过期时间
 function this:IsLimitSkin()
-    if(self.limitTime)then 
-        return true,self.limitTime
+    if (self.limitTime) then
+        return true, self.limitTime
     end
     return false
 end

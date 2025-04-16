@@ -1369,6 +1369,8 @@ PlrMixIx.bindPlrType = 68 -- 回归绑定活动，绑定时玩家的回归类型
 PlrMixIx.actZeroMonth = 69 -- 下个月1号凌晨3点，重置时间
 PlrMixIx.limitedTimeSkins = 70 -- 限时皮肤
 PlrMixIx.sectionMultiInfo = 71 -- 有时效双倍掉落
+PlrMixIx.icon_emotes = 72 -- 竞技场对战表情
+PlrMixIx.changeId = 73 -- 物品变动的日志Id
 
 
 -- 图鉴

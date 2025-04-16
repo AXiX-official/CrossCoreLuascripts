@@ -35,6 +35,7 @@ function OnDragGridEnd() --拖拽完之后启用拖拽判定
 end
 
 function OnDrop(cardObj)
+    TeamMgr:SetDragFingerID();
     if cardObj then
         local lua=ComUtil.GetLuaTable(cardObj);
         if lua ==nil then

@@ -2029,7 +2029,7 @@ function ConfigChecker:CfgDySetOpenCfgs(cfgs)
 end
 
 function ConfigChecker:CfgActiveList(cfgs)
-    g_ActiveSign = {}
+    g_ActiveSign_2 = {}
     g_OpenConditionRecordTime = {}
     for _, fCfg in pairs(cfgs) do
         if fCfg.sTime then
@@ -2042,7 +2042,7 @@ function ConfigChecker:CfgActiveList(cfgs)
             fCfg.resetKey = GCalHelp:GetTimeStampBySplit(fCfg.data, fCfg)
         end
         if fCfg.info and fCfg.info.signInId then
-            g_ActiveSign[fCfg.info.signInId] = fCfg.id
+            g_ActiveSign_2[fCfg.info.signInId] = fCfg.id
         end
         if fCfg.time and not table.empty(fCfg.time) then
             table.insert(g_OpenConditionRecordTime, fCfg.id)
@@ -2367,11 +2367,17 @@ function ConfigChecker:CfgActiveRankReward(cfgs)
 end
 
 function ConfigChecker:CfgSignReward(cfgs)
+    g_ActiveSign_1 = {}
+
     for id, info in pairs(cfgs) do
         info.nBegTime = GCalHelp:GetTimeStampBySplit(info.begTime, info)
         info.nEndTime = GCalHelp:GetTimeStampBySplit(info.endTime, info)
         info.nSendTime = GCalHelp:GetTimeStampBySplit(info.sendTime, info)
         info.nSendTimeStop = GCalHelp:GetTimeStampBySplit(info.sendTimeStop, info)
+        if info.activityID then
+            g_ActiveSign_1[info.id] = info.activityID
+            --LogI("g_ActiveSign：%s,%s", info.id, info.activityID)
+        end
     end
 end
 
@@ -2419,6 +2425,14 @@ function CommCalCfgTasks(cfgs, t)
     local returnTypeTasks = {}
 
     for _, cfg in pairs(cfgs) do
+        local aFinishIds = cfg.aFinishIds
+        if aFinishIds then
+            for _, finishId in ipairs(aFinishIds) do
+                if not CfgTaskFinishVal[finishId] then
+                    LogE('任务：%s:%s 的 aFinishIds ：%s 在CfgTaskFinishVal中没有配置', cTaskCfgNames[t], cfg.id, finishId)
+                end
+            end
+        end
         if eStageTask[t] then
             if cfg.nStage then
                 local old = stageTasks[cfg.nStage] or 0
@@ -3297,17 +3311,18 @@ function ConfigChecker:cfgColosseum(cfgs)
     end
 end
 
-function ConfigChecker:cfgColosseumEquip(cfgs)
-    for _, cfg in pairs(cfgs) do
-        GCalHelp:CalArrWeight(cfg.infos, 'weight', 'sumWeight')
-        local sumWeight = 0
-        for _, info in pairs(cfg.infos) do
-            local weight = info.weight
-            info.sumWeight = weight + sumWeight
-            sumWeight = sumWeight + info.weight
-        end
-    end
-end
+-- function ConfigChecker:cfgColosseumEquip(cfgs)
+--     for _, cfg in pairs(cfgs) do
+--         -- GCalHelp:CalArrWeight(cfg.infos, 'weight', 'sumWeight')
+--         local sumWeight = 0
+--         for _, info in pairs(cfg.infos) do
+--             local weight = info.weight
+--             info.sumWeight = weight + sumWeight
+--             sumWeight = sumWeight + info.weight
+--         end
+--     end
+-- end
+
 function ConfigChecker:cfgGlobalBoss(cfgs)
     for _, cfg in pairs(cfgs) do
         cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.nBeginTime, cfg)

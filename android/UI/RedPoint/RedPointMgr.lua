@@ -56,6 +56,7 @@ RedPointType.SectionMain = "SectionMain" --章节主线
 RedPointType.SectionDaily = "SectionDaily" --章节日常
 RedPointType.SectionExercise = "SectionExercise" --章节演习
 RedPointType.SectionActivity = "SectionActivity" --章节活动
+RedPointType.CourseView = "CourseView" --教程
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机

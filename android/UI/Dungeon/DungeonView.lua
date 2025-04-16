@@ -644,6 +644,9 @@ function ShowInfo(item)
     CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
     itemInfo.Show(cfg)
+    if not isActive then --关闭特殊引导
+        itemInfo.CallFunc("Button","StopSpecialGuide")
+    end
 end
 
 -- 进入
@@ -676,6 +679,7 @@ function OnBattleEnter()
             })
         end
     end
+    itemInfo.CallFunc("Button","FinishSpecialGuide") --特殊引导
 end
 
 ---------------------------------------------动效---------------------------------------------

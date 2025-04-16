@@ -504,9 +504,18 @@ function OnClickStartBtn()
                         local dialogData = {}
                         dialogData.content = LanguageMgr:GetTips(1026,TimeUtil:GetTimeHMS(jsonPackage.forbitTime, "%Y-%m-%d %H:%M"))
                         CSAPI.OpenView("Prompt", dialogData)
+                    elseif jsonPackage and jsonPackage.code~=0 and jsonPackage.maintainJson and jsonPackage.maintainJson~="" then
+                        Log("维护中")
+                        local dialogData = {}
+                        dialogData.content = jsonPackage.maintainJson;
+                        CSAPI.OpenView("Prompt", dialogData)
                     elseif jsonPackage.code==1 and jsonPackage.language then
                         local dialogData = {}
                         dialogData.content = LanguageMgr:GetTips(tonumber(jsonPackage.language))
+                        -- 20250409 处理防沉迷token过期没有自动退出游戏的问题
+                        if jsonPackage.tokenExpiry == 1 or jsonPackage.tokenExpiry == "1" then
+                            dialogData.okCallBack = function() ShiryuSDK.Logout() end
+                        end
                         CSAPI.OpenView("Prompt", dialogData)
                     else
                         AdvLoginErrorTitle()

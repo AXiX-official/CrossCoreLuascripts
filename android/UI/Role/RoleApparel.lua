@@ -181,7 +181,7 @@ function RefreshPanel(isCheck)
     cfgModel = Cfgs.character:GetByID(curModeId)
     if (isCheck) then
         isLive2D = false
-        if (curDatas[curIndex]:CanShowL2d()) then
+        if (curDatas[curIndex]:ToShowL2d()) then
             isLive2D = true
         end
         -- 如果是当前选择并且没选择l2d
@@ -291,7 +291,7 @@ function SetBtn()
         end
     end
     --
-    if (lanId == 18131) then --未获得角色
+    if (lanId == 18131) then -- 未获得角色
         CSAPI.SetGOActive(txtNoGet, true)
         CSAPI.SetGOActive(btnSure, false)
     else
@@ -321,10 +321,10 @@ function OnClickSure()
         --         cardData:GetSkinIsL2dBase(), isLive2D)
         -- end
         local isLimitSkin, limitTime = curDatas[curIndex]:IsLimitSkin()
-        if(isLimitSkin and (limitTime - TimeUtil:GetTime()<=0))then 
+        if (isLimitSkin and (limitTime - TimeUtil:GetTime() <= 0)) then
             LanguageMgr:ShowTips(1054)
-            return 
-        end 
+            return
+        end
         -- 改为按绑定关系切换
         local skin_a = RoleTool.GetBDSkin_a(cardData:GetCfgID(), curModeId)
         RoleSkinMgr:UseSkin(cardData:GetID(), curModeId, skin_a, isLive2D, isLive2D)
@@ -418,7 +418,7 @@ end
 -------------------------------------------------------放大
 -- 放大
 function OnClickSearch()
-    CSAPI.OpenView("RoleInfoAmplification", {curModeId, isLive2D,nil,nil,true}, LoadImgType.RoleInfo)
+    CSAPI.OpenView("RoleInfoAmplification", {curModeId, isLive2D, nil, nil, true}, LoadImgType.RoleInfo)
 end
 
 -- 动态开关
@@ -430,7 +430,7 @@ function OnClickKey()
 end
 
 function OnClickL2D()
-    if (not isLive2D and not curDatas[curIndex]:CanShowL2d()) then
+    if (not isLive2D and curDatas[curIndex]:CheckIsBreakType() and not curDatas[curIndex]:CanShowL2d()) then
         LanguageMgr:ShowTips(3015)
         return
     end

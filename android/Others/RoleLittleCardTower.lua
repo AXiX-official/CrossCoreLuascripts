@@ -45,6 +45,9 @@ function OnRecycle()
     if (cg_go~=nil) then
         cg_go.alpha = 1
     end
+    fingerId=nil;
+    isEvent=false;
+    isDrag=false;
 end
 
 function SetClickCB(_cb)

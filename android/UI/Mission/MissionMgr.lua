@@ -759,6 +759,9 @@ end
 
 -- 弹提示数据
 function this:GetChangeDatas()
+    if(not self.changeDatas)then 
+        return {}
+    end
     local arr = {}
     for i, v in pairs(self.changeDatas) do
         table.insert(arr, v)
@@ -794,6 +797,9 @@ function this:GetRewardRet(datas, dailyStar, weeklyStar, rewards)
                 data:SetIsGet(v.is_get)
                 data:Refresh()
                 type = data:GetType()
+                if data:GetCfgID() == 20105 then
+                    EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "FinishMission") 
+                end
             end
         end
     end

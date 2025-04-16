@@ -29,8 +29,8 @@ function Skill4704003:OnAfterHurt(caster, target, data)
 		self:AddHp(SkillEffect[4704011], caster, target, data, -math.floor(count80))
 	end
 end
--- 行动结束
-function Skill4704003:OnActionOver(caster, target, data)
+-- 行动结束2
+function Skill4704003:OnActionOver2(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -44,8 +44,8 @@ function Skill4704003:OnActionOver(caster, target, data)
 	-- 4101912
 	self:AddBuff(SkillEffect[4101912], caster, self.card, data, 4101912)
 end
--- 行动结束2
-function Skill4704003:OnActionOver2(caster, target, data)
+-- 行动结束
+function Skill4704003:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else

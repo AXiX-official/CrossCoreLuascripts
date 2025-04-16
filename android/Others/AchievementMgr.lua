@@ -98,9 +98,10 @@ function this:SetRewardInfos(proto)
     if proto then
         self:UpdateDatas(proto.infos)
         if proto.is_finish then
+            if self.isFirst then
+                Tips.ShowMisionTips()
+            end
             self.isFirst = true
-            Tips.ShowMisionTips()
-
             EventMgr.Dispatch(EventType.Achievement_Data_Update)
         end
     end

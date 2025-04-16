@@ -11,6 +11,31 @@ function this:Init(_cfg)
     self.cfg = _cfg
 end
 
+function this:SetTime(s,e)
+    self.sTime =s
+    self.eTime =e
+    if s then
+        self.cfg.sTime = TimeUtil:GetTimeStr2(s,true)
+    end
+    if e then
+        self.cfg.eTime = TimeUtil:GetTimeStr2(e,true)
+    end
+end
+
+function this:GetStartTime()
+    if not self.sTime and self.cfg and self.cfg.sTime then
+        self.sTime = TimeUtil:GetTimeStampBySplit(self.cfg.sTime)
+    end
+    return self.sTime
+end
+
+function this:GetEndTime()
+    if not self.eTime and self.cfg and self.cfg.eTime then
+        self.eTime = TimeUtil:GetTimeStampBySplit(self.cfg.eTime)
+    end
+    return self.eTime
+end
+
 function this:GetCfg()
     return self.cfg
 end
@@ -85,9 +110,8 @@ end
 
 function this:IsOpenTime()
     local isOpen = true
-    if self.cfg and self.cfg.sTime and self.cfg.eTime then
-        local sTime = TimeUtil:GetTimeStampBySplit(self.cfg.sTime)
-        local eTime = TimeUtil:GetTimeStampBySplit(self.cfg.eTime)
+    local sTime,eTime = self:GetStartTime(),self:GetEndTime()
+    if sTime and eTime then
         isOpen = TimeUtil:GetTime() > sTime and TimeUtil:GetTime() <= eTime
     end
     return isOpen

@@ -82,6 +82,7 @@ function this:Init1(webIp, webPort, time)
     self:InitData(BackstageFlushType.Board, time)
     self:InitData(BackstageFlushType.ActiveSkip, time)
     self:InitActivityListData()
+    OperateActiveProto:GetActiveTimeList()
 end
 
 function this:InitData(type, time)
@@ -224,21 +225,18 @@ function this:InitActivityListData()
     end
 end
 
-function this:SetData(cfgId)
-    if cfgId == nil then
-        return
-    end
-    self.ALDatas = self.ALDatas or {}
-    local cfg = Cfgs.CfgActiveList:GetByID(cfgId)
-    if cfg then
-        if self.ALDatas[cfgId] then
-            self.ALDatas[cfgId]:Init(cfg)
-        else    
-            local data = ActivityData.New()
-            data:Init(cfg)
-            if data:GetGroup() ~= nil then
-                self.ALDatas[cfgId] = data
+function this:UpdateDatas(proto)
+    if proto then
+        if proto.operateActiveList and #proto.operateActiveList > 0 then
+            for i, v in ipairs(proto.operateActiveList) do
+                if self.ALDatas[v.id] then
+                    self.ALDatas[v.id]:SetTime(v.openTime,v.closeTime)
+                end
             end
+        end
+        if proto.isFinish then
+            self:RefreshOpenState()
+            EventMgr.Dispatch(EventType.Activity_List_Cfg_Change)        
         end
     end
 end
@@ -283,9 +281,9 @@ function this:GetActivityTime(group)
     if self.ALDatas then
         for k, v in pairs(self.ALDatas) do
             if group and v:GetGroup() == group and v:IsOpen() then
-                if v:GetCfg() and v:GetCfg().sTime and v:GetCfg().eTime then
-                    local _sTime = TimeUtil:GetTimeStampBySplit(v:GetCfg().sTime)
-                    local _eTime = TimeUtil:GetTimeStampBySplit(v:GetCfg().eTime)
+                if v:GetStartTime() and v:GetEndTime() then
+                    local _sTime = v:GetStartTime()
+                    local _eTime = v:GetEndTime()
                     if sTime == nil then
                         sTime = _sTime
                     else
@@ -304,6 +302,27 @@ function this:GetActivityTime(group)
         end
     end
     return sTime,eTime
+end
+
+--获取整个活动表的最小刷新时间
+function this:GetRefreshTime()
+    local timer = nil
+    if self.ALDatas then
+        local curTime = TimeUtil:GetTime()
+        for k, v in pairs(self.ALDatas) do
+            if v:GetStartTime() and v:GetStartTime() > curTime then
+                if (timer == nil or timer > v:GetStartTime()) then
+                    timer = v:GetStartTime()
+                end
+            end
+            if v:GetEndTime() and v:GetEndTime() > curTime then
+                if (timer == nil or timer > v:GetEndTime()) then
+                    timer = v:GetEndTime()
+                end
+            end
+        end
+    end
+    return timer
 end
 
 function this:GetALData(id)
@@ -509,19 +528,6 @@ function this:CheckRed(id)
     return false
 end
 
--- 活动内容为空
-function this:IsActivityListNull(viewName, group)
-    local isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, viewName)
-    if isOpen and self.ALDatas then
-        for i, v in pairs(self.ALDatas) do
-            if v:GetGroup() == group and v:IsOpen() then
-                return false
-            end
-        end
-    end
-    return true
-end
-
 function this:IsSignIn(id)
     local data = self:GetALData(id)
     if data then
@@ -537,16 +543,18 @@ end
 function this:SetOperateActive(id,info)
     local data= self:GetALData(tonumber(id))
     if data and data:GetType() ==ActivityListType.SignInGift and info.payRate then
-        if info.openTime and info.openTime <= TimeUtil:GetTime() and info.closeTime and info.closeTime > TimeUtil:GetTime() then
-            self.operateActive[tonumber(id)] = self.operateActive[tonumber(id)] or {}
-            self.operateActive[tonumber(id)].sTime = info.openTime
-            self.operateActive[tonumber(id)].eTime = info.closeTime
-        end
+        self.operateActive[tonumber(id)] = self.operateActive[tonumber(id)] or {}
+        self.operateActive[tonumber(id)].sTime = info.openTime or 0
+        self.operateActive[tonumber(id)].eTime = info.closeTime or 0
     end
 end
 
 function this:GetOperateActive(id)
-    return self.operateActive[tonumber(id)]
+    local info = self.operateActive[tonumber(id)]
+    if info and info.sTime <= TimeUtil:GetTime() and info.eTime > TimeUtil:GetTime() then
+        return info
+    end
+    return nil
 end
 
 ----------------------------------------界面弹出---------------------------------------

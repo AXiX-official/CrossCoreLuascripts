@@ -391,14 +391,14 @@ GameMsg.map["ClientProto:PreLoginGame"] = {
 	{ "uid", "distinctId",},
 }
 GameMsg.map["LoginProto:PreLoginGame"] = {
-	--登陆秘钥 ip       端口    是否可以登陆 错误id(CfgTipsSimpleChinese的key) 错误参数         所在服务器集群 
-	{ "string","string","short","bool",      "string",            "list|sTipsInfo","string",      },
-	{ "key",   "ip",    "port", "is_ok",     "strId",             "args",          "svr_group",   },
+	--登陆秘钥 ip       端口    是否可以登陆 错误id(CfgTipsSimpleChinese的key) 错误参数         所在服务器集群 中台uid          第三方id        
+	{ "string","string","short","bool",      "string",            "list|sTipsInfo","string",      "string",        "string",       },
+	{ "key",   "ip",    "port", "is_ok",     "strId",             "args",          "svr_group",   "center_web_uid","third_part_id",},
 }
 GameMsg.map["ClientProto:LoginGame"] = {
-	--登陆秘钥 版本号       账号   登陆设备信息         数数游客id   紫龙玩家信息         中台uid        中台传的信息    
-	{ "string","string",    "long","struts|sLoginDevice","string",    "struts|sZiLongUserInfo","string",      "json",         },
-	{ "key",   "SvnVersion","uid", "device",            "distinctId","ziLongUserInfo",    "centerWebUid","centerWebInfo",},
+	--登陆秘钥 版本号       账号   登陆设备信息         数数游客id   紫龙玩家信息         中台传的信息    
+	{ "string","string",    "long","struts|sLoginDevice","string",    "struts|sZiLongUserInfo","json",         },
+	{ "key",   "SvnVersion","uid", "device",            "distinctId","ziLongUserInfo",    "centerWebInfo",},
 }
 GameMsg.map["sPlrData"] = {
 	--账号   名字     体能    等级    金币   钻石      服务器时间戳 经验  签名     创建时间      军演代币    tp值    tp开始时间    是否不统计日志(1:为不统计，0为统计) 支付钻石      
@@ -471,14 +471,14 @@ GameMsg.map["ClientProto:Offline"] = {
 	{ },
 }
 GameMsg.map["ClientProto:ExchangeItem"] = {
-	--要活的的物品   
-	{ "list|sReward",},
-	{ "exchanges",   },
+	--要换的的物品   如果是抽卡需要产生把卡池id发过来 
+	{ "list|sReward","uint",               },
+	{ "exchanges",   "card_pool_id",       },
 }
 GameMsg.map["ClientProto:ExchangeItemRet"] = {
-	--获得的物品     
-	{ "list|sReward",},
-	{ "rewards",     },
+	--获得的物品     如果是抽卡需要产生把卡池id发过来 
+	{ "list|sReward","uint",               },
+	{ "rewards",     "card_pool_id",       },
 }
 GameMsg.map["LoginProto:WaitingLogin"] = {
 	--排队人数  是否等待排队 多久后再来链接（秒） 排队限制人数  
@@ -4849,6 +4849,16 @@ GameMsg.map["sOperateActive"] = {
 	--活动id（eOperateType） 开始时间   结束时间（-1或者nil，无限开） 充值金额（分） 弹窗id     开启状态(0未开，1已开） 
 	{ "uint",               "int",     "int",               "int",         "int",     "int",               },
 	{ "id",                 "openTime","closeTime",         "payRate",     "noticeId","state",             },
+}
+GameMsg.map["OperateActiveProto:GetActiveTimeList"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:GetActiveTimeListRet"] = {
+	--运营活动的数据       是否发完   
+	{ "list|sOperateActive","bool",    },
+	{ "operateActiveList", "isFinish",},
 }
 GameMsg.map["sRandCard"] = {
 	--卡牌id   装备信息      对应怪物id   

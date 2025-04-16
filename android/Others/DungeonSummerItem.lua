@@ -153,7 +153,7 @@ function SetTitle()
     CSAPI.SetScriptEnable(textImg,"Image",not isPlot)
     if not isPlot then
         local imgName = isLock and "img_13_02" or "img_13_01"
-        CSAPI.LoadImg(textImg,"UIs/DungeonActivity7/" ..imgName ..".png",true,nil,true)
+        CSAPI.LoadImg(textImg,"UIs/DungeonActivity7/" ..imgName ..".png",false,nil,true)
     end
 end
 

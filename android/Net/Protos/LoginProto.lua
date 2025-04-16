@@ -22,7 +22,7 @@ end
 function LoginProto:QueryAccount(proto)
 	Log("查询账号响应：==================")
 	Log(proto);
-	if CSAPI.IsADV() then
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
 		if proto and proto["uid"]~=nil then
 			CSAPI.UnityClientVersion(proto["uid"]);
 		end
@@ -91,8 +91,11 @@ end
 --响应：预登陆
 function LoginProto:PreLoginGame(proto)
 	Log("预登陆响应：==================")
-	Log(proto);
-	self.vosPreLoginGame = proto;	
+	self.vosPreLoginGame = proto;
+	if LoginProto:VerifyUID()==true then
+		LogError("VerifyUID触发1")
+		return;
+	end
 	NetMgr.net:Disconnect();
 	if proto.is_ok then
 		self.ip = proto.ip
@@ -105,11 +108,46 @@ function LoginProto:PreLoginGame(proto)
 		end
 	end
 end
+---验证中台UID
+function LoginProto:VerifyUID()
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		if self.vosPreLoginGame and self.vosPreLoginGame.center_web_uid and self.vosPreLoginGame.center_web_uid~="" then
+			if tostring(ShiryuSDK.ShiryuLogin.uid)~=tostring(self.vosPreLoginGame.center_web_uid) then
+				--LogError("数据中台UID异常:"..ShiryuSDK.ShiryuLogin.uid.."self.vosPreLoginGame.center_web_uid:"..self.vosPreLoginGame.center_web_uid)
+				Temtable={}
+				Temtable.GameUID=tostring(PlayerClient:GetID());---用户uid
+				Temtable.SDK_center_web_uid=ShiryuSDK.ShiryuLogin.uid;---SDK给的中台id
+				Temtable.Server_center_web_uid=self.vosPreLoginGame.center_web_uid;---服务端给的中台id
+				Temtable.Server_third_part_id=self.vosPreLoginGame.third_part_id;---第三方id
+				local LoginProtoPreLoginGameStr=table.tostring(Temtable,true);
+				BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_center_web_uid_GotoVerify, { LoginProtoPreLoginGameData=LoginProtoPreLoginGameStr,})
+				ShiryuSDK.Logout();
+				return true ;
+			end
+		elseif self.vosPreLoginGame==nil then
+			LogError("vosPreLoginGame返回数据空")
+			Temtable={}
+			Temtable.GameUID=tostring(PlayerClient:GetID());---用户uid
+			Temtable.SDK_center_web_uid=ShiryuSDK.ShiryuLogin.uid;---SDK给的中台id
+			Temtable.Server_center_web_uid="";---服务端给的中台id
+			Temtable.Server_third_part_id="";---第三方id
+			local LoginProtoPreLoginGameStr=table.tostring(Temtable,true);
+			BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_center_web_uid_GotoVerify, { LoginProtoPreLoginGameData=LoginProtoPreLoginGameStr,})
+			ShiryuSDK.Logout();
+			return true ;
+		end
+	end
 
+	return false;
+end
 
 --连接到游戏逻辑服
 function LoginProto:OnConnectGameServer()
 	Log("OnConnectGameServer：==================")
+	if LoginProto:VerifyUID()==true then
+		LogError("VerifyUID触发2")
+		return;
+	end
 	--机型信息
 	local isEmulator = CSAPI.CheckEmulator()
 	local lv, _score = SettingMgr:GetMobieLv()

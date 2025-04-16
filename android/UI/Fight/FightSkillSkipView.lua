@@ -23,6 +23,10 @@ function OnFightSkipStateChanged(state)
         return;
     end
 
+    if(g_GuideFightSkipShow and FightClient:IsNewPlayerFight())then
+        return;
+    end
+
     if(state and autoSkipNext)then        
         OnClickSkip();
         return;
@@ -86,7 +90,7 @@ end
 
 function ShowSkillResult()
     local fa = FightActionMgr.curr;
-    if(not fa)then
+    if(not fa or not fa.GetTargetCharacters)then
         return;
     end
     local targets = fa:GetTargetCharacters();

@@ -29,6 +29,6 @@ function Skill932800201:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 932800201
-	self:AddProgress(SkillEffect[932800201], caster, target, data, -300)
+	-- 932800202
+	self:HitAddBuff(SkillEffect[932800202], caster, target, data, 10000,932800202)
 end

@@ -94,4 +94,13 @@ function this:IsHide()
     return self.cfg and self.cfg.nIsHide
 end
 
+--获取开始时间
+function this:GetStartTime()
+    local time = 0
+    if self.cfg and self.cfg.begTime then
+        time = TimeUtil:GetTimeStampBySplit(self.cfg.begTime)
+    end
+    return time
+end
+
 return this;

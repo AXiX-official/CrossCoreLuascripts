@@ -175,6 +175,14 @@ function SetCost(cost,isOver)
             end
             CSAPI.SetText(txt_dPrice1,tostring(cost[1].num));
             CSAPI.SetText(txt_dPrice2,tostring(cost[2].num));
+            if CSAPI.IsADV() then
+                ---显示符号
+                local   StrText=this.data["cfg"]["displayCurrency"];
+                if StrText~=nil then CSAPI.SetText(pnIcon1,StrText); end
+                ---显示价格
+                local  displayPrice=this.data["cfg"]["displayPrice"];
+                if displayPrice~=nil then CSAPI.SetText(txt_dPrice1,displayPrice); end
+            end
         else
             local cfg = Cfgs.ItemInfo:GetByID(cost[1].id);
             if cfg and cfg.icon then

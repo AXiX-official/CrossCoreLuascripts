@@ -6,23 +6,23 @@ Skill22101 = oo.class(SkillBase)
 function Skill22101:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 伤害前
-function Skill22101:OnBefourHurt(caster, target, data)
+-- 入场时
+function Skill22101:OnBorn(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8201
-	if SkillJudger:IsSingle(self, caster, target, true) then
-	else
-		return
-	end
 	-- 22101
-	self:AddTempAttr(SkillEffect[22101], caster, self.card, data, "damage",0.10)
+	self:AddBuff(SkillEffect[22101], caster, self.card, data, 22101)
+end
+-- 特殊入场时(复活，召唤，合体)
+function Skill22101:OnBornSpecial(caster, target, data)
+	-- 8166
+	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
+	else
+		return
+	end
+	-- 22111
+	self:AddBuff(SkillEffect[22111], caster, caster, data, 22101)
 end

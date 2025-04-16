@@ -32,3 +32,16 @@ function Skill932800501:OnAttackOver(caster, target, data)
 	-- 932800501
 	self:HitAddBuff(SkillEffect[932800501], caster, target, data, 10000,5206,2)
 end
+-- 特殊入场时(复活，召唤，合体)
+function Skill932800501:OnBornSpecial(caster, target, data)
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 932800204
+	local targets = SkillFilter:All(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[932800204], caster, target, data, 932800203)
+	end
+end

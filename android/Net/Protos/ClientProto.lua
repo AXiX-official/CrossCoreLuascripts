@@ -229,10 +229,11 @@ function ClientProto:OfflineRet()
 end
 
 -- 兑换
-function ClientProto:ExchangeItem(_exchanges, cb)
+function ClientProto:ExchangeItem(_exchanges, cb,_card_pool_id)
     self.ExchangeItemCB = cb
     NetMgr.net:Send({"ClientProto:ExchangeItem", {
-        exchanges = _exchanges
+        exchanges = _exchanges,
+        card_pool_id = _card_pool_id
     }})
 end
 function ClientProto:ExchangeItemRet(proto)
@@ -275,11 +276,6 @@ function ClientProto:DySetCfgNotice(proto)
         end
         if (v.name == "CfgActiveEntry") then
             EventMgr.Dispatch(EventType.CfgActiveEntry_Change) --活动表动态更改
-        end
-        if v.name == "CfgActiveList" then
-            ActivityMgr:SetData(v.row_id)
-            ActivityMgr:RefreshOpenState()
-            EventMgr.Dispatch(EventType.Activity_List_Cfg_Change)
         end
     end
 end
