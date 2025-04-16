@@ -447,6 +447,20 @@ function Team:HasRole(cId)
 	end	
 	return false
 end
+
+-- 共用血条共同扣血
+function Team:ShareHp(damage, maxhp)
+	self.nShareHp = maxhp - damage
+	for i,v in ipairs(self.arrCard) do
+		if v.isInvincible == 2 then 
+			v.hp = self.nShareHp
+			-- if maxhp then
+			-- 	v.maxhp = maxhp
+			-- end
+			LogDebugEx("ShareHp", v.name, v.hp)
+		end
+	end
+end
 ------------------------------------------
 -- 检测卡牌站位(坐标包含关系)
 function Team:CheckGridsEx(coordinate, gridsID, minpos)

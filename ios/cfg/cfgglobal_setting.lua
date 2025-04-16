@@ -272,7 +272,7 @@ local conf = {
 {'g_ExplorationPlusShopID',	'g_ExplorationPlusShopID',	'',	'int',	'31002'},
 {'g_ExplorationArbitrageShopID',	'g_ExplorationArbitrageShopID',	'',	'int',	'31003'},
 {'g_PhysicalStrengthList',	'g_PhysicalStrengthList',	'',	'int[]',	'10035,10036,10037'},
-{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2024-12-11 10:00:00","2025-02-19 03:00:00"]]'},
+{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2025-3-25 12:00:00","2025-04-30 03:00:00"]]'},
 {'g_FightOnlineUnlock',	'g_FightOnlineUnlock',	'',	'bool',	'1'},
 {'g_TimeZone',	'g_TimeZone',	'',	'float',	'8'},
 {'g_DungeonTaoFaDailyNum',	'g_DungeonTaoFaDailyNum',	'',	'int',	'2'},
@@ -298,12 +298,14 @@ local conf = {
 {'g_PetBGM',	'g_PetBGM',	'',	'string',	'Event_SummerMarineRhythm'},
 {'g_HoldOnTime',	'g_HoldOnTime',	'',	'int[]',	'3,5,10,-1'},
 {'g_FHXOpenRole',	'g_FHXOpenRole',	'',	'bool',	'1'},
+{'g_FHXOpenSkin',	'g_FHXOpenSkin',	'',	'bool',	'1'},
 {'g_FHXOpenPicture',	'g_FHXOpenPicture',	'',	'bool',	'1'},
 {'g_FHXArchiveRole',	'g_FHXArchiveRole',	'',	'bool',	'1'},
 {'g_BosssTart',	'g_BosssTart',	'',	'int',	'1'},
 {'g_BosscLose',	'g_BosscLose',	'',	'int',	'21'},
 {'g_RogueT_Coin',	'g_RogueT_Coin',	'',	'int',	'10501'},
 {'g_ItemReturnMail',	'g_ItemReturnMail',	'',	'json',	'[[33043003,2010,"2024/05/27 10:00:00","2024/05/28 10:00:00"]]'},
+{'g_NoExpNoticeMailItemTypes',	'g_NoExpNoticeMailItemTypes',	'',	'int[]',	'19,21,26'},
 },
 }
 --cfgglobal_setting = conf

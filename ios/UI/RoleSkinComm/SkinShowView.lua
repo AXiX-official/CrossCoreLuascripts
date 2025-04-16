@@ -23,8 +23,9 @@ end
 function OnOpen()
     if data then
         CSAPI.SetGOActive(clicker,false)
-        local hasEnter=data:HasEnterTween();
+        -- local hasEnter=data:HasEnterTween();
         -- local hasEnter=data:HasL2D();
+        local hasEnter=false
         modelID=data:GetModelID();
         roleItem.Refresh(modelID, LoadImgType.SkinReward,function()
             if roleItem.CheckIn() and CSAPI.IsInternation() then --有反和谐且有入场动画
@@ -179,7 +180,9 @@ function OnClickOther()
         local cfg=changeInfo[1].cfg;
         local type=changeInfo[1].type;
         if type==5 then --机神
-            OpenSearchView({ cfg.id, type==SkinChangeResourceType.Spine,false}, LoadImgType.Main)
+            --和谐更改
+            OpenSearchView({ cfg.id, type==SkinChangeResourceType.Image,false}, LoadImgType.Main)
+            -- OpenSearchView({ cfg.id, type==SkinChangeResourceType.Spine,false}, LoadImgType.Main)
         elseif changeData then --变更展示信息
             changeData=nil;
             SetChangeInfo(cfg);

@@ -23,3 +23,12 @@ function OperateActiveProto:GetOperateActiveRet(proto)
     end
     EventMgr.Dispatch(EventType.MenuBuy_RechargeCB)
 end
+
+function OperateActiveProto:GetActiveTimeList()
+    local proto = {"OperateActiveProto:GetActiveTimeList", {}}
+    NetMgr.net:Send(proto);
+end
+
+function OperateActiveProto:GetActiveTimeListRet(proto)
+    ActivityMgr:UpdateDatas(proto)
+end

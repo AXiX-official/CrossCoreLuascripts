@@ -38,6 +38,7 @@ local mgrNames = {
 	"ArchiveMgr",   --图鉴
 	"SweepMgr",  --扫荡
 	"DungeonBoxMgr", --副本星级
+	"SpecialGuideMgr", --特殊引导
 
 	"MenuMgr", --主界面相关(需要先收到关卡数据)
 	"AIStrategyMgr",--AI预设

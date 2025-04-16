@@ -8,7 +8,7 @@ local this =
 [-686817241]={
 {time=4000,type=0,cue_sheet="cv/Ra.acb",cue_name="Ra_10",cue_feature=1},
 {time=4000,type=2,hit_creates={1192467788},hits={0}},
-{effect="cast1_eff",time=4000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Ra_attack_skill_01"}
+{effect="cast1_eff",time=3550,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Ra_attack_skill_01"}
 },
 [1192467788]={
 effect="cast1_hit",time=4000,type=0,pos_ref={ref_type=4,part_index=0}

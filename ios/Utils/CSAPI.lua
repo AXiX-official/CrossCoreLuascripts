@@ -656,7 +656,7 @@ this.GetCurrUIEventObj=CS.CSAPI.GetCurrUIEventObj;
 this.ReleaseSound = CS.CSAPI.ReleaseSound;
 --播放声音
 this.csPlaySound = CS.CSAPI.PlaySound;
-function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff,startTime)
+function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff,startTime,completeCB)
 --	--屏蔽人声
 --	if(cueSheet and string.find(cueSheet, "cv/"))then
 --        LogError(cueSheet);    
@@ -678,7 +678,11 @@ function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, call
 	--LogError(tostring(cueSheet) .. ":" .. tostring(cueName) .. ",isLoop:" .. tostring(isLoop) .. ",tag:" .. tostring(tag));
 	volumeCoeff = volumeCoeff or 100;
 	startTime = startTime or 0
-	return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime);
+	if tonumber(CS.CSAPI.APKVersion()) > 6 then		
+		return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime,completeCB);
+	else
+		return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime);
+	end
 end
 
 --播放UI声音
@@ -1222,7 +1226,11 @@ end
 
 ---是否提审模式
 function this.IsAppReview()
-	return false;
+	if tonumber(CS.CSAPI.APKVersion()) > 6 then
+		return this.IsAppReviewMode();
+	else
+		return false
+	end
 end
 ---获取当前平台指定热更新文件夹路径(指定文件夹内)
 this.PlatformURL=CS.CSAPI.PlatformURL;
@@ -1373,6 +1381,8 @@ function this.UnityClientVersion(uid)
 		BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_Client_Version,ClientVersion)
 	end
 end
+
+this.IsAppReviewMode = CS.CSAPI.IsAppReviewMode;
 
 return this;
 

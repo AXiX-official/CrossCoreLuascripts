@@ -1031,6 +1031,15 @@ function SkillApi:GetStateDamage(oSkill, caster, target, filter)
 	return mgr.nInvStateDamage or 0
 end
 
+--获取最大恢复血量(默认是最大血量)
+function SkillApi:GetMaxCureHp(oSkill, caster, target, filter)
+	local card = self:Filter(oSkill, caster, target, filter)
+    if card.fCurePercent then
+        local max = math.floor(card:Get("maxhp") * card.fCurePercent) -- 每次重新计算回血最大血量, 避免最大血量调整需要重新计算
+        return max
+    end
+    return card:Get("maxhp")
+end
 ----------------------------------------------
 -- 技能基类
 FightAPI = oo.class()
@@ -1427,6 +1436,14 @@ function FightAPI:AddProgress(effect, caster, target, data, progress, max)
 	if target:IsLive() then
 		target:AddProgress(progress, max, effect.apiSetting)
 	end
+end
+
+-- 增加操作数上限
+function FightAPI:AddStep(effect, caster, target, data, num, isHide)
+	if caster:GetTeamID() ~= 1 then return end -- PVE只对我方有效
+	
+    local mgr = self.team.fightMgr
+    mgr:AddStep(num, isHide)
 end
 
 function FightAPI:AddSp(effect, caster, target, data, num)

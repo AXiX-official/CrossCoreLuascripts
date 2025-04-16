@@ -24,9 +24,7 @@ function Skill4802301:OnBornSpecial(caster, target, data)
 		return
 	end
 	-- 4802304
-	self:AddBuff(SkillEffect[4802304], caster, self.card, data, 4802301,5)
-	-- 4802301
-	self:CallSkillEx(SkillEffect[4802301], caster, target, data, 802300401)
+	self:AddBuff(SkillEffect[4802304], caster, self.card, data, 4802301,2)
 end
 -- 行动结束2
 function Skill4802301:OnActionOver2(caster, target, data)
@@ -61,6 +59,11 @@ function Skill4802301:OnActionOver2(caster, target, data)
 	end
 	-- 4802302
 	self:CallSkill(SkillEffect[4802302], caster, target, data, 802300401)
-	-- 4802303
-	self:AddBuff(SkillEffect[4802303], caster, self.card, data, 4802301,5)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4802304
+	self:AddBuff(SkillEffect[4802304], caster, self.card, data, 4802301,2)
 end

@@ -31,9 +31,29 @@ function Skill932800601:OnActionOver2(caster, target, data)
 		return
 	end
 	-- 932800602
-	self:DelBuffQuality(SkillEffect[932800602], caster, self.card, data, 2,5)
+	self:DelBuffQuality(SkillEffect[932800602], caster, self.card, data, 2,4)
 	-- 932800603
 	self:DelBufferForce(SkillEffect[932800603], caster, self.card, data, 932800601)
 	-- 932800604
 	self:CallOwnerSkill(SkillEffect[932800604], caster, self.card, data, 932800201)
+end
+-- 行动结束
+function Skill932800601:OnActionOver(caster, target, data)
+	-- 932800605
+	if self:Rand(5000) then
+		self:AddNp(SkillEffect[932800605], caster, target, data, -5)
+	end
+end
+-- 入场时
+function Skill932800601:OnBorn(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 932800203
+	local targets = SkillFilter:All(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[932800203], caster, target, data, 932800203)
+	end
 end

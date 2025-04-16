@@ -3,7 +3,6 @@ local top = nil
 local currItem = nil;
 local currType = nil; -- 1.主线 2.日常 3.军演 4.活动
 local isViewJump = false --跳转进来而不是战斗结束返回
-
 --锚点
 local PivotType = {
     Center = 0,
@@ -14,7 +13,6 @@ local PivotType = {
 }
 --分辨率适应
 local offset = {}
-
 --场景界面
 local SectionViewType ={
     MainLine = 1,
@@ -22,7 +20,6 @@ local SectionViewType ={
     Exercise = 3,
     Activity = 4
 }
-
 --选择物体
 local SelectType = {
     MainLine = 1, --主线
@@ -31,7 +28,6 @@ local SelectType = {
     Activity = 4, --活动
     All = 5 --任意
 }
-
 -- 主页
 local rects = {}
 local canvasSize = nil
@@ -47,7 +43,6 @@ local isJump = false
 local jumpData = nil
 local isClickEnter = false --限制点击过快导致打开多个界面
 local isViewDrop = false
-
 --主线
 local currSectionIndex = 0
 local mainLineDatas = nil
@@ -55,7 +50,6 @@ local mainLinePanel = nil
 local layout1 = nil
 local lastPrograssIdx = 0
 local itemPos1 = {}
-
 -- 日常
 local weeks = {1017,1018,1019,1020,1021,1022,1023}
 local dailyPanel = nil
@@ -71,7 +65,6 @@ local currDailyIndexL1 = 0
 local currDailyIndexL2 = 0
 local currDailyIndexR = 0
 local isDailyNew = false
-
 --军演
 local eRectL = nil
 local eRectR = nil
@@ -85,7 +78,6 @@ local isPvpRet = false
 local cRefreshTime = 0
 local cTimer = 0
 local cTime = 0
-
 --活动
 local layout4 =nil
 local activityDatas = nil
@@ -95,10 +87,8 @@ local btnCanvasGroup = nil
 local hasSecond = false
 local items4 = nil
 local itemNums = nil
-
 --uisv
 local isDrop = false
-
 --动效
 local moveAction = nil
 local menuFade = nil
@@ -110,6 +100,10 @@ local exerciseFade = nil
 local exerciseMoveL = nil
 local exerciseMoveR = nil
 local activityFade = nil
+--特殊引导
+local lastGuideInfo = nil
+local openViewKey = nil --用于验证当前界面是否是顶层
+local guideTimer = 0--限制点击
 
 -- 章节界面
 function Awake()
@@ -119,6 +113,7 @@ function Awake()
     eventMgr:AddListener(EventType.Update_Everyday, RefreshActivityDatas) --每日到点更新
     eventMgr:AddListener(EventType.Tower_Update_Data, RefreshActivityDatas) --爬塔数据更新
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
+    eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
     eventMgr:AddListener(EventType.Dungeon_MainLine_Update, OnMainLineUpdate)
     eventMgr:AddListener(EventType.Player_Update, OnDailyPanelRefresh)
     eventMgr:AddListener(EventType.Exercise_Update, OnExerciseRefresh)
@@ -131,6 +126,7 @@ function Awake()
     eventMgr:AddListener(EventType.ExerciseL_New, ExerciseNewRefresh)
     eventMgr:AddListener(EventType.Loading_Complete, CheckModelOpen) --检测功能开启
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedRefresh)
+    eventMgr:AddListener(EventType.Guide_Complete,OnGuideComplete)
     UIMaskGo = CSAPI.GetGlobalGO("UIClickMask")
 
     layout1 = ComUtil.GetCom(sv1, "UIInfinite")
@@ -212,10 +208,18 @@ function OnEnterSound()
 end
 
 function OnViewClosed(viewKey)
-    if viewKey == "Dungeon" then --刷新需要解锁的章节
-        -- RefreshActivityDatas()
+    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" and openViewKey == viewKey then
+        SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
+        openViewKey = nil
     end
     isClickEnter = false
+end
+
+function OnViewOpened(viewKey)
+    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" and openViewKey == nil then
+        openViewKey = viewKey
+        SpecialGuideMgr:StopAll()
+    end
 end
 
 --index:指定章节
@@ -239,6 +243,9 @@ function OnDailyPanelRefresh()
             curDailyItemR = dailyPanel.GetItem(currDailyIndexR)
         end
     end
+end
+function OnGuideComplete()
+    ContinueSpecGuide()
 end
 
 function OnInit()
@@ -295,6 +302,8 @@ function Update()
         end
     end
 
+    UpdateCheckSpecGuide()
+    
     if isAnim then
         return
     end
@@ -387,7 +396,7 @@ function RefreshMainLineView()
     table.insert(mainLineDatas,1,lastData)
     table.insert(mainLineDatas,firstData)
     
-    if node1.gameObject.activeSelf then
+    if not IsNil(node1) and node1.gameObject.activeSelf then
         if currSectionIndex > 0 then
             layout1:IEShowList(#mainLineDatas, nil, currSectionIndex + 1)
             currSectionIndex = 0
@@ -657,6 +666,9 @@ function ShowPanel(type)
     isViewDrop = false
 
     DailyNewRefresh()
+
+    --特殊引导
+    CheckSpecGuide()
 end
 
 function ShowMenuPanel()
@@ -2123,15 +2135,15 @@ function SetRed()
 
     local redData3= DungeonMgr:IsExerciseRed() and 1 or nil
     if isExerciseLOpen and isExerciseROpen then
-    UIUtil:SetRedPoint(SectionTypeItem3,redData3 ~= nil,146,26)
+        UIUtil:SetRedPoint(SectionTypeItem3,redData3 ~= nil,146,26)
     end
 
     local redData4= RedPointMgr:GetData(RedPointType.SectionActivity)
     UIUtil:SetRedPoint(SectionTypeItem4,redData4 ~= nil,146,26)
 
     if isExerciseROpen then
-    UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
-end
+        UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
+    end
 end
 ---------------------------------------------new---------------------------------------------
 function DailyNewRefresh()
@@ -2207,8 +2219,31 @@ function CheckModelOpen()
         CSAPI.OpenView("MenuOpen")
     end 
 end
+---------------------------------------------SpecialGuide------------------------------------------
+function CheckSpecGuide()
+    if currType and currType == 1 then
+        SpecialGuideMgr:TryCallFunc("Section","Finish",lastGuideInfo)
+    else
+        SpecialGuideMgr:TryCallFunc("Section","Stop",lastGuideInfo)
+    end
+    lastGuideInfo = {index = currIndex,type = currType}
+    SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
+end
 
+function ContinueSpecGuide()
+    lastGuideInfo = {index = currIndex,type = currType}
+    SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
+end
 
+function UpdateCheckSpecGuide()
+    SpecialGuideMgr:Update()
+    
+    if currType and currType == 1 and currIndex == 2 then
+        if(CS.UnityEngine.Input.GetMouseButtonDown(0)) and openViewKey == nil then
+            SpecialGuideMgr:TryCallFunc("Section","TryFinish",{index = 2,type = 1})
+        end
+    end
+end
 
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
 function OnClickVirtualkeysClose()
@@ -2225,9 +2260,8 @@ function OnClickVirtualkeysClose()
     end
 end
 
-
-
 function OnDestroy()
+    SpecialGuideMgr:CloseView()
     eventMgr:ClearListener();
     ReleaseCSComRefs()
     if not UIMask then

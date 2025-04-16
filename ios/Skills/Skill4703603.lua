@@ -19,7 +19,7 @@ function Skill4703603:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 4703603
-	if self:Rand(4000) then
+	if self:Rand(6000) then
 		self:AddNp(SkillEffect[4703603], caster, self.card, data, 20)
 		-- 4703607
 		self:CallSkill(SkillEffect[4703607], caster, self.card, data, 703600402)

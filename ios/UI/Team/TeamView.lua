@@ -236,6 +236,7 @@ function OnDisable()
 end
 
 function OnDestroy()
+	TeamMgr:SetDragFingerID();
 	if CSAPI.IsADV() or CSAPI.IsDomestic() then
 		if battleStrength~=ShiryuSDK.GetbattleStrength() then
 			ShiryuSDK.OnRoleInfoUpdate();
@@ -1550,6 +1551,7 @@ function OnClickViewType()
 	if IsDisClick() then
 		return;
 	end
+	TeamMgr:SetDragFingerID();
     is3D=not is3D;
 	CSAPI.PlayUISound("ui_generic_tab_2")
 	SetViewBtnState(is3D)

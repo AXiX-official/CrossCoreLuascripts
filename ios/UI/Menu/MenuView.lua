@@ -283,7 +283,7 @@ function Update()
 
     -- 到点活动更新
     if (activityRefreshTime and curTime > activityRefreshTime) then
-        activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
+        activityRefreshTime = ActivityMgr:GetRefreshTime()
         ActivityMgr:RefreshOpenState()
         EventMgr.Dispatch(EventType.Update_Everyday) -- 到点刷新活动
     end
@@ -333,7 +333,7 @@ function Update()
         end
     end
     -- 限时皮肤
-    if (skinLimitTime and curTime > skinLimitTime and not skinLimitTime and CheckIsTop()) then
+    if (skinLimitTime and curTime > skinLimitTime and CheckIsTop()) then
         skinLimitTime = nil
         RoleSkinMgr:CheckLimitSkin()
     end
@@ -348,7 +348,6 @@ function OnOpen()
     CSAPI.SetGOActive(uis, false)
     CSAPI.SetGOActive(mask, false)
     CSAPI.SetGOActive(btnBack, false)
-
 end
 
 function LoadingComplete()
@@ -376,7 +375,7 @@ end
 function InitTimers()
     colosseumRTime = ColosseumMgr:GetRefreshTimes()
     -- petStateTime = PetActivityMgr:GetEmotionChangeTimestamp()
-    activityRefreshTime = TimeUtil:GetRefreshTime("CfgActiveList", "sTime", "eTime")
+    activityRefreshTime = ActivityMgr:GetRefreshTime()
     menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
     exerciseLTime = ExerciseMgr:GetRefreshTime()
     globalBossTime = GlobalBossMgr:GetCloseTime()
@@ -542,7 +541,7 @@ function CheckMoreRed()
         ["Achievement"] = RedPointType.Achievement,
         -- ["Dorm"] = ,
         ["FriendView"] = RedPointType.Friend,
-        ["CourseView"] = RedPointType.Achievement,
+        ["CourseView"] = RedPointType.CourseView,
         ["PlayerAbility"] = RedPointType.PlayerAbility,
         ["ArchiveView"] = RedPointType.Archive
         -- ["ActivityView"] = RedPointType.,

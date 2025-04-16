@@ -79,16 +79,21 @@ function Refresh()
             if cards then
                 card=cards[1]
             end
-            local useL2d=l2dOn;
+            -- local useL2d=l2dOn;
             comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
+            -- isShowImg=false;
+            --屏蔽
+            local useL2d=false;
             isShowImg=false;
-            if comm and comm:IsShowImg() and rSkinInfo and rSkinInfo:CheckCanUse()~=true then
-                useL2d=false; 
-                isShowImg=true;
-                CSAPI.SetGOActive(btnL2D, false);
-            else
-                CSAPI.SetGOActive(btnL2D, hasL2d);
-            end
+            l2dOn=false;
+            CSAPI.SetGOActive(btnL2D, false);
+            -- if comm and comm:IsShowImg() and rSkinInfo and rSkinInfo:CheckCanUse()~=true then
+            --     useL2d=false; 
+            --     isShowImg=true;
+            --     CSAPI.SetGOActive(btnL2D, false);
+            -- else
+            --     CSAPI.SetGOActive(btnL2D, hasL2d);
+            -- end
             -- 初始化立绘
             roleItem.Refresh(currSkinInfo:GetModelID(), LoadImgType.SkinFull,nil,useL2d,isShowImg)
             -- 初始化L2D按钮状态
@@ -185,6 +190,14 @@ function SetPriceNode(isShow)
         end
         CSAPI.SetText(txt_dPrice1,tostring(cost.num));
         CSAPI.SetText(txt_dPrice2,tostring(cost2.num));
+        if CSAPI.IsADV() then
+            --- 显示符号
+            local StrText=comm["cfg"]["displayCurrency"];
+            if StrText~=nil then CSAPI.SetText(pnIcon1,StrText); end
+            ---显示动态价格
+            local  displayPrice=comm["cfg"]["displayPrice"];
+            if displayPrice~=nil then CSAPI.SetText(txt_dPrice1,displayPrice); end
+        end
     end
     if isShow then
         SetPriceNodeStyle();
@@ -394,7 +407,9 @@ function OnClickOther()
             isShowImg2=false;
         end
         desc=LanguageMgr:GetByID(18102,currSkinInfo:GetRoleName(),cfg.desc);
-        OpenSearchView({cfg.id, type==SkinChangeResourceType.Spine,isShowImg2,desc}, LoadImgType.Main)
+        --和谐更改
+        OpenSearchView({cfg.id, type==SkinChangeResourceType.Image,isShowImg2,desc}, LoadImgType.Main)
+       -- OpenSearchView({cfg.id, type==SkinChangeResourceType.Spine,isShowImg2,desc}, LoadImgType.Main)
     end
 end
 

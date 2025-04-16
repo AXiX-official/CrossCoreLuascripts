@@ -1239,6 +1239,8 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
             -- self.nTotalDamage = self.nTotalDamage - num
             -- self.nStateDamage = self.nStateDamage - num
             if self.isInvincible == 2 then 
+                -- self.hp = self.hp + num
+                self.team:ShareHp(mgr.nInvStateDamage, mgr.nInvStatehp)
             else
                 self.hp = self:Get("maxhp") -- 恢复血量
             end
@@ -1255,6 +1257,8 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
         self.hp = 1
         return false, shield, num, "ImmuneDeath"
     end
+
+  
 
     LogDebugEx("FightCardBase:AddHp2", self.name, self.hp, onum, num)
     self.hp = self.hp + num

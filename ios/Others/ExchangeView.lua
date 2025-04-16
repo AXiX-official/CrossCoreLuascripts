@@ -2,6 +2,10 @@ local cfg = nil
 local info = nil
 local curDatas = {}
 local page = nil
+
+local time =0
+local timer = 0
+
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/Activity6/EXchangeItem", LayoutCallBack, true)
@@ -57,6 +61,14 @@ function OnDestroy()
     eventMgr:ClearListener()
 end
 
+function Update()
+    if time > 0 and Time.time > timer then
+        timer = Time.time + 1
+        time = GetTime()
+        CSAPI.SetText(txtTime1,LanguageMgr:GetByID(22046) .. TimeUtil:GetTimeStr3(time))
+    end
+end
+
 function Refresh(_data,_elseData)
     cfg = _elseData and _elseData.cfg or nil
     if cfg then
@@ -70,22 +82,30 @@ function Refresh(_data,_elseData)
 end
 
 function SetTime()
-    if cfg.sTime then
-       local tab =  TimeUtil:SplitTime(cfg.sTime)
-       CSAPI.SetText(txtTime1,LanguageMgr:GetByID(22046) .. tab[1].."/"..tab[2].."/"..tab[3])
-       CSAPI.SetText(txtTime2,tab[4]..":"..tab[5]..":"..tab[6])
-    end
+    time = GetTime()
+    timer = 0
+    CSAPI.SetText(txtTime2,"")
+    CSAPI.SetText(txtTime3,"")
+    CSAPI.SetText(txtTime4,"")
+end
+
+function GetTime()
     if cfg.eTime then
-        local tab =  TimeUtil:SplitTime(cfg.eTime)
-        CSAPI.SetText(txtTime3,tab[1].."/"..tab[2].."/"..tab[3])
-        CSAPI.SetText(txtTime4,tab[4]..":"..tab[5]..":"..tab[6])
+        local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
+        if eTime > TimeUtil:GetTime() then
+            return eTime - TimeUtil:GetTime()
+        end
     end
+    return 0
 end
 
 function SetNum()
     local str= "："
     if info and info.goodId then
-        ResUtil.IconGoods:Load(icon,info.goodId)
+        local cfg = Cfgs.ItemInfo:GetByID(info.goodId)
+        if cfg and cfg.icon then
+            ResUtil.IconGoods:Load(icon,cfg.icon)
+        end
         local cur =PlayerMgr:GetSpecialDrop(info.goodId)
         local max = 0
         local cfgs = Cfgs.CfgDropItem:GetAll()

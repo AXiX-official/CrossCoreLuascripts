@@ -106,26 +106,29 @@ function SetRight()
     if leftInfos[curIndex1] then
         local ids = leftInfos[curIndex1].moneyId or {}
         top.SetMoney(ids)
-        
-        local info, elseInfo = GetInfo(leftInfos[curIndex1].type)
-        if panels[leftInfos[curIndex1].type] then
-            currPanel = panels[leftInfos[curIndex1].type]
+        local type = leftInfos[curIndex1].type
+        if not type then
+            return 
+         end
+        local info, elseInfo = GetInfo(type)
+        if panels[tostring(type)] then
+            currPanel = panels[tostring(type)]
             CSAPI.SetGOActive(currPanel.gameObject,true)
-            panels[leftInfos[curIndex1].type].Refresh(info, elseInfo)
+            panels[tostring(type)].Refresh(info, elseInfo)
             UIUtil:SetObjFade(currPanel.gameObject,0,1,nil,200)
         else
-            local viewPath = GetPathName(leftInfos[curIndex1].type)
+            local viewPath = GetPathName(type)
             if viewPath ~= "" then
                 ResUtil:CreateUIGOAsync(viewPath, rightParent, function(go)
                     local lua = ComUtil.GetLuaTable(go)
                     lua.Refresh(info, elseInfo)
                     currPanel = lua
                     UIUtil:SetObjFade(currPanel.gameObject,0,1,nil,200)
-                    panels[leftInfos[curIndex1].type] = lua
+                    panels[tostring(type)] = lua
                 end)
             end
         end
-        redInfos[leftInfos[curIndex1].type] = 1
+        redInfos[tostring(type)] = 1
     end
     FileUtil.SaveToFile("Regression_RedInfo.txt",redInfos)
 end

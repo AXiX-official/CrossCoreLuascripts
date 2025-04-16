@@ -4,6 +4,7 @@ local isActive = true
 local imgScale = 1
 local oldModelId = nil
 local clickRecords = {}
+local isDelayBlack=false;
 
 function Awake()
     img_imgObj = ComUtil.GetCom(imgObj, "Image")
@@ -75,11 +76,13 @@ function SetFaceItem()
         ResUtil:CreateUIGOAsync("Common/CharacterImgItem", faceNode, function(go)
             faceLua = ComUtil.GetLuaTable(go)
             faceLua.Init(modelId, CreateFaceCB, isUseShopImg)
-            SetBlack()
+            SetBlack(isDelayBlack)
+            isDelayBlack=false;
         end)
     else
         faceLua.Init(modelId, CreateFaceCB, isUseShopImg)
-        SetBlack()
+        SetBlack(isDelayBlack)
+        isDelayBlack=false;
     end
 end
 
@@ -220,5 +223,8 @@ function PlayLC()
 end
 
 function SetBlack(isBlack)
-    faceLua.SetBlack(isBlack)
+    isDelayBlack=isBlack;
+    if faceLua then
+        faceLua.SetBlack(isBlack)
+    end
 end

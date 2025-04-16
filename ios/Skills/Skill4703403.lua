@@ -49,6 +49,23 @@ function Skill4703403:OnDeath(caster, target, data)
 end
 -- 特殊入场时(复活，召唤，合体)
 function Skill4703403:OnBornSpecial(caster, target, data)
+	-- 4703442
+	self:tFunc_4703442_4703422(caster, target, data)
+	self:tFunc_4703442_4703432(caster, target, data)
+end
+function Skill4703403:tFunc_4703442_4703432(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4703432
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[4703432], caster, target, data, 4703402)
+	end
+end
+function Skill4703403:tFunc_4703442_4703422(caster, target, data)
 	-- 8062
 	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else

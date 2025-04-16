@@ -199,13 +199,26 @@ function Play()
     end
     timer = nil
     ASMRMgr:StopBGM()
-    source = ASMRMgr:PlayBGM(curData:GetCfg().id, 1)
-    if (source:GetMaxTime() > 0) then
-        cur = 0
-        timer = Time.time
-        CSAPI.SetGOActive(effect_sound, true)
-        anim_sound:Play("Sound_entry")
+    ------------------------------
+    if tonumber(CS.CSAPI.APKVersion()) > 6 then
+        source = ASMRMgr:PlayBGM_CB(curData:GetCfg().id, 1, 0,function ()
+            if (source:GetMaxTime() > 0) then
+                cur = 0
+                timer = Time.time
+                CSAPI.SetGOActive(effect_sound, true)
+                anim_sound:Play("Sound_entry")
+            end
+        end)
+    else
+        source = ASMRMgr:PlayBGM(curData:GetCfg().id, 1)
+        if (source:GetMaxTime() > 0) then
+            cur = 0
+            timer = Time.time
+            CSAPI.SetGOActive(effect_sound, true)
+            anim_sound:Play("Sound_entry")
+        end   
     end
+    ----------------------------
     if (oldCurMusicID) then
         ASMRMgr:RemoveCueSheet(oldCurMusicID, 1)
     end

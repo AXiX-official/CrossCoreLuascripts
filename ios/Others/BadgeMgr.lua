@@ -65,11 +65,13 @@ function this:GetArr(group)
     local typeInfos = FileUtil.LoadByPath("Badge_type_info.txt") or {}
     for _, v in pairs(self.datas) do
         if not group or v:GetGroup() == group then
-            if v:GetType() then
-                typeDatas[v:GetType()] = typeDatas[v:GetType()] or {}
-                table.insert(typeDatas[v:GetType()], v)
-            else
-                table.insert(datas, v)
+            if TimeUtil:GetTime() >= v:GetStartTime() then
+                if v:GetType() then
+                    typeDatas[v:GetType()] = typeDatas[v:GetType()] or {}
+                    table.insert(typeDatas[v:GetType()], v)
+                else
+                    table.insert(datas, v)
+                end
             end
         end
     end
@@ -277,6 +279,9 @@ end
 
 -- 弹提示数据
 function this:GetChangeDatas()
+    if not MenuMgr:CheckModelOpen(OpenViewType.main,"BadgeView") then
+        return {}
+    end
     local arr = {}
     for i, v in pairs(self.changeDatas) do
         table.insert(arr, v)

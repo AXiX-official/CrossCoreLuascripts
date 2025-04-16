@@ -15,3 +15,16 @@ function Skill704000302:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:Cure(SkillEffect[704000311], caster, target, data, 1,0.1)
 end
+-- 死亡时
+function Skill704000302:OnDeath(caster, target, data)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4704006
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:SetShareDamage(SkillEffect[4704006], caster, target, data, 0)
+	end
+end

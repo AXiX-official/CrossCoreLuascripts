@@ -11,6 +11,7 @@ function Awake()
     layout:Init("UIs/Course/CourseItem", LayoutCallBack, true)
 
     numSlider = ComUtil.GetCom(slider, "Slider")
+    SetOutRed()
 end
 
 function OnInit()
@@ -214,5 +215,12 @@ function OnClickVirtualkeysClose()
     ---填写退出代码逻辑/接口
     if  top.OnClickBack then
         top.OnClickBack();
+    end
+end
+
+function SetOutRed()
+    local _data = RedPointMgr:GetData(RedPointType.CourseView)
+    if(_data)then 
+       RedPointMgr:UpdateData(RedPointType.CourseView, nil)
     end
 end

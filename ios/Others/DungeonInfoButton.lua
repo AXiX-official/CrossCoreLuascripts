@@ -8,6 +8,10 @@ local time = 0
 local timer = 0
 local hotTime = 0
 
+local openViewKey = nil
+local isHide = false
+
+
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Sweep_Show_Panel, ShowSweep)
@@ -16,13 +20,32 @@ function Awake()
         ShowCost()
         ShowTicket()
     end)
+    eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
+    eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
+end
+
+function OnViewClosed(viewKey)
+    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == viewKey  then
+        ShowSpecialGuide()
+        openViewKey = nil
+    end
+end
+
+function OnViewOpened(viewKey)
+    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == nil  then
+        SpecialGuideMgr:StopAll()
+        openViewKey = viewKey
+    end
 end
 
 function OnDestroy()
+    SpecialGuideMgr:CloseView()
     eventMgr:ClearListener()
 end
 
 function Update()
+    UpdateSpecialGuide()
+
     if time > 0 and timer < Time.time then
         timer = Time.time + 1
         time = hotTime - TimeUtil:GetTime()
@@ -40,6 +63,7 @@ function Refresh(tab)
         ShowCost()
         ShowSweep()
         ShowTicket()
+        ShowSpecialGuide()
     end
 end
 
@@ -107,7 +131,7 @@ end
 function ShowTicket()
     local _cost = DungeonUtil.GetCost(cfg)
     CSAPI.SetGOActive(ticketObj, _cost~=nil)
-    if gameObject.activeSelf then
+    if not IsNil(gameObject) and gameObject.activeSelf then
         CSAPI.SetRTSize(gameObject,589, _cost~=nil and 149 or 116)
     end
     if _cost~=nil then
@@ -163,4 +187,34 @@ end
 
 function IsSweepOpen()
     return isSweepOpen
+end
+
+-------------------------------------特殊引导-------------------------------------
+function ShowSpecialGuide()
+    if not IsMainLine() then return end
+    SpecialGuideMgr:TryCallFunc("Dungeon","Start")
+end
+
+function StopSpecialGuide()
+    if not IsMainLine() then return end
+    SpecialGuideMgr:TryCallFunc("Dungeon","Stop")
+end
+
+function FinishSpecialGuide()
+    if not IsMainLine() then return end
+    SpecialGuideMgr:TryCallFunc("Dungeon","Finish")
+end
+
+function UpdateSpecialGuide()
+    if not IsMainLine() then return end
+
+    if (CS.UnityEngine.Input.GetMouseButton(0)) then
+        SpecialGuideMgr:TryCallFunc("Dungeon","Start")
+    end
+
+    SpecialGuideMgr:Update()
+end
+
+function IsMainLine()
+   return sectionData:GetSectionType() == SectionType.MainLine
 end

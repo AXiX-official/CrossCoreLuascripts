@@ -352,6 +352,7 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     mgr.cbOver = function(self, winer, isForceOver)
         -- LogTrace('FightHelp:StartPvpMirrorFight() cbOver')
         LogDebug('StartPvpMirrorFight cbOver winer:%s, isForceOver:%s', winer, isForceOver)
+        -- LogTable(self, "mgr.cbOver self:")
 
         if isForceOver then
 
@@ -368,7 +369,8 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
             isWiner = isWiner,
             defenderId = defenderId,
             isRobot = tMirror.is_robot,
-            isForceOver = isForceOver
+            isForceOver = isForceOver,
+            turnNum = self.turnNum
         }
 
         if tMirror.robotId then
@@ -383,6 +385,7 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
         for _, obj in ipairs(armyObjs or {}) do
             if obj.uid == toCenterFinishMsg.defenderId then
                 dfInfo = obj
+                player:SetTmp('armyObj', dfInfo)
                 break
             end
         end
@@ -391,6 +394,8 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
             GCTipTool:SendOnlyParms(player, 'StartPvpMirrorFight(Game)', 'notFindOpObj')
             return
         end
+
+        armyInfo.can_join_cnt = armyInfo.can_join_cnt - 1
 
         GLogicCheck:CalArmyFinish(armyInfo, dfInfo, isWiner, toCenterFinishMsg)
 

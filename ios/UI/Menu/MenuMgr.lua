@@ -246,6 +246,10 @@ function this:UpdateDatas()
                 type = data:GetOpenViewType(),
                 id = data:GetID()
             })
+            --教程开启有红点
+            if(data:GetOpenViewType() == OpenViewType.main)then 
+                RedPointMgr:UpdateData(RedPointType.CourseView, 1)
+            end
         end
     end
     if (#deleteData > 0) then

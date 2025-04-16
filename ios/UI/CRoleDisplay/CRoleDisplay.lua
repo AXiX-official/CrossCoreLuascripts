@@ -91,6 +91,7 @@ function OnOpen()
             RefreshPanel0()
         end
         -- 打开选人
+        CSAPI.SetAnchor(AdaptiveScreen, 0, 10000, 0)
         OpenSelectRole()
     else
         -- 直接展示
@@ -130,6 +131,10 @@ function SetLeft()
         -- lDatas
         lDatas = {}
         local info = CRoleMgr:GetCRoleByModelID(selectModelID)
+        if(not info)then 
+            LogError("找不到模型："..selectModelID.."的角色数据(不是旧数据与表不匹配就是表没配或配错了)")
+            return
+        end 
         lDatas = info:GetAllSkinsArr(true)
         for k, v in ipairs(lDatas) do
             if (v:GetSkinID() == selectModelID) then
@@ -280,7 +285,8 @@ end
 -- 选人
 function OpenSelectRole(_slot)
     _slot = _slot or slot
-    CSAPI.SetAnchor(AdaptiveScreen, 0, 10000, 0)
+    --CSAPI.SetAnchor(AdaptiveScreen, 0, 10000, 0)
+    ShowRight(false)
     if (not _CRoleSelectView) then
         ResUtil:CreateUIGOAsync("CRoleDisplay/CRoleSelectView", gameObject, function(go)
             _CRoleSelectView = ComUtil.GetLuaTable(go)
@@ -295,6 +301,7 @@ end
 
 -- 1，2，3:取消，设置，点选
 function OnClickCRoleDisplayCB(type, isSame)
+    CSAPI.SetAnchor(AdaptiveScreen, 0, 0, 0)
     if (type == 1) then
         -- 取消
         if (c_data:CheckIsEntity()) then
@@ -315,7 +322,8 @@ function OnClickCRoleDisplayCB(type, isSame)
         end
     end
     if (type ~= 3) then
-        CSAPI.SetAnchor(AdaptiveScreen, 0, 0, 0)
+        -- CSAPI.SetAnchor(AdaptiveScreen, 0, 0, 0)
+        ShowRight(true)
     end
     if (not isSame) then
         RefreshPanel0()
@@ -324,7 +332,8 @@ end
 
 -- 更换背景
 function OnClickChangeBG()
-    CSAPI.SetAnchor(AdaptiveScreen, 0, 10000, 0)
+    -- CSAPI.SetAnchor(AdaptiveScreen, 0, 10000, 0)
+    ShowRight(false)
     if (not _BGSelectView) then
         ResUtil:CreateUIGOAsync("CRoleDisplay/BGSelectView", gameObject, function(go)
             _BGSelectView = ComUtil.GetLuaTable(go)
@@ -346,11 +355,17 @@ end
 -- 1，2，3:取消，设置，点选
 function OnClickBGSelectViewCB(type, isSame)
     if (type ~= 3) then
-        CSAPI.SetAnchor(AdaptiveScreen, 0, 0, 0)
+        -- CSAPI.SetAnchor(AdaptiveScreen, 0, 0, 0)
+        ShowRight(true)
     end
     if (not isSame) then
         SetBG()
     end
+end
+
+function ShowRight(b)
+    CSAPI.SetGOActive(roleMask, not b)
+    CSAPI.SetGOActive(right, b)
 end
 
 -----------------------------------------------------------------------------------------------

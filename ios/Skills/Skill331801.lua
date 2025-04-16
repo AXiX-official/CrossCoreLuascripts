@@ -6,8 +6,8 @@ Skill331801 = oo.class(SkillBase)
 function Skill331801:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束
-function Skill331801:OnActionOver(caster, target, data)
+-- 攻击结束2
+function Skill331801:OnAttackOver2(caster, target, data)
 	-- 8074
 	if SkillJudger:TargetIsSummon(self, caster, target, true) then
 	else

@@ -104,6 +104,8 @@ ShiryuEventName = {
     Unity_SDK_LuaLoginData="Unity_SDK_LuaLoginData";
     ---Unity 客户端Lua  LoginProto_SendLoginGame 发送给服务端数据打点
     Unity_LoginProto_SendLoginGame="Unity_LoginProto_SendLoginGame";
+    ---中台UID验证
+    Unity_center_web_uid_GotoVerify="Unity_center_web_uid_GotoVerify";
 
 }
 local this = ShiryuEventName

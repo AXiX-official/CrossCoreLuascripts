@@ -907,6 +907,12 @@ function BuffBase:AddMaxHpPercent(effect, caster, target, data, val, limit)
 		if target.hp > target:Get("maxhp") then
 			target.hp = math.floor(target:Get("maxhp"))
 		end
+
+		local log = {api="AddAttrPercent", bufferID = self.id, targetID = target.oid, uuid = self.uuid, 
+		attr = "maxhp", add = -add}
+		log.maxhp = target:Get("maxhp")
+		log.hp = target:Get("hp")
+		self.log:Add(log)
 	end
 	
 	self:AddTodoOnDelete(todo, target)

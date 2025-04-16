@@ -168,6 +168,10 @@ function this:ShowBtnL2D(slot)
         return true
     end
     if (self:HadL2D(slot) and self:GetRet()["detail" .. slot].top and not self:CheckIsHX(slot)) then
+        local id = self:GetIDs()[slot]
+        if (id ~= 0 and id < 10000 and g_FHXOpenPicture) then
+            return false -- 多人插图， g_FHXOpenPicture不为空并且未获得皮肤则不展示按钮
+        end
         return true
     end
     return false
@@ -194,6 +198,28 @@ function this:CanShowL2d(slot)
             end
         end
         return true
+    end
+    return false
+end
+
+-- 是否展示l2d
+function this:ToShowL2d(slot)
+    if (self:ShowBtnL2D(slot)) then
+        -- 突破皮肤未突破不能展示
+        local id = self:GetIDs()[slot]
+        if (id ~= 0) then
+            if (id > 10000) then
+                local _data = RoleSkinMgr:GetSkinInfoByModelID(id)
+                if (_data and _data:ToShowL2d()) then
+                    return false
+                end
+            else
+                local _data = MulPicMgr:GetData(id)
+                if (_data and _data:IsHad()) then
+                    return true
+                end
+            end
+        end
     end
     return false
 end
@@ -382,13 +408,13 @@ end
 
 function this:CheckLimitSkin(index)
     index = index or 1
-    if(index==1 or (index==2 and self:IsTwoRole()))then 
+    if (index == 1 or (index == 2 and self:IsTwoRole())) then
         local id = self:GetIDs()[index]
-        if(id>10000)then 
+        if (id > 10000) then
             local skin = RoleSkinMgr:GetSkinInfoByModelID(id)
             return skin:IsLimitSkin()
-        end 
-    end 
+        end
+    end
     return false
 end
 

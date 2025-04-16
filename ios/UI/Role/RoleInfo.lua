@@ -369,12 +369,12 @@ function SetSpecialSkill()
         CSAPI.SetText(txtTT2, str2[1])
     end
     -- red
-    local isRed = false
-    local twoCardID = GCalHelp:GetElseCfgID(cardData:GetCfgID())
-    if (twoCardID and _data and not isFighting and RoleSkinMgr:CheckIsNewAdd(twoCardID)) then
-        isRed = true
-    end
-    UIUtil:SetRedPoint(btnSpecialSkill, isRed, 119.4, 22.5, 0)
+    -- local isRed = false
+    -- local twoCardID = GCalHelp:GetElseCfgID(cardData:GetCfgID())
+    -- if (twoCardID and _data and not isFighting and RoleSkinMgr:CheckIsNewAdd(twoCardID)) then
+    --     isRed = true
+    -- end
+    -- UIUtil:SetRedPoint(btnSpecialSkill, isRed, 119.4, 22.5, 0)
 end
 
 -- 角色定位

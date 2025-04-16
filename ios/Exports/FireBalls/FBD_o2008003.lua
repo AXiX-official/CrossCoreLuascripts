@@ -3,9 +3,10 @@ local this =
 {
 [1310282141]={
 {time=10000,type=0,cue_sheet="fight/effect/twelfth.acb",cue_name="Melody_attack_skill_02"},
+{delay=733,time=10000,type=0,cue_sheet="cv/melody.acb",cue_name="melody_11",cue_feature=1},
 {delay=9800,time=10000,type=2,hits={0}},
 {effect="cast2_eff",effect_pack="o20080",delay=9800,time=10000,type=0,pos_ref={ref_type=13}},
-{effect="o20080_cast2a",effect_pack="videos",time=10000,type=0,pos_ref={ref_type=6},cue_sheet="cv/melody.acb",cue_name="melody_11",cue_feature=1},
+{effect="o20080_cast2a",effect_pack="videos",time=10000,type=0,pos_ref={ref_type=6}},
 {delay=9800,time=10000,type=3,hits={0}}
 },
 [-686817241]={
