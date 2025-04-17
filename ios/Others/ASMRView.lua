@@ -15,7 +15,7 @@ local isClick = false
 local Input = CS.UnityEngine.Input
 local GetMouseButton = CS.UnityEngine.Input.GetMouseButton
 local deviceType = CSAPI.GetDeviceType()
-
+local isDestory = false
 function Awake()
     UIUtil:AddTop2("ASMRView", gameObject, function()
         view:Close()
@@ -44,6 +44,7 @@ function Awake()
 end
 
 function OnDestroy()
+    isDestory = true
     eventMgr:ClearListener()
     if (oldCurMusicID) then
         ASMRMgr:RemoveCueSheet(oldCurMusicID, 1)
@@ -202,6 +203,9 @@ function Play()
     ------------------------------
     if tonumber(CS.CSAPI.APKVersion()) > 6 then
         source = ASMRMgr:PlayBGM_CB(curData:GetCfg().id, 1, 0,function ()
+            if(isDestory)then 
+                return
+            end
             if (source:GetMaxTime() > 0) then
                 cur = 0
                 timer = Time.time

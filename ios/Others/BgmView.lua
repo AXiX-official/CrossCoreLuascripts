@@ -7,7 +7,7 @@ local timer = nil
 local svUtil = nil
 local time = nil
 local isBeginDrag = false
-
+local isDestory = false
 function Awake()
     layout = ComUtil.GetCom(hsv, "UIInfinite")
     layout:Init("UIs/Bgm/BgmItem1", LayoutCallBack, true)
@@ -35,6 +35,7 @@ function Awake()
 end
 
 function OnDestroy()
+    isDestory = true
     timer = nil
     eventMgr:ClearListener()
     if (oldCurMusicID) then
@@ -215,6 +216,9 @@ function SetPlay(startTime)
     BGMMgr:StopBGM2()
     if tonumber(CS.CSAPI.APKVersion()) > 6 then
         source = BGMMgr:PlayBGM2_CB(curMusicID, startTime * 1000, function()
+            if(isDestory or source == nil)then 
+                return
+            end
             local max = source:GetMaxTime()
             slider_sd.minValue = 0
             slider_sd.maxValue = max

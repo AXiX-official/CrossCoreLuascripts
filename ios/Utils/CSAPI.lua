@@ -1227,7 +1227,11 @@ end
 ---是否提审模式
 function this.IsAppReview()
 	if tonumber(CS.CSAPI.APKVersion()) > 6 then
-		return this.IsAppReviewMode();
+		if this.IsAppReviewMode ~= nil then
+			return this.IsAppReviewMode();
+		else
+			return true
+		end
 	else
 		return false
 	end

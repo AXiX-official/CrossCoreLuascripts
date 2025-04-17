@@ -11,7 +11,7 @@ local timer = nil
 local time = nil
 local isPress = false
 local pType = 0
-
+local isDestory = false
 function Awake()
     topLua = UIUtil:AddTop2("ASMRShow", gameObject, function()
         voiceTimer = nil
@@ -31,6 +31,7 @@ function Awake()
 end
 
 function OnDestroy()
+    isDestory = true
     ASMRMgr:RemoveCueSheet(curData:GetCfg().id, 2)
     SetMusic(false)
 end
@@ -89,6 +90,9 @@ function Play()
     ASMRMgr:StopBGM()
     if tonumber(CS.CSAPI.APKVersion()) > 6 then
         source = ASMRMgr:PlayBGM_CB(curData:GetCfg().id, 2, 0, function()
+            if(isDestory)then 
+                return
+            end
             max = source:GetMaxTime()
             voiceTimer = Time.time
             CSAPI.SetGOActive(mask, false)
