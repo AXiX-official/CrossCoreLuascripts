@@ -1129,7 +1129,7 @@ function this:OnQuit(isExit, jumpType)
                 CSAPI.OpenView(path1, {id = cfg.group},{isDungeonOver = true})
                 CSAPI.OpenView(path2, {id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
             elseif cfg.type == eDuplicateType.TaoFa then --讨伐
-                CSAPI.OpenView(path1,{id = cfg.group, itemId = cfg.id})
+                CSAPI.OpenView(path1,{id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
                 if path2 and path2~="" then --试炼
                     CSAPI.OpenView(path2,{id = cfg.group, itemId = cfg.id},{isDungeonOver = true})
                 end
