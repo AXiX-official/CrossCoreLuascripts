@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        platform: ['android', 'ios']
+        platform: ['android']
         include:
           - platform: 'android'
             url: 'https://cdn.megagamelog.com/cross/release/android/curr/Custom/luascripts'
