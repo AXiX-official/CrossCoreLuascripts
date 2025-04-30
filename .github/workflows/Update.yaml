@@ -14,9 +14,6 @@ jobs:
           - platform: 'android'
             url: 'https://cdn.megagamelog.com/cross/release/android/curr/Custom/luascripts'
             filename: 'lua_android'
-          - platform: 'ios'
-            url: 'https://cdn.megagamelog.com/cross/release/ios/curr/Custom/luascripts'
-            filename: 'lua_ios'
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
