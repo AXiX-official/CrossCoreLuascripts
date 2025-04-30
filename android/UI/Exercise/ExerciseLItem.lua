@@ -12,15 +12,15 @@ function Refresh(_data, _isHistory)
     data = _data
     isHistory = _isHistory
     if (data) then
-        -- role
-        local icon_id = data:GetIconID()
-        if (data:GetRolePanelID() ~= nil and data:GetRolePanelID() ~= 0) then
-            icon_id = data:GetRolePanelID()
-        end
-        if (icon_id) then
-            local cfg = Cfgs.character:GetByID(icon_id)
-            SetIcon(cfg.Fight_head)
-        end
+        -- -- role
+        -- local icon_id = data:GetIconID()
+        -- if (data:GetRolePanelID() ~= nil and data:GetRolePanelID() ~= 0) then
+        --     icon_id = data:GetRolePanelID()
+        -- end
+        -- if (icon_id) then
+        --     local cfg = Cfgs.character:GetByID(icon_id)
+        --     SetIcon(cfg.Fight_head)
+        -- end
         -- attack
         CSAPI.SetText(txtFighting2, data:GetPerformance() .. "")
         -- rank
@@ -70,14 +70,14 @@ function Refresh(_data, _isHistory)
     end
 end
 
-function SetIcon(iconName)
-    if iconName then
-        CSAPI.SetGOActive(role, true);
-        ResUtil.FightCard:Load(role, iconName);
-    else
-        CSAPI.SetGOActive(role, false);
-    end
-end
+-- function SetIcon(iconName)
+--     if iconName then
+--         CSAPI.SetGOActive(role, true);
+--         ResUtil.FightCard:Load(role, iconName);
+--     else
+--         CSAPI.SetGOActive(role, false);
+--     end
+-- end
 
 -- 查看
 function OnClick()
