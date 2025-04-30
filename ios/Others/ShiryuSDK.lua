@@ -643,4 +643,15 @@ function this.GetDeviceID()
     --print("设备 ID："..deviceId)
     return deviceId;
 end
+
+--调查问卷
+function this.OpenWebView(url,action)
+    MJSdkManagerImpl:OpenWebView(url,action)
+end
+
+--sdk运行参数
+function this.SdkProperties()
+    return this.GetSdkProperties
+end
+
 this.Init();

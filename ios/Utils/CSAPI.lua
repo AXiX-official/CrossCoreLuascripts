@@ -736,7 +736,7 @@ function this.PlayBGM(bgm, fadeDelay, volumeCoeff, lockKey)
 		return;
 	end
 	
-	if(not bgm) then
+	if(StringUtil:IsEmpty(bgm)) then
 		return;
 	end
 	

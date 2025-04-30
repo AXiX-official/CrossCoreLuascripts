@@ -12,8 +12,8 @@ function Skill102200203:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:OwnerAddBuffCount(SkillEffect[102200201], caster, target, data, 102200201,3,3)
 end
--- 回合结束时
-function Skill102200203:OnRoundOver(caster, target, data)
+-- 回合开始时
+function Skill102200203:OnRoundBegin(caster, target, data)
 	-- 8062
 	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else

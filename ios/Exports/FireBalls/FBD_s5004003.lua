@@ -6,8 +6,8 @@ local this =
 },
 [1310282141]={
 {time=10600,type=0,cue_sheet="fight/effect/nineth.acb",cue_name="Silver_Feather_attack_skill_02"},
-{effect="cast2_eff",effect_pack="s50040",time=10600,type=0,pos_ref={ref_type=6}},
-{effect="cast2_hit",effect_pack="s50040",delay=4900,time=5000,type=0,pos_ref={ref_type=3}},
+{effect="cast2_eff",time=10600,type=0,pos_ref={ref_type=6}},
+{effect="cast2_hit",delay=4900,time=5000,type=0,pos_ref={ref_type=3}},
 {delay=5450,time=3000,type=1,hit_type=1,hits={0}},
 {delay=3400,time=10600,type=0,cue_sheet="cv/Silver_Feather.acb",cue_name="Silver_Feather_11",cue_feature=1},
 {delay=5150,time=3000,type=1,hit_type=1,hits={0}},

@@ -1,10 +1,19 @@
 --商品预制物
 -- local grid=nil;
 local eventMgr=nil;
+local needToCheckMove = false
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.RedPoint_Refresh,SetRedInfo)
     eventMgr:AddListener(EventType.Shop_NewInfo_Refresh,SetNewInfo)
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(text_name)
+end
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(text_name)
+        needToCheckMove = false
+    end
 end
 
 function OnDestroy()
@@ -150,7 +159,9 @@ end
 -- end
 
 function SetName(str)
+    needToCheckMove = false
     CSAPI.SetText(text_name,str);
+    needToCheckMove = true
 end
 
 function SetDiscount(discount)

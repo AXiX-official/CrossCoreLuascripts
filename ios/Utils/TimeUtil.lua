@@ -247,7 +247,7 @@ end
 -- 秒数转时间: 00：00：00
 function this:GetTimeStr8(_timer)
     if (_timer <= 0) then
-        return "00 : 00 : 00"
+        return "00:00:00"
     else
         local h = math.floor(_timer / 3600)
         local m = math.floor((_timer % 3600) / 60)
@@ -255,7 +255,7 @@ function this:GetTimeStr8(_timer)
         h = h < 10 and "0" .. h or h
         m = m < 10 and "0" .. m or m
         s = s < 10 and "0" .. s or s
-        return string.format("%s : %s : %s", h, m, s)
+        return string.format("%s:%s:%s", h, m, s)
     end
 end
 

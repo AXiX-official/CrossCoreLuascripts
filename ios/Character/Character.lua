@@ -667,6 +667,9 @@ function DeadEnd()
     isDeadEnd = true;
     ShowDeadEffect();
 end
+function IsDeadEnd()
+    return isDeadEnd;
+end
 function ShowDeadEffect()
     
     if(isDeadEffectShowed)then
@@ -684,7 +687,7 @@ function ShowDeadEffect()
             local x,y,z = GetPos();
             FuncUtil:Call(ResUtil.CreateEffect,ResUtil,0,"common/dead1",x,0.5,z);
             --ResUtil:CreateEffect("common/dead1",0,0,0,gameObject);
-            FuncUtil:Call(Remove,nil,300);
+            FuncUtil:Call(DeadRemove,nil,300);
 
             FuncUtil:Call(
                 function()
@@ -699,14 +702,14 @@ function ShowDeadEffect()
             local x,y,z = GetPos();
             ResUtil:CreateEffect("common/dead2",x,y,z);         
 
-            FuncUtil:Call(Remove,nil,700);
+            FuncUtil:Call(DeadRemove,nil,700);
             CSAPI.PlaySound("fight/effect/fourth.acb","Death_dissipates",false,false,nil,nil,nil,nil);
         elseif(deadType == 3)then
             CSAPI.ApplyAction(gameObject,"action_dead_shader");
             CSAPI.ApplyAction(gameObject,"action_dead3");
             ResUtil:CreateEffect("common/dead_suixing",0,0,0,gameObject);         
 
-            FuncUtil:Call(Remove,nil,2000);
+            FuncUtil:Call(DeadRemove,nil,2000);
         elseif(deadType == 100)then
             local deadTime = 1500;
             local deadData = GetCastStateData("dead");
@@ -715,7 +718,7 @@ function ShowDeadEffect()
             end
             deadTime = deadTime or 1500;
 
-            FuncUtil:Call(Remove,nil,deadTime);
+            FuncUtil:Call(DeadRemove,nil,deadTime);
         end
     else
         --默认死亡类型
@@ -723,7 +726,7 @@ function ShowDeadEffect()
         CSAPI.ApplyAction(gameObject,"action_dead");
         ResUtil:CreateEffect("common/dead_transfer",0,0,0,gameObject);         
 
-        FuncUtil:Call(Remove,nil,2000);
+        FuncUtil:Call(DeadRemove,nil,2000);
     end
 end
 
@@ -759,7 +762,7 @@ function ApplyHitData(hitData)
     if(damage > 0 or shieldDamage > 0)then
         local currHP = GetHpInfo();
         if(hitData.hp < currHP)then
-            UpdateHp(hitData.hp);  
+            UpdateHp(hitData.hp,hitData.maxhp);  
         end
     end
     
@@ -1163,8 +1166,29 @@ end
 
 --进入指定状态
 function EnterState(stateName,fadeTime)
+    local currTime = CSAPI.GetTime();
+    if(lastEnterStateTime and lastEnterStateTime == currTime)then
+        --LogError(GetModelName() .. "----------------------------" .. stateName);
+        return;
+    end
+    lastEnterStateTime = currTime;
+
+
+    PlayState(stateName,fadeTime);    
+    --LogError(GetModelName() .. "-------enter state----------" .. stateName);
+   
+    PlayPartState(stateName);
+end
+function PlayState(stateName,fadeTime)
     --fadeTime = 0.2;
     --LogError(GetModelName() .. "进入状态：" .. tostring(stateName));
+   
+    local currTime = CSAPI.GetTime();
+    if(lastPlayStateTime and lastPlayStateTime == currTime)then
+        return;
+    end
+    lastPlayStateTime = currTime;
+
     if(animator ~= nil)then
         if(fadeTime)then
             animator:CrossFade(stateName,fadeTime);            
@@ -1173,6 +1197,110 @@ function EnterState(stateName,fadeTime)
         end
     end
 end
+
+--获取部位标记
+function GetPartSign()    
+    return cfgModel and cfgModel.part_sign;
+end
+function PlayPartState(state)
+    local partSign = GetPartSign();
+    if(StringUtil:IsEmpty(partSign))then
+        return;
+    end
+    --LogError(GetModelName() .. ":" .. state);
+    --return;
+    --FuncUtil:Call(function()
+    --    CharacterMgr:SyncPartState(partSign,state);
+    --end,nil,100)
+    CharacterMgr:SyncPartState(partSign,state);
+    RefreshParts();
+end
+
+function SyncPartState(state)
+    --LogError("a:" .. state );
+    if(IsPartState(state))then
+        --LogError("b:" .. state );
+        PlayState(state);
+    end
+end
+function IsPartState(state)
+    local partStates = cfgModel and cfgModel.part_states;
+    --LogError(partStates);
+    if(partStates)then
+        for _,partState in ipairs(partStates)do
+            if(partState == state)then
+                return true;
+            end
+        end
+    end
+end
+
+function PlayPartHitState(hitType)
+    local partSign = GetPartSign();
+    if(StringUtil:IsEmpty(partSign))then
+        return;
+    end
+
+    local partCharacters = CharacterMgr:GetPartCharacters(partSign,this);
+    if(partCharacters)then
+        for _,character in ipairs(partCharacters)do
+            character.SyncPartHit(hitType);
+        end
+    end
+
+    RefreshParts();
+end
+function SyncPartHit(hitType)
+    if(stateMachine)then
+        stateMachine:Hit(hitType);
+    end
+end
+
+function RefreshParts()
+    local partSign = GetPartSign();
+    if(StringUtil:IsEmpty(partSign))then
+        return;
+    end
+    local partCharacters = CharacterMgr:GetPartCharacters(partSign,this);
+    if(partCharacters)then
+        for _,character in ipairs(partCharacters)do
+            myParts = myParts or {};
+            if(myParts[character] == nil)then
+                myParts[character] = character;
+            end
+        end
+    end
+end
+
+--是否分体角色
+function IsPart()
+    local partSign = GetPartSign();
+    return not StringUtil:IsEmpty(partSign);
+end
+--是否主体
+function IsMainPart()
+    if(IsPart())then
+        return cfgModel and not cfgModel.dead_retain;
+    end
+end
+
+--显示全部部位
+function ShowParts()
+    local partSign = GetPartSign();
+    if(StringUtil:IsEmpty(partSign))then
+        return;
+    end
+    RefreshParts();
+    if(myParts)then
+        for _,myPart in pairs(myParts)do
+            if(myPart)then
+                myPart.SetShowState(true,true);
+            end
+        end
+    end
+end
+
+
 
 --是否冰冻状态
 function IsIceState()
@@ -1206,6 +1334,8 @@ function ApplyHit(hitType)
     end
     
     stateMachine:Hit(hitType);
+    PlayPartHitState(hitType);
+
 
     if(infoView)then
         infoView.SetShowState(true,true,true);        
@@ -1255,6 +1385,8 @@ function PlayDead()
     if(deadType and (deadType == 2 or deadType >= 100))then
         ShowDeadEffect();
     end
+
+    PlayDeadParts();
 end
 
 function GetBodySize()
@@ -1833,6 +1965,14 @@ function RemoveAfterDeadAni()
     end
 end
 
+--死亡移除
+function DeadRemove()
+    if(cfgModel and cfgModel.dead_retain)then--保留部位的尸体，让主体移除
+        RemoveInfoView();
+        return;
+    end
+    Remove();
+end
 
 --移除
 function Remove()
@@ -1844,6 +1984,7 @@ function Remove()
         return;
     end
     isRemoved = 1;
+    isDeadEnd = true;
     SetFace("");
     SetShowState(true,true);
     Clean();
@@ -1852,6 +1993,44 @@ function Remove()
     CSAPI.RemoveGO(gameObject);
     RemoveInfoView();
     
+    RemoveParts();
+end
+function RemoveParts()
+    local partSign = GetPartSign();
+    if(StringUtil:IsEmpty(partSign))then
+        return;
+    end
+
+    if(cfgModel and cfgModel.dead_retain)then--移除部位的尸体
+        return;
+    end
+
+    if(myParts)then
+        for _,myPart in pairs(myParts)do
+            if(myPart and myPart.IsDead())then
+                myPart.Remove();
+            end
+        end
+    end
+end
+
+function PlayDeadParts()
+    local partSign = GetPartSign();
+    if(StringUtil:IsEmpty(partSign))then
+        return;
+    end
+
+    if(not IsMainPart())then--非主体
+        return;
+    end
+
+    if(myParts)then
+        for _,myPart in pairs(myParts)do
+            if(myPart)then
+                myPart.EnterState("dead_part");
+            end
+        end
+    end
 end
 
  --移除头顶信息框
@@ -1986,8 +2165,8 @@ function RemoveOverLoadEff()
     end
 end
 
---function Update()
---    if(CS.UnityEngine.Input.GetKeyDown(CS.UnityEngine.KeyCode.D))then
---        PlayDead()
---    end
---end
+--[[ function Update()
+     if(CS.UnityEngine.Input.GetKeyDown(CS.UnityEngine.KeyCode.D))then
+        LogError(GetModelName());
+     end
+ end  ]]

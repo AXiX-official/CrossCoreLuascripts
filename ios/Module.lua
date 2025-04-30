@@ -206,3 +206,13 @@ require "SpineTools"
 --版本检测
 require "VerChecker";
 
+
+--拼图奖池
+_G.PuzzleEnum=require "PuzzleEnum"
+_G.PuzzleFragment=require "PuzzleFragment"
+_G.PuzzleInfo=require "PuzzleInfo"
+_G.PuzzleRowRewardInfo=require "PuzzleRowRewardInfo"
+_G.PuzzleCommodity=require "PuzzleCommodity"
+
+--text滚动工具
+require "LuaTextMove"

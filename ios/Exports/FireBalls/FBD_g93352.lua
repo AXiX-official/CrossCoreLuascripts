@@ -11,6 +11,9 @@ local this =
 {effect="cast0_hit",time=5000,type=0,pos_ref={ref_type=3}},
 {effect="cast0_eff",time=5000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Razor_Stinger_attack_general"},
 {time=4000,type=1,hit_type=1,hits={1300,1600}}
+},
+[-316323548]={
+{effect="dead1",effect_pack="common",time=3000,type=0,pos_ref={ref_type=6,offset_row=-75,offset_height=230},cue_sheet="fight/effect/explosion_.acb",cue_name="grenade_exploImpac_1"}
 }
 };
 

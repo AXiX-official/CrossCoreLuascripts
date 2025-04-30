@@ -11,7 +11,7 @@ function Buffer336202:OnCreate(caster, target)
 	-- 336202
 	local targets = SkillFilter:All(self, self.caster, target or self.owner, 3)
 	for i,target in ipairs(targets) do
-		self:AddMaxHpPercent(BufferEffect[336202], self.caster, target, nil, 0.6)
+		self:AddMaxHpPercent(BufferEffect[336202], self.caster, target, nil, 0.06)
 	end
 	-- 336212
 	local targets = SkillFilter:All(self, self.caster, target or self.owner, 3)

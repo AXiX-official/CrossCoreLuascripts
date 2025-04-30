@@ -29,8 +29,10 @@ function InitInfo()
 end
 
 function GetEnterPos()
-    canvasSize = CSAPI.GetMainCanvasSize()
-    return {canvasSize[0] / 2, goY, 0}
+    -- canvasSize = CSAPI.GetMainCanvasSize()
+    -- local offset = canvasSize[0] 
+    -- return {canvasSize[0] / 2, goY, 0}
+    return {0,goY,0}
 end
 
 function OnDestroy()

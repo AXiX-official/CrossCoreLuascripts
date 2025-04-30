@@ -56,9 +56,9 @@ function OnViewClosed(viewKey)
     if viewKey == "Plot" or viewKey == "ShopView" then
         FuncUtil:Call(function()
             if gameObject then
-                CSAPI.PlayBGM("Sys_Hesitant_Cage", 1)
+                CSAPI.PlayBGM(sectionData:GetBGM(), 1)
             end
-        end, nil, 200)
+        end, this, 300)
     end
 end
 
@@ -944,12 +944,22 @@ function ItemChangeAnim()
 end
 -----------------------------------------------本地记录-----------------------------------------------
 function SaveInfo()
-    local info = LoadInfo()
-    info.level = currLevel
-    info.turn = currTurnNum
-    FileUtil.SaveToFile("DungeonRole_" .. PlayerClient:GetUid() .. ".txt", info)
+    local info = FileUtil.LoadByPath("DungeonRole.txt") or {}
+    info[sectionData:GetID()] = info[sectionData:GetID()] or {}
+    info[sectionData:GetID()].level = currLevel
+    info[sectionData:GetID()].turn = currTurnNum
+    FileUtil.SaveToFile("DungeonRole.txt", info)
 end
 
 function LoadInfo()
-    return FileUtil.LoadByPath("DungeonRole_" .. PlayerClient:GetUid() .. ".txt") or {}
+    local info = FileUtil.LoadByPath("DungeonRole.txt") or {}
+    info[sectionData:GetID()] = info[sectionData:GetID()] or {}
+    local cfgs = Cfgs.MainLine:GetGroup(sectionData:GetID())
+    if cfgs and cfgs[1] then --重置数据
+        local dungeonData = DungeonMgr:GetDungeonData(cfgs[1].id)
+        if not dungeonData or not dungeonData:IsPass() then
+            info[sectionData:GetID()] = {}
+        end
+    end
+    return info[sectionData:GetID()]
 end

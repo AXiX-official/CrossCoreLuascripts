@@ -1,3 +1,17 @@
+local needToCheckMove = false
+local timer = 0
+
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName1)
+end
+function Update()
+    if (needToCheckMove and Time.time > timer) then
+        luaTextMove:CheckMove(txtName1)
+        needToCheckMove = false
+    end
+end
+
 function SetIndex(_index)
     index = _index
 end
@@ -15,7 +29,7 @@ function Refresh(_id, _data)
     CSAPI.SetGOActive(entity, id ~= 0)
     if (isOpen and (id == nil or id == 0)) then
         CSAPI.SetGOActive(empty, true)
-    else 
+    else
         CSAPI.SetGOActive(empty, false)
     end
     CSAPI.SetGOActive(lock, not isOpen)
@@ -29,6 +43,7 @@ function Refresh(_id, _data)
     end
     --
     SetLimitSkin()
+
 end
 
 function SetEntity()
@@ -49,7 +64,10 @@ function SetEntity()
 end
 
 function SetName(str1, str2)
+    needToCheckMove = false
     CSAPI.SetText(txtName1, str1)
+    timer = Time.time + 0.1
+    needToCheckMove = true
     CSAPI.SetText(txtName2, str2)
 end
 
@@ -62,7 +80,6 @@ end
 function OnClickRemove()
     cb(index, 2)
 end
-
 
 function SetLimitSkin()
     local isLimitSkin = data:CheckLimitSkin(index)

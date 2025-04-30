@@ -349,7 +349,7 @@ end
 -- 3、目标血量比>=xx%
 function SkillJudger:TargetPercentHp(oSkill, caster, target, res, percent)
 	local myPercent = target.hp/target:Get("maxhp")
-	-- LogDebugEx("111---", target.hp, target:Get("maxhp"), res, percent, myPercent >= percent)
+	LogDebugEx("TargetPercentHp---", target.name, target.hp, target:Get("maxhp"), res, percent, myPercent >= percent)
 	if myPercent >= percent then 
 		return res
 	end
@@ -1743,8 +1743,8 @@ function FightAPI:SummonRevive(effect, caster, target, data)
 end
 
 -- 协战
-function FightAPI:Help(effect, caster, target, data, ty, index)
-	LogDebugEx("FightAPI:bCallHelp------------", index)
+function FightAPI:Help(effect, caster, target, data, ty, index,helpType,helpVal)
+	LogDebugEx("FightAPI:bCallHelp------------", index,helpType,helpVal)
 
 	-- 攻击方受击方是友方, 不触发协战
 	if caster:GetTeamID() == target:GetTeamID() then return end
@@ -1762,6 +1762,7 @@ function FightAPI:Help(effect, caster, target, data, ty, index)
 	-- index 支持同一回合多次触发
 	mgr.bCallHelp = mgr.bCallHelp or {}
 	index = index or 0
+	helpType = helpType or 0
 	if mgr.bCallHelp[index] then return end
 	-- mgr.bCallHelp[index] = true
 	-- LogTrace()
@@ -1778,6 +1779,9 @@ function FightAPI:Help(effect, caster, target, data, ty, index)
 			local t = mgr:GetCardByOID(data.target.helperID)
 			ASSERT(t)
 			helper = {t}
+		elseif helpType == 1 and helpVal then					-- 属性最高
+			local team = SkillFilter:GetTeam(self, caster, target, 1)
+			helper = team.filter:GetMaxAttribute(helpVal,1,caster)
 		else
 			helper = SkillFilter:Rand(self, caster, target, 1, 1)
 		end
@@ -1951,7 +1955,8 @@ function FightAPI:AddHp(effect, caster, target, data, hp, bNotDeathEvent)
 	if target:GetTempSign("ImmuneDamage") then  
 		return
 	end
-
+	
+	local bIsLive = target:IsLive() -- 记录原来的状态, 死了就不再添加死亡列表
 	hp = math.floor(hp)
 	local isdeath, shield, num = target:AddHpNoShield(hp, caster)
 	self.log:Add({api="AddHp", death = isdeath, targetID = target.oid, casterID = caster.oid,
@@ -1964,7 +1969,7 @@ function FightAPI:AddHp(effect, caster, target, data, hp, bNotDeathEvent)
 
 	LogDebugEx("FightAPI:AddHp bNotDeathEvent")
 	local isdeath = not target:IsLive()
-	if isdeath and self.AddDeaths then
+	if bIsLive and  isdeath and self.AddDeaths then
 		self:AddDeaths(target, caster)
 	end
 end
@@ -2516,7 +2521,6 @@ function FightAPI:DelSkill(effect, caster, target, data, skillID)
 	-- local log = {api="DelSkill", targetID = target.oid, effectID = effect.apiSetting, skillID=skillID}
 	-- self.log:Add(log)
 end
-
 -- ---------------------------------------------------
 -- -- 辅助函数
 

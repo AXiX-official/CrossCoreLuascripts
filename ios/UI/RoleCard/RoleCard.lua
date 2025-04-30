@@ -4,6 +4,9 @@ local colors = {"FFFFFF", "00ffbf", "26dbff", "8080ff", "FFC146"}
 -- {"战斗中", "远征中", "冷却中", "训练中", "军演中", "演习中", "助战中"}
 local stateColors = {"FF265C", "307be9", "3cc7f5", "cc50ff", "f07b09", "11e70b", "FFFFFF"}
 -- local colorOutlines = {"LineGlow_Blue", "LineGlow_Blue", "LineGlow_Blue", "LineGlow_Purple", "LineGlow_Gold","LineGlow_Color"}
+
+local needToCheckMove = false
+
 function OnRecycle()
     if goRect == nil then
         goRect = ComUtil.GetCom(gameObject, "RectTransform")
@@ -16,6 +19,16 @@ end
 function Awake()
     -- tickAnim = ComUtil.GetCom(tick, "BarBase")
     colorBar = ComUtil.GetCom(colorSlider, "SliderValue")
+    --
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName2)
+end
+
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName2)
+        needToCheckMove = false
+    end
 end
 
 function SetIndex(_index)
@@ -74,7 +87,7 @@ function Refresh(_cardData, _elseData)
         -- star 
         ResUtil.RoleCard_BG:Load(imgStar, "img_01_0" .. cardData:GetQuality())
         -- red 
-        if (elseData.noCheckRed==nil) then
+        if (elseData.noCheckRed == nil) then
             local isRed = cardData:RoleCardRed()
             UIUtil:SetRedPoint(red, isRed)
             CSAPI.SetGOActive(red, isRed)
@@ -235,13 +248,13 @@ end
 
 -- 状态
 function SetState(_index)
-
-    if _index then
-        CSAPI.SetGOActive(state, true)
-        LanguageMgr:SetText(txtState, 2999 + _index)
-    else
-        CSAPI.SetGOActive(state, false)
-    end
+    -- 用不到了，统一隐藏
+    -- if _index then
+    --     CSAPI.SetGOActive(state, true)
+    --     LanguageMgr:SetText(txtState, 2999 + _index)
+    -- else
+    --     CSAPI.SetGOActive(state, false)
+    -- end
 end
 
 -- tag
@@ -272,7 +285,9 @@ function SetLv(_lv)
 end
 
 function SetName(str)
+    needToCheckMove = false
     CSAPI.SetText(txtName2, str)
+    needToCheckMove = true -- 字符串的设置是异步的，所以要隔1帧再计算字符串长度和移动
 end
 
 -- 第几编队
@@ -363,12 +378,12 @@ function SetPro()
 end
 
 function SetJieJin()
-    if(elseData and elseData.isJieJin) then 
+    if (elseData and elseData.isJieJin) then
         CSAPI.SetGOActive(format, false)
         CSAPI.SetGOActive(state, false)
         ActiveClick(false)
         CSAPI.SetGOActive(new, false)
-    end 
+    end
 end
 
 function SetLimitSkin()

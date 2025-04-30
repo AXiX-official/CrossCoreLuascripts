@@ -37,6 +37,7 @@ function OnInit()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed) -- 加载之后再显示奖励面板
     eventMgr:AddListener(EventType.Bag_Update, SetXz)
     eventMgr:AddListener(EventType.ExerciseL_BuyCount, SetCount)
+    -- eventMgr:AddListener(EventType.Exercise_Role_Panel, SetHead)
 end
 
 function OnDestroy()
@@ -60,7 +61,7 @@ end
 function OnOpen()
     RefreshSelf()
     -- 敌人
-    SetEnemy() -- 请求数据 
+    SetEnemy() -- 请求数据
 end
 
 -- 更新数据再提示，否则会出现数据返回的延迟错误 
@@ -87,7 +88,7 @@ function RefreshSelf()
     -- 段位
     SetGrade()
     -- 排名
-    CSAPI.SetText(txtPm2, "" .. ExerciseMgr:GetRankStr())
+    SetPM()
     -- 积分
     SetZF()
     -- 勋章
@@ -96,6 +97,20 @@ function RefreshSelf()
     SetCount()
     -- 刷新次数
     SetRefreshCnt()
+
+    SetMaxRank()
+    SetHead()
+    SetContent()
+end
+
+function SetPM()
+    local str = ExerciseMgr:GetRankStr()
+    if (str == "--") then
+        str = LanguageMgr:GetByID(33072)
+    else
+        str = LanguageMgr:GetByID(33060, str)
+    end
+    CSAPI.SetText(txtPm, str)
 end
 
 function SetXz()
@@ -134,14 +149,14 @@ function SetZF()
         zf_slider.value = cur / max or 1
     end
     local str = string.format("%s/<color=#ffc146>%s</color>", cur, max)
-    CSAPI.SetText(txtZf2, str)
+    CSAPI.SetText(txtZf, str)
     -- 
 
 end
 
 function SetCount()
     cnt, maxCnt = ExerciseMgr:GetJoinCnt()
-    CSAPI.SetText(txtCount2, cnt .. "/" .. maxCnt)
+    CSAPI.SetText(txtCount2, "<color=#ffc146>" .. cnt .. "</color>/" .. maxCnt)
     -- 下次刷新时间
     timeBase2:Run(ExerciseMgr:GetNextTime(), SetTime2)
 end
@@ -155,7 +170,7 @@ end
 
 -- 赛季时间
 function SetTime(_needTime)
-    CSAPI.SetText(txtTime2, TimeUtil:GetTimeStr3(_needTime))
+    CSAPI.SetText(txtTime, TimeUtil:GetTimeStr3(_needTime))
     if (_needTime <= 0) then
         isEnd = true
         -- LanguageMgr:ShowTips(33018)
@@ -168,7 +183,7 @@ end
 
 -- 回复时间
 function SetTime2(_needTime)
-    LanguageMgr:SetText(txtCount3, 33008, TimeUtil:GetTimeStr8(_needTime), g_ArmyPracticeJoinCntFlushCnt)
+    CSAPI.SetText(txtCount3, TimeUtil:GetTimeStr8(_needTime)) -- 33008 g_ArmyPracticeJoinCntFlushCnt
     if (_needTime <= 0) then
         ArmyProto:GetSelfPracticeInfo(function()
             -- 弹出提示 
@@ -182,7 +197,7 @@ end
 function SetRefreshCnt()
     local cnt, maxCnt = ExerciseMgr:GetFlushCnt()
     local curCnt = (maxCnt - cnt) < 0 and 0 or (maxCnt - cnt)
-    CSAPI.SetText(txtRefresh3, curCnt .. "/" .. maxCnt)
+    CSAPI.SetText(txtRefresh, "<color=#ffc146>" .. curCnt .. "</color>/" .. maxCnt)
 end
 
 -- 对手
@@ -190,15 +205,27 @@ function SetEnemyItems()
     enemyItems = enemyItems or {}
     local datas = ExerciseMgr:GetEnemy()
     table.sort(datas, function(a, b)
-        if (a.rank == 0 and b.rank ~= 0) then
+        if (a:GetRank() == 0 and b:GetRank() ~= 0) then
             return false
-        elseif (a.rank ~= 0 and b.rank == 0) then
+        elseif (a:GetRank() ~= 0 and b:GetRank() == 0) then
             return true
         end
-        return a.rank < b.rank
+        return a:GetRank() < b:GetRank()
     end)
+    ItemUtil.AddItems("ExerciseL/ExerciseLItem", enemyItems, datas, enemyGrids, ItemClickCB, 1, nil, ItemAnims)
+end
 
-    ItemUtil.AddItems("ExerciseL/ExerciseLItem", enemyItems, datas, enemyGrids, ItemClickCB)
+function ItemAnims()
+    if (isFirst) then
+        return
+    end
+    isFirst = 1
+    for i, v in ipairs(enemyItems) do
+        local delay = (i - 1) * 20
+        UIUtil:SetObjFade(v.clickNode, 0, 1, nil, 300, delay)
+        local y1 = i * 20
+        UIUtil:SetPObjMove(v.clickNode, 0, 0, -y1, 0, 0, 0, nil, 200, delay)
+    end
 end
 
 function ItemClickCB(data)
@@ -211,7 +238,7 @@ function ItemClickCB(data)
         end
         return
     end
-    ExerciseMgr:GetPracticeOtherTeam(data.uid, data.is_robot)
+    ExerciseMgr:GetPracticeOtherTeam(data:GetID(), data:GetIsRobot())
 end
 
 -- 避免loading界面与RewardPanel冲突  todo 
@@ -296,3 +323,58 @@ end
 function OnClickReward()
     CSAPI.OpenView("ExerciseLRankReward")
 end
+
+---------------------------------------------------------------------
+
+-- 历史最高排名
+function SetMaxRank()
+    local max_rank = ExerciseMgr:GetMaxRank()
+    if (max_rank == 0) then
+        LanguageMgr:SetText(txtMaxRank2, 33072)
+    else
+        LanguageMgr:SetText(txtMaxRank2, 33060, max_rank)
+    end
+end
+
+-- 头像 （立绘的独立的）
+function SetHead()
+    -- UIUtil:AddHeadByID(headParent, 1, PlayerClient:GetHeadFrame(), ExerciseMgr:GetRolePanel(), PlayerClient:GetSex())
+    UIUtil:AddHeadFrame(headParent, 1)
+end
+
+-- 挑战历史信息
+function SetContent()
+    local infos = ExerciseMgr:GetFightBaseLogs()
+    local str = ""
+    local ni = LanguageMgr:GetByID(33067)
+    local len = #infos
+    for k = len, 1, -1 do
+        local v = infos[k]
+        local _str = ""
+        if (not v[3]) then
+            _str = "<color=#c3c3c8>" .. LanguageMgr:GetByID(33064, ni, v[2]) .. "</color>"
+        else
+            _str = "<color=#ff7781>" .. LanguageMgr:GetByID(33064, v[2], ni) .. "</color>"
+        end
+        str = str == "" and _str or str .. "\n" .. _str
+    end
+    CSAPI.SetText(txtContent, str)
+end
+
+-- 重置立绘
+function OnClickImgReset()
+    UIUtil:OpenDialog(LanguageMgr:GetTips(33021), function()
+        ArmyProto:SetRolePanel()
+    end)
+end
+
+-- 更换立绘
+function OnClickImgSelect()
+    CSAPI.OpenView("CRoleDisplayPVP")
+end
+
+-- 历史挑战
+function OnClickHistory()
+    CSAPI.OpenView("ExerciseLHistory")
+end
+

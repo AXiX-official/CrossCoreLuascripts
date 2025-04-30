@@ -527,44 +527,5 @@ function CreatePosInfos()
     end)
 end
 function OnDestroy()    
-    ReleaseCSComRefs();
+    FightClient:SetStopState(false);
 end
-
-----#Start#----
-----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
-function ReleaseCSComRefs()     
-gameObject=nil;
-transform=nil;
-this=nil;  
-tabs=nil;
-sv=nil;
-tabContent=nil;
-arrow1=nil;
-arrow2=nil;
-hpTitle=nil;
-txt_name=nil;
-lvObj=nil;
-txt_lvTips=nil;
-txt_lv=nil;
-txt_hp=nil;
-spTitle=nil;
-txt_sp=nil;
-statusRoot=nil;
-sv2=nil;
-btn_skill=nil;
-txt_skill=nil;
-btn_status=nil;
-txt_status=nil;
-btn_talent=nil;
-txt_talent=nil;
-btn_equip=nil;
-txt_equip=nil;
-Content=nil;
-hpBar=nil;
-spBar=nil;
-posLayout=nil;
-posObj=nil;
--- gridObj=nil;
-view=nil;
-end
-----#End#----

@@ -374,7 +374,10 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
         }
 
         if tMirror.robotId then
+            toCenterFinishMsg.isRobot = BoolType.Yes
             toCenterFinishMsg.defenderId = tMirror.robotId
+        else
+            toCenterFinishMsg.isRobot = BoolType.No
         end
 
         local dfInfo = nil

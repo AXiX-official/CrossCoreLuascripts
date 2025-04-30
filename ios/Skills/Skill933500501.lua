@@ -19,19 +19,23 @@ function Skill933500501:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 933500501
-	self:AddBuff(SkillEffect[933500501], caster, target, data, 5206)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
+	if self:Rand(3000) then
+		self:AddBuff(SkillEffect[933500501], caster, target, data, 5206)
+		-- 8060
+		if SkillJudger:CasterIsSelf(self, caster, target, true) then
+		else
+			return
+		end
+		-- 8073
+		if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+		else
+			return
+		end
+		-- 933500502
+		if self:Rand(5000) then
+			self:AddProgress(SkillEffect[933500502], caster, target, data, -200)
+		end
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 933500502
-	self:AddProgress(SkillEffect[933500502], caster, target, data, -200)
 end
 -- 伤害前
 function Skill933500501:OnBefourHurt(caster, target, data)

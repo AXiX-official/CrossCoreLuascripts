@@ -1,6 +1,7 @@
 --带确认取消的提示框
 local canvasGroup = nil;
 local isOpening=false;
+local isHideDailyTips = false
 ---是否移动平台
 local IsMobileplatform=false;
 --inpt
@@ -33,8 +34,23 @@ function OnOpen()
 
 		LanguageMgr:SetEnText(text_ok1,1001)
 		LanguageMgr:SetEnText(text_cancel1,1002)
+
+		if data.dailyKey then
+			isHideDailyTips = not TipsMgr:IsShowDailyTips(data.dailyKey)
+			SetDailyTips()
+		end
 	end
 	ShowAction();
+end
+
+function SetDailyTips()
+	CSAPI.SetGOActive(hideImg1, not isHideDailyTips)
+	CSAPI.SetGOActive(hideImg2, isHideDailyTips)
+end
+
+function OnClickHide()
+	isHideDailyTips = not isHideDailyTips
+	SetDailyTips()
 end
 
 function OnClickOK()
@@ -68,6 +84,9 @@ function Close(callBack)
 	HideAction(function()
 		if callBack then
 			callBack()
+		end
+		if data.dailyKey then
+			TipsMgr:SaveDailyTips(data.dailyKey, isHideDailyTips)
 		end
 		
 		data = nil;

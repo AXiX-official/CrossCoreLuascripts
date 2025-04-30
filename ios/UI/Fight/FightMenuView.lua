@@ -30,6 +30,10 @@ function OnOpen()
 end
 -- 等待入场动画结束，暂停，关闭点击遮罩
 function OnPlayEnterComplete()
+    if(isClosed)then
+        return;
+    end
+
     if (FightActionUtil:IsHangup()) then
         OnClickExit();
         FightClient:SetPauseState(false);
@@ -196,17 +200,20 @@ function OnSureBack_PVP()
     OnClickExit();
 end
 
-function OnClickBack()
+function OnClickBack()   
     FightClient:SetPauseState(false);
+    
     panel.ExitTween()
     fade:Play(1, 0, 200, 300, function()
         view:Close();
     end)
+
+    isClosed = true;
 end
 
 function OnClickExit()
     view:Close();
-
+    
     FightClient:SetPauseState(false);
 end
 

@@ -34,13 +34,13 @@ function Awake()
 
 	inpName = ComUtil.GetCom(inp_name, "InputField");
 	CSAPI.AddInputFieldChange(inp_name, InputChange)
-	if CSAPI.RegionalCode() == 3 or CSAPI.RegionalCode() == 5 then
-		CSAPI.SetGOActive(sexTab,false)
-		CSAPI.SetGOActive(sexObj,false)
-	else
-		tab = ComUtil.GetCom(sexTab, "CTab")
-		tab:AddSelChangedCallBack(OnTabChanged)	
-	end
+	-- if CSAPI.RegionalCode() == 3 or CSAPI.RegionalCode() == 5 then
+	-- 	CSAPI.SetGOActive(sexTab,false)
+	-- 	CSAPI.SetGOActive(sexObj,false)
+	-- else
+	tab = ComUtil.GetCom(sexTab, "CTab")
+	tab:AddSelChangedCallBack(OnTabChanged)	
+	-- end
 	--sex
 	for k, v in ipairs(g_SexInitCardIds) do --读取男女主立绘
 		local img = k == 1 and mRoleImg or wRoleImg

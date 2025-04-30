@@ -23,6 +23,11 @@ function this:GetDungeonCfg()
     return self.dungeonCfg
 end
 
+--对应章节id
+function this:GetSectionID()
+    return self.dungeonCfg and self.dungeonCfg.group
+end
+
 function this:GetID()
     return self.cfg and self.cfg.id
 end

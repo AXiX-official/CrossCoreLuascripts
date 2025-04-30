@@ -84,7 +84,8 @@ local rdLNR = {}
 local globalBossTime = 0
 local bagLimitTime
 local skinLimitTime = nil
-
+local questionnaireTime = nil
+local puzzleNextInfo=nil;
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
     fill_lv = ComUtil.GetCom(fillLv, "Image")
@@ -187,6 +188,10 @@ function InitListener()
     eventMgr:AddListener(EventType.Role_LimitSkin_Refresh, function()
         skinLimitTime = RoleSkinMgr:CheckLimitSkin()
     end)
+    eventMgr:AddListener(EventType.Menu_Questionnaire, function ()
+        questionnaireTime = QuestionnaireMgr:GetRefreshTime()
+    end)
+    eventMgr:AddListener(EventType.Puzzle_Data_Ret,SetLTSV)
 end
 
 function OnDestroy()
@@ -337,6 +342,17 @@ function Update()
         skinLimitTime = nil
         RoleSkinMgr:CheckLimitSkin()
     end
+    -- 问卷
+    if (questionnaireTime and curTime >= questionnaireTime) then
+        questionnaireTime = nil 
+        QuestionnaireProto:GetInfo(function ()
+            questionnaireTime = QuestionnaireMgr:GetRefreshTime()
+        end)
+    end
+    if puzzleNextInfo~=nil and curTime>=puzzleNextInfo.time then
+        ActivePuzzleProto:GetPuzzleData(puzzleNextInfo.id)
+        puzzleNextInfo=PuzzleMgr:GetNextInfo();
+    end
 end
 
 -- 界面逻辑不在这里处理，在Loading_Complete后再处理,这里处理初始化数据操作
@@ -381,6 +397,8 @@ function InitTimers()
     globalBossTime = GlobalBossMgr:GetCloseTime()
     bagLimitTime = BagMgr:GetLessLimitTime()
     skinLimitTime = RoleSkinMgr:GetSkinMinLimitTime()
+    questionnaireTime = QuestionnaireMgr:GetRefreshTime()
+    puzzleNextInfo=PuzzleMgr:GetNextInfo()
 end
 
 function RefreshPanel()

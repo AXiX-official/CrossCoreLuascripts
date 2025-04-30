@@ -8,8 +8,8 @@ function Buffer704200205:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer704200205:OnCreate(caster, target)
-	-- 4606
-	self:AddAttr(BufferEffect[4606], self.caster, target or self.owner, nil,"resist",0.3)
-	-- 4406
-	self:AddAttr(BufferEffect[4406], self.caster, target or self.owner, nil,"crit",0.3)
+	-- 8720
+	local c116 = SkillApi:GetAttr(self, self.caster, target or self.owner,3,"hp")
+	-- 704200205
+	self:AddHp(BufferEffect[704200205], self.caster, self.card, nil, -math.floor(c116*0.15))
 end

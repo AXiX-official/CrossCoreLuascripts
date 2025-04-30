@@ -3,7 +3,10 @@ local timer = nil
 local isFirst = true
 isHideQuestionItem = true -- 外部调用
 
+local needToCheckMove = false
 function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName1)
     CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
     CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
     recordBeginTime = CSAPI.GetRealTime()
@@ -64,6 +67,10 @@ end
 function Update()
     if (timer and Time.time > timer) then
         OpenAnim(false)
+    end
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName1)
+        needToCheckMove = false
     end
 end
 
@@ -247,7 +254,9 @@ end
 
 -- 设置名称
 function SetName()
+    needToCheckMove = false
     CSAPI.SetText(txtName1, cardData:GetName())
+    needToCheckMove = true
     CSAPI.SetText(txtName2, cardData:GetEnName())
     -- bg
     local quality = cardData:GetQuality()

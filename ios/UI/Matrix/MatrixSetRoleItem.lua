@@ -3,7 +3,11 @@
 local isCalTime = false
 local len = 0
 local timer = 0
-
+local needToCheckMove = false
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
+end 
 
 -- function Awake()
 -- 	outlineBar = ComUtil.GetCom(hp, "OutlineBar")
@@ -66,7 +70,9 @@ function Refresh(_data, _matrixData)
 end
 
 function SetName(name)
+	needToCheckMove = false
 	CSAPI.SetText(txtName, name)
+	needToCheckMove = true
 end
 
 function SetIcon(iconName)
@@ -125,6 +131,10 @@ function Update()
 	if(matrixPL) then
 		matrixPL:Update()
 	end
+	if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
+    end
 end
 
 -- function InitPl()

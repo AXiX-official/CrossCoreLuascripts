@@ -1,4 +1,17 @@
 -- RewardInfo2 的某 index
+
+local needToCheckMove = false
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
+end
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
+    end
+end
+
 function Refresh(cfg)
     local cardCfg = Cfgs.CardData:GetByID(cfg.id)
     cfgID = cardCfg.id
@@ -11,7 +24,9 @@ function Refresh(cfg)
     -- pickup
     CSAPI.SetGOActive(pickup, cfg.desc ~= nil)
     -- name
+    needToCheckMove = false
     CSAPI.SetText(txtName, cardCfg.name)
+    needToCheckMove = true
     -- imgStar
     ResUtil.CardBorder:Load(imgStar, "img_101_0" .. cardCfg.quality)
 end

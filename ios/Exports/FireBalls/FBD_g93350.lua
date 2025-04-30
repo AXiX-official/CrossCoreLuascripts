@@ -22,7 +22,8 @@ local this =
 {effect="cast0_eff",time=2300,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Phantom_Stinger_attack_general"}
 },
 [-316323548]={
-{effect="deadLarge_common_eff",effect_pack="common",delay=2416,time=6000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/nineth.acb",cue_name="Drasoul_Die"}
+{time=6000,type=0,cue_sheet="fight/effect/nineth.acb",cue_name="Drasoul_Die"},
+{effect="deadLarge_common_eff",effect_pack="common",delay=2416,time=6000,type=0,pos_ref={ref_type=6}}
 }
 };
 

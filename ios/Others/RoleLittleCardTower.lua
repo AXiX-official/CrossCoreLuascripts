@@ -14,13 +14,25 @@ local hpBarImg=nil;
 local spBarImg=nil;
 local fingerId=nil;
 local Input=CS.UnityEngine.Input;
+local needToCheckMove = false
 function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
+
     eventMgr = ViewEvent.New();
     dragScript = ComUtil.GetCom(btnClick, "DragCallLua");
     cg_format =  ComUtil.GetCom(format, "CanvasGroup");
     hpBarImg=ComUtil.GetCom(hpBar, "Image");
     spBarImg=ComUtil.GetCom(spBar, "Image");
 end
+
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
+    end
+end
+
 
 function OnEnable()
     eventMgr:AddListener(EventType.TeamView_DragJoin_Lost, OnDragLost);
@@ -429,7 +441,9 @@ function SetHot(_hot, _totalHot)
 end
 
 function SetName(str)
+    needToCheckMove = false
     CSAPI.SetText(txtName, str)
+    needToCheckMove = true
 end
 
 function SetState(_index)

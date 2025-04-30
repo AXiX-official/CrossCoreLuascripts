@@ -95,6 +95,7 @@ function FightMgrBase:Init(id, groupID, ty, seed, nDuplicateID)
     self.turnNum = 0 -- 总战斗回合
     self.nStep = 0 -- 当前周目战斗回合
     self.nStepPVE = 0 -- PVE 我方操作次数
+    self.nStepOffset = 0 -- 操作数偏移(用于不消耗操作数机制)
     self:SetStepLimit(g_nFightLimit) -- 设置回合限制
 
     -- 事件处理
@@ -159,7 +160,7 @@ function FightMgrBase:RecvCmd(cmd)
     end
 
     if index + 1 ~= cmd[1] then
-        if DEBUG then 
+        if DEBUG then
             ASSERT(nil, STR('命令顺序错误:当前[%s] 收到[%s]', index, cmd[1]))
         end
         return
@@ -240,7 +241,7 @@ function FightMgrBase:LoadConfig(groupID, stage, hpinfo)
     -- 无限血必须只能有一个周目
     for i, card in ipairs(self.arrCard) do
         -- 无限血机制
-        if card.isInvincible then 
+        if card.isInvincible then
             self.isInvincible = card.isInvincible -- 是否为无限血副本
         end
     end
@@ -637,7 +638,7 @@ function FightMgrBase:OnBorn(card, isspecial)
         for i, buffID in ipairs(self.tAllBuff) do
             card:AddBuff(card, buffID)
         end
-    end    
+    end
 
     if isspecial then
         -- 复活/召唤/合体等非正常入场
@@ -962,7 +963,7 @@ end
 
 -- 是否pve关卡
 function FightMgrBase:IsPVE()
-    if self.type == SceneType.PVP or self.type == SceneType.BOSS or self.type == SceneType.GuildBOSS then  --or self.type == SceneType.GlobalBoss 
+    if self.type == SceneType.PVP or self.type == SceneType.BOSS or self.type == SceneType.GuildBOSS then  --or self.type == SceneType.GlobalBoss
         return false
     end
     return true
@@ -1390,7 +1391,7 @@ function FightMgrBase:OnTurnNext()
 
     self:OnRoundOver() -- 由于回合结束触发了技能打死怪物, 导致切换切换周目
     if self.isOver then return end
-    
+
     if DEBUG then
         LogTable(self.log:GetAndClean())
     end
@@ -1939,7 +1940,7 @@ end
 -- 无限血相关接口
 -- 无限血机制设置阶段[总阶段数, 阶段, 阶段血量, 操作数]
 function FightMgrBase:SetInvincible(effect, caster, target, data, totalState, state, statehp, opnum)
-    
+
     if not self.isInvincible then return end
 
     self.nInvStateDamage  = 0 -- 当前阶段伤害量
@@ -1958,13 +1959,12 @@ function FightMgrBase:AddInvincibleDamage(num)
     self.nInvTotalDamage   = self.nInvTotalDamage + num
 end
 
--- target.nStateDamage = 0 -- 当前阶段伤害量
--- target.totalState   = totalState -- 总阶段
--- target.state        = state -- 阶段
--- target.statehp      = statehp -- 阶段血量
--- target.opnum        = opnum -- 操作数
--- target.startopnum   = self.team.fightMgr.nStepPVE or 0 -- 阶段开始时的操作数
-
+-- 增加操作数上限
+function FightMgrBase:AddStep(num, isHide)
+    self.nStepLimit = self.nStepLimit + num
+    if not isHide then return end
+    self.nStepOffset   = self.nStepOffset + num
+end
 
 ----------------------------------------------
 -- 服务端管理器
@@ -2304,11 +2304,11 @@ function FightMgrClient:DoCommanderSkill(data)
 
     -- 再发一次OnTurn
     local card = self.currTurn
-    local log = {api = 'OnTurn', turnNum = self.nStep, nStepLimit = self.nStepLimit, isMotionless = isMotionless}
+    local log = {api = 'OnTurn', turnNum = self.nStep+self.nStepOffset, nStepLimit = self.nStepLimit+self.nStepOffset, isMotionless = isMotionless}
 
     if self:IsPVE() then
         if self.currTurn:GetTeamID() == 1 then
-            log.turnNum = self.nStepPVE 
+            log.turnNum = self.nStepPVE
         else
             log.turnNum = self.nStepPVE
         end
@@ -2556,14 +2556,14 @@ function FightMgrClient:DoTurn(data)
 
         local log = {
             api = 'OnTurn',
-            turnNum = self.nStep,
-            nStepLimit = self.nStepLimit,
+            turnNum = self.nStep+self.nStepOffset,
+            nStepLimit = self.nStepLimit+self.nStepOffset,
             isMotionless = isMotionless
         }
 
         if self:IsPVE() then
             if self.currTurn:GetTeamID() == 1 then
-                log.turnNum = self.nStepPVE 
+                log.turnNum = self.nStepPVE
             else
                 log.turnNum = self.nStepPVE
             end
@@ -2597,7 +2597,7 @@ function FightMgrClient:DoTurn(data)
         else
             errContent = string.format('数据不一致%s%s', card and '' or ',card is nil', card2 and '' or ',card2 is nil')
         end
-        
+
         local proto = {'FightProtocol:ClientError', {errContent = errContent}}
         self:ClientSend(proto)
 
@@ -2785,10 +2785,10 @@ function FightMgrClient:RestoreFight()
     -- 控制类buffer处理
     local isMotionless = card.bufferMgr:IsMotionless()
 
-    local log = {api = 'OnTurn', turnNum = self.nStep, nStepLimit = self.nStepLimit, isMotionless = isMotionless}
+    local log = {api = 'OnTurn', turnNum = self.nStep+self.nStepOffset, nStepLimit = self.nStepLimit+self.nStepOffset, isMotionless = isMotionless}
     if self:IsPVE() then
         if self.currTurn:GetTeamID() == 1 then
-            log.turnNum = self.nStepPVE 
+            log.turnNum = self.nStepPVE
         else
             log.turnNum = self.nStepPVE
         end
@@ -3082,6 +3082,8 @@ function PVEFightMgrServer:Over(stage, winer)
         -- LogTable(self.arrNP, "self.arrNP")
         local cardCnt = self.arrTeam[1].nCardCount
         local teamIdx = self.oDuplicate:GetTeamIndex() or 1
+        self.oDuplicate.fCard = fCard
+        --LogD("更新无限血排行榜:%s,%s,%s", self.nInvTotalDamage or 0, dupCfg.group, self.isInvincible)
         -- 更新无限血排行榜 无限血机制统计伤害 1钓鱼佬  2可杀死共用血条  3无限血共用血条
         if self.isInvincible and self.isInvincible ~= 2 then
             local nTotalDamage = self.nInvTotalDamage or 0
@@ -3097,28 +3099,11 @@ function PVEFightMgrServer:Over(stage, winer)
             local plr = self.oDuplicate.oPlayer
             local rankType
             if dupCfg.group then
-                if dupCfg.group == 3005 then
-                    rankType = eRankType.SummerActiveRank
-                elseif dupCfg.group == 3006 then
-                    rankType = eRankType.CentaurRank
-                elseif dupCfg.group == 6001 then
-                    rankType = eRankType.TrialsRank
-                elseif dupCfg.group == 6002 then
-                    rankType = eRankType.TrialsRank2
-                elseif dupCfg.group == 6003 then
-                    rankType = eRankType.TrialsRank3
-                elseif dupCfg.group == 6004 then
-                    rankType = eRankType.TrialsRank4
-                elseif dupCfg.group == 6005 then
-                    rankType = eRankType.TrialsRank5
-                elseif dupCfg.group == 15001 then
-                    rankType = eRankType.RogueTRank
-                elseif dupCfg.group == 3007 then
-                    rankType = eRankType.CloudRank
-                end
-                local dungeonGroup = dupCfg.dungeonGroup or 0
-                if rankType then
-                    RankMgrGs:AddRankData(rankType, nTotalDamage, plr, teamIdx,fCard, dungeonGroup)
+                local rankSection = GobalCfg:GetRankSection()
+                if rankSection and rankSection[dupCfg.group] then
+                    local dungeonGroup = dupCfg.dungeonGroup or 0
+                    rankType = rankSection[dupCfg.group]
+                    RankMgrGs:AddRankData(rankType, nTotalDamage, plr, teamIdx, fCard, dungeonGroup)
                     plr:UpdateAchieve(eAchieveFinishType.Fight, eAchieveEventType.Rank, { rankType })
                     self.oDuplicate.hisMaxDamage = RankMgrGs:GetScoreByType(rankType, plr)
                 end
@@ -3764,7 +3749,7 @@ end
 -- 伤害统计
 function BossFightMgrServer:DamageStat(caster, nDamage)
     if caster:GetTeamID() ~= 1 then
-        return 
+        return
     end
     self.nTotalDamage = self.nTotalDamage + nDamage
 

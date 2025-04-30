@@ -170,6 +170,7 @@ local conf = {
 {'g_ArmyCanQuit',	'g_ArmyCanQuit',	'',	'int',	'1'},
 {'g_ArmyAttackBuyCnt',	'g_ArmyAttackBuyCnt',	'',	'int',	'10'},
 {'g_ArmyAttactBuyCost',	'g_ArmyAttactBuyCost',	'',	'int[]',	'10002,10,2'},
+{'g_ArmyFightLogCnt',	'g_ArmyFightLogCnt',	'',	'int',	'10'},
 {'g_BuildFullTiredBenefit',	'g_BuildFullTiredBenefit',	'',	'int',	'100'},
 {'g_BuildScale',	'g_BuildScale',	'',	'int[]',	'30,16'},
 {'g_ExploreBaseLvMax',	'g_ExploreBaseLvMax',	'',	'int',	'10'},

@@ -14,6 +14,10 @@ local isHeXie = false -- 和谐了
 local inter = 0.5
 local timer = 0
 
+local curRoleNum = 1 -- 使用第几套人物
+local changeCfg = nil -- 变幻到第二套人物的cfg
+local interludeGO = nil -- 切换人物的过场go
+
 function Awake()
     img_imgObj = ComUtil.GetCom(imgObj, "Image")
     spineTools = SpineTools.New()
@@ -43,6 +47,7 @@ function Refresh(_modelId, _posType, _callBack, _needClick)
         end
         return -- 相同的话不往下
     end
+    curRoleNum = 1
     oldModelId = _modelId
     records = {}
     if (dragObj) then
@@ -57,10 +62,15 @@ function Refresh(_modelId, _posType, _callBack, _needClick)
     -- SetTouch()
 end
 
-function SetImg()
+function SetImg(_l2dName, _b)
+    local b = true
+    if (_b ~= nil) then
+        b = _b
+    end
     local pos, scale, img, l2dName = RoleTool.GetImgPosScale(modelId, posType, true)
     CSAPI.SetAnchor(prefabObj, pos.x, pos.y, pos.z)
     CSAPI.SetScale(prefabObj, scale, scale, 1)
+    l2dName = _l2dName or l2dName
     if (l2dName) then
         if (l2dGo) then
             CSAPI.RemoveGO(l2dGo)
@@ -79,7 +89,7 @@ function SetImg()
             end
             SetBlack()
             SetTouch()
-            if (callBack) then
+            if (b and callBack) then
                 callBack()
             end
         end)
@@ -116,6 +126,9 @@ end
 
 -- 点击触发
 function TouchItemClickCB(cfgChild)
+    if (interludeGO ~= nil) then
+        return
+    end
     if (Time.time < timer) then
         return
     end
@@ -146,14 +159,14 @@ function TouchItemClickCB(cfgChild)
     if (cfgChild.content) then
         sName, timeScale, progress, isClicksLast = SetContent(cfgChild)
     end
-    if (not sName) then
-        return
-    end
+    -- if (not sName) then
+    --     return
+    -- end
     if (isCan) then
         local b = false
-        if (trackIndex ~= 1 and content.clicks ~= nil) then
+        if (trackIndex ~= 1 and content.clicks ~= nil and sName ~= nil) then
             b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress, isClicksLast)
-        elseif (content.actions ~= nil) then
+        elseif (content.actions ~= nil and sName ~= nil) then
             -- 首次播放或者再次点击
             local _sName = spineTools:GetNameByTrackIndex(trackIndex)
             if (sName == _sName) then
@@ -177,7 +190,15 @@ function TouchItemClickCB(cfgChild)
                 end, nil, content.changeIdle[2])
             end
             --
-            b = spineTools:PlayByClick(sName, trackIndex, true, true, nil)
+            SetInterlude(content)
+            local cb = GetClickCB(cfgChild)
+            if (sName ~= nil) then
+                b = spineTools:PlayByClick(sName, trackIndex, true, true, cb)
+            else
+                if (cb) then
+                    cb()
+                end
+            end
         end
         if (b) then
             PlayAudio(cfgChild)
@@ -186,8 +207,50 @@ function TouchItemClickCB(cfgChild)
     end
 end
 
+-- 点击回调
+function GetClickCB(cfgChild)
+    local func = nil
+    if (cfgChild.content) then
+        if (cfgChild.content.changerole) then
+            local _curRoleNum = cfgChild.role or 1
+            curRoleNum = 3 - _curRoleNum
+            func = function()
+                SetImg(cfgChild.content.changerole[1], false)
+            end
+        elseif (cfgChild.content.nextClick) then
+            func = function()
+                local nextCfgChild  = cfg.item[cfgChild.content.nextClick]
+                TouchItemClickCB(nextCfgChild) --触发下一个动作
+            end
+        end
+    end
+    return func
+end
+
+-- 过场spine
+function SetInterlude(content)
+    if (content.changerole and content.changerole[2] ~= nil) then
+        local l2dName = content.changerole[2]
+        ResUtil:CreateSpine(l2dName .. "/" .. l2dName, 0, 0, 0, gameObject, function(go)
+            interludeGO = go
+            FuncUtil:Call(function()
+                CSAPI.RemoveGO(interludeGO)
+                interludeGO = nil
+            end, nil, content.changerole[3] or 1)
+        end)
+    end
+end
+
+-- 当前是否在使用第二套角色
+function GetCurRoleNum()
+    return curRoleNum or 1
+end
+
 -- 拖拽开始
 function ItemDragBeginCB(cfgChild, x, y)
+    if (interludeGO ~= nil) then
+        return
+    end
     if (isHeXie or isIn or isDrag or not IsIdle()) then
         return
     end
@@ -259,7 +322,7 @@ function ItemDragEndCB(cfgChild, x, y, index)
                 CSAPI.SetGOActive(dragObj, false)
                 --
                 touchItems[index].SetHideShoe(function()
-                    --点击还原鞋
+                    -- 点击还原鞋
                     for k, v in pairs(content.drag.slots) do
                         local slot = graphic.Skeleton:FindSlot(v)
                         if (slot) then
@@ -388,7 +451,7 @@ end
 -------------进场------------------------
 
 function CheckIn()
-    if (not isHeXie and spineTools and spineTools:CheckAnimExist("in")) then
+    if (not isHeXie and spineTools and spineTools:CheckAnimExist("in") and curRoleNum == 1) then
         return true
     end
     return false
@@ -396,8 +459,8 @@ end
 
 -- 进场动画 
 function PlayIn(cb, _movePoint)
-    local indexs,names = GetIndexs()
-    spineTools:ImmClearTracks(indexs,names)
+    local indexs, names = GetIndexs()
+    spineTools:ImmClearTracks(indexs, names)
     graphic.Skeleton:SetToSetupPose()
     records = {}
     --
@@ -525,15 +588,6 @@ end
 function SetContent(cfgChild)
     local content = cfgChild.content
     local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
-    -- 激活与隐藏
-    if (content.activation) then
-        for k, v in pairs(touchItems) do
-            local num = content.activation[v:GetIndex() .. ""]
-            if (num) then
-                CSAPI.SetGOActive(v.gameObject, num == 1)
-            end
-        end
-    end
     -- 随机动作
     if (content.randomActions) then
         local num = CSAPI.RandomInt(0, 100)
@@ -570,6 +624,32 @@ function SetContent(cfgChild)
             progress = content.clicks[num]
             timeScale = progress == 0 and -1 or 1
             isClicksLast = num >= #content.clicks
+        end
+    end
+    -- 激活与隐藏
+    if (content.activation) then
+        -- 有clicks会记录顺序，偶数会反转
+        local isF = false
+        if (content.clicks) then
+            if (#content.clicks % 2 ~= 0) then
+                LogError(
+                    "activation字段下有clicks,那么clicks长度必须是偶数，否则不符合一正一反的规则")
+            end
+            local realIndex = GetRealIndex(cfgChild)
+            if (records[realIndex] and records[realIndex] % 2 == 0) then
+                isF = true
+            end
+        end
+        --
+        for k, v in pairs(touchItems) do
+            local num = content.activation[v:GetIndex() .. ""]
+            if (num) then
+                local b = num == 1
+                if (isF) then
+                    b = not b
+                end
+                CSAPI.SetGOActive(v.gameObject, b)
+            end
         end
     end
     return sName, timeScale, progress, isClicksLast
@@ -637,20 +717,26 @@ end
 --
 function GetTrackIndexs(childCfg)
     local trackIndexs, indexs, revoverNames = {}, {}, {}
-    local ignore1 = GetTrackIndex(childCfg)
-    local ignore2 = nil
+    local ignore1 = GetTrackIndex(childCfg) -- 当前的轨道
+    local ignoreDic = {} -- 忽略的轨道
 
-    if (childCfg.content.changeIdle and childCfg.content.changeIdle[3]) then
-        ignore2 = GetTrackIndex(cfg.item[childCfg.content.changeIdle[3]])
+    if (childCfg.content.changeIdle and #childCfg.content.changeIdle > 2) then
+        local tabs = childCfg.content.changeIdle
+        local len = #tabs or 2
+        for k = 3, len do
+            local _trackIndex = GetTrackIndex(cfg.item[childCfg.content.changeIdle[k]])
+            ignoreDic[_trackIndex] = 1
+        end
     end
     for k, v in ipairs(cfg.item) do
         local trackIndex = GetTrackIndex(v)
-        if (trackIndex ~= ignore1 and (ignore2 == nil or trackIndex ~= ignore2)) then
+        if (trackIndex ~= ignore1 and not ignoreDic[trackIndex]) then
             table.insert(trackIndexs, trackIndex)
             table.insert(indexs, v.index)
             table.insert(revoverNames, v.sName)
         end
     end
+    -- 要清除的轨道，对应的条目序号，要清除的动画名称
     return trackIndexs, indexs, revoverNames
 end
 
@@ -665,7 +751,7 @@ function ClearRecords(indexs)
 end
 
 function GetIndexs()
-    local indexs,names = {},{}
+    local indexs, names = {}, {}
     local dic = {}
     for k, v in pairs(cfg.item) do
         local trackIndex = GetTrackIndex(v)
@@ -675,5 +761,5 @@ function GetIndexs()
             dic[trackIndex] = 1
         end
     end
-    return indexs,names
+    return indexs, names
 end

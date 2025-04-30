@@ -2075,6 +2075,12 @@ end
 function ConfigChecker:CfgCommodity(cfgs)
     g_CanByShop = {shop = {}, tab = {}}
     g_CheckTimeShop = {shop = {}, tab = {}}
+    -- 返利卡的皮肤商品组
+    g_SkinIDShop = {}
+    -- 共用记录的商品组
+    g_GroupShop = {}
+    --分段上架的商品组
+    g_SplitTimeShop = {}
 
     -- 记录所有需要支付的商品id
     g_ShopIsPayIds = {}
@@ -2199,23 +2205,53 @@ function ConfigChecker:CfgCommodity(cfgs)
                 end
             end
         else
-            if v.nBuyEnd == 0 or CURRENT_TIME < v.nBuyEnd then
-                if v.group then
-                    if v.tabID then
-                        if not g_CanByShop.tab[v.group] then
-                            g_CanByShop.tab[v.group] = {}
-                        end
-                        if not g_CanByShop.tab[v.group][v.tabID] then
-                            g_CanByShop.tab[v.group][v.tabID] = {}
-                        end
-                        table.insert(g_CanByShop.tab[v.group][v.tabID], v.id)
-                    else
-                        if not g_CanByShop.shop[v.group] then
-                            g_CanByShop.shop[v.group] = {}
-                        end
-                        table.insert(g_CanByShop.shop[v.group], v.id)
+            --if v.nBuyEnd == 0 or CURRENT_TIME < v.nBuyEnd then
+            --
+            --end
+            if v.group then
+                if v.tabID then
+                    if not g_CanByShop.tab[v.group] then
+                        g_CanByShop.tab[v.group] = {}
                     end
+                    if not g_CanByShop.tab[v.group][v.tabID] then
+                        g_CanByShop.tab[v.group][v.tabID] = {}
+                    end
+                    table.insert(g_CanByShop.tab[v.group][v.tabID], v.id)
+                else
+                    if not g_CanByShop.shop[v.group] then
+                        g_CanByShop.shop[v.group] = {}
+                    end
+                    table.insert(g_CanByShop.shop[v.group], v.id)
                 end
+            end
+        end
+
+        if v.skinID then
+            if not g_SkinIDShop[v.skinID] then
+                g_SkinIDShop[v.skinID] = {}
+            end
+            table.insert(g_SkinIDShop[v.skinID], v.id)
+
+            if not v.rewardID then
+                assert(false, string.format('CfgCommodity 的 id = %s 配置了皮肤组编号，返利奖励物品不允许为空', v.id))
+            end
+        end
+
+        if v.shopGroupID then
+            if not g_GroupShop[v.shopGroupID] then
+                g_GroupShop[v.shopGroupID] = {}
+            end
+            table.insert(g_GroupShop[v.shopGroupID], v.id)
+        end
+
+        if v.sSplitTime then
+            if not g_SplitTimeShop[v.sSplitTime] then
+                g_SplitTimeShop[v.sSplitTime] = {}
+            end
+            table.insert(g_SplitTimeShop[v.sSplitTime], v.id)
+
+            if v.sBuyStart or v.sBuyEnd then
+                assert(false, string.format('CfgCommodity 的 id = %s 配置了多时段，不需要再配开始结束时间', v.id))
             end
         end
     end
@@ -2760,6 +2796,56 @@ function ConfigChecker:cfgColosseumSeasonMission(cfgs)
     CommCalCfgTasks(cfgs, eTaskType.AbattoirSeason)
 end
 
+function ConfigChecker:CfgDupLiZhan(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.DupLiZhan)
+end
+function ConfigChecker:CfgTaskPuzzle(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.Puzzle)
+end
+function ConfigChecker:cfgWorldBossMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.GlobalBossDay)
+end
+
+function ConfigChecker:cfgWorldBossMonthMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.GlobalBossMonth)
+end
+function ConfigChecker:cfgWorldBossMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.GlobalBossDay)
+end
+
+function ConfigChecker:cfgWorldBossMonthMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.GlobalBossMonth)
+end
 function ConfigChecker:CfgExtraExploration(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -2894,9 +2980,10 @@ function ConfigChecker:CfgDupDropCntAdd(cfgs)
 
     -- LogTrace("ConfigChecker:CfgDupDropCntAdd()")
     LogDebug(
-            'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s',
+            'ConfigChecker:CfgDupDropCntAdd() g_AddDupMultiCnt:%s, g_ReCalAddDupMultiTime:%s, g_SpecialMultiId:%s',
             g_AddDupMultiCnt,
-            g_ReCalAddDupMultiTime
+            g_ReCalAddDupMultiTime,
+            g_SpecialMultiId
     )
 end
 
@@ -2985,6 +3072,9 @@ function ConfigChecker:CfgAchieve(cfgs)
         cfg.aFinishId = aFinishId
         cfg.finishCount = finishCount
         table.insert(achievementFinishIds[aFinishId], cfgid)
+        if not CfgAchieveFinishVal[aFinishId] then
+            LogE('CfgAchieve：%s 的 aFinishId ：%s 在CfgAchieveFinishVal中没有配置', cfg.id, aFinishId)
+        end
     end
     cfgs.achievementFinishIds = achievementFinishIds
 end
@@ -3033,6 +3123,10 @@ function ConfigChecker:CfgBadge(cfgs)
         cfg.aFinishId = aFinishId
         cfg.finishCount = finishCount
         table.insert(badgedFinishIds[aFinishId], cfgid)
+
+        if not CfgBadgeFinishVal[aFinishId] then
+            LogE('徽章CfgBadge：%s 的 aFinishId ：%s 在CfgBadgeFinishVal中没有配置', cfg.id, aFinishId)
+        end
     end
     cfgs.badgedFinishIds = badgedFinishIds
 end
@@ -3283,6 +3377,29 @@ function ConfigChecker:CfgRogueBuff(cfgs)
 
     end
 end
+function ConfigChecker:Section(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if cfg.data then
+            cfg.resetTime = GCalHelp:GetTimeStampBySplit(cfg.data, cfg)
+        end
+    end
+end
+
+
+function ConfigChecker:CfgSplitTime(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if cfg.infos then
+            for _, info in pairs(cfg.infos) do
+                if info.begTime then
+                    info.nBegTime = GCalHelp:GetTimeStampBySplit(info.begTime, info)
+                end
+                if info.endTime then
+                    info.nEndTime = GCalHelp:GetTimeStampBySplit(info.endTime, info)
+                end
+            end
+        end
+    end
+end
 function ConfigChecker:cfgColosseum(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -3327,6 +3444,39 @@ function ConfigChecker:cfgGlobalBoss(cfgs)
     for _, cfg in pairs(cfgs) do
         cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.nBeginTime, cfg)
         cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.nEndTime, cfg)
+        cfg.BossDeathTime = GCalHelp:GetTimeStampBySplit(cfg.BossDeathTime, cfg)
         assert(cfg.nBeginTime < cfg.nEndTime, "boss开启时间范围有误")
+    end
+end
+function ConfigChecker:CfgRankTeam(cfgs)
+    -- 按章节分排行榜
+    g_rank_section = {}
+    -- 十二宫的排行榜
+    g_star_group = {}
+    for _, cfg in pairs(cfgs) do
+        if cfg.sectionID then
+            g_rank_section[cfg.sectionID] = cfg.id
+        end
+        if cfg.activityID and cfg.activityID == eActiveEntryId.STAR then
+            table.insert(g_star_group, cfg.id)
+        end
+    end
+end
+function ConfigChecker:CfgPuzzleBase(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        assert(cfg.nBeginTime < cfg.nEndTime, "拼图玩法活动开启时间范围有误")
+    end
+end
+
+function ConfigChecker:CfgPuzzleReward(cfgs)
+    for _, cfg in pairs(cfgs) do
+        for id,info in pairs(cfg.infos or {}) do
+            if not info.grids or table.empty(info.grids) then
+                cfg.finalRwdId = id
+                break
+            end
+        end
     end
 end

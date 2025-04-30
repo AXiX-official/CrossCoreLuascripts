@@ -1046,9 +1046,9 @@ GameMsg.map["FightProtocol:GetGlobalBossData"] = {
 	{ },
 }
 GameMsg.map["FightProto:GetGlobalBossDataRet"] = {
-	--血量     最大血量 玩家排名 今日已挑战次数   
-	{ "double","double","uint",  "uint",          },
-	{ "hp",    "maxHp", "rank",  "challengeTimes",},
+	--血量     最大血量 玩家排名 今日已挑战次数   最高伤害值  
+	{ "double","double","uint",  "uint",          "int",      },
+	{ "hp",    "maxHp", "rank",  "challengeTimes","maxDamage",},
 }
 GameMsg.map["FightProtocol:EnterGlobalBossFight"] = {
 	--队伍         
@@ -1189,6 +1189,16 @@ GameMsg.map["FightProto:RogueTGainRewardRet"] = {
 	--类型   对应类型的奖励下标 
 	{ "uint","uint",            },
 	{ "ty",  "idx",             },
+}
+GameMsg.map["FightProtocol:GlobalBossMopUp"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["FightProto:GlobalBossMopUpRet"] = {
+	--奖励           伤害      历史最高伤害 
+	{ "list|sReward","int",    "int",       },
+	{ "reward",      "nDamage","nHightest", },
 }
 GameMsg.map["ItemData"] = {
 	--id     数量  第一个获取时间 有效期序列值(结合配置表的sExpiry使用, 导表工具会生成nExpiry) 过期时间，不需要分开堆叠显示的使用[头像框] 分批获取的信息 
@@ -2541,14 +2551,14 @@ GameMsg.map["TaskProto:GetRewardByTypes"] = {
 	{ "taskType",      },
 }
 GameMsg.map["sPracticeInfo"] = {
-	--本季赛开始时间(时间前的都是休息时间） 本季赛结束时间 可以参加的计数 下次参加次数重置时间 已使用刷新次数 段位         最高段位         排名   最高排名   积分    可购买军演挑战次数 
-	{ "uint",              "uint",        "short",       "uint",              "byte",        "short",     "uint",          "uint","uint",    "uint", "short",           },
-	{ "start_time",        "end_time",    "can_join_cnt","t_join_cnt",        "flush_cnt",   "rank_level","max_rank_level","rank","max_rank","score","can_join_buy_cnt",},
+	--本季赛开始时间(时间前的都是休息时间） 本季赛结束时间 可以参加的计数 下次参加次数重置时间 已使用刷新次数 段位         最高段位         排名   最高排名   积分    可购买军演挑战次数 最后设置的角色看板ID 军演立绘live2d 
+	{ "uint",              "uint",        "short",       "uint",              "byte",        "short",     "uint",          "uint","uint",    "uint", "short",           "uint",              "byte",        },
+	{ "start_time",        "end_time",    "can_join_cnt","t_join_cnt",        "flush_cnt",   "rank_level","max_rank_level","rank","max_rank","score","can_join_buy_cnt","role_panel_id",     "live2d",      },
 }
 GameMsg.map["sPracticeObjInfo"] = {
-	--id     姓名     玩家等级 段位         排名   综合能力      头像模型id 头像框       最后设置的角色看板ID 是否机器人 积分    性别序号      玩家称号     
-	{ "uint","string","uint",  "short",     "uint","uint",       "uint",    "uint",      "uint",              "byte",    "uint", "byte",       "uint",      },
-	{ "uid", "name",  "level", "rank_level","rank","performance","icon_id", "icon_frame","role_panel_id",     "is_robot","score","sel_card_ix","icon_title",},
+	--id     姓名     玩家等级 段位         排名   综合能力      头像模型id 头像框       最后设置的角色看板ID 是否机器人 积分    性别序号      玩家称号     基础队伍卡牌信息  军演立绘live2d 
+	{ "uint","string","uint",  "short",     "uint","uint",       "uint",    "uint",      "uint",              "byte",    "uint", "byte",       "uint",      "list|sCardsData","byte",        },
+	{ "uid", "name",  "level", "rank_level","rank","performance","icon_id", "icon_frame","role_panel_id",     "is_robot","score","sel_card_ix","icon_title","baseCards",      "live2d",      },
 }
 GameMsg.map["sPracticeBaseTeam"] = {
 	--是否机器人                   好友id 
@@ -2561,9 +2571,9 @@ GameMsg.map["ArmyProto:GetPracticeInfo"] = {
 	{ "selfInfo",      "listInfo",      },
 }
 GameMsg.map["ArmyProto:GetPracticeInfoRet"] = {
-	--                                          获取自己军演信息 是否获取对手列表 第几个赛季 
-	{ "struts|sPracticeInfo","list|sPracticeObjInfo","bool",          "bool",          "short",   },
-	{ "info",              "objs",              "selfInfo",      "listInfo",      "army_ix", },
+	--                                          获取自己军演信息 是否获取对手列表 第几个赛季 战绩简单信息    
+	{ "struts|sPracticeInfo","list|sPracticeObjInfo","bool",          "bool",          "short",   "json",         },
+	{ "info",              "objs",              "selfInfo",      "listInfo",      "army_ix", "fightBaseLogs",},
 }
 GameMsg.map["ArmyProto:PracticeInfoUpdate"] = {
 	--                     结果     经验(卡牌) 玩家经验     增加的兑币 是否强行退出  参与战斗的卡牌(id：卡牌id, num:添加的好感度) 
@@ -2744,6 +2754,31 @@ GameMsg.map["ArmyProto:BuyAttackCntRet"] = {
 	--购买次数 已买次数           可以参加的计数 
 	{ "short", "short",           "short",       },
 	{ "cnt",   "can_join_buy_cnt","can_join_cnt",},
+}
+GameMsg.map["sArmyFightLog"] = {
+	--                                                            对方分数变动                                 自己是否胜利 挑战时间 操作数     排名   
+	{ "uint","string","uint", "int",    "uint",      "uint",      "uint",      "uint",       "list|sCardsData","bool",      "uint",  "short",   "uint",},
+	{ "uid", "name",  "level","icon_id","icon_frame","icon_title","mod_score", "performance","baseCards",      "is_winer",  "time",  "turn_num","rank",},
+}
+GameMsg.map["ArmyProto:GetFightLogs"] = {
+	--第几个开始，从1开始 数量    
+	{ "short",            "short",},
+	{ "ix",               "cnt",  },
+}
+GameMsg.map["ArmyProto:GetFightLogsRet"] = {
+	--                     第几个开始，从1开始 数量    
+	{ "list|sArmyFightLog","short",            "short",},
+	{ "logs",              "ix",               "cnt",  },
+}
+GameMsg.map["ArmyProto:SetRolePanel"] = {
+	--军演立绘id      军演立绘live2d 
+	{ "uint",         "byte",        },
+	{ "role_panel_id","live2d",      },
+}
+GameMsg.map["ArmyProto:SetRolePanelRet"] = {
+	--军演立绘id      军演立绘live2d 
+	{ "uint",         "byte",        },
+	{ "role_panel_id","live2d",      },
 }
 GameMsg.map["sBuildRoleAbility"] = {
 	--能力类型值 参考角色能力表CfgCardRoleAbility的vals字段批注 [物品id] = 增加的数量 or 百分比 目前只有工程师有，上次执行时间 能力生效的角色ids 
@@ -4944,6 +4979,111 @@ GameMsg.map["AbattoirProto:RandModeGetRwdRet"] = {
 	--领奖状态 
 	{ "bool",  },
 	{ "isGet", },
+}
+GameMsg.map["ActivePuzzleProto:GetPuzzleData"] = {
+	--活动id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["ActivePuzzleProto:GetPuzzleDataRet"] = {
+	--活动id 已解锁格子    已领取奖励   
+	{ "uint","array|uint", "array|uint",},
+	{ "id",  "unlockGrids","getRwdIds", },
+}
+GameMsg.map["ActivePuzzleProto:DrawPuzzle"] = {
+	--活动id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["ActivePuzzleProto:DrawPuzzleRet"] = {
+	--活动id 奖励配置idx 
+	{ "uint","uint",     },
+	{ "id",  "idx",      },
+}
+GameMsg.map["ActivePuzzleProto:UnlockGrid"] = {
+	--活动id 格子序号     
+	{ "uint","array|uint",},
+	{ "id",  "gridIdx",   },
+}
+GameMsg.map["ActivePuzzleProto:UnlockGridRet"] = {
+	--活动id 已解锁格子    奖励           
+	{ "uint","array|uint", "list|sReward",},
+	{ "id",  "unlockGrids","gets",        },
+}
+GameMsg.map["ActivePuzzleProto:GetReward"] = {
+	--活动id 奖励id  
+	{ "uint","uint", },
+	{ "id",  "rwdId",},
+}
+GameMsg.map["ActivePuzzleProto:GetRewardRet"] = {
+	--活动id 已领取奖励   
+	{ "uint","array|uint",},
+	{ "id",  "getRwdIds", },
+}
+GameMsg.map["ActivePuzzleProto:BuyPuzzle"] = {
+	--活动id 商品配置idx 购买消耗类型 
+	{ "uint","uint",     "uint",      },
+	{ "id",  "idx",      "costType",  },
+}
+GameMsg.map["ActivePuzzleProto:BuyPuzzleRet"] = {
+	--活动id 商品配置idx 
+	{ "uint","uint",     },
+	{ "id",  "idx",      },
+}
+GameMsg.map["DownloadProto:GetDownloadReward"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["DownloadProto:CheckDownloadRewardRet"] = {
+	--是否已领取 
+	{ "bool",    },
+	{ "isGet",   },
+}
+GameMsg.map["DownloadProto:GetDownloadRewardRet"] = {
+	--返回结果 
+	{ "bool",  },
+	{ "result",},
+}
+GameMsg.map["DownloadProto:CheckDownloadReward"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["sQuestionna"] = {
+	--问卷ID 标题     开始时间   结束时间    跳转路径        奖励           系统        渠道        领取状态（1已点击未领取） 
+	{ "int", "string","uint",    "uint",     "string",       "list|sReward","array|int","array|int","byte",              },
+	{ "id",  "name",  "openTime","closeTime","nTransferPath","reward",      "system",   "channel",  "getStatus",         },
+}
+GameMsg.map["QuestionnaireProto:GetInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["QuestionnaireProto:GetInfoRet"] = {
+	--                   
+	{ "list|sQuestionna",},
+	{ "infos",           },
+}
+GameMsg.map["QuestionnaireProto:GetReward"] = {
+	--问卷ID 
+	{ "int", },
+	{ "id",  },
+}
+GameMsg.map["QuestionnaireProto:GetRewardRet"] = {
+	--问卷ID 
+	{ "int", },
+	{ "id",  },
+}
+GameMsg.map["QuestionnaireProto:Jump"] = {
+	--问卷ID 
+	{ "int", },
+	{ "id",  },
+}
+GameMsg.map["QuestionnaireProto:JumpRet"] = {
+	--问卷ID 
+	{ "int", },
+	{ "id",  },
 }
 GameMsg.map["PlayerProto:GetClientData"] = {
 	--键值     

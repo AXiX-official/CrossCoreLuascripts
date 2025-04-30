@@ -971,7 +971,7 @@ function SkillBase:RegisterEvent(skillMgr)
 	local mgr = self.team.fightMgr
 	for k,v in ipairs(arrPassiveTiming) do
 		if self[v] then
-			--LogDebugEx("注册技能事件", self.id, v)
+			--LogDebugEx("注册技能事件", self.name, self.id, v)
 			mgr.oFightEventMgr:AddSkillEvent(v, self)
 			if v == "OnDeath" then
 				table.insert(skillMgr.arrDeathEvent, self)
@@ -1569,7 +1569,9 @@ function SkillBase:OnHelp(effectID, caster, helper, target, pos, data)
 	-- -- 普攻是群攻就不协助
 	-- local oSkill = caster.currentSkill
 	local oSkill = helper.skillMgr:GetNormon()
-	if not oSkill.isSingle then return end
+	
+	--暂时屏蔽
+	-- if not oSkill.isSingle then return end
 
 	local mgr = self.team.fightMgr
 	if mgr.bInHelp then return end -- 禁止协战中触发协战
@@ -1594,7 +1596,6 @@ function SkillBase:OnCallSkill(effectID, caster, targets, pos, data, api)
 	api=api or "OnHelp"
 	LogDebug("调用技能{%s}id{%s}", api, self.id)
 	local mgr = self.team.fightMgr
-
 	local lastSkill = caster.currentSkill
 	local currTurn = mgr.currTurn
 	mgr.currTurn = caster
@@ -1646,7 +1647,7 @@ function SkillBase:OnCallSkill(effectID, caster, targets, pos, data, api)
 			mgr:DoEventWithLog("OnAttackOver2", caster, target, data)
 		end
 
-		self.currentAtkTargets = nil
+		self.currentAtkTargets = {} --不能设为nil 防止Apply循环报错
 	-- else
 	-- 	if mgr.currentDeathsBySkill then
 	-- 		ASSERT(nil, "不是伤害技能但是有死亡")
@@ -1680,6 +1681,7 @@ function SkillBase:OnCallSkill(effectID, caster, targets, pos, data, api)
 	self.callSkillType = nil
 	caster.currentSkill = lastSkill
 	mgr.currTurn = currTurn
+	LogDebug("调用技能结束{%s}id{%s}----------", api, self.id)
 	return {}
 end
 
@@ -1774,7 +1776,7 @@ function DealDamage(oSkill, log, caster, target, data, eDamage)
 				local nShareDamage = math.floor(-hpDamage*isshare)
 				LogDebugEx("分摊前/后伤害", hpDamage, hpDamage + nShareDamage)
 				hpDamage = hpDamage + nShareDamage -- 真正的伤害
-				target.nShareDamage = math.floor((-hpDamage*isshare)/count) -- 分摊到每个队友的伤害量
+				target.nShareDamage = math.floor((-hpDamage)/count) -- 分摊到每个队友的伤害量
 			end 
 		end
 	end
@@ -1835,6 +1837,7 @@ function SkillBase:Damage(effect, caster, target, data, percent, count, maxcount
 
 	count = count or 1
 	local isdeath = nil
+	local bIsLive = target:IsLive() -- 记录原来的状态, 死了就不再添加死亡列表
 	local mgr = self.team.fightMgr
 
 	for i=1,count do
@@ -1892,7 +1895,7 @@ function SkillBase:Damage(effect, caster, target, data, percent, count, maxcount
 
 	caster.currentEDamage = nil
 	isdeath = not target:IsLive()
-	if isdeath then
+	if bIsLive and isdeath then --本来活的, 现在死了才加入
 		self:AddDeaths(target, caster)
 	end
 
@@ -1927,6 +1930,7 @@ function SkillBase:ExtraDamage(effect, caster, target, data, percent, count, max
 
 	count = count or 1
 	local isdeath = nil
+	local bIsLive = target:IsLive() -- 记录原来的状态, 死了就不再添加死亡列表
 	local mgr = self.team.fightMgr
 
 	for i=1,count do
@@ -1964,7 +1968,7 @@ function SkillBase:ExtraDamage(effect, caster, target, data, percent, count, max
 			-- 	mgr:DoEventWithSub("OnAfterHurt", caster, target, data)
 			-- end
 
-			if isdeath then
+			if bIsLive and isdeath then --本来活的, 现在死了才加入
 				self:AddDeaths(target, caster)
 			end
 		elseif bIgnoreSingleAttack then

@@ -2387,6 +2387,8 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
     local notDelCnt = false
     local isAddReturnAdd = false
 
+    -- LogTable(cfgSection, "GCalHelp:GetMultiDropMaxCnt() cfgSection:")
+    
     if cfgSection.multiId then
         local dropMultiCfg = CfgDupDropMulti[cfgSection.multiId]
         if dropMultiCfg and dropMultiCfg.dropAdd then
@@ -2426,7 +2428,7 @@ function GCalHelp:GetMultiDropMaxCnt(cfgSection, returnAdd)
     end
 
     -- LogTrace("GCalHelp:GetMultiDropMaxCnt()")
-    -- LogDebug("sumMulti:%s, sumMaxCnt:%s, notDelCnt:%s, isUseSpecialMulti:%s, returnAdd:%s", sumMulti, sumMaxCnt, notDelCnt, isUseSpecialMulti, returnAdd)
+    LogDebug("g_SpecialMultiId:%s, sumMulti:%s, sumMaxCnt:%s, notDelCnt:%s, isUseSpecialMulti:%s, returnAdd:%s", g_SpecialMultiId, sumMulti, sumMaxCnt, notDelCnt, isUseSpecialMulti, returnAdd)
     return sumMulti, sumMaxCnt, notDelCnt, isUseSpecialMulti
 end
 
@@ -2489,4 +2491,257 @@ function GCalHelp:GetRogueTNextMonth(curTime)
         date.month = date.month + 1
     end
     return os.time{year = date.year, month = date.month, day = date.day, hour = date.hour, min = 0, sec = 0}
+end
+
+-- 获取爱相随商店套装价格
+-- suitPrice:套装原折扣价
+-- totalPrice:单项售价总价
+-- subPrice:已拥有的单项售价和
+function GCalHelp:GetLovePlusShopSuitPrice(suitPrice,totalPrice,subPrice)
+    local rtPrice = suitPrice - subPrice * suitPrice / totalPrice
+    LogInfo("<<<<<GCalHelp:GetLovePlusShopSuitPrice>>>>>%d - %d * %d / %d = %d",suitPrice,subPrice,suitPrice,totalPrice,rtPrice)
+    return rtPrice
+end
+
+
+function GCalHelp:GetExchangeCodePlats(plat, plats)
+    local canUsePlats = nil
+    if not plats or table.empty(plats) then
+        canUsePlats = { [plat] = 1 }
+        if plat == ChannelType.Normal then
+            canUsePlats[ChannelType.TapTap] = 1
+        end
+    else
+        canUsePlats = plats
+    end
+
+    return canUsePlats
+end
+
+-- 拼图活动获取已解锁的奖励id集合
+-- id:活动id
+-- mapGrids:已解锁格子数据
+function GCalHelp:GetActivePuzzleUnlockRwd(id,mapGrids)
+    ASSERT(id and mapGrids)
+    local baseCfg = CfgPuzzleBase[id]
+    if not baseCfg or not mapGrids then
+        return
+    end
+    local rwdCfg = CfgPuzzleReward[baseCfg.rewardId]
+    if not rwdCfg then
+        return
+    end
+    local mapIds = {}
+    for _,cfg in ipairs(rwdCfg.infos) do
+        local canGet = true
+        if cfg.grids and not table.empty(cfg.grids) then
+            for _,idx in ipairs(cfg.grids) do
+                if not mapGrids[idx] then
+                    canGet = false
+                    break
+                end
+            end
+        else
+            local gridCfg = CfgPuzzleGrid[baseCfg.gridCfgId]
+            if not gridCfg then
+                canGet = false
+            else
+                for gId,_ in ipairs(gridCfg.infos) do
+                    if not mapGrids[gId] then
+                        canGet = false
+                        break
+                    end
+                end
+            end
+        end
+        
+        if canGet then
+            mapIds[cfg.rewardId] = true
+        end
+    end
+    return mapIds
+end
+
+-- 检测积分战斗选中词条是否正确
+function GCalHelp:CheckBuffBattle(buffs, duplicateId)
+
+    if not duplicateId then
+        return false
+    end
+
+    --全部词条
+    local buffsMap = {}
+    --全部前置词条
+    local preidMap = {}
+    --全部冲突词条
+    local conflictidMap = {}
+    --全部分组
+    local groupMap = {}
+
+
+    -- 检测词条与关卡冲突
+
+    local dupCfg = MainLine[duplicateId]
+    local dungeonGroup = dupCfg.dungeonGroup
+    local dungeonGroupCfg = DungeonGroup[dungeonGroup]
+
+    --可以选中的词条组
+    local canSelectBuffIdMap = {}
+
+    -- 是否需要检测章节可以选中的词条组
+    local checkBuffGroup = true
+    if not dungeonGroupCfg.buffgroup or table.empty(dungeonGroupCfg.buffgroup) then
+        checkBuffGroup = false
+    else
+        for _, canSelectGroup in pairs(dungeonGroupCfg.buffgroup) do
+            canSelectBuffIdMap[canSelectGroup] = true
+        end
+    end
+
+    if buffs then
+        for _, buffBattleBuffId in ipairs(buffs) do
+            buffsMap[buffBattleBuffId] = true
+            local cfg = CfgBuffBattle[buffBattleBuffId]
+
+            if cfg then
+                if cfg.preid then
+                    table.insert(preidMap, cfg.preid)
+                end
+
+                if cfg.conflictid then
+                    for _, buffConflictid in ipairs(cfg.conflictid) do
+                        table.insert(conflictidMap, buffConflictid)
+                    end
+                end
+
+                if cfg.group then
+                    groupMap[cfg.group] = true
+
+                    if checkBuffGroup and not canSelectBuffIdMap[cfg.group] then
+                        return false, string.format("选中词条%s 属于不可选关卡组：%s 未选中", buffBattleBuffId, cfg.group)
+                    end
+                end
+            end
+        end
+    end
+
+    -- 检测词条冲突
+    for _, preid in ipairs(preidMap) do
+        if not buffsMap[preid] then
+            return false, string.format("前置词条id：%s 未选中", preid)
+        end
+    end
+
+    for _, conflictid in ipairs(conflictidMap) do
+        if buffsMap[conflictid] then
+            return false, string.format("冲突词条id：%s 被选中", conflictid)
+        end
+    end
+
+    return true
+
+end
+
+-- 积分战斗转换成技能跟buff，传入战斗
+function GCalHelp:GetBuffBattleExdata(buffs, exData, cardData)
+    exData.tExBuff = {}         -- 我方buff 数组
+    exData.tMonsterBuff = {}    -- 怪物buff 数组​
+    exData.tAllBuff = {}        -- 双方buff 数组​
+    exData.tRandBuff = {}       -- 随机buff 格式给我方三个人加buff, 敌方1个人加buff
+    if buffs and next(buffs) then
+        for _, rouguBuff in ipairs(buffs) do
+            local cfg = CfgBuffBattle[rouguBuff]
+            if cfg.target == RogueBuffTarget.TeamAll then
+                -- 我方全体
+                table.merge(exData.tExBuff, cfg.buffId)
+                if cfg.skillId and next(cfg.skillId) then
+                    for k, v in pairs(cardData) do
+                        table.merge(v.data.skills, cfg.skillId)
+                    end
+                end
+            elseif cfg.target == RogueBuffTarget.MonsterAll then
+                -- 敌方全体
+                table.merge(exData.tMonsterBuff, cfg.buffId)
+            elseif cfg.target == RogueBuffTarget.BothAll then
+                -- 敌我全体
+                table.merge(exData.tAllBuff, cfg.buffId)
+                if cfg.skillId and next(cfg.skillId) then
+                    for k, v in pairs(cardData) do
+                        table.merge(v.data.skills, cfg.skillId)
+                    end
+                end
+            elseif cfg.target == RogueBuffTarget.TeamRandom then
+                -- 我方随机
+                table.insert(exData.tRandBuff, {
+                    teamID = 1,
+                    count = cfg.targetValue,
+                    buff = table.copy(cfg.buffId)
+                })
+
+                local roleNum = #cardData
+                if roleNum <= cfg.targetValue then
+                    -- 上阵角色数少于随机数，全部角色加技能
+                    if cfg.skillId and next(cfg.skillId) then
+                        for idx, v in pairs(cardData) do
+                            table.merge(v.data.skills, cfg.skillId)
+                        end
+                    end
+                else
+                    -- 从上阵角色里面随机N个角色出来加上词条技能
+                    local arr = {}
+                    for i = 1, roleNum do
+                        table.insert(arr, i)
+                    end
+
+                    local effectRoles = {}
+                    for i = 1, cfg.targetValue do
+                        local r = math.random(1, #arr)
+                        effectRoles[arr[r]] = true
+                        table.remove(arr, r)
+                    end
+
+                    if cfg.skillId and next(cfg.skillId) then
+                        for idx, v in pairs(cardData) do
+                            if effectRoles[idx] then
+                                table.merge(v.data.skills, cfg.skillId)
+                            end
+                        end
+                    end
+                end
+
+
+            elseif cfg.target == RogueBuffTarget.MonsterRandom then
+                -- 敌方随机
+                table.insert(exData.tRandBuff, {
+                    teamID = 2,
+                    count = cfg.targetValue,
+                    buff = table.copy(cfg.buffId)
+                })
+            end
+        end
+    end
+end
+
+-- 获取选中词条的积分，不传入duplicateId只计算buff分，不计算关卡基础分
+function GCalHelp:GetCheckBuffBattlePoint(buffs, duplicateId)
+    local points = 0
+
+    if duplicateId then
+        local dupCfg = MainLine[duplicateId]
+        local dungeonGroup = dupCfg.dungeonGroup
+        local dungeonGroupCfg = DungeonGroup[dungeonGroup]
+
+        points = dungeonGroupCfg and dungeonGroupCfg.points or 0
+    end
+
+    buffs = buffs or {  }
+
+    for _, buffId in ipairs(buffs) do
+        local buffBattle = CfgBuffBattle[buffId]
+        if buffBattle then
+            points = points + (buffBattle.points or 0)
+        end
+    end
+
+    return points
 end

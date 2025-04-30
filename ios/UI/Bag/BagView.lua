@@ -290,10 +290,12 @@ function Refresh(list) --刷新列表
 		CSAPI.SetGOActive(SortNone,false);
 	end
 	-- RefreshSortBar();
-	CSAPI.SetGOActive(mask,true);
-	FuncUtil:Call(function()
-		CSAPI.SetGOActive(mask,false);
-	end,nil,tweenMaskTime);
+	if isFirst then
+		CSAPI.SetGOActive(mask,true);
+		FuncUtil:Call(function()
+			CSAPI.SetGOActive(mask,false);
+		end,nil,tweenMaskTime);
+	end
 	if list then
 		curDatas = list;
 		selectIndex =nil;

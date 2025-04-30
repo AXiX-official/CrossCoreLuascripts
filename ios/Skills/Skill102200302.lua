@@ -48,3 +48,21 @@ function Skill102200302:OnRoundOver(caster, target, data)
 	-- 102200303
 	self:OwnerAddBuffCount(SkillEffect[102200303], caster, caster, data, 102200301,-1,6)
 end
+-- 死亡时
+function Skill102200302:OnDeath(caster, target, data)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 102200304
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:DelBufferForce(SkillEffect[102200304], caster, target, data, 102200201)
+	end
+	-- 102200305
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:DelBufferForce(SkillEffect[102200305], caster, target, data, 102200301)
+	end
+end

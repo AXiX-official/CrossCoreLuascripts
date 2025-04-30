@@ -4,7 +4,11 @@ local skinInfo=nil;
 local countTime=0;
 local updateTime=600;
 local changeInfo=nil;
-
+local needToCheckMove = false
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txt_name)
+end 
 function Refresh(_data,_elseData)
     this.data=_data;
     this.elseData=_elseData;
@@ -102,6 +106,10 @@ function Update()
         countTime=0;
         RefreshTime()
     end
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txt_name)
+        needToCheckMove = false
+    end
 end
 
 function RefreshTime()
@@ -126,7 +134,9 @@ function SetTag(str)
 end
 
 function SetName(str)
+    needToCheckMove = false
     CSAPI.SetText(txt_name,str or "");
+    needToCheckMove = true
 end
 
 function SetAlpha(val)

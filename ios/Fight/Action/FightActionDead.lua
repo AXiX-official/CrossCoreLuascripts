@@ -37,7 +37,7 @@ function this:CheckPlayComplete(checkedCount)
 
     if(self.deadList)then
         for id,character in pairs(self.deadList)do
-            if(character and not character.isRemoved)then
+            if(character and not character.IsDeadEnd())then
                 FuncUtil:Call(self.CheckPlayComplete,self,1000,checkedCount + 1);
                 return;
             end

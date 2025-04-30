@@ -345,9 +345,9 @@ function this:GetFallRewards()
 	return self.cfg and self.cfg.fallRewards
 end
 
-function this:GetBGM()
-	return self.cfg and self.cfg.bgm
-end
+-- function this:GetBGM()
+-- 	return self.cfg and self.cfg.bgm
+-- end
 
 --获取不开启是否隐藏
 function this:GetLockShow()
@@ -435,6 +435,11 @@ end
 function this:GetTaskType()
 	local info = self:GetInfo()
 	return info and info.taskType 
+end
+
+function this:GetBGM()
+	local info = self:GetInfo()
+	return info and info.bgm or ""
 end
 ---------------------------------------------门票购买---------------------------------------------
 function this:GetBuyCount()

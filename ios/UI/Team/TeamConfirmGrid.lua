@@ -5,12 +5,22 @@ local data=nil;
 local cb=nil;
 local hpBarImg=nil;
 local spBarImg=nil;
+local needToCheckMove = false
+local timer = 0
 function Awake()
     clicker=ComUtil.GetCom(clickImg,"Image");
     hpBarImg=ComUtil.GetCom(hpBar, "Image");
     spBarImg=ComUtil.GetCom(spBar, "Image");
-end
 
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txt_name)
+end
+function Update()
+    if (needToCheckMove and Time.time > timer) then
+        luaTextMove:CheckMove(txt_name)
+        needToCheckMove = false
+    end
+end
 --data: teamItemData:上阵的队员信息
 function Refresh(d,index,openSetting)
     InitNull();
@@ -50,7 +60,10 @@ function Refresh(d,index,openSetting)
 end
 
 function SetName(name)
+    needToCheckMove = false
     CSAPI.SetText(txt_name,name or "");
+    timer = Time.time + 0.1
+    needToCheckMove = true
 end
 
 -- function SetIndex(index)

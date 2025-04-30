@@ -304,6 +304,7 @@ function SingleFightMgrClient:SendCmd(cmd, data)
 
     -- [[调试代码
     if CMD_TYPE.Skill == cmd then  -- 出现发送命令服务器没有对象,可能是客户端重复发??
+        -- 25/3/18 客户端断线恢复
         if not g_FightMgrServer.currTurn then
             if not self.currTurn then
                 ASSERT(nil, Json.Encode(data))

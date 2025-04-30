@@ -1,3 +1,15 @@
+local needToCheckMove = false
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName2)
+end
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName2)
+        needToCheckMove = false
+    end
+end
+
 function SetIndex(_index)
     index = _index
 end
@@ -36,7 +48,9 @@ end
 
 function SetName(str1, str2)
     CSAPI.SetText(txtName1, str2)
+    needToCheckMove = false
     CSAPI.SetText(txtName2, str1)
+    needToCheckMove = true
 end
 
 function OnClick()

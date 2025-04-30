@@ -1258,13 +1258,19 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
         return false, shield, num, "ImmuneDeath"
     end
 
-  
-
     LogDebugEx("FightCardBase:AddHp2", self.name, self.hp, onum, num)
     self.hp = self.hp + num
 
     if self.hp > self:Get("maxhp") then
         self.hp = self:Get("maxhp")
+    end
+
+    -- 限制回血上限
+    if num > 0 and self.fCurePercent then
+        local max = math.floor(self:Get("maxhp") * self.fCurePercent) -- 每次重新计算回血最大血量, 避免最大血量调整需要重新计算
+        if self.hp > max then
+            self.hp = max
+        end
     end
 
     LogDebugEx("FightCardBase:AddHp end", self.name, self.hp, onum, num)
@@ -1274,10 +1280,11 @@ function FightCardBase:AddHpNoShield(num, killer, bNotDeathEvent,isFromAddHp)
         end
         self.nOverDamageTotal = -self.hp
 
-        self.isLive = false
-        if not bNotDeathEvent then
+        -- 本来活着被打死才调用接口,已经死亡不再调用死亡事件
+        if self.isLive and not bNotDeathEvent then
             self:OnDeath(killer)
         end
+        self.isLive = false
 
         --LogTrace()
         return true, shield, num

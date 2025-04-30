@@ -8,8 +8,10 @@ function this:Clear()
     self.objs = {} -- 模拟敌人信息
     self.rankInfos = {} -- 排行榜信息
     self.teamInfos = {} -- 排行榜队伍信息
-    self.cur_rank = 0
+    self.army_ix = 1
+    self.fightBaseLogs = {}
 
+    self.cur_rank = 0
     self.addCoin = 0
     self.addRankNum = 0
     self.isRankLevelUp = false
@@ -41,12 +43,19 @@ end
 
 -- 敌人
 function this:GetEnemy()
-    return self.objs or {}
+    local _datas  = {}
+    for k, v in ipairs(self.objs) do
+        local info = ExerciseInfo.New()
+        info:InitData(v)
+        table.insert(_datas,info)
+    end
+
+    return _datas
 end
 
 -- 单个敌人信息
 function this:GetEnemyInfo(uid)
-    for i, v in ipairs(self:GetEnemy()) do
+    for i, v in ipairs(self.objs) do
         if (v.uid == uid) then
             return v
         end
@@ -54,7 +63,7 @@ function this:GetEnemyInfo(uid)
 end
 
 function this:UpdateEnemyInfo(proto)
-    for i, v in ipairs(self:GetEnemy()) do
+    for i, v in ipairs(self.objs) do
         if (v.uid == proto.uid) then
             v.performance = proto.team.performance
         end
@@ -223,6 +232,11 @@ function this:SetNewJoinCnt()
 end
 
 -------------------------------演习次数刷新------------------------------
+--自己的数据
+function this:GetInfo()
+    return self.info
+end
+
 --已购买次数
 function this:GetCanBuy()
     local cnt = self.info.can_join_buy_cnt or 0
@@ -277,8 +291,8 @@ end
 -- 最高段位
 function this:GetMaxDwName()
     local cfg = Cfgs.CfgPracticeRankLevel:GetByID(self:GetMaxRankLevel())
-    return cfg~=nil and cfg.name or "--"
-end 
+    return cfg and cfg.name or "--"
+end
 
 -- 积分
 function this:GetScore()
@@ -445,6 +459,8 @@ end
 -- 获取军演信息
 function this:GetPracticeInfoRet(proto)
     if (proto) then
+        self.army_ix = proto.army_ix
+        self.fightBaseLogs = proto.fightBaseLogs
         if (proto.selfInfo) then
             self.info = proto.info or {}
             EventMgr.Dispatch(EventType.Exercise_Update)
@@ -535,6 +551,14 @@ function this:SetMyRankData()
     info:InitData(_data)
     return info
 end
+
+-- 封装自己的排行榜数据
+function this:GetHistoryData(_data)
+    local info = ExerciseInfo.New()
+    info:InitData(_data)
+    return info
+end
+
 
 -- 准备好
 function this:StartRealArmyRet(proto)
@@ -769,6 +793,27 @@ function this:BuyAttackCntRet(proto)
         self.info.can_join_cnt = proto.can_join_cnt
         EventMgr.Dispatch(EventType.ExerciseL_BuyCount)
     end 
+end
+
+--战绩简单信息 
+-- {
+--     {对方uid, 对方名称, 对方是否胜利},
+--     {对方uid, 对方名称, 对方是否胜利},
+-- }
+function this:GetFightBaseLogs()
+    return self.fightBaseLogs or {}
+end
+
+function this:SetRolePanelRet(_role_panel_id,_live2d)
+    self.info.role_panel_id = _role_panel_id
+    self.info.live2d = _live2d
+    --EventMgr.Dispatch(EventType.Exercise_Role_Panel)
+end
+
+function this:GetRolePanel()
+    local modelID = self.info.role_panel_id or PlayerClient:GetIconId()
+    local isLive2D = self.info.live2d or false
+    return modelID,isLive2D
 end
 
 return this

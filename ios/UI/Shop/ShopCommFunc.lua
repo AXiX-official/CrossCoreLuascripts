@@ -910,21 +910,7 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
                 callBack = callBack
             });
         else -- 其它，直接调用支付
-            if CSAPI.IsADV() then
-                if CSAPI.RegionalCode()==3 then
-                    local priceInfo=commodityData:GetRealPrice();
-                    if priceInfo and priceInfo[1].id==-1 and priceInfo[1].num>0 and CSAPI.PayAgeTitle() then
-                        CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function()     this.HandlePayLogic(commodityData,1,commodityType,callBack); end})
-                    else
-                        this.HandlePayLogic(commodityData,1,commodityType,nil,callBack);
-                    end
-                else
-                    this.HandlePayLogic(commodityData,1,commodityType,nil,callBack);
-                end
-            else
-                this.HandlePayLogic(commodityData, 1, commodityType,nil, callBack);
-            end
-            -- this.BuyCommodity(commodityData,1,callBack);
+            this.HandlePayLogic(commodityData, 1, commodityType,nil, callBack);
         end
     elseif commodityData:GetType() == CommodityItemType.FORNITURE and
         (commodityData:GetNum() >= 1 or commodityData:GetNum() == -1 or isForce == true) then -- 家具商品

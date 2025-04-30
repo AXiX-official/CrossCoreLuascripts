@@ -235,8 +235,8 @@ function this:CreateCharacters(datas)
             local isPutIn =  character.PutIn();         
             if(isPutIn == false)then
                 LogError("位置被占用，无法放入新角色");
-                LogError("角色数据");
-                Log( data);
+                --LogError("角色数据");
+                --Log(data);
             end
             table.insert(list,character);
         else
@@ -297,6 +297,33 @@ function this:LoadModelBaseAB(cfgModel)
 
     local abName = ResUtil:GenCharacterABName(cfgModel.ab_name);
     CSAPI.LoadABsByOrder({abName},nil,false,false);
+end
+
+--获取标记partSign的所有部位
+function this:GetPartCharacters(partSign,ignorePartCharacter)
+    if(StringUtil:IsEmpty(partSign))then
+        return;
+    end
+    local partCharacters = nil;
+    local list = self:GetAll();
+    if(list)then
+        for _,character in pairs(list)do
+            if(character.GetPartSign() == partSign and character ~= ignorePartCharacter)then
+                partCharacters = partCharacters or {};
+                table.insert(partCharacters,character);
+            end
+        end
+    end
+    return partCharacters;
+end
+--同步部位状态
+function this:SyncPartState(partSign,state,ignorePartCharacter)
+    local partCharacters = self:GetPartCharacters(partSign,ignorePartCharacter);
+    if(partCharacters)then
+        for _,character in ipairs(partCharacters)do
+            character.SyncPartState(state);
+        end
+    end
 end
 
 return this;

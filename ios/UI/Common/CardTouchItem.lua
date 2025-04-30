@@ -1,4 +1,4 @@
-local restoreShoeCB = nil 
+local restoreShoeCB = nil
 
 function SetIndex(_index)
     index = _index
@@ -29,8 +29,13 @@ function Refresh(_cfgChild, _parentLua)
     drag_clickNode.enabled = gesture ~= 0
     -- hide (生成时默认一隐藏)
     local isHide = false
-    if (cfgChild.content and cfgChild.content.isHide ~= nil) then
+    local roleNum = cfgChild.role or 1
+    if (parentLua.GetCurRoleNum ~= nil and parentLua.GetCurRoleNum() ~= roleNum) then
         isHide = true
+    else
+        if (cfgChild.content and cfgChild.content.isHide ~= nil) then
+            isHide = true
+        end
     end
     CSAPI.SetGOActive(gameObject, not isHide)
 
@@ -54,7 +59,7 @@ function OnClick()
         return
     end
 
-    if(restoreShoeCB)then 
+    if (restoreShoeCB) then
         restoreShoeCB()
         click_clickNode.enabled = false
         drag_clickNode.enabled = true
@@ -89,7 +94,7 @@ function OnDragXY(_x, _y)
 end
 
 function OnEndDragXY(_x, _y)
-    parentLua.ItemDragEndCB(cfgChild, _x, _y,index)
+    parentLua.ItemDragEndCB(cfgChild, _x, _y, index)
 end
 
 function GetIndex()
@@ -109,13 +114,13 @@ function JumpASMR()
             end
         else
             UIUtil:OpenDialog(LanguageMgr:GetTips(46003), function()
-                CSAPI.OpenView("ASMRShow",asmr.id)
+                CSAPI.OpenView("ASMRShow", asmr.id)
             end)
         end
     end
 end
 
---隐藏鞋相关逻辑
+-- 隐藏鞋相关逻辑
 function SetHideShoe(_restoreShoeCB)
     restoreShoeCB = _restoreShoeCB
     click_clickNode.enabled = true

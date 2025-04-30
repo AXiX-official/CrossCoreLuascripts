@@ -48,6 +48,12 @@ function this:CheckIsShow()
                 end
             end
         end
+    elseif (self.cfg.nType==9) then --拼图
+        local cfg=Cfgs.CfgPuzzleBase:GetByID(self:GetCfg().page);
+        if cfg then
+            self.begTime=cfg.begTime and TimeUtil:GetTimeStampBySplit(cfg.begTime) or nil;
+            self.endTime=cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or nil;
+        end
     end
     if (self.begTime == nil and self.endTime == nil) then
         self.isShow = false
@@ -72,7 +78,7 @@ function this:IsOpen()
     self.isOpen = true
     local str = ""
     if (self.cfg.nType == 1) then
-        self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "CollaborationMain")
+        self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "ExplorationMain")
         if (self.isOpen) then
             self.isOpen = ExplorationMgr:CanOpenExploration()
             str = LanguageMgr:GetTips(22003)
@@ -81,6 +87,8 @@ function this:IsOpen()
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "ActivityListView")
     elseif (self.cfg.nType == 6) then  
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "CollaborationMain")
+    elseif (self.cfg.nType == 9) then  
+        self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "PuzzleActivity")
     end
     return self.isOpen, str
 end
@@ -102,6 +110,11 @@ function this:IsRed()
             self.isRed = RedPointMgr:GetData(RedPointType.Collaboration) ~=nil
         elseif (self.cfg.nType == 7) then
             -- IsRed7 要异步
+        elseif (self.cfg.nType==9) then
+            local info=PuzzleMgr:CheckRedInfo(self:GetCfg().page);
+            if info then
+                self.isRed=info~=nil;
+            end
         end
     end
     return self.isRed

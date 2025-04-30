@@ -9,7 +9,8 @@ local redPoss = {
     ["ArchiveView"] = {66.3, 50.7},
     ["ActivityView"] = {66.3, 50.7},
     ["SettingView"] = {66.3, 50.7},
-    ["ActivityListView"] = {74.7, 72.4}
+    ["ActivityListView"] = {74.7, 72.4},
+    ["Questionnaire"] = {66.3, 50.7},
 }
 -- 上锁位置全居中[0,0]
 -- 入口拿取红点的key值，没有的特殊处理
@@ -22,11 +23,12 @@ local redsRef = {
     ["ArchiveView"] = RedPointType.Archive,
     -- ["ActivityView"] = RedPointType.,
     -- ["SettingView"] = RedPointType.,
-    ["ActivityListView"] = RedPointType.ActivityList1
+    ["ActivityListView"] = RedPointType.ActivityList1,
+    ["Questionnaire"] = RedPointType.Questionnaire,
 }
 --
 local views = {"PlayerView", "Achievement", "Dorm", "FriendView", "CourseView", "PlayerAbility", "ArchiveView",
-               "ActivityView", "SettingView", "ActivityListView"} -- 统一处理（上锁，红点检查，点击）
+               "ActivityView", "SettingView", "ActivityListView","Questionnaire"} -- 统一处理（上锁，红点检查，点击）
 --
 local timer = 0
 local isClickMask = false
@@ -120,6 +122,12 @@ function RefreshPanel()
     SetReds()
     --
     UIUtil:AddTitle(titleParent, 1)
+    --问卷 
+    SetQuestionnaire()
+end
+
+function SetQuestionnaire()
+    CSAPI.SetGOActive(btnQuestionnaire,QuestionnaireMgr:IsShowEnter())
 end
 
 function SetDayPower()

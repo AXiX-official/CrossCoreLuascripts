@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer335101:OnCreate(caster, target)
 	-- 335101
-	self:AddMaxHpPercent(BufferEffect[335101], self.caster, target or self.owner, nil,0.2)
+	self:AddMaxHpPercent(BufferEffect[335101], self.caster, target or self.owner, nil,0.02)
 end

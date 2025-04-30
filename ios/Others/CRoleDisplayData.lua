@@ -11,7 +11,7 @@ function this:InitIndex(index, ty)
     -- 默认数据
     self.sNewPanel = {}
     self.sNewPanel.idx = index
-    self.sNewPanel.ty = ty or 1 -- 分类 1:6位置  2：随机单人  3：随机双人
+    self.sNewPanel.ty = ty or 1 -- 分类 1:6位置  2：随机单人  3：随机双人 4:竞技场单人
     self.sNewPanel.ids = self:IsTwoRole() and {0, 0} or {0}
     self.sNewPanel.bg = 1
     self.sNewPanel.detail1 = {
@@ -416,6 +416,14 @@ function this:CheckLimitSkin(index)
         end
     end
     return false
+end
+
+--是否可以选择插画
+function this:CanSelectPic()
+    if (self.sNewPanel.ty == 4) then
+       return false 
+    end 
+    return not self:IsTwoRole()
 end
 
 return this

@@ -27,6 +27,7 @@ local isStartPvpExp = false
 
 -- 扫荡
 local isSweep = false
+local isGlobalSweep = false
 local sweepView = nil
 
 -- buff
@@ -139,6 +140,7 @@ function Refresh(_data, _elseData)
     isSweep = elseData and elseData.isSweep
     isDirll = elseData and elseData.isDirll
     isBossDirll = elseData and elseData.isBossDirll
+    isGlobalSweep = elseData and elseData.isGlobalSweep
     if data then
         -- reward
         rewards = data.rewards or nil
@@ -170,6 +172,8 @@ function RefreshPanel()
 
     if isSweep then
         SetSweepPanel()
+    elseif isGlobalSweep then
+        SetGlobalBossSweepPanel()
     elseif isDirll then
         SetDirllPanel()
     elseif isBossDirll then
@@ -194,7 +198,7 @@ end
 function SetTitleIcon()
     local imgName = "win"
     if elseData then
-        if isSweep then
+        if isSweep or isGlobalSweep then
             imgName = "sweep"
         elseif isDirll then
             imgName = "dirll_win"
@@ -1088,6 +1092,16 @@ function SetGlobalBossPanel()
     CSAPI.SetText(txtDamage,score.."")
     local maxScore = data.hDamage or 0
     CSAPI.SetGOActive(txt_topDamage,score>0 and score>=maxScore)
+end
+
+function SetGlobalBossSweepPanel()
+    CSAPI.SetGOActive(titleObj,true)
+    CSAPI.SetGOActive(damageObj,true)
+    --title
+    LanguageMgr:SetText(txtTitle,25036)
+    local maxScore = data.hDamage or 0
+    CSAPI.SetText(txtDamage,maxScore.."")
+    CSAPI.SetGOActive(txt_topDamage,false)
 end
 ------------------------------------扫荡------------------------------------
 function SetSweepPanel()
