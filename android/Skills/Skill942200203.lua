@@ -8,20 +8,10 @@ function Skill942200203:Init(skillID, card)
 end
 -- 执行技能
 function Skill942200203:DoSkill(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 704200203
+	-- 942200203
 	self.order = self.order + 1
-	local targets = SkillFilter:All(self, caster, target, 3)
-	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[704200203], caster, target, data, 704200203)
-	end
+	self:AddBuff(SkillEffect[942200203], caster, target, data, 4604,2)
+	-- 942200213
+	self.order = self.order + 1
+	self:AddBuff(SkillEffect[942200213], caster, target, data, 4404,2)
 end
