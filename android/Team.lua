@@ -17,16 +17,16 @@ end
 function Team:Destroy()
 	LogDebugEx("Team:Destroy()")
 
-    for k,v in pairs(self.arrCard) do
-        v:Destroy()
-    end    
-    if self.oCommander then
-    	self.oCommander:Destroy()
-    end
+	for k,v in pairs(self.arrCard) do
+		v:Destroy()
+	end    
+	if self.oCommander then
+		self.oCommander:Destroy()
+	end
 
-    for k,v in pairs(self) do
-        self[k] = nil
-    end
+	for k,v in pairs(self) do
+		self[k] = nil
+	end
 end
 
 function Team:InitMap(row, col)
@@ -198,26 +198,26 @@ function Team:Summon(caster, monsterID, pos, data, isSummon2Summon)
 	end
 
 	--- [[ 给召唤物添加生活buff加成
-    local damage = caster.damage_add or 0
-    local bedamage = caster.bedamage_add or 0
-    -- 对敌方的伤害增加的百分比
-    if damage ~= 0 then
-        card.damage = card.damage or 1
-        card.damage = card.damage + damage
-        if card.damage < 0 then
-            card.damage = 0
-        end
-    end
+	local damage = caster.damage_add or 0
+	local bedamage = caster.bedamage_add or 0
+	-- 对敌方的伤害增加的百分比
+	if damage ~= 0 then
+		card.damage = card.damage or 1
+		card.damage = card.damage + damage
+		if card.damage < 0 then
+			card.damage = 0
+		end
+	end
 
-    -- 受到的伤害增加的百分比
-    if bedamage ~= 0 then
-        card.bedamage = card.bedamage or 1
-        card.bedamage = card.bedamage + bedamage
-        if card.bedamage < 0 then
-            card.bedamage = 0
-        end
-    end
-    --- 给召唤物添加生活buff加成 ]]
+	-- 受到的伤害增加的百分比
+	if bedamage ~= 0 then
+		card.bedamage = card.bedamage or 1
+		card.bedamage = card.bedamage + bedamage
+		if card.bedamage < 0 then
+			card.bedamage = 0
+		end
+	end
+	--- 给召唤物添加生活buff加成 ]]
 
 	return card
 end
@@ -460,6 +460,26 @@ function Team:ShareHp(damage, maxhp)
 			LogDebugEx("ShareHp", v.name, v.hp)
 		end
 	end
+end
+
+function Team:GetHp()
+	local teamHp = 0
+	for i,v in ipairs(self.arrCard) do
+		if v:IsLive() then
+			teamHp = teamHp + v.hp
+		end
+	end
+	return teamHp
+end
+
+function Team:GetMaxHp()
+	local teamMaxHp = 0
+	for i,v in ipairs(self.arrCard) do
+		if v:IsLive() then
+			teamMaxHp = teamMaxHp + v.maxhp
+		end
+	end
+	return teamMaxHp
 end
 ------------------------------------------
 -- 检测卡牌站位(坐标包含关系)

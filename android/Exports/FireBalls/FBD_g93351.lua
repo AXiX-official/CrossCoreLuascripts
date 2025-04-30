@@ -10,6 +10,9 @@ local this =
 {delay=1433,time=4000,type=1,hit_type=1,camera_shake={time=400,shake_dir=1,range=450,range2=450,hz=30,decay_value=0.5},hits={0}},
 {effect="cast0_hit",delay=1433,time=5000,type=0,pos_ref={ref_type=3}},
 {effect="cast0_eff",time=5000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Titan_Claw_attack_skill_02"}
+},
+[-316323548]={
+{effect="dead1",effect_pack="common",time=3000,type=0,pos_ref={ref_type=6,offset_row=-75,offset_col=-200,offset_height=230},cue_sheet="fight/effect/explosion_.acb",cue_name="grenade_exploImpac_1"}
 }
 };
 

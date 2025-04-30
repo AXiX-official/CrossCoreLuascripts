@@ -19,7 +19,7 @@ local this =
 {delay=10899,time=20000,type=0,cue_sheet="cv/Silver_Feather.acb",cue_name="Silver_Feather_49",cue_feature=1},
 {delay=6200,time=1000,type=1,hit_type=0,hits={0}},
 {delay=17800,time=12000,type=1,hit_type=0,hits={0}},
-{effect="cast2_eff",effect_pack="s50041",time=19200,type=0,pos_ref={ref_type=6}},
+{effect="cast2_eff",time=19200,type=0,pos_ref={ref_type=6}},
 {time=20000,type=0,cue_sheet="fight/effect/twelfth.acb",cue_name="homology_Silver_Feather_attack_skill_02"}
 },
 [-1368377223]={

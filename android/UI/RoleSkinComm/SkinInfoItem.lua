@@ -1,5 +1,17 @@
 --皮肤信息子物体
 
+local needToCheckMove = false
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txt_name)
+end 
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txt_name)
+        needToCheckMove = false
+    end
+end
+
 --data:this.data
 local modelCfg=nil
 function Refresh(_data,_elseData)
@@ -55,7 +67,9 @@ function SetSName(str)
 end
 
 function SetName(str)
+    needToCheckMove = false
     CSAPI.SetText(txt_name,str or "");
+    needToCheckMove = true
 end
 
 function SetHas(isHas)

@@ -73,6 +73,8 @@ ITEM_TYPE.ICON_TITLE = 26 --玩家称号
 ITEM_TYPE.ASMR = 27 --ASMR音频
 ITEM_TYPE.SECTION_MULTI = 28 --双倍掉落道具
 ITEM_TYPE.LIMITED_TIME_SKIN = 29 --限时皮肤
+ITEM_TYPE.ICON_EMOTE = 30 --对战表情
+ITEM_TYPE.CHANGE_NAME_AND_SEX = 31 -- 名字与形态转换券
 
 -- 物品标签
 ITEM_TAG = {}
@@ -101,6 +103,7 @@ PROP_TYPE.PetItem = 15 -- 宠物道具(动态值2填宠物物品id)
 PROP_TYPE.PetArchive = 16 -- 宠物图鉴（动态值2填宠物图鉴表id）
 PROP_TYPE.Music = 17 -- 音乐（动态值2音乐表id）
 PROP_TYPE.IconTitle = 18 -- 玩家称号（动态值2称号表id）
+PROP_TYPE.SKIN_REBATE = 19 --皮肤返利卡 （动态值2称号表id）
 
 -- 物品月卡类型
 ItemMemberType = {}
@@ -160,6 +163,8 @@ DungeonResetType = {}
 DungeonResetType.Confrontation = 1 -- 1：镜像作战,竞技场
 DungeonResetType.Abattoir = 2 -- 2：角斗场赛季
 DungeonResetType.Shop = 3 -- 3：按对应商店的结束时间
+DungeonResetType.Time = 4 -- 4：按配置的结束时间
+DungeonResetType.SplitTime = 5 -- 5：按多时段上架的时间重置
 
 -------------------------------------------------------------------------------------------------
 -- 布尔类型
@@ -347,6 +352,10 @@ eTaskType.StarPalace = 24     -- 十二星宫任务
 --eTaskType.Pet = 25              -- 夏活宠物图鉴任务
 eTaskType.AbattoirMoon = 26     -- 角斗场月任务
 eTaskType.AbattoirSeason = 27     -- 角斗场赛季任务
+eTaskType.Puzzle = 28 --拼图活动任务
+eTaskType.DupLiZhan = 29 --历战任务
+eTaskType.GlobalBossDay = 30     -- 世界Boss日任务
+eTaskType.GlobalBossMonth = 31     -- 世界Boss月任务
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -396,6 +405,7 @@ eTaskTypeChName.WeekExplore = '每周勘探任务'
 eTaskTypeChName.Explore = '每期勘探任务'
 eTaskTypeChName.GuideStage = '每期引导任务阶段'
 eTaskTypeChName.Guide = '每期引导任务'
+eTaskTypeChName.Puzzle = '拼图活动任务'
 
 TASK_TYPE_COUNT = table.size(eTaskType)
 
@@ -443,6 +453,10 @@ cTaskCfgNames = {
     --[eTaskType.Pet] = 'CfgPetArchive',
     [eTaskType.AbattoirMoon] = 'cfgColosseumMission',
     [eTaskType.AbattoirSeason] = 'cfgColosseumSeasonMission',
+    [eTaskType.Puzzle] = 'CfgTaskPuzzle',
+    [eTaskType.DupLiZhan] = 'CfgDupLiZhan',
+    [eTaskType.GlobalBossDay] = 'cfgWorldBossMission',
+    [eTaskType.GlobalBossMonth] = 'cfgWorldBossMonthMission',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -512,6 +526,10 @@ eTaskEventType.AbattoirPassStar = 32 -- 角斗场单次通关获得星数
 eTaskEventType.AbattoirTotalStar = 33 -- 角斗场赛季累计获得星数
 eTaskEventType.AbattoirJoin = 34 -- 角斗场参与次数
 eTaskEventType.AbattoirJoinStar = 35 -- 角斗场单次获得星数(不需要通关才算)
+eTaskEventType.GlobalBossFight = 36 -- 世界boss挑战或扫荡X次（每日重置）
+eTaskEventType.GlobalBossDamage = 37 -- 世界boss单次伤害达到N（每月重置）
+eTaskEventType.GlobalBossKill = 38 -- 世界boss击败（每月重置）
+eTaskEventType.GlobalBossTotalDamage = 39 -- 世界boss累计伤害达到N（每月重置）
 
 eLockState = {}
 eLockState.No = 0
@@ -1836,52 +1854,19 @@ eBindInviteOpenType={
     Request=2, --请求的
 }
 
---排行榜
 eRankType = {}
-eRankType.StarRank1 = 9001 --十二星宫 9001
-eRankType.StarRank2 = 9002 --十二星宫 9002
-eRankType.StarRank3 = 9003 --十二星宫 9003
-eRankType.StarRank4 = 9004 --十二星宫 9004
-eRankType.StarRank5 = 9005 --十二星宫 9005
-
-eRankType.SummerActiveRank = 10001 --夏活无限血排行榜，钓鱼老
 eRankType.Abattoir = 10002 -- 角斗场
-eRankType.CentaurRank = 10003 --人马无限血排行榜
---eRankType.GlobalBoss = 10004(已占用)
-eRankType.TrialsRank = 10005 --试炼无限血排行榜
 eRankType.RogueTRank = 10006 --限制肉鸽爬塔排行榜
-eRankType.CloudRank = 10007 --云端行迹排行榜
-eRankType.TrialsRank2 = 10008 --尤弥尔排行榜
-eRankType.TrialsRank3 = 10009 --德拉苏排行榜
-eRankType.TrialsRank4 = 10010 --瑞尔排行榜
-eRankType.TrialsRank5 = 10011 --冰霜禁卫排行榜
+--eRankType.BuffBattleRank = 10013 --积分战斗
 
--- 用户后台清理排行榜的选项（不影响游戏内的功能逻辑）
-cRankCfgNames = {
-    { id = eRankType.StarRank1, name = '十二星宫 9001' },
-    { id = eRankType.StarRank2, name = '十二星宫 9002' },
-    { id = eRankType.StarRank3, name = '十二星宫 9003' },
-    { id = eRankType.StarRank4, name = '十二星宫 9004' },
-    { id = eRankType.StarRank5, name = '十二星宫 9005' },
-    { id = eRankType.SummerActiveRank, name = '夏活无限血 10001' },
-    { id = eRankType.Abattoir, name = '角斗场 10002' },
-    { id = eRankType.CentaurRank, name = '人马无限血 10003' },
-    { id = eRankType.TrialsRank, name = '试炼无限血排行榜 10005' },
-    { id = eRankType.RogueTRank, name = '限制肉鸽爬塔排行榜 10006' },
-    { id = eRankType.CloudRank, name = '云端行迹排行榜 10007' },
-    { id = eRankType.TrialsRank2, name = '尤弥尔排行榜 10008' },
-    { id = eRankType.TrialsRank3, name = '德拉苏排行榜 10009' },
-    { id = eRankType.TrialsRank4, name = '瑞尔排行榜 10010' },
-    { id = eRankType.TrialsRank5, name = '冰霜禁卫排行榜 10011' },
-}
--- 十二星宫的排行榜
-eStarGroupId = {
-    eRankType.StarRank1,
-    eRankType.StarRank2,
-    eRankType.StarRank3,
-    eRankType.StarRank4,
-    eRankType.StarRank5,
-}
+-- 排行榜默认使用数据表名
+G_RANK_DEF_DB_TABLE = 'plr_star_rank'
+
+--需要定义数据表名
+eRankDbTable = {}
+eRankDbTable[eRankType.RogueTRank] = 'plr_rogueT_rank'
+eRankDbTable[eRankType.Abattoir] = 'plr_abattoir_rank'
+-- eRankDbTable[eRankType.BuffBattleRank] = 'plr_buff_battle_rank'
 
 --收集活动类型
 eCollectType = {}
@@ -1931,6 +1916,8 @@ eOperateActiveType = {}
 eOperateActiveType.PayNotice1 = eOperateType.PayNotice1
 eOperateActiveType.PayNotice7 = eOperateType.PayNotice7
 eOperateActiveType.PayNotice8 = eOperateType.PayNotice8
+
+GenEnumNameByVal('eOperateActiveTypeById', eOperateActiveType)
 -----------------------------------------------------------------------------------------------------------------
 -- 夏日活动宠物属性类型
 ePetAbilityType = {
@@ -2010,3 +1997,8 @@ eSummaryType.NewYear = 1
 eItemSectionMultiType = {}
 eItemSectionMultiType.cnt = 1 --指定时间内只有一个可以生效
 eItemSectionMultiType.time = 2 --使用之后延长有效时间
+
+-- 拼图玩法活动类型
+ePuzzleType = {}
+ePuzzleType.Type1     = 1   -- 玩法1
+ePuzzleType.Type2     = 2   -- 玩法2

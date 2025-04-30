@@ -167,6 +167,11 @@ function TouchItemClickCB(cfgChild)
     end
 end
 
+--当前是否在使用第二套角色
+function GetCurRoleNum()
+    return 1
+end
+
 -- 拖拽开始
 function ItemDragBeginCB(cfgChild, x, y)
     if (isHeXie or isIn or isDrag or not IsIdle()) then

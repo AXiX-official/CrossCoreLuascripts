@@ -247,6 +247,8 @@ function this:InitCharactersShowState()
         CharacterMgr:SetAllShowState(true);     
     end
 
+    local partCharacter = nil;
+
     if(not self.castStateData or (not self.castStateData.feature and not self.castStateData.dont_hide_others))then
     
         local list = self.fightAction:GetAllCharacters();      
@@ -273,17 +275,26 @@ function this:InitCharactersShowState()
                             isShow = false;
                         end
                     end
-
+                    --LogError(tmpCharacter.GetModelName() .. ":" .. tostring(isShow))
                     tmpCharacter.SetShowState(isShow,nil,not hasCustomCamera,true);
                     --showTeleport or 
                     if(not isShow)then
                         tmpCharacter.SetEffShowState(false);   
+                    else
+                        if(tmpCharacter ~= self.character and tmpCharacter.IsPart())then--角色部位
+                            partCharacter = tmpCharacter;
+                            --LogError("aa");
+                        end
                     end
                 end                                             
             end
         end        
     end
 
+    if(partCharacter)then
+        partCharacter.ShowParts();
+        self.partCharacter = partCharacter;
+    end
     --初始化被保护者（）
     --self.fightAction:InitProtectCharacter();
 end
@@ -1056,6 +1067,11 @@ function this:CastEnd()
     self:SetCharacterShadowState(true);--还原中低配影子
     EventMgr.Dispatch(EventType.Character_HeadInfo_Scale_State,true);
     EventMgr.Dispatch(EventType.Fight_View_Mask,true); 
+
+    if(self.partCharacter)then
+        self.partCharacter.ShowParts();
+        self.partCharacter = nil;
+    end
 
     if(self.cfgSkill.type == SkillType.Summon)then
         --还原播放速度

@@ -160,7 +160,6 @@ function ClearMisionTips()
 		missionTips.ClearAll()
 	end
 end
-
 --------------------------------点击特效--------------------------------------
 local Input = CS.UnityEngine.Input
 local TouchPhase = CS.UnityEngine.TouchPhase;
@@ -184,14 +183,14 @@ function Update()
 			clickTimer = Time.time + 0.1
 			pos = Input.mousePosition
 		end
-	else		
-		if(Input.touchCount == 1 and Input.GetTouch(0).phase == TouchPhase.Began) then		
+	else       
+		if(Input.touchCount == 1 and Input.GetTouch(0).phase == TouchPhase.Began) then			
 			if(Time.time < clickTimer) then
-				return
-			end
-			clickTimer = Time.time + 0.1
-				
-			pos = Input.GetTouch(0).position
+			    return
+		    end
+		    clickTimer = Time.time + 0.1
+
+            pos = Input.GetTouch(0).position
 		end
 	end
 	if(pos ~= nil) then

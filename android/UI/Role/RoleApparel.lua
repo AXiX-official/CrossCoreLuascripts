@@ -7,6 +7,7 @@ local svUtil = nil
 local isExist = true -- 卡牌是否已获得
 local isLimitSkin, limitTime = false, nil
 local timer = nil
+local memorys = {}
 
 function Awake()
     top = UIUtil:AddTop2("RoleApparel", gameObject, function()
@@ -188,8 +189,11 @@ function RefreshPanel(isCheck)
         if (isLive2D and useIndex == curIndex and not cardData:GetSkinIsL2d()) then
             isLive2D = false
         end
+        -- 记忆
+        if (memorys[curModeId]~=nil) then
+            isLive2D = memorys[curModeId]
+        end
     end
-
     -- desc
     CSAPI.SetText(txt_desc, cfgModel.model_desc)
     -- l2d btn
@@ -255,6 +259,7 @@ function SetImg()
     --     CSAPI.SetGOActive(iconParent, true)
     -- end, isLive2D)
     cardIconItem.Refresh(curModeId, LoadImgType.RoleInfo, nil, isLive2D, curDatas[curIndex]:IsHX())
+    memorys[curModeId] = isLive2D
 end
 
 function SetBtn()

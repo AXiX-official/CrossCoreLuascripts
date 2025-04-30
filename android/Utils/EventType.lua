@@ -563,6 +563,8 @@ this.MenuBuy_RechargeCB=180019;
 this.Head_Title_Change=180020;
 --累充领取s
 this.AccuChargeS_Get=180021;
+--调查问卷
+this.Menu_Questionnaire = 180023
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -816,6 +818,8 @@ this.Mission_ReSet = 240004
 this.Mission_Stage_Update=240005
 --任务删除
 this.Mission_Delete = 240006
+--领取奖励返回
+this.Mission_RewardRet = 240007
 -------------------------------------------好友
 --刷新
 this.Friend_Update = 250001
@@ -926,9 +930,12 @@ this.ExerciseL_BuyCount = 290015 --购买挑战次数
 this.Rogue_CancelBack = 290016 --放弃
 this.RogueS_phase_Change = 290017 --战力派遣期数变更
 this.RogueT_Buff_Upgrade = 290018 --buff升级回调
+--this.Exercise_Role_Panel = 290019 --军演看板修改
 --------------------------------------------------物品合成
 --合成成功
 this.Goods_Combine_Success = 300001
+--物品手动转换成功
+this.Goods_Converted_Success=300002
 
 
 ------------------------------天赋
@@ -960,7 +967,6 @@ this.Activity_Get_SignIn = 340001 --签到记录
 this.Activity_SignIn = 340002 --签到
 this.Activity_OpenQueue = 340003 --活动预开启队列
 this.Activity_Click = 340004 --活动强制点击
-this.Activity_List_Null_Check = 340005 --活动列表检测为空
 this.Acitivty_List_Pop = 340006 --活动弹出
 this.Activity_List_Panel_Refresh = 340007 --活动界面刷新
 this.Activity_List_Cfg_Change = 340008 --活动表配置修改
@@ -1316,6 +1322,15 @@ this.Setting_Live_Change = 660000 --直播设置
 ----------------------------------新世界boss
 this.GlobalBoss_Data_Update = 670000 --数据刷新
 this.GlobalBoss_Rank_Update = 670001 --活动排名刷新
+
+--------------------------------------------------拼图活动
+this.Puzzle_Data_Ret=680000--活动数据返回
+this.Puzzle_Selected_Goods=680001--选择购买商品
+this.Puzzle_Buy_Ret=680002 --购买返回
+this.Puzzle_Unlock_Ret=680003 --解锁格子返回
+this.Puzzle_GetReward_Ret=680004 --领取奖励返回
+this.Puzzle_Item_TweenBegin=680005 --点击点亮
+
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
 this.SDK_ShiryuSDK_Init=800001;

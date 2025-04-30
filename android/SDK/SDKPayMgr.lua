@@ -294,7 +294,20 @@ function this:SearchPayReward(isFirst)
 	self.searchPaySuccess=false;
 	FuncUtil:Call(self.SendSearchPayReward,self,500,self.lastOrderID,self.lastPayType);
 end
-
+function this:SearchPayRewardAtOne()
+	if self.lastOrderID~=nil and self.lastPayType~=nil then
+		EventMgr.Dispatch(EventType.Shop_Buy_Mask,false)
+		PlayerProto:PayReward(self.lastOrderID,self.lastPayType);
+	end
+end
+---停止查询
+function this:StopSearchPayReward()
+	self:SetIsPaying(false);
+	EventMgr.Dispatch(EventType.Shop_Buy_Mask,false)
+	self.searchPayCount=0;
+	self.searchPaySuccess=true;
+	self:SetLastPayInfo(nil,nil); --清理缓存信息
+end
 --查询，三次未响应则放弃
 function this:SendSearchPayReward(_orderID,_payType)
 	if not NetMgr.net:IsConnected() or self.searchPayCount>=30 or self.searchPaySuccess==true then --断线也退出发送

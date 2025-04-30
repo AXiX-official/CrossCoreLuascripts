@@ -202,6 +202,23 @@ function this.OnSweepOver(proto, isForceOver)
 	CSAPI.OpenView("FightOverResult", data);
 end
 
+function this.OnGlobalBossSweepOver(proto, isForceOver)
+	local team = this.GetTeamData(eTeamType.DungeonFight, false)  --暂时默认队伍1 todo
+	local exp = this.GetExpList(proto, false)
+	local bIsWin = true
+	local _data = {}
+	_data.bIsWin = true
+	_data.team = team
+	_data.exp = exp or 0
+	_data.nPlayerExp = proto.nPlayerExp or 0
+	_data.favor = proto.cardsExp
+	_data.damage = proto.nDamage
+	_data.hDamage = proto.nHightest
+	_data.rewards = proto.reward
+	_data.elseData = {isGlobalSweep = true}
+	CSAPI.OpenView("FightOverResult", _data);
+end
+
 --模拟使用
 function this.OnDirllOver(stage, winer)
 	local team = this.GetTeamData(DungeonMgr:GetFightTeamId(), true); 

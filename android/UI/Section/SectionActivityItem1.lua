@@ -341,7 +341,7 @@ function UpdateGlobalBoss()
         if globalBossTime <= 0 then
             if not isLock then
                 SetLockPanel(false, "")
-                DungeonMgr:CheckRedPoint()
+                DungeonMgr:CheckRedPointData()
             end
         end
     end

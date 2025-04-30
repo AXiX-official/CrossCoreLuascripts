@@ -1,3 +1,4 @@
+local needToCheckMove = false
 function OnRecycle()
     if goRect == nil then
         goRect = ComUtil.GetCom(gameObject, "RectTransform")
@@ -9,6 +10,8 @@ end
 
 function Awake()
     cg_skill = ComUtil.GetCom(skill, "CanvasGroup")
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
 end
 
 function SetIndex(_index)
@@ -54,7 +57,9 @@ function RefreshBase()
     -- lv
     CSAPI.SetText(txtLv, curData:GetLv() .. "")
     -- name 代号
+    needToCheckMove = false
     CSAPI.SetText(txtName, curData:GetAlias())
+    needToCheckMove = true
     -- skill
     local curSkillCfg = curData:GetAbilityCurCfg()
     CSAPI.SetText(txtSkill, curSkillCfg.index .. "")
@@ -74,6 +79,10 @@ function Update()
     if (plTimer and Time.time > plTimer) then
         plTimer = Time.time + plPerTimer
         SetPL()
+    end
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
     end
 end
 function SetPL()

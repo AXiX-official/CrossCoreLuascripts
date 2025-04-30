@@ -18,6 +18,9 @@ function Awake()
 	Log("Xlua启动完成")
 	--LogTime()
 	Launcher()
+
+	--关闭AB包大小检测
+	PlayerPrefs.SetInt("close_ab_size_proof",0);
 end
 --初始化日志状态
 function InitLogState()

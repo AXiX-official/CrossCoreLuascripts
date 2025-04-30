@@ -32,3 +32,26 @@ function Skill933500301:OnAttackOver(caster, target, data)
 	-- 933500301
 	self:AddProgress(SkillEffect[933500301], caster, target, data, -300)
 end
+-- 行动结束
+function Skill933500301:OnActionOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 933500302
+	local targets = SkillFilter:Teammate(self, caster, target, 1)
+	for i,target in ipairs(targets) do
+		self:AddProgress(SkillEffect[933500302], caster, target, data, 1000)
+	end
+end

@@ -975,7 +975,7 @@ end
 function OnClickGrid(lua)
     if CSAPI.IsADV() then
         if CSAPI.RegionalCode()==3 then
-            if CSAPI.PayAgeTitle() then
+            if CSAPI.PayAgeTitle() and lua.data and lua.data:GetRealPrice() and lua.data:GetRealPrice()[1].id==-1 then
                 CSAPI.OpenView("SDKPayJPlimitLevel",{  ExitMain=function() ShopCommFunc.OpenPayView(lua.data,currPageData);  end})
             else
                 ShopCommFunc.OpenPayView(lua.data,currPageData);

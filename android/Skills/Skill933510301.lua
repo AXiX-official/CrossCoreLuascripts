@@ -19,7 +19,9 @@ function Skill933510301:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 933510301
-	self:AddBuff(SkillEffect[933510301], caster, target, data, 500100321)
+	if self:Rand(5000) then
+		self:AddBuff(SkillEffect[933510301], caster, target, data, 5006)
+	end
 end
 -- 攻击结束2
 function Skill933510301:OnAttackOver2(caster, target, data)
@@ -28,14 +30,9 @@ function Skill933510301:OnAttackOver2(caster, target, data)
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
 	-- 933510302
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[933510302], caster, target, data, 2301)
+		self:AddBuff(SkillEffect[933510302], caster, target, data, 4106)
 	end
 end

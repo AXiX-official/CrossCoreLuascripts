@@ -33,6 +33,7 @@ function this:Clear()
         self.tipsTimer.Remove()
     end
     self.tipsTimer = nil
+    self.isOpen = nil
 end
 
 -- 设置选中的标签索引
@@ -327,7 +328,6 @@ function this:GetActivityDatas(_type, _group, _day)
             end
         end
     end
-
     if _type == eTaskType.DupTower or _type == eTaskType.TmpDupTower then
         -- 塔副本任务需要全部展出，所以采用加入假数据来实现
         datas = self:GetTowerMissions(datas, _type, cfgIds, _group)
@@ -340,6 +340,8 @@ function this:GetActivityDatas(_type, _group, _day)
     elseif _day and (_type == eTaskType.NewYear or _type == eTaskType.NewYearFinish) then
         -- 获取指定新年的任务
         datas = self:GetNewYearMissions(datas, _type, _day)
+    elseif _type==eTaskType.Puzzle then
+        datas = self:GetPuzzleTasks(datas, _group)
     end
     if (datas and #datas > 1) then
         if _type == eTaskType.SevenStage or _type == eTaskType.GuideStage or _type == eTaskType.NewYearFinish then -- 按id排序
@@ -501,6 +503,26 @@ function this:IsAllNewYearMissionGet()
         end
     end
     return true
+end
+
+---------------------------------------------拼图任务------------------------
+function this:GetPuzzleTasks(_datas,nGroup)
+    local arr = {}
+    if (_datas) then
+        for i, v in pairs(_datas) do
+            if (eTaskType.Puzzle == v:GetType() and v:GetCfg().nGroup==nGroup) then
+                if (not self.CheckIsReset(v) and v:CheckIsOpen()) then
+                    table.insert(arr, v)
+                end
+            end
+        end
+    end
+    if (arr and #arr > 1) then
+        table.sort(arr, function(a, b)
+            return a:GetCfgID() < b:GetCfgID()
+        end)
+    end
+    return arr
 end
 
 -----------------------------------------------协议发------------------------
@@ -803,8 +825,11 @@ function this:GetRewardRet(datas, dailyStar, weeklyStar, rewards)
             end
         end
     end
-
-    EventMgr.Dispatch(EventType.Mission_List, {type, rewards})
+    if type and type==eTaskType.Puzzle then
+        EventMgr.Dispatch(EventType.Mission_RewardRet, {type, rewards});
+    else
+        EventMgr.Dispatch(EventType.Mission_List, {type, rewards})
+    end
 
     self:CheckRedPointData()
 end

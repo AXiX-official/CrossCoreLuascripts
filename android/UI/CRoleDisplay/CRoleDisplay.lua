@@ -257,15 +257,15 @@ function SetBtns()
     cg_btnBC.alpha = alpha
 end
 
--- 动态切换
-function OnClickL2D()
-    if (slot == 1) then
-        c_data:GetDetail(1).live2d = not c_data:GetDetail(1).live2d
-    else
-        c_data:GetDetail(2).live2d = not c_data:GetDetail(2).live2d
-    end
-    SetMiddle()
-end
+-- -- 动态切换
+-- function OnClickL2D()
+--     if (slot == 1) then
+--         c_data:GetDetail(1).live2d = not c_data:GetDetail(1).live2d
+--     else
+--         c_data:GetDetail(2).live2d = not c_data:GetDetail(2).live2d
+--     end
+--     SetMiddle()
+-- end
 
 -- 重置当前
 function OnClickCZ()

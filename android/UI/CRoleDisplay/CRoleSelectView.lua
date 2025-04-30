@@ -77,8 +77,8 @@ function Refresh(_data)
     c_data = _data[1]
     slot = _data[2]
 
-    CSAPI.SetGOActive(topBtns1, c_data:IsTwoRole())
-    CSAPI.SetGOActive(topBtns2, not c_data:IsTwoRole())
+    CSAPI.SetGOActive(topBtns1, not c_data:CanSelectPic())
+    CSAPI.SetGOActive(topBtns2, c_data:CanSelectPic())
 
     isRole = true
     curTabIndex = 1

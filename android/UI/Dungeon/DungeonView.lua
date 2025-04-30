@@ -47,7 +47,7 @@ function OnViewClose(viewKey)
             end
             -- bgm
             local bgm = sectionData:GetBGM()
-            if bgm then
+            if bgm and bgm ~= "" then
                 CSAPI.PlayBGM(bgm)
             end
         end,nil,100)  

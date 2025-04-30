@@ -14,6 +14,7 @@ local conf = {
 {'4',	'4',	'4',	'5',	'22045',	'icon_02_05',	'DE8394',	'SpecialActivityView',	'3'},
 {'5',	'5',	'5',	'3',	'22083',	'icon_02_03',	'DC8361',	'RegressionList',	''},
 {'7',	'7',	'6',	'6',	'22084',	'icon_02_04',	'c97ee5',	'CollaborationMain',	''},
+{'9',	'9',	'9',	'9',	'74001',	'icon_02_08',	'FFC146',	'PuzzleActivity',	'2'},
 },
 }
 --cfgCfgMenuLBtns = conf

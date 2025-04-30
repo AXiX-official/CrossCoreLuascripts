@@ -508,4 +508,15 @@ function this:GetUsefulUsing()
     return self.panelRet.using
 end
 
+--演习 模拟创建基数据
+function this:CreateDisplayData(_modelID,_live2d)
+    local _data = CRoleDisplayData.New()
+    _data:InitIndex(1,4)
+    _data:GetRet().ids = {_modelID}
+    _data:GetDetail(1).live2d = _live2d
+    _data:GetDetail(1).top = true
+    return _data
+end
+
+
 return this

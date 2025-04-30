@@ -1,3 +1,15 @@
+local needToCheckMove = false
+local timer = nil
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
+end
+function Update()
+    if (needToCheckMove and Time.time > timer) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
+    end
+end
 function Refresh(_id)
     id = _id
 
@@ -6,7 +18,10 @@ function Refresh(_id)
     -- icon 
     ResUtil.Furniture:Load(icon, cfg.icon, true)
     -- name 
+    needToCheckMove = false
     CSAPI.SetText(txtName, cfg.sName)
+    timer = Time.time + 0.1
+    needToCheckMove = true
     -- time 
     -- todo 
     -- num 
@@ -31,10 +46,18 @@ function Refresh(_id)
     CSAPI.SetGOActive(imgSpend2, cfg.price_2 ~= nil)
     --
     CSAPI.SetGOActive(bg, cfg.price_1 ~= nil and cfg.price_2 ~= nil and true or false)
+    --  
+    local canInte = false
+    if (cfg.intePoints and #cfg.intePoints > 0) then
+        canInte = true
+    end
+    CSAPI.SetGOActive(imgMove, canInte)
 end
 
 function OnClick()
     if (cur < cfg.buyNumLimit) then
-        CSAPI.OpenView("DormFurniturePayView", id) 
+        CSAPI.OpenView("DormFurniturePayView", id)
+    else
+        LanguageMgr:ShowTips(21036)
     end
 end

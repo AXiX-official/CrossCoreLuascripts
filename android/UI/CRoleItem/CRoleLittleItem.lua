@@ -1,4 +1,17 @@
 -- 皮肤 data : CRoleInfo
+local needToCheckMove = false
+function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
+end
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
+    end
+end
+
+
 function SetIndex(_index)
     index = _index
 end
@@ -18,7 +31,9 @@ function Refresh(_data, _curID)
     -- SetIcon(data:GetIcon())
     SetIcon2()
     -- name 
+    needToCheckMove = false
     CSAPI.SetText(txtName, data:GetAlias())
+    needToCheckMove = true
     -- use 
     --CSAPI.SetGOActive(use, isUse)
     -- select

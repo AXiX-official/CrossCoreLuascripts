@@ -139,3 +139,33 @@ function ArmyProto:BuyAttackCntRet(proto)
     ExerciseMgr:BuyAttackCntRet(proto)
     LanguageMgr:ShowTips(33008)
 end
+
+
+--军演立绘
+function ArmyProto:SetRolePanel(_role_panel_id,_live2d)
+    local proto = {"ArmyProto:SetRolePanel", {
+        role_panel_id = _role_panel_id,
+        live2d = _live2d
+    }}
+    NetMgr.net:Send(proto)
+end
+function ArmyProto:SetRolePanelRet(proto)
+    ExerciseMgr:SetRolePanelRet(proto.role_panel_id,proto.live2d)
+    LanguageMgr:ShowTips(33020)
+end
+
+--军演战报
+function ArmyProto:GetFightLogs(_ix,_cnt,_cb)
+    self.GetFightLogsCB = _cb
+    local proto = {"ArmyProto:GetFightLogs", {
+        ix = _ix,
+        cnt = _cnt
+    }}
+    NetMgr.net:Send(proto)
+end
+function ArmyProto:GetFightLogsRet(proto)
+    if(self.GetFightLogsCB)then 
+        self.GetFightLogsCB(proto)
+    end
+    self.GetFightLogsCB = nil
+end

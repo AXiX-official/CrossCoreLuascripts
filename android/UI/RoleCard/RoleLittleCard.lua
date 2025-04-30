@@ -12,10 +12,20 @@ local eventMgr=nil;
 local Input=CS.UnityEngine.Input;
 local fingerId=nil;
 
+local needToCheckMove = false
 function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
+
     eventMgr = ViewEvent.New();
     dragScript = ComUtil.GetCom(btnClick, "DragCallLua");
     cg_format =  ComUtil.GetCom(format, "CanvasGroup");
+end
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
+    end
 end
 
 function OnEnable()
@@ -428,7 +438,9 @@ function SetHot(_hot, _totalHot)
 end
 
 function SetName(str)
+    needToCheckMove = false
     CSAPI.SetText(txtName, str)
+    needToCheckMove = true
 end
 
 function SetState(_index)

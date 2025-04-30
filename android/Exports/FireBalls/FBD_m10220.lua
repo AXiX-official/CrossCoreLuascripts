@@ -10,10 +10,10 @@ local this =
 effect="cast1_buff",time=2000,type=0,pos_ref={ref_type=15}
 },
 [1310282141]={
+{delay=3300,time=8000,type=0,cue_sheet="cv/Garnet.acb",cue_name="Garnet_34",cue_feature=1},
 {delay=6600,time=8000,type=3,hits={0}},
-{time=8000,type=0,cue_sheet="cv/Garnet.acb",cue_name="Garnet_11",cue_feature=1},
-{effect="cast2_eff",time=8000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Garnet_attack_skill_02"},
-{delay=3600,time=8000,type=0,cue_sheet="cv/Garnet.acb",cue_name="Garnet_12",cue_feature=1}
+{delay=4481,time=8000,type=0,cue_sheet="cv/Garnet.acb",cue_name="Garnet_11",cue_feature=1},
+{effect="cast2_eff",time=8000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Garnet_attack_skill_02"}
 },
 [958292235]={
 {effect="cast3_eff",time=2000,type=0,pos_ref={ref_type=3},cue_sheet="fight/effect/seventeen.acb",cue_name="Garnet_attack_skill_03"},

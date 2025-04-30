@@ -102,7 +102,8 @@ local exerciseMoveR = nil
 local activityFade = nil
 --特殊引导
 local lastGuideInfo = nil
-local openViewKey = nil --用于验证当前界面是否是顶层
+local isStopSP = false
+local viewKeys = {} --记录界面状态
 local guideTimer = 0--限制点击
 
 -- 章节界面
@@ -208,18 +209,35 @@ function OnEnterSound()
 end
 
 function OnViewClosed(viewKey)
-    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" and openViewKey == viewKey then
-        SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
-        openViewKey = nil
+    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" then
+        viewKeys[viewKey] = nil
+        if CheckIsTop() then
+            SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
+            isStopSP = false
+        end
     end
     isClickEnter = false
 end
 
 function OnViewOpened(viewKey)
-    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" and openViewKey == nil then
-        openViewKey = viewKey
-        SpecialGuideMgr:StopAll()
+    if viewKey ~= "Section" and viewKey ~= "SpecialGuide"  then
+        viewKeys[viewKey] = 1
+        if not isStopSP then
+            SpecialGuideMgr:StopAll()   
+            isStopSP = true 
+        end
     end
+end
+
+function CheckIsTop()
+    local isTop = true
+    for k, v in pairs(viewKeys) do
+        if v~=nil then
+            isTop = false
+            break
+        end
+    end
+    return isTop
 end
 
 --index:指定章节
@@ -255,7 +273,7 @@ end
 function OnOpen()
     jumpData = data
     local baseScale = {1920, 1080}
-	 local curScale = CSAPI.GetMainCanvasSize()
+	local curScale = CSAPI.GetMainCanvasSize()
     local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
     local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
     offset.x =  (curScale[0] - baseScale[1] + fit1 + fit2)/2

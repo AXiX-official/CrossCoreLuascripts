@@ -1,4 +1,4 @@
---对手信息
+--对手信息 
 local this = {
 	data = {},
 }
@@ -12,6 +12,10 @@ end
 
 function this:InitData(sPracticeObjInfo)
 	self.data = sPracticeObjInfo or {}
+end
+
+function this:GetData()
+	return self.data
 end
 
 function this:GetID()
@@ -73,6 +77,29 @@ end
 
 function this:GetIconTitle()
 	return self.data.icon_title or 1
+end
+
+function this:GetModScore()
+	return self.data.mod_score or 0
+end
+
+function this:GetIsWin()
+	return self.data.is_winer
+end
+
+--队伍基础卡牌信息
+function this:GetTeamCardDatas()
+	local baseCards = {}
+	local _baseCards = self.data.baseCards or {}
+	for k, v in ipairs(_baseCards) do
+		local card = CharacterCardsData(v)
+		table.insert(baseCards,card)
+	end
+	return baseCards
+end
+
+function this:GetTurnNum()
+	return self.data.turn_num or 0
 end
 
 return this 

@@ -108,7 +108,7 @@ function FightProto:RecvCmd(proto)
             g_FightMgr = CreateFightMgr(data.fid, data.groupID, data.stype, data.seed)
             g_FightMgr.nPlayerLevel = data.level
             g_FightMgr.uid = PlayerClient:GetID()
-            
+
             if data.exData.dupId then
                 g_FightMgr.nDuplicateID = data.exData.dupId
             end
@@ -1053,8 +1053,17 @@ end
 
 function FightProto:ModUpFightOver(proto)
     Log(proto)
-    EventMgr.Dispatch(EventType.Sweep_Close_Panel)
     FightOverTool.OnSweepOver(proto, false)
+end
+
+-- 世界boss请求扫荡
+function FightProto:GlobalBossMopUp()
+    local proto = {"FightProtocol:GlobalBossMopUp", {}};
+    NetMgr.net:Send(proto);
+end
+
+function FightProto:GlobalBossMopUpRet(proto)
+    FightOverTool.OnGlobalBossSweepOver(proto, false)
 end
 
 -------------------------------乱序演习-----------------------------------------

@@ -6,6 +6,7 @@ function Awake()
     eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
     eventMgr:AddListener(EventType.GlobalBoss_Data_Update,OnDataUpdate)
+    eventMgr:AddListener(EventType.Mission_List, SetRed)
 
     CSAPI.SetGOActive(killObj,false)
 end
@@ -55,7 +56,6 @@ function OnOpen()
         InitPanel()
     end
 
-    RedPointMgr:SetDayRedToday(RedPointDayOnceType.GloBalBoss)
     DungeonMgr:CheckRedPointData()
 end
 
@@ -65,7 +65,7 @@ end
 
 function InitPanel()
     InitEffect()
-    FightProto:GetGlobalBossData() 
+    FightProto:GetGlobalBossData()
 end
 
 function InitEffect()
@@ -92,6 +92,7 @@ end
 function RefreshPanel()
     ShowKill()
     ShowInfo()
+    SetRed()
 end
 
 function ShowKill()
@@ -122,6 +123,14 @@ function OnItemLoadSuccess()
         itemInfo.SetPanelPos("BossDetails",18.5,-155)
         itemInfo.SetPanelPos("BossButton2",18.5,-303)
     end
+end
+
+function SetRed()
+    UIUtil:SetRedPoint(btnMission,GlobalBossMgr:IsMissionRed(),107,34)
+end
+
+function OnClickMission()
+    CSAPI.OpenView("MissionGlobalBoss",{group = bossData:GetSectionID()})
 end
 
 function OnClickReturn()

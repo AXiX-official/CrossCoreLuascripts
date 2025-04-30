@@ -2,7 +2,10 @@ local colors = {"ffffff", "12f6b2", "30baf7", "956dfd", "ffc146", "ffffff"}
 local timer = nil
 local isFirst = true
 
+local needToCheckMove = false
 function Awake()
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName1)
     -- recordBeginTime = CSAPI.GetRealTime()
     -- 立绘
     cardIconItem = RoleTool.AddRole(iconParent, nil, nil, false)
@@ -29,6 +32,10 @@ end
 function Update()
     if (timer and Time.time > timer) then
         OpenAnim(false)
+    end
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName1)
+        needToCheckMove = false
     end
 end
 
@@ -274,7 +281,9 @@ end
 
 -- 设置名称
 function SetName()
+    needToCheckMove = false
     CSAPI.SetText(txtName1, cardData:GetName())
+    needToCheckMove = true
     CSAPI.SetText(txtName2, cardData:GetEnName())
     -- bg
     local quality = cardData:GetQuality()

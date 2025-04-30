@@ -848,9 +848,18 @@ end
 -- 属性直加
 function BuffBase:AddAttr(effect, caster, target, data, attr, val)
 	LogDebugEx("BuffBase:AddAttr", self.id, target.name, attr, val, self.nCount)
+	-- LogTrace()
+	local todo = function(data)
+		local tCard = data.tCard 
+		if tCard and tCard:IsLive() and data.val ~= 0 then
+			tCard:AddBuffAttr(data.attr, -data.val)
+		end
+	end
 	if target == self.owner then -- 给自己加的属性删除时自动删掉
 		self.addAttrattr[attr] = self.addAttrattr[attr] or 0
 		self.addAttrattr[attr] = self.addAttrattr[attr] + val
+	else							 -- 给其他人加的属性删除时自动删掉
+		self:AddTodoOnDelete(todo,{tCard = target,attr = attr,val = val})
 	end
 	target:AddBuffAttr(attr, val)
 
@@ -878,6 +887,10 @@ end
 
 -- 增加或减少最大血量, 同时修改
 function BuffBase:AddMaxHpPercent(effect, caster, target, data, val, limit)
+
+	if self.owner.isInvincible == 2 then 
+		return 
+	end
 
 	local add = math.floor(target.maxhp * val)
 	if limit then 
@@ -1389,15 +1402,15 @@ function BuffBase:OnPreDelete()
 		if v ~= 0 then
 			target:AddBuffAttr(k, -v)
 		end
-		self.addAttrattr = {}
 	end
+	self.addAttrattr = {}
 
 	for k,v in pairs(self.attrPercent) do
 		if v ~= 0 then
 			target:AddAttrPercent(k, -v)
 		end
-		self.attrPercent = {}
 	end	
+	self.attrPercent = {}
 
 	-- if self.sneer then
 	-- 	target:Sneer(nil)
@@ -1849,6 +1862,22 @@ function BuffBase:IgnoreShareDamage(effect, caster, target, data)
 	
 	self:AddTodoOnDelete(todo, target)
 end
+
+-- 设置回血上限比例
+function BuffBase:SetCurePercent(effect, caster, target, data, percent)
+	if not percent then ASSERT(nil, "回血比例:nil") return end
+	if percent > 1 or percent <= 0 then ASSERT(nil, "回血比例范围有误:"..percent) end
+	-- target:SetTempSign("CurePercent", percent)
+	-- 可回血最大血量
+	-- target.maxCureHp = math.floor(self:Get("maxhp") * percent) 
+	target.fCurePercent = percent
+	local todo = function(target)
+		target.fCurePercent = nil
+	end
+	
+	self:AddTodoOnDelete(todo, target)
+end
+
 
 -- 删除技能事件
 function BuffBase:DeleteEvent(effect, caster, target, data)

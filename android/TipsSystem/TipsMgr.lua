@@ -184,4 +184,38 @@ function this:CheckAuthenError(tipsData)
 	end
 end
 
+--------------------------------每日提醒记录--------------------------------------
+function this:SaveDailyTips(key,b)
+	if key == nil or key == "" then
+		return
+	end
+    local info = FileUtil.LoadByPath("DailyTips.txt") or {}
+    info[key] = b and TimeUtil:GetTime() or nil
+    FileUtil.SaveToFile("DailyTips.txt",info)
+end 
+
+function this:IsShowDailyTips(key)
+	if key == nil or key == "" then
+		return true
+	end
+    local info = FileUtil.LoadByPath("DailyTips.txt")
+    if not info or not info[key] then
+        return true
+    end
+    local tab1 = TimeUtil:GetTimeHMS(info[key])
+    local tab2 = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
+    if tab2.day - tab1.day > 1 then --超过一天
+        return true
+    elseif tab2.day - tab1.day > 0 then --在前后一天
+        if tab1.hour < g_ActivityDiffDayTime then --前一次记录在每日刷新前
+            return true
+        elseif tab2.hour >= g_ActivityDiffDayTime then --当前在每日刷新后
+            return true
+        end
+    elseif tab1.hour < g_ActivityDiffDayTime and tab2.hour >= g_ActivityDiffDayTime then --在同一天但在每日刷新前后
+        return true
+    end
+    return false
+end
+
 return this

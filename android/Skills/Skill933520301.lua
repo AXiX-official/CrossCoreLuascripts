@@ -19,7 +19,9 @@ function Skill933520301:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 933520301
-	self:AddBuff(SkillEffect[933520301], caster, target, data, 5106)
+	if self:Rand(5000) then
+		self:AddBuff(SkillEffect[933520301], caster, target, data, 5106)
+	end
 end
 -- 攻击结束2
 function Skill933520301:OnAttackOver2(caster, target, data)

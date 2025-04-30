@@ -1455,7 +1455,8 @@ end
 function PlayerProto:PayFinishOrderId(proto)
     if proto then
         if CSAPI.IsADV() then
-            EventMgr.Dispatch(EventType.Shop_Buy_Mask,false);
+            SDKPayMgr:SearchPayRewardAtOne();
+            SDKPayMgr:StopSearchPayReward();
         else
             if CSAPI.IsDomestic() then
                 if proto.gameOrderId then

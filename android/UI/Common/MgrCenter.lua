@@ -67,6 +67,8 @@ local mgrNames = {
 	"GlobalBossMgr", --新世界boss
 	"RogueTMgr",
 	"ExplorationMgr",--勘探
+	"PuzzleMgr",
+	"QuestionnaireMgr", --问卷
 	"MissionMgr",   --任务  --------------------------------------必须放到最后
 }
 

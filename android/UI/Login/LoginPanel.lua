@@ -120,10 +120,22 @@ function Awake()
             end
         end
     end
-
+    SetADVNeedToClose()
     SetLive()
     if PlayerClient then PlayerClient:SetEnterHall(false); end
 end
+---新增海外差异化代码（海外不需要显示的内容）
+function SetADVNeedToClose()
+    if CSAPI.IsADV() then
+        CSAPI.SetGOActive(Gametext,false)
+        CSAPI.SetGOActive(btn_Live,false)
+        CSAPI.SetGOActive(txt_userTips,false)
+        CSAPI.SetGOActive(txt_tips2,false)
+        txt_tips3.gameObject.transform:SetAsLastSibling();
+        txt_userTips2.gameObject.transform:SetAsLastSibling();
+    end
+end
+
 function Start()
     SetLoadText()
 end

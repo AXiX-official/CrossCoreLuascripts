@@ -72,7 +72,7 @@ function this:Hit(hitType)
 end
 --技能
 function this:Cast(castName)          
-    self.character.animator:Play(castName);
+    self.character.EnterState(castName);
 end
 --设置眩晕状态
 function this:SetStunState(state)

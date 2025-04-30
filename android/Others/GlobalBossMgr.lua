@@ -10,12 +10,14 @@ function this:Clear()
     self.info = {}
     self.cfg = nil
     self.hp = 0
+    self.lastHp = nil
     self.maxHp = 0
     self.rank = 0
     self.useCount = 0
     self.data = nil
     self.closeDesc = ""
     self.closeTime = 0
+    self.maxDamage = 0
 
     --rank
     self.clearTime = 0
@@ -79,8 +81,16 @@ function this:SetData(proto)
         self.maxHp = proto.maxHp and math.floor(proto.maxHp) or 0
         self.rank = proto.rank or 0
         self.useCount = proto.challengeTimes or 0
+        self.maxDamage = proto.maxDamage or 0
+        if self.lastHp then
+            if self.hp <= 0 and self.lastHp > 0 then -- boss被杀死刷新红点
+                DungeonMgr:CheckRedPointData()
+            end
+        end
+        self.lastHp = self.hp
     end
     EventMgr.Dispatch(EventType.GlobalBoss_Data_Update)
+
 end
 
 --血量
@@ -210,12 +220,26 @@ end
 
 ------------------------------------red------------------------------------
 function this:IsRed()
+    if self:IsDayRed() then
+        return true
+    end
+    if self:IsMissionRed() then
+        return true
+    end
+    return false
+end
+
+function this:IsDayRed()
     if self.data then
         if not self:IsClose() and self:IsOpen() and not self:IsKill() then
             return RedPointMgr:GetDayRedState(RedPointDayOnceType.GloBalBoss)
         end
     end
     return false
+end
+
+function this:IsMissionRed()
+    return MissionMgr:CheckRed({eTaskType.GlobalBossDay,eTaskType.GlobalBossMonth})
 end
 ------------------------------------openTime------------------------------------
 function this:CheckCloseTime()
@@ -255,6 +279,16 @@ end
 
 function this:IsClose()
     return self.closeTime > TimeUtil:GetTime()
+end
+
+------------------------------------sweep------------------------------------
+--扫荡
+function this:CanSweep()
+    return self.maxDamage > 0
+end
+
+function this:GetMaxDamage()
+    return self.maxDamage
 end
 
 return this

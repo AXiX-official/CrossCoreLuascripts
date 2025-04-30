@@ -29,6 +29,8 @@ function Skill102200104:OnActionOver(caster, target, data)
 	else
 		return
 	end
-	-- 102200103
-	self:Help(SkillEffect[102200103], caster, target, data, 1,1022,1,"attack")
+	-- 102200102
+	if self:Rand(7000) then
+		self:Help(SkillEffect[102200102], caster, target, data, 1,1022,1,"attack")
+	end
 end

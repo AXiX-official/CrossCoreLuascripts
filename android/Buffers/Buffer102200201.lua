@@ -6,6 +6,21 @@ Buffer102200201 = oo.class(BuffBase)
 function Buffer102200201:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
+-- 回合开始时
+function Buffer102200201:OnRoundBegin(caster, target)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 8763
+	local c763 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,1022002)
+	-- 102200211
+	local targets = SkillFilter:All(self, self.caster, target or self.owner, 3)
+	for i,target in ipairs(targets) do
+		self:Cure(BufferEffect[102200211], self.caster, target, nil, 8,(0.02+math.floor((c763+1)/2)/100)*self.nCount)
+	end
+end
 -- 创建时
 function Buffer102200201:OnCreate(caster, target)
 	-- 8762
@@ -22,11 +37,6 @@ function Buffer102200201:OnRoundOver(caster, target)
 	end
 	-- 8763
 	local c763 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,1022002)
-	-- 102200211
-	local targets = SkillFilter:All(self, self.caster, target or self.owner, 3)
-	for i,target in ipairs(targets) do
-		self:Cure(BufferEffect[102200211], self.caster, target, nil, 8,(0.02+math.floor((c763+1)/2)/100)*self.nCount)
-	end
 	-- 102200221
 	self:AddProgress(BufferEffect[102200221], self.caster, self.card, nil, 50+math.floor((c763+1)/2)*50)
 end

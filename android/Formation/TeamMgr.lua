@@ -976,4 +976,11 @@ function this:Clear()
 	self.dragFingerID=nil;
 end
 
+--创建队伍数据
+function this:CreateTeamData(team)
+	local teamData = TeamData.New()
+	teamData:SetData(team)
+	return teamData
+end
+
 return this; 

@@ -244,7 +244,7 @@ function OnClickMask()
     end
 
     isClicked = 2;
-    if data and data.elseData and data.elseData.isSweep then --扫荡关闭
+    if data and data.elseData and (data.elseData.isSweep or data.elseData.isGlobalSweep) then --扫荡关闭
         view:Close()
         return
     end

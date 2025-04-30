@@ -6,7 +6,7 @@ local this =
 },
 [1310282141]={
 {delay=3950,time=4000,type=1,hit_type=1,hits={0,1640,1760,1920}},
-{effect="cast2_eff",time=10000,type=0,pos_ref={ref_type=6}}
+{effect="cast2_eff",time=7000,type=0,pos_ref={ref_type=6}}
 },
 [-601574123]={
 {time=3500,type=0}
