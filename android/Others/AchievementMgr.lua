@@ -98,14 +98,33 @@ function this:SetRewardInfos(proto)
     if proto then
         self:UpdateDatas(proto.infos)
         if proto.is_finish then
-            if self.isFirst then
-                Tips.ShowMisionTips()
-            end
             self.isFirst = true
+            self:CheckRedPointData()
             EventMgr.Dispatch(EventType.Achievement_Data_Update)
         end
     end
-    self:CheckRedPointData()
+end
+
+--更新成就领取详情
+function this:UpdateFinishInfo(proto)
+    if proto then
+        -- self:UpdateDatas(proto.infos)
+        if proto.finish_list then
+            self.finishes = self.finishes or {}
+            for k, v in pairs(proto.finish_list) do
+                self.finishes[v.sid] = v.num
+            end
+        end
+        if proto.is_finish then
+            self.datas = self.datas or {}
+            for k, v in pairs(self.datas) do
+                v:SetFinish(self.finishes)
+            end
+            self:CheckRedPointData()
+            MissionMgr:ApplyShowMisionTips()
+            EventMgr.Dispatch(EventType.Achievement_Data_Update)
+        end
+    end
 end
 
 --更新成就数据 info:sAchievementRewardDetail
@@ -125,7 +144,6 @@ function this:UpdateDatas(infos)
         end
     end
 end
-
 
 function this:GetDatas()
     return self.datas
@@ -354,6 +372,9 @@ end
 
 -- 弹提示数据
 function this:GetChangeDatas()
+    if not MenuMgr:CheckModelOpen(OpenViewType.main,"Achievement") then
+        return {}
+    end
     local arr = {}
     for i, v in pairs(self.changeDatas) do
         table.insert(arr, v)

@@ -33,7 +33,7 @@ function Skill601900205:DoSkill(caster, target, data)
 	end
 	-- 601900215
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[601900215], caster, target, data, nil)
+	self:AddBuff(SkillEffect[601900215], caster, target, data, 4905,2)
 end
 -- 回合结束时
 function Skill601900205:OnRoundOver(caster, target, data)
