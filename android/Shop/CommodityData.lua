@@ -465,9 +465,10 @@ function this:GetRealPrice(key)
         infos = {}
         for k, v in ipairs(priceInfo) do
             if v.id==-1 then
+                local num=tonumber(string.match(self:GetCfg().displayPrice,"[0-9]+"))
                 table.insert(infos, {
                     id = v.id,
-                    num = tonumber(self:GetCfg().displayPrice)
+                    num = num
                 })
             else
                 local num = discount == 1 and v.num or math.modf(tonumber(v.num) * discount)
