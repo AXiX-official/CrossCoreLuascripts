@@ -1942,7 +1942,11 @@ function GCalHelp:DyModifyCfgs(modifysArr)
         if ConfigChecker[cfgName] then
             local result, errmsg = pcall(ConfigChecker[cfgName], ConfigChecker, _G[cfgName])
             if errmsg then
-                print(result, errmsg)
+                if LogError then
+                    LogError("GCalHelp:DyModifyCfgs() ConfigChecker[%s], result:%s, errmsg:%s", cfgName, result, errmsg)
+                else
+                    print(result, errmsg)
+                end
                 ASSERT(false, '配置表出错' .. cfgName)
             end
         end
