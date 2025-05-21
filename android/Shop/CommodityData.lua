@@ -461,32 +461,12 @@ function this:GetRealPrice(key)
     local infos = nil
     local priceInfo = self:GetPrice(key)
     local discount = self:GetNowDiscount()
-    if (CSAPI.IsADV() or CSAPI.IsDomestic()) and self:GetCfg().displayPrice~=nil then -- 兼容SDK传过来的价格
+    if priceInfo then
         infos = {}
         for k, v in ipairs(priceInfo) do
-            if v.id==-1 then
-                local num=tonumber(string.match(self:GetCfg().displayPrice,"[0-9]+"))
-                table.insert(infos, {
-                    id = v.id,
-                    num = num
-                })
-            else
-                local num = discount == 1 and v.num or math.modf(tonumber(v.num) * discount)
-                table.insert(infos, {
-                    id = v.id,
-                    num = num
-                })
-            end
-            
-        end
-    elseif priceInfo then
-        infos = {}
-        for k, v in ipairs(priceInfo) do
-            local num = discount == 1 and v.num or math.modf(tonumber(v.num) * discount)
-            table.insert(infos, {
-                id = v.id,
-                num = num
-            })
+            local num = discount == 1 and v.num or
+                            math.modf(tonumber(v.num) * discount)
+            table.insert(infos, {id = v.id, num = num})
         end
     end
     return infos
