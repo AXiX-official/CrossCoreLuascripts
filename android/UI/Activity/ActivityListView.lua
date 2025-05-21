@@ -22,7 +22,7 @@ function OnEnable()
     eventMgr:AddListener(EventType.Activity_Click, OnBtnCallBack);
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
     eventMgr:AddListener(EventType.Update_Everyday, OnDayRefresh)
-    eventMgr:AddListener(EventType.Acitivty_List_Pop,CheckNextView)
+    eventMgr:AddListener(EventType.Acitivty_List_Pop,SetRightPanel)
     eventMgr:AddListener(EventType.Activity_List_Panel_Refresh,OnPanelRefresh)
     eventMgr:AddListener(EventType.Activity_List_Cfg_Change,OnPanelRefresh)
 end
@@ -33,15 +33,13 @@ end
 
 function OnViewClose(key)
     if (key == "RewardPanel") then
-        CheckNextView()
+        ActivityPopUpMgr:TryPopUpView("ActivityListView")
     end
 end
 
 function OnBtnCallBack()
     isClickMask = true
-    -- btnCallBack = _cb or nil
     CSAPI.SetGOActive(clickMask, true)
-    -- CSAPI.SetGOActive(topParent,false)
 end
 
 function OnRedPointRefresh()
@@ -54,7 +52,7 @@ end
 
 function OnDayRefresh()
     --清除弹出缓存
-    ActivityMgr:ClearPopInfos()
+    ActivityPopUpMgr:ClearPopUpInfos()
     
     UIUtil:ToHome()
 end
@@ -67,7 +65,7 @@ function OnPanelRefresh()
         InitLeftPanel()
         CSAPI.SetGOActive(emptyObj,datas == nil or #datas < 1)
     end
-    CheckNextView()
+    SetRightPanel()
 end
 
 function OnDisable()
@@ -78,7 +76,7 @@ function OnOpen()
     group = openSetting or 1
     InitLeftPanel()
     if datas and #datas > 0 then
-        CheckNextView(data)
+        SetRightPanel(data and data.id)
     end
 
     CSAPI.SetGOActive(emptyObj,datas == nil or #datas < 1)
@@ -89,6 +87,7 @@ function InitLeftPanel()
         local go = ResUtil:CreateUIGO("Common/LeftPanel", left.transform)
         leftPanel = ComUtil.GetLuaTable(go)
     end
+    curIndex1 = 1
     local leftDatas = {}
     datas = ActivityMgr:GetArr(tonumber(group))
     if CSAPI.IsADV() then
@@ -110,16 +109,7 @@ function InitLeftPanel()
             end
         end
     end
-
     leftPanel.Init(this, leftDatas)
-end
-
-function CheckNextView(_id)
-    local nextId = ActivityMgr:TryGetNextId(group)
-    if (_id == nil and nextId) then
-        _id = nextId
-    end
-    SetRightPanel(_id)
 end
 
 function SetRightPanel(_id)
@@ -162,19 +152,17 @@ function SetRight()
         ShowTop(_data)
         ShowQusetion(_data)
 
-        local info,esleData = GetInfo(_data)
-
         if (rightItems[_data:GetID()]) then
             CSAPI.SetGOActive(rightItems[_data:GetID()].gameObject, true)
             rightItems[_data:GetID()].isFirst = false
-            rightItems[_data:GetID()].Refresh(info, esleData)
+            rightItems[_data:GetID()].Refresh(_data, {cfg = _data:GetCfg()})
             UIUtil:SetObjFade(rightItems[_data:GetID()].gameObject,0,1,nil,200)
             curItem = rightItems[_data:GetID()]
         else
             if (_data:GetPath()) then
                 ResUtil:CreateUIGOAsync(_data:GetPath(), right, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(info, esleData)
+                    lua.Refresh(_data, {cfg = _data:GetCfg()})
                     UIUtil:SetObjFade(go,0,1,nil,200)
                     rightItems[_data:GetID()] = lua
                     curItem = lua
@@ -215,16 +203,8 @@ function ShowQusetion(_data)
     CSAPI.SetGOActive(qusetion, isShow)
 end
 
-function GetInfo(_data)
-    local data,elseData = ActivityMgr:TryGetData(_data:GetID()),{cfg = _data:GetCfg()}
-    return data,elseData
-end
-
-
 function CloseView()
     CSAPI.SetGOActive(top.btn_home, true)
-    -- CSAPI.SetGOActive(top.moneys, true)
-    EventMgr.Dispatch(EventType.Activity_List_Null_Check)
     view:Close()
 end
 

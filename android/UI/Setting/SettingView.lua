@@ -42,7 +42,7 @@ function OnOpen()
 	if openSetting and openSetting > 0  then
 		curIndex1 = openSetting
 	end
-	CSAPI.SetLocalPos(imgObj,0,0)
+	-- CSAPI.SetLocalPos(imgObj,0,0)
 	if CSAPI.IsADV() then
        ---海外-------------------------
 	   if data == SettingEnterType.Login then

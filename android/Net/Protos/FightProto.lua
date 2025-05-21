@@ -1405,3 +1405,17 @@ function FightProto:RogueTDelBuffRet(proto)
     end 
     self.RogueTDelBuff = nil
 end
+
+--弹窗与红点
+function FightProto:RogueTSetWindow(_ty,_value,_cb)
+    self.RogueTSetWindowCB = _cb
+    local proto = {"FightProtocol:RogueTSetWindow",{ty = _ty,value = _value}}
+    NetMgr.net:Send(proto)
+end
+function FightProto:RogueTSetWindowRet(proto)
+    RogueTMgr:RogueTSetWindowRet(proto)
+    if( self.RogueTSetWindowCB)then 
+        self.RogueTSetWindowCB()
+    end 
+    self.RogueTSetWindowCB = nil
+end

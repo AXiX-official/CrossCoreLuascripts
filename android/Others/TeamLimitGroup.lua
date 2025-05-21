@@ -33,24 +33,31 @@ function this:CheckCard(teamData,cardData)
         LogError("TeamLimitGroup-------->检测："..tostring(self.cfg.id).."CheckCard传入的数据不得为空！param1:"..tostring(teamData==nil).."\tparam2:"..tostring(cardData==nil).."\tparam3:"..tostring(self.conds==nil));
         return
     end
-    local result=false;
+    local result,errorCode=false,nil;
     for k, v in ipairs(self.conds) do
-        local rlt=v:CheckCard(teamData,cardData)
+        local rlt,eCode=v:CheckCard(teamData,cardData)
         -- LogError("TeamLimitGroup-------->检测："..tostring(v.cfgId).."\t操作符："..tostring(self:GetOperator()).."\t结果："..tostring(rlt).."\t k："..tostring(k).."\t length："..tostring(#self.conds))
         if rlt and self:GetOperator()==TeamConditionOperator.Or then
             result=true;
             break;
         elseif self:GetOperator()==TeamConditionOperator.And then
             if rlt~=true then
+                errorCode=errorCode==nil and eCode or errorCode;
                 result=false;
                 break;
             elseif rlt==true and k==#self.conds then
                 result=true;
             end
+        elseif rlt~=true then
+            errorCode=errorCode==nil and eCode or errorCode;
         end
     end
     -- LogError("TeamLimitGroup-------->检测完毕："..tostring(result))
-    return result;
+    if result then
+        return result;
+    else
+        return result,errorCode;
+    end
 end
 
 --检查队伍是否满足编程限制条件

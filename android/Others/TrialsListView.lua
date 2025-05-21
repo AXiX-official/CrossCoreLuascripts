@@ -32,7 +32,7 @@ function Awake()
     eventMgr:AddListener(EventType.Trials_List_Refresh,RefreshPanel)
     eventMgr:AddListener(EventType.Dungeon_Activity_RankInfo,OnRankInfoRet)
     eventMgr:AddListener(EventType.Mission_List, function ()
-        SetRed(MissionMgr:CheckRed({sectionDatas[currIndexR]:GetTaskType()}))
+        SetRed(MissionMgr:CheckRed2(sectionDatas[currIndexR]:GetTaskType(),sectionDatas[currIndexR]:GetID()))
     end)
 end
 
@@ -288,7 +288,7 @@ function SetRankInfo()
     CSAPI.SetText(txtRank,"--") 
     CSAPI.SetGOActive(rankObj,true)
     PlayerProto:GetMineRankInfo(sectionData:GetRankType())
-    SetRed(MissionMgr:CheckRed({sectionData:GetTaskType()}))
+    SetRed(MissionMgr:CheckRed2(sectionData:GetTaskType(),sectionData:GetID()))
 end
 
 function OnRankInfoRet(proto)

@@ -4,7 +4,7 @@ local this =
 [-686817241]={
 {effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Smelt_attack_skill_01"},
 {time=3500,type=0,cue_sheet="cv/Smelt.acb",cue_name="Smelt_10",cue_feature=1},
-{time=3500,type=3,hits={0}}
+{delay=1800,time=3500,type=3,hits={0}}
 },
 [1310282141]={
 {delay=2000,time=12000,type=0,cue_sheet="cv/Smelt.acb",cue_name="Smelt_12",cue_feature=1},

@@ -1634,7 +1634,7 @@ end
 -- getCnt: 卡牌获取次数
 -- ret:
 -- { {id=1, num=1, type=1}, {id=1, num=1, type=1}}
-function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets)
+function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets, from)
     gets = gets or {}
 
     if not cfg or not cfg.coreItemId then

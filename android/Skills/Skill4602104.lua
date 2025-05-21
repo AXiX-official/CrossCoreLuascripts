@@ -6,8 +6,8 @@ Skill4602104 = oo.class(SkillBase)
 function Skill4602104:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 入场时
-function Skill4602104:OnBorn(caster, target, data)
+-- 伤害前
+function Skill4602104:OnBefourHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -28,8 +28,8 @@ function Skill4602104:OnAttackOver2(caster, target, data)
 	else
 		return
 	end
-	-- 4602118
-	self:DelBufferForce(SkillEffect[4602118], caster, self.card, data, 4602104)
+	-- 4602121
+	self:DelBufferTypeForce(SkillEffect[4602121], caster, self.card, data, 4602101)
 end
 -- 行动结束
 function Skill4602104:OnActionOver(caster, target, data)
@@ -45,4 +45,19 @@ function Skill4602104:OnActionOver(caster, target, data)
 	end
 	-- 4602113
 	self:AddBuffCount(SkillEffect[4602113], caster, self.card, data, 4602104,1,10)
+end
+-- 回合开始处理完成后
+function Skill4602104:OnAfterRoundBegin(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8146
+	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.6) then
+	else
+		return
+	end
+	-- 4602122
+	self:DelBufferTypeForce(SkillEffect[4602122], caster, self.card, data, 4602101)
 end

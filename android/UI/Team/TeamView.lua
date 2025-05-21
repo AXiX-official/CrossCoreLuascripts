@@ -476,7 +476,7 @@ function SetViewLayout(openSetting)
 	--AI和战术
 	local isSkill = true
 	local isAI = true
-	if(TeamMgr.currentIndex ==eTeamType.Colosseum or TeamMgr.currentIndex ==(eTeamType.Colosseum + 1)) then 
+	if(TeamMgr.currentIndex ==eTeamType.Colosseum or TeamMgr.currentIndex ==(eTeamType.Colosseum + 1) or TeamMgr.currentIndex ==eTeamType.RogueT) then 
 		isSkill = false		
 		isAI= false
 	elseif openSetting==TeamOpenSetting.GlobalBoss then
@@ -489,6 +489,7 @@ function SetViewLayout(openSetting)
 	end 
 	CSAPI.SetGOActive(btn_ai,isAI)
 	CSAPI.SetGOActive(btn_skill,isSkill)
+	CSAPI.SetGOActive(btnLimit,openSetting==TeamOpenSetting.RogueT)
 end
 
 --刷新面板 isReset:是否重置卡牌列表，notLoadModel：是否不刷新阵盘
@@ -903,7 +904,7 @@ function SetSVList()
 		elseif openSetting==TeamOpenSetting.RogueT then
 			local _newArr = {}
 			for i=1,#arr do
-				arr[i].canDrag=CheckCardCanPass(arr[i]);
+				arr[i].canDrag,arr[i].disDrag_lanID=CheckCardCanPass(arr[i]);
 				table.insert(_newArr,arr[i])
 			end
 			--推荐的
@@ -1075,7 +1076,7 @@ function LayoutCallBack(index)
 	if (selectType ~= TeamSelectType.Support  and _data:GetRoleTag()==assistTag) or (roleItem and  _data:GetRoleTag()==roleItem:GetRoleTag() and roleItem:GetIndex()~=6 and selectType==TeamSelectType.Support) then
 		isEqual=true;
 	end
-	local disDrag=false;
+	local disDrag,_disDrag_lanID=false,nil;
 	local key="TeamFormation"
 	if openSetting==TeamOpenSetting.Tower then
 		disDrag=not _data.canDrag;
@@ -1085,6 +1086,7 @@ function LayoutCallBack(index)
 		isEqual=disDrag;
 	elseif openSetting==TeamOpenSetting.RogueT then
 		disDrag=not _data.canDrag;
+		_disDrag_lanID = _data.disDrag_lanID;
 		isEqual=disDrag;
 	end
 	local isNpc,s1,s2=FormationUtil.CheckNPCID(_data:GetID());
@@ -1108,6 +1110,7 @@ function LayoutCallBack(index)
 		canClick=enableClick,
 		sortId=sortID,
 		disDrag=disDrag,
+		disDrag_lanID = _disDrag_lanID,
 		teamType = TeamMgr:GetTeamType(teamData:GetIndex())
     };
 	local grid=layout:GetItemLua(index);
@@ -1385,9 +1388,9 @@ function CheckCardCanPass(card)
 		end
 	end 
 	if cond then
-		local result=cond:CheckCard(teamData,card);
+		local result,lanID=cond:CheckCard(teamData,card);
 		-- LogError(tostring(card:GetID()).."检测限制--------------->"..tostring(result))
-		return result;
+		return result,lanID;
 	end
 	return true;
 end
@@ -1648,7 +1651,7 @@ function OnClickClean()
     local removeCid={};
 	for i=1,#teamData.data do
 		local item=teamData.data[i];
-		if teamData:GetTeamType()==eTeamType.Colosseum then
+		if teamData:GetTeamType()==eTeamType.Colosseum or teamData:GetTeamType()==eTeamType.RogueT then
 			table.insert(removeCid,item.cid);
 		else
 			if (teamData:GetIndex()==1 or canEmpty~=true) and item:IsLeader()==false then--不能为空的队伍或者编队1会留下队长卡
@@ -1817,6 +1820,11 @@ function SetSortObj()
 			RefreshCardList(true);
 		end);
 	end
+end
+
+--能力测验编队限制
+function OnClickLimit()
+	CSAPI.OpenView("TeamLimitPanel",data.dungeonId)
 end
 
 -------------------------------筛选

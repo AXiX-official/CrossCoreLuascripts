@@ -326,8 +326,8 @@ function InitLevel()
     CSAPI.SetGOAlpha(nolNolImg,currLevel ~=1 and 1 or 0 )
     CSAPI.SetGOAlpha(nolSelImg,currLevel ==1 and 1 or 0 )
 
-    CSAPI.SetAnchor(txt_hard,isHardOpen and 45 or 10,0)
-    CSAPI.SetAnchor(txt_extra,isExtraOpen and 45 or 10,0)
+    CSAPI.SetAnchor(txt_hard,isHardOpen and 27.5 or -7.5,0)
+    CSAPI.SetAnchor(txt_extra,isExtraOpen and 27.5 or -7.5,0)
 
     SetLevel()
 end
@@ -480,7 +480,7 @@ end
 
 function OnLoadCallBack()
     itemInfo.SetFunc("Button2","OnClickEnter",OnBattleEnter)
-    itemInfo.SetFunc("Button2","OnClickSweep",OnSweepClick)
+    itemInfo.CallFunc("Button2","SetBuyFunc",OnPayFunc)
     itemInfo.CallFunc("PlotButton","SetStoryCB",OnStoryCB)
     if currItem then
         itemInfo.CallFunc("Danger3","ShowDangeLevel",currItem.IsDanger(),currItem.GetCfgs(),currDanger)
@@ -542,38 +542,15 @@ function OnBattleEnter()
     end
 end
 
-function OnPayFunc(count)
-    PlayerProto:BuyArachnidCount(count,sectionData:GetID())
-end
-
-function OnSweepClick()
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-    if openInfo and not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-    local isSweepOpen = itemInfo.CallFunc("Button2","IsSweepOpen")
-    local cfg = currItem:GetCfg()
-    if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = cfg.id},{onBuyFunc = OnBuyFunc})
-    else
-        local sweepData = SweepMgr:GetData(cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfgModUp = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
-            if cfgModUp then
-                Tips.ShowTips(cfgModUp.sDescription)
-            end
-        end
-    end
-end
-
 function OnBuyFunc()
     local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
     if sectionData:GetBuyGets() then
         UIUtil:OpenPurchaseView(nil,nil,curCount,sectionData:GetBuyCount(),sectionData:GetBuyCost(),sectionData:GetBuyGets(),OnPayFunc)
     end
+end
+
+function OnPayFunc(count)
+    PlayerProto:BuyArachnidCount(count,sectionData:GetID())
 end
 
 function OnStoryCB()

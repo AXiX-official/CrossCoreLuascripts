@@ -1,6 +1,7 @@
 local key = nil
 local cfg = nil
 local isCanGet = false
+local data = nil
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -23,9 +24,6 @@ function ESignCB(proto)
     SetDatas()
     SetButton()
     isClick = false
-    ActivityMgr:SetListData(cfg.id, {
-        key = _key
-    })
 end
 
 function OnDestroy()
@@ -33,15 +31,16 @@ function OnDestroy()
     ReleaseCSComRefs()
 end
 
-function Refresh(data,elseData)
-    local isSingIn = data.isSingIn ~= nil and data.isSingIn or false
-    key = data.key
-    cfg = elseData and elseData.cfg or nil
-
-    SetDatas()
-    SetTime()
-    SetButton()
-    SetItems()
+function Refresh(_data,_elseData)
+    data = _data
+    if data then
+        key = SignInMgr:GetDataKeyById(data:GetID())
+        cfg = data:GetCfg()
+        SetDatas()
+        SetTime()
+        SetButton()
+        SetItems()
+    end
 end
 
 -- 如果是12或者倒数12位，则额外加多2个空数据填位

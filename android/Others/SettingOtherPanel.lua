@@ -1,6 +1,6 @@
 local liveIndex = nil
 local equipIndex = nil
-
+local timer = 0;
 local names ={s_wait_scale.waitTime,s_wait_scale.timeFormat,s_wait_scale.style,s_wait_scale.tips,s_wait_scale.time,s_wait_scale.electric,s_wait_scale.date,s_wait_scale.rotate}
 local tabNames = {"djsjTab","sjgsTab","djfgTab","gntsTab","sjxsTab","dlxsTab","rqxsTab","lhxsTab"}
 
@@ -24,6 +24,8 @@ function Awake()
     SetAuto()
 
     InitWaitSetting()
+    JPObjState();
+    ZbmsobjState();
 end
 
 --直播模式
@@ -215,4 +217,70 @@ function OnClickEnter()
     if cb then
         cb()
     end
+end
+---区分海外和国内隐藏/显示
+function JPObjState()
+    if CSAPI.IsADVRegional(3) then
+        CSAPI.SetGOActive(JPObj,true)
+    else
+        CSAPI.SetGOActive(JPObj,false)
+    end
+
+end
+function OnClickUserAgreementTxt(go)
+    Log("用户协议")
+    ShiryuSDK.ShowSdkCommonUI(7)
+end
+
+function OnClickPrivacytxt(go)
+    Log("隐私协议")
+    ShiryuSDK.ShowSdkCommonUI(6)
+end
+---直播开关按钮
+function ZbmsobjState()
+    if  CSAPI.IsADV() then
+        CSAPI.SetGOActive(zbmsObj,false)
+        CSAPI.SetAnchor(zdssObj,CSAPI.csGetAnchor(zbmsObj)[0],CSAPI.csGetAnchor(zbmsObj)[1],CSAPI.csGetAnchor(zbmsObj)[2]);
+    end
+end
+
+function Update()
+    if (Time.time < timer) then return end
+    timer = Time.time + 1
+
+    RefreshDownloadBtn()
+end
+
+function OnClickRewardBtn()    
+    OnClickDownloadBtn()
+end
+function OnClickDownloadBtn()
+    CSAPI.OpenView("SilentDownload")   
+end
+function RefreshDownloadBtn()
+    local apkVer = tonumber(CSAPI.APKVersion())
+    local percent = apkVer <= 6 and 1 or SilentDownloadMgr:GetInfo_CurrentDownloadProgressPecent()
+    -- local percent = SilentDownloadMgr:GetInfo_CurrentDownloadProgressPecent()
+    -- 下载完成，未领取奖励
+    local canReward = percent >= 1 and not MenuMgr:GetDownloadRewardState()
+    -- 下载完成，已经领取奖励
+    local hasRewarded = percent >= 1 and MenuMgr:GetDownloadRewardState()
+    CSAPI.SetGOActive(rewardBtn,canReward)
+    CSAPI.SetGOActive(completeBtn,hasRewarded)
+    CSAPI.SetGOActive(downloadBtn,not canReward and not hasRewarded)
+    -- 暂时屏蔽功能入口
+    CSAPI.SetGOActive(node.transform:Find("downloadObj").gameObject,false)
+
+    -- if canReward then
+    -- else if hasRewarded then
+    --     CSAPI.SetGOActive(rewardBtn,true)
+    --     CSAPI.SetGOActive(completeBtn,false)
+    --     CSAPI.SetGOActive(downloadBtn,false)
+
+    -- else
+        
+    -- end
+    -- 未下载完
+
+     
 end

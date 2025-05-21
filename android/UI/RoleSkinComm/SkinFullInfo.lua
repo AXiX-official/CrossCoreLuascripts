@@ -24,6 +24,7 @@ local comm=nil;
 local shopPriceKey=ShopPriceKey.jCosts;
 local bindComm=nil;
 local asmrClicker=nil;
+local rmbIcon=nil;
 
 function Awake()
     layout = ComUtil.GetCom(hsv, "UISV")
@@ -45,7 +46,7 @@ function OnDestroy()
 end
 
 function OnOpen()
-    -- l2dOn=RoleSkinMgr:GetL2DState()==true;
+    --     l2dOn=RoleSkinMgr:GetL2DState()==true;
     if data then
         list = data.list
         nowIdx = data.idx or 1;
@@ -79,21 +80,24 @@ function Refresh()
             if cards then
                 card=cards[1]
             end
-            -- local useL2d=l2dOn;
             comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
-            -- isShowImg=false;
+            rmbIcon=comm:GetCurrencySymbols();
             --屏蔽
             local useL2d=false;
             isShowImg=false;
-            l2dOn=false;
-            CSAPI.SetGOActive(btnL2D, false);
-            -- if comm and comm:IsShowImg() and rSkinInfo and rSkinInfo:CheckCanUse()~=true then
-            --     useL2d=false; 
-            --     isShowImg=true;
-            --     CSAPI.SetGOActive(btnL2D, false);
-            -- else
-            --     CSAPI.SetGOActive(btnL2D, hasL2d);
-            -- end
+            if g_FHXOpenSkin ~= true then
+                useL2d=l2dOn;
+                if comm and comm:IsShowImg() and rSkinInfo and rSkinInfo:CheckCanUse() ~= true then
+                    useL2d = false;
+                    isShowImg = true;
+                    CSAPI.SetGOActive(btnL2D, false);
+                else
+                    CSAPI.SetGOActive(btnL2D, hasL2d);
+                end
+            else
+                l2dOn=false;
+                CSAPI.SetGOActive(btnL2D, false);
+            end
             -- 初始化立绘
             roleItem.Refresh(currSkinInfo:GetModelID(), LoadImgType.SkinFull,nil,useL2d,isShowImg)
             -- 初始化L2D按钮状态
@@ -169,7 +173,7 @@ end
 
 function SetPriceNode(isShow)
     CSAPI.SetGOActive(btnSwitch,isShow);
-    CSAPI.SetAnchor(txt_tips,0,isShow and -125 or -185);
+    CSAPI.SetAnchor(txt_tips,0,isShow and -160 or -185);
     if isShow and comm and comm:HasOtherPrice(ShopPriceKey.jCosts1) then
         local cost=comm:GetRealPrice(ShopPriceKey.jCosts)[1];
         local cost2=comm:GetRealPrice(ShopPriceKey.jCosts1)[1];
@@ -179,25 +183,17 @@ function SetPriceNode(isShow)
         if cost.id~=-1 then
             ShopCommFunc.SetPriceIcon(dMIcon1,cost);
         else
-            CSAPI.SetText(pnIcon1,LanguageMgr:GetByID(18013));
+            CSAPI.SetText(pnIcon1,rmbIcon);
         end
         CSAPI.SetGOActive(dMNode2,cost2.id~=-1 )
         CSAPI.SetGOActive(pnIcon2,cost2.id==-1 )
         if cost2.id~=-1 then
             ShopCommFunc.SetPriceIcon(dMIcon2,cost2);
         else
-            CSAPI.SetText(pnIcon2,LanguageMgr:GetByID(18013));
+            CSAPI.SetText(pnIcon2,rmbIcon);
         end
         CSAPI.SetText(txt_dPrice1,tostring(cost.num));
         CSAPI.SetText(txt_dPrice2,tostring(cost2.num));
-        if CSAPI.IsADV() then
-            --- 显示符号
-            local StrText=comm["cfg"]["displayCurrency"];
-            if StrText~=nil then CSAPI.SetText(pnIcon1,StrText); end
-            ---显示动态价格
-            local  displayPrice=comm["cfg"]["displayPrice"];
-            if displayPrice~=nil then CSAPI.SetText(txt_dPrice1,displayPrice); end
-        end
     end
     if isShow then
         SetPriceNodeStyle();
@@ -253,14 +249,15 @@ function SetContent()
         end
     else 
         if getType==SkinGetType.Store then
-            CSAPI.SetText(txtS1,LanguageMgr:GetByID(18053));
-            CSAPI.SetText(txtS2,LanguageMgr:GetByType(18053,4));
+            CSAPI.SetText(txtS1,LanguageMgr:GetByID(1007));
+            CSAPI.SetText(txtS2,LanguageMgr:GetByType(1007,4));
             if comm~=nil and comm:GetNowTimeCanBuy() then
                 if comm:GetBundlingType()==ShopCommBindType.Bindling and bindComm then
                     CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18123),curModelCfg.key,curModelCfg.desc,bindComm:GetName()));
                 else
                     CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18067),curModelCfg.key,curModelCfg.desc));
                 end
+                SetOrgPrice()
             else
                 CSAPI.SetText(txt_tips,LanguageMgr:GetByID(18056));
             end
@@ -268,7 +265,7 @@ function SetContent()
             CSAPI.SetGOActive(btnCurrent,false);
             --判断商品是否在购买期限内
             local isBtnShow=false
-            if curModelCfg and curModelCfg.shopId then
+            if curModelCfg and curModelCfg.shopId and comm then
                 isBtnShow=comm:GetNowTimeCanBuy();
             end
             CSAPI.SetGOActive(btnSuit,isBtnShow);
@@ -295,6 +292,54 @@ function SetContent()
             CSAPI.SetGOActive(btnSuit,false);
             SetClickFuncC(nil)
             SetClickFuncS(nil)
+        end
+    end
+end
+
+function SetOrgPrice()
+    if comm~=nil then
+        local orgCosts=comm:GetOrgCosts();
+        CSAPI.SetGOActive(discountInfo,orgCosts~=nil);
+        if orgCosts~=nil then
+            CSAPI.SetText(txt_discount2,tostring(orgCosts[2]));
+            --计算倒计时
+            local timeTips=comm:GetOrgEndBuyTips()
+            CSAPI.SetGOActive(dsInfo2,timeTips~=nil)
+            if timeTips then
+                CSAPI.SetText(txtDSTime,timeTips);
+            end
+            if orgCosts[1]~=-1 then
+                CSAPI.SetGOActive(dsMoneyIcon,true);
+                CSAPI.SetGOActive(txt_dsRmb,false);
+                local cfg = Cfgs.ItemInfo:GetByID(orgCosts[1],true);
+                if cfg and cfg.icon then
+                    ResUtil.IconGoods:Load(dsMoneyIcon, cfg.icon.."_1");
+                else
+                    LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
+                end
+            else
+                CSAPI.SetGOActive(dsMoneyIcon,false);
+                CSAPI.SetText(txt_dsRmb,rmbIcon)
+                CSAPI.SetGOActive(txt_dsRmb,true);
+            end
+            -- CSAPI.SetTextColorByCode(txt_price,"FFC146");
+            -- CSAPI.SetTextColorByCode(txt_rmb,"FFC146");
+            -- CSAPI.SetTextColorByCode(txt_rmbVal,"FFC146");
+            -- CSAPI.SetTextColorByCode(txt_price3,"FFC146");
+            if #orgCosts==3 then
+                CSAPI.SetTextColorByCode(this["pnIcon"..orgCosts[3]],"FFC146");
+                CSAPI.SetTextColorByCode(this["txt_dPrice"..orgCosts[3]],"FFC146");
+            else
+                CSAPI.SetTextColorByCode(pnIcon1,"FFFFFF");
+                CSAPI.SetTextColorByCode(pnIcon2,"FFFFFF");
+                CSAPI.SetTextColorByCode(txt_dPrice1,"FFFFFF");
+                CSAPI.SetTextColorByCode(txt_dPrice2,"FFFFFF");
+            end
+        else
+            CSAPI.SetTextColorByCode(pnIcon1,"FFFFFF");
+            CSAPI.SetTextColorByCode(pnIcon2,"FFFFFF");
+            CSAPI.SetTextColorByCode(txt_dPrice1,"FFFFFF");
+            CSAPI.SetTextColorByCode(txt_dPrice2,"FFFFFF");
         end
     end
 end
@@ -407,9 +452,12 @@ function OnClickOther()
             isShowImg2=false;
         end
         desc=LanguageMgr:GetByID(18102,currSkinInfo:GetRoleName(),cfg.desc);
-        --和谐更改
-        OpenSearchView({cfg.id, type==SkinChangeResourceType.Image,isShowImg2,desc}, LoadImgType.Main)
-       -- OpenSearchView({cfg.id, type==SkinChangeResourceType.Spine,isShowImg2,desc}, LoadImgType.Main)
+        if g_FHXOpenSkin ~= true then
+            OpenSearchView({cfg.id, type==SkinChangeResourceType.Spine,isShowImg2,desc}, LoadImgType.Main)
+        else
+            --和谐更改
+            OpenSearchView({cfg.id, type==SkinChangeResourceType.Image,isShowImg2,desc}, LoadImgType.Main)
+        end
     end
 end
 

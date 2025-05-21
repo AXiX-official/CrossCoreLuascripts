@@ -18,13 +18,8 @@ function Skill1100070089:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
-	else
-		return
-	end
 	-- 1100070091
-	self:DelBuffQuality(SkillEffect[1100070091], caster, target, data, 1,99)
+	self:DelBuffQuality(SkillEffect[1100070091], caster, target, data, 1,2)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -32,11 +27,6 @@ function Skill1100070089:OnAttackOver(caster, target, data)
 	end
 	-- 8073
 	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
 	else
 		return
 	end

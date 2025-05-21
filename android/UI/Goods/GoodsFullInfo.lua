@@ -33,7 +33,8 @@ local IsMobileplatform=false;
 local Input=CS.UnityEngine.Input
 local KeyCode=CS.UnityEngine.KeyCode
 
-
+local needToCheckMove = false
+local timer = nil
 function Awake()
 	CSAPI.Getplatform();
 	IsMobileplatform=CSAPI.IsMobileplatform;
@@ -45,6 +46,9 @@ function Awake()
 	-- CSAPI.AddSliderCallBack(numSlider, SliderCB)
 	CSAPI.PlayUISound("ui_popup_open")
 	defaultSize=CSAPI.GetRTSize(svc);
+
+	luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txt_name)
 end
 
 function OnEnable()
@@ -176,7 +180,10 @@ function Refresh()
 		else
 			maxNum = itemInfo:GetCount() < g_MaxUseItem and itemInfo:GetCount() or g_MaxUseItem;
 		end
+		needToCheckMove = false
 		CSAPI.SetText(txt_name, itemInfo:GetName());
+		timer = Time.time + 0.2
+		needToCheckMove = true
 		CSAPI.SetText(txt_desc, itemInfo:GetDesc());
 		CSAPI.SetText(txt_useNum, tostring(useNum));
 		-- if openSetting~=3 then
@@ -289,6 +296,11 @@ function Update()
             RefreshDownTime();
             upTime=0;
         end
+    end
+
+	if (needToCheckMove and Time.time > timer) then
+        luaTextMove:CheckMove(txt_name)
+        needToCheckMove = false
     end
 end
 

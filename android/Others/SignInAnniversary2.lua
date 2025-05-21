@@ -1,6 +1,7 @@
 local key = nil
 local targetTime = 0
 local cfg = nil
+local data = nil
 function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Activity_SignIn, ESignCB)
@@ -12,17 +13,18 @@ function OnDestroy()
     ReleaseCSComRefs()
 end
 
-function Refresh(data,elseData)
-    local isSingIn = data.isSingIn ~= nil and data.isSingIn or false
-    key = data.key
-    cfg = elseData and elseData.cfg or nil
-
-    -- CSAPI.SetGOActive(mask, isSingIn)
-    if (isSingIn) then
-        EventMgr.Dispatch(EventType.Activity_Click)
+function Refresh(_data,_elseData)
+    data = _data
+    if data then
+        key = SignInMgr:GetDataKeyById(data:GetID())
+        cfg = data:GetCfg()
+        local info = SignInMgr:GetDataByKey(key)
+        if info and not info:CheckIsDone() then
+            EventMgr.Dispatch(EventType.Activity_Click)
+        end
+        SetDatas()
+        SetTime()
     end
-    SetDatas()
-    SetTime()
 end
 
 -- 如果是12或者倒数12位，则额外加多2个空数据填位
@@ -63,9 +65,6 @@ function ESignCB(proto)
     -- layout:UpdateList()
     SetDatas()
     isClick = false
-    ActivityMgr:SetListData(cfg.id, {
-        key = _key
-    })
 end
 
 function SetTime()

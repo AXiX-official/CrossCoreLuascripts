@@ -6,6 +6,7 @@ local isNew = false
 
 function Awake()
 	canvasGroup = ComUtil.GetCom(node, "CanvasGroup")
+	CSAPI.SetGOActive(txt_name1,not CSAPI.IsADVRegional(3))
 end
 
 function SetIndex(idx)

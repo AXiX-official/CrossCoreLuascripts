@@ -368,6 +368,8 @@ function this:GetCoin(id)
         return self.data.BIND_DIAMOND or 0
     elseif (id == ITEM_ID.POWER_CEILING) then
         return self.data.POWER_CEILING or 0
+    elseif (id == 10999) then
+        return AdvDeductionvoucher.SDKvoucherNum or 0
     elseif (id == ITEM_ID.DIAMOND_PAY) then
         return self.info.diamond_pay or 0
     end

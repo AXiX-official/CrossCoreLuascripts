@@ -8,16 +8,21 @@ function Skill305000502:Init(skillID, card)
 end
 -- 执行技能
 function Skill305000502:DoSkill(caster, target, data)
-	-- 11003
+	-- 11001
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11003], caster, target, data, 0.333,3)
+	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
 end
--- 行动结束
-function Skill305000502:OnActionOver(caster, target, data)
+-- 攻击结束
+function Skill305000502:OnAttackOver(caster, target, data)
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
 	-- 305000501
-	self:AddBuff(SkillEffect[305000501], caster, target, data, 305000501)
+	self:AddTempAttr(SkillEffect[305000501], caster, self.card, data, "damagePhysics",8)
 	-- 305000610
-	self:ChangeSkill(SkillEffect[305000610], caster, target, data, 3,305000301)
+	self:ChangeSkill(SkillEffect[305000610], caster, self.card, data, 3,305000301)
 	-- 305000510
 	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
 	-- 305000510

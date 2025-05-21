@@ -143,7 +143,7 @@ function Skill4700305:tFunc_4700395_4700390(caster, target, data)
 		return
 	end
 	-- 4700390
-	self:AddTempAttr(SkillEffect[4700390], caster, target, data, "bedamage",0.60)
+	self:AddTempAttr(SkillEffect[4700390], caster, target, data, "bedamage",0.30)
 end
 function Skill4700305:tFunc_4700345_4700335(caster, target, data)
 	-- 8264

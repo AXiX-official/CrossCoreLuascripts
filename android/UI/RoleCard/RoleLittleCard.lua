@@ -99,8 +99,11 @@ function Refresh(_cardData, _elseData)
     if (cardData and cardData.data ~= nil) then
         CSAPI.SetGOActive(Image, true)
         if elseData and elseData.disDrag==true  then
-            CSAPI.SetText(txt_tips,LanguageMgr:GetByID(49027));
-            canClick=false;
+            local lanID = elseData.disDrag_lanID and elseData.disDrag_lanID or 49027
+            CSAPI.SetText(txt_tips,LanguageMgr:GetByID(lanID));
+            if(elseData.disDrag_lanID==nil)then 
+                canClick=false;
+            end 
         else
             CSAPI.SetText(txt_tips,LanguageMgr:GetByID(26024));
         end

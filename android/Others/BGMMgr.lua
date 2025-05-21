@@ -103,7 +103,7 @@ function this:GetCueName()
     return self.curCueName
 end
 
-function this:PlayBGM(cueSheet, cueName, fadeDelay, volumeCoeff, lockKey, isLoop, startTime)
+function this:PlayBGM(cueSheet, cueName, fadeDelay, volumeCoeff, lockKey, isLoop, startTime,completeCallBack)
     if (self.bgmLockKey and self.bgmLockKey ~= lockKey) then
         return
     end
@@ -114,7 +114,7 @@ function this:PlayBGM(cueSheet, cueName, fadeDelay, volumeCoeff, lockKey, isLoop
     volumeCoeff = volumeCoeff or 100
     local cueSheet = "bgms/" .. cueSheet .. ".acb"
     isLoop = isLoop or false
-    return CSAPI.PlaySound(cueSheet, cueName, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff, startTime)
+    return CSAPI.PlaySound(cueSheet, cueName, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff, startTime,completeCallBack)
 end
 
 function this:StopBGM(fadeSpeed)
@@ -128,7 +128,13 @@ function this:RemoveCueSheet(id)
     local cueSheet = "bgms/" .. cfg.cue_sheet .. ".acb"
     CSAPI.RemoveCueSheet(cueSheet)
 end
-
+-- 试听
+function this:PlayBGM2_CB(_id, startTime, completeCallBack)
+    local id = _id or self:GetViewMusicID()
+    local cfg = Cfgs.CfgMusic:GetByID(id)
+    startTime = startTime or 0
+    return self:PlayBGM(cfg.cue_sheet, cfg.cue_name, 0, nil, nil, true, startTime,completeCallBack)
+end
 -- 试听
 function this:PlayBGM2(_id, startTime)
     local id = _id or self:GetViewMusicID()

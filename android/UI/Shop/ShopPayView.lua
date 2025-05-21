@@ -21,6 +21,7 @@ local realPrice=nil;
 local eventMgr=nil;
 local voucherItem=nil
 local onceMax=0;
+local rmbIcon=nil;
 
 -- local slider=nil;
 function Awake()
@@ -66,9 +67,19 @@ function OnOpen()
 	local isPackage=false;
 	-- 根据当前物品数量进行初始化
 	if commodity then
+		rmbIcon=commodity:GetCurrencySymbols();
 		onceMax=commodity:GetOnecBuyLimit() == - 1 and 99 or commodity:GetOnecBuyLimit(); --单次购买上限
 		CSAPI.SetText(txt_name,commodity:GetName());
-		CSAPI.SetText(txt_desc,commodity:GetDesc());
+		if commodity:GetType()==CommodityItemType.ChoiceCard then  --自选，特殊处理
+			local getInfo=commodity:GetCommodityList();
+			if getInfo then
+				CSAPI.SetText(txt_desc,getInfo[1].data:GetDesc());
+			else
+				LogError("未得到对应兑换信息！"..table.tostring(commodity));
+			end
+		else
+			CSAPI.SetText(txt_desc,commodity:GetDesc());
+		end
 		--当前剩余数量
 		local num=commodity:GetNum();
 		-- CSAPI.SetGOActive(txt_limit,num~=-1)
@@ -225,12 +236,19 @@ function RefreshPrice()
 		CSAPI.SetGOActive(txt_free,false);
 		CSAPI.SetGOActive(txt_nPrice,true);
 		local priceInfo=commodity:GetRealPrice();
+		local orgInfo=commodity:GetOrgCosts();
 		local disPrice=normalPrice[1].num*currNum;--折扣前价格
 		local curPrice=priceInfo[1].num*currNum;--当前价格
 		local curPID=priceInfo[1].id;
 		if voucherList then
-			disPrice=priceInfo[1].num*currNum;
+			if orgInfo then
+				disPrice=orgInfo[2]*currNum;
+			else
+				disPrice=priceInfo[1].num*currNum;
+			end
 			curPrice=realPrice;
+		elseif orgInfo~=nil then
+			disPrice=orgInfo[2]*currNum
 		end
 		local discount=commodity:GetNowDiscount();
 		CSAPI.SetGOActive(discountObj,discount~=1);
@@ -239,7 +257,7 @@ function RefreshPrice()
 			local dis=math.floor((1-discount)*100);
 			CSAPI.SetText(txt_discount,"-"..dis.."%");
 		end
-		if discount~=1 or voucherList~=nil then
+		if discount~=1 or voucherList~=nil or (commodity:GetOrgCosts()) then
 			isShowHPrice=true;
 		end
 		if isShowHPrice then
@@ -273,7 +291,7 @@ end
 
 function SetPrice(id, num,pIcon,pText)
 	if id==-1 then --SDK支付
-		CSAPI.SetText(pText, LanguageMgr:GetByID(18013)..tostring(num));
+		CSAPI.SetText(pText, rmbIcon..tostring(num));
 		CSAPI.SetGOActive(pIcon,false);
 		return;
 	end

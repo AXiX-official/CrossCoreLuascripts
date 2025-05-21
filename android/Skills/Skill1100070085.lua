@@ -19,7 +19,7 @@ function Skill1100070085:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 1100070085
-	self:HitAddBuff(SkillEffect[1100070085], caster, target, data, 10000,1001,2)
+	self:HitAddBuff(SkillEffect[1100070085], caster, target, data, 7500,1001)
 end
 -- 攻击结束2
 function Skill1100070085:OnAttackOver2(caster, target, data)
@@ -34,5 +34,5 @@ function Skill1100070085:OnAttackOver2(caster, target, data)
 		return
 	end
 	-- 1100070086
-	self:AddBuff(SkillEffect[1100070086], caster, target, data, 10000,1001,2)
+	self:HitAddBuff(SkillEffect[1100070086], caster, self.card, data, 7500,1001)
 end

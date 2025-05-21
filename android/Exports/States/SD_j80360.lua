@@ -1,0 +1,12 @@
+--状态数据
+local this = 
+{
+eff_addition_pack={"videos"},
+buff={play_time=2500},
+cast1={play_time=3000,start_pos={ref_type=1,offset_row=-250},feature=1,feature_camera_no_transform=1,last_hit=1500},
+cast2={play_time=6500,start_pos={ref_type=3,offset_row=400},spe_setting="spe_setting_cast2",last_hit=4000},
+cast0={play_time=2500,feature=1,feature_camera_no_transform=1,last_hit=1900},
+win={play_time=2500}
+};
+
+return this;

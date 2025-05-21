@@ -20,32 +20,13 @@ function Awake()
         ShowCost()
         ShowTicket()
     end)
-    eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
-    eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
-end
-
-function OnViewClosed(viewKey)
-    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == viewKey  then
-        ShowSpecialGuide()
-        openViewKey = nil
-    end
-end
-
-function OnViewOpened(viewKey)
-    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == nil  then
-        SpecialGuideMgr:StopAll()
-        openViewKey = viewKey
-    end
 end
 
 function OnDestroy()
-    SpecialGuideMgr:CloseView()
     eventMgr:ClearListener()
 end
 
 function Update()
-    UpdateSpecialGuide()
-
     if time > 0 and timer < Time.time then
         timer = Time.time + 1
         time = hotTime - TimeUtil:GetTime()
@@ -63,7 +44,6 @@ function Refresh(tab)
         ShowCost()
         ShowSweep()
         ShowTicket()
-        ShowSpecialGuide()
     end
 end
 
@@ -92,7 +72,7 @@ end
 
 function ShowHotChange(b)
     local info =sectionData:GetInfo()
-    local isHide = info and info.isHideExtre ~= nil
+    local isHide = info and info.isHideExtre
     UIUtil:SetHotPoint(btnEnter,b and not isHide,170,51)
     if b then
         _,hotTime = DungeonUtil.GetHotChangeTime()
@@ -164,57 +144,11 @@ function SetBuyFunc(_func)
 end
 
 function OnClickSweep()
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-    if openInfo and not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-
-    if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = cfg.id},{onBuyFunc = buyFunc})
-    else
-        local sweepData = SweepMgr:GetData(cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfg = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
-            if cfg then
-                Tips.ShowTips(cfg.sDescription)
-            end
-        end
-    end
+    UIUtil:OpenSweepView(cfg.id,buyFunc)
 end
 
 function IsSweepOpen()
     return isSweepOpen
 end
 
--------------------------------------特殊引导-------------------------------------
-function ShowSpecialGuide()
-    if not IsMainLine() then return end
-    SpecialGuideMgr:TryCallFunc("Dungeon","Start")
-end
 
-function StopSpecialGuide()
-    if not IsMainLine() then return end
-    SpecialGuideMgr:TryCallFunc("Dungeon","Stop")
-end
-
-function FinishSpecialGuide()
-    if not IsMainLine() then return end
-    SpecialGuideMgr:TryCallFunc("Dungeon","Finish")
-end
-
-function UpdateSpecialGuide()
-    if not IsMainLine() then return end
-
-    if (CS.UnityEngine.Input.GetMouseButton(0)) then
-        SpecialGuideMgr:TryCallFunc("Dungeon","Start")
-    end
-
-    SpecialGuideMgr:Update()
-end
-
-function IsMainLine()
-   return sectionData:GetSectionType() == SectionType.MainLine
-end

@@ -260,7 +260,7 @@ function Filter:GetDead()
 	local arr = self.team.arrCard
 	local res = {}
 	for i,v in ipairs(arr) do
-		if not v:IsLive() then
+		if not v:IsLive() and v.type ~= CardType.Unite and not v.isRemove then -- 复活不能取到合体对象还有机神
 			table.insert(res, v)
 		end
 	end
@@ -270,13 +270,8 @@ end
 -- 尸体(随机一个)
 function Filter:GetOneDead(rand)
 	rand = rand or 1
-	local arr = self.team.arrCard
-	local res = {}
-	for i,v in ipairs(arr) do
-		if not v:IsLive() then
-			table.insert(res, v)
-		end
-	end
+	-- local arr = self.team.arrCard
+	local res = self:GetDead()
 
 	local len = #res
 	if res == 0 then

@@ -1096,9 +1096,9 @@ GameMsg.map["FightProtocol:GetRogueTInfo"] = {
 	{ },
 }
 GameMsg.map["FightProto:GetRogueTInfoRet"] = {
-	--关卡组数据                       总积分（不重置） 阶段奖励等级（不重置） 本期累计分数（月重置） 周期奖励下标（月重置） 最大通关难度 打过的最大无限血关难度(关卡组ID)，只显示在排行榜 
-	{ "list|sRogueTDuplicateData","bool",     "uint",          "uint",               "uint",               "uint",               "uint",      "uint",               },
-	{ "data",              "is_finish","score",         "stageIdx",           "monthScore",         "periodIdx",          "maxGroup",  "maxBoss",            },
+	--关卡组数据                       总积分（不重置） 阶段奖励等级（不重置） 本期累计分数（月重置） 周期奖励下标（月重置） 最大通关难度 打过的最大无限血关难度(关卡组ID)，只显示在排行榜 周期奖励最后一次弹窗时间（初始0） 等级奖励扩充下标 
+	{ "list|sRogueTDuplicateData","bool",     "uint",          "uint",               "uint",               "uint",               "uint",      "uint",               "uint",               "uint",          },
+	{ "data",              "is_finish","score",         "stageIdx",           "monthScore",         "periodIdx",          "maxGroup",  "maxBoss",            "win1",               "win2",          },
 }
 GameMsg.map["FightProtocol:EnterRogueTDuplicate"] = {
 	--关卡组ID（难度ID） 是否无限血关 
@@ -1189,6 +1189,16 @@ GameMsg.map["FightProto:RogueTGainRewardRet"] = {
 	--类型   对应类型的奖励下标 
 	{ "uint","uint",            },
 	{ "ty",  "idx",             },
+}
+GameMsg.map["FightProtocol:RogueTSetWindow"] = {
+	--类型   值      
+	{ "uint","uint", },
+	{ "ty",  "value",},
+}
+GameMsg.map["FightProto:RogueTSetWindowRet"] = {
+	--类型   值      
+	{ "uint","uint", },
+	{ "ty",  "value",},
 }
 GameMsg.map["FightProtocol:GlobalBossMopUp"] = {
 	--
@@ -1361,9 +1371,9 @@ GameMsg.map["PlayerProto:SectionMultiInfoRet"] = {
 	{ "infos",             "cntInfos",          },
 }
 GameMsg.map["DuplicateItemData"] = {
-	--副本id 星级    条件数据    副本配置表可以使用物品的的下标 副本使用物品是否开启 星级数据    
-	{ "uint","short","array|int","uint",               "bool",              "array|int",},
-	{ "id",  "star", "nGrade",   "nUseItemindex",      "bIsUse",            "data",     },
+	--副本id 星级    条件数据    副本配置表可以使用物品的的下标 副本使用物品是否开启 星级数据    是否通关过，重置后也会完成 
+	{ "uint","short","array|int","uint",               "bool",              "array|int","short",              },
+	{ "id",  "star", "nGrade",   "nUseItemindex",      "bIsUse",            "data",     "isHisPass",          },
 }
 GameMsg.map["PlayerProto:DuplicateData"] = {
 	--数据                 是否完了    
@@ -2399,6 +2409,41 @@ GameMsg.map["sShopCommodityCfg"] = {
 	--折扣开始时间     折扣结束时间   折扣        获得的物品id及数量 额外获得  消耗货币id 单次购买上限    总购买上限     重置类型     重置类型值    是否显示在列表 消耗货币id 
 	{ "uint",          "uint",        "float",    "json",            "json",   "json",    "uint",         "uint",        "uint",      "uint",       "uint",        "json",    },
 	{ "nDiscountStart","nDiscountEnd","fDiscount","jGets",           "jExGets","jCosts",  "nOnecBuyLimit","nSumBuyLimit","nResetType","nResetValue","isShow",      "jCosts1", },
+}
+GameMsg.map["ShopProto:GetSkinRebateReward"] = {
+	--商店配置配置id 
+	{ "uint",        },
+	{ "id",          },
+}
+GameMsg.map["ShopProto:GetSkinRebateRewardRet"] = {
+	--商店配置配置id 获得的物品id及数量 
+	{ "uint",        "json",            },
+	{ "id",          "jGets",           },
+}
+GameMsg.map["ShopProto:GetSkinRebateRecord"] = {
+	--皮肤组id，不传发全部 
+	{ "uint",              },
+	{ "skinId",            },
+}
+GameMsg.map["ShopProto:GetSkinRebateRecordRet"] = {
+	--领取的商品id         
+	{ "list|sSkinRebateRecord",},
+	{ "skinRebateRecordList",},
+}
+GameMsg.map["sSkinRebateRecord"] = {
+	--皮肤组id，不传发全部 领取的商品id 
+	{ "uint",              "array|uint",},
+	{ "skinId",            "infos",     },
+}
+GameMsg.map["ShopProto:GetSkinRebateCanTakeReward"] = {
+	--皮肤组id，不传发全部 
+	{ "uint",              },
+	{ "skinId",            },
+}
+GameMsg.map["ShopProto:GetSkinRebateCanTakeRewardRet"] = {
+	--领取的商品id         
+	{ "list|sSkinRebateRecord",},
+	{ "skinRebateRecordList",},
 }
 GameMsg.map["sMailContent"] = {
 	--邮件名称 发件人名称 描述     获得的奖励(物品id,数量) 阅读后多少秒删除 附带邮件id 发件人名称参数列表 描述参数列表 
@@ -4894,6 +4939,36 @@ GameMsg.map["OperateActiveProto:GetActiveTimeListRet"] = {
 	--运营活动的数据       是否发完   
 	{ "list|sOperateActive","bool",    },
 	{ "operateActiveList", "isFinish",},
+}
+GameMsg.map["OperateActiveProto:GetSkinRebateInfo"] = {
+	--皮肤组id，不传发全部 
+	{ "uint",              },
+	{ "skinId",            },
+}
+GameMsg.map["OperateActiveProto:GetSkinRebateInfoRet"] = {
+	--皮肤组开启数据   
+	{ "list|sSkinInfo",},
+	{ "skinIdList",    },
+}
+GameMsg.map["sSkinInfo"] = {
+	--皮肤组id 结束时间   
+	{ "uint",  "uint",    },
+	{ "skinId","nEndTime",},
+}
+GameMsg.map["OperateActiveProto:DragonBoatFestivalRefuel"] = {
+	--签到活动id(CfgSignReward.id) 加油类型eDragonBoatFestivalType 
+	{ "int",               "int",               },
+	{ "id",                "type",              },
+}
+GameMsg.map["OperateActiveProto:GetDragonBoatFestivalInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:GetDragonBoatFestivalInfoRet"] = {
+	--端午签到数据    当天加油类型eDragonBoatFestivalType 第六天奖励是否领取，1已领取，0或nil 未领取 
+	{ "list|sNumInfo","int",               "int",               },
+	{ "infos",        "type",              "isTake",            },
 }
 GameMsg.map["sRandCard"] = {
 	--卡牌id   装备信息      对应怪物id   

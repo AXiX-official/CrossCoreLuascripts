@@ -32,8 +32,17 @@ function OnOpen()
 		CSAPI.SetText(text_ok, data.okText or LanguageMgr:GetByID(1001));
 		CSAPI.SetText(text_cancel, data.cancelText or LanguageMgr:GetByID(1002));
 
-		LanguageMgr:SetEnText(text_ok1,1001)
-		LanguageMgr:SetEnText(text_cancel1,1002)
+		if data.okText2 then
+			CSAPI.SetText(text_ok1, data.okText2);
+		else
+			LanguageMgr:SetEnText(text_ok1,1001)
+		end
+		
+		if data.cancelText2 then
+			CSAPI.SetText(text_cancel1, data.cancelText2);
+		else
+			LanguageMgr:SetEnText(text_cancel1,1002)
+		end
 
 		if data.dailyKey then
 			isHideDailyTips = not TipsMgr:IsShowDailyTips(data.dailyKey)

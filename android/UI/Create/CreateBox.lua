@@ -178,7 +178,7 @@ end
 function StartShow(isSkip)
 	if(boxAni) then
 		RemoveAni()
-		CSAPI.StopUICardSound("ui_card_draw_ambience")
+		--CSAPI.StopUICardSound("ui_card_draw_ambience")
 		cb(isSkip)
 	end
 end
@@ -203,7 +203,8 @@ end
 function SetSkipState(state)
 	CSAPI.SetGOActive(btnSkip, state);
 end 
--- function OnDestroy()    
--- 	CSAPI.StopUICardSound("ui_card_draw_ambience")
--- end
+
+function OnDestroy()    
+	CSAPI.StopUICardSound("ui_card_draw_ambience")
+end
 

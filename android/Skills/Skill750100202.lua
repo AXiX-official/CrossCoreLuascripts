@@ -20,8 +20,5 @@ function Skill750100202:DoSkill(caster, target, data)
 	end
 	-- 750100202
 	self.order = self.order + 1
-	local targets = SkillFilter:All(self, caster, target, 3)
-	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[750100202], caster, target, data, 750100202)
-	end
+	self:AddBuff(SkillEffect[750100202], caster, target, data, 750100202)
 end

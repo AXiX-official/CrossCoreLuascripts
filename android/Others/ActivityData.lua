@@ -72,6 +72,10 @@ function this:GetInfo()
     return self.cfg and self.cfg.info
 end
 
+function this:GetPopIndex()
+    return self.cfg.popIndex
+end
+
 function this:IsOpen()
     local isOpen = true
     if self:GetType() == ActivityListType.SignInContinue then

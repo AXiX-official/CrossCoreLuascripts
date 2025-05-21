@@ -608,19 +608,19 @@ function this:CheckRedPointData()
 
     RedPointMgr:UpdateData(RedPointType.ActiveEntry3, taoFaRed)
 
-    -- 活动
-    ActivityMgr:CheckRedPointData()
+    if MenuMgr.isInit then --防止未初始化完成就检测数据
+        -- 活动
+        ActivityMgr:CheckRedPointData()
 
-    --回归
-    RegressionMgr:CheckRedPointData()
+        --回归
+        RegressionMgr:CheckRedPointData()
+
+        -- 关卡
+        DungeonMgr:CheckRedPointData()
+    end
 
     -- 勘探
     ExplorationMgr:CheckRedInfo();
-
-    -- 关卡
-    if MenuMgr.isInit then --防止未初始化完成就检测数据
-    DungeonMgr:CheckRedPointData()
-    end
 
     --rogue 
     local rogueRedNum =  self:CheckRed({eTaskType.Rogue}) and 1 or 0
@@ -687,14 +687,18 @@ function this:GetSevenTaskDayRet(proto)
         elseif proto.type == eTaskType.NewYearFinish or proto.type == eTaskType.NewYear then -- 写死全开
             -- self.newYearIndex = proto.c_day
         end
-        -- 活动
-        ActivityMgr:CheckRedPointData()
-
+        if MenuMgr.isInit then --防止未初始化完成就检测数据
+            -- 活动
+            ActivityMgr:CheckRedPointData()
+        end
         -- ActivityMgr:InitListOpenState()
     end
 end
 
 function this:ApplyShowMisionTips()
+    if(not MenuMgr:CheckIsInit())then 
+        return
+    end
     if (self.applyShowMisionTips) then
         return
     end

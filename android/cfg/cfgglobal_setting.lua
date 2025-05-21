@@ -281,7 +281,7 @@ local conf = {
 {'g_DungeonTaoFaDailyCost',	'g_DungeonTaoFaDailyCost',	'',	'json',	'[[10002,50,2]]'},
 {'g_DungeonArachnidDailyBuy',	'g_DungeonArachnidDailyBuy',	'',	'int',	'0'},
 {'g_DungeonArachnidDailyCost',	'g_DungeonArachnidDailyCost',	'',	'json',	'[[10002,15,2]]'},
-{'g_DungeonArachnidGets',	'g_DungeonArachnidGets',	'',	'json',	'[[12010,1,2]]'},
+{'g_DungeonArachnidGets',	'g_DungeonArachnidGets',	'',	'json',	'[[12007,1,2]]'},
 {'g_ResetTeamStateDailyTime',	'g_ResetTeamStateDailyTime',	'',	'json',	'[[7001,1],[7002,1]]'},
 {'g_BadgeMax',	'g_BadgeMax',	'',	'int',	'6'},
 {'g_AchieveMenuListNum',	'g_AchieveMenuListNum',	'',	'int',	'10'},
@@ -307,6 +307,8 @@ local conf = {
 {'g_RogueT_Coin',	'g_RogueT_Coin',	'',	'int',	'10501'},
 {'g_ItemReturnMail',	'g_ItemReturnMail',	'',	'json',	'[[33043003,2010,"2024/05/27 10:00:00","2024/05/28 10:00:00"]]'},
 {'g_NoExpNoticeMailItemTypes',	'g_NoExpNoticeMailItemTypes',	'',	'int[]',	'19,21,26'},
+{'g_RogueScoreLVIdx',	'g_RogueScoreLVIdx',	'',	'int',	'0'},
+{'g_DownloadReward',	'g_DownloadReward',	'',	'json',	'[[11002,2,2]]'},
 },
 }
 --cfgglobal_setting = conf

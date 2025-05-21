@@ -57,7 +57,9 @@ function OnOpen()
     --
     CSAPI.SetText(txtJF, curData.score .. "")
     --
-    --SetVlg()
+    -- SetVlg()
+    --
+    SetNext()
 end
 
 function SetStarRoles()
@@ -65,11 +67,11 @@ function SetStarRoles()
     local _datas = {}
     for k, v in ipairs(roleIDs) do
         local cfg = Cfgs.MonsterData:GetByID(v)
-        local _data = RoleMgr:GetMaxFakeData(cfg.card_id,cfg.level)
+        local _data = RoleMgr:GetMaxFakeData(cfg.card_id, cfg.level)
         table.insert(_datas, _data)
     end
     items = items or {}
-    ItemUtil.AddItems("RoleLittleCard/RoleSmallCard", items, _datas, roleParent,nil,1,nil,function ()
+    ItemUtil.AddItems("RoleLittleCard/RoleSmallCard", items, _datas, roleParent, nil, 1, nil, function()
         for k, v in pairs(items) do
             v.ActiveClick(false)
             v.HideLv(false)
@@ -142,7 +144,8 @@ function DItemClickCB(item)
         canEmpty = true,
         is2D = true,
         cond = _cond,
-        --isSkill = false,
+        -- isSkill = false,
+        dungeonId = curData.nDuplicateID,
     }, TeamOpenSetting.RogueT)
 end
 
@@ -209,19 +212,19 @@ function OnClickEnemy()
             table.insert(monsters, {
                 id = q,
                 -- level = mainLineCfg.previewLv,
-                isBoss = monsterCfg.isboss==1
+                isBoss = monsterCfg.isboss == 1
             })
         end
     end
-    if(#monsters>1)then 
-        table.sort(monsters,function (a,b)
-            if(a.isBoss~=b.isBoss)then 
+    if (#monsters > 1) then
+        table.sort(monsters, function(a, b)
+            if (a.isBoss ~= b.isBoss) then
                 return a.isBoss
-            else 
+            else
                 return a.id > b.id
-            end 
+            end
         end)
-    end 
+    end
     CSAPI.OpenView("FightEnemyInfo", monsters)
 end
 
@@ -281,5 +284,35 @@ function OnClickVirtualkeysClose()
         MoveBack()
     else
         view:Close()
+    end
+end
+
+-- 下一档奖励
+function SetNext()
+    local nextCfg = nil
+    local lv2, s2, ms2 = RogueTMgr:GetScore()
+    local score = curData.score + s2
+    local cfgs = Cfgs.CfgRogueTPeriodReward:GetAll()
+    if (score == 0) then
+        nextCfg = cfgs[1]
+    elseif (score > 0) then
+        for k, v in ipairs(cfgs) do
+            if (v.points > score) then
+                nextCfg = v
+                break
+            end
+        end
+    end
+    CSAPI.SetGOActive(txtNext, nextCfg ~= nil)
+    if (nextCfg ~= nil) then
+        local need = nextCfg.points - score
+        LanguageMgr:SetText(txtNext, 49305, need)
+        local id = nil
+        if (nextCfg.reward) then
+            id = nextCfg.reward[1][1]
+        end
+        CSAPI.SetGOActive(imgNext, id ~= nil)
+        local goodsCfg = Cfgs.ItemInfo:GetByID(id)
+        ResUtil.IconGoods:Load(imgNext, goodsCfg.icon)
     end
 end

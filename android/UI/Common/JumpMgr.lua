@@ -177,16 +177,7 @@ function this.ActivityListView(cfg)
     this.CheckClose(cfg);
     local state, tips = this.ActivityListViewState(cfg)
     if state == JumpModuleState.Normal then
-        local data = ActivityMgr:GetALData(cfg.val3)
-        if data then
-            if data:GetSpecType() == ALType.SignIn then
-                local key = SignInMgr:GetDataKeyById(data:GetID())
-                ActivityMgr:AddNextOpen2(cfg.val3,{key = key})
-            else
-                ActivityMgr:AddNextOpen2(cfg.val3, {cfg.val1, cfg.val2})
-            end
-        end
-        CSAPI.OpenView("ActivityListView", nil, cfg.page)
+        CSAPI.OpenView("ActivityListView", {id = cfg.val3}, cfg.page)
     else
         FuncUtil:Call(function()
             Tips.ShowTips(tips)
@@ -454,11 +445,15 @@ function this.DungeonState(cfg)
             return JumpModuleState.Normal;
         end
     elseif cfg.val2 == 3 then -- 活动
-        if cfg.val1 == 1001 then -- 爬塔
-            return JumpModuleState.Normal
+        if cfg.val3 then
+            local isOpen, tips = DungeonMgr:IsDungeonOpen(cfg.val3);
+            if isOpen then
+                return JumpModuleState.Normal;
         else
-            return JumpModuleState.Normal
+                return JumpModuleState.Close, tips;
         end
+        end
+        return JumpModuleState.Normal;
     else -- 每日
         local sectionData = DungeonMgr:GetSectionData(cfg.val1);
         if sectionData then

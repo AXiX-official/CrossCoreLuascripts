@@ -23,19 +23,22 @@ local changeID = nil -- 自跳转的章节ID
 local changeHard = nil -- 自跳转的章节难度
 local changeInfo = nil
 local changeIndex = 1
+--sp
+local openViewKey =nil
 
 function Awake()
     sliderObj = ComUtil.GetCom(slider, "Slider");
 
     eventMgr = ViewEvent.New();
-    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClose)
+    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
+    eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.Dungeon_Box_Refresh, InitBox)
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadComplete)
 
     InitInfo()
 end
 
-function OnViewClose(viewKey)
+function OnViewClosed(viewKey)
     -- or viewKey =="Plot"
     if viewKey == "TeamConfirm" or viewKey == "TeamForceConfirm" then
         CSAPI.SetGOActive(mapView.ModelCamera, true);
@@ -53,6 +56,18 @@ function OnViewClose(viewKey)
         end,nil,100)  
     elseif viewKey == "ActivityListView" then
         RefreshItems()
+    end
+
+    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == viewKey  then
+        SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.Start)
+        openViewKey = nil
+    end
+end
+
+function OnViewOpened(viewKey)
+    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == nil  then
+        SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.StopAll)
+        openViewKey = viewKey
     end
 end
 
@@ -643,10 +658,14 @@ function ShowInfo(item)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
-    itemInfo.Show(cfg)
+    itemInfo.Show(cfg,nil,OnLoadSuccess)
     if not isActive then --关闭特殊引导
-        itemInfo.CallFunc("Button","StopSpecialGuide")
+        SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.StopAll)
     end
+end
+
+function OnLoadSuccess()
+    SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.Start)
 end
 
 -- 进入
@@ -679,7 +698,7 @@ function OnBattleEnter()
             })
         end
     end
-    itemInfo.CallFunc("Button","FinishSpecialGuide") --特殊引导
+    SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.Finish)
 end
 
 ---------------------------------------------动效---------------------------------------------
@@ -828,7 +847,7 @@ end
 
 -- 读取上一次选中id
 function LoadDungeonID()
-    local ids = FileUtil.LoadByPath("CurrID.txt")
+    local ids = FileUtil.LoadByPath("CurrID.txt") or {}
     local id = ids.id or 0
     return id
 end

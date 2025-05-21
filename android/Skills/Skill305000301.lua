@@ -10,10 +10,10 @@ end
 function Skill305000301:DoSkill(caster, target, data)
 	-- 305000301
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[305000301], caster, target, data, 305000301)
+	self:AddBuff(SkillEffect[305000301], caster, self.card, data, 305000301)
 	-- 305000310
 	self.order = self.order + 1
-	self:ChangeSkill(SkillEffect[305000310], caster, target, data, 3,305000401)
+	self:ChangeSkill(SkillEffect[305000310], caster, self.card, data, 3,305000401)
 end
 -- 攻击结束
 function Skill305000301:OnAttackOver(caster, target, data)
@@ -30,9 +30,9 @@ function Skill305000301:OnAttackOver(caster, target, data)
 	-- 305000321
 	self:AddBuff(SkillEffect[305000321], caster, self.card, data, 305000321)
 	-- 305000320
-	local count320 = SkillApi:BuffCount(self, caster, target,3,3,305000321)
+	local count320 = SkillApi:BuffCount(self, caster, self.card,3,3,305000321)
 	-- 305000322
-	if SkillJudger:Greater(self, caster, target, true,count320,5) then
+	if SkillJudger:Greater(self, caster, self.card, true,count320,5) then
 	else
 		return
 	end

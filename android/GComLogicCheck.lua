@@ -495,16 +495,16 @@ end
 
 -- return:
 ---- 过期返回 true
-function GLogicCheck:CheckItemExpiry(cfgId, expiryIx, curTime)
+function GLogicCheck:CheckItemExpiry(cfgId, expiryIx, curTime, fixExpiryTime)
     if not expiryIx then
         return false
     end
 
     local cfg = ItemInfo[cfgId]
-    return self:CheckItemExpiryByCfg(cfg, expiryIx, curTime)
+    return self:CheckItemExpiryByCfg(cfg, expiryIx, curTime, fixExpiryTime)
 end
 
-function GLogicCheck:CheckItemExpiryByCfg(cfg, expiryIx, curTime)
+function GLogicCheck:CheckItemExpiryByCfg(cfg, expiryIx, curTime, fixExpiryTime)
     if not expiryIx or not cfg.expiryIx then
         return false
     end
@@ -513,7 +513,9 @@ function GLogicCheck:CheckItemExpiryByCfg(cfg, expiryIx, curTime)
         return true
     end
 
-    if curTime >= cfg.nExpiry then
+    fixExpiryTime = fixExpiryTime or cfg.nExpiry
+    -- 这个不用判断了, 使用物品创建时保存的那个过期时间
+    if curTime >= fixExpiryTime then
         return true
     end
 

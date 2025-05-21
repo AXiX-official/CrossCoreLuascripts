@@ -1024,7 +1024,8 @@ function this:SetDungeonOver(dungeonOverData)
         local data = {
             id = self:GetCurrId(),
             star = dungeonOverData.star,
-            data = dungeonOverData.data --通关条件
+            data = dungeonOverData.data, --通关条件
+            isHisPass = dungeonOverData.star > 0 --用于图鉴检测通关
         }
         --星数覆盖
         local star = data.star

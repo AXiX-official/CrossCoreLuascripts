@@ -24,7 +24,7 @@ function Skill336304:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 336304
-	self:AddTempAttr(SkillEffect[336304], caster, self.card, data, "damage",0.16)
+	self:AddTempAttr(SkillEffect[336304], caster, self.card, data, "damage",0.25)
 end
 -- 攻击结束
 function Skill336304:OnAttackOver(caster, target, data)
@@ -33,8 +33,10 @@ function Skill336304:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	-- 8718
+	local count718 = SkillApi:SkillLevel(self, caster, target,3,6021001)
+	-- 8214
+	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
 	else
 		return
 	end
@@ -43,8 +45,6 @@ function Skill336304:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8718
-	local count718 = SkillApi:SkillLevel(self, caster, target,3,6021001)
 	-- 336314
 	self:CallSkill(SkillEffect[336314], caster, self.card, data, 602100100+count718)
 end

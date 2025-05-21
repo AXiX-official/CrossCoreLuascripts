@@ -1,6 +1,7 @@
 --礼包的商品展示
 local descPos={{-94.63,-99},{-94.63,-145.5}}
 local eventMgr=nil;
+local rmbIcon=nil;
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Shop_MonthCard_DaysChange,OnMonthCardDaysChange)
@@ -31,7 +32,7 @@ function Refresh(_data,_elseData)
     SetCount(this.data:GetLimitDesc(num >0 and "ffc146" or "ffffff"));
     -- ShopCommFunc.SetIconBorder(_data,_elseData.commodityType,border,icon)
     SetLimitTag(this.data:IsLimitTime(),this.data:GetEndBuyTips());
-    
+    rmbIcon=this.data:GetCurrencySymbols();
     SetDiscount(this.data:GetNowDiscountTips())
     local exStr=""
     local buyNum=-1;

@@ -72,9 +72,9 @@ function ShowList()
 end
 
 function OnLoadSuccse()
-    CSAPI.SetScriptEnable(sr,"Image",#datas > 4)
-    if #datas < 5 then
-        local x = (5-#datas) * 147
+    CSAPI.SetScriptEnable(sr,"Image",#datas > 3)
+    if #datas < 4 then
+        local x = (4-#datas) * 165
         CSAPI.SetAnchor(sr, x, 0)
     end
 end

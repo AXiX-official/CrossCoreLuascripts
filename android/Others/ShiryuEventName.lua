@@ -106,6 +106,8 @@ ShiryuEventName = {
     Unity_LoginProto_SendLoginGame="Unity_LoginProto_SendLoginGame";
     ---中台UID验证
     Unity_center_web_uid_GotoVerify="Unity_center_web_uid_GotoVerify";
+    Unity_DownFile_MD5_Different = "Unity_DownFile_MD5_Different";
+    Unity_DownFile_MD5_Different_Quit = "Unity_DownFile_MD5_Different_Quit";
 
 }
 local this = ShiryuEventName

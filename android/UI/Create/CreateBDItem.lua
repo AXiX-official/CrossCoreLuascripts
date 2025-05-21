@@ -1,6 +1,16 @@
+local needToCheckMove = false
 function Awake()
     clickNodeImage = ComUtil.GetCom(clickNode, "Image")
+    luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txtName)
 end
+function Update()
+    if (needToCheckMove) then
+        luaTextMove:CheckMove(txtName)
+        needToCheckMove = false
+    end
+end
+
 function SetIndex(_index)
     index = _index
 end
@@ -20,7 +30,9 @@ function Refresh(_cfg, elseData)
     local modelCfg = Cfgs.character:GetByID(cardCfg.model)
     LoadIcon(modelCfg.icon)
     -- name 
+    needToCheckMove = false
     CSAPI.SetText(txtName, modelCfg.key)
+    needToCheckMove = true
     -- imgStar
     ResUtil.CardBorder:Load(imgStar, "img_101_0" .. cardCfg.quality)
 

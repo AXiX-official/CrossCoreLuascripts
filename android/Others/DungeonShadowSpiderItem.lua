@@ -153,6 +153,16 @@ function GetCfgs()
     return cfgs
 end
 
+function GetType()
+    local type = DungeonInfoType.Normal 
+    if IsDanger() then
+        type = DungeonInfoType.Danger
+    elseif IsStory() then
+        type = DungeonInfoType.Plot
+    end
+    return type
+end
+
 function OnClick()
     if isLock then
         Tips.ShowTips(lockStr)

@@ -274,4 +274,21 @@ function this:GetBuySum()
     return 0;
 end
 
+function this:GetOrgCosts()
+    return nil
+end
+
+--返回现金价格符号
+function this:GetCurrencySymbols()
+    local str=LanguageMgr:GetByID(18013);
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        str=self:GetCfg().displayCurrency;
+        if str==nil then
+            str=RegionalSet.RegionalCurrencyType();
+        end
+    end
+    return str;
+end
+
+
 return this;

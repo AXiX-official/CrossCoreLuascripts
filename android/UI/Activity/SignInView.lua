@@ -1,6 +1,6 @@
 local SignInInfo = require "SignInInfo"
 local weekStr = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY","SUNDAY"}
-local isSingIn = false
+local isSignIn = false
 local curDayInfo = nil
 local curItem = nil
 local isSelect = false
@@ -21,44 +21,30 @@ function OnDestroy()
 	ReleaseCSComRefs()
 end
 
--- function OnOpen()
--- 	CSAPI.PlayUISound("ui_popup_open")
--- 	fade:Play(0, 1, 200)
--- 	isSingIn = data.isSingIn ~= nil and data.isSingIn or false
--- 	CSAPI.SetGOActive(mask, isSingIn)
--- 	RefreshPanel()
--- 	if isSingIn then
--- 		isSelect = true
--- 		curItem.SetSelect()
--- 		if not rightItemFade then
--- 			rightItemFade = ComUtil.GetCom(rewardObj, "ActionFade")
--- 		end
--- 		rightItemFade:Play(0, 1, 1000, 0, function()
--- 			isSelect = false
--- 		end)
--- 	end
--- end
-function Refresh(data,elseData)	
+function Refresh(_data,_elseData)
 	CSAPI.PlayUISound("ui_popup_open")	
-	isSingIn = data.isSingIn ~= nil and data.isSingIn or false
-	key = data.key	
-	cfg = elseData and elseData.cfg or nil
-	-- CSAPI.SetGOActive(mask, isSingIn)
-	if(isSingIn) then
-		EventMgr.Dispatch(EventType.Activity_Click)
-	end
-	RefreshPanel()
-	
-	if isSingIn then
-		isSelect = true
-		curItem.SetSelect()
-		if not rightItemFade then
-			rightItemFade = ComUtil.GetCom(rewardObj, "ActionFade")
+    data = _data
+    if data then
+        key = SignInMgr:GetDataKeyById(data:GetID())
+        cfg = data:GetCfg()
+        local info = SignInMgr:GetDataByKey(key)
+		isSignIn = info and not info:CheckIsDone()
+        if isSignIn then
+            EventMgr.Dispatch(EventType.Activity_Click)
+        end
+		RefreshPanel()
+
+		if isSignIn then
+			isSelect = true
+			curItem.SetSelect()
+			if not rightItemFade then
+				rightItemFade = ComUtil.GetCom(rewardObj, "ActionFade")
+			end
+			rightItemFade:Play(0, 1, 1000, 0, function()
+				isSelect = false
+			end)
 		end
-		rightItemFade:Play(0, 1, 1000, 0, function()
-			isSelect = false
-		end)
-	end
+    end
 end
 
 function Update()
@@ -202,7 +188,6 @@ function ESignCB(proto)
 	--if(proto.isOk) then
 	-- CSAPI.SetGOActive(mask, false)
 	RefreshPanel()--刷新列表
-	ActivityMgr:SetListData(cfg.id, {key = _key})
 	ActivityMgr:CheckRedPointData(ActivityListType.SignIn)
 
 	local taData = {

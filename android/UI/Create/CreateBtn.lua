@@ -40,7 +40,7 @@ end
 function SetRed()
     local isRed = false
     local conditions = data:GetCfg().conditions
-    if (conditions) then
+    if (conditions and 1003==data:GetCfg().id) then
         local _isOpen, lockStr = MenuMgr:CheckConditionIsOK(conditions)
         isRed = _isOpen
     end

@@ -395,6 +395,11 @@ end
 
 function ShowTips()
     local info = FileUtil.LoadByPath("Dungeon_TaoFa_OpenInfo_".. data.id .."_" .. PlayerClient:GetUid() ..".txt") or {1}
+    if curOpen < 2 and info[curOpen + 1] then --重置本地数据
+        info = {}
+        FileUtil.SaveToFile("Dungeon_TaoFa_OpenInfo_".. data.id .."_" .. PlayerClient:GetUid() ..".txt",info)
+        return
+    end
     if curOpen > 1 and info[curOpen] == nil then -- 没记录则弹出提示
         info[curOpen] = 1
         FileUtil.SaveToFile("Dungeon_TaoFa_OpenInfo_".. data.id .."_" .. PlayerClient:GetUid() ..".txt",info)

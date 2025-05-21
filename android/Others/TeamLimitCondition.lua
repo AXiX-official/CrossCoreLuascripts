@@ -55,9 +55,10 @@ end
 --检查传入的卡牌是否符合限制条件,这个方法不检测数量，只检测是否符合条件，数量检测在TeamLimit对象中进行判定
 function this:CheckCard(cardData)
     local isPass=false;
+    local errorCode=nil;
     if cardData==nil then
         LogError("TeamLimitCondition 传入参数错误！"..tostring(cardData==nil));
-        return isPass;
+        return isPass,errorCode;
     end
     local limitType=self:GetLimitedType();
     local limitVal=self:GetLimitedVal();
@@ -65,7 +66,7 @@ function this:CheckCard(cardData)
     if limitType==nil or limitVal==nil or  (roleInfo==nil and (limitType==TeamConditionLimitType.Faction or limitType==TeamConditionLimitType.TeamType or limitType==TeamConditionLimitType.Territory)) then
         -- LogError(cardData)
         -- LogError("TeamLimitCondition CheckCard中发现错误！"..tostring(limitType==nil).."\t"..tostring(limitVal==nil).."\t"..tostring(roleInfo==nil));
-        return isPass;
+        return isPass,errorCode;
     end
     local tempVal=nil;
     if limitType==TeamConditionLimitType.CardID then  --卡牌ID
@@ -103,9 +104,11 @@ function this:CheckCard(cardData)
     elseif limitType==TeamConditionLimitType.LevelGreater then
         isPass=cardData:GetLv()>=limitVal;
         tempVal=cardData:GetLv();
+        errorCode=49302
     elseif limitType==TeamConditionLimitType.LevelLess then
         isPass=cardData:GetLv()<=limitVal;
         tempVal=cardData:GetLv();
+        errorCode=49302
     elseif limitType==TeamConditionLimitType.SuitType then --五件装备均为同一套装才算通过
         local equips=cardData:GetEquips();
         if equips~=nil and #equips==5 then
@@ -132,6 +135,7 @@ function this:CheckCard(cardData)
         else
             isPass=true;
         end
+        errorCode=49303
     elseif limitType==TeamConditionLimitType.SuitQualityLess then--装备品质，有空槽位也能通过测试
         local equips=cardData:GetEquips();
         if equips~=nil then
@@ -145,6 +149,7 @@ function this:CheckCard(cardData)
         else
             isPass=true;
         end
+        errorCode=49303
     elseif limitType==TeamConditionLimitType.SuitLevelGreater then--装备等级，有空槽位也能通过测试
         local equips=cardData:GetEquips();
         local lv=0;
@@ -155,6 +160,7 @@ function this:CheckCard(cardData)
         end
         isPass=lv>=limitVal;
         tempVal=lv;
+        errorCode=49304
     elseif limitType==TeamConditionLimitType.SuitLevelLess then--装备等级，有空槽位也能通过测试
         local equips=cardData:GetEquips();
         local lv=0;
@@ -165,9 +171,14 @@ function this:CheckCard(cardData)
         end
         isPass=lv<=limitVal;
         tempVal=lv;
+        errorCode=49304
     end
     -- LogError("条件ID："..tostring(self.cfg.id).."卡牌ID："..tostring(cardData:GetCfgID()).."\t限制类型："..tostring(limitType).."\t限制值："..tostring(limitVal).."\t当前值："..tostring(tempVal).."\t验证结果："..tostring(isPass))
-    return isPass;
+    if isPass then
+        return isPass
+    else
+        return isPass,errorCode;
+    end
 end
 
 return this

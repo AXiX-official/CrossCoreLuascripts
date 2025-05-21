@@ -2,10 +2,10 @@ local curIndex = 1
 local key = nil
 local items = {}
 local descFade = nil
-local modelId = 0
 local soundIndex = 1
 local isSignIn = false
 local cfg = nil
+local data = nil
 
 function Awake()
     eventMgr = ViewEvent.New()
@@ -28,18 +28,21 @@ function OnDisable()
     RoleAudioPlayMgr:StopSound()
 end
 
-function Refresh(data,elseData)
-    isSignIn = data.isSingIn ~= nil and data.isSingIn or false
-    key = data.key
-    cfg = elseData and elseData.cfg or nil
-    -- CSAPI.SetGOActive(mask, isSignIn)
-    if (isSignIn) then
-        EventMgr.Dispatch(EventType.Activity_Click)
+function Refresh(_data,_elseData)
+    data = _data
+    if data then
+        key = SignInMgr:GetDataKeyById(data:GetID())
+        cfg = data:GetCfg()
+        local info = SignInMgr:GetDataByKey(key)
+        isSignIn = info and not info:CheckIsDone()
+        if isSignIn then
+            EventMgr.Dispatch(EventType.Activity_Click)
+        end
+        SetDatas()
+        SetTime()
+            -- 卡牌角色id
+        SetRole()
     end
-    SetDatas()
-    SetTime()
-    -- 卡牌角色id
-    SetRole(50080)
 end
 
 function SetDatas(closeAnim)
@@ -114,9 +117,6 @@ function ESignCB(proto)
     -- CSAPI.SetGOActive(mask, false)
     SetDatas(true)
     isClick = false
-    ActivityMgr:SetListData(cfg.id, {
-        key = _key
-    })
     ActivityMgr:CheckRedPointData(ActivityListType.SignInContinue)
 
     local taData = {
@@ -142,14 +142,10 @@ function SetTime()
     end
 end
 
-function SetRole(id)
-    local cfg = Cfgs.CfgCardRole:GetByID(id)
-    if cfg then
-        -- CSAPI.SetText(txtName, cfg.sAliasName or "")
-        -- CSAPI.SetText(txtName2, cfg.eName or "")
-        modelId = cfg.aModels
-        -- RoleTool.LoadImg(icon, cfg.aModels + 1, LoadImgType.Main)
-        cardIconItem.Refresh(modelId + 1, LoadImgType.Main, nil, false)
+function SetRole()
+    if cfg and cfg.info and cfg.info.modelId then
+        cardIconItem.Refresh(cfg.info.modelId, LoadImgType.Main, nil, false)
+        CSAPI.SetAnchor(iconParent,cfg.info.x or 641,cfg.info.y or -135)
     end
 end
 

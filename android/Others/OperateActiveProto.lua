@@ -1,5 +1,7 @@
 -- 运营活动
-OperateActiveProto = {}
+OperateActiveProto = {
+    SkinRebateInfoCallBack = nil,
+}
 
 function OperateActiveProto:GetOperateActive(_id)
     local proto = {"OperateActiveProto:GetOperateActive", {
@@ -31,4 +33,29 @@ end
 
 function OperateActiveProto:GetActiveTimeListRet(proto)
     ActivityMgr:UpdateDatas(proto)
+end
+
+--获取皮肤返利特权卡数据
+function OperateActiveProto:GetSkinRebateInfo(skinId)
+    local proto = {"OperateActiveProto:GetSkinRebateInfo", {skinId = skinId}}
+    NetMgr.net:Send(proto);
+end
+
+--获取皮肤返利特权卡数据返回
+function OperateActiveProto:GetSkinRebateInfoRet(proto)
+    OperationActivityMgr:SetSkinRebateInfos(proto)
+end
+
+function OperateActiveProto:DragonBoatFestivalRefuel(id,type)
+    local proto = {"OperateActiveProto:DragonBoatFestivalRefuel", {id = id,type = type}}
+    NetMgr.net:Send(proto);
+end
+
+function OperateActiveProto:GetDragonBoatFestivalInfo()
+    local proto = {"OperateActiveProto:GetDragonBoatFestivalInfo", {}}
+    NetMgr.net:Send(proto);
+end
+
+function OperateActiveProto:GetDragonBoatFestivalInfoRet(proto)
+    OperationActivityMgr:SetDuanWuInfos(proto)
 end

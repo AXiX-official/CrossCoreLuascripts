@@ -157,7 +157,7 @@ function this:OpenReward2(viewPath, data, elseData)
         local showRoleList = {};
         local showSkinList = {}
         local len = #data[1]
-        for k = len, 1,-1 do -- data[1]是奖励数据
+        for k = len, 1, -1 do -- data[1]是奖励数据
             v = data[1][k]
             if v.type == RandRewardType.CARD then
                 local card = RoleMgr:GetData(v.c_id);
@@ -197,8 +197,8 @@ function this:OpenReward2(viewPath, data, elseData)
                     skinInfo:InitCfg(cfg.dy_value2)
                     table.insert(showSkinList, skinInfo)
                 elseif cfg.type == ITEM_TYPE.LIMITED_TIME_SKIN then
-                    --限时皮肤在GetSkinsRet统计，物品不展示，要移除
-                    table.remove(data[1],k)
+                    -- 限时皮肤在GetSkinsRet统计，物品不展示，要移除
+                    table.remove(data[1], k)
                 end
             end
         end
@@ -233,7 +233,7 @@ function this:ShowSkinList(list, data, elseData)
                 lua.Init()
                 UIUtil:ShowSkinList(list, data, elseData)
             else
-                --CSAPI.OpenView("RewardPanel", data, elseData)
+                -- CSAPI.OpenView("RewardPanel", data, elseData)
                 self:ShowLimitSkins("RewardPanel", data, elseData)
                 lua.CloseView();
             end
@@ -241,21 +241,21 @@ function this:ShowSkinList(list, data, elseData)
     end)
 end
 
---展示限时皮肤
+-- 展示限时皮肤
 function this:ShowLimitSkins(viewPath, data, elseData)
-    if(not RoleSkinMgr:ShowLimitSkins(function ()
+    if (not RoleSkinMgr:ShowLimitSkins(function()
         self:ShowLimitSkins(viewPath, data, elseData)
-    end))then
-        if(#data[1]>0)then 
-            CSAPI.OpenView(viewPath, data, elseData)  ----------------------物品最终展示位置------------------------
-        end  
-    end 
+    end)) then
+        if (#data[1] > 0) then
+            CSAPI.OpenView(viewPath, data, elseData) ----------------------物品最终展示位置------------------------
+        end
+    end
 end
 
---cfgId=CfgSkinInfo.id
-function this:ShowSkin(cfgId,cb)
+-- cfgId=CfgSkinInfo.id
+function this:ShowSkin(cfgId, cb)
     if cfgId then
-        local skinInfo=ShopSkinInfo.New();
+        local skinInfo = ShopSkinInfo.New();
         skinInfo:InitCfg(cfgId);
         if skinInfo then
             CSAPI.OpenView("SkinShowView", skinInfo)
@@ -465,11 +465,11 @@ function this:OpenPoputSpendView(titleID, desc, itemID, surecb, cancelcb)
 end
 
 -- 今天不再提示弹窗
-function this:OpenTipsDialog(_key,_content, _okFunc, _cancelFunc,_titleID)
-    if(self:IsTipsDialogTick(_key))then 
-        if(_okFunc)then 
+function this:OpenTipsDialog(_key, _content, _okFunc, _cancelFunc, _titleID)
+    if (self:IsTipsDialogTick(_key)) then
+        if (_okFunc) then
             _okFunc()
-        end 
+        end
         return
     end
     local dialogdata = {}
@@ -489,20 +489,20 @@ function this:IsTipsDialogTick(_key)
     return false
 end
 
---打开徽章信息界面
-function this:OpenBadgeTips(badgeId,x,y)
+-- 打开徽章信息界面
+function this:OpenBadgeTips(badgeId, x, y)
     if badgeId == nil then
         LogError("输入徽章id为空!!!")
         return
     end
     local badgeData = BadgeMgr:GetData(badgeId)
     if badgeData == nil then
-        LogError("获取不到徽章数据!!!"..badgeId)
+        LogError("获取不到徽章数据!!!" .. badgeId)
         return
     end
     x = x or 0
     y = y or 0
-    CSAPI.OpenView("BadgeTips",badgeData,{x,y})
+    CSAPI.OpenView("BadgeTips", badgeData, {x, y})
 end
 
 -- 移动
@@ -573,8 +573,8 @@ function this:SetObjSizeDelta(obj, x1, x2, y1, y2, cb, timer, delay)
 end
 
 -- 自动适配屏幕大小
-function this:SetPerfectScale(obj)
-    local baseScale = {1920, 1080}
+function this:SetPerfectScale(obj, _baseScale)
+    local baseScale = _baseScale or {1920, 1080}
     local curScale = CSAPI.GetMainCanvasSize()
     local nType = self:GetSceneType()
     local scale = 1
@@ -728,7 +728,7 @@ function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFu
             JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
         else
             local dialogData = {}
-            dialogData.content = LanguageMgr:GetTips(24009)
+            dialogData.content = LanguageMgr:GetTips(24015,cfg.name)
             dialogData.okCallBack = function()
                 JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
             end
@@ -745,6 +745,19 @@ function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFu
     data.reward = reward
     data.payFunc = payFunc
     CSAPI.OpenView("UniversalPurchase", data)
+end
+
+-- 添加战斗表情 (异步，可通过 item = item or {} 传入持有item )
+--isL 是左边(要区分左右，因为艺术字不能翻转，但图要翻转)
+function this:AddHeadFace(parent, id,isL,item)
+    if (not item) then
+        ResUtil:CreateUIGOAsync("Common/HeadFaceItem", parent, function(go)
+            item = ComUtil.GetLuaTable(go)
+            item.Refresh(id,isLeft)
+        end)
+    else
+        item.Refresh(id,isLeft)
+    end
 end
 
 -- 添加头像+头像框(自己)
@@ -896,6 +909,11 @@ function this:OpenSweepView(cfgId, payFunc)
     if cfg and cfg.group then
         local sectionData = DungeonMgr:GetSectionData(cfg.group)
         if sectionData then
+            local openInfo = sectionData:GetOpenInfo()
+            if openInfo and not openInfo:IsDungeonOpen() then
+                LanguageMgr:ShowTips(24003)
+                return
+            end
             local buy = sectionData:GetBuyCount()
             local cost = sectionData:GetBuyCost()
             local gets = sectionData:GetBuyGets()
@@ -906,8 +924,11 @@ function this:OpenSweepView(cfgId, payFunc)
             local sweepData = SweepMgr:GetData(cfgId)
             if sweepData then
                 if sweepData:IsOpen() then
-                    local OnBuyFunc = function()
-                        UIUtil:OpenPurchaseView(nil, nil, cur, buy, cost, gets, payFunc)
+                    local OnBuyFunc = nil
+                    if sectionData:GetBuyGets() then
+                        OnBuyFunc = function()
+                            UIUtil:OpenPurchaseView(nil, nil, cur, buy, cost, gets, payFunc)
+                        end
                     end
                     CSAPI.OpenView("SweepView", {
                         id = cfgId
@@ -975,9 +996,30 @@ function this:SetLiveBroadcast2(obj, isBlack)
         local value = SettingMgr:GetValue(s_other_live_key)
         num = value == 1 and 0.1 or 1
     end
-   -- 图片+特效
-   local _num = num == 1 and 255 or 25
-   CSAPI.SetImgColor(obj, _num, _num, _num, 255)
+    -- 图片+特效
+    local _num = num == 1 and 255 or 25
+    CSAPI.SetImgColor(obj, _num, _num, _num, 255)
+end
+
+-- 显示特殊引导
+function this:ShowSpecialGuide(parent, viewName, type, datas)
+    -- if viewName == nil or viewName == "" then
+    --     return
+    -- end
+    -- if GuideMgr:HasGuide(viewName) or GuideMgr:IsGuiding() or SpecialGuideMgr:IsClose() then
+    --     return
+    -- end
+    -- local name = "SpecialGuideView"
+    -- local go = parent.transform:Find(name)
+    -- if IsNil(go) then
+    --     go = ResUtil:CreateUIGO("SpecialGuide/" .. name, parent.transform)
+    -- end
+    -- if not IsNil(go) then
+    --     local lua = ComUtil.GetLuaTable(go.gameObject)
+    --     if lua and lua.Refresh then
+    --         lua.Refresh(viewName, type, datas)
+    --     end
+    -- end
 end
 
 return this

@@ -15,6 +15,7 @@ local voucherList=nil;
 local realPrice=0;
 local endTime=0;--结束时间戳
 local countTime=0;
+local rmbIcon=nil;
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV")
 	layout:Init("UIs/Shop/ShopPackItem",LayoutCallBack,true)
@@ -55,6 +56,7 @@ function OnOpen()
 	payCallBack=data.callBack;
 	-- 根据当前物品数量进行初始化
 	if commodity then
+		rmbIcon=commodity:GetCurrencySymbols();
 		local onceMax=commodity:GetOnecBuyLimit() == - 1 and 99 or commodity:GetOnecBuyLimit(); --单次购买上限
 		RefreshPrice();
 		--当前剩余数量
@@ -172,13 +174,22 @@ function RefreshPrice()
 		CSAPI.SetGOActive(txt_free,false);
 		CSAPI.SetGOActive(txt_nPrice,true);
 		local discount=commodity:GetNowDiscount();
+		local orgInfo=commodity:GetOrgCosts();
 		if discount~=1 then
 			local rPrice=commodity:GetRealPrice();
 			if voucherList then
-				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				if orgInfo then
+					SetPrice(orgInfo[1],orgInfo[2],hPriceIcon,txt_hPrice);
+				else
+					SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				end
 				SetPrice(rPrice[1].id,realPrice,nPriceIcon,txt_nPrice);
 			else
-				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				if orgInfo then
+					SetPrice(orgInfo[1],orgInfo[2],hPriceIcon,txt_hPrice);
+				else
+					SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				end
 				SetPrice(rPrice[1].id,rPrice[1].num,nPriceIcon,txt_nPrice);
 			end
 			CSAPI.SetGOActive(hPrice,true)
@@ -187,12 +198,19 @@ function RefreshPrice()
 			CSAPI.SetText(txt_discount,"-"..dis.."%");
 		else
 			if voucherList then --折扣券
-				SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				if orgInfo then
+					SetPrice(orgInfo[1],orgInfo[2],hPriceIcon,txt_hPrice);
+				else
+					SetPrice(normalPrice[1].id,normalPrice[1].num,hPriceIcon,txt_hPrice);
+				end
 				SetPrice(normalPrice[1].id,realPrice,nPriceIcon,txt_nPrice);
 				CSAPI.SetGOActive(hPrice,true)
 			else
+				if orgInfo then
+					SetPrice(orgInfo[1],orgInfo[2],hPriceIcon,txt_hPrice);
+				end
 				SetPrice(normalPrice[1].id,normalPrice[1].num,nPriceIcon,txt_nPrice);
-				CSAPI.SetGOActive(hPrice,false)
+				CSAPI.SetGOActive(hPrice,orgInfo~=nil)
 			end
 			CSAPI.SetGOActive(discountObj,false);
 		end
@@ -218,16 +236,7 @@ end
 
 function SetPrice(id, num,pIcon,pText)
 	if id==-1 then --SDK支付
-		CSAPI.SetText(pText, LanguageMgr:GetByID(18013)..tostring(num));
-		if CSAPI.IsADV() then
-			local StrText=commodity["cfg"]["displayCurrency"];
-			local displayPrice=commodity["cfg"]["displayPrice"];
-			if StrText and displayPrice then
-				CSAPI.SetText(pText, StrText..tostring(displayPrice));
-			else
-				CSAPI.SetText(pText, LanguageMgr:GetByID(18013)..tostring(num));
-			end
-		end
+		CSAPI.SetText(pText, rmbIcon..tostring(num));
 		CSAPI.SetGOActive(pIcon,false);
 		return;
 	end
@@ -310,7 +319,7 @@ end
 function LayoutCallBack(index)
 	local _data = curDatas[index]
 	local item=layout:GetItemLua(index);
-	item.Refresh(_data.itemData,_data.desc,true);
+	item.Refresh(_data.itemData,_data.desc,true,commodity);
 	-- item.SetDesc(_data.desc);
 	-- item.ShowDesc(false);
 end

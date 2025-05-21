@@ -26,33 +26,6 @@ function Skill602101303:DoSkill(caster, target, data)
 		self:DelValue(SkillEffect[8332], caster, target, data, "suaijian")
 	end
 end
--- 伤害前
-function Skill602101303:OnBefourHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8333
-	local suaijian = SkillApi:GetValue(self, caster, target,2,"suaijian")
-	-- 8334
-	if SkillJudger:Greater(self, caster, self.card, true,suaijian,0) then
-	else
-		return
-	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 602100301
-	self:AddTempAttr(SkillEffect[602100301], caster, self.card, data, "damage",-0.40)
-end
 -- 攻击结束
 function Skill602101303:OnAttackOver(caster, target, data)
 	-- 8060

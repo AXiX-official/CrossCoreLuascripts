@@ -154,6 +154,14 @@ function this:SetIsPlay(n)
     self.isPlayNum = n
 end
 
+function this:GetDownloadRewardState()
+    return self.isGetDownloadReward or false
+end
+
+function this:SetDownloadRewardState(n)
+    self.isGetDownloadReward = n
+end
+
 ------------------------------------------------------------------模块开启(记录未开启的数据)
 local fileName = "opencondition13.txt"
 
@@ -220,6 +228,8 @@ function this:InitDatas()
         end
     end
     self:SaveDatas(curFileName, newDatas)
+    --任务弹窗推送 
+    MissionMgr:ApplyShowMisionTips()
 end
 
 -- 检测当前数据是否有已符合开启添加的系统
@@ -837,6 +847,11 @@ function this:GetMenuRDType()
 end
 function this:SetMenuRDType(type)
     self.menuRDType = type
+end
+
+--是否已初始化
+function this:CheckIsInit()
+    return self.isInit
 end
 
 return this

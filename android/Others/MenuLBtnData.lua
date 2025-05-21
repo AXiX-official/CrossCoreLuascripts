@@ -54,6 +54,13 @@ function this:CheckIsShow()
             self.begTime=cfg.begTime and TimeUtil:GetTimeStampBySplit(cfg.begTime) or nil;
             self.endTime=cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or nil;
         end
+    elseif (self.cfg.nType==10) then --端午签到
+        local _,id = ActivityMgr:IsOpenByType(ActivityListType.SignInDuanWu)
+        local alData = ActivityMgr:GetALData(id)
+        if alData then
+            self.begTime=alData:GetStartTime()
+            self.endTime=alData:GetEndTime()
+        end
     end
     if (self.begTime == nil and self.endTime == nil) then
         self.isShow = false
@@ -89,6 +96,8 @@ function this:IsOpen()
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "CollaborationMain")
     elseif (self.cfg.nType == 9) then  
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "PuzzleActivity")
+    elseif (self.cfg.nType == 10) then  
+        self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "SignInDuanWu")
     end
     return self.isOpen, str
 end
@@ -115,6 +124,8 @@ function this:IsRed()
             if info then
                 self.isRed=info~=nil;
             end
+        elseif (self.cfg.nType==10) then
+            self.isRed = RedPointMgr:GetData(RedPointType.SignInDuanWu) ~= nil 
         end
     end
     return self.isRed

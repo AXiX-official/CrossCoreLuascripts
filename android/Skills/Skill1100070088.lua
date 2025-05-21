@@ -18,11 +18,6 @@ function Skill1100070088:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
-	else
-		return
-	end
 	-- 1100070090
-	self:ExtraRound(SkillEffect[1100070090], caster, self.card, data, nil)
+	self:HitAddBuff(SkillEffect[1100070090], caster, target, data, 2000,3005)
 end

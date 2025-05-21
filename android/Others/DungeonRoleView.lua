@@ -56,9 +56,9 @@ function OnViewClosed(viewKey)
     if viewKey == "Plot" or viewKey == "ShopView" then
         FuncUtil:Call(function()
             if gameObject then
-                CSAPI.PlayBGM(sectionData:GetBGM(), 1)
+                CSAPI.PlayBGM("Sys_Hesitant_Cage", 1)
             end
-        end, this, 300)
+        end, nil, 200)
     end
 end
 

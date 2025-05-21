@@ -457,20 +457,40 @@ end
 
 -- 返回打折的价格 key:ShopPriceKey
 function this:GetRealPrice(key)
-    key=key==nil and ShopPriceKey.jCosts or key
+    key = key == nil and ShopPriceKey.jCosts or key
     local infos = nil
     local priceInfo = self:GetPrice(key)
     local discount = self:GetNowDiscount()
-    if priceInfo then
+    if (CSAPI.IsADV() or CSAPI.IsDomestic()) and self:GetCfg().displayPrice~=nil then -- 兼容SDK传过来的价格
         infos = {}
         for k, v in ipairs(priceInfo) do
-            local num = discount == 1 and v.num or
-                            math.modf(tonumber(v.num) * discount)
-            table.insert(infos, {id = v.id, num = num})
+            if v.id==-1 then
+                table.insert(infos, {
+                    id = v.id,
+                    num = tonumber(self:GetCfg().displayPrice)
+                })
+            else
+                local num = discount == 1 and v.num or math.modf(tonumber(v.num) * discount)
+                table.insert(infos, {
+                    id = v.id,
+                    num = num
+                })
+            end
+            
+        end
+    elseif priceInfo then
+        infos = {}
+        for k, v in ipairs(priceInfo) do
+            local num = discount == 1 and v.num or math.modf(tonumber(v.num) * discount)
+            table.insert(infos, {
+                id = v.id,
+                num = num
+            })
         end
     end
     return infos
 end
+
 
 -- 返回获得物品数据
 function this:GetCommodityList()
@@ -478,6 +498,35 @@ function this:GetCommodityList()
     local jGets=nil;
     if self.data and self.data.shop_config and self.data.shop_config.jGets then
         jGets=self.data.shop_config.jGets;
+    end
+    if jGets then
+        info = {}
+        for k, v in ipairs(jGets) do
+            local type = v[3]
+            local data = nil
+            if type == RandRewardType.ITEM then
+                data = GoodsData()
+                data:InitCfg(v[1])
+            elseif type == RandRewardType.CARD then
+                data = CharacterCardsData()
+                data:InitCfg(v[1])
+            elseif type == RandRewardType.EQUIP then
+                data = EquipData()
+                data:InitCfg(v[1])
+            end
+            table.insert(info,
+                         {data = data, cid = v[1], num = v[2], type = type})
+        end
+    end
+    return info
+end
+
+-- 根据字段返回获得物品数据 grid1,grid2字段
+function this:GetCommodityList2(key)
+    local info = nil
+    local jGets = nil
+    if self.cfg and key and self.cfg[key] then
+        jGets = self.cfg[key]
     end
     if jGets then
         info = {}
@@ -743,6 +792,10 @@ function this:IsPackage()
     return isPackage
 end
 
+function this:GetShopGroupID()
+    return self.cfg and self.cfg.shopGroupID or nil;
+end
+
 function this:HasDiscountTag()
     local has=false
     if self.cfg and self.cfg.hasDiscountTag then
@@ -801,6 +854,51 @@ function this:GetBundlingID()
     if self.cfg then
         return self.cfg and self.cfg.bundlingID or nil
     end
+end
+
+--前端显示用的字段
+function this:GetOrgCosts()
+    if self.data and self.data.shop_config and self.data.shop_config.orgCosts then
+        return self.data.shop_config.orgCosts   
+    elseif self.cfg then
+        return self.cfg and self.cfg.orgCosts or nil;
+    end
+end
+
+--返回显示用的字段结束时间的提示
+function this:GetOrgEndBuyTips()
+    --先隐藏显示
+    -- local time=self:GetBuyEnd();   
+	-- if time~=nil then
+    --     local buyEndTime = self:GetBuyEndTime();
+	-- 	local count=TimeUtil:GetDiffHMS(buyEndTime,TimeUtil.GetTime());
+    --     if count.day>0 then
+    --         return LanguageMgr:GetByID(18035,count.day)
+    --     else
+    --         return LanguageMgr:GetByID(18035,1)
+    --     -- elseif count.hour>0 then
+    --     --     return LanguageMgr:GetByID(18087,count.hour)
+    --     -- else
+    --     --     if count.minute>=1 then
+    --     --         return LanguageMgr:GetByID(18088,count.minute)
+    --     --     else
+    --     --         return LanguageMgr:GetByID(18097)
+    --     --     end
+    --     end
+    -- end
+	return nil;
+end
+
+--返回现金价格符号
+function this:GetCurrencySymbols()
+    local str=LanguageMgr:GetByID(18013);
+    if CSAPI.IsADV() then
+        str=self:GetCfg().displayCurrency;
+        if str==nil then
+            str=RegionalSet.RegionalCurrencyType();
+        end
+    end
+    return str;
 end
 
 return this

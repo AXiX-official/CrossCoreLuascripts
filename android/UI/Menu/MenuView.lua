@@ -84,6 +84,9 @@ local rdLNR = {}
 local globalBossTime = 0
 local bagLimitTime
 local skinLimitTime = nil
+local skinRebateTime = nil
+local skinRebateShowTime = nil
+local skinRebateRefreshTime = nil
 local questionnaireTime = nil
 local puzzleNextInfo=nil;
 function Awake()
@@ -188,6 +191,8 @@ function InitListener()
     eventMgr:AddListener(EventType.Role_LimitSkin_Refresh, function()
         skinLimitTime = RoleSkinMgr:CheckLimitSkin()
     end)
+    -- 皮肤返利
+    eventMgr:AddListener(EventType.Activity_SkinRebate_Refresh, SetSkinRebate)
     eventMgr:AddListener(EventType.Menu_Questionnaire, function ()
         questionnaireTime = QuestionnaireMgr:GetRefreshTime()
     end)
@@ -230,7 +235,7 @@ function Update()
     timer = Time.time + 1
     curTime = TimeUtil:GetTime()
     -- 活动入口
-    if (activeEnter_tab[2]~=nil and curTime >= activeEnter_tab[2]) then
+    if (activeEnter_tab[2] ~= nil and curTime >= activeEnter_tab[2]) then
         InitActivityEnter()
         SetActivityEnter()
     end
@@ -315,7 +320,7 @@ function Update()
         end
     end
     -- 背包限时物品
-       if (bagLimitTime) then
+    if (bagLimitTime) then
         -- 检测时间是否小于24小时
         if curTime < bagLimitTime and (bagLimitTime - curTime) <= 86400 and BagMgr:IsDayLimitTipsDone() ~= true then
             -- 弹提示
@@ -342,6 +347,17 @@ function Update()
         skinLimitTime = nil
         RoleSkinMgr:CheckLimitSkin()
     end
+    --皮肤返利
+    if skinRebateTime then
+        if skinRebateShowTime then
+            local srTimeTab = TimeUtil:GetTimeTab(skinRebateShowTime - curTime)
+            LanguageMgr:SetText(txtSkinRebateTime,34039,srTimeTab[1],srTimeTab[2],srTimeTab[3])
+        end
+        if curTime > skinRebateTime or (skinRebateRefreshTime and curTime > skinRebateRefreshTime) then
+            skinRebateTime = nil
+            SetSkinRebate()
+        end
+    end
     -- 问卷
     if (questionnaireTime and curTime >= questionnaireTime) then
         questionnaireTime = nil 
@@ -353,6 +369,8 @@ function Update()
         ActivePuzzleProto:GetPuzzleData(puzzleNextInfo.id)
         puzzleNextInfo=PuzzleMgr:GetNextInfo();
     end
+    -- 静默下载
+    UpdateSilentDownloadProgress()
 end
 
 -- 界面逻辑不在这里处理，在Loading_Complete后再处理,这里处理初始化数据操作
@@ -378,6 +396,8 @@ function LoadingComplete()
     --
     RefreshPanel()
     InitListener()
+
+    FuncUtil:Call(InitSilentDownload,nil,1000);
 end
 
 function Init()
@@ -886,6 +906,7 @@ function SetRT()
     SetMoneys()
     SetHot()
     SetMenuBuy()
+    SetSkinRebate()
 end
 function SetMoneys()
     for i, v in ipairs(moneyIDs) do
@@ -933,6 +954,26 @@ end
 --         petStateTime = eventData
 --     end
 -- end
+
+function SetSkinRebate()
+    local isOpen,id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+    CSAPI.SetGOActive(btnSkinRebate,isOpen)
+    if isOpen then
+        local type,limitTime,rTime = OperationActivityMgr:GetSkinRebateState()
+        local isRed = ActivityMgr:CheckRed(id) and type ~= SkinRebateType.Lock
+        UIUtil:SetRedPoint(btnSkinRebate,isRed,120,39)
+        CSAPI.SetGOActive(skinRebateLock,type == SkinRebateType.Lock)
+        CSAPI.SetGOActive(skinRebateLimit,type == SkinRebateType.LimitTime)
+        CSAPI.SetGOActive(skinRebateNol,not isRed and type ~= SkinRebateType.Lock)
+        if type == SkinRebateType.LimitTime then
+            skinRebateShowTime = limitTime
+        end
+        if rTime and rTime > 0 then
+            skinRebateRefreshTime = rTime
+        end
+    end
+    skinRebateTime = ActivityMgr:GetRefreshTime(ActivityListType.SkinRebate)
+end
 
 -------------------------RD--------------------------------------
 function SetRD()
@@ -1012,7 +1053,7 @@ function EActivityGetCB()
     end
 
     -- 活动相关的界面弹窗
-    if (ActivityMgr:CheckPopView()) then
+    if (ActivityPopUpMgr:CheckPopView()) then
         return true
     end
 
@@ -1115,6 +1156,9 @@ end
 -------------------------事件--------------------------------------
 -- 其它界面打开
 function OnViewOpened(viewKey)
+    if(viewKey == "CRoleDisplayMain" and attackEffectGO) then 
+        CSAPI.SetScale(attackEffectGO, 0, 0, 0)
+    end 
     closeViews = closeViews or {}
     for k, v in ipairs(closeViews) do
         if (v == viewKey) then
@@ -1135,6 +1179,9 @@ end
 
 -- 其它界面关闭
 function OnViewClosed(viewKey)
+    if(viewKey == "CRoleDisplayMain" and attackEffectGO) then 
+        CSAPI.SetScale(attackEffectGO, 1, 1, 1)
+    end 
     closeViews = closeViews or {}
     table.insert(closeViews, viewKey)
     if (isApplyRefresh) then
@@ -1491,6 +1538,15 @@ function OnClickActiveityEnter()
     end
 end
 
+function OnClickSkinRebate()
+    local isOpen,id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+    if not isOpen then
+        return
+    end
+
+    CSAPI.OpenView("SkinRebate",id)
+end
+
 function OnClickMoney1()
     OnClickMoney(1)
 end
@@ -1518,5 +1574,89 @@ function OnClickVirtualkeysClose()
         if CSAPI.IsADV() then
             ShiryuSDK.ExitGame()
         end
+    end
+end
+function OnClickSilentDownload()
+    CSAPI.OpenView("SilentDownload")
+end
+
+function InitSilentDownload()
+    
+    -- 兼容旧包
+    local apkVer = tonumber(CSAPI.APKVersion())
+    if apkVer > 6 then
+        local recordMode = 0
+        if apkVer <= 8 then
+            -- 切换静默下载模式
+            -- 是否开启了静默自动下载
+            recordMode = PlayerPrefs.GetInt("SilentDownloadMode",0)
+
+            -- if SilentDownloadMgr:GetInitState() == true then
+            --     -- CS.CSAPI.RefreshSilentDownloadState(true)
+            --     -- 开启后台自动下载
+            --     SilentDownloadMgr:RefreshCurrentState(true)
+            -- else
+            --     -- 开始按需下载并且提示选择下载方案
+            --     SilentDownloadMgr:SetDownloadMode(2)
+            --     PlayerPrefs.SetInt("SilentDownloadMode", 2);
+            -- end
+        else
+            -- 是否选择过静默下载模式
+            recordMode = SilentDownloadMgr:GetDownloadMode()
+        end
+        
+        if recordMode == 0 then                
+            -- 开始按需下载并且提示选择下载方案
+            SilentDownloadMgr:SetDownloadMode(2)
+            if apkVer == 7 then PlayerPrefs.SetInt("SilentDownloadMode", 2); end
+        elseif recordMode == 3 then
+            -- 开启后台自动下载
+            SilentDownloadMgr:InitSilentDownloadState(true);
+            SilentDownloadMgr:RefreshCurrentState(true)           
+            if apkVer == 7 then PlayerPrefs.SetInt("SilentDownloadMode", 3); end
+        end
+    end
+    CSAPI.SetGOActive(btnSilentDownload, false)
+end
+
+function UpdateSilentDownloadProgress() 
+    local apkVer = tonumber(CSAPI.APKVersion())
+    local percent = apkVer <= 6 and 1 or SilentDownloadMgr:GetInfo_CurrentDownloadProgressPecent()
+    CSAPI.SetGOActive(btnSilentDownload, not MenuMgr:GetDownloadRewardState() or percent < 1)
+    -- 暂时屏蔽功能入口
+    CSAPI.SetGOActive(btnSilentDownload, false)
+    if btnSilentDownload.gameObject.activeSelf then
+        -- if apkVer <= 6 then
+        --     -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
+        --     CSAPI.SetText(silentDownloadProgresstxt, LanguageMgr:GetByID(15038))
+        -- elseif apkVer >= 7 then
+        if apkVer ~= nil then
+            if apkVer == 7 then
+                -- 7.0版本的包下载进度会有异常，需要特殊处理
+                if SilentDownloadMgr:GetInfo_DownloadSizeTotal() ~= 0 and SilentDownloadMgr:GetInfo_DownloadedSize() == 0 then
+                    percent = 0
+                end
+            end
+            if percent == 1 or percent == 1.0 or apkVer <= 6 then
+                local isRed = percent >= 1 and not MenuMgr:GetDownloadRewardState()
+                UIUtil:SetRedPoint(btnSilentDownload, isRed, 35, 35)
+                
+                -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
+                CSAPI.SetText(silentDownloadProgresstxt, LanguageMgr:GetByID(15038))
+                -- CSAPI.SetGOActive(btnSilentDownload, false)
+                -- LogError("当前下载进度 ： 完成" )
+                -- 刷新downloadBtn    
+                CSAPI.LoadImg(btnSilentDownload, "UIs/Menu/download_btn_01_01.png", true, nil, true)
+                
+                local textColor = {255, 193, 70, 255}
+                CSAPI.SetTextColor(silentDownloadProgresstxt.gameObject, textColor[1], textColor[2], textColor[3], textColor[4])
+            else
+                -- percent = string.format("%.2f", percent * 100)
+                percent = math.floor(percent*100)
+                CSAPI.SetText(silentDownloadProgresstxt, percent .. "%")
+                -- LogError("当前下载进度 ： " .. percent .. "%" )
+            end
+        end
+            
     end
 end

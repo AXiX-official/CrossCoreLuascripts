@@ -8,6 +8,6 @@ function Buffer1100070087:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer1100070087:OnCreate(caster, target)
-	-- 4001
-	self:AddAttrPercent(BufferEffect[4001], self.caster, target or self.owner, nil,"attack",0.05)
+	-- 1100070087
+	self:AddAttrPercent(BufferEffect[1100070087], self.caster, self.card, nil, "attack",0.05*self.nCount)
 end

@@ -23,6 +23,7 @@ function Awake()
             SetReds()
         end
     end)
+    eventMgr:AddListener(EventType.View_Lua_Closed, CheckOpen)
 end
 function OnDestroy()
     eventMgr:ClearListener()
@@ -84,7 +85,25 @@ function OnOpen()
             RefreshPanel()
             EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RogueTView")
         end
+        --奖励更新
+        CheckOpen()
     end)
+end
+
+function CheckOpen()
+    if(RogueTMgr:CheckRed3())then 
+        CSAPI.OpenView("RogueTScore")
+        FuncUtil:Call(function ()
+            LanguageMgr:ShowTips(48002)
+        end,nil,500)
+        FightProto:RogueTSetWindow(1,RogueTMgr:GetRogueTTime())
+    elseif(RogueTMgr:CheckRed4())then  
+        CSAPI.OpenView("RogueTReward")
+        FuncUtil:Call(function ()
+            LanguageMgr:ShowTips(48003)
+        end,nil,500)
+        FightProto:RogueTSetWindow(2,g_RogueScoreLVIdx)
+    end
 end
 
 function RefreshPanel()

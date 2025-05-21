@@ -188,6 +188,7 @@ function FightMgrBase:RecvCmd(cmd)
         self:DoEnd(data)
     elseif ty == CMD_TYPE.ChangeStage then
         self:ChangeStage(data.stage)
+        self.needChangeStage = nil
     -- elseif ty == CMD_TYPE.Auto then
     -- 	self:AutoFight(data)
     -- elseif ty == CMD_TYPE.AddCard then
@@ -1205,7 +1206,7 @@ end
 
 function FightMgrBase:CheckOver(isRoundOver)
     -- LogDebugEx("FightMgrBase:CheckOver", self.nStep , self.nStepLimit, isRoundOver or "false", self.needCheckOver and true or false)
-
+    -- LogTrace()
     -- if self.oForceOver then
     --     self:Over(self.stage, self.oForceOver)
     --     return true
@@ -1246,14 +1247,14 @@ function FightMgrBase:CheckOver(isRoundOver)
     local card = self.needCheckOver
     local over = false
     local count = {0, 0}
-    --self:PrintCardInfo("CheckOver")
+    -- self:PrintCardInfo("CheckOver")
     for i, v in ipairs(self.arrCard) do
         local teamID = v:GetTeamID()
         if v:IsLive() then
             count[teamID] = count[teamID] + 1
         end
     end
-    --LogTable(count)
+    -- LogTable(count)
 
     if count[1] == 0 or count[2] == 0 then
         -- 本来应该结束的, 但是需求最后一次死亡还要触发事件
@@ -1446,11 +1447,15 @@ function FightMgrBase:OnTurnNext()
     -- 可能敌方都死光了
     if self:CheckOver() then
         return
+    elseif self.needChangeStage then
+        -- 需要切换周目
+        LogDebugEx("self.needChangeStage", self.needChangeStage)
+        -- return
     end
 
     -- 控制类buffer处理
-    local isMotionless = card:IsMotionless()
-    LogDebugEx('============isMotionless===============', IsMotionless)
+    local isMotionless = card:IsMotionless()  or self.needChangeStage
+    LogDebugEx('============isMotionless===============', isMotionless, type(isMotionless), card:IsMotionless(), self.needChangeStage)
     if isMotionless then
         LogDebug('-------此处无法行动-------' .. card.name)
         card.bufferMgr:OnUpdateBuffer()
@@ -2540,11 +2545,15 @@ function FightMgrClient:DoTurn(data)
         -- 可能敌方都死光了
         if self:CheckOver() then
             return
+        elseif self.needChangeStage then
+            -- 需要切换周目
+            LogDebugEx("self.needChangeStage", self.needChangeStage)
+            -- return
         end
 
         -- 控制类buffer处理
-        local isMotionless = card.bufferMgr:IsMotionless()
-        LogDebugEx('============isMotionless===============', IsMotionless)
+        local isMotionless = card.bufferMgr:IsMotionless() or self.needChangeStage
+        LogDebugEx('============isMotionless===============', isMotionless, type(isMotionless), card:IsMotionless(), self.needChangeStage)
         if isMotionless then
             LogDebug('-------此处无法行动-------' .. card.name)
             card.bufferMgr:OnUpdateBuffer()

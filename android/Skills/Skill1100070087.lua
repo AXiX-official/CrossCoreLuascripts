@@ -16,7 +16,7 @@ function Skill1100070087:OnAfterRoundBegin(caster, target, data)
 		return
 	end
 	-- 1100070088
-	self:AddBuff(SkillEffect[1100070088], caster, self.card, data, 984000602)
+	self:AddBuff(SkillEffect[1100070088], caster, self.card, data, 1100080020)
 	-- 1100070089
-	self:DelBuffQuality(SkillEffect[1100070089], caster, self.card, data, 2,9)
+	self:DelBuffQuality(SkillEffect[1100070089], caster, self.card, data, 2,3)
 end

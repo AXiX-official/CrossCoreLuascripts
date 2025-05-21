@@ -41,6 +41,7 @@ local conf = {
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},
 {'3',	'3',	'',	'',	'',	'3',	'19',	'arch_moonlight_sharing',	'80413'},
 {'3',	'3',	'',	'',	'',	'4',	'30',	'arch_starry_lotus_fire',	''},
+{'3',	'3',	'',	'',	'',	'5',	'57',	'arch_chinese_music_party',	'80437'},
 {'4',	'4',	'arch_base_check',	'作战准备',	'',	'',	'',	'',	''},
 {'4',	'4',	'',	'',	'',	'1',	'8',	'arch_base_check',	''},
 {'5',	'5',	'arch_bestie_agent',	'娇痴颐使',	'',	'',	'',	'',	''},
@@ -63,6 +64,7 @@ local conf = {
 {'6',	'6',	'',	'',	'',	'15',	'53',	'arch_a_sweet_moment',	''},
 {'6',	'6',	'',	'',	'',	'16',	'63',	'arch_mirage_of_splendor',	''},
 {'6',	'6',	'',	'',	'',	'17',	'70',	'arch_calm_soak',	''},
+{'6',	'6',	'',	'',	'',	'18',	'64',	'arch_decisiv_moment',	''},
 {'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
 {'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
 {'7',	'7',	'',	'',	'',	'2',	'51',	'arch_anniversary_party',	''},
@@ -79,8 +81,9 @@ local conf = {
 {'9',	'9',	'',	'',	'',	'2',	'44',	'arch_fantastic_curtain_raiser',	'80420'},
 {'9',	'9',	'',	'',	'',	'3',	'46',	'arch_double_feature',	'80422'},
 {'9',	'9',	'',	'',	'',	'4',	'48',	'arch_alley_corner_crisis',	'80424'},
-{'9',	'9',	'',	'',	'',	'4',	'50',	'arch_twilight_invitation',	'80426'},
-{'9',	'9',	'',	'',	'',	'5',	'38',	'arch_rainy_night_jeopardy',	'80428'},
+{'9',	'9',	'',	'',	'',	'5',	'50',	'arch_twilight_invitation',	'80426'},
+{'9',	'9',	'',	'',	'',	'6',	'38',	'arch_rainy_night_jeopardy',	'80428'},
+{'9',	'9',	'',	'',	'',	'7',	'72',	'arch_starting_raid',	'80438'},
 },
 }
 --cfgCfgArchiveIllustration = conf

@@ -60,7 +60,7 @@ end
 --不同
 function SetImg()
     -- 多人插图立绘是会根据异形屏幕做适配的，所以l2d也要按照适配的比例做大小调整，但不是作用在sizeDetail上而是作用在scale上，因为子点击位置是固定的
-    rate = UIUtil:GetSceneRate({2240, 1080})
+    rate = 1--UIUtil:GetSceneRate({2240, 1080})
 
     local pos, scale, img, l2dName = RoleTool.GetMulImgPosScale(modelId, posType, true)
 

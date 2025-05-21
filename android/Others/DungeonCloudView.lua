@@ -511,7 +511,7 @@ end
 
 function OnLoadCallBack()
     itemInfo.SetFunc("CloudButton","OnClickEnter",OnBattleEnter)
-    itemInfo.SetFunc("CloudButton","OnClickSweep",OnSweepClick)
+    itemInfo.CallFunc("CloudButton","SetBuyFunc",OnPayFunc)
     itemInfo.CallFunc("CloudPlotButton","SetStoryCB",OnStoryCB)
     itemInfo.CallFunc("Double","SetTextColor","ffc146")
     if currItem then
@@ -574,29 +574,6 @@ end
 
 function OnPayFunc(count)
     PlayerProto:BuyArachnidCount(count,sectionData:GetID())
-end
-
-function OnSweepClick()
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-    if openInfo and not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-    local isSweepOpen = itemInfo.CallFunc("CloudButton","IsSweepOpen")
-    local cfg = currItem:GetCfg()
-    if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = cfg.id},{onBuyFunc = OnBuyFunc})
-    else
-        local sweepData = SweepMgr:GetData(cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfgModUp = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
-            if cfgModUp then
-                Tips.ShowTips(cfgModUp.sDescription)
-            end
-        end
-    end
 end
 
 function OnBuyFunc()

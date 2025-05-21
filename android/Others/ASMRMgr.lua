@@ -68,13 +68,27 @@ end
 -- 播放
 function this:PlayBGM(_id, index, startTime)
     local cfg = Cfgs.CfgASMR:GetByID(_id)
-    return self:_PlayBGM(cfg["cue_sheet" .. index], cfg["cue_name" .. index], 0, nil, nil, false, startTime)
+    return self:_PlayBGM(cfg["cue_sheet" .. index], cfg["cue_name" .. index], 0, nil, nil, false, startTime)    
+end
+function this:PlayBGM_CB(_id, index, startTime,completeCallBack)
+    
+    local cfg = Cfgs.CfgASMR:GetByID(_id)
+    return self:_PlayBGM(cfg["cue_sheet" .. index], cfg["cue_name" .. index], 0, nil, nil, false, startTime,completeCallBack)
+    -- if tonumber(CS.CSAPI.APKVersion()) > 8 then
+    --     local cfg = Cfgs.CfgASMR:GetByID(_id)
+    --     return self:_PlayBGM(cfg["cue_sheet" .. index], cfg["cue_name" .. index], 0, nil, nil, false, startTime,completeCallBack)
+    -- else
+    --     local cfg = Cfgs.CfgASMR:GetByID(_id)
+    --     local _source = self:_PlayBGM(cfg["cue_sheet" .. index], cfg["cue_name" .. index], 0, nil, nil, false, startTime)
+    --     if(completeCallBack ~= nil) then completeCallBack(_source) end
+    --     return _source
+    -- end
 end
 
-function this:_PlayBGM(cueSheet, cueName, fadeDelay, volumeCoeff, lockKey, isLoop, startTime)
+function this:_PlayBGM(cueSheet, cueName, fadeDelay, volumeCoeff, lockKey, isLoop, startTime,completeCallBack)
     volumeCoeff = volumeCoeff or 100
     isLoop = isLoop or false
-    return CSAPI.PlaySound(cueSheet, cueName, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff, startTime)
+    return CSAPI.PlaySound(cueSheet, cueName, isLoop, false, "bgm", 0.5, nil, fadeDelay, volumeCoeff, startTime,completeCallBack)
 end
 
 -- 移除

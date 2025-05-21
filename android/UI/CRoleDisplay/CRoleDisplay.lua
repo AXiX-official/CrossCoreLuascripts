@@ -471,7 +471,9 @@ function OnClickBC()
     ChangeToDetail()
     local isSame = FuncUtil.TableIsSame(data, c_data)
     if (not isSame) then
-        CRoleDisplayMgr:SetCRoleDisplayS()
+        if (data:GetTy() == 2 or data:GetTy() == 3) then
+            CRoleDisplayMgr:SetCRoleDisplayS()
+        end 
         data:InitRet(c_data:GetRet())
         if (data:GetTy() ~= 1) then
             PlayerProto:SetRandomPanel(data:GetRet())

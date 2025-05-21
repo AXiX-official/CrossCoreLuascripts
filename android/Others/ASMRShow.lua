@@ -11,6 +11,8 @@ local timer = nil
 local time = nil
 local isPress = false
 local pType = 0
+local isDestory = false
+local needReplayBGM = false
 
 function Awake()
     topLua = UIUtil:AddTop2("ASMRShow", gameObject, function()
@@ -31,18 +33,25 @@ function Awake()
 end
 
 function OnDestroy()
+    isDestory = true
     ASMRMgr:RemoveCueSheet(curData:GetCfg().id, 2)
     SetMusic(false)
+
+    if (needReplayBGM) then
+        ASMRMgr:ReplayBGM() -- 恢复
+    end
 end
 
 function OnOpen()
     SetMusic(true)
     RefreshPanel()
+
+    needReplayBGM = not CSAPI.IsViewOpen("ASMRView")
 end
 
 function RefreshPanel()
     curData = ASMRMgr:GetData(data)
-    FuncUtil:Call(SetRole,nil,100) 
+    FuncUtil:Call(SetRole, nil, 100)
 end
 
 function SetRole()
@@ -87,10 +96,21 @@ function Play()
         words[v.time] = v.word
     end
     ASMRMgr:StopBGM()
-    source = ASMRMgr:PlayBGM(curData:GetCfg().id, 2)
-    max = source:GetMaxTime()
-    voiceTimer = Time.time
-    CSAPI.SetGOActive(mask,false)
+    if tonumber(CS.CSAPI.APKVersion()) > 6 then
+        source = ASMRMgr:PlayBGM_CB(curData:GetCfg().id, 2, 0, function()
+            if (isDestory) then
+                return
+            end
+            max = source:GetMaxTime()
+            voiceTimer = Time.time
+            CSAPI.SetGOActive(mask, false)
+        end)
+    else
+        source = ASMRMgr:PlayBGM(curData:GetCfg().id, 2)
+        max = source:GetMaxTime()
+        voiceTimer = Time.time
+        CSAPI.SetGOActive(mask, false)
+    end
 end
 
 function Update()
@@ -101,7 +121,7 @@ function Update()
         oldStr = words[math.floor(cur)] or oldStr
         CSAPI.SetText(txtVoice, oldStr)
         --
-        if (cur >= (max-1)) then
+        if (cur >= (max - 1)) then
             voiceTimer = nil
             if (pType == 0) then
                 source:Pause(true)
@@ -121,8 +141,9 @@ function OnClickBG()
     CSAPI.SetGOActive(stop, not isPlay)
     CSAPI.SetGOActive(pro, not isPlay)
     SetPTypeImg()
+    source:Pause(not isPlay)
     if (isPlay) then
-        -- 播放
+        -- 拉了进度条
         if (isPress) then
             voiceTimer = nil
             ASMRMgr:StopBGM()
@@ -134,7 +155,6 @@ function OnClickBG()
         SetPro()
     end
 
-    source:Pause(not isPlay)
     voiceTimer = isPlay and Time.time + 0.1 or nil
     if (l2d) then
         local te0 = l2d.animationState:GetCurrent(0)
@@ -159,7 +179,7 @@ function SetL2d(l2dName)
     ResUtil:CreateSpine(l2dName .. "/" .. l2dName, 0, 0, 0, bg, function(go)
         l2d = ComUtil.GetCom(go, "CSpine")
         l2d.animationState:SetAnimation(1, curData:GetCfg().e_anim, false)
-        FuncUtil:Call(Play,nil,100) 
+        FuncUtil:Call(Play, nil, 100)
     end)
 end
 
@@ -171,7 +191,6 @@ function SetMusic(isOpen)
         SettingMgr:SetAudioScale(s_audio_scale.music, scale)
     end
 end
-
 
 ----------------------------------------------------------------------------------------
 

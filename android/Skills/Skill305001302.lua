@@ -10,8 +10,8 @@ end
 function Skill305001302:DoSkill(caster, target, data)
 	-- 305000301
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[305000301], caster, target, data, 305000301)
+	self:AddBuff(SkillEffect[305000301], caster, self.card, data, 305000301)
 	-- 305000310
 	self.order = self.order + 1
-	self:ChangeSkill(SkillEffect[305000310], caster, target, data, 3,305000401)
+	self:ChangeSkill(SkillEffect[305000310], caster, self.card, data, 3,305000401)
 end

@@ -121,25 +121,7 @@ function SetBuyFunc(_func)
 end
 
 function OnClickSweep()
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-    if openInfo and not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-
-    if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = cfg.id},{onBuyFunc = buyFunc})
-    else
-        local sweepData = SweepMgr:GetData(cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfg = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
-            if cfg then
-                Tips.ShowTips(cfg.sDescription)
-            end
-        end
-    end
+    UIUtil:OpenSweepView(cfg.id,buyFunc)
 end
 
 function IsSweepOpen()

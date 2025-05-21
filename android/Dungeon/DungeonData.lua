@@ -55,6 +55,11 @@ function this:IsStory()
     return self.cfg and self.cfg.sub_type == DungeonFlagType.Story;
 end
 
+--图鉴怪物检测开启
+function this:IsHisPass()
+    return self.data and self.data.isHisPass
+end
+
 --返回行动次数上限
 function this:GetActionNum()
     local num=0;

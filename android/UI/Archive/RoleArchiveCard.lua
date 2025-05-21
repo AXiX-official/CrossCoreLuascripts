@@ -156,7 +156,7 @@ function OnClick()
             -- Tips.ShowTips(18001)
         end
     elseif elseData == ArchiveType.Enemy then
-        if dungeonData and dungeonData:IsPass() then
+        if dungeonData and dungeonData:IsHisPass() then
             CSAPI.OpenView("ArchiveEnemy", cfg)
         else
             LanguageMgr:ShowTips(18000)
@@ -195,7 +195,7 @@ function IsLock()
         if cfg.unlock_type == 1 then
             for i, v in ipairs(cfg.unlock_id) do
                 dungeonData = DungeonMgr:GetDungeonData(v)
-                if dungeonData and dungeonData:IsPass() then
+                if dungeonData and dungeonData:IsHisPass() then
                     isLock = false
                     break
                 end

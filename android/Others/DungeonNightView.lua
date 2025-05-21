@@ -505,7 +505,7 @@ end
 
 function OnLoadCallBack()
     itemInfo.SetFunc("NightButton","OnClickEnter",OnBattleEnter)
-    itemInfo.SetFunc("NightButton","OnClickSweep",OnSweepClick)
+    itemInfo.CallFunc("NightButton","SetBuyFunc",OnPayFunc)
     itemInfo.CallFunc("NightPlotButton","SetStoryCB",OnStoryCB)
     itemInfo.CallFunc("Double","SetTextColor","ffc146")
     if currItem then
@@ -574,29 +574,6 @@ end
 
 function OnPayFunc(count)
     PlayerProto:BuyArachnidCount(count,sectionData:GetID())
-end
-
-function OnSweepClick()
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-    if openInfo and not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-    local isSweepOpen = itemInfo.CallFunc("NightButton","IsSweepOpen")
-    local cfg = currItem:GetCfg()
-    if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = cfg.id},{onBuyFunc = OnBuyFunc})
-    else
-        local sweepData = SweepMgr:GetData(cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfgModUp = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
-            if cfgModUp then
-                Tips.ShowTips(cfgModUp.sDescription)
-            end
-        end
-    end
 end
 
 function OnBuyFunc()

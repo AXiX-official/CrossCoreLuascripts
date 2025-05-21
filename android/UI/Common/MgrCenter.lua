@@ -68,10 +68,12 @@ local mgrNames = {
 	"RogueTMgr",
 	"ExplorationMgr",--勘探
 	"PuzzleMgr",
+	"OperationActivityMgr", --运营活动
 	"QuestionnaireMgr", --问卷
-	"MissionMgr",   --任务  --------------------------------------必须放到最后
+	"ActivityPopUpMgr", --活动界面弹出
+	"MissionMgr",   --任务  --------------------------------------必须放到最后}
+	"SilentDownloadManager"
 }
-
 
 local this = {
 	datas = {}  --管理类字典

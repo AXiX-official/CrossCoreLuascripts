@@ -27,16 +27,4 @@ function Skill907800602:OnAttackOver(caster, target, data)
 	end
 	-- 907800604
 	self:AddProgress(SkillEffect[907800604], caster, self.card, data, 1000)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 907800605
-	self:AddBuff(SkillEffect[907800605], caster, self.card, data, 4806)
 end

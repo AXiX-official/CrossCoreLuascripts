@@ -283,6 +283,12 @@ function this:IsRed()
     if (self:CheckRed2()) then
         return true
     end
+    if (self:CheckRed3()) then
+        return true
+    end
+    if (self:CheckRed4()) then
+        return true
+    end
     return false
 end
 
@@ -334,6 +340,46 @@ function this:CheckRed2()
         return true
     end
     return false
+end
+
+-- 周期奖励刷新红点(首次不弹)
+function this:CheckRed3()
+    if(not self.proto)then 
+        return false
+    end 
+    local time = self:GetRogueTTime()
+    local win1 = self.proto.win1 or 0
+    if (win1 == 0) then
+        -- 首次
+        FightProto:RogueTSetWindow(1, time)
+    else
+        if (time ~= win1) then
+            return true
+        end
+    end
+    return false
+end
+
+-- 等级扩充红点
+function this:CheckRed4()
+    if(not self.proto)then 
+        return false
+    end 
+    local win2 = self.proto.win2 or 0
+    local cur = g_RogueScoreLVIdx or 0
+    if (win2 ~= cur) then
+        return true
+    end
+    return false
+end
+
+function this:RogueTSetWindowRet(proto)
+    if (proto.ty == 1) then
+        self.proto.win1 = proto.value
+    else
+        self.proto.win2 = proto.value
+    end
+    self:CheckReds()
 end
 
 function this:GetTeamIndex(hard)

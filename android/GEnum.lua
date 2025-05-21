@@ -793,12 +793,19 @@ ActivityListType = {
     AccuCharge2 = 1022, --累计充值2
     AccuCharge3 = 1023, --累计充值3
     Collaboration=1012,--回归绑定
+    SkinRebate = 3000, --皮肤返利
+    SignInDuanWu = 1029, --端午签到
 }
 
 ALType = {}
 ALType.Pay = 1 --付费
 ALType.SignIn = 2 --签到
 
+SkinRebateType = {}
+SkinRebateType.Normal = 1 --常规
+SkinRebateType.Lock = 2 --上锁
+SkinRebateType.Red = 3 --红点
+SkinRebateType.LimitTime = 4 --限时
 
 -- 剧情站位
 PlotAlign = {
@@ -1899,13 +1906,17 @@ VoucherType={
     Pictrue=3,--插画折扣券
 }
 
---运营活动活动类型(有前置开启条件)
+--运营活动活动类型
 eOperateType = {}
+--(有前置开启条件)
 eOperateType.RechargeSign = 1015 --充值签到
+--(无前置开启条件)
 eOperateType.PayNotice7 = 1018 --充值弹窗7
 eOperateType.PayNotice8 = 1019 --充值弹窗8
 eOperateType.PayNotice1 = 1020 --充值弹窗1
-
+--(特殊处理)对应多个活动，所以不对应活动id
+eOperateType.SkinRebate = 13000 --皮肤返利
+eOperateType.DragonBoatFestival = 1029 --端午签到
 
 eActiveListId = {}
 eActiveListId.FreeCreateCard = 1021
@@ -2002,3 +2013,16 @@ eItemSectionMultiType.time = 2 --使用之后延长有效时间
 ePuzzleType = {}
 ePuzzleType.Type1     = 1   -- 玩法1
 ePuzzleType.Type2     = 2   -- 玩法2
+-----------------------------------------------------------------------------------------------------------------
+--特殊引导类型
+SpecialGuideType = {}
+SpecialGuideType.Start = 1 --开始
+SpecialGuideType.Stop = 2 --暂停
+SpecialGuideType.StopAll = 3 --关闭所有
+SpecialGuideType.FinishOrRefresh = 4 --结束或者刷新
+SpecialGuideType.Finish = 5 --结束
+-----------------------------------------------------------------------------------------------------------------
+-- 端午活动加油类型
+eDragonBoatFestivalType = {}
+eDragonBoatFestivalType.Sweet = 1   -- 甜
+eDragonBoatFestivalType.Salty = 2   -- 咸

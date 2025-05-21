@@ -38,7 +38,7 @@ local anim_AdaptiveScreen
 local barTime = nil
 local barValue = 0
 local barLen = 0.5
-
+local isDestroy = false
 function Awake()
     fill_lv = ComUtil.GetCom(imgLv, "Image")
     fill_power = ComUtil.GetCom(fillPower, "Image")
@@ -54,6 +54,7 @@ function OnDestroy()
         menu.Anim_center(true, not isClickMask)
     end
     eventMgr:ClearListener()
+    isDestroy = true
 end
 
 function Update()
@@ -109,6 +110,9 @@ function InitOnClick()
 end
 
 function RefreshPanel()
+    if(isDestroy)then 
+        return
+    end 
     -- head
     UIUtil:AddHeadFrame(headParent, 1)
     -- player

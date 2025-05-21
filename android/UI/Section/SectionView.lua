@@ -209,10 +209,10 @@ function OnEnterSound()
 end
 
 function OnViewClosed(viewKey)
-    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" then
+    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" and viewKey ~= "Loading" then
         viewKeys[viewKey] = nil
         if CheckIsTop() then
-            SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
+            SpecialGuideMgr:ApplyShowView(spParent,"Section",SpecialGuideType.Start,lastGuideInfo)
             isStopSP = false
         end
     end
@@ -220,10 +220,10 @@ function OnViewClosed(viewKey)
 end
 
 function OnViewOpened(viewKey)
-    if viewKey ~= "Section" and viewKey ~= "SpecialGuide"  then
+    if viewKey ~= "Section" and viewKey ~= "SpecialGuide" and viewKey ~= "Loading" then
         viewKeys[viewKey] = 1
         if not isStopSP then
-            SpecialGuideMgr:StopAll()   
+            SpecialGuideMgr:ApplyShowView(spParent,"Section",SpecialGuideType.StopAll)
             isStopSP = true 
         end
     end
@@ -302,7 +302,7 @@ function Update()
         isAnim = false
     end
 
-    CSAPI.SetGOActive(UIMaskGo, isAnim)
+    CSAPI.SetGOActive(clickMask, isAnim)
 
     if currType == 1 and mainLineDatas and #mainLineDatas > 0 then      
         local contentX = CSAPI.GetAnchor(content1) 
@@ -2240,25 +2240,23 @@ end
 ---------------------------------------------SpecialGuide------------------------------------------
 function CheckSpecGuide()
     if currType and currType == 1 then
-        SpecialGuideMgr:TryCallFunc("Section","Finish",lastGuideInfo)
-    else
-        SpecialGuideMgr:TryCallFunc("Section","Stop",lastGuideInfo)
+        SpecialGuideMgr:ApplyShowView(spParent,"Section",SpecialGuideType.Finish,lastGuideInfo)
+    elseif lastGuideInfo then
+        SpecialGuideMgr:ApplyShowView(spParent,"Section",SpecialGuideType.Stop,lastGuideInfo)
     end
     lastGuideInfo = {index = currIndex,type = currType}
-    SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
+    SpecialGuideMgr:ApplyShowView(spParent,"Section",SpecialGuideType.Start,lastGuideInfo)
 end
 
 function ContinueSpecGuide()
     lastGuideInfo = {index = currIndex,type = currType}
-    SpecialGuideMgr:TryCallFunc("Section","Start",lastGuideInfo)
+    SpecialGuideMgr:ApplyShowView(spParent,"Section",SpecialGuideType.Start,lastGuideInfo)
 end
 
-function UpdateCheckSpecGuide()
-    SpecialGuideMgr:Update()
-    
+function UpdateCheckSpecGuide()    
     if currType and currType == 1 and currIndex == 2 then
-        if(CS.UnityEngine.Input.GetMouseButtonDown(0)) and openViewKey == nil then
-            SpecialGuideMgr:TryCallFunc("Section","TryFinish",{index = 2,type = 1})
+        if(CS.UnityEngine.Input.GetMouseButtonDown(0)) and not isStopSP then
+            SpecialGuideMgr:ApplyShowView(spParent,"Section",SpecialGuideType.FinishOrRefresh,{index = 2,type = 1})
         end
     end
 end
@@ -2279,7 +2277,6 @@ function OnClickVirtualkeysClose()
 end
 
 function OnDestroy()
-    SpecialGuideMgr:CloseView()
     eventMgr:ClearListener();
     ReleaseCSComRefs()
     if not UIMask then

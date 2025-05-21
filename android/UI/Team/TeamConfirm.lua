@@ -168,7 +168,7 @@ function RefreshItems()
             state=TeamConfirmItemState.Disable;
         end
         local npc=k==1 and forceNPC or nil
-        table.insert(list,{id=k,num=k,options=optionsData,forceNPC=npc,NPCList=assistNPCList,showClean=teamMax>1,currState=v.GetState(),state=state,ShowDownList=ShowDownList,openSetting=openSetting,cond=cond,dungeonCfg=dungeonCfg,isDirll=data.isDirll});
+        table.insert(list,{id=k,num=k,options=optionsData,forceNPC=npc,NPCList=assistNPCList,showClean=teamMax>1,currState=v.GetState(),state=state,ShowDownList=ShowDownList,openSetting=openSetting,cond=cond,dungeonCfg=dungeonCfg,isDirll=data.isDirll,dungeonId = data.dungeonId});
     end
     ItemUtil.AddItems("TeamConfirm/TeamListItem", teamItems, list, itemNode, nil, 1, nil)
 end
@@ -200,7 +200,7 @@ function InitItem()
             state=TeamConfirmItemState.Disable;
         end
         local npc=i==1 and forceNPC or nil
-        table.insert(list,{id=i,num=i,options=optionsData,showClean=teamMax>1,forceNPC=npc,NPCList=assistNPCList,state=state,ShowDownList=ShowDownList,openSetting=openSetting,cond=cond,dungeonCfg=dungeonCfg,isDirll=data.isDirll});
+        table.insert(list,{id=i,num=i,options=optionsData,showClean=teamMax>1,forceNPC=npc,NPCList=assistNPCList,state=state,ShowDownList=ShowDownList,openSetting=openSetting,cond=cond,dungeonCfg=dungeonCfg,isDirll=data.isDirll,dungeonId = data.dungeonId});
     end
     ItemUtil.AddItems("TeamConfirm/TeamListItem", teamItems, list, itemNode, nil, 1, nil)
 end

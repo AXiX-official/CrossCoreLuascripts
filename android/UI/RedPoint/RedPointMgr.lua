@@ -53,8 +53,10 @@ RedPointType.SectionExercise = "SectionExercise" --章节演习
 RedPointType.SectionActivity = "SectionActivity" --章节活动
 RedPointType.CourseView = "CourseView" --教程
 RedPointType.Questionnaire = "Questionnaire" --调查问卷
+RedPointType.SignInDuanWu = "SignInDuanWu" --端午签到
 RedPointType.Puzzle1="Puzzle1"--拼图红点1
 RedPointType.Puzzle2="Puzzle2"--拼图红点2
+RedPointType.PackageDownload = "PackageDownload"; -- 分包下载
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机

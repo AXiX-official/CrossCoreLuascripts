@@ -130,4 +130,12 @@ function this:GetEquipped()
     return false;
 end
 
+
+function this:GetType()
+	return self:GetCfg() and self:GetCfg().type
+end
+
+function this:GetCfgID()
+	return self:GetCfg() and self:GetCfg().id
+end
 return this;

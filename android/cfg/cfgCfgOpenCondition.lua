@@ -42,6 +42,8 @@ local conf = {
 {'CollaborationMain',	'CollaborationMain',	'协同作战',	'',	'',	'2007',	'',	''},
 {'RogueTView',	'RogueTView',	'能力测验',	'',	'',	'2120',	'',	''},
 {'PuzzleActivity',	'PuzzleActivity',	'拾光剪影',	'',	'',	'2120',	'',	''},
+{'SignInDuanWu',	'SignInDuanWu',	'龙舟争霸赛',	'',	'',	'2007',	'',	''},
+{'SkinRebate',	'SkinRebate',	'衣惠有礼',	'',	'',	'2002',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

@@ -1,14 +1,21 @@
 -- RewardInfo2 的某 index
 
 local needToCheckMove = false
+local timer = nil
 function Awake()
     luaTextMove = LuaTextMove.New()
     luaTextMove:Init(txtName)
 end
 function Update()
-    if (needToCheckMove) then
+    if (needToCheckMove and Time.time > timer) then
         luaTextMove:CheckMove(txtName)
         needToCheckMove = false
+    end
+end
+
+function OnEnable()
+    if (timer and luaTextMove) then
+        luaTextMove:CheckMove(txtName)
     end
 end
 
@@ -26,6 +33,7 @@ function Refresh(cfg)
     -- name
     needToCheckMove = false
     CSAPI.SetText(txtName, cardCfg.name)
+    timer = Time.time + 0.1
     needToCheckMove = true
     -- imgStar
     ResUtil.CardBorder:Load(imgStar, "img_101_0" .. cardCfg.quality)

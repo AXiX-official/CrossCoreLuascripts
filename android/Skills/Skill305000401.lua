@@ -8,27 +8,23 @@ function Skill305000401:Init(skillID, card)
 end
 -- 执行技能
 function Skill305000401:DoSkill(caster, target, data)
-	-- 11003
+	-- 11001
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11003], caster, target, data, 0.333,3)
+	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
 end
 -- 攻击结束
 function Skill305000401:OnAttackOver(caster, target, data)
-	-- 305000401
-	self:AddBuff(SkillEffect[305000401], caster, target, data, 305000401)
-	-- 305000610
-	self:ChangeSkill(SkillEffect[305000610], caster, target, data, 3,305000301)
-	-- 305000510
-	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
-	-- 305000320
-	local count320 = SkillApi:BuffCount(self, caster, target,3,3,305000321)
-	-- 305000322
-	if SkillJudger:Greater(self, caster, target, true,count320,5) then
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
 	else
 		return
 	end
-	-- 305000410
-	self:AddBuffCount(SkillEffect[305000410], caster, self.card, data, 305000410,1,5)
+	-- 305000401
+	self:AddTempAttr(SkillEffect[305000401], caster, self.card, data, "damagePhysics",3)
+	-- 305000610
+	self:ChangeSkill(SkillEffect[305000610], caster, self.card, data, 3,305000301)
+	-- 305000510
+	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
 	-- 305000510
 	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
 end

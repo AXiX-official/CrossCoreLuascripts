@@ -15,7 +15,7 @@ local isClick = false
 local Input = CS.UnityEngine.Input
 local GetMouseButton = CS.UnityEngine.Input.GetMouseButton
 local deviceType = CSAPI.GetDeviceType()
-
+local isDestory = false
 function Awake()
     UIUtil:AddTop2("ASMRView", gameObject, function()
         view:Close()
@@ -44,6 +44,7 @@ function Awake()
 end
 
 function OnDestroy()
+    isDestory = true
     eventMgr:ClearListener()
     if (oldCurMusicID) then
         ASMRMgr:RemoveCueSheet(oldCurMusicID, 1)
@@ -69,9 +70,9 @@ function OnClickItem(index)
         return
     end
     --
-    if(isClick)then 
+    if (isClick) then
         return
-    end 
+    end
     isClick = true
     --
     if (oldIndex and oldIndex ~= index) then
@@ -130,7 +131,7 @@ function SelectOrNot()
 end
 
 function Update()
-    if (timer ~= nil and Time.time >= timer) then
+    if (source ~= nil and timer ~= nil and Time.time >= timer) then
         timer = Time.time + 1
         local time = source:GetCurTime()
         if (time >= cur) then
@@ -199,13 +200,29 @@ function Play()
     end
     timer = nil
     ASMRMgr:StopBGM()
-    source = ASMRMgr:PlayBGM(curData:GetCfg().id, 1)
-    if (source:GetMaxTime() > 0) then
-        cur = 0
-        timer = Time.time
-        CSAPI.SetGOActive(effect_sound, true)
-        anim_sound:Play("Sound_entry")
+    ------------------------------
+    if tonumber(CS.CSAPI.APKVersion()) > 6 then
+        source = ASMRMgr:PlayBGM_CB(curData:GetCfg().id, 1, 0, function()
+            if (isDestory) then
+                return
+            end
+            if (source:GetMaxTime() > 0) then
+                cur = 0
+                timer = Time.time
+                CSAPI.SetGOActive(effect_sound, true)
+                anim_sound:Play("Sound_entry")
+            end
+        end)
+    else
+        source = ASMRMgr:PlayBGM(curData:GetCfg().id, 1)
+        if (source:GetMaxTime() > 0) then
+            cur = 0
+            timer = Time.time
+            CSAPI.SetGOActive(effect_sound, true)
+            anim_sound:Play("Sound_entry")
+        end
     end
+    ----------------------------
     if (oldCurMusicID) then
         ASMRMgr:RemoveCueSheet(oldCurMusicID, 1)
     end
@@ -245,6 +262,7 @@ end
 function OnClickR2()
     if (isBuy) then
         if (isDownload) then
+            RemoveCur()
             CSAPI.OpenView("ASMRShow", curData:GetCfg().id)
         else
             CSAPI.SetGOActive(mask, true)
@@ -364,7 +382,7 @@ function GetCurPos()
 end
 
 function OnViewOpened(viewKey)
-    source:Pause(true)
+    RemoveCur()
     if (viewKey == "ShopView") then
         SettingMgr:SetAudioScale(s_audio_scale.music, musicScale)
     end
@@ -372,8 +390,17 @@ end
 
 -- 其它界面关闭
 function OnViewClosed(viewKey)
-    source:Pause(false)
     if (viewKey == "ShopView") then
         SettingMgr:SetAudioScale(s_audio_scale.music, curMusicScale)
+    end
+end
+
+-- 移除bgm只有一个接口，那么打开界面时都移除当前试听
+function RemoveCur()
+    if (source) then
+        timer = nil
+        source = nil
+        ASMRMgr:RemoveCueSheet(oldCurMusicID, 1)
+        oldCurMusicID = nil
     end
 end

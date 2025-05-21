@@ -85,8 +85,7 @@ function Refresh()
     if commodity then
         if CSAPI.IsADV() then
             CSAPI.SetText(txt_name,commodity:GetName());
-            local displayCurrency=commodity["data"]["displayCurrency"];
-            if displayCurrency==nil then displayCurrency="" end
+            local displayCurrency=commodity:GetCurrencySymbols()
             CSAPI.SetText(txt_moneyType,displayCurrency);
             local realPrice=commodity["data"]["displayPrice"];
             if realPrice==nil then
@@ -140,8 +139,7 @@ function RefreshItems()
         if currType==PayType.ZiLong then
             if commodity then
                 CSAPI.SetText(txt_name,commodity:GetName());
-                local displayCurrency=commodity["data"]["displayCurrency"];
-                if displayCurrency==nil then displayCurrency="" end
+                local displayCurrency=commodity:GetCurrencySymbols();
                 CSAPI.SetText(txt_moneyType,displayCurrency);
                 local realPrice=commodity["data"]["displayPrice"];
                 if realPrice==nil then

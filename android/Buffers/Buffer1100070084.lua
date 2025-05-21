@@ -19,5 +19,5 @@ function Buffer1100070084:OnDeath(caster, target)
 		return
 	end
 	-- 1100070084
-	self:PassiveRevive(BufferEffect[1100070084], self.caster, self.card, nil, 8,0.5,{progress=1000})
+	self:PassiveRevive(BufferEffect[1100070084], self.caster, self.card, nil, 8,0.3,{progress=1000})
 end

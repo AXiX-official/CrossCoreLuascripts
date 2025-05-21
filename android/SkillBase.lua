@@ -1577,7 +1577,20 @@ function SkillBase:OnHelp(effectID, caster, helper, target, pos, data)
 	if mgr.bInHelp then return end -- 禁止协战中触发协战
 
 	mgr.bInHelp = true
-	local ret = oSkill:OnCallSkill(effectID, helper, {target} --[[realTagets]], pos, data)
+	-- 群攻技能协战
+	local tgtData = {target}
+	if not oSkill.isSingle then
+		local tgtIds = helper:GetSkillRange(oSkill.id, target)
+		local tmpData = {}
+		for i,oid in ipairs(tgtIds) do
+			local card = mgr:GetCardByOID(oid)
+			table.insert(tmpData, card)
+		end
+		if not table.empty(tmpData) then
+			tgtData = tmpData
+		end
+	end
+	local ret = oSkill:OnCallSkill(effectID, helper, tgtData --[[realTagets]], pos, data)
 	mgr.bInHelp = nil
 
 	return ret

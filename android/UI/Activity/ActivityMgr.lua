@@ -305,19 +305,21 @@ function this:GetActivityTime(group)
 end
 
 --获取整个活动表的最小刷新时间
-function this:GetRefreshTime()
+function this:GetRefreshTime(type)
     local timer = nil
     if self.ALDatas then
         local curTime = TimeUtil:GetTime()
         for k, v in pairs(self.ALDatas) do
-            if v:GetStartTime() and v:GetStartTime() > curTime then
-                if (timer == nil or timer > v:GetStartTime()) then
-                    timer = v:GetStartTime()
+            if not type or v:GetType() == type then
+                if v:GetStartTime() and v:GetStartTime() > curTime then
+                    if (timer == nil or timer > v:GetStartTime()) then
+                        timer = v:GetStartTime()
+                    end
                 end
-            end
-            if v:GetEndTime() and v:GetEndTime() > curTime then
-                if (timer == nil or timer > v:GetEndTime()) then
-                    timer = v:GetEndTime()
+                if v:GetEndTime() and v:GetEndTime() > curTime then
+                    if (timer == nil or timer > v:GetEndTime()) then
+                        timer = v:GetEndTime()
+                    end
                 end
             end
         end
@@ -353,6 +355,13 @@ end
 function this:CheckIsOpen(id)
     if self.ALDatas and self.ALDatas[id] then
         return self.ALDatas[id]:IsOpen()
+    end
+    return false
+end
+
+function this:CheckIsPop(id)
+    if self.ALDatas and self.ALDatas[id] then
+        return self.ALDatas[id]:GetPopIndex() ~= nil
     end
     return false
 end
@@ -520,6 +529,21 @@ function this:CheckRed(id)
                 return true
             end 
             return false  
+        elseif data:GetType() == ActivityListType.SkinRebate then
+            if data:GetInfo() and data:GetInfo().skinId then
+                local comms = ShopMgr:GetCommodityBySkinID(data:GetInfo().skinId)
+                local isGet,isFinish =false,false
+                if #comms > 0 then
+                    for i, v in ipairs(comms) do
+                        isGet = OperationActivityMgr:IsSkinRebateGet(data:GetInfo().skinId,v:GetID())
+                        isFinish = OperationActivityMgr:IsSkinRebateFinish(data:GetInfo().skinId,v:GetID())
+                        if isFinish and not isGet then
+                            return true
+                        end
+                    end
+                end
+            end
+            return false
         else
             local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. id) == 0
             return isRed
@@ -540,111 +564,7 @@ function this:IsSignIn(id)
     return false
 end
 
-function this:SetOperateActive(id,info)
-    local data= self:GetALData(tonumber(id))
-    if data and data:GetType() ==ActivityListType.SignInGift and info.payRate then
-        self.operateActive[tonumber(id)] = self.operateActive[tonumber(id)] or {}
-        self.operateActive[tonumber(id)].sTime = info.openTime or 0
-        self.operateActive[tonumber(id)].eTime = info.closeTime or 0
-    end
-end
-
-function this:GetOperateActive(id)
-    local info = self.operateActive[tonumber(id)]
-    if info and info.sTime <= TimeUtil:GetTime() and info.eTime > TimeUtil:GetTime() then
-        return info
-    end
-    return nil
-end
-
 ----------------------------------------界面弹出---------------------------------------
-function this:CheckPopView()
-    if SignInMgr:CheckAll() then
-        CSAPI.OpenView("ActivityListView")
-        return true
-    end
-    return false
-end
-
--- 获取活动列表数据
-function this:TryGetData(_id)
-    self.listDatas = self.listDatas or {}
-    if (self.listDatas[_id] == nil) then
-        local _key = nil
-        if self:IsSignIn(_id) then
-            _key = SignInMgr:GetDataKeyById(_id)
-        end
-        self.listDatas[_id] = {
-            key = _key
-        }
-    end
-    return self.listDatas[_id]
-end
-
-function this:SetListData(_id, _data)
-    self.listDatas = self.listDatas or {}
-    self.listDatas[_id] = _data
-end
-
--- 添加下一个将要打开的界面
-function this:AddNextOpen(_id, _data)
-    if not self:PanelCanJump(_id) then
-        return false
-    end
-    self.popInfos[_id] = self.popInfos[_id] or {}
-    self.popInfos[_id].recordTime = TimeUtil:GetTime()
-    self:AddNextOpen2(_id, _data)
-    return true
-end
-
--- 不记录界面信息的添加
-function this:AddNextOpen2(_id, _data)
-    if (tonumber(_id) > 0) then
-        if (_data) then
-            self:SetListData(_id, _data)
-        end
-        table.insert(self.nextViewIds, _id)
-    end
-end
-
-function this:ClearPopInfos()
-    self.nextViewIds = {}
-end
-
--- 获取弹出id
-function this:TryGetNextId(_group)
-    if self.nextViewIds and #self.nextViewIds > 0 then
-        for i, id in ipairs(self.nextViewIds) do
-            local _data = self:GetALData(id)
-            if _data and _data:GetGroup() == tonumber(_group) then
-                return table.remove(self.nextViewIds, i)
-            end
-        end
-    end
-    return nil
-end
-
--- 获取界面可否弹出
-function this:PanelCanJump(_id)
-    if not self.popInfos[_id] or not self.popInfos[_id].recordTime or self.popInfos[_id].recordTime <= 0 then
-        return true
-    end
-    local tab1 = TimeUtil:GetTimeHMS(self.popInfos[_id].recordTime)
-    local tab2 = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
-    if tab2.day - tab1.day > 1 then --超过一天
-        return true
-    elseif tab2.day - tab1.day > 0 then --在前后一天
-        if tab1.hour < g_ActivityDiffDayTime then --前一次记录在每日刷新前
-            return true
-        elseif tab2.hour >= g_ActivityDiffDayTime then --当前在每日刷新后
-            return true
-        end
-    elseif tab1.hour < g_ActivityDiffDayTime and tab2.hour >= g_ActivityDiffDayTime then --在同一天但在每日刷新前后
-        return true
-    end
-    return false
-end
-
 --检测所有活动弹窗
 function this:CheckWindowShow()
     for k, v in pairs(eAEShowType) do
@@ -721,6 +641,42 @@ function this:GetWindowInfo(key)
     end
     local infos = FileUtil.LoadByPath("Menu_Window_Show") or {}
     return infos[key] or {}
+end
+----------------------------------------运营相关---------------------------------------
+function this:SetOperateActive(id,info)
+    local data= self:GetALData(tonumber(id))
+    if data and data:GetType() ==ActivityListType.SignInGift and info.payRate then
+        self.operateActive[tonumber(id)] = self.operateActive[tonumber(id)] or {}
+        self.operateActive[tonumber(id)].sTime = info.openTime or 0
+        self.operateActive[tonumber(id)].eTime = info.closeTime or 0
+    end
+end
+
+function this:GetOperateActive(id)
+    local info = self.operateActive[tonumber(id)]
+    if info and info.sTime <= TimeUtil:GetTime() and info.eTime > TimeUtil:GetTime() then
+        return info
+    end
+    return nil
+end
+
+--根据类型来获取开启状态和id
+function this:IsOpenByType(type)
+    local isOpen = false
+    local id = nil
+    if self.ALDatas then
+        local sTime = nil
+        for k, v in pairs(self.ALDatas) do
+            if v:GetType() == type and v:IsOpen() then
+                if not sTime or v:GetStartTime() < sTime then --获取最先开启
+                    id = v:GetID()
+                    isOpen = true
+                    sTime = v:GetStartTime()
+                end
+            end
+        end
+    end
+    return isOpen,id
 end
 
 return this

@@ -76,7 +76,7 @@ function OnEnable()
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened);
     eventMgr:AddListener(EventType.Player_HotChange, OnHotChange);
     eventMgr:AddListener(EventType.Sweep_Close_Panel, OnSweepPanelClose);
-    eventMgr:AddListener(EventType.Bag_Update, RefreshSweepPanel)
+    eventMgr:AddListener(EventType.Bag_Update, OnItemChange)
     eventMgr:AddListener(EventType.Dungeon_Double_Update, OnDailyDataUpdate)
 
 
@@ -95,6 +95,12 @@ function OnDailyDataUpdate()
 end
 
 function OnHotChange()
+    if not isStarLoading then
+        OnSweepPanelShow()
+    end
+end
+
+function OnItemChange()
     if not isStarLoading then
         OnSweepPanelShow()
     end
@@ -505,12 +511,6 @@ function OnClickSweep()
         return
     end
 
-    if not isHotEnough then
-        CSAPI.OpenView("HotPanel")
-        -- LanguageMgr:ShowTips(8013)
-        return
-    end
-
     if isMat and not isMatEnough then
         if onBuyFunc then
             onBuyFunc()
@@ -523,6 +523,13 @@ function OnClickSweep()
         LanguageMgr:ShowTips(8014, goodsData and goodsData:GetName() or "")
         return
     end
+
+    if not isHotEnough then
+        CSAPI.OpenView("HotPanel")
+        -- LanguageMgr:ShowTips(8013)
+        return
+    end
+
     if hasMulti and multiNum > 0 and not isLimitDouble then
         local dialogData = {}
         dialogData.content = string.format(LanguageMgr:GetByID(15072), cfgDungeon.name, multiNum)

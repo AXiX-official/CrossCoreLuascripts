@@ -2,6 +2,7 @@
 ShopProto={
     buyCallBack=nil,
     exchangeCallBack=nil;
+    SkinRebateRewardCallBack = nil,
 };
 --返回购买记录信息
 function ShopProto:GetShopInfos()
@@ -20,7 +21,7 @@ end
 function ShopProto:Buy(cfgId,time,sum,useCost,voucherList,useJCost,callBack)
     self.buyCallBack=callBack;
     useCost=useCost==nil and "price_1" or useCost;
-    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost,vouchers=voucherList,useJCost=useJCost}}
+    local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost,vouchers=voucherList,useJCost=useJCost,grid1 = grid1,grid2 = grid2}}
 	NetMgr.net:Send(proto);
     UIUtil:AddNetWeakHandle();
 end
@@ -129,4 +130,40 @@ function ShopProto:GetShopCommodityRet(proto)
     if  proto and proto.is_finish then
         EventMgr.Dispatch(EventType.Shop_RecordInfos_Refresh);
     end
+end
+
+--领取皮肤返利奖励
+function ShopProto:GetSkinRebateReward(shopId,callBack)
+    self.SkinRebateRewardCallBack = callBack
+    local proto={"ShopProto:GetSkinRebateReward",{id=shopId}};
+    NetMgr.net:Send(proto);
+end
+
+function ShopProto:GetSkinRebateRewardRet(proto)
+    if self.SkinRebateRewardCallBack then
+        self.SkinRebateRewardCallBack(proto)
+        self.SkinRebateRewardCallBack = nil
+    end
+end
+
+--获取皮肤返利信息
+function ShopProto:GetSkinRebateRecord(skinId)
+    local proto={"ShopProto:GetSkinRebateRecord",{skinId=skinId}};
+    NetMgr.net:Send(proto);
+end
+
+--获取皮肤返利领取记录返回
+function ShopProto:GetSkinRebateRecordRet(proto)
+    OperationActivityMgr:SetSkinRebateGetRecords(proto)
+end
+
+--获取皮肤返利可领取记录
+function ShopProto:GetSkinRebateCanTakeReward(skinId)
+    local proto={"ShopProto:GetSkinRebateCanTakeReward",{skinId=skinId}};
+    NetMgr.net:Send(proto);
+end
+
+--获取皮肤返利可领取记录返回
+function ShopProto:GetSkinRebateCanTakeRewardRet(proto)
+    OperationActivityMgr:SetSkinRebateFinishRecords(proto)
 end

@@ -174,7 +174,9 @@ function this.LoadMulImg(_imgGo, _modelId, _posType, _callBack)
         return
     end
     local pos, scale, img, l2dName = this.GetMulImgPosScale(_modelId, _posType)
-    ResUtil.ImgCharacter:Load(_imgGo, img, function(go)
+    local rate = 1--UIUtil:GetSceneRate({2240, 1080})
+    scale = scale * rate
+    ResUtil.MultiImg:Load(_imgGo, img, function(go)
         CSAPI.SetAnchor(_imgGo, pos.x, pos.y, pos.z)
         CSAPI.SetScale(_imgGo, scale, scale, 1)
         if (_callBack) then

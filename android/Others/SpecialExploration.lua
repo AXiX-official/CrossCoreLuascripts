@@ -289,10 +289,10 @@ end
 function RefreshDownTime()
     local t=TimeUtil:GetTimeStampBySplit(exData:GetEndTime());
     local count=TimeUtil:GetDiffHMS(t,TimeUtil.GetTime());
-    if count.day>0 or count.hour>0 or count.minute>0 or count.second>60 then
+    if count.day>0 or count.hour>0 or count.minute>0 or count.second>0 then
         CSAPI.SetText(txtTime,string.format(LanguageMgr:GetByID(34042),count.day,count.hour,count.minute));
-    else
-        CSAPI.SetText(txtTime,LanguageMgr:GetByID(1062,count.second));
+    -- else
+    --     CSAPI.SetText(txtTime,LanguageMgr:GetByID(1062,count.second));
     end
     if endTime<=0 then--回到主界面并提示
         HandlerOver();

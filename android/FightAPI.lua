@@ -460,6 +460,8 @@ end
 -- 是否大招技能(被动用)
 function SkillJudger:IsUltimate(oSkill, caster, target, res)
 
+	LogDebugEx("是否大招", caster.name, caster.currentSkill and caster.currentSkill.upgrade_type or "nil")
+
 	if caster.currentSkill and 
 		(caster.currentSkill.upgrade_type == CardSkillUpType.C or 
 			caster.currentSkill.upgrade_type == CardSkillUpType.OverLoad) then
@@ -1040,6 +1042,19 @@ function SkillApi:GetMaxCureHp(oSkill, caster, target, filter)
     end
     return card:Get("maxhp")
 end
+
+-- 获取队伍当前总血量
+function SkillApi:GetTeamHP(oSkill, caster, target,teamID)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	return team:GetHp()
+end
+
+-- 获取队伍当前总血量上限
+function SkillApi:GetTeamMaxHP(oSkill, caster, target,teamID)
+	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
+	return team:GetMaxHp()
+end
+
 ----------------------------------------------
 -- 技能基类
 FightAPI = oo.class()
@@ -1428,6 +1443,19 @@ function FightAPI:AlterBufferByID(effect, caster, target, data, buffID, num)
 	local oBuffMgr = target.bufferMgr
 	oBuffMgr:AlterBufferByID(caster, target, buffID, num, effect)
 end
+
+-- 增加或减少随机一个buff的回合
+function FightAPI:AlterRandBufferByGroup(effect, caster, target, data, buffID, num)
+	local oBuffMgr = target.bufferMgr
+	oBuffMgr:AlterRandBufferByGroup(caster, target, buffID, num, effect)
+end
+
+-- 增加或减少随机一个buff的回合
+function FightAPI:AlterRandBufferByID(effect, caster, target, data, buffID, num)
+	local oBuffMgr = target.bufferMgr
+	oBuffMgr:AlterRandBufferByID(caster, target, buffID, num, effect)
+end
+
 
 -- 拉条
 function FightAPI:AddProgress(effect, caster, target, data, progress, max)
@@ -1890,6 +1918,7 @@ function FightAPI:DelValue(effect, caster, target, data, key, isNotify)
 	LogDebugEx("--删除标记", target.name, key)
 	target:DelValue(key)
 	-- if isNotify then
+		if not caster then caster = target end -- Buffer336805:OnRemoveBuff 删除时报错
 		self.log:Add({api="DelValue", casterID = caster.oid, targetID = target.oid, effectID = effect.apiSetting, key=key})
 	-- end
 end

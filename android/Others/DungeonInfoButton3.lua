@@ -8,6 +8,10 @@ local resetTime = 0
 local timer = 0
 local isFight = false
 
+local time = 0
+local hotTimer = 0
+local hotTime = 0
+
 function Refresh(tab)
     cfg = tab.cfg
     data = tab.data
@@ -35,6 +39,14 @@ function Update()
             PlayerProto:GetStarPalaceInfo()
         end
     end
+
+    if time > 0 and hotTimer < Time.time then
+        hotTimer = Time.time + 1
+        time = hotTime - TimeUtil:GetTime()
+        if time <= 0 then
+            ShowHotChange(false)
+        end
+    end
 end
 
 function ShowCost()
@@ -50,10 +62,22 @@ function ShowCost()
             end
         else
             ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .. "_3")
-            local costNum = DungeonUtil.GetHot(cfg)
+            local costNum,isHotChange = DungeonUtil.GetHot(cfg)
+            ShowHotChange(isHotChange)
             costNum = StringUtil:SetByColor(costNum .. "", math.abs(costNum) <= PlayerClient:Hot() and "191919" or "CD333E")
             CSAPI.SetText(cost," " .. costNum)
             LanguageMgr:SetText(txt_cost, 15004)
+        end
+    end
+end
+
+function ShowHotChange(b)
+    UIUtil:SetHotPoint(btnEnter,b,170,51)
+    if b then
+        _,hotTime = DungeonUtil.GetHotChangeTime()
+        if hotTime > 0  then
+            time = hotTime - TimeUtil:GetTime()
+            hotTimer = 0
         end
     end
 end
@@ -118,8 +142,12 @@ function OnClickEnter()
     
 end
 
-function OnClickSweep()
+function SetBuyFunc(_func)
+    buyFunc = _func
+end
 
+function OnClickSweep()
+    UIUtil:OpenSweepView(cfg.id,buyFunc)
 end
 
 function OnClickDirll()

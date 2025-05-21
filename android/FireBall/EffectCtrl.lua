@@ -33,7 +33,13 @@ function Init(fireBall)
                             else
                                 LogError("特效对象" .. gameObject.name .. "设置路径失败。找不到Debug目标，path_index设置为200为debug目标");
                             end
-                        else
+                        elseif(cfgFb.path_index == 300)then--敌方场地中点
+                            local actorCharacter = fightAction:GetActorCharacter();
+                            local originTeamId = actorCharacter.GetTeam();
+                            local teamId = TeamUtil:GetOpponent(originTeamId);
+                            local x,y,z = FightGroundMgr:GetCenter(teamId);
+                            SetTarget(x,y,z,true);
+                        else                            
                             local targets = fightAction:GetDamageTargetByIndex(cfgFb.path_index);
                             if(targets)then
                                 local x,y,z = targets[1].GetPos();

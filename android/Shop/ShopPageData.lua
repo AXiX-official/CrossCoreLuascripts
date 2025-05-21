@@ -174,7 +174,7 @@ function this:GetCommodityInfos(isLimit,topTabID)
 		local cfgs=Cfgs.CfgCommodity:GetGroup(self:GetID());
 		if cfgs then
 			for k, v in ipairs(cfgs) do
-				local itemData = ShopMgr:GetFixedCommodity(v.id);
+				local itemData = ShopMgr:GetFixedCommodity(v.id,true);
 				local canAdd=true;
 				-- for _,val in ipairs(ids) do
 				-- 	if itemData:GetID()==val then
@@ -274,6 +274,10 @@ function this:ShowExchange()
 		return true;		
 	end
 	return false;
+end
+
+function this:GetFragmentExchange()
+	return self.cfg and self.cfg.fragmentExchange or nil;
 end
 
 function this:GetSort()

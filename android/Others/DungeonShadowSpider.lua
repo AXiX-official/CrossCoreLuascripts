@@ -57,19 +57,11 @@ function OnViewOpened(viewKey)
     if CheckView(viewKey) then
         CSAPI.SetGOActive(lastEffect, false)
     end
-    if viewKey == "Plot" then
-        CSAPI.SetGOActive(node,false)
-        CSAPI.SetGOActive(black,false)
-    end
 end
 
 function OnViewClosed(viewKey)
     if CheckView(viewKey) then
         CSAPI.SetGOActive(lastEffect, true)
-    end
-    if viewKey == "Plot" then
-        CSAPI.SetGOActive(node,true)
-        CSAPI.SetGOActive(black,true)
     end
 end
 
@@ -102,7 +94,7 @@ function LayoutCallBack(index)
 end
 
 function OnItemClickCB(item)
-    if selIndex == item.index and not item.IsStory() then
+    if selIndex == item.index then
         return
     end
 
@@ -342,11 +334,11 @@ end
 function ShowInfo(item)
     isActive = item ~= nil;
     CSAPI.SetGOActive(infoMask, isActive)
-    if IsPlotItem(item) then
-        return
-    end
+    -- if IsPlotItem(item) then
+    --     return
+    -- end
     local cfg = item and item.GetCfg() or nil
-    local type = item and item.IsDanger() and DungeonInfoType.Danger or DungeonInfoType.Normal 
+    local type = item and item.GetType() or nil
     SetWidth(isActive)
     if itemInfo == nil then
         ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo2", infoParent, function(go)
@@ -357,6 +349,7 @@ function ShowInfo(item)
             itemInfo.Show(cfg,type,function ()
                 if item then
                     itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
+                    itemInfo.CallFunc("PlotButton","SetStoryCB",OnStoryCB)
                     itemInfo.SetItemPos("Double",-166,-427)
                 end
             end)
@@ -365,75 +358,51 @@ function ShowInfo(item)
         itemInfo.Show(cfg,type,function ()
             if item then
                 itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
+                itemInfo.CallFunc("PlotButton","SetStoryCB",OnStoryCB)
                 itemInfo.SetItemPos("Double",-166,-427)
             end
         end)
     end
 end
 
-function IsPlotItem(item)
-    if item == nil or #item.GetCfgs() > 1 then
-        return false
-    end
-
-    local cfg = item.GetCfg()
-    if cfg and cfg.sub_type == DungeonFlagType.Story then
-        -- 剧情关卡
-        if cfg.storyID == nil then
-            LogError("找不到当前关卡的剧情ID，当前关卡ID：" .. cfg.id)
-            return false
-        end
-
-        local dialogData = {}
-        dialogData.content = LanguageMgr:GetTips(8020)
-        dialogData.okCallBack = function()
-            local dungeonData = DungeonMgr:GetDungeonData(cfg.id)
-            isStoryFirst = (not dungeonData) or (not dungeonData.data.isPass)
-            PlotMgr:TryPlay(cfg.storyID, OnStoryPlayComplete, this, true);
-        end
-        dialogData.cancelCallBack = function()
-            if currItem then
-                currItem.SetSelect(false)
-                -- currItem = nil
-                currIndex = 0
-                selIndex = 0
-            end
-        end
-        CSAPI.OpenView("Dialog",dialogData)
-        return true
-    end
-    return false
-end
-
-function OnStoryPlayComplete()
-    PlotMgr:Save() -- 播放完毕后保存剧情id
-    FightProto:QuitDuplicate({
-        index = 1,
-        nDuplicateID = currItem.GetID()
-    });
-    local data = {};
-    data.id = currItem.GetID();
-    data.star = 1;
-    data.isPass = true;
-    DungeonMgr:AddDungeonData(data);
-    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
-    MenuMgr:UpdateDatas() --刷新关卡解锁状态
-    EventMgr.Dispatch(EventType.Activity_Open_State);
-    layout:UpdateList()
-    CheckOpenHard()
-end
-
-function CheckOpenHard()
-    if not isStoryFirst then
+function OnStoryCB()
+    if not itemInfo.IsStoryFirst() then
         return
     end
 
+    RefreshDatas()
+    layout:UpdateList()
+
     if currItem.index ~= #curDatas then
+        currIndex = currIndex + 1
+        PlayDungeonUnLock()
         return
     end
 
     PlayHardUnLock()
     isHardOpen = true
+end
+
+function RefreshDatas()
+    datas = {}
+    local _datas = DungeonMgr:GetDungeonGroupDatas(data.id)
+    if _datas and #_datas > 0 then
+        for i, v in ipairs(_datas) do
+            local cfg = v:GetCfg()
+            if cfg and cfg.type then
+                datas[cfg.type] = datas[cfg.type] or {}
+                table.insert(datas[cfg.type], v)
+            end
+        end
+    end
+
+    for k, m in pairs(datas) do
+        table.sort(m, function(a, b)
+            return a:GetID() < b:GetID()
+        end)
+    end
+
+    curDatas = datas[currLevel]
 end
 
 -- 进入

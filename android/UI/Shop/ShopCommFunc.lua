@@ -23,7 +23,7 @@ function this.SetIconBorder(data, commodityType, border, icon, tIcon, tBorder, o
     local qulaity = 1;
     local iName = data:GetIcon();
     if commodityType == 1 then
-        if iName ~= nil and iName ~= "" and openSetting == 2 then -- 固定商品有配置图标优先读取
+        if iName ~= nil and iName ~= "" and openSetting == 2 and data:GetType()~=CommodityItemType.ChoiceCard  then -- 固定商品有配置图标优先读取
             qulaity = data:GetQuality();
             iSize = 1;
             ResUtil.IconGoods:Load(icon, iName);
@@ -52,8 +52,7 @@ function this.SetIconBorder(data, commodityType, border, icon, tIcon, tBorder, o
                 -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
                 goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
             end
-        elseif data:GetType() == CommodityItemType.Package or data:GetType() == CommodityItemType.Deposit or
-            data:GetType() == CommodityItemType.MonthCard then -- 商品类型为2，4，5时读商店表中的icon
+        elseif data:GetType() == CommodityItemType.Package or data:GetType() == CommodityItemType.Deposit or data:GetType() == CommodityItemType.MonthCard then -- 商品类型为2，4，5时读商店表中的icon
             -- CSAPI.SetGOActive(border,false);
             qulaity = data:GetQuality();
             ResUtil.IconGoods:Load(icon, iName);
@@ -64,6 +63,39 @@ function this.SetIconBorder(data, commodityType, border, icon, tIcon, tBorder, o
             };
             goodsData = GoodsData(good);
             ResUtil.Furniture:Load(icon, goodsData:GetIcon());
+        elseif data:GetType()==CommodityItemType.ChoiceCard then
+            --判断是否绑定了卡牌
+            local infos = data:GetCommodityList()
+            if infos~=nil then--已绑定
+                local item = infos[1];
+                local good = {
+                    id = item.cid
+                };
+                goodsData = GoodsData(good);
+                if goodsData==nil then
+                    LogError("物品表不存在物品配置："..tostring(item.cid));
+                    do return end
+                end
+                qulaity=goodsData:GetQuality();
+                if goodsData:GetType() == ITEM_TYPE.CARD then
+                    GridUtil.LoadCIcon(icon, tIcon, goodsData:GetCfg(), true);
+                elseif goodsData:GetType() == ITEM_TYPE.CARD_CORE_ELEM then
+                    ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                    GridUtil.LoadTIcon(tIcon, tBorder, goodsData:GetCfg(), true);
+                elseif goodsData:GetType() == ITEM_TYPE.PanelImg then -- 多人插图,特殊处理
+                    local cfg = goodsData:GetCfg();
+                    ResUtil.MultiIcon:Load(icon, cfg.itemPicture);
+                elseif goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType() == ITEM_TYPE.EQUIP then -- 装备素材
+                    -- GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetCfg(),false,true);
+                    GridUtil.LoadEquipIcon(icon, tIcon, goodsData:GetIcon(), goodsData:GetQuality(),
+                        goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL, false)
+                else
+                    -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                    goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
+                end
+            else
+                this.LoadBorderFrame(icon, data:GetIcon());
+            end
         end
     else
         if data:GetType() == RandRewardType.EQUIP then -- 装备
@@ -118,7 +150,7 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon, tI
     openSetting = openSetting or 1;
     local iName = data:GetIcon();
     if commodityType == 1 then
-        if iName ~= nil and iName ~= "" and openSetting == 2 then -- 固定商品有配置图标优先读取
+        if iName ~= nil and iName ~= "" and openSetting == 2 and data:GetType()~=CommodityItemType.ChoiceCard then -- 固定商品有配置图标优先读取
             qulaity = data:GetQuality();
             iSize = 1;
             ResUtil.IconGoods:Load(icon, iName);
@@ -150,7 +182,8 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon, tI
                 goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
             end
         elseif data:GetType() == CommodityItemType.Package or data:GetType() == CommodityItemType.Deposit or
-            data:GetType() == CommodityItemType.MonthCard then -- 商品类型为2，4，5时读商店表中的icon
+            data:GetType() == CommodityItemType.MonthCard or data:GetType() == CommodityItemType.SingleSelection or 
+            data:GetType() == CommodityItemType.DoubleSelection or data:GetType() == CommodityItemType.SUIT then -- 商品类型为2，4，5, 11, 12, 13时读商店表中的icon
             -- CSAPI.SetGOActive(border,false);
             -- qulaity=data:GetQuality();
             ResUtil.IconGoods:Load(icon, iName);
@@ -167,6 +200,40 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon, tI
                 if cfg and cfg.inteActionId~=nil then
                     CSAPI.LoadImg(tIcon2,"UIs/Shop/img_11_02.png",true,nil,true);
                 end
+            end
+        elseif data:GetType()==CommodityItemType.ChoiceCard then
+            --判断是否绑定了卡牌
+            local infos = data:GetCommodityList()
+            if infos~=nil then--已绑定
+                local item = infos[1];
+                local good = {
+                    id = item.cid
+                };
+                goodsData = GoodsData(good);
+                if goodsData==nil then
+                    LogError("物品表不存在物品配置："..tostring(item.cid));
+                    do return end
+                end
+                -- qulaity=goodsData:GetQuality();
+                if goodsData:GetType() == ITEM_TYPE.CARD then
+                    -- CSAPI.SetScale(icon,roleSize,roleSize,roleSize);
+                    -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                    GridUtil.LoadCIcon(icon, tIcon2, goodsData:GetCfg());
+                elseif goodsData:GetType() == ITEM_TYPE.CARD_CORE_ELEM then
+                    ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                    GridUtil.LoadTIcon(tIcon2, tBorder, goodsData:GetCfg(), true);
+                    -- elseif goodsData:GetType()==ITEM_TYPE.PanelImg then--多人插图,特殊处理
+                    --     local cfg=goodsData:GetCfg();
+                    --     ResUtil.MultiIcon:Load(icon,cfg.itemPicture);
+                elseif goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType() == ITEM_TYPE.EQUIP then -- 装备素材
+                    GridUtil.LoadEquipIcon(icon, tIcon2, goodsData:GetIcon(), goodsData:GetQuality(),
+                        goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL, false)
+                else
+                    -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                    goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
+                end
+            else
+                ResUtil.Commodity:Load(icon, data:GetIcon());
             end
         end
     else
@@ -928,9 +995,15 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
         }, 2)
     elseif commodityData:GetNum() >= 1 or commodityData:GetNum() == -1 or isForce == true then -- :-1代表不限制
         if commodityType == 1 then
-            if commodityData:GetType() == CommodityItemType.Item or commodityData:GetType() == CommodityItemType.Skin then
                 if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
                     CSAPI.OpenView("ShopMultPayView", {
+                        commodity = commodityData,
+                        pageData = pageData,
+                        callBack = callBack
+                    });
+                elseif commodityData:GetType() == CommodityItemType.Package or commodityData:GetType() ==
+                CommodityItemType.MonthCard or commodityData:GetType() == CommodityItemType.Regression then
+                    CSAPI.OpenView("ShopPackPayView", {
                         commodity = commodityData,
                         pageData = pageData,
                         callBack = callBack
@@ -941,15 +1014,7 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
                         pageData = pageData,
                         callBack = callBack
                     });
-                end
-            elseif commodityData:GetType() == CommodityItemType.Package or commodityData:GetType() ==
-                CommodityItemType.MonthCard or commodityData:GetType() == CommodityItemType.Regression then
-                CSAPI.OpenView("ShopPackPayView", {
-                    commodity = commodityData,
-                    pageData = pageData,
-                    callBack = callBack
-                });
-            end
+                end          
         else
             if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
                 CSAPI.OpenView("ShopMultPayView", {
@@ -1056,10 +1121,10 @@ function this.TimeIsBetween2(startTime, endTime, currentTime)
 end
 
 -- 返回商品中包含的皮肤信息
-function this.GetSkinInfo(commodity)
+function this.GetSkinInfo(commodity,key)
     local skinInfo = nil;
     if commodity then
-        local list = commodity:GetCommodityList();
+        local list = key == nil and commodity:GetCommodityList() or commodity:GetCommodityList2(key);
         local skinId = nil;
         if list == nil then
             return skinInfo;

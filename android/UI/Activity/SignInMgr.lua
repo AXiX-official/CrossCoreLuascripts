@@ -240,37 +240,37 @@ end
 
 -- 检测签到
 function this:CheckAll()
-    -- 有引导
-    if (GuideMgr:HasGuide() or GuideMgr:IsGuiding()) then
-        return false
-    end
-    if (not self:SignInIsOpen()) then
-        return false
-    end
-    if not self.datas then
-        return false
-    end
-    local arr = self:GetArr()
-    local isOpen = false
-    for i, v in ipairs(arr) do
-        if (not v:CheckIsDone()) then
-            local _data = {key = v:GetKey(), isSingIn = true}
-            if v:GetCfg() and v:GetCfg().activityID then
-                local id = v:GetCfg().activityID
-                if ActivityMgr:CheckIsOpen(id) and ActivityMgr:AddNextOpen(id, _data) then
-                    isOpen = true
-                end
-            end
-            if (v:GetType() == RewardActivityType.DateDay) then
-                -- 月签到
-            elseif (v:GetType() == RewardActivityType.Continuous) then
-                -- 连续签到 todo
-            elseif (v:GetType() == RewardActivityType.DateMonth) then
-                -- 日签到 todo
-            end
-        end
-    end
-    return isOpen
+    -- -- 有引导
+    -- if (GuideMgr:HasGuide() or GuideMgr:IsGuiding()) then
+    --     return false
+    -- end
+    -- if (not self:SignInIsOpen()) then
+    --     return false
+    -- end
+    -- if not self.datas then
+    --     return false
+    -- end
+    -- local arr = self:GetArr()
+    -- local isOpen = false
+    -- for i, v in ipairs(arr) do
+    --     if (not v:CheckIsDone()) then
+    --         local _data = {key = v:GetKey(), isSingIn = true}
+    --         if v:GetCfg() and v:GetCfg().activityID then
+    --             local id = v:GetCfg().activityID
+    --             if ActivityMgr:CheckIsOpen(id) and ActivityMgr:AddNextOpen(id, _data) then
+    --                 isOpen = true
+    --             end
+    --         end
+    --         if (v:GetType() == RewardActivityType.DateDay) then
+    --             -- 月签到
+    --         elseif (v:GetType() == RewardActivityType.Continuous) then
+    --             -- 连续签到 todo
+    --         elseif (v:GetType() == RewardActivityType.DateMonth) then
+    --             -- 日签到 todo
+    --         end
+    --     end
+    -- end
+    -- return isOpen
 end
 
 -- 当次登录是否已弹出过，是就不继续弹出签到保证只弹1次

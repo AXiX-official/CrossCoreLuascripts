@@ -110,8 +110,9 @@ function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_pr
     local plusPrice=curData and curData:GetTargetPrice(type);
     local displayPrice=nil;
     local Price=nil;
-    if CSAPI.IsADV() then
-        local amountPrice=curData and curData:GetTargetPrice(type);
+    local amountPrice=0;
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+         amountPrice=curData and curData:GetTargetPrice(type);
         local TwdData=curData:GetTWDDataPrice(type);
         if TwdData and TwdData["data"]["displayCurrency"]~=nil then
             Price=TwdData["data"]["displayCurrency"];--描述字符
@@ -132,7 +133,7 @@ function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_pr
         CSAPI.SetText(txt_desc,LanguageMgr:GetByID(34032));
         CSAPI.SetText(txt_desc2,LanguageMgr:GetByID(34033));
         CSAPI.SetText(txt_price,tostring(plusPrice));
-        if CSAPI.IsADV() then CSAPI.SetText(normal_VoucherPrice,tostring(amountPrice)); end
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then CSAPI.SetText(normal_VoucherPrice,tostring(amountPrice)); end
         -- isShowTips=true;
     elseif type==ExplorationState.Plus then
         -- CSAPI.LoadImg(bg,"UIs/ExplorationCard/img_15_2.png",true,nil,true);
@@ -141,11 +142,11 @@ function SetContents(type,txt_title,txt_tips,txt_desc,txt_desc2,txt_price,txt_pr
         CSAPI.SetText(txt_desc,LanguageMgr:GetByID(34035));
         CSAPI.SetText(txt_desc2,LanguageMgr:GetByID(34036));
         CSAPI.SetText(txt_price,tostring(plusPrice));
-        if CSAPI.IsADV() then CSAPI.SetText(plus_VoucherPrice,tostring(amountPrice)); end
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then CSAPI.SetText(plus_VoucherPrice,tostring(amountPrice)); end
         -- isShowTips=false;
     end
     CSAPI.SetText(txt_priceType,LanguageMgr:GetByID(18013));
-    if CSAPI.IsADV() and Price~=nil then
+    if (CSAPI.IsADV() or CSAPI.IsDomestic()) and Price~=nil then
         CSAPI.SetText(txt_priceType,Price);
         txt_priceType.transform.localPosition=UnityEngine.Vector3(-47,0,0);
     end

@@ -38,10 +38,12 @@ end
 --检查卡牌是否满足条件
 function this:CheckCard(teamData,cardData)
     local isPass=false;
+    local errorCode=nil;
     if self.conds and teamData and cardData then
         local teamMemberNum=self:GetTeamMemberMaxNum();
         for k, v in ipairs(self.conds) do
-            local result=v:CheckCard(teamData,cardData);
+            local result=false;
+            result,errorCode=v:CheckCard(teamData,cardData);
             --检测当前还剩几个可以上阵的位置,当前条件检测为失效且还有其他位置可以任意放置时，继续检测，否则直接返回结果
             -- if result~=true then
             --     LogError("TeamCondition检测----------->失败\t 条件位置:"..tostring(k).."\t 总条件数:"..tostring(#self.conds).."\t")
@@ -59,7 +61,11 @@ function this:CheckCard(teamData,cardData)
         end
         -- LogError("TeamCondition检测------------->卡牌ID："..tostring(cardData:GetCfgID()).."\t 是否通过："..tostring(isPass));
     end
-    return isPass;
+    if isPass then
+        return isPass
+    else
+        return isPass,errorCode;
+    end
 end
 
 --返回当前限制下最多可以编入的队员数量，取最大值

@@ -312,13 +312,25 @@ function this:GetExChangeItemRewardCfg(rewardId,itemId)
 	return itemCfg;
 end
 
---返回固定道具对象
-function this:GetFixedCommodity(cfgId)
+--返回固定道具对象 disGroup:是否包含组查询，为true时不会返回同组内在售商品
+function this:GetFixedCommodity(cfgId,disGroup)
 	if cfgId then
 		local itemData = CommodityData.New();
 		itemData:SetCfg(cfgId);
 		local records=self:GetRecordInfos(cfgId);
 		itemData:SetData(records);
+		if disGroup~=true and (itemData:HasData()~=true or itemData:GetNowTimeCanBuy()~=true) and itemData:GetShopGroupID()~=nil and self.records then
+			--查找同商品组内的在售商品信息
+			for k,v in pairs(self.records) do
+				local comm = CommodityData.New();
+				comm:SetCfg(k);
+				comm:SetData(v);
+				if comm:GetShopGroupID()==itemData:GetShopGroupID() and comm:HasData() and comm:GetNowTimeCanBuy() then
+					itemData=comm;
+					break;
+				end
+			end
+		end
 		return itemData;
 	end
 end
@@ -589,6 +601,29 @@ end
 --返回当前跳转的折扣券ID
 function this:GetJumpVoucherID()
 	return self.jumpVoucherID;
+end
+
+--获取和皮肤返利相关的商店信息
+function this:GetCommodityBySkinID(skinId)
+	local cfgs = Cfgs.CfgCommodity:GetAll()
+	local infos = {}
+	if cfgs then
+		local data = nil
+		for _, cfg in pairs(cfgs) do
+			if cfg.skinID and cfg.skinID == skinId then
+				if not cfg.shopGroupID or cfg.shopGroupID == cfg.id then
+					data = self:GetFixedCommodity(cfg.id)
+					-- if data and data:GetData() then
+					-- 	table.insert(infos,data)
+					-- end
+					if data:IsShow() then
+						table.insert(infos,data)
+					end
+				end
+			end
+		end
+	end
+	return infos
 end
 
 function this:Clear()

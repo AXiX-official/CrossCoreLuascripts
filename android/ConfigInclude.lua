@@ -38,6 +38,7 @@ local ConfigList =
 	'CfgActiveEntry',
 	'CfgActiveIntegralReward',
 	'CfgActiveList',
+	'CfgActivePopUp',
 	'CfgActiveRankReward',
 	'CfgActiveScorePool',
 	'CfgActivityGlobalBoss',

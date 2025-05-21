@@ -19,6 +19,16 @@ function OnDestroy()
     eventMgr:ClearListener()
 end
 
+function Update()
+    if time > 0 and timer < Time.time then
+        timer = Time.time + 1
+        time = hotTime - TimeUtil:GetTime()
+        if time <= 0 then
+            ShowHotChange(false)
+        end
+    end
+end
+
 function Refresh(tab)
     cfg = tab.cfg
     data = tab.data
@@ -44,11 +54,22 @@ function ShowCost()
         else
             ResUtil.IconGoods:Load(ticketIcon, ITEM_ID.Hot .. "_1")
             ResUtil.IconGoods:Load(costImg, ITEM_ID.Hot .. "_3")
-            local costNum = cfg.enterCostHot and cfg.enterCostHot or 0
-            costNum = cfg.winCostHot and costNum + cfg.winCostHot or costNum
+            local costNum,isHotChange = DungeonUtil.GetHot(cfg)
+            ShowHotChange(isHotChange)
             costNum = StringUtil:SetByColor(costNum .. "", math.abs(costNum) <= PlayerClient:Hot() and "191919" or "CD333E")
             CSAPI.SetText(cost," " .. costNum)
             LanguageMgr:SetText(txt_cost, 15004)
+        end
+    end
+end
+
+function ShowHotChange(b)
+    UIUtil:SetHotPoint(btnEnter,b,170,51)
+    if b then
+        _,hotTime = DungeonUtil.GetHotChangeTime()
+        if hotTime > 0  then
+            time = hotTime - TimeUtil:GetTime()
+            timer = 0
         end
     end
 end
@@ -101,25 +122,7 @@ function SetBuyFunc(_func)
 end
 
 function OnClickSweep()
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
-    if openInfo and not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
-        return
-    end
-
-    if isSweepOpen then
-        CSAPI.OpenView("SweepView",{id = cfg.id},{onBuyFunc = buyFunc})
-    else
-        local sweepData = SweepMgr:GetData(cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfg = Cfgs.CfgModUpOpenType:GetByID(cfg.modUpOpenId)
-            if cfg then
-                Tips.ShowTips(cfg.sDescription)
-            end
-        end
-    end
+    UIUtil:OpenSweepView(cfg.id,buyFunc)
 end
 
 function IsSweepOpen()

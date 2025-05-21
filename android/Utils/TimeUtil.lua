@@ -39,6 +39,20 @@ function this:GetTime2(_year, _month, _day, _hour, _minute, _second)
     end
 end
 
+-- 日期转时间
+function this:GetTimeStamp3(_year, _month, _day, _hour, _minute, _second)
+    local data = {
+        year = _year,
+        month = _month,
+        day = _day,
+        hour = _hour,
+        min = _minute,
+        sec = _second
+    }
+    if (data) then
+        return os.time(data)
+    end
+end
 -- 匹配获取
 -- _time = this:GetTime
 -- _typeStr = *t  >  返回table{year,month,day,hour,min,sec}
@@ -416,6 +430,41 @@ function this:IsSameDay(_timeA,_timeB)
     local timeA = os.date("*t", _timeA)
     local timeB = os.date("*t", _timeB)
     return timeA.day==timeB.day
+end
+
+--获取两个时间戳的间隔天数（按3点跨天）
+function this:GetActivyIntervalDay(startTime, endTime)
+    endTime = endTime or self:GetTime()
+    if startTime > endTime then
+        startTime, endTime = endTime, startTime
+    end
+
+    local actZero1 = self:GetActivyDiffDayZero(startTime)
+    local actZero2 = self:GetActivyDiffDayZero(endTime)
+
+    -- 计算两个时间点各自距离其所在日期凌晨3点的秒数
+    local diff1 = startTime - actZero1
+    local diff2 = endTime - actZero2
+
+    local days = math.floor((actZero2 - actZero1) / (86400))
+
+    if diff1 <= 0 and diff2 >= 0 then
+        -- 判断是否需要加一天（如果startTime在凌晨3点之前，且endTime在凌晨3点之后）
+        days = days + 1
+    elseif diff1 > 0 and diff2 < 0 then
+        -- 如果startTime在第一天3点之后，endTime在第二天3点之前，需减少一天
+        days = days - 1
+    end
+    return days
+end
+
+--获取当天活动零点时间(默认凌晨3点游戏刷新时间)
+function this:GetActivyDiffDayZero(time,hour)
+    local date = os.date("*t", time)
+    date.hour = hour or g_ActivityDiffDayTime
+    date.min = 0
+    date.sec = 0
+    return os.time(date)
 end
 
 return this

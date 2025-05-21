@@ -13,6 +13,6 @@ function Skill1100070092:OnBorn(caster, target, data)
 	else
 		return
 	end
-	-- 1100070095
-	self:AddBuff(SkillEffect[1100070095], caster, self.card, data, 1100070095)
+	-- 1100010132
+	self:OwnerAddBuff(SkillEffect[1100010132], caster, self.card, data, 1100010132)
 end

@@ -8,6 +8,12 @@ function Skill750200205:Init(skillID, card)
 end
 -- 执行技能
 function Skill750200205:DoSkill(caster, target, data)
+	-- 750200205
+	self.order = self.order + 1
+	self:AddBuff(SkillEffect[750200205], caster, target, data, 4004)
+end
+-- 行动结束
+function Skill750200205:OnActionOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -18,10 +24,6 @@ function Skill750200205:DoSkill(caster, target, data)
 	else
 		return
 	end
-	-- 750200205
-	self.order = self.order + 1
-	local targets = SkillFilter:All(self, caster, target, 3)
-	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[750200205], caster, target, data, 750200205)
-	end
+	-- 750200215
+	self:AddBuffCount(SkillEffect[750200215], caster, self.card, data, 750200201,5,20)
 end

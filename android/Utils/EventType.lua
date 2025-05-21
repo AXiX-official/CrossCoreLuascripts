@@ -40,6 +40,11 @@ this.View_Lua_Ready = 1102;
 --界面间消息传递
 this.View_Message = 1103;
 
+--静默下载模式选择
+this.Version_SilentDownload_Select = 1112;
+this.Version_SilentDownload_Complete = 1113;
+this.Version_SilentDownload_Error_MD5 = 1114;
+
 --通用颜色遮罩关闭
 this.Common_Color_Mask_Close = 1120;
 ------------------------------------------声音
@@ -970,6 +975,9 @@ this.Activity_Click = 340004 --活动强制点击
 this.Acitivty_List_Pop = 340006 --活动弹出
 this.Activity_List_Panel_Refresh = 340007 --活动界面刷新
 this.Activity_List_Cfg_Change = 340008 --活动表配置修改
+this.Activity_SkinRebate_Refresh = 340009 --皮肤返利按钮刷新
+this.Activity_DuanWu_Refresh = 340010 --端午签到界面刷新
+this.Activity_PopUp_View = 340011 --活动界面弹出
 ------------------------------------------背景音乐
 --播放背景音乐
 this.Play_BGM = 350001
@@ -1046,6 +1054,10 @@ this.Shop_ResetTime_Ret=370015;
 this.Shop_OpenTime_Ret=370016;
 --抵扣券信息变更
 this.Shop_PayVoucher_Change=370017;
+--皮肤返利领取记录
+this.Shop_SkinRebate_Get_Record = 370018
+--皮肤返利可领取记录
+this.Shop_SkinRebate_Finish_Record = 370019
 --------------------------------------------引导
 --引导完成
 this.Guide_Complete = 380001

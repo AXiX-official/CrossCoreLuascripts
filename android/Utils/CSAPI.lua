@@ -603,7 +603,7 @@ loadstring = CS.CSAPI.LoadString;
 --3：高
 function this.SetGameLv(lv)
 	this.gameLv = lv;
-	
+	--LogError(this.gameLv);
 	CameraMgr:SetMotionBlurState(lv and lv >= 2);
 	--CameraMgr:SwitchHDR(lv and lv >= 3);
 	CSAPI.SetFogEnableState(lv and lv >= 3);
@@ -631,6 +631,7 @@ function this.SetGameLv(lv)
 end
 
 function this.GetGameLv()
+	--LogError(this.gameLv);
 	return this.gameLv or 2;
 end
 
@@ -656,7 +657,7 @@ this.GetCurrUIEventObj=CS.CSAPI.GetCurrUIEventObj;
 this.ReleaseSound = CS.CSAPI.ReleaseSound;
 --播放声音
 this.csPlaySound = CS.CSAPI.PlaySound;
-function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff,startTime)
+function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay, volumeCoeff,startTime,completeCB)
 --	--屏蔽人声
 --	if(cueSheet and string.find(cueSheet, "cv/"))then
 --        LogError(cueSheet);    
@@ -678,7 +679,11 @@ function this.PlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, call
 	--LogError(tostring(cueSheet) .. ":" .. tostring(cueName) .. ",isLoop:" .. tostring(isLoop) .. ",tag:" .. tostring(tag));
 	volumeCoeff = volumeCoeff or 100;
 	startTime = startTime or 0
-	return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime);
+	if tonumber(CS.CSAPI.APKVersion()) > 6 then		
+		return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime,completeCB);
+	else
+		return this.csPlaySound(cueSheet, cueName, isLoop, feature, tag, fadeSpeed, callBack, fadeDelay or 0, volumeCoeff,startTime);
+	end
 end
 
 --播放UI声音
@@ -800,8 +805,15 @@ this.StopSound = CS.CSAPI.StopSound;
 --停止指定声音
 this.csStopTargetSound = CS.CSAPI.StopTargetSound;
 function this.StopTargetSound(cueSheet, cueName)
-	this.PlaySound(cueSheet, cueName);
-	this.csStopTargetSound(cueSheet, cueName);
+	if tonumber(CS.CSAPI.APKVersion()) > 6 then		
+		this.PlaySound(cueSheet, cueName,nil,nil,nil,nil,nil,nil,nil,nil,function(playedCueName)
+			-- LogError("停止指定声音" .. cueName);
+			this.csStopTargetSound(cueSheet, cueName);
+		end);
+	else
+		this.PlaySound(cueSheet, cueName);
+		this.csStopTargetSound(cueSheet, cueName);
+	end	
 end
 this.StopExceptTag = CS.CSAPI.StopExceptTag;
 --设置音量
@@ -1107,6 +1119,11 @@ _G.ReYunSDK=CS.ReYunSDK.ins;
 
 _G.JuLiangSDK = CS.JuLiangSDK.ins;
 
+-- 兼容旧包
+if tonumber(CS.CSAPI.APKVersion()) > 6 then
+	_G.SilentDownloadMgr = CS.SilentDownloadMgr.ins;
+end
+
 local packageName=nil;
 this.GetPackageName = function()
 	if packageName==nil or packageName=="" then
@@ -1174,6 +1191,7 @@ function this.GetInside()
 	return this.GetSdkEnvironmentType
 end
 
+
 this.PCSetWindow=CS.CSAPI.PCSetWindow;
 this.APKVersion=CS.CSAPI.APKVersion;
 this.RegionalCode=CS.CSAPI.RegionalCode;
@@ -1222,7 +1240,15 @@ end
 
 ---是否提审模式
 function this.IsAppReview()
-	return false;
+	if tonumber(CS.CSAPI.APKVersion()) > 6 then
+		if this.IsAppReviewMode ~= nil then
+			return this.IsAppReviewMode();
+		else
+			return true
+		end
+	else
+		return false
+	end
 end
 ---获取当前平台指定热更新文件夹路径(指定文件夹内)
 this.PlatformURL=CS.CSAPI.PlatformURL;
@@ -1230,9 +1256,7 @@ this.PlatformURL=CS.CSAPI.PlatformURL;
 this.HotFileUrl=CS.CSAPI.HotFileUrl;
 --字符串替换 (string str = "",string pattern = "",bool isMatch = false)
 this.FilterChar = CS.CSAPI.FilterChar
-
 this.server_list_enc_close=false;
-
 --- 海外日服璨晶购买提示
 function this.ADVJPTitle(consume,action)
 	---璨晶总数
@@ -1374,5 +1398,6 @@ function this.UnityClientVersion(uid)
 	end
 end
 
+this.IsAppReviewMode = CS.CSAPI.IsAppReviewMode;
 return this;
 

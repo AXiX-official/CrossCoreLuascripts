@@ -84,6 +84,7 @@ function this:CheckCard(teamData,cardData)
     local limitNum=self:GetTeamLimitMemberNum();
     -- local isPass2=self:CheckPass(teamData);
     local realCount=teamData:GetCount();
+    local errorCode=nil;
     -- LogError("TeamLimit检测----------->"..tostring(self.cfg.id).."队伍限制上阵人数："..tostring(limitNum).."\t 队伍检测："..tostring(isPass2))
     -- if isPass2 and (realCount<limitNum or limitNum==0) then --当前已经满足限制条件且还有空位
     if (realCount<limitNum or limitNum==6) then --当前未满足上阵条件
@@ -91,7 +92,10 @@ function this:CheckCard(teamData,cardData)
         local passNum=0;--通过的条件个数
         for k, v in ipairs(self.conds) do
             local condItem=v.cond;
-            local tempResult=condItem:CheckCard(cardData);
+            local tempResult,eCode=condItem:CheckCard(cardData);
+            if tempResult~=true and errorCode==nil then
+               errorCode=eCode 
+            end
             --对结果做处理
             if v.limit==TeamConditionLimitEditType.Dis then --禁止编入取相反的结果值
                 tempResult=not tempResult;
@@ -159,7 +163,11 @@ function this:CheckCard(teamData,cardData)
             end
         end
     end
-    return isPass;
+    if isPass then
+        return isPass
+    else
+        return isPass,errorCode
+    end
 end
 
 --根据限制条件返回队伍中符合的条件的卡牌数量

@@ -6,10 +6,28 @@ Buffer750100202 = oo.class(BuffBase)
 function Buffer750100202:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
+-- 伤害前
+function Buffer750100202:OnBefourHurt(caster, target)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 8262
+	if SkillJudger:IsCallSkill(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 750100212
+	self:AddTempAttr(BufferEffect[750100212], self.caster, self.card, nil, "damage",0.10)
+end
 -- 创建时
 function Buffer750100202:OnCreate(caster, target)
-	-- 750100202
-	self:AddAttrPercent(BufferEffect[750100202], self.caster, target or self.owner, nil,"crit_rate",0.15)
-	-- 750100207
-	self:AddAttrPercent(BufferEffect[750100207], self.caster, target or self.owner, nil,"attack",0.02)
+	-- 750100201
+	self:AddProgress(BufferEffect[750100201], self.caster, self.card, nil, 100)
 end

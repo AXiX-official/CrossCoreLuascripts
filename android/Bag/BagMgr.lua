@@ -415,8 +415,24 @@ function this:GetCount(id)
         return 0
     end
     local _b, _num = self.IsCoin(id)
+    local item=GoodsData({id = id, num = 0});
     if (_b) then
         return _num
+    elseif item and item:GetType()==ITEM_TYPE.SKIN then --皮肤
+        local skinID=item:GetDyVal2();
+        if skinID then
+            local curModelCfg=Cfgs.character:GetByID(skinID)
+            if curModelCfg==nil then
+                LogError("未找到ID:"..tostring(skinID).."相关的皮肤信息！")
+                return 0
+            end
+            local rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(curModelCfg.role_id,curModelCfg.id);
+            if rSkinInfo and rSkinInfo:GetCanUse() then
+                return 1;
+            end
+        else
+            return 0;
+        end
     else
         return BagMgr:GetData(id) and BagMgr:GetData(id):GetCount() or 0
     end

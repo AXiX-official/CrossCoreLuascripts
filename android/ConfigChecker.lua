@@ -2031,6 +2031,7 @@ end
 function ConfigChecker:CfgActiveList(cfgs)
     g_ActiveSign_2 = {}
     g_OpenConditionRecordTime = {}
+    g_Open_SkinRebate = {}
     for _, fCfg in pairs(cfgs) do
         if fCfg.sTime then
             fCfg.nStartTime = GCalHelp:GetTimeStampBySplit(fCfg.sTime, fCfg)
@@ -2046,6 +2047,11 @@ function ConfigChecker:CfgActiveList(cfgs)
         end
         if fCfg.time and not table.empty(fCfg.time) then
             table.insert(g_OpenConditionRecordTime, fCfg.id)
+        end
+        if fCfg.type == ActivityListType.SkinRebate then
+            if fCfg.nEndTime == 0 or fCfg.nEndTime > CURRENT_TIME then
+                g_Open_SkinRebate[fCfg.info.skinId] = true
+            end
         end
     end
 end

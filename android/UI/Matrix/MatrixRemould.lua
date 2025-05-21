@@ -10,11 +10,6 @@ function Awake()
     UIUtil:AddQuestionItem("MatrixRemould", gameObject)
 end
 
-function OnDestroy()
-    AdaptiveConfiguration.LuaView_Lua_Closed("MatrixRemould")
-
-end
-
 function LayoutCallBack(index)
     local lua = layout:GetItemLua(index)
     if (lua) then
@@ -52,6 +47,7 @@ function OnInit()
 end
 
 function OnDestroy()
+    AdaptiveConfiguration.LuaView_Lua_Closed("MatrixRemould")
     eventMgr:ClearListener()
 end
 

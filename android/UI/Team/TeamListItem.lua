@@ -221,10 +221,10 @@ function OnClickGrid(tab)
         if assistData then
             cid=assistData.card:GetID();
         end
-        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
+        CSAPI.OpenView("TeamView",{team=teamData,cid=cid,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Support,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg,dungeonId = data.dungeonId},openSetting);
     else
         SetTeamData(teamData:GetIndex());
-        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg},openSetting);
+        CSAPI.OpenView("TeamView",{team=teamData,canEmpty=canEmpty,NPCList=data.NPCList,closeFunc=OnChange,selectType=TeamSelectType.Normal,canAssist=canAddAssist,cond=data.cond,dungeonCfg=data.dungeonCfg,dungeonId = data.dungeonId},openSetting);
     end
 end
 

@@ -15,6 +15,10 @@ function Awake()
 
 	InitLogState();
 	
+	if not CSAPI.IsADV() and (CSAPI.OpenHarmony == nil or CSAPI.Currentplatform ~= CSAPI.OpenHarmony) then
+		CheckInternation();
+	end
+	
 	Log("Xlua启动完成")
 	--LogTime()
 	Launcher()
@@ -31,6 +35,30 @@ function InitLogState()
 	end
 end
 
+function CheckInternation()
+	local unlockTime_start = TimeUtil:GetTime2(2025,4,1,0,0,0)
+	local unlockTime_end = TimeUtil:GetTime2(2025,4,1,23,59,59)
+	local lockTime_start = TimeUtil:GetTime2(2025,5,1,0,0,0)
+	local lockTime_end = TimeUtil:GetTime2(2025,5,1,23,59,59)
+	local currentTime = os.time()
+	-- LogError(unlockTime_start)
+	-- LogError(unlockTime_end)
+	-- LogError(lockTime_start)
+	-- LogError(lockTime_end)
+	-- LogError(currentTime)
+	
+	local content = ""
+	if currentTime >= unlockTime_start and currentTime <= unlockTime_end then 
+		content = "1" 
+	elseif currentTime >= lockTime_start and currentTime <= lockTime_end then 
+		content = "0"
+	end
+
+	if content ~= "" then
+		CSAPI.SaveToFile(CS.CPath.FilterFileHead(CS.CPath.persistentDataPath) .. "/internation.txt", content);
+		LogError(content)
+	end	
+end
 function Launcher()
 	--ReadAllConfig();
 	cfgLaucher = Cfgs.launcher:GetByID(1)

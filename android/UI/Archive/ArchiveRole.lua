@@ -8,6 +8,9 @@ local isAnim = false
 local models = {}
 local liveTog = nil
 local isLive2D = false
+local needToCheckMove = false
+local timer = 0
+
 function Awake()
 	mTab = ComUtil.GetComInChildren(tab, "CTab")
 	mTab:AddSelChangedCallBack(OnTabChanged)
@@ -16,6 +19,9 @@ function Awake()
 	liveTog.isOn = isLive2D
 	
 	cardIconItem = RoleTool.AddRole(iconParent, PlayCB, EndCB)
+
+	luaTextMove = LuaTextMove.New()
+    luaTextMove:Init(txt_cv)
 end
 
 function OnInit()
@@ -48,6 +54,13 @@ function OnToggleChange(_isOn)
 	CSAPI.SetTextColor(txt_live1, color1[1], color1[2], color1[3], color1[4])
 	CSAPI.SetTextColor(txt_live2, color2[1], color2[2], color2[3], color2[4])
 	SetRole(curSkinData:GetSkinID())
+end
+
+function Update()
+    if (needToCheckMove and Time.time > timer) then
+        luaTextMove:CheckMove(txt_cv)
+        needToCheckMove = false
+    end
 end
 
 function OnOpen()
@@ -141,8 +154,10 @@ function SetRole(_moduleId)
 			cvName = cfg.sSounder_cn
 		end
 	end
-	local cfStr = LanguageMgr:GetByID(16051) .. ":" .. cvName
+	local cfStr = cvName
+	needToCheckMove = false
 	CSAPI.SetText(txt_cv, cfStr)
+	needToCheckMove = true
 	--painter 
 	local painterStr = LanguageMgr:GetByID(29056) .. ":" .. cfg.sPainter
 	CSAPI.SetText(txt_painter, painterStr)

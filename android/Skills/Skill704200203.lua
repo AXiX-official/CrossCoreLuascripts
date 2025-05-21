@@ -30,3 +30,18 @@ function Skill704200203:OnActionOver(caster, target, data)
 		self:AddBuff(SkillEffect[704200203], caster, target, data, 704200203)
 	end
 end
+-- 行动结束2
+function Skill704200203:OnActionOver2(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 704200223
+	self:AddSp(SkillEffect[704200223], caster, self.card, data, 20)
+end

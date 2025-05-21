@@ -23,9 +23,20 @@ local voucherItem=nil
 local onceMax=0;
 local tab=nil;
 local shopPriceKey=ShopPriceKey.jCosts;
+local costIdx=1;
+local rmbIcon=nil;
+local layout=nil;
+local curDatas=nil;
+local commodity=nil;
+local endTime=0;--结束时间戳
+local countTime=0;
+local isEnterInit=false;
+local hasSVInit=false;
 
 -- local slider=nil;
 function Awake()
+	layout = ComUtil.GetCom(vsv, "UISV")
+	layout:Init("UIs/Shop/ShopPackItem",LayoutCallBack,true)
 	okBtn = ComUtil.GetCom(btn_pay, "Button");
 	addBtn = ComUtil.GetCom(btn_add, "Button");
 	removeBtn = ComUtil.GetCom(btn_remove, "Button");
@@ -42,6 +53,7 @@ function Awake()
 end
 
 function OnTabChanged(_index)
+	costIdx=_index==0 and 1 or 2;
     shopPriceKey=_index==0 and ShopPriceKey.jCosts or ShopPriceKey.jCosts1
     RefreshPanel()
 end
@@ -66,7 +78,8 @@ function OnShopRefresh()
 end
 
 function OnOpen()
-	UIUtil:ShowAction(childNode,nil,UIUtil.active2);
+	isEnterInit=false;
+	UIUtil:ShowAction(childNode,OnAnimaEnd,UIUtil.active2);
 	commodity=data.commodity;
 	pageData=data.pageData;
 	commodityType=data.pageData:GetCommodityType();
@@ -74,6 +87,10 @@ function OnOpen()
     tab.selIndex = 0
     SetImgTabs();
 	RefreshPanel();
+end
+
+function OnAnimaEnd()
+	isEnterInit=true
 end
 
 function SetImgTabs()
@@ -101,6 +118,7 @@ function RefreshPanel()
     local isPackage=false;
 	-- 根据当前物品数量进行初始化
 	if commodity then
+		rmbIcon=commodity:GetCurrencySymbols();
 		onceMax=commodity:GetOnecBuyLimit() == - 1 and 99 or commodity:GetOnecBuyLimit(); --单次购买上限
 		CSAPI.SetText(txt_name,commodity:GetName());
 		CSAPI.SetText(txt_desc,commodity:GetDesc());
@@ -147,6 +165,7 @@ function RefreshPanel()
 		else
 			CSAPI.SetGOActive(limitTimeObj,false);
 		end
+		hasSVInit=false;
 		if (commodityType==1 and commodity:GetType()==CommodityItemType.Item) then --固定配置
 			local item=commodity:GetCommodityList()[1];
 			local bagNum=BagMgr:GetCount(item.cid);
@@ -154,9 +173,16 @@ function RefreshPanel()
 		elseif (commodityType==2 and commodity:GetType()==RandRewardType.ITEM) then --随机配置
 			local bagNum=BagMgr:GetCount(commodity:GetID());
 			SetHasNum(bagNum)
+		elseif commodityType==1 and  commodity:GetType()==CommodityItemType.Package then
+			SetHasNum(0)
+			hasSVInit=true;
+			onceMax=1;
 		else
 			SetHasNum(0)
 		end
+		CSAPI.SetGOActive(vsv,hasSVInit);
+		CSAPI.SetGOActive(txt_contentName,not hasSVInit);
+		CSAPI.SetGOActive(txt_contentNum,not hasSVInit);
 		if onceMax>1 then
 			InitType1();
 		else
@@ -176,6 +202,56 @@ function RefreshVoucherItem()
         end
     end
 	SetVoucherItem(isShow)
+end
+
+function Update()
+	if isEnterInit and hasSVInit then
+		InitSV();
+		isEnterInit=false;
+	end
+	if endTime and endTime~=0 then
+		countTime=countTime+Time.deltaTime;
+		if countTime>=1 then
+			countTime=0;
+			if TimeUtil:GetTime()>=endTime then
+				InitSV();
+				endTime=0;
+			end
+		end
+	end
+end
+
+--创建物品列表
+function InitSV()
+    --显示礼包中的所有数据
+	curDatas={};
+    for k, v in ipairs(commodity:GetCommodityList()) do
+        if v.data:GetType()==ITEM_TYPE.PROP and v.data:GetDyVal1()==PROP_TYPE.MemberReward then --月卡
+			if v.data:GetDy2Times() and TimeUtil:GetTime()>=v.data:GetDy2Times() then
+				for key,val in ipairs(v.data:GetDy2Tb()) do
+					local itemData=GridUtil.RandRewardConvertToGridObjectData({id=val[1],num = val[2],type=val[3]});
+					table.insert(curDatas,{itemData=itemData,desc=LanguageMgr:GetByID(24021)});
+				end
+			else
+				for key,val in ipairs(v.data:GetCfg().dy_tb) do
+					local itemData=GridUtil.RandRewardConvertToGridObjectData({id=val[1],num = val[2],type=val[3]});
+					table.insert(curDatas,{itemData=itemData,desc=LanguageMgr:GetByID(24021)});
+				end
+			end
+        else
+			local itemData=GridUtil.RandRewardConvertToGridObjectData({id=v.cid,num = v.num,type=v.type});
+			table.insert(curDatas,{itemData=itemData,desc=LanguageMgr:GetByID(24020)});
+        end
+    end
+	layout:IEShowList(#curDatas);
+end
+
+function LayoutCallBack(index)
+	local _data = curDatas[index]
+	local item=layout:GetItemLua(index);
+	item.Refresh(_data.itemData,_data.desc,true,commodity);
+	-- item.SetDesc(_data.desc);
+	-- item.ShowDesc(false);
 end
 
 function SetVoucherItem(isShow)
@@ -281,12 +357,19 @@ function RefreshPrice()
 		CSAPI.SetGOActive(txt_free,false);
 		CSAPI.SetGOActive(txt_nPrice,true);
 		local priceInfo=commodity:GetRealPrice(shopPriceKey);
+		local orgInfo=commodity:GetOrgCosts();
 		local disPrice=normalPrice[1].num*currNum;--折扣前价格
 		local curPrice=priceInfo[1].num*currNum;--当前价格
 		local curPID=priceInfo[1].id;
 		if voucherList then
-			disPrice=priceInfo[1].num*currNum;
+			if orgInfo then
+				disPrice=orgInfo[2]*currNum;
+			else
+				disPrice=priceInfo[1].num*currNum;
+			end
 			curPrice=realPrice;
+		elseif orgInfo~=nil and (#orgInfo<3 or (#orgInfo==3 and orgInfo[3]==costIdx)) then
+			disPrice=orgInfo[2]*currNum
 		end
 		local discount=commodity:GetNowDiscount();
 		CSAPI.SetGOActive(discountObj,discount~=1);
@@ -295,7 +378,7 @@ function RefreshPrice()
 			local dis=math.floor((1-discount)*100);
 			CSAPI.SetText(txt_discount,"-"..dis.."%");
 		end
-		if discount~=1 or voucherList~=nil then
+		if discount~=1 or voucherList~=nil or (orgInfo~=nil and (#orgInfo<3 or (#orgInfo==3 and orgInfo[3]==costIdx))) then
 			isShowHPrice=true;
 		end
 		if isShowHPrice then
@@ -329,7 +412,7 @@ end
 
 function SetPrice(id, num,pIcon,pText)
 	if id==-1 then --SDK支付
-		CSAPI.SetText(pText, LanguageMgr:GetByID(18013)..tostring(num));
+		CSAPI.SetText(pText, rmbIcon..tostring(num));
 		CSAPI.SetGOActive(pIcon,false);
 		return;
 	end
@@ -487,9 +570,8 @@ function OnClickVoucherPay()
 	else
 		ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,nil,shopPriceKey);
 	end
-	---ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLongDeductionvoucher,false,shopPriceKey);
-end--购买成功
-
+end
+--购买成功
 function Close()
 	UIUtil:HideAction(childNode, function()
 		if view and view.Close then

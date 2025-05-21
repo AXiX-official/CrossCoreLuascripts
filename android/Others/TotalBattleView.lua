@@ -436,11 +436,6 @@ function OnSweepClick()
     end
 end
 
-function OnBuyFunc()
-    local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
-    UIUtil:OpenPurchaseView(nil,nil,curCount,sectionData:GetBuyCount(),sectionData:GetBuyCost(),sectionData:GetBuyGets(),OnPayFunc)
-end
-
 function OnDirllClick()
     local currCfgs = currItem.GetCfgs()
     currDanger = itemInfo.CallFunc("Danger2","GetCurrDanger")

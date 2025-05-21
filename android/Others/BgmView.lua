@@ -7,7 +7,7 @@ local timer = nil
 local svUtil = nil
 local time = nil
 local isBeginDrag = false
-
+local isDestory = false
 function Awake()
     layout = ComUtil.GetCom(hsv, "UIInfinite")
     layout:Init("UIs/Bgm/BgmItem1", LayoutCallBack, true)
@@ -35,6 +35,7 @@ function Awake()
 end
 
 function OnDestroy()
+    isDestory = true
     timer = nil
     eventMgr:ClearListener()
     if (oldCurMusicID) then
@@ -213,15 +214,31 @@ end
 function SetPlay(startTime)
     timer = nil
     BGMMgr:StopBGM2()
-    source = BGMMgr:PlayBGM2(curMusicID, startTime * 1000)
-    local max = source:GetMaxTime()
-    slider_sd.minValue = 0
-    slider_sd.maxValue = max
-    slider_sd.value = startTime
-    CSAPI.SetText(txtSlider1, TimeUtil:GetTimeStr9(startTime))
-    CSAPI.SetText(txtSlider2, TimeUtil:GetTimeStr9(max))
-    time = nil
-    timer = Time.time + 0.1
+    if tonumber(CS.CSAPI.APKVersion()) > 6 then
+        source = BGMMgr:PlayBGM2_CB(curMusicID, startTime * 1000, function()
+            if(isDestory or source == nil or source.cueSheet == "")then 
+                return
+            end
+            local max = source:GetMaxTime()
+            slider_sd.minValue = 0
+            slider_sd.maxValue = max
+            slider_sd.value = startTime
+            CSAPI.SetText(txtSlider1, TimeUtil:GetTimeStr9(startTime))
+            CSAPI.SetText(txtSlider2, TimeUtil:GetTimeStr9(max))
+            time = nil
+            timer = Time.time + 0.1
+        end)
+    else
+        source = BGMMgr:PlayBGM2(curMusicID, startTime * 1000)
+        local max = source:GetMaxTime()
+        slider_sd.minValue = 0
+        slider_sd.maxValue = max
+        slider_sd.value = startTime
+        CSAPI.SetText(txtSlider1, TimeUtil:GetTimeStr9(startTime))
+        CSAPI.SetText(txtSlider2, TimeUtil:GetTimeStr9(max))
+        time = nil
+        timer = Time.time + 0.1
+    end
 end
 
 function SetBtnPlay()
