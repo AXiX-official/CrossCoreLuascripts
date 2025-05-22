@@ -68,10 +68,13 @@ function Next()
     if (#curDatas > 1) then
         for k, v in ipairs(curDatas) do
             if (v:GetCfg().id == data) then
-                if (k < #curData) then
-                    data = curDatas[k + 1]:GetCfg().id
-                else
-                    data = curDatas[1]:GetCfg().id
+                data = nil
+                local index, len = k, #curDatas
+                while data == nil do
+                    index = index >= len and 1 or (index + 1)
+                    if (curDatas[index]:IsBuy()) then
+                        data = curDatas[index]:GetCfg().id
+                    end
                 end
                 break
             end

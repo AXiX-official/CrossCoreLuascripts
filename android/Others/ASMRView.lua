@@ -138,10 +138,8 @@ function Update()
             cur = time -- 播放中
         else
             -- 返回开头了 
-            ASMRMgr:RemoveCueSheet(oldCurMusicID, 1)
+            RemoveCur()
             ASMRMgr:StopBGM()
-            oldCurMusicID = nil
-            timer = nil
             anim_sound:Play("Sound_quit")
         end
     end
@@ -273,6 +271,7 @@ function OnClickR2()
         end
     else
         if (curData:GetCfg().jump) then
+            RemoveCur()
             JumpMgr:Jump(curData:GetCfg().jump)
         end
     end
@@ -382,7 +381,7 @@ function GetCurPos()
 end
 
 function OnViewOpened(viewKey)
-    RemoveCur()
+    --RemoveCur()
     if (viewKey == "ShopView") then
         SettingMgr:SetAudioScale(s_audio_scale.music, musicScale)
     end
