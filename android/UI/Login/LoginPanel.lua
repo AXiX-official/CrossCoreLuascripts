@@ -760,9 +760,16 @@ function Login(_data)
         HideMask();
         return;
     end
-    local serverInfo = GetCurrentServer();
-    local serverIp,serverPort =GetLoginIpInfo(serverInfo,_data.account);
-    serverPort = serverPort or serverInfo.port;
+   local serverInfo = GetCurrentServer();
+    local serverIp,serverPort;
+      if CSAPI.IsADV() then
+       local ipAndPort=GetLoginIpInfo(serverInfo,_data.account);
+        serverIp,serverPort = GetIpAndPort(ipAndPort)
+        serverPort = serverPort or serverInfo.port;
+     else
+         serverIp,serverPort =GetLoginIpInfo(serverInfo,_data.account);
+         serverPort = serverPort or serverInfo.port;
+     end
     tempMsg=_data;
     if isOnline then
         ShowMask();

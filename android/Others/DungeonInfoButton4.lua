@@ -2,7 +2,6 @@ local cfg = nil
 local data = nil
 local sectionData = nil
 local isSweepOpen = false
-local buyFunc = nil
 local timeFunc = nil
 local resetTime = 0
 local timer = 0

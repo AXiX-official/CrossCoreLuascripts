@@ -4,7 +4,7 @@ local layout = nil
 local rewardDatas = nil
 local sweepImg = nil
 local teamView = nil
-
+local sectionData = nil
 --time
 local isShowTime = 0
 local resetTime = -1
@@ -20,7 +20,6 @@ local SweepNum = 0
 
 local isHotEnough = false
 local isMatEnough = false
-
 -- buff
 local isHasBuff = nil
 -- double
@@ -36,17 +35,12 @@ local isUnLimit = false
 local vipEndTime = 0
 local vipTime = 0
 local vipTimer = 0
-
 --net
 local isStarLoading = nil
 local loadingTime = 30
-
 --taofa
 local isTaoFaMat = false
 local taoFaInfo = nil
-
---buy
-local onBuyFunc = nil
 
 function Awake()
     slider = ComUtil.GetCom(leftSlider, "Slider")
@@ -204,10 +198,10 @@ function OnOpen()
         LogError("id对应的关卡表数据不存在！！！" .. data.id)
         return
     end
+    sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
 
     if openSetting then
         taoFaInfo = openSetting.taoFaInfo
-        onBuyFunc = openSetting.onBuyFunc
     end
 
     InitPanel()
@@ -512,8 +506,7 @@ function OnClickSweep()
     end
 
     if isMat and not isMatEnough then
-        if onBuyFunc then
-            onBuyFunc()
+        if IsShowBuyView() then
             return
         end
         local goodsData = nil
@@ -643,8 +636,7 @@ end
 
 function OnClick(go)
     if (isHas and go.name == "btnMat") or not isHot then
-        if onBuyFunc then
-            onBuyFunc()
+        if IsShowBuyView() then
             return
         end
         local reward = {}
@@ -662,4 +654,20 @@ end
 
 function StarLoading()
     CSAPI.SetGOActive(loadObj, true)
+end
+------------------------------------商店购买------------------------------------
+function IsShowBuyView()
+    local sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
+    if sectionData:GetBuyGets() then
+        local buy = sectionData:GetBuyCount()
+        local cost = sectionData:GetBuyCost()
+        local gets = sectionData:GetBuyGets()
+        local cur = DungeonMgr:GetArachnidCount(sectionData:GetID())
+        local payFunc = function(count)
+            PlayerProto:BuyArachnidCount(count, sectionData:GetID())
+        end
+        UIUtil:OpenPurchaseView(nil, nil, cur, buy, cost, gets, payFunc)
+        return true
+    end
+    return false
 end

@@ -344,7 +344,6 @@ function ShowInfo(item)
         ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo2", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
-            itemInfo.SetBuyFunc(OnBuyFunc)
             itemInfo.SetIsActive(true)
             itemInfo.Show(cfg,type,function ()
                 if item then

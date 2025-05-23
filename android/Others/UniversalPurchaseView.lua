@@ -100,6 +100,7 @@ function OnClickPay()
         CSAPI.OpenView("Dialog",dialogData)
         return
     end
+
     if data.payFunc then
         data.payFunc(currNum)
     end

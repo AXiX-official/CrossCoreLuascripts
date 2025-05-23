@@ -2,7 +2,6 @@ local cfg = nil
 local data = nil
 local sectionData = nil
 local isSweepOpen = false
-local buyFunc = nil
 
 local time = 0
 local timer = 0
@@ -116,12 +115,8 @@ function OnEnterClick()
     end
 end
 
-function SetBuyFunc(_func)
-    buyFunc = _func
-end
-
 function OnClickSweep()
-    UIUtil:OpenSweepView(cfg.id,buyFunc)
+    UIUtil:OpenSweepView(cfg.id)
 end
 
 function IsSweepOpen()

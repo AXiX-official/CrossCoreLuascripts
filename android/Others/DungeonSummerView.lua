@@ -480,7 +480,6 @@ end
 
 function OnLoadCallBack()
     itemInfo.SetFunc("Button2","OnClickEnter",OnBattleEnter)
-    itemInfo.CallFunc("Button2","SetBuyFunc",OnPayFunc)
     itemInfo.CallFunc("PlotButton","SetStoryCB",OnStoryCB)
     if currItem then
         itemInfo.CallFunc("Danger3","ShowDangeLevel",currItem.IsDanger(),currItem.GetCfgs(),currDanger)

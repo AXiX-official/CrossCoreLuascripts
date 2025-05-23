@@ -511,7 +511,6 @@ end
 
 function OnLoadCallBack()
     itemInfo.SetFunc("CloudButton","OnClickEnter",OnBattleEnter)
-    itemInfo.CallFunc("CloudButton","SetBuyFunc",OnPayFunc)
     itemInfo.CallFunc("CloudPlotButton","SetStoryCB",OnStoryCB)
     itemInfo.CallFunc("Double","SetTextColor","ffc146")
     if currItem then

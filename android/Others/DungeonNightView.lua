@@ -505,7 +505,6 @@ end
 
 function OnLoadCallBack()
     itemInfo.SetFunc("NightButton","OnClickEnter",OnBattleEnter)
-    itemInfo.CallFunc("NightButton","SetBuyFunc",OnPayFunc)
     itemInfo.CallFunc("NightPlotButton","SetStoryCB",OnStoryCB)
     itemInfo.CallFunc("Double","SetTextColor","ffc146")
     if currItem then

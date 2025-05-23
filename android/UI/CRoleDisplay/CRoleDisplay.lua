@@ -473,11 +473,11 @@ function OnClickBC()
     if (not isSame) then
         if (data:GetTy() == 2 or data:GetTy() == 3) then
             CRoleDisplayMgr:SetCRoleDisplayS()
-        end 
-        data:InitRet(c_data:GetRet())
+        end
         if (data:GetTy() ~= 1) then
-            PlayerProto:SetRandomPanel(data:GetRet())
+            PlayerProto:SetRandomPanel(c_data:GetRet())
         else
+            data:InitRet(c_data:GetRet())
             EventMgr.Dispatch(EventType.CRoleDisplayMain_Refresh)
         end
     end

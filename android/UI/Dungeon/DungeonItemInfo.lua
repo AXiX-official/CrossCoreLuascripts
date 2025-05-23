@@ -220,9 +220,6 @@ function OnButtonClick(panel)
     if storyCB and panel.SetStoryCB then
         panel.SetStoryCB(storyCB)
     end
-    if buyFunc and panel.SetBuyFunc then
-        panel.SetBuyFunc(buyFunc)
-    end
 end
 
 function SetClickMaskCB(_cb)
@@ -235,11 +232,6 @@ function OnClickMask()
         maskCB()
     end
 end
-
-function SetBuyFunc(_func)
-    buyFunc = _func
-end
-
 ------------------------------------------------动效
 function PlayAnim(time, callback)
     CSAPI.SetGOActive(clickMask, true)

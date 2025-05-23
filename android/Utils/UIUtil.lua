@@ -914,27 +914,10 @@ function this:OpenSweepView(cfgId, payFunc)
                 LanguageMgr:ShowTips(24003)
                 return
             end
-            local buy = sectionData:GetBuyCount()
-            local cost = sectionData:GetBuyCost()
-            local gets = sectionData:GetBuyGets()
-            local cur = DungeonMgr:GetArachnidCount(sectionData:GetID())
-            payFunc = payFunc or function(count)
-                PlayerProto:BuyArachnidCount(count, sectionData:GetID())
-            end
             local sweepData = SweepMgr:GetData(cfgId)
             if sweepData then
                 if sweepData:IsOpen() then
-                    local OnBuyFunc = nil
-                    if sectionData:GetBuyGets() then
-                        OnBuyFunc = function()
-                            UIUtil:OpenPurchaseView(nil, nil, cur, buy, cost, gets, payFunc)
-                        end
-                    end
-                    CSAPI.OpenView("SweepView", {
-                        id = cfgId
-                    }, {
-                        onBuyFunc = OnBuyFunc
-                    })
+                    CSAPI.OpenView("SweepView", {id = cfgId})
                 else
                     Tips.ShowTips(sweepData:GetLockStr())
                 end

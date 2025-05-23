@@ -449,7 +449,6 @@ function ShowInfo(item)
         ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo3", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter,nil,OnStoryCB)
-            itemInfo.SetBuyFunc(OnBuyFunc)
             itemInfo.SetIsActive(true)
             itemInfo.PlayInfoMove = PlayInfoMove
             itemInfo.PlayMoveAction = PlayMoveAction
