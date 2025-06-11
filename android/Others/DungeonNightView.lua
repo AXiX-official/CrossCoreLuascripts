@@ -405,7 +405,7 @@ function OnClickHome()
 end
 
 function OnClickRank()
-    CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {eRankType.CentaurRank}})
+    CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {eRankId.CentaurRank}})
 end
 -----------------------------------------------bgItem-----------------------------------------------
 function InitBGItems()

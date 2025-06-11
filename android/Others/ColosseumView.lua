@@ -173,7 +173,7 @@ function OnClickPM()
     local sectionData = ColosseumMgr:GetSectionData()
     CSAPI.OpenView("RankSummer", {
         datas = {sectionData},
-        types = {eRankType.Abattoir}
+        types = {eRankId.Abattoir}
     })
 end
 

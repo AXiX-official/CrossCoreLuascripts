@@ -390,7 +390,7 @@ function OnClickHome()
 end
 
 function OnClickRank()
-    CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {eRankType.CloudRank}})
+    CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {eRankId.CloudRank}})
 end
 -----------------------------------------------bgItem-----------------------------------------------
 function ShowBGItems()

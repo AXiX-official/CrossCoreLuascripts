@@ -298,7 +298,7 @@ function OnClickR()
     local sectionData = RogueTMgr:GetSectionData()
     CSAPI.OpenView("RankSummer", {
         datas = {sectionData},
-        types = {eRankType.RogueTRank}
+        types = {eRankId.RogueTRank}
     })
 end
 

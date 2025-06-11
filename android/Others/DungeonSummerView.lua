@@ -424,7 +424,7 @@ function OnClickHome()
 end
 
 function OnClickRank()
-    CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {eRankType.SummerActiveRank}})
+    CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {eRankId.SummerActiveRank}})
 end
 
 -----------------------------------------------关卡信息-----------------------------------------------
