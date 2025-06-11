@@ -1,7 +1,7 @@
 --状态数据
 local this = 
 {
-eff_addition_pack={"s50041"},
+eff_addition_pack={"","s50041"},no_eff_ab=1,
 cast3={play_time=1500,hide_buff=1},
 combo_enter={play_time=5000,hide_buff=1},
 cast2={play_time=19700,start_pos={ref_type=1,offset_row=-300},last_hit=17800,hide_scene=1,hide_scene_time=19200,hide_buff=1,showDatas={{delay=0,isFriend=1}}},

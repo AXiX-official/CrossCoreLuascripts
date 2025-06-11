@@ -1787,9 +1787,9 @@ function GCalHelp:Clock(isCpuClock)
 end
 
 function GCalHelp:FindObjArrByKey(arr, key, val)
-    for _, info in ipairs(arr) do
+    for ix, info in ipairs(arr) do
         if info[key] == val then
-            return info
+            return info, ix
         end
     end
 
@@ -2748,4 +2748,16 @@ function GCalHelp:GetCheckBuffBattlePoint(buffs, duplicateId)
     end
 
     return points
+end
+-- 根据模型ID获取该角色ID
+function GCalHelp:GetCidByModel(model)
+    if not model then
+        return nil
+    end
+    local cfg = character[model]
+
+    if cfg and cfg.role_id then
+        return cfg.role_id
+    end
+    return nil
 end

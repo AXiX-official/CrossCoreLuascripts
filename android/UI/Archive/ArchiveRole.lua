@@ -145,7 +145,7 @@ function SetRole(_moduleId)
 	cfg = data:GetCfg()
 	--name
 	CSAPI.SetText(txtName, data:GetAlias())
-	CSAPI.SetText(txtName2, data:GetEnName())
+	-- CSAPI.SetText(txtName2, data:GetEnName())
 	--cv
 	local cvName = cfg.sSounder_jp
 	local language = SoundMgr:GetCVLanguage(data:GetSoundLanguageName())
@@ -158,6 +158,7 @@ function SetRole(_moduleId)
 	needToCheckMove = false
 	CSAPI.SetText(txt_cv, cfStr)
 	needToCheckMove = true
+	CSAPI.SetGOActive(left,not (cfStr == nil or cfStr == ""))
 	--painter 
 	local painterStr = LanguageMgr:GetByID(29056) .. ":" .. cfg.sPainter
 	CSAPI.SetText(txt_painter, painterStr)

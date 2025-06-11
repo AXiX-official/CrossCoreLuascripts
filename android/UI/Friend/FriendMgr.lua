@@ -220,6 +220,7 @@ function this:GetAssistFormat(proto, card, index, isFull)
 		alias = proto.alias,
 		icon_id = proto.icon_id,
 		icon_frame=proto.icon_frame,
+		sel_card_ix=proto.sel_card_ix,
 		level = proto.level,
 		card = card,
 		assit_cnt = proto.assit_cnt,
@@ -660,7 +661,10 @@ function this:GetFriendFlush()
 		"level",
 		"uid",
 		"build_opens",
-		"icon_frame"
+		"icon_frame",
+		"sel_card_ix",
+		"icon_title",
+		"icon_id",
 	}
 	self:GetFlush(fileds)
 end

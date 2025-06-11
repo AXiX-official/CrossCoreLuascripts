@@ -190,6 +190,8 @@ function RefreshPanel()
         SetGlobalBossPanel()
     elseif sceneType == SceneType.RogueT then
         SetRogueTPanel()
+    elseif sceneType == SceneType.BuffBattle then
+        SetBuffBattlePanel() 
     else
         SetPVEPanel()
     end
@@ -663,7 +665,6 @@ function SetPVEPanel()
             end
         end
     end
-
 end
 
 function SetPVETitle()
@@ -1102,6 +1103,14 @@ function SetGlobalBossSweepPanel()
     local maxScore = data.hDamage or 0
     CSAPI.SetText(txtDamage,maxScore.."")
     CSAPI.SetGOActive(txt_topDamage,false)
+end
+----------------------------------积分战斗--------------------------------------
+function SetBuffBattlePanel()
+    CSAPI.SetGOActive(titleObj, true)
+    local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
+    if cfgDungeon then
+        CSAPI.SetText(txtTitle, cfgDungeon.name)
+    end
 end
 ------------------------------------扫荡------------------------------------
 function SetSweepPanel()

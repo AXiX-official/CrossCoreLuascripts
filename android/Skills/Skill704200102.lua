@@ -19,8 +19,8 @@ function Skill704200102:OnActionOver(caster, target, data)
 	else
 		return
 	end
-	-- 8220
-	if SkillJudger:IsCanHurt(self, caster, target, true) then
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
 	else
 		return
 	end

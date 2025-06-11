@@ -68,12 +68,12 @@ function Filter:GetAll(exclude)
 end
 
 -- 目标单体(随机一个)
-function Filter:GetRand(rand, exclude)
+function Filter:GetRand(rand, exclude,isSummonIn)
 	rand = rand or 1
 	local arr = self.team.arrCard
 	local res = {}
 	for i,v in ipairs(arr) do
-		if v:IsLive() and v.type ~= CardType.Summon and exclude ~= v then
+		if v:IsLive() and (v.type ~= CardType.Summon or isSummonIn) and exclude ~= v then
 			table.insert(res, v)
 		end
 	end
@@ -683,10 +683,11 @@ end
 function Filter:GetUnite(card)
 	local arr = self.team.arrCard
 	local res = {}
+	local arrUnite = card.mapUnite or {}
 	for i,v in ipairs(arr) do
-		if v:IsLive() and v ~= card and v.nClass == card.nClass and v.type ~= CardType.Unite then -- 必须是同小队并且不是同调角色
+		if v:IsLive() and v ~= card and v.nClass == card.nClass and v.type ~= CardType.Unite and arrUnite[v.id] then -- 必须是同小队并且不是同调角色
 			-- table.insert(res, v)
-			LogDebugEx("同队角色:", v.name)
+			LogDebugEx("同队角色:", v.name,v.id)
 			return {v}
 		end
 	end

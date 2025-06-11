@@ -100,10 +100,25 @@ function this:PlayBGM(fightOverData)
         -- end
     else
         -- 播放队长失败声音
-        if (fightOverData.team and fightOverData.team.leader) then
+        if (fightOverData.team and fightOverData.team.leader) then            
             local card = FormationUtil.FindTeamCard(fightOverData.team.leader);
-            if (card) then
+            if (card) then               
                 local cfgModel = card:GetModelCfg();
+
+                if(cfgModel)then
+                    local characters = CharacterMgr:GetAll();
+                    if(characters)then
+                        for _,c in pairs(characters)do
+                            if(not c.IsEnemy())then
+                                local cfgModelTemp = c.GetCfgModel();
+                                if(cfgModelTemp and cfgModel.role_id == cfgModelTemp.role_id)then
+                                    cfgModel = cfgModelTemp;
+                                end
+                            end
+                        end
+                    end
+                end
+
                 if (cfgModel and cfgModel.s_fail) then
                     CSAPI.PlayRandSound(cfgModel.s_fail, true);
                 end

@@ -202,6 +202,7 @@ end
 
 function FightMgrBase:ClientError(uid, err)
     LogDebugEx('FightMgrBase:ClientError()', uid, err)
+    LogInfo("uid=%s, nDuplicateID=%s, groupID=%s", uid, self.nDuplicateID or "nil", self.groupID )
     LogInfo("svn = %s err = %s\n cmds = %s", g_svnVersion, err, table.Encode(self.cmds))
 end
 
@@ -3802,7 +3803,7 @@ elseif IS_SERVER then
     FightMgr = FightMgrServer
     function CreateFightMgr(id, groupID, ty, seed, nDuplicateID)
         LogDebugEx('CreateFightMgr', id, groupID, ty, seed, nDuplicateID)
-        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT then
+        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT or ty == SceneType.BuffBattle then
             return PVEFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild then
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)

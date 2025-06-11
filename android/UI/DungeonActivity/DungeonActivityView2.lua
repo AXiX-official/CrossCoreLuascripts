@@ -1,3 +1,4 @@
+local sectionData = nil
 local curType = 1
 local curOpen = 1
 local currLevel = 1
@@ -19,7 +20,7 @@ local curDatas = nil
 function Awake()
     blackFade = ComUtil.GetCom(frontBlack, "ActionFade")
     blackFade2 = ComUtil.GetCom(black, "ActionFade")
-    CSAPI.SetGOActive(action, false)
+    CSAPI.SetGOActive(action,false)
     CSAPI.SetText(txtLockTime, "")
 
     layout = ComUtil.GetCom(hsv, "UISV")
@@ -59,8 +60,8 @@ function OnValueChange()
 end
 
 function SetArrows()
-    CSAPI.SetGOActive(btnFirst, currLevel ~= 1)
-    CSAPI.SetGOActive(btnLast, currLevel ~= #curDatas)
+    CSAPI.SetGOActive(btnFirst,currLevel ~= 1)
+    CSAPI.SetGOActive(btnLast,currLevel ~= #curDatas)
 end
 
 function OnInit()
@@ -70,15 +71,17 @@ end
 function OnEnable()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
-    eventMgr:AddListener(EventType.Scene_Load_Complete, OnSceneLoadComplete)
+    eventMgr:AddListener(EventType.Loading_Complete,OnLoadComplete)
 end
 
 function OnRedPointRefresh()
     SetRed()
 end
 
-function OnSceneLoadComplete()
-    ShowTips()
+function OnLoadComplete()
+    if openSetting and openSetting.isDungeonOver then
+        ShowTips()
+    end
 end
 
 function OnDisable()
@@ -94,11 +97,11 @@ function Update()
 end
 
 function OnOpen()
-    imgs1 = {nolImg1, hardImg1, eliteImg1, hellImg1}
-    imgs2 = {nolImg2, hardImg2, eliteImg2, hellImg2}
-    btns = {btnNol, btnHard, btnElite, btnHell}
+    imgs1 = {nolImg1,hardImg1,eliteImg1,hellImg1,exImg1}
+    imgs2 = {nolImg2,hardImg2,eliteImg2,hellImg2,exImg2}
+    btns = {btnNol,btnHard,btnElite,btnHell,btnEx}
     if data and data.id then
-        local sectionData = DungeonMgr:GetSectionData(data.id)
+        sectionData = DungeonMgr:GetSectionData(data.id)
         if sectionData then
             openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         end
@@ -113,21 +116,28 @@ function OnOpen()
     else
         LogError("获取不到副本数据!")
     end
-    blackFade2:Play(1, 0, 200)
+    blackFade2:Play(1,0,200)
     CSAPI.SetGOActive(action, true)
 
     MissionMgr:CheckRedPointData()
 end
 
 function SetRed()
-    local isRed = MissionMgr:CheckRed2(eTaskType.DupTaoFa, sectionData:GetID())
+    local isRed = MissionMgr:CheckRed2(eTaskType.DupTaoFa,sectionData:GetID())
     UIUtil:SetRedPoint2("Common/Red2", btnMission, isRed, 79, 42, 0)
+
+    if DungeonActivityMgr:HasBuffBattle(sectionData:GetID()) then
+        local isRed2 = MissionMgr:CheckRed2(eTaskType.PointsBattle,sectionData:GetID())
+        UIUtil:SetRedPoint(exRedParent, isRed2, 0, 0, 0)
+        UIUtil:SetRedPoint(btnEnter, isRed2 and curType == #curDatas, 236, 68, 0)
+    end
 end
 
 -- 初始化数据
 function SetDatas()
     groupDatas = DungeonMgr:GetDungeonGroupDatas(data.id)
-    if groupDatas and #groupDatas > 0 then
+    local dungeonIds = {}
+    if groupDatas and #groupDatas>0 then
         for i, v in ipairs(groupDatas) do
             if v:IsOpen() then
                 curOpen = i
@@ -143,18 +153,23 @@ function SetDatas()
                         end
                     end
                 end
+                if #ids > 1 then
+                    dungeonIds = ids
+                end
             end
         end
     end
-    if not data.itemId then -- 无跳转id选中最新关卡
+    if not data.itemId then --无跳转id选中最新关卡
+        curType = curOpen
+    elseif DungeonMgr:GetCurrDungeonIsFirst() then --第一次战斗结束
+        DungeonMgr:SetCurrDungeonNoFirst()
         curType = curOpen
     end
 
-    local ids = groupDatas[#groupDatas]:GetDungeonGroups()
     curDatas = {}
-    for i, v in ipairs(ids) do
+    for i, v in ipairs(dungeonIds) do
         local cfg = Cfgs.MainLine:GetByID(v)
-        table.insert(curDatas, cfg)
+        table.insert(curDatas,cfg)
     end
     svUtil:Init(layout, #curDatas, {100, 100}, 3, 0.1, 0.58)
 end
@@ -162,7 +177,7 @@ end
 function SetButtons()
     for i = 1, #btns do
         if i > #groupDatas then
-            CSAPI.SetGOActive(btns[i], false)
+            CSAPI.SetGOActive(btns[i].gameObject,false)
         end
     end
 end
@@ -190,68 +205,76 @@ function RefreshPanel()
         SetState()
         SetLevel()
         SetPower()
+        SetRank()
+        SetRed()
     end
 end
 
 -- 背景
 function SetBg()
-    CSAPI.LoadImg(btnEnter, "UIs/DungeonActivity2/btn_01_0" .. curType .. ".png", true, nil, true)
+    CSAPI.LoadImg(btnEnter,"UIs/DungeonActivity2/btn_01_0" .. curType .. ".png",true, nil, true)
     local bgPath = currGroupData:GetBGPath()
     if bgPath ~= nil and bgPath ~= "" then
-        ResUtil:LoadBigImg2(bg, bgPath, false)
+        ResUtil:LoadBigImg2(bg, bgPath,false)
     end
     local imgPath = currGroupData:GetImgPath()
     if imgPath ~= nil and imgPath ~= "" then
         ResUtil:LoadBigImg(before, imgPath, false)
     end
-    CSAPI.SetGOActive(bg, currGroupData:GetShowType() ~= 3 and currGroupData:GetShowType() ~= 2)
-    CSAPI.SetGOActive(before, currGroupData:GetShowType() > 2 and currGroupData:GetShowType() ~= 4)
+    CSAPI.SetGOActive(bg,currGroupData:GetShowType() ~= 3 and currGroupData:GetShowType() ~= 2)
+    CSAPI.SetGOActive(before,currGroupData:GetShowType() > 2 and currGroupData:GetShowType() ~= 4)
 end
 
 function SetTitle()
     local title = ""
-    local timeStr = ""
+    local timeStr =""
     if openInfo then
         title = openInfo:GetName()
         if openInfo:IsDungeonOpen() then
             local strs = openInfo:GetTimeStrs()
             timeStr = strs[1] .. " " .. strs[2] .. " - " .. strs[3] .. " " .. strs[4]
-        else
+        else    
             timeStr = openInfo:GetCloseTimeStr()
         end
     end
-    CSAPI.SetText(txtTitle, title)
-    CSAPI.SetText(txtTime, timeStr)
+    CSAPI.SetText(txtTitle,title)
+    CSAPI.SetText(txtTime,timeStr)
 end
 
 -- 状态
 function SetState()
-    if groupDatas and #groupDatas > 0 then
+    if groupDatas and #groupDatas>0 then
         for i = 1, #groupDatas do
             CSAPI.SetImgColor(imgs2[i], 255, 255, 255, curType == i and 255 or 179)
         end
     end
-
+    
     CSAPI.SetGOActive(hardLock, curOpen < 2)
     CSAPI.SetGOActive(eliteLock, curOpen < 3)
     CSAPI.SetGOActive(hellLock, curOpen < 4)
+    CSAPI.SetGOActive(exLock, curOpen < 5)
 end
 
 function SetLevel()
     local ids = currGroupData:GetDungeonGroups()
     CSAPI.SetGOActive(levelObj, ids and #ids > 1)
-    if ids and #ids > 1 then
+    if ids and #ids>1 then
         layout:IEShowList(#curDatas, nil, currLevel)
         OnValueChange()
     end
 end
 
 function SetPower()
-    CSAPI.SetGOActive(powerObj, curType ~= #groupDatas)
+    local ids = currGroupData:GetDungeonGroups()
+    CSAPI.SetGOActive(powerObj, not(ids and #ids > 1))
     local cfg = GetCurrCfg()
     if cfg and cfg.lvTips then
-        CSAPI.SetText(txtPower, cfg.lvTips .. "")
+        CSAPI.SetText(txtPower,cfg.lvTips .. "")
     end
+end
+
+function SetRank()
+    CSAPI.SetGOActive(btnRank,currGroupData:IsEx())
 end
 
 -- 普通
@@ -275,7 +298,7 @@ function OnClickHard()
         AnimBlackTo(RefreshPanel)
     end
 end
--- 精英
+--精英
 function OnClickElite()
     if curOpen < 3 then
         LanguageMgr:ShowTips(24002)
@@ -291,11 +314,24 @@ end
 -- 地狱
 function OnClickHell()
     if curOpen < 4 then
-        LanguageMgr:ShowTips(24002)
+            LanguageMgr:ShowTips(24002)
         return
     end
     if curType ~= 4 then
         curType = 4
+        PlayButtonAnim()
+        AnimBlackTo(RefreshPanel)
+    end
+end
+
+--积分
+function OnClickEx()
+    if curOpen < 5 then
+            LanguageMgr:ShowTips(24002)
+        return
+    end
+    if curType ~= 5 then
+        curType = 5
         PlayButtonAnim()
         AnimBlackTo(RefreshPanel)
     end
@@ -332,6 +368,10 @@ function OnClickEnter()
         LanguageMgr:ShowTips(24003)
         return
     end
+    if currGroupData:IsEx() then
+        CSAPI.OpenView("BuffBattle",{id =currGroupData:GetID()})
+        return
+    end
     local cfg = GetCurrCfg()
     if cfg and DungeonMgr:IsDungeonOpen(cfg.id) then
         CSAPI.OpenView("TeamConfirm", { -- 正常上阵
@@ -364,9 +404,13 @@ function OnClickExplain2()
     local explainData = {}
     explainData.title = LanguageMgr:GetByID(37033)
     explainData.content = cfg and cfg.introduce or ""
-    explainData.pos = {249, -244}
-    explainData.anchors = {1, 0, 1, 0}
+    explainData.pos= {249,-244}
+    explainData.anchors = {1,0,1,0}
     CSAPI.OpenView("ExplainBox", explainData)
+end
+
+function OnClickRank()
+    CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {sectionData:GetRankType()}})
 end
 
 -- 关闭界面
@@ -380,8 +424,8 @@ function GetCurrCfg(_index)
     if groupDatas and groupDatas[index] then
         local ids = groupDatas[index]:GetDungeonGroups()
         local id = 0
-        if ids and #ids > 0 then
-            id = index < #groupDatas and ids[1] or ids[currLevel]
+        if ids and #ids>0 then
+            id = #ids > 1 and ids[currLevel] or ids[1] 
         end
         cfg = Cfgs.MainLine:GetByID(id)
     end
@@ -420,7 +464,7 @@ function PlayEffect()
     local name = currGroupData:GetEffectName()
     local goEffect = effectGos[name]
     if not goEffect then
-        ResUtil:CreateBGEffect(name, 0, 0, 0, effectObj, function(go)
+        ResUtil:CreateBGEffect(name, 0,0,0,effectObj,function (go)
             effectGos[name] = go
         end);
     else
@@ -430,18 +474,18 @@ end
 
 function SetBGScale()
     local size = CSAPI.GetMainCanvasSize()
-    local offset1, offset2 = size[0] / 1920, size[1] / 1080
-    local offset = offset1 > offset2 and offset1 or offset2
+    local offset1,offset2 = size[0] / 1920,size[1] / 1080
+    local offset = offset1>offset2 and offset1 or offset2
     local child = bg.transform:GetChild(0)
     if child then
-        CSAPI.SetScale(child.gameObject, offset, offset, offset)
+        CSAPI.SetScale(child.gameObject,offset,offset,offset)
     end
 end
 
 -------------------------------------------anim-------------------------------------------
 -- 按钮动画
 function PlayButtonAnim()
-    if groupDatas and #groupDatas > 0 then
+    if groupDatas and #groupDatas>0 then
         for i = 1, #groupDatas do
             AnimScaleTo(imgs2[i].gameObject, curType == i)
             CSAPI.SetGOActive(imgs1[i], curType == i)
@@ -476,24 +520,23 @@ function AnimMask(delay)
     end, nil, delay)
 end
 -------------------------------------------tips-------------------------------------------
-
 function ShowTips()
-    local info = FileUtil.LoadByPath("Dungeon_TaoFa_OpenInfo_" .. data.id .. "_" .. PlayerClient:GetUid() .. ".txt") or
-                     {1}
-    if curOpen < 2 and info[curOpen + 1] then -- 重置本地数据
+    local info = FileUtil.LoadByPath("Dungeon_TaoFa_OpenInfo_".. data.id .."_" .. PlayerClient:GetUid() ..".txt") or {1}
+    if curOpen < 2 and info[curOpen + 1] then --重置本地数据
         info = {}
-        FileUtil.SaveToFile("Dungeon_TaoFa_OpenInfo_" .. data.id .. "_" .. PlayerClient:GetUid() .. ".txt", info)
+        FileUtil.SaveToFile("Dungeon_TaoFa_OpenInfo_".. data.id .."_" .. PlayerClient:GetUid() ..".txt",info)
         return
     end
     if curOpen > 1 and info[curOpen] == nil then -- 没记录则弹出提示
         info[curOpen] = 1
-        FileUtil.SaveToFile("Dungeon_TaoFa_OpenInfo_" .. data.id .. "_" .. PlayerClient:GetUid() .. ".txt", info)
-        if groupDatas and curOpen >= #groupDatas then -- 全开启
+        FileUtil.SaveToFile("Dungeon_TaoFa_OpenInfo_".. data.id .."_" .. PlayerClient:GetUid() ..".txt",info)
+        if groupDatas and curOpen >= #groupDatas then --全开启
             local dungeonData = DungeonMgr:GetData(GetCurrCfg(curOpen).id)
-            if dungeonData and dungeonData:IsPass() then -- 已通关则不用提示
+            if dungeonData and dungeonData:IsPass() then --已通关则不用提示
                 return
             end
         end
         LanguageMgr:ShowTips(34002)
     end
 end
+

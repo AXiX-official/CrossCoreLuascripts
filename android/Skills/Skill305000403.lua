@@ -24,7 +24,7 @@ function Skill305000403:OnAttackOver(caster, target, data)
 	-- 305000610
 	self:ChangeSkill(SkillEffect[305000610], caster, self.card, data, 3,305000301)
 	-- 305000510
-	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
-	-- 305000510
-	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
+	self:SetFury(SkillEffect[305000510], caster, self.card, data, 0)
+	-- 305000511
+	self:DelBufferForce(SkillEffect[305000511], caster, self.card, data, 305000301)
 end

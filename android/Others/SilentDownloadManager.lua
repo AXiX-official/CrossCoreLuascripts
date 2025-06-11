@@ -6,7 +6,7 @@ function this:Init()
     this.hasPopSelectView = false
     self:Clear()
     
-    if tonumber(CSAPI.APKVersion()) == 9 then
+    if tonumber(CSAPI.APKVersion()) >= 9 then
         EventMgr.AddListener(EventType.Version_SilentDownload_Error_MD5, this.OnVersionSilentDownloadError)
     end
     -- 兼容旧包
@@ -118,7 +118,7 @@ function this.OnShowSilentDownloadSelect()
 end
 
 function this:Clear()
-    if tonumber(CSAPI.APKVersion()) == 9 then
+    if tonumber(CSAPI.APKVersion()) >= 9 then
         EventMgr.RemoveListener(EventType.Version_SilentDownload_Error_MD5, OnVersionSilentDownloadError)
     end
     if tonumber(CSAPI.APKVersion()) > 6 then

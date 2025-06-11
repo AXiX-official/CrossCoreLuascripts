@@ -62,6 +62,11 @@ function OnOpen()
             CSAPI.SetText(txt_tips3,LanguageMgr:GetByID(langID,cardName,changeInfo[1].cfg.desc));
         end
         CSAPI.SetGOActive(txt_tips3,changeInfo~=nil);
+        local hasL2d=currSkinInfo:HasL2D();
+        if hasL2d~=true then
+            CSAPI.SetText(txt_tips5,LanguageMgr:GetByID(18132));
+        end
+        CSAPI.SetGOActive(txt_tips5,changeInfo~=true);
         local isShow=false;
         if voucherItem~=nil then
             voucherItem.Init(data,1);

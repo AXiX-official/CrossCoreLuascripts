@@ -895,6 +895,8 @@ this.CRoleDisplayMain_Refresh = 270013;
 this.CRoleDisplayMain_Change = 270014;
 --随机看板刷新（移除，添加）
 this.CRoleDisplayS_Change = 270015;
+--玩家名称和性别变更
+this.Player_SexOrName_Change = 270016
 ----------------------------镜头相关事件
 --当前天空盒变化
 this.SkyBox_Changed = 280001;
@@ -1389,6 +1391,10 @@ this.ShareView_NoticeTheNextFrameScreenshot=800021;
 ---分享通知截图完成
 this.ShareView_NoticeScreenshotCompleted=800022;
 ----------------------------------------------海外SDK----上-----------------------------------------------------
+this.SDK_ShiryuSDK_GetActivitys = 800023;
+this.SDK_ShiryuSDK_GetActivitys_Complete = 800024;
+this.SDK_ShiryuSDK_Redeem = 800025;
+this.SDK_ShiryuSDK_Redeem_Complete = 800026;
 
 
 return this; 

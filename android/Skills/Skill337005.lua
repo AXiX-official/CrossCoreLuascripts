@@ -25,11 +25,6 @@ function Skill337005:OnBornSpecial(caster, target, data)
 	end
 	-- 337015
 	self:AddSp(SkillEffect[337015], caster, caster, data, 30)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
 	-- 337025
 	self:AddBuff(SkillEffect[337025], caster, self.card, data, 337005)
 end

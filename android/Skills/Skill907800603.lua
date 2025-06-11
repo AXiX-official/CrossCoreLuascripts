@@ -8,23 +8,20 @@ function Skill907800603:Init(skillID, card)
 end
 -- 行动结束
 function Skill907800603:OnActionOver(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	-- 907800607
+	local playerturn = SkillApi:GetTurnCount(self, caster, self.card,nil)
+	-- 907800608
+	if SkillJudger:Equal(self, caster, target, true,(playerturn%5),0) then
 	else
 		return
 	end
 	-- 907800607
 	local playerturn = SkillApi:GetTurnCount(self, caster, self.card,nil)
-	-- 907800608
-	if SkillJudger:Equal(self, caster, target, true,(playerturn%3),0) then
-	else
-		return
-	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	-- 907800610
+	if SkillJudger:Greater(self, caster, self.card, true,playerturn,0) then
 	else
 		return
 	end
 	-- 907800606
-	self:AddBuff(SkillEffect[907800606], caster, self.card, data, 2105)
+	self:AddBuff(SkillEffect[907800606], caster, self.card, data, 907800606)
 end

@@ -22,7 +22,7 @@ function Skill336105:OnRoundBegin(caster, target, data)
 	end
 	-- 336105
 	if self:Rand(5000) then
-		self:DelBuffQuality(SkillEffect[336105], caster, caster, data, 2,2)
+		self:DelBuffQuality(SkillEffect[336105], caster, caster, data, 2,1)
 		-- 336111
 		self:AddBuff(SkillEffect[336111], caster, caster, data, 4004,1)
 	end

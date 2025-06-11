@@ -752,6 +752,45 @@ function this:ApplyEnter(id, indexList, duplicateTeamDatas)
     end});
 end
 
+--积分战斗
+function this:ApplyBuffBattle(id, indexList, duplicateTeamDatas,buffs)
+    indexList = indexList or {};
+    duplicateTeamDatas = duplicateTeamDatas or {};
+    -- 发送协议, 请求进入副本
+    local data = {
+        index = 1, -- 副本类型
+        nDuplicateID = id, -- 副本id
+        data = indexList, -- 队伍id
+        list = duplicateTeamDatas, -- 编队信息
+        buffs = buffs --选中的buff
+    }
+    local dungeonCfg = Cfgs.MainLine:GetByID(id);
+    -- LogError(data.list)
+    if dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
+        self:SetFightTeamId(indexList[1]); -- 设置正在战斗中的队伍id
+
+        self:SetCurrId(id)
+        local groupCfg = Cfgs.MonsterGroup:GetByID(dungeonCfg.nGroupID);
+        self:SetFightMonsterGroup(groupCfg);
+        data.isMultiReward = self.isMultiReward -- 每日副本多倍奖励
+    end
+
+    FightProto:EnterFightBuffBattleDuplicate(data)
+
+    --副本消息超时提示
+    EventMgr.Dispatch(EventType.Net_Msg_Wait,{msg="fight",time=5000,
+    timeOutCallBack=function()
+        local retryTime = DungeonMgr.retryTime or 0;
+        local time = CSAPI.GetTime();
+        if(time < retryTime + 10)then
+            return;
+        end
+        DungeonMgr.retryTime = time;
+        LogError(string.format("请求进入副本失败,id=%s,indexList=%s,duplicateTeamDatas=%s",id, table.tostring(indexList,true),table.tostring(duplicateTeamDatas,true)));       
+        DungeonMgr:ApplyBuffBattle(id, indexList, duplicateTeamDatas,buffs);
+    end});
+end
+
 function this:ApplyDungeonFight(myOID, monsterOID)
     FightClient:Clean();
 
@@ -1183,6 +1222,12 @@ function this:OnQuit(isExit, jumpType)
                 end
             end  
         end
+        -- if cfg.dungeonGroup then
+        --     local groupData= DungeonMgr:GetDungeonGroupData(cfg.dungeonGroup)
+        --     if groupData and groupData:IsEx() then --积分战斗
+        --         CSAPI.OpenView("BuffBattle",{id = groupData:GetID()})
+        --     end
+        -- end
     end
     
     if jumpType and (jumpType == 5 or jumpType == 6 or jumpType == 7) then --失败重开或下一关

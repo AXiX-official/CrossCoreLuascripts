@@ -19,9 +19,9 @@ function this:GetActivityDownAddress(type)
     -- local curServer = GetCurrentServer()
     local currPlatform = CSAPI.GetPlatform()
     local str1 = "pc"
-    if(currPlatform == 8) then 
+    if (currPlatform == 8) then
         str1 = "ios"
-    elseif(currPlatform == 11) then 
+    elseif (currPlatform == 11) then
         str1 = "android"
     elseif(currPlatform == 51) then 
         str1 = "harmony"
@@ -33,7 +33,8 @@ function this:GetActivityDownAddress(type)
         str2 = "official"
     elseif (CSAPI.GetChannelType() == ChannelType.QOO) then
         str2 = "qoo"
-    elseif (CSAPI.GetChannelType() == ChannelType.ZiLong or CSAPI.GetChannelType() == ChannelType.ZiLongKR or CSAPI.GetChannelType() == ChannelType.ZiLongJP) then
+    elseif (CSAPI.GetChannelType() == ChannelType.ZiLong or CSAPI.GetChannelType() == ChannelType.ZiLongKR or
+        CSAPI.GetChannelType() == ChannelType.ZiLongJP) then
         str2 = "zilong"
     end
     local fileName = ""
@@ -182,10 +183,32 @@ function this:GetDatasByType(type, time, page)
     end
 end
 
+-- 是否有公告
+function this:IsHaveBoard()
+    local datas = self.datas and self.datas[BackstageFlushType.Board] or nil
+    if (datas) then
+        local curTime = time or TimeUtil:GetTime()
+        for k, v in pairs(datas) do
+            local beginTime = v:GetBeginTime()
+            local endTime = v:GetEndTime()
+            if (beginTime == nil or curTime > beginTime) then
+                if (endTime == nil or endTime > curTime) then
+                   return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 -- 弹出活动公告
 function this:ToShowAD()
     if (self:CheckIsNeedShow()) then
         self.isIn = 1
+        -- 是否无公告，无则不需要弹 
+        if (not self:IsHaveBoard()) then
+            return false
+        end
         return true
     end
     return false
@@ -230,13 +253,13 @@ function this:UpdateDatas(proto)
         if proto.operateActiveList and #proto.operateActiveList > 0 then
             for i, v in ipairs(proto.operateActiveList) do
                 if self.ALDatas[v.id] then
-                    self.ALDatas[v.id]:SetTime(v.openTime,v.closeTime)
+                    self.ALDatas[v.id]:SetTime(v.openTime, v.closeTime)
                 end
             end
         end
         if proto.isFinish then
             self:RefreshOpenState()
-            EventMgr.Dispatch(EventType.Activity_List_Cfg_Change)        
+            EventMgr.Dispatch(EventType.Activity_List_Cfg_Change)
         end
     end
 end
@@ -275,9 +298,9 @@ function this:CheakPopInfos()
     self.popInfos = {}
 end
 
---获取某一组活动的最前开始时间和最后结束时间
+-- 获取某一组活动的最前开始时间和最后结束时间
 function this:GetActivityTime(group)
-    local sTime,eTime = nil,nil
+    local sTime, eTime = nil, nil
     if self.ALDatas then
         for k, v in pairs(self.ALDatas) do
             if group and v:GetGroup() == group and v:IsOpen() then
@@ -301,10 +324,10 @@ function this:GetActivityTime(group)
             end
         end
     end
-    return sTime,eTime
+    return sTime, eTime
 end
 
---获取整个活动表的最小刷新时间
+-- 获取整个活动表的最小刷新时间
 function this:GetRefreshTime(type)
     local timer = nil
     if self.ALDatas then
@@ -370,7 +393,7 @@ end
 function this:CheckRedPointData(type)
     if type then
         if self.ALDatas then
-            local redData1,redData2 = nil,nil
+            local redData1, redData2 = nil, nil
             local group = 1
             for i, v in pairs(self.ALDatas) do
                 if v:GetType() == type then
@@ -385,11 +408,11 @@ function this:CheckRedPointData(type)
                 end
             end
             if redData1 ~= redData2 then
-                if redData2 == nil then --如果无红点，检测一遍全组是否都无红点
+                if redData2 == nil then -- 如果无红点，检测一遍全组是否都无红点
                     redData2 = self:CheckRedByGroup(group) and 1 or nil
                 end
                 redData1 = redData2
-                RedPointMgr:UpdateData(RedPointType["ActivityList" .. group], redData1) 
+                RedPointMgr:UpdateData(RedPointType["ActivityList" .. group], redData1)
             end
         end
         return
@@ -457,16 +480,16 @@ function this:CheckRed(id)
                 LogError("找不到对应商店页的商品数据！1001")
                 return false
             end
-    
+
             local comms = pageData:GetCommodityInfos(true)
             if comms and #comms < 1 then
                 return false
             end
-    
+
             local commodity = comms[1]
             if commodity:GetPrice() and #commodity:GetPrice() > 0 then
                 if commodity:GetBuyLimitType() == ShopBuyLimitType.FirstRecharge then
-                    local amount = PlayerClient:GetPayAmount() / 100 
+                    local amount = PlayerClient:GetPayAmount() / 100
                     local maxAmount = commodity:GetBuyLimitVal()
                     if amount < maxAmount then
                         return false
@@ -485,7 +508,8 @@ function this:CheckRed(id)
                     if datas and #datas > 0 then
                         local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
                         for i, v in ipairs(datas) do
-                            if (not infos[v:GetID()] or infos[v:GetID()] == 1) and v:GetNum() ~= 0 and ShopCommFunc.CheckCanPay(v,1) then
+                            if (not infos[v:GetID()] or infos[v:GetID()] == 1) and v:GetNum() ~= 0 and
+                                ShopCommFunc.CheckCanPay(v, 1) then
                                 return true
                             end
                         end
@@ -495,48 +519,48 @@ function this:CheckRed(id)
             return false
         elseif data:GetType() == ActivityListType.AccuCharge then
             local num = RedPointMgr:GetData(RedPointType.AccuCharge)
-            if(num and num==1) then 
+            if (num and num == 1) then
                 return true
-            end 
-            return false          
-        elseif data:GetType()==ActivityListType.GachaBall then
+            end
+            return false
+        elseif data:GetType() == ActivityListType.GachaBall then
             local info = data:GetInfo()
             if info and info[1] then
-                local cfgId=info[1].cfgId;
-                local info=ItemPoolActivityMgr:CheckPoolHasRedPoint(cfgId);
-                local pool=ItemPoolActivityMgr:GetPoolInfo(cfgId);
-                local info2=RedPointMgr:GetDayRedState(RedPointDayOnceType.GachaBall)
-                if pool and pool:IsOver()~=true and (info or info2) then
+                local cfgId = info[1].cfgId;
+                local info = ItemPoolActivityMgr:CheckPoolHasRedPoint(cfgId);
+                local pool = ItemPoolActivityMgr:GetPoolInfo(cfgId);
+                local info2 = RedPointMgr:GetDayRedState(RedPointDayOnceType.GachaBall)
+                if pool and pool:IsOver() ~= true and (info or info2) then
                     return true;
                 end
             end
             return false;
         elseif data:GetType() == ActivityListType.AccuCharge2 then
             local num = RedPointMgr:GetData(RedPointType.AccuCharge2)
-            if(num and num==1) then 
+            if (num and num == 1) then
                 return true
-            end 
-            return false   
+            end
+            return false
         elseif data:GetType() == ActivityListType.AccuCharge3 then
             local num = RedPointMgr:GetData(RedPointType.AccuCharge3)
-            if(num and num==1) then 
+            if (num and num == 1) then
                 return true
-            end 
-            return false   
+            end
+            return false
         elseif data:GetType() == ActivityListType.Collaboration then
-            local num=RedPointMgr:GetData(RedPointType.Collaboration);
-            if(num ~= nil) then 
+            local num = RedPointMgr:GetData(RedPointType.Collaboration);
+            if (num ~= nil) then
                 return true
-            end 
-            return false  
+            end
+            return false
         elseif data:GetType() == ActivityListType.SkinRebate then
             if data:GetInfo() and data:GetInfo().skinId then
                 local comms = ShopMgr:GetCommodityBySkinID(data:GetInfo().skinId)
-                local isGet,isFinish =false,false
+                local isGet, isFinish = false, false
                 if #comms > 0 then
                     for i, v in ipairs(comms) do
-                        isGet = OperationActivityMgr:IsSkinRebateGet(data:GetInfo().skinId,v:GetID())
-                        isFinish = OperationActivityMgr:IsSkinRebateFinish(data:GetInfo().skinId,v:GetID())
+                        isGet = OperationActivityMgr:IsSkinRebateGet(data:GetInfo().skinId, v:GetID())
+                        isFinish = OperationActivityMgr:IsSkinRebateFinish(data:GetInfo().skinId, v:GetID())
                         if isFinish and not isGet then
                             return true
                         end
@@ -545,7 +569,7 @@ function this:CheckRed(id)
             end
             return false
         else
-            local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .."_Activity_Red_" .. id) == 0
+            local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .. "_Activity_Red_" .. id) == 0
             return isRed
         end
     end
@@ -565,7 +589,7 @@ function this:IsSignIn(id)
 end
 
 ----------------------------------------界面弹出---------------------------------------
---检测所有活动弹窗
+-- 检测所有活动弹窗
 function this:CheckWindowShow()
     for k, v in pairs(eAEShowType) do
         local id = eAEShowIdType[v]
@@ -579,39 +603,39 @@ function this:CheckWindowShow()
     return false
 end
 
---检测弹窗是否需要弹出
+-- 检测弹窗是否需要弹出
 function this:CheckWindowNeedShow(key)
     if not key or key == "" then
         return false
     end
     self.windowInfos = self.windowInfos or {}
-    if self.windowInfos[key] and self.windowInfos[key] == 1 then --已经弹过一次
+    if self.windowInfos[key] and self.windowInfos[key] == 1 then -- 已经弹过一次
         return false
     end
     self.windowInfos[key] = 1
     local infos = FileUtil.LoadByPath("Menu_Window_Show") or {}
-    if infos[key] == nil or infos[key].time == nil then --默认弹出
-        self:SaveWindowInfos(key,false)
+    if infos[key] == nil or infos[key].time == nil then -- 默认弹出
+        self:SaveWindowInfos(key, false)
         return true
     end
     local offsetTab = TimeUtil:GetTimeTab(TimeUtil:GetTime() - infos[key].time)
-    if offsetTab[1] > 0 then --超过一天
-        self:SaveWindowInfos(key,false)
+    if offsetTab[1] > 0 then -- 超过一天
+        self:SaveWindowInfos(key, false)
         return true
     else
         local timeTab1 = TimeUtil:GetTimeHMS(infos[key].time)
         local timeTab2 = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
-        if timeTab1.day == timeTab2.day then --同一天
-            if timeTab1.hour < g_ActivityDiffDayTime and timeTab2.hour >= g_ActivityDiffDayTime then --刷新前后
-                self:SaveWindowInfos(key,false)
+        if timeTab1.day == timeTab2.day then -- 同一天
+            if timeTab1.hour < g_ActivityDiffDayTime and timeTab2.hour >= g_ActivityDiffDayTime then -- 刷新前后
+                self:SaveWindowInfos(key, false)
                 return true
             end
-        elseif timeTab2.day > timeTab1.day then --前后一天
-            if timeTab1.hour < g_ActivityDiffDayTime then --刷新前
-                self:SaveWindowInfos(key,false)
+        elseif timeTab2.day > timeTab1.day then -- 前后一天
+            if timeTab1.hour < g_ActivityDiffDayTime then -- 刷新前
+                self:SaveWindowInfos(key, false)
                 return true
-            elseif timeTab2.hour >= g_ActivityDiffDayTime then --刷新后
-                self:SaveWindowInfos(key,false)
+            elseif timeTab2.hour >= g_ActivityDiffDayTime then -- 刷新后
+                self:SaveWindowInfos(key, false)
                 return true
             end
         end
@@ -622,8 +646,8 @@ function this:CheckWindowNeedShow(key)
     return true
 end
 
---保存弹窗状态
-function this:SaveWindowInfos(key,isClose)
+-- 保存弹窗状态
+function this:SaveWindowInfos(key, isClose)
     if not key or key == "" then
         return
     end
@@ -631,10 +655,10 @@ function this:SaveWindowInfos(key,isClose)
     infos[key] = infos[key] or {}
     infos[key].isClose = isClose
     infos[key].time = TimeUtil:GetTime()
-    FileUtil.SaveToFile("Menu_Window_Show",infos)
+    FileUtil.SaveToFile("Menu_Window_Show", infos)
 end
 
---获取弹窗状态
+-- 获取弹窗状态
 function this:GetWindowInfo(key)
     if not key or key == "" then
         return {}
@@ -643,9 +667,9 @@ function this:GetWindowInfo(key)
     return infos[key] or {}
 end
 ----------------------------------------运营相关---------------------------------------
-function this:SetOperateActive(id,info)
-    local data= self:GetALData(tonumber(id))
-    if data and data:GetType() ==ActivityListType.SignInGift and info.payRate then
+function this:SetOperateActive(id, info)
+    local data = self:GetALData(tonumber(id))
+    if data and data:GetType() == ActivityListType.SignInGift and info.payRate then
         self.operateActive[tonumber(id)] = self.operateActive[tonumber(id)] or {}
         self.operateActive[tonumber(id)].sTime = info.openTime or 0
         self.operateActive[tonumber(id)].eTime = info.closeTime or 0
@@ -660,7 +684,7 @@ function this:GetOperateActive(id)
     return nil
 end
 
---根据类型来获取开启状态和id
+-- 根据类型来获取开启状态和id
 function this:IsOpenByType(type)
     local isOpen = false
     local id = nil
@@ -668,7 +692,7 @@ function this:IsOpenByType(type)
         local sTime = nil
         for k, v in pairs(self.ALDatas) do
             if v:GetType() == type and v:IsOpen() then
-                if not sTime or v:GetStartTime() < sTime then --获取最先开启
+                if not sTime or v:GetStartTime() < sTime then -- 获取最先开启
                     id = v:GetID()
                     isOpen = true
                     sTime = v:GetStartTime()
@@ -676,7 +700,7 @@ function this:IsOpenByType(type)
             end
         end
     end
-    return isOpen,id
+    return isOpen, id
 end
 
 return this

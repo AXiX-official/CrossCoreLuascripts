@@ -18,11 +18,8 @@ function Skill336902:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8261
-	if SkillJudger:IsCallSkill(self, caster, target, true) then
-	else
-		return
-	end
 	-- 336902
-	self:AlterRandBufferByID(SkillEffect[336902], caster, target, data, 1003,1)
+	if self:Rand(4000) then
+		self:AlterRandBufferByID(SkillEffect[336902], caster, target, data, 1001,1)
+	end
 end

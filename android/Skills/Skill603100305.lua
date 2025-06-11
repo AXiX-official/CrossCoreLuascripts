@@ -8,9 +8,9 @@ function Skill603100305:Init(skillID, card)
 end
 -- 执行技能
 function Skill603100305:DoSkill(caster, target, data)
-	-- 12005
+	-- 12004
 	self.order = self.order + 1
-	self:DamageLight(SkillEffect[12005], caster, target, data, 0.2,5)
+	self:DamageLight(SkillEffect[12004], caster, target, data, 0.25,4)
 end
 -- 攻击结束
 function Skill603100305:OnAttackOver(caster, target, data)
@@ -32,5 +32,5 @@ function Skill603100305:OnAttackOver(caster, target, data)
 	-- 603100305
 	self:HitAddBuffCount(SkillEffect[603100305], caster, target, data, 10000,603100101,3,999)
 	-- 603100313
-	self:AddProgress(SkillEffect[603100313], caster, target, data, -1500)
+	self:AddProgress(SkillEffect[603100313], caster, target, data, -150)
 end

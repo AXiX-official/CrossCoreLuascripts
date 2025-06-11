@@ -9,6 +9,7 @@ end
 function Refresh(_info,elseData)
 	info = _info
 	isOpenReplace = elseData and elseData.isOpenReplace or false
+	type = elseData and elseData.rankType or nil
 	local rank = info:GetRank()
 
 	--bg
@@ -27,8 +28,10 @@ function Refresh(_info,elseData)
 	--排名
 	CSAPI.SetText(txtRank1, rank < 4 and rank .. "" or "")
 	CSAPI.SetText(txtRank2, rank >= 4 and rank .. "" or "")
-	--战斗力
+	-- 显示2
 	CSAPI.SetText(txtFighting, info:GetScore() .. "")
+	-- 显示1
+	CSAPI.SetText(txtTurnNum, info:GetTurnNum() .. "")
 	--icon
 	-- ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")
 	-- local _cfg = Cfgs.character:GetByID(info:GetModuleID())
@@ -42,6 +45,11 @@ function Refresh(_info,elseData)
 	CSAPI.SetGOActive(btnOpen,isOpenReplace)
 	--
 	CSAPI.SetText(txtHard,info:GetHard())
+
+	if type == eRankId.BuffBattleRank then
+        CSAPI.SetAnchor(txtTurnNum,581,0)
+        CSAPI.SetAnchor(txtFighting,285,0)
+    end
 end
 
 function GetName()

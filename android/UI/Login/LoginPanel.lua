@@ -520,6 +520,7 @@ function OnClickStartBtn()
                         Log("维护中")
                         local dialogData = {}
                         dialogData.content = jsonPackage.maintainJson;
+                        dialogData.okCallBack = function() CSAPI.UnityQuit() end
                         CSAPI.OpenView("Prompt", dialogData)
                     elseif jsonPackage.code==1 and jsonPackage.language then
                         local dialogData = {}
@@ -760,16 +761,9 @@ function Login(_data)
         HideMask();
         return;
     end
-   local serverInfo = GetCurrentServer();
-    local serverIp,serverPort;
-      if CSAPI.IsADV() then
-       local ipAndPort=GetLoginIpInfo(serverInfo,_data.account);
-        serverIp,serverPort = GetIpAndPort(ipAndPort)
-        serverPort = serverPort or serverInfo.port;
-     else
-         serverIp,serverPort =GetLoginIpInfo(serverInfo,_data.account);
-         serverPort = serverPort or serverInfo.port;
-     end
+    local serverInfo = GetCurrentServer();
+    local serverIp,serverPort =GetLoginIpInfo(serverInfo,_data.account);
+    serverPort = serverPort or serverInfo.port;
     tempMsg=_data;
     if isOnline then
         ShowMask();
@@ -1110,16 +1104,18 @@ function OnAgreeState(_isAgree)
 end
 
 function OnClickUserTips(go)
-	local type=1;
-	if go.name=="txt_userTips" then
-		type=1; --注册协议下标
-        if CSAPI.IsADV() then ShiryuSDK.ShowSdkCommonUI(7) end
+    local type=1;
+    if go.name=="txt_userTips" then
+        type=1; --注册协议下标
     elseif go.name=="txt_userTips2" then
         type=3; --个人隐私下标
+        ---海外隐私（隐私协议）
         if CSAPI.IsADV() then ShiryuSDK.ShowSdkCommonUI(6) end
-	else
-		type=2; --儿童隐私下标
-	end
+    elseif go.name=="txt_userTips3" then
+        type=2; --儿童隐私下标
+        ---海外（使用许可及服务协议）
+        if CSAPI.IsADV() then ShiryuSDK.ShowSdkCommonUI(7) end
+    end
     if CSAPI.IsADV()==false then CSAPI.OpenView("LoginAgreement",nil,type); end
 end
 

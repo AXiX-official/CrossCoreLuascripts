@@ -1,6 +1,7 @@
 --状态数据
 local this = 
 {
+eff_addition_pack={"videos"},
 summon={play_time=17000,start_pos={ref_type=10},summon_delay=0},
 cast2={play_time=10500,start_pos={ref_type=13},last_hit=8800},
 cast1={play_time=2000,feature=1,feature_camera_no_transform=1},

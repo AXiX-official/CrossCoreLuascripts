@@ -102,7 +102,15 @@ function InitOnClick()
                 if (not isOpen) then
                     Tips.ShowTips(str)
                 else
-                    CSAPI.OpenView(key)
+                    if (key == "ActivityView") then
+                        if (not ActivityMgr:IsHaveBoard()) then
+                            Tips.ShowTips(LanguageMgr:GetByID(30005))
+                        else
+                            CSAPI.OpenView(key)
+                        end
+                    else
+                        CSAPI.OpenView(key)
+                    end
                 end
             end
         end
@@ -110,9 +118,9 @@ function InitOnClick()
 end
 
 function RefreshPanel()
-    if(isDestroy)then 
+    if (isDestroy or headParent==nil) then
         return
-    end 
+    end
     -- head
     UIUtil:AddHeadFrame(headParent, 1)
     -- player

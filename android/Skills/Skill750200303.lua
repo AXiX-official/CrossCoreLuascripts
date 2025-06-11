@@ -8,7 +8,22 @@ function Skill750200303:Init(skillID, card)
 end
 -- 执行技能
 function Skill750200303:DoSkill(caster, target, data)
-	-- 12006
+	-- 11006
 	self.order = self.order + 1
-	self:DamageLight(SkillEffect[12006], caster, target, data, 0.167,6)
+	self:DamagePhysics(SkillEffect[11006], caster, target, data, 0.167,6)
+end
+-- 行动结束
+function Skill750200303:OnActionOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4750231
+	self:DelBufferForce(SkillEffect[4750231], caster, self.card, data, 750200201)
 end

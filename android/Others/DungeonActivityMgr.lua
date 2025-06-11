@@ -13,19 +13,38 @@ function this:Clear()
     self.cur_rank = {} 
     self.rankInfos = {} 
     self.myRank = {}
+    self.myTurnNum = {}
     self.myScore = {}
     self.max_rank = {}
     self.rankTime = {}
 end
 
+--包含积分战斗
+function this:HasBuffBattle(sid)
+    local dungeonGroups = DungeonMgr:GetDungeonGroupDatas(sid)
+    local isHas = false
+    if dungeonGroups and #dungeonGroups > 0 then
+        for i, v in ipairs(dungeonGroups) do
+            if v:IsEx() then
+                isHas = true
+                break
+            end
+        end
+    end
+    return isHas
+end
 ---------------------------------------------rank----------------------------------------------
 --本地清空
 function this:ClearRankData(type)
+    if type == nil then
+        return
+    end
     self.clearTime[type] = self.clearTime[type] or 0
     if(self.clearTime[type] <= TimeUtil:GetTime()) then 
         self.cur_rank = {}
         self.rankInfos = {}
         self.myRank = {}
+        self.myTurnNum = {}
         self.myScore = {}
         self.clearTime[type] = self.rankTime[type]
     end 
@@ -38,6 +57,7 @@ function this:ClearRank(proto)
         self.rankInfos[proto.rank_type] = nil
         self.myRank[proto.rank_type] = nil
         self.myScore[proto.rank_type] = nil
+        self.myTurnNum[proto.rank_type] = nil
         EventMgr.Dispatch(EventType.Activity_Rank_Update)
     end
 end
@@ -60,6 +80,7 @@ function this:GetRankRet(proto)
         end
         self.myRank[proto.rank_type] = proto.rank or self.myRank[proto.rank_type]
         self.myScore[proto.rank_type] = proto.score or self.myScore[proto.rank_type]
+        self.myTurnNum[proto.rank_type] = proto.turn_num or self.myTurnNum[proto.rank_type]
         self.rankTime[proto.rank_type] = proto.next_refresh_time and proto.next_refresh_time + 10 or 0 --延后10秒用于获取服务器数据
     end
     EventMgr.Dispatch(EventType.Activity_Rank_Update)
@@ -107,6 +128,7 @@ function this:GetMyRank(type)
         icon_id = PlayerClient:GetIconId(),
         icon_frame = PlayerClient:GetHeadFrame(),
         score = self.myScore[type] or 0,
+        turn_num = self.myTurnNum[type] or 0,
         dupId = cfgDungeon and cfgDungeon.id or 0,
         sel_card_ix = PlayerClient:GetSex(),
         icon_title = PlayerClient:GetIconTitle(),
@@ -140,7 +162,11 @@ function this:CheckRed(sid)
             end
             return isRed
         elseif sectionData:GetType() == SectionActivityType.TaoFa then
-            return MissionMgr:CheckRed2(eTaskType.DupTaoFa,sectionData:GetID())
+            local isRed = MissionMgr:CheckRed2(eTaskType.DupTaoFa,sectionData:GetID())
+            if not isRed and self:HasBuffBattle(sid) then
+                isRed = MissionMgr:CheckRed2(eTaskType.PointsBattle,sectionData:GetID())
+            end
+            return isRed
         elseif sectionData:GetType() == SectionActivityType.TotalBattle then
             return MissionMgr:CheckRed({eTaskType.StarPalace})
         elseif sectionData:GetType() == SectionActivityType.Rogue then  

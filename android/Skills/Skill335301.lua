@@ -31,6 +31,42 @@ function Skill335301:OnBorn(caster, target, data)
 end
 -- 特殊入场时(复活，召唤，合体)
 function Skill335301:OnBornSpecial(caster, target, data)
-	-- 335321
-	self:OwnerAddBuff(SkillEffect[335321], caster, caster, data, 335301)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 335301
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[335301], caster, target, data, 335301)
+	end
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 335311
+	local targets = SkillFilter:All(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[335311], caster, target, data, 335301)
+	end
+end
+-- 死亡时
+function Skill335301:OnDeath(caster, target, data)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 335331
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:DelBufferTypeForce(SkillEffect[335331], caster, target, data, 335301)
+	end
+	-- 335332
+	local targets = SkillFilter:All(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		self:DelBufferTypeForce(SkillEffect[335332], caster, target, data, 335301)
+	end
 end

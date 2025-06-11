@@ -109,6 +109,8 @@ function OnOpen()
         InitGlobalBoss()
     elseif openSetting==TeamConfirmOpenType.RogueT then
         InitRogueT();
+    elseif openSetting==TeamConfirmOpenType.BuffBattle then
+        InitBuffBattle();
     end
     InitChoosieIDs();--初始化已选择的队伍id
     InitOptions();
@@ -433,6 +435,8 @@ function OnClickBattle()
         OnGlobalBoss()
     elseif openSetting==TeamConfirmOpenType.RogueT then
         OnRogueT();
+    elseif openSetting==TeamConfirmOpenType.BuffBattle then
+        OnBuffBattle();
     end
 end
 
@@ -1004,6 +1008,72 @@ function OnGlobalBoss()
     end
 end
 
+function InitBuffBattle()
+    InitDungeon()
+end
+
+function OnBuffBattle()
+    local teamNum=0;
+    local duplicateTeamDatas={};
+    local choosieID={};
+    local choosieInfo={};--缓存配置的信息
+    for k,v in ipairs(teamItems) do
+        if k<=teamMax and v.IsUse()==true then
+            local duplicateTeam=v.GetDuplicateTeamData();
+            local canBattle=v.CanBattle();
+            if v.GetState()~=TeamConfirmItemState.UnUse and canBattle==false then
+                teamNum=teamNum+1;
+            elseif duplicateTeam~=nil and canBattle==true and v.GetState()~=TeamConfirmItemState.UnUse then
+                teamNum=teamNum+1;
+                table.insert(duplicateTeamDatas,duplicateTeam);
+                table.insert(choosieID,duplicateTeam.nTeamIndex);
+                table.insert(choosieInfo,{index=k,order=duplicateTeam.nTeamIndex});
+            end
+        end
+    end
+    if currDungeonID==nil or currDungeonID=="" then
+        LogError("出战关卡的ID不能为nil！"..tostring(currDungeonID));
+        return;
+    elseif #duplicateTeamDatas==teamNum then
+        if #duplicateTeamDatas>0 then
+            --判断装备是否超量
+            if EquipMgr:IsBagFull() then
+                TipsMgr:HandleMsg({strId="equipBagSpaceLimit"});
+                -- Tips.ShowTips(LanguageMgr:GetTips(14003));
+                do return end
+            end
+            --进入战斗！！
+            BattleMgr:SetLastCtrlId(nil);
+            for k,v in ipairs(choosieID) do --用于处理单机模式下获取不到战斗中队伍数据的情况
+                TeamMgr.currentIndex=v;
+                local teamData=TeamMgr:GetEditTeam();
+                if  teamItems[k] and teamItems[k].GetAssistData()~=nil then
+                    teamData:AddCard(teamItems[k].GetAssistData());
+                end
+                TeamMgr:AddFightTeamData(teamData);
+                UIUtil:AddFightTeamState(1,"TeamConfirm:OnDungeon()")
+            end
+            TeamMgr:DelEditTeam();
+            for k, v in ipairs(duplicateTeamDatas) do
+                for _, val in ipairs(v.team) do
+                    if val.fuid then --助战卡
+                        FriendMgr:SetAssistMemberCnt(val.fuid);
+                    end
+                end
+            end
+            local buffs = (data and data.buffs) and data.buffs or nil
+            -- LogError(duplicateTeamDatas)
+            DungeonMgr:ApplyBuffBattle(currDungeonID, choosieID, duplicateTeamDatas,buffs);
+            BuffBattleMgr:ClearIDs()
+            SaveConfig(choosieInfo);
+            UIUtil:AddNetWeakHandle(500);
+        else
+            Tips.ShowTips(LanguageMgr:GetTips(14004));
+        end
+    elseif duplicateTeamDatas==nil or #duplicateTeamDatas<1 then
+        Tips.ShowTips(LanguageMgr:GetTips(14005));
+    end
+end
 --本地保存当前选择的队伍id
 function SaveConfig(tab)
     if tab then

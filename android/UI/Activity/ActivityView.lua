@@ -66,13 +66,15 @@ function SetCTab()
     end
     isSetTab = true
 
-    local _selIndex = 0
-    for i = 3, 1, -1 do
+    local _selIndex = -1
+    for i = 1, 3 do
         local _data = ActivityMgr:GetDatasByType(BackstageFlushType.Board, time, i) or {}
         CSAPI.SetGOActive(this["page" .. i], #_data > 0)
-        _selIndex = i - 1
+        if(#_data > 0 and _selIndex == -1)then 
+            _selIndex = i - 1
+        end
     end
-    tab.selIndex = _selIndex
+    tab.selIndex = _selIndex==-1 and 0 or _selIndex
 end
 
 function OnTabChanged(_index)
@@ -138,7 +140,7 @@ end
 
 function SetCurInfo()
     curData = datas[curIndex]
-    local showType = curData and curData:GetShowType() or 0
+    local showType = curData and curData:GetShowType() or -1
     CSAPI.SetGOActive(right1, showType == 0)
     CSAPI.SetGOActive(right2, showType == 1)
     CSAPI.SetGOActive(right3, showType == 2)

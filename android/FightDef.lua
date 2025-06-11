@@ -13,6 +13,7 @@ SceneType.Rogue		= 9 -- 乱序演习
 SceneType.RogueS	= 10 -- 战力派遣
 SceneType.GlobalBoss= 11 -- 新世界boss
 SceneType.RogueT 	= 12 -- 能力测验
+SceneType.BuffBattle	= 13 -- 积分战斗
 
 -- 副本类型
 eDuplicateType                 = {}

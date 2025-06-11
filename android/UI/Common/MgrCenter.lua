@@ -71,6 +71,7 @@ local mgrNames = {
 	"OperationActivityMgr", --运营活动
 	"QuestionnaireMgr", --问卷
 	"ActivityPopUpMgr", --活动界面弹出
+	"BuffBattleMgr", --积分战斗
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"
 }

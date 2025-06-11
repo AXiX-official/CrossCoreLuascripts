@@ -78,6 +78,11 @@ function this:GetDungeonCfgs()
     return cfgs
 end
 
+function this:GetFirstDungeonCfg()
+    local cfgs = self:GetDungeonCfgs()
+    return cfgs and cfgs[1]
+end
+
 --获取星数
 function this:GetStar()
     local groups = self:GetDungeonGroups()
@@ -197,6 +202,38 @@ end
 
 function this:GetIcon()
     return self.cfg and self.cfg.icon
+end
+
+-----------------------------------------------积分-----------------------------------------------
+function this:IsEx()
+    return self.cfg and self.cfg.isEx
+end
+
+--基础分数
+function this:GetPoints()
+    return self.cfg and self.cfg.points
+end
+
+--词条组
+function this:GetBuffs()
+    local datas = {}
+    if self.cfg and self.cfg.buffgroup and #self.cfg.buffgroup > 0 then
+        local cfgs = nil
+        for i, id in ipairs(self.cfg.buffgroup) do
+            cfgs = Cfgs.CfgBuffBattle:GetGroup(id)
+            if cfgs then
+                for k, cfg in pairs(cfgs) do
+                    table.insert(datas,cfg)
+                end
+            end
+        end
+    end
+    if #datas > 0 then
+        table.sort(datas,function (a,b)
+            return a.id < b.id
+        end)
+    end
+    return datas
 end
 
 return this;

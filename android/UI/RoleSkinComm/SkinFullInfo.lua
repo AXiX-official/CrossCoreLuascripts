@@ -254,6 +254,8 @@ function SetContent()
             if comm~=nil and comm:GetNowTimeCanBuy() then
                 if comm:GetBundlingType()==ShopCommBindType.Bindling and bindComm then
                     CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18123),curModelCfg.key,curModelCfg.desc,bindComm:GetName()));
+                elseif currSkinInfo:HasL2D()~=true then
+                    CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18133),curModelCfg.key,curModelCfg.desc));
                 else
                     CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18067),curModelCfg.key,curModelCfg.desc));
                 end

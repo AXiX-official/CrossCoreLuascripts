@@ -44,8 +44,14 @@ function SetStarInfos()
         return
     end
 
+    if sceneType == SceneType.BuffBattle then
+        CSAPI.SetGOActive(taskObj, false)
+        return
+    end
+
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
-    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa or cfgDungeon.type == eDuplicateType.NewTower or cfgDungeon.type == eDuplicateType.RogueS then
+    if cfgDungeon.type == eDuplicateType.Tower or cfgDungeon.type == eDuplicateType.TaoFa 
+    or cfgDungeon.type == eDuplicateType.NewTower or cfgDungeon.type == eDuplicateType.RogueS then
         CSAPI.SetGOActive(taskObj, false)
         return
     end
@@ -203,7 +209,7 @@ function ApplyQuit(jumpType)
             -- DungeonMgr:ApplyEnter(dungeonId);
             return;
         end
-    elseif sceneType == SceneType.Rogue or sceneType == SceneType.RogueS then 
+    elseif sceneType == SceneType.Rogue or sceneType == SceneType.RogueS or sceneType == SceneType.BuffBattle then 
         ClearTeamData()
     end
     if jumpType then
@@ -245,6 +251,8 @@ function ApplyQuit(jumpType)
         RogueMgr:FightToBack(false,elseData.group)
     elseif (sceneType == SceneType.RogueS) then
         RogueSMgr:Quit(elseData.group,data.elseData.group)
+    elseif (sceneType == SceneType.BuffBattle) then
+        DungeonMgr:Quit(not bIsWin);
     end
 end
 
@@ -253,3 +261,4 @@ function ClearTeamData()
     TeamMgr:ClearAssistTeamIndex();
     TeamMgr:ClearFightTeamData();
 end
+

@@ -35,9 +35,9 @@ function this:InitCfg(cfgid)
         LogError("初始化物品配置失败！无效配置idCGD");
     end
 
-    if (self.cfg == nil) then
-        self.cfg = Cfgs.CardData:GetByID(cfgid); -- 持有引用
-    end
+    --if (self.cfg == nil) then
+    self.cfg = Cfgs.CardData:GetByID(cfgid); -- 持有引用
+    --end
 end
 
 -- 初始化模型配置

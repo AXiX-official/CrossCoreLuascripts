@@ -11,6 +11,7 @@ local this =
 {effect="cast1_hit02",delay=800,time=2000,type=0,pos_ref={ref_type=1,offset_row=-250}},
 {delay=300,time=2000,type=1,hit_type=0,camera_shake={time=300,shake_dir=1,range=100,range2=100,hz=25,decay_value=0.6},hits={700}},
 {effect="cast1_hit01",delay=200,time=2000,type=0,pos_ref={ref_type=1,offset_row=-200}},
+{time=3000,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="80360_cast_01"},
 {delay=300,time=2000,type=1,hit_type=0,camera_shake={time=300,shake_dir=1,range=100,range2=100,hz=25,decay_value=0.6},hits={0}}
 },
 [1310282141]={
@@ -20,13 +21,15 @@ local this =
 {delay=1600,time=2000,type=1,hit_type=0,hits={0}},
 {effect="cast2_eff01",time=6500,type=0,pos_ref={ref_type=3,offset_row=-250}},
 {effect="cast2_eff02",time=6500,type=0,pos_ref={ref_type=3,offset_row=-250}},
+{delay=500,time=6500,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="80360_cast_02_02"},
 {delay=3500,time=2000,type=1,hit_type=0,hits={0}},
 {effect="cast2_eff03",time=6500,type=0,pos_ref={ref_type=6}},
 {delay=1000,time=2000,type=1,hit_type=0,hits={0}},
-{effect="j80360_cast2_1",effect_pack="videos",delay=-1,time=18000,type=0,pos_ref={ref_type=6}}
+{effect="j80360_cast2_1",effect_pack="videos",delay=-1,time=7000,type=0,pos_ref={ref_type=6}}
 },
 [-1609092943]={
 {effect="cast0_eff",time=2000,type=0,pos_ref={ref_type=6}},
+{delay=210,time=2500,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="80360_cast_00"},
 {time=2500,type=1,hit_type=1,camera_shake={time=400,shake_dir=1,range=200,range2=200,hz=20,decay_value=0.5},hits={1900}},
 {time=2000,type=1,hit_type=0,camera_shake={time=300,shake_dir=1,range=200,range2=200,hz=10,decay_value=0.6},hit_creates={1349028111},hits={1400}}
 },

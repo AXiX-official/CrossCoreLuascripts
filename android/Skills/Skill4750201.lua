@@ -8,23 +8,6 @@ function Skill4750201:Init(skillID, card)
 end
 -- 行动结束
 function Skill4750201:OnActionOver(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8202
-	if SkillJudger:IsNormal(self, caster, target, true) then
-	else
-		return
-	end
-	-- 4750201
-	self:AddBuffCount(SkillEffect[4750201], caster, self.card, data, 4750201,1,999)
 	-- 8062
 	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else
@@ -40,9 +23,26 @@ function Skill4750201:OnActionOver(caster, target, data)
 	else
 		return
 	end
+	-- 4750201
+	self:AddBuffCount(SkillEffect[4750201], caster, self.card, data, 4750201,1,999)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8202
+	if SkillJudger:IsNormal(self, caster, target, true) then
+	else
+		return
+	end
 	-- 4750221
-	if self:Rand(1000) then
-		self:AddBuffCount(SkillEffect[4750221], caster, self.card, data, 750200201,1,15)
+	if self:Rand(2000) then
+		self:AddBuffCount(SkillEffect[4750221], caster, self.card, data, 750200201,1,20)
 	end
 end
 -- 行动结束2
@@ -63,16 +63,4 @@ function Skill4750201:OnActionOver2(caster, target, data)
 	for i,target in ipairs(targets) do
 		self:CallOwnerSkill(SkillEffect[4750216], caster, target, data, 750200100+count720)
 	end
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
-	else
-		return
-	end
-	-- 4750231
-	self:DelBufferTypeForce(SkillEffect[4750231], caster, self.card, data, 750200201)
 end

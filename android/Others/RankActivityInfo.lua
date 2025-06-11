@@ -31,6 +31,10 @@ function this:GetDamage()
     return self.info and self.info.nDamage or ""
 end
 
+function this:GetTurnNum()
+    return self.info and self.info.turn_num or ""
+end
+
 function this:GetIconID()
     return  self.info and self.info.icon_id
 end

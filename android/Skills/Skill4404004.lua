@@ -19,9 +19,7 @@ function Skill4404004:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 4404004
-	if self:Rand(5000) then
-		self:AddBuff(SkillEffect[4404004], caster, target, data, 4404001)
-	end
+	self:HitAddBuff(SkillEffect[4404004], caster, target, data, 5000,4404001,2)
 end
 -- 伤害前
 function Skill4404004:OnBefourHurt(caster, target, data)

@@ -448,6 +448,8 @@ local conf = {
 {'438',	'BuffBattle',	'BuffBattle/BuffBattleView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'439',	'TeamLimitPanel',	'Team/TeamLimitPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 {'440',	'SilentDownload',	'SilentDownload/SilentDownloadView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
+{'441',	'SelectSlotBox',	'EquipInfo/SelectSlotBox',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'442',	'MissionReward',	'Mission2/MissionRewardView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 },
 }
 --cfgview = conf

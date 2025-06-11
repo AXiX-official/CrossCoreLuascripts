@@ -106,18 +106,18 @@ function SkillFilter:DynamicCross(oSkill, caster, target, teamID, num)
 end
 
 -- 随机
-function SkillFilter:Rand(oSkill, caster, target, teamID, exclude)
+function SkillFilter:Rand(oSkill, caster, target, teamID, exclude,isSummonIn)
 
 	local team = SkillFilter:GetTeam(oSkill, caster, target, teamID)
 	local r = oSkill.card:Rand(10000)
 
 	if exclude == 1 then
-		return team.filter:GetRand(r, caster)
+		return team.filter:GetRand(r, caster,isSummonIn)
 	elseif exclude == 2 then
-		return team.filter:GetRand(r, target)
+		return team.filter:GetRand(r, target,isSummonIn)
 	end
 
-	return team.filter:GetRand(r)
+	return team.filter:GetRand(r,nil,isSummonIn)
 end
 
 -- 最大属性
@@ -979,6 +979,12 @@ function SkillApi:GetEnergy(oSkill, caster, target, filter)
 	return card:GetValue("energy") or 0
 end
 
+-- 获取蓄能（怒气值）
+function SkillApi:GetFury(oSkill, caster, target, filter)
+	local card = self:Filter(oSkill, caster, target, filter)
+	return card:GetValue("fury") or 0
+end
+
 -- 获取分摊伤害量OnAfterHurt中使用
 function SkillApi:GetShareDamage(effect, caster, target, data)
 	LogDebugEx("获取分摊伤害", target.nShareDamage)
@@ -1444,18 +1450,23 @@ function FightAPI:AlterBufferByID(effect, caster, target, data, buffID, num)
 	oBuffMgr:AlterBufferByID(caster, target, buffID, num, effect)
 end
 
--- 增加或减少随机一个buff的回合
+-- 增加或减少随机一个buff的回合(Group)
 function FightAPI:AlterRandBufferByGroup(effect, caster, target, data, buffID, num)
 	local oBuffMgr = target.bufferMgr
 	oBuffMgr:AlterRandBufferByGroup(caster, target, buffID, num, effect)
 end
 
--- 增加或减少随机一个buff的回合
+-- 增加或减少随机一个buff的回合(ID)
 function FightAPI:AlterRandBufferByID(effect, caster, target, data, buffID, num)
 	local oBuffMgr = target.bufferMgr
 	oBuffMgr:AlterRandBufferByID(caster, target, buffID, num, effect)
 end
 
+-- 增加或减少随机一个buff的回合(Type)
+function FightAPI:AlterRandBufferByType(effect, caster, target, data, type, num)
+	local oBuffMgr = target.bufferMgr
+	oBuffMgr:AlterRandBufferByType(caster, target, type, num, effect)
+end
 
 -- 拉条
 function FightAPI:AddProgress(effect, caster, target, data, progress, max)
@@ -2550,6 +2561,39 @@ function FightAPI:DelSkill(effect, caster, target, data, skillID)
 	-- local log = {api="DelSkill", targetID = target.oid, effectID = effect.apiSetting, skillID=skillID}
 	-- self.log:Add(log)
 end
+
+
+-- 增加蓄能（怒气值）
+function FightAPI:AddFury(effect, caster, target, data, val, max)
+	-- local mgr = self.team.fightMgr
+	val = math.floor(val)
+	local fury = target:GetValue("fury") or 0
+	if fury >= max then 
+		LogDebugEx("蓄能已满", val, max)
+		return 
+	end
+	if val > 0 then
+		fury = fury + val
+		if fury > max then fury = max end
+	else
+	end
+
+	LogDebugEx("增加蓄能", val, max, "最终", fury)
+	target:SetValue("fury", fury)
+
+	self.log:Add({api="UpdateFury", targetID = target.oid, fury = fury, add = val, max = max, effectID = effect.apiSetting, order = self.order})
+end
+
+-- 设置蓄能（怒气值）
+function FightAPI:SetFury(effect, caster, target, data, val, max)
+	LogDebugEx("设置蓄能", val, max)
+	-- local mgr = self.team.fightMgr
+	val = math.floor(val)
+	target:SetValue("fury", val)
+
+	self.log:Add({api="SetFury", targetID = target.oid, fury = val, max = max, effectID = effect.apiSetting, order = self.order})
+end
+
 -- ---------------------------------------------------
 -- -- 辅助函数
 

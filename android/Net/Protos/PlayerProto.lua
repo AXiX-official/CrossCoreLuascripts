@@ -1251,6 +1251,7 @@ function PlayerProto:ChangePlrName(_name, _item_id)
 end
 
 function PlayerProto:ChangePlrNameRet()
+    -- self.changePlrShpaeCallBack = nil
     EventMgr.Dispatch(EventType.Player_EditName)
 end
 
@@ -1600,3 +1601,31 @@ function PlayerProto:SkinExpiredRet(proto)
     RoleSkinMgr:SkinExpiredRet(proto.ids)
 end
 
+--获取积分战斗的分数
+function PlayerProto:GetBuffBattleInfo(sid ,callBack)
+    self.buffBattleInfoCallBack = callBack
+    local proto = {"PlayerProto:GetBuffBattleInfo",{sid = sid}}
+    NetMgr.net:Send(proto)
+end
+
+--获取积分战斗的分数返回
+function PlayerProto:GetBuffBattleInfoRet(proto)
+    if self.buffBattleInfoCallBack then
+        self.buffBattleInfoCallBack(proto)
+        self.buffBattleInfoCallBack = nil
+    end
+end
+
+--修改角色名与性别
+function PlayerProto:ChangePlrNameAndSex(data,callBack)
+    self.changePlrNameAndSexCallBack = callBack
+    local proto = {"PlayerProto:ChangePlrNameAndSex",data}
+    NetMgr.net:Send(proto)
+end
+
+function PlayerProto:ChangePlrNameAndSexRet(proto)
+    if self.changePlrNameAndSexCallBack then
+        self.changePlrNameAndSexCallBack(proto)
+        self.changePlrNameAndSexCallBack = nil
+    end
+end

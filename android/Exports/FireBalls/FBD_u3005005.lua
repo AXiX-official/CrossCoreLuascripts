@@ -14,7 +14,7 @@ local this =
 {time=5000,type=0,cue_sheet="fight/effect/thrid.acb",cue_name="acheron_attack_skill_02"},
 {time=6000,type=1,hit_type=0,camera_shake={time=270,shake_dir=1,range=600,range1=100,range2=100,hz=30,decay_value=0.6},hits={4500,5000,5300,5580}},
 {delay=3200,time=5000,type=1,cue_sheet="fight/effect/explosion_.acb",cue_name="OnHit_05",hit_type=1,camera_shake={time=500,shake_dir=1,range=500,range1=100,range2=100,hz=30,decay_value=0.6},hits={0}},
-{delay=6790,time=10000,type=0,cue_sheet="cv/Acheron.acb",cue_name="Acheron_11_b",cue_feature=1}
+{delay=6790,time=10000,type=0,cue_sheet="cv/Acheron.acb",cue_name="Acheron_12",cue_feature=1}
 },
 [-825781485]={
 effect="qc_common_medium_hit",effect_pack="common_hit",time=4600,type=0,pos_ref={ref_type=1}

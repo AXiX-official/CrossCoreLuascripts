@@ -14,6 +14,9 @@ function Skill305000302:DoSkill(caster, target, data)
 	-- 305000310
 	self.order = self.order + 1
 	self:ChangeSkill(SkillEffect[305000310], caster, self.card, data, 3,305000401)
+	-- 305000321
+	self.order = self.order + 1
+	self:AddFury(SkillEffect[305000321], caster, self.card, data, 20,100)
 end
 -- 攻击结束
 function Skill305000302:OnAttackOver(caster, target, data)
@@ -22,20 +25,24 @@ function Skill305000302:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	-- 8071
+	if SkillJudger:TargetIsFriend(self, caster, target, true) then
 	else
 		return
 	end
-	-- 305000321
-	self:AddBuff(SkillEffect[305000321], caster, self.card, data, 305000321)
+	-- 305000326
+	local targets = SkillFilter:All(self, caster, target, nil)
+	for i,target in ipairs(targets) do
+		self:AddFury(SkillEffect[305000326], caster, target, data, 10,100)
+	end
+end
+-- 行动结束2
+function Skill305000302:OnActionOver2(caster, target, data)
 	-- 305000320
-	local count320 = SkillApi:BuffCount(self, caster, self.card,3,3,305000321)
+	local xuneng = SkillApi:GetFury(self, caster, self.card,3)
 	-- 305000322
-	if SkillJudger:Greater(self, caster, self.card, true,count320,5) then
-	else
-		return
+	if SkillJudger:Greater(self, caster, target, true,xuneng,100) then
+		-- 305000323
+		self:ChangeSkill(SkillEffect[305000323], caster, self.card, data, 3,305000501)
 	end
-	-- 305000323
-	self:ChangeSkill(SkillEffect[305000323], caster, self.card, data, 3,305000501)
 end

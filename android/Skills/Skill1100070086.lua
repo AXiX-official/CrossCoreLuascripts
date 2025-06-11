@@ -19,5 +19,5 @@ function Skill1100070086:OnAddBuff(caster, target, data, buffer)
 		return
 	end
 	-- 1100070087
-	self:AddBuffCount(SkillEffect[1100070087], caster, self.card, data, 1100070087,1,10)
+	self:AddBuffCount(SkillEffect[1100070087], caster, self.card, data, 1100070087,1,60)
 end

@@ -95,7 +95,8 @@ function FightProto:RecvCmd(proto)
     ASSERT(data)
     proto[3] = data
     if cmd == CMD_TYPE.InitData then
-        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS or data.stype == SceneType.RogueT then
+        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS or data.stype == SceneType.RogueT or
+        data.stype == SceneType.BuffBattle then
             if not g_bRestartFight then
                 FightActionMgr:Start()
             end
@@ -1404,6 +1405,12 @@ function FightProto:RogueTDelBuffRet(proto)
         self.RogueTDelBuff()
     end 
     self.RogueTDelBuff = nil
+end
+
+--请求进入积分战斗副本(直接战斗)
+function FightProto:EnterFightBuffBattleDuplicate(data)
+    local proto = {"FightProtocol:EnterFightBuffBattleDuplicate",data}
+    NetMgr.net:Send(proto)
 end
 
 --弹窗与红点

@@ -25,7 +25,7 @@ time=5000,type=0
 [-1485114200]={
 {time=13000,type=1,hit_type=1,hits={10500,10800,11000,12500}},
 {time=13000,type=1,hit_type=0,hit_creates={226809859},hits={3500,3800,4000,4200}},
-{effect="cast4_eff",time=20000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Soulless_attack_skill_04"}
+{effect="cast4_eff",time=20000,type=0,pos_ref={ref_type=10,offset_row=150},cue_sheet="fight/effect/seventeen.acb",cue_name="Soulless_attack_skill_04"}
 },
 [226809859]={
 time=5000,type=0

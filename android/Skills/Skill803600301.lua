@@ -30,5 +30,5 @@ function Skill803600301:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 803600301
-	self:LimitDamage(SkillEffect[803600301], caster, target, data, 0.05,4)
+	self:LimitDamage(SkillEffect[803600301], caster, target, data, 0.1,8)
 end

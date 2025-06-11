@@ -1210,6 +1210,11 @@ GameMsg.map["FightProto:GlobalBossMopUpRet"] = {
 	{ "list|sReward","int",    "int",       },
 	{ "reward",      "nDamage","nHightest", },
 }
+GameMsg.map["FightProtocol:EnterFightBuffBattleDuplicate"] = {
+	--副本类型 副本id         编队信息             是否用多倍奖励  词条列表    
+	{ "byte",  "uint",        "list|sDuplicateTeamData","bool",         "array|int",},
+	{ "index", "nDuplicateID","list",              "isMultiReward","buffs",    },
+}
 GameMsg.map["ItemData"] = {
 	--id     数量  第一个获取时间 有效期序列值(结合配置表的sExpiry使用, 导表工具会生成nExpiry) 过期时间，不需要分开堆叠显示的使用[头像框] 分批获取的信息 
 	{ "uint","int","uint",        "short",             "uint",               "json",        },
@@ -4261,9 +4266,9 @@ GameMsg.map["PlayerProto:ChangePlrShpae"] = {
 	{ "item_id", "index",             "month","day", "use_vid",   },
 }
 GameMsg.map["PlayerProto:ChangePlrShpaeRet"] = {
-	--头像模型  看板id     最后设置的角色看板ID 
-	{ "uint",   "uint",    "uint",              },
-	{ "icon_id","panel_id","role_panel_id",     },
+	--                头像模型  看板id     最后设置的角色看板ID 
+	{ "uint","uint",  "uint",   "uint",    "uint",              },
+	{ "cid", "ocfgid","icon_id","panel_id","role_panel_id",     },
 }
 GameMsg.map["PlayerProto:CheckReturningPlr"] = {
 	--回归类型 离开天数 触发回归时间戳 各个活动开启时间     
@@ -4331,9 +4336,9 @@ GameMsg.map["PlayerProto:GetStarRank"] = {
 	{ "nPage","rank_type",         },
 }
 GameMsg.map["sStarRank"] = {
-	--排名   当前积分  名字    等级    头像      通关的最大副本id 头像框       性别序号      玩家称号     
-	{ "int", "int",   "string","short","int",    "int",           "int",       "byte",       "uint",      },
-	{ "rank","score", "name",  "level","icon_id","dupId",         "icon_frame","sel_card_ix","icon_title",},
+	--排名   当前积分  名字    等级    头像      通关的最大副本id 头像框       性别序号      玩家称号     回合数     
+	{ "int", "int",   "string","short","int",    "int",           "int",       "byte",       "uint",      "uint",    },
+	{ "rank","score", "name",  "level","icon_id","dupId",         "icon_frame","sel_card_ix","icon_title","turn_num",},
 }
 GameMsg.map["PlayerProto:GetStarRankRet"] = {
 	--排名数据         我的排名 排行榜类型（章节id） 当前积分 
@@ -4466,9 +4471,9 @@ GameMsg.map["PlayerProto:GetRank"] = {
 	{ "nPage","rank_type",         },
 }
 GameMsg.map["PlayerProto:GetRankRet"] = {
-	--排名数据         我的排名 排行榜类型（章节id） 当前积分 下次刷新时间        
-	{ "list|sStarRank","int",   "int",               "int",   "int",              },
-	{ "data",          "rank",  "rank_type",         "score", "next_refresh_time",},
+	--排名数据         我的排名 排行榜类型（章节id） 当前积分 下次刷新时间        回合数     
+	{ "list|sStarRank","int",   "int",               "int",   "int",              "uint",    },
+	{ "data",          "rank",  "rank_type",         "score", "next_refresh_time","turn_num",},
 }
 GameMsg.map["PlayerProto:GetAllMusic"] = {
 	--
@@ -4561,9 +4566,9 @@ GameMsg.map["PlayerProto:GetMineRankInfo"] = {
 	{ "rank_type",         },
 }
 GameMsg.map["PlayerProto:GetMineRankInfoRet"] = {
-	--排行榜类型（eRankType） 当前积分 当前排名 下次刷新时间        
-	{ "int",               "uint",  "uint",  "int",              },
-	{ "rank_type",         "score", "rank",  "next_refresh_time",},
+	--排行榜类型（eRankType） 当前积分 当前排名 下次刷新时间        回合数     
+	{ "int",               "uint",  "uint",  "int",              "uint",    },
+	{ "rank_type",         "score", "rank",  "next_refresh_time","turn_num",},
 }
 GameMsg.map["PlayerProto:ConverItem"] = {
 	--物品id 多过期时间，选择使用的下标 使用数量 
@@ -4589,6 +4594,51 @@ GameMsg.map["PlayerProto:SkinExpiredRet"] = {
 	--过期的皮肤ID 
 	{ "array|uint",},
 	{ "ids",       },
+}
+GameMsg.map["PlayerProto:SetIconEmote"] = {
+	--表情id        
+	{ "array|uint", },
+	{ "icon_emotes",},
+}
+GameMsg.map["PlayerProto:SetIconEmoteRet"] = {
+	--表情id        
+	{ "array|uint", },
+	{ "icon_emotes",},
+}
+GameMsg.map["sSelfChoiceCards"] = {
+	--卡池ID 目前设置的五个概率up角色 首次设置的两个角色（1是六星，2是五星) 
+	{ "uint","array|uint",         "array|uint",        },
+	{ "id",  "cids",               "firstCids",         },
+}
+GameMsg.map["PlayerProto:SetSelfChoiceCardPoolCard"] = {
+	--卡池id 本次设置的五个概率up角色 
+	{ "uint","array|uint",         },
+	{ "id",  "cids",               },
+}
+GameMsg.map["PlayerProto:SetSelfChoiceCardPoolCardRet"] = {
+	--卡池id 本次设置的五个概率up角色 首次设置的两个角色（1是六星，2是五星) 
+	{ "uint","array|uint",         "array|uint",        },
+	{ "id",  "cids",               "firstCids",         },
+}
+GameMsg.map["PlayerProto:ChangePlrNameAndSex"] = {
+	--使用的物品 改名字(不改不发) 全局表g_SexInitCardIds的下标(改性别，不改不发) 生日月  生日天 选择的台词id 
+	{ "uint",    "string",        "byte",              "byte", "byte","uint",      },
+	{ "item_id", "name",          "index",             "month","day", "use_vid",   },
+}
+GameMsg.map["PlayerProto:ChangePlrNameAndSexRet"] = {
+	--                   
+	{ "bool",   "bool",  },
+	{ "name_ok","sex_ok",},
+}
+GameMsg.map["PlayerProto:GetBuffBattleInfo"] = {
+	--章节id 
+	{ "int", },
+	{ "sid", },
+}
+GameMsg.map["PlayerProto:GetBuffBattleInfoRet"] = {
+	--历史最高分 累计分数      
+	{ "int",     "int",        },
+	{ "score",   "total_score",},
 }
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 

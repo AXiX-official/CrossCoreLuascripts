@@ -36,6 +36,7 @@ function this:GetFunc(sName)
         self.funcs["DungeonNight"] = self.DungeonActivity
         self.funcs["GlobalBossView"] = self.DungeonActivity
         self.funcs["TrialsListView"] = self.DungeonActivity
+        self.funcs["DungeonTaoFa"] = self.DungeonActivity
         self.funcs["DungeonCloud"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
@@ -52,6 +53,7 @@ function this:GetFunc(sName)
         self.funcs["LovePlus"] = self.LovePlus
         self.funcs["TWWeb"] = self.TWWeb
         self.funcs["ColosseumView"] = self.ColosseumView
+        self.funcs["BuffBattle"] = self.BuffBattle
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -376,6 +378,16 @@ function this.LovePlus(cfg)
     end
 end
 
+function this.BuffBattle(cfg)
+    local state, lockStr = this.BuffBattleState(cfg);
+    if state == JumpModuleState.Normal then
+        this.CheckClose(cfg);
+        CSAPI.OpenView(cfg.sName, {
+            id = cfg.val1
+        })
+    end
+end
+
 -- 返回获取跳转状态的方法名
 function this:GetStateFunc(sName)
     if (self.stateFuncs == nil) then
@@ -391,6 +403,7 @@ function this:GetStateFunc(sName)
         self.stateFuncs["SignInContinue"] = self.SignInContinueState
         self.stateFuncs["ActivityListView"] = self.ActivityListViewState
         self.stateFuncs["RegressionList"] = self.RegressionState
+        self.stateFuncs["BuffBattle"] = self.BuffBattleState
     end
     if (self.stateFuncs[sName]) then
         return self.stateFuncs[sName]
@@ -449,9 +462,9 @@ function this.DungeonState(cfg)
             local isOpen, tips = DungeonMgr:IsDungeonOpen(cfg.val3);
             if isOpen then
                 return JumpModuleState.Normal;
-        else
+            else
                 return JumpModuleState.Close, tips;
-        end
+            end
         end
         return JumpModuleState.Normal;
     else -- 每日
@@ -595,6 +608,10 @@ function this.RegressionState(cfg)
 end
 
 function this.LovePlusState(cfg)
+    return JumpModuleState.Normal
+end
+
+function this.BuffBattleState(cfg)
     return JumpModuleState.Normal
 end
 

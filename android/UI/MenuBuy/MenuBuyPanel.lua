@@ -1,9 +1,9 @@
 -- 背景图的位置
-local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}, {-32, 17.5}}
+local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}, {-32, 17.5},{0, 62.6}}
 local closePos = {{662, 310}, {537.8, 322.1}, {716, 321}, {537.8, 322.1}, {568.1, 249.6}, {657, 237}, {662, 310},
-                  {662, 310}, {0, 100000}}
+                  {662, 310}, {0, 100000},{555.9, 310.5}}
 local skipPos = {{607.2, -415.6}, {229, -430}, {283, -442}, {229, -430}, {513.1, -365.6}, {590.9, -327.8},
-                 {607.2, -415.6}, {607.2, -415.6}, {486.6, -385}}
+                 {607.2, -415.6}, {607.2, -415.6}, {486.6, -385},{497.9, -414.9}}
 
 local curItem = nil
 local endTime = nil
@@ -194,6 +194,19 @@ function SetNode9()
     CSAPI.SetText(txt9_Num, reward[2] .. "")
 end
 
+-- 
+function SetNode10()
+    CSAPI.SetText(txtTitle10, cfg.title)
+    CSAPI.SetText(txtDesc10, cfg.des)
+    -- icon
+    local reward = cfg.item[1]
+    curItem = BagMgr:GetFakeData(reward[1], reward[2])
+    -- icon 
+    ResUtil.IconGoods:Load(icon2, curItem:GetIcon() .. "_3")
+    -- num
+    CSAPI.SetText(txt10_Num, reward[2] .. "")
+end
+
 function SetTimes()
     if (cfg.id == 7 or cfg.id == 8) then
         local timeTab = TimeUtil:GetTimeTab(endTime - TimeUtil:GetTime())
@@ -288,6 +301,12 @@ end
 
 -- 立即领取
 function OnClickBtn9()
+    ShopProto:Buy2(cfg.shopItem, {})
+    view:Close()
+end
+
+-- 立即领取
+function OnClickBtn10()
     ShopProto:Buy2(cfg.shopItem, {})
     view:Close()
 end

@@ -64,7 +64,6 @@ local conf = {
 {'6',	'6',	'',	'',	'',	'15',	'53',	'arch_a_sweet_moment',	''},
 {'6',	'6',	'',	'',	'',	'16',	'63',	'arch_mirage_of_splendor',	''},
 {'6',	'6',	'',	'',	'',	'17',	'70',	'arch_calm_soak',	''},
-{'6',	'6',	'',	'',	'',	'18',	'64',	'arch_decisiv_moment',	''},
 {'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
 {'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
 {'7',	'7',	'',	'',	'',	'2',	'51',	'arch_anniversary_party',	''},
@@ -84,6 +83,10 @@ local conf = {
 {'9',	'9',	'',	'',	'',	'5',	'50',	'arch_twilight_invitation',	'80426'},
 {'9',	'9',	'',	'',	'',	'6',	'38',	'arch_rainy_night_jeopardy',	'80428'},
 {'9',	'9',	'',	'',	'',	'7',	'72',	'arch_starting_raid',	'80438'},
+{'10',	'10',	'arch_decisiv_moment',	'活力瞬间',	'',	'',	'',	'',	''},
+{'10',	'10',	'',	'',	'',	'1',	'64',	'arch_decisiv_moment',	''},
+{'10',	'10',	'',	'',	'',	'2',	'75',	'arch_contention_arena',	'80439'},
+{'10',	'10',	'',	'',	'',	'3',	'76',	'arch_knockout',	'80440'},
 },
 }
 --cfgCfgArchiveIllustration = conf

@@ -273,7 +273,7 @@ local conf = {
 {'g_ExplorationPlusShopID',	'g_ExplorationPlusShopID',	'',	'int',	'31002'},
 {'g_ExplorationArbitrageShopID',	'g_ExplorationArbitrageShopID',	'',	'int',	'31003'},
 {'g_PhysicalStrengthList',	'g_PhysicalStrengthList',	'',	'int[]',	'10035,10036,10037'},
-{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2025-3-25 12:00:00","2025-04-30 03:00:00"]]'},
+{'g_addHotTime',	'g_addHotTime',	'',	'json',	'[["2025-5-25 12:00:00","2025-06-25 03:00:00"]]'},
 {'g_FightOnlineUnlock',	'g_FightOnlineUnlock',	'',	'bool',	'1'},
 {'g_TimeZone',	'g_TimeZone',	'',	'float',	'8'},
 {'g_DungeonTaoFaDailyNum',	'g_DungeonTaoFaDailyNum',	'',	'int',	'2'},

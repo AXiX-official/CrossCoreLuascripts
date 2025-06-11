@@ -11,5 +11,5 @@ function Buffer704200202:OnCreate(caster, target)
 	-- 8720
 	local c116 = SkillApi:GetAttr(self, self.caster, target or self.owner,3,"hp")
 	-- 704200202
-	self:AddHp(BufferEffect[704200202], self.caster, self.card, nil, -math.floor(c116*0.9))
+	self:AddHp(BufferEffect[704200202], self.caster, self.card, nil, -math.floor(c116*0.09))
 end

@@ -1399,5 +1399,12 @@ function this.UnityClientVersion(uid)
 end
 
 this.IsAppReviewMode = CS.CSAPI.IsAppReviewMode;
+
+--是否根据分辨率动态检测修改matchWidthOrHeight
+function this.IsCheckRate(b)
+	CS.CSAPI.IsCheckRate(b)
+end
+
+
 return this;
 

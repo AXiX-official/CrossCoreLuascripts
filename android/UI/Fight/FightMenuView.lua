@@ -50,7 +50,7 @@ end
 function GetQuitState()
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
     if cfgDungeon and (cfgDungeon.type == eDuplicateType.MainNormal or cfgDungeon.type == eDuplicateType.MainElite) then
-        return MenuMgr:CheckModelOpen(OpenViewType.special, SpecialOpenViewType.AutoFight);
+        return MenuMgr:CheckModelOpen(OpenViewType.special, SpecialOpenViewType.QuitFight);
     end
     return true
     -- return DungeonMgr:CheckDungeonPass(1003)
@@ -87,7 +87,7 @@ function OnClickQuit()
         -- func = OnDirllBack;
         OnDirllBack();
         return;
-    elseif (g_FightMgr and (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS or g_FightMgr.type == SceneType.RogueT)) then
+    elseif (g_FightMgr and (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS or g_FightMgr.type == SceneType.RogueT or g_FightMgr.type == SceneType.BuffBattle)) then
         -- if (DungeonMgr:CheckDungeonPass(1004)) then
         func = OnSureDungeonFightQuit;
         --        else

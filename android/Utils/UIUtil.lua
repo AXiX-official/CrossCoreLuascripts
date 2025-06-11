@@ -1005,4 +1005,17 @@ function this:ShowSpecialGuide(parent, viewName, type, datas)
     -- end
 end
 
+--显示任务奖励列表
+function this:ShowMissionReward(type,group,title1,title2)
+    if not type or not group then
+        return
+    end
+    local data = {
+        type = type,
+        group = group,
+        title1 = title1,
+        title2 = title2,
+    }
+    CSAPI.OpenView("MissionReward",data)
+end
 return this

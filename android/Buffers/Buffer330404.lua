@@ -13,11 +13,8 @@ function Buffer330404:OnActionOver2(caster, target)
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, self.caster, target, true) then
-	else
-		return
-	end
 	-- 330402
-	self:Cure(BufferEffect[330402], self.caster, self.card, nil, 4,0.20)
+	self:AddProgress(BufferEffect[330402], self.caster, self.card, nil, 1010)
+	-- 330403
+	self:DelBufferForce(BufferEffect[330403], self.caster, self.card, nil, 330402)
 end

@@ -1101,6 +1101,27 @@ function FightCardBase:AddTime(t)
     self.progress = math.floor(self.progress + self:Get("speed") * t)
 end
 
+-- 获取buff总拉条比例
+function FightCardBase:GetProgressPercent()
+
+    if not self.tAddProgressBuffer then return end
+
+    local fPercent = 0
+    for k,v in pairs(self.tAddProgressBuffer) do
+        fPercent = fPercent + v
+    end
+
+    if fPercent > 1 then
+        return 1
+    end
+
+    if fPercent < 0 then
+        return 0
+    end
+
+    return fPercent
+end
+
 -- 拉条
 function FightCardBase:AddProgress(d, max, effectID)
     ---注:max参数现在不用了
@@ -1110,6 +1131,12 @@ function FightCardBase:AddProgress(d, max, effectID)
         self.log:Add({ api = "AddProgress", targetID = self.oid, attr = "progress",
                        progress = self.progress, add = 0, effectID = effectID, abnormalities = "ImmuneRetreat" })
         return
+    end
+
+    local fPercent = self:GetProgressPercent()
+    if fPercent then
+        -- 拉条率
+        d = math.floor(d * (1-fPercent))
     end
 
     LogDebugEx("拉条", self.name, self.progress, d)

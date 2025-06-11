@@ -8,9 +8,9 @@ function Skill305000502:Init(skillID, card)
 end
 -- 执行技能
 function Skill305000502:DoSkill(caster, target, data)
-	-- 11001
+	-- 11002
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
+	self:DamagePhysics(SkillEffect[11002], caster, target, data, 0.5,2)
 end
 -- 攻击结束
 function Skill305000502:OnAttackOver(caster, target, data)
@@ -24,7 +24,7 @@ function Skill305000502:OnAttackOver(caster, target, data)
 	-- 305000610
 	self:ChangeSkill(SkillEffect[305000610], caster, self.card, data, 3,305000301)
 	-- 305000510
-	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
-	-- 305000510
-	self:DelBufferForce(SkillEffect[305000510], caster, self.card, data, 305000321)
+	self:SetFury(SkillEffect[305000510], caster, self.card, data, 0)
+	-- 305000511
+	self:DelBufferForce(SkillEffect[305000511], caster, self.card, data, 305000301)
 end

@@ -19,10 +19,10 @@ function Skill1100070085:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 1100070085
-	self:HitAddBuff(SkillEffect[1100070085], caster, target, data, 7500,1001)
+	self:HitAddBuff(SkillEffect[1100070085], caster, target, data, 5000,1001)
 end
--- 攻击结束2
-function Skill1100070085:OnAttackOver2(caster, target, data)
+-- 行动结束
+function Skill1100070085:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -34,5 +34,7 @@ function Skill1100070085:OnAttackOver2(caster, target, data)
 		return
 	end
 	-- 1100070086
-	self:HitAddBuff(SkillEffect[1100070086], caster, self.card, data, 7500,1001)
+	if self:Rand(5000) then
+		self:AddBuff(SkillEffect[1100070086], caster, caster, data, 1001)
+	end
 end

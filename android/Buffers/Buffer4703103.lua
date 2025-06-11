@@ -23,6 +23,8 @@ function Buffer4703103:OnBefourHurt(caster, target)
 end
 -- 创建时
 function Buffer4703103:OnCreate(caster, target)
+	-- 8499
+	local c99 = SkillApi:SkillLevel(self, self.caster, target or self.owner,3,47031)
 	-- 4703103
-	self:AddAttr(BufferEffect[4703103], self.caster, self.card, nil, "damage",0.1*self.nCount)
+	self:AddAttr(BufferEffect[4703103], self.caster, self.card, nil, "damage",(0.02*c99)*self.nCount)
 end

@@ -294,7 +294,7 @@ function this:CheckRed(_type, _activityId, redInfos, _info)
         if redInfos == nil then
             redInfos = FileUtil.LoadByPath("Regression_RedInfo.txt") or {}
         end
-        return (redInfos[_type] == nil or redInfos[_type] == 0)
+        return (redInfos[tostring(_type)] == nil or redInfos[tostring(_type)] == 0)
     end
 end
 return this

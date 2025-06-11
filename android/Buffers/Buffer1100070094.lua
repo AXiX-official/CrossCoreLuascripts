@@ -8,8 +8,8 @@ function Buffer1100070094:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer1100070094:OnCreate(caster, target)
-	-- 4807
-	self:AddAttr(BufferEffect[4807], self.caster, target or self.owner, nil,"damage",0.5)
-	-- 5906
-	self:AddAttr(BufferEffect[5906], self.caster, target or self.owner, nil,"bedamage",0.3)
+	-- 4808
+	self:AddAttr(BufferEffect[4808], self.caster, target or self.owner, nil,"damage",0.4)
+	-- 5904
+	self:AddAttr(BufferEffect[5904], self.caster, target or self.owner, nil,"bedamage",0.2)
 end

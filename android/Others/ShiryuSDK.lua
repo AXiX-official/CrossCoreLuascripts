@@ -25,6 +25,9 @@ this.ShiryuLogin.uid="";
 this.ShiryuLogin.token="";
 this.ShiryuLogin.channelExts={} ---opcode、operators、appKey、channelId、ecid、deviceId，did（打点参数）
 
+this.ShiryuActivitys = {}
+this.ShiryuActivitys.list = {}
+this.ShiryuActivitys.Dic = {}
 
 this.ShiryuGoodsList={}
 this.ShiryuGoodsList.success=false;
@@ -64,6 +67,8 @@ function this.Init()
         CSAPI.AddEventListener(EventType.SDK_ShiryuSDK_SetLogoutCallback_complete,this.SDKShiryuSDKSetLogoutCallbackcomplete)
         CSAPI.AddEventListener(EventType.SDK_ShiryuSDK_GetGoodsList_complete,this.SDKShiryuSDKGetGoodsListcomplete)
         CSAPI.AddEventListener(EventType.SDK_ShiryuSDK_Pay_complete,this.SDKShiryuSDKPaycomplete)
+        CSAPI.AddEventListener(EventType.SDK_ShiryuSDK_GetActivitys_Complete,this.SDKShiryuSDKGetActivitysComplete)
+        CSAPI.AddEventListener(EventType.SDK_ShiryuSDK_Redeem_Complete,this.SDKShiryuSDKRedeemComplete)
     end
 end
 ---1.SDK初始化完成返回
@@ -94,6 +99,7 @@ end
 ---获取通用常规数据
 function this.GetCommonData()
     CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_GetGoodsList)
+    this.GetActivitys()
 end
 ---2.获取SDK数据
 function this.SDKShiryuSDKGetSdkPropertiescomplete(datapacket)
@@ -320,6 +326,64 @@ function this.CheckGiftCallback(MJGoodsLit)
 end
 
 
+function this.GetActivitys()
+    CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_GetActivitys)
+    -- LogError("---------------GetActivitys---------------")
+end
+---8.获取商品列表返回
+function this.SDKShiryuSDKGetActivitysComplete(activitysDatapacket)
+
+    if CSAPI.IsDomestic() then        
+        if activitysDatapacket then
+            -- activitysInfo :  struct
+            -- string name;     //活动的名称
+            -- string imageUrl;     //活动的图片地址
+            -- string jumpId;       //活动的跳转Id
+            -- string panelId;      //关联面板Id
+            -- int sortId;      //序号，游戏需要根据这个字段进行排序
+            -- long startTime;      //活动的开始时间，秒级别的时间戳
+            -- long endTime;        //活动的开始结束，秒级别的时间戳
+            -- string serverId;     //该活动是用于哪个服务器的
+            -- string lang;		//该活动是用于哪种语言的
+            this.ShiryuActivitys = {}
+            this.ShiryuActivitys.list = {}
+            this.ShiryuActivitys.Dic = {}
+
+            local index=0;
+            for i, v in pairs(activitysDatapacket) do
+                index=index+1
+                local Item={}
+                Item.name=activitysDatapacket[i].name;
+                Item.imageUrl=activitysDatapacket[i].imageUrl;
+                Item.jumpId=activitysDatapacket[i].jumpId;
+                Item.panelId=activitysDatapacket[i].panelId;
+                Item.sortId=activitysDatapacket[i].sortId;
+                Item.startTime=activitysDatapacket[i].startTime;
+                Item.endTime=activitysDatapacket[i].endTime;
+                Item.serverId=activitysDatapacket[i].serverId;
+                Item.lang=activitysDatapacket[i].lang;
+                table.insert(this.ShiryuActivitys.list,index,Item)
+                this.ShiryuActivitys.Dic[tostring(Item.name)]=Item;
+            end
+        end
+    end
+end
+
+function this.Redeem(code)
+    CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Redeem,code)
+    -- LogError("---------------GetActivitys---------------")
+end
+---8.获取商品列表返回
+function this.SDKShiryuSDKRedeemComplete(datapacket)
+    if CSAPI.IsDomestic() then        
+        if datapacket then
+            -- success
+            -- msg
+            LogError(datapacket.success)
+            LogError(datapacket.msg)
+        end
+    end
+end
 ----------------------------------------------SDK监听回调区域上---------------------------------------------------------------------------------------
 
 

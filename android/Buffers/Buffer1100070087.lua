@@ -1,4 +1,4 @@
--- 1100070087
+-- 攻击增加
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer1100070087:OnCreate(caster, target)
 	-- 1100070087
-	self:AddAttrPercent(BufferEffect[1100070087], self.caster, self.card, nil, "attack",0.05*self.nCount)
+	self:AddAttrPercent(BufferEffect[1100070087], self.caster, self.card, nil, "attack",0.01*self.nCount)
 end

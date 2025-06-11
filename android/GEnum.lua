@@ -356,6 +356,7 @@ eTaskType.Puzzle = 28 --拼图活动任务
 eTaskType.DupLiZhan = 29 --历战任务
 eTaskType.GlobalBossDay = 30     -- 世界Boss日任务
 eTaskType.GlobalBossMonth = 31     -- 世界Boss月任务
+eTaskType.PointsBattle = 32     -- 积分战斗
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -457,6 +458,7 @@ cTaskCfgNames = {
     [eTaskType.DupLiZhan] = 'CfgDupLiZhan',
     [eTaskType.GlobalBossDay] = 'cfgWorldBossMission',
     [eTaskType.GlobalBossMonth] = 'cfgWorldBossMonthMission',
+    [eTaskType.PointsBattle] = 'CfgPointsBattle',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -997,6 +999,7 @@ TeamConfirmOpenType.Rogue=5 --
 TeamConfirmOpenType.TotalBattle =6 --十二星宫
 TeamConfirmOpenType.GlobalBoss = 7 --世界boss
 TeamConfirmOpenType.RogueT = 8 -- 能力测验
+TeamConfirmOpenType.BuffBattle = 9 -- 积分战斗
 
 -- 商店商品的展示方式
 ShopShowType = {}
@@ -1310,9 +1313,10 @@ GenEnumNameByVal('ChannelTypeName', ChannelType)
 
 -- 服务器登陆状态
 SvrLoginState = {}
-SvrLoginState.Normal = 0 -- 正常
-SvrLoginState.JustRegister = 1 -- 仅登陆
-SvrLoginState.Close = 2 -- 关闭状态
+SvrLoginState.Normal = 0       -- 正常
+SvrLoginState.JustRegister = 1 -- 仅注册
+SvrLoginState.Close = 2        -- 关闭状态
+SvrLoginState.InWihte = 3      -- 内部白名状态
 
 -- 宿舍主题类型
 ThemeType = {}
@@ -1861,10 +1865,21 @@ eBindInviteOpenType={
     Request=2, --请求的
 }
 
+--排行榜类型
 eRankType = {}
-eRankType.Abattoir = 10002 -- 角斗场
-eRankType.RogueTRank = 10006 --限制肉鸽爬塔排行榜
---eRankType.BuffBattleRank = 10013 --积分战斗
+eRankType.Abattoir = 1 -- 角斗场
+eRankType.RogueTRank = 2 -- 限制肉鸽爬塔排行榜
+eRankType.STAR = 3 -- 十二宫
+eRankType.BuffBattleRank = 4 -- 积分战斗
+
+-- 排行榜id
+eRankId = {}
+eRankId.SummerActiveRank = 10001 --夏活无限血排行榜，钓鱼老
+eRankId.Abattoir = 10002 -- 角斗场
+eRankId.CentaurRank = 10003 --人马无限血排行榜
+eRankId.RogueTRank = 10006 --限制肉鸽爬塔排行榜
+eRankId.CloudRank = 10007 --云端行迹排行榜
+eRankId.BuffBattleRank = 10013 --积分战斗
 
 -- 排行榜默认使用数据表名
 G_RANK_DEF_DB_TABLE = 'plr_star_rank'
@@ -1873,7 +1888,7 @@ G_RANK_DEF_DB_TABLE = 'plr_star_rank'
 eRankDbTable = {}
 eRankDbTable[eRankType.RogueTRank] = 'plr_rogueT_rank'
 eRankDbTable[eRankType.Abattoir] = 'plr_abattoir_rank'
--- eRankDbTable[eRankType.BuffBattleRank] = 'plr_buff_battle_rank'
+eRankDbTable[eRankType.BuffBattleRank] = 'plr_buff_battle_rank'
 
 --收集活动类型
 eCollectType = {}

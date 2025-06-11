@@ -7,7 +7,7 @@ local openInfo = {}
 local currLevel = 1
 local currItem = nil
 local currIndex = 0
-local selIndex= 0
+local selIndex = 0
 local isHardOpen = false
 local hardTips = ""
 local levelNames = {"btnNormal", "btnHard"}
@@ -20,9 +20,9 @@ local viewKeys = {}
 
 -- anim
 local isAnim = false
-local isJumpAnim = false --关卡结束后进入
-local isHardUnLockAnim = false --解锁困难
-local isDungeonUnLockAnim = false --解锁关卡
+local isJumpAnim = false -- 关卡结束后进入
+local isHardUnLockAnim = false -- 解锁困难
+local isDungeonUnLockAnim = false -- 解锁关卡
 local isShowAnim = true
 local bgFade = nil
 local moveAction1 = nil
@@ -36,17 +36,17 @@ function Awake()
 
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadComplete)
-    eventMgr:AddListener(EventType.Arachnid_Count_Refresh,function () --购买刷新
+    eventMgr:AddListener(EventType.Arachnid_Count_Refresh, function() -- 购买刷新
         local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
         EventMgr.Dispatch(EventType.Universal_Purchase_Refresh_Panel, curCount)
     end)
-    eventMgr:AddListener(EventType.Dungeon_DailyData_Update, CheckNew) --双倍刷新
-    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed) 
-    eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened) 
+    eventMgr:AddListener(EventType.Dungeon_DailyData_Update, CheckNew) -- 双倍刷新
+    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
+    eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
 
     InitAnim()
 
-    viewKeys = {"TeamConfirm","TeamForceConfirm","ShopView","TeamView","Bag","FightOverResult"}
+    viewKeys = {"TeamConfirm", "TeamForceConfirm", "ShopView", "TeamView", "Bag", "FightOverResult"}
 end
 
 function OnLoadComplete()
@@ -99,8 +99,9 @@ function OnItemClickCB(item)
     end
 
     local isItemChange = false
-    if currItem then
-        currItem.SetSelect(false)
+    local lua = layout:GetItemLua(selIndex)
+    if lua then
+        lua.SetSelect(false)
         isItemChange = true
     end
     currItem = item
@@ -154,7 +155,7 @@ end
 
 function IsDontMove(info)
     if lastInfo then
-        local x,y = lastInfo.pos[1],lastInfo.pos[2]
+        local x, y = lastInfo.pos[1], lastInfo.pos[2]
         if info.pos[1] == x and info.pos[2] == y then
             return true
         end
@@ -174,7 +175,7 @@ function OnOpen()
         InitDatas()
         InitAnimState()
         InitHardState()
-        if sectionData:GetStoryID() and (not PlotMgr:IsPlayed(sectionData:GetStoryID())) then --第一次观看入场剧情
+        if sectionData:GetStoryID() and (not PlotMgr:IsPlayed(sectionData:GetStoryID())) then -- 第一次观看入场剧情
             PlotMgr:TryPlay(sectionData:GetStoryID(), function()
                 PlotMgr:Save()
                 InitPanel()
@@ -222,17 +223,17 @@ function InitDatas()
     curDatas = datas[currLevel]
 end
 
---正常进入 --跳转进入 --完成关卡后进入
+-- 正常进入 --跳转进入 --完成关卡后进入
 function InitAnimState()
     currIndex = GetCurrIndex(data.itemId)
     if data.itemId then
         isJumpAnim = true
-        if openSetting and openSetting.isDungeonOver then --战斗结束
-            if DungeonMgr:GetCurrDungeonIsFirst() then --首通
+        if openSetting and openSetting.isDungeonOver then -- 战斗结束
+            if DungeonMgr:GetCurrDungeonIsFirst() then -- 首通
                 DungeonMgr:SetCurrDungeonNoFirst()
-                if currLevel == 1 and currIndex == #curDatas then --开启困难
+                if currLevel == 1 and currIndex == #curDatas then -- 开启困难
                     isHardUnLockAnim = true
-                elseif currIndex ~= #curDatas then --不在最后一关
+                elseif currIndex ~= #curDatas then -- 不在最后一关
                     currIndex = currIndex + 1
                     isDungeonUnLockAnim = true
                 end
@@ -246,13 +247,13 @@ function InitHardState()
     if isHardOpen and not isHardUnLockAnim then
         color = 255
     end
-    CSAPI.SetTextColor(txt_hard,255,255,255,color)
+    CSAPI.SetTextColor(txt_hard, 255, 255, 255, color)
 end
 
 function InitPanel()
     SetLevel()
     CheckNew()
-    layout:IEShowList(#curDatas,OnItemLoadSuccess,currIndex)
+    layout:IEShowList(#curDatas, OnItemLoadSuccess, currIndex)
 end
 
 function OnItemLoadSuccess()
@@ -284,7 +285,7 @@ function GetCurrIndex(_itemId)
         for i, v in ipairs(curDatas) do
             if _itemId then
                 local ids = v:GetDungeonGroups()
-                if ids and #ids>0 then
+                if ids and #ids > 0 then
                     for k, id in ipairs(ids) do
                         if id == _itemId then
                             index = i
@@ -345,20 +346,20 @@ function ShowInfo(item)
             itemInfo = ComUtil.GetLuaTable(go)
             itemInfo.SetClickCB(OnBattleEnter)
             itemInfo.SetIsActive(true)
-            itemInfo.Show(cfg,type,function ()
+            itemInfo.Show(cfg, type, function()
                 if item then
-                    itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
-                    itemInfo.CallFunc("PlotButton","SetStoryCB",OnStoryCB)
-                    itemInfo.SetItemPos("Double",-166,-427)
+                    itemInfo.CallFunc("Danger", "ShowDangeLevel", item.IsDanger(), item.GetCfgs(), currDanger)
+                    itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
+                    itemInfo.SetItemPos("Double", -166, -427)
                 end
             end)
         end)
     else
-        itemInfo.Show(cfg,type,function ()
+        itemInfo.Show(cfg, type, function()
             if item then
-                itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
-                itemInfo.CallFunc("PlotButton","SetStoryCB",OnStoryCB)
-                itemInfo.SetItemPos("Double",-166,-427)
+                itemInfo.CallFunc("Danger", "ShowDangeLevel", item.IsDanger(), item.GetCfgs(), currDanger)
+                itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
+                itemInfo.SetItemPos("Double", -166, -427)
             end
         end)
     end
@@ -410,14 +411,15 @@ function OnBattleEnter()
         LanguageMgr:ShowTips(24003)
         return
     end
-    if currItem and currItem.GetCfg() then --非体力消耗
+    if currItem and currItem.GetCfg() then -- 非体力消耗
         local cost = DungeonUtil.GetCost(currItem.GetCfg())
         if cost then
             local cur = BagMgr:GetCount(cost[1])
             if cur < cost[2] then
                 local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
-                UIUtil:OpenPurchaseView(nil,nil,curCount,sectionData:GetBuyCount(),sectionData:GetBuyCost(),sectionData:GetBuyGets(),OnPayFunc)
-                return 
+                UIUtil:OpenPurchaseView(nil, nil, curCount, sectionData:GetBuyCount(), sectionData:GetBuyCost(),
+                    sectionData:GetBuyGets(), OnPayFunc)
+                return
             end
         end
     end
@@ -425,7 +427,7 @@ function OnBattleEnter()
 end
 
 function OnPayFunc(count)
-    PlayerProto:BuyArachnidCount(count,sectionData:GetID())
+    PlayerProto:BuyArachnidCount(count, sectionData:GetID())
 end
 
 function EnterNextView()
@@ -451,7 +453,8 @@ end
 
 function OnBuyFunc()
     local curCount = DungeonMgr:GetArachnidCount(sectionData:GetID())
-    UIUtil:OpenPurchaseView(nil,nil,curCount,sectionData:GetBuyCount(),sectionData:GetBuyCost(),sectionData:GetBuyGets(),OnPayFunc)
+    UIUtil:OpenPurchaseView(nil, nil, curCount, sectionData:GetBuyCount(), sectionData:GetBuyCost(),
+        sectionData:GetBuyGets(), OnPayFunc)
 end
 
 function OnClickBack()
@@ -459,9 +462,9 @@ function OnClickBack()
         if currItem then
             currItem.SetSelect(false)
             currItem = nil
-            currIndex = 0
-            selIndex = 0
         end
+        currIndex = 0
+        selIndex = 0
         ShowInfo()
         BackToInit()
         lastInfo = nil
@@ -537,15 +540,15 @@ function InitAnim()
     for i = 1, 6 do
         local go = this["effect" .. i].gameObject
         if go then
-            table.insert(effects,go)
-            CSAPI.SetGOActive(go,false)
+            table.insert(effects, go)
+            CSAPI.SetGOActive(go, false)
         end
     end
 end
 
 function ShowAnim(go)
-    CSAPI.SetGOActive(go,false)
-    CSAPI.SetGOActive(go,true)
+    CSAPI.SetGOActive(go, false)
+    CSAPI.SetGOActive(go, true)
 end
 
 function PlayAnim(time, callback)
@@ -578,7 +581,7 @@ function ShowEnterAnim()
 
     if isDungeonUnLockAnim then
         PlayDungeonUnLock()
-        return  
+        return
     end
 
     if isJumpAnim then
@@ -591,7 +594,7 @@ function ShowEnterAnim()
 
     PlayAnim(700)
     ShowAnim(enterAction)
-    ShowBGFade(false, 400)    
+    ShowBGFade(false, 400)
 end
 
 function MoveToTargetByAnim(index, x, y, time, callBack)
@@ -603,21 +606,21 @@ function MoveToTargetByAnim(index, x, y, time, callBack)
     moveAction:Play(callBack)
 end
 
---困难解锁动画
+-- 困难解锁动画
 function PlayHardUnLock()
     PlayAnim(800)
-    CSAPI.SetTextColor(txt_hard,255,255,255,255)
-    CSAPI.SetImgColor(hardLock,255,255,255,255)
+    CSAPI.SetTextColor(txt_hard, 255, 255, 255, 255)
+    CSAPI.SetImgColor(hardLock, 255, 255, 255, 255)
     ShowAnim(hardUnLockAction)
-    FuncUtil:Call(function ()
+    FuncUtil:Call(function()
         CSAPI.SetGOActive(hardUnLockAnim, true)
-    end,this,200)
-    FuncUtil:Call(function ()
+    end, this, 200)
+    FuncUtil:Call(function()
         CSAPI.SetGOActive(hardUnLockAnim, false)
-    end,this,600)
+    end, this, 600)
 end
 
---切换难度动画
+-- 切换难度动画
 function PlayChangeLevel(callBack)
     PlayAnim(400)
     -- local anim = currLevel == 1 and nolAnim or hardAnim
@@ -631,7 +634,7 @@ function PlayChangeLevel(callBack)
     end
 end
 
---特效播放
+-- 特效播放
 function PlayEffect(index)
     if index and effects[index] then
         CSAPI.SetGOActive(effects[index], true)
@@ -641,12 +644,12 @@ end
 
 function ClearEffect()
     if lastEffect then
-        CSAPI.SetGOActive(lastEffect,false)
+        CSAPI.SetGOActive(lastEffect, false)
         lastEffect = nil
     end
 end
 
---关卡解锁动画
+-- 关卡解锁动画
 function PlayDungeonUnLock()
     PlayAnim(400)
     local unLockItem = layout:GetItemLua(currIndex)
@@ -655,11 +658,14 @@ function PlayDungeonUnLock()
         unLockItem.SetNew(false)
         unLockItem.SetBG()
         unLockItem.SetLock()
-        unLockItem.PlayUnLockAnim(function ()
+        unLockItem.PlayUnLockAnim(function()
             unLockItem.SetIsLock(false)
             unLockItem.SetNew(true)
             unLockItem.SetBG()
             unLockItem.SetLock()
+            if isActive then
+                ShowInfo(currItem)
+            end
         end)
     end
 end

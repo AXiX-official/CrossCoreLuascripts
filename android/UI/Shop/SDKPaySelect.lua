@@ -46,11 +46,6 @@ function OnOpen()
     if CSAPI.IsADV() then
         if AdvDeductionvoucher.SDKvoucherNum>0 then
             Log("商品信息："..table.tostring(data.commodity))
-            --if AdvDeductionvoucher.IsDeductionvoucher==true then
-            --    OnCloseNode()
-            --end
-        else
-            OnCloseNode()
         end
     else
         if not CSAPI.IsPCPlatform() then
@@ -60,25 +55,6 @@ function OnOpen()
     end
 
 end
-function IsTWOnClickOK()
-    print("拉起支付数据")
-    ---LogError("---------拉起支付数据----------------")
-    local tempType=currType;
-    local isInstall=false;
-    if currItemData then
-        if not CSAPI.IsPCPlatform() then
-            local pName=CSAPI.GetPlatform()==8 and currItemData.iPName or currItemData.pName;
-            isInstall=CSAPI.IsInstallApp(pName);
-        end
-        if not isInstall then --安装微信/支付宝客户端
-            tempType=currItemData.qrType;
-        end
-    end
-    ShopCommFunc.BuyCommodity(commodity, num, func,nil,tempType,isInstall)
-end
-
-
-
 function Refresh()
     SetLayout(false)
     RefreshItems();

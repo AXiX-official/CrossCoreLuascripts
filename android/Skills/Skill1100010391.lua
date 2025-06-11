@@ -18,9 +18,9 @@ function Skill1100010391:OnActionOver(caster, target, data)
 	else
 		return
 	end
-	-- 1100010390
+	-- 1100010391
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:OwnerAddBuffCount(SkillEffect[1100010390], caster, target, data, 1100010390,1,5)
+		self:OwnerAddBuffCount(SkillEffect[1100010391], caster, target, data, 1100010391,1,5)
 	end
 end

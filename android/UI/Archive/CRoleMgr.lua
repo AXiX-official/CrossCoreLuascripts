@@ -296,7 +296,8 @@ end
 
 --更换队长，机神(一样的id，不用删)
 function this:ChangeLeader(ocfgid)
-    self.datas[ocfgid] = nil
+    local cfg = Cfgs.CardData:GetByID(ocfgid)
+    self.datas[cfg.role_id] = nil
 end
 
 ----------------------------------------看板位置------------------------------------------------------

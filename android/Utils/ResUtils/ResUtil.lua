@@ -583,6 +583,8 @@ function this:Init()
 
     --汇总
     self.Summary = ResIconUtil.New("Summary")
+    --积分战斗
+    self.BuffBattle = ResIconUtil.New("BuffBattle")
 end
 
 return this;

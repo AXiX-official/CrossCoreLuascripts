@@ -224,6 +224,9 @@ function ApplyQuit()
                 RogueTMgr:Quit()
             end 
         end 
+    elseif (sceneType == SceneType.BuffBattle) then
+        ClearTeamData()
+        DungeonMgr:Quit(not bIsWin);
     end
 end
 

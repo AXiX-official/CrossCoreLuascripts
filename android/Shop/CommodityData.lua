@@ -345,8 +345,11 @@ function this:GetShowLimitRet()
     local type = self:GetShowLimitType()
     local val = self:GetShowLimitVal()
     local canShow = false
-    if preLimit and ShopMgr:HasBuyRecord(preLimit)~=true then
-        return canShow;
+    if preLimit then --售罄才显示
+        local _itemData = ShopMgr:GetFixedCommodity(preLimit)
+        if (_itemData and _itemData:IsOver()~=true) then
+            return canShow;
+        end
     end
     if type == CommodityShowLimitType.Null or type==nil then
         canShow = true

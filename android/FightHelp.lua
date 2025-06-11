@@ -191,8 +191,7 @@ function FightHelp:FightByData(player, oData)
     return mgr
 end
 
--- 开始主线战斗
-function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData)
+function FightHelp:StartFightBySceneType(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneType)
     -- DT(player)
     -- 战斗管理器的id
     --ASSERT(nDuplicateID)
@@ -202,14 +201,14 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
     local fid = UID(10)
     local seed = os.time() + math.random(1000000)
     --print("------------", nDuplicateID)
-    local mgr = CreateFightMgr(fid, groupID, SceneType.PVE, seed, nDuplicateID)
+    local mgr = CreateFightMgr(fid, groupID, sceneType, seed, nDuplicateID)
     mgr.nTeamIndex = nTeamIndex
     mgr.oDuplicate = oDuplicate
     mgr.nPlayerLevel = player:Get('level')
     mgr.uid = player.id
 
     mgr:AddPlayer(player.id, 1)
-    self:AddFightMgr({player.id}, mgr)
+    self:AddFightMgr({ player.id }, mgr)
 
     mgr:LoadConfig(groupID, exData.stage or 1, exData.hpinfo)
     mgr:LoadData(1, data.data, nil, data.tCommanderSkill)
@@ -224,23 +223,28 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
         exData.dupId = nDuplicateID
     end
     mgr:AddCmd(
-        CMD_TYPE.InitData,
-        {
-            seed = seed,
-            fid = fid,
-            stype = SceneType.PVE,
-            groupID = groupID,
-            teamID = 1,
-            nTeamIndex = nTeamIndex,
-            data = data,
-            exData = exData,
-            level = player:Get('level')
-        }
+            CMD_TYPE.InitData,
+            {
+                seed = seed,
+                fid = fid,
+                stype = sceneType,
+                groupID = groupID,
+                teamID = 1,
+                nTeamIndex = nTeamIndex,
+                data = data,
+                exData = exData,
+                level = player:Get('level')
+            }
     )
     -- DT(mgr.cmds)
     -- 操作日志
-    LogEnterFight(player, fid, SceneType.PVE, nDuplicateID, groupID, data)
+    LogEnterFight(player, fid, sceneType, nDuplicateID, groupID, data)
     return mgr
+end
+
+-- 开始主线战斗
+function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData)
+    return self:StartFightBySceneType(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, SceneType.PVE)
 end
 
 ---- 开始乱序演习战斗

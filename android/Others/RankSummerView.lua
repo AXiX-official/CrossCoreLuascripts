@@ -46,7 +46,8 @@ function LayoutCallBack(index)
         lua.SetClickCB(OnItemClickCB)
         lua.SetIndex(index)
         lua.Refresh(_data, {
-            isOpenReplace = isOpenReplace
+            isOpenReplace = isOpenReplace,
+            rankType = rankType
         })
         -- 请求更多数据
         if (index ~= 100 and index == #currDatas and intervalTime < TimeUtil:GetTime()) then
@@ -137,18 +138,19 @@ function SetTitle()
         LanguageMgr:SetText(txtTitle3, info.rankDes)
     end
     local lanID = 33002
-    if rankType == eRankType.Abattoir then
+    if rankType == eRankId.Abattoir then
         lanID = 64034
     end
     LanguageMgr:SetText(txtTips, lanID)
-    -- if rankType == eRankType.SummerActiveRank then
-    --     LanguageMgr:SetText(txtTitle3,62035)
-    -- elseif rankType == eRankType.Abattoir then
-    --     LanguageMgr:SetText(txtTitle3,64032)
-    -- elseif rankType == eRankType.CentaurRank then
-    -- end
     if info and info.rankDes2 then
         LanguageMgr:SetText(txtTitle4, info.rankDes2)
+    end
+
+    if rankType == eRankId.BuffBattleRank then
+        CSAPI.SetAnchor(txtTitle4,552,0)
+        CSAPI.SetAnchor(txtTitle3,212,0)
+        CSAPI.SetAnchor(txtTurnNum,552,0)
+        CSAPI.SetAnchor(txtFighting,275,0)
     end
 end
 
@@ -178,8 +180,10 @@ function SetMyData()
     local rankStr = rank >= 4 and rank .. "" or ""
     rankStr = rank > 100 and "100+" or rankStr
     CSAPI.SetText(txtRank2, rankStr)
-    -- 战斗力
+    -- 显示2
     CSAPI.SetText(txtFighting, info:GetScore() .. "")
+    -- 显示1
+    CSAPI.SetText(txtTurnNum, info:GetTurnNum() .. "")
     -- icon
     -- ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")
     -- local _cfg = Cfgs.character:GetByID(info:GetModuleID())
@@ -192,7 +196,7 @@ function SetMyData()
 
     CSAPI.SetGOActive(btnOpen, rank ~= 0 and isOpenReplace)
     --
-    if (rankType == eRankType.RogueTRank) then
+    if (rankType == eRankId.RogueTRank) then
         local maxHard = RogueTMgr:GetMaxHard2()
         local str = maxHard == 0 and "" or LanguageMgr:GetByID(54049, maxHard)
         CSAPI.SetText(txtHard, str)

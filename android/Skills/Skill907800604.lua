@@ -12,8 +12,8 @@ function Skill907800604:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12001], caster, target, data, 1,1)
 end
--- 行动结束
-function Skill907800604:OnActionOver(caster, target, data)
+-- 攻击结束2
+function Skill907800604:OnAttackOver2(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -26,8 +26,8 @@ function Skill907800604:OnActionOver(caster, target, data)
 	end
 	-- 8419
 	local count19 = SkillApi:GetAttr(self, caster, target,3,"xp")
-	-- 8824
-	if SkillJudger:Greater(self, caster, self.card, true,count19,3) then
+	-- 907800704
+	if SkillJudger:Equal(self, caster, self.card, true,count19,4) then
 	else
 		return
 	end
@@ -53,8 +53,8 @@ function Skill907800604:OnBorn(caster, target, data)
 	-- 907800901
 	self:AddBuff(SkillEffect[907800901], caster, self.card, data, 907800901)
 end
--- 攻击结束
-function Skill907800604:OnAttackOver(caster, target, data)
+-- 行动结束
+function Skill907800604:OnActionOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else

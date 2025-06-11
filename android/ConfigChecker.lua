@@ -2844,14 +2844,15 @@ function ConfigChecker:cfgWorldBossMission(cfgs)
     CommCalCfgTasks(cfgs, eTaskType.GlobalBossDay)
 end
 
-function ConfigChecker:cfgWorldBossMonthMission(cfgs)
+function ConfigChecker:CfgPointsBattle(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
         return
     end
 
-    CommCalCfgTasks(cfgs, eTaskType.GlobalBossMonth)
+    CommCalCfgTasks(cfgs, eTaskType.PointsBattle)
 end
+
 function ConfigChecker:CfgExtraExploration(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -3463,7 +3464,7 @@ function ConfigChecker:CfgRankTeam(cfgs)
         if cfg.sectionID then
             g_rank_section[cfg.sectionID] = cfg.id
         end
-        if cfg.activityID and cfg.activityID == eActiveEntryId.STAR then
+        if cfg.rankType and cfg.rankType == eRankType.STAR then
             table.insert(g_star_group, cfg.id)
         end
     end

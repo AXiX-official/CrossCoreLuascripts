@@ -267,6 +267,11 @@ function Refresh()
 				SetNumObj(false)
 				CSAPI.SetGOActive(btn_ok, true);
 				clickFunc = UseVoucher;
+			elseif cfg.type==ITEM_TYPE.CHANGE_NAME_AND_SEX then -- 名字与形态转换券
+				CSAPI.SetGOActive(bottomObj, true);
+				CSAPI.SetGOActive(mUseNode,false)
+				CSAPI.SetGOActive(btn_ok, true);
+				clickFunc = UseInfoCorr
 			end
 			if showGets then
 				--显示获取途径
@@ -555,6 +560,11 @@ function UseVoucher()
 		ShopMgr:SetJumpVoucherID(goods:GetID());
 		JumpMgr:Jump(goods:GetDyVal2());
 	end
+end
+
+--形态变更
+function UseInfoCorr()
+	CSAPI.OpenView("InfoCorrBox")
 end
 
 function OnClickComb()

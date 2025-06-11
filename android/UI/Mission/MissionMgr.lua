@@ -630,6 +630,9 @@ function this:CheckRedPointData()
     ColosseumMgr:CheckMissionRed()
     --回归绑定
     CollaborationMgr:CheckRedInfo();
+
+    --积分战斗
+    RedPointMgr:UpdateData(RedPointType.BuffBattle,self:CheckRed({eTaskType.PointsBattle}) and 1 or 0)
 end
 
 -- 任务添加通知
@@ -879,7 +882,7 @@ function this:CheckRed2(_type,_nGroup)
         for i, v in pairs(self.datas) do
             if (_type == v:GetType()) then
                 if (not self.CheckIsReset(v) and v:CheckIsOpen() and v:IsFinish() and not v:IsGet()) then
-                    if (v:GetCfg().nGroup == nil or v:GetCfg().nGroup == _nGroup) then
+                    if v:GetCfg() and (v:GetCfg().nGroup == nil or v:GetCfg().nGroup == _nGroup) then
                         return true
                     end
                 end

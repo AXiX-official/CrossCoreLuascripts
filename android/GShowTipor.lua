@@ -10,6 +10,7 @@ TipAargType.EquipId = 4 -- 4：代表装备id
 TipAargType.DupId = 5 -- 5：副本ID
 TipAargType.Role = 6 -- 6：角色Id
 TipAargType.SectionId = 7 -- 7：章节Id
+TipAargType.Language = 8 -- 8: 多语言ID
 
 -- 使用值对应key的名字
 local tmpTb = {}
@@ -125,6 +126,11 @@ function GCTipTool:OneRoleArg(id, args)
     return self:AddArg(TipAargType.Role, id, args)
 end
 
+-- 多语言id
+function GCTipTool:OneLanguageArg(id, args)
+    return self:AddArg(TipAargType.Language, id, args)
+end
+
 -- 添加一个配置表与索引参数
 function GCTipTool:OneCfgArg(cfgName, index, args)
     args = args or {}
@@ -142,6 +148,11 @@ end
 
 function GCTipTool:SendNotEquip(plr, opName, equipId)
     local args = self:OneEquipArg(equipId)
+    self:SendToPlr(plr, opName, "equipNotFind", args)
+end
+
+function GCTipTool:SendLanguage(plr, opName, langId)
+    local args = self:OneLanguageArg(langId)
     self:SendToPlr(plr, opName, "equipNotFind", args)
 end
 

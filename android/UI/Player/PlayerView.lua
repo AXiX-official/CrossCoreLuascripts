@@ -27,6 +27,7 @@ function OnInit()
     eventMgr:AddListener(EventType.RedPoint_Refresh, SetRed)
     eventMgr:AddListener(EventType.Badge_Sort_Update, SetBadge)
     eventMgr:AddListener(EventType.Player_EditName,OnNameChange)
+    eventMgr:AddListener(EventType.Player_SexOrName_Change,OnSexOrNameChange)
     -- CSAPI.AddInputFieldChange(inputSign, InputChange)
     -- CSAPI.AddInputFieldCallBack(inputSign, InputCB)
 end
@@ -45,10 +46,18 @@ end
 
 function OnNameChange()
     CSAPI.SetText(txtName, PlayerClient:GetName() .. "")
-    LanguageMgr:ShowTips(30002)
+    -- LanguageMgr:ShowTips(30002)
     if CSAPI.IsADV() or CSAPI.IsDomestic() then
         ShiryuSDK.OnRoleInfoUpdate();
     end
+end
+
+function OnSexOrNameChange()
+    FuncUtil:Call(function ()
+        LanguageMgr:ShowTips(30002)
+    end,this,200)
+    SetSupport()
+    SetHeadFrame()
 end
 
 function OnOpen()
