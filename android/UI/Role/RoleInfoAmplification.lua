@@ -7,13 +7,13 @@ function Awake()
     cardIconItem = RoleTool.AddRole(iconParent)
     -- CSAPI.AddSliderCallBack(slider, SliderCB)
 
-    CSAPI.IsCheckRate(false)
+    --CSAPI.IsCheckRate(false)
 end
 
 function OnDestroy()
-    CSAPI.IsCheckRate(true)
+    --CSAPI.IsCheckRate(true)
     if (data[5]) then
-        FanZhuan(false)
+        --FanZhuan(false)
     end
     CSAPI.RemoveSliderCallBack(slider, SliderCB)
 end
@@ -45,7 +45,7 @@ function OnOpen()
     SetAmplification()
 
     if (data[5]) then
-        FanZhuan(true)
+        --FanZhuan(true)
         CSAPI.SetGOActive(sliderNode, false)
     else 
         CSAPI.SetGOActive(sliderNode, true)

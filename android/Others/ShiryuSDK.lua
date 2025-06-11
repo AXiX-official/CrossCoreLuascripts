@@ -99,7 +99,9 @@ end
 ---获取通用常规数据
 function this.GetCommonData()
     CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_GetGoodsList)
-    this.GetActivitys()
+    
+    -- 暂未启用中台的获取活动接口
+    -- this.GetActivitys()
 end
 ---2.获取SDK数据
 function this.SDKShiryuSDKGetSdkPropertiescomplete(datapacket)

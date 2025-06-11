@@ -10,5 +10,5 @@ end
 function Skill201101304:DoSkill(caster, target, data)
 	-- 201101304
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[201101304], caster, target, data, 80)
+	self:AddBuff(SkillEffect[201101304], caster, target, data, 201101304)
 end
