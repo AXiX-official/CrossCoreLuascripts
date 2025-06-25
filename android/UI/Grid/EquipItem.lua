@@ -8,6 +8,10 @@ local canvasGroup=nil;
 local goNewCanvas=nil;
 local holdTime=0;
 local longHoldTime=0.8;
+local clickPos=nil;
+local deviceType = CSAPI.GetDeviceType()
+local Input=UnityEngine.Input
+local dragDistance=5;--超过这个值则判定为拖拽
 
 function Awake()
 	txtCount = ComUtil.GetCom(txt_count, "Text");
@@ -44,6 +48,7 @@ function Clean()
 	SetSelectLock(false);
     SetSlotColor();
 	CSAPI.SetScale(clickNode,1,1,1)
+	clickPos=nil;
 end
 
 --加载框
@@ -440,10 +445,40 @@ end
 
 function OnPressDown()
 	holdTime = Time.unscaledTime;
+	clickPos=GetCurPos();
+end
+
+function GetCurPos()
+    local vec3 = UnityEngine.Vector2(0, 0)
+    if (deviceType == 3) then
+        -- 电脑
+		vec3.x = Input.mousePosition.x
+		vec3.y = Input.mousePosition.y
+	elseif Input.touchCount == 1 then
+        vec3 = Input.GetTouch(0).position
+	else
+		return nil;
+    end
+    return vec3
+end
+
+function IsDrag()
+	local isDrag=false;
+	local clickPos2=GetCurPos();
+	if clickPos==nil or clickPos2==nil then
+		return isDrag,2;
+	end
+	local distance=UnityEngine.Vector2.Distance(clickPos,clickPos2);
+	-- LogError(tostring(clickPos.x).."\t"..tostring(clickPos.y).."\t"..tostring(clickPos2.x).."\t"..tostring(clickPos2.y).."\t"..tostring(distance))
+	if distance>dragDistance then
+		isDrag=true;
+	end
+	return isDrag,1
 end
 
 function Update()
-	if holdTime~=0 and Time.unscaledTime - holdTime >= longHoldTime then
+	local isDrag,state=IsDrag();
+	if holdTime~=0 and Time.unscaledTime - holdTime >= longHoldTime and  not isDrag and state~=2 then
 		--长按
 		OnHold();
 		holdTime=0;
@@ -451,11 +486,13 @@ function Update()
 end
 
 function OnPressUp()
-	if Time.unscaledTime - holdTime < longHoldTime then
+	local isDrag,state=IsDrag();
+	if Time.unscaledTime - holdTime < longHoldTime and not isDrag and state~=2 then
 		--短按
 		OnClick();
 	end
 	holdTime=0;
+	clickPos=nil;
 end
 
 --空状态待添加

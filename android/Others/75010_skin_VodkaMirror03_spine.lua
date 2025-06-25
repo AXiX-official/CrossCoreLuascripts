@@ -8,20 +8,25 @@ local downTime = 0.5 -- 降低百分1需要的秒数
 local addNum = 18 -- 每次点击增加多少 （100是满了）
 -- local showtime = 1000 -- 事件触发后多长时间显示UI,不能改，要特效改
 local hideTime = 0 -- 触发胜利失败动画多长时间后隐藏UI
-local lerpNum = 2 -- 每帧增加多少
+local lerpNum = 0.01 -- 每帧增加多少
 
 -- 程序
+local img_fill
 local CardLive2DItem
 local isOver = nil
 local timer = 0
-local slider_min = -170
-local slider_max = 200
+local slider_min = 0 ---170
+local slider_max = 1 -- 200
 local height = 0
 local _height = 0
 local len = 0
 local isUp = true
 local firstHeight = 0
 local isCan = false
+
+function Awake()
+    img_fill = ComUtil.GetCom(fill, "Image")
+end
 
 function Refresh(_CardLive2DItem)
     CardLive2DItem = _CardLive2DItem
@@ -33,8 +38,9 @@ function Refresh(_CardLive2DItem)
     timer = holdTime
     -- 显示ui
     FuncUtil:Call(function()
+        CSAPI.SetGOActive(effect, true)
         isOver = false
-    end, nil, 1500)
+    end, nil, 1000)
 end
 
 function Update()
@@ -70,7 +76,8 @@ function Update()
 end
 
 function SetSoftMaskHeight()
-    local x, y = CSAPI.GetAnchor(softMask)
+    -- local x, y = CSAPI.GetAnchor(softMask)
+    local y = img_fill.fillAmount
     if (isUp) then
         height = (y + lerpNum) >= _height and _height or (y + lerpNum)
         height = height <= slider_max and height or slider_max
@@ -78,16 +85,18 @@ function SetSoftMaskHeight()
             isCan = true
         end
     else
-        height = (y - lerpNum) <= _height and _height or (y - lerpNum)
+        --height = (y - lerpNum) <= _height and _height or (y - lerpNum)
+        height = _height
         height = height >= slider_min and height or slider_min
     end
     if (height >= slider_max or height <= slider_min) then
         isOver = true
     end
     if (height >= _height) then
-        isUp = false 
+        isUp = false
     end
-    CSAPI.SetAnchor(softMask, -472.3, height, 0)
+    -- CSAPI.SetAnchor(softMask, -472.3, height, 0)
+    img_fill.fillAmount = height
 end
 
 function OnClickMask()

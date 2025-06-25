@@ -281,7 +281,7 @@ end
 --返回现金价格符号
 function this:GetCurrencySymbols(isFixed)
     local str=LanguageMgr:GetByID(18013);
-    if (CSAPI.IsADV() or CSAPI.IsDomestic()) and isFixed~=true then
+    if (CSAPI.IsADV()) and isFixed~=true then
         str=self:GetCfg().displayCurrency;
         if str==nil then
             str=RegionalSet.RegionalCurrencyType();

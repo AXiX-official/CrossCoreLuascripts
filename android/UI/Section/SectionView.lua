@@ -128,7 +128,7 @@ function Awake()
     eventMgr:AddListener(EventType.Loading_Complete, CheckModelOpen) --检测功能开启
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedRefresh)
     eventMgr:AddListener(EventType.Guide_Complete,OnGuideComplete)
-    UIMaskGo = CSAPI.GetGlobalGO("UIClickMask")
+    UIMaskGo = CSAPI.GetGlobalGO("UIClickMask") 
 
     layout1 = ComUtil.GetCom(sv1, "UIInfinite")
     layout1:Init("UIs/Section/SectionMainLineItem", LayoutCallBack1, true)
@@ -1291,7 +1291,7 @@ function RefreshActivityDatas()
         for _, cfg in pairs(activityCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfg.id)   
             local openState1,openState2 = 0,0
-            if sectionData then
+            if sectionData and sectionData:GetType() then
                 activityTypeDatas[sectionData:GetType()] = activityTypeDatas[sectionData:GetType()] or {}
                 if sectionData:IsShowOnly() then
                     if #activityTypeDatas[sectionData:GetType()] > 0 then

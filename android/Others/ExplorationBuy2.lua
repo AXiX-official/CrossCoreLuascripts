@@ -134,7 +134,7 @@ function SetContents(type,txt_title,txt_price,txt_priceType,txt_over,btn_buy,Vou
     local displayPrice=nil;
     local Price=nil;
     local amountPrice=0;
-    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+    if CSAPI.IsADV() then
          amountPrice=curData and curData:GetTargetPrice(type);
         local TwdData=curData:GetTWDDataPrice(type);
         if TwdData and TwdData["data"]["displayCurrency"]~=nil then
@@ -153,17 +153,17 @@ function SetContents(type,txt_title,txt_price,txt_priceType,txt_over,btn_buy,Vou
         -- CSAPI.LoadImg(bg,"UIs/ExplorationCard/img_15_1.png",true,nil,true);
         CSAPI.SetText(txt_title,LanguageMgr:GetByID(18042));
         CSAPI.SetText(txt_price,tostring(plusPrice));
-        if CSAPI.IsADV() or CSAPI.IsDomestic() then CSAPI.SetText(normal_VoucherPrice,tostring(amountPrice)); end
+        if CSAPI.IsADV() then CSAPI.SetText(normal_VoucherPrice,tostring(amountPrice)); end
         -- isShowTips=true;
     elseif type==ExplorationState.Plus then
         -- CSAPI.LoadImg(bg,"UIs/ExplorationCard/img_15_2.png",true,nil,true);
         CSAPI.SetText(txt_title,LanguageMgr:GetByID(18040));
         CSAPI.SetText(txt_price,tostring(plusPrice));
-        if CSAPI.IsADV() or CSAPI.IsDomestic()  then CSAPI.SetText(plus_VoucherPrice,tostring(amountPrice)); end
+        if CSAPI.IsADV()  then CSAPI.SetText(plus_VoucherPrice,tostring(amountPrice)); end
         -- isShowTips=false;
     end
     CSAPI.SetText(txt_priceType,LanguageMgr:GetByID(18013));
-    if (CSAPI.IsADV() or CSAPI.IsDomestic()) and Price~=nil then
+    if (CSAPI.IsADV()) and Price~=nil then
         CSAPI.SetText(txt_priceType,Price);
         txt_priceType.transform.localPosition=UnityEngine.Vector3(-47,0,0);
     end

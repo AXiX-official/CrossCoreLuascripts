@@ -19,7 +19,7 @@ function this:IsDailyNew()
     if sectionCfgs then
         for i, cfgSection in pairs(sectionCfgs) do
             local sectionData = DungeonMgr:GetSectionData(cfgSection.id)
-            if sectionData:GetOpen() then
+            if sectionData and sectionData:GetOpen() then
                 local dungeonCfgs = Cfgs.MainLine:GetGroup(cfgSection.id)
                 if dungeonCfgs then
                     for i, cfgDungeon in pairs(dungeonCfgs) do
