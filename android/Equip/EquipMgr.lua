@@ -45,7 +45,8 @@ function this:Update(equip)
 				end
 			end
 			local equip2=EquipData(data);
-			if type~=equip2:GetSlot() then --刷新typeIndex
+			local type2=equip2:GetSlot()
+			if type~=type2 then --刷新typeIndex
 				if self.typeIndex and self.typeIndex[type] then
 					local idx=nil;
 					for k,v in ipairs(self.typeIndex[type]) do
@@ -56,7 +57,6 @@ function this:Update(equip)
 					end
 					table.remove(self.typeIndex[type],idx)
 				end
-				local type2=self.equips[equip.sid]:GetSlot()
 				self.typeIndex[type2] = self.typeIndex[type2] or {};
 				table.insert(self.typeIndex[type2], equip.sid);
 			end

@@ -119,7 +119,11 @@ function GetServerPath()
 				 DomainNameswitch=true;
 			 end
 		end
-		VerChecker:SetState(true);
+		if VerChecker then
+			VerChecker:SetState(true);
+		else
+			LogError("未知原因 ： VerChecker == nil")
+		end
 	else
 		--主干
 		---_G.server_list_enc_close = 1;

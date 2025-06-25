@@ -667,6 +667,9 @@ function this.OnRoleOnline()
         roleInfoTable.guildName="";
         roleInfoTable.guildLeaderRoleId="";
         roleInfoTable.guildLevel="";
+        if CSAPI.IsDomestic() then
+            CShiryuSDK:OnRoleInfoUpdate(roleInfoTable)
+        end
         CShiryuSDK:OnRoleOnline(roleInfoTable);
     end
 
@@ -693,6 +696,9 @@ function this.OnRoleOffline()
         roleInfoTable.guildLeaderRoleId="";
         roleInfoTable.guildLevel="";
         CShiryuSDK:OnRoleOffline(roleInfoTable);
+        if CSAPI.IsDomestic() then
+            CShiryuSDK:OnRoleInfoUpdate(roleInfoTable)
+        end
     end
 
 end

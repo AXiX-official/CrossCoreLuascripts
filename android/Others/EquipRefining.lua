@@ -73,11 +73,11 @@ end
 function Refresh()
     InitLastState()
     RefreshList();
-    if curItem==nil then
+    if curItem==nil and lastStateData==nil then
         CSAPI.SetGOActive(tipsObj,true);
         CSAPI.SetGOActive(rightObj,false);
         return;
-    else
+    elseif curItem~=nil or lastStateData~=nil then
         CSAPI.SetGOActive(tipsObj,false);
         CSAPI.SetGOActive(rightObj,true);
     end
@@ -102,6 +102,7 @@ function InitLastState()
         lastStateData=EquipMgr:GetRefreshLastData()
         if lastStateData then
             refCount=refCount+1;
+            curItem=EquipMgr:GetEquip(lastStateData.sid)
             RefreshPreEquip(lastStateData)
         else
             preEquip=nil;

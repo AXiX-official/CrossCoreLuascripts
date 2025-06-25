@@ -64,7 +64,7 @@ function CancelRelogin()
 end
 
 function OnDestroy()
-    if CSAPI.IsADV() then
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
         ShiryuSDK.OnRoleOnline()
     end
 	eventMgr:ClearListener();
