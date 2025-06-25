@@ -1,5 +1,5 @@
 local cfg = nil
-local colors = {{255,193,70,255},{255,255,255,255},{255,255,255,128}}
+local defaultColors = {{255,193,70,255},{255,255,255,255},{255,255,255,128}}
 local isOpen = false
 local index = 1
 
@@ -11,11 +11,12 @@ function SetClickCB(_cb)
     cb = _cb
 end
 
-function SetSelect(b)
+function SetSelect(b,colors)
     local idx = b and 1 or 2
     if not isOpen then
         idx = 3
     end
+    colors = colors or defaultColors
     CSAPI.SetTextColor(txtNum,colors[idx][1],colors[idx][2],colors[idx][3],colors[idx][4])
     CSAPI.SetGOActive(selImg,b and isOpen)
     CSAPI.SetGOActive(img,not b or not isOpen)

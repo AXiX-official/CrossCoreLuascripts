@@ -43,7 +43,6 @@ local plotSound = nil --音效
 local plotVideo = nil
 
 local effectInfos = {} --用于记录已播放的特效
-
 --模糊
 local blur = nil
 local blurTimer = 0
@@ -52,18 +51,24 @@ local blurSpeed = 0
 local currBgName = nil
 local isOpenTween = true
 local isCanPlay = true --剧情文字播放状态
-
 --眨眼
 local isBlink = false
 local blinkNum = 0
-
 --背景切换
 local isChangeBg = false
 local isFirstChange = true
-
 local isCamera = false
 
 local myBGMLockKey = "plot_bgm";
+--背景动画
+local imgInfos = nil
+local imgIndex = 0
+local isImgAuto = false
+local lastImgInfo = nil
+--因为对话之间动画不停止，所以单独设置动画，后续可以考虑并入动画脚本管理
+local imgMove = nil
+local imgScale = nil
+
 
 function Awake()
 	anyWayObj = ComUtil.GetCom(gameObject, "Button");
@@ -355,6 +360,7 @@ function PlayPlot()
 	PlayShake()
 	PlayVideo()
 	PlayTopImg()
+	PlayImgAnim()
 	
 	--判断是否存在图片内容
 	if cgList ~= nil then--播放图片内容
@@ -500,7 +506,7 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 			end
 			FuncUtil:Call(function()
 				if(gameObject and currentPlotData) then
-					CSAPI.SetGOActive(grayEffect,currentPlotData:IsGray());
+					SetGray()
 					SetBackGround(imgPath);
 					if roleCB then
 						roleCB()
@@ -526,7 +532,7 @@ function ShowImgContent(imgPath, changeType, roleCB, boxCB)
 			cgDelay = 0
 		end
 	else
-		CSAPI.SetGOActive(grayEffect, currentPlotData:IsGray());
+		SetGray()
 		SetBackGround(imgPath);
 		if roleCB then
 			roleCB()
@@ -602,7 +608,7 @@ function OnClickAnyway()
 		do return end
 	end	
 	
-	if(FinshEffect()) then --跳过特效
+	if(FinishEffect()) then --跳过特效
 		do return end
 	end
 
@@ -624,17 +630,20 @@ function OnClickAnyway()
 end
 
 --提前终止所有效果
-function FinshEffect()	
+function FinishEffect()	
 	if cgCall then  --存在cg动画不能跳过
 		return true
 	end
 
-	if(IsPlayOver()) then --已经播放完就不需要跳过特效
+	local isEffect = false
+
+	if CheckImgAnimFinish() then
+		isEffect = true
+	end
+
+	if(IsPlayOver() and not isEffect) then --已经播放完就不需要跳过特效
 		return false
 	end
-	
-	local isEffect = false
-	local plotID = currentPlotData:GetID()
 	
 	if(PlotTween.IsTween()) then --动效		
 		PlotTween.StopAllAction()
@@ -875,7 +884,7 @@ end
 function RecordFrameInfo(plotInfo)
 	jumpRecord = jumpRecord or {};
 	--是否是灰色
-	-- jumpRecord.isGray=currentPlotData:IsGray();
+	-- jumpRecord.GetGray=currentPlotData:GetGray();
 	--记录图片内容
 	local cgList = currentPlotData:GetImgContents();
 	if cgList ~= nil then--播放图片内容
@@ -998,6 +1007,78 @@ function ShowLastFrame()
 	end
 	jumpRecord = nil;
 end
+--------------------------------------------------背景--------------------------------------------------
+function SetGray()
+	CSAPI.SetGOActive(grayEffect1, currentPlotData:GetGray() == 1);
+	CSAPI.SetGOActive(grayEffect2, currentPlotData:GetGray() == 2);
+end
+
+function PlayImgAnim()
+	imgInfos = currentPlotData:GetImgInfos()
+	if imgInfos and #imgInfos > 0 then
+		imgIndex = 1
+		ShowImgAnim()
+		lastImgInfo = not isImgAuto and imgInfos[#imgInfos] or nil
+		local timer = 0
+		for i, v in ipairs(imgInfos) do
+			if v.time then
+				timer = timer + v.time
+			end
+			if v.delay then
+				timer = timer + v.delay
+			end
+		end
+		table.insert(timers,timer)
+	end
+end
+
+function ShowImgAnim()
+	if imgInfos == nil or CheckIsRecord("ImgAnim") then
+		return
+	end
+	local info = imgInfos[imgIndex]
+	local pos1 = info.pos1 or {0,0}
+	local scale1 = info.scale1 or 1
+	CSAPI.SetAnchor(bg,pos1[1],pos1[2])
+	CSAPI.SetScale(bg,scale1,scale1,scale1)
+
+	local pos2 = info.pos2 or pos1
+	local scale2 = info.scale2 or scale1
+	local time = info.time or 0.3
+	local delay = info.delay or 0
+	if pos1 ~= pos2 or scale1 ~= scale2 then
+		imgMove = CSAPI.MoveTo(bg,"UI_Local_Move",pos2[1],pos2[2],this.myLocalPosZ,nil,time,delay)
+		imgScale = CSAPI.SetUIScaleTo(bg,nil,scale2,scale2,1,nil,time,delay)
+		if imgIndex < #imgInfos then
+			imgIndex = imgIndex + 1
+			FuncUtil:Call(ShowImgAnim,this,time * 1000 + delay * 1000)
+		end
+	end
+	if info.auto ~= nil then
+		isImgAuto = info.auto == 1		
+	end
+end
+
+function CheckImgAnimFinish()
+	if lastImgInfo ~= nil then
+		if imgMove ~= nil then
+			imgMove:SetComplete()
+		end
+		if imgScale ~= nil then
+			imgScale:SetComplete()
+		end
+		if lastImgInfo.pos2 ~= nil then
+			CSAPI.SetAnchor(bg,lastImgInfo.pos2[1],lastImgInfo.pos2[2])
+		end
+		if lastImgInfo.scale2 ~= nil then
+			CSAPI.SetScale(bg,lastImgInfo.scale2 ,lastImgInfo.scale2 )
+		end
+		lastImgInfo = nil
+		RecordInfo("ImgAnim")
+		return true
+	end
+	return false
+end
 --------------------------------------------------立绘--------------------------------------------------
 --清理所有的立绘
 function ClearImg(tween)
@@ -1088,6 +1169,8 @@ function UpdateRoleImg(pInfos)
 				end				
 			elseif v.black then --变色
 				roleView.SetBlack(v.black, false);
+			elseif v.alpha then
+				roleView.SetImg(v);
 			end
 		end
 	end
@@ -1274,12 +1357,16 @@ end
 
 --播放模糊效果
 function PlayBlur()
-	local sBlur, eBlur, blurTime = currentPlotData:GetBlur()
-	if blurTime > 0 then
-		blur.Progress = sBlur / 100
-		blurTimer = blurTime / 1000
-		blurSpeed =((eBlur - sBlur) / blurTime) / 10 * 2
-		table.insert(timers, blurTimer);
+	local isBlur = currentPlotData:IsBlur()
+	CSAPI.SetScriptEnable(bgCamera,"SuperBlur",isBlur)
+	if isBlur then
+			local sBlur, eBlur, blurTime = currentPlotData:GetBlur()
+		if blurTime > 0 then
+			blur.Progress = sBlur / 100
+			blurTimer = blurTime / 1000
+			blurSpeed =((eBlur - sBlur) / blurTime) / 10 * 2
+			table.insert(timers, blurTimer);
+		end
 	end
 end
 

@@ -832,10 +832,12 @@ function this:StartAction()
         end
     end    
        
-    local helpFightAction = self.fightAction:GetHelp();
-    if(helpFightAction)then   
+    local helpFightActions = self.fightAction:GetHelps();
+    if(helpFightActions)then   
          --有协战者
-        EventMgr.Dispatch(EventType.Fight_Trigger_Event_Update,{ character = helpFightAction:GetActorCharacter(),typeIndex = 1});          
+        for _,helpFightAction in ipairs(helpFightActions)do
+            EventMgr.Dispatch(EventType.Fight_Trigger_Event_Update,{ character = helpFightAction:GetActorCharacter(),typeIndex = 1});      
+        end    
     else
         local customPlayTime = self.fightAction:GetCustomPlayTime();
 
@@ -1173,31 +1175,59 @@ end
 
 --启动协战
 function this:StartHelp()
-    local helpFightAction = self.fightAction:GetHelp();
-    if(helpFightAction)then        
-         if(self.fightAction:IsHelp())then
-            LogError("协战无法再次触发协战！");
-            LogError(a.b)
-            return;
-        end
+    local helpFightActions = self.fightAction:GetHelps();
+    local count = helpFightActions and #helpFightActions or 0;
 
-        local helpCharacter = helpFightAction:GetActorCharacter();
-        if(helpCharacter == nil)then
-            LogError("协战FightAction出错，找不到协战角色，数据如下");
-            LogError(helpFightAction.data);
-        end
-        
-        helpFightAction:Play(self.HelpComplete,self);
-        if(self:HashFeature())then
-            helpFightAction:SetFeature();
-        end
-        if(self.isTeleport or self.character.IsModelOffset())then
-            self.isTeleportBack = 1;
-            FuncUtil:Call(self.TeleportBack,self,300);            
-        end
+    if(helpFightActions)then
+        for i,helpFightAction in ipairs(helpFightActions)do
+            if(helpFightAction)then        
+                if(self.fightAction:IsHelp())then
+                    LogError("协战无法再次触发协战！");
+                    LogError(a.b)
+                    return;
+                end
 
-        --LogError("协战触发，有没进大招场景：" .. (self:HasCustomCamera() and "有" or "没"))        
-    end   
+                local helpCharacter = helpFightAction:GetActorCharacter();
+                if(helpCharacter == nil)then
+                    LogError("协战FightAction出错，找不到协战角色，数据如下");
+                    LogError(helpFightAction.data);
+                end
+                
+                FuncUtil:Call(function()
+                    if(i == count)then
+                        helpFightAction:Play(self.HelpComplete,self);
+                    else
+                        helpFightAction:Play(self.HelpComplete1,self);
+                    end
+                end,nil,(i - 1) * 1000);                    
+                
+                if(self:HashFeature())then
+                    helpFightAction:SetFeature();
+                end
+                if(i == 1)then
+                    if(self.isTeleport or self.character.IsModelOffset())then
+                        self.isTeleportBack = 1;
+                        FuncUtil:Call(self.TeleportBack,self,300);            
+                    end
+                end
+
+                --LogError("协战触发，有没进大招场景：" .. (self:HasCustomCamera() and "有" or "没"))        
+            end   
+        end
+    end
+end
+
+function this:HelpComplete1(helpFightAction)
+    FuncUtil:Call(function()
+        if(helpFightAction)then
+            local character = helpFightAction:GetActorCharacter();            
+            character.ResetPlace();
+            character.ApplyIdle();
+            character.SetShowState(true,nil,true);
+            --character.SetShowState(false,nil,true);
+        end        
+    end,nil,100);
+    
 end
 
 function this:TeleportCustom()
@@ -1228,7 +1258,7 @@ end
 
 function this:HelpComplete()
     self:ActionTimeOver();
-    self.fightAction:SetHelp();--清理协战
+    self.fightAction:ClearHelps();--清理协战
 end
 
 return this;

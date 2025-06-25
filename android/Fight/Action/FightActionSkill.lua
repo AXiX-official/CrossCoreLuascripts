@@ -7,6 +7,9 @@ function this:OnPlay()
 --    LogError("技能执行================，id = " .. self.data.id .. "，skill = " .. self.data.skillID);
 --    LogError(self.data);
     --CSAPI.DisableInput(1000);    
+    --[[ if(self:IsHelp())then
+        LogError(string.format("协战触发%s%s",self:GetActorID(),table.tostring(self:GetData())));
+    end ]]
     if(self.initSkill)then
         self.initSkill(self.initSkillCaller,self);
         self.initSkill = nil;
@@ -190,10 +193,11 @@ function this:OnClean()
     --死亡事件
     self.faBeforeDeathEvent = nil;
     --协战
-    if(self.faHelp)then
+    if(self.faHelps)then
         --LogError("清理协战数据" .. table.tostring(self.faHelp.data));
-        FightActionMgr:Recycle(self.faHelp);
+        --FightActionMgr:Recycle(self.faHelp);
         --self.tt = nil;
+        self:ClearHelps();
     end
     self.faHelp = nil;
     self.faHelpCaller = nil;
@@ -302,7 +306,8 @@ function this:PushSub(fightAction,order)
         --LogError("治疗类型");
     elseif(fightActionType == FightActionType.Skill and fightAction:IsHelp())then
         --协战
-        self:SetHelp(fightAction);
+        --LogError(string.format("ID=%s添加ID=%s协战%s",self:GetActorID(),fightAction:GetActorID(),table.tostring(fightAction:GetData())));
+        self:AddHelp(fightAction);
     elseif(self:IsPlayAftSkill(fightAction))then
         --延后结算
         local pushVal = self:IsPlayAftSkill(fightAction);   
@@ -370,11 +375,12 @@ function this:PushSub(fightAction,order)
             end
             --LogError("技能释放前处理============");
             --FightActionBase.PushSub(self,fightAction,order);
+        else
         end
 
          --处理特殊API中的协战
          if(fightActionType == FightActionType.APISpecial)then
-            local faHelp = fightAction:GetHelp();
+            local faHelp = fightAction:GetHelp();            
             if(faHelp)then
                 self:PushSub(faHelp);
             end
@@ -382,10 +388,11 @@ function this:PushSub(fightAction,order)
          --技能API
          if(fightActionType == FightActionType.SkillAPI)then
             fightAction:SetParent(self);
-
-            local faHelp = fightAction:GetHelp();
-            if(faHelp)then
-                self:PushSub(faHelp);
+            local faHelps = fightAction:GetHelps();
+            if(faHelps)then
+                for _,faHelp in ipairs(faHelps)do
+                    self:PushSub(faHelp);
+                end
             end
          end
          --API
@@ -474,7 +481,7 @@ function this:TryPushToTargetArr(fightAction)
             --LogError("被前面数据阻塞" .. id);
             return true;     
         elseif(self.faBlockCurr)then
-            --LogError("被前面数据阻塞（目标不同）");
+            --LogError("被前面数据阻塞（目标不同）");       
             table.insert(self.faBlockCurr,fightAction);
             return true;   
         end
@@ -651,7 +658,7 @@ function this:ApplyHitData(characterId,isFake,workDelay)
         if(not isFake)then
             table.remove(arr,1);
             faDamag:Complete();
-            self:HandlerBlockFightAction(arr);
+            self:HandlerBlockFightAction(arr);            
         end    
     end
     return isAttackValid,applyState;
@@ -802,25 +809,19 @@ end
 
 ---------------------------------------------------协战
 --设置协助
-function this:SetHelp(fightAction)
-
+function this:AddHelp(fightAction)
     if(fightAction)then
         fightAction:SetHelpCaller(self);
-    elseif(self.faHelp)then
-        self.faHelp:SetHelpCaller();
-        FightActionMgr:Recycle(self.faHelp);
+        self.faHelps = self.faHelps or {};
+        table.insert(self.faHelps,fightAction); 
     end
-    self.faHelp = fightAction; 
-
-    --[[ if(self.faHelp)then
-        LogError("设置协战数据----------------------------" .. table.tostring(fightAction.data));
-    else
-        LogError("清除协战");
-    end ]]
 end
 --获取协助FightAction
-function this:GetHelp()
-    return self.faHelp;
+function this:GetHelps()
+    return self.faHelps;
+end
+function this:ClearHelps()
+    self.faHelps = nil;
 end
 --设置协助发起者
 function this:SetHelpCaller(callerFightAction)
@@ -994,25 +995,27 @@ function this:CheckLeftData()
     local allCharacter = CharacterMgr:GetAll();
     
     if(allCharacter ~= nil)then
-        local isLeftData;
         for id,character in pairs(allCharacter)do
-            local isAttackIndexMatch,attackState = self:ApplyHitData(id);
-            if(attackState)then
-                LogError("有伤害遗漏=============================");                
-                isLeftData = 1;
+            local count = 0;
+            for i = 1,100 do
+                local isAttackIndexMatch,attackState = self:ApplyHitData(id);                
+                if(isAttackIndexMatch)then
+                    --LogError("有伤害遗漏=============================");                
+                    count = count + 1;
+                else
+                    if(count > 0)then
+                        LogError(string.format("对目标%s漏结算%s段伤害,%s",id,count,table.tostring(self:GetData())));
+                    end
+                    break;
+                end
             end
             if(self:ApplyBuffData(id))then
                 LogError("有Buff遗漏=============================");                
-                isLeftData = 1;
             end
             if(self:ApplyDebuffData(id))then
                 LogWarning("有Debuff遗漏=============================");                
-                --isLeftData = 1;
             end
-        end
-        if(isLeftData)then
-            LogError(self:GetData());          
-        end
+        end        
     end
 end
 

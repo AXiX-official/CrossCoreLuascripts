@@ -37,7 +37,8 @@ function this:Handle(effEventData)
         self.effFuncArr[APIType.ShowTips] = self.EffAction_ShowTips;  
         self.effFuncArr[APIType.SetInvincible] = self.EffAction_SetInvincible;  
         self.effFuncArr[APIType.UpdateDamage] = self.EffAction_UpdateDamage;  
-        
+        --self.effFuncArr[APIType.SetFury] = self.EffAction_UpdateFury;  
+        --self.effFuncArr[APIType.UpdateFury] = self.EffAction_UpdateFury;  
 
         self.effFuncArr[APIType.UpdateValue] = self.EffAction_UpdateValue;  
         self.effFuncArr[APIType.DelValue] = self.EffAction_DelValue;  
@@ -135,7 +136,7 @@ function this:EffAction_AddHp(effEventData)
     local targetId = effEventData.targetID;         
     local targetCharacter = CharacterMgr:Get(targetId);
     if(targetCharacter ~= nil and effEventData.add)then
-        if(effEventData.add < 0)then
+        if(effEventData.add < 0 or effEventData.death)then
             --targetCharacter.ApplyHit(0);
             local hitData = {hpDamage = -effEventData.add,hp = effEventData.hp,death = effEventData.death,isReal = effEventData.isReal}
             if(effEventData.effectID and effEventData.effectID == 0)then
@@ -348,6 +349,15 @@ end
 function this:EffAction_UpdateDamage(effEventData)
     EventMgr.Dispatch(EventType.Fight_Activity_UpdateDamage,effEventData);
 end
+
+function this:EffAction_UpdateFury(effEventData)
+    local targetId = effEventData.targetID;         
+    local targetCharacter = CharacterMgr:Get(targetId);
+    if(targetCharacter)then        
+        targetCharacter.UpdateFury(effEventData.fury,effEventData.max);
+    end
+end
+
 
 function this:EffAction_UpdateValue(effEventData)
     local targetId = effEventData.targetID;         

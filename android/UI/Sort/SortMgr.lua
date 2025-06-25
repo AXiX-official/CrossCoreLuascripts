@@ -362,7 +362,7 @@ function this.Filter_CfgIsAvatar(newDatas, dic)
     end
     return _newDatas
 end
---成就
+-- 成就
 function this.Filter_CfgAchieveQualitySort(newDatas, dic)
     local _newDatas = {}
     for i, v in pairs(newDatas) do
@@ -376,7 +376,7 @@ function this.Filter_CfgAchieveQualitySort(newDatas, dic)
     return _newDatas
 end
 
---看板 角色，多人插图
+-- 看板 角色，多人插图
 function this.Filter_CfgRandomRoleType(newDatas, dic)
     local _newDatas = {}
     for i, v in pairs(newDatas) do
@@ -390,6 +390,16 @@ function this.Filter_CfgRandomRoleType(newDatas, dic)
     return _newDatas
 end
 
+-- 半身像
+function this.Filter_CfgHalfBodyType(newDatas, dic)
+    local _newDatas = {}
+    for i, v in pairs(newDatas) do
+        if (dic[v:GetThemeType()]) then
+            table.insert(_newDatas, v)
+        end
+    end
+    return _newDatas
+end
 
 --------------------------------------------------筛选end-----------------------------------------------------
 
@@ -457,8 +467,8 @@ function this.SortFunc_1007(a, b)
     end
 end
 function this.SortFunc_1008(a, b)
-    local i1 = TeamMgr:GetCardTeamIndex(a:GetID(),eTeamType.DungeonFight, true)
-    local i2 = TeamMgr:GetCardTeamIndex(b:GetID(),eTeamType.DungeonFight, true)
+    local i1 = TeamMgr:GetCardTeamIndex(a:GetID(), eTeamType.DungeonFight, true)
+    local i2 = TeamMgr:GetCardTeamIndex(b:GetID(), eTeamType.DungeonFight, true)
     local index1 = (i1 == nil or i1 == -1) and 10000 or tonumber(i1)
     local index2 = (i2 == nil or i2 == -1) and 10000 or tonumber(i2)
 
@@ -561,18 +571,18 @@ function this.SortFunc_3005(a, b)
 end
 function this.SortFunc_3006(a, b)
     -- 点数
-    --判断第一个技能点的值大小
-    local a1=a:GetSkillInfo(1)
-    local b1=b:GetSkillInfo(1)
+    -- 判断第一个技能点的值大小
+    local a1 = a:GetSkillInfo(1)
+    local b1 = b:GetSkillInfo(1)
     if a1 and b1 then
-        if a1.nLv==b1.nLv then
+        if a1.nLv == b1.nLv then
             if (a:GetTotalSkillValue() == b:GetTotalSkillValue()) then
                 return nil
             else
                 return a:GetTotalSkillValue() > b:GetTotalSkillValue()
             end
         else
-            return a1.nLv>b1.nLv
+            return a1.nLv > b1.nLv
         end
     else
         if (a:GetTotalSkillValue() == b:GetTotalSkillValue()) then

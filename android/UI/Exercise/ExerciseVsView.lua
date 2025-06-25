@@ -1,6 +1,8 @@
 function Awake()
     cardIconItemL = RoleTool.AddRole(iconLParent, nil, nil, false)
+    mulIconItemL = RoleTool.AddMulRole(iconLParent, nil, nil, false)
     cardIconItemR = RoleTool.AddRole(iconRParent, nil, nil, false)
+    mulIconItemR = RoleTool.AddMulRole(iconRParent, nil, nil, false)
 end
 
 function OnInit()
@@ -56,7 +58,7 @@ function SetLeft()
 end
 
 function SetIconL()
-    local icon_id,live2d = GetLIcon()
+    local icon_id, live2d = GetLIcon()
     local arr = CSAPI.GetMainCanvasSize()
     local width = arr.x / 4
     -- CSAPI.SetRTSize(iconMaskL, width, 0)
@@ -65,15 +67,19 @@ function SetIconL()
     -- RoleTool.LoadImg(iconL, icon_id, LoadImgType.ExerciseLView)
     -- -- 
     -- UIUtil:SetLiveBroadcast(iconL)
-
-    cardIconItemL.Refresh(icon_id, LoadImgType.ExerciseLView, nil, live2d)
-    cardIconItemL.SetLiveBroadcast()
+    if (icon_id < 10000) then
+        mulIconItemL.Refresh(icon_id, LoadImgType.ExerciseLView, nil, live2d)
+        mulIconItemL.SetLiveBroadcast()
+    else
+        cardIconItemL.Refresh(icon_id, LoadImgType.ExerciseLView, nil, live2d)
+        cardIconItemL.SetLiveBroadcast()
+    end
 end
 
 function GetLIcon()
-    local icon_id,live2d = nil,false
+    local icon_id, live2d = nil, false
     if (ExerciseMgr:GetInfo().role_panel_id == nil or ExerciseMgr:GetInfo().role_panel_id == 0) then
-        --用队长
+        -- 用队长
         local cards = TeamMgr:GetTeamCardDatas(eTeamType.PracticeAttack)
         icon_id = cards[1]:GetSkinID()
         local cfgModel = Cfgs.character:GetByID(icon_id)
@@ -82,7 +88,7 @@ function GetLIcon()
         icon_id = ExerciseMgr:GetInfo().role_panel_id
         live2d = ExerciseMgr:GetInfo().live2d == BoolType.Yes
     end
-    return icon_id,live2d
+    return icon_id, live2d
 end
 
 function SetLTeamItems()
@@ -171,8 +177,13 @@ function SetIconR(icon_id)
     -- -- 
     -- UIUtil:SetLiveBroadcast(iconR)
 
-    cardIconItemR.Refresh(icon_id, LoadImgType.ExerciseLView, nil, lData.live2d)
-    cardIconItemR.SetLiveBroadcast()
+    if (icon_id < 10000) then
+        mulIconItemR.Refresh(icon_id, LoadImgType.ExerciseLView, nil, lData.live2d)
+        mulIconItemR.SetLiveBroadcast()
+    else
+        cardIconItemR.Refresh(icon_id, LoadImgType.ExerciseLView, nil, lData.live2d)
+        cardIconItemR.SetLiveBroadcast()
+    end
 end
 function SetRTeamItems()
     local teamData = TeamMgr:CreateTeamData(data.team)

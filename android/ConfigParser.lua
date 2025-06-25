@@ -404,7 +404,8 @@ function ConfigParser:ClientConfig()
         MainLine = 1,
         CfgMenuBg = 1,
         CfgItemPool = 1,
-        CfgIconTitle = 1
+        CfgIconTitle = 1,
+        CfgIconEmote = 1
     }
 
     -- 检查/特殊处理以及设为只读

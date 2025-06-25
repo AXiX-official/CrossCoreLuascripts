@@ -378,3 +378,6 @@ function OnClickHistory()
     CSAPI.OpenView("ExerciseLHistory")
 end
 
+function OnClickHead()
+    CSAPI.OpenView("HeadFramePanel",nil,3)
+end

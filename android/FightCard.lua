@@ -1324,7 +1324,7 @@ end
 function FightCardBase:ForceDeath(killer)
     -- LogDebugEx("FightCardBase:ForceDeath", self:Get("hp"))
     self.log:Add({api="AddHp", death = true, targetID = self.oid, casterID = self.oid,
-    attr = "hp", hp = 0, add = -self:Get("hp")}) 
+    attr = "hp", hp = 0, add = -(self:Get("hp")+1)}) 
 
     self.hp = 0
     self.isLive = false

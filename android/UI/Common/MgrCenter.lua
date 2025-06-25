@@ -48,6 +48,7 @@ local mgrNames = {
 	"SDKPayMgr",--SDK支付
 	"HeadFrameMgr",
 	"HeadIconMgr",
+	"HeadFaceMgr",
 	"AchievementMgr", --成就
 	"TowerMgr", --新爬塔
 	"BadgeMgr", --徽章

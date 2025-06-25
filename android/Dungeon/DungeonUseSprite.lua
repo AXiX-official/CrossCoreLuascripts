@@ -22,7 +22,7 @@ function Init(index, cfgId, func)
 	grid.SetCount(goods:GetCount());
 	CSAPI.SetText(name, goods:GetName());
 	CSAPI.SetText(tips, goods:GetDesc());
-	nameMove:SetMove();
+	--nameMove:SetMove();
 	tipMove:SetMove();
 	SetState(false);
 	-- grid.SetIntensify();

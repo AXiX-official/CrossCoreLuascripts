@@ -68,6 +68,15 @@ local conf = {
 {'10058',	'ticking_4s',	'plot_effect/plot_effect.acb',	'ticking_4s',	''},
 {'10059',	'ticking_12s',	'plot_effect/plot_effect.acb',	'ticking_12s',	''},
 {'10060',	'ticking_12s_loop',	'plot_effect/plot_effect.acb',	'ticking_12s_loop',	'1'},
+{'10061',	'sea_wave',	'plot_effect/plot_effect.acb',	'sea_wave',	''},
+{'10062',	'sea_wave_loop',	'plot_effect/plot_effect.acb',	'sea_wave_loop',	'1'},
+{'10063',	'Signal_loss_1s',	'plot_effect/plot_effect.acb',	'Signal_loss_1s',	''},
+{'10064',	'Signal_loss_loop',	'plot_effect/plot_effect.acb',	'Signal_loss_loop',	'1'},
+{'10065',	'bubble',	'plot_effect/plot_effect.acb',	'bubble',	''},
+{'10066',	'droplet',	'plot_effect/plot_effect.acb',	'droplet',	''},
+{'10067',	'droplet_loop',	'plot_effect/plot_effect.acb',	'droplet_loop',	'1'},
+{'10068',	'knock_slow',	'plot_effect/plot_effect.acb',	'knock_slow',	''},
+{'10069',	'knock_fast',	'plot_effect/plot_effect.acb',	'knock_fast',	''},
 },
 }
 --cfgPlotSound = conf

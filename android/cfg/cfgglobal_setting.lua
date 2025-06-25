@@ -309,6 +309,7 @@ local conf = {
 {'g_NoExpNoticeMailItemTypes',	'g_NoExpNoticeMailItemTypes',	'',	'int[]',	'19,21,26'},
 {'g_RogueScoreLVIdx',	'g_RogueScoreLVIdx',	'',	'int',	'0'},
 {'g_DownloadReward',	'g_DownloadReward',	'',	'json',	'[[11002,2,2]]'},
+{'g_BattleFaceSet',	'g_BattleFaceSet',	'',	'int[]',	'1033,1031,1032'},
 },
 }
 --cfgglobal_setting = conf

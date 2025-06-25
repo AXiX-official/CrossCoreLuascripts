@@ -19,8 +19,8 @@ function Skill603100202:OnRoundBegin(caster, target, data)
 	else
 		return
 	end
-	-- 603100201
-	self:DelBuffQuality(SkillEffect[603100201], caster, self.card, data, 2,1)
+	-- 603100202
+	self:DelBuffQuality(SkillEffect[603100202], caster, self.card, data, 2,2)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -29,7 +29,7 @@ function Skill603100202:OnRoundBegin(caster, target, data)
 	-- 8721
 	local count721 = SkillApi:SkillLevel(self, caster, target,3,6031002)
 	-- 603100204
-	local targets = SkillFilter:MinAttr(self, caster, target, 1,"hp",1)
+	local targets = SkillFilter:MinPercentHp(self, caster, target, 1,"hp",1)
 	for i,target in ipairs(targets) do
 		self:CallOwnerSkill(SkillEffect[603100204], caster, target, data, 603100500+count721)
 	end

@@ -18,16 +18,18 @@ function this:SetData(cfg)
     self.last_op = nil -- 最后一次数据，中途重登时使用，如果没有，则从logs中获取
     self.isSave = false -- 当前抽卡结果是否已保存到logs
     self.isDy = false
-    if(self.cfg.nType==4 or self.cfg.nType==5) then 
-        self.isDy = true 
-        self.dyEndTime = 0 
-    end 
+    if (self.cfg.nType == 4 or self.cfg.nType == 5) then
+        self.isDy = true
+        self.dyEndTime = 0
+    end
 end
 
 function this:GetCfg()
     return self.cfg
 end
-
+function this:GetID()
+    return self.cfg.id
+end
 function this:GetId()
     return self.cfg.id
 end
@@ -220,7 +222,7 @@ end
 
 function this:InitDyOpenPool(endTime)
     self.isDy = true
-    self.dyEndTime = TimeUtil:GetBJTime(endTime) 
+    self.dyEndTime = TimeUtil:GetBJTime(endTime)
 end
 
 -- 是否是动态卡池
@@ -231,12 +233,12 @@ function this:GetDyEndTime()
     return self.dyEndTime
 end
 
---是否已满足开启条件
+-- 是否已满足开启条件
 function this:CheckConditions()
-    if(self:GetCfg().conditions) then 
+    if (self:GetCfg().conditions) then
         return MenuMgr:CheckConditionIsOK(self:GetCfg().conditions)
-    end 
-    return true 
+    end
+    return true
 end
 
 ----------------------------------免费抽卡-------------------------------------------
@@ -252,5 +254,61 @@ function this:IsOneFree()
     return false
 end
 
+----------------------------------自选抽卡-------------------------------------------
+function this:GetType()
+    return self:GetCfg().nType or 1
+end
+
+function this:SetChoiceInfos(choice_info)
+    self.choice_infos = choice_info
+    -- 修改表的数据
+    local _look_cards = CfgCardPool[self:GetCfg().id].look_cards
+    _look_cards[1][3] = choice_info.cids[1]
+    _look_cards[2][3] = choice_info.cids[2]
+    -- Cfgs["CfgCardPool"][self:GetCfg().id].look_cards = _look_cards
+end
+
+function this:GetChoiceCids()
+    if (self.choice_infos) then
+        return self.choice_infos.cids
+    end
+    return nil
+end
+
+function this:IsSelectPool()
+    return self:GetType() == CardPoolType.SelfChoice
+end
+
+-- {id,cids,firstCids}
+function this:IsSelectRole()
+    return self.choice_infos ~= nil
+end
+
+function this:IsChoiceAndSelectPool()
+    if (self:IsSelectPool() and self:IsSelectRole()) then
+        return true
+    end
+    return false
+end
+
+-- 抽卡消耗的物品id
+function this:GetCostID()
+    if (self:GetCfg().jCost) then
+        return self:GetCfg().jCost[1][1]
+    end
+    return 11002
+end
+
+-- 兑换id 微晶换抽卡劵xx
+function this:GetExchangeID()
+    local id = self:GetCostID() -- xx
+    local cfgs = Cfgs.CfgItemExchange:GetAll()
+    for k, v in pairs(cfgs) do
+        if (v.id < 10000 and v.gets[1][1] == id and v.costs[1][1] == 10040) then
+            return v.id
+        end
+    end
+    return nil
+end
 
 return this

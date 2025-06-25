@@ -78,6 +78,7 @@ function ESignCB(proto)
     SignInMgr:AddCacheRecord(key)
     -- CSAPI.SetGOActive(mask, false)
     -- layout:UpdateList()
+    ActivityMgr:CheckRedPointData(ActivityListType.SignInCommon)
     SetDatas()
     isClick = false
 end

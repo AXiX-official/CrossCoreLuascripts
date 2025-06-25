@@ -24,14 +24,14 @@ function OnOpen()
 		--其余价格显示
 	if discount~=1 then
 		local realPrice=commodity:GetRealPrice();
-		SetPrice(normalPrice[1].id,normalPrice[1].num,txt_hPrice);
-		SetPrice(realPrice[1].id,realPrice[1].num,txt_nPrice);
+		SetPrice(normalPrice[1].id,normalPrice[1].num,txt_hPrice,txt_hRmb);
+		SetPrice(realPrice[1].id,realPrice[1].num,txt_nPrice,txt_rmb);
 		CSAPI.SetGOActive(hPrice,true)
 		CSAPI.SetGOActive(discountObj,true);
 		local dis=math.floor((1-discount)*100);
 		CSAPI.SetText(txt_discount,"-"..dis.."%");
 	else
-		SetPrice(normalPrice[1].id,normalPrice[1].num,txt_nPrice);
+		SetPrice(normalPrice[1].id,normalPrice[1].num,txt_nPrice,txt_rmb);
 		CSAPI.SetGOActive(hPrice,false)
 		CSAPI.SetGOActive(discountObj,false);
 	end
@@ -78,9 +78,32 @@ function SetBuyContent()
 	CSAPI.SetText(txt_contentNum,"X"..tostring(getInfo[1].num));
 end
 
-function SetPrice(id, num,pText)
-	CSAPI.SetText(pText, LanguageMgr:GetByID(18013)..tostring(num));
+function SetPrice(id, num,pIcon,pText,pRmbIcon)
+	if id==-1 then --SDK支付
+		CSAPI.SetText(pRmbIcon, rmbIcon..tostring(num));
+		CSAPI.SetGOActive(pIcon,false);
+		CSAPI.SetGOActive(pRmbIcon,true);
+		return;
+	else
+		CSAPI.SetGOActive(pIcon,true);
+		CSAPI.SetGOActive(pRmbIcon,false);
+	end
+	if id == ITEM_ID.GOLD then --金币
+		ResUtil.IconGoods:Load(pIcon, tostring(ITEM_ID.GOLD).."_1");
+		CSAPI.SetImgColorByCode(pIcon,"ffffff")
+	elseif id == ITEM_ID.DIAMOND then --钻石
+		ResUtil.IconGoods:Load(pIcon, tostring(ITEM_ID.DIAMOND).."_1");
+		CSAPI.SetImgColorByCode(pIcon,"ffc146")
+	else
+		local cfg = Cfgs.ItemInfo:GetByID(id);
+		if cfg and cfg.icon then
+			ResUtil.IconGoods:Load(pIcon, cfg.icon.."_1");
+		end
+		CSAPI.SetImgColorByCode(pIcon,"ffffff")
+	end
+	CSAPI.SetText(pText, tostring(math.floor(num+0.5)));
 end
+
 --点击充值
 function OnClickPay()
 	local normalPrice=commodity:GetPrice();

@@ -23,8 +23,8 @@ local changeID = nil -- 自跳转的章节ID
 local changeHard = nil -- 自跳转的章节难度
 local changeInfo = nil
 local changeIndex = 1
---sp
-local openViewKey =nil
+-- sp
+local openViewKey = nil
 
 function Awake()
     sliderObj = ComUtil.GetCom(slider, "Slider");
@@ -44,7 +44,7 @@ function OnViewClosed(viewKey)
         CSAPI.SetGOActive(mapView.ModelCamera, true);
     elseif viewKey == "Plot" then
         CSAPI.SetGOActive(mapView.ModelCamera, true);
-        FuncUtil:Call(function ()
+        FuncUtil:Call(function()
             if not gameObject then
                 return
             end
@@ -53,20 +53,20 @@ function OnViewClosed(viewKey)
             if bgm and bgm ~= "" then
                 CSAPI.PlayBGM(bgm)
             end
-        end,nil,100)  
+        end, nil, 100)
     elseif viewKey == "ActivityListView" then
         RefreshItems()
     end
 
-    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == viewKey  then
-        SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.Start)
+    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == viewKey then
+        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
         openViewKey = nil
     end
 end
 
 function OnViewOpened(viewKey)
-    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == nil  then
-        SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.StopAll)
+    if viewKey ~= "Dungeon" and viewKey ~= "SpecialGuide" and openViewKey == nil then
+        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
         openViewKey = viewKey
     end
 end
@@ -74,7 +74,7 @@ end
 function OnLoadComplete()
     if loadCB then
         loadCB()
-        loadCB= nil
+        loadCB = nil
     end
 end
 
@@ -142,21 +142,21 @@ function InitPanel()
 end
 
 -- 打开界面状态
-function SetOpenState()  
+function SetOpenState()
     local _id = LoadDungeonID()
     local state = data.state or DungeonOpenType.Normal
     if state == DungeonOpenType.Jump and data.itemId then -- 跳转
         SetJumpInfo(data.itemId)
     elseif state == DungeonOpenType.Retreat or state == DungeonOpenType.Finish then -- 撤退 或 完成关卡
         if _id > 0 then
-            SetJumpInfo(_id)  
+            SetJumpInfo(_id)
         end
     else -- 正常打开
-        if not CheckSectionOver(_id) then  
-            if DungeonMgr:GetCurrDungeonIsFirst() then --首次通关
-                CheckNextDungeonMission(_id)-- 任务检测
-                CheckDungeonPassTips(_id) --通关提示
-                DungeonMgr:SetCurrDungeonNoFirst() --避免再次进入
+        if not CheckShowPassTips(_id) then
+            if DungeonMgr:GetCurrDungeonIsFirst() then -- 首次通关
+                CheckNextDungeonMission(_id) -- 任务检测
+                CheckDungeonPassTips(_id) -- 通关提示
+                DungeonMgr:SetCurrDungeonNoFirst() -- 避免再次进入
             end
             if currListItem then
                 mapView.MoveToTarget(currListItem, mapView.curScale)
@@ -216,7 +216,7 @@ function Refresh()
     -- 宝箱
     -- local dungeonCfgs = sectionData:GetDungeonCfgs(currHardLv)
     -- CheckStar(dungeonCfgs)
-    currStarNum = DungeonMgr:GetMainSectionStar(sectionData:GetID(),currHardLv)
+    currStarNum = DungeonMgr:GetMainSectionStar(sectionData:GetID(), currHardLv)
     InitBox()
 end
 
@@ -232,11 +232,11 @@ function SetHard()
     if isOpen ~= true then
         if currHardLv == 2 then
             currHardLv = 1;
-            DungeonMgr:SetDungeonHardLv(sectionData:GetID(),currHardLv);
+            DungeonMgr:SetDungeonHardLv(sectionData:GetID(), currHardLv);
         end
     end
     local isEasy = currHardLv == 1
-    CSAPI.SetAnchor(hardSel,isEasy and -51 or 107, 52)
+    CSAPI.SetAnchor(hardSel, isEasy and -51 or 107, 52)
     local color1 = isEasy and {255, 255, 255, 255} or {255, 255, 255, 125}
     local color2 = not isEasy and {255, 255, 255, 255} or {255, 255, 255, 125}
     CSAPI.SetImgColor(btnSelEasy, color1[1], color1[2], color1[3], color1[4])
@@ -299,7 +299,7 @@ function SwitchHard(targetHardLv)
         gourpData:SetHard(targetHardLv == 2)
         local isOpen, str = gourpData:IsOpen()
         if isOpen then
-            DungeonMgr:SetDungeonHardLv(sectionData:GetID(),targetHardLv);
+            DungeonMgr:SetDungeonHardLv(sectionData:GetID(), targetHardLv);
             Refresh()
             if mapView.currIdx == 2 then
                 ClickSwitch(currListItem:GetIndex())
@@ -312,7 +312,7 @@ function SwitchHard(targetHardLv)
         end
     end
 
-    EventMgr.Dispatch(EventType.Dungeon_MainLine_Update,sectionData:GetID())
+    EventMgr.Dispatch(EventType.Dungeon_MainLine_Update, sectionData:GetID())
 end
 
 -- 普通
@@ -348,7 +348,7 @@ function RecycleListItems()
     listItemPool = listItemPool or {}
     for _, listItem in pairs(listItems) do
         table.insert(listItemPool, listItem)
-        CSAPI.SetGOActive(listItem.gameObject,false)
+        CSAPI.SetGOActive(listItem.gameObject, false)
     end
     listItems = nil;
 end
@@ -367,7 +367,7 @@ function CreateAllLine()
                 local pos = {{x1, y1}}
                 if v:GetTurnPos() and #v:GetTurnPos() > 0 then
                     for _, _pos in ipairs(v:GetTurnPos()) do
-                        table.insert(pos, {_pos[1] * scale,_pos[2] * scale})
+                        table.insert(pos, {_pos[1] * scale, _pos[2] * scale})
                     end
                 end
                 table.insert(pos, {x2, y2})
@@ -418,7 +418,7 @@ function RecycleLines()
     listLines = nil
 end
 -----------------------------------------------item-----------------------------------------------
---刷新物体
+-- 刷新物体
 function RefreshItems()
     if items then
         for k, v in pairs(items) do
@@ -467,9 +467,9 @@ function ShowDungeon(_id)
                 LogError("没找到关卡表数据！！！id:" .. v)
             end
         end
-        local cur,max = currListItem:GetPassCount()
-        CSAPI.SetText(txtPrograss, math.floor(cur/max * 100) .. "%")
-        --少数量控制长度
+        local cur, max = currListItem:GetPassCount()
+        CSAPI.SetText(txtPrograss, math.floor(cur / max * 100) .. "%")
+        -- 少数量控制长度
         CSAPI.SetRTSize(mapView.itemNode, 565, #groups < 5 and 124 + (#groups * 148) or 754)
         CSAPI.SetRTSize(itemNode, 565, #groups < 5 and 124 + (#groups * 148) or 754)
         CSAPI.SetGOActive(scrollBar, #groups > 4)
@@ -613,7 +613,7 @@ function OnClickItem(item)
                 end
                 PlotMgr:TryPlay(selItem.cfg.storyID, OnStoryPlayComplete, this, true);
             end
-            CSAPI.OpenView("Dialog",dialogData)
+            CSAPI.OpenView("Dialog", dialogData)
         end
     end
 end
@@ -630,13 +630,13 @@ function OnStoryPlayComplete()
     data.isPass = true;
     DungeonMgr:AddDungeonData(data);
     selItem.Set(selItem.cfg);
-    MenuMgr:UpdateDatas() --刷新关卡解锁状态
+    MenuMgr:UpdateDatas() -- 刷新关卡解锁状态
     EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
     EventMgr.Dispatch(EventType.Activity_Open_State);
-    EventMgr.Dispatch(EventType.Dungeon_MainLine_Update,sectionData:GetID());
+    EventMgr.Dispatch(EventType.Dungeon_MainLine_Update, sectionData:GetID());
 
     if currListItem:IsPass() then
-        if CheckSectionOver(selItem.GetID()) then
+        if CheckShowPassTips(selItem.GetID()) then
             ShowDungeon()
             SetHard()
             return
@@ -658,14 +658,14 @@ function ShowInfo(item)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
-    itemInfo.Show(cfg,nil,OnLoadSuccess)
-    if not isActive then --关闭特殊引导
-        SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.StopAll)
+    itemInfo.Show(cfg, nil, OnLoadSuccess)
+    if not isActive then -- 关闭特殊引导
+        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
     end
 end
 
 function OnLoadSuccess()
-    SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.Start)
+    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
 end
 
 -- 进入
@@ -698,7 +698,7 @@ function OnBattleEnter()
             })
         end
     end
-    SpecialGuideMgr:ApplyShowView(spParent,"Dungeon",SpecialGuideType.Finish)
+    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Finish)
 end
 
 ---------------------------------------------动效---------------------------------------------
@@ -880,7 +880,7 @@ function InitBox()
         local starNum = currStarNum > totalStarNum and totalStarNum or currStarNum
         sliderObj.value = starNum / totalStarNum;
         -- 阶段
-        local cur,max = boxData:GetStage()
+        local cur, max = boxData:GetStage()
         if cur <= max then
             CSAPI.SetGOActive(img_tip, totalStarNum <= num)
         else
@@ -931,7 +931,7 @@ function SetBoxPanel()
                 end
             end
         end
-        
+
         -- btn
         if not btnGetCG then
             btnGetCG = ComUtil.GetCom(btnAllGet, "CanvasGroup")
@@ -972,7 +972,6 @@ function OnClickAllGet()
         return
     end
 
-
     local datas = {}
     local indexs = boxData:GetIndexs()
     for i = 1, #boxData:GetArr() do
@@ -990,7 +989,7 @@ function OnClickAllGet()
     end
     if #datas > 0 then
         -- 开启宝箱		
-        ClientProto:GetDupSumStarReward(datas) --领取宝箱
+        ClientProto:GetDupSumStarReward(datas) -- 领取宝箱
         -- ClientProto:DupSumStarRewardInfo({sectionData:GetStarRewardID()})  --刷新宝箱
         -- InitBox()
         OnClickBox()
@@ -998,43 +997,51 @@ function OnClickAllGet()
 end
 
 -------------------------------------------检查章节是否完成-----------------------------------------------
-function CheckSectionOver(_id) -- 检查章节是否完成
-    local cfgDungeon = Cfgs.MainLine:GetByID(_id)
-    if cfgDungeon then
+function CheckShowPassTips(_id) -- 检查弹出开启窗口
+    local dungeonData = DungeonMgr:GetDungeonData(_id) -- 通关后必有数据
+    if dungeonData then
         changeInfo = {};
         changeIndex = 1;
         changeID = nil;
-        changeHard = nil;
 
-        if (not DungeonMgr:GetCurrDungeonIsFirst() and cfgDungeon.sub_type == nil) or (not isStoryFirst and cfgDungeon.sub_type ~= nil) then -- 当前关卡不是第一次通关
+        -- 关卡非首次通关
+        if (not DungeonMgr:GetCurrDungeonIsFirst() and not dungeonData:IsStory()) then
             return false
         end
 
-        local _sectionData = DungeonMgr:GetSectionData(cfgDungeon.group)
-        if _sectionData:GetState(currHardLv) ~= 2 then
+        -- 剧情非首次通关
+        if (not isStoryFirst and dungeonData:IsStory()) then
             return false
         end
+
+        local isShow = false
 
         -- 要显示的信息
-        local passStrs = _sectionData:GetPassDesc()
-        table.insert(changeInfo, {
-            title = passStrs and passStrs[1],
-            content = passStrs and passStrs[2]
-        })
+        local passStrs = dungeonData:GetPassDesc()
+        if passStrs then
+            isShow = true
+            table.insert(changeInfo, {
+                title = passStrs[1] or "",
+                content = passStrs[2] or ""
+            })
+        end
 
-        if cfgDungeon.lasChapterID then
-            local nextCfgDungeon = Cfgs.MainLine:GetByID(cfgDungeon.lasChapterID[1]);
-            if nextCfgDungeon and nextCfgDungeon.group ~= cfgDungeon.group then
-                local nextSectionData = DungeonMgr:GetSectionData(nextCfgDungeon.group)
-                -- 要显示的信息
-                local openStrs = _sectionData:GetNextOpenDesc()
-                table.insert(changeInfo, {
-                    title = (openStrs and openStrs[1]) and openStrs[1] or "" ,
-                    content = (openStrs and openStrs[2]) and openStrs[2] or ""
-                })
-                changeID = nextCfgDungeon.group;
-                changeHard = nextCfgDungeon.type;
-            end
+        local nextOpenStrs = dungeonData:GetNextOpenDesc()
+        if nextOpenStrs then
+            isShow = true
+            table.insert(changeInfo, {
+                title = nextOpenStrs[1] or "",
+                content = nextOpenStrs[2] or ""
+            })
+        end
+
+        if dungeonData:GetJumpId() then
+            isShow = true
+            changeID = dungeonData:GetJumpId()
+        end
+
+        if not isShow then
+            return
         end
 
         if isActive then
@@ -1073,21 +1080,11 @@ function OnClickPassOther()
     else
         SaveDungeonID()
         CSAPI.SetGOActive(passObj, false);
-        if changeID and changeHard then
-            local jumpCfgs = Cfgs.CfgJump:GetAll()
-            local nextSectionCfg = Cfgs.Section:GetByID(changeID)
-            if nextSectionCfg then
-                if jumpCfgs then
-                    for _, jumpCfg in pairs(jumpCfgs) do
-                        if jumpCfg.sName == "Dungeon" and jumpCfg.val1 == nextSectionCfg.id and jumpCfg.val3 == nil and
-                            jumpCfg.val2 == changeHard then
-                            currListItem = nil
-                            selItem = nil
-                            JumpMgr:Jump(jumpCfg.id)
-                        end
-                    end
-                end
-                EventMgr.Dispatch(EventType.Dungeon_MainLine_Update, nextSectionCfg.id)
+        if changeID then
+            local jumpCfg = Cfgs.CfgJump:GetByID(changeID)
+            if jumpCfg then
+                JumpMgr:Jump(jumpCfg.id)
+                EventMgr.Dispatch(EventType.Dungeon_MainLine_Update, jumpCfg.val1)
             end
         end
     end
@@ -1101,7 +1098,8 @@ function CheckNextDungeonMission(_id)
             local lockInfo = nextCfg.LockMission[1]
             loadCB = function()
                 local dialogData = {}
-                dialogData.content = LanguageMgr:GetByID(15107,lockInfo[2] + 1, nextCfg.chapterID .. " " .. nextCfg.name)
+                dialogData.content = LanguageMgr:GetByID(15107, lockInfo[2] + 1,
+                    nextCfg.chapterID .. " " .. nextCfg.name)
                 dialogData.okCallBack = function()
                     JumpMgr:Jump(180002)
                 end
@@ -1116,11 +1114,11 @@ function CheckDungeonPassTips(_id)
     if cfg and cfg.passTips then
         local _loadCB = loadCB
         loadCB = function()
-            FuncUtil:Call(function ()
+            FuncUtil:Call(function()
                 if gameObject then
                     LanguageMgr:ShowTips(cfg.passTips)
                 end
-            end,nil,200)
+            end, nil, 200)
             if _loadCB then
                 _loadCB()
             end
@@ -1153,16 +1151,16 @@ function OnClickHome()
     if mapView and not mapView.isMove then
         UIUtil:ToHome()
         SaveDungeonID()
-    else 
+    else
         UIUtil:ToHome()
     end
 end
 
 function SetRed()
     local isNolRed = DungeonBoxMgr:CheckRed(sectionData:GetID(), 1)
-    UIUtil:SetRedPoint(btnSelEasy,isNolRed,65,9)
+    UIUtil:SetRedPoint(btnSelEasy, isNolRed, 65, 9)
 
     local isHardRed = DungeonBoxMgr:CheckRed(sectionData:GetID(), 2)
     -- local isHardRed = CheckRed(sectionData:GetID(), 2)
-    UIUtil:SetRedPoint(btnSelHard,isHardRed,65,9)
+    UIUtil:SetRedPoint(btnSelHard, isHardRed, 65, 9)
 end

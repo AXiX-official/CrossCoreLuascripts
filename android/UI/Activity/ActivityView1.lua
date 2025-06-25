@@ -41,7 +41,8 @@ function RefreshPanel()
 end
 
 function OnClickUnLock()
-	CSAPI.OpenView("ExplorationBuy")
+	-- CSAPI.OpenView("ExplorationBuy")
+	UIUtil:OpenExplorationBuy()
 end
 
 function OnClickJump()

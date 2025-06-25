@@ -874,9 +874,9 @@ function this:GetOrgEndBuyTips()
 end
 
 --返回现金价格符号
-function this:GetCurrencySymbols()
+function this:GetCurrencySymbols(isFixed)
     local str=LanguageMgr:GetByID(18013);
-    if CSAPI.IsADV() then
+    if CSAPI.IsADV() and isFixed~=true then
         str=self:GetCfg().displayCurrency;
         if str==nil then
             str=RegionalSet.RegionalCurrencyType();
@@ -884,5 +884,16 @@ function this:GetCurrencySymbols()
     end
     return str;
 end
-
+---中台SDK价格显示
+---如果有SDK数据，优先显示
+---如果没有SDK数据，就显示配置表真实价格
+function this:GetSDKdisplayPrice()
+    if CSAPI.IsADV() then
+        if (self:GetCfg().displayPrice~=nil) then
+            local displayPrice =self:GetCfg().displayPrice;
+            return tostring(displayPrice);
+        end
+    end
+    return nil;
+end
 return this

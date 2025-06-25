@@ -19,21 +19,6 @@ function Skill913910101:OnActionOver(caster, target, data)
 	else
 		return
 	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 913910101
-	self:AddSp(SkillEffect[913910101], caster, self.card, data, 10)
-end
--- 行动结束2
-function Skill913910101:OnActionOver2(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
 	-- 8073
 	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
@@ -45,5 +30,5 @@ function Skill913910101:OnActionOver2(caster, target, data)
 		return
 	end
 	-- 913910105
-	self:HitAddBuffCount(SkillEffect[913910105], caster, target, data, 10000,913910101,1,50)
+	self:HitAddBuffCount(SkillEffect[913910105], caster, target, data, 10000,913910101,1,25)
 end

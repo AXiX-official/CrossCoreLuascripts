@@ -64,6 +64,10 @@ function this:SetNew(isNew)
 	end
 end
 
+function this:GetSkills()
+	return self.data and self.data.skills or nil;
+end
+
 --返回唯一ID
 function this:GetID()
 	return self.data and self.data.sid;

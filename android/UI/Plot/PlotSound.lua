@@ -84,6 +84,7 @@ end
 ---------------------------------场景音效-----------------------------------
 function PlayEffSound(info)
 	if(info.key == "none") then
+		-- LogError("关闭所有循环音效!!!" .. table.tostring(lastLoopKeys))
 		StopEffSoundsByLoop()
 		return
 	end	
@@ -97,7 +98,8 @@ function PlayEffSound(info)
 	-- end
 	local volume = info.volume or 100
 	CSAPI.PlayPlotSound(info.key, false, volume)
-	
+	-- LogError("播放音效：" .. info.key .. "|isLoop:" .. tostring(isLoop))
+
 	if(isLoop) then
 		table.insert(lastLoopKeys, info.key)
 		-- lastLoopKey = info.key

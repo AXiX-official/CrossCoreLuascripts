@@ -269,7 +269,7 @@ function RefreshDownloadBtn()
     CSAPI.SetGOActive(completeBtn,hasRewarded)
     CSAPI.SetGOActive(downloadBtn,not canReward and not hasRewarded)
     -- 暂时屏蔽功能入口
-    CSAPI.SetGOActive(node.transform:Find("downloadObj").gameObject,false)
+    -- CSAPI.SetGOActive(node.transform:Find("downloadObj").gameObject,false)
 
     -- if canReward then
     -- else if hasRewarded then

@@ -1,9 +1,6 @@
 --FireBall数据
 local this = 
 {
-[2008187309]={
-{effect="change_eff",effect_pack="d70050",time=2000,type=0,pos_ref={ref_type=6}}
-},
 [1079508512]={
 {effect="change_eff",effect_pack="d70051",time=2000,type=0,pos_ref={ref_type=6},cue_sheet="cv/Hades.acb",cue_name="Hades_13",cue_feature=1}
 },

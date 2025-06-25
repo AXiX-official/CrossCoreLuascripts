@@ -361,3 +361,72 @@ function EquipProto:EquipUpdate(proto)
 		EventMgr.Dispatch(EventType.Equip_Update)
 	end
 end
+
+--装备合成
+function EquipProto:EquipMerge(equip_ids,fixedSlot)
+	if equip_ids then
+		local proto = {"EquipProto:EquipMerge", {equip_ids=equip_ids,nSlot=fixedSlot}}
+		NetMgr.net:Send(proto);
+	end
+end
+
+function EquipProto:EquipMergeRet(proto)
+	EventMgr.Dispatch(EventType.Equip_Combine_Ret,proto);
+end
+
+--装备洗炼
+function EquipProto:EquipRefresh(sid,lockSkills,isLockSlot)
+	if sid then
+		local proto = {"EquipProto:EquipRefresh", {sid=sid,lockSkills=lockSkills,isLockSlot=isLockSlot}}
+		NetMgr.net:Send(proto);
+	end
+end
+
+--洗炼结果预览
+function EquipProto:EquipRefreshRet(proto)
+	if proto then
+		EquipMgr:SetRefreshLastData({
+			sid=proto.sid,
+			newEquipId=proto.newEquipId,
+			skills=proto.skills,
+		});
+	end
+	EventMgr.Dispatch(EventType.Equip_Refining_Ret,proto);
+end
+
+--洗炼结果确认
+function EquipProto:EquipRefreshConfirm(sid)
+	if sid then
+		local proto = {"EquipProto:EquipRefreshConfirm", {sid=sid}}
+		NetMgr.net:Send(proto);
+	end
+end
+
+function EquipProto:EquipRefreshConfirmRet(proto)
+	--洗炼确定返回
+	if proto and proto.equipData then
+		EquipMgr:Update(proto.equipData);
+	end
+	EquipMgr:SetRefreshLastData();--清空最后一次的洗炼数据
+	EventMgr.Dispatch(EventType.Equip_Refining_Comfirm,proto);
+end
+
+function EquipProto:EquipRefreshGetLastData(isWeekNet)
+	local proto = {"EquipProto:EquipRefreshGetLastData",{isWeekNet=isWeekNet==true and true or false}}
+	NetMgr.net:Send(proto);
+end
+
+function EquipProto:EquipRefreshGetLastDataRet(proto)
+	EquipMgr:SetRefreshLastData(proto);
+	local isConfirm=false;
+	if proto or (proto and proto.sid==0) then
+		isConfirm=true;
+	end
+	EventMgr.Dispatch(EventType.Equip_Refining_Update,isConfirm);
+end
+
+function EquipProto:EquipRefreshClearLastData()
+	EquipMgr:SetRefreshLastData();
+	local proto = {"EquipProto:EquipRefreshClearLastData"}
+	NetMgr.net:Send(proto);
+end

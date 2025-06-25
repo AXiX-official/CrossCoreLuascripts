@@ -50,20 +50,6 @@ function Skill4803601:tFunc_4803604_4803602(caster, target, data)
 	end
 end
 function Skill4803601:tFunc_4803604_4803606(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8418
-	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
-	-- 8934
-	if SkillJudger:GreaterEqual(self, caster, self.card, true,count18,100) then
-	else
-		return
-	end
-	-- 4803606
-	self:AddSp(SkillEffect[4803606], caster, self.card, data, -100)
 	-- 8065
 	if SkillJudger:CasterIsSummoner(self, caster, target, true) then
 	else
@@ -76,6 +62,8 @@ function Skill4803601:tFunc_4803604_4803606(caster, target, data)
 	else
 		return
 	end
+	-- 4803606
+	self:AddSp(SkillEffect[4803606], caster, self.card, data, -100)
 	-- 4803603
 	self:CallOwnerSkill(SkillEffect[4803603], caster, target, data, 803600301)
 end

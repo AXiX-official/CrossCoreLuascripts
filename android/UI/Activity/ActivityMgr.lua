@@ -568,6 +568,8 @@ function this:CheckRed(id)
                 end
             end
             return false
+        elseif data:GetType() == ActivityListType.AdvBindUsers then
+            return AdvBindingRewards.isHadReward
         else
             local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .. "_Activity_Red_" .. id) == 0
             return isRed

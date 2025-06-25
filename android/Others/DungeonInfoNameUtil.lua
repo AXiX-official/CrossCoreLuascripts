@@ -98,4 +98,24 @@ function this.CloudSpecial()
     return {"CloudTitle","CloudLevel","CloudSpecial","CloudOutput","CloudDetails","CloudButton"},"DungeonActivity11"
 end
 
+function this.RogueMap()
+    return {"Title2","Level","Output","Level3","Danger4","Details","Button6"}
+end
+
+function this.Summer2()
+    return {"Title","Level","Target","Output","Details","Double","Button"},"DungeonActivity13"
+end
+
+function this.Summer2Plot()
+    return {"Title","Plot","Output","PlotButton"},"DungeonActivity13"
+end
+
+function this.Summer2Danger()
+    return {"Title","Level","Target","Danger","Details","Double","Button"},"DungeonActivity13"
+end
+
+function this.Summer2Special()
+    return {"Title","Level","Plot","Output","Details","Button"},"DungeonActivity13"
+end
+
 return this; 

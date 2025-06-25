@@ -173,6 +173,7 @@ _G.BadgeChangeInfo = require "BadgeChangeInfo"
 --道具池
 _G.ItemPoolInfo=require "ItemPoolInfo"
 _G.ItemPoolGoodsInfo=require "ItemPoolGoodsInfo"
+require "ItemPoolEnum"
 
 --回归绑定
 _G.CollaborationInfo=require "CollaborationInfo"

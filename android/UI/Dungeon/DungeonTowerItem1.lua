@@ -56,7 +56,7 @@ end
 -- 上标题
 function SetTitle()
     CSAPI.SetText(txtTitle1, data:GetName() or "")
-    CSAPI.SetText(txtTitle2, data:GetEName() or "")
+    -- CSAPI.SetText(txtTitle2, data:GetEName() or "")
 end
 
 -- 中间标题

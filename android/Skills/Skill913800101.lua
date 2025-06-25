@@ -24,6 +24,11 @@ function Skill913800101:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 603100103
-	self:HitAddBuffCount(SkillEffect[603100103], caster, target, data, 10000,603100101,1,999)
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 913800101
+	self:HitAddBuffCount(SkillEffect[913800101], caster, target, data, 10000,913800101,1,20)
 end

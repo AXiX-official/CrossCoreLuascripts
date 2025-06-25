@@ -184,7 +184,7 @@ end
 
 --返回全解锁的奖励
 function this:GetOverReward()
-    local list={};
+    local list=nil;
     if self.cfg and self.cfg.rewardId then
         local rewardCfg=Cfgs.CfgPuzzleReward:GetByID(self.cfg.rewardId);
         if rewardCfg then
@@ -201,6 +201,7 @@ function this:GetOverReward()
                         end
                     end
                     info:SetData({id=self.cfg.rewardId,idx=k,state=state});
+                    list=list or {}
                     table.insert(list,info);
                 end
             end

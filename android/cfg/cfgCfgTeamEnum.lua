@@ -16,6 +16,7 @@ local conf = {
 {'6',	'6',	'灭刃',	'icon_01_06',	'06_blade_1',	'06_blade_item',	'6',	'06_Blade',	'06_blade',	'[[1,"RoleTeam/06_blade_4",1,0.3]]',	'montagnes_mv_06',	'29014'},
 {'7',	'7',	'碎星',	'icon_01_07',	'07_star_1',	'07_star_item',	'7',	'07_Star',	'07_star',	'[[1,"RoleTeam/07_star_4",0.9,0.3]]',	'montagnes_mv_07',	'29015'},
 {'8',	'8',	'其他',	'icon_01_07',	'08_other_1',	'08_other_item',	'7',	'08_Other',	'08_other',	'[[1,"RoleTeam/08_other_4",1,0.3]]',	'montagnes_mv_01',	'29016'},
+{'9',	'9',	'盟约',	'icon_01_09',	'09_extra_1',	'07_star_item',	'9',	'09_Extra',	'09_extra',	'[[1,"RoleTeam/09_extra_4",1,0.3]]',	'montagnes_mv_09',	'29076'},
 },
 }
 --cfgCfgTeamEnum = conf

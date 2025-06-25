@@ -145,6 +145,7 @@ function OnClickShadow()
     local curData=ExplorationMgr:GetCurrData();
     local state=data.plus:GetState();
     if state~=ExplorationState.Plus  then
-        CSAPI.OpenView("ExplorationBuy");
+        -- CSAPI.OpenView("ExplorationBuy");
+        UIUtil:OpenExplorationBuy()
     end
 end

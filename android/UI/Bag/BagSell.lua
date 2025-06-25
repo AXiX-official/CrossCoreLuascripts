@@ -49,6 +49,9 @@ function this.OnClickGrid(tab)
         Tips.ShowTips(LanguageMgr:GetTips(16000));
         return;
     end
+	if EquipMgr:CheckIsRefreshLast(tab.data:GetID()) then
+		do return end
+	end
     local isSelect = not tab.IsSelect();
     tab.SetChoosie(isSelect);
     if tab.IsSelect() then

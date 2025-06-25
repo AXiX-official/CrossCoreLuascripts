@@ -11,7 +11,7 @@ function Skill500800304:DoSkill(caster, target, data)
 	-- 500800304
 	self.order = self.order + 1
 	self:Cure(SkillEffect[500800304], caster, target, data, 1,0.14)
-	-- 500800313
+	-- 500800314
 	self.order = self.order + 1
-	self:DelBuffQuality(SkillEffect[500800313], caster, target, data, 2,2)
+	self:DelBuffQuality(SkillEffect[500800314], caster, target, data, 2,2)
 end

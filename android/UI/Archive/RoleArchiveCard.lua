@@ -25,7 +25,7 @@ function Refresh(_data, _elseData)
     elseData = _elseData
     InitPanel()
     if cfg then
-        CSAPI.SetText(txtName2, "")
+        -- CSAPI.SetText(txtName2, "")
         if elseData == ArchiveType.Role then
             SetCRole()
         elseif elseData == ArchiveType.Enemy then
@@ -62,7 +62,7 @@ function SetCRole()
     SetIdxText(cfg.number)
     data = CRoleMgr:GetData(cfg.id)
     CSAPI.SetText(txtName1, cfg.sAliasName)
-    CSAPI.SetText(txtName2, cfg.eName)
+    -- CSAPI.SetText(txtName2, cfg.eName)
     if not IsLock() then
         SetIcon(data:Card_head())
         SetHei(false)
@@ -85,7 +85,7 @@ end
 function SetEnemy()
     SetIdxText(index)
     CSAPI.SetText(txtName1, cfg.name)
-    CSAPI.SetText(txtName2, cfg.name_en)
+    -- CSAPI.SetText(txtName2, cfg.name_en)
     if cfg.unlock_type == 1 then -- 关卡		
         if not IsLock() then
             local cfgModel = Cfgs.character:GetByID(cfg.aModels)

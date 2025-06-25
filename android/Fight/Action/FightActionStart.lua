@@ -107,7 +107,7 @@ function this:OnPlotComplete()
             callBack = function()
                 CSAPI.CloseView("VideoPlayer");
                 CameraMgr:EnableMainCamera(true);
-                self:PlayCharacterFightStart();
+                self:PlayEmotes();
                 CSAPI.SetBGMLock();
                 CSAPI.StopSound();
                 EventMgr.Dispatch(EventType.Replay_BGM);
@@ -123,7 +123,7 @@ function this:OnPlotComplete()
             BuryingPointMgr:BuryingPoint("after_login", 20042);
         end
     else
-        FuncUtil:Call(self.PlayCharacterFightStart,self,150);
+        FuncUtil:Call(self.PlayEmotes,self,150);
     end
         
     CSAPI.PlayUISound("ui_battle_interface_in");
@@ -148,6 +148,22 @@ function this:GetEnterAni()
     end
     return enterAniName,enterSound;
 end
+
+function this:PlayEmotes()
+    local emote1,emote2 = FightClient:GetEmote(eEmoteState.Start);
+    --emote1,emote2 = 1,2;
+    if(emote1 and emote2)then
+        --Tips.ShowTips("播放战斗表情：" .. tostring(emote1) .. "|" .. tostring(emote2));
+        FuncUtil:Call(function()
+            EventMgr.Dispatch(EventType.Fight_Play_Face,{{id=emote1},{id=emote2}});     
+        end,nil,1000);         
+        FuncUtil:Call(self.PlayCharacterFightStart,self,3000);
+    else
+        self:PlayCharacterFightStart(); 
+    end
+end
+
+
 
  --播放角色开场
  function this:PlayCharacterFightStart() 

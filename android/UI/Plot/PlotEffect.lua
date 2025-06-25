@@ -106,10 +106,12 @@ end
 function RecycleVideo(go)
     PlotTween.FadeOut(go,0.1,function ()
         videoPools = videoPools or {}
-        local name = go.name
-        videoPools[name] = videoPools[name] or {}
-        CSAPI.SetGOActive(go,false)
-        table.insert(videoPools[name], go)
+        if not IsNil(go) then
+            local name = go.name
+            videoPools[name] = videoPools[name] or {}
+            CSAPI.SetGOActive(go,false)
+            table.insert(videoPools[name], go)
+        end
     end)
 end
 

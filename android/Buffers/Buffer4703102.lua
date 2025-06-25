@@ -6,21 +6,6 @@ Buffer4703102 = oo.class(BuffBase)
 function Buffer4703102:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 伤害前
-function Buffer4703102:OnBefourHurt(caster, target)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
-	else
-		return
-	end
-	-- 8225
-	if SkillJudger:IsTypeOf(self, self.caster, target, true,4) then
-	else
-		return
-	end
-	-- 4703112
-	self:AddTempAttr(BufferEffect[4703112], self.caster, self.card, nil, "damage",0.07*self.nCount)
-end
 -- 创建时
 function Buffer4703102:OnCreate(caster, target)
 	-- 8499

@@ -864,4 +864,12 @@ function this:IsEnterHall()
     end
 end
 
+--战斗表情
+function this:SetEmotes(icon_emotes)
+    self.data.icon_emotes = icon_emotes 
+end
+function this:GetEmotes()
+    return self.data.icon_emotes or g_BattleFaceSet
+end
+
 return this;

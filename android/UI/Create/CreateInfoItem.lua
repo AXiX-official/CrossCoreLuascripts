@@ -2,7 +2,7 @@ function Refresh(_data)
     quality = _data[1]
     datas = _data[2]
 
-    if (CSAPI.RegionalCode() ~= 5) then
+    if (CSAPI.RegionalCode() ~= 5 and CSAPI.RegionalCode() ~=3 ) then
         LanguageMgr:SetText(txtStar, 17027, quality)
     end
     --
@@ -36,7 +36,7 @@ function Refresh(_data)
     ItemUtil.AddItems("RoleLittleCard/CreateProItem", items, datas, grid)
 
     -- CSAPI.SetText(txtPercent, "<color=#ffc146>" .. (percent * 100) .. "%</color>")
-    if (CSAPI.RegionalCode() == 5) then
+    if (CSAPI.RegionalCode() == 5 or CSAPI.RegionalCode() == 3 ) then
         CSAPI.SetText(txtPercent, "")
         if (quality == 6) then
             LanguageMgr:SetText(txtStar, 17061)

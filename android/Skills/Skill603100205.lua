@@ -29,7 +29,7 @@ function Skill603100205:OnRoundBegin(caster, target, data)
 	-- 8721
 	local count721 = SkillApi:SkillLevel(self, caster, target,3,6031002)
 	-- 603100204
-	local targets = SkillFilter:MinAttr(self, caster, target, 1,"hp",1)
+	local targets = SkillFilter:MinPercentHp(self, caster, target, 1,"hp",1)
 	for i,target in ipairs(targets) do
 		self:CallOwnerSkill(SkillEffect[603100204], caster, target, data, 603100500+count721)
 	end

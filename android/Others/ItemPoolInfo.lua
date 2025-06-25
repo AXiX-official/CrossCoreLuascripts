@@ -226,15 +226,19 @@ end
 function this:GetMaxCostNum(isNowRound)
     local maxNum=self.cfg and self.cfg.maxcostnum or 1;
     if self.data and isNowRound then
-        maxNum=0;
+        local tempNum=0;
         local list=self:GetInfos(self:GetRound());
         if list then
             for k,v in ipairs(list) do
-                if v:GetCurrRewardNum()>0 then
-                    maxNum=maxNum+v:GetCurrRewardNum();
+                if v:GetInfinite()==true then
+                    tempNum=maxNum;
+                    break;
+                elseif v:GetCurrRewardNum()>0 then
+                    tempNum=maxNum+v:GetCurrRewardNum();
                 end
             end
         end
+        maxNum=tempNum;
     end
     return maxNum;
 end
@@ -248,11 +252,21 @@ end
 function this:GetInfos(round,forceFull,hasOver)
     local list={};
     local realRound=round>self.maxRounds and self.maxRounds or round;
-   if self.groups and self.groups[realRound]~=nil then
+    local isOver=false;
+    if self:GetExtractType()==ItemPoolExtractType.Control then
+        --判断大奖是否被抽取
+        for k,v in ipairs(self.groups[realRound]) do
+            if v.iskeyreward and v.countMax and self.data and self.data.drawArr[v.index] then
+                isOver=true;
+                break;
+            end
+        end
+    end
+    if self.groups and self.groups[realRound]~=nil then
         for k,v in ipairs(self.groups[realRound]) do
             --获取当前轮次的道具剩余数量
             local n=nil;
-            local isFull=true;
+            local isFull=true;   
             if self.data and self.data.drawArr[v.index] then
                 n=self.data.drawArr[v.index];
             elseif self.data and self.data.round>round then
@@ -260,9 +274,9 @@ function this:GetInfos(round,forceFull,hasOver)
             end
             local item=ItemPoolGoodsInfo.New();
             if forceFull then
-                item:SetData(v,0,round,true);
+                item:SetData(v,0,round,true,isOver);
             else
-                item:SetData(v,n,round,isFull);
+                item:SetData(v,n,round,isFull,isOver);
             end
             if item:GetCurrRewardNum()>0 or hasOver==true then
                 table.insert(list,item);
@@ -369,6 +383,40 @@ function this:GetRewardInfos()
         end);
     end
     return dList;
+end
+
+--返回当前轮次对应级别的奖励
+function this:GetCurrRoundGradeInfo(itemPoolGoodsGrade)
+    if itemPoolGoodsGrade then
+        local list=self:GetInfos(self:GetRound(),true,true);
+        if list then
+            for k,v in ipairs(list) do
+                if v:GetRewardLevel()==itemPoolGoodsGrade then
+                    return v;
+                end
+            end
+        end
+    end
+end
+
+--返回保底次数
+function this:GetCountMax()
+    local num=0;
+    local round=self:GetRound();
+    local realRound=round>self.maxRounds and self.maxRounds or round;
+    if self.groups then
+        for k,v in ipairs(self.groups[realRound]) do
+            if v.iskeyreward and v.countMax then
+                num=v.countMax;
+                break;
+            end
+        end
+    end
+    return num;
+end
+
+function this:IsLimitImg()
+    return self.cfg and self.cfg.limitimg or false;
 end
 
 return this;

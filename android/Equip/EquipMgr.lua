@@ -37,12 +37,30 @@ function this:Update(equip)
 		local equipData = nil;
 		if self.equips[equip.sid] ~= nil then
 			equipData = self.equips[equip.sid];
-			local data = equipData:GetData();
-			for k, v in pairs(equip) do
+			local type = equipData:GetSlot();
+			local data = table.copy(equipData:GetData());
+			for k, v in pairs(equip) do --更新指定属性
 				if v ~= nil and data[k] then
 					data[k] = v;
 				end
 			end
+			local equip2=EquipData(data);
+			if type~=equip2:GetSlot() then --刷新typeIndex
+				if self.typeIndex and self.typeIndex[type] then
+					local idx=nil;
+					for k,v in ipairs(self.typeIndex[type]) do
+						if v==equip.sid then
+							idx=k;
+							break;
+						end
+					end
+					table.remove(self.typeIndex[type],idx)
+				end
+				local type2=self.equips[equip.sid]:GetSlot()
+				self.typeIndex[type2] = self.typeIndex[type2] or {};
+				table.insert(self.typeIndex[type2], equip.sid);
+			end
+			self.equips[equip.sid]=equip2;
 		else
 			equipData = EquipData(equip);
 			local type = equipData:GetSlot();
@@ -216,7 +234,7 @@ function this:SearchBeastEquips(cardId)
             end
         end
         if hasEquip==false then
-			-- local equip=self:GetEquip(v.id);
+			local equip=self:GetEquip(v.id);
 			-- Log("名字："..tostring(equip:GetName()));
             table.insert(ids,v.id);
         end
@@ -830,6 +848,36 @@ function this:GetSlotStr(slot)
 	return "";
 end
 
+--设置正在洗炼中的装备ID
+function this:SetRefreshLastData(proto)
+	if proto and proto.sid~=0 then
+		self.refreshLastData=proto;
+	else
+		self.refreshLastData=nil;
+	end
+end
+
+--返回正在洗炼中的装备ID
+function this:GetRefreshLastData()
+	return self.refreshLastData
+end
+
+--判断是否正在洗炼中的装备
+function this:CheckIsRefreshLast(sid)
+	if sid and self.refreshLastData and sid==self.refreshLastData.sid then
+		--洗炼中，是否跳转到洗炼界面
+		local dialogData={
+            content = LanguageMgr:GetByID(75025),
+            okCallBack = function()
+               JumpMgr:Jump(330001);
+            end
+        }
+        CSAPI.OpenView("Dialog", dialogData);
+		return true;
+	end
+	return false;
+end
+
 function this:Clear()
 	self.curSize = 0;
 	self.maxSize = 0;
@@ -840,6 +888,7 @@ function this:Clear()
 	self.screenData={};
 	self.equips =  {};
 	self.typeIndex = {};
+	self.refreshLastData=nil;
 end
 
 return this; 

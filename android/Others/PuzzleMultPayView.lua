@@ -90,24 +90,28 @@ function RefreshPrice()
 	local normalPrice=costs[costIdx];
 	if normalPrice==nil or (normalPrice and normalPrice.num==0) then --免费
 		CSAPI.SetGOActive(txt_free,true);
-		CSAPI.SetGOActive(txt_nPrice,false);
+		CSAPI.SetGOActive(nPriceObj,false);
 		CSAPI.SetGOActive(hPrice,false);
 	else
 		CSAPI.SetGOActive(txt_free,false);
-		CSAPI.SetGOActive(txt_nPrice,true);
-		SetPrice(normalPrice.id,normalPrice.num*currNum,priceIcon,txt_price);
-        SetPrice(normalPrice.id,normalPrice.num*currNum,nPriceIcon,txt_nPrice);
+		CSAPI.SetGOActive(nPriceObj,true);
+		SetPrice(normalPrice.id,normalPrice.num*currNum,priceIcon,txt_price,txt_rmb2);
+        SetPrice(normalPrice.id,normalPrice.num*currNum,nPriceIcon,txt_nPrice,txt_rmb);
         CSAPI.SetGOActive(hPrice,false)
 	end
 end
 
-function SetPrice(id, num,pIcon,pText)
+function SetPrice(id, num,pIcon,pText,pRmbIcon)
 	if id==-1 then --SDK支付
-		CSAPI.SetText(pText, rmbIcon..tostring(num));
+		CSAPI.SetText(pRmbIcon, rmbIcon);
+		CSAPI.SetText(pText, tostring(num));
 		CSAPI.SetGOActive(pIcon,false);
+		CSAPI.SetGOActive(pRmbIcon,true);
 		return;
+	else
+		CSAPI.SetGOActive(pIcon,true);
+		CSAPI.SetGOActive(pRmbIcon,false);
 	end
-	CSAPI.SetGOActive(pIcon,true);
 	if id == ITEM_ID.GOLD then --金币
 		ResUtil.IconGoods:Load(pIcon, tostring(ITEM_ID.GOLD).."_1");
 		CSAPI.SetImgColorByCode(pIcon,"ffffff")

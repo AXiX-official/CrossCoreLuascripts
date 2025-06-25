@@ -26,7 +26,7 @@ end
 function SetPanel()
 	--title
 	CSAPI.SetText(txtTitle1, data.name)
-	CSAPI.SetText(txtTitle2, typeStr[index])
+	-- CSAPI.SetText(txtTitle2, typeStr[index])
 	
 	--new
 	SetNew()
@@ -65,7 +65,7 @@ function SetSelect(isSelect)
 	
 	local color = isSelect and {255, 255, 255, 255} or {255, 255, 255, 125}
 	CSAPI.SetTextColor(txtTitle1, color[1], color[2], color[3], color[4])
-	CSAPI.SetTextColor(txtTitle2, color[1], color[2], color[3], color[4])
+	-- CSAPI.SetTextColor(txtTitle2, color[1], color[2], color[3], color[4])
 	CSAPI.SetImgColor(icon, color[1], color[2], color[3], color[4])
 	CSAPI.SetImgColor(img1, color[1], color[2], color[3], color[4])
 	

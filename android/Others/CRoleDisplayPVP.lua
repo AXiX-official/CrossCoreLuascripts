@@ -10,6 +10,7 @@ function Awake()
     tlua1 = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Normal)
 
     cardIconItem = RoleTool.AddRole(iconParent)
+    mulIconItem = RoleTool.AddMulRole(iconParent)
 
     cg_btnBC = ComUtil.GetCom(btnBC, "CanvasGroup") -- 保存
 end
@@ -44,18 +45,24 @@ function OnOpen()
 end
 
 function SetLeft()
-    -- lDatas
-    lDatas = {}
     local modelID = c_data:GetIDs()[slot]
-    local cRole = CRoleMgr:GetCRoleByModelID(modelID)
-    lDatas = cRole:GetAllSkinsArr(true)
-    for k, v in ipairs(lDatas) do
-        if (v:GetSkinID() == modelID) then
-            lIndex = k
-            break
-        end
+    lIsShow = true
+    if (modelID < 10000) then
+        lIsShow = false
     end
-    layout:IEShowList(#lDatas)
+    CSAPI.SetGOActive(left, lIsShow)
+    if (lIsShow) then
+        lDatas = {}
+        local cRole = CRoleMgr:GetCRoleByModelID(modelID)
+        lDatas = cRole:GetAllSkinsArr(true)
+        for k, v in ipairs(lDatas) do
+            if (v:GetSkinID() == modelID) then
+                lIndex = k
+                break
+            end
+        end
+        layout:IEShowList(#lDatas)
+    end
 end
 
 function SetData()
@@ -95,7 +102,14 @@ function SetMiddle()
     end
     -- items 
     local detail = c_data:GetDetail(slot)
-    cardIconItem.Refresh(c_data:GetIDs()[1], LoadImgType.Main, nil, detail.live2d, c_data:IsShowShowImg(slot))
+    local id = c_data:GetIDs()[1]
+    CSAPI.SetGOActive(cardIconItem.gameObject, id >= 10000)
+    CSAPI.SetGOActive(mulIconItem.gameObject, id < 10000)
+    if (id > 10000) then
+        cardIconItem.Refresh(c_data:GetIDs()[1], LoadImgType.Main, nil, detail.live2d, c_data:IsShowShowImg(slot))
+    else 
+        mulIconItem.Refresh(c_data:GetIDs()[1], LoadImgType.Main, nil, detail.live2d, c_data:IsShowShowImg(slot))
+    end
 end
 
 function SetBtns()

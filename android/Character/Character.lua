@@ -746,8 +746,9 @@ function ApplyHitData(hitData)
     end
 
     local damage = hitData.hpDamage or 0;
-    CreateDamageValue(damage,hitData.crit,hitData.restrain,hitData.isReal);       
-
+    if(damage > 0)then
+        CreateDamageValue(damage,hitData.crit,hitData.restrain,hitData.isReal);       
+    end
     local shieldDamage = hitData.shieldDamage or 0;
     if(shieldDamage > 0)then
         FuncUtil:Call(CreateFloatValue,nil,10,"Damage",shieldDamage);    
@@ -1175,8 +1176,9 @@ function EnterState(stateName,fadeTime)
 
 
     PlayState(stateName,fadeTime);    
-    --LogError(GetModelName() .. "-------enter state----------" .. stateName);
-   
+    --[[ if(GetID() == 9)then
+        LogError(GetModelName() .. "-------enter state----------" .. stateName);
+    end ]]
     PlayPartState(stateName);
 end
 function PlayState(stateName,fadeTime)
@@ -1715,7 +1717,9 @@ function SetShowState(isShow,isForce,playEff,commonEff,effData)
     end
 
     --playEff = true;
-    --LogError("id=" .. GetID() .. "," .. GetModelName() .. "设置显示状态：" .. (isShow and "是" or "否"));
+    --[[ if(GetID() == 10)then
+        LogError("id=" .. GetID() .. "," .. GetModelName() .. "设置显示状态：" .. (isShow and "是" or "否"));
+    end ]]
     isHide = not isShow;
     if(goAnimator)then
         y = isShow and 0 or -1000;
@@ -2062,13 +2066,14 @@ function OnDestroy()
     --LogError("角色被移除" .. GetID());
 end
 
-function UpdateFlag(flagData)
-    flagDatas = flagDatas or {};
-    flagDatas[flagData.key] = flagData;
-    if(infoView)then
-        infoView.UpdateBuff();
+function UpdateFlag(flagData)    
+    if(flagData and flagData.key)then
+        flagDatas = flagDatas or {};
+        flagDatas[flagData.key] = flagData;
+        if(infoView)then
+            infoView.UpdateBuff();
+        end
     end
-
     --LogError(flagDatas);
     --EventMgr.Dispatch(EventType.Fight_Flag_Changed,GetID());
 end
@@ -2165,6 +2170,18 @@ function RemoveOverLoadEff()
     end
 end
 
+--怒气
+function UpdateFury(val,max)
+    fury = val;
+    furyMax = max or furyMax;
+end
+function GetFury()
+    local p = 0;
+    if(fury and furyMax)then
+        p = fury / furyMax;
+    end
+    return fury,furyMax,p;
+end
 --[[ function Update()
      if(CS.UnityEngine.Input.GetKeyDown(CS.UnityEngine.KeyCode.D))then
         LogError(GetModelName());

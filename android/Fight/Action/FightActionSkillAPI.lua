@@ -18,12 +18,12 @@ function this:OnPlay()
         FightActionUtil:PlayAPIsByOrder(self.data.datas)
         --LogError("执行==================================\n" .. table.tostring(self.data));
     end
-    self:Complete();    
+    self:Complete();
 end
 
 function this:OnClean()
     FightActionAPI.OnClean(self);
-    self.faHelp = nil;
+    self.faHelps = nil;
 end
 
 
@@ -36,16 +36,22 @@ function this:InitData(datas)
     if(datas)then
         for i,data in ipairs(datas)do
             if(data.api == APIType.OnHelp)then
-                self.faHelp = FightActionUtil:HandleAPIData(data);
+                local faHelp = FightActionUtil:HandleAPIData(data);
+                self:AddHelp(faHelp);
                 table.remove(datas,i);
+                self:InitData(datas);
                 break;
             end
         end
     end
 end
 
-function this:GetHelp()
-    return self.faHelp;
+function this:AddHelp(faHelp)
+    self.faHelps = self.faHelps or {}
+    table.insert(self.faHelps,faHelp);
+end
+function this:GetHelps()
+    return self.faHelps;
 end
 
 return this;

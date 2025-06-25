@@ -344,7 +344,12 @@ end
 function this:GetRoleType()
     if (not self.s_roleType) then
         local id = self:GetIDs()[1]
-        self.s_roleType = id < 10000 and 2 or 1
+        if (id < 10000) then
+            local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(id)
+            self.s_roleType = cfg.nType==1 and 2 or 3
+        else
+            self.s_roleType = 1
+        end
     end
     return self.s_roleType
 end
@@ -418,11 +423,11 @@ function this:CheckLimitSkin(index)
     return false
 end
 
---是否可以选择插画
+-- 是否可以选择插画
 function this:CanSelectPic()
     if (self.sNewPanel.ty == 4) then
-       return false 
-    end 
+        return false
+    end
     return not self:IsTwoRole()
 end
 

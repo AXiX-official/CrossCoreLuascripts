@@ -28,6 +28,7 @@ local runTime=0;
 local hasReward=false;
 local moneyInfo=nil;
 local lastBGM=nil;
+local overTime=0;
 
 function Awake()
     actionSlider=ComUtil.GetCom(actionBar,"Slider");
@@ -61,6 +62,7 @@ function OnDestroy()
     EventMgr.Dispatch(EventType.PetActivity_TimeStamp_Change,0);--立即检查一次宠物状态
     eventMgr:ClearListener();
     DisBGM()
+    PetActivityMgr:SaveUnLockList();
 end
 
 function DisBGM()
@@ -92,13 +94,6 @@ function OnViewClosed(viewKey)
 end
 
 function OnOpen()
-    if true then
-        FuncUtil:Call(function()
-            Tips.ShowTips(LanguageMgr:GetTips(1000))
-        end,nil,500)
-        view:Close()
-        do return end 
-    end
     InitTabDatas()
     Refresh();
     PlayBGM()
@@ -145,6 +140,12 @@ function Update();
         if PetActivityMgr:GetNextRewardTime()~=0 and TimeUtil:GetTime()>=PetActivityMgr:GetNextRewardTime() and hasReward~=true then
             SetReward();
             PetActivityMgr:ChecekRedInfo();
+        end
+        if PetActivityMgr:IsOver() then--活动结束，回到主界面
+                CSAPI.CloseAllOpenned();
+                FuncUtil:Call(function()
+                    Tips.ShowTips(LanguageMgr:GetTips(24001));
+                end, nil, 100);
         end
     end
 end
@@ -333,10 +334,16 @@ end
 function SetTabs()
     local currIdx=tabDatas[currTab] and tabDatas[currTab].idx or nil; 
     local redInfo=RedPointMgr:GetData(RedPointType.ActiveEntry16);
-    if tabDatas and redInfo then
+    if tabDatas then
         for k,v in ipairs(tabDatas) do
-            if v.id==PetViewType.Book then
-                tabDatas[k].isRed=redInfo.hasBook;
+            if redInfo~=nil then
+                if v.id==PetViewType.Book then
+                    tabDatas[k].isRed=redInfo.hasBook;
+                elseif v.id==PetViewType.Pet then
+                    tabDatas[k].isRed=redInfo.newPets~=nil;
+                end
+            else
+                tabDatas[k].isRed=false
             end
         end
     end

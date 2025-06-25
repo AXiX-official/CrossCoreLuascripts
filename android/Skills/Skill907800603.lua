@@ -6,8 +6,8 @@ Skill907800603 = oo.class(SkillBase)
 function Skill907800603:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束
-function Skill907800603:OnActionOver(caster, target, data)
+-- 回合结束时
+function Skill907800603:OnRoundOver(caster, target, data)
 	-- 907800607
 	local playerturn = SkillApi:GetTurnCount(self, caster, self.card,nil)
 	-- 907800608

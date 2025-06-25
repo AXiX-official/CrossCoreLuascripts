@@ -50,27 +50,28 @@ local isFirstFail=true;
 
 function Awake()
     CheckUpdate();--ios旧包强更包体
-
     UIUtil:AddLoginMovie(movieObj);
     serverName = ComUtil.GetCom(txt_ServerName, "Text");
+     ---登录页面左下角  显示版本号
+    local Promptcontent=UnityEngine.Application.version.."_"..CSAPI.APKVersion().."_"..GlobalConfig.HotVersion;
+    _G.g_ver_name =tostring(Promptcontent);
+    CSAPI.SetText(txtVer,Promptcontent);
+
     -- iconContent= ComUtil.GetCom(icon, "CanvasGroup");
     -- ResUtil:CreateUIGO("Logo/Logo",icon.transform);
     -- ResUtil:CreateUIGO("Logo/LineView",lineObj.transform);
-
     -- local goRT = CSAPI.GetGlobalGO("CommonRT")
     -- CSAPI.SetRenderTexture(rt,goRT);
     -- CSAPI.SetCameraRenderTarget(CameraMgr:GetCameraGO(),goRT);
     --CSAPI.SetText(txtVer, "Ver:1.0.0" .. tostring(UnityEngine.Application.version));
-    _G.g_ver_name = "Ver:2.3.0";
-    CSAPI.SetText(txtVer, _G.g_ver_name);
+    --_G.g_ver_name = "Ver:2.3.0";
+    --CSAPI.SetText(txtVer, _G.g_ver_name);
     -- 开启战斗场景镜头
     -- local xluaCamera = CameraMgr:GetXLuaCamera();
     -- if (xluaCamera) then
     --     xluaCamera.SetEnable(true);
     -- end
-
     -- CameraMgr:ApplyCommonAction(nil,"login");
-
     isChannel = false;
     local type = GetChannelType();
     if CSAPI.IsChannel() and type ~= ChannelType.TapTap and type ~= ChannelType.Normal then -- Taptap包即是官网包
@@ -90,11 +91,7 @@ function Awake()
     -- CSAPI.SetGOActive(btn_Start1,false)
     SetOpenCount();
     CSAPI.SetGOActive(btn_ScanCode, false)
-    if CSAPI.IsMobileplatform then
-        if type and CSAPI.IsADV() then
-            CSAPI.SetGOActive(btn_ScanCode, true)
-        end
-    end
+    if CSAPI.IsMobileplatform then if type and CSAPI.IsADV() then CSAPI.SetGOActive(btn_ScanCode, true) end end
     if CSAPI.IsADV() or CSAPI.IsDomestic() then
         if CSAPI.GetsSDKInitSuccess() then
             print("  init sdk _complete")
@@ -103,11 +100,7 @@ function Awake()
             print(" no init sdk")
             CSAPI.DispatchEvent(EventType.SDK_ShiryuSDK_Init)
         end
-
-        local Promptcontent=UnityEngine.Application.version.."_"..CSAPI.APKVersion().."_"..GlobalConfig.HotVersion;
-        _G.g_ver_name =tostring(Promptcontent);
-        CSAPI.SetText(txtVer,Promptcontent);
-
+         ---返回登录页面 防止部分页面没有关闭，进行重复关闭
         local CloseViewTable={"PlotSimple","Plot"};
         if #CloseViewTable>0 then
             for i, v in pairs(CloseViewTable) do
@@ -123,6 +116,25 @@ function Awake()
     SetADVNeedToClose()
     SetLive()
     if PlayerClient then PlayerClient:SetEnterHall(false); end
+end
+---登录前系统锁定弹网络提示，断网，造成无法获取服务器数据（仅仅真机才会触发,仅仅异常才会执行修复）
+function MJSDKLogincomplete(datapacket)
+    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        local serverInfo = GetCurrentServer();
+        if serverInfo==nil then
+           --- LogError("触发首次安装，首次打开，弹出提示断网，需要重新获取服务器资源")
+            InitServerInfo(function()
+                serverInfo = GetCurrentServer();
+                if serverInfo~=nil then
+                    ShowServerInfo(serverInfo);
+                else
+                    LogError("二次获取依旧失败,触发首次安装，首次打开，弹出提示断网，需要重新获取服务器资源")
+                end
+            end);
+        else
+            ---print("正常数据无需理会")
+        end
+    end
 end
 ---新增海外差异化代码（海外不需要显示的内容）
 function SetADVNeedToClose()
@@ -171,6 +183,7 @@ function InitListener()
     eventMgr:AddListener(EventType.Login_White_Mask_FadeOut, ApplyFadeOut)
     eventMgr:AddListener(EventType.Net_Tips_Disconnect,OnTipsDisConnect)
     eventMgr:AddListener(EventType.Login_Switch_Server, OnClickSwitch)
+    eventMgr:AddListener(EventType.SDK_ShiryuSDK_Login_complete, MJSDKLogincomplete)
     -- eventMgr:AddListener(EventType.Main_Activity,function(key)
     -- 	Log(key)
     -- 	if key==BackstageFlushType.Board then
@@ -870,8 +883,16 @@ function OnClickAccount()
         end
     end
 end
+---
+local DownloadSelectModeKey="DownloadSelectMode";
+---
+local prefsVal=0;
 ---客户端修复
 function OnClickClientRepair()
+    prefsVal=PlayerPrefs.GetInt(DownloadSelectModeKey);
+    Log("prefsVal:"..tostring(prefsVal))
+    if (prefsVal==nil or tostring(prefsVal)==tostring(0)) then prefsVal=1; end
+    Log("prefsVal:::::"..tostring(prefsVal))
     local dialogData = {}
     dialogData.content = LanguageMgr:GetTips(1050)
     dialogData.okText =LanguageMgr:GetByID(1001)
@@ -881,6 +902,7 @@ function OnClickClientRepair()
         PlayerPrefs.DeleteAll();
         PlayerPrefs.SetString("key_for_unpack",UnityEngine.Application.version);
         PlayerPrefs.SetInt("UnityRes_ClientRepair",9);
+        PlayerPrefs.SetInt(DownloadSelectModeKey,prefsVal);
         if UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.WindowsEditor or UnityEngine.Application.platform ==UnityEngine.RuntimePlatform.OSXEditor then
             Log("--------------------------------------开发软件自己重新启动进入----------------------------------------------")
         else

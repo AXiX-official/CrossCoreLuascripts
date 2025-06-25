@@ -108,6 +108,8 @@ ShiryuEventName = {
     Unity_center_web_uid_GotoVerify="Unity_center_web_uid_GotoVerify";
     Unity_DownFile_MD5_Different = "Unity_DownFile_MD5_Different";
     Unity_DownFile_MD5_Different_Quit = "Unity_DownFile_MD5_Different_Quit";
+    ---获取服务器列表
+    Unity_GetserverListUrl="Unity_GetserverListUrl";
 
 }
 local this = ShiryuEventName

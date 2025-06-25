@@ -21,7 +21,7 @@ end
 function SetLeft()
 	--name
 	CSAPI.SetText(txtName1, cfg.name or "")
-	CSAPI.SetText(txtName2, cfg.name_en or "")
+	-- CSAPI.SetText(txtName2, cfg.name_en or "")
 	
 	--type
 	local cfgMEnum = Cfgs.CfgMonsterEnum:GetByID(tonumber(cfg.type))
@@ -33,11 +33,16 @@ end
 
 function SetRight()
 	--bgInfo
-	CSAPI.SetText(txtBgInfo, cfg.bgDesc or "")
+	local str1 = cfg.bgDesc or ""
+	str1 = StringUtil:IndentFirstLine(str1,true)
+	CSAPI.SetText(txtBgInfo, str1)
 	
 	--skilDesc
-	CSAPI.SetText(txtSkillInfo, cfg.skillDesc or "")
+	local str2 = cfg.skillDesc or ""
+	str2 = StringUtil:IndentFirstLine(str2,true)
+	CSAPI.SetText(txtSkillInfo, str2)
 end 
+
 function OnDestroy()    
     ReleaseCSComRefs();
 end

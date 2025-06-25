@@ -29,8 +29,8 @@ function Skill913900202:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 913900202
-	self:AddTempAttr(SkillEffect[913900202], caster, target, data, "defense",-100)
+	-- 803600201
+	self:AddTempAttr(SkillEffect[803600201], caster, target, data, "defense",-400)
 end
 -- 行动结束
 function Skill913900202:OnActionOver(caster, target, data)
@@ -50,5 +50,5 @@ function Skill913900202:OnActionOver(caster, target, data)
 		return
 	end
 	-- 913900102
-	self:HitAddBuffCount(SkillEffect[913900102], caster, target, data, 10000,603100101,2,999)
+	self:AddBuffCount(SkillEffect[913900102], caster, target, data, 913800101,2,45)
 end

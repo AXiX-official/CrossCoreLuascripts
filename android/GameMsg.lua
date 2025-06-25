@@ -406,9 +406,9 @@ GameMsg.map["sPlrData"] = {
 	{ "uid", "name",  "hot",  "level","gold","diamond","currtime",  "exp","sign",  "create_time","army_coin","tp",   "tpBeginTime","notLog",            "diamond_pay",},
 }
 GameMsg.map["LoginProto:LoginGame"] = {
-	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     最后设置的角色看板ID 背景ID          玩家称号     
-	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      "uint",              "uint",         "uint",      },
-	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame","role_panel_id",     "background_id","icon_title",},
+	--玩家信息          是否可以改名      头像模型id 面板角色id 能力点        当前登录逻辑服id 创建时候选择的性别序号 选择的台词id 下次体能恢复时间 体能已购买次数 {月，日}       头像框id     最后设置的角色看板ID 背景ID          玩家称号     玩家设置界面的表情 
+	{ "struts|sPlrData","byte",           "uint",    "uint",    "int",        "short",         "byte",               "uint",      "uint",          "short",       "array|ushort","uint",      "uint",              "uint",         "uint",      "array|uint",      },
+	{ "infos",          "can_modify_name","icon_id", "panel_id","ability_num","serverID",      "sel_card_ix",        "use_vid",   "t_hot",         "hot_buy_cnt", "birth",       "icon_frame","role_panel_id",     "background_id","icon_title","icon_emotes",     },
 }
 GameMsg.map["LoginProto:PlrUpdate"] = {
 	--更新信息(不是所有字段都有) 添加的经验 下次体能恢复时间 
@@ -2319,6 +2319,51 @@ GameMsg.map["EquipProto:EquipDownRet"] = {
 	--装备id       当前存储量 
 	{ "array|uint","uint",    },
 	{ "equip_ids", "cur_size",},
+}
+GameMsg.map["EquipProto:EquipMerge"] = {
+	--装备id       指定部位 
+	{ "array|uint","uint",  },
+	{ "equip_ids", "nSlot", },
+}
+GameMsg.map["EquipProto:EquipMergeRet"] = {
+	--新装备id     当前存储量 
+	{ "uint",      "uint",    },
+	{ "newEquipId","cur_size",},
+}
+GameMsg.map["EquipProto:EquipRefresh"] = {
+	--洗练的装备id 锁定词条id   是否锁定部位 
+	{ "uint",      "array|uint","bool",      },
+	{ "sid",       "lockSkills","isLockSlot",},
+}
+GameMsg.map["EquipProto:EquipRefreshRet"] = {
+	--当前洗练的装备id 洗练后的装备配置id 技能ids数组  
+	{ "uint",          "uint",            "array|uint",},
+	{ "sid",           "newEquipId",      "skills",    },
+}
+GameMsg.map["EquipProto:EquipRefreshConfirm"] = {
+	--洗练的装备id 
+	{ "uint",      },
+	{ "sid",       },
+}
+GameMsg.map["EquipProto:EquipRefreshConfirmRet"] = {
+	--装备数据        
+	{ "struts|sEquip",},
+	{ "equipData",    },
+}
+GameMsg.map["EquipProto:EquipRefreshGetLastData"] = {
+	--弱网状态    
+	{ "bool",     },
+	{ "isWeekNet",},
+}
+GameMsg.map["EquipProto:EquipRefreshGetLastDataRet"] = {
+	--当前洗练的装备id 洗练后的装备配置id 技能ids数组  
+	{ "uint",          "uint",            "array|uint",},
+	{ "sid",           "newEquipId",      "skills",    },
+}
+GameMsg.map["EquipProto:EquipRefreshClearLastData"] = {
+	--
+	{ },
+	{ },
 }
 GameMsg.map["sShopInfoData"] = {
 	--配置id 最后购买时间    购买总量  重置时间     可购买数量    购买次数 

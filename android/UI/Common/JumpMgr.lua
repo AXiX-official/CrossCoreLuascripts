@@ -38,6 +38,7 @@ function this:GetFunc(sName)
         self.funcs["TrialsListView"] = self.DungeonActivity
         self.funcs["DungeonTaoFa"] = self.DungeonActivity
         self.funcs["DungeonCloud"] = self.DungeonActivity
+        self.funcs["DungeonSummer2"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -211,6 +212,9 @@ function this.Section(cfg)
             isJump = true
         }
         CSAPI.OpenView(cfg.sName, jumpData);
+        if cfg.id == 30003 then
+            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "JumpToPVP")
+        end
     else
         FuncUtil:Call(function()
             Tips.ShowTips(_str)

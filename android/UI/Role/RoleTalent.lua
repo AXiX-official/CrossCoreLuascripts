@@ -3,7 +3,7 @@ function Awake()
     cg_btnUp = ComUtil.GetCom(btnUp, "CanvasGroup")
 
     EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleTalent"); -- 引导用
-    AdaptiveConfiguration.SetLuaObjUIFit("RoleTalent",gameObject)
+    AdaptiveConfiguration.SetLuaObjUIFit("RoleTalent", gameObject)
 end
 
 function OnDestroy()
@@ -28,8 +28,8 @@ function RefreshPanel()
     CSAPI.SetText(txtName, cfg.name)
     -- lv 
     local lvStr = LanguageMgr:GetByID(1033) or "LV."
-    local str = isMax and string.format(lvStr.."%s", cfg.lv) or
-                    string.format(lvStr.."%s  >  <color=#FFC146>%s%s</color>", cfg.lv,lvStr, nextCfg.lv)
+    local str = isMax and string.format(lvStr .. "%s", cfg.lv) or
+                    string.format(lvStr .. "%s  >  <color=#FFC146>%s%s</color>", cfg.lv, lvStr, nextCfg.lv)
     CSAPI.SetText(txtLv, str)
     -- desc1
     local desc2 = cfg.desc2 and StringUtil:SkillDescFormat(cfg.desc2) or ""
@@ -88,6 +88,18 @@ function SetMaterials()
         items = items or {}
         local count = #datas > 1 and 5 or 1
         ItemUtil.AddItems("Grid/RoleGridItem", items, datas, materialGrids, GridClickFunc.OpenInfo, 1, {nil, count})
+
+        -- 金币
+        CSAPI.SetGOActive(coin, expCfg.costAdds ~= nil)
+        if (expCfg.costAdds ~= nil) then
+            local cost = expCfg.costAdds[1]
+            local cfg = Cfgs.ItemInfo:GetByID(cost[1])
+            ResUtil.IconGoods:Load(imgCoin, cfg.icon .. "_1")
+            CSAPI.SetText(txtCoin, cost[2] .. "")
+            if (isEnough) then
+                isEnough = BagMgr:GetCount(cost[1]) >= cost[2]
+            end
+        end
     end
 end
 

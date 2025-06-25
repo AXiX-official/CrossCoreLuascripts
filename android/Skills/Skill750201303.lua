@@ -12,8 +12,8 @@ function Skill750201303:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11006], caster, target, data, 0.167,6)
 end
--- 行动结束
-function Skill750201303:OnActionOver(caster, target, data)
+-- 行动结束2
+function Skill750201303:OnActionOver2(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else

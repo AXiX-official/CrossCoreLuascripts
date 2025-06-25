@@ -308,7 +308,9 @@ function InitServerInfo(callBack,serverListUrl)
 
 			-- local decodeStr=Base64.dec(str)
 			if decodeStr==nil or decodeStr=="" then
-				LogError("获取服务器信息出错！"..tostring(decodeStr));
+				LogError("获取服务器信息出错！"..tostring(decodeStr).." URL："..path);
+				UnityGetserverListUrl(path,str);
+				DetectCallback(callBack)
 				do return end;
 			end
 			--LogError(decodeStr);
@@ -317,6 +319,7 @@ function InitServerInfo(callBack,serverListUrl)
 			-- local json = Json.decode(str);
 			if(not json)then
 				if GetServerURLfrequency<=7 then
+					UnityGetserverListUrl(path,str);
 					DetectCallback(callBack)
 				else
 					local dialogData = { content = LanguageMgr:GetByID(38011) };
@@ -329,9 +332,11 @@ function InitServerInfo(callBack,serverListUrl)
 				SetServerLinkData(json)
 				if callBack then callBack(); end
 			else
+				UnityGetserverListUrl(path,str);
 				DetectCallback(callBack)
 			end
 		else
+			UnityGetserverListUrl(path,str);
 			DetectCallback(callBack)
 		end
 	end);
@@ -355,7 +360,26 @@ function DetectCallback(callBack)
 		CSAPI.OpenView("Dialog", dialogData)
 	end
 end
-
+---获取服务端清单失败返回
+function UnityGetserverListUrl(url,Backcontent)
+	if CSAPI.IsADV() or CSAPI.IsDomestic() then
+		local platform="PC"
+		if CSAPI.Currentplatform == CSAPI.Android then
+			platform="Android"
+		elseif CSAPI.Currentplatform == CSAPI.IPhonePlayer then
+			platform="IPhonePlayer"
+		else
+			platform="PC"
+		end
+		local ServerList=
+		{
+			HttpUrl=url,
+			content=Backcontent,
+			Platform=platform,
+		};
+		BuryingPointMgr:TrackEvents(ShiryuEventName.Unity_GetserverListUrl,ServerList)
+	end
+end
 function InitServerInfoCallback(callBack)
 	InitServerInfo(callBack,nil)
 end

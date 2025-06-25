@@ -20,6 +20,7 @@ local conf = {
 {'10',	'10',	'plot_warning2',	'1',	''},
 {'11',	'11',	'plot_camera',	'1',	'1'},
 {'12',	'12',	'plot_camera_end',	'1',	''},
+{'13',	'13',	'plot_misc1',	'1',	''},
 },
 }
 --cfgPlotVideo = conf

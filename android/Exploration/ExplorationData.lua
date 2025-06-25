@@ -79,7 +79,7 @@ function this:GetInfiniteRewardState(explorationState)
            return ExplorationRewardState.Available;
         end
     end
-    return self:GetCurrLv()>=self.maxLv and ExplorationRewardState.UnLock or ExplorationRewardState.Lock;
+    return ExplorationRewardState.UnLock;
 end
 
 --返回解锁状态下奖励的可领取状态：rId:奖励模板ID，index：奖励下标
@@ -278,7 +278,40 @@ function this:GetPlusRewardCfgs(lv,hasFirst)
     return self:GetRewardCfgs(ExplorationState.Plus,lv,hasFirst);
 end
 
---返回当前期首次购买额外奖励配置信息 ExplorationRewardInfo
+function this:GetDailyRewardID()
+    return self.cfg and self.cfg.dailyRewardID or nil;
+end
+
+function this:GetDailySPRewardID()
+    return self.cfg and self.cfg.dailyspRewardID or nil;
+end
+
+--返回高级勘探每日获得奖励
+function this:GetDailyReward()
+    local fID=self:GetDailyRewardID();
+    if fID then
+        local cfg=Cfgs.CfgExplorationReward:GetByID(fID);
+        local rewardInfo=ExplorationRewardInfo.New()
+        rewardInfo:SetCfg(cfg.item[1]);
+        return rewardInfo
+    end
+    return nil;
+end
+
+--返回机密勘探每日获得奖励
+function this:GetPlusDailyReward()
+    local fID=self:GetDailySPRewardID();
+    if fID then
+        local cfg=Cfgs.CfgExplorationReward:GetByID(fID);
+        local rewardInfo=ExplorationRewardInfo.New()
+        rewardInfo:SetCfg(cfg.item[1]);
+        return rewardInfo
+    end
+    return nil;
+end
+
+
+--返回当前期首次购买额外奖励的第一个配置信息 ExplorationRewardInfo
 function this:GetFirstRewardInfo()
     local fID=self:GetFirstRewardID();
     if fID then
@@ -290,19 +323,76 @@ function this:GetFirstRewardInfo()
     return nil;
 end
 
+function this:GetFirstRewardInfos()
+    local fID=self:GetFirstRewardID();
+    if fID then
+        local cfg=Cfgs.CfgExplorationReward:GetByID(fID);
+        local infos={};
+        for k,v in ipairs(cfg.item) do
+            local rewardInfo=ExplorationRewardInfo.New()
+            rewardInfo:SetCfg(v);
+            table.insert(infos,rewardInfo);
+        end
+        return infos
+    end
+    return nil;
+end
+
 --返回当前期首次购买额外奖励配置信息
 function this:GetFirstRewardCfg()
     local fID=self:GetFirstRewardID();
     if fID then
         local cfg=Cfgs.CfgExplorationReward:GetByID(fID);
         local realCfg=cfg.item[1];
-        return rewardInfo
+        return realCfg
     end
     return nil;
 end
 
+function this:GetFirstRewardCfgs()
+    local fID=self:GetFirstRewardID();
+    if fID then
+        local cfg=Cfgs.CfgExplorationReward:GetByID(fID);
+        return cfg.item
+    end
+    return nil;
+end
+
+
 function this:GetFirstRewardID()
     return self.cfg and self.cfg.buyRewardID or nil;
+end
+
+--首次购买额外奖励模板（仅展示）
+function this:GetBuyRewardShows()
+    local fID=self.cfg and self.cfg.buyRewardShowID or nil;
+    if fID then
+        local cfg=Cfgs.CfgExplorationReward:GetByID(fID);
+        local infos={};
+        for k,v in ipairs(cfg.item) do
+            local rewardInfo=ExplorationRewardInfo.New()
+            rewardInfo:SetCfg(v);
+            table.insert(infos,rewardInfo);
+        end
+        return infos
+    end
+    return nil;
+end
+
+--首次购买机密勘探额外奖励模板（仅展示）
+function this:GetExBuyRewardShows()
+    local fID=self.cfg and self.cfg.spRewardShowID or nil;
+    if fID then
+        local cfg=Cfgs.CfgExplorationReward:GetByID(fID);
+        local infos={};
+        for k,v in ipairs(cfg.item) do
+            local rewardInfo=ExplorationRewardInfo.New()
+            rewardInfo:SetCfg(v);
+            table.insert(infos,rewardInfo);
+        end
+        return infos
+    end
+    return nil;
 end
 
 --返回开通目标测绘价格
@@ -414,6 +504,14 @@ end
 
 function this:GetBackPos()
     return self.cfg and self.cfg.backPos or {0,0,1};
+end
+
+function this:GetBaseMailReward()
+    return self.cfg and self.cfg.baseMailReward or nil;
+end
+
+function this:GetFullMailReward()
+    return self.cfg and self.cfg.fullMailReward or nil;
 end
 
 return this;

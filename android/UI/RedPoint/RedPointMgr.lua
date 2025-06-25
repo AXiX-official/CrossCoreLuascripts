@@ -32,6 +32,7 @@ RedPointType.MaterialBag = "MaterialBag" -- 背包
 RedPointType.HeadFrame = "HeadFrame" -- 头像框
 RedPointType.Head = "Head" -- 头像
 RedPointType.Title = "Title" -- 称号
+RedPointType.Face = "Face" -- 对战表情
 RedPointType.Achievement = "Achievement" --成就
 RedPointType.Regression = "Regression" --回归
 RedPointType.Badge = "Badge" --徽章

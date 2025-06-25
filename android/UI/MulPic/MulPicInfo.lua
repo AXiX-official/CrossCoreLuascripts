@@ -137,5 +137,9 @@ end
 --     return false
 -- end
 
+function this:GetType()
+    return self:GetCfg().nType or 0
+end
+
 return this
 

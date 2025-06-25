@@ -37,12 +37,18 @@ function this.GetElseData(_data)
 end
 
 function this.OnClickGrid(tab)
+	if tab==nil or tab.data==nil then
+		do return end
+	end
 	if tab.data:IsNew() then
 		EquipProto:SetIsNew({tab.data:GetID()}, function()
 			if tab and tab.data then
 				tab.SetNewState(tab.data:IsNew());
 			end
 		end);
+	end
+	if EquipMgr:CheckIsRefreshLast(tab.data:GetID()) then
+		do return end
 	end
 	remouldData = tab.data
 	if selectIndex and selectIndex ~= tab.index then

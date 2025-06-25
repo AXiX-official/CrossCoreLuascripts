@@ -224,3 +224,10 @@ eBossState.Fighting = 2 -- 战斗阶段
 eBossState.Over     = 3 -- 结束阶段
 eBossState.Reward   = 4 -- 颁奖阶段
 eBossState.Delete   = 5 -- 删除阶段
+
+---------------------------------------------
+-- 表情展示时机
+eEmoteState = {}
+eEmoteState.Start	 	= 1		-- 战斗开始
+eEmoteState.Win 		= 2		-- 赢
+eEmoteState.Lose	 	= 3		-- 输

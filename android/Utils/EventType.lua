@@ -7,7 +7,6 @@ local this = {};
 this.GM_State_Changed = 11;
 
 
-
 --Lua消息
 this.Lua_Event = 1000;
 --GM测试信息
@@ -392,6 +391,8 @@ this.Fight_Over_Panel_Show = 140032 --显示结算界面
 --进入战斗失败
 this.Fight_Enter_Fail=140033 --进入战斗失败
 
+--战斗表情
+this.Fight_Play_Face=140034
 -----------------------------------------登录模块
 --玩家登录成功
 this.Login_Server_Success			= 150000;
@@ -521,6 +522,7 @@ this.Role_Jump_Break = 170041 --跳转到指定突破页面
 this.Role_FirstCreate_End = 170042
 this.Role_Captain_ToFirst = 170043  --队长排在最前面
 this.Role_LimitSkin_Refresh = 170044 --限时皮肤
+this.Choice_Card_Ret = 170046 --自选卡牌返回
 ------------------------------------------主界面
 --切换显示状态
 this.Main_Menu_Show			= 180000;
@@ -568,8 +570,12 @@ this.MenuBuy_RechargeCB=180019;
 this.Head_Title_Change=180020;
 --累充领取s
 this.AccuChargeS_Get=180021;
+--对战表情
+this.Head_Face_Change = 180022
 --调查问卷
 this.Menu_Questionnaire = 180023
+--spineUI动画进入与退出
+this.Menu_SpineUI = 180024
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -761,6 +767,20 @@ this.Equip_TweenMask_State=210030;
 this.Equip_Update=210031;
 --强化动画遮罩
 this.Equip_StrengthTween_State=210032;
+--装备合成类型选择
+this.Equip_Combine_SelSlot=210033;
+--移除合成素材
+this.Equip_Remove_CombineM=210034;
+--锁定词条
+this.Equip_Lock_Attribute=210035
+--合成返回
+this.Equip_Combine_Ret=210036
+--洗炼返回
+this.Equip_Refining_Ret=210037
+--洗炼确定返回
+this.Equip_Refining_Comfirm=210038
+--洗炼数据刷新
+this.Equip_Refining_Update=210039
 ------------------------------------------战棋系统事件
 --场地初始化完成
 this.Battle_Ground_Inited = 220000;
@@ -1163,9 +1183,9 @@ this.Dungeon_DailyData_Update = 420004 --日常变量更新
 this.Dungeon_MainLine_Update = 420005 --主线更新
 this.Dungeon_Box_Refresh = 420006 --星级奖励更新
 this.Update_Dungeon_Data = 420007;--副本结束
-this.Dungeon_InfoPanel_Update = 420008 --副本信息界面更新
+this.Dungeon_InfoPanel_Update = 420008 --副本信息界面设置
 this.Dungeon_Double_Update = 420009 --副本多倍更新
-
+this.Dungeon_InfoItem_Update = 420010 --副本信息组件更新
 --------------------------------------组队boss
 this.TeamBoss_List = 430001
 this.TeamBoss_Room_Update = 430002 --房间更新
@@ -1336,7 +1356,6 @@ this.Setting_Live_Change = 660000 --直播设置
 ----------------------------------新世界boss
 this.GlobalBoss_Data_Update = 670000 --数据刷新
 this.GlobalBoss_Rank_Update = 670001 --活动排名刷新
-
 --------------------------------------------------拼图活动
 this.Puzzle_Data_Ret=680000--活动数据返回
 this.Puzzle_Selected_Goods=680001--选择购买商品
@@ -1344,6 +1363,18 @@ this.Puzzle_Buy_Ret=680002 --购买返回
 this.Puzzle_Unlock_Ret=680003 --解锁格子返回
 this.Puzzle_GetReward_Ret=680004 --领取奖励返回
 this.Puzzle_Item_TweenBegin=680005 --点击点亮
+----------------------------------秘境探索
+this.RogueMap_Ground_Inited = 690000 --场景初始化
+this.RogueMap_Battle_View_Show = 690001 --显示场景UI
+this.RogueMap_Battle_Character_Ctrl_Changed = 690002 --变更场景控制角色
+this.RogueMap_Battle_Grid_Click = 690003 --点击格子
+this.RogueMap_Battle_Step_Refresh = 690004 --步数显示
+this.RogueMap_Battle_Team_Show = 690005 --显示队伍选择
+this.RogueMap_Battle_Grid_Keep = 690006 --滑动选择路径
+this.RogueMap_Battle_View_Update = 690007 --更新场景UI
+this.RogueMap_Battle_GridInfo_Create = 690008 --格子UI显示
+this.RogueMap_Battle_Prop_Use = 690009 --道具使用
+this.RogueMap_Battle_Mist_Remove = 690010 --特殊格子移除
 
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
@@ -1390,11 +1421,11 @@ this.SDK_Deduction_voucher_paymentcompleted=800020;
 this.ShareView_NoticeTheNextFrameScreenshot=800021;
 ---分享通知截图完成
 this.ShareView_NoticeScreenshotCompleted=800022;
-----------------------------------------------海外SDK----上-----------------------------------------------------
+----------------------------------------------海外SDK----上
 this.SDK_ShiryuSDK_GetActivitys = 800023;
 this.SDK_ShiryuSDK_GetActivitys_Complete = 800024;
 this.SDK_ShiryuSDK_Redeem = 800025;
-this.SDK_ShiryuSDK_Redeem_Complete = 800026;
+this.SDK_ShiryuSDK_Redeem_Complete = 800026;-----------------------------------------------------
 
 
 return this; 

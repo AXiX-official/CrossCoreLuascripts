@@ -52,49 +52,19 @@ function Skill913900401:OnAttackOver2(caster, target, data)
 	-- 8722
 	local count722 = SkillApi:GetCount(self, caster, target,2,603100101)
 	-- 913900104
-	self:HitAddBuffCount(SkillEffect[913900104], caster, target, data, 10000,603100101,4,999)
+	self:AddBuffCount(SkillEffect[913900104], caster, target, data, 913800101,2,45)
 end
 -- 行动结束
 function Skill913900401:OnActionOver(caster, target, data)
-	-- 913900405
-	self:tFunc_913900405_913900401(caster, target, data)
-	self:tFunc_913900405_913900402(caster, target, data)
-	self:tFunc_913900405_913900403(caster, target, data)
-	self:tFunc_913900405_913900406(caster, target, data)
+	-- 913900505
+	self:tFunc_913900505_913900501(caster, target, data)
+	self:tFunc_913900505_913900502(caster, target, data)
+	self:tFunc_913900505_913900503(caster, target, data)
+	self:tFunc_913900505_913900511(caster, target, data)
 end
-function Skill913900401:tFunc_913900405_913900402(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8418
-	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
-	-- 913900507
-	if SkillJudger:GreaterEqual(self, caster, self.card, true,count18,30) then
-	else
-		return
-	end
-	-- 8418
-	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
-	-- 8931
-	if SkillJudger:Less(self, caster, self.card, true,count18,50) then
-	else
-		return
-	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 913900402
-	if self:Rand(3000) then
-		self:CallOwnerSkill(SkillEffect[913900402], caster, caster, data, 913900201)
-	end
-end
-function Skill913900401:tFunc_913900405_913900401(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+function Skill913900401:tFunc_913900505_913900501(caster, target, data)
+	-- 8061
+	if SkillJudger:CasterIsFriend(self, caster, target, true) then
 	else
 		return
 	end
@@ -105,56 +75,15 @@ function Skill913900401:tFunc_913900405_913900401(caster, target, data)
 	else
 		return
 	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 913900401
-	if self:Rand(3000) then
-		self:CallOwnerSkill(SkillEffect[913900401], caster, caster, data, 913900101)
+	-- 913900501
+	local targets = SkillFilter:Rand(self, caster, target, 2)
+	for i,target in ipairs(targets) do
+		self:CallOwnerSkill(SkillEffect[913900501], caster, target, data, 913900101)
 	end
 end
-function Skill913900401:tFunc_913900405_913900406(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8418
-	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
-	-- 8934
-	if SkillJudger:GreaterEqual(self, caster, self.card, true,count18,100) then
-	else
-		return
-	end
-	-- 913900406
-	self:AddSp(SkillEffect[913900406], caster, self.card, data, -100)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8418
-	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
-	-- 8934
-	if SkillJudger:GreaterEqual(self, caster, self.card, true,count18,100) then
-	else
-		return
-	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 913900404
-	if self:Rand(3000) then
-		self:CallOwnerSkill(SkillEffect[913900404], caster, target, data, 913900401)
-	end
-end
-function Skill913900401:tFunc_913900405_913900403(caster, target, data)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+function Skill913900401:tFunc_913900505_913900503(caster, target, data)
+	-- 8061
+	if SkillJudger:CasterIsFriend(self, caster, target, true) then
 	else
 		return
 	end
@@ -172,13 +101,55 @@ function Skill913900401:tFunc_913900405_913900403(caster, target, data)
 	else
 		return
 	end
-	-- 8070
-	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	-- 913900503
+	self:CallOwnerSkill(SkillEffect[913900503], caster, target, data, 913900301)
+end
+function Skill913900401:tFunc_913900505_913900502(caster, target, data)
+	-- 8061
+	if SkillJudger:CasterIsFriend(self, caster, target, true) then
 	else
 		return
 	end
-	-- 913900403
-	if self:Rand(3000) then
-		self:CallOwnerSkill(SkillEffect[913900403], caster, target, data, 913900301)
+	-- 8418
+	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
+	-- 913900507
+	if SkillJudger:GreaterEqual(self, caster, self.card, true,count18,30) then
+	else
+		return
 	end
+	-- 8418
+	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
+	-- 8931
+	if SkillJudger:Less(self, caster, self.card, true,count18,50) then
+	else
+		return
+	end
+	-- 913900502
+	local targets = SkillFilter:Rand(self, caster, target, 2)
+	for i,target in ipairs(targets) do
+		self:CallOwnerSkill(SkillEffect[913900502], caster, target, data, 913900201)
+	end
+end
+function Skill913900401:tFunc_913900505_913900511(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8418
+	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
+	-- 8934
+	if SkillJudger:GreaterEqual(self, caster, self.card, true,count18,100) then
+	else
+		return
+	end
+	-- 913900511
+	self:AddSp(SkillEffect[913900511], caster, self.card, data, -100)
+	-- 8061
+	if SkillJudger:CasterIsFriend(self, caster, target, true) then
+	else
+		return
+	end
+	-- 913900504
+	self:CallOwnerSkill(SkillEffect[913900504], caster, target, data, 913900401)
 end

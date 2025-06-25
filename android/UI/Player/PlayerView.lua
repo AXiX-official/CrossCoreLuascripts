@@ -124,8 +124,9 @@ function SetRed()
     local _pData = RedPointMgr:GetData(RedPointType.HeadFrame)
     local _pData2 = RedPointMgr:GetData(RedPointType.Head)
     local _pData3 = RedPointMgr:GetData(RedPointType.Title)
+    local _pData4 = RedPointMgr:GetData(RedPointType.Face)
     local _isRed = false 
-    if(_pData ~= nil or _pData2 ~= nil or _pData3 ~= nil) then 
+    if(_pData ~= nil or _pData2 ~= nil or _pData3 ~= nil or _pData4 ~= nil) then 
         _isRed = true 
     end 
     UIUtil:SetRedPoint2("Common/Red2", iconNode, _isRed, 89, 91, 0)

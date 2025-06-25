@@ -1,10 +1,7 @@
 --对话数据
 local this = {}
-
 local talkInfo = nil;
 local options = nil;
-local allRoleInfos = nil;
-local roleInfos = nil
 
 function this.New()
 	this.__index = this.__index or this;
@@ -17,8 +14,7 @@ end
 function this:InitCfg(cfgId)
 	talkInfo = nil;
 	options = nil;
-	allRoleInfos = nil;
-	roleInfos = nil;
+
 	if(cfgId == nil) then
 		LogError("初始化对话数据失败！无效配置id");		
 	end
@@ -319,7 +315,15 @@ function this:GetEffectCfg()
 	return effectCfg;
 end
 
---是否回忆
+--回忆
+function this:GetGray()
+	local index = 0
+	if self.cfg and self.cfg.grayEffect then
+		index = self.cfg.grayEffect
+	end
+	return index
+end
+
 function this:IsGray()
 	local isGray = false;
 	if self.cfg and self.cfg.grayEffect then
@@ -348,6 +352,10 @@ function this:GetBlur()
 	local endBlur = self.cfg.endBlur or 0
 	local blurTime = self.cfg.blurTime or 0
 	return starBlur, endBlur, blurTime
+end
+
+function this:IsBlur()
+	return self.cfg.blurTime ~= nil or self.cfg.starBlur ~= nil or self.cfg.endBlur ~= nil
 end
 
 --强制自动状态
@@ -493,6 +501,10 @@ function this:GetTopImgInfo()
 		end
 	end
 	return info
+end
+------------------------------------------背景信息-------------------------------------------
+function this:GetImgInfos()
+	return self.cfg and self.cfg.imgInfos
 end
 
 return this; 

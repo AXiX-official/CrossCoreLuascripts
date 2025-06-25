@@ -1601,6 +1601,30 @@ function PlayerProto:SkinExpiredRet(proto)
     RoleSkinMgr:SkinExpiredRet(proto.ids)
 end
 
+--设置PVP表情
+function PlayerProto:SetIconEmote(_icon_emotes,_cb)
+    self.SetIconEmoteCB = _cb
+    local proto = {"PlayerProto:SetIconEmote",{icon_emotes=_icon_emotes}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetIconEmoteRet(proto)
+    --LanguageMgr:ShowTips(49001)
+    PlayerClient:SetEmotes(proto.icon_emotes)
+    EventMgr.Dispatch(EventType.Head_Face_Change)
+    if(self.SetIconEmoteCB)then 
+        self.SetIconEmoteCB()
+    end 
+    self.SetIconEmoteCB = nil
+end
+
+function PlayerProto:SetSelfChoiceCardPoolCard(_id,_cids)
+    local proto = {"PlayerProto:SetSelfChoiceCardPoolCard",{id=_id,cids=_cids}}
+    NetMgr.net:Send(proto)
+end
+function PlayerProto:SetSelfChoiceCardPoolCardRet(proto)
+    CreateMgr:SetSelfChoiceCardPoolCardRet(proto)
+end
+
 --获取积分战斗的分数
 function PlayerProto:GetBuffBattleInfo(sid ,callBack)
     self.buffBattleInfoCallBack = callBack

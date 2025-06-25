@@ -41,9 +41,12 @@ local conf = {
 {'ColosseumView',	'ColosseumView',	'角斗场',	'',	'',	'2120',	'',	''},
 {'CollaborationMain',	'CollaborationMain',	'协同作战',	'',	'',	'2007',	'',	''},
 {'RogueTView',	'RogueTView',	'能力测验',	'',	'',	'2120',	'',	''},
+{'LuckyGachaMain',	'LuckyGachaMain',	'扭蛋机',	'',	'',	'2007',	'',	''},
 {'PuzzleActivity',	'PuzzleActivity',	'拾光剪影',	'',	'',	'2120',	'',	''},
 {'SignInDuanWu',	'SignInDuanWu',	'龙舟争霸赛',	'',	'',	'2007',	'',	''},
 {'SkinRebate',	'SkinRebate',	'衣惠有礼',	'',	'',	'2002',	'',	''},
+{'EquipRefining',	'EquipRefining',	'重构',	'',	'',	'1045',	'',	''},
+{'EquipSynthesis',	'EquipSynthesis',	'合成',	'',	'',	'1050',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

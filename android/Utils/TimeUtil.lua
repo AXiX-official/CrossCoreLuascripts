@@ -39,20 +39,6 @@ function this:GetTime2(_year, _month, _day, _hour, _minute, _second)
     end
 end
 
--- 日期转时间
-function this:GetTimeStamp3(_year, _month, _day, _hour, _minute, _second)
-    local data = {
-        year = _year,
-        month = _month,
-        day = _day,
-        hour = _hour,
-        min = _minute,
-        sec = _second
-    }
-    if (data) then
-        return os.time(data)
-    end
-end
 -- 匹配获取
 -- _time = this:GetTime
 -- _typeStr = *t  >  返回table{year,month,day,hour,min,sec}

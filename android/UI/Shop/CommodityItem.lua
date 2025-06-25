@@ -177,7 +177,7 @@ function SetOrgCosts()
                     LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
                 end
             else
-                CSAPI.SetText(txt_dsRmb,rmbIcon);
+                CSAPI.SetText(txt_dsRmb,this.data:GetCurrencySymbols(true));
                 CSAPI.SetGOActive(dsMoneyIcon,false);
                 CSAPI.SetGOActive(txt_dsRmb,true);
             end
@@ -206,7 +206,7 @@ function SetOrgCosts()
                     end
                 else
                     CSAPI.SetGOActive(dsMoneyIcon,false);
-                    CSAPI.SetText(txt_dsRmb,rmbIcon);
+                    CSAPI.SetText(txt_dsRmb,this.data:GetCurrencySymbols(true));
                     CSAPI.SetGOActive(txt_dsRmb,true);
                 end
             end

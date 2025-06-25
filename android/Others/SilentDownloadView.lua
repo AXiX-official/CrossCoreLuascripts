@@ -43,7 +43,7 @@ function GetDownloadRewardCB(proto)
     if isSuccess == false then
         LogError("领取失败")
     else
-        LogError("领取成功")
+        -- Log("领取成功")
     end
     view:Close();
 end

@@ -561,7 +561,8 @@ end
 --跳转购买界面
 function OnClickBuy()
     if currState~=ExplorationState.Plus then
-        CSAPI.OpenView("ExplorationBuy")
+        -- CSAPI.OpenView("ExplorationBuy")
+        UIUtil:OpenExplorationBuy()
     end
 end
 

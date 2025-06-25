@@ -749,14 +749,14 @@ end
 
 -- 添加战斗表情 (异步，可通过 item = item or {} 传入持有item )
 --isL 是左边(要区分左右，因为艺术字不能翻转，但图要翻转)
-function this:AddHeadFace(parent, id,isL,item)
+function this:AddHeadFace(parent,id,isL,item)
     if (not item) then
         ResUtil:CreateUIGOAsync("Common/HeadFaceItem", parent, function(go)
             item = ComUtil.GetLuaTable(go)
-            item.Refresh(id,isLeft)
+            item.Refresh(id,isL)
         end)
     else
-        item.Refresh(id,isLeft)
+        item.Refresh(id,isL)
     end
 end
 
@@ -772,6 +772,7 @@ function this:AddHeadByID(parent, scale, frameID, iconID, sel_card_ix, itemGoNam
     -- local isGirl, frameID = self:GetSexAndID(_frameID)
     scale = scale or 1
     itemGoName = itemGoName or "RoleHead"
+    if parent==nil then return; end
     local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
         ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
@@ -794,6 +795,7 @@ function this:AddTitleByID(parent, scale, titleID, isMy)
     -- 真实性别和头像 
     scale = scale or 1
     local itemGoName = "RoleTitle"
+    if parent==nil then return; end
     local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
         ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
@@ -986,36 +988,31 @@ end
 
 -- 显示特殊引导
 function this:ShowSpecialGuide(parent, viewName, type, datas)
-    -- if viewName == nil or viewName == "" then
-    --     return
-    -- end
-    -- if GuideMgr:HasGuide(viewName) or GuideMgr:IsGuiding() or SpecialGuideMgr:IsClose() then
-    --     return
-    -- end
-    -- local name = "SpecialGuideView"
-    -- local go = parent.transform:Find(name)
-    -- if IsNil(go) then
-    --     go = ResUtil:CreateUIGO("SpecialGuide/" .. name, parent.transform)
-    -- end
-    -- if not IsNil(go) then
-    --     local lua = ComUtil.GetLuaTable(go.gameObject)
-    --     if lua and lua.Refresh then
-    --         lua.Refresh(viewName, type, datas)
-    --     end
-    -- end
-end
-
---显示任务奖励列表
-function this:ShowMissionReward(type,group,title1,title2)
-    if not type or not group then
+    if viewName == nil or viewName == "" then
         return
     end
-    local data = {
-        type = type,
-        group = group,
-        title1 = title1,
-        title2 = title2,
-    }
-    CSAPI.OpenView("MissionReward",data)
+    if GuideMgr:HasGuide(viewName) or GuideMgr:IsGuiding() or SpecialGuideMgr:IsClose() then
+        return
+    end
+    local name = "SpecialGuideView"
+    local go = parent.transform:Find(name)
+    if IsNil(go) then
+        go = ResUtil:CreateUIGO("SpecialGuide/" .. name, parent.transform)
+    end
+    if not IsNil(go) then
+        local lua = ComUtil.GetLuaTable(go.gameObject)
+        if lua and lua.Refresh then
+            lua.Refresh(viewName, type, datas)
+        end
+    end
 end
+function this:OpenExplorationBuy()
+    local curData=ExplorationMgr:GetCurrData();
+    if curData==nil or (curData and curData:GetDailyReward()) or (curData and curData:GetBaseMailReward()~=nil) then
+        CSAPI.OpenView("ExplorationBuy2");
+    else
+        CSAPI.OpenView("ExplorationBuy");
+    end
+end
+
 return this

@@ -59,7 +59,7 @@ function this:CheckCanUse()
     local _expiry = goodsData:GetHeadFrameExpiry()
     if (not _expiry or _expiry > TimeUtil:GetTime()) then
         isCanUse = true
-        expiry = _expiry
+        expiry = _expiry 
     end
     return isCanUse, expiry
 end

@@ -1401,6 +1401,18 @@ function ConfigChecker:CfgEquip(cfgs)
             end
         end
 
+        if cfg.refreshLibId then
+            local libCfg = CfgEquipRefreshLib[cfg.refreshLibId]
+            if not libCfg then
+                ASSERT(false, 'CfgEquip not find refreshLibcfg id: ' .. cfg.refreshLibId .. ', in CfgEquipRefreshLib from refreshLibId!')
+            end
+
+            if not next(libCfg.infos) then
+                ASSERT(false, 'CfgEquipRefreshLib cfg id：' .. cfg.refreshLibId .. ' field infos is empty!')
+            end
+
+        end
+
         if cfg.suitId then
             local bySuitId = GCalHelp:GetTb(g_EquipBySuit, cfg.suitId, {})
             local byQuality = GCalHelp:GetTb(bySuitId, cfg.nQuality, {})
@@ -1420,6 +1432,40 @@ function ConfigChecker:CfgEquip(cfgs)
             )
 
             -- LogTable(equipArr, "equipArr:")
+        end
+    end
+end
+
+function ConfigChecker:CfgEquipRefreshLib(cfgs)
+    -- if IS_CLIENT then
+    --     return
+    -- end
+
+    for _, cfg in pairs(cfgs) do
+        local arr = cfg.infos
+        if not arr then
+            return
+        end
+        local field = 'weight'
+        local sumField = 'sumWeight'
+        local sumWeight = 0
+        cfg.mapRare = {}
+        for _, info in ipairs(arr) do
+            local orign = info[field]
+            if not orign then
+                LogError('GCalHelp:CalArrWeight not field %s', field)
+            end
+            info[sumField] = orign + sumWeight
+            sumWeight = sumWeight + orign
+            cfg.rareCnt = cfg.rareCnt or 0
+            if info.isRare then
+                cfg.rareCnt = cfg.rareCnt + 1
+                local skillCfg = CfgEquipSkill[info.skillId]
+                cfg.mapRare[info.skillId] = true
+            end
+            if not cfg.showRareCnt and info.showRareCnt then
+                cfg.showRareCnt = info.showRareCnt
+            end
         end
     end
 end
@@ -1692,6 +1738,14 @@ function ConfigChecker:ItemInfo(cfgs)
             else
                 ASSERT(false, string.format('称号表里找不到该物品id:%s对应的玩家称号id：%s', id, cfg.dy_value2))
             end
+        elseif cfg.type == ITEM_TYPE.ICON_EMOTE then
+            local emoteCfg = CfgIconEmote[cfg.dy_value2]
+            if emoteCfg then
+                ASSERT(not emoteCfg.item_id, string.format('该战斗表情id=%s已有对应的物品id=%s,玩家表情表配置冲突', cfg.dy_value2, id))
+                emoteCfg.item_id = id
+            else
+                ASSERT(false, string.format('表情表里找不到该物品id:%s对应的玩家表情id：%s', id, cfg.dy_value2))
+            end
         elseif cfg.type == ITEM_TYPE.BG_ITEM then
             local menuBgCfg = CfgMenuBg[cfg.dy_value1]
             if menuBgCfg then
@@ -1736,12 +1790,12 @@ function ConfigChecker:ItemInfo(cfgs)
                         )
                 )
                 ASSERT(iconItem.type == ITEM_TYPE.ICON, string.format('道具id:%s的物品对应的头像物品:%s，类型不对', id, item_id))
-            -- elseif cfg.dy_value1 == PROP_TYPE.Pet then
-            --     ASSERT(CfgPet[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物在宠物表没有对应的id：%s", id, cfg.dy_value2))
-            -- elseif cfg.dy_value1 == PROP_TYPE.PetItem then
-            --     ASSERT(CfgPetItem[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物物品在宠物物品表没有对应的id：%s", id, cfg.dy_value2))
-            -- elseif cfg.dy_value1 == PROP_TYPE.PetArchive then
-            --     ASSERT(CfgPetArchive[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物图鉴在宠物图鉴表没有对应的id：%s", id, cfg.dy_value2))
+            elseif cfg.dy_value1 == PROP_TYPE.Pet then
+                ASSERT(CfgPet[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物在宠物表没有对应的id：%s", id, cfg.dy_value2))
+            elseif cfg.dy_value1 == PROP_TYPE.PetItem then
+                ASSERT(CfgPetItem[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物物品在宠物物品表没有对应的id：%s", id, cfg.dy_value2))
+            elseif cfg.dy_value1 == PROP_TYPE.PetArchive then
+                ASSERT(CfgPetArchive[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物图鉴在宠物图鉴表没有对应的id：%s", id, cfg.dy_value2))
             elseif cfg.dy_value1 == PROP_TYPE.Music then
                     ASSERT(cfg.dy_value2, string.format("物品id：%s使用后获得的音乐在ItemInfo没配dy_value2", id))
                     ASSERT(CfgMusic[cfg.dy_value2], string.format("音乐id：%s使用后获得的音乐在音乐表[CfgMusic]没有对应的id：%s", id, cfg.dy_value2))
@@ -1813,6 +1867,19 @@ function ConfigChecker:CfgIconTitle(cfgs)
         -- 称号要有对应的物品id
         if id ~= 1 then
             ASSERT(cfg.item_id, string.format('称号id:%s无对应的的物品id,配置不对', id))
+        end
+    end
+end
+
+function ConfigChecker:CfgIconEmote(cfgs)
+    g_IconEmotesDefault = {}
+    for id, cfg in pairs(cfgs) do
+        -- 玩家表情要有对应的表情ID
+        -- if id ~= 1 then
+        ASSERT(cfg.item_id, string.format('表情id:%s无对应的的物品id,配置不对', id))
+        -- end
+        if cfg.is_Open == 1 then
+            table.insert(g_IconEmotesDefault, cfg.item_id)
         end
     end
 end
@@ -3061,16 +3128,16 @@ function ConfigChecker:CfgAchieve(cfgs)
     for cfgid, cfg in pairs(cfgs) do
         local aFinishIds = cfg.aFinishIds
         if not aFinishIds then
-            LogError('CfgAchieve id:%s 的aFinishIds不允许为空', cfgid)
+            LogError(string.format('CfgAchieve id:%s 的aFinishIds不允许为空', cfgid))
         end
 
         local aFinishId = aFinishIds[1]
         local finishCount = aFinishIds[2]
         if not aFinishId then
-            LogError('CfgAchieve id:%s 的条件Id不允许为空', cfgid)
+            LogError(string.format('CfgAchieve id:%s 的条件Id不允许为空', cfgid))
         end
         if not finishCount then
-            LogError('CfgAchieve id:%s 的完成次数不允许为空', cfgid)
+            LogError(string.format('CfgAchieve id:%s 的完成次数不允许为空', cfgid))
         end
 
         if not achievementFinishIds[aFinishId] then
@@ -3080,7 +3147,7 @@ function ConfigChecker:CfgAchieve(cfgs)
         cfg.finishCount = finishCount
         table.insert(achievementFinishIds[aFinishId], cfgid)
         if not CfgAchieveFinishVal[aFinishId] then
-            LogE('CfgAchieve：%s 的 aFinishId ：%s 在CfgAchieveFinishVal中没有配置', cfg.id, aFinishId)
+            LogE(string.format('CfgAchieve：%s 的 aFinishId ：%s 在CfgAchieveFinishVal中没有配置', cfg.id, aFinishId))
         end
     end
     cfgs.achievementFinishIds = achievementFinishIds
@@ -3112,16 +3179,16 @@ function ConfigChecker:CfgBadge(cfgs)
     for cfgid, cfg in pairs(cfgs) do
         local aFinishIds = cfg.aFinishIds
         if not aFinishIds then
-            LogError('CfgBadge id:%s 的aFinishIds不允许为空', cfgid)
+            LogError(string.format('CfgBadge id:%s 的aFinishIds不允许为空', cfgid))
         end
 
         local aFinishId = aFinishIds[1]
         local finishCount = aFinishIds[2]
         if not aFinishId then
-            LogError('CfgBadge id:%s 的条件Id不允许为空', cfgid)
+            LogError(string.format('CfgBadge id:%s 的条件Id不允许为空', cfgid))
         end
         if not finishCount then
-            LogError('CfgBadge id:%s 的完成次数不允许为空', cfgid)
+            LogError(string.format('CfgBadge id:%s 的完成次数不允许为空', cfgid))
         end
 
         if not badgedFinishIds[aFinishId] then
@@ -3132,7 +3199,7 @@ function ConfigChecker:CfgBadge(cfgs)
         table.insert(badgedFinishIds[aFinishId], cfgid)
 
         if not CfgBadgeFinishVal[aFinishId] then
-            LogE('徽章CfgBadge：%s 的 aFinishId ：%s 在CfgBadgeFinishVal中没有配置', cfg.id, aFinishId)
+            LogE(string.format('徽章CfgBadge：%s 的 aFinishId ：%s 在CfgBadgeFinishVal中没有配置', cfg.id, aFinishId))
         end
     end
     cfgs.badgedFinishIds = badgedFinishIds
@@ -3143,7 +3210,7 @@ function ConfigChecker:CfgBadgeFinishVal(cfgs)
     for cfgid, cfg in pairs(cfgs) do
         local nType = cfg.nType
         if not nType then
-            LogError('CfgBadgeFinishVal id:%s 的nType不允许为空', cfgid)
+            LogError(string.format('CfgBadgeFinishVal id:%s 的nType不允许为空', cfgid))
         end
         if cfg.aVal2 then
             table.sort(cfg.aVal2)
@@ -3485,5 +3552,22 @@ function ConfigChecker:CfgPuzzleReward(cfgs)
                 break
             end
         end
+    end
+end
+
+
+function ConfigChecker:CfgPet(cfgs)
+    for _, cfg in pairs(cfgs) do
+        local feedCfg = CfgPetFeedReward[cfg.feedReward]
+        local feedMax = 0
+        ASSERT(feedCfg, "该宠物(id:%s)对应的养成奖励没有配置，养成奖励表ID：", cfg.id, cfg.feedReward)
+        for _, v in pairs(feedCfg.infos) do
+            LogTable(v)
+            if feedMax < v.feedNum then
+                feedMax = v.feedNum
+            end
+        end
+        ASSERT(feedMax ~= 0, "该宠物(id:%s)对应的养成值有问题,最大值为0", cfg.id)
+        cfg.feedMax = feedMax
     end
 end

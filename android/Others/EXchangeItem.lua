@@ -105,7 +105,7 @@ function SetState()
     CSAPI.SetGOActive(toggle,not data:IsOver())
     CSAPI.SetGOActive(txt_exchange3,data:IsOver())
     CSAPI.SetGOActive(txt_exchange1,not data:IsOver())
-    CSAPI.SetGOActive(txt_exchange2,not data:IsOver())
+    -- CSAPI.SetGOActive(txt_exchange2,not data:IsOver())
 
     local infos = FileUtil.LoadByPath("Activity_ExChange_Tip") or {}
     local isShowRed = not infos[data:GetID()] or infos[data:GetID()] == 1

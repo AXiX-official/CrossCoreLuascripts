@@ -15,7 +15,7 @@ function this:OnPlay()
     if (fightOverData and fightOverData.forceDeadTeam) then -- 播放结果前，强制某个队伍死亡
         FightActionMgr:ForceDead(fightOverData.forceDeadTeam, self.ForceDeadComplete, self);
     else
-        self:PlayResult();
+        self:PlayEmotes();
     end
 
     --    if(not FightClient.isStarted) then
@@ -24,8 +24,29 @@ function this:OnPlay()
 end
 
 function this:ForceDeadComplete()
-    self:PlayResult();
+    self:PlayEmotes();
 end
+
+--播放结束表情
+function this:PlayEmotes()
+    local emoteWin1,emoteWin2 = FightClient:GetEmote(eEmoteState.Win);
+    if(emoteWin1 and emoteWin2)then
+        --LogError("播放战斗表情：" .. tostring(emoteWin1) .. "|" .. tostring(emoteWin2))
+        local fightOverData = self:GetData();
+        local isWin = fightOverData and fightOverData.bIsWin;
+        local emoteLose1,emoteLose2 = FightClient:GetEmote(eEmoteState.Lose);
+        local emote1 = isWin and emoteWin1 or emoteLose1;
+        local emote2 = not isWin and emoteWin2 or emoteLose2;
+
+        FuncUtil:Call(function()
+            EventMgr.Dispatch(EventType.Fight_Play_Face,{{id=emote1},{id=emote2}});     
+        end,nil,1000);       
+        FuncUtil:Call(self.PlayResult,self,3000);
+    else
+        self:PlayResult(); 
+    end
+end
+
 
 -- 播放结果
 function this:PlayResult()
@@ -59,6 +80,7 @@ function this:PlayResult()
         else
             self:PlayCameraAction(fightOverData);
             self:PlayBGM(fightOverData);
+            --LogError(fightOverData);
             FuncUtil:Call(self.OpenView, self, 2000, fightOverData)
         end
     else

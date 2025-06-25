@@ -230,11 +230,11 @@ function RefreshPrice()
 	local normalPrice=commodity:GetPrice();
 	if normalPrice==nil or (normalPrice and normalPrice[1].num==0) then --免费
 		CSAPI.SetGOActive(txt_free,true);
-		CSAPI.SetGOActive(txt_nPrice,false);
+		CSAPI.SetGOActive(nPriceObj,false);
 		CSAPI.SetGOActive(hPrice,false);
 	else
 		CSAPI.SetGOActive(txt_free,false);
-		CSAPI.SetGOActive(txt_nPrice,true);
+		CSAPI.SetGOActive(nPriceObj,true);
 		local priceInfo=commodity:GetRealPrice();
 		local orgInfo=commodity:GetOrgCosts();
 		local disPrice=normalPrice[1].num*currNum;--折扣前价格
@@ -263,39 +263,40 @@ function RefreshPrice()
 		if isShowHPrice then
 			if onceMax>1 then
 				if normalPrice[1].num==priceInfo[1].num then
-					SetPrice(curPID,priceInfo[1].num,nPriceIcon,txt_nPrice);
+					SetPrice(curPID,priceInfo[1].num,nPriceIcon,txt_nPrice,txt_rmb);
 				else
-					SetPrice(curPID,normalPrice[1].num,hPriceIcon,txt_hPrice);
-					SetPrice(curPID,priceInfo[1].num,nPriceIcon,txt_nPrice);
+					SetPrice(curPID,normalPrice[1].num,hPriceIcon,txt_hPrice,txt_hRmb);
+					SetPrice(curPID,priceInfo[1].num,nPriceIcon,txt_nPrice,txt_rmb);
 				end
-				SetPrice(curPID,disPrice,hPriceIcon2,txt_hPrice2);
-				SetPrice(curPID,curPrice,priceIcon,txt_price);
+				SetPrice(curPID,disPrice,hPriceIcon2,txt_hPrice2,txt_hRmb2);
+				SetPrice(curPID,curPrice,priceIcon,txt_price,txt_rmb2);
 			else
-				SetPrice(curPID,disPrice,hPriceIcon,txt_hPrice);
-				SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice);
+				SetPrice(curPID,disPrice,hPriceIcon,txt_hPrice,txt_hRmb);
+				SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice,txt_rmb);
 			end
-			CSAPI.SetGOActive(p0,onceMax>1);
-			CSAPI.SetGOActive(txt_hPrice2,onceMax>1);
-			CSAPI.SetGOActive(hPrice,isShowHPrice)
+			CSAPI.SetGOActive(hLayout2,onceMax>1);
 		else
-			SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice);
+			SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice,txt_rmb);
 			if  onceMax>1 then
-				SetPrice(curPID,curPrice,priceIcon,txt_price);
+				SetPrice(curPID,curPrice,priceIcon,txt_price,txt_rmb2);
 			end
-			CSAPI.SetGOActive(p0,false);
-			CSAPI.SetGOActive(txt_hPrice2,false);
+			CSAPI.SetGOActive(hLayout2,false);
 			CSAPI.SetGOActive(hPrice,false)
 		end
 	end
 end
 
-function SetPrice(id, num,pIcon,pText)
+function SetPrice(id, num,pIcon,pText,pRmbIcon)
 	if id==-1 then --SDK支付
-		CSAPI.SetText(pText, rmbIcon..tostring(num));
+		CSAPI.SetText(pRmbIcon, rmbIcon);
+		CSAPI.SetText(pText, tostring(num));
 		CSAPI.SetGOActive(pIcon,false);
+		CSAPI.SetGOActive(pRmbIcon,true);
 		return;
+	else
+		CSAPI.SetGOActive(pIcon,true);
+		CSAPI.SetGOActive(pRmbIcon,false);
 	end
-	CSAPI.SetGOActive(pIcon,true);
 	if id == ITEM_ID.GOLD then --金币
 		ResUtil.IconGoods:Load(pIcon, tostring(ITEM_ID.GOLD).."_1");
 		CSAPI.SetImgColorByCode(pIcon,"ffffff")

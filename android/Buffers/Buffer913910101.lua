@@ -1,4 +1,4 @@
--- 913910101buff
+-- 圣痕
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -14,15 +14,5 @@ function Buffer913910101:OnRoundBegin(caster, target)
 		return
 	end
 	-- 913910101
-	self:LimitDamage(BufferEffect[913910101], self.caster, target or self.owner, nil,0.5,0.6+self.nCount*0.05)
-end
--- 创建时
-function Buffer913910101:OnCreate(caster, target)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
-	else
-		return
-	end
-	-- 913910101
-	self:LimitDamage(BufferEffect[913910101], self.caster, target or self.owner, nil,0.5,0.6+self.nCount*0.05)
+	self:LimitDamage(BufferEffect[913910101], self.caster, target or self.owner, nil,0.5,0.3+self.nCount*0.05)
 end

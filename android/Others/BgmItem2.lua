@@ -15,9 +15,12 @@ function Refresh(_cfg, _curMusicID)
     CSAPI.SetText(txtIndex, index .. ".")
     CSAPI.SetText(txtName, cfg.sName)
     if (isSelect) then
-        nameMove:SetMove()
+        --nameMove:SetMove()
+        nameMove:SetText(cfg.sName)
     else
-        nameMove:ResetAll()
+        --nameMove:ResetAll()
+        nameMove.isMove = false
+        nameMove:ResetToDefault()
     end
 
     CSAPI.SetGOActive(icon, not isSelect)

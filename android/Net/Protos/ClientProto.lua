@@ -172,6 +172,7 @@ function ClientProto:InitFinishRet(proto)
     CollaborationMgr:InitData();--初始化回归绑定活动
     ActivityMgr:CheckRedPointData() --用于活动
     RegressionMgr:CheckRedPointData() -- 回归活动
+    EquipProto:EquipRefreshGetLastData();--获取最后一次洗炼的数据
     EventMgr.Dispatch(EventType.InitFinishRet)
 end
 ---中途打断清理数据
@@ -229,11 +230,12 @@ function ClientProto:OfflineRet()
 end
 
 -- 兑换
-function ClientProto:ExchangeItem(_exchanges, cb,_card_pool_id)
+function ClientProto:ExchangeItem(_exchanges, cb,_card_pool_id,_type)
     self.ExchangeItemCB = cb
     NetMgr.net:Send({"ClientProto:ExchangeItem", {
         exchanges = _exchanges,
-        card_pool_id = _card_pool_id
+        card_pool_id = _card_pool_id,
+        ty=_type,
     }})
 end
 function ClientProto:ExchangeItemRet(proto)
@@ -304,6 +306,16 @@ function ClientProto:QueryPrePay(ShopproductId,amountVave,action)
     if ShopproductId and amountVave then
         self.PayQueryAction=action;
         local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId),amount=tonumber(amountVave), }}
+        NetMgr.net:Send(proto)
+    else
+        LogError("ClientProto:PayQuery --ShopproductId:"..tostring(ShopproductId))
+    end
+end
+function ClientProto:QueryPrePay(ShopproductId,amount,action)
+    self.PayQueryAction=nil;
+    if ShopproductId then
+        self.PayQueryAction=action;
+        local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId),amount = tonumber(amount) }}
         NetMgr.net:Send(proto)
     else
         LogError("ClientProto:PayQuery --ShopproductId:"..tostring(ShopproductId))

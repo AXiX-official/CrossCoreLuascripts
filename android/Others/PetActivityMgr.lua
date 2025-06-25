@@ -17,7 +17,33 @@ function this:Init()
     end
     self.unLockNum=0;
     self.reviceNum=0;
+    self.unLockPetList=FileUtil.LoadByPath("PetActivity");--已解锁的宠物列表，读取本地缓存
+    if self.unLockPetList==nil then
+        self.unLockPetList={};
+        for k,v in pairs(self.pets) do
+            if v:IsLock()~=true or v:GetItem()==g_DefaultPet then
+                self:AddUnLockPetList(v:GetID());
+            end
+        end
+    end
     SummerProto:PetInfo();
+end
+
+function this:AddUnLockPetList(pid)
+    self.unLockPetList=self.unLockPetList or {}
+    if pid then
+        local has=false;
+        for k,v in ipairs(self.unLockPetList) do
+            if v==pid then
+                has=true;
+                break;
+            end
+        end
+        if has~=true then
+            table.insert(self.unLockPetList,pid);
+            self:ChecekRedInfo();
+        end
+    end
 end
 
 function this:OnActivityDataRet(proto)
@@ -384,7 +410,25 @@ function this:ChecekRedInfo()
             end
         end
     end
-    if self.haveReward or (self.tNextRandom and TimeUtil:GetTime()>=self.tNextRandom) then
+    if self.pets and self.unLockPetList ~= nil then
+        for k, v in pairs(self.pets) do
+            if v:IsLock() ~= true then
+                local has = false;
+                for _, val in pairs(self.unLockPetList) do
+                    if v:GetID() == val then
+                        has = true;
+                        break
+                    end
+                end
+                if has ~= true then
+                    redInfo = redInfo or {};
+                    redInfo.newPets = redInfo.newPets or {};
+                    table.insert(redInfo.newPets, v:GetID());
+                end
+            end
+        end
+    end
+    if self.haveReward or (self.tNextRandom>0 and TimeUtil:GetTime()>=self.tNextRandom) then
         redInfo=redInfo or {};
         redInfo.hasRand=true;
         if self.pets then
@@ -424,6 +468,25 @@ function this:GetPetSportIntervalTimeStamp(pet)
     return 0;
 end
 
+function this:SaveUnLockList()
+    FileUtil.SaveToFile("PetActivity",self.unLockPetList); --存储解锁列表
+end
+
+function this:IsOver()
+    local cfg=Cfgs.CfgActiveEntry:GetByID(16);
+    local curTime=TimeUtil:GetTime();
+    local begTime,endTime=nil,nil;
+    if cfg then
+        begTime=cfg.begTime and TimeUtil:GetTimeStampBySplit(cfg.begTime) or nil;
+        endTime=cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or nil;
+    end
+    if (begTime == nil or curTime > begTime) then
+        if (endTime == nil or curTime < endTime) then
+            return false
+        end
+    end
+    return true
+end
 
 function this:Clear()
     self.currPet=nil;
@@ -439,6 +502,7 @@ function this:Clear()
     self.haveReward=false;
     self.isDisState=false;
     self.emotionTimestamp=nil;
+    self.unLockPetList=nil;
 end
 
 return this;

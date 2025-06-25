@@ -63,10 +63,13 @@ end
 
 function this:CheckPoolActive(_poolId)
     local v = self:GetData(_poolId)
-    if (v and v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
+    if (v:GetCfg().nType == 1 and v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove()) then
         return true
     elseif((v:GetCfg().nType == 4 or v:GetCfg().nType == 5) and not v:CheckIsEnd() and v:CheckConditions()) then 
         return true 
+    end
+    if(v:CheckIsStart() and not v:CheckIsEnd() and not v:CheckIsRemove())then 
+        return true
     end
     return false
 end
@@ -193,6 +196,15 @@ function this:CardFactoryInfoRet(proto)
     end
 
     self.free_cnt = proto.free_cnt
+
+    --自选构建卡池信息
+    if(proto.choice_infos)then 
+        for k, v in pairs(proto.choice_infos) do
+            if(self.datas[k])then 
+                self.datas[k]:SetChoiceInfos(v)
+            end 
+        end
+    end 
 end
 
 -- 获取首次抽卡logs
@@ -391,6 +403,14 @@ function this:SetFreeCnt(free_cnt)
 end
 function this:SetDailyUseCnt(daily_use_cnt)
     self.daily_use_cnt = daily_use_cnt
+end
+
+--设置自选构建卡池返回
+function this:SetSelfChoiceCardPoolCardRet(proto)
+    if(self.datas[proto.id])then 
+        self.datas[proto.id]:SetChoiceInfos(proto)
+    end
+    EventMgr.Dispatch(EventType.Choice_Card_Ret)
 end
 
 return this

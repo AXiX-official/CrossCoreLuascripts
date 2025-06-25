@@ -21,8 +21,12 @@ function Awake()
     layout2:Init("UIs/CRoleDisplay/CRoleMulItem", LayoutCallBack, true)
     tlua2 = UIInfiniteUtil:AddUIInfiniteAnim(layout2, UIInfiniteAnimType.Normal)
 
-    cg_btnOne = ComUtil.GetCom(btnOne, "CanvasGroup")
-    cg_btnMore = ComUtil.GetCom(btnMore, "CanvasGroup")
+    layout3 = ComUtil.GetCom(vsv3, "UIInfinite")
+    layout3:Init("UIs/CRoleDisplay/CRoleHalfBodyItem", LayoutCallBack, true)
+    tlua3 = UIInfiniteUtil:AddUIInfiniteAnim(layout3, UIInfiniteAnimType.Normal)
+
+    -- cg_btnOne = ComUtil.GetCom(btnOne, "CanvasGroup")
+    -- cg_btnMore = ComUtil.GetCom(btnMore, "CanvasGroup")
 
     cg_btns = ComUtil.GetOrAddCom(btnS, "CanvasGroup")
 end
@@ -32,7 +36,7 @@ function OnDestroy()
 end
 
 function LayoutCallBack(index)
-    local layout = curTabIndex == 1 and layout1 or layout2
+    local layout = GetLayout()
     local lua = layout:GetItemLua(index)
     if (lua) then
         local _data = curDatas[index]
@@ -52,7 +56,7 @@ function ItemClickCB(_data)
     -- 
     Show()
     -- 
-    local layout = curTabIndex == 1 and layout1 or layout2
+    local layout = GetLayout()
     layout:UpdateList()
     SetNoGet()
 end
@@ -77,8 +81,14 @@ function Refresh(_data)
     c_data = _data[1]
     slot = _data[2]
 
-    CSAPI.SetGOActive(topBtns1, not c_data:CanSelectPic())
-    CSAPI.SetGOActive(topBtns2, c_data:CanSelectPic())
+    if (c_data:GetTy() == 4) then
+        CSAPI.SetGOActive(topBtns1, false)
+        CSAPI.SetGOActive(topBtns2, true)
+        CSAPI.SetGOActive(btnMore,false)
+    else
+        CSAPI.SetGOActive(topBtns1, not c_data:CanSelectPic())
+        CSAPI.SetGOActive(topBtns2, c_data:CanSelectPic())
+    end
 
     isRole = true
     curTabIndex = 1
@@ -86,7 +96,8 @@ function Refresh(_data)
     local id = c_data:GetIDs()[slot]
     if (id ~= nil and id ~= 0) then
         if (id < 10000) then
-            curTabIndex = 2
+            local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(id)
+            curTabIndex = cfg.nType == 1 and 2 or 3
             isRole = false
         end
         curID = curTabIndex == 1 and Cfgs.character:GetByID(id).role_id or id
@@ -97,8 +108,10 @@ end
 function RefreshPanel0()
     if (curTabIndex == 1) then
         tlua1:AnimAgain()
-    else
+    elseif (curTabIndex == 2) then
         tlua2:AnimAgain()
+    else
+        tlua3:AnimAgain()
     end
     RefreshPanel()
 end
@@ -122,8 +135,11 @@ end
 function SetDatas()
     CSAPI.SetGOActive(vsv1, curTabIndex == 1)
     CSAPI.SetGOActive(vsv2, curTabIndex == 2)
-
-    local sortId = curTabIndex == 1 and 5 or 6
+    CSAPI.SetGOActive(vsv3, curTabIndex == 3)
+    local sortId = 5
+    if (curTabIndex ~= 1) then
+        sortId = curTabIndex == 2 and 6 or 27
+    end
     if (not sortLua) then
         ResUtil:CreateUIGOAsync("Sort/SortTop", sortParent, function(go)
             sortLua = ComUtil.GetLuaTable(go)
@@ -161,14 +177,14 @@ function SetDatas()
     else
         -- 如果未获得，判断是否隐藏，不隐藏的话则要判断是否在可售时间内 
         local arr = {}
-        local _arr = MulPicMgr:GetArr()
+        local _arr = MulPicMgr:GetArr(true, curTabIndex - 1)
         for k, v in ipairs(_arr) do
             if (v:IsHad() or v:IsShow()) then
                 table.insert(arr, v)
             end
         end
         curDatas = SortMgr:Sort(sortId, arr)
-        layout2:IEShowList(#curDatas)
+        GetLayout():IEShowList(#curDatas)
     end
     CSAPI.SetGOActive(SortNone, #curDatas <= 0)
 end
@@ -179,6 +195,8 @@ function SetTab()
         CSAPI.SetGOActive(sel1, curTabIndex == 1)
         CSAPI.SetGOActive(normal2, curTabIndex ~= 2)
         CSAPI.SetGOActive(sel2, curTabIndex == 2)
+        CSAPI.SetGOActive(normal3, curTabIndex ~= 3)
+        CSAPI.SetGOActive(sel3, curTabIndex == 3)
     end
 end
 
@@ -225,6 +243,14 @@ function OnClickMore()
     RefreshPanel()
 end
 
+function OnClickHalf()
+    if (curTabIndex == 3) then
+        return
+    end
+    curTabIndex = 3
+    RefreshPanel()
+end
+
 -- 取消
 function OnClickC()
     local isSame = FuncUtil.TableIsSame(c_data.sNewPanel, old_c_data.sNewPanel)
@@ -244,4 +270,12 @@ end
 
 function OnClickMask()
     OnClickC()
+end
+
+function GetLayout()
+    local layout = layout1
+    if (curTabIndex ~= 1) then
+        layout = curTabIndex == 2 and layout2 or layout3
+    end
+    return layout
 end

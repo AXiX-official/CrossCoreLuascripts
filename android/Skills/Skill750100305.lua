@@ -27,7 +27,7 @@ function Skill750100305:OnActionOver(caster, target, data)
 	-- 750100305
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[750100305], caster, target, data, 4003)
+		self:AddBuff(SkillEffect[750100305], caster, target, data, 750100302)
 	end
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
@@ -42,6 +42,6 @@ function Skill750100305:OnActionOver(caster, target, data)
 	-- 750100315
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[750100315], caster, target, data, 4302)
+		self:AddBuff(SkillEffect[750100315], caster, target, data, 750100312)
 	end
 end

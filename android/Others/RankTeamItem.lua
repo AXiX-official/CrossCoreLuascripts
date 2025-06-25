@@ -24,10 +24,10 @@ function SetEmpty(b)
     CSAPI.SetGOActive(empty, b)
     if isTactics then
         LanguageMgr:SetText(txtEmpty1,22071)
-        LanguageMgr:SetEnText(txtEmpty2,22071)    
+        -- LanguageMgr:SetEnText(txtEmpty2,22071)    
     else
         LanguageMgr:SetText(txtEmpty1,index == 6 and 22069 or 22068)
-        LanguageMgr:SetEnText(txtEmpty2,index == 6 and 22069 or 22068)    
+        -- LanguageMgr:SetEnText(txtEmpty2,index == 6 and 22069 or 22068)    
     end
 end
 

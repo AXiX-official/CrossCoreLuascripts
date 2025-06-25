@@ -361,7 +361,7 @@ local conf = {
 {'351',	'DungeonActivity7',	'DungeonActivity7/DungeonActivityView7',	'',	'',	'[[10103],[12010,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'352',	'DungeonSummer',	'DungeonActivity7/DungeonSummerView',	'',	'',	'[[10103],[12010,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'353',	'RankSummer',	'Rank/RankSummerView',	'',	'',	'[[10103],[12010,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'354',	'PetMain',	'Pet/PetMain',	'',	'',	'[[10002],[10104,12402]]',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'354',	'PetMain',	'Pet/PetMain',	'',	'',	'[[10002],[10104,12702]]',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'355',	'PlayerSex',	'PlayerSex/PlayerSexView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'356',	'PlayerShow',	'RoleSkinComm/PlayerShowView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'357',	'CRoleDisplayMain',	'CRoleDisplay/CRoleDisplayMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
@@ -450,6 +450,9 @@ local conf = {
 {'440',	'SilentDownload',	'SilentDownload/SilentDownloadView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
 {'441',	'SelectSlotBox',	'EquipInfo/SelectSlotBox',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 {'442',	'MissionReward',	'Mission2/MissionRewardView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'443',	'DungeonActivity13',	'DungeonActivity13/DungeonActivityView13',	'',	'',	'[[10107],[12013,140027]]',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'444',	'DungeonSummer2',	'DungeonActivity13/DungeonSummer2View',	'',	'',	'[[10107],[12013,140027]]',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'445',	'ExplorationBuy2',	'Exploration/ExplorationBuy2',	'',	'',	'',	'',	'',	'',	'',	'',	'-1',	'1',	''},
 },
 }
 --cfgview = conf

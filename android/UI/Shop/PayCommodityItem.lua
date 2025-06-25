@@ -2,6 +2,7 @@
 -- local grid=nil;
 local currPrice=nil;
 local rmbIcon=nil;
+local SDKdisplayPrice=nil;
 function Refresh(_data,_elseData)
     this.data=_data;
     this.elseData=_elseData;
@@ -10,6 +11,7 @@ function Refresh(_data,_elseData)
     local getList=this.data:GetCommodityList();
     SetDiscount(this.data:GetNowDiscountTips())
     rmbIcon=this.data:GetCurrencySymbols();
+    SDKdisplayPrice=this.data:GetSDKdisplayPrice();
     local isOver=this.data:IsOver();
     local cost=this.data:GetRealPrice();
     if cost and cost[1].id==-1 then
@@ -25,6 +27,11 @@ function Refresh(_data,_elseData)
     SetOrgPrice();
 end
 
+function SetSDKdisplayPrice(TxtUI)
+    if CSAPI.IsADV() then
+        if SDKdisplayPrice~=nil then CSAPI.SetText(TxtUI,SDKdisplayPrice); end
+    end
+end
 
 function SetLockObj(isLock,lockDesc)
     CSAPI.SetGOActive(lockObj,isLock);
@@ -60,7 +67,7 @@ function SetOrgPrice()
                 end
             else
                 CSAPI.SetGOActive(dsMoneyIcon,false);
-                CSAPI.SetText(txt_dsRmb,rmbIcon);
+                CSAPI.SetText(txt_dsRmb,this.data:GetCurrencySymbols(true));
                 CSAPI.SetGOActive(txt_dsRmb,true);
             end
         --     CSAPI.SetTextColorByCode(txt_price,"FFC146");
@@ -82,13 +89,15 @@ function SetCost(cost,isOver)
         CSAPI.SetGOActive(priceObj,false);
         CSAPI.SetGOActive(priceObj2,false);
         CSAPI.SetGOActive(priceObj3,false);
-        CSAPI.SetGOActive(freeObj,false);
+        CSAPI.SetGOActive(freeObj,true);
+        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18012));
         do return end
     end
     if cost then
         if currPrice==priceObj2 then
             CSAPI.SetText(txt_rmb,rmbIcon)
             CSAPI.SetText(txt_rmbVal,tostring(cost[1].num));
+            SetSDKdisplayPrice(txt_rmbVal);
         elseif currPrice==priceObj then
             local cfg = Cfgs.ItemInfo:GetByID(cost[1].id,true);
             if cfg and cfg.icon then
@@ -97,6 +106,7 @@ function SetCost(cost,isOver)
                 LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
             end
             CSAPI.SetText(txt_price,tostring(cost[1].num));
+            SetSDKdisplayPrice(txt_price);
         else
             local cfg = Cfgs.ItemInfo:GetByID(cost[1].id);
             if cfg and cfg.icon then
@@ -105,6 +115,7 @@ function SetCost(cost,isOver)
                 LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
             end
             CSAPI.SetText(txt_price3,tostring(cost[1].num));
+            SetSDKdisplayPrice(txt_price3);
         end
         if cost[1].num>0 then
             CSAPI.SetGOActive(freeObj,false);
@@ -116,12 +127,14 @@ function SetCost(cost,isOver)
             CSAPI.SetGOActive(priceObj2,false);
             CSAPI.SetGOActive(priceObj3,false);
             CSAPI.SetGOActive(freeObj,true);
+            CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
         end
     else
         CSAPI.SetGOActive(priceObj,false);
         CSAPI.SetGOActive(priceObj2,false);
         CSAPI.SetGOActive(priceObj3,false);
         CSAPI.SetGOActive(freeObj,true);
+        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
     end
 end
 

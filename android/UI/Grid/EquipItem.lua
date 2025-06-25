@@ -6,6 +6,9 @@ local selectType = 1;
 local slotObjs={};
 local canvasGroup=nil;
 local goNewCanvas=nil;
+local holdTime=0;
+local longHoldTime=0.8;
+
 function Awake()
 	txtCount = ComUtil.GetCom(txt_count, "Text");
 	clickImg = ComUtil.GetCom(clickNode, "Image");
@@ -40,6 +43,7 @@ function Clean()
 	SetSlot();
 	SetSelectLock(false);
     SetSlotColor();
+	CSAPI.SetScale(clickNode,1,1,1)
 end
 
 --加载框
@@ -264,6 +268,8 @@ function OnRecycle()
 	goRect.anchorMin = UnityEngine.Vector2(0.5,0.5)
 	CSAPI.SetRectSize(gameObject, 222, 222);
 	this.callBack = nil;
+	this.holdCallBack=nil;
+	this.holdTime=0;
 	this.removeFunc = nil;
 end
 
@@ -299,6 +305,19 @@ function OnClick()
 		CSAPI.PlayUISound("ui_generic_click_daoju");
 		this.callBack(this);
 	end
+end
+
+function OnHold()
+	if this.holdCallBack~=nil then
+		CSAPI.PlayUISound("ui_generic_click_daoju");
+		this.holdCallBack(this);
+	elseif this.callBack~=nil then
+		OnClick();
+	end
+end
+
+function SetHoldCB(func)
+	this.holdCallBack=func;
 end
 
 function SetClickCB(func)
@@ -417,6 +436,26 @@ function OnClickRemove()
 	if this.removeFunc then
 		this.removeFunc(this);
 	end
+end
+
+function OnPressDown()
+	holdTime = Time.unscaledTime;
+end
+
+function Update()
+	if holdTime~=0 and Time.unscaledTime - holdTime >= longHoldTime then
+		--长按
+		OnHold();
+		holdTime=0;
+	end
+end
+
+function OnPressUp()
+	if Time.unscaledTime - holdTime < longHoldTime then
+		--短按
+		OnClick();
+	end
+	holdTime=0;
 end
 
 --空状态待添加

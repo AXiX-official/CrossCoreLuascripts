@@ -430,11 +430,11 @@ function this:IsDungeonOpen(id)
         LogError("检测副本开启状态失败！id无效");
     end
 
-    --	local dungeonData = self:GetDungeonData(id);
-    --	if(dungeonData and dungeonData:GetStar() > 0) then
-    --		--存在副本数据，表示已经通关，自然就是开启了的
-    --		return true;
-    --	end
+    local dungeonData = self:GetDungeonData(id);
+    --存在副本数据，表示已经通关，自然就是开启了的
+    if dungeonData and dungeonData:IsPass() then
+        return true
+    end
     local cfgDungeon = Cfgs.MainLine:GetByID(id);
     if (cfgDungeon) then
         if (cfgDungeon.LockLevel and PlayerClient:GetLv() < cfgDungeon.LockLevel) then

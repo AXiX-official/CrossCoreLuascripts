@@ -733,6 +733,71 @@ function BuffMgr:AlterBufferByID(caster, card, group, num)
 	end	
 end
 
+
+-- 增加或减少随机一个buff的回合
+function BuffMgr:AlterRandBufferByGroup(caster, card, group, num)
+	LogDebugEx("BuffMgr:AlterRandBufferByGroup", self.card.name, group, num)
+	
+	local list = {}
+
+	for i,v in ipairs(self.list) do
+		if v.goodOrBad == group and v.round then
+			table.insert(list,v)
+		end
+	end
+
+	if #list > 0 then
+		local rNum = math.random(1,#list)
+		local bf = list[rNum]
+		if bf then
+			bf.round = bf.round + num
+			self.log:Add({api="UpdateBuffer", bufferID = bf.id, uuid = bf.uuid, round = bf.round})
+		end
+	end
+end
+
+
+function BuffMgr:AlterRandBufferByID(caster, card, group, num)
+	LogDebugEx("BuffMgr:AlterRandBufferByID", self.card.name, group, num)
+	
+	local list = {}
+
+	for i,v in ipairs(self.list) do
+		if v.id == group and v.round then
+			table.insert(list,v)
+		end
+	end
+
+	if #list > 0 then
+		local rNum = math.random(1,#list)
+		local bf = list[rNum]
+		if bf then
+			bf.round = bf.round + num
+			self.log:Add({api="UpdateBuffer", bufferID = bf.id, uuid = bf.uuid, round = bf.round})
+		end
+	end
+end
+
+function BuffMgr:AlterRandBufferByType(caster, card, type, num)
+	LogDebugEx("BuffMgr:AlterRandBufferByType", self.card.name, type, num)
+	
+	local list = {}
+
+	for i,v in ipairs(self.list) do
+		if v.type == type and v.round then
+			table.insert(list,v)
+		end
+	end
+
+	if #list > 0 then
+		local rNum = math.random(1,#list)
+		local bf = list[rNum]
+		if bf then
+			bf.round = bf.round + num
+			self.log:Add({api="UpdateBuffer", bufferID = bf.id, uuid = bf.uuid, round = bf.round})
+		end
+	end
+end
 -----------------------------------------------
 -- buffer基类
 BuffBase = oo.class(FightAPI)

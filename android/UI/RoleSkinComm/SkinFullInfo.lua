@@ -25,7 +25,7 @@ local shopPriceKey=ShopPriceKey.jCosts;
 local bindComm=nil;
 local asmrClicker=nil;
 local rmbIcon=nil;
-
+local SDKdisplayPrice=nil;
 function Awake()
     layout = ComUtil.GetCom(hsv, "UISV")
     layout:Init("UIs/RoleSkinComm/SkinInfoItem", LayoutCallBack, true)
@@ -82,6 +82,7 @@ function Refresh()
             end
             comm=ShopCommFunc.GetSkinCommodity(currSkinInfo:GetModelID());
             rmbIcon=comm:GetCurrencySymbols();
+            SDKdisplayPrice=comm:GetSDKdisplayPrice();
             --屏蔽
             local useL2d=false;
             isShowImg=false;
@@ -194,6 +195,7 @@ function SetPriceNode(isShow)
         end
         CSAPI.SetText(txt_dPrice1,tostring(cost.num));
         CSAPI.SetText(txt_dPrice2,tostring(cost2.num));
+        if SDKdisplayPrice~=nil then CSAPI.SetText(txt_dPrice1,tostring(SDKdisplayPrice)); end
     end
     if isShow then
         SetPriceNodeStyle();
@@ -236,7 +238,6 @@ function SetContent()
             CSAPI.SetGOActive(btnCurrent,isSuit);
             CSAPI.SetGOActive(btnSuit,not isSuit);
             CSAPI.SetText(txtS1,LanguageMgr:GetByID(18061));
-            CSAPI.SetText(txtS2,LanguageMgr:GetByType(18061,4));
             local lid=isSuit and 18064 or 18065;
             CSAPI.SetText(txt_tips,LanguageMgr:GetByID(lid));
             SetClickFuncS(OnClickEquip);
@@ -250,7 +251,6 @@ function SetContent()
     else 
         if getType==SkinGetType.Store then
             CSAPI.SetText(txtS1,LanguageMgr:GetByID(1007));
-            CSAPI.SetText(txtS2,LanguageMgr:GetByType(1007,4));
             if comm~=nil and comm:GetNowTimeCanBuy() then
                 if comm:GetBundlingType()==ShopCommBindType.Bindling and bindComm then
                     CSAPI.SetText(txt_tips,string.format(LanguageMgr:GetByID(18123),curModelCfg.key,curModelCfg.desc,bindComm:GetName()));
@@ -276,14 +276,12 @@ function SetContent()
             end
         elseif getType==SkinGetType.Archive then
             CSAPI.SetText(txtS1,LanguageMgr:GetByID(18062));
-            CSAPI.SetText(txtS2,LanguageMgr:GetByType(18062,4));
             CSAPI.SetText(txt_tips,getTips);--暂用
             SetClickFuncS(OnClickJump);
             CSAPI.SetGOActive(btnCurrent,false);
             CSAPI.SetGOActive(btnSuit,true);
         elseif getType==SkinGetType.Other then
             CSAPI.SetText(txtS1,LanguageMgr:GetByID(18063));
-            CSAPI.SetText(txtS2,LanguageMgr:GetByType(18063,4));
             CSAPI.SetText(txt_tips,getTips);
             SetClickFuncS(OnClickJump);
             CSAPI.SetGOActive(btnCurrent,false);
@@ -321,7 +319,7 @@ function SetOrgPrice()
                 end
             else
                 CSAPI.SetGOActive(dsMoneyIcon,false);
-                CSAPI.SetText(txt_dsRmb,rmbIcon)
+                CSAPI.SetText(txt_dsRmb,comm:GetCurrencySymbols(true))
                 CSAPI.SetGOActive(txt_dsRmb,true);
             end
             -- CSAPI.SetTextColorByCode(txt_price,"FFC146");

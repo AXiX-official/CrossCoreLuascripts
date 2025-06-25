@@ -102,6 +102,8 @@ local conf = {
 {'PuzzleActivity',	'PuzzleActivity',	'1',	'1',	'886,-130',	'',	'74025,74026',	'',	''},
 {'SignInDuanWu',	'SignInDuanWu',	'1',	'1',	'487,-72',	'',	'13022,13023',	'',	''},
 {'SkinRebate',	'SkinRebate',	'1',	'1',	'487,-72',	'',	'45022,45023',	'',	''},
+{'EquipStreng',	'EquipStreng',	'1',	'1',	'487,-72',	'3001,3002,3003,3004',	'',	'',	''},
+{'LuckyGachaMain',	'LuckyGachaMain',	'1',	'1',	'487,-72',	'',	'67022,67023',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

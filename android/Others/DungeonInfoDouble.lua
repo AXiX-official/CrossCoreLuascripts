@@ -196,11 +196,14 @@ function SetPos(x,y)
     CSAPI.SetAnchor(doubleObj,x,y)
 end
 
-function SetTextColor(code1,code2)
+function SetTextColor(code1,code2,code3)
     if code1 and code1~="" then
         CSAPI.SetTextColorByCode(txt_double,code1)
     end
     if code2 and code2~="" then
         CSAPI.SetTextColorByCode(txtDouble,code2)
+    end
+    if code3 and code3~="" then
+        CSAPI.SetImgColorByCode(line,code3)
     end
 end

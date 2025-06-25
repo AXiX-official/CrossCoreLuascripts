@@ -10,6 +10,8 @@ local hp=nil;
 local heath=nil;
 local hunger=nil;
 local lBar=nil;
+local eventMgr=nil;
+local redInfo=nil;
 function Awake()
     detailsTween=ComUtil.GetCom(detialsObj,"ActionFadeCurve");
     getsTween=ComUtil.GetCom(getInfoObj,"ActionFadeCurve");
@@ -20,10 +22,22 @@ function Awake()
     layout=ComUtil.GetCom(hpage,"UISlideshow");
     lBar=ComUtil.GetCom(lifeBar,"Image")
     layout:Init("UIs/Pet/PetInfoGrid",LayoutCallBack,true,1)
+    eventMgr = ViewEvent.New();
+    eventMgr:AddListener(EventType.RedPoint_Refresh,SetRedInfo);
+end
+
+
+function OnDestroy()
+    eventMgr:ClearListener();
 end
 
 function Init()
     CleanCache();
+    Refresh();
+end
+
+function SetRedInfo()
+    redInfo=RedPointMgr:GetData(RedPointType.ActiveEntry16);
     Refresh();
 end
 
@@ -79,6 +93,7 @@ function SetPetInfo()
         CSAPI.SetText(txt_get,curPet:GetTxt());
         CSAPI.SetAnchor(btnS2,-40,-329.9);
     else
+        PetActivityMgr:AddUnLockPetList(curPet:GetID()); --记录当前的宠物红点数据
         -- CSAPI.LoadImg(icon,"UIs/Pet/img_04_23.png",true,nil,true);
         ResUtil.PetIcon:Load(icon,curPet:GetIcon())
         local _happy=curPet:GetHappyPercent();
@@ -102,7 +117,16 @@ end
 function LayoutCallBack(idx)
     local _data = curDatas[idx]
     local grid=layout:GetItemLua(idx);
-    grid.Refresh(_data);
+    local isRed=false;
+    if redInfo and redInfo.newPets then
+        for k,v in ipairs(redInfo.newPets) do
+            if v==_data:GetID() then
+                isRed=true;
+                break;
+            end
+        end
+    end 
+    grid.Refresh(_data,isRed);
     grid.SetClickCB(OnClickGrid);
     grid.SetIndex(idx);
 end

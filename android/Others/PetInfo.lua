@@ -275,6 +275,10 @@ function this:GetName()
     return self.cfg and self.cfg.name or "";
 end
 
+function this:GetItem()
+    return self.cfg.item and self.cfg.item or nil;
+end
+
 --是否解锁该宠物
 function this:IsLock()
     local isLock=true;
@@ -392,7 +396,12 @@ function this:GetHappy()
 end
 
 function this:GetHappyPercent()
-    return self:GetHappy()/self:GetFullHappy();
+    local num=self:GetHappy()/self:GetFullHappy()
+    if num~=0 and math.floor(num*100)==0 then
+        return 0.01
+    else
+        return num
+    end
 end
 
 function this:GetWash()
@@ -401,7 +410,13 @@ function this:GetWash()
 end
 
 function this:GetWashPercent()
-    return self:GetWash()/self:GetFullWash();
+    -- return self:GetWash()/self:GetFullWash();
+    local num=self:GetWash()/self:GetFullWash()
+    if num~=0 and math.floor(num*100)==0 then
+        return 0.01
+    else
+        return num
+    end
 end
 
 function this:GetFood()
@@ -410,7 +425,13 @@ function this:GetFood()
 end
 
 function this:GetFoodPercent()
-    return self:GetFood()/self:GetFullFood();
+    -- return self:GetFood()/self:GetFullFood();
+    local num=self:GetFood()/self:GetFullFood()
+    if num~=0 and math.floor(num*100)==0 then
+        return 0.01
+    else
+        return num
+    end
 end
 
 function this:GetFullHappy()

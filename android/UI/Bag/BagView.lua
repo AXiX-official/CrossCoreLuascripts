@@ -378,6 +378,7 @@ function SetMaterialLayout()
 		-- CSAPI.SetGOActive(tagNode,true);
 		CSAPI.SetGOActive(btnCancelSellBtn,false);
 		CSAPI.SetGOActive(sellTips,false);
+		CSAPI.SetGOActive(btnWork,false);
 	end
 end
 
@@ -394,6 +395,7 @@ function SetEquipLayout()
 		CSAPI.SetGOActive(btnCancelSellBtn,false);
 		CSAPI.SetGOActive(sellBtnOnAnima,false);
 		CSAPI.SetGOActive(sellTips,false);
+		CSAPI.SetGOActive(btnWork,currTab==BagOpenSetting.Equipped);
 		SetSellStyle(1);
 	elseif bagType==EquipBagType.Sell then
 		CSAPI.SetGOActive(btn_sell, true);
@@ -407,6 +409,7 @@ function SetEquipLayout()
 		CSAPI.SetGOActive(btnCancelSellBtn,true);
 		CSAPI.SetGOActive(sellTips,true);
 		CSAPI.SetGOActive(sellBtnOnAnima,true);
+		CSAPI.SetGOActive(btnWork,false);
 		SetSellStyle(2);
 	elseif bagType==EquipBagType.Remould then
 		CSAPI.SetText(txt_sell, LanguageMgr:GetByID(24000));
@@ -420,6 +423,7 @@ function SetEquipLayout()
 		CSAPI.SetGOActive(tagNode,false);
 		CSAPI.SetGOActive(btnCancelSellBtn,false);
 		CSAPI.SetGOActive(sellTips,false);
+		CSAPI.SetGOActive(btnWork,false);
 	elseif bagType==EquipBagType.Strength then
 		CSAPI.SetText(txt_sell, LanguageMgr:GetByID(24000));
 		CSAPI.SetText(txt_sell2, LanguageMgr:GetByID(24001));
@@ -432,6 +436,7 @@ function SetEquipLayout()
 		-- CSAPI.SetGOActive(tagNode,true);
 		CSAPI.SetGOActive(btnCancelSellBtn,false);
 		CSAPI.SetGOActive(sellTips,false);
+		CSAPI.SetGOActive(btnWork,false);
 	elseif bagType==EquipBagType.Lock then
 		CSAPI.SetGOActive(btn_sell, false);
 		CSAPI.SetGOActive(btnLock,false);
@@ -442,6 +447,7 @@ function SetEquipLayout()
 		-- CSAPI.SetGOActive(tagNode,false);
 		CSAPI.SetGOActive(btnCancelSellBtn,false);
 		CSAPI.SetGOActive(sellTips,false);
+		CSAPI.SetGOActive(btnWork,false);
 	end
 	-- SetCount(#curDatas, EquipMgr.maxSize);
 end
@@ -679,14 +685,22 @@ end
 --背包数据更新
 function OnBagChange(isMoney)
 	if GetBagBaseType()==BagType.Material and isMoney ~=true then
-		curModule.Refresh();
+		if sv.activeSelf then
+			curModule.Refresh();
+		end
 	end
 end
 
 function OnEquipChange()
 	if GetBagBaseType()==BagType.Equipped and curModule and bagType~=EquipBagType.Sell and bagType~=EquipBagType.Strength then
-		curModule.Refresh();
+		if sv2.activeSelf then
+			curModule.Refresh();
+		end
 	end
+end
+
+function OnClickWork()
+	CSAPI.OpenView("EquipStreng");
 end
 
 --点击自动选择

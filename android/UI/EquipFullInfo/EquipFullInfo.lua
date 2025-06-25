@@ -184,6 +184,10 @@ end
 
 --强化
 function OnStrength()
+    if EquipMgr:CheckIsRefreshLast(data:GetID()) then
+        view:Close();
+		do return end
+	end
     if CanEdit() then
         if data:GetLv()>=data:GetMaxLv() then
             Tips.ShowTips(LanguageMgr:GetTips(12008));
@@ -221,6 +225,10 @@ end
 
 --出售
 function OnSell()
+    if EquipMgr:CheckIsRefreshLast(data:GetID()) then
+        view:Close();
+		do return end
+	end
     if data:IsLock() and openSetting==1 then
         return;
     end

@@ -18,11 +18,6 @@ function Buffer704301301:OnBefourCritHurt(caster, target)
 	else
 		return
 	end
-	-- 8213
-	if SkillJudger:IsCrit(self, self.caster, target, true) then
-	else
-		return
-	end
 	-- 704301301
-	self:AddTempAttr(BufferEffect[704301301], self.caster, self.caster, nil, "damage",-0.35)
+	self:AddTempAttr(BufferEffect[704301301], self.caster, self.caster, nil, "crit",-0.35)
 end

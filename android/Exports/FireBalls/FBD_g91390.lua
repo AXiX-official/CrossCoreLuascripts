@@ -43,6 +43,10 @@ time=2000,type=0
 [1349028111]={
 effect="cast0_hit",time=4000,type=0,pos_ref={ref_type=4,part_index=0}
 },
+[-316323548]={
+{effect="deadLarge_common_eff",effect_pack="common",delay=2716,time=6000,type=0,pos_ref={ref_type=6}},
+{time=6000,type=0,cue_sheet="fight/effect/nineth.acb",cue_name="Censor_Die"}
+},
 [-1328923786]={
 {effect="win",delay=766,time=2000,type=0,pos_ref={ref_type=6}}
 }

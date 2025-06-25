@@ -9,7 +9,8 @@ end
 
 function RefreshPanel()
     cfg = Cfgs.CfgCardPool:GetByID(poolId)
-    cur1 = BagMgr:GetCount(g_CreateSpendID)
+    local id = cnt==1 and cfg.jCost[1][1] or cfg.multiCost[1][1] --抽卡劵id  --g_CreateSpendID
+    cur1 = BagMgr:GetCount(id)
     needNum = cnt - cur1 -- 还需要的抽卡卷的数量
     local eCfg = Cfgs.CfgItemExchange:GetByID(cfgID)
     cost = eCfg.costs[1] -- 兑换物
@@ -114,7 +115,7 @@ function OnClickR()
     end
 end
 function ChangeCB(proto)
-    if (cfgID == 1002) then
+    if (cfgID ~= 1003) then
         if (proto.rewards and #proto.rewards > 0) then
             CreateMgr:CardCreate(poolId, cnt)
         end

@@ -36,12 +36,15 @@ function OnInit()
     --
     -- SetTop2()
     eventMgr:AddListener(EventType.Update_Everyday, RefreshPanel)
+    eventMgr:AddListener(EventType.Choice_Card_Ret, function()
+        local _curIndex = curIndex
+        curIndex = nil
+        ClickBtnItemCB(_curIndex)
+    end)
 end
 
 function OnDestroy()
     eventMgr:ClearListener()
-
-    ReleaseCSComRefs()
 end
 
 -- 开箱动画是否隐藏跳过按钮
@@ -102,6 +105,22 @@ function RefreshPanel()
     SetDatas()
     SetItems()
     CheckTime()
+end
+
+-- 自选卡池会改变顶部
+function SetMoney()
+    local moenys = {}
+    local _id = curData:GetCostID()
+    if (_id ~= 11002) then
+        moenys = {{10002}, {10040}, {_id}}
+    else
+        if (not Show_CurrencyType) then
+            local cfg = Cfgs.view:GetByKey("CreateView")
+            Show_CurrencyType = cfg.Show_CurrencyType
+        end
+        moenys = Show_CurrencyType
+    end
+    top.SetMoney(moenys)
 end
 
 -- 通关1002前把卡池1001放最前面
@@ -169,9 +188,21 @@ function ClickBtnItemCB(index)
 
     curData = datas[curIndex]
 
-    -- SetCreateBuild()
-    -- bg
-    SetBgs()
+    isSelectPool = curData:IsSelectPool()
+
+    CSAPI.SetGOActive(obj15, not isSelectPool)
+    CSAPI.SetGOActive(obj6, isSelectPool)
+    SetBg()
+    if (isSelectPool) then
+        SetObj6()
+    else
+        -- icons
+        SetIcons()
+        -- effect 卡池特效
+        SetEffect()
+    end
+    -- 查看按钮
+    SetLookItems()
 
     -- 底部按钮
     SetDowns()
@@ -179,21 +210,60 @@ function ClickBtnItemCB(index)
     -- 首抽未完
     SetContinue()
 
-    -- 累计抽卡界面 当前版本没有
-    -- ECardCoolCntsUpdate()
-    -- 保底列表
+    -- 左侧
+    SetLeft()
+
+    -- 保底信息
     SetBtnBD()
 
-    -- 查看按钮
-    SetLookItems()
+    SetRight()
 
-    -- effect 卡池特效
-    SetEffect()
-
-    --
-    SetShowTime()
     -- 每日免费抽卡
     SetFree()
+
+    --
+    SetMoney()
+end
+
+function SetObj6()
+    local b = curData:IsSelectRole()
+    CSAPI.SetGOActive(empty6, not b)
+    CSAPI.SetGOActive(entity6, b)
+    if (b) then
+        local cids = curData:GetChoiceCids()
+        local model1 = Cfgs.CardData:GetByID(cids[1]).model
+        RoleTool.LoadImg(imgRole1, model1)
+        local model2 = Cfgs.CardData:GetByID(cids[2]).model
+        RoleTool.LoadImg(imgRole2, model2)
+        --
+        local datas35 = {}
+        for k = 3, 5 do
+            if (cids[k]) then
+                local _data = RoleMgr:GetFakeData(cids[k])
+                table.insert(datas35, _data)
+            else
+                table.insert(datas35, {})
+            end
+        end
+        items35 = items35 or {}
+        ItemUtil.AddItems("Create/CreateRoleCard", items35, datas35, grids35, nil, 1, false)
+    end
+end
+
+function SetRight()
+    -- 卡池时间 
+    SetShowTime()
+end
+
+function SetLeft()
+    -- 累计抽卡界面 当前版本没有
+    -- ECardCoolCntsUpdate()
+    --
+    local b = false
+    if (isSelectPool and curData:IsSelectRole()) then
+        b = true
+    end
+    CSAPI.SetGOActive(type6Tips, b)
 end
 
 function SetFree()
@@ -277,17 +347,30 @@ function SetEffect()
 end
 
 function SetLookItems()
-    local look_cards = curData:GetCfg().look_cards or {}
-    lookItems = lookItems or {}
-    ItemUtil.AddItems("Create/CreateLookItem", lookItems, look_cards, icon)
+    if (isSelectPool) then
+        local look_cards = curData:GetCfg().look_cards or {}
+        lookItems2 = lookItems2 or {}
+        ItemUtil.AddItems("Create/CreateLookItem2", lookItems2, look_cards, entity6)
+    else
+        local look_cards = curData:GetCfg().look_cards or {}
+        lookItems = lookItems or {}
+        ItemUtil.AddItems("Create/CreateLookItem", lookItems, look_cards, icon)
+    end
 end
 
-function SetBgs()
-    -- bg 
-    local scale = UIUtil:SetPerfectScale(bg) -- 适配大小
+function SetBg()
+    local baseScale = isSelectPool and {2560, 1080} or {1920, 1080}
+    local scale = UIUtil:SetPerfectScale(bg, baseScale) -- 适配大小
     UIUtil:SetObjScale(bg, scale + 0.1, scale, scale + 0.1, scale, 1, 1, nil, 500, 1)
-    ResUtil:LoadBigImg(bg, "UIs/Create/" .. curData:GetCfg().bg .. "/bg", true)
+    if (isSelectPool) then
+        local bgName = curData:IsSelectRole() and "bg_zx01" or "bg_zx02"
+        ResUtil:LoadBigImg(bg, "UIs/Create/" .. bgName .. "/bg", true)
+    else
+        ResUtil:LoadBigImg(bg, "UIs/Create/" .. curData:GetCfg().bg .. "/bg", true)
+    end
+end
 
+function SetIcons()
     local icon3Str = curData:GetCfg().icon3
     -- icon1 
     local nType = UIUtil:GetSceneType()
@@ -312,58 +395,21 @@ function SetBgs()
     end
 end
 
--- --创建建筑面板
--- function SetCreateBuild()
--- 	if(curData) then
--- 		--SetLeft()
--- 		--SetRole()
--- 		SetRight()
--- 	end
--- end
--- function SetLeft()
--- 	--time
--- 	SetTime()
--- 	--模型图
--- 	--SetModelInfo()
--- end
---[[function SetTime()
-	needTime2 = curData:GetEndTime()
-	if(needTime2) then
-		needTime2 = needTime2 - TimeUtil:GetTime()
-		needTime2 = needTime2 > 0 and needTime2 or nil
-	else
-		needTime2 = nil
-	end
-	if(not needTime2) then
-		CSAPI.SetText(txtTime1, "")
-		CSAPI.SetText(txtTime2, "")
-	else
-		local timeDatas = TimeUtil:GetTimeTab(needTime2)
-		CSAPI.SetText(txtTime1, "剩余时间")
-		CSAPI.SetText(txtTime2, string.format("%s天%s时%s分", timeDatas[1], timeDatas[2], timeDatas[3]))
-	end
-end
-]]
--- function SetModelInfo()
--- 	local iconName = curData:GetCfg().cardeModel
--- 	CSAPI.SetGOActive(btnLook, iconName ~= nil)
--- 	if(iconName) then
--- 		ResUtil.Kacha:Load(btnLook, iconName)
--- 	end
--- end
--- function SetRole()
--- 	local cfgid = curData:GetCfg().coverCardId
--- 	local cardCfg =	Cfgs.CardData:GetByID(cfgid)
-
--- end
--- function SetRight()
--- 	--展示卡牌的信息
--- 	SetCardInfo()
--- end
 function SetDowns()
+    local b4 = false
+    if (isSelectPool and not curData:IsSelectRole()) then
+        b4 = true
+    end
+    CSAPI.SetGOActive(btns, not b4)
+    if (not b4) then
+        SetDwon()
+    else
+        CSAPI.SetGOActive(btnTips, false)
+    end
+end
+
+function SetDwon()
     local conditions = curData:GetCfg().conditions
-    -- CSAPI.SetGOActive(down, conditions == nil)
-    -- CSAPI.SetGOActive(down2, conditions ~= nil)	
     if (conditions and curData:GetCfg().nType == 1) then
         SetDown2(conditions)
     else
@@ -391,6 +437,8 @@ function SetDown1()
         CSAPI.LoadImg(spend1, "UIs/Create/" .. spendName .. ".png", true, nil, true)
         -- CSAPI.SetGOActive(spend1, jCost ~= nil)
         -- CSAPI.SetGOActive(icon1, jCost ~= nil)
+        local goodsCfg = Cfgs.ItemInfo:GetByID(jCost[1][1])
+        ResUtil.IconGoods:Load(icon1, goodsCfg.icon .. "_1", true)
     end
     -- r 
     local multiCnt = curData:GetCfg().multiCnt
@@ -401,6 +449,8 @@ function SetDown1()
         CSAPI.LoadImg(spend2, "UIs/Create/" .. spendName .. ".png", true, nil, true)
         -- CSAPI.SetGOActive(spend2, multiCost ~= nil)
         -- CSAPI.SetGOActive(icon2, multiCost ~= nil)
+        local goodsCfg = Cfgs.ItemInfo:GetByID(multiCost[1][1])
+        ResUtil.IconGoods:Load(icon2, goodsCfg.icon .. "_1", true)
     end
 end
 
@@ -419,6 +469,10 @@ function SetDown2(conditions)
     local multiCost = curData:GetCfg().multiCost
     local spendName = multiCost ~= nil and "btn_5_03" or "btn_5_04"
     CSAPI.LoadImg(spend3, "UIs/Create/" .. spendName .. ".png", true, nil, true)
+
+    -- local goodsCfg = Cfgs.ItemInfo:GetByID(multiCost[1][1])
+    -- ResUtil.IconGoods:Load(icon3, goodsCfg.icon.."_1", true)
+
     -- CSAPI.SetGOActive(spend3, multiCost ~= nil)
     -- CSAPI.SetGOActive(icon3, multiCost ~= nil)
     -- lock str
@@ -511,13 +565,17 @@ function CheckEndough(costs, cnt)
     end
     if (enough == false) then
         -- 微晶是否足够
-        local count = CreateMgr:GetExchangeCount(1002)
-
-        local costData = costs and costs[1];
-        local have = BagMgr:GetCount(costData and costData[1]) or 0;
-
-        local cfgID = have + count >= cnt and 1002 or 1003
-        CSAPI.OpenView("CreateBuy", {curData:GetCfg().id, cnt, cfgID})
+        local exchageID = curData:GetExchangeID()
+        if exchageID then
+            local count = CreateMgr:GetExchangeCount(exchageID) -- 可兑换的数量
+            local costData = costs and costs[1];
+            local have = BagMgr:GetCount(costData and costData[1]) or 0;
+            local cfgID = 1003
+            if (have + count >= cnt) then
+                cfgID = exchageID
+            end
+            CSAPI.OpenView("CreateBuy", {curData:GetCfg().id, cnt, cfgID})
+        end
     end
     return enough, str
 end
@@ -618,7 +676,7 @@ function Create(_str, _cnt)
             else
                 LanguageMgr:ShowTips(10015)
             end
-        end,nil,17031)
+        end, nil, 17031)
         --
         -- CSAPI.OpenView("CreateSelectPanel", {
         --     content = str,
@@ -631,8 +689,12 @@ function Create(_str, _cnt)
 end
 
 function SetBtnBD()
-    CSAPI.SetGOActive(bdPanel, curData:GetCfg().sel_card_ids ~= nil)
-    if (not bdPanel.activeSelf) then
+    local b = true
+    if (isSelectPool or curData:GetCfg().sel_card_ids == nil) then
+        b = false
+    end
+    CSAPI.SetGOActive(bdPanel, b)
+    if (not b) then
         return
     end
     local ix = curData:GetCfg().def_sel_card_ix
@@ -738,6 +800,15 @@ end
 -- 保底选择
 function OnClickBD()
     CSAPI.OpenView("CreateBDPanel", curData)
+end
+
+-- 开始选择
+function OnClickSelect()
+    CSAPI.OpenView("CreateSelectRolePanel", curData:GetID())
+end
+
+function OnClickCX()
+    CSAPI.OpenView("CreateSelectRolePanel", curData:GetID())
 end
 
 --------------------------------拖拽-----------------------------------------------------------
@@ -907,51 +978,3 @@ function OnClickChildTips()
 end 
 
 ]]
-----#Start#----
-----释放CS组件引用（生成时会覆盖，请勿改动，尽量把该内容放置在文件结尾。）
-function ReleaseCSComRefs()
-    gameObject = nil;
-    transform = nil;
-    this = nil;
-    bg = nil;
-    icon = nil;
-    maskL = nil;
-    maskR = nil;
-    left = nil;
-    timeObj = nil;
-    txtTime1 = nil;
-    txtTime2 = nil;
-    childPanel = nil;
-    Slider = nil;
-    txtChild1 = nil;
-    txtChild2 = nil;
-    txtChild3 = nil;
-    txtChild4 = nil;
-    txtChild5 = nil;
-    btnChildCreate = nil;
-    txtChildCreate = nil;
-    txtChildInfo = nil;
-    txtChildTips = nil;
-    right = nil;
-    Text = nil;
-    grid = nil;
-    btn1 = nil;
-    spend1 = nil;
-    icon1 = nil;
-    txtExpend1 = nil;
-    btn2 = nil;
-    spend2 = nil;
-    icon2 = nil;
-    txtExpend2 = nil;
-    btn3 = nil;
-    icon3 = nil;
-    spend3 = nil;
-    lock = nil;
-    imgLock = nil;
-    txtLock = nil;
-    txtExpend3 = nil;
-    btnTips = nil;
-    txtTips = nil;
-    view = nil;
-end
-----#End#----

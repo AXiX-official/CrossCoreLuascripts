@@ -7,7 +7,7 @@ end
 
 function Init(str,isComplete)
     CSAPI.SetText(txt_desc,str);
-    txtMove:SetMove();
+    --txtMove:SetMove();
     CSAPI.SetGOActive(tick,isComplete);
     textGradient.enabled=isComplete;
     if isComplete then

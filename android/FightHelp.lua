@@ -437,7 +437,12 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     local exData = nil
     local np = player.oLifeBufMgr:GetBufAddVal('army_np_add')
     -- tMirror.nEnterNp = tMirror.nEnterNp or 0
-    exData = {nEnterNp = {np, tMirror.nEnterNp or 0}}
+    exData = {nEnterNp = {np, tMirror.nEnterNp or 0},
+    emotes = {
+        tData.icon_emotes or table.copy(g_BattleFaceSet),
+        tMirror.icon_emotes or table.copy(g_BattleFaceSet),
+        }
+    }
 
     mgr:SetStepLimit(g_sPVPMirrorStepLimit)
     mgr:AfterLoadData(exData or {})
@@ -457,7 +462,8 @@ function FightHelp:GetPvpDataFromPlr(plr, nTeamIndex)
     local tData = {
         uid = plr:Get('uid'),
         data = {},
-        nEnterNp = plr.oLifeBufMgr:GetBufAddVal('army_np_add')
+        nEnterNp = plr.oLifeBufMgr:GetBufAddVal('army_np_add'),
+        icon_emotes = plr:GetMix('icon_emotes') or  table.copy(g_BattleFaceSet)
     }
 
     local oCardMgr = plr.oCardMgr

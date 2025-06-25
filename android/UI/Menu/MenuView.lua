@@ -88,7 +88,9 @@ local skinRebateTime = nil
 local skinRebateShowTime = nil
 local skinRebateRefreshTime = nil
 local questionnaireTime = nil
-local puzzleNextInfo=nil;
+local puzzleNextInfo = nil;
+local isShowSpineUI = false
+
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
     fill_lv = ComUtil.GetCom(fillLv, "Image")
@@ -193,10 +195,12 @@ function InitListener()
     end)
     -- 皮肤返利
     eventMgr:AddListener(EventType.Activity_SkinRebate_Refresh, SetSkinRebate)
-    eventMgr:AddListener(EventType.Menu_Questionnaire, function ()
+    eventMgr:AddListener(EventType.Menu_Questionnaire, function()
         questionnaireTime = QuestionnaireMgr:GetRefreshTime()
     end)
-    eventMgr:AddListener(EventType.Puzzle_Data_Ret,SetLTSV)
+    eventMgr:AddListener(EventType.Puzzle_Data_Ret, SetLTSV)
+    -- spineUI动画进入与退出
+    eventMgr:AddListener(EventType.Menu_SpineUI, SpineUI)
 end
 
 function OnDestroy()
@@ -207,7 +211,7 @@ end
 
 function Update()
     -- 展示立绘 
-    if (isHideUI) then
+    if (isHideUI and not isShowSpineUI) then
         if (CS.UnityEngine.Input.GetMouseButton(0)) then
             showTime = Time.time + 1.5
             CSAPI.SetGOActive(btnBack, true)
@@ -347,11 +351,11 @@ function Update()
         skinLimitTime = nil
         RoleSkinMgr:CheckLimitSkin()
     end
-    --皮肤返利
+    -- 皮肤返利
     if skinRebateTime then
         if skinRebateShowTime then
             local srTimeTab = TimeUtil:GetTimeTab(skinRebateShowTime - curTime)
-            LanguageMgr:SetText(txtSkinRebateTime,34039,srTimeTab[1],srTimeTab[2],srTimeTab[3])
+            LanguageMgr:SetText(txtSkinRebateTime, 34039, srTimeTab[1], srTimeTab[2], srTimeTab[3])
         end
         if curTime > skinRebateTime or (skinRebateRefreshTime and curTime > skinRebateRefreshTime) then
             skinRebateTime = nil
@@ -360,14 +364,14 @@ function Update()
     end
     -- 问卷
     if (questionnaireTime and curTime >= questionnaireTime) then
-        questionnaireTime = nil 
-        QuestionnaireProto:GetInfo(function ()
+        questionnaireTime = nil
+        QuestionnaireProto:GetInfo(function()
             questionnaireTime = QuestionnaireMgr:GetRefreshTime()
         end)
     end
-    if puzzleNextInfo~=nil and curTime>=puzzleNextInfo.time then
+    if puzzleNextInfo ~= nil and curTime >= puzzleNextInfo.time then
         ActivePuzzleProto:GetPuzzleData(puzzleNextInfo.id)
-        puzzleNextInfo=PuzzleMgr:GetNextInfo();
+        puzzleNextInfo = PuzzleMgr:GetNextInfo();
     end
     -- 静默下载
     UpdateSilentDownloadProgress()
@@ -397,7 +401,7 @@ function LoadingComplete()
     RefreshPanel()
     InitListener()
 
-    FuncUtil:Call(InitSilentDownload,nil,1000);
+    FuncUtil:Call(InitSilentDownload, nil, 1000);
 end
 
 function Init()
@@ -418,7 +422,7 @@ function InitTimers()
     bagLimitTime = BagMgr:GetLessLimitTime()
     skinLimitTime = RoleSkinMgr:GetSkinMinLimitTime()
     questionnaireTime = QuestionnaireMgr:GetRefreshTime()
-    puzzleNextInfo=PuzzleMgr:GetNextInfo()
+    puzzleNextInfo = PuzzleMgr:GetNextInfo()
 end
 
 function RefreshPanel()
@@ -486,7 +490,7 @@ function PlayUIAnimEnd()
     if (not b) then
         PlayLoginVoice() -- 登录语音
         VerChecker:ApplyCheck() -- 版本检查
-        CheckInternation() -- 和谐开关
+        -- CheckInternation() -- 和谐开关
     end
 end
 
@@ -957,15 +961,15 @@ end
 -- end
 
 function SetSkinRebate()
-    local isOpen,id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
-    CSAPI.SetGOActive(btnSkinRebate,isOpen)
+    local isOpen, id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+    CSAPI.SetGOActive(btnSkinRebate, isOpen)
     if isOpen then
-        local type,limitTime,rTime = OperationActivityMgr:GetSkinRebateState()
+        local type, limitTime, rTime = OperationActivityMgr:GetSkinRebateState()
         local isRed = ActivityMgr:CheckRed(id) and type ~= SkinRebateType.Lock
-        UIUtil:SetRedPoint(btnSkinRebate,isRed,120,39)
-        CSAPI.SetGOActive(skinRebateLock,type == SkinRebateType.Lock)
-        CSAPI.SetGOActive(skinRebateLimit,type == SkinRebateType.LimitTime)
-        CSAPI.SetGOActive(skinRebateNol,not isRed and type ~= SkinRebateType.Lock)
+        UIUtil:SetRedPoint(btnSkinRebate, isRed, 120, 39)
+        CSAPI.SetGOActive(skinRebateLock, type == SkinRebateType.Lock)
+        CSAPI.SetGOActive(skinRebateLimit, type == SkinRebateType.LimitTime)
+        CSAPI.SetGOActive(skinRebateNol, not isRed and type ~= SkinRebateType.Lock)
         if type == SkinRebateType.LimitTime then
             skinRebateShowTime = limitTime
         end
@@ -1157,9 +1161,9 @@ end
 -------------------------事件--------------------------------------
 -- 其它界面打开
 function OnViewOpened(viewKey)
-    if(viewKey == "CRoleDisplayMain" and attackEffectGO) then 
+    if (viewKey == "CRoleDisplayMain" and attackEffectGO) then
         CSAPI.SetScale(attackEffectGO, 0, 0, 0)
-    end 
+    end
     closeViews = closeViews or {}
     for k, v in ipairs(closeViews) do
         if (v == viewKey) then
@@ -1180,9 +1184,9 @@ end
 
 -- 其它界面关闭
 function OnViewClosed(viewKey)
-    if(viewKey == "CRoleDisplayMain" and attackEffectGO) then 
+    if (viewKey == "CRoleDisplayMain" and attackEffectGO) then
         CSAPI.SetScale(attackEffectGO, 1, 1, 1)
-    end 
+    end
     closeViews = closeViews or {}
     table.insert(closeViews, viewKey)
     if (isApplyRefresh) then
@@ -1233,7 +1237,7 @@ function OnViewCloseds()
     ShowHint(true)
     PlayLoginVoice() -- 登录语音
     VerChecker:ApplyCheck() -- 检测是否强制更新
-    CheckInternation() -- 和谐开关
+    -- CheckInternation() -- 和谐开关
 end
 
 function CheckPopUpWindow()
@@ -1541,12 +1545,12 @@ function OnClickActiveityEnter()
 end
 
 function OnClickSkinRebate()
-    local isOpen,id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+    local isOpen, id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
     if not isOpen then
         return
     end
 
-    CSAPI.OpenView("SkinRebate",id)
+    CSAPI.OpenView("SkinRebate", id)
 end
 
 function OnClickMoney1()
@@ -1583,7 +1587,7 @@ function OnClickSilentDownload()
 end
 
 function InitSilentDownload()
-    
+
     -- 兼容旧包
     local apkVer = tonumber(CSAPI.APKVersion())
     if apkVer > 6 then
@@ -1591,7 +1595,7 @@ function InitSilentDownload()
         if apkVer <= 8 then
             -- 切换静默下载模式
             -- 是否开启了静默自动下载
-            recordMode = PlayerPrefs.GetInt("SilentDownloadMode",0)
+            recordMode = PlayerPrefs.GetInt("SilentDownloadMode", 0)
 
             -- if SilentDownloadMgr:GetInitState() == true then
             --     -- CS.CSAPI.RefreshSilentDownloadState(true)
@@ -1606,27 +1610,31 @@ function InitSilentDownload()
             -- 是否选择过静默下载模式
             recordMode = SilentDownloadMgr:GetDownloadMode()
         end
-        
-        if recordMode == 0 then                
+
+        if recordMode == 0 then
             -- 开始按需下载并且提示选择下载方案
             SilentDownloadMgr:SetDownloadMode(2)
-            if apkVer == 7 then PlayerPrefs.SetInt("SilentDownloadMode", 2); end
+            if apkVer == 7 then
+                PlayerPrefs.SetInt("SilentDownloadMode", 2);
+            end
         elseif recordMode == 3 then
             -- 开启后台自动下载
             SilentDownloadMgr:InitSilentDownloadState(true);
-            SilentDownloadMgr:RefreshCurrentState(true)           
-            if apkVer == 7 then PlayerPrefs.SetInt("SilentDownloadMode", 3); end
+            SilentDownloadMgr:RefreshCurrentState(true)
+            if apkVer == 7 then
+                PlayerPrefs.SetInt("SilentDownloadMode", 3);
+            end
         end
     end
     CSAPI.SetGOActive(btnSilentDownload, false)
 end
 
-function UpdateSilentDownloadProgress() 
+function UpdateSilentDownloadProgress()
     local apkVer = tonumber(CSAPI.APKVersion())
     local percent = apkVer <= 6 and 1 or SilentDownloadMgr:GetInfo_CurrentDownloadProgressPecent()
     CSAPI.SetGOActive(btnSilentDownload, not MenuMgr:GetDownloadRewardState() or percent < 1)
     -- 暂时屏蔽功能入口
-    CSAPI.SetGOActive(btnSilentDownload, false)
+    -- CSAPI.SetGOActive(btnSilentDownload, false)
     if btnSilentDownload.gameObject.activeSelf then
         -- if apkVer <= 6 then
         --     -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
@@ -1635,57 +1643,68 @@ function UpdateSilentDownloadProgress()
         if apkVer ~= nil then
             if apkVer == 7 then
                 -- 7.0版本的包下载进度会有异常，需要特殊处理
-                if SilentDownloadMgr:GetInfo_DownloadSizeTotal() ~= 0 and SilentDownloadMgr:GetInfo_DownloadedSize() == 0 then
+                if SilentDownloadMgr:GetInfo_DownloadSizeTotal() ~= 0 and SilentDownloadMgr:GetInfo_DownloadedSize() ==
+                    0 then
                     percent = 0
                 end
             end
             if percent == 1 or percent == 1.0 or apkVer <= 6 then
                 local isRed = percent >= 1 and not MenuMgr:GetDownloadRewardState()
                 UIUtil:SetRedPoint(btnSilentDownload, isRed, 35, 35)
-                
+
                 -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
                 CSAPI.SetText(silentDownloadProgresstxt, LanguageMgr:GetByID(15038))
                 -- CSAPI.SetGOActive(btnSilentDownload, false)
                 -- LogError("当前下载进度 ： 完成" )
                 -- 刷新downloadBtn    
                 CSAPI.LoadImg(btnSilentDownload, "UIs/Menu/download_btn_01_01.png", true, nil, true)
-                
+
                 local textColor = {255, 193, 70, 255}
-                CSAPI.SetTextColor(silentDownloadProgresstxt.gameObject, textColor[1], textColor[2], textColor[3], textColor[4])
+                CSAPI.SetTextColor(silentDownloadProgresstxt.gameObject, textColor[1], textColor[2], textColor[3],
+                    textColor[4])
             else
                 -- percent = string.format("%.2f", percent * 100)
-                percent = math.floor(percent*100)
+                percent = math.floor(percent * 100)
                 CSAPI.SetText(silentDownloadProgresstxt, percent .. "%")
                 -- LogError("当前下载进度 ： " .. percent .. "%" )
             end
         end
-            
+
     end
 end
 
 function CheckInternation()
     if not CSAPI.IsADV() and (CSAPI.OpenHarmony == nil or CSAPI.Currentplatform ~= CSAPI.OpenHarmony) then
-        local unlockTime_start = TimeUtil:GetTime2(2025,4,1,0,0,0)
-        local unlockTime_end = TimeUtil:GetTime2(2025,4,1,23,59,59)
-        local lockTime_start = TimeUtil:GetTime2(2025,5,1,0,0,0)
-        local lockTime_end = TimeUtil:GetTime2(2025,5,1,23,59,59)
+        local unlockTime_start = TimeUtil:GetTime2(2025, 4, 1, 0, 0, 0)
+        local unlockTime_end = TimeUtil:GetTime2(2025, 4, 1, 23, 59, 59)
+        local lockTime_start = TimeUtil:GetTime2(2025, 5, 1, 0, 0, 0)
+        local lockTime_end = TimeUtil:GetTime2(2025, 5, 1, 23, 59, 59)
         local currentTime = os.time()
         -- LogError(unlockTime_start)
         -- LogError(unlockTime_end)
         -- LogError(lockTime_start)
         -- LogError(lockTime_end)
         -- LogError(currentTime)
-        
+
         local content = ""
-        if currentTime >= unlockTime_start and currentTime <= unlockTime_end then 
-            content = "1" 
-        elseif currentTime >= lockTime_start and currentTime <= lockTime_end then 
+        if currentTime >= unlockTime_start and currentTime <= unlockTime_end then
+            content = "1"
+        elseif currentTime >= lockTime_start and currentTime <= lockTime_end then
             content = "0"
         end
-        
+
         if content ~= "" then
             CSAPI.SaveToFile(CS.CPath.FilterFileHead(CS.CPath.persistentDataPath) .. "/internation.txt", content);
             -- LogError(content)
-        end	
+        end
     end
+end
+
+function SpineUI(b)
+    if (b) then
+        OnClickHide()
+    else
+        OnClickBack()
+    end
+    isShowSpineUI = b
 end

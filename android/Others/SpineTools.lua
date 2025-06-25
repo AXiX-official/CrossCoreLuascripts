@@ -53,11 +53,12 @@ function this:Clear()
     self.anim = nil
 end
 
-function this:Init(l2d)
+function this:Init(l2d, spineEvent)
     self.l2d = l2d
     self.l2d:SetComplete(function(trackIndex)
         self:Complete(trackIndex)
     end)
+    self.l2d.spineEvent = spineEvent
     self.anim = l2d.animationState
 
     self.teFadeInClickDic = {} -- 淡入
@@ -124,9 +125,20 @@ function this:Update()
                     v.te.TrackTime = 0
                     self:ClearTrack(k)
                     self.mulClickDic[k] = nil
+                    -- 重置点击记录
+                    if (v.clickTimeCB) then
+                        v.clickTimeCB()
+                    end
                     break
                 else
-                    v.te.TrackTime = v.progress
+                    v.te.TrackTime = v.progress -- 虽然为1，但还没解锁，最后填0，点多一下，则倒退
+                end
+            elseif (v.clickTime ~= nil and v.te.TimeScale == 0 and v.te.TrackTime ~= 0) then
+                v.clickTime = v.clickTime - Time.deltaTime -- 延迟固定时间后自动倒退到0
+                if (v.clickTime <= 0) then
+                    v.progress = 0
+                    v.te.TimeScale = -1
+                    v.isClicksLast = true
                 end
             end
             -- end
@@ -272,28 +284,33 @@ function this:PlayByClick2(animName, trackIndex)
     te.Loop = false
     te.TrackTime = 0
     te.TimeScale = 1
+    self.anim:AddEmptyAnimation(trackIndex, self.fadeOutTime, 0)
     return true
 end
 
 -- 多段点击（物件）（非1轨道）
-function this:PlayByMulClick(animName, trackIndex, timeScale, progress, isClicksLast)
+function this:PlayByMulClick(animName, trackIndex, mulData)
     local data = self.mulClickDic[trackIndex]
     if (data == nil) then
         local te = self.anim:SetAnimation(trackIndex, animName, false)
         te.Loop = false
-        te.TimeScale = timeScale
+        te.TimeScale = mulData.timeScale
         data = {}
         data.te = te
         data.duration = te.Animation.Duration
-        data.progress = progress * data.duration
-        data.isClicksLast = isClicksLast
+        data.progress = mulData.progress * data.duration
+        data.isClicksLast = mulData.isClicksLast
+        data.clickTime = mulData.clickTime -- 多长时间不点击，则倒退，为nil则不用处理
+        data.clickTimeCB = mulData.clickTimeCB
         self.mulClickDic[trackIndex] = data
         return true
     else
         if (data.te.TimeScale == 0) then
-            data.isClicksLast = isClicksLast
-            data.progress = progress * data.duration
-            data.te.TimeScale = timeScale
+            data.isClicksLast = mulData.isClicksLast
+            data.progress = mulData.progress * data.duration
+            data.te.TimeScale = mulData.timeScale
+            data.clickTime = mulData.clickTime
+            data.clickTimeCB = mulData.clickTimeCB
             return true
         end
     end
@@ -490,9 +507,30 @@ function this:GetTrackTimePercent(trackIndex)
     return 1
 end
 
+-- 某轨道是不是在初始状态
+function this:CheckTrackIsInStar(trackIndex)
+    local te = self.anim:GetCurrent(trackIndex)
+    if (te) then
+        return te.TrackTime == 0
+    end
+    return true
+end
+
+function this:CheckCanPlay(trackIndex)
+    local te = self.anim:GetCurrent(trackIndex)
+    if (te) then
+        return te.TrackTime >= te.Animation.Duration
+    end
+    return true
+end
+
 function this:ClearTrack(trackIndex)
     self.anim:ClearTrack(trackIndex)
     self.l2d.sg.Skeleton:SetToSetupPose()
+end
+
+function this:ClearTrack2(trackIndex)
+    self.anim:ClearTrack(trackIndex)
 end
 
 -- 立即清楚轨道及其数据

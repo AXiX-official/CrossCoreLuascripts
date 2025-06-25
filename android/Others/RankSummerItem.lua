@@ -31,7 +31,9 @@ function Refresh(_info,elseData)
 	-- 显示2
 	CSAPI.SetText(txtFighting, info:GetScore() .. "")
 	-- 显示1
-	CSAPI.SetText(txtTurnNum, info:GetTurnNum() .. "")
+	if IsShowTurn() then
+        CSAPI.SetText(txtTurnNum, info:GetTurnNum() .. "")
+    end
 	--icon
 	-- ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")
 	-- local _cfg = Cfgs.character:GetByID(info:GetModuleID())
@@ -54,6 +56,14 @@ end
 
 function GetName()
 	return info and info:GetName() or ""
+end
+
+function IsShowTurn()
+    local cfg = Cfgs.CfgRankTeam:GetByID(rankType)
+    if cfg and cfg.isHideTurn then
+        return false
+    end
+    return true
 end
 
 function OnClick()

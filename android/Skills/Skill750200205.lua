@@ -10,7 +10,7 @@ end
 function Skill750200205:DoSkill(caster, target, data)
 	-- 750200205
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[750200205], caster, target, data, 4004)
+	self:AddBuff(SkillEffect[750200205], caster, target, data, 750200204)
 end
 -- 行动结束
 function Skill750200205:OnActionOver(caster, target, data)

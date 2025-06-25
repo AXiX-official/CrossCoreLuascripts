@@ -12,26 +12,6 @@ function Skill913910301:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12002], caster, target, data, 0.5,2)
 end
--- 伤害前
-function Skill913910301:OnBefourHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 803600201
-	self:AddTempAttr(SkillEffect[803600201], caster, target, data, "defense",-400)
-end
 -- 攻击结束
 function Skill913910301:OnAttackOver(caster, target, data)
 	-- 8060
@@ -50,5 +30,5 @@ function Skill913910301:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 913910103
-	self:HitAddBuffCount(SkillEffect[913910103], caster, target, data, 10000,913910101,3,50)
+	self:HitAddBuffCount(SkillEffect[913910103], caster, target, data, 10000,913910101,3,25)
 end

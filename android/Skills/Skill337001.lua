@@ -28,3 +28,18 @@ function Skill337001:OnBornSpecial(caster, target, data)
 	-- 337021
 	self:AddBuff(SkillEffect[337021], caster, self.card, data, 337001)
 end
+-- 死亡时
+function Skill337001:OnDeath(caster, target, data)
+	-- 8074
+	if SkillJudger:TargetIsSummon(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8071
+	if SkillJudger:TargetIsFriend(self, caster, target, true) then
+	else
+		return
+	end
+	-- 337026
+	self:DelBufferTypeForce(SkillEffect[337026], caster, self.card, data, 337001)
+end

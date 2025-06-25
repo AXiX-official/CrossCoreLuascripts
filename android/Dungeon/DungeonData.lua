@@ -27,6 +27,10 @@ function this:GetID()
     return self.cfg and self.cfg.id or -1;
 end
 
+function this:GetGroup()
+     return self.cfg and self.cfg.group
+end
+
 --是否开启
 function this:IsOpen()
     return DungeonMgr:IsDungeonOpen(self:GetID());
@@ -88,6 +92,26 @@ function this:GetAssistNPCList()
         list=self.cfg.arrNPC;
     end
     return list;
+end
+
+function this:GetPassDesc()
+    return self.cfg and self.cfg.passDesc
+end
+
+function this:GetLastChapterId()
+    return self.cfg and self.cfg.lasChapterID
+end
+
+function this:GetLastChapterCfg()
+    return Cfgs.MainLine:GetByID(self:GetLastChapterId())
+end
+
+function this:GetNextOpenDesc()
+    return self.cfg and self.cfg.nextOpenDesc
+end
+
+function this:GetJumpId()
+    return self.cfg and self.cfg.jumpId
 end
 
 return this;

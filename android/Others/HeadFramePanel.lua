@@ -1,4 +1,4 @@
-local panelNames = {"HeadFramePanel1", "HeadFramePanel2","HeadFramePanel3"}
+local panelNames = {"HeadFramePanel1", "HeadFramePanel2", "HeadFramePanel3", "HeadFramePanel4"}
 local panels = {}
 local curPanel
 local curIndex
@@ -16,7 +16,7 @@ function OnDestroy()
 end
 
 function OnOpen()
-    tab.selIndex = 0
+    tab.selIndex = openSetting or 0
 end
 
 function OnTabChanged(_index)
@@ -41,6 +41,8 @@ function OnTabChanged(_index)
         end)
     end
     SetRed()
+    --
+    CSAPI.SetGOActive(imgR, curIndex ~= 3)
 end
 
 function SetRed()
@@ -50,11 +52,19 @@ function SetRed()
     -- red 2
     local _pData2 = RedPointMgr:GetData(RedPointType.Head)
     UIUtil:SetRedPoint(page2, _pData2 ~= nil, 112, 21, 0)
-    -- red 2
+    -- red 3
     local _pData3 = RedPointMgr:GetData(RedPointType.Title)
     UIUtil:SetRedPoint(page3, _pData3 ~= nil, 112, 21, 0)
+    -- red 4
+    local _pData4 = RedPointMgr:GetData(RedPointType.Face)
+    UIUtil:SetRedPoint(page4, _pData4 ~= nil, 112, 21, 0)
 end
 
 function OnClickClose()
+    view:Close()
+end
+
+---返回虚拟键公共接口
+function OnClickVirtualkeysClose()
     view:Close()
 end

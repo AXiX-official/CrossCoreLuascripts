@@ -62,7 +62,7 @@ function SetBtn(isGet, isFinsh)
 
     -- CSAPI.SetText(txtBtn,str)
     LanguageMgr:SetText(txtBtn,languageID)
-    LanguageMgr:SetEnText(txtBtn2,languageID)
+    -- LanguageMgr:SetEnText(txtBtn2,languageID)
 
     if (not isGet and not isFinsh and (isBattle or not data:GetJumpID())) then
         CSAPI.SetGOActive(btnObj, false)

@@ -17,6 +17,8 @@ local timer = 0
 local curRoleNum = 1 -- 使用第几套人物
 local changeCfg = nil -- 变幻到第二套人物的cfg
 local interludeGO = nil -- 切换人物的过场go
+local l2dName
+local spineUI = nil
 
 function Awake()
     img_imgObj = ComUtil.GetCom(imgObj, "Image")
@@ -67,10 +69,10 @@ function SetImg(_l2dName, _b)
     if (_b ~= nil) then
         b = _b
     end
-    local pos, scale, img, l2dName = RoleTool.GetImgPosScale(modelId, posType, true)
+    local pos, scale, img, l2dName2 = RoleTool.GetImgPosScale(modelId, posType, true)
     CSAPI.SetAnchor(prefabObj, pos.x, pos.y, pos.z)
     CSAPI.SetScale(prefabObj, scale, scale, 1)
-    l2dName = _l2dName or l2dName
+    l2dName = _l2dName or l2dName2
     if (l2dName) then
         if (l2dGo) then
             CSAPI.RemoveGO(l2dGo)
@@ -81,7 +83,7 @@ function SetImg(_l2dName, _b)
             local l2d = ComUtil.GetCom(l2dGo, "CSpine")
             graphic = ComUtil.GetComInChildren(l2dGo, "SkeletonGraphic")
             if (l2d) then
-                spineTools:Init(l2d)
+                spineTools:Init(l2d, SpineEvent)
             end
             isHeXie = false
             if (not l2d or not l2d.animationState) then
@@ -144,7 +146,21 @@ function TouchItemClickCB(cfgChild)
     local isCan = false
     if (trackIndex == 1) then
         -- 1轨道需要在idle状态下才能点击 或 前后都是同一多动作，并且不是最后一个动作
-        if (IsIdle() or content.actions ~= nil) then
+        if (not isCan and IsIdle() or content.actions ~= nil) then
+            isCan = true
+        end
+        -- 如果某个多段点击进度处于非0状态，也不能点击 
+        if (content.noClick) then
+            for k, v in pairs(content.noClick) do
+                local _trackIndex = GetTrackIndex(cfg.item[v])
+                if (not spineTools:CheckTrackIsInStar(_trackIndex)) then -- 某多段点击还在激发状态
+                    isCan = false
+                    break
+                end
+            end
+        end
+    elseif (content and content.guochange) then -- 如果是过场动作，未播完不能再次点
+        if (IsIdle() and spineTools:CheckCanPlay(trackIndex)) then
             isCan = true
         end
     else
@@ -154,10 +170,15 @@ function TouchItemClickCB(cfgChild)
         return
     end
 
-    local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
+    local sName = cfgChild.sName
+    local mulData = {
+        timeScale = 1,
+        progress = 1,
+        isClicksLast = false
+    }
     -- content内容
     if (cfgChild.content) then
-        sName, timeScale, progress, isClicksLast = SetContent(cfgChild)
+        sName, mulData = SetContent(cfgChild)
     end
     -- if (not sName) then
     --     return
@@ -165,7 +186,7 @@ function TouchItemClickCB(cfgChild)
     if (isCan) then
         local b = false
         if (trackIndex ~= 1 and content.clicks ~= nil and sName ~= nil) then
-            b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress, isClicksLast)
+            b = spineTools:PlayByMulClick(sName, trackIndex, mulData)
         elseif (content.actions ~= nil and sName ~= nil) then
             -- 首次播放或者再次点击
             local _sName = spineTools:GetNameByTrackIndex(trackIndex)
@@ -219,8 +240,12 @@ function GetClickCB(cfgChild)
             end
         elseif (cfgChild.content.nextClick) then
             func = function()
-                local nextCfgChild  = cfg.item[cfgChild.content.nextClick]
-                TouchItemClickCB(nextCfgChild) --触发下一个动作
+                local nextCfgChild = cfg.item[cfgChild.content.nextClick]
+                local trackIndex = GetTrackIndex(cfgChild)
+                --LogError(tostring(IsIdle()))
+                spineTools:ClearTrack2(trackIndex)
+                --LogError(tostring(IsIdle()))
+                TouchItemClickCB(nextCfgChild) -- 触发下一个动作
             end
         end
     end
@@ -230,8 +255,8 @@ end
 -- 过场spine
 function SetInterlude(content)
     if (content.changerole and content.changerole[2] ~= nil) then
-        local l2dName = content.changerole[2]
-        ResUtil:CreateSpine(l2dName .. "/" .. l2dName, 0, 0, 0, gameObject, function(go)
+        local _l2dName = content.changerole[2]
+        ResUtil:CreateSpine(_l2dName .. "/" .. _l2dName, 0, 0, 0, gameObject, function(go)
             interludeGO = go
             FuncUtil:Call(function()
                 CSAPI.RemoveGO(interludeGO)
@@ -264,6 +289,14 @@ function ItemDragBeginCB(cfgChild, x, y)
             if (slot) then
                 slot.A = 0
             end
+        end
+        -- idle同步
+        if (content.drag.targetObjName == "toushi") then
+            local l2d = ComUtil.GetCom(l2dGo, "CSpine")
+            local anim = l2d:GetSG("pos/main/toushi/main").AnimationState
+            local trackEntry1 = graphic.AnimationState:GetCurrent(0)
+            local trackEntry2 = anim:GetCurrent(0)
+            trackEntry2.TrackTime = trackEntry1.TrackTime;
         end
     end
     PlayAudio(cfgChild)
@@ -333,7 +366,7 @@ function ItemDragEndCB(cfgChild, x, y, index)
             end
         end
     else
-        if (content.gestureDatas and content.gestureDatas.stopTime >= 0) then
+        if (content.gestureDatas and content.gestureDatas.stopTime ~= nil and content.gestureDatas.stopTime >= 0) then
             local forward = false
             local limit = content.gestureDatas.splitPerc or 1
             if (limit ~= 1) then
@@ -587,7 +620,12 @@ end
 -- 点击 content内容
 function SetContent(cfgChild)
     local content = cfgChild.content
-    local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
+    local sName = cfgChild.sName
+    local mulData = {
+        timeScale = 1,
+        progress = 1,
+        isClicksLast = false
+    }
     -- 随机动作
     if (content.randomActions) then
         local num = CSAPI.RandomInt(0, 100)
@@ -621,9 +659,24 @@ function SetContent(cfgChild)
                 num = records[realIndex] + 1
             end
             records[realIndex] = num
-            progress = content.clicks[num]
-            timeScale = progress == 0 and -1 or 1
-            isClicksLast = num >= #content.clicks
+            mulData.progress = content.clicks[num]
+            mulData.timeScale = mulData.progress == 0 and -1 or 1 -- 最后是1的，如果再填0，意思是点多一下就倒退，否则就是播完就移除
+            mulData.isClicksLast = num >= #content.clicks
+            mulData.clickTime = content.clickTime
+            mulData.clickTimeCB = function()
+                records[realIndex] = nil
+                -- 隐藏
+                if (content.activation and touchItems ~= nil) then
+                    for k, v in pairs(content.activation) do
+                        for p, q in pairs(touchItems) do
+                            if (q.cfgChild.index == tonumber(k)) then
+                                CSAPI.SetGOActive(q.gameObject, v ~= 1)
+                                break
+                            end
+                        end
+                    end
+                end
+            end
         end
     end
     -- 激活与隐藏
@@ -652,7 +705,7 @@ function SetContent(cfgChild)
             end
         end
     end
-    return sName, timeScale, progress, isClicksLast
+    return sName, mulData
 end
 
 function GetRealIndex(cfgChild)
@@ -750,6 +803,10 @@ function ClearRecords(indexs)
     end
 end
 
+function func()
+
+end
+
 function GetIndexs()
     local indexs, names = {}, {}
     local dic = {}
@@ -762,4 +819,29 @@ function GetIndexs()
         end
     end
     return indexs, names
+end
+
+-- spine事件
+function SpineEvent(trackEntry, e)
+    if (e.Name == "SpineUI") then
+        if (not spineUI) then
+            -- 进场
+            local UI_Layer_Common = CSAPI.GetGlobalGO("UI_Layer_Common")
+            ResUtil:CreateUIGOAsync("Spine/" .. l2dName .. "/" .. l2dName, UI_Layer_Common, function(go)
+                spineUI = ComUtil.GetLuaTable(go)
+                spineUI.Refresh(this)
+            end)
+            EventMgr.Dispatch(EventType.Menu_SpineUI, true)
+        else
+            -- 退场
+            CSAPI.RemoveGO(spineUI.gameObject)
+            spineUI = nil
+            EventMgr.Dispatch(EventType.Menu_SpineUI, false)
+        end
+    end
+end
+
+function PlayByIndex(index)
+    local cfgChild = cfg.item[index]
+    TouchItemClickCB(cfgChild)
 end

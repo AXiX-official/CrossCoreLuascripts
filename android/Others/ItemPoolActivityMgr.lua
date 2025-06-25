@@ -38,6 +38,18 @@ function this:GetPoolInfo(id)
     return info;
 end
 
+--根据掉落类型返回当前开启的活动信息
+function this:GetCurrPoolInfoByType(itemPoolExtractType)
+    if itemPoolExtractType and self.poolInfos then
+        for k,v in pairs(self.poolInfos) do
+            if v:GetExtractType()==itemPoolExtractType and v:IsOpen() then
+                return v;
+            end
+        end
+    end
+    return nil;
+end
+
 --检查对应ID的道具池是否有红点
 function this:CheckPoolHasRedPoint(id)
     if id then

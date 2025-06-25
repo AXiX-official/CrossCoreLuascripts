@@ -67,6 +67,20 @@ function this:Init(data,initCallBack,initCaller)
     --SettingMgr:UpdateTargetFPS(); 
 end
 
+--获取开场表情
+function this:GetEmote(emoteState)
+    local emotes = self.data and self.data.emotes;
+    --LogError(self.data);
+    if(emotes)then
+       --LogError(emotes);
+       local emote1,emote2;
+       emote1 = emotes[1] and emotes[1][emoteState];
+       emote2 = emotes[2] and emotes[2][emoteState];
+
+       return emote1,emote2;
+    end
+end
+
 function this:InitSkillScene()
     if(self.inInited)then
         return;

@@ -88,10 +88,8 @@ function SetTitle(id)
     local str2=""
     if id then
         str=LanguageMgr:GetByID(id)
-        str2=LanguageMgr:GetByType(id,4)
     end
     CSAPI.SetText(txt_title,str);
-    CSAPI.SetText(txt_titleTips,str2);
 end
 
 function SetRedPoint(isShow)

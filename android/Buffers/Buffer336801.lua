@@ -25,23 +25,8 @@ function Buffer336801:OnBefourHurt(caster, target)
 end
 -- 创建时
 function Buffer336801:OnCreate(caster, target)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
-	else
-		return
-	end
-	-- 8071
-	if SkillJudger:TargetIsFriend(self, self.caster, target, true) then
-	else
-		return
-	end
 	-- 8766
 	local c766 = SkillApi:GetCount(self, self.caster, target or self.owner,3,750200201)
-	-- 8219
-	if SkillJudger:IsUltimate(self, self.caster, target, true) then
-	else
-		return
-	end
 	-- 336808
 	self:AddValue(BufferEffect[336808], self.caster, self.card, nil, "gc",c766)
 end

@@ -8,8 +8,8 @@ end
 
 function this:InitListener()
     self.eventMgr = ViewEvent.New()
-    self.eventMgr:AddListener(EventType.Loading_Start,self.OnLoadingStart)
-    self.eventMgr:AddListener(EventType.Loading_Complete,self.OnLoadingComplete)
+    -- self.eventMgr:AddListener(EventType.Loading_Start,self.OnLoadingStart)
+    -- self.eventMgr:AddListener(EventType.Loading_Complete,self.OnLoadingComplete)
 end
 
 function this.OnLoadingStart()
@@ -73,20 +73,20 @@ function this:Clear()
 end
 
 function this:ApplyShowView(parent, viewName, type, datas)
-    if self.canApply then
-        UIUtil:ShowSpecialGuide(parent, viewName, type, datas)
-    else
-        if not SceneMgr:IsMajorCity() then
-            return
-        end
-        local data = {
-            parent = parent,
-            viewName = viewName,
-            type = type,
-            datas = datas
-        }
-        self:PushData(data)
-    end
+    -- if self.canApply then
+    --     UIUtil:ShowSpecialGuide(parent, viewName, type, datas)
+    -- else
+    --     if not SceneMgr:IsMajorCity() then
+    --         return
+    --     end
+    --     local data = {
+    --         parent = parent,
+    --         viewName = viewName,
+    --         type = type,
+    --         datas = datas
+    --     }
+    --     self:PushData(data)
+    -- end
 end
 
 return this

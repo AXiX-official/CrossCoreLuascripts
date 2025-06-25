@@ -61,7 +61,9 @@ function Refresh()
     if commodity then
         if CSAPI.IsADV() then
             CSAPI.SetText(txt_name,commodity:GetName());
-            local displayCurrency=commodity:GetCurrencySymbols()
+            local displayCurrency=commodity["data"]["displayCurrency"];
+            ---抵扣卷货币不能显示货币符号前缀执行清除
+            if displayCurrency==nil then displayCurrency="" end
             CSAPI.SetText(txt_moneyType,displayCurrency);
             local realPrice=commodity["data"]["displayPrice"];
             if realPrice==nil then
@@ -115,7 +117,9 @@ function RefreshItems()
         if currType==PayType.ZiLong then
             if commodity then
                 CSAPI.SetText(txt_name,commodity:GetName());
-                local displayCurrency=commodity:GetCurrencySymbols();
+                local displayCurrency=commodity["data"]["displayCurrency"];
+                ---抵扣卷货币不能显示货币符号前缀执行清除
+                if displayCurrency==nil then displayCurrency="" end
                 CSAPI.SetText(txt_moneyType,displayCurrency);
                 local realPrice=commodity["data"]["displayPrice"];
                 if realPrice==nil then

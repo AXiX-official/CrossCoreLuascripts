@@ -2749,6 +2749,114 @@ function GCalHelp:GetCheckBuffBattlePoint(buffs, duplicateId)
 
     return points
 end
+
+
+-- 装备洗练随机词条
+-- equipData = {cfgId = 装备id,skills = 词条id数组},lockSkills = {skillId1,skillId2...}
+-- cntData = {[libId1] = cnt1,[libId2] = cnt2}
+function GCalHelp:DoEquipRefresh(equipData,lockSkills,cntData,isLockSlot,gmLibId)
+    if not equipData then
+        return
+    end
+    local eCfg = CfgEquip[equipData.cfgId]
+    if not eCfg or eCfg.nType == EquipType.Material then
+        return
+    end
+    local libId = gmLibId or eCfg.refreshLibId or 0
+    local randCfg = CfgEquipRefreshLib[libId]
+    local randPool = randCfg and randCfg.infos
+    if not randPool then
+        LogError("EquipMgr:EquipRefresh,get randPool error ：%s,%s,%s",eCfg.suitId,eCfg.nQuality,libId)
+        return
+    end
+    local refreshNum = cntData and cntData[libId] or 0
+    local minShowRare = randCfg.showRareCnt or 0
+    local oldSkills = equipData.skills
+    local equipBySuitCfg = g_EquipBySuit[eCfg.suitId] --GobalCfg:GetCfgVal('CfgEquipBySuit', eCfg.suitId)
+    local equipPool = equipBySuitCfg and equipBySuitCfg[eCfg.nQuality]
+    if not equipPool then
+        LogError("EquipMgr:EquipRefresh,get equipPool error ：%s,%,%s",eCfg.suitId,eCfg.nQuality,libId)
+        return
+    end
+    local newEquipId = eCfg.id
+    -- local baseVal = eCfg.nBase1
+    -- 随机部位
+    if not isLockSlot then
+        local poolSize = #equipPool
+        if poolSize > 0 then
+            local r = math.random(poolSize)
+            local tmpCfg = equipPool[r]
+            newEquipId = tmpCfg and tmpCfg.id or 0
+            -- baseVal = tmpCfg.nBase1
+        end
+    end
+    -- 随机词条
+    local mapRare = randCfg.mapRare or {}
+    local newSkills = {oldSkills[1]}
+    local rareNum = 0
+    local function getOrignSkillId(skillId)
+        local oldSkillCfg = CfgEquipSkill[skillId] 
+        local oldSkillLv = oldSkillCfg.nLv
+        local ogSkillId = skillId - oldSkillLv + 1
+        return ogSkillId
+    end
+    local mpGetSkills = {}
+    local mpLock = {}
+    for _,sId in ipairs(lockSkills or {}) do
+        mpLock[sId] = true
+        local ogId = getOrignSkillId(sId)
+        mpGetSkills[ogId] = true
+        if mapRare[ogId] then
+            rareNum = rareNum + 1
+        end
+    end
+    local function checkCanGetRare(skillId)
+        if not mapRare[skillId] then
+            return true
+        end
+        if rareNum + 1 >= randCfg.rareCnt and refreshNum < minShowRare then
+            return false
+        end
+       return true
+    end
+    for i=2,#oldSkills do
+        local oldSkillId = oldSkills[i]
+        if oldSkillId then
+            if mpLock[oldSkillId] then
+                newSkills[i] = oldSkillId
+                local ogSkillId = getOrignSkillId(oldSkillId)
+                mpGetSkills[ogSkillId] = true
+
+            else
+                local useCfg, ix = GCalHelp:GetByWeight(randPool, 'sumWeight')
+                local orignSkillId = useCfg and useCfg.skillId
+                if mpGetSkills[orignSkillId] or not checkCanGetRare(orignSkillId) then
+                    local randArr = {}
+                    for _, info in ipairs(randPool) do
+                        if not mpGetSkills[info.skillId] and info.skillId ~= orignSkillId then 
+                            table.insert(randArr, info)
+                        end
+                    end
+                    -- LogTable(randArr,">>>>>>>randPool")
+                    local tUseCfg, _ = GCalHelp:GetByCalWeight(randArr, 'weight')
+                    if tUseCfg then
+                        orignSkillId = tUseCfg.skillId
+                    end
+                end
+                if orignSkillId then
+                    local oldSkillCfg = CfgEquipSkill[oldSkillId] 
+                    local oldSkillLv = oldSkillCfg.nLv
+                    local useSkillId = orignSkillId + oldSkillLv - 1
+                    mpGetSkills[orignSkillId] = true
+                    newSkills[i] = useSkillId
+                end
+            end
+        end
+    end
+    return newEquipId,newSkills
+end
+
+
 -- 根据模型ID获取该角色ID
 function GCalHelp:GetCidByModel(model)
     if not model then

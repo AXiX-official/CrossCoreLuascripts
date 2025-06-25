@@ -100,6 +100,9 @@ function OnCharacterFightInfoChanged(character)
 end
 
 function SetTarget(targetCharacter)
+    if(target)then
+        return;
+    end
     target = targetCharacter;
     CSAPI.SetGOActive(node,target ~= nil);
 

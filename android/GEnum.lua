@@ -349,7 +349,7 @@ eTaskType.Rogue = 21      -- 乱序演习任务
 eTaskType.RegressionTask = 22     -- 回归任务
 eTaskType.RegressionBind = 23     -- 回归绑定任务
 eTaskType.StarPalace = 24     -- 十二星宫任务
---eTaskType.Pet = 25              -- 夏活宠物图鉴任务
+eTaskType.Pet = 25              -- 夏活宠物图鉴任务
 eTaskType.AbattoirMoon = 26     -- 角斗场月任务
 eTaskType.AbattoirSeason = 27     -- 角斗场赛季任务
 eTaskType.Puzzle = 28 --拼图活动任务
@@ -451,7 +451,7 @@ cTaskCfgNames = {
     [eTaskType.RegressionTask] = 'CfgRegressionTask',
     [eTaskType.RegressionBind] = 'CfgRegressionBind',
     [eTaskType.StarPalace] = 'CfgTotalBattleTask',
-    --[eTaskType.Pet] = 'CfgPetArchive',
+    [eTaskType.Pet] = 'CfgPetArchive',
     [eTaskType.AbattoirMoon] = 'cfgColosseumMission',
     [eTaskType.AbattoirSeason] = 'cfgColosseumSeasonMission',
     [eTaskType.Puzzle] = 'CfgTaskPuzzle',
@@ -480,7 +480,7 @@ eTaskFinishType.CardCreate = 50 -- 卡牌创建
 eTaskFinishType.Task = 60 -- 任务
 eTaskFinishType.Army = 61 -- 军演
 eTaskFinishType.Item = 65 -- 物品
---eTaskFinishType.Pet = 67 -- 夏活宠物
+eTaskFinishType.Pet = 67 -- 夏活宠物
 
 -- 任务状态
 eTaskState = {}
@@ -521,7 +521,7 @@ eTaskEventType.Team = 25 -- 队伍
 eTaskEventType.Skill = 26 -- 技能
 eTaskEventType.Board = 27 -- 看板
 eTaskEventType.PassGroup = 28 -- 通关关卡组
---eTaskEventType.PetAbility = 29 -- 宠物属性变动
+eTaskEventType.PetAbility = 29 -- 宠物属性变动
 eTaskEventType.AbattoirStar = 30 -- 角斗场星数(重置前累计星数)
 eTaskEventType.AbattoirPass = 31 -- 角斗场通关
 eTaskEventType.AbattoirPassStar = 32 -- 角斗场单次通关获得星数
@@ -544,7 +544,7 @@ eContinueTaskType.NewYear = 3 --新年
 
 -- 完成任务后自动领取奖励的任务
 eAutoGainTaskType = {
-    --[eTaskType.Pet] = 1
+    [eTaskType.Pet] = 1
 }
 
 -----------------------------好友------------------------------------------------------------------------
@@ -797,6 +797,7 @@ ActivityListType = {
     Collaboration=1012,--回归绑定
     SkinRebate = 3000, --皮肤返利
     SignInDuanWu = 1029, --端午签到
+	AdvBindUsers =2001, --引导游客绑定账号（红点异常必须新增）
 }
 
 ALType = {}
@@ -1027,6 +1028,10 @@ CommodityItemType.THEME = 6 -- 宿舍主题
 CommodityItemType.FORNITURE = 7 -- 宿舍家具
 CommodityItemType.Exploration = 8 -- 勘探
 CommodityItemType.Regression = 9 -- 回归基金
+CommodityItemType.SingleSelection = 10 -- 单自选
+CommodityItemType.DoubleSelection = 11 -- 双自选
+CommodityItemType.SUIT = 12 -- 套装
+CommodityItemType.ChoiceCard = 13 -- 自选卡牌(获得物品不读，由服务端特殊处理)
 
 -- 商品道具品质背景图
 CommodityQuality = {'white.png', 'green.png', 'blue.png', 'purple.png', 'yellow.png'}
@@ -1400,6 +1405,7 @@ PlrMixIx.limitedTimeSkins = 70 -- 限时皮肤
 PlrMixIx.sectionMultiInfo = 71 -- 有时效双倍掉落
 PlrMixIx.icon_emotes = 72 -- 竞技场对战表情
 PlrMixIx.changeId = 73 -- 物品变动的日志Id
+PlrMixIx.equipRefresh = 74 -- 装备洗练结果数据
 
 
 -- 图鉴
@@ -1688,6 +1694,10 @@ DungeonInfoType.Cloud = "Cloud"
 DungeonInfoType.CloudPlot = "CloudPlot"
 DungeonInfoType.CloudDanger = "CloudDanger"
 DungeonInfoType.CloudSpecial = "CloudSpecial"
+DungeonInfoType.Summer2 = "Summer2"
+DungeonInfoType.Summer2Plot = "Summer2Plot"
+DungeonInfoType.Summer2Danger = "Summer2Danger"
+DungeonInfoType.Summer2Special = "Summer2Special"
 
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
@@ -1835,7 +1845,9 @@ ItemPoolExtractType={
     RoundLoop=1,--轮数无限
     RoundLimit=2,--轮数上限设置
     Once=3,--只能抽一次
-    DropLoop=4--按同一轮的配置无限抽取
+    DropLoop=4,--按同一轮的配置无限抽取
+    Control = 5,     --控制前N抽产出，有无限奖励
+    ControlNotInfinite = 6     --控制前N抽产出，没有无限奖励
 }
 --开放条件
 ItemPoolPropType={
@@ -2022,8 +2034,18 @@ eSummaryType.NewYear = 1
 --双倍掉落道具类型
 eItemSectionMultiType = {}
 eItemSectionMultiType.cnt = 1 --指定时间内只有一个可以生效
-eItemSectionMultiType.time = 2 --使用之后延长有效时间
+eItemSectionMultiType.time = 2 --使用之后延长有效时间（道具id不同,需要上一个失效才会生效下一个）
+eItemSectionMultiType.exTime = 3 --使用之后延长有效时间（道具id不同可以同时生效）
 
+-----------------------------------------------------------------------------------------------------------------
+--对战表情类型
+eEmoteType = {}
+eEmoteType.Common     = 1   -- 通用
+eEmoteType.FightStart = 2   -- 开场
+eEmoteType.FightWin   = 3   -- 胜利
+eEmoteType.FightLost  = 4   -- 失败
+
+-----------------------------------------------------------------------------------------------------------------
 -- 拼图玩法活动类型
 ePuzzleType = {}
 ePuzzleType.Type1     = 1   -- 玩法1

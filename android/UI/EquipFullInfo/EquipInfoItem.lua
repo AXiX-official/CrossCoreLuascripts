@@ -2,54 +2,59 @@
 local baseItems={};
 local skillItems={};
 local grid=nil;
-function Refresh(_data)
+local equip=nil;
+local data=nil;
+local elseData=nil;
+
+function Refresh(_data,_elseData)
     data=_data;
-    if data and data:GetClassType()=="EquipData" then
-        CSAPI.SetGOActive(gridNode,true);
-        CSAPI.SetGOActive(lockBtn,true);
-        CSAPI.SetText(txt_name,data:GetName());
+    equip=data ==nil and nil or data.equip
+    elseData=_elseData;
+    CSAPI.SetText(txtTips,data==nil and "" or data.tips)
+    if equip and equip:GetClassType()=="EquipData" then
+        CSAPI.SetGOActive(node,true);
+        CSAPI.SetGOActive(nullObj,false);
+        CSAPI.SetText(txt_name,equip:GetName());
         if grid==nil then
             ResUtil:CreateUIGOAsync("Grid/EquipItem",gridNode,function(go)
                 grid=ComUtil.GetLuaTable(go);
-                grid.Refresh(data);
+                grid.Refresh(equip);
             end)
         else
-            grid.Refresh(data);
+            grid.Refresh(equip);
         end
         ShowBase();
         ShowSkill();
     else
-        CSAPI.SetText(txt_name,"");
-        CSAPI.SetGOActive(gridNode,false);
-        CSAPI.SetGOActive(lockBtn,false);
-        ItemUtil.AddItems("AttributeNew2/AttributeItemLittle",baseItems,{},attrNode,nil,1);
-        ItemUtil.AddItems("AttributeNew2/AttributeItemLittle",skillItems,{},skillNode,nil,1);
+        CSAPI.SetGOActive(node,false);
+        CSAPI.SetGOActive(nullObj,true);
+        ItemUtil.AddItems("AttributeNew2/AttributeItemLock",baseItems,{},attrNode,nil,1,elseData);
+        ItemUtil.AddItems("EquipInfo/EquipSkillAttributeLock",skillItems,{},skillNode,nil,1,elseData);
     end
 end
 
 function ShowBase()
     local list={};
     for i=1,g_EquipMaxAttrNum do
-        local id,add,upAdd=data:GetBaseAddInfo(i);
+        local id,add,upAdd=equip:GetBaseAddInfo(i);
         if id and add and upAdd then
-            local addition=add+upAdd*data:GetLv();
-            local text="+"..EquipCommon.FormatAddtion(id,addition);
-            table.insert(list,{id=id,val1=text});
+            local addition=add+upAdd*equip:GetLv();
+            local text=EquipCommon.FormatAddtion(id,addition);
+            table.insert(list,{id=id,val1="+"..text});
         end
     end
-    ItemUtil.AddItems("AttributeNew2/AttributeItemLittle",baseItems,list,attrNode,nil,1);
+    ItemUtil.AddItems("AttributeNew2/AttributeItemLock",baseItems,list,baseRoot,nil,1,elseData);
 end
 
 function ShowSkill()
     local list={};
-    if data then
+    if equip then
         local index=0;
         for i=1,g_EquipMaxSkillNum do
-            local cfg=data:GetSkillInfo(i);
+            local cfg=equip:GetSkillInfo(i);
             if cfg then
                 if index<=g_EquipMaxSkillNum then
-                    local lvStr = LanguageMgr:GetByID(1033) or "LV."
-                    table.insert(list,{id=cfg.group,val1=lvStr..cfg.nLv,type=2,alpha=204,val1Color="FFC146"});
+                    table.insert(list,cfg);
                     index=index+1;
                 else
                     LogError("技能数量超过上限！！");
@@ -57,7 +62,20 @@ function ShowSkill()
             end       
         end
     end
-    ItemUtil.AddItems("AttributeNew2/AttributeItemLittle",skillItems,list,skillNode,nil,1);
+    skillItems=skillItems or {};
+    for i=1,g_EquipMaxSkillNum  do
+        if skillItems and i <= #skillItems then
+            skillItems[i].Refresh(list[i],elseData);
+            skillItems[i].SetClickCB(OnClickSkillItem);
+        else
+            ResUtil:CreateUIGOAsync("EquipInfo/EquipSkillAttributeLock",skillRoot,function(go)
+                local tab=ComUtil.GetLuaTable(go);
+                tab.Refresh(list[i],elseData);
+                tab.SetClickCB(OnClickSkillItem);
+                table.insert(skillItems,tab);
+            end);
+        end
+    end
 end
 
 function OnDestroy()    

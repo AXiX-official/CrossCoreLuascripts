@@ -191,6 +191,13 @@ function Refresh()
 			if (itemInfo:GetClassType()~="EquipData" and itemInfo.GetType~=nil and itemInfo:GetType()==ITEM_TYPE.EQUIP_MATERIAL) or (itemInfo:GetClassType()=="EquipData" and itemInfo.GetType~=nil and itemInfo:GetType()==EquipType.Material)  then
 				local info=EquipMgr:GetEquipByCfgID(itemInfo:GetCfgID());
 				count=info~=nil and info:GetCount() or 0;
+			elseif itemInfo:GetClassType()=="GoodsData" and itemInfo.GetType~=nil and itemInfo:GetType()==ITEM_TYPE.SKIN then --皮肤
+				local rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(itemInfo:GetDyVal1(),itemInfo:GetDyVal2());
+				if rSkinInfo and rSkinInfo:CheckCanUse() and rSkinInfo:IsLimitSkin()~=true then
+					count=1;
+				else
+					count=0;
+				end
 			elseif itemInfo:GetCount()>0 and openSetting==nil then
 				count=itemInfo:GetCount();
 			else

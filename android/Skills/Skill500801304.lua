@@ -14,7 +14,7 @@ function Skill500801304:DoSkill(caster, target, data)
 	-- 500801306
 	self.order = self.order + 1
 	self:AddBuff(SkillEffect[500801306], caster, target, data, 6103,2)
-	-- 500800313
+	-- 500800314
 	self.order = self.order + 1
-	self:DelBuffQuality(SkillEffect[500800313], caster, target, data, 2,2)
+	self:DelBuffQuality(SkillEffect[500800314], caster, target, data, 2,2)
 end

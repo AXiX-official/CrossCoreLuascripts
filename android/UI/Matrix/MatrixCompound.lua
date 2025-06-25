@@ -89,8 +89,10 @@ function InitLeftPanel()
         leftPanel = ComUtil.GetLuaTable(go)
         local leftDatas = {}
         local leftChildDatas = {}
-        local leftDatas = {{10427, "Compound/btn_02_01"}, {10428, "Compound/btn_02_01"}, {10429, "Compound/btn_02_01"},
-                           {10430, "Compound/btn_02_01"}} -- 多语言id，需要配置英文
+        local cfgs = Cfgs.CfgMatrixCompoundType:GetAll()
+        for k, v in pairs(cfgs) do
+            table.insert(leftDatas, {v.Name, "Compound/btn_02_01"})
+        end
         leftPanel.Init(this, leftDatas, leftChildDatas)
     end
 end

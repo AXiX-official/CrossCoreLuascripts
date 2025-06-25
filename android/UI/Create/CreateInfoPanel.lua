@@ -70,34 +70,23 @@ end
 
 function SetItems0()
     -- datas 
-    local count = 0
-    local _datas = {}
-    for k, v in pairs(qualityDatasArr) do
-        _datas[v[1]] = {}
-        for p, q in pairs(v[2]) do
-            if (q.s_up_probability) then
-                table.insert(_datas[v[1]], q)
-                count = count + 1
-            end
-        end
-    end
-    if (count <= 0) then
+    local hadUP, datas0,isChoise = GetItem0Datas()
+    if (not hadUP) then
         if (item0) then
-            CSAPI.SetGOActive(item0.gameObject, count > 0)
+            CSAPI.SetGOActive(item0.gameObject, false)
         end
         return
     end
-
     -- item 
     if (not item0) then
         ResUtil:CreateUIGOAsync("Create/CreateInfoItem0", Content, function(go)
             item0 = ComUtil.GetLuaTable(go)
-            item0.Refresh(_datas)
+            item0.Refresh(datas0,isChoise)
             go.transform:SetAsFirstSibling()
         end)
     else
-        CSAPI.SetGOActive(item0.gameObject, count > 0)
-        item.Refresh(_datas)
+        CSAPI.SetGOActive(item0.gameObject, true)
+        item0.Refresh(datas0,isChoise)
     end
 end
 
@@ -110,4 +99,56 @@ function CheckInTime(openTimes)
         return false
     end
     return true
+end
+
+function GetItem0Datas()
+    local hadUP, datas0,isChoise = false, {},false
+    if (data:IsSelectPool()) then
+        if (data:IsSelectRole()) then
+            hadUP = true
+            isChoise = true
+            local ids = data:GetChoiceCids()
+            datas0[6] = {}
+            for k = 1, 2 do
+                local id = ids[k]
+                for p, q in pairs(qualityDatasArr) do
+                    if (q[1] == 6) then
+                        for p1, q1 in pairs(q[2]) do
+                            if (q1.id == id) then
+                                table.insert(datas0[6], q1)
+                                break
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+            datas0[5] = {}
+            for k = 3, 5 do
+                local id = ids[k]
+                for p, q in pairs(qualityDatasArr) do
+                    if (q[1] == 5) then
+                        for p1, q1 in pairs(q[2]) do
+                            if (q1.id == id) then
+                                table.insert(datas0[5], q1)
+                                break
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+        end
+    else
+        for k, v in pairs(qualityDatasArr) do
+            datas0[v[1]] = {}
+            for p, q in pairs(v[2]) do
+                if (q.s_up_probability) then
+                    table.insert(datas0[v[1]], q)
+                    hadUP = true
+                end
+            end
+        end
+    end
+    return hadUP, datas0,isChoise
 end

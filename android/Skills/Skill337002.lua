@@ -35,8 +35,8 @@ function Skill337002:OnDeath(caster, target, data)
 	else
 		return
 	end
-	-- 8062
-	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	-- 8071
+	if SkillJudger:TargetIsFriend(self, caster, target, true) then
 	else
 		return
 	end

@@ -18,20 +18,17 @@ function Skill703101305:OnAfterHurt(caster, target, data)
 	self:tFunc_703100413_703100303(caster, target, data)
 	self:tFunc_703100413_703100313(caster, target, data)
 end
--- 伤害前
-function Skill703101305:OnBefourHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+-- 行动结束2
+function Skill703101305:OnActionOver2(caster, target, data)
+	-- 8723
+	local count723 = SkillApi:GetCount(self, caster, target,3,4703101)
+	-- 8937
+	if SkillJudger:GreaterEqual(self, caster, self.card, true,count723,7) then
 	else
 		return
 	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 4703106
-	self:AddTempAttr(SkillEffect[4703106], caster, self.card, data, "damage",0.3)
+	-- 4703111
+	self:DelBufferForce(SkillEffect[4703111], caster, self.card, data, 3003,1)
 end
 function Skill703101305:tFunc_703100413_703100303(caster, target, data)
 	-- 8060

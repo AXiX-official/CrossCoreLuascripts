@@ -146,7 +146,7 @@ function FightProto:RecvCmd(proto)
 
             g_FightMgr:LoadData(1, data.tPvpData[1].data)
             g_FightMgr:LoadData(2, data.tPvpData[2].data, CardType.Mirror)
-
+            data.exData = data.exData or {}
             g_FightMgr:SetStepLimit(g_sPVPMirrorStepLimit)
             g_FightMgr:AfterLoadData(data.exData)
             g_FightMgr:AddCmd(CMD_TYPE.InitData, data)
@@ -156,7 +156,8 @@ function FightProto:RecvCmd(proto)
                 scene = g_nPVPMirrorSceneID,
                 gridDatas = gridDatas,
                 myTeamID = 1,
-                bgm = g_sPVPMirrorBgm
+                bgm = g_sPVPMirrorBgm,
+                emotes = data.exData.emotes
             };
             g_FightMgr.tClientInitData = fightActionData
             fightActionData.api = "InitData";

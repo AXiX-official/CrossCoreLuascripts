@@ -31,17 +31,20 @@ function this:GetData(id)
     return self.datas and self.datas[id]
 end
 
--- 列表（包含不可用,默认true）
-function this:GetArr(isContain)
-    isContain = isContain == nil and true or false
+-- 列表（包含不可用,默认true）;nType 0:全部 1:多人插图 2:半身像
+function this:GetArr(_isContain, _nType)
+    local isContain = _isContain == nil and true or _isContain
+    local nType = _nType or 0
     local arr = {}
     local datas = self:GetDatas()
     for k, v in pairs(datas) do
-        if (isContain) then
-            table.insert(arr, v)
-        else
-            if (v:IsHad()) then
+        if (v:GetType() == nType) then
+            if (isContain) then
                 table.insert(arr, v)
+            else
+                if (v:IsHad()) then
+                    table.insert(arr, v)
+                end
             end
         end
     end

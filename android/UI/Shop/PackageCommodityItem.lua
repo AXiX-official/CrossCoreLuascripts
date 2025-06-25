@@ -142,7 +142,8 @@ end
 function SetCost(cost,isOver)
     if isOver then
         CSAPI.SetGOActive(priceObj,false);
-        CSAPI.SetGOActive(freeObj,false);
+        CSAPI.SetGOActive(freeObj,true);
+        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18012));
         do return end
     end
     if cost then
@@ -159,10 +160,12 @@ function SetCost(cost,isOver)
         else
             CSAPI.SetGOActive(priceObj,false);
             CSAPI.SetGOActive(freeObj,true);
+            CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
         end
     else
         CSAPI.SetGOActive(priceObj,false);
         CSAPI.SetGOActive(freeObj,true);
+        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
     end
 end
 

@@ -203,7 +203,9 @@ function InitListener()
     eventMgr:AddListener(EventType.Fight_Action_Turn_Add1,TurnNumAdd);    
     
     eventMgr:AddListener(EventType.Fight_Activity_UpdateDamage,OnFightActivityUpdateDamage);    
-    
+   
+    eventMgr:AddListener(EventType.Fight_Play_Face,PlayHeadFace);--表情     
+    --PlayHeadFace({{id=1,delay=500},{id=2,delay=1000}});
 end
 function OnDestroy()
     AdaptiveConfiguration.LuaView_Lua_Closed("FigHtView");
@@ -1130,3 +1132,27 @@ function CheckVirtualkeys()
     end
 end
 -----------------------------------------------虚拟返回键代码 上-------------------------------------------------------------
+
+--播放表情
+function PlayHeadFace(faceData)
+    --LogError(faceData);
+    if(not faceData)then
+        return;
+    end
+    local faceData1,faceData2 = faceData[1],faceData[2];
+    if(faceData1)then
+        FuncUtil:Call(function()
+            AddFace(faceData1.id,true);    
+        end,nil,faceData1.delay or 0);        
+    end
+    if(faceData2)then
+        FuncUtil:Call(function()
+            AddFace(faceData2.id,false);   
+        end,nil,faceData2.delay or 0);    
+    end
+end
+function AddFace(id,isL)
+    local faceGO = ResUtil:CreateUIGO("Fight/FaceNode" .. (isL and "L" or "R"),transform);
+    local lua = ComUtil.GetLuaTable(faceGO);
+    lua.PlayHeadFace(id,isL);
+end

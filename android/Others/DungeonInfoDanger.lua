@@ -5,6 +5,7 @@ local layout =nil
 local svUtil =nil
 local curDatas = nil
 local currLevel = 1
+local colors = nil
 
 function Awake()
     layout = ComUtil.GetCom(hsv, "UISV")
@@ -30,7 +31,7 @@ function LayoutCallBack(index)
     item.SetIndex(index)
     item.SetClickCB(OnClickItem)
     item.Refresh(_data)
-    item.SetSelect(index == currLevel)
+    item.SetSelect(index == currLevel,colors)
 end
 
 function OnClickItem(index)
@@ -42,12 +43,12 @@ function OnValueChange()
     if index + 1 ~= currLevel then
         local item = layout:GetItemLua(currLevel)
         if item then
-            item.SetSelect(false)
+            item.SetSelect(false,colors)
         end
         currLevel = index + 1
         local item = layout:GetItemLua(currLevel)
         if (item) then
-            item.SetSelect(true);
+            item.SetSelect(true,colors);
         end
         SetArrows()
         CSAPI.SetGOActive(tipImg, currLevel == 1)
@@ -55,6 +56,7 @@ function OnValueChange()
         if curDatas then
             cfg = curDatas[currLevel]   
             EventMgr.Dispatch(EventType.Dungeon_InfoPanel_Update, cfg)
+            EventMgr.Dispatch(EventType.Dungeon_InfoItem_Update,{danger = currLevel})
             -- Refresh()
         end
     end
@@ -87,6 +89,10 @@ end
 
 function SetEmptyStr(_str)
     CSAPI.SetText(txt_empty,_str)
+end
+
+function SetColors(_colors)
+    colors = _colors
 end
 
 function GetCurrDanger()

@@ -603,7 +603,7 @@ loadstring = CS.CSAPI.LoadString;
 --3：高
 function this.SetGameLv(lv)
 	this.gameLv = lv;
-	--LogError(this.gameLv);
+	
 	CameraMgr:SetMotionBlurState(lv and lv >= 2);
 	--CameraMgr:SwitchHDR(lv and lv >= 3);
 	CSAPI.SetFogEnableState(lv and lv >= 3);
@@ -631,7 +631,6 @@ function this.SetGameLv(lv)
 end
 
 function this.GetGameLv()
-	--LogError(this.gameLv);
 	return this.gameLv or 2;
 end
 

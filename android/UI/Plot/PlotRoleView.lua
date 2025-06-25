@@ -42,6 +42,10 @@ function SetImg(data)
 	if data.gradient then
 		cImg.SetImgGradient(roleImgInfo:GetGradientInfo())
 	end
+	--设置透明度
+	if data.alpha and tonumber(data.alpha) >= 0 then
+		CSAPI.SetGOAlpha(mask,tonumber(data.alpha))
+	end
 end
 
 --判断当前是否是同一张图片
@@ -261,6 +265,7 @@ function OnLeave()
 	if onLeave ~= nil then
 		onLeave();
 	end
+	CSAPI.SetGOAlpha(mask,1)
 	CSAPI.RemoveGO(gameObject);
 	-- if view ~= nil and IsNil(view) ~= true then
 	-- 	view:Close();

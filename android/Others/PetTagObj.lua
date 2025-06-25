@@ -8,12 +8,12 @@ function Refresh(_d,currIdx)
         local txt=LanguageMgr:GetByID(_d.id);
         CSAPI.SetText(txtNormal,txt);
         CSAPI.SetText(txtOn,txt);
-        SetRed(_d.isRed);
     end
     if isFirst then
         isOn=_isOn;
         isFirst=false;
     end
+    SetRed(_d and _d.isRed or false);
     SetState(_isOn);
 end
 

@@ -585,6 +585,10 @@ function this:Init()
     self.Summary = ResIconUtil.New("Summary")
     --积分战斗
     self.BuffBattle = ResIconUtil.New("BuffBattle")
+
+    self.HeadFace = ResIconUtil.New("HeadFace")
+
+    self.HalfBody = ResIconUtil.New("HalfBody")
 end
 
 return this;

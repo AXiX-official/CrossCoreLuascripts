@@ -8,6 +8,9 @@ function SetClickCB(_cb)
 end
 function Awake()
     nameMove = ComUtil.GetCom(nameObj, "TextMove")
+    nameMove.duration = 12
+    nameMove.isMove = false
+    
     anim_neri = ComUtil.GetCom(neri, "ActionBase")
 
     layout = ComUtil.GetCom(vsv, "UIInfinite")
@@ -36,13 +39,13 @@ function Refresh(_cfg, _curMusicID)
     -- SetSelect(curIndex == index)
     -- icon  
     ResUtil:LoadBigImgByExtend(icon, cfg.img)
-    --ResUtil.MultiImg:Load(icon, cfg.img)
+    -- ResUtil.MultiImg:Load(icon, cfg.img)
     CSAPI.SetAnchor(icon, cfg.offices[1], cfg.offices[2], 0)
     CSAPI.SetScale(icon, cfg.offices[3], cfg.offices[3], 1)
     --
-    if(oldCurMusicID and oldCurMusicID~=curMusicID)then 
+    if (oldCurMusicID and oldCurMusicID ~= curMusicID) then
         layout:UpdateList()
-    end 
+    end
     oldCurMusicID = curMusicID
 end
 
@@ -59,10 +62,14 @@ function SetSelect(b)
         CSAPI.SetAnchor(right, 0, 0, 0)
     end
     if (b) then
-        nameMove:SetMove()
+        -- nameMove:SetMove()
+        nameMove.isMove = true
+
         anim_neri:ToPlay()
     else
-        nameMove:ResetAll()
+        -- nameMove:ResetAll()
+        nameMove.isMove = false
+
         anim_neri:SetRun(false)
         CSAPI.SetRectAngle(neri, 0, 0, 0)
     end

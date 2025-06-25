@@ -14,15 +14,15 @@ local canvasGroup=nil;
 
 function Awake()
     animator=ComUtil.GetComInChildren(root,"Animator");
-    local clipInfos=animator.runtimeAnimatorController.animationClips;
     canvasGroup=ComUtil.GetCom(root,"CanvasGroup")
-    if clipInfos and clipInfos.Length>0 then
-        for i=0,clipInfos.Length-1 do
-            local clipName=clipInfos[i].name;
-            local time=clipInfos[i].length;
-            clipTimes[clipName]=time;
-        end
-    end
+    -- local clipInfos=animator.runtimeAnimatorController.animationClips;
+    -- if clipInfos and clipInfos.Length>0 then
+    --     for i=0,clipInfos.Length-1 do
+    --         local clipName=clipInfos[i].name;
+    --         local time=clipInfos[i].length;
+    --         clipTimes[clipName]=time;
+    --     end
+    -- end
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.PetActivity_FSMState_Change,OnFSMStateChange)
     eventMgr:AddListener(EventType.PetActivity_TalkCond_Trigger,OnTalkCondTrigger);
@@ -46,7 +46,8 @@ function Init(_data)
         do return end;
     end
     -- LogError("OnOpen:"..tostring(feedNum).."\t"..tostring(data:GetStageExp()).."\t"..tostring(data:GetWash()).."\t"..tostring(data:GetHappy()).."\t"..tostring(data:GetFood()).."\tStarttime2:"..tostring(data:GetCurrSportStartTime()).."\tKeeptime1:"..tostring(data.data.keep_time).."\tKeeptime2:"..tostring(data:GetKeepTime()))
-        PetActivityMgr:CountPetAttr(data:GetID())
+    clipTimes=PetTweenTimes[data:GetID()]
+    PetActivityMgr:CountPetAttr(data:GetID())
     InitFSM();
     SetDefaultState();
     InitEmoji();

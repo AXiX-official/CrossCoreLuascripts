@@ -10,5 +10,5 @@ end
 function Skill913800501:DoSkill(caster, target, data)
 	-- 913800501
 	self.order = self.order + 1
-	self:AddBuffCount(SkillEffect[913800501], caster, target, data, 913800501,40,40)
+	self:AddBuffCount(SkillEffect[913800501], caster, target, data, 913800501,15,45)
 end

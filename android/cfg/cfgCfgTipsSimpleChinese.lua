@@ -348,6 +348,8 @@ local conf = {
 {'338',	'globalBossOver',	'1',	'',	'活动已结束',	''},
 {'339',	'checkNameError',	'1',	'',	'输入的文字中不得含有敏感字符',	''},
 {'340',	'checkMyNameError',	'1',	'',	'无法命名为当前名字',	''},
+{'341',	'expReminder',	'7',	'',	'您持有的{1}将在24小时内过期，请尽快使用。',	'80001'},
+{'342',	'EquipSynthesisReminder',	'7',	'',	'芯片存在未保存的重构结果，请前往确认。',	'330001'},
 },
 }
 --cfgCfgTipsSimpleChinese = conf
