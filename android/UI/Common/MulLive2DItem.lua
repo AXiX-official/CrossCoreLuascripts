@@ -14,7 +14,7 @@ local clickCounts = {} -- actions 某段点击次数
 local inter = 0.5
 local timer = 0
 
---不同
+-- 不同
 function Awake()
     spineTools = SpineTools.New()
 end
@@ -26,16 +26,16 @@ function Init(_playCB, _endCB, _needClick)
     isInit = true
 end
 
-function Refresh(_modelId, _posType, _callBack,_needClick)
+function Refresh(_modelId, _posType, _callBack, _needClick)
     if (not isInit or _modelId == nil) then
         return
     end
     modelId = _modelId
     posType = _posType
     callBack = _callBack
-    if(_needClick~=nil)then 
+    if (_needClick ~= nil) then
         needClick = _needClick
-    end 
+    end
     -- 重置点击记录
     if (oldModelId and oldModelId == _modelId) then
         if (callBack) then
@@ -57,10 +57,10 @@ function Refresh(_modelId, _posType, _callBack,_needClick)
     -- SetTouch()
 end
 
---不同
+-- 不同
 function SetImg()
     -- 多人插图立绘是会根据异形屏幕做适配的，所以l2d也要按照适配的比例做大小调整，但不是作用在sizeDetail上而是作用在scale上，因为子点击位置是固定的
-    rate = 1--UIUtil:GetSceneRate({2240, 1080})
+    rate = 1 -- UIUtil:GetSceneRate({2240, 1080})
 
     local pos, scale, img, l2dName = RoleTool.GetMulImgPosScale(modelId, posType, true)
 
@@ -77,10 +77,10 @@ function SetImg()
             l2dGo = go
             local l2d = ComUtil.GetCom(l2dGo, "CSpine")
             graphic = ComUtil.GetComInChildren(l2dGo, "SkeletonGraphic")
-            if(l2d) then 
+            if (l2d) then
                 spineTools:Init(l2d)
-            end 
-            isHeXie = false 
+            end
+            isHeXie = false
             if (not l2d or not l2d.animationState) then
                 isHeXie = true
             end
@@ -95,7 +95,6 @@ function SetImg()
 
     imgScale = scale
 end
-
 
 -- 位置触摸
 function SetTouch()
@@ -125,10 +124,16 @@ function TouchItemClickCB(cfgChild)
     end
     local content = cfgChild.content or {}
 
-    local sName, timeScale, progress,isClicksLast = cfgChild.sName, 1, 1,false
+    local sName = cfgChild.sName
+    local mulData = {
+        timeScale = 1,
+        progress = 1,
+        isClicksLast = false
+    }
+    -- local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
     -- content内容
     if (cfgChild.content) then
-        sName, timeScale, progress,isClicksLast = SetContent(cfgChild)
+        sName, mulData = SetContent(cfgChild)
     end
     if (not sName) then
         return
@@ -147,7 +152,7 @@ function TouchItemClickCB(cfgChild)
     if (isCan) then
         local b = false
         if (trackIndex ~= 1 and content.clicks ~= nil) then
-            b = spineTools:PlayByMulClick(sName, trackIndex, timeScale, progress, isClicksLast)
+            b = spineTools:PlayByMulClick(sName, trackIndex, mulData)
         elseif (content.actions ~= nil) then
             -- 首次播放或者再次点击
             local _sName = spineTools:GetNameByTrackIndex(trackIndex)
@@ -158,7 +163,11 @@ function TouchItemClickCB(cfgChild)
                     content.actions.stopTime, content.actions.stopCount)
             end
         else
-            b = spineTools:PlayByClick(sName, trackIndex, true, true, nil)
+            local _b = false
+            if (trackIndex == 1 or content.guochange ~= nil) then
+                _b = true
+            end
+            b = spineTools:PlayByClick(sName, trackIndex, true, _b, nil)
         end
         if (b) then
             PlayAudio(cfgChild)
@@ -167,7 +176,7 @@ function TouchItemClickCB(cfgChild)
     end
 end
 
---当前是否在使用第二套角色
+-- 当前是否在使用第二套角色
 function GetCurRoleNum()
     return 1
 end
@@ -289,7 +298,6 @@ function PlayAudio(cfgChild)
     end
 end
 
-
 function IsIdle()
     if (spineTools) then
         return spineTools:IsIdle()
@@ -300,7 +308,7 @@ end
 -- 能否点击 不同
 function SetClickActive(b)
     isActive = b
-    CSAPI.SetGOActive(mask,b)
+    CSAPI.SetGOActive(mask, b)
 end
 
 function PlayVoiceByID(id)
@@ -351,13 +359,13 @@ end
 
 function SetBlack(isBlack)
     if l2dGo then
-        UIUtil:SetLiveBroadcast(l2dGo,isBlack)
+        UIUtil:SetLiveBroadcast(l2dGo, isBlack)
     end
 end
 -------------进场------------------------
 
 function CheckIn()
-    if (not isHeXie and spineTools~=nil and spineTools:CheckAnimExist("in")) then
+    if (not isHeXie and spineTools ~= nil and spineTools:CheckAnimExist("in")) then
         return true
     end
     return false
@@ -484,12 +492,16 @@ end
 
 ------------------------------新内容-----------------------------
 
-
-
 -- 点击 content内容
 function SetContent(cfgChild)
     local content = cfgChild.content
-    local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
+    local sName = cfgChild.sName
+    local mulData = {
+        timeScale = 1,
+        progress = 1,
+        isClicksLast = false
+    }
+    -- local sName, timeScale, progress, isClicksLast = cfgChild.sName, 1, 1, false
     -- 激活与隐藏
     if (content.activation) then
         for k, v in pairs(touchItems) do
@@ -517,7 +529,7 @@ function SetContent(cfgChild)
     -- 顺序动作
     if (content.orderActions) then
         local index = records[cfgChild.index] or 0
-        index = (index + 1) > #content.orderActions and 1 or  (index + 1)
+        index = (index + 1) > #content.orderActions and 1 or (index + 1)
         sName = content.orderActions[index]
         records[cfgChild.index] = index
     end
@@ -531,13 +543,13 @@ function SetContent(cfgChild)
                 num = records[cfgChild.index] + 1
             end
             records[cfgChild.index] = num
-            progress = content.clicks[num]
-            timeScale = progress == 0 and -1 or 1
-            isClicksLast = num >= #content.clicks
+            mulData.progress = content.clicks[num]
+            mulData.timeScale = mulData.progress == 0 and -1 or 1
+            mulData.isClicksLast = num >= #content.clicks
         end
     end
 
-    return sName, timeScale, progress, isClicksLast
+    return sName, mulData
 end
 
 -- 轨道
@@ -574,7 +586,6 @@ function HadInAudio()
     end
     return false
 end
-
 
 function ClearCache()
     if (l2dGo) then

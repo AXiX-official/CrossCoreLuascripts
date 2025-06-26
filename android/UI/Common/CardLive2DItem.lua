@@ -214,7 +214,11 @@ function TouchItemClickCB(cfgChild)
             SetInterlude(content)
             local cb = GetClickCB(cfgChild)
             if (sName ~= nil) then
-                b = spineTools:PlayByClick(sName, trackIndex, true, true, cb)
+                local _b = false
+                if (trackIndex == 1 or content.guochange ~= nil) then
+                    _b = true
+                end
+                b = spineTools:PlayByClick(sName, trackIndex, true, _b, cb)
             else
                 if (cb) then
                     cb()
@@ -242,9 +246,9 @@ function GetClickCB(cfgChild)
             func = function()
                 local nextCfgChild = cfg.item[cfgChild.content.nextClick]
                 local trackIndex = GetTrackIndex(cfgChild)
-                --LogError(tostring(IsIdle()))
+                -- LogError(tostring(IsIdle()))
                 spineTools:ClearTrack2(trackIndex)
-                --LogError(tostring(IsIdle()))
+                -- LogError(tostring(IsIdle()))
                 TouchItemClickCB(nextCfgChild) -- 触发下一个动作
             end
         end

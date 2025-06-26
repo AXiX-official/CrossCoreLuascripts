@@ -645,7 +645,6 @@ end
 
 function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payType, isInstall, voucherList,shopPriceKey)
 
-    -- ShiryuSDK.OnRoleOffline()
             ---海外------------------------
             local priceInfo=commodity:GetRealPrice(shopPriceKey);
             Log("-------------------canPay------------priceInfo--------"..table.tostring(priceInfo))

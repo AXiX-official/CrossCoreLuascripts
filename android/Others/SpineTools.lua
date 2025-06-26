@@ -254,7 +254,7 @@ function this:PlayByClick(animName, trackIndex, fadeIn, fadeOut, complete)
     if (trackIndex == 1) then
         return self:PlayByClick1(animName, trackIndex, fadeIn, fadeOut, complete)
     else
-        return self:PlayByClick2(animName, trackIndex)
+        return self:PlayByClick2(animName, trackIndex,false, fadeOut)
     end
 end
 
@@ -279,12 +279,15 @@ function this:PlayByClick1(animName, trackIndex, fadeIn, fadeOut, complete)
 end
 
 -- 物件的点击（无渐入渐出）
-function this:PlayByClick2(animName, trackIndex)
+function this:PlayByClick2(animName, trackIndex, fadeIn,fadeOut)
+    fadeOut = fadeOut == nil and false or fadeOut
     local te = self.anim:SetAnimation(trackIndex, animName, false)
     te.Loop = false
     te.TrackTime = 0
     te.TimeScale = 1
-    self.anim:AddEmptyAnimation(trackIndex, self.fadeOutTime, 0)
+    if(fadeOut)then 
+        self.anim:AddEmptyAnimation(trackIndex, self.fadeOutTime, 0)
+    end 
     return true
 end
 
