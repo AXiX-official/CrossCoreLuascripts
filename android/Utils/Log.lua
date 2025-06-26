@@ -127,13 +127,13 @@ end
 function _G.LogError(content)
     if(type(content) =="table")then
         if _G.g_ver_name then
-          CS.CDebug.LogError( table.tostring(content,true).."\n"..debug.traceback() .."\n AppVersion = ".. _G.g_ver_name );  
+          CS.CDebug.LogError("AppVersion = ".. _G.g_ver_name .. "\n" .. table.tostring(content,true).."\n"..debug.traceback());  
         else
           CS.CDebug.LogError( table.tostring(content,true).."\n"..debug.traceback());  
         end
     else
       if _G.g_ver_name then
-        CS.CDebug.LogError((content or "nil").."\n"..debug.traceback() .."\n AppVersion = ".. _G.g_ver_name ,color);
+        CS.CDebug.LogError("AppVersion = ".. _G.g_ver_name .. "\n" .. (content or "nil").."\n"..debug.traceback(),color);
       else
         CS.CDebug.LogError((content or "nil").."\n"..debug.traceback(),color);
       end
