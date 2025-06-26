@@ -46,7 +46,7 @@ function Refresh(_data, _elseData)
                                 elseif(not lastVideoInfos[v.id]) then
                                     lastVideoInfos[v.id] = {}
                                     CreateVideo(cfgVideo.name, videoParent,function (video)
-                                        if gameObject then
+                                        if gameObject and video then
                                             local _info = {
                                                 go = video.gameObject,
                                                 isLoop = cfgVideo.loop ~= nil

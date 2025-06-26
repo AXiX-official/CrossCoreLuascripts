@@ -12,7 +12,6 @@ local top=nil;
 function Awake()
 	UIUtil:AddQuestionItem("EquipStreng",gameObject, question)
 	CSAPI.SetGOActive(question,false)
-	InitLeftPanel();
 	eventMgr = ViewEvent.New();
 	eventMgr:AddListener(EventType.Equip_StrengthTween_State,SetMask)
 end
@@ -28,6 +27,9 @@ end
 
 --openSetting:1-3
 function OnOpen()
+	curIndex1=openSetting or 1;
+	curType=curIndex1;
+	InitLeftPanel();
 	FuncUtil:Call(function()
 		SetMask(false);
 		disNewTween=true;
@@ -37,8 +39,6 @@ function OnOpen()
 			CSAPI.SetGOActive(curChild.gameObject,false)
 		end
 	end
-	curIndex1=openSetting or 1;
-	curType=curIndex1;
     Refresh();
 end
 

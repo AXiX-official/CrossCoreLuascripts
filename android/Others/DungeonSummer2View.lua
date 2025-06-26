@@ -706,7 +706,9 @@ function MoveToTarget(x, y, scale, time, callBack)
 end
 
 function ScaleTo(scale, time)
-    CSAPI.SetUIScaleTo(bg, nil, scale, scale, scale, nil, time)
+    if bg and not IsNil(bg.gameObject) then
+        CSAPI.SetUIScaleTo(bg, nil, scale, scale, scale, nil, time)
+    end
 end
 
 function SetPos(info)

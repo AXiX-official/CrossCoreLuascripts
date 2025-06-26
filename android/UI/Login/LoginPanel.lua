@@ -119,9 +119,9 @@ function Awake()
 end
 ---登录前系统锁定弹网络提示，断网，造成无法获取服务器数据（仅仅真机才会触发,仅仅异常才会执行修复）
 function MJSDKLogincomplete(datapacket)
-    if CSAPI.IsADV() or CSAPI.IsDomestic() then
+    if CSAPI.IsADV() then
         local serverInfo = GetCurrentServer();
-        if serverInfo==nil then
+        if serverInfo==nil and VerChecker then
            --- LogError("触发首次安装，首次打开，弹出提示断网，需要重新获取服务器资源")
             InitServerInfo(function()
                 serverInfo = GetCurrentServer();

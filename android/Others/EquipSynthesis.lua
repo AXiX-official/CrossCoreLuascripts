@@ -49,6 +49,7 @@ function OnEnable()
         eventMgr:AddListener(EventType.Equip_Remove_CombineM,OnRemoveCombine);
         eventMgr:AddListener(EventType.Bag_Update,RefreshPrice);
         eventMgr:AddListener(EventType.Equip_Combine_Ret,OnCombineRet);
+        eventMgr:AddListener(EventType.Equip_SetLock_Ret,OnLockRet)
 	end
 end
 
@@ -111,6 +112,10 @@ end
 
 function GetMoneys()
     return {{10011},{10703}}
+end
+
+function OnLockRet()
+    RefreshList()
 end
 
 --

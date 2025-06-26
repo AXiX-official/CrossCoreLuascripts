@@ -82,9 +82,18 @@ function Awake()
 	CSAPI.SetText(txt_forwardVal, "×" .. playPower[powerIndex]);
 		
 	--底图
-	local goRT = CSAPI.GetGlobalGO("CommonRT")
-	CSAPI.SetRenderTexture(bg, goRT);
-	CSAPI.SetCameraRenderTarget(bgCamera, goRT);
+	-- local goRT = CSAPI.GetGlobalGO("CommonRT")
+	-- -- CSAPI.SetRenderTexture(bg, goRT);
+	-- CSAPI.SetCameraRenderTarget(bgCamera, goRT);
+
+	local size = CSAPI.GetMainCanvasSize()
+	local xScale,yScale = 1,1
+	if size then
+		xScale = size[0] / 1920
+		yScale = size[1] / 1080	
+	end
+	local scale = xScale <= yScale and xScale or yScale
+	CSAPI.SetScale(go,scale,scale,1)
 	
 	blur = ComUtil.GetCom(bgCamera, "SuperBlur")
 end
