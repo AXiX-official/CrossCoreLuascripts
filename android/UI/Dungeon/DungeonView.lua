@@ -92,6 +92,10 @@ function OnOpen()
     if (data) then
         sectionData = DungeonMgr:GetSectionData(data.id)
 
+        if not sectionData then
+            return
+        end
+
         -- bgm
         local bgm = sectionData:GetBGM()
         if bgm then

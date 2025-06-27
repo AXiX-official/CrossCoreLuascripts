@@ -1434,7 +1434,7 @@ end
 
 -- b:进场
 function Anim_uis(b, isPlay)
-    if (isPlay) then
+    if (isPlay and anim_uis~=nil) then
         local animNam = b and "uis_in" or "uis_hidden"
         anim_uis:Play(animNam)
         --

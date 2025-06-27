@@ -171,6 +171,9 @@ end
 
 --获取装备等级，读取等级信息
 function RefreshContent(equip)
+	if IsNil(sBar) or IsNil(cBar) then
+		do return end
+	end
 	if equip:GetLv()<equip:GetMaxLv() then
 		CSAPI.SetGOActive(txt_max,false);
 		CSAPI.SetGOActive(txt_expVal,true);
@@ -290,10 +293,14 @@ function SetPrice(num)
 	local color="#ffffff"
 	if num>PlayerClient:GetCoin(ITEM_ID.GOLD) then
 		color="#ff7781"
-		aphlaCanvas.alpha=0.3;
+		if not IsNil(aphlaCanvas) then
+			aphlaCanvas.alpha=0.3;
+		end
 		canClick=false;
 	else
-		aphlaCanvas.alpha=1;
+		if not IsNil(aphlaCanvas) then
+			aphlaCanvas.alpha=1;
+		end
 		canClick=true;
 	end
 	CSAPI.SetText(txt_price,string.format("<color=%s>%s</color>",color,num));

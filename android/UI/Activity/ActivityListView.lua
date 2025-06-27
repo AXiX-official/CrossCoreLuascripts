@@ -43,10 +43,12 @@ function OnBtnCallBack()
 end
 
 function OnRedPointRefresh()
-    for i, v in ipairs(leftPanel.leftItems) do
-        local isRed = ActivityMgr:CheckRed(datas[i]:GetID())
-        isRed = i == curIndex1 and false or isRed
-        v.SetRed(isRed)
+    if leftPanel then
+        for i, v in ipairs(leftPanel.leftItems) do
+            local isRed = ActivityMgr:CheckRed(datas[i]:GetID())
+            isRed = i == curIndex1 and false or isRed
+            v.SetRed(isRed)
+        end
     end
 end
 

@@ -28,7 +28,7 @@ function OnOpen()
     SetRight()
     -- 积分
     local zf1 = ExerciseMgr:GetScore()
-    local zf2 = lData.score
+    local zf2 = lData and lData.score or 0
     local zf = GCalHelp:GetArmyAddScore(zf1, zf2)
     LanguageMgr:SetText(txtZf, 33069, "+" .. zf)
     -- CSAPI.SetText(txtZf, "+" .. zf)

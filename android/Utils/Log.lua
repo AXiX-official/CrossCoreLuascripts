@@ -126,13 +126,13 @@ end
 
 function _G.LogError(content)
     if(type(content) =="table")then
-        if _G.g_ver_name then
+        if _G.g_ver_name and CS.UnityEngine.Application.platform ~= CS.UnityEngine.RuntimePlatform.WindowsEditor then
           CS.CDebug.LogError("AppVersion = ".. _G.g_ver_name .. "\n" .. table.tostring(content,true).."\n"..debug.traceback());  
         else
           CS.CDebug.LogError( table.tostring(content,true).."\n"..debug.traceback());  
         end
     else
-      if _G.g_ver_name then
+      if _G.g_ver_name and CS.UnityEngine.Application.platform ~= CS.UnityEngine.RuntimePlatform.WindowsEditor then
         CS.CDebug.LogError("AppVersion = ".. _G.g_ver_name .. "\n" .. (content or "nil").."\n"..debug.traceback(),color);
       else
         CS.CDebug.LogError((content or "nil").."\n"..debug.traceback(),color);

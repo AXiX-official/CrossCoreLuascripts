@@ -43,7 +43,9 @@ function OnOpen()
 end
 
 function Refresh()
-	leftPanel.Anim();
+	if isAnim~=true then
+		leftPanel.Anim();
+	end
 	--根据索引显示子物体
 	curChild=CreateChild();
 	if curChild then

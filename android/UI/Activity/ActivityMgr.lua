@@ -224,6 +224,9 @@ end
 
 -- 当天是否已设置跳过
 function this:IsSetToSkip()
+    if(not PlayerClient:GetUid())then 
+        return false
+    end 
     local day = TimeUtil:GetTime3("day")
     local dayRecord = PlayerPrefs.GetString(PlayerClient:GetUid() .. "ActivityTips_Day", "0")
     if (dayRecord ~= "0" and dayRecord == tostring(day)) then

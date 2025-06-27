@@ -695,6 +695,7 @@ function this.OnRoleOffline()
         roleInfoTable.guildName="";
         roleInfoTable.guildLeaderRoleId="";
         roleInfoTable.guildLevel="";
+        print("====================================sdk OnRoleOffline")
         CShiryuSDK:OnRoleOffline(roleInfoTable);
         if CSAPI.IsDomestic() then
             CShiryuSDK:OnRoleInfoUpdate(roleInfoTable)

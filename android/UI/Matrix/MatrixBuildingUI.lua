@@ -75,7 +75,7 @@ end
 
 function SetHP()
     local isShow = false
-    if (buildingState) then
+    if (buildingState and outlineBar~=nil) then
         isShow = true
         local cur, max = data:GetHP()
         if (buildingState == MatrixBuildingType.Create) then

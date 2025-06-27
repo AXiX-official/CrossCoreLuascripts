@@ -571,7 +571,7 @@ function SetInfoItemPos()
         itemInfo.SetPanelPos("PlotButton", 60, -345)
         itemInfo.SetPanelPos("Danger", 60, -23)
         itemInfo.SetItemPos("Double", -209, -425)
-        CSAPI.SetRTSize(itemInfo.layout,579,859)
+        CSAPI.SetRTSize(itemInfo.layout, 579, 859)
     end
 end
 
@@ -596,16 +596,18 @@ function OnBattleEnter()
             if cfgs and #cfgs > 1 then
                 cfg = cfgs[itemInfo.CallFunc("Danger", "GetCurrDanger")]
             end
-            if cfg.arrForceTeam ~= nil then -- 强制上阵编队
-                CSAPI.OpenView("TeamForceConfirm", {
-                    dungeonId = cfg.id,
-                    teamNum = cfg.teamNum
-                })
-            else
-                CSAPI.OpenView("TeamConfirm", { -- 正常上阵
-                    dungeonId = cfg.id,
-                    teamNum = cfg.teamNum
-                }, TeamConfirmOpenType.Dungeon)
+            if cfg then
+                if cfg.arrForceTeam ~= nil then -- 强制上阵编队
+                    CSAPI.OpenView("TeamForceConfirm", {
+                        dungeonId = cfg.id,
+                        teamNum = cfg.teamNum
+                    })
+                else
+                    CSAPI.OpenView("TeamConfirm", { -- 正常上阵
+                        dungeonId = cfg.id,
+                        teamNum = cfg.teamNum
+                    }, TeamConfirmOpenType.Dungeon)
+                end
             end
         end
     end
