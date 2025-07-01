@@ -55,7 +55,6 @@ function OnRecycle()
     isEvent = false;
     isDrag=false;
     cb=nil;
-    dragScript=nil;
     canClick = true
     holdTime = 1.5;
     holdDownTime = 0;
@@ -630,13 +629,13 @@ function OnDragXY(x, y, deltaX, deltaY)
 end
 
 function OnEndDragXY(x, y, deltaX, deltaY)
-    TeamMgr:SetDragFingerID(nil);
     if  (TeamMgr:GetDragFingerID()~=nil and fingerId==nil)  then
         do return end;
     end
     if elseData and elseData.disDrag==true then
 		return;
 	end
+    TeamMgr:SetDragFingerID(nil);
     fingerId=nil;
     EventMgr.Dispatch(EventType.TeamView_DragMask_Change, false)
     -- Log("OnEndDrag....")

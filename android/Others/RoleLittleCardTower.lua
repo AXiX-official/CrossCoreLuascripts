@@ -61,7 +61,6 @@ function OnRecycle()
     isEvent=false;
     isDrag=false;
     cb=nil;
-    dragScript=nil;
     canClick = true
     holdTime = 1.5;
     holdDownTime = 0;

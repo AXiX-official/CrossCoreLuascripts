@@ -31,7 +31,6 @@ function OnRecycle()
 	goRect.pivot = UnityEngine.Vector2(0.5, 0.5)
 	CSAPI.SetAnchor(gameObject, 0, 0, 0)
 	cb=nil;
-    dragScript=nil;
 	canDrag=true;
 	isEvent=false;
 	isDrag=false;
@@ -175,7 +174,7 @@ end
 --设置支援玩家信息
 function SetAssistPlayerInfos(assistData)
 	if assistData then
-		UIUtil:AddHeadByID(fBorder,0.8,assistData.icon_frame,assistData.icon_id);
+		UIUtil:AddHeadByID(fBorder,0.8,assistData.icon_frame,assistData.icon_id,assistData.sel_card_ix);
 		-- SetFIcon(assistData.icon_id)
 		-- SetFBorder(assistData.icon_frame)
 		SetFLv(assistData.level);

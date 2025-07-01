@@ -194,7 +194,7 @@ end
 
 function this:ActionPlay(_cfg)
     local cfg = Cfgs.CfgCardRoleAction:GetByID(_cfg.id)
-    local animators = self.roleLua.animators
+    local animators = self.roleLua.animators or {}
     local name = self:GetCorrectName(_cfg)
     for i = 0, animators.Length - 1 do
         self.roleLua.animators[i]:Play(name)
@@ -206,7 +206,7 @@ function this:ActionPlay(_cfg)
 end
 
 function this:ActionBool(name, b)
-    local animators = self.roleLua.animators
+    local animators = self.roleLua.animators or {}
     for i = 0, animators.Length - 1 do
         self.roleLua.animators[i]:SetBool(name, b)
     end
@@ -215,7 +215,7 @@ end
 function this:SetFloat(name, num)
     num = num < 0 and 0 or num
     num = num > 1 and 1 or num
-    local animators = self.roleLua.animators
+    local animators = self.roleLua.animators or {}
     for i = 0, animators.Length - 1 do
         self.roleLua.animators[i]:SetFloat(name, num)
     end

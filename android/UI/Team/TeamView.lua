@@ -608,6 +608,9 @@ end
 
 --初始化主线队伍列表
 function InitTeamItems()
+	if teamList==nil or (teamList and next(teamList)==nil) then
+		do return end
+	end
 	ItemUtil.AddItems("Team/TeamSelectItem", teamListItems, teamList, teamSelectNode,nil,nil,{canEmpty=canEmpty},function()
 		--计算当前content总长度
 		local height=(g_TeamMaxNum-1)*(249)+262;
