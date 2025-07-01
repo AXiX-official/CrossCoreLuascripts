@@ -815,6 +815,7 @@ function OnBtnChangeEnv()
     PlayerPrefs.SetInt("DomesticSdkEnvirment",currentVal);
     LogError("当前的sdk环境Env修改为：" .. tostring(currentVal))
     UpdateCurrentSDKEnv();
+    -- ShiryuSDK.OnRoleOffline()
 end
 function UpdateCurrentSDKEnv()
     local haskey = PlayerPrefs.HasKey("DomesticSdkEnvirment")

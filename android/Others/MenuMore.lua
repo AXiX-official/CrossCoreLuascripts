@@ -49,7 +49,7 @@ function Awake()
 end
 
 function OnDestroy()
-    if (menu) then
+    if (menu and menu.gameObject~=nil) then
         menu.Anim_uis(true, not isClickMask)
         menu.Anim_center(true, not isClickMask)
     end

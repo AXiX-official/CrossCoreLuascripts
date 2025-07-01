@@ -1434,7 +1434,7 @@ end
 
 -- b:进场
 function Anim_uis(b, isPlay)
-    if (isPlay and anim_uis~=nil) then
+    if (isPlay and anim_uis~=nil and gameObject~=nil) then
         local animNam = b and "uis_in" or "uis_hidden"
         anim_uis:Play(animNam)
         --
@@ -1626,50 +1626,54 @@ function InitSilentDownload()
             end
         end
     end
-    CSAPI.SetGOActive(btnSilentDownload, false)
+    if btnSilentDownload ~= nil then
+        CSAPI.SetGOActive(btnSilentDownload, false)
+    end
 end
 
 function UpdateSilentDownloadProgress()
     local apkVer = tonumber(CSAPI.APKVersion())
     local percent = apkVer <= 6 and 1 or SilentDownloadMgr:GetInfo_CurrentDownloadProgressPecent()
-    CSAPI.SetGOActive(btnSilentDownload, not MenuMgr:GetDownloadRewardState() or percent < 1)
-    -- 暂时屏蔽功能入口
-    -- CSAPI.SetGOActive(btnSilentDownload, false)
-    if btnSilentDownload.gameObject.activeSelf then
-        -- if apkVer <= 6 then
-        --     -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
-        --     CSAPI.SetText(silentDownloadProgresstxt, LanguageMgr:GetByID(15038))
-        -- elseif apkVer >= 7 then
-        if apkVer ~= nil then
-            if apkVer == 7 then
-                -- 7.0版本的包下载进度会有异常，需要特殊处理
-                if SilentDownloadMgr:GetInfo_DownloadSizeTotal() ~= 0 and SilentDownloadMgr:GetInfo_DownloadedSize() ==
-                    0 then
-                    percent = 0
+    if btnSilentDownload ~= nil then
+        CSAPI.SetGOActive(btnSilentDownload, not MenuMgr:GetDownloadRewardState() or percent < 1)
+        -- 暂时屏蔽功能入口
+        -- CSAPI.SetGOActive(btnSilentDownload, false)
+        if btnSilentDownload.gameObject.activeSelf then
+            -- if apkVer <= 6 then
+            --     -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
+            --     CSAPI.SetText(silentDownloadProgresstxt, LanguageMgr:GetByID(15038))
+            -- elseif apkVer >= 7 then
+            if apkVer ~= nil then
+                if apkVer == 7 then
+                    -- 7.0版本的包下载进度会有异常，需要特殊处理
+                    if SilentDownloadMgr:GetInfo_DownloadSizeTotal() ~= 0 and SilentDownloadMgr:GetInfo_DownloadedSize() ==
+                        0 then
+                        percent = 0
+                    end
+                end
+                if percent == 1 or percent == 1.0 or apkVer <= 6 then
+                    local isRed = percent >= 1 and not MenuMgr:GetDownloadRewardState()
+                    UIUtil:SetRedPoint(btnSilentDownload, isRed, 35, 35)
+    
+                    -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
+                    CSAPI.SetText(silentDownloadProgresstxt, LanguageMgr:GetByID(15038))
+                    -- CSAPI.SetGOActive(btnSilentDownload, false)
+                    -- LogError("当前下载进度 ： 完成" )
+                    -- 刷新downloadBtn    
+                    CSAPI.LoadImg(btnSilentDownload, "UIs/Menu/download_btn_01_01.png", true, nil, true)
+    
+                    local textColor = {255, 193, 70, 255}
+                    CSAPI.SetTextColor(silentDownloadProgresstxt.gameObject, textColor[1], textColor[2], textColor[3],
+                        textColor[4])
+                else
+                    -- percent = string.format("%.2f", percent * 100)
+                    percent = math.floor(percent * 100)
+                    CSAPI.SetText(silentDownloadProgresstxt, percent .. "%")
+                    -- LogError("当前下载进度 ： " .. percent .. "%" )
                 end
             end
-            if percent == 1 or percent == 1.0 or apkVer <= 6 then
-                local isRed = percent >= 1 and not MenuMgr:GetDownloadRewardState()
-                UIUtil:SetRedPoint(btnSilentDownload, isRed, 35, 35)
-
-                -- CSAPI.SetText(silentDownloadProgresstxt, "完成")
-                CSAPI.SetText(silentDownloadProgresstxt, LanguageMgr:GetByID(15038))
-                -- CSAPI.SetGOActive(btnSilentDownload, false)
-                -- LogError("当前下载进度 ： 完成" )
-                -- 刷新downloadBtn    
-                CSAPI.LoadImg(btnSilentDownload, "UIs/Menu/download_btn_01_01.png", true, nil, true)
-
-                local textColor = {255, 193, 70, 255}
-                CSAPI.SetTextColor(silentDownloadProgresstxt.gameObject, textColor[1], textColor[2], textColor[3],
-                    textColor[4])
-            else
-                -- percent = string.format("%.2f", percent * 100)
-                percent = math.floor(percent * 100)
-                CSAPI.SetText(silentDownloadProgresstxt, percent .. "%")
-                -- LogError("当前下载进度 ： " .. percent .. "%" )
-            end
+    
         end
-
     end
 end
 

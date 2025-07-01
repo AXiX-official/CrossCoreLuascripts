@@ -60,6 +60,11 @@ function OnRecycle()
     fingerId=nil;
     isEvent=false;
     isDrag=false;
+    cb=nil;
+    dragScript=nil;
+    canClick = true
+    holdTime = 1.5;
+    holdDownTime = 0;
 end
 
 function SetClickCB(_cb)

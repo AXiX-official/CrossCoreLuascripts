@@ -443,7 +443,7 @@ function ShowBtn(_isOpen)
             if (idx == 1 or not groupDatas[idx - 1]:IsOpen()) then
                 isLeft = false
             end
-            if (idx == #groupDatas or not groupDatas[idx + 1]:IsOpen()) then
+            if (idx == #groupDatas or (idx + 1 <= #groupDatas and not groupDatas[idx + 1]:IsOpen())) then
                 isRight = false
             end
         end

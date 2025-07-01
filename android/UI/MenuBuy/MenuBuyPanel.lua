@@ -24,6 +24,10 @@ end
 
 function OnOpen()
     data = MenuBuyMgr:GetCurData()
+    if(not data)then 
+        view:Close()
+        return 
+    end
     data:SetPush(false)
     RefreshPanel()
 end

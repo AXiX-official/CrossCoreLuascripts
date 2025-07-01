@@ -25,6 +25,14 @@ function OnRecycle()
 	goRect.anchorMax = UnityEngine.Vector2(0.5, 0.5)
 	goRect.pivot = UnityEngine.Vector2(0.5, 0.5)
 	CSAPI.SetAnchor(gameObject, 0, 0, 0)
+	cb=nil;
+    dragScript=nil;
+	canDrag=true;
+	isEvent=false;
+	isDrag=false;
+	cDeltaX=0;
+	cDeltaY=0;
+	pressTime=0;
 end
 
 function SetClickCB(_cb)

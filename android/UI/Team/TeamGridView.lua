@@ -25,8 +25,10 @@ end
 
 
 function OnDragGrid(eventData)--用于判断多点拖拽的时候做的处理
-    if dragObj then
+    if dragObj and eventData then
         SetDragActive(eventData.cid==dragObj.data.cid)
+    else
+        SetDragActive(false)
     end
 end
 

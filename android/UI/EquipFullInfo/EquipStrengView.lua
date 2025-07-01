@@ -8,6 +8,7 @@ local isAnim=false;
 local eventMgr=nil;
 local curChild=nil;
 local top=nil;
+local leftDatas=nil;
 
 function Awake()
 	UIUtil:AddQuestionItem("EquipStreng",gameObject, question)
@@ -27,9 +28,13 @@ end
 
 --openSetting:1-3
 function OnOpen()
-	curIndex1=openSetting or 1;
-	curType=curIndex1;
 	InitLeftPanel();
+	if openSetting and openSetting<=#leftDatas then
+		curIndex1=openSetting or 1
+	else
+		curIndex1=1;
+	end
+	curType=curIndex1;
 	FuncUtil:Call(function()
 		SetMask(false);
 		disNewTween=true;
@@ -109,7 +114,7 @@ function InitLeftPanel()
         local go = ResUtil:CreateUIGO("Common/LeftPanel", root.transform)
         leftPanel = ComUtil.GetLuaTable(go)
     end
-    local leftDatas = {{75018, "EquipInfo/btn_02_01"}}
+    leftDatas = {{75018, "EquipInfo/btn_02_01"}}
 	if MenuMgr:CheckModelOpen(OpenViewType.main,"EquipRefining") then
 		table.insert(leftDatas,{75002,"EquipInfo/btn_02_02"})
 		CSAPI.SetGOActive(question,true)

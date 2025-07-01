@@ -338,8 +338,8 @@ function this:GetPower()
     --     cur = math.floor(math.abs(cur) * (add / 100))
     -- end
     -- return cur, max
-    local cur = self.matrixInfo.power.realCost or 0
-    local max = self.matrixInfo.power.add or 0
+    local cur = self.matrixInfo.power and self.matrixInfo.power.realCost or 0
+    local max = self.matrixInfo.power and self.matrixInfo.power.add or 0
     return cur, max
 end
 -- 预警级别
