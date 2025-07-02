@@ -62,7 +62,7 @@ function RefreshPanel()
 end
 
 function Change()
-    CSAPI.SetText(txt_useNum, count .. "")
+    CSAPI.SetText(txt_num, count .. "")
     -- 合计
     if (iconName) then
         ResUtil.IconGoods:Load(priceIcon, iconName .. "_1", true)

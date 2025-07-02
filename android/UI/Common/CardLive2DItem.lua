@@ -679,6 +679,8 @@ function SetContent(cfgChild)
                             end
                         end
                     end
+                    -- 
+                    isDrag = nil --todo 这种处理有问题的，需要优化
                 end
             end
         end
