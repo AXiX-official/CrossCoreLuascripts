@@ -196,7 +196,7 @@ function SetMyData()
     -- title
     UIUtil:AddTitleByID(titleParent, 0.6, info:GetTitle())
 
-    CSAPI.SetGOActive(btnOpen, rank ~= 0 and isOpenReplace)
+    CSAPI.SetGOActive(btnOpen, rank ~= 0 and rank <= 100 and isOpenReplace)
     --
     if (rankType == eRankId.RogueTRank) then
         local maxHard = RogueTMgr:GetMaxHard2()

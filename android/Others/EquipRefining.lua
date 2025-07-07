@@ -81,6 +81,10 @@ function Refresh()
         CSAPI.SetGOActive(tipsObj,false);
         CSAPI.SetGOActive(rightObj,true);
     end
+    RefreshRight();
+end
+
+function RefreshRight()
     local lData={tips=LanguageMgr:GetByID(75009),equip=curItem}
     local rData={tips=LanguageMgr:GetByID(75010),equip=preEquip}
     if lAttr==nil then
@@ -177,6 +181,8 @@ function OnClickGrid(tab)
     end
     if curItem==nil or (curItem and refCount==0) then
         curItem=tab.data;
+        lockSkills=nil;
+        isLockBase=false;
     elseif curItem and refCount>0 then
         --提示是否切换洗炼
         local dialogData={
@@ -195,17 +201,33 @@ function OnLockAttrs(eventData)
     if eventData==nil then
         do return end
     end
-    if eventData.isBase then
-        isLockBase=not isLockBase;
-    else
-        lockSkills=lockSkills or {};
-        local idx=nil;
+    local lockNum=0;
+    local idx=nil;
+    if (eventData.isBase~=true and isLockBase) or  (eventData.isBase  and  isLockBase~=true) then
+        lockNum=1;
+    end
+    if lockSkills then
         for k,v in ipairs(lockSkills) do
             if v==eventData.id then
                 idx=k
                 break;
             end
         end
+        if eventData.id then
+            lockNum=idx and #lockSkills-1+lockNum   or #lockSkills+1+lockNum
+        end
+    elseif eventData.id  then
+        lockNum=lockNum+1;
+    end
+    if lockNum>3 then
+        Tips.ShowTips(LanguageMgr:GetByID(75021));
+        RefreshRight();
+        do return end
+    end
+    if eventData.isBase then
+        isLockBase=not isLockBase;
+    else
+        lockSkills=lockSkills or {};
         if idx then
             table.remove(lockSkills,idx);
         else
