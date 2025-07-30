@@ -24,7 +24,7 @@ function Skill22702:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 22702
-	self:AddTempAttr(SkillEffect[22702], caster, caster, data, "damage",-0.15)
+	self:AddTempAttr(SkillEffect[22702], caster, target, data, "bedamage",-0.15)
 end
 -- 行动开始
 function Skill22702:OnActionBegin(caster, target, data)

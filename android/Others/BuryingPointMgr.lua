@@ -132,4 +132,18 @@ function this:GetDomesticPointData(_datas)
     return _datas;
 end
 
+--按天上传，当天已上报过则忽略
+function this:TrackEventsByDay(_eventName, _datas)
+    if not _eventName or _eventName == "" then
+        return
+    end
+    local recordInfo = FileUtil.LoadByPath("BuryingPointRecord.txt") or {}
+    if recordInfo[_eventName] and not TimeUtil:CheckRefreshByDay(recordInfo[_eventName]) then
+        return
+    end
+    recordInfo[_eventName] = TimeUtil:GetTime()
+    FileUtil.SaveToFile("BuryingPointRecord.txt",recordInfo)
+    self:TrackEvents("mj_" .. _eventName, _datas)
+end
+
 return this

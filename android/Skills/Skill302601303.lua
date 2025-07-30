@@ -32,3 +32,23 @@ function Skill302601303:OnAttackBegin(caster, target, data)
 	-- 302600301
 	self:StealBuff(SkillEffect[302600301], caster, target, data, 2,2)
 end
+-- 攻击结束
+function Skill302601303:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 302600302
+	self:HitAddBuff(SkillEffect[302600302], caster, target, data, 10000,1001,2)
+end

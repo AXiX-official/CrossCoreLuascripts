@@ -1,10 +1,9 @@
 -- 背景图的位置
-local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}, {-32, 17.5},{0, 62.6}}
-local closePos = {{662, 310}, {537.8, 322.1}, {716, 321}, {537.8, 322.1}, {568.1, 249.6}, {657, 237}, {662, 310},
-                  {662, 310}, {0, 100000},{555.9, 310.5}}
-local skipPos = {{607.2, -415.6}, {229, -430}, {283, -442}, {229, -430}, {513.1, -365.6}, {590.9, -327.8},
-                 {607.2, -415.6}, {607.2, -415.6}, {486.6, -385},{497.9, -414.9}}
-
+-- local bgPos = {{14, 0}, {-78, 19}, {-44, 21}, {-78, 19}, {-23.8, 22.5}, {0, 32}, {14, 0}, {14, 0}, {-32, 17.5},{0, 62.6}}
+-- local closePos = {{662, 310}, {537.8, 322.1}, {716, 321}, {537.8, 322.1}, {568.1, 249.6}, {657, 237}, {662, 310},
+--                   {662, 310}, {0, 100000},{555.9, 310.5}}
+-- local skipPos = {{607.2, -415.6}, {229, -430}, {283, -442}, {229, -430}, {513.1, -365.6}, {590.9, -327.8},
+--                  {607.2, -415.6}, {607.2, -415.6}, {486.6, -385},{497.9, -414.9}}
 local curItem = nil
 local endTime = nil
 
@@ -23,10 +22,14 @@ function OnDestroy()
 end
 
 function OnOpen()
-    data = MenuBuyMgr:GetCurData()
-    if(not data)then 
+    if(openSetting)then
+        data = MenuBuyMgr:GetData(openSetting)
+    else  
+        data = MenuBuyMgr:GetCurData()
+    end 
+    if (not data) then
         view:Close()
-        return 
+        return
     end
     data:SetPush(false)
     RefreshPanel()
@@ -49,11 +52,14 @@ function RefreshPanel()
 
     SetBg()
     -- node
-    local len = #Cfgs.CfgPayNoticeWindow:GetAll()
-    for i = 1, len do
-        CSAPI.SetGOActive(this["node" .. i], data:GetID() == i)
+    if (oldIndex) then
+        CSAPI.SetGOActive(this["node" .. oldIndex], false)
     end
-    local func = this["SetNode" .. data:GetID()]
+    local index = cfg.muban or cfg.id
+    oldIndex = index
+    CSAPI.SetGOActive(this["node" .. index], true)
+    --
+    local func = this["SetNode" .. index]
     func()
     --
     SetClose()
@@ -65,7 +71,7 @@ function SetBg()
     num = num == 7 and 1 or num
     local bgRes = "UIs/MenuBuy/" .. num .. "/bg"
     ResUtil:LoadBigImg(bg, bgRes, true, function()
-        local pos = bgPos[data:GetID()]
+        local pos = cfg.bgPos -- bgPos[data:GetID()]
         CSAPI.SetAnchor(bg, pos[1], pos[2])
     end)
 end
@@ -206,9 +212,21 @@ function SetNode10()
     local reward = cfg.item[1]
     curItem = BagMgr:GetFakeData(reward[1], reward[2])
     -- icon 
-    ResUtil.IconGoods:Load(icon2, curItem:GetIcon() .. "_3")
+    ResUtil.IconGoods:Load(icon10, curItem:GetIcon() .. "_3")
     -- num
     CSAPI.SetText(txt10_Num, reward[2] .. "")
+end
+
+function SetNode11()
+    CSAPI.SetText(txtTitle11, cfg.title)
+    CSAPI.SetText(txtDesc11, cfg.des)
+    -- icon
+    local reward = cfg.item[1]
+    curItem = BagMgr:GetFakeData(reward[1], reward[2])
+    -- icon 
+    ResUtil.IconGoods:Load(icon11, curItem:GetIcon() .. "_3")
+    -- num
+    CSAPI.SetText(txt11_Num, reward[2] .. "")
 end
 
 function SetTimes()
@@ -223,7 +241,7 @@ function SetTimes()
 end
 
 function SetClose()
-    local pos = closePos[data:GetID()]
+    local pos = cfg.closePos -- closePos[data:GetID()]
     CSAPI.SetAnchor(btnClose, pos[1], pos[2])
 end
 
@@ -238,7 +256,7 @@ function SetTips()
     -- end
     -- CSAPI.SetGOActive(btnSkip, true)
     --
-    local pos = skipPos[data:GetID()]
+    local pos = cfg.skipPos -- skipPos[data:GetID()]
     CSAPI.SetAnchor(btnSkip, pos[1], pos[2])
 
     -- tick 
@@ -315,6 +333,12 @@ function OnClickBtn10()
     view:Close()
 end
 
+-- 立即领取
+function OnClickBtn11()
+    ShopProto:Buy2(cfg.shopItem, {})
+    view:Close()
+end
+
 function OnClickIcon2()
     if (curItem) then
         GridRewardGridFunc({
@@ -326,3 +350,4 @@ end
 function OnClickClose()
     view:Close()
 end
+

@@ -1,4 +1,4 @@
--- 337115_Buff_name##
+-- 心智扰乱
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -15,5 +15,5 @@ function Buffer337115:OnCreate(caster, target)
 	-- 8765
 	local c765 = SkillApi:GetTeamHP(self, self.caster, target or self.owner,3)
 	-- 337125
-	self:AddAttr(BufferEffect[337125], self.caster, target or self.owner, nil,"attack",-200)
+	self:AddAttr(BufferEffect[337125], self.caster, target or self.owner, nil,"attack",-200*self.nCount)
 end

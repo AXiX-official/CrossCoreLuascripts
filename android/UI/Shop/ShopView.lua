@@ -45,6 +45,8 @@ local lastChildPageIDs=nil;--当前页面的二级页签的id列表
 local lastPageIDs=nil;--当前商店的页面id列表
 local layout6=nil;
 local FirstEnterQuestionItem=false;
+local hasCloseTips=false;
+local closeWindows=nil;
 function Awake()
     ADVJPTxt(false);
     eventMgr = ViewEvent.New();
@@ -61,6 +63,7 @@ function Awake()
     eventMgr:AddListener(EventType.Shop_NewInfo_Refresh,SetNewInfo)
     eventMgr:AddListener(EventType.Shop_ResetTime_Ret,InitRefreshInfo)
     eventMgr:AddListener(EventType.Shop_OpenTime_Ret,OnShopTagRefresh)
+    eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened);
     InitSVList();
     --商店bgm
     local bgm = g_bgm_shop;
@@ -677,11 +680,38 @@ function Update()
 	if countTime>=updateTime then
 		AutoRefresh();
         CheckPageRefresh();
+        CheckShopState();
 		countTime=0;
 	end
     if isNil==true then
         LoopTween();
     end
+end
+
+--检测当前页面是否到关闭时间
+function CheckShopState()
+    if data and currPageData and hasCloseTips==false then --有指定商店ID才做检测
+        if TimeUtil:GetTime()>currPageData:GetCloseTimeData()  and currPageData:GetCloseTimeData()~=0 then --商店已关闭
+            --提示关闭
+            local dialogData={
+               content=LanguageMgr:GetTips(24001),
+               okCallBack=CloseShopPanels,
+            }
+            CSAPI.OpenView("Prompt",dialogData);
+            hasCloseTips=true;
+        end
+    end
+end
+
+function CloseShopPanels()
+    if closeWindows~=nil then
+        for k, v in pairs(closeWindows) do
+            if CSAPI.IsViewOpen(v) then
+                CSAPI.CloseView(v);
+            end
+        end
+    end
+    OnClickBack();
 end
 
 --获得皮肤时，刷新列表
@@ -1253,6 +1283,14 @@ function ADVJPTxt(Active)
         CSAPI.SetGOActive(ADVJP,false);
     end
 end
+
+function OnViewOpened(viewKey)
+    if viewKey then
+        closeWindows=closeWindows or {};
+        closeWindows[viewKey]=viewKey;
+    end
+end
+
 function ReleaseCSComRefs()     
     gameObject=nil;
     transform=nil;
@@ -1284,4 +1322,5 @@ function ReleaseCSComRefs()
     mask=nil;
     top=nil;
     view=nil;
+    closeWindows=nil;
 end

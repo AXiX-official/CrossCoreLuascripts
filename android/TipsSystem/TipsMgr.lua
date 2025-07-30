@@ -95,7 +95,7 @@ function this:ShowMsg(data)
 			MgrCenter:Clear()
 			EventMgr.Dispatch(EventType.Login_Quit, nil,true);	
 			CSAPI.OpenView("LoadPrompt", {content = tipsData:GetContent(), okCallBack = function()
-				if CSAPI.IsADV() then
+				if CSAPI.IsADV() or CSAPI.IsDomestic() then
 					if CSAPI.IsChannel() then --渠道注销
 						EventMgr.Dispatch(EventType.Login_SDK_LogoutCommand, nil,true);
 					end

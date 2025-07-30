@@ -94,6 +94,7 @@ function this:GetNextInfo()
     local lessTime = nil;
     local tempTime=nil;
     local lessID = nil;
+    self.nextInfo=nil;
     for k, v in ipairs(Cfgs.CfgPuzzleBase:GetAll()) do
         if v.begTime then
             local begTime = TimeUtil:GetTimeStampBySplit(v.begTime)

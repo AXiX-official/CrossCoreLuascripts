@@ -151,6 +151,13 @@ function this:GetIconScale()
 	end
 end
 
+function this:IsHide()
+	if self.cfg.hide and self.cfg.hide==1 then
+		return true;
+	end
+	return false;
+end
+
 --卡牌id
 function this:GetCardID()
 	return self.cfg and self.cfg.card_id or nil
@@ -461,6 +468,20 @@ end
 function this:GetObtainrateState()
 	if self.cfg and self.cfg.is_obtainrate_showed then
 		return self.cfg.is_obtainrate_showed;
+	end
+	return nil;
+end
+
+function this:GetPrice()
+	if self.cfg and self.cfg.price then
+		return self.cfg.price
+	end
+	return nil;
+end
+
+function this:GetUseSkip()
+	if self.cfg and self.cfg.use_skip then
+		return self.cfg.use_skip
 	end
 	return nil;
 end

@@ -32,7 +32,11 @@ function Refresh(_info,elseData)
 	CSAPI.SetText(txtFighting, info:GetScore() .. "")
 	-- 显示1
 	if IsShowTurn() then
-        CSAPI.SetText(txtTurnNum, info:GetTurnNum() .. "")
+		if type==eRankId.MultTeamRank then
+            CSAPI.SetText(txtTurnNum,LanguageMgr:GetByID(77036,info:GetTurnNum() ))
+        else
+            CSAPI.SetText(txtTurnNum, info:GetTurnNum() .. "")
+        end
     end
 	--icon
 	-- ResUtil.CRoleItem_BG:Load(iconBg, "btn_02_03")

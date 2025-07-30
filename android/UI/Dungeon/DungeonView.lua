@@ -25,6 +25,12 @@ local changeInfo = nil
 local changeIndex = 1
 -- sp
 local openViewKey = nil
+--bg
+local bgType = DungeonBgType.Normal
+--shop
+local shopPageData = nil
+local shopRefreshTime = 0
+local shopTime,timer = 0,0
 
 function Awake()
     sliderObj = ComUtil.GetCom(slider, "Slider");
@@ -88,13 +94,16 @@ function OnDestroy()
     eventMgr:ClearListener();
 end
 
+function Update()
+    if timer < Time.time then
+        timer=Time.time + 1
+        UpdateShopTime()
+    end
+end
+
 function OnOpen()
     if (data) then
         sectionData = DungeonMgr:GetSectionData(data.id)
-
-        if not sectionData then
-            return
-        end
 
         -- bgm
         local bgm = sectionData:GetBGM()
@@ -103,7 +112,12 @@ function OnOpen()
         end
 
         if not mapView then
-            ResUtil:CreateUIGOAsync("SectionMap/SectionMapView", mapParent, function(go)
+            local path = "SectionMapView"
+            if sectionData:GetBGType() == 2 then
+                path = "SectionMapView2"
+                bgType = DungeonBgType.Change
+            end
+            ResUtil:CreateUIGOAsync("SectionMap/" .. path, mapParent, function(go)
                 local lua = ComUtil.GetLuaTable(go)
                 lua.Init(sectionData)
                 mapView = lua
@@ -121,14 +135,16 @@ end
 -- 初始化右侧栏
 function InitInfo()
     if (itemInfo == nil) then
-        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo7", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.SetClickCB(OnBattleEnter)
+            -- itemInfo.SetClickCB(OnBattleEnter)
         end)
     end
 end
 
 function InitPanel()
+    InitShop()
+    
     DungeonMgr:SetMultiReward(false) -- 进入主线章节关闭多倍
 
     Refresh()
@@ -277,7 +293,7 @@ function OnlyShowListItem(item)
             if item then
                 v.ShowRoot(v == item)
             else
-                v.SetRootScale(mapView.curScale)
+                v.SetRootScale(mapView.rootScale)
                 v.ShowRoot(true)
             end
         end
@@ -340,6 +356,7 @@ function GetListItem()
 
     local go = ResUtil:CreateUIGO("Dungeon/DungeonListItem", mapView.listNode.transform)
     local lua = ComUtil.GetLuaTable(go)
+    lua.SetPivot(bgType)
     return lua
 end
 
@@ -443,7 +460,7 @@ function ShowBtn(_isOpen)
             if (idx == 1 or not groupDatas[idx - 1]:IsOpen()) then
                 isLeft = false
             end
-            if (idx == #groupDatas or (idx + 1 <= #groupDatas and not groupDatas[idx + 1]:IsOpen())) then
+            if (idx == #groupDatas or not groupDatas[idx + 1]:IsOpen()) then
                 isRight = false
             end
         end
@@ -592,84 +609,45 @@ function OnClickItem(item)
     end
 
     selItem = item
-    if (selItem) then
-        if not selItem.IsStory() then
-            selItem.SetSel(true)
-            ShowInfo(selItem)
-        else
-            -- 剧情关卡
-            if selItem.cfg.storyID == nil then
-                LogError("找不到当前关卡的剧情ID，当前关卡ID：" .. selItem.GetID())
-                return
-            end
-
-            local dialogData = {}
-            dialogData.content = LanguageMgr:GetTips(8020)
-            dialogData.okCallBack = function()
-                CSAPI.SetGOActive(mapView.ModelCamera, false);
-
-                local dungeonData = DungeonMgr:GetDungeonData(selItem.cfg.id)
-
-                isStoryFirst = (not dungeonData) or (not dungeonData.data.isPass)
-
-                if isActive then
-                    ShowInfo(nil);
-                end
-                PlotMgr:TryPlay(selItem.cfg.storyID, OnStoryPlayComplete, this, true);
-            end
-            CSAPI.OpenView("Dialog", dialogData)
-        end
-    end
-end
-
-function OnStoryPlayComplete()
-    PlotMgr:Save() -- 播放完毕后保存剧情id
-    FightProto:QuitDuplicate({
-        index = 1,
-        nDuplicateID = selItem.GetID()
-    });
-    local data = {};
-    data.id = selItem.GetID();
-    data.star = 1;
-    data.isPass = true;
-    DungeonMgr:AddDungeonData(data);
-    selItem.Set(selItem.cfg);
-    MenuMgr:UpdateDatas() -- 刷新关卡解锁状态
-    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
-    EventMgr.Dispatch(EventType.Activity_Open_State);
-    EventMgr.Dispatch(EventType.Dungeon_MainLine_Update, sectionData:GetID());
-
-    if currListItem:IsPass() then
-        if CheckShowPassTips(selItem.GetID()) then
-            ShowDungeon()
-            SetHard()
-            return
-        end
-        if isStoryFirst then
-            OnClickNext()
-            return
-        end
-    end
-    ShowDungeon()
-    -- JumpMgr:Jump(10102)
+    selItem.SetSel(true)
+    ShowInfo(selItem)
 end
 ---------------------------------------------itemInfo---------------------------------------------
 -- 关卡信息
 function ShowInfo(item)
     isActive = item ~= nil;
     local cfg = item and item.GetCfg() or nil
+    local type = item and item.GetType() or nil
     CSAPI.SetGOActive(infoMask, isActive)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
-    itemInfo.Show(cfg, nil, OnLoadSuccess)
+    itemInfo.Show(cfg, type, OnLoadSuccess)
     if not isActive then -- 关闭特殊引导
         SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
+    else
+        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
     end
 end
 
 function OnLoadSuccess()
-    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
+    itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
+    itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
+    SetInfoItemPos()
+end
+
+function SetInfoItemPos()
+    itemInfo.SetPanelPos("Title", 0, 449)
+    itemInfo.SetPanelPos("Level", 0, 363)
+    itemInfo.SetPanelPos("Target", 23, 308)
+    itemInfo.SetPanelPos("Output", 23, -71)
+    itemInfo.SetPanelPos("Details", -6, -250)
+    itemInfo.SetPanelPos("Button", 6, -444)
+    itemInfo.SetPanelPos("Plot", 23, 322)
+    if selItem then
+        itemInfo.SetPanelPos("Output", 23, selItem.IsStory() and 15 or -71)
+    end
+    itemInfo.SetPanelPos("PlotButton", 6, -349)
 end
 
 -- 进入
@@ -703,6 +681,27 @@ function OnBattleEnter()
         end
     end
     SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Finish)
+end
+
+function OnStoryCB(_isStoryFirst)
+    isStoryFirst = _isStoryFirst
+    if not isStoryFirst then
+        return
+    end
+    selItem.Set(selItem.cfg);
+
+    if currListItem:IsPass() then
+        if CheckShowPassTips(selItem.GetID()) then
+            ShowDungeon()
+            SetHard()
+            return
+        end
+        if isStoryFirst then
+            OnClickNext()
+            return
+        end
+    end
+    ShowDungeon()
 end
 
 ---------------------------------------------动效---------------------------------------------
@@ -741,7 +740,7 @@ function ClickEnter(itemId, cb)
         end
         local finshFunc = function()
             -- list
-            currListItem.SetRootScale(mapView.curScale)
+            currListItem.SetRootScale(mapView.rootScale)
             currListItem.ShowRoot(true)
             currListItem.SetSel(true)
 
@@ -811,7 +810,7 @@ function ClickSwitch(idx)
         mapView.Switch(currListItem, nil, function()
             mapView.isMove = true
             -- list
-            currListItem.SetRootScale(mapView.curScale)
+            currListItem.SetRootScale(mapView.rootScale)
             currListItem.ShowRoot(true)
             currListItem.SetSel(true)
             SetListItemAction(currListItem, function()
@@ -1167,4 +1166,38 @@ function SetRed()
     local isHardRed = DungeonBoxMgr:CheckRed(sectionData:GetID(), 2)
     -- local isHardRed = CheckRed(sectionData:GetID(), 2)
     UIUtil:SetRedPoint(btnSelHard, isHardRed, 65, 9)
+end
+-------------------------------------------商店-----------------------------------------------
+function InitShop()
+    CSAPI.SetGOActive(btnShop,sectionData:GetShopId() ~= nil)
+    if sectionData:GetShopId() ~= nil then
+        shopPageData = ShopMgr:GetPageByID(sectionData:GetShopId())
+        if shopPageData and shopPageData:GetOpenTimeData() and shopPageData:GetOpenTimeData() ~= 0 and shopPageData:GetOpenTimeData() < TimeUtil:GetTime() then
+            CSAPI.SetGOActive(shopTimeObj, true)
+            SetShopTime()
+        end
+    end
+end
+
+function SetShopTime()
+    shopRefreshTime = shopPageData:GetCloseTimeData() or 0
+    shopTime = shopRefreshTime - TimeUtil:GetTime()
+    if shopTime <= 0 then
+        CSAPI.SetGOActive(btnShop,false)
+    end
+end
+
+function UpdateShopTime()
+    if shopTime > 0 then
+        shopTime = shopRefreshTime - TimeUtil:GetTime()
+        local tab = TimeUtil:GetTimeTab(shopTime)
+        LanguageMgr:SetText(txtShopTime, 34039, tab[1], tab[2], tab[3])
+        if shopTime <= 0 then
+            SetShopTime()
+        end
+    end
+end
+
+function OnClickShop()
+    CSAPI.OpenView("ShopView", shopPageData:GetID())
 end

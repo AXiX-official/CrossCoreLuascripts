@@ -10,5 +10,5 @@ end
 function Skill302600402:DoSkill(caster, target, data)
 	-- 302600402
 	self.order = self.order + 1
-	self:AddProgress(SkillEffect[302600402], caster, target, data, -150)
+	self:AddProgress(SkillEffect[302600402], caster, target, data, 150)
 end

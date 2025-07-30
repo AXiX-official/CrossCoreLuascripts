@@ -35,6 +35,8 @@ SectionActivityType = {
     Rogue = 108,--乱序演习
     Colosseum = 109,--
     GlobalBoss = 110,--世界boss
+    RogueMap = 112, --秘境探索
+    MultTeamBattle=113,--递归沙盒
 }
 
 --章节活动开启类型
@@ -356,7 +358,72 @@ function this:GetLastOpenDungeon(_type)
 	return dungeonCfg;
 end
 
---获取最后通关的副本 --sid：章节id
+-- 获取当前最新关卡
+function this:GetCurrMainLineProgress()
+    if self.showCfgs == nil then
+        self.showCfgs = {}
+        local cfgs = Cfgs.CfgMainLineShow:GetAll()
+        if cfgs then
+            for k, cfg in pairs(cfgs) do
+                table.insert(self.showCfgs, cfg)
+            end
+        end
+        if #self.showCfgs > 0 then
+            table.sort(self.showCfgs, function(a, b)
+                if a.group ~= b.group then
+                    return a.group < b.group
+                else
+                    return a.index < b.index
+                end
+            end)
+        end
+    end
+
+    local cfgDungeon = nil
+    local prograss = 0
+    if #self.showCfgs > 0 then
+        local dungeonData = nil
+        for i, cfg in ipairs(self.showCfgs) do
+            dungeonData = DungeonMgr:GetDungeonData(cfg.id)
+            if dungeonData and dungeonData:IsPass() then
+                if cfg.next then
+                    cfgDungeon = Cfgs.MainLine:GetByID(cfg.next)
+                else
+                    cfgDungeon = dungeonData:GetCfg()
+                end
+                Log(string.format("关卡id：%s，所在组：%s，状态：已通关,主界面显示关卡id：%s", cfg.id, cfg.group,cfgDungeon.id) ..
+                        table.tostring(dungeonData:GetCfg()))
+            else
+                if not cfgDungeon then
+                    cfgDungeon = Cfgs.MainLine:GetByID(cfg.id)
+                end
+                break
+            end
+        end
+        -- 进度计算
+        local currGroup = 1
+        local curNum, maxNum = 0, 0
+        for i, cfg in ipairs(self.showCfgs) do
+            if cfg.group ~= currGroup then
+                if curNum ~= maxNum then -- 上一组未通关完
+                    break
+                else -- 重置进度
+                    curNum, maxNum = 0, 0
+                    currGroup = cfg.group
+                end
+            end
+            local dungeonData = DungeonMgr:GetDungeonData(cfg.id)
+            if dungeonData and dungeonData:IsPass() then
+                curNum = curNum + 1
+            end
+            maxNum = maxNum + 1
+        end
+        prograss = math.floor((curNum / maxNum) * 100)
+    end
+    return cfgDungeon, prograss
+end
+
+-- 获取最后通关的副本 --sid：章节id
 function this:GetLastPassDungeon(sid)
     local cfgs = Cfgs.MainLine:GetGroup(sid)
     local cfg = nil
@@ -469,7 +536,8 @@ function this:IsDungeonOpen(id)
                     else
                         local sectionType = self:GetDungeonSectionType(preChapterId)
                         if sectionType == SectionType.MainLine then
-                            local exStr = cfg2.type == 2 and string.format("(%s)", LanguageMgr:GetByID(15016)) or ""
+                            -- local exStr = cfg2.type == 2 and string.format("(%s)", LanguageMgr:GetByID(15016)) or ""
+                            local exStr = ""
                             dungeonName = cfg2.chapterID .. " " .. cfg2.name .. exStr;
                         elseif cfg2.diff then
                             dungeonName = cfg2.diff == 2 and LanguageMgr:GetByID(15016) .. "-" .. cfg2.name or cfg2.name
@@ -724,7 +792,7 @@ function this:ApplyEnter(id, indexList, duplicateTeamDatas)
     if (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueS) then -- 直接进入战斗的副本
         FightProto:EnterRogueSFight()
     elseif (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueT) then -- 直接进入战斗的副本
-        FightProto:EnterRogueTFight(duplicateTeamDatas)
+        FightProto:EnterRogueTFight(duplicateTeamDatas)      
     elseif dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
         self:SetFightTeamId(indexList[1]); -- 设置正在战斗中的队伍id
 
@@ -1186,6 +1254,8 @@ function this:OnQuit(isExit, jumpType)
                 end
             elseif  cfg.type == eDuplicateType.StarPalace then
                 CSAPI.OpenView(path1,{id = cfg.group,itemId = cfg.id},{isDungeonOver = true})
+            elseif cfg.type == eDuplicateType.MultTeam then --递归沙盒
+                CSAPI.OpenView(path1,{id = cfg.group})
             else
                 CSAPI.OpenView(path1)
             end
@@ -1531,6 +1601,9 @@ function this:IsActivityRed(isUpdate)
 
     if not isRed then --世界boss
         isRed = GlobalBossMgr:IsRed()
+    end
+    if not isRed then
+        isRed=MultTeamBattleMgr:IsRed()
     end
 
     return isRed

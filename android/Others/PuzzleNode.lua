@@ -39,10 +39,15 @@ end
 --info: PuzzleRowRewardInfo
 function SetOverRewardInfo()
     local infos=puzzleInfo:GetOverReward()
-    if infos then
+    if infos and #infos>0 then
+        CSAPI.SetGOActive(allNode,true);  
+        CSAPI.SetAnchor(singleNode,-102,-200);  
         overReward=infos[1];
         local goods=overReward:GetGoodsInfo(1);
         SetRewardGridState("a",goods,overReward:GetState());
+    else
+        CSAPI.SetGOActive(allNode,false);   
+        CSAPI.SetAnchor(singleNode,0,-200);       
     end
 end
 

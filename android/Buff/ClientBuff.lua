@@ -123,8 +123,9 @@ function this:Remove(playRemoveEff)
         if(not playRemoveEff and self.cfg.remove_effect)then
             --self:CreateBuffEffect(self.cfg.remove_effect);
             local cfgBE = Cfgs.buff_effect:GetByKey(self.cfg.remove_effect);
-            if(cfgBE and targetCharacter.gameObject)then
-                ResUtil:CreateBuffEff(cfgBE.res,targetCharacter.gameObject);  
+            if(cfgBE and cfgBE.res and targetCharacter.gameObject)then
+                local bodySize = targetCharacter.GetBodySize();
+                ResUtil:CreateBuffEff(cfgBE.res,targetCharacter.gameObject,nil,bodySize);  
             end  
         end        
 

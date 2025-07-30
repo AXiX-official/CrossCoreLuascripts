@@ -17,10 +17,14 @@ function OnDestroy()
 end
 
 function OnMonthCardDaysChange(days)
-    if this.data and this.data:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
-        SetDays(days);--刷新剩余时间
+    if  this.data and this.data:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
+		local info=this.data:GetMonthCardInfo();
+		if info then
+			SetDays(info.l_cnt);--刷新剩余时间
+		end
     end
 end
+
 function Refresh(_data,_elseData)
     this.data=_data;
     this.elseData=_elseData;
@@ -75,7 +79,19 @@ function Refresh(_data,_elseData)
         --     exStr=LanguageMgr:GetByID(langID,exList[1].num,exList[1].data:GetName());
         -- end
     elseif this.data:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
-        SetDays(ShopMgr:GetMonthCardDays());
+        -- SetDays(ShopMgr:GetMonthCardDays());
+        local gets=this.data:GetMonthCardInfo();
+        if gets then
+            SetDays(gets.l_cnt);
+        else
+            SetDays(0)
+        end
+        if this.data:GetSubType()==CommodityItemSubType.MonthCard2 then --限时月卡，在有效期内不显示售罄
+            if gets and gets.l_cnt>0 then --有效期内不显示剩余数量
+                isOver=false;
+                SetCount();
+            end
+        end
     else
         SetDays(0);
     end
@@ -230,13 +246,19 @@ function SetCost(cost,isOver)
             currPrice=dPriceObj
         end
     end
+    local freeID=18012
+    if this.data:GetType()==CommodityItemType.MonthCard and this.data:GetSubType()==CommodityItemSubType.MonthCard2 and this.data:IsOver() then
+        isOver=true;
+        freeID=18134
+        currPrice=nil;
+    end
     if isOver then
         CSAPI.SetGOActive(priceObj,false);
         CSAPI.SetGOActive(priceObj2,false);
         CSAPI.SetGOActive(priceObj3,false);
         CSAPI.SetGOActive(freeObj,true);
         CSAPI.SetGOActive(dPriceObj,false);
-        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18012));
+        CSAPI.SetText(txt_free,LanguageMgr:GetByID(freeID));
         do return end
     end
     if cost then

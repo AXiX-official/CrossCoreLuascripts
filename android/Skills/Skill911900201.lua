@@ -1,4 +1,4 @@
--- 重力压制
+-- 稽查者技能2
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -22,4 +22,24 @@ function Skill911900201:DoSkill(caster, target, data)
 		-- 8331
 		self:AddValue(SkillEffect[8331], caster, target, data, "suaijian",1)
 	end
+end
+-- 伤害后
+function Skill911900201:OnAfterHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 907800201
+	self:HitAddBuff(SkillEffect[907800201], caster, target, data, 10000,5204,2)
 end

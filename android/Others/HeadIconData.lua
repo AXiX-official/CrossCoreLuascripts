@@ -155,4 +155,13 @@ function this:GetSelectID()
     end
 end
 
+-- 获取阵营 小队
+function this:GetCamp()
+ if (self:IsRoleIcon()) then
+        return self.cRoleInfo:GetCamp()
+    else
+        return 0
+    end
+end
+
 return this

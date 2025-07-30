@@ -175,8 +175,8 @@ function OnPlayDrawTween(proto)
                             if v:IsKeyReward() then
                                 has1st=true;
                             end
-                            if idx==nil or v:GetIndex()<idx then --连抽按最高的算
-                                idx=v:GetIndex();
+                            if idx==nil or v:GetQuality()>idx then --连抽按最高的算
+                                idx=v:GetQuality();
                             end
                             rewardInfo=rewardInfo or {};
                             local info=v:GetGoodInfo();
@@ -184,11 +184,7 @@ function OnPlayDrawTween(proto)
                         end
                     end
                 end
-                if has1st then
-                    videoName=videoName.."1"
-                elseif idx then
-                    videoName=idx>6 and videoName.."6" or videoName..idx
-                end
+                videoName=videoName..idx
                 if idx then
                     CSAPI.PlayUISound("ui_"..videoName);
                     criMovie2 = ResUtil:PlayVideo(videoName,movieObj);

@@ -68,11 +68,13 @@ local mgrNames = {
 	"GlobalBossMgr", --新世界boss
 	"RogueTMgr",
 	"ExplorationMgr",--勘探
-	"PuzzleMgr",
+	"PuzzleMgr",--拼图
 	"OperationActivityMgr", --运营活动
 	"QuestionnaireMgr", --问卷
 	"ActivityPopUpMgr", --活动界面弹出
 	"BuffBattleMgr", --积分战斗
+	"AnniversaryMgr", --周年活动
+	"MultTeamBattleMgr",--递归沙盒
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"
 }

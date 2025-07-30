@@ -41,9 +41,13 @@ local isBossDirll = false
 local isJumpToEnd = false
 local actions = {}
 
+local isMultTeam=false;
+local hpSlider=nil;
+
 function Awake()
     fillExpBar = ComUtil.GetCom(expSlider, "Slider")
     fillExerBar = ComUtil.GetCom(exerSlider, "Slider")
+    hpSlider=ComUtil.GetCom(sliderHp,"Slider");
 
     expBar = ExpBar.New();
     exerBar = ExpBar.New();
@@ -62,7 +66,7 @@ function Awake()
     end
 
     sliderTotal = ComUtil.GetCom(totalSlider, "Slider")
-
+    CSAPI.SetText(txt_topDamage,LanguageMgr:GetByID(20022));
     InitPanel()
 end
 
@@ -141,6 +145,7 @@ function Refresh(_data, _elseData)
     isDirll = elseData and elseData.isDirll
     isBossDirll = elseData and elseData.isBossDirll
     isGlobalSweep = elseData and elseData.isGlobalSweep
+    isMultTeam=elseData and elseData.isMultTeam
     if data then
         -- reward
         rewards = data.rewards or nil
@@ -169,11 +174,12 @@ function RefreshPanel()
     SetPlayer()
     SetRewards()
     SetCards()
-
     if isSweep then
         SetSweepPanel()
     elseif isGlobalSweep then
         SetGlobalBossSweepPanel()
+    elseif isMultTeam then
+        SetMultTeam()
     elseif isDirll then
         SetDirllPanel()
     elseif isBossDirll then
@@ -202,6 +208,8 @@ function SetTitleIcon()
     if elseData then
         if isSweep or isGlobalSweep then
             imgName = "sweep"
+        elseif isMultTeam then
+            imgName = "14_01"  
         elseif isDirll then
             imgName = "dirll_win"
         elseif isBossDirll then
@@ -209,7 +217,7 @@ function SetTitleIcon()
         elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
             imgName = elseData.bIsWin and imgName or "lose"
         elseif sceneType == SceneType.RogueT then
-            imgName = "32_01"
+            imgName = "32_01"        
         end
     end
     if sceneType == SceneType.PVE then --十二星宫
@@ -1184,6 +1192,62 @@ function SetDirllBossPanel()
     -- local maxScore = data.hDamage or 0
     CSAPI.SetGOActive(txt_topDamage, false)
 end
+
+------------------------------------递归沙盒------------------------------------
+function SetMultTeam()
+    CSAPI.SetGOActive(titleObj,true)
+    CSAPI.SetGOActive(damageObj,true)
+    CSAPI.SetGOActive(hpObj,true)
+    --title
+    LanguageMgr:SetText(txtTitle,77017)
+    local score = data and data.score or 0
+    CSAPI.SetText(txtDamage,score.."")
+    --模拟战才显示
+    if elseData and elseData.isDirll==true then
+        CSAPI.SetText(txt_topDamage,LanguageMgr:GetByID(77018));
+        CSAPI.SetGOActive(txt_topDamage,true)
+    else
+        CSAPI.SetGOActive(txt_topDamage,false)
+    end
+    --设置boss血量
+    local cfg= Cfgs.MainLine:GetByID(data and data.id);
+    local maxHp=0;
+    local hp=0;
+    local mCfg=nil;
+    local lv=0;
+    if cfg and cfg.enemyPreview then
+        mCfg = Cfgs.MonsterData:GetByID(cfg.enemyPreview[1]);
+        if mCfg then
+            lv=tostring(mCfg.level);
+        end
+    end
+    if data and data.dupData then
+        local bossInfo=nil;
+        for k,v in ipairs(data.dupData) do
+            if v.dupId==data.id then
+                bossInfo=v;
+                break;
+            end
+        end
+        if bossInfo then
+            maxHp=bossInfo.totalMaxHp or 0;
+            hp=bossInfo.totalHp or 0;
+        end
+    end
+    CSAPI.SetText(txtMaxHp,"/" .. maxHp)
+    CSAPI.SetText(txtHp,"" .. hp)
+    CSAPI.SetGOActive(sliderImg, hp > 0)
+
+    local percent = maxHp > 0 and hp / maxHp or 0
+    hpSlider.value = percent
+    local p = math.floor(percent * 10000)
+    if p <= 0 and hp > 0 then
+        p = 1
+    end
+    CSAPI.SetText(txtHPPercent,string.format("%.2f",p / 100) .. "%")
+    CSAPI.SetText(txtHPLv,tostring(lv))
+end
+
 
 ------------------------------------加成------------------------------------
 function SetBuffs()

@@ -20,8 +20,11 @@ function Set(targetCfg,caller)
         isLoaded = 1;
 
         local key = cfg.key;
-        local res = cfg.res or key;      
-        ResUtil:CreateBuffEff(res,effNode,OnCreated);    
+        local res = cfg.res or key;     
+        
+        local bodySize = targetCharacter and targetCharacter.GetBodySize();
+
+        ResUtil:CreateBuffEff(res,effNode,OnCreated,bodySize);    
         --LogError("创建特效：" .. tostring(res) .. "\n" .. table.tostring(cfg));
     end
 
@@ -62,10 +65,9 @@ end
 
 
 --设置角色
-function SetCharacter(ownerCharacter)
+function SetCharacter(ownerCharacter)    
     targetCharacter = ownerCharacter;
-
-    if (character and buffCtrl and buffCtrl.SetCharacter) then
+    if (targetCharacter and buffCtrl and buffCtrl.SetCharacter) then
         buffCtrl.SetCharacter(targetCharacter);
     end
 end 

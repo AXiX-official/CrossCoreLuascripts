@@ -453,6 +453,10 @@ local conf = {
 {'443',	'DungeonActivity13',	'DungeonActivity13/DungeonActivityView13',	'',	'',	'[[10107],[12013,140027]]',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'444',	'DungeonSummer2',	'DungeonActivity13/DungeonSummer2View',	'',	'',	'[[10107],[12013,140027]]',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'445',	'ExplorationBuy2',	'Exploration/ExplorationBuy2',	'',	'',	'',	'',	'',	'',	'',	'',	'-1',	'1',	''},
+{'446',	'AnniversaryList',	'AnniversaryList/AnniversaryListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'454',	'MultTeamBattleMain',	'MultTeamBattle/MultTeamBattleMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'455',	'MultTeamLimitInfo',	'MultTeamBattle/MultTeamLimitInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'456',	'MultTeamRewardInfo',	'MultTeamBattle/MultTeamRewardInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 },
 }
 --cfgview = conf

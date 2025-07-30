@@ -986,13 +986,18 @@ function SetRD()
     SetActivityEnter()
 end
 function SetAttack()
-    local sectionData = DungeonMgr:GetLastMainLineSection() -- 获取当前进行的主线章节
-    if (sectionData) then
-        local data = sectionData:GetLastOpenDungeon() -- 获取进行的副本配置表
-        local per = sectionData:GetCompletePercent() -- 获取当前章节完成度的百分比 0-100
-        CSAPI.SetText(txtAttackCur, data and data.chapterID or "0-1")
-        fill_attack.fillAmount = per / 100
+    local cfg, prograss = DungeonMgr:GetCurrMainLineProgress()
+    if cfg and prograss then
+        CSAPI.SetText(txtAttackCur, cfg.type == 1 and cfg.chapterID or "h" .. cfg.chapterID)
+        fill_attack.fillAmount = prograss / 100
     end
+    -- local sectionData = DungeonMgr:GetLastMainLineSection() -- 获取当前进行的主线章节
+    -- if (sectionData) then
+    --     local data = sectionData:GetLastOpenDungeon() -- 获取进行的副本配置表
+    --     local per = sectionData:GetCompletePercent() -- 获取当前章节完成度的百分比 0-100
+    --     CSAPI.SetText(txtAttackCur, data and data.chapterID or "0-1")
+    --     fill_attack.fillAmount = per / 100
+    -- end
 end
 
 function SetActivityEnter()
@@ -1008,6 +1013,8 @@ function SetActivityEnter()
             local key = "ActiveEntry" .. activeEnter_tab[1].id
             if (key == "ActiveEntry26") then
                 data = ColosseumMgr:IsRed()
+            elseif (key == "ActiveEntry41") then
+                data = RedPointMgr:GetData(RedPointType.Anniversary)
             else
                 data = RedPointMgr:GetData(key)
             end
@@ -1577,7 +1584,7 @@ function OnClickVirtualkeysClose()
     if btnHide.gameObject.activeInHierarchy == false and OnClickBack then
         OnClickBack()
     else
-        if CSAPI.IsADV() then
+        if CSAPI.IsADV() or CSAPI.IsDomestic() then
             ShiryuSDK.ExitGame()
         end
     end

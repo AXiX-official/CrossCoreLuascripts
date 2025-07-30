@@ -264,6 +264,16 @@ function SkillJudger:CasterIsSummoner(oSkill, caster, target, res)
 	return not res
 end
 
+function SkillJudger:CasterIsSummoner2(oSkill, caster, target, res)
+	local summon = caster.oSummonObj
+	if not summon then return not res end -- 没有召唤物
+
+	if (summon.type == CardType.Summon or summon.bSummonTeammate) and summon.oSummonOwner and summon.oSummonOwner == caster then
+		return res
+	end
+	return not res
+end
+
 -- 攻击方是自己的召唤物
 function SkillJudger:CasterIsOwnSummon(oSkill, caster, target, res)
 	local summon = oSkill.card
@@ -1024,6 +1034,12 @@ function SkillApi:GetTurnCount(oSkill, caster, target)
 	local mgr = oSkill.team.fightMgr
 	LogDebugEx("SkillApi:GetTurnCount", ((mgr.nStepPVE or 0) - (oSkill.card.startopnum or 0)), oSkill.card.startopnum, mgr.nStepPVE, oSkill.card.name)
 	return ((mgr.nStepPVE or 0) - (oSkill.card.startopnum or 0))
+end
+
+-- 获取当前操作数(pvp)
+function SkillApi:GetStep(oSkill, caster, target)
+	local mgr = oSkill.team.fightMgr
+	return mgr.nStep
 end
 
 -- 总伤害

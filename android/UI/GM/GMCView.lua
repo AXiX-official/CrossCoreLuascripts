@@ -691,7 +691,7 @@ function OnClickServerList()
     FuncUtil:Call(function()
         local go = CSAPI.GetView("Login");
         local lua = ComUtil.GetLuaTable(go);
-        lua.OnClickSwitch();
+        lua.OnClickSwitch(true);
     end,nil,1000);
 
     end

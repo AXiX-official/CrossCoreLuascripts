@@ -24,7 +24,7 @@ local leftPanel=nil;
 local leftInfos={};
 curIndex1, curIndex2 = 1, 1;
 local endTime=0;
-local fixedTime=60;
+local fixedTime=1;
 local upTime=0;
 local layout=nil;
 local types={eTaskType.Main,eTaskType.Sub,eTaskType.Daily,eTaskType.Weekly}
@@ -117,7 +117,7 @@ function RefreshPanel()
         isForceSwitch=false;
         local time=currActivty:GetEndTime();
         if time then
-            endTime=TimeUtil:GetTimeStampBySplit(time);
+            endTime=TimeUtil:GetTimeStampBySplit(time)-TimeUtil:GetTime();
         else
             endTime=0;
         end

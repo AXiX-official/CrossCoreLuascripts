@@ -118,3 +118,5 @@ require "BuryingPointMgr"
 --紫龙事件名
 require "ShiryuEventName"
 
+--箭头显示
+ArrowUtil = require "ArrowUtil"

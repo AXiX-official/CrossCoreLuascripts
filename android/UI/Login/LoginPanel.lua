@@ -408,8 +408,11 @@ function OnDestroy()
 end
 
 -- 点击换区
-function OnClickSwitch()
+function OnClickSwitch(isGMC)
     -- 加载一个换区面板
+    if UnityEngine.Application.platform ~= UnityEngine.RuntimePlatform.WindowsEditor and isGMC~=true then
+        do return end
+    end
     if userLogin ~= nil then
         CSAPI.SetGOActive(userLogin, false);
     end
@@ -482,6 +485,7 @@ function OnClickStartBtn()
     -- 	LogError(text);
     -- end);
     if CSAPI.IsADV() or CSAPI.IsDomestic() then
+          SetLoadText();
         if ShiryuSDK.ShiryuLogin.uid and ShiryuSDK.ShiryuLogin.success then
             ShowMask();
             local serverInfo = GetCurrentServer();
@@ -495,8 +499,6 @@ function OnClickStartBtn()
                 CSAPI.OpenView("Dialog", dialogData)
                 return;
             end
-            
-            -- print("url:"..url)
             local JsonTable={}
             JsonTable.uid=ShiryuSDK.ShiryuLogin.uid;
             JsonTable.token=ShiryuSDK.ShiryuLogin.token;
@@ -519,6 +521,10 @@ function OnClickStartBtn()
                 if isOK then
                     local jsonPackage={};
                     jsonPackage =Json.decode(JsonStr);
+                    if jsonPackage==nil or JsonStr==nil then
+                        AdvLoginErrorTitle()
+                        return;
+                    end
                     if jsonPackage.code==0 then
                         ShiryuSDK.Serverlogin=jsonPackage;
                         Login({

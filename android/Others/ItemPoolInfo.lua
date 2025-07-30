@@ -179,7 +179,9 @@ end
 
 function this:IsOver()
     local maxRound=self:GetMaxRounds();
-    if maxRound==-1 then
+    if self:GetExtractType()==ItemPoolExtractType.Control then
+        return GCalHelp:ItemPoolControlSoldOut(self.rewardCfg,self:GetDrawArr());
+    elseif maxRound==-1 then
         return false;
     else
         local canNext,hasOther=self:CanNext();
@@ -302,7 +304,9 @@ function this:CanGet()
     local costGoods=self:GetCostGoods();
     local needCostNum=costGoods and costGoods:GetCount() or 1;
     local costNum=costGoods and BagMgr:GetCount(costGoods:GetID()) or 0;
-    if maxRound==-1 then
+    if self:IsOver() then
+        return canGet;
+    elseif  maxRound==-1 then
         canGet=costNum>=needCostNum;
     else
         local curRound=self:GetRound();
@@ -416,7 +420,7 @@ function this:GetCountMax()
 end
 
 function this:IsLimitImg()
-    return self.cfg and self.cfg.limitimg or false;
+    return self.cfg and self.cfg.limitimg==1 or false;
 end
 
 return this;

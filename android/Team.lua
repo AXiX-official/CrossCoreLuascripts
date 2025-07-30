@@ -548,7 +548,7 @@ function Team:SetGrids(row, col, card, coordinate)
 		local formation = MonsterFormation[card.gridsID]
 		ASSERT(formation)
 		local ret = self:CheckGrids(row, col, formation.coordinate)
-		ASSERT(ret, "CheckGrids error:%s",self.fightMgr.groupID)
+		ASSERT(ret, "CheckGrids error:%s, row:%s, col:%s",self.fightMgr.groupID, row, col)
 		--ASSERT(nil, "MonsterFormation==================")
 		-- relative 相对坐标
 		for i, pos in ipairs(formation.coordinate) do

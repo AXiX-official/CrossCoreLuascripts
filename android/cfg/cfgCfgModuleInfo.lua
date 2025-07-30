@@ -104,6 +104,7 @@ local conf = {
 {'SkinRebate',	'SkinRebate',	'1',	'1',	'487,-72',	'',	'45022,45023',	'',	''},
 {'EquipStreng',	'EquipStreng',	'1',	'1',	'487,-72',	'3001,3002,3003,3004',	'',	'',	''},
 {'LuckyGachaMain',	'LuckyGachaMain',	'1',	'1',	'487,-72',	'',	'67022,67023',	'',	''},
+{'MultTeamBattleMain',	'MultTeamBattleMain',	'1',	'1',	'487,-72',	'3201,3202',	'',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

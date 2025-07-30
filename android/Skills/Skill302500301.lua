@@ -12,3 +12,23 @@ function Skill302500301:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12004], caster, target, data, 0.25,4)
 end
+-- 攻击结束
+function Skill302500301:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 302500301
+	self:HitAddBuff(SkillEffect[302500301], caster, target, data, 2400,3005,1)
+end

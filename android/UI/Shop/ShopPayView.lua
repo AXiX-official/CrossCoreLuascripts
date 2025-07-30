@@ -205,6 +205,8 @@ function InitCommodityInfo()
 			CSAPI.SetGOActive(btnDetails,true);
 		elseif good.data:GetType()==ITEM_TYPE.BG_ITEM then--背景道具
 			CSAPI.SetGOActive(btnDetails,true);
+		elseif good.data:GetType()==ITEM_TYPE.LIMITED_TIME_SKIN or good.data:GetType()==ITEM_TYPE.SKIN then --皮肤
+			CSAPI.SetGOActive(btnDetails,true);
 		end
 		SetDayObj(good.data:GetIconDayTips());
 		if isSmall~=true then
@@ -337,6 +339,9 @@ function OnClickDetails()
 			CSAPI.OpenView("MulPictureView",{id=good.data:GetDyVal1(),showMask=true},commodity:IsShowImg() and 1 or 0);
 		elseif good.data:GetType()==ITEM_TYPE.BG_ITEM then--背景道具
 			CSAPI.OpenView("BGPictureView",{id=good.data:GetDyVal1(),showMask=true});
+		elseif good.data:GetType()==ITEM_TYPE.LIMITED_TIME_SKIN or good.data:GetType()==ITEM_TYPE.SKIN then --皮肤
+			local d={good.data:GetDyVal2(), false};
+			CSAPI.OpenView("RoleInfoAmplification", d,LoadImgType.Main);
 		end
 	end
 end

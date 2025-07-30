@@ -168,6 +168,8 @@ function this.ApplyEnd(sceneType)
 		this.OnGuildBossOver({}, true)
 	elseif (sceneType==SceneType.GlobalBoss) then
 		this.OnGlobalBossOver({},true)
+	elseif (sceneType == SceneType.MultTeam) then
+		this.OnMultTeamBattleOver({},true)
 	else
         this.OnDuplicate({bIsWin = false}, true)
 	end
@@ -234,6 +236,14 @@ function this.OnGlobalBossDirllOver(stage, winer,damage)
 	this.PushEnd(data,true,team,nil, 0, {}, 0,{},false,{isBossDirll = true,isWin = true})
 end
 
+--递归沙河
+function this.OnMultTeamBattleOver(proto,isForceOver,isDirll)
+	local team = this.GetTeamData(eTeamType.MultBattle, false);
+	local exp = this.GetExpList(proto, false);
+	local _data=table.copy(proto)
+	_data.sceneType=SceneType.MultTeam;
+	this.PushEnd(_data, proto.bIsWin, team, nil, 0, exp, 0,{},isForceOver,{isMultTeam=true,isDirll=isDirll})
+end
 --返回编队数据
 function this.GetTeamData(teamID, isDuplicate)
 	local teamData = nil;

@@ -6,45 +6,25 @@ Skill900500201 = oo.class(SkillBase)
 function Skill900500201:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 执行技能
-function Skill900500201:DoSkill(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+-- 行动结束
+function Skill900500201:OnActionOver(caster, target, data)
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 900500201
-	self.order = self.order + 1
-	self:AddBuff(SkillEffect[900500201], caster, self.card, data, 900500201)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	-- 900500203
+	local B1 = SkillApi:BuffCount(self, caster, target,3,3,900500201)
+	-- 900500206
+	if SkillJudger:Less(self, caster, self.card, true,B1,3) then
 	else
 		return
 	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 900500201
-	self.order = self.order + 1
-	self:AddBuff(SkillEffect[900500201], caster, self.card, data, 900500201)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 900500201
-	self.order = self.order + 1
-	self:AddBuff(SkillEffect[900500201], caster, self.card, data, 900500201)
+	-- 900500205
+	self:CallOwnerSkill(SkillEffect[900500205], caster, self.card, data, 900500101)
 end

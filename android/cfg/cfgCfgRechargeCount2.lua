@@ -1,6 +1,6 @@
 local conf = {
 	["filename"] = 'h-活动列表.xlsx',
-	["sheetname"] = 'Sheet1',
+	["sheetname"] = '新手累充',
 	["types"] = {
 'int','string','string','int','json'
 },

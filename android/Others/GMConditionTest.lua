@@ -3,6 +3,7 @@ local inputCond=nil;
 local items={};
 local cond=nil;
 local teamData=nil;
+local isTrueCard=true;
 function Awake()
     inputCond = ComUtil.GetCom(input_cond, "InputField");
     inputID = ComUtil.GetCom(input_id, "InputField");
@@ -11,10 +12,18 @@ function Awake()
     -- inputCond.text="498011,199013,230050"--必须编入总队长、禁止编入治疗角色,队伍人数只能三个
     -- inputCond.text="110040,120010";
     -- inputCond.text="120020|120030"; --只能编入乐团或者不朽的角色
-    inputCond.text="310063";
-    inputID.text="60110";
+    -- inputCond.text="170500";
+    -- inputCond.text="121000000300";--品质大于等于R3
+    -- inputCond.text="121100100300";--品质小于等于R3
+    -- inputCond.text="121205205000";--总等级大于50
+    -- inputCond.text="310063"--必须编入1个携带穿甲芯片的角色
+    -- inputCond.text="329020020211"--最多编入1个携带切割芯片的角色
+    -- inputCond.text="121305305000";--总等级小于50
+    inputCond.text="170400,121000000500|121204204000"
+    inputID.text="50010";
+    -- inputID.text="";
     teamData=GetTeamData();
-    LogError(teamData:GetData())
+    -- LogError(teamData:GetData())
 end
 
 function GetTeamData()
@@ -65,23 +74,61 @@ function OnClick()
     cond=TeamCondition.New();
 	cond:Init(condStr)
     local list={};
-    if id==nil then
-        for k,v in pairs(Cfgs.CardData:GetAll()) do
-            if v.get_from_gm then
-                local card=RoleMgr:GetFakeData(v.id);
-                local result=cond:CheckCard(teamData,card)
+    if isTrueCard then
+        if id==nil then
+            for k,card in pairs(RoleMgr:GetDatas()) do
+                local result,eCode=cond:CheckCard(teamData,card)
                 if result then
                     table.insert(list,card);
                 end
-                LogError(card:GetCfgID().."\t"..card:GetName().."\t"..tostring(result))
+                LogError(card:GetCfgID().."\t"..card:GetName().."\t"..tostring(result).."\t"..tostring(eCode~=nil and LanguageMgr:GetByID(eCode) or "无").."\t"..tostring(eCode))
+            end
+        else
+            local card=RoleMgr:GetData(tonumber(id));
+            if isTrueCard then
+                local teamItem=TeamItemData.New();
+                local tempData = {
+                    cid = card:GetID(),
+                    row = 1,
+                    col = 1,
+                    index=teamData:GetRealCount()+1,
+                }
+                teamItem:SetData(tempData);
+                teamData:AddCard(teamItem);
+            end
+            if card~=nil then
+                local isOK,eCode=cond:CheckCard(teamData,card) 
+                if isOK then
+                    table.insert(list,card);
+                end
+                LogError(card:GetCfgID().."\t"..card:GetName().."\t"..tostring(result).."\t"..tostring(eCode~=nil and LanguageMgr:GetByID(eCode) or "无").."\t"..tostring(eCode))
             end
         end
     else
-        local card=RoleMgr:GetFakeData(tonumber(id));
-        if card~=nil and cond:CheckCard(teamData,card) then
-            table.insert(list,card);
+        if id==nil then
+            for k,v in pairs(Cfgs.CardData:GetAll()) do
+                if v.get_from_gm then
+                    local card=RoleMgr:GetFakeData(v.id);
+                    local result,eCode=cond:CheckCard(teamData,card)
+                    if result then
+                        table.insert(list,card);
+                    end
+                    LogError(card:GetCfgID().."\t"..card:GetName().."\t"..tostring(result).."\t"..tostring(eCode~=nil and LanguageMgr:GetByID(eCode) or "无").."\t"..tostring(eCode))
+                end
+            end
+        else
+            local card=RoleMgr:GetFakeData(tonumber(id));
+            if card~=nil then
+                local isOK,eCode=cond:CheckCard(teamData,card) 
+                if isOK then
+                    table.insert(list,card);
+                end
+                LogError(card:GetCfgID().."\t"..card:GetName().."\t"..tostring(result).."\t"..tostring(eCode~=nil and LanguageMgr:GetByID(eCode) or "无").."\t"..tostring(eCode))
+            end
         end
     end
+    
+    LogError("编队数据："..tostring(cond:CheckPass(teamData)));
     Output(list);
 end
 

@@ -313,8 +313,8 @@ function this:GetCollaborationData(_type,_val)
 end
 
 ---------------------------------------------活动任务------------------------
--- 获取活动任务
-function this:GetActivityDatas(_type, _group, _day)
+-- 获取活动任务 _isNotIndexSort:只根据id排序
+function this:GetActivityDatas(_type, _group, _day,_isNotIndexSort)
     local datas = {}
     local cfgIds = {}
     if not self.datas then
@@ -342,9 +342,11 @@ function this:GetActivityDatas(_type, _group, _day)
         datas = self:GetNewYearMissions(datas, _type, _day)
     elseif _type==eTaskType.Puzzle then
         datas = self:GetPuzzleTasks(datas, _group)
+    elseif _type==eTaskType.MultTeam then
+        datas=self:GetMultTeamTasks(datas,_group)
     end
     if (datas and #datas > 1) then
-        if _type == eTaskType.SevenStage or _type == eTaskType.GuideStage or _type == eTaskType.NewYearFinish then -- 按id排序
+        if _type == eTaskType.SevenStage or _type == eTaskType.GuideStage or _type == eTaskType.NewYearFinish or _isNotIndexSort then -- 按id排序
             table.sort(datas, function(a, b)
                 return a:GetCfgID() < b:GetCfgID()
             end)
@@ -525,6 +527,26 @@ function this:GetPuzzleTasks(_datas,nGroup)
     return arr
 end
 
+---------------------------------------------递归沙盒任务------------------------
+function this:GetMultTeamTasks(_datas,nGroup)
+    local arr = {}
+    if (_datas) then
+        for i, v in pairs(_datas) do
+            if (eTaskType.MultTeam == v:GetType() and v:GetCfg().nGroup==nGroup) then
+                if (not self.CheckIsReset(v) and v:CheckIsOpen()) then
+                    table.insert(arr, v)
+                end
+            end
+        end
+    end
+    if (arr and #arr > 1) then
+        table.sort(arr, function(a, b)
+            return a:GetCfgID() < b:GetCfgID()
+        end)
+    end
+    return arr
+end
+
 -----------------------------------------------协议发------------------------
 -- 任务列表
 function this:GetTasksData()
@@ -615,6 +637,7 @@ function this:CheckRedPointData()
         --回归
         RegressionMgr:CheckRedPointData()
 
+        MultTeamBattleMgr:CheckRedInfo();
         -- 关卡
         DungeonMgr:CheckRedPointData()
     end
@@ -633,6 +656,9 @@ function this:CheckRedPointData()
 
     --积分战斗
     RedPointMgr:UpdateData(RedPointType.BuffBattle,self:CheckRed({eTaskType.PointsBattle}) and 1 or 0)
+
+    --周年活动
+    AnniversaryMgr:CheckRedPointData()
 end
 
 -- 任务添加通知
@@ -729,11 +755,22 @@ function this:ApplyShowMisionTips()
 end
 
 function this:CheckNeedShowTips(old, new)
+    if(not self:IsOpen())then 
+        return
+    end 
     local info = MissionChangeInfo.New()
     info:InitData(new)
     if (info:IsFinish()) then
         self.changeDatas[new.id] = info
     end
+end
+
+function this:IsOpen()
+    if(self.isOpen)then 
+        return self.isOpen
+    end 
+    self.isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, "MissionView")
+    return self.isOpen
 end
 
 --[[

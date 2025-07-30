@@ -64,6 +64,14 @@ function this:GetSeasonID()
     return nil
 end
 
+function this:GetRealSeasonID()
+    if (self:GetSeasonData()) then
+        local id = self:GetSeasonData().id
+        return Cfgs.cfgColosseum:GetByID(id).dupSeasonId
+    end
+    return nil
+end
+
 function this:GetCfg()
     return self.cfg
 end

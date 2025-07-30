@@ -60,3 +60,7 @@ end
 function OnClickOK()
     view:Close();
 end
+
+function OnClickMask()
+    view:Close();
+end

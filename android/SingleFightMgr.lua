@@ -517,7 +517,7 @@ end
 
 -- 创建一个单机模拟战斗
 function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill, exData)
-    LogDebugEx('CreateSimulateFight', groupID, groupID2, seed)
+    LogDebugEx('CreateSimulateFight', groupID, groupID2, seed,exData)
     -- ASSERT()
     local fid = UID(10)
     local seed = seed or 1 -- 结果必然确定
@@ -539,8 +539,19 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
     end
     LogTable(data.data, 'data.data')
     LogTable(tCommanderSkill, 'data.tCommanderSkill')
-
+    local cbData = {}
     mgr:AddPlayer(PlayerClient:GetID(), 1)
+
+
+    local hpData = exData.hpData
+    if hpData and hpData.data then
+        exData.stage = hpData.stage
+        local hpIfs = {}
+        for i, hp in pairs(hpData.data) do
+            hpIfs[i] = { hp = hp }
+        end
+        exData.hpinfo = hpIfs
+    end
     mgr:LoadConfig(groupID2, 1, exData.hpinfo)
     mgr:LoadData(1, data.data, nil, tCommanderSkill)
     mgr:AfterLoadData(exData)
@@ -549,7 +560,10 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
         LogDebugEx('CreateSimulateFight:Over', self.type, self.nDuplicateID, winer,self.nTotalDamage)
         self:AddCmd(CMD_TYPE.End, {stage = stage, winer = winer})
         if cbOver then
-            cbOver(stage, winer,self.nTotalDamage)
+            if exData.isMultTeam then
+                cbData = PackMultTeamFightCbData(self,exData,winer)
+            end 
+            cbOver(stage, winer,self.nTotalDamage,cbData)
         end
         -- g_FightMgrServer = nil
         FightMgrBase.Over(self, stage, winer)
@@ -569,6 +583,37 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
     )
     -- ASSERT()
     return mgr
+end
+
+function PackMultTeamFightCbData(fMgr,exData,winner)
+    local retData = {}
+    retData.id = exData.dupId
+    retData.bIsWin = true
+    local hpInfo = {}
+    hpInfo.stage = fMgr.stage
+    local data = {}
+    for i, v in ipairs(fMgr.arrCard) do
+        if v:GetTeamID() == 2 then
+            if v.configIndex then
+                data[v.configIndex] = v.hp
+            end
+        end
+    end
+    hpInfo.data = data
+    local cfgMainLine = MainLine[exData.dupId]
+    local maxDupScore = cfgMainLine.points
+    local score,totalHp = GCalHelp:MultTeamGetFightRetData(winner,maxDupScore,exData.score,exData.totalHp,exData.totalMaxHp,hpInfo)
+    local dData = {}
+    dData.hpData = hpInfo
+    dData.dupId = exData.dupId
+    local oldScore = dData.score or 0
+    dData.score = score + oldScore
+    dData.totalHp = totalHp
+    dData.totalMaxHp = exData.totalMaxHp
+    retData.dupData = {dData}
+    retData.score = score
+    LogDebugEx("PackMultTeamFightCbData,retData",retData)
+    return retData
 end
 
 -- data 结构

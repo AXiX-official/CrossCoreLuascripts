@@ -705,7 +705,7 @@ function ConfigChecker:MainLine(cfgs)
     g_CalMainLineStarIxs = {}
     g_CalMainLineCount = {}
     g_AbattoirSeason = {}
-
+    g_MultTeamStageDup = {}
     for k, v in pairs(cfgs) do
         if v.starIx then
             local arr = GCalHelp:GetTb(g_CalMainLineStarIxs, v.starIx, {})
@@ -817,6 +817,16 @@ function ConfigChecker:MainLine(cfgs)
 
             local tCfg = {id = v.id,weight = v.weight,themeType = v.themeType}
             table.insert(g_AbattoirSeason[v.season][v.turn],tCfg)
+        end
+
+        if v.type == 17 and v.stage then
+            g_MultTeamStageDup[v.stage] = g_MultTeamStageDup[v.stage] or {}
+            g_MultTeamStageDup[v.stage].dups = g_MultTeamStageDup[v.stage].dups or {}
+            local dups = g_MultTeamStageDup[v.stage].dups
+            dups[v.id] = true
+            local dupNum = g_MultTeamStageDup[v.stage].dupNum or 0
+            g_MultTeamStageDup[v.stage].dupNum = dupNum + 1
+            g_MultTeamStageDup[v.stage].groupId = g_MultTeamStageDup[v.stage].groupId or v.dungeonGroup
         end
     end
 end
@@ -2902,14 +2912,6 @@ function ConfigChecker:cfgWorldBossMonthMission(cfgs)
 
     CommCalCfgTasks(cfgs, eTaskType.GlobalBossMonth)
 end
-function ConfigChecker:cfgWorldBossMission(cfgs)
-    if IS_CLIENT then
-        -- IS_SERVER
-        return
-    end
-
-    CommCalCfgTasks(cfgs, eTaskType.GlobalBossDay)
-end
 
 function ConfigChecker:CfgPointsBattle(cfgs)
     if IS_CLIENT then
@@ -2918,6 +2920,24 @@ function ConfigChecker:CfgPointsBattle(cfgs)
     end
 
     CommCalCfgTasks(cfgs, eTaskType.PointsBattle)
+end
+
+function ConfigChecker:cfgAnniversaryMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.AnniversaryMission)
+end
+
+function ConfigChecker:CfgMultiteamEntrance(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.MultTeam)
 end
 
 function ConfigChecker:CfgExtraExploration(cfgs)
@@ -3366,6 +3386,8 @@ end
 
 function ConfigChecker:DungeonGroup(cfgs)
     g_CalGroupStarIxs = {}
+    g_MultTeamStage = {}
+
     for id, cfg in pairs(cfgs) do
         if cfg.group == 11001 then
             -- 乱序演习词条数量检查
@@ -3387,6 +3409,8 @@ function ConfigChecker:DungeonGroup(cfgs)
                     )
                 end
             end
+        elseif cfg.group == 17001 and cfg.stage then
+            g_MultTeamStage[cfg.stage] = cfg.id
         end
 
         if cfg.starIx then
@@ -3569,5 +3593,13 @@ function ConfigChecker:CfgPet(cfgs)
         end
         ASSERT(feedMax ~= 0, "该宠物(id:%s)对应的养成值有问题,最大值为0", cfg.id)
         cfg.feedMax = feedMax
+    end
+end
+function ConfigChecker:CfgMultiteamBattle(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nSettleTime = GCalHelp:GetTimeStampBySplit(cfg.settlementTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        assert(cfg.nBeginTime < cfg.nEndTime, "多队玩法活动开启时间范围有误")
     end
 end

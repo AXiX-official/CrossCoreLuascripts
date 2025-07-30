@@ -288,16 +288,18 @@ function ItemDragBeginCB(cfgChild, x, y)
         dragObj = l2dGo.transform:Find("pos/" .. content.drag.targetObjName).gameObject
         dragStartPos = CSAPI.csGetAnchor(dragObj)
         CSAPI.SetGOActive(dragObj, true)
-        for k, v in pairs(content.drag.slots) do
-            local slot = graphic.Skeleton:FindSlot(v)
-            if (slot) then
-                slot.A = 0
+        if (content.drag.slots) then
+            for k, v in pairs(content.drag.slots) do
+                local slot = graphic.Skeleton:FindSlot(v)
+                if (slot) then
+                    slot.A = 0
+                end
             end
         end
         -- idle同步
         if (content.drag.targetObjName == "toushi") then
             local l2d = ComUtil.GetCom(l2dGo, "CSpine")
-            local anim = l2d:GetSG("pos/main/toushi/main").AnimationState
+            local anim = l2d:GetSG("pos/" .. content.drag.hideSpine.."/pos/main").AnimationState
             local trackEntry1 = graphic.AnimationState:GetCurrent(0)
             local trackEntry2 = anim:GetCurrent(0)
             trackEntry2.TrackTime = trackEntry1.TrackTime;
@@ -334,13 +336,17 @@ function ItemDragEndCB(cfgChild, x, y, index)
     local content = cfgChild.content or {}
     if (CheckIsDrag(cfgChild)) then
         if (dragObj) then
-            local _dragStartPos = CSAPI.csGetPos(dragObj)
-            local startPos = UnityEngine.Vector3(_dragStartPos[0], _dragStartPos[1], 0)
-            local targetObj = l2dGo.transform:Find("pos/" .. content.drag.targetPosObjName).gameObject
-            local dragTargetPos = CSAPI.csGetPos(targetObj)
-            local targetPos = UnityEngine.Vector3(dragTargetPos[0], dragTargetPos[1], 0)
-            local dis = UnityEngine.Vector3.Distance(startPos, targetPos)
-            if (dis < 10) then
+            local isIn = false -- 在目标范围
+            if (content.drag.targetPosObjName) then
+                local _dragStartPos = CSAPI.csGetPos(dragObj)
+                local startPos = UnityEngine.Vector3(_dragStartPos[0], _dragStartPos[1], 0)
+                local targetObj = l2dGo.transform:Find("pos/" .. content.drag.targetPosObjName).gameObject
+                local dragTargetPos = CSAPI.csGetPos(targetObj)
+                local targetPos = UnityEngine.Vector3(dragTargetPos[0], dragTargetPos[1], 0)
+                local dis = UnityEngine.Vector3.Distance(startPos, targetPos)
+                isIn = dis < 10
+            end
+            if (isIn) then
                 -- 播放动作
                 spineTools:PlayByClick(cfgChild.sName, GetTrackIndex(cfgChild), true, true)
                 PlayAudio(cfgChild)
@@ -358,15 +364,17 @@ function ItemDragEndCB(cfgChild, x, y, index)
                 CSAPI.SetAnchor(dragObj, dragStartPos[0], dragStartPos[1], 0)
                 CSAPI.SetGOActive(dragObj, false)
                 --
-                touchItems[index].SetHideShoe(function()
-                    -- 点击还原鞋
-                    for k, v in pairs(content.drag.slots) do
-                        local slot = graphic.Skeleton:FindSlot(v)
-                        if (slot) then
-                            slot.A = 1
+                if (content.drag.slots) then
+                    touchItems[index].SetHideShoe(function()
+                        for k, v in pairs(content.drag.slots) do
+                            local slot = graphic.Skeleton:FindSlot(v)
+                            if (slot) then
+                                slot.A = 1
+                            end
                         end
-                    end
-                end)
+                    end)
+                end
+
             end
         end
     else
@@ -680,7 +688,7 @@ function SetContent(cfgChild)
                         end
                     end
                     -- 
-                    isDrag = nil --todo 这种处理有问题的，需要优化
+                    isDrag = nil -- todo 这种处理有问题的，需要优化
                 end
             end
         end
@@ -829,7 +837,8 @@ end
 
 -- spine事件
 function SpineEvent(trackEntry, e)
-    if (e.Name == "SpineUI") then
+    local strs = StringUtil:split(e.Name, "_")
+    if (strs[1] == "SpineUI") then
         if (not spineUI) then
             -- 进场
             local UI_Layer_Common = CSAPI.GetGlobalGO("UI_Layer_Common")
@@ -844,10 +853,15 @@ function SpineEvent(trackEntry, e)
             spineUI = nil
             EventMgr.Dispatch(EventType.Menu_SpineUI, false)
         end
+    else
+        if (strs[1] == "TriggerIndex") then
+            PlayByIndex(tonumber(strs[2]))
+        end
     end
 end
 
 function PlayByIndex(index)
     local cfgChild = cfg.item[index]
+    timer = 0 
     TouchItemClickCB(cfgChild)
 end

@@ -118,8 +118,27 @@ function this:CreateBuffEff(res, resParent, callBack,postfix)
     else
         res = self.buffPathPre .. res;
     end
-    local low = CSAPI.GetGameLv() <= 2;
-    CSAPI.CreateGOAsync(res, 0, 0, 0, resParent, callBack, low);
+
+    if(not StringUtil:IsEmpty(postfix))then
+        local tmpRes = res .. "_" .. postfix;
+        local low = CSAPI.GetGameLv() <= 2;
+        CSAPI.CreateGOAsync(tmpRes, 0, 0, 0, resParent, function (go)
+            if(IsNil(go))then
+            CSAPI.CreateGOAsync(res, 0, 0, 0, resParent, callBack, low,false); 
+            end    
+        end, low,false);  
+
+        --[[ CSAPI.LoadPrefab(tmpRes,function (go)
+            if(go)then
+                res = tmpRes;
+            end
+            local low = CSAPI.GetGameLv() <= 2;
+            CSAPI.CreateGOAsync(res, 0, 0, 0, resParent, callBack, low,false);            
+        end,false); ]]
+    else
+        local low = CSAPI.GetGameLv() <= 2;
+        CSAPI.CreateGOAsync(res, 0, 0, 0, resParent, callBack, low,false);        
+    end
 end
 
 -- 角色动态立绘目录
@@ -583,6 +602,7 @@ function this:Init()
 
     --汇总
     self.Summary = ResIconUtil.New("Summary")
+    self.SummaryImg = ResImgUtil.New("UIs/Summary")
     --积分战斗
     self.BuffBattle = ResIconUtil.New("BuffBattle")
 

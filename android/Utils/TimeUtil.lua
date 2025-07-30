@@ -408,7 +408,11 @@ end
 
 --某个月有多少天（下个月的第0天，也就是本月的最后一天）
 function this:DaysInMonth(year, month)
-    return os.date("*t", os.time({year=year, month=month+1, day=0})).day
+    return os.date("*t", os.time({
+        year = year,
+        month = month + 1,
+        day = 0
+    })).day
 end
 
 --是否是同一天
@@ -451,6 +455,33 @@ function this:GetActivyDiffDayZero(time,hour)
     date.min = 0
     date.sec = 0
     return os.time(date)
+end
+
+-- 检测时间戳是否过了指定刷新点
+function this:CheckRefreshByDay(time, refreshTime)
+    if time == nil or time <= 0 then
+        return false
+    end
+    refreshTime = refreshTime or g_ActivityDiffDayTime
+    local offsetTab = TimeUtil:GetTimeTab(TimeUtil:GetTime() - time)
+    if offsetTab[1] > 0 then -- 超过一天
+        return true
+    else
+        local tab1 = TimeUtil:GetTimeHMS(time)
+        local tab2 = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
+        if tab1.day == tab2.day then -- 同一天
+            if tab1.hour < refreshTime and tab2.hour >= refreshTime then -- 刷新前后
+                return true
+            end
+        elseif tab2.day > tab1.day then -- 前后一天
+            if tab1.hour < refreshTime then -- 刷新前
+                return true
+            elseif tab2.hour >= refreshTime then -- 刷新后
+                return true
+            end
+        end
+    end
+    return false
 end
 
 return this

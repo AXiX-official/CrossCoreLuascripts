@@ -1423,7 +1423,7 @@ function FightMgrBase:OnTurnNext()
         self.tWaitForRestore = nil
     end
 
-    local str = '第' .. self.turnNum .. '回合\n'
+    local str = '第' .. self.turnNum .. '回合;操作数'..(self.nStep+self.nStepOffset)..'\n'
     self:PrintCardInfo(str)
 
     LogDebug('##############玩家行动#################' .. card.name .. ' ' .. card.oid)
@@ -3028,6 +3028,7 @@ function PVEFightMgrServer:Over(stage, winer)
         local hpinfo = nil
         local nMinHpPercent = 1
         local fCard = nil
+        local summonLiveCnt = 0
         if winer == 1 then
             grade[1] = 1
             for i, v in ipairs(self.arrCard) do
@@ -3058,6 +3059,12 @@ function PVEFightMgrServer:Over(stage, winer)
                     end
 
                     table.insert(cardIds, v.id)
+                elseif v:GetTeamID() == 1 and v:GetType() == CardType.Summon then
+                    -- 这个是机神
+                    --LogTable(v,"这个是机神")
+                    if math.floor(v.hp) > 0 then
+                        summonLiveCnt = summonLiveCnt + 1
+                    end
                 end
 
                 -- nNp = self.arrNP[1]
@@ -3119,6 +3126,8 @@ function PVEFightMgrServer:Over(stage, winer)
                 end
             end
         end
+        exData.summonLiveCnt = summonLiveCnt
+
 
         -- 后续尽量不新增参数，全部丢在exData里面，需要的自己读出来
         self.oDuplicate:OnFightOver(
@@ -3222,8 +3231,13 @@ end
 
 -- 伤害统计
 function PVEFightMgrServer:DamageStat(caster, nDamage)
-    LogDebug(string.format('DamageStat name = %s damage = %s', caster.name, nDamage))
+    local dupCfg = MainLine[self.nDuplicateID]
+    if dupCfg.type == eDuplicateType.MultTeam and caster:GetTeamID() == 1 then
+        local oldVal = self.nTotalDamage or 0
+        self.nTotalDamage = oldVal + nDamage
+    end
     --LogDebug("PVEFightMgrServer:DamageStat nDamage:" .. nDamage)
+    LogDebug(string.format('DamageStat name = %s damage = %s', caster.name, nDamage))
     self.oDuplicate:UpdateDamageStat(caster, nDamage)
 end
 
@@ -3803,7 +3817,7 @@ elseif IS_SERVER then
     FightMgr = FightMgrServer
     function CreateFightMgr(id, groupID, ty, seed, nDuplicateID)
         LogDebugEx('CreateFightMgr', id, groupID, ty, seed, nDuplicateID)
-        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT or ty == SceneType.BuffBattle then
+        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT or ty == SceneType.BuffBattle or ty == SceneType.MultTeam then
             return PVEFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild then
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)

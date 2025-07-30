@@ -89,7 +89,9 @@ end
 --特殊掉落
 function this.GetSpecialReward(sectionID)
     local cfg = Cfgs.CfgSpecialDrops:GetByID(sectionID)
+    local isFixed = false
     if cfg and cfg.DropsStartTime and cfg.DropsEndTime then
+        isFixed = cfg.isEntryPoint ~= nil
         local begTime = TimeUtil:GetTimeStampBySplit(cfg.DropsStartTime) or 0
         local endTime = TimeUtil:GetTimeStampBySplit(cfg.DropsEndTime) or 0
         local curTime = TimeUtil:GetTime() or 0
@@ -102,11 +104,11 @@ function this.GetSpecialReward(sectionID)
                         table.insert(rewards,{cfgItem.DropItemID})
                     end
                 end
-                return rewards
+                return rewards,isFixed
             end
         end
     end
-	return nil
+	return nil,isFixed
 end
 
 return this

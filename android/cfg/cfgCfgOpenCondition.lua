@@ -45,8 +45,7 @@ local conf = {
 {'PuzzleActivity',	'PuzzleActivity',	'拾光剪影',	'',	'',	'2120',	'',	''},
 {'SignInDuanWu',	'SignInDuanWu',	'龙舟争霸赛',	'',	'',	'2007',	'',	''},
 {'SkinRebate',	'SkinRebate',	'衣惠有礼',	'',	'',	'2002',	'',	''},
-{'EquipRefining',	'EquipRefining',	'重构',	'',	'',	'1045',	'',	''},
-{'EquipSynthesis',	'EquipSynthesis',	'合成',	'',	'',	'1050',	'',	''},
+{'MultTeamBattleMain',	'MultTeamBattleMain',	'递归沙盒',	'',	'',	'2125',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

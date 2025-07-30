@@ -102,7 +102,8 @@ function OnOpen()
 end
 
 function GetIsWin(_sceneType)
-    if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror or _sceneType == SceneType.GlobalBoss or _sceneType == SceneType.RogueT) then
+    if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror or _sceneType == SceneType.GlobalBoss or
+     _sceneType == SceneType.RogueT or _sceneType==SceneType.MultTeam) then
         return true
     elseif _sceneType == SceneType.PVE then
         local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
@@ -140,7 +141,6 @@ function ApplyQuit()
     if(not PlayerClient:GetUid())then
         return;
     end
-
     FightClient:Clean()
     if sceneType == SceneType.PVE or sceneType == SceneType.PVEBuild then -- 清理PVE的数据
         local dungeonId = DungeonMgr:GetCurrId();
@@ -227,6 +227,9 @@ function ApplyQuit()
     elseif (sceneType == SceneType.BuffBattle) then
         ClearTeamData()
         DungeonMgr:Quit(not bIsWin);
+    elseif (sceneType == SceneType.MultTeam) then
+        ClearTeamData()
+        DungeonMgr:Quit(not bIsWin);
     end
 end
 
@@ -234,7 +237,6 @@ function OnClickMask()
     if (isClicked == 2 or isClicked == 1) then
         return;
     end
-
     if bIsWin and not viewLua.IsAnimEnd() then
         isClicked = 1
         viewLua.JumpToAnimEnd()

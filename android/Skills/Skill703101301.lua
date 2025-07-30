@@ -30,6 +30,18 @@ function Skill703101301:OnActionOver2(caster, target, data)
 	-- 4703111
 	self:DelBufferForce(SkillEffect[4703111], caster, self.card, data, 3003,1)
 end
+-- 回合开始时
+function Skill703101301:OnRoundBegin(caster, target, data)
+	-- 8723
+	local count723 = SkillApi:GetCount(self, caster, target,3,4703101)
+	-- 8937
+	if SkillJudger:GreaterEqual(self, caster, self.card, true,count723,7) then
+	else
+		return
+	end
+	-- 4703111
+	self:DelBufferForce(SkillEffect[4703111], caster, self.card, data, 3003,1)
+end
 function Skill703101301:tFunc_703100411_703100301(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then

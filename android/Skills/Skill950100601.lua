@@ -23,6 +23,6 @@ function Skill950100601:OnDeath(caster, target, data)
 	-- 950100601
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:AddHp(SkillEffect[950100601], caster, target, data, -count49)
+		self:AddHp(SkillEffect[950100601], caster, target, data, -count49*0.3)
 	end
 end

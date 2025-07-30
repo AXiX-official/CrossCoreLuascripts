@@ -301,5 +301,9 @@ function this:GetSDKdisplayPrice()
     end
     return nil;
 end
+function this:GetSubType()
+    return nil;
+end
+
 
 return this;

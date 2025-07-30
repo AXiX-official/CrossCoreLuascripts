@@ -84,11 +84,12 @@ function InitLeftPanel()
         leftPanel = ComUtil.GetLuaTable(go)
     end
     local leftDatas = {} -- 多语言id，需要配置英文
-    if #sectionDatas> 0 then
+    if #sectionDatas > 0 then
         for i, v in ipairs(sectionDatas) do
-            local info = v:GetInfo()
-            local id = info and info.rankId or 39006
-            table.insert(leftDatas,{id,"Rank/icon_" .. v:GetID()})
+            local iconName = v:GetRankIcon()
+            if iconName ~= "" then
+                table.insert(leftDatas, {v:GetRankID(),"Rank/" ..  iconName})
+            end
         end
     end
     leftPanel.Init(this, leftDatas)

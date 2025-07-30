@@ -37,8 +37,8 @@ function this:Handle(effEventData)
         self.effFuncArr[APIType.ShowTips] = self.EffAction_ShowTips;  
         self.effFuncArr[APIType.SetInvincible] = self.EffAction_SetInvincible;  
         self.effFuncArr[APIType.UpdateDamage] = self.EffAction_UpdateDamage;  
-        --self.effFuncArr[APIType.SetFury] = self.EffAction_UpdateFury;  
-        --self.effFuncArr[APIType.UpdateFury] = self.EffAction_UpdateFury;  
+        self.effFuncArr[APIType.SetFury] = self.EffAction_UpdateFury;  
+        self.effFuncArr[APIType.UpdateFury] = self.EffAction_UpdateFury;  
 
         self.effFuncArr[APIType.UpdateValue] = self.EffAction_UpdateValue;  
         self.effFuncArr[APIType.DelValue] = self.EffAction_DelValue;  

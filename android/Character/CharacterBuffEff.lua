@@ -84,8 +84,9 @@ function this:ApplyBuffEff(key,caller)
        self.effsUniqueness[key] = be;
    end
 
-   be.Set(cfg,caller);
    be.SetCharacter(self.character);
+   be.Set(cfg,caller);
+   
    
    --处理播放模式
    local playEffs = self:GetPlayEffTable(cfg.play_model);

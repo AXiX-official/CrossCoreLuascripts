@@ -375,11 +375,12 @@ function this:GetBuyLimitDesc()
     local preComm=self:GetPreLimitID();--前置购买ID
     local type = self:GetBuyLimitType()
     local val = self:GetBuyLimitVal()
-    if preComm and ShopMgr:HasBuyRecord(preComm)~=true then
-        local comm=CommodityData.New();
-        comm:SetCfg(preComm);
-        str= LanguageMgr:GetByID(18080,comm:GetName());
-        return str;
+    if preComm then
+        local _itemData = ShopMgr:GetFixedCommodity(preComm)
+        if (_itemData and _itemData:IsOver()~=true) then
+            str= LanguageMgr:GetByID(18080,_itemData:GetName());
+            return str;
+        end
     end
     if type == CommodityLimitType.Null then
     elseif type == CommodityLimitType.Day then
@@ -396,6 +397,8 @@ function this:GetBuyLimitDesc()
         if dungeonInfo then
             str= LanguageMgr:GetByID(18079,dungeonInfo:GetCfg().name)
         end
+    elseif type==CommodityLimitType.MultTeamStage and val~=nil then
+        str=LanguageMgr:GetByID(77031,self:GetBuyLimitVal());
     end
     return str;
 end
@@ -407,7 +410,10 @@ function this:GetBuyLimit()
     local val = self:GetBuyLimitVal()
     local canBuy = false
     if preComm and ShopMgr:HasBuyRecord(preComm)~=true then
-        return canBuy;
+        local _itemData = ShopMgr:GetFixedCommodity(preComm)
+        if _itemData and _itemData:IsOver()~=true then --售罄才提示
+            return canBuy;
+        end
     end
     if type == CommodityLimitType.Null or type==nil then
         canBuy = true
@@ -421,6 +427,10 @@ function this:GetBuyLimit()
         if dungeonInfo then
             canBuy=dungeonInfo:IsPass();
         end
+    elseif type == CommodityLimitType.LovePlus then
+        canBuy = LovePlusMgr:IsCommOpen(val)
+    elseif type==CommodityLimitType.MultTeamStage then
+        canBuy=MultTeamBattleMgr:IsCommOpen(val)
     end
     return canBuy
 end
@@ -443,6 +453,36 @@ function this:GetPrice(key)
             info.num = v[2]
             table.insert(priceInfo, info)
         end
+    end
+    if self:GetType() == CommodityItemType.SUIT then
+        priceInfo = self:GetSUITPrice(priceInfo,key)
+    end
+    return priceInfo
+end
+
+--套装礼包
+function this:GetSUITPrice(priceInfo,key)
+    if not priceInfo then
+        return
+    end
+    if self.cfg and self.cfg.packList then
+        local totalPrice,subPrice = 0,0
+        for i, v in ipairs(self.cfg.packList) do
+            local comm = ShopMgr:GetFixedCommodity(v)
+            if comm and comm:GetPrice(key) then
+                totalPrice = totalPrice + (comm:GetPrice(key)[1].num and comm:GetPrice(key)[1].num or 0)
+                local list = comm:GetCommodityList()
+                if list then
+                    for k, m in ipairs(list) do
+                        if BagMgr:GetCount(m.cid) > 0 then
+                            subPrice = subPrice + (comm:GetPrice(key)[1].num and comm:GetPrice(key)[1].num or 0)
+                            break
+                        end
+                    end
+                end
+            end
+        end
+        priceInfo[1].num = math.floor(GCalHelp:GetLovePlusShopSuitPrice(priceInfo[1].num,totalPrice,subPrice))
     end
     return priceInfo
 end
@@ -656,6 +696,13 @@ function this:IsOver()
             return true 
         elseif dyVal1 then
            return ShopCommFunc.GetThemeInfo(dyVal1);
+        end
+    elseif self:GetType() == CommodityItemType.SUIT then
+        local priceInfo = self:GetPrice()
+        if priceInfo and priceInfo[1].num <= 0 then
+            return true
+        elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then
+            return true
         end
     elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then 
         return true 
@@ -876,7 +923,7 @@ end
 --返回现金价格符号
 function this:GetCurrencySymbols(isFixed)
     local str=LanguageMgr:GetByID(18013);
-    if CSAPI.IsADV() and isFixed~=true then
+    if (CSAPI.IsADV()) and isFixed~=true then
         str=self:GetCfg().displayCurrency;
         if str==nil then
             str=RegionalSet.RegionalCurrencyType();
@@ -896,4 +943,48 @@ function this:GetSDKdisplayPrice()
     end
     return nil;
 end
+--返回月卡信息
+function this:GetMonthCardInfo()
+    local info=nil;
+    if self:GetType()==CommodityItemType.MonthCard then
+        local goods=self:GetCommodityList();
+        for k, v in pairs(goods) do
+            if v.data.GetClassType and v.data:GetClassType()=="GoodsData" and v.data:GetType()==ITEM_TYPE.PROP then
+                info=ShopMgr:GetMonthCardInfoByID(v.data:GetCfgID())
+                break;
+            end
+        end
+    end
+    return info;
+end
+
+function this:GetSubType()
+    return self.cfg and self.cfg.subType or nil;
+end
+
+---------------------------------------------爱相随---------------------------------------------
+function this:GetGrid1()
+    if self.cfg.grid1 == nil then
+        return nil
+    end
+    return self.grid1
+end
+
+function this:SetGrid1(id)
+    self.grid1 = id
+end
+
+function this:GetGrid2()
+    if self.cfg.grid2 == nil then
+        return nil
+    end
+    return self.grid2
+end
+
+function this:SetGrid2(id)
+    self.grid2 = id
+end
+
+---------------------------------------多队战斗版本新增需求--------------------
+
 return this

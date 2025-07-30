@@ -12,3 +12,23 @@ function Skill302600204:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
 end
+-- 攻击结束
+function Skill302600204:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 302600202
+	self:HitAddBuff(SkillEffect[302600202], caster, target, data, 7500,1001,2)
+end

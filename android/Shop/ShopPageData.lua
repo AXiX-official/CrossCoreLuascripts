@@ -65,6 +65,10 @@ function this:GetTips()
 	return self.cfg and self.cfg.tips or nil;
 end
 
+function this:IsHide()
+	return self.cfg and self.cfg.isHide or false;
+end
+
 function this:GetOpenTime()
 	local time = self:GetOpenTimeData();
 	if time>0 then
@@ -189,6 +193,15 @@ function this:GetCommodityInfos(isLimit,topTabID)
 				end
 				if CSAPI.IsAppReview() and self:GetShowType()==6 and itemData:GetType()==CommodityItemType.Skin and canAdd==true and itemData:GetID()~=ShopCommFunc.fixedSkinID then--皮肤
 					canAdd=false;
+				end
+				if itemData:GetType()==CommodityItemType.MonthCard and itemData:GetSubType()==CommodityItemSubType.MonthCard2 and canAdd==true then --限时月卡
+					--没有剩余数量且没有剩余天数就不显示
+					local monthInfo=itemData:GetMonthCardInfo();
+					if monthInfo and monthInfo.l_cnt==0 and itemData:IsOver() then
+						canAdd=false;
+					else
+						canAdd=true;
+					end
 				end
 				-- if itemData:GetShopID()==4 then
 				-- 	LogError(itemData:GetID().."\t"..tostring(itemData:IsShow()).."\t"..tostring(itemData:IsOver()).."\t canAdd:"..tostring(canAdd))

@@ -15,8 +15,11 @@ function Skill305000505:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	local targets = SkillFilter:All(self, caster, target, 4)
 	for i,target in ipairs(targets) do
-		self:DamagePhysics(SkillEffect[11504], caster, target, data, 2.1,1)
+		self:DamagePhysics(SkillEffect[11504], caster, target, data, 2,1)
 	end
+	-- 305000512
+	self.order = self.order + 1
+	self:DelBufferForce(SkillEffect[305000512], caster, self.card, data, 305000400)
 end
 -- 行动结束2
 function Skill305000505:OnActionOver2(caster, target, data)
@@ -35,7 +38,7 @@ function Skill305000505:OnActionOver2(caster, target, data)
 	-- 305000402
 	self:SetFury(SkillEffect[305000402], caster, self.card, data, 0)
 	-- 305000403
-	self:DelBufferForce(SkillEffect[305000403], caster, self.card, data, 305000301)
+	self:DelBufferTypeForce(SkillEffect[305000403], caster, self.card, data, 305000301)
 end
 -- 攻击结束
 function Skill305000505:OnAttackOver(caster, target, data)
@@ -85,4 +88,19 @@ function Skill305000505:OnActionOver(caster, target, data)
 	end
 	-- 305000325
 	self:AddFury(SkillEffect[305000325], caster, self.card, data, 10,100)
+end
+-- 伤害后
+function Skill305000505:OnAfterHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 305000505
+	self:LimitDamage(SkillEffect[305000505], caster, target, data, 0.05,8)
 end

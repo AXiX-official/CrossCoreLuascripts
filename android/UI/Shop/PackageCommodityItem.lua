@@ -14,8 +14,11 @@ function OnDestroy()
 end
 
 function OnMonthCardDaysChange(days)
-    if this.data and this.data:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
-        SetDays(days);--刷新剩余时间
+    if  this.data and this.data:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
+		local info=this.data:GetMonthCardInfo();
+		if info and info.id==ITEM_ID.MonthCard then
+			SetDays(days);--刷新剩余时间
+		end
     end
 end
 

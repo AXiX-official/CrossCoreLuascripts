@@ -18,7 +18,7 @@ end
 
 function SetIcon()
     if info.icon then
-        ResUtil.Summary:Load(icon,info.icon)
+        ResUtil.Summary:Load(icon,"1/" .. info.icon)
     end
 end
 

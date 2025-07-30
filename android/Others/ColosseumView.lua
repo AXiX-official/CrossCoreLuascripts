@@ -35,13 +35,14 @@ end
 
 function OnOpen()
     -- 请求数据
+    local oldSeason = ColosseumMgr:GetSeasonID()
     AbattoirProto:GetSeasonData(function()
         CSAPI.SetGOActive(AdaptiveScreen, true)
         RefreshPanel()
         -- 处理跳转
         if (data) then
             local cfgDungeon = Cfgs.MainLine:GetByID(data)
-            if (cfgDungeon.season == ColosseumMgr:GetSeasonID()) then
+            if (oldSeason and oldSeason == ColosseumMgr:GetSeasonID()) then
                 if (cfgDungeon.modeType == 1) then
                     local isBuy = ColosseumMgr:CheckIsBuy(1)
                     if (isBuy) then

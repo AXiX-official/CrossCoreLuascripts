@@ -8,9 +8,9 @@ function Skill305000103:Init(skillID, card)
 end
 -- 执行技能
 function Skill305000103:DoSkill(caster, target, data)
-	-- 11001
+	-- 11002
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
+	self:DamagePhysics(SkillEffect[11002], caster, target, data, 0.5,2)
 end
 -- 伤害前
 function Skill305000103:OnBefourHurt(caster, target, data)
@@ -30,5 +30,5 @@ function Skill305000103:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 305000103
-	self:AddTempAttr(SkillEffect[305000103], caster, target, data, "defense",-360)
+	self:AddTempAttr(SkillEffect[305000103], caster, target, data, "defense",-180)
 end

@@ -6,35 +6,26 @@ Skill330703 = oo.class(SkillBase)
 function Skill330703:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 攻击开始
-function Skill330703:OnAttackBegin(caster, target, data)
+-- 回合开始时
+function Skill330703:OnRoundBegin(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8214
-	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
 	else
 		return
 	end
 	-- 330703
-	if self:Rand(6000) then
-		self:StealBuff(SkillEffect[330703], caster, target, data, 2,1)
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[330703], caster, target, data, 330703)
 	end
-end
--- 伤害前
-function Skill330703:OnBefourHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8214
-	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
-	else
-		return
-	end
 	-- 330713
-	self:AddTempAttr(SkillEffect[330713], caster, self.card, data, "damage",0.20)
+	local targets = SkillFilter:All(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		self:OwnerAddBuff(SkillEffect[330713], caster, target, data, 330703)
+	end
 end

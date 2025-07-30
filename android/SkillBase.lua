@@ -1433,22 +1433,12 @@ function SkillBase:Apply(caster, targets, pos, data)
 	self:DoDeathEventWithLog()
 
 
-
 	-- 行动结束追击反击
 	mgr:DealCallSkill()
 
-	-- if mgr.lstCallSkill and #mgr.lstCallSkill>0 then
+	-- 4.0 追击反击也可能出现死亡[怪物被动是死亡时候恢复我方角色np，但这个怪物被反击或者额外攻击杀死的时候不会恢复np]
+	self:DoDeathEventWithLog()
 
-	-- 	-- print("mgr.lstCallSkill", #mgr.lstCallSkill)
-	-- 	for i,v in ipairs(mgr.lstCallSkill) do
-	-- 		-- print("--------lstCallSkill------------------", i)
-	-- 		-- xpcall(v.fun, XpcallCB, v.obj, unpack(v.arg))
-	-- 		v.fun(v.obj, unpack(v.arg))
-	-- 	end
-
-	-- 	mgr.lstCallSkill = nil
-	-- end
- 
 	self.log:EndSub("datas")
 
 	-- end

@@ -10,7 +10,7 @@ function OnDestroy()
 end
 
 function OnMemberCardRet()
-    local info=ShopMgr:GetMonthCardInfo(ItemMemberType.Month);
+    local info=ShopMgr:GetMonthCardInfoByID(ITEM_ID.MonthCard);
     if info then
         LanguageMgr:SetText(txt_day,18035,tostring(info.l_cnt));
     end
@@ -25,7 +25,7 @@ function Refresh(_data)
         --获取月卡状态
         local commodity=ShopMgr:GetFixedCommodity(monthId);
         if commodity and commodity:GetResetTime()>0 then
-            local info=ShopMgr:GetMonthCardInfo(ItemMemberType.Month);
+            local info=ShopMgr:GetMonthCardInfoByID(ITEM_ID.MonthCard);
             --显示购买按钮状态
             if info and info.l_cnt>0 then
                 LanguageMgr:SetText(txt_day,18035,tostring(info.l_cnt));

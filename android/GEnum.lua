@@ -181,6 +181,7 @@ ShopBuyLimitType.NewPlrByDay = 1 -- 1：新号前几天
 ShopBuyLimitType.PlrLv = 2 -- 2：玩家等级
 ShopBuyLimitType.PassDup = 3 -- 3：通关id
 ShopBuyLimitType.FirstRecharge = 4 -- 4：首充
+ShopBuyLimitType.MultTeamStage = 7  -- 7:多队玩法周目
 
 -- 皮肤获取方式
 SkinGetType = {}
@@ -357,6 +358,8 @@ eTaskType.DupLiZhan = 29 --历战任务
 eTaskType.GlobalBossDay = 30     -- 世界Boss日任务
 eTaskType.GlobalBossMonth = 31     -- 世界Boss月任务
 eTaskType.PointsBattle = 32     -- 积分战斗
+eTaskType.AnniversaryMission = 33     -- 周年活动任务
+eTaskType.MultTeam = 34     -- 多队玩法
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -459,6 +462,8 @@ cTaskCfgNames = {
     [eTaskType.GlobalBossDay] = 'cfgWorldBossMission',
     [eTaskType.GlobalBossMonth] = 'cfgWorldBossMonthMission',
     [eTaskType.PointsBattle] = 'CfgPointsBattle',
+    [eTaskType.AnniversaryMission] = 'cfgAnniversaryMission',
+    [eTaskType.MultTeam] = 'CfgMultiteamEntrance',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -585,6 +590,7 @@ eTeamType = {
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
     Colosseum = 60, --角斗场(60-61) 60:自选模式 61：随机模式
     RogueT = 70,    --限制版爬塔 70-89 
+    MultBattle=90,--多队战斗
     ForceFight = 10000 -- 强制上阵索引起始值
 }
 
@@ -798,6 +804,7 @@ ActivityListType = {
     SkinRebate = 3000, --皮肤返利
     SignInDuanWu = 1029, --端午签到
 	AdvBindUsers =2001, --引导游客绑定账号（红点异常必须新增）
+    SignInAnniversary = 1030, --1.5周年
 }
 
 ALType = {}
@@ -1001,6 +1008,7 @@ TeamConfirmOpenType.TotalBattle =6 --十二星宫
 TeamConfirmOpenType.GlobalBoss = 7 --世界boss
 TeamConfirmOpenType.RogueT = 8 -- 能力测验
 TeamConfirmOpenType.BuffBattle = 9 -- 积分战斗
+TeamConfirmOpenType.MultTeamBattle= 11 --递归沙盒
 
 -- 商店商品的展示方式
 ShopShowType = {}
@@ -1032,6 +1040,11 @@ CommodityItemType.SingleSelection = 10 -- 单自选
 CommodityItemType.DoubleSelection = 11 -- 双自选
 CommodityItemType.SUIT = 12 -- 套装
 CommodityItemType.ChoiceCard = 13 -- 自选卡牌(获得物品不读，由服务端特殊处理)
+
+--商品子类型
+CommodityItemSubType={}
+CommodityItemSubType.MonthCard=1;--月卡
+CommodityItemSubType.MonthCard2=2;--限时月卡
 
 -- 商品道具品质背景图
 CommodityQuality = {'white.png', 'green.png', 'blue.png', 'purple.png', 'yellow.png'}
@@ -1130,6 +1143,7 @@ TeamOpenSetting.RogueS = 7 --战力派遣
 TeamOpenSetting.Colosseum = 8 --角斗场
 TeamOpenSetting.GlobalBoss= 9 --世界boss
 TeamOpenSetting.RogueT= 10 --限制版爬塔
+TeamOpenSetting.MultBattle= 11 --多队战斗
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1406,6 +1420,7 @@ PlrMixIx.sectionMultiInfo = 71 -- 有时效双倍掉落
 PlrMixIx.icon_emotes = 72 -- 竞技场对战表情
 PlrMixIx.changeId = 73 -- 物品变动的日志Id
 PlrMixIx.equipRefresh = 74 -- 装备洗练结果数据
+PlrMixIx.multTeam = 75 -- 多队玩法活动数据
 
 
 -- 图鉴
@@ -1551,7 +1566,8 @@ CommodityLimitType = {
     Null = 0, -- 无
     Day = 1, -- 建号后天数
     PlayLv = 2, -- 玩家等级
-    Dungeon = 3 -- 通关关卡
+    Dungeon = 3, -- 通关关卡
+    MultTeamStage=7,
 }
 -- 商品类型显示条件类型
 CommodityShowLimitType = {
@@ -1698,7 +1714,7 @@ DungeonInfoType.Summer2 = "Summer2"
 DungeonInfoType.Summer2Plot = "Summer2Plot"
 DungeonInfoType.Summer2Danger = "Summer2Danger"
 DungeonInfoType.Summer2Special = "Summer2Special"
-
+DungeonInfoType.MultTeamBattle = "MultTeamBattle"
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
 RegressionPlrType = {}
@@ -1883,6 +1899,7 @@ eRankType.Abattoir = 1 -- 角斗场
 eRankType.RogueTRank = 2 -- 限制肉鸽爬塔排行榜
 eRankType.STAR = 3 -- 十二宫
 eRankType.BuffBattleRank = 4 -- 积分战斗
+eRankType.MultTeamRank = 5 -- 多队玩法
 
 -- 排行榜id
 eRankId = {}
@@ -1892,6 +1909,7 @@ eRankId.CentaurRank = 10003 --人马无限血排行榜
 eRankId.RogueTRank = 10006 --限制肉鸽爬塔排行榜
 eRankId.CloudRank = 10007 --云端行迹排行榜
 eRankId.BuffBattleRank = 10013 --积分战斗
+eRankId.MultTeamRank = 10015 --多队玩法
 
 -- 排行榜默认使用数据表名
 G_RANK_DEF_DB_TABLE = 'plr_star_rank'
@@ -1901,6 +1919,7 @@ eRankDbTable = {}
 eRankDbTable[eRankType.RogueTRank] = 'plr_rogueT_rank'
 eRankDbTable[eRankType.Abattoir] = 'plr_abattoir_rank'
 eRankDbTable[eRankType.BuffBattleRank] = 'plr_buff_battle_rank'
+eRankDbTable[eRankType.MultTeamRank] = 'plr_mult_team_rank'
 
 --收集活动类型
 eCollectType = {}
@@ -2063,3 +2082,25 @@ SpecialGuideType.Finish = 5 --结束
 eDragonBoatFestivalType = {}
 eDragonBoatFestivalType.Sweet = 1   -- 甜
 eDragonBoatFestivalType.Salty = 2   -- 咸
+-----------------------------------------------------------------------------------------------------------------
+AnniversaryType = {}
+AnniversaryType.Timest = 2 --1.5周年
+
+AnniversaryListType = {}
+AnniversaryListType.Timest = 1 --1.5周年主界面
+AnniversaryListType.Pic = 2 --图片跳转
+AnniversaryListType.Shop = 3 --商店
+AnniversaryListType.AccuCharge = 4 --累积充值
+AnniversaryListType.SignIn = 5 --签到
+-----------------------------------------------------------------------------------------------------------------
+DungeonBgType = {}
+DungeonBgType.Normal = 1 --正常模式
+DungeonBgType.Change = 2 --背景切换模式
+
+-----------------------------------------------------------------------------------------------------------------
+-- 多队玩法
+eMultTeamState = {}
+eMultTeamState.NONE = 0
+eMultTeamState.START = 1
+eMultTeamState.SETTLE = 2
+eMultTeamState.OVER = 3

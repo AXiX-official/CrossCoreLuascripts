@@ -209,7 +209,7 @@ function this:CheckBagRedInfo()
                     isRecord=true;
                 end    
             end
-            if v:IsExipiryType() then--限时物品记录最近的一个快要到期的时间
+            if (v:IsExipiryType() or v:GetExpiry()) and (not v:IsHide()) then--限时物品记录最近的一个快要到期的时间
                 limitTime=v:GetExpiry();
                 if v:GetData().get_infos and #v:GetData().get_infos>1 then
                     for _, val in ipairs(v:GetData().get_infos) do
@@ -432,6 +432,8 @@ function this:GetCount(id)
             local rSkinInfo=RoleSkinMgr:GetRoleSkinInfo(curModelCfg.role_id,curModelCfg.id);
             if rSkinInfo and rSkinInfo:GetCanUse() then
                 return 1;
+            else
+                return 0;
             end
         else
             return 0;

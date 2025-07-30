@@ -464,12 +464,12 @@ function SetViewLayout(openSetting)
         CSAPI.SetGOActive(btn_svType2,false);
         CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
-    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT then
+    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle then
 		CSAPI.SetGOActive(btn_svType2,canAssist);
         CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
     end
-	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT then
+	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle then
 		hasPrefab=false;
 	end
 	CSAPI.SetGOActive(btn_prefab,hasPrefab);
@@ -555,7 +555,7 @@ end
 
 function RefreshLeftInfo()
 	if teamData then
-		if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS then
+		if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.MultBattle then
 			input.interactable=false;
 		else
 			input.interactable=not TeamMgr:GetTeamIsFight(teamData:GetIndex())
@@ -918,6 +918,12 @@ function SetSVList()
 			end
 			arr = _newArr
 			--svList=SortMgr:Sort2(sortID,arr,{isRogueT=openSetting==TeamOpenSetting.RogueT})
+		elseif openSetting==TeamOpenSetting.MultBattle then
+			for i=1,#arr do
+				local canDrag,lanID=MultTeamBattleMgr:CardCanUse(arr[i]:GetID());
+				arr[i].canDrag=canDrag
+				arr[i].disDrag_lanID=lanID
+			end
 		-- else
 		-- 	svList=SortMgr:Sort(sortID,arr)
 		end
@@ -1088,6 +1094,10 @@ function LayoutCallBack(index)
 		disDrag=TotalBattleMgr:IsShowCard(_data:GetID())~=true
 		isEqual=disDrag;
 	elseif openSetting==TeamOpenSetting.RogueT then
+		disDrag=not _data.canDrag;
+		_disDrag_lanID = _data.disDrag_lanID;
+		isEqual=disDrag;
+	elseif openSetting==TeamOpenSetting.MultBattle then
 		disDrag=not _data.canDrag;
 		_disDrag_lanID = _data.disDrag_lanID;
 		isEqual=disDrag;

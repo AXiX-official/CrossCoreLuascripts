@@ -30,7 +30,7 @@ function Skill913900202:OnBefourHurt(caster, target, data)
 		return
 	end
 	-- 803600201
-	self:AddTempAttr(SkillEffect[803600201], caster, target, data, "defense",-400)
+	self:AddTempAttr(SkillEffect[803600201], caster, target, data, "defense",-500)
 end
 -- 行动结束
 function Skill913900202:OnActionOver(caster, target, data)

@@ -55,6 +55,11 @@ function this:GetFunc(sName)
         self.funcs["TWWeb"] = self.TWWeb
         self.funcs["ColosseumView"] = self.ColosseumView
         self.funcs["BuffBattle"] = self.BuffBattle
+        self.funcs["AnniversaryList"] = self.AnniversaryList
+        self.funcs["MultTeamBattleMain"] = self.MultTeamBattle
+        self.funcs["CollaborationMain"]=self.CollaborationMain
+        self.funcs["MenuBuyPanel"]=self.MenuBuyPanel
+        self.funcs["LuckyGachaMain"]=self.LuckyGachaMain
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -305,17 +310,18 @@ function this.Shop(cfg)
     local state, lockStr = this.ShopState(cfg);
     if state == JumpModuleState.Normal then
         this.CheckClose(cfg);
-        if cfg.val1 and cfg.val1 ~= 0 and cfg.val2 == nil and cfg.val3 == nil then -- 打开单个商店
+        local page=ShopMgr:GetPageByID(cfg.val1);
+        if cfg.val1 and cfg.val1 ~= 0 and cfg.val2 == nil and cfg.val3 == nil and page~=nil and page:IsHide() then -- 打开单个商店
             CSAPI.OpenView(cfg.sName, cfg.val1);
         else
             if cfg.val5 then
                 local cId=tonumber(cfg.val5);
                 local comm=ShopMgr:GetFixedCommodity(cId);
-                if comm and comm:GetNowTimeCanBuy() then --皮肤购买界面不打开商店
+                if comm and comm:GetNowTimeCanBuy() then
                     if comm:IsOver() then --售罄
                         LanguageMgr:ShowTips(15125);
                         do return end;
-                    elseif comm:GetType()==CommodityItemType.Skin then
+                    elseif comm:GetType()==CommodityItemType.Skin then--皮肤购买界面不打开商店
                         ShopCommFunc.OpenBuyConfrim(cfg.val2, cfg.val3, cId)
                         do return end;
                     end
@@ -325,11 +331,22 @@ function this.Shop(cfg)
                 end
             end
             CSAPI.OpenView(cfg.sName, nil, {
-                [1] = cfg.val2,
-                [2] = cfg.val3,
+                [1] = cfg.val1,
+                [2] = cfg.val2,
                 [3] = cfg.val5
             }); -- val5是要打开购买界面的商品名称
         end
+    else
+        FuncUtil:Call(function()
+            Tips.ShowTips(lockStr)
+        end, nil, 100)
+    end
+end
+
+function this.LuckyGachaMain(cfg)
+    local state, lockStr = this.LuckyGachaMainState(cfg);
+    if state == JumpModuleState.Normal then
+        CSAPI.OpenView(cfg.sName, cfg.val1);
     else
         FuncUtil:Call(function()
             Tips.ShowTips(lockStr)
@@ -392,6 +409,31 @@ function this.BuffBattle(cfg)
     end
 end
 
+function this.AnniversaryList(cfg)
+    this.CheckClose(cfg);
+    CSAPI.OpenView(cfg.sName,{
+        group = cfg.page,
+        jumpId = cfg.val1,
+    })
+end
+
+
+function this.MultTeamBattle(cfg)
+    local state, lockStr = this.MultTeamBattleState(cfg);
+    if state == JumpModuleState.Normal then
+        this.CheckClose(cfg);
+        CSAPI.OpenView(cfg.sName,{id=cfg.val1})
+    end
+end
+
+function this.CollaborationMain(cfg)
+    local state, lockStr = this.CollaborationMainState(cfg);
+    if state == JumpModuleState.Normal then
+        this.CheckClose(cfg);
+        CSAPI.OpenView(cfg.sName)
+    end
+end
+
 -- 返回获取跳转状态的方法名
 function this:GetStateFunc(sName)
     if (self.stateFuncs == nil) then
@@ -408,6 +450,9 @@ function this:GetStateFunc(sName)
         self.stateFuncs["ActivityListView"] = self.ActivityListViewState
         self.stateFuncs["RegressionList"] = self.RegressionState
         self.stateFuncs["BuffBattle"] = self.BuffBattleState
+        self.stateFuncs["MultTeamBattleMain"]=self.MultTeamBattleState
+        self.stateFuncs["CollaborationMain"]=self.CollaborationMainState
+        self.stateFuncs["LuckyGachaMain"]=self.LuckyGachaMainState
     end
     if (self.stateFuncs[sName]) then
         return self.stateFuncs[sName]
@@ -535,7 +580,23 @@ end
 function this.ShopState(cfg)
     local isUnLock, lockStr = MenuMgr:CheckModelOpen(OpenViewType.main, cfg.sName)
     if isUnLock then
-        return JumpModuleState.Normal;
+        --模块开启，判定指定商店是否在开启时间
+        local shopId,pageId=cfg.val1,cfg.val2;
+        if shopId then
+            local page=ShopMgr:GetPageByID(shopId)
+            local state=JumpModuleState.Normal;
+            local lockStr=nil;
+            if page==nil or (page~=nil and next(page)==nil) then --有数据则已经开启
+                state=JumpModuleState.Lock
+                lockStr=LanguageMgr:GetTips(15121)
+            elseif page and next(page) and (pageId~=nil and not ShopMgr:ChildPageIsOpen(pageId) ) then
+                state=JumpModuleState.Lock
+                lockStr=LanguageMgr:GetTips(15121)
+            end
+           return state,lockStr
+        else
+            return JumpModuleState.Normal;
+        end
     else
         return JumpModuleState.Lock, lockStr;
     end
@@ -619,6 +680,50 @@ function this.BuffBattleState(cfg)
     return JumpModuleState.Normal
 end
 
+function this.MultTeamBattleState(cfg)
+    if cfg.val1 then
+        local sectionData = DungeonMgr:GetSectionData(cfg.val1)
+        if sectionData then
+            local isOpen,lockStr = sectionData:GetOpen()
+            if not isOpen then
+                Tips.ShowTips(lockStr)
+                return JumpModuleState.Close
+            end
+        end
+    end
+    return JumpModuleState.Normal
+end
+
+function this.CollaborationMainState(cfg)
+    local activityInfo = CollaborationMgr:GetCurrInfo()
+    if activityInfo~=nil and activityInfo:IsOpen() then
+        return JumpModuleState.Normal
+    else
+        Tips.ShowTips(LanguageMgr:GetTips(24003))
+        return JumpModuleState.Close
+    end
+end
+
+function this.LuckyGachaMainState(cfg)
+    local activityInfo=nil;
+    if cfg and cfg.sName=="LuckyGachaMain" then
+        local isUnLock,lockStr= MenuMgr:CheckModelOpen(OpenViewType.main, cfg.sName);
+        if isUnLock~=true then
+            return JumpModuleState.Lock,lockStr
+        end
+        --获取扭蛋机对应的两种掉落类型的活动数据
+        activityInfo=ItemPoolActivityMgr:GetCurrPoolInfoByType(ItemPoolExtractType.Control);
+        if activityInfo==nil then
+            activityInfo=ItemPoolActivityMgr:GetCurrPoolInfoByType(ItemPoolExtractType.ControlNotInfinite);
+        end
+    end
+    if activityInfo then
+       return JumpModuleState.Normal;
+    else
+       return JumpModuleState.Close,LanguageMgr:GetTips(24003);
+    end
+end
+
 -- 是否禁止跳转
 function this.IsDisableJump(viewKey, jumpID)
     if viewKey and jumpID then
@@ -684,6 +789,28 @@ function this:CheckCanJump(id)
     end
     -- return false, "跳转界面不存在"
     return false,LanguageMgr:GetTips(1052);
+end
+
+-- 付费弹窗
+function this.MenuBuyPanel(cfg)
+    local isOpen, str = MenuBuyMgr:CheckMenuBuyIsOpen()
+    if (not isOpen) then
+        Tips.ShowTips(str)
+        return
+    end
+    if (cfg.page) then
+        local page = tonumber(cfg.page)
+        if (MenuBuyMgr:CheckIsInTime(page)) then
+            if (MenuBuyMgr:CheckIsEnd(page)) then
+                LanguageMgr:ShowTips(1055)
+            else
+                this.CheckClose(cfg)
+                CSAPI.OpenView(cfg.sName, nil, page)
+            end
+        else
+            LanguageMgr:ShowTips(24003)
+        end
+    end
 end
 
 this.Init();

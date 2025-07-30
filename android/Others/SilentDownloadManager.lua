@@ -14,6 +14,20 @@ function this:Init()
         EventMgr.AddListener(EventType.Version_SilentDownload_Select, this.OnShowSilentDownloadSelect)
         -- LogError("Regist EventType.Version_SilentDownload_Select")
     end
+    -- EventMgr.AddListener(EventType.Login_Success,this.CheckInternation);
+    this.CheckInternation()
+end
+
+function this.CheckInternation()
+    -- Log("CheckInternation")
+    if CSAPI.IsDomestic() and (CSAPI.OpenHarmony == nil or CSAPI.Currentplatform ~= CSAPI.OpenHarmony) then
+        local recordInternationState = PlayerPrefs.GetInt("Internation_State",0);
+        if recordInternationState == 0 then
+            -- Log("TrackEvent mj_EnableInternation")
+            PlayerPrefs.SetInt("Internation_State",1);
+            BuryingPointMgr:TrackEvents("mj_EnableInternation", {})
+        end
+    end
 end
 
 function this.OnVersionSilentDownloadError()

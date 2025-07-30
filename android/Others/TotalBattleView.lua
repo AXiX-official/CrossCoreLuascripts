@@ -16,6 +16,8 @@ local isLoading = false
 local currId = 0
 local jumpId = 0
 local moveAction1,moveAction2
+local isSectionOpen = false
+local timeSectionData = nil
 
 function Awake()
     layout=ComUtil.GetCom(vsv,"UISV");
@@ -277,11 +279,11 @@ function RefreshPanel()
 end
 
 function CheckOpenSection()
-    local isOpen = false
+    isSectionOpen = false
     if #sectionDatas > 0 then
         for i, v in ipairs(sectionDatas) do
             if openInfo:IsSectionOpen(v:GetID()) then
-                isOpen = true
+                isSectionOpen = true
                 if currIndex == 0 then
                     currIndex = i
                 end
@@ -289,7 +291,7 @@ function CheckOpenSection()
             end
         end
     end
-    if isOpen == false then
+    if isSectionOpen == false then
         if currItem then
             currItem.SetSelect(false)
             currItem = nil
@@ -297,10 +299,10 @@ function CheckOpenSection()
         currIndex = 0
         CSAPI.SetGOActive(before,false)
     end
-    CSAPI.SetGOActive(rankObj,isOpen)
-    CSAPI.SetGOActive(timeObj,isOpen)
-    CSAPI.SetGOActive(mask,isOpen)
-    CSAPI.SetGOActive(infoParent,isOpen)
+    CSAPI.SetGOActive(rankObj,isSectionOpen)
+    CSAPI.SetGOActive(mask,isSectionOpen)
+    CSAPI.SetGOActive(infoParent,isSectionOpen)
+    SetTime()
 end
 
 function CheckTime()
@@ -313,6 +315,9 @@ function CheckTime()
             PlayerProto:GetStarPalaceInfo()
         end
     end
+    if data and data.id then
+        timeSectionData = DungeonMgr:GetSectionData(data.id)
+    end
 end
 
 -----------------------------------------------left-----------------------------------------------
@@ -323,7 +328,7 @@ end
 
 function SetRankTime()
     resetTime = TotalBattleMgr:GetRankTime()
-    CSAPI.SetGOActive(timeObj,resetTime>0)
+    CSAPI.SetGOActive(timeObj,resetTime>0 and isSectionOpen)
 end
 
 function SetRank()
@@ -538,7 +543,6 @@ function SetState(_cfg)
     currGroupData = currItem.GetGroupData(_cfg)
     if currGroupData then
         SetBg()
-        SetTime()
         SetEffect()
         SetEffectScale()
     end
@@ -564,18 +568,19 @@ function SetBg()
 end
 
 function SetTime()
-    local timeStr =""
-    local openInfo = DungeonMgr:GetActiveOpenInfo2(currItem.GetData():GetID())
-    if openInfo then
-        if openInfo:IsDungeonOpen() then
-            local strs = openInfo:GetTimeStrs()
-            timeStr =LanguageMgr:GetByID(22046) .. strs[1] .. " " .. strs[2] .. " - " .. strs[3] .. " " .. strs[4]
-        else    
-            timeStr = openInfo:GetCloseTimeStr()
+    if timeSectionData then
+        local timeStr =""
+        local openInfo = DungeonMgr:GetActiveOpenInfo2(timeSectionData:GetID())
+        if openInfo then
+            if openInfo:IsDungeonOpen() then
+                local strs = openInfo:GetTimeStrs()
+                timeStr =LanguageMgr:GetByID(22046) .. strs[1] .. " " .. strs[2] .. " - " .. strs[3] .. " " .. strs[4]
+            else    
+                timeStr = openInfo:GetCloseTimeStr()
+            end
         end
+        CSAPI.SetText(txtTime2,timeStr)
     end
-
-    CSAPI.SetText(txtTime2,timeStr)
 end
 
 function SetEffect()

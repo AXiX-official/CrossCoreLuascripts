@@ -116,6 +116,7 @@ end
 -- 初始化背景
 function InitBG()
     curScale = minScale
+    rootScale = 1 / curScale * 2
     -- local arr = CSAPI.GetScreenSize()
     local arr = CS.UIUtil.mainCanvasRectTransform.sizeDelta
     CSAPI.SetRTSize(goModelRaw, arr[0], arr[1])
@@ -242,6 +243,7 @@ function Enter(item, startCB, finshCB)
         isBlur = true
         isMove = true
         curScale = maxScale
+        rootScale = 1 / curScale * 2
         currIdx = 2
 
         -- 模糊
@@ -266,6 +268,7 @@ function Back(item, startCB, finshCB)
         isBlur = false
         isMove = true
         curScale = minScale
+        rootScale = 1 / curScale * 2
 
         -- 模糊
         SetBlurMask(true, false, 2)

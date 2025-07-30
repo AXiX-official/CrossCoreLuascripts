@@ -15,11 +15,16 @@ function OnCodeChange(str)
         _str=_str..s;
     end
     inp.text=_str;
+
 end
 
 function OnClickOK()
     local code=inp.text;
-    if code==nil or code=="" then
+    local activityData=CollaborationMgr:GetCurrInfo();
+    if activityData==nil then
+        do return end
+    end
+    if activityData:CheckCodeFormat(code)~=true then
         --邀请码格式错误
         inp.text="";
         Tips.ShowTips(LanguageMgr:GetTips(40001));

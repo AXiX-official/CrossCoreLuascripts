@@ -56,7 +56,7 @@ function InitDatas()
         local cfgs = Cfgs.MainLine:GetGroup(group)
         local allDatas = {}
         for k, v in pairs(cfgs) do
-            if (v.modeType == 1 and v.season == ColosseumMgr:GetSeasonID()) then
+            if (v.modeType == 1 and v.season == ColosseumMgr:GetRealSeasonID()) then
                 if (not allDatas[v.turn]) then
                     allDatas[v.turn] = {}
                 end

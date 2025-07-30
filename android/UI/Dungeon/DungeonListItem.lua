@@ -5,6 +5,7 @@ local alpha = 0
 local data = nil
 local btnPos = {}
 local isSelect = false
+local curBgType = DungeonBgType.Normal
 
 local index = 0
 
@@ -64,8 +65,12 @@ function Refresh(_data)
 end
 
 function SetPos(pos)
-	local scale = CSAPI.GetSizeOffset()
-	CSAPI.SetLocalPos(gameObject, pos.x * scale, pos.y * scale)
+	local xScale = CSAPI.GetSizeOffset()
+	local yScale = xScale
+	if curBgType == DungeonBgType.Change then --自适应在列表长度上
+		xScale = 1
+	end
+	CSAPI.SetLocalPos(gameObject, pos.x * xScale, pos.y * yScale)
 end
 
 function SetBtnPos(pos)
@@ -164,7 +169,21 @@ function SetScale(scale)
 end
 
 function SetRootScale(scale)
-	CSAPI.SetScale(root.gameObject, 1 / scale * 2, 1 / scale * 2, 1)
+	CSAPI.SetScale(root.gameObject, scale, scale, 1)
+end
+
+function SetPivot(type)
+	curBgType = type
+	if rect == nil then
+		rect = ComUtil.GetCom(gameObject,"RectTransform")
+	end
+	if type == DungeonBgType.Normal then
+		rect.anchorMin = UnityEngine.Vector2(0.5,0.5)
+		rect.anchorMax = UnityEngine.Vector2(0.5,0.5)
+	elseif type == DungeonBgType.Change then
+		rect.anchorMin = UnityEngine.Vector2(0,1)
+		rect.anchorMax = UnityEngine.Vector2(0,1)
+	end
 end
 
 function GetOffsetPos()

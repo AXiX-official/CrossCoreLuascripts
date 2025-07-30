@@ -293,6 +293,53 @@ function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplica
     LogEnterFight(player, fid, sceneTy, nDuplicateID, groupID, data)
     return mgr
 end
+---- 开始多队玩法战斗
+function FightHelp:StartMultTeamFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneTy)
+    -- DT(player)
+    -- 战斗管理器的id
+    --ASSERT(nDuplicateID)
+    -- LogTable(data, "StartMainLineFight data =")
+    -- LogTable(exData, "exData")
+    -- ASSERT()
+    local fid = UID(10)
+    local seed = os.time() + math.random(1000000)
+    --print("------------", nDuplicateID)
+    local mgr = CreateFightMgr(fid, groupID, sceneTy, seed, nDuplicateID)
+    mgr.nTeamIndex = nTeamIndex
+    mgr.oDuplicate = oDuplicate
+    mgr.nPlayerLevel = player:Get('level')
+    mgr.uid = player.id
+
+    mgr:AddPlayer(player.id, 1)
+    self:AddFightMgr({player.id}, mgr)
+    data.data = Halo:Calc(data.data)
+
+    mgr:LoadConfig(groupID, exData.stage or 1, exData.hpinfo)
+    mgr:LoadData(1, data.data, nil, data.tCommanderSkill)
+    mgr:AfterLoadData(exData)
+    if table.empty(exData) then
+        exData = nil
+    end
+
+    mgr:AddCmd(
+        CMD_TYPE.InitData,
+        {
+            seed = seed,
+            fid = fid,
+            stype = sceneTy,
+            groupID = groupID,
+            teamID = 1,
+            nTeamIndex = nTeamIndex,
+            data = data,
+            exData = exData,
+            level = player:Get('level')
+        }
+    )
+    -- DT(mgr.cmds)
+    -- 操作日志
+    LogEnterFight(player, fid, sceneTy, nDuplicateID, groupID, data)
+    return mgr
+end
 --------------------------------------------------------------
 function FightHelp:StartPvpFight(data, fightIndex)
     local fid = UUID(10)

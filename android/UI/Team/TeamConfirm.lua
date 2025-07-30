@@ -111,6 +111,8 @@ function OnOpen()
         InitRogueT();
     elseif openSetting==TeamConfirmOpenType.BuffBattle then
         InitBuffBattle();
+    elseif openSetting==TeamConfirmOpenType.MultTeamBattle then
+        InitMTB();
     end
     InitChoosieIDs();--初始化已选择的队伍id
     InitOptions();
@@ -437,6 +439,8 @@ function OnClickBattle()
         OnRogueT();
     elseif openSetting==TeamConfirmOpenType.BuffBattle then
         OnBuffBattle();
+    elseif openSetting==TeamConfirmOpenType.MultTeamBattle then
+        OnMTB();
     end
 end
 
@@ -1071,6 +1075,115 @@ function OnBuffBattle()
             Tips.ShowTips(LanguageMgr:GetTips(14004));
         end
     elseif duplicateTeamDatas==nil or #duplicateTeamDatas<1 then
+        Tips.ShowTips(LanguageMgr:GetTips(14005));
+    end
+end
+
+function InitMTB()
+    CSAPI.SetGOActive(rogueMonster,true)
+    --加载详情界面
+    CSAPI.CreateGOAsync("UIs/MultTeamBattle/DungeonInfoDetails", 0, 0, 0, rogueMonster, function(go)
+        local lua = ComUtil.GetLuaTable(go)
+        lua.Refresh({
+            cfg=dungeonCfg,
+        })
+    end)
+    currCostInfo=DungeonUtil.GetCost(dungeonCfg);
+    startTeamIdx = eTeamType.MultBattle;
+    endTeamIdx =  eTeamType.MultBattle;
+    if data and data.teamNum then
+        teamMax=data.teamNum 
+    else
+        teamMax=1;
+    end
+    CSAPI.SetGOActive(nameObj,false);
+    -- CSAPI.SetGOActive(btnNavi,false);
+    CSAPI.SetGOActive(fightObj,false);
+    CSAPI.SetGOActive(hotObj,false)
+    SetEnterCost()
+end
+
+function OnMTB()
+    local item=teamItems[1];
+    local teamData=TeamMgr:GetEditTeam();
+    if item.CanBattle()==true and teamData and teamData:GetRealCount()>0 then
+        local activityData=MultTeamBattleMgr:GetCurData();
+        if activityData and activityData:IsPass(dungeonCfg.id) then
+            do return end
+        end
+        if dungeonCfg~=nil then
+            DungeonMgr:SetCurrId(dungeonCfg.id);
+        end
+        if data.isDirll == true and dungeonCfg and dungeonCfg.nGroupID then --模拟战
+            if teamData:GetRealCount()<=0 then
+                Tips.ShowTips(LanguageMgr:GetTips(14005));
+                do return end;
+            end
+            local dirllData={}
+            local tCommanderSkill=nil;
+            local skillGroupID=teamData:GetSkillGroupID();
+            if skillGroupID and dungeonCfg and dungeonCfg.tacticsSwitch~=1 then
+                local tacticData=TacticsMgr:GetDataByID(skillGroupID);
+                if tacticData and  tacticData:IsUnLock() then
+                    tCommanderSkill={};
+                    tCommanderSkill=tacticData:GetSkillsIds();
+                end
+            end
+            local exData = {}
+            local bossInfo=activityData:GetBossInfo(dungeonCfg.id);
+            bossInfo=bossInfo or {};
+            bossInfo.isMultTeam=true;
+            exData=bossInfo;
+            --助战卡
+            local assistInfo=nil;
+            local assistData=item.GetAssistData();
+            if assistData~=nil and assistData.card~=nil then
+                assistInfo=assistData.card:GetAssistData()
+            end
+            if (assistInfo and assistInfo.isFull==true) or (assistInfo==nil and teamData:GetAssistID()==nil) then
+                if  assistData~=nil and teamData:GetAssistID()==nil then
+                    teamData:AddCard(assistData);
+                end
+                for k,v in ipairs(teamData.data) do
+                    local itemData=v:GetFightCardData();
+                    itemData.data.nStrategyIndex = v:GetStrategyIndex()
+                    table.insert(dirllData,itemData);
+                end
+                TeamMgr:AddFightTeamData(teamData);
+                DungeonMgr:SetFightTeamId(teamData:GetIndex());
+                CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill,exData);
+            elseif assistInfo~=nil then --未锁定的卡
+                local uid=assistData.card:GetData().fuid;
+                local cid=assistData.card:GetData().old_cid;
+                FriendMgr:SetAssistInfos(uid, {cid}, function()
+                    if  assistData~=nil and teamData:GetAssistID()==nil then
+                        teamData:AddCard(assistData);
+                    elseif assistData~=nil and teamData:GetAssistID()~=nil then
+                        teamData:RemoveCard(assistData:GetID());
+                        teamData:AddCard(assistData);
+                    end
+                    for k,v in ipairs(teamData.data) do
+                        local itemData=v:GetFightCardData();
+                        itemData.data.nStrategyIndex = v:GetStrategyIndex()
+                        table.insert(dirllData,itemData);
+                    end
+                    TeamMgr:AddFightTeamData(teamData);
+                    DungeonMgr:SetFightTeamId(teamData:GetIndex());
+                    -- LogError(dirllData)
+                    -- LogError(tCommanderSkill)
+                    -- do return end 
+                    CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill,exData);
+                end);
+            end
+            -- TeamMgr:AddFightTeamData(teamData);
+            -- DungeonMgr:SetFightTeamId(teamData:GetIndex());
+            -- LogError(dirllData)
+            -- CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill,exData);
+        else
+            local duplicateTeam=item.GetDuplicateTeamData();
+            FightProto:EnterMultTeamFight(activityData:GetID(),activityData:GetRound(),dungeonCfg.id,{duplicateTeam})    
+        end
+    else
         Tips.ShowTips(LanguageMgr:GetTips(14005));
     end
 end

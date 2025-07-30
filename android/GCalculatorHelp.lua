@@ -2869,3 +2869,94 @@ function GCalHelp:GetCidByModel(model)
     end
     return nil
 end
+-- 获取其他战斗周目怪物总血量
+function GCalHelp:GetLeftStageHp(stage)
+    if not stage then
+        return 0
+    end
+    local lHp = 0
+    local mgCfg = MonsterGroup[self.nGroup]
+    local cfgs = mgCfg and mgCfg.stage or {}
+    local totalHp = 0
+    local mSize = #cfgs
+    if stage <= mSize then
+        for i = stage,mSize,1 do
+            local stg = cfgs[i]
+            for j, mstId in ipairs(stg.monsters or {}) do
+                local mcfg = MonsterData[mstId]
+                lHp = lHp + mcfg and mcfg.maxhp or 0
+            end
+        end
+    end
+    return lHp
+end
+
+-- 多队玩法获取战斗分数
+--[[
+winner:1赢 2输
+maxDupScore：关卡最大分数
+curScore：当前关卡已获得分数
+totalDamage：已造成总伤害
+totalMaxHp：怪物总Hp
+hpinfo：怪物血量数据
+]]
+function GCalHelp:MultTeamGetFightRetData(winner,maxDupScore,curScore,oldTotalHp,totalMaxHp,hpinfo)
+    LogDebugEx("GCalHelp:MultTeamGetFightRetData,winner,maxDupScore,curScore,oldTotalHp,hpinfo,totalMaxHp",winner,maxDupScore,curScore,oldTotalHp,hpinfo,totalMaxHp)
+    local score = 0
+    local totalHp = 0
+    local leftScore = math.max(maxDupScore - curScore,0)
+    if winner == 1 then
+        score = leftScore
+    else
+        if hpinfo then
+            local leftHp = 0
+            for _,val in ipairs(hpinfo.data or {}) do
+               leftHp = leftHp + val
+            end 
+            totalHp = leftHp + self:GetLeftStageHp(hpinfo.stage)
+        end
+        local subVal = math.max(0,oldTotalHp - totalHp)
+        if totalMaxHp and totalMaxHp > 0 then
+            score = math.floor((subVal/totalMaxHp)*maxDupScore)
+        end
+    end
+    score = math.min(leftScore,score)
+    LogDebugEx("GCalHelp:MultTeamGetFightRetData,score,totalHp",score,totalHp)
+    return score,totalHp
+end
+
+--4.0 扭蛋机优化 判断是否只剩无限跟关键奖励，如果池子里只剩这两个类型的奖励的话，不给他抽
+---@param drawArr 已抽取的数组
+---@return boolean true 已售罄，不可抽取， false 可抽取
+function GCalHelp:ItemPoolControlSoldOut(rewardCfg, drawArr)
+    local arr = {}
+    for k, v in pairs(rewardCfg.pool) do
+        local num = v.rewardnum
+        if drawArr[v.index] then
+            -- 扣除已抽取的数量
+            num = num - drawArr[v.index]
+        end
+        if num > 0 then
+            table.insert(arr, v)
+        end
+    end
+
+    if not next(arr) then
+        -- 池子空的，已售罄
+        LogDebugEx("GCalHelp:ItemPoolControlSoldOut soldout 1 not next(arr)")
+        return true
+    end
+
+    for _, v in ipairs(arr) do
+        if not v.iskeyreward and not v.isInfinite then
+            -- 池子不止关键奖励跟无限奖励，未售罄
+
+            LogTable(v, "ItemPoolControlSoldOut")
+            return false
+        end
+    end
+
+    -- 池子只剩关键奖励跟无限奖励，已售罄
+    LogDebugEx("GCalHelp:ItemPoolControlSoldOut soldout")
+    return true
+end

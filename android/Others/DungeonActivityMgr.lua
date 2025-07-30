@@ -7,7 +7,6 @@ function this:Init()
 end
 
 function this:Clear()
-
     --rank
     self.clearTime = {}
     self.cur_rank = {} 
@@ -175,6 +174,8 @@ function this:CheckRed(sid)
             end 
         elseif sectionData:GetType() == SectionActivityType.GlobalBoss then
             return GlobalBossMgr:IsRed()
+        elseif  sectionData:GetType()==SectionActivityType.MultTeamBattle then
+            return MultTeamBattleMgr:IsRed();
         end
     end
     return false

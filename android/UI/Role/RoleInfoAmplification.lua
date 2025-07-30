@@ -32,11 +32,11 @@ function OnOpen()
     if isShopImg then
         isLive2D = false;
     end
-    local desc = data[4] or false;
-    if desc ~= nil then
-        CSAPI.SetText(txtInfo, desc);
-    end
-    CSAPI.SetGOActive(infoObj, desc ~= nil)
+    -- local desc = data[4] or false;
+    -- if desc ~= nil then
+    --     CSAPI.SetText(txtInfo, desc);
+    -- end
+    CSAPI.SetGOActive(infoObj, false)--desc ~= nil)
     pos = openSetting ~= nil and openSetting or LoadImgType.RoleInfo
 
     cardIconItem.Refresh(curModeId, pos, nil, isLive2D, isShopImg)

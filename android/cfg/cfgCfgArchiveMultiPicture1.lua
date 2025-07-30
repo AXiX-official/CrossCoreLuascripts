@@ -82,6 +82,8 @@ local conf = {
 {'78',	'78',	'61080',	'热沙之夏',	'79',	'',	'',	'1',	'1',	'sands_of_summer_heat',	'',	'board_sands_of_summer_heat',	'Small_sands_of_summer_heat',	'商店购买',	'-21,34,0.86',	'CG0054_SandsofSummerHeat',	'-38,0,1',	'1',	'80442'},
 {'79',	'79',	'61081',	'海滩野餐',	'80',	'',	'',	'1',	'1',	'beach_picnic',	'',	'board_beach_picnic',	'Small_beach_picnic',	'商店购买',	'84,-50,1.28',	'CG0055_Beachpicnic',	'0,0,1',	'1',	'80443'},
 {'73',	'73',	'61075',	'静谧小筑',	'81',	'',	'',	'1',	'6',	'quiet_nook',	'',	'board_quiet_nook',	'Small_quiet_nook',	'高级勘测奖励',	'-1,124,0.71',	'buertegen',	'0,122,1.2',	'',	'1'},
+{'74',	'74',	'61076',	'悠然野餐',	'74',	'',	'',	'1',	'6',	'leisurely_picnic',	'',	'board_leisurely_picnic',	'Small_leisurely_picnic',	'高级勘测奖励',	'-2,-74,0.98',	'nagelin',	'0,-73,0.9',	'',	'1'},
+{'83',	'83',	'61085',	'限定享用',	'80',	'',	'',	'1',	'2',	'ephemeral_indulgence',	'',	'board_ephemeral_indulgence',	'Small_ephemeral_indulgence',	'商店购买',	'37,-156,1.04',	'CG0059_EphemeralIndulgence_spine',	'97,-16,1',	'1',	'80444'},
 },
 }
 --cfgCfgArchiveMultiPicture1 = conf

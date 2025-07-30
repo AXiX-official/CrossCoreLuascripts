@@ -131,7 +131,9 @@ function this:Update()
                     end
                     break
                 else
-                    v.te.TrackTime = v.progress -- 虽然为1，但还没解锁，最后填0，点多一下，则倒退
+                    if (v.te.TrackTime >= v.te.Animation.Duration) then
+                        v.te.TrackTime = v.progress -- 最大百分百却还有得点（最后填0，点多一下，则倒退） -- 回退会触发事件
+                    end
                 end
             elseif (v.clickTime ~= nil and v.te.TimeScale == 0 and v.te.TrackTime ~= 0) then
                 v.clickTime = v.clickTime - Time.deltaTime -- 延迟固定时间后自动倒退到0
@@ -254,7 +256,7 @@ function this:PlayByClick(animName, trackIndex, fadeIn, fadeOut, complete)
     if (trackIndex == 1) then
         return self:PlayByClick1(animName, trackIndex, fadeIn, fadeOut, complete)
     else
-        return self:PlayByClick2(animName, trackIndex,false, fadeOut)
+        return self:PlayByClick2(animName, trackIndex, false, fadeOut)
     end
 end
 
@@ -279,15 +281,15 @@ function this:PlayByClick1(animName, trackIndex, fadeIn, fadeOut, complete)
 end
 
 -- 物件的点击（无渐入渐出）
-function this:PlayByClick2(animName, trackIndex, fadeIn,fadeOut)
+function this:PlayByClick2(animName, trackIndex, fadeIn, fadeOut)
     fadeOut = fadeOut == nil and false or fadeOut
     local te = self.anim:SetAnimation(trackIndex, animName, false)
     te.Loop = false
     te.TrackTime = 0
     te.TimeScale = 1
-    if(fadeOut)then 
+    if (fadeOut) then
         self.anim:AddEmptyAnimation(trackIndex, self.fadeOutTime, 0)
-    end 
+    end
     return true
 end
 

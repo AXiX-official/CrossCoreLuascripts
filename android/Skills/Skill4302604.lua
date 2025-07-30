@@ -8,55 +8,105 @@ function Skill4302604:Init(skillID, card)
 end
 -- 入场时
 function Skill4302604:OnBorn(caster, target, data)
+	-- 4302634
+	self:tFunc_4302634_4302604(caster, target, data)
+	self:tFunc_4302634_4302621(caster, target, data)
+	self:tFunc_4302634_4302622(caster, target, data)
+	self:tFunc_4302634_4302623(caster, target, data)
+	self:tFunc_4302634_4302624(caster, target, data)
+end
+-- 回合开始时
+function Skill4302604:OnRoundBegin(caster, target, data)
+	-- 8728
+	local count728 = SkillApi:SkillLevel(self, caster, target,3,3026003)
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8729
+	local count729 = SkillApi:BuffCount(self, caster, target,1,4,1)
+	-- 8941
+	if SkillJudger:Greater(self, caster, self.card, true,count729,3) then
+	else
+		return
+	end
+	-- 4302642
+	self:CallOwnerSkill(SkillEffect[4302642], caster, caster, data, 302600300+count728)
+end
+-- 伤害前
+function Skill4302604:OnBefourHurt(caster, target, data)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8730
+	local count730 = SkillApi:BuffCount(self, caster, target,2,4,1)
+	-- 4302654
+	self:AddTempAttr(SkillEffect[4302654], caster, target, data, "bedamage",count730*0.04)
+end
+function Skill4302604:tFunc_4302634_4302622(caster, target, data)
+	-- 8274
+	if SkillJudger:IsCasterSibling(self, caster, target, true,30220) then
+	else
+		return
+	end
+	-- 4302622
+	local targets = SkillFilter:Group(self, caster, target, 3,3)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[4302622], caster, target, data, 4302621)
+	end
+end
+function Skill4302604:tFunc_4302634_4302623(caster, target, data)
+	-- 8273
+	if SkillJudger:IsCasterSibling(self, caster, target, true,30270) then
+	else
+		return
+	end
+	-- 4302623
+	local targets = SkillFilter:Group(self, caster, target, 3,3)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[4302623], caster, target, data, 4302621)
+	end
+end
+function Skill4302604:tFunc_4302634_4302624(caster, target, data)
+	-- 8271
+	if SkillJudger:IsCasterSibling(self, caster, target, true,30250) then
+	else
+		return
+	end
+	-- 4302624
+	local targets = SkillFilter:Group(self, caster, target, 3,3)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[4302624], caster, target, data, 4302621)
+	end
+end
+function Skill4302604:tFunc_4302634_4302604(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
 	-- 4302604
-	self:CallSkillEx(SkillEffect[4302604], caster, self.card, data, 302600403)
+	self:CallSkillEx(SkillEffect[4302604], caster, self.card, data, 302600402)
 	-- 4302611
 	self:AddBuff(SkillEffect[4302611], caster, self.card, data, 4302601)
 end
--- 回合开始处理完成后
-function Skill4302604:OnAfterRoundBegin(caster, target, data)
-	-- 8147
-	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.7) then
+function Skill4302604:tFunc_4302634_4302621(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8659
-	local count659 = SkillApi:BuffCount(self, caster, target,3,4,4302601)
-	-- 8865
-	if SkillJudger:Greater(self, caster, target, true,count659,0) then
-	else
-		return
+	-- 4302621
+	local targets = SkillFilter:Group(self, caster, target, 3,3)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[4302621], caster, target, data, 4302621)
 	end
-	-- 4302613
-	self:DelBufferTypeForce(SkillEffect[4302613], caster, self.card, data, 4302601)
-	-- 4302615
-	self:DelBufferGroup(SkillEffect[4302615], caster, self.card, data, 1,5)
-	-- 4302606
-	self:CallSkill(SkillEffect[4302606], caster, self.card, data, 302600403)
-end
--- 行动结束
-function Skill4302604:OnActionOver(caster, target, data)
-	-- 8147
-	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.7) then
-	else
-		return
-	end
-	-- 8659
-	local count659 = SkillApi:BuffCount(self, caster, target,3,4,4302601)
-	-- 8865
-	if SkillJudger:Greater(self, caster, target, true,count659,0) then
-	else
-		return
-	end
-	-- 4302613
-	self:DelBufferTypeForce(SkillEffect[4302613], caster, self.card, data, 4302601)
-	-- 4302615
-	self:DelBufferGroup(SkillEffect[4302615], caster, self.card, data, 1,5)
-	-- 4302606
-	self:CallSkill(SkillEffect[4302606], caster, self.card, data, 302600403)
 end

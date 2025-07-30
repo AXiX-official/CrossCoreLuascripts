@@ -24,8 +24,6 @@ function this:Clear()
     self.refreshTime=0;
     self.inviteTips=false;--绑定完成提示框
     self:CleanCache();
-    self.inviteOptions=nil;
-    self.inviteList=nil;
 end
 
 function this:CleanCache()
@@ -35,6 +33,8 @@ function this:CleanCache()
     self.isIniviteFull=false;
     self.bindInivte=nil;
     self.invitePage=0;
+    self.inviteOptions=nil;
+    self.inviteList=nil;
     -- self.disOptions=nil;
 end
 

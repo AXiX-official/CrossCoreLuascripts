@@ -319,58 +319,8 @@ function OnItemClickCB(item)
         currItem.SetSel(false)
     end
     currItem = item
-    if not currItem.IsStory() then
-        currItem.SetSel(true)
-        ShowInfo(item)
-    else
-        -- 剧情关卡
-        if currItem.GetCfg().storyID == nil then
-            LogError("找不到当前关卡的剧情ID，当前关卡ID：" .. currItem.GetID())
-            return
-        end
-
-        local dialogData = {}
-        dialogData.content = LanguageMgr:GetTips(8020)
-        dialogData.okCallBack = function()
-            local dungeonData = DungeonMgr:GetDungeonData(currItem.GetCfg().id)
-
-            isStoryFirst = (not dungeonData) or (not dungeonData.data.isPass)
-
-            PlotMgr:TryPlay(currItem.GetCfg().storyID, OnStoryPlayComplete, this, true);
-        end
-        CSAPI.OpenView("Dialog",dialogData)
-    end
-end
-
-function OnStoryPlayComplete()
-    PlotMgr:Save() -- 播放完毕后保存剧情id
-    FightProto:QuitDuplicate({
-        index = 1,
-        nDuplicateID = currItem.GetDungeonID()
-    });
-    local data = {};
-    data.id = currItem.GetDungeonID();
-    data.star = 1;
-    data.isPass = true;
-    DungeonMgr:AddDungeonData(data);
-    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
-    if currItem.GetData() == groupDatas[#groupDatas] and isStoryFirst then
-        if currHardLv == 1 and openInfo:IsHardOpen() then
-            currHardLv = 2
-        elseif currHardLv == 2 and openInfo:IsExtreOpen() then
-            currHardLv = 3
-        end
-    end
-    currItem = nil
-    RefreshPanel()
-    JumpToItem()
-    
-    local bgPos_x = CSAPI.GetLocalPos(bgImg.gameObject)
-    local bgPrecent = math.abs(bgPos_x) / (bgWidth - canvasW)
-    local x = -(bgPrecent * (itemWidth - canvasW))
-    lastPosX = x
-    CSAPI.SetAnchor(lineNode.gameObject, x, 0)
-    CSAPI.SetAnchor(itemParent.gameObject, x, 0)
+    currItem.SetSel(true)
+    ShowInfo(item)
 end
 
 -- 获取关卡组
@@ -501,16 +451,36 @@ end
 function ShowInfo(item)
     isActive = item ~= nil;
     local _cfg = item and item.GetCfg() or nil
+    local type = item and item.GetType() or nil
     CSAPI.SetGOActive(infoMask, isActive)
     if itemInfo == nil then
-        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo7", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.SetClickCB(OnBattleEnter,OnSweepClick)
-            itemInfo.Show(_cfg)
+            itemInfo.Show(_cfg,type,OnLoadCallBack)
         end)
     else
-        itemInfo.Show(_cfg)
+        itemInfo.Show(_cfg,type,OnLoadCallBack)
     end
+end
+
+function OnLoadCallBack()
+    itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
+    itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
+    SetInfoItemPos()
+end
+
+function SetInfoItemPos()
+    itemInfo.SetPanelPos("Title", 0, 449)
+    itemInfo.SetPanelPos("Level", 0, 363)
+    itemInfo.SetPanelPos("Target", 23, 308)
+    itemInfo.SetPanelPos("Output", 23, -71)
+    itemInfo.SetPanelPos("Details", -6, -250)
+    itemInfo.SetPanelPos("Button", 6, -444)
+    itemInfo.SetPanelPos("Plot", 23, 322)
+    if currItem then
+        itemInfo.SetPanelPos("Output", 23, currItem.IsStory() and 15 or -71)
+    end
+    itemInfo.SetPanelPos("PlotButton", 6, -349)
 end
 
 -- 进入
@@ -535,27 +505,35 @@ function OnBattleEnter()
     end
 end
 
-function OnSweepClick()
-    local _cfg = currItem:GetCfg()
-    if not openInfo:IsDungeonOpen() then
-        LanguageMgr:ShowTips(24003)
+function OnStoryCB(isStoryFirst)
+    if not isStoryFirst then
         return
     end
-    if itemInfo.IsSweepOpen() then
-        CSAPI.OpenView("SweepView",{id = _cfg.id})
-    else
-        local sweepData = SweepMgr:GetData(_cfg.id)
-        if sweepData then
-            Tips.ShowTips(sweepData:GetLockStr())
-        else
-            local cfg = Cfgs.CfgModUpOpenType:GetByID(_cfg.modUpOpenId)
-            if cfg then
-                Tips.ShowTips(cfg.sDescription)
-            end
+
+    if currItem.GetData() == groupDatas[#groupDatas] and isStoryFirst then
+        if currHardLv == 1 and openInfo:IsHardOpen() then
+            currHardLv = 2
+        elseif currHardLv == 2 and openInfo:IsExtreOpen() then
+            currHardLv = 3
         end
     end
-end
+    if isActive then
+        ShowInfo()
+    end
+    if currItem then
+        currItem.SetSel(false)
+        currItem = nil
+    end
+    RefreshPanel()
+    JumpToItem()
 
+    local bgPos_x = CSAPI.GetLocalPos(bgImg.gameObject)
+    local bgPrecent = math.abs(bgPos_x) / (bgWidth - canvasW)
+    local x = -(bgPrecent * (itemWidth - canvasW))
+    lastPosX = x
+    CSAPI.SetAnchor(lineNode.gameObject, x, 0)
+    CSAPI.SetAnchor(itemParent.gameObject, x, 0)
+end
 -----------------------------------btn-----------------------------------
 function OnClickReturn()
     if currItem then
@@ -618,4 +596,33 @@ end
 
 function AnimEnd()
     CSAPI.SetGOActive(clickMask.gameObject, false)
+end
+
+function ShowDungeonUnLockAnim()
+    local index = curIndex + 1
+    if index <= #curDatas then
+        -- CSAPI.SetGOActive(animMask, true)
+        local lua1 = layout:GetItemLua(index - 1)
+        if lua1 then
+            local lua2 = layout:GetItemLua(selIndex)
+            if lua2 then
+                -- currItem.SetSelect(false)
+                lua2.ShowSelAnim(false)
+                currItem = nil
+            end
+            selIndex = 0
+            curIndex = 0
+            if isActive then
+                ShowInfo()
+            end
+            ShowBGItem()
+            MoveToTargetByIndex(lua1.GetInfo(), 1, function()
+                local lua = layout:GetItemLua(index)
+                if lua then
+                    lua.ShowUnLockAnim()
+                    lua.OnClick()
+                end
+            end)
+        end
+    end
 end

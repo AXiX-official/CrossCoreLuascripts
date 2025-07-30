@@ -29,7 +29,7 @@ end
 function this:CheckMenuBuyIsOpen()
     return MenuMgr:CheckModelOpen(OpenViewType.special, "special16")
 end
---id:5、9是新年
+-- id:5、9是新年
 -- 设置等待弹出的数据
 -- 弹出销毁条件
 -- 1、全部    【登录+未勾】
@@ -109,8 +109,8 @@ function this:GetOpenEndTimeInfo()
             break
         end
         for k, v in pairs(self.datas) do
-            --local timeStr = n == 1 and v:GetCfg().startTime or v:GetCfg().endTime
-            local _time = n == 1 and v:GetStartTime() or v:GetEndTime()--TimeUtil:GetTimeStampBySplit(timeStr)
+            -- local timeStr = n == 1 and v:GetCfg().startTime or v:GetCfg().endTime
+            local _time = n == 1 and v:GetStartTime() or v:GetEndTime() -- TimeUtil:GetTimeStampBySplit(timeStr)
             if (_time and _time > curTime and (time == nil or _time < time)) then
                 time = _time
                 id = v:GetID()
@@ -153,6 +153,28 @@ function this:CheckIsNeedShow()
     local data = self:GetCurData()
     if (data) then
         return data:GetPush()
+    end
+    return false
+end
+
+function this:GetData(id)
+    return self.datas[id]
+end
+
+-- 活动是否已关闭
+function this:CheckIsEnd(id)
+    local data = self.datas[id]
+    if (data and not data:IsEnd()) then
+        return false
+    end
+    return true
+end
+
+-- 活动是否在开发时间内
+function this:CheckIsInTime(id)
+    local data = self.datas[id]
+    if (data and data:IsInTime()) then
+        return true
     end
     return false
 end

@@ -12,3 +12,50 @@ function Skill302500205:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12001], caster, target, data, 1,1)
 end
+-- 攻击结束
+function Skill302500205:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 302500203
+	self:HitAddBuff(SkillEffect[302500203], caster, target, data, 2400,3005,1)
+end
+-- 攻击结束2
+function Skill302500205:OnAttackOver2(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8434
+	local count34 = SkillApi:BuffCount(self, caster, target,2,3,3005)
+	-- 8807
+	if SkillJudger:Less(self, caster, self.card, true,count34,1) then
+	else
+		return
+	end
+	-- 302500213
+	self:HitAddBuff(SkillEffect[302500213], caster, target, data, 10000,5506,2)
+end

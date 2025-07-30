@@ -8,6 +8,13 @@ function Skill4803601:Init(skillID, card)
 end
 -- 行动结束
 function Skill4803601:OnActionOver(caster, target, data)
+	-- 8477
+	local count77 = SkillApi:LiveCount(self, caster, target,4)
+	-- 4803607
+	if SkillJudger:Greater(self, caster, target, true,count77,0) then
+	else
+		return
+	end
 	-- 4803604
 	self:tFunc_4803604_4803601(caster, target, data)
 	self:tFunc_4803604_4803602(caster, target, data)
@@ -62,10 +69,20 @@ function Skill4803601:tFunc_4803604_4803606(caster, target, data)
 	else
 		return
 	end
+	-- 8477
+	local count77 = SkillApi:LiveCount(self, caster, target,4)
+	-- 4803607
+	if SkillJudger:Greater(self, caster, target, true,count77,0) then
+	else
+		return
+	end
 	-- 4803606
 	self:AddSp(SkillEffect[4803606], caster, self.card, data, -100)
 	-- 4803603
-	self:CallOwnerSkill(SkillEffect[4803603], caster, target, data, 803600301)
+	local targets = SkillFilter:Rand(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		self:CallOwnerSkill(SkillEffect[4803603], caster, target, data, 803600301)
+	end
 end
 function Skill4803601:tFunc_4803604_4803601(caster, target, data)
 	-- 8065

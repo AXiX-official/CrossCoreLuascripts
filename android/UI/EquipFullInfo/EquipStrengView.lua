@@ -115,14 +115,27 @@ function InitLeftPanel()
         leftPanel = ComUtil.GetLuaTable(go)
     end
     leftDatas = {{75018, "EquipInfo/btn_02_01"}}
-	if MenuMgr:CheckModelOpen(OpenViewType.main,"EquipRefining") then
+	if MenuMgr:CheckModelOpen(OpenViewType.special,"special18") then
 		table.insert(leftDatas,{75002,"EquipInfo/btn_02_02"})
 		CSAPI.SetGOActive(question,true)
+		CheckFirstModuleInfo();
 	end
-	if MenuMgr:CheckModelOpen(OpenViewType.main,"EquipSynthesis") then
+	if MenuMgr:CheckModelOpen(OpenViewType.special,"special19") then
 		table.insert(leftDatas,{75003,"EquipInfo/btn_02_03"})
 	end
     leftPanel.Init(this, leftDatas)
+end
+
+--检测是否弹出过引导提示
+function CheckFirstModuleInfo()
+	local cfg=Cfgs.CfgModuleInfo:GetByID("EquipStreng");
+	if cfg then
+		local value=PlayerPrefs.GetInt("first_open_equipRefining");
+		if value==nil or value==0 then
+			CSAPI.OpenView("ModuleInfoView",cfg);
+			PlayerPrefs.SetInt("first_open_equipRefining",1);
+		end
+	end
 end
 
 function OnClickReturn()

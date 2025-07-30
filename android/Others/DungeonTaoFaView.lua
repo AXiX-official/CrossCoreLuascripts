@@ -11,6 +11,7 @@ local imgs1 = nil
 local imgs2 = nil
 local btns = nil
 local itemInfo = nil
+local sectionData = nil
 
 function Awake()
     CSAPI.SetGOActive(action,false)
@@ -28,8 +29,7 @@ function OnEnable()
 end
 
 function OnRedPointRefresh()
-    local _data = RedPointMgr:GetData(RedPointType.MissionTaoFa)
-    UIUtil:SetRedPoint2("Common/Red2", btnMission, _data == 1, 108, 32, 0)
+    SetRed()
 end
 
 function OnDisable()
@@ -50,7 +50,7 @@ function OnOpen()
     imgs2 = {nolImg2,hardImg2,eliteImg2,hellImg2}
     btns = {btnNol,btnHard,btnElite,btnHell}
     if data and data.id then
-        local sectionData = DungeonMgr:GetSectionData(data.id)
+        sectionData = DungeonMgr:GetSectionData(data.id)
         if sectionData then
             openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         end
@@ -71,8 +71,9 @@ function OnOpen()
     MissionMgr:CheckRedPointData()
 end
 
-function SetRed(b)
-    UIUtil:SetRedPoint2("Common/Red2", gameObject, b, 89.8, 23.8)
+function SetRed()
+    local isRed = MissionMgr:CheckRed2(eTaskType.DupTaoFa,sectionData:GetID())
+    UIUtil:SetRedPoint2("Common/Red2", btnMission, isRed, 108, 32, 0)
 end
 
 
@@ -133,6 +134,7 @@ function RefreshPanel()
         SetTitle()
         SetState()
         ShowInfo()
+        SetRed()
     end
 end
 

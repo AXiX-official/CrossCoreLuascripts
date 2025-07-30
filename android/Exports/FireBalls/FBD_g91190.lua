@@ -12,10 +12,10 @@ local this =
 {effect="cast4_eff",time=10000,type=0,pos_ref={ref_type=6}}
 },
 [-686817241]={
-{delay=1550,time=5000,type=1,hit_type=0,hit_creates={806661594},hits={700}},
-{delay=1800,time=5000,type=1,hit_type=0,hit_creates={1192467788},hits={700}},
-{delay=1300,time=5000,type=1,hit_type=0,hit_creates={-1457652640},hits={700}},
-{delay=500,time=8000,type=0,cue_sheet="fight/effect/seventh.acb",cue_name="Censor_attack_skill_02"}
+{delay=1550,time=5000,type=1,work_delay=500,hit_type=0,hit_creates={806661594},hits={700}},
+{delay=1800,time=5000,type=1,work_delay=500,hit_type=0,hit_creates={1192467788},hits={700}},
+{delay=1300,time=5000,type=1,work_delay=500,hit_type=0,hit_creates={-1457652640},hits={700}},
+{time=8000,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="91190_cast_01"}
 },
 [806661594]={
 effect="cast1_eff02",time=8000,type=0,pos_ref={ref_type=4,part_index=1}
@@ -39,7 +39,8 @@ effect="cast2_hit",time=1000,type=0,pos_ref={ref_type=4,part_index=1}
 {time=8600,type=1,hit_type=0,hits={4030}},
 {time=8600,type=1,hit_type=0,hits={6495}},
 {time=12766,type=0},
-{effect="cast3_eff",time=8600,type=0,pos_ref={ref_type=6}}
+{effect="cast3_eff",time=8600,type=0,pos_ref={ref_type=6}},
+{time=8000,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="91190_cast_03"}
 },
 [-1609092943]={
 {effect="cast0_eff2",time=3700,type=0,pos_ref={ref_type=1,lock_col=1}},

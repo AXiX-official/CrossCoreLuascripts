@@ -118,4 +118,8 @@ function this.Summer2Special()
     return {"Title","Level","Plot","Output","Details","Button"},"DungeonActivity13"
 end
 
+function this.MultTeamBattle()
+    return {"Title","BossState","Point","Details","Button7"},"MultTeamBattle"
+end
+
 return this; 

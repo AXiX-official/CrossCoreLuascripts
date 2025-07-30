@@ -92,7 +92,7 @@ function SetState()
 			completeInfo = dungeonData:GetNGrade()
 		end
 		local starInfos = DungeonUtil.GetStarInfo2(cfg.id, completeInfo);
-		
+
 		for i = 0, starObj.transform.childCount - 1 do
 			local go = starObj.transform:GetChild(i).gameObject
 			local isComplete = starInfos[i + 1].isComplete
@@ -148,6 +148,14 @@ end
 --返回出战队伍数量
 function GetTeamNum()
 	return cfg and cfg.teamNum or 1;
+end
+
+function GetType()
+	local type= DungeonInfoType.Normal
+	if IsStory() then
+		type = DungeonInfoType.Plot
+	end
+	return type
 end
 
 --开启

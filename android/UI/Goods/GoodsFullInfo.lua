@@ -198,11 +198,17 @@ function Refresh()
 				else
 					count=0;
 				end
+			elseif itemInfo:GetClassType()=="CharacterCardsData" then
+				local has=RoleMgr:GetData(itemInfo:GetID());
+				if has~=nil then
+					count=1
+				end
 			elseif itemInfo:GetCount()>0 and openSetting==nil then
 				count=itemInfo:GetCount();
 			else
 				count=BagMgr:GetCount(itemInfo:GetID());
 			end
+			count=count or 0;
 			CSAPI.SetText(txt_currNum, tostring(count));
 		-- else
 		-- 	CSAPI.SetText(txt_currNum, tostring(itemInfo:GetCount()));
@@ -274,11 +280,23 @@ function Refresh()
 				SetNumObj(false)
 				CSAPI.SetGOActive(btn_ok, true);
 				clickFunc = UseVoucher;
-			elseif cfg.type==ITEM_TYPE.CHANGE_NAME_AND_SEX then -- 名字与形态转换券
+			-- elseif cfg.type==ITEM_TYPE.CHANGE_NAME_AND_SEX then -- 名字与形态转换券
+			-- 	CSAPI.SetGOActive(bottomObj, true);
+			-- 	CSAPI.SetGOActive(mUseNode,false)
+				-- CSAPI.SetGOActive(btn_ok, true);
+				-- clickFunc = UseInfoCorr
+			end
+			if cfg.use_skip then
 				CSAPI.SetGOActive(bottomObj, true);
 				CSAPI.SetGOActive(mUseNode,false)
 				CSAPI.SetGOActive(btn_ok, true);
-				clickFunc = UseInfoCorr
+				clickFunc = UseSkipCall
+			end
+			if cfg.can_be_converted==1 then
+				showGets=false;
+				CSAPI.SetGOActive(btn_converted,true);
+			else
+				CSAPI.SetGOActive(btn_converted,false);
 			end
 			if showGets then
 				--显示获取途径
@@ -317,7 +335,7 @@ function Update()
 end
 
 function RefreshDownTime()
-	if itemInfo==nil or (itemInfo.IsExipiryType==nil or (itemInfo.GetExpiryTips~=nil and itemInfo:IsExipiryType()~=true) or itemInfo:GetCount()<=0) then
+	if itemInfo==nil or ((itemInfo.IsExipiryType==nil or (itemInfo.GetExpiryTips~=nil and itemInfo:IsExipiryType()~=true) and itemInfo:GetExpiry()==nil) or itemInfo:GetCount()<=0) then
 		CSAPI.SetGOActive(limitObj,false);
 		return
 	end
@@ -587,6 +605,18 @@ function Close()
 	end,nil,180);
 end
 
+function OnClickGetInfo()
+	if itemInfo and itemInfo:GetObtainrateState()then
+		local cfg1=itemInfo:GetCfg();
+		if cfg1 and cfg1.dy_value1 then
+			local cfg=Cfgs.RewardInfo:GetByID(cfg1.dy_value1)
+			if cfg then
+				CSAPI.OpenView("PackGetInfo",cfg);
+			end
+		end
+    end  
+end
+
 function OnClickBack()
 	CSAPI.SetGOActive(root, true);
 end
@@ -657,6 +687,13 @@ function OnClickDetails()
 	end
 end
 
+
+function UseSkipCall()
+	local cfg = itemInfo:GetCfg();
+	if cfg.use_skip then
+		JumpMgr:Jump(cfg.use_skip);
+	end
+end
 
 ---判断检测是否按了返回键
 function CheckVirtualkeys()

@@ -747,7 +747,7 @@ function BuffMgr:AlterRandBufferByGroup(caster, card, group, num)
 	end
 
 	if #list > 0 then
-		local rNum = math.random(1,#list)
+		local rNum = self.card:Rand(#list)+1
 		local bf = list[rNum]
 		if bf then
 			bf.round = bf.round + num
@@ -769,7 +769,7 @@ function BuffMgr:AlterRandBufferByID(caster, card, group, num)
 	end
 
 	if #list > 0 then
-		local rNum = math.random(1,#list)
+		local rNum = self.card:Rand(#list)+1
 		local bf = list[rNum]
 		if bf then
 			bf.round = bf.round + num
@@ -790,7 +790,7 @@ function BuffMgr:AlterRandBufferByType(caster, card, type, num)
 	end
 
 	if #list > 0 then
-		local rNum = math.random(1,#list)
+		local rNum = self.card:Rand(#list)+1
 		local bf = list[rNum]
 		if bf then
 			bf.round = bf.round + num
@@ -1943,6 +1943,19 @@ function BuffBase:SetCurePercent(effect, caster, target, data, percent)
 	self:AddTodoOnDelete(todo, target)
 end
 
+-- 减少拉条比例
+function BuffBase:ReduceProgressPercent(effect, caster, target, data, percent)
+	if self.nAddProgressPercent then ASSERT(nil, "一个buff只能设置一次拉条比例") end
+	self.nAddProgressPercent = percent
+	target.tAddProgressBuffer = target.tAddProgressBuffer or {} -- 存放拉条buff
+	target.tAddProgressBuffer[self.uuid] = percent
+
+	local todo = function(target)
+		target.tAddProgressBuffer[self.uuid] = nil
+	end
+	
+	self:AddTodoOnDelete(todo, target)
+end
 
 -- 删除技能事件
 function BuffBase:DeleteEvent(effect, caster, target, data)

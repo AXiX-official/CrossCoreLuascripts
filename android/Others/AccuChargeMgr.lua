@@ -202,6 +202,7 @@ function this:CheckRed3()
     if (rData == nil or rData ~= num) then
         RedPointMgr:UpdateData(RedPointType.AccuCharge3, num)
         ActivityMgr:CheckRedPointData(ActivityListType.AccuCharge3)
+        AnniversaryMgr:CheckRedPointData()
     end
 end
 

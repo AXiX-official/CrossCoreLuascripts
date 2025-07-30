@@ -14,7 +14,7 @@ local conf = {
 {'4',	'4',	'4',	'5',	'22045',	'icon_02_06',	'DE8394',	'SpecialActivityView',	'3'},
 {'5',	'5',	'5',	'3',	'22083',	'icon_02_03',	'DC8361',	'RegressionList',	''},
 {'7',	'7',	'6',	'6',	'22084',	'icon_02_04',	'c97ee5',	'CollaborationMain',	''},
-{'8',	'8',	'8',	'8',	'67006',	'icon_02_07',	'7fabe6',	'LuckyGachaMain',	''},
+{'8',	'8',	'8',	'8',	'67024',	'icon_02_07',	'7fabe6',	'LuckyGachaMain',	''},
 {'9',	'9',	'9',	'9',	'74001',	'icon_02_08',	'FFC146',	'PuzzleActivity',	'2'},
 {'10',	'10',	'10',	'10',	'13035',	'icon_02_09',	'7fe6a6',	'SignInDuanWu',	''},
 {'11',	'11',	'11',	'11',	'62049',	'icon_02_10',	'FFC146',	'PetMain',	''},

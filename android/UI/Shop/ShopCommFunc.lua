@@ -369,17 +369,44 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
     end
     local canPay = this.CheckCanPay(commodity, currNum, voucherList,shopPriceKey);
     if commodity:GetType() == CommodityItemType.MonthCard then -- 月卡,判断剩余时间是否可以续费
+        local curDays=0;
+        if commodity:GetSubType()==CommodityItemSubType.MonthCard then
+            curDays=ShopMgr:GetMonthCardDays();
+        else
+            local info=commodity:GetMonthCardInfo();
+            curDays=info and info.l_cnt or 0;
+        end
         local limitDays = commodity:GetResetValue();
-        if ShopMgr:GetMonthCardDays() > limitDays then -- 月卡大于限制天数则无法购买
-            Tips.ShowTips(LanguageMgr:GetTips(15108));
+        if curDays > limitDays then -- 月卡大于限制天数则无法购买
+            local langId=commodity:GetSubType()==CommodityItemSubType.MonthCard and 15108 or 15128;
+            Tips.ShowTips(LanguageMgr:GetTips(langId));
             do
                 return
             end
         end
     end
     if canPay then
-        if CSAPI.IsDomestic() then
-            this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payType, isInstall, voucherList,shopPriceKey)
+        if CSAPI.IsDomestic() then            
+            -- 添加弹窗
+            local priceInfo=commodity:GetRealPrice(shopPriceKey);
+            if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
+                local good=BagMgr:GetFakeData(priceInfo[1].id);
+                local rNum=priceInfo[1].num;
+                local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),currNum,PlayerClient:GetLv(),nil,shopPriceKey);
+                if isOk and res  then
+                    rNum=res[1][2];
+                end
+                local dialogData = {
+                    content = LanguageMgr:GetTips(15123,good:GetName(),rNum*currNum),
+                    okCallBack = function()
+                        this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payType, isInstall, voucherList,shopPriceKey)
+                    end
+                }
+                CSAPI.OpenView("Dialog", dialogData);
+            else
+                this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payType, isInstall, voucherList,shopPriceKey)
+            end
+            -- this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payType, isInstall, voucherList,shopPriceKey)
         elseif CSAPI.IsADV() then
             ---海外------------------------
             local priceInfo=commodity:GetRealPrice(shopPriceKey);
@@ -719,6 +746,7 @@ function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payTy
                                 --- gameExt=commodity["cfg"]["goodsId"],---游戏传入自定义参数
                                 gameExt=Json.encode(Backresult);---游戏传入自定义参数
                             }
+                            -- LogError("productName = " .. payData.productName .. "   productDesc = " .. payData.productDesc .. "   amount = " .. payData.amount)
                             if payData.productDesc==nil then
                                 payData.productDesc="";
                             end
@@ -993,28 +1021,28 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
             id = good.data:GetDyVal1(),
             commId = commodityData:GetID()
         }, 2)
-    elseif commodityData:GetNum() >= 1 or commodityData:GetNum() == -1 or isForce == true then -- :-1代表不限制
+    elseif commodityData:GetNum() >= 1 or commodityData:GetNum() == -1 or isForce == true or (commodityData:GetType()==CommodityItemType.MonthCard and commodityData:GetSubType()==CommodityItemSubType.MonthCard2) then -- :-1代表不限制
         if commodityType == 1 then
-                if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
-                    CSAPI.OpenView("ShopMultPayView", {
-                        commodity = commodityData,
-                        pageData = pageData,
-                        callBack = callBack
-                    });
-                elseif commodityData:GetType() == CommodityItemType.Package or commodityData:GetType() ==
-                CommodityItemType.MonthCard or commodityData:GetType() == CommodityItemType.Regression then
-                    CSAPI.OpenView("ShopPackPayView", {
-                        commodity = commodityData,
-                        pageData = pageData,
-                        callBack = callBack
-                    });
-                else
-                    CSAPI.OpenView("ShopPayView", {
-                        commodity = commodityData,
-                        pageData = pageData,
-                        callBack = callBack
-                    });
-                end          
+            if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
+                CSAPI.OpenView("ShopMultPayView", {
+                    commodity = commodityData,
+                    pageData = pageData,
+                    callBack = callBack
+                });
+            elseif commodityData:GetType() == CommodityItemType.Package or commodityData:GetType() ==
+            CommodityItemType.MonthCard or commodityData:GetType() == CommodityItemType.Regression then
+                CSAPI.OpenView("ShopPackPayView", {
+                    commodity = commodityData,
+                    pageData = pageData,
+                    callBack = callBack
+                });
+            else
+                CSAPI.OpenView("ShopPayView", {
+                    commodity = commodityData,
+                    pageData = pageData,
+                    callBack = callBack
+                });
+            end       
         else
             if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
                 CSAPI.OpenView("ShopMultPayView", {
@@ -1035,6 +1063,24 @@ end
 
 -- 处理购买/兑换逻辑
 function this.HandlePayLogic(commodity, num, commodityType, voucherList, func,shopPriceKey)
+    if commodity and commodity:GetType() == CommodityItemType.MonthCard then -- 月卡,判断剩余时间是否可以续费
+        local curDays=0;
+        if commodity:GetSubType()==CommodityItemSubType.MonthCard then
+            curDays=ShopMgr:GetMonthCardDays();
+        else
+            local info=commodity:GetMonthCardInfo();
+            curDays=info and info.l_cnt or 0;
+        end
+        local limitDays = commodity:GetResetValue();
+        if curDays > limitDays then -- 月卡大于限制天数则无法购买
+            local langId=commodity:GetSubType()==CommodityItemSubType.MonthCard and 15108 or 15128;
+            Tips.ShowTips(LanguageMgr:GetTips(langId));
+            do
+                return
+            end
+        end
+    end
+
     local priceInfo = commodity:GetRealPrice(shopPriceKey);
     -- 调用支付渠道选择
     if priceInfo and priceInfo[1].id == -1 and CSAPI.IsDomestic()then
@@ -1072,6 +1118,23 @@ end
 
 ---处理购买/兑换逻辑 海外
 function this.AdvHandlePayLogic(commodity,num,commodityType,func,payType,Isdisplay,voucherList,shopPriceKey)
+    if commodity and commodity:GetType() == CommodityItemType.MonthCard then -- 月卡,判断剩余时间是否可以续费
+        local curDays=0;
+        if commodity:GetSubType()==CommodityItemSubType.MonthCard then
+            curDays=ShopMgr:GetMonthCardDays();
+        else
+            local info=commodity:GetMonthCardInfo();
+            curDays=info and info.l_cnt or 0;
+        end
+        local limitDays = commodity:GetResetValue();
+        if curDays > limitDays then -- 月卡大于限制天数则无法购买
+            local langId=commodity:GetSubType()==CommodityItemSubType.MonthCard and 15108 or 15128;
+            Tips.ShowTips(LanguageMgr:GetTips(langId));
+            do
+                return
+            end
+        end
+    end
     local priceInfo=commodity:GetRealPrice(shopPriceKey);
     --调用支付渠道选择
     print("channelType:"..channelType)
@@ -1202,6 +1265,18 @@ end
 function this.SortComm(a, b)
     local over1 = a:IsOver() and 1 or 0;
     local over2 = b:IsOver() and 1 or 0;
+    if a:GetType()==CommodityItemType.MonthCard and a:GetSubType()==CommodityItemSubType.MonthCard2 and over1==1 then
+        -- local gets=a:GetMonthCardInfo();
+        -- if gets and gets.l_cnt>0 then
+            over1=0;
+        -- end
+    end
+    if b:GetType()==CommodityItemType.MonthCard and b:GetSubType()==CommodityItemSubType.MonthCard2 and over2==1 then
+        -- local gets=b:GetMonthCardInfo();
+        -- if gets and gets.l_cnt>0 then
+            over2=0;
+        -- end
+    end
     if over1 ~= over2 then
         return over1 < over2;
     elseif a:GetSort() == b:GetSort() then

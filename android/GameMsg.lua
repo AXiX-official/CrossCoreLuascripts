@@ -1215,6 +1215,41 @@ GameMsg.map["FightProtocol:EnterFightBuffBattleDuplicate"] = {
 	{ "byte",  "uint",        "list|sDuplicateTeamData","bool",         "array|int",},
 	{ "index", "nDuplicateID","list",              "isMultiReward","buffs",    },
 }
+GameMsg.map["FightProtocol:GetMultTeamData"] = {
+	--活动id 周目    
+	{ "uint","uint", },
+	{ "id",  "round",},
+}
+GameMsg.map["sMultTeamHpData"] = {
+	--战斗周目 怪物血量     
+	{ "int",   "array|uint",},
+	{ "stage", "data",      },
+}
+GameMsg.map["sMultTeamDupData"] = {
+	--关卡id  当前总血量 总最大血量   怪物血量数据         当前关卡已获得分数 
+	{ "int",  "int",     "int",       "struts|sMultTeamHpData","int",             },
+	{ "dupId","totalHp", "totalMaxHp","hpData",            "score",           },
+}
+GameMsg.map["FightProto:GetMultTeamDataRet"] = {
+	--活动id 周目    关卡组ID 已通关关卡   今日已上阵过的卡牌id 是否已经领过结算奖励 关卡数据             
+	{ "uint","uint", "uint",  "array|uint","array|uint",        "bool",              "list|sMultTeamDupData",},
+	{ "id",  "round","group", "arrPass",   "arrCard",           "isSettle",          "dupData",           },
+}
+GameMsg.map["FightProtocol:EnterMultTeamFight"] = {
+	--活动id 周目    关卡id  编队信息             
+	{ "uint","uint", "uint", "list|sDuplicateTeamData",},
+	{ "id",  "round","dupId","list",              },
+}
+GameMsg.map["FightProtocol:GetSettleReward"] = {
+	--活动id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["FightProto:MultTeamFightOver"] = {
+	--副本id 本次获得积分 关卡数据             结果     已通关关卡   奖励           今日已上阵过的卡牌id 
+	{ "uint","uint",      "list|sMultTeamDupData","bool",  "array|uint","list|sReward","array|uint",        },
+	{ "id",  "score",     "dupData",           "bIsWin","arrPass",   "reward",      "arrCard",           },
+}
 GameMsg.map["ItemData"] = {
 	--id     数量  第一个获取时间 有效期序列值(结合配置表的sExpiry使用, 导表工具会生成nExpiry) 过期时间，不需要分开堆叠显示的使用[头像框] 分批获取的信息 
 	{ "uint","int","uint",        "short",             "uint",               "json",        },

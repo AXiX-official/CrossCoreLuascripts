@@ -170,7 +170,12 @@ APIType =
     Custom = "custom";
 
     SetInvincible = "SetInvincible";--设置活动boss阶段信息
-    UpdateDamage = "UpdateDamage"--更新总伤害
+    UpdateDamage = "UpdateDamage";--更新总伤害
+
+    Skip = "skip";--跳过回合
+
+    SetFury = "SetFury";--设置怒气
+    UpdateFury = "UpdateFury";--更新怒气
 }
 
 
@@ -304,6 +309,7 @@ function this:GetAPIHandler(apiName)
         --反击
         self.handers[APIType.BeatBack] = require "FightAPIHandler_Skill";--"FightAPIHandler_Jumper";
        
+        self.handers[APIType.Skip] = require "FightAPIHandler_Skip";
 
         --协助提示信息
         self.handers[APIType.Help] = require "FightAPIHandler_Help";
@@ -415,6 +421,11 @@ function this:GetAPIHandler(apiName)
         self.handers[APIType.UpdateValue] = apiHandler
         --移除数值
         self.handers[APIType.DelValue] = apiHandler;
+
+        --设置怒气
+        self.handers[APIType.SetFury] = apiHandler;
+        --更新怒气
+        self.handers[APIType.UpdateFury] = apiHandler;
 
         --自定义
         self.handers[APIType.Custom] = apiHandler;

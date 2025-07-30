@@ -16,6 +16,7 @@ local realPrice=0;
 local endTime=0;--结束时间戳
 local countTime=0;
 local rmbIcon=nil;
+local SDKdisplayPrice=nil;
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV")
 	layout:Init("UIs/Shop/ShopPackItem",LayoutCallBack,true)
@@ -44,8 +45,11 @@ function OnShopRefresh()
 end
 
 function OnMonthCardDaysChange(days)
-    if commodity and commodity:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
-        SetDays(days);--刷新剩余时间
+    if  commodity and commodity:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
+		local info=commodity:GetMonthCardInfo();
+		if info and info.id==ITEM_ID.MonthCard then
+			SetDays(days);--刷新剩余时间
+		end
     end
 end
 
@@ -104,12 +108,22 @@ function OnOpen()
 		elseif commodityType==1 and  commodity:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
 			SetHasNum(0)
 			showNum=false;
-			SetDays(ShopMgr:GetMonthCardDays());
-			--自动刷新时间戳
-			for k, v in ipairs(commodity:GetCommodityList()) do
-				if v.data:GetType()==ITEM_TYPE.PROP and v.data:GetDyVal1()==PROP_TYPE.MemberReward and v.data:GetDy2Times() and TimeUtil:GetTime()<v.data:GetDy2Times() then --月卡
-					endTime=v.data:GetDy2Times();
-					break;
+			local mInfo=commodity:GetMonthCardInfo();
+			if mInfo then
+				SetDays(mInfo.l_cnt);
+				if tips~=nil then
+					CSAPI.SetGOActive(limitTimeObj,mInfo.l_cnt<=0);
+				end
+			end
+			if commodity:GetSubType()==CommodityItemSubType.MonthCard2 then
+				endTime=0;
+			else
+				--自动刷新时间戳
+				for k, v in ipairs(commodity:GetCommodityList()) do
+					if v.data:GetType()==ITEM_TYPE.PROP and v.data:GetDyVal1()==PROP_TYPE.MemberReward and v.data:GetDy2Times() and TimeUtil:GetTime()<v.data:GetDy2Times() then --月卡
+						endTime=v.data:GetDy2Times();
+						break;
+					end
 				end
 			end
 		elseif (commodityType==2 and commodity:GetType()==RandRewardType.ITEM) then --随机配置
@@ -240,6 +254,7 @@ function SetPrice(id, num,pIcon,pText,pRmbIcon)
 		CSAPI.SetText(pText, tostring(num));
 		CSAPI.SetGOActive(pIcon,false);
 		CSAPI.SetGOActive(pRmbIcon,true);
+		if CSAPI.IsADV() then SDKdisplayPrice=commodity:GetSDKdisplayPrice(); if SDKdisplayPrice~=nil then CSAPI.SetText(pText, rmbIcon..tostring(SDKdisplayPrice)); end end
 		return;
 	else
 		CSAPI.SetGOActive(pIcon,true);
@@ -360,11 +375,13 @@ function OnClickPay()
 		ShopCommFunc.HandlePayLogic(commodity,currNum,commodityType,voucherList,OnSuccess);
 	end
 end
+
 ---方法整合 ---点击购买
 function OnClickPayADVMain()
 	AdvDeductionvoucher.IsDeductionvoucher=true;
 	ShopCommFunc.AdvHandlePayLogic(commodity,currNum,commodityType,OnSuccess,PayType.ZiLong,false,voucherList);
 end
+
 ---抵扣卷支付按钮事件
 function OnClickVoucherPay()
 	if CSAPI.RegionalCode()==3 then

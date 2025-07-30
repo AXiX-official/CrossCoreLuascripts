@@ -176,65 +176,79 @@ function CreateGrids(list, path, parent, _elseData)
 end
 
 function CreateMainLineOutPutGrids()
-	local passList = GetRewardCfgGoods(info.fisrtPassReward);
-	local starList = GetRewardCfgGoods(info.fisrt3StarReward);	
-	local fixedList = GetRewardCfgGoods(info.fixedReward, true)
-	local randomList = GetRewardCfgGoods(info.randomReward, true)
-	local littleList = GetRewardCfgGoods(info.littleReward, true)
-	local timeLimitList = {}
-	if info.sub_type == nil then
-		timeLimitList = GetRewardCfgGoods(RewardUtil.GetSpecialReward(info.group))
-	end
+	local firstList = GetFirstList();
+	local secondList = GetFixedList();	
+	local thirdList = GetRandomList()
+	local fourthList = GetRewardCfgGoods(info.littleReward, true, GetElseData(4))
 	local LanguageIDs = {15019, 15041, 15042, 15044}
-	local lists = {passList, fixedList, randomList, littleList}
-	
-	local dungeonData = DungeonMgr:GetDungeonData(info.id)
-	local starNum = 0;
-	if dungeonData and dungeonData.data then
-		local starInfo = DungeonUtil.GetStarInfo2(info.id, dungeonData:GetNGrade());
-		if starInfo then
-			for k, v in ipairs(starInfo) do
-				if v.isComplete then
-					starNum = starNum + 1;
-				end
-			end
-		end
-	end
-	
-	local count = 1
+	local lists = {firstList, secondList, thirdList, fourthList}
+
 	for i, v in ipairs(LanguageIDs) do
-		if(#lists[i] > 0 or (i == 3 and #timeLimitList > 0)) then
+		if(#lists[i] > 0) then
 			ResUtil:CreateUIGOAsync("DungeonDetail/DungeonDetailList", rewardNode, function(go)
 				local lua = ComUtil.GetLuaTable(go)
-				local elseData = GetElseData(i, starNum)
-				lua.SetTweenDelay(count)
-				if i == 3 then
-					local _elseData = GetElseData(6, starNum)
-					lua.AddItem(timeLimitList, _elseData)
-				end
-				lua.Refresh(lists[i], elseData)
-				if i == 1 then
-					elseData = GetElseData(5, starNum)
-					lua.AddItem(starList, elseData)
-				end
+				lua.SetTweenDelay(i)
+				lua.Refresh(lists[i])
 				lua.ShowLine(i < 3)
 				lua.SetTitle(v)
 				table.insert(itemLists, lua)
 			end)
-			count = count + 1
 		end
 	end
 end
 
+--首通和三星
+function GetFirstList()
+	local list = GetRewardCfgGoods(info.fisrtPassReward,false,GetElseData(1));
+	local starList = GetRewardCfgGoods(info.fisrt3StarReward,false,GetElseData(2));	
+	if starList and #starList > 0 then
+		for i, v in ipairs(starList) do
+			table.insert(list,v)
+		end
+	end
+	return list
+end
+
+--固定掉落列表
+function GetFixedList()
+	local specList,isFixed= RewardUtil.GetSpecialReward(info.group)
+	local list = GetRewardCfgGoods(info.fixedReward, true)
+	if not info.sub_type and specList and isFixed then
+		local _list = GetRewardCfgGoods(specList,false,GetElseData(5))
+		for i, v in ipairs(_list) do
+			table.insert(list,i,v)
+		end
+	end
+	return list
+end
+
+--概率掉落列表
+function GetRandomList()
+	local specList,isFixed= RewardUtil.GetSpecialReward(info.group)
+	local list = GetRewardCfgGoods(info.randomReward, true)
+	if not info.sub_type and specList and not isFixed then
+		local _list = GetRewardCfgGoods(specList,false,GetElseData(5))
+		for i, v in ipairs(_list) do
+			table.insert(list,i,v)
+		end
+	end
+	return list
+end
+
+function GetStarNum()
+	local dungeonData = DungeonMgr:GetDungeonData(info.id)
+	return dungeonData and dungeonData:GetStar() or 0
+end
+
 --读取掉落表中的信息
-function GetRewardCfgGoods(list, isOnlyID)
+function GetRewardCfgGoods(list, isOnlyID, elseData)
 	local tab = {};
 	if list then
 		for k, v in ipairs(list) do
 			if isOnlyID then --只有物品id
 				local goodsData = GoodsData();
 				goodsData:InitCfg(v);
-				table.insert(tab, goodsData);
+				table.insert(tab, {data = goodsData,elseData = elseData});
 			else			
 				local item = nil;
 				if v[3] == nil then
@@ -249,32 +263,29 @@ function GetRewardCfgGoods(list, isOnlyID)
 					item = RoleMgr:GetFakeData(v[1], v[2])
 					item:InitCfg(v[1]);
 				end
-				table.insert(tab, item);				
+				table.insert(tab, {data = item,elseData = elseData});				
 			end
 		end
 	end
 	return tab
 end
--- 1:首通 3:概率 4：小概率 5：三星 6：限时
+-- 1:首通 2：三星 3:概率 4：小概率 5：限时
 function GetElseData(i, star)
-	if i == 2 then
-		return
-	end
-	star = star or 0
+	local star = GetStarNum()
 	local eData = {
 		tag = ITEM_TAG.FirstPass,
 		isPass = star > 0
 	}
-	if i == 3 then
+	if i == 2 then
+		eData.tag = ITEM_TAG.ThreeStar
+		eData.isPass = star >= 3
+	elseif i == 3 then
 		eData.tag = ITEM_TAG.Chance
 		eData.isPass = false
 	elseif i == 4 then
 		eData.tag = ITEM_TAG.LittleChance
 		eData.isPass = false
 	elseif i == 5 then
-		eData.tag = ITEM_TAG.ThreeStar
-		eData.isPass = star >= 3
-	elseif i == 6 then
 		eData.tag = ITEM_TAG.TimeLimit
 		eData.isPass = false
 	end
@@ -303,6 +314,12 @@ function OnClickBack()
 		-- CSAPI.SetGOActive(gameObject, false)
 		-- fade:Play(0, 1)
 	end)
+end
+
+function OnClickAnyway()
+	if elseData == DungeonDetailsType.Map then
+		CloseView()
+	end
 end
 
 function CloseView()

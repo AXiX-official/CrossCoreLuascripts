@@ -96,7 +96,7 @@ function FightProto:RecvCmd(proto)
     proto[3] = data
     if cmd == CMD_TYPE.InitData then
         if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS or data.stype == SceneType.RogueT or
-        data.stype == SceneType.BuffBattle then
+        data.stype == SceneType.BuffBattle or data.stype==SceneType.MultTeam then
             if not g_bRestartFight then
                 FightActionMgr:Start()
             end
@@ -251,7 +251,6 @@ function FightProto:RecvCmd(proto)
             g_FightMgr.nCastTP = data.exData.nCastTP
             g_FightMgr.nTPCastRate = g_TPCastRate[g_FightMgr.nCastTP] or 1
             g_FightMgr.uid = PlayerClient:GetID()
-
             local oboss = g_FightMgr:LoadBossConfig(data.groupID, 1)
             if data.exData.bossHp then
                 oboss.maxhp = data.exData.bossMaxHp
@@ -755,8 +754,6 @@ end
 function FightProto:SetRestoreFightProto(proto)
     -- LogError("SetRestoreFightProto" .. table.tostring(proto,true));
     if (FightClient:IsFightting()) then
-		FightClient:QuitFihgt()	
-		DungeonMgr:SendToQuit();        
         return;
     end
     self.restoreFightProto = proto;
@@ -1426,4 +1423,29 @@ function FightProto:RogueTSetWindowRet(proto)
         self.RogueTSetWindowCB()
     end 
     self.RogueTSetWindowCB = nil
+end
+---------------------多队玩法
+function FightProto:GetMultTeamData(id,round)
+    local proto={"FightProtocol:GetMultTeamData",{id=id,round=round}}
+    NetMgr.net:Send(proto)
+end
+
+function FightProto:GetMultTeamDataRet(proto)
+    MultTeamBattleMgr:Update(proto);
+end
+
+function FightProto:EnterMultTeamFight(id,round,dupId,list)
+    local proto={"FightProtocol:EnterMultTeamFight",{id=id,round=round,dupId=dupId,list=list}}
+    NetMgr.net:Send(proto)
+end
+
+function FightProto:GetSettleReward(id)
+    local proto={"FightProtocol:GetSettleReward",{id=id}}
+    NetMgr.net:Send(proto)
+end
+
+--结算
+function FightProto:MultTeamFightOver(proto)
+    MultTeamBattleMgr:UpdateCurData(proto);
+    FightOverTool.OnMultTeamBattleOver(proto)
 end

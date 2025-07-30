@@ -61,6 +61,8 @@ function Refresh(poolId,_overTime)
         --判断是否显示下一轮补给
         local canNext,_h=pool:CanNext();
         hasOther=_h;
+        local isAdd = pool:CanGet();
+        UIUtil:SetRedPoint(btnGet, isAdd, 110, 35, 0)
         CSAPI.SetGOActive(btnNext,canNext);
     end
 end
@@ -103,6 +105,9 @@ function OnClickGet()
     local count=BagMgr:GetCount(itemInfo:GetID());
     if count==0 then
         Tips.ShowTips(LanguageMgr:GetByID(60116));
+        do return end
+    elseif pool:IsOver() then
+        Tips.ShowTips(LanguageMgr:GetTips(38006));
         do return end
     end
     CSAPI.OpenView("ItemPoolDraw",pool);

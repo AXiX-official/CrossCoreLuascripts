@@ -8,7 +8,6 @@ function Refresh(tab)
     sectionData = tab.sectionData
     if cfg then
         CSAPI.SetText(txtName1, cfg.name)
-        LanguageMgr:SetText(txtName2, 64014, cfg.turn)
     end
 end
 

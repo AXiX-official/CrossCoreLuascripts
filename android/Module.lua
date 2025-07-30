@@ -217,3 +217,7 @@ _G.PuzzleCommodity=require "PuzzleCommodity"
 
 --text滚动工具
 require "LuaTextMove"
+--递归沙盒
+require "MultTeamBattleEnum"
+_G.MultTeamBattleInfo=require "MultTeamBattleInfo"
+

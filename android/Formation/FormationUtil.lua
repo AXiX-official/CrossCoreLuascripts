@@ -631,6 +631,8 @@ function this.GetDefaultName(teamIndex,name)
         teamName = LanguageMgr:GetByID(64047)
     elseif teamType==eTeamType.RogueT then
         teamName = LanguageMgr:GetByID(54053)
+    elseif teamType==eTeamType.MultBattle then
+        teamName = LanguageMgr:GetByID(77038)
     elseif teamName==nil or teamName=="" then
         teamName = string.format(LanguageMgr:GetTips(14017), teamIndex)
     end

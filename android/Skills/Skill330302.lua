@@ -66,7 +66,7 @@ function Skill330302:OnActionOver(caster, target, data)
 		return
 	end
 	-- 330322
-	if self:Rand(1500) then
+	if self:Rand(2000) then
 		self:CallOwnerSkill(SkillEffect[330322], caster, target, data, 703100200+count687)
 	end
 end

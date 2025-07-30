@@ -1,7 +1,19 @@
 local restoreShoeCB = nil
+local dragNum = 0
+local hideSpine
+-- local isMove = false
+local x0, y0, z0 = 0, 0, 0
+local mX0, mY0, mZ0 = 0, 0, 0
+local isDragging = false
+local isPress = false
+local pressDownTime = nil
 
 function SetIndex(_index)
     index = _index
+end
+
+function SetClickCB(_cb)
+    cb = _cb
 end
 
 function Awake()
@@ -10,8 +22,20 @@ function Awake()
     polygon = ComUtil.GetCom(clickNode, "PolygonColliderImage")
 end
 
-function SetClickCB(_cb)
-    cb = _cb
+function Update()
+    if (isMove and hideSpine) then
+        CSAPI.SetPos(hideSpine, x0, y0, z0)
+    end
+    if (cfgChild and cfgChild.gesture == 6) then
+        if (pressDownTime ~= nil and Time.time > pressDownTime) then
+            OnBeginDragXY(0, 0)
+            --
+            local pos = CS.UnityEngine.Input.mousePosition
+            CSAPI.SetToMousePosition(drag_clickNode.dragGO.transform.parent, drag_clickNode.dragGO.transform, pos.x,
+                pos.y, pos.z)
+            isMove = true
+        end
+    end
 end
 
 function Refresh(_cfgChild, _parentLua)
@@ -44,11 +68,18 @@ function Refresh(_cfgChild, _parentLua)
     -- 设置鞋
     drag_clickNode.dragGO = nil
     drag_clickNode.move = false
+    hideSpine = nil
     if (cfgChild.sType == SpineActionType.RoleDrag or cfgChild.sType == SpineActionType.ElseDrag) then
         if (cfgChild.content.drag ~= nil and cfgChild.content.drag.targetObjName ~= nil and parentLua.l2dGo ~= nil) then
             local dragObj = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.targetObjName).gameObject
             drag_clickNode.dragGO = dragObj
             drag_clickNode.move = true
+            -- 透视的高层spine 
+            if (cfgChild.content.drag.hideSpine) then
+                hideSpine = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.hideSpine).gameObject
+                drag_clickNode.move = false
+                mX0, mY0, mZ0 = CSAPI.GetAnchor(hideSpine)
+            end
         end
     end
 end
@@ -72,12 +103,24 @@ function OnClick()
 end
 
 function OnBeginDragXY(_x, _y)
+    if (isDragging) then
+        return
+    end
+    isDragging = true
+    pressDownTime = nil
+    dragNum = 0
     -- if (not parentLua.IsIdle()) then
     --     return
     -- end
     x = _x
     y = _y
     parentLua.ItemDragBeginCB(cfgChild, _x, _y)
+    --
+    dragNum = 0
+    if (hideSpine) then
+        x0, y0, z0 = CSAPI.GetPos(hideSpine)
+        SetMove(false)
+    end
 end
 
 function OnDragXY(_x, _y)
@@ -91,10 +134,23 @@ function OnDragXY(_x, _y)
     parentLua.ItemDragCB(cfgChild, _x - x, _y - y)
     x = _x
     y = _y
+    --
+    if (hideSpine and dragNum == 1) then
+        SetMove(true)
+    end
+    dragNum = dragNum + 1
 end
 
 function OnEndDragXY(_x, _y)
+    if (not isDragging) then
+        return
+    end
+    isDragging = false
     parentLua.ItemDragEndCB(cfgChild, _x, _y, index)
+    isMove = false
+    if (hideSpine) then
+        CSAPI.SetAnchor(hideSpine, mX0, mY0, mZ0)
+    end
 end
 
 function GetIndex()
@@ -125,4 +181,29 @@ function SetHideShoe(_restoreShoeCB)
     restoreShoeCB = _restoreShoeCB
     click_clickNode.enabled = true
     drag_clickNode.enabled = false
+end
+
+-- 延迟赋值移动
+function SetMove(b)
+    drag_clickNode.move = b
+    isMove = b
+end
+
+function OnPressDown(isDragging, clickTime)
+    isPress = true
+    --
+    if (cfgChild and cfgChild.gesture == 6) then
+        pressDownTime = Time.time + 0.3
+    end
+end
+
+function OnPressUp()
+    isPress = false
+    --
+    pressDownTime = nil 
+    if (cfgChild and cfgChild.gesture == 6) then
+        if (isDragging and dragNum <= 0) then
+            OnEndDragXY(0, 0)
+        end
+    end
 end

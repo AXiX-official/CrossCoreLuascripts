@@ -245,11 +245,31 @@ end
 
 --返回背景图片
 function this:GetBG()
-	return self.cfg and self.cfg.bg or nil;
+	local str = nil
+	if self.cfg and self.cfg.bg and self.cfg.bg[1] then
+		str = self.cfg.bg[1]
+	end
+	return str;
+end
+
+function this:GetBGs()
+	return self.cfg and self.cfg.bg
+end
+
+function this:GetBGType()
+	return self.cfg and self.cfg.bgType
 end
 
 function this:GetBGPosZ()
 	return self.cfg and self.cfg.bgPosZ or 15.2
+end
+
+function this:GetBGInfo()
+	local info = self.cfg and self.cfg.bgInfo
+	if info then
+		info.width = info.width or 1920
+	end
+	return info
 end
 
 function this:GetLockDesc()
@@ -441,6 +461,12 @@ function this:GetBGM()
 	local info = self:GetInfo()
 	return info and info.bgm or ""
 end
+
+function this:GetShopId()
+	local info = self:GetInfo()
+	return info and info.shopId
+end
+
 ---------------------------------------------门票购买---------------------------------------------
 function this:GetBuyCount()
 	return self.cfg and self.cfg.DungeonArachnidDailyBuy or 0

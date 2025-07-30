@@ -11,7 +11,7 @@ function this:OnCommodityInfoRet(proto)
 		for k, v in ipairs(proto.infos) do
 			this:UpdateData(v.id, v);
 		end
-		self:UpdateMonthDays(proto.m_cnt);
+		self:UpdateMonthDays(proto.m_cnt); --只针对普通月卡有效
 	end
 	if proto and proto.is_finish then --发送完成
 		-- LogError("ShopInit-------------");
@@ -90,6 +90,16 @@ function this:GetMonthCardInfo(type)
 	end
 end
 
+function this:GetMonthCardInfoByID(id)
+	if self.monthCardInfo then
+		for k,v in ipairs(self.monthCardInfo) do
+			if v.item_id==id then
+				return v;
+			end
+		end
+	end
+end
+
 function this:UpdateMonthDays(days)
 	self.m_cnt=days or 0;
 	EventMgr.Dispatch(EventType.Shop_MonthCard_DaysChange,self.m_cnt);
@@ -118,20 +128,30 @@ function this:GetPageByID(id)
 end
 
 --返回已开启的子商店页数据
-function this:GetChildPageByID(id)
+function this:ChildPageIsOpen(id)
 	if id then
 		local cfg=Cfgs.CfgShopTab:GetByID(id);
 		if cfg then
-			local pageData=ShopPageData.New();
-			pageData:SetCfg(id);
-			pageData:SetData(self:GetPageTimeInfo(id));
-			--判断当前商店是否开启
-			if pageData:IsOpen() then--当前商店页开启则返回
-				return pageData;
+			local openTime=cfg.startTime and TimeUtil:GetTimeStampBySplit(cfg.startTime) or 0;
+			local closeTime=cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or 0;
+			local currentTime=TimeUtil:GetTime();
+			local isOpen=false;
+			if openTime == 0 and closeTime == 0 then
+				isOpen = true;
+			elseif (openTime==0 or currentTime >= openTime) and (closeTime==0 or currentTime < closeTime) then
+				isOpen = true;
 			end
+			return isOpen;
+			-- local pageData=ShopPageData.New();
+			-- pageData:SetCfg(id);
+			-- pageData:SetData(self:GetPageTimeInfo(id));
+			--判断当前商店是否开启
+			-- if pageData:IsOpen() then--当前商店页开启则返回
+			-- 	return pageData;
+			-- end
 		end
 	end
-	return nil;
+	return false;
 end
 
 function this:CheckRedInfo()
@@ -355,9 +375,14 @@ function this:GetPromoteInfos(group)
 				info:SetCfg(v.id);
 				if (info:GetShowType()==1 and info:GetNowTimeCanShow()) then
 					table.insert(list,info);
-				elseif (info:GetShowType()==2 and info:GetNowTimeCanShow() and info:IsBuy()~=true) or  (info:GetShowType()==2 and info:GetNowTimeCanShow() and ( info:IsBuy()~=true or k==#cfgs)) then
-					table.insert(list,info);
-					break;
+				elseif (info:GetShowType()==2 and info:GetNowTimeCanShow() and info:IsBuy()~=true) or  (info:GetShowType()==2 and info:GetNowTimeCanShow() and ( info:IsBuy()~=true or (k==#cfgs and #list==0))) then
+					--类型2的暂时只显示1个
+					if #list>=1 and list[1]~=nil and list[1]:GetSort()>info:GetSort() then
+						list={};
+						table.insert(list,info);
+					elseif #list<1 then
+						table.insert(list,info);
+					end
 				end
 			end
 			table.sort(list,function(a,b) --排序

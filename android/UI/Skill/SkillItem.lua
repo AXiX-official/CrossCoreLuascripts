@@ -76,18 +76,16 @@ function InitItem(cfgSkill, skillData, skillCostData, character)
 		
 		if(costData) then
 			costValue = costData.val or 0;			
-			--costText = costData.attr == "np" and StringConstant.np or StringConstant.sp;
-			costText = costData.attr == "np" and LanguageMgr:GetByID(28014) or LanguageMgr:GetByID(28012);
+			costText = costData.attr == "np" and LanguageMgr:GetByID(28014) or  LanguageMgr:GetByID(28012);
 			
 		else
 			if(cfg.sp and cfg.sp > 0) then
 				costValue = cfg.sp;
-				--costText = StringConstant.sp;
-				costText = LanguageMgr:GetByID(28012)
+				costText =  LanguageMgr:GetByID(28012);
 			else
 				costValue = cfg.np or 0;
-				--costText = StringConstant.np;
-				costText = LanguageMgr:GetByID(28014)
+				costText = LanguageMgr:GetByID(28014);
+				
 			end
 		end			
 		
@@ -191,6 +189,30 @@ function InitItem(cfgSkill, skillData, skillCostData, character)
 	if(isSpeSkill) then
 		CSAPI.SetGOActive(disableState, speSkillNoActive);
 		CSAPI.SetGOActive(btnNode, not speSkillNoActive);
+	end
+
+	--蓄力显示
+	if(cfg and cfg.fury and character)then
+		local fury,furyMax,furyP = character.GetFury();		
+		fury = fury or 0;
+		furyMax = furyMax or 1;
+		furyP = furyP or 0;
+		--LogError(string.format("fury:%s",fury));
+		CSAPI.SetGOActive(furyNode,fury > 0);
+		if(fury > 0)then		
+			if(not furyBar)then
+				furyBar = ComUtil.GetCom(furyBarGo,"BarBase");  
+			end
+			if(furyBar)then
+				furyBar:SetProgress(furyP);				
+			end 
+			CSAPI.SetText(furyVal,tostring(fury));
+
+			CSAPI.SetGOActive(furingEffect,furyP < 1);
+			CSAPI.SetGOActive(furyEffect,furyP >= 1);
+		end
+	else
+		CSAPI.SetGOActive(furyNode,false);
 	end
 end
 

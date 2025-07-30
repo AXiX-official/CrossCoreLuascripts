@@ -3,11 +3,11 @@ local height = 199
 local num = 0
 local tweenDelay = 0
 
-function Refresh(_data, _elseData)
-	AddItem(_data, _elseData)
+function Refresh(_data)
+	AddItem(_data)
 end
 
-function AddItem(list, _elseData)
+function AddItem(list)
 	if(list) then
 		items = items or {}
 		for i, v in ipairs(list) do
@@ -15,7 +15,7 @@ function AddItem(list, _elseData)
 			ResUtil:CreateUIGOAsync("DungeonDetail/DungeonGoodsItem", passNode, function(go)
 				local lua = ComUtil.GetLuaTable(go)
 				lua.SetIndex(num)
-				lua.Refresh(v, _elseData)
+				lua.Refresh(v.data, v.elseData)
 				lua.SetTween(tweenDelay)
 				table.insert(items, lua)
 			end)

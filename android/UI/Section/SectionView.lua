@@ -81,6 +81,7 @@ local cTime = 0
 --活动
 local layout4 =nil
 local activityDatas = nil
+local activityDatas2 = nil
 local curActivityItem1 = nil
 local curActivityItem2 = nil
 local btnCanvasGroup = nil
@@ -1284,7 +1285,7 @@ end
 
 ------------------------------------活动-----------------------------------
 function RefreshActivityDatas()
-    local datas = {}
+    activityDatas2 = {}
     local activityCfgs = Cfgs.Section:GetGroup(SectionType.Activity)
     if activityCfgs then
         local activityTypeDatas = {}
@@ -1328,7 +1329,7 @@ function RefreshActivityDatas()
                             chaperName = v:GetChaperName(),
                             pos = v:GetCfg().pos --顺序
                         }
-                        table.insert(datas,_data)
+                        table.insert(activityDatas2,_data)
                     end
                 end
             end
@@ -1337,23 +1338,32 @@ function RefreshActivityDatas()
         -- Log("活动信息:")
         -- Log(logStrs)
     end
-    table.sort(datas, function(a, b)      
-        local pos1 = a.pos or 99
-        local pos2 = b.pos or 99
-        if pos1 == pos2 then
-            return a.type < b.type
-        else
-            return pos1 < pos2
-        end
-    end)
+    if #activityDatas2 > 0 then
+        table.sort(activityDatas2, function(a, b)      
+            local pos1 = a.pos or 99
+            local pos2 = b.pos or 99
+            if pos1 == pos2 then
+                return a.type < b.type
+            else
+                return pos1 < pos2
+            end
+        end)
+    end
+    
+    RefreshActivityItems()
+end
 
-    items4 = ItemUtil.AddItems("Section/SectionActivityItem1", items4, datas, content4, ClickActivityItem1,1, OnEnterCB1)
+function RefreshActivityItems()
+    items4 = ItemUtil.AddItems("Section/SectionActivityItem1", items4, activityDatas2, content4, ClickActivityItem1,1, OnEnterCB1)
 end
 
 function ShowActivityPanel()
     local pType = PivotType.Center 
     if currIndex == 1 then
         pType = PivotType.Up
+    end
+    if currIndex == 2 then
+        RefreshActivityItems()
     end
 
     -- move

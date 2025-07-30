@@ -1,4 +1,4 @@
--- 伤害减少30%
+-- 银光流华
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,5 +19,5 @@ function Buffer305000202:OnBefourCritHurt(caster, target)
 		return
 	end
 	-- 305000202
-	self:AddTempAttr(BufferEffect[305000202], self.caster, self.caster, nil, "crit",-0.35)
+	self:AddTempAttr(BufferEffect[305000202], self.caster, self.caster, nil, "crit",-0.45)
 end

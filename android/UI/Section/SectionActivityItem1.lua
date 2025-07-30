@@ -37,6 +37,12 @@ local isGlobalBoss = false
 local globalBossTimer = 0
 local globalBossTime = 0
 
+--递归沙盒
+local isMultTeamBattle = false
+local globalMTBTimer = 0
+local globalMTBTime = 0
+local globalMTBTime2=0;
+
 -- 动效
 local textRand = nil
 local lastSelect = false
@@ -77,6 +83,7 @@ function Refresh(_data, elseData)
         SetLock()
         SetRed()
         SetGlobalBoss()
+        SetMultTeamBattle();
     end
 
     itemX = CSAPI.GetAnchor(gameObject)
@@ -93,6 +100,8 @@ function Update()
         UpdateTotalBattle()
     elseif isGlobalBoss then
         UpdateGlobalBoss()
+    elseif isMultTeamBattle then
+        UpdateMultTeamBattle();
     end
 end
 
@@ -319,6 +328,39 @@ function UpdateRogue()
         end
     end
 end
+-------------------------------------------递归沙盒
+
+function SetMultTeamBattle()
+    isMultTeamBattle = data.type == SectionActivityType.MultTeamBattle
+    CSAPI.SetGOActive(mtbObj,isMultTeamBattle)
+    if isMultTeamBattle then
+        globalMTBTimer = 0
+        local curMTBData=MultTeamBattleMgr:GetCurData();
+        if curMTBData then
+            local state=curMTBData:GetActivityState();
+            if state~=MultTeamActivityState.Over then
+                globalMTBTime = curMTBData:GetEndTime()
+                globalMTBTime2 = globalMTBTime-TimeUtil:GetTime();
+            end
+        end
+        if globalMTBTime <= 0 then
+            CSAPI.SetGOActive(mtbObj,false)
+        end
+    end
+end
+
+function UpdateMultTeamBattle()
+    if (globalMTBTime2 > 0 and Time.time > globalMTBTimer) then
+        globalMTBTimer = Time.time + 1
+        globalMTBTime2 = globalMTBTime-TimeUtil:GetTime();
+        local timeData = TimeUtil:GetTimeTab(globalMTBTime2)
+        LanguageMgr:SetText(txtMTBTime, 77032, timeData[1], timeData[2], timeData[3])
+        if globalMTBTime2 <= 0 then
+            CSAPI.SetGOActive(mtbObj,false)
+        end
+    end
+end
+
 -------------------------------------------世界boss
 function SetGlobalBoss()
     isGlobalBoss = data.type == SectionActivityType.GlobalBoss

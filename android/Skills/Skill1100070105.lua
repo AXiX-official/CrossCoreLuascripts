@@ -1,4 +1,4 @@
--- 多队战斗日月队关卡5buff
+-- 多队战斗大招流关卡5buff
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -13,25 +13,8 @@ function Skill1100070105:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 1100070103
-	if SkillJudger:IsUltimate(self, caster, target, false) then
-	else
-		return
-	end
-	-- 1100070101
-	self:AddTempAttr(SkillEffect[1100070101], caster, caster, data, "damage",-0.1)
-	-- 8063
-	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
 	else
 		return
 	end
@@ -40,6 +23,6 @@ function Skill1100070105:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 1100070102
-	self:AddTempAttr(SkillEffect[1100070102], caster, self.card, data, "bedamage",0.1)
+	-- 1100071105
+	self:AddTempAttr(SkillEffect[1100071105], caster, self.card, data, "bedamage",0.3)
 end

@@ -23,6 +23,8 @@ local conf = {
 {'special14',	'special14',	'芯片嵌合（每日探索）',	'',	'',	'',	'',	''},
 {'special15',	'special15',	'跃升行动（每日探索）',	'',	'',	'',	'',	''},
 {'special16',	'special16',	'付费弹窗',	'',	'',	'2002',	'',	''},
+{'special18',	'special18',	'重构',	'',	'',	'1045',	'',	''},
+{'special19',	'special19',	'合成',	'',	'',	'1050',	'',	''},
 },
 }
 --cfgCfgOpenConditionMore = conf

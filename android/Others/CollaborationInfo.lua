@@ -317,4 +317,19 @@ function this:GetApplyLimit()
     return self.cfg and self.cfg.applyLimit or 0;
 end
 
+function this:CheckCodeFormat(code)
+    if code and code~="" then
+        local type=string.match(code,"%d+");
+        local type2=string.match(self.data.code,"%d+");
+        if type~=nil and  type2~=nil then
+            for k,v in pairs(self.cfg.infos) do
+                if tostring(v.codePrefix)==type and  type~=type2 then
+                    return true
+                end
+            end
+        end
+    end
+    return false;
+end
+
 return this;

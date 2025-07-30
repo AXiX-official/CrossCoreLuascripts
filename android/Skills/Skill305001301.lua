@@ -33,7 +33,7 @@ function Skill305001301:OnBefourHurt(caster, target, data)
 	-- 305000320
 	local xuneng = SkillApi:GetFury(self, caster, self.card,3)
 	-- 305001301
-	self:AddTempAttr(SkillEffect[305001301], caster, self.card, data, "damage",xuneng/10000*1.5)
+	self:AddTempAttr(SkillEffect[305001301], caster, self.card, data, "damage",xuneng/100)
 end
 -- 行动结束
 function Skill305001301:OnActionOver(caster, target, data)
@@ -51,4 +51,21 @@ function Skill305001301:OnActionOver(caster, target, data)
 	self:SetFury(SkillEffect[305001302], caster, self.card, data, 0)
 	-- 305001303
 	self:ChangeSkill(SkillEffect[305001303], caster, self.card, data, 3,305000301)
+	-- 305000403
+	self:DelBufferTypeForce(SkillEffect[305000403], caster, self.card, data, 305000301)
+end
+-- 伤害后
+function Skill305001301:OnAfterHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 305000501
+	self:LimitDamage(SkillEffect[305000501], caster, target, data, 0.05,4)
 end

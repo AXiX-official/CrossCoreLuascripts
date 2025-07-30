@@ -1376,6 +1376,11 @@ this.RogueMap_Battle_GridInfo_Create = 690008 --格子UI显示
 this.RogueMap_Battle_Prop_Use = 690009 --道具使用
 this.RogueMap_Battle_Mist_Remove = 690010 --特殊格子移除
 
+--------------------------------递归沙盒
+this.MTB_Click_Dungeon=700001;--点击关卡
+this.MTB_Click_Reward=700002;--点击结算奖励
+this.MTB_Data_Update=700003;--活动数据更新
+
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
 this.SDK_ShiryuSDK_Init=800001;

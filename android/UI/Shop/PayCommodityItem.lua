@@ -25,6 +25,7 @@ function Refresh(_data,_elseData)
     local isLock=not this.data:GetBuyLimit();
     SetLockObj(isLock,this.data:GetBuyLimitDesc());
     SetOrgPrice();
+    SetSDKdisplayPrice();
 end
 
 function SetSDKdisplayPrice(TxtUI)
@@ -67,7 +68,7 @@ function SetOrgPrice()
                 end
             else
                 CSAPI.SetGOActive(dsMoneyIcon,false);
-                CSAPI.SetText(txt_dsRmb,this.data:GetCurrencySymbols(true));
+                CSAPI.SetText(txt_dsRmb,rmbIcon);
                 CSAPI.SetGOActive(txt_dsRmb,true);
             end
         --     CSAPI.SetTextColorByCode(txt_price,"FFC146");

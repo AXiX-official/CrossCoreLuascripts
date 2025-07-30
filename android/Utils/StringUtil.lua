@@ -630,4 +630,35 @@ function this:IntToRoman(num)
     return romanNumeral
 end
 
+local units = {"ZERO", "ONE", "TWO", "THREE", "FOUR","FIVE", "SIX", "SEVEN", "EIGHT", "NINE"}
+local teens = {"TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN","FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"}
+local tens = {"", "TEN", "TWENTY", "THIRTY", "FORTY","FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"}
+
+--数字转英文单词 --只支持1000以下
+function this:NumberToWords(num)
+    if num < 10 then
+        return units[num + 1]  -- Lua数组从1开始
+    elseif num < 20 then
+        return teens[num - 10 + 1]
+    elseif num < 100 then
+        local ten = math.floor(num / 10)
+        local unit = num % 10
+        if unit == 0 then
+            return tens[ten + 1]
+        else
+            return tens[ten + 1] .. "-" .. units[unit + 1]
+        end
+    elseif num < 1000 then
+        local hundred = math.floor(num / 100)
+        local remainder = num % 100
+        if remainder == 0 then
+            return units[hundred + 1] .. " hundred"
+        else
+            return units[hundred + 1] .. " hundred and " .. NumberToWords(remainder)
+        end
+    else
+        return "number too large"
+    end
+end
+
 return this;

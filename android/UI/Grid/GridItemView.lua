@@ -162,7 +162,11 @@ function Refresh(data, _elseData)
 			-- 	isLoadIcon=true;
 			-- end
 		end
-		SetLimitTag(data:IsExipiryType());
+		local isLimit=false;
+		if data:GetExpiry()~=nil or data:IsExipiryType() then
+			isLimit=true;
+		end
+		SetLimitTag(isLimit);
 		LoadFrame(data:GetQuality());
 		-- SetIcon(data:GetIcon());
 		CSAPI.SetGOActive(icon, true);

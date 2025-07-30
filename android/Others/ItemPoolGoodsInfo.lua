@@ -111,4 +111,8 @@ function this:GetLanguageID()
     return self.cfg and self.cfg.Languageid or nil;
 end
 
+function this:GetQuality()
+    return self.cfg and self.cfg.quality or 1;
+end
+
 return this;

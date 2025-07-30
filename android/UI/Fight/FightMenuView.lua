@@ -79,6 +79,8 @@ function OnClickQuit()
             func2 = OnSureBack_Rogue2
             str1 = LanguageMgr:GetByID(50022)
             str2 = LanguageMgr:GetByID(50009)
+        elseif g_FightMgr.type == SceneType.MultTeam then
+            func=OnSureBack_MultTeam;
         end
     end
 
@@ -119,6 +121,8 @@ function OnClickQuit()
                 quitStr = LanguageMgr:GetByID(50010)
             elseif (g_FightMgr.type == SceneType.RogueT) then
                 quitStr = LanguageMgr:GetByID(54046) 
+            elseif g_FightMgr.type == SceneType.MultTeam then
+                quitStr = LanguageMgr:GetByID(77039)
             end
         end 
     end
@@ -198,6 +202,14 @@ end
 function OnSureBack_PVP()
     g_FightMgr:Quit()
     OnClickExit();
+end
+
+function OnSureBack_MultTeam()
+    -- FightOverTool.ApplyEnd(g_FightMgr and g_FightMgr.type)
+    OnClickExit();
+    --退出战斗
+    local proto = {"FightProtocol:Quit", {uid=PlayerClient:GetUid(),bIsQuit = true}} 
+    NetMgr.net:Send(proto)
 end
 
 function OnClickBack()   

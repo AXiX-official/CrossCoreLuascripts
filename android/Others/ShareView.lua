@@ -238,7 +238,7 @@ function SDKShare(Sharecontent,ShareTitle,ShareImagePath,thumbImagePath,Url,shar
         if Isback then
             print("分享成功:"..ShareImagePath)
         else
-            LogError("分享失败:"..ShareImagePath)
+           --- LogError("分享失败:"..ShareImagePath)
         end
     end)
 
