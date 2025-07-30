@@ -390,12 +390,12 @@ function this:GetRewardInfos()
 end
 
 --返回当前轮次对应级别的奖励
-function this:GetCurrRoundGradeInfo(itemPoolGoodsGrade)
+function this:GetCurrRoundGradeInfo(itemPoolGoodsGrade,isShow)
     if itemPoolGoodsGrade then
         local list=self:GetInfos(self:GetRound(),true,true);
         if list then
             for k,v in ipairs(list) do
-                if v:GetRewardLevel()==itemPoolGoodsGrade then
+                if v:GetRewardLevel()==itemPoolGoodsGrade and (isShow~=true or (isShow==true and v:IsShow())) then
                     return v;
                 end
             end

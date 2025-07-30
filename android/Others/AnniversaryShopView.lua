@@ -48,7 +48,7 @@ function SetDatas()
         curDatas = {}
         for i, v in ipairs(ids) do
             local comm = ShopMgr:GetFixedCommodity(v)
-            if comm:IsShow() then
+            if comm:IsShow() and comm:GetNowTimeCanBuy() then
                 table.insert(curDatas,comm)
             end
         end

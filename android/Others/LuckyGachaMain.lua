@@ -233,7 +233,7 @@ end
 
 function OnClickGrade(itemPoolGoodsGrade)
     if pool then
-        local info=pool:GetCurrRoundGradeInfo(itemPoolGoodsGrade);  
+        local info=pool:GetCurrRoundGradeInfo(itemPoolGoodsGrade,true);  
         local itemData=info:GetGoodInfo(true);
         if itemData then
             CSAPI.OpenView("GoodsFullInfo",{data=itemData});
