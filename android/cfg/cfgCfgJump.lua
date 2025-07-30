@@ -1147,6 +1147,7 @@ local conf = {
 {'190009',	'190009',	'',	'问卷反馈链接',	'',	'',	'SpeicalJump',	'https://megagamelog.qiyukf.com/worksheet/page/plugin/submit?pluginId=f241481a355143d39f5af6b3209e181d&type=1',	'',	'',	'',	'',	'',	'',	''},
 {'190010',	'190010',	'',	'问卷进度查询',	'',	'',	'SpeicalJump',	'https://megagamelog.qiyukf.com/worksheet/page/plugin/list?pluginId=f241481a355143d39f5af6b3209e181d&type=1',	'',	'',	'',	'',	'',	'',	''},
 {'190011',	'190011',	'',	'问卷调查',	'',	'',	'TWWeb',	'',	'',	'',	'',	'',	'',	'',	''},
+{'190012',	'190012',	'',	'问卷进度查询',	'',	'',	'SpeicalJump',	'https://tkio-redirect.solar-engine.com/receive/turl/4Pftsma?attribution_type=ua&touchpoint_type=click',	'',	'',	'',	'',	'',	'',	''},
 {'200001',	'200001',	'',	'日常任务',	'',	'',	'MissionView',	'3',	'',	'',	'',	'',	'',	'',	''},
 {'214301',	'214001',	'',	'合成工厂',	'',	'',	'Matrix',	'MatrixCompound',	'14301',	'',	'',	'',	'',	'',	''},
 {'214302',	'214002',	'',	'合成工厂',	'',	'',	'Matrix',	'MatrixCompound',	'14302',	'',	'',	'',	'',	'',	''},

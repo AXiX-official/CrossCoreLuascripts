@@ -14,7 +14,7 @@ function Skill4400104:OnRoundOver(caster, target, data)
 		return
 	end
 	-- 4400104
-	self:OwnerAddBuffCount(SkillEffect[4400104], caster, self.card, data, 4400104,1,8)
+	self:OwnerAddBuffCount(SkillEffect[4400104], caster, self.card, data, 4400104,1,5)
 	-- 4400106
 	self:ShowTips(SkillEffect[4400106], caster, self.card, data, 2,"破袭战",true,4400106)
 end

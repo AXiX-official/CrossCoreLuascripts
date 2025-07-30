@@ -537,7 +537,7 @@ function this.DungeonActivityState(cfg)
             if string.match(cfg.sName, "DungeonActivity") then
                 if not openInfo:IsOpen() then
                     isOpen = false
-                    _lockStr = LanguageMgr:GetTips(24001)
+                    _lockStr = LanguageMgr:GetTips(24003)
                 end
             else
                 if not openInfo:IsDungeonOpen() then
