@@ -27,7 +27,7 @@ function OnClickOK()
     if activityData:CheckCodeFormat(code)~=true then
         --邀请码格式错误
         inp.text="";
-        Tips.ShowTips(LanguageMgr:GetTips(40001));
+        Tips.ShowTips(LanguageMgr:GetTips(40005));
     else
         --检查格式是否正确
         if string.match(code,"%d+_%d+")~=nil then

@@ -12,3 +12,27 @@ function Skill603001305:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11006], caster, target, data, 0.167,6)
 end
+-- 攻击结束
+function Skill603001305:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 9718
+	local count807 = SkillApi:ClassCount(self, caster, target,1,6)
+	-- 603001305
+	if self:Rand(10000) then
+		self:AddBuffCount(SkillEffect[603001305], caster, target, data, 603000101,3,4)
+	end
+end

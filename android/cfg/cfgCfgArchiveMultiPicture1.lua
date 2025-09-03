@@ -84,6 +84,8 @@ local conf = {
 {'73',	'73',	'61075',	'静谧小筑',	'81',	'',	'',	'1',	'6',	'quiet_nook',	'',	'board_quiet_nook',	'Small_quiet_nook',	'高级勘测奖励',	'-1,124,0.71',	'buertegen',	'0,122,1.2',	'',	'1'},
 {'74',	'74',	'61076',	'悠然野餐',	'74',	'',	'',	'1',	'6',	'leisurely_picnic',	'',	'board_leisurely_picnic',	'Small_leisurely_picnic',	'高级勘测奖励',	'-2,-74,0.98',	'nagelin',	'0,-73,0.9',	'',	'1'},
 {'83',	'83',	'61085',	'限定享用',	'80',	'',	'',	'1',	'2',	'ephemeral_indulgence',	'',	'board_ephemeral_indulgence',	'Small_ephemeral_indulgence',	'商店购买',	'37,-156,1.04',	'CG0059_EphemeralIndulgence_spine',	'97,-16,1',	'1',	'80444'},
+{'84',	'84',	'61086',	'茶点时刻',	'80',	'',	'',	'1',	'2',	'Tea_Time',	'',	'board_Tea_Time',	'Small_Tea_Time',	'商店购买',	'31,-32,0.95',	'CG0068_TeaTime_spine',	'61,-35,1.06',	'1',	'80459'},
+{'85',	'85',	'61087',	'梦幻光影',	'80',	'',	'',	'1',	'2',	'Dreamlike_Picture',	'',	'board_Dreamlike_Picture',	'Small_Dreamlike_Picture',	'商店购买',	'-17,-91,0.86',	'CG0069_DreamlikePicture_spine',	'9,52,1',	'1',	'80460'},
 },
 }
 --cfgCfgArchiveMultiPicture1 = conf

@@ -42,5 +42,38 @@ function Skill4302705:OnBefourCritHurt(caster, target, data)
 		return
 	end
 	-- 4302710
-	self:AddTempAttr(SkillEffect[4302710], caster, caster, data, "crit",math.min((count2711-count2712),1))
+	self:AddTempAttr(SkillEffect[4302710], caster, caster, data, "crit",math.min(math.max((count2711-count2712),0),1))
+end
+-- 回合结束时
+function Skill4302705:OnRoundOver(caster, target, data)
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8734
+	local count734 = SkillApi:BuffCount(self, caster, target,1,3,1002)
+	-- 8947
+	if SkillJudger:Less(self, caster, self.card, true,count734,1) then
+	else
+		return
+	end
+	-- 4302725
+	self:DelBufferForce(SkillEffect[4302725], caster, caster, data, 4302705)
+end
+-- 回合开始时
+function Skill4302705:OnRoundBegin(caster, target, data)
+	-- 4302731
+	local targets = SkillFilter:All(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		-- 8428
+		local count28 = SkillApi:BuffCount(self, caster, target,2,3,1002)
+		-- 8823
+		if SkillJudger:Less(self, caster, self.card, true,count28,1) then
+		else
+			return
+		end
+		-- 4302732
+		self:DelBufferTypeForce(SkillEffect[4302732], caster, target, data, 4302701)
+	end
 end

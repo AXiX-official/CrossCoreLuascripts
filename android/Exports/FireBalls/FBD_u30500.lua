@@ -7,7 +7,7 @@ local this =
 {time=20000,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="30500_cast_04"},
 {effect="cast4_hit",delay=5500,time=14500,type=0,pos_ref={ref_type=6}},
 {time=4000,type=1,hit_type=1,hits={2200,4620,5000}},
-{delay=9300,time=4000,type=1,hit_type=1,hits={0}},
+{delay=15000,time=4000,type=1,hit_type=1,hits={0}},
 {effect="u30500_cast4",effect_pack="videos",delay=13800,time=10000,type=0,pos_ref={ref_type=6}},
 {delay=100,time=20000,type=0,cue_sheet="cv/Kunlun_unsterblich.acb",cue_name="Kunlun_unsterblich_13",cue_feature=1}
 },

@@ -1188,7 +1188,7 @@ function OnClickVirtualkeysClose()
     if switchObj.gameObject.activeInHierarchy==true and OnClickBack then
         OnClickBack();
     else
-        if CSAPI.IsADV() then ShiryuSDK.ExitGame(); end
+        if CSAPI.IsADV() or CSAPI.IsDomestic()  then ShiryuSDK.ExitGame(); end
     end
 end
 

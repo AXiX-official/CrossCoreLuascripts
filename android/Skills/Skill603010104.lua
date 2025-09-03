@@ -12,3 +12,23 @@ function Skill603010104:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
 end
+-- 攻击结束
+function Skill603010104:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8202
+	if SkillJudger:IsNormal(self, caster, target, true) then
+	else
+		return
+	end
+	-- 603010101
+	self:AddBuff(SkillEffect[603010101], caster, self.card, data, 603010101)
+end

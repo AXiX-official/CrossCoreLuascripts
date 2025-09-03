@@ -609,6 +609,8 @@ function this:Init()
     self.HeadFace = ResIconUtil.New("HeadFace")
 
     self.HalfBody = ResIconUtil.New("HalfBody")
+
+    self.Coffee = ResIconUtil.New("Coffee")
 end
 
 return this;

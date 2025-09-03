@@ -48,31 +48,33 @@ function this:CheckIsShow()
                 end
             end
         end
-    elseif (self.cfg.nType==8) then
-        local info=ItemPoolActivityMgr:GetCurrPoolInfoByType(ItemPoolExtractType.Control);
+    elseif (self.cfg.nType == 8) then
+        local info = ItemPoolActivityMgr:GetCurrPoolInfoByType(ItemPoolExtractType.Control);
         if info then
-            self.begTime=info:GetOpenTime() and TimeUtil:GetTimeStampBySplit(info:GetOpenTime()) or nil;
-            self.endTime=info:GetCloseTime() and TimeUtil:GetTimeStampBySplit(info:GetCloseTime()) or nil;
+            self.begTime = info:GetOpenTime() and TimeUtil:GetTimeStampBySplit(info:GetOpenTime()) or nil;
+            self.endTime = info:GetCloseTime() and TimeUtil:GetTimeStampBySplit(info:GetCloseTime()) or nil;
         end
-    elseif (self.cfg.nType==9) then --拼图
-        local cfg=Cfgs.CfgPuzzleBase:GetByID(self:GetCfg().page);
-        if cfg then
-            self.begTime=cfg.begTime and TimeUtil:GetTimeStampBySplit(cfg.begTime) or nil;
-            self.endTime=cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or nil;
+    elseif (self.cfg.nType == 9) then -- 拼图
+        local info=PuzzleMgr:GetCurrPuzzleByType(self:GetCfg().page);
+        if info then
+            self.begTime = info:GetBeginTime() and TimeUtil:GetTimeStampBySplit(info:GetBeginTime()) or nil;
+            self.endTime = info:GetEndTime() and TimeUtil:GetTimeStampBySplit(info:GetEndTime()) or nil;
         end
-    elseif (self.cfg.nType==10) then --端午签到
-        local _,id = ActivityMgr:IsOpenByType(ActivityListType.SignInDuanWu)
+    elseif (self.cfg.nType == 10) then -- 端午签到
+        local _, id = ActivityMgr:IsOpenByType(ActivityListType.SignInDuanWu)
         local alData = ActivityMgr:GetALData(id)
         if alData then
-            self.begTime=alData:GetStartTime()
-            self.endTime=alData:GetEndTime()
+            self.begTime = alData:GetStartTime()
+            self.endTime = alData:GetEndTime()
         end
-    elseif (self.cfg.nType==11) then --宠物
-        local cfg=Cfgs.CfgActiveEntry:GetByID(16);
+    elseif (self.cfg.nType == 11) then -- 宠物
+        local cfg = Cfgs.CfgActiveEntry:GetByID(16);
         if cfg then
-            self.begTime=cfg.begTime and TimeUtil:GetTimeStampBySplit(cfg.begTime) or nil;
-            self.endTime=cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or nil;
+            self.begTime = cfg.begTime and TimeUtil:GetTimeStampBySplit(cfg.begTime) or nil;
+            self.endTime = cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or nil;
         end
+    elseif (self.cfg.nType == 12) then -- 女仆咖啡
+        self.begTime, self.endTime = CoffeeMgr:GetActivityTime()
     end
     if (self.begTime == nil and self.endTime == nil) then
         self.isShow = false
@@ -104,15 +106,15 @@ function this:IsOpen()
         end
     elseif (self.cfg.nType == 2 or self.cfg.nType == 4) then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "ActivityListView")
-    elseif (self.cfg.nType == 6) then  
+    elseif (self.cfg.nType == 6) then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "CollaborationMain")
-    elseif (self.cfg.nType == 8) then  
+    elseif (self.cfg.nType == 8) then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "LuckyGachaMain")
-    elseif (self.cfg.nType == 9) then  
+    elseif (self.cfg.nType == 9) then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "PuzzleActivity")
-    elseif (self.cfg.nType == 10) then  
+    elseif (self.cfg.nType == 10) then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "SignInDuanWu")
-    elseif (self.cfg.nType == 11)then
+    elseif (self.cfg.nType == 11) then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "PetMain")
     end
     return self.isOpen, str
@@ -132,23 +134,27 @@ function this:IsRed()
         elseif (self.cfg.nType == 5) then
             self.isRed = RedPointMgr:GetData(RedPointType.Regression) ~= nil
         elseif (self.cfg.nType == 6) then
-            self.isRed = RedPointMgr:GetData(RedPointType.Collaboration) ~=nil
+            self.isRed = RedPointMgr:GetData(RedPointType.Collaboration) ~= nil
         elseif (self.cfg.nType == 7) then
             -- IsRed7 要异步
-        elseif (self.cfg.nType==8) then
-            local info=ItemPoolActivityMgr:GetCurrPoolInfoByType(ItemPoolExtractType.Control);
+        elseif (self.cfg.nType == 8) then
+            local info = ItemPoolActivityMgr:GetCurrPoolInfoByType(ItemPoolExtractType.Control);
             if info then
-                self.isRed=ItemPoolActivityMgr:CheckPoolHasRedPoint(info:GetID());
+                self.isRed = ItemPoolActivityMgr:CheckPoolHasRedPoint(info:GetID());
             end
-        elseif (self.cfg.nType==9) then
-            local info=PuzzleMgr:CheckRedInfo(self:GetCfg().page);
+        elseif (self.cfg.nType == 9) then
+            local info = PuzzleMgr:CheckRedInfo(self:GetCfg().page);
             if info then
-                self.isRed=info~=nil;
+                self.isRed = info ~= nil;
             end
-        elseif (self.cfg.nType==10) then
-            self.isRed = RedPointMgr:GetData(RedPointType.SignInDuanWu) ~= nil 
-        elseif (self.cfg.nType==11) then
-            self.isRed = RedPointMgr:GetData(RedPointType.ActiveEntry16) ~=nil
+        elseif (self.cfg.nType == 10) then
+            self.isRed = RedPointMgr:GetData(RedPointType.SignInDuanWu) ~= nil
+        elseif (self.cfg.nType == 11) then
+            self.isRed = RedPointMgr:GetData(RedPointType.ActiveEntry16) ~= nil
+        elseif (self.cfg.nType == 12) then -- 女仆咖啡
+            self.isRed = RedPointMgr:GetData(RedPointType.Coffee) ~= nil
+        elseif (self.cfg.nType == 13 and self.cfg.page) then
+            self.isRed = RiddleMgr:CheckRed(self.cfg.page);
         end
     end
     return self.isRed

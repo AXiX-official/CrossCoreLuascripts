@@ -1421,6 +1421,7 @@ PlrMixIx.icon_emotes = 72 -- 竞技场对战表情
 PlrMixIx.changeId = 73 -- 物品变动的日志Id
 PlrMixIx.equipRefresh = 74 -- 装备洗练结果数据
 PlrMixIx.multTeam = 75 -- 多队玩法活动数据
+PlrMixIx.maidCoffee = 76 -- 女仆咖啡活动数据
 
 
 -- 图鉴
@@ -1900,6 +1901,7 @@ eRankType.RogueTRank = 2 -- 限制肉鸽爬塔排行榜
 eRankType.STAR = 3 -- 十二宫
 eRankType.BuffBattleRank = 4 -- 积分战斗
 eRankType.MultTeamRank = 5 -- 多队玩法
+eRankType.MaidCoffeeRank = 7 -- 女仆咖啡玩法
 
 -- 排行榜id
 eRankId = {}
@@ -1910,6 +1912,7 @@ eRankId.RogueTRank = 10006 --限制肉鸽爬塔排行榜
 eRankId.CloudRank = 10007 --云端行迹排行榜
 eRankId.BuffBattleRank = 10013 --积分战斗
 eRankId.MultTeamRank = 10015 --多队玩法
+eRankId.MaidCoffeeRank = 10017 --女仆咖啡玩法
 
 -- 排行榜默认使用数据表名
 G_RANK_DEF_DB_TABLE = 'plr_star_rank'
@@ -1920,6 +1923,7 @@ eRankDbTable[eRankType.RogueTRank] = 'plr_rogueT_rank'
 eRankDbTable[eRankType.Abattoir] = 'plr_abattoir_rank'
 eRankDbTable[eRankType.BuffBattleRank] = 'plr_buff_battle_rank'
 eRankDbTable[eRankType.MultTeamRank] = 'plr_mult_team_rank'
+eRankDbTable[eRankType.MaidCoffeeRank] = 'plr_maid_coffee_rank'
 
 --收集活动类型
 eCollectType = {}

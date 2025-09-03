@@ -290,7 +290,7 @@ function ShowCharacter(showCharacter)
     if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
         local isMyTurn = character.IsMine();
         SetTimeOut(g_fightControlTime or 20);
-        CSAPI.SetText(goActionTips,isMyTurn and "" or "");
+        --CSAPI.SetText(goActionTips,isMyTurn and "" or "");
 --        else
 --            SetTimeOut(nil);
     end

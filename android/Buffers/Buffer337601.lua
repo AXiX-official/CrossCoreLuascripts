@@ -9,5 +9,5 @@ end
 -- 创建时
 function Buffer337601:OnCreate(caster, target)
 	-- 337601
-	self:LimitDamage(BufferEffect[337601], self.caster, target or self.owner, nil,1,0.50)
+	self:LimitDamage(BufferEffect[337601], self.caster, target or self.owner, nil,1,0.40)
 end

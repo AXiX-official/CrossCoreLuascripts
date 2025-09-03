@@ -18,6 +18,7 @@ local conf = {
 {'9',	'9',	'9',	'9',	'74001',	'icon_02_08',	'FFC146',	'PuzzleActivity',	'2'},
 {'10',	'10',	'10',	'10',	'13035',	'icon_02_09',	'7fe6a6',	'SignInDuanWu',	''},
 {'11',	'11',	'11',	'11',	'62049',	'icon_02_10',	'FFC146',	'PetMain',	''},
+{'12',	'12',	'12',	'12',	'78012',	'icon_02_12',	'de8d45',	'CoffeeView',	''},
 },
 }
 --cfgCfgMenuLBtns = conf

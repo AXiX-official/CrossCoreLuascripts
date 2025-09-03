@@ -457,6 +457,15 @@ local conf = {
 {'454',	'MultTeamBattleMain',	'MultTeamBattle/MultTeamBattleMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 {'455',	'MultTeamLimitInfo',	'MultTeamBattle/MultTeamLimitInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
 {'456',	'MultTeamRewardInfo',	'MultTeamBattle/MultTeamRewardInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'457',	'CoffeeView',	'Coffee/CoffeeView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'458',	'CoffeePlayView',	'Coffee/CoffeePlayView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'459',	'CoffeeFoodDetail',	'Coffee/CoffeeFoodDetail',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'460',	'SignInNReward',	'Common/SignInNReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'461',	'CoffeeOverView',	'Coffee/CoffeeOverView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'462',	'ExerciseRMain',	'ExerciseR/ExerciseRMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
+{'463',	'ExerciseRPP',	'ExerciseR/ExerciseRPP',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'464',	'PopupPackView',	'PopupPack/PopupPackView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
+{'465',	'DungeonActivity14',	'DungeonActivity14/DungeonActivityView14',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
 },
 }
 --cfgview = conf

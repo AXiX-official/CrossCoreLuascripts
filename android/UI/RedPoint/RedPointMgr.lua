@@ -61,6 +61,7 @@ RedPointType.PackageDownload = "PackageDownload"; -- 分包下载
 RedPointType.BuffBattle = "BuffBattle"
 RedPointType.Anniversary = "Anniversary" --周年红点
 RedPointType.MultTeamBattle= "MultTeamBattle" --递归沙盒
+RedPointType.Coffee = "Coffee" --女仆咖啡
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机

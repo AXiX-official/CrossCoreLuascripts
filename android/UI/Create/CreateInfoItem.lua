@@ -54,7 +54,7 @@ function GetPercent()
     if (quality == 6) then
         percent = 0.02
     elseif (quality == 5) then
-        percent = 0.08
+        percent = CSAPI.IsADVRegional(3) and 0.089 or 0.08
     elseif (quality == 4) then
         percent = 0.4
     elseif (quality == 3) then

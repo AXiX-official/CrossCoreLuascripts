@@ -99,6 +99,9 @@ function OnOpen()
     if not isSweep then
         MenuMgr:SetFightOver(true)
     end
+
+    --spcialGuide
+    ShowSpecialGuide()
 end
 
 function GetIsWin(_sceneType)
@@ -279,6 +282,30 @@ end
 
 function OnDestroy()
     ReleaseCSComRefs();
+end
+
+function ShowSpecialGuide()
+    if not DungeonMgr:IsCurrDungeonComplete() then
+        return
+    end
+    if bIsWin then
+        return
+    end
+    if data.team then
+        local lv,count = 0,0
+        for i = 1, 5 do
+            local v = data.team:GetItemByIndex(i);
+            if v ~= nil then
+                local card = v:GetCard()
+                if card then
+                    lv = lv + card:GetLv()
+                    count = count + 1
+                end
+            end
+        end
+        local lvAvg = lv / count
+        SpecialGuideMgr:ApplyShowView(spParent,"FightOverResult",SpecialGuideType.Start,{teamlevel = lvAvg})
+    end
 end
 
 ----#Start#----

@@ -244,8 +244,9 @@ end
 --index:指定章节
 function OnMainLineUpdate(index)
     if index and index > 0 then
+        currSectionIndex = index
         RefreshMainLineView()
-        MoveToIndex(index,nil,200)
+        -- MoveToIndex(index,nil,200)
     else
         InitMainView()
     end
@@ -622,7 +623,7 @@ function OnClickTab(child)
         end
         if index > 0 then
             if index == 3 and not isPvpRet then
-                ExerciseMgr:GetPracticeInfo(true, false)
+                ArmyProto:GetSelfPracticeInfo()
             end
             currIndex = 2
             curState = 1
@@ -2127,7 +2128,7 @@ end
 
 function ShowDropPanel(type)
     if type == 3 and not isPvpRet then
-        ExerciseMgr:GetPracticeInfo(true, false)
+        ArmyProto:GetSelfPracticeInfo()
     end
     currIndex = 2
     curState = 1

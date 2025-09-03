@@ -641,6 +641,9 @@ function ViewClose()
     -- 延迟关闭，放置CreateView的突然显示盒消失
     FuncUtil:Call(function()
         view:Close()
+        if (rewards and #rewards ~= 10) then
+            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "BackToCreate")
+        end 
     end, nil, 1)
 end
 

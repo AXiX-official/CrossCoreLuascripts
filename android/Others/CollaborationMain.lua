@@ -168,7 +168,7 @@ function InitContentNode2()
         rInfo:GetIconLoader():Load(preGoodsIcon,rInfo:GetIcon(),true);
     end 
     --设置红点
-    UIUtil:SetRedPoint(staticGridNode,currActivty:GetStageCanRevice(),48,48,0);
+    -- UIUtil:SetRedPoint(staticGridNode,currActivty:GetStageCanRevice(),48,48,0);
     --初始化玩家头像格子
     bLGrid2.Refresh(PlayerClient:GetHeadFrameInfo());
     local binds=currActivty:GetBindPlayers();

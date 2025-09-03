@@ -13,5 +13,5 @@ function Buffer1042:OnCreate(caster, target)
 	-- 1060
 	local Live4006 = SkillApi:GetValue(self, self.caster, target or self.owner,4,"Live4006")
 	-- 1054
-	self:AddHp(BufferEffect[1054], self.caster, target or self.owner, nil,math.floor(-dmg4006/(math.max((Live4006-1),1))*0.4))
+	self:AddHp(BufferEffect[1054], self.caster, target or self.owner, nil,math.floor(-dmg4006/(math.max((Live4006),1))*0.2))
 end

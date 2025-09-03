@@ -122,7 +122,22 @@ function this:GetNextInfo()
     return self.nextInfo;
 end
 
-
+--根据类型和当前时间获取活动数据
+function this:GetCurrPuzzleByType(type)
+    if type and self.datas then
+        local time=TimeUtil:GetTime();
+        for k,v in pairs(self.datas) do
+            local sTime=v:GetBeginTime() and TimeUtil:GetTimeStampBySplit(v:GetBeginTime()) or nil;
+            local eTime=v:GetEndTime() and TimeUtil:GetTimeStampBySplit(v:GetEndTime()) or nil;
+            if v:GetType()==type and (sTime == nil or time > sTime) then
+                if (eTime == nil or time < eTime) then
+                    return v;
+                end
+            end
+        end
+    end
+    return nil;
+end
 
 function this:Clear()
     self.nextInfo=nil;

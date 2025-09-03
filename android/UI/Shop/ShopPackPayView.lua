@@ -252,9 +252,19 @@ function SetPrice(id, num,pIcon,pText,pRmbIcon)
 	if id==-1 then --SDK支付
 		CSAPI.SetText(pRmbIcon, rmbIcon);
 		CSAPI.SetText(pText, tostring(num));
+		if CSAPI.IsADV() then
+			if pRmbIcon~=nil and pRmbIcon.gameObject~=nil and pRmbIcon.gameObject.name=="txt_hRmb" then
+				CSAPI.SetText(pRmbIcon, commodity:GetCurrencySymbols(true));
+			else
+				SDKdisplayPrice=commodity:GetSDKdisplayPrice();
+				if SDKdisplayPrice~=nil then
+					CSAPI.SetText(pText,tostring(SDKdisplayPrice));
+				end
+			end
+		end
 		CSAPI.SetGOActive(pIcon,false);
 		CSAPI.SetGOActive(pRmbIcon,true);
-		if CSAPI.IsADV() then SDKdisplayPrice=commodity:GetSDKdisplayPrice(); if SDKdisplayPrice~=nil then CSAPI.SetText(pText, rmbIcon..tostring(SDKdisplayPrice)); end end
+
 		return;
 	else
 		CSAPI.SetGOActive(pIcon,true);

@@ -65,6 +65,9 @@ function SetLock()
         local _isOpen,_sTime,_eTime = openInfo:IsSectionOpen(sectionData:GetID())
         isOpen = _isOpen
         resetTime = _isOpen and _eTime or _sTime
+        if resetTime < TimeUtil:GetTime() then
+            resetTime = 0
+        end
     end
     CSAPI.SetGOActive(lockObj,not isOpen)
 end

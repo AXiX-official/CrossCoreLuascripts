@@ -77,6 +77,7 @@ function Refresh(_cfgChild, _parentLua)
             -- 透视的高层spine 
             if (cfgChild.content.drag.hideSpine) then
                 hideSpine = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.hideSpine).gameObject
+                hideSpine = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.hideSpine).gameObject
                 drag_clickNode.move = false
                 mX0, mY0, mZ0 = CSAPI.GetAnchor(hideSpine)
             end
@@ -103,15 +104,16 @@ function OnClick()
 end
 
 function OnBeginDragXY(_x, _y)
+    if (parentLua.IsIdle~=nil and not parentLua.IsIdle()) then
+        return
+    end
+    --
     if (isDragging) then
         return
     end
     isDragging = true
     pressDownTime = nil
     dragNum = 0
-    -- if (not parentLua.IsIdle()) then
-    --     return
-    -- end
     x = _x
     y = _y
     parentLua.ItemDragBeginCB(cfgChild, _x, _y)
@@ -124,9 +126,9 @@ function OnBeginDragXY(_x, _y)
 end
 
 function OnDragXY(_x, _y)
-    -- if (not parentLua.IsIdle()) then
-    --     return
-    -- end
+    if (not isDragging) then
+        return
+    end
     if (x == nil or y == nil) then
         x = _x
         y = _y
@@ -147,9 +149,9 @@ function OnEndDragXY(_x, _y)
     end
     isDragging = false
     parentLua.ItemDragEndCB(cfgChild, _x, _y, index)
-    isMove = false
     if (hideSpine) then
         CSAPI.SetAnchor(hideSpine, mX0, mY0, mZ0)
+        SetMove(false)
     end
 end
 
@@ -190,6 +192,9 @@ function SetMove(b)
 end
 
 function OnPressDown(isDragging, clickTime)
+    if (parentLua.IsIdle~=nil and not parentLua.IsIdle()) then
+        return
+    end
     isPress = true
     --
     if (cfgChild and cfgChild.gesture == 6) then
@@ -198,6 +203,9 @@ function OnPressDown(isDragging, clickTime)
 end
 
 function OnPressUp()
+    if (not isPress) then
+        return
+    end
     isPress = false
     --
     pressDownTime = nil 

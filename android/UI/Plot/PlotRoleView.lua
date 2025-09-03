@@ -46,6 +46,13 @@ function SetImg(data)
 	if data.alpha and tonumber(data.alpha) >= 0 then
 		CSAPI.SetGOAlpha(mask,tonumber(data.alpha))
 	end
+	if data.turn then --翻转
+		local x = (data.turn == 1 or data.turn == 3) and -1 or 1
+		local y = (data.turn == 2 or data.turn == 3) and -1 or 1
+		CSAPI.SetScale(mask,x,y,1)
+	else
+		CSAPI.SetScale(mask,1,1,1)
+	end
 end
 
 --判断当前是否是同一张图片

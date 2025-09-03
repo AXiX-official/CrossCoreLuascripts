@@ -748,8 +748,8 @@ end
 
 -- 攻击方是否兄妹
 function SkillJudger:IsCasterSibling(oSkill, caster, target, res, charID)
-
-	if caster.id == charID then
+	local card_id = caster.card_id or 0
+	if caster.id == charID or card_id == charID then
 		return res
 	else
 		return not res
@@ -1321,7 +1321,7 @@ function FightAPI:StealBuff(effect, caster, target, data, buffID, num)
 		end
 		
 		buffer.mgr:DelBuffer(buffer, caster, target)
-		buffer.fightMgr:DoEventWithLog("OnDelBuff", caster, card)
+		buffer.fightMgr:DoEventWithLog("OnDelBuff", caster, target)
 		caster:AddBuff(caster, buffID, nRoundNum, effect.apiSetting)
 	end
 end
@@ -1340,7 +1340,7 @@ function FightAPI:TransferBuff(effect, caster, target, data, buffID, num)
 		local buffID = buffer.id
 
 		buffer.mgr:DelBuffer(buffer, caster, target)
-		buffer.fightMgr:DoEventWithLog("OnDelBuff", caster, card)
+		buffer.fightMgr:DoEventWithLog("OnDelBuff", caster, target)
 		target:AddBuff(caster, buffID, nRoundNum, effect.apiSetting, eBufferAddType.Transfer)
 	end
 end

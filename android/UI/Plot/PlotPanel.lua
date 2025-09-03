@@ -23,7 +23,6 @@ local lastShakeInfo = nil --上一个震动信息
 
 local isJump = false
 local jumpRecord = nil;--跳过的数据缓存
-local effectLayer = nil;--特效层级父物体
 
 local timers = {};--用来统计各部分的播放时长的
 local delayTimer = 0; --当前信息的播放时长，不包括对话信息
@@ -73,7 +72,7 @@ local imgScale = nil
 function Awake()
 	anyWayObj = ComUtil.GetCom(gameObject, "Button");
 	text_desc = ComUtil.GetCom(DescText, "Text");
-	effectLayer = {
+	effectLayer = { --特效层级父物体
 		bottomParent,
 		topParent,
 	}
@@ -1239,7 +1238,7 @@ function PlayVideo()
 	if plotVideo == nil then
 		ResUtil:CreateUIGOAsync("Plot/PlotEffect", videoParent, function (go)
 			local lua = ComUtil.GetLuaTable(go)
-			lua.Refresh(currentPlotData,effectInfos)
+			lua.Refresh(currentPlotData,effectInfos,this)
 			plotVideo = lua
 
 			local videoTime = lua.GetCurrTime()
@@ -1248,7 +1247,7 @@ function PlayVideo()
 			end
 		end)
 	else
-		plotVideo.Refresh(currentPlotData,effectInfos)
+		plotVideo.Refresh(currentPlotData,effectInfos,this)
 		local videoTime = plotVideo.GetCurrTime()
 		if videoTime then
 			table.insert(timers, videoTime);

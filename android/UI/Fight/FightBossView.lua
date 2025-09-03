@@ -177,9 +177,10 @@ function UpdateActivityHP(nStateDamage)
         target.SetHPLock(true);  
         UpdateInfo();     
                 
-        UpdateActivityActionHP1(hpCurr,hpTotal); 
+         
         --LogError(activityAPIData);
         if(activityAPIData and (activityAPIData.type == 2 or activityAPIData.type == 3))then
+            UpdateActivityActionHP1(hpCurr,hpTotal);
             local enemys = GetAllEnemys();            
             if(enemys)then
                 for _,enemy in ipairs(enemys)do

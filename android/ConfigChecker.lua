@@ -3603,3 +3603,10 @@ function ConfigChecker:CfgMultiteamBattle(cfgs)
         assert(cfg.nBeginTime < cfg.nEndTime, "多队玩法活动开启时间范围有误")
     end
 end
+function ConfigChecker:CfgCoffeeMain(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        assert(cfg.nBeginTime < cfg.nEndTime, "女仆咖啡活动开启时间范围有误")
+    end
+end

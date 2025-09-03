@@ -460,7 +460,21 @@ function GCardCalculator:CalPropertys(
     local lvl_cals = GCardCalculator:CalLvlPropertys(cfgid, level, intensify_level, break_level, isMonster, cl)
     --local equip_cals = GEquipCalculator:CalEquipPropertys(equips)
     local sum_cals = GCardCalculator:CalSumPropery(lvl_cals, equips, skillMap, useSubTalents)
+    if equips then
+        sum_cals.excludeSkills = self:GetExcludeSkills(equips)   
+    end
     return sum_cals
+end
+
+function GCardCalculator:GetExcludeSkills(cardData)
+    local rInfo = {}
+    for _, skillId in ipairs(cardData.fightSkills or {}) do
+        local cfg = g_CalExcludeSkillIds[skillId]
+        if cfg then
+            table.insert(rInfo, table.copy(cfg))
+        end
+    end
+    return rInfo
 end
 
 --返回队伍的光环战力值加成

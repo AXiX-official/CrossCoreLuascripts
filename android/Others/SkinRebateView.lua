@@ -198,6 +198,7 @@ end
 function SetCost()
     local price = (comm:GetRealPrice() and comm:GetRealPrice()[1]) and comm:GetRealPrice()[1].num or 0
     if price > 0 then
+        if CSAPI.IsADV() then price=comm:GetSDKdisplayPrice() end
         CSAPI.SetText(txtBuy,comm:GetCurrencySymbols() .. price)
     end
 end

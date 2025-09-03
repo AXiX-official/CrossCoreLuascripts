@@ -580,10 +580,14 @@ function this:SetPerfectScale(obj, _baseScale)
     local scale = 1
     if (nType == 1) then
         -- 长屏
-        scale = curScale[0] / baseScale[1]
+        if(baseScale[1]<curScale[0])then 
+            scale = curScale[0] / baseScale[1]
+        end 
     elseif (nType == 2) then
         -- 宽屏
-        scale = curScale[1] / baseScale[2]
+        if(baseScale[1]<curScale[1])then 
+            scale = curScale[1] / baseScale[2]
+        end 
     end
     CSAPI.SetScale(obj, scale, scale, 1)
     return scale

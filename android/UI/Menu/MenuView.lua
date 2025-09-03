@@ -82,6 +82,10 @@ local anim_create
 local anim_shop
 local rdLNR = {}
 local globalBossTime = 0
+local isDestory = false
+local attackEffectIsShow = false
+local attackEffectBaseTime = nil
+local attackEffectTimer = nil
 local bagLimitTime
 local skinLimitTime = nil
 local skinRebateTime = nil
@@ -139,6 +143,7 @@ function InitListener()
     eventMgr:AddListener(EventType.Player_Update, function()
         SetPlayerDetail()
         SetLocks()
+        SetUpgrade()
     end)
     -- 背包
     eventMgr:AddListener(EventType.Bag_Update, function()
@@ -154,9 +159,13 @@ function InitListener()
         SetAttack()
         InitActivityEnter()
         SetActivityEnter()
+        SetAttackEffect()
     end)
     -- 副本数据设置完
-    eventMgr:AddListener(EventType.Dungeon_Data_Setted, SetAttack)
+    eventMgr:AddListener(EventType.Dungeon_Data_Setted, function()
+        SetAttack()
+        SetAttackEffect()
+    end)
     -- 基地 
     eventMgr:AddListener(EventType.Matrix_Building_UpdateEnd, InitMatrixRTime)
     -- 3点刷新 检查弹窗
@@ -207,6 +216,7 @@ function OnDestroy()
     AdaptiveConfiguration.LuaView_Lua_Closed("MenuView")
     eventMgr:ClearListener()
     RoleAudioPlayMgr:StopSound()
+    isDestory = true
 end
 
 function Update()
@@ -227,6 +237,9 @@ function Update()
         menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
     end
 
+    if (attackEffectTimer ~= nil and CS.UnityEngine.Input.GetMouseButton(0)) then
+        attackEffectTimer = GetAttackEffectTimer()
+    end
     -- 经验
     if (barTime) then
         Anim_fillLv()
@@ -310,7 +323,7 @@ function Update()
     -- 待机界面
     if (menuStandbyTimer and Time.time > menuStandbyTimer) then
         menuStandbyTimer = nil
-        if (openViews["Guide"] ~= nil) then
+        if (openViews["Guide"] ~= nil or not CheckIsTop()) then
             menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
         else
             CSAPI.OpenView("MenuStandby")
@@ -321,6 +334,15 @@ function Update()
         globalBossTime = GlobalBossMgr:GetCloseTime()
         if globalBossTime <= 0 then
             DungeonMgr:CheckRedPointData()
+        end
+    end
+        -- 出击按钮特效
+    if (not attackEffectIsShow and attackEffectTimer and curTime >= attackEffectTimer) then
+        if (openViews["Guide"] ~= nil or not CheckIsTop()) then
+            attackEffectTimer = GetAttackEffectTimer()
+        else
+            attackEffectIsShow = true
+            SetAttackEffect()
         end
     end
     -- 背包限时物品
@@ -418,6 +440,7 @@ function InitTimers()
     activityRefreshTime = ActivityMgr:GetRefreshTime()
     menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
     exerciseLTime = ExerciseMgr:GetRefreshTime()
+    attackEffectTimer = GetAttackEffectTimer()
     globalBossTime = GlobalBossMgr:GetCloseTime()
     bagLimitTime = BagMgr:GetLessLimitTime()
     skinLimitTime = RoleSkinMgr:GetSkinMinLimitTime()
@@ -629,6 +652,12 @@ function InitOnClick()
                     CSAPI.OpenView(key, nil, openSetting)
                 end
             end
+        elseif (key == "Section") then
+            this[_name] = function()
+                CSAPI.OpenView(key)
+                attackEffectIsShow = false
+                SetAttackEffect()
+            end
         else
             -- 通用的打开方式
             this[_name] = function()
@@ -836,6 +865,7 @@ end
 function SetLT()
     SetPlayerDetail()
     SetLTSV()
+    SetUpgrade()
 end
 function SetPlayerDetail()
     CSAPI.SetText(txtName, PlayerClient:GetName())
@@ -886,6 +916,13 @@ function SetLTSV()
 end
 function ShowLTSVItem(k)
     CSAPI.SetGOActive(ltSVItems[k].gameObject, true)
+end
+
+function SetUpgrade()
+    if (PlayerClient:GetAddExp() > 0 and PlayerClient:GetLv() > PlayerClient.oldLv) then
+        CSAPI.OpenView("PlayerUpgrade")
+        PlayerClient:GetAddExp(0)
+    end
 end
 -------------------------LD--------------------------------------
 function SetLD()
@@ -984,6 +1021,7 @@ end
 function SetRD()
     SetAttack()
     SetActivityEnter()
+    SetAttackEffect()
 end
 function SetAttack()
     local cfg, prograss = DungeonMgr:GetCurrMainLineProgress()
@@ -1026,6 +1064,19 @@ function SetActivityEnter()
     end
 end
 
+function SetAttackEffect()
+    if(not CSAPI.IsADVRegional(3))then 
+        return 
+    end 
+    CSAPI.SetGOActive(btnSectionGuideParent, attackEffectIsShow)
+    if (not attackEffectGO) then
+        if (not SpecialGuideMgr:IsClose() and Cfgs.SpecialGuide:GetByID(101) ~= nil) then
+            ResUtil:CreateUIGOAsync("SpecialGuide/SpecialGuideItem2", btnSectionGuideParent, function(go)
+                attackEffectGO = go
+            end)
+        end
+    end
+end
 -------------------------公共处理--------------------------------------
 -- 主界面是否在最上
 function CheckIsTop()
@@ -1207,7 +1258,7 @@ end
 
 -- 其它界面关闭
 function OnViewCloseds()
-    if (not gameObject) then
+    if (isDestory or gameObject == nil) then
         return
     end
     isApplyRefresh = nil
@@ -1346,6 +1397,7 @@ function HidePanel(viewKey, open)
                 CRoleDisplayMgr:NormalCheck2()
             end
             menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
+            attackEffectTimer = GetAttackEffectTimer()
             CSAPI.SetScale(gameObject, 1, 1, 1)
             sv_ltsv.enabled = true
         end
@@ -1361,6 +1413,7 @@ function HidePanel(viewKey, open)
             end
 
             menuStandbyTimer = nil
+            attackEffectTimer = nil
         end
     end
     -- 如果仅Guide在上层则关闭mask
@@ -1589,6 +1642,19 @@ function OnClickVirtualkeysClose()
         end
     end
 end
+
+------------------------出击按钮特效-------------------------
+function GetAttackEffectTimer()
+    if(not CSAPI.IsADVRegional(3))then 
+        return nil
+    end
+    local _attackEffectBaseTime = nil
+    if (not SpecialGuideMgr:IsClose() and Cfgs.SpecialGuide:GetByID(101) ~= nil) then
+        _attackEffectBaseTime = TimeUtil:GetTime() + Cfgs.SpecialGuide:GetByID(101).time
+    end
+    return _attackEffectBaseTime
+end
+
 function OnClickSilentDownload()
     CSAPI.OpenView("SilentDownload")
 end

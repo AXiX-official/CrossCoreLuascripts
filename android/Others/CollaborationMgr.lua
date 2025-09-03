@@ -315,11 +315,11 @@ end
 --检查红点信息
 function this:CheckRedInfo()
     local redInfo=nil;
-    if (self.bindInivte and #self.bindInivte>0) or (self.inviteList and #self.inviteList>0) then
-        redInfo={bind=1};
-    end
     --检查任务完成情况
     local currActivity=self:GetCurrInfo();
+    if currActivity and not currActivity:IsBindOver() and ((self.bindInivte and #self.bindInivte>0) or (self.inviteList and #self.inviteList>0)) then
+        redInfo={bind=1};
+    end
     if currActivity and currActivity:IsLimitFull()~=true and currActivity:IsBindOver() then
         local taskInfo=MissionMgr:GetCollaborationData(eTaskType.RegressionBind);
         if taskInfo and #taskInfo>0 then

@@ -75,6 +75,7 @@ local mgrNames = {
 	"BuffBattleMgr", --积分战斗
 	"AnniversaryMgr", --周年活动
 	"MultTeamBattleMgr",--递归沙盒
+	"CoffeeMgr",
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"
 }

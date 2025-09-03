@@ -41,6 +41,8 @@ local conf = {
 {'2',	'2',	'',	'',	'',	'16',	'65',	'arch_idol_dressing_room',	'80433'},
 {'2',	'2',	'',	'',	'',	'17',	'66',	'arch_foot_fashion',	'80434'},
 {'2',	'2',	'',	'',	'',	'18',	'83',	'arch_ephemeral_indulgence',	'80444'},
+{'2',	'2',	'',	'',	'',	'19',	'84',	'arch_Tea_Time',	'80459'},
+{'2',	'2',	'',	'',	'',	'20',	'85',	'arch_Dreamlike_Picture',	'80460'},
 {'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
 {'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
 {'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},

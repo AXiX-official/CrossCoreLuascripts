@@ -36,8 +36,8 @@ function OnStoryPlayComplete()
     data.star = 1;
     data.isPass = true;
     DungeonMgr:AddDungeonData(data);
-    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
     MenuMgr:UpdateDatas() --刷新关卡解锁状态
+    EventMgr.Dispatch(EventType.Dungeon_PlotPlay_Over);
     EventMgr.Dispatch(EventType.Activity_Open_State);
     if cb then
         cb(isStoryFirst)

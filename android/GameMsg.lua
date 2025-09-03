@@ -1087,7 +1087,7 @@ GameMsg.map["sRogueTBuffs"] = {
 }
 GameMsg.map["sRogueTDuplicateData"] = {
 	--关卡组ID（难度ID） 历史最高伤害 已存档buff          首通奖励          是否通关(解锁无限血关) 当前使用buff组下标 
-	{ "uint",            "uint",      "list|sRogueTBuffs","bool",           "bool",              "uint",            },
+	{ "uint",            "string",    "list|sRogueTBuffs","bool",           "bool",              "uint",            },
 	{ "id",              "maxDamage", "buffs",            "firstPassReward","pass",              "useBuff",         },
 }
 GameMsg.map["FightProtocol:GetRogueTInfo"] = {
@@ -1137,7 +1137,7 @@ GameMsg.map["FightProto:RogueTBuffUpRet"] = {
 }
 GameMsg.map["FightProto:RogueTOver"] = {
 	--输赢     当前关卡       已选择buffs   本次获得货币 总货币 总积分  本次获得积分 玩家经验     参与战斗的卡牌(id：卡牌id, num:添加的好感度) 奖励           无限血关伤害 
-	{ "bool",  "uint",        "array|uint", "uint",      "uint","uint", "uint",      "uint",      "list|sNumInfo",     "list|sReward","uint",      },
+	{ "bool",  "uint",        "array|uint", "uint",      "uint","uint", "uint",      "uint",      "list|sNumInfo",     "list|sReward","string",    },
 	{ "bIsWin","nDuplicateID","selectBuffs","coinGet",   "coin","score","scoreGet",  "nPlayerExp","cardsExp",          "rewards",     "damage",    },
 }
 GameMsg.map["FightProtocol:RogueTBuffSave"] = {
@@ -4417,7 +4417,7 @@ GameMsg.map["PlayerProto:GetStarRank"] = {
 }
 GameMsg.map["sStarRank"] = {
 	--排名   当前积分  名字    等级    头像      通关的最大副本id 头像框       性别序号      玩家称号     回合数     
-	{ "int", "int",   "string","short","int",    "int",           "int",       "byte",       "uint",      "uint",    },
+	{ "int", "string","string","short","int",    "int",           "int",       "byte",       "uint",      "uint",    },
 	{ "rank","score", "name",  "level","icon_id","dupId",         "icon_frame","sel_card_ix","icon_title","turn_num",},
 }
 GameMsg.map["PlayerProto:GetStarRankRet"] = {
@@ -4552,7 +4552,7 @@ GameMsg.map["PlayerProto:GetRank"] = {
 }
 GameMsg.map["PlayerProto:GetRankRet"] = {
 	--排名数据         我的排名 排行榜类型（章节id） 当前积分 下次刷新时间        回合数     
-	{ "list|sStarRank","int",   "int",               "int",   "int",              "uint",    },
+	{ "list|sStarRank","int",   "int",               "string","int",              "uint",    },
 	{ "data",          "rank",  "rank_type",         "score", "next_refresh_time","turn_num",},
 }
 GameMsg.map["PlayerProto:GetAllMusic"] = {
@@ -5099,6 +5099,26 @@ GameMsg.map["OperateActiveProto:GetDragonBoatFestivalInfoRet"] = {
 	--端午签到数据    当天加油类型eDragonBoatFestivalType 第六天奖励是否领取，1已领取，0或nil 未领取 
 	{ "list|sNumInfo","int",               "int",               },
 	{ "infos",        "type",              "isTake",            },
+}
+GameMsg.map["OperateActiveProto:GetMaidCoffeeData"] = {
+	--活动id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["OperateActiveProto:GetMaidCoffeeDataRet"] = {
+	--活动id 奖励次数 剩余奖励次数 个人历史最高分 
+	{ "uint","uint",  "uint",      "uint",        },
+	{ "id",  "cnt",   "remainCnt", "maxScore",    },
+}
+GameMsg.map["OperateActiveProto:GetMaidCoffeeReward"] = {
+	--活动id 获得积分 开始游戏时间 游戏总计时间 正确订单数量 错误订单数量 本次游戏结果（1正常结算，2为中途退出） 
+	{ "uint","uint",  "int",       "int",       "uint",      "uint",      "uint",              },
+	{ "id",  "score", "begTime",   "gameTime",  "rightNum",  "wrongNum",  "gameRet",           },
+}
+GameMsg.map["OperateActiveProto:GetMaidCoffeeRewardRet"] = {
+	--活动id 奖励次数 剩余奖励次数 个人历史最高分 
+	{ "uint","uint",  "uint",      "uint",        },
+	{ "id",  "cnt",   "remainCnt", "maxScore",    },
 }
 GameMsg.map["sRandCard"] = {
 	--卡牌id   装备信息      对应怪物id   

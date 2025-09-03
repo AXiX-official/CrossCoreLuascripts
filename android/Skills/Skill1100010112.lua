@@ -20,6 +20,6 @@ function Skill1100010112:OnActionOver(caster, target, data)
 	end
 	-- 1100010112
 	if self:Rand(10000) then
-		self:AddNp(SkillEffect[1100010112], caster, caster, data, 5)
+		self:AddNp(SkillEffect[1100010112], caster, caster, data, 10)
 	end
 end

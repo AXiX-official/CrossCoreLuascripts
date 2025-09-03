@@ -6,12 +6,14 @@ local currTime = 0
 local lastVideoInfos = {}
 local fade = nil
 local stopList = {} --用于缓存需要关闭的异步创建的循环特效
+local fatherView = nil
 
 function Awake()
     fade = ComUtil.GetCom(videoParent,"ActionFade")
 end
 
-function Refresh(_data, _elseData)
+function Refresh(_data, _elseData,_view)
+    fatherView = _view
     for i, v in pairs(lastVideoInfos) do
 		if(not v.isLoop) then
             RecycleVideo(v.go)
@@ -27,6 +29,7 @@ function Refresh(_data, _elseData)
         if(videoInfo) then
             for i, v in ipairs(videoInfo) do
                 local videoDelay = v.delay or 0
+                local parent = fatherView.effectLayer[v.layer or 2]
                 if(v.id) then
                     local cfgVideo = Cfgs.PlotVideo:GetByID(v.id)
                     if(cfgVideo) then				
@@ -45,7 +48,7 @@ function Refresh(_data, _elseData)
                                     end
                                 elseif(not lastVideoInfos[v.id]) then
                                     lastVideoInfos[v.id] = {}
-                                    CreateVideo(cfgVideo.name, videoParent,function (video)
+                                    CreateVideo(cfgVideo.name, parent,function (video)
                                         if gameObject and video then
                                             local _info = {
                                                 go = video.gameObject,
@@ -88,6 +91,7 @@ function CreateVideo(name, parent, callback)
     if videoPools[name] and #videoPools[name] > 0 then
         local go = table.remove(videoPools[name],1)
         CSAPI.SetGOActive(go, true)
+        CSAPI.SetParent(go,parent.gameObject)
         if callback then
             callback(go)
         end

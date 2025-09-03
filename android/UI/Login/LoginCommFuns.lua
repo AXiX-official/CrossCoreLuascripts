@@ -183,8 +183,13 @@ end
 
 ---测试 Url
 function GetLocalTestUrl()
-	  CSAPI.server_list_enc_close=true;
-	   return "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";
+	CSAPI.server_list_enc_close=true;
+	if CSAPI.IsADV() then
+		---海外需要开VPN，开了VPN无法访问ip
+		return "http://mega.megagamelog.com/php/res/serverList/serverlist_nw1.json";
+	else
+		return "http://192.168.5.86/php/res/serverList/serverlist_nw1.json";
+	end
 end
 
 ---正式发布url

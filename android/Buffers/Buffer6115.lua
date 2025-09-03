@@ -1,3 +1,4 @@
+-- 免疫死亡
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -7,5 +8,6 @@ function Buffer6115:Init(mgr, id, target, caster)
 end
 -- 回合开始时
 function Buffer6115:OnRoundBegin(caster, target)
-	self:ImmuneBuffID(BufferEffect[6113], self.caster, self.owner, nil,3004)
+	-- 6109
+	self:ImmuneDeath(BufferEffect[6109], self.caster, target or self.owner, nil,nil)
 end

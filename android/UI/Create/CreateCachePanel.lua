@@ -103,6 +103,9 @@ function OnClickL()
             CreateMgr:FirstCardCreateAddLog(poolId)
             btnRCanvasGroup.alpha = (ogs and #logs > 0) and 1 or 0.3
             if CSAPI.IsADV() or CSAPI.IsDomestic() then BuryingPointMgr:TrackEvents(ShiryuEventName.MJ_RESTRUCTURE_REPLACE) end
+            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "CheckBuild") 
+        end,function ()
+            EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "CheckBuild") 
         end)
     end
 end

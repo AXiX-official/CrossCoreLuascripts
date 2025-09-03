@@ -20,6 +20,7 @@ function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.Role_FirstCreate_End, FirstEnd)
+    eventMgr:AddListener(EventType.CreateRoleView_ShareBtn_SH, OpenShareBtn)
 
     CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
     CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
@@ -42,11 +43,12 @@ function OnViewOpened(viewKey)
 end
 
 ---判断是否可以打开  分享按钮
-function OpenShareBtn()
+function OpenShareBtn(_b)
+    local b = _b==nil and true or _b
     local rewards = data[1]
     local quality = GetMaxQuality(rewards)
     if quality>=6 and  CSAPI.IsMobileplatform then
-        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+        if b and (CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5) then
             CSAPI.SetGOActive(ShareBtn, true);
         else
             CSAPI.SetGOActive(ShareBtn, false);
@@ -136,6 +138,7 @@ function OnClickMask()
 
     if (data[2]) then
         OpenCreateCachePanel()
+        EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "CloseBuild") 
     else
         view:Close()
     end

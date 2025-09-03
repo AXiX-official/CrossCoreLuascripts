@@ -1,4 +1,4 @@
--- 恐惧
+-- 鞭尾
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,5 +19,5 @@ function Buffer302700101:OnBefourCritHurt(caster, target)
 		return
 	end
 	-- 302700101
-	self:AddTempAttr(BufferEffect[302700101], self.caster, target or self.owner, nil,"crit_rate",0.1)
+	self:AddTempAttr(BufferEffect[302700101], self.caster, self.caster, nil, "crit_rate",0.1)
 end

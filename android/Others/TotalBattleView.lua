@@ -5,6 +5,7 @@ local resetTime = -1
 local currIndex = 1
 local selIndex= 0
 local itemInfo = nil
+local isCreate = false
 local currItem = nil
 local currDanger = 1
 local effectGos = nil
@@ -33,6 +34,7 @@ function Awake()
     end)
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
 
+    CSAPI.SetGOActive(timeObj,false)
     InitAnim()
 end
 
@@ -175,8 +177,8 @@ function Update()
 end
 
 function OnOpen()
-    CheckTime()
     SetDatas()  
+    CheckTime()
     CheckOpenSection()  
     InitJumpState()
     if not isFirst then
@@ -317,6 +319,8 @@ function CheckTime()
     end
     if data and data.id then
         timeSectionData = DungeonMgr:GetSectionData(data.id)
+    elseif sectionDatas and #sectionDatas> 0 then
+        timeSectionData = DungeonMgr:GetSectionData(sectionDatas[1]:GetID())
     end
 end
 
@@ -348,6 +352,10 @@ end
 -----------------------------------------------iteminfo-----------------------------------------------
 function SetRight()
     if itemInfo == nil then
+        if isCreate then
+            return
+        end
+        isCreate = true
         ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo4", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             CSAPI.SetGOActive(itemInfo.gameObject, true)

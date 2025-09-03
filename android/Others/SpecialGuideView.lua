@@ -45,7 +45,7 @@ function Refresh(viewName,type,datas)
             if cfg.info then
                 need,max = 0,0
                 for k, v in pairs(cfg.info) do
-                    if datas and datas[k] and datas[k] == v then
+                    if datas and datas[k] and CheckIsPass(v,datas[k]) then
                         need = need + 1
                     end
                     max = max + 1
@@ -57,6 +57,14 @@ function Refresh(viewName,type,datas)
                 TryPlay(cfg.id,type)
             end
         end
+    end
+end
+
+function CheckIsPass(v,index)
+    if tostring(type(v)) == "table" and #v > 0 then --在区间内
+        return v[1] <= index and index <= v[2]
+    elseif tostring(type(v)) == "number" then
+        return v == index
     end
 end
 

@@ -142,7 +142,7 @@ function OnClickReplace()
         local isSatisfy,needCards,needTactics,isNotReplace = CheckSatisfy()
         if isSatisfy then
             local dialogData= {}
-            dialogData.content = LanguageMgr:GetTips(24010)
+            dialogData.content = (cfgRankTeam and cfgRankTeam.isHideTactics) and LanguageMgr:GetTips(24016) or LanguageMgr:GetTips(24010)
             dialogData.okCallBack = OnTeamReplace
             CSAPI.OpenView("Dialog",dialogData)
         elseif isNotReplace then --没有可替换的

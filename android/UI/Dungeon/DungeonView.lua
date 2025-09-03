@@ -40,6 +40,7 @@ function Awake()
     eventMgr:AddListener(EventType.View_Lua_Opened, OnViewOpened)
     eventMgr:AddListener(EventType.Dungeon_Box_Refresh, InitBox)
     eventMgr:AddListener(EventType.Loading_Complete, OnLoadComplete)
+    eventMgr:AddListener(EventType.Dungeon_MainLine_Guide_Refresh, SetJumpInfo2)
 
     InitInfo()
 end
@@ -195,6 +196,10 @@ end
 -- 跳转时设置信息 --外部跳转进来 --同章节跳转 --不同章节跳转 --
 function SetJumpInfo(val3)
     if (val3) then
+        local cfg = Cfgs.MainLine:GetByID(val3)
+        if cfg and cfg.type ~= currHardLv  then
+            SwitchHard(cfg.type)
+        end
         if listItems then
             for _, listItem in pairs(listItems) do
                 local groups = listItem:GetGroups()
@@ -217,6 +222,19 @@ function SetJumpInfo(val3)
                         end
                     end, nil, 200)
                 end)
+            end
+        end
+    end
+end
+
+--只跳转到关卡组
+function SetJumpInfo2(groupId)
+    if groupId and groupDatas and #groupDatas > 0 then
+        for k, groupData in ipairs(groupDatas) do
+            if groupData:GetID() == groupId and listItems and listItems[k] then
+                SwitchHard(listItems[k].IsHard() and 2 or 1)
+                OnClickListItem(listItems[k])
+                break
             end
         end
     end
@@ -460,7 +478,7 @@ function ShowBtn(_isOpen)
             if (idx == 1 or not groupDatas[idx - 1]:IsOpen()) then
                 isLeft = false
             end
-            if (idx == #groupDatas or not groupDatas[idx + 1]:IsOpen()) then
+            if (idx == #groupDatas or (idx + 1 <= #groupDatas and not groupDatas[idx + 1]:IsOpen())) then
                 isRight = false
             end
         end

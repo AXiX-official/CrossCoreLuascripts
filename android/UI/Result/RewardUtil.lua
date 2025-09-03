@@ -1,10 +1,10 @@
 local this = {}
 
---合并相同的物品
+-- 合并相同的物品
 function this.SetShrink(_rewards)
     local _datas = {}
     local _newDatas = {}
-    local _newDatas2 = {} --标签
+    local _newDatas2 = {} -- 标签
     for i, v in ipairs(_rewards) do
         if (v.type == nil) then -- 没有type则视作物品
             v.type = RandRewardType.ITEM
@@ -13,11 +13,11 @@ function this.SetShrink(_rewards)
         local isMat = false
         if v.c_id ~= nil then
             local equipData = EquipMgr:GetEquip(v.c_id)
-            if equipData and equipData:GetType()==EquipType.Material then
+            if equipData and equipData:GetType() == EquipType.Material then
                 isMat = true
             end
         end
-        if v.tag == nil then --区分标签物品
+        if v.tag == nil then -- 区分标签物品
             if ((v.type == RandRewardType.ITEM) or isMat) then
                 _newDatas[v.type] = _newDatas[v.type] or {}
                 if (_newDatas[v.type][v.id]) then
@@ -54,7 +54,7 @@ function this.SetShrink(_rewards)
 
     _datas = SortMgr:Sort(19, _datas)
 
-     return _datas
+    return _datas
 end
 
 function this.GetReward(v)
@@ -81,34 +81,39 @@ function this.GetTips(_type)
         str = LanguageMgr:GetByID(15089)
     elseif _type == ITEM_TAG.TimeLimit then
         str = LanguageMgr:GetByID(15123)
-        str = StringUtil:SetByColor(str,"FFFFFF")
+        str = StringUtil:SetByColor(str, "FFFFFF")
     end
     return str
 end
 
---特殊掉落
+-- 特殊掉落
 function this.GetSpecialReward(sectionID)
     local cfg = Cfgs.CfgSpecialDrops:GetByID(sectionID)
     local isFixed = false
-    if cfg and cfg.DropsStartTime and cfg.DropsEndTime then
-        isFixed = cfg.isEntryPoint ~= nil
-        local begTime = TimeUtil:GetTimeStampBySplit(cfg.DropsStartTime) or 0
-        local endTime = TimeUtil:GetTimeStampBySplit(cfg.DropsEndTime) or 0
-        local curTime = TimeUtil:GetTime() or 0
-        if curTime> begTime and curTime<=endTime and cfg.DropID then
-            if cfg.DropID and #cfg.DropID > 0 then
-                local rewards = {}
-                for i, id in ipairs(cfg.DropID) do
-                    local cfgItem = Cfgs.CfgDropItem:GetByID(id)
-                    if cfgItem then
-                        table.insert(rewards,{cfgItem.DropItemID})
+    if cfg then
+        if cfg.isHide then --不显示
+            return nil, isFixed
+        end
+        if cfg.DropsStartTime and cfg.DropsEndTime then
+            isFixed = cfg.isEntryPoint ~= nil
+            local begTime = TimeUtil:GetTimeStampBySplit(cfg.DropsStartTime) or 0
+            local endTime = TimeUtil:GetTimeStampBySplit(cfg.DropsEndTime) or 0
+            local curTime = TimeUtil:GetTime() or 0
+            if curTime > begTime and curTime <= endTime and cfg.DropID then
+                if cfg.DropID and #cfg.DropID > 0 then
+                    local rewards = {}
+                    for i, id in ipairs(cfg.DropID) do
+                        local cfgItem = Cfgs.CfgDropItem:GetByID(id)
+                        if cfgItem then
+                            table.insert(rewards, {cfgItem.DropItemID})
+                        end
                     end
+                    return rewards, isFixed
                 end
-                return rewards,isFixed
             end
         end
     end
-	return nil,isFixed
+    return nil, isFixed
 end
 
 return this

@@ -350,7 +350,7 @@ function SetCharInfos(character)
                     if skillCfg then
                         table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
                     end
-                else
+                elseif cfg.main_type~=SkillMainType.Equip then
                     table.insert( charInfos[1], {cfg=cfg});
                 end
             end

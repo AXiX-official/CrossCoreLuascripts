@@ -538,6 +538,7 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
         end
     end
     LogTable(data.data, 'data.data')
+    RemoveExcludeSkill(data.data)
     LogTable(tCommanderSkill, 'data.tCommanderSkill')
     local cbData = {}
     mgr:AddPlayer(PlayerClient:GetID(), 1)
@@ -583,6 +584,66 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
     )
     -- ASSERT()
     return mgr
+end
+
+function RemoveExcludeSkill(fData)
+    local m_excludeSkills = {}
+    for _,fightData in ipairs(fData) do
+        local cardData = fightData.data
+        m_excludeSkills[cardData.id] = cardData.excludeSkills
+    end
+    -- 根据卡牌id分类
+    local cardDatas = {}
+
+    -- 按照互斥id分类
+    local excludeIdMap = {}
+
+    -- 遍历卡牌数据，取出所有卡牌的互斥技能信息
+    for _, fightData in ipairs(fData or {}) do
+        local cardData = fightData.data
+        local cid = cardData.id
+        if cid then
+            cardDatas[cid] = cardData
+
+            local rInfo = m_excludeSkills[cid]
+            if rInfo then
+                -- 如果这个卡牌存在互斥技能
+                LogTable(rInfo, "xiaowu,Card "..cid.." exclude info:")
+                for _, cfg in ipairs(rInfo) do
+                    -- 加入
+                    local arr = GCalHelp:GetTb(excludeIdMap, cfg.nExcludeId)
+                    table.insert(arr, {cid = cid, id = cfg.nSkillId})
+                end
+            end
+        end
+    end
+    local CfgSkills = _G['skill']
+    for excludeId, infos in pairs(excludeIdMap) do
+        local len = #infos
+        -- 如果互斥数组大于1，那么表示存在互斥
+        if len > 1 then
+            -- 根据技能等级，从大到小排序
+            table.sort(
+                infos,
+                function(rhs, lhs)
+                    local rCfg = CfgSkills[rhs.id]
+                    local lCfg = CfgSkills[lhs.id]
+                    return rCfg.lv > lCfg.lv
+                end
+            )
+            -- 倒序删除，保留等级最大的那个，其余的删掉
+            for i = len, 2, -1 do
+                local info = infos[i]
+                local cardData = cardDatas[info.cid]
+                local sLen = #cardData.skills
+                for si = sLen, 1, -1 do
+                    if cardData.skills[si] == info.id then
+                        table.remove(cardData.skills, si)
+                    end
+                end
+            end
+        end
+    end
 end
 
 function PackMultTeamFightCbData(fMgr,exData,winner)

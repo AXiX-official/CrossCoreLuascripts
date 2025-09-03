@@ -522,6 +522,7 @@ this.Role_Jump_Break = 170041 --跳转到指定突破页面
 this.Role_FirstCreate_End = 170042
 this.Role_Captain_ToFirst = 170043  --队长排在最前面
 this.Role_LimitSkin_Refresh = 170044 --限时皮肤
+this.CreateRoleView_ShareBtn_SH = 170045 --构建展示界面分享按钮的显示与隐藏
 this.Choice_Card_Ret = 170046 --自选卡牌返回
 ------------------------------------------主界面
 --切换显示状态
@@ -576,6 +577,8 @@ this.Head_Face_Change = 180022
 this.Menu_Questionnaire = 180023
 --spineUI动画进入与退出
 this.Menu_SpineUI = 180024
+--女仆咖啡
+this.Menu_Coffee = 180025 
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -1186,6 +1189,7 @@ this.Update_Dungeon_Data = 420007;--副本结束
 this.Dungeon_InfoPanel_Update = 420008 --副本信息界面设置
 this.Dungeon_Double_Update = 420009 --副本多倍更新
 this.Dungeon_InfoItem_Update = 420010 --副本信息组件更新
+this.Dungeon_MainLine_Guide_Refresh= 420011 --主线选关界面引导
 --------------------------------------组队boss
 this.TeamBoss_List = 430001
 this.TeamBoss_Room_Update = 430002 --房间更新
@@ -1275,6 +1279,7 @@ this.Sweep_Close_Panel = 510002
 -----------------------------------------章节
 this.Section_Red_Update = 520001
 this.Section_Daily_Double_Update = 520002
+this.Section_Guide_Update = 520003
 
 -----------------------------------------等待
 this.Wait_Panel_Close = 530001  --关闭等待界面

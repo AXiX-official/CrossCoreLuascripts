@@ -51,6 +51,7 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
+    CSAPI.ApplyReleaseRes()
 end
 
 -- function Update()

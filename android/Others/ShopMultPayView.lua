@@ -32,7 +32,7 @@ local endTime=0;--结束时间戳
 local countTime=0;
 local isEnterInit=false;
 local hasSVInit=false;
-
+local SDKdisplayPrice=nil;
 -- local slider=nil;
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV")
@@ -412,6 +412,16 @@ function SetPrice(id, num,pIcon,pText,pRmbIcon)
 	if id==-1 then --SDK支付
 		CSAPI.SetText(pRmbIcon, rmbIcon);
 		CSAPI.SetText(pText, tostring(num));
+		if CSAPI.IsADV() then
+			if pRmbIcon~=nil and pRmbIcon.gameObject~=nil and pRmbIcon.gameObject.name=="txt_hRmb" then
+				CSAPI.SetText(pRmbIcon, commodity:GetCurrencySymbols(true));
+			else
+				SDKdisplayPrice=commodity:GetSDKdisplayPrice();
+				if SDKdisplayPrice~=nil then
+					CSAPI.SetText(pText,tostring(SDKdisplayPrice));
+				end
+			end
+		end
 		CSAPI.SetGOActive(pIcon,false);
 		CSAPI.SetGOActive(pRmbIcon,true);
 		return;

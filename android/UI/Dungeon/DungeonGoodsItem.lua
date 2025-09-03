@@ -34,6 +34,7 @@ function Refresh(data, elseData)
 		data.data = reward
 		
 		lua.Refresh(data, {isClick = true});
+		lua.SetLimitTag(false)
 		local type = data.cfg.type
 		local _cb = type ~= nil and GridClickFunc.OpenInfoShort or GridClickFunc.EquipDetails
 		lua.SetClickCB(_cb);

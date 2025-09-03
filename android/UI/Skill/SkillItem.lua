@@ -89,12 +89,16 @@ function InitItem(cfgSkill, skillData, skillCostData, character)
 			end
 		end			
 		
+		if(btnEff)then
+			local state = Usable() > 0;
+			CSAPI.SetGOActive(btnEff,state);	
+		end
 		
 		local skillName = nil;
 		--检测是否召唤和合体技能
 		if(cfg.type == SkillType.Summon) then
 			resIcon1 = "w_summon1";
-            resIcon2 = "w_summon2";
+            resIcon2 = "w_summon2";			
 			--skillName = StringConstant.fight_skill_name1;
 			--resIconTitle = "w_machine_loading";         
 		elseif(cfg.type == SkillType.Unite) then
@@ -204,10 +208,9 @@ function InitItem(cfgSkill, skillData, skillCostData, character)
 				furyBar = ComUtil.GetCom(furyBarGo,"BarBase");  
 			end
 			if(furyBar)then
-				furyBar:SetProgress(furyP);				
+				furyBar:SetProgress(furyP);
 			end 
-			CSAPI.SetText(furyVal,tostring(fury));
-
+			CSAPI.SetText(furyVal,tostring(fury));	
 			CSAPI.SetGOActive(furingEffect,furyP < 1);
 			CSAPI.SetGOActive(furyEffect,furyP >= 1);
 		end

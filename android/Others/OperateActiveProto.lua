@@ -59,3 +59,28 @@ end
 function OperateActiveProto:GetDragonBoatFestivalInfoRet(proto)
     OperationActivityMgr:SetDuanWuInfos(proto)
 end
+
+function OperateActiveProto:GetMaidCoffeeData(_id,_cb)
+    self.GetMaidCoffeeDataCB = _cb
+    local proto = {"OperateActiveProto:GetMaidCoffeeData", {id = _id}}
+    NetMgr.net:Send(proto);
+end
+
+function OperateActiveProto:GetMaidCoffeeDataRet(proto)
+    CoffeeMgr:GetMaidCoffeeDataRet(proto)
+    if(self.GetMaidCoffeeDataCB )then 
+        self.GetMaidCoffeeDataCB()
+    end 
+    self.GetMaidCoffeeDataCB = nil 
+end
+
+function OperateActiveProto:GetMaidCoffeeReward(_id,_gameData)
+    _gameData.id = _id 
+    local proto = {"OperateActiveProto:GetMaidCoffeeReward", _gameData}
+    NetMgr.net:Send(proto)
+end
+
+function OperateActiveProto:GetMaidCoffeeRewardRet(proto)
+    CoffeeMgr:GetMaidCoffeeDataRet(proto)
+    EventMgr.Dispatch(EventType.Menu_Coffee)
+end

@@ -563,10 +563,10 @@ this.FormatString = CS.CSAPI.FormatString;
 this.GetServerInfo = CS.CSAPI.GetServerInfo;
 
 this.GC = CS.CSAPI.GC;
---this.csApplyReleaseRes = CS.CSAPI.ApplyReleaseRes;
---function this.ApplyReleaseRes()
---	this.csApplyReleaseRes(true);
---end
+this.csApplyReleaseRes = CS.CSAPI.ApplyReleaseRes;
+function this.ApplyReleaseRes()
+	this.csApplyReleaseRes(true);
+end
 this.GetPlatform = CS.CSAPI.GetPlatform;
 --强行释放资源
 this.ApplyReleaseForce = CS.CSAPI.ApplyReleaseForce;
@@ -715,6 +715,18 @@ end
 function this.StopCounselingRoomSound(cueName)
 	--CSAPI.PlayUICardSound(cueName)
 	CSAPI.StopTargetSound("UI/Dorm_CounselingRoom.acb", cueName);
+end
+
+--播放运营活动相关声音
+function this.PlayTempSound(cueName, isLoop)
+	--LogError("播放UI声音" .. cueName);
+	CSAPI.PlaySound("temp/temp.acb", cueName);
+end
+--停止运营活动相关声音
+function this.StopTempSound(cueName)
+	--LogError("停止UI声音" .. cueName);
+	--CSAPI.PlayUISound(cueName)
+	CSAPI.StopTargetSound("temp/temp.acb", cueName);
 end
 
 
@@ -1118,10 +1130,7 @@ _G.ReYunSDK=CS.ReYunSDK.ins;
 
 _G.JuLiangSDK = CS.JuLiangSDK.ins;
 
--- 兼容旧包
-if tonumber(CS.CSAPI.APKVersion()) > 6 then
-	_G.SilentDownloadMgr = CS.SilentDownloadMgr.ins;
-end
+_G.SilentDownloadMgr = CS.SilentDownloadMgr.ins;
 
 local packageName=nil;
 this.GetPackageName = function()

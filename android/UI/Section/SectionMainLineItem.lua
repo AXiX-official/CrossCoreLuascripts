@@ -44,6 +44,11 @@ function Refresh(_data, _elseData)
     if data then
         hardLv =DungeonMgr:GetDungeonHardLv(data:GetID())
         isLock = data:GetState(hardLv) == 0
+        if hardLv == 2 and isLock then --困难未开启但切换到了困难则返回普通难度
+            hardLv = 1
+            DungeonMgr:SetDungeonHardLv(data:GetID(),hardLv)
+            isLock = data:GetState(hardLv) == 0
+        end
         curX = CSAPI.GetLocalPos(gameObject)
         if not (elseData.fakeType > 0) then
             SetBg()

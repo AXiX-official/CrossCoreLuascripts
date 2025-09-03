@@ -12,8 +12,8 @@ function Skill305000205:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:AddBuff(SkillEffect[305000205], caster, target, data, 305000205)
 end
--- 行动结束2
-function Skill305000205:OnActionOver2(caster, target, data)
+-- 攻击结束
+function Skill305000205:OnAttackOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else

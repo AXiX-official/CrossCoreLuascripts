@@ -14,7 +14,8 @@ effect="cast1_hit",time=6500,type=0,pos_ref={ref_type=4,part_index=0}
 [1310282141]={
 {time=6500,type=1,hit_type=0,hits={2000,2400,2800,3200,6000,6400}},
 {time=8500,type=0,cue_sheet="cv/Mist.acb",cue_name="Mist_11",cue_feature=1},
-{effect="cast2_eff",time=8500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Mist_attack_skill_02"}
+{effect="cast2_eff",time=8500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Mist_attack_skill_02"},
+{delay=4333,time=8500,type=0,cue_sheet="cv/Mist.acb",cue_name="Mist_12",cue_feature=1}
 },
 [-1609092943]={
 {time=2500,type=0,cue_sheet="cv/Mist.acb",cue_name="Mist_09",cue_feature=1},

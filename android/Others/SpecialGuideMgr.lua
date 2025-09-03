@@ -8,8 +8,15 @@ end
 
 function this:InitListener()
     self.eventMgr = ViewEvent.New()
-    -- self.eventMgr:AddListener(EventType.Loading_Start,self.OnLoadingStart)
-    -- self.eventMgr:AddListener(EventType.Loading_Complete,self.OnLoadingComplete)
+    if CSAPI.IsADVRegional(3) then
+        self.eventMgr:AddListener(EventType.Loading_Start,self.OnLoadingStart)
+        self.eventMgr:AddListener(EventType.Loading_Complete,self.OnLoadingComplete)
+        self.eventMgr:AddListener(EventType.Scene_Load_Start,self.OnSceneLoadStart)
+    end
+end
+
+function this.OnSceneLoadStart()
+    this.canApply = false
 end
 
 function this.OnLoadingStart()
@@ -33,6 +40,9 @@ function this:ApplyNext()
     end
 
     local data = table.remove(self.datas,1);
+    if not data.parent or IsNil(data.parent.gameObject) then
+        return
+    end
     UIUtil:ShowSpecialGuide(data.parent, data.viewName, data.type, data.datas);
     FuncUtil:Call(self.ApplyNext,this,200)
 end
@@ -73,20 +83,9 @@ function this:Clear()
 end
 
 function this:ApplyShowView(parent, viewName, type, datas)
-    -- if self.canApply then
-    --     UIUtil:ShowSpecialGuide(parent, viewName, type, datas)
-    -- else
-    --     if not SceneMgr:IsMajorCity() then
-    --         return
-    --     end
-    --     local data = {
-    --         parent = parent,
-    --         viewName = viewName,
-    --         type = type,
-    --         datas = datas
-    --     }
-    --     self:PushData(data)
-    -- end
+    if CSAPI.IsADVRegional(3) then
+        UIUtil:ShowSpecialGuide(parent, viewName, type, datas)
+    end
 end
 
 return this

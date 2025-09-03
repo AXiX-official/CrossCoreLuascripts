@@ -30,3 +30,27 @@ function Skill330901:OnAttackOver(caster, target, data)
 		end
 	end
 end
+-- 攻击结束2
+function Skill330901:OnAttackOver2(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 330931
+	if self:Rand(2000) then
+		local r = self.card:Rand(2)+1
+		if 1 == r then
+			-- 330911
+			self:AddBuffCount(SkillEffect[330911], caster, self.card, data, 400600101,1,5)
+		elseif 2 == r then
+			-- 330921
+			self:AddBuffCount(SkillEffect[330921], caster, self.card, data, 400600201,1,5)
+		end
+	end
+end

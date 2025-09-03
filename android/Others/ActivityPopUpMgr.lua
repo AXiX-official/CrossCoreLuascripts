@@ -73,8 +73,8 @@ function this:CheckIsPop(id)
             if signInInfo and not signInInfo:CheckIsDone() then
                 return true
             end
-        elseif self:GetSpecType() == ALType.Pay then
-            local active = ActivityMgr:GetOperateActive(self:GetID())
+        elseif alData:GetSpecType() == ALType.Pay then
+            local active = ActivityMgr:GetOperateActive(alData:GetID())
             local signInInfo = SignInMgr:GetDataByALType(id)
             if signInInfo and not signInInfo:CheckIsDone() and active ~= nil then
                 return true

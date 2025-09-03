@@ -18,6 +18,11 @@ function Skill1100070113:OnAttackOver(caster, target, data)
 	else
 		return
 	end
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
 	-- 1100070120
 	self:AddProgress(SkillEffect[1100070120], caster, self.card, data, 200)
 	-- 8063

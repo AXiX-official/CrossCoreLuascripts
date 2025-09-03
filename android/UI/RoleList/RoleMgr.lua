@@ -531,7 +531,7 @@ function this:CardUpdate(proto)
             end
         end
         -- EventMgr.Dispatch(EventType.Role_Card_Update)
-        self:UpdateCardEvent(CardUpdateType.DataUpdate, nil, _proto)
+        self:UpdateCardEvent(CardUpdateType.DataUpdate, nil, proto)
     end
 end
 

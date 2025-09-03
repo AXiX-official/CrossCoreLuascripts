@@ -2,7 +2,6 @@
 local this = 
 {
 eff_addition_pack={"u30250"},no_eff_ab=1,
-hit1={play_time=2000},
 cast2={play_time=7000,start_pos={ref_type=10},last_hit=5870},
 idle={play_time=2000},
 cast1={play_time=2800,start_pos={ref_type=2,offset_row=-150},feature=1,feature_camera_no_transform=1,last_hit=1550},

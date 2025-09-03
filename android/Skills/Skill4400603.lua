@@ -20,15 +20,8 @@ function Skill4400603:OnActionOver2(caster, target, data)
 	else
 		return
 	end
-	-- 8416
-	local count16 = SkillApi:BuffCount(self, caster, target,2,2,2)
-	-- 8108
-	if SkillJudger:Greater(self, caster, self.card, true,count16,0) then
-	else
-		return
-	end
 	-- 4400603
-	local targets = SkillFilter:Exception(self, caster, target, 4)
+	local targets = SkillFilter:All(self, caster, target, 4)
 	for i,target in ipairs(targets) do
 		self:OwnerAddBuff(SkillEffect[4400603], caster, target, data, 1044)
 	end
@@ -44,4 +37,23 @@ function Skill4400603:OnBorn(caster, target, data)
 	end
 	-- 4400606
 	self:OwnerAddBuff(SkillEffect[4400606], caster, self.card, data, 1041)
+end
+-- 暴击伤害前(OnBefourHurt之前)
+function Skill4400603:OnBefourCritHurt(caster, target, data)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8407
+	local count7 = SkillApi:GetAttr(self, caster, target,1,"speed")
+	-- 8408
+	local count8 = SkillApi:GetAttr(self, caster, target,2,"speed")
+	-- 4400613
+	self:AddTempAttr(SkillEffect[4400613], caster, caster, data, "crit",0.003*math.max(count7-count8,0))
 end

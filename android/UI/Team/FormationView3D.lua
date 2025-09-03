@@ -1152,17 +1152,17 @@ function Update()
 	-- 		end
 	-- 	end
 	
-	alphaCameraTimer = alphaCameraTimer + Time.deltaTime;
-	if alphaCameraTimer / alphaCameraInterval > 1 then
-		local cacheState = AplhaCamera.gameObject.activeSelf
-		if cacheState == true then
-			CSAPI.SetGOActive(AplhaCamera.gameObject,false)
-			alphaCameraTimer = 0
-		else
-			CSAPI.SetGOActive(AplhaCamera.gameObject,true)
-			alphaCameraTimer = alphaCameraInterval - 0.01
-		end
-	end
+	-- alphaCameraTimer = alphaCameraTimer + Time.deltaTime;
+	-- if alphaCameraTimer / alphaCameraInterval > 1 then
+	-- 	local cacheState = AplhaCamera.gameObject.activeSelf
+	-- 	if cacheState == true then
+	-- 		CSAPI.SetGOActive(AplhaCamera.gameObject,false)
+	-- 		alphaCameraTimer = 0
+	-- 	else
+	-- 		CSAPI.SetGOActive(AplhaCamera.gameObject,true)
+	-- 		alphaCameraTimer = alphaCameraInterval - 0.01
+	-- 	end
+	-- end
 end
 
 function ShowAplhaCameraWithTime(timeCache)

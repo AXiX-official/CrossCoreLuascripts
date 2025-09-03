@@ -705,6 +705,7 @@ function OnClickBtnOverLoad()
 
     local lastSkillItem = GetLastSkillItem();
     if(targetState)then        
+        selItem = nil;  
         if(selItem ~= lastSkillItem)then
             OnClickItem(lastSkillItem);                                  
         end    
