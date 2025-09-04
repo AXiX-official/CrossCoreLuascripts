@@ -40,6 +40,7 @@ function OnDestroy()
 end
 
 function Show(cfg, _elseData, callBack)
+    currCfg = cfg
     PlayInfoMove(cfg ~= nil, function()
         Refresh(cfg, _elseData, callBack)
         ShowAnim()
@@ -80,16 +81,22 @@ function SetItems(typeNames,path,callBack)
 end
 ------------------------------------------------多倍
 function IsShowDouble()
+    if not nolSize then
+        nolSize = CSAPI.GetRTSize(layout)
+    end
+    local x,y = nolSize[0],nolSize[1]
+    local isShowDouble = false
     if not currCfg or (currCfg.diff and currCfg.diff == 3) then -- 危险等级不显示双倍
-        return false
+        isShowDouble = false
+    else
+        local sectionData = DungeonMgr:GetSectionData(currCfg.group)
+        if sectionData and DungeonUtil.HasMultiDesc(sectionData:GetID())then
+            y = y - 80
+            isShowDouble = true
+        end
     end
-    local sectionData = DungeonMgr:GetSectionData(currCfg.group)
-    if sectionData and DungeonUtil.HasMultiDesc(sectionData:GetID())then
-        local size = CSAPI.GetRTSize(layout)
-        CSAPI.SetRTSize(layout,size[0],size[1] - 80)
-        return true
-    end
-    return false
+    CSAPI.SetRTSize(layout,x,y)
+    return isShowDouble
 end
 
 function CheckDouble(panel, cb)
@@ -196,6 +203,17 @@ function SetGOActive(panelName,goName,b)
     end
     CSAPI.SetGOActive(panel[goName].gameObject,b)
 end
+
+function GetPanelObj(panelName,goName)
+    if panelName == nil or panelName == "" then
+        return nil
+    end
+    local panel = infoUtil:GetPanel(panelName)
+    if panel == nil or panel[goName] == nil then
+        return nil
+    end
+    return panel[goName]
+end
 ------------------------------------------------按钮回调
 
 function SetClickCB(_cb1, _cb2,_cb3)
@@ -276,6 +294,7 @@ function PlayInfoMove(isShow, callBack)
             isInfoShow = false;
             CSAPI.SetGOActive(gameObject, false);
         end)
+        lastCfg = nil
     end
     PlayAnim(animTime)
 end

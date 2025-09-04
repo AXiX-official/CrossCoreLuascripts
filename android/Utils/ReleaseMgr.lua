@@ -12,6 +12,7 @@ end
 
 function this:ApplyRelease(keys)
     CSAPI.ApplyReleaseForce(keys);
+    LogError("apply")
 end
 
 function this:ReleaseSound()

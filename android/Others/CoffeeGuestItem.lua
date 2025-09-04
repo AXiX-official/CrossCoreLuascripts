@@ -10,7 +10,7 @@ local faceTime = nil
 local isOver = false
 
 function SetClickCB(_cb)
-    cb = _cb 
+    cb = _cb
 end
 
 function Awake()
@@ -121,18 +121,18 @@ function SetGuest()
 end
 
 function SetScore(isSuccess)
-    local imgScoreN = nil 
-    if(isSuccess)then
+    local imgScoreN = nil
+    if (isSuccess) then
         imgScoreN = guestCfg.score == 100 and "img_13_01" or "img_13_02"
-    else 
-        imgScoreN = CoffeeMgr:GetMissPoints()==100 and "img_13_03" or "img_13_04"
-        if(cb)then 
+    else
+        imgScoreN = CoffeeMgr:GetMissPoints() == 100 and "img_13_03" or "img_13_04"
+        if (cb) then
             cb()
-        end 
-    end 
+        end
+    end
     CSAPI.LoadImg(imgScore, "UIs/Coffee/" .. imgScoreN .. ".png", true, nil, true)
-    CSAPI.SetGOActive(imgScore,false)
-    CSAPI.SetGOActive(imgScore,true)
+    CSAPI.SetGOActive(imgScore, false)
+    CSAPI.SetGOActive(imgScore, true)
 end
 
 function SetFoodItems()
@@ -217,10 +217,7 @@ function ToOver()
     -- 
     SetScore(isSuccess)
     -- 退场
-    UIUtil:SetObjFade(node, 1, 0, nil, 900, 2000, 1)
-    -- todo
-    -- 下一个客人
-    FuncUtil:Call(function()
+    UIUtil:SetObjFade(node, 1, 0, function()
         if (gameObject == nil) then
             return
         end
@@ -237,5 +234,5 @@ function ToOver()
         CSAPI.SetGOActive(iconMask, false)
         CSAPI.SetGOActive(top, false)
         changeTime = mainCfg.changeTime
-    end, nil, 3000)
+    end, 900, 2000, 1)
 end
