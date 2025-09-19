@@ -53,7 +53,7 @@ jobs:
     - name: Unpack and Push
       if: steps.check-hash.outputs.changed == 'true'
       run: |
-        curl -L -o D:/a/CrossCoreLuascripts/studio.zip https://github.com/RazTools/Studio/releases/download/v1.00.00/net6.0-windows.zip
+        curl -L -o D:/a/CrossCoreLuascripts/studio.zip https://github.com/AXiX-official/Studio/releases/download/v1.38.10/net9.0-windows.zip
         Expand-Archive -Path D:/a/CrossCoreLuascripts/studio.zip -DestinationPath D:/a/CrossCoreLuascripts/studio
         git clone "https://${{ secrets.MY_TOKEN }}@github.com/AXiX-official/CrossCore-Auto-Lua.git" D:/a/CrossCoreLuascripts/tool
         python D:/a/CrossCoreLuascripts/tool/decrypt.py "D:/a/CrossCoreLuascripts/${{ matrix.filename }}"
