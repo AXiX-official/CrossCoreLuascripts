@@ -58,7 +58,7 @@ jobs:
         git clone "https://${{ secrets.MY_TOKEN }}@github.com/AXiX-official/CrossCore-Auto-Lua.git" D:/a/CrossCoreLuascripts/tool
         python D:/a/CrossCoreLuascripts/tool/decrypt.py "D:/a/CrossCoreLuascripts/${{ matrix.filename }}"
         mkdir D:/a/CrossCoreLuascripts/lua
-        D:/a/CrossCoreLuascripts/studio/AssetStudio.CLI.exe D:/a/CrossCoreLuascripts/${{ matrix.filename }}_decrypt D:/a/CrossCoreLuascripts/lua --game Normal --silent
+        D:/a/CrossCoreLuascripts/studio/net9.0-windows/AssetStudio.CLI.exe D:/a/CrossCoreLuascripts/${{ matrix.filename }}_decrypt D:/a/CrossCoreLuascripts/lua --game Normal --silent
         python D:/a/CrossCoreLuascripts/tool/sortFile.py D:/a/CrossCoreLuascripts/lua/TextAsset D:/a/CrossCoreLuascripts/CrossCoreLuascripts/${{ matrix.platform }} D:/a/CrossCoreLuascripts/tool/structure.json
 
     - name: Set Mail
