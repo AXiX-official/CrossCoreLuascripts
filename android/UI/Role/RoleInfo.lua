@@ -3,6 +3,8 @@ local timer = nil
 local isFirst = true
 isHideQuestionItem = true -- 外部调用
 
+local abMemorys = {}
+local abMemorys_ignore = nil
 local needToCheckMove = false
 function Awake()
     luaTextMove = LuaTextMove.New()
@@ -62,6 +64,9 @@ function OnDestroy()
 
     -- 停止上一段语音
     RoleAudioPlayMgr:StopSound()
+    -- ABMgr:ReleaseABAllWithViewName("RoleInfo")
+    -- ABMgr:ClearRecordsWithViewName("RoleInfo")
+
 end
 
 function Update()
@@ -112,6 +117,8 @@ function OnInit()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
     -- 红点刷新
     eventMgr:AddListener(EventType.RedPoint_Refresh, SetRed)
+    eventMgr:AddListener(EventType.Guide_RoleInfo_220040, Guide_220040)
+    eventMgr:AddListener(EventType.Guide_RoleInfo_230070, Guide_230070)
 end
 
 -- 降低 DC
@@ -226,6 +233,10 @@ function SetRole()
     -- end)
 
     CSAPI.SetGOActive(iconParent, false)
+
+    -- ABMgr:RecordABWithModelIDInto("RoleInfo",cardData:GetSkinID())
+    -- ABMgr:ReleaseABAutoWithViewName("RoleInfo")
+    RoleABMgr:ChangeByIDs("RoleInfo", {cardData:GetSkinID()})
     cardIconItem.Refresh(cardData:GetSkinID(), LoadImgType.RoleInfo, function(go)
         CSAPI.SetGOActive(iconParent, true)
         if (isFirst) then
@@ -467,7 +478,14 @@ function SetEquip()
         CSAPI.SetGOActive(equip, false)
         return
     end
-
+    if (isRealCard) then
+        local isOpen, lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special3")
+        CSAPI.SetGOActive(equipLock, not isOpen)
+        CSAPI.SetText(txtEquipLock, lockStr)
+        if (not isOpen) then
+            return
+        end
+    end
     local equipCoreSetting = isRealCard and EquipCoreSetting.Role or EquipCoreSetting.Search
     if (not equipCore) then
         ResUtil:CreateUIGOAsync("EquipCore/EquipCore", equip, function(go)
@@ -519,6 +537,10 @@ function SetSkills()
     end
     skillItems = skillItems or {}
     ItemUtil.AddItems("Role/RoleInfoSkillItem1", skillItems, ids, skillGrids, ClickSkillItemCB, 1, nil, CheckSkillsRed)
+
+    -- 
+    skillIsOpen, skillLockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special4")
+    CSAPI.SetGOActive(skillLock, not skillIsOpen)
 end
 function ClickSkillItemCB(index)
     CSAPI.OpenView("RoleSkillInfoView", {newSkillDatas[index], cardData}, 1)
@@ -548,6 +570,9 @@ function SetTalent()
     talentItems = talentItems or {}
     ItemUtil.AddItems("Role/RoleInfoTalentItem1", talentItems, talentDatas, talentGrids, ClickTalentItemCB, 1, cardData,
         CheckTalentRed)
+    -- 
+    talentIsOpen, talentLockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special20")
+    CSAPI.SetGOActive(talentLock, not talentIsOpen)
 end
 function CheckTalentRed()
     if (not isRealCard) then
@@ -580,24 +605,19 @@ function GetTalentData()
 end
 function ClickTalentItemCB(index)
     local _data = talentDatas[index]
-    if (_data.isOpen) then
-        if (_data.id) then
-            CSAPI.OpenView("RoleSkillInfoView", {talentDatas[index], cardData}, 2)
-        else
-            if (isRealCard) then
-                if (CheckIsFighting()) then
-                    return
-                end
-                CSAPI.OpenView("RoleCenter", {cardData}, "talent")
-            end
-        end
+    if (_data.isOpen and _data.id) then
+        CSAPI.OpenView("RoleSkillInfoView", {talentDatas[index], cardData}, 2)
     else
         if (isRealCard) then
             if (CheckIsFighting()) then
                 return
             end
-            CSAPI.OpenView("RoleCenter", {cardData}, "talent")
-        end
+        end 
+        if (not talentIsOpen) then
+            Tips.ShowTips(talentLockStr)
+            return
+        end 
+        CSAPI.OpenView("RoleCenter", {cardData}, "talent") 
     end
 end
 
@@ -791,6 +811,10 @@ function OnClickSkillDetail()
     if (not isRealCard) then
         return
     end
+    if (not skillIsOpen) then
+        Tips.ShowTips(skillLockStr)
+        return
+    end
     if (CheckIsFighting()) then
         return
     end
@@ -800,6 +824,10 @@ end
 -- 天赋界面
 function OnClickTalentDetail()
     if (not isRealCard) then
+        return
+    end
+    if (not talentIsOpen) then
+        Tips.ShowTips(talentLockStr)
         return
     end
     if (CheckIsFighting()) then
@@ -847,4 +875,19 @@ function OnClickVirtualkeysClose()
             topLua.OnClickBack();
         end
     end
+end
+
+function OnClickEquipLock()
+    local isOpen, lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special3")
+    if(not isOpen)then 
+        Tips.ShowTips(lockStr)
+    end 
+end
+
+function Guide_220040(isDo)
+    CSAPI.SetGOActive(btnGuide_220040,isDo)
+end
+
+function Guide_230070(isDo)
+    CSAPI.SetGOActive(btnGuide_230070,isDo)
 end

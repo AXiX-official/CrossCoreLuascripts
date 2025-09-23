@@ -22,9 +22,9 @@ function OnEnable()
     eventMgr:AddListener(EventType.Activity_Click, OnBtnCallBack);
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedPointRefresh)
     eventMgr:AddListener(EventType.Update_Everyday, OnDayRefresh)
-    eventMgr:AddListener(EventType.Acitivty_List_Pop,SetRightPanel)
-    eventMgr:AddListener(EventType.Activity_List_Panel_Refresh,OnPanelRefresh)
-    eventMgr:AddListener(EventType.Activity_List_Cfg_Change,OnPanelRefresh)
+    eventMgr:AddListener(EventType.Acitivty_List_Pop, SetRightPanel)
+    eventMgr:AddListener(EventType.Activity_List_Panel_Refresh, OnPanelRefresh)
+    eventMgr:AddListener(EventType.Activity_List_Cfg_Change, OnPanelRefresh)
 end
 
 function OnItemSelect(_type)
@@ -43,19 +43,21 @@ function OnBtnCallBack()
 end
 
 function OnRedPointRefresh()
-    if leftPanel then
+    if leftPanel and leftPanel.leftItems then
         for i, v in ipairs(leftPanel.leftItems) do
-            local isRed = ActivityMgr:CheckRed(datas[i]:GetID())
-            isRed = i == curIndex1 and false or isRed
-            v.SetRed(isRed)
+            if datas and datas[i] then
+                local isRed = ActivityMgr:CheckRed(datas[i]:GetID())
+                isRed = i == curIndex1 and false or isRed
+                v.SetRed(isRed)
+            end
         end
     end
 end
 
 function OnDayRefresh()
-    --清除弹出缓存
+    -- 清除弹出缓存
     ActivityPopUpMgr:ClearPopUpInfos()
-    
+
     UIUtil:ToHome()
 end
 
@@ -65,7 +67,7 @@ function OnPanelRefresh()
         curIndex = 0
         curIndex1 = 1
         InitLeftPanel()
-        CSAPI.SetGOActive(emptyObj,datas == nil or #datas < 1)
+        CSAPI.SetGOActive(emptyObj, datas == nil or #datas < 1)
     end
     SetRightPanel()
 end
@@ -81,7 +83,7 @@ function OnOpen()
         SetRightPanel(data and data.id)
     end
 
-    CSAPI.SetGOActive(emptyObj,datas == nil or #datas < 1)
+    CSAPI.SetGOActive(emptyObj, datas == nil or #datas < 1)
 end
 
 function InitLeftPanel()
@@ -93,12 +95,12 @@ function InitLeftPanel()
     local leftDatas = {}
     datas = ActivityMgr:GetArr(tonumber(group))
     if CSAPI.IsADV() then
-        if AdvBindingRewards.isHadReward==false then
+        if AdvBindingRewards.isHadReward == false then
             if #datas > 0 then
                 for i, v in ipairs(datas) do
-                    if v:GetID()==2001 then
-                        table.remove(datas,i)
-                        break;
+                    if v:GetID() == 2001 then
+                        table.remove(datas, i)
+                        break
                     end
                 end
             end
@@ -107,7 +109,7 @@ function InitLeftPanel()
     if #datas > 0 then
         for i, v in ipairs(datas) do
             if v:GetLeftInfos() then
-                table.insert(leftDatas,{v:GetLeftInfos()[1].id, v:GetLeftInfos()[1].path})
+                table.insert(leftDatas, {v:GetLeftInfos()[1].id, v:GetLeftInfos()[1].path})
             end
         end
     end
@@ -134,11 +136,11 @@ function RefreshPanel()
     if (isRefresh) then
         curIndex = curIndex1
         if (curItem) then
-            UIUtil:SetObjFade(curItem.gameObject,1,0,function ()
+            UIUtil:SetObjFade(curItem.gameObject, 1, 0, function()
                 CSAPI.SetGOActive(curItem.gameObject, false)
                 curItem = nil
                 SetRight()
-            end,200)
+            end, 200)
         else
             SetRight()
         end
@@ -157,15 +159,19 @@ function SetRight()
         if (rightItems[_data:GetID()]) then
             CSAPI.SetGOActive(rightItems[_data:GetID()].gameObject, true)
             rightItems[_data:GetID()].isFirst = false
-            rightItems[_data:GetID()].Refresh(_data, {cfg = _data:GetCfg()})
-            UIUtil:SetObjFade(rightItems[_data:GetID()].gameObject,0,1,nil,200)
+            rightItems[_data:GetID()].Refresh(_data, {
+                cfg = _data:GetCfg()
+            })
+            UIUtil:SetObjFade(rightItems[_data:GetID()].gameObject, 0, 1, nil, 200)
             curItem = rightItems[_data:GetID()]
         else
             if (_data:GetPath()) then
                 ResUtil:CreateUIGOAsync(_data:GetPath(), right, function(go)
                     local lua = ComUtil.GetLuaTable(go)
-                    lua.Refresh(_data, {cfg = _data:GetCfg()})
-                    UIUtil:SetObjFade(go,0,1,nil,200)
+                    lua.Refresh(_data, {
+                        cfg = _data:GetCfg()
+                    })
+                    UIUtil:SetObjFade(go, 0, 1, nil, 200)
                     rightItems[_data:GetID()] = lua
                     curItem = lua
                 end)
@@ -175,16 +181,16 @@ function SetRight()
         end
         curData = nil
 
-        PlayerPrefs.SetInt(PlayerClient:GetUid() .."_Activity_Red_" .. _data:GetID(),1)
+        PlayerPrefs.SetInt(PlayerClient:GetUid() .. "_Activity_Red_" .. _data:GetID(), 1)
         ActivityMgr:CheckRedPointData(_data:GetType())
     end
 end
 
 function ShowTop(_data)
     if _data:GetPath() and _data:GetType() == ActivityListType.Investment then
-        top.SetMoney({{ITEM_ID.DIAMOND,140001}})
+        top.SetMoney({{ITEM_ID.DIAMOND, 140001}})
     elseif _data:GetType() == ActivityListType.Exchange then
-        local info =_data:GetInfo() and _data:GetInfo()[1] or nil
+        local info = _data:GetInfo() and _data:GetInfo()[1] or nil
         local tab = {}
         if info and info.goodId then
             tab = {{info.goodId}}
@@ -196,7 +202,7 @@ function ShowTop(_data)
 end
 
 function ShowQusetion(_data)
-    local info =_data:GetInfo()
+    local info = _data:GetInfo()
     local isShow = false
     if info and info[1] and info[1].moduleInfo then
         UIUtil:AddQuestionItem(info[1].moduleInfo, gameObject, qusetion)

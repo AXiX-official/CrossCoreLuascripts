@@ -534,7 +534,7 @@ end
 function IsShowExchange()
     local isFragment=currPageData:ShowExchange();
     if currChildPage then --优先显示子页面的碎片兑换
-        return currChildPage.fragmentExchange==1;
+        return currChildPage.fragmentExchange~=nil;
     else
         return currPageData:ShowExchange();
     end
@@ -691,7 +691,7 @@ end
 --检测当前页面是否到关闭时间
 function CheckShopState()
     if data and currPageData and hasCloseTips==false then --有指定商店ID才做检测
-        if TimeUtil:GetTime()>currPageData:GetCloseTimeData()  and currPageData:GetCloseTimeData()~=0 then --商店已关闭
+        if TimeUtil:GetTime()>currPageData:GetCloseTimeData() and currPageData:GetCloseTimeData()~=0 then --商店已关闭
             --提示关闭
             local dialogData={
                content=LanguageMgr:GetTips(24001),
@@ -723,6 +723,7 @@ end
 
 --初始化刷新信息
 function InitRefreshInfo()
+    local lID=18011;
 	if currPageData~=nil and currPageData:GetCommodityType()==CommodityType.Rand then --随机道具才有刷新信息
         local canRefresh=ShopMgr:GetExChangeCanRefresh(shopID);
         CSAPI.SetGOActive(btnRefresh,canRefresh);
@@ -747,10 +748,19 @@ function InitRefreshInfo()
         SetTimeText(lastTime);
         CSAPI.SetGOActive(refreshObj,false);
         CSAPI.SetGOActive(txt_refreshTime2,true);
+    elseif currPageData~=nil and currChildPage~=nil and currChildPage.nEndTime~=nil and currChildPage.nEndTime>0 then
+        --新增固定商店二级界面存在关闭时间时显示倒计时
+        local lTime=currChildPage.nEndTime;
+        lastTime=lTime>TimeUtil:GetTime() and lTime-TimeUtil:GetTime() or 0; --计算剩余时间
+        SetTimeText(lastTime);
+        CSAPI.SetGOActive(refreshObj,false);
+        CSAPI.SetGOActive(txt_refreshTime2,true);
+        lID=18135
     else
 		CSAPI.SetGOActive(refreshObj,false);
         CSAPI.SetGOActive(txt_refreshTime2,false);
 	end
+    CSAPI.SetText(txt_refreshTips2,LanguageMgr:GetByID(lID));
 end
 
 function SetTimeText(time)
@@ -989,8 +999,14 @@ function OnClickExchange()
             end
         end
     end
+    local os=nil
+    if currChildPage then --优先显示子页面的碎片兑换
+        os=currChildPage.fragmentExchange;
+    else
+        os=currPageData:GetFragmentExchange();
+    end
     if lt and #lt>0 then
-        CSAPI.OpenView("RoleExchangeView",lt);
+        CSAPI.OpenView("RoleExchangeView",lt,os);
     else
         Tips.ShowTips(LanguageMgr:GetTips(15105));
     end
@@ -1003,6 +1019,11 @@ end
 
 --点击商品
 function OnClickGrid(lua)
+    if lua.data:GetType()==CommodityItemType.ChoiceCard and lua.data:GetCommodityList()==nil then
+        local cfg=lua.data:GetCfg();
+        CSAPI.OpenView("CreateSelectRolePanel",cfg.ChoicePoolId) --卡池自选界面
+        do return end;
+    end
     if CSAPI.IsADV() then
         if CSAPI.RegionalCode()==3 then
             if CSAPI.PayAgeTitle() and lua.data and lua.data:GetRealPrice() and lua.data:GetRealPrice()[1].id==-1 then
@@ -1065,9 +1086,9 @@ function OnBuyRet(proto)
                 BuryingPointMgr:TrackEvents("store_buy",record )
             end
         end
-        if comm:GetType()==CommodityItemType.MonthCard then --月卡
-            ClientProto:GetMemberRewardInfo();
-        end
+        -- if comm:GetType()==CommodityItemType.MonthCard then --月卡
+        --     ClientProto:GetMemberRewardInfo();
+        -- end
         --判断该页签是否为空
         if currPageData~=nil and currChildPage~=nil then
            local currList=currPageData:GetCommodityInfos(true,currChildPage.id);
@@ -1150,7 +1171,13 @@ function OnClickRefresh()
 end
 
 function OnClickCoreDetails()
-    CSAPI.OpenView("CoreExchangeDetails");
+    local os=nil
+    if currChildPage then --优先显示子页面的碎片兑换
+        os=currChildPage.fragmentExchange;
+    else
+        os=currPageData:GetFragmentExchange();
+    end
+    CSAPI.OpenView("CoreExchangeDetails",nil,os);
 end
 
 --检测商店页刷新

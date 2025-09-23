@@ -579,6 +579,10 @@ function this:Init()
     self.PetEmoji=ResIconUtil.New("PetEmoji");
     self.PetIcon=ResIconUtil.New("PetIcon");
 
+    --loveplus 爱相随
+    self.LovePlusImg = ResImgUtil.New("UIs/LovePlus"); --大图
+    self.LovePlus = ResIconUtil.New("LovePlus"); 
+    self.LovePlusShop = ResIconUtil.New("LovePlus/Shop"); 
     self.RogueSNum = ResIconUtil.New("RogueSNum") --战力派遣
 
     --扭蛋

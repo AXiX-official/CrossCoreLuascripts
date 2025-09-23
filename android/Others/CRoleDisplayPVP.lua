@@ -110,6 +110,8 @@ function SetMiddle()
     else 
         mulIconItem.Refresh(c_data:GetIDs()[1], LoadImgType.Main, nil, detail.live2d, c_data:IsShowShowImg(slot))
     end
+    
+    RoleABMgr:ChangeByIDs("CRoleDisplayPVP", c_data:GetIDs())
 end
 
 function SetBtns()

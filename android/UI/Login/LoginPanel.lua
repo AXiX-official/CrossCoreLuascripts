@@ -78,6 +78,7 @@ function Awake()
         isChannel = true;
     end
     if CSAPI.IsADV() or CSAPI.IsDomestic() then
+        CSAPI.IsAppReviewMode();
         CSAPI.SetGOActive(btn_Account, true);
         CSAPI.SetGOActive(btnAge, false)--台服关闭
 		CSAPI.SetGOActive(btn_ClientRepair, true);    else

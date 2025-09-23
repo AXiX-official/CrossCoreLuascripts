@@ -621,6 +621,8 @@ function OnSDKResult(_d)
 			local num=commodity:GetNum();
 			if num<=0 and num~=-1 then
 				Close();
+			else
+				RefreshPanel();
 			end
 		else
 			Close();
@@ -635,6 +637,8 @@ function OnQROver()
 		local num=commodity:GetNum();
 		if num<=0 and num~=-1 then
 			Close();
+		else
+			RefreshPanel();
 		end
 	else
 		Close();
@@ -655,6 +659,11 @@ function OnSuccess(proto)
 			else
 				ShowBuffTips();
 			end
+		end
+		commodity=ShopMgr:GetFixedCommodity(commodity:GetID());
+		local num=commodity:GetNum();
+		if num>0 or num==-1 then
+			RefreshPanel();
 		end
 	end
 end

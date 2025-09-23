@@ -524,6 +524,8 @@ this.Role_Captain_ToFirst = 170043  --队长排在最前面
 this.Role_LimitSkin_Refresh = 170044 --限时皮肤
 this.CreateRoleView_ShareBtn_SH = 170045 --构建展示界面分享按钮的显示与隐藏
 this.Choice_Card_Ret = 170046 --自选卡牌返回
+this.Guide_RoleInfo_220040 = 170047 --点击装备区域引导
+this.Guide_RoleInfo_230070 = 170048 --点击天赋区域引导
 ------------------------------------------主界面
 --切换显示状态
 this.Main_Menu_Show			= 180000;
@@ -702,6 +704,7 @@ this.Team_PresetName_Change = 190056;
 this.Bag_Update = 200000;
 this.Money_Update = 200001;
 this.Bag_SellQuality_Change = 200002;
+this.Goods_GiftFilter_GetRet=200003;--从材料箱中获取到符合需求数的材料时的返回
 
 ------------------------装备系统
 --卡牌装备有变化
@@ -1348,9 +1351,10 @@ this.Regression_Fund_Buy=630000 --回归基金购买
 ----------------------------------爱相随
 this.LovePlus_Chat_Update = 640000 --聊天数据更新
 this.LovePlus_Data_Update = 640001 --章节数据更新
-this.LovePlus_UnLock_Update =640002 --解锁数据更新
+this.LovePlus_Story_Update =640002 --剧情数据更新
 this.LovePlus_Spine_Select = 640003 --live2d动作选择
 this.LovePlus_Story_Select = 640004 --节点选中
+this.LovePlus_List_View_Change = 640005 -- 跳转界面
 ----------------------------------角斗场
 this.Colosseum_Refresh_Time = 650000 --时间刷新
 this.Colosseum_SelectCard = 650001 --选卡回调
@@ -1386,6 +1390,10 @@ this.MTB_Click_Dungeon=700001;--点击关卡
 this.MTB_Click_Reward=700002;--点击结算奖励
 this.MTB_Data_Update=700003;--活动数据更新
 
+--------------------------------猜谜活动
+this.Riddle_Data_Ret=710001;--猜谜活动数据返回
+this.Riddle_Draw_Ret=710002;--猜谜活动答题返回
+this.Riddle_Reward_Ret=710003;--猜谜活动领取奖励返回
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
 this.SDK_ShiryuSDK_Init=800001;

@@ -51,15 +51,16 @@ function this:GetFunc(sName)
         self.funcs["SpeicalJump"] = self.SpeicalJump
         self.funcs["AchievementView"] = self.Achievement
         self.funcs["RegressionList"] = self.RegressionList
-        self.funcs["LovePlus"] = self.LovePlus
+        self.funcs["LovePlusView"] = self.LovePlus
         self.funcs["TWWeb"] = self.TWWeb
         self.funcs["ColosseumView"] = self.ColosseumView
         self.funcs["BuffBattle"] = self.BuffBattle
         self.funcs["AnniversaryList"] = self.AnniversaryList
         self.funcs["MultTeamBattleMain"] = self.MultTeamBattle
-        self.funcs["CollaborationMain"]=self.CollaborationMain
-        self.funcs["MenuBuyPanel"]=self.MenuBuyPanel
-        self.funcs["LuckyGachaMain"]=self.LuckyGachaMain
+        self.funcs["CollaborationMain"] = self.CollaborationMain
+        self.funcs["MenuBuyPanel"] = self.MenuBuyPanel
+        self.funcs["LuckyGachaMain"] = self.LuckyGachaMain
+        self.funcs["SkinRebate"] = self.SkinRebate
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -434,6 +435,16 @@ function this.CollaborationMain(cfg)
     end
 end
 
+function this.SkinRebate(cfg)
+    local state, lockStr = this.SkinRebateState(cfg);
+    if state == JumpModuleState.Normal then
+        this.CheckClose(cfg);
+        CSAPI.OpenView(cfg.sName, cfg.val1)
+    elseif state == JumpModuleState.Close then
+        Tips.ShowTips(lockStr)
+    end
+end
+
 -- 返回获取跳转状态的方法名
 function this:GetStateFunc(sName)
     if (self.stateFuncs == nil) then
@@ -453,6 +464,7 @@ function this:GetStateFunc(sName)
         self.stateFuncs["MultTeamBattleMain"]=self.MultTeamBattleState
         self.stateFuncs["CollaborationMain"]=self.CollaborationMainState
         self.stateFuncs["LuckyGachaMain"]=self.LuckyGachaMainState
+        self.stateFuncs["SkinRebateState"] = self.SkinRebateState
     end
     if (self.stateFuncs[sName]) then
         return self.stateFuncs[sName]
@@ -721,6 +733,15 @@ function this.LuckyGachaMainState(cfg)
        return JumpModuleState.Normal;
     else
        return JumpModuleState.Close,LanguageMgr:GetTips(24003);
+    end
+end
+
+function this.SkinRebateState(cfg)
+    local isOpen = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+    if isOpen then
+        return JumpModuleState.Normal
+    else
+        return JumpModuleState.Close, LanguageMgr:GetTips(24003)
     end
 end
 

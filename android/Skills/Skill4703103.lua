@@ -18,31 +18,9 @@ function Skill4703103:OnActionOver(caster, target, data)
 end
 -- 伤害后
 function Skill4703103:OnAfterHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8723
-	local count723 = SkillApi:GetCount(self, caster, target,3,4703101)
-	-- 8935
-	if SkillJudger:GreaterEqual(self, caster, self.card, true,count723,3) then
-	else
-		return
-	end
-	-- 4703107
-	if self:Rand(5000) then
-		self:AlterBufferByID(SkillEffect[4703107], caster, target, data, 1003,1)
-		-- 4703108
-		if self:Rand(5000) then
-			self:AlterBufferByID(SkillEffect[4703108], caster, target, data, 1051,1)
-		end
-	end
+	-- 4703112
+	self:tFunc_4703112_4703107(caster, target, data)
+	self:tFunc_4703112_4703108(caster, target, data)
 end
 -- 攻击结束
 function Skill4703103:OnAttackOver(caster, target, data)
@@ -89,4 +67,50 @@ function Skill4703103:OnBefourCritHurt(caster, target, data)
 	end
 	-- 4703106
 	self:AddTempAttr(SkillEffect[4703106], caster, self.card, data, "crit_rate",0.15)
+end
+function Skill4703103:tFunc_4703112_4703107(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8723
+	local count723 = SkillApi:GetCount(self, caster, target,3,4703101)
+	-- 8935
+	if SkillJudger:GreaterEqual(self, caster, self.card, true,count723,3) then
+	else
+		return
+	end
+	-- 4703107
+	if self:Rand(5000) then
+		self:AlterBufferByID(SkillEffect[4703107], caster, target, data, 1003,1)
+	end
+end
+function Skill4703103:tFunc_4703112_4703108(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8723
+	local count723 = SkillApi:GetCount(self, caster, target,3,4703101)
+	-- 8935
+	if SkillJudger:GreaterEqual(self, caster, self.card, true,count723,3) then
+	else
+		return
+	end
+	-- 4703108
+	if self:Rand(5000) then
+		self:AlterBufferByID(SkillEffect[4703108], caster, target, data, 1051,1)
+	end
 end

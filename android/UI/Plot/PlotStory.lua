@@ -72,6 +72,7 @@ function RefreshLovePlus()
 	local index = 1;
 	items = {}
 	fade:Play(0, 1, 250, 0,AnimEnd)
+	local readOptions = {} 
 	while(plot:GetNextPlotInfo() ~= nil) do
 		if plot:GetContent() ~= nil and plot:GetShowStory() ~= nil then
 			ResUtil:CreateUIGOAsync("Plot/PlotStoryItem", Content, function(go)
@@ -89,8 +90,10 @@ function RefreshLovePlus()
 			if options ~= nil then			
 				if #options > 1 then
 					for i, v in ipairs(options) do
-						if LovePlusMgr:IsPlotRead(v:GetID()) then
+						if LovePlusMgr:IsPlotRead(v:GetID()) and readOptions[v:GetID()] == nil then
+							readOptions[v:GetID()] = 1
 							plot = v
+							break
 						end
 					end
 				else
@@ -113,10 +116,9 @@ function RefreshLovePlus()
 		end
 	end
 	
+	CSAPI.SetRTSize(Content, 0, math.abs(currY));
 	if index > 4 then
 		CSAPI.SetAnchor(Content, 0, math.abs(currY) - 956)
-	else
-		CSAPI.SetRTSize(Content, 0, math.abs(currY));
 	end
 end
 

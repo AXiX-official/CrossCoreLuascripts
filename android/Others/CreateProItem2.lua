@@ -16,7 +16,9 @@ function Update()
 end
 
 -- _ids 当前选择的
-function Refresh(cfg, _ids)
+function Refresh(cfg, elseData)
+    local ids = elseData[1]
+    local poolID = elseData[2]
     local cardCfg = Cfgs.CardData:GetByID(cfg.id)
     cfgID = cardCfg.id
 
@@ -26,7 +28,7 @@ function Refresh(cfg, _ids)
     local modelCfg = Cfgs.character:GetByID(cardCfg.model)
     LoadIcon(modelCfg.icon)
     -- pickup
-    --CSAPI.SetGOActive(pickup, cfg.desc ~= nil)
+    -- CSAPI.SetGOActive(pickup, cfg.desc ~= nil)
     -- name
     needToCheckMove = false
     CSAPI.SetText(txtName, cardCfg.name)
@@ -36,10 +38,13 @@ function Refresh(cfg, _ids)
     ResUtil.CardBorder:Load(imgStar, "img_101_0" .. cardCfg.quality)
     -- 
     local b = false
-    if (_ids) then
-        b = _ids[cfgID] ~= nil
+    if (ids) then
+        b = ids[cfgID] ~= nil
     end
     CSAPI.SetGOActive(select, b)
+    -- 
+    local isFirstS = CreateMgr:CheckISSelectCard(poolID, cfgID)
+    CSAPI.SetGOActive(imgGoods, isFirstS)
 end
 
 -- 加载框
@@ -58,7 +63,7 @@ function LoadIcon(iconName)
 end
 
 function OnClick()
-    if (cb~=nil) then
+    if (cb ~= nil) then
         cb(cfgID)
     else
         local cardData = RoleMgr:GetMaxFakeData(cfgID)

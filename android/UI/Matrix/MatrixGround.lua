@@ -145,9 +145,37 @@ function InitBuildingUI()
                 ResUtil:CreateUIGOAsync("Matrix/MatrixBuildingUI", matrixViewTab.buildingUIParent, function(go)
                     local item = ComUtil.GetLuaTable(go)
                     SetUIPos(go, this["b" .. v.id], v.id)
+                    item.SetClickCB(ItemClickCB)
                     item.Refresh(v)
                     buildingUIItems[v.id] = item
                 end)
+            end
+        end
+    end
+end
+
+function ItemClickCB(cfgId,data,buildingState)
+    if(clickTimer and Time.time<clickTimer)then 
+       return
+    end 
+    clickTimer = Time.time+1 --防止同时点击
+    if (cfgId == Dorm_CfgID) then
+        CSAPI.OpenView("DormRoom") -- todo 需要后端加入建造
+    else
+        if (data) then
+            -- 已建造/建造中
+            if (buildingState == nil or buildingState ~= MatrixBuildingType.Create) then
+                EventMgr.Dispatch(EventType.Matrix_Indoor_Change, {"MatrixBuilding", data})
+            end
+        else
+            -- 未建造
+            local isOpen, str = MatrixMgr:CheckCreate(cfgId)
+            if (isOpen) then
+                CSAPI.OpenView("MatrixCreateInfo", cfgId)
+            else
+                if (str) then
+                    Tips.ShowTips(str)
+                end
             end
         end
     end

@@ -7,11 +7,11 @@ function Refresh(_d,_elseData)
 	isClick=false;
 	this.data=_d;
 	if this.data then
-		this.sourceData=this.data;
 		local useNum=_d.num;
-		if _elseData and _elseData.isSelect then
+		if _elseData then
 			isClick=_elseData.isSelect
-			useNum=_elseData.useNum*_d.num;--被选中的格子自动计算当前数量
+			local baseNum=_elseData.useNum or 0;
+			useNum=baseNum*_d.num;--被选中的格子自动计算当前数量
 		end
 		local d={id=_d.id,num=useNum,type=_d.type};
 		local goodsData, clickCB = GridFakeData(d,true)

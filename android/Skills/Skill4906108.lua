@@ -26,5 +26,5 @@ function Skill4906108:OnActionOver(caster, target, data)
 		return
 	end
 	-- 4906108
-	self:AddUplimitBuff(SkillEffect[4906108], caster, self.card, data, 3,3,4906105,1,4906105)
+	self:AddUplimitBuff(SkillEffect[4906108], caster, self.card, data, 3,3,4906104,1,4906104)
 end

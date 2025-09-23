@@ -573,24 +573,24 @@ function this:InitDungeonGroupDatas()
     end
 end
 
---获取关卡祖
+-- 获取关卡祖
 function this:GetDungeonGroupData(id)
     return self.dungeonGroupDatas and self.dungeonGroupDatas[id]
 end
 
---获取同一章节的关卡祖
+-- 获取同一章节的关卡祖
 function this:GetDungeonGroupDatas(group, ishard)
     local datas = {}
     if self.dungeonGroupDatas then
         for _, data in pairs(self.dungeonGroupDatas) do
             if data:GetGroup() == group then
                 data:SetHard(ishard)
-                table.insert(datas,data)
+                table.insert(datas, data)
             end
         end
     end
     if #datas > 0 then
-        table.sort(datas,function (a,b)
+        table.sort(datas, function(a, b)
             return a:GetID() < b:GetID()
         end)
     end
@@ -608,7 +608,7 @@ function this:GetDungeonGroupCfg(gid)
     end
 end
 
-function this:GetMainSectionStar(id,hardLv)
+function this:GetMainSectionStar(id, hardLv)
     local sectionData = self.sectionDatas[id]
     local starNums = 0
     hardLv = hardLv or 1
@@ -630,23 +630,23 @@ end
 -- 每周关卡开启状态
 function this:IsTowerOpen(id)
     local cfg = Cfgs.MainLine:GetByID(id)
-    if(cfg and cfg.nStartTime and cfg.nEndTime)then
+    if (cfg and cfg.nStartTime and cfg.nEndTime) then
         local _startTime = GCalHelp:GetTimeStampBySplit(cfg.nStartTime)
         local _endTime = GCalHelp:GetTimeStampBySplit(cfg.nEndTime)
-        if(TimeUtil:GetTime()>= _startTime and TimeUtil:GetTime()< _endTime)then
+        if (TimeUtil:GetTime() >= _startTime and TimeUtil:GetTime() < _endTime) then
             return true
         end
     else
         return true
     end
-	return false
+    return false
 end
 
---更新塔数据
+-- 更新塔数据
 function this:UpdateTowerData(proto)
     local data = nil
     if proto then
-        data ={}
+        data = {}
         data.resetTime = proto.nTowerResetTime or -1
         data.max = proto.nTowerCeiling or 0
         data.cur = proto.nTowerCurrent or 0
@@ -655,12 +655,12 @@ function this:UpdateTowerData(proto)
     EventMgr.Dispatch(EventType.Tower_Update_Data, data)
 end
 
---获取塔数据
+-- 获取塔数据
 function this:GetTowerData()
     return self.towerRewardData
 end
 
---变更塔数据
+-- 变更塔数据
 function this:AddTowerCur(num)
     if self.towerRewardData then
         self.towerRewardData.cur = self.towerRewardData.cur + num < self.towerRewardData.max and self.towerRewardData.cur + num or self.towerRewardData.max
@@ -689,28 +689,28 @@ function this:InitActivityOpenInfos()
     end
 end
 
---添加活动开启信息 1-战场 2-剧情活动 3-讨伐活动
+-- 添加活动开启信息 1-战场 2-剧情活动 3-讨伐活动
 function this:AddActivityOpenInfo(proto)
     self:InitActivityOpenInfos()
     if proto and proto.id then
         if self.ActiveOpenInfos[proto.id] then
             self.ActiveOpenInfos[proto.id]:Init(proto)
         end
-        EventMgr.Dispatch(EventType.Activity_Open_Refresh,proto.id)
+        EventMgr.Dispatch(EventType.Activity_Open_Refresh, proto.id)
     end
 end
 
---获取所有活动开启信息
+-- 获取所有活动开启信息
 function this:GetActiveOpenInfos()
     return self.ActiveOpenInfos
 end
 
---获取活动开启信息
+-- 获取活动开启信息
 function this:GetActiveOpenInfo(_id)
     return self.ActiveOpenInfos and self.ActiveOpenInfos[_id]
 end
 
---获取活动开启信息 --章节id
+-- 获取活动开启信息 --章节id
 function this:GetActiveOpenInfo2(_id)
     if self.ActiveOpenInfos then
         for k, v in pairs(self.ActiveOpenInfos) do
@@ -721,19 +721,19 @@ function this:GetActiveOpenInfo2(_id)
     end
 end
 
---活动开启
+-- 活动开启
 function this:IsActiveOpen(_id)
     local openInfo = self:GetActiveOpenInfo(_id)
     return openInfo and openInfo:IsOpen()
 end
 
---活动开启 --章节id
+-- 活动开启 --章节id
 function this:IsActiveOpen2(_id)
     local openInfo = self:GetActiveOpenInfo2(_id)
     return openInfo and openInfo:IsOpen()
 end
 
---活动副本开启
+-- 活动副本开启
 function this:IsActiveDungeonOpen(_id)
     local openInfo = self:GetActiveOpenInfo(_id)
     return openInfo and openInfo:IsDungeonOpen()
@@ -792,7 +792,7 @@ function this:ApplyEnter(id, indexList, duplicateTeamDatas)
     if (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueS) then -- 直接进入战斗的副本
         FightProto:EnterRogueSFight()
     elseif (dungeonCfg and dungeonCfg.type == eDuplicateType.RogueT) then -- 直接进入战斗的副本
-        FightProto:EnterRogueTFight(duplicateTeamDatas)      
+        FightProto:EnterRogueTFight(duplicateTeamDatas)
     elseif dungeonCfg and dungeonCfg.nGroupID ~= nil and dungeonCfg.nGroupID ~= "" then -- 直接进入战斗的副本
         self:SetFightTeamId(indexList[1]); -- 设置正在战斗中的队伍id
 
@@ -820,8 +820,8 @@ function this:ApplyEnter(id, indexList, duplicateTeamDatas)
     end});
 end
 
---积分战斗
-function this:ApplyBuffBattle(id, indexList, duplicateTeamDatas,buffs)
+-- 积分战斗
+function this:ApplyBuffBattle(id, indexList, duplicateTeamDatas, buffs)
     indexList = indexList or {};
     duplicateTeamDatas = duplicateTeamDatas or {};
     -- 发送协议, 请求进入副本
@@ -830,7 +830,7 @@ function this:ApplyBuffBattle(id, indexList, duplicateTeamDatas,buffs)
         nDuplicateID = id, -- 副本id
         data = indexList, -- 队伍id
         list = duplicateTeamDatas, -- 编队信息
-        buffs = buffs --选中的buff
+        buffs = buffs -- 选中的buff
     }
     local dungeonCfg = Cfgs.MainLine:GetByID(id);
     -- LogError(data.list)
@@ -1402,10 +1402,10 @@ function this:GetDungeonViewOffset()
 end
 
 function this:GetHardPath()
-    return "Dungeon_HardInfo_" .. PlayerClient:GetUid() ..".txt"
+    return "Dungeon_HardInfo_" .. PlayerClient:GetUid() .. ".txt"
 end
 
---设置章节难度 id:sectionId
+-- 设置章节难度 id:sectionId
 function this:SetDungeonHardLv(id, hardlv)
     if not id then
         return
@@ -1473,7 +1473,7 @@ end
 -- 记录AI战斗
 function this:AddAIFightRewards(rewards)
     self.AIRewards = self.AIRewards or {};
-    if rewards~=nil then
+    if rewards ~= nil then
         for key, val in ipairs(rewards) do
             if val.type == RandRewardType.ITEM or val.type == null then
                 local info = self.AIRewards[val.id];
@@ -1520,7 +1520,7 @@ function this:CurrSectionIsMainLine()
     return false;
 end
 
---获取当前副本类型
+-- 获取当前副本类型
 function this:GetCurrDungeonType()
     if self.currId then
         local cfgDungeon = Cfgs.MainLine:GetByID(self.currId)
@@ -1551,7 +1551,7 @@ function this:AIMoveBtnShow()
     return PlayerPrefs.GetInt("AIMove_ShowBtn") > 0
 end
 
---第一次提示双倍开启
+-- 第一次提示双倍开启
 function this:GetFisrtOpenDouble()
     return self.firstOpenDouble
 end
@@ -1576,36 +1576,33 @@ end
 
 function this:IsActivityRed(isUpdate)
     local isRed = DungeonMgr:CheckActivityRed(isUpdate)
-
-    if not isRed then --十二星宫
-        isRed = MissionMgr:CheckRed({eTaskType.StarPalace})
-    end
-
-    if not isRed then --旧爬塔
-        isRed = MissionMgr:CheckRed({eTaskType.TmpDupTower,eTaskType.DupTower})
-    end
-
-    if not isRed then --乱序
-        isRed = RogueMgr:IsRed()
-    end
-
-    if not isRed then --战力派遣
-        isRed = RogueSMgr:IsRed()
-    end
-    if not isRed then --能力测验
-        isRed = RogueTMgr:IsRed()
-    end
-    -- if not isRed then
-    --     isRed = ColosseumMgr:IsRed()
-    -- end
-
-    if not isRed then --世界boss
-        isRed = GlobalBossMgr:IsRed()
-    end
     if not isRed then
-        isRed=MultTeamBattleMgr:IsRed()
+        local sectionDatas = DungeonActivityMgr:GetSectionDatasByType(true)
+        if #sectionDatas > 0 then
+            for type, datas in ipairs(sectionDatas) do
+                if datas[1]:GetOpen() then
+                    if type == SectionActivityType.Rogue and
+                        (RogueMgr:IsRed() or RogueSMgr:IsRed() or RogueTMgr:IsRed()) then
+                        isRed = true
+                        break
+                    elseif type == SectionActivityType.GlobalBoss and GlobalBossMgr:IsRed() then
+                        isRed = true
+                        break
+                    elseif type == SectionActivityType.MultTeamBattle and MultTeamBattleMgr:IsRed() then
+                        isRed = true
+                        break
+                    elseif type == SectionActivityType.TotalBattle and MissionMgr:CheckRed({eTaskType.StarPalace}) then
+                        isRed = true
+                        break
+                    elseif type == SectionActivityType.Tower and
+                        MissionMgr:CheckRed({eTaskType.TmpDupTower, eTaskType.DupTower}) then
+                        isRed = true
+                        break
+                    end
+                end
+            end
+        end
     end
-
     return isRed
 end
 
@@ -1621,7 +1618,7 @@ function this:CheckActivityRed(isUpdate)
                     local redData1 = RedPointMgr:GetData("ActiveEntry" .. openCfg.id)
                     local redData2 = DungeonActivityMgr:CheckRed(cfg.sectionID) and 1 or nil
                     if redData1 ~= redData2 and isUpdate then
-                        RedPointMgr:UpdateData("ActiveEntry" .. openCfg.id,redData2)
+                        RedPointMgr:UpdateData("ActiveEntry" .. openCfg.id, redData2)
                     end
                     if not isRed and redData2 ~= nil then
                         isRed = true
@@ -1638,14 +1635,16 @@ function this:IsMainLineRed()
 end
 
 function this:IsExerciseRed()
-    if not MenuMgr:CheckModelOpen(OpenViewType.main, "ExerciseLView") then
-        return false
+    local isRed = false
+
+    -- 角斗场
+    local isOpen = MenuMgr:CheckModelOpen(OpenViewType.main, "ExerciseLView")
+    local sectionData = DungeonMgr:GetSectionData(13001)
+    if isOpen and sectionData and sectionData:GetOpen() then
+        isRed = ColosseumMgr:IsRed()
     end
 
-    if DungeonMgr:GetSectionData(13001) and not  DungeonMgr:GetSectionData(13001):GetOpen() then
-        return false
-    end
-    return ColosseumMgr:IsRed()
+    return isRed
 end
 
 function this:IsDailyRed()
@@ -1655,7 +1654,7 @@ end
 ---------------------------------------------new---------------------------------------------
 -- 获取new 
 function this:GetIsNew(id)
-    if  not self:IsDungeonOpen(id) then
+    if not self:IsDungeonOpen(id) then
         return false
     end
     local newInfo = FileUtil.LoadByPath("Dungeon_new_Info" .. PlayerClient:GetUid() .. ".txt") or {}
@@ -1665,7 +1664,7 @@ function this:GetIsNew(id)
     return newInfo[id] == 1
 end
 
---设置new
+-- 设置new
 function this:SetIsNew(id, b)
     if id == nil then
         return

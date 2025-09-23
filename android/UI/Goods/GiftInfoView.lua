@@ -4,24 +4,35 @@ local rewardCfg = nil;
 local items=nil;
 local selectID=nil;
 local layout=nil;
-local useNum=1;
+local useNum=0;
 local maxNum=0;
 local minNum = 1;--最少使用数量
+local needUseNum=0;--本次需求量
+local needNum=0;
+local needCfgId=nil;
+local targetNum=0;--使用单个礼包时获取目标物品的数量
+local curUseList={
+
+}
+-- local eventMgr=nil;
 
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV");
-	layout:Init("UIs/Common/GridChoosieItem",LayoutCallBack,true)
+	layout:Init("UIs/Goods/GiftSelectItem",LayoutCallBack,true)
+	-- eventMgr = ViewEvent.New();
+	-- eventMgr:AddListener(EventType.Bag_Update, OnBagChange);
 end
+
+-- function OnDestroy()
+-- 	eventMgr:ClearListener();
+-- end
 
 function LayoutCallBack(index)
 	local _data = curDatas[index]
 	local grid=layout:GetItemLua(index);
-	local elseData={isSelect=false,useNum=useNum};
-	if selectID==_data.cfg.index then
-		elseData={isSelect=true,useNum=useNum};
-	end
+	local elseData={isSelect=false,useNum=curUseList[_data.cfg.index] or 0,maxNum=maxNum-useNum,item=item};
 	grid.Refresh(_data,elseData);
-	grid.SetClickCB(OnClickGridChoosieItem);
+	grid.SetClickCB(OnChoosieNumChange);
 end
 
 function OnOpen()
@@ -29,6 +40,13 @@ function OnOpen()
 		if data ~= nil then
 			item = data.info;
 			rewardCfg = data.rewardCfg;
+			needCfgId=data.needCfgId;
+			needNum=data.needNum;
+			if needCfgId then
+				targetNum=BagMgr:GetCount(needCfgId)+needNum;
+			else
+				targetNum=0;
+			end
 			SetData();
 			CSAPI.SetText(txt_title,item:GetName());
 			CSAPI.SetGOActive(btn_open,data.showBtn);
@@ -40,6 +58,7 @@ end
 function SetData()
 	--初始化礼品礼包中的物品
 	curDatas={};
+	curUseList={}
 	LoadCfgs(rewardCfg,1);
 end
 
@@ -53,6 +72,10 @@ function LoadCfgs(cfg,count)
 						local rCfg = Cfgs.RewardInfo:GetByID(v.id);
 						LoadCfgs(rCfg,v.count);
 					else
+						if needCfgId and needNum>0 and v.id==needCfgId then
+							needUseNum=math.floor(needNum/v.count+0.5);
+							selectID=k;
+						end
 						table.insert(curDatas,{id=v.id,type=v.type,num=v.count,cfg=v});
 					end
 				end
@@ -61,10 +84,14 @@ function LoadCfgs(cfg,count)
 			local list=cfg.item;
 			if list then
 				for k,v in ipairs(list) do
+					if needCfgId and needNum>0 and v.id==needCfgId then
+						needUseNum=math.floor(needNum/v.count+0.5);
+						selectID=k;
+					end
 					table.insert(curDatas,{id=v.id,type=v.type,num=v.count,cfg=v});
 				end
 			end
-		else	--随机
+		else	--随机，随机不做需求判定
 			table.insert(curDatas,{id=cfg.id,type=cfg.type,num=count,cfg=cfg});
 		end
 	end
@@ -74,14 +101,34 @@ end
 function Refresh()
 	maxNum=item:GetCount()<g_MaxUseItem and item:GetCount() or g_MaxUseItem;
 	CSAPI.SetText(txt_currNum,tostring(item:GetCount()));
-	CSAPI.SetText(txt_num, tostring(useNum));
-	layout:IEShowList(#curDatas);
+	if needNum and needNum>0 and needCfgId~=nil and needUseNum~=0 then
+		CSAPI.SetGOActive(needObj,true);
+		CSAPI.SetText(txtNeedNum,LanguageMgr:GetByID(24048,needUseNum));
+		curUseList[selectID]=needUseNum;--需要的数量
+		useNum=maxNum>=needUseNum and needUseNum or maxNum;
+	else
+		CSAPI.SetGOActive(needObj,false);
+	end
+	-- LogError(needUseNum.."\t"..tostring(needNum).."\t"..tostring(needCfgId).."\t"..tostring(useNum))
+	CSAPI.SetText(txt_useNum, tostring(useNum).."/"..tostring(maxNum));
+	if selectID then
+		layout:IEShowList(#curDatas,nil,selectID);
+	else
+		layout:IEShowList(#curDatas)
+	end
 end
 
---点击礼包中的物品
-function OnClickGridChoosieItem(item)
-	selectID=item.sourceData.cfg.index;
-	layout:UpdateList();
+--礼包数量变更
+function OnChoosieNumChange(lua)
+	if lua then
+		curUseList[lua.data.cfg.index]=lua.GetChoosieNum();
+		useNum=0;
+		for k, v in pairs(curUseList) do
+			useNum=useNum+v;
+		end
+		CSAPI.SetText(txt_useNum, tostring(useNum).."/"..tostring(maxNum));
+		layout:UpdateList();
+	end
 end
 
 function OnClickAnyWay()
@@ -98,7 +145,7 @@ end
 
 --点击购买
 function OnClickOpen()
-	if selectID~=nil then
+	if next(curUseList)~=nil and useNum>0 then
 		local index=nil;
 		local id= item:GetID();
 		local data=item:GetData();
@@ -106,13 +153,20 @@ function OnClickOpen()
 			index=data.get_infos[1].index;
 			id=item:GetCfg().to_item_id;
 		end
+		local list={};
+		for k, v in pairs(curUseList) do
+			table.insert(list,{
+				id=id,
+				ix=index,
+				cnt=v,
+				arg1=k,
+			});
+		end
 		--打开礼包
-		PlayerProto:UseItem({
-			id=id,
-			ix=index,
-			cnt=useNum,
-			arg1=selectID,
-		}, true);
+		PlayerProto:UseItemList(list, true,OnUseRet);
+		if needUseNum>0 and needCfgId~=nil then
+			do return end
+		end
 		Close();
 	else
 		Tips.ShowTips(LanguageMgr:GetByID(24028))
@@ -176,6 +230,34 @@ function OnClickMin()
 	-- SetBtnState(addBtn, addImg, useNum < maxNum);
 	CSAPI.SetText(txt_useNum, tostring(useNum));	
 	layout:UpdateList();
+end
+
+function OnUseRet(proto)
+	-- if proto and proto.gets and needCfgId and needCfgId==proto.id then
+	-- 	for k, v in ipairs(proto.gets) do
+	-- 		if needCfgId==v.id then
+	-- 			needNum=needNum-v.num;
+	-- 		end
+	-- 	end
+	-- 	needNum=needNum<=0 and 0 or needNum;
+	if proto and proto.infos and needCfgId then
+		-- needUseNum=needUseNum-proto.info.cnt;
+		-- needUseNum=needUseNum>0 and needUseNum or 0;
+		local count=BagMgr:GetCount(needCfgId);
+		needNum=count>=targetNum and 0 or targetNum-count; 
+		item=BagMgr:GetFakeData(item:GetID());
+		EventMgr.Dispatch(EventType.Goods_GiftFilter_GetRet,needNum)
+		if item:GetCount()<=0 or needNum<=0 then
+			Close();
+			do return end;
+		end
+	end
+	SetData();
+	Refresh();
+end
+
+function OnClickQuestion()
+	Tips.ShowTips(LanguageMgr:GetTips(16012));
 end
 
 ----#Start#----

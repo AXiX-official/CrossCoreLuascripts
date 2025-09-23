@@ -53,6 +53,7 @@ end
 
 function OnOpen()
     mainCfg = Cfgs.CfgCoffeeMain:GetByID(1)
+    LanguageMgr:SetText(txtTime, 78008, math.ceil(mainCfg.len or 60))
     -- 顾客 
     SetGuest()
     -- 菜品
@@ -90,6 +91,7 @@ function Update()
             startTime = nil
             CSAPI.SetGOActive(startBg, false)
             len = mainCfg.len or 60
+            LanguageMgr:SetText(txtTime, 78008, math.ceil(len))
             ToStart()
         end
     elseif (not isStop and len ~= nil) then

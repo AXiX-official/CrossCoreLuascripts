@@ -12,8 +12,8 @@ function Skill600500401:OnBefourHurt(caster, target, data)
 	self:tFunc_600500403_600500401(caster, target, data)
 	self:tFunc_600500403_600500402(caster, target, data)
 end
--- 攻击结束
-function Skill600500401:OnAttackOver(caster, target, data)
+-- 行动结束
+function Skill600500401:OnActionOver(caster, target, data)
 	-- 8841
 	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.01) then
 	else
@@ -36,10 +36,27 @@ function Skill600500401:OnAttackOver(caster, target, data)
 	-- 600500407
 	self:DelBufferForce(SkillEffect[600500407], caster, target, data, 6115)
 end
--- 入场时
-function Skill600500401:OnBorn(caster, target, data)
-	-- 600500406
-	self:AddBuff(SkillEffect[600500406], caster, self.card, data, 6115)
+-- 死亡时
+function Skill600500401:OnDeath(caster, target, data)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 93002
+	if SkillJudger:CheckCD(self, caster, target, false) then
+	else
+		return
+	end
+	-- 8253
+	if SkillJudger:IsLive(self, caster, target, false) then
+	else
+		return
+	end
+	-- 600500408
+	self:PassiveRevive(SkillEffect[600500408], caster, target, data, 2,1,{progress=1002})
+	-- 93005
+	self:ResetCD(SkillEffect[93005], caster, target, data, 99)
 end
 function Skill600500401:tFunc_600500403_600500401(caster, target, data)
 	-- 8063

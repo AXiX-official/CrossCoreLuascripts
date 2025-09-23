@@ -263,6 +263,8 @@ function SetRole()
             end
         end
     end, cardData:GetSkinIsL2d())
+    --
+    RoleABMgr:ChangeByIDs("RoleInfoFussion", {cardData:GetSkinID()})
 end
 
 -- tag

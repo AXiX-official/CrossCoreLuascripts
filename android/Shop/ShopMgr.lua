@@ -76,6 +76,7 @@ end
 function this:UpdateMonthCard(proto)
 	self.monthCardInfo=proto.infos;
 	self:CheckRedInfo();
+	EventMgr.Dispatch(EventType.Shop_MonthCard_DaysChange,self:GetMonthCardDays());
 end
 
 --返回月卡信息
@@ -107,6 +108,10 @@ end
 
 --返回月卡有效期
 function this:GetMonthCardDays()
+	local info = self:GetMonthCardInfoByID(ITEM_ID.MonthCard);
+	if info~=nil then
+		return info.l_cnt;
+	end
 	return self.m_cnt or 0;
 end
 
@@ -132,8 +137,8 @@ function this:ChildPageIsOpen(id)
 	if id then
 		local cfg=Cfgs.CfgShopTab:GetByID(id);
 		if cfg then
-			local openTime=cfg.startTime and TimeUtil:GetTimeStampBySplit(cfg.startTime) or 0;
-			local closeTime=cfg.endTime and TimeUtil:GetTimeStampBySplit(cfg.endTime) or 0;
+			local openTime=cfg.nStartTime or 0;
+			local closeTime=cfg.nEndTime or 0;
 			local currentTime=TimeUtil:GetTime();
 			local isOpen=false;
 			if openTime == 0 and closeTime == 0 then

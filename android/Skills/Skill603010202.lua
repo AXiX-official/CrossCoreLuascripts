@@ -30,27 +30,5 @@ function Skill603010202:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 603010201
-	self:AddProgress(SkillEffect[603010201], caster, target, data, -200)
-end
--- 攻击结束2
-function Skill603010202:OnAttackOver2(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 603000304
-	if self:Rand(10000) then
-		self:AddBuffCount(SkillEffect[603000304], caster, target, data, 603000101,1,4)
-	end
+	self:HitAddBuff(SkillEffect[603010201], caster, target, data, 10000,5806,2)
 end

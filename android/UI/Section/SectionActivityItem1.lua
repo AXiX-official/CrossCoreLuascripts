@@ -10,6 +10,7 @@ local enterCB = nil
 local cb = nil
 local itemX = 0
 local isSelect = false
+local isNew = false
 
 -- 爬塔
 local isTower = false
@@ -81,6 +82,8 @@ function Refresh(_data, elseData)
         SetRogue()
         SetTitle()
         SetLock()
+        isNew = DungeonActivityMgr:GetIsNew(sectionData:GetID())
+        SetNew()
         SetRed()
         SetGlobalBoss()
         SetMultTeamBattle();
@@ -132,8 +135,14 @@ function SetLockPanel(b,str)
     CSAPI.SetText(txtLock, str)
 end
 
+function SetNew()
+    UIUtil:SetNewPoint(redParent, isNew)
+end
+
 function SetRed()
-    UIUtil:SetRedPoint(redParent, DungeonActivityMgr:CheckRed(sectionData:GetID()))
+    if not isNew then
+        UIUtil:SetRedPoint(redParent, DungeonActivityMgr:CheckRed(sectionData:GetID()))
+    end
 end
 
 function GetData()
@@ -157,6 +166,13 @@ function GetItemX()
 end
 
 function OnClick()
+    if isNew then
+        isNew = false
+        DungeonActivityMgr:SetNew(sectionData:GetID())
+        SetNew()
+        SetRed()
+        RedPointMgr:ApplyRefresh()
+    end
     if globalBossTime > 0 then
         Tips.ShowTips(lockStr)
         return

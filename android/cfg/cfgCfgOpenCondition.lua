@@ -46,6 +46,8 @@ local conf = {
 {'SignInDuanWu',	'SignInDuanWu',	'龙舟争霸赛',	'',	'',	'2007',	'',	''},
 {'SkinRebate',	'SkinRebate',	'衣惠有礼',	'',	'',	'2002',	'',	''},
 {'MultTeamBattleMain',	'MultTeamBattleMain',	'递归沙盒',	'',	'',	'2125',	'',	''},
+{'RiddleMain',	'RiddleMain',	'天灯映月',	'',	'',	'2007',	'',	''},
+{'LovePlusView',	'LovePlusView',	'时光恋曲',	'',	'',	'2007',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

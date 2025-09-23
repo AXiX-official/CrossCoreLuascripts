@@ -18,20 +18,24 @@ function Update()
     end
 end
 
--- toSelect 选卡界面
-function Refresh(_data, _toSelect)
-    toSelect = _toSelect
+-- _data:卡牌信息  toSelect：选卡界面
+function Refresh(_data, elseData)
+    poolID = elseData[1]
+    toSelect = elseData[2]
+    isSelect = elseData[3]
     data = _data
     CSAPI.SetGOActive(entity, data.data ~= nil)
     CSAPI.SetGOActive(empty, not data.data)
     --
-    --
-    CSAPI.SetGOActive(imgGoods, index == 1)
+    local isFirstS = data.data ~= nil and CreateMgr:CheckISSelectCard(poolID, data:GetCfgID()) or false
     local b = false
-    if (toSelect and index == 1) then
-        b = true
+    if (toSelect) then
+        if (isFirstS or (not isSelect and index == 1)) then
+            b = true
+        end
     end
     CSAPI.SetGOActive(select, b)
+    CSAPI.SetGOActive(goods, isFirstS)
     --
     if (not data.data) then
         return
@@ -42,7 +46,6 @@ function Refresh(_data, _toSelect)
     needToCheckMove = false
     CSAPI.SetText(txtName, data:GetName())
     needToCheckMove = true
-
 end
 
 -- icon

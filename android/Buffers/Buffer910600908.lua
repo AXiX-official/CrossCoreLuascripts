@@ -19,5 +19,5 @@ function Buffer910600908:OnCreate(caster, target)
 		return
 	end
 	-- 910600908
-	self:AddAttrPercent(BufferEffect[910600908], self.caster, self.card, nil, "bedamage",-0.04*self.nCount)
+	self:AddAttrPercent(BufferEffect[910600908], self.caster, self.card, nil, "bedamage",-0.06*self.nCount)
 end

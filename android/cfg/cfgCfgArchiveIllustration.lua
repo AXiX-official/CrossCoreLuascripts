@@ -49,6 +49,7 @@ local conf = {
 {'3',	'3',	'',	'',	'',	'3',	'19',	'arch_moonlight_sharing',	'80413'},
 {'3',	'3',	'',	'',	'',	'4',	'30',	'arch_starry_lotus_fire',	''},
 {'3',	'3',	'',	'',	'',	'5',	'57',	'arch_chinese_music_party',	'80437'},
+{'3',	'3',	'',	'',	'',	'6',	'58',	'arch_hang_out_in_lotus',	'80461'},
 {'4',	'4',	'arch_base_check',	'作战准备',	'',	'',	'',	'',	''},
 {'4',	'4',	'',	'',	'',	'1',	'8',	'arch_base_check',	''},
 {'5',	'5',	'arch_bestie_agent',	'娇痴颐使',	'',	'',	'',	'',	''},
@@ -96,6 +97,12 @@ local conf = {
 {'10',	'10',	'',	'',	'',	'1',	'64',	'arch_decisiv_moment',	''},
 {'10',	'10',	'',	'',	'',	'2',	'75',	'arch_contention_arena',	'80439'},
 {'10',	'10',	'',	'',	'',	'3',	'76',	'arch_knockout',	'80440'},
+{'11',	'11',	'arch_changing_moment',	'恋色风景',	'',	'',	'',	'',	''},
+{'11',	'11',	'',	'',	'',	'1',	'86',	'arch_changing_moment',	''},
+{'11',	'11',	'',	'',	'',	'2',	'87',	'arch_woodland_search',	''},
+{'11',	'11',	'',	'',	'',	'3',	'88',	'arch_soul_confession',	''},
+{'11',	'11',	'',	'',	'',	'4',	'89',	'arch_dusk_shore',	''},
+{'11',	'11',	'',	'',	'',	'5',	'90',	'arch_Brilliant_Night',	''},
 },
 }
 --cfgCfgArchiveIllustration = conf

@@ -1,8 +1,9 @@
 -- local index = 1 -- 有问题
 function Awake()
     cg_btnUp = ComUtil.GetCom(btnUp, "CanvasGroup")
-
-    EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleTalent"); -- 引导用
+    FuncUtil:Call(function ()
+        EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleTalent"); -- 引导用
+    end,nil,120)
     AdaptiveConfiguration.SetLuaObjUIFit("RoleTalent", gameObject)
 end
 

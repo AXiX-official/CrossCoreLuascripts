@@ -18,7 +18,7 @@ function ShopProto:GetShopInfosAdd(proto)
 end
 
 --购买物品
-function ShopProto:Buy(cfgId,time,sum,useCost,voucherList,useJCost,callBack)
+function ShopProto:Buy(cfgId,time,sum,useCost,voucherList,useJCost,callBack,grid1,grid2)
     self.buyCallBack=callBack;
     useCost=useCost==nil and "price_1" or useCost;
     local proto = {"ShopProto:Buy", {id=cfgId,buy_time=time,buy_sum=sum,useCost=useCost,vouchers=voucherList,useJCost=useJCost,grid1 = grid1,grid2 = grid2}}

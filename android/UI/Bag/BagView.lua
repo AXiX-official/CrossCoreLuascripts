@@ -463,6 +463,11 @@ function OnClickMatiral()
 end
 
 function OnClickEquip()
+	local isOpen,lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special3")
+	if(not isOpen)then 
+		Tips.ShowTips(lockStr)
+		return
+	end
 	if GetBagBaseType()~=BagType.Equipped then
 		currTag=1;
 		BagMgr:SetSelChildTabIndex(currTag);
@@ -552,6 +557,13 @@ function SetTabStyle()
 	CSAPI.LoadImg(btnEquip,"UIs/Bag/"..imgName2,false,nil,true);
 	CSAPI.SetTextColor(txt_Matiral,color[1],color[2],color[3],color[4]);
 	CSAPI.SetTextColor(txt_Equip,color2[1],color2[2],color2[3],color2[4]);
+
+	--装备锁
+	local isOpen,lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special3")
+	CSAPI.SetGOActive(equipLock,not isOpen)
+	if(not isOpen)then 
+		CSAPI.SetText(txtEquipLock,lockStr)
+	end 
 end
 
 function LayoutCallBack(index)

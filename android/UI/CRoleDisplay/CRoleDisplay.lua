@@ -195,6 +195,8 @@ function SetMiddle()
         top = iconParent1
     end
     top.transform:SetAsLastSibling()
+     
+    RoleABMgr:ChangeByIDs("CRoleDisplay", c_data:GetIDs())
 end
 
 function SetItem(slot, id, item, roleSlot, iconParent)

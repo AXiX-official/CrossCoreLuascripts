@@ -165,6 +165,7 @@ DungeonResetType.Abattoir = 2 -- 2：角斗场赛季
 DungeonResetType.Shop = 3 -- 3：按对应商店的结束时间
 DungeonResetType.Time = 4 -- 4：按配置的结束时间
 DungeonResetType.SplitTime = 5 -- 5：按多时段上架的时间重置
+DungeonResetType.SelfChoice = 6 -- 6：自选构建卡牌，特殊处理
 
 -------------------------------------------------------------------------------------------------
 -- 布尔类型
@@ -181,6 +182,7 @@ ShopBuyLimitType.NewPlrByDay = 1 -- 1：新号前几天
 ShopBuyLimitType.PlrLv = 2 -- 2：玩家等级
 ShopBuyLimitType.PassDup = 3 -- 3：通关id
 ShopBuyLimitType.FirstRecharge = 4 -- 4：首充
+ShopBuyLimitType.UnlockPlot = 6  -- 6:爱相随剧情解锁幕
 ShopBuyLimitType.MultTeamStage = 7  -- 7:多队玩法周目
 
 -- 皮肤获取方式
@@ -622,6 +624,8 @@ RewardRandomType.RANDOM_WEIGHT = 3 -- 多个物品按权重产出其中一个
 RewardRandomType.SINGLE_SELECT = 4 -- 单选择类型
 RewardRandomType.RANDOM_MULTI = 5 -- 随机多个， 根据品质决定掉落几个
 RewardRandomType.RANDOM_PLR_NOT_GET = 6 -- 还未获得的随机一个
+RewardRandomType.RANDOM_HALF_WEIGHT = 7 -- 半概率(自选卡池用，n个id占总概率的一半，其余平分概率)
+RewardRandomType.RANDOM_MULTIPLE_WEIGHT = 8 -- 倍概率(自选卡池用，每N抽不出，特定的概率会翻倍)
 
 -- 跳转模块状态类型
 JumpModuleState = {
@@ -805,6 +809,7 @@ ActivityListType = {
     SignInDuanWu = 1029, --端午签到
 	AdvBindUsers =2001, --引导游客绑定账号（红点异常必须新增）
     SignInAnniversary = 1030, --1.5周年
+    LovePlus = 1033,--爱相随
 }
 
 ALType = {}
@@ -1568,6 +1573,7 @@ CommodityLimitType = {
     Day = 1, -- 建号后天数
     PlayLv = 2, -- 玩家等级
     Dungeon = 3, -- 通关关卡
+    LovePlus = 6, -- 爱相随
     MultTeamStage=7,
 }
 -- 商品类型显示条件类型
@@ -1613,6 +1619,7 @@ ShopGroup = {
     RechargeShop = 2, -- 充值商店
     RegressionShop = 3001, -- 复归商店
     AbattoirShop = 4001, -- 角斗场商店
+    LovePlusShop = 3018001, -- 爱相随商店
 }
 
 ShopPriceKey={
@@ -1655,6 +1662,7 @@ CardPoolType.WaitFinish = 2 -- 2：需要建造时间
 CardPoolType.GobalCreateCnt = 3 -- 3：全服抽卡次数开启
 CardPoolType.FixTimeFirstLogin = 4 -- 4：固定时间后首次登录开启
 CardPoolType.Regression = 5 -- 5：回归卡池
+CardPoolType.SelfChoice = 6 -- 6：自选构建卡池
 
 --编队爬塔限制条件运算符类型
 TeamConditionOperator={
@@ -2100,6 +2108,16 @@ AnniversaryListType.SignIn = 5 --签到
 DungeonBgType = {}
 DungeonBgType.Normal = 1 --正常模式
 DungeonBgType.Change = 2 --背景切换模式
+
+-----------------------------------------------------------------------------------------------------------------
+--爱相随解锁类型
+eLovePlusUnLockType = {}
+eLovePlusUnLockType.CG = 1 
+eLovePlusUnLockType.Img = 2
+eLovePlusUnLockType.Chat = 3
+eLovePlusUnLockType.Label = 4
+eLovePlusUnLockType.Story = 5
+eLovePlusUnLockType.Shop = 6
 
 -----------------------------------------------------------------------------------------------------------------
 -- 多队玩法

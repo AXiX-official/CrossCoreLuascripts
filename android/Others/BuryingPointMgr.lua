@@ -31,7 +31,7 @@ function this:BuryingPoint(_eventName, _stepID)
             ---  LogError("输出ID："..tostring(_stepID))
         end
         self:SDKTrack(_eventName, _stepID)
-        --Log("打点上报，事件名：" .._eventName .. ",步骤id：" .. _stepID)
+        -- Log("打点上报，事件名：" .._eventName .. ",步骤id：" .. _stepID)
         infos[_eventName .. "_" .. _stepID] = 1
         FileUtil.SaveToFile("BuryingPoint.txt", infos, true)
     end
@@ -42,10 +42,10 @@ function this:GetDefautDatas()
     datas.account_id = PlayerClient:GetAccount()
     datas.time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true)
     -- datas.ip = LoginProto.ip or ""
-    datas.zone_offset = g_TimeZone or 8
+    -- datas.zone_offset = g_TimeZone or 8
     datas.app_id = 0
-    datas.device_id = ThinkingAnalyticsMgr:GetpresetProperty("device_id")
-    datas.device_model = ThinkingAnalyticsMgr:GetpresetProperty("device_model")
+    -- datas.device_id = ThinkingAnalyticsMgr:GetpresetProperty("device_id")
+    -- datas.device_model = ThinkingAnalyticsMgr:GetpresetProperty("device_model")
     datas.open_id = self.openID or 0
     datas.user_id = PlayerClient:GetUid()
     local info = GetCurrentServer()
@@ -132,16 +132,24 @@ function this:GetDomesticPointData(_datas)
     return _datas;
 end
 
---按天上传，当天已上报过则忽略
-function this:TrackEventsByDay(_eventName, _datas)
+--按天上传，当天已上报过则忽略 _compareStr:对比内容，如果内容相同则忽略
+function this:TrackEventsByDay(_eventName, _datas,_compareStr)
     if not _eventName or _eventName == "" then
         return
     end
     local recordInfo = FileUtil.LoadByPath("BuryingPointRecord.txt") or {}
-    if recordInfo[_eventName] and not TimeUtil:CheckRefreshByDay(recordInfo[_eventName]) then
-        return
+    if recordInfo[_eventName] and not TimeUtil:CheckRefreshByDay(recordInfo[_eventName].time) then
+        if _compareStr and recordInfo[_eventName].str ~= nil then
+            if _compareStr == recordInfo[_eventName].str then
+                return
+            end
+        else
+            return
+        end
     end
-    recordInfo[_eventName] = TimeUtil:GetTime()
+    recordInfo[_eventName] = recordInfo[_eventName] or {}
+    recordInfo[_eventName].time = TimeUtil:GetTime()
+    recordInfo[_eventName].str = _compareStr
     FileUtil.SaveToFile("BuryingPointRecord.txt",recordInfo)
     self:TrackEvents("mj_" .. _eventName, _datas)
 end

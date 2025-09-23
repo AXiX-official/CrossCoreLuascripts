@@ -8,32 +8,32 @@ local getRecords = nil
 local finishRecords = nil
 local comm = nil
 local info = nil
-local size,fit1,fit2
---购买前
+local size, fit1, fit2
+-- 购买前
 local time1 = 0
 local layout = nil
 local layoutTween = nil
 
---购买后
+-- 购买后
 local time2 = 0
 local eTime = 0
-local layout2= nil
+local layout2 = nil
 local layoutTween2 = nil
 local refreshTime = 0
 
 function Awake()
     layout = ComUtil.GetCom(hsv, "UIInfinite")
     layout:Init("UIs/OperationActivity1/SkinRebateItem", LayoutCallBack, true)
-    layoutTween=UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.MoveByType2,{"RTL"});
+    layoutTween = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.MoveByType2, {"RTL"});
 
     layout2 = ComUtil.GetCom(hsv2, "UIInfinite")
     layout2:Init("UIs/OperationActivity1/SkinRebateItem", LayoutCallBack2, true)
-    layoutTween2=UIInfiniteUtil:AddUIInfiniteAnim(layout2, UIInfiniteAnimType.MoveByType2,{"RTL"});
+    layoutTween2 = UIInfiniteUtil:AddUIInfiniteAnim(layout2, UIInfiniteAnimType.MoveByType2, {"RTL"});
 
     eventMgr = ViewEvent.New()
-    eventMgr:AddListener(EventType.Activity_SkinRebate_Refresh,OnPanelRefresh)
-    eventMgr:AddListener(EventType.Shop_SkinRebate_Get_Record,OnTryRefresh)
-    eventMgr:AddListener(EventType.Shop_SkinRebate_Finish_Record,OnTryRefresh)
+    eventMgr:AddListener(EventType.Activity_SkinRebate_Refresh, OnPanelRefresh)
+    eventMgr:AddListener(EventType.Shop_SkinRebate_Get_Record, OnTryRefresh)
+    eventMgr:AddListener(EventType.Shop_SkinRebate_Finish_Record, OnTryRefresh)
 
     size = CSAPI.GetMainCanvasSize()
     fit1 = CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
@@ -46,7 +46,10 @@ function LayoutCallBack(index)
         local _data = curDatas[index]
         lua.SetClickCB(OnItemClickCB)
         lua.SetScale(1)
-        lua.Refresh(_data,{isShow = isShow,skinId = curSkinId})
+        lua.Refresh(_data, {
+            isShow = isShow,
+            skinId = curSkinId
+        })
     end
 end
 
@@ -56,15 +59,18 @@ function LayoutCallBack2(index)
         local _data = curDatas[index]
         lua.SetClickCB(OnItemClickCB)
         lua.SetScale(1.1)
-        lua.Refresh(_data,{isShow = isShow,skinId = curSkinId})
+        lua.Refresh(_data, {
+            isShow = isShow,
+            skinId = curSkinId
+        })
     end
 end
 
 function OnItemClickCB(item)
     local _data = item.data
     if not item.isFinish then
-        if _data and _data:GetNowTimeCanBuy() then --皮肤购买界面不打开商店
-            if _data:IsOver() then --售罄
+        if _data and _data:GetNowTimeCanBuy() then -- 皮肤购买界面不打开商店
+            if _data:IsOver() then -- 售罄
                 LanguageMgr:ShowTips(15125);
             else
                 if _data:GetType() == CommodityItemType.Skin then
@@ -77,11 +83,11 @@ function OnItemClickCB(item)
             LanguageMgr:ShowTips(15007);
         end
     else
-        ShopProto:GetSkinRebateReward(_data:GetID(),OnRewardOpen)
+        ShopProto:GetSkinRebateReward(_data:GetID(), OnRewardOpen)
     end
 end
 
---展示奖励，刷新在另外的协议里 ShopProto:GetSkinRebateCanTakeRewardRet
+-- 展示奖励，刷新在另外的协议里 ShopProto:GetSkinRebateCanTakeRewardRet
 function OnRewardOpen(proto)
     if proto and proto.jGets then
         UIUtil:OpenReward({proto.jGets})
@@ -100,10 +106,10 @@ function OnTryRefresh()
         return
     end
     isRefresh = true
-    FuncUtil:Call(function ()
+    FuncUtil:Call(function()
         RefreshPanel()
         isRefresh = false
-    end,this,200)
+    end, this, 200)
 end
 
 function OnDestroy()
@@ -115,7 +121,7 @@ function OnInit()
 end
 
 function Update()
-    if timer < Time.time then
+    if timer < Time.time and alData then
         timer = Time.time + 1
         UpdateTime1()
         if isShow then
@@ -125,9 +131,20 @@ function Update()
 end
 
 function OnOpen()
+    if data == nil then
+        local isOpen, id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+        if not isOpen then
+            FuncUtil:Call(OnClickBack,this,50)
+            -- OnClickBack()
+        else
+            data = id
+        end
+    end
     alData = ActivityMgr:GetALData(data)
     if alData then
         InitPanel()
+    else
+        LanguageMgr:ShowTips(38004)
     end
 end
 
@@ -144,17 +161,17 @@ end
 
 function SetBGScale()
     local size = CSAPI.GetMainCanvasSize()
-    local offset1,offset2 = size[0] / 1920,size[1] / 1080
+    local offset1, offset2 = size[0] / 1920, size[1] / 1080
     local offset = offset1 > offset2 and offset1 or offset2
     local child = bg.transform:GetChild(0)
     if child then
-        CSAPI.SetScale(child.gameObject,offset,offset,offset)
+        CSAPI.SetScale(child.gameObject, offset, offset, offset)
     end
 end
 
 function RefreshPanel()
-    CSAPI.SetGOActive(obj1,not isShow)
-    CSAPI.SetGOActive(obj2,isShow)
+    CSAPI.SetGOActive(obj1, not isShow)
+    CSAPI.SetGOActive(obj2, isShow)
     if not isShow then
         ShowPanel1()
     else
@@ -179,7 +196,7 @@ end
 function SetDatas1()
     curDatas = ShopMgr:GetCommodityBySkinID(curSkinId)
     if #curDatas > 0 then
-        table.sort(curDatas,function (a,b)
+        table.sort(curDatas, function(a, b)
             return a:GetSort() < b:GetSort()
         end)
     end
@@ -187,8 +204,9 @@ end
 
 function SetTime1()
     local str = LanguageMgr:GetByID(22051)
-    local str2 = TimeUtil:GetTimeStr2(alData:GetStartTime(),true) .. "-" ..TimeUtil:GetTimeStr2(alData:GetEndTime(),true)
-    CSAPI.SetText(txtTime1,str .. StringUtil:SetByColor(str2,"ffc146"))
+    local str2 = TimeUtil:GetTimeStr2(alData:GetStartTime(), true) .. "-" ..
+                     TimeUtil:GetTimeStr2(alData:GetEndTime(), true)
+    CSAPI.SetText(txtTime1, str .. StringUtil:SetByColor(str2, "ffc146"))
     time1 = alData:GetEndTime() - TimeUtil:GetTime()
     if time1 <= 0 then
         OnClickBack()
@@ -198,8 +216,10 @@ end
 function SetCost()
     local price = (comm:GetRealPrice() and comm:GetRealPrice()[1]) and comm:GetRealPrice()[1].num or 0
     if price > 0 then
-        if CSAPI.IsADV() then price=comm:GetSDKdisplayPrice() end
-        CSAPI.SetText(txtBuy,comm:GetCurrencySymbols() .. price)
+        if CSAPI.IsADV() then
+            price = comm:GetSDKdisplayPrice()
+        end
+        CSAPI.SetText(txtBuy, comm:GetCurrencySymbols() .. price)
     end
 end
 
@@ -213,7 +233,7 @@ end
 
 function OnClickBuy()
     local key = (comm:GetCfg() and comm:GetCfg().jCosts ~= nil) and ShopPriceKey.jCosts or ShopPriceKey.jCosts1
-    ShopCommFunc.HandlePayLogic(comm,1,CommodityType.Normal,nil,OnBuySuccess,key)
+    ShopCommFunc.HandlePayLogic(comm, 1, CommodityType.Normal, nil, OnBuySuccess, key)
 end
 
 function OnBuySuccess()
@@ -234,7 +254,7 @@ end
 function SetDatas2()
     curDatas = ShopMgr:GetCommodityBySkinID(curSkinId)
     if #curDatas > 0 then
-        table.sort(curDatas,function (a,b)
+        table.sort(curDatas, function(a, b)
             local isLaunch1 = a:GetNowTimeCanBuy()
             local isLaunch2 = b:GetNowTimeCanBuy()
             if isLaunch1 ~= isLaunch2 then
@@ -251,13 +271,13 @@ function SetTime2()
     if time2 <= 0 then
         OnClickBack()
     end
-    if #curDatas > 0 then --获取最小刷新时间
+    if #curDatas > 0 then -- 获取最小刷新时间
         for i, v in ipairs(curDatas) do
             if v:GetBuyStartTime() > TimeUtil:GetTime() and (refreshTime == 0 or refreshTime > v:GetBuyStartTime()) then
                 refreshTime = v:GetBuyStartTime()
             end
             if v:GetBuyEndTime() > TimeUtil:GetTime() and (refreshTime == 0 or refreshTime > v:GetBuyEndTime()) then
-                refreshTime = v:GetBuyEndTime()                
+                refreshTime = v:GetBuyEndTime()
             end
         end
     end
@@ -267,9 +287,10 @@ function UpdateTime2()
     if time2 > 0 then
         time2 = eTime - TimeUtil:GetTime()
         local timeTab = TimeUtil:GetTimeTab(time2)
-        CSAPI.SetText(txtTime2,LanguageMgr:GetByID(45012) .. 
-        StringUtil:SetByColor(LanguageMgr:GetByID(34039,timeTab[1],timeTab[2],timeTab[3]),
-        timeTab[1] > 2 and "ffffff" or "ff7781"))
+        CSAPI.SetText(txtTime2,
+            LanguageMgr:GetByID(45012) ..
+                StringUtil:SetByColor(LanguageMgr:GetByID(34039, timeTab[1], timeTab[2], timeTab[3]),
+                    timeTab[1] > 2 and "ffffff" or "ff7781"))
         if time2 <= 0 then
             OnClickBack()
             return

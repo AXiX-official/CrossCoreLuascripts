@@ -1,8 +1,9 @@
-function Refresh(_data)
+function Refresh(_data, _isSelectPool)
     quality = _data[1]
     datas = _data[2]
+    isSelectPool = _isSelectPool
 
-    if (CSAPI.RegionalCode() ~= 5 and CSAPI.RegionalCode() ~=3 ) then
+    if (CSAPI.RegionalCode() ~= 5 and CSAPI.RegionalCode() ~= 3) then
         LanguageMgr:SetText(txtStar, 17027, quality)
     end
     --
@@ -36,7 +37,7 @@ function Refresh(_data)
     ItemUtil.AddItems("RoleLittleCard/CreateProItem", items, datas, grid)
 
     -- CSAPI.SetText(txtPercent, "<color=#ffc146>" .. (percent * 100) .. "%</color>")
-    if (CSAPI.RegionalCode() == 5 or CSAPI.RegionalCode() == 3 ) then
+    if (CSAPI.RegionalCode() == 5 or CSAPI.RegionalCode() == 3) then
         CSAPI.SetText(txtPercent, "")
         if (quality == 6) then
             LanguageMgr:SetText(txtStar, 17061)
@@ -50,16 +51,24 @@ function Refresh(_data)
 end
 
 function GetPercent()
-    local percent = 0
-    if (quality == 6) then
-        percent = 0.02
-    elseif (quality == 5) then
-        percent = CSAPI.IsADVRegional(3) and 0.089 or 0.08
-    elseif (quality == 4) then
-        percent = 0.4
-    elseif (quality == 3) then
-        percent = 0.5
+    local cns = nil
+    local isJP = CSAPI.IsADVRegional(3)
+    if (isJP) then
+        cns = isSelectPool and g_CardPoolPercentJp2 or g_CardPoolPercentJp1
+    else
+        cns = isSelectPool and g_CardPoolPercentCn2 or g_CardPoolPercentCn1
     end
+    local percent = cns[7 - quality]
+    -- local percent = 0
+    -- if (quality == 6) then
+    --     percent = 0.02
+    -- elseif (quality == 5) then
+    --     percent = CSAPI.IsADVRegional(3) and 0.089 or 0.08
+    -- elseif (quality == 4) then
+    --     percent = 0.4
+    -- elseif (quality == 3) then
+    --     percent = 0.5
+    -- end
     local pickUpPercent = 0
     for k, m in pairs(datas) do
         if (m.desc) then

@@ -68,7 +68,7 @@ function SetOrgPrice()
                 end
             else
                 CSAPI.SetGOActive(dsMoneyIcon,false);
-                CSAPI.SetText(txt_dsRmb,rmbIcon);
+                CSAPI.SetText(txt_dsRmb,this.data:GetCurrencySymbols(true));
                 CSAPI.SetGOActive(txt_dsRmb,true);
             end
         --     CSAPI.SetTextColorByCode(txt_price,"FFC146");

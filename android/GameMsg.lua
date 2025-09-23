@@ -471,14 +471,14 @@ GameMsg.map["ClientProto:Offline"] = {
 	{ },
 }
 GameMsg.map["ClientProto:ExchangeItem"] = {
-	--要换的的物品   如果是抽卡需要产生把卡池id发过来 
-	{ "list|sReward","uint",               },
-	{ "exchanges",   "card_pool_id",       },
+	--要换的的物品   如果是抽卡需要产生把卡池id发过来 兑换类型 
+	{ "list|sReward","uint",               "uint",  },
+	{ "exchanges",   "card_pool_id",       "ty",    },
 }
 GameMsg.map["ClientProto:ExchangeItemRet"] = {
-	--获得的物品     如果是抽卡需要产生把卡池id发过来 
-	{ "list|sReward","uint",               },
-	{ "rewards",     "card_pool_id",       },
+	--获得的物品     如果是抽卡需要产生把卡池id发过来 兑换类型 
+	{ "list|sReward","uint",               "uint",  },
+	{ "rewards",     "card_pool_id",       "ty",    },
 }
 GameMsg.map["LoginProto:WaitingLogin"] = {
 	--排队人数  是否等待排队 多久后再来链接（秒） 排队限制人数  
@@ -1531,9 +1531,9 @@ GameMsg.map["PlayerProto:CardFactoryInfo"] = {
 	{ },
 }
 GameMsg.map["PlayerProto:CardFactoryInfoRet"] = {
-	--是否已经首次十连     保底设置(id：卡池id, num:已中次数 ,type:设置的保底卡牌) 今日抽卡次数    服务器累计抽卡次数 建造次数(卡池id,建造次数) 动态开启的卡池 剩余可用免费次数 建造中的             等待中的             完成                 
-	{ "map|sFirstCreateInfo|card_pool_id","map|sNumInfo|id",   "ushort",       "list|sNumInfo",   "json",               "json",        "ushort",        "list|sCardCreateInfo","list|sCardCreateInfo","list|sCardCreateInfo",},
-	{ "firt_create_infos", "sel_infos",         "daily_use_cnt","sum_pool_cnts",   "create_cnts",        "dy_open_pool","free_cnt",      "buildings",         "waitings",          "finishs",           },
+	--是否已经首次十连     保底设置(id：卡池id, num:已中次数 ,type:设置的保底卡牌) 今日抽卡次数    服务器累计抽卡次数 建造次数(卡池id,建造次数) 动态开启的卡池 剩余可用免费次数 建造中的             等待中的             完成                 自选构建卡池信息     
+	{ "map|sFirstCreateInfo|card_pool_id","map|sNumInfo|id",   "ushort",       "list|sNumInfo",   "json",               "json",        "ushort",        "list|sCardCreateInfo","list|sCardCreateInfo","list|sCardCreateInfo","map|sSelfChoiceCards|id",},
+	{ "firt_create_infos", "sel_infos",         "daily_use_cnt","sum_pool_cnts",   "create_cnts",        "dy_open_pool","free_cnt",      "buildings",         "waitings",          "finishs",           "choice_infos",      },
 }
 GameMsg.map["PlayerProto:CardPoolOpen"] = {
 	--服务器累计抽卡次数 
@@ -2416,9 +2416,9 @@ GameMsg.map["ShopProto:GetShopInfosAdd"] = {
 	{ "infos",             "m_cnt",         "is_finish",},
 }
 GameMsg.map["ShopProto:Buy"] = {
-	--配置id 购买时间   购买总量  扣费方式[ price_1 / price_2 ] 使用的抵扣券    扣费方式[ jCosts / jCosts1 ] 
-	{ "uint","uint",    "uint",   "string",            "list|sNumInfo","string",            },
-	{ "id",  "buy_time","buy_sum","useCost",           "vouchers",     "useJCost",          },
+	--配置id 购买时间   购买总量  扣费方式[ price_1 / price_2 ] 使用的抵扣券    扣费方式[ jCosts / jCosts1 ] 自选格子1 自选格子2 
+	{ "uint","uint",    "uint",   "string",            "list|sNumInfo","string",            "uint",   "uint",   },
+	{ "id",  "buy_time","buy_sum","useCost",           "vouchers",     "useJCost",          "grid1",  "grid2",  },
 }
 GameMsg.map["ShopProto:BuyRet"] = {
 	--配置id 购买记录信息         获得的物品      新加bufId的物品 月卡剩余有效时间 扣费方式[ jCosts / jCosts1 ] 
@@ -4720,6 +4720,16 @@ GameMsg.map["PlayerProto:GetBuffBattleInfoRet"] = {
 	{ "int",     "int",        },
 	{ "score",   "total_score",},
 }
+GameMsg.map["PlayerProto:UseItemList"] = {
+	--                    
+	{ "list|sUseIteminfo",},
+	{ "infos",            },
+}
+GameMsg.map["PlayerProto:UseItemListRet"] = {
+	--                    获得的物品      是否需要前端合并 
+	{ "list|sUseIteminfo","list|sNumInfo","bool",          },
+	{ "infos",            "gets",         "isMerge",       },
+}
 GameMsg.map["sChat"] = {
 	--发送者id 接受信息的玩家 头像id   名称     发送时间 消息类型 消息内容  文本提示表CfgTipsSimpleChinese的id 错误参数(map的sTipsInfo) 
 	{ "long",  "array|long",  "uint",  "string","uint",  "byte",  "string", "string",            "json",              },
@@ -5100,6 +5110,41 @@ GameMsg.map["OperateActiveProto:GetDragonBoatFestivalInfoRet"] = {
 	{ "list|sNumInfo","int",               "int",               },
 	{ "infos",        "type",              "isTake",            },
 }
+GameMsg.map["OperateActiveProto:GetQuestionInfo"] = {
+	--活动id（cfgQuestions.id） 
+	{ "int",               },
+	{ "id",                },
+}
+GameMsg.map["OperateActiveProto:GetQuestionInfoRet"] = {
+	--活动id（cfgQuestions.id） 当前是开放的第几天 答对题目数量 已领取      获取题目列表         
+	{ "int",               "int",             "int",       "array|int","list|sQuestionInfo",},
+	{ "id",                "openTime",        "answerCnt", "reward",   "questionInfos",     },
+}
+GameMsg.map["OperateActiveProto:AnswerQuestion"] = {
+	--活动id（cfgQuestions.id） sQuestionInfo.drawnQuestions 题目id sQuestionInfo.drawnAnswers的值 
+	{ "int",               "int",               "int",               },
+	{ "id",                "drawnQuestions",    "answerIndex",       },
+}
+GameMsg.map["OperateActiveProto:AnswerQuestionRet"] = {
+	--活动id（cfgQuestions.id） sQuestionInfo.index 答题结果 获取奖励列表    sQuestionInfo.drawnQuestions 题目id sQuestionInfo.drawnAnswers的值 
+	{ "int",               "int",              "bool",  "list|sNumInfo","int",               "int",               },
+	{ "id",                "index",            "res",   "gets",         "drawnQuestions",    "answerIndex",       },
+}
+GameMsg.map["OperateActiveProto:TakeQuestionReward"] = {
+	--活动id（cfgQuestions.id） cfgQuestionsReward.index 
+	{ "int",               "int",               },
+	{ "id",                "index",             },
+}
+GameMsg.map["OperateActiveProto:TakeQuestionRewardRet"] = {
+	--答题结果 获取奖励列表    已领取      活动id（cfgQuestions.id） 
+	{ "bool",  "list|sNumInfo","array|int","int",               },
+	{ "res",   "gets",         "reward",   "id",                },
+}
+GameMsg.map["sQuestionInfo"] = {
+	--题目id           答案           已回答      是否已领取 序号    当前题目是第几天开放的 
+	{ "uint",          "array|int",   "array|int","uint",    "uint", "int",                },
+	{ "drawnQuestions","drawnAnswers","answers",  "isTake",  "index","openTime",           },
+}
 GameMsg.map["OperateActiveProto:GetMaidCoffeeData"] = {
 	--活动id 
 	{ "uint",},
@@ -5119,6 +5164,106 @@ GameMsg.map["OperateActiveProto:GetMaidCoffeeRewardRet"] = {
 	--活动id 奖励次数 剩余奖励次数 个人历史最高分 
 	{ "uint","uint",  "uint",      "uint",        },
 	{ "id",  "cnt",   "remainCnt", "maxScore",    },
+}
+GameMsg.map["LovePlusProto:GetChapterData"] = {
+	--章节id      
+	{ "uint",     },
+	{ "chapterId",},
+}
+GameMsg.map["LovePlusProto:SaveChatData"] = {
+	--章节id      聊天组id      聊天id       
+	{ "uint",     "uint",       "array|uint",},
+	{ "chapterId","chatGroupId","chatIds",   },
+}
+GameMsg.map["LovePlusProto:ChatDataRet"] = {
+	--章节id      聊天组            
+	{ "uint",     "list|sChatGroup",},
+	{ "chapterId","chatGroupData",  },
+}
+GameMsg.map["LovePlusProto:GetNodeData"] = {
+	--章节id      
+	{ "uint",     },
+	{ "chapterId",},
+}
+GameMsg.map["sSaveNode"] = {
+	--节点id   剧情幕id     
+	{ "uint",  "array|uint",},
+	{ "nodeId","storyIds",  },
+}
+GameMsg.map["LovePlusProto:NodeDataRet"] = {
+	--章节id      已完成节点   
+	{ "uint",     "array|uint",},
+	{ "chapterId","nodeIds",   },
+}
+GameMsg.map["LovePlusProto:FinishNode"] = {
+	--节点信息           
+	{ "struts|sNodeInfo",},
+	{ "nodeInfo",        },
+}
+GameMsg.map["LovePlusProto:StartNode"] = {
+	--章节id      节点id   
+	{ "uint",     "uint",  },
+	{ "chapterId","nodeId",},
+}
+GameMsg.map["LovePlusProto:StartNodeRet"] = {
+	--章节id      节点id   
+	{ "uint",     "uint",  },
+	{ "chapterId","nodeId",},
+}
+GameMsg.map["LovePlusProto:SendUnlockItems"] = {
+	--章节id      配图id       解锁数据             完成进度           是否显示红点 
+	{ "uint",     "array|uint","struts|sUnlockData","uint",            "bool",      },
+	{ "chapterId","imgIds",    "unlockData",        "completeProgress","isRed",     },
+}
+GameMsg.map["sChatGroup"] = {
+	--聊天组id      聊天id       
+	{ "uint",       "array|uint",},
+	{ "chatGroupId","chatIds",   },
+}
+GameMsg.map["LovePlusProto:GetChapterSimpleInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["LovePlusProto:GetChapterSimpleInfoRet"] = {
+	--章节信息            已解锁配图id 
+	{ "list|sChapterInfo","array|uint",},
+	{ "chapterInfo",      "imgIds",    },
+}
+GameMsg.map["sChapterInfo"] = {
+	--章节id      完成进度           存档节点数据       解锁数据             已解锁购买商品id 是否显示红点 
+	{ "uint",     "uint",            "struts|sSaveNode","struts|sUnlockData","array|uint",    "bool",      },
+	{ "chapterId","completeProgress","saveNode",        "unlockData",        "shopItemIds",   "isRed",     },
+}
+GameMsg.map["LovePlusProto:GetChapterDataRet"] = {
+	--章节id      
+	{ "uint",     },
+	{ "chapterId",},
+}
+GameMsg.map["LovePlusProto:DropOut"] = {
+	--节点信息           
+	{ "struts|sNodeInfo",},
+	{ "nodeInfo",        },
+}
+GameMsg.map["LovePlusProto:SaveNode"] = {
+	--节点信息           
+	{ "struts|sNodeInfo",},
+	{ "nodeInfo",        },
+}
+GameMsg.map["LovePlusProto:SaveNodeRet"] = {
+	--节点信息           
+	{ "struts|sNodeInfo",},
+	{ "nodeInfo",        },
+}
+GameMsg.map["sNodeInfo"] = {
+	--章节id      节点id   剧情幕id     
+	{ "uint",     "uint",  "array|uint",},
+	{ "chapterId","nodeId","storyIds",  },
+}
+GameMsg.map["sUnlockData"] = {
+	--已解锁CGId   已解锁聊天组   已解锁节点   已解锁节点   
+	{ "array|uint","array|uint",  "array|uint","array|uint",},
+	{ "CGIds",     "chatGroupIds","nodeIds",   "labelIds",  },
 }
 GameMsg.map["sRandCard"] = {
 	--卡牌id   装备信息      对应怪物id   

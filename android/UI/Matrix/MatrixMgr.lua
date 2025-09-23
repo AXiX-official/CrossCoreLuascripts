@@ -1092,4 +1092,22 @@ function this:SetExtraPresetTeamNum(num)
     self.matrixInfo.extraPresetTeamNum = num
 end
 
+function this:GetCfgModuleInfoName(type)
+    local name = nil 
+    if(type==BuildsType.ControlTower)then 
+        name = "MatrixCommand"
+    elseif(type==BuildsType.Compound)then  
+        name = "MatrixCompound"
+    elseif(type==BuildsType.Remould)then  
+        name = "MatrixRemould"
+    elseif(type==BuildsType.PowerHouse)then  
+        name = "PowerHouse"
+    elseif(type==BuildsType.ProductionCenter)then  
+        name = "MatrixResPanel"
+    elseif(type==BuildsType.TradingCenter)then  
+        name = "MatrixTrading"
+    end
+    return name
+end
+
 return this

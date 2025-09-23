@@ -454,9 +454,9 @@ function this:GetPrice(key)
             table.insert(priceInfo, info)
         end
     end
-    if self:GetType() == CommodityItemType.SUIT then
-        priceInfo = self:GetSUITPrice(priceInfo,key)
-    end
+    -- if self:GetType() == CommodityItemType.SUIT then
+        -- priceInfo = self:GetSUITPrice(priceInfo,key)
+    -- end
     return priceInfo
 end
 
@@ -482,7 +482,7 @@ function this:GetSUITPrice(priceInfo,key)
                 end
             end
         end
-        priceInfo[1].num = math.floor(GCalHelp:GetLovePlusShopSuitPrice(priceInfo[1].num,totalPrice,subPrice))
+        priceInfo[1].num = math.ceil(GCalHelp:GetLovePlusShopSuitPrice(priceInfo[1].num,totalPrice,subPrice))
     end
     return priceInfo
 end
@@ -702,6 +702,18 @@ function this:IsOver()
         if priceInfo and priceInfo[1].num <= 0 then
             return true
         elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then
+            return true
+        end
+        local list = self:GetCommodityList()
+        local itemOverNum = 0
+        for k, v in ipairs(list) do
+            if v.data:GetType() == ITEM_TYPE.SKIN or v.data:GetType() == ITEM_TYPE.PANEL_IMG then
+                if BagMgr:GetCount(v.cid) > 0 then
+                    itemOverNum = itemOverNum + 1
+                end
+            end
+        end
+        if itemOverNum == #list then
             return true
         end
     elseif self:GetNum() ~= -1 and self:GetNum() <= 0 then 

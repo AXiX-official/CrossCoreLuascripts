@@ -935,4 +935,19 @@ end
 function this:GuideBehaviourCondition_AbilityTest_156010()
     return GuideMgr:IsGuided(1530);
 end
+
+function this:GuideBehaviourStart_RoleInfo_220040()
+    EventMgr.Dispatch(EventType.Guide_RoleInfo_220040,true)
+end
+function this:GuideBehaviourComplete_RoleInfo_220040()
+    EventMgr.Dispatch(EventType.Guide_RoleInfo_220040,false)
+end
+function this:GuideBehaviourStart_RoleInfo_230070()
+    EventMgr.Dispatch(EventType.Guide_RoleInfo_230070,true)
+end
+function this:GuideBehaviourComplete_RoleInfo_230070()
+    EventMgr.Dispatch(EventType.Guide_RoleInfo_230070,false)
+end
+
+
 return this;

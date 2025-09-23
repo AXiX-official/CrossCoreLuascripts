@@ -6,7 +6,9 @@ PlayerProto = {
     GetLifeCall = nil,
     isOpenReward = false,
     getCardCntCall = nil,
-    combineCallBack = nil
+    combineCallBack = nil,
+    convertedCallBack=nil,
+    useItemListCallBack=nil,
 };
 
 -- 背包信息
@@ -1651,5 +1653,42 @@ function PlayerProto:ChangePlrNameAndSexRet(proto)
     if self.changePlrNameAndSexCallBack then
         self.changePlrNameAndSexCallBack(proto)
         self.changePlrNameAndSexCallBack = nil
+    end
+end
+
+--批量使用物品
+function PlayerProto:UseItemList(infos,isOpenReward,callBack)
+    self.isOpenReward = isOpenReward;
+    self.useItemListCallBack=callBack
+    local proto = {"PlayerProto:UseItemList",{infos=infos}}
+    NetMgr.net:Send(proto)
+end
+
+-- 使用背包中的物品的回调
+function PlayerProto:UseItemListRet(proto)
+    if proto and proto.infos and self.isOpenReward and proto.gets ~= nil and #proto.gets > 0 then
+        UIUtil:OpenReward({proto.gets}, {
+            isNoShrink = not proto.isMerge
+        });
+    end
+    if self.useItemListCallBack then
+        self.useItemListCallBack(proto);
+        self.useItemListCallBack = nil;
+    end
+
+    -- 使用体能道具
+    if proto and proto.infos then
+        local total=0;
+        for k, v in ipairs(proto.infos ) do
+            if (v.id == 10036 or v.id == 10037) then
+                local cfg = Cfgs.ItemInfo:GetByID(v.id)
+                total=total+ cfg.dy_value2 * v.cnt
+            end
+        end
+        if total>0 then
+            local per = PlayerClient:Hot()-total;
+            EventMgr.Dispatch(EventType.Player_HotChange)
+            CSAPI.OpenView("HotTipsPanel", {per})
+        end
     end
 end

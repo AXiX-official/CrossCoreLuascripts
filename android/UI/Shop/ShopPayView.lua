@@ -64,20 +64,26 @@ function OnOpen()
 	pageData=data.pageData;
 	commodityType=data.pageData:GetCommodityType();
 	payCallBack=data.callBack;
+	Refresh();
+end
+
+function Refresh()
 	local isPackage=false;
 	-- 根据当前物品数量进行初始化
 	if commodity then
 		rmbIcon=commodity:GetCurrencySymbols();
 		onceMax=commodity:GetOnecBuyLimit() == - 1 and 99 or commodity:GetOnecBuyLimit(); --单次购买上限
-		CSAPI.SetText(txt_name,commodity:GetName());
 		if commodity:GetType()==CommodityItemType.ChoiceCard then  --自选，特殊处理
 			local getInfo=commodity:GetCommodityList();
 			if getInfo then
+				CSAPI.SetText(txt_name,getInfo[1].data:GetName());
 				CSAPI.SetText(txt_desc,getInfo[1].data:GetDesc());
 			else
+				CSAPI.SetText(txt_name,commodity:GetName());
 				LogError("未得到对应兑换信息！"..table.tostring(commodity));
 			end
 		else
+			CSAPI.SetText(txt_name,commodity:GetName());
 			CSAPI.SetText(txt_desc,commodity:GetDesc());
 		end
 		--当前剩余数量
@@ -479,6 +485,8 @@ function OnSDKResult(_d)
 			local num=commodity:GetNum();
 			if num<=0 and num~=-1 then
 				Close();
+			else
+				Refresh();
 			end
 		else
 			Close();
@@ -493,6 +501,8 @@ function OnQROver()
 		local num=commodity:GetNum();
 		if num<=0 and num~=-1 then
 			Close();
+		else
+			Refresh();
 		end
 	else
 		Close();

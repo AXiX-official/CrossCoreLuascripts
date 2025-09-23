@@ -640,18 +640,15 @@ function ShowInfo(item)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
+    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
     itemInfo.Show(cfg, type, OnLoadSuccess)
-    if not isActive then -- 关闭特殊引导
-        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
-    else
-        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
-    end
 end
 
 function OnLoadSuccess()
     itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
     itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
     SetInfoItemPos()
+    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
 end
 
 function SetInfoItemPos()
@@ -1193,6 +1190,8 @@ function InitShop()
         if shopPageData and shopPageData:GetOpenTimeData() and shopPageData:GetOpenTimeData() ~= 0 and shopPageData:GetOpenTimeData() < TimeUtil:GetTime() then
             CSAPI.SetGOActive(shopTimeObj, true)
             SetShopTime()
+        elseif not shopPageData or shopPageData:GetCloseTimeData() < TimeUtil:GetTime() then
+            CSAPI.SetGOActive(btnShop,false)
         end
     end
 end

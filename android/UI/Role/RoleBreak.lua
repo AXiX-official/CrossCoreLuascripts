@@ -163,19 +163,21 @@ end
 
 -- 是否足够
 function CheckEnough()
+    mat1, mat2 = nil, nil
     if (materialCfg) then
-        if (materialCfg.gold and materialCfg.gold > PlayerClient:GetGold()) then
-            return false
-        end
         if (materialCfg.materials) then
             for i, v in ipairs(materialCfg.materials) do
                 local goodsData = BagMgr:GetData(v[1])
                 local curNum = goodsData and goodsData:GetCount() or 0
                 local needNum = v[2]
                 if (curNum < needNum) then
+                    mat1, mat2 = v[1], needNum - curNum
                     return false
                 end
             end
+        end
+        if (materialCfg.gold and materialCfg.gold > PlayerClient:GetGold()) then
+            return false, true
         end
         return true
     end
@@ -192,11 +194,29 @@ function SetBtn()
         LanguageMgr:SetEnText(txtBreak2, 4214)
     else
         -- 正常升级 
-        enough = CheckEnough()
-
-        cg_btnBreak.alpha = not enough and 0.3 or 1
-        LanguageMgr:SetText(txtBreak1, 4001)
-        LanguageMgr:SetEnText(txtBreak2, 4001)
+        isOpen, lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special1") -- 是否已解锁
+        if (not isOpen) then
+            CSAPI.SetGOActive(imgBreak1, true)
+            CSAPI.SetGOActive(imgBreak2, false)
+            LanguageMgr:SetText(txtBreak1, 4001)
+            cg_btnBreak.alpha = 0.3
+        else
+            enough, isNoGold = CheckEnough()
+            cg_btnBreak.alpha = isNoGold and 0.3 or 1
+            local landID = 21172
+            if (enough) then
+                landID = cardData:GetBreakLevel() > 4 and 4090 or 4001
+            else
+                local _landID = cardData:GetBreakLevel() > 4 and 4090 or 4001
+                landID = isNoGold and _landID or 21172
+            end
+            LanguageMgr:SetText(txtBreak1, landID)
+            -- LanguageMgr:SetEnText(txtBreak2, 4001)
+            -- 
+            CSAPI.SetGOActive(imgBreak1, enough or isNoGold)
+            CSAPI.SetGOActive(imgBreak2, not enough and not isNoGold)
+        end
+        CSAPI.SetText(txtBreakLock,lockStr)
     end
     local money = materialCfg.gold or 0
     CSAPI.SetText(txtCost, PlayerClient:GetGold() >= money and money .. "" or StringUtil:SetByColor(money, "ff8790"))
@@ -207,8 +227,16 @@ function OnClickBreak()
         -- 返回升级
         EventMgr.Dispatch(EventType.Role_Jump_Break, {_lookBreakLv, true})
     else
+        if(not isOpen)then 
+            Tips.ShowTips(lockStr)
+        end 
         if (enough) then
             RoleMgr:CardBreak(cardData:GetID())
+        else
+            if (mat1) then
+                local goodsData = BagMgr:GetFakeData(mat1)
+                UIUtil:OpenGoodsInfo(goodsData, nil, mat2)
+            end
         end
     end
 end

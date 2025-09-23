@@ -1,4 +1,4 @@
--- 大招增加伤害
+-- 连锁强化
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -11,9 +11,9 @@ function Buffer4603003:OnCreate(caster, target)
 	-- 8468
 	local c68 = SkillApi:GetDamage(self, self.caster, target or self.owner,3)
 	-- 4603033
-	self:AddAttr(BufferEffect[4603033], self.caster, self.card, nil, "attack",math.floor(math.min(c68*0.03,1500)))
+	self:AddAttr(BufferEffect[4603033], self.caster, self.card, nil, "attack",math.floor(math.min(c68*0.02,1500)))
 	-- 8468
 	local c68 = SkillApi:GetDamage(self, self.caster, target or self.owner,3)
 	-- 4603043
-	self:AddAttr(BufferEffect[4603043], self.caster, self.creater, nil, "attack",math.floor(math.min(c68*0.03,1500)))
+	self:AddAttr(BufferEffect[4603043], self.caster, self.creater, nil, "attack",math.floor(math.min(c68*0.02,1500)))
 end

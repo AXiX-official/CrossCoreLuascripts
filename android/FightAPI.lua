@@ -293,6 +293,23 @@ function SkillJudger:TargetIsSelf(oSkill, caster, target, res)
 	return not res
 end
 
+
+-- 攻击方是唤物
+function SkillJudger:CasterIsMonster(oSkill, caster, target, res)
+	if caster.type == CardType.Monster or caster.type == CardType.Boss  then
+		return res
+	end
+	return not res
+end
+
+-- 受击方是怪物
+function SkillJudger:TargetIsMonster(oSkill, caster, target, res)
+	if target.type == CardType.Monster or target.type == CardType.Boss  then
+		return res
+	end
+	return not res
+end
+
 -- 受击方是友方
 function SkillJudger:TargetIsFriend(oSkill, caster, target, res)
 	local myTeamID = oSkill.card:GetTeamID()
@@ -2036,6 +2053,8 @@ function FightAPI:LimitDamage(effect, caster, target, data, percenthp, percentat
 
 	local hp2 = self:CalcCure(caster, target, 2, percenthp) -- 受击者血量
 	local hp3 = self:CalcCure(caster, target, 3, percentatt) -- 攻击者攻击
+	-- [4.2版本]
+	local bIsLive = target:IsLive() -- 记录原来的状态, 死了就不再添加死亡列表
 	local damageAdjust = caster:Get("damage") * target:Get("bedamage")
 	LogDebugEx(string.format("hp=%s, attack=%s damage=%s bedamage=%s damageAdjust= %s",
 	hp2, hp3, caster:Get("damage") , target:Get("bedamage"), damageAdjust))
@@ -2044,6 +2063,12 @@ function FightAPI:LimitDamage(effect, caster, target, data, percenthp, percentat
 	local isdeath, shield, num = target:AddHpNoShield(-hp, caster)
 	self.log:Add({api="BufferDamage", death = isdeath, targetID = target.oid, casterID = caster.oid,
 	attr = "hp", hp = target:Get("hp"), add = -num, effectID = effect.apiSetting, isReal = true}) --isReal真实伤害
+	-- [4.2版本]
+	LogDebugEx("FightAPI:AddHp bNotDeathEvent")
+	local isdeath = not target:IsLive()
+	if bIsLive and  isdeath and self.AddDeaths then
+		self:AddDeaths(target, caster)
+	end
 end
 
 -- 减少所有技能属性
@@ -2055,6 +2080,11 @@ end
 function FightAPI:AddSkillAttr(effect, caster, target, data, attr, val)
 	local mgr = target.skillMgr
 	mgr:AddSkillAttr(attr, val)
+end
+
+function FightAPI:AddSkillAttrPct(effect, caster, target, data, attr, val)
+	local mgr = target.skillMgr
+	mgr:AddSkillAttrPct(attr, val)
 end
 
 function FightAPI:AddOneSkillAttr(effect, caster, target, data, attr, val, t)

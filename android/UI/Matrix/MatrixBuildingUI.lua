@@ -5,6 +5,10 @@ local needTime = 0
 local baseTime = 0
 local maxTime = 1 -- 建造或
 
+function SetClickCB(_cb)
+    cb = _cb 
+end
+
 function Awake()
     outlineBar = ComUtil.GetCom(hp, "OutlineBar")
 end
@@ -333,25 +337,28 @@ function EnterAnim()
 end
 
 function OnClick()
-    cfgId = cfg.id
-    if (cfgId == Dorm_CfgID) then
-        CSAPI.OpenView("DormRoom") -- todo 需要后端加入建造
-    else
-        if (data) then
-            -- 已建造/建造中
-            if (buildingState == nil or buildingState ~= MatrixBuildingType.Create) then
-                EventMgr.Dispatch(EventType.Matrix_Indoor_Change, {"MatrixBuilding", data})
-            end
-        else
-            -- 未建造
-            local isOpen, str = MatrixMgr:CheckCreate(cfgId)
-            if (isOpen) then
-                CSAPI.OpenView("MatrixCreateInfo", cfgId)
-            else
-                if (str) then
-                    Tips.ShowTips(str)
-                end
-            end
-        end
-    end
+    if(cb)then 
+        cb(cfg.id,data,buildingState)
+    end 
+    -- cfgId = cfg.id
+    -- if (cfgId == Dorm_CfgID) then
+    --     CSAPI.OpenView("DormRoom") -- todo 需要后端加入建造
+    -- else
+    --     if (data) then
+    --         -- 已建造/建造中
+    --         if (buildingState == nil or buildingState ~= MatrixBuildingType.Create) then
+    --             EventMgr.Dispatch(EventType.Matrix_Indoor_Change, {"MatrixBuilding", data})
+    --         end
+    --     else
+    --         -- 未建造
+    --         local isOpen, str = MatrixMgr:CheckCreate(cfgId)
+    --         if (isOpen) then
+    --             CSAPI.OpenView("MatrixCreateInfo", cfgId)
+    --         else
+    --             if (str) then
+    --                 Tips.ShowTips(str)
+    --             end
+    --         end
+    --     end
+    -- end
 end

@@ -567,6 +567,25 @@ function SkillMgr:AddSkillAttr(attr, val)
 	end
 end
 
+
+-- 减少所有技能属性(百分比)
+function SkillMgr:AddSkillAttrPct(attr, val)
+	self.tRestoreLog = self.tRestoreLog or {}
+	local log		= self.team.fightMgr.log
+	for k,skill in pairs(self.initiativeSkills) do
+		skill[attr] = skill[attr] or 0
+		skill[attr] = math.ceil(skill[attr] * (1+val))
+		if val<0 and skill[attr] < 0 then skill[attr] = 0 end
+
+		-- 修改技能属性
+		local tlog = {api="UpdateSkill", id = self.card.oid, skillID = skill.id, attr = attr, val = skill[attr]}
+		table.insert(self.tRestoreLog, tlog)
+		log:Add(tlog)
+	end
+end
+
+
+
 -- 减少一个技能属性
 function SkillMgr:AddOneSkillAttr(attr, val, upgrade_type, limit)
 	self.tRestoreLog = self.tRestoreLog or {}
@@ -974,6 +993,7 @@ function SkillBase:RegisterEvent(skillMgr)
 			--LogDebugEx("注册技能事件", self.name, self.id, v)
 			mgr.oFightEventMgr:AddSkillEvent(v, self)
 			if v == "OnDeath" then
+				-- LogDebugEx("注册死亡事件", self.id, self.card.name)
 				table.insert(skillMgr.arrDeathEvent, self)
 			-- elseif v == "OnDeath2" then
 			-- 	table.insert(skillMgr.arrDeathEvent2, self)
@@ -2229,6 +2249,8 @@ function SkillBase:CallOwnerSkill(effect, caster, target, data, skillID, api)
 	local isMotionless = caster.bufferMgr:IsMotionless()
 	-- 无法行动
 	if isMotionless then return end
+
+	-- 对面死光会打自己人--?
 
 	if not skl then
 		skl = skillMgr:CreateSkill(skillID)

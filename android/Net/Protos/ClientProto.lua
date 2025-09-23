@@ -173,6 +173,7 @@ function ClientProto:InitFinishRet(proto)
     ActivityMgr:CheckRedPointData() --用于活动
     RegressionMgr:CheckRedPointData() -- 回归活动
     EquipProto:EquipRefreshGetLastData();--获取最后一次洗炼的数据
+    RiddleMgr:InitData();--初始化猜谜活动
     EventMgr.Dispatch(EventType.InitFinishRet)
 end
 ---中途打断清理数据
@@ -306,16 +307,6 @@ function ClientProto:QueryPrePay(ShopproductId,amountVave,action)
     if ShopproductId and amountVave then
         self.PayQueryAction=action;
         local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId),amount=tonumber(amountVave), }}
-        NetMgr.net:Send(proto)
-    else
-        LogError("ClientProto:PayQuery --ShopproductId:"..tostring(ShopproductId))
-    end
-end
-function ClientProto:QueryPrePay(ShopproductId,amount,action)
-    self.PayQueryAction=nil;
-    if ShopproductId then
-        self.PayQueryAction=action;
-        local proto = {"ClientProto:QueryPrePay", { productId = tonumber(ShopproductId),amount = tonumber(amount) }}
         NetMgr.net:Send(proto)
     else
         LogError("ClientProto:PayQuery --ShopproductId:"..tostring(ShopproductId))

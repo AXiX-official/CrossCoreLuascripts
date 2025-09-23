@@ -113,7 +113,7 @@ function this:GetCount()
     local cur,max = 0,0
     if self.data and self.data:GetMaxCount() > 0 then
         max = self.data:GetMaxCount()
-        cur = max - self.useCount
+        cur = max - (self.useCount or 0)
     end
     return cur,max
 end

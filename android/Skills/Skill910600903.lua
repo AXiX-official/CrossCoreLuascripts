@@ -31,7 +31,7 @@ function Skill910600903:OnActionOver(caster, target, data)
 		return
 	end
 	-- 910600905
-	self:AddSp(SkillEffect[910600905], caster, self.card, data, 100)
+	self:AddSp(SkillEffect[910600905], caster, self.card, data, 10)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
@@ -98,4 +98,21 @@ function Skill910600903:OnAttackOver2(caster, target, data)
 	end
 	-- 910600912
 	self:AddBuffCount(SkillEffect[910600912], caster, target, data, 910600908,1,15)
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8832
+	if SkillJudger:IsProgressLess(self, caster, target, true,10) then
+	else
+		return
+	end
+	-- 910600913
+	self:DelBufferForce(SkillEffect[910600913], caster, self.card, data, 910600908,15)
 end

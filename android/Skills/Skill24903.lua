@@ -35,8 +35,8 @@ function Skill24903:OnActionOver(caster, target, data)
 end
 -- 行动结束2
 function Skill24903:OnActionOver2(caster, target, data)
-	-- 8072
-	if SkillJudger:TargetIsTeammate(self, caster, target, true) then
+	-- 8071
+	if SkillJudger:TargetIsFriend(self, caster, target, true) then
 	else
 		return
 	end

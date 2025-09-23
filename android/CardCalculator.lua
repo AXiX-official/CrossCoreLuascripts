@@ -272,16 +272,15 @@ function GCardCalculator:CalSumPropery(cardCalResult, equipsCalResult, skillMap,
     ret.skills = {}
     ret.eskills = equipsCalResult.eskills -- 装备技能列表
 
-    local skillSumLevel = 0
+     -- v 4.1 CalPerformance() 函数修改
+    local skillSumLevels = {}
     if skillMap then
         for id, v in pairs(skillMap) do
             local skillId = id
             local skillCfg = skill[skillId]
-            if skillCfg then
-                if skillCfg.lv then
-                    skillSumLevel = skillSumLevel + skillCfg.lv
-                    table.insert(ret.skills, skillId)
-                end
+            if skillCfg and skillCfg.lv and skillCfg.main_type then
+                table.insert(ret.skills, skillId)
+                GCalHelp:Add(skillSumLevels, skillCfg.main_type, skillCfg.lv)
 
                 if skillCfg.main_type == SkillMainType.CardTalent then
                     local qualityCfg = CfgMainTalentSkillUpgrade[ret.quality]
@@ -301,55 +300,49 @@ function GCardCalculator:CalSumPropery(cardCalResult, equipsCalResult, skillMap,
     end
 
     -- 加入装备技能
-    if equipsCalResult.fightSkills then
-        for _, equipSkillId in pairs(equipsCalResult.fightSkills) do
-            local cfg = CfgEquipSkill[equipSkillId]
-            if cfg then
-                local skillId = cfg.nGetSkillId
-                local skillCfg = skill[skillId]
-                if skillCfg then
-                    skillSumLevel = skillSumLevel + skillCfg.lv
-                    table.insert(ret.skills, skillId)
-                end
+    for _, equipSkillId in ipairs(equipsCalResult.fightSkills or {}) do
+        local cfg = CfgEquipSkill[equipSkillId]
+        if cfg then
+            local skillId = cfg.nGetSkillId
+            local skillCfg = skill[skillId]
+            if skillCfg and skillCfg.lv and skillCfg.main_type then
+                table.insert(ret.skills, skillId)
+                GCalHelp:Add(skillSumLevels, skillCfg.main_type, skillCfg.lv)
             end
         end
     end
 
     -- 副本天赋技能
     local subTablentProperty = {}
-    if useSubTalents then
-        -- LogTable(useSubTalents, "useSubTalents:")
-        for _, tId in pairs(useSubTalents) do
-            if tId > 0 then
-                local stCfg = CfgSubTalentSkill[tId]
-                if stCfg then
-                    if stCfg.nFightSkillId then
-                        local skillCfg = skill[stCfg.nFightSkillId]
-                        if skillCfg then
-                            if skillCfg.lv then
-                                skillSumLevel = skillSumLevel + skillCfg.lv
-                            end
-                            table.insert(ret.skills, stCfg.nFightSkillId)
-                        else
-                            LogWarning('not find sub talent id nFightSkillId (%d) in skill cfg', stCfg.nFightSkillId)
-                        end
+    -- LogTable(useSubTalents, "useSubTalents:")
+    for _, tId in pairs(useSubTalents or {}) do
+        if tId > 0 then
+            local stCfg = CfgSubTalentSkill[tId]
+            if stCfg then
+                if stCfg.nFightSkillId then
+                    local skillCfg = skill[stCfg.nFightSkillId]
+                    if skillCfg and skillCfg.lv and skillCfg.main_type then
+                        table.insert(ret.skills, stCfg.nFightSkillId)
+                        GCalHelp:Add(skillSumLevels, skillCfg.main_type, skillCfg.lv)
+                    else
+                        LogWarning('not find sub talent id nFightSkillId (%d) in skill cfg', stCfg.nFightSkillId)
                     end
-
-                    -- 属性添加
-                    -- LogTable(stCfg.jPropertys, "stCfg.jPropertys:")
-                    if stCfg.jPropertys then
-                        for _, proInfo in ipairs(stCfg.jPropertys) do
-                            local proType, proValue = proInfo[1], proInfo[2]
-
-                            -- 获取技能添加的属性点
-                            local propertyName = CfgCardPropertyEnum[proType].sFieldName
-                            -- LogDebug("Add %s, %f", propertyName, proValue)
-                            GCalHelp:Add(subTablentProperty, propertyName, proValue)
-                        end
-                    end
-                else
-                    LogWarning('not find sub talent (id:%d) in CfgSubTalentSkill', tId)
                 end
+
+                -- 属性添加
+                -- LogTable(stCfg.jPropertys, "stCfg.jPropertys:")
+                if stCfg.jPropertys then
+                    for _, proInfo in ipairs(stCfg.jPropertys) do
+                        local proType, proValue = proInfo[1], proInfo[2]
+
+                        -- 获取技能添加的属性点
+                        local propertyName = CfgCardPropertyEnum[proType].sFieldName
+                        -- LogDebug("Add %s, %f", propertyName, proValue)
+                        GCalHelp:Add(subTablentProperty, propertyName, proValue)
+                    end
+                end
+            else
+                LogWarning('not find sub talent (id:%d) in CfgSubTalentSkill', tId)
             end
         end
     end
@@ -357,7 +350,7 @@ function GCardCalculator:CalSumPropery(cardCalResult, equipsCalResult, skillMap,
     -- 拷贝一下到装备里面一起计算
     TakePropertyAdd(ret, equipsProperty, subTablentProperty)
 
-    ret.performance = GCardCalculator:CalPerformance(ret, skillSumLevel)
+    ret.performance = GCardCalculator:CalPerformance(ret, skillSumLevels)
 
     -- 转化为整型
     for _, key in ipairs(SumCalArgs.cal2) do
@@ -384,17 +377,53 @@ function GCardCalculator:CalSumPropery(cardCalResult, equipsCalResult, skillMap,
     return ret
 end
 
-function GCardCalculator:CalPerformance(ret, skillSumLevel)
+-- v 4.1 CalPerformance() 函数修改
+-- skillSumLevels : { [skills.main_type] = 总等级 }
+function GCardCalculator:CalPerformance(ret, skillSumLevels)
+    skillSumLevels = skillSumLevels or {}
+
     -- print(string.format("GCardCalculator:CalPerformance skillSumLevel:%s", skillSumLevel))
     -- LogTable(ret, "GCardCalculator:CalPerformance")
-    -- （攻击+生命*0.24+防御*6）/2+（速度-100）*8.6+（暴击伤害-1.5）*540+（暴击+效果命中+效果抵抗）*859+（技能等级-3）*24
-    local performance =
-        (ret.attack + ret.maxhp * 0.2 + ret.defense * 5) / 2 + (ret.speed - 100) * 8.6 + (ret.crit - 1.5) * 540 +
-        (ret.crit_rate + ret.hit + ret.resist) * 859 +
-        (skillSumLevel - 3) * 24
 
-    -- LogDebug("skillSumLevel: %d, performance: %f", skillSumLevel, performance)
-    return math.floor(performance)
+    -- skillSumLevel1-5对应技能表类型的1-5，这个是最新的公式哈
+    -- SkillMainType.CardNormal = 1 -- 卡牌一般技能
+    -- SkillMainType.CardTalent = 2 -- 卡牌主天赋技能
+    -- SkillMainType.CardSpecial = 3 -- 卡牌特殊技能
+    -- SkillMainType.CardSubTalent = 4 -- 卡牌副天赋技能
+    -- SkillMainType.Equip = 5 -- 装备技能
+
+    if g_CalCardPerfArr then
+        -- 攻击 耐久 防御 机动 暴伤 暴击 效果命中 效果抵抗 主动技能，特性，特殊技能，跃升天赋，装备技技能
+
+        local arr = g_CalCardPerfArr
+        local A, B, C, D, E, F, G, H, I, J, K, L, M = arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8], arr[9], arr[10], arr[11], arr[12], arr[13]
+        
+        local ssl1 = skillSumLevels[SkillMainType.CardNormal] or 3
+        local ssl2 = skillSumLevels[SkillMainType.CardTalent] or 0
+        local ssl3 = skillSumLevels[SkillMainType.CardSpecial] or 0
+        local ssl4 = skillSumLevels[SkillMainType.CardSubTalent] or 0
+        local ssl5 = skillSumLevels[SkillMainType.Equip] or 0
+
+        local performance = ret.attack * A + ret.maxhp * B + ret.defense * C + (ret.speed - 100) * D 
+                                + (ret.crit - 1.5) * E + ret.crit_rate * F + ret. hit * G  + ret.resist * H 
+                                + (ssl1 - 3) * I + ssl2 * J + ssl3 * K + ssl4 * L + ssl5 * M
+        return math.floor(performance)
+    else
+        local skillSumLevel = 0
+        for _, sLv in pairs(skillSumLevels) do
+            skillSumLevel = skillSumLevel + sLv
+        end
+
+        -- （攻击+生命*0.24+防御*6）/2+（速度-100）*8.6+（暴击伤害-1.5）*540+（暴击+效果命中+效果抵抗）*859+（技能等级-3）*24
+        local performance =
+            (ret.attack + ret.maxhp * 0.2 + ret.defense * 5) / 2 + (ret.speed - 100) * 8.6 + (ret.crit - 1.5) * 540 +
+            (ret.crit_rate + ret.hit + ret.resist) * 859 +
+            (skillSumLevel - 3) * 24
+
+        -- LogDebug("skillSumLevel: %d, performance: %f", skillSumLevel, performance)
+        return math.floor(performance)
+    end
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -493,6 +522,18 @@ end
 --             hit =0,
 --             damage =0,
 --             resist =0,
+--             haloInfo = {
+--                 cfgid = 0,
+--                 level = 0,
+--                 curCoor = 0,
+--                 equips = {
+--                     sid = 0,
+--                     cfgid = 0, 
+--                     idx = 0,
+--                     attrIdx = 0,
+--                     attr = 0,
+--                 }
+--             }
 --         },
 --         col= 编队col,
 --         row= 编队row,
@@ -506,8 +547,8 @@ function GCardCalculator:GetTeamPowerAdd(orignPower, dataArr)
     if property then
         for ix, v in ipairs(property) do --计算这一部分属性的战斗力
             if v.bInHalo then --受到光环加成的卡
-                local old = GCardCalculator:CalPerformance(dataArr[ix].data, 3)
-                local new = GCardCalculator:CalPerformance(v.data, 3)
+                local old = GCardCalculator:CalPerformance(dataArr[ix].data) -- v 4.1 CalPerformance() 函数修改
+                local new = GCardCalculator:CalPerformance(v.data)           -- v 4.1 CalPerformance() 函数修改
                 local haloAddPower = (new - old)
                 power = power + haloAddPower
             end

@@ -283,6 +283,106 @@ function this.SetIconBorder2(data, commodityType, border, icon, light, tIcon, tI
     end
 end
 
+--自选商品用 --支付界面
+function this.SetIconBorder3(data, icon1, border1, index1, icon2, border2, index2)
+    local goodsData = nil;
+    if border1 then
+        CSAPI.SetGOActive(border1, true);
+        CSAPI.SetScale(border1, normalSize, normalSize, normalSize);
+    end
+    if border2 then
+        CSAPI.SetGOActive(border2, true);
+        CSAPI.SetScale(border2, normalSize, normalSize, normalSize);
+    end
+    local iSize = 1;
+    local qulaity = 1;
+    index1 = index1 or 1
+    index2 = index2 or 1
+    local iName = data:GetIcon();
+    if commodityType == 1 then
+        if iName ~= nil and iName ~= "" and openSetting == 2 then -- 固定商品有配置图标优先读取
+            qulaity = data:GetQuality();
+            iSize = 1;
+            ResUtil.IconGoods:Load(icon, iName);
+        elseif data:GetType() == CommodityItemType.Item then -- 商品类型为1时读取物品表中的icon
+            local item = data:GetCommodityList()[1];
+            local good = {
+                id = item.cid
+            };
+            goodsData = GoodsData(good);
+            qulaity = goodsData:GetQuality();
+            if goodsData:GetType() == ITEM_TYPE.CARD then
+                -- CSAPI.SetScale(icon,roleSize,roleSize,roleSize);
+                -- ResUtil.RoleCard:Load(icon, goodsData:GetIcon());
+                GridUtil.LoadCIcon(icon, tIcon, goodsData:GetCfg(), true);
+            elseif goodsData:GetType() == ITEM_TYPE.CARD_CORE_ELEM then
+                ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                GridUtil.LoadTIcon(tIcon, tBorder, goodsData:GetCfg(), true);
+            elseif goodsData:GetType() == ITEM_TYPE.PanelImg then -- 多人插图,特殊处理
+                local cfg = goodsData:GetCfg();
+                ResUtil.MultiIcon:Load(icon, cfg.itemPicture);
+            elseif goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType() == ITEM_TYPE.EQUIP then -- 装备素材
+                -- GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetCfg(),false,true);
+                GridUtil.LoadEquipIcon(icon, tIcon, goodsData:GetIcon(), goodsData:GetQuality(),
+                    goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL, false)
+            else
+                -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
+            end
+        elseif data:GetType() == CommodityItemType.Package or data:GetType() == CommodityItemType.Deposit or
+            data:GetType() == CommodityItemType.MonthCard then -- 商品类型为2，4，5时读商店表中的icon
+            -- CSAPI.SetGOActive(border,false);
+            qulaity = data:GetQuality();
+            ResUtil.IconGoods:Load(icon, iName);
+        elseif data:GetType() == CommodityItemType.FORNITURE or data:GetType() == CommodityItemType.THEME then -- 家具图标
+            local item = data:GetCommodityList()[1];
+            local good = {
+                id = item.cid
+            };
+            goodsData = GoodsData(good);
+            ResUtil.Furniture:Load(icon, goodsData:GetIcon());
+        end
+    else
+        if data:GetType() == RandRewardType.EQUIP then -- 装备
+            goodsData = data.goods;
+            qulaity = goodsData:GetQuality();
+            GridUtil.LoadEquipIcon(icon, tIcon, goodsData:GetIcon(), goodsData:GetQuality(), false, false)
+            -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+        elseif data:GetType() == RandRewardType.CARD or data:GetType() == RandRewardType.ITEM then
+            local good = {
+                id = data:GetID(),
+                num = BagMgr:GetCount(data:GetID())
+            };
+            goodsData = GoodsData(good);
+            qulaity = goodsData:GetQuality();
+            if goodsData:GetType() == ITEM_TYPE.CARD then
+                -- CSAPI.SetScale(border,roleSize,roleSize,roleSize);
+                -- CSAPI.SetScale(icon,roleSize,roleSize,roleSize);
+                -- RoleTool.AddCardBG(border, goodsData:GetQuality())
+                GridUtil.LoadCIcon(icon, tIcon, goodsData:GetCfg());
+                -- ResUtil.RoleCard:Load(icon, goodsData:GetIcon());
+            elseif goodsData:GetType() == ITEM_TYPE.CARD_CORE_ELEM then
+                ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                GridUtil.LoadTIcon(tIcon, tBorder, goodsData:GetCfg(), true);
+            elseif goodsData:GetType() == ITEM_TYPE.PanelImg then -- 多人插图,特殊处理
+                local cfg = goodsData:GetCfg();
+                ResUtil.MultiIcon:Load(icon, cfg.itemPicture);
+            elseif goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL or goodsData:GetType() == ITEM_TYPE.EQUIP then -- 装备素材
+                -- GridUtil.LoadEquipIcon(icon,tIcon,goodsData:GetCfg(),false,true);
+                GridUtil.LoadEquipIcon(icon, tIcon, goodsData:GetIcon(), goodsData:GetQuality(),
+                    goodsData:GetType() == ITEM_TYPE.EQUIP_MATERIAL, false)
+            else
+                -- ResUtil.IconGoods:Load(icon, goodsData:GetIcon());
+                goodsData:GetIconLoader():Load(icon, goodsData:GetIcon());
+            end
+        end
+    end
+    CSAPI.SetScale(icon, iSize, iSize, iSize);
+    if border then
+        this.LoadBorderFrame(qulaity, border);
+    end
+end
+
 function this.LoadBorderFrame(lvQuality, border)
     -- local frame = GridFrame[lvQuality];
     -- ResUtil.IconGoods:Load(border, frame);
@@ -392,9 +492,11 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
             if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
                 local good=BagMgr:GetFakeData(priceInfo[1].id);
                 local rNum=priceInfo[1].num;
+                if commodity:GetType() ~= CommodityItemType.SUIT then
                 local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),currNum,PlayerClient:GetLv(),nil,shopPriceKey);
                 if isOk and res  then
                     rNum=res[1][2];
+                end
                 end
                 local dialogData = {
                     content = LanguageMgr:GetTips(15123,good:GetName(),rNum*currNum),
@@ -550,12 +652,12 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
                 if CSAPI.IsADVRegional(3) then
                     if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
                         print("--------------------BuyCommodity----------------------------")
-                        CSAPI.ADVJPTitle(priceInfo[1].num*currNum,function() ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack); end)
+                        CSAPI.ADVJPTitle(priceInfo[1].num*currNum,function() ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack,commodity:GetGrid1(),commodity:GetGrid2()); end)
                     else
-                        ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack);
+                        ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack,commodity:GetGrid1(),commodity:GetGrid2());
                     end
                 else
-                    ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack);
+                    ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack,commodity:GetGrid1(),commodity:GetGrid2());
                 end
             end
         else
@@ -646,19 +748,21 @@ function this.BuyCommodity(commodity, currNum, callBack, useCost, payType, isIns
                 if priceInfo and priceInfo[1].id == ITEM_ID.DIAMOND then --弹窗确认
                     local good=BagMgr:GetFakeData(priceInfo[1].id);
                     local rNum=priceInfo[1].num;
-                    local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),currNum,PlayerClient:GetLv(),nil,shopPriceKey);
-                    if isOk and res  then
-                        rNum=res[1][2];
+                    if commodity:GetType() ~= CommodityItemType.SUIT then
+                        local isOk,tips,res=GLogicCheck:IsCanUseVoucher(commodity:GetCfg(),voucherList,TimeUtil:GetTime(),currNum,PlayerClient:GetLv(),nil,shopPriceKey);
+                        if isOk and res then
+                            rNum=res[1][2];
+                        end
                     end
                     local dialogData = {
                         content = LanguageMgr:GetTips(15123,good:GetName(),rNum*currNum),
                         okCallBack = function()
-                            ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList,shopPriceKey, callBack);
+                            ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList,shopPriceKey, callBack,commodity:GetGrid1(),commodity:GetGrid2());
                         end
                     }
                     CSAPI.OpenView("Dialog", dialogData);
                 else
-                    ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList,shopPriceKey, callBack);
+                    ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum, useCost, voucherList,shopPriceKey, callBack,commodity:GetGrid1(),commodity:GetGrid2());
                 end
             end
         end
@@ -762,7 +866,7 @@ function this.BuyCommodity_Domestic(commodity, currNum, callBack, useCost, payTy
                 end);
             else --正常购买
                 Log("-------------------canPay--------正常购买------------")
-                ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack);
+                ShopProto:Buy(commodity:GetCfgID(), TimeUtil:GetTime(), currNum,useCost,nil,shopPriceKey, callBack,commodity:GetGrid1(),commodity:GetGrid2());
             end
 end
 
@@ -1021,28 +1125,43 @@ function this.OpenPayView(commodityData, pageData, callBack, isForce)
             id = good.data:GetDyVal1(),
             commId = commodityData:GetID()
         }, 2)
+    elseif (commodityData:GetType() == CommodityItemType.SingleSelection or commodityData:GetType() == CommodityItemType.DoubleSelection ) and
+    (commodityData:GetNum() >= 1 or commodityData:GetNum() == -1 or isForce == true) then -- 自选商品
+        CSAPI.OpenView("LovePlusPayView", {
+            commodity = commodityData,
+            pageData = pageData,
+            callBack = callBack
+        });
     elseif commodityData:GetNum() >= 1 or commodityData:GetNum() == -1 or isForce == true or (commodityData:GetType()==CommodityItemType.MonthCard and commodityData:GetSubType()==CommodityItemSubType.MonthCard2) then -- :-1代表不限制
         if commodityType == 1 then
-            if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
-                CSAPI.OpenView("ShopMultPayView", {
-                    commodity = commodityData,
-                    pageData = pageData,
-                    callBack = callBack
-                });
-            elseif commodityData:GetType() == CommodityItemType.Package or commodityData:GetType() ==
-            CommodityItemType.MonthCard or commodityData:GetType() == CommodityItemType.Regression then
-                CSAPI.OpenView("ShopPackPayView", {
+            if commodityData:GetType() == CommodityItemType.SUIT then
+                CSAPI.OpenView("LovePlusPackPayView", {
                     commodity = commodityData,
                     pageData = pageData,
                     callBack = callBack
                 });
             else
-                CSAPI.OpenView("ShopPayView", {
-                    commodity = commodityData,
-                    pageData = pageData,
-                    callBack = callBack
-                });
-            end       
+                if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
+                    CSAPI.OpenView("ShopMultPayView", {
+                        commodity = commodityData,
+                        pageData = pageData,
+                        callBack = callBack
+                    });
+                elseif commodityData:GetType() == CommodityItemType.Package or commodityData:GetType() ==
+                CommodityItemType.MonthCard or commodityData:GetType() == CommodityItemType.Regression then
+                    CSAPI.OpenView("ShopPackPayView", {
+                        commodity = commodityData,
+                        pageData = pageData,
+                        callBack = callBack
+                    });
+                else
+                    CSAPI.OpenView("ShopPayView", {
+                        commodity = commodityData,
+                        pageData = pageData,
+                        callBack = callBack
+                    });
+                end          
+            end
         else
             if commodityData:HasOtherPrice(ShopPriceKey.jCosts1) then
                 CSAPI.OpenView("ShopMultPayView", {

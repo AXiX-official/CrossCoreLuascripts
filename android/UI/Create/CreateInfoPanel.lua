@@ -43,7 +43,20 @@ function AddDatas1(id)
     local oCfg = Cfgs.RewardInfo:GetByID(id)
     if (oCfg.quality) then
         qualityDatas[oCfg.quality] = qualityDatas[oCfg.quality] or {}
-        AddDatas2(qualityDatas[oCfg.quality], oCfg.item, oCfg.bIsLimit)
+        for k, v in pairs(oCfg.item) do
+            if (v.type == 1) then
+                -- 模板
+                AddDatas1(v.id)
+            elseif (v.type == 3) then
+                -- 处理卡牌
+                if (tonumber(v.s_probability) ~= 0) then
+                    -- 是否检查开启时间
+                    if (not oCfg.bIsLimit or not v.openTimes or CheckInTime(v.openTimes)) then
+                        table.insert(qualityDatas[oCfg.quality], v)
+                    end
+                end
+            end
+        end
     else
         -- 模板
         for i, v in ipairs(oCfg.item) do
@@ -52,25 +65,25 @@ function AddDatas1(id)
     end
 end
 
-function AddDatas2(datas, item, bIsLimit)
-    for p, q in ipairs(item) do
-        if (tonumber(q.s_probability) ~= 0) then
-            -- 是否检查开启时间
-            if (not bIsLimit or not q.openTimes or CheckInTime(q.openTimes)) then
-                table.insert(datas, q)
-            end
-        end
-    end
-end
+-- function AddDatas2(datas, item, bIsLimit)
+--     for p, q in ipairs(item) do
+--         if (tonumber(q.s_probability) ~= 0) then
+--             -- 是否检查开启时间
+--             if (not bIsLimit or not q.openTimes or CheckInTime(q.openTimes)) then
+--                 table.insert(datas, q)
+--             end
+--         end
+--     end
+-- end
 
 function SetItems()
     items = items or {}
-    ItemUtil.AddItems("Create/CreateInfoItem", items, qualityDatasArr, Content)
+    ItemUtil.AddItems("Create/CreateInfoItem", items, qualityDatasArr, Content,nil,1,data:IsSelectPool())
 end
 
 function SetItems0()
     -- datas 
-    local hadUP, datas0,isChoise = GetItem0Datas()
+    local hadUP, datas0, isChoise = GetItem0Datas()
     if (not hadUP) then
         if (item0) then
             CSAPI.SetGOActive(item0.gameObject, false)
@@ -81,12 +94,12 @@ function SetItems0()
     if (not item0) then
         ResUtil:CreateUIGOAsync("Create/CreateInfoItem0", Content, function(go)
             item0 = ComUtil.GetLuaTable(go)
-            item0.Refresh(datas0,isChoise)
+            item0.Refresh(datas0, isChoise)
             go.transform:SetAsFirstSibling()
         end)
     else
         CSAPI.SetGOActive(item0.gameObject, true)
-        item0.Refresh(datas0,isChoise)
+        item0.Refresh(datas0, isChoise)
     end
 end
 
@@ -102,7 +115,7 @@ function CheckInTime(openTimes)
 end
 
 function GetItem0Datas()
-    local hadUP, datas0,isChoise = false, {},false
+    local hadUP, datas0, isChoise = false, {}, false
     if (data:IsSelectPool()) then
         if (data:IsSelectRole()) then
             hadUP = true
@@ -150,5 +163,5 @@ function GetItem0Datas()
             end
         end
     end
-    return hadUP, datas0,isChoise
+    return hadUP, datas0, isChoise
 end

@@ -31,9 +31,10 @@ function Awake()
     cg_btns = ComUtil.GetOrAddCom(btnS, "CanvasGroup")
 end
 
-function OnDestroy()
-
-end
+-- function OnDestroy()
+--     ABMgr:ReleaseABAllWithViewName("CRoleSelectView")
+--     ABMgr:ClearRecordsWithViewName("CRoleSelectView")
+-- end
 
 function LayoutCallBack(index)
     local layout = GetLayout()
@@ -63,6 +64,10 @@ end
 
 function Show()
     local modelID = curTabIndex == 1 and RoleMgr:GetSkinIDByRoleID(curID) or curID
+
+    -- ABMgr:RecordABWithModelIDInto("CRoleSelectView",modelID)
+    -- ABMgr:ReleaseABAutoWithViewName("CRoleSelectView")
+
     if (modelID == old_c_data:GetIDs()[slot]) then
         c_data.sNewPanel["detail" .. slot] = table.copy(old_c_data.sNewPanel["detail" .. slot])
         c_data.sNewPanel.ids = table.copy(old_c_data.sNewPanel.ids)

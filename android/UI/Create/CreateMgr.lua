@@ -3,9 +3,7 @@ require "CreateData"
 local this = MgrRegister("CreateMgr")
 
 function this:Init()
-    self.datas = {}
-    self.daily_use_cnt = 0
-    self.create_cnts = {} -- 抽卡次数记录
+    self:Clear()
     self:InitCfg()
 
     self:CardFactoryInfo()
@@ -18,7 +16,9 @@ function this:Init()
 end
 
 function this:Clear()
-    self.datas = nil
+    self.datas = {}
+    self.daily_use_cnt = 0
+    self.create_cnts = {} -- 抽卡次数记录
 
     EventMgr.RemoveListener(EventType.Dungeon_PlotPlay_Over, this.LevelUpdate)
     EventMgr.RemoveListener(EventType.Dungeon_Data_Setted, this.LevelUpdate)
@@ -140,7 +140,8 @@ function this:GetTotalCreateCnt(id)
 end
 
 -- 卡牌厂区信息
-function this:CardFactoryInfo()
+function this:CardFactoryInfo(cb)
+    self.CardFactoryInfoCB = cb
     local proto = {"PlayerProto:CardFactoryInfo", {}}
     NetMgr.net:Send(proto)
 end
@@ -204,7 +205,7 @@ function this:CardFactoryInfoRet(proto)
                 self.datas[k]:SetChoiceInfos(v)
             end 
         end
-    end 
+    end
 end
 
 -- 获取首次抽卡logs
@@ -411,6 +412,15 @@ function this:SetSelfChoiceCardPoolCardRet(proto)
         self.datas[proto.id]:SetChoiceInfos(proto)
     end
     EventMgr.Dispatch(EventType.Choice_Card_Ret)
+end
+
+--是不是首选卡
+function this:CheckISSelectCard(poolID,cardID)
+    local data = self:GetData(poolID)
+    if(data)then 
+        return data:IsFirstSelectCard(cardID)
+    end
+    return false 
 end
 
 return this

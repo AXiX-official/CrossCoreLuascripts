@@ -25,5 +25,5 @@ function Skill400600205:OnActionOver(caster, target, data)
 		return
 	end
 	-- 400600203
-	self:AddBuffCount(SkillEffect[400600203], caster, self.card, data, 400600201,1,5)
+	self:AddBuffCount(SkillEffect[400600203], caster, self.card, data, 400600201,1,3)
 end

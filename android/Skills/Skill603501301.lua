@@ -12,3 +12,18 @@ function Skill603501301:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamageLight(SkillEffect[12006], caster, target, data, 0.167,6)
 end
+-- 行动结束
+function Skill603501301:OnActionOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 603500301
+	self:OwnerAddBuffCount(SkillEffect[603500301], caster, self.card, data, 603500301,1,4)
+end

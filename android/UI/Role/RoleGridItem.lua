@@ -26,7 +26,7 @@ function Refresh(_data, _elseData)
     -- root
     LoadFrame(data:GetQuality())
     LoadIcon(data:GetIcon())
-	LoadTIcon()
+    LoadTIcon()
     -- down
     local str1 = needNum > data:GetCount() and StringUtil:SetByColor(data:GetCount(), "ff8790") or data:GetCount()
     CSAPI.SetText(txtDown, string.format("%s/%s", str1, needNum))
@@ -72,6 +72,13 @@ end
 
 function OnClick()
     if (data and cb) then
-        cb(needSelect and index or this)
+        if (needSelect) then
+            cb(index)
+        else
+            -- cb(this)
+            local _needNum = needNum - data:GetCount()
+            _needNum = _needNum>0 and _needNum or nil
+            UIUtil:OpenGoodsInfo(data, nil, _needNum)
+        end
     end
 end

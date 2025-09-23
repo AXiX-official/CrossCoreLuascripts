@@ -421,7 +421,7 @@ function this:RemoveLoginMovie()
 end
 
 -- 打开物品信息框
-function this:OpenGoodsInfo(data, openSetting)
+function this:OpenGoodsInfo(data, openSetting,_needNum)
     local panelName = "GoodsFullInfo";
     local key = JumpMgr:GetLastViewKey();
     if key then
@@ -432,7 +432,8 @@ function this:OpenGoodsInfo(data, openSetting)
     end
     CSAPI.OpenView(panelName, {
         data = data,
-        key = key
+        key = key,
+        needNum = _needNum
     }, openSetting);
 end
 

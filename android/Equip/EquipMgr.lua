@@ -286,10 +286,11 @@ end
 
 --返回套装分类的装备数据 返回的数据结构：{{cfg=套装配置表数据,equips1,equip2,...}} qualityFilters:品质筛选 配置表中show不等于1则不返回，配置表中时间字段大于当前时间时不返回
 function this:GetEquipSuitData2(qualityFilters,hasEquipped,notContainID)
+	LogError("GetEquipSuitData2")
 	local arr={};
 	if self.equips then
 		local currTime=TimeUtil:GetTime();
-		for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do
+		for _,cfg in pairs(Cfgs.CfgSuit:GetAll()) do
 			local canAdd=true;
 			if cfg.limitTime then
 				local lTime=TimeUtil:GetTimeStampBySplit(cfg.limitTime)
@@ -333,7 +334,7 @@ function this:GetEquipSuitData(qualityFilters,hasEquipped,notContainID)
 	local arr={};
 	if self.equips then
 		local currTime=TimeUtil:GetTime();
-		for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do
+		for _,cfg in pairs(Cfgs.CfgSuit:GetAll()) do
 			local canAdd=true;
 			if cfg.limitTime then
 				local lTime=TimeUtil:GetTimeStampBySplit(cfg.limitTime)
@@ -410,7 +411,7 @@ function this:GetEquipSuitDataByStr(str,qualityFilters,notContainID,hasEquipped)
 	local arr={};
 	if self.equips then
 		local currTime=TimeUtil:GetTime();
-		for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do
+		for _,cfg in pairs(Cfgs.CfgSuit:GetAll()) do
             if string.match(cfg.name,str) then
 				local list={};
 				list.cfg=cfg;
@@ -600,7 +601,7 @@ function this:GetSkillSortConf(conditionData,cb)
 	mData.root = {}
 	local _root = {}
 	_root.Skill=EquipCommon.GetFilterSkillList();
-	-- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum.datas_ID) do
+	-- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum:GetAll()) do
 	-- 	if v.show==1 then
 	-- 		table.insert(_root.Skill,{id=v.id,sName=v.sName});
 	-- 	end

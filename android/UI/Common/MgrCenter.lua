@@ -3,6 +3,7 @@ require "MgrBase"
 
 --注册名称(必填)
 local mgrNames = {
+	"RoleABMgr",
 	"MenuBuyMgr",  --充值弹窗
 	"RedPointMgr",  --红点管理
 	"DungeonMgr",	--副本
@@ -60,6 +61,7 @@ local mgrNames = {
 	"CollaborationMgr",--回归绑定
 	"PetActivityMgr",--宠物管理类
 	"CRoleDisplayMgr", --看板
+	"LovePlusMgr", --爱相随
 	"RogueSMgr",   --战力派遣
 	"BGMMgr",
 	"ColosseumMgr",
@@ -76,6 +78,7 @@ local mgrNames = {
 	"AnniversaryMgr", --周年活动
 	"MultTeamBattleMgr",--递归沙盒
 	"CoffeeMgr",
+	"RiddleMgr",
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"
 }

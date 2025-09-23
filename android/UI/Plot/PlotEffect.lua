@@ -98,7 +98,7 @@ function CreateVideo(name, parent, callback)
         return
     end
     -- LogError(name)
-    local path = "Effects/plot/" .. name
+    local path = "Effects/" .. name
     CSAPI.CreateGOAsync(path,0,0,0,parent,function (go)
         if callback then
             callback(go)

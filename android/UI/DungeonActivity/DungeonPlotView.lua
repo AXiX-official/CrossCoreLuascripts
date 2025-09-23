@@ -7,23 +7,22 @@ local groupDatas = nil
 local listItemPool = nil
 local listItems = nil
 local jumpID = 0 -- 用于区分进入时是否有新关卡
-local openInfo =nil
+local openInfo = nil
 -- hard
 local currHardLv = 1
 local hardData = nil
 local isHardOpen = false
-local isHardChange = false 
+local isHardChange = false
 local hardTips = nil
-
---extre
+-- danger
+local currDanger = 1
+-- extre
 local extreData = nil
-
 -- bg
 local canvasW = 0
 local bgWidth = 0
 local itemWidth = 1
 local lastPosX = 0
-
 -- effect
 local animInfo = nil
 local animPlayTime = 0
@@ -74,7 +73,7 @@ function Update()
         CSAPI.SetAnchor(effect.gameObject, effectPosOffset + math.abs(bgPos_x), 0)
     end
 
-    --困难本等待开启
+    -- 困难本等待开启
     UpdateHardOpen()
 end
 
@@ -93,7 +92,7 @@ function UpdateHardOpen()
     end
 end
 
-function OnOpen() 
+function OnOpen()
     if data then
         sectionData = DungeonMgr:GetSectionData(data.id)
         openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
@@ -109,7 +108,7 @@ end
 function InitPanel()
     data.itemId = data.itemId or 0
     currHardLv = 1
-    --good
+    -- good
     CSAPI.SetText(txtGoods, BagMgr:GetCount(10015) .. "")
     CSAPI.SetGOActive(infoMask, false)
 
@@ -146,17 +145,17 @@ function InitDatas()
                 end
             end
         end
-        table.sort(datas[1],function (a,b) --普通关排序
+        table.sort(datas[1], function(a, b) -- 普通关排序
             return a.cfg.id < b.cfg.id
         end)
         if datas[2] then
-            table.sort(datas[2],function (a,b) --困难关排序
+            table.sort(datas[2], function(a, b) -- 困难关排序
                 return a.cfg.id < b.cfg.id
             end)
             hardData = datas[2][1]
         end
         if datas[3] then
-            table.sort(datas[3],function (a,b) --EX关排序
+            table.sort(datas[3], function(a, b) -- EX关排序
                 return a.cfg.id < b.cfg.id
             end)
             extreData = datas[3][1]
@@ -171,8 +170,8 @@ function InitDatas()
                 currHardLv = 3
             end
         end
-        
-        --未开启取消跳转
+
+        -- 未开启取消跳转
         if currHardLv == 2 and not openInfo:IsHardOpen() then
             currHardLv = 1
             data.itemId = 0
@@ -181,7 +180,7 @@ function InitDatas()
             data.itemId = 0
         end
 
-        --判断困难本开启
+        -- 判断困难本开启
         if openInfo and openInfo:IsHardOpen() then
             isHardChange = true
         end
@@ -199,39 +198,48 @@ function JumpToItem()
     end
     if jumpID > 0 and listItems and #listItems > 0 then
         for k, v in ipairs(listItems) do
-            if v:GetDungeonID() == jumpID then
-                local itemPos_x = CSAPI.GetAnchor(v.gameObject)
-                local itemPrecent = (math.abs(itemPos_x)) / itemWidth
-                local _, bgLocalY = CSAPI.GetLocalPos(bgImg.gameObject)
-                local x = -(bgWidth * itemPrecent) + canvasW / 2
-                CSAPI.SetLocalPos(bgImg.gameObject, x, bgLocalY)
-                if data.itemId > 0 and jumpID == data.itemId then -- 新关卡和跳转关卡是同一关卡
-                    v.OnClick()
-                end
-                -- 首次开启关卡动效
-                local infos = GetFirstOpenInfos()
-                if jumpID and (not IsCurrTypePass(groupDatas) or data.itemId <= 0) and
-                (not infos[jumpID] or infos[jumpID] == 0) then
-                    PlayAnim(300, function ()
-                        local line = listLines[k]
-                        if line then
-                            line.PlayAnim()
-                        end
-
-                        if k > 1 then
-                            local lastItem = listItems[k - 1]
-                            if lastItem then
-                                lastItem.SetColor(true, false, currHardLv == 2)
-                            end
-                            v.SetColor(true, true, currHardLv == 2)
-                            v.SetNew(true)
-                            currItem = v
-                        end
-                        SaveFirstOpenInfo(jumpID, true)
-                    end)
+            if v:GetGroups() then
+                for i, m in ipairs(v:GetGroups()) do
+                    if m == jumpID then
+                        SetJump(k,v)
+                        currDanger = i
+                        break
+                    end
                 end
             end
         end
+    end
+end
+
+function SetJump(k, v)
+    local itemPos_x = CSAPI.GetAnchor(v.gameObject)
+    local itemPrecent = (math.abs(itemPos_x)) / itemWidth
+    local _, bgLocalY = CSAPI.GetLocalPos(bgImg.gameObject)
+    local x = -(bgWidth * itemPrecent) + canvasW / 2
+    CSAPI.SetLocalPos(bgImg.gameObject, x, bgLocalY)
+    if data.itemId > 0 and jumpID == data.itemId then -- 新关卡和跳转关卡是同一关卡
+        v.OnClick()
+    end
+    -- 首次开启关卡动效
+    local infos = GetFirstOpenInfos()
+    if jumpID and (not IsCurrTypePass(groupDatas) or data.itemId <= 0) and (not infos[jumpID] or infos[jumpID] == 0) then
+        PlayAnim(300, function()
+            local line = listLines[k]
+            if line then
+                line.PlayAnim()
+            end
+
+            if k > 1 then
+                local lastItem = listItems[k - 1]
+                if lastItem then
+                    lastItem.SetColor(true, false, currHardLv == 2)
+                end
+                v.SetColor(true, true, currHardLv == 2)
+                v.SetNew(true)
+                currItem = v
+            end
+            SaveFirstOpenInfo(jumpID, true)
+        end)
     end
 end
 
@@ -246,24 +254,24 @@ end
 function SetHard()
     CSAPI.SetGOActive(hardObj, hardData ~= nil)
 
-    if not openInfo:IsDungeonOpen() then --关卡开启
+    if not openInfo:IsDungeonOpen() then -- 关卡开启
         isHardOpen = false
         hardTips = LanguageMgr:GetTips(24003)
-    else    
+    else
         isHardOpen = true
     end
 
     if isHardOpen then
-        isHardOpen, hardTips = openInfo:IsHardOpen() --时间开启
+        isHardOpen, hardTips = openInfo:IsHardOpen() -- 时间开启
     end
-    
-    if isHardOpen and hardData then --副本开启
+
+    if isHardOpen and hardData then -- 副本开启
         isHardOpen, hardTips = hardData:IsOpen()
     end
-    
+
     CSAPI.SetGOActive(lockImg1, not isHardOpen);
     local isEasy = currHardLv == 1
-    CSAPI.SetAnchor(hardSel,isEasy and -51 or 107, 52)
+    CSAPI.SetAnchor(hardSel, isEasy and -51 or 107, 52)
     local color1 = isEasy and {255, 255, 255, 255} or {255, 255, 255, 125}
     local color2 = not isEasy and {255, 255, 255, 255} or {255, 255, 255, 125}
     CSAPI.SetImgColor(btnSelEasy, color1[1], color1[2], color1[3], color1[4])
@@ -271,7 +279,7 @@ function SetHard()
 end
 
 function SetExtre()
-    --待定
+    -- 待定
 end
 -----------------------------------------------item-----------------------------------------------
 
@@ -300,7 +308,7 @@ function RefreshDatas()
 
             if lua.IsOpen() and not lua.IsPass() then
                 jumpID = lua.GetDungeonID()
-                if (not infos[lua.GetDungeonID()] or infos[lua.GetDungeonID()] == 0) and index > 1 then --未播放
+                if (not infos[lua.GetDungeonID()] or infos[lua.GetDungeonID()] == 0) and index > 1 then -- 未播放
                     lua.SetNew(false)
                     lua.SetColor(false, false, currHardLv == 2)
                     local lastItem = listItems[index - 1]
@@ -456,16 +464,19 @@ function ShowInfo(item)
     if itemInfo == nil then
         ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo7", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.Show(_cfg,type,OnLoadCallBack)
+            itemInfo.Show(_cfg, type, OnLoadCallBack)
         end)
     else
-        itemInfo.Show(_cfg,type,OnLoadCallBack)
+        itemInfo.Show(_cfg, type, OnLoadCallBack)
     end
 end
 
 function OnLoadCallBack()
-    itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
+    itemInfo.SetFunc("Button", "OnClickEnter", OnBattleEnter)
     itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
+    if currItem then
+        itemInfo.CallFunc("Danger","ShowDangeLevel",currItem.IsDanger(),currItem.GetCfgs(),currDanger)
+    end
     SetInfoItemPos()
 end
 
@@ -477,6 +488,7 @@ function SetInfoItemPos()
     itemInfo.SetPanelPos("Details", -6, -250)
     itemInfo.SetPanelPos("Button", 6, -444)
     itemInfo.SetPanelPos("Plot", 23, 322)
+    itemInfo.SetPanelPos("Danger", 0, -69)
     if currItem then
         itemInfo.SetPanelPos("Output", 23, currItem.IsStory() and 15 or -71)
     end
@@ -491,16 +503,30 @@ function OnBattleEnter()
     end
     if (currItem) then
         local cfg = currItem:GetCfg()
-        if cfg.arrForceTeam ~= nil then -- 强制上阵编队
-            CSAPI.OpenView("TeamForceConfirm", {
-                dungeonId = cfg.id,
-                teamNum = cfg.teamNum
-            })
-        else
-            CSAPI.OpenView("TeamConfirm", { -- 正常上阵
-                dungeonId = cfg.id,
-                teamNum = cfg.teamNum
-            }, TeamConfirmOpenType.Dungeon)
+        if cfg then
+            local cost = DungeonUtil.GetCost(cfg)
+            if cost then
+                local cur = BagMgr:GetCount(cost[1])
+                if cur < cost[2] then
+                    OnBuyFunc()
+                    return 
+                end
+            end
+            local cfgs = currItem.GetCfgs()
+            if cfgs and #cfgs > 1 then
+                cfg = cfgs[itemInfo.CallFunc("Danger","GetCurrDanger")]
+            end
+            if cfg.arrForceTeam ~= nil then -- 强制上阵编队
+                CSAPI.OpenView("TeamForceConfirm", {
+                    dungeonId = cfg.id,
+                    teamNum = cfg.teamNum
+                })
+            else
+                CSAPI.OpenView("TeamConfirm", { -- 正常上阵
+                    dungeonId = cfg.id,
+                    teamNum = cfg.teamNum
+                }, TeamConfirmOpenType.Dungeon)
+            end
         end
     end
 end
@@ -560,7 +586,7 @@ function OnClickHard()
 end
 
 function OnClickShop()
-    CSAPI.OpenView("ShopView",901)
+    CSAPI.OpenView("ShopView", 901)
 end
 
 -- 难度切换
@@ -578,7 +604,7 @@ end
 
 -----------------------------------------------anim-----------------------------------------------
 
-function PlayAnim(time,cb)
+function PlayAnim(time, cb)
     AnimStart()
     FuncUtil:Call(function()
         if gameObject then

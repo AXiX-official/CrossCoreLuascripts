@@ -21,8 +21,9 @@ end
 
 --初始化公会战配置信息
 function this:InitGFDatas()
+    LogError("InitGFDatas")
     self.gfList={};
-    for k,v in pairs(Cfgs.CfgGuildFightSchedule.datas_ID) do
+    for k,v in pairs(Cfgs.CfgGuildFightSchedule:GetAll()) do
         local gf=GuildFightData.New();
         gf:SetCfgID(v.id);
         table.insert(self.gfList,gf);

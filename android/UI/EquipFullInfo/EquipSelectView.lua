@@ -166,7 +166,7 @@ function Update()
         countSuitNum=0;
         local currTime=TimeUtil:GetTime();
         local screenType = suitScreenIdx == nil and nil or suitScreenList[suitScreenIdx]
-        for _,cfg in pairs(Cfgs.CfgSuit.datas_ID) do --计算可以显示的套装数量
+        for _,cfg in pairs(Cfgs.CfgSuit:GetAll()) do --计算可以显示的套装数量
 			local canAdd=true;
 			if cfg.limitTime then
 				local lTime=TimeUtil:GetTimeStampBySplit(cfg.limitTime)
@@ -723,7 +723,7 @@ function OnClickFiltrate()
 	_root.Sort="CfgEquipSortEnum";
 	_root.Qualiy = "CfgEquipQualityEnum"
     _root.skill=EquipCommon.GetFilterSkillList();
-    -- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum.datas_ID) do
+    -- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum:GetAll()) do
     --     if v.group and v.show then
     --         table.insert(_root.skill,{id=v.id,sName=v.sName});
     --     end

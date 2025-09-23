@@ -3475,6 +3475,16 @@ function ConfigChecker:CfgRogueBuff(cfgs)
 
     end
 end
+
+function ConfigChecker:CfgDateParagraph(cfgs)
+    gChapterNodeNums = {}
+    for _, cfg in pairs(cfgs) do
+        gChapterNodeNums[cfg.group] = gChapterNodeNums[cfg.group] or 0
+        local curNum = gChapterNodeNums[cfg.group]
+        gChapterNodeNums[cfg.group] = curNum + 1
+    end
+end
+
 function ConfigChecker:Section(cfgs)
     for _, cfg in pairs(cfgs) do
         if cfg.data then
@@ -3498,6 +3508,24 @@ function ConfigChecker:CfgSplitTime(cfgs)
         end
     end
 end
+
+function ConfigChecker:CfgDateChat(cfgs)
+    for _, cfg in pairs(cfgs) do
+        if cfg.nextChatID and #cfg.nextChatID > 0 then
+            for _, id in ipairs(cfg.nextChatID) do
+                if cfgs[id] then
+                    if cfg.type == 2 or cfg.type == 3 then --选项设置
+                        cfgs[id].isOption = 1
+                    end
+                    if cfg.talkRoleEmblem~=nil and cfgs[id].talkRoleEmblem~=nil then --隐藏头像
+                        cfgs[id].isHideIcon = 1
+                    end
+                end
+            end
+        end
+    end
+end
+
 function ConfigChecker:cfgColosseum(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -3579,6 +3607,33 @@ function ConfigChecker:CfgPuzzleReward(cfgs)
     end
 end
 
+function ConfigChecker:cfgQuestions(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+    end
+
+end
+
+function ConfigChecker:cfgQuestionsGroup(cfgs)
+    g_questions_group = {}
+    for _, cfg in pairs(cfgs) do
+        for _, info in pairs(cfg.infos) do
+            if info.isright then
+                cfg.answerIndex = info.index
+            end
+        end
+        if not cfg.group then
+            LogE(string.format("cfgQuestionsGroup:%s 缺少group", cfg.id))
+        end
+        if not g_questions_group[cfg.group] then
+            g_questions_group[cfg.group] = { group = {} }
+        end
+        table.insert(g_questions_group[cfg.group].group, { id = cfg.id, weight = cfg.weight })
+        g_questions_group[cfg.group].totalWeight = (g_questions_group[cfg.group].totalWeight or 0) + cfg.weight
+    end
+end
+
 
 function ConfigChecker:CfgPet(cfgs)
     for _, cfg in pairs(cfgs) do
@@ -3608,5 +3663,13 @@ function ConfigChecker:CfgCoffeeMain(cfgs)
         cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
         cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
         assert(cfg.nBeginTime < cfg.nEndTime, "女仆咖啡活动开启时间范围有误")
+    end
+end
+function ConfigChecker:CfgDateSection(cfgs)
+    g_shopToChapter = {}
+    for _, cfg in pairs(cfgs) do
+       if cfg.shopId then
+            g_shopToChapter[cfg.shopId] = cfg.id
+       end
     end
 end

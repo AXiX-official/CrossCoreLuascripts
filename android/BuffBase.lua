@@ -123,6 +123,9 @@ function BuffMgr:AddCount(target, caster, id, nCount, limit, effectID)
 		if nCount > 0 and buffer.nCount >= limit then --buffer本身已经达到上限, 不需要处理了
 			return
 		end	
+
+		-- [4.2 Buffer400600201buff报错]
+		buffer.caster = buffer.caster or caster
 	else
 		buffer = self:Create(target, caster, id)
 		buffer.effectID = effectID
@@ -159,6 +162,8 @@ function BuffMgr:AddCount(target, caster, id, nCount, limit, effectID)
 		-- 	--LogDebugEx("oldBuff", oldBuff.id , oldBuff.nCount, buffer.nCount)
 		-- 	self:DelBuffer(oldBuff, caster, target)
 		-- end
+
+		-- LogDebugEx("buffer:OnCreate----", target.name, caster.name, buffer.caster.name)
 		buffer:OnPreDelete()-- 删除之前的属性
 		buffer:OnCreate(caster, target) -- 重新加属性
 
@@ -1235,7 +1240,11 @@ function BuffBase:LimitDamage(effect, caster, target, data, percenthp, percentat
 
 	local hp2 = self:CalcCure(caster, target, 2, percenthp) -- 持有者血量
 	local hp3 = self:CalcCure(caster, target, 3, percentatt) -- 创建者攻击
-	local damageAdjust = caster:Get("damage") * target:Get("bedamage")
+
+	-- [4.2版本]
+	local coefficient = 1+(caster:GetValue("LimitDamage") or 0) -- 限制真实伤害
+	local damageAdjust = caster:Get("damage") * target:Get("bedamage") * coefficient
+
 	local hp = math.floor(math.min(hp2, hp3) * damageAdjust)
 	LogDebugEx(string.format("hp=%s, attack=%s damage=%s bedamage=%s damageAdjust= %s",
 	hp2, hp3, caster:Get("damage") , target:Get("bedamage"), damageAdjust))
@@ -1267,8 +1276,10 @@ function BuffBase:LimitDamage2(effect, caster, target, data, percenthp, percenta
 	local hp3 = self:CalcCure(caster, target, 3, percentatt) -- 创建者攻击
 	-- FightCardBase:SetValue(key, {"buffid1":系数1, "buffid2":系数2}, data)
 
+	-- [4.2版本]
 	local coefficient = 1+(caster:GetValue("LimitDamage"..self.id) or 0) -- buff持续伤害强化系数
-	local damageAdjust = caster:Get("damage") * target:Get("bedamage") * coefficient
+	local coefficient2 = 1+(caster:GetValue("LimitDamage") or 0) -- 限制真实伤害
+	local damageAdjust = caster:Get("damage") * target:Get("bedamage") * coefficient * coefficient2
 	local hp = math.floor(math.min(hp2, hp3) * damageAdjust)
 	LogDebugEx(string.format("hp=%s, attack=%s damage=%s bedamage=%s damageAdjust= %s",
 	hp2, hp3, caster:Get("damage") , target:Get("bedamage"), damageAdjust))

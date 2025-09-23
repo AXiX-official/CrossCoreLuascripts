@@ -655,7 +655,7 @@ function OnClickFiltrate()
 	_root.Sort="CfgEquipSortEnum";
 	_root.Qualiy = "CfgEquipQualityEnum"
     _root.skill=EquipCommon.GetFilterSkillList();
-    -- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum.datas_ID) do
+    -- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum:GetAll()) do
     --     if v.group then
     --         table.insert(_root.skill,{id=v.id,sName=v.sName});
     --     end

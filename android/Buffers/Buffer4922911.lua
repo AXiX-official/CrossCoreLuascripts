@@ -6,11 +6,6 @@ Buffer4922911 = oo.class(BuffBase)
 function Buffer4922911:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 回合开始时
-function Buffer4922911:OnRoundBegin(caster, target)
-	-- 6104
-	self:ImmuneBufferGroup(BufferEffect[6104], self.caster, target or self.owner, nil,1)
-end
 -- 创建时
 function Buffer4922911:OnCreate(caster, target)
 	-- 4008

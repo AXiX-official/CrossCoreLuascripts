@@ -82,12 +82,12 @@ local anim_create
 local anim_shop
 local rdLNR = {}
 local globalBossTime = 0
+local bagLimitTime
+local skinLimitTime = nil
 local isDestory = false
 local attackEffectIsShow = false
 local attackEffectBaseTime = nil
 local attackEffectTimer = nil
-local bagLimitTime
-local skinLimitTime = nil
 local skinRebateTime = nil
 local skinRebateShowTime = nil
 local skinRebateRefreshTime = nil
@@ -210,6 +210,7 @@ function InitListener()
     eventMgr:AddListener(EventType.Puzzle_Data_Ret, SetLTSV)
     -- spineUI动画进入与退出
     eventMgr:AddListener(EventType.Menu_SpineUI, SpineUI)
+    eventMgr:AddListener(EventType.Riddle_Data_Ret, SetLTSV)
 end
 
 function OnDestroy()
@@ -770,6 +771,9 @@ function SetImg()
         top = iconParent1
     end
     top.transform:SetAsLastSibling()
+    --记录看板的ab
+    --ABMgr:RefreshMajorRoleList(RecordAB(curDisplayData))
+    RoleABMgr:ChangeByIDs("MenuView", curDisplayData:GetIDs())
 end
 
 function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
@@ -779,6 +783,9 @@ function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
         CSAPI.SetAnchor(iconParent, detail.x, detail.y, 0)
         CSAPI.SetScale(iconParent, detail.scale, detail.scale, 1)
         -- item.EnNeedClick(detail.top) -- 启禁点击 
+        -- local cfg = Cfgs.character:GetByID(id)    
+        -- cfg = cfg == nil and Cfgs.CfgArchiveMultiPicture:GetByID(id) or cfg
+        -- ReleaseMgr:RefreshMajorRole(cfg,abMemorys)
         item.Refresh(id, LoadImgType.Main, function()
             -- 入场动画
             if (slot == curDisplayData:GetTopSlot()) then
@@ -1644,6 +1651,7 @@ function OnClickVirtualkeysClose()
 end
 
 ------------------------出击按钮特效-------------------------
+
 function GetAttackEffectTimer()
     if(not CSAPI.IsADVRegional(3))then 
         return nil
@@ -1785,3 +1793,31 @@ function SpineUI(b)
     end
     isShowSpineUI = b
 end
+
+-- function RecordAB(ids)
+--     local abNames = {}
+--     for k, v in ipairs(ids) do
+--         if (v and v ~= 0) then
+--             local cfgModel = nil
+--             if (v > 10000) then
+--                 cfgModel = Cfgs.character:GetByID(v)
+--             else
+--                 cfgModel = Cfgs.CfgArchiveMultiPicture:GetByID(v)
+--             end
+--             -- 
+--             table.insert(abNames, GetABName(v, "img", cfgModel.img))
+--             if (cfgModel.l2dName) then
+--                 table.insert(abNames, GetABName(v, "l2d", cfgModel.l2dName))
+--             end
+--         end
+--     end
+--     return abNames
+-- end
+
+-- function GetABName(id, abType, abName)
+--     if (id > 10000) then
+--         abName = (abType == "img" and "textures_bigs_character_" or "prefabs_spine_") .. abName
+--     else
+--         abName = (abType == "img" and "textures_bigs_uis_multiimg_" or "prefabs_spine_") .. abName
+--     end
+-- end

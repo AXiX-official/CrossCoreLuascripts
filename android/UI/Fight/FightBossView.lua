@@ -100,7 +100,7 @@ function OnCharacterFightInfoChanged(character)
 end
 
 function SetTarget(targetCharacter)
-    if(target)then
+    if(target and not target.IsDead())then
         return;
     end
     target = targetCharacter;
@@ -177,8 +177,6 @@ function UpdateActivityHP(nStateDamage)
         target.SetHPLock(true);  
         UpdateInfo();     
                 
-         
-        --LogError(activityAPIData);
         if(activityAPIData and (activityAPIData.type == 2 or activityAPIData.type == 3))then
             UpdateActivityActionHP1(hpCurr,hpTotal);
             local enemys = GetAllEnemys();            
@@ -397,7 +395,7 @@ function OnClickSelf()
     if(target)then
         local id = target.GetID();
         if(FightClient:GetInputCharacter())then
-            if (g_FightMgr.type~=SceneType.PVP and g_FightMgr.type ~= SceneType.PVPMirror) or _G.showPvpRoleInfo==true then --非PVP界面可以打开查看数据
+            if ( not IsPvpSceneType(g_FightMgr.type) and g_FightMgr.type ~= SceneType.PVPMirror) or _G.showPvpRoleInfo==true then --非PVP界面可以打开查看数据
                 CSAPI.OpenView("FightRoleInfo",id);
             end
         end

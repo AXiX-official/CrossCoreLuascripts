@@ -5,7 +5,7 @@ local this = {
 --初始化
 function this:Init()
 	self.tactics = {};
-	for k, v in pairs(Cfgs.CfgPlrSkillGroup.datas_ID) do
+	for k, v in pairs(Cfgs.CfgPlrSkillGroup:GetAll()) do
 		local tactic = TacticsData.New();
 		tactic:InitCfg(v.id);
 		table.insert(self.tactics, tactic);

@@ -7,6 +7,12 @@ local btnPos = {}
 local isSelect = false
 local index = 0
 local isNew =false
+local isOpen = false
+local lockStr = ""
+local ids = nil
+local cfgDungeon = nil
+local dungeonData = nil
+
 
 function SetClickCB(callBack)
     clickCallBack = callBack
@@ -27,8 +33,10 @@ end
 function Refresh(_data)
     data = _data
     if data then
+        isOpen,lockStr = data:IsOpen()
+        ids = data:GetDungeonGroups()
         -- icon
-        SetColor(data:IsOpen(), isSelect, data:IsHard())
+        SetColor(isOpen, isSelect, data:IsHard())
 
         -- index
         CSAPI.SetText(txtNum, index .. "")
@@ -46,7 +54,7 @@ function Refresh(_data)
         SetBtnPos(data:GetRelativePos())
 
         -- button
-        SetBtnActive(data:IsOpen())
+        SetBtnActive(isOpen)
 
         --plot
         CSAPI.SetGOActive(plot,IsStory())
@@ -85,8 +93,11 @@ end
 
 function SetSel(isSel)
     isSelect = isSel
-    SetColor(data:IsOpen(), isSel, data:IsHard())
+    SetColor(isOpen, isSel, data:IsHard())
     PlayAnim(isSel)
+    if isNew then
+        CSAPI.SetGOActive(newObj, not isSel)
+    end
 end
 
 -- 设置颜色
@@ -155,7 +166,20 @@ function GetDungeonID()
 end
 
 function GetGroups()
-    return data and data:GetDungeonGroups()
+    return ids
+end
+
+function GetCfgs()
+    local cfgs = {}
+    if ids and #ids > 0 then
+        for _, cfgId in ipairs(ids) do
+            local cfg =Cfgs.MainLine:GetByID(cfgId)
+            if cfg then
+                table.insert(cfgs,cfg)
+            end
+        end
+    end
+    return cfgs
 end
 
 function IsHard()
@@ -170,8 +194,22 @@ function IsStory()
     return GetCfg() and GetCfg().sub_type == DungeonFlagType.Story;
 end
 
+function IsDanger()
+    return ids and #ids > 1
+end
+
 function IsOpen()
-    return data:IsOpen()
+    return isOpen
+end
+
+function GetType()
+    local type = DungeonInfoType.Normal
+    if IsStory() then
+        type = DungeonInfoType.Plot
+    elseif IsDanger() then
+        type = DungeonInfoType.Danger
+    end
+    return type
 end
 
 function GetCfg()
@@ -185,7 +223,8 @@ end
 
 function OnClick()
     if not IsOpen() then
-       return 
+        Tips.ShowTips(lockStr)
+        return 
     end
     if clickCallBack then
         clickCallBack(this)

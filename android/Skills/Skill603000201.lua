@@ -29,8 +29,13 @@ function Skill603000201:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 603000101
-	if self:Rand(5000) then
-		self:AddBuffCount(SkillEffect[603000101], caster, target, data, 603000101,1,4)
+	-- 8736
+	local count736 = SkillApi:GetCount(self, caster, target,2,603000101)
+	-- 8948
+	if SkillJudger:Less(self, caster, target, true,count736,4) then
+	else
+		return
 	end
+	-- 603000201
+	self:HitAddBuffCount(SkillEffect[603000201], caster, target, data, 5000,603000101,1,4)
 end

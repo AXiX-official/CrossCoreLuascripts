@@ -8,11 +8,8 @@ function Skill603010401:Init(skillID, card)
 end
 -- 解体时
 function Skill603010401:OnResolve(caster, target, data)
-	-- 8061
-	if SkillJudger:CasterIsFriend(self, caster, target, true) then
-	else
-		return
-	end
+	-- 8735
+	local count735 = SkillApi:SkillLevel(self, caster, target,3,6030102)
 	-- 603010401
-	self:CallSkill(SkillEffect[603010401], caster, self.card, data, 603010201)
+	self:CallSkill(SkillEffect[603010401], caster, self.card, data, 603010200+count735)
 end

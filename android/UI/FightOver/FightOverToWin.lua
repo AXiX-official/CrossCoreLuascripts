@@ -967,7 +967,7 @@ function SetPVPScore(addScore)
         RefreshTextRank(oldLv)
         RefreshTextScore(oldScore, maxScore)
         SetPVPProgress(oldScore / maxScore)
-        expBar:Begin(oldLv, oldScore, ExerciseMgr:GetRankLevel(), ExerciseMgr:GetScore(), addScore, maxRankLv,
+        exerBar:Begin(oldLv, oldScore, ExerciseMgr:GetRankLevel(), ExerciseMgr:GetScore(), addScore, maxRankLv,
             SetPVPProgress, GetMaxScore, RefreshTextRank, RefreshTextScore);
     end
 end

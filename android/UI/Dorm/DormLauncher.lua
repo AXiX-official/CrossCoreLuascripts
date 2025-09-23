@@ -151,7 +151,8 @@ DormRoleActionType.normal_fatigue = "DormRoleActionLeisure"
 function Dorm_Action_Time(_dormAction2)
     local cfg = Cfgs.CfgCardRoleAction:GetByID(_dormAction2)
     local timer = 0
-    if (cfg.loop) then
+    if cfg==nil then LogError("DormLauncher:154 cfg==nil"..table.tostring(_dormAction2,true)) end
+    if (cfg and cfg.loop) then
         if (#cfg.loop > 1) then
             timer = CSAPI.RandomFloat(cfg.loop[1], cfg.loop[2])
         else

@@ -1,4 +1,4 @@
--- 怪物通用针对真伤buff
+-- 溯源探查第二期ex新增技能1
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -16,6 +16,6 @@ function Skill5500001:OnBorn(caster, target, data)
 	-- 5500001
 	local targets = SkillFilter:All(self, caster, target, 4)
 	for i,target in ipairs(targets) do
-		self:AddValue(SkillEffect[5500001], caster, target, data, "LimitDamage",-0.5,-0.5,0)
+		self:AddValue(SkillEffect[5500001], caster, target, data, "LimitDamage",-0.3,-0.3,0)
 	end
 end

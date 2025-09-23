@@ -443,6 +443,44 @@ function this:GetCount(id)
     end
 end
 
+--根据物品素材ID获取素材礼包信息
+function this:GetPackagesByCfgID(cfgId)
+    local list=nil;
+    if cfgId and self.datas then
+        for _,v in pairs(self.datas) do
+            if (v:GetType()==ITEM_TYPE.GIFT_BAG or v:GetType()==ITEM_TYPE.SEL_BOX) and v:GetDyVal1()~=nil then
+                local hasCfg,count=self:GetPackagesRewardCfgs(v:GetDyVal1(),cfgId);
+                if hasCfg then
+                    list=list or {};
+                    table.insert(list,{goods=v,count=count})
+                end
+            end
+        end
+    end
+    return list
+end
+
+--是否是包含指定物品的奖励表数据,hasCfg=true/false count=num
+function this:GetPackagesRewardCfgs(tempId,cfgId)
+    local hasCfg=false;
+    local count=0;
+    if tempId==nil or cfgId==nil then
+        return hasCfg,count;
+    end
+    local rewardCfg = Cfgs.RewardInfo:GetByID(tempId);
+    if rewardCfg ~= nil and
+        (rewardCfg.type == RewardRandomType.SINGLE_SELECT or rewardCfg.type == RewardRandomType.FIXED) then
+        for _, item in ipairs(rewardCfg.item) do
+            if item.id == cfgId and item.type == RandRewardType.ITEM then--不做嵌套判断
+                hasCfg=true;
+                count=count+item.count;
+            end
+        end
+    end
+    return hasCfg,count;
+end
+
+
 function this:SetOrderType(order)
     self.orderType = order
 end

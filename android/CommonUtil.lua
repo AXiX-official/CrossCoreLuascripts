@@ -113,7 +113,7 @@ require "SettingMgr"
 require "BuryingPointMgr"
 
 --无限不规则滚动
---UIInfiniteUnlimited = require "UIInfiniteUnlimited"
+UIInfiniteUnlimited = require "UIInfiniteUnlimited"
 
 --紫龙事件名
 require "ShiryuEventName"

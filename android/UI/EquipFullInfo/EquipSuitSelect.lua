@@ -117,7 +117,7 @@ function OnClickFiltrate()
 	_root.Qualiy = "CfgEquipQualityEnum"
     _root.Equipped={{id=1,sName=LanguageMgr:GetByID(24002)},{id=2,sName=LanguageMgr:GetByID(24003)}};
     _root.skill=EquipCommon.GetFilterSkillList();
-    -- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum.datas_ID) do
+    -- for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum:GetAll()) do
     --     if v.group and v.show==1 then
     --         table.insert(_root.skill,{id=v.id,sName=v.sName});
     --     end

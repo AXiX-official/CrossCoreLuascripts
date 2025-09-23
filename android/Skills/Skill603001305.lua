@@ -29,10 +29,33 @@ function Skill603001305:OnAttackOver(caster, target, data)
 	else
 		return
 	end
-	-- 9718
-	local count807 = SkillApi:ClassCount(self, caster, target,1,6)
-	-- 603001305
-	if self:Rand(10000) then
-		self:AddBuffCount(SkillEffect[603001305], caster, target, data, 603000101,3,4)
+	-- 8736
+	local count736 = SkillApi:GetCount(self, caster, target,2,603000101)
+	-- 8948
+	if SkillJudger:Less(self, caster, target, true,count736,4) then
+	else
+		return
 	end
+	-- 603001305
+	self:HitAddBuffCount(SkillEffect[603001305], caster, target, data, 10000,603000101,3,4)
+end
+-- 攻击结束2
+function Skill603001305:OnAttackOver2(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 603000315
+	self:HitAddBuff(SkillEffect[603000315], caster, target, data, 10000,603000305,2)
 end

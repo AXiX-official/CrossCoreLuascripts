@@ -24,5 +24,5 @@ function Skill337702:OnBornSpecial(caster, target, data)
 		return
 	end
 	-- 337707
-	self:AddBuff(SkillEffect[337707], caster, self.card, data, 337702)
+	self:AddSkillAttrPct(SkillEffect[337707], caster, self.card, data, "sp",-0.16)
 end

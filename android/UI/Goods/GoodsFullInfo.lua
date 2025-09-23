@@ -16,6 +16,7 @@ local buildItems={};
 local otherItems={};
 local otherItems2={};
 local limitGetItems={};
+local bagGetItems={};
 local itemInfo=nil;
 local eventMgr=nil;
 local expiryTime=nil;
@@ -26,6 +27,8 @@ local fixedTime=1;
 local upTime=0;
 local beforNum=0; --当前物品的数量
 -- local slider=nil;
+local hasGiftList=false; --是否存在指定素材的礼包信息
+local giftList=nil;--存在指定素材的礼包信息列表
 
 ---是否移动平台
 local IsMobileplatform=false;
@@ -57,6 +60,8 @@ function OnEnable()
 	eventMgr:AddListener(EventType.View_Lua_Closed, this.OnViewClose);
 	eventMgr:AddListener(EventType.Bag_Update, OnBagChange);
 	eventMgr:AddListener(EventType.Equip_Update, OnEquipChange);
+	eventMgr:AddListener(EventType.Goods_Converted_Success,OnConvertedItem);
+	eventMgr:AddListener(EventType.Goods_GiftFilter_GetRet, OnFilterGetRet);
 	CSAPI.SetGOActive(numObj, false);
 end
 
@@ -121,6 +126,14 @@ function Refresh()
 			ResUtil.MultiIcon:Load(icon,cfg.itemPicture);
 			CSAPI.SetScale(icon,0.63,0.63,0.63);
 			CSAPI.SetGOActive(btnDetails,true);
+		elseif cfg and cfg.type==ITEM_TYPE.GIFT_BAG then
+			local loader=itemInfo:GetIconLoader();
+			if loader then
+				loader:Load(icon, itemInfo:GetIcon())
+			end
+			CSAPI.SetScale(icon,1,1,1);
+			CSAPI.SetGOActive(btnDetails,false);
+			CSAPI.SetGOActive(btn_getInfo,cfg.is_obtainrate_showed);
 		elseif cfg and cfg.type==ITEM_TYPE.FORNITURE then --家具，特殊处理
 			isShow=true;
 			local loader=itemInfo:GetIconLoader();
@@ -217,6 +230,12 @@ function Refresh()
 		if endTime and endTime>0 then
 			endTime=endTime-TimeUtil:GetTime()>0 and endTime-TimeUtil:GetTime() or 0;
 		end
+		if data and data.needNum~=nil and data.needNum>0 then
+			giftList=BagMgr:GetPackagesByCfgID(cfg.id)
+			hasGiftList=giftList and #giftList>0 or false;
+		else
+			hasGiftList=false;
+		end
 		RefreshDownTime();
 		CSAPI.SetGOActive(tIcon,false);
 		CSAPI.SetGOActive(tBorder,false);
@@ -246,6 +265,13 @@ function Refresh()
 				showGets=false;
 			elseif cfg.type==ITEM_TYPE.EQUIP then
 				CSAPI.SetGOActive(tIcon,true);
+			elseif cfg.type == ITEM_TYPE.LIMIT_CODE then -- 识别码容器
+				CSAPI.SetGOActive(bottomObj, true);
+				CSAPI.SetGOActive(mUseNode,false)
+				CSAPI.SetGOActive(btn_ok, true);
+				clickFunc = function()
+					OperateActiveProto:LimitRewardShowCode(itemInfo:GetID())
+				end
 			elseif cfg.is_can_use then --可以使用的道具
 				CSAPI.SetText(txt_open, LanguageMgr:GetByID(1032))
 				CSAPI.SetText(txt_openTips, LanguageMgr:GetByType(1032,4))
@@ -302,6 +328,7 @@ function Refresh()
 				--显示获取途径
 				CreateGetInfo();
 			else
+				CSAPI.SetGOActive(bagGet,false);
 				CSAPI.SetGOActive(chapterGet,false);
 				CSAPI.SetGOActive(buildGet,false);
 				CSAPI.SetGOActive(otherGet,false);
@@ -361,7 +388,7 @@ function CreateGetInfo()
 	local jOhterInfo=itemInfo.GetJOtherGetInfo and itemInfo:GetJOtherGetInfo() or nil;
 	local tOhterInfo=itemInfo.GetTOtherGetInfo and itemInfo:GetTOtherGetInfo() or nil;
 	local lActInfo=itemInfo.GetLimitGetInfo and itemInfo:GetLimitGetInfo() or nil;
-	if infos==nil and combineInfo==nil and jOhterInfo==nil and tOhterInfo==nil and lActInfo==nil then
+	if infos==nil and combineInfo==nil and jOhterInfo==nil and tOhterInfo==nil and lActInfo==nil  and hasGiftList~=true then
 		hasGet=false;
 	else
 		hasGet=true;
@@ -371,6 +398,7 @@ function CreateGetInfo()
 		HideItems(otherItems);
 		HideItems(otherItems2);
 		HideItems(limitGetItems);
+		HideItems(bagGetItems);
 		if infos and #infos>0 then
 			cIsShow=true;
 			CreateGetItem(infos,"GetWayItem/GoodsGetWayItemNew",getItems,chapterRoot,JumpCall);
@@ -396,10 +424,43 @@ function CreateGetInfo()
 			lIsShow=true;
 			CreateGetItem(lActInfo,"GetWayItem/GoodsGetWayItemNew",limitGetItems,limitGetRoot,JumpCall);
 		end
+		if hasGiftList then
+			local giftData={
+				state=JumpModuleState.Normal,
+				outTips=LanguageMgr:GetByID(24050),
+			};
+			if bagGetItems~=nil and #bagGetItems>0 then
+				CSAPI.SetGOActive(bagGetItems[1].gameObject,true);
+				bagGetItems[1].Refresh(giftData);
+				bagGetItems[1].SetJumpCall(OnClickBagGet);
+			else
+				ResUtil:CreateUIGOAsync("GetWayItem/GoodsGetWayItemNew2",bagGetRoot,function(go)
+					local lua=ComUtil.GetLuaTable(go);
+					lua.Refresh(giftData);
+					lua.SetJumpCall(OnClickBagGet);
+					table.insert(bagGetItems,lua);
+				end)
+			end
+		end
 		CSAPI.SetGOActive(chapterGet,cIsShow);
 		CSAPI.SetGOActive(buildGet,bIsShow);
 		CSAPI.SetGOActive(otherGet,oIsShow);
 		CSAPI.SetGOActive(limitGet,lIsShow);
+		CSAPI.SetGOActive(bagGet,hasGiftList);
+	end
+end
+
+function OnClickBagGet()
+	if itemInfo and data and data.needNum and hasGiftList and giftList~=nil then
+		local cfg=itemInfo:GetCfg();
+		if cfg==nil then
+			LogError("未获取配置表信息："..table.tostring(cfg));
+		end
+		CSAPI.OpenView("GiftFilter",{
+			cfgId=cfg.id,
+			list=giftList,
+			needNum=data.needNum or 0
+		});
 	end
 end
 
@@ -687,12 +748,68 @@ function OnClickDetails()
 	end
 end
 
+--点击手动转换
+function OnClickConverted()
+	if itemInfo==nil then
+		do return end;
+	end
+	CSAPI.OpenView("ConvertedItemView",itemInfo);
+	-- local cfg = itemInfo:GetCfg()
+	-- local data=itemInfo:GetData();
+	-- local index=nil;
+	-- local id=itemInfo:GetID();
+	-- beforNum=itemInfo:GetCount();
+	-- if data and data.get_infos then
+	-- 	index=data.get_infos[1].index;
+	-- 	id=cfg.to_item_id;
+	-- end
+	-- if cfg and cfg.can_be_converted==1 then
+	-- 	isUse=true;
+	-- 	PlayerProto:ConverItem(itemInfo:GetID(),index,useNum,OnConvertedItem);
+	-- end
+end
+
+--转换完道具的回调
+function OnConvertedItem(proto)
+	isUse=false;
+	if itemInfo==nil and proto then
+		local fakeData=BagMgr:GetFakeData(proto.id);
+		Tips.ShowTips(string.format(LanguageMgr:GetTips(12014), fakeData:GetName(), proto.cnt))
+		Close();
+		return;
+	end
+	if proto and proto.cnt>=beforNum then --处理分开显示的限时商品
+		Close();
+		do return end
+	end
+	local goods = BagMgr:GetData(itemInfo:GetID());
+	-- Tips.ShowTips(string.format(LanguageMgr:GetTips(12014), itemInfo:GetName(), useNum))
+	if goods and goods:GetCount() > 0 then
+		maxNum=goods:GetCount()<g_MaxUseItem and goods:GetCount() or g_MaxUseItem;
+		useNum = 1;
+		-- slider.value=0;
+		if data then
+			data.data=BagMgr:GetData(data.data:GetID());
+			itemInfo=data.data;
+		end
+		Refresh();
+		CSAPI.SetText(txt_useNum,tostring(useNum));
+	else
+		Close();
+	end
+end
 
 function UseSkipCall()
 	local cfg = itemInfo:GetCfg();
 	if cfg.use_skip then
 		JumpMgr:Jump(cfg.use_skip);
 	end
+end
+
+function OnFilterGetRet(needNum)
+	if needNum==0 then
+        Close()
+    end
 end
 
 ---判断检测是否按了返回键

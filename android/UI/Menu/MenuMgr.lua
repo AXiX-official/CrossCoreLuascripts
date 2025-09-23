@@ -17,12 +17,12 @@ OpenConditionType.guide = 3
 
 -- 功能开启特殊类型子分类
 SpecialOpenViewType = {}
-SpecialOpenViewType.RoleUp = "special1"
-SpecialOpenViewType.RoleBreak = "special2"
-SpecialOpenViewType.RoleEquip = "special3"
-SpecialOpenViewType.RoleSkill = "special4"
+-- SpecialOpenViewType.RoleUp = "special1"
+-- SpecialOpenViewType.RoleBreak = "special2"
+-- SpecialOpenViewType.RoleEquip = "special3"
+-- SpecialOpenViewType.RoleSkill = "special4"
 -- SpecialOpenViewType.PVPMirror = "special5"
-SpecialOpenViewType.PVP = "special6"
+-- SpecialOpenViewType.PVP = "special6"
 SpecialOpenViewType.AutoFight = "special7"
 SpecialOpenViewType.SpecialSkill = "special8"
 SpecialOpenViewType.SpeedFight = "special9"

@@ -186,6 +186,7 @@ local conf = {
 {'g_BuildPresetTeamBuyCost',	'g_BuildPresetTeamBuyCost',	'',	'int[]',	'10002,50,2'},
 {'g_BuildBasePresetTeamCnt',	'g_BuildBasePresetTeamCnt',	'',	'int',	'2'},
 {'g_BuildMaxPresetTeamCnt',	'g_BuildMaxPresetTeamCnt',	'',	'int',	'4'},
+{'g_PopupCourseBuildsType',	'g_PopupCourseBuildsType',	'',	'int[]',	'1,2,3,4,6,9'},
 {'g_DormRoleHitAngle',	'g_DormRoleHitAngle',	'',	'float',	'60'},
 {'g_DormColMinDis1',	'g_DormColMinDis1',	'',	'float',	'0.2'},
 {'g_DormColMinDis2',	'g_DormColMinDis2',	'',	'float',	'0.2'},
@@ -310,6 +311,12 @@ local conf = {
 {'g_RogueScoreLVIdx',	'g_RogueScoreLVIdx',	'',	'int',	'0'},
 {'g_DownloadReward',	'g_DownloadReward',	'',	'json',	'[[11002,2,2]]'},
 {'g_BattleFaceSet',	'g_BattleFaceSet',	'',	'int[]',	'1033,1031,1032'},
+{'g_CardPoolPercentCn1',	'g_CardPoolPercentCn1',	'',	'float[]',	'0.02,0.08,0.4,0.5'},
+{'g_CardPoolPercentCn2',	'g_CardPoolPercentCn2',	'',	'float[]',	'0.022,0.08,0.4,0.498'},
+{'g_firstCreateCardLastCheck',	'g_firstCreateCardLastCheck',	'',	'int[]',	'6,2,3,1,20012'},
+{'g_Questions',	'g_Questions',	'',	'int',	'5'},
+{'g_CloseQuestions',	'g_CloseQuestions',	'',	'int',	'5'},
+{'g_CalPerfArr',	'g_CalCardPerfArr',	'',	'float[]',	'0.5,0.1,2.5,8.6,540,859,859,859,24,24,24,24,24'},
 },
 }
 --cfgglobal_setting = conf

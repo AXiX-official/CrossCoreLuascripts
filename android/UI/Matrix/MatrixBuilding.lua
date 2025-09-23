@@ -154,6 +154,9 @@ function OnOpen()
     buildData = data[1]
     cfg = buildData:GetCfg()
     RefreshPanel()
+
+    --questionItem
+    SetQuestionItem()
 end
 
 function RefreshPanel()
@@ -486,3 +489,16 @@ function OnClickVirtualkeysClose()
     end
 end
 ------------------------------------------------------------------------------
+
+function SetQuestionItem()
+    local name = MatrixMgr:GetCfgModuleInfoName(buildData:GetType())
+    CSAPI.SetGOActive(question,name~=nil)
+end
+
+function OnClickQuestion()
+    local name = MatrixMgr:GetCfgModuleInfoName(buildData:GetType())
+    if(name)then 
+        local cfg = Cfgs.CfgModuleInfo:GetByID(name)
+	    CSAPI.OpenView("ModuleInfoView", cfg)
+    end 
+end 

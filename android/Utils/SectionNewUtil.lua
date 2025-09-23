@@ -7,6 +7,9 @@ function this:IsSectionNew()
     if self:IsDailyNew()then
         return true
     end
+    if DungeonActivityMgr:IsNew() then
+        return true
+    end
     return false
 end
 

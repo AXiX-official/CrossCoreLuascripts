@@ -14,31 +14,9 @@ function Skill4503002:OnAfterHurt(caster, target, data)
 end
 -- 伤害前
 function Skill4503002:OnBefourHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8429
-	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
-	-- 8112
-	if SkillJudger:Greater(self, caster, self.card, true,count29,0) then
-	else
-		return
-	end
-	-- 4503011
-	if self:Rand(3000) then
-		self:AlterBufferByID(SkillEffect[4503011], caster, target, data, 1003,1)
-		-- 4503051
-		if self:Rand(3000) then
-			self:AlterBufferByID(SkillEffect[4503051], caster, target, data, 1051,1)
-		end
-	end
+	-- 4503062
+	self:tFunc_4503062_4503012(caster, target, data)
+	self:tFunc_4503062_4503052(caster, target, data)
 end
 -- 暴击伤害前(OnBefourHurt之前)
 function Skill4503002:OnBefourCritHurt(caster, target, data)
@@ -62,26 +40,11 @@ function Skill4503002:OnBefourCritHurt(caster, target, data)
 	-- 4503022
 	self:AddTempAttr(SkillEffect[4503022], caster, caster, data, "crit",0.16)
 end
-function Skill4503002:tFunc_4503042_4503002(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
+function Skill4503002:tFunc_4503062_4503052(caster, target, data)
+	-- 4503052
+	if self:Rand(3500) then
+		self:AlterBufferByID(SkillEffect[4503052], caster, target, data, 1051,1)
 	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8429
-	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
-	-- 8822
-	if SkillJudger:Less(self, caster, self.card, true,count29,1) then
-	else
-		return
-	end
-	-- 4503002
-	self:HitAddBuff(SkillEffect[4503002], caster, target, data, 2500,1003,2)
 end
 function Skill4503002:tFunc_4503042_4503032(caster, target, data)
 	-- 8060
@@ -110,4 +73,48 @@ function Skill4503002:tFunc_4503042_4503032(caster, target, data)
 	end
 	-- 4503032
 	self:HitAddBuff(SkillEffect[4503032], caster, target, data, 2500,1051,2)
+end
+function Skill4503002:tFunc_4503042_4503002(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8429
+	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
+	-- 8822
+	if SkillJudger:Less(self, caster, self.card, true,count29,1) then
+	else
+		return
+	end
+	-- 4503002
+	self:HitAddBuff(SkillEffect[4503002], caster, target, data, 2500,1003,2)
+end
+function Skill4503002:tFunc_4503062_4503012(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8429
+	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
+	-- 8112
+	if SkillJudger:Greater(self, caster, self.card, true,count29,0) then
+	else
+		return
+	end
+	-- 4503012
+	if self:Rand(3500) then
+		self:AlterBufferByID(SkillEffect[4503012], caster, target, data, 1003,1)
+	end
 end

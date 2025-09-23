@@ -23,10 +23,10 @@ function Skill330901:OnAttackOver(caster, target, data)
 		local r = self.card:Rand(2)+1
 		if 1 == r then
 			-- 330911
-			self:AddBuffCount(SkillEffect[330911], caster, self.card, data, 400600101,1,5)
+			self:AddBuffCount(SkillEffect[330911], caster, self.card, data, 400600101,1,3)
 		elseif 2 == r then
 			-- 330921
-			self:AddBuffCount(SkillEffect[330921], caster, self.card, data, 400600201,1,5)
+			self:AddBuffCount(SkillEffect[330921], caster, self.card, data, 400600201,1,3)
 		end
 	end
 end
@@ -47,10 +47,10 @@ function Skill330901:OnAttackOver2(caster, target, data)
 		local r = self.card:Rand(2)+1
 		if 1 == r then
 			-- 330911
-			self:AddBuffCount(SkillEffect[330911], caster, self.card, data, 400600101,1,5)
+			self:AddBuffCount(SkillEffect[330911], caster, self.card, data, 400600101,1,3)
 		elseif 2 == r then
 			-- 330921
-			self:AddBuffCount(SkillEffect[330921], caster, self.card, data, 400600201,1,5)
+			self:AddBuffCount(SkillEffect[330921], caster, self.card, data, 400600201,1,3)
 		end
 	end
 end

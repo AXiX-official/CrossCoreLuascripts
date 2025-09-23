@@ -202,6 +202,23 @@ function this.GetMulImgPosScale(modelId, posType, isL2d)
     return pos, scale, img, l2dName
 end
 
+-- 爱相随立绘配置表信息   
+function this.GetMulImgPosScale2(modelId, posType, isL2d)
+    local pos, scale, img, l2dName = nil, 1, nil, nil
+    local cfg = Cfgs.CfgDateCG:GetByID(modelId)
+    if (cfg) then
+        local _pos = isL2d and cfg.l2dPos or cfg.imgPos
+        local offset = posType or {0, 0, 1}
+        pos = UnityEngine.Vector3(_pos[1] + offset[1], _pos[2] + offset[2], 0)
+        scale = _pos[3] * offset[3]
+        img = cfg.img
+        l2dName = cfg.l2dName
+    else
+        LogError("多人插图表不存在id：" + tostring(modelId))
+    end
+    return pos, scale, img, l2dName
+end
+
 -- =========================end--------------------------------------------------------------------------------
 
 -- 属性str

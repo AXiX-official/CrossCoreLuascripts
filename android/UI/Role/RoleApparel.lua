@@ -51,7 +51,9 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
-    CSAPI.ApplyReleaseRes()
+    -- ABMgr:ReleaseABAllWithViewName("RoleApparel")
+    -- ABMgr:RefreshProtectABList("RoleApparel",{})
+    -- ABMgr:ClearRecordsWithViewName("RoleApparel")
 end
 
 -- function Update()
@@ -180,7 +182,13 @@ end
 
 function RefreshPanel(isCheck)
     curModeId = curDatas[curIndex]:GetSkinID()
-    cfgModel = Cfgs.character:GetByID(curModeId)
+    cfgModel = Cfgs.character:GetByID(curModeId) 
+
+    -- if #ABMgr:GetProtectABListByViewName("RoleApparel") == 0 then
+    --     ABMgr:RefreshProtectABList("RoleApparel" ,ABMgr:GetABNameArrayWithID(curModeId))
+    -- end
+    -- ABMgr:RecordABWithModelIDInto("RoleApparel" ,curModeId)
+
     if (isCheck) then
         isLive2D = false
         if (curDatas[curIndex]:ToShowL2d()) then
@@ -255,6 +263,7 @@ end
 
 -- role
 function SetImg()
+    RoleABMgr:ChangeByIDs("RoleApparel", {curModeId})
     -- CSAPI.SetGOActive(iconParent, false)
     -- cardIconItem.Refresh(curModeId, LoadImgType.RoleInfo, function(go)
     --     CSAPI.SetGOActive(iconParent, true)
@@ -334,6 +343,8 @@ function OnClickSure()
         -- 改为按绑定关系切换
         local skin_a = RoleTool.GetBDSkin_a(cardData:GetCfgID(), curModeId)
         RoleSkinMgr:UseSkin(cardData:GetID(), curModeId, skin_a, isLive2D, isLive2D)
+        --ABMgr:RefreshProtectABList("RoleApparel",{})
+        
     elseif (jumId) then
         -- local dialogdata = {}l
         -- local str = LanguageMgr:GetTips(3007, itemCfg.name, curDatas[curIndex]:GetCfg().key,

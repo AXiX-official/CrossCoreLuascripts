@@ -16,6 +16,10 @@ SceneType.RogueT 	= 12 -- 能力测验
 SceneType.BuffBattle	= 13 -- 积分战斗
 SceneType.MultTeam		= 15 -- 多队玩法
 
+function IsPvpSceneType(sType)
+	return sType == SceneType.PVP or sType == SceneType.PVEFreeMatch
+end
+
 -- 副本类型
 eDuplicateType                 = {}
 eDuplicateType.MainNormal      = 1 -- 主线普通

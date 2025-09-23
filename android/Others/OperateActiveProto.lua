@@ -84,3 +84,39 @@ function OperateActiveProto:GetMaidCoffeeRewardRet(proto)
     CoffeeMgr:GetMaidCoffeeDataRet(proto)
     EventMgr.Dispatch(EventType.Menu_Coffee)
 end
+
+--获取猜谜活动信息
+function OperateActiveProto:GetQuestionInfo(id)
+    local proto = {"OperateActiveProto:GetQuestionInfo", {id = id}}
+    NetMgr.net:Send(proto);
+end
+
+--猜谜活动数据返回
+function OperateActiveProto:GetQuestionInfoRet(proto)
+    RiddleMgr:Update(proto);
+    EventMgr.Dispatch(EventType.Riddle_Data_Ret,proto)
+end
+
+--猜谜答题
+function OperateActiveProto:AnswerQuestion(id,drawnQuestions,answerIdx)
+    local proto = {"OperateActiveProto:AnswerQuestion", {id = id,drawnQuestions=drawnQuestions,answerIndex=answerIdx}}
+    NetMgr.net:Send(proto);
+end
+
+--猜谜答题返回
+function OperateActiveProto:AnswerQuestionRet(proto)
+    RiddleMgr:UpdataAnswer(proto);
+    EventMgr.Dispatch(EventType.Riddle_Draw_Ret,proto)
+end
+
+--猜谜领取奖励
+function OperateActiveProto:TakeQuestionReward(id,index)
+    local proto = {"OperateActiveProto:TakeQuestionReward", {id = id,index=index}}
+    NetMgr.net:Send(proto);
+end
+
+--猜谜领取奖励返回
+function OperateActiveProto:TakeQuestionRewardRet(proto)
+    RiddleMgr:UpdateRewards(proto)
+    EventMgr.Dispatch(EventType.Riddle_Reward_Ret,proto)
+end

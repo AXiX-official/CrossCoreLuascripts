@@ -9,7 +9,7 @@ local allSuit=nil;--套装配置信息
 function OnOpen()
     --显示所有特性
     allSuit={};
-    for _, cfg in pairs(Cfgs.CfgSuit.datas_ID) do
+    for _, cfg in pairs(Cfgs.CfgSuit:GetAll()) do
         if cfg.show == 1 then
             table.insert(allSuit, cfg);
         end

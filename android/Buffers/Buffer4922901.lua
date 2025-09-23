@@ -10,8 +10,6 @@ end
 function Buffer4922901:OnRoundBegin(caster, target)
 	-- 6109
 	self:ImmuneDeath(BufferEffect[6109], self.caster, target or self.owner, nil,nil)
-	-- 6104
-	self:ImmuneBufferGroup(BufferEffect[6104], self.caster, target or self.owner, nil,1)
 end
 -- 创建时
 function Buffer4922901:OnCreate(caster, target)

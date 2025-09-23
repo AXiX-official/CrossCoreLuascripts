@@ -21,7 +21,7 @@ function Skill4400601:OnActionOver2(caster, target, data)
 		return
 	end
 	-- 4400601
-	local targets = SkillFilter:All(self, caster, target, 4)
+	local targets = SkillFilter:All(self, caster, target, nil)
 	for i,target in ipairs(targets) do
 		self:OwnerAddBuff(SkillEffect[4400601], caster, target, data, 1042)
 	end

@@ -55,7 +55,7 @@ function this:CheckIsShow()
             self.endTime = info:GetCloseTime() and TimeUtil:GetTimeStampBySplit(info:GetCloseTime()) or nil;
         end
     elseif (self.cfg.nType == 9) then -- 拼图
-        local info=PuzzleMgr:GetCurrPuzzleByType(self:GetCfg().page);
+        local info = PuzzleMgr:GetCurrPuzzleByType(self:GetCfg().page);
         if info then
             self.begTime = info:GetBeginTime() and TimeUtil:GetTimeStampBySplit(info:GetBeginTime()) or nil;
             self.endTime = info:GetEndTime() and TimeUtil:GetTimeStampBySplit(info:GetEndTime()) or nil;
@@ -75,6 +75,28 @@ function this:CheckIsShow()
         end
     elseif (self.cfg.nType == 12) then -- 女仆咖啡
         self.begTime, self.endTime = CoffeeMgr:GetActivityTime()
+    elseif (self.cfg.nType == 13 and self.cfg.page) then -- 中秋猜谜
+        local activityData = RiddleMgr:GetData(self.cfg.page);
+        if activityData then
+            self.begTime = activityData:GetBegTime() and TimeUtil:GetTimeStampBySplit(activityData:GetBegTime()) or nil;
+            self.endTime = activityData:GetEndTime() and TimeUtil:GetTimeStampBySplit(activityData:GetEndTime()) or nil;
+        else
+            local cfg = Cfgs.CfgMenuLBtns:GetByID(self.cfg.nType);
+            if cfg and cfg.page then
+                local cfg2 = Cfgs.cfgQuestions:GetByID(cfg.page)
+                if cfg2 then
+                    self.begTime = cfg2.begTime and TimeUtil:GetTimeStampBySplit(cfg2.begTime) or nil;
+                    self.endTime = cfg2.endTime and TimeUtil:GetTimeStampBySplit(cfg2.endTime) or nil;
+                end
+            end
+        end
+    elseif self.cfg.nType == 14 then -- 爱相随
+        local _, id = ActivityMgr:IsOpenByType(ActivityListType.LovePlus)
+        local alData = ActivityMgr:GetALData(id)
+        if alData then
+            self.begTime = alData:GetStartTime()
+            self.endTime = alData:GetEndTime()
+        end
     end
     if (self.begTime == nil and self.endTime == nil) then
         self.isShow = false
@@ -116,6 +138,10 @@ function this:IsOpen()
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "SignInDuanWu")
     elseif (self.cfg.nType == 11) then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "PetMain")
+    elseif (self.cfg.nType == 13) then
+        self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "RiddleMain")
+    elseif self.cfg.nType == 14 then
+        self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "LovePlusView")
     end
     return self.isOpen, str
 end
@@ -154,7 +180,10 @@ function this:IsRed()
         elseif (self.cfg.nType == 12) then -- 女仆咖啡
             self.isRed = RedPointMgr:GetData(RedPointType.Coffee) ~= nil
         elseif (self.cfg.nType == 13 and self.cfg.page) then
-            self.isRed = RiddleMgr:CheckRed(self.cfg.page);
+            local infos = RedPointMgr:GetData(RedPointType.Riddle);
+            self.isRed = infos ~= nil and infos[self:GetCfg().page] ~= nil or false;
+        elseif self.cfg.nType == 14 then
+            self.isRed = RedPointMgr:GetData(RedPointType.LovePlus) ~= nil
         end
     end
     return self.isRed

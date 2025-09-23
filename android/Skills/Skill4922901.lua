@@ -39,7 +39,9 @@ function Skill4922901:OnAttackOver(caster, target, data)
 		return
 	end
 	-- 922900601
-	self:DelBufferGroup(SkillEffect[922900601], caster, self.card, data, 3,10)
+	self:DelBuffQuality(SkillEffect[922900601], caster, self.card, data, 2,20)
+	-- 30013
+	self:Cure(SkillEffect[30013], caster, self.card, data, 1,1)
 	-- 922900603
 	self:CallOwnerSkill(SkillEffect[922900603], caster, self.card, data, 922900601)
 end

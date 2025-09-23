@@ -15,9 +15,9 @@ end
 -- 攻击结束
 function Skill603010303:OnAttackOver(caster, target, data)
 	-- 8732
-	local count732 = SkillApi:SkillLevel(self, caster, target,3,603010101)
+	local count732 = SkillApi:SkillLevel(self, caster, target,3,6030101)
 	-- 8731
-	local count731 = SkillApi:GetCount(self, caster, target,3,603000101)
+	local count731 = SkillApi:GetCount(self, caster, target,2,603000101)
 	-- 8200
 	if SkillJudger:IsCurrSkill(self, caster, target, true) then
 	else
@@ -25,6 +25,26 @@ function Skill603010303:OnAttackOver(caster, target, data)
 	end
 	-- 603010303
 	if self:Rand(4000+1000*count731) then
-		self:CallSkill(SkillEffect[603010303], caster, target, data, 603010101+count732)
+		self:CallSkill(SkillEffect[603010303], caster, target, data, 603010100+count732)
 	end
+end
+-- 攻击结束2
+function Skill603010303:OnAttackOver2(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 603000313
+	self:HitAddBuff(SkillEffect[603000313], caster, target, data, 10000,603000303,2)
 end

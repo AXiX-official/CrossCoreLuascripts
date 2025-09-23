@@ -663,7 +663,7 @@ function PackMultTeamFightCbData(fMgr,exData,winner)
     hpInfo.data = data
     local cfgMainLine = MainLine[exData.dupId]
     local maxDupScore = cfgMainLine.points
-    local score,totalHp = GCalHelp:MultTeamGetFightRetData(winner,maxDupScore,exData.score,exData.totalHp,exData.totalMaxHp,hpInfo)
+    local score,totalHp = GCalHelp:MultTeamGetFightRetData(winner,maxDupScore,exData.score,exData.totalHp,exData.totalMaxHp,hpInfo,cfgMainLine.nGroupID)
     local dData = {}
     dData.hpData = hpInfo
     dData.dupId = exData.dupId

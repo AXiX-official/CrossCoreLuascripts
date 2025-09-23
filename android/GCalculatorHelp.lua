@@ -1658,16 +1658,35 @@ function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets, from)
         return gets
     end
 
-    -- 先看下，核心原件满了没, {核心} { 通用 } { 额外} 写入顺序是这样的, 不能修改添加的顺序，不然前端会显示异常
-    if useCfg.elemNum and useCfg.elemNum > 0 then
-        -- LogDebug("CreateCardCoreElemByCfg() Add %s %s", cfg.coreItemId, canAddNum)
-        table.insert(gets, {id = cfg.coreItemId, num = useCfg.elemNum})
-    end
-
     -- LogTable(gets, "========================================gets:")
     -- LogTable(useCfg.reward, "useCfg.reward:")
-    if useCfg.reward then
-        GCalHelp:IdNumArrToTb(useCfg.reward, nil, nil, gets)
+    local reward = useCfg.reward
+    local elemNum = useCfg.elemNum
+    
+    if from then
+        local strFrom = string.find(from, "CardCreate")
+        if strFrom then
+            local poolId = tonumber(string.sub(from, 12, -1))
+            if not poolId or not CfgCardPool[poolId] then
+                return gets
+            end
+            local poolType = CfgCardPool[poolId].nType
+            if poolType == CardPoolType.SelfChoice then
+                reward = useCfg.reward1
+                elemNum = useCfg.elemNum1
+            end
+        end
+    end
+
+    -- 先看下，核心原件满了没, {核心} { 通用 } { 额外} 写入顺序是这样的, 不能修改添加的顺序，不然前端会显示异常
+    if elemNum and elemNum > 0 then
+        -- LogDebug("CreateCardCoreElemByCfg() Add %s %s", cfg.coreItemId, canAddNum)
+        table.insert(gets, {id = cfg.coreItemId, num = elemNum})
+    end
+
+    if reward then
+
+        GCalHelp:IdNumArrToTb(reward, nil, nil, gets)
     end
 
     return gets
@@ -1819,8 +1838,9 @@ end
 
 -- 在加载完配置表之后, 再调用
 function GCalHelp:DyModifyCfgs(modifysArr)
-    if DEBUG then
-    -- LogTable(modifysArr, 'GCalHelp:DyModifyCfgs() modifysArr:')
+    local showDebug = false
+    if showDebug then
+        LogTable(modifysArr, 'GCalHelp:DyModifyCfgs() modifysArr:')
     end
 
     if not next(modifysArr) then
@@ -1836,7 +1856,7 @@ function GCalHelp:DyModifyCfgs(modifysArr)
 
     -- 加载需要的表
     for _, modifyInfo in ipairs(modifysArr) do
-        if DEBUG then
+        if showDebug then
             LogTable(modifyInfo, 'GCalHelp:DyModifyCfgs() modifyInfo:')
         end
 
@@ -1953,7 +1973,7 @@ function GCalHelp:DyModifyCfgs(modifysArr)
     end
 
     -- 调试打印
-    if DEBUG then
+    if showDebug then
         local hadShowLog = {}
         for _, modifyInfo in ipairs(modifysArr) do
             local cfgName = modifyInfo.name
@@ -2503,7 +2523,7 @@ end
 -- subPrice:已拥有的单项售价和
 function GCalHelp:GetLovePlusShopSuitPrice(suitPrice,totalPrice,subPrice)
     local rtPrice = suitPrice - subPrice * suitPrice / totalPrice
-    LogInfo("<<<<<GCalHelp:GetLovePlusShopSuitPrice>>>>>%d - %d * %d / %d = %d",suitPrice,subPrice,suitPrice,totalPrice,rtPrice)
+    LogInfo(string.format("<<<<<GCalHelp:GetLovePlusShopSuitPrice>>>>>%s - %s * %s / %s = %s",suitPrice,subPrice,suitPrice,totalPrice,rtPrice))
     return rtPrice
 end
 
@@ -2870,21 +2890,25 @@ function GCalHelp:GetCidByModel(model)
     return nil
 end
 -- 获取其他战斗周目怪物总血量
-function GCalHelp:GetLeftStageHp(stage)
+function GCalHelp:GetLeftStageHp(stage,mstGroup,isCalPoint)
     if not stage then
         return 0
     end
     local lHp = 0
-    local mgCfg = MonsterGroup[self.nGroup]
+    local mgCfg = MonsterGroup[mstGroup]
     local cfgs = mgCfg and mgCfg.stage or {}
     local totalHp = 0
     local mSize = #cfgs
-    if stage <= mSize then
-        for i = stage,mSize,1 do
+    local nxStage = stage + 1
+    if nxStage <= mSize then
+        for i = nxStage,mSize,1 do
             local stg = cfgs[i]
             for j, mstId in ipairs(stg.monsters or {}) do
                 local mcfg = MonsterData[mstId]
-                lHp = lHp + mcfg and mcfg.maxhp or 0
+                if not isCalPoint or (mcfg and mcfg.isPoints) then
+                    local mstMaxHp = mcfg and mcfg.maxhp or 0
+                    lHp = lHp + mstMaxHp
+                end
             end
         end
     end
@@ -2892,7 +2916,7 @@ function GCalHelp:GetLeftStageHp(stage)
 end
 
 -- 多队玩法获取战斗分数
---[[
+--[[                 
 winner:1赢 2输
 maxDupScore：关卡最大分数
 curScore：当前关卡已获得分数
@@ -2900,8 +2924,8 @@ totalDamage：已造成总伤害
 totalMaxHp：怪物总Hp
 hpinfo：怪物血量数据
 ]]
-function GCalHelp:MultTeamGetFightRetData(winner,maxDupScore,curScore,oldTotalHp,totalMaxHp,hpinfo)
-    LogDebugEx("GCalHelp:MultTeamGetFightRetData,winner,maxDupScore,curScore,oldTotalHp,hpinfo,totalMaxHp",winner,maxDupScore,curScore,oldTotalHp,hpinfo,totalMaxHp)
+function GCalHelp:MultTeamGetFightRetData(winner,maxDupScore,curScore,oldTotalHp,totalMaxHp,hpinfo,mstGroup)
+    LogDebugEx("GCalHelp:MultTeamGetFightRetData,winner,maxDupScore,curScore,oldTotalHp,hpinfo,totalMaxHp",winner,maxDupScore,curScore,oldTotalHp,hpinfo,totalMaxHp,mstGroup)
     local score = 0
     local totalHp = 0
     local leftScore = math.max(maxDupScore - curScore,0)
@@ -2913,15 +2937,15 @@ function GCalHelp:MultTeamGetFightRetData(winner,maxDupScore,curScore,oldTotalHp
             for _,val in ipairs(hpinfo.data or {}) do
                leftHp = leftHp + val
             end 
-            totalHp = leftHp + self:GetLeftStageHp(hpinfo.stage)
+            totalHp = leftHp + self:GetLeftStageHp(hpinfo.stage,mstGroup)
         end
         local subVal = math.max(0,oldTotalHp - totalHp)
         if totalMaxHp and totalMaxHp > 0 then
             score = math.floor((subVal/totalMaxHp)*maxDupScore)
         end
     end
-    score = math.min(leftScore,score)
     LogDebugEx("GCalHelp:MultTeamGetFightRetData,score,totalHp",score,totalHp)
+    score = math.min(leftScore,score)
     return score,totalHp
 end
 

@@ -14,7 +14,7 @@ function Skill337805:OnBorn(caster, target, data)
 		return
 	end
 	-- 337805
-	local targets = SkillFilter:Group(self, caster, target, 3,3)
+	local targets = SkillFilter:Group(self, caster, target, 3,6)
 	for i,target in ipairs(targets) do
 		self:AddBuff(SkillEffect[337805], caster, target, data, 337805)
 	end

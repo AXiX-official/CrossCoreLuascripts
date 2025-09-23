@@ -55,6 +55,7 @@ _G.DungeonInfoNameUtil = require "DungeonInfoNameUtil"
 _G.BattleFieldUtil = require "BattleFieldUtil"
 --释放管理
 require "ReleaseMgr"
+require "ABMgr"
 --战棋
 require "MapTranslatorClient"
 require "BattleMgr"
@@ -207,6 +208,8 @@ require "SpineTools"
 --版本检测
 require "VerChecker";
 
+--爱相随
+_G.LovePlusStoryData = require "LovePlusStoryData";
 
 --拼图奖池
 _G.PuzzleEnum=require "PuzzleEnum"
@@ -221,3 +224,6 @@ require "LuaTextMove"
 require "MultTeamBattleEnum"
 _G.MultTeamBattleInfo=require "MultTeamBattleInfo"
 
+--猜谜活动
+_G.RiddleActivityInfo=require "RiddleActivityInfo"
+_G.RiddleInfo=require "RiddleInfo"

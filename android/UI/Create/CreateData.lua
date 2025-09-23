@@ -263,16 +263,21 @@ function this:SetChoiceInfos(choice_info)
     self.choice_infos = choice_info
     -- 修改表的数据
     local _look_cards = CfgCardPool[self:GetCfg().id].look_cards
-    _look_cards[1][3] = choice_info.cids[1]
-    _look_cards[2][3] = choice_info.cids[2]
-    -- Cfgs["CfgCardPool"][self:GetCfg().id].look_cards = _look_cards
+    if (self:IsSelectRole()) then
+        _look_cards = _look_cards==nil and {{0,0,0},{0,0,0}} or _look_cards
+        _look_cards[1][3] = choice_info.cids[1]
+        _look_cards[2][3] = choice_info.cids[2]
+    else
+        _look_cards = nil 
+    end
+    CfgCardPool[self:GetCfg().id].look_cards = _look_cards
 end
 
 function this:GetChoiceCids()
     if (self.choice_infos) then
         return self.choice_infos.cids
     end
-    return nil
+    return {}
 end
 
 function this:IsSelectPool()
@@ -281,7 +286,15 @@ end
 
 -- {id,cids,firstCids}
 function this:IsSelectRole()
-    return self.choice_infos ~= nil
+    if (self.choice_infos) then
+        local cids = self.choice_infos.cids or {}
+        for k, v in pairs(cids) do
+            if (v ~= nil) then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 function this:IsChoiceAndSelectPool()
@@ -308,6 +321,24 @@ function this:GetExchangeID()
             return v.id
         end
     end
+    return nil
+end
+
+function this:IsFirstSelectCard(cardID)
+    if (self.choice_infos and self.choice_infos.firstCids) then
+        for k, v in pairs(self.choice_infos.firstCids) do
+            if(v==cardID)then 
+                return true 
+            end 
+        end
+    end 
+    return false 
+end
+
+function this:GetFirstCids()
+    if (self.choice_infos and self.choice_infos.firstCids) then
+        return self.choice_infos.firstCids
+    end 
     return nil
 end
 

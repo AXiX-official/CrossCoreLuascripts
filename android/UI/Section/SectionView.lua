@@ -64,7 +64,6 @@ local lastPosY={0,0,0}
 local currDailyIndexL1 = 0
 local currDailyIndexL2 = 0
 local currDailyIndexR = 0
-local isDailyNew = false
 --军演
 local eRectL = nil
 local eRectR = nil
@@ -125,7 +124,7 @@ function Awake()
     eventMgr:AddListener(EventType.Section_Daily_Double_Update, OnDoubleRefresh)
     eventMgr:AddListener(EventType.Dungeon_Double_Update, OnDoubleRefresh)
     --red
-    eventMgr:AddListener(EventType.ExerciseL_New, ExerciseNewRefresh)
+    eventMgr:AddListener(EventType.ExerciseL_New, CheckExceriseRed)
     eventMgr:AddListener(EventType.Loading_Complete, CheckModelOpen) --检测功能开启
     eventMgr:AddListener(EventType.RedPoint_Refresh, OnRedRefresh)
     eventMgr:AddListener(EventType.Guide_Complete,OnGuideComplete)
@@ -685,8 +684,6 @@ function ShowPanel(type)
 
     isViewDrop = false
 
-    DailyNewRefresh()
-
     --特殊引导
     CheckSpecGuide()
 end
@@ -696,8 +693,6 @@ function ShowMenuPanel()
     SetTitle(false)
 
     CSAPI.SetLocalPos(moveNode,0,0)
-
-    UIUtil:SetNewPoint(dailyNew,IsDailyNew())
     DailyDoubleRefresh()
 end
 
@@ -1243,8 +1238,6 @@ function ShowExercisePanel()
         LanguageMgr:SetText(txt_eLock1, 1035)
         CSAPI.SetText(txt_eLock2, eLockStr) 
     end
-
-    ExerciseNewRefresh()
 end
 
 function OnClickExerciseL()
@@ -1287,58 +1280,27 @@ end
 ------------------------------------活动-----------------------------------
 function RefreshActivityDatas()
     activityDatas2 = {}
-    local activityCfgs = Cfgs.Section:GetGroup(SectionType.Activity)
-    if activityCfgs then
-        local activityTypeDatas = {}
-        for _, cfg in pairs(activityCfgs) do
-            local sectionData = DungeonMgr:GetSectionData(cfg.id)   
-            local openState1,openState2 = 0,0
-            if sectionData and sectionData:GetType() then
-                activityTypeDatas[sectionData:GetType()] = activityTypeDatas[sectionData:GetType()] or {}
-                if sectionData:IsShowOnly() then
-                    if #activityTypeDatas[sectionData:GetType()] > 0 then
-                        local id = activityTypeDatas[sectionData:GetType()][1]:GetID()
-                        openState1 = activityTypeDatas[sectionData:GetType()][1]:GetOpenState()
-                        openState2 = sectionData:GetOpenState()
-                        if openState1 ~= openState2 then
-                            if openState2 > openState1 then
-                                activityTypeDatas[sectionData:GetType()][1] = sectionData
-                            end
-                        elseif id > sectionData:GetID() then
-                            activityTypeDatas[sectionData:GetType()][1] = sectionData
-                        end
-                    else
-                        table.insert(activityTypeDatas[sectionData:GetType()],sectionData)
-                    end
-                else
-                    table.insert(activityTypeDatas[sectionData:GetType()],sectionData)
+    local dataList = DungeonActivityMgr:GetSectionDatasByType(true)
+    local logStrs = {}
+    local stateStr ={"未在活动开放时间内","","未达成开启条件","已开启"}
+    for _, _type in pairs(SectionActivityType) do
+        local typeDatas = dataList[_type]           
+        if typeDatas and #typeDatas > 0 then
+            for i, v in ipairs(typeDatas) do
+                table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),stateStr[v:GetOpenState()+3]))
+                if v:GetOpenState() > -1 or v:IsResident() then
+                    local _data = {
+                        data = v,
+                        type = _type,
+                        chaperName = v:GetChaperName(),
+                        pos = v:GetCfg().pos --顺序
+                    }
+                    table.insert(activityDatas2,_data)
                 end
             end
         end
-
-        local logStrs = {}
-        local stateStr ={"未在活动开放时间内","","未达成开启条件","已开启"}
-        for _, _type in pairs(SectionActivityType) do
-            local typeDatas = activityTypeDatas[_type]           
-            if typeDatas and #typeDatas > 0 then
-                for i, v in ipairs(typeDatas) do
-                    table.insert(logStrs,string.format("名字：%s, id：%s, 状态：%s",v:GetName(),v:GetID(),stateStr[v:GetOpenState()+3]))
-                    if v:GetOpenState() > -1 or v:IsResident() then
-                        local _data = {
-                            data = v,
-                            type = _type,
-                            chaperName = v:GetChaperName(),
-                            pos = v:GetCfg().pos --顺序
-                        }
-                        table.insert(activityDatas2,_data)
-                    end
-                end
-            end
-        end
-        LogTable(logStrs,"活动信息")
-        -- Log("活动信息:")
-        -- Log(logStrs)
     end
+    LogTable(logStrs,"活动信息")
     if #activityDatas2 > 0 then
         table.sort(activityDatas2, function(a, b)      
             local pos1 = a.pos or 99
@@ -2156,23 +2118,48 @@ function OnRedRefresh()
 end
 
 function SetRed()
+    CheckMainLineRed()
+    CheckDailyRed()
+    CheckExceriseRed()
+    CheckActivityRed()
+end
+
+function CheckMainLineRed()
     local redData1 = RedPointMgr:GetData(RedPointType.SectionMain)
     UIUtil:SetRedPoint(SectionTypeItem1,redData1 ~= nil,146,26)
+end
 
+function CheckDailyRed()
+    local isNew = SectionNewUtil:IsDoubleNew()
+    if not isNew then
+        isNew = SectionNewUtil:IsDailyNew()
+    end
+    UIUtil:SetNewPoint(SectionTypeItem2,isNew,129,13)
     local redData2= RedPointMgr:GetData(RedPointType.SectionDaily)
+    if isNew then
+        redData2 = nil
+    end
     UIUtil:SetRedPoint(SectionTypeItem2,redData2 ~= nil,146,26)
+end
 
+function CheckExceriseRed()
+    local isNew = ExerciseMgr:IsExerciseLNew()
+    UIUtil:SetNewPoint(SectionTypeItem3,isNew,129,13)
     local redData3= DungeonMgr:IsExerciseRed() and 1 or nil
-    if isExerciseLOpen and isExerciseROpen then
-        UIUtil:SetRedPoint(SectionTypeItem3,redData3 ~= nil,146,26)
+    if isNew then
+        redData3 = nil
     end
+    UIUtil:SetRedPoint(SectionTypeItem3,redData3 ~= nil,146,26) 
+end
 
+function CheckActivityRed()
+    local isNew = DungeonActivityMgr:IsNew()
+    UIUtil:SetNewPoint(SectionTypeItem4,isNew,129,13)
     local redData4= RedPointMgr:GetData(RedPointType.SectionActivity)
-    UIUtil:SetRedPoint(SectionTypeItem4,redData4 ~= nil,146,26)
-
-    if isExerciseROpen then
-        UIUtil:SetRedPoint(btnExerciseR,ColosseumMgr:IsRed(),349,184)
+    if isNew then
+        redData4 = nil
     end
+    UIUtil:SetRedPoint(SectionTypeItem4,redData4 ~= nil,146,26)
 end
 ---------------------------------------------new---------------------------------------------
 function DailyNewRefresh()
@@ -2185,25 +2172,7 @@ function DailyNewRefresh()
             end   
         end,nil, 600)
     end
-    isDailyNew = IsDailyNew()
-    UIUtil:SetNewPoint(dailyNew,isDailyNew)
-end
-
-function IsDailyNew()
-    local isNew = SectionNewUtil:IsDoubleNew()
-    if not isNew then
-        isNew = SectionNewUtil:IsDailyNew()
-    end
-    return isNew
-end
-
-function ExerciseNewRefresh()
-    local isNew = ExerciseMgr:IsExerciseLNew()
-    if currIndex == 1 then
-        UIUtil:SetNewPoint(eNewObj,isNew,125,24)
-    elseif currIndex == 2 and currType == 3 then
-        UIUtil:SetNewPoint(btnExerciseL,isNew,340,190)
-    end
+    CheckDailyRed()
 end
 ---------------------------------------------limitDouble---------------------------------------------
 function OnDoubleRefresh()

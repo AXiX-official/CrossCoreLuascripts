@@ -66,11 +66,19 @@ function Refresh(_data,_elseData)
     this.data=_data;
     this.elseData=_elseData;
     local good=this.data:GetCommodityList() and this.data:GetCommodityList()[1] or nil;
+    if _data:GetType()==CommodityItemType.ChoiceCard then
+        if good then--已绑定
+            SetName(good.data:GetName());
+        else
+            SetName(this.data:GetName());
+        end
+    else
+        SetName(this.data:GetName());
+    end
     local num=this.data:GetNum()
     rmbIcon=this.data:GetCurrencySymbols();
     ShopCommFunc.SetIconBorder2(_data,_elseData.commodityType,bg,icon,light,tIcon,tIcon2,tBorder)
     SetLimitTag(this.data:IsLimitTime(),this.data:GetEndBuyTips());
-    SetName(this.data:GetName());
     -- if _elseData and _elseData.commodityType ==2 then
     --     SetLimit();
     -- else

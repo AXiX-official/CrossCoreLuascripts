@@ -80,8 +80,13 @@ function SetBtn()
     end
 
     -- 
+    if(isTalent)then 
+        isOpen,lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special20")
+    else 
+        isOpen,lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special4")
+    end 
     local isLight = false
-    if (cfg.lv < maxLv and cardData and cardData:CheckIsRealCard()) then
+    if (isOpen and cfg.lv < maxLv and cardData and cardData:CheckIsRealCard()) then
         isLight = true
     end
     cg_btnUp.alpha = isLight and 1 or 0.3
@@ -201,6 +206,9 @@ function OnClickUp()
         return
     end
     if (cg_btnUp.alpha ~= 1) then
+        if(not isOpen)then 
+            Tips.ShowTips(lockStr)
+        end 
         return
     end
     if (cardData:IsFighting()) then

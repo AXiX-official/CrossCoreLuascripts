@@ -15,6 +15,10 @@ local needTime2 = nil
 local timer2 = 0
 local minStartTime, minEndTime = nil, nil
 
+-- local abNames1 = {}
+-- local abNames2 = {}
+
+
 function Awake()
     CSAPI.PlayUISound("ui_window_open_load")
     image_bdPanel = ComUtil.GetCom(bdPanel, "Image")
@@ -45,6 +49,7 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
+    --ABMgr:RefreshProtectABList("CreateView",{})
 end
 
 -- 开箱动画是否隐藏跳过按钮
@@ -246,8 +251,10 @@ function SetObj6()
             end
         end
         items35 = items35 or {}
-        ItemUtil.AddItems("Create/CreateRoleCard", items35, datas35, grids35, nil, 1, false)
+        ItemUtil.AddItems("Create/CreateRoleCard", items35, datas35, grids35, nil, 1, {curData:GetID(),false})
     end
+    -- 
+    CSAPI.SetGOActive(objToShop6, b)
 end
 
 function SetRight()
@@ -350,12 +357,24 @@ function SetLookItems()
     if (isSelectPool) then
         local look_cards = curData:GetCfg().look_cards or {}
         lookItems2 = lookItems2 or {}
-        ItemUtil.AddItems("Create/CreateLookItem2", lookItems2, look_cards, entity6)
+        ItemUtil.AddItems("Create/CreateLookItem2", lookItems2, look_cards, entity6,nil,1,curData:GetID())
     else
         local look_cards = curData:GetCfg().look_cards or {}
         lookItems = lookItems or {}
         ItemUtil.AddItems("Create/CreateLookItem", lookItems, look_cards, icon)
     end
+end
+
+function CreateLookItemCB(cardData)
+    RoleABMgr:ChangeByIDs("CreateView", {cardData:GetModelCfg().id})
+    --local cfgModel = cardData:GetModelCfg()
+    -- local abName = ABMgr:GetABName(cfgModel,true)
+    -- if(abNames1[abName])then 
+    --     return
+    -- end
+    -- abNames1[abName] = 1
+    -- table.insert(abNames2,abName)
+    -- ABMgr:RefreshProtectABList("CreateView",abNames2)
 end
 
 function SetBg()
@@ -809,6 +828,11 @@ end
 
 function OnClickCX()
     CSAPI.OpenView("CreateSelectRolePanel", curData:GetID())
+end
+
+--前往自选星尘区
+function OnClickToShow6()
+    JumpMgr:Jump(140029)
 end
 
 --------------------------------拖拽-----------------------------------------------------------

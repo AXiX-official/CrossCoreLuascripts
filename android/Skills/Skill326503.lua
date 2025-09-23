@@ -8,27 +8,27 @@ function Skill326503:Init(skillID, card)
 end
 -- 入场时
 function Skill326503:OnBorn(caster, target, data)
-	-- 8062
-	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
 	-- 326503
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:SetValue(SkillEffect[326503], caster, target, data, "LimitDamage1002",0.3)
+		self:AddValue(SkillEffect[326503], caster, target, data, "LimitDamage1002",0.3,0.3,0.3)
 	end
 end
 -- 特殊入场时(复活，召唤，合体)
 function Skill326503:OnBornSpecial(caster, target, data)
-	-- 8062
-	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
 	-- 326503
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:SetValue(SkillEffect[326503], caster, target, data, "LimitDamage1002",0.3)
+		self:AddValue(SkillEffect[326503], caster, target, data, "LimitDamage1002",0.3,0.3,0.3)
 	end
 end

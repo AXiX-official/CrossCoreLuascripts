@@ -1,7 +1,7 @@
 function SetIndex(_index)
     index = _index
 end
-function Refresh(data,isFirst)
+function Refresh(data,poolID)
     if (data[3] == 0) then
         return
     end
@@ -11,9 +11,13 @@ function Refresh(data,isFirst)
     cardData = RoleMgr:GetMaxFakeData(cfgID)
     -- 
     CSAPI.SetText(txtName, cardData:GetName())
-    local goodsCfg = Cfgs.ItemInfo:GetByID(10053)
-    ResUtil.IconGoods:Load(imgGoods, goodsCfg.icon)
-    CSAPI.SetGOActive(objGet, index==1)
+
+    local isFirstS = CreateMgr:CheckISSelectCard(poolID, cfgID)
+    CSAPI.SetGOActive(objGet, isFirstS)
+    if (isFirstS) then
+        local goodsCfg = Cfgs.ItemInfo:GetByID(10053)
+        ResUtil.IconGoods:Load(imgGoods, goodsCfg.icon)
+    end
 end
 
 function OnClick()

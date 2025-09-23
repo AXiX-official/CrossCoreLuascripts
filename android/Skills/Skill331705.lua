@@ -26,7 +26,7 @@ function Skill331705:tFunc_331705_331715(caster, target, data)
 	-- 8449
 	local count49 = SkillApi:GetAttr(self, caster, target,3,"maxhp")
 	-- 331715
-	self:AddTempAttr(SkillEffect[331715], caster, caster, data, "attack",count49*0.05)
+	self:AddTempAttr(SkillEffect[331715], caster, caster, data, "attack",math.min((count49*0.05),2500))
 end
 function Skill331705:tFunc_331705_331725(caster, target, data)
 	-- 8064
@@ -42,5 +42,5 @@ function Skill331705:tFunc_331705_331725(caster, target, data)
 	-- 8449
 	local count49 = SkillApi:GetAttr(self, caster, target,3,"maxhp")
 	-- 331725
-	self:AddTempAttr(SkillEffect[331725], caster, caster, data, "attack",count49*0.10)
+	self:AddTempAttr(SkillEffect[331725], caster, caster, data, "attack",math.min((count49*0.1),5000))
 end

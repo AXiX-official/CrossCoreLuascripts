@@ -202,10 +202,25 @@ function this:TriggerFlag(data)
 end
 
 
-
+--打开界面触发的引导默认延迟100ms，以让Input_Event_Trigger优先触发
 function this.OnViewOpened(viewKey)   
-    this:ViewOpenGuide(viewKey);
+    this.openViewKeys = this.openViewKeys or {}
+    table.insert(this.openViewKeys,viewKey)
+    if (not this.ViewOpenGuide_lock) then
+        this.ViewOpenGuide_lock = 1
+        FuncUtil:Call(function ()
+            local len = #this.openViewKeys
+            for k=1, len do
+                local _viewKey = this.openViewKeys[1]
+                this:ViewOpenGuide(_viewKey)
+                table.remove(this.openViewKeys,1)
+            end
+            this.ViewOpenGuide_lock = nil
+        end, nil, 100)
+    end
+    --this:ViewOpenGuide(viewKey);
 end
+
 function this:ViewOpenGuide(viewKey)
     if(viewKey)then
         self:CheckGuide("ViewOpen_" .. viewKey);

@@ -467,6 +467,7 @@ end
 -- 添加当前装备id
 function this:AddEquipId(slot, id)
     if self.data and id and slot then
+        self.fighting=nil;
         self.data.equip_ids = self.data.equip_ids or {};
         self.data.equip_ids[slot] = id
     end
@@ -477,6 +478,7 @@ function this:RemoveEquipId(id)
     if self.data and self.data.equip_ids and id then
         for k, v in pairs(self.data.equip_ids) do
             if v == id then
+                self.fighting=nil;
                 self.data.equip_ids[k] = nil;
             end
         end
@@ -899,6 +901,9 @@ function this:CheckCanBreak()
     if (not self:CheckIsRealCard()) then
         return
     end
+    if (not MenuMgr:CheckModelOpen(OpenViewType.special, "special1")) then
+        return
+    end
     local curLv = self:GetLv()
     local maxLv = self:GetMaxLv()
     local break_limitLv = self:GetBreakLimitLv()
@@ -996,6 +1001,10 @@ end
 
 -- 普通技能能否升级
 function this:CheckNormalSkillUP(skillId)
+    local isOpen = MenuMgr:CheckModelOpen(OpenViewType.special, "special4")
+    if(not isOpen)then 
+        return false
+    end 
     local cfg = Cfgs.skill:GetByID(skillId)
     if (cfg == nil or cfg.next_id == nil) then
         return false
@@ -1033,6 +1042,10 @@ end
 -- 特性技能能否升级
 function this:CheckPassiveUp()
     self.passiveRed = false
+    local isOpen = MenuMgr:CheckModelOpen(OpenViewType.special, "special4")
+    if(not isOpen)then 
+        return false
+    end
     local passiveDatas = self:GetSkills(SkillMainType.CardTalent)
     if (passiveDatas and #passiveDatas > 0) then
         local passiveData = passiveDatas[1]
@@ -1064,6 +1077,10 @@ end
 
 --天赋能否升级
 function this:CheckTalnetUp(talentId)
+    local isOpen = MenuMgr:CheckModelOpen(OpenViewType.special, "special20")
+    if(not isOpen)then 
+        return false
+    end
     local cfg = Cfgs.CfgSubTalentSkill:GetByID(talentId)
     if (cfg.next_id == nil) then
         return false

@@ -6,8 +6,8 @@ Skill4402001 = oo.class(SkillBase)
 function Skill4402001:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束
-function Skill4402001:OnActionOver(caster, target, data)
+-- 攻击结束
+function Skill4402001:OnAttackOver(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else
