@@ -12,11 +12,11 @@ function this:Clear()
 end
 
 function this:ChangeByIDs(viewName, modelIDs)
-    local abNames = {}
-    for k, v in ipairs(modelIDs) do
-        self:SetABNameByID(v, abNames)
-    end
-    self:ChangeByABNames(viewName, abNames)
+    -- local abNames = {}
+    -- for k, v in ipairs(modelIDs) do
+    --     self:SetABNameByID(v, abNames)
+    -- end
+    -- self:ChangeByABNames(viewName, abNames)
 end
 
 -- 默认是替换
