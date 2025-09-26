@@ -61,6 +61,7 @@ function this:GetFunc(sName)
         self.funcs["MenuBuyPanel"] = self.MenuBuyPanel
         self.funcs["LuckyGachaMain"] = self.LuckyGachaMain
         self.funcs["SkinRebate"] = self.SkinRebate
+        self.funcs["RiddleMain"]=self.RiddleMain
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -442,6 +443,15 @@ function this.SkinRebate(cfg)
         CSAPI.OpenView(cfg.sName, cfg.val1)
     elseif state == JumpModuleState.Close then
         Tips.ShowTips(lockStr)
+    end
+end
+
+function this.RiddleMain(cfg)
+    local isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "RiddleMain")
+    if isOpen then
+        CSAPI.OpenView(cfg.sName,nil,cfg.val1);
+    else
+        Tips.ShowTips(str)
     end
 end
 

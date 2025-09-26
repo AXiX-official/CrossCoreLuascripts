@@ -23,6 +23,17 @@ function this:PushSub(fightAction,order)
     FightActionAPI.PushSub(self,fightAction,order);       
 end
 
+function this:OnPlay()
+    FightActionMgr:Pause();   
+    self:PushSub(FightActionMgr:Apply(FightActionType.DeadChecker),4);
+    FightActionAPI.OnPlay(self);
+end
+
+function this:OnComplete()    
+    FightActionMgr:Continue();
+    FightActionAPI.OnComplete(self);
+end
+
 function this:GetHelp()
     return self.faHelp;
 end

@@ -1732,6 +1732,13 @@ function ConfigChecker:ItemInfo(cfgs)
             else
                 ASSERT(false, string.format('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
+
+        elseif cfg.type == ITEM_TYPE.CARD then
+            local cardCfg = CardData[cfg.dy_value1]
+            if not cardCfg then
+                ASSERT(false, string.format('角色CardData表里找不到该物品id:%s对应的卡牌id：%s', id, cfg.dy_value1))
+            end
+            cardCfg.itemId = id
         elseif cfg.type == ITEM_TYPE.ICON then
             local avatarCfg = CfgAvatar[cfg.dy_value2]
             if avatarCfg then

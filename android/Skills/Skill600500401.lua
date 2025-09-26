@@ -14,8 +14,10 @@ function Skill600500401:OnBefourHurt(caster, target, data)
 end
 -- 行动结束
 function Skill600500401:OnActionOver(caster, target, data)
-	-- 8841
-	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.01) then
+	-- 8420
+	local count20 = SkillApi:GetAttr(self, caster, target,3,"hp")
+	-- 8106
+	if SkillJudger:Less(self, caster, self.card, true,count20,2) then
 	else
 		return
 	end

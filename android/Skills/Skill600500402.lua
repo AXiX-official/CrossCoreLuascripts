@@ -21,7 +21,4 @@ function Skill600500402:DoSkill(caster, target, data)
 	-- 95001
 	self.order = self.order + 1
 	self:AlterBufferByGroup(SkillEffect[95001], caster, self.card, data, 1,1)
-	-- 30013
-	self.order = self.order + 1
-	self:Cure(SkillEffect[30013], caster, self.card, data, 1,1)
 end

@@ -1634,15 +1634,17 @@ end
 -- getCnt: 卡牌获取次数
 -- ret:
 -- { {id=1, num=1, type=1}, {id=1, num=1, type=1}}
-function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets, from)
+function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets, from, cardPoolId)
     gets = gets or {}
 
     if not cfg or not cfg.coreItemId then
+        -- LogError("CalCardCoreElemByCfg() not coreItemId from:%s", from)
         return gets
     end
 
     local elemCfg = CfgCardElem[cfg.quality]
     if not elemCfg then
+        -- LogError("CalCardCoreElemByCfg() not elemCfg from:%s", from)
         return gets
     end
 
@@ -1663,18 +1665,11 @@ function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets, from)
     local reward = useCfg.reward
     local elemNum = useCfg.elemNum
     
-    if from then
-        local strFrom = string.find(from, "CardCreate")
-        if strFrom then
-            local poolId = tonumber(string.sub(from, 12, -1))
-            if not poolId or not CfgCardPool[poolId] then
-                return gets
-            end
-            local poolType = CfgCardPool[poolId].nType
-            if poolType == CardPoolType.SelfChoice then
-                reward = useCfg.reward1
-                elemNum = useCfg.elemNum1
-            end
+    if cardPoolId then
+        local cardPoolCfg = CfgCardPool[cardPoolId]
+        if cardPoolCfg and cardPoolCfg.nType == CardPoolType.SelfChoice then
+            reward = useCfg.reward1
+            elemNum = useCfg.elemNum1
         end
     end
 
@@ -1685,7 +1680,6 @@ function GCalHelp:CalCardCoreElemByCfg(cfg, getCnt, gets, from)
     end
 
     if reward then
-
         GCalHelp:IdNumArrToTb(reward, nil, nil, gets)
     end
 
