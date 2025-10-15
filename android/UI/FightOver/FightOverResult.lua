@@ -105,7 +105,7 @@ function OnOpen()
 end
 
 function GetIsWin(_sceneType)
-    if (_sceneType == SceneType.BOSS or _sceneType == SceneType.PVP or _sceneType == SceneType.PVPMirror or _sceneType == SceneType.GlobalBoss or
+    if (_sceneType == SceneType.BOSS or IsPvpSceneType(_sceneType) or _sceneType == SceneType.PVPMirror or _sceneType == SceneType.GlobalBoss or
      _sceneType == SceneType.RogueT or _sceneType==SceneType.MultTeam) then
         return true
     elseif _sceneType == SceneType.PVE then
@@ -188,8 +188,10 @@ function ApplyQuit()
             -- 测试用
             SceneLoader:Load("MajorCity")
         end
-    elseif (sceneType == SceneType.PVP or sceneType == SceneType.PVPMirror) then
-        ExerciseMgr:Quit(sceneType, data.elseData.type)
+    elseif (IsPvpSceneType(sceneType)) then
+        ExerciseRMgr:Quit(data.elseData.type)
+    elseif (sceneType == SceneType.PVPMirror) then
+        ExerciseMgr:Quit(data.elseData.type)
     elseif (sceneType == SceneType.BOSS) then
         BattleFieldMgr:Quit()
     elseif sceneType == SceneType.PVE then
@@ -254,11 +256,12 @@ function OnClickMask()
     isClicked = 2;
     if data and data.elseData and (data.elseData.isSweep or data.elseData.isGlobalSweep) then --扫荡关闭
         view:Close()
+        PopupPackMgr:CheckByCondition({1})
         return
     end
 
     local cfg = DungeonMgr:GetFightMonsterGroup();
-    local isNotPvP = sceneType ~= SceneType.PVP and sceneType ~= SceneType.PVPMirror
+    local isNotPvP = not IsPvpSceneType(sceneType) and sceneType ~= SceneType.PVPMirror
     if (bIsWin and cfg and cfg.storyID2 and isNotPvP) then
         PlotMgr:TryPlay(cfg.storyID2, ApplyQuit, nil, false);
     else

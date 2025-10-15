@@ -21,7 +21,7 @@ function LayoutCallBack(index)
         local _data = lDatas[index]
         lua.SetIndex(index)
         lua.SetClickCB(ItemClickCB)
-        lua.Refresh(_data, lIndex, ExerciseMgr:GetInfo().role_panel_id)
+        lua.Refresh(_data, lIndex, data.role_panel_id)
     end
 end
 
@@ -36,8 +36,8 @@ function ItemClickCB(index)
 end
 
 function OnOpen()
-    local modelID = ExerciseMgr:GetInfo().role_panel_id
-    local live2d = ExerciseMgr:GetInfo().live2d == BoolType.Yes
+    local modelID = data.role_panel_id
+    local live2d = data.live2d == BoolType.Yes
     c_data = CRoleDisplayMgr:CreateDisplayData(modelID, live2d)
 
     SetLeft()
@@ -119,8 +119,8 @@ function SetBtns()
     local alpha = 1
     local id = c_data:GetIDs()[slot]
     local live2d = c_data:GetDetail(slot).live2d
-    local _live2d = ExerciseMgr:GetInfo().live2d == BoolType.Yes
-    if (not c_data:GetCanUse(slot) or (id == ExerciseMgr:GetInfo().role_panel_id and live2d == _live2d)) then
+    local _live2d = data.live2d == BoolType.Yes
+    if (not c_data:GetCanUse(slot) or (id == data.role_panel_id and live2d == _live2d)) then
         alpha = 0.3
     end
     cg_btnBC.alpha = alpha

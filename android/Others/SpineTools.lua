@@ -67,7 +67,7 @@ function this:Init(l2d, spineEvent)
     self.mulClickDic = {} -- 物件多段点击-- {[trackIndex]={te =,progress =,},}
 
     self.dragDic = {}
-    self.revoverDragDic = {}
+    self.recoverDragDic = {}
 
     self.teFadeInBaclClickDic = {} -- 淡入反向
 
@@ -147,8 +147,8 @@ function this:Update()
         end
     end
     -- 拖拽恢复 
-    if (self.revoverDragDic) then
-        for k, v in pairs(self.revoverDragDic) do
+    if (self.recoverDragDic) then
+        for k, v in pairs(self.recoverDragDic) do
             if (Time.time > v.stay) then
                 if (v.te.TimeScale ~= 1 or v.te.TimeScale ~= -1) then
                     v.te.TimeScale = v.forward and 1 or -1
@@ -164,7 +164,7 @@ function this:Update()
                         self:ClearTrack(1)
                         self.dragDic[1] = nil
                     end
-                    self.revoverDragDic[k] = nil
+                    self.recoverDragDic[k] = nil
                     break
                 end
             end
@@ -411,7 +411,7 @@ end
 
 -- 拖拽
 function this:PlayByDrag(animName, trackIndex, gesture, x, y, limit, speed)
-    if (self.revoverDragDic[animName]) then
+    if (self.recoverDragDic[animName]) then
         return -- 恢复中
     end
     if (trackIndex == 1 and self:CheckIsPlaying(trackIndex)) then
@@ -444,7 +444,7 @@ end
 
 -- 拖拽恢复 
 function this:Recover(animName, trackIndex, stay, forward, complete)
-    if (self.revoverDragDic[animName]) then
+    if (self.recoverDragDic[animName]) then
         return -- 恢复中
     end
     local _data = {}
@@ -455,7 +455,7 @@ function this:Recover(animName, trackIndex, stay, forward, complete)
     if (trackIndex == 1) then
         self.anim:AddEmptyAnimation(trackIndex, self.fadeOutTime, 0) -- 主体添加淡出（即平滑回归idle）
     end
-    self.revoverDragDic[animName] = _data
+    self.recoverDragDic[animName] = _data
 
     -- 主体反向减轻权重
     if (trackIndex == 1 and not _data.forward) then
@@ -507,9 +507,9 @@ end
 function this:GetTrackTimePercent(trackIndex)
     local te = self.anim:GetCurrent(trackIndex)
     if (te) then
-        return te.TrackTime / te.Animation.Duration
+        return true,te.TrackTime / te.Animation.Duration
     end
-    return 1
+    return false,0
 end
 
 -- 某轨道是不是在初始状态
@@ -534,12 +534,16 @@ function this:ClearTrack(trackIndex)
     self.l2d.sg.Skeleton:SetToSetupPose()
 end
 
+function this:SetToSetupPose()
+    self.l2d.sg.Skeleton:SetToSetupPose()
+end
+
 function this:ClearTrack2(trackIndex)
     self.anim:ClearTrack(trackIndex)
 end
 
 -- 立即清楚轨道及其数据
-function this:ImmClearTracks(trackIndexs, revoverNames)
+function this:ImmClearTracks(trackIndexs, revoverNames, fade)
     self.isUpdate = false
     for k, v in pairs(trackIndexs) do
         if (self.teFadeInClickDic) then
@@ -564,11 +568,15 @@ function this:ImmClearTracks(trackIndexs, revoverNames)
         if (self.teClickCompleteDic) then
             self.teClickCompleteDic[v] = nil
         end
-        self.anim:ClearTrack(v)
+        if (fade) then
+            self.anim:SetEmptyAnimation(v, 0.2)
+        else
+            self.anim:ClearTrack(v)
+        end
     end
     for k, v in pairs(revoverNames) do
-        if (self.revoverDragDic) then
-            self.revoverDragDic[v] = nil
+        if (self.recoverDragDic) then
+            self.recoverDragDic[v] = nil
         end
     end
     self.isUpdate = true
@@ -610,6 +618,15 @@ function this:ChangeIdle(animName)
     --     self.teFadeInClickDic[0] = te
     -- end
     return true
+end
+
+-- 某动作的时长
+function this:GetAnimDuration(animName)
+    if (self.anim) then
+        local anim = self.anim.Data.SkeletonData:FindAnimation(animName)
+        return anim and anim.Duration or 0
+    end
+    return 0
 end
 
 return this

@@ -54,16 +54,16 @@ function this:PlayResult()
     local fightOverData = self:GetData(); -- DungeonMgr:GetFightOverData();
     if (fightOverData) then
         if (fightOverData.fight_error_msg) then
-            local clickFunc = function()
-                SceneLoader:Load("MajorCity");
-                self:Complete();
-                FightClient:Clean();
-            end;
-            CSAPI.OpenView("DialogNoTop", {
-                content = fightOverData.fight_error_msg,
-                okCallBack = clickFunc,
-                cancelCallBack = clickFunc
-            });
+            -- local clickFunc = function()
+            --     SceneLoader:Load("MajorCity");
+            --     self:Complete();
+            --     FightClient:Clean();
+            -- end;
+            -- CSAPI.OpenView("DialogNoTop", {
+            --     content = fightOverData.fight_error_msg,
+            --     okCallBack = clickFunc,
+            --     cancelCallBack = clickFunc
+            -- });
         elseif (fightOverData.new_player_fight) then
             self:Complete();
 

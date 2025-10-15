@@ -13,6 +13,7 @@ local mgrNames = {
 	"CRoleMgr",     --卡牌角色
 	"RoleSkinMgr",  --皮肤
 	"ExerciseMgr",  --演习
+	"ExerciseRMgr", --PVP
 	"FriendMgr",    --好友
 	"PlayerMgr",    --玩家
 	--"CoolMgr",      --热值冷却
@@ -34,7 +35,7 @@ local mgrNames = {
 	"EquipMgr",		--装备
 	"GuildMgr",		--公会
 	"GuildFightMgr",--公会战
-	"TeamBossMgr",--组队boss
+	--"TeamBossMgr",--组队boss
     "DormMgr",    --宿舍
 	"ArchiveMgr",   --图鉴
 	"SweepMgr",  --扫荡
@@ -79,6 +80,8 @@ local mgrNames = {
 	"MultTeamBattleMgr",--递归沙盒
 	"CoffeeMgr",
 	"RiddleMgr",
+	"PopupPackMgr",
+	"DungeonTeamReplaceMgr", --推荐阵容
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"
 }

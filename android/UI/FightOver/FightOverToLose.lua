@@ -239,8 +239,10 @@ function ApplyQuit(jumpType)
             -- 测试用
             SceneLoader:Load("MajorCity")
         end
-    elseif (sceneType == SceneType.PVP or sceneType == SceneType.PVPMirror) then
-        ExerciseMgr:Quit(sceneType, data.elseData)
+    elseif (IsPvpSceneType(sceneType)) then
+        ExerciseRMgr:Quit(data.elseData)
+    elseif (sceneType == SceneType.PVPMirror) then
+        ExerciseMgr:Quit(data.elseData)
     elseif (sceneType == SceneType.BOSS) then
         BattleFieldMgr:Quit()
     elseif sceneType == SceneType.PVE then

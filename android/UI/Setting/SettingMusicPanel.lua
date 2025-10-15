@@ -1,3 +1,5 @@
+local language,bgm = "",""
+
 function Awake()
 	SetItem(s_audio_scale.music, item1)
 	SetItem(s_audio_scale.sound, item2)
@@ -8,6 +10,9 @@ function Awake()
 	fade1 = ComUtil.GetCom(item1Fade,"ActionFade")
 	fade2 = ComUtil.GetCom(item2Fade,"ActionFade")
 	fade3 = ComUtil.GetCom(item3Fade,"ActionFade")
+
+	language = SettingMgr:GetValue("s_language_key")
+	bgm = BGMMgr:GetViewMusicID()
 end
 
 function OnEnable()
@@ -117,4 +122,21 @@ end
 function OnClickMusic()
 	CSAPI.OpenView("BgmView")
 	-- LanguageMgr:ShowTips(1000)
+end
+
+function OnDestroy()
+    if SettingMgr:GetValue("s_language_key") ~= language then
+        BuryingPointMgr:TrackEvents("mj_setting", {
+            time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(), true),
+            eventName = "language",
+            key = tostring(language)
+        })
+    end
+	if BGMMgr:GetViewMusicID() ~= bgm then
+        BuryingPointMgr:TrackEvents("mj_setting", {
+            time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(), true),
+            eventName = "bgm",
+            cfgId = tostring(BGMMgr:GetViewMusicID())
+        })
+    end
 end

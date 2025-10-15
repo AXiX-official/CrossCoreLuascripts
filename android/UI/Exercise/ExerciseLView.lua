@@ -272,7 +272,7 @@ function OnClickDeffense()
         currentIndex = eTeamType.PracticeDefine,
         canEmpty = false,
         is2D = true
-    }, TeamOpenSetting.PVP)
+    }, TeamOpenSetting.PVPMirror)
 end
 
 -- 防御部署
@@ -281,7 +281,7 @@ function OnClickAttack()
         currentIndex = eTeamType.PracticeAttack,
         canEmpty = false,
         is2D = true
-    }, TeamOpenSetting.PVP)
+    }, TeamOpenSetting.PVPMirror)
 end
 
 -- 排行榜
@@ -370,7 +370,7 @@ end
 
 -- 更换立绘
 function OnClickImgSelect()
-    CSAPI.OpenView("CRoleDisplayPVP")
+    CSAPI.OpenView("CRoleDisplayPVP",ExerciseMgr:GetInfo())
 end
 
 -- 历史挑战

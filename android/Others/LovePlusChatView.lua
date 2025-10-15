@@ -203,9 +203,9 @@ function ShowChatFinish()
     --打点
 	BuryingPointMgr:TrackEventsByDay("love_plus_chat_finish",{
 		time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true),
-		groupId = newChatListData:GetID(),
-		sectionId = data:GetID(),
-        options = ids
+		groupId = tostring(newChatListData:GetID()),
+		sectionId = tostring(data:GetID()),
+        options = table.tostring(ids)
 	})
 end
 

@@ -77,7 +77,6 @@ function Refresh(_cfgChild, _parentLua)
             -- 透视的高层spine 
             if (cfgChild.content.drag.hideSpine) then
                 hideSpine = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.hideSpine).gameObject
-                hideSpine = parentLua.l2dGo.transform:Find("pos/" .. cfgChild.content.drag.hideSpine).gameObject
                 drag_clickNode.move = false
                 mX0, mY0, mZ0 = CSAPI.GetAnchor(hideSpine)
             end

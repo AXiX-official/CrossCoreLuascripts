@@ -41,7 +41,11 @@ function Refresh(_data,_elseData)
     end
     isFight=TeamMgr:GetTeamIsFight(teamData.index);
     CSAPI.SetGOActive(fightMask,isFight)
-    CSAPI.SetText(txt_index,tostring(teamData:GetIndex()))
+    local index = teamData:GetIndex()
+    if(teamData:GetTeamType()==eTeamType.PVP or teamData:GetTeamType()==eTeamType.PVPFriend)then 
+       index = index-teamData:GetTeamType()+1
+    end
+    CSAPI.SetText(txt_index,tostring(index))
     --设置队伍名
     CSAPI.SetText(txt_Name,teamData:GetTeamName()==nil and "" or tostring(teamData:GetTeamName()));
     -- SetSkillInfo();

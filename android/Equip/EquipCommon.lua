@@ -136,7 +136,6 @@ function this.GetDescFormat(cfg)
 end
 
 function this.GetFilterSkillList()
-	LogError("GetFilterSkillList")
 	local list={};
 	for k,v in pairs(Cfgs.CfgEquipSkillTypeEnum:GetAll()) do
         if v.group and v.show==1 then

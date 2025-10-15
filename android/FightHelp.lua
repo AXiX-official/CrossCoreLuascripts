@@ -293,6 +293,7 @@ function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplica
     LogEnterFight(player, fid, sceneTy, nDuplicateID, groupID, data)
     return mgr
 end
+
 ---- 开始多队玩法战斗
 function FightHelp:StartMultTeamFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneTy)
     -- DT(player)
@@ -341,36 +342,45 @@ function FightHelp:StartMultTeamFight(player, nDuplicateID, groupID, data, oDupl
     return mgr
 end
 --------------------------------------------------------------
-function FightHelp:StartPvpFight(data, fightIndex)
+function FightHelp:StartPvpFight(data, fightIndex, buffIds)
     local fid = UUID(10)
     local seed = os.time() + math.random(10000)
 
     local mgr = CreateFightMgr(fid, groupID, SceneType.PVP, seed)
     local uids = {}
-    local exData = nil
+    local exData = {
+        tAllBuff = {}
+    }
 
-    --LogTable(data,"StartPvpFight111111111111111111111")
+    if buffIds then
+        table.copy(buffIds, exData.tAllBuff)
+    end
+
+    -- LogTable(data,"StartPvpFight111111111111111111111")
     for i, v in ipairs(data) do
         v.data = Halo:Calc(v.data)
     end
+
     --LogTable(data,"StartPvpFight222222222222222222222")
     for i, v in ipairs(data) do
-        -- self.listPvp[v.uid] = v.data
+        LogTable(v, "StartPvpFight() i:" .. i)
 
-        local conn = ArmyFighDataMgr:GetPlrConn(v.uid)
-        conn:send({'FightProto:PvpFightResult', {data = data}})
+        if not v.robotId then
+            local conn = ArmyFighDataMgr:GetPlrConn(v.uid)
+            conn:send({'FightProto:PvpFightResult', {data = data}})
+        end
+
         mgr:AddPlayer(v.uid, i)
         table.insert(uids, v.uid)
         mgr:LoadData(i, v.data)
 
         if v.nEnterNp and v.nEnterNp > 0 then
-            exData = exData or {}
             exData.nEnterNp = exData.nEnterNp or {0, 0}
             exData.nEnterNp[i] = v.nEnterNp
         end
 
         -- 统计日志
-        LogEnterFight(GetPlayer(v.uid), fid, SceneType.PVP, 0, 0, v)
+        -- LogEnterFight(GetPlayer(v.uid), fid, SceneType.PVP, 0, 0, v)
     end
     self:AddFightMgr(uids, mgr)
 
@@ -386,7 +396,7 @@ function FightHelp:StartPvpFight(data, fightIndex)
 end
 
 -- pvp 镜像
-function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
+function FightHelp:StartPvpMirrorFight(plr, tData, tMirror, sceneType, cbOver, buffIds)
     --LogTrace()
     LogTable({tData, tMirror}, 'FightHelp:StartPvpMirrorFight')
     ASSERT(#tMirror.data > 0, '镜像数据为空')
@@ -394,75 +404,13 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     local fid = UUID(10)
     local seed = os.time() + math.random(10000)
 
-    local mgr = CreateFightMgr(fid, groupID, SceneType.PVPMirror, seed)
+    local mgr = CreateFightMgr(fid, groupID, sceneType, seed)
 
     local attackerId = tData.uid
     local defenderId = tMirror.uid
     local player = plr
 
-    mgr.cbOver = function(self, winer, isForceOver)
-        -- LogTrace('FightHelp:StartPvpMirrorFight() cbOver')
-        LogDebug('StartPvpMirrorFight cbOver winer:%s, isForceOver:%s', winer, isForceOver)
-        -- LogTable(self, "mgr.cbOver self:")
-
-        if isForceOver then
-
-        end
-
-        local isWiner = false
-        if winer == 1 then
-            isWiner = true
-        end
-
-        -- tMirror.is_robot: 这个字段，机器人才会写入
-        -- tMirror.robotId: 这个字段，机器人才会写入
-        local toCenterFinishMsg = {
-            isWiner = isWiner,
-            defenderId = defenderId,
-            isRobot = tMirror.is_robot,
-            isForceOver = isForceOver,
-            turnNum = self.turnNum
-        }
-
-        if tMirror.robotId then
-            toCenterFinishMsg.isRobot = BoolType.Yes
-            toCenterFinishMsg.defenderId = tMirror.robotId
-        else
-            toCenterFinishMsg.isRobot = BoolType.No
-        end
-
-        local dfInfo = nil
-        local armyInfo = player:GetTmp('armyInfo', nil)
-        local armyObjs = player:GetTmp('armyObjs', nil)
-
-        -- 军演结算
-        for _, obj in ipairs(armyObjs or {}) do
-            if obj.uid == toCenterFinishMsg.defenderId then
-                dfInfo = obj
-                player:SetTmp('armyObj', dfInfo)
-                break
-            end
-        end
-
-        if not armyInfo or not armyObjs or not dfInfo then
-            GCTipTool:SendOnlyParms(player, 'StartPvpMirrorFight(Game)', 'notFindOpObj')
-            return
-        end
-
-        armyInfo.can_join_cnt = armyInfo.can_join_cnt - 1
-
-        GLogicCheck:CalArmyFinish(armyInfo, dfInfo, isWiner, toCenterFinishMsg)
-
-        toCenterFinishMsg.upInfo = player:GetTmpArmyFlushInfo({'rank_level', 'max_rank_level'})
-
-        if isForceOver then
-            -- 暂时之后，赛季结束会调用这里了
-            toCenterFinishMsg.info = armyInfo
-            ServerProto:PracticeFinishRet(player:GetConn(), toCenterFinishMsg, player:Get('uid'))
-        else
-            Send2Army('ArmyProto:PracticeFinish', attackerId, toCenterFinishMsg)
-        end
-    end
+    mgr.cbOver = cbOver
 
     -- self.listPvp[tData.uid] = tData.data
     -- player:Send("FightProto:PvpFightResult", {tData = data, tMirror = tMirror}, encod)
@@ -474,22 +422,27 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     mgr:LoadData(1, tData.data)
 
     -- 镜像数据
-    if tMirror.is_robot then
+    if tMirror.is_robot == BoolType.Yes then
     else
         tMirror.data = Halo:Calc(tMirror.data)
     end
     mgr:LoadData(2, tMirror.data, CardType.Mirror)
     -- 加载为镜像
 
-    local exData = nil
     local np = player.oLifeBufMgr:GetBufAddVal('army_np_add')
     -- tMirror.nEnterNp = tMirror.nEnterNp or 0
-    exData = {nEnterNp = {np, tMirror.nEnterNp or 0},
-    emotes = {
-        tData.icon_emotes or table.copy(g_BattleFaceSet),
-        tMirror.icon_emotes or table.copy(g_BattleFaceSet),
+    local exData = {
+        nEnterNp = {np, tMirror.nEnterNp or 0}
+        , emotes = {
+            tData.icon_emotes or table.copy(g_BattleFaceSet),
+            tMirror.icon_emotes or table.copy(g_BattleFaceSet),
         }
+        , tAllBuff = {}
     }
+    
+    if buffIds then
+        table.copy(buffIds, exData.tAllBuff)
+    end
 
     mgr:SetStepLimit(g_sPVPMirrorStepLimit)
     mgr:AfterLoadData(exData or {})
@@ -497,11 +450,11 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror)
     -- LogTable({seed = seed, stype = SceneType.PVPMirror, tData = tData, tMirror = tMirror}, "SceneType.PVPMirror")
     mgr:AddCmd(
         CMD_TYPE.InitData,
-        {seed = seed, fid = fid, stype = SceneType.PVPMirror, tPvpData = {tData, tMirror}, exData = exData}
+        {seed = seed, fid = fid, stype = sceneType, tPvpData = {tData, tMirror}, exData = exData}
     )
     -- LogError("-----------")
     -- 操作日志
-    LogEnterFight(player, fid, SceneType.PVPMirror, 0, 0, tData)
+    LogEnterFight(player, fid, sceneType, 0, 0, tData)
 end
 
 -- pvp 镜像
@@ -541,6 +494,252 @@ function FightHelp:GetPvpDataFromPlr(plr, nTeamIndex)
     end
 
     plr.oCardMgr:RemoveExcludeSkill(tData.data)
+
+    return tData
+end
+
+
+
+-- 将客户端发过来的卡牌信息
+-- [16:21:38][DEBUG] Client Recv
+--     {
+--         [ 1 ]n = [ "ArmyProto:StartRealArmy" ]s
+--         [ 2 ]n =
+--         {
+--             [ "team" ]s =
+--             {
+--                 [ "index" ]s = [ 23 ]f
+--                 [ "data" ]s =
+--                 {
+--                     [ 1 ]n =
+--                     {
+--                         [ "index" ]s = [ 1 ]f
+--                         [ "bIsNpc" ]s = [ 'false' ]boolean
+--                         [ "nStrategyIndex" ]s = [ 2 ]f
+--                         [ "row" ]s = [ 2 ]f
+--                         [ "col" ]s = [ 1 ]f
+--                         [ "card_info" ]s =
+--                         {
+--                             [ "name" ]s = [ "丝卡蒂" ]s
+--                             [ "break_level" ]s = [ 5 ]f
+--                             [ "cfgid" ]s = [ 70240 ]f
+--                             [ "performance" ]s = [ 6270 ]f
+--                             [ "sp_race" ]s = [ 5 ]f
+--                             [ "np" ]s = [ 0 ]f
+--                             [ "attack" ]s = [ 2544 ]f
+--                             [ "exp" ]s = [ 7800 ]f
+--                             [ "defense" ]s = [ 463 ]f
+--                             [ "skin" ]s = [ 7024002 ]f
+--                             [ "crit" ]s = [ 1.5 ]f
+--                             [ "crit_rate" ]s = [ 0.079999998211861 ]f
+--                             [ "skinIsl2d" ]s = [ 2 ]f
+--                             [ "sub_talent" ]s =
+--                             {
+--                                 [ "had" ]s =
+--                                 {
+--                                     [ 1 ]n = [ 1075 ]f
+--                                     [ 2 ]n = [ 329005 ]f
+--                                     [ 3 ]n = [ 1045 ]f
+--                                     [ 4 ]n = [ 329105 ]f
+--                                 }
+--                                 [ "use" ]s =
+--                                 {
+--                                     [ 1 ]n = [ 1075 ]f
+--                                     [ 2 ]n = [ 1045 ]f
+--                                     [ 3 ]n = [ 329105 ]f
+--                                 }
+--                             }
+--                             [ "skinIsl2d_a" ]s = [ 1 ]f
+--                             [ "mix_data" ]s =
+--                             {
+--                                 [ "cl" ]s = [ 1 ]f
+--                             }
+--                             [ "sp" ]s = [ 50 ]f
+--                             [ "hp" ]s = [ 3 ]f
+--                             [ "resist" ]s = [ 0.10000000149012 ]f
+--                             [ "hit" ]s = [ 0.15000000596046 ]f
+--                             [ "speed" ]s = [ 123 ]f
+--                             [ "maxhp" ]s = [ 10557 ]f
+--                             [ "skin_a" ]s = [ 0 ]f
+--                             [ "skills" ]s =
+--                             {
+--                                 [ 1 ]n = [ 329105 ]f
+--                                 [ 2 ]n = [ 4702405 ]f
+--                                 [ 3 ]n = [ 702400105 ]f
+--                                 [ 4 ]n = [ 702400205 ]f
+--                                 [ 5 ]n = [ 702400305 ]f
+--                                 [ 6 ]n = [ 702401305 ]f
+--                             }
+--                             [ "level" ]s = [ 70 ]f
+--                             [ "intensify_level" ]s = [ 1 ]f
+--                             [ "cid" ]s = [ 70240 ]f
+--                         }
+--                         [ "cid" ]s = [ 70240 ]f
+--                     }
+--                 }
+--                 [ "nReserveNP" ]s = [ 0 ]f
+--                 [ "bIsReserveSP" ]s = [ 'false' ]boolean
+--                 [ "leader" ]s = [ 70240 ]f
+--             }
+--         }
+--     }
+-- 替换为如下的战斗需要使用的结构
+--》 [18:00:40][DEBUG] Card:GetData():
+--》     {
+--》         [ "use_sub_talent" ]s = 
+--》         {
+--》             [ 1 ]n = [ 329205 ]f
+--》             [ 2 ]n = [ 1025 ]f
+--》             [ 3 ]n = [ 1015 ]f
+--》         }
+--》         [ "quality" ]s = [ 4 ]f
+--》         [ "skills" ]s = 
+--》         {
+--》             [ 1 ]n = [ 329205 ]f
+--》             [ 2 ]n = [ 4102105 ]f
+--》             [ 3 ]n = [ 102100105 ]f
+--》             [ 4 ]n = [ 102100205 ]f
+--》             [ 5 ]n = [ 102100305 ]f
+--》             [ 6 ]n = [ 102101305 ]f
+--》         }
+--》         [ "level" ]s = [ 60 ]f
+--》         [ "nStep" ]s = [ 0 ]f
+--》         [ "nJump" ]s = [ 0 ]f
+--》         [ "real_cid" ]s = [ 10210 ]f
+--》         [ "fight_cost" ]s = [ 0 ]f
+--》         [ "career" ]s = [ 1 ]f
+--》         [ "nMoveType" ]s = [ 2 ]f
+--》         [ "hp_percent" ]s = [ 1 ]f
+--》         [ "model" ]s = [ 1021002 ]f
+--》         [ "np" ]s = [ 0 ]f
+--》         [ "name" ]s = [ "鑼舵櫠" ]s
+--》         [ "maxhp" ]s = [ 8428 ]f
+--》         [ "defense" ]s = [ 423 ]f
+--》         [ "speed" ]s = [ 106 ]f
+--》         [ "crit" ]s = [ 1.6 ]f
+--》         [ "crit_rate" ]s = [ 0.086 ]f
+--》         [ "hit" ]s = [ 0.05 ]f
+--》         [ "resist" ]s = [ 0 ]f
+--》         [ "performance" ]s = [ 3693 ]f
+--》         [ "sp_race" ]s = [ 5 ]f
+--》         [ "sp_race2" ]s = [ 10 ]f
+--》         [ "id" ]s = [ 10210 ]f
+--》         [ "passivBufIds" ]s = 
+--》         {
+--》        
+--》         }
+--》         [ "aiSetting" ]s = 
+--》         {
+--》             [ 1 ]n = 
+--》             {
+--》                 [ "skillStrategy" ]s = 
+--》                 {
+--》                     [ 1 ]n = [ 1 ]f
+--》                 }
+--》                 [ "aiStrategy" ]s = 
+--》                 {
+--》                     [ 1 ]n = [ 6 ]f
+--》                 }
+--》                 [ "skillID" ]s = [ 102100105 ]f
+--》             }
+--》             [ 2 ]n = 
+--》             {
+--》                 [ "skillStrategy" ]s = 
+--》                 {
+--》                     [ 1 ]n = [ 2 ]f
+--》                 }
+--》                 [ "aiStrategy" ]s = [ .Card:GetData():.aiSetting.1.aiStrategy ]t
+--》                 [ "skillID" ]s = [ 102100205 ]f
+--》             }
+--》             [ 3 ]n = 
+--》             {
+--》                 [ "skillStrategy" ]s = 
+--》                 {
+--》                     [ 1 ]n = [ 5 ]f
+--》                     [ 2 ]n = [ 2 ]f
+--》                     [ 3 ]n = [ 3 ]f
+--》                     [ 4 ]n = [ 0 ]f
+--》                 }
+--》                 [ "skillID" ]s = [ 102100305 ]f
+--》             }
+--》             [ "bOverLoad" ]s = [ 'false' ]boolean
+--》         }
+--》         [ "max_level" ]s = [ 70 ]f
+--》         [ "gold_add" ]s = [ 0 ]f
+--》         [ "plr_exp_add" ]s = [ 0 ]f
+--》         [ "card_exp_add" ]s = [ 0 ]f
+--》         [ "hot" ]s = [ 100 ]f
+--》         [ "attack" ]s = [ 1844 ]f
+--》         [ "break_level" ]s = [ 4 ]f
+--》         [ "intensify_level" ]s = [ 1 ]f
+--》         [ "eskills" ]s = 
+--》         {
+--》             [ 1 ]n = [ 10201 ]f
+--》             [ 2 ]n = [ 20302 ]f
+--》             [ 3 ]n = [ 21202 ]f
+--》             [ 4 ]n = [ 10302 ]f
+--》             [ 5 ]n = [ 10701 ]f
+--》         }
+--》         [ "nStrategyIndex" ]s = [ 1 ]f
+--》         [ "sp" ]s = [ 50 ]f
+--》     }
+
+function GetFightDataFromTeamData(cardData)
+    local ret = {}
+    local cardCfg = CardData[cardData.cfgid]
+
+    local cpFields = {
+        'quality', 'skills', 'level', 'np', 'name', 'maxhp', 'defense', 'speed', 'crit', 'crit_rate', 'hit', 'resist'
+        , 'performance', 'sp_race', 'sp_race2', 'attack', 'break_level', 'intensify_level', 'sp'
+    }
+    for _, k in ipairs(cpFields) do
+        ret[k] = cardData[k]
+    end
+
+    local cpCfgFields = { 'id', 'fight_cost', 'career', 'nMoveType', 'model' }
+    for _, k in ipairs(cpCfgFields) do
+        ret[k] = cardCfg[k]
+    end
+
+
+    ret.use_sub_talent = cardData.sub_talent.use
+    ret.nStep = 0
+    ret.nJump = 0
+    ret.real_cid = cardData.cid
+    ret.hp_percent = 1
+
+    return ret
+end
+
+function FightHelp:GetPvpDataFromTeam(uid, teamData, icon_emotes)
+    local tData = {
+        uid = uid,
+        index = teamData.index,
+        data = {},
+        icon_emotes = icon_emotes or {1,1,1}
+    }
+
+    if teamData and #teamData.data > 0 then
+        for i, v in ipairs(teamData.data) do
+            local cardData = GetFightDataFromTeamData(v.card_info)
+            cardData.row = v.row
+            cardData.col = v.col
+            cardData.cuid = v.cid
+            cardData.nStrategyIndex = v.nStrategyIndex
+            table.insert(
+                tData.data,
+                {
+                    row = v.row,
+                    col = v.col,
+                    cid = v.cid,
+                    uid = tData.uid,
+                    data = cardData
+                }
+            )
+        end
+    else
+        return nil
+    end
 
     return tData
 end
@@ -701,10 +900,14 @@ end
 --     return mgr
 -- end
 --------------------------------------------------------------
-local WriteMonterData = function(formId, monsterIds, retData, uid)
+function FightHelp:WriteMonterData(formId, monsterIds, retData, uid)
+    LogDebug("WriteMonterData() formId:%s, monsterIds:%s, uid:%s", formId, monsterIds, uid)
+
     -- 阵法数据
     local mform = MonsterFormation[formId]
     if not mform then
+        LogError("WriteMonterData() formId:%s not cfg from MonsterFormation", formId)
+        ASSERT(false)
         return nil
     end
 
@@ -729,22 +932,40 @@ local WriteMonterData = function(formId, monsterIds, retData, uid)
 end
 
 function FightHelp:GetPvpDataFromMonsterIds(practiceRobotCfg, useUId)
-    local tData = {uid = useUId, data = {}, robotId = practiceRobotCfg.id}
+    local tData = {uid = useUId, data = {}, robotId = practiceRobotCfg.id, is_robot = BoolType.Yes}
 
     -- 阵法数据
-    WriteMonterData(practiceRobotCfg.nGridId, practiceRobotCfg.aTeamIds, tData.data, useUId)
+    self:WriteMonterData(practiceRobotCfg.nGridId, practiceRobotCfg.aTeamIds, tData.data, useUId)
 
     return tData
 end
 
-function FightHelp:GetPveFromMonsterGroup(id)
-    local tData = {uid = id, data = {}}
+function FightHelp:GetFreeMatchPvpRobotData(robotCfg)
+    local tData = {uid = useUId, data = {}, robotId = robotCfg.id, is_robot = BoolType.Yes}
+
+    local len = #robotCfg.aTeamIds
+    tData.index = math.random(1, len)
+    local monsterGroupId = robotCfg.aTeamIds[tData.index]
+
+    -- 阵法数据
+    return self:GetPveFromMonsterGroup(monsterGroupId, tData)
+end
+
+
+function FightHelp:GetPveFromMonsterGroup(id, retDate)
+    LogDebug("GetPveFromMonsterGroup() id:%s", id)
+
+    local tData = retDate or {uid = id, data = {}}
     local gCfg = MonsterGroup[id]
     if not gCfg then
+        LogError("FightHelp:GetPveFromMonsterGroup() %s can not find cfg from MonsterGroup", id)
+        ASSERT(false)
         return nil
     end
 
-    WriteMonterData(gCfg.formation, gCfg.monsters, tData.data, id)
+    local stage = gCfg.stage[1]
+
+    self:WriteMonterData(stage.formation, stage.monsters, tData.data, id)
 
     return tData
 end
@@ -794,7 +1015,7 @@ function FightHelp:CalcLiveBuff(plr, stype, data)
         damage = bufMgr:GetBufAddVal('dup_damage_add_pct')
         -- 对敌方的伤害增加的百分比
         bedamage = bufMgr:GetBufAddVal('dup_bedamage_add_pct')
-    elseif stype == SceneType.PVP or SceneType.PVPMirror then
+    elseif stype == SceneType.PVP or stype == SceneType.PVPMirror or stype == SceneType.PVEFreeMatch then -- v 4.3
         -- pvp(实时)
         -- pvp(镜像)
         -- np = bufMgr:GetBufAddVal("army_np_add")
@@ -941,6 +1162,10 @@ function FightHelp:CountdownBegins(uid, data)
     local ret
     if mgr and mgr.CountdownBegins then
         mgr:CountdownBegins(uid, data)
+    else
+        if not mgr then
+            LogWarning("FightHelp:CountdownBegins() not find mgr uid:%s", uid)
+        end
     end
 end
 
@@ -950,6 +1175,8 @@ function FightHelp:Quit(uid, data)
     local ret
     if mgr then
         mgr:Quit(uid, data)
+    else
+        LogWarning("FightHelp:Quit() not find fight mgr uid:%s", uid)
     end
 end
 
@@ -985,17 +1212,21 @@ end
 
 --------------------------------------------------------------
 function FightHelp:OnTimer()
-    -- LogDebug("1111111111111111 FightHelp:OnTimer()")
+    -- LogDebug("FightHelp:OnTimer()")
+
     local f = function()
         -- local t = GameApp:GetTickCount()
         -- LogInfo("FightHelp:OnTimer() %s; %s", t, #FightHelp.lstMgr)
+
         GameApp:Timeout(1, self:OnTimer())
         for k, v in pairs(FightHelp.lstMgr) do
             -- LogDebugEx("OnTimer",v.id)
+
             local ret, err = xpcall(v.OnTimer, XpcallCB, v)
             -- if not ret then LogError(err) end
         end
         -- LogInfo("FightHelp:OnTimer() %s", GameApp:GetTickCount()-t)
+
         FightHelp.count = FightHelp.count or 0
         FightHelp.count = FightHelp.count + 1
         if FightHelp.count > 100 then 
@@ -1058,16 +1289,24 @@ function FightHelp:OnPlayerLogin(uid, ispvp, notiteConn)
         if notiteConn then
             self:SendInBattle(uid, notiteConn)
         end
+    else
+        LogTable(FightHelp.mapPlayerMgr, "FightHelp.mapPlayerMgr")
+        LogTable(FightHelp.lstMgr, "FightHelp.lstMgr")
+        LogTable(FightHelp.cache, "FightHelp.cache")
+        LogDebug("FightHelp:OnPlayerLogin() FightHelp.cache not find uid:%s", uid)
     end
+
+    return mgr
 end
 
-function FightHelp:SendInBattle(uid, notiteConn)
+function FightHelp:SendInBattle(uid, notiteConn, isPvp)
     -- LogDebug("FightHelp:SendInBattle uid :%s", uid)
     -- LogTrace("FightHelp:SendInBattle:")
     local mgr = self:GetFightMgr(uid)
     if mgr then
         mgr:OnPlayerLogin(uid)
     else
+        LogDebug("FightHelp:SendInBattle(), not find mgr! uid :%s", uid)
         notiteConn:send({'FightProto:InBattle', {type = 0, nDuplicateID = 0}})
     end
 end
@@ -1081,7 +1320,8 @@ function FightHelp:Destroy(uid, player)
     if mgr then
         FightHelp.lstMgr[mgr.id] = nil
 
-        if mgr.type == SceneType.PVPMirror and not mgr.isOver then
+        -- v 4.3
+        if (mgr.type == SceneType.PVPMirror or mgr.type == SceneType.PVEFreeMatch or mgr.type == SceneType.PVP) and not mgr.isOver then
             -- 紫龙打印bi日志
             xpcall(
                 function ()
@@ -1121,14 +1361,16 @@ function FightHelp:CloseMirror()
     LogDebug('FightHelp:CloseMirror()......')
 
     for id, v in pairs(self.lstMgr) do
-        if v.type == SceneType.PVPMirror then
+        -- v 4.3
+        if v.type == SceneType.PVPMirror or v.type == SceneType.PVEFreeMatch then
             v.isForceOver = true
             v:Over(v.stage, 2)
         end
     end
 
     for uid, v in pairs(self.cache) do
-        if v.type == SceneType.PVPMirror then
+        -- v 4.3
+        if v.type == SceneType.PVPMirror or v.type == SceneType.PVEFreeMatch then
             v.isForceOver = true
             v:Over(v.stage, 2)
         end

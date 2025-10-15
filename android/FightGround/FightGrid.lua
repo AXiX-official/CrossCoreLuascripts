@@ -51,7 +51,7 @@ function SetSize()
         local summonGridState = true;
 
 --        if(TeamUtil:IsEnemy(teamId))then
---            if(g_FightMgr.type ~= SceneType.PVP and g_FightMgr.type ~= PVPMirror)then
+--            if(not IsPvpSceneType(g_FightMgr.type) and g_FightMgr.type ~= PVPMirror)then
 --                summonGridState = false;
 --            end
 --        end

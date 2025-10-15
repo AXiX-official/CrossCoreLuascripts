@@ -10,6 +10,7 @@ function this:GetGuideKey()
 end
 
 function this:Init()
+    self:SetCanSkipStep(true);
     self:InitListener();
 end
 
@@ -59,6 +60,15 @@ function this:Clear()
     self.guideData = nil;
     self.currGuides = nil;
     self.doingGuide = nil;
+    self.canSkipStep=true;
+end
+
+function this:CanSkipStep()
+    return self.canSkipStep;
+end
+
+function this:SetCanSkipStep(_canSkip)
+    self.canSkipStep=_canSkip;
 end
 
 --设置数据
@@ -236,23 +246,48 @@ function this:CheckGuide(flag)
             table.insert(currGuideIds,tmp.cfg.id);
         end
     end
+    -- if self:CanSkipStep()~=true then --GM命令时执行排序
+        table.sort(currGuideIds,function(a,b)
+            return a<b;
+        end)
+    -- end
     --LogError("尝试触发引导！ Flag：" .. tostring(flag) .. ",待引导：" .. table.tostring(currGuideIds) .. "\n引导中：" ..  table.tostring(self.doingGuide));
-
     if(self.doingGuide)then
         return true;
     end
 --    LogError("aaaaaaaaaaaaaaaaaaaaa")
     local triggerGuide = nil;
-    if(self.currGuides)then
-        for _,guideData in pairs(self.currGuides)do
-            local cfg = guideData.cfg;
-            if(self:CanGuide(cfg,flag))then                            
-                triggerGuide = guideData;
-                break;
-            end            
+    -- if self:CanSkipStep()~=true then
+        if(currGuideIds)then
+            -- LogError(self.currGuides)
+            for _,id in ipairs(currGuideIds)do
+                local cfg=Cfgs.Guide:GetByID(id);
+                local line=cfg and cfg.line or 0;
+                if cfg and self.currGuides and self.currGuides[line] then
+                    local guideData=self.currGuides[line];
+                    -- LogError("id:"..tostring(id).."\t"..table.tostring(guideData))
+                    if guideData then
+                        if(self:CanGuide(cfg,flag))then                            
+                            triggerGuide = guideData;
+                            break;
+                        end            
+                    end
+                end
+            end
         end
-    end
-    --LogError("执行引导" .. (triggerGuide and triggerGuide.cfg.id or "") .. table.tostring(triggerGuide));
+    -- else
+    --     if(self.currGuides)then
+    --         for _,guideData in pairs(self.currGuides)do
+    --             local cfg = guideData.cfg;
+    --             if(self:CanGuide(cfg,flag))then                            
+    --                 triggerGuide = guideData;
+    --                 break;
+    --             end            
+    --         end
+    --     end
+    -- end
+    
+    -- LogError("执行引导" .. (triggerGuide and triggerGuide.cfg.id or "") .. table.tostring(triggerGuide));
     if(triggerGuide)then
         self:DoGuide(triggerGuide,flag);
         return true;
@@ -308,14 +343,53 @@ function this:CanGuide(cfg,flag)
             LogError("custom guide behaviour missing:" .. tostring(cfg.id));
          end
     end
-    --LogError(tostring(state) .. cfg.id);
+
+    --配置表条件
+    if(state)then
+        state = self:CfgCondition(cfg);
+    end
+    -- LogError(tostring(state) .. cfg.id);
+    return state;
+end
+
+--自定义配置条件
+function this:CfgCondition(cfg)
+    local conditionArr = cfg.condition_check;
+    if(not conditionArr)then
+        return true;
+    end
+
+    local state = true;
+    for _,condition in pairs(conditionArr) do
+        local str = condition[1];
+        local val = condition[2]; 
+        if(str and string.lower(str) == "checkdungeonpass")then
+            if(not DungeonMgr:CheckDungeonPass(val))then
+                state = false;
+                break;
+            end
+        elseif(str and string.lower(str) == "isguided")then
+            if(not GuideMgr:IsGuided(val))then
+                state = false;
+                break;
+            end  
+        elseif(str and string.lower(str) == "getcurrdungeonid")then
+            if(DungeonMgr:GetCurrId() ~= val)then
+                state = false;
+                break;
+            end         
+        else
+            LogError(string.format("引导条件condition_check配置错误%s",table.tostring(cfg,true)));   
+        end
+    end
+
     return state;
 end
 
 function this:TrySkipStep(cfg)
     local name = cfg and cfg.name or "";
     local func = GuideBehaviour["GuideBehaviourSkipStep_" .. name];
-    if(func)then
+    if(func) and self:CanSkipStep() then
         return func();
     end  
 end
@@ -344,7 +418,7 @@ function this:DoGuide(data,flag)
     if(data.cfg.close_view)then
         CSAPI.CloseAllOpenned();
     end
-    --LogError("执行引导" .. table.tostring(data,true));
+    -- LogError("执行引导" .. table.tostring(data,true));
 
     CSAPI.OpenView("Guide",data);
 
@@ -356,6 +430,11 @@ function this:DoGuide(data,flag)
         if(func)then
             func(GuideBehaviour);
         end  
+    end
+
+    local openQuestion = data.cfg.openQuestion;
+    if(not StringUtil:IsEmpty(openQuestion))then
+        UIUtil:OpenQuestion(openQuestion);
     end
 end
 --检测回滚
@@ -369,7 +448,7 @@ function this:CheckRoll(cfg)
 end
 --检测跳过
 function this:CheckSkip(cfg)
-    if(cfg.custom_skip)then--跳过
+    if(cfg.custom_skip) and self:CanSkipStep() then--跳过
          local func = GuideBehaviour["GuideBehaviourSkip_" .. cfg.name];
          local state = func(GuideBehaviour);
          --LogError(tostring(state));

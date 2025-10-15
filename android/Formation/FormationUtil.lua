@@ -39,6 +39,33 @@ this.FormationTypeSort[FormationType.Nine] = 7;
 this.SkillModuleKey = "PlayerAbility";
 this.AIModuleKey = "special7";
 
+this.RaisingType={
+    Gift=1,
+    Skill=2,
+    ChipQuality=3,
+    ChipLevel=4,
+    CardLevel=5,
+}
+
+this.RaisingTypeTips={
+    [this.RaisingType.Gift]=15141,
+    [this.RaisingType.Skill]=15140,
+    [this.RaisingType.ChipQuality]=15139,
+    [this.RaisingType.ChipLevel]=15138,
+    [this.RaisingType.CardLevel]=15137,
+}
+
+this.RaisingTypeTips2={
+    [this.RaisingType.Gift]=15147,
+    [this.RaisingType.Skill]=15146,
+    [this.RaisingType.ChipQuality]=15145,
+    [this.RaisingType.ChipLevel]=15144,
+    [this.RaisingType.CardLevel]=15143,
+}
+
+this.RaisingDailyKey="RaisingDialog";
+this.RaisingDailyKey2="RaisingJumpDialog";
+
 this.orderList = { -- 编队类型对应的配置下标
     [eTeamType.DungeonFight] = 1, -- 副本队伍列表,队伍ID是1-8
     [eTeamType.Assistance] = 1, -- 助战队伍信息，自己分享的助战卡牌列表
@@ -633,6 +660,10 @@ function this.GetDefaultName(teamIndex,name)
         teamName = LanguageMgr:GetByID(54053)
     elseif teamType==eTeamType.MultBattle then
         teamName = LanguageMgr:GetByID(77038)
+    elseif teamType==eTeamType.PVP then
+        teamName = LanguageMgr:GetByID(90006+(teamIndex-62))
+    elseif teamType==eTeamType.PVPFriend then
+        teamName = LanguageMgr:GetByID(90006+(teamIndex-65))
     elseif teamName==nil or teamName=="" then
         teamName = string.format(LanguageMgr:GetTips(14017), teamIndex)
     end
@@ -661,5 +692,157 @@ function this.GetNForceID(forceCfg)
     end
     return nForceID;
 end
+
+--检查培养度并返回结果 teamList={TeamData,TeamData,...},cfg=养成值要求表
+function this.CheckRaising(teamList,cfg)
+    if teamList==nil or (teamList and next(teamList)==nil)or cfg==nil then
+        return nil
+    end
+    local infos={};
+    local lessGiftID,lessSkillID,lessChipQualityID,lessChipLevelID,lessCardLevelID,lessNumGift,lessNumSkill,lessNumChipQuality,lessNumChipLevel,lessNumCardLevel=nil,nil,nil,nil,nil,nil,nil,nil,nil,nil;
+    for k, v in ipairs(teamList) do
+        if v:GetRealCount()<5 and infos.lessMemberID==nil then
+            infos.lessMemberID=v:GetIndex();
+        end
+        local info=v:GetRaisingInfo();
+        if info then
+            infos.info=infos.info or {}
+            infos.info.numGift=(infos.info.numGift or 0)+(info.numGift or 0)
+			infos.info.numSkill=(infos.info.numSkill or 0)+(info.numSkill or 0)
+			infos.info.numChipQuality=(infos.info.numChipQuality or 0)+(info.numChipQuality or 0)
+			infos.info.numChipLevel=(infos.info.numChipLevel or 0)+(info.numChipLevel or 0)
+			infos.info.numCardLevel=(infos.info.numCardLevel or 0)+(info.numCardLevel or 0)
+            if lessNumGift==nil or (lessNumGift and lessNumGift>info.lessNumGift) then
+				lessNumGift=info.lessNumGift;
+				lessGiftID=info.lessGiftID
+			end
+			if lessNumSkill==nil or (lessNumSkill and lessNumSkill>info.lessNumSkill) then
+				lessNumSkill=info.lessNumSkill;
+				lessSkillID=info.lessSkillID;
+			end
+			if lessNumChipQuality==nil or (lessNumChipQuality and lessNumChipQuality>info.lessNumChipQuality) then
+				lessNumChipQuality=info.lessNumChipQuality;
+				lessChipQualityID=info.lessChipQualityID;
+			end
+			if lessNumChipLevel==nil or (lessNumChipLevel and lessNumChipLevel>info.lessNumChipLevel) then
+				lessNumChipLevel=info.lessNumChipLevel;
+				lessChipLevelID=info.lessChipLevelID;
+			end
+			if lessNumCardLevel==nil or (lessNumCardLevel and lessNumCardLevel>info.lessNumCardLevel) then
+				lessNumCardLevel=info.lessNumCardLevel;
+				lessCardLevelID=info.lessCardLevelID;
+			end
+        end
+    end
+    if infos.info==nil then
+        return infos;
+    end
+    infos.info.lessNumGift=lessNumGift or 0;
+    infos.info.lessGiftID=lessGiftID;
+    infos.info.lessNumSkill=lessNumSkill or 0;
+    infos.info.lessSkillID=lessSkillID;
+    infos.info.lessNumChipQuality=lessNumChipQuality or 0;
+    infos.info.lessChipQualityID=lessChipQualityID;
+    infos.info.lessNumChipLevel=lessNumChipLevel or 0;
+    infos.info.lessChipLevelID=lessChipLevelID;
+    infos.info.lessNumCardLevel=lessNumCardLevel or 0;
+    infos.info.lessCardLevelID=lessCardLevelID;
+    --计算各项最低的养成值的百分比差值
+    if cfg then
+        --各项最低的能力值
+        infos.numGift=cfg.numGift and math.floor((cfg.numGift-(lessNumGift or 0))/cfg.numGift*100) or 0;
+        infos.numSkill=cfg.numSkill and math.floor((cfg.numSkill-(lessNumSkill or 0))/cfg.numSkill*100) or 0;
+        infos.numChipQuality=cfg.numChipQuality and math.floor((cfg.numChipQuality-(lessNumChipQuality or 0))/cfg.numChipQuality*100) or 0;
+        infos.numChipLevel=cfg.numChipLevel and math.floor((cfg.numChipLevel-(lessNumChipLevel or 0))/cfg.numChipLevel*100) or 0;
+        infos.numCardLevel=cfg.numCardLevel and math.floor((cfg.numCardLevel-(lessNumCardLevel or 0))/cfg.numCardLevel*100) or 0;
+        -- 打开培养引导UI
+        local jumpView = nil;
+        local cardID = nil; -- 培育的卡牌ID
+        --判断打开的UI类型
+        if infos.numGift>0 or  infos.numSkill>0 or infos.numChipLevel>0 or infos.numChipQuality>0 or infos.numCardLevel>0 then
+            local max=0;
+            if infos.numGift>infos.numSkill then
+                max=infos.numGift;
+                jumpView=this.RaisingType.Gift;
+                cardID=infos.info.lessGiftID
+            else
+                max=infos.numSkill;
+                jumpView=this.RaisingType.Skill;
+                cardID=infos.info.lessSkillID
+            end
+            if infos.numChipQuality>max then
+                max=infos.numChipQuality
+                jumpView=this.RaisingType.ChipQuality;
+                cardID=infos.info.lessChipQualityID
+            end
+            if infos.numChipLevel>max then
+                max=infos.numChipLevel
+                jumpView=this.RaisingType.ChipLevel;
+                cardID=infos.info.lessChipLevelID
+            end
+            if infos.numCardLevel>max then
+                max=infos.numCardLevel
+                jumpView=this.RaisingType.CardLevel;
+                cardID=infos.info.lessCardLevelID
+            end
+        end
+        infos.raisingType=jumpView; --需要优先培养的类型
+        infos.targetCardID=cardID;--培养的目标卡牌
+    end
+    return infos;
+end
+
+--打开跳转的培养引导界面 result:CheckRaising返回的数据结构 disMemberCond:是否不检测玩家人数
+function this.OpenRaisingView(result,dungeonCfg,disMemberCond,openSetting)
+    -- LogError(result)
+    if result and next(result) ~= nil then
+        if result.lessMemberID and disMemberCond~=true then
+            -- 提示人数不足
+            -- LogError("人数不足！")
+            CSAPI.OpenView("RaisingDialog",{result,dungeonCfg},openSetting);
+            -- local dialogdata = {}
+            -- dialogdata.content = "当前编队人数不满5人，是否前往编队？";
+            -- dialogdata.dailyKey="DungeonRaisingTeam"
+            -- dialogdata.okCallBack = function()
+            --         EventMgr.Dispatch(EventType.Team_Raising_GoTeamView,result.lessMemberID);
+            -- end
+            -- CSAPI.OpenView("Dialog", dialogdata)
+            do return end;
+        end
+        if result.raisingType ~= nil then
+            CSAPI.OpenView("RaisingJumpDialog",{result,dungeonCfg},openSetting);
+            -- local dialogdata = {}
+            -- dialogdata.content = string.format("当前%s较低，是否仍要继续挑战？",tostring(result.raisingType));
+            -- dialogdata.dailyKey="DungeonRaising"
+            -- dialogdata.okCallBack = function()
+            --     EventMgr.Dispatch(EventType.Team_Raising_GoBattle,dungeonCfg.id);
+            -- end
+            -- dialogdata.cancelCallBack=function()
+            --     -- LogError("跳转到："..tostring(result.raisingType))
+            --     local cardData=RoleMgr:GetData(result.targetCardID);
+            --     if cardData==nil then
+            --         LogError("未找到对应卡牌数据："..tostring(result.targetCardID))
+            --         do return end
+            --     end
+            --     result.raisingType=jumpId
+            --     CSAPI.OpenView("RoleInfo",cardData);
+            --     if result.raisingType==this.RaisingType.Gift then
+            --         CSAPI.OpenView("RoleCenter",{cardData},"talent");
+            --     elseif result.raisingType==this.RaisingType.Skill then
+            --         local newSkillDatas = cardData:GetSkillsForShow()
+            --         CSAPI.OpenView("RoleCenter",{cardData,newSkillDatas[1].id},"skill");
+            --     elseif result.raisingType==this.RaisingType.ChipQuality or result.raisingType==this.RaisingType.ChipLevel then
+            --         CSAPI.OpenView("RoleEquip",{
+            --             card = cardData
+            --         });
+            --     elseif result.raisingType==this.RaisingType.CardLevel then  
+            --         CSAPI.OpenView("RoleUpBreak",cardData);
+            --     end
+            -- end
+            -- CSAPI.OpenView("Dialog", dialogdata)
+        end
+    end
+end
+
 
 return this;

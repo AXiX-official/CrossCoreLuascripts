@@ -286,7 +286,6 @@ end
 
 --返回套装分类的装备数据 返回的数据结构：{{cfg=套装配置表数据,equips1,equip2,...}} qualityFilters:品质筛选 配置表中show不等于1则不返回，配置表中时间字段大于当前时间时不返回
 function this:GetEquipSuitData2(qualityFilters,hasEquipped,notContainID)
-	LogError("GetEquipSuitData2")
 	local arr={};
 	if self.equips then
 		local currTime=TimeUtil:GetTime();

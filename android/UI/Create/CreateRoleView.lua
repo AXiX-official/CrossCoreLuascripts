@@ -141,6 +141,7 @@ function OnClickMask()
         EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "CloseBuild") 
     else
         view:Close()
+        PopupPackMgr:CheckByCondition({3})
     end
 end
 function OnClickShareBtn()
@@ -157,4 +158,5 @@ function ShareView_NoticeScreenshotCompleted(Data)
 end
 function FirstEnd()
     view:Close()
+    PopupPackMgr:CheckByCondition({3})
 end

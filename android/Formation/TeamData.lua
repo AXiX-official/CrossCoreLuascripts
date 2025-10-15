@@ -760,4 +760,50 @@ function this:GetCoolState()
 	return state;
 end
 
+function this:GetRaisingInfo()
+	local infos={};
+	local lessGiftID,lessSkillID,lessChipQualityID,lessChipLevelID,lessCardLevelID,lessNumGift,lessNumSkill,lessNumChipQuality,lessNumChipLevel,lessNumCardLevel=nil,nil,nil,nil,nil,nil,nil,nil,nil,nil;
+	for k, v in ipairs(self.data) do
+		local info=v:GetRaisingInfo();
+		if info~=nil then
+			infos.numGift=(infos.numGift or 0)+(info.numGift or 0)
+			infos.numSkill=(infos.numSkill or 0)+(info.numSkill or 0)
+			infos.numChipQuality=(infos.numChipQuality or 0)+(info.numChipQuality or 0)
+			infos.numChipLevel=(infos.numChipLevel or 0)+(info.numChipLevel or 0)
+			infos.numCardLevel=(infos.numCardLevel or 0)+(info.numCardLevel or 0)
+			if lessNumGift==nil or (lessNumGift and lessNumGift>info.numGift) then
+				lessNumGift=info.numGift;
+				lessGiftID=v:GetID();
+			end
+			if lessNumSkill==nil or (lessNumSkill and lessNumSkill>info.numSkill) then
+				lessNumSkill=info.numSkill;
+				lessSkillID=v:GetID();
+			end
+			if lessNumChipQuality==nil or (lessNumChipQuality and lessNumChipQuality>info.numChipQuality) then
+				lessNumChipQuality=info.numChipQuality;
+				lessChipQualityID=v:GetID();
+			end
+			if lessNumChipLevel==nil or (lessNumChipLevel and lessNumChipLevel>info.numChipLevel) then
+				lessNumChipLevel=info.numChipLevel;
+				lessChipLevelID=v:GetID();
+			end
+			if lessNumCardLevel==nil or (lessNumCardLevel and lessNumCardLevel>info.numCardLevel) then
+				lessNumCardLevel=info.numCardLevel;
+				lessCardLevelID=v:GetID();
+			end
+		end
+	end
+	infos.lessNumGift=lessNumGift;
+	infos.lessGiftID=lessGiftID;
+	infos.lessNumSkill=lessNumSkill;
+	infos.lessSkillID=lessSkillID;
+	infos.lessNumChipQuality=lessNumChipQuality;
+	infos.lessChipQualityID=lessChipQualityID;
+	infos.lessNumChipLevel=lessNumChipLevel;
+	infos.lessChipLevelID=lessChipLevelID;
+	infos.lessNumCardLevel=lessNumCardLevel;
+	infos.lessCardLevelID=lessCardLevelID;
+	return infos;
+end
+
 return this; 

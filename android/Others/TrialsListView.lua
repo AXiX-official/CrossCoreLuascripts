@@ -503,6 +503,7 @@ function OnLoadSuccess()
     local itemR = layout2:GetItemLua(selIndexR)
     if itemR then
         itemInfo.CallFunc("Danger4","ShowDangeLevel",itemR.IsDanger(),itemR.GetCfgs(),currDanger)
+        itemInfo.AddTeamReplace(true,OnBattleEnter)
     end
 end
 

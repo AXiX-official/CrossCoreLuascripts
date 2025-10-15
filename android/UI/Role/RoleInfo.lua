@@ -117,8 +117,9 @@ function OnInit()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
     -- 红点刷新
     eventMgr:AddListener(EventType.RedPoint_Refresh, SetRed)
-    eventMgr:AddListener(EventType.Guide_RoleInfo_220040, Guide_220040)
-    eventMgr:AddListener(EventType.Guide_RoleInfo_230070, Guide_230070)
+    eventMgr:AddListener(EventType.Menu_PopupPack, function ()
+        PopupPackMgr:CheckByCondition({7})
+    end)
 end
 
 -- 降低 DC

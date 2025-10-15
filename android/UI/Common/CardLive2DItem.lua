@@ -117,7 +117,7 @@ function SetTouch()
     if (needClick) then
         if (cfg and #cfg.item > 0) then
             for k, v in ipairs(cfg.item) do
-                if (v.sName ~= "in") then
+                if (v.sName ~= "in" and v.areas ~= nil) then
                     table.insert(touchDatas, v)
                 end
             end
@@ -127,7 +127,7 @@ function SetTouch()
 end
 
 -- 点击触发
-function TouchItemClickCB(cfgChild)
+function TouchItemClickCB(cfgChild, _cb)
     if (interludeGO ~= nil) then
         return
     end
@@ -184,6 +184,11 @@ function TouchItemClickCB(cfgChild)
     --     return
     -- end
     if (isCan) then
+        -- 重置某些下标对应的轨道
+        if (content.reset7) then
+            ResetByIndex(content.reset7)
+        end
+        -- 
         local b = false
         if (trackIndex ~= 1 and content.clicks ~= nil and sName ~= nil) then
             b = spineTools:PlayByMulClick(sName, trackIndex, mulData)
@@ -212,7 +217,7 @@ function TouchItemClickCB(cfgChild)
             end
             --
             SetInterlude(content)
-            local cb = GetClickCB(cfgChild)
+            local cb = _cb or GetClickCB(cfgChild)
             if (sName ~= nil) then
                 local _b = false
                 if (trackIndex == 1 or content.guochange ~= nil) then
@@ -220,6 +225,7 @@ function TouchItemClickCB(cfgChild)
                 end
                 b = spineTools:PlayByClick(sName, trackIndex, true, _b, cb)
             else
+                timer = 0
                 if (cb) then
                     cb()
                 end
@@ -299,7 +305,7 @@ function ItemDragBeginCB(cfgChild, x, y)
         -- idle同步
         if (content.drag.targetObjName == "toushi") then
             local l2d = ComUtil.GetCom(l2dGo, "CSpine")
-            local anim = l2d:GetSG("pos/" .. content.drag.hideSpine.."/pos/main").AnimationState
+            local anim = l2d:GetSG("pos/" .. content.drag.hideSpine .. "/pos/main").AnimationState
             local trackEntry1 = graphic.AnimationState:GetCurrent(0)
             local trackEntry2 = anim:GetCurrent(0)
             trackEntry2.TrackTime = trackEntry1.TrackTime;
@@ -817,10 +823,6 @@ function ClearRecords(indexs)
     end
 end
 
-function func()
-
-end
-
 function GetIndexs()
     local indexs, names = {}, {}
     local dic = {}
@@ -860,8 +862,34 @@ function SpineEvent(trackEntry, e)
     end
 end
 
-function PlayByIndex(index)
+function PlayByIndex(index, cb)
     local cfgChild = cfg.item[index]
-    timer = 0 
-    TouchItemClickCB(cfgChild)
+    timer = 0
+    TouchItemClickCB(cfgChild, cb)
+end
+
+function GetAnimDuration(animName)
+    if (spineTools) then
+        return spineTools:GetAnimDuration(animName)
+    end
+    return 0
+end
+
+-- 重置指定index所在的轨道
+function ResetByIndex(_indexs)
+    local trackIndexs, indexs, revoverNames = {}, {}, {}
+    for k, v in pairs(_indexs) do
+        local childCfg = cfg.item[v]
+        local trackIndex = GetTrackIndex(childCfg)
+        table.insert(trackIndexs, trackIndex)
+        table.insert(revoverNames, childCfg.sName)
+    end
+    spineTools:ImmClearTracks(trackIndexs, revoverNames,true)
+    ClearRecords(_indexs)
+    --spineTools:SetToSetupPose()
+end
+
+
+function GetL2dGo()
+    return l2dGo
 end

@@ -222,7 +222,7 @@ function OnInputChanged(fightAction)
 --    LogError(g_FightMgr.type);
 --    LogError(SceneType);
     
-    CSAPI.SetGOActive(btnPlayerSkill,fightActionData ~= nil and g_FightMgr and fightActionData.tCommanderSkill ~= nil and g_FightMgr.type ~= SceneType.PVP and g_FightMgr.type ~= SceneType.PVPMirror);
+    CSAPI.SetGOActive(btnPlayerSkill,fightActionData ~= nil and g_FightMgr and fightActionData.tCommanderSkill ~= nil and not IsPvpSceneType(g_FightMgr.type) and g_FightMgr.type ~= SceneType.PVPMirror);
     CSAPI.SetGOActive(btnOverLoad,skillList ~= nil);
     
     SetOverLoadValidState(isCanOverload);

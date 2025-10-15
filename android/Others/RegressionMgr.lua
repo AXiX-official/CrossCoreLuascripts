@@ -127,6 +127,10 @@ function this:CheckNeedShow()
     if (not self:CheckHadActivity(RegressionActiveType.ResourcesRecovery) or self:CheckResRecoveryIsGain()) then
         return false
     end
+    local resRecoveryEndTime = self:GetActivityEndTime(RegressionActiveType.ResourcesRecovery)
+    if(not resRecoveryEndTime or resRecoveryEndTime==0 or TimeUtil:GetTime()>resRecoveryEndTime)then 
+        return false
+    end
     local key = PlayerClient:GetID() .. "_resrecovery3"
     --
     local time1 = self:GetBackTime()

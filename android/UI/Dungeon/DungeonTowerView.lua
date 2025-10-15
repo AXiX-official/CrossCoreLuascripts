@@ -158,7 +158,6 @@ end
 
 function OnOpen()
     offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920) / 2
-    -- offsetW = (CSAPI.GetMainCanvasSize()[0] - 1920) / 2
     left = left + offsetW
     selIndex = 0
     if data then
@@ -394,9 +393,14 @@ function ClickItemCB2(item)
     currItem2.SetSelect(true)
     selIndex = currItem2.index
     if itemInfo then
-        itemInfo.Show(item.GetCfg(), DungeonInfoType.Tower)
+        itemInfo.Show(item.GetCfg(), DungeonInfoType.Tower,OnLoadSuccess)
     end
 end
+
+function OnLoadSuccess()
+    itemInfo.AddTeamReplace(true,OnBattleEnter,nil,nil,nil,0,-158)
+end
+
 -----------------------------------------------anim-----------------------------------------------
 function PlayAnim(delay)
     animTime = animTime + (delay / 1000)

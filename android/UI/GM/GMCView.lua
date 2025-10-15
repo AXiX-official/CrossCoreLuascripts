@@ -149,7 +149,8 @@ function OnBtnNewPlayerFight0()
     -- PlayerPrefs.SetInt(PlayerClient:GetNewPlayerFightStateKey() .. "_" .. PlayerClient:GetID(), 0);
     -- PlayerClient:NewPlayerFight(1);
 
-    CSAPI.OpenView("ExerciseRView")
+    CSAPI.OpenView("ExerciseRMain")
+    view:Close()
 end
 
 function btnJump()
@@ -415,16 +416,32 @@ function OnClickGuideSet()
     local cfgs = Cfgs.Guide:GetAll();
 
     local guideData = {};
+    local doingGuide=nil;
     for _, cfg in pairs(cfgs) do
         if (id > cfg.id) then
             if (cfg.group) then
                 guideData[GuideMgr:GetKey(cfg.group)] = 1;
             end
         end
+        if id==cfg.id then
+            doingGuide=cfg;
+            if guideData[GuideMgr:GetKey(cfg.group)] then
+                guideData[GuideMgr:GetKey(cfg.group)]=nil;
+            end
+        end
     end
-
-    PlayerProto:SetClientData(GuideMgr:GetGuideKey(), guideData);
-    GuideMgr:SetData(guideData);
+    GuideMgr.doingGuide=nil
+    if doingGuide==nil then
+        LogError("未找到对应id的引导数据："..tostring(id))
+        do return end
+    end
+    if CSAPI.IsViewOpen("Guide") then
+        CSAPI.CloseView("Guide")
+    end
+    GuideMgr:SetCanSkipStep(false);
+    -- PlayerProto:SetClientData(GuideMgr:GetGuideKey(), guideData);
+    GuideMgr:SetData(guideData); 
+    GuideMgr:CheckGuide(doingGuide.view_open) 
 end
 
 function OnClickGuiding()

@@ -41,6 +41,23 @@ function Skill4503001:OnBefourCritHurt(caster, target, data)
 	self:AddTempAttr(SkillEffect[4503021], caster, caster, data, "crit",0.08)
 end
 function Skill4503001:tFunc_4503061_4503051(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8429
+	local count29 = SkillApi:BuffCount(self, caster, target,2,3,1003)
+	-- 8112
+	if SkillJudger:Greater(self, caster, self.card, true,count29,0) then
+	else
+		return
+	end
 	-- 4503051
 	if self:Rand(3000) then
 		self:AlterBufferByID(SkillEffect[4503051], caster, target, data, 1051,1)

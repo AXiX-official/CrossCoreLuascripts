@@ -484,14 +484,15 @@ function SetFormation(_cid,_hideFormat)
     local index = TeamMgr:GetCardTeamIndex(cid,teamType,true)
     if index ~= -1 then
         CSAPI.SetGOActive(format, true)
-        if(teamType and teamType==eTeamType.RogueS) then 
-            index = index - eTeamType.RogueS
-        end 
+        if(teamType and (teamType==eTeamType.RogueS or teamType==eTeamType.PVP or teamType==eTeamType.PVPFriend)) then 
+            index = index - teamType+1
+        end
         index = index < 10 and "0" .. index or index .. ""
         CSAPI.SetText(txtFormat1, index)
     else
         CSAPI.SetGOActive(format, false)
     end
+    CSAPI.SetGOActive(txtFormat2, false)
 end
 function SetSelect(b)
     CSAPI.SetGOActive(select, b)

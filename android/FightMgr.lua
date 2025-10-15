@@ -32,7 +32,7 @@ end
 
 -- 发送客户端信息, 发送失败会重新发送
 function ClientSend(proto)
-    local curNet = ExerciseMgr:GetCurNet()
+    local curNet = ExerciseRMgr:GetCurNet()
 
     if not curNet:IsConnected() then
         -- 已经断线
@@ -79,7 +79,8 @@ function FightMgrBase:Init(id, groupID, ty, seed, nDuplicateID)
         self.shield[i] = {}
     end
 
-    if ty == SceneType.PVPMirror or ty == SceneType.PVP then
+    -- v 4.3
+    if ty == SceneType.PVPMirror or ty == SceneType.PVP or ty == SceneType.PVEFreeMatch then
     else
         self.arrNP[2] = 0
     end
@@ -965,9 +966,10 @@ end
 
 -- 是否pve关卡
 function FightMgrBase:IsPVE()
-    if self.type == SceneType.PVP or self.type == SceneType.BOSS or self.type == SceneType.GuildBOSS then  --or self.type == SceneType.GlobalBoss
+    if self.type == SceneType.PVP or self.type == SceneType.BOSS or self.type == SceneType.GuildBOSS or self.type == SceneType.PVEFreeMatch then  --or self.type == SceneType.GlobalBoss
         return false
     end
+    
     return true
 end
 
@@ -1591,16 +1593,18 @@ function FightMgrBase:Quit(uid, data)
 
     -- 操作日志
     -- StatsMgr:AddLogRecord(GetPlayer(uid), LogItem.QuitFight, self.id, self.nDuplicateID, self.groupID)
-    SSSDK:Event(
-        GetPlayer(uid),
-        'QuitFight',
-        {
-            fid = self.id,
-            duplicate_id = self.nDuplicateID,
-            sceneType = self.type,
-            groupID = self.groupID
-        }
-    )
+    if GetPlayer then
+        SSSDK:Event(
+            GetPlayer(uid),
+            'QuitFight',
+            {
+                fid = self.id,
+                duplicate_id = self.nDuplicateID,
+                sceneType = self.type,
+                groupID = self.groupID
+            }
+        )
+    end
 
     self.isForceOver = true
     if teamID == 1 then
@@ -1919,7 +1923,8 @@ end
 function FightMgrBase:OnPlayerLogin(uid)
     -- LogTrace("FightMgrBase:OnPlayerLogin:")
     -- if self.type ~= SceneType.Rogue then
-    if self.type ~= SceneType.GlobalBoss then
+    LogDebug("FightMgrBase:OnPlayerLogin(uid:%s), self.type:%s", uid, self.type)
+    if self.type ~= SceneType.GlobalBoss and self.type ~= SceneType.RogueMap then
         self:Send(uid, 'FightProto:InBattle', {type = self.type, nDuplicateID = self.nDuplicateID})
     end
     -- end
@@ -3018,6 +3023,8 @@ function PVEFightMgrServer:Over(stage, winer)
 
     LogDebugEx('PVEFightMgrServer:Over', self.type, self.nDuplicateID, winer)
 
+    -- LogTable(self, "PVEFightMgrServer:")
+
     local cardIds = {}
     if self.oDuplicate then
         local data = {}
@@ -3032,6 +3039,7 @@ function PVEFightMgrServer:Over(stage, winer)
         if winer == 1 then
             grade[1] = 1
             for i, v in ipairs(self.arrCard) do
+                -- LogTable(v, "PVEFightMgrServer:Over() arrCard:")
                 --LogDebugEx("card11---", v.name, v.hp, v.maxhp, v:GetTeamID(), v:IsCard(), v:IsLive())
                 -- 合体, 召唤
                 if v:GetTeamID() == 1 and v:IsCard() then
@@ -3040,14 +3048,14 @@ function PVEFightMgrServer:Over(stage, winer)
                         -- arrSp[0] = v.sp
                         data[0] = {hp = math.floor(v.hp), maxhp = v.maxhp, sp = v.sp}
                         fCard = {}
-                        fCard.data = {index = 6,col = v.col,row = v.row,cid = v.real_cid,nStrategyIndex = v.nStrategyIndex}
-                        fCard.fuid = v.fuid
+                        fCard.data = {index = 6, col = v.col, row = v.row, cid = v.real_cid, nStrategyIndex = v.nStrategyIndex}
+                        fCard.fuid = v.fuid                      
                     elseif v.npcid then
                         -- arrSp[v.npcid] = v.sp
                         data[v.npcid] = {hp = math.floor(v.hp), maxhp = v.maxhp, sp = v.sp}
                     else
                         -- arrSp[v.cuid] = v.sp
-                        data[v.cuid] = {hp = math.floor(v.hp), maxhp = v.maxhp, sp = v.sp}
+                        data[v.cuid] = {hp = math.floor(v.hp), maxhp = v.maxhp, sp = v.sp}                      
                     end
 
                     if nMinHpPercent > v.hp / v.maxhp then
@@ -3181,7 +3189,7 @@ function PVEFightMgrServer:Over(stage, winer)
 
     if self.cbOver then
         self:cbOver(winer, self.isForceOver)
-    end
+    end 
 
     self:Destroy()
 end
@@ -3356,6 +3364,8 @@ function PVPFightMgrServer:Send(uid, cmd, msg)
     local conn = ArmyFighDataMgr:GetPlrConn(uid)
     if conn then
         conn:send({cmd, msg})
+    else
+        LogDebug("PVPFightMgrServer:Send() not find conn")
     end
 end
 
@@ -3402,17 +3412,23 @@ end
 
 -- 倒计时
 function PVPFightMgrServer:OnCardTick()
+    -- LogDebug("PVPFightMgrServer:OnCardTick() self.isOver:%s, self.currTurn:%s", self.isOver, self.currTurn)
     if self.isOver then
         return
     end
+
     if not self.currTurn then
         return
     end
+
+    -- LogTable(self.currTurn, "PVPFightMgrServer:OnCardTick() self.currTurn:")
+    -- LogDebug("PVPFightMgrServer:OnCardTick()  self.currTurn.nTimeToDoAI:%s, CURRENT_TIME:%s, diff:%s", self.currTurn.nTimeToDoAI, CURRENT_TIME, self.currTurn.nTimeToDoAI - CURRENT_TIME)
 
     if self.currTurn.nTimeToDoAI then
         local teamID = self.currTurn:GetTeamID()
 
         -- 托管
+        -- LogDebug("PVPFightMgrServer:OnCardTick() self.nTrusteeship[teamID]:%s", self.nTrusteeship[teamID])
         if self.nTrusteeship[teamID] then
             -- 超时自动战斗
             LogDebug('OnCardTick.托管[%s]', teamID)
@@ -3819,7 +3835,7 @@ elseif IS_SERVER then
         LogDebugEx('CreateFightMgr', id, groupID, ty, seed, nDuplicateID)
         if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT or ty == SceneType.BuffBattle or ty == SceneType.MultTeam then
             return PVEFightMgrServer(id, groupID, ty, seed, nDuplicateID)
-        elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild then
+        elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild or ty == SceneType.PVEFreeMatch then -- v 4.3
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVP then
             return PVPFightMgrServer(id, groupID, ty, seed, nDuplicateID)

@@ -197,11 +197,13 @@ function ShowInfo()
             itemInfo.SetClickCB(OnBattleEnter)
             itemInfo.Refresh(cfg,DungeonInfoType.Danger,function ()
                 itemInfo.CallFunc("Danger","ShowDangeLevel",#cfgs > 1,cfgs,currLevel)
+                itemInfo.AddTeamReplace(true,OnBattleEnter)
             end)
         end)
     else
         itemInfo.Refresh(cfg,DungeonInfoType.Danger,function ()
             itemInfo.CallFunc("Danger","ShowDangeLevel",#cfgs > 1,cfgs,currLevel)
+            itemInfo.AddTeamReplace(true,OnBattleEnter)
         end)
     end
 end

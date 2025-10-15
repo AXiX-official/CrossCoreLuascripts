@@ -19,7 +19,7 @@ function OnFightSkipStateChanged(state)
         return;
     end
 
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
+    if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then
         return;
     end
 

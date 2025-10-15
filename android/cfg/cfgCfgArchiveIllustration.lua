@@ -103,6 +103,9 @@ local conf = {
 {'11',	'11',	'',	'',	'',	'3',	'88',	'arch_soul_confession',	''},
 {'11',	'11',	'',	'',	'',	'4',	'89',	'arch_dusk_shore',	''},
 {'11',	'11',	'',	'',	'',	'5',	'90',	'arch_Brilliant_Night',	''},
+{'12',	'12',	'arch_The_Care_in_Check-ups',	'暖心呵护',	'',	'',	'',	'',	''},
+{'12',	'12',	'',	'',	'',	'1',	'91',	'arch_The_Care_in_Check-ups',	'80461'},
+{'12',	'12',	'',	'',	'',	'2',	'96',	'arch_private_inspection',	''},
 },
 }
 --cfgCfgArchiveIllustration = conf

@@ -552,6 +552,7 @@ function OnLoadCallBack()
     itemInfo.CallFunc("Target", "SetGoal", "67707c", "67707c", "summer2_02", "summer2_01")
     if currItem then
         itemInfo.CallFunc("Danger", "ShowDangeLevel", currItem.IsDanger(), currItem.GetCfgs(), currDanger)
+        itemInfo.AddTeamReplace(currItem.GetType() == DungeonInfoType.Summer2,OnBattleEnter,"Common/btn_18_05","334863")
     end
     SetInfoItemPos()
 end

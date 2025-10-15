@@ -188,8 +188,8 @@ function OnClick()
     if(currCharacter)then
         if(FightClient:GetInputCharacter())then
             local id = currCharacter.GetID();
-            --if (g_FightMgr.type~=SceneType.PVP and g_FightMgr.type ~= SceneType.PVPMirror) or _G.showPvpRoleInfo==true then --非PVP界面可以打开查看数据
-            if g_FightMgr and g_FightMgr.type~=SceneType.PVP or _G.showPvpRoleInfo==true then --非PVP界面可以打开查看数据
+            --if (not IsPvpSceneType(g_FightMgr.type) and g_FightMgr.type ~= SceneType.PVPMirror) or _G.showPvpRoleInfo==true then --非PVP界面可以打开查看数据
+            if g_FightMgr and not IsPvpSceneType(g_FightMgr.type) or _G.showPvpRoleInfo==true then --非PVP界面可以打开查看数据
                 CSAPI.OpenView("FightRoleInfo",id);
             end
         end

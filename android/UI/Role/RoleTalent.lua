@@ -5,9 +5,15 @@ function Awake()
         EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleTalent"); -- 引导用
     end,nil,120)
     AdaptiveConfiguration.SetLuaObjUIFit("RoleTalent", gameObject)
+
+    eventMgr = ViewEvent.New()    
+    eventMgr:AddListener(EventType.Menu_PopupPack, function ()
+        PopupPackMgr:CheckByCondition({5})
+    end)
 end
 
 function OnDestroy()
+    eventMgr:ClearListener()
     AdaptiveConfiguration.LuaView_Lua_Closed("RoleTalent")
 end
 

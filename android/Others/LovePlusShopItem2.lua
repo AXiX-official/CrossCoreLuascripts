@@ -50,6 +50,8 @@ function SetPrice()
         CSAPI.SetText(txtPrice1, tostring(costs[1].num));
         CSAPI.SetText(txtPrice2, data:GetCurrencySymbols() .. "")
         CSAPI.SetText(txtPrice3, tostring(costs[2].num));
+        local  SDKdisplayPrice=data:GetSDKdisplayPrice();
+        if CSAPI.IsADV()  then if SDKdisplayPrice~=nil then  CSAPI.SetText(txtPrice3, tostring(SDKdisplayPrice));; end end
     end
 end
 

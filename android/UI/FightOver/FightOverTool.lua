@@ -41,12 +41,11 @@ function this.RogueInfoUpdate(proto)
 end
 
 --结果 实时pvp    proto.type:  RealArmyType.Friend  RealArmyType.Freedom
-function this.RealTimeFightFinish(proto)
+function this.RealTimeFightFinish(proto,score)
     --LogError(proto);
-
-	local team = this.GetTeamData(eTeamType.RealPracticeAttack, false);
+	local team = this.GetTeamData(proto.teamId, false);
 	local exp = this.GetExpList(proto, false);
-	this.PushEnd(nil, proto.bIsWin, team, nil, 0, exp, 0,proto.cardsExp, proto.isForceOver, {type =proto.type, bIsWin = proto.bIsWin})
+	this.PushEnd(nil, proto.bIsWin, team, nil, score or 0, exp, 0,proto.cardsExp, proto.isForceOver, {type =proto.type, bIsWin = proto.bIsWin})
 end
 
 --结果 演习

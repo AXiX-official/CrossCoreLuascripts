@@ -156,7 +156,7 @@ function ConfigChecker:RewardInfo(cfg)
                 ASSERT(endTime ~= 0, string.format("掉落表id:%s, index:%s, item.openTimes 结束时间 %s 错误",k, i, item.openTimes[2]))
                 ASSERT(begTime <= endTime, string.format("掉落表id:%s, index:%s, item.id为:%s, item.openTimes 开始时间不小于结束时间",k, i, item.id))
                 item.openTimesArr = {begTime, endTime}
-            end            
+            end
         end
     end
 end
@@ -182,7 +182,7 @@ function ConfigChecker:CardData(cfgs)
                 local roleCfg = CfgCardRole[v.role_id]
                 if roleCfg and roleCfg.bShowInAltas then
                     g_openCardCnt = g_openCardCnt + 1
-                    GCalHelp:Add(g_openCardCntByQuality, v.quality, 1)                    
+                    GCalHelp:Add(g_openCardCntByQuality, v.quality, 1)
                 end
             end
         end
@@ -528,6 +528,87 @@ function ConfigChecker:MonsterData(cfg)
         if (v.card_id and CardData[v.card_id] and CardData[v.card_id].uniteLabel) then
             v.unite = GetUnites(CardData[v.card_id].uniteLabel,v.id)
         end
+
+        -- if (v.card_id and CardData[v.card_id] and CardData[v.card_id].uniteLabel) then
+        --     local removeIDs = {}
+        --     local uniteIDs = {}
+        --     for _, _cfg in pairs(MonsterData) do
+        --         --需要剔除的id
+        --         if (_cfg.fit_result) then --合体id
+        --             removeIDs[_cfg.fit_result] = _cfg.fit_result
+        --         end
+        --         if (_cfg.tTransfo) then --变身id
+        --             for _, _id in ipairs(_cfg.tTransfo) do
+        --                 removeIDs[_id] = _id
+        --             end
+        --         end
+
+        --         local count = 0
+        --         for _, _info in ipairs(CardData[v.card_id].uniteLabel) do
+        --             local cfgLabel = CfgUniteLabel[_info[1]]
+        --             local cfg1 = nil
+        --             if (_cfg.card_id and CardData[_cfg.card_id] and CardData[_cfg.card_id].role_id and cfgLabel.cfgType == 1) then
+        --                 cfg1 = CfgCardRole[CardData[_cfg.card_id].role_id]
+        --             else
+        --                 cfg1 = CardData[_cfg.card_id]
+        --             end
+        --             if (cfg1) then
+        --                 --判断条件
+        --                 local num = 0
+        --                 if (cfgLabel.key) then
+        --                     for _, content in ipairs(_info[2]) do
+        --                         if (cfgLabel.type ~= 2) then
+        --                             if (cfg1[cfgLabel.key] == content) then
+        --                                 num = num + 1
+        --                             end
+        --                         else --区间类型
+        --                             if
+        --                             (content[1] < 0 and content[2] < 0) or
+        --                                     (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+        --                                     (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+        --                                     (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2])
+        --                             then
+        --                                 num = num + 1
+        --                             end
+        --                         end
+        --                     end
+        --                 end
+        --                 if (num > 0) then
+        --                     if (_info[3] == 1) then --或条件
+        --                         count = count + 1
+        --                     else --与条件
+        --                         if (num >= #_info[2]) then
+        --                             count = count + 1
+        --                         end
+        --                     end
+        --                 end
+        --             end
+        --         end
+
+        --         -- if (count >= #v.uniteLabel and _cfg.get_from_gm) then
+        --         if (count >= #CardData[v.card_id].uniteLabel) then
+        --             table.insert(uniteIDs, _cfg.id)
+        --         end
+        --     end
+
+        --     if (#uniteIDs > 0) then
+        --         table.sort(
+        --                 uniteIDs,
+        --                 function(a, b)
+        --                     return a < b
+        --                 end
+        --         )
+        --         local lastID = 0
+        --         local ids = {}
+        --         for _, uniteID in ipairs(uniteIDs) do --剔除不需要和相同的id
+        --             if (not (removeIDs[uniteID]) and not (uniteID == v.id) and not (uniteID == lastID)) then
+        --                 table.insert(ids, uniteID)
+        --             end
+        --             lastID = uniteID
+        --         end
+        --         v.unite = ids
+        --     end
+        -- end
     end
 end
 
@@ -2894,6 +2975,8 @@ function ConfigChecker:CfgDupLiZhan(cfgs)
 
     CommCalCfgTasks(cfgs, eTaskType.DupLiZhan)
 end
+
+
 function ConfigChecker:CfgTaskPuzzle(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -2902,6 +2985,7 @@ function ConfigChecker:CfgTaskPuzzle(cfgs)
 
     CommCalCfgTasks(cfgs, eTaskType.Puzzle)
 end
+
 function ConfigChecker:cfgWorldBossMission(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -3332,7 +3416,7 @@ function ConfigChecker:CfgItemPool(cfgs)
         if cfg.costtype == 2 then
             -- 每轮消耗都不一致，需要判断消耗长度与实际道具组数量是否一致
             local timesSum = #cfg.cost
-            
+
             local poolRewardCfg = CfgItemPoolReward[cfg.group]
             assert(poolRewardCfg, string.format("道具池活动表 id:%s,对应的group:%s，在道具组奖励表里找不到对应的ID", id, cfg.group))
 
@@ -3553,7 +3637,7 @@ function ConfigChecker:cfgColosseum(cfgs)
         table.insert(cfg.randRefreshList,cfg.nEndTime)
         cfg.selectRefreshList = cfg.selectRefreshList or {}
         for k,v in ipairs(cfg.optionalRefresh or {}) do
-            local lastRefresh = cfg.selectRefreshList[k - 1] or cfg.nBegTime 
+            local lastRefresh = cfg.selectRefreshList[k - 1] or cfg.nBegTime
             local refreshTime = lastRefresh + v * TimerHelper.cDaySeconds
             table.insert(cfg.selectRefreshList,refreshTime)
         end
@@ -3581,6 +3665,7 @@ function ConfigChecker:cfgGlobalBoss(cfgs)
         assert(cfg.nBeginTime < cfg.nEndTime, "boss开启时间范围有误")
     end
 end
+
 function ConfigChecker:CfgRankTeam(cfgs)
     -- 按章节分排行榜
     g_rank_section = {}
@@ -3595,6 +3680,7 @@ function ConfigChecker:CfgRankTeam(cfgs)
         end
     end
 end
+
 function ConfigChecker:CfgPuzzleBase(cfgs)
     for _, cfg in pairs(cfgs) do
         cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
@@ -3657,6 +3743,7 @@ function ConfigChecker:CfgPet(cfgs)
         cfg.feedMax = feedMax
     end
 end
+
 function ConfigChecker:CfgMultiteamBattle(cfgs)
     for _, cfg in pairs(cfgs) do
         cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
@@ -3665,6 +3752,9 @@ function ConfigChecker:CfgMultiteamBattle(cfgs)
         assert(cfg.nBeginTime < cfg.nEndTime, "多队玩法活动开启时间范围有误")
     end
 end
+
+
+
 function ConfigChecker:CfgCoffeeMain(cfgs)
     for _, cfg in pairs(cfgs) do
         cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
@@ -3672,11 +3762,42 @@ function ConfigChecker:CfgCoffeeMain(cfgs)
         assert(cfg.nBeginTime < cfg.nEndTime, "女仆咖啡活动开启时间范围有误")
     end
 end
+
+function ConfigChecker:CfgPvpSeason(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeg = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+    end
+end
+
+function ConfigChecker:cfgPopupPackCondition(cfgs)
+    g_popupPack = {}
+    for _, cfg in pairs(cfgs) do
+        if g_popupPack[cfg.popupPack] then
+            LogE(string.format("cfgPopupPackCondition id:%s popupPack:%s 存在重复", cfg.id, cfg.popupPack))
+        end
+        g_popupPack[cfg.popupPack] = cfg.id
+    end
+end
+
+
 function ConfigChecker:CfgDateSection(cfgs)
     g_shopToChapter = {}
     for _, cfg in pairs(cfgs) do
        if cfg.shopId then
             g_shopToChapter[cfg.shopId] = cfg.id
        end
+    end
+end
+
+function ConfigChecker:CfgPvpRobot(cfgs)
+    if not GCalHelp then
+        return
+    end
+
+    for _, cfg in pairs(cfgs) do
+        if cfg.nScore then
+            cfg.nRankLv = GCalHelp:CalFreeMatchRankLv(cfg.nScore)
+        end
     end
 end

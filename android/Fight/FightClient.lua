@@ -134,7 +134,7 @@ function this:InitFight(data)
         EventMgr.Dispatch(EventType.Scene_Fight_Load, sceneId);   
     end
 
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then           
+    if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then           
        self:SetAutoFight(false);
     elseif(PlayerClient:IsPassNewPlayerFight())then
         if(self:GetDirll() or DungeonMgr:IsTutorialDungeon())then
@@ -218,7 +218,11 @@ function this:QuitFihgt()
         local proto = {"FightProtocol:Quit", {
             bIsQuit = true
         }}
-        NetMgr.net:Send(proto);
+        if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then    
+            ExerciseRMgr:GetCurNet():Send(proto)
+        else 
+            NetMgr.net:Send(proto);
+        end 
     end
 end
 function this:Reset()    
@@ -361,7 +365,7 @@ function this:GetPlaySpeedDefault()
 end
 
 function this:InitSpeed()
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then           
+    if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then           
        local pvpSpeed = fight_play_speed_pvp and (fight_play_speed_pvp * 0.01) or 1;
        self:SetPlaySpeed(pvpSpeed,true);
     else
@@ -440,7 +444,7 @@ function this:SetAutoFight(autoFight,dontSave)
         return;
     end
     if(g_FightMgr)then      
-        if(g_FightMgr.type ~= SceneType.PVP and g_FightMgr.type ~= SceneType.PVPMirror and not self:GetDirll())then           
+        if( not IsPvpSceneType(g_FightMgr.type) and g_FightMgr.type ~= SceneType.PVPMirror and not self:GetDirll())then           
 	        PlayerPrefs.SetInt("fight_Auto", autoFight==true and 1 or 0);
             --LogError("set auto state:" .. tostring(autoFight));
         end

@@ -76,7 +76,7 @@ function Awake()
     --     CSAPI.SetGOActive(btnBack,false);
     -- end
     --pvp隐藏暂停
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVP) then
+    if(g_FightMgr and IsPvpSceneType(g_FightMgr.type)) then
         --CSAPI.SetGOActive(btnBack,false);
         --CSAPI.SetBtnState(btnSpeed,false); 
         CSAPI.SetGOActive(btnSpeed,false);
@@ -137,7 +137,7 @@ function InitFightInfo()
         return;
     end  
 
-    if(g_FightMgr.type == SceneType.PVP)then
+    if(IsPvpSceneType(g_FightMgr.type))then
         info = LanguageMgr:GetByID(1080)--StringConstant.fight_info_pvp;
     elseif(g_FightMgr.type == SceneType.PVPMirror)then
         info = LanguageMgr:GetByID(1081)--StringConstant.fight_info_pvpmirror;
@@ -232,7 +232,7 @@ function OnRelogin()
         return;
     end
 
-    if(g_FightMgr.type == SceneType.PVP)then
+    if(IsPvpSceneType(g_FightMgr.type))then
         FightClient:SetStopState(false);
 	    FightActionMgr:Surrender({ fight_error_msg = "" });
         --FightProto:RestoreFight();
@@ -287,7 +287,7 @@ function ShowCharacter(showCharacter)
         return;
     end
         
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
+    if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then
         local isMyTurn = character.IsMine();
         SetTimeOut(g_fightControlTime or 20);
         --CSAPI.SetText(goActionTips,isMyTurn and "" or "");
@@ -718,7 +718,7 @@ function OnClickBtnSpeed()
 	end 
 
 
-   if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
+   if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then
        --Tips.ShowTips(StringConstant.fight_pvp_tips_1);
        return;
    end   
@@ -760,7 +760,7 @@ function OnClickBtnAuto()
 
    
 
-   if(g_FightMgr and g_FightMgr.type == SceneType.PVP)then
+   if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then
        if(FightClient:IsAutoFight() == false)then
             Log( "取消PVP自动战斗");
             g_FightMgr:SetTrusteeship(false);
@@ -891,8 +891,8 @@ function OnClickPaint()
     if(character)then
         if(FightClient:GetInputCharacter())then
             local id = character.GetID();
-            --if (g_FightMgr and g_FightMgr.type ~= SceneType.PVP and g_FightMgr.type ~= SceneType.PVPMirror) or _G.showPvpRoleInfo then --非PVP界面可以打开查看数据
-            if g_FightMgr and g_FightMgr.type ~= SceneType.PVP or _G.showPvpRoleInfo then --非PVP界面可以打开查看数据
+            --if (g_FightMgr and not IsPvpSceneType(g_FightMgr.type) and g_FightMgr.type ~= SceneType.PVPMirror) or _G.showPvpRoleInfo then --非PVP界面可以打开查看数据
+            if g_FightMgr and not IsPvpSceneType(g_FightMgr.type) or _G.showPvpRoleInfo then --非PVP界面可以打开查看数据
                 CSAPI.OpenView("FightRoleInfo",id);
             end
         end
@@ -1008,6 +1008,9 @@ function CheckAutoSkipCast2(character)
             PlayerPrefs.SetString(skillKey,currPlayTime);
         end
     --end
+    if(g_FightMgr and g_FightMgr.type == SceneType.PVEFreeMatch) then
+        skipPlay = true;
+    end 
 
     if(skipPlay)then
         character.SetSkipSkill(true);

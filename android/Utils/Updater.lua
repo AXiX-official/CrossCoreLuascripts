@@ -4,7 +4,7 @@ function SetFunc(targetFunc,targetCaller)
     caller = targetCaller;
 end
 
-function Updater()
+function Update()
     if(func)then
         if(caller)then
             func(caller);

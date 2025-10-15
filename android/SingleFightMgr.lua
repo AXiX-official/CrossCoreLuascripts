@@ -111,7 +111,7 @@ function SingleFightMgrServer:Over(stage, winer)
     LogTable(sendData, 'FightProtocol:OnFightOver')
     -- ASSERT()
     local proto = {'FightProtocol:OnFightOver', sendData}
-    local curNet = ExerciseMgr:GetCurNet()
+    local curNet = ExerciseRMgr:GetCurNet()
     if not curNet then
         ASSERT()
     end
@@ -243,7 +243,63 @@ function SingleFightMgrServer:MakeFightDataFromGroup(groupID, cid, model, modelA
             carddata.data.break_level = 1
             carddata.data.intensify_level = 1
 
-			-- LogError(useSkills)
+            -- -- 传生活buff的值进来
+            -- local damage = nil
+            -- local bedamage = nil
+            -- if damage and bedamage then
+            --     FightHelp:AddLiveBuff(carddata.data, damage, bedamage)
+            -- end
+			
+
+            -- ai 格式
+            -- local ai =     
+                -- {
+                --     [ 1 ]n = 
+                --     {
+                --         [ "skillStrategy" ]s = 
+                --         {
+                --             [ 1 ]n = [ 4 ]f
+                --         }
+                --         [ "aiStrategy" ]s = 
+                --         {
+                --             [ 1 ]n = [ 13 ]f
+                --         }
+                --         [ "skillID" ]s = [ 700900105 ]f
+                --     }
+                --     [ 2 ]n = 
+                --     {
+                --         [ "skillStrategy" ]s = 
+                --         {
+                --             [ 1 ]n = [ 13 ]f
+                --             [ 2 ]n = [ 2 ]f
+                --             [ 3 ]n = [ 3 ]f
+                --             [ 4 ]n = [ 0 ]f
+                --         }
+                --         [ "aiStrategy" ]s = 
+                --         {
+                --             [ 1 ]n = [ 8 ]f
+                --         }
+                --         [ "skillID" ]s = [ 700900205 ]f
+                --     }
+                --     [ "bOverLoad" ]s = [ 'false' ]boolean
+                --     [ 3 ]n = 
+                --     {
+                --         [ "skillStrategy" ]s = 
+                --         {
+                --             [ 1 ]n = [ 2 ]f
+                --         }
+                --         [ "aiStrategy" ]s = 
+                --         {
+                --             [ 1 ]n = [ 6 ]f
+                --         }
+                --         [ "skillID" ]s = [ 700900305 ]f
+                --     }
+                -- }
+
+            -- carddata.data.aiSetting = ai
+            -- carddata.data.nStrategyIndex = index
+            
+            -- LogError(useSkills)
 			-- LogError(carddata.data.skills)
 
 			-- 单独替换机神技能
@@ -608,7 +664,6 @@ function RemoveExcludeSkill(fData)
             local rInfo = m_excludeSkills[cid]
             if rInfo then
                 -- 如果这个卡牌存在互斥技能
-                LogTable(rInfo, "xiaowu,Card "..cid.." exclude info:")
                 for _, cfg in ipairs(rInfo) do
                     -- 加入
                     local arr = GCalHelp:GetTb(excludeIdMap, cfg.nExcludeId)
@@ -754,7 +809,6 @@ end
 
 -- 自定义数据试玩战斗
 function CreateDirllFightByData(data, groupID2, cbOver, tCommanderSkill, exData)
-    LogTable(data)
     -- LogDebugEx("CreateDirllFight",groupID, groupID2, os.time())
 	g_FightMgrServer = nil
 	g_FightMgr = nil

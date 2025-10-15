@@ -1,290 +1,338 @@
-local isAsk = false -- 是否邀请成功
-local isFind = false -- 匹配中
-local lIsReady = false -- 是否已准备
-local askData = nil -- 邀请或匹配成功的数据
-local isShowTeam = false
-local fillCount = 0
-local rIsReady = false
+local rankDatas = {}
+local isEnd = false -- 已经请求到最大排行榜长度
+local getNum = 10 -- 每次请求个数
+local curTeamIndex = nil
+local curEmptyIndex = nil
+-- 
+local friendDatas = {}
+local timer = 0
 
 function Awake()
-    tab = ComUtil.GetCom(tabObj, "CTab")
+    UIUtil:AddTop2("ExerciseRView", gameObject, function()
+        view:Close()
+    end, nil, {})
+
+    layout = ComUtil.GetCom(vsv1, "UIInfinite")
+    layout:Init("UIs/ExerciseR/ExerciseRItem1", LayoutCallBack, true)
+    UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Normal)
+
+    layout2 = ComUtil.GetCom(vsv2, "UIInfinite")
+    layout2:Init("UIs/ExerciseR/ExerciseRItem2", LayoutCallBack2, true)
+    UIInfiniteUtil:AddUIInfiniteAnim(layout2, UIInfiniteAnimType.Normal)
+    --
+    tab = ComUtil.GetCom(tabs, "CTab")
     tab:AddSelChangedCallBack(OnTabChanged)
-    layout = ComUtil.GetCom(left2SV, "UISV")
-    layout:Init("UIs/ExerciseR/ExerciseRFrientItem", LayoutCallBack, true)
-    timeBase = TimeBase.New()
-    canvasGroup = ComUtil.GetCom(btnMiddle, "CanvasGroup")
+
+    eventMgr = ViewEvent.New()
+    eventMgr:AddListener(EventType.Team_Data_Update, SetTeams)
+    eventMgr:AddListener(EventType.Friend_Update, RefreshPanel2)
+    eventMgr:AddListener(EventType.ExerciseR_End, function()
+        if (openSetting == 1) then
+            view:Close()
+        end
+    end)
+    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed) -- 加载之后再显示奖励面板
+    eventMgr:AddListener(EventType.RedPoint_Refresh, SetRed)
+end
+function OnDestroy()
+    eventMgr:ClearListener()
+end
+
+function OnTabChanged(_index)
+    if (curTeamIndex and curTeamIndex == _index) then
+        return
+    end
+    curTeamIndex = _index
+    SetTeams()
 end
 
 function LayoutCallBack(index)
     local lua = layout:GetItemLua(index)
     if (lua) then
-        local _data = curDatas[index]
+        local _data = rankDatas[index]
         lua.Refresh(_data)
+        -- 请求更多数据
+        if (index ~= eFreeMatchDef.rankLen and index == #rankDatas) then
+            SetR1()
+        end
     end
 end
 
-function OnInit()
-    UIUtil:AddTop2("ExerciseRView", gameObject, function()
-        view:Close()
-    end, nil, {})
-    eventMgr = ViewEvent.New()
-    -- 准备
-    eventMgr:AddListener(EventType.Exercise_Ready, EReady)
-    -- 刷新好友
-    eventMgr:AddListener(EventType.Friend_Update, ERefreshFriendList)
-    -- 邀请或匹配成功
-    eventMgr:AddListener(EventType.Exercise_Pp_Success, function(_data)
-        InitData(_data)
-    end)
-    -- 对方退出
-    eventMgr:AddListener(EventType.Exercise_Army_Out, function()
-        InitData(nil)
-    end)
-    eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
-end
-
-function Update()
-    timeBase:Update()
-end
-
-function OnDestroy()
-    eventMgr:ClearListener()
-    -- 中断已成功的匹配
-    if (isAsk) then
-        ArmyProto:QuitArmy()
+function LayoutCallBack2(index)
+    local lua = layout2:GetItemLua(index)
+    if (lua) then
+        local _data = friendDatas[index]
+        lua.Refresh(_data, ClickYQ)
     end
-    -- 取消匹配
-    if (isFind) then
-        ExerciseMgr:QuitFreeArmy()
-    end
-    ExerciseFriendTool:CancelAllInvite() -- 取消邀请
 end
 
--- 1：正常进来  2：被邀请进来(data 不为空)
--- data = {endTime = _endTime, left_time = proto.left_time, type = proto.type}
+function ClickYQ(_fid)
+    fid = _fid
+    OnClickPP()
+end
+
+-- function Update()
+--     if (openSetting == 2 and Time.time > timer) then
+--         timer = Time.time + 30
+--         FriendMgr:GetFlush({"icon_id", "name", "is_online", "level"})
+--     end
+-- end
+
 function OnOpen()
-    InitData(data)
-end
-
-function InitData(_data)
-    askData = _data
-    if (askData) then
-        isAsk = true
-        isFind = false
-        lIsReady = false
-        SetData()
-        RefreshPanel()
+    mainCfg = ExerciseRMgr:GetMainCfg()
+    curCfg = ExerciseRMgr:GetCurCfg()
+    CSAPI.SetGOActive(L1, openSetting == 1)
+    CSAPI.SetGOActive(L2, openSetting ~= 1)
+    CSAPI.SetGOActive(R1, openSetting == 1)
+    CSAPI.SetGOActive(R2, openSetting ~= 1)
+    CSAPI.SetGOActive(DR, openSetting == 1)
+    if (openSetting == 1) then
+        CheckJC()
+        RefreshPanel1()
     else
-        isAsk = false
-        isFind = false
-        lIsReady = false
-        rIsReady = false
-        if (curIndex) then
-            RefreshPanel()
+        --RefreshPanel2()--由update处理
+        FriendMgr:GetFlush({"icon_id", "name", "is_online", "level"})
+    end
+
+    tab.selIndex = curTeamIndex or 0
+    -- 
+    if (not CSAPI.IsViewOpen("Loading") and not CSAPI.IsViewOpen("RewardPanel")) then
+        CheckRChange()
+    end
+end
+
+-- 自由匹配
+function RefreshPanel1()
+    -- l 
+    SetL1()
+    -- r 
+    SetR1()
+    -- dr 
+    --local cnt = ExerciseRMgr:GetProto().can_join_cnt or 0
+    --LanguageMgr:SetText(txtPPNum, 90016, cnt, mainCfg.pvpPlayCnt)
+    -- 
+    SetRed()
+end
+
+function SetL1()
+    -- time1
+    CSAPI.SetText(txtTime1, curCfg.showTime)
+    -- time2
+    local str = curCfg.startBattleTime .. ":00-" .. curCfg.endBattleTime .. ":00"
+    LanguageMgr:SetText(txtTime2, 90004, str)
+    -- 禁用角色
+    SetRoles()
+end
+
+-- 排行榜
+function SetR1()
+    if (not isEnd) then
+        ArmyProto:GetFreeMatchRankList(#rankDatas + 1, getNum, GetRankDatasCB)
+    end
+    -- 
+    if (not myRankItem) then
+        ResUtil:CreateUIGOAsync("ExerciseR/ExerciseRItem1", myPoint, function(go)
+            myRankItem = ComUtil.GetLuaTable(go)
+            myRankItem.RefreshMySelf()
+        end)
+    end
+end
+
+function GetRankDatasCB(proto)
+    if (not proto.rank_objs or #proto.rank_objs < getNum) then
+        isEnd = true
+    end
+    if (proto.rank_objs) then
+        for k, v in ipairs(proto.rank_objs) do
+            table.insert(rankDatas, v)
+        end
+    end
+    layout:IEShowList(#rankDatas)
+end
+
+-- 队伍
+function SetTeams()
+    local nType = openSetting == 1 and eTeamType.PVP or eTeamType.PVPFriend
+    local teamData = TeamMgr:GetTeamData(nType + curTeamIndex)
+    local itemDatas = {}
+    for k = 1, 5 do
+        local _data = teamData:GetItemByIndex(k)
+        table.insert(itemDatas, _data ~= nil and _data:GetCard() or {})
+    end
+    teamItems = teamItems or {}
+    ItemUtil.AddItems("RoleLittleCard/RoleSmallCard", teamItems, itemDatas, dGrid, ToEditTeam, 1, nil, function()
+        for k, v in pairs(teamItems) do
+            v.ActiveClick(true)
+        end
+    end)
+    -- 
+    isTeamMax, teamNum, teamRoleNums = true, 0, {}
+    for k = 0, 2 do
+        local _teamData = TeamMgr:GetTeamData(nType + k)
+        if (_teamData:GetRealCount() > 0) then
+            teamNum = teamNum + 1
+            if (_teamData:GetRealCount() < 5) then
+                isTeamMax = false
+            end
         else
-            tab.selIndex = openSetting and openSetting or 1
+            isTeamMax = false
         end
-        if (timeBase) then
-            timeBase:Stop(true)
+        table.insert(teamRoleNums, _teamData:GetRealCount())
+    end
+    -- 
+    for k, v in ipairs(teamRoleNums) do
+        CSAPI.SetGOActive(this["imgRed" .. k], v < 5)
+    end
+end
+
+function SetRoles()
+    local roleIDs = curCfg.pvpBan or {}
+    local _datas = {}
+    for k, v in ipairs(roleIDs) do
+        local _data = RoleMgr:GetFakeData(v, 1)
+        table.insert(_datas, _data)
+    end
+    roleItems = roleItems or {}
+    ItemUtil.AddItems("RoleLittleCard/RoleSmallCard", roleItems, _datas, roleParent, nil, 1, nil, function()
+        for k, v in pairs(roleItems) do
+            v.ActiveClick(false)
+            v.HideLv(false)
         end
-    end
-end
-
-function OnTabChanged(_index)
-    if (isAsk or (curIndex and curIndex == _index)) then
-        return
-    end
-    curIndex = _index
-    RefreshPanel()
-end
-
-function SetData()
-    myData = ExerciseFriendTool:GetMyData(askData.type, askData.uid)
-    armyData = ExerciseFriendTool:GetArmyData(askData.type, askData.uid, askData.team)
-end
-
-function RefreshPanel()
-    SetMe()
-    SetEnemy()
-    SetEnemy2()
-    SetFriendPanel()
-    SetMiddle()
-end
-
--- 自己 
-function SetMe()
-    local modelId = PlayerClient:GetIconId()
-    SetIconMe(modelId)
-    -- lv
-    CSAPI.SetText(txtLvL2, "" .. PlayerClient:GetLv())
-    -- name
-    CSAPI.SetText(txtNameL, PlayerClient:GetName())
-    -- 排名
-    CSAPI.SetText(txtRankL2, PlayerClient:GetUid() .. "")
-    -- 战力
-    CSAPI.SetText(txtFightingL2, ExerciseFriendTool:GetMeAttack() .. "")
-    -- team
-    SetMeItems()
-    -- 编队按钮 
-    CSAPI.SetGOActive(bntTeam, not isAsk and not lIsReady)
-    -- 准备按钮
-    CSAPI.SetGOActive(btnStart, isAsk and not lIsReady)
-    -- 状态按钮
-    CSAPI.SetGOActive(readyL, isAsk and lIsReady)
-end
-
--- 自己
-function SetIconMe(icon_id)
-    local arr = CSAPI.GetMainCanvasSize()
-    local width = arr.x / 2
-    CSAPI.SetRTSize(iconMaskL, width, arr.y)
-    RoleTool.LoadImg(iconL, icon_id, LoadImgType.ExerciseLView)
-
-end
-function SetMeItems()
-    local cards = TeamMgr:GetTeamCardDatas(eTeamType.RealPracticeAttack)
-    -- 封装数据
-    local rNewDatas = {}
-    for i = 1, 5 do
-        if (i <= #cards) then
-            table.insert(rNewDatas, cards[i])
-        else
-            table.insert(rNewDatas, {})
-        end
-    end
-
-    rTeamGrids = rTeamGrids or {}
-    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", rTeamGrids, rNewDatas, itemGridL)
-end
-
-function SetEnemy()
-    CSAPI.SetGOActive(r, isAsk)
-    if (isAsk) then
-        SetEnemyIcon(armyData.icon_id)
-        -- lv
-        CSAPI.SetText(txtLvR2, armyData.level .. "")
-        -- name
-        CSAPI.SetText(txtNameR, armyData.name)
-        -- uid
-        CSAPI.SetText(txtRankR2, armyData.uid .. "")
-        -- 战力
-        CSAPI.SetText(txtFightingR2, armyData.attack .. "")
-        -- items
-        SetEnemyItems()
-        -- 状态按钮
-        CSAPI.SetGOActive(waitR, not rIsReady)
-        CSAPI.SetGOActive(readyR, rIsReady)
-    else
-        CSAPI.SetGOActive(iconR, false)
-    end
-end
-function SetEnemyIcon(icon_id)
-    CSAPI.SetGOActive(iconR, true)
-    local arr = CSAPI.GetMainCanvasSize()
-    local width = arr.x / 2
-    CSAPI.SetRTSize(iconMaskR, width, arr.y)
-    RoleTool.LoadImg(iconR, icon_id, LoadImgType.ExerciseLView, function()
-        local x, y = CSAPI.GetAnchor(iconR)
-        CSAPI.SetAnchor(iconR, -x, y)
     end)
 end
-function SetEnemyItems()
-    local cardDatas = GetRightCardDatas()
-    -- 封装数据
-    local lNewDatas = {}
-    for i = 1, 5 do
-        if (i <= #cardDatas) then
-            table.insert(lNewDatas, cardDatas[i])
-        else
-            table.insert(lNewDatas, {})
-        end
-    end
 
-    lTeamGrids = lTeamGrids or {}
-    ItemUtil.AddItems("RoleLittleCard/RoleLittleCard", lTeamGrids, lNewDatas, itemGridR)
-end
-function GetRightCardDatas()
-    local cardDatas = {}
-    if (isExercise) then
-        if (armyData and armyData.team) then
-            for i, v in ipairs(armyData.team.data) do
-                local _card = CharacterCardsData(v.card_info)
-                table.insert(cardDatas, _card)
+-- 队伍有问题
+function SetTips1()
+    local lans = {90006, 90007, 90008}
+    CSAPI.SetGOActive(tips1, true)
+    local s1, s2 = "", ""
+    if (teamNum < 3) then
+        -- 有空队伍
+        local str = ""
+        for k, v in ipairs(teamRoleNums) do
+            if (v == 0) then
+                if (str == "") then
+                    str = LanguageMgr:GetByID(lans[k])
+                else
+                    str = str .. "," .. LanguageMgr:GetByID(lans[k])
+                end
             end
         end
+        s1 = LanguageMgr:GetByID(90041, str)
+        s2 = LanguageMgr:GetByID(90023)
     else
-        local _cardDatas = ExerciseFriendTool:GetArmyCardDatas()
-        for i, v in pairs(_cardDatas) do
-            table.insert(cardDatas, v)
+        -- 未满编
+        local str = ""
+        for k, v in ipairs(teamRoleNums) do
+            if (v < 5) then
+                if (str == "") then
+                    str = LanguageMgr:GetByID(lans[k])
+                else
+                    str = str .. "," .. LanguageMgr:GetByID(lans[k])
+                end
+            end
+        end
+        s1 = LanguageMgr:GetByID(90042, "\n" .. str)
+        s2 = LanguageMgr:GetByID(90015)
+    end
+    CSAPI.SetText(txtTips1, s1)
+    CSAPI.SetText(txtS1, s2)
+end
+
+-- 目标
+function OnClickTarget()
+    CSAPI.OpenView("ExerciseRRankReward")
+end
+
+function OnClickC()
+    CSAPI.SetGOActive(tips1, false)
+end
+
+function OnClickS()
+    if (teamNum < 3) then
+        curEmptyIndex = nil
+        for k, v in ipairs(teamRoleNums) do
+            if (v <= 0) then
+                curEmptyIndex = k - 1
+                break
+            end
+        end
+        ToEditTeam()
+    else
+        if (openSetting == 1) then
+            ArmyProto:JoinFreeArmy(function()
+                local armyType = RealArmyType.Freedom
+                CSAPI.OpenView("ExerciseRPP", nil, armyType)
+            end)
+        else
+            ArmyProto:InviteFriend({{
+                uid = fid,
+                is_cancel = false
+            }}, YQCB)
         end
     end
-    return cardDatas
+    CSAPI.SetGOActive(tips1, false)
 end
 
-function SetEnemy2()
-    CSAPI.SetGOActive(r2, curIndex == 1)
-    if (curIndex == 1) then
-        CSAPI.SetGOActive(imgR2, not isAsk)
-        CSAPI.SetGOActive(middleFind, isFind)
+function ToEditTeam()
+    local index = curEmptyIndex or curTeamIndex
+    local nType = openSetting == 1 and eTeamType.PVP or eTeamType.PVPFriend
+    CSAPI.OpenView("TeamView", {
+        currentIndex = nType + index,
+        canEmpty = true,
+        is2D = true,
+        teamList = GetTeamList()
+    }, TeamOpenSetting.PVP)
+    --
+    curEmptyIndex = nil
+end
+
+function GetTeamList()
+    local nType = openSetting == 1 and eTeamType.PVP or eTeamType.PVPFriend
+    local teamList = {}
+    local x1 = nType
+    local x2 = Cfgs.CfgTeamTypeEnum:GetByID(x1).endIdx
+    for k = x1, x2 do
+        table.insert(teamList, k)
     end
+    return teamList
 end
 
-function SetFriendPanel()
-    local x = (not isAsk and curIndex == 0) and 0 or 1000
-    CSAPI.SetAnchor(friendPanel, x, 0, 0)
-    -- 内容 
-    ERefreshFriendList()
-end
-
-function SetMiddle()
-    CSAPI.SetGOActive(middlePair, isAsk)
-    if (isAsk) then
-        -- 匹配成功
-        timeBase:Run(askData.endTime, SetTime1)
-        CSAPI.SetText(txtPair3, rIsReady and LanguageMgr:GetByID(1077) or LanguageMgr:GetByID(1078))--StringConstant.Exercise80 or StringConstant.Exercise69)
-    elseif (isFind) then
-        -- 匹配中
-        timeBase:Run(TimeUtil:GetTime() + g_ArmyFreeMatchWaitTime, SetTime2)
-    else
-        -- 停止倒计时
-        if (timeBase) then
-            timeBase:Stop(true)
+-- 开始匹配
+function OnClickPP()
+    -- 队伍是否已满 
+    if (isTeamMax) then
+        if (openSetting == 1) then
+            ArmyProto:JoinFreeArmy(function()
+                local armyType = openSetting == 1 and RealArmyType.Freedom or RealArmyType.Friend
+                CSAPI.OpenView("ExerciseRPP", nil, armyType)
+            end)
+        else
+            ArmyProto:InviteFriend({{
+                uid = fid,
+                is_cancel = false
+            }}, YQCB)
         end
+    else
+        SetTips1()
     end
 end
 
-function SetTime1(_needTime)
-    CSAPI.SetText(txtPair2, _needTime .. "s")
-    if (_needTime <= 0) then
-        isAsk = false
-        ExerciseMgr:StartRealArmy(myData.team)
-    end
+function YQCB(proto)
+    layout2:UpdateList()
+    -- 
+    CSAPI.OpenView("ExerciseRPP", nil, RealArmyType.Friend)
 end
 
-function SetTime2(_needTime)
-    CSAPI.SetText(txtFind, _needTime .. "s")
-    if (_needTime <= 0) then
-        ExerciseMgr:QuitFreeArmy(QuitFreeArmyCB)
-        LanguageMgr:ShowTips(33019)
-    end
-end
-
-----------------------------------------------------------------------------
--- 刷新好友列表
-function ERefreshFriendList()
-    curDatas = FriendMgr:GetDatasByState(eFriendState.Pass)
-    table.sort(curDatas, function(a, b)
+-- 好友
+function RefreshPanel2()
+    friendDatas = FriendMgr:GetDatasByState(eFriendState.Pass)
+    table.sort(friendDatas, function(a, b)
         return FriendSort(a, b)
     end)
-    layout:IEShowList(#curDatas)
-
-    CSAPI.SetGOActive(leftEmpty, #curDatas <= 0)
-
-    -- 数量 
-    local cur = FriendMgr:GetFriendCount()
-    local max = FriendMgr:GetMaxCount()
-    CSAPI.SetText(txtFriendNum, string.format("<color=#ffc146>%s</color>/%s", cur, max))
+    layout2:IEShowList(#friendDatas)
 end
+
 function FriendSort(a, b)
     if ((a:IsOnLine() and b:IsOnLine()) or (a:IsOnLine() == false and b:IsOnLine() == false)) then
         if (a:GetLv() == b:GetLv()) then
@@ -297,65 +345,84 @@ function FriendSort(a, b)
     end
 end
 
--- 准备回调或通知
-function EReady(proto)
-    if (proto.uid == myData.uid) then
-        lIsReady = true
-        SetMe()
-    else
-        rIsReady = true
-        SetEnemy()
+function OnClickTips1()
+    CSAPI.SetGOActive(tips1, false)
+end
+
+function OnClickJY()
+    CSAPI.SetGOActive(tips2, true)
+end
+
+function OnClickTips2()
+    CSAPI.SetGOActive(tips2, false)
+end
+
+-- 赛季继承 
+function CheckJC()
+    if (ExerciseRMgr:IsChangeSJ()) then
+        -- 清空编队
+        RemoveTeams()
+        -- 
+        PlayerPrefs.SetInt(PlayerClient:GetID() .. "_exercoserpp_" .. eTeamType.PVP, 1)
+        PlayerPrefs.SetInt(PlayerClient:GetID() .. "_exercoserpp_" .. eTeamType.PVPFriend, 1)
+        --
+        local oldScore, oldRankLe = GCalHelp:CalFreeMatchInheritScore(ExerciseRMgr:GetProto().score)
+        if (ExerciseRMgr:GetProto().score ~ oldScore) then
+            CSAPI.OpenView("ExerciseRJC", {oldScore, oldRankLe})
+        end
+        ExerciseRMgr:SetChangeSJ()
+        ArmyProto:FreeMatchCfgChangeFix()
     end
 end
 
-----------------------------------------------------------------------------
--- 刷新好友列表
-function OnClickRefresh()
-    FriendMgr:GetFlush({"icon_id", "name", "is_online", "level"})
+function RemoveTeams()
+    local nType = openSetting == 1 and eTeamType.PVP or eTeamType.PVPFriend
+    local teamDatas = {}
+    local x1 = nType
+    local x2 = Cfgs.CfgTeamTypeEnum:GetByID(x1).endIdx
+    for k = x1, x2 do
+        local teamData = TeamMgr:GetTeamData(k)
+        teamDatas:ClearCard()
+        table.insert(teamDatas, teamData)
+    end
+    PlayerProto:SaveTeamList(teamDatas)
 end
 
--- 编队
-function OnClickTeam()
-    local isOpen = CSAPI.IsViewOpen("TeamView")
-    if (isOpen) then
-        CSAPI.CloseView("TeamView")
-    end
-    CSAPI.OpenView("TeamView", {
-        currentIndex = eTeamType.RealPracticeAttack,
-        canEmpty = false,
-        is2D = true
-    }, TeamOpenSetting.PVP)
+function SetRed()
+    local _data = RedPointMgr:GetData(RedPointType.PVP)
+    UIUtil:SetRedPoint2("Common/Red2", btnTarget, _data ~= nil, 97, 48, 0)
 end
+
+-- 避免loading界面与RewardPanel冲突   
 function OnViewClosed(viewKey)
-    if (viewKey == "TeamView") then
-        SetMeItems()
+    -- 是否是新段位，新排名,获得积分币
+    if (viewKey == "Loading" or viewKey == "RewardPanel") then
+        CheckRChange()
     end
 end
 
--- 开始匹配
-function OnClickPP()
-    ExerciseMgr:JoinFreeArmy(JoinFreeArmyCB)
-end
-function JoinFreeArmyCB()
-    isFind = true
-    SetEnemy2()
-    SetMiddle()
-end
-
-function OnClickPPC()
-    isFind = false
-    ExerciseMgr:QuitFreeArmy(QuitFreeArmyCB)
-end
-function QuitFreeArmyCB()
-    isFind = false
-    SetEnemy2()
-    SetMiddle()
+function CheckRChange()
+    local oldRewards = ExerciseRMgr:GSetOldRewards()
+    if (oldRewards) then
+        UIUtil:OpenReward({oldRewards})
+    else
+        local b = ExerciseRMgr:CheckBreak()
+        if (b) then
+            CSAPI.OpenView("ExerciseRChange")
+        end
+    end
 end
 
-function OnClickStart()
-    ExerciseMgr:StartRealArmy(myData.team)
+--
+function OnClickChangeRole()
+    CSAPI.OpenView("CRoleDisplayPVP",ExerciseRMgr:GetProto())
 end
 
-function OnClickAddFriend()
-    CSAPI.OpenView("FriendView")
+---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口
+function OnClickVirtualkeysClose()
+    view:Close()
 end
+
+-- function OnClickShop()
+--     CSAPI.OpenView("ShopView", 8001)
+-- end

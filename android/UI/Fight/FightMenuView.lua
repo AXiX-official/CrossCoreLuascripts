@@ -3,7 +3,7 @@ local fade = nil
 local canvasGroup = nil
 local panel = nil
 function Awake()
-    --    if(g_FightMgr and g_FightMgr.type ~= SceneType.PVP) then
+    --    if(g_FightMgr and not IsPvpSceneType(g_FightMgr.type)) then
     --	    FightClient:SetStopState(true);	
     --    end
     fade = ComUtil.GetCom(btnObj, "ActionFade")
@@ -72,7 +72,7 @@ function OnClickQuit()
     local func,func2= OnSureBack,nil
     local str1,str2 = nil,nil
     if (g_FightMgr) then
-        if(g_FightMgr.type == SceneType.PVP or g_FightMgr.type == SceneType.PVEBuild) then 
+        if(IsPvpSceneType(g_FightMgr.type) or g_FightMgr.type == SceneType.PVEBuild) then 
             func= OnSureBack_PVP
         elseif(g_FightMgr.type == SceneType.Rogue) then
             func= OnSureBack_Rogue
@@ -177,7 +177,7 @@ end
 
 -- 确认退出
 function OnSureBack()
-    --    if(g_FightMgr and g_FightMgr.type ~= SceneType.PVP) then
+    --    if(g_FightMgr and not IsPvpSceneType(g_FightMgr.type)) then
     --	    FightClient:SetStopState(false);	
     --    end
     FightOverTool.ApplyEnd(g_FightMgr and g_FightMgr.type)

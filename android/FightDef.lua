@@ -1,20 +1,21 @@
 -- 场景类型
 SceneType = {}
-SceneType.PVE		= 1 -- pve(主线/副本)
-SceneType.PVP		= 2 -- pvp(实时)
-SceneType.PVPMirror	= 3 -- pvp(镜像)
-SceneType.BOSS		= 4 -- 世界BOSS
-SceneType.SinglePVE	= 5 -- 单机pve(主线/副本)
-SceneType.PVEBuild	= 6 -- pve(非副本)
-SceneType.GuildBOSS	= 7 -- 工会BOSS
-SceneType.TeamBOSS	= 7 -- 组队BOSS
-SceneType.FieldBoss	= 8 -- 战场系统BOSS
-SceneType.Rogue		= 9 -- 乱序演习
-SceneType.RogueS	= 10 -- 战力派遣
-SceneType.GlobalBoss= 11 -- 新世界boss
-SceneType.RogueT 	= 12 -- 能力测验
+SceneType.PVE			= 1 -- pve(主线/副本)
+SceneType.PVP			= 2 -- pvp(实时)
+SceneType.PVPMirror		= 3 -- pvp(镜像)
+SceneType.BOSS			= 4 -- 世界BOSS
+SceneType.SinglePVE		= 5 -- 单机pve(主线/副本)
+SceneType.PVEBuild		= 6 -- pve(非副本)
+SceneType.GuildBOSS		= 7 -- 工会BOSS
+SceneType.TeamBOSS		= 7 -- 组队BOSS
+SceneType.FieldBoss		= 8 -- 战场系统BOSS
+SceneType.Rogue			= 9 -- 乱序演习
+SceneType.RogueS		= 10 -- 战力派遣
+SceneType.GlobalBoss	= 11 -- 新世界boss
+SceneType.RogueT 		= 12 -- 能力测验
 SceneType.BuffBattle	= 13 -- 积分战斗
 SceneType.MultTeam		= 15 -- 多队玩法
+SceneType.PVEFreeMatch	= 17 -- 自由军演(镜像) -- v 4.3
 
 function IsPvpSceneType(sType)
 	return sType == SceneType.PVP or sType == SceneType.PVEFreeMatch
@@ -22,6 +23,7 @@ end
 
 -- 副本类型
 eDuplicateType                 = {}
+eDuplicateType.Comm            = 0 -- 服务器保存数据使用
 eDuplicateType.MainNormal      = 1 -- 主线普通
 eDuplicateType.MainElite       = 2 -- 主线精英
 eDuplicateType.SubLine         = 3 -- 支线
@@ -30,21 +32,23 @@ eDuplicateType.Tower           = 5 -- 爬塔
 eDuplicateType.BattleField     = 6 -- 战场
 eDuplicateType.BattleFieldBoss = 7 -- 战场boss
 eDuplicateType.TaoFa           = 8 -- 讨伐
-eDuplicateType.NewTower        = 9 -- 异构空间
-eDuplicateType.Rogue           = 10 -- 乱序演习
+eDuplicateType.Rogue9          = 9 -- 乱序演习
+eDuplicateType.Rogue           = 10 -- 乱序演习		-- 客户端有用到，所以保留一个eDuplicateType.Rogue=10
+eDuplicateType.Rogue10         = 10 -- 乱序演习
 eDuplicateType.StarPalace      = 11 -- 十二星宫
 eDuplicateType.RogueS	       = 12 -- 战力派遣
 eDuplicateType.AbattoirSelect  = 13 -- 角斗场自选模式
 eDuplicateType.AbattoirRand	   = 14 -- 角斗场随机模式
 eDuplicateType.RogueT	       = 15 -- 能力测验
 eDuplicateType.MultTeam	       = 17 -- 多队玩法
+eDuplicateType.NewTower        = 19 -- 异构空间
 
 eDuplicateType.Materials       = 101 -- 材料副本
 eDuplicateType.Equip           = 102 -- 装备副本
-eDuplicateType.Gold            = 103 --金币
-eDuplicateType.Exp             = 104 --经验
-eDuplicateType.Skill           = 105 --技能材料
-eDuplicateType.StoryActive     = 106 --剧情活动
+eDuplicateType.Gold            = 103 -- 金币
+eDuplicateType.Exp             = 104 -- 经验
+eDuplicateType.Skill           = 105 -- 技能材料
+eDuplicateType.StoryActive     = 106 -- 剧情活动
 --eDuplicateType.Rogue           = 108 --乱序、战力派遣
 --eDuplicateType.Colosseum       = 109 --角斗场
 GenEnumNameByVal('eDuplicateTypeName', eDuplicateType)

@@ -615,6 +615,10 @@ function this:Init()
     self.HalfBody = ResIconUtil.New("HalfBody")
 
     self.Coffee = ResIconUtil.New("Coffee")
+
+    --章节军演
+    self.SectionExercise = ResImgUtil.New("UIs/Exercise/1")
+    self.FightOver=ResIconUtil.New("FightOver")
 end
 
 return this;

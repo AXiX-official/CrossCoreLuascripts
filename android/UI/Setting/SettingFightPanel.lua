@@ -3,6 +3,8 @@ local tab2 = nil
 local curIndex1 = nil
 local curIndex2 = nil
 
+local index1 = 0
+
 function Awake()
     curIndex1 = SettingMgr:GetValue(s_fight_action_key)
     curIndex2 = SettingMgr:GetValue(s_fight_simple_key)
@@ -15,6 +17,8 @@ function Awake()
 
     tab1:AddSelChangedCallBack(OnTabChanged1)
     tab2:AddSelChangedCallBack(OnTabChanged2)
+
+    index1 = curIndex1
 end
 
 function OnTabChanged1(index)
@@ -27,10 +31,10 @@ function OnTabChanged1(index)
             local cb2 = function()
                 tab1.selIndex = curIndex1
             end
-            ShowDialog(14029,cb1,cb2)
+            ShowDialog(14029, cb1, cb2)
         else
             curIndex1 = index
-            SettingMgr:SaveValue(s_fight_action_key, curIndex1)    
+            SettingMgr:SaveValue(s_fight_action_key, curIndex1)
         end
     end
 end
@@ -40,20 +44,20 @@ function OnTabChanged2(index)
         if index == 1 then
             local cb1 = function()
                 curIndex2 = index
-                SettingMgr:SaveValue(s_fight_simple_key, curIndex2)  
+                SettingMgr:SaveValue(s_fight_simple_key, curIndex2)
             end
             local cb2 = function()
                 tab2.selIndex = curIndex2
             end
-            ShowDialog(14030,cb1,cb2)
+            ShowDialog(14030, cb1, cb2)
         else
             curIndex2 = index
-            SettingMgr:SaveValue(s_fight_simple_key, curIndex2)    
+            SettingMgr:SaveValue(s_fight_simple_key, curIndex2)
         end
     end
 end
 
-function ShowDialog(languageId,okCB,canelCB)
+function ShowDialog(languageId, okCB, canelCB)
     if languageId == nil or languageId == 0 then
         return
     end
@@ -66,16 +70,26 @@ function ShowDialog(languageId,okCB,canelCB)
     CSAPI.OpenView("Dialog", dialogData)
 end
 
-function SetFade(isOpen,callback)
+function SetFade(isOpen, callback)
     if isOpen then
         CSAPI.SetGOActive(gameObject, true)
-        UIUtil:SetObjFade(gameObject,0, 1,callback,200)
+        UIUtil:SetObjFade(gameObject, 0, 1, callback, 200)
     else
-        UIUtil:SetObjFade(gameObject,1, 0,function ()
+        UIUtil:SetObjFade(gameObject, 1, 0, function()
             CSAPI.SetGOActive(gameObject, false)
             if callback then
                 callback()
             end
-        end,200)
+        end, 200)
+    end
+end
+
+function OnDestroy()
+    if curIndex1 ~= index1 then
+        BuryingPointMgr:TrackEvents("mj_setting", {
+            time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(), true),
+            eventName = "fight_action",
+            key = tostring(curIndex1)
+        })
     end
 end

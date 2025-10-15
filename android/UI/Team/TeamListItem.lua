@@ -22,6 +22,7 @@ function Awake()
     delayCtrl.unitDelay=250;
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.AIPreset_Use,OnUseAIPreset);
+    eventMgr:AddListener(EventType.Team_Raising_GoTeamView,OnGoTeamView)
 end
 
 --改变了AI策略，缓存编队信息
@@ -38,6 +39,12 @@ function OnUseAIPreset(eventData)
             TeamMgr:SaveItemStrategyIndex(tIndex,eventData.cid,eventData.index);
             TeamConfirmUtil.CreateGrids(teamData,grids,gridNode,OnClickGrid,openSetting);
         end
+    end
+end
+
+function OnGoTeamView(teamIdx)
+    if not IsNil(gameObject) and teamIdx and teamData and teamData:GetIndex()==teamIdx and grids then
+        OnClickGrid(grids[1]);
     end
 end
 
@@ -68,16 +75,23 @@ function SetTeamData(index)
         teamData=nil;
         assistData=nil;
     end
+    CSAPI.SetText(txt_fight, tostring(GetTeamStrength()));
     if teamData~=nil then
-        local haloStrength=teamData:GetHaloStrength();
-        CSAPI.SetText(txt_fight, tostring(teamData:GetTeamStrength()+haloStrength));
         CSAPI.SetText(txt_teamName,tostring(teamData:GetTeamName()));
     else
-        CSAPI.SetText(txt_fight,tostring(0))
         CSAPI.SetText(txt_teamName,LanguageMgr:GetByID(25021));
     end
     SetSkillIcon(skillId);
     TeamConfirmUtil.CreateGrids(teamData,grids,gridNode,OnClickGrid,openSetting);
+end
+
+function GetTeamStrength()
+    if teamData~=nil then
+        local haloStrength=teamData:GetHaloStrength();
+        return teamData:GetTeamStrength()+haloStrength;
+    else
+        return 0
+    end
 end
 
 function GetTeamIndex()
@@ -359,6 +373,7 @@ function OnDropValChange(option)
         --     assistData=teamData:GetAssistData();
         -- end
     end
+    EventMgr.Dispatch(EventType.Team_Card_Refresh);
 end
 ------------------------------下拉框逻辑完毕
 

@@ -900,3 +900,15 @@ end
 -- voucherMinCost: 抵扣券最小消耗限制
 -- voucherNotProductType: 抵扣券不支持该商品类型
 -- voucherBiggerThanRealCose: 抵扣券大于总面值大于需要抵扣的总额
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- v 4.3
+function GLogicCheck:GetSimpleKey(a, b, c)
+    return math.floor( (a + c) * (b - c) * 0.618 )
+end
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- v 4.3
+function GLogicCheck:IsSimpleKey(a, b, c, key)
+    return self:GetSimpleKey(a, b, c) == key
+end

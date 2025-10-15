@@ -17,6 +17,7 @@ local effects = {}
 local lastEffect = nil
 local currDanger = 1
 local viewKeys = {}
+local offsetScale = 0
 
 -- anim
 local isAnim = false
@@ -351,6 +352,7 @@ function ShowInfo(item)
                     itemInfo.CallFunc("Danger", "ShowDangeLevel", item.IsDanger(), item.GetCfgs(), currDanger)
                     itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
                     itemInfo.SetItemPos("Double", -166, -427)
+                    itemInfo.AddTeamReplace(type == DungeonInfoType.Normal,OnBattleEnter)
                 end
             end)
         end)
@@ -360,6 +362,7 @@ function ShowInfo(item)
                 itemInfo.CallFunc("Danger", "ShowDangeLevel", item.IsDanger(), item.GetCfgs(), currDanger)
                 itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
                 itemInfo.SetItemPos("Double", -166, -427)
+                itemInfo.AddTeamReplace(type == DungeonInfoType.Normal,OnBattleEnter)
             end
         end)
     end
@@ -481,6 +484,10 @@ function InitState()
     initState.y = y
     local scale = CSAPI.GetScale(bg)
     initState.scale = scale
+    offsetScale = CSAPI.GetSizeOffset() - 1
+    if offsetScale > 0 then
+        CSAPI.SetScale(bg, scale + offsetScale, scale + offsetScale, scale + offsetScale)
+    end
 end
 
 function BackToInit()
@@ -496,9 +503,14 @@ end
 function MoveToTarget(index, x, y, scale, time, callBack)
     x = x or 0
     y = y or 0
+    scale = scale or 1
+    if offsetScale > 0 then
+        x = x * (1 + offsetScale)
+        y = y * (1 + offsetScale)
+        scale = scale + offsetScale
+    end
     CSAPI.SetAnchor(localObj, x, y)
     x, y = CSAPI.GetLocalPos(localObj)
-    scale = scale or 1
     time = time or 0.2
     ScaleTo(scale, time)
     MoveToTargetByAnim(index, x, y, time, callBack)

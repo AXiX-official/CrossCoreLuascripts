@@ -413,6 +413,10 @@ function OnClickRank()
     CSAPI.OpenView("RankSummer",{datas = {sectionData},types = {sectionData:GetRankType()}})
 end
 
+function OnClickReplace()
+    UIUtil:OpenTeamReplaceView(GetCurrCfg().id,OnClickEnter)
+end
+
 -- 关闭界面
 function OnClickReturn()
     view:Close()

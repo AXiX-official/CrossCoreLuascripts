@@ -1,6 +1,5 @@
-require "ExerciseFriendTool" -- 管理邀请或被邀请的数据
-local ExerciseInfo = require "ExerciseInfo"
 
+local ExerciseInfo = require "ExerciseInfo"
 local this = MgrRegister("ExerciseMgr")
 
 function this:Clear()
@@ -24,30 +23,28 @@ function this:Clear()
     self._isNewJoinCnt = false
     self._newJoinCntTime = nil
 
-    self.isInit = false 
-
-    ExerciseFriendTool:Clear()
+    self.isInit = false
 end
 
 function this:Init()
     self:Clear()
 
     -- 请求 infos
-    --self:GetPracticeInfo(true, false)
+    self:GetPracticeInfo(true, false)
 end
 
---是否已初始化
+-- 是否已初始化
 function this:CheckIsInit()
     return self.isInit
 end
 
 -- 敌人
 function this:GetEnemy()
-    local _datas  = {}
+    local _datas = {}
     for k, v in ipairs(self.objs) do
         local info = ExerciseInfo.New()
         info:InitData(v)
-        table.insert(_datas,info)
+        table.insert(_datas, info)
     end
 
     return _datas
@@ -66,6 +63,12 @@ function this:UpdateEnemyInfo(proto)
     for i, v in ipairs(self.objs) do
         if (v.uid == proto.uid) then
             v.performance = proto.team.performance
+            --
+            if (proto.info) then
+                for p, q in pairs(proto.info) do
+                    v[p] = q
+                end
+            end
         end
     end
 end
@@ -105,14 +108,14 @@ function this:IsLeisureTime()
     return true
 end
 
---下次刷新时间
+-- 下次刷新时间
 function this:GetRefreshTime()
     local isExerciseLOpen = MenuMgr:CheckModelOpen(OpenViewType.main, "ExerciseLView")
-    if(isExerciseLOpen)then 
-        if(not self:IsLeisureTime())then 
+    if (isExerciseLOpen) then
+        if (not self:IsLeisureTime()) then
             return self:GetEndTime()
-        end 
-    end 
+        end
+    end
     return nil
 end
 
@@ -232,12 +235,12 @@ function this:SetNewJoinCnt()
 end
 
 -------------------------------演习次数刷新------------------------------
---自己的数据
+-- 自己的数据
 function this:GetInfo()
     return self.info
 end
 
---已购买次数
+-- 已购买次数
 function this:GetCanBuy()
     local cnt = self.info.can_join_buy_cnt or 0
     return cnt, g_ArmyAttackBuyCnt
@@ -316,24 +319,17 @@ function this:GetNewChange()
 end
 
 -- 退出战斗，返回演习界面
-function this:Quit(sceneType, armyType)
-    if (sceneType == SceneType.PVP) then
-        ClientProto:DelayChangeLine()
-    end
+function this:Quit(armyType)
     SceneLoader:Load("MajorCity", function()
-        self:OnQuit(sceneType, armyType)
+        self:OnQuit(armyType)
     end)
 end
 
-function this:OnQuit(sceneType, armyType)
+function this:OnQuit(armyType)
     CSAPI.OpenView("Section", {
         type = 3
     })
-    if (sceneType == SceneType.PVPMirror) then
-        CSAPI.OpenView("ExerciseLView")
-    else
-        CSAPI.OpenView("ExerciseRView", nil, armyType - 1)
-    end
+    CSAPI.OpenView("ExerciseLView")
 end
 
 function this:GetRankInfos()
@@ -383,69 +379,23 @@ function this:GetYqTeam()
     return self.YqTeam
 end
 
--- 获取对手卡牌数据
-function this:GetData(cid)
-    return self.armyCardDatas[cid]
-end
+-- -- 获取对手卡牌数据
+-- function this:GetData(cid)
+--     return self.armyCardDatas[cid]
+-- end
 
--- 下一级是否是最高段位
-function this:NextIsMaxLevel(lv)
-    local cfg = Cfgs.CfgPracticeRankLevel:GetByID(lv + 1)
-    return cfg == nil
-end
+-- -- 下一级是否是最高段位
+-- function this:NextIsMaxLevel(lv)
+--     local cfg = Cfgs.CfgPracticeRankLevel:GetByID(lv + 1)
+--     return cfg == nil
+-- end
 
--- 排行榜队伍信息
-function this:GetTeanInfo(uid)
-    return self.teamInfos[uid]
-end
+-- -- 排行榜队伍信息
+-- function this:GetTeanInfo(uid)
+--     return self.teamInfos[uid]
+-- end
 
 -----------------------------------------------协议------------------------
-function this:JoinFreeArmy(_JoinFreeArmyCB)
-    self.JoinFreeArmyCB = _JoinFreeArmyCB
-    local proto = {"ArmyProto:JoinFreeArmy", {}}
-    NetMgr.net:Send(proto)
-end
--- 参加自由军演返回
-function this:JoinFreeArmyRet(proto)
-    if (proto) then
-        self.win_cnt = proto.win_cnt
-        self.lost_cnt = proto.lost_cnt
-        -- EventMgr.Dispatch(EventType.Exercise_Yq_CB, RealArmyType.Freedom)	
-        if (self.JoinFreeArmyCB) then
-            self.JoinFreeArmyCB()
-        end
-    end
-end
-
-function this:QuitFreeArmy(_QuitFreeArmyCB)
-    self.QuitFreeArmyCB = _QuitFreeArmyCB
-    local proto = {"ArmyProto:QuitFreeArmy"}
-    NetMgr.net:Send(proto)
-end
--- 退出匹配
-function this:QuitFreeArmyRet(proto)
-    -- EventMgr.Dispatch(EventType.Exercise_Yq_Cancel)	
-    if (self.QuitFreeArmyCB) then
-        self.QuitFreeArmyCB()
-    end
-end
-
--- 开始模拟
-function this:Practice(_uid, _is_robot)
-    local proto = {"ArmyProto:Practice", {
-        uid = _uid,
-        is_robot = _is_robot
-    }}
-    NetMgr.net:Send(proto)
-end
-
--- 开始实时对战
-function this:StartRealArmy(_team)
-    local proto = {"ArmyProto:StartRealArmy", {
-        team = _team
-    }}
-    NetMgr.net:Send(proto)
-end
 
 -- 获取军演信息
 function this:GetPracticeInfo(_selfInfo, _listInfo)
@@ -470,7 +420,7 @@ function this:GetPracticeInfoRet(proto)
             EventMgr.Dispatch(EventType.Exercise_Enemy_Update)
         end
 
-        self.isInit = true 
+        self.isInit = true
     end
 end
 
@@ -509,7 +459,7 @@ end
 function this:GetPracticeList(_beg_rank, _end_rank)
     local proto = {"ArmyProto:GetPracticeList", {
         beg_rank = _beg_rank,
-        end_rank = _end_rank
+        rank_cnt = _end_rank
     }}
     NetMgr.net:Send(proto)
 end
@@ -559,181 +509,6 @@ function this:GetHistoryData(_data)
     return info
 end
 
-
--- 准备好
-function this:StartRealArmyRet(proto)
-    EventMgr.Dispatch(EventType.Exercise_Ready, proto)
-end
-
--- 邀请好友  _is_cancel:true 取消邀请   false：邀请
-function this:InviteFriend(_ops, _YQCB)
-    if(self.YQCB) then 
-        return 
-    end 
-    self.YQCB = _YQCB
-    local proto = {"ArmyProto:InviteFriend", {
-        ops = _ops
-    }}
-    NetMgr.net:Send(proto)
-end
-
--- 邀请回调
-function this:InviteFriendRet(proto)
-    if (proto) then
-        ExerciseFriendTool:RefreshInviteDatas(proto)
-        if (self.YQCB) then
-            self.YQCB(proto)
-        end
-        self.YQCB = nil
-    end
-end
-
--- 好友应答(给邀请者)
-function this:BeInviteRespond(proto)
-    ExerciseFriendTool:BeInviteRespond(proto)
-    -- if(proto) then
-    -- 	if(proto.is_receive == false) then
-    -- 		Log("对方不接受邀请")	
-    -- 		if(self.YqUid ~= nil) then
-    -- 			EventMgr.Dispatch(EventType.Exercise_Yq_Refuse, proto)
-    -- 		end
-    -- 		self.YqUid = nil
-    -- 		self.YqTeam = nil
-    -- 		self.YqRank = nil
-    -- 	else
-    -- 		Log("对方接受邀请，等待服务器返回进入倒计时")	
-    -- 		self.YqUid = proto.uid
-    -- 		self.YqTeam = proto.team	
-    -- 		self.YqRank = proto.rank
-    -- 	end
-    -- end
-end
-
--- 进入军演开始倒计时
-function this:RealArmyStarCountDown(proto)
-    local _team = nil
-    if (proto.type == RealArmyType.Friend) then
-        _team = ExerciseFriendTool:GetTeam(proto.is_inviter, proto.uid)
-    end
-    local _endTime = proto.end_time
-    local data = {
-        endTime = _endTime,
-        uid = proto.uid,
-        type = proto.type,
-        team = _team
-    }
-    if (CSAPI.IsViewOpen("ExerciseRView")) then
-        EventMgr.Dispatch(EventType.Exercise_Pp_Success, data)
-    else
-        CSAPI.OpenView("ExerciseRView", data)
-    end
-
-    -- 清除邀请的相关数据
-    Tips.CleanInviteTips()
-    ExerciseFriendTool:ClearFriendDatas()
-end
-
--- 收到好友邀请(服务器推送)
-function this:BeInvite(proto)
-    if (proto) then
-        ExerciseFriendTool:RefreshBeInviteDatas(proto)
-        -- self.YqUid = proto.uid
-        -- self.YqTeam = proto.team
-        -- self.YqRank = proto.rank
-        -- EventMgr.Dispatch(EventType.Exercise_Yq_Notice, proto)	
-    end
-end
-
--- 应答好友
-function this:BeInviteRet(_ops)
-    local proto = {"ArmyProto:BeInviteRet", {
-        ops = _ops
-    }}
-    NetMgr.net:Send(proto)
-end
-
--- 自由军演匹配成功
-function this:FreeArmyMatch(proto)
-    -- self.freeArmyData = proto
-    ExerciseFriendTool:FreeArmyMatch(proto)
-end
-
-function this:FightServerInit(_self_uid, _fightIndex, _svrId)
-    local proto = {"ArmyProto:FightServerInit", {
-        self_uid = _self_uid,
-        fightIndex = _fightIndex,
-        svrId = _svrId
-    }}
-    local curNet = self:GetCurNet()
-    curNet:Send(proto)
-end
--- 获取当前网络
-function this:GetCurNet()
-    if (self.isFightNet) then
-        return NetMgr.netFight
-    else
-        return NetMgr.net
-    end
-end
-
--- 实时军演战斗地址服务器
-function this:FightAddress(proto)
-    self.ip = proto.ip
-    self.port = proto.port
-    self.fightIndex = proto.fightIndex
-    self.svrId = proto.svrId
-    local localIp, localPort = LoginProto:GetIpPort()
-    Log("主网络Ip：" .. localIp .. "  " .. localPort)
-    Log("游戏服Ip：" .. proto.ip .. "   " .. proto.port)
-    if (localIp ~= self.ip or localPort ~= self.port) then
-        Log("连接到游戏逻辑服")
-        self.isFightNet = true
-        self:OnConnectFightServer()
-    else
-        Log("使用主网络")
-        self.isFightNet = false
-        self:FightServerInit(PlayerClient:GetID(), self.fightIndex, self.svrId)
-    end
-end
-
--- 连接到游戏逻辑服
-function this:OnConnectFightServer()
-    local func = function()
-        local msg = {
-            uid = LoginProto.vosQueryAccount.uid,
-            key = LoginProto.vosPreLoginGame.key
-        }
-        self:FightServerInit(PlayerClient:GetID(), self.fightIndex, self.svrId)
-    end
-    NetMgr.netFight:Connect(self.ip, self.port, func)
-end
-
--- 实时军演战斗服报道返回
-function this:FightServerInitRet(proto)
-    Log("实时军演战斗服报道返回")
-end
-
--- 结果 实时pvp
-function this:RealTimeFightFinish(proto)
-    -- if(proto) then
-    -- 	local data = {bIsWin = proto.bIsWin, result = proto, armyType = proto.type}
-    -- 	if(proto.isForceOver) then
-    -- 		FightActionMgr:Surrender(data)
-    -- 	else
-    -- 		FightActionMgr:Push(FightActionMgr:Apply(FightActionType.FightEnd, data))
-    -- 	end
-    -- end
-    -- 断线重连在主界面时不进行结算
-    local scene = SceneMgr:GetCurrScene()
-    if (scene.key ~= "MajorCity") then
-        FightOverTool.RealTimeFightFinish(proto)
-    end
-    -- 是否在战斗中
-    -- if(FightClient:IsFightting()) then 
-    -- 	FightOverTool.RealTimeFightFinish(proto)
-    -- end
-end
-
 -- 结果 演习
 function this:PracticeInfoUpdate(proto)
     local score = proto.info.score - self.info.score
@@ -774,28 +549,28 @@ function this:IsRankUp()
     return self.isRankUp
 end
 
--- 获取旧等级，积分 
-function this:GetOldInfo(jf)
-    local lv = self:GetRankLevel()
-    local cur = self:GetScore() - jf
-    if (cur < 0) then
-        lv = self:GetRankLevel() - 1
-        local cfg = Cfgs.CfgPracticeRankLevel:GetByID(lv)
-        cur = cfg.nScore + cur
-    end
-    return lv, cur
-end
+-- -- 获取旧等级，积分 
+-- function this:GetOldInfo(jf)
+--     local lv = self:GetRankLevel()
+--     local cur = self:GetScore() - jf
+--     if (cur < 0) then
+--         lv = self:GetRankLevel() - 1
+--         local cfg = Cfgs.CfgPracticeRankLevel:GetByID(lv)
+--         cur = cfg.nScore + cur
+--     end
+--     return lv, cur
+-- end
 
---购买军演次数返回
+-- 购买军演次数返回
 function this:BuyAttackCntRet(proto)
-    if(self.info) then 
+    if (self.info) then
         self.info.can_join_buy_cnt = proto.can_join_buy_cnt
         self.info.can_join_cnt = proto.can_join_cnt
         EventMgr.Dispatch(EventType.ExerciseL_BuyCount)
-    end 
+    end
 end
 
---战绩简单信息 
+-- 战绩简单信息 
 -- {
 --     {对方uid, 对方名称, 对方是否胜利},
 --     {对方uid, 对方名称, 对方是否胜利},
@@ -804,16 +579,18 @@ function this:GetFightBaseLogs()
     return self.fightBaseLogs or {}
 end
 
-function this:SetRolePanelRet(_role_panel_id,_live2d)
+function this:SetRolePanelRet(_role_panel_id, _live2d)
     self.info.role_panel_id = _role_panel_id
     self.info.live2d = _live2d
-    --EventMgr.Dispatch(EventType.Exercise_Role_Panel)
+    -- EventMgr.Dispatch(EventType.Exercise_Role_Panel)
 end
 
 function this:GetRolePanel()
     local modelID = self.info.role_panel_id or PlayerClient:GetIconId()
     local isLive2D = self.info.live2d or false
-    return modelID,isLive2D
+    return modelID, isLive2D
 end
+
+
 
 return this

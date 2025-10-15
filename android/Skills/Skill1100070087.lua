@@ -11,7 +11,7 @@ function Skill1100070087:OnAfterRoundBegin(caster, target, data)
 	-- 8580
 	local count101 = SkillApi:BuffCount(self, caster, target,1,2,2)
 	-- 984000604
-	if SkillJudger:Greater(self, caster, target, true,count101,3) then
+	if SkillJudger:Greater(self, caster, target, true,count101,4) then
 	else
 		return
 	end

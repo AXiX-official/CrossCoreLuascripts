@@ -165,7 +165,7 @@ function FightProto:RecvCmd(proto)
 
             local fightActionData1 = g_FightMgr:GetInitData();
             FightActionMgr:PushSkill(fightActionData1);
-        elseif data.stype == SceneType.PVP then
+        elseif IsPvpSceneType(data.stype) then
             -- pvp 战斗
             g_FightMgr = CreateFightMgr(data.fid, nil, data.stype, data.seed)
 
@@ -726,9 +726,11 @@ function FightProto:InBattle(proto)
                     end
                 })
             end
-
         end
         return;
+    elseif IsPvpSceneType(proto.type) then
+        --ExerciseRMgr:RecoverPvp()
+        --return
     elseif proto.type == SceneType.Rogue and not FightClient:IsFightting()then 
         FightProto:QuitRogueFight(true, 1)
         return;
@@ -762,6 +764,16 @@ end
 
 -- 显示恢复战斗对话框
 function FightProto:ShowRestoreFightDialog(isShow)
+    --pvp恢复战斗 
+    if(ExerciseRMgr:CheckIsReconnect())then
+        ExerciseRMgr:SetIsReconnect(false)
+        UIUtil:OpenDialog(LanguageMgr:GetTips(8022), function ()
+            ExerciseRMgr:RecoverPvp()
+        end, function ()
+            FightClient:QuitFihgt()
+        end)
+        return
+    end 
     --RogueS恢复战斗 
     local _data = RogueSMgr:GetFightingRogueSData()
     if(_data) then 

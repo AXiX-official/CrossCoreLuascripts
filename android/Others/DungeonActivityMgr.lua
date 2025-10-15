@@ -228,7 +228,6 @@ function this:CheckRed(sid)
     end
     return false
 end
-
 ---------------------------------------------new----------------------------------------------
 function this:IsNew()
     local isNew = false

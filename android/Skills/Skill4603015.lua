@@ -8,9 +8,9 @@ function Skill4603015:Init(skillID, card)
 end
 -- 行动结束
 function Skill4603015:OnActionOver(caster, target, data)
-	-- 4603003
-	self:tFunc_4603003_4603023(caster, target, data)
-	self:tFunc_4603003_4603013(caster, target, data)
+	-- 4603005
+	self:tFunc_4603005_4603025(caster, target, data)
+	self:tFunc_4603005_4603015(caster, target, data)
 end
 -- 解体时
 function Skill4603015:OnResolve(caster, target, data)
@@ -51,26 +51,7 @@ function Skill4603015:OnBornSpecial(caster, target, data)
 	-- 4304316
 	self:AddBuff(SkillEffect[4304316], caster, self.card, data, 6209)
 end
-function Skill4603015:tFunc_4603003_4603013(caster, target, data)
-	-- 8061
-	if SkillJudger:CasterIsFriend(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8239
-	if SkillJudger:IsCasterMech(self, caster, self.card, true,6) then
-	else
-		return
-	end
-	-- 8219
-	if SkillJudger:IsUltimate(self, caster, target, true) then
-	else
-		return
-	end
-	-- 4603013
-	self:OwnerAddBuff(SkillEffect[4603013], caster, caster, data, 4603003)
-end
-function Skill4603015:tFunc_4603003_4603023(caster, target, data)
+function Skill4603015:tFunc_4603005_4603025(caster, target, data)
 	-- 8064
 	if SkillJudger:CasterIsSummon(self, caster, target, true) then
 	else
@@ -91,6 +72,25 @@ function Skill4603015:tFunc_4603003_4603023(caster, target, data)
 	else
 		return
 	end
-	-- 4603023
-	self:OwnerAddBuff(SkillEffect[4603023], caster, caster, data, 4603003)
+	-- 4603025
+	self:OwnerAddBuff(SkillEffect[4603025], caster, caster, data, 4603005)
+end
+function Skill4603015:tFunc_4603005_4603015(caster, target, data)
+	-- 8061
+	if SkillJudger:CasterIsFriend(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8239
+	if SkillJudger:IsCasterMech(self, caster, self.card, true,6) then
+	else
+		return
+	end
+	-- 8219
+	if SkillJudger:IsUltimate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4603015
+	self:OwnerAddBuff(SkillEffect[4603015], caster, caster, data, 4603005)
 end

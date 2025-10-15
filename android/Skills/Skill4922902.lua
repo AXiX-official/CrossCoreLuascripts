@@ -26,8 +26,8 @@ function Skill4922902:OnAfterRoundBegin(caster, target, data)
 	-- 922900605
 	self:CallOwnerSkill(SkillEffect[922900605], caster, self.card, data, 922900602)
 end
--- 攻击结束
-function Skill4922902:OnAttackOver(caster, target, data)
+-- 攻击结束2
+function Skill4922902:OnAttackOver2(caster, target, data)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, caster, target, true) then
 	else

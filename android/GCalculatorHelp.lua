@@ -439,14 +439,18 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------
 --
 function GCalHelp:GetArmyRobotTeams(uid, teamIds, formatId, teamType)
+    local sgk, _ = _G.next(CfgPlrSkillGroup)
+
     local ret = {
         uid = uid,
         is_robot = BoolType.Yes,
         performance = 0,
         team = {
-            leader = 0,
-            index = teamType,
-            data = {
+            leader = 0
+            , index = teamType
+            , skill_group_id = sgk
+            , skill_group_lv = 1
+            , data = {
                 card_info = {}
             }
         }
@@ -488,7 +492,7 @@ function GCalHelp:GetArmyRobotTeams(uid, teamIds, formatId, teamType)
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
---
+-- 
 function GCalHelp:GetArmyRobotSimpleTeams(uid, teamIds)
     local ret = {
         uid = uid,
@@ -508,6 +512,27 @@ function GCalHelp:GetArmyRobotSimpleTeams(uid, teamIds)
             }
             table.insert(ret.team, robotCard)
         end
+    end
+
+    return ret
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetFreeArmyRobotSimpleTeams(robotCfgId)
+    local ret = {
+        uid = robotCfgId,
+        is_robot = BoolType.Yes,
+        teams = {}
+    }
+
+    local robotCfg = CfgPvpRobot[robotCfgId]
+
+    for i, groupId in ipairs(robotCfg.aTeamIds) do
+        local gCfg = MonsterGroup[groupId]
+        local stage = gCfg.stage[1]
+        local robotInfo = self:GetArmyRobotTeams(robotCfgId, stage.monsters, stage.formation, i)
+        table.insert(ret.teams, robotInfo.team)
     end
 
     return ret
@@ -882,10 +907,17 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 --
-function GCalHelp:ForRank(arr, begRank, endRank, fun)
-    -- LogDebug("GCalHelp:ForRank() begRank:%s, endRank:%s, arr len:%s", begRank, endRank, #arr)
-
+function GCalHelp:ForRank(arr, begRank, endRank, fun, maxLen)
+    maxLen = maxLen or 50
     local endIndex = #arr
+
+    LogDebug("GCalHelp:ForRank() begRank:%s, endRank:%s, arr len:%s, maxLen:%s", begRank, endRank, endIndex, maxLen)
+
+    if endIndex == 0 then
+        LogWarning("GCalHelp:ForRank() arr len is 0!")
+        return
+    end
+
     if endIndex > endRank then
         endIndex = endRank
     end
@@ -895,7 +927,7 @@ function GCalHelp:ForRank(arr, begRank, endRank, fun)
         ASSERT(false)
     end
 
-    if endIndex - begIndex > 50 then
+    if endIndex - begIndex > maxLen then
         ASSERT(false)
     end
 
@@ -1583,6 +1615,9 @@ end
 function GCalHelp:GetTaskCfg(taskType, taskCfgid)
     local cfgName = cTaskCfgNames[taskType]
     local cfgs = _G[cfgName]
+    if cfgs == nil then
+        LogWarning("GCalHelp:GetTaskCfg() cfgName:%s, taskType:%s, taskCfgid:%s", cfgName, taskType, taskCfgid)
+    end
     return cfgs[taskCfgid]
 end
 
@@ -2961,20 +2996,242 @@ function GCalHelp:ItemPoolControlSoldOut(rewardCfg, drawArr)
 
     if not next(arr) then
         -- 池子空的，已售罄
-        LogDebugEx("GCalHelp:ItemPoolControlSoldOut soldout 1 not next(arr)")
         return true
     end
 
     for _, v in ipairs(arr) do
         if not v.iskeyreward and not v.isInfinite then
             -- 池子不止关键奖励跟无限奖励，未售罄
-
-            LogTable(v, "ItemPoolControlSoldOut")
             return false
         end
     end
 
     -- 池子只剩关键奖励跟无限奖励，已售罄
-    LogDebugEx("GCalHelp:ItemPoolControlSoldOut soldout")
+    return true
+end
+
+-----------------------------------------------------------------------------------------------------------
+-- 计算自由军演，段位
+function GCalHelp:CalFreeMatchRankLv(score)
+    for _, cfg in ipairs(CfgPvpRankLevel) do
+        if score <= cfg.nScore then
+            return cfg.id
+        end
+    end
+
+    return CfgPvpRankLevel[#CfgPvpRankLevel].id
+end
+
+
+-----------------------------------------------------------------------------------------------------------
+-- 计算自由军演，继承分数
+-- args:
+---- preScore: 上次分数
+---- preRankLv: 上一次段位（没有传nil, 函数自己算）
+---- preCfgid: 上次赛季配置id
+---- curCfgId: 当前赛季配置id
+-- ret:
+---- score: 继承的分数
+---- rankLv: 继承的段位
+function GCalHelp:CalFreeMatchInheritScore(preScore, preRankLv)
+    if not preRankLv then
+        preRankLv = self:CalFreeMatchRankLv(preScore)
+    end
+
+    -- 修改分数
+    local curRankLv = preRankLv - 2
+    if curRankLv < 2 then
+        return 0, 1
+    end
+
+    local curRlCfg = CfgPvpRankLevel[curRankLv-1]
+    return curRlCfg.nScore, curRankLv
+end
+
+
+-----------------------------------------------------------------------------------------------------------
+-- v 4.3 返回自由匹配，增减的分数
+function GCalHelp:FreeMatchArmyChangeSocreCfg(diffScore)
+    local scoreCfg = nil
+    for _, cfg in ipairs(CfgPvpScore) do
+        if diffScore >= cfg.nDiffMin and diffScore < cfg.nDiffMax then
+            scoreCfg = cfg
+            break
+        end
+    end
+
+    LogDebug("GCalHelp:FreeMatchArmyChangeSocreCfg() diffScore:%s", diffScore)
+    LogTable(scoreCfg, "FreeMatchArmyChangeSocreCfg()")
+    return scoreCfg
+end
+
+
+-- 新世界boss词条转化传入战斗
+function GCalHelp:GetGlobalBossExdata(buffs, exData, cardData)
+    if not buffs then
+        return
+    end
+    exData.tExBuff = {}         -- 我方buff 数组
+    exData.tMonsterBuff = {}    -- 怪物buff 数组​
+    exData.tAllBuff = {}        -- 双方buff 数组​
+    exData.tRandBuff = {}       -- 随机buff 格式给我方三个人加buff, 敌方1个人加buff
+    if buffs and next(buffs) then
+        for _, id in ipairs(buffs) do
+            local cfg = cfgGlobalBossBuffBattle[id]
+            if cfg.target == RogueBuffTarget.TeamAll then
+                -- 我方全体
+                table.merge(exData.tExBuff, cfg.buffId)
+                if cfg.skillId and next(cfg.skillId) then
+                    for k, v in pairs(cardData) do
+                        table.merge(v.data.skills, cfg.skillId)
+                    end
+                end
+            elseif cfg.target == RogueBuffTarget.MonsterAll then
+                -- 敌方全体
+                table.merge(exData.tMonsterBuff, cfg.buffId)
+            elseif cfg.target == RogueBuffTarget.BothAll then
+                -- 敌我全体
+                table.merge(exData.tAllBuff, cfg.buffId)
+                if cfg.skillId and next(cfg.skillId) then
+                    for k, v in pairs(cardData) do
+                        table.merge(v.data.skills, cfg.skillId)
+                    end
+                end
+            elseif cfg.target == RogueBuffTarget.TeamRandom then
+                -- 我方随机
+                table.insert(exData.tRandBuff, {
+                    teamID = 1,
+                    count = cfg.targetValue,
+                    buff = table.copy(cfg.buffId)
+                })
+
+                local roleNum = #cardData
+                if roleNum <= cfg.targetValue then
+                    -- 上阵角色数少于随机数，全部角色加技能
+                    if cfg.skillId and next(cfg.skillId) then
+                        for idx, v in pairs(cardData) do
+                            table.merge(v.data.skills, cfg.skillId)
+                        end
+                    end
+                else
+                    -- 从上阵角色里面随机N个角色出来加上词条技能
+                    local arr = {}
+                    for i = 1, roleNum do
+                        table.insert(arr, i)
+                    end
+
+                    local effectRoles = {}
+                    for i = 1, cfg.targetValue do
+                        local r = math.random(1, #arr)
+                        effectRoles[arr[r]] = true
+                        table.remove(arr, r)
+                    end
+
+                    if cfg.skillId and next(cfg.skillId) then
+                        for idx, v in pairs(cardData) do
+                            if effectRoles[idx] then
+                                table.merge(v.data.skills, cfg.skillId)
+                            end
+                        end
+                    end
+                end
+
+
+            elseif cfg.target == RogueBuffTarget.MonsterRandom then
+                -- 敌方随机
+                table.insert(exData.tRandBuff, {
+                    teamID = 2,
+                    count = cfg.targetValue,
+                    buff = table.copy(cfg.buffId)
+                })
+            end
+        end
+    end
+end
+
+function GCalHelp:GetGlobalBossAddSkill(boss,bossId)
+    function ArrToMap(arr)
+        local map = {}
+        for _, v in ipairs(arr) do
+            map[v] = true
+        end
+        return map
+    end
+    local cfg = cfgGlobalBoss[bossId]
+    if cfg and cfg.skillId then
+        local mpSkills = ArrToMap(boss.skills)
+        local mpTfSkills = ArrToMap(boss.tfSkills)
+        for _,sId in ipairs(cfg.skillId or {}) do
+            if not mpSkills[sId] then
+                table.insert(boss.skills,sId)                                    
+            end   
+            if not mpTfSkills[sId] then
+                table.insert(boss.tfSkills,sId)                                    
+            end
+        end
+    end
+end
+
+-- 深塔战斗获取关卡分数
+--[[                 
+winner:1赢 2输
+aliveNum：我方队伍存活人数
+stepCnt：总操作数
+dupId：关卡id
+hpinfo：怪物血量数据
+]]
+function GCalHelp:CalcTowerDeepDupScore(winner,dupId,aliveNum,stepCnt,hpinfo)
+    local dupCfg = MainLine[dupId]
+    local dupGroupId = dupCfg and dupCfg.dungeonGroup or 0
+    local DupGroupCfg = DungeonGroup[dupGroupId]
+    local mstgCfg = MonsterGroup[dupCfg.nGroupID or 0]
+    local score = 0
+    if dupCfg and DupGroupCfg and mstgCfg then
+        local tmpVal = 0
+        local mstMaxHp = 0  -- 怪物总血量
+        local mstLeftHp = 0  -- 怪物剩余总血量
+        local cfgs = mstgCfg and mstgCfg.stage or {}
+        for i, stage in ipairs(cfgs) do
+            for j, mstId in ipairs(stage.monsters or {}) do
+                local mcfg = MonsterData[mstId]
+                if mcfg and mcfg.isPoints then
+                    mstMaxHp = mstMaxHp + (mcfg and mcfg.maxhp or 0)
+                end
+            end
+        end
+        if winner ~= 1 and hpinfo then
+            mstLeftHp = hpinfo.leftHp + self:GetLeftStageHp(hpinfo.stage,dupCfg.nGroupID,true)
+        end
+        tmpVal = mstLeftHp > 0 and (1 - mstLeftHp/mstMaxHp) or 1
+        -- 血量分=关卡基础分*（1-怪物剩余血量/关卡怪物总血量）
+        local hpScore = dupCfg.point * tmpVal
+        -- 实际积分=血量分/2*（1-使用总操作数/100）*（1+ 存活人数*8%）+血量分/2
+        score = math.ceil(hpScore/2*(1-stepCnt/100)*(1+aliveNum*8/100) + hpScore/2)
+        LogInfo(string.format("<><>GCalHelp:CalcTowerNewDupScore,关卡基础分（%s) 怪物剩余血量(%s) 怪物总血量(%s) 血量分(%s) 总操作数(%s) 存活人数(%s)  总分(%s)",dupCfg.point,mstLeftHp,mstMaxHp,hpScore,stepCnt,aliveNum,score))
+    end
+    return score
+end
+
+-- 深塔战斗判断关卡组是否解锁
+--[[            
+groupId：关卡组id
+totalScore:累计分数
+]]
+
+function GCalHelp:isTowerDeepDupGroupUnlock(groupId,totalScore)
+    local groupCfg = DungeonGroup[groupId]
+    if not groupCfg then
+        return
+    end
+    -- 判断是否达到关卡组解锁条件
+    if not groupCfg.perPoint or groupCfg.perPoint > totalScore then
+        -- LogError("GCalHelp:isTowerDeepDupGroupUnlock score not enougth,groupId(%s),totalScore(%s),needScore(%s)",groupId,totalScore,groupCfg.perPoint)
+        return
+    end
+
+    if groupCfg.nOpenTime and CURRENT_TIME < groupCfg.nOpenTime then
+        -- LogError("GCalHelp:isTowerDeepDupGroukpUnlock,not in open time,groupId(%s),openTime(%s)",groupId,groupCfg.nOpenTime)
+        return
+    end
     return true
 end

@@ -1,11 +1,11 @@
 --TipsPanel
-local tipsMaxCount = 3;--飘字最大显示个数
+local tipsMaxCount = 1;--飘字最大显示个数
 local tipsPadding = 80;--间距
 local inviteTipsPadding = 120;--间距
 
 function Awake()
 	eventMgr = ViewEvent.New();
-	eventMgr:AddListener(EventType.View_Lua_Opened, CleanTips)
+	--eventMgr:AddListener(EventType.View_Lua_Opened, CleanTips)
 	eventMgr:AddListener(EventType.View_Lua_Closed, CleanTips)
 end
 
@@ -105,10 +105,11 @@ function AddInviteTips(proto, inviteTypes)
 		local item = ComUtil.GetLuaTable(go)
 		item.Refresh(inviteTipsCount, proto, CheckTips)
 		table.insert(inviteTipsQueue, item)	
-		--重新设置位置
-		for i = 1, #inviteTipsQueue do
-			CSAPI.SetAnchor(inviteTipsQueue[i].gameObject, 0, -(i - 1) * inviteTipsPadding, 0);
-		end
+		CSAPI.SetAnchor(go,-764,-108)
+		-- --重新设置位置
+		-- for i = 1, #inviteTipsQueue do
+		-- 	CSAPI.SetAnchor(inviteTipsQueue[i].gameObject, 0, -(i - 1) * inviteTipsPadding, 0);
+		-- end
 	end)
 end
 
@@ -120,10 +121,10 @@ function CheckTips(_inviteTipsCount)
 				table.remove(inviteTipsQueue, i)
 			end
 		end
-		--重新设置位置
-		for i = 1, #inviteTipsQueue do
-			inviteTipsQueue[i].SetMoveUp(-(i - 1) * inviteTipsPadding)
-		end
+		-- --重新设置位置
+		-- for i = 1, #inviteTipsQueue do
+		-- 	inviteTipsQueue[i].SetMoveUp(-(i - 1) * inviteTipsPadding)
+		-- end
 	end
 end
 

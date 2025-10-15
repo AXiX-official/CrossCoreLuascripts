@@ -235,6 +235,6 @@ function OnViewClosed(viewKey)
 end
 
 function OnClickStart()
-    ExerciseMgr:Practice(data.uid, data.is_robot)
+    ArmyProto:Practice(data.uid, data.is_robot)
 end
 

@@ -26,9 +26,9 @@ function ItemClickCB(item)
     --打点
 	BuryingPointMgr:TrackEventsByDay("love_plus_picture",{
 		time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true),
-		pictureId = cfg.id,
-		sectionId = cfg.group,
-		state = 1
+		pictureId = tostring(cfg.id),
+		sectionId = tostring(cfg.group),
+		state = "1"
 	})
 end
 

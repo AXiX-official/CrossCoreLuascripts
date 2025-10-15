@@ -486,6 +486,7 @@ function OnLoadCallBack()
         itemInfo.SetGOActive("Level2","img2",not currItem.IsPlot())
         itemInfo.SetGOActive("Level2","txtLevel",not currItem.IsPlot())
         itemInfo.CallFunc("Level2","SetTitle",LanguageMgr:GetByID(currItem.IsPlot() and 22033 or 15035))
+        itemInfo.AddTeamReplace(currItem.GetType() == DungeonInfoType.Summer,OnBattleEnter,"Common/btn_18_02","1e160e")
     end
     SetInfoItemPos()
 end

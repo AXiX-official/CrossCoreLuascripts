@@ -4,6 +4,7 @@ local layout=nil;
 local eventMgr=nil;
 local stateList={};
 local changeList={};
+local isHideUse = false --隐藏使用按钮
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UISV")
 	layout:Init("UIs/FormatPreset/TeamPresetItem",LayoutCallBack,true)
@@ -12,6 +13,15 @@ function Awake()
     eventMgr:AddListener(EventType.Team_Preset_Open, OnOpenPreset);
 	eventMgr:AddListener(EventType.Team_Preset_Buy, OnPresetBuyRet);
 	eventMgr:AddListener(EventType.Team_PresetName_Change, OnItemNameChange);
+end
+
+function SetCloseCB(_cb)
+	cb = _cb
+end
+
+function SetButtonState(_isHideUse)
+	isHideUse = _isHideUse
+	layout:IEShowList(#curDatas)
 end
 
 function OnEnable()
@@ -40,11 +50,12 @@ function LayoutCallBack(index)
 		isLock=_data>TeamMgr:GetPresetNum();
 		team=TeamMgr:GetTeamData(eTeamType.Preset + _data),
 		index=index,
-		isClick=stateList[index]==true;
+		isClick=stateList[index]==true,
 	}
 	local item=layout:GetItemLua(index);
 	item.Refresh(_data,elseData);
 	item.SetClickCB(OnClickItem);
+	CSAPI.SetGOActive(item.btnUse,not isHideUse)
 end
 
 function OnClickItem(lua,isOn)
@@ -63,6 +74,9 @@ function OnClickReturn()
 		end
 	end
 	CSAPI.ApplyAction(gameObject, "Fade_Out_100",function()
+		if cb then
+			cb()
+		end
 		CSAPI.SetGOActive(gameObject, false);
 	end);
 end

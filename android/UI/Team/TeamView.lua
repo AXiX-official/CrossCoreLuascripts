@@ -201,6 +201,11 @@ end
 
 --播放移动索引动画
 function PlayIndexTween(idx)
+    if(idx>=65)then 
+		idx = idx-64
+	elseif(idx>=62)then  
+		idx = idx-61
+	end 
 	local x,y=CSAPI.GetAnchor(txt_teamIndex);
 	local tx,ty=CountIndexPos(idx);
 	indexMoveTween:SetTargetPos(tx,ty);
@@ -246,6 +251,12 @@ function OnDestroy()
 	CSAPI.RemoveInputFieldChange(inp_teamName,OnTeamNameChange);
    eventMgr:ClearListener();
    ReleaseCSComRefs();
+   -- 
+   local arr = RoleMgr:GetDatas()
+   for k, v in pairs(arr) do
+	  	v.canDrag= true 
+		v.disDrag_lanID=nil
+   end
 end
 
 function OnViewClosed(viewKey)
@@ -330,7 +341,8 @@ function OnClickHomeFunc()
 	if IsDisClick() then
 		return;
 	end
-	if(data and (data.currentIndex==eTeamType.RealPracticeAttack or data.currentIndex==eTeamType.TeamBoss)) then 
+	--data.currentIndex==eTeamType.RealPracticeAttack
+	if(data and (TeamMgr:IsTeamType(eTeamType.PVP,data.currentIndex) or TeamMgr:IsTeamType(eTeamType.PVPFriend,data.currentIndex) or data.currentIndex==eTeamType.TeamBoss)) then 
 		OnClickReturn()
 	else 
 		--按home键保存改动
@@ -381,6 +393,9 @@ function OnOpen()
     isFirst=true;
 	is3D=TeamMgr:GetViewerOption();
     if data then
+		if(data.teamList)then 
+			teamList = data.teamList
+		end 
         if data.team then
             teamData=data.team;
         elseif data.currentIndex then
@@ -403,7 +418,7 @@ function OnOpen()
 			end
 		else
 			NPCList=nil;
-		end
+		end	
     else
 		if teamList==nil then
 			teamList={};
@@ -434,6 +449,8 @@ function OnOpen()
     --layout:AddBarAnim(0.4,false);
     Refresh();
 	CheckModelOpen();
+	-- 
+	PlayIndexTween(TeamMgr.currentIndex)
 end
 
 function CheckModelOpen()
@@ -463,8 +480,9 @@ function SetViewLayout(openSetting)
     elseif openSetting==TeamOpenSetting.PVP then
         CSAPI.SetGOActive(btn_svType2,false);
         CSAPI.SetGOActive(viewType,true);
-		CSAPI.SetGOActive(btn_list,false);
-    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle then
+		CSAPI.SetGOActive(btn_list,selectType==TeamSelectType.Normal and true or false);
+		hasPrefab = false
+    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle or openSetting==TeamOpenSetting.PVPMirror then
 		CSAPI.SetGOActive(btn_svType2,canAssist);
         CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
@@ -476,7 +494,7 @@ function SetViewLayout(openSetting)
 	--AI和战术
 	local isSkill = true
 	local isAI = true
-	if(TeamMgr.currentIndex ==eTeamType.Colosseum or TeamMgr.currentIndex ==(eTeamType.Colosseum + 1) or TeamMgr.currentIndex ==eTeamType.RogueT) then 
+	if(TeamMgr.currentIndex ==eTeamType.Colosseum or TeamMgr.currentIndex ==(eTeamType.Colosseum + 1) or TeamMgr.currentIndex ==eTeamType.RogueT or openSetting==TeamOpenSetting.PVP) then 
 		isSkill = false		
 		isAI= false
 	elseif openSetting==TeamOpenSetting.GlobalBoss then
@@ -613,7 +631,13 @@ function InitTeamItems()
 	end
 	ItemUtil.AddItems("Team/TeamSelectItem", teamListItems, teamList, teamSelectNode,nil,nil,{canEmpty=canEmpty},function()
 		--计算当前content总长度
-		local height=(g_TeamMaxNum-1)*(249)+262;
+		local len = 1
+        if openSetting==TeamOpenSetting.PVP then
+			len = 3
+		else 
+			len = g_TeamMaxNum
+		end 
+		local height=(len-1)*(249)+262; 
 		local currHeight=(TeamMgr.currentIndex-1)*249-5-7;
 		-- CSAPI.SetAnchor(teamSelectNode,0,currHeight);
 		local x,y=CSAPI.GetAnchor(teamSelectNode);
@@ -924,6 +948,15 @@ function SetSVList()
 				arr[i].canDrag=canDrag
 				arr[i].disDrag_lanID=lanID
 			end
+		elseif openSetting==TeamOpenSetting.PVP then
+			for i=1,#arr do
+				local canDrag,lanID= true,nil
+				if(teamType==eTeamType.PVP)then 
+					canDrag,lanID=ExerciseRMgr:CardCanUse(arr[i]:GetCfgID())
+				end 
+				arr[i].canDrag=canDrag
+				arr[i].disDrag_lanID=lanID
+			end
 		-- else
 		-- 	svList=SortMgr:Sort(sortID,arr)
 		end
@@ -1093,7 +1126,7 @@ function LayoutCallBack(index)
 		key="TotalBattle";
 		disDrag=TotalBattleMgr:IsShowCard(_data:GetID())~=true
 		isEqual=disDrag;
-	elseif openSetting==TeamOpenSetting.RogueT then
+	elseif openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.PVP then
 		disDrag=not _data.canDrag;
 		_disDrag_lanID = _data.disDrag_lanID;
 		isEqual=disDrag;

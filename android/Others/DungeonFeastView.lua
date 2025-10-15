@@ -456,6 +456,7 @@ function ShowInfo(item)
                 if item then
                     itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
                     itemInfo.SetItemPos("Double",-166,-427)
+                    itemInfo.AddTeamReplace(item.GetInfoType() == DungeonInfoType.Feast,OnBattleEnter)
                 end
             end)           
             CSAPI.SetRTSize(itemInfo.layout,579,845)
@@ -465,6 +466,7 @@ function ShowInfo(item)
             if item then
                 itemInfo.CallFunc("Danger","ShowDangeLevel",item.IsDanger(),item.GetCfgs(),currDanger)
                 itemInfo.SetItemPos("Double",-166,-427)
+                itemInfo.AddTeamReplace(item.GetInfoType() == DungeonInfoType.Feast,OnBattleEnter)
             end
         end)
         CSAPI.SetRTSize(itemInfo.layout,579,845)

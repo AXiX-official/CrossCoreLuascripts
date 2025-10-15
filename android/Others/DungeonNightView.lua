@@ -8,6 +8,7 @@ local currLevel = 1
 local isDungeonOver = false
 local overTipsId = 0
 local isDungeonUnLock = false
+local offsetScale = 0
 --hard
 local isHardOpen = false
 local hardTips = ""
@@ -166,6 +167,7 @@ function OnOpen()
         end
         InitDatas()
         InitAnimState()
+        InitBGState()
         if sectionData:GetStoryID() and (not PlotMgr:IsPlayed(sectionData:GetStoryID())) then --第一次观看入场剧情
             PlotMgr:TryPlay(sectionData:GetStoryID(), function()
                 PlotMgr:Save()
@@ -274,6 +276,14 @@ function GetCurIndex(_itemId)
         end
     end
     return index
+end
+
+function InitBGState()
+    local scale = CSAPI.GetScale(bg)
+    offsetScale = CSAPI.GetSizeOffset() - 1
+    if offsetScale > 0 then
+        CSAPI.SetScale(bg, scale + offsetScale, scale + offsetScale, scale + offsetScale)
+    end
 end
 
 function InitPanel()
@@ -509,6 +519,7 @@ function OnLoadCallBack()
     itemInfo.CallFunc("Double","SetTextColor","ffc146")
     if currItem then
         itemInfo.CallFunc("NightDanger","ShowDangeLevel",currItem.IsDanger(),currItem.GetCfgs(),currDanger)
+        itemInfo.AddTeamReplace(currItem.GetType() == DungeonInfoType.Night,OnBattleEnter,"Common/btn_18_03","492722")
     end
     SetInfoItemPos()
 end
@@ -650,9 +661,14 @@ end
 function MoveToTarget(x, y, scale, time, callBack)
     x = x or 0
     y = y or 0
+    scale = scale or 1
+    if offsetScale > 0 then
+        x = x * (1 + offsetScale)
+        y = y * (1 + offsetScale)
+        scale = scale + offsetScale
+    end
     CSAPI.SetAnchor(localObj, x, y)
     x, y = CSAPI.GetLocalPos(localObj)
-    scale = scale or 1
     time = time or 0.2
     ScaleTo(scale, time)
     MoveToTargetByAnim(x, y, time, callBack)

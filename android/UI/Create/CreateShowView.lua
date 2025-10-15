@@ -643,6 +643,7 @@ function ViewClose()
         view:Close()
         if (rewards and #rewards ~= 10) then
             EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "BackToCreate")
+            PopupPackMgr:CheckByCondition({3})
         end 
     end, nil, 1)
 end

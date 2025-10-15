@@ -475,6 +475,7 @@ function OnLoadCallBack()
     itemInfo.SetFunc("Button", "OnClickEnter", OnBattleEnter)
     itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
     if currItem then
+        itemInfo.AddTeamReplace(currItem.GetType() == DungeonInfoType.Normal)
         itemInfo.CallFunc("Danger","ShowDangeLevel",currItem.IsDanger(),currItem.GetCfgs(),currDanger)
     end
     SetInfoItemPos()

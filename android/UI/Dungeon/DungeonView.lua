@@ -105,6 +105,9 @@ end
 function OnOpen()
     if (data) then
         sectionData = DungeonMgr:GetSectionData(data.id)
+        if not sectionData then
+            return
+        end
 
         -- bgm
         local bgm = sectionData:GetBGM()
@@ -136,7 +139,7 @@ end
 -- 初始化右侧栏
 function InitInfo()
     if (itemInfo == nil) then
-        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo7", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             -- itemInfo.SetClickCB(OnBattleEnter)
         end)
@@ -640,29 +643,20 @@ function ShowInfo(item)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
-    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
     itemInfo.Show(cfg, type, OnLoadSuccess)
+    if not isActive then -- 关闭特殊引导
+        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
+    else
+        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
+    end
 end
 
 function OnLoadSuccess()
     itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
     itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
-    SetInfoItemPos()
-    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
-end
-
-function SetInfoItemPos()
-    itemInfo.SetPanelPos("Title", 0, 449)
-    itemInfo.SetPanelPos("Level", 0, 363)
-    itemInfo.SetPanelPos("Target", 23, 308)
-    itemInfo.SetPanelPos("Output", 23, -71)
-    itemInfo.SetPanelPos("Details", -6, -250)
-    itemInfo.SetPanelPos("Button", 6, -444)
-    itemInfo.SetPanelPos("Plot", 23, 322)
     if selItem then
-        itemInfo.SetPanelPos("Output", 23, selItem.IsStory() and 15 or -71)
+        itemInfo.AddTeamReplace(selItem.GetType() == DungeonInfoType.Normal,OnBattleEnter)
     end
-    itemInfo.SetPanelPos("PlotButton", 6, -349)
 end
 
 -- 进入

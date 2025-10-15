@@ -56,9 +56,9 @@ function OnViewClosed(viewKey)
     if viewKey == "Plot" or viewKey == "ShopView" then
         FuncUtil:Call(function()
             if gameObject then
-                CSAPI.PlayBGM("Sys_Hesitant_Cage", 1)
+                CSAPI.PlayBGM(sectionData:GetBGM(), 1)
             end
-        end, nil, 200)
+        end, this, 300)
     end
 end
 
@@ -620,6 +620,9 @@ function OnLoadCallBack()
     itemInfo.SetFunc("Button2", "OnClickEnter", OnBattleEnter)
     itemInfo.SetFunc("PlotButton", "OnClickStory",OnStoryEnter)
     itemInfo.CallFunc("PlotButton", "SetStoryCB", OnStoryCB)
+    if currItem then
+        itemInfo.AddTeamReplace(currItem.GetType() == DungeonInfoType.Normal,OnBattleEnter)
+    end
 end
 
 -- 进入

@@ -55,11 +55,11 @@ function GCardCalculator:CalLvlPropertys(cfgid, level, intensify_level, break_le
 
     if not cfgid or not level or not intensify_level or not break_level then
         LogWarning(
-            'not cfgid:%s or not level:%s or not intensify_level:%s or not break_level:%s',
+            string.format('not cfgid:%s or not level:%s or not intensify_level:%s or not break_level:%s',
             cfgid,
             level,
             intensify_level,
-            break_level
+            break_level)
         )
         return nil
     end
@@ -556,7 +556,7 @@ function GCardCalculator:GetTeamPowerAdd(orignPower, dataArr)
     end
 
     power = math.floor(power)
-    -- LogDebug("GCardCalculator:GetTeamPowerAdd() power:%s orignPower:%s, sum:%s", power, orignPower, orignPower + power)
+    LogDebug("GCardCalculator:GetTeamPowerAdd() power:%s orignPower:%s, sum:%s", power, orignPower, orignPower + power)
     return power, orignPower + power
 end
 

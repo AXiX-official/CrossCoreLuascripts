@@ -37,7 +37,6 @@ function OnItemClickCB(item)
     local isPass,lockStr = GCalHelp:CheckBuffBattle(GetSelIds(),cfgDungeon.id)
     if not isSel and not isPass then
         curSels[item.cfg.id] = nil
-        LogError(lockStr)
         return 
     end
     item.SetSelect(not isSel)
@@ -50,6 +49,7 @@ function OnRedPointRefresh()
 end
 
 function OnDestroy()
+    BuffBattleMgr:SetIDs(curSels)
     eventMgr:ClearListener()
 end
 
@@ -185,17 +185,15 @@ function OnClickEnter()
 end
 
 function OnClickBack()
-    BuffBattleMgr:SetIDs(curSels)
     view:Close()
 end
 
 function OnClickHome()
-    BuffBattleMgr:SetIDs(curSels)
     UIUtil:ToHome()
 end
 
 function OnClickMission()
-    if sectionData  then
+    if sectionData then
         UIUtil:ShowMissionReward(sectionData:GetTaskType(),sectionData:GetID())
     end
 end

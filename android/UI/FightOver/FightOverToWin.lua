@@ -184,7 +184,7 @@ function RefreshPanel()
         SetDirllPanel()
     elseif isBossDirll then
         SetDirllBossPanel()
-    elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
+    elseif sceneType == SceneType.PVPMirror or IsPvpSceneType(sceneType) then
         SetPVPPanel()
     elseif sceneType == SceneType.BOSS then
         SetFiledBossPanel()
@@ -198,6 +198,8 @@ function RefreshPanel()
         SetRogueTPanel()
     elseif sceneType == SceneType.BuffBattle then
         SetBuffBattlePanel() 
+    elseif sceneType == SceneType.TowerDeep then
+        SetTowerDeepPanel()
     else
         SetPVEPanel()
     end
@@ -214,7 +216,7 @@ function SetTitleIcon()
             imgName = "dirll_win"
         elseif isBossDirll then
             imgName = "end"
-        elseif sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP then
+        elseif sceneType == SceneType.PVPMirror or IsPvpSceneType(sceneType) then
             imgName = elseData.bIsWin and imgName or "lose"
         elseif sceneType == SceneType.RogueT then
             imgName = "32_01"        
@@ -406,7 +408,7 @@ function SetRole(_id)
     if (_id) then
         RoleTool.LoadImg(icon, _id, LoadImgType.Main) -- 立绘
         UIUtil:SetLiveBroadcast(icon)
-        if (sceneType == SceneType.PVPMirror or sceneType == SceneType.PVP) and not elseData.bIsWin then -- pvp战斗失败不播放语音
+        if (sceneType == SceneType.PVPMirror or IsPvpSceneType(sceneType)) and not elseData.bIsWin then -- pvp战斗失败不播放语音
             return
         end
 
@@ -922,22 +924,40 @@ function SetPVPPanel()
     -- -- round
     -- CSAPI.SetText(txtRound, FightClient:GetTurn() .. "")
 
-    if sceneType == SceneType.PVP then
+    if IsPvpSceneType(sceneType) and elseData.type==RealArmyType.Friend then
         return
     end
 
+    pvpData = {}
+    if(IsPvpSceneType(sceneType))then 
+        --自由匹配
+        pvpData.dwIcon = ExerciseRMgr:GetDwIcon()
+        pvpData.rank = ExerciseRMgr:GetRank()
+        pvpData.isRankUP = ExerciseRMgr:IsRankUp()
+        pvpData.rankLv = ExerciseRMgr:GetRankLevel()
+        pvpData.score = ExerciseRMgr:GetScore()
+        pvpData.cfg = "CfgPvpRankLevel"
+    else 
+        --军演
+        pvpData.dwIcon = ExerciseMgr:GetDwIcon()
+        pvpData.rank = ExerciseMgr:GetRank()
+        pvpData.isRankUP = ExerciseMgr:IsRankUp()
+        pvpData.rankLv = ExerciseMgr:GetRankLevel()
+        pvpData.score = ExerciseMgr:GetScore()
+        pvpData.cfg = "CfgPracticeRankLevel"
+    end 
     CSAPI.SetGOActive(exerObj, true)
     CSAPI.SetGOActive(pvpEffect, false)
 
     -- icon
-    local iconName = ExerciseMgr:GetDwIcon()
+    local iconName = pvpData.dwIcon
     if iconName and iconName ~= "" then
         ResUtil.ExerciseGrade:Load(exerIcon, iconName, true)
     end
 
-    local rankStr = ExerciseMgr:GetRank() > 0 and ExerciseMgr:GetRank() or "--"
+    local rankStr = pvpData.rank > 0 and pvpData.rank or "--"
     CSAPI.SetText(txtRank2, LanguageMgr:GetByID(33000) .. ":" .. rankStr)
-    CSAPI.SetGOActive(rankUp, ExerciseMgr:IsRankUp())
+    CSAPI.SetGOActive(rankUp, pvpData.isRankUP)
 
     FuncUtil:Call(function()
         if gameObject and not isJumpToEnd then
@@ -950,14 +970,14 @@ end
 -- 军演升级动画效果
 function SetPVPScore(addScore)
     local maxRankLv = GetMaxRankLv()
-    if maxRankLv == ExerciseMgr:GetRankLevel() then
+    if maxRankLv == pvpData.rankLv then
         RefreshTextRank(maxRankLv)
         RefreshTextScore("MAX", "MAX")
         SetPVPProgress(1)
     elseif (addScore <= 0) then
-        local curScore = ExerciseMgr:GetScore()
-        local maxScroe = GetMaxScore(ExerciseMgr:GetRankLevel())
-        RefreshTextRank(ExerciseMgr:GetRankLevel())
+        local curScore = pvpData.score
+        local maxScroe = GetMaxScore(pvpData.rankLv)
+        RefreshTextRank(pvpData.rankLv)
         RefreshTextScore(curScore, maxScroe)
         SetPVPProgress(curScore / maxScroe)
     else
@@ -967,13 +987,13 @@ function SetPVPScore(addScore)
         RefreshTextRank(oldLv)
         RefreshTextScore(oldScore, maxScore)
         SetPVPProgress(oldScore / maxScore)
-        exerBar:Begin(oldLv, oldScore, ExerciseMgr:GetRankLevel(), ExerciseMgr:GetScore(), addScore, maxRankLv,
+        exerBar:Begin(oldLv, oldScore, pvpData.rankLv, pvpData.score, addScore, maxRankLv,
             SetPVPProgress, GetMaxScore, RefreshTextRank, RefreshTextScore);
     end
 end
 
 function RefreshTextRank(rankLv)
-    local cfg = Cfgs.CfgPracticeRankLevel:GetByID(rankLv)
+    local cfg = Cfgs[pvpData.cfg]:GetByID(rankLv)
     local name = cfg and cfg.name or ""
     if currRankLv > 0 and currRankLv ~= rankLv then
         currRankLv = rankLv
@@ -993,7 +1013,7 @@ end
 -- 获取段位所需积分
 function GetMaxScore(rankLv)
     local score = 0
-    local cfg = Cfgs.CfgPracticeRankLevel:GetByID(rankLv)
+    local cfg = Cfgs[pvpData.cfg]:GetByID(rankLv)
     if cfg then
         score = cfg.nScore;
     end
@@ -1002,7 +1022,7 @@ end
 
 -- 获取最高段位
 function GetMaxRankLv()
-    local cfg = Cfgs.CfgPracticeRankLevel:GetAll()
+    local cfg = Cfgs[pvpData.cfg]:GetAll()
     local rankLv = 0
     if cfg then
         for k, v in pairs(cfg) do
@@ -1019,9 +1039,9 @@ end
 
 -- 获取未增加积分前的信息
 function GetOldRankLvAndScore(scoreAdd)
-    local lv = ExerciseMgr:GetRankLevel()
+    local lv = pvpData.rankLv
     local score = 0;
-    local currentScore = ExerciseMgr:GetScore();
+    local currentScore = pvpData.score;
     if currentScore >= scoreAdd then
         score = currentScore - scoreAdd;
     else
@@ -1114,6 +1134,7 @@ function SetGlobalBossSweepPanel()
 end
 ----------------------------------积分战斗--------------------------------------
 function SetBuffBattlePanel()
+    BuffBattleMgr:ClearIDs()
     CSAPI.SetGOActive(titleObj, true)
     local cfgDungeon = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
     if cfgDungeon then
@@ -1192,7 +1213,6 @@ function SetDirllBossPanel()
     -- local maxScore = data.hDamage or 0
     CSAPI.SetGOActive(txt_topDamage, false)
 end
-
 ------------------------------------递归沙盒------------------------------------
 function SetMultTeam()
     CSAPI.SetGOActive(titleObj,true)
@@ -1248,7 +1268,39 @@ function SetMultTeam()
     CSAPI.SetText(txtHPLv,tostring(lv))
 end
 
+------------------------------------深塔计划------------------------------------
+function SetTowerDeepPanel()
+    --score
+    CSAPI.SetGOActive(damageObj,true)
+    CSAPI.SetText(txtDamage,elseData.score .. "")
+    LanguageMgr:SetText(txt_topDamage,130020)
+    CSAPI.SetGOActive(txt_topDamage, elseData.maxScore and elseData.maxScore > 0 and elseData.maxScore >= elseData.score)
+    --title
+    CSAPI.SetGOActive(titleObj,true)
+    LanguageMgr:SetText(txtTitle,130019)
+    --bottom
+    local len = RogueSMgr:GetLen(elseData.group)
+    CSAPI.SetGOActive(towerDeepObj, elseData.round< len)
+end
 
+--重新挑战
+function OnClickTowerDeep1()
+    FightClient:Clean()
+    FightProto:EnterTowerDeepFight(elseData.round,CloseParent)
+end
+--下一轮
+function OnClickTowerDeep2()
+    FightClient:Clean()
+    FightProto:EnterTowerDeepFight(elseData.round+1,CloseParent)
+end
+
+function CloseParent()
+    local _view = CSAPI.GetView("FightOverResult")
+    if (_view) then
+        local lua = ComUtil.GetLuaTable(_view)
+        lua.view:Close()
+    end
+end
 ------------------------------------加成------------------------------------
 function SetBuffs()
     isHasBuff = false

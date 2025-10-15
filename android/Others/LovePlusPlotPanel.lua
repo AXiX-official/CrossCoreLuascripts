@@ -94,7 +94,7 @@ function OnSelectPlotOption(plot)
 	if plot ~= nil then
 		BuryingPointMgr:TrackEvents("mj_love_plus_plot_option",{
 			time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true),
-			plotId = plot:GetID()
+			plotId = tostring(plot:GetID())
 		})
 		if(not isAuto) then
 			plotBox.SetNextTween(false, true)
@@ -206,9 +206,9 @@ function OnOpen()
 	--打点
 	BuryingPointMgr:TrackEvents("mj_love_plus_plot",{
 		time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true),
-		storyId = storyData:GetID(),
-		sectionId = storyData:GetGroup(),
-		state = 1
+		storyId = tostring(storyData:GetID()),
+		sectionId = tostring(storyData:GetGroup()),
+		state = "1"
 	})
 end
 
@@ -321,9 +321,10 @@ end
 --整段剧情播放完毕
 function PlotPlayOver()
 	if not storyData:IsPass() then --首次通关
+		local plotId = currPlotData:GetID()
 		BuryingPointMgr:TrackEvents("mj_love_plus_plot_over",{
-			time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true),
-			plotId = currPlotData:GetID()
+			time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true),			
+			plotId = tostring(plotId)
 		})
 	end
 
@@ -757,10 +758,10 @@ function OnClickJump()
 		--打点
 		BuryingPointMgr:TrackEvents("mj_love_plus_plot",{
 			time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(),true),
-			storyId = storyData:GetID(),
-			sectionId = storyData:GetGroup(),
-			state = 2,
-			plotId = currPlotData:GetID()
+			storyId = tostring(storyData:GetID()),
+			sectionId = tostring(storyData:GetGroup()),
+			state = "2",
+			plotId = tostring(currPlotData:GetID())
 		})
 
 		local type = currPlotData:GetType()

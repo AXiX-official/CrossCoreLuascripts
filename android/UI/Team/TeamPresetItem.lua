@@ -187,7 +187,7 @@ function OnClickUse()
 		return
 	end
 	local isPractice=false; --是否是军演队伍
-	if	TeamMgr:IsTeamType(eTeamType.PracticeAttack,TeamMgr.currentIndex) or TeamMgr:IsTeamType(eTeamType.PracticeDefine,TeamMgr.currentIndex) or TeamMgr:IsTeamType(eTeamType.RealPracticeAttack,TeamMgr.currentIndex) then
+	if	TeamMgr:IsTeamType(eTeamType.PracticeAttack,TeamMgr.currentIndex) or TeamMgr:IsTeamType(eTeamType.PracticeDefine,TeamMgr.currentIndex) or TeamMgr:IsTeamType(eTeamType.PVP,TeamMgr.currentIndex) then
 		isPractice=true;
 	end
 	local isFight = TeamMgr:GetTeamIsFight(TeamMgr.currentIndex);

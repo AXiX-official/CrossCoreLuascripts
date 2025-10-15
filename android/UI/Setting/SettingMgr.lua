@@ -48,6 +48,29 @@ function this:SetData(_key, _value)
     self.datas[_key] = value
 end
 
+function this:TrackEventsByFirst()
+    local info = FileUtil.LoadByPath("setting_first") or {}
+    if info.index == nil then
+        info.index = 1
+        BuryingPointMgr:TrackEvents("mj_setting", {
+            time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(), true),
+            eventName = "fight_action",
+            key = tostring(self:GetValue("s_fight_action_key"))
+        })
+        BuryingPointMgr:TrackEvents("mj_setting", {
+            time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(), true),
+            eventName = "language",
+            key = tostring(self:GetValue("s_language_key"))
+        })
+        BuryingPointMgr:TrackEvents("mj_setting", {
+            time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(), true),
+            eventName = "bgm",
+            cfgId = tostring(BGMMgr:GetViewMusicID())
+        })
+        FileUtil.SaveToFile("setting_first",info)
+    end
+end
+
 -- ==============================--
 -- desc:刷新音频大小
 -- time:2019-09-11 10:23:19

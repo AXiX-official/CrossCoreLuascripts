@@ -120,3 +120,74 @@ function OperateActiveProto:TakeQuestionRewardRet(proto)
     RiddleMgr:UpdateRewards(proto)
     EventMgr.Dispatch(EventType.Riddle_Reward_Ret,proto)
 end
+
+--限量奖励活动 获取信息
+function OperateActiveProto:GetLimitRewardInfo(callback)
+    self.getLimitRewardInfoCallBack = callback
+    local proto = {"OperateActiveProto:GetLimitRewardInfo"}
+    NetMgr.net:Send(proto);
+end
+
+--限量奖励活动 获取信息返回
+function OperateActiveProto:GetLimitRewardInfoRet(proto)
+    if self.getLimitRewardInfoCallBack then
+        self.getLimitRewardInfoCallBack(proto)
+        self.getLimitRewardInfoCallBack = nil
+    end
+end
+
+--限量奖励活动 确认领取关闭弹窗
+function OperateActiveProto:LimitRewardCloseWindow(callback)
+    self.limitRewardCloseWindowCallBack = callback
+    local proto = {"OperateActiveProto:LimitRewardCloseWindow"}
+    NetMgr.net:Send(proto);
+end
+
+--限量奖励活动 确认领取关闭弹窗返回
+function OperateActiveProto:LimitRewardCloseWindowRet(proto)
+    if self.limitRewardCloseWindowCallBack then
+        self.limitRewardCloseWindowCallBack(proto)
+        self.limitRewardCloseWindowCallBack = nil
+    end
+end
+
+--限量奖励活动 显示兑换码
+function OperateActiveProto:LimitRewardShowCode(id)
+    local proto = {"OperateActiveProto:LimitRewardShowCode",{id = id}}
+    NetMgr.net:Send(proto);
+end
+
+--限量奖励活动 显示兑换码返回
+function OperateActiveProto:LimitRewardShowCodeRet(proto)
+    UIUtil:OpenMissionLimitTips(proto)
+end
+
+--触发礼包
+function OperateActiveProto:GetPopupPackInfo(isLogin)
+    self.GetPopupPackInfoIsMy = isLogin
+    local proto = {"OperateActiveProto:GetPopupPackInfo"}
+    NetMgr.net:Send(proto)
+end
+function OperateActiveProto:GetPopupPackInfoRet(proto)
+    PopupPackMgr:GetPopupPackInfoRet(proto)
+    if(proto.isFinish)then 
+        if(not self.GetPopupPackInfoIsMy)then 
+            EventMgr.Dispatch(EventType.Menu_PopupPack)
+        end 
+        self.GetPopupPackInfoIsMy = nil 
+    end 
+end 
+
+--记录弹出的礼包
+function OperateActiveProto:UpdatePopupTime(_cfgids,_cb)
+    self.UpdatePopupTimeCB = _cb
+    local proto = {"OperateActiveProto:UpdatePopupTime",{cfgids = _cfgids}}
+    NetMgr.net:Send(proto)
+end
+function OperateActiveProto:UpdatePopupTimeRet(proto)
+    PopupPackMgr:UpdatePopupTimeRet(proto)
+    if(self.UpdatePopupTimeCB)then 
+        self.UpdatePopupTimeCB()
+    end 
+    self.UpdatePopupTimeCB = nil
+end 

@@ -581,6 +581,8 @@ this.Menu_Questionnaire = 180023
 this.Menu_SpineUI = 180024
 --女仆咖啡
 this.Menu_Coffee = 180025 
+--触发礼包 
+this.Menu_PopupPack = 180026 
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -699,6 +701,10 @@ this.TeamView_List_Refresh=190054;
 this.TeamView_Has_Change=190055;
 --队伍预设名字更改
 this.Team_PresetName_Change = 190056;
+--队伍战力不足引导操作,进编队界面
+this.Team_Raising_GoTeamView=190057;
+--队伍战力不足引导操作，进战斗
+this.Team_Raising_GoBattle=190058;
 -------------------------------------------背包
 --物品更新
 this.Bag_Update = 200000;
@@ -787,6 +793,8 @@ this.Equip_Refining_Ret=210037
 this.Equip_Refining_Comfirm=210038
 --洗炼数据刷新
 this.Equip_Refining_Update=210039
+--点击锁定条件
+this.Equip_Click_LockLimit=210040
 ------------------------------------------战棋系统事件
 --场地初始化完成
 this.Battle_Ground_Inited = 220000;
@@ -942,7 +950,7 @@ this.Exercise_Rank_Info = 290004
 --主动退出自由军演
 --this.Exercise_Yq_Cancel = 290006
 --对方拒绝邀请
---this.Exercise_Yq_Refuse = 290007
+this.Exercise_Yq_Refuse = 290007
 --被邀请通知
 --this.Exercise_Yq_Notice = 290008
 --军演匹配或邀请成功
@@ -964,6 +972,7 @@ this.Rogue_CancelBack = 290016 --放弃
 this.RogueS_phase_Change = 290017 --战力派遣期数变更
 this.RogueT_Buff_Upgrade = 290018 --buff升级回调
 --this.Exercise_Role_Panel = 290019 --军演看板修改
+this.ExerciseR_End = 290020 --pvp 赛季结束或者开发时间结束
 --------------------------------------------------物品合成
 --合成成功
 this.Goods_Combine_Success = 300001
@@ -1193,6 +1202,7 @@ this.Dungeon_InfoPanel_Update = 420008 --副本信息界面设置
 this.Dungeon_Double_Update = 420009 --副本多倍更新
 this.Dungeon_InfoItem_Update = 420010 --副本信息组件更新
 this.Dungeon_MainLine_Guide_Refresh= 420011 --主线选关界面引导
+this.Dungeon_TeamReplace_View_Refresh = 420012 -- 副本队伍推荐刷新
 --------------------------------------组队boss
 this.TeamBoss_List = 430001
 this.TeamBoss_Room_Update = 430002 --房间更新

@@ -53,7 +53,7 @@ function this:Init(cfg)
             --敌方占位从左到右
             --创建敌方召唤区格子，召唤区格子固定为第一排
             self:CreateGrids(1,self.cfg.enemyCol,TeamUtil.enemyTeamId,true);
---            if(g_FightMgr.type == SceneType.PVP or g_FightMgr.type == PVPMirror)then
+--            if(IsPvpSceneType(g_FightMgr.type) or g_FightMgr.type == PVPMirror)then
 --                self:CreateGrids(1,self.cfg.enemyCol,TeamUtil.enemyTeamId,true);
 --            end
         end

@@ -103,7 +103,7 @@ function SetTouch()
     if (needClick) then
         if (cfg and #cfg.item > 0) then
             for k, v in ipairs(cfg.item) do
-                if (v.sName ~= "in") then
+                if (v.sName ~= "in" and v.areas~=nil) then
                     table.insert(touchDatas, v)
                 end
             end

@@ -5,6 +5,8 @@ local isNotClick = false
 local teamData = nil
 local tacticsData = nil
 local cfgRankTeam = nil
+local buffItems = nil
+local isBuffDescShow = false
 
 local isGlobalBoss = false
 
@@ -13,6 +15,8 @@ function Awake()
     eventMgr:AddListener(EventType.View_Lua_Opened,OnViewOpened)
     eventMgr:AddListener(EventType.View_Lua_Closed,OnViewClosed)
     eventMgr:AddListener(EventType.Team_Data_Update,OnTeamUpdate)
+
+    CSAPI.SetGOActive(buffObj,false)
 end
 
 function OnViewOpened(viewKey)
@@ -49,6 +53,7 @@ function OnOpen()
         SetItems()
         SetButton()
     end
+    SetBuffs()
 end
 
 function SetTitle()
@@ -134,6 +139,32 @@ function SetButton()
     if not teamInfo.data or #teamInfo.data < 1 then
         CSAPI.SetGOAlpha(btn_replace,0.5)
         isNotClick = true
+    end
+end
+
+function SetBuffs()
+    CSAPI.SetGOActive(buffObj,cfgRankTeam and cfgRankTeam.isBuffOpen ~= nil)
+    if cfgRankTeam and cfgRankTeam.isBuffOpen ~= nil then
+        CSAPI.SetRTSize(bg,1627,717)
+        CSAPI.SetGOActive(buffClickMask,false)
+        CSAPI.SetGOActive(buffDescObj,false)
+        if data.buffIds then
+            buffItems = buffItems or {}
+            ItemUtil.AddItems("Rank/RankTeamBuffItem",buffItems,data.buffIds,buffParent,OnBuffItemClickCB)
+        end
+    end
+end
+
+function OnBuffItemClickCB(item)
+    isBuffDescShow = true
+    ShowBuffDesc(item.GetDesc())
+end
+
+function ShowBuffDesc(str)
+    CSAPI.SetGOActive(buffDescObj,isBuffDescShow)
+    CSAPI.SetGOActive(buffClickMask,isBuffDescShow)
+    if isBuffDescShow then
+        CSAPI.SetText(txtBuffdesc,str or "")
     end
 end
 
@@ -228,5 +259,10 @@ function SetReplaceTeamData()
 end
 
 function OnClickClose()
+    if isBuffDescShow then
+        isBuffDescShow = false
+        ShowBuffDesc()
+        return
+    end
     view:Close()
 end

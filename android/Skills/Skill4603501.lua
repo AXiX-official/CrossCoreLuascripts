@@ -52,7 +52,7 @@ function Skill4603501:tFunc_4603531_4603521(caster, target, data)
 		return
 	end
 	-- 4603521
-	if self:Rand(1000+count737) then
+	if self:Rand(1000+count737*100) then
 		local targets = SkillFilter:Rand(self, caster, target, 4)
 		for i,target in ipairs(targets) do
 			self:CallOwnerSkill(SkillEffect[4603521], caster, target, data, 603500401+math.max(count738-1,0))
@@ -72,7 +72,7 @@ function Skill4603501:tFunc_4603531_4603511(caster, target, data)
 		return
 	end
 	-- 4603511
-	if self:Rand(1000+count737) then
+	if self:Rand(1000+count737*100) then
 		local targets = SkillFilter:Rand(self, caster, target, 4)
 		for i,target in ipairs(targets) do
 			self:CallOwnerSkill(SkillEffect[4603511], caster, target, data, 603500201+math.max(count738-1,0))

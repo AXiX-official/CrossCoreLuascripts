@@ -35,9 +35,9 @@ function this:InitCfg(cfgid)
         LogError("初始化物品配置失败！无效配置idCGD");
     end
 
-    --if (self.cfg == nil) then
+    -- if (self.cfg == nil) then
     self.cfg = Cfgs.CardData:GetByID(cfgid); -- 持有引用
-    --end
+    -- end
 end
 
 -- 初始化模型配置
@@ -263,7 +263,7 @@ function this:GetCRoleData()
     return nil
 end
 
---是否含有限时皮肤
+-- 是否含有限时皮肤
 function this:CheckLimitSkin()
     if (self:GetRoleID()) then
         return RoleSkinMgr:IsHadLimitSkin(self:GetRoleID())
@@ -399,12 +399,14 @@ function this:GetEquipSkillPoint()
     local equips = self:GetEquips();
     if equips then
         for k, v in ipairs(equips) do
+            local skills=v:GetSkills() 
+            skills=skills or {}
             local param = {
                 cfgid = v:GetCfgID(), -- 装备的配置id
                 level = v:GetLv(), -- 装备等级
                 --  randSkillType = v:GetSkillType(), --随机技能类型
                 --  randSkillValue = v:GetRandSkillValue(), --随机技能值
-                skills = v:GetData().skills or {}
+                skills = skills
             }
             table.insert(list, param);
         end
@@ -634,7 +636,7 @@ end
 ----------------------------------------等级相关-----------------------
 -- 当前最大等级（限制等级）
 function this:GetMaxLv()
-    return self.curData and self.curData.max_level or 80 --todo 
+    return self.curData and self.curData.max_level or RoleTool.GetMaxLv()
 end
 
 -- 最大跃升解锁的上限等级
@@ -907,7 +909,7 @@ function this:CheckCanBreak()
     local curLv = self:GetLv()
     local maxLv = self:GetMaxLv()
     local break_limitLv = self:GetBreakLimitLv()
-    local core_limitLv = self:GetCoreLimitLv()
+    -- local core_limitLv = self:GetCoreLimitLv()
     local isMax = curLv >= break_limitLv -- core_limitLv 屏蔽 
     if (isMax or curLv < maxLv) then
         self.red_canbreak = false
@@ -1075,7 +1077,7 @@ function this:CheckPassiveUp()
     return false
 end
 
---天赋能否升级
+-- 天赋能否升级
 function this:CheckTalnetUp(talentId)
     local isOpen = MenuMgr:CheckModelOpen(OpenViewType.special, "special20")
     if(not isOpen)then 

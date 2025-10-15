@@ -25,7 +25,11 @@ function Refresh(_data)
 
     local askData = ExerciseFriendTool:GetInviteData(data:GetUid())
     if (askData) then
-        invite_time = askData.invite_time + g_ArmyFriendInviteDiffTime
+        if(askData.is_cancel)then 
+            invite_time = askData.invite_time + g_ArmyInviteCoolDown
+        else 
+            invite_time = askData.invite_time + g_ArmyFriendInviteDiffTime
+        end  
     else
         invite_time = nil
     end
@@ -105,7 +109,7 @@ end
 function OnClickYQ1()
     if (isOnLine and not runTime) then
         local id = data:GetUid()
-        ExerciseMgr:InviteFriend({{
+        ArmyProto:InviteFriend({{
             uid = data:GetUid(),
             is_cancel = false
         }}, YQCB)

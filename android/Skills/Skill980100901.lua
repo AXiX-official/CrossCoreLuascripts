@@ -38,10 +38,20 @@ function Skill980100901:OnAttackOver(caster, target, data)
 	-- 8580
 	local count101 = SkillApi:BuffCount(self, caster, target,1,2,2)
 	-- 984000604
-	if SkillJudger:Greater(self, caster, target, true,count101,3) then
+	if SkillJudger:Greater(self, caster, target, true,count101,4) then
 	else
 		return
 	end
 	-- 980100902
 	self:OwnerAddBuffCount(SkillEffect[980100902], caster, self.card, data, 980100902,50,1)
+end
+-- 入场时
+function Skill980100901:OnBorn(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 9004
+	self:AddBuff(SkillEffect[9004], caster, self.card, data, 9004)
 end

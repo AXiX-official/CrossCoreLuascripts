@@ -2,40 +2,37 @@
 ExerciseFriendTool = {}
 local this = ExerciseFriendTool
 
-this.inviteDatas = {} -- 邀请的数据
-this.beInviteDatas = {} -- 被邀请的数据 
-this.respondData = nil -- 受邀者数据
-this.freeArmyData = nil -- 匹配的对手
+this.inviteFriendDatas = {} -- 我邀请的好友的的数据(我离开界面时会取消所有邀请)
+this.beInviteDatas = {} -- 邀请我的人的数据
+this.emenyData_friend = nil -- 对手数据 sFriendInvite
+this.emenyData_free = nil -- 对手数据 sFreeArmyMatch
 
 function this:Clear()
     self:ClearFriendDatas()
-    self.freeArmyData = nil
+    self.emenyData_free = nil
 end
 
 -- 换场景检测邀请
 function this:CheckInvite()
-    local scene = SceneMgr:GetCurrScene()
-    if (scene.key == "MajorCity") then
-        if (self.beInviteDatas) then
-            for i, v in pairs(self.beInviteDatas) do
-                if (TimeUtil:GetTime() < (v.invite_time + g_ArmyFriendMatchWaitTime)) then
-                    Tips.ShowInviteTips(v)
-                end
+    if (self:IsCanInvite() and self.beInviteDatas ~= nil) then
+        for i, v in pairs(self.beInviteDatas) do
+            if (TimeUtil:GetTime() < (v.invite_time + ExerciseRMgr:GetPPTimer())) then
+                Tips.ShowInviteTips(v)
             end
         end
     end
 end
 
 function this:ClearFriendDatas()
-    self.inviteDatas = {}
+    self.inviteFriendDatas = {}
     self.beInviteDatas = {}
-    self.respondData = nil
+    self.emenyData_friend = nil
 end
 
 -- ArmyProto:InviteFriendRet	ops   {uid	is_cancel invite_time}
 function this:RefreshInviteDatas(proto)
     for i, v in ipairs(proto.ops) do
-        self.inviteDatas[v.uid] = v
+        self.inviteFriendDatas[v.uid] = v
     end
 end
 
@@ -44,35 +41,43 @@ end
 function this:RefreshBeInviteDatas(proto)
     self.beInviteDatas[proto.uid] = proto
     -- 只在主场景接收
-    local scene = SceneMgr:GetCurrScene()
-    if (scene.key == "MajorCity") then
-        if (TimeUtil:GetTime() < (proto.invite_time + g_ArmyFriendMatchWaitTime)) then
+    if (self:IsCanInvite()) then
+        if (TimeUtil:GetTime() < (proto.invite_time + ExerciseRMgr:GetPPTimer())) then
             Tips.ShowInviteTips(proto)
         end
     end
 end
 
--- 好友应答（不接受时由服务器弹出提示）
-function this:BeInviteRespond(proto)
-    if (proto.is_receive) then
-        self.respondData = proto
+--能否弹出邀请框
+function this:IsCanInvite()
+    local scene = SceneMgr:GetCurrScene()
+    if (scene.key == "MajorCity" and not CSAPI.IsViewOpen("ExerciseRPP") and not GuideMgr:IsGuiding() and
+        not MenuMgr:IsSpineUI()) then
+        return true
     end
+    return false
 end
 
+-- 对手数据（好友）
+function this:SetRespondData(_data)
+    self.emenyData_friend = _data
+end
+
+-- 对手数据（自由匹配）
 function this:FreeArmyMatch(proto)
-    self.freeArmyData = proto
+    self.emenyData_free = proto
 end
 
 function this:GetInviteData(uid)
-    return self.inviteDatas[uid]
+    return self.inviteFriendDatas[uid]
 end
 
 -- 取消所有申请（离开界面）
 function this:CancelAllInvite()
     local curTime = TimeUtil:GetTime()
     local _ops = {}
-    for i, v in pairs(self.inviteDatas) do
-        if (curTime < (v.invite_time + g_ArmyFriendMatchWaitTime)) then
+    for i, v in pairs(self.inviteFriendDatas) do
+        if (v.invite_time == nil or curTime < (v.invite_time + ExerciseRMgr:GetPPTimer())) then
             table.insert(_ops, {
                 uid = v.uid,
                 is_cancel = true
@@ -80,109 +85,90 @@ function this:CancelAllInvite()
         end
     end
     if (#_ops > 0) then
-        ExerciseMgr:InviteFriend(_ops)
+        ArmyProto:InviteFriend(_ops)
     end
-    self.inviteDatas = {}
+    --self.inviteFriendDatas = {}
 end
 
 -- 自己的信息
-function this:GetMyData(type, uid)
-    local win_cnt = 0
-    local lost_cnt = 0
-    if (type == RealArmyType.Freedom) then
-        win_cnt = ExerciseMgr.win_cnt or 0
-        lost_cnt = ExerciseMgr.lost_cnt or 0
-    else
-        local friendData = FriendMgr:GetData(uid) -- ??
-        win_cnt = friendData:GetWinCnt()
-        lost_cnt = friendData:GetLostCnt()
+function this:GetMyData(nType)
+    local data = {}
+    local teams = {}
+    for k = 0, 2 do
+        local teamData = TeamMgr:GetTeamData(nType + k)
+        table.insert(teams, teamData)
     end
-    local team = TeamMgr:GetTeamData(eTeamType.RealPracticeAttack)
-    local attack = self:GetMeAttack()
-    return self:SetData(PlayerClient:GetID(), PlayerClient:GetName(), PlayerClient:GetLv(), win_cnt, lost_cnt,
-        PlayerClient:GetIconId(), team, attack)
+    data.uid = PlayerClient:GetID()
+    data.name = PlayerClient:GetName()
+    data.level = PlayerClient:GetLv()
+    data.rank = ExerciseRMgr:GetProto().rank
+    data.icon_id = PlayerClient:GetIconId()
+    data.icon_frame = PlayerClient:GetHeadFrame()
+    data.sel_card_ix = PlayerClient:GetSex()
+    data.role_panel_id = ExerciseRMgr:GetProto().role_panel_id
+    data.live2d = ExerciseRMgr:GetProto().live2d
+    data.icon_title = PlayerClient:GetIconTitle()
+    data.teams = teams
+    data.score = ExerciseRMgr:GetProto().score or 0
+    return data
 end
 
 -- 获取对手信息
-function this:GetArmyData(type, uid, team)
+function this:GetArmyData(type, uid)
     local data = {}
     if (type == RealArmyType.Friend) then
         local friendData = FriendMgr:GetData(uid)
-        local teamData = TeamData.New()
-        teamData:SetData(team)
-        local attack = team.performance
-        data = self:SetData(uid, friendData:GetName(), friendData:GetLv(), friendData:GetWinCnt(),
-            friendData:GetLostCnt(), friendData:GetIconId(), teamData, attack)
-        self:SetArmyCardDatas(team)
+        -- local attack = team.performance
+        data.uid = uid
+        data.name = friendData:GetName()
+        data.level = friendData:GetLv()
+        data.rank = self.emenyData_friend.rank
+        data.icon_id = friendData:GetIconId()
+        data.icon_frame = friendData:GetFrameId()
+        data.sel_card_ix = friendData:GetSex()
+        data.role_panel_id = self.emenyData_friend.role_panel_id
+        data.live2d = self.emenyData_friend.live2d
+        data.icon_title = friendData:GetTitle()
+        data.teams = self:SetTeams(self.emenyData_friend.teams)
+        data.score = self.emenyData_friend.score
     elseif (type == RealArmyType.Freedom) then
-        data = self.freeArmyData
-        for i, v in pairs(self.freeArmyData) do
-            if (i == "team") then
-                local teamData = TeamData.New()
-                teamData:SetData(v)
-                data["team"] = teamData
-                data.attack = v.performance
-            else
-                data[i] = v
-            end
+        if (self.emenyData_free.robot_cfg_id and self.emenyData_free.robot_cfg_id ~= 0) then
+            -- 机器人
+            local cfg = Cfgs.CfgPvpRobot:GetByID(self.emenyData_free.robot_cfg_id)
+            data.name = cfg.nName
+            data.level = cfg.nLevel
+            data.rank = self.emenyData_free.rank
+            data.icon_id = cfg.nIconId
+            data.icon_frame = 1
+            data.sel_card_ix = 1
+            data.role_panel_id = cfg.nIconId
+            data.live2d = false
+            data.icon_title = 1
+            local list = GCalHelp:GetFreeArmyRobotSimpleTeams(cfg.id)
+            data.teams = self:SetTeams(list.teams)
+            data.score = cfg.nScore
+        else
+            data = self.emenyData_free
+            data.teams = self:SetTeams(self.emenyData_free.teams)
         end
-
-        self:SetArmyCardDatas(self.freeArmyData.team)
     end
     return data
 end
 
-function this:SetData(_uid, _name, _level, _win_cnt, _lost_cnt, _icon_id, _team, _attack)
-    local data = {}
-    data.uid = _uid
-    data.name = _name
-    data.level = _level
-    data.win_cnt = _win_cnt
-    data.lost_cnt = _lost_cnt
-    data.icon_id = _icon_id
-    data.team = _team
-    data.attack = _attack
-    return data
-end
-
--- 设置对手卡牌数据
-function this:SetArmyCardDatas(team)
-    self.armyCardDatas = {}
-    if (team and team.data) then
-        for i, v in ipairs(team.data) do
-            local card = CharacterCardsData(v.card_info)
-            self.armyCardDatas[v.cid] = card
-        end
-    else
-        LogError("对手无编队数据")
+function this:SetTeams(_teams)
+    local teams = {}
+    for k, v in ipairs(_teams) do
+        local teamData = TeamData.New()
+        teamData:SetData(v)
+        table.insert(teams, teamData)
     end
+    return teams
 end
 
--- 获取对方队伍
-function this:GetTeam(is_inviter, uid)
-    local _team = {}
-    if (is_inviter) then
-        _team = self.respondData.team
-    else
-        local _data = self.beInviteDatas[uid]
-        _team = _data.team
-    end
-    return _team
-end
-
-function this:GetMeAttack()
-    local attack = 0
-    local teamData = TeamMgr:GetTeamData(eTeamType.PracticeAttack)
-    if teamData then
-        local haloStrength = teamData:GetHaloStrength()
-        attack = teamData:GetTeamStrength() + haloStrength
-    end
-    return attack
-end
-
--- 对手卡牌数据
-function this:GetArmyCardDatas()
-    return self.armyCardDatas
+--对方拒绝
+function this:BeInviteRespond(proto)
+    self.inviteFriendDatas[proto.uid].is_cancel = proto.is_receive
+    self.inviteFriendDatas[proto.uid].invite_time = TimeUtil:GetTime() --拒绝时间
 end
 
 return this

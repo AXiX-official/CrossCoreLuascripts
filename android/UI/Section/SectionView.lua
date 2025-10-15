@@ -65,18 +65,8 @@ local currDailyIndexL1 = 0
 local currDailyIndexL2 = 0
 local currDailyIndexR = 0
 --军演
-local eRectL = nil
-local eRectR = nil
-local isExerciseLOpen = false
-local isExerciseROpen = false
-local isExerciseRShow = true
-local isColosseumOpen = false
-local eLockStr = ""
-local eLockStr2 = ""
+local exercisePanel = nil
 local isPvpRet = false
-local cRefreshTime = 0
-local cTimer = 0
-local cTime = 0
 --活动
 local layout4 =nil
 local activityDatas = nil
@@ -94,8 +84,6 @@ local moveAction = nil
 local menuFade = nil
 local backFade = nil
 local fades = nil 
-local exerciseFadeL = nil
-local exerciseFadeR = nil
 local exerciseFade = nil
 local exerciseMoveL = nil
 local exerciseMoveR = nil
@@ -144,9 +132,6 @@ function Awake()
     -- layout4:Init("UIs/Section/SectionActivityItem2", LayoutCallBack4, true)
 
     InitAnim()
-
-    eRectL = ComUtil.GetCom(eImg1,"RectTransform")
-    eRectR = ComUtil.GetCom(eImg2,"RectTransform")
 
     btnCanvasGroup = ComUtil.GetCom(btnEnter,"CanvasGroup")
     
@@ -293,6 +278,8 @@ function OnOpen()
     end
     curState = 3
     ShowPanel()
+    --点触礼包
+    PopupPackMgr:CheckByCondition({4,6})
 end
 
 function Update()
@@ -310,8 +297,6 @@ function Update()
         UpdateItemAngle(contentX)
         UpdatePrograss(contentX)      
     end 
-
-    UpdateColosseum()
 
     if currType == 4 and items4 and #items4 > 0 then
         local contentX = CSAPI.GetAnchor(content4)      
@@ -562,35 +547,16 @@ end
 
 -- 初始化军演界面
 function InitExerciseView()
-    CSAPI.SetGOActive(exerciseNode,false)
-
-    isExerciseLOpen,eLockStr = MenuMgr:CheckModelOpen(OpenViewType.main, "ExerciseLView")
-    if not isExerciseLOpen then
-        CSAPI.SetText(txt_eLock2, eLockStr)
+    if not exercisePanel then
+        ResUtil:CreateUIGOAsync("Section/SectionExerciseView",exerciseNode,function (go)
+            exercisePanel = ComUtil.GetLuaTable(go)
+            exercisePanel.SetClickCB(OnExerciseChange)
+            exercisePanel.Refresh()
+            if currIndex < 2 or currType ~= 3 then
+                CSAPI.SetGOActive(exerciseNode, false)
+            end
+        end)
     end
-    --Colosseum
-    isColosseumOpen,cRefreshTime = ColosseumMgr:CheckEnterOpen()
-    if cRefreshTime ~= nil then
-        cTime = cRefreshTime - TimeUtil:GetTime()
-    end
-
-    local sectionData = DungeonMgr:GetSectionData(13001)
-    isExerciseROpen,eLockStr2 = sectionData:GetOpen()
-    if not isExerciseROpen or not isColosseumOpen then
-        isExerciseRShow = sectionData:GetOpenState() > -2
-        if isExerciseRShow then
-            isExerciseRShow = isColosseumOpen
-        end
-        CSAPI.SetText(txt_eLock4, eLockStr2)
-        CSAPI.SetGOActive(btnExerciseR, isExerciseRShow)
-        if not isExerciseRShow and exerciseMoveL then
-            exerciseMoveL.targetPos = UnityEngine.Vector3(0,0,0)
-        end
-    else
-        CSAPI.SetGOActive(eLockImg2, false)
-        CSAPI.SetGOActive(eLockObj2, false)
-    end
-    isPvpRet = ExerciseMgr:GetEndTime() ~= 0
 end
 
 -- 初始化活动界面
@@ -1124,11 +1090,7 @@ function ClickDailyItemR(item)
     ShowDailyPanel()
     curState = 0
 
-    ShowItemInfo(function ()
-        currItem = curDailyItemR
-        itemInfo.Show(curDailyItemR.GetCfg())
-    end)
-
+    ShowItemInfo(curDailyItemR)
     ShowLineAnim()
 end
 
@@ -1186,7 +1148,6 @@ end
 ------------------------------------军演-----------------------------------
 function OnExerciseRefresh()
     isPvpRet = true
-    ShowExercisePanel()
 end
 
 function ShowExercisePanel()
@@ -1196,87 +1157,23 @@ function ShowExercisePanel()
     end
 
     -- move
-    if viewInfo.Exercise == nil then
-        InitViewInfo()
-    end
     MoveTo(viewInfo.Exercise[currIndex], SectionViewType.Exercise, pType, 0)
 
-    
-    if currIndex == 1 then
-        -- scale
-        CSAPI.SetScale(btnExerciseL, 0.73, 0.73, 1)
-        CSAPI.SetScale(btnExerciseR, 0.73, 0.73, 1)   
-
-        --pos
-        CSAPI.SetAnchor(btnExerciseL,241,isExerciseRShow and 153 or 0)
-        CSAPI.SetAnchor(btnExerciseR,241,-153)       
-    end
-
     if currIndex == 2 and curState == 1 then
-        ShowExerciseFade(function ()
-            -- scale
-            CSAPI.SetScale(btnExerciseL, 1, 1, 1)
-            CSAPI.SetScale(btnExerciseR, 1, 1, 1) 
-        end)
-
         --title
         SetTitle(true,exerciseNode,350)
+        if exercisePanel and isPvpRet then
+            exercisePanel.Refresh()
+        end
     end
     
     --view
     CSAPI.SetGOActive(exerciseNode, currIndex > 1)
-
-    --lock
-    if not isPvpRet and currIndex == 2 then
-        CSAPI.SetGOActive(eLockImg,true)
-        CSAPI.SetGOActive(eLockObj,true)
-        LanguageMgr:SetText(txt_eLock1, 15117)
-        LanguageMgr:SetText(txt_eLock2, 15118)
-    else
-        CSAPI.SetGOActive(eLockImg,not isExerciseLOpen)
-        CSAPI.SetGOActive(eLockObj,not isExerciseLOpen and currIndex == 2)   
-        LanguageMgr:SetText(txt_eLock1, 1035)
-        CSAPI.SetText(txt_eLock2, eLockStr) 
-    end
 end
 
-function OnClickExerciseL()
-    -- if ExerciseMgr:IsLeisureTime() then
-    --     LanguageMgr:ShowTips(33018)
-    --     return
-    -- end
-    if not isPvpRet then
-        LanguageMgr:ShowTips(1019)
-        return
-    end
-
-    if not isExerciseLOpen then
-        Tips.ShowTips(eLockStr)
-        return
-    end
-    CSAPI.OpenView("ExerciseLView")
+function OnExerciseChange(index)
+    ResUtil.SectionExercise:Load(imgExercise,"bg" .. index)
 end
-
-function OnClickExerciseR()
-    --LanguageMgr:ShowTips(1000)
-    if isExerciseROpen then
-        CSAPI.OpenView("ColosseumView")       --CSAPI.OpenView("ExerciseRView")      
-    else
-        Tips.ShowTips(eLockStr2)
-        -- LanguageMgr:ShowTips(1000)
-    end
-end
-
-function UpdateColosseum()
-    if cTime > 0 and Time.time > cTimer then
-        cTimer = Time.time + 1
-        cTime = cRefreshTime - TimeUtil:GetTime()
-        if cTime <= 0 then
-            InitExerciseView()
-        end
-    end
-end
-
 ------------------------------------活动-----------------------------------
 function RefreshActivityDatas()
     activityDatas2 = {}
@@ -1573,21 +1470,23 @@ function OnClickArrowR()
     end
 end
 ------------------------------------右侧信息栏-----------------------------------
-function ShowItemInfo(cb)    
+function ShowItemInfo(item)    
+    currItem = curDailyItemR
     if (itemInfo == nil) then --没有则异步创建
         ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
-            itemInfo.SetClickCB(OnBattleEnter)
             CSAPI.SetGOActive(itemInfo.bg, false)
-            if cb then
-                cb()
-            end
+            itemInfo.Show(curDailyItemR.GetCfg(),nil,OnLoadSuccess)
         end)
     else
-        if cb then
-            cb()
-        end
+        itemInfo.Show(curDailyItemR.GetCfg(),nil,OnLoadSuccess)
     end
+end
+
+function OnLoadSuccess()
+    itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
+    itemInfo.AddTeamReplace(true,OnBattleEnter)
+    -- SetInfoItemPos()
 end
 
 -- 进入
@@ -1614,6 +1513,16 @@ function EnterNextView(_item)
             teamNum = _item.GetCfg().teamNum or 1
         }, TeamConfirmOpenType.Dungeon)
     end
+end
+
+function SetInfoItemPos()
+    itemInfo.SetPanelPos("Title", 0, 407)
+    itemInfo.SetPanelPos("Level", 0, 336)
+    itemInfo.SetPanelPos("Target", 23, 298)
+    itemInfo.SetPanelPos("Output", 23, -62)
+    itemInfo.SetPanelPos("Details", -6, -228)
+    itemInfo.SetPanelPos("Button", 6, -433)
+    CSAPI.SetRTSize(itemInfo.layout, 579, -200)
 end
 
 ------------------------------------移动-----------------------------------
@@ -1827,10 +1736,6 @@ function InitAnim()
         local fade = ComUtil.GetCom(this["nodeAnim" .. i].gameObject, "ActionFade")
         table.insert(fades, fade)
     end
-    exerciseFadeL = ComUtil.GetCom(exerciseFade1, "ActionFade")
-    exerciseFadeR = ComUtil.GetCom(exerciseFade2, "ActionFade")
-    exerciseMoveL = ComUtil.GetCom(exerciseMove1, "ActionMoveByCurve")
-    exerciseMoveR = ComUtil.GetCom(exerciseMove2, "ActionMoveByCurve")
     exerciseFade = ComUtil.GetCom(exerciseFade3, "ActionFade")
     activityFade = ComUtil.GetCom(activityFade1, "ActionFade")
 end
@@ -1893,13 +1798,12 @@ function ShowMenuAnim(type)
     local isMenu = type == nil
     CSAPI.SetGOActive(menuAction,isMenu)
     if isMenu then
-        CSAPI.SetGOActive(blackAciton,true)
+        ShowAction(blackAciton)
         CSAPI.SetGOActive(menuView,true)
         menuFade:SetAlpha(1)
         exerciseFade:SetAlpha(1)
         MoveDailyItemL()     
     else  
-        CSAPI.SetGOActive(blackAciton,false)
         menuFade.target = this["SectionTypeItem" .. type].gameObject
         menuFade:Play(1,0,100,0)
         if curState == 1 then
@@ -1970,22 +1874,7 @@ end
 
 function ShowExerciseAnim()
     CSAPI.SetGOActive(exerciseAction.gameObject, true)
-end
-
-function ShowExerciseFade(cb)
-    exerciseFade:Play(1,0,200)
-    exerciseFadeL:Play(1,0,200)
-    exerciseFadeR:Play(1,0,200,0,function()
-        if cb then
-            cb()
-        end
-        --pos
-        exerciseMoveL:Play()
-        exerciseMoveR:Play()
-
-        exerciseFadeL:Play(0,1,200,150)
-        exerciseFadeR:Play(0,1,200,50)
-    end)
+    exerciseFade:Play()
 end
 
 function ShowActivityAnim()
@@ -2027,6 +1916,13 @@ function ActionBack(_cb)
             _cb()
         end
     end)
+end
+
+function ShowAction(go)
+    if not IsNil(go) then
+        CSAPI.SetGOActive(go,false)
+        CSAPI.SetGOActive(go,true)
+    end
 end
 
 ------------------------------------拖拽----------------------------------------

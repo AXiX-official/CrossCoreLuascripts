@@ -57,3 +57,13 @@ function Skill4400604:OnBefourCritHurt(caster, target, data)
 	-- 4400614
 	self:AddTempAttr(SkillEffect[4400614], caster, caster, data, "crit",0.004*math.max(count7-count8,0))
 end
+-- 特殊入场时(复活，召唤，合体)
+function Skill4400604:OnBornSpecial(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4400606
+	self:OwnerAddBuff(SkillEffect[4400606], caster, self.card, data, 1041)
+end

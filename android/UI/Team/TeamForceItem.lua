@@ -26,6 +26,7 @@ function Awake()
     dropClick=ComUtil.GetCom(dClick,"Image");
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.AIPreset_Use,OnUseAIPreset);
+    eventMgr:AddListener(EventType.Team_Raising_GoTeamView,OnGoTeamView)
 end
 
 --改变了AI策略，缓存编队信息
@@ -45,6 +46,20 @@ function OnUseAIPreset(eventData)
     end
 end
 
+function OnGoTeamView(teamIdx)
+    if not IsNil(gameObject) and teamIdx and teamData and teamData:GetIndex()==teamIdx and grids then
+        OnClickGrid(grids[1]);
+    end
+end
+
+
+function GetTeamIndex()
+    if teamData then
+        return teamData.index
+    else
+        return nil;
+    end
+end
 
 function SetTeamData(index)
     local skillId=nil
@@ -92,12 +107,7 @@ function SetTeamData(index)
             end
         end
     end
-    if teamData~=nil then
-        local haloStrength=teamData:GetHaloStrength();
-        CSAPI.SetText(txt_fight, tostring(teamData:GetTeamStrength()+haloStrength));
-    else
-        CSAPI.SetText(txt_fight,tostring(0))
-    end
+    CSAPI.SetText(txt_fight, tostring(GetTeamStrength()));
     if dCfg and dCfg.type==eDuplicateType.Teaching then
         forceSkill=dCfg.forceSkill and dCfg.forceSkill[data.id] or nil;
         if teamData then
@@ -108,6 +118,15 @@ function SetTeamData(index)
         SetSkillIcon(skillId);
     end
     TeamConfirmUtil.CreateGrids(teamData,grids,gridNode,OnClickGrid);
+end
+
+function GetTeamStrength()
+    if teamData~=nil then
+        local haloStrength=teamData:GetHaloStrength();
+        return teamData:GetTeamStrength()+haloStrength;
+    else
+        return 0
+    end
 end
 
 function Refresh(d)

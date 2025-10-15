@@ -108,6 +108,7 @@ function OnClickClose()
 	isClose = true
     CSAPI.ApplyAction(gameObject, "View_Close_Fade", function()
         view:Close()
+        PopupPackMgr:CheckByCondition({1})
     end)
 end
 

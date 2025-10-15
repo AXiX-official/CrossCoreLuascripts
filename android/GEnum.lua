@@ -134,6 +134,7 @@ CallPlrType.GetOpenDorm = 12
 CallPlrType.GetDorm = 13
 CallPlrType.PlrBindInvite = 14
 CallPlrType.PlrBindInviteAgree = 15
+CallPlrType.DupSupportUpdate = 16 -- 副本支援更新
 
 -------------------------------------------------------------------------------------------------
 -- 掉落类型
@@ -578,7 +579,6 @@ GenEnumNameByVal('eFriendStateName', eFriendState)
 -- 队伍下标起始值,与CfgTeamTypeEnum表中的起始下标一致
 eTeamType = {
     DungeonFight = 1, -- 副本队伍列表,队伍ID是1-6
-    RogueS = 50, --战力派遣 (50-59)
     Assistance = 20, -- 助战队伍信息，自己分享的助战卡牌列表
     PracticeAttack = 21, -- 军演练习攻击队伍
     PracticeDefine = 22, -- 军演练习防御队伍
@@ -590,7 +590,10 @@ eTeamType = {
     Rogue = 28,  --乱序演习
     TotalBattle=29,--总力战
     Preset = 30, -- 队伍预设索引起始值，从30开始到36
+    RogueS = 50, --战力派遣 (50-59)
     Colosseum = 60, --角斗场(60-61) 60:自选模式 61：随机模式
+    PVP = 62,       -- 实时自由匹配军演攻击队伍 62,63,64
+    PVPFriend = 65, -- 好友实时军演攻击队伍 65, 66, 67
     RogueT = 70,    --限制版爬塔 70-89 
     MultBattle=90,--多队战斗
     ForceFight = 10000 -- 强制上阵索引起始值
@@ -663,6 +666,8 @@ RealArmyType.Matrix = 5 -- 基地突袭
 RealArmyType.WorldBoss = 6 -- 世界boss
 RealArmyType.GuildFight = 7 -- 工会战
 RealArmyType.TeamBoss = 8 -- 组队boss
+
+GenEnumNameByVal('RealArmyTypeName', RealArmyType)
 
 -- 装备技能类型
 EquipSkillType = {}
@@ -1140,7 +1145,7 @@ TeamSelectType.Force = 3 -- 强制队员
 TeamOpenSetting = {}
 TeamOpenSetting.Normal = 1 -- 正常打开
 TeamOpenSetting.PVE = 2 -- pve编队
-TeamOpenSetting.PVP = 3 -- pvp编队
+TeamOpenSetting.PVP = 3 -- pvp编队 (自由匹配，好友匹配)
 TeamOpenSetting.Tower = 4 --爬塔编成
 TeamOpenSetting.Rogue = 5 --肉鸽
 TeamOpenSetting.TotalBattle=6--总力战
@@ -1149,6 +1154,7 @@ TeamOpenSetting.Colosseum = 8 --角斗场
 TeamOpenSetting.GlobalBoss= 9 --世界boss
 TeamOpenSetting.RogueT= 10 --限制版爬塔
 TeamOpenSetting.MultBattle= 11 --多队战斗
+TeamOpenSetting.PVPMirror= 12 --演习
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1427,6 +1433,8 @@ PlrMixIx.changeId = 73 -- 物品变动的日志Id
 PlrMixIx.equipRefresh = 74 -- 装备洗练结果数据
 PlrMixIx.multTeam = 75 -- 多队玩法活动数据
 PlrMixIx.maidCoffee = 76 -- 女仆咖啡活动数据
+PlrMixIx.levelBreakTicket = 77 -- 每日门票发放
+PlrMixIx.armyLive2d = 78 -- 军演看板是否动态
 
 
 -- 图鉴
@@ -1494,14 +1502,14 @@ eRecordType.GameMaxNum = 9
 eRecordType.GameLineNum = 10
 eRecordType.FullCacheTime = 11
 eRecordType.NextActiveZeroTime = 12
-eRecordType.ArmyPracticeStartTime = 13 --  [军演服使用] 当前季度军演开始时间
-eRecordType.ArmyIncreaseId = 14 --  [军演服使用] 自增id从1开始
-eRecordType.ArmyNextActiveZeroTime = 15 -- [军演服使用] 零点重置时间
-eRecordType.ArmyCalFinish = 16 -- [军演服使用] 是否在结算中 0 否 1 是
-eRecordType.ArmyCalFinishCnt = 17 -- [军演服使用] 已经结算的人数
-eRecordType.ArmyCalFinishIx = 18 -- [军演服使用] 结算进度值
-eRecordType.ArmyCalFinishOnceCnt = 19 -- [军演服使用] 结算进度值，每次结算的人数
-eRecordType.ArmyCalFinishUseTime = 20 -- [军演服使用] 结算使用的时间戳
+eRecordType.ArmyPracticeStartTime = 13    -- [军演服使用] 当前季度军演开始时间
+eRecordType.ArmyIncreaseId = 14           -- [军演服使用] 自增id从1开始
+eRecordType.ArmyNextActiveZeroTime = 15   -- [军演服使用] 零点重置时间
+eRecordType.ArmyCalFinish = 16            -- [军演服使用] 是否在结算中 0 否 1 是
+eRecordType.ArmyCalFinishCnt = 17         -- [军演服使用] 已经结算的人数
+eRecordType.ArmyCalFinishIx = 18          -- [军演服使用] 结算进度值
+eRecordType.ArmyCalFinishOnceCnt = 19     -- [军演服使用] 结算进度值，每次结算的人数
+eRecordType.ArmyCalFinishUseTime = 20     -- [军演服使用] 结算使用的时间戳
 eRecordType.OffLineMailMysqlTbChange = 21 -- [中心服] 玩家离线邮件转移表数据
 eRecordType.BindPlrActiveId = 22          -- [游戏服] 绑定活动id
 eRecordType.ZiLongPayDelIx = 23           -- [Code服使用]紫龙支付处理空订单的最大值
@@ -1510,6 +1518,10 @@ eRecordType.GlobalBossFindIx = 25         -- [中心服]新世界boss处理结�
 eRecordType.ResetDoubleRecharge = 26      -- [中心服]重置双倍充值次数设置
 eRecordType.ResetDoubleRechargeToken = 27 -- [中心服]重置双倍充值次数设置
 eRecordType.OneTypeCodeMultiUse = 28      -- [Code服使用]一个码多人使用
+eRecordType.FreeMatchPvpCfgid = 29        -- [军演服使用]自由pvp当前配置id
+eRecordType.LimitCodeActiveId = 30        -- [游戏服] 限量奖励任务活动ID
+eRecordType.FreeMatchJoinPlrCnt = 31      -- [军演服使用] 参与人数
+
 
 GmInitPlrType = {}
 GmInitPlrType.Item = 1 -- 物品
@@ -1620,6 +1632,7 @@ ShopGroup = {
     RegressionShop = 3001, -- 复归商店
     AbattoirShop = 4001, -- 角斗场商店
     LovePlusShop = 3018001, -- 爱相随商店
+    PopupShop = 7001, -- 触发礼包
 }
 
 ShopPriceKey={
@@ -1867,10 +1880,10 @@ eBadgedEventType.PassDupStar = 40 -- 角斗场通关获得星数
 --道具池相关
 --抽取类型
 ItemPoolExtractType={
-    RoundLoop=1,--轮数无限
-    RoundLimit=2,--轮数上限设置
-    Once=3,--只能抽一次
-    DropLoop=4,--按同一轮的配置无限抽取
+    RoundLoop=1,    --轮数无限
+    RoundLimit=2,   --轮数上限设置
+    Once=3,         --只能抽一次
+    DropLoop=4,     --按同一轮的配置无限抽取
     Control = 5,     --控制前N抽产出，有无限奖励
     ControlNotInfinite = 6     --控制前N抽产出，没有无限奖励
 }
@@ -2019,6 +2032,7 @@ eLovePlusUnLockType.Img = 2
 eLovePlusUnLockType.Chat = 3
 eLovePlusUnLockType.Label = 4
 eLovePlusUnLockType.Story = 5
+eLovePlusUnLockType.Shop = 6
 -----------------------------------------------------------------------------------------------------------------
 -- 角斗场状态
 eAbattoirState = {}
@@ -2110,19 +2124,38 @@ DungeonBgType.Normal = 1 --正常模式
 DungeonBgType.Change = 2 --背景切换模式
 
 -----------------------------------------------------------------------------------------------------------------
---爱相随解锁类型
-eLovePlusUnLockType = {}
-eLovePlusUnLockType.CG = 1 
-eLovePlusUnLockType.Img = 2
-eLovePlusUnLockType.Chat = 3
-eLovePlusUnLockType.Label = 4
-eLovePlusUnLockType.Story = 5
-eLovePlusUnLockType.Shop = 6
-
------------------------------------------------------------------------------------------------------------------
 -- 多队玩法
 eMultTeamState = {}
 eMultTeamState.NONE = 0
 eMultTeamState.START = 1
 eMultTeamState.SETTLE = 2
 eMultTeamState.OVER = 3
+
+-----------------------------------------------------------------------------------------------------------------
+--触发礼包类型
+ePopupType = {}
+ePopupType.PlrLevel = 1 --玩家等级达到X
+ePopupType.Skill = 2    --X个主动技能等级达到Y级
+ePopupType.Role = 3 --获得X个Y星角色
+ePopupType.PassDup = 4  --首次通关指定关卡
+ePopupType.TalentLevel = 5  --X个跃升天赋等级达到Y级
+ePopupType.Equip = 6    --获得X个Y品质芯片
+ePopupType.RoleLevel = 7    --X个角色等级达到Y级
+
+-----------------------------------------------------------------------------------------------------------------
+-- 
+eFreeMatchDef = {}
+eFreeMatchDef.rankLen = 100 -- 自由军演，排行榜长度
+
+
+
+-----------------------------------------------------------------------------------------------------------------
+-- 
+eDupPassTeamDef = {}
+eDupPassTeamDef.recordCnt = 10 -- 每个副本记录的数量
+
+-----------------------------------------------------------------------------------------------------------------
+-- pvp 累计任务计数类型
+ePVPTaskType = {}
+ePVPTaskType.Join = 1 -- 参与次数
+ePVPTaskType.Win = 2  -- 胜利次数

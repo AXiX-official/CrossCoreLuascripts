@@ -172,4 +172,9 @@ function this:GetTitle()
 	return self.icon_title or 1
 end
 
+function this:GetRolePanelId()
+	return self.role_panel_id or 1
+end
+
+
 return this 

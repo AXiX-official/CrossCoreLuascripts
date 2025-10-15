@@ -9,6 +9,8 @@ local isNotAssist=false;
 local slider=nil;
 local currCostHot=0;--当前消耗的热值
 local  currCostInfo=nil;
+local dungeonCfg=nil;
+local raisingInfo=nil;
 function Awake()
     -- slider=ComUtil.GetCom(hotSlider, "OutlineBar")
     eventMgr = ViewEvent.New();
@@ -21,6 +23,7 @@ function Awake()
     eventMgr:AddListener(EventType.Player_HotChange, SetEnterCost)
     eventMgr:AddListener(EventType.Bag_Update,SetEnterCost);
     eventMgr:AddListener(EventType.Fight_Enter_Fail,OnEnterFail)
+    eventMgr:AddListener(EventType.Team_Raising_GoBattle,OnGoBattle)
     -- eventMgr:AddListener(EventType.Team_Confirm_OpenSkill, OnClickSkill)
     CSAPI.SetGOActive(btnAISetting,true);
     CSAPI.SetGOActive(btnNavi,false)
@@ -72,7 +75,10 @@ function OnOpen()
     isNotAssist=data.isNotAssist;
     --读取强制NPC的id，该支援位只有队伍一存在
     local dungeonData= DungeonMgr:GetDungeonData(currDungeonID);
-    local dungeonCfg=Cfgs.MainLine:GetByID(currDungeonID)
+    dungeonCfg=Cfgs.MainLine:GetByID(currDungeonID)
+    if dungeonCfg~=nil then
+        DungeonMgr:SetCurrId1(dungeonCfg.id);
+    end
     local warnDesc=dungeonCfg.teamDescription
     if isNotAssist then
         warnDesc=teamMax>1 and LanguageMgr:GetByID(15076) or LanguageMgr:GetByID(15075)
@@ -134,6 +140,7 @@ function OnOpen()
     -- end
     Init();
     InitHotItem();
+    InitRaisingInfo();
     EventMgr.Dispatch(EventType.Guide_Trigger_View,data);--尝试触发引导
 end
 
@@ -220,6 +227,114 @@ function SetEnterCost()
 end
 
 function OnClickBattle()
+	if dungeonCfg and dungeonCfg.idCultivate then
+        local teamList=nil;
+        for k,v in ipairs(teamItems) do
+            if k<=teamMax and v.IsUse()==true then
+                local duplicateTeam=v.GetDuplicateTeamData();
+                local canBattle=v.CanBattle();
+                if duplicateTeam~=nil and canBattle==true and v.GetState()~=TeamConfirmItemState.UnUse then
+                    teamList=teamList or {};
+                    table.insert(teamList,TeamMgr:GetTeamData(v.GetTeamIndex()));
+                end
+            end
+        end
+        local raisingCfg=Cfgs.CultivateId:GetByID(dungeonCfg.idCultivate)
+        local result= FormationUtil.CheckRaising(teamList,raisingCfg);
+        local isHideDailyTips1 = TipsMgr:IsShowDailyTips(FormationUtil.RaisingDailyKey)
+        local isHideDailyTips2 = TipsMgr:IsShowDailyTips(FormationUtil.RaisingDailyKey2)
+        local key=dungeonCfg and "RaisingTips"..dungeonCfg.id or nil;
+        local isCurrTips=TipsMgr:IsShowDailyTips(key)
+        --如果两个窗口都被屏蔽，则不弹窗口
+        if result and dungeonCfg and dungeonCfg.idCultivate and data and data.isDirll~=true then
+            local isShowTips=false;
+            if isHideDailyTips1 and result.lessMemberID~=nil then
+                isShowTips=true;
+            elseif isHideDailyTips2 and result.raisingType~=nil and isCurrTips then
+                isShowTips=true;
+            end
+            if isHideDailyTips2 and isCurrTips~=true then
+                isHideDailyTips2=false
+            end
+            if isShowTips then
+                FormationUtil.OpenRaisingView(result,dungeonCfg,not isHideDailyTips1,not isHideDailyTips2);
+                do return end;
+            end
+        end
+    end
+    OnDungeon();
+end
+
+
+function OnGoBattle(eventData)
+     if not IsNil(gameObject) and eventData[1] and dungeonCfg and dungeonCfg.id==eventData[1] then
+        if eventData[2]~=true then
+            OnDungeon();
+        else
+            local key=dungeonCfg and "RaisingTips"..dungeonCfg.id or nil;
+            local isCurrTips=TipsMgr:IsShowDailyTips(key)
+            local isHideDailyTips2 = TipsMgr:IsShowDailyTips(FormationUtil.RaisingDailyKey2)
+            if raisingInfo and dungeonCfg and dungeonCfg.idCultivate and isFightCond~=true and data and data.isDirll~=true then
+                local isShowTips=false;
+                if isHideDailyTips2 and raisingInfo.raisingType~=nil and isCurrTips then
+                    isShowTips=true;
+                end
+                if isHideDailyTips2 and isCurrTips~=true then
+                    isHideDailyTips2=false
+                end
+                if isShowTips then
+                    FormationUtil.OpenRaisingView(raisingInfo,dungeonCfg,true,not isHideDailyTips2);
+                    do return end;
+                end
+            end
+            OnDungeon();
+        end
+    end
+end
+
+function OnClickRaising()
+    if raisingInfo and dungeonCfg and dungeonCfg.idCultivate then
+        FormationUtil.OpenRaisingView(raisingInfo,dungeonCfg,true,2);
+        TipsMgr:SaveDailyTips(key,true)
+    end
+end
+
+function InitRaisingInfo()
+    local isFightLess=false;
+    raisingInfo=nil;
+    if dungeonCfg and dungeonCfg.idCultivate and data and data.isDirll~=true then
+        local teamList=nil;
+        local targetFightVal=dungeonCfg.lvTips and tonumber(dungeonCfg.lvTips) or 0;
+        for k,v in ipairs(teamItems) do
+            if k<=teamMax and v.IsUse()==true then
+                local duplicateTeam=v.GetDuplicateTeamData();
+                local canBattle=v.CanBattle();
+                if v.GetTeamStrength()<targetFightVal then
+                    isFightLess=true;
+                end
+                if duplicateTeam~=nil and canBattle==true and v.GetState()~=TeamConfirmItemState.UnUse then
+                    teamList=teamList or {};
+                    table.insert(teamList,TeamMgr:GetTeamData(v.GetTeamIndex()));
+                end
+            end
+        end
+        if isFightLess==true then
+            local raisingCfg=Cfgs.CultivateId:GetByID(dungeonCfg.idCultivate)
+            raisingInfo= FormationUtil.CheckRaising(teamList,raisingCfg);
+        end
+        isFightCond=not isFightLess
+    end
+    -- LogError(raisingInfo)
+    if raisingInfo~=nil then
+        --根据类型显示培养不足的提示
+        CSAPI.SetGOActive(raisingObj,true)
+        -- CSAPI.SetText(txtRaising,LanguageMgr:GetByID(FormationUtil.RaisingTypeTips[raisingInfo.raisingType]));
+    else
+        CSAPI.SetGOActive(raisingObj,false)
+    end
+end
+
+function OnDungeon()
     --检测热值
     if currCostInfo then
         --读取消耗信息
@@ -232,6 +347,7 @@ function OnClickBattle()
             data:InitCfg(cid)
             local hasCount=BagMgr:GetCount(cid);
             if hasCount<num then
+                Tips.ShowTips(LanguageMgr:GetTips(8014,data:GetName()))
                 return;
             end
         else
@@ -248,7 +364,6 @@ function OnClickBattle()
    end
     local canBattle=true;
     local duplicateTeamDatas={};
-    local dungeonCfg=Cfgs.MainLine:GetByID(currDungeonID)
     local choosieIdx={};
     for k,v in ipairs(teamItems) do
         if k<=teamMax and v.IsUse()==true then
@@ -378,6 +493,7 @@ function OnRefresh()
         table.insert(list,{id=k,teamID=teamID,showClean=teamMax>1,forceNPC=npc,NPCList=assistNPCList,dungeonID=currDungeonID,currState=v.GetState(),state=state,parent=this,canClick=not isTeaching});
     end
     ItemUtil.AddItems("TeamConfirm/TeamListItem", teamItems, list, itemNode, nil, 1, nil)
+    InitRaisingInfo();
 end
 
 --设置AI寻路

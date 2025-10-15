@@ -45,6 +45,9 @@ function this:Init()
     self.ActiveEntryNews = {}
     EventMgr.AddListener(EventType.View_Lua_Opened, this.OnViewOpened)
     EventMgr.AddListener(EventType.View_Lua_Closed, this.OnViewClosed)
+
+    --首次打开客户端上报设置事件
+    SettingMgr:TrackEventsByFirst()
 end
 
 function this:Clear()
@@ -57,6 +60,7 @@ function this:Clear()
     -- self.saveDatas = nil
     -- self.ActiveEntryNews = nil
     self.isInit = nil
+    self.isShowSpineUI = false
     EventMgr.RemoveListener(EventType.View_Lua_Opened, this.OnViewOpened)
     EventMgr.RemoveListener(EventType.View_Lua_Closed, this.OnViewClosed)
     -- self:MenuBuyClear()
@@ -443,10 +447,12 @@ end
 
 -- 检测所有邀请tips
 function this:CheckInviteTips()
-    -- pvp
-    ExerciseFriendTool:CheckInvite()
-    -- 组队boss
-    TeamBossMgr:CheckInvite()
+    if(not GuideMgr:IsGuiding() and not self:IsSpineUI())then 
+        -- pvp
+        ExerciseFriendTool:CheckInvite()
+        -- 组队boss
+        --TeamBossMgr:CheckInvite()
+    end 
 end
 
 -- --当次登录界面是否打开过
@@ -852,6 +858,13 @@ end
 --是否已初始化
 function this:CheckIsInit()
     return self.isInit
+end
+
+function this:SpineUI(b)
+    self.isShowSpineUI = b
+end
+function this:IsSpineUI()
+    return self.isShowSpineUI
 end
 
 return this

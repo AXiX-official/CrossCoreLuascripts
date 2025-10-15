@@ -8,7 +8,7 @@ function Skill801000201:Init(skillID, card)
 end
 -- 执行技能
 function Skill801000201:DoSkill(caster, target, data)
-	-- 2109
+	-- 4005
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[2109], caster, target, data, 2109)
+	self:AddBuff(SkillEffect[4005], caster, target, data, 4005)
 end

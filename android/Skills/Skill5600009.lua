@@ -37,11 +37,16 @@ function Skill5600009:OnBorn(caster, target, data)
 end
 -- 特殊入场时(复活，召唤，合体)
 function Skill5600009:OnBornSpecial(caster, target, data)
+	-- 9763
+	if SkillJudger:CasterIsUnite(self, caster, self.card, false) then
+	else
+		return
+	end
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 5600013
-	self:AddBuff(SkillEffect[5600013], caster, self.card, data, 5600013)
+	-- 5600024
+	self:AddBuff(SkillEffect[5600024], caster, self.card, data, 5600013)
 end

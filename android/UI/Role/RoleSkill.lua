@@ -5,9 +5,15 @@ local iconColors = {"white", "green", "blue", "purple", "yellow", "red"};
 function Awake()
     EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleSkill");
     AdaptiveConfiguration.SetLuaObjUIFit("RoleSkill", gameObject)
+    --
+    eventMgr = ViewEvent.New()    
+    eventMgr:AddListener(EventType.Menu_PopupPack, function ()
+        PopupPackMgr:CheckByCondition({2})
+    end)
 end
 
 function OnDestroy()
+    eventMgr:ClearListener()
     AdaptiveConfiguration.LuaView_Lua_Closed("RoleSkill")
 end
 

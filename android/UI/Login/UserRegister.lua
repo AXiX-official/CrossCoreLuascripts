@@ -161,18 +161,16 @@ function RegisterAccount()
 	if IsAccount() then
 		if serverInfo.state~=ServerListState.Maintentance then
 			EventMgr.Dispatch(EventType.Login_Show_Mask);
-			local ipAndPort=GetLoginIpInfo(serverInfo);
-            local serverIp,serverPort = GetIpAndPort(ipAndPort)
-            serverPort = serverPort or serverInfo.port;
+			local serverIp,serverPort =GetLoginIpInfo(serverInfo);
+			serverPort = serverPort or serverInfo.port;
 			NetMgr.net:Connect(serverIp, serverPort, function()
 				LoginProto:RegisterAccount(accountName, pwd, RegisterSuccess);
 			end);
 		else
 			InitServerInfo(function() --刷新服务器状态
 				serverInfo =GetCurrentServer();
-				local ipAndPort=GetLoginIpInfo(serverInfo);
-                local serverIp,serverPort = GetIpAndPort(ipAndPort)
-                serverPort = serverPort or serverInfo.port;
+				local serverIp,serverPort =GetLoginIpInfo(serverInfo);
+				serverPort = serverPort or serverInfo.port;
 				if serverInfo.state~=ServerListState.Maintentance then
 					EventMgr.Dispatch(EventType.Login_Show_Mask);
 					NetMgr.net:Connect(serverIp, serverPort, function()

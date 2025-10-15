@@ -161,6 +161,7 @@ function SkillFilter:Teammate(oSkill, caster, target, teamID)
 		local team = mgr:GetTeam(target:GetTeamID())
 		return team.filter:GetAll(target)
 	elseif teamID == 1 then --1施法方
+	--ASSERT(caster)
 		local team = mgr:GetTeam(caster:GetTeamID())
 		return team.filter:GetAll(caster)
 	end
@@ -283,6 +284,15 @@ function SkillJudger:CasterIsOwnSummon(oSkill, caster, target, res)
 	end
 	return not res
 end
+
+-- 攻击方是合体怪
+function SkillJudger:CasterIsUnite(oSkill, caster, target, res)
+	if caster:IsUnite() then
+		return res
+	end
+	return not res
+end
+
 
 -- 受击方是自己
 function SkillJudger:TargetIsSelf(oSkill, caster, target, res)
@@ -2053,9 +2063,13 @@ function FightAPI:LimitDamage(effect, caster, target, data, percenthp, percentat
 
 	local hp2 = self:CalcCure(caster, target, 2, percenthp) -- 受击者血量
 	local hp3 = self:CalcCure(caster, target, 3, percentatt) -- 攻击者攻击
+
 	-- [4.2版本]
 	local bIsLive = target:IsLive() -- 记录原来的状态, 死了就不再添加死亡列表
-	local damageAdjust = caster:Get("damage") * target:Get("bedamage")
+	local coefficient = 1+(caster:GetValue("LimitDamage") or 0) -- 限制真实伤害
+	local damageAdjust = caster:Get("damage") * target:Get("bedamage") * coefficient
+
+	-- local damageAdjust = caster:Get("damage") * target:Get("bedamage")
 	LogDebugEx(string.format("hp=%s, attack=%s damage=%s bedamage=%s damageAdjust= %s",
 	hp2, hp3, caster:Get("damage") , target:Get("bedamage"), damageAdjust))
 	local hp = math.floor(math.min(hp2, hp3) * damageAdjust)
@@ -2063,6 +2077,7 @@ function FightAPI:LimitDamage(effect, caster, target, data, percenthp, percentat
 	local isdeath, shield, num = target:AddHpNoShield(-hp, caster)
 	self.log:Add({api="BufferDamage", death = isdeath, targetID = target.oid, casterID = caster.oid,
 	attr = "hp", hp = target:Get("hp"), add = -num, effectID = effect.apiSetting, isReal = true}) --isReal真实伤害
+
 	-- [4.2版本]
 	LogDebugEx("FightAPI:AddHp bNotDeathEvent")
 	local isdeath = not target:IsLive()
@@ -2204,7 +2219,7 @@ function FightAPI:ChangeSkill(effect, caster, target, data, nIndex, skillID)
 	LogTable(skillMgr.list, "ChangeSkill before")
 
 	for i,v in ipairs(skillMgr.skills) do
-		LogDebugEx("技能", i, v.id, v.upgrade_type, v.main_type)
+		LogDebugEx("技能", i, v.id, v.upgrade_type, v.main_type, skillID)
 		-- 找到指定技能
 
 		if (v.upgrade_type and v.upgrade_type == nIndex) then 

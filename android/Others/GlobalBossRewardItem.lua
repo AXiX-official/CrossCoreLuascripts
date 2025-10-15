@@ -25,7 +25,6 @@ function SetBossKill()
         local cfgMail = Cfgs.CfgMail:GetByID(info.mailId)
         if cfgMail and cfgMail.rewards then
             ShowReward(cfgMail.rewards)
-           
         end
     end
 end
@@ -47,6 +46,7 @@ function SetRankReward()
             ShowReward(cfgMail.rewards)
         end
     end
+    CSAPI.SetAnchor(grid,-100,40)
 end
 
 function ShowReward(rewards)

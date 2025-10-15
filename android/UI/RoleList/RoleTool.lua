@@ -54,39 +54,47 @@ function this:GetMaxBreakLv()
 end
 
 -- =========================立绘、live2d--------------------------------------------------------------------------------
+--混合
+-- function this.LoadImgByID(_imgGo, _modelId, _posType, _callBack)
+--     if (_modelId < 10000) then
+--         this.LoadMulImg(_imgGo, _modelId, _posType, _callBack)
+--     else 
+--         this.LoadImg(_imgGo, _modelId, _posType, _callBack)
+--     end 
+-- end
 
 -- 混合加载（无语言表情的不可调用，直接用this.LoadImg）
 function this.AddRole(_parent, _playCB, _endCB, _needClick)
     if (_parent == nil) then
         return
     end
-    local go = ResUtil:CreateUIGO("Common/CardIconItem", _parent.transform)
+    local go = ResUtil:CreateUIGO("Common/RoleSpineItem0", _parent.transform)
     local lua = ComUtil.GetLuaTable(go)
-    lua.Init(_playCB, _endCB, _needClick)
+    lua.Init(_playCB, _endCB, _needClick,false)
     return lua
 end
 
--- 仅加载 img（含表情）
-function this.AddImg(_parent, _playCB, _endCB, _needClick)
-    if (_parent == nil) then
-        return
-    end
-    local go = ResUtil:CreateUIGO("Common/CardImgItem", _parent.transform)
-    local lua = ComUtil.GetLuaTable(go)
-    lua.Init(_playCB, _endCB, _needClick)
-    return lua
-end
+-- -- 仅加载 img（含表情）
+-- function this.AddImg(_parent, _playCB, _endCB, _needClick)
+--     if (_parent == nil) then
+--         return
+--     end
+--     local go = ResUtil:CreateUIGO("Common/CardImgItem", _parent.transform)
+--     local lua = ComUtil.GetLuaTable(go)
+--     lua.Init(_playCB, _endCB, _needClick)
+--     return lua
+-- end
 
--- 仅加载l2d
-function this.AddLive2D(_parent, _playCB, _endCB, _needClick)
-    if (_parent == nil) then
-        return
-    end
-    local go = ResUtil:CreateUIGO("Common/CardLive2DItem", _parent.transform)
-    local lua = ComUtil.GetLuaTable(go)
-    lua.Init(_playCB, _endCB, _needClick)
-    return lua
-end
+-- -- 仅加载l2d
+-- function this.AddLive2D(_parent, _playCB, _endCB, _needClick)
+--     if (_parent == nil) then
+--         return
+--     end
+--     local go = ResUtil:CreateUIGO("Common/CardLive2DItem", _parent.transform)
+--     local lua = ComUtil.GetLuaTable(go)
+--     lua.Init(_playCB, _endCB, _needClick)
+--     return lua
+-- end
 
 -- 仅加载图片（只有立绘）
 function this.LoadImg(_imgGo, _modelId, _posType, _callBack)
@@ -139,33 +147,33 @@ function this.AddMulRole(_parent, _playCB, _endCB, _needClick)
     if (_parent == nil) then
         return
     end
-    local go = ResUtil:CreateUIGO("Common/MulIconItem", _parent.transform)
+    local go = ResUtil:CreateUIGO("Common/RoleSpineItem0", _parent.transform)
     local lua = ComUtil.GetLuaTable(go)
-    lua.Init(_playCB, _endCB, _needClick)
+    lua.Init(_playCB, _endCB, _needClick,true)
     return lua
 end
 
--- 仅加载 img（含表情）
-function this.AddMulImg(_parent, _playCB, _endCB)
-    if (_parent == nil) then
-        return
-    end
-    local go = ResUtil:CreateUIGO("Common/MulImgItem", _parent.transform)
-    local lua = ComUtil.GetLuaTable(go)
-    lua.Init(_playCB, _endCB)
-    return lua
-end
+-- -- 仅加载 img（含表情）
+-- function this.AddMulImg(_parent, _playCB, _endCB)
+--     if (_parent == nil) then
+--         return
+--     end
+--     local go = ResUtil:CreateUIGO("Common/MulImgItem", _parent.transform)
+--     local lua = ComUtil.GetLuaTable(go)
+--     lua.Init(_playCB, _endCB)
+--     return lua
+-- end
 
--- 仅加载l2d
-function this.AddMulLive2D(_parent, _playCB, _endCB)
-    if (_parent == nil) then
-        return
-    end
-    local go = ResUtil:CreateUIGO("Common/MulLive2DItem", _parent.transform)
-    local lua = ComUtil.GetLuaTable(go)
-    lua.Init(_playCB, _endCB)
-    return lua
-end
+-- -- 仅加载l2d
+-- function this.AddMulLive2D(_parent, _playCB, _endCB)
+--     if (_parent == nil) then
+--         return
+--     end
+--     local go = ResUtil:CreateUIGO("Common/MulLive2DItem", _parent.transform)
+--     local lua = ComUtil.GetLuaTable(go)
+--     lua.Init(_playCB, _endCB)
+--     return lua
+-- end
 
 -- 仅加载图片（只有立绘）
 function this.LoadMulImg(_imgGo, _modelId, _posType, _callBack)

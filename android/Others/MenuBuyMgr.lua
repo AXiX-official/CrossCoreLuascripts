@@ -37,7 +37,7 @@ end
 -- 3、ID:234 【在线期间进入，后进行了2场任意战斗】
 -- 4：ID:5  【到点弹出和销毁（强制）】
 -- 5、ID:6  【到点弹出和销毁（强制）；不可领取变可领取（强制)】
--- (时间检测都用ConditionCheck2，充值检测用ConditionCheck3)
+-- (结束时间检测都用ConditionCheck2，充值检测用ConditionCheck3)
 function this:ConditionCheck(type, elseData)
     if (type == 1) then
         if (not self.loginCheck) then
@@ -71,7 +71,7 @@ function this:ConditionCheck(type, elseData)
     end
 end
 
--- 时间检测 --id: 5、6  时间：GetOpenEndTimeInfo
+-- 结束时间检测 --id: 5、6  时间：GetOpenEndTimeInfo
 function this:ConditionCheck2(id)
     local data = self.datas[id]
     if (data:IsEnd()) then
@@ -97,6 +97,14 @@ function this:ConditionCheck4(id, proto)
         data:SetTimes(proto.openTime, proto.closeTime)
         data:SetAmount(math.floor(payRate / 100))
         -- EventMgr.Dispatch(EventType.MenuBuy_RechargeCB)
+    end
+end
+
+--在线期间进入检测 6 
+function this:ConditionCheck5(id)
+    local data = self.datas[id]
+    if (id == 6 and data) then
+       data:SetPush() 
     end
 end
 
@@ -143,6 +151,7 @@ function this:GetCurData()
     if (data) then
         if (self.oldID and self.oldID ~= data:GetID()) then
             data:SetOnlineIn()
+            self:ConditionCheck5(data:GetID())
         end
         self.oldID = data:GetID()
     end

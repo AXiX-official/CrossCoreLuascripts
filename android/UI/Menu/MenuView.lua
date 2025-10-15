@@ -93,8 +93,9 @@ local skinRebateShowTime = nil
 local skinRebateRefreshTime = nil
 local questionnaireTime = nil
 local puzzleNextInfo = nil;
-local isShowSpineUI = false
 
+local exerciseRTime = nil
+local popupPackTime = nil
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
     fill_lv = ComUtil.GetCom(fillLv, "Image")
@@ -211,6 +212,8 @@ function InitListener()
     -- spineUI动画进入与退出
     eventMgr:AddListener(EventType.Menu_SpineUI, SpineUI)
     eventMgr:AddListener(EventType.Riddle_Data_Ret, SetLTSV)
+    -- 点触礼包新增或者被购买
+    eventMgr:AddListener(EventType.Menu_PopupPack, SetPopupPack)
 end
 
 function OnDestroy()
@@ -222,7 +225,7 @@ end
 
 function Update()
     -- 展示立绘 
-    if (isHideUI and not isShowSpineUI) then
+    if (isHideUI and not MenuMgr:IsSpineUI()) then
         if (CS.UnityEngine.Input.GetMouseButton(0)) then
             showTime = Time.time + 1.5
             CSAPI.SetGOActive(btnBack, true)
@@ -270,7 +273,7 @@ function Update()
         end
     end
     -- 自动播放台词
-    if (not voicePlaying and curTime > nextPlayTime and mainIconItem and mainIconItem.modelId > 10000) then
+    if (not voicePlaying and curTime > nextPlayTime and mainIconItem and mainIconItem:GetModelID() > 10000) then
         nextPlayTime = curTime + 180
         if (CheckIsTop()) then
             mainIconItem.PlayVoice()
@@ -324,7 +327,7 @@ function Update()
     -- 待机界面
     if (menuStandbyTimer and Time.time > menuStandbyTimer) then
         menuStandbyTimer = nil
-        if (openViews["Guide"] ~= nil or not CheckIsTop()) then
+        if (openViews["Guide"] ~= nil or not CheckIsTop() or MenuMgr:IsSpineUI()) then
             menuStandbyTimer = MenuMgr:GetNextStandbyTimer()
         else
             CSAPI.OpenView("MenuStandby")
@@ -396,6 +399,18 @@ function Update()
         ActivePuzzleProto:GetPuzzleData(puzzleNextInfo.id)
         puzzleNextInfo = PuzzleMgr:GetNextInfo();
     end
+    --pvp
+    if(exerciseRTime~=nil and curTime >= exerciseRTime)then 
+        exerciseRTime = ExerciseRMgr:CheckEerciseRTime()
+        EventMgr.Dispatch(EventType.ExerciseR_End)
+    end 
+    -- 点触礼包
+    if (popupPackTime ~= nil) then
+        if (curTime >= popupPackTime) then
+            popupPackTime = PopupPackMgr:GetMinTime()
+        end
+        SetPopupPackBtn()
+    end
     -- 静默下载
     UpdateSilentDownloadProgress()
 end
@@ -447,6 +462,8 @@ function InitTimers()
     skinLimitTime = RoleSkinMgr:GetSkinMinLimitTime()
     questionnaireTime = QuestionnaireMgr:GetRefreshTime()
     puzzleNextInfo = PuzzleMgr:GetNextInfo()
+    exerciseRTime = ExerciseRMgr:CheckEerciseRTime()
+    popupPackTime = PopupPackMgr:GetMinTime()
 end
 
 function RefreshPanel()
@@ -493,12 +510,14 @@ function PlayUIAnimEnd()
     if (not isGuide) then
         PlayerClient:ApplyChangeLine() -- 切线
     end
+    -- 
+    MenuMgr:CheckInviteTips() --理论上没有引导都可以弹出
     --
     if (not CheckIsTop()) then
         return
     end
     -- 检测邀请
-    MenuMgr:CheckInviteTips()
+    --MenuMgr:CheckInviteTips()
 
     -- 引导相关（有引导时，在关闭引导界面时会触发OnViewClosed）
     local b = false
@@ -956,6 +975,7 @@ function SetRT()
     SetHot()
     SetMenuBuy()
     SetSkinRebate()
+    SetPopupPackBtn()
 end
 function SetMoneys()
     for i, v in ipairs(moneyIDs) do
@@ -1158,10 +1178,19 @@ function EActivityGetCB()
         return true
     end
 
+    --点触礼包
+    if(ShowPopupPack())then 
+        return true
+    end
+
     -- 皮肤是否过期
     RoleSkinMgr:CheckLimitSkin()
 
     CSAPI.SetGOActive(mask, false)
+
+    -- 检测邀请
+    --MenuMgr:CheckInviteTips()
+
     return false
 end
 
@@ -1202,7 +1231,7 @@ end
 -- 登录语言
 function PlayLoginVoice()
     local isPlay = false
-    if (mainIconItem and mainIconItem.modelId > 10000 and isChangeImgPlayVoice) then
+    if (mainIconItem and mainIconItem:GetModelID() > 10000 and isChangeImgPlayVoice) then
         if (PlayerClient:IsPlayerBirthDay() and not PlayerClient:IsPlayBirthDayVoice()) then
             mainIconItem.PlayVoice(RoleAudioType.birthday) -- 玩家生日
         elseif (MenuMgr:CheckIsFightVier()) then
@@ -1501,7 +1530,7 @@ end
 
 -- b:进场
 function Anim_uis(b, isPlay)
-    if (isPlay and anim_uis~=nil and gameObject~=nil) then
+    if (isPlay and anim_uis ~= nil and gameObject ~= nil) then
         local animNam = b and "uis_in" or "uis_hidden"
         anim_uis:Play(animNam)
         --
@@ -1791,33 +1820,39 @@ function SpineUI(b)
     else
         OnClickBack()
     end
-    isShowSpineUI = b
+    MenuMgr:SpineUI(b)
 end
 
--- function RecordAB(ids)
---     local abNames = {}
---     for k, v in ipairs(ids) do
---         if (v and v ~= 0) then
---             local cfgModel = nil
---             if (v > 10000) then
---                 cfgModel = Cfgs.character:GetByID(v)
---             else
---                 cfgModel = Cfgs.CfgArchiveMultiPicture:GetByID(v)
---             end
---             -- 
---             table.insert(abNames, GetABName(v, "img", cfgModel.img))
---             if (cfgModel.l2dName) then
---                 table.insert(abNames, GetABName(v, "l2d", cfgModel.l2dName))
---             end
---         end
---     end
---     return abNames
--- end
+function SetPopupPackBtn()
+    CSAPI.SetGOActive(btnPopupPack, popupPackTime ~= nil)
+    if(popupPackTime ~= nil)then 
+        local needTime = popupPackTime - TimeUtil:GetTime()
+        CSAPI.SetText(txtPopupPack, TimeUtil:GetTimeStr(needTime <= 0 and 0 or needTime))
+    end 
+end
 
--- function GetABName(id, abType, abName)
---     if (id > 10000) then
---         abName = (abType == "img" and "textures_bigs_character_" or "prefabs_spine_") .. abName
---     else
---         abName = (abType == "img" and "textures_bigs_uis_multiimg_" or "prefabs_spine_") .. abName
---     end
--- end
+-- 点触礼包 新增或被购买 
+function SetPopupPack()
+    popupPackTime = PopupPackMgr:GetMinTime()
+    SetPopupPackBtn()
+    if (openViews["Guide"] == nil and CheckIsTop()) then
+        ShowPopupPack()
+    end
+end
+
+-- 自动检测弹出
+function ShowPopupPack()
+    if(PopupPackMgr:CheckNeedShow())then 
+        if(not CSAPI.IsViewOpen("PopupPackView"))then 
+            --CSAPI.OpenView("PopupPackView")
+            PopupPackMgr:ToshowView("冷启动")
+            return true
+        end
+    end
+    return false
+end
+-- 点击弹出
+function BtnPopupPack()
+    --CSAPI.OpenView("PopupPackView")
+    PopupPackMgr:ToshowView("点击入口")
+end

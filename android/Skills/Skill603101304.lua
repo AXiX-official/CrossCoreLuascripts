@@ -36,7 +36,7 @@ function Skill603101304:OnAttackOver(caster, target, data)
 	-- 8722
 	local count722 = SkillApi:GetCount(self, caster, target,2,603100101)
 	-- 603101321
-	self:LimitDamage(SkillEffect[603101321], caster, target, data, 1,0.75*count722)
+	self:LimitDamage(SkillEffect[603101321], caster, target, data, 1.1,0.75*count722)
 	-- 603101322
 	self:DelBufferForce(SkillEffect[603101322], caster, target, data, 603100101)
 end

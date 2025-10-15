@@ -165,6 +165,11 @@ GameMsg.map["sPairStringInt"] = {
 	{ "string","uint",  },
 	{ "first", "second",},
 }
+GameMsg.map["sPvpCardsData"] = {
+	--        卡牌的唯一id 名字     技能         等级    跃升等级[以前的突破等级] 强化等级          血量   经验   性能（缓存显示、军演）使用 使用的皮肤 皮肤l2d     其他形态皮肤 皮肤l2d       副天赋       卡牌其他信息                                                                                                                  
+	{ "uint", "uint",      "string","array|uint","uint", "uint",              "uint",           "uint","uint","float",              "uint",    "byte",     "uint",      "byte",       "json",      "struts|sCardMixData","int",   "int",  "int",    "int",  "float",    "float","float","float", "int","int","float",  "float",   },
+	{ "cfgid","cid",       "name",  "skills",    "level","break_level",       "intensify_level","hp",  "exp", "performance",        "skin",    "skinIsl2d","skin_a",    "skinIsl2d_a","sub_talent","mix_data",          "attack","maxhp","defense","speed","crit_rate","crit", "hit",  "resist","np", "sp", "sp_race","sp_race2",},
+}
 GameMsg.map["SystemProto:ServerError"] = {
 	--账号     
 	{ "string",},
@@ -706,9 +711,9 @@ GameMsg.map["sPosData"] = {
 	{ "fuid",        "cid",     "row", "col", },
 }
 GameMsg.map["FightProto:InBattle"] = {
-	--副本类型 副本ID         
-	{ "byte",  "int",         },
-	{ "type",  "nDuplicateID",},
+	--副本类型 副本ID         军演地址信息         
+	{ "byte",  "int",         "struts|sFightAddress",},
+	{ "type",  "nDuplicateID","addr",              },
 }
 GameMsg.map["FightProto:UseProp"] = {
 	--对象id 道具oid    道具类型 使用道具额外数据 
@@ -1292,7 +1297,7 @@ GameMsg.map["PlayerProto:UseItemRet"] = {
 }
 GameMsg.map["TeamItemData"] = {
 	--卡牌的唯一id 位置    行      列      卡牌的信息(实时战斗才设置) 策略             是否是NPC 
-	{ "uint",      "byte", "short","short","struts|sCardsData", "byte",          "bool",   },
+	{ "uint",      "byte", "short","short","struts|sPvpCardsData","byte",          "bool",   },
 	{ "cid",       "index","row",  "col",  "card_info",         "nStrategyIndex","bIsNpc", },
 }
 GameMsg.map["TeamItem"] = {
@@ -2701,7 +2706,7 @@ GameMsg.map["ArmyProto:GetPracticeInfo"] = {
 	{ "selfInfo",      "listInfo",      },
 }
 GameMsg.map["ArmyProto:GetPracticeInfoRet"] = {
-	--                                          获取自己军演信息 是否获取对手列表 第几个赛季 战绩简单信息    
+	--自己的军演信息       对手军演信息列表     获取自己军演信息 是否获取对手列表 第几个赛季 战绩简单信息    
 	{ "struts|sPracticeInfo","list|sPracticeObjInfo","bool",          "bool",          "short",   "json",         },
 	{ "info",              "objs",              "selfInfo",      "listInfo",      "army_ix", "fightBaseLogs",},
 }
@@ -2731,9 +2736,9 @@ GameMsg.map["ArmyProto:GetPracticeOtherTeam"] = {
 	{ "uid", "is_robot",},
 }
 GameMsg.map["ArmyProto:GetPracticeOtherTeamRet"] = {
-	--对方队伍          id     是否机器人 
-	{ "struts|TeamItem","long","byte",    },
-	{ "team",           "uid", "is_robot",},
+	--对方队伍          id     是否机器人 玩家信息             
+	{ "struts|TeamItem","long","byte",    "struts|sPracticeObjInfo",},
+	{ "team",           "uid", "is_robot","info",              },
 }
 GameMsg.map["ArmyProto:GetPracticeList"] = {
 	--开始排名，最小1 结束排名   
@@ -2744,136 +2749,6 @@ GameMsg.map["ArmyProto:GetPracticeListRet"] = {
 	--排名列表             最大排名   队伍信息             下次刷新时间 
 	{ "list|sPracticeObjInfo","byte",    "list|sPracticeBaseTeam","uint",      },
 	{ "objs",              "max_rank","teamInfos",         "tNextFlush",},
-}
-GameMsg.map["sInviteInfo"] = {
-	--好友id 是否取消    邀请时间      
-	{ "long","bool",     "uint",       },
-	{ "uid", "is_cancel","invite_time",},
-}
-GameMsg.map["sInviteResponeInfo"] = {
-	--好友id 是否接受     
-	{ "long","bool",      },
-	{ "uid", "is_receive",},
-}
-GameMsg.map["ArmyProto:InviteFriend"] = {
-	--批量操作           
-	{ "list|sInviteInfo",},
-	{ "ops",             },
-}
-GameMsg.map["ArmyProto:InviteFriendRet"] = {
-	--批量操作           
-	{ "list|sInviteInfo",},
-	{ "ops",             },
-}
-GameMsg.map["ArmyProto:BeInvite"] = {
-	--好友id 对方队伍          对方排名 邀请时间      
-	{ "long","struts|TeamItem","uint",  "uint",       },
-	{ "uid", "team",           "rank",  "invite_time",},
-}
-GameMsg.map["ArmyProto:BeInviteRet"] = {
-	--批量操作             
-	{ "list|sInviteResponeInfo",},
-	{ "ops",               },
-}
-GameMsg.map["ArmyProto:BeInviteRespond"] = {
-	--好友id 是否接受     对方队伍          对方排名 
-	{ "long","bool",      "struts|TeamItem","uint",  },
-	{ "uid", "is_receive","team",           "rank",  },
-}
-GameMsg.map["ArmyProto:StartRealArmy"] = {
-	--改变位置的队伍    
-	{ "struts|TeamItem",},
-	{ "team",           },
-}
-GameMsg.map["ArmyProto:StartRealArmyRet"] = {
-	--准备好的人的Id 准备好的队伍      
-	{ "long",        "struts|TeamItem",},
-	{ "uid",         "team",           },
-}
-GameMsg.map["ArmyProto:RealTimeFightFinish"] = {
-	--结果     RealArmyType 是否强行退出  
-	{ "bool",  "byte",      "bool",       },
-	{ "bIsWin","type",      "isForceOver",},
-}
-GameMsg.map["ArmyProto:FightAddress"] = {
-	--ip       端口    战斗序号     服务器id 
-	{ "string","short","uint",      "uint",  },
-	{ "ip",    "port", "fightIndex","svrId", },
-}
-GameMsg.map["ArmyProto:FightServerInit"] = {
-	--自己的id   战斗序号     服务器id 
-	{ "long",    "uint",      "uint",  },
-	{ "self_uid","fightIndex","svrId", },
-}
-GameMsg.map["ArmyProto:FightServerInitRet"] = {
-	--
-	{ },
-	{ },
-}
-GameMsg.map["ArmyProto:RealArmyLogout"] = {
-	--好友id RealArmyType 
-	{ "long","byte",      },
-	{ "uid", "type",      },
-}
-GameMsg.map["ArmyProto:RealArmyStarCountDown"] = {
-	--RealArmyType 结束时间   对方的id 自己是否发起邀请者 
-	{ "byte",      "uint",    "long",  "bool",            },
-	{ "type",      "end_time","uid",   "is_inviter",      },
-}
-GameMsg.map["ArmyProto:JoinFreeArmy"] = {
-	--
-	{ },
-	{ },
-}
-GameMsg.map["ArmyProto:JoinFreeArmyRet"] = {
-	--战胜次数  战败次数   
-	{ "uint",   "uint",    },
-	{ "win_cnt","lost_cnt",},
-}
-GameMsg.map["ArmyProto:QuitFreeArmy"] = {
-	--
-	{ },
-	{ },
-}
-GameMsg.map["ArmyProto:QuitFreeArmyRet"] = {
-	--
-	{ },
-	{ },
-}
-GameMsg.map["ArmyProto:FreeArmyMatch"] = {
-	--对手id 队伍信息          战胜次数  战败次数                     头像框       最后设置的角色看板ID          对方排名 性别序号      玩家称号     
-	{ "uint","struts|TeamItem","uint",   "uint",    "uint", "uint",   "uint",      "uint",              "string","uint",  "byte",       "uint",      },
-	{ "uid", "team",           "win_cnt","lost_cnt","level","icon_id","icon_frame","role_panel_id",     "name",  "rank",  "sel_card_ix","icon_title",},
-}
-GameMsg.map["ArmyProto:GetSelfPracticeInfo"] = {
-	--
-	{ },
-	{ },
-}
-GameMsg.map["ArmyProto:GetSelfPracticeInfoRet"] = {
-	--                     第几个赛季 
-	{ "struts|sPracticeInfo","short",   },
-	{ "info",              "army_ix", },
-}
-GameMsg.map["sFreeArmyVS"] = {
-	--长度为2的两个人信息  
-	{ "list|sPracticeObjInfo",},
-	{ "plrs",              },
-}
-GameMsg.map["ArmyProto:FreeArmyFightList"] = {
-	--
-	{ },
-	{ },
-}
-GameMsg.map["ArmyProto:FreeArmyFightListRet"] = {
-	--                                        
-	{ "list|sFreeArmyVS","list|sPracticeObjInfo",},
-	{ "fightings",       "waitings",          },
-}
-GameMsg.map["ArmyProto:QuitArmy"] = {
-	--
-	{ },
-	{ },
 }
 GameMsg.map["ArmyProto:BuyAttackCnt"] = {
 	--购买次数 
@@ -2909,6 +2784,191 @@ GameMsg.map["ArmyProto:SetRolePanelRet"] = {
 	--军演立绘id      军演立绘live2d 
 	{ "uint",         "byte",        },
 	{ "role_panel_id","live2d",      },
+}
+GameMsg.map["ArmyProto:GetSelfPracticeInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["ArmyProto:GetSelfPracticeInfoRet"] = {
+	--                     第几个赛季 
+	{ "struts|sPracticeInfo","short",   },
+	{ "info",              "army_ix", },
+}
+GameMsg.map["sInviteInfo"] = {
+	--好友id 是否取消    邀请时间      
+	{ "long","bool",     "uint",       },
+	{ "uid", "is_cancel","invite_time",},
+}
+GameMsg.map["sInviteResponeInfo"] = {
+	--好友id 是否接受     
+	{ "long","bool",      },
+	{ "uid", "is_receive",},
+}
+GameMsg.map["ArmyProto:InviteFriend"] = {
+	--批量操作           
+	{ "list|sInviteInfo",},
+	{ "ops",             },
+}
+GameMsg.map["ArmyProto:InviteFriendRet"] = {
+	--批量操作           
+	{ "list|sInviteInfo",},
+	{ "ops",             },
+}
+GameMsg.map["ArmyProto:BeInvite"] = {
+	--好友id 邀请时间      
+	{ "long","uint",       },
+	{ "uid", "invite_time",},
+}
+GameMsg.map["ArmyProto:BeInviteRet"] = {
+	--批量操作             
+	{ "list|sInviteResponeInfo",},
+	{ "ops",               },
+}
+GameMsg.map["ArmyProto:BeInviteRespond"] = {
+	--好友id 是否接受     
+	{ "long","bool",      },
+	{ "uid", "is_receive",},
+}
+GameMsg.map["sFreeArmyMatch"] = {
+	--机器人id       对手id          等级    积分    对方排名 头像      头像框       性别序号      最后设置的角色看板ID 玩家称号     对方队伍        是否动态看板 
+	{ "uint",        "uint","string","uint", "uint", "uint",  "uint",   "uint",      "byte",       "uint",              "uint",      "list|TeamItem","byte",      },
+	{ "robot_cfg_id","uid", "name",  "level","score","rank",  "icon_id","icon_frame","sel_card_ix","role_panel_id",     "icon_title","teams",        "live2d",    },
+}
+GameMsg.map["sFriendInvite"] = {
+	--好友id 积分    对方排名 最后设置的角色看板ID 是否动态看板 对方队伍        
+	{ "long","uint", "uint",  "uint",              "byte",      "list|TeamItem",},
+	{ "uid", "score","rank",  "role_panel_id",     "live2d",    "teams",        },
+}
+GameMsg.map["sFightAddress"] = {
+	--ip       端口    战斗序号   服务器id 随机值 参与玩家     RealArmyType 比较大的段位 机器人id       差值a       差值b       
+	{ "string","short","uint",    "uint",  "int", "array|long","byte",      "int",       "uint",        "int",      "int",      },
+	{ "ip",    "port", "fight_ix","svr_id","key", "uids",      "type",      "max_rank",  "robot_cfg_id","dif_val_a","dif_val_b",},
+}
+GameMsg.map["ArmyProto:FightAddress"] = {
+	--军演地址信息         自由匹配军演         好友邀请军演         
+	{ "struts|sFightAddress","struts|sFreeArmyMatch","struts|sFriendInvite",},
+	{ "addr",              "free_match_info",   "friend_invite_info",},
+}
+GameMsg.map["ArmyProto:FightServerInit"] = {
+	--自己的id 军演地址信息         
+	{ "long",  "struts|sFightAddress",},
+	{ "uid",   "addr",              },
+}
+GameMsg.map["ArmyProto:FightServerInitRet"] = {
+	--RealArmyType 倒计时结束时间    邀请方id     接受方方的id 
+	{ "byte",      "uint",           "long",      "long",      },
+	{ "type",      "auto_start_time","invite_uid","agreed_uid",},
+}
+GameMsg.map["ArmyProto:StartRealArmy"] = {
+	--准备好的队伍      
+	{ "struts|TeamItem",},
+	{ "team",           },
+}
+GameMsg.map["ArmyProto:StartRealArmyRet"] = {
+	--准备好的人的Id 
+	{ "long",        },
+	{ "uid",         },
+}
+GameMsg.map["ArmyProto:RealTimeFightFinish"] = {
+	--结果     RealArmyType 是否强行退出  分数    排名   奖励            奖励领取相关记录     使用的队伍id 
+	{ "bool",  "byte",      "bool",       "uint", "uint","list|sNumInfo","struts|sFreeMatchRewarInfo","uint",      },
+	{ "bIsWin","type",      "isForceOver","score","rank","rewards",      "reward_info",       "teamId",    },
+}
+GameMsg.map["ArmyProto:RealArmyLogout"] = {
+	--好友id RealArmyType 
+	{ "long","byte",      },
+	{ "uid", "type",      },
+}
+GameMsg.map["ArmyProto:HadPvpInfo"] = {
+	--军演地址信息         是否断线重连   
+	{ "struts|sFightAddress","bool",        },
+	{ "addr",              "is_reconnect",},
+}
+GameMsg.map["ArmyProto:RecoverPvp"] = {
+	--自己的id 军演地址信息         
+	{ "long",  "struts|sFightAddress",},
+	{ "uid",   "addr",              },
+}
+GameMsg.map["ArmyProto:RecoverPvpRet"] = {
+	--是否已经结束（如果true,发送 ArmyProto:DelPvpInfo 给游戏服） 
+	{ "bool",              },
+	{ "finish",            },
+}
+GameMsg.map["ArmyProto:DelPvpInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["ArmyProto:JoinFreeArmy"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["ArmyProto:JoinFreeArmyRet"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["ArmyProto:QuitFreeArmy"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["ArmyProto:QuitFreeArmyRet"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["ArmyProto:QuitArmy"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["sFreeArmyRank"] = {
+	--                玩家等级 玩家称号     排名   积分    头像模型id 头像框                     
+	{ "long","string","uint",  "uint",      "uint","uint", "uint",    "uint",      "byte",       },
+	{ "uid", "name",  "level", "icon_title","rank","score","icon_id", "icon_frame","sel_card_ix",},
+}
+GameMsg.map["ArmyProto:FreeMatchInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["ArmyProto:FreeMatchInfoRet"] = {
+	--当前赛季id[没有就发0] 分数    排名   最高排名   可以参加的计数 上一当前赛季id[没有就为空] 奖励领取相关记录     最后设置的角色看板ID 是否动态看板 
+	{ "short",             "uint", "uint","uint",    "short",       "short",             "struts|sFreeMatchRewarInfo","uint",              "byte",      },
+	{ "cfg_id",            "score","rank","max_rank","can_join_cnt","pre_cfg_id",        "reward_info",       "role_panel_id",     "live2d",    },
+}
+GameMsg.map["ArmyProto:GetFreeMatchRankList"] = {
+	--开始排名，最小1 排名个数   
+	{ "byte",         "short",   },
+	{ "beg_rank",     "rank_cnt",},
+}
+GameMsg.map["ArmyProto:GetFreeMatchRankListRet"] = {
+	--开始排名，最小1 排名个数   排名列表             
+	{ "byte",         "short",   "list|sFreeArmyRank",},
+	{ "beg_rank",     "rank_cnt","rank_objs",         },
+}
+GameMsg.map["sFreeMatchRewarInfo"] = {
+	--参与自由军演次数 已领取参与次数id  已领取军演段位id 胜利次数  胜利次数获取到哪里 
+	{ "short",         "short",          "short",         "short",  "short",           },
+	{ "jion_cnt",      "get_jion_cnt_id","get_rank_lv_id","win_cnt","get_win_cnt_ix",  },
+}
+GameMsg.map["ArmyProto:GetPvpReward"] = {
+	--类型    领取的列表   
+	{ "short","array|uint",},
+	{ "type", "ids",       },
+}
+GameMsg.map["ArmyProto:GetPvpRewardRet"] = {
+	--奖励领取相关记录     
+	{ "struts|sFreeMatchRewarInfo",},
+	{ "reward_info",       },
+}
+GameMsg.map["ArmyProto:FreeMatchCfgChangeFix"] = {
+	--
+	{ },
+	{ },
 }
 GameMsg.map["sBuildRoleAbility"] = {
 	--能力类型值 参考角色能力表CfgCardRoleAbility的vals字段批注 [物品id] = 增加的数量 or 百分比 目前只有工程师有，上次执行时间 能力生效的角色ids 
@@ -4591,9 +4651,9 @@ GameMsg.map["PlayerProto:GetRankTeamInfo"] = {
 	{ "rankType",          "rankIdx",},
 }
 GameMsg.map["PlayerProto:GetRankTeamInfoRet"] = {
-	--排行榜类型(eRankType) 第几名    队伍数据        
-	{ "int",               "int",    "list|TeamItem",},
-	{ "rankType",          "rankIdx","data",         },
+	--排行榜类型(eRankType) 第几名    队伍数据        选择词条(积分战斗用） 
+	{ "int",               "int",    "list|TeamItem","array|uint",        },
+	{ "rankType",          "rankIdx","data",         "buffIds",           },
 }
 GameMsg.map["PlayerProto:CopyRankTeam"] = {
 	--排行榜类型(eRankType) 第几名    
@@ -4930,6 +4990,11 @@ GameMsg.map["sAchievementRewardDetail"] = {
 	{ "uint",              "uint",  "uint",       },
 	{ "id",                "time",  "finish_time",},
 }
+GameMsg.map["AchievementProto:UpdateFinishInfoRet"] = {
+	--成就条件的进度（CfgAchieveFinishVal的id，完成的次数） 是否最后一条 
+	{ "list|sStrNumInfo",  "bool",      },
+	{ "finish_list",       "is_finish", },
+}
 GameMsg.map["BadgedProto:GetBadgedInfo"] = {
 	--
 	{ },
@@ -5164,6 +5229,31 @@ GameMsg.map["OperateActiveProto:GetMaidCoffeeRewardRet"] = {
 	--活动id 奖励次数 剩余奖励次数 个人历史最高分 
 	{ "uint","uint",  "uint",      "uint",        },
 	{ "id",  "cnt",   "remainCnt", "maxScore",    },
+}
+GameMsg.map["OperateActiveProto:GetPopupPackInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:GetPopupPackInfoRet"] = {
+	--获取奖励列表         是否结束   
+	{ "list|sPopupPackInfo","bool",    },
+	{ "infos",             "isFinish",},
+}
+GameMsg.map["OperateActiveProto:UpdatePopupTime"] = {
+	--礼包条件id  
+	{ "array|int",},
+	{ "cfgids",   },
+}
+GameMsg.map["OperateActiveProto:UpdatePopupTimeRet"] = {
+	--礼包条件id  弹出时间（非nil 并且大于0 弹出过） 是否更新成功 
+	{ "array|int","uint",               "bool",      },
+	{ "cfgids",   "popupTime",          "res",       },
+}
+GameMsg.map["sPopupPackInfo"] = {
+	--礼包条件id 礼包结束时间戳 弹出时间（非nil 并且大于0 弹出过） 
+	{ "uint",    "uint",        "uint",               },
+	{ "cfgid",   "finishTime",  "popupTime",          },
 }
 GameMsg.map["LovePlusProto:GetChapterData"] = {
 	--章节id      

@@ -27,7 +27,7 @@ function Skill337903:OnBornSpecial(caster, target, data)
 		return
 	end
 	-- 337913
-	self:AddBuff(SkillEffect[337913], caster, target, data, 337913)
+	self:AddBuff(SkillEffect[337913], caster, caster, data, 337903)
 end
 -- 死亡时
 function Skill337903:OnDeath(caster, target, data)

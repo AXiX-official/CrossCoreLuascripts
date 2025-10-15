@@ -348,3 +348,31 @@ function IsStoryFirst()
         return plotButton.isStoryFirst
     end
 end
+------------------------------------------------阵容推荐
+function AddTeamReplace(isShow,callBack,iconRes,textCode,parent,x,y)
+    if not isShow then
+        if teamReplaceButton ~= nil then
+            CSAPI.SetGOActive(teamReplaceButton.gameObject,false)
+        end
+        return
+    end
+    parent = parent or teamReplaceParent
+    x = x or 0
+    y = y or 0
+    local isNative = iconRes ~= nil
+    iconRes = iconRes or "Common/btn_18_01"
+    textCode = textCode or "000000"
+    if teamReplaceButton == nil then
+        local go = ResUtil:CreateUIGO("Common/TeamReplaceButton",parent.transform,x,y)
+        teamReplaceButton= ComUtil.GetLuaTable(go)
+        teamReplaceButton.SetClickCB(function()
+                UIUtil:OpenTeamReplaceView(currCfg and currCfg.id,callBack)
+            end)
+        teamReplaceButton.Refresh(iconRes,isNative)
+        teamReplaceButton.SetTextColor(textCode)
+    else
+        CSAPI.SetGOActive(teamReplaceButton.gameObject,true)
+        teamReplaceButton.Refresh(iconRes,isNative)
+        teamReplaceButton.SetTextColor(textCode)
+    end
+end

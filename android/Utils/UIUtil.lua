@@ -421,7 +421,7 @@ function this:RemoveLoginMovie()
 end
 
 -- 打开物品信息框
-function this:OpenGoodsInfo(data, openSetting,_needNum)
+function this:OpenGoodsInfo(data, openSetting, _needNum)
     local panelName = "GoodsFullInfo";
     local key = JumpMgr:GetLastViewKey();
     if key then
@@ -733,7 +733,7 @@ function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFu
             JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
         else
             local dialogData = {}
-            dialogData.content = LanguageMgr:GetTips(24015,cfg.name)
+            dialogData.content = LanguageMgr:GetTips(24015, cfg.name)
             dialogData.okCallBack = function()
                 JumpMgr:Jump(cfg and cfg.j_moneyGet or 0)
             end
@@ -753,15 +753,15 @@ function this:OpenPurchaseView(title, tips, count, maxCount, cost, reward, payFu
 end
 
 -- 添加战斗表情 (异步，可通过 item = item or {} 传入持有item )
---isL 是左边(要区分左右，因为艺术字不能翻转，但图要翻转)
-function this:AddHeadFace(parent,id,isL,item)
+-- isL 是左边(要区分左右，因为艺术字不能翻转，但图要翻转)
+function this:AddHeadFace(parent, id, isL, item)
     if (not item) then
         ResUtil:CreateUIGOAsync("Common/HeadFaceItem", parent, function(go)
             item = ComUtil.GetLuaTable(go)
-            item.Refresh(id,isL)
+            item.Refresh(id, isL)
         end)
     else
-        item.Refresh(id,isL)
+        item.Refresh(id, isL)
     end
 end
 
@@ -777,7 +777,9 @@ function this:AddHeadByID(parent, scale, frameID, iconID, sel_card_ix, itemGoNam
     -- local isGirl, frameID = self:GetSexAndID(_frameID)
     scale = scale or 1
     itemGoName = itemGoName or "RoleHead"
-    if parent==nil then return; end
+    if parent == nil then
+        return;
+    end
     local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
         ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
@@ -800,7 +802,9 @@ function this:AddTitleByID(parent, scale, titleID, isMy)
     -- 真实性别和头像 
     scale = scale or 1
     local itemGoName = "RoleTitle"
-    if parent==nil then return; end
+    if parent == nil then
+        return;
+    end
     local itemGo = parent.transform:Find(itemGoName)
     if (not itemGo) then
         ResUtil:CreateUIGOAsync("Common/" .. itemGoName, parent, function(go)
@@ -924,7 +928,9 @@ function this:OpenSweepView(cfgId, payFunc)
             local sweepData = SweepMgr:GetData(cfgId)
             if sweepData then
                 if sweepData:IsOpen() then
-                    CSAPI.OpenView("SweepView", {id = cfgId})
+                    CSAPI.OpenView("SweepView", {
+                        id = cfgId
+                    })
                 else
                     Tips.ShowTips(sweepData:GetLockStr())
                 end
@@ -1011,13 +1017,100 @@ function this:ShowSpecialGuide(parent, viewName, type, datas)
         end
     end
 end
+
+-- 显示任务奖励列表
+function this:ShowMissionReward(type, group, title1, title2)
+    if not type or not group then
+        return
+    end
+    local data = {
+        type = type,
+        group = group,
+        title1 = title1,
+        title2 = title2
+    }
+    CSAPI.OpenView("MissionReward", data)
+end
+
 function this:OpenExplorationBuy()
-    local curData=ExplorationMgr:GetCurrData();
-    if curData==nil or (curData and curData:GetDailyReward()) or (curData and curData:GetBaseMailReward()~=nil) then
+    local curData = ExplorationMgr:GetCurrData();
+    if curData == nil or (curData and curData:GetDailyReward()) or (curData and curData:GetBaseMailReward() ~= nil) then
         CSAPI.OpenView("ExplorationBuy2");
     else
         CSAPI.OpenView("ExplorationBuy");
     end
 end
+
+--打开副本推荐队伍界面
+function this:OpenTeamReplaceView(dungeonId,callBack)
+    -- Tips.ShowTips("暂未完善")
+    if dungeonId==nil then
+        LogError("打开推荐队伍界面失败，缺少关卡id！！！")
+        return
+    end
+    CSAPI.OpenView("DungeonTeamReplace",nil,{id = dungeonId,callBack = callBack})
+end
+
+function this:ShowBuy(id)
+    local bindComm = ShopMgr:GetFixedCommodity(id)
+    if (not bindComm) then
+        return
+    end
+    local pageData = ShopMgr:GetPageByID(bindComm:GetShopID())
+    if (not pageData) then
+        return
+    end
+      if CSAPI.IsADV() then
+        if CSAPI.RegionalCode() == 3 then
+            if CSAPI.PayAgeTitle() then
+                CSAPI.OpenView("SDKPayJPlimitLevel", {
+                    ExitMain = function()
+                        ShopCommFunc.OpenPayView(bindComm, pageData)
+                    end
+                })
+            else
+                ShopCommFunc.OpenPayView(bindComm, pageData)
+            end
+        else
+            ShopCommFunc.OpenPayView(bindComm, pageData)
+        end
+    else
+        ShopCommFunc.OpenPayView(bindComm, pageData)
+    end
+end
+
+--设置物品购买按钮
+function this:SetPrice(showID,rmbIcon,rmbText,rmbNum)
+    local bindComm = ShopMgr:GetFixedCommodity(showID)
+    if (not bindComm) then
+        return
+    end
+    local rPrice=bindComm:GetRealPrice()
+    local id = rPrice[1].id
+    local num = rPrice[1].num
+    --
+    CSAPI.SetGOActive(rmbIcon,id~=-1)
+    CSAPI.SetGOActive(rmbText,id==-1)
+    if id==-1 then --SDK支付
+        CSAPI.SetText(rmbText, bindComm:GetCurrencySymbols())
+        CSAPI.SetText(rmbNum, tostring(num))
+        return
+    end
+
+    if id == ITEM_ID.GOLD then --金币
+        ResUtil.IconGoods:Load(rmbIcon, tostring(ITEM_ID.GOLD).."_1");
+        CSAPI.SetImgColorByCode(rmbIcon,"ffffff")
+    elseif id == ITEM_ID.DIAMOND then --钻石
+        ResUtil.IconGoods:Load(rmbIcon, tostring(ITEM_ID.DIAMOND).."_1");
+        CSAPI.SetImgColorByCode(rmbIcon,"ffc146")
+    else
+        local cfg = Cfgs.ItemInfo:GetByID(id);
+        if cfg and cfg.icon then
+            ResUtil.IconGoods:Load(rmbIcon, cfg.icon.."_1");
+        end
+        CSAPI.SetImgColorByCode(rmbIcon,"ffffff")
+    end
+        CSAPI.SetText(rmbNum, tostring(math.floor(num+0.5)));
+    end
 
 return this

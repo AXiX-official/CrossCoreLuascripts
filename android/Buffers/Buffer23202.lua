@@ -8,8 +8,9 @@ function Buffer23202:Init(mgr, id, target, caster)
 end
 -- 创建时
 function Buffer23202:OnCreate(caster, target)
-	-- 8405
-	local c5 = SkillApi:PercentHp(self, self.caster, target or self.owner,3)
-	-- 23202
-	self:AddAttr(BufferEffect[23202], self.caster, self.card, nil, "becure",math.floor((1-c5)*10)*0.04)
+	-- 22002
+	local targets = SkillFilter:All(self, self.caster, target or self.owner, 1)
+	for i,target in ipairs(targets) do
+		self:AddAttr(BufferEffect[22002], self.caster, target, nil, "resist",0.10)
+	end
 end

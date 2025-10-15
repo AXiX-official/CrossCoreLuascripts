@@ -1,98 +1,111 @@
-
 local runTime = false
-local timer = 0
+-- local timer = 0
 local t = 0.5
+
 function Awake()
-	acObj = ComUtil.GetCom(gameObject, "ActionUIMoveTo")
+    acObj = ComUtil.GetCom(gameObject, "ActionUIMoveTo")
+    fill = ComUtil.GetCom(bar, "Image")
 end
 
 function Update()
-	if(runTime) then
-		timer = timer - Time.deltaTime
-		if(timer < 0) then
-			timer = t
-			SetTime()
-		end
-	end
+    if (runTime) then
+        -- timer = timer - Time.deltaTime
+        -- if (timer < 0) then
+        --     timer = t
+        SetTime()
+        -- end
+    end
 end
 
---强制退出
+-- 强制退出
 function ForceClose(_cb)
-	local x, y, z = CSAPI.GetAnchor(gameObject)
-	runTime = false
-	acObj:PlayByTime(- 550, y, 0, t, function()
-		view:Close()
-		if(_cb) then
-			_cb()
-		end
-	end)
+    local x, y, z = CSAPI.GetAnchor(gameObject)
+    runTime = false
+    acObj:PlayByTime(0, y, 0, t, function()
+        view:Close()
+        if (_cb) then
+            _cb()
+        end
+    end)
 end
 
---邀请tips
+-- 邀请tips
 function Close()
-	local x, y, z = CSAPI.GetAnchor(gameObject)
-	acObj:PlayByTime(- 550, y, 0, t, function()
-		view:Close()
-		if(cb) then
-			cb(index)
-		end
-	end)
+    local x, y, z = CSAPI.GetAnchor(gameObject)
+    acObj:PlayByTime(0, y, 0, t, function()
+        view:Close()
+        if (cb) then
+            cb(index)
+        end
+    end)
 end
 
 function Refresh(_index, _data, _cb)
-	index = _index
-	data = _data
-	cb = _cb
-	
-	friendData = FriendMgr:GetData(data.uid)
-	--lv 
-	local lvStr = LanguageMgr:GetByID(1033) or "LV."
-	CSAPI.SetText(txtLv, lvStr .. friendData:GetLv())
-	--name
-	CSAPI.SetText(txtName, friendData:GetName())
-	--time
-	baseTime = data.invite_time + g_ArmyFriendMatchWaitTime
-	SetTime()
+    index = _index
+    data = _data
+    cb = _cb
+
+    friendData = FriendMgr:GetData(data.uid)
+    -- lv 
+    CSAPI.SetText(txtLv, friendData:GetLv() .. "")
+    -- name
+    CSAPI.SetText(txtName, friendData:GetName())
+    --
+    UIUtil:AddHeadByID(hfParent, 1, friendData.icon_frame, friendData.icon_id, friendData.sel_card_ix)
+    -- 
+    UIUtil:AddTitleByID(titleParent, 1, friendData.icon_title)
+    -- time
+    local baseTime = data.invite_time + ExerciseRMgr:GetPPTimer()
+    needTime = baseTime - TimeUtil:GetTime()
+    SetTime()
 end
 
 function SetTime()
-	if(baseTime > 0) then
-		needTime = baseTime - TimeUtil:GetTime()
-		needTime = needTime > 0 and needTime or 0
-	else
-		needTime = 0
-	end
-	runTime = needTime > 0
-	CSAPI.SetText(txtTime2, math.floor(needTime) .. "s")
-	if(runTime == false) then
-		Close()
-	end
+    needTime = needTime - Time.deltaTime
+    needTime = needTime <= 0 and 0 or needTime
+    runTime = needTime > 0
+    -- CSAPI.SetText(txtTime2, math.floor(needTime) .. "s")
+    fill.fillAmount = needTime / ExerciseRMgr:GetPPTimer()
+    if (runTime == false) then
+        Close()
+    end
 end
 
 function GetIndex()
-	return index
+    return index
 end
 
---向上移动
+-- 向上移动
 function SetMoveUp(y)
-	local x = CSAPI.GetAnchor(gameObject)
-	acObj:PlayByTime(x, y, 0, t)
+    local x = CSAPI.GetAnchor(gameObject)
+    acObj:PlayByTime(x, y, 0, t)
 end
 
---拒绝
+-- 拒绝
 function OnClick1()
-	if(data) then
-		runTime = false
-		ExerciseMgr:BeInviteRet({{uid = data.uid, is_receive = false}})
-		Close()
-	end
+    if (data) then
+        runTime = false
+        ArmyProto:BeInviteRet({{
+            uid = data.uid,
+            is_receive = false
+        }})
+        Close()
+    end
 end
 
---接受
+-- 接受
 function OnClick2()
-	if(data) then
-		runTime = false
-		ExerciseMgr:BeInviteRet({{uid = data.uid, is_receive = true}})
-		Close()
-	end
-end 
+    -- -- 是否已编队
+    if (not ExerciseRMgr:CheckCanAgree()) then
+        LanguageMgr:ShowTips(33023)
+        return
+    end
+    if (data) then
+        runTime = false
+        ArmyProto:BeInviteRet({{
+            uid = data.uid,
+            is_receive = true
+        }})
+        Close()
+    end
+end
