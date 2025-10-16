@@ -721,7 +721,7 @@ function FightHelp:GetPvpDataFromTeam(uid, teamData, icon_emotes)
 
     if teamData and #teamData.data > 0 then
         for i, v in ipairs(teamData.data) do
-            local cardData = GetFightDataFromTeamData(v.card_info)
+            local cardData = GetFightDataFromTeamData(v.pvp_card_info)
             cardData.row = v.row
             cardData.col = v.col
             cardData.cuid = v.cid

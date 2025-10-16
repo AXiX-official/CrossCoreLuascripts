@@ -12,6 +12,7 @@ end
 
 function OnPanelUpdate(_data)
     if _data then
+        currCfg = _data
         infoUtil:Set(_data)
     end
     infoUtil:RefreshPanel()

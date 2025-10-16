@@ -1296,9 +1296,9 @@ GameMsg.map["PlayerProto:UseItemRet"] = {
 	{ "info",              "isMerge",       },
 }
 GameMsg.map["TeamItemData"] = {
-	--卡牌的唯一id 位置    行      列      卡牌的信息(实时战斗才设置) 策略             是否是NPC 
-	{ "uint",      "byte", "short","short","struts|sPvpCardsData","byte",          "bool",   },
-	{ "cid",       "index","row",  "col",  "card_info",         "nStrategyIndex","bIsNpc", },
+	--卡牌的唯一id 位置    行      列      卡牌的信息(实时战斗才设置) 卡牌的信息(实时战斗才设置) 策略             是否是NPC 
+	{ "uint",      "byte", "short","short","struts|sCardsData", "struts|sPvpCardsData","byte",          "bool",   },
+	{ "cid",       "index","row",  "col",  "card_info",         "pvp_card_info",     "nStrategyIndex","bIsNpc", },
 }
 GameMsg.map["TeamItem"] = {
 	--队伍类型 数据                队长cid  队伍名字 技能组id         技能组等级       性能          预留sp         预留np       

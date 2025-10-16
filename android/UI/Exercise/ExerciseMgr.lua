@@ -459,7 +459,7 @@ end
 function this:GetPracticeList(_beg_rank, _end_rank)
     local proto = {"ArmyProto:GetPracticeList", {
         beg_rank = _beg_rank,
-        rank_cnt = _end_rank
+        end_rank = _end_rank
     }}
     NetMgr.net:Send(proto)
 end

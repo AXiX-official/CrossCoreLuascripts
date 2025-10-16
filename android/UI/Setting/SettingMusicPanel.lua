@@ -6,6 +6,7 @@ function Awake()
 	SetItem(s_audio_scale.dubbing, item3)
 	if CSAPI.RegionalCode()==5 or CSAPI.RegionalCode()==3 then
 		CSAPI.SetGOActive(btnCN,false)
+		if CSAPI.RegionalCode()==3 then CSAPI.SetGOActive(btnJP,false) end
 	end
 	fade1 = ComUtil.GetCom(item1Fade,"ActionFade")
 	fade2 = ComUtil.GetCom(item2Fade,"ActionFade")

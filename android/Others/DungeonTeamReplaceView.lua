@@ -64,10 +64,10 @@ function OnItemClickCB(item)
                 end
             end
             if isReplaceAll then -- 检测有没有对应战术
-                if not teamData:GetSkillGroupID() then
+                if not teamData.skillGroupID or teamData.skillGroupID == 0 then
                     isReplaceAll = false
                 else
-                    local _data = TacticsMgr:GetDataByID(teamData:GetSkillGroupID())
+                    local _data = TacticsMgr:GetDataByID(teamData.skillGroupID)
                     if _data == nil then
                         isReplaceAll = false
                     end
@@ -129,6 +129,7 @@ function ReplaceTeamData(teamIndex, teamData)
     local editTeamData = TeamMgr:GetEditTeam(teamIndex)
     editTeamData:ClearCard()
     if teamData and teamData.data then
+        local cardInfos = {}
         for i, v in ipairs(teamData.data) do
             if RoleMgr:IsLeader(v.card_info.cfgid) then -- 总队长特殊处理
                 local myLeaderCard = RoleMgr:GetLeader2()
@@ -137,21 +138,32 @@ function ReplaceTeamData(teamIndex, teamData)
                 end
                 local new = GetNewInfo(v)
                 new.card_info = nil -- 剔除卡牌信息
-                editTeamData:AddCard(new)
+                table.insert(cardInfos,new)
+                -- editTeamData:AddCard(new)
             else
                 local _card = CRoleMgr:GetData(v.card_info.cfgid)
                 if _card ~= nil then -- 不存则直接剔除数据
                     local new = GetNewInfo(v)
                     new.card_info = nil -- 剔除卡牌信息
-                    editTeamData:AddCard(new)
+                    table.insert(cardInfos,new)
+                    -- editTeamData:AddCard(new)
                 end
             end
         end
-        local _data = TacticsMgr:GetDataByID(teamData:GetSkillGroupID())
-        if _data == nil then
+        if #cardInfos > 0 then
+            for i, v in ipairs(cardInfos) do
+                if i == 1 and v.index ~= 1 then
+                    v.index = 1
+                end
+                editTeamData:AddCard(v)
+            end
+        end
+
+        local cfg = Cfgs.CfgPlrSkillGroup:GetByID(teamData.skill_group_id)
+        if cfg == nil then
             editTeamData.skill_group_id = 0
         else
-            editTeamData.skill_group_id = _data:GetCfgID()
+            editTeamData.skill_group_id = cfg.id
         end
     end
 end
