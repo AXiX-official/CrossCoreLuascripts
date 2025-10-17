@@ -126,7 +126,7 @@ function this:StartRealArmy(_team)
         for k, v in pairs(calData) do
             baseData[k] = v
         end
-        _team2.data[k].card_info = baseData
+        _team2.data[k].pvp_card_info = baseData
     end
     -- 
     local proto = {"ArmyProto:StartRealArmy", {
