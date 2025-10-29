@@ -3108,17 +3108,17 @@ function PVEFightMgrServer:Over(stage, winer)
             hpinfo = {stage = self.stage, data = data}
         end
 
-
-        for i, v in ipairs(self.arrCard) do
-            if v:GetTeamID() == 2 then
-                if v.configIndex then
-                    data[v.configIndex] = v.hp
-                    if self.type == SceneType.TowerDeep then
-                        exData.validMstHpInfo = exData.validMstHpInfo or {stage = self.stage,leftHp = 0}
-                        local tHp = exData.validMstHpInfo.leftHp or 0
-                        if v.isPoints then
-                            tHp = tHp + v.hp
-                            exData.validMstHpInfo.leftHp = tHp
+        if self.type == SceneType.TowerDeep then
+            for i, v in ipairs(self.arrCard) do
+                if v:GetTeamID() == 2 then
+                    if v.configIndex then
+                        if self.type == SceneType.TowerDeep then
+                            exData.validMstHpInfo = exData.validMstHpInfo or {stage = self.stage,leftHp = 0}
+                            local tHp = exData.validMstHpInfo.leftHp or 0
+                            if v.isPoints then
+                                tHp = tHp + v.hp
+                                exData.validMstHpInfo.leftHp = tHp
+                            end
                         end
                     end
                 end

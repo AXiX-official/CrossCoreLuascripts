@@ -122,9 +122,7 @@ end
 
 --游戏结束
 function PlayEnd(isClose)
-    if isLittleTime then -- 关闭倒计时
-        CSAPI.StopTempSound("Halloween_effects_05")
-    end
+    CSAPI.StopTempSound("Halloween_effects_05")
     ToLog(string.format("游戏结束,用时：%s,实际用时：%s",curTime,TimeUtil:GetTime() - openViewTime))
     local info = {
         score = score,
@@ -281,7 +279,7 @@ function AddGameTime(num)
 end
 ---------------------------------------------时间---------------------------------------------
 function InitTime()
-    curEndTime = cfg.baseTime
+    curEndTime = cfg.baseTime + startTime
     maxEndTime = cfg.maxTime
     curTime = 0
     CSAPI.PlayTempSound("Halloween_effects_05")

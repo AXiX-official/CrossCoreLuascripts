@@ -7,6 +7,7 @@ local shaderUtil=nil;
 local roleImage=nil;
 local gradient = nil
 local isUseShopImg=false;
+local lastPath=nil;
 function Awake()
 	rect=ComUtil.GetCom(img,"RectTransform");
 	roleImage=ComUtil.GetCom(img,"Image");
@@ -59,6 +60,7 @@ function InitNull()
 	roleImage.sprite=nil;
 	CSAPI.SetRTSize(img,0,0);
 	SetImgGradient();
+	lastPath=nil;
 	-- SetRoleScale();
 	-- HideFace();
 end
@@ -83,13 +85,18 @@ function SetBlend(item,_blendType,_c1,_c2)
 		 path = GetFacePath(item);
 		 pos=UnityEngine.Vector2(item.pos[1], item.pos[2]);
 	end
+
 	if shaderUtil then
+		if lastPath~=nil and lastPath~=path then
+			shaderUtil:Clear();
+		end
 		if _c1 or _c2 then
 			shaderUtil:SetBlend2(_blendType,path,pos,_c1,_c2);
 		else
 			shaderUtil:SetBlend(_blendType,path,pos);
 		end
 	end
+	lastPath=path;
 end
 
 function GetFacePath(item)
@@ -114,10 +121,13 @@ end
 function SetFaceByIndex(faceIndex)
 	if cfg and cfg.faceID and faceIndex then
 		local faceCfg = Cfgs.characterFace:GetByID(cfg.faceID);
+
 		if faceCfg and faceCfg.item[faceIndex] then
 			local item = faceCfg.item[faceIndex];
 			--设置表情和位置
 			SetBlend(item,blendType);
+			CSAPI.SetGOActive(img,false)
+			CSAPI.SetGOActive(img,true)
 		-- else
 		-- 	Log("<color=#c66ffc>模型表中未找到关联的表情配置："..tostring(cfg.faceID).."\t表情ID:"..cfg.faceID.."</color>");
 		end

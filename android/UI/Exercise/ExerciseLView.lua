@@ -33,6 +33,7 @@ function OnInit()
     eventMgr:AddListener(EventType.Exercise_Enemy_Update, function()
         SetRefreshCnt()
         SetEnemyItems()
+        SetContent()
     end)
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed) -- 加载之后再显示奖励面板
     eventMgr:AddListener(EventType.Bag_Update, SetXz)
@@ -100,7 +101,7 @@ function RefreshSelf()
 
     SetMaxRank()
     SetHead()
-    SetContent()
+    --SetContent()
 end
 
 function SetPM()

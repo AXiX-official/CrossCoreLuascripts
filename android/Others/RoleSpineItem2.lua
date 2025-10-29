@@ -59,11 +59,11 @@ function Refresh(_modelId, _posType, _callBack, _isUseShopImg, _needClick)
     end
     dragObj = nil
 
-    cfg = isMul and Cfgs.CfgSpineMultiImageAction:GetByID(modelId) or Cfgs.CfgSpineAction:GetByID(modelId)    
+    cfg = isMul and Cfgs.CfgSpineMultiImageAction:GetByID(modelId) or Cfgs.CfgSpineAction:GetByID(modelId)
     SetImg()
 end
 
-function SetImg(_l2dName, _b,_cb)
+function SetImg(_l2dName, _b, _cb)
     local b = true
     if (_b ~= nil) then
         b = _b
@@ -98,9 +98,9 @@ function SetImg(_l2dName, _b,_cb)
             if (b and callBack) then
                 callBack()
             end
-            if(_cb)then 
+            if (_cb) then
                 _cb()
-            end 
+            end
         end)
     end
 
@@ -137,11 +137,11 @@ end
 
 -- 点击触发
 -- _check 检查过场spine是否存在（存在时不让玩家点击），changerole时如果后接更换idle
-function TouchItemClickCB(cfgChild, _cb,_check)
-    local check = true 
-    if(_check~=nil)then 
+function TouchItemClickCB(cfgChild, _cb, _check)
+    local check = true
+    if (_check ~= nil) then
         check = _check
-    end 
+    end
     if (check and interludeGO ~= nil) then
         return
     end
@@ -158,7 +158,7 @@ function TouchItemClickCB(cfgChild, _cb,_check)
     if (content.conditions) then
         local _cfg = cfg.item[content.conditions[1]]
         local trackIndex = GetTrackIndex(_cfg)
-        local b,cur = spineTools:GetTrackTimePercent(trackIndex)
+        local b, cur = spineTools:GetTrackTimePercent(trackIndex)
         if (not b or cur < content.conditions[2]) then
             return
         end
@@ -186,12 +186,12 @@ function TouchItemClickCB(cfgChild, _cb,_check)
             isCan = true
         end
     else
-        --需要idle才能播放
+        -- 需要idle才能播放
         if (content and content.needIdle) then
             isCan = IsIdle()
         else
             isCan = true
-        end       
+        end
     end
     if (not isCan) then
         return
@@ -243,7 +243,12 @@ function TouchItemClickCB(cfgChild, _cb,_check)
             end
             --
             SetInterlude(content)
-            local cb = _cb or GetClickCB(cfgChild)
+            local cb, delay = nil, 0
+            if (_cb) then
+                cb = _cb
+            else
+                cb, delay = GetClickCB(cfgChild)
+            end
             if (sName ~= nil) then
                 local _b = false
                 if (trackIndex == 1 or content.guochange ~= nil) then
@@ -251,9 +256,18 @@ function TouchItemClickCB(cfgChild, _cb,_check)
                 end
                 b = spineTools:PlayByClick(sName, trackIndex, true, _b, cb)
             else
-                timer = 0
-                if (cb) then
-                    cb()
+                if (delay > 0) then
+                    FuncUtil:Call(function()
+                        timer = 0
+                        if (cb) then
+                            cb()
+                        end
+                    end, nil, delay)
+                else
+                    timer = 0
+                    if (cb) then
+                        cb()
+                    end
                 end
             end
         end
@@ -266,20 +280,21 @@ end
 
 -- 点击回调
 function GetClickCB(cfgChild)
-    local func = nil
+    local func, delay = nil, 0
     if (cfgChild.content) then
         if (cfgChild.content.changerole) then
             local _curRoleNum = cfgChild.role or 1
             curRoleNum = 3 - _curRoleNum
             func = function()
-                local cb = nil 
-                if(cfgChild.content.changerole[4])then 
+                local cb = nil
+                if (cfgChild.content.changerole[4]) then
                     cb = function()
-                        PlayByIndex(cfgChild.content.changerole[4],nil,false)
+                        PlayByIndex(cfgChild.content.changerole[4], nil, false)
                     end
-                end 
-                SetImg(cfgChild.content.changerole[1], false,cb)
+                end
+                SetImg(cfgChild.content.changerole[1], false, cb)
             end
+            delay = cfgChild.sName == nil and math.floor(cfgChild.content.changerole[3] / 2) or 0
         elseif (cfgChild.content.nextClick) then
             func = function()
                 local nextCfgChild = cfg.item[cfgChild.content.nextClick]
@@ -291,7 +306,7 @@ function GetClickCB(cfgChild)
             end
         end
     end
-    return func
+    return func, delay
 end
 
 -- 过场spine
@@ -421,7 +436,7 @@ function ItemDragEndCB(cfgChild, x, y, index)
             local limit = content.gestureDatas.splitPerc or 1
             if (limit ~= 1) then
                 local trackIndex = GetTrackIndex(cfgChild)
-                local b,cur = spineTools:GetTrackTimePercent(trackIndex)
+                local b, cur = spineTools:GetTrackTimePercent(trackIndex)
                 if (limit - cur < 0.01) then
                     forward = true
                 end
@@ -904,10 +919,10 @@ function SpineEvent(trackEntry, e)
     end
 end
 
-function PlayByIndex(index, cb,check)
+function PlayByIndex(index, cb, check)
     local cfgChild = cfg.item[index]
     timer = 0
-    TouchItemClickCB(cfgChild, cb,check)
+    TouchItemClickCB(cfgChild, cb, check)
 end
 
 function GetAnimDuration(animName)

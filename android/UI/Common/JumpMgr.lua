@@ -62,6 +62,7 @@ function this:GetFunc(sName)
         self.funcs["LuckyGachaMain"] = self.LuckyGachaMain
         self.funcs["SkinRebate"] = self.SkinRebate
         self.funcs["RiddleMain"]=self.RiddleMain
+        self.funcs["TowerDeep"]=self.DungeonActivity
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]

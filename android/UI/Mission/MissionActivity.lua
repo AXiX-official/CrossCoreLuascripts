@@ -46,7 +46,7 @@ end
 
 function OnInit()
     top =UIUtil:AddTop2("MissionActivityView", topObj, OnClickReturn);
-    isBattle = DungeonMgr:GetCurrId() ~= nil
+    isBattle = SceneMgr:IsBattleDungeon()
     CSAPI.SetGOActive(top.btn_home,not isBattle)
 end
 

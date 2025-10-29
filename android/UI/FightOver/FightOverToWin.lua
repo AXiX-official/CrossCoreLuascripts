@@ -229,7 +229,7 @@ function SetTitleIcon()
         end
     elseif sceneType == SceneType.GlobalBoss or sceneType == SceneType.TowerDeep then
         imgName = "end"
-    elseif sceneType == SceneType.PVPMirror or IsPvpSceneType(sceneType) or sceneType == SceneType.RogueMap or sceneType == SceneType.RogueMapSup then
+    elseif sceneType == SceneType.PVPMirror or IsPvpSceneType(sceneType) then
         imgName = elseData.bIsWin and imgName or "lose"
     elseif sceneType == SceneType.RogueT then
         imgName = "32_01"    
