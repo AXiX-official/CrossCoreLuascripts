@@ -484,7 +484,7 @@ function SetFormation(_cid,_hideFormat)
     local index = TeamMgr:GetCardTeamIndex(cid,teamType,true)
     if index ~= -1 then
         CSAPI.SetGOActive(format, true)
-        if(teamType and (teamType==eTeamType.RogueS or teamType==eTeamType.PVP or teamType==eTeamType.PVPFriend)) then 
+        if(teamType and (teamType==eTeamType.RogueS or teamType==eTeamType.PVP or teamType==eTeamType.PVPFriend or teamType==eTeamType.TowerDeep)) then 
             index = index - teamType+1
         end
         index = index < 10 and "0" .. index or index .. ""

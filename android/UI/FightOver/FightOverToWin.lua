@@ -215,11 +215,7 @@ function SetTitleIcon()
         elseif isDirll then
             imgName = "dirll_win"
         elseif isBossDirll then
-            imgName = "end"
-        elseif sceneType == SceneType.PVPMirror or IsPvpSceneType(sceneType) then
-            imgName = elseData.bIsWin and imgName or "lose"
-        elseif sceneType == SceneType.RogueT then
-            imgName = "32_01"        
+            imgName = "end"    
         end
     end
     if sceneType == SceneType.PVE then --十二星宫
@@ -231,8 +227,12 @@ function SetTitleIcon()
                 -- imgName = "dirll_end"
             end
         end
-    elseif sceneType == SceneType.GlobalBoss then
+    elseif sceneType == SceneType.GlobalBoss or sceneType == SceneType.TowerDeep then
         imgName = "end"
+    elseif sceneType == SceneType.PVPMirror or IsPvpSceneType(sceneType) or sceneType == SceneType.RogueMap or sceneType == SceneType.RogueMapSup then
+        imgName = elseData.bIsWin and imgName or "lose"
+    elseif sceneType == SceneType.RogueT then
+        imgName = "32_01"    
     end
     CSAPI.LoadImg(topImg, "UIs/FightOver/img_" .. imgName .. ".png", true, nil, true)
 end
@@ -972,7 +972,7 @@ function SetPVPScore(addScore)
     local maxRankLv = GetMaxRankLv()
     if maxRankLv == pvpData.rankLv then
         RefreshTextRank(maxRankLv)
-        RefreshTextScore("MAX", "MAX")
+        RefreshTextScore(pvpData.score)
         SetPVPProgress(1)
     elseif (addScore <= 0) then
         local curScore = pvpData.score
@@ -1007,7 +1007,11 @@ function RefreshTextRank(rankLv)
 end
 
 function RefreshTextScore(currScore, nextScroe)
-    CSAPI.SetText(txtRankNum, string.format("%s/%s", currScore, nextScroe))
+    if not nextScroe or nextScroe == "" then
+        CSAPI.SetText(txtRankNum, currScore .. "")
+    else
+        CSAPI.SetText(txtRankNum, string.format("%s/%s", currScore, nextScroe))
+    end
 end
 
 -- 获取段位所需积分
@@ -1274,19 +1278,24 @@ function SetTowerDeepPanel()
     CSAPI.SetGOActive(damageObj,true)
     CSAPI.SetText(txtDamage,elseData.score .. "")
     LanguageMgr:SetText(txt_topDamage,130020)
-    CSAPI.SetGOActive(txt_topDamage, elseData.maxScore and elseData.maxScore > 0 and elseData.maxScore >= elseData.score)
+    CSAPI.SetGOActive(txt_topDamage, elseData.maxScore and elseData.maxScore > 0 and elseData.maxScore <= elseData.score)
     --title
     CSAPI.SetGOActive(titleObj,true)
     LanguageMgr:SetText(txtTitle,130019)
     --bottom
     local len = RogueSMgr:GetLen(elseData.group)
-    CSAPI.SetGOActive(towerDeepObj, elseData.round< len)
+    CSAPI.SetGOActive(towerDeepObj, elseData.round< len and elseData and elseData.bIsWin)
 end
 
 --重新挑战
 function OnClickTowerDeep1()
-    FightClient:Clean()
-    FightProto:EnterTowerDeepFight(elseData.round,CloseParent)
+    local dialogData = {}
+    dialogData.content = LanguageMgr:GetByID(130033)
+    dialogData.okCallBack = function()
+        FightClient:Clean()
+        FightProto:EnterTowerDeepFight(elseData.round,CloseParent)
+    end
+    CSAPI.OpenView("Dialog",dialogData)
 end
 --下一轮
 function OnClickTowerDeep2()

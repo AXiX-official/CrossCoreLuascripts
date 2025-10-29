@@ -5,6 +5,8 @@ local totaleExp = 0
 local roleItem1
 local roleItem2
 local mExp = 0
+local openType = nil
+local isChoose = false
 
 function Clear()
     curDatas = {}
@@ -17,9 +19,9 @@ function Awake()
     slider = ComUtil.GetCom(Slider, "Slider")
     layout = ComUtil.GetCom(hsv, "UIInfinite")
     layout:Init("UIs/Grid/GridGiftItem", LayoutCallBack, true)
-
     -- bar = Bar.New()
     -- bar:Init(Slider, CfgCardRoleUpgrade, "nExp", SetCLv, SetCExp, 2, SetExp, false)
+    CSAPI.SetGOActive(mask, false)
 end
 
 -- --设置等级
@@ -42,6 +44,12 @@ end
 
 function Init(_dormView)
     dormView = _dormView
+end
+
+function OnOpen()
+    CSAPI.SetGOActive(mask, true)
+    openType = 1
+    Refresh(data)
 end
 
 function Refresh(_role)
@@ -107,7 +115,9 @@ function SetGrids()
     for i, v in pairs(cfgs) do
         local num = BagMgr:GetCount(v.itemId)
         local data = BagMgr:GetFakeData(v.itemId, num)
-        table.insert(curDatas, data)
+        if (isChoose or num > 0) then
+            table.insert(curDatas, data)
+        end
         local _giftData = {}
         _giftData.had = num
         _giftData.removeFunc = RemoveFunc
@@ -131,6 +141,9 @@ function SetGrids()
         end)
     end
     layout:IEShowList(#curDatas)
+    --
+    CSAPI.SetGOActive(empty, #curDatas <= 0)
+    CSAPI.SetGOActive(sel,isChoose)
 end
 
 -- 选择
@@ -184,7 +197,11 @@ function OnClickBg2()
 end
 
 function OnClickCancel()
-    Refresh(nil)
+    if (not openType) then
+        Refresh(nil)
+    else
+        view:Close()
+    end
 end
 
 function OnClickSure()
@@ -204,5 +221,16 @@ function OnClickSure()
         -- Clear()
 
         OnClickCancel()
+        LanguageMgr:ShowTips(21038)
     end
+end
+
+function OnClickMask()
+    view:Close()
+end
+
+-- 显示未拥有礼物
+function OnClickChoose()
+    isChoose = not isChoose
+    SetGrids()
 end

@@ -752,7 +752,6 @@ function PlayAnim(b)
                 animators[i]:Play("idle")
             end
         end
-        CreateEffect(b)
     end
 end
 

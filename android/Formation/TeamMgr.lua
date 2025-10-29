@@ -33,10 +33,7 @@ end
 function this:CheckSingleCard(index)
 	local teamType=self:GetTeamType(index);
 	local rangeInfo=self:GetIndexRangeInfo(teamType)
-	if rangeInfo and rangeInfo.isSingleCard then
-		return true;
-	end
-	return false;
+	return rangeInfo and rangeInfo.singleCardType
 end
 
 --设置数据
@@ -279,6 +276,20 @@ function this:GetCardForceIndex(dungeonId,cid)
 	return -1;
 end
 
+----返回卡牌所属队伍索引（根据卡牌tag检测）
+function this:GetCardTeamIndexByTag(roleTag,teamType)
+	teamType=teamType==nil and eTeamType.DungeonFight or teamType
+	local teams = self:GetTeamDatasByType(teamType);
+	if roleTag and teams then
+		for k, v in ipairs(teams) do
+			if v:GetItemByRoleTag(roleTag) then
+				return v:GetIndex()
+			end
+		end
+	end
+	return -1;
+end
+
 function this:SaveData(teamData,callBack)
 	if teamData==nil or teamData:GetIndex()==nil or teamData:GetIndex()<1 then
 		LogError("队伍数据不得为空！")
@@ -394,7 +405,8 @@ function this:SaveEditTeam(callBack)
 	local index=self.currentIndex;
 	if self.editTeams and self.editTeams[index] then
 		local saveIndex=nil;
-		if (self:CheckSingleCard(index))then
+		local type = self:CheckSingleCard(index)
+		if (type)then
 			--剧情队伍/强制上阵队伍
 			--判断当前队伍中的卡牌是否包含其他队伍的，有的话就将影响到的卡牌一起保存
 			saveIndex=saveIndex or {};
@@ -407,19 +419,30 @@ function this:SaveEditTeam(callBack)
 					teamItem:SetStrategyIndex(realAIIndex);
 				end
 				local oldIndex=-1
-				if index >= eTeamType.ForceFight then --强制上阵队伍
-					local dungeonId=tostring(index);
-					dungeonId=tostring(string.sub(dungeonId,1,string.len(dungeonId)-1));
-					oldIndex=self:GetCardForceIndex(dungeonId,val.cid);
-				else --普通队伍
-					oldIndex=self:GetCardTeamIndex(val.cid,teamType);
+				if (type == eSingleCardType.Normal) then 
+					if index >= eTeamType.ForceFight then --强制上阵队伍
+						local dungeonId=tostring(index);
+						dungeonId=tostring(string.sub(dungeonId,1,string.len(dungeonId)-1));
+						oldIndex=self:GetCardForceIndex(dungeonId,val.cid);
+					else --普通队伍
+						oldIndex=self:GetCardTeamIndex(val.cid,teamType);
+					end
+				elseif (type == eSingleCardType.Assist) then --包含检测助战的牌
+					oldIndex = self:GetCardTeamIndexByTag(val:GetRoleTag(),teamType)
+					if oldIndex == -1 then --未找到则检查一遍助战缓存,如果有则清除对应缓存
+						self:RemoveAssistTeamIndexByRoleTag(val:GetRoleTag(),teamType)
+					end
 				end
 				--从旧队伍中移除卡牌
 				if oldIndex~=-1 and oldIndex~=index then
 					local teamData=self:GetTeamData(oldIndex,true);
 					if teamData~=nil then
 						local isLeader=teamData:IsLeader(val.cid);
-						teamData:RemoveCard(val.cid);
+						if (type == eSingleCardType.Normal) then
+							teamData:RemoveCard(val.cid);
+						elseif (type == eSingleCardType.Assist) then
+							teamData:RemoveCardByTag(val:GetRoleTag());
+						end
 						if isLeader==true and teamData:GetCount()>=1 then --涉及队长的话会默认设置第一的队员为新的队长
 							teamData:SetLeader(teamData.data[1].cid);
 						end
@@ -844,6 +867,26 @@ function this:RemoveAssistTeamIndex(cid)
 	end
 end
 
+--根据tag移除助战卡牌缓存
+function this:RemoveAssistTeamIndexByRoleTag(roleTag,teamType)
+	if not roleTag or not self.assistTeamIndex then
+		return
+	end
+	local ss,cfg =nil,nil
+	local rangeInfo = teamType and self:GetIndexRangeInfo(teamType) or nil
+	for k, v in pairs(self.assistTeamIndex) do
+		ss = StringUtil:Split(k,'_')
+		if ss and #ss > 1 then
+			cfg = Cfgs.CardData:GetByID(tonumber(ss[2]))
+			if cfg and cfg.role_tag and roleTag == cfg.role_tag then
+				if not rangeInfo or (v>=rangeInfo.id and v<=rangeInfo.endIdx) then
+					self:RemoveAssistTeamIndex(k)
+				end
+			end
+		end
+	end
+end
+
 function this:GetAssistCID(index)
 	if index and self.assistTeamIndex then
 		for k,v in pairs(self.assistTeamIndex) do
@@ -874,6 +917,7 @@ end
 function this:ClearAssistTeamIndex()
 	self.assistTeamIndex={};
 end
+
 -------------------------------------------------------end
 
 -----------------------------------------------------界面数据缓存--------------------------

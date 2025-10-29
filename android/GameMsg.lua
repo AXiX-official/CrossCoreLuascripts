@@ -1051,9 +1051,9 @@ GameMsg.map["FightProtocol:GetGlobalBossData"] = {
 	{ },
 }
 GameMsg.map["FightProto:GetGlobalBossDataRet"] = {
-	--血量     最大血量 玩家排名 今日已挑战次数   最高伤害值  
-	{ "double","double","uint",  "uint",          "int",      },
-	{ "hp",    "maxHp", "rank",  "challengeTimes","maxDamage",},
+	--血量     最大血量 玩家排名 今日已挑战次数   最高伤害值  参与人数  
+	{ "double","double","uint",  "uint",          "int",      "int",    },
+	{ "hp",    "maxHp", "rank",  "challengeTimes","maxDamage","joinNum",},
 }
 GameMsg.map["FightProtocol:EnterGlobalBossFight"] = {
 	--队伍         
@@ -1255,6 +1255,41 @@ GameMsg.map["FightProto:MultTeamFightOver"] = {
 	{ "uint","uint",      "list|sMultTeamDupData","bool",  "array|uint","list|sReward","array|uint",        },
 	{ "id",  "score",     "dupData",           "bIsWin","arrPass",   "reward",      "arrCard",           },
 }
+GameMsg.map["sTowerDeepDuplicateData"] = {
+	--关卡组ID 积分    已获得奖励档位 是否通关 
+	{ "uint",  "uint", "array|uint",  "bool",  },
+	{ "id",    "score","getRwdLv",    "isPass",},
+}
+GameMsg.map["FightProtocol:GetTowerDeepInfo"] = {
+	--活动id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["FightProto:GetTowerDeepInfoRet"] = {
+	--活动id 关卡组数据           已通关最大关卡组 
+	{ "uint","list|sTowerDeepDuplicateData","uint",          },
+	{ "id",  "datas",             "maxGroup",      },
+}
+GameMsg.map["FightProtocol:EnterTowerDeepDuplicate"] = {
+	--关卡组ID 编队信息             
+	{ "uint",  "list|sDuplicateTeamData",},
+	{ "id",    "list",              },
+}
+GameMsg.map["FightProtocol:EnterTowerDeepFight"] = {
+	--选择的关卡轮次 
+	{ "uint",        },
+	{ "round",       },
+}
+GameMsg.map["FightProto:EnterTowerDeepFightRet"] = {
+	--选择的关卡轮次 
+	{ "uint",        },
+	{ "round",       },
+}
+GameMsg.map["FightProto:TowerDeepFightOver"] = {
+	--结果     当前关卡轮次 关卡组ID 总操作数 分数    参与战斗的卡牌(id：卡牌id, num:添加的好感度) 历史最高分数 奖励           
+	{ "bool",  "uint",      "uint",  "uint",  "uint", "list|sNumInfo",     "uint",      "list|sReward",},
+	{ "bIsWin","round",     "group", "steps", "score","cardsExp",          "maxScore",  "reward",      },
+}
 GameMsg.map["ItemData"] = {
 	--id     数量  第一个获取时间 有效期序列值(结合配置表的sExpiry使用, 导表工具会生成nExpiry) 过期时间，不需要分开堆叠显示的使用[头像框] 分批获取的信息 
 	{ "uint","int","uint",        "short",             "uint",               "json",        },
@@ -1296,7 +1331,7 @@ GameMsg.map["PlayerProto:UseItemRet"] = {
 	{ "info",              "isMerge",       },
 }
 GameMsg.map["TeamItemData"] = {
-	--卡牌的唯一id 位置    行      列      卡牌的信息(实时战斗才设置) 卡牌的信息(实时战斗才设置) 策略             是否是NPC 
+	--卡牌的唯一id 位置    行      列      卡牌的信息(排行榜阵容) 卡牌的信息(实时战斗才设置) 策略             是否是NPC 
 	{ "uint",      "byte", "short","short","struts|sCardsData", "struts|sPvpCardsData","byte",          "bool",   },
 	{ "cid",       "index","row",  "col",  "card_info",         "pvp_card_info",     "nStrategyIndex","bIsNpc", },
 }
@@ -5254,6 +5289,26 @@ GameMsg.map["sPopupPackInfo"] = {
 	--礼包条件id 礼包结束时间戳 弹出时间（非nil 并且大于0 弹出过） 
 	{ "uint",    "uint",        "uint",               },
 	{ "cfgid",   "finishTime",  "popupTime",          },
+}
+GameMsg.map["OperateActiveProto:GetHalloweenGameData"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:GetHalloweenGameDataRet"] = {
+	--奖励次数 剩余奖励次数 个人历史最高分 
+	{ "uint",  "uint",      "uint",        },
+	{ "cnt",   "remainCnt", "maxScore",    },
+}
+GameMsg.map["OperateActiveProto:GetHalloweenGameReward"] = {
+	--获得积分 开始游戏时间 游戏总计时间 积分糖果数量 骷髅糖果数量 时间糖果数量 本次游戏结果（1倒计时结束，2为血量扣完，3中途退出） 
+	{ "uint",  "int",       "int",       "uint",      "uint",      "uint",      "uint",              },
+	{ "score", "begTime",   "gameTime",  "rightNum",  "wrongNum",  "timeNum",   "gameRet",           },
+}
+GameMsg.map["OperateActiveProto:GetHalloweenGameRewardRet"] = {
+	--奖励次数 剩余奖励次数 个人历史最高分 
+	{ "uint",  "uint",      "uint",        },
+	{ "cnt",   "remainCnt", "maxScore",    },
 }
 GameMsg.map["LovePlusProto:GetChapterData"] = {
 	--章节id      

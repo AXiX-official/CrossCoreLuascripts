@@ -1002,6 +1002,9 @@ function this:ShowSpecialGuide(parent, viewName, type, datas)
     if viewName == nil or viewName == "" then
         return
     end
+    if parent.gameObject.activeSelf == false then
+        return
+    end
     if GuideMgr:HasGuide(viewName) or GuideMgr:IsGuiding() or SpecialGuideMgr:IsClose() then
         return
     end

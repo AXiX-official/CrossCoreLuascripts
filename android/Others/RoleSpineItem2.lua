@@ -136,7 +136,7 @@ function SetTouch()
 end
 
 -- 点击触发
--- _check 检查过场spine是否存在（存在时不让玩家点击），表上填的切换不检测
+-- _check 检查过场spine是否存在（存在时不让玩家点击），changerole时如果后接更换idle
 function TouchItemClickCB(cfgChild, _cb,_check)
     local check = true 
     if(_check~=nil)then 
@@ -196,7 +196,6 @@ function TouchItemClickCB(cfgChild, _cb,_check)
     if (not isCan) then
         return
     end
-
     local sName = cfgChild.sName
     local mulData = {
         timeScale = 1,

@@ -158,7 +158,9 @@ function InitFightInfo()
         items2 = items2 or {}
         ItemUtil.AddItems("Rogue/RogueBuffSelectItem2", items2, RogueMgr:GetSelectBuffs(), rogueBuffs)
     elseif (g_FightMgr.type == SceneType.RogueT) then
-        CSAPI.SetGOActive(rogutTBuff,true);
+        CSAPI.SetGOActive(rogutTBuff,true);        
+    elseif (g_FightMgr.type == SceneType.TowerDeep) then
+        CSAPI.SetGOActive(deepScore,true)
     end
     --CSAPI.SetText(fightInfoText,info);
 end
@@ -319,6 +321,8 @@ function OnFightInfoUpdate(fightActionDatas)
             UpdateNP(npData);
         end
     end
+
+    UpdateTowerDeepScore()
 end
 function OnFightNpCost(data)
     if(data and data > 0)then
@@ -358,6 +362,8 @@ function OnFightDamageUpdate(value)
     end
 
     UpdateCurrTotalDamage();
+    
+    UpdateTowerDeepScore()
 end
 
 function UpdateCurrTotalDamage()
@@ -375,6 +381,36 @@ function UpdateCurrTotalDamage()
 	end
 end
 
+--更新深塔计划分数
+function UpdateTowerDeepScore()
+    if not g_FightMgr or g_FightMgr.type ~= SceneType.TowerDeep then
+        return
+    end
+    local mineCount = 0  --存活人数
+    local hpinfo = { --怪物剩余总血量
+        stage = g_FightMgr.stage
+    }
+    if CharacterMgr:GetAll() then
+        local cfgMonster = nil
+        local hpCount = 0
+        for _, character in pairs(CharacterMgr:GetAll()) do
+            if not character.IsDead() then
+                if character.IsEnemy() then
+                    cfgMonster = character.GetCfg()
+                    if cfgMonster and cfgMonster.isPoints then
+                        hpCount = hpCount + character.GetHpInfo()
+                    end
+                -- elseif character.GetCharacterType() == CardType.Card then
+                --     mineCount = mineCount + 1
+                end
+            end
+        end
+        hpinfo.leftHp = hpCount
+    end
+    
+    --传入关卡id，存活人数，总操作数，怪物血量
+    CSAPI.SetText(txtDeepScore,GCalHelp:CalcTowerDeepDupScore(0,g_FightMgr.nDuplicateID,mineCount,turnData and turnData.turnNum or 0,hpinfo) .. "")
+end
 
 function SetTimeOut(value)
     if(value and myUpdater == nil)then

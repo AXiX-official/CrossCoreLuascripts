@@ -16,6 +16,7 @@ SceneType.RogueT 		= 12 -- 能力测验
 SceneType.BuffBattle	= 13 -- 积分战斗
 SceneType.MultTeam		= 15 -- 多队玩法
 SceneType.PVEFreeMatch	= 17 -- 自由军演(镜像) -- v 4.3
+SceneType.TowerDeep		= 18 -- 新爬塔 -- v 4.4
 
 function IsPvpSceneType(sType)
 	return sType == SceneType.PVP or sType == SceneType.PVEFreeMatch
@@ -41,6 +42,7 @@ eDuplicateType.AbattoirSelect  = 13 -- 角斗场自选模式
 eDuplicateType.AbattoirRand	   = 14 -- 角斗场随机模式
 eDuplicateType.RogueT	       = 15 -- 能力测验
 eDuplicateType.MultTeam	       = 17 -- 多队玩法
+eDuplicateType.TowerDeep	   = 18 -- 深塔计划 v 4.4
 eDuplicateType.NewTower        = 19 -- 异构空间
 
 eDuplicateType.Materials       = 101 -- 材料副本

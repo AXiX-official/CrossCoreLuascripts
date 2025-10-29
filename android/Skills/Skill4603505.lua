@@ -39,6 +39,16 @@ function Skill4603505:OnAttackOver2(caster, target, data)
 	-- 4603543
 	self:ClosingBuffByID(SkillEffect[4603543], caster, target, data, 3,1001)
 end
+-- 回合开始处理完成后
+function Skill4603505:OnAfterRoundBegin(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4603502
+	self:AddBuff(SkillEffect[4603502], caster, self.card, data, 4603502)
+end
 function Skill4603505:tFunc_4603535_4603525(caster, target, data)
 	-- 8738
 	local count738 = SkillApi:SkillLevel(self, caster, target,3,6035002)

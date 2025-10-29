@@ -106,7 +106,7 @@ end
 
 function GetIsWin(_sceneType)
     if (_sceneType == SceneType.BOSS or IsPvpSceneType(_sceneType) or _sceneType == SceneType.PVPMirror or _sceneType == SceneType.GlobalBoss or
-     _sceneType == SceneType.RogueT or _sceneType==SceneType.MultTeam) then
+     _sceneType == SceneType.RogueT or _sceneType==SceneType.MultTeam or _sceneType == SceneType.TowerDeep) then
         return true
     elseif _sceneType == SceneType.PVE then
         local cfg = Cfgs.MainLine:GetByID(DungeonMgr:GetCurrId())
@@ -235,6 +235,12 @@ function ApplyQuit()
     elseif (sceneType == SceneType.MultTeam) then
         ClearTeamData()
         DungeonMgr:Quit(not bIsWin);
+    elseif (sceneType == SceneType.TowerDeep) then
+        local len = RogueSMgr:GetLen(data.elseData.group)
+        if not data.elseData.bIsWin or data.elseData.round>= len then
+            ClearTeamData()
+            DungeonMgr:Quit(not bIsWin);
+        end
     end
 end
 

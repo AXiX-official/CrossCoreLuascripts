@@ -30,6 +30,37 @@ function SingleFightMgrServer:OnDeath(card, killer)
     end
 end
 
+function SingleFightMgrServer:LoadBossConfig(groupID, stage)
+    self.groupID = self.groupID or groupID
+    stage = stage or 1
+    self.stage = stage
+
+    local config = MonsterGroup[groupID]
+    ASSERT(config, '没有配置怪物组' .. self.groupID)
+    -- DT(config)
+    local stageconfig = config.stage[stage]
+    ASSERT(stageconfig, '怪物组' .. self.groupID .. '周目' .. stage)
+
+    if config.nStepLimit then
+        -- 回合限制
+        self:SetStepLimit(config.nStepLimit)
+    elseif stageconfig.nStepLimit then
+        -- 回合限制
+        self:SetStepLimit(stageconfig.nStepLimit)
+    else
+        self:SetStepLimit(g_nFightLimit)
+    end
+
+    for i, v in ipairs(config.stage) do
+        table.insert(self.arrStateID, i)
+    end
+
+    self.totleState = #config.stage
+    -- 敌方阵型
+    self.oBoss = self.arrTeam[2]:LoadBossConfig(self.groupID, self.stage)
+    return self.oBoss
+end
+
 -- 结束
 function SingleFightMgrServer:Over(stage, winer)
     LogDebugEx('SingleFightMgrServer:Over', self.type, self.nDuplicateID, winer)
@@ -341,6 +372,8 @@ function SingleFightMgrClient:Init(...)
     self.uid = PlayerClient:GetID()
 end
 
+SingleFightMgrClient.LoadBossConfig = SingleFightMgrServer.LoadBossConfig
+
 function SingleFightMgrClient:SendCmd(cmd, data)
     if not g_FightMgrServer then
         return
@@ -372,6 +405,19 @@ function SingleFightMgrClient:SendCmd(cmd, data)
     -- 调试代码]]
 
     ret = g_FightMgrServer:RecvCmd(d)
+end
+
+function SingleFightMgrClient:AfterLoadData(exData)
+    FightMgrClient.AfterLoadData(self,exData)
+    if exData.bossMaxHp then
+        for i, v in ipairs(self.arrCard) do
+            local ty = v:GetType()
+            if ty == CardType.Boss then
+                v.hp = exData.bossMaxHp
+                v.maxhp = exData.bossMaxHp
+            end
+        end
+    end
 end
 
 function SingleFightMgrClient:SendAuto()
@@ -571,6 +617,21 @@ function SingleFightMgrServer:DamageStat(caster, nDamage)
     self.nTotalDamage = self.nTotalDamage + nDamage
 end
 
+
+function SingleFightMgrServer:AfterLoadData(exData)
+    --LogTrace()
+    FightMgrServer.AfterLoadData(self,exData)
+    if exData.bossMaxHp then
+        for i, v in ipairs(self.arrCard) do
+            local ty = v:GetType()
+            if ty == CardType.Boss then
+                v.hp = exData.bossMaxHp
+                v.maxhp = exData.bossMaxHp
+            end
+        end
+    end
+end
+
 -- 创建一个单机模拟战斗
 function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill, exData)
     LogDebugEx('CreateSimulateFight', groupID, groupID2, seed,exData)
@@ -609,7 +670,20 @@ function CreateSimulateFightByData(data, groupID2, cbOver, seed, tCommanderSkill
         end
         exData.hpinfo = hpIfs
     end
-    mgr:LoadConfig(groupID2, 1, exData.hpinfo)
+    local bossId = exData.bossId
+    if bossId then
+        mgr.nTPCastRate = 1
+        local oboss = mgr:LoadBossConfig(groupID2, 1)
+        -- boss技能添加
+        GCalHelp:GetGlobalBossAddSkill(oboss,bossId)
+        -- 添加词条
+        local bossCfg = cfgGlobalBoss[bossId]
+        if bossCfg and bossCfg.buffId then
+            GCalHelp:GetGlobalBossExdata(bossCfg.buffId, exData, data.data)
+        end
+    else
+        mgr:LoadConfig(groupID2, 1, exData.hpinfo)
+    end
     mgr:LoadData(1, data.data, nil, tCommanderSkill)
     mgr:AfterLoadData(exData)
     mgr.isSingleFight = true

@@ -95,8 +95,8 @@ function FightProto:RecvCmd(proto)
     ASSERT(data)
     proto[3] = data
     if cmd == CMD_TYPE.InitData then
-        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS or data.stype == SceneType.RogueT or
-        data.stype == SceneType.BuffBattle or data.stype==SceneType.MultTeam then
+        if data.stype == SceneType.PVE or data.stype == SceneType.PVEBuild or data.stype == SceneType.Rogue or data.stype == SceneType.RogueS or data.stype == SceneType.RogueT 
+        or data.stype == SceneType.BuffBattle or data.stype==SceneType.MultTeam or data.stype == SceneType.TowerDeep then
             if not g_bRestartFight then
                 FightActionMgr:Start()
             end
@@ -212,8 +212,16 @@ function FightProto:RecvCmd(proto)
 
             g_FightMgr = SingleFightMgrClient(data.fid, data.groupID, SceneType.PVE, data.seed)
             g_FightMgr.uid = PlayerClient:GetID()
-
-            g_FightMgr:LoadConfig(data.groupID, 1,data.exData.hpinfo)
+            if data.exData.bossId then
+                g_FightMgr.nTPCastRate = 1
+                local oboss = g_FightMgr:LoadBossConfig(data.groupID, 1)
+                oboss.maxhp = data.exData.bossMaxHp
+                oboss.hp = data.exData.bossMaxHp
+                oboss:UpdateHp(data.exData.bossMaxHp)
+                GCalHelp:GetGlobalBossAddSkill(oboss,data.exData.bossId)     
+            else
+                g_FightMgr:LoadConfig(data.groupID, 1,data.exData.hpinfo)
+            end
             g_FightMgr:LoadData(data.teamID, data.data.data, nil, data.data.tCommanderSkill)
 
             g_FightMgr:AfterLoadData(data.exData)
@@ -256,6 +264,9 @@ function FightProto:RecvCmd(proto)
                 oboss.maxhp = data.exData.bossMaxHp
                 oboss.hp = data.exData.bossHp
                 oboss:UpdateHp(data.exData.bossHp)
+                if data.exData.bossId then                   
+                    GCalHelp:GetGlobalBossAddSkill(oboss,data.exData.bossId)     
+                end
             end
             -- oboss.hp = data.exData.bossHp or oboss.hp
             g_FightMgr:LoadData(data.teamID, data.data.data, nil, data.data.tCommanderSkill)
@@ -745,7 +756,7 @@ function FightProto:InBattle(proto)
         self:SetRestoreFightProto(proto);
     end
 
-    if (proto.type == SceneType.PVE or proto.type == SceneType.RogueS) then
+    if (proto.type == SceneType.PVE or proto.type == SceneType.RogueS or proto.type == SceneType.TowerDeep) then
         DungeonMgr:SetCurrId(proto.nDuplicateID);
         DungeonMgr:SetCurrFightId(proto.nDuplicateID);
     end
@@ -801,48 +812,31 @@ function FightProto:ShowRestoreFightDialog(isShow)
         end
     end
     self.restoreFightProto = nil;
-    if (not isShow) then
-        FightClient:QuitFihgt()
-        DungeonMgr:SendToQuit();
-        return;
-    end
-
-    self.isRestoreFight = true
-    local cancelCallBack = nil;
-    -- if(data.type == SceneType.PVP or data.type == SceneType.PVPMirror)then
-    cancelCallBack = function()
-        -- FightProto:LeaveFight()
-        -- if data then
-        FightClient:QuitFihgt()
-        DungeonMgr:SendToQuit();
-        -- local proto = {"FightProtocol:Quit", {bIsQuit = true}}  --ArmyProto:NotReEntryRealFight
-        -- NetMgr.net:Send(proto)
-        -- else
-        -- DungeonMgr:SendToQuit();
-        -- FriendMgr:ClearAssistData();
-        -- TeamMgr:ClearFightTeamData();
-        -- UIUtil:AddFightTeamState(2,"BattleView:OnQuipOk()")
-        -- end	
-    end
-    -- LogError(self.restoreFightProto);
-    -- LogError(id);
-    -- end
-    CSAPI.OpenView("DialogNoTop", {
-        content = LanguageMgr:GetTips(8022),
+    local dialogData = {
         okCallBack = function()
-            -- if data then
-            -- 	local proto = {"FightProtocol:RestoreFight", {nCmdIndex = 0}}
-            -- 	local curNet = ExerciseMgr:GetCurNet()
-            -- 	curNet:Send(proto)
-            -- else
             self.isRestoreFight = false
             DungeonMgr:SetToCheckBattleFight()
             DungeonMgr:ApplyEnter(id)
-            -- end			
-            -- ASSERT()
         end,
-        cancelCallBack = cancelCallBack
-    });
+        cancelCallBack = function()
+            FightClient:QuitFihgt()
+            DungeonMgr:SendToQuit();
+        end,
+        content = LanguageMgr:GetTips(8022),
+    }
+    if (not isShow) then
+        dialogData.cancelCallBack()
+        return;
+    end
+    self.isRestoreFight = true
+    local cfgDungeon = Cfgs.MainLine:GetByID(id)
+    if cfgDungeon and cfgDungeon.dungeonGroup and cfgDungeon.type == eDuplicateType.TowerDeep then
+        dialogData.okCallBack = function()
+            self.isRestoreFight = false
+            FightProto:EnterTowerDeepFight()
+        end
+    end
+    CSAPI.OpenView("DialogNoTop", dialogData);
 end
 
 -- 设置集火回复
@@ -1460,4 +1454,39 @@ end
 function FightProto:MultTeamFightOver(proto)
     MultTeamBattleMgr:UpdateCurData(proto);
     FightOverTool.OnMultTeamBattleOver(proto)
+end
+
+---------------------深塔计划
+function FightProto:GetTowerDeepInfo(id)
+    local proto={"FightProtocol:GetTowerDeepInfo",{id=id}}
+    NetMgr.net:Send(proto)
+end
+
+function FightProto:GetTowerDeepInfoRet(proto)
+    TowerMgr:SetDeepDatas(proto)
+end
+
+--进入副本
+function FightProto:EnterTowerDeepDuplicate(data)
+    local proto={"FightProtocol:EnterTowerDeepDuplicate",data}
+    NetMgr.net:Send(proto)
+end
+
+--进入战斗
+function FightProto:EnterTowerDeepFight(_round,_cb)
+    self.enterTowerDeepFightCallBack = _cb
+    local proto={"FightProtocol:EnterTowerDeepFight",{round = _round}}
+    NetMgr.net:Send(proto)
+end
+
+function FightProto:EnterTowerDeepFightRet(proto)
+    if self.enterTowerDeepFightCallBack then
+        self.enterTowerDeepFightCallBack(proto)
+        self.enterTowerDeepFightCallBack= nil
+    end
+end
+
+function FightProto:TowerDeepFightOver(proto)
+    local isSurrender = FightClient:IsSurrender();
+    FightOverTool.TowerDeepInfoUpdate(proto,isSurrender)
 end

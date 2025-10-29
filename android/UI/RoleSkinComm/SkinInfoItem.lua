@@ -23,16 +23,30 @@ function Refresh(_data,_elseData)
         ResUtil.CardIcon:Load(icon,modelCfg.Card_head,true);
         SetName(this.data:GetRoleName());
         SetSName(this.data:GetSkinName());
-        SetL2dTag(this.data:HasL2D());
-        SetAnimaTag(this.data:HasEnterTween());
-        SetModelTag(this.data:HasModel());
+        -- SetL2dTag(this.data:HasL2D());
+        -- SetAnimaTag(this.data:HasEnterTween());
+        -- SetModelTag(this.data:HasModel());
+         --特殊标签
+        local icons=this.data:GetTagIcons();
+        if icons~=nil then
+            for i, v in ipairs(icons) do
+                CSAPI.SetGOActive(this[("tag"..i)],true)
+                ResUtil.Tag:Load(this[("tagIcon"..i)],v);
+            end
+        end
+         if icons==nil or #icons<3 then
+                local index= icons~=nil and #icons+1 or 1;
+                for i=index,3 do
+                    CSAPI.SetGOActive(this[("tag"..i)],false)
+                end
+            end
         local comm=ShopCommFunc.GetSkinCommodity(this.data:GetModelID());
         if comm then
             SetSPPriceTag(comm:HasDiscountTag());
         else
             SetSPPriceTag();
         end
-        SetSPTag(this.data:HasSpecial());
+        -- SetSPTag(this.data:HasSpecial());
         local cfg=this.data:GetSetCfg();
         SetSIcon(cfg.icon);
         local getType,getTips=this.data:GetWayInfo();
@@ -43,6 +57,8 @@ function Refresh(_data,_elseData)
                 local isHas=rInfo:CheckCanUse()
                 SetHas(isHas);
                 CSAPI.SetImgColor(setIcon,255,255,255,isHas and 255 or 50);
+            elseif rInfo==nil then
+                SetHas(false);
             else
                 SetHas(true);--隐藏未持有的标签
             end

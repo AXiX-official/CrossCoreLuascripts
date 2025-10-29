@@ -97,6 +97,13 @@ function this:CheckIsShow()
             self.begTime = alData:GetStartTime()
             self.endTime = alData:GetEndTime()
         end
+    elseif self.cfg.nType == 15 then -- 万圣节
+        local _, id = ActivityMgr:IsOpenByType(ActivityListType.Halloween)
+        local alData = ActivityMgr:GetALData(id)
+        if alData then
+            self.begTime = alData:GetStartTime()
+            self.endTime = alData:GetEndTime()
+        end
     end
     if (self.begTime == nil and self.endTime == nil) then
         self.isShow = false
@@ -184,6 +191,8 @@ function this:IsRed()
             self.isRed = infos ~= nil and infos[self:GetCfg().page] ~= nil or false;
         elseif self.cfg.nType == 14 then
             self.isRed = RedPointMgr:GetData(RedPointType.LovePlus) ~= nil
+        elseif self.cfg.nType == 15 then -- 万圣节
+            self.isRed = RedPointMgr:GetData(RedPointType.Halloween) ~= nil
         end
     end
     return self.isRed

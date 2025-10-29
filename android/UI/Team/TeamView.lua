@@ -482,12 +482,12 @@ function SetViewLayout(openSetting)
         CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,selectType==TeamSelectType.Normal and true or false);
 		hasPrefab = false
-    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle or openSetting==TeamOpenSetting.PVPMirror then
+    elseif openSetting==TeamOpenSetting.PVE or openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle or openSetting==TeamOpenSetting.PVPMirror or openSetting==TeamOpenSetting.TowerDeep then
 		CSAPI.SetGOActive(btn_svType2,canAssist);
         CSAPI.SetGOActive(viewType,true);
 		CSAPI.SetGOActive(btn_list,false);
     end
-	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle then
+	if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.Colosseum or openSetting==TeamOpenSetting.RogueT or openSetting==TeamOpenSetting.MultBattle or openSetting==TeamOpenSetting.TowerDeep then
 		hasPrefab=false;
 	end
 	CSAPI.SetGOActive(btn_prefab,hasPrefab);
@@ -573,13 +573,15 @@ end
 
 function RefreshLeftInfo()
 	if teamData then
-		if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.MultBattle then
+		if openSetting==TeamOpenSetting.Tower or openSetting==TeamOpenSetting.Rogue or openSetting==TeamOpenSetting.TotalBattle or openSetting==TeamOpenSetting.RogueS or openSetting==TeamOpenSetting.MultBattle or openSetting==TeamOpenSetting.TowerDeep then
 			input.interactable=false;
 		else
 			input.interactable=not TeamMgr:GetTeamIsFight(teamData:GetIndex())
 		end
 		if(openSetting==TeamOpenSetting.RogueS) then 
 			input.text=LanguageMgr:GetByID(65021)
+		elseif openSetting==TeamOpenSetting.TowerDeep then
+			input.text=LanguageMgr:GetByID(130025)
 		else 
 			input.text=teamData:GetTeamName()==nil and "" or tostring(teamData:GetTeamName());
 		end 
@@ -700,7 +702,7 @@ function OnClickReturn()
 		--清除助战索引
 		TeamMgr:RemoveAssistTeamIndex(assitData.cid);
 	end
-    if  GetIsChange() then --有改动
+    if GetIsChange() then --有改动
         CheckTeam(Exit);
     else
         -- TeamMgr:DelEditTeam(TeamMgr.currentIndex);
@@ -774,7 +776,7 @@ end
 
 --检察队伍改动的冲突 func 处理完冲突的回调，func2取消解决冲突的回调
 function CheckTeam(func,func2)
-	if ((selectType == TeamSelectType.Normal or selectType==TeamSelectType.Force) and (TeamMgr:IsTeamType(eTeamType.DungeonFight) or TeamMgr:IsTeamType(eTeamType.ForceFight) or TeamMgr:IsTeamType(eTeamType.RogueS))) then --副本队伍检查是否有冲突
+	if ((selectType == TeamSelectType.Normal or selectType==TeamSelectType.Force) and (TeamMgr:IsTeamType(eTeamType.DungeonFight) or TeamMgr:IsTeamType(eTeamType.ForceFight) or TeamMgr:IsTeamType(eTeamType.RogueS) or TeamMgr:IsTeamType(eTeamType.TowerDeep))) then --副本队伍检查是否有冲突
 		local state = 1;--卡牌状态，1表示当前卡牌没有队伍冲突，2表示在其它队伍中上阵，但是可以下阵，3表示在其它队伍中强制上阵
 		for k, v in ipairs(teamData.data) do
 			local card = RoleMgr:GetData(v.cid);
@@ -957,9 +959,10 @@ function SetSVList()
 				arr[i].canDrag=canDrag
 				arr[i].disDrag_lanID=lanID
 			end
+		end
 		-- else
 		-- 	svList=SortMgr:Sort(sortID,arr)
-		end
+
 		svList=SortMgr:Sort(sortID,arr)
 	elseif selectType == TeamSelectType.Force then
 		local arr = {}
@@ -1134,6 +1137,9 @@ function LayoutCallBack(index)
 		disDrag=not _data.canDrag;
 		_disDrag_lanID = _data.disDrag_lanID;
 		isEqual=disDrag;
+	-- elseif openSetting==TeamOpenSetting.TowerDeep then
+	-- 	disDrag=not _data.canDrag;
+	-- 	isEqual=disDrag;
 	end
 	local isNpc,s1,s2=FormationUtil.CheckNPCID(_data:GetID());
 	local showNpc=false;
@@ -1174,7 +1180,7 @@ function LayoutCallBack2(index)
 	if (selectType ~= TeamSelectType.Support  and _data:GetRoleTag()==assistTag) or (roleItem and  _data:GetRoleTag()==roleItem:GetRoleTag() and roleItem:GetIndex()~=6 and selectType==TeamSelectType.Support) then
 		isEqual=true;
 	end
-	local canDrag=true;
+	local canDrag,disDrag_lanID=true,nil;
 	if openSetting==TeamOpenSetting.Tower then--还需要判断是否是今日锁定的助战卡牌
 		canDrag=FriendMgr:IsLockAssist(_data:GetID(),sectionID);
 		local canPass=CheckCardCanPass(_data);
@@ -1184,7 +1190,7 @@ function LayoutCallBack2(index)
 			canDrag=canPass;
 		end
 	elseif openSetting==TeamOpenSetting.TotalBattle then
-		canDrag=TotalBattleMgr:IsShowCard(_data:GetID());
+		canDrag = TotalBattleMgr:IsShowCard(_data:GetID());
 	end
 	local isNpc,s1,s2=FormationUtil.CheckNPCID(_data:GetID());
 	local showNpc=false;
@@ -1199,6 +1205,7 @@ function LayoutCallBack2(index)
 		checkTeam=true,
 		sr=scroll2,
 		disDrag=not canDrag,
+		disDrag_lanID = disDrag_lanID,
     };
 	local grid=layout2:GetItemLua(index);
 	grid.SetIndex(index);

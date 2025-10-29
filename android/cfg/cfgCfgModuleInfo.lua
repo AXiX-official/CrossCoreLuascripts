@@ -108,6 +108,8 @@ local conf = {
 {'CoffeeView',	'CoffeeView',	'1',	'1',	'487,-72',	'3101,3102,3103',	'',	'1',	''},
 {'RiddleMain',	'RiddleMain',	'1',	'1',	'487,-72',	'',	'80010,80011',	'',	''},
 {'LovePlusListView',	'LovePlusListView',	'1',	'1',	'487,-72',	'',	'73014,73015',	'',	''},
+{'TowerDeep',	'TowerDeep',	'1',	'1',	'487,-72',	'',	'130030,130031',	'',	''},
+{'HalloweenMenu',	'HalloweenMenu',	'1',	'1',	'487,-72',	'3301,3302,3303',	'',	'',	''},
 },
 }
 --cfgCfgModuleInfo = conf

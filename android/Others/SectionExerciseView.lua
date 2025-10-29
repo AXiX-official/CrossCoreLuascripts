@@ -92,7 +92,7 @@ function SetLimitExercise()
     openNums[3] = 1
     if not g_ArmyPvpShowUi or g_ArmyPvpShowUi == 0 then
         openNums[3] = 0
-end
+    end 
 end
 
 function SetButtonState()

@@ -247,6 +247,53 @@ function FightHelp:StartMainLineFight(player, nDuplicateID, groupID, data, oDupl
     return self:StartFightBySceneType(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, SceneType.PVE)
 end
 
+---- 开始新爬塔战斗
+function FightHelp:StartTowerDeepFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneTy)
+    -- DT(player)
+    -- 战斗管理器的id
+    --ASSERT(nDuplicateID)
+    -- LogTable(data, "StartMainLineFight data =")
+    -- LogTable(exData, "exData")
+    -- ASSERT()
+    local fid = UID(10)
+    local seed = os.time() + math.random(1000000)
+    --print("------------", nDuplicateID)
+    local mgr = CreateFightMgr(fid, groupID, sceneTy, seed, nDuplicateID)
+    mgr.nTeamIndex = nTeamIndex
+    mgr.oDuplicate = oDuplicate
+    mgr.nPlayerLevel = player:Get('level')
+    mgr.uid = player.id
+
+    mgr:AddPlayer(player.id, 1)
+    self:AddFightMgr({player.id}, mgr)
+    exData = exData or {}
+    exData.dupId = nDuplicateID
+    mgr:LoadConfig(groupID, exData.stage or 1, exData.hpinfo)
+    mgr:LoadData(1, data.data, nil, data.tCommanderSkill)
+    mgr:AfterLoadData(exData)
+    -- if table.empty(exData) then
+    --     exData = nil
+    -- end
+
+    mgr:AddCmd(
+        CMD_TYPE.InitData,
+        {
+            seed = seed,
+            fid = fid,
+            stype = sceneTy,
+            groupID = groupID,
+            teamID = 1,
+            nTeamIndex = nTeamIndex,
+            data = data,
+            exData = exData,
+            level = player:Get('level')
+        }
+    )
+    -- DT(mgr.cmds)
+    -- 操作日志
+    LogEnterFight(player, fid, sceneTy, nDuplicateID, groupID, data)
+    return mgr
+end
 ---- 开始乱序演习战斗
 function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneTy)
     -- DT(player)
@@ -825,6 +872,62 @@ function FightHelp:StartRoomBossFight(player, nDuplicateID, groupID, data, exDat
     local oboss = mgr:LoadBossConfig(groupID, 1)
     oboss.maxhp = exData.bossMaxHp
     oboss.hp = exData.bossHp
+
+    mgr:LoadData(1, data.data)
+
+    mgr:AfterLoadData(exData)
+
+    mgr:AddCmd(
+        CMD_TYPE.InitData,
+        {
+            seed = seed,
+            fid = fid,
+            stype = nSceneType,
+            groupID = groupID,
+            teamID = 1,
+            data = data,
+            exData = exData,
+            level = player:Get('level')
+        }
+    )
+    -- 操作日志
+    LogEnterFight(player, fid, nSceneType, nDuplicateID, groupID, data)
+
+    return mgr
+end
+
+--------------------------------------------------------------
+-- -- 新世界boss
+function FightHelp:StartGlobalBossFight(player, nDuplicateID, groupID, data, exData, nSceneType,buffs)
+    -- DT(player)
+    -- 战斗管理器的id
+    --ASSERT(nDuplicateID)
+    local fid = UID(10)
+    local seed = os.time() + math.random(10000)
+    --print("------------", nDuplicateID)
+    local mgr = CreateFightMgr(fid, groupID, nSceneType, seed, nDuplicateID)
+    mgr.nPlayerLevel = player:Get('level')
+    mgr.playerID = player.uid
+    mgr.uid = player.id
+    mgr.oPlayer = player
+
+    mgr:AddPlayer(player.id, 1)
+    self:AddFightMgr({player.id}, mgr)
+
+    data.data = Halo:Calc(data.data)
+
+    exData = exData or {}
+    -- exData.nEnterNp = {data.nEnterNp, 0}
+    mgr.nBossLevel = exData.nBossLevel
+    mgr.nTPCastRate = 1
+
+    local oboss = mgr:LoadBossConfig(groupID, 1)
+    oboss.maxhp = exData.bossMaxHp
+    oboss.hp = exData.bossHp
+    -- boss技能添加
+    GCalHelp:GetGlobalBossAddSkill(oboss,exData.bossId)
+    -- 添加词条
+    GCalHelp:GetGlobalBossExdata(buffs, exData, data.data)
 
     mgr:LoadData(1, data.data)
 

@@ -63,7 +63,7 @@ function GetName()
 end
 
 function IsShowTurn()
-    local cfg = Cfgs.CfgRankTeam:GetByID(rankType)
+    local cfg = Cfgs.CfgRankTeam:GetByID(type)
     if cfg and cfg.isHideTurn then
         return false
     end

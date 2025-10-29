@@ -30,9 +30,9 @@ function Refresh(_info,elseData)
 	--战斗力
 	CSAPI.SetText(txtFighting, info:GetDamage() .. "")
 	--icon
-	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID(),info:GetSex())
+	UIUtil:AddHeadByID(hfParent, 0.9, info:GetFrameId(), info:GetIconID(), info:GetSex())
 	--title
-	UIUtil:AddTitleByID(titleParent,0.6,info:GetTitle())
+	UIUtil:AddTitleByID(titleParent,0.6, info:GetTitle())
 	--cards
 	SetCards()
 end

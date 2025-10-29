@@ -2,10 +2,10 @@ local conf = {
 	["filename"] = 'e-枚举定义表.xlsx',
 	["sheetname"] = '队伍枚举',
 	["types"] = {
-'int','string','int','int','bool'
+'int','string','int','int','int'
 },
 	["names"] = {
-'id','key','type','endIdx','isSingleCard'
+'id','key','type','endIdx','singleCardType'
 },
 	["data"] = {
 {'1',	'1',	'1',	'8',	'1'},
@@ -26,6 +26,7 @@ local conf = {
 {'65',	'65',	'1',	'67',	'1'},
 {'70',	'70',	'1',	'70',	''},
 {'90',	'90',	'2',	'90',	''},
+{'96',	'96',	'1',	'100',	'2'},
 {'10000',	'10000',	'1',	'-1',	''},
 },
 }

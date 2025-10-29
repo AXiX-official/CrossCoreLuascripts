@@ -1317,7 +1317,11 @@ function FightMgrBase:OnRoundOver()
 
         if not self.isOver then
             -- 最后一个回合还没有结果, 直接判输
-            self:Over(self.stage, 0)
+            local tWiner = 0
+            if SceneType.TowerDeep == self.type then   -- 深塔计划特殊处理，操作数上限算赢
+                tWiner = 1
+            end
+            self:Over(self.stage, tWiner)
         end
         return
     end
@@ -3104,6 +3108,24 @@ function PVEFightMgrServer:Over(stage, winer)
             hpinfo = {stage = self.stage, data = data}
         end
 
+
+        for i, v in ipairs(self.arrCard) do
+            if v:GetTeamID() == 2 then
+                if v.configIndex then
+                    data[v.configIndex] = v.hp
+                    if self.type == SceneType.TowerDeep then
+                        exData.validMstHpInfo = exData.validMstHpInfo or {stage = self.stage,leftHp = 0}
+                        local tHp = exData.validMstHpInfo.leftHp or 0
+                        if v.isPoints then
+                            tHp = tHp + v.hp
+                            exData.validMstHpInfo.leftHp = tHp
+                        end
+                    end
+                end
+            end
+        end
+
+
         -- LogTable(self.arrNP, "self.arrNP")
         local cardCnt = self.arrTeam[1].nCardCount
         local teamIdx = self.oDuplicate:GetTeamIndex() or 1
@@ -3833,7 +3855,7 @@ elseif IS_SERVER then
     FightMgr = FightMgrServer
     function CreateFightMgr(id, groupID, ty, seed, nDuplicateID)
         LogDebugEx('CreateFightMgr', id, groupID, ty, seed, nDuplicateID)
-        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT or ty == SceneType.BuffBattle or ty == SceneType.MultTeam then
+        if ty == SceneType.PVE or ty == SceneType.Rogue or ty == SceneType.RogueS or ty == SceneType.RogueT or ty == SceneType.BuffBattle or ty == SceneType.MultTeam or ty == SceneType.TowerDeep then
             return PVEFightMgrServer(id, groupID, ty, seed, nDuplicateID)
         elseif ty == SceneType.PVPMirror or ty == SceneType.PVEBuild or ty == SceneType.PVEFreeMatch then -- v 4.3
             return MirrorFightMgrServer(id, groupID, ty, seed, nDuplicateID)

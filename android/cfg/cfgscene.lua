@@ -95,6 +95,7 @@ local conf = {
 {'300502001',	'Activity_Circus_02',	'奇迹之夜广场日光破坏差分',	'Scenes/Activity_Circus_02/Main,Scenes/Activity_Circus_02/SceneSetting,Scenes/Activity_Circus_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'300503001',	'Activity_Circus_03',	'奇迹之夜舞台',	'Scenes/Activity_Circus_03/Main,Scenes/Activity_Circus_03/SceneSetting,Scenes/Activity_Circus_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'300601001',	'Activity_VirtualSpace',	'虚海奇谭活动虚拟空间场景',	'Scenes/Activity_VirtualSpace/Main,Scenes/Activity_VirtualSpace/SceneSetting,Scenes/Activity_VirtualSpace/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
+{'300601002',	'Activity_VirtualSpace2',	'魔法少女jarry活动虚拟空间场景',	'Scenes/Activity_VirtualSpace_01/Main,Scenes/Activity_VirtualSpace_01/SceneSetting,Scenes/Activity_VirtualSpace_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'400101001',	'Activity_Stellaris',	'双子座战斗场景',	'Scenes/Activity_Stellaris/Main,Scenes/Activity_Stellaris/SceneSetting,Scenes/Activity_Stellaris/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'400101002',	'Activity_Stellaris_blue',	'双子座战斗场景差分1',	'Scenes/Activity_Stellaris_blue/Main,Scenes/Activity_Stellaris_blue/SceneSetting,Scenes/Activity_Stellaris_blue/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
 {'400101003',	'Activity_Stellaris_purple',	'双子座战斗场景差分2',	'Scenes/Activity_Stellaris_purple/Main,Scenes/Activity_Stellaris_purple/SceneSetting,Scenes/Activity_Stellaris_purple/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},

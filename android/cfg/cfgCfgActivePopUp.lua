@@ -24,6 +24,7 @@ local conf = {
 {'14',	'14',	'14',	'ActivityListView',	'1026'},
 {'15',	'15',	'15',	'ActivityListView',	'1027'},
 {'16',	'16',	'16',	'ActivityListView',	'1028'},
+{'17',	'17',	'17',	'ActivityListView',	'1036'},
 },
 }
 --cfgCfgActivePopUp = conf

@@ -151,6 +151,9 @@ function SetTitle()
         CSAPI.SetAnchor(txtTitle3,212,0)
         CSAPI.SetAnchor(txtTurnNum,552,0)
         CSAPI.SetAnchor(txtFighting,275,0)
+    elseif rankType == eRankId.TowerDeepRank  then
+        CSAPI.SetAnchor(txtTitle3,212,0)
+        CSAPI.SetAnchor(txtTitle4,552,0)
     end
 end
 

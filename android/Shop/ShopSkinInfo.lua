@@ -158,7 +158,16 @@ function this:HasModel()
     return has
 end
 
---是否包含特价标签
+function this:HadLive2D()
+    local has=nil --表示没找到
+    local modelCfg=self:GetModelCfg();
+    if modelCfg and modelCfg.hadLive2D then
+        has=modelCfg.hadLive2D;
+    end
+    return has
+end
+
+--是否包含特殊标签
 function this:HasSpecial()
     local has=false
     local modelCfg=self:GetModelCfg();
@@ -175,5 +184,31 @@ function this:GetHideType()
     return self.cfg and self.cfg.hideType or false;
 end
 
+--返回当前限时的Tag Icon名
+function this:GetTagIcons()
+    local icons=nil;
+    local hadL2d=self:HadLive2D();
+    if hadL2d~=nil then
+        local iconName=nil;
+        if hadL2d==1 then
+            iconName="img_22_03";
+        elseif hadL2d==2 then
+            iconName="img_22_07";
+        elseif hadL2d==3 then
+            iconName="img_22_06";
+        end
+        icons=icons or {};
+        table.insert(icons,iconName);
+    end
+    if self:HasModel() then
+        icons=icons or {};
+        table.insert(icons,"img_22_05");
+    end
+    if self:HasSpecial() then
+        icons=icons or {};
+        table.insert(icons,"img_22_04");
+    end
+    return icons;
+end
 
 return this;

@@ -643,12 +643,8 @@ function ShowInfo(item)
     CSAPI.SetGOActive(normal, not isActive)
     CSAPI.SetGOActive(boxBtnObj, not isActive)
     CSAPI.SetGOActive(mapView.boxObj, not isActive)
+    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
     itemInfo.Show(cfg, type, OnLoadSuccess)
-    if not isActive then -- 关闭特殊引导
-        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.StopAll)
-    else
-        SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
-    end
 end
 
 function OnLoadSuccess()
@@ -657,6 +653,8 @@ function OnLoadSuccess()
     if selItem then
         itemInfo.AddTeamReplace(selItem.GetType() == DungeonInfoType.Normal,OnBattleEnter)
     end
+    CSAPI.SetGOActive(spParent,isActive)
+    SpecialGuideMgr:ApplyShowView(spParent, "Dungeon", SpecialGuideType.Start)
 end
 
 -- 进入

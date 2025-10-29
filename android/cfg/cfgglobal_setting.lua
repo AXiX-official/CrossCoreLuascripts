@@ -314,10 +314,13 @@ local conf = {
 {'g_BattleFaceSet',	'g_BattleFaceSet',	'',	'int[]',	'1033,1031,1032'},
 {'g_CardPoolPercentCn1',	'g_CardPoolPercentCn1',	'',	'float[]',	'0.02,0.08,0.4,0.5'},
 {'g_CardPoolPercentCn2',	'g_CardPoolPercentCn2',	'',	'float[]',	'0.022,0.08,0.4,0.498'},
+{'g_CardPoolPercentJp1',	'g_CardPoolPercentJp1',	'',	'float[]',	'0.02,0.08,0.4,0.5'},
+{'g_CardPoolPercentJp2',	'g_CardPoolPercentJp2',	'',	'float[]',	'0.014,0.086,0.4,0.5'},
 {'g_firstCreateCardLastCheck',	'g_firstCreateCardLastCheck',	'',	'int[]',	'6,2,3,1,20012'},
 {'g_Questions',	'g_Questions',	'',	'int',	'5'},
 {'g_CloseQuestions',	'g_CloseQuestions',	'',	'int',	'5'},
 {'g_CalPerfArr',	'g_CalCardPerfArr',	'',	'float[]',	'0.5,0.1,2.5,8.6,540,859,859,859,24,24,24,24,24'},
+{'g_TowerDeepAssist',	'g_TowerDeepAssist',	'',	'int',	'1'},
 },
 }
 --cfgglobal_setting = conf

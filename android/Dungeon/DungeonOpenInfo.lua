@@ -42,6 +42,10 @@ function this:GetCfg()
     return self.cfg
 end
 
+function this:GetCfgID()
+    return self.cfg and self.cfg.id
+end
+
 function this:GetType()
     return self.cfg and self.cfg.type
 end

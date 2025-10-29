@@ -9,8 +9,8 @@ local needToCheckMove = false
 function Awake()
     luaTextMove = LuaTextMove.New()
     luaTextMove:Init(txtName1)
-    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
-    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot, ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.AddEventListener(EventType.ShareView_NoticeScreenshotCompleted, ShareView_NoticeScreenshotCompleted)
     recordBeginTime = CSAPI.GetRealTime()
     -- 立绘
     cardIconItem = RoleTool.AddRole(iconParent, nil, nil, false)
@@ -38,7 +38,7 @@ function ShareView_NoticeScreenshotCompleted(Data)
 end
 function ShareBtnOpenState()
     if CSAPI.IsMobileplatform then
-        if CSAPI.RegionalCode()==1 or CSAPI.RegionalCode()==5 then
+        if CSAPI.RegionalCode() == 1 or CSAPI.RegionalCode() == 5 then
             CSAPI.SetGOActive(ShareBtn, true);
         else
             CSAPI.SetGOActive(ShareBtn, false);
@@ -48,7 +48,9 @@ function ShareBtnOpenState()
     end
 end
 function OnClickShareBtn()
-    CSAPI.OpenView("ShareView",{LocationSource=3})
+    CSAPI.OpenView("ShareView", {
+        LocationSource = 3
+    })
 end
 function OnDisable()
     -- if (openSetting) then -- and (openSetting == RoleInfoOpenType.LookSelf or openSetting == RoleInfoOpenType.LookOther)) then
@@ -56,8 +58,8 @@ function OnDisable()
     -- end
 end
 function OnDestroy()
-    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot,ShareView_NoticeTheNextFrameScreenshot)
-    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted,ShareView_NoticeScreenshotCompleted)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeTheNextFrameScreenshot, ShareView_NoticeTheNextFrameScreenshot)
+    CSAPI.RemoveEventListener(EventType.ShareView_NoticeScreenshotCompleted, ShareView_NoticeScreenshotCompleted)
     RecordMgr:Save(RecordMode.View, recordBeginTime, "ui_id=" .. RecordViews.RoleInfo)
 
     eventMgr:ClearListener()
@@ -117,9 +119,11 @@ function OnInit()
     eventMgr:AddListener(EventType.View_Lua_Closed, OnViewClosed)
     -- 红点刷新
     eventMgr:AddListener(EventType.RedPoint_Refresh, SetRed)
-    eventMgr:AddListener(EventType.Menu_PopupPack, function ()
+    eventMgr:AddListener(EventType.Menu_PopupPack, function()
         PopupPackMgr:CheckByCondition({7})
     end)
+    -- 使用礼物回调
+    eventMgr:AddListener(EventType.Dorm_UseGiftRet, SetMatrix)
 end
 
 -- 降低 DC
@@ -663,14 +667,14 @@ function SetBtns()
     CSAPI.SetGOActive(questionP, not isFighting)
     CSAPI.SetGOActive(btnApparel, not isFighting)
     -- red 
-    if(btnApparel.activeSelf)then 
+    if (btnApparel.activeSelf) then
         local isRed = RoleSkinMgr:CheckIsNewAdd(cardData:GetCfgID())
-        UIUtil:SetRedPoint2("Common/Red2",btnApparel, isRed, 58, 26, 0)
-        local isLimitSkin = false 
-        if(not isRed)then 
+        UIUtil:SetRedPoint2("Common/Red2", btnApparel, isRed, 58, 26, 0)
+        local isLimitSkin = false
+        if (not isRed) then
             isLimitSkin = cardData:CheckLimitSkin()
-        end 
-        UIUtil:SetRedPoint2("Common/Red4", btnApparel, isLimitSkin,57, 26, 0)
+        end
+        UIUtil:SetRedPoint2("Common/Red4", btnApparel, isLimitSkin, 57, 26, 0)
     end
 end
 
@@ -854,7 +858,8 @@ end
 
 function SetChangeBtn()
     local b = false
-    if ((cardData:GetCfg().changeCardIds~=nil and #cardData:GetCfg().changeCardIds > 0) or (cardData:GetCfg().allTcSkills~=nil and #cardData:GetCfg().allTcSkills > 0)) then
+    if ((cardData:GetCfg().changeCardIds ~= nil and #cardData:GetCfg().changeCardIds > 0) or
+        (cardData:GetCfg().allTcSkills ~= nil and #cardData:GetCfg().allTcSkills > 0)) then
         b = true
     end
     CSAPI.SetGOActive(btnJieJin, b)
@@ -874,6 +879,24 @@ function OnClickVirtualkeysClose()
     else
         if topLua.OnClickBack then
             topLua.OnClickBack();
+        end
+    end
+end
+
+function OnClickFeel()
+    if (not isRealCard) then
+        return
+    end
+    if (CheckIsFighting()) then
+        return
+    end
+    if (cardData:GetCRoleData()) then
+        if (cardData:GetCRoleData():GetLv() >= 100) then
+            LanguageMgr:ShowTips(21033)
+        else
+            CSAPI.OpenView("DormGift", {
+                data = cardData:GetCRoleData()
+            })
         end
     end
 end

@@ -115,6 +115,13 @@ end
 
 function OnItemLoadSuccess()
     if itemInfo then
+        -- itemInfo.SetPanelPos("BossTitle",18.5,430)
+        -- itemInfo.SetPanelPos("BossLevel",18.5,280)
+        -- itemInfo.SetPanelPos("BossState",18.5,219)
+        -- itemInfo.SetPanelPos("BossTime",18.5,156)
+        -- itemInfo.SetPanelPos("BossButton1",18.5,66)
+        -- itemInfo.SetPanelPos("BossDetails",18.5,-47)
+        -- itemInfo.SetPanelPos("BossBuff",18.5,-170)
         itemInfo.SetPanelPos("BossTitle",18.5,440)
         itemInfo.SetPanelPos("BossLevel",18.5,301)
         itemInfo.SetPanelPos("BossState",18.5,215)

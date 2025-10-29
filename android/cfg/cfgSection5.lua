@@ -14,6 +14,7 @@ local conf = {
 {'5004',	'',	'觅己归途',	'103',	'觅己归途',	'4',	'',	'1',	'',	'2009',	'[{"view":"DungeonActivity10","childView": "DungeonRole","goodsId":10201,"bgm":"Event_LostAndFoundKV","taskType":9 }]',	'1',	'3',	'2',	'8',	'4',	'bg_5004',	'icon4',	'1,1,1,1,1,1,1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'LOST AND FOUND',	'aBg1_18',	'dBg1',	'',	'4',	'',	'',	'',	'',	'',	'',	'',	''},
 {'5005',	'',	'朝花夕誓',	'103',	'朝花夕誓',	'4',	'',	'1',	'',	'2009',	'[{"view":"DungeonActivity12","childView": "DungeonRole","goodsId":10201,"bgm":"Event_ReawakenOfCarmelBlossomsKV","taskType":9 }]',	'1',	'3',	'2',	'8',	'4',	'bg_5005',	'icon5',	'1,1,1,1,1,1,1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'REAWAKEN OF CARMEL BLOSSOMS',	'aBg1_23',	'dBg1',	'',	'4',	'',	'',	'',	'',	'',	'',	'',	''},
 {'5006',	'',	'白垩行旅',	'103',	'白垩行旅',	'4',	'',	'1',	'',	'2009',	'[{"view":"DungeonActivity14","childView": "DungeonRole","goodsId":10201,"bgm":"Event_CretaceousJourneyKV","taskType":9 }]',	'1',	'3',	'2',	'8',	'4',	'bg_5006',	'icon6',	'1,1,1,1,1,1,1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'REAWAKEN OF CARMEL BLOSSOMS',	'aBg1_29',	'dBg1',	'',	'4',	'',	'',	'',	'',	'',	'',	'',	''},
+{'5007',	'',	'魔导少女伊根',	'103',	'魔导少女伊根',	'4',	'',	'1',	'',	'2009',	'[{"view":"DungeonActivity15","childView": "DungeonRole","goodsId":10201,"bgm":"Event_MagitekGirlIjenKV","taskType":9 }]',	'1',	'3',	'2',	'8',	'4',	'bg_5007',	'icon7',	'1,1,1,1,1,1,1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'REAWAKEN OF CARMEL BLOSSOMS',	'aBg1_30',	'dBg1',	'',	'4',	'',	'',	'',	'',	'',	'',	'',	''},
 },
 }
 --cfgSection5 = conf

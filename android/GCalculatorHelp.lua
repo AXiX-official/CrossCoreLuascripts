@@ -3065,6 +3065,15 @@ function GCalHelp:FreeMatchArmyChangeSocreCfg(diffScore)
     return scoreCfg
 end
 
+-- 数组合并
+local function TableMerge(src, cpy)
+    src = src or {}
+    cpy = cpy or {}
+    for i, v in ipairs(cpy) do
+        table.insert(src, v)
+    end
+    return src
+end
 
 -- 新世界boss词条转化传入战斗
 function GCalHelp:GetGlobalBossExdata(buffs, exData, cardData)
@@ -3080,21 +3089,21 @@ function GCalHelp:GetGlobalBossExdata(buffs, exData, cardData)
             local cfg = cfgGlobalBossBuffBattle[id]
             if cfg.target == RogueBuffTarget.TeamAll then
                 -- 我方全体
-                table.merge(exData.tExBuff, cfg.buffId)
+                TableMerge(exData.tExBuff, cfg.buffId)
                 if cfg.skillId and next(cfg.skillId) then
                     for k, v in pairs(cardData) do
-                        table.merge(v.data.skills, cfg.skillId)
+                        TableMerge(v.data.skills, cfg.skillId)
                     end
                 end
             elseif cfg.target == RogueBuffTarget.MonsterAll then
                 -- 敌方全体
-                table.merge(exData.tMonsterBuff, cfg.buffId)
+                TableMerge(exData.tMonsterBuff, cfg.buffId)
             elseif cfg.target == RogueBuffTarget.BothAll then
                 -- 敌我全体
-                table.merge(exData.tAllBuff, cfg.buffId)
+                TableMerge(exData.tAllBuff, cfg.buffId)
                 if cfg.skillId and next(cfg.skillId) then
                     for k, v in pairs(cardData) do
-                        table.merge(v.data.skills, cfg.skillId)
+                        TableMerge(v.data.skills, cfg.skillId)
                     end
                 end
             elseif cfg.target == RogueBuffTarget.TeamRandom then
@@ -3110,7 +3119,7 @@ function GCalHelp:GetGlobalBossExdata(buffs, exData, cardData)
                     -- 上阵角色数少于随机数，全部角色加技能
                     if cfg.skillId and next(cfg.skillId) then
                         for idx, v in pairs(cardData) do
-                            table.merge(v.data.skills, cfg.skillId)
+                            TableMerge(v.data.skills, cfg.skillId)
                         end
                     end
                 else
@@ -3130,7 +3139,7 @@ function GCalHelp:GetGlobalBossExdata(buffs, exData, cardData)
                     if cfg.skillId and next(cfg.skillId) then
                         for idx, v in pairs(cardData) do
                             if effectRoles[idx] then
-                                table.merge(v.data.skills, cfg.skillId)
+                                TableMerge(v.data.skills, cfg.skillId)
                             end
                         end
                     end
@@ -3163,10 +3172,12 @@ function GCalHelp:GetGlobalBossAddSkill(boss,bossId)
         local mpTfSkills = ArrToMap(boss.tfSkills)
         for _,sId in ipairs(cfg.skillId or {}) do
             if not mpSkills[sId] then
-                table.insert(boss.skills,sId)                                    
+                table.insert(boss.skills,sId)
+                mpSkills[sId] = true
             end   
             if not mpTfSkills[sId] then
-                table.insert(boss.tfSkills,sId)                                    
+                table.insert(boss.tfSkills,sId)     
+                mpTfSkills[sId] = true
             end
         end
     end
@@ -3199,15 +3210,16 @@ function GCalHelp:CalcTowerDeepDupScore(winner,dupId,aliveNum,stepCnt,hpinfo)
                 end
             end
         end
-        if winner ~= 1 and hpinfo then
+        if hpinfo then
             mstLeftHp = hpinfo.leftHp + self:GetLeftStageHp(hpinfo.stage,dupCfg.nGroupID,true)
         end
         tmpVal = mstLeftHp > 0 and (1 - mstLeftHp/mstMaxHp) or 1
         -- 血量分=关卡基础分*（1-怪物剩余血量/关卡怪物总血量）
-        local hpScore = dupCfg.point * tmpVal
+        local hpScore = math.ceil(dupCfg.point * tmpVal)
         -- 实际积分=血量分/2*（1-使用总操作数/100）*（1+ 存活人数*8%）+血量分/2
-        score = math.ceil(hpScore/2*(1-stepCnt/100)*(1+aliveNum*8/100) + hpScore/2)
-        LogInfo(string.format("<><>GCalHelp:CalcTowerNewDupScore,关卡基础分（%s) 怪物剩余血量(%s) 怪物总血量(%s) 血量分(%s) 总操作数(%s) 存活人数(%s)  总分(%s)",dupCfg.point,mstLeftHp,mstMaxHp,hpScore,stepCnt,aliveNum,score))
+        -- score = math.ceil(hpScore/2*(1-stepCnt/100)*(1+aliveNum*8/100) + hpScore/2)
+        score = hpScore
+        LogInfo(string.format("<><>GCalHelp:CalcTowerNewDupScore,总分(%s),关卡基础分（%s) 怪物剩余血量(%s) 怪物总血量(%s) 血量分(%s) 总操作数(%s) 存活人数(%s)  ",score,dupCfg.point,mstLeftHp,mstMaxHp,hpScore,stepCnt,aliveNum))
     end
     return score
 end
@@ -3225,12 +3237,12 @@ function GCalHelp:isTowerDeepDupGroupUnlock(groupId,totalScore)
     end
     -- 判断是否达到关卡组解锁条件
     if not groupCfg.perPoint or groupCfg.perPoint > totalScore then
-        -- LogError("GCalHelp:isTowerDeepDupGroupUnlock score not enougth,groupId(%s),totalScore(%s),needScore(%s)",groupId,totalScore,groupCfg.perPoint)
+        -- LogError(string.format("GCalHelp:isTowerDeepDupGroupUnlock score not enougth,groupId(%s),totalScore(%s),needScore(%s)",groupId,totalScore,groupCfg.perPoint))
         return
     end
 
     if groupCfg.nOpenTime and CURRENT_TIME < groupCfg.nOpenTime then
-        -- LogError("GCalHelp:isTowerDeepDupGroukpUnlock,not in open time,groupId(%s),openTime(%s)",groupId,groupCfg.nOpenTime)
+        -- LogError(string.format("GCalHelp:isTowerDeepDupGroukpUnlock,not in open time,groupId(%s),openTime(%s)",groupId,groupCfg.nOpenTime))
         return
     end
     return true

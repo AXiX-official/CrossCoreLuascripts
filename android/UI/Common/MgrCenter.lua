@@ -81,6 +81,7 @@ local mgrNames = {
 	"CoffeeMgr",
 	"RiddleMgr",
 	"PopupPackMgr",
+	"HalloweenMgr", --万圣节小游戏
 	"DungeonTeamReplaceMgr", --推荐阵容
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"

@@ -29,7 +29,7 @@ function this:InitNewDatas()
         for i, v in ipairs(datas) do
             self.sectionNewDatas[v:GetID()] = v
         end
-    end  
+    end
 end
 
 -- 包含积分战斗
@@ -47,7 +47,7 @@ function this:HasBuffBattle(sid)
     return isHas
 end
 
---获取对应类型的章节组数据
+-- 获取对应类型的章节组数据
 function this:GetSectionDatasByType(isCheckOnly)
     local activityTypeDatas = {}
     local activityCfgs = Cfgs.Section:GetGroup(SectionType.Activity)
@@ -232,10 +232,12 @@ end
 function this:IsNew()
     local isNew = false
     local newInfos = FileUtil.LoadByPath("section_activity_new") or {}
-    for k, v in pairs(self.sectionNewDatas) do
-        if v:GetOpen() and not newInfos[k] then
-            isNew = true
-            break   
+    if self.sectionNewDatas then
+        for k, v in pairs(self.sectionNewDatas) do
+            if v:GetOpen() and not newInfos[k] then
+                isNew = true
+                break
+            end
         end
     end
     return isNew
@@ -252,7 +254,7 @@ end
 function this:SetNew(sid)
     local newInfos = FileUtil.LoadByPath("section_activity_new") or {}
     newInfos[sid] = 1
-    FileUtil.SaveToFile("section_activity_new",newInfos)
+    FileUtil.SaveToFile("section_activity_new", newInfos)
 end
 
 return this

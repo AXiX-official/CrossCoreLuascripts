@@ -51,4 +51,17 @@ function this:GetRankType()
     return self.cfg and self.cfg.rankType
 end
 
+function this:GetBuffIds()
+    return self.cfg and self.cfg.buffId
+end
+
+function this:GetSkills()
+    return self.cfg and self.cfg.skillId
+end
+
+function this:GetRanking()
+    local cfg = Cfgs.cfgGlobalBossRanking:GetByID(self.cfg and self.cfg.rankRwdGroupId)
+    return cfg and cfg.infos
+end
+
 return this

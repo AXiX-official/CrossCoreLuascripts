@@ -15,8 +15,17 @@ end
 
 function SetRank()
     if GlobalBossMgr:GetRankIdx() > 0 then
-        local rank = GlobalBossMgr:GetRankIdx() > 1000 and "1000+" or GlobalBossMgr:GetRankIdx()
-        LanguageMgr:SetText(txtRank,70021,rank)
+        if (GlobalBossMgr.joinNum == nil or GlobalBossMgr.joinNum == 0) then
+            if GlobalBossMgr:GetRankIdx() > 50 then
+                 LanguageMgr:SetText(txtRank,70026)
+            else
+                LanguageMgr:SetText(txtRank,70021,GlobalBossMgr:GetRankIdx())
+            end
+        elseif GlobalBossMgr:GetRankIdx() < 4 then
+            LanguageMgr:SetText(txtRank,70021,GlobalBossMgr:GetRankIdx())
+        else
+            LanguageMgr:SetText(txtRank,70021,GlobalBossMgr:GetRankStr(GlobalBossMgr:GetRankIdx()))
+        end
     else
         LanguageMgr:SetText(txtRank,70017)
     end

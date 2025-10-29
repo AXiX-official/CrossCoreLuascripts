@@ -522,7 +522,7 @@ end
 --网络异常
 function this:NetException()
     self:CloseGuideView();
-    CSAPI.OpenView("Prompt", {content = StringConstant.guide_error ,okCallBack=function()
+    CSAPI.OpenView("Prompt", {content =LanguageMgr:GetTips(8036)  ,okCallBack=function()
         CSAPI.Quit();		
 	end});
 end

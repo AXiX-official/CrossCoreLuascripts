@@ -40,6 +40,13 @@ function this.RogueInfoUpdate(proto)
 	this.PushEnd(nil, proto.bIsWin, team, proto.fisrtPassReward, 0, exp, 0,proto.cardsExp, proto.isForceOver,proto)
 end
 
+--结果 TowerDeep
+function this.TowerDeepInfoUpdate(proto,isForceOver)
+	local team = this.GetTeamData(eTeamType.TowerDeep + proto.round - 1, false);
+	local exp = this.GetExpList(proto, false);
+	this.PushEnd(nil, proto.bIsWin, team, proto.reward, 0, exp, 0,proto.cardsExp, isForceOver,proto)
+end
+
 --结果 实时pvp    proto.type:  RealArmyType.Friend  RealArmyType.Freedom
 function this.RealTimeFightFinish(proto,score)
     --LogError(proto);

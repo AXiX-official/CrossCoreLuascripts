@@ -17,23 +17,23 @@ function this:split(str, reps)
     return resultStrList
 end
 
---用字符串切割
+-- 用字符串切割
 function this:Split(str, reps)
     local result = {}
     local start_index = 1
     local end_index = string.find(str, reps)
-    
+
     while end_index do
         local part = string.sub(str, start_index, end_index - 1)
         table.insert(result, part)
-        
+
         start_index = end_index + string.len(reps)
         end_index = string.find(str, reps, start_index)
     end
-    
+
     local last_part = string.sub(str, start_index)
     table.insert(result, last_part)
-    
+
     return result
 end
 
@@ -547,23 +547,23 @@ function this:NumberToString(szNum)
     return str
 end
 
---替换字符串中不定的%s，replacements为table
+-- 替换字符串中不定的%s，replacements为table
 function this:ReplacePlaceholders(str, replacements)
-	return str:gsub("%%s", function()
-	  local value = replacements[1]
-	  table.remove(replacements, 1)
-	  return tostring(value)
-	end)
+    return str:gsub("%%s", function()
+        local value = replacements[1]
+        table.remove(replacements, 1)
+        return tostring(value)
+    end)
 end
 
 ---首行缩进 
 ---@param str 文本
 ---@param isLine 包含换行
-function this:IndentFirstLine(str,isLine)
-    if str and str ~="" then
+function this:IndentFirstLine(str, isLine)
+    if str and str ~= "" then
         str = "\u{3000}\u{3000}" .. str
         if isLine then
-            str = str:gsub("\n","\n\u{3000}\u{3000}")
+            str = str:gsub("\n", "\n\u{3000}\u{3000}")
         end
     end
     return str
@@ -572,53 +572,41 @@ end
 --- 替换空格为不换行空格(解决Text组件英文分词问题)
 ---@param str 文本
 function this:ReplaceSpace(str)
-    if str and str ~="" then
-        str = str:gsub(" ","\u{00A0}")
+    if str and str ~= "" then
+        str = str:gsub(" ", "\u{00A0}")
     end
     return str
 end
-  
---只包含中文、繁体中文、注音、日文、韩文、英文和数字
+
+-- 只包含中文、繁体中文、注音、日文、韩文、英文和数字
 function this:CheckPassStr(str)
-    local pattern = "^[\u{4e00}-\u{9fff}\u{3400}-\u{4dbf}\u{3040}-\u{309f}\u{ac00}-\u{d7af}\z{IsHiragana}\z{IsKatakana}a-zA-Z0-9]*$"
+    local pattern =
+        "^[\u{4e00}-\u{9fff}\u{3400}-\u{4dbf}\u{3040}-\u{309f}\u{ac00}-\u{d7af}\z{IsHiragana}\z{IsKatakana}a-zA-Z0-9]*$"
     return string.match(str, pattern)
 end
 
---匹配非特殊字符的文本 --支持空格 
+-- 匹配非特殊字符的文本 --支持空格 
 local regex = CS.System.Text.RegularExpressions.Regex("[^\\p{L}\\p{N}\\s+]+")
-local regex2 = CS.System.Text.RegularExpressions.Regex("[\\r?\\n|\\r\\t+]+") 
+local regex2 = CS.System.Text.RegularExpressions.Regex("[\\r?\\n|\\r\\t+]+")
 function this:FilterChar2(str)
-    local result=""
+    local result = ""
     if str ~= "" and str ~= nil then
-        result = regex:Replace(str,"");
-        result = regex2:Replace(result,"") --剔除tab
+        result = regex:Replace(str, "");
+        result = regex2:Replace(result, "") -- 剔除tab
         -- result = result:gsub("^%s*(.-)%s*$", "%1") --去掉前后空格
     end
     return result;
 end
 
---根据数字获取罗马数字
+-- 根据数字获取罗马数字
 function this:IntToRoman(num)
     if num <= 0 or num >= 4000 then
         return "Invalid number"
     end
 
     local romanNumeral = ""
-    local romanNumerals = {
-        {1000, "M"},
-        {900, "CM"},
-        {500, "D"},
-        {400, "CD"},
-        {100, "C"},
-        {90, "XC"},
-        {50, "L"},
-        {40, "XL"},
-        {10, "X"},
-        {9, "IX"},
-        {5, "V"},
-        {4, "IV"},
-        {1, "I"}
-    }
+    local romanNumerals = {{1000, "M"}, {900, "CM"}, {500, "D"}, {400, "CD"}, {100, "C"}, {90, "XC"}, {50, "L"},
+                           {40, "XL"}, {10, "X"}, {9, "IX"}, {5, "V"}, {4, "IV"}, {1, "I"}}
 
     for _, v in ipairs(romanNumerals) do
         while num >= v[1] do
@@ -630,14 +618,15 @@ function this:IntToRoman(num)
     return romanNumeral
 end
 
-local units = {"ZERO", "ONE", "TWO", "THREE", "FOUR","FIVE", "SIX", "SEVEN", "EIGHT", "NINE"}
-local teens = {"TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN","FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"}
-local tens = {"", "TEN", "TWENTY", "THIRTY", "FORTY","FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"}
+local units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"}
+local teens = {"TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN",
+               "NINETEEN"}
+local tens = {"", "TEN", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"}
 
---数字转英文单词 --只支持1000以下
+-- 数字转英文单词 --只支持1000以下
 function this:NumberToWords(num)
     if num < 10 then
-        return units[num + 1]  -- Lua数组从1开始
+        return units[num + 1] -- Lua数组从1开始
     elseif num < 20 then
         return teens[num - 10 + 1]
     elseif num < 100 then
@@ -659,6 +648,32 @@ function this:NumberToWords(num)
     else
         return "number too large"
     end
+end
+
+-- 返回固定位数的数字文本，max：最大位数
+function this:GetScoreNumStr(num, max)
+    if not num or not (type(num) == "number") or not max or not (type(max) == "number") then
+        return
+    end
+    local cur = 0
+    local count = 1
+    if num > 0 then
+        for i = 1, max do
+            if num >= count then
+                count = count * 10
+                cur = cur + 1
+            else
+                break
+            end
+        end
+    end
+    local zeroStr = ""
+    if max > cur then
+        for i = 1, max - cur do
+            zeroStr = zeroStr .. "0"
+        end
+    end
+    return zeroStr .. num
 end
 
 return this;

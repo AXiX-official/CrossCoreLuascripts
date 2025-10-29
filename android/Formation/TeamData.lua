@@ -176,6 +176,17 @@ function this:RemoveCard(cid,disRefresh)
 		-- self:RefreshIndex();
 	end
 end
+--删除卡牌 disRefresh:为true时不自动队员刷新下标 根据卡牌tag查询
+function this:RemoveCardByTag(roleTag,disRefresh)
+	if self.data and roleTag then
+		for k,v in ipairs(self.data) do
+			if v:GetRoleTag() and v:GetRoleTag() == roleTag then
+				self:RemoveCard(v.cid,disRefresh)
+				break;
+			end
+		end
+	end
+end
 
 --清理卡牌
 function this:ClearCard()

@@ -26,6 +26,7 @@ function this:Clear()
     self.myRank = 0
     self.myScore = 0
     self.max_rank = 0
+    self.joinNum = 1
 end
 
 function this:SetInfo(proto)
@@ -82,6 +83,7 @@ function this:SetData(proto)
         self.rank = proto.rank or 0
         self.useCount = proto.challengeTimes or 0
         self.maxDamage = proto.maxDamage or 0
+        self.joinNum = proto.joinNum
         if self.lastHp then
             if self.hp <= 0 and self.lastHp > 0 then -- boss被杀死刷新红点
                 DungeonMgr:CheckRedPointData()
@@ -116,6 +118,11 @@ function this:GetCount()
         cur = max - (self.useCount or 0)
     end
     return cur,max
+end
+
+--获取当期特效
+function this:GetSkills()
+    return self.data and self.data:GetSkills()
 end
 
 --击败boss
@@ -211,11 +218,43 @@ function this:GetMyRank(type)
         score = self.myScore or 0,
         sel_card_ix = PlayerClient:GetSex(),
         icon_title = PlayerClient:GetIconTitle(),
+        joinNum = self.joinNum or 0,
         -- nDamage = self:GetDamage()
     }
     local info = RankActivityInfo.New()
     info:Init(data)
     return info
+end
+
+function this:GetRankStr(rank)
+    local maxRank = self.joinNum
+    local rankStr = rank >= 4 and rank .. "" or ""
+    if rankStr ~= "" then
+        if maxRank == nil or maxRank == 0 then
+            rankStr = tonumber(rankStr) > 50 and LanguageMgr:GetByID(70026) or rankStr
+        else
+            local num1, num2 = 0, 0
+            local globalData = GlobalBossMgr:GetData()
+            if globalData then
+                local info = globalData:GetRanking()
+                if info and #info > 0 then
+                    for i, v in ipairs(info) do
+                        if v.sub and #v.sub > 1 then
+                            num1 = v.sub[1] == 1 and v.sub[2] or num1
+                            num2 = v.sub[1] == 2 and v.sub[2] or num2
+                        end
+                    end
+                end
+            end
+            if num1 ~= 0 and num2 ~= 0 then
+                if tonumber(rankStr) >= num1 then
+                    rankStr = math.floor(tonumber(rankStr) / maxRank * 10000) / 100
+                    rankStr = rankStr > (num2 / 100) and math.floor(num2 / 100) .. "%+" or rankStr .. "%"
+                end
+            end
+        end
+    end
+    return rankStr
 end
 
 ------------------------------------red------------------------------------

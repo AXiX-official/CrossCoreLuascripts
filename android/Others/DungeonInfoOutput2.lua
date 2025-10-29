@@ -19,10 +19,7 @@ end
 
 -- 显示掉落
 function ShowOutput(isSpec,iconName)
-    rewardDatas = nil
-    if cfg then
-        rewardDatas = GetRewardDatas()
-    end
+    rewardDatas = GetRewardDatas()
     if (outputGoodItems and #outputGoodItems > 0) then
         for _, goodsItem in ipairs(outputGoodItems) do
             CSAPI.SetGOActive(goodsItem.gameObject, false);
@@ -60,6 +57,9 @@ end
 
 -- 获取掉落信息
 function GetRewardDatas()
+    if cfg == nil then
+        return
+    end
     local _datas = {}
     local dungeonData = DungeonMgr:GetDungeonData(cfg.id)
     local isTeaching = cfg.type == eDuplicateType.Teaching -- 教程关

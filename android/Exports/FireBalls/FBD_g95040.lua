@@ -19,6 +19,7 @@ local this =
 time=2000,type=0
 },
 [-1485114200]={
+{time=12868,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="95040_cast_04"},
 {time=12368,type=1,hit_type=1,hits={3900,4800,5400,7000,9450,9750,10050,11200}},
 {effect="cast4_hit",time=12868,type=0,pos_ref={ref_type=2,offset_row=-100}},
 {effect="cast4_eff",time=12868,type=0,pos_ref={ref_type=6}}

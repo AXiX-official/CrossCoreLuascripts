@@ -191,3 +191,25 @@ function OperateActiveProto:UpdatePopupTimeRet(proto)
     end 
     self.UpdatePopupTimeCB = nil
 end 
+
+--请求万圣节游戏数据
+function OperateActiveProto:GetHalloweenGameData()
+    local proto = {"OperateActiveProto:GetHalloweenGameData"}
+    NetMgr.net:Send(proto)
+end
+
+--请求万圣节游戏数据返回
+function OperateActiveProto:GetHalloweenGameDataRet(proto)
+    HalloweenMgr:SetDatas(proto)
+end
+
+--万圣节游戏请求领取奖励
+function OperateActiveProto:GetHalloweenGameReward(data)
+    local proto = {"OperateActiveProto:GetHalloweenGameReward",data}
+    NetMgr.net:Send(proto)
+end
+
+--万圣节游戏请求领取奖励返回
+function OperateActiveProto:GetHalloweenGameRewardRet(proto)
+    HalloweenMgr:SetDatas(proto)
+end

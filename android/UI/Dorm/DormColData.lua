@@ -141,6 +141,9 @@ function this:FurnitureAction(b)
         if (cfg2.playAnim) then
             self.lua2.PlayAnim(b)
         end
+        if (cfg2.eff) then
+            self.lua2.CreateEffect(b)
+        end
     end 
 end
 

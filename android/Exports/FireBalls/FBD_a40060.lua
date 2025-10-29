@@ -19,7 +19,7 @@ effect="cast1_hit",time=6500,type=0,pos_ref={ref_type=4,part_index=0}
 },
 [-1609092943]={
 {time=2500,type=0,cue_sheet="cv/Mist.acb",cue_name="Mist_09",cue_feature=1},
-{time=6500,type=1,hit_type=0,camera_shake={time=400,shake_dir=1,range=300,range2=300,hz=30,decay_value=0.3},hit_creates={1349028111},hits={1000,1200}},
+{time=6500,type=1,hit_type=0,camera_shake={time=400,shake_dir=1,range=300,range2=300,hz=30,decay_value=0.3},hit_creates={1349028111},hits={1000,1400}},
 {effect="cast0_eff",time=2500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/thirteen.acb",cue_name="Mist_attack_general"}
 },
 [1349028111]={

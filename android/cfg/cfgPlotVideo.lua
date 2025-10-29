@@ -21,6 +21,7 @@ local conf = {
 {'11',	'11',	'plot/plot_camera',	'1',	'1'},
 {'12',	'12',	'plot/plot_camera_end',	'1',	''},
 {'13',	'13',	'plot2/plot_misc1',	'1',	''},
+{'17',	'17',	'plot2/plot_cutsence',	'1',	''},
 },
 }
 --cfgPlotVideo = conf

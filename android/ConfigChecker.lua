@@ -876,6 +876,20 @@ function ConfigChecker:MainLine(cfgs)
             end
             ccc.rounds[v.roundLevel] = v.id
         end
+        if v.roundLevel and v.type == 18 then
+            -- 深塔计划
+            local tdgCfg = DungeonGroup[v.dungeonGroup]
+            if not tdgCfg then
+                ASSERT(false, string.format('深塔计划没有该关卡组 关卡id：%s 对应的关卡组ID:%s', v.id, v.dungeonGroup))
+            end
+            if not tdgCfg.rounds then
+                tdgCfg.rounds = {}
+            end
+            if not tdgCfg.rounds[v.roundLevel] then
+                tdgCfg.rounds[v.roundLevel] = {}
+            end
+            tdgCfg.rounds[v.roundLevel] = v.id
+        end
 
         if v.type == 15 then
             -- 限制肉鸽爬塔
@@ -2276,6 +2290,12 @@ function ConfigChecker:CfgCommodity(cfgs)
 
         v.nBuyStart = GCalHelp:GetTimeStampBySplit(v.sBuyStart, v)
         v.nBuyEnd = GCalHelp:GetTimeStampBySplit(v.sBuyEnd, v)
+        if v.jCosts and not table.empty(v.jCosts) and v.jCosts1 and not table.empty(v.jCosts1) then
+            local cost1 = v.jCosts[1]
+            if cost1[1] ~= -1 then
+                ASSERT(false, string.format('商品id：%s 直购的默认消耗配的不是-1', v.id))
+            end
+        end
         if v.limitedTimeID then
             if v.nBuyStart > 0 or v.nBuyEnd > 0 then
                 ASSERT(false, string.format('CfgCommodity 的 v.id = %s，配置了limitedTimeID，不需要配v.sBuyStart和v.sBuyEnd', v.id))
@@ -3502,6 +3522,8 @@ function ConfigChecker:DungeonGroup(cfgs)
             end
         elseif cfg.group == 17001 and cfg.stage then
             g_MultTeamStage[cfg.stage] = cfg.id
+        elseif cfg.group == 20001 and cfg.openTime then
+            cfg.nOpenTime = GCalHelp:GetTimeStampBySplit(cfg.openTime, cfg)
         end
 
         if cfg.starIx then
@@ -3657,6 +3679,13 @@ end
 --     end
 -- end
 
+function ConfigChecker:CfgTowerDeep(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nStart = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nEnd = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        assert(cfg.nStart < cfg.nEnd, "开放时间范围有误")
+    end
+end
 function ConfigChecker:cfgGlobalBoss(cfgs)
     for _, cfg in pairs(cfgs) do
         cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.nBeginTime, cfg)
@@ -3800,4 +3829,20 @@ function ConfigChecker:CfgPvpRobot(cfgs)
             cfg.nRankLv = GCalHelp:CalFreeMatchRankLv(cfg.nScore)
         end
     end
+end
+--v4.4 世界boss优化
+function ConfigChecker:cfgGlobalBossHpLevel(cfgs)
+    local maxId
+    local minId
+    for id, cfg in pairs(cfgs) do
+        maxId = maxId or id
+        minId = minId or id
+        if id < minId then
+            minId = id
+        end
+        if id > maxId then
+            maxId = id
+        end
+    end
+    cfgs.tLimit = {maxHpLv = maxId,minHpLv = minId}
 end

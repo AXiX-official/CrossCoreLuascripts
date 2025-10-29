@@ -29,3 +29,16 @@ function Skill337901:OnBornSpecial(caster, target, data)
 	-- 337911
 	self:AddBuff(SkillEffect[337911], caster, caster, data, 337901)
 end
+-- 死亡时
+function Skill337901:OnDeath(caster, target, data)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 337921
+	local targets = SkillFilter:All(self, caster, target, 4)
+	for i,target in ipairs(targets) do
+		self:DelBufferTypeForce(SkillEffect[337921], caster, target, data, 337901)
+	end
+end

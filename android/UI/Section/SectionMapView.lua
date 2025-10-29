@@ -95,6 +95,9 @@ function InitPanel()
     -- bg
     InitBG()
 
+    --fit
+    InitFit()
+
     -- voice
     FuncUtil:Call(function()
         CSAPI.PlayUISound("ui_page_battle_start");
@@ -135,9 +138,19 @@ function InitPivot(x, y)
         x1 = x > 0.5 and (x + size[0] / 2) or -(x + size[0] / 2)
     end
     if y == 0 or y == 1 then
-        y1 = y > 0.5 and (y + size[01] / 2) or -(y + size[1] / 2)
+        y1 = y > 0.5 and (y + size[1] / 2) or -(y + size[1] / 2)
     end
-    CSAPI.SetAnchor(itemNode.gameObject,x1, y1)
+    local fit1 =CSAPI.UIFitoffsetTop() and -CSAPI.UIFitoffsetTop() or 0
+    local fit2 = CSAPI.UIFoffsetBottom() and -CSAPI.UIFoffsetBottom() or 0
+
+    CSAPI.SetAnchor(itemNode.gameObject,x1 + fit1 + fit2, y1)
+end
+
+function InitFit()
+    local x1, y1 = CSAPI.GetAnchor(itemNode.gameObject)
+    local fit1 = CSAPI.UIFitoffsetTop() or 0
+    local fit2 = CSAPI.UIFoffsetBottom() or 0
+    CSAPI.SetAnchor(itemNode.gameObject,x1 + ((fit1 + fit2) / 2), y1)
 end
 
 ---------------------------------------------模糊---------------------------------------------------

@@ -1,31 +1,31 @@
---皮肤商品子物体
-local currPrice=priceObj;
-local skinInfo=nil;
-local countTime=0;
-local updateTime=600;
-local changeInfo=nil;
+-- 皮肤商品子物体
+local currPrice = priceObj;
+local skinInfo = nil;
+local countTime = 0;
+local updateTime = 600;
+local changeInfo = nil;
 local needToCheckMove = false
-local rmbIcon=nil;
-local SDKdisplayPrice=nil;
+local rmbIcon = nil;
+local SDKdisplayPrice = nil;
 function Awake()
     luaTextMove = LuaTextMove.New()
     luaTextMove:Init(txt_name)
-end 
-function Refresh(_data,_elseData)
-    this.data=_data;
-    this.elseData=_elseData;
-    skinInfo=ShopCommFunc.GetSkinInfo(this.data);
-    currPrice=priceObj3
-    local num=this.data:GetNum()
+end
+function Refresh(_data, _elseData)
+    this.data = _data;
+    this.elseData = _elseData;
+    skinInfo = ShopCommFunc.GetSkinInfo(this.data);
+    currPrice = priceObj3
+    local num = this.data:GetNum()
     RefreshTime();
     SetDiscount(this.data:GetNowDiscountTips())
-    rmbIcon=this.data:GetCurrencySymbols();
-    SDKdisplayPrice=this.data:GetSDKdisplayPrice();
+    rmbIcon = this.data:GetCurrencySymbols();
+    SDKdisplayPrice = this.data:GetSDKdisplayPrice();
     if skinInfo then
-        changeInfo=skinInfo:GetChangeInfo();
-        local hasMore=changeInfo~=nil and true or false;
-        local showBg1=true;
-        local showOtherIcon=false;
+        changeInfo = skinInfo:GetChangeInfo();
+        local hasMore = changeInfo ~= nil and true or false;
+        local showBg1 = true;
+        -- local showOtherIcon=false;
         -- if this.data:GetIcon2()~=nil then
         --     --加载SpriteRenderer
         --     ResUtil.SkinMall:LoadSR(Role_A,this.data:GetIcon());
@@ -39,56 +39,71 @@ function Refresh(_data,_elseData)
         --     ResUtil.SkinMall:LoadSR(Role_B,imgB);
         --     showBg1=false  
         -- end
-        if hasMore~=true then
-            ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
+        if hasMore ~= true then
+            ResUtil.SkinMall:Load(icon, this.data:GetIcon(), true);
         else
-            if changeInfo[1].cfg.skinType~=5 then --形切或者同调
-                if this.data:GetIcon2()~=nil then
-                    --加载SpriteRenderer
-                    ResUtil.SkinMall:LoadSR(Role_A,this.data:GetIcon());
-                    ResUtil.SkinMall:LoadSR(Role_B,this.data:GetIcon2());
-                    showBg1=false  
+            if changeInfo[1].cfg.skinType ~= 5 then -- 形切或者同调
+                if this.data:GetIcon2() ~= nil then
+                    -- 加载SpriteRenderer
+                    ResUtil.SkinMall:LoadSR(Role_A, this.data:GetIcon());
+                    ResUtil.SkinMall:LoadSR(Role_B, this.data:GetIcon2());
+                    showBg1 = false
                 end
             else
-                ResUtil.SkinMall:Load(icon,this.data:GetIcon(),true);
-                --加载机神icon
-                showBg1=true
-                showOtherIcon=true;
+                ResUtil.SkinMall:Load(icon, this.data:GetIcon(), true);
+                -- 加载机神icon
+                showBg1 = true
+                -- showOtherIcon=true;
             end
         end
-        CSAPI.SetGOActive(otherIcon,showOtherIcon);
-        CSAPI.SetGOActive(bg,showBg1);
-        CSAPI.SetGOActive(bg2,not showBg1);
-        CSAPI.SetGOActive(asmrIcon,this.data:GetBundlingID()~=nil);
+        -- CSAPI.SetGOActive(otherIcon,showOtherIcon);
+        CSAPI.SetGOActive(bg, showBg1);
+        CSAPI.SetGOActive(bg2, not showBg1);
+        -- CSAPI.SetGOActive(asmrIcon,this.data:GetBundlingID()~=nil);
         SetName(skinInfo:GetRoleName());
-        SetL2dTag(skinInfo:HasL2D());
-        SetAnimaTag(skinInfo:HasEnterTween());
-        SetModelTag(skinInfo:HasModel());
-        SetSPPriceTag(this.data:HasDiscountTag());
-        SetSPTag(skinInfo:HasSpecial());
-        local cfg=skinInfo:GetSetCfg();
+        -- SetL2dTag(skinInfo:HasL2D());
+        -- SetAnimaTag(skinInfo:HasEnterTween());
+        -- SetModelTag(skinInfo:HasModel());
+        -- SetSPPriceTag(this.data:HasDiscountTag());
+        -- SetSPTag(skinInfo:HasSpecial());
+        -- 特殊标签
+        local icons = skinInfo:GetTagIcons();
+        if icons ~= nil then
+            -- LogError(skinInfo:GetSkinName().."\t"..table.tostring(icons))
+            for i, v in ipairs(icons) do
+                CSAPI.SetGOActive(this[("tag" .. i)], true)
+                ResUtil.Tag:Load(this[("tagIcon" .. i)], v);
+            end
+        end
+        if icons == nil or #icons < 3 then
+            local index = icons ~= nil and #icons + 1 or 1;
+            for i = index, 3 do
+                CSAPI.SetGOActive(this[("tag" .. i)], false)
+            end
+        end
+        local cfg = skinInfo:GetSetCfg();
         SetTag(skinInfo:GetSkinName());
         SetSIcon(cfg.icon);
         SetOrgPrice();
-        local getType,getTips=skinInfo:GetWayInfo(true)
-        local isOver=this.data:IsOver();
+        local getType, getTips = skinInfo:GetWayInfo(true)
+        local isOver = this.data:IsOver();
         if isOver then
             SetOver(isOver);
-        elseif getType~=SkinGetType.Store then
+        elseif getType ~= SkinGetType.Store then
             SetGetTips(getTips);
         else
-            local costs={};
+            local costs = {};
             if this.data:HasOtherPrice(ShopPriceKey.jCosts1) then
-                costs={this.data:GetRealPrice()[1],this.data:GetRealPrice(ShopPriceKey.jCosts1)[1]};
+                costs = {this.data:GetRealPrice()[1], this.data:GetRealPrice(ShopPriceKey.jCosts1)[1]};
             else
-                costs=this.data:GetRealPrice();
+                costs = this.data:GetRealPrice();
             end
-            if costs and #costs>1 then
-                currPrice=dPriceObj;
-            elseif costs and costs[1].id==-1 then
-                currPrice=priceObj2;
+            if costs and #costs > 1 then
+                currPrice = dPriceObj;
+            elseif costs and costs[1].id == -1 then
+                currPrice = priceObj2;
             end
-            SetCost(costs,isOver);
+            SetCost(costs, isOver);
         end
     else
         LogError("未找到对应的模型Id");
@@ -96,57 +111,63 @@ function Refresh(_data,_elseData)
 end
 
 function SetOrgPrice()
-    if this.data~=nil then
-        local orgCosts=this.data:GetOrgCosts();
-        CSAPI.SetGOActive(discountInfo,orgCosts~=nil);
-        if orgCosts~=nil then
-            CSAPI.SetText(txt_discount2,tostring(orgCosts[2]));
-            --计算倒计时
-            local timeTips=this.data:GetOrgEndBuyTips()
-            CSAPI.SetGOActive(dsInfo2,timeTips~=nil)
-            if timeTips then
-                CSAPI.SetText(txtDSTime,timeTips);
+    if this.data ~= nil then
+        if this.data:IsOver() then
+            CSAPI.SetGOActive(discountInfo, false);
+            do
+                return
             end
-            if orgCosts[1]~=-1 then
-                CSAPI.SetGOActive(dsMoneyIcon,true);
-                CSAPI.SetGOActive(txt_dsRmb,false);
-                local cfg = Cfgs.ItemInfo:GetByID(orgCosts[1],true);
+        end
+        local orgCosts = this.data:GetOrgCosts();
+        CSAPI.SetGOActive(discountInfo, orgCosts ~= nil);
+        if orgCosts ~= nil then
+            CSAPI.SetText(txt_discount2, tostring(orgCosts[2]));
+            -- 计算倒计时
+            local timeTips = this.data:GetOrgEndBuyTips()
+            CSAPI.SetGOActive(dsInfo2, timeTips ~= nil)
+            if timeTips then
+                CSAPI.SetText(txtDSTime, timeTips);
+            end
+            if orgCosts[1] ~= -1 then
+                CSAPI.SetGOActive(dsMoneyIcon, true);
+                CSAPI.SetGOActive(txt_dsRmb, false);
+                local cfg = Cfgs.ItemInfo:GetByID(orgCosts[1], true);
                 if cfg and cfg.icon then
-                    ResUtil.IconGoods:Load(dsMoneyIcon, cfg.icon.."_1");
+                    ResUtil.IconGoods:Load(dsMoneyIcon, cfg.icon .. "_1");
                 else
-                    LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
+                    LogError("道具商店：读取物品的价格Icon出错！Cfg:" .. tostring(cfg));
                 end
             else
-                CSAPI.SetText(txt_dsRmb,this.data:GetCurrencySymbols(true));
-                CSAPI.SetGOActive(dsMoneyIcon,false);
-                CSAPI.SetGOActive(txt_dsRmb,true);
+                CSAPI.SetText(txt_dsRmb, this.data:GetCurrencySymbols(true));
+                CSAPI.SetGOActive(dsMoneyIcon, false);
+                CSAPI.SetGOActive(txt_dsRmb, true);
             end
             -- CSAPI.SetTextColorByCode(txt_price,"FFC146");
             -- CSAPI.SetTextColorByCode(txt_rmb,"FFC146");
             -- CSAPI.SetTextColorByCode(txt_rmbVal,"FFC146");
             -- CSAPI.SetTextColorByCode(txt_price3,"FFC146");
-            if #orgCosts==3 then
-                CSAPI.SetTextColorByCode(this["pnIcon"..orgCosts[3]],"FFC146");
-                CSAPI.SetTextColorByCode(this["txt_dPrice"..orgCosts[3]],"FFC146");
+            if #orgCosts == 3 then
+                CSAPI.SetTextColorByCode(this["pnIcon" .. orgCosts[3]], "FFC146");
+                CSAPI.SetTextColorByCode(this["txt_dPrice" .. orgCosts[3]], "FFC146");
             else
-                CSAPI.SetTextColorByCode(pnIcon1,"FFFFFF");
-                CSAPI.SetTextColorByCode(pnIcon2,"FFFFFF");
-                CSAPI.SetTextColorByCode(txt_dPrice1,"FFFFFF");
-                CSAPI.SetTextColorByCode(txt_dPrice2,"FFFFFF");
+                CSAPI.SetTextColorByCode(pnIcon1, "FFFFFF");
+                CSAPI.SetTextColorByCode(pnIcon2, "FFFFFF");
+                CSAPI.SetTextColorByCode(txt_dPrice1, "FFFFFF");
+                CSAPI.SetTextColorByCode(txt_dPrice2, "FFFFFF");
             end
         else
-            CSAPI.SetTextColorByCode(pnIcon1,"FFFFFF");
-            CSAPI.SetTextColorByCode(pnIcon2,"FFFFFF");
-            CSAPI.SetTextColorByCode(txt_dPrice1,"FFFFFF");
-            CSAPI.SetTextColorByCode(txt_dPrice2,"FFFFFF");
+            CSAPI.SetTextColorByCode(pnIcon1, "FFFFFF");
+            CSAPI.SetTextColorByCode(pnIcon2, "FFFFFF");
+            CSAPI.SetTextColorByCode(txt_dPrice1, "FFFFFF");
+            CSAPI.SetTextColorByCode(txt_dPrice2, "FFFFFF");
         end
     end
 end
 
 function SetDiscount(discount)
-    CSAPI.SetGOActive(discountObj,discount~=nil);
+    CSAPI.SetGOActive(discountObj, discount ~= nil);
     if discount then
-        CSAPI.SetText(txt_discount,discount);
+        CSAPI.SetText(txt_discount, discount);
     end
     -- local dis=math.floor(discount*10+0.5);
     -- CSAPI.SetGOActive(discountObj,discount~=1);
@@ -154,9 +175,9 @@ function SetDiscount(discount)
 end
 
 function Update()
-    countTime=countTime+Time.deltaTime;
-	if countTime>=updateTime then
-        countTime=0;
+    countTime = countTime + Time.deltaTime;
+    if countTime >= updateTime then
+        countTime = 0;
         RefreshTime()
     end
     if (needToCheckMove) then
@@ -166,152 +187,155 @@ function Update()
 end
 
 function RefreshTime()
-    if this.data and this.data:GetEndBuyTime()>0 then
-        CSAPI.SetText(txt_limit,this.data:GetEndBuyTips())
-        CSAPI.SetGOActive(limitObj,true);
+    if this.data and this.data:GetEndBuyTime() > 0 then
+        CSAPI.SetText(txt_limit, this.data:GetEndBuyTips())
+        CSAPI.SetGOActive(limitObj, true);
     else
-        CSAPI.SetGOActive(limitObj,false);
+        CSAPI.SetGOActive(limitObj, false);
     end
 end
 
 function SetSIcon(iconName)
-    CSAPI.SetGOActive(setIcon,iconName~=nil);
+    CSAPI.SetGOActive(setIcon, iconName ~= nil);
     if iconName then
-        ResUtil.SkinSetIcon:Load(setIcon,iconName.."_w",true);
+        ResUtil.SkinSetIcon:Load(setIcon, iconName .. "_w", true);
     end
 end
 
 function SetTag(str)
-    CSAPI.SetText(txt_setTag,str or "");
-    CSAPI.SetGOActive(txt_setTag,str~=nil)
+    CSAPI.SetText(txt_setTag, str or "");
+    CSAPI.SetGOActive(txt_setTag, str ~= nil)
 end
 
 function SetName(str)
     needToCheckMove = false
-    CSAPI.SetText(txt_name,str or "");
+    CSAPI.SetText(txt_name, str or "");
     needToCheckMove = true
 end
 
 function SetAlpha(val)
-    CSAPI.SetGOAlpha(alphaNode,val);
+    CSAPI.SetGOAlpha(alphaNode, val);
 end
 
 function SetOver(isOver)
-    CSAPI.SetGOActive(priceObj,false);
-    CSAPI.SetGOActive(priceObj2,false);
-    CSAPI.SetGOActive(priceObj3,false);
-    CSAPI.SetGOActive(dPriceObj,false);
-    CSAPI.SetGOActive(freeObj,true);
-    CSAPI.SetText(txt_free,LanguageMgr:GetByID(18068));
+    CSAPI.SetGOActive(priceObj, false);
+    CSAPI.SetGOActive(priceObj2, false);
+    CSAPI.SetGOActive(priceObj3, false);
+    CSAPI.SetGOActive(dPriceObj, false);
+    CSAPI.SetGOActive(freeObj, true);
+    CSAPI.SetText(txt_free, LanguageMgr:GetByID(18068));
 end
 
---设置价格
-function SetCost(cost,isOver)
+-- 设置价格
+function SetCost(cost, isOver)
     if isOver then
-        do return end
+        do
+            return
+        end
     end
     if cost then
-        if currPrice==priceObj2 then
-            CSAPI.SetText(txt_rmb,rmbIcon);
-            CSAPI.SetText(txt_rmbVal,tostring(cost[1].num));
-        elseif currPrice==priceObj then
-            local cfg = Cfgs.ItemInfo:GetByID(cost[1].id,true);
+        if currPrice == priceObj2 then
+            CSAPI.SetText(txt_rmb, rmbIcon);
+            CSAPI.SetText(txt_rmbVal, tostring(cost[1].num));
+        elseif currPrice == priceObj then
+            local cfg = Cfgs.ItemInfo:GetByID(cost[1].id, true);
             if cfg and cfg.icon then
-                ResUtil.IconGoods:Load(moneyIcon, cfg.icon.."_1");
+                ResUtil.IconGoods:Load(moneyIcon, cfg.icon .. "_1");
             else
-                LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
+                LogError("道具商店：读取物品的价格Icon出错！Cfg:" .. tostring(cfg));
             end
-            CSAPI.SetText(txt_price,tostring(cost[1].num));
-        elseif currPrice==dPriceObj then
-            CSAPI.SetGOActive(dMNode,cost[1].id~=-1 )
-            CSAPI.SetGOActive(pnIcon1,cost[1].id==-1 )
-            if cost[1].id~=-1 then
-                ShopCommFunc.SetPriceIcon(dMIcon1,cost[1]);
+            CSAPI.SetText(txt_price, tostring(cost[1].num));
+        elseif currPrice == dPriceObj then
+            CSAPI.SetGOActive(dMNode, cost[1].id ~= -1)
+            CSAPI.SetGOActive(pnIcon1, cost[1].id == -1)
+            if cost[1].id ~= -1 then
+                ShopCommFunc.SetPriceIcon(dMIcon1, cost[1]);
             else
-                CSAPI.SetText(pnIcon1,rmbIcon);
+                CSAPI.SetText(pnIcon1, rmbIcon);
             end
-            CSAPI.SetGOActive(dMNode2,cost[2].id~=-1 )
-            CSAPI.SetGOActive(pnIcon2,cost[2].id==-1 )
-            if cost[2].id~=-1 then
-                ShopCommFunc.SetPriceIcon(dMIcon2,cost[2]);
+            CSAPI.SetGOActive(dMNode2, cost[2].id ~= -1)
+            CSAPI.SetGOActive(pnIcon2, cost[2].id == -1)
+            if cost[2].id ~= -1 then
+                ShopCommFunc.SetPriceIcon(dMIcon2, cost[2]);
             else
-                CSAPI.SetText(pnIcon2,rmbIcon);
+                CSAPI.SetText(pnIcon2, rmbIcon);
             end
-            CSAPI.SetText(txt_dPrice1,tostring(cost[1].num));
-            CSAPI.SetText(txt_dPrice2,tostring(cost[2].num));
-            if CSAPI.IsADV()  then
+            CSAPI.SetText(txt_dPrice1, tostring(cost[1].num));
+            CSAPI.SetText(txt_dPrice2, tostring(cost[2].num));
+            if CSAPI.IsADV() then
                 ---显示价格
-                if SDKdisplayPrice~=nil then CSAPI.SetText(txt_dPrice1,SDKdisplayPrice); end
+                if SDKdisplayPrice ~= nil then
+                    CSAPI.SetText(txt_dPrice1, SDKdisplayPrice);
+                end
             end
         else
             local cfg = Cfgs.ItemInfo:GetByID(cost[1].id);
             if cfg and cfg.icon then
-                ResUtil.IconGoods:Load(moneyIcon3, cfg.icon.."_1",true);
+                ResUtil.IconGoods:Load(moneyIcon3, cfg.icon .. "_1", true);
             else
-                LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
+                LogError("道具商店：读取物品的价格Icon出错！Cfg:" .. tostring(cfg));
             end
-            CSAPI.SetText(txt_price3,tostring(cost[1].num));
+            CSAPI.SetText(txt_price3, tostring(cost[1].num));
         end
-        if cost[1].num>0 then 
-            CSAPI.SetGOActive(freeObj,false);
-            CSAPI.SetGOActive(priceObj,currPrice==priceObj);
-            CSAPI.SetGOActive(priceObj2,currPrice==priceObj2);
-            CSAPI.SetGOActive(priceObj3,currPrice==priceObj3);
-            CSAPI.SetGOActive(dPriceObj,currPrice==dPriceObj);
+        if cost[1].num > 0 then
+            CSAPI.SetGOActive(freeObj, false);
+            CSAPI.SetGOActive(priceObj, currPrice == priceObj);
+            CSAPI.SetGOActive(priceObj2, currPrice == priceObj2);
+            CSAPI.SetGOActive(priceObj3, currPrice == priceObj3);
+            CSAPI.SetGOActive(dPriceObj, currPrice == dPriceObj);
         else
-            CSAPI.SetGOActive(priceObj,false);
-            CSAPI.SetGOActive(priceObj2,false);
-            CSAPI.SetGOActive(priceObj3,false);
-            CSAPI.SetGOActive(dPriceObj,false);
-            CSAPI.SetGOActive(freeObj,true);
-            CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
+            CSAPI.SetGOActive(priceObj, false);
+            CSAPI.SetGOActive(priceObj2, false);
+            CSAPI.SetGOActive(priceObj3, false);
+            CSAPI.SetGOActive(dPriceObj, false);
+            CSAPI.SetGOActive(freeObj, true);
+            CSAPI.SetText(txt_free, LanguageMgr:GetByID(18032));
         end
     else
-        CSAPI.SetGOActive(priceObj,false);
-        CSAPI.SetGOActive(priceObj2,false);
-        CSAPI.SetGOActive(priceObj3,false);
-        CSAPI.SetGOActive(dPriceObj,false);
-        CSAPI.SetGOActive(freeObj,true);
-        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18032));
+        CSAPI.SetGOActive(priceObj, false);
+        CSAPI.SetGOActive(priceObj2, false);
+        CSAPI.SetGOActive(priceObj3, false);
+        CSAPI.SetGOActive(dPriceObj, false);
+        CSAPI.SetGOActive(freeObj, true);
+        CSAPI.SetText(txt_free, LanguageMgr:GetByID(18032));
     end
 end
 
---设置获得方式
+-- 设置获得方式
 function SetGetTips(str)
-    CSAPI.SetGOActive(priceObj,false);
-    CSAPI.SetGOActive(priceObj2,false);
-    CSAPI.SetGOActive(priceObj3,false);
-    CSAPI.SetGOActive(freeObj,true);
-    if str~=nil and str~="" then
-        CSAPI.SetText(txt_free,str);
+    CSAPI.SetGOActive(priceObj, false);
+    CSAPI.SetGOActive(priceObj2, false);
+    CSAPI.SetGOActive(priceObj3, false);
+    CSAPI.SetGOActive(freeObj, true);
+    if str ~= nil and str ~= "" then
+        CSAPI.SetText(txt_free, str);
     else
-        CSAPI.SetText(txt_free,LanguageMgr:GetByID(18057));
+        CSAPI.SetText(txt_free, LanguageMgr:GetByID(18057));
     end
 end
 
 function SetL2dTag(isShow)
-    --CSAPI.SetGOActive(l2dTag,isShow==true); --和谐隐藏
+    -- CSAPI.SetGOActive(l2dTag,isShow==true); --和谐隐藏
 end
 
 function SetAnimaTag(isShow)
-    --CSAPI.SetGOActive(animaTag,isShow==true);
+    -- CSAPI.SetGOActive(animaTag,isShow==true);
 end
 
 function SetModelTag(isShow)
-    --CSAPI.SetGOActive(modelTag,isShow==true);
+    -- CSAPI.SetGOActive(modelTag,isShow==true);
 end
 
 function SetSPPriceTag(isShow)
-    --CSAPI.SetGOActive(spPriceTag,isShow==true);
+    -- CSAPI.SetGOActive(spPriceTag,isShow==true);
 end
 
 function SetSPTag(isShow)
-    --CSAPI.SetGOActive(spTag,isShow==true);
+    -- CSAPI.SetGOActive(spTag,isShow==true);
 end
 
-
 function SetClickCB(cb)
-    this.cb=cb;
+    this.cb = cb;
 end
 
 function OnClickSelf()
@@ -320,27 +344,27 @@ function OnClickSelf()
     end
 end
 
---检查固定商品类型的道具折扣信息是否需要刷新
+-- 检查固定商品类型的道具折扣信息是否需要刷新
 function CheckDiscountRefresh(nowTime)
-    if this.elseData.commodityType==1 then
+    if this.elseData.commodityType == 1 then
         local endTime = this.data:GetDiscountEndTime()
         local startTime = this.data:GetDiscountStartTime()
-        if startTime~=0 and nowTime>=startTime and nowTime<=endTime then
+        if startTime ~= 0 and nowTime >= startTime and nowTime <= endTime then
             RefreshByFixed();
-        elseif endTime~=0 and nowTime>=endTime then
-            RefreshByFixed(); 
+        elseif endTime ~= 0 and nowTime >= endTime then
+            RefreshByFixed();
         end
     end
 end
 
 function RefreshByFixed()
-    local records=ShopMgr:GetRecordInfos(this.data:GetCfgID());
-	data:SetData(records);
+    local records = ShopMgr:GetRecordInfos(this.data:GetCfgID());
+    data:SetData(records);
     -- Refresh(data,commodityType);
 end
 
 function SetIndex(index)
-    this.index=index;
+    this.index = index;
 end
 
 function GetIndex()

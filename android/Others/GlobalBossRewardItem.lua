@@ -31,14 +31,17 @@ end
 
 
 function SetRankReward()
-    local sub = info.sub or 1
-    local up = info.up or -1
-    if up == -1 then
-        CSAPI.SetText(txtName,sub .. "+")
+    local sub = info.sub
+    local up = info.up
+    local str1 = sub[1] == 1 and sub[2] or math.floor(sub[2] / 100) .. "%"
+    if up == nil then
+        CSAPI.SetText(txtName,str1 .. "+")
+    elseif sub[2] == up[2] then 
+        CSAPI.SetText(txtName,str1 .. "")
     else
-        CSAPI.SetText(txtName,sub.."-"..up)
+        local str2 = up[1] == 1 and up[2] or math.floor(up[2] / 100) .. "%"
+        CSAPI.SetText(txtName,str1.."-"..str2)
     end
-    
 
     if info.mailId then
         local cfgMail = Cfgs.CfgMail:GetByID(info.mailId)

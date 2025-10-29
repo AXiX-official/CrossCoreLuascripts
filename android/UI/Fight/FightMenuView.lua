@@ -30,7 +30,7 @@ function OnOpen()
 end
 -- 等待入场动画结束，暂停，关闭点击遮罩
 function OnPlayEnterComplete()
-    if(isClosed)then
+    if (isClosed) then
         return;
     end
 
@@ -69,18 +69,18 @@ function OnClickQuit()
         LanguageMgr:ShowTips(19000)
         return;
     end
-    local func,func2= OnSureBack,nil
-    local str1,str2 = nil,nil
+    local func, func2 = OnSureBack, nil
+    local str1, str2 = nil, nil
     if (g_FightMgr) then
-        if(IsPvpSceneType(g_FightMgr.type) or g_FightMgr.type == SceneType.PVEBuild) then 
-            func= OnSureBack_PVP
-        elseif(g_FightMgr.type == SceneType.Rogue) then
-            func= OnSureBack_Rogue
+        if (IsPvpSceneType(g_FightMgr.type) or g_FightMgr.type == SceneType.PVEBuild) then
+            func = OnSureBack_PVP
+        elseif (g_FightMgr.type == SceneType.Rogue) then
+            func = OnSureBack_Rogue
             func2 = OnSureBack_Rogue2
             str1 = LanguageMgr:GetByID(50022)
             str2 = LanguageMgr:GetByID(50009)
         elseif g_FightMgr.type == SceneType.MultTeam then
-            func=OnSureBack_MultTeam;
+            func = OnSureBack_MultTeam;
         end
     end
 
@@ -89,7 +89,9 @@ function OnClickQuit()
         -- func = OnDirllBack;
         OnDirllBack();
         return;
-    elseif (g_FightMgr and (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS or g_FightMgr.type == SceneType.RogueT or g_FightMgr.type == SceneType.BuffBattle)) then
+    elseif (g_FightMgr and
+        (g_FightMgr.type == SceneType.PVE or g_FightMgr.type == SceneType.RogueS or g_FightMgr.type == SceneType.RogueT or
+            g_FightMgr.type == SceneType.BuffBattle or SceneType.TowerDeep)) then
         -- if (DungeonMgr:CheckDungeonPass(1004)) then
         func = OnSureDungeonFightQuit;
         --        else
@@ -112,8 +114,9 @@ function OnClickQuit()
     end
 
     if (g_FightMgr) then
-        if(g_FightMgr.nDuplicateID and DungeonMgr:GetDungeonSectionType(g_FightMgr.nDuplicateID)==SectionType.Colosseum)then 
-            quitStr = LanguageMgr:GetByID(64049) 
+        if (g_FightMgr.nDuplicateID and DungeonMgr:GetDungeonSectionType(g_FightMgr.nDuplicateID) ==
+            SectionType.Colosseum) then
+            quitStr = LanguageMgr:GetByID(64049)
         else
             if (g_FightMgr.type == SceneType.PVPMirror) then
                 quitStr = LanguageMgr:GetTips(19004)
@@ -123,8 +126,10 @@ function OnClickQuit()
                 quitStr = LanguageMgr:GetByID(54046) 
             elseif g_FightMgr.type == SceneType.MultTeam then
                 quitStr = LanguageMgr:GetByID(77039)
+            elseif g_FightMgr.type == SceneType.TowerDeep then
+                quitStr = LanguageMgr:GetByID(130032)
             end
-        end 
+        end
     end
     local dialogData = {}
     dialogData.content = quitStr
@@ -136,7 +141,7 @@ function OnClickQuit()
             end)
         end
     end
-    if(func2~=nil) then 
+    if (func2 ~= nil) then
         dialogData.cancelCallBack = function()
             panel.ExitTween()
             if (not IsNil(fade)) then
@@ -146,12 +151,12 @@ function OnClickQuit()
             end
         end
     end
-    if(str1~=nil) then 
+    if (str1 ~= nil) then
         dialogData.okText = str1
-    end 
-    if(str2~=nil) then 
-        dialogData.cancelText =str2
-    end 
+    end
+    if (str2 ~= nil) then
+        dialogData.cancelText = str2
+    end
     CSAPI.OpenView("Dialog", dialogData);
 end
 
@@ -207,14 +212,17 @@ end
 function OnSureBack_MultTeam()
     -- FightOverTool.ApplyEnd(g_FightMgr and g_FightMgr.type)
     OnClickExit();
-    --退出战斗
-    local proto = {"FightProtocol:Quit", {uid=PlayerClient:GetUid(),bIsQuit = true}} 
+    -- 退出战斗
+    local proto = {"FightProtocol:Quit", {
+        uid = PlayerClient:GetUid(),
+        bIsQuit = true
+    }}
     NetMgr.net:Send(proto)
 end
 
-function OnClickBack()   
+function OnClickBack()
     FightClient:SetPauseState(false);
-    
+
     panel.ExitTween()
     fade:Play(1, 0, 200, 300, function()
         view:Close();
@@ -225,7 +233,7 @@ end
 
 function OnClickExit()
     view:Close();
-    
+
     FightClient:SetPauseState(false);
 end
 

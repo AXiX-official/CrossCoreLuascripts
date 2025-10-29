@@ -619,6 +619,8 @@ function this:Init()
     --章节军演
     self.SectionExercise = ResImgUtil.New("UIs/Exercise/1")
     self.FightOver=ResIconUtil.New("FightOver")
+    --万圣节
+    self.Halloween = ResIconUtil.New("Halloween")
 end
 
 return this;

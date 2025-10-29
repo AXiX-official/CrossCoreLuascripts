@@ -109,6 +109,20 @@ function Refresh()
             SetContent();
             changeInfo=currSkinInfo:GetChangeInfo();
             SetChangeInfo();
+            local icons=currSkinInfo:GetTagIcons();
+            if icons~=nil then
+                for i, v in ipairs(icons) do
+                    CSAPI.SetGOActive(this[("tag"..i)],true)
+                    ResUtil.Tag:Load(this[("tagIcon"..i)],v);
+                end
+
+            end
+            if icons==nil or #icons<3 then
+                local index= icons~=nil and #icons+1 or 1;
+                for i=index,3 do
+                    CSAPI.SetGOActive(this[("tag"..i)],false)
+                end
+            end
         else
             curModelCfg=nil;
         end
@@ -585,6 +599,13 @@ function Update()
             isFirst=false;
             CSAPI.SetGOActive(mask,false);
         end
+    end
+end
+
+function OnClickTag()
+    --显示当前图标的描述
+    if currSkinInfo then
+        CSAPI.OpenView("SkinTagDesc",currSkinInfo);
     end
 end
 

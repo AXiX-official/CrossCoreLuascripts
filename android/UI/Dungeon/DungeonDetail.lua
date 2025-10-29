@@ -25,7 +25,7 @@ function OnViewOpened(viewKey)
 end
 
 function OnInit()
-	tab = UIUtil:AddTop2("DungeonView", topParent, OnClickBack, nil, {})
+	tab = UIUtil:AddTop2("DungeonDetials", topParent, OnClickBack, nil, {})
 	CSAPI.SetGOActive(tab.btn_home, false)
 end
 
@@ -180,7 +180,7 @@ function CreateMainLineOutPutGrids()
 	local secondList = GetFixedList();	
 	local thirdList = GetRandomList()
 	local fourthList = GetRewardCfgGoods(info.littleReward, true, GetElseData(4))
-	local LanguageIDs = {15019, 15041, 15042, 15044}
+	local LanguageIDs = {LanguageMgr:GetByID(15019), LanguageMgr:GetByID(15041), LanguageMgr:GetByID(15042), LanguageMgr:GetByID(15044)}
 	local lists = {firstList, secondList, thirdList, fourthList}
 
 	for i, v in ipairs(LanguageIDs) do

@@ -8,13 +8,17 @@ function this.New()
 end
 
 function this:Set(cfg)
+    self.panel = self.panel or {}
+    self.create = self.create or {}
+    if type(cfg) ~= "table" then
+        self.datas = {}
+        return
+    end
     self.cfg = cfg
     if cfg then
         self.data = DungeonMgr:GetDungeonData(cfg.id)
         self.sectionData = DungeonMgr:GetSectionData(cfg.group)
     end
-    self.panel = self.panel or {}
-    self.create = self.create or {}
     self.datas = {cfg =self.cfg,data =self.data,sectionData =self.sectionData}
 end
 

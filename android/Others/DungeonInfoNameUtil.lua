@@ -75,6 +75,7 @@ function this.Colosseum()
 end
 
 function this.GlobalBoss()
+    -- return {"BossTitle","BossLevel","BossState","BossTime","BossButton1","BossDetails","BossBuff","BossButton2"},"GlobalBoss"
     return {"BossTitle","BossLevel","BossState","BossTime","BossButton1","BossDetails","BossButton2"},"GlobalBoss"
 end
 
@@ -120,6 +121,10 @@ end
 
 function this.MultTeamBattle()
     return {"Title","BossState","Point","Details","Button7"},"MultTeamBattle"
+end
+
+function this.TowerDeep()
+    return {"Title","Score","Target","Output","Details","Button"},"TowerDeep"
 end
 
 return this; 

@@ -96,6 +96,8 @@ local puzzleNextInfo = nil;
 
 local exerciseRTime = nil
 local popupPackTime = nil
+local isSpineUIHide = nil
+
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
     fill_lv = ComUtil.GetCom(fillLv, "Image")
@@ -1816,9 +1818,15 @@ end
 
 function SpineUI(b)
     if (b) then
-        OnClickHide()
+        if(not isHideUI)then 
+            isSpineUIHide = true
+            OnClickHide()
+        end
     else
-        OnClickBack()
+        if(isSpineUIHide)then 
+            OnClickBack()
+        end
+        isSpineUIHide = nil
     end
     MenuMgr:SpineUI(b)
 end

@@ -48,6 +48,7 @@ local conf = {
 {'MultTeamBattleMain',	'MultTeamBattleMain',	'递归沙盒',	'',	'',	'2125',	'',	''},
 {'RiddleMain',	'RiddleMain',	'天灯映月',	'',	'',	'2007',	'',	''},
 {'LovePlusView',	'LovePlusView',	'时光恋曲',	'',	'',	'2007',	'',	''},
+{'TowerDeep',	'TowerDeep',	'深塔计划',	'',	'',	'2125',	'',	''},
 },
 }
 --cfgCfgOpenCondition = conf

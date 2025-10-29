@@ -596,6 +596,7 @@ eTeamType = {
     PVPFriend = 65, -- 好友实时军演攻击队伍 65, 66, 67
     RogueT = 70,    --限制版爬塔 70-89 
     MultBattle=90,--多队战斗
+    TowerDeep = 96, -- 新爬塔  96-100
     ForceFight = 10000 -- 强制上阵索引起始值
 }
 
@@ -815,6 +816,7 @@ ActivityListType = {
 	AdvBindUsers =2001, --引导游客绑定账号（红点异常必须新增）
     SignInAnniversary = 1030, --1.5周年
     LovePlus = 1033,--爱相随
+    Halloween = 1035,--万圣节活动
 }
 
 ALType = {}
@@ -1155,6 +1157,7 @@ TeamOpenSetting.GlobalBoss= 9 --世界boss
 TeamOpenSetting.RogueT= 10 --限制版爬塔
 TeamOpenSetting.MultBattle= 11 --多队战斗
 TeamOpenSetting.PVPMirror= 12 --演习
+TeamOpenSetting.TowerDeep = 13 --深塔计划
 -----------------聊天类型
 ChatType = {}
 ChatType.World = 1 -- 世界
@@ -1737,6 +1740,7 @@ DungeonInfoType.Summer2Plot = "Summer2Plot"
 DungeonInfoType.Summer2Danger = "Summer2Danger"
 DungeonInfoType.Summer2Special = "Summer2Special"
 DungeonInfoType.MultTeamBattle = "MultTeamBattle"
+DungeonInfoType.TowerDeep = "TowerDeep"
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
 RegressionPlrType = {}
@@ -1923,6 +1927,8 @@ eRankType.STAR = 3 -- 十二宫
 eRankType.BuffBattleRank = 4 -- 积分战斗
 eRankType.MultTeamRank = 5 -- 多队玩法
 eRankType.MaidCoffeeRank = 7 -- 女仆咖啡玩法
+eRankType.TowerDeepRank = 9 -- 深塔计划
+eRankType.HalloweenGameRank = 10 -- 万圣节游戏
 
 -- 排行榜id
 eRankId = {}
@@ -1934,6 +1940,8 @@ eRankId.CloudRank = 10007 --云端行迹排行榜
 eRankId.BuffBattleRank = 10013 --积分战斗
 eRankId.MultTeamRank = 10015 --多队玩法
 eRankId.MaidCoffeeRank = 10017 --女仆咖啡玩法
+eRankId.TowerDeepRank = 10020 --深塔计划
+eRankId.HalloweenGameRank = 10021 --万圣节游戏
 
 -- 排行榜默认使用数据表名
 G_RANK_DEF_DB_TABLE = 'plr_star_rank'
@@ -1945,6 +1953,8 @@ eRankDbTable[eRankType.Abattoir] = 'plr_abattoir_rank'
 eRankDbTable[eRankType.BuffBattleRank] = 'plr_buff_battle_rank'
 eRankDbTable[eRankType.MultTeamRank] = 'plr_mult_team_rank'
 eRankDbTable[eRankType.MaidCoffeeRank] = 'plr_maid_coffee_rank'
+eRankDbTable[eRankType.HalloweenGameRank] = 'plr_halloween_game_rank'
+eRankDbTable[eRankType.TowerDeepRank] = 'plr_tower_deep_rank'
 
 --收集活动类型
 eCollectType = {}
@@ -1988,6 +1998,7 @@ eOperateType.PayNotice1 = 1020 --充值弹窗1
 --(特殊处理)对应多个活动，所以不对应活动id
 eOperateType.SkinRebate = 13000 --皮肤返利
 eOperateType.DragonBoatFestival = 1029 --端午签到
+eOperateType.HalloweenGame = 1035--万圣节小游戏
 
 eActiveListId = {}
 eActiveListId.FreeCreateCard = 1021
@@ -2155,7 +2166,19 @@ eDupPassTeamDef = {}
 eDupPassTeamDef.recordCnt = 10 -- 每个副本记录的数量
 
 -----------------------------------------------------------------------------------------------------------------
+HalloweenItemType = {}
+HalloweenItemType.Score = 1 --得分
+HalloweenItemType.Trap = 2 --陷阱
+HalloweenItemType.Time = 3 --加时
+
+
+-----------------------------------------------------------------------------------------------------------------
 -- pvp 累计任务计数类型
 ePVPTaskType = {}
-ePVPTaskType.Join = 1 -- 参与次数
+ePVPTaskType.Join = 1 -- 参与次数 
 ePVPTaskType.Win = 2  -- 胜利次数
+
+--检测卡牌类型
+eSingleCardType = {}
+eSingleCardType.Normal = 1 --自己的卡牌
+eSingleCardType.Assist = 2 --包括助战卡牌

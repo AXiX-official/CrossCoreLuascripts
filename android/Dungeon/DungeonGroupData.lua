@@ -78,6 +78,18 @@ function this:GetDungeonCfgs()
     return cfgs
 end
 
+-- 从关卡表获取关卡数据
+function this:GetMainLines()
+    local cfgs = {}
+    local _cfgs = Cfgs.MainLine:GetGroup(self:GetGroup())
+    for k, v in pairs(_cfgs) do
+        if (v.dungeonGroup == self:GetID()) then
+            table.insert(cfgs, v)
+        end
+    end
+    return cfgs
+end
+
 function this:GetFirstDungeonCfg()
     local cfgs = self:GetDungeonCfgs()
     return cfgs and cfgs[1]
@@ -234,6 +246,11 @@ function this:GetBuffs()
         end)
     end
     return datas
+end
+
+-----------------------------------------------TowerDeep-----------------------------------------------
+function this:IsDiff()
+    return self.cfg and self.cfg.difficulty ~= nil
 end
 
 return this;

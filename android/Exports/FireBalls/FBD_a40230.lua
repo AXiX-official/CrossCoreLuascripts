@@ -2,8 +2,9 @@
 local this = 
 {
 [1310282141]={
-{time=10000,type=0,cue_sheet="cv/Scorching.acb",cue_name="Scorching_11",cue_feature=1},
-{delay=9000,time=4000,type=1,hit_type=1,hits={0,100,200}},
+{delay=1300,time=10000,type=0,cue_sheet="cv/Scorching.acb",cue_name="Scorching_06",cue_feature=1},
+{delay=9000,time=4000,type=1,hit_type=1,hits={0,500,500}},
+{delay=3000,time=10000,type=0,cue_sheet="cv/Scorching.acb",cue_name="Scorching_11",cue_feature=1},
 {effect="cast2_hit",delay=9600,time=1400,type=0,pos_ref={ref_type=1,offset_row=-250,offset_col=-50}},
 {effect="cast2_eff",time=10000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Scorching_attack_skill_02"}
 },

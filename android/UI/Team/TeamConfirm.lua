@@ -1098,9 +1098,10 @@ function OnGlobalBoss()
             TeamMgr:AddFightTeamData(teamData);
             DungeonMgr:SetFightTeamId(teamData:GetIndex());
             local exData = {}
-            -- if GlobalBossMgr:GetMaxHp() > 0 then --赋予模拟boss血量，队列表示第几只boss怪
-            --     exData.hpinfo = {{hp = GlobalBossMgr:GetMaxHp(),maxhp}}
-            -- end
+            if GlobalBossMgr:GetMaxHp() > 0 then --赋予模拟boss血量，队列表示第几只boss怪
+                exData.bossMaxHp = GlobalBossMgr:GetMaxHp()
+                exData.bossId = GlobalBossMgr:GetData():GetID()
+            end
             CreateDirllFightByData({data=dirllData},dungeonCfg.nGroupID,data.overCB,tCommanderSkill,exData);
         else
             if GlobalBossMgr:IsKill() then

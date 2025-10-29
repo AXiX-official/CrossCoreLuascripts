@@ -59,6 +59,7 @@ function Refresh(data, elseData)
 				canvasGroup = ComUtil.GetCom(gridNode, "CanvasGroup")
 			end	
 			canvasGroup.alpha = elseData.isPass and 0.7 or 1
+			CSAPI.SetGOActive(tipImg,tips ~= "")
 		end
 		-- lua.SetChoosieIcon(true);
 		local numStr = ""

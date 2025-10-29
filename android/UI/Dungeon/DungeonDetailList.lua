@@ -33,8 +33,11 @@ function ShowLine(isShow)
 	CSAPI.SetGOActive(lineObj, isShow)
 end
 
-function SetTitle(_id)
-	LanguageMgr:SetText(txt_title, _id)
+function SetTitle(str)
+	if str == nil or str == "" then
+		return
+	end
+	CSAPI.SetText(txt_title,str)
 end
 
 function SetTweenDelay(idx)
