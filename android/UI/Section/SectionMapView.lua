@@ -147,10 +147,12 @@ function InitPivot(x, y)
 end
 
 function InitFit()
-    local x1, y1 = CSAPI.GetAnchor(itemNode.gameObject)
     local fit1 = CSAPI.UIFitoffsetTop() or 0
     local fit2 = CSAPI.UIFoffsetBottom() or 0
-    CSAPI.SetAnchor(itemNode.gameObject,x1 + ((fit1 + fit2) / 2), y1)
+    local x1, y1 = CSAPI.GetAnchor(itemNode.gameObject)
+    CSAPI.SetAnchor(itemNode.gameObject,x1 + ((fit1 - fit2) / 2), y1)
+    local x2,y2 =  CSAPI.GetAnchor(boxObj.gameObject)
+    CSAPI.SetAnchor(boxObj.gameObject,x2  - fit2, y2)
 end
 
 ---------------------------------------------模糊---------------------------------------------------
