@@ -1,4 +1,4 @@
--- 夺取攻击
+-- 炙热火雨
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -23,15 +23,5 @@ function Buffer402300301:OnCreate(caster, target)
 	-- 8415
 	local c15 = SkillApi:GetAttr(self, self.caster, target or self.owner,3,"attack")
 	-- 402300311
-	self:AddAttr(BufferEffect[402300311], self.caster, self.card, nil, "attack"-,math.min(math.abs((c767-c20)*c15*0.003),0.3*c15))
-end
--- 行动结束2
-function Buffer402300301:OnActionOver2(caster, target)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, self.caster, target, true) then
-	else
-		return
-	end
-	-- 402300314
-	self:DelBufferTypeForce(BufferEffect[402300314], self.caster, self.card, nil, 402300301)
+	self:AddAttr(BufferEffect[402300311], self.caster, self.card, nil, "attack",-math.min(math.abs((c767-c20)*c15*0.003),0.3*c15))
 end

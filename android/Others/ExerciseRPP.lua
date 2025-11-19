@@ -40,7 +40,9 @@ function OnInit()
         view:Close()
     end)
     eventMgr:AddListener(EventType.ExerciseR_End, function()
-        view:Close()
+        if(openSetting and openSetting == RealArmyType.Freedom)then 
+            view:Close()
+        end 
     end)
 end
 
@@ -113,7 +115,7 @@ function SetMy()
     if (not myRankItem) then
         ResUtil:CreateUIGOAsync("ExerciseR/ExerciseRItem1", detailParentL, function(go)
             myRankItem = ComUtil.GetLuaTable(go)
-            myRankItem.Refresh(myData)
+            myRankItem.RefreshMySelf()
         end)
     end
     --

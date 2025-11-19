@@ -35,6 +35,10 @@ function ItemClickCB(index)
     RefreshPanel()
 end
 
+function OnDestroy()
+    RoleABMgr:CheckRemoveAB("CRoleDisplayPVP")
+end
+
 function OnOpen()
     local modelID = data.role_panel_id
     local live2d = data.live2d == BoolType.Yes

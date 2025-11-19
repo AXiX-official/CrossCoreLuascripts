@@ -64,6 +64,7 @@ RedPointType.MultTeamBattle= "MultTeamBattle" --递归沙盒
 RedPointType.Coffee = "Coffee" --女仆咖啡
 RedPointType.LovePlus = "LovePlus"
 RedPointType.Riddle="Riddle"--猜谜
+RedPointType.PVP = "PVP" 
 RedPointType.Halloween = "Halloween" --万圣节小游戏
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}

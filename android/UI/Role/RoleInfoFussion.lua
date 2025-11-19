@@ -27,6 +27,7 @@ function OnDestroy()
 
     -- 停止上一段语音
     RoleAudioPlayMgr:StopSound()
+    RoleABMgr:CheckRemoveAB("RoleInfoFussion")
 end
 
 function Update()

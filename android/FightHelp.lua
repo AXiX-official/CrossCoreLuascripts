@@ -65,15 +65,15 @@ end
 
 --------------------------------------------------------------
 -- nDuplicateID 100以内为预留活动战斗
-function FightHelp:StartPveFight(player, nDuplicateID, groupID, data, exData)
+function FightHelp:StartPveFight(player, nDuplicateID, groupID, data, exData, seed2)
     -- DT(player)
     -- 战斗管理器的id
     --ASSERT(nDuplicateID)
     -- LogTable(data)
     -- ASSERT()
     local fid = UID(10)
-    local seed = os.time() + math.random(10000)
-    --print("------------", nDuplicateID)
+    local seed = seed2 or (os.time() + math.random(10000))
+    --LogDebugEx("FightHelp:StartPveFight",  seed, seed2)
     local mgr = CreateFightMgr(fid, groupID, SceneType.PVEBuild, seed, nDuplicateID)
     mgr.nPlayerLevel = player:Get('level')
     mgr.uid = player.id
@@ -294,6 +294,7 @@ function FightHelp:StartTowerDeepFight(player, nDuplicateID, groupID, data, oDup
     LogEnterFight(player, fid, sceneTy, nDuplicateID, groupID, data)
     return mgr
 end
+
 ---- 开始乱序演习战斗
 function FightHelp:StartRogueFight(player, nDuplicateID, groupID, data, oDuplicate, nTeamIndex, exData, sceneTy)
     -- DT(player)
@@ -458,6 +459,11 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror, sceneType, cbOver, b
     local player = plr
 
     mgr.cbOver = cbOver
+    if IsPvpSceneType(sceneType) then
+        mgr:SetStepLimit(g_sPVPStepLimit)
+    else
+        mgr:SetStepLimit(g_sPVPMirrorStepLimit)
+    end
 
     -- self.listPvp[tData.uid] = tData.data
     -- player:Send("FightProto:PvpFightResult", {tData = data, tMirror = tMirror}, encod)
@@ -491,7 +497,6 @@ function FightHelp:StartPvpMirrorFight(plr, tData, tMirror, sceneType, cbOver, b
         table.copy(buffIds, exData.tAllBuff)
     end
 
-    mgr:SetStepLimit(g_sPVPMirrorStepLimit)
     mgr:AfterLoadData(exData or {})
     -- LogTable({tData, tMirror}, "FightHelp:StartPvpMirrorFight")
     -- LogTable({seed = seed, stype = SceneType.PVPMirror, tData = tData, tMirror = tMirror}, "SceneType.PVPMirror")
@@ -749,11 +754,19 @@ function GetFightDataFromTeamData(cardData)
     end
 
 
+    ret.cfgid = cardData.cfgid
     ret.use_sub_talent = cardData.sub_talent.use
     ret.nStep = 0
     ret.nJump = 0
     ret.real_cid = cardData.cid
     ret.hp_percent = 1
+    if cardData.skin and cardData.skin > 0 then
+        ret.model = cardData.skin
+    end
+
+    if cardData.skin_a and cardData.skin_a > 0 then
+        ret.modelA = cardData.skin_a
+    end
 
     return ret
 end

@@ -22,10 +22,7 @@ function LayoutCallBack1(index)
     local lua = layout1:GetItemLua(index)
     if (lua) then
         local _data = curDatas1[index]
-        lua.SetClickCB(function()
-            layout1:UpdateList()
-            SetRed()
-        end)
+        lua.SetClickCB(RefreshPanel)
         lua.Refresh(_data,ePVPTaskType.Join)
     end
 end
@@ -33,10 +30,7 @@ function LayoutCallBack2(index)
     local lua = layout2:GetItemLua(index)
     if (lua) then
         local _data = curDatas2[index]
-        lua.SetClickCB(function()
-            layout2:UpdateList()
-            SetRed()
-        end)
+        lua.SetClickCB(RefreshPanel)
         lua.Refresh(_data,ePVPTaskType.Win)
     end
 end
@@ -74,16 +68,16 @@ function RefreshPanel()
     if (curIndex == 0) then
         curDatas1 = {}
         local rewardInfo = ExerciseRMgr:GetRewardInfo()
-        local get_jion_cnt_id = rewardInfo.get_jion_cnt_id or 0
+        local get_join_cnt_id = rewardInfo.get_join_cnt_id or 0
         local cfg = Cfgs.CfgPvpTaskReward:GetByID(1)
         if (cfg.fold==1) then
-            local _i = get_jion_cnt_id == 0 and 1 or (get_jion_cnt_id + 1)
+            local _i = get_join_cnt_id == 0 and 1 or (get_join_cnt_id + 1)
             _i = _i > #cfg.infos and #cfg.infos or _i
-            cfg.infos[_i]._isSuccess = _i <= get_jion_cnt_id
+            cfg.infos[_i]._isSuccess = _i <= get_join_cnt_id
             table.insert(curDatas1, cfg.infos[_i])
         else
             for k, v in ipairs(cfg.infos) do
-                v._isSuccess = k <= get_jion_cnt_id
+                v._isSuccess = k <= get_join_cnt_id
                 table.insert(curDatas1, v)
             end
             if (#curDatas1 > 1) then

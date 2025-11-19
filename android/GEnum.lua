@@ -75,6 +75,7 @@ ITEM_TYPE.SECTION_MULTI = 28 --双倍掉落道具
 ITEM_TYPE.LIMITED_TIME_SKIN = 29 --限时皮肤
 ITEM_TYPE.ICON_EMOTE = 30 --对战表情
 ITEM_TYPE.CHANGE_NAME_AND_SEX = 31 -- 名字与形态转换券
+ITEM_TYPE.LIMIT_CODE = 32 -- 识别码容器
 
 -- 物品标签
 ITEM_TAG = {}
@@ -135,6 +136,8 @@ CallPlrType.GetDorm = 13
 CallPlrType.PlrBindInvite = 14
 CallPlrType.PlrBindInviteAgree = 15
 CallPlrType.DupSupportUpdate = 16 -- 副本支援更新
+
+GenEnumNameByVal('CallPlrTypeName', CallPlrType)
 
 -------------------------------------------------------------------------------------------------
 -- 掉落类型
@@ -662,11 +665,11 @@ RealArmyType = {}
 RealArmyType.Friend = 1
 RealArmyType.Freedom = 2
 RealArmyType.Limit = 3
-RealArmyType.Mirror = 4 -- 演习
-RealArmyType.Matrix = 5 -- 基地突袭
-RealArmyType.WorldBoss = 6 -- 世界boss
+RealArmyType.Mirror = 4     -- 演习
+RealArmyType.Matrix = 5     -- 基地突袭
+RealArmyType.WorldBoss = 6  -- 世界boss
 RealArmyType.GuildFight = 7 -- 工会战
-RealArmyType.TeamBoss = 8 -- 组队boss
+RealArmyType.TeamBoss = 8   -- 组队boss
 
 GenEnumNameByVal('RealArmyTypeName', RealArmyType)
 
@@ -1392,8 +1395,8 @@ PlrMixIx.selCardVId = 29
 PlrMixIx.icon_id_grid = 30
 PlrMixIx.rewardMustUseCnt = 31
 PlrMixIx.cardInfo = 32 -- 如果重新启用重命名，或者增加，需要移出去
-PlrMixIx.freeArmyWin = 33
-PlrMixIx.freeArmyLost = 34
+PlrMixIx.notUse33 = 33      -- 弃用，可以重新改名使用
+PlrMixIx.notUse34 = 34      -- 弃用，可以重新改名使用
 PlrMixIx.createTime = 35 -- 用户创建时间
 PlrMixIx.remouldCount = 36 -- 存储改造芯片次数
 PlrMixIx.equipInfo = 37
@@ -1523,7 +1526,8 @@ eRecordType.ResetDoubleRechargeToken = 27 -- [中心服]重置双倍充值次数
 eRecordType.OneTypeCodeMultiUse = 28      -- [Code服使用]一个码多人使用
 eRecordType.FreeMatchPvpCfgid = 29        -- [军演服使用]自由pvp当前配置id
 eRecordType.LimitCodeActiveId = 30        -- [游戏服] 限量奖励任务活动ID
-eRecordType.FreeMatchJoinPlrCnt = 31      -- [军演服使用] 参与人数
+eRecordType.FreeMatchJoinPlrCnt = 31      -- [军演服使用] pvp参与人数
+eRecordType.DyExchangeCodeId = 32         -- [Code服使用] 动态兑换码生成id
 
 
 GmInitPlrType = {}
@@ -1730,6 +1734,7 @@ DungeonInfoType.NightDanger = "NightDanger"
 DungeonInfoType.NightSpecial = "NightSpecial"
 DungeonInfoType.Colosseum = "Colosseum" 
 DungeonInfoType.GlobalBoss = "GlobalBoss"
+DungeonInfoType.GlobalBossBuff = "GlobalBossBuff"
 DungeonInfoType.RogueT = "RogueT"
 DungeonInfoType.Cloud = "Cloud"
 DungeonInfoType.CloudPlot = "CloudPlot"
@@ -2175,7 +2180,7 @@ HalloweenItemType.Time = 3 --加时
 -----------------------------------------------------------------------------------------------------------------
 -- pvp 累计任务计数类型
 ePVPTaskType = {}
-ePVPTaskType.Join = 1 -- 参与次数 
+ePVPTaskType.Join = 1 -- 参与次数
 ePVPTaskType.Win = 2  -- 胜利次数
 
 --检测卡牌类型

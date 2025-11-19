@@ -18,10 +18,7 @@ function Skill983600301:DoSkill(caster, target, data)
 	else
 		return
 	end
-	-- 983600301
+	-- 983600302
 	self.order = self.order + 1
-	local targets = SkillFilter:All(self, caster, target, 3)
-	for i,target in ipairs(targets) do
-		self:AddProgress(SkillEffect[983600301], caster, target, data, 20)
-	end
+	self:AddBuff(SkillEffect[983600302], caster, target, data, 983600301,1)
 end

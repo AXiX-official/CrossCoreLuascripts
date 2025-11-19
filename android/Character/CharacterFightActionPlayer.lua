@@ -807,7 +807,9 @@ function this:StartAction()
         --召唤
         self.fightAction:PlaySummon();
         if(not self.character.IsSkipSkill())then
-            FightClient:SetPlaySpeed(1,true);--1倍数，保证音画同步
+            if(not g_FightMgr or not IsPvpSceneType(g_FightMgr.type))then
+                FightClient:SetPlaySpeed(1,true);--1倍数，保证音画同步
+            end
             commonSummonEff = ResUtil:CreateEffectImmediately("common/common_summon");
         end
 --    elseif(self.cfgSkill.type == SkillType.Unite)then
@@ -1077,7 +1079,9 @@ function this:CastEnd()
 
     if(self.cfgSkill.type == SkillType.Summon)then
         --还原播放速度
-        FightClient:SetPlaySpeed();
+        if(not g_FightMgr or not IsPvpSceneType(g_FightMgr.type))then
+            FightClient:SetPlaySpeed();
+        end
         if(commonSummonEff)then
             CSAPI.RemoveGO(commonSummonEff);
             commonSummonEff = nil;

@@ -6,18 +6,28 @@ Skill333804 = oo.class(SkillBase)
 function Skill333804:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 回合开始时
-function Skill333804:OnRoundBegin(caster, target, data)
+-- 伤害前
+function Skill333804:OnBefourHurt(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8138
-	if SkillJudger:OwnerPercentHp(self, caster, target, true,0.8) then
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8247
+	if SkillJudger:IsTargetMech(self, caster, target, true,11) then
+	else
+		return
+	end
+	-- 8090
+	if SkillJudger:TargetPercentHp(self, caster, target, true,0.5) then
 	else
 		return
 	end
 	-- 333804
-	self:AddBuff(SkillEffect[333804], caster, self.card, data, 4405,1)
+	self:AddTempAttr(SkillEffect[333804], caster, caster, data, "damage",0.25)
 end

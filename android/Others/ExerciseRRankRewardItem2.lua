@@ -16,9 +16,9 @@ end
 -- 排名奖励
 function Refresh2(_cfg)
     cfg = _cfg
-    local rewardInfo = ExerciseRMgr:GetRewardInfo()
-    local jion_cnt = rewardInfo.jion_cnt or 0
-    local get_jion_cnt_id = rewardInfo.get_jion_cnt_id or 0
+    -- local rewardInfo = ExerciseRMgr:GetRewardInfo()
+    -- local jion_cnt = rewardInfo.jion_cnt or 0
+    -- local get_jion_cnt_id = rewardInfo.get_jion_cnt_id or 0
     -- 
     --local str = cfg.rankNum[1] == cfg.rankNum[2] and cfg.rankNum[1] or cfg.rankNum[1] .. "~" .. cfg.rankNum[2]
     LanguageMgr:SetText(txtDesc, 90045, cfg.rankShowNum)

@@ -68,6 +68,7 @@ function OnDestroy()
     RoleAudioPlayMgr:StopSound()
     -- ABMgr:ReleaseABAllWithViewName("RoleInfo")
     -- ABMgr:ClearRecordsWithViewName("RoleInfo")
+    RoleABMgr:CheckRemoveAB("RoleInfo")
 
 end
 

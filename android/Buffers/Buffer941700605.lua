@@ -6,8 +6,8 @@ Buffer941700605 = oo.class(BuffBase)
 function Buffer941700605:Init(mgr, id, target, caster)
 	BuffBase.Init(self, mgr, id, target, caster)
 end
--- 行动结束
-function Buffer941700605:OnActionOver(caster, target)
+-- 行动结束2
+function Buffer941700605:OnActionOver2(caster, target)
 	-- 8063
 	if SkillJudger:CasterIsEnemy(self, self.caster, target, true) then
 	else

@@ -6,20 +6,25 @@ Skill333702 = oo.class(SkillBase)
 function Skill333702:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 攻击结束
-function Skill333702:OnAttackOver(caster, target, data)
+-- 行动结束
+function Skill333702:OnActionOver(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8202
-	if SkillJudger:IsNormal(self, caster, target, true) then
+	-- 8219
+	if SkillJudger:IsUltimate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
 	else
 		return
 	end
 	-- 333702
-	if self:Rand(2000) then
-		self:Help(SkillEffect[333702], caster, target, data, 1,10)
+	if self:Rand(3000) then
+		self:AddProgress(SkillEffect[333702], caster, self.card, data, 150)
 	end
 end

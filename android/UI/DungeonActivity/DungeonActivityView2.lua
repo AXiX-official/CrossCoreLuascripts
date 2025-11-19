@@ -133,6 +133,15 @@ function SetRed()
     end
 end
 
+function SetTeamReplace()
+    local cfgDungeon = GetCurrCfg()
+    if cfgDungeon and cfgDungeon.isHideReplace then
+        CSAPI.SetGOActive(btnReplace,false)
+    else
+        CSAPI.SetGOActive(btnReplace,true)
+    end
+end
+
 -- 初始化数据
 function SetDatas()
     groupDatas = DungeonMgr:GetDungeonGroupDatas(data.id)
@@ -206,6 +215,7 @@ function RefreshPanel()
         SetLevel()
         SetPower()
         SetRank()
+        SetTeamReplace()
         SetRed()
     end
 end

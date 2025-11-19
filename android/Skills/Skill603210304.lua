@@ -12,3 +12,23 @@ function Skill603210304:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11006], caster, target, data, 0.167,6)
 end
+-- 暴击伤害前(OnBefourHurt之前)
+function Skill603210304:OnBefourCritHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 603210302
+	self:AddTempAttr(SkillEffect[603210302], caster, self.card, data, "crit",0.15)
+end

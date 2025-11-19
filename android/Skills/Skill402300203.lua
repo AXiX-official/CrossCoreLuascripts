@@ -31,6 +31,6 @@ function Skill402300203:OnActionOver2(caster, target, data)
 	end
 	-- 402300202
 	if self:Rand(7500) then
-		self:AddBuff(SkillEffect[402300202], caster, self.card, data, 402300201,2)
+		self:AddBuff(SkillEffect[402300202], caster, target, data, 402300201,2)
 	end
 end

@@ -19,6 +19,7 @@ require "Log"
 CSAPI = require "CSAPI"
 
 Json = require "rapidjson"
+--Json = require "dkjson"
 
 --Lua����
 IS_CLIENT = true

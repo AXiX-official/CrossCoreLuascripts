@@ -98,6 +98,7 @@ end
 function SetButtonState()
     openGOs = {}
     for i = 1, 3 do
+        CSAPI.SetGOActive(this["exercise" .. i].gameObject, openNums[i] == 1)
         if openNums[i] == 1 then
             table.insert(openGOs, this["exercise" .. i].gameObject)
         end

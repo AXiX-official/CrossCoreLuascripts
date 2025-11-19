@@ -2866,14 +2866,14 @@ GameMsg.map["ArmyProto:BeInviteRespond"] = {
 	{ "uid", "is_receive",},
 }
 GameMsg.map["sFreeArmyMatch"] = {
-	--机器人id       对手id          等级    积分    对方排名 头像      头像框       性别序号      最后设置的角色看板ID 玩家称号     对方队伍        是否动态看板 
-	{ "uint",        "uint","string","uint", "uint", "uint",  "uint",   "uint",      "byte",       "uint",              "uint",      "list|TeamItem","byte",      },
-	{ "robot_cfg_id","uid", "name",  "level","score","rank",  "icon_id","icon_frame","sel_card_ix","role_panel_id",     "icon_title","teams",        "live2d",    },
+	--机器人id       对手id          等级    积分    对方排名 头像      头像框       性别序号      最后设置的角色看板ID 玩家称号     对方队伍        是否动态看板 参与自由军演次数 
+	{ "uint",        "uint","string","uint", "uint", "uint",  "uint",   "uint",      "byte",       "uint",              "uint",      "list|TeamItem","byte",      "short",         },
+	{ "robot_cfg_id","uid", "name",  "level","score","rank",  "icon_id","icon_frame","sel_card_ix","role_panel_id",     "icon_title","teams",        "live2d",    "join_cnt",      },
 }
 GameMsg.map["sFriendInvite"] = {
-	--好友id 积分    对方排名 最后设置的角色看板ID 是否动态看板 对方队伍        
-	{ "long","uint", "uint",  "uint",              "byte",      "list|TeamItem",},
-	{ "uid", "score","rank",  "role_panel_id",     "live2d",    "teams",        },
+	--好友id 积分    对方排名 最后设置的角色看板ID 是否动态看板 对方队伍        参与自由军演次数 
+	{ "long","uint", "uint",  "uint",              "byte",      "list|TeamItem","short",         },
+	{ "uid", "score","rank",  "role_panel_id",     "live2d",    "teams",        "join_cnt",      },
 }
 GameMsg.map["sFightAddress"] = {
 	--ip       端口    战斗序号   服务器id 随机值 参与玩家     RealArmyType 比较大的段位 机器人id       差值a       差值b       
@@ -2971,9 +2971,9 @@ GameMsg.map["ArmyProto:FreeMatchInfo"] = {
 	{ },
 }
 GameMsg.map["ArmyProto:FreeMatchInfoRet"] = {
-	--当前赛季id[没有就发0] 分数    排名   最高排名   可以参加的计数 上一当前赛季id[没有就为空] 奖励领取相关记录     最后设置的角色看板ID 是否动态看板 
-	{ "short",             "uint", "uint","uint",    "short",       "short",             "struts|sFreeMatchRewarInfo","uint",              "byte",      },
-	{ "cfg_id",            "score","rank","max_rank","can_join_cnt","pre_cfg_id",        "reward_info",       "role_panel_id",     "live2d",    },
+	--当前赛季id[没有就发0] 分数    排名   最高排名   可以参加的计数 上一当前赛季id[没有就为空] 奖励领取相关记录     最后设置的角色看板ID 是否动态看板 上赛季分数  
+	{ "short",             "uint", "uint","uint",    "short",       "short",             "struts|sFreeMatchRewarInfo","uint",              "byte",      "uint",     },
+	{ "cfg_id",            "score","rank","max_rank","can_join_cnt","pre_cfg_id",        "reward_info",       "role_panel_id",     "live2d",    "pre_score",},
 }
 GameMsg.map["ArmyProto:GetFreeMatchRankList"] = {
 	--开始排名，最小1 排名个数   
@@ -2988,7 +2988,7 @@ GameMsg.map["ArmyProto:GetFreeMatchRankListRet"] = {
 GameMsg.map["sFreeMatchRewarInfo"] = {
 	--参与自由军演次数 已领取参与次数id  已领取军演段位id 胜利次数  胜利次数获取到哪里 
 	{ "short",         "short",          "short",         "short",  "short",           },
-	{ "jion_cnt",      "get_jion_cnt_id","get_rank_lv_id","win_cnt","get_win_cnt_ix",  },
+	{ "join_cnt",      "get_join_cnt_id","get_rank_lv_id","win_cnt","get_win_cnt_ix",  },
 }
 GameMsg.map["ArmyProto:GetPvpReward"] = {
 	--类型    领取的列表   

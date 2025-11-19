@@ -322,16 +322,15 @@ this.Fight_Damage_Update		= 140005;
 this.Fight_Damage_Show_State		= 140006;
 --战斗显示翻转
 this.Fight_Flip				= 140007;
---战斗摄像机渲染目标设置
---this.Fight_Camera_Render				= 140008;
+this.Fight_Time_Line_Refresh = 140008;
 --战斗摄像机镜头效果
 this.Fight_Camera_Eff				= 140009;
 --消耗np
 this.Fight_Np_Cost = 140010;
 --自动战斗切换
 this.Fight_Auto_Changed = 140011;
---战斗视频
---this.Fight_Video = 140012;
+--战斗界面显示
+this.Fight_View_Show_Changed	= 140012;
 --战斗移除镜头效果
 this.Fight_Remove_Camera_Eff = 140013;
 --战斗镜头淡入淡出
@@ -340,8 +339,6 @@ this.Fight_Fade = 140014;
 this.Fight_Img_Update	= 140015;
 --自动战斗状态切换
 this.Fight_View_AutoFight_Changed	= 140016;
---战斗界面显示
-this.Fight_View_Show_Changed	= 140017;
 
 --战斗恢复
 this.Fight_Restore = 140017;
@@ -583,6 +580,8 @@ this.Menu_SpineUI = 180024
 this.Menu_Coffee = 180025 
 --触发礼包 
 this.Menu_PopupPack = 180026 
+--触发礼包 
+this.Menu_PopupPack_MinTime = 180027
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;

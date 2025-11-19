@@ -202,6 +202,8 @@ end
 
 -- 重置临时标记(回合结束清理)
 function FightCardBase:ResetTempSign()
+    LogDebugEx("FightCardBase:ResetTempSign()")
+    -- LogTrace()
     self.arrTempSign = {} -- 临时标记列表
     self.arrTempBuffEffct = {} -- 临时buff效果列表
 end
@@ -890,7 +892,7 @@ function FightCardBase:AddTempSign(key)
 end
 
 function FightCardBase:GetTempBuffEffct(key)
-    LogDebugEx("--获取buff临时标记", self.name, key)
+    -- LogDebugEx("--获取buff临时标记", self.name, key)
     if not self.arrTempBuffEffct[key] or #self.arrTempBuffEffct[key] == 0 then
         return
     end
@@ -1709,6 +1711,8 @@ function FightCardBase:CheckAddBuff(caster, buffID, effectID)
 
     local log = { api = "AddBuff", id = caster.oid, targetID = self.oid, bufferID = buffID, effectID = effectID }
 
+
+    -- LogDebugEx("ImmuneBuffQuality", config.goodOrBad, self:GetTempBuffEffct("ImmuneBuffQuality" .. config.goodOrBad))
     -- 判断buffer是否免疫
     if self:GetTempBuffEffct("ImmuneBuffQuality" .. config.goodOrBad) then
         log.abnormalities = "ImmuneBuffQuality" .. config.goodOrBad

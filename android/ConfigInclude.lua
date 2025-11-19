@@ -212,6 +212,7 @@ local ConfigList =
 	'CfgGenDerEnum',
 	'CfgGifts',
 	'cfgGlobalBoss',
+	'cfgGlobalBossBuffBattle',
 	'cfgGlobalBossChallenge',
 	'cfgGlobalBossHpDrop',
 	'cfgGlobalBossHpLevel',

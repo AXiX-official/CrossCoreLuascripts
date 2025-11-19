@@ -351,6 +351,12 @@ function IsStoryFirst()
 end
 ------------------------------------------------阵容推荐
 function AddTeamReplace(isShow,callBack,iconRes,textCode,parent,x,y)
+    if currCfg and currCfg.isHideReplace then
+        if teamReplaceButton then
+            CSAPI.SetGOActive(teamReplaceButton.gameObject,false)
+        end
+        return
+    end
     if not isShow then
         if teamReplaceButton ~= nil then
             CSAPI.SetGOActive(teamReplaceButton.gameObject,false)

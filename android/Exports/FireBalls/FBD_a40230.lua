@@ -21,10 +21,10 @@ local this =
 {delay=1000,time=3500,type=0,cue_sheet="cv/Scorching.acb",cue_name="Scorching_09",cue_feature=1}
 },
 [-1183793042]={
-{time=3500,type=0}
+{effect="enter",effect_pack="a4023003",time=3500,type=0,pos_ref={ref_type=6}}
 },
 [-1328923786]={
-{time=3500,type=0}
+{effect="win",effect_pack="a4023003",time=3500,type=0,pos_ref={ref_type=6}}
 }
 };
 

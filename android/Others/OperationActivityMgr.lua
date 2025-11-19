@@ -36,6 +36,21 @@ function this:GetSkinRebateInfo(id)
     return self.skinRebateInfos[id]
 end
 
+--获取上锁状态
+function this:GetSkinRebateLock()
+    local isLock,time = false,0
+    local _,id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+    local alData = ActivityMgr:GetALData(id)
+    if not alData or not alData:GetInfo() or not alData:GetInfo().skinId then
+        return isLock,time
+    end
+    local info = self.skinRebateInfos[alData:GetInfo().skinId]
+    if not info or TimeUtil:GetTime() > info.time then
+        isLock,time = true,info.time
+    end
+    return isLock,time
+end
+
 --获取皮肤返利主界面按钮状态
 function this:GetSkinRebateState()
     local _,id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)

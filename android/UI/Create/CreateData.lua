@@ -336,7 +336,7 @@ function this:IsFirstSelectCard(cardID)
 end
 
 function this:GetFirstCids()
-    if (self.choice_infos and self.choice_infos.firstCids) then
+    if (self.choice_infos and self.choice_infos.firstCids and #self.choice_infos.firstCids>0) then
         return self.choice_infos.firstCids
     end 
     return nil

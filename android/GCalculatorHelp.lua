@@ -1826,7 +1826,7 @@ end
 -- isCpuClock: 是否只算占用CPU的时间，线程挂起睡眠不算
 function GCalHelp:Clock(isCpuClock)
     -- CUP 占用时间，线程挂起不算
-    isCpuClock = true
+    -- isCpuClock = true
     if isCpuClock then
         return math.floor(os.clock() * 1000)
     else
@@ -3014,7 +3014,8 @@ end
 -- 计算自由军演，段位
 function GCalHelp:CalFreeMatchRankLv(score)
     for _, cfg in ipairs(CfgPvpRankLevel) do
-        if score <= cfg.nScore then
+        -- LogDebug("score:%s <= cfg.nScore:%s", score, cfg.nScore)
+        if score < cfg.nScore then
             return cfg.id
         end
     end
@@ -3064,6 +3065,24 @@ function GCalHelp:FreeMatchArmyChangeSocreCfg(diffScore)
     LogTable(scoreCfg, "FreeMatchArmyChangeSocreCfg()")
     return scoreCfg
 end
+
+-- dif_val_a: uids[1] - uids[2] 的分数差
+-- dif_val_b: uids[2] - uids[1] 的分数差
+function GCalHelp:CalFreeMatchChangeScore(winderIx, uids, difScores)
+    local ret = {}
+    for ix, uid in ipairs(uids) do
+        local difScore = difScores[ix]
+        local useCfg = self:FreeMatchArmyChangeSocreCfg(difScore)
+        if ix == winderIx then
+            ret[uid] = useCfg.nGetScore
+        else
+            ret[uid] = useCfg.nLoseScore
+        end
+    end
+
+    return ret
+end
+
 
 -- 数组合并
 local function TableMerge(src, cpy)
@@ -3246,4 +3265,28 @@ function GCalHelp:isTowerDeepDupGroupUnlock(groupId,totalScore)
         return
     end
     return true
+end
+
+-----------------------------------------------------------------------------------------------------------
+-- 数值返回35进制字符( 4 位的 35 进制最大可表示 1,500,625 个可能值)
+function GCalHelp:DecToBase35(number, minLen)
+    -- local base36str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" -- 36进制的 0 和 O 有时候不好区分，所以去掉O 就是35进制
+    local base35str = "0123456789ABCDEFGHIJKLMNPQRSTUVWXYZ"
+    local result = ""
+    
+    while number > 0 do
+        -- 取余数得到当前位的36进制值
+        local remainder = number % 35
+        -- 将余数转换为对应的36进制字符并添加到结果字符串的开头
+        result = base35str:sub(remainder + 1, remainder + 1) .. result
+        -- 更新number为除以36的商，继续循环直到number为0
+        number = math.floor(number / 35)
+    end
+    
+    -- 如果结果为空，说明输入的数字为0
+    while result:len() < minLen do
+        result = "0" .. result
+    end
+
+    return result
 end

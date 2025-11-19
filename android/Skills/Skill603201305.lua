@@ -8,7 +8,25 @@ function Skill603201305:Init(skillID, card)
 end
 -- 执行技能
 function Skill603201305:DoSkill(caster, target, data)
-	-- 11004
+	-- 12004
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11004], caster, target, data, 0.25,4)
+	self:DamageLight(SkillEffect[12004], caster, target, data, 0.25,4)
+end
+-- 行动结束
+function Skill603201305:OnActionOver(caster, target, data)
+	-- 603200303
+	local targets = SkillFilter:MinPercentHp(self, caster, target, 1,"hp",1)
+	for i,target in ipairs(targets) do
+		self:Cure(SkillEffect[603200303], caster, target, data, 1,0.15)
+	end
+	-- 603200304
+	local targets = SkillFilter:MinPercentHp(self, caster, target, 1,"hp",1)
+	for i,target in ipairs(targets) do
+		self:Cure(SkillEffect[603200304], caster, target, data, 1,0.15)
+	end
+	-- 603200305
+	local targets = SkillFilter:MinPercentHp(self, caster, target, 1,"hp",1)
+	for i,target in ipairs(targets) do
+		self:Cure(SkillEffect[603200305], caster, target, data, 1,0.15)
+	end
 end

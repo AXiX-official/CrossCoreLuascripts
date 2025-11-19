@@ -88,16 +88,22 @@ function this:IsShow()
 end
 
 -- 冷启动原因
-function this:SetErrorStr(str)
-    if (not self.data.eStr) then
+function this:SetErrorStr(eStr)
+    if (not self.data.eStr and eStr ~= nil) then
         self.data.isCold = true
-        self.data.eStr = str
+        self.data.eStr = eStr
     end
 end
 function this:GetErrorStr()
     if (self.source ~= "自动弹窗" and self.data.isCold == nil) then
         self.data.isCold = true
         self.data.eStr = "重登"
+    end
+    if (self.data.isCold == nil) then
+        self.data.isCold = false
+    end
+    if (self.data.eStr == nil) then
+        self.data.eStr = "无"
     end
     return self.data.isCold, self.data.eStr
 end

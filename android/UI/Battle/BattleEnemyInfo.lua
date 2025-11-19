@@ -9,8 +9,18 @@ function Init(charData)
     if charData then
         if charData.data.type==eDungeonCharType.Prop then
             --道具、buff
-            CSAPI.SetText(txt_name,charData.cfg.name);
-            CSAPI.SetText(txt_fullDesc,charData.cfg.desc);
+            local nameID = charData.cfg.name_id;
+            if(nameID and nameID > 0)then
+                CSAPI.SetText(txt_name,LanguageMgr:GetTips(nameID));
+            else
+                CSAPI.SetText(txt_name,charData.cfg.name);
+            end            
+            local descID = charData.cfg.desc_id;
+            if(descID and descID > 0)then
+                CSAPI.SetText(txt_fullDesc,LanguageMgr:GetTips(descID));
+            else
+                CSAPI.SetText(txt_fullDesc,charData.cfg.desc);
+            end
             CSAPI.SetGOActive(hpBar,false);
             CSAPI.SetGOActive(txt_lv,false);
             CSAPI.SetGOActive(fightingObj,false);

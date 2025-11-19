@@ -9,23 +9,23 @@ function Refresh(_cfg, _type)
     type = _type
     local rewardInfo = ExerciseRMgr:GetRewardInfo()
     if (type == ePVPTaskType.Join) then
-        jion_cnt = rewardInfo.jion_cnt or 0
-        get_jion_cnt_id = rewardInfo.get_jion_cnt_id or 0
+        join_cnt = rewardInfo.join_cnt or 0
+        get_join_cnt_id = rewardInfo.get_join_cnt_id or 0
     else
-        jion_cnt = rewardInfo.win_cnt or 0
-        get_jion_cnt_id = rewardInfo.get_win_cnt_ix or 0
+        join_cnt = rewardInfo.win_cnt or 0
+        get_join_cnt_id = rewardInfo.get_win_cnt_ix or 0
     end
     -- 
     CSAPI.SetText(txtDesc, cfg.sDescription)
-    CSAPI.SetText(txtCount, jion_cnt .. "/" .. cfg.order)
-    slider.value = jion_cnt / cfg.order
-    CSAPI.SetGOActive(success, cfg.order <= get_jion_cnt_id)
-    CSAPI.SetGOActive(btn, cfg.order > get_jion_cnt_id)
-    if (cfg.order > get_jion_cnt_id) then
-        CSAPI.SetGOActive(btnBg1, jion_cnt >= cfg.order)
-        CSAPI.SetGOActive(btnBg2, jion_cnt < cfg.order)
-        LanguageMgr:SetText(txtBtn1, jion_cnt >= cfg.order and 6011 or 90049)
-        CSAPI.SetGOAlpha(btn, jion_cnt >= cfg.order and 1 or 0.3)
+    CSAPI.SetText(txtCount, join_cnt .. "/" .. cfg.order)
+    slider.value = join_cnt / cfg.order
+    CSAPI.SetGOActive(success, cfg.index <= get_join_cnt_id)
+    CSAPI.SetGOActive(btn, cfg.index > get_join_cnt_id)
+    if (cfg.index > get_join_cnt_id) then
+        CSAPI.SetGOActive(btnBg1, join_cnt >= cfg.order)
+        CSAPI.SetGOActive(btnBg2, join_cnt < cfg.order)
+        LanguageMgr:SetText(txtBtn1, join_cnt >= cfg.order and 6011 or 90049)
+        CSAPI.SetGOAlpha(btn, join_cnt >= cfg.order and 1 or 0.3)
     end
     SetReward(cfg.jAward)
     SetRed()
@@ -75,33 +75,33 @@ end
 function GetIDs()
     local ids = {}
     if (type == ePVPTaskType.Join) then
-        local jion_cnt = ExerciseRMgr:GetProto().reward_info.jion_cnt
+        local join_cnt = ExerciseRMgr:GetProto().reward_info.join_cnt
         local _i = 0
         local cfg = Cfgs.CfgPvpTaskReward:GetByID(1)
         for k, v in ipairs(cfg.infos) do
-            if (v.order >= jion_cnt) then
-                _i = v.order == jion_cnt and k or (k - 1)
+            if (v.order >= join_cnt) then
+                _i = v.order == join_cnt and k or (k - 1)
                 _i = _i <= 0 and 0 or _i
                 break
             end
         end
-        local get_jion_cnt_id = ExerciseRMgr:GetProto().reward_info.get_jion_cnt_id or 0
-        for k = get_jion_cnt_id + 1, _i do
+        local get_join_cnt_id = ExerciseRMgr:GetProto().reward_info.get_join_cnt_id or 0
+        for k = get_join_cnt_id + 1, _i do
             table.insert(ids, k)
         end
     else
-        local jion_cnt = ExerciseRMgr:GetProto().reward_info.win_cnt
+        local join_cnt = ExerciseRMgr:GetProto().reward_info.win_cnt
         local _i = 0
         local cfg = Cfgs.CfgPvpTaskReward:GetByID(2)
         for k, v in ipairs(cfg.infos) do
-            if (v.order >= jion_cnt) then
-                _i = v.order == jion_cnt and k or (k - 1)
+            if (v.order >= join_cnt) then
+                _i = v.order == join_cnt and k or (k - 1)
                 _i = _i <= 0 and 0 or _i
                 break
             end
         end
-        local get_jion_cnt_id = ExerciseRMgr:GetProto().reward_info.get_win_cnt_ix or 0
-        for k = get_jion_cnt_id + 1, _i do
+        local get_join_cnt_id = ExerciseRMgr:GetProto().reward_info.get_win_cnt_ix or 0
+        for k = get_join_cnt_id + 1, _i do
             table.insert(ids, k)
         end
     end

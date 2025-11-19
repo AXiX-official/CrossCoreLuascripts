@@ -103,6 +103,9 @@ function Update()
 end
 
 function OnOpen()
+    --点触礼包
+    PopupPackMgr:CheckByCondition({1,4,6})
+    --
     if (data) then
         sectionData = DungeonMgr:GetSectionData(data.id)
         if not sectionData then

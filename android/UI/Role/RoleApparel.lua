@@ -54,6 +54,7 @@ function OnDestroy()
     -- ABMgr:ReleaseABAllWithViewName("RoleApparel")
     -- ABMgr:RefreshProtectABList("RoleApparel",{})
     -- ABMgr:ClearRecordsWithViewName("RoleApparel")
+    RoleABMgr:CheckRemoveAB("RoleApparel")
 end
 
 -- function Update()

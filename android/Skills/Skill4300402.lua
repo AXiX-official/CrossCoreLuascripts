@@ -6,28 +6,22 @@ Skill4300402 = oo.class(SkillBase)
 function Skill4300402:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动结束2
-function Skill4300402:OnActionOver2(caster, target, data)
-	-- 8679
-	local count679 = SkillApi:BuffCount(self, caster, target,3,3,3005)
-	-- 8890
-	if SkillJudger:Greater(self, caster, self.card, true,count679,0) then
+-- 伤害前
+function Skill4300402:OnBefourHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 4300406
+	local count4300406 = SkillApi:BuffCount(self, caster, target,2,3,300400302)
+	-- 4300407
+	local count4300407 = SkillApi:BuffCount(self, caster, target,2,3,300400303)
 	-- 4300402
-	self:AddProgress(SkillEffect[4300402], caster, self.card, data, 400)
-	-- 4300416
-	self:DelBuff(SkillEffect[4300416], caster, self.card, data, 3004,1)
-	-- 8680
-	local count680 = SkillApi:BuffCount(self, caster, target,3,3,1002)
-	-- 8891
-	if SkillJudger:Greater(self, caster, self.card, true,count680,0) then
-	else
-		return
-	end
-	-- 4300412
-	self:AddBuff(SkillEffect[4300412], caster, self.card, data, 4002,1)
-	-- 4300417
-	self:DelBuff(SkillEffect[4300417], caster, self.card, data, 1002,1)
+	self:AddTempAttr(SkillEffect[4300402], caster, self.card, data, "damage",0.12*(count4300406+count4300407))
 end

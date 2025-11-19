@@ -278,8 +278,6 @@ function OnOpen()
     end
     curState = 3
     ShowPanel()
-    --点触礼包
-    PopupPackMgr:CheckByCondition({4,6})
 end
 
 function Update()
@@ -1473,7 +1471,7 @@ end
 function ShowItemInfo(item)    
     currItem = curDailyItemR
     if (itemInfo == nil) then --没有则异步创建
-        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo", infoParent, function(go)
+        ResUtil:CreateUIGOAsync("DungeonInfo/DungeonItemInfo7", infoParent, function(go)
             itemInfo = ComUtil.GetLuaTable(go)
             CSAPI.SetGOActive(itemInfo.bg, false)
             itemInfo.Show(curDailyItemR.GetCfg(),nil,OnLoadSuccess)
@@ -1486,7 +1484,7 @@ end
 function OnLoadSuccess()
     itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
     itemInfo.AddTeamReplace(true,OnBattleEnter)
-    -- SetInfoItemPos()
+    SetInfoItemPos()
 end
 
 -- 进入

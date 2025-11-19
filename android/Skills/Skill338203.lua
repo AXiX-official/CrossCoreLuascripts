@@ -21,7 +21,7 @@ function Skill338203:OnRoundBegin(caster, target, data)
 		return
 	end
 	-- 338203
-	self:AddBuffCount(SkillEffect[338203], caster, self.card, data, 338203,math.min(count101,2),999)
+	self:AddBuffCount(SkillEffect[338203], caster, self.card, data, 338203,math.min(count101,2),3)
 	-- 338213
 	self:DelBuffQuality(SkillEffect[338213], caster, self.card, data, 2,2)
 end

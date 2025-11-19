@@ -21,7 +21,7 @@ monsters=
 },
 props=
 {
-{born_pos=10503,wave=1,rate=100,nPropID=1,float_content="攻击+20%",use_sound="ui_buff_attack",name="攻击补给",icon="MapProps_006",desc="基地投送的作战补给，获得后队伍下一次战斗攻击力+20%。",res="GridProps/buff/Buff_Attack",get_eff="get_eff_blue",eBlockState=1,nStep=0,state=1,type=13,param={4004},round=1}
+{born_pos=10503,wave=1,rate=100,nPropID=1,float_content="攻击+20%",float_content_id=72061,use_sound="ui_buff_attack",name="攻击补给",name_id=70060,icon="MapProps_006",desc="基地投送的作战补给，获得后队伍下一次战斗攻击力+20%。",desc_id=71061,res="GridProps/buff/Buff_Attack",get_eff="get_eff_blue",eBlockState=1,nStep=0,state=1,type=13,param={4004},round=1}
 },
 }
 return this;

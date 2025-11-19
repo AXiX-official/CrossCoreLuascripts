@@ -1,4 +1,4 @@
--- 吞噬强化
+-- 燃起薪火
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -19,7 +19,7 @@ function Buffer338204:OnBefourHurt(caster, target)
 		return
 	end
 	-- 338214
-	self:AddTempAttr(BufferEffect[338214], self.caster, target or self.owner, nil,"bedamage",0.08*self.nCount)
+	self:AddAttr(BufferEffect[338214], self.caster, self.card, nil, "damage",0.08*self.nCount)
 end
 -- 创建时
 function Buffer338204:OnCreate(caster, target)

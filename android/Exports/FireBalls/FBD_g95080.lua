@@ -9,7 +9,8 @@ effect="cast1_hit",time=3000,type=0,pos_ref={ref_type=4,part_index=0}
 {effect="cast1_eff",time=3000,type=0,pos_ref={ref_type=6}},
 {delay=400,time=3000,type=0},
 {delay=1145,time=3000,type=1,hit_type=0,camera_shake={time=300,shake_dir=1,range=400,range1=300,range2=100,hz=30,decay_value=0.25},hit_creates={1192467788},hits={0}},
-{delay=1370,time=3000,type=1,hit_type=1,camera_shake={time=400,shake_dir=1,range=600,range1=600,range2=600,hz=30,decay_value=0.25},hit_creates={-646510353},hits={0}}
+{delay=1370,time=3000,type=1,hit_type=1,camera_shake={time=400,shake_dir=1,range=600,range1=600,range2=600,hz=30,decay_value=0.25},hit_creates={-646510353},hits={0}},
+{time=3000,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="95080_cast_01"}
 },
 [806661594]={
 effect="cast1_hit",time=3000,type=0,pos_ref={ref_type=4,part_index=0}

@@ -144,6 +144,10 @@ function ApplyShake()
     actionShake:Play();
 end
 
+function Refresh()
+    UpdateInfo(currCharacter);
+end
+
 function UpdateInfo(character,nextFlag)
     CSAPI.SetGOActive(gameObject,character ~= nil);
     if(character == nil)then

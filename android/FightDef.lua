@@ -17,9 +17,12 @@ SceneType.BuffBattle	= 13 -- 积分战斗
 SceneType.MultTeam		= 15 -- 多队玩法
 SceneType.PVEFreeMatch	= 17 -- 自由军演(镜像) -- v 4.3
 SceneType.TowerDeep		= 18 -- 新爬塔 -- v 4.4
+SceneType.PVP3			= 19 -- pvp(实时) -- v 4.6
+SceneType.PVEFreeMatch3	= 20 -- 自由军演(镜像) -- v 4.6
 
+-- v 4.6
 function IsPvpSceneType(sType)
-	return sType == SceneType.PVP or sType == SceneType.PVEFreeMatch
+	return sType == SceneType.PVP or sType == SceneType.PVEFreeMatch or sType == SceneType.PVP3 or sType == SceneType.PVEFreeMatch3
 end
 
 -- 副本类型

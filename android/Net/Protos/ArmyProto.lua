@@ -277,7 +277,7 @@ function ArmyProto:GetPvpReward(_type,_ids,_cb)
     NetMgr.net:Send(proto)
 end
 function ArmyProto:GetPvpRewardRet(proto)
-    ExerciseRMgr:GetPvpRewardRet(proto)
+    ExerciseRMgr:SetRewardInfo(proto.reward_info)
     if(self.GetPvpRewardCB)then 
         self.GetPvpRewardCB()
     end 

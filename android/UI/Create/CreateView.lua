@@ -50,6 +50,7 @@ end
 function OnDestroy()
     eventMgr:ClearListener()
     --ABMgr:RefreshProtectABList("CreateView",{})
+    RoleABMgr:CheckRemoveAB("CreateView")
 end
 
 -- 开箱动画是否隐藏跳过按钮

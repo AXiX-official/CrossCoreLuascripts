@@ -366,9 +366,10 @@ function CheckJC()
         PlayerPrefs.SetInt(PlayerClient:GetID() .. "_exercoserpp_" .. eTeamType.PVP, 1)
         PlayerPrefs.SetInt(PlayerClient:GetID() .. "_exercoserpp_" .. eTeamType.PVPFriend, 1)
         --
-        local oldScore, oldRankLe = GCalHelp:CalFreeMatchInheritScore(ExerciseRMgr:GetProto().score)
-        if (ExerciseRMgr:GetProto().score ~ oldScore) then
-            CSAPI.OpenView("ExerciseRJC", {oldScore, oldRankLe})
+        local pre_score = ExerciseRMgr:GetProto().pre_score or 0
+        local per_rankLv = GCalHelp:CalFreeMatchRankLv(pre_score)
+        if (ExerciseRMgr:GetProto().score ~= pre_score) then
+            CSAPI.OpenView("ExerciseRJC", {pre_score, per_rankLv})
         end
         ExerciseRMgr:SetChangeSJ()
         ArmyProto:FreeMatchCfgChangeFix()
@@ -382,7 +383,7 @@ function RemoveTeams()
     local x2 = Cfgs.CfgTeamTypeEnum:GetByID(x1).endIdx
     for k = x1, x2 do
         local teamData = TeamMgr:GetTeamData(k)
-        teamDatas:ClearCard()
+        teamData:ClearCard()
         table.insert(teamDatas, teamData)
     end
     PlayerProto:SaveTeamList(teamDatas)
@@ -402,6 +403,9 @@ function OnViewClosed(viewKey)
 end
 
 function CheckRChange()
+    if(openSetting ~= 1)then 
+        return
+    end 
     local oldRewards = ExerciseRMgr:GSetOldRewards()
     if (oldRewards) then
         UIUtil:OpenReward({oldRewards})

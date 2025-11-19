@@ -1,4 +1,4 @@
--- 夏炙
+-- 炙夏
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -17,16 +17,6 @@ function Skill4402302:OnRoundBegin(caster, target, data)
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
 		self:AddBuff(SkillEffect[4402302], caster, target, data, 4402301)
-	end
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 4402312
-	local targets = SkillFilter:Group(self, caster, target, 3,4)
-	for i,target in ipairs(targets) do
-		self:AddBuff(SkillEffect[4402312], caster, target, data, 4402311)
 	end
 end
 -- 伤害前

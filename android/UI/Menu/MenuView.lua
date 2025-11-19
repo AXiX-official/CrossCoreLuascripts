@@ -216,6 +216,10 @@ function InitListener()
     eventMgr:AddListener(EventType.Riddle_Data_Ret, SetLTSV)
     -- 点触礼包新增或者被购买
     eventMgr:AddListener(EventType.Menu_PopupPack, SetPopupPack)
+    eventMgr:AddListener(EventType.Menu_PopupPack_MinTime, function ()
+        popupPackTime = PopupPackMgr:GetMinTime()
+        SetPopupPackBtn()
+    end)
 end
 
 function OnDestroy()
@@ -223,6 +227,7 @@ function OnDestroy()
     eventMgr:ClearListener()
     RoleAudioPlayMgr:StopSound()
     isDestory = true
+    RoleABMgr:CheckRemoveAB("MenuView")
 end
 
 function Update()
@@ -407,9 +412,10 @@ function Update()
         EventMgr.Dispatch(EventType.ExerciseR_End)
     end 
     -- 点触礼包
-    if (popupPackTime ~= nil) then
+    if (popupPackTime ~= nil) then        
         if (curTime >= popupPackTime) then
-            popupPackTime = PopupPackMgr:GetMinTime()
+            popupPackTime = nil
+            PopupPackMgr:UpdateDatas()
         end
         SetPopupPackBtn()
     end
@@ -1832,8 +1838,12 @@ function SpineUI(b)
 end
 
 function SetPopupPackBtn()
-    CSAPI.SetGOActive(btnPopupPack, popupPackTime ~= nil)
-    if(popupPackTime ~= nil)then 
+    local isShow = false
+    if(popupPackTime ~= nil and (popupPackTime>TimeUtil:GetTime()))then 
+        isShow = true 
+    end 
+    CSAPI.SetGOActive(btnPopupPack, isShow)
+    if(isShow)then 
         local needTime = popupPackTime - TimeUtil:GetTime()
         CSAPI.SetText(txtPopupPack, TimeUtil:GetTimeStr(needTime <= 0 and 0 or needTime))
     end 

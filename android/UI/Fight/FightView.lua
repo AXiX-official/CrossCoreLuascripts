@@ -1044,7 +1044,7 @@ function CheckAutoSkipCast2(character)
             PlayerPrefs.SetString(skillKey,currPlayTime);
         end
     --end
-    if(g_FightMgr and g_FightMgr.type == SceneType.PVEFreeMatch) then
+    if(g_FightMgr and (g_FightMgr.type == SceneType.PVP or g_FightMgr.type == SceneType.PVEFreeMatch or g_FightMgr.type == SceneType.PVP3 or g_FightMgr.type == SceneType.PVEFreeMatch3)) then 
         skipPlay = true;
     end 
 

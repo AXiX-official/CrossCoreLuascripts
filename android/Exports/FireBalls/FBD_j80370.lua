@@ -21,6 +21,15 @@ local this =
 [2124325257]={
 time=2000,type=0
 },
+[-11658927]={
+{delay=14500,time=4000,type=1,hit_type=1,hit_creates={408932612},hits={0,300,600}},
+{delay=3300,time=4000,type=1,hit_type=1,hits={0,700}},
+{effect="cast2_eff",effect_pack="j8037003",time=16500,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Blade_Stream_attack_skill_02"},
+{delay=1700,time=4000,type=1,hit_type=1,hits={0}}
+},
+[408932612]={
+time=2000,type=0
+},
 [-1609092943]={
 {delay=200,time=3500,type=0,cue_sheet="fight/effect/seventeen.acb",cue_name="Blade_Stream_attack_general"},
 {effect="cast0_hit",time=4000,type=0,pos_ref={ref_type=1,lock_col=1}},

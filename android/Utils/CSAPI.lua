@@ -459,7 +459,13 @@ this.ReleaseAB = CS.CSAPI.ReleaseAB;
 --场景UI元素
 this.AddSceneUIElement = CS.CSAPI.AddSceneUIElement;
 --UI跟随场景目标
-this.AddUISceneElement = CS.CSAPI.AddUISceneElement;
+this.csAddUISceneElement = CS.CSAPI.AddUISceneElement;
+function this.AddUISceneElement(ui,target,goCamera)
+	if(not target)then
+		return;
+	end
+	this.csAddUISceneElement(ui,target,goCamera);
+end
 --设置翻转状态
 this.SetUISceneElementFlip = CS.CSAPI.SetUISceneElementFlip;
 

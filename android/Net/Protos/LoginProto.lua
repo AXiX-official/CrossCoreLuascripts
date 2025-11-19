@@ -235,7 +235,7 @@ function LoginProto:LoginGame(proto)
 	if CSAPI.IsADV() then CSAPI.SetGameUID(PlayerClient:GetUid()) end
 	PlayerProto:SectionMultiInfo();
 	PlayerProto:GetLifeBuff();
-	EquipProto:GetEquips()
+	-- EquipProto:GetEquips()
 	ShopProto:GetShopOpenTime();
 	ShopProto:GetShopCommodity();
 	-- ShopProto:GetShopInfos();

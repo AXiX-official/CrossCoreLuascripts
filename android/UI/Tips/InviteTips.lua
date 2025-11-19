@@ -5,6 +5,12 @@ local t = 0.5
 function Awake()
     acObj = ComUtil.GetCom(gameObject, "ActionUIMoveTo")
     fill = ComUtil.GetCom(bar, "Image")
+    eventMgr = ViewEvent.New()
+    eventMgr:AddListener(EventType.Scene_Load, OnSceneLoad)
+end
+
+function OnDestroy()
+    eventMgr:ClearListener()
 end
 
 function Update()
@@ -90,6 +96,7 @@ function OnClick1()
             is_receive = false
         }})
         Close()
+        ExerciseFriendTool:BeInviteRet(data.uid)
     end
 end
 
@@ -108,4 +115,10 @@ function OnClick2()
         }})
         Close()
     end
+end
+
+function OnSceneLoad(sceneName)
+    if(sceneName and sceneName~="MajorCity")then 
+        OnClick1()
+    end 
 end

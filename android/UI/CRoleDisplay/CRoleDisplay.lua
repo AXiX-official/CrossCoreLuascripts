@@ -28,6 +28,7 @@ function OnDestroy()
     CSAPI.RemoveSliderCallBack(AdjustSlider, SliderCB1)
     CSAPI.RemoveSliderCallBack(dobSlider1, SliderCB1)
     CSAPI.RemoveSliderCallBack(dobSlider2, SliderCB2)
+    RoleABMgr:CheckRemoveAB("CRoleDisplay")
 end
 
 function LayoutCallBack(index)

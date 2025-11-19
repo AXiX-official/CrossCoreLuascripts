@@ -350,6 +350,7 @@ local conf = {
 {'340',	'checkMyNameError',	'1',	'',	'无法命名为当前名字',	''},
 {'341',	'expReminder',	'7',	'',	'您持有的{1}将在24小时内过期，请尽快使用。',	'80001'},
 {'342',	'EquipSynthesisReminder',	'7',	'',	'芯片存在未保存的重构结果，请前往确认。',	'330001'},
+{'348',	'pvpTeamNotSet',	'1',	'',	'未满足三个编队，无法开始军演',	''},
 },
 }
 --cfgCfgTipsSimpleChinese = conf

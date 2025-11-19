@@ -2,7 +2,7 @@
 local this = 
 {
 [-390021739]={
-{effect="cast1_summon",time=6000,type=0,pos_ref={ref_type=10,offset_row=-165},cue_sheet="fight/effect/thirteen.acb",cue_name="Osiris_attack_skill_05_2"},
+{effect="cast1_summon",time=6000,type=0,pos_ref={ref_type=10},cue_sheet="fight/effect/thirteen.acb",cue_name="Osiris_attack_skill_05_2"},
 {time=6000,type=0,cue_sheet="cv/Osiris.acb",cue_name="Osiris_06",cue_feature=1}
 },
 [1349028111]={
@@ -23,7 +23,7 @@ effect="cast2_buff",time=3000,type=0,pos_ref={ref_type=4,part_index=1}
 {delay=900,time=3000,type=3,hit_creates={2124325257},hits={0}}
 },
 [958292235]={
-{delay=1500,time=3000,type=1,hit_type=0,hits={0}},
+{delay=1500,time=3000,type=1,hit_type=0,camera_shake={time=800,shake_dir=1,range=150,range2=150,hz=50,decay_value=0.6},hits={0}},
 {effect="cast3_eff",time=3000,type=0,pos_ref={ref_type=6}},
 {effect="cast3_hit",time=3000,type=0,pos_ref={ref_type=3,offset_row=-250,lock_col=1}}
 },

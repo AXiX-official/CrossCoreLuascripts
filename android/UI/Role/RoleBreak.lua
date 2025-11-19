@@ -115,6 +115,7 @@ function GetAddValue(_key)
 end
 
 function SetTalent()
+    CSAPI.SetGOActive(objMaxTalent, lookBreakLv > 5)
     local curTalentID = cardData:GetTalentIDByBreakLV(lookBreakLv)
     if (curTalentID) then
         local cfg = Cfgs.CfgSubTalentSkill:GetByID(curTalentID)

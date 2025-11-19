@@ -962,6 +962,7 @@ function FightMgrBase:SetStepLimit(nStepLimit)
     self.nStep = 0
     self.nStepPVE = 0
     self.nStepLimit = nStepLimit or g_nFightLimit
+    self.nStepOffset = 0
 end
 
 -- 是否pve关卡
@@ -1215,6 +1216,8 @@ function FightMgrBase:CheckOver(isRoundOver)
     --     return true
     -- end
 
+    -- local stepLimit = self:GetStepLimit()
+    -- LogDebug("FightMgrBase:CheckOver(isRoundOver:%s), stepLimit:%s, self:IsPVE():%s, self.nStepPVE:%s, self.nStep:%s", isRoundOver, self.nStepLimit, self:IsPVE(), self.nStepPVE, self.nStep)
     if self:IsPVE() then
         if self.nStepPVE > self.nStepLimit then
             self:Over(self.stage, 0)
@@ -1302,6 +1305,7 @@ function FightMgrBase:OnRoundOver()
         if self.uid == self.currTurn.uid then
             self.nStepPVE = self.nStepPVE + 1 -- PVE 我方操作次数+1
         end
+        LogDebugEx("nStepPVE---",self.uid ,  self.currTurn.uid, self.nStepPVE, self.type )
 
         if self.nStepPVE >= self.nStepLimit then
             flag = true
@@ -1976,11 +1980,29 @@ end
 
 -- 增加操作数上限
 function FightMgrBase:AddStep(num, isHide)
+    LogDebugEx("FightMgrBase:AddStep before-----", num, isHide, self.nStepLimit, self.nStepOffset)
+    -- LogTrace()
     self.nStepLimit = self.nStepLimit + num
     if not isHide then return end
-    self.nStepOffset   = self.nStepOffset + num
+    self.nStepOffset   = self.nStepOffset - num
+    LogDebugEx("FightMgrBase:AddStep after-----", num, isHide, self.nStepLimit, self.nStepOffset)
 end
 
+-- 获取操作数上限
+function FightMgrBase:GetStepLimit()
+    return self.nStepLimit+self.nStepOffset
+end
+
+-- 当前操作数
+function FightMgrBase:GetCurrStep()
+    if self:IsPVE() then
+        LogDebugEx("GetCurrStep PVE ", self.nStepPVE+self.nStepOffset, self.nStepPVE, self.nStepOffset)
+        return self.nStepPVE+self.nStepOffset
+    end
+
+    LogDebugEx("GetCurrStep", self.nStep+self.nStepOffset, self.nStep, self.nStepOffset)
+    return self.nStep+self.nStepOffset
+end
 ----------------------------------------------
 -- 服务端管理器
 FightMgrServer = oo.class(FightMgrBase)
@@ -2523,7 +2545,7 @@ function FightMgrClient:DoTurn(data)
 
         self:AddCmd(CMD_TYPE.Turn, {id = card.oid})
 
-        local str = '第' .. self.turnNum .. '回合\n'
+        local str = '第' .. self.turnNum .. '回合;操作数'..(self.nStep+self.nStepOffset)..'\n'
         self:PrintCardInfo(str)
 
         card.tmpPrintLog = {}

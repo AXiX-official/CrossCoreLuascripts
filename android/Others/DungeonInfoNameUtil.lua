@@ -75,8 +75,11 @@ function this.Colosseum()
 end
 
 function this.GlobalBoss()
-    -- return {"BossTitle","BossLevel","BossState","BossTime","BossButton1","BossDetails","BossBuff","BossButton2"},"GlobalBoss"
     return {"BossTitle","BossLevel","BossState","BossTime","BossButton1","BossDetails","BossButton2"},"GlobalBoss"
+end
+
+function this.GlobalBossBuff()
+    return {"BossTitle","BossLevel","BossState","BossTime","BossButton1","BossDetails","BossBuff","BossButton2"},"GlobalBoss"
 end
 
 function this.RogueT()

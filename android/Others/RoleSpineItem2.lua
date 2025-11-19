@@ -19,6 +19,7 @@ local spineUI = nil
 local img_imgObj
 local isMul
 local isInit = false
+local changeIdleData = nil
 
 function Awake()
     img_imgObj = ComUtil.GetCom(imgObj, "Image")
@@ -54,6 +55,7 @@ function Refresh(_modelId, _posType, _callBack, _isUseShopImg, _needClick)
     curRoleNum = 1
     oldModelId = _modelId
     records = {}
+    changeIdleData = nil
     if (dragObj) then
         CSAPI.RemoveGO(dragObj)
     end
@@ -230,16 +232,8 @@ function TouchItemClickCB(cfgChild, _cb, _check)
         else
             -- 切换idle(移除除了自身动作轨道和忽略的动作轨道外的所有轨道)
             if (content.changeIdle) then
-                FuncUtil:Call(function()
-                    --
-                    local trackIndexs, indexs, revoverNames = GetTrackIndexs(cfgChild)
-                    spineTools:ImmClearTracks(trackIndexs, revoverNames)
-                    ClearRecords(indexs)
-                    --
-                    if (spineTools ~= nil) then
-                        spineTools:ChangeIdle(content.changeIdle[1])
-                    end
-                end, nil, content.changeIdle[2])
+                local time = Time.time + content.changeIdle[2] / 1000
+                changeIdleData = {time, cfgChild}
             end
             --
             SetInterlude(content)
@@ -629,6 +623,16 @@ function Update()
 
     if (spineTools ~= nil) then
         spineTools:Update()
+    end
+    if (changeIdleData and Time.time > changeIdleData[1]) then
+        local trackIndexs, indexs, revoverNames = GetTrackIndexs(changeIdleData[2])
+        spineTools:ImmClearTracks(trackIndexs, revoverNames)
+        ClearRecords(indexs)
+        --
+        if (spineTools ~= nil) then
+            spineTools:ChangeIdle(changeIdleData[2].content.changeIdle[1])
+        end
+        changeIdleData = nil
     end
 end
 

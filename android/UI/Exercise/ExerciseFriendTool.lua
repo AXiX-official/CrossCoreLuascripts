@@ -16,7 +16,7 @@ end
 function this:CheckInvite()
     if (self:IsCanInvite() and self.beInviteDatas ~= nil) then
         for i, v in pairs(self.beInviteDatas) do
-            if (TimeUtil:GetTime() < (v.invite_time + ExerciseRMgr:GetPPTimer())) then
+            if (not v.is_cancel and TimeUtil:GetTime() < (v.invite_time + ExerciseRMgr:GetPPTimer())) then
                 Tips.ShowInviteTips(v)
             end
         end
@@ -131,6 +131,7 @@ function this:GetArmyData(type, uid)
         data.icon_title = friendData:GetTitle()
         data.teams = self:SetTeams(self.emenyData_friend.teams)
         data.score = self.emenyData_friend.score
+        data.join_cnt = self.emenyData_friend.join_cnt or 0
     elseif (type == RealArmyType.Freedom) then
         if (self.emenyData_free.robot_cfg_id and self.emenyData_free.robot_cfg_id ~= 0) then
             -- 机器人
@@ -147,6 +148,7 @@ function this:GetArmyData(type, uid)
             local list = GCalHelp:GetFreeArmyRobotSimpleTeams(cfg.id)
             data.teams = self:SetTeams(list.teams)
             data.score = cfg.nScore
+            data.join_cnt = self.emenyData_free.join_cnt or 0
         else
             data = self.emenyData_free
             data.teams = self:SetTeams(self.emenyData_free.teams)
@@ -169,6 +171,13 @@ end
 function this:BeInviteRespond(proto)
     self.inviteFriendDatas[proto.uid].is_cancel = proto.is_receive
     self.inviteFriendDatas[proto.uid].invite_time = TimeUtil:GetTime() --拒绝时间
+end
+
+--拒绝别人的邀请
+function this:BeInviteRet(uid)
+    if(self.beInviteDatas and self.beInviteDatas[uid])then 
+        self.beInviteDatas[uid].is_cancel = true
+    end 
 end
 
 return this

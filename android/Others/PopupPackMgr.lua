@@ -4,7 +4,7 @@ local this = MgrRegister("PopupPackMgr")
 function this:Init()
     self:Clear()
     if(CSAPI.RegionalCode() == 3) then
-        OperateActiveProto:GetPopupPackInfo()
+    	OperateActiveProto:GetPopupPackInfo(true)
     end   
 end
 
@@ -71,9 +71,11 @@ function this:UpdateDatas()
         for k, v in ipairs(self.arr) do
             if (v:GetFinishTime() ~= nil) then
                 self.minTime = v:GetFinishTime()
+                break
             end
         end
     end
+    EventMgr.Dispatch(EventType.Menu_PopupPack_MinTime)
 end
 
 -- 当前还存在时间的礼包且未领取的礼包，时间由小到大排列
@@ -153,6 +155,7 @@ function this:ToshowView(source, cfgID)
                 data:SetFirst(true)
             end
             self:TrackEvents_1(ids)
+            self:UpdateDatas()
             CSAPI.OpenView("PopupPackView", cfgID)
         end)
     else
@@ -167,13 +170,13 @@ function this:TrackEvents_1(ids)
         if (data) then
             local isCold, eStr = data:GetErrorStr()
             local _data = {}
-            _data.gift_id = data:GetCfgID()
-            _data.popup_source = data:GetSource()
-            _data.remaining_time = data:GetFinishTime() - data:GetPopupTime()
-            _data.is_cold_popup = isCold
+            _data.gift_id = tostring(data:GetCfgID())
+            _data.popup_source = tostring(data:GetSource())
+            _data.remaining_time = tostring(data:GetFinishTime() - data:GetPopupTime())
+            _data.is_cold_popup = isCold and "true" or "false"
             _data.cold_popup_reason = eStr
-            _data.popup_time = data:GetPopupTime()
-            BuryingPointMgr:TrackEvents("mj_growth_pack_trigger_pending", _data)
+            _data.popup_time = tostring(data:GetPopupTime())
+            BuryingPointMgr:TrackEvents("growth_pack_popup_show", _data)
         end
     end
 end
@@ -183,10 +186,10 @@ function this:TrackEvents_2()
     local arr = self:GetArr()
     for k, v in ipairs(arr) do
         local _data = {}
-        _data.gift_id = v:GetCfgID()
-        _data.is_first_open = v:GetFirst()
-        _data.remaining_time = v:GetFinishTime() - v:GetPopupTime()
-        BuryingPointMgr:TrackEvents("mj_growth_pack_popup_close", _data)
+        _data.gift_id = tostring(v:GetCfgID())
+        _data.is_first_open = tostring(v:GetFirst())
+        _data.remaining_time = tostring(v:GetFinishTime() - v:GetPopupTime())
+        BuryingPointMgr:TrackEvents("growth_pack_popup_close", _data)
         --
         v:SetFirst(false)
     end
@@ -197,11 +200,11 @@ function this:TrackEvents_3()
     local arr = self:GetArr()
     for k, v in ipairs(arr) do
         local _data = {}
-        _data.gift_id = v:GetCfgID()
-        _data.remaining_diamond = PlayerClient:GetDiamond()
-        _data.click_time = TimeUtil:GetTime()
-        _data.popup_source = v:GetSource()
-        BuryingPointMgr:TrackEvents("mj_growth_pack_click_buy", _data)
+        _data.gift_id = tostring(v:GetCfgID())
+        _data.remaining_diamond = tostring(PlayerClient:GetDiamond())
+        _data.click_time = tostring(TimeUtil:GetTime())
+        _data.popup_source = tostring(v:GetSource())
+        BuryingPointMgr:TrackEvents("growth_pack_click_buy", _data)
     end
 end
 

@@ -106,10 +106,13 @@ function ReplacedModel(modelId,goModel)
     buffEffNode = nil;
     RemoveOverLoadEff();
     cfgModel = Cfgs.character:GetByID(modelId);
+    
     InitModules();
  
     CSAPI.SetParent(goModel,resParentGO);
     OnResLoadComplete(goModel);     
+
+    EventMgr.Dispatch(EventType.Fight_Time_Line_Refresh);
 end
 
 function SetMatKeywordState(key,state)
@@ -1332,10 +1335,11 @@ function ApplyHit(hitType)
             matCtrl:DamageBlink(60,4,60);
         end
     else
-        LogError(string.format("角色%s不存在材质控制组件MaterialCtrl",GetModelName()));
+        --LogError(string.format("角色%s不存在材质控制组件MaterialCtrl",GetModelName()));
     end
-    
-    stateMachine:Hit(hitType);
+    if(stateMachine)then
+        stateMachine:Hit(hitType);
+    end
     PlayPartHitState(hitType);
 
 
@@ -1575,6 +1579,11 @@ end
 
 --胜利
 function ApplyWin()
+    if(IsDead())then
+        return;
+    end
+
+
     SetOverLoadEffState(false);
     SetMatKeywordState("_SRIM_LIGHT",false);
 

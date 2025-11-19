@@ -8,7 +8,27 @@ function Skill603301305:Init(skillID, card)
 end
 -- 执行技能
 function Skill603301305:DoSkill(caster, target, data)
-	-- 11004
+	-- 12004
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11004], caster, target, data, 0.25,4)
+	self:DamageLight(SkillEffect[12004], caster, target, data, 0.25,4)
+end
+-- 伤害前
+function Skill603301305:OnBefourHurt(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 603300103
+	self:AddTempAttr(SkillEffect[603300103], caster, target, data, "defense",-400)
 end

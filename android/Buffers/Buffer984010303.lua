@@ -11,6 +11,11 @@ function Buffer984010303:OnRoundBegin(caster, target)
 	-- 6102
 	self:ImmuneBuffQuality(BufferEffect[6102], self.caster, target or self.owner, nil,1)
 end
+-- 伤害前
+function Buffer984010303:OnBefourHurt(caster, target)
+	-- 6102
+	self:ImmuneBuffQuality(BufferEffect[6102], self.caster, target or self.owner, nil,1)
+end
 -- 创建时
 function Buffer984010303:OnCreate(caster, target)
 	-- 6102

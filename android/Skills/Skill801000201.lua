@@ -8,7 +8,13 @@ function Skill801000201:Init(skillID, card)
 end
 -- 执行技能
 function Skill801000201:DoSkill(caster, target, data)
-	-- 4005
+	-- 801000202
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[4005], caster, target, data, 4005)
+	local targets = SkillFilter:All(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:DelBufferTypeForce(SkillEffect[801000202], caster, target, data, 801000201)
+	end
+	-- 801000201
+	self.order = self.order + 1
+	self:OwnerAddBuff(SkillEffect[801000201], caster, target, data, 801000201)
 end

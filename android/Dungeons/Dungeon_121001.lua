@@ -26,8 +26,8 @@ monsters=
 },
 props=
 {
-{born_group=103,wave=3,rate=100,nPropID=1,name="货箱",icon="MapProps_001",desc="装着各种随机素材的箱子。",res="GridProps/baoxiang/baoxiang",get_eff="baoxiang_hit",eBlockState=1,nStep=0,state=1,type=26,param={10001}},
-{born_group=107,wave=2,rate=100,nPropID=2,float_content="耐久+50%",name="生命补给",icon="图标名称",desc="基地投送的作战补给，获得后队伍全体耐久+50%。",res="GridProps/buff/Buff_Heal",get_eff="get_eff_green",eBlockState=1,nStep=0,state=1,type=2,param={0.5}}
+{born_group=103,wave=3,rate=100,nPropID=1,name="货箱",name_id=70010,icon="MapProps_001",desc="装着各种随机素材的箱子。",desc_id=71010,res="GridProps/baoxiang/baoxiang",get_eff="baoxiang_hit",eBlockState=1,nStep=0,state=1,type=26,param={10001}},
+{born_group=107,wave=2,rate=100,nPropID=2,float_content="耐久+50%",float_content_id=72022,name="生命补给",name_id=70020,icon="图标名称",desc="基地投送的作战补给，获得后队伍全体耐久+50%。",desc_id=71022,res="GridProps/buff/Buff_Heal",get_eff="get_eff_green",eBlockState=1,nStep=0,state=1,type=2,param={0.5}}
 },
 }
 return this;

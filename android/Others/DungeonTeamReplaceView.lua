@@ -159,11 +159,11 @@ function ReplaceTeamData(teamIndex, teamData)
             end
         end
 
-        local cfg = Cfgs.CfgPlrSkillGroup:GetByID(teamData.skill_group_id)
-        if cfg == nil then
-            editTeamData.skill_group_id = 0
+        local tacticsData= TacticsMgr:GetDataByID(teamData.skillGroupID)
+        if tacticsData ~= nil then
+            editTeamData.skillGroupID = teamData.skillGroupID
         else
-            editTeamData.skill_group_id = cfg.id
+            editTeamData.skillGroupID = 0
         end
     end
 end

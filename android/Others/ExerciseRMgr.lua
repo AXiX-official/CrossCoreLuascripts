@@ -17,11 +17,16 @@ end
 
 function this:FreeMatchInfoRet(proto)
     self.proto = proto
-    if (self.old_max_rank == nil) then
-        self.old_max_rank = self.proto.max_rank or 0
-    end
-    if (self.old_max_dw == nil) then
+    if(self.proto.pre_cfg_id)then 
+        self.old_max_rank = 0
         self.old_max_dw = self.proto.reward_info.get_rank_lv_id or 1
+    else 
+        if (self.old_max_rank == nil) then
+            self.old_max_rank = self.proto.max_rank or 0
+        end
+        if (self.old_max_dw == nil) then
+            self.old_max_dw = self.proto.reward_info.get_rank_lv_id or 1
+        end
     end
     self:CheckRed()
 end
@@ -375,19 +380,19 @@ end
 function this:CheckRed()
     local num1 = nil
     if (self:GetProto().reward_info) then
-        local jion_cnt = self:GetProto().reward_info.jion_cnt
-        if (jion_cnt > 0) then
+        local join_cnt = self:GetProto().reward_info.join_cnt
+        if (join_cnt > 0) then
             local _i = 0
             local cfg = Cfgs.CfgPvpTaskReward:GetByID(1)
             for k, v in ipairs(cfg.infos) do
-                if (v.order >= jion_cnt) then
-                    _i = v.order == jion_cnt and k or (k - 1)
+                if (v.order >= join_cnt) then
+                    _i = v.order == join_cnt and k or (k - 1)
                     _i = _i <= 0 and 0 or _i
                     break
                 end
             end
-            local get_jion_cnt_id = self:GetProto().reward_info.get_jion_cnt_id or 0
-            if (_i > get_jion_cnt_id) then
+            local get_join_cnt_id = self:GetProto().reward_info.get_join_cnt_id or 0
+            if (_i > get_join_cnt_id) then
                 num1 = 1
             end
         end
@@ -395,13 +400,13 @@ function this:CheckRed()
     --
     local num2 = nil
     if (self:GetProto().reward_info) then
-        local jion_cnt = self:GetProto().reward_info.win_cnt
-        if (jion_cnt > 0) then
+        local join_cnt = self:GetProto().reward_info.win_cnt
+        if (join_cnt > 0) then
             local _i = 0
             local cfg = Cfgs.CfgPvpTaskReward:GetByID(2)
             for k, v in ipairs(cfg.infos) do
-                if (v.order >= jion_cnt) then
-                    _i = v.order == jion_cnt and k or (k - 1)
+                if (v.order >= join_cnt) then
+                    _i = v.order == join_cnt and k or (k - 1)
                     _i = _i <= 0 and 0 or _i
                     break
                 end

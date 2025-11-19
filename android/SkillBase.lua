@@ -44,6 +44,7 @@ function SkillMgr:InitSkill()
 	self.mapSlotSkills    = {} -- 主动技能按123
 	self.initiativeSkills = {} -- 主动技能
 	self.passiveSkills    = {} -- 被动技能
+	self.equipSkills      = {} -- 装备技能
 	self.oNormonSkill     = nil -- 普攻技能
 	self.oOverloadSkill   = nil -- overload技能
 	self.attrSkill = {} -- 属性技能(后端没用,前端显示用)
@@ -67,6 +68,9 @@ function SkillMgr:InitSkill()
 					self.oOverloadSkill = oSkill
 				end
 			else
+				if oSkill.main_type == SkillMainType.Equip then
+					table.insert(self.equipSkills, v)
+				end
 				table.insert(self.passiveSkills, oSkill)
 			end
 			table.insert(self.skills, oSkill)

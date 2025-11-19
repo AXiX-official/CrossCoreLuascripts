@@ -10,7 +10,7 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
-
+    PopupPackMgr:TrackEvents_2()
 end
 
 function Update()
@@ -61,16 +61,16 @@ function SetCur()
     CSAPI.SetText(txtName, shopCfg.sName)
     CSAPI.SetText(txtGoodValue, cfg.goodValue * 100 .. "%")
     CSAPI.SetText(txtDesc, shopCfg.sDesc)
-    SetItem()
+    SetItem(shopCfg.nSumBuyLimit or 1)
     -- time
     finishTime = curData:GetFinishTime()
     timer = 0
 end
 
-function SetItem()
-    local cfg = curData:GetCfg()
+function SetItem(nSumBuyLimit)
+    --local cfg = curData:GetCfg()
     -- CSAPI.SetText(txtCnt, cfg.loopCount)
-    LanguageMgr:SetText(txtCnt, 38005, cfg.loopCount)
+    LanguageMgr:SetText(txtCnt, 38005, nSumBuyLimit)
     -- local cfg = curData:GetCurShowItemCfg()
     -- if (cfg.item) then
     --     local rewardData = BagMgr:GetFakeData(cfg.item[1][1], cfg.item[1][2])
@@ -91,7 +91,7 @@ end
 function SetTime()
     local needTime = finishTime - TimeUtil:GetTime()
     needTime = needTime <= 0 and 0 or needTime
-    LanguageMgr:SetText(81002, TimeUtil:GetTimeStr(needTime))
+    LanguageMgr:SetText(txtTime,81002, TimeUtil:GetTimeStr(needTime))
     if (needTime <= 0) then
         timer = nil
         PopupPackMgr:UpdateDatas()
@@ -127,13 +127,14 @@ function OnClickBuy()
 end
 
 function OnClickItem()
-    local cfg = curData:GetCurShowItemCfg()
-    if (cfg.item) then
-        local rewardData = BagMgr:GetFakeData(cfg.item[1][1], cfg.item[1][2])
-        GridClickFunc.OpenInfoSmiple({
-            data = rewardData
-        })
-    end
+    OnClickBuy()
+    -- local cfg = curData:GetCurShowItemCfg()
+    -- if (cfg.item) then
+    --     local rewardData = BagMgr:GetFakeData(cfg.item[1][1], cfg.item[1][2])
+    --     GridClickFunc.OpenInfoSmiple({
+    --         data = rewardData
+    --     })
+    -- end
 end
 
 ---返回虚拟键公共接口  函数名一样，调用该页面的关闭接口

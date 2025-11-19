@@ -8,13 +8,13 @@ function Skill603200203:Init(skillID, card)
 end
 -- 执行技能
 function Skill603200203:DoSkill(caster, target, data)
-	-- 30002
+	-- 603200222
 	self.order = self.order + 1
-	local targets = SkillFilter:All(self, caster, target, 1)
-	for i,target in ipairs(targets) do
-		self:Cure(SkillEffect[30002], caster, target, data, 1,0.1)
-	end
-	-- 4003
+	self:OwnerAddBuffCount(SkillEffect[603200222], caster, self.card, data, 4603201,2,10)
+	-- 603200203
 	self.order = self.order + 1
-	self:AddBuff(SkillEffect[4003], caster, target, data, 4003)
+	self:AddSp(SkillEffect[603200203], caster, self.card, data, 20)
+	-- 603200212
+	self.order = self.order + 1
+	self:AddNp(SkillEffect[603200212], caster, self.card, data, 15)
 end

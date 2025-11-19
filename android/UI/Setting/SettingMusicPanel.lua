@@ -13,7 +13,7 @@ function Awake()
 	fade3 = ComUtil.GetCom(item3Fade,"ActionFade")
 
 	language = SettingMgr:GetValue("s_language_key")
-	bgm = BGMMgr:GetViewMusicID()
+	bgm = GetMusicID()
 end
 
 function OnEnable()
@@ -133,11 +133,18 @@ function OnDestroy()
             key = tostring(language)
         })
     end
-	if BGMMgr:GetViewMusicID() ~= bgm then
+	if GetMusicID() ~= bgm then
         BuryingPointMgr:TrackEvents("mj_setting", {
             time = TimeUtil:GetTimeStr2(TimeUtil:GetTime(), true),
             eventName = "bgm",
             cfgId = tostring(BGMMgr:GetViewMusicID())
         })
     end
+end
+
+function GetMusicID()
+	if PlayerClient:GetUid() == nil then
+		return ""
+	end
+	return BGMMgr:GetViewMusicID()
 end

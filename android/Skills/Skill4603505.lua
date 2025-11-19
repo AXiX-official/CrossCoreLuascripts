@@ -61,11 +61,13 @@ function Skill4603505:tFunc_4603535_4603525(caster, target, data)
 	else
 		return
 	end
+	-- 8741
+	local count741 = SkillApi:SkillLevel(self, caster, target,3,6035004)
 	-- 4603525
 	if self:Rand(5000+count737*100) then
 		local targets = SkillFilter:Rand(self, caster, target, 4)
 		for i,target in ipairs(targets) do
-			self:CallOwnerSkill(SkillEffect[4603525], caster, target, data, 603500401+math.max(count738-1,0))
+			self:CallOwnerSkill(SkillEffect[4603525], caster, target, data, 603500401+math.min(math.max(count738+count741-2,0),4))
 		end
 	end
 end
@@ -81,11 +83,13 @@ function Skill4603505:tFunc_4603535_4603515(caster, target, data)
 	else
 		return
 	end
+	-- 8741
+	local count741 = SkillApi:SkillLevel(self, caster, target,3,6035004)
 	-- 4603515
 	if self:Rand(5000+count737*100) then
 		local targets = SkillFilter:Rand(self, caster, target, 4)
 		for i,target in ipairs(targets) do
-			self:CallOwnerSkill(SkillEffect[4603515], caster, target, data, 603500201+math.max(count738-1,0))
+			self:CallOwnerSkill(SkillEffect[4603515], caster, target, data, 603500201+math.min(math.max(count738+count741-2,0),4))
 		end
 	end
 end

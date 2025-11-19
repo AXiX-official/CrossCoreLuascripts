@@ -21,6 +21,7 @@ function InitListener()
     eventMgr:AddListener(EventType.Fight_View_Main_Info_Show_State, SetShowState);
     eventMgr:AddListener(EventType.Fight_Reset_TimeLineIndex, ResetItemIndex);    
     eventMgr:AddListener(EventType.Input_Select_Target_Character_Changed,OnInputSelectTargetCharacterChanged);
+    eventMgr:AddListener(EventType.Fight_Time_Line_Refresh,RefreshItems);
     AdaptiveConfiguration.SetLuaObjUIFit("FightTimeLine",gameObject); --节点添加
 end
 function OnDestroy()
@@ -256,7 +257,7 @@ function OnClick()
                 CSAPI.OpenView("FightRoleInfo",id);
             end
         end
-        EventMgr.Dispatch(EventType.Character_FightInfo_Log,id);
+        EventMgr.Dispatch(EventType.Character_FightInfo_Log,id);               
     end
 end
 
@@ -268,6 +269,14 @@ end
 --    end
 --    return firstItem;
 --end
+
+function RefreshItems()
+    if(items)then
+        for _,item in pairs(items)do
+            item.Refresh();
+        end        
+    end
+end
 
 function CreateItem(data)
     local itemRoot = nodes.transform;        

@@ -96,6 +96,8 @@ local conf = {
 {'92',	'92',	'61094',	'抚心问诊',	'92',	'2025/10/29 10:00:00',	'2025/11/19 03:00:00',	'1',	'12',	'Soul-Searching_Consultation',	'',	'board_Soul-Searching_Consultation',	'Small_Soul-Searching_Consultation',	'商店购买',	'30,-126,1',	'CG0071_OurHealingTime_spine',	'20,22,1.05',	'1',	'80463'},
 {'95',	'95',	'61097',	'待享美味',	'95',	'',	'',	'1',	'1',	'awaited_delicacy',	'',	'board_awaited_delicacy',	'Small_awaited_delicacy',	'高级勘测奖励',	'-2,-74,0.8',	'kuizhou',	'0,-73,1',	'',	'1'},
 {'96',	'96',	'61098',	'私人检查',	'96',	'',	'',	'1',	'2',	'private_inspection',	'',	'board_private_inspection',	'Small_private_inspection',	'高级勘测奖励',	'-2,-74,0.8',	'qiangji',	'0,-73,1',	'',	'1'},
+{'97',	'97',	'61099',	'欢呼跃动',	'97',	'',	'',	'1',	'8',	'jump_for_joy',	'',	'board_jump_for_joy',	'Small_jump_for_joy',	'高级勘测奖励',	'-3,37,0.8',	'xiwa',	'-3,35,1',	'',	'1'},
+{'98',	'98',	'61100',	'更衣密趣',	'98',	'2025/11/19 10:00:00',	'2025/12/03 03:00:00',	'1',	'2',	'Changing_Room_Shenanigans',	'',	'board_Changing_Room_Shenanigans',	'Small_Changing_Room_Shenanigans',	'商店购买',	'3,-53,0.9',	'CG0075_LockerRoomImpact',	'55,-29,1.03',	'1',	'80465'},
 },
 }
 --cfgCfgArchiveMultiPicture1 = conf

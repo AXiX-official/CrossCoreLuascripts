@@ -265,11 +265,16 @@ function ApplyUse(data,completeCallBack,caller)
 
 --    LogError(data);
 --    LogError(cfg);
-    if(cfg and cfg.float_content)then 
-        --LogError("pp");       
-        if(character and character.CreateFloatFont)then       
-            --LogError("pp1");          
-            character.CreateFloatFont(cfg.float_content);
+    if(cfg)then 
+        local floatContent = cfg.float_content;
+        if(cfg.float_content_id)then
+            floatContent = LanguageMgr:GetTips(cfg.float_content_id);
+        end
+        if(floatContent)then    
+            if(character and character.CreateFloatFont)then       
+                --LogError("pp1");          
+                character.CreateFloatFont(floatContent);
+            end
         end
     end
 

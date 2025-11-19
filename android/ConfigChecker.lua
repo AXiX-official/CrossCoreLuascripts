@@ -1799,72 +1799,72 @@ function ConfigChecker:ItemInfo(cfgs)
 
     for id, cfg in pairs(cfgs) do
         if cfg.to_item_id then
-            ASSERT(cfgs[cfg.to_item_id], string.format('物品id:%s, 的 to_item_id:%s 找不到物品配置信息', id, cfg.to_item_id))
+            ASSERT(cfgs[cfg.to_item_id], string.format('ConfigChecker:ItemInfo(cfgs) 物品id:%s, 的 to_item_id:%s 找不到物品配置信息', id, cfg.to_item_id))
             local arr = GCalHelp:GetTb(g_toItemArr, cfg.to_item_id)
             table.insert(arr, id)
         end
 
         if cfg.sExpiry then
             cfg.nExpiry = GCalHelp:GetTimeStampBySplit(cfg.sExpiry, cfg)
-            ASSERT(cfg.expiryIx, string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
+            ASSERT(cfg.expiryIx, string.format('ConfigChecker:ItemInfo(cfgs) 物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
         end
 
         if cfg.expiryIx then
-            ASSERT(cfg.sExpiry and cfg.sExpiry ~= '', string.format('物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
+            ASSERT(cfg.sExpiry and cfg.sExpiry ~= '', string.format('ConfigChecker:ItemInfo(cfgs) 物品id:%s, 的 sExpiry 与 expiryIx, 必须都填', id))
         end
 
         if cfg.exipiry_type then
             if cfg.exipiry_type[1] < 1 or cfg.exipiry_type[1] > 3 then
-                ASSERT(false, string.format('物品id:%s, 的 exipiry_type 类型错误', id, cfg.to_item_id))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 物品id:%s, 的 exipiry_type 类型错误', id, cfg.to_item_id))
             end
         end
 
         if cfg.type == ITEM_TYPE.ICON_FRAME then
             local frameCfg = AvatarFrame[cfg.dy_value2]
             if frameCfg then
-                ASSERT(not frameCfg.item_id, string.format('该头像框id=%s已有对应的物品id=%s,头像框配置冲突', cfg.dy_value2, id))
+                ASSERT(not frameCfg.item_id, string.format('ConfigChecker:ItemInfo(cfgs) 该头像框id=%s已有对应的物品id=%s,头像框配置冲突', cfg.dy_value2, id))
                 frameCfg.item_id = id
             else
-                ASSERT(false, string.format('头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
 
         elseif cfg.type == ITEM_TYPE.CARD then
             local cardCfg = CardData[cfg.dy_value1]
             if not cardCfg then
-                ASSERT(false, string.format('角色CardData表里找不到该物品id:%s对应的卡牌id：%s', id, cfg.dy_value1))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 角色CardData表里找不到该物品id:%s对应的卡牌id：%s', id, cfg.dy_value1))
             end
             cardCfg.itemId = id
         elseif cfg.type == ITEM_TYPE.ICON then
             local avatarCfg = CfgAvatar[cfg.dy_value2]
             if avatarCfg then
-                ASSERT(not avatarCfg.item_id, string.format('该头像id=%s已有对应的物品id=%s,头像表配置冲突', cfg.dy_value2, id))
+                ASSERT(not avatarCfg.item_id, string.format('ConfigChecker:ItemInfo(cfgs) 该头像id=%s已有对应的物品id=%s,头像表配置冲突', cfg.dy_value2, id))
                 avatarCfg.item_id = id
             else
-                ASSERT(false, string.format('头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 头像表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
         elseif cfg.type == ITEM_TYPE.ICON_TITLE then
             local titleCfg = CfgIconTitle[cfg.dy_value2]
             if titleCfg then
-                ASSERT(not titleCfg.item_id, string.format('该称号id=%s已有对应的物品id=%s,称号表配置冲突', cfg.dy_value2, id))
+                ASSERT(not titleCfg.item_id, string.format('ConfigChecker:ItemInfo(cfgs) 该称号id=%s已有对应的物品id=%s,称号表配置冲突', cfg.dy_value2, id))
                 titleCfg.item_id = id
             else
-                ASSERT(false, string.format('称号表里找不到该物品id:%s对应的玩家称号id：%s', id, cfg.dy_value2))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 称号表里找不到该物品id:%s对应的玩家称号id：%s', id, cfg.dy_value2))
             end
         elseif cfg.type == ITEM_TYPE.ICON_EMOTE then
             local emoteCfg = CfgIconEmote[cfg.dy_value2]
             if emoteCfg then
-                ASSERT(not emoteCfg.item_id, string.format('该战斗表情id=%s已有对应的物品id=%s,玩家表情表配置冲突', cfg.dy_value2, id))
+                ASSERT(not emoteCfg.item_id, string.format('ConfigChecker:ItemInfo(cfgs) 该战斗表情id=%s已有对应的物品id=%s,玩家表情表配置冲突', cfg.dy_value2, id))
                 emoteCfg.item_id = id
             else
-                ASSERT(false, string.format('表情表里找不到该物品id:%s对应的玩家表情id：%s', id, cfg.dy_value2))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 表情表里找不到该物品id:%s对应的玩家表情id：%s', id, cfg.dy_value2))
             end
         elseif cfg.type == ITEM_TYPE.BG_ITEM then
             local menuBgCfg = CfgMenuBg[cfg.dy_value1]
             if menuBgCfg then
-                ASSERT(not menuBgCfg.item_id, string.format('该主界面背景id=%s已有对应的物品id=%s,主界面背景表配置冲突', cfg.dy_value1, id))
+                ASSERT(not menuBgCfg.item_id, string.format('ConfigChecker:ItemInfo(cfgs) 该主界面背景id=%s已有对应的物品id=%s,主界面背景表配置冲突', cfg.dy_value1, id))
                 menuBgCfg.item_id = id
             else
-                ASSERT(false, string.format('主界面背景表里找不到该物品id:%s对应的主界面背景id：%s', id, cfg.dy_value1))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 主界面背景表里找不到该物品id:%s对应的主界面背景id：%s', id, cfg.dy_value1))
             end
         elseif cfg.type == ITEM_TYPE.EQUIP then
             if cfg.dy_value1 then
@@ -1877,7 +1877,7 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(
                         iconFrameItem.dy_value2 == cfg.dy_value2,
                         string.format(
-                                '头像框道具id:%s的对应的头像框id:%s 与 使用后获得的头像框物品id:%s对应的头像框id：%s 不符',
+                                'ConfigChecker:ItemInfo(cfgs) 头像框道具id:%s的对应的头像框id:%s 与 使用后获得的头像框物品id:%s对应的头像框id：%s 不符',
                                 id,
                                 cfg.dy_value2,
                                 item_id,
@@ -1886,7 +1886,7 @@ function ConfigChecker:ItemInfo(cfgs)
                 )
                 ASSERT(
                         iconFrameItem.type == ITEM_TYPE.ICON_FRAME,
-                        string.format('道具id:%s的物品对应的头像框物品:%s，类型不对', id, item_id)
+                        string.format('ConfigChecker:ItemInfo(cfgs) 道具id:%s的物品对应的头像框物品:%s，类型不对', id, item_id)
                 )
             elseif cfg.dy_value1 == PROP_TYPE.Icon then
                 local item_id = cfg.dy_arr[1]
@@ -1894,45 +1894,45 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(
                         iconItem.dy_value2 == cfg.dy_value2,
                         string.format(
-                                '头像道具id:%s的对应的头像id:%s 与 使用后获得的头像物品id:%s对应的头像id：%s 不符',
+                                'ConfigChecker:ItemInfo(cfgs) 头像道具id:%s的对应的头像id:%s 与 使用后获得的头像物品id:%s对应的头像id：%s 不符',
                                 id,
                                 cfg.dy_value2,
                                 item_id,
                                 iconItem.dy_value2
                         )
                 )
-                ASSERT(iconItem.type == ITEM_TYPE.ICON, string.format('道具id:%s的物品对应的头像物品:%s，类型不对', id, item_id))
+                ASSERT(iconItem.type == ITEM_TYPE.ICON, string.format('ConfigChecker:ItemInfo(cfgs) 道具id:%s的物品对应的头像物品:%s，类型不对', id, item_id))
             elseif cfg.dy_value1 == PROP_TYPE.Pet then
-                ASSERT(CfgPet[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物在宠物表没有对应的id：%s", id, cfg.dy_value2))
+                ASSERT(CfgPet[cfg.dy_value2], string.format("ConfigChecker:ItemInfo(cfgs) 宠物道具id：%s使用后获得的宠物在宠物表没有对应的id：%s", id, cfg.dy_value2))
             elseif cfg.dy_value1 == PROP_TYPE.PetItem then
-                ASSERT(CfgPetItem[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物物品在宠物物品表没有对应的id：%s", id, cfg.dy_value2))
+                ASSERT(CfgPetItem[cfg.dy_value2], string.format("ConfigChecker:ItemInfo(cfgs) 宠物道具id：%s使用后获得的宠物物品在宠物物品表没有对应的id：%s", id, cfg.dy_value2))
             elseif cfg.dy_value1 == PROP_TYPE.PetArchive then
-                ASSERT(CfgPetArchive[cfg.dy_value2], string.format("宠物道具id：%s使用后获得的宠物图鉴在宠物图鉴表没有对应的id：%s", id, cfg.dy_value2))
+                ASSERT(CfgPetArchive[cfg.dy_value2], string.format("ConfigChecker:ItemInfo(cfgs) 宠物道具id：%s使用后获得的宠物图鉴在宠物图鉴表没有对应的id：%s", id, cfg.dy_value2))
             elseif cfg.dy_value1 == PROP_TYPE.Music then
-                    ASSERT(cfg.dy_value2, string.format("物品id：%s使用后获得的音乐在ItemInfo没配dy_value2", id))
-                    ASSERT(CfgMusic[cfg.dy_value2], string.format("音乐id：%s使用后获得的音乐在音乐表[CfgMusic]没有对应的id：%s", id, cfg.dy_value2))
+                    ASSERT(cfg.dy_value2, string.format("ConfigChecker:ItemInfo(cfgs) 物品id：%s使用后获得的音乐在ItemInfo没配dy_value2", id))
+                    ASSERT(CfgMusic[cfg.dy_value2], string.format("ConfigChecker:ItemInfo(cfgs) 音乐id：%s使用后获得的音乐在音乐表[CfgMusic]没有对应的id：%s", id, cfg.dy_value2))
             elseif cfg.dy_value1 == PROP_TYPE.IconTitle then
                 local item_id = cfg.dy_arr[1]
                 local iconItem = cfgs[item_id]
                 ASSERT(
                         iconItem.dy_value2 == cfg.dy_value2,
                         string.format(
-                                '称号道具id:%s的对应的称号id:%s 与 使用后获得的称号物品id:%s对应的称号id：%s 不符',
+                                'ConfigChecker:ItemInfo(cfgs) 称号道具id:%s的对应的称号id:%s 与 使用后获得的称号物品id:%s对应的称号id：%s 不符',
                                 id,
                                 cfg.dy_value2,
                                 item_id,
                                 iconItem.dy_value2
                         )
                 )
-                ASSERT(iconItem.type == ITEM_TYPE.ICON_TITLE, string.format('道具id:%s的物品对应的称号物品:%s，类型不对', id, item_id))
+                ASSERT(iconItem.type == ITEM_TYPE.ICON_TITLE, string.format('ConfigChecker:ItemInfo(cfgs) 道具id:%s的物品对应的称号物品:%s，类型不对', id, item_id))
             end
         elseif cfg.type == ITEM_TYPE.VOUCHER then
             if cfg.dy_value1 then
                 if not CfgVoucher[cfg.dy_value1] then
-                    ASSERT(false, string.format('物品%s 的 dy_value1 配置的抵扣券id, 在 CfgVoucher 表中找不到配置', cfg.id, cfg.dy_value1))
+                    ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 物品%s 的 dy_value1 配置的抵扣券id, 在 CfgVoucher 表中找不到配置', cfg.id, cfg.dy_value1))
                 end
             else
-                ASSERT(false, string.format('物品%s的 dy_value1 为抵扣券id，没有填写', cfg.id))
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 物品%s的 dy_value1 为抵扣券id，没有填写', cfg.id))
             end
         end
 
@@ -1941,12 +1941,12 @@ function ConfigChecker:ItemInfo(cfgs)
             if cfg.type == ITEM_TYPE.CARD then
                 ASSERT(
                         CardData[cfg.dy_value1],
-                        '物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CardData 找不到配置！'
+                        'ConfigChecker:ItemInfo(cfgs) 物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CardData 找不到配置！'
                 )
             elseif cfg.type == ITEM_TYPE.EQUIP then
                 ASSERT(
                         CfgEquip[cfg.dy_value1],
-                        '物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CfgEquip 找不到配置！'
+                        'ConfigChecker:ItemInfo(cfgs) 物品表的: dy_value1:' .. (cfg.dy_value1 or 'empty') .. ', item.id为:' .. id .. ', 表 CfgEquip 找不到配置！'
                 )
             elseif cfg.type == ITEM_TYPE.SKIN then
             end
@@ -2296,6 +2296,7 @@ function ConfigChecker:CfgCommodity(cfgs)
                 ASSERT(false, string.format('商品id：%s 直购的默认消耗配的不是-1', v.id))
             end
         end
+
         if v.limitedTimeID then
             if v.nBuyStart > 0 or v.nBuyEnd > 0 then
                 ASSERT(false, string.format('CfgCommodity 的 v.id = %s，配置了limitedTimeID，不需要配v.sBuyStart和v.sBuyEnd', v.id))
@@ -2656,7 +2657,7 @@ function CommCalCfgTasks(cfgs, t)
         if aFinishIds then
             for _, finishId in ipairs(aFinishIds) do
                 if not CfgTaskFinishVal[finishId] then
-                    LogE('任务：%s:%s 的 aFinishIds ：%s 在CfgTaskFinishVal中没有配置', cTaskCfgNames[t], cfg.id, finishId)
+                    LogE(string.format('任务：%s:%s 的 aFinishIds ：%s 在CfgTaskFinishVal中没有配置', cTaskCfgNames[t], cfg.id, finishId))
                 end
             end
         end
@@ -3803,7 +3804,7 @@ function ConfigChecker:cfgPopupPackCondition(cfgs)
     g_popupPack = {}
     for _, cfg in pairs(cfgs) do
         if g_popupPack[cfg.popupPack] then
-            LogE(string.format("cfgPopupPackCondition id:%s popupPack:%s 存在重复", cfg.id, cfg.popupPack))
+            LogError(string.format("cfgPopupPackCondition id:%s popupPack:%s 存在重复", cfg.id, cfg.popupPack))
         end
         g_popupPack[cfg.popupPack] = cfg.id
     end

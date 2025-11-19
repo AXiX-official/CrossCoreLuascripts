@@ -8,6 +8,10 @@ function SingleFightMgrServer:Init(...)
     self.nKillMonster = 0
     self.isServerMgr = true
     self.nTotalDamage = 0
+
+
+    -- mgr.nPlayerLevel = player:Get('level')
+    self.uid = PlayerClient:GetID()
 end
 
 -- 广播消息
@@ -499,6 +503,8 @@ function CreateDuplicateSingleFight(proto)
     local fid = UID(10)
     local seed = math.random(os.time())
     local mgr = SingleFightMgrServer(fid, groupID, SceneType.SinglePVE, seed, nDuplicateID)
+    -- mgr.nPlayerLevel = player:Get('level')
+    mgr.uid = PlayerClient:GetID()
     g_FightMgrServer = mgr
 
     mgr.myOID = proto.myOID
