@@ -16,8 +16,8 @@ monsters=
 {id=403062,born_pos=10803,wave=1},
 {id=403061,born_pos=10203,wave=1},
 {id=403062,born_pos=10208,wave=1},
-{id=403061,born_pos=10709,wave=1},
-{id=403061,born_group=103,wave=2}
+{id=403063,born_pos=10709,wave=1},
+{id=403064,born_group=103,wave=2}
 },
 props=
 {

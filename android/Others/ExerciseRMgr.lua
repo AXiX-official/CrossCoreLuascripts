@@ -17,10 +17,10 @@ end
 
 function this:FreeMatchInfoRet(proto)
     self.proto = proto
-    if(self.proto.pre_cfg_id)then 
+    if (self.proto.pre_cfg_id) then
         self.old_max_rank = 0
         self.old_max_dw = self.proto.reward_info.get_rank_lv_id or 1
-    else 
+    else
         if (self.old_max_rank == nil) then
             self.old_max_rank = self.proto.max_rank or 0
         end
@@ -165,7 +165,7 @@ function this:FightServerInitRet(proto)
         CSAPI.OpenView("ExerciseRPP", data, proto.type)
         CSAPI.CloseAllOpenned("ExerciseRPP")
     end
-
+    
     -- 清除邀请的相关数据
     Tips.CleanInviteTips()
     ExerciseFriendTool:ClearFriendDatas()

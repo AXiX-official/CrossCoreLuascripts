@@ -26,7 +26,7 @@ end
 function this:ClearFriendDatas()
     self.inviteFriendDatas = {}
     self.beInviteDatas = {}
-    self.emenyData_friend = nil
+    --self.emenyData_friend = nil
 end
 
 -- ArmyProto:InviteFriendRet	ops   {uid	is_cancel invite_time}
