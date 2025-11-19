@@ -267,8 +267,8 @@ function this:SetChoiceInfos(choice_info)
         _look_cards = _look_cards==nil and {{0,0,0},{0,0,0}} or _look_cards
         _look_cards[1][3] = choice_info.cids[1]
         _look_cards[2][3] = choice_info.cids[2]
-    else
-        _look_cards = nil 
+    -- else
+    --     _look_cards = nil 
     end
     CfgCardPool[self:GetCfg().id].look_cards = _look_cards
 end
