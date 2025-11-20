@@ -165,7 +165,7 @@ function this:FightServerInitRet(proto)
         CSAPI.OpenView("ExerciseRPP", data, proto.type)
         CSAPI.CloseAllOpenned("ExerciseRPP")
     end
-    
+
     -- 清除邀请的相关数据
     Tips.CleanInviteTips()
     ExerciseFriendTool:ClearFriendDatas()
@@ -380,42 +380,20 @@ end
 function this:CheckRed()
     local num1 = nil
     if (self:GetProto().reward_info) then
-        local join_cnt = self:GetProto().reward_info.join_cnt
-        if (join_cnt > 0) then
-            local _i = 0
-            local cfg = Cfgs.CfgPvpTaskReward:GetByID(1)
-            for k, v in ipairs(cfg.infos) do
-                if (v.order >= join_cnt) then
-                    _i = v.order == join_cnt and k or (k - 1)
-                    _i = _i <= 0 and 0 or _i
-                    break
-                end
-            end
-            local get_join_cnt_id = self:GetProto().reward_info.get_join_cnt_id or 0
-            if (_i > get_join_cnt_id) then
-                num1 = 1
-            end
-        end
+        local cfg = Cfgs.CfgPvpTaskReward:GetByID(1)
+        local join_cnt = self:GetProto().reward_info.join_cnt or 0
+        local get_join_cnt_id = self:GetProto().reward_info.get_join_cnt_id or 0
+        local ids = self:GetIDs(cfg, join_cnt, get_join_cnt_id)
+        num1 = #ids > 0 and 1 or nil
     end
     --
     local num2 = nil
     if (self:GetProto().reward_info) then
-        local join_cnt = self:GetProto().reward_info.win_cnt
-        if (join_cnt > 0) then
-            local _i = 0
-            local cfg = Cfgs.CfgPvpTaskReward:GetByID(2)
-            for k, v in ipairs(cfg.infos) do
-                if (v.order >= join_cnt) then
-                    _i = v.order == join_cnt and k or (k - 1)
-                    _i = _i <= 0 and 0 or _i
-                    break
-                end
-            end
-            local get_win_cnt_ix = self:GetProto().reward_info.get_win_cnt_ix or 0
-            if (_i > get_win_cnt_ix) then
-                num2 = 2
-            end
-        end
+        local cfg = Cfgs.CfgPvpTaskReward:GetByID(2)
+        local win_cnt = self:GetProto().reward_info.win_cnt or 0
+        local get_win_cnt_ix = self:GetProto().reward_info.get_win_cnt_ix or 0
+        local ids = self:GetIDs(cfg, win_cnt, get_win_cnt_ix)
+        num2 = #ids > 0 and 2 or nil
     end
     local num = nil
     if (num1 ~= nil and num2 ~= nil) then
@@ -481,6 +459,16 @@ function this:SetRolePanelRet(_role_panel_id, _live2d)
     self:GetProto().role_panel_id = _role_panel_id
     self:GetProto().live2d = _live2d
     -- EventMgr.Dispatch(EventType.Exercise_Role_Panel)
+end
+
+function this:GetIDs(cfg, cnt, id)
+    local ids = {}
+    for k, v in ipairs(cfg.infos) do
+        if (k > id and cnt >= v.order) then
+            table.insert(ids, k)
+        end
+    end
+    return ids
 end
 
 return this

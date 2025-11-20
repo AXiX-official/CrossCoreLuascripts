@@ -75,35 +75,15 @@ end
 function GetIDs()
     local ids = {}
     if (type == ePVPTaskType.Join) then
-        local join_cnt = ExerciseRMgr:GetProto().reward_info.join_cnt
-        local _i = 0
         local cfg = Cfgs.CfgPvpTaskReward:GetByID(1)
-        for k, v in ipairs(cfg.infos) do
-            if (v.order >= join_cnt) then
-                _i = v.order == join_cnt and k or (k - 1)
-                _i = _i <= 0 and 0 or _i
-                break
-            end
-        end
+        local join_cnt = ExerciseRMgr:GetProto().reward_info.join_cnt or 0
         local get_join_cnt_id = ExerciseRMgr:GetProto().reward_info.get_join_cnt_id or 0
-        for k = get_join_cnt_id + 1, _i do
-            table.insert(ids, k)
-        end
+        ids = ExerciseRMgr:GetIDs(cfg, join_cnt, get_join_cnt_id)
     else
-        local join_cnt = ExerciseRMgr:GetProto().reward_info.win_cnt
-        local _i = 0
         local cfg = Cfgs.CfgPvpTaskReward:GetByID(2)
-        for k, v in ipairs(cfg.infos) do
-            if (v.order >= join_cnt) then
-                _i = v.order == join_cnt and k or (k - 1)
-                _i = _i <= 0 and 0 or _i
-                break
-            end
-        end
-        local get_join_cnt_id = ExerciseRMgr:GetProto().reward_info.get_win_cnt_ix or 0
-        for k = get_join_cnt_id + 1, _i do
-            table.insert(ids, k)
-        end
+        local win_cnt = ExerciseRMgr:GetProto().reward_info.win_cnt or 0
+        local get_win_cnt_ix = ExerciseRMgr:GetProto().reward_info.get_win_cnt_ix or 0
+        ids = ExerciseRMgr:GetIDs(cfg, win_cnt, get_win_cnt_ix)
     end
     return ids
 end
