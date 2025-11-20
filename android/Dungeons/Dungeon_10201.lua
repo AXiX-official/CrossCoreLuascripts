@@ -14,8 +14,8 @@ monsters=
 {
 {id=403011,born_group=100,wave=1},
 {id=403011,born_group=100,wave=1},
-{id=403012,born_pos=10703,wave=1},
-{id=403013,born_pos=10604,wave=2},
+{id=403012,born_pos=10802,wave=1},
+{id=403013,born_pos=10904,wave=2},
 {id=403014,born_group=102,wave=2}
 },
 props=
