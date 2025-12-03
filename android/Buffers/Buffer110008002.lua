@@ -24,5 +24,5 @@ function Buffer110008002:OnBefourHurt(caster, target)
 		return
 	end
 	-- 110008002
-	self:AddTempAttrPercent(BufferEffect[110008002], self.caster, self.card, nil, "damage",0.5)
+	self:AddTempAttrPercent(BufferEffect[110008002], self.caster, self.card, nil, "damage",0.2)
 end

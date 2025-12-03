@@ -69,6 +69,7 @@ function this:UpdateData(id, info,checkRed)
 	-- end
 	if checkRed then
 		self:CheckRedInfo();
+		self:CheckRegressionShopRedInfo();
 	end
 end
 
@@ -183,6 +184,34 @@ function this:CheckRedInfo()
     RedPointMgr:UpdateData(RedPointType.Shop,data)  
 end
 
+--回归商店的红点
+function this:CheckRegressionShopRedInfo()
+	local data=self:GetRegressionShopRedInfo();
+    RedPointMgr:UpdateData(RedPointType.RegressionShop,data)  
+end
+
+function this:GetRegressionShopRedInfo()
+	local data=nil;
+	if RegressionMgr==nil or (RegressionMgr~=nil and RegressionMgr:IsHuiGui()~=true)  then --非回归玩家则返回空
+		return data;
+	end
+    local page=self:GetPageByID(3001);--检测是否有免费礼包领取
+	if page then
+		for k,v in ipairs(page:GetCommodityInfos(true)) do
+			local price=v:GetRealPrice();
+			if (price==nil or (price and price.num==0)) and v:IsOver()~=true and v:GetBuyLimit() then --免费物品且未售罄
+				data= data or {};
+				data[page:GetID()]=data[page:GetID()] or {}
+				data[page:GetID()][v:GetID()]=data[page:GetID()][v:GetID()] or true;
+				if v:GetTabID()~=nil then
+					data.cTab=data.cTab or {};
+					data.cTab[v:GetTabID()]=data.cTab[v:GetTabID()] or true;
+				end
+			end
+		end
+	end
+	return data;
+end
 
 --返回所有已开启的商店页数据 isHide:是否隐藏不显示的商店
 function this:GetAllPages(isHide)
@@ -512,6 +541,7 @@ function this:CheckCommReset()
 	end
 	self.pagesNewInfo=data;
 	self:CheckRedInfo();
+	self:CheckRegressionShopRedInfo();
 	EventMgr.Dispatch(EventType.Shop_NewInfo_Refresh,self.pagesNewInfo);
 end
 

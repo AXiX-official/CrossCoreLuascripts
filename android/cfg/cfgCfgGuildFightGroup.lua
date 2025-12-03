@@ -1,62 +1,58 @@
-local conf = {
-	["filename"] = 'g-工会.xlsx',
-	["sheetname"] = '工会战分组',
-	["types"] = {
-'int','string','table#10','int','string','int','int','int','int','int','int','int','int'
-},
-	["names"] = {
-'id','key','infos','index','rankGroup','sartIx','endIx','firstFightMailId','firstFightRewardId','winMailId','winRewardId','lostMailId','lostRewardId'
-},
-	["data"] = {
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'1',	'1',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'1',	'1',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'1',	'1',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'1',	'1',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'2',	'2',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'2',	'2',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'2',	'2',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'2',	'2',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-{'3',	'3',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'3',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'3',	'3',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'3',	'3',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'3',	'3',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'3',	'3',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-{'4',	'4',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'4',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'4',	'4',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'4',	'4',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'4',	'4',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'4',	'4',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-{'5',	'5',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5',	'5',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'5',	'5',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'5',	'5',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'5',	'5',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'5',	'5',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-{'6',	'6',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'6',	'6',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'6',	'6',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'6',	'6',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'6',	'6',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'6',	'6',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-{'7',	'7',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'7',	'7',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'7',	'7',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'7',	'7',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'7',	'7',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'7',	'7',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-{'8',	'8',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'8',	'8',	'',	'1',	'A',	'1',	'2000',	'3001',	'1',	'3007',	'1',	'3008',	'2'},
-{'8',	'8',	'',	'2',	'B',	'2001',	'4000',	'3002',	'2',	'3009',	'',	'3010',	''},
-{'8',	'8',	'',	'3',	'C',	'4001',	'6000',	'3003',	'3',	'3011',	'',	'3012',	''},
-{'8',	'8',	'',	'4',	'D',	'6001',	'8000',	'3004',	'4',	'3013',	'',	'3014',	''},
-{'8',	'8',	'',	'5',	'E',	'8001',	'',	'3005',	'5',	'3015',	'1',	'3016',	'2'},
-},
+_G["CfgGuildFightGroup"]={{["id"]=1,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
 }
---cfgCfgGuildFightGroup = conf
-return conf
+,["key"]="1"}
+,{["id"]=2,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
+}
+,["key"]="2"}
+,{["id"]=3,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
+}
+,["key"]="3"}
+,{["id"]=4,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
+}
+,["key"]="4"}
+,{["id"]=5,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
+}
+,["key"]="5"}
+,{["id"]=6,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
+}
+,["key"]="6"}
+,{["id"]=7,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
+}
+,["key"]="7"}
+,{["id"]=8,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
+,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
+,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}
+,{["rankGroup"]="E",["index"]=5,["winMailId"]=3015,["lostRewardId"]=2,["lostMailId"]=3016,["winRewardId"]=1,["firstFightRewardId"]=5,["sartIx"]=8001,["firstFightMailId"]=3005}
+}
+,["key"]="8"}
+}
+

@@ -66,11 +66,12 @@ function Awake()
     CSAPI.SetText(txt_fightRoleInfo, _G.showPvpRoleInfo and "关闭PVP卡牌信息" or "开启PVP卡牌信息");
     SetSearchText(options[selectIndex].desc);
     CSAPI.AddInputFieldChange(search, OnSearch);
-    inputSpecialField = ComUtil.GetCom(inputSpecial,"InputField")
+    inputSpecialField = ComUtil.GetCom(inputSpecial, "InputField")
     CSAPI.AddInputFieldChange(inputSpecial, OnSpecial);
-	txtUnite = ComUtil.GetCom(TxtUnite, "InputField");
-	btn_ChangeEnv_text_comp = ComUtil.GetCom(sdkEnv, "Text");
+    txtUnite = ComUtil.GetCom(TxtUnite, "InputField");
+    btn_ChangeEnv_text_comp = ComUtil.GetCom(sdkEnv, "Text");
     UpdateCurrentSDKEnv();
+    _G.Guid_Skin_Btn = true;
 end
 
 function OnEnable()
@@ -148,9 +149,6 @@ function OnBtnNewPlayerFight0()
     -- GuideMgr:SkipTo(3010);
     -- PlayerPrefs.SetInt(PlayerClient:GetNewPlayerFightStateKey() .. "_" .. PlayerClient:GetID(), 0);
     -- PlayerClient:NewPlayerFight(1);
-
-    CSAPI.OpenView("ExerciseRMain")
-    view:Close()
 end
 
 function btnJump()
@@ -401,7 +399,6 @@ function OnClickVideo()
     end
     local str = inputVideoField.text;
     video = ResUtil:PlayVideo(str);
-
     --    video:AddCompleteEvent(function()           
     --        LogError("播放完成");
     --    end); 
@@ -416,32 +413,37 @@ function OnClickGuideSet()
     local cfgs = Cfgs.Guide:GetAll();
 
     local guideData = {};
-    local doingGuide=nil;
+    local doingGuide = nil;
     for _, cfg in pairs(cfgs) do
         if (id > cfg.id) then
             if (cfg.group) then
                 guideData[GuideMgr:GetKey(cfg.group)] = 1;
             end
         end
-        if id==cfg.id then
-            doingGuide=cfg;
+        if id == cfg.id then
+            doingGuide = cfg;
             if guideData[GuideMgr:GetKey(cfg.group)] then
-                guideData[GuideMgr:GetKey(cfg.group)]=nil;
+                guideData[GuideMgr:GetKey(cfg.group)] = nil;
             end
         end
     end
-    GuideMgr.doingGuide=nil
-    if doingGuide==nil then
-        LogError("未找到对应id的引导数据："..tostring(id))
-        do return end
+    GuideMgr.doingGuide = nil
+    if doingGuide == nil then
+        LogError("未找到对应id的引导数据：" .. tostring(id))
+        do
+            return
+        end
     end
     if CSAPI.IsViewOpen("Guide") then
         CSAPI.CloseView("Guide")
     end
+    LogWarning("开始引导步骤：" .. table.tostring(doingGuide));
+    LogWarning("当前引导数据：" .. table.tostring(guideData))
     GuideMgr:SetCanSkipStep(false);
     -- PlayerProto:SetClientData(GuideMgr:GetGuideKey(), guideData);
-    GuideMgr:SetData(guideData); 
-    GuideMgr:CheckGuide(doingGuide.view_open) 
+    GuideMgr:SetData(guideData);
+    GuideMgr:CheckGuide(doingGuide.view_open)
+    view:Close();
 end
 
 function OnClickGuiding()
@@ -618,7 +620,7 @@ end
 function OnClickMatrix()
     CSAPI.OpenView("RogueSView")
     -- PlayerPrefs.SetInt(s_mobie_lv_key, 0)
-	-- LogError("已重置，请重新登录游戏")
+    -- LogError("已重置，请重新登录游戏")
 end
 
 -- 测试内置网页
@@ -699,19 +701,19 @@ function OnClickFightRecord()
 end
 
 function OnClickServerList()
-    --LogError("aaaa");
+    -- LogError("aaaa");
     ---_G.server_list_enc_close = 1;
-    CSAPI.server_list_enc_close=true;
+    CSAPI.server_list_enc_close = true;
     InitServerInfo(nil, "http://192.168.5.86/php/res/serverList/serverlist_nw1.json");
     OnClickClose();
-     
+
     FuncUtil:Call(function()
         local go = CSAPI.GetView("Login");
         local lua = ComUtil.GetLuaTable(go);
         lua.OnClickSwitch(true);
-    end,nil,1000);
+    end, nil, 1000);
 
-    end
+end
 
 function OnClickLoadingList()
     local go = CSAPI.GetView("Loading");
@@ -721,7 +723,24 @@ end
 
 function OnClickSpine()
     -- ResUtil:CreateUIGOAsync("SpineTest", gameObject)
-    CSAPI.OpenView("PetMain");
+    -- CSAPI.OpenView("PetMain");
+    -- local shopView=ComUtil.GetLuaTable(CSAPI.GetView("ShopView"));
+    -- shopView.CloseShopPanels();
+    -- JumpMgr:Jump(340001)
+    -- local cData=ShopMgr:GetFixedCommodity(81001)
+    -- LogError(tostring(cData:IsOver()))
+    -- CSAPI.OpenView("GoodsFullInfo",{
+    --     data=BagMgr:GetFakeData(14033),
+    --     needNum=100,
+    -- })
+    -- view:Close();
+    UIUtil:OpenReward({{{
+        c_id = 1,
+        id = 4,
+        num = 1,
+        type = 6
+    }}});
+    -- CSAPI.OpenView("RiddleMain");
     -- CSAPI.OpenView("SpecialExploration",2001);
     -- --批量添加折扣券
     -- local index=5;
@@ -738,12 +757,12 @@ function OnHideFightUI()
     ChangeUIState("Fight");
     ChangeUIState("Skill");
     ChangeUIState("FightTimeLine");
-    --ChangeUIState("Fight");
+    -- ChangeUIState("Fight");
 end
 
 function ChangeUIState(uiName)
     local go = CSAPI.GetViewPanel(uiName);
-    local canvasGroup = ComUtil.GetOrAddCom(go,"CanvasGroup");
+    local canvasGroup = ComUtil.GetOrAddCom(go, "CanvasGroup");
     canvasGroup.alpha = canvasGroup.alpha == 1 and 0 or 1;
 end
 
@@ -776,60 +795,175 @@ function OnSpecial()
 end
 
 function OnClickSneak()
-    EventMgr.Dispatch(EventType.Scene_Load, "Sneak_1")
+    -- local go=ResUtil:CreateUIGO("ItemPoolCard/ItemPoolCardMain",gameObject.transform)
+    -- local lua=ComUtil.GetLuaTable(go);
+    -- lua.Refresh(nil,{cfg={info={{cfgId=1004}}}});
+    -- JumpMgr:Jump(140019);
+    -- CSAPI.OpenView("PuzzleActivity");
+    -- CSAPI.OpenView("LuckyGachaMain");
+    -- local comm=ShopMgr:GetFixedCommodity(50005);
+    -- local skinInfo=ShopCommFunc.GetSkinInfo(comm);
+    -- CSAPI.OpenView("SkinShowView",skinInfo);
+    -- view:Close();
+    -- EventMgr.Dispatch(EventType.Scene_Load, "SneakMain")
+    -- if equipTest==nil then
+    --     ResUtil:CreateUIGOAsync("GMCEquipTest", gameObject,function(go)
+    --         equipTest=ComUtil.GetLuaTable(go);
+    --         equipTest.Refresh()
+    --     end);
+    -- else
+    --     CSAPI.SetGOActive(equipTest.gameObject,true);    
+    --     equipTest.Refresh()    
+    -- end
+    -- local data=RichManMgr:GetCurData();
+    -- if data~=nil then
+    --     data:EnterScene();
+    -- end
+    CSAPI.OpenView("CumulativeSpending")
 end
 
 function OnClickUnite()
-    local id,type = 0,1
-    local str = txtUnite.text
-    if str == "" then
+    local _str = txtUnite.text
+    if _str == "" then
         return
     end
 
-    local ss = StringUtil:split(str," ")
-    id = tonumber(ss[1])
-    type = ss[2] or 1
-    local str = ""
-    if tonumber(type) == 2 then
-        local cfg = Cfgs.MonsterData:GetByID(id)
-        if cfg then
-            if cfg.unite then
-                LogTable(cfg.unite,string.format("怪物id：%s，怪物名称：%s",cfg.id,cfg.name))
-            else
-                LogError("没可同调的怪物或卡牌！！！" .. id)
-            end
-        else
-            LogError("找不到对应怪物数据！！！" .. id)
-        end
-    else
-        local cfg = Cfgs.CardData:GetByID(id)
-        if cfg then
-            if cfg.unite then
-                LogTable(cfg.unite,string.format("卡牌id：%s，卡牌名称：%s",cfg.id,cfg.name))
-            else
-                LogError("没可同调的怪物或卡牌！！！" .. id)
-            end
-        else
-            LogError("找不到对应卡牌数据！！！" .. id)
+    local ss = StringUtil:split(_str, " ")
+    if #ss < 2 then
+        return
+    end
+    local id1, id2 = tonumber(ss[1]), tonumber(ss[2])
+    local cfg1, cfg2 = nil, nil
+    cfg1 = Cfgs.CardData:GetByID(id1)
+    if not cfg1 then
+        cfg1 = Cfgs.MonsterData:GetByID(id1)
+    end
+    cfg2 = Cfgs.CardData:GetByID(id2)
+    if not cfg2 then
+        cfg2 = Cfgs.MonsterData:GetByID(id2)
+    end
+    if not cfg1 or not cfg2 then
+        LogError("没找到表数据！！！id:" .. (not cfg1 and id1 or id2))
+        return
+    elseif not cfg1.unite and not cfg2.unite then
+        LogError("两个id所对应的表的uniteLabel字段没有数据！！！")
+        return
+    end
+
+    -- 检测是否在列表内
+    local unites = cfg1.unite or cfg2.unite
+    local id = cfg1.unite == nil and id1 or id2
+    for _, _id in ipairs(unites) do
+        if id == _id then
+            LogError(string.format("id:%s和id:%s可以同调！！！", id1, id2))
+            return
         end
     end
+
+    local removeIds = GetRemoveIDs()
+    if removeIds[id1] ~= nil or removeIds[id2] ~= nil then
+        LogError(string.format("id:%s不可被同调，存在被合体或被变身！！！",
+            removeIds[id1] ~= nil and id1 or id2))
+        return
+    end
+
+    -- 卡牌配置表数据
+    local cfgCard1 = cfg1.card_id and Cfgs.CardData:GetByID(cfg1.card_id) or cfg1
+    local cfgCard2 = cfg2.card_id and Cfgs.CardData:GetByID(cfg2.card_id) or cfg2
+    local uniteLabels = cfg1.uniteLabel or cfg2.uniteLabel
+    local _cfg = cfg1.uniteLabel ~= nil and cfgCard2 or cfgCard1
+    local strTab = {}
+    for _, _info in ipairs(uniteLabels) do
+        local cfgLabel = Cfgs.CfgUniteLabel:GetByID(_info[1])
+        local cfg1 = nil
+        if (_cfg.role_id and cfgLabel.cfgType == 1) then
+            cfg1 = Cfgs.CfgCardRole:GetByID(_cfg.role_id)
+        else
+            cfg1 = _cfg
+        end
+        if (cfg1) then
+            -- 判断条件
+            local num = 0
+            if (cfgLabel.key) then
+                for _, content in ipairs(_info[2]) do
+                    local b = false
+                    if (cfgLabel.type ~= 2) then
+                        if (cfg1[cfgLabel.key] == content) then
+                            num = num + 1
+                        end
+                    else -- 区间类型
+                        if (content[1] < 0 and content[2] < 0) or (content[1] < 0 and cfg1[cfgLabel.key] < content[2]) or
+                            (content[2] < 0 and cfg1[cfgLabel.key] > content[1]) or
+                            (cfg1[cfgLabel.key] > content[1] and cfg1[cfgLabel.key] < content[2]) then
+                            num = num + 1
+                        end
+                    end
+                end
+            end
+            local b = false
+            if (num > 0) then
+                if (_info[3] == 1) then -- 或条件
+                    b = true
+                else -- 与条件
+                    if (num >= #_info[2]) then
+                        b = true
+                    end
+                end
+            end
+            table.insert(strTab, string.format("%s:%s", cfgLabel.typeName, b and "成功" or "失败"))
+        end
+    end
+    LogError(string.format("id:%s和id:%s不可以同调！！！匹配结果如下：", id1, id2) ..
+                 table.tostring(strTab))
+end
+
+function GetRemoveIDs()
+    local infos = {}
+    local cfgCards = Cfgs.CardData:GetAll()
+    for k, v in pairs(cfgCards) do
+        if v.fit_result then
+            infos[v.fit_result] = 1
+        end
+        if v.tTransfo then
+            for _, _id in ipairs(v.tTransfo) do
+                infos[_id] = 1
+            end
+        end
+    end
+
+    local cfgMonsters = Cfgs.MonsterData:GetAll()
+    for k, v in pairs(cfgMonsters) do
+        if v.fit_result then
+            infos[v.fit_result] = 1
+        end
+        if v.tTransfo then
+            for _, _id in ipairs(v.tTransfo) do
+                infos[_id] = 1
+            end
+        end
+    end
+    return infos
 end
 
 -------------------------下拉列表逻辑处理完毕------------
 -- 切换中台sdk环境
 function OnBtnChangeEnv()
-    local haskey = PlayerPrefs.HasKey("DomesticSdkEnvirment")    
-    local currentVal = tonumber(PlayerPrefs.GetInt("DomesticSdkEnvirment",4))
+    local haskey = PlayerPrefs.HasKey("DomesticSdkEnvirment")
+    local currentVal = tonumber(PlayerPrefs.GetInt("DomesticSdkEnvirment", 4))
     -- currentVal = currentVal + 1
     -- if currentVal > 5 then currentVal = 0 end
 
-    if currentVal == 0 then currentVal = 1
-    elseif currentVal == 1 then currentVal = 4
-    elseif currentVal == 4 then currentVal = 0
-    else currentVal = 0
+    if currentVal == 0 then
+        currentVal = 1
+    elseif currentVal == 1 then
+        currentVal = 4
+    elseif currentVal == 4 then
+        currentVal = 0
+    else
+        currentVal = 0
     end
 
-    PlayerPrefs.SetInt("DomesticSdkEnvirment",currentVal);
+    PlayerPrefs.SetInt("DomesticSdkEnvirment", currentVal);
     LogError("当前的sdk环境Env修改为：" .. tostring(currentVal))
     UpdateCurrentSDKEnv();
     -- ShiryuSDK.OnRoleOffline()
@@ -837,10 +971,26 @@ end
 function UpdateCurrentSDKEnv()
     local haskey = PlayerPrefs.HasKey("DomesticSdkEnvirment")
     if haskey then
-        btn_ChangeEnv_text_comp.text = string.format("%s%d","当前Env:",PlayerPrefs.GetInt("DomesticSdkEnvirment"));
+        btn_ChangeEnv_text_comp.text = string.format("%s%d", "当前Env:", PlayerPrefs.GetInt("DomesticSdkEnvirment"));
     else
-        btn_ChangeEnv_text_comp.text = string.format("%s","当前Env为默认值");
+        btn_ChangeEnv_text_comp.text = string.format("%s", "当前Env为默认值");
     end
+end
+
+function OnClickRogueMap()
+    if not SceneMgr:IsRogueMapDungeon() then
+        Tips.ShowTips("未在秘境探索格子副本中！！！！")
+        return
+    end
+
+    local _dis = RogueMapBattleMgr:GetMistDis()
+    local dis = {}
+    for k, v in pairs(_dis) do
+        dis[k] = v
+        dis[k].isUnLock = true
+    end
+    RogueMapBattleMgr:SetMistDis(dis)
+    EventMgr.Dispatch(EventType.RogueMap_Battle_Mist_Refresh)
 end
 
 -- 关闭

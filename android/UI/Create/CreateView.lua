@@ -101,6 +101,13 @@ function Update()
             SetShowTime()
         end
     end
+    --免费单抽刷新
+    if(freeRefreshTime and TimeUtil:GetTime() > freeRefreshTime)then 
+        SetFree()
+    end 
+    if(nextHour and TimeUtil:GetTime() > nextHour)then 
+        SetFreeTime()
+    end 
 end
 
 function OnOpen()
@@ -275,7 +282,7 @@ function SetLeft()
 end
 
 function SetFree()
-    isOneFree = curData:IsOneFree()
+    isOneFree,freeRefreshTime = curData:IsOneFree()
     local str1 = ""
     if (isOneFree) then
         str1 = LanguageMgr:GetByID(16108, CreateMgr:FreeRemainDay())
@@ -286,7 +293,18 @@ function SetFree()
     local spend1Name = isOneFree and "UIs/Create/btn_4_05.png" or "UIs/Create/btn_4_04.png"
     CSAPI.LoadImg(spend1, spend1Name, true, nil, true)
     -- red 
-    UIUtil:SetRedPoint(btn1, isOneFree, 166, 44, 0)
+    --UIUtil:SetRedPoint(btn1, isOneFree, 166, 44, 0)
+    --免费剩余时间
+    SetFreeTime()
+end
+
+function SetFreeTime()
+    nextHour = nil 
+    if(isOneFree)then 
+        local hour = TimeUtil:HoursUntilNext3AM(TimeUtil:GetTime())
+        LanguageMgr:SetText(txtFreeTime,18087,hour) --剩余刷新时间
+        nextHour = TimeUtil:NextHourTimestamp(TimeUtil:GetTime())
+    end
 end
 
 function SetShowTime()

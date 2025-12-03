@@ -1,23 +1,13 @@
-local conf = {
-	["filename"] = 'h_汇总界面表.xlsx',
-	["sheetname"] = '周年活动汇总',
-	["types"] = {
-'int','string','int','int','int','string','string','string','string','string','string','int','int','int','int','int[]','int[]'
-},
-	["names"] = {
-'id','key','group','type','index','name','enName','icon','path','sTime','eTime','jumpId','summary','shop','activity','commodity','mission'
-},
-	["data"] = {
-{'1',	'1',	'2',	'1',	'1',	'时光盛典',	'Time Festival',	'icon_02_01',	'Anniversary1/AnniversaryTimestView',	'2025/7/30 03:00:00',	'2025/9/3 03:00:00',	'140008',	'2',	'',	'',	'',	'33,18001'},
-{'2',	'2',	'2',	'2',	'2',	'庆典福利',	'Celebration benefits',	'icon_02_02',	'Anniversary1/AnniversaryPicView1',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'3',	'',	'',	'',	''},
-{'3',	'3',	'2',	'2',	'3',	'庆典活动',	'activity',	'icon_02_03',	'Anniversary1/AnniversaryPicView2',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'4',	'',	'',	'',	''},
-{'4',	'4',	'2',	'2',	'7',	'庆典画册',	'picture album',	'icon_02_06',	'Anniversary1/AnniversaryPicView3',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'5',	'',	'',	'',	''},
-{'5',	'5',	'2',	'2',	'6',	'庆典时装',	'fashion',	'icon_02_07',	'Anniversary1/AnniversaryPicView4',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'6',	'',	'',	'',	''},
-{'6',	'6',	'2',	'2',	'4',	'赤溟专属',	'exclusive',	'icon_02_04',	'Anniversary1/AnniversaryPicView5',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'7',	'',	'',	'',	''},
-{'7',	'7',	'2',	'2',	'9',	'奇趣扭蛋',	'INTEREST GACHA',	'icon_02_05',	'Anniversary1/AnniversaryPicView6',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'8',	'',	'',	'',	''},
-{'8',	'8',	'2',	'3',	'8',	'庆典礼包',	'Gift Pack',	'icon_02_08',	'Anniversary1/AnniversaryShopView',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'',	'',	'',	'31301,31070,31071,31072,31073,31074,31075,31066,31401,31076,31402,31403,31404,31405',	''},
-{'9',	'9',	'2',	'4',	'5',	'惠享返礼',	'Accumulated recharge',	'icon_02_09',	'Anniversary1/AnniversaryAccuCharge',	'2024/1/25 10:00:00',	'2028/1/6 03:00:00',	'140008',	'',	'',	'1023',	'',	''},
-},
+_G["CfgAnniversary"]={{["group"]=2,["enName"]="Time Festival",["index"]=1,["id"]=1,["type"]=1,["summary"]=2,["jumpId"]=140008,["eTime"]="2025/9/3 03:00:00",["name"]="时光盛典",["path"]="Anniversary1/AnniversaryTimestView",["sTime"]="2025/7/30 03:00:00",["key"]="1",["icon"]="icon_02_01",["mission"]={33,18001}
 }
---cfgCfgAnniversary = conf
-return conf
+,{["group"]=2,["enName"]="Celebration benefits",["index"]=2,["id"]=2,["type"]=2,["summary"]=3,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="庆典福利",["path"]="Anniversary1/AnniversaryPicView1",["sTime"]="2024/1/25 10:00:00",["key"]="2",["icon"]="icon_02_02"}
+,{["group"]=2,["enName"]="activity",["index"]=3,["id"]=3,["type"]=2,["summary"]=4,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="庆典活动",["path"]="Anniversary1/AnniversaryPicView2",["sTime"]="2024/1/25 10:00:00",["key"]="3",["icon"]="icon_02_03"}
+,{["group"]=2,["enName"]="picture album",["index"]=7,["id"]=4,["type"]=2,["summary"]=5,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="庆典画册",["path"]="Anniversary1/AnniversaryPicView3",["sTime"]="2024/1/25 10:00:00",["key"]="4",["icon"]="icon_02_06"}
+,{["group"]=2,["enName"]="fashion",["index"]=6,["id"]=5,["type"]=2,["summary"]=6,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="庆典时装",["path"]="Anniversary1/AnniversaryPicView4",["sTime"]="2024/1/25 10:00:00",["key"]="5",["icon"]="icon_02_07"}
+,{["group"]=2,["enName"]="exclusive",["index"]=4,["id"]=6,["type"]=2,["summary"]=7,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="赤溟专属",["path"]="Anniversary1/AnniversaryPicView5",["sTime"]="2024/1/25 10:00:00",["key"]="6",["icon"]="icon_02_04"}
+,{["group"]=2,["enName"]="INTEREST GACHA",["index"]=9,["id"]=7,["type"]=2,["summary"]=8,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="奇趣扭蛋",["path"]="Anniversary1/AnniversaryPicView6",["sTime"]="2024/1/25 10:00:00",["key"]="7",["icon"]="icon_02_05"}
+,{["path"]="Anniversary1/AnniversaryShopView",["index"]=8,["id"]=8,["group"]=2,["enName"]="Gift Pack",["type"]=3,["jumpId"]=140008,["key"]="8",["eTime"]="2028/1/6 03:00:00",["sTime"]="2024/1/25 10:00:00",["name"]="庆典礼包",["icon"]="icon_02_08",["commodity"]={31301,31070,31071,31072,31073,31074,31075,31066,31401,31076,31402,31403,31404,31405}
+}
+,{["group"]=2,["enName"]="Accumulated recharge",["index"]=5,["activity"]=1023,["id"]=9,["type"]=4,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="惠享返礼",["path"]="Anniversary1/AnniversaryAccuCharge",["sTime"]="2024/1/25 10:00:00",["key"]="9",["icon"]="icon_02_09"}
+}
+

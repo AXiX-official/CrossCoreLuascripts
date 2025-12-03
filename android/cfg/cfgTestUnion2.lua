@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = '测试.xlsx',
-	["sheetname"] = 'Sheet1',
-	["types"] = {
-'int','string','string','int','int'
-},
-	["names"] = {
-'id','key','sName','nMin','nMax'
-},
-	["data"] = {
-{'6',	'6',	'1',	'0',	'0'},
-{'7',	'7',	'0',	'1',	'1'},
-{'8',	'8',	'0',	'2',	'2'},
-{'9',	'9',	'1',	'3',	'3'},
-{'10',	'10',	'1',	'5',	'5'},
-},
+_G["TestUnion2"]={[6]={["key"]="6",["id"]=6,["sName"]="1",["nMin"]=0,["nMax"]=0}
+,[7]={["key"]="7",["id"]=7,["sName"]="0",["nMin"]=1,["nMax"]=1}
+,[8]={["key"]="8",["id"]=8,["sName"]="0",["nMin"]=2,["nMax"]=2}
+,[10]={["key"]="10",["id"]=10,["sName"]="1",["nMin"]=5,["nMax"]=5}
+,[9]={["key"]="9",["id"]=9,["sName"]="1",["nMin"]=3,["nMax"]=3}
 }
---cfgTestUnion2 = conf
-return conf
+

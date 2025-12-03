@@ -1,21 +1,9 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '主界面按钮',
-	["types"] = {
-'int','string','string','string','string','string'
-},
-	["names"] = {
-'id','key','sName1','sName2','icon','sViewName'
-},
-	["data"] = {
-{'1',	'1',	'基建中心',	'INF.CENTER',	'v1',	'Matrix'},
-{'2',	'2',	'商店',	'SHOP',	'v2',	'ShopView'},
-{'3',	'3',	'后勤仓',	'STOREHOUSE',	'v3',	'Bag'},
-{'4',	'4',	'角色',	'CHAAACTER',	'v4',	'RoleListNormal'},
-{'5',	'5',	'编队',	'UNIT EDIT',	'v5',	'TeamView'},
-{'6',	'6',	'冷却',	'COOLING SYS',	'v6',	'CoolView'},
-{'7',	'7',	'核心构建',	'CORE MAKING',	'v7',	'CreateView'},
-},
+_G["CfgMenuEnum"]={{["sName1"]="基建中心",["key"]="1",["id"]=1,["sViewName"]="Matrix",["sName2"]="INF.CENTER",["icon"]="v1"}
+,{["sName1"]="商店",["key"]="2",["id"]=2,["sViewName"]="ShopView",["sName2"]="SHOP",["icon"]="v2"}
+,{["sName1"]="后勤仓",["key"]="3",["id"]=3,["sViewName"]="Bag",["sName2"]="STOREHOUSE",["icon"]="v3"}
+,{["sName1"]="角色",["key"]="4",["id"]=4,["sViewName"]="RoleListNormal",["sName2"]="CHAAACTER",["icon"]="v4"}
+,{["sName1"]="编队",["key"]="5",["id"]=5,["sViewName"]="TeamView",["sName2"]="UNIT EDIT",["icon"]="v5"}
+,{["sName1"]="冷却",["key"]="6",["id"]=6,["sViewName"]="CoolView",["sName2"]="COOLING SYS",["icon"]="v6"}
+,{["sName1"]="核心构建",["key"]="7",["id"]=7,["sViewName"]="CreateView",["sName2"]="CORE MAKING",["icon"]="v7"}
 }
---cfgCfgMenuEnum = conf
-return conf
+

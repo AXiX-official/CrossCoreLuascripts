@@ -1,18 +1,13 @@
-local conf = {
-	["filename"] = 'a-爱相随.xlsx',
-	["sheetname"] = '聊天组配置',
-	["types"] = {
-'int','int','int','int','int[]','int[]'
-},
-	["names"] = {
-'id','key','group','unLockType','storyID','unLockStoryID'
-},
-	["data"] = {
-{'2024001',	'2024001',	'20240011',	'',	'',	'1000001'},
-{'2024002',	'2024002',	'20240011',	'1',	'1000085',	'1000101'},
-{'2024003',	'2024003',	'20240011',	'1',	'1000287',	'1000301'},
-{'2024004',	'2024004',	'20240011',	'1',	'1000395',	'1000401'},
-},
+_G["CfgDateChatrecords"]={[2024003]={["unLockStoryID"]={1000301}
+,["storyID"]={1000287}
+,["key"]=2024003,["group"]=20240011,["id"]=2024003,["unLockType"]=1}
+,[2024001]={["group"]=20240011,["unLockStoryID"]={1000001}
+,["key"]=2024001,["id"]=2024001}
+,[2024002]={["unLockStoryID"]={1000101}
+,["storyID"]={1000085}
+,["key"]=2024002,["group"]=20240011,["id"]=2024002,["unLockType"]=1}
+,[2024004]={["unLockStoryID"]={1000401}
+,["storyID"]={1000395}
+,["key"]=2024004,["group"]=20240011,["id"]=2024004,["unLockType"]=1}
 }
---cfgCfgDateChatrecords = conf
-return conf
+

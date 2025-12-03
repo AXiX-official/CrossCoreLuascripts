@@ -1,20 +1,32 @@
-local conf = {
-	["filename"] = 'b-绑定活动.xlsx',
-	["sheetname"] = '绑定活动配置',
-	["types"] = {
-'int','int','string','int','int','int[]','json','string','int','string','int','int','int','table#4','int','json','int','int'
-},
-	["names"] = {
-'id','key','name','desc','needPlrNum','bindTypes','reward','startTime','preTime','endTime','applyLimit','recvLimit','applyResetCycle','infos','index','taskRewardLimit','shopid','codePrefix'
-},
-	["data"] = {
-{'1',	'1',	'',	'',	'2',	'2,3',	'[[11002,1,2]]',	'2024/12/25 03:00:00',	'1440',	'2025/1/20 03:00:00',	'100',	'100',	'30',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'2',	'[[0,10403,0]]',	'2002',	'60028'},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'3',	'[[0,10404,0]]',	'2003',	'60029'},
-{'2',	'2',	'',	'',	'2',	'2,3',	'[[11002,1,2]]',	'2025/7/30 03:00:00',	'1440',	'2025/9/1 03:00:00',	'100',	'100',	'30',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'2',	'[[0,10403,0]]',	'2005',	'60028'},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'3',	'[[0,10404,0]]',	'2006',	'60029'},
-},
+_G["CfgBindActive"]={{["recvLimit"]=100,["preTime"]=1440,["id"]=1,["endTime"]="2025/1/20 03:00:00",["nEndTime"]=1737313200,["bindTypes"]={2,3}
+,["applyResetCycle"]=30,["infos"]={[2]={["codePrefix"]=60028,["teskGetLimit"]={[0]={[10403]=0}
 }
---cfgCfgBindActive = conf
-return conf
+,["index"]=2,["taskRewardLimit"]={{0,10403,0}
+}
+,["shopid"]=2002}
+,[3]={["codePrefix"]=60029,["teskGetLimit"]={[0]={[10404]=0}
+}
+,["index"]=3,["taskRewardLimit"]={{0,10404,0}
+}
+,["shopid"]=2003}
+}
+,["key"]=1,["applyLimit"]=100,["nStartTime"]=1735066800,["startTime"]="2024/12/25 03:00:00",["reward"]={{11002,1,2}
+}
+,["needPlrNum"]=2}
+,{["recvLimit"]=100,["preTime"]=1440,["id"]=2,["endTime"]="2025/9/1 03:00:00",["nEndTime"]=1756666800,["bindTypes"]={2,3}
+,["applyResetCycle"]=30,["infos"]={[2]={["codePrefix"]=60028,["teskGetLimit"]={[0]={[10403]=0}
+}
+,["index"]=2,["taskRewardLimit"]={{0,10403,0}
+}
+,["shopid"]=2005}
+,[3]={["codePrefix"]=60029,["teskGetLimit"]={[0]={[10404]=0}
+}
+,["index"]=3,["taskRewardLimit"]={{0,10404,0}
+}
+,["shopid"]=2006}
+}
+,["key"]=2,["applyLimit"]=100,["nStartTime"]=1753815600,["startTime"]="2025/7/30 03:00:00",["reward"]={{11002,1,2}
+}
+,["needPlrNum"]=2}
+}
+

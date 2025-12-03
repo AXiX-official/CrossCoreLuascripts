@@ -1,19 +1,16 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '改造池',
-	["types"] = {
-'int','string','table#4','int','int','json','int'
-},
-	["names"] = {
-'id','key','arr','index','quality','costs','needTime'
-},
-	["data"] = {
-{'1001',	'1001',	'',	'',	'',	'',	''},
-{'1001',	'1001',	'',	'1',	'1',	'[[10011,1,2]]',	'10'},
-{'1001',	'1001',	'',	'2',	'2',	'[[10011,5,2]]',	'30'},
-{'1001',	'1001',	'',	'3',	'3',	'[[10011,30,2]]',	'600'},
-{'1001',	'1001',	'',	'4',	'4',	'[[10011,300,2]]',	'14400'},
-},
+_G["CfgBRemouldPool"]={[1001]={["id"]=1001,["arr"]={{["costs"]={{10011,1,2}
 }
---cfgCfgBRemouldPool = conf
-return conf
+,["needTime"]=10,["index"]=1,["quality"]=1}
+,{["costs"]={{10011,5,2}
+}
+,["needTime"]=30,["index"]=2,["quality"]=2}
+,{["costs"]={{10011,30,2}
+}
+,["needTime"]=600,["index"]=3,["quality"]=3}
+,{["costs"]={{10011,300,2}
+}
+,["needTime"]=14400,["index"]=4,["quality"]=4}
+}
+,["key"]="1001"}
+}
+

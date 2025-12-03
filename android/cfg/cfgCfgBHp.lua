@@ -1,18 +1,6 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '建筑耐久配置',
-	["types"] = {
-'int','string','string','int','int','int','int','string'
-},
-	["names"] = {
-'id','key','name','min','max','powrPercent','productPercent','icon'
-},
-	["data"] = {
-{'1',	'1',	'细微损坏',	'80',	'100',	'0',	'0',	'damage1'},
-{'2',	'2',	'轻度损坏',	'50',	'79',	'-20',	'-20',	'damage2'},
-{'3',	'3',	'中度损坏',	'20',	'49',	'-50',	'-50',	'damage3'},
-{'4',	'4',	'重度损坏',	'0',	'19',	'-100',	'-100',	'damage4'},
-},
+_G["CfgBHp"]={{["min"]=80,["max"]=100,["name"]="细微损坏",["productPercent"]=0,["id"]=1,["powrPercent"]=0,["icon"]="damage1",["key"]="1"}
+,{["min"]=50,["max"]=79,["name"]="轻度损坏",["productPercent"]=-20,["id"]=2,["powrPercent"]=-20,["icon"]="damage2",["key"]="2"}
+,{["min"]=20,["max"]=49,["name"]="中度损坏",["productPercent"]=-50,["id"]=3,["powrPercent"]=-50,["icon"]="damage3",["key"]="3"}
+,{["min"]=0,["max"]=19,["name"]="重度损坏",["productPercent"]=-100,["id"]=4,["powrPercent"]=-100,["icon"]="damage4",["key"]="4"}
 }
---cfgCfgBHp = conf
-return conf
+

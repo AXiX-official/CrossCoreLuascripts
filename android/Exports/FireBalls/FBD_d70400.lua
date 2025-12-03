@@ -8,13 +8,13 @@ time=9000,type=0
 time=9000,type=0
 },
 [1310282141]={
-{effect="cast2_eff",time=11000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Lycoris_Radiata_attack_skill_02"},
+{effect="cast2_eff",time=7300,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="Lycoris_Radiata_attack_skill_02"},
 {delay=9300,time=11000,type=3,hit_creates={-520473558,2045994384},hits={0}},
 {delay=9300,time=11000,type=3,hit_creates={-380864511},hits={0}},
 {time=11000,type=0,cue_sheet="cv/Lycoris_Radiata.acb",cue_name="Lycoris_Radiata_11",cue_feature=1},
 {delay=2000,time=11000,type=0,cue_sheet="cv/Lycoris_Radiata.acb",cue_name="Lycoris_Radiata_12",cue_feature=1},
 {delay=9300,time=11000,type=3,hits={0}},
-{effect="cast2_eff1",delay=7800,time=9000,type=0,pos_ref={ref_type=13}}
+{effect="cast2_eff1",delay=7800,time=2500,type=0,pos_ref={ref_type=13}}
 },
 [-380864511]={
 effect="cast1_buff1",time=9000,type=0,pos_ref={ref_type=15}

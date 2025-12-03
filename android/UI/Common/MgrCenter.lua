@@ -30,6 +30,7 @@ local mgrNames = {
 	"WorldBossMgr",
 	"ChatMgr",
 	"TeamMgr",		--编队
+	"HeadFaceMgr",
 	"BagMgr",		--背包
 	"ShopMgr",		--商城
 	"EquipMgr",		--装备
@@ -50,7 +51,7 @@ local mgrNames = {
 	"SDKPayMgr",--SDK支付
 	"HeadFrameMgr",
 	"HeadIconMgr",
-	"HeadFaceMgr",
+	
 	"AchievementMgr", --成就
 	"TowerMgr", --新爬塔
 	"BadgeMgr", --徽章
@@ -82,7 +83,8 @@ local mgrNames = {
 	"RiddleMgr",
 	"PopupPackMgr",
 	"HalloweenMgr", --万圣节小游戏
-	"DungeonTeamReplaceMgr", --推荐阵容
+    "DungeonTeamReplaceMgr", --推荐阵容
+	"MerryChristmasMgr", --圣诞活动
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"
 }

@@ -1,136 +1,1040 @@
-local conf = {
-	["filename"] = 'd-道具池表.xlsx',
-	["sheetname"] = '道具组奖励表',
-	["types"] = {
-'int','string','table#18','int','int[]','int','int','int[]','int','int','int','bool','bool','int','int','int','int','int','int','int','int'
-},
-	["names"] = {
-'id','name','pool','index','rounds','rewardLevel','quality','reward','Languageid','rewardnum','weight','isInfinite','iskeyreward','controlType','controlGroup','controlLimit','controlMax','isShow','countMax','preMax','preReward'
-},
-	["data"] = {
-{'1',	'回归道具池',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'1',	'1',	'',	'',	'10033,5',	'',	'2',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'2',	'1',	'',	'',	'15003,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'3',	'1',	'',	'',	'10034,5',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'4',	'1',	'',	'',	'10040,5',	'',	'8',	'160',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'5',	'1',	'',	'',	'14209,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'6',	'1',	'',	'',	'2000401,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'7',	'1',	'',	'',	'15002,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'8',	'1',	'',	'',	'14208,1',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'9',	'1',	'',	'',	'2000301,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'10',	'1',	'',	'',	'15001,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'11',	'1',	'',	'',	'2000201,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'12',	'1',	'',	'',	'2000101,1',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'13',	'1',	'',	'',	'10001,8000',	'',	'1',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'14',	'1',	'',	'',	'10001,3000',	'',	'9',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'15',	'1',	'',	'',	'10001,2000',	'',	'12',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'16',	'1',	'',	'',	'10003,8000',	'',	'1',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'17',	'1',	'',	'',	'10003,3000',	'',	'9',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'18',	'1',	'',	'',	'10003,2000',	'',	'12',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'19',	'2',	'',	'',	'10033,5',	'',	'3',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'20',	'2',	'',	'',	'15003,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'21',	'2',	'',	'',	'10034,6',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'22',	'2',	'',	'',	'10040,10',	'',	'8',	'150',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'23',	'2',	'',	'',	'14209,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'24',	'2',	'',	'',	'2000401,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'25',	'2',	'',	'',	'15002,1',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'26',	'2',	'',	'',	'14208,1',	'',	'3',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'27',	'2',	'',	'',	'2000301,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'28',	'2',	'',	'',	'15001,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'29',	'2',	'',	'',	'2000201,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'30',	'2',	'',	'',	'2000101,1',	'',	'3',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'31',	'2',	'',	'',	'10001,8000',	'',	'1',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'32',	'2',	'',	'',	'10001,3000',	'',	'10',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'33',	'2',	'',	'',	'10001,2000',	'',	'13',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'34',	'2',	'',	'',	'10003,8000',	'',	'1',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'35',	'2',	'',	'',	'10003,3000',	'',	'10',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'36',	'2',	'',	'',	'10003,2000',	'',	'13',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'37',	'3',	'',	'',	'10033,5',	'',	'4',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'38',	'3',	'',	'',	'15003,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'39',	'3',	'',	'',	'10034,7',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'40',	'3',	'',	'',	'10040,12',	'',	'10',	'150',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'41',	'3',	'',	'',	'14209,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'42',	'3',	'',	'',	'2000401,1',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'43',	'3',	'',	'',	'15002,1',	'',	'3',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'44',	'3',	'',	'',	'14208,2',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'45',	'3',	'',	'',	'2000301,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'46',	'3',	'',	'',	'15001,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'47',	'3',	'',	'',	'2000201,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'48',	'3',	'',	'',	'2000101,2',	'',	'3',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'49',	'3',	'',	'',	'10001,8000',	'',	'2',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'50',	'3',	'',	'',	'10001,3000',	'',	'11',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'51',	'3',	'',	'',	'10001,2000',	'',	'15',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'52',	'3',	'',	'',	'10003,8000',	'',	'2',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'53',	'3',	'',	'',	'10003,3000',	'',	'11',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'54',	'3',	'',	'',	'10003,2000',	'',	'15',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'55',	'4',	'',	'',	'10033,5',	'',	'5',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'56',	'4',	'',	'',	'15003,1',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'57',	'4',	'',	'',	'10034,12',	'',	'1',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'58',	'4',	'',	'',	'10040,20',	'',	'8',	'150',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'59',	'4',	'',	'',	'14209,1',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'60',	'4',	'',	'',	'2000401,1',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'61',	'4',	'',	'',	'15002,1',	'',	'4',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'62',	'4',	'',	'',	'14208,1',	'',	'5',	'70',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'63',	'4',	'',	'',	'2000301,1',	'',	'2',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'64',	'4',	'',	'',	'15001,1',	'',	'1',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'65',	'4',	'',	'',	'2000201,1',	'',	'2',	'50',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'66',	'4',	'',	'',	'2000101,3',	'',	'3',	'60',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'67',	'4',	'',	'',	'10001,8000',	'',	'4',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'68',	'4',	'',	'',	'10001,3000',	'',	'12',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'69',	'4',	'',	'',	'10001,2000',	'',	'50',	'20',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'70',	'4',	'',	'',	'10003,8000',	'',	'4',	'40',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'71',	'4',	'',	'',	'10003,3000',	'',	'12',	'30',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'',	'',	'72',	'4',	'',	'',	'10003,2000',	'',	'50',	'20',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'幸运扭蛋',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'',	'',	'1',	'1',	'',	'',	'61033,1',	'',	'1',	'1000',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'',	'',	'2',	'1',	'',	'',	'61034,1',	'',	'1',	'1000',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'',	'',	'3',	'1',	'',	'',	'61035,1',	'',	'1',	'1000',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'',	'',	'4',	'1',	'',	'',	'61042,1',	'',	'1',	'1000',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'',	'',	'5',	'1',	'',	'',	'61037,1',	'',	'1',	'1000',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'',	'',	'6',	'1',	'',	'',	'61038,1',	'',	'1',	'1000',	'',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'新扭蛋',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'1',	'1',	'0',	'',	'10410,1',	'67013',	'1',	'25',	'',	'1',	'1',	'',	'6',	'0',	'1',	'25',	'',	''},
-{'3',	'',	'',	'2',	'1',	'1',	'',	'64001,1',	'67014',	'1',	'200',	'',	'',	'2',	'1',	'6',	'2',	'1',	'',	'',	''},
-{'3',	'',	'',	'3',	'1',	'2',	'',	'64004,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'1',	'',	'',	''},
-{'3',	'',	'',	'4',	'1',	'2',	'',	'64002,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'',	'',	'',	''},
-{'3',	'',	'',	'5',	'1',	'2',	'',	'64003,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'',	'',	'',	''},
-{'3',	'',	'',	'6',	'1',	'2',	'',	'64005,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'',	'',	'',	''},
-{'3',	'',	'',	'7',	'1',	'3',	'',	'31041,1',	'67016',	'1',	'450',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'8',	'1',	'3',	'',	'31042,1',	'67016',	'1',	'450',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'9',	'1',	'3',	'',	'31043,1',	'67016',	'1',	'450',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'10',	'1',	'4',	'',	'31061,1',	'67017',	'1',	'550',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'11',	'1',	'4',	'',	'31062,1',	'67017',	'1',	'550',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'12',	'1',	'4',	'',	'31063,1',	'67017',	'1',	'550',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'13',	'1',	'5',	'',	'24191,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'14',	'1',	'5',	'',	'24192,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'15',	'1',	'5',	'',	'24193,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'16',	'1',	'5',	'',	'24187,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'17',	'1',	'5',	'',	'24188,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'18',	'1',	'6',	'',	'14209,1',	'67019',	'1',	'700',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'19',	'1',	'6',	'',	'14209,1',	'67019',	'1',	'700',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'',	'',	'20',	'1',	'7',	'',	'10037,1',	'67020',	'1',	'925',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'奇趣扭蛋',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'1',	'1',	'0',	'6',	'10410,1',	'67026',	'1',	'25',	'',	'1',	'1',	'',	'6',	'0',	'1',	'25',	'',	''},
-{'4',	'',	'',	'2',	'1',	'1',	'5',	'64010,1',	'67014',	'1',	'200',	'',	'',	'2',	'1',	'6',	'2',	'1',	'',	'10',	'1'},
-{'4',	'',	'',	'3',	'1',	'2',	'4',	'64006,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'',	'',	'10',	''},
-{'4',	'',	'',	'4',	'1',	'2',	'4',	'64007,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'',	'',	'10',	''},
-{'4',	'',	'',	'5',	'1',	'2',	'4',	'64008,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'1',	'',	'10',	''},
-{'4',	'',	'',	'6',	'1',	'2',	'4',	'64009,1',	'67015',	'1',	'300',	'',	'',	'2',	'1',	'6',	'2',	'',	'',	'10',	''},
-{'4',	'',	'',	'7',	'1',	'3',	'3',	'31051,1',	'67016',	'1',	'450',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'8',	'1',	'3',	'3',	'31052,1',	'67016',	'1',	'450',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'9',	'1',	'3',	'3',	'31053,1',	'67016',	'1',	'450',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'10',	'1',	'4',	'2',	'31071,1',	'67017',	'1',	'550',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'11',	'1',	'4',	'2',	'31072,1',	'67017',	'1',	'550',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'12',	'1',	'4',	'2',	'31073,1',	'67017',	'1',	'550',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'13',	'1',	'5',	'2',	'24178,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'14',	'1',	'5',	'2',	'24185,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'15',	'1',	'5',	'2',	'24177,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'16',	'1',	'5',	'2',	'24186,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'17',	'1',	'5',	'2',	'24181,1',	'67018',	'1',	'650',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'18',	'1',	'6',	'1',	'14209,1',	'67019',	'1',	'700',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'19',	'1',	'6',	'1',	'14209,1',	'67019',	'1',	'700',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'20',	'1',	'7',	'1',	'10037,1',	'67019',	'1',	'925',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-},
+_G["CfgItemPoolReward"]={{["pool"]={{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=1,["weight"]=70,["reward"]={10033,5}
 }
---cfgCfgItemPoolReward = conf
-return conf
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=2,["weight"]=60,["reward"]={15003,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=3,["weight"]=50,["reward"]={10034,5}
+}
+,{["rewardnum"]=8,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=4,["weight"]=160,["reward"]={10040,5}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=5,["weight"]=60,["reward"]={14209,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=6,["weight"]=60,["reward"]={2000401,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=7,["weight"]=60,["reward"]={15002,1}
+}
+,{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=8,["weight"]=60,["reward"]={14208,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=9,["weight"]=60,["reward"]={2000301,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=10,["weight"]=50,["reward"]={15001,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=11,["weight"]=50,["reward"]={2000201,1}
+}
+,{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=12,["weight"]=60,["reward"]={2000101,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=13,["weight"]=40,["reward"]={10001,8000}
+}
+,{["rewardnum"]=9,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=14,["weight"]=30,["reward"]={10001,3000}
+}
+,{["rewardnum"]=12,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=15,["weight"]=30,["reward"]={10001,2000}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=16,["weight"]=40,["reward"]={10003,8000}
+}
+,{["rewardnum"]=9,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=17,["weight"]=30,["reward"]={10003,3000}
+}
+,{["rewardnum"]=12,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=18,["weight"]=30,["reward"]={10003,2000}
+}
+,{["rewardnum"]=3,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=19,["weight"]=70,["reward"]={10033,5}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=20,["weight"]=60,["reward"]={15003,1}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=21,["weight"]=50,["reward"]={10034,6}
+}
+,{["rewardnum"]=8,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=22,["weight"]=150,["reward"]={10040,10}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=23,["weight"]=60,["reward"]={14209,1}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=24,["weight"]=60,["reward"]={2000401,1}
+}
+,{["rewardnum"]=2,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=25,["weight"]=60,["reward"]={15002,1}
+}
+,{["rewardnum"]=3,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=26,["weight"]=70,["reward"]={14208,1}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=27,["weight"]=50,["reward"]={2000301,1}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=28,["weight"]=50,["reward"]={15001,1}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=29,["weight"]=50,["reward"]={2000201,1}
+}
+,{["rewardnum"]=3,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=30,["weight"]=70,["reward"]={2000101,1}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=31,["weight"]=40,["reward"]={10001,8000}
+}
+,{["rewardnum"]=10,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=32,["weight"]=30,["reward"]={10001,3000}
+}
+,{["rewardnum"]=13,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=33,["weight"]=30,["reward"]={10001,2000}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=34,["weight"]=40,["reward"]={10003,8000}
+}
+,{["rewardnum"]=10,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=35,["weight"]=30,["reward"]={10003,3000}
+}
+,{["rewardnum"]=13,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=36,["weight"]=30,["reward"]={10003,2000}
+}
+,{["rewardnum"]=4,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=37,["weight"]=70,["reward"]={10033,5}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=38,["weight"]=60,["reward"]={15003,1}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=39,["weight"]=50,["reward"]={10034,7}
+}
+,{["rewardnum"]=10,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=40,["weight"]=150,["reward"]={10040,12}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=41,["weight"]=60,["reward"]={14209,1}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=42,["weight"]=60,["reward"]={2000401,1}
+}
+,{["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=43,["weight"]=70,["reward"]={15002,1}
+}
+,{["rewardnum"]=2,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=44,["weight"]=60,["reward"]={14208,2}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=45,["weight"]=50,["reward"]={2000301,1}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=46,["weight"]=50,["reward"]={15001,1}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=47,["weight"]=50,["reward"]={2000201,1}
+}
+,{["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=48,["weight"]=70,["reward"]={2000101,2}
+}
+,{["rewardnum"]=2,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=49,["weight"]=40,["reward"]={10001,8000}
+}
+,{["rewardnum"]=11,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=50,["weight"]=30,["reward"]={10001,3000}
+}
+,{["rewardnum"]=15,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=51,["weight"]=30,["reward"]={10001,2000}
+}
+,{["rewardnum"]=2,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=52,["weight"]=40,["reward"]={10003,8000}
+}
+,{["rewardnum"]=11,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=53,["weight"]=30,["reward"]={10003,3000}
+}
+,{["rewardnum"]=15,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=54,["weight"]=30,["reward"]={10003,2000}
+}
+,{["rewardnum"]=5,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=55,["weight"]=70,["reward"]={10033,5}
+}
+,{["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=56,["weight"]=60,["reward"]={15003,1}
+}
+,{["rewardnum"]=1,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=57,["weight"]=60,["reward"]={10034,12}
+}
+,{["rewardnum"]=8,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=58,["weight"]=150,["reward"]={10040,20}
+}
+,{["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=59,["weight"]=60,["reward"]={14209,1}
+}
+,{["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=60,["weight"]=60,["reward"]={2000401,1}
+}
+,{["rewardnum"]=4,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=61,["weight"]=70,["reward"]={15002,1}
+}
+,{["rewardnum"]=5,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=62,["weight"]=70,["reward"]={14208,1}
+}
+,{["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=63,["weight"]=60,["reward"]={2000301,1}
+}
+,{["rewardnum"]=1,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=64,["weight"]=50,["reward"]={15001,1}
+}
+,{["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=65,["weight"]=50,["reward"]={2000201,1}
+}
+,{["rewardnum"]=3,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=66,["weight"]=60,["reward"]={2000101,3}
+}
+,{["rewardnum"]=4,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=67,["weight"]=40,["reward"]={10001,8000}
+}
+,{["rewardnum"]=12,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=68,["weight"]=30,["reward"]={10001,3000}
+}
+,{["rewardnum"]=50,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=69,["weight"]=20,["reward"]={10001,2000}
+}
+,{["rewardnum"]=4,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=70,["weight"]=40,["reward"]={10003,8000}
+}
+,{["rewardnum"]=12,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=71,["weight"]=30,["reward"]={10003,3000}
+}
+,{["rewardnum"]=50,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=72,["weight"]=20,["reward"]={10003,2000}
+}
+}
+,["roundPool"]={{{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=1,["weight"]=70,["reward"]={10033,5}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=2,["weight"]=60,["reward"]={15003,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=3,["weight"]=50,["reward"]={10034,5}
+}
+,{["rewardnum"]=8,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=4,["weight"]=160,["reward"]={10040,5}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=5,["weight"]=60,["reward"]={14209,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=6,["weight"]=60,["reward"]={2000401,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=7,["weight"]=60,["reward"]={15002,1}
+}
+,{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=8,["weight"]=60,["reward"]={14208,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=9,["weight"]=60,["reward"]={2000301,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=10,["weight"]=50,["reward"]={15001,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=11,["weight"]=50,["reward"]={2000201,1}
+}
+,{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=12,["weight"]=60,["reward"]={2000101,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=13,["weight"]=40,["reward"]={10001,8000}
+}
+,{["rewardnum"]=9,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=14,["weight"]=30,["reward"]={10001,3000}
+}
+,{["rewardnum"]=12,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=15,["weight"]=30,["reward"]={10001,2000}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=16,["weight"]=40,["reward"]={10003,8000}
+}
+,{["rewardnum"]=9,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=17,["weight"]=30,["reward"]={10003,3000}
+}
+,{["rewardnum"]=12,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=18,["weight"]=30,["reward"]={10003,2000}
+}
+}
+,{[30]={["rewardnum"]=3,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=30,["weight"]=70,["reward"]={2000101,1}
+}
+,[31]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=31,["weight"]=40,["reward"]={10001,8000}
+}
+,[32]={["rewardnum"]=10,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=32,["weight"]=30,["reward"]={10001,3000}
+}
+,[33]={["rewardnum"]=13,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=33,["weight"]=30,["reward"]={10001,2000}
+}
+,[34]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=34,["weight"]=40,["reward"]={10003,8000}
+}
+,[35]={["rewardnum"]=10,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=35,["weight"]=30,["reward"]={10003,3000}
+}
+,[36]={["rewardnum"]=13,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=36,["weight"]=30,["reward"]={10003,2000}
+}
+,[19]={["rewardnum"]=3,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=19,["weight"]=70,["reward"]={10033,5}
+}
+,[20]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=20,["weight"]=60,["reward"]={15003,1}
+}
+,[21]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=21,["weight"]=50,["reward"]={10034,6}
+}
+,[22]={["rewardnum"]=8,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=22,["weight"]=150,["reward"]={10040,10}
+}
+,[23]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=23,["weight"]=60,["reward"]={14209,1}
+}
+,[24]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=24,["weight"]=60,["reward"]={2000401,1}
+}
+,[25]={["rewardnum"]=2,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=25,["weight"]=60,["reward"]={15002,1}
+}
+,[26]={["rewardnum"]=3,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=26,["weight"]=70,["reward"]={14208,1}
+}
+,[27]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=27,["weight"]=50,["reward"]={2000301,1}
+}
+,[28]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=28,["weight"]=50,["reward"]={15001,1}
+}
+,[29]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=29,["weight"]=50,["reward"]={2000201,1}
+}
+}
+,{[37]={["rewardnum"]=4,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=37,["weight"]=70,["reward"]={10033,5}
+}
+,[38]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=38,["weight"]=60,["reward"]={15003,1}
+}
+,[39]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=39,["weight"]=50,["reward"]={10034,7}
+}
+,[40]={["rewardnum"]=10,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=40,["weight"]=150,["reward"]={10040,12}
+}
+,[41]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=41,["weight"]=60,["reward"]={14209,1}
+}
+,[42]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=42,["weight"]=60,["reward"]={2000401,1}
+}
+,[43]={["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=43,["weight"]=70,["reward"]={15002,1}
+}
+,[44]={["rewardnum"]=2,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=44,["weight"]=60,["reward"]={14208,2}
+}
+,[45]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=45,["weight"]=50,["reward"]={2000301,1}
+}
+,[46]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=46,["weight"]=50,["reward"]={15001,1}
+}
+,[47]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=47,["weight"]=50,["reward"]={2000201,1}
+}
+,[48]={["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=48,["weight"]=70,["reward"]={2000101,2}
+}
+,[49]={["rewardnum"]=2,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=49,["weight"]=40,["reward"]={10001,8000}
+}
+,[50]={["rewardnum"]=11,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=50,["weight"]=30,["reward"]={10001,3000}
+}
+,[51]={["rewardnum"]=15,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=51,["weight"]=30,["reward"]={10001,2000}
+}
+,[52]={["rewardnum"]=2,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=52,["weight"]=40,["reward"]={10003,8000}
+}
+,[53]={["rewardnum"]=11,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=53,["weight"]=30,["reward"]={10003,3000}
+}
+,[54]={["rewardnum"]=15,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=54,["weight"]=30,["reward"]={10003,2000}
+}
+}
+,{[58]={["rewardnum"]=8,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=58,["weight"]=150,["reward"]={10040,20}
+}
+,[59]={["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=59,["weight"]=60,["reward"]={14209,1}
+}
+,[60]={["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=60,["weight"]=60,["reward"]={2000401,1}
+}
+,[61]={["rewardnum"]=4,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=61,["weight"]=70,["reward"]={15002,1}
+}
+,[62]={["rewardnum"]=5,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=62,["weight"]=70,["reward"]={14208,1}
+}
+,[63]={["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=63,["weight"]=60,["reward"]={2000301,1}
+}
+,[64]={["rewardnum"]=1,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=64,["weight"]=50,["reward"]={15001,1}
+}
+,[66]={["rewardnum"]=3,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=66,["weight"]=60,["reward"]={2000101,3}
+}
+,[68]={["rewardnum"]=12,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=68,["weight"]=30,["reward"]={10001,3000}
+}
+,[70]={["rewardnum"]=4,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=70,["weight"]=40,["reward"]={10003,8000}
+}
+,[72]={["rewardnum"]=50,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=72,["weight"]=20,["reward"]={10003,2000}
+}
+,[65]={["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=65,["weight"]=50,["reward"]={2000201,1}
+}
+,[67]={["rewardnum"]=4,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=67,["weight"]=40,["reward"]={10001,8000}
+}
+,[69]={["rewardnum"]=50,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=69,["weight"]=20,["reward"]={10001,2000}
+}
+,[71]={["rewardnum"]=12,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=71,["weight"]=30,["reward"]={10003,3000}
+}
+,[55]={["rewardnum"]=5,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=55,["weight"]=70,["reward"]={10033,5}
+}
+,[56]={["rewardnum"]=2,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=56,["weight"]=60,["reward"]={15003,1}
+}
+,[57]={["rewardnum"]=1,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=false,["index"]=57,["weight"]=60,["reward"]={10034,12}
+}
+}
+}
+,["id"]=1,["key"]=1,["name"]="回归道具池"}
+,{["pool"]={{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=1,["weight"]=1000,["reward"]={61033,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=2,["weight"]=1000,["reward"]={61034,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=3,["weight"]=1000,["reward"]={61035,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=4,["weight"]=1000,["reward"]={61042,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=5,["weight"]=1000,["reward"]={61037,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=6,["weight"]=1000,["reward"]={61038,1}
+}
+}
+,["roundPool"]={{{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=1,["weight"]=1000,["reward"]={61033,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=2,["weight"]=1000,["reward"]={61034,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=3,["weight"]=1000,["reward"]={61035,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=4,["weight"]=1000,["reward"]={61042,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=5,["weight"]=1000,["reward"]={61037,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=6,["weight"]=1000,["reward"]={61038,1}
+}
+}
+}
+,["id"]=2,["key"]=2,["name"]="幸运扭蛋"}
+,{["pool"]={{["Languageid"]=67013,["index"]=1,["reward"]={10410,1}
+,["controlType"]=1,["isShow"]=1,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["controlMax"]=0,["weight"]=25,["countMax"]=25,["rewardLevel"]=0}
+,{["Languageid"]=67014,["index"]=2,["reward"]={64001,1}
+,["controlType"]=2,["isShow"]=1,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=200,["rewardLevel"]=1}
+,{["Languageid"]=67015,["index"]=3,["reward"]={64004,1}
+,["controlType"]=2,["isShow"]=1,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=4,["controlType"]=2,["reward"]={64002,1}
+,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=5,["controlType"]=2,["reward"]={64003,1}
+,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=6,["controlType"]=2,["reward"]={64005,1}
+,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67016,["index"]=7,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31041,1}
+,["weight"]=450,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=8,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31042,1}
+,["weight"]=450,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=9,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31043,1}
+,["weight"]=450,["rewardLevel"]=3}
+,{["Languageid"]=67017,["index"]=10,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31061,1}
+,["weight"]=550,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=11,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31062,1}
+,["weight"]=550,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=12,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31063,1}
+,["weight"]=550,["rewardLevel"]=4}
+,{["Languageid"]=67018,["index"]=13,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24191,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=14,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24192,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=15,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24193,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=16,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24187,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=17,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24188,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67019,["index"]=18,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={14209,1}
+,["weight"]=700,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=19,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={14209,1}
+,["weight"]=700,["rewardLevel"]=6}
+,{["Languageid"]=67020,["index"]=20,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=true,["iskeyreward"]=false,["reward"]={10037,1}
+,["weight"]=925,["rewardLevel"]=7}
+}
+,["roundPool"]={{{["Languageid"]=67013,["index"]=1,["reward"]={10410,1}
+,["controlType"]=1,["isShow"]=1,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["controlMax"]=0,["weight"]=25,["countMax"]=25,["rewardLevel"]=0}
+,{["Languageid"]=67014,["index"]=2,["reward"]={64001,1}
+,["controlType"]=2,["isShow"]=1,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=200,["rewardLevel"]=1}
+,{["Languageid"]=67015,["index"]=3,["reward"]={64004,1}
+,["controlType"]=2,["isShow"]=1,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=4,["controlType"]=2,["reward"]={64002,1}
+,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=5,["controlType"]=2,["reward"]={64003,1}
+,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=6,["controlType"]=2,["reward"]={64005,1}
+,["controlLimit"]=6,["controlGroup"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlMax"]=2,["rewardnum"]=1,["weight"]=300,["rewardLevel"]=2}
+,{["Languageid"]=67016,["index"]=7,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31041,1}
+,["weight"]=450,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=8,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31042,1}
+,["weight"]=450,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=9,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31043,1}
+,["weight"]=450,["rewardLevel"]=3}
+,{["Languageid"]=67017,["index"]=10,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31061,1}
+,["weight"]=550,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=11,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31062,1}
+,["weight"]=550,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=12,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={31063,1}
+,["weight"]=550,["rewardLevel"]=4}
+,{["Languageid"]=67018,["index"]=13,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24191,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=14,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24192,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=15,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24193,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=16,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24187,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=17,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={24188,1}
+,["weight"]=650,["rewardLevel"]=5}
+,{["Languageid"]=67019,["index"]=18,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={14209,1}
+,["weight"]=700,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=19,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["reward"]={14209,1}
+,["weight"]=700,["rewardLevel"]=6}
+,{["Languageid"]=67020,["index"]=20,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=true,["iskeyreward"]=false,["reward"]={10037,1}
+,["weight"]=925,["rewardLevel"]=7}
+}
+}
+,["id"]=3,["key"]=3,["name"]="新扭蛋"}
+,{["pool"]={{["Languageid"]=67026,["index"]=1,["quality"]=6,["isShow"]=1,["controlType"]=1,["controlMax"]=0,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["weight"]=25,["reward"]={10410,1}
+,["countMax"]=25,["rewardLevel"]=0}
+,{["Languageid"]=67014,["index"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=200,["quality"]=5,["preReward"]=1,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64010,1}
+,["rewardLevel"]=1}
+,{["Languageid"]=67015,["index"]=3,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64006,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=4,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64007,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=5,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=300,["quality"]=4,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64008,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=6,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64009,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67016,["index"]=7,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31051,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=8,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31052,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=9,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31053,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67017,["index"]=10,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31071,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=11,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31072,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=12,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31073,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67018,["index"]=13,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24178,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=14,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24185,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=15,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24177,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=16,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24186,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=17,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24181,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67019,["index"]=18,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=19,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=20,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=true,["iskeyreward"]=false,["quality"]=1,["weight"]=925,["reward"]={10037,1}
+,["rewardLevel"]=7}
+}
+,["roundPool"]={{{["Languageid"]=67026,["index"]=1,["quality"]=6,["isShow"]=1,["controlType"]=1,["controlMax"]=0,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["weight"]=25,["reward"]={10410,1}
+,["countMax"]=25,["rewardLevel"]=0}
+,{["Languageid"]=67014,["index"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=200,["quality"]=5,["preReward"]=1,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64010,1}
+,["rewardLevel"]=1}
+,{["Languageid"]=67015,["index"]=3,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64006,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=4,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64007,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=5,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=300,["quality"]=4,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64008,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=6,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64009,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67016,["index"]=7,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31051,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=8,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31052,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=9,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31053,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67017,["index"]=10,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31071,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=11,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31072,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=12,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31073,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67018,["index"]=13,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24178,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=14,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24185,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=15,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24177,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=16,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24186,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=17,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24181,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67019,["index"]=18,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=19,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=20,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=true,["iskeyreward"]=false,["quality"]=1,["weight"]=925,["reward"]={10037,1}
+,["rewardLevel"]=7}
+}
+}
+,["id"]=4,["key"]=4,["name"]="奇趣扭蛋"}
+,{["pool"]={{["Languageid"]=67026,["index"]=1,["quality"]=6,["isShow"]=1,["controlType"]=1,["controlMax"]=0,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["weight"]=25,["reward"]={10410,1}
+,["countMax"]=25,["rewardLevel"]=0}
+,{["Languageid"]=67014,["index"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=200,["quality"]=5,["preReward"]=1,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64015,1}
+,["rewardLevel"]=1}
+,{["Languageid"]=67015,["index"]=3,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=300,["quality"]=4,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64011,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=4,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64012,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=5,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64013,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=6,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64014,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67016,["index"]=7,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31081,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=8,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31082,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=9,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31083,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67017,["index"]=10,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31091,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=11,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31092,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=12,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31093,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67018,["index"]=13,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24231,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=14,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24232,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=15,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24234,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=16,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24235,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=17,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24239,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67019,["index"]=18,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=19,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=20,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=true,["iskeyreward"]=false,["quality"]=1,["weight"]=925,["reward"]={10037,1}
+,["rewardLevel"]=7}
+}
+,["roundPool"]={{{["Languageid"]=67026,["index"]=1,["quality"]=6,["isShow"]=1,["controlType"]=1,["controlMax"]=0,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["weight"]=25,["reward"]={10410,1}
+,["countMax"]=25,["rewardLevel"]=0}
+,{["Languageid"]=67014,["index"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=200,["quality"]=5,["preReward"]=1,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64015,1}
+,["rewardLevel"]=1}
+,{["Languageid"]=67015,["index"]=3,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isShow"]=1,["weight"]=300,["quality"]=4,["controlType"]=2,["controlGroup"]=1,["isInfinite"]=false,["preMax"]=10,["controlMax"]=2,["iskeyreward"]=false,["reward"]={64011,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=4,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64012,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=5,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64013,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67015,["index"]=6,["preMax"]=10,["quality"]=4,["controlType"]=2,["controlMax"]=2,["controlLimit"]=6,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["controlGroup"]=1,["weight"]=300,["reward"]={64014,1}
+,["rewardLevel"]=2}
+,{["Languageid"]=67016,["index"]=7,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31081,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=8,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31082,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67016,["index"]=9,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=3,["weight"]=450,["reward"]={31083,1}
+,["rewardLevel"]=3}
+,{["Languageid"]=67017,["index"]=10,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31091,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=11,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31092,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67017,["index"]=12,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=550,["reward"]={31093,1}
+,["rewardLevel"]=4}
+,{["Languageid"]=67018,["index"]=13,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24231,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=14,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24232,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=15,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24234,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=16,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24235,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67018,["index"]=17,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=2,["weight"]=650,["reward"]={24239,1}
+,["rewardLevel"]=5}
+,{["Languageid"]=67019,["index"]=18,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=19,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=false,["quality"]=1,["weight"]=700,["reward"]={14209,1}
+,["rewardLevel"]=6}
+,{["Languageid"]=67019,["index"]=20,["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=true,["iskeyreward"]=false,["quality"]=1,["weight"]=925,["reward"]={10037,1}
+,["rewardLevel"]=7}
+}
+}
+,["id"]=5,["key"]=5,["name"]="幸运扭蛋"}
+,{["pool"]={{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=1,["weight"]=10,["reward"]={11002,5}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=2,["weight"]=50,["reward"]={11002,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=3,["weight"]=10,["reward"]={15003,3}
+}
+,{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=4,["weight"]=20,["reward"]={15002,5}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=5,["weight"]=50,["reward"]={15001,10}
+}
+,{["rewardnum"]=3,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=6,["weight"]=30,["reward"]={58004,1}
+}
+,{["rewardnum"]=6,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=7,["weight"]=60,["reward"]={58003,1}
+}
+,{["rewardnum"]=6,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=8,["weight"]=60,["reward"]={58002,1}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=9,["weight"]=50,["reward"]={10001,15000}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=10,["weight"]=50,["reward"]={10003,15000}
+}
+,{["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=11,["weight"]=10,["reward"]={11002,5}
+}
+,{["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=12,["weight"]=50,["reward"]={11002,1}
+}
+,{["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=13,["weight"]=50,["reward"]={57116,1}
+}
+,{["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=14,["weight"]=50,["reward"]={2000401,1}
+}
+,{["rewardnum"]=10,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=15,["weight"]=100,["reward"]={2000301,1}
+}
+,{["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=16,["weight"]=50,["reward"]={10011,50}
+}
+,{["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=17,["weight"]=50,["reward"]={10001,15000}
+}
+,{["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=18,["weight"]=50,["reward"]={10003,15000}
+}
+,{["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=19,["weight"]=10,["reward"]={580302,1}
+}
+,{["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=20,["weight"]=50,["reward"]={11002,1}
+}
+,{["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=21,["weight"]=30,["reward"]={14209,1}
+}
+,{["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=22,["weight"]=30,["reward"]={14208,3}
+}
+,{["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=23,["weight"]=30,["reward"]={14204,3}
+}
+,{["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=24,["weight"]=50,["reward"]={2000401,1}
+}
+,{["rewardnum"]=10,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=25,["weight"]=100,["reward"]={2000301,1}
+}
+,{["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=26,["weight"]=50,["reward"]={10011,50}
+}
+,{["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=27,["weight"]=50,["reward"]={10001,15000}
+}
+,{["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=28,["weight"]=50,["reward"]={10003,15000}
+}
+,{["rewardnum"]=9999,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=29,["weight"]=10,["reward"]={10001,15000}
+}
+,{["rewardnum"]=9999,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=30,["weight"]=10,["reward"]={10003,15000}
+}
+}
+,["roundPool"]={{{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=1,["weight"]=10,["reward"]={11002,5}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=2,["weight"]=50,["reward"]={11002,1}
+}
+,{["rewardnum"]=1,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=3,["weight"]=10,["reward"]={15003,3}
+}
+,{["rewardnum"]=2,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=4,["weight"]=20,["reward"]={15002,5}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=5,["weight"]=50,["reward"]={15001,10}
+}
+,{["rewardnum"]=3,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=6,["weight"]=30,["reward"]={58004,1}
+}
+,{["rewardnum"]=6,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=7,["weight"]=60,["reward"]={58003,1}
+}
+,{["rewardnum"]=6,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=8,["weight"]=60,["reward"]={58002,1}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=9,["weight"]=50,["reward"]={10001,15000}
+}
+,{["rewardnum"]=5,["rounds"]={1}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=10,["weight"]=50,["reward"]={10003,15000}
+}
+}
+,{[11]={["rewardnum"]=1,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=11,["weight"]=10,["reward"]={11002,5}
+}
+,[13]={["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=13,["weight"]=50,["reward"]={57116,1}
+}
+,[15]={["rewardnum"]=10,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=15,["weight"]=100,["reward"]={2000301,1}
+}
+,[18]={["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=18,["weight"]=50,["reward"]={10003,15000}
+}
+,[12]={["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=12,["weight"]=50,["reward"]={11002,1}
+}
+,[14]={["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=14,["weight"]=50,["reward"]={2000401,1}
+}
+,[16]={["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=16,["weight"]=50,["reward"]={10011,50}
+}
+,[17]={["rewardnum"]=5,["rounds"]={2}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=17,["weight"]=50,["reward"]={10001,15000}
+}
+}
+,{[24]={["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=24,["weight"]=50,["reward"]={2000401,1}
+}
+,[25]={["rewardnum"]=10,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=25,["weight"]=100,["reward"]={2000301,1}
+}
+,[26]={["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=26,["weight"]=50,["reward"]={10011,50}
+}
+,[27]={["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=27,["weight"]=50,["reward"]={10001,15000}
+}
+,[28]={["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=28,["weight"]=50,["reward"]={10003,15000}
+}
+,[19]={["rewardnum"]=1,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=19,["weight"]=10,["reward"]={580302,1}
+}
+,[20]={["rewardnum"]=5,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=20,["weight"]=50,["reward"]={11002,1}
+}
+,[21]={["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=21,["weight"]=30,["reward"]={14209,1}
+}
+,[22]={["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=22,["weight"]=30,["reward"]={14208,3}
+}
+,[23]={["rewardnum"]=3,["rounds"]={3}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=23,["weight"]=30,["reward"]={14204,3}
+}
+}
+,{[29]={["rewardnum"]=9999,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=29,["weight"]=10,["reward"]={10001,15000}
+}
+,[30]={["rewardnum"]=9999,["rounds"]={4}
+,["isInfinite"]=false,["iskeyreward"]=true,["index"]=30,["weight"]=10,["reward"]={10003,15000}
+}
+}
+}
+,["id"]=6,["key"]=6,["name"]="回归道具池3"}
+}
+

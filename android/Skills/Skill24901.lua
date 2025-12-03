@@ -55,6 +55,13 @@ function Skill24901:OnActionOver2(caster, target, data)
 	else
 		return
 	end
+	-- 8476
+	local count76 = SkillApi:LiveCount(self, caster, target,3)
+	-- 8892
+	if SkillJudger:Greater(self, caster, target, true,count76,1) then
+	else
+		return
+	end
 	-- 24911
 	if self:Rand(1500) then
 		self:BeatBack(SkillEffect[24911], caster, self.card, data, nil,6)

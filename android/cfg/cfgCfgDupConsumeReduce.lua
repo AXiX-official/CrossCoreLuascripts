@@ -1,15 +1,3 @@
-local conf = {
-	["filename"] = 't-体力消耗减少表.xlsx',
-	["sheetname"] = '体力消耗减少',
-	["types"] = {
-'int','int','int','string','string'
-},
-	["names"] = {
-'id','consumeReduce','regressionType','startTime','endTime'
-},
-	["data"] = {
-{'1',	'20',	'1',	'',	''},
-},
+_G["CfgDupConsumeReduce"]={{["nEnd"]=0,["key"]=1,["id"]=1,["consumeReduce"]=20,["nStart"]=0,["regressionType"]=1}
 }
---cfgCfgDupConsumeReduce = conf
-return conf
+

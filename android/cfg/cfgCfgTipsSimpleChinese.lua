@@ -1,357 +1,366 @@
-local conf = {
-	["filename"] = 't-提示文本配置.xlsx',
-	["sheetname"] = '提示文本简体中文',
-	["types"] = {
-'int','string','int','int','string','string'
-},
-	["names"] = {
-'id','key','nShowType','nFunType','sStr','arg1'
-},
-	["data"] = {
-{'1',	'accExist',	'3',	'1',	'账号已经存在',	''},
-{'2',	'accNotExist',	'3',	'1',	'账号不存在',	''},
-{'3',	'accLenErr',	'3',	'1',	'账号长度错误',	''},
-{'4',	'notInWhite',	'3',	'1',	'服务器维护中',	''},
-{'5',	'notInWhiteRegister',	'3',	'1',	'服务器维护中',	''},
-{'6',	'pwdLenErr',	'3',	'1',	'密码长度错误',	''},
-{'7',	'sqlFail',	'3',	'1',	'数据入库失败，稍后再试',	''},
-{'8',	'sqlFailTyNumber',	'',	'',	'数据入库失败，账号请使用纯数字账号尝试',	''},
-{'9',	'pwdErr',	'3',	'1',	'密码错误',	''},
-{'10',	'relogin',	'8',	'1',	'重复登录',	''},
-{'11',	'svrBusy',	'3',	'1',	'服务器爆满',	''},
-{'12',	'loadDataErr',	'3',	'1',	'登录失败,数据加载出错',	''},
-{'13',	'waitLoadFinish',	'3',	'1',	'数据加载失败,请按流程登录',	''},
-{'14',	'tryAgain',	'3',	'1',	'您的账户已在线, 登录将进行下线处理，请确认',	''},
-{'15',	'serverMaintain',	'8',	'1',	'网络不稳定，已断开连接，需要重新登陆',	''},
-{'16',	'justRegisterState',	'9',	'1',	'当前服务器仅提供注册功能',	''},
-{'17',	'gmKrickPlr',	'9',	'1',	'您已被管理员请离了游戏，如有疑问请联系工作人员，感谢理解。',	''},
-{'18',	'svrMaintaining',	'8',	'1',	'服务器正在维护中，请耐心等待，感谢支持。',	''},
-{'19',	'gmDelPlrAcc',	'8',	'1',	'您的账号已经被管理员限制，如有疑误请联系工作人员协助解决，感谢您的理解。',	''},
-{'20',	'GeneralTipsClose',	'8',	'1',	'{}',	''},
-{'21',	'notFindGameSvr',	'3',	'1',	'历史游戏服序号不在本登录服受理[history game id not in my login svr]!!!',	''},
-{'22',	'notSelectLoginSvr',	'3',	'1',	'非指定的登陆服[not select login svr]!!!',	''},
-{'23',	'',	'',	'',	'',	''},
-{'24',	'itemNotEnough',	'1',	'',	'物品数量不足',	''},
-{'25',	'itemNumNotEnough',	'1',	'',	'物品 {} 数量不足 {}',	''},
-{'26',	'itemNotFind',	'1',	'',	'找不到物品 {}',	''},
-{'27',	'itemBapOpenLimit',	'1',	'',	'仓库开启上限限制',	''},
-{'28',	'itemBagSpaceLimit',	'7',	'',	'物品<color=#FFC142>{1}</color>已到达数量上限，只能再添加{2}个',	'80001'},
-{'29',	'canNotUse',	'1',	'',	'{} 不能被使用',	''},
-{'30',	'TPNotEnough',	'1',	'',	'TP不足',	''},
-{'31',	'itemFull',	'1',	'',	'物品{}已达上限，添加失败的部分将会以邮件发送',	''},
-{'32',	'itemSignFull',	'3',	'',	'获得奖励中，部分物品已达上限，将通过邮件发送到您的邮箱，请查收。',	''},
-{'33',	'itemOutOfData',	'1',	'',	'该物品已经过期',	''},
-{'34',	'itemRepeat',	'1',	'',	'已自动为您转化重复获得的物品发送到邮箱，请前往查收。',	''},
-{'35',	'euipBagOpenLimit',	'1',	'',	'芯片仓开启上限限制',	''},
-{'36',	'equipBagSpaceLimit',	'7',	'',	'芯片仓已满，是否进行清理？',	'80002'},
-{'37',	'equipNotFind',	'1',	'',	'找不到芯片{}',	''},
-{'38',	'equipInLock',	'1',	'',	'芯片{}上锁被保护中，不能被使用',	''},
-{'39',	'equipNotSuitId',	'3',	'',	'芯片配置id:{}没有配置套装',	''},
-{'40',	'equipLogSlotUpLimit',	'1',	'',	'芯片配置记录栏位上限',	''},
-{'41',	'equipStorageSpaceAdd',	'1',	'',	'芯片仓上限+{}',	''},
-{'42',	'equipFullToMail',	'3',	'',	'芯片仓库已达上限，超过容量的芯片将通过邮件发送到邮箱中，请总队长注意查收。',	''},
-{'43',	'',	'',	'',	'',	''},
-{'44',	'cardBagOpenLimit',	'1',	'',	'核心仓开启上限限制',	''},
-{'45',	'cardBagSpaceLimit',	'7',	'',	'核心仓容量已满，是否进行处理？',	'60002'},
-{'46',	'cardBagMaxSpaceLimit',	'',	'',	'最大核心数量{1}限制, 剩下添加数量为{2}!',	''},
-{'47',	'cardStorageSpaceAdd',	'1',	'',	'角色核心仓容量上限+{}',	''},
-{'48',	'cardCoolOpenLimit',	'1',	'',	'角色核心冷却开启上限限制',	''},
-{'49',	'cardCoolSpaceLimit',	'1',	'',	'角色核心冷却空间不足',	''},
-{'50',	'cardSkillUpOpenLimit',	'1',	'',	'角色技能升级槽位开启上限限制',	''},
-{'51',	'cardSkillUpSpaceLimit',	'1',	'',	'角色技能升级槽位不足',	''},
-{'52',	'cardNotFind',	'1',	'',	'找不到卡牌{}',	''},
-{'53',	'cardHotFull',	'',	'',	'{}行动值已经满了',	''},
-{'54',	'cardInHotCool',	'1',	'',	'{}行动值恢复中，不能被使用',	''},
-{'55',	'cardInLock',	'1',	'',	'{}被保护中，不能被使用',	''},
-{'56',	'cardInSkillUpgrade',	'1',	'',	'{}技能升级中，不能被使用',	''},
-{'57',	'cardCoolSlotHadOpen',	'1',	'',	'该位置已经开启',	''},
-{'58',	'cardNotEnough',	'1',	'',	'{}不足',	''},
-{'59',	'sNotSkillCanBeUsed',	'1',	'',	'{}没有可用的技能',	''},
-{'60',	'cardBreakLvlLimit',	'1',	'',	'角色核心突破等级不足',	''},
-{'61',	'cardClassLimit',	'1',	'',	'角色编队限制',	''},
-{'62',	'cardPoolDailyUseLimit',	'1',	'',	'今日构建次数已限制，已抽取了{}次，上限{}次',	''},
-{'63',	'orignCardIsInFight',	'1',	'',	'原本的卡牌[{}]在战斗中',	''},
-{'64',	'notFindInitRole',	'1',	'',	'角色原型id:{}配置的角色id:{}在角色配置表中找不到',	''},
-{'65',	'cardNeedCool',	'1',	'',	'角色{}需要冷却',	''},
-{'66',	'cardRoleAddExp',	'1',	'',	'角色{}增加经验{},增加后为{}等级，拥有经验{}',	''},
-{'67',	'cardIsInFight',	'3',	'',	'角色【{}】在战斗中，无法进行操作',	''},
-{'68',	'canNotUseSelfAsMaterial',	'1',	'',	'不能使用角色本身当作材料',	''},
-{'69',	'subTalentIxErr',	'1',	'',	'收到的副天赋id:{1}异常',	''},
-{'70',	'firstCreateTryCntLimit',	'1',	'',	'首次构建次数已经用完',	''},
-{'71',	'plrLvLimitBreak',	'1',	'',	'需要玩家等级达{1}等级以上，才可以执行{2}级突破',	''},
-{'72',	'plrLvLimitCardPool',	'1',	'',	'玩家需要{}级才能使用该卡池',	''},
-{'73',	'plrDupLimitCardPool',	'1',	'',	'玩家需要通关副本{}，才能使用该卡池',	''},
-{'74',	'cardPoolCntLimt',	'1',	'',	'该卡池已经到达使用上限',	''},
-{'75',	'cardTestResult',	'1',	'',	'第{1}次测试,卡池{2}使用次数为{3},十连抽结果为{4}',	''},
-{'76',	'cardTestResultErr',	'3',	'',	'第{1}次测试,卡池{2}使用次数为{3},十连抽结果为{4}',	''},
-{'77',	'cardCoreLvMax',	'1',	'',	'以达到最高核心等级',	''},
-{'78',	'cardCoreItemUseLimit',	'1',	'',	'核心碎片{1}需要保留{2}个作为使用',	''},
-{'79',	'',	'',	'',	'',	''},
-{'80',	'inconformityBuy',	'1',	'',	'不符合购买条件',	''},
-{'81',	'exchangeCodeErr',	'1',	'',	'兑换码错误',	''},
-{'82',	'exchangeCodeIsUse',	'1',	'',	'兑换码已经使用',	''},
-{'83',	'exchangeCodeOutDate',	'1',	'',	'兑换码不在使用时限内',	''},
-{'84',	'exchangeSameType',	'1',	'',	'同类型兑换码，每个玩家只能用一个',	''},
-{'85',	'exchangeChannelLimit',	'1',	'',	'不符合该兑换码所限制的渠道类型',	''},
-{'86',	'shopCanNotManualFlush',	'1',	'',	'此商店不能手动刷新',	''},
-{'87',	'shopMemBuyDayLimit',	'1',	'',	'月卡还有{1}天效期，购买后持续时间超过{2}天，暂不可购买',	''},
-{'88',	'',	'',	'',	'',	''},
-{'89',	'fridendCntLimit',	'1',	'',	'已达到好友上限',	''},
-{'90',	'friendDelCool',	'1',	'',	'删除好友{}小时之后才可重新添加',	''},
-{'91',	'inviteOutDate',	'1',	'',	'邀请已经失效',	''},
-{'92',	'inviteFightInDupLimit',	'1',	'',	'您在副本中无法发起邀请',	''},
-{'93',	'inviteFightInDupLimitTarget',	'1',	'',	'{}在副本中无法邀请',	''},
-{'94',	'isYourFriend',	'1',	'',	'已经是您的好友',	''},
-{'95',	'arymyInviteCoolDown',	'1',	'',	'邀请冷却中',	''},
-{'96',	'friendDenyCool',	'1',	'',	'拒绝或者取消申请的目标玩家，需要{}小时后才能继续申请好友',	''},
-{'97',	'friendApplying',	'1',	'',	'好友申请已发送,请勿重复操作',	''},
-{'98',	'friendWaiting',	'1',	'',	'好友在你的申请列表中，不需申请',	''},
-{'99',	'notInBlack',	'1',	'',	'不在黑名单中',	''},
-{'100',	'friendFlushInCool',	'1',	'',	'刷新冷却中',	''},
-{'101',	'targetFriendCntLimit',	'1',	'',	'{}的好友已达上限',	''},
-{'102',	'notFindAssitFrient',	'1',	'',	'找不到支援玩家信息',	''},
-{'103',	'isInBlackList',	'1',	'',	'在自己的黑名单中',	''},
-{'104',	'isInBeBlackList',	'1',	'',	'在对方的黑名单中',	''},
-{'105',	'friendAgreeCntLimit',	'1',	'',	'一天内，只可以给好友点赞{}次',	''},
-{'106',	'',	'',	'',	'',	''},
-{'107',	'coreBuildingLvLimit',	'1',	'',	'指挥中心需达到{1}级',	''},
-{'108',	'buildInLimitArea',	'1',	'',	'该区域未开放',	''},
-{'109',	'buildSumLimit',	'1',	'',	'建筑总数已达上限',	''},
-{'110',	'buildTypeLimit',	'1',	'',	'该类型建筑已达上限',	''},
-{'111',	'buildPosLimit',	'1',	'',	'建筑位置无效',	''},
-{'112',	'buildOpenLimit',	'1',	'',	'建筑未开启',	''},
-{'113',	'buildRoleCntLimit',	'1',	'',	'入驻人员已满',	''},
-{'114',	'buildRoleNotFind',	'1',	'',	'建筑配置[ {} ]找不到对应的角色id[ {} ]',	''},
-{'115',	'buildRoleIsInBuild',	'1',	'',	'角色已在基地入驻了',	''},
-{'116',	'buildRoleIsInDorm',	'1',	'',	'角色已经入住了宿舍了',	''},
-{'117',	'buildIsStop',	'1',	'',	'建筑停止运作',	''},
-{'118',	'buildAssaultString',	'1',	'',	'基地受到袭击时无法进行该操作',	''},
-{'119',	'buildAssaultFinish',	'1',	'',	'袭击已结束',	''},
-{'120',	'buildMaxFailCnt',	'1',	'',	'失败次数已达上限',	''},
-{'121',	'buildExpTaskNotFind',	'1',	'',	'找不到远征探索任务,请尝试刷新界面',	''},
-{'122',	'buildExpTaskHadStart',	'1',	'',	'远征探索已经开始，请勿重复操作',	''},
-{'123',	'buildExpCardClassLimit',	'1',	'',	'远征队伍类型不符合要求',	''},
-{'124',	'buildExpCardNumLimit',	'1',	'',	'远征队伍人员数量不符合要求',	''},
-{'125',	'buildExpCardLvLimit',	'1',	'',	'远征队伍人员等级不符合要求',	''},
-{'126',	'buildExpNotFinish',	'1',	'',	'远征探索任务还未完成',	''},
-{'127',	'buildTypeError',	'1',	'',	'建筑类型错误',	''},
-{'128',	'buildExpNotBall',	'1',	'',	'没球了',	''},
-{'129',	'buildExpHadFinish',	'1',	'',	'远征探索已完成',	''},
-{'130',	'buildExpTeamMax',	'1',	'',	'已经到达队伍数量上限',	''},
-{'131',	'buildInExp',	'1',	'',	'角色{}已经在远征中了',	''},
-{'132',	'buildGetRewardLimt',	'1',	'',	'资源上限已满, 无法继续领取',	''},
-{'133',	'buildSetAllTired',	'1',	'',	'成功设置所有角色疲劳值为 {}',	''},
-{'134',	'buildSetOneTired',	'1',	'',	'成功设置角色 {} 疲劳值为 {}',	''},
-{'135',	'buildSetAllLv',	'1',	'',	'成功设置所有角色等级值为 {}',	''},
-{'136',	'buildSetOneLv',	'1',	'',	'成功设置角色 {} 等级值为 {}',	''},
-{'137',	'buildCombineFail',	'1',	'',	'合成失败，需要消耗更多时间',	''},
-{'138',	'buildEnemyIsEmpty',	'1',	'',	'敌人已被消灭',	''},
-{'139',	'buildRoleCfgNotSet',	'1',	'',	'角色[ {1} ]没有入驻的功能',	''},
-{'140',	'buildOrderIsFull',	'1',	'',	'订单数量已达上限',	''},
-{'141',	'buildFlushOrderRoleTired',	'1',	'',	'角色{}疲劳上限，不足刷新订单',	''},
-{'142',	'buildFlrTradeOutOfDate',	'1',	'',	'好友订单已失效',	''},
-{'143',	'buildFlrTradeNotData',	'1',	'',	'“拜访失败，当前好友基地未建造订单库”',	''},
-{'144',	'',	'',	'',	'',	''},
-{'145',	'notEnoughGuildPower',	'1',	'',	'工会职位权限不够',	''},
-{'146',	'inGuildLimit',	'1',	'',	'需要先退出所在的工会才可操作',	''},
-{'147',	'guildNameLenLimit',	'1',	'',	'工会名字太长',	''},
-{'148',	'guildDescLenLimit',	'1',	'',	'工会描述太长',	''},
-{'149',	'guildApplyLvLimit',	'1',	'',	'工会申请等级限制不能大于会长等级',	''},
-{'150',	'sysError',	'1',	'',	'系统异常',	''},
-{'151',	'guildApplyCntLimit',	'1',	'',	'工会申请数量限制',	''},
-{'152',	'guildMemberFull',	'1',	'',	'工会已经满员',	''},
-{'153',	'notInGuildLimit',	'1',	'',	'没有再工会里面',	''},
-{'154',	'guildNeedBoss',	'1',	'',	'需要会长权限',	''},
-{'155',	'guildInvalid',	'1',	'',	'无效的工会',	''},
-{'156',	'guildNeedSubBoss',	'1',	'',	'需要副会长以上权限',	''},
-{'157',	'guildNeedBoss',	'1',	'',	'会长才可操作',	''},
-{'158',	'guildNeedNotBoss',	'1',	'',	'会长不可操作',	''},
-{'159',	'guildAppyLvLimit',	'1',	'',	'小不点，等级还不够噢',	''},
-{'160',	'guildSubBoosCntLimit',	'1',	'',	'副会长人数以达上限',	''},
-{'161',	'guildRoomHadCreate',	'1',	'',	'该房间已经被创建',	''},
-{'162',	'guildFightRoomOutOfDate',	'1',	'',	'工会战房间过期',	''},
-{'163',	'guildFightLimit',	'1',	'',	'工会战期间不能支持该操作噢~!',	''},
-{'164',	'guildFightRoomDup',	'1',	'',	'房间不能重复出创建',	''},
-{'165',	'',	'',	'',	'',	''},
-{'166',	'inFightingLimit',	'1',	'',	'你已经在战斗中',	''},
-{'167',	'inFightingTarget',	'1',	'',	'{}已经在战斗中',	''},
-{'168',	'forceTeamError',	'1',	'',	'强制上阵队伍数据不正确',	''},
-{'169',	'hotLimit',	'1',	'',	'燃料不足，无法进入关卡',	''},
-{'170',	'hotFull',	'1',	'',	'燃料不足，无法进入关卡',	''},
-{'171',	'PreChapterIDLimit',	'1',	'',	'数据验证异常，请重新登录游戏',	''},
-{'172',	'isInTeam',	'1',	'',	'{}在队伍上阵中',	''},
-{'173',	'armyOpErr',	'1',	'',	'军演协议发送时间有误',	''},
-{'174',	'invalidSkillGroupId',	'1',	'',	'无效的技能组id',	''},
-{'175',	'invalidTeamId',	'1',	'',	'无效的队伍id',	''},
-{'176',	'plrCostLimit',	'1',	'',	'超过探索队等级cost值上限{}',	''},
-{'177',	'teamMemCntLimt',	'1',	'',	'队伍人数限制，最少需要1人上阵',	''},
-{'178',	'teamCardDupUse',	'1',	'',	'角色 {} 在编队{}已经使用，不能重复编队',	''},
-{'179',	'armyPracticeHadNotStart',	'1',	'',	'军演还未到开始时间',	''},
-{'180',	'armyPracticeIsFinish',	'1',	'',	'本季度军演已经结束，感谢参与！',	''},
-{'181',	'armyAttackBuyCntLimit',	'1',	'',	'超过可购买次数上限',	''},
-{'182',	'armyAttackMaxCntLimit',	'1',	'',	'购买后次数超过了可挑战次数上限',	''},
-{'183',	'',	'',	'',	'',	''},
-{'184',	'sOnOtherDuplicate',	'1',	'',	'其他副本正在进行中',	''},
-{'185',	'sDuplicateOver',	'1',	'',	'副本已经结束',	''},
-{'186',	'inDupFightLimit',	'1',	'',	'在副本战斗中不能进行此操作',	''},
-{'187',	'DupCntLimit',	'1',	'',	'该副本挑战次数到达上限',	''},
-{'188',	'sDuplicatePropPalsy',	'1',	'',	'队伍被麻痹，无法移动',	''},
-{'189',	'sDuplicatePropPalsyMonster',	'1',	'',	'敌人被麻痹，无法移动',	''},
-{'190',	'sDuplicatePropIce',	'1',	'',	'处于冰冻中，无法移动',	''},
-{'191',	'sNeedPassDup',	'1',	'',	'需要先通过副本{}',	''},
-{'192',	'sDuplicateTimeOut',	'3',	'',	'超过副本规定时间,强制结束战斗',	''},
-{'193',	'g_DungeonNumAdd',	'1',	'',	'{}入场次数+{}',	''},
-{'194',	'touchMaxLv',	'1',	'',	'已经满级',	''},
-{'195',	'opcodeHoldUp',	'1',	'',	'消息{}频率过于频繁，请等候片刻哦！',	''},
-{'196',	'gameReloging',	'1',	'',	'游戏服开始热更',	''},
-{'197',	'svrsReloging',	'1',	'',	'全服开始热更',	''},
-{'198',	'costNotEnough',	'1',	'',	'消耗不足',	''},
-{'199',	'outOfDate',	'1',	'',	'订单已过期',	''},
-{'200',	'tradeOrderBuyLimit',	'1',	'',	'交付订单已达购买上限',	''},
-{'201',	'tradeFlrOrderBuyLimit',	'1',	'',	'交付好友订单已达购买上限',	''},
-{'202',	'taskRepeat',	'1',	'',	'有相同的操作未完成',	''},
-{'203',	'notFindOrder',	'1',	'',	'未找到订单',	''},
-{'204',	'orderWaitStart',	'1',	'',	'订单未开始',	''},
-{'205',	'repeatOp',	'1',	'',	'请勿重复操作',	''},
-{'206',	'opFaild',	'1',	'',	'操作失败',	''},
-{'207',	'onceLimit',	'1',	'',	'超过单次上限',	''},
-{'208',	'sumLimit',	'1',	'',	'超过总数上限',	''},
-{'209',	'invalidInput',	'1',	'',	'输入信息不合规范',	''},
-{'210',	'hadGet',	'1',	'',	'已经被领取了',	''},
-{'211',	'opCntLimit',	'1',	'',	'操作次数已达上限',	''},
-{'212',	'wordCntLimit',	'1',	'',	'字数超过限制',	''},
-{'213',	'invalidOp',	'1',	'',	'操作不被允许',	''},
-{'214',	'nameExist',	'1',	'',	'名字已经存在',	''},
-{'215',	'applyCntLimit',	'1',	'',	'申请数量到达上限，申请列表最大上限为{1}人',	''},
-{'216',	'opQuickly',	'1',	'',	'操作太快了，请休息下再继续!',	''},
-{'217',	'scoreLimit',	'1',	'',	'积分不足',	''},
-{'218',	'spaceNumNotEnough',	'4',	'',	'“芯片仓达到上限，无法进行芯片更换，是否进行清理？”',	'80002'},
-{'219',	'goldHadTake',	'1',	'',	'晶片已领取, 请稍后再试',	''},
-{'220',	'notInOpenTime',	'1',	'',	'不在开放时间内',	''},
-{'221',	'notFindOpObj',	'1',	'',	'获取不到操作对象',	''},
-{'222',	'hadNotFinish',	'1',	'',	'尚未完成',	''},
-{'223',	'invalidArgs',	'1',	'',	'参数无效',	''},
-{'224',	'notEnoughStoreExp',	'1',	'',	'存储技术点剩余{},不足扣除',	''},
-{'225',	'spaceNotEnough',	'1',	'',	'空间不足',	''},
-{'226',	'notCfg',	'1',	'',	'配置{}中找不到为{}的配置',	''},
-{'227',	'notFindCfg',	'1',	'',	'配置表异常，找不到相关配置',	''},
-{'228',	'reachMaxLvl',	'1',	'',	'已经到达等级上限',	''},
-{'229',	'isUpgrading',	'1',	'',	'已在升级中',	''},
-{'230',	'LevelLimit',	'1',	'',	'等级不足{}级',	''},
-{'231',	'isNotOnline',	'1',	'',	'不在线',	''},
-{'232',	'friendNotOnline',	'1',	'',	'好友不在线',	''},
-{'233',	'notInLimitTime',	'1',	'',	'不在限定时间内',	''},
-{'234',	'slotHadAllOpen',	'1',	'',	'仓库格子已经全部开放',	''},
-{'235',	'materialNotEnough',	'1',	'',	'【{1}】拥有数量不足{2}',	''},
-{'236',	'hadNotOpen',	'1',	'',	'未开启',	''},
-{'237',	'notOpenCfg',	'1',	'',	'未有配有开启配置',	''},
-{'238',	'plrLvLimit',	'1',	'',	'玩家探索等级需要达到{1}级',	''},
-{'239',	'goldGetLimit',	'1',	'',	'晶片到达可领取上限',	''},
-{'240',	'abilityNumLimit',	'1',	'',	'战术点不足',	''},
-{'241',	'useAsIcon',	'1',	'',	'头像使用中',	''},
-{'242',	'needFlush',	'1',	'',	'需要刷新',	''},
-{'243',	'notFindSkin',	'1',	'',	'没找到外装外观',	''},
-{'244',	'signFaild',	'1',	'',	'签到失败',	''},
-{'245',	'notFindOpSkill',	'1',	'',	'没有找到要操作的技能',	''},
-{'246',	'gmplrOpen',	'1',	'',	'开启GM,时间间隔为{}秒',	''},
-{'247',	'gmplrColse',	'1',	'',	'关闭GM',	''},
-{'248',	'signMaxLenLimit',	'1',	'',	'超过签名最大长度了哦～',	''},
-{'249',	'GeneralTips',	'1',	'',	'{}',	''},
-{'250',	'hadSameRoleId',	'1',	'',	'不能存在相同角色id的角色！',	''},
-{'251',	'assitTeamNumLimit',	'1',	'',	'支援助战最多设置3名角色',	''},
-{'252',	'teamNotSet',	'1',	'',	'没有设置队伍信息',	''},
-{'253',	'goldHadFull',	'1',	'',	'资源已经达到上限，无法继续交易',	''},
-{'254',	'canNotToSelf',	'1',	'',	'不支持对自己操作',	''},
-{'255',	'plrChangeGameSvr',	'1',	'',	'玩家开始从游戏服{}转移到游戏服{}',	''},
-{'256',	'buySuc',	'1',	'',	'购买成功',	''},
-{'257',	'gameSvrIdErr',	'1',	'',	'找不到id为{}的游戏服',	''},
-{'258',	'roleNotFind',	'1',	'',	'找不到id为{}的角色',	''},
-{'259',	'canNotOpToSelf',	'1',	'',	'不能添加自己为好友',	''},
-{'260',	'notLoadFinish',	'1',	'',	'未加载完成',	''},
-{'261',	'onlineTimeLimit',	'8',	'1',	'防沉迷提示\n由于您是{1}，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，不在可登陆时间范围内，可登陆时间为周五、周六、周日和法定节假日每日20时至21时。',	''},
-{'262',	'onlineTimeHolidayLimit',	'8',	'1',	'防沉迷提示\n由于您是{1}，根据《国家新闻出版署关于防止未成年人沉迷网络游戏的通知》，您今天已经进行游戏{5}小时，超过法定节假日3小时限制，不能继续游戏，请注意休息。',	''},
-{'263',	'sumOnlineTimeLimit',	'8',	'1',	'防沉迷提示\n由于您是{1}，已达到{}小时的游戏限制，15日内无法再次进入游客体验模式。',	''},
-{'264',	'sumOnlineTimeLimitByDay',	'8',	'1',	'防沉迷提示\n由于您是{1}，你已在线{9}小时,{10}日内无法再次进入游客体验模式。',	''},
-{'265',	'loginTimeLimit',	'8',	'1',	'防沉迷提示\n由于您是{1}，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，不在可登陆时间范围内，可登陆时间为周五、周六、周日和法定节假日每日20时至21时。',	''},
-{'266',	'needRegisterAntiAddiction',	'1',	'1',	'防沉迷提示\n需要先注册防沉迷信息',	''},
-{'267',	'oncePayLimit',	'3',	'',	'防沉迷提示\n因为由于您是{2}周岁的未成年人，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，单次充值金额不得超过{6}元人民币。',	''},
-{'268',	'accTypeCanNotPay',	'3',	'',	'防沉迷提示\n由于您是{1}玩家，所以无法进行充值。',	''},
-{'269',	'monthPayLimit',	'3',	'',	'防沉迷提示\n因为由于您是{2}周岁的未成年人，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，每个月累计充值不得超过{7}元。',	''},
-{'270',	'SetAccNum',	'3',	'',	'设置账号类型为{},子类型{},年龄{}，身份证号码为{},姓名为{}',	''},
-{'271',	'accTypeNoticeGuest',	'3',	'',	'防沉迷提示\n由于您是{1},15日内，在线总时长限制{5}小时,且无法进行充值和消费。',	''},
-{'272',	'accTypeNoticePlr1',	'3',	'',	'防沉迷提示\n由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，在周五、周六、周日和法定节假日每日20时至21时，提供1小时游戏时间，单次充值限额50元，\n每月累计充值不得超过200元。',	''},
-{'273',	'accTypeNoticePlr2',	'3',	'',	'防沉迷提示\n由于您是{1}，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，不在可登陆时间范围内，可登陆时间为周五、周六、周日和法定节假日每日20时至21时。',	''},
-{'274',	'accTypeNoticePlr3',	'3',	'',	'防沉迷提示\n由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，当前时间属于周五、周六、周日20时至21时，期间可体验游戏1小时。',	''},
-{'275',	'accTypeNoticePlr4',	'3',	'',	'防沉迷提示\n因为由于您是{2}周岁的未成年人,根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，\n您无法进行付费充值。',	''},
-{'276',	'accTypeNoticePlr5',	'3',	'',	'防沉迷提示\n由于您是未成年人,根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，在周五、周六、周日和法定节假日每日20时至21时，提供1小时游戏时间，无法充值和消费。',	''},
-{'277',	'accTypeNoticePlr6',	'3',	'',	'防沉迷提示\n由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，当前属于法定节假日20时至21时，期间可体验游戏1小时。',	''},
-{'278',	'accTypeNoticePlr7',	'3',	'',	'防沉迷提示\n由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，在周五、周六、周日和法定节假日每日20时至21时，提供1小时游戏时间，单次充值限额100元，\n每月累计充值不得超过400元。',	''},
-{'279',	'createTimeLimit',	'1',	'',	'创建时间限制，在{}秒后，才可以创建',	''},
-{'280',	'hadOneRoom',	'1',	'',	'已经创建了一个房间，不能重复创建',	''},
-{'281',	'needQuitTeamRoom',	'1',	'',	'需要先退出之前所在的房间',	''},
-{'282',	'notFindTeamRoom',	'1',	'',	'找不到对应的房间',	''},
-{'283',	'teamBossIsFull',	'1',	'',	'房间已经满人了',	''},
-{'284',	'teamBossRoomNotFind',	'1',	'',	'找不到房间',	''},
-{'285',	'teamBossInviteLimit',	'1',	'',	'房主才能邀请',	''},
-{'286',	'teamBossIsStartingLimit',	'1',	'',	'组队boss已经开始的房间不支持改操作',	''},
-{'287',	'teamBossFriendHadJoin',	'1',	'',	'好友已经参加了该活动',	''},
-{'288',	'teamBossNotFindTeam',	'1',	'',	'找不到队伍信息',	''},
-{'289',	'teamBossTeamNotFighting',	'1',	'',	'队伍不在战斗中',	''},
-{'290',	'dormNotFind',	'1',	'',	'定位不到id为【{}】的房间',	''},
-{'291',	'dormThemeStoreLimit',	'1',	'',	'主题的收藏，已经达到上限{}个',	''},
-{'292',	'dormThemeNotFind',	'1',	'',	'定位不到id为【{}】的主题',	''},
-{'293',	'dormThemeShareLimit',	'1',	'',	'主题的分享，已经达到上限{}个',	''},
-{'294',	'dormThemeIdCreateErr',	'1',	'',	'主题id生成失败，请稍后再尝试',	''},
-{'295',	'dormThemeSaveLimit',	'1',	'',	'数量已达到上限{}个',	''},
-{'296',	'dormRoleNotFind',	'1',	'',	'在id为{}的宿舍，找不到角色 {}',	''},
-{'297',	'dormEventNotStart',	'1',	'',	'事件还没开始',	''},
-{'298',	'dormClothesCfgErr',	'1',	'',	'服装穿戴信息异常，穿戴不成功',	''},
-{'299',	'dormClothesCfgSex',	'1',	'',	'服装不符合性别需求',	''},
-{'300',	'dormClothesCfgLimit',	'1',	'',	'服装不能穿戴在该角色身上',	''},
-{'301',	'dormFurBuyLimit',	'1',	'',	'家具{1}已经购买了{2},购买上限为{3}件',	''},
-{'302',	'friendOrdersOutOfDate',	'1',	'',	'无法交付，好友订单已失效',	''},
-{'303',	'explorNotOpenExLv',	'1',	'',	'需要开启开启高级勘探',	''},
-{'304',	'exploHadGetReward',	'1',	'',	'该奖励已经领取',	''},
-{'305',	'explorMailReward',	'1',	'',	'领取成功',	''},
-{'306',	'plrHotBuyCntLimit',	'1',	'',	'每天可兑{1}次体能,已经兑换了{2}次数',	''},
-{'307',	'plrHotBuyMaxLimit',	'1',	'',	'购买失败，超过燃料上限数量{2}',	''},
-{'308',	'plrHotUseMaxLimit',	'1',	'',	'使用失败，超过燃料上限数量999',	''},
-{'309',	'plrPhyMinGameCntLimit',	'1',	'',	'每天可以参与游戏{1}次，今天已经使用{2}次了',	''},
-{'310',	'moneyNotEnough',	'1',	'',	'货币不足，无法购买',	''},
-{'311',	'plrHotMailMaxLimit',	'1',	'',	'领取失败，超过燃料上限数量{1}',	''},
-{'312',	'cardPoolFirstNotFinish',	'1',	'',	'特装构建进度尚未结束,请退出当前界面后重新进入尝试',	''},
-{'313',	'accRegisterLimit',	'9',	'',	'防沉迷提示\n非常抱歉，由于您是未成年人,暂无法进入游戏。',	''},
-{'314',	'bindCodeErr',	'1',	'',	'协同代码不存在',	''},
-{'315',	'hadBindFinish',	'1',	'',	'绑定玩家已处于协作关系',	''},
-{'316',	'plrBindTypeErr',	'1',	'',	'绑定玩家不符合要求',	''},
-{'317',	'mailExpiry',	'1',	'',	'邮件已失效，请重新进入界面查看。',	''},
-{'318',	'plrBindApplyLimitCnt',	'1',	'',	'申请频繁，请稍后再试',	''},
-{'319',	'plrBindBeApplyLimitCnt',	'1',	'',	'该玩家被申请次数频繁，切换玩家目标重试',	''},
-{'320',	'notPlrBindInviteLog',	'1',	'',	'该邀请已失效',	''},
-{'321',	'hadBindPlrCanNotAgree',	'1',	'',	'已绑定玩家无法接受申请',	''},
-{'322',	'plrUnfinishBinding',	'1',	'',	'未完成绑定',	''},
-{'323',	'voucherCanNotUseVoucher',	'1',	'',	'商品不支持使用抵扣券',	''},
-{'324',	'voucherMixUseReduceIdErr',	'1',	'',	'叠加抵扣券只支持扣除一种物品',	''},
-{'325',	'voucherCanNotMixUse',	'1',	'',	'抵扣券不支持叠加使用',	''},
-{'326',	'voucherCanNotMixDiscount',	'1',	'',	'不支持与其他折扣一起使用',	''},
-{'327',	'voucherMinCost',	'1',	'',	'抵扣券最小消耗限制',	''},
-{'328',	'voucherNotProductType',	'1',	'',	'抵扣券不支持该商品类型',	''},
-{'329',	'voucherBiggerThanRealCose',	'1',	'',	'抵扣券大于总面值大于需要抵扣的总额',	''},
-{'330',	'petUnlock',	'1',	'',	'未解锁宠物',	''},
-{'331',	'petIsLocked',	'1',	'',	'宠物已解锁',	''},
-{'332',	'petArchiveLocked',	'1',	'',	'宠物图鉴已解锁',	''},
-{'333',	'petArchiveUnlock',	'1',	'',	'宠物图鉴未解锁',	''},
-{'334',	'petTimeNotInRange',	'1',	'',	'宠物运动时间不在范围内',	''},
-{'335',	'petSportBeInterrupted',	'1',	'',	'宠物属性不足运动中止',	''},
-{'336',	'plrBindRewardHadMail',	'1',	'',	'绑定奖励已发送至邮件',	''},
-{'337',	'plrBindHadInvite',	'1',	'',	'已邀请',	''},
-{'338',	'globalBossOver',	'1',	'',	'活动已结束',	''},
-{'339',	'checkNameError',	'1',	'',	'输入的文字中不得含有敏感字符',	''},
-{'340',	'checkMyNameError',	'1',	'',	'无法命名为当前名字',	''},
-{'341',	'expReminder',	'7',	'',	'您持有的{1}将在24小时内过期，请尽快使用。',	'80001'},
-{'342',	'EquipSynthesisReminder',	'7',	'',	'芯片存在未保存的重构结果，请前往确认。',	'330001'},
-{'348',	'pvpTeamNotSet',	'1',	'',	'未满足三个编队，无法开始军演',	''},
-},
+_G["CfgTipsSimpleChinese"]={{["key"]="accExist",["nShowType"]=3,["id"]=1,["nFunType"]=1,["sStr"]="账号已经存在"}
+,{["key"]="accNotExist",["nShowType"]=3,["id"]=2,["nFunType"]=1,["sStr"]="账号不存在"}
+,{["key"]="accLenErr",["nShowType"]=3,["id"]=3,["nFunType"]=1,["sStr"]="账号长度错误"}
+,{["key"]="notInWhite",["nShowType"]=3,["id"]=4,["nFunType"]=1,["sStr"]="服务器维护中"}
+,{["key"]="notInWhiteRegister",["nShowType"]=3,["id"]=5,["nFunType"]=1,["sStr"]="服务器维护中"}
+,{["key"]="pwdLenErr",["nShowType"]=3,["id"]=6,["nFunType"]=1,["sStr"]="密码长度错误"}
+,{["key"]="sqlFail",["nShowType"]=3,["id"]=7,["nFunType"]=1,["sStr"]="数据入库失败，稍后再试"}
+,{["id"]=8,["key"]="sqlFailTyNumber",["sStr"]="数据入库失败，账号请使用纯数字账号尝试"}
+,{["key"]="pwdErr",["nShowType"]=3,["id"]=9,["nFunType"]=1,["sStr"]="密码错误"}
+,{["key"]="relogin",["nShowType"]=8,["id"]=10,["nFunType"]=1,["sStr"]="重复登录"}
+,{["key"]="svrBusy",["nShowType"]=3,["id"]=11,["nFunType"]=1,["sStr"]="服务器爆满"}
+,{["key"]="loadDataErr",["nShowType"]=3,["id"]=12,["nFunType"]=1,["sStr"]="登录失败,数据加载出错"}
+,{["key"]="waitLoadFinish",["nShowType"]=3,["id"]=13,["nFunType"]=1,["sStr"]="数据加载失败,请按流程登录"}
+,{["key"]="tryAgain",["nShowType"]=3,["id"]=14,["nFunType"]=1,["sStr"]="您的账户已在线, 登录将进行下线处理，请确认"}
+,{["key"]="serverMaintain",["nShowType"]=8,["id"]=15,["nFunType"]=1,["sStr"]="网络不稳定，已断开连接，需要重新登陆"}
+,{["key"]="justRegisterState",["nShowType"]=9,["id"]=16,["nFunType"]=1,["sStr"]="当前服务器仅提供注册功能"}
+,{["key"]="gmKrickPlr",["nShowType"]=9,["id"]=17,["nFunType"]=1,["sStr"]="您已被管理员请离了游戏，如有疑问请联系工作人员，感谢理解。"}
+,{["key"]="svrMaintaining",["nShowType"]=8,["id"]=18,["nFunType"]=1,["sStr"]="服务器正在维护中，请耐心等待，感谢支持。"}
+,{["key"]="gmDelPlrAcc",["nShowType"]=8,["id"]=19,["nFunType"]=1,["sStr"]="您的账号已经被管理员限制，如有疑误请联系工作人员协助解决，感谢您的理解。"}
+,{["key"]="GeneralTipsClose",["nShowType"]=8,["id"]=20,["nFunType"]=1,["sStr"]="{}"}
+,{["key"]="notFindGameSvr",["nShowType"]=3,["id"]=21,["nFunType"]=1,["sStr"]="历史游戏服序号不在本登录服受理[history game id not in my login svr]!!!"}
+,{["key"]="notSelectLoginSvr",["nShowType"]=3,["id"]=22,["nFunType"]=1,["sStr"]="非指定的登陆服[not select login svr]!!!"}
+,{["id"]=23,["key"]=23}
+,{["key"]="itemNotEnough",["nShowType"]=1,["id"]=24,["sStr"]="物品数量不足"}
+,{["key"]="itemNumNotEnough",["nShowType"]=1,["id"]=25,["sStr"]="物品 {} 数量不足 {}"}
+,{["key"]="itemNotFind",["nShowType"]=1,["id"]=26,["sStr"]="找不到物品 {}"}
+,{["key"]="itemBapOpenLimit",["nShowType"]=1,["id"]=27,["sStr"]="仓库开启上限限制"}
+,{["key"]="itemBagSpaceLimit",["nShowType"]=7,["id"]=28,["arg1"]="80001",["sStr"]="物品<color=#FFC142>{1}</color>已到达数量上限，只能再添加{2}个"}
+,{["key"]="canNotUse",["nShowType"]=1,["id"]=29,["sStr"]="{} 不能被使用"}
+,{["key"]="TPNotEnough",["nShowType"]=1,["id"]=30,["sStr"]="TP不足"}
+,{["key"]="itemFull",["nShowType"]=1,["id"]=31,["sStr"]="物品{}已达上限，添加失败的部分将会以邮件发送"}
+,{["key"]="itemSignFull",["nShowType"]=3,["id"]=32,["sStr"]="获得奖励中，部分物品已达上限，将通过邮件发送到您的邮箱，请查收。"}
+,{["key"]="itemOutOfData",["nShowType"]=1,["id"]=33,["sStr"]="该物品已经过期"}
+,{["key"]="itemRepeat",["nShowType"]=1,["id"]=34,["sStr"]="已自动为您转化重复获得的物品发送到邮箱，请前往查收。"}
+,{["key"]="euipBagOpenLimit",["nShowType"]=1,["id"]=35,["sStr"]="芯片仓开启上限限制"}
+,{["key"]="equipBagSpaceLimit",["nShowType"]=7,["id"]=36,["arg1"]="80002",["sStr"]="芯片仓已满，是否进行清理？"}
+,{["key"]="equipNotFind",["nShowType"]=1,["id"]=37,["sStr"]="找不到芯片{}"}
+,{["key"]="equipInLock",["nShowType"]=1,["id"]=38,["sStr"]="芯片{}上锁被保护中，不能被使用"}
+,{["key"]="equipNotSuitId",["nShowType"]=3,["id"]=39,["sStr"]="芯片配置id:{}没有配置套装"}
+,{["key"]="equipLogSlotUpLimit",["nShowType"]=1,["id"]=40,["sStr"]="芯片配置记录栏位上限"}
+,{["key"]="equipStorageSpaceAdd",["nShowType"]=1,["id"]=41,["sStr"]="芯片仓上限+{}"}
+,{["key"]="equipFullToMail",["nShowType"]=3,["id"]=42,["sStr"]="芯片仓库已达上限，超过容量的芯片将通过邮件发送到邮箱中，请总队长注意查收。"}
+,{["id"]=43,["key"]=43}
+,{["key"]="cardBagOpenLimit",["nShowType"]=1,["id"]=44,["sStr"]="核心仓开启上限限制"}
+,{["key"]="cardBagSpaceLimit",["nShowType"]=7,["id"]=45,["arg1"]="60002",["sStr"]="核心仓容量已满，是否进行处理？"}
+,{["id"]=46,["key"]="cardBagMaxSpaceLimit",["sStr"]="最大核心数量{1}限制, 剩下添加数量为{2}!"}
+,{["key"]="cardStorageSpaceAdd",["nShowType"]=1,["id"]=47,["sStr"]="角色核心仓容量上限+{}"}
+,{["key"]="cardCoolOpenLimit",["nShowType"]=1,["id"]=48,["sStr"]="角色核心冷却开启上限限制"}
+,{["key"]="cardCoolSpaceLimit",["nShowType"]=1,["id"]=49,["sStr"]="角色核心冷却空间不足"}
+,{["key"]="cardSkillUpOpenLimit",["nShowType"]=1,["id"]=50,["sStr"]="角色技能升级槽位开启上限限制"}
+,{["key"]="cardSkillUpSpaceLimit",["nShowType"]=1,["id"]=51,["sStr"]="角色技能升级槽位不足"}
+,{["key"]="cardNotFind",["nShowType"]=1,["id"]=52,["sStr"]="找不到卡牌{}"}
+,{["id"]=53,["key"]="cardHotFull",["sStr"]="{}行动值已经满了"}
+,{["key"]="cardInHotCool",["nShowType"]=1,["id"]=54,["sStr"]="{}行动值恢复中，不能被使用"}
+,{["key"]="cardInLock",["nShowType"]=1,["id"]=55,["sStr"]="{}被保护中，不能被使用"}
+,{["key"]="cardInSkillUpgrade",["nShowType"]=1,["id"]=56,["sStr"]="{}技能升级中，不能被使用"}
+,{["key"]="cardCoolSlotHadOpen",["nShowType"]=1,["id"]=57,["sStr"]="该位置已经开启"}
+,{["key"]="cardNotEnough",["nShowType"]=1,["id"]=58,["sStr"]="{}不足"}
+,{["key"]="sNotSkillCanBeUsed",["nShowType"]=1,["id"]=59,["sStr"]="{}没有可用的技能"}
+,{["key"]="cardBreakLvlLimit",["nShowType"]=1,["id"]=60,["sStr"]="角色核心突破等级不足"}
+,{["key"]="cardClassLimit",["nShowType"]=1,["id"]=61,["sStr"]="角色编队限制"}
+,{["key"]="cardPoolDailyUseLimit",["nShowType"]=1,["id"]=62,["sStr"]="今日构建次数已限制，已抽取了{}次，上限{}次"}
+,{["key"]="orignCardIsInFight",["nShowType"]=1,["id"]=63,["sStr"]="原本的卡牌[{}]在战斗中"}
+,{["key"]="notFindInitRole",["nShowType"]=1,["id"]=64,["sStr"]="角色原型id:{}配置的角色id:{}在角色配置表中找不到"}
+,{["key"]="cardNeedCool",["nShowType"]=1,["id"]=65,["sStr"]="角色{}需要冷却"}
+,{["key"]="cardRoleAddExp",["nShowType"]=1,["id"]=66,["sStr"]="角色{}增加经验{},增加后为{}等级，拥有经验{}"}
+,{["key"]="cardIsInFight",["nShowType"]=3,["id"]=67,["sStr"]="角色【{}】在战斗中，无法进行操作"}
+,{["key"]="canNotUseSelfAsMaterial",["nShowType"]=1,["id"]=68,["sStr"]="不能使用角色本身当作材料"}
+,{["key"]="subTalentIxErr",["nShowType"]=1,["id"]=69,["sStr"]="收到的副天赋id:{1}异常"}
+,{["key"]="firstCreateTryCntLimit",["nShowType"]=1,["id"]=70,["sStr"]="首次构建次数已经用完"}
+,{["key"]="plrLvLimitBreak",["nShowType"]=1,["id"]=71,["sStr"]="需要玩家等级达{1}等级以上，才可以执行{2}级突破"}
+,{["key"]="plrLvLimitCardPool",["nShowType"]=1,["id"]=72,["sStr"]="玩家需要{}级才能使用该卡池"}
+,{["key"]="plrDupLimitCardPool",["nShowType"]=1,["id"]=73,["sStr"]="玩家需要通关副本{}，才能使用该卡池"}
+,{["key"]="cardPoolCntLimt",["nShowType"]=1,["id"]=74,["sStr"]="该卡池已经到达使用上限"}
+,{["key"]="cardTestResult",["nShowType"]=1,["id"]=75,["sStr"]="第{1}次测试,卡池{2}使用次数为{3},十连抽结果为{4}"}
+,{["key"]="cardTestResultErr",["nShowType"]=3,["id"]=76,["sStr"]="第{1}次测试,卡池{2}使用次数为{3},十连抽结果为{4}"}
+,{["key"]="cardCoreLvMax",["nShowType"]=1,["id"]=77,["sStr"]="以达到最高核心等级"}
+,{["key"]="cardCoreItemUseLimit",["nShowType"]=1,["id"]=78,["sStr"]="核心碎片{1}需要保留{2}个作为使用"}
+,{["id"]=79,["key"]=79}
+,{["key"]="inconformityBuy",["nShowType"]=1,["id"]=80,["sStr"]="不符合购买条件"}
+,{["key"]="exchangeCodeErr",["nShowType"]=1,["id"]=81,["sStr"]="兑换码错误"}
+,{["key"]="exchangeCodeIsUse",["nShowType"]=1,["id"]=82,["sStr"]="兑换码已经使用"}
+,{["key"]="exchangeCodeOutDate",["nShowType"]=1,["id"]=83,["sStr"]="兑换码不在使用时限内"}
+,{["key"]="exchangeSameType",["nShowType"]=1,["id"]=84,["sStr"]="同类型兑换码，每个玩家只能用一个"}
+,{["key"]="exchangeChannelLimit",["nShowType"]=1,["id"]=85,["sStr"]="不符合该兑换码所限制的渠道类型"}
+,{["key"]="shopCanNotManualFlush",["nShowType"]=1,["id"]=86,["sStr"]="此商店不能手动刷新"}
+,{["key"]="shopMemBuyDayLimit",["nShowType"]=1,["id"]=87,["sStr"]="月卡还有{1}天效期，购买后持续时间超过{2}天，暂不可购买"}
+,{["id"]=88,["key"]=88}
+,{["key"]="fridendCntLimit",["nShowType"]=1,["id"]=89,["sStr"]="已达到好友上限"}
+,{["key"]="friendDelCool",["nShowType"]=1,["id"]=90,["sStr"]="删除好友{}小时之后才可重新添加"}
+,{["key"]="inviteOutDate",["nShowType"]=1,["id"]=91,["sStr"]="邀请已经失效"}
+,{["key"]="inviteFightInDupLimit",["nShowType"]=1,["id"]=92,["sStr"]="您在副本中无法发起邀请"}
+,{["key"]="inviteFightInDupLimitTarget",["nShowType"]=1,["id"]=93,["sStr"]="{}在副本中无法邀请"}
+,{["key"]="isYourFriend",["nShowType"]=1,["id"]=94,["sStr"]="已经是您的好友"}
+,{["key"]="arymyInviteCoolDown",["nShowType"]=1,["id"]=95,["sStr"]="邀请冷却中"}
+,{["key"]="friendDenyCool",["nShowType"]=1,["id"]=96,["sStr"]="拒绝或者取消申请的目标玩家，需要{}小时后才能继续申请好友"}
+,{["key"]="friendApplying",["nShowType"]=1,["id"]=97,["sStr"]="好友申请已发送,请勿重复操作"}
+,{["key"]="friendWaiting",["nShowType"]=1,["id"]=98,["sStr"]="好友在你的申请列表中，不需申请"}
+,{["key"]="notInBlack",["nShowType"]=1,["id"]=99,["sStr"]="不在黑名单中"}
+,{["key"]="friendFlushInCool",["nShowType"]=1,["id"]=100,["sStr"]="刷新冷却中"}
+,{["key"]="targetFriendCntLimit",["nShowType"]=1,["id"]=101,["sStr"]="{}的好友已达上限"}
+,{["key"]="notFindAssitFrient",["nShowType"]=1,["id"]=102,["sStr"]="找不到支援玩家信息"}
+,{["key"]="isInBlackList",["nShowType"]=1,["id"]=103,["sStr"]="在自己的黑名单中"}
+,{["key"]="isInBeBlackList",["nShowType"]=1,["id"]=104,["sStr"]="在对方的黑名单中"}
+,{["key"]="friendAgreeCntLimit",["nShowType"]=1,["id"]=105,["sStr"]="一天内，只可以给好友点赞{}次"}
+,{["id"]=106,["key"]=106}
+,{["key"]="coreBuildingLvLimit",["nShowType"]=1,["id"]=107,["sStr"]="指挥中心需达到{1}级"}
+,{["key"]="buildInLimitArea",["nShowType"]=1,["id"]=108,["sStr"]="该区域未开放"}
+,{["key"]="buildSumLimit",["nShowType"]=1,["id"]=109,["sStr"]="建筑总数已达上限"}
+,{["key"]="buildTypeLimit",["nShowType"]=1,["id"]=110,["sStr"]="该类型建筑已达上限"}
+,{["key"]="buildPosLimit",["nShowType"]=1,["id"]=111,["sStr"]="建筑位置无效"}
+,{["key"]="buildOpenLimit",["nShowType"]=1,["id"]=112,["sStr"]="建筑未开启"}
+,{["key"]="buildRoleCntLimit",["nShowType"]=1,["id"]=113,["sStr"]="入驻人员已满"}
+,{["key"]="buildRoleNotFind",["nShowType"]=1,["id"]=114,["sStr"]="建筑配置[ {} ]找不到对应的角色id[ {} ]"}
+,{["key"]="buildRoleIsInBuild",["nShowType"]=1,["id"]=115,["sStr"]="角色已在基地入驻了"}
+,{["key"]="buildRoleIsInDorm",["nShowType"]=1,["id"]=116,["sStr"]="角色已经入住了宿舍了"}
+,{["key"]="buildIsStop",["nShowType"]=1,["id"]=117,["sStr"]="建筑停止运作"}
+,{["key"]="buildAssaultString",["nShowType"]=1,["id"]=118,["sStr"]="基地受到袭击时无法进行该操作"}
+,{["key"]="buildAssaultFinish",["nShowType"]=1,["id"]=119,["sStr"]="袭击已结束"}
+,{["key"]="buildMaxFailCnt",["nShowType"]=1,["id"]=120,["sStr"]="失败次数已达上限"}
+,{["key"]="buildExpTaskNotFind",["nShowType"]=1,["id"]=121,["sStr"]="找不到远征探索任务,请尝试刷新界面"}
+,{["key"]="buildExpTaskHadStart",["nShowType"]=1,["id"]=122,["sStr"]="远征探索已经开始，请勿重复操作"}
+,{["key"]="buildExpCardClassLimit",["nShowType"]=1,["id"]=123,["sStr"]="远征队伍类型不符合要求"}
+,{["key"]="buildExpCardNumLimit",["nShowType"]=1,["id"]=124,["sStr"]="远征队伍人员数量不符合要求"}
+,{["key"]="buildExpCardLvLimit",["nShowType"]=1,["id"]=125,["sStr"]="远征队伍人员等级不符合要求"}
+,{["key"]="buildExpNotFinish",["nShowType"]=1,["id"]=126,["sStr"]="远征探索任务还未完成"}
+,{["key"]="buildTypeError",["nShowType"]=1,["id"]=127,["sStr"]="建筑类型错误"}
+,{["key"]="buildExpNotBall",["nShowType"]=1,["id"]=128,["sStr"]="没球了"}
+,{["key"]="buildExpHadFinish",["nShowType"]=1,["id"]=129,["sStr"]="远征探索已完成"}
+,{["key"]="buildExpTeamMax",["nShowType"]=1,["id"]=130,["sStr"]="已经到达队伍数量上限"}
+,{["key"]="buildInExp",["nShowType"]=1,["id"]=131,["sStr"]="角色{}已经在远征中了"}
+,{["key"]="buildGetRewardLimt",["nShowType"]=1,["id"]=132,["sStr"]="资源上限已满, 无法继续领取"}
+,{["key"]="buildSetAllTired",["nShowType"]=1,["id"]=133,["sStr"]="成功设置所有角色疲劳值为 {}"}
+,{["key"]="buildSetOneTired",["nShowType"]=1,["id"]=134,["sStr"]="成功设置角色 {} 疲劳值为 {}"}
+,{["key"]="buildSetAllLv",["nShowType"]=1,["id"]=135,["sStr"]="成功设置所有角色等级值为 {}"}
+,{["key"]="buildSetOneLv",["nShowType"]=1,["id"]=136,["sStr"]="成功设置角色 {} 等级值为 {}"}
+,{["key"]="buildCombineFail",["nShowType"]=1,["id"]=137,["sStr"]="合成失败，需要消耗更多时间"}
+,{["key"]="buildEnemyIsEmpty",["nShowType"]=1,["id"]=138,["sStr"]="敌人已被消灭"}
+,{["key"]="buildRoleCfgNotSet",["nShowType"]=1,["id"]=139,["sStr"]="角色[ {1} ]没有入驻的功能"}
+,{["key"]="buildOrderIsFull",["nShowType"]=1,["id"]=140,["sStr"]="订单数量已达上限"}
+,{["key"]="buildFlushOrderRoleTired",["nShowType"]=1,["id"]=141,["sStr"]="角色{}疲劳上限，不足刷新订单"}
+,{["key"]="buildFlrTradeOutOfDate",["nShowType"]=1,["id"]=142,["sStr"]="好友订单已失效"}
+,{["key"]="buildFlrTradeNotData",["nShowType"]=1,["id"]=143,["sStr"]="“拜访失败，当前好友基地未建造订单库”"}
+,{["id"]=144,["key"]=144}
+,{["key"]="notEnoughGuildPower",["nShowType"]=1,["id"]=145,["sStr"]="工会职位权限不够"}
+,{["key"]="inGuildLimit",["nShowType"]=1,["id"]=146,["sStr"]="需要先退出所在的工会才可操作"}
+,{["key"]="guildNameLenLimit",["nShowType"]=1,["id"]=147,["sStr"]="工会名字太长"}
+,{["key"]="guildDescLenLimit",["nShowType"]=1,["id"]=148,["sStr"]="工会描述太长"}
+,{["key"]="guildApplyLvLimit",["nShowType"]=1,["id"]=149,["sStr"]="工会申请等级限制不能大于会长等级"}
+,{["key"]="sysError",["nShowType"]=1,["id"]=150,["sStr"]="系统异常"}
+,{["key"]="guildApplyCntLimit",["nShowType"]=1,["id"]=151,["sStr"]="工会申请数量限制"}
+,{["key"]="guildMemberFull",["nShowType"]=1,["id"]=152,["sStr"]="工会已经满员"}
+,{["key"]="notInGuildLimit",["nShowType"]=1,["id"]=153,["sStr"]="没有再工会里面"}
+,{["key"]="guildNeedBoss",["nShowType"]=1,["id"]=154,["sStr"]="需要会长权限"}
+,{["key"]="guildInvalid",["nShowType"]=1,["id"]=155,["sStr"]="无效的工会"}
+,{["key"]="guildNeedSubBoss",["nShowType"]=1,["id"]=156,["sStr"]="需要副会长以上权限"}
+,{["key"]="guildNeedBoss",["nShowType"]=1,["id"]=157,["sStr"]="会长才可操作"}
+,{["key"]="guildNeedNotBoss",["nShowType"]=1,["id"]=158,["sStr"]="会长不可操作"}
+,{["key"]="guildAppyLvLimit",["nShowType"]=1,["id"]=159,["sStr"]="小不点，等级还不够噢"}
+,{["key"]="guildSubBoosCntLimit",["nShowType"]=1,["id"]=160,["sStr"]="副会长人数以达上限"}
+,{["key"]="guildRoomHadCreate",["nShowType"]=1,["id"]=161,["sStr"]="该房间已经被创建"}
+,{["key"]="guildFightRoomOutOfDate",["nShowType"]=1,["id"]=162,["sStr"]="工会战房间过期"}
+,{["key"]="guildFightLimit",["nShowType"]=1,["id"]=163,["sStr"]="工会战期间不能支持该操作噢~!"}
+,{["key"]="guildFightRoomDup",["nShowType"]=1,["id"]=164,["sStr"]="房间不能重复出创建"}
+,{["id"]=165,["key"]=165}
+,{["key"]="inFightingLimit",["nShowType"]=1,["id"]=166,["sStr"]="你已经在战斗中"}
+,{["key"]="inFightingTarget",["nShowType"]=1,["id"]=167,["sStr"]="{}已经在战斗中"}
+,{["key"]="forceTeamError",["nShowType"]=1,["id"]=168,["sStr"]="强制上阵队伍数据不正确"}
+,{["key"]="hotLimit",["nShowType"]=1,["id"]=169,["sStr"]="燃料不足，无法进入关卡"}
+,{["key"]="hotFull",["nShowType"]=1,["id"]=170,["sStr"]="燃料不足，无法进入关卡"}
+,{["key"]="PreChapterIDLimit",["nShowType"]=1,["id"]=171,["sStr"]="数据验证异常，请重新登录游戏"}
+,{["key"]="isInTeam",["nShowType"]=1,["id"]=172,["sStr"]="{}在队伍上阵中"}
+,{["key"]="armyOpErr",["nShowType"]=1,["id"]=173,["sStr"]="军演协议发送时间有误"}
+,{["key"]="invalidSkillGroupId",["nShowType"]=1,["id"]=174,["sStr"]="无效的技能组id"}
+,{["key"]="invalidTeamId",["nShowType"]=1,["id"]=175,["sStr"]="无效的队伍id"}
+,{["key"]="plrCostLimit",["nShowType"]=1,["id"]=176,["sStr"]="超过探索队等级cost值上限{}"}
+,{["key"]="teamMemCntLimt",["nShowType"]=1,["id"]=177,["sStr"]="队伍人数限制，最少需要1人上阵"}
+,{["key"]="teamCardDupUse",["nShowType"]=1,["id"]=178,["sStr"]="角色 {} 在编队{}已经使用，不能重复编队"}
+,{["key"]="armyPracticeHadNotStart",["nShowType"]=1,["id"]=179,["sStr"]="军演还未到开始时间"}
+,{["key"]="armyPracticeIsFinish",["nShowType"]=1,["id"]=180,["sStr"]="本季度军演已经结束，感谢参与！"}
+,{["key"]="armyAttackBuyCntLimit",["nShowType"]=1,["id"]=181,["sStr"]="超过可购买次数上限"}
+,{["key"]="armyAttackMaxCntLimit",["nShowType"]=1,["id"]=182,["sStr"]="购买后次数超过了可挑战次数上限"}
+,{["id"]=183,["key"]=183}
+,{["key"]="sOnOtherDuplicate",["nShowType"]=1,["id"]=184,["sStr"]="其他副本正在进行中"}
+,{["key"]="sDuplicateOver",["nShowType"]=1,["id"]=185,["sStr"]="副本已经结束"}
+,{["key"]="inDupFightLimit",["nShowType"]=1,["id"]=186,["sStr"]="在副本战斗中不能进行此操作"}
+,{["key"]="DupCntLimit",["nShowType"]=1,["id"]=187,["sStr"]="该副本挑战次数到达上限"}
+,{["key"]="sDuplicatePropPalsy",["nShowType"]=1,["id"]=188,["sStr"]="队伍被麻痹，无法移动"}
+,{["key"]="sDuplicatePropPalsyMonster",["nShowType"]=1,["id"]=189,["sStr"]="敌人被麻痹，无法移动"}
+,{["key"]="sDuplicatePropIce",["nShowType"]=1,["id"]=190,["sStr"]="处于冰冻中，无法移动"}
+,{["key"]="sNeedPassDup",["nShowType"]=1,["id"]=191,["sStr"]="需要先通过副本{}"}
+,{["key"]="sDuplicateTimeOut",["nShowType"]=3,["id"]=192,["sStr"]="超过副本规定时间,强制结束战斗"}
+,{["key"]="g_DungeonNumAdd",["nShowType"]=1,["id"]=193,["sStr"]="{}入场次数+{}"}
+,{["key"]="touchMaxLv",["nShowType"]=1,["id"]=194,["sStr"]="已经满级"}
+,{["key"]="opcodeHoldUp",["nShowType"]=1,["id"]=195,["sStr"]="消息{}频率过于频繁，请等候片刻哦！"}
+,{["key"]="gameReloging",["nShowType"]=1,["id"]=196,["sStr"]="游戏服开始热更"}
+,{["key"]="svrsReloging",["nShowType"]=1,["id"]=197,["sStr"]="全服开始热更"}
+,{["key"]="costNotEnough",["nShowType"]=1,["id"]=198,["sStr"]="消耗不足"}
+,{["key"]="outOfDate",["nShowType"]=1,["id"]=199,["sStr"]="订单已过期"}
+,{["key"]="tradeOrderBuyLimit",["nShowType"]=1,["id"]=200,["sStr"]="交付订单已达购买上限"}
+,{["key"]="tradeFlrOrderBuyLimit",["nShowType"]=1,["id"]=201,["sStr"]="交付好友订单已达购买上限"}
+,{["key"]="taskRepeat",["nShowType"]=1,["id"]=202,["sStr"]="有相同的操作未完成"}
+,{["key"]="notFindOrder",["nShowType"]=1,["id"]=203,["sStr"]="未找到订单"}
+,{["key"]="orderWaitStart",["nShowType"]=1,["id"]=204,["sStr"]="订单未开始"}
+,{["key"]="repeatOp",["nShowType"]=1,["id"]=205,["sStr"]="请勿重复操作"}
+,{["key"]="opFaild",["nShowType"]=1,["id"]=206,["sStr"]="操作失败"}
+,{["key"]="onceLimit",["nShowType"]=1,["id"]=207,["sStr"]="超过单次上限"}
+,{["key"]="sumLimit",["nShowType"]=1,["id"]=208,["sStr"]="超过总数上限"}
+,{["key"]="invalidInput",["nShowType"]=1,["id"]=209,["sStr"]="输入信息不合规范"}
+,{["key"]="hadGet",["nShowType"]=1,["id"]=210,["sStr"]="已经被领取了"}
+,{["key"]="opCntLimit",["nShowType"]=1,["id"]=211,["sStr"]="操作次数已达上限"}
+,{["key"]="wordCntLimit",["nShowType"]=1,["id"]=212,["sStr"]="字数超过限制"}
+,{["key"]="invalidOp",["nShowType"]=1,["id"]=213,["sStr"]="操作不被允许"}
+,{["key"]="nameExist",["nShowType"]=1,["id"]=214,["sStr"]="名字已经存在"}
+,{["key"]="applyCntLimit",["nShowType"]=1,["id"]=215,["sStr"]="申请数量到达上限，申请列表最大上限为{1}人"}
+,{["key"]="opQuickly",["nShowType"]=1,["id"]=216,["sStr"]="操作太快了，请休息下再继续!"}
+,{["key"]="scoreLimit",["nShowType"]=1,["id"]=217,["sStr"]="积分不足"}
+,{["key"]="spaceNumNotEnough",["nShowType"]=4,["id"]=218,["arg1"]="80002",["sStr"]="“芯片仓达到上限，无法进行芯片更换，是否进行清理？”"}
+,{["key"]="goldHadTake",["nShowType"]=1,["id"]=219,["sStr"]="晶片已领取, 请稍后再试"}
+,{["key"]="notInOpenTime",["nShowType"]=1,["id"]=220,["sStr"]="不在开放时间内"}
+,{["key"]="notFindOpObj",["nShowType"]=1,["id"]=221,["sStr"]="获取不到操作对象"}
+,{["key"]="hadNotFinish",["nShowType"]=1,["id"]=222,["sStr"]="尚未完成"}
+,{["key"]="invalidArgs",["nShowType"]=1,["id"]=223,["sStr"]="参数无效"}
+,{["key"]="notEnoughStoreExp",["nShowType"]=1,["id"]=224,["sStr"]="存储技术点剩余{},不足扣除"}
+,{["key"]="spaceNotEnough",["nShowType"]=1,["id"]=225,["sStr"]="空间不足"}
+,{["key"]="notCfg",["nShowType"]=1,["id"]=226,["sStr"]="配置{}中找不到为{}的配置"}
+,{["key"]="notFindCfg",["nShowType"]=1,["id"]=227,["sStr"]="配置表异常，找不到相关配置"}
+,{["key"]="reachMaxLvl",["nShowType"]=1,["id"]=228,["sStr"]="已经到达等级上限"}
+,{["key"]="isUpgrading",["nShowType"]=1,["id"]=229,["sStr"]="已在升级中"}
+,{["key"]="LevelLimit",["nShowType"]=1,["id"]=230,["sStr"]="等级不足{}级"}
+,{["key"]="isNotOnline",["nShowType"]=1,["id"]=231,["sStr"]="不在线"}
+,{["key"]="friendNotOnline",["nShowType"]=1,["id"]=232,["sStr"]="好友不在线"}
+,{["key"]="notInLimitTime",["nShowType"]=1,["id"]=233,["sStr"]="不在限定时间内"}
+,{["key"]="slotHadAllOpen",["nShowType"]=1,["id"]=234,["sStr"]="仓库格子已经全部开放"}
+,{["key"]="materialNotEnough",["nShowType"]=1,["id"]=235,["sStr"]="【{1}】拥有数量不足{2}"}
+,{["key"]="hadNotOpen",["nShowType"]=1,["id"]=236,["sStr"]="未开启"}
+,{["key"]="notOpenCfg",["nShowType"]=1,["id"]=237,["sStr"]="未有配有开启配置"}
+,{["key"]="plrLvLimit",["nShowType"]=1,["id"]=238,["sStr"]="玩家探索等级需要达到{1}级"}
+,{["key"]="goldGetLimit",["nShowType"]=1,["id"]=239,["sStr"]="晶片到达可领取上限"}
+,{["key"]="abilityNumLimit",["nShowType"]=1,["id"]=240,["sStr"]="战术点不足"}
+,{["key"]="useAsIcon",["nShowType"]=1,["id"]=241,["sStr"]="头像使用中"}
+,{["key"]="needFlush",["nShowType"]=1,["id"]=242,["sStr"]="需要刷新"}
+,{["key"]="notFindSkin",["nShowType"]=1,["id"]=243,["sStr"]="没找到外装外观"}
+,{["key"]="signFaild",["nShowType"]=1,["id"]=244,["sStr"]="签到失败"}
+,{["key"]="notFindOpSkill",["nShowType"]=1,["id"]=245,["sStr"]="没有找到要操作的技能"}
+,{["key"]="gmplrOpen",["nShowType"]=1,["id"]=246,["sStr"]="开启GM,时间间隔为{}秒"}
+,{["key"]="gmplrColse",["nShowType"]=1,["id"]=247,["sStr"]="关闭GM"}
+,{["key"]="signMaxLenLimit",["nShowType"]=1,["id"]=248,["sStr"]="超过签名最大长度了哦～"}
+,{["key"]="GeneralTips",["nShowType"]=1,["id"]=249,["sStr"]="{}"}
+,{["key"]="hadSameRoleId",["nShowType"]=1,["id"]=250,["sStr"]="不能存在相同角色id的角色！"}
+,{["key"]="assitTeamNumLimit",["nShowType"]=1,["id"]=251,["sStr"]="支援助战最多设置3名角色"}
+,{["key"]="teamNotSet",["nShowType"]=1,["id"]=252,["sStr"]="没有设置队伍信息"}
+,{["key"]="goldHadFull",["nShowType"]=1,["id"]=253,["sStr"]="资源已经达到上限，无法继续交易"}
+,{["key"]="canNotToSelf",["nShowType"]=1,["id"]=254,["sStr"]="不支持对自己操作"}
+,{["key"]="plrChangeGameSvr",["nShowType"]=1,["id"]=255,["sStr"]="玩家开始从游戏服{}转移到游戏服{}"}
+,{["key"]="buySuc",["nShowType"]=1,["id"]=256,["sStr"]="购买成功"}
+,{["key"]="gameSvrIdErr",["nShowType"]=1,["id"]=257,["sStr"]="找不到id为{}的游戏服"}
+,{["key"]="roleNotFind",["nShowType"]=1,["id"]=258,["sStr"]="找不到id为{}的角色"}
+,{["key"]="canNotOpToSelf",["nShowType"]=1,["id"]=259,["sStr"]="不能添加自己为好友"}
+,{["key"]="notLoadFinish",["nShowType"]=1,["id"]=260,["sStr"]="未加载完成"}
+,{["key"]="onlineTimeLimit",["nShowType"]=8,["id"]=261,["nFunType"]=1,["sStr"]=[[防沉迷提示
+由于您是{1}，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，不在可登陆时间范围内，可登陆时间为周五、周六、周日和法定节假日每日20时至21时。]]}
+,{["key"]="onlineTimeHolidayLimit",["nShowType"]=8,["id"]=262,["nFunType"]=1,["sStr"]=[[防沉迷提示
+由于您是{1}，根据《国家新闻出版署关于防止未成年人沉迷网络游戏的通知》，您今天已经进行游戏{5}小时，超过法定节假日3小时限制，不能继续游戏，请注意休息。]]}
+,{["key"]="sumOnlineTimeLimit",["nShowType"]=8,["id"]=263,["nFunType"]=1,["sStr"]=[[防沉迷提示
+由于您是{1}，已达到{}小时的游戏限制，15日内无法再次进入游客体验模式。]]}
+,{["key"]="sumOnlineTimeLimitByDay",["nShowType"]=8,["id"]=264,["nFunType"]=1,["sStr"]=[[防沉迷提示
+由于您是{1}，你已在线{9}小时,{10}日内无法再次进入游客体验模式。]]}
+,{["key"]="loginTimeLimit",["nShowType"]=8,["id"]=265,["nFunType"]=1,["sStr"]=[[防沉迷提示
+由于您是{1}，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，不在可登陆时间范围内，可登陆时间为周五、周六、周日和法定节假日每日20时至21时。]]}
+,{["key"]="needRegisterAntiAddiction",["nShowType"]=1,["id"]=266,["nFunType"]=1,["sStr"]=[[防沉迷提示
+需要先注册防沉迷信息]]}
+,{["key"]="oncePayLimit",["nShowType"]=3,["id"]=267,["sStr"]=[[防沉迷提示
+因为由于您是{2}周岁的未成年人，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，单次充值金额不得超过{6}元人民币。]]}
+,{["key"]="accTypeCanNotPay",["nShowType"]=3,["id"]=268,["sStr"]=[[防沉迷提示
+由于您是{1}玩家，所以无法进行充值。]]}
+,{["key"]="monthPayLimit",["nShowType"]=3,["id"]=269,["sStr"]=[[防沉迷提示
+因为由于您是{2}周岁的未成年人，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，每个月累计充值不得超过{7}元。]]}
+,{["key"]="SetAccNum",["nShowType"]=3,["id"]=270,["sStr"]="设置账号类型为{},子类型{},年龄{}，身份证号码为{},姓名为{}"}
+,{["key"]="accTypeNoticeGuest",["nShowType"]=3,["id"]=271,["sStr"]=[[防沉迷提示
+由于您是{1},15日内，在线总时长限制{5}小时,且无法进行充值和消费。]]}
+,{["key"]="accTypeNoticePlr1",["nShowType"]=3,["id"]=272,["sStr"]=[[防沉迷提示
+由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，在周五、周六、周日和法定节假日每日20时至21时，提供1小时游戏时间，单次充值限额50元，
+每月累计充值不得超过200元。]]}
+,{["key"]="accTypeNoticePlr2",["nShowType"]=3,["id"]=273,["sStr"]=[[防沉迷提示
+由于您是{1}，根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，不在可登陆时间范围内，可登陆时间为周五、周六、周日和法定节假日每日20时至21时。]]}
+,{["key"]="accTypeNoticePlr3",["nShowType"]=3,["id"]=274,["sStr"]=[[防沉迷提示
+由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，当前时间属于周五、周六、周日20时至21时，期间可体验游戏1小时。]]}
+,{["key"]="accTypeNoticePlr4",["nShowType"]=3,["id"]=275,["sStr"]=[[防沉迷提示
+因为由于您是{2}周岁的未成年人,根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，
+您无法进行付费充值。]]}
+,{["key"]="accTypeNoticePlr5",["nShowType"]=3,["id"]=276,["sStr"]=[[防沉迷提示
+由于您是未成年人,根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，在周五、周六、周日和法定节假日每日20时至21时，提供1小时游戏时间，无法充值和消费。]]}
+,{["key"]="accTypeNoticePlr6",["nShowType"]=3,["id"]=277,["sStr"]=[[防沉迷提示
+由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，当前属于法定节假日20时至21时，期间可体验游戏1小时。]]}
+,{["key"]="accTypeNoticePlr7",["nShowType"]=3,["id"]=278,["sStr"]=[[防沉迷提示
+由于您是{1},根据国家新闻出版署《关于防止未成年人沉迷网络游戏的通知》《关于进一步严格管理切实防止未成年人沉迷网络游戏的通知》要求，在周五、周六、周日和法定节假日每日20时至21时，提供1小时游戏时间，单次充值限额100元，
+每月累计充值不得超过400元。]]}
+,{["key"]="createTimeLimit",["nShowType"]=1,["id"]=279,["sStr"]="创建时间限制，在{}秒后，才可以创建"}
+,{["key"]="hadOneRoom",["nShowType"]=1,["id"]=280,["sStr"]="已经创建了一个房间，不能重复创建"}
+,{["key"]="needQuitTeamRoom",["nShowType"]=1,["id"]=281,["sStr"]="需要先退出之前所在的房间"}
+,{["key"]="notFindTeamRoom",["nShowType"]=1,["id"]=282,["sStr"]="找不到对应的房间"}
+,{["key"]="teamBossIsFull",["nShowType"]=1,["id"]=283,["sStr"]="房间已经满人了"}
+,{["key"]="teamBossRoomNotFind",["nShowType"]=1,["id"]=284,["sStr"]="找不到房间"}
+,{["key"]="teamBossInviteLimit",["nShowType"]=1,["id"]=285,["sStr"]="房主才能邀请"}
+,{["key"]="teamBossIsStartingLimit",["nShowType"]=1,["id"]=286,["sStr"]="组队boss已经开始的房间不支持改操作"}
+,{["key"]="teamBossFriendHadJoin",["nShowType"]=1,["id"]=287,["sStr"]="好友已经参加了该活动"}
+,{["key"]="teamBossNotFindTeam",["nShowType"]=1,["id"]=288,["sStr"]="找不到队伍信息"}
+,{["key"]="teamBossTeamNotFighting",["nShowType"]=1,["id"]=289,["sStr"]="队伍不在战斗中"}
+,{["key"]="dormNotFind",["nShowType"]=1,["id"]=290,["sStr"]="定位不到id为【{}】的房间"}
+,{["key"]="dormThemeStoreLimit",["nShowType"]=1,["id"]=291,["sStr"]="主题的收藏，已经达到上限{}个"}
+,{["key"]="dormThemeNotFind",["nShowType"]=1,["id"]=292,["sStr"]="定位不到id为【{}】的主题"}
+,{["key"]="dormThemeShareLimit",["nShowType"]=1,["id"]=293,["sStr"]="主题的分享，已经达到上限{}个"}
+,{["key"]="dormThemeIdCreateErr",["nShowType"]=1,["id"]=294,["sStr"]="主题id生成失败，请稍后再尝试"}
+,{["key"]="dormThemeSaveLimit",["nShowType"]=1,["id"]=295,["sStr"]="数量已达到上限{}个"}
+,{["key"]="dormRoleNotFind",["nShowType"]=1,["id"]=296,["sStr"]="在id为{}的宿舍，找不到角色 {}"}
+,{["key"]="dormEventNotStart",["nShowType"]=1,["id"]=297,["sStr"]="事件还没开始"}
+,{["key"]="dormClothesCfgErr",["nShowType"]=1,["id"]=298,["sStr"]="服装穿戴信息异常，穿戴不成功"}
+,{["key"]="dormClothesCfgSex",["nShowType"]=1,["id"]=299,["sStr"]="服装不符合性别需求"}
+,{["key"]="dormClothesCfgLimit",["nShowType"]=1,["id"]=300,["sStr"]="服装不能穿戴在该角色身上"}
+,{["key"]="dormFurBuyLimit",["nShowType"]=1,["id"]=301,["sStr"]="家具{1}已经购买了{2},购买上限为{3}件"}
+,{["key"]="friendOrdersOutOfDate",["nShowType"]=1,["id"]=302,["sStr"]="无法交付，好友订单已失效"}
+,{["key"]="explorNotOpenExLv",["nShowType"]=1,["id"]=303,["sStr"]="需要开启开启高级勘探"}
+,{["key"]="exploHadGetReward",["nShowType"]=1,["id"]=304,["sStr"]="该奖励已经领取"}
+,{["key"]="explorMailReward",["nShowType"]=1,["id"]=305,["sStr"]="领取成功"}
+,{["key"]="plrHotBuyCntLimit",["nShowType"]=1,["id"]=306,["sStr"]="每天可兑{1}次体能,已经兑换了{2}次数"}
+,{["key"]="plrHotBuyMaxLimit",["nShowType"]=1,["id"]=307,["sStr"]="购买失败，超过燃料上限数量{2}"}
+,{["key"]="plrHotUseMaxLimit",["nShowType"]=1,["id"]=308,["sStr"]="使用失败，超过燃料上限数量999"}
+,{["key"]="plrPhyMinGameCntLimit",["nShowType"]=1,["id"]=309,["sStr"]="每天可以参与游戏{1}次，今天已经使用{2}次了"}
+,{["key"]="moneyNotEnough",["nShowType"]=1,["id"]=310,["sStr"]="货币不足，无法购买"}
+,{["key"]="plrHotMailMaxLimit",["nShowType"]=1,["id"]=311,["sStr"]="领取失败，超过燃料上限数量{1}"}
+,{["key"]="cardPoolFirstNotFinish",["nShowType"]=1,["id"]=312,["sStr"]="特装构建进度尚未结束,请退出当前界面后重新进入尝试"}
+,{["key"]="accRegisterLimit",["nShowType"]=9,["id"]=313,["sStr"]=[[防沉迷提示
+非常抱歉，由于您是未成年人,暂无法进入游戏。]]}
+,{["key"]="bindCodeErr",["nShowType"]=1,["id"]=314,["sStr"]="协同代码不存在"}
+,{["key"]="hadBindFinish",["nShowType"]=1,["id"]=315,["sStr"]="绑定玩家已处于协作关系"}
+,{["key"]="plrBindTypeErr",["nShowType"]=1,["id"]=316,["sStr"]="绑定玩家不符合要求"}
+,{["key"]="mailExpiry",["nShowType"]=1,["id"]=317,["sStr"]="邮件已失效，请重新进入界面查看。"}
+,{["key"]="plrBindApplyLimitCnt",["nShowType"]=1,["id"]=318,["sStr"]="申请频繁，请稍后再试"}
+,{["key"]="plrBindBeApplyLimitCnt",["nShowType"]=1,["id"]=319,["sStr"]="该玩家被申请次数频繁，切换玩家目标重试"}
+,{["key"]="notPlrBindInviteLog",["nShowType"]=1,["id"]=320,["sStr"]="该邀请已失效"}
+,{["key"]="hadBindPlrCanNotAgree",["nShowType"]=1,["id"]=321,["sStr"]="已绑定玩家无法接受申请"}
+,{["key"]="plrUnfinishBinding",["nShowType"]=1,["id"]=322,["sStr"]="未完成绑定"}
+,{["key"]="voucherCanNotUseVoucher",["nShowType"]=1,["id"]=323,["sStr"]="商品不支持使用抵扣券"}
+,{["key"]="voucherMixUseReduceIdErr",["nShowType"]=1,["id"]=324,["sStr"]="叠加抵扣券只支持扣除一种物品"}
+,{["key"]="voucherCanNotMixUse",["nShowType"]=1,["id"]=325,["sStr"]="抵扣券不支持叠加使用"}
+,{["key"]="voucherCanNotMixDiscount",["nShowType"]=1,["id"]=326,["sStr"]="不支持与其他折扣一起使用"}
+,{["key"]="voucherMinCost",["nShowType"]=1,["id"]=327,["sStr"]="抵扣券最小消耗限制"}
+,{["key"]="voucherNotProductType",["nShowType"]=1,["id"]=328,["sStr"]="抵扣券不支持该商品类型"}
+,{["key"]="voucherBiggerThanRealCose",["nShowType"]=1,["id"]=329,["sStr"]="抵扣券大于总面值大于需要抵扣的总额"}
+,{["key"]="petUnlock",["nShowType"]=1,["id"]=330,["sStr"]="未解锁宠物"}
+,{["key"]="petIsLocked",["nShowType"]=1,["id"]=331,["sStr"]="宠物已解锁"}
+,{["key"]="petArchiveLocked",["nShowType"]=1,["id"]=332,["sStr"]="宠物图鉴已解锁"}
+,{["key"]="petArchiveUnlock",["nShowType"]=1,["id"]=333,["sStr"]="宠物图鉴未解锁"}
+,{["key"]="petTimeNotInRange",["nShowType"]=1,["id"]=334,["sStr"]="宠物运动时间不在范围内"}
+,{["key"]="petSportBeInterrupted",["nShowType"]=1,["id"]=335,["sStr"]="宠物属性不足运动中止"}
+,{["key"]="plrBindRewardHadMail",["nShowType"]=1,["id"]=336,["sStr"]="绑定奖励已发送至邮件"}
+,{["key"]="plrBindHadInvite",["nShowType"]=1,["id"]=337,["sStr"]="已邀请"}
+,{["key"]="globalBossOver",["nShowType"]=1,["id"]=338,["sStr"]="活动已结束"}
+,{["key"]="checkNameError",["nShowType"]=1,["id"]=339,["sStr"]="输入的文字中不得含有敏感字符"}
+,{["key"]="checkMyNameError",["nShowType"]=1,["id"]=340,["sStr"]="无法命名为当前名字"}
+,{["key"]="expReminder",["nShowType"]=7,["id"]=341,["arg1"]="80001",["sStr"]="您持有的{1}将在24小时内过期，请尽快使用。"}
+,{["key"]="EquipSynthesisReminder",["nShowType"]=7,["id"]=342,["arg1"]="330001",["sStr"]="芯片存在未保存的重构结果，请前往确认。"}
+,[348]={["key"]="pvpTeamNotSet",["nShowType"]=1,["id"]=348,["sStr"]="未满足三个编队，无法开始军演"}
 }
---cfgCfgTipsSimpleChinese = conf
-return conf
+

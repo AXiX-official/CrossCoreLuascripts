@@ -19,7 +19,7 @@ function Buffer338201:OnBefourHurt(caster, target)
 		return
 	end
 	-- 338211
-	self:AddAttr(BufferEffect[338211], self.caster, self.card, nil, "damage",0.02*self.nCount)
+	self:AddTempAttr(BufferEffect[338211], self.caster, self.card, nil, "damage",0.02*self.nCount)
 end
 -- 创建时
 function Buffer338201:OnCreate(caster, target)

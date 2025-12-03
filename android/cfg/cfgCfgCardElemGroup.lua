@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'k-卡牌核心突破.xlsx',
-	["sheetname"] = '碎片转化次数分组',
-	["types"] = {
-'int','string','int','int'
-},
-	["names"] = {
-'id','key','MinTimes','MaxTimes'
-},
-	["data"] = {
-{'1',	'1',	'1',	'1'},
-{'2',	'2',	'2',	'9'},
-{'3',	'3',	'10',	''},
-},
+_G["CfgCardElemGroup"]={{["id"]=1,["MaxTimes"]=1,["key"]="1",["MinTimes"]=1}
+,{["id"]=2,["MaxTimes"]=9,["key"]="2",["MinTimes"]=2}
+,{["id"]=3,["key"]="3",["MinTimes"]=10}
 }
---cfgCfgCardElemGroup = conf
-return conf
+

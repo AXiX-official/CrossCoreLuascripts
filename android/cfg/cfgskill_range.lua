@@ -1,27 +1,56 @@
-local conf = {
-	["filename"] = 'j-技能.xlsx',
-	["sheetname"] = '技能范围',
-	["types"] = {
-'int','string','int','int','json','json','string','bool'
-},
-	["names"] = {
-'id','key','group','range_type','range','range_limit','skill_icon','cross'
-},
-	["data"] = {
-{'1',	'one',	'',	'0',	'[[1,1]]',	'',	'effective_range_01',	''},
-{'2',	'one_row',	'',	'1',	'',	'',	'effective_range_02',	''},
-{'3',	'one_col',	'',	'2',	'',	'',	'effective_range_05',	''},
-{'4',	'all',	'',	'3',	'',	'',	'effective_range_04',	''},
-{'5',	'tian',	'',	'0',	'[[1,1],[1,2],[2,1],[2,2]]',	'',	'effective_range_06',	''},
-{'6',	'shizi',	'',	'0',	'[[1,2],[2,1],[2,2],[2,3],[3,2]]',	'',	'effective_range_03',	''},
-{'7',	'summon_area',	'',	'1',	'',	'[[0,1],[0,2],[0,3]]',	'effective_range_07',	''},
-{'8',	'one_except_self',	'',	'4',	'[[1,1]]',	'',	'effective_range_01',	''},
-{'9',	'myself',	'',	'5',	'[[1,1]]',	'',	'effective_range_01',	''},
-{'10',	'shizi1',	'',	'0',	'[[1,1]]',	'',	'effective_range_03',	'1'},
-{'11',	'two_row',	'',	'0',	'[[1,1],[1,2],[1,3],[2,1],[2,2],[2,3]]',	'',	'effective_range_10',	''},
-{'12',	'two_col',	'',	'0',	'[[1,1],[1,2],[2,1],[2,2],[3,1],[3,2],[4,1],[4,2]]',	'',	'effective_range_11',	''},
-{'13',	'all1',	'',	'3',	'[[1,1]]',	'',	'effective_range_04',	''},
-},
+_G["skill_range"]={{["range_type"]=0,["key"]="one",["cross"]=false,["id"]=1,["skill_icon"]="effective_range_01",["range"]={{1,1}
 }
---cfgskill_range = conf
-return conf
+}
+,{["range_type"]=1,["skill_icon"]="effective_range_02",["cross"]=false,["id"]=2,["key"]="one_row"}
+,{["range_type"]=2,["skill_icon"]="effective_range_05",["cross"]=false,["id"]=3,["key"]="one_col"}
+,{["range_type"]=3,["skill_icon"]="effective_range_04",["cross"]=false,["id"]=4,["key"]="all"}
+,{["range_type"]=0,["key"]="tian",["cross"]=false,["id"]=5,["skill_icon"]="effective_range_06",["range"]={{1,1}
+,{1,2}
+,{2,1}
+,{2,2}
+}
+}
+,{["range_type"]=0,["key"]="shizi",["cross"]=false,["id"]=6,["skill_icon"]="effective_range_03",["range"]={{1,2}
+,{2,1}
+,{2,2}
+,{2,3}
+,{3,2}
+}
+}
+,{["range_type"]=1,["range_limit"]={{0,1}
+,{0,2}
+,{0,3}
+}
+,["cross"]=false,["id"]=7,["skill_icon"]="effective_range_07",["key"]="summon_area"}
+,{["range_type"]=4,["key"]="one_except_self",["cross"]=false,["id"]=8,["skill_icon"]="effective_range_01",["range"]={{1,1}
+}
+}
+,{["range_type"]=5,["key"]="myself",["cross"]=false,["id"]=9,["skill_icon"]="effective_range_01",["range"]={{1,1}
+}
+}
+,{["range_type"]=0,["key"]="shizi1",["cross"]=true,["id"]=10,["skill_icon"]="effective_range_03",["range"]={{1,1}
+}
+}
+,{["range_type"]=0,["key"]="two_row",["cross"]=false,["id"]=11,["skill_icon"]="effective_range_10",["range"]={{1,1}
+,{1,2}
+,{1,3}
+,{2,1}
+,{2,2}
+,{2,3}
+}
+}
+,{["range_type"]=0,["key"]="two_col",["cross"]=false,["id"]=12,["skill_icon"]="effective_range_11",["range"]={{1,1}
+,{1,2}
+,{2,1}
+,{2,2}
+,{3,1}
+,{3,2}
+,{4,1}
+,{4,2}
+}
+}
+,{["range_type"]=3,["key"]="all1",["cross"]=false,["id"]=13,["skill_icon"]="effective_range_04",["range"]={{1,1}
+}
+}
+}
+

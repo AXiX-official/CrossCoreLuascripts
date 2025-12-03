@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'k-卡牌配置表.xlsx',
-	["sheetname"] = '突破能力修正',
-	["types"] = {
-'int','string','int','float','float','float','float','float','float','float','float','int','int','int','float'
-},
-	["names"] = {
-'id','key','need_lv','attack','maxhp','defense','speed','crit_rate','crit','hit','resist','hot','sp','np','sp_race'
-},
-	["data"] = {
-{'1',	'1',	'',	'1',	'1',	'1',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0'},
-{'2',	'2',	'',	'1.2672',	'1.1671',	'1.2376',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0'},
-{'3',	'3',	'',	'1.6164',	'1.3748',	'1.5247',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0'},
-{'4',	'4',	'',	'2.0555',	'1.5924',	'1.8712',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0'},
-{'5',	'5',	'',	'2.6143',	'1.8496',	'2.0792',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0'},
-},
+_G["CardBreak"]={{["defense"]=1,["sp_race"]=0,["id"]=1,["maxhp"]=1,["np"]=0,["crit_rate"]=0,["resist"]=0,["hot"]=0,["key"]="1",["hit"]=0,["speed"]=0,["sp"]=0,["crit"]=0,["attack"]=1}
+,{["defense"]=1.2376,["sp_race"]=0,["id"]=2,["maxhp"]=1.1671,["np"]=0,["crit_rate"]=0,["resist"]=0,["hot"]=0,["key"]="2",["hit"]=0,["speed"]=0,["sp"]=0,["crit"]=0,["attack"]=1.2672}
+,{["defense"]=1.5247,["sp_race"]=0,["id"]=3,["maxhp"]=1.3748,["np"]=0,["crit_rate"]=0,["resist"]=0,["hot"]=0,["key"]="3",["hit"]=0,["speed"]=0,["sp"]=0,["crit"]=0,["attack"]=1.6164}
+,{["defense"]=1.8712,["sp_race"]=0,["id"]=4,["maxhp"]=1.5924,["np"]=0,["crit_rate"]=0,["resist"]=0,["hot"]=0,["key"]="4",["hit"]=0,["speed"]=0,["sp"]=0,["crit"]=0,["attack"]=2.0555}
+,{["defense"]=2.0792,["sp_race"]=0,["id"]=5,["maxhp"]=1.8496,["np"]=0,["crit_rate"]=0,["resist"]=0,["hot"]=0,["key"]="5",["hit"]=0,["speed"]=0,["sp"]=0,["crit"]=0,["attack"]=2.6143}
 }
---cfgCardBreak = conf
-return conf
+

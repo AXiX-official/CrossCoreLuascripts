@@ -1,55 +1,81 @@
-local conf = {
-	["filename"] = 'x-新手教程.xlsx',
-	["sheetname"] = '模块开启',
-	["types"] = {
-'string','string','string','int','string','int[]','int','string'
-},
-	["names"] = {
-'id','key','sName','open_tips','icon','conditions','jump','sSceneName'
-},
-	["data"] = {
-{'TeamView',	'TeamView',	'编队',	'',	'',	'',	'',	''},
-{'Section',	'Section',	'出击',	'',	'',	'',	'',	''},
-{'CreateView',	'CreateView',	'抽卡',	'',	'',	'',	'',	''},
-{'RoleListNormal',	'RoleListNormal',	'角色',	'',	'',	'',	'',	''},
-{'CoolView',	'CoolView',	'冷却',	'',	'',	'',	'',	''},
-{'SettingView',	'SettingView',	'设置',	'',	'',	'',	'',	''},
-{'SignInView',	'SignInView',	'签到',	'',	'',	'',	'',	''},
-{'FriendView',	'FriendView',	'好友',	'1',	'FriendView',	'2001',	'',	''},
-{'PlayerView',	'PlayerView',	'玩家',	'',	'',	'2001',	'',	''},
-{'CourseView',	'CourseView',	'教程',	'1',	'CourseView',	'2001',	'',	''},
-{'MissionView',	'MissionView',	'任务',	'1',	'MissionView',	'2002',	'',	''},
-{'Bag',	'Bag',	'仓库',	'',	'',	'2002',	'',	''},
-{'MailView',	'MailView',	'邮件',	'1',	'MailView',	'2003',	'90001',	''},
-{'ShopView',	'ShopView',	'商店',	'1',	'ShopView',	'2002',	'',	''},
-{'Matrix',	'Matrix',	'基地',	'1',	'Matrix',	'2005',	'',	'Matrix'},
-{'Dorm',	'Dorm',	'宿舍',	'1',	'Dorm',	'2005',	'',	''},
-{'ActivityListView',	'ActivityListView',	'活动界面',	'1',	'ActivityListView',	'2007',	'',	''},
-{'ExplorationMain',	'ExplorationMain',	'勘探指南',	'1',	'ExplorationMain',	'2007',	'',	''},
-{'PlayerAbility',	'PlayerAbility',	'战术',	'1',	'PlayerAbility',	'2007',	'',	''},
-{'ArchiveView',	'ArchiveView',	'档案',	'1',	'ArchiveView',	'2103',	'',	''},
-{'GuildMenu',	'GuildMenu',	'公会',	'',	'',	'2110',	'',	''},
-{'ExerciseLView',	'ExerciseLView',	'镜像竞技',	'1',	'Arena',	'2114',	'',	''},
-{'ExtraActivityView',	'ExtraActivityView',	'付费活动',	'',	'',	'2002',	'',	''},
-{'TowerListView',	'TowerListView',	'异构空间',	'',	'',	'2120',	'',	''},
-{'BadgeView',	'BadgeView',	'徽章',	'1',	'Badge',	'2001',	'',	''},
-{'Achievement',	'Achievement',	'成就',	'1',	'Achievement',	'2105',	'',	''},
-{'TowerView',	'TowerView',	'异构空间',	'',	'',	'2120',	'',	''},
-{'RogueView',	'RogueView',	'乱序演习',	'',	'',	'2120',	'',	''},
-{'PetMain',	'PetMain',	'萌宠进化论',	'',	'',	'2007',	'',	''},
-{'RogueSView',	'RogueSView',	'战力调遣',	'',	'',	'2120',	'',	''},
-{'ColosseumView',	'ColosseumView',	'角斗场',	'',	'',	'2120',	'',	''},
-{'CollaborationMain',	'CollaborationMain',	'协同作战',	'',	'',	'2007',	'',	''},
-{'RogueTView',	'RogueTView',	'能力测验',	'',	'',	'2120',	'',	''},
-{'LuckyGachaMain',	'LuckyGachaMain',	'扭蛋机',	'',	'',	'2007',	'',	''},
-{'PuzzleActivity',	'PuzzleActivity',	'拾光剪影',	'',	'',	'2120',	'',	''},
-{'SignInDuanWu',	'SignInDuanWu',	'龙舟争霸赛',	'',	'',	'2007',	'',	''},
-{'SkinRebate',	'SkinRebate',	'衣惠有礼',	'',	'',	'2002',	'',	''},
-{'MultTeamBattleMain',	'MultTeamBattleMain',	'递归沙盒',	'',	'',	'2125',	'',	''},
-{'RiddleMain',	'RiddleMain',	'天灯映月',	'',	'',	'2007',	'',	''},
-{'LovePlusView',	'LovePlusView',	'时光恋曲',	'',	'',	'2007',	'',	''},
-{'TowerDeep',	'TowerDeep',	'深塔计划',	'',	'',	'2125',	'',	''},
-},
+_G["CfgOpenCondition"]={["ColosseumView"]={["key"]="ColosseumView",["id"]="ColosseumView",["conditions"]={2120}
+,["sName"]="角斗场"}
+,["GuildMenu"]={["key"]="GuildMenu",["id"]="GuildMenu",["conditions"]={2110}
+,["sName"]="公会"}
+,["MailView"]={["conditions"]={2003}
+,["key"]="MailView",["jump"]=90001,["open_tips"]=1,["sName"]="邮件",["icon"]="MailView",["id"]="MailView"}
+,["BadgeView"]={["conditions"]={2001}
+,["key"]="BadgeView",["open_tips"]=1,["sName"]="徽章",["icon"]="Badge",["id"]="BadgeView"}
+,["ExplorationMain"]={["conditions"]={2007}
+,["key"]="ExplorationMain",["open_tips"]=1,["sName"]="勘探指南",["icon"]="ExplorationMain",["id"]="ExplorationMain"}
+,["RogueTView"]={["key"]="RogueTView",["id"]="RogueTView",["conditions"]={2120}
+,["sName"]="能力测验"}
+,["Section"]={["id"]="Section",["sName"]="出击",["key"]="Section"}
+,["RichManMain"]={["key"]="RichManMain",["id"]="RichManMain",["conditions"]={2001}
+,["sName"]="光影奇境"}
+,["RogueView"]={["key"]="RogueView",["id"]="RogueView",["conditions"]={2120}
+,["sName"]="乱序演习"}
+,["ArchiveView"]={["conditions"]={2103}
+,["key"]="ArchiveView",["open_tips"]=1,["sName"]="档案",["icon"]="ArchiveView",["id"]="ArchiveView"}
+,["SettingView"]={["id"]="SettingView",["sName"]="设置",["key"]="SettingView"}
+,["Dorm"]={["conditions"]={2005}
+,["key"]="Dorm",["open_tips"]=1,["sName"]="宿舍",["icon"]="Dorm",["id"]="Dorm"}
+,["Achievement"]={["conditions"]={2105}
+,["key"]="Achievement",["open_tips"]=1,["sName"]="成就",["icon"]="Achievement",["id"]="Achievement"}
+,["SkinRebate"]={["key"]="SkinRebate",["id"]="SkinRebate",["conditions"]={2002}
+,["sName"]="衣惠有礼"}
+,["MultTeamBattleMain"]={["key"]="MultTeamBattleMain",["id"]="MultTeamBattleMain",["conditions"]={2125}
+,["sName"]="递归沙盒"}
+,["PuzzleActivity"]={["key"]="PuzzleActivity",["id"]="PuzzleActivity",["conditions"]={2120}
+,["sName"]="拾光剪影"}
+,["ExerciseLView"]={["conditions"]={2114}
+,["key"]="ExerciseLView",["open_tips"]=1,["sName"]="镜像竞技",["icon"]="Arena",["id"]="ExerciseLView"}
+,["CourseView"]={["conditions"]={2001}
+,["key"]="CourseView",["open_tips"]=1,["sName"]="教程",["icon"]="CourseView",["id"]="CourseView"}
+,["FriendView"]={["conditions"]={2001}
+,["key"]="FriendView",["open_tips"]=1,["sName"]="好友",["icon"]="FriendView",["id"]="FriendView"}
+,["ActivityListView"]={["conditions"]={2007}
+,["key"]="ActivityListView",["open_tips"]=1,["sName"]="活动界面",["icon"]="ActivityListView",["id"]="ActivityListView"}
+,["CoolView"]={["id"]="CoolView",["sName"]="冷却",["key"]="CoolView"}
+,["ShopView"]={["conditions"]={2002}
+,["key"]="ShopView",["open_tips"]=1,["sName"]="商店",["icon"]="ShopView",["id"]="ShopView"}
+,["PlayerAbility"]={["conditions"]={2007}
+,["key"]="PlayerAbility",["open_tips"]=1,["sName"]="战术",["icon"]="PlayerAbility",["id"]="PlayerAbility"}
+,["TowerListView"]={["key"]="TowerListView",["id"]="TowerListView",["conditions"]={2120}
+,["sName"]="异构空间"}
+,["TowerDeep"]={["key"]="TowerDeep",["id"]="TowerDeep",["conditions"]={2125}
+,["sName"]="深塔计划"}
+,["TowerView"]={["key"]="TowerView",["id"]="TowerView",["conditions"]={2120}
+,["sName"]="异构空间"}
+,["PlayerView"]={["key"]="PlayerView",["id"]="PlayerView",["conditions"]={2001}
+,["sName"]="玩家"}
+,["LovePlusView"]={["key"]="LovePlusView",["id"]="LovePlusView",["conditions"]={2007}
+,["sName"]="时光恋曲"}
+,["Matrix"]={["conditions"]={2005}
+,["sSceneName"]="Matrix",["key"]="Matrix",["open_tips"]=1,["sName"]="基地",["icon"]="Matrix",["id"]="Matrix"}
+,["RiddleMain"]={["key"]="RiddleMain",["id"]="RiddleMain",["conditions"]={2007}
+,["sName"]="天灯映月"}
+,["SignInDuanWu"]={["key"]="SignInDuanWu",["id"]="SignInDuanWu",["conditions"]={2007}
+,["sName"]="龙舟争霸赛"}
+,["Bag"]={["key"]="Bag",["id"]="Bag",["conditions"]={2002}
+,["sName"]="仓库"}
+,["RogueSView"]={["key"]="RogueSView",["id"]="RogueSView",["conditions"]={2120}
+,["sName"]="战力调遣"}
+,["LuckyGachaMain"]={["key"]="LuckyGachaMain",["id"]="LuckyGachaMain",["conditions"]={2007}
+,["sName"]="扭蛋机"}
+,["TeamView"]={["id"]="TeamView",["sName"]="编队",["key"]="TeamView"}
+,["SignInView"]={["id"]="SignInView",["sName"]="签到",["key"]="SignInView"}
+,["SpecialActivityView"]={["key"]="SpecialActivityView",["id"]="SpecialActivityView",["conditions"]={2007}
+,["sName"]="特别馈赠"}
+,["RoleListNormal"]={["id"]="RoleListNormal",["sName"]="角色",["key"]="RoleListNormal"}
+,["MissionView"]={["conditions"]={2002}
+,["key"]="MissionView",["open_tips"]=1,["sName"]="任务",["icon"]="MissionView",["id"]="MissionView"}
+,["CollaborationMain"]={["key"]="CollaborationMain",["id"]="CollaborationMain",["conditions"]={2007}
+,["sName"]="协同作战"}
+,["PetMain"]={["key"]="PetMain",["id"]="PetMain",["conditions"]={2007}
+,["sName"]="萌宠进化论"}
+,["CreateView"]={["id"]="CreateView",["sName"]="抽卡",["key"]="CreateView"}
+,["ExtraActivityView"]={["key"]="ExtraActivityView",["id"]="ExtraActivityView",["conditions"]={2002}
+,["sName"]="付费活动"}
 }
---cfgCfgOpenCondition = conf
-return conf
+

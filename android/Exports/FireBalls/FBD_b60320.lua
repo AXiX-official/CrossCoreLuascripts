@@ -8,8 +8,10 @@ local this =
 [-686817241]={
 {time=3500,type=0,cue_sheet="fight/effect/Eighteen.acb ",cue_name="60320_cast_01"},
 {time=4000,type=3,hits={800}},
+{time=4000,type=3,hits={800}},
 {time=3500,type=0,cue_sheet="cv/Dainslef.acb",cue_name="Dainslef_15",cue_feature=1},
-{effect="cast1_buff",delay=800,time=3000,type=0,pos_ref={ref_type=13}},
+{effect="cast1_buff",delay=800,time=3000,type=0,pos_ref={ref_type=6}},
+{time=4000,type=3,hits={800}},
 {effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6}}
 },
 [1310282141]={

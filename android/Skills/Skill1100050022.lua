@@ -24,7 +24,7 @@ function Skill1100050022:OnAddBuff(caster, target, data, buffer)
 		return
 	end
 	-- 1100050021
-	if SkillJudger:IsCtrlBuffType(self, caster, target, true,1) then
+	if SkillJudger:IsCtrlBuffType(buffer or self, caster, target, true,1) then
 	else
 		return
 	end

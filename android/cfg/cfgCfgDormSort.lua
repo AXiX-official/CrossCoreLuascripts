@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '基地人物筛选',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'技能'},
-{'2',	'2',	'疲劳值'},
-{'3',	'3',	'好感度'},
-},
+_G["CfgDormSort"]={{["id"]=1,["sName"]="技能",["key"]="1"}
+,{["id"]=2,["sName"]="疲劳值",["key"]="2"}
+,{["id"]=3,["sName"]="好感度",["key"]="3"}
 }
---cfgCfgDormSort = conf
-return conf
+

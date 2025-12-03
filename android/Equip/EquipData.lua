@@ -64,8 +64,25 @@ function this:SetNew(isNew)
 	end
 end
 
-function this:GetSkills()
-	return self.data and self.data.skills or nil;
+--hasLock:是否包含锁定的装备信息
+function this:GetSkills(hasLock)
+	local isJP=CSAPI.IsADVRegional(3);
+	-- local isJP=true;
+	if self.data and self.data.skills then
+		if not isJP or hasLock then
+			return self.data.skills
+		else
+			local list=nil;
+			for k, v in ipairs(self.data.skills) do --只返回未加锁的
+				if self:GetSkillIsLock(v,k)~=true then
+					list=list or {};
+					table.insert(list,v);
+				end
+			end
+			return list;
+		end
+	end
+	return nil;
 end
 
 --返回唯一ID
@@ -520,6 +537,29 @@ function this:GetScore()
     local attr=self:GetTotalSkillValue()+baseNum;
     score=lv+quality+attr;
     return score;
+end
+
+function this:GetSkillIsLock(skillID,idx)
+	local isJP=CSAPI.IsADVRegional(3);
+	-- local isJP=true
+	if not isJP then
+		return false;
+	end
+	if skillID==nil or idx==nil then
+		LogError("GetSkillIsLock has Error SkillID="..tostring(skillID).."\tIdx:"..tostring(idx))
+		return true
+	end
+	local data=self:GetData()
+	if skillID and idx and data then
+		local tips=""
+		if self:GetCfg().randSkillsCondition then
+			tips=LanguageMgr:GetByID(79001,self:GetCfg().randSkillsCondition[idx]);
+		end
+		return GEquipCalculator:IsEquipSkillLock(data,idx,skillID),tips;
+	else
+		LogError("GetSkillIsLock has Error SkillID="..tostring(skillID).."\tIdx:"..tostring(idx).."\t data:"..table.tostring(data))
+		return true;
+	end
 end
 
 ----------------------------方法-------------------

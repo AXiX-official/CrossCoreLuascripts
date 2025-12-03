@@ -1,20 +1,9 @@
-local conf = {
-	["filename"] = 'c-猜谜活动.xlsx',
-	["sheetname"] = '活动总表',
-	["types"] = {
-'int','string','string','int','int','table#3','int','int','json'
-},
-	["names"] = {
-'id','begTime','endTime','group','rewardgroup','infos','index','openTime','reward'
-},
-	["data"] = {
-{'1',	'2025/9/24 10:00:00',	'2025/10/15 2:59:59',	'1',	'1',	'',	'',	'',	''},
-{'1',	'',	'',	'',	'',	'',	'1',	'1',	''},
-{'1',	'',	'',	'',	'',	'',	'2',	'2',	''},
-{'1',	'',	'',	'',	'',	'',	'3',	'3',	''},
-{'1',	'',	'',	'',	'',	'',	'4',	'4',	''},
-{'1',	'',	'',	'',	'',	'',	'5',	'5',	''},
-},
+_G["cfgQuestions"]={{["begTime"]="2025/9/24 10:00:00",["rewardgroup"]=1,["endTime"]="2025/10/15 2:59:59",["nEndTime"]=1760468399,["infos"]={{["index"]=1,["openTime"]=1}
+,{["index"]=2,["openTime"]=2}
+,{["index"]=3,["openTime"]=3}
+,{["index"]=4,["openTime"]=4}
+,{["index"]=5,["openTime"]=5}
 }
---cfgcfgQuestions = conf
-return conf
+,["key"]=1,["nBeginTime"]=1758679200,["id"]=1,["group"]=1}
+}
+

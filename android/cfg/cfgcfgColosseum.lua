@@ -1,21 +1,44 @@
-local conf = {
-	["filename"] = 'j-角斗场表.xlsx',
-	["sheetname"] = '入口表',
-	["types"] = {
-'int','int','string','string','string','int','json','int[]','int','json','int','int[]','int','int','int','int','int','int','int'
-},
-	["names"] = {
-'id','key','seasonName','begTime','endTime','optionalSwitch','optionalCost','optionalRefresh','randomSwitch','randomCost','randomSet','randomRefresh','savePoint','freeType','freeNum','freeMax','messageid','shopId','dupSeasonId'
-},
-	["data"] = {
-{'1',	'1',	'测试赛季',	'2024/12/01 10:00:00',	'2025/02/01 02:59:59',	'1',	'',	'30',	'1',	'[[10035,90],[10040,90]]',	'1',	'30',	'',	'2',	'1',	'3',	'9006',	'4001',	'1'},
-{'2',	'2',	'第2赛季',	'2025/02/19 10:00:00',	'2025/04/01 02:59:59',	'1',	'',	'10',	'1',	'[[10035,90],[10040,90]]',	'1',	'10',	'',	'2',	'1',	'3',	'9006',	'4001',	'2'},
-{'3',	'3',	'第3赛季',	'2025/04/01 10:00:00',	'2025/06/01 02:59:59',	'1',	'',	'30',	'1',	'[[10035,90],[10040,90]]',	'1',	'30',	'',	'2',	'1',	'3',	'9006',	'4002',	'3'},
-{'4',	'4',	'第4赛季',	'2025/06/01 10:00:00',	'2025/08/01 02:59:59',	'1',	'',	'30',	'1',	'[[10035,90],[10040,90]]',	'1',	'30',	'',	'2',	'1',	'3',	'9006',	'4002',	'4'},
-{'5',	'5',	'第5赛季',	'2025/08/01 10:00:00',	'2025/10/01 02:59:59',	'1',	'',	'30',	'1',	'[[10035,90],[10040,90]]',	'1',	'30',	'',	'2',	'1',	'3',	'9006',	'4002',	'4'},
-{'6',	'6',	'第6赛季',	'2025/10/01 10:00:00',	'2025/12/01 02:59:59',	'1',	'',	'30',	'1',	'[[10035,90],[10040,90]]',	'1',	'30',	'',	'2',	'1',	'3',	'9006',	'4002',	'4'},
-{'7',	'7',	'第7赛季',	'2025/12/01 10:00:00',	'2026/02/01 02:59:59',	'1',	'',	'30',	'1',	'[[10035,90],[10040,90]]',	'1',	'30',	'',	'2',	'1',	'3',	'9006',	'4002',	'4'},
-},
+_G["cfgColosseum"]={{["begTime"]="2024/12/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=1,["shopId"]=4001,["key"]=1,["randomCost"]={{10035,90}
+,{10040,90}
 }
---cfgcfgColosseum = conf
-return conf
+,["seasonName"]="测试赛季",["freeMax"]=3,["freeNum"]=1,["id"]=1,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}
+,["endTime"]="2025/02/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={30}
+}
+,{["begTime"]="2025/02/19 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=2,["shopId"]=4001,["key"]=2,["randomCost"]={{10035,90}
+,{10040,90}
+}
+,["seasonName"]="第2赛季",["freeMax"]=3,["freeNum"]=1,["id"]=2,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={10}
+,["endTime"]="2025/04/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={10}
+}
+,{["begTime"]="2025/04/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=3,["shopId"]=4002,["key"]=3,["randomCost"]={{10035,90}
+,{10040,90}
+}
+,["seasonName"]="第3赛季",["freeMax"]=3,["freeNum"]=1,["id"]=3,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}
+,["endTime"]="2025/06/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={30}
+}
+,{["begTime"]="2025/06/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=4,["shopId"]=4002,["key"]=4,["randomCost"]={{10035,90}
+,{10040,90}
+}
+,["seasonName"]="第4赛季",["freeMax"]=3,["freeNum"]=1,["id"]=4,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}
+,["endTime"]="2025/08/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={30}
+}
+,{["begTime"]="2025/08/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=4,["shopId"]=4002,["key"]=5,["randomCost"]={{10035,90}
+,{10040,90}
+}
+,["seasonName"]="第5赛季",["freeMax"]=3,["freeNum"]=1,["id"]=5,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}
+,["endTime"]="2025/10/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={30}
+}
+,{["begTime"]="2025/10/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=4,["shopId"]=4002,["key"]=6,["randomCost"]={{10035,90}
+,{10040,90}
+}
+,["seasonName"]="第6赛季",["freeMax"]=3,["freeNum"]=1,["id"]=6,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}
+,["endTime"]="2025/12/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={30}
+}
+,{["begTime"]="2025/12/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=4,["shopId"]=4002,["key"]=7,["randomCost"]={{10035,90}
+,{10040,90}
+}
+,["seasonName"]="第7赛季",["freeMax"]=3,["freeNum"]=1,["id"]=7,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}
+,["endTime"]="2026/02/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={30}
+}
+}
+

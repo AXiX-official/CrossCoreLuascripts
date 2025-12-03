@@ -1,50 +1,74 @@
-local conf = {
-	["filename"] = 't-图鉴表.xlsx',
-	["sheetname"] = '图鉴教程',
-	["types"] = {
-'int','string','int','string','string','string','int[]'
-},
-	["names"] = {
-'id','key','type','name','eName','small_id','icons'
-},
-	["data"] = {
-{'1001',	'1001',	'1',	'基础信息',	'Basic Information',	'Course_1101',	'1101'},
-{'1002',	'1002',	'1',	'能量值',	'NP',	'Course_1102',	'1102'},
-{'1003',	'1003',	'1',	'同步率',	'SP',	'Course_1103',	'1103'},
-{'1004',	'1004',	'1',	'战斗详情',	'Battle Details',	'Course_1104',	'1104,1105'},
-{'1005',	'1005',	'1',	'自动战斗',	'Auto Battle',	'Course_1106',	'1106,1107'},
-{'1006',	'1006',	'1',	'伤害减免',	'Damage Reduction',	'Course_1701',	'1701'},
-{'1007',	'1007',	'1',	'削减伤害',	'Cut Damage',	'Course_1702',	'1702,1703'},
-{'1008',	'1008',	'1',	'削减层数',	'Reduce Layers',	'Course_1704',	'1704'},
-{'1009',	'1009',	'1',	'战术使用',	'Tactic',	'Course_1901',	'1901,1902'},
-{'1010',	'1010',	'1',	'同调',	'Synchro',	'Course_2001',	'2001,2002,2003'},
-{'2001',	'2001',	'2',	'基础信息',	'Basic Information',	'Course_1001',	'1001,1002'},
-{'2002',	'2002',	'2',	'升级/跃升',	'Upgrade/Breakthrough',	'Course_1003',	'1003'},
-{'2004',	'2004',	'2',	'武装芯片',	'Armed Chip',	'Course_1006',	'1006,1007'},
-{'2005',	'2005',	'2',	'武装技能',	'Armed Skills',	'Course_1008',	'1008'},
-{'2006',	'2006',	'2',	'跃升天赋',	'Armed Talent',	'Course_1009',	'1009'},
-{'4001',	'4001',	'4',	'基础信息',	'Basic Information',	'Course_1501',	'1501'},
-{'4002',	'4002',	'4',	'战术部署',	'Tactical Deployment',	'Course_1502',	'1502,1503'},
-{'5001',	'5001',	'5',	'基础信息',	'Basic Information',	'Course_1601',	'1601'},
-{'5002',	'5002',	'5',	'电力相关',	'Electricity',	'Course_1602',	'1602'},
-{'5003',	'5003',	'5',	'制作',	'Production',	'Course_1603',	'1603'},
-{'5004',	'5004',	'5',	'订单',	'Orders',	'Course_1604',	'1604,1605,1606,1607,1608'},
-{'5005',	'5005',	'5',	'队员进驻',	'Team Members',	'Course_1609',	'1609'},
-{'6001',	'6001',	'6',	'基础信息',	'Basic Information',	'Course_1801',	'1801'},
-{'6002',	'6002',	'6',	'核心共鸣',	'Core Resonance',	'Course_1802',	'1802'},
-{'7001',	'7001',	'7',	'敌兵移动',	'Enemy Movement',	'Course_1302',	'1302'},
-{'7002',	'7002',	'7',	'补给/货箱',	'Supplies/Containers',	'Course_1303',	'1303'},
-{'7003',	'7003',	'7',	'雷击',	'Lightning Strike',	'Course_1307',	'1307'},
-{'7004',	'7004',	'7',	'冰面',	'Ice',	'Course_1305',	'1305'},
-{'7005',	'7005',	'7',	'冰冻捕夹',	'Freeze Trap',	'Course_1306',	'1306'},
-{'7006',	'7006',	'7',	'裁决之雷',	'Thunder of Judgment',	'Course_1304',	'1304'},
-{'7007',	'7007',	'7',	'屏蔽力场',	'',	'Course_1308',	'1308'},
-{'7008',	'7008',	'7',	'探视天眼',	'',	'Course_1309',	'1309'},
-{'7009',	'7009',	'7',	'泄止阀',	'',	'Course_1310',	'1310'},
-{'7010',	'7010',	'7',	'流沙陷阱',	'QuickSand',	'Course_2401',	'2401'},
-{'7011',	'7011',	'7',	'落石陷阱',	'RockFall',	'Course_2402',	'2402'},
-{'7012',	'7012',	'7',	'沙尘暴',	'SandStorm',	'Course_2403',	'2403'},
-},
+_G["CfgArchiveCourse"]={[7001]={["type"]=7,["name"]="敌兵移动",["eName"]="Enemy Movement",["id"]=7001,["small_id"]="Course_1302",["icons"]={1302}
+,["key"]="7001"}
+,[5001]={["type"]=5,["name"]="基础信息",["eName"]="Basic Information",["id"]=5001,["small_id"]="Course_1601",["icons"]={1601}
+,["key"]="5001"}
+,[7002]={["type"]=7,["name"]="补给/货箱",["eName"]="Supplies/Containers",["id"]=7002,["small_id"]="Course_1303",["icons"]={1303}
+,["key"]="7002"}
+,[5002]={["type"]=5,["name"]="电力相关",["eName"]="Electricity",["id"]=5002,["small_id"]="Course_1602",["icons"]={1602}
+,["key"]="5002"}
+,[7003]={["type"]=7,["name"]="雷击",["eName"]="Lightning Strike",["id"]=7003,["small_id"]="Course_1307",["icons"]={1307}
+,["key"]="7003"}
+,[5003]={["type"]=5,["name"]="制作",["eName"]="Production",["id"]=5003,["small_id"]="Course_1603",["icons"]={1603}
+,["key"]="5003"}
+,[7004]={["type"]=7,["name"]="冰面",["eName"]="Ice",["id"]=7004,["small_id"]="Course_1305",["icons"]={1305}
+,["key"]="7004"}
+,[5004]={["type"]=5,["name"]="订单",["eName"]="Orders",["id"]=5004,["small_id"]="Course_1604",["icons"]={1604,1605,1606,1607,1608}
+,["key"]="5004"}
+,[1002]={["type"]=1,["name"]="能量值",["eName"]="NP",["id"]=1002,["small_id"]="Course_1102",["icons"]={1102}
+,["key"]="1002"}
+,[5005]={["type"]=5,["name"]="队员进驻",["eName"]="Team Members",["id"]=5005,["small_id"]="Course_1609",["icons"]={1609}
+,["key"]="5005"}
+,[1006]={["type"]=1,["name"]="伤害减免",["eName"]="Damage Reduction",["id"]=1006,["small_id"]="Course_1701",["icons"]={1701}
+,["key"]="1006"}
+,[1008]={["type"]=1,["name"]="削减层数",["eName"]="Reduce Layers",["id"]=1008,["small_id"]="Course_1704",["icons"]={1704}
+,["key"]="1008"}
+,[2004]={["type"]=2,["name"]="武装芯片",["eName"]="Armed Chip",["id"]=2004,["small_id"]="Course_1006",["icons"]={1006,1007}
+,["key"]="2004"}
+,[7007]={["type"]=7,["name"]="屏蔽力场",["id"]=7007,["small_id"]="Course_1308",["icons"]={1308}
+,["key"]="7007"}
+,[7008]={["type"]=7,["name"]="探视天眼",["id"]=7008,["small_id"]="Course_1309",["icons"]={1309}
+,["key"]="7008"}
+,[4001]={["type"]=4,["name"]="基础信息",["eName"]="Basic Information",["id"]=4001,["small_id"]="Course_1501",["icons"]={1501}
+,["key"]="4001"}
+,[6001]={["type"]=6,["name"]="基础信息",["eName"]="Basic Information",["id"]=6001,["small_id"]="Course_1801",["icons"]={1801}
+,["key"]="6001"}
+,[2001]={["type"]=2,["name"]="基础信息",["eName"]="Basic Information",["id"]=2001,["small_id"]="Course_1001",["icons"]={1001,1002}
+,["key"]="2001"}
+,[2005]={["type"]=2,["name"]="武装技能",["eName"]="Armed Skills",["id"]=2005,["small_id"]="Course_1008",["icons"]={1008}
+,["key"]="2005"}
+,[1009]={["type"]=1,["name"]="战术使用",["eName"]="Tactic",["id"]=1009,["small_id"]="Course_1901",["icons"]={1901,1902}
+,["key"]="1009"}
+,[7010]={["type"]=7,["name"]="流沙陷阱",["eName"]="QuickSand",["id"]=7010,["small_id"]="Course_2401",["icons"]={2401}
+,["key"]="7010"}
+,[4002]={["type"]=4,["name"]="战术部署",["eName"]="Tactical Deployment",["id"]=4002,["small_id"]="Course_1502",["icons"]={1502,1503}
+,["key"]="4002"}
+,[7011]={["type"]=7,["name"]="落石陷阱",["eName"]="RockFall",["id"]=7011,["small_id"]="Course_2402",["icons"]={2402}
+,["key"]="7011"}
+,[7009]={["type"]=7,["name"]="泄止阀",["id"]=7009,["small_id"]="Course_1310",["icons"]={1310}
+,["key"]="7009"}
+,[7006]={["type"]=7,["name"]="裁决之雷",["eName"]="Thunder of Judgment",["id"]=7006,["small_id"]="Course_1304",["icons"]={1304}
+,["key"]="7006"}
+,[1004]={["type"]=1,["name"]="战斗详情",["eName"]="Battle Details",["id"]=1004,["small_id"]="Course_1104",["icons"]={1104,1105}
+,["key"]="1004"}
+,[7012]={["type"]=7,["name"]="沙尘暴",["eName"]="SandStorm",["id"]=7012,["small_id"]="Course_2403",["icons"]={2403}
+,["key"]="7012"}
+,[1010]={["type"]=1,["name"]="同调",["eName"]="Synchro",["id"]=1010,["small_id"]="Course_2001",["icons"]={2001,2002,2003}
+,["key"]="1010"}
+,[6002]={["type"]=6,["name"]="核心共鸣",["eName"]="Core Resonance",["id"]=6002,["small_id"]="Course_1802",["icons"]={1802}
+,["key"]="6002"}
+,[1001]={["type"]=1,["name"]="基础信息",["eName"]="Basic Information",["id"]=1001,["small_id"]="Course_1101",["icons"]={1101}
+,["key"]="1001"}
+,[1003]={["type"]=1,["name"]="同步率",["eName"]="SP",["id"]=1003,["small_id"]="Course_1103",["icons"]={1103}
+,["key"]="1003"}
+,[1005]={["type"]=1,["name"]="自动战斗",["eName"]="Auto Battle",["id"]=1005,["small_id"]="Course_1106",["icons"]={1106,1107}
+,["key"]="1005"}
+,[1007]={["type"]=1,["name"]="削减伤害",["eName"]="Cut Damage",["id"]=1007,["small_id"]="Course_1702",["icons"]={1702,1703}
+,["key"]="1007"}
+,[2002]={["type"]=2,["name"]="升级/跃升",["eName"]="Upgrade/Breakthrough",["id"]=2002,["small_id"]="Course_1003",["icons"]={1003}
+,["key"]="2002"}
+,[2006]={["type"]=2,["name"]="跃升天赋",["eName"]="Armed Talent",["id"]=2006,["small_id"]="Course_1009",["icons"]={1009}
+,["key"]="2006"}
+,[7005]={["type"]=7,["name"]="冰冻捕夹",["eName"]="Freeze Trap",["id"]=7005,["small_id"]="Course_1306",["icons"]={1306}
+,["key"]="7005"}
 }
---cfgCfgArchiveCourse = conf
-return conf
+

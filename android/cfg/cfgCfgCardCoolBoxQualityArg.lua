@@ -1,20 +1,8 @@
-local conf = {
-	["filename"] = 'k-卡牌冷却.xlsx',
-	["sheetname"] = '冷却计算品质参数',
-	["types"] = {
-'int','string','float'
-},
-	["names"] = {
-'id','key','fArg'
-},
-	["data"] = {
-{'1',	'1',	'1'},
-{'2',	'2',	'1'},
-{'3',	'3',	'1'},
-{'4',	'4',	'1'},
-{'5',	'5',	'1'},
-{'6',	'6',	'1'},
-},
+_G["CfgCardCoolBoxQualityArg"]={{["id"]=1,["key"]="1",["fArg"]=1}
+,{["id"]=2,["key"]="2",["fArg"]=1}
+,{["id"]=3,["key"]="3",["fArg"]=1}
+,{["id"]=4,["key"]="4",["fArg"]=1}
+,{["id"]=5,["key"]="5",["fArg"]=1}
+,{["id"]=6,["key"]="6",["fArg"]=1}
 }
---cfgCfgCardCoolBoxQualityArg = conf
-return conf
+

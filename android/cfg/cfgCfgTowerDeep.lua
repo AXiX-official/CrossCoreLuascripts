@@ -1,15 +1,3 @@
-local conf = {
-	["filename"] = 'h-活动入口开放.xlsx',
-	["sheetname"] = '深塔计划',
-	["types"] = {
-'int','string','string','int','string','string'
-},
-	["names"] = {
-'id','key','name','sectionID','begTime','endTime'
-},
-	["data"] = {
-{'18001',	'18001',	'Active_Name_47##深塔计划',	'20001',	'2025/10/22 10:00:00',	'2025/11/19 03:00:00'},
-},
+_G["CfgTowerDeep"]={[18001]={["begTime"]="2025/10/22 10:00:00",["sectionID"]=20001,["name"]="Active_Name_47##深塔计划",["nEnd"]=1763492400,["id"]=18001,["nStart"]=1761098400,["endTime"]="2025/11/19 03:00:00",["key"]="18001"}
 }
---cfgCfgTowerDeep = conf
-return conf
+

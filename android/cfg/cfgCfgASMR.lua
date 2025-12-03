@@ -1,16 +1,4 @@
-local conf = {
-	["filename"] = 'a-ASMR.xlsx',
-	["sheetname"] = 'ASMR',
-	["types"] = {
-'int','int','int','string','int','string','string','string','string','string','string','string','int','string','string','int','int'
-},
-	["names"] = {
-'id','key','item','icon','model','name','cvName','des','cue_sheet1','cue_name1','cue_sheet2','cue_name2','voice','l2d','e_anim','jump','scale'
-},
-	["data"] = {
-{'1',	'1',	'62001',	'img_01_01',	'7003003',	'厨房的亲昵轻语',	'风间万裕子',	'她满怀期待，要与你开始甜蜜的喁喁私语',	'asmr/DC_ASMR_Poseidon_Check.acb',	'DC_ASMR_Poseidon_Check',	'asmr/DC_ASMR_Poseidon.acb',	'DC_ASMR_Poseidon',	'1001',	'70030_skin_Poseidon03_ASMR_spine',	'camera',	'140201',	'100'},
-{'2',	'2',	'62002',	'img_01_02',	'6021003',	'雨中的呢喃私语',	'野椛YUUKA',	'她细心装扮，想让你看到与平日不同的一面',	'asmr/DC_ASMR_Longxian_Check.acb',	'DC_ASMR_Longxian_Check',	'asmr/DC_ASMR_Longxian.acb',	'DC_ASMR_Longxian',	'1002',	'60210_skin_Longxian03_ASMR_spine',	'camera',	'140202',	'100'},
-},
+_G["CfgASMR"]={{["scale"]=100,["cue_sheet2"]="asmr/DC_ASMR_Poseidon.acb",["l2d"]="70030_skin_Poseidon03_ASMR_spine",["item"]=62001,["icon"]="img_01_01",["jump"]=140201,["id"]=1,["voice"]=1001,["cue_sheet1"]="asmr/DC_ASMR_Poseidon_Check.acb",["e_anim"]="camera",["key"]=1,["name"]="厨房的亲昵轻语",["model"]=7003003,["cue_name2"]="DC_ASMR_Poseidon",["cvName"]="风间万裕子",["cue_name1"]="DC_ASMR_Poseidon_Check",["des"]="她满怀期待，要与你开始甜蜜的喁喁私语"}
+,{["scale"]=100,["cue_sheet2"]="asmr/DC_ASMR_Longxian.acb",["l2d"]="60210_skin_Longxian03_ASMR_spine",["item"]=62002,["icon"]="img_01_02",["jump"]=140202,["id"]=2,["voice"]=1002,["cue_sheet1"]="asmr/DC_ASMR_Longxian_Check.acb",["e_anim"]="camera",["key"]=2,["name"]="雨中的呢喃私语",["model"]=6021003,["cue_name2"]="DC_ASMR_Longxian",["cvName"]="野椛YUUKA",["cue_name1"]="DC_ASMR_Longxian_Check",["des"]="她细心装扮，想让你看到与平日不同的一面"}
 }
---cfgCfgASMR = conf
-return conf
+

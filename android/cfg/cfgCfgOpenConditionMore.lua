@@ -1,32 +1,30 @@
-local conf = {
-	["filename"] = 'x-新手教程.xlsx',
-	["sheetname"] = '特殊功能开启',
-	["types"] = {
-'string','string','string','int','string','int[]','string','int'
-},
-	["names"] = {
-'id','key','sName','open_tips','icon','conditions','fatherView','jump'
-},
-	["data"] = {
-{'special1',	'special1',	'核心升级',	'',	'',	'',	'',	''},
-{'special2',	'special2',	'限界突破',	'',	'',	'',	'',	''},
-{'special3',	'special3',	'芯片强化',	'',	'',	'',	'',	''},
-{'special4',	'special4',	'技能强化',	'',	'',	'',	'',	''},
-{'special5',	'special5',	'全息军演',	'',	'',	'',	'',	''},
-{'special6',	'special6',	'实时对战',	'',	'',	'',	'',	''},
-{'special7',	'special7',	'自动战斗',	'1',	'AutoBattle',	'2003',	'',	''},
-{'special9',	'special9',	'2倍速战斗',	'1',	'BattleFast',	'2001',	'',	''},
-{'special10',	'special10',	'特装构建',	'1',	'30Drop',	'2002',	'',	''},
-{'special11',	'special11',	'碎星虚影',	'1',	'Tower',	'2120',	'',	''},
-{'special12',	'special12',	'技能磨砺（每日探索）',	'',	'',	'',	'',	''},
-{'special13',	'special13',	'荒墟拾遗（每日探索）',	'',	'',	'',	'',	''},
-{'special14',	'special14',	'芯片嵌合（每日探索）',	'',	'',	'',	'',	''},
-{'special15',	'special15',	'跃升行动（每日探索）',	'',	'',	'',	'',	''},
-{'special16',	'special16',	'付费弹窗',	'',	'',	'2002',	'',	''},
-{'special18',	'special18',	'重构',	'',	'',	'1045',	'',	''},
-{'special19',	'special19',	'合成',	'',	'',	'1050',	'',	''},
-{'special20',	'special20',	'跃升天赋',	'',	'',	'',	'',	''},
-},
+_G["CfgOpenConditionMore"]={["special13"]={["id"]="special13",["sName"]="荒墟拾遗（每日探索）",["key"]="special13"}
+,["special7"]={["conditions"]={2003}
+,["key"]="special7",["open_tips"]=1,["sName"]="自动战斗",["icon"]="AutoBattle",["id"]="special7"}
+,["special1"]={["id"]="special1",["sName"]="核心升级",["key"]="special1"}
+,["special9"]={["conditions"]={2001}
+,["key"]="special9",["open_tips"]=1,["sName"]="2倍速战斗",["icon"]="BattleFast",["id"]="special9"}
+,["special18"]={["key"]="special18",["id"]="special18",["conditions"]={1045}
+,["sName"]="重构"}
+,["special10"]={["conditions"]={2002}
+,["key"]="special10",["open_tips"]=1,["sName"]="特装构建",["icon"]="30Drop",["id"]="special10"}
+,["special3"]={["id"]="special3",["sName"]="芯片强化",["key"]="special3"}
+,["special20"]={["key"]="special20",["id"]="special20",["conditions"]={2006}
+,["sName"]="跃升天赋"}
+,["special19"]={["key"]="special19",["id"]="special19",["conditions"]={1050}
+,["sName"]="合成"}
+,["special6"]={["id"]="special6",["sName"]="实时对战",["key"]="special6"}
+,["special2"]={["id"]="special2",["sName"]="限界突破",["key"]="special2"}
+,["special11"]={["conditions"]={2120}
+,["key"]="special11",["open_tips"]=1,["sName"]="碎星虚影",["icon"]="Tower",["id"]="special11"}
+,["special16"]={["key"]="special16",["id"]="special16",["conditions"]={2002}
+,["sName"]="付费弹窗"}
+,["special4"]={["id"]="special4",["sName"]="技能强化",["key"]="special4"}
+,["special15"]={["id"]="special15",["sName"]="跃升行动（每日探索）",["key"]="special15"}
+,["special5"]={["id"]="special5",["sName"]="全息军演",["key"]="special5"}
+,["special12"]={["id"]="special12",["sName"]="技能磨砺（每日探索）",["key"]="special12"}
+,["special17"]={["key"]="special17",["id"]="special17",["sName"]="自动战斗",["icon"]="QuitFight",["conditions"]={2003}
 }
---cfgCfgOpenConditionMore = conf
-return conf
+,["special14"]={["id"]="special14",["sName"]="芯片嵌合（每日探索）",["key"]="special14"}
+}
+

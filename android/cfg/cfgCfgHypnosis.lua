@@ -1,17 +1,8 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '催眠配置表',
-	["types"] = {
-'int','string','int','int','int','int','int','int','int','int[]','int'
-},
-	["names"] = {
-'id','key','processScore','rollSpeed','perfectScore','greatScore','goodScore','missScore','exp','lvRange','timeLen'
-},
-	["data"] = {
-{'1',	'1',	'1000',	'2600',	'100',	'80',	'50',	'0',	'5',	'1,20',	'30'},
-{'2',	'2',	'2000',	'2200',	'100',	'80',	'50',	'0',	'10',	'21,60',	'30'},
-{'3',	'3',	'3000',	'1800',	'100',	'80',	'50',	'0',	'20',	'61,60',	'30'},
-},
+_G["CfgHypnosis"]={{["missScore"]=0,["processScore"]=1000,["goodScore"]=50,["timeLen"]=30,["lvRange"]={1,20}
+,["perfectScore"]=100,["exp"]=5,["rollSpeed"]=2600,["id"]=1,["key"]="1",["greatScore"]=80}
+,{["missScore"]=0,["processScore"]=2000,["goodScore"]=50,["timeLen"]=30,["lvRange"]={21,60}
+,["perfectScore"]=100,["exp"]=10,["rollSpeed"]=2200,["id"]=2,["key"]="2",["greatScore"]=80}
+,{["missScore"]=0,["processScore"]=3000,["goodScore"]=50,["timeLen"]=30,["lvRange"]={61,60}
+,["perfectScore"]=100,["exp"]=20,["rollSpeed"]=1800,["id"]=3,["key"]="3",["greatScore"]=80}
 }
---cfgCfgHypnosis = conf
-return conf
+

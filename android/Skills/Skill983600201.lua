@@ -26,4 +26,7 @@ function Skill983600201:DoSkill(caster, target, data)
 	-- 983600203
 	self.order = self.order + 1
 	self:SummonTeammate(SkillEffect[983600203], caster, self.card, data, 10000302,3,{1,3},{progress=300},nil,nil)
+	-- 110008034
+	self.order = self.order + 1
+	self:AddBuff(SkillEffect[110008034], caster, self.card, data, 983600901)
 end

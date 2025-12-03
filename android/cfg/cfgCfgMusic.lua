@@ -1,38 +1,26 @@
-local conf = {
-	["filename"] = 'Y_音乐表.xlsx',
-	["sheetname"] = '音乐表',
-	["types"] = {
-'int','string','int','string','string','string','string','int','int','int','int','int'
-},
-	["names"] = {
-'id','key','InitialType','cue_sheet','cue_name','cue_name_2','sName','music_type','purchase','group','item_id','display'
-},
-	["data"] = {
-{'1',	'1',	'1',	'Sys_Lobby',	'Sys_Lobby_01',	'Sys_Lobby',	'焕然心生',	'1',	'',	'1',	'',	''},
-{'2',	'2',	'',	'Sys_Login',	'Sys_Login_1',	'Sys_Login',	'交错的世界',	'1',	'',	'1',	'',	''},
-{'3',	'3',	'',	'Sys_Base',	'Sys_Base_1',	'Sys_Base',	'前哨基地',	'1',	'',	'1',	'',	''},
-{'4',	'4',	'',	'Sys_Hostel',	'Sys_Hostel_1',	'Sys_Hostel',	'小歇片刻',	'1',	'',	'1',	'',	''},
-{'5',	'5',	'2',	'BGM_Plot_01',	'BGM_Plot_01_1',	'BGM_Plot_01',	'购物时光',	'1',	'',	'1',	'',	''},
-{'6',	'6',	'',	'Env_Prologue',	'Env_Prologue_1',	'Env_Prologue',	'序幕',	'1',	'',	'2',	'',	''},
-{'7',	'7',	'',	'Env_Chapter1',	'Env_Chapter1_1',	'Env_Chapter1',	'意识桎梏',	'1',	'',	'2',	'',	''},
-{'8',	'8',	'',	'Env_Chapter2',	'Env_Chapter2_1',	'Env_Chapter2',	'终焉奇点',	'1',	'',	'2',	'',	''},
-{'9',	'9',	'',	'Env_Chapter3',	'Env_Chapter3_1',	'Env_Chapter3',	'重生之梦',	'1',	'',	'2',	'',	''},
-{'10',	'10',	'',	'Event_ArachnidsInTheTwilight',	'Event_ArachnidsInTheTwilight_1',	'Event_ArachnidsInTheTwilight',	'迷城蛛影',	'1',	'',	'3',	'',	''},
-{'11',	'11',	'',	'Event_FairytaleFeastInvitation',	'Event_FairytaleFeastInvitation_1',	'Event_FairytaleFeastInvitation',	'绮境笺宴α',	'1',	'',	'3',	'',	''},
-{'12',	'12',	'',	'Event_FairytaleFeastInvitation2',	'Event_FairytaleFeastInvitation2_1',	'Event_FairytaleFeastInvitation2',	'绮境笺宴β',	'1',	'',	'3',	'',	''},
-{'13',	'13',	'',	'Event_SummerMarineRhythm',	'Event_SummerMarineRhythm_1',	'Event_SummerMarineRhythm',	'夏日海韵',	'1',	'',	'3',	'',	''},
-{'14',	'14',	'',	'Sys_Hesitant_Cage',	'Sys_Hesitant_Cage_1',	'Sys_Hesitant_Cage',	'迷躇樊笼',	'1',	'',	'3',	'',	''},
-{'15',	'15',	'',	'TEx_MovieHorrorJazzyVer',	'TEx_MovieHorrorJazzyVer_1',	'TEx_MovieHorrorJazzyVer',	'真假惊魂夜',	'1',	'',	'3',	'',	''},
-{'16',	'16',	'',	'Plot_Confide',	'Plot_Confide_1',	'Plot_Confide',	'心声',	'1',	'',	'4',	'',	''},
-{'17',	'17',	'',	'Plot_Daily_Normal',	'Plot_Daily_Normal_1',	'Plot_Daily_Normal',	'日常',	'1',	'',	'4',	'',	''},
-{'18',	'18',	'',	'Plot_Ethereal',	'Plot_Ethereal_1',	'Plot_Ethereal',	'空灵',	'1',	'',	'4',	'',	''},
-{'19',	'19',	'',	'Plot_Joy_Battle',	'Plot_Joy_Battle_1',	'Plot_Joy_Battle',	'欢乐时光',	'1',	'',	'4',	'',	''},
-{'20',	'20',	'',	'Plot_Joy_Hilarious',	'Plot_Joy_Hilarious_1',	'Plot_Joy_Hilarious',	'古灵精怪',	'1',	'',	'4',	'',	''},
-{'21',	'21',	'',	'Plot_Memories',	'Plot_Memories_1',	'Plot_Memories',	'记忆',	'1',	'',	'4',	'',	''},
-{'22',	'22',	'',	'Plot_Mysterious',	'Plot_Mysterious_1',	'Plot_Mysterious',	'神秘',	'1',	'',	'4',	'',	''},
-{'23',	'23',	'',	'Plot_Redemption',	'Plot_Redemption_1',	'Plot_Redemption',	'救赎',	'1',	'',	'4',	'',	''},
-{'24',	'24',	'',	'Plot_Tragedy',	'Plot_Tragedy_1',	'Plot_Tragedy',	'悲伤',	'1',	'',	'4',	'',	''},
-},
+_G["CfgMusic"]={{["cue_sheet"]="Sys_Lobby",["music_type"]=1,["id"]=1,["InitialType"]=1,["key"]="1",["cue_name_2"]="Sys_Lobby",["cue_name"]="Sys_Lobby_01",["sName"]="焕然心生",["group"]=1}
+,{["cue_sheet"]="Sys_Login",["music_type"]=1,["id"]=2,["key"]="2",["cue_name_2"]="Sys_Login",["cue_name"]="Sys_Login_1",["sName"]="交错的世界",["group"]=1}
+,{["cue_sheet"]="Sys_Base",["music_type"]=1,["id"]=3,["key"]="3",["cue_name_2"]="Sys_Base",["cue_name"]="Sys_Base_1",["sName"]="前哨基地",["group"]=1}
+,{["cue_sheet"]="Sys_Hostel",["music_type"]=1,["id"]=4,["key"]="4",["cue_name_2"]="Sys_Hostel",["cue_name"]="Sys_Hostel_1",["sName"]="小歇片刻",["group"]=1}
+,{["cue_sheet"]="BGM_Plot_01",["music_type"]=1,["id"]=5,["InitialType"]=2,["key"]="5",["cue_name_2"]="BGM_Plot_01",["cue_name"]="BGM_Plot_01_1",["sName"]="购物时光",["group"]=1}
+,{["cue_sheet"]="Env_Prologue",["music_type"]=1,["id"]=6,["key"]="6",["cue_name_2"]="Env_Prologue",["cue_name"]="Env_Prologue_1",["sName"]="序幕",["group"]=2}
+,{["cue_sheet"]="Env_Chapter1",["music_type"]=1,["id"]=7,["key"]="7",["cue_name_2"]="Env_Chapter1",["cue_name"]="Env_Chapter1_1",["sName"]="意识桎梏",["group"]=2}
+,{["cue_sheet"]="Env_Chapter2",["music_type"]=1,["id"]=8,["key"]="8",["cue_name_2"]="Env_Chapter2",["cue_name"]="Env_Chapter2_1",["sName"]="终焉奇点",["group"]=2}
+,{["cue_sheet"]="Env_Chapter3",["music_type"]=1,["id"]=9,["key"]="9",["cue_name_2"]="Env_Chapter3",["cue_name"]="Env_Chapter3_1",["sName"]="重生之梦",["group"]=2}
+,{["cue_sheet"]="Event_ArachnidsInTheTwilight",["music_type"]=1,["id"]=10,["key"]="10",["cue_name_2"]="Event_ArachnidsInTheTwilight",["cue_name"]="Event_ArachnidsInTheTwilight_1",["sName"]="迷城蛛影",["group"]=3}
+,{["cue_sheet"]="Event_FairytaleFeastInvitation",["music_type"]=1,["id"]=11,["key"]="11",["cue_name_2"]="Event_FairytaleFeastInvitation",["cue_name"]="Event_FairytaleFeastInvitation_1",["sName"]="绮境笺宴α",["group"]=3}
+,{["cue_sheet"]="Event_FairytaleFeastInvitation2",["music_type"]=1,["id"]=12,["key"]="12",["cue_name_2"]="Event_FairytaleFeastInvitation2",["cue_name"]="Event_FairytaleFeastInvitation2_1",["sName"]="绮境笺宴β",["group"]=3}
+,{["cue_sheet"]="Event_SummerMarineRhythm",["music_type"]=1,["id"]=13,["key"]="13",["cue_name_2"]="Event_SummerMarineRhythm",["cue_name"]="Event_SummerMarineRhythm_1",["sName"]="夏日海韵",["group"]=3}
+,{["cue_sheet"]="Sys_Hesitant_Cage",["music_type"]=1,["id"]=14,["key"]="14",["cue_name_2"]="Sys_Hesitant_Cage",["cue_name"]="Sys_Hesitant_Cage_1",["sName"]="迷躇樊笼",["group"]=3}
+,{["cue_sheet"]="TEx_MovieHorrorJazzyVer",["music_type"]=1,["id"]=15,["key"]="15",["cue_name_2"]="TEx_MovieHorrorJazzyVer",["cue_name"]="TEx_MovieHorrorJazzyVer_1",["sName"]="真假惊魂夜",["group"]=3}
+,{["cue_sheet"]="Plot_Confide",["music_type"]=1,["id"]=16,["key"]="16",["cue_name_2"]="Plot_Confide",["cue_name"]="Plot_Confide_1",["sName"]="心声",["group"]=4}
+,{["cue_sheet"]="Plot_Daily_Normal",["music_type"]=1,["id"]=17,["key"]="17",["cue_name_2"]="Plot_Daily_Normal",["cue_name"]="Plot_Daily_Normal_1",["sName"]="日常",["group"]=4}
+,{["cue_sheet"]="Plot_Ethereal",["music_type"]=1,["id"]=18,["key"]="18",["cue_name_2"]="Plot_Ethereal",["cue_name"]="Plot_Ethereal_1",["sName"]="空灵",["group"]=4}
+,{["cue_sheet"]="Plot_Joy_Battle",["music_type"]=1,["id"]=19,["key"]="19",["cue_name_2"]="Plot_Joy_Battle",["cue_name"]="Plot_Joy_Battle_1",["sName"]="欢乐时光",["group"]=4}
+,{["cue_sheet"]="Plot_Joy_Hilarious",["music_type"]=1,["id"]=20,["key"]="20",["cue_name_2"]="Plot_Joy_Hilarious",["cue_name"]="Plot_Joy_Hilarious_1",["sName"]="古灵精怪",["group"]=4}
+,{["cue_sheet"]="Plot_Memories",["music_type"]=1,["id"]=21,["key"]="21",["cue_name_2"]="Plot_Memories",["cue_name"]="Plot_Memories_1",["sName"]="记忆",["group"]=4}
+,{["cue_sheet"]="Plot_Mysterious",["music_type"]=1,["id"]=22,["key"]="22",["cue_name_2"]="Plot_Mysterious",["cue_name"]="Plot_Mysterious_1",["sName"]="神秘",["group"]=4}
+,{["cue_sheet"]="Plot_Redemption",["music_type"]=1,["id"]=23,["key"]="23",["cue_name_2"]="Plot_Redemption",["cue_name"]="Plot_Redemption_1",["sName"]="救赎",["group"]=4}
+,{["cue_sheet"]="Plot_Tragedy",["music_type"]=1,["id"]=24,["key"]="24",["cue_name_2"]="Plot_Tragedy",["cue_name"]="Plot_Tragedy_1",["sName"]="悲伤",["group"]=4}
 }
---cfgCfgMusic = conf
-return conf
+

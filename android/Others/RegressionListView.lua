@@ -9,6 +9,7 @@ curIndex1, curIndex2 = 1, 1;
 function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Update_Everyday, OnOpen)
+    eventMgr:AddListener(EventType.HuiGui_Check, OnOpen)
 end
 
 function OnDestroy()
@@ -151,6 +152,10 @@ function GetPathName(_type)
         str = "RegressionActivity5/RegressionShop"
     elseif _type == RegressionActiveType.Show then -- 玩法一览
         str = "AllGameplay/AllGameplay"
+    elseif _type == RegressionActiveType.Resupply  then -- 玩法一览
+        str = "RegressionActivity6/RegressionSupplyView"
+    elseif _type == RegressionActiveType.AcitveRewards then
+        str = "RegressionActivity7/RegressionRebateView"
     end
     return str
 end
@@ -161,6 +166,12 @@ function GetInfo(_type)
         info, elseInfo = leftInfos[curIndex1].activityId,
             RegressionMgr:GetActivityEndTime(leftInfos[curIndex1].type)
     elseif _type == RegressionActiveType.ConsumeReduce then
+        info, elseInfo = leftInfos[curIndex1].activityId,
+            RegressionMgr:GetActivityEndTime(leftInfos[curIndex1].type)
+    elseif _type == RegressionActiveType.Resupply  then
+        info, elseInfo = leftInfos[curIndex1].activityId,
+            RegressionMgr:GetActivityEndTime(leftInfos[curIndex1].type)
+    elseif _type == RegressionActiveType.AcitveRewards then
         info, elseInfo = leftInfos[curIndex1].activityId,
             RegressionMgr:GetActivityEndTime(leftInfos[curIndex1].type)
     end

@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'z-装备配置表.xlsx',
-	["sheetname"] = '随机点范围(废弃)',
-	["types"] = {
-'int','string','int','int'
-},
-	["names"] = {
-'id','key','nMin','nMax'
-},
-	["data"] = {
-{'1',	'1',	'0',	'1'},
-{'2',	'2',	'0',	'2'},
-{'3',	'3',	'0',	'3'},
-{'4',	'4',	'1',	'5'},
-{'5',	'5',	'1',	'10'},
-},
+_G["CfgEquipRandTypeVal"]={{["id"]=1,["nMin"]=0,["key"]="1",["nMax"]=1}
+,{["id"]=2,["nMin"]=0,["key"]="2",["nMax"]=2}
+,{["id"]=3,["nMin"]=0,["key"]="3",["nMax"]=3}
+,{["id"]=4,["nMin"]=1,["key"]="4",["nMax"]=5}
+,{["id"]=5,["nMin"]=1,["key"]="5",["nMax"]=10}
 }
---cfgCfgEquipRandTypeVal = conf
-return conf
+

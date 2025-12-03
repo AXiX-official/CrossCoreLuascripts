@@ -1,18 +1,6 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '全局电量配置表',
-	["types"] = {
-'int','string','string','int','int','int','int','int','int','int','bool','string'
-},
-	["names"] = {
-'id','key','name','min','max','productPercent','tradeOrderPer','expeditionPer','combineOrderPer','remouldOrderPer','running','icon'
-},
-	["data"] = {
-{'1',	'1',	'电荷超载',	'-10000',	'-1000',	'-20',	'-20',	'0',	'0',	'0',	'0',	'runIcon1'},
-{'2',	'2',	'满载负荷',	'-999',	'0',	'-20',	'-10',	'-10',	'-10',	'-10',	'1',	'runIcon2'},
-{'3',	'3',	'正常负载',	'1',	'19',	'0',	'0',	'0',	'0',	'0',	'1',	'runIcon3'},
-{'4',	'4',	'电力充裕',	'20',	'1000',	'20',	'10',	'10',	'10',	'10',	'1',	'runIcon4'},
-},
+_G["CfgBGobalPower"]={{["tradeOrderPer"]=-20,["id"]=1,["expeditionPer"]=0,["combineOrderPer"]=0,["min"]=-10000,["running"]=false,["key"]="1",["remouldOrderPer"]=0,["productPercent"]=-20,["max"]=-1000,["icon"]="runIcon1",["name"]="电荷超载"}
+,{["tradeOrderPer"]=-10,["id"]=2,["expeditionPer"]=-10,["combineOrderPer"]=-10,["min"]=-999,["running"]=true,["key"]="2",["remouldOrderPer"]=-10,["productPercent"]=-20,["max"]=0,["icon"]="runIcon2",["name"]="满载负荷"}
+,{["tradeOrderPer"]=0,["id"]=3,["expeditionPer"]=0,["combineOrderPer"]=0,["min"]=1,["running"]=true,["key"]="3",["remouldOrderPer"]=0,["productPercent"]=0,["max"]=19,["icon"]="runIcon3",["name"]="正常负载"}
+,{["tradeOrderPer"]=10,["id"]=4,["expeditionPer"]=10,["combineOrderPer"]=10,["min"]=20,["running"]=true,["key"]="4",["remouldOrderPer"]=10,["productPercent"]=20,["max"]=1000,["icon"]="runIcon4",["name"]="电力充裕"}
 }
---cfgCfgBGobalPower = conf
-return conf
+

@@ -1,16 +1,6 @@
-local conf = {
-	["filename"] = 'b-世界boss表.xlsx',
-	["sheetname"] = '世界boss',
-	["types"] = {
-'int','string','string','int','float','int[]','int','int','string','string','string','string'
-},
-	["names"] = {
-'id','key','name','nMonsterGroupID','fHpMultiple','reward','killReward','nActivityReward','nBeginTime','nEndTime','nDailyBeginTime','nDailyEndTime'
-},
-	["data"] = {
-{'1001',	'',	'碎星BOSS1',	'999911',	'4',	'10001,10002,10003',	'30001',	'1001',	'2019/10/10 10:00:00',	'2022/10/11 10:00:00',	'10:00:00',	'19:00:00'},
-{'1002',	'',	'碎星BOSS2',	'999911',	'4',	'10001,10002,10004',	'30001',	'1001',	'2019/10/10 10:00:00',	'2019/10/11 10:00:00',	'10:00:00',	'12:00:00'},
-},
+_G["cfgWorldBoss"]={[1001]={["id"]=1001,["killReward"]=30001,["nEndTime"]="2022/10/11 10:00:00",["key"]=1001,["nDailyEndTime"]="19:00:00",["nDailyBeginTime"]="10:00:00",["name"]="碎星BOSS1",["nBeginTime"]="2019/10/10 10:00:00",["nMonsterGroupID"]=999911,["nActivityReward"]=1001,["reward"]={10001,10002,10003}
+,["fHpMultiple"]=4}
+,[1002]={["id"]=1002,["killReward"]=30001,["nEndTime"]="2019/10/11 10:00:00",["key"]=1002,["nDailyEndTime"]="12:00:00",["nDailyBeginTime"]="10:00:00",["name"]="碎星BOSS2",["nBeginTime"]="2019/10/10 10:00:00",["nMonsterGroupID"]=999911,["nActivityReward"]=1001,["reward"]={10001,10002,10004}
+,["fHpMultiple"]=4}
 }
---cfgcfgWorldBoss = conf
-return conf
+

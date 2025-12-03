@@ -1,16 +1,4 @@
-local conf = {
-	["filename"] = 'h-活动.xlsx',
-	["sheetname"] = '活动表',
-	["types"] = {
-'int','string','string','int','int','int','string','string','int'
-},
-	["names"] = {
-'id','key','name','sortIndex','type','sortDiff','begTime','endTime','score_pool_id'
-},
-	["data"] = {
-{'1001',	'1001',	'积分活动',	'1',	'3',	'',	'2019/10/10 10:00:00',	'2019/10/31 10:00:00',	'1001'},
-{'2001',	'2001',	'排名奖励',	'2',	'4',	'60',	'2019/10/10 10:00:00',	'2019/10/31 10:00:00',	''},
-},
+_G["CfgActive"]={[1001]={["begTime"]="2019/10/10 10:00:00",["type"]=3,["id"]=1001,["nEndTime"]=1572487200,["nBegTime"]=1570672800,["key"]="1001",["score_pool_id"]=1001,["name"]="积分活动",["sortIndex"]=1,["endTime"]="2019/10/31 10:00:00"}
+,[2001]={["begTime"]="2019/10/10 10:00:00",["type"]=4,["endTime"]="2019/10/31 10:00:00",["nEndTime"]=1572487200,["nBegTime"]=1570672800,["name"]="排名奖励",["sortIndex"]=2,["sortDiff"]=60,["key"]="2001",["id"]=2001}
 }
---cfgCfgActive = conf
-return conf
+

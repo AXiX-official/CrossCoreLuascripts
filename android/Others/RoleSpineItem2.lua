@@ -383,19 +383,25 @@ function ItemDragEndCB(cfgChild, x, y, index)
     local content = cfgChild.content or {}
     if (CheckIsDrag(cfgChild)) then
         if (dragObj) then
-            local isIn = false -- 在目标范围
-            if (content.drag.targetPosObjName) then
-                local _dragStartPos = CSAPI.csGetPos(dragObj)
-                local startPos = UnityEngine.Vector3(_dragStartPos[0], _dragStartPos[1], 0)
-                local targetObj = l2dGo.transform:Find("pos/" .. content.drag.targetPosObjName).gameObject
-                local dragTargetPos = CSAPI.csGetPos(targetObj)
-                local targetPos = UnityEngine.Vector3(dragTargetPos[0], dragTargetPos[1], 0)
-                local dis = UnityEngine.Vector3.Distance(startPos, targetPos)
-                isIn = dis < 10
+            local isIn, sName = false, nil -- 在目标范围
+            if (content.drag.targetPosObjNames) then
+                for k, v in pairs(content.drag.targetPosObjNames) do
+                    local strs = StringUtil:split(v, "_")
+                    local _dragStartPos = CSAPI.csGetPos(dragObj)
+                    local startPos = UnityEngine.Vector3(_dragStartPos[0], _dragStartPos[1], 0)
+                    local targetObj = l2dGo.transform:Find("pos/" .. strs[1]).gameObject
+                    local dragTargetPos = CSAPI.csGetPos(targetObj)
+                    local targetPos = UnityEngine.Vector3(dragTargetPos[0], dragTargetPos[1], 0)
+                    local dis = UnityEngine.Vector3.Distance(startPos, targetPos)
+                    if (dis < 10) then
+                        isIn = true
+                        sName = strs[2]
+                    end
+                end
             end
-            if (isIn) then
+            if (isIn and sName ~= nil) then
                 -- 播放动作
-                spineTools:PlayByClick(cfgChild.sName, GetTrackIndex(cfgChild), true, true)
+                spineTools:PlayByClick(sName, GetTrackIndex(cfgChild), true, true)
                 PlayAudio(cfgChild)
                 -- 显示主体隐藏额外
                 CSAPI.SetAnchor(dragObj, dragStartPos[0], dragStartPos[1], 0)

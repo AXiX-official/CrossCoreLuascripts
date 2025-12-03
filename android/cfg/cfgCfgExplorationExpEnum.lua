@@ -1,15 +1,4 @@
-local conf = {
-	["filename"] = 'k-勘探配置.xlsx',
-	["sheetname"] = '勘探经验兑换模板',
-	["types"] = {
-'int','string','int','int[]','int','int'
-},
-	["names"] = {
-'id','key','dayLimit','actionGet','exerciseGet','coreCreateGet'
-},
-	["data"] = {
-{'1001',	'1001',	'100000',	'10,0',	'0',	'0'},
-},
+_G["CfgExplorationExpEnum"]={[1001]={["dayLimit"]=100000,["key"]="1001",["actionGet"]={10,0}
+,["coreCreateGet"]=0,["exerciseGet"]=0,["id"]=1001}
 }
---cfgCfgExplorationExpEnum = conf
-return conf
+

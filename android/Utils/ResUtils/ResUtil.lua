@@ -621,6 +621,8 @@ function this:Init()
     self.FightOver=ResIconUtil.New("FightOver")
     --万圣节
     self.Halloween = ResIconUtil.New("Halloween")
+    --回归活动
+    self.Regression = ResIconUtil.New("Regression")
 end
 
 return this;

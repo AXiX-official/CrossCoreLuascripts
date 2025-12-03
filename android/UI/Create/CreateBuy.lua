@@ -4,12 +4,17 @@ function OnOpen()
     poolId = data[1] -- 卡池id
     cnt = data[2] -- 构建次数
     cfgID = data[3] --
+    if (cfgID == 1003) then
+        if (BagMgr:GetCount(10040) <= 0) then
+            cfgID = 1001
+        end
+    end
     RefreshPanel()
 end
 
 function RefreshPanel()
     cfg = Cfgs.CfgCardPool:GetByID(poolId)
-    local id = cnt==1 and cfg.jCost[1][1] or cfg.multiCost[1][1] --抽卡劵id  --g_CreateSpendID
+    local id = cnt == 1 and cfg.jCost[1][1] or cfg.multiCost[1][1] -- 抽卡劵id  --g_CreateSpendID
     cur1 = BagMgr:GetCount(id)
     needNum = cnt - cur1 -- 还需要的抽卡卷的数量
     local eCfg = Cfgs.CfgItemExchange:GetByID(cfgID)
@@ -18,6 +23,8 @@ function RefreshPanel()
 
     if (cfgID == 1003) then
         SetExchange1()
+    elseif (cfgID == 1001) then
+        SetExchange3()
     else
         SetExchange2()
     end
@@ -89,6 +96,35 @@ function SetExchange2()
         Cfgs.ItemInfo:GetByID(cost[1]).name, needNum, Cfgs.ItemInfo:GetByID(get[1]).name)
 end
 
+-- 钻石-抽卡卷
+function SetExchange3()
+    if (not item1) then
+        local go, _item = ResUtil:CreateGridItem(itemPoint1.transform)
+        item1 = _item
+        num = BagMgr:GetCount(cost[1])
+        local fodderData = BagMgr:GetFakeData(cost[1], num)
+        item1.Refresh(fodderData)
+        item1.SetClickCB(GridClickFunc.OpenInfo)
+        needCostNum = cost[2] * needNum
+        local str = needCostNum > num and StringUtil:SetByColor(num, "FF381E") or StringUtil:SetByColor(num, "65ffb1")
+        item1.SetDownCount(str .. "/" .. needCostNum)
+    end
+
+    if (not item2) then
+        local go, _item = ResUtil:CreateGridItem(itemPoint2.transform)
+        item2 = _item
+        local fodderData = BagMgr:GetFakeData(get[1], cur1)
+        item2.Refresh(fodderData)
+        item2.SetClickCB(GridClickFunc.OpenInfo)
+        local str1 = StringUtil:SetByColor(cur1, "FF381E")
+        local str2 = needCostNum > num and StringUtil:SetByColor("+" .. needNum, "FF381E") or
+                         StringUtil:SetByColor("+" .. needNum, "65ffb1")
+        item2.SetDownCount(str1 .. str2 .. "/" .. cnt)
+    end
+    LanguageMgr:SetText(txtTips, 17016, Cfgs.ItemInfo:GetByID(get[1]).name, needCostNum,
+        Cfgs.ItemInfo:GetByID(cost[1]).name, needNum, Cfgs.ItemInfo:GetByID(get[1]).name)
+end
+
 function OnClickL()
     view:Close()
 end
@@ -107,15 +143,17 @@ function OnClickR()
             num = needNum,
             type = RandRewardType.ITEM
         }}
-        if CSAPI.IsADVRegional(3) and cfgID==1003 then
-            CSAPI.ADVJPTitle(needCostNum,function()  ClientProto:ExchangeItem(datas, ChangeCB,poolId) end)
+        if CSAPI.IsADVRegional(3) and (cfgID == 1003 or cfgID == 1001) then
+            CSAPI.ADVJPTitle(needCostNum, function()
+                ClientProto:ExchangeItem(datas, ChangeCB, poolId)
+            end)
         else
-            ClientProto:ExchangeItem(datas, ChangeCB,poolId)
+            ClientProto:ExchangeItem(datas, ChangeCB, poolId)
         end
     end
 end
 function ChangeCB(proto)
-    if (cfgID ~= 1003) then
+    if (cfgID == 1002 or cfgID == 1001) then
         if (proto.rewards and #proto.rewards > 0) then
             CreateMgr:CardCreate(poolId, cnt)
         end

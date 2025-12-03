@@ -1,115 +1,117 @@
-local conf = {
-	["filename"] = 't-图鉴表.xlsx',
-	["sheetname"] = '多人插画',
-	["types"] = {
-'int','string','string','string','table#4','int','int','string','int'
-},
-	["names"] = {
-'id','key','small','name','infos','index','board_id','icon','shopId'
-},
-	["data"] = {
-{'1',	'1',	'arch_seashore',	'海边度假',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'',	'',	'1',	'2',	'arch_seashore',	'80401'},
-{'1',	'1',	'',	'',	'',	'2',	'4',	'arch_summer_rendezvous',	'80402'},
-{'1',	'1',	'',	'',	'',	'3',	'23',	'arch_summer_swimming_party',	''},
-{'1',	'1',	'',	'',	'',	'4',	'24',	'arch_beach_holidays',	'80415'},
-{'1',	'1',	'',	'',	'',	'5',	'25',	'arch_cool_bright_summer',	'80416'},
-{'1',	'1',	'',	'',	'',	'6',	'26',	'arch_warm_summer',	'80417'},
-{'1',	'1',	'',	'',	'',	'7',	'28',	'arch_coolness_of_summer',	''},
-{'1',	'1',	'',	'',	'',	'8',	'43',	'arch_swimmer_assemble',	''},
-{'1',	'1',	'',	'',	'',	'9',	'49',	'arch_beach_playtime',	''},
-{'1',	'1',	'',	'',	'',	'10',	'71',	'arch_master_of_tides',	''},
-{'1',	'1',	'',	'',	'',	'11',	'77',	'arch_radiant_summer_sojourn',	'80441'},
-{'1',	'1',	'',	'',	'',	'12',	'78',	'arch_sands_of_summer_heat',	'80442'},
-{'1',	'1',	'',	'',	'',	'13',	'79',	'arch_beach_picnic',	'80443'},
-{'2',	'2',	'arch_three_people',	'宿舍故事',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'',	'',	'1',	'1',	'arch_three_people',	''},
-{'2',	'2',	'',	'',	'',	'2',	'3',	'arch_kadya_liedown',	''},
-{'2',	'2',	'',	'',	'',	'3',	'7',	'arch_trytomoveforward',	'80405'},
-{'2',	'2',	'',	'',	'',	'4',	'9',	'arch_play_time',	''},
-{'2',	'2',	'',	'',	'',	'5',	'10',	'arch_relaxing_afternoon',	''},
-{'2',	'2',	'',	'',	'',	'6',	'13',	'arch_greenhouse',	'80407'},
-{'2',	'2',	'',	'',	'',	'7',	'14',	'arch_starry_night',	'80408'},
-{'2',	'2',	'',	'',	'',	'8',	'15',	'arch_fun_with_mew',	''},
-{'2',	'2',	'',	'',	'',	'9',	'16',	'arch_tender_dream',	'80409'},
-{'2',	'2',	'',	'',	'',	'10',	'17',	'arch_intoxicated_shadow',	'80410'},
-{'2',	'2',	'',	'',	'',	'11',	'18',	'arch_weightless_space',	'80411'},
-{'2',	'2',	'',	'',	'',	'12',	'56',	'arch_dress_up_game',	'80427'},
-{'2',	'2',	'',	'',	'',	'13',	'59',	'arch_pink_love',	'80429'},
-{'2',	'2',	'',	'',	'',	'14',	'60',	'arch_cozy_cooking',	'80430'},
-{'2',	'2',	'',	'',	'',	'15',	'61',	'arch_feeding_with_affection',	'80431'},
-{'2',	'2',	'',	'',	'',	'16',	'65',	'arch_idol_dressing_room',	'80433'},
-{'2',	'2',	'',	'',	'',	'17',	'66',	'arch_foot_fashion',	'80434'},
-{'2',	'2',	'',	'',	'',	'18',	'83',	'arch_ephemeral_indulgence',	'80444'},
-{'2',	'2',	'',	'',	'',	'19',	'84',	'arch_Tea_Time',	'80459'},
-{'2',	'2',	'',	'',	'',	'20',	'85',	'arch_Dreamlike_Picture',	'80460'},
-{'2',	'2',	'',	'',	'',	'21',	'98',	'arch_Changing_Room_Shenanigans',	'80465'},
-{'3',	'3',	'arch_shimmering_feast',	'佳节逐禧',	'',	'',	'',	'',	''},
-{'3',	'3',	'',	'',	'',	'1',	'5',	'arch_shimmering_feast',	'80403'},
-{'3',	'3',	'',	'',	'',	'2',	'6',	'arch_fireworks_IoIent',	'80404'},
-{'3',	'3',	'',	'',	'',	'3',	'19',	'arch_moonlight_sharing',	'80413'},
-{'3',	'3',	'',	'',	'',	'4',	'30',	'arch_starry_lotus_fire',	''},
-{'3',	'3',	'',	'',	'',	'5',	'57',	'arch_chinese_music_party',	'80437'},
-{'3',	'3',	'',	'',	'',	'6',	'58',	'arch_hang_out_in_lotus',	'80461'},
-{'4',	'4',	'arch_base_check',	'作战准备',	'',	'',	'',	'',	''},
-{'4',	'4',	'',	'',	'',	'1',	'8',	'arch_base_check',	''},
-{'5',	'5',	'arch_bestie_agent',	'娇痴颐使',	'',	'',	'',	'',	''},
-{'5',	'5',	'',	'',	'',	'1',	'11',	'arch_bestie_agent',	'80406'},
-{'6',	'6',	'arch_trip_in_the_milky_way',	'寰宇梦境',	'',	'',	'',	'',	''},
-{'6',	'6',	'',	'',	'',	'1',	'12',	'arch_trip_in_the_milky_way',	''},
-{'6',	'6',	'',	'',	'',	'2',	'20',	'arch_guard_of_iron_bastion',	'80412'},
-{'6',	'6',	'',	'',	'',	'3',	'21',	'arch_silhouette_in_a_moment',	''},
-{'6',	'6',	'',	'',	'',	'4',	'22',	'arch_snowland_gods',	''},
-{'6',	'6',	'',	'',	'',	'5',	'31',	'arch_sign_of_mutation',	''},
-{'6',	'6',	'',	'',	'',	'6',	'32',	'arch_waves_tumble',	''},
-{'6',	'6',	'',	'',	'',	'7',	'33',	'arch_rainbow_in_the_sky',	''},
-{'6',	'6',	'',	'',	'',	'8',	'35',	'arch_person_on_the_darknet',	''},
-{'6',	'6',	'',	'',	'',	'9',	'36',	'arch_rebuilding_together',	''},
-{'6',	'6',	'',	'',	'',	'10',	'40',	'arch_a_narrow_escape',	''},
-{'6',	'6',	'',	'',	'',	'11',	'41',	'arch_black_cocoon_rebecca',	''},
-{'6',	'6',	'',	'',	'',	'12',	'42',	'arch_wave_and_vortex',	''},
-{'6',	'6',	'',	'',	'',	'13',	'47',	'arch_golden_celebration',	'80423'},
-{'6',	'6',	'',	'',	'',	'14',	'52',	'arch_voice_of_the_wild',	''},
-{'6',	'6',	'',	'',	'',	'15',	'53',	'arch_a_sweet_moment',	''},
-{'6',	'6',	'',	'',	'',	'16',	'63',	'arch_mirage_of_splendor',	''},
-{'6',	'6',	'',	'',	'',	'17',	'70',	'arch_calm_soak',	''},
-{'6',	'6',	'',	'',	'',	'18',	'73',	'arch_quiet_nook',	''},
-{'6',	'6',	'',	'',	'',	'19',	'74',	'arch_leisurely_picnic',	''},
-{'7',	'7',	'arch_dance_for_joy',	'涂色速写',	'',	'',	'',	'',	''},
-{'7',	'7',	'',	'',	'',	'1',	'27',	'arch_dance_for_joy',	''},
-{'7',	'7',	'',	'',	'',	'2',	'51',	'arch_anniversary_party',	''},
-{'7',	'7',	'',	'',	'',	'3',	'55',	'arch_whole_family_have_fun',	''},
-{'7',	'7',	'',	'',	'',	'4',	'69',	'arch_labor_leisure',	''},
-{'8',	'8',	'arch_camping_with_fireworks',	'闲适假日',	'',	'',	'',	'',	''},
-{'8',	'8',	'',	'',	'',	'1',	'29',	'arch_camping_with_fireworks',	'80418'},
-{'8',	'8',	'',	'',	'',	'2',	'45',	'arch_trail_of_cases',	'80421'},
-{'8',	'8',	'',	'',	'',	'3',	'62',	'arch_dusk_of_summer',	'80432'},
-{'8',	'8',	'',	'',	'',	'4',	'67',	'arch_hot_spring_night_talk',	'80435'},
-{'8',	'8',	'',	'',	'',	'5',	'68',	'arch_thin_gorgeous_snow',	'80436'},
-{'8',	'8',	'',	'',	'',	'6',	'97',	'arch_jump_for_joy',	''},
-{'9',	'9',	'arch_law_of_the_streets',	'都市掠影',	'',	'',	'',	'',	''},
-{'9',	'9',	'',	'',	'',	'1',	'39',	'arch_law_of_the_streets',	'80419'},
-{'9',	'9',	'',	'',	'',	'2',	'44',	'arch_fantastic_curtain_raiser',	'80420'},
-{'9',	'9',	'',	'',	'',	'3',	'46',	'arch_double_feature',	'80422'},
-{'9',	'9',	'',	'',	'',	'4',	'48',	'arch_alley_corner_crisis',	'80424'},
-{'9',	'9',	'',	'',	'',	'5',	'50',	'arch_twilight_invitation',	'80426'},
-{'9',	'9',	'',	'',	'',	'6',	'38',	'arch_rainy_night_jeopardy',	'80428'},
-{'9',	'9',	'',	'',	'',	'7',	'72',	'arch_starting_raid',	'80438'},
-{'10',	'10',	'arch_decisiv_moment',	'活力瞬间',	'',	'',	'',	'',	''},
-{'10',	'10',	'',	'',	'',	'1',	'64',	'arch_decisiv_moment',	''},
-{'10',	'10',	'',	'',	'',	'2',	'75',	'arch_contention_arena',	'80439'},
-{'10',	'10',	'',	'',	'',	'3',	'76',	'arch_knockout',	'80440'},
-{'11',	'11',	'arch_changing_moment',	'恋色风景',	'',	'',	'',	'',	''},
-{'11',	'11',	'',	'',	'',	'1',	'86',	'arch_changing_moment',	''},
-{'11',	'11',	'',	'',	'',	'2',	'87',	'arch_woodland_search',	''},
-{'11',	'11',	'',	'',	'',	'3',	'88',	'arch_soul_confession',	''},
-{'11',	'11',	'',	'',	'',	'4',	'89',	'arch_dusk_shore',	''},
-{'11',	'11',	'',	'',	'',	'5',	'90',	'arch_Brilliant_Night',	''},
-{'12',	'12',	'arch_The_Care_in_Check-ups',	'暖心呵护',	'',	'',	'',	'',	''},
-{'12',	'12',	'',	'',	'',	'1',	'91',	'arch_The_Care_in_Check-ups',	'80462'},
-{'12',	'12',	'',	'',	'',	'2',	'96',	'arch_private_inspection',	''},
-{'12',	'12',	'',	'',	'',	'2',	'92',	'arch_Soul-Searching_Consultation',	'80463'},
-},
+_G["CfgArchiveIllustration"]={{["small"]="arch_seashore",["infos"]={{["shopId"]=80401,["board_id"]=2,["index"]=1,["icon"]="arch_seashore"}
+,{["shopId"]=80402,["board_id"]=4,["index"]=2,["icon"]="arch_summer_rendezvous"}
+,{["board_id"]=23,["index"]=3,["icon"]="arch_summer_swimming_party"}
+,{["shopId"]=80415,["board_id"]=24,["index"]=4,["icon"]="arch_beach_holidays"}
+,{["shopId"]=80416,["board_id"]=25,["index"]=5,["icon"]="arch_cool_bright_summer"}
+,{["shopId"]=80417,["board_id"]=26,["index"]=6,["icon"]="arch_warm_summer"}
+,{["board_id"]=28,["index"]=7,["icon"]="arch_coolness_of_summer"}
+,{["board_id"]=43,["index"]=8,["icon"]="arch_swimmer_assemble"}
+,{["board_id"]=49,["index"]=9,["icon"]="arch_beach_playtime"}
+,{["board_id"]=71,["index"]=10,["icon"]="arch_master_of_tides"}
+,{["shopId"]=80441,["board_id"]=77,["index"]=11,["icon"]="arch_radiant_summer_sojourn"}
+,{["shopId"]=80442,["board_id"]=78,["index"]=12,["icon"]="arch_sands_of_summer_heat"}
+,{["shopId"]=80443,["board_id"]=79,["index"]=13,["icon"]="arch_beach_picnic"}
 }
---cfgCfgArchiveIllustration = conf
-return conf
+,["key"]="1",["id"]=1,["name"]="海边度假"}
+,{["small"]="arch_three_people",["infos"]={{["board_id"]=1,["index"]=1,["icon"]="arch_three_people"}
+,{["board_id"]=3,["index"]=2,["icon"]="arch_kadya_liedown"}
+,{["shopId"]=80405,["board_id"]=7,["index"]=3,["icon"]="arch_trytomoveforward"}
+,{["board_id"]=9,["index"]=4,["icon"]="arch_play_time"}
+,{["board_id"]=10,["index"]=5,["icon"]="arch_relaxing_afternoon"}
+,{["shopId"]=80407,["board_id"]=13,["index"]=6,["icon"]="arch_greenhouse"}
+,{["shopId"]=80408,["board_id"]=14,["index"]=7,["icon"]="arch_starry_night"}
+,{["board_id"]=15,["index"]=8,["icon"]="arch_fun_with_mew"}
+,{["shopId"]=80409,["board_id"]=16,["index"]=9,["icon"]="arch_tender_dream"}
+,{["shopId"]=80410,["board_id"]=17,["index"]=10,["icon"]="arch_intoxicated_shadow"}
+,{["shopId"]=80411,["board_id"]=18,["index"]=11,["icon"]="arch_weightless_space"}
+,{["shopId"]=80427,["board_id"]=56,["index"]=12,["icon"]="arch_dress_up_game"}
+,{["shopId"]=80429,["board_id"]=59,["index"]=13,["icon"]="arch_pink_love"}
+,{["shopId"]=80430,["board_id"]=60,["index"]=14,["icon"]="arch_cozy_cooking"}
+,{["shopId"]=80431,["board_id"]=61,["index"]=15,["icon"]="arch_feeding_with_affection"}
+,{["shopId"]=80433,["board_id"]=65,["index"]=16,["icon"]="arch_idol_dressing_room"}
+,{["shopId"]=80434,["board_id"]=66,["index"]=17,["icon"]="arch_foot_fashion"}
+,{["shopId"]=80444,["board_id"]=83,["index"]=18,["icon"]="arch_ephemeral_indulgence"}
+,{["shopId"]=80459,["board_id"]=84,["index"]=19,["icon"]="arch_Tea_Time"}
+,{["shopId"]=80460,["board_id"]=85,["index"]=20,["icon"]="arch_Dreamlike_Picture"}
+,{["shopId"]=80465,["board_id"]=98,["index"]=21,["icon"]="arch_Changing_Room_Shenanigans"}
+,{["board_id"]=100,["index"]=22,["icon"]="arch_Locker_Room_Party"}
+,{["board_id"]=101,["index"]=23,["icon"]="arch_Nocturnal_Mystery_Gift"}
+}
+,["key"]="2",["id"]=2,["name"]="宿舍故事"}
+,{["small"]="arch_shimmering_feast",["infos"]={{["shopId"]=80403,["board_id"]=5,["index"]=1,["icon"]="arch_shimmering_feast"}
+,{["shopId"]=80404,["board_id"]=6,["index"]=2,["icon"]="arch_fireworks_IoIent"}
+,{["shopId"]=80413,["board_id"]=19,["index"]=3,["icon"]="arch_moonlight_sharing"}
+,{["board_id"]=30,["index"]=4,["icon"]="arch_starry_lotus_fire"}
+,{["shopId"]=80437,["board_id"]=57,["index"]=5,["icon"]="arch_chinese_music_party"}
+,{["shopId"]=80461,["board_id"]=58,["index"]=6,["icon"]="arch_hang_out_in_lotus"}
+}
+,["key"]="3",["id"]=3,["name"]="佳节逐禧"}
+,{["small"]="arch_base_check",["infos"]={{["board_id"]=8,["index"]=1,["icon"]="arch_base_check"}
+}
+,["key"]="4",["id"]=4,["name"]="作战准备"}
+,{["small"]="arch_bestie_agent",["infos"]={{["shopId"]=80406,["board_id"]=11,["index"]=1,["icon"]="arch_bestie_agent"}
+}
+,["key"]="5",["id"]=5,["name"]="娇痴颐使"}
+,{["small"]="arch_trip_in_the_milky_way",["infos"]={{["board_id"]=12,["index"]=1,["icon"]="arch_trip_in_the_milky_way"}
+,{["shopId"]=80412,["board_id"]=20,["index"]=2,["icon"]="arch_guard_of_iron_bastion"}
+,{["board_id"]=21,["index"]=3,["icon"]="arch_silhouette_in_a_moment"}
+,{["board_id"]=22,["index"]=4,["icon"]="arch_snowland_gods"}
+,{["board_id"]=31,["index"]=5,["icon"]="arch_sign_of_mutation"}
+,{["board_id"]=32,["index"]=6,["icon"]="arch_waves_tumble"}
+,{["board_id"]=33,["index"]=7,["icon"]="arch_rainbow_in_the_sky"}
+,{["board_id"]=35,["index"]=8,["icon"]="arch_person_on_the_darknet"}
+,{["board_id"]=36,["index"]=9,["icon"]="arch_rebuilding_together"}
+,{["board_id"]=40,["index"]=10,["icon"]="arch_a_narrow_escape"}
+,{["board_id"]=41,["index"]=11,["icon"]="arch_black_cocoon_rebecca"}
+,{["board_id"]=42,["index"]=12,["icon"]="arch_wave_and_vortex"}
+,{["shopId"]=80423,["board_id"]=47,["index"]=13,["icon"]="arch_golden_celebration"}
+,{["board_id"]=52,["index"]=14,["icon"]="arch_voice_of_the_wild"}
+,{["board_id"]=53,["index"]=15,["icon"]="arch_a_sweet_moment"}
+,{["board_id"]=63,["index"]=16,["icon"]="arch_mirage_of_splendor"}
+,{["board_id"]=70,["index"]=17,["icon"]="arch_calm_soak"}
+,{["board_id"]=73,["index"]=18,["icon"]="arch_quiet_nook"}
+,{["board_id"]=74,["index"]=19,["icon"]="arch_leisurely_picnic"}
+}
+,["key"]="6",["id"]=6,["name"]="寰宇梦境"}
+,{["small"]="arch_dance_for_joy",["infos"]={{["board_id"]=27,["index"]=1,["icon"]="arch_dance_for_joy"}
+,{["board_id"]=51,["index"]=2,["icon"]="arch_anniversary_party"}
+,{["board_id"]=55,["index"]=3,["icon"]="arch_whole_family_have_fun"}
+,{["board_id"]=69,["index"]=4,["icon"]="arch_labor_leisure"}
+}
+,["key"]="7",["id"]=7,["name"]="涂色速写"}
+,{["small"]="arch_camping_with_fireworks",["infos"]={{["shopId"]=80418,["board_id"]=29,["index"]=1,["icon"]="arch_camping_with_fireworks"}
+,{["shopId"]=80421,["board_id"]=45,["index"]=2,["icon"]="arch_trail_of_cases"}
+,{["shopId"]=80432,["board_id"]=62,["index"]=3,["icon"]="arch_dusk_of_summer"}
+,{["shopId"]=80435,["board_id"]=67,["index"]=4,["icon"]="arch_hot_spring_night_talk"}
+,{["shopId"]=80436,["board_id"]=68,["index"]=5,["icon"]="arch_thin_gorgeous_snow"}
+,{["board_id"]=97,["index"]=6,["icon"]="arch_jump_for_joy"}
+,{["shopId"]=80466,["board_id"]=99,["index"]=7,["icon"]="arch_Brilliant_Mirror_Image"}
+}
+,["key"]="8",["id"]=8,["name"]="闲适假日"}
+,{["small"]="arch_law_of_the_streets",["infos"]={{["shopId"]=80419,["board_id"]=39,["index"]=1,["icon"]="arch_law_of_the_streets"}
+,{["shopId"]=80420,["board_id"]=44,["index"]=2,["icon"]="arch_fantastic_curtain_raiser"}
+,{["shopId"]=80422,["board_id"]=46,["index"]=3,["icon"]="arch_double_feature"}
+,{["shopId"]=80424,["board_id"]=48,["index"]=4,["icon"]="arch_alley_corner_crisis"}
+,{["shopId"]=80426,["board_id"]=50,["index"]=5,["icon"]="arch_twilight_invitation"}
+,{["shopId"]=80428,["board_id"]=38,["index"]=6,["icon"]="arch_rainy_night_jeopardy"}
+,{["shopId"]=80438,["board_id"]=72,["index"]=7,["icon"]="arch_starting_raid"}
+}
+,["key"]="9",["id"]=9,["name"]="都市掠影"}
+,{["small"]="arch_decisiv_moment",["infos"]={{["board_id"]=64,["index"]=1,["icon"]="arch_decisiv_moment"}
+,{["shopId"]=80439,["board_id"]=75,["index"]=2,["icon"]="arch_contention_arena"}
+,{["shopId"]=80440,["board_id"]=76,["index"]=3,["icon"]="arch_knockout"}
+}
+,["key"]="10",["id"]=10,["name"]="活力瞬间"}
+,{["small"]="arch_changing_moment",["infos"]={{["board_id"]=86,["index"]=1,["icon"]="arch_changing_moment"}
+,{["board_id"]=87,["index"]=2,["icon"]="arch_woodland_search"}
+,{["board_id"]=88,["index"]=3,["icon"]="arch_soul_confession"}
+,{["board_id"]=89,["index"]=4,["icon"]="arch_dusk_shore"}
+,{["board_id"]=90,["index"]=5,["icon"]="arch_Brilliant_Night"}
+}
+,["key"]="11",["id"]=11,["name"]="恋色风景"}
+,{["small"]="arch_The_Care_in_Check-ups",["infos"]={{["shopId"]=80462,["board_id"]=91,["index"]=1,["icon"]="arch_The_Care_in_Check-ups"}
+,{["shopId"]=80463,["board_id"]=92,["index"]=2,["icon"]="arch_Soul-Searching_Consultation"}
+}
+,["key"]="12",["id"]=12,["name"]="暖心呵护"}
+}
+

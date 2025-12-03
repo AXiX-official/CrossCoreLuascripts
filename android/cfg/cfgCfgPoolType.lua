@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '卡池标签枚举',
-	["types"] = {
-'int','string','string','string'
-},
-	["names"] = {
-'id','key','sName','icon'
-},
-	["data"] = {
-{'1',	'1',	'常驻',	'img_34_01'},
-{'2',	'2',	'新手',	'img_36_01'},
-{'3',	'3',	'限时',	'img_35_01'},
-},
+_G["CfgPoolType"]={{["id"]=1,["sName"]="常驻",["key"]="1",["icon"]="img_34_01"}
+,{["id"]=2,["sName"]="新手",["key"]="2",["icon"]="img_36_01"}
+,{["id"]=3,["sName"]="限时",["key"]="3",["icon"]="img_35_01"}
 }
---cfgCfgPoolType = conf
-return conf
+

@@ -132,6 +132,7 @@ APIType =
     --OnAfterHurt      = "OnAfterHurt", -- 伤害后
     OnDeath          = "OnDeath", -- 死亡时
     OnCure           = "OnCure", -- 治疗时
+    OnAddProgress    = "OnAddProgress", -- 拉条时
     --切换周目
     ChangeStage = "ChangeStage"; 
     --切换周目
@@ -463,7 +464,8 @@ function this:GetAPIHandler(apiName)
         self.handers[APIType.OnDeath]          = apisHandler;
         -- 治疗时
         self.handers[APIType.OnCure]           = apisHandler;
-      
+        -- 拉条时
+        self.handers[APIType.OnAddProgress]           = apisHandler;        
         --添加Buff时触发
         self.handers[APIType.OnAddBuff] = apisHandler;
         --删除Buff时触发（后端给的api）

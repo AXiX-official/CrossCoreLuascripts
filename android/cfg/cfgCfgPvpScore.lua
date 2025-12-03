@@ -1,24 +1,12 @@
-local conf = {
-	["filename"] = 'j-军演限时.xlsx',
-	["sheetname"] = '军演积分奖励',
-	["types"] = {
-'int','string','int','int','int','int'
-},
-	["names"] = {
-'id','key','nGetScore','nLoseScore','nDiffMin','nDiffMax'
-},
-	["data"] = {
-{'1',	'1',	'140',	'-42',	'-999999',	'-150'},
-{'2',	'2',	'140',	'-42',	'-999999',	'-150'},
-{'3',	'3',	'140',	'-42',	'-999999',	'-150'},
-{'4',	'4',	'140',	'-42',	'-999999',	'-150'},
-{'5',	'5',	'144',	'-43',	'-150',	'-100'},
-{'6',	'6',	'147',	'-44',	'-100',	'-50'},
-{'7',	'7',	'150',	'-45',	'-50',	'50'},
-{'8',	'8',	'153',	'-46',	'50',	'100'},
-{'9',	'9',	'156',	'-47',	'100',	'150'},
-{'10',	'10',	'160',	'-48',	'150',	'999999'},
-},
+_G["CfgPvpScore"]={{["nDiffMax"]=-150,["key"]="1",["id"]=1,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
+,{["nDiffMax"]=-150,["key"]="2",["id"]=2,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
+,{["nDiffMax"]=-150,["key"]="3",["id"]=3,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
+,{["nDiffMax"]=-150,["key"]="4",["id"]=4,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
+,{["nDiffMax"]=-100,["key"]="5",["id"]=5,["nLoseScore"]=-43,["nDiffMin"]=-150,["nGetScore"]=144}
+,{["nDiffMax"]=-50,["key"]="6",["id"]=6,["nLoseScore"]=-44,["nDiffMin"]=-100,["nGetScore"]=147}
+,{["nDiffMax"]=50,["key"]="7",["id"]=7,["nLoseScore"]=-45,["nDiffMin"]=-50,["nGetScore"]=150}
+,{["nDiffMax"]=100,["key"]="8",["id"]=8,["nLoseScore"]=-46,["nDiffMin"]=50,["nGetScore"]=153}
+,{["nDiffMax"]=150,["key"]="9",["id"]=9,["nLoseScore"]=-47,["nDiffMin"]=100,["nGetScore"]=156}
+,{["nDiffMax"]=999999,["key"]="10",["id"]=10,["nLoseScore"]=-48,["nDiffMin"]=150,["nGetScore"]=160}
 }
---cfgCfgPvpScore = conf
-return conf
+

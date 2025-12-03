@@ -1,15 +1,3 @@
-local conf = {
-	["filename"] = 'h-活动入口开放.xlsx',
-	["sheetname"] = '乱序演习',
-	["types"] = {
-'int','string','string','int','string'
-},
-	["names"] = {
-'id','key','name','sectionID','actionTime'
-},
-	["data"] = {
-{'8001',	'8001',	'Active_Name_13##乱序演习',	'11001',	'06/31 12:00 - 9/28  02:59'},
-},
+_G["CfgRogueView"]={[8001]={["sectionID"]=11001,["name"]="Active_Name_13##乱序演习",["actionTime"]="06/31 12:00 - 9/28  02:59",["id"]=8001,["key"]="8001"}
 }
---cfgCfgRogueView = conf
-return conf
+

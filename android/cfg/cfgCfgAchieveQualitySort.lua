@@ -1,18 +1,6 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '成就品质筛选',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'R1'},
-{'2',	'2',	'R2'},
-{'3',	'3',	'R3'},
-{'4',	'4',	'R4'},
-},
+_G["CfgAchieveQualitySort"]={{["id"]=1,["sName"]="R1",["key"]="1"}
+,{["id"]=2,["sName"]="R2",["key"]="2"}
+,{["id"]=3,["sName"]="R3",["key"]="3"}
+,{["id"]=4,["sName"]="R4",["key"]="4"}
 }
---cfgCfgAchieveQualitySort = conf
-return conf
+

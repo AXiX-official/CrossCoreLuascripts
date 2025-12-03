@@ -366,6 +366,7 @@ eTaskType.GlobalBossMonth = 31     -- 世界Boss月任务
 eTaskType.PointsBattle = 32     -- 积分战斗
 eTaskType.AnniversaryMission = 33     -- 周年活动任务
 eTaskType.MultTeam = 34     -- 多队玩法
+eTaskType.NewPlayerSeven = 37      -- 新手七日任务
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -470,6 +471,7 @@ cTaskCfgNames = {
     [eTaskType.PointsBattle] = 'CfgPointsBattle',
     [eTaskType.AnniversaryMission] = 'cfgAnniversaryMission',
     [eTaskType.MultTeam] = 'CfgMultiteamEntrance',
+    [eTaskType.NewPlayerSeven] = 'CfgNewPlayerSevenDayTask',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -820,6 +822,7 @@ ActivityListType = {
     SignInAnniversary = 1030, --1.5周年
     LovePlus = 1033,--爱相随
     Halloween = 1035,--万圣节活动
+    NewPlayerSeven = 1039, -- 新手七日任务
 }
 
 ALType = {}
@@ -1055,6 +1058,7 @@ CommodityItemType.SingleSelection = 10 -- 单自选
 CommodityItemType.DoubleSelection = 11 -- 双自选
 CommodityItemType.SUIT = 12 -- 套装
 CommodityItemType.ChoiceCard = 13 -- 自选卡牌(获得物品不读，由服务端特殊处理)
+CommodityItemType.ActivityRewards = 14 -- 回归活跃返利
 
 --商品子类型
 CommodityItemSubType={}
@@ -1441,6 +1445,7 @@ PlrMixIx.multTeam = 75 -- 多队玩法活动数据
 PlrMixIx.maidCoffee = 76 -- 女仆咖啡活动数据
 PlrMixIx.levelBreakTicket = 77 -- 每日门票发放
 PlrMixIx.armyLive2d = 78 -- 军演看板是否动态
+PlrMixIx.ChristmasGift = 79 -- 圣诞签到活动
 
 
 -- 图鉴
@@ -1746,6 +1751,10 @@ DungeonInfoType.Summer2Danger = "Summer2Danger"
 DungeonInfoType.Summer2Special = "Summer2Special"
 DungeonInfoType.MultTeamBattle = "MultTeamBattle"
 DungeonInfoType.TowerDeep = "TowerDeep"
+DungeonInfoType.Christmas = "Christmas"
+DungeonInfoType.ChristmasPlot = "ChristmasPlot"
+DungeonInfoType.ChristmasDanger = "ChristmasDanger"
+DungeonInfoType.ChristmasSpecial = "ChristmasSpecial"
 -----------------------------------------------------------------------------------------------------------------
 -- 回归玩家类型
 RegressionPlrType = {}
@@ -1767,6 +1776,8 @@ RegressionActiveType.Tasks = 8 -- 8、回归任务
 RegressionActiveType.Banner = 9 -- 9、回归卡池
 RegressionActiveType.Show = 10 -- 10、玩法一览
 RegressionActiveType.ConsumeReduce = 11 -- 11、体力消耗减少
+RegressionActiveType.Resupply = 12 -- 12、燃料补给
+RegressionActiveType.AcitveRewards = 13 -- 13、回归活跃返利
 
 
 -----------------------------------------------------------------------------------------------------------------
@@ -1932,6 +1943,7 @@ eRankType.STAR = 3 -- 十二宫
 eRankType.BuffBattleRank = 4 -- 积分战斗
 eRankType.MultTeamRank = 5 -- 多队玩法
 eRankType.MaidCoffeeRank = 7 -- 女仆咖啡玩法
+eRankType.ChristmasGiftRank = 8 -- 圣诞节签到活动
 eRankType.TowerDeepRank = 9 -- 深塔计划
 eRankType.HalloweenGameRank = 10 -- 万圣节游戏
 
@@ -1945,6 +1957,7 @@ eRankId.CloudRank = 10007 --云端行迹排行榜
 eRankId.BuffBattleRank = 10013 --积分战斗
 eRankId.MultTeamRank = 10015 --多队玩法
 eRankId.MaidCoffeeRank = 10017 --女仆咖啡玩法
+eRankId.ChristmasGiftRank = 10019 --圣诞节签到活动
 eRankId.TowerDeepRank = 10020 --深塔计划
 eRankId.HalloweenGameRank = 10021 --万圣节游戏
 
@@ -1958,6 +1971,7 @@ eRankDbTable[eRankType.Abattoir] = 'plr_abattoir_rank'
 eRankDbTable[eRankType.BuffBattleRank] = 'plr_buff_battle_rank'
 eRankDbTable[eRankType.MultTeamRank] = 'plr_mult_team_rank'
 eRankDbTable[eRankType.MaidCoffeeRank] = 'plr_maid_coffee_rank'
+eRankDbTable[eRankType.ChristmasGiftRank] = 'plr_christmas_gift_rank'
 eRankDbTable[eRankType.HalloweenGameRank] = 'plr_halloween_game_rank'
 eRankDbTable[eRankType.TowerDeepRank] = 'plr_tower_deep_rank'
 
@@ -2004,6 +2018,7 @@ eOperateType.PayNotice1 = 1020 --充值弹窗1
 eOperateType.SkinRebate = 13000 --皮肤返利
 eOperateType.DragonBoatFestival = 1029 --端午签到
 eOperateType.HalloweenGame = 1035--万圣节小游戏
+eOperateType.NewPlayerSeven = 1039 --新手七日活动
 
 eActiveListId = {}
 eActiveListId.FreeCreateCard = 1021

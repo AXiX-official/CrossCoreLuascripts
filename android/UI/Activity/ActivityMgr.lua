@@ -23,9 +23,7 @@ function this:GetActivityDownAddress(type)
         str1 = "ios"
     elseif (currPlatform == 11) then
         str1 = "android"
-    elseif(currPlatform == 51) then 
-        str1 = "harmony"
-    end 
+    end
     local str2 = "text"
     if (CSAPI.GetChannelType() == ChannelType.BliBli) then
         str2 = "bilibili"
@@ -323,6 +321,9 @@ function this:GetActivityTime(group)
                 elseif v:GetType() == ActivityListType.Investment then
                     sTime = PlayerMgr:GetOpenTime(ActivityListType.Investment)
                     eTime = PlayerMgr:GetOpenTime(ActivityListType.Investment) + (g_InvestmentTimes * 86400)
+                elseif v:GetType() == ActivityListType.NewPlayerSeven then
+                    sTime = PlayerMgr:GetOpenTime(ActivityListType.NewPlayerSeven)
+                    eTime = PlayerMgr:GetOpenTime(ActivityListType.NewPlayerSeven) + (g_NewPlayerSevenDayTaskTimes * 86400)
                 end
             end
         end
@@ -558,6 +559,10 @@ function this:CheckRed(id)
             return false
         elseif data:GetType() == ActivityListType.SkinRebate then
             if data:GetInfo() and data:GetInfo().skinId then
+                local skinRebateInfo = OperationActivityMgr:GetSkinRebateInfo(data:GetInfo().skinId)
+                if not skinRebateInfo or TimeUtil:GetTime() > skinRebateInfo.time then
+                    return false
+                end
                 local comms = ShopMgr:GetCommodityBySkinID(data:GetInfo().skinId)
                 local isGet, isFinish = false, false
                 if #comms > 0 then
@@ -573,6 +578,8 @@ function this:CheckRed(id)
             return false
         elseif data:GetType() == ActivityListType.AdvBindUsers then
             return AdvBindingRewards.isHadReward
+        elseif data:GetType() == ActivityListType.NewPlayerSeven then
+            return MissionMgr:CheckRed({eTaskType.NewPlayerSeven})
         else
             local isRed = PlayerPrefs.GetInt(PlayerClient:GetUid() .. "_Activity_Red_" .. id) == 0
             return isRed

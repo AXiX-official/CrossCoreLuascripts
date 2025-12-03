@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'j-剧情表.xlsx',
-	["sheetname"] = '表情符号表',
-	["types"] = {
-'int','string'
-},
-	["names"] = {
-'id','emojiImg'
-},
-	["data"] = {
-{'1',	'111.jpg'},
-{'2',	'222.png'},
-{'3',	'333.jpg'},
-},
+_G["Emoji"]={{["emojiImg"]="111.jpg",["key"]=1,["id"]=1}
+,{["emojiImg"]="222.png",["key"]=2,["id"]=2}
+,{["emojiImg"]="333.jpg",["key"]=3,["id"]=3}
 }
-cfgEmoji = conf
-return conf
+

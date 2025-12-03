@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '移动类型',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'陆行'},
-{'2',	'2',	'飞行'},
-{'3',	'3',	'水上'},
-{'4',	'4',	'转移'},
-{'5',	'5',	'浮游'},
-},
+_G["CfgMoveEnum"]={{["id"]=1,["sName"]="陆行",["key"]="1"}
+,{["id"]=2,["sName"]="飞行",["key"]="2"}
+,{["id"]=3,["sName"]="水上",["key"]="3"}
+,{["id"]=4,["sName"]="转移",["key"]="4"}
+,{["id"]=5,["sName"]="浮游",["key"]="5"}
 }
---cfgCfgMoveEnum = conf
-return conf
+

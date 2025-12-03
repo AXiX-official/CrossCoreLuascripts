@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'c-成就.xlsx',
-	["sheetname"] = '成就收集',
-	["types"] = {
-'int','string','int','string','string'
-},
-	["names"] = {
-'id','key','num','name','icon'
-},
-	["data"] = {
-{'1',	'1',	'0',	'故事记录者',	'img_01_01'},
-{'2',	'2',	'50',	'旅途参与者',	'img_01_02'},
-{'3',	'3',	'100',	'危境挑战者',	'img_02_01'},
-{'4',	'4',	'200',	'荣光胜利者',	'img_02_02'},
-{'5',	'5',	'300',	'大地探索者',	'img_03_01'},
-},
+_G["CfgAchieveCollect"]={{["num"]=0,["name"]="故事记录者",["id"]=1,["icon"]="img_01_01",["key"]="1"}
+,{["num"]=50,["name"]="旅途参与者",["id"]=2,["icon"]="img_01_02",["key"]="2"}
+,{["num"]=100,["name"]="危境挑战者",["id"]=3,["icon"]="img_02_01",["key"]="3"}
+,{["num"]=200,["name"]="荣光胜利者",["id"]=4,["icon"]="img_02_02",["key"]="4"}
+,{["num"]=300,["name"]="大地探索者",["id"]=5,["icon"]="img_03_01",["key"]="5"}
 }
---cfgCfgAchieveCollect = conf
-return conf
+

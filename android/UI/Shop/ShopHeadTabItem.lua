@@ -4,6 +4,9 @@ local data=nil;
 local eventMgr=nil;
 local isNew=false;
 local setNew=false;
+--超过五个需要滑动，低于五个自适应长度，总长度1498
+
+
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.RedPoint_Refresh,SetRedInfo)
@@ -52,11 +55,15 @@ end
 --检测红点数据
 function SetRedInfo()
     local rd=RedPointMgr:GetData(RedPointType.Shop);
+    local rd2=RedPointMgr:GetData(RedPointType.RegressionShop);
+    local isShowRed=false;
     if rd and data and rd[data:GetID()] then
-        SetRedPoint(true);
-    else
-        SetRedPoint(false);
+        isShowRed=true;
     end
+    if isShowRed~=true and rd2 and data and rd2[data:GetID()] then
+        isShowRed=true;
+    end
+    SetRedPoint(isShowRed)
 end
 
 function SetNewInfo(infos)

@@ -2271,9 +2271,9 @@ GameMsg.map["EquipProto:EquipDelete"] = {
 	{ "sids",      "cur_size","max_size",},
 }
 GameMsg.map["EquipProto:EquipAdd"] = {
-	--装备信息      当前存储量 最大存储量 
-	{ "list|sEquip","uint",    "uint",    },
-	{ "equips",     "cur_size","max_size",},
+	--装备信息      当前存储量 最大存储量 发送完结    
+	{ "list|sEquip","uint",    "uint",    "bool",     },
+	{ "equips",     "cur_size","max_size","is_finish",},
 }
 GameMsg.map["EquipProto:EquipGridAdd"] = {
 	--扩容数量 
@@ -4980,6 +4980,46 @@ GameMsg.map["RegressionProto:PlrBindStageTaskInfoRet"] = {
 	{ "uint",  "uint",       },
 	{ "stage", "doneTaskNum",},
 }
+GameMsg.map["RegressionProto:PlrFundInfo"] = {
+	--有效期（0或者过去的时间都是未购买基金） 
+	{ "uint",              },
+	{ "validity",          },
+}
+GameMsg.map["sResupply"] = {
+	--活动ID 今日领取数组 
+	{ "uint","array|uint",},
+	{ "id",  "gainArr",   },
+}
+GameMsg.map["RegressionProto:ResupplyInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["RegressionProto:ResupplyInfoRet"] = {
+	--燃料补给信息     
+	{ "list|sResupply",},
+	{ "info",          },
+}
+GameMsg.map["RegressionProto:ResupplyGain"] = {
+	--活动ID 领取下标 
+	{ "uint","uint",  },
+	{ "id",  "idx",   },
+}
+GameMsg.map["RegressionProto:ActiveRewardsInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["RegressionProto:ActiveRewardsInfoRet"] = {
+	--已购买方案下标 登录天数   已领取奖励下标 
+	{ "uint",        "uint",    "array|uint",  },
+	{ "idx",         "loginDay","gainArr",     },
+}
+GameMsg.map["RegressionProto:ActiveRewardsGain"] = {
+	--奖励下标 
+	{ "uint",  },
+	{ "idx",   },
+}
 GameMsg.map["AchievementProto:GetFinishInfo"] = {
 	--
 	{ },
@@ -5309,6 +5349,26 @@ GameMsg.map["OperateActiveProto:GetHalloweenGameRewardRet"] = {
 	--奖励次数 剩余奖励次数 个人历史最高分 
 	{ "uint",  "uint",      "uint",        },
 	{ "cnt",   "remainCnt", "maxScore",    },
+}
+GameMsg.map["OperateActiveProto:GetChristmasGiftData"] = {
+	--活动id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["OperateActiveProto:GetChristmasGiftDataRet"] = {
+	--活动id 奖励次数 剩余奖励次数 个人历史最高分 
+	{ "uint","uint",  "uint",      "uint",        },
+	{ "id",  "cnt",   "remainCnt", "maxScore",    },
+}
+GameMsg.map["OperateActiveProto:GetChristmasGiftReward"] = {
+	--活动id 获得积分 开始游戏时间 游戏总计时间 本次游戏结果（1正常结算，2为中途退出） 奖励时段次数 
+	{ "uint","uint",  "int",       "int",       "uint",              "uint",      },
+	{ "id",  "score", "begTime",   "gameTime",  "gameRet",           "gameBonus", },
+}
+GameMsg.map["OperateActiveProto:GetChristmasGiftRewardRet"] = {
+	--活动id 奖励次数 剩余奖励次数 个人历史最高分 
+	{ "uint","uint",  "uint",      "uint",        },
+	{ "id",  "cnt",   "remainCnt", "maxScore",    },
 }
 GameMsg.map["LovePlusProto:GetChapterData"] = {
 	--章节id      

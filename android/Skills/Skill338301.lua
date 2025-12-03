@@ -26,3 +26,18 @@ function Skill338301:OnBornSpecial(caster, target, data)
 	-- 338311
 	self:AddSp(SkillEffect[338311], caster, caster, data, 10)
 end
+-- 回合结束时
+function Skill338301:OnRoundOver(caster, target, data)
+	-- 338341
+	self:tFunc_338341_338321(caster, target, data)
+	self:tFunc_338341_338321(caster, target, data)
+end
+function Skill338301:tFunc_338341_338321(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 338321
+	self:AddSp(SkillEffect[338321], caster, self.card, data, 5)
+end

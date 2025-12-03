@@ -538,6 +538,30 @@ function GCalHelp:GetFreeArmyRobotSimpleTeams(robotCfgId)
     return ret
 end
 
+----------------------------------------------------------------------------------------------------------------------------------------------
+--
+function GCalHelp:GetFreeArmy3RobotSimpleTeams(robotCfgId)
+    local ret = {
+        uid = robotCfgId,
+        is_robot = BoolType.Yes,
+        teams = {}
+    }
+
+    local robotCfg = CfgPvp3Robot[robotCfgId]
+
+    local teamIx = eTeamType.PVP3
+
+    for i, groupId in ipairs(robotCfg.aTeamIds) do
+        local gCfg = MonsterGroup[groupId]
+        local stage = gCfg.stage[1]
+        local robotInfo = self:GetArmyRobotTeams(robotCfgId, stage.monsters, stage.formation, teamIx)
+        ret.teams[i] = robotInfo.team
+        teamIx = teamIx + 1
+    end
+
+    return ret
+end
+
 -------------------------------------------------------------------------------------
 -- 获取被动buff属性
 -- 33	增加物品获得数量	add_get_item_num
@@ -1216,6 +1240,8 @@ end
 -- sids : 单个id
 -- rangs : 范围id
 function GCalHelp:GetRangNum(idArr)
+    -- LogEx({"GetRangNum input", idArr})
+
     idArr = idArr or {}
 
     table.sort(idArr)
@@ -1252,6 +1278,7 @@ function GCalHelp:GetRangNum(idArr)
         eIx = sIx + 1
     end
 
+    -- LogEx({"GetRangNum output", { sids = sids, rangs = rangs}})
     return sids, rangs
 end
 
@@ -3289,4 +3316,164 @@ function GCalHelp:DecToBase35(number, minLen)
     end
 
     return result
+end
+
+
+-----------------------------------------------------------------------------------------------------------
+-- 计算自由军演，段位
+function GCalHelp:CalFreeMatch3RankLv(score)
+    for _, cfg in ipairs(CfgPvp3RankLevel) do
+        -- LogDebug("score:%s <= cfg.nScore:%s", score, cfg.nScore)
+        if score < cfg.nScore then
+            return cfg.id
+        end
+    end
+
+    return CfgPvp3RankLevel[#CfgPvp3RankLevel].id
+end
+
+
+-----------------------------------------------------------------------------------------------------------
+-- 计算自由军演，继承分数
+-- args:
+---- preScore: 上次分数
+---- preRankLv: 上一次段位（没有传nil, 函数自己算）
+---- preCfgid: 上次赛季配置id
+---- curCfgId: 当前赛季配置id
+-- ret:
+---- score: 继承的分数
+---- rankLv: 继承的段位
+function GCalHelp:CalFreeMatch3InheritScore(preScore, preRankLv)
+    if not preRankLv then
+        preRankLv = self:CalFreeMatch3RankLv(preScore)
+    end
+
+    -- 修改分数
+    local curRankLv = preRankLv - 2
+    if curRankLv < 2 then
+        return 0, 1
+    end
+
+    local curRlCfg = CfgPvp3RankLevel[curRankLv-1]
+    return curRlCfg.nScore, curRankLv
+end
+
+
+-----------------------------------------------------------------------------------------------------------
+-- v 4.3 返回自由匹配，增减的分数
+function GCalHelp:FreeMatch3ArmyChangeSocreCfg(diffScore)
+    local scoreCfg = nil
+    for _, cfg in ipairs(CfgPvp3Score) do
+        if diffScore >= cfg.nDiffMin and diffScore < cfg.nDiffMax then
+            scoreCfg = cfg
+            break
+        end
+    end
+
+    LogDebug("GCalHelp:FreeMatch3ArmyChangeSocreCfg() diffScore:%s", diffScore)
+    LogTable(scoreCfg, "FreeMatch3ArmyChangeSocreCfg()")
+    return scoreCfg
+end
+
+-- dif_val_a: uids[1] - uids[2] 的分数差
+-- dif_val_b: uids[2] - uids[1] 的分数差
+function GCalHelp:CalFreeMatch3ChangeScore(winderIx, uids, difScores)
+    local ret = {}
+    for ix, uid in ipairs(uids) do
+        local difScore = difScores[ix]
+        local useCfg = self:FreeMatch3ArmyChangeSocreCfg(difScore)
+        if ix == winderIx then
+            ret[uid] = useCfg.nGetScore
+        else
+            ret[uid] = useCfg.nLoseScore
+        end
+    end
+
+    return ret
+end
+
+--------------------------------------------------------------------------------------------
+-- 添加装备互斥技能
+function GCalHelp:RegisterExcludeSkill(cid, equipFightSkills, excludeSkills)
+    local rInfo = {}
+    
+    for _, skillId in ipairs(equipFightSkills) do
+        local cfg = g_CalExcludeSkillIds[skillId]
+        if cfg then
+            table.insert(rInfo, cfg) -- cfg:{nExcludeId = cfg.nExcludeId, nEquipSkillId = id, nSkillId = cfg.nGetSkillId}
+        end
+    end
+
+    -- 保存互斥技能数组
+    excludeSkills[cid] = rInfo
+end
+
+--------------------------------------------------------------------------------------------
+-- 去掉装备互斥技能
+-- cardDataArrs: 
+function GCalHelp:RemoveExcludeSkill(cardDataArrs, excludeSkills)
+   -- LogDebug("=================================================================================================")
+    -- LogTable(excludeSkills, "CardMgr:RemoveExcludeSkill m_excludeSkills:")
+    -- 根据卡牌id分类
+    local cardDatas = {}
+
+    -- 按照互斥id分类
+    local excludeIdMap = {}
+
+    -- 遍历卡牌数据，取出所有卡牌的互斥技能信息
+    for _, fightData in ipairs(cardDataArrs) do
+        local cardData = fightData.data
+        local cid = cardData.real_cid
+        if cid then
+            cardDatas[cid] = cardData
+
+            local rInfo = excludeSkills[cid]
+            if rInfo then
+                -- 如果这个卡牌存在互斥技能
+                -- LogTable(rInfo, "Card "..cid.." exclude info:")
+                for _, cfg in ipairs(rInfo) do
+                    -- 加入
+                    local arr = GCalHelp:GetTb(excludeIdMap, cfg.nExcludeId)
+                    table.insert(arr, {cid = cid, skillId = cfg.nSkillId})
+                end
+            end
+        else
+            -- LogWarning("CardMgr:RemoveExcludeSkill had none card not real_cid")
+        end
+    end
+
+    local CfgSkills = _G['skill']
+
+    -- LogTable(CfgSkills, "CfgSkills:")
+    -- LogTable(cardDatas, "cardDatas:")
+    -- LogTable(cardDataArrs, "cardDataArrs:")
+    -- LogTable(excludeIdMap, "CardMgr:RemoveExcludeSkill:")
+
+    for excludeId, infos in pairs(excludeIdMap) do
+        local len = #infos
+        -- 如果互斥数组大于1，那么表示存在互斥
+        if len > 1 then
+            -- 根据技能等级，从大到小排序
+            table.sort(
+                infos,
+                function(rhs, lhs)
+                    local rCfg = CfgSkills[rhs.skillId]
+                    local lCfg = CfgSkills[lhs.skillId]
+                    return rCfg.lv > lCfg.lv
+                end
+            )
+            -- 倒序删除，保留等级最大的那个，其余的删掉
+            for i = len, 2, -1 do
+                local info = infos[i]
+                local cardData = cardDatas[info.cid]
+
+                local sLen = #cardData.skills
+                for si = sLen, 1, -1 do
+                    if cardData.skills[si] == info.id then
+                        table.remove(cardData.skills, si)
+                    end
+                end
+            end
+        end
+    end
 end

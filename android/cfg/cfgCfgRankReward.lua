@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'j-奖励表-排行奖励.xlsx',
-	["sheetname"] = 'Sheet1',
-	["types"] = {
-'int','int','string','int','int','int','int','int'
-},
-	["names"] = {
-'id','key','name','group','type','sub','up','nRewardID'
-},
-	["data"] = {
-{'1',	'1',	'排名奖励',	'1',	'6',	'1',	'1',	'1'},
-{'2',	'2',	'排名奖励',	'1',	'6',	'2',	'2',	'2'},
-{'3',	'3',	'排名奖励',	'1',	'6',	'3',	'3',	'3'},
-{'4',	'4',	'排名奖励',	'1',	'6',	'4',	'10',	'4'},
-{'5',	'5',	'排名奖励',	'1',	'6',	'11',	'100',	'5'},
-},
+_G["CfgRankReward"]={{["sub"]=1,["type"]=6,["name"]="排名奖励",["up"]=1,["group"]=1,["nRewardID"]=1,["id"]=1,["key"]=1}
+,{["sub"]=2,["type"]=6,["name"]="排名奖励",["up"]=2,["group"]=1,["nRewardID"]=2,["id"]=2,["key"]=2}
+,{["sub"]=3,["type"]=6,["name"]="排名奖励",["up"]=3,["group"]=1,["nRewardID"]=3,["id"]=3,["key"]=3}
+,{["sub"]=4,["type"]=6,["name"]="排名奖励",["up"]=10,["group"]=1,["nRewardID"]=4,["id"]=4,["key"]=4}
+,{["sub"]=11,["type"]=6,["name"]="排名奖励",["up"]=100,["group"]=1,["nRewardID"]=5,["id"]=5,["key"]=5}
 }
---cfgCfgRankReward = conf
-return conf
+

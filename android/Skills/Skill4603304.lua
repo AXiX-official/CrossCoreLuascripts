@@ -45,6 +45,32 @@ function Skill4603304:OnBornSpecial(caster, target, data)
 end
 -- 伤害前
 function Skill4603304:OnBefourHurt(caster, target, data)
+	-- 4603343
+	self:tFunc_4603343_4603313(caster, target, data)
+	self:tFunc_4603343_4603316(caster, target, data)
+end
+function Skill4603304:tFunc_4603343_4603313(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8743
+	local count743 = SkillApi:BuffCount(self, caster, target,3,4,338401)
+	-- 8956
+	if SkillJudger:Greater(self, caster, self.card, true,count743,0) then
+	else
+		return
+	end
+	-- 4603313
+	self:LimitDamage(SkillEffect[4603313], caster, target, data, 0.05,2,1)
+end
+function Skill4603304:tFunc_4603343_4603316(caster, target, data)
 	-- 8166
 	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
 	else
@@ -55,6 +81,13 @@ function Skill4603304:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 4603313
-	self:LimitDamage(SkillEffect[4603313], caster, target, data, 0.04,3,1)
+	-- 8743
+	local count743 = SkillApi:BuffCount(self, caster, target,3,4,338401)
+	-- 8956
+	if SkillJudger:Greater(self, caster, self.card, true,count743,0) then
+	else
+		return
+	end
+	-- 4603316
+	self:LimitDamage(SkillEffect[4603316], caster, target, data, 0.05,2,1)
 end

@@ -1,28 +1,16 @@
-local conf = {
-	["filename"] = 'b-标签表.xlsx',
-	["sheetname"] = '同调',
-	["types"] = {
-'int','string','int','string','int'
-},
-	["names"] = {
-'id','key','type','typeName','cfgType'
-},
-	["data"] = {
-{'1',	'nClass',	'3',	'分队',	'2'},
-{'2',	'sBelonging',	'3',	'所属',	'1'},
-{'3',	'sSex',	'3',	'性别',	'1'},
-{'4',	'career',	'3',	'护甲类型',	'2'},
-{'5',	'pos_enum',	'3',	'定位',	'2'},
-{'6',	'sBirthPlace',	'2',	'出身',	'1'},
-{'7',	'sBloodType',	'3',	'血型',	'1'},
-{'8',	'sPhysicalAbi',	'3',	'身体素质',	'1'},
-{'9',	'sTechniqueAbi',	'3',	'战斗技巧',	'1'},
-{'10',	'sMoraleAbi',	'3',	'战斗意志',	'1'},
-{'11',	'sHarmonyAbi',	'3',	'队伍协调',	'1'},
-{'12',	'sHeight',	'3',	'身高',	'1'},
-{'13',	'',	'2',	'HP',	''},
-{'14',	'',	'3',	'持有BUFF',	''},
-},
+_G["CfgUniteLabel"]={{["type"]=3,["key"]="nClass",["id"]=1,["typeName"]="分队",["cfgType"]=2}
+,{["type"]=3,["key"]="sBelonging",["id"]=2,["typeName"]="所属",["cfgType"]=1}
+,{["type"]=3,["key"]="sSex",["id"]=3,["typeName"]="性别",["cfgType"]=1}
+,{["type"]=3,["key"]="career",["id"]=4,["typeName"]="护甲类型",["cfgType"]=2}
+,{["type"]=3,["key"]="pos_enum",["id"]=5,["typeName"]="定位",["cfgType"]=2}
+,{["type"]=2,["key"]="sBirthPlace",["id"]=6,["typeName"]="出身",["cfgType"]=1}
+,{["type"]=3,["key"]="sBloodType",["id"]=7,["typeName"]="血型",["cfgType"]=1}
+,{["type"]=3,["key"]="sPhysicalAbi",["id"]=8,["typeName"]="身体素质",["cfgType"]=1}
+,{["type"]=3,["key"]="sTechniqueAbi",["id"]=9,["typeName"]="战斗技巧",["cfgType"]=1}
+,{["type"]=3,["key"]="sMoraleAbi",["id"]=10,["typeName"]="战斗意志",["cfgType"]=1}
+,{["type"]=3,["key"]="sHarmonyAbi",["id"]=11,["typeName"]="队伍协调",["cfgType"]=1}
+,{["type"]=3,["key"]="sHeight",["id"]=12,["typeName"]="身高",["cfgType"]=1}
+,{["id"]=13,["type"]=2,["typeName"]="HP",["key"]=13}
+,{["id"]=14,["type"]=3,["typeName"]="持有BUFF",["key"]=14}
 }
---cfgCfgUniteLabel = conf
-return conf
+

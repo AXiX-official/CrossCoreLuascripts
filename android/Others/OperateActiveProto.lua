@@ -213,3 +213,72 @@ end
 function OperateActiveProto:GetHalloweenGameRewardRet(proto)
     HalloweenMgr:SetDatas(proto)
 end
+
+--圣诞活动
+function OperateActiveProto:GetChristmasGiftData(_cb)
+    self.GetChristmasGiftDataCB = _cb
+    local _id = MerryChristmasMgr:GetID()
+    local proto = {"OperateActiveProto:GetChristmasGiftData",{id = _id}}
+    NetMgr.net:Send(proto)
+    --self:GetChristmasGiftDataRet({id = _id,cnt=1,remainCnt=5,maxScore = 0})
+end
+function OperateActiveProto:GetChristmasGiftDataRet(proto)
+    MerryChristmasMgr:GetChristmasGiftDataRet(proto)
+    if(self.GetChristmasGiftDataCB)then 
+        self.GetChristmasGiftDataCB()
+    end 
+    self.GetChristmasGiftDataCB = nil
+end
+function OperateActiveProto:GetChristmasGiftReward(_data,_cb)
+    self.GetChristmasGiftRewardCB = _cb
+    local proto = {"OperateActiveProto:GetChristmasGiftReward",_data}
+    NetMgr.net:Send(proto)
+end
+function OperateActiveProto:GetChristmasGiftRewardRet(proto)
+    MerryChristmasMgr:GetChristmasGiftDataRet(proto)
+    if(self.GetChristmasGiftRewardCB)then 
+        self.GetChristmasGiftRewardCB()
+    end 
+    self.GetChristmasGiftRewardCB = nil 
+    EventMgr.Dispatch(EventType.Menu_Christmas)
+end
+
+--获取活动数据
+function OperateActiveProto:GetRichManData()
+    local proto = {"OperateActiveProto:GetRichManData"}
+    NetMgr.net:Send(proto)
+end
+
+--获取活动数据返回
+function OperateActiveProto:GetRichManDataRet(proto)
+    RichManMgr:SetData(proto);
+end
+
+--请求投掷
+function OperateActiveProto:RichManThrow(isAuto,point)
+    local proto = {"OperateActiveProto:RichManThrow",{isAuto=isAuto,point=point}}
+    NetMgr.net:Send(proto)
+end
+
+--投掷返回
+function OperateActiveProto:RichManThrowRet(proto)
+    RichManMgr:OnThrowRet(proto);
+end
+
+function OperateActiveProto:NoticePhysicalReward(proto)
+    PhysicalRewardMgr:NoticePhysicalReward(proto)
+end
+
+function OperateActiveProto:PhysicalRewardInfo(_cb)
+    self.PhysicalRewardInfoCB = _cb
+    local proto = {"OperateActiveProto:PhysicalRewardInfo"}
+    NetMgr.net:Send(proto)
+end
+
+function OperateActiveProto:PhysicalRewardInfoRet(proto)
+    PhysicalRewardMgr:PhysicalRewardInfoRet(proto)
+    if(self.PhysicalRewardInfoCB)then 
+        self.PhysicalRewardInfoCB()
+    end 
+    self.PhysicalRewardInfoCB = nil 
+end

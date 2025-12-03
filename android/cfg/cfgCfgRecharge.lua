@@ -1,243 +1,251 @@
-local conf = {
-	["filename"] = 's-商店配置.xlsx',
-	["sheetname"] = '充值后台配置',
-	["types"] = {
-'int','string','int','int'
-},
-	["names"] = {
-'id','iosID','group','appleShopType'
-},
-	["data"] = {
-{'30001',	'PayMonthlyCard_30001',	'1',	'2'},
-{'30015',	'PayGiftPack_30015',	'1',	'0'},
-{'30016',	'PayGiftPack_30016',	'1',	'0'},
-{'30017',	'PayGiftPack_30017',	'1',	'0'},
-{'30018',	'PayGiftPack_30018',	'1',	'0'},
-{'30019',	'PayGiftPack_30019',	'1',	'0'},
-{'30020',	'PayGiftPack_30020',	'1',	'0'},
-{'30021',	'PayGiftPack_30021',	'1',	'0'},
-{'30022',	'PayGiftPack_30022',	'1',	'0'},
-{'30023',	'PayGiftPack_30023',	'1',	'0'},
-{'30024',	'PayGiftPack_30024',	'1',	'0'},
-{'30025',	'PayGiftPack_30025',	'1',	'0'},
-{'30026',	'PayGiftPack_30026',	'1',	'0'},
-{'30027',	'PayGiftPack_30027',	'1',	'0'},
-{'30028',	'PayGiftPack_30028',	'1',	'0'},
-{'30029',	'PayGiftPack_30029',	'1',	'0'},
-{'30030',	'PayGiftPack_30030',	'1',	'0'},
-{'30031',	'PayGiftPack_30031',	'1',	'0'},
-{'30032',	'PayGiftPack_30032',	'1',	'0'},
-{'30033',	'PayGiftPack_30033',	'1',	'0'},
-{'31001',	'PayPassportA_31001',	'1',	'2'},
-{'31002',	'PayPassportB_31002',	'1',	'2'},
-{'31003',	'PayPassportC_31003',	'1',	'2'},
-{'40001',	'PayRecharge_40001',	'1',	'0'},
-{'40002',	'PayRecharge_40002',	'1',	'0'},
-{'40003',	'PayRecharge_40003',	'1',	'0'},
-{'40004',	'PayRecharge_40004',	'1',	'0'},
-{'40005',	'PayRecharge_40005',	'1',	'0'},
-{'40006',	'PayRecharge_40006',	'1',	'0'},
-{'210001',	'PayGiftPack_210001',	'1',	'0'},
-{'210002',	'PayGiftPack_210002',	'1',	'0'},
-{'210003',	'PayGiftPack_210003',	'1',	'0'},
-{'210004',	'PayGiftPack_210004',	'1',	'0'},
-{'210005',	'PayGiftPack_210005',	'1',	'0'},
-{'210006',	'PayGiftPack_210006',	'1',	'0'},
-{'210007',	'PayGiftPack_210007',	'1',	'0'},
-{'210008',	'PayGiftPack_210008',	'1',	'0'},
-{'210009',	'PayGiftPack_210009',	'1',	'0'},
-{'210010',	'PayGiftPack_210010',	'1',	'0'},
-{'210011',	'PayGiftPack_210011',	'1',	'0'},
-{'210012',	'PayGiftPack_210012',	'1',	'0'},
-{'210013',	'PayGiftPack_210013',	'1',	'0'},
-{'210014',	'PayGiftPack_210014',	'1',	'0'},
-{'210015',	'PayGiftPack_210015',	'1',	'0'},
-{'100001',	'PaySkinPack_100001',	'1',	'0'},
-{'100002',	'PaySkinPack_100002',	'1',	'0'},
-{'100003',	'PaySkinPack_100003',	'1',	'0'},
-{'110001',	'PaySkinPack_110001',	'1',	'0'},
-{'110002',	'PaySkinPack_110002',	'1',	'0'},
-{'110003',	'PaySkinPack_110003',	'1',	'0'},
-{'120001',	'PaySkinPack_120001',	'1',	'0'},
-{'120002',	'PaySkinPack_120002',	'1',	'0'},
-{'120003',	'PaySkinPack_120003',	'1',	'0'},
-{'130001',	'PaySkinPack_130001',	'1',	'0'},
-{'130002',	'PaySkinPack_130002',	'1',	'0'},
-{'130003',	'PaySkinPack_130003',	'1',	'0'},
-{'300001',	'PayImagePack_300001',	'1',	'0'},
-{'300002',	'PayImagePack_300002',	'1',	'0'},
-{'300003',	'PayImagePack_300003',	'1',	'0'},
-{'310001',	'PayImagePack_310001',	'1',	'0'},
-{'310002',	'PayImagePack_310002',	'1',	'0'},
-{'310003',	'PayImagePack_310003',	'1',	'0'},
-{'320001',	'PayImagePack_320001',	'1',	'0'},
-{'320002',	'PayImagePack_320002',	'1',	'0'},
-{'320003',	'PayImagePack_320003',	'1',	'0'},
-{'330001',	'PayImagePack_330001',	'1',	'0'},
-{'330002',	'PayImagePack_330002',	'1',	'0'},
-{'330003',	'PayImagePack_330003',	'1',	'0'},
-{'400001',	'PayGiftPack_400001',	'1',	'0'},
-{'400002',	'PayGiftPack_400002',	'1',	'0'},
-{'400003',	'PayGiftPack_400003',	'1',	'0'},
-{'400004',	'PayGiftPack_400004',	'1',	'0'},
-{'400005',	'PayGiftPack_400005',	'1',	'0'},
-{'400006',	'PayGiftPack_400006',	'1',	'0'},
-{'400007',	'PayGiftPack_400007',	'1',	'0'},
-{'400008',	'PayItem_6',	'1',	'0'},
-{'400009',	'PayItem_12',	'1',	'0'},
-{'400010',	'PayItem_18',	'1',	'0'},
-{'400011',	'PayItem_30',	'1',	'0'},
-{'400012',	'PayItem_45',	'1',	'0'},
-{'400013',	'PayItem_68',	'1',	'0'},
-{'400014',	'PayItem_98',	'1',	'0'},
-{'400015',	'PayItem_108',	'1',	'0'},
-{'400016',	'PayItem_128',	'1',	'0'},
-{'400017',	'PayItem_168',	'1',	'0'},
-{'400018',	'PayItem_198',	'1',	'0'},
-{'400019',	'PayItem_248',	'1',	'0'},
-{'400020',	'PayItem_328',	'1',	'0'},
-{'400021',	'PayItem_78',	'1',	'0'},
-{'400022',	'PayItem_88',	'1',	'0'},
-{'400023',	'PayItem_138',	'1',	'0'},
-{'400024',	'PayItem_148',	'1',	'0'},
-{'400025',	'PayItem_208',	'1',	'0'},
-{'400026',	'PayItem_228',	'1',	'0'},
-{'400027',	'PayItem_268',	'1',	'0'},
-{'400028',	'PayItem_288',	'1',	'0'},
-{'400029',	'PayItem_308',	'1',	'0'},
-{'400030',	'PayItem_518',	'1',	'0'},
-{'400031',	'PayItem_648',	'1',	'0'},
-{'31007',	'PayItem_98',	'1',	'0'},
-{'31008',	'PayGiftPack_400007',	'1',	'0'},
-{'31009',	'PayItem_198',	'1',	'0'},
-{'31010',	'PayItem_248',	'1',	'0'},
-{'31011',	'PayItem_128',	'1',	'0'},
-{'31012',	'PayItem_68',	'1',	'0'},
-{'32009',	'PayRecharge_40002',	'1',	'0'},
-{'12001',	'PayItem_6',	'1',	'0'},
-{'12002',	'PayItem_30',	'1',	'0'},
-{'12003',	'PayItem_68',	'1',	'0'},
-{'12007',	'PayItem_68',	'1',	'0'},
-{'12009',	'PayItem_128',	'1',	'0'},
-{'50056',	'PayItem_88',	'1',	'0'},
-{'50061',	'PayItem_198',	'1',	'0'},
-{'50069',	'PayItem_108',	'1',	'0'},
-{'50075',	'PayItem_108',	'1',	'0'},
-{'50083',	'PayItem_108',	'1',	'0'},
-{'50088',	'PayItem_108',	'1',	'0'},
-{'50089',	'PayItem_108',	'1',	'0'},
-{'50092',	'PayItem_108',	'1',	'0'},
-{'50095',	'PayItem_108',	'1',	'0'},
-{'50098',	'PayItem_108',	'1',	'0'},
-{'50104',	'PayItem_108',	'1',	'0'},
-{'50118',	'PayItem_108',	'1',	'0'},
-{'50119',	'PayItem_108',	'1',	'0'},
-{'50121',	'PayItem_108',	'1',	'0'},
-{'50122',	'PayItem_108',	'1',	'0'},
-{'50126',	'PayItem_108',	'1',	'0'},
-{'50132',	'PayItem_108',	'1',	'0'},
-{'50134',	'PayItem_108',	'1',	'0'},
-{'50137',	'PayItem_108',	'1',	'0'},
-{'50145',	'PayItem_116',	'1',	'0'},
-{'50147',	'PayItem_116',	'1',	'0'},
-{'31015',	'PayItem_108',	'1',	'0'},
-{'31016',	'PayItem_328',	'1',	'0'},
-{'31017',	'PayItem_648',	'1',	'0'},
-{'31018',	'PayItem_30',	'1',	'0'},
-{'31019',	'PayItem_328',	'1',	'0'},
-{'31020',	'PayItem_45',	'1',	'0'},
-{'31021',	'PayItem_45',	'1',	'0'},
-{'31022',	'PayItem_98',	'1',	'0'},
-{'31023',	'PayItem_168',	'1',	'0'},
-{'31024',	'PayItem_248',	'1',	'0'},
-{'31025',	'PayItem_198',	'1',	'0'},
-{'31026',	'PayItem_328',	'1',	'0'},
-{'31027',	'PayItem_68',	'1',	'0'},
-{'31028',	'PayItem_328',	'1',	'0'},
-{'31029',	'PayItem_328',	'1',	'0'},
-{'31030',	'PayItem_18',	'1',	'0'},
-{'31031',	'PayItem_6',	'1',	'0'},
-{'31032',	'PayItem_30',	'1',	'0'},
-{'31033',	'PayGiftPack_30018',	'1',	'0'},
-{'31034',	'PayItem_168',	'1',	'0'},
-{'31035',	'PayItem_328',	'1',	'0'},
-{'31036',	'PayItem_248',	'1',	'0'},
-{'31038',	'PayItem_198',	'1',	'0'},
-{'31039',	'PayItem_248',	'1',	'0'},
-{'31041',	'PayItem_198',	'1',	'0'},
-{'31042',	'PayItem_248',	'1',	'0'},
-{'31043',	'PayItem_6',	'1',	'0'},
-{'31044',	'PayItem_68',	'1',	'0'},
-{'31045',	'PayItem_198',	'1',	'0'},
-{'31046',	'PayItem_248',	'1',	'0'},
-{'31047',	'PayItem_6',	'1',	'0'},
-{'31048',	'PayItem_68',	'1',	'0'},
-{'31050',	'PayItem_98',	'1',	'0'},
-{'30034',	'PayItem_108',	'1',	'0'},
-{'31101',	'PayItem_12',	'1',	'0'},
-{'31102',	'PayItem_12',	'1',	'0'},
-{'31103',	'PayItem_12',	'1',	'0'},
-{'31060',	'PayItem_68',	'1',	'0'},
-{'31061',	'PayItem_8',	'1',	'0'},
-{'31062',	'PayItem_68',	'1',	'0'},
-{'31063',	'PayItem_168',	'1',	'0'},
-{'31064',	'PayItem_10',	'1',	'0'},
-{'31065',	'PayItem_25',	'1',	'0'},
-{'31066',	'PayItem_68',	'1',	'0'},
-{'31067',	'PayItem_10',	'1',	'0'},
-{'31070',	'PayItem_198',	'1',	'0'},
-{'31071',	'PayItem_248',	'1',	'0'},
-{'31072',	'PayItem_198',	'1',	'0'},
-{'31073',	'PayItem_198',	'1',	'0'},
-{'31074',	'PayItem_198',	'1',	'0'},
-{'31075',	'PayItem_198',	'1',	'0'},
-{'31076',	'PayItem_248',	'1',	'0'},
-{'31301',	'PayItem_68',	'1',	'0'},
-{'31077',	'PayItem_18',	'1',	'0'},
-{'31078',	'PayGiftPack_31078',	'1',	'0'},
-{'31501',	'PayItem_98',	'1',	'0'},
-{'31601',	'PayItem_45',	'1',	'0'},
-{'31602',	'PayItem_68',	'1',	'0'},
-{'31603',	'PayGiftPack_31603',	'1',	'0'},
-{'31604',	'PayGiftPack_31604',	'1',	'0'},
-{'31605',	'PayItem_68',	'1',	'0'},
-{'31606',	'PayItem_68',	'1',	'0'},
-{'31607',	'PayItem_98',	'1',	'0'},
-{'31608',	'PayItem_98',	'1',	'0'},
-{'31609',	'PayItem_98',	'1',	'0'},
-{'31610',	'PayItem_98',	'1',	'0'},
-{'31611',	'PayItem_98',	'1',	'0'},
-{'31612',	'PayItem_168',	'1',	'0'},
-{'31613',	'PayItem_168',	'1',	'0'},
-{'31614',	'PayItem_168',	'1',	'0'},
-{'31615',	'PayItem_168',	'1',	'0'},
-{'31616',	'PayItem_168',	'1',	'0'},
-{'31617',	'PayItem_328',	'1',	'0'},
-{'31651',	'PayItem_68',	'1',	'0'},
-{'31652',	'PayGiftPack_31652',	'1',	'0'},
-{'31653',	'PayItem_248',	'1',	'0'},
-{'31654',	'PayItem_248',	'1',	'0'},
-{'31655',	'PayItem_248',	'1',	'0'},
-{'31656',	'PayItem_328',	'1',	'0'},
-{'31657',	'PayItem_328',	'1',	'0'},
-{'31683',	'PayGiftPack_30017',	'1',	'0'},
-{'31684',	'PayGiftPack_30018',	'1',	'0'},
-{'31685',	'PayGiftPack_30021',	'1',	'0'},
-{'31686',	'PayItem_168',	'1',	'0'},
-{'31687',	'PayItem_328',	'1',	'0'},
-{'31079',	'PayItem_98',	'1',	'0'},
-{'31618',	'PayItem_168',	'1',	'0'},
-{'31701',	'PayItem_48',	'1',	'0'},
-{'31702',	'PayItem_98',	'1',	'0'},
-{'31703',	'PayItem_108',	'1',	'0'},
-{'31704',	'PayGiftPack_30020',	'1',	'0'},
-{'31705',	'PayItem_128',	'1',	'0'},
-{'31751',	'PayItem_98',	'1',	'0'},
-{'31752',	'PayItem_198',	'1',	'0'},
-{'31502',	'PayItem_98',	'1',	'0'},
-{'31753',	'PayItem_48',	'1',	'0'},
-{'31754',	'PayItem_298',	'1',	'0'},
-},
+_G["CfgRecharge"]={[400015]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=400015,["key"]=400015,["group"]=1}
+,[12017]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12017,["key"]=12017,["group"]=1}
+,[12019]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12019,["key"]=12019,["group"]=1}
+,[12021]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=12021,["key"]=12021,["group"]=1}
+,[310001]={["iosID"]="PayImagePack_310001",["appleShopType"]=0,["id"]=310001,["key"]=310001,["group"]=1}
+,[50147]={["iosID"]="PayItem_116",["appleShopType"]=0,["id"]=50147,["key"]=50147,["group"]=1}
+,[310002]={["iosID"]="PayImagePack_310002",["appleShopType"]=0,["id"]=310002,["key"]=310002,["group"]=1}
+,[31652]={["iosID"]="PayGiftPack_31652",["appleShopType"]=0,["id"]=31652,["key"]=31652,["group"]=1}
+,[31656]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31656,["key"]=31656,["group"]=1}
+,[310003]={["iosID"]="PayImagePack_310003",["appleShopType"]=0,["id"]=310003,["key"]=310003,["group"]=1}
+,[40003]={["iosID"]="PayRecharge_40003",["appleShopType"]=0,["id"]=40003,["key"]=40003,["group"]=1}
+,[130001]={["iosID"]="PaySkinPack_130001",["appleShopType"]=0,["id"]=130001,["key"]=130001,["group"]=1}
+,[400019]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=400019,["key"]=400019,["group"]=1}
+,[31684]={["iosID"]="PayGiftPack_30018",["appleShopType"]=0,["id"]=31684,["key"]=31684,["group"]=1}
+,[400020]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=400020,["key"]=400020,["group"]=1}
+,[31704]={["iosID"]="PayGiftPack_30020",["appleShopType"]=0,["id"]=31704,["key"]=31704,["group"]=1}
+,[1100104]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=1100104,["key"]=1100104,["group"]=1}
+,[400021]={["iosID"]="PayItem_78",["appleShopType"]=0,["id"]=400021,["key"]=400021,["group"]=1}
+,[1100103]={["iosID"]="PayItem_90",["appleShopType"]=0,["id"]=1100103,["key"]=1100103,["group"]=1}
+,[1100102]={["iosID"]="PayItem_60",["appleShopType"]=0,["id"]=1100102,["key"]=1100102,["group"]=1}
+,[1100101]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=1100101,["key"]=1100101,["group"]=1}
+,[400022]={["iosID"]="PayItem_88",["appleShopType"]=0,["id"]=400022,["key"]=400022,["group"]=1}
+,[31082]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=31082,["key"]=31082,["group"]=1}
+,[130002]={["iosID"]="PaySkinPack_130002",["appleShopType"]=0,["id"]=130002,["key"]=130002,["group"]=1}
+,[50092]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50092,["key"]=50092,["group"]=1}
+,[400023]={["iosID"]="PayItem_138",["appleShopType"]=0,["id"]=400023,["key"]=400023,["group"]=1}
+,[31031]={["iosID"]="PayItem_6",["appleShopType"]=0,["id"]=31031,["key"]=31031,["group"]=1}
+,[31752]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31752,["key"]=31752,["group"]=1}
+,[31501]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31501,["key"]=31501,["group"]=1}
+,[400024]={["iosID"]="PayItem_148",["appleShopType"]=0,["id"]=400024,["key"]=400024,["group"]=1}
+,[31080]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31080,["key"]=31080,["group"]=1}
+,[31003]={["iosID"]="PayPassportC_31003",["appleShopType"]=2,["id"]=31003,["key"]=31003,["group"]=1}
+,[300001]={["iosID"]="PayImagePack_300001",["appleShopType"]=0,["id"]=300001,["key"]=300001,["group"]=1}
+,[31011]={["iosID"]="PayItem_128",["appleShopType"]=0,["id"]=31011,["key"]=31011,["group"]=1}
+,[31015]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=31015,["key"]=31015,["group"]=1}
+,[31019]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31019,["key"]=31019,["group"]=1}
+,[300002]={["iosID"]="PayImagePack_300002",["appleShopType"]=0,["id"]=300002,["key"]=300002,["group"]=1}
+,[400026]={["iosID"]="PayItem_228",["appleShopType"]=0,["id"]=400026,["key"]=400026,["group"]=1}
+,[40004]={["iosID"]="PayRecharge_40004",["appleShopType"]=0,["id"]=40004,["key"]=40004,["group"]=1}
+,[30015]={["iosID"]="PayGiftPack_30015",["appleShopType"]=0,["id"]=30015,["key"]=30015,["group"]=1}
+,[30019]={["iosID"]="PayGiftPack_30019",["appleShopType"]=0,["id"]=30019,["key"]=30019,["group"]=1}
+,[30023]={["iosID"]="PayGiftPack_30023",["appleShopType"]=0,["id"]=30023,["key"]=30023,["group"]=1}
+,[30027]={["iosID"]="PayGiftPack_30027",["appleShopType"]=0,["id"]=30027,["key"]=30027,["group"]=1}
+,[30031]={["iosID"]="PayGiftPack_30031",["appleShopType"]=0,["id"]=30031,["key"]=30031,["group"]=1}
+,[31032]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=31032,["key"]=31032,["group"]=1}
+,[400028]={["iosID"]="PayItem_288",["appleShopType"]=0,["id"]=400028,["key"]=400028,["group"]=1}
+,[31063]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31063,["key"]=31063,["group"]=1}
+,[31067]={["iosID"]="PayItem_10",["appleShopType"]=0,["id"]=31067,["key"]=31067,["group"]=1}
+,[110002]={["iosID"]="PaySkinPack_110002",["appleShopType"]=0,["id"]=110002,["key"]=110002,["group"]=1}
+,[400029]={["iosID"]="PayItem_308",["appleShopType"]=0,["id"]=400029,["key"]=400029,["group"]=1}
+,[31079]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31079,["key"]=31079,["group"]=1}
+,[12020]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12020,["key"]=12020,["group"]=1}
+,[50061]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=50061,["key"]=50061,["group"]=1}
+,[400030]={["iosID"]="PayItem_518",["appleShopType"]=0,["id"]=400030,["key"]=400030,["group"]=1}
+,[31605]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31605,["key"]=31605,["group"]=1}
+,[31609]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31609,["key"]=31609,["group"]=1}
+,[31103]={["iosID"]="PayItem_12",["appleShopType"]=0,["id"]=31103,["key"]=31103,["group"]=1}
+,[400031]={["iosID"]="PayItem_648",["appleShopType"]=0,["id"]=400031,["key"]=400031,["group"]=1}
+,[31078]={["iosID"]="PayGiftPack_31078",["appleShopType"]=0,["id"]=31078,["key"]=31078,["group"]=1}
+,[12016]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12016,["key"]=12016,["group"]=1}
+,[12015]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=12015,["key"]=12015,["group"]=1}
+,[12014]={["iosID"]="PayItem_45",["appleShopType"]=0,["id"]=12014,["key"]=12014,["group"]=1}
+,[12013]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12013,["key"]=12013,["group"]=1}
+,[12012]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=12012,["key"]=12012,["group"]=1}
+,[110003]={["iosID"]="PaySkinPack_110003",["appleShopType"]=0,["id"]=110003,["key"]=110003,["group"]=1}
+,[12011]={["iosID"]="PayItem_6",["appleShopType"]=0,["id"]=12011,["key"]=12011,["group"]=1}
+,[31653]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31653,["key"]=31653,["group"]=1}
+,[31657]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31657,["key"]=31657,["group"]=1}
+,[31754]={["iosID"]="PayItem_298",["appleShopType"]=0,["id"]=31754,["key"]=31754,["group"]=1}
+,[31753]={["iosID"]="PayItem_48",["appleShopType"]=0,["id"]=31753,["key"]=31753,["group"]=1}
+,[40005]={["iosID"]="PayRecharge_40005",["appleShopType"]=0,["id"]=40005,["key"]=40005,["group"]=1}
+,[31502]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31502,["key"]=31502,["group"]=1}
+,[50069]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50069,["key"]=50069,["group"]=1}
+,[400016]={["iosID"]="PayItem_128",["appleShopType"]=0,["id"]=400016,["key"]=400016,["group"]=1}
+,[31685]={["iosID"]="PayGiftPack_30021",["appleShopType"]=0,["id"]=31685,["key"]=31685,["group"]=1}
+,[31703]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=31703,["key"]=31703,["group"]=1}
+,[31702]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31702,["key"]=31702,["group"]=1}
+,[31601]={["iosID"]="PayItem_45",["appleShopType"]=0,["id"]=31601,["key"]=31601,["group"]=1}
+,[31701]={["iosID"]="PayItem_48",["appleShopType"]=0,["id"]=31701,["key"]=31701,["group"]=1}
+,[31705]={["iosID"]="PayItem_128",["appleShopType"]=0,["id"]=31705,["key"]=31705,["group"]=1}
+,[31007]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31007,["key"]=31007,["group"]=1}
+,[50132]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50132,["key"]=50132,["group"]=1}
+,[50075]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50075,["key"]=50075,["group"]=1}
+,[31071]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31071,["key"]=31071,["group"]=1}
+,[31021]={["iosID"]="PayItem_45",["appleShopType"]=0,["id"]=31021,["key"]=31021,["group"]=1}
+,[31617]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31617,["key"]=31617,["group"]=1}
+,[31616]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31616,["key"]=31616,["group"]=1}
+,[31026]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31026,["key"]=31026,["group"]=1}
+,[31614]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31614,["key"]=31614,["group"]=1}
+,[31613]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31613,["key"]=31613,["group"]=1}
+,[31612]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31612,["key"]=31612,["group"]=1}
+,[50118]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50118,["key"]=50118,["group"]=1}
+,[50126]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50126,["key"]=50126,["group"]=1}
+,[50134]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50134,["key"]=50134,["group"]=1}
+,[31611]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31611,["key"]=31611,["group"]=1}
+,[31027]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31027,["key"]=31027,["group"]=1}
+,[31008]={["iosID"]="PayGiftPack_400007",["appleShopType"]=0,["id"]=31008,["key"]=31008,["group"]=1}
+,[31012]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31012,["key"]=31012,["group"]=1}
+,[31016]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31016,["key"]=31016,["group"]=1}
+,[31020]={["iosID"]="PayItem_45",["appleShopType"]=0,["id"]=31020,["key"]=31020,["group"]=1}
+,[31024]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31024,["key"]=31024,["group"]=1}
+,[31028]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31028,["key"]=31028,["group"]=1}
+,[40006]={["iosID"]="PayRecharge_40006",["appleShopType"]=0,["id"]=40006,["key"]=40006,["group"]=1}
+,[30016]={["iosID"]="PayGiftPack_30016",["appleShopType"]=0,["id"]=30016,["key"]=30016,["group"]=1}
+,[30020]={["iosID"]="PayGiftPack_30020",["appleShopType"]=0,["id"]=30020,["key"]=30020,["group"]=1}
+,[30024]={["iosID"]="PayGiftPack_30024",["appleShopType"]=0,["id"]=30024,["key"]=30024,["group"]=1}
+,[30028]={["iosID"]="PayGiftPack_30028",["appleShopType"]=0,["id"]=30028,["key"]=30028,["group"]=1}
+,[30032]={["iosID"]="PayGiftPack_30032",["appleShopType"]=0,["id"]=30032,["key"]=30032,["group"]=1}
+,[31608]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31608,["key"]=31608,["group"]=1}
+,[31060]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31060,["key"]=31060,["group"]=1}
+,[210001]={["iosID"]="PayGiftPack_210001",["appleShopType"]=0,["id"]=210001,["key"]=210001,["group"]=1}
+,[31607]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31607,["key"]=31607,["group"]=1}
+,[31072]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31072,["key"]=31072,["group"]=1}
+,[31076]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31076,["key"]=31076,["group"]=1}
+,[12002]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=12002,["key"]=12002,["group"]=1}
+,[31606]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31606,["key"]=31606,["group"]=1}
+,[31604]={["iosID"]="PayGiftPack_31604",["appleShopType"]=0,["id"]=31604,["key"]=31604,["group"]=1}
+,[31602]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31602,["key"]=31602,["group"]=1}
+,[210002]={["iosID"]="PayGiftPack_210002",["appleShopType"]=0,["id"]=210002,["key"]=210002,["group"]=1}
+,[31610]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31610,["key"]=31610,["group"]=1}
+,[50095]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50095,["key"]=50095,["group"]=1}
+,[31618]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31618,["key"]=31618,["group"]=1}
+,[12018]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12018,["key"]=12018,["group"]=1}
+,[50119]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50119,["key"]=50119,["group"]=1}
+,[12022]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=12022,["key"]=12022,["group"]=1}
+,[31301]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31301,["key"]=31301,["group"]=1}
+,[210003]={["iosID"]="PayGiftPack_210003",["appleShopType"]=0,["id"]=210003,["key"]=210003,["group"]=1}
+,[31075]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31075,["key"]=31075,["group"]=1}
+,[31074]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31074,["key"]=31074,["group"]=1}
+,[31033]={["iosID"]="PayGiftPack_30018",["appleShopType"]=0,["id"]=31033,["key"]=31033,["group"]=1}
+,[31654]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31654,["key"]=31654,["group"]=1}
+,[110001]={["iosID"]="PaySkinPack_110001",["appleShopType"]=0,["id"]=110001,["key"]=110001,["group"]=1}
+,[120002]={["iosID"]="PaySkinPack_120002",["appleShopType"]=0,["id"]=120002,["key"]=120002,["group"]=1}
+,[31065]={["iosID"]="PayItem_25",["appleShopType"]=0,["id"]=31065,["key"]=31065,["group"]=1}
+,[210004]={["iosID"]="PayGiftPack_210004",["appleShopType"]=0,["id"]=210004,["key"]=210004,["group"]=1}
+,[31064]={["iosID"]="PayItem_10",["appleShopType"]=0,["id"]=31064,["key"]=31064,["group"]=1}
+,[400025]={["iosID"]="PayItem_208",["appleShopType"]=0,["id"]=400025,["key"]=400025,["group"]=1}
+,[31035]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31035,["key"]=31035,["group"]=1}
+,[31686]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31686,["key"]=31686,["group"]=1}
+,[31101]={["iosID"]="PayItem_12",["appleShopType"]=0,["id"]=31101,["key"]=31101,["group"]=1}
+,[130003]={["iosID"]="PaySkinPack_130003",["appleShopType"]=0,["id"]=130003,["key"]=130003,["group"]=1}
+,[31050]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31050,["key"]=31050,["group"]=1}
+,[210005]={["iosID"]="PayGiftPack_210005",["appleShopType"]=0,["id"]=210005,["key"]=210005,["group"]=1}
+,[31048]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31048,["key"]=31048,["group"]=1}
+,[31047]={["iosID"]="PayItem_6",["appleShopType"]=0,["id"]=31047,["key"]=31047,["group"]=1}
+,[31046]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31046,["key"]=31046,["group"]=1}
+,[31045]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31045,["key"]=31045,["group"]=1}
+,[50056]={["iosID"]="PayItem_88",["appleShopType"]=0,["id"]=50056,["key"]=50056,["group"]=1}
+,[31044]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31044,["key"]=31044,["group"]=1}
+,[31043]={["iosID"]="PayItem_6",["appleShopType"]=0,["id"]=31043,["key"]=31043,["group"]=1}
+,[210006]={["iosID"]="PayGiftPack_210006",["appleShopType"]=0,["id"]=210006,["key"]=210006,["group"]=1}
+,[50088]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50088,["key"]=50088,["group"]=1}
+,[31042]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31042,["key"]=31042,["group"]=1}
+,[50104]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50104,["key"]=50104,["group"]=1}
+,[31041]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31041,["key"]=31041,["group"]=1}
+,[32009]={["iosID"]="PayRecharge_40002",["appleShopType"]=0,["id"]=32009,["key"]=32009,["group"]=1}
+,[31039]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31039,["key"]=31039,["group"]=1}
+,[31038]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31038,["key"]=31038,["group"]=1}
+,[31001]={["iosID"]="PayPassportA_31001",["appleShopType"]=2,["id"]=31001,["key"]=31001,["group"]=1}
+,[50152]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=50152,["key"]=50152,["group"]=1}
+,[31009]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31009,["key"]=31009,["group"]=1}
+,[31036]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31036,["key"]=31036,["group"]=1}
+,[31017]={["iosID"]="PayItem_648",["appleShopType"]=0,["id"]=31017,["key"]=31017,["group"]=1}
+,[30001]={["iosID"]="PayMonthlyCard_30001",["appleShopType"]=2,["id"]=30001,["key"]=30001,["group"]=1}
+,[31025]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31025,["key"]=31025,["group"]=1}
+,[31029]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31029,["key"]=31029,["group"]=1}
+,[210008]={["iosID"]="PayGiftPack_210008",["appleShopType"]=0,["id"]=210008,["key"]=210008,["group"]=1}
+,[30017]={["iosID"]="PayGiftPack_30017",["appleShopType"]=0,["id"]=30017,["key"]=30017,["group"]=1}
+,[30021]={["iosID"]="PayGiftPack_30021",["appleShopType"]=0,["id"]=30021,["key"]=30021,["group"]=1}
+,[30025]={["iosID"]="PayGiftPack_30025",["appleShopType"]=0,["id"]=30025,["key"]=30025,["group"]=1}
+,[30029]={["iosID"]="PayGiftPack_30029",["appleShopType"]=0,["id"]=30029,["key"]=30029,["group"]=1}
+,[30033]={["iosID"]="PayGiftPack_30033",["appleShopType"]=0,["id"]=30033,["key"]=30033,["group"]=1}
+,[100001]={["iosID"]="PaySkinPack_100001",["appleShopType"]=0,["id"]=100001,["key"]=100001,["group"]=1}
+,[31061]={["iosID"]="PayItem_8",["appleShopType"]=0,["id"]=31061,["key"]=31061,["group"]=1}
+,[210009]={["iosID"]="PayGiftPack_210009",["appleShopType"]=0,["id"]=210009,["key"]=210009,["group"]=1}
+,[400027]={["iosID"]="PayItem_268",["appleShopType"]=0,["id"]=400027,["key"]=400027,["group"]=1}
+,[31073]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31073,["key"]=31073,["group"]=1}
+,[31077]={["iosID"]="PayItem_18",["appleShopType"]=0,["id"]=31077,["key"]=31077,["group"]=1}
+,[31081]={["iosID"]="PayItem_18",["appleShopType"]=0,["id"]=31081,["key"]=31081,["group"]=1}
+,[120003]={["iosID"]="PaySkinPack_120003",["appleShopType"]=0,["id"]=120003,["key"]=120003,["group"]=1}
+,[31030]={["iosID"]="PayItem_18",["appleShopType"]=0,["id"]=31030,["key"]=31030,["group"]=1}
+,[31603]={["iosID"]="PayGiftPack_31603",["appleShopType"]=0,["id"]=31603,["key"]=31603,["group"]=1}
+,[330001]={["iosID"]="PayImagePack_330001",["appleShopType"]=0,["id"]=330001,["key"]=330001,["group"]=1}
+,[50089]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50089,["key"]=50089,["group"]=1}
+,[31615]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31615,["key"]=31615,["group"]=1}
+,[31023]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31023,["key"]=31023,["group"]=1}
+,[330002]={["iosID"]="PayImagePack_330002",["appleShopType"]=0,["id"]=330002,["key"]=330002,["group"]=1}
+,[50121]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50121,["key"]=50121,["group"]=1}
+,[100002]={["iosID"]="PaySkinPack_100002",["appleShopType"]=0,["id"]=100002,["key"]=100002,["group"]=1}
+,[50137]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50137,["key"]=50137,["group"]=1}
+,[330003]={["iosID"]="PayImagePack_330003",["appleShopType"]=0,["id"]=330003,["key"]=330003,["group"]=1}
+,[400004]={["iosID"]="PayGiftPack_400004",["appleShopType"]=0,["id"]=400004,["key"]=400004,["group"]=1}
+,[400001]={["iosID"]="PayGiftPack_400001",["appleShopType"]=0,["id"]=400001,["key"]=400001,["group"]=1}
+,[31651]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31651,["key"]=31651,["group"]=1}
+,[31655]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31655,["key"]=31655,["group"]=1}
+,[50145]={["iosID"]="PayItem_116",["appleShopType"]=0,["id"]=50145,["key"]=50145,["group"]=1}
+,[400002]={["iosID"]="PayGiftPack_400002",["appleShopType"]=0,["id"]=400002,["key"]=400002,["group"]=1}
+,[40001]={["iosID"]="PayRecharge_40001",["appleShopType"]=0,["id"]=40001,["key"]=40001,["group"]=1}
+,[210012]={["iosID"]="PayGiftPack_210012",["appleShopType"]=0,["id"]=210012,["key"]=210012,["group"]=1}
+,[300003]={["iosID"]="PayImagePack_300003",["appleShopType"]=0,["id"]=300003,["key"]=300003,["group"]=1}
+,[400003]={["iosID"]="PayGiftPack_400003",["appleShopType"]=0,["id"]=400003,["key"]=400003,["group"]=1}
+,[31683]={["iosID"]="PayGiftPack_30017",["appleShopType"]=0,["id"]=31683,["key"]=31683,["group"]=1}
+,[31687]={["iosID"]="PayItem_328",["appleShopType"]=0,["id"]=31687,["key"]=31687,["group"]=1}
+,[12007]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12007,["key"]=12007,["group"]=1}
+,[100003]={["iosID"]="PaySkinPack_100003",["appleShopType"]=0,["id"]=100003,["key"]=100003,["group"]=1}
+,[400017]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=400017,["key"]=400017,["group"]=1}
+,[210013]={["iosID"]="PayGiftPack_210013",["appleShopType"]=0,["id"]=210013,["key"]=210013,["group"]=1}
+,[400009]={["iosID"]="PayItem_12",["appleShopType"]=0,["id"]=400009,["key"]=400009,["group"]=1}
+,[400005]={["iosID"]="PayGiftPack_400005",["appleShopType"]=0,["id"]=400005,["key"]=400005,["group"]=1}
+,[400018]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=400018,["key"]=400018,["group"]=1}
+,[31002]={["iosID"]="PayPassportB_31002",["appleShopType"]=2,["id"]=31002,["key"]=31002,["group"]=1}
+,[210011]={["iosID"]="PayGiftPack_210011",["appleShopType"]=0,["id"]=210011,["key"]=210011,["group"]=1}
+,[400006]={["iosID"]="PayGiftPack_400006",["appleShopType"]=0,["id"]=400006,["key"]=400006,["group"]=1}
+,[210007]={["iosID"]="PayGiftPack_210007",["appleShopType"]=0,["id"]=210007,["key"]=210007,["group"]=1}
+,[210014]={["iosID"]="PayGiftPack_210014",["appleShopType"]=0,["id"]=210014,["key"]=210014,["group"]=1}
+,[30022]={["iosID"]="PayGiftPack_30022",["appleShopType"]=0,["id"]=30022,["key"]=30022,["group"]=1}
+,[400007]={["iosID"]="PayGiftPack_400007",["appleShopType"]=0,["id"]=400007,["key"]=400007,["group"]=1}
+,[320001]={["iosID"]="PayImagePack_320001",["appleShopType"]=0,["id"]=320001,["key"]=320001,["group"]=1}
+,[31751]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31751,["key"]=31751,["group"]=1}
+,[50122]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50122,["key"]=50122,["group"]=1}
+,[400008]={["iosID"]="PayItem_6",["appleShopType"]=0,["id"]=400008,["key"]=400008,["group"]=1}
+,[320002]={["iosID"]="PayImagePack_320002",["appleShopType"]=0,["id"]=320002,["key"]=320002,["group"]=1}
+,[210015]={["iosID"]="PayGiftPack_210015",["appleShopType"]=0,["id"]=210015,["key"]=210015,["group"]=1}
+,[120001]={["iosID"]="PaySkinPack_120001",["appleShopType"]=0,["id"]=120001,["key"]=120001,["group"]=1}
+,[31010]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31010,["key"]=31010,["group"]=1}
+,[320003]={["iosID"]="PayImagePack_320003",["appleShopType"]=0,["id"]=320003,["key"]=320003,["group"]=1}
+,[31018]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=31018,["key"]=31018,["group"]=1}
+,[31022]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=31022,["key"]=31022,["group"]=1}
+,[400010]={["iosID"]="PayItem_18",["appleShopType"]=0,["id"]=400010,["key"]=400010,["group"]=1}
+,[40002]={["iosID"]="PayRecharge_40002",["appleShopType"]=0,["id"]=40002,["key"]=40002,["group"]=1}
+,[31034]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=31034,["key"]=31034,["group"]=1}
+,[30018]={["iosID"]="PayGiftPack_30018",["appleShopType"]=0,["id"]=30018,["key"]=30018,["group"]=1}
+,[400011]={["iosID"]="PayItem_30",["appleShopType"]=0,["id"]=400011,["key"]=400011,["group"]=1}
+,[30026]={["iosID"]="PayGiftPack_30026",["appleShopType"]=0,["id"]=30026,["key"]=30026,["group"]=1}
+,[30030]={["iosID"]="PayGiftPack_30030",["appleShopType"]=0,["id"]=30030,["key"]=30030,["group"]=1}
+,[30034]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=30034,["key"]=30034,["group"]=1}
+,[400012]={["iosID"]="PayItem_45",["appleShopType"]=0,["id"]=400012,["key"]=400012,["group"]=1}
+,[31062]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31062,["key"]=31062,["group"]=1}
+,[31066]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=31066,["key"]=31066,["group"]=1}
+,[31070]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31070,["key"]=31070,["group"]=1}
+,[400013]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=400013,["key"]=400013,["group"]=1}
+,[12001]={["iosID"]="PayItem_6",["appleShopType"]=0,["id"]=12001,["key"]=12001,["group"]=1}
+,[12003]={["iosID"]="PayItem_68",["appleShopType"]=0,["id"]=12003,["key"]=12003,["group"]=1}
+,[210010]={["iosID"]="PayGiftPack_210010",["appleShopType"]=0,["id"]=210010,["key"]=210010,["group"]=1}
+,[400014]={["iosID"]="PayItem_98",["appleShopType"]=0,["id"]=400014,["key"]=400014,["group"]=1}
+,[12009]={["iosID"]="PayItem_128",["appleShopType"]=0,["id"]=12009,["key"]=12009,["group"]=1}
+,[50083]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50083,["key"]=50083,["group"]=1}
+,[31102]={["iosID"]="PayItem_12",["appleShopType"]=0,["id"]=31102,["key"]=31102,["group"]=1}
+,[50098]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=50098,["key"]=50098,["group"]=1}
 }
---cfgCfgRecharge = conf
-return conf
+

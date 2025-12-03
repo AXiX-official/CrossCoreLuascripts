@@ -1,64 +1,152 @@
-local conf = {
-	["filename"] = 'j-军演.xlsx',
-	["sheetname"] = '军演段位',
-	["types"] = {
-'int','string','string','int','int','json','int','int','int','int','int','string'
-},
-	["names"] = {
-'id','key','name','nScore','nGetCoin','rewards','nWinGetCoin','nLostGetCoin','nWinGetExp','nLostGetExp','rewardMailId','icon'
-},
-	["data"] = {
-{'1',	'1',	'少尉1星',	'100',	'0',	'[[10010,0,2]]',	'80',	'64',	'1200',	'960',	'5001',	'img_3_1'},
-{'2',	'2',	'少尉2星',	'200',	'500',	'[[10010,500,2]]',	'82',	'65',	'1200',	'960',	'5001',	'img_3_1'},
-{'3',	'3',	'少尉3星',	'300',	'525',	'[[10010,525,2]]',	'84',	'67',	'1200',	'960',	'5001',	'img_3_1'},
-{'4',	'4',	'少尉4星',	'400',	'550',	'[[10010,550,2]]',	'86',	'68',	'1200',	'960',	'5001',	'img_3_1'},
-{'5',	'5',	'少尉5星',	'500',	'575',	'[[10010,575,2]]',	'88',	'70',	'1200',	'960',	'5001',	'img_3_1'},
-{'6',	'6',	'中尉1星',	'600',	'600',	'[[10010,600,2]]',	'90',	'72',	'1300',	'1040',	'5002',	'img_3_2'},
-{'7',	'7',	'中尉2星',	'700',	'625',	'[[10010,625,2]]',	'92',	'73',	'1300',	'1040',	'5002',	'img_3_2'},
-{'8',	'8',	'中尉3星',	'800',	'650',	'[[10010,650,2]]',	'94',	'75',	'1300',	'1040',	'5002',	'img_3_2'},
-{'9',	'9',	'中尉4星',	'900',	'675',	'[[10010,675,2]]',	'96',	'76',	'1300',	'1040',	'5002',	'img_3_2'},
-{'10',	'10',	'中尉5星',	'1000',	'700',	'[[10010,700,2]]',	'98',	'78',	'1300',	'1040',	'5002',	'img_3_2'},
-{'11',	'11',	'上尉1星',	'1100',	'725',	'[[10010,725,2]]',	'100',	'80',	'1400',	'1120',	'5003',	'img_3_3'},
-{'12',	'12',	'上尉2星',	'1200',	'750',	'[[10010,750,2]]',	'102',	'81',	'1400',	'1120',	'5003',	'img_3_3'},
-{'13',	'13',	'上尉3星',	'1300',	'775',	'[[10010,775,2]]',	'104',	'83',	'1400',	'1120',	'5003',	'img_3_3'},
-{'14',	'14',	'上尉4星',	'1400',	'800',	'[[10010,800,2]]',	'106',	'84',	'1400',	'1120',	'5003',	'img_3_3'},
-{'15',	'15',	'上尉5星',	'1500',	'825',	'[[10010,825,2]]',	'108',	'86',	'1400',	'1120',	'5003',	'img_3_3'},
-{'16',	'16',	'少校1星',	'1600',	'850',	'[[10010,850,2]]',	'110',	'88',	'1500',	'1200',	'5004',	'img_3_4'},
-{'17',	'17',	'少校2星',	'1700',	'875',	'[[10010,875,2]]',	'112',	'89',	'1500',	'1200',	'5004',	'img_3_4'},
-{'18',	'18',	'少校3星',	'1800',	'900',	'[[10010,900,2]]',	'114',	'91',	'1500',	'1200',	'5004',	'img_3_4'},
-{'19',	'19',	'少校4星',	'1900',	'925',	'[[10010,925,2]]',	'116',	'92',	'1500',	'1200',	'5004',	'img_3_4'},
-{'20',	'20',	'少校5星',	'2000',	'950',	'[[10010,950,2]]',	'120',	'96',	'1500',	'1200',	'5004',	'img_3_4'},
-{'21',	'21',	'中校1星',	'2200',	'1000',	'[[10010,1000,2]]',	'124',	'99',	'1600',	'1280',	'5005',	'img_3_5'},
-{'22',	'22',	'中校2星',	'2400',	'1050',	'[[10010,1050,2]]',	'128',	'102',	'1600',	'1280',	'5005',	'img_3_5'},
-{'23',	'23',	'中校3星',	'2600',	'1100',	'[[10010,1100,2]]',	'132',	'105',	'1600',	'1280',	'5005',	'img_3_5'},
-{'24',	'24',	'中校4星',	'2800',	'1150',	'[[10010,1150,2]]',	'136',	'108',	'1600',	'1280',	'5005',	'img_3_5'},
-{'25',	'25',	'中校5星',	'3000',	'1200',	'[[10010,1200,2]]',	'140',	'112',	'1600',	'1280',	'5005',	'img_3_5'},
-{'26',	'26',	'上校1星',	'3200',	'1250',	'[[10010,1250,2]]',	'144',	'115',	'1700',	'1360',	'5006',	'img_3_6'},
-{'27',	'27',	'上校2星',	'3400',	'1300',	'[[10010,1300,2]]',	'148',	'118',	'1700',	'1360',	'5006',	'img_3_6'},
-{'28',	'28',	'上校3星',	'3600',	'1350',	'[[10010,1350,2]]',	'152',	'121',	'1700',	'1360',	'5006',	'img_3_6'},
-{'29',	'29',	'上校4星',	'3800',	'1400',	'[[10010,1400,2]]',	'156',	'124',	'1700',	'1360',	'5006',	'img_3_6'},
-{'30',	'30',	'上校5星',	'4000',	'1450',	'[[10010,1450,2]]',	'160',	'128',	'1700',	'1360',	'5006',	'img_3_6'},
-{'31',	'31',	'少将1星',	'4200',	'1500',	'[[10010,1500,2]]',	'164',	'131',	'1800',	'1440',	'5007',	'img_3_7'},
-{'32',	'32',	'少将2星',	'4400',	'1550',	'[[10010,1550,2]]',	'168',	'134',	'1800',	'1440',	'5007',	'img_3_7'},
-{'33',	'33',	'少将3星',	'4600',	'1600',	'[[10010,1600,2]]',	'172',	'137',	'1800',	'1440',	'5007',	'img_3_7'},
-{'34',	'34',	'少将4星',	'4800',	'1650',	'[[10010,1650,2]]',	'176',	'140',	'1800',	'1440',	'5007',	'img_3_7'},
-{'35',	'35',	'少将5星',	'5000',	'1700',	'[[10010,1700,2]]',	'180',	'144',	'1800',	'1440',	'5007',	'img_3_7'},
-{'36',	'36',	'中将1星',	'5200',	'1750',	'[[10010,1750,2]]',	'184',	'147',	'1900',	'1520',	'5008',	'img_3_8'},
-{'37',	'37',	'中将2星',	'5400',	'1800',	'[[10010,1800,2]]',	'188',	'150',	'1900',	'1520',	'5008',	'img_3_8'},
-{'38',	'38',	'中将3星',	'5600',	'1850',	'[[10010,1850,2]]',	'192',	'153',	'1900',	'1520',	'5008',	'img_3_8'},
-{'39',	'39',	'中将4星',	'5800',	'1900',	'[[10010,1900,2]]',	'196',	'156',	'1900',	'1520',	'5008',	'img_3_8'},
-{'40',	'40',	'中将5星',	'6000',	'1950',	'[[10010,1950,2]]',	'200',	'160',	'1900',	'1520',	'5008',	'img_3_8'},
-{'41',	'41',	'上将1星',	'6300',	'2000',	'[[10010,2000,2]]',	'204',	'163',	'2000',	'1600',	'5009',	'img_3_9'},
-{'42',	'42',	'上将2星',	'6600',	'2050',	'[[10010,2050,2]]',	'208',	'166',	'2000',	'1600',	'5009',	'img_3_9'},
-{'43',	'43',	'上将3星',	'6900',	'2100',	'[[10010,2100,2]]',	'212',	'169',	'2000',	'1600',	'5009',	'img_3_9'},
-{'44',	'44',	'上将4星',	'7200',	'2150',	'[[10010,2150,2]]',	'216',	'172',	'2000',	'1600',	'5009',	'img_3_9'},
-{'45',	'45',	'上将5星',	'7500',	'2200',	'[[10010,2200,2]]',	'220',	'176',	'2000',	'1600',	'5009',	'img_3_9'},
-{'46',	'46',	'元帅1星',	'7800',	'2250',	'[[10010,2250,2]]',	'224',	'179',	'2100',	'1680',	'5010',	'img_3_10'},
-{'47',	'47',	'元帅2星',	'8100',	'2300',	'[[10010,2300,2]]',	'228',	'182',	'2100',	'1680',	'5010',	'img_3_10'},
-{'48',	'48',	'元帅3星',	'8400',	'2350',	'[[10010,2350,2]]',	'232',	'185',	'2100',	'1680',	'5010',	'img_3_10'},
-{'49',	'49',	'元帅4星',	'9000',	'2400',	'[[10010,2400,2]]',	'236',	'188',	'2100',	'1680',	'5010',	'img_3_10'},
-{'50',	'50',	'元帅5星',	'99999',	'2500',	'[[10010,2500,2]]',	'250',	'200',	'2100',	'1680',	'5010',	'img_3_10'},
-},
+_G["CfgPracticeRankLevel"]={{["rewardMailId"]=5001,["id"]=1,["rewards"]={{10010,0,2}
 }
---cfgCfgPracticeRankLevel = conf
-return conf
+,["nLostGetCoin"]=64,["nWinGetExp"]=1200,["nWinGetCoin"]=80,["nGetCoin"]=0,["nScore"]=100,["name"]="少尉1星",["nLostGetExp"]=960,["icon"]="img_3_1",["key"]="1"}
+,{["rewardMailId"]=5001,["id"]=2,["rewards"]={{10010,500,2}
+}
+,["nLostGetCoin"]=65,["nWinGetExp"]=1200,["nWinGetCoin"]=82,["nGetCoin"]=500,["nScore"]=200,["name"]="少尉2星",["nLostGetExp"]=960,["icon"]="img_3_1",["key"]="2"}
+,{["rewardMailId"]=5001,["id"]=3,["rewards"]={{10010,525,2}
+}
+,["nLostGetCoin"]=67,["nWinGetExp"]=1200,["nWinGetCoin"]=84,["nGetCoin"]=525,["nScore"]=300,["name"]="少尉3星",["nLostGetExp"]=960,["icon"]="img_3_1",["key"]="3"}
+,{["rewardMailId"]=5001,["id"]=4,["rewards"]={{10010,550,2}
+}
+,["nLostGetCoin"]=68,["nWinGetExp"]=1200,["nWinGetCoin"]=86,["nGetCoin"]=550,["nScore"]=400,["name"]="少尉4星",["nLostGetExp"]=960,["icon"]="img_3_1",["key"]="4"}
+,{["rewardMailId"]=5001,["id"]=5,["rewards"]={{10010,575,2}
+}
+,["nLostGetCoin"]=70,["nWinGetExp"]=1200,["nWinGetCoin"]=88,["nGetCoin"]=575,["nScore"]=500,["name"]="少尉5星",["nLostGetExp"]=960,["icon"]="img_3_1",["key"]="5"}
+,{["rewardMailId"]=5002,["id"]=6,["rewards"]={{10010,600,2}
+}
+,["nLostGetCoin"]=72,["nWinGetExp"]=1300,["nWinGetCoin"]=90,["nGetCoin"]=600,["nScore"]=600,["name"]="中尉1星",["nLostGetExp"]=1040,["icon"]="img_3_2",["key"]="6"}
+,{["rewardMailId"]=5002,["id"]=7,["rewards"]={{10010,625,2}
+}
+,["nLostGetCoin"]=73,["nWinGetExp"]=1300,["nWinGetCoin"]=92,["nGetCoin"]=625,["nScore"]=700,["name"]="中尉2星",["nLostGetExp"]=1040,["icon"]="img_3_2",["key"]="7"}
+,{["rewardMailId"]=5002,["id"]=8,["rewards"]={{10010,650,2}
+}
+,["nLostGetCoin"]=75,["nWinGetExp"]=1300,["nWinGetCoin"]=94,["nGetCoin"]=650,["nScore"]=800,["name"]="中尉3星",["nLostGetExp"]=1040,["icon"]="img_3_2",["key"]="8"}
+,{["rewardMailId"]=5002,["id"]=9,["rewards"]={{10010,675,2}
+}
+,["nLostGetCoin"]=76,["nWinGetExp"]=1300,["nWinGetCoin"]=96,["nGetCoin"]=675,["nScore"]=900,["name"]="中尉4星",["nLostGetExp"]=1040,["icon"]="img_3_2",["key"]="9"}
+,{["rewardMailId"]=5002,["id"]=10,["rewards"]={{10010,700,2}
+}
+,["nLostGetCoin"]=78,["nWinGetExp"]=1300,["nWinGetCoin"]=98,["nGetCoin"]=700,["nScore"]=1000,["name"]="中尉5星",["nLostGetExp"]=1040,["icon"]="img_3_2",["key"]="10"}
+,{["rewardMailId"]=5003,["id"]=11,["rewards"]={{10010,725,2}
+}
+,["nLostGetCoin"]=80,["nWinGetExp"]=1400,["nWinGetCoin"]=100,["nGetCoin"]=725,["nScore"]=1100,["name"]="上尉1星",["nLostGetExp"]=1120,["icon"]="img_3_3",["key"]="11"}
+,{["rewardMailId"]=5003,["id"]=12,["rewards"]={{10010,750,2}
+}
+,["nLostGetCoin"]=81,["nWinGetExp"]=1400,["nWinGetCoin"]=102,["nGetCoin"]=750,["nScore"]=1200,["name"]="上尉2星",["nLostGetExp"]=1120,["icon"]="img_3_3",["key"]="12"}
+,{["rewardMailId"]=5003,["id"]=13,["rewards"]={{10010,775,2}
+}
+,["nLostGetCoin"]=83,["nWinGetExp"]=1400,["nWinGetCoin"]=104,["nGetCoin"]=775,["nScore"]=1300,["name"]="上尉3星",["nLostGetExp"]=1120,["icon"]="img_3_3",["key"]="13"}
+,{["rewardMailId"]=5003,["id"]=14,["rewards"]={{10010,800,2}
+}
+,["nLostGetCoin"]=84,["nWinGetExp"]=1400,["nWinGetCoin"]=106,["nGetCoin"]=800,["nScore"]=1400,["name"]="上尉4星",["nLostGetExp"]=1120,["icon"]="img_3_3",["key"]="14"}
+,{["rewardMailId"]=5003,["id"]=15,["rewards"]={{10010,825,2}
+}
+,["nLostGetCoin"]=86,["nWinGetExp"]=1400,["nWinGetCoin"]=108,["nGetCoin"]=825,["nScore"]=1500,["name"]="上尉5星",["nLostGetExp"]=1120,["icon"]="img_3_3",["key"]="15"}
+,{["rewardMailId"]=5004,["id"]=16,["rewards"]={{10010,850,2}
+}
+,["nLostGetCoin"]=88,["nWinGetExp"]=1500,["nWinGetCoin"]=110,["nGetCoin"]=850,["nScore"]=1600,["name"]="少校1星",["nLostGetExp"]=1200,["icon"]="img_3_4",["key"]="16"}
+,{["rewardMailId"]=5004,["id"]=17,["rewards"]={{10010,875,2}
+}
+,["nLostGetCoin"]=89,["nWinGetExp"]=1500,["nWinGetCoin"]=112,["nGetCoin"]=875,["nScore"]=1700,["name"]="少校2星",["nLostGetExp"]=1200,["icon"]="img_3_4",["key"]="17"}
+,{["rewardMailId"]=5004,["id"]=18,["rewards"]={{10010,900,2}
+}
+,["nLostGetCoin"]=91,["nWinGetExp"]=1500,["nWinGetCoin"]=114,["nGetCoin"]=900,["nScore"]=1800,["name"]="少校3星",["nLostGetExp"]=1200,["icon"]="img_3_4",["key"]="18"}
+,{["rewardMailId"]=5004,["id"]=19,["rewards"]={{10010,925,2}
+}
+,["nLostGetCoin"]=92,["nWinGetExp"]=1500,["nWinGetCoin"]=116,["nGetCoin"]=925,["nScore"]=1900,["name"]="少校4星",["nLostGetExp"]=1200,["icon"]="img_3_4",["key"]="19"}
+,{["rewardMailId"]=5004,["id"]=20,["rewards"]={{10010,950,2}
+}
+,["nLostGetCoin"]=96,["nWinGetExp"]=1500,["nWinGetCoin"]=120,["nGetCoin"]=950,["nScore"]=2000,["name"]="少校5星",["nLostGetExp"]=1200,["icon"]="img_3_4",["key"]="20"}
+,{["rewardMailId"]=5005,["id"]=21,["rewards"]={{10010,1000,2}
+}
+,["nLostGetCoin"]=99,["nWinGetExp"]=1600,["nWinGetCoin"]=124,["nGetCoin"]=1000,["nScore"]=2200,["name"]="中校1星",["nLostGetExp"]=1280,["icon"]="img_3_5",["key"]="21"}
+,{["rewardMailId"]=5005,["id"]=22,["rewards"]={{10010,1050,2}
+}
+,["nLostGetCoin"]=102,["nWinGetExp"]=1600,["nWinGetCoin"]=128,["nGetCoin"]=1050,["nScore"]=2400,["name"]="中校2星",["nLostGetExp"]=1280,["icon"]="img_3_5",["key"]="22"}
+,{["rewardMailId"]=5005,["id"]=23,["rewards"]={{10010,1100,2}
+}
+,["nLostGetCoin"]=105,["nWinGetExp"]=1600,["nWinGetCoin"]=132,["nGetCoin"]=1100,["nScore"]=2600,["name"]="中校3星",["nLostGetExp"]=1280,["icon"]="img_3_5",["key"]="23"}
+,{["rewardMailId"]=5005,["id"]=24,["rewards"]={{10010,1150,2}
+}
+,["nLostGetCoin"]=108,["nWinGetExp"]=1600,["nWinGetCoin"]=136,["nGetCoin"]=1150,["nScore"]=2800,["name"]="中校4星",["nLostGetExp"]=1280,["icon"]="img_3_5",["key"]="24"}
+,{["rewardMailId"]=5005,["id"]=25,["rewards"]={{10010,1200,2}
+}
+,["nLostGetCoin"]=112,["nWinGetExp"]=1600,["nWinGetCoin"]=140,["nGetCoin"]=1200,["nScore"]=3000,["name"]="中校5星",["nLostGetExp"]=1280,["icon"]="img_3_5",["key"]="25"}
+,{["rewardMailId"]=5006,["id"]=26,["rewards"]={{10010,1250,2}
+}
+,["nLostGetCoin"]=115,["nWinGetExp"]=1700,["nWinGetCoin"]=144,["nGetCoin"]=1250,["nScore"]=3200,["name"]="上校1星",["nLostGetExp"]=1360,["icon"]="img_3_6",["key"]="26"}
+,{["rewardMailId"]=5006,["id"]=27,["rewards"]={{10010,1300,2}
+}
+,["nLostGetCoin"]=118,["nWinGetExp"]=1700,["nWinGetCoin"]=148,["nGetCoin"]=1300,["nScore"]=3400,["name"]="上校2星",["nLostGetExp"]=1360,["icon"]="img_3_6",["key"]="27"}
+,{["rewardMailId"]=5006,["id"]=28,["rewards"]={{10010,1350,2}
+}
+,["nLostGetCoin"]=121,["nWinGetExp"]=1700,["nWinGetCoin"]=152,["nGetCoin"]=1350,["nScore"]=3600,["name"]="上校3星",["nLostGetExp"]=1360,["icon"]="img_3_6",["key"]="28"}
+,{["rewardMailId"]=5006,["id"]=29,["rewards"]={{10010,1400,2}
+}
+,["nLostGetCoin"]=124,["nWinGetExp"]=1700,["nWinGetCoin"]=156,["nGetCoin"]=1400,["nScore"]=3800,["name"]="上校4星",["nLostGetExp"]=1360,["icon"]="img_3_6",["key"]="29"}
+,{["rewardMailId"]=5006,["id"]=30,["rewards"]={{10010,1450,2}
+}
+,["nLostGetCoin"]=128,["nWinGetExp"]=1700,["nWinGetCoin"]=160,["nGetCoin"]=1450,["nScore"]=4000,["name"]="上校5星",["nLostGetExp"]=1360,["icon"]="img_3_6",["key"]="30"}
+,{["rewardMailId"]=5007,["id"]=31,["rewards"]={{10010,1500,2}
+}
+,["nLostGetCoin"]=131,["nWinGetExp"]=1800,["nWinGetCoin"]=164,["nGetCoin"]=1500,["nScore"]=4200,["name"]="少将1星",["nLostGetExp"]=1440,["icon"]="img_3_7",["key"]="31"}
+,{["rewardMailId"]=5007,["id"]=32,["rewards"]={{10010,1550,2}
+}
+,["nLostGetCoin"]=134,["nWinGetExp"]=1800,["nWinGetCoin"]=168,["nGetCoin"]=1550,["nScore"]=4400,["name"]="少将2星",["nLostGetExp"]=1440,["icon"]="img_3_7",["key"]="32"}
+,{["rewardMailId"]=5007,["id"]=33,["rewards"]={{10010,1600,2}
+}
+,["nLostGetCoin"]=137,["nWinGetExp"]=1800,["nWinGetCoin"]=172,["nGetCoin"]=1600,["nScore"]=4600,["name"]="少将3星",["nLostGetExp"]=1440,["icon"]="img_3_7",["key"]="33"}
+,{["rewardMailId"]=5007,["id"]=34,["rewards"]={{10010,1650,2}
+}
+,["nLostGetCoin"]=140,["nWinGetExp"]=1800,["nWinGetCoin"]=176,["nGetCoin"]=1650,["nScore"]=4800,["name"]="少将4星",["nLostGetExp"]=1440,["icon"]="img_3_7",["key"]="34"}
+,{["rewardMailId"]=5007,["id"]=35,["rewards"]={{10010,1700,2}
+}
+,["nLostGetCoin"]=144,["nWinGetExp"]=1800,["nWinGetCoin"]=180,["nGetCoin"]=1700,["nScore"]=5000,["name"]="少将5星",["nLostGetExp"]=1440,["icon"]="img_3_7",["key"]="35"}
+,{["rewardMailId"]=5008,["id"]=36,["rewards"]={{10010,1750,2}
+}
+,["nLostGetCoin"]=147,["nWinGetExp"]=1900,["nWinGetCoin"]=184,["nGetCoin"]=1750,["nScore"]=5200,["name"]="中将1星",["nLostGetExp"]=1520,["icon"]="img_3_8",["key"]="36"}
+,{["rewardMailId"]=5008,["id"]=37,["rewards"]={{10010,1800,2}
+}
+,["nLostGetCoin"]=150,["nWinGetExp"]=1900,["nWinGetCoin"]=188,["nGetCoin"]=1800,["nScore"]=5400,["name"]="中将2星",["nLostGetExp"]=1520,["icon"]="img_3_8",["key"]="37"}
+,{["rewardMailId"]=5008,["id"]=38,["rewards"]={{10010,1850,2}
+}
+,["nLostGetCoin"]=153,["nWinGetExp"]=1900,["nWinGetCoin"]=192,["nGetCoin"]=1850,["nScore"]=5600,["name"]="中将3星",["nLostGetExp"]=1520,["icon"]="img_3_8",["key"]="38"}
+,{["rewardMailId"]=5008,["id"]=39,["rewards"]={{10010,1900,2}
+}
+,["nLostGetCoin"]=156,["nWinGetExp"]=1900,["nWinGetCoin"]=196,["nGetCoin"]=1900,["nScore"]=5800,["name"]="中将4星",["nLostGetExp"]=1520,["icon"]="img_3_8",["key"]="39"}
+,{["rewardMailId"]=5008,["id"]=40,["rewards"]={{10010,1950,2}
+}
+,["nLostGetCoin"]=160,["nWinGetExp"]=1900,["nWinGetCoin"]=200,["nGetCoin"]=1950,["nScore"]=6000,["name"]="中将5星",["nLostGetExp"]=1520,["icon"]="img_3_8",["key"]="40"}
+,{["rewardMailId"]=5009,["id"]=41,["rewards"]={{10010,2000,2}
+}
+,["nLostGetCoin"]=163,["nWinGetExp"]=2000,["nWinGetCoin"]=204,["nGetCoin"]=2000,["nScore"]=6300,["name"]="上将1星",["nLostGetExp"]=1600,["icon"]="img_3_9",["key"]="41"}
+,{["rewardMailId"]=5009,["id"]=42,["rewards"]={{10010,2050,2}
+}
+,["nLostGetCoin"]=166,["nWinGetExp"]=2000,["nWinGetCoin"]=208,["nGetCoin"]=2050,["nScore"]=6600,["name"]="上将2星",["nLostGetExp"]=1600,["icon"]="img_3_9",["key"]="42"}
+,{["rewardMailId"]=5009,["id"]=43,["rewards"]={{10010,2100,2}
+}
+,["nLostGetCoin"]=169,["nWinGetExp"]=2000,["nWinGetCoin"]=212,["nGetCoin"]=2100,["nScore"]=6900,["name"]="上将3星",["nLostGetExp"]=1600,["icon"]="img_3_9",["key"]="43"}
+,{["rewardMailId"]=5009,["id"]=44,["rewards"]={{10010,2150,2}
+}
+,["nLostGetCoin"]=172,["nWinGetExp"]=2000,["nWinGetCoin"]=216,["nGetCoin"]=2150,["nScore"]=7200,["name"]="上将4星",["nLostGetExp"]=1600,["icon"]="img_3_9",["key"]="44"}
+,{["rewardMailId"]=5009,["id"]=45,["rewards"]={{10010,2200,2}
+}
+,["nLostGetCoin"]=176,["nWinGetExp"]=2000,["nWinGetCoin"]=220,["nGetCoin"]=2200,["nScore"]=7500,["name"]="上将5星",["nLostGetExp"]=1600,["icon"]="img_3_9",["key"]="45"}
+,{["rewardMailId"]=5010,["id"]=46,["rewards"]={{10010,2250,2}
+}
+,["nLostGetCoin"]=179,["nWinGetExp"]=2100,["nWinGetCoin"]=224,["nGetCoin"]=2250,["nScore"]=7800,["name"]="元帅1星",["nLostGetExp"]=1680,["icon"]="img_3_10",["key"]="46"}
+,{["rewardMailId"]=5010,["id"]=47,["rewards"]={{10010,2300,2}
+}
+,["nLostGetCoin"]=182,["nWinGetExp"]=2100,["nWinGetCoin"]=228,["nGetCoin"]=2300,["nScore"]=8100,["name"]="元帅2星",["nLostGetExp"]=1680,["icon"]="img_3_10",["key"]="47"}
+,{["rewardMailId"]=5010,["id"]=48,["rewards"]={{10010,2350,2}
+}
+,["nLostGetCoin"]=185,["nWinGetExp"]=2100,["nWinGetCoin"]=232,["nGetCoin"]=2350,["nScore"]=8400,["name"]="元帅3星",["nLostGetExp"]=1680,["icon"]="img_3_10",["key"]="48"}
+,{["rewardMailId"]=5010,["id"]=49,["rewards"]={{10010,2400,2}
+}
+,["nLostGetCoin"]=188,["nWinGetExp"]=2100,["nWinGetCoin"]=236,["nGetCoin"]=2400,["nScore"]=9000,["name"]="元帅4星",["nLostGetExp"]=1680,["icon"]="img_3_10",["key"]="49"}
+,{["rewardMailId"]=5010,["id"]=50,["rewards"]={{10010,2500,2}
+}
+,["nLostGetCoin"]=200,["nWinGetExp"]=2100,["nWinGetCoin"]=250,["nGetCoin"]=2500,["nScore"]=99999,["name"]="元帅5星",["nLostGetExp"]=1680,["icon"]="img_3_10",["key"]="50"}
+}
+

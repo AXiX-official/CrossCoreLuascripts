@@ -131,9 +131,8 @@ function this:UpdateState()
     --输入完成
     if(nextSkillFightAction ~= nil)then
         local skillDatas = self.fightAction:GetData().skillDatas;
+        self:ApplyComplete();   
 
-        self:ApplyComplete();
-        
         if(skillDatas and not nextSkillFightAction:IsPlayerSkill())then
             EventMgr.Dispatch(EventType.Fight_Action_Turn_Add1); 
         end
@@ -143,6 +142,14 @@ function this:UpdateState()
     local endFightAction = FightActionMgr:FindNextByType(FightActionType.FightEnd);
     --输入完成
     if(endFightAction ~= nil)then
+        self:ApplyComplete();
+        --EventMgr.Dispatch(EventType.Fight_Action_Turn_Add1);
+        return false;
+    end
+
+    local skipFightAction = FightActionMgr:FindNextByType(FightActionType.Skip);
+    --跳过
+    if(skipFightAction ~= nil)then
         self:ApplyComplete();
         --EventMgr.Dispatch(EventType.Fight_Action_Turn_Add1);
         return false;
@@ -488,6 +495,9 @@ function this:DownInput(x,y,z,inputState)
     FuncUtil:Call(self.HandleDownInput,self,1000,x,y,z);
 end
 function this:HandleDownInput(x,y,z)
+    if(g_FightMgr and IsPvpSceneType(g_FightMgr.type))then
+        return;
+    end
     if(not self.downTime)then
         return;
     end

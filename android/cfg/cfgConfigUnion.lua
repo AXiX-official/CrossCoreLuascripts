@@ -1,84 +1,81 @@
-local conf = {
-	["filename"] = 'p-配置表关联表.xlsx',
-	["sheetname"] = '配置表联合',
-	["types"] = {
-'int','string','string','string','table#3','int','string','string'
-},
-	["names"] = {
-'id','key','name','sUnionName','item','index','sCfgKey','sCfgName'
-},
-	["data"] = {
-{'1',	'1',	'奖励表',	'RewardInfo',	'',	'',	'',	''},
-{'1',	'2',	'',	'',	'',	'1',	'RewardInfo1',	'奖励表-常规'},
-{'1',	'3',	'',	'',	'',	'2',	'RewardInfo2',	'奖励表-抽卡'},
-{'1',	'4',	'',	'',	'',	'3',	'RewardInfo3',	'奖励表-关卡'},
-{'1',	'5',	'',	'',	'',	'4',	'RewardInfo4',	'奖励表-礼包'},
-{'1',	'6',	'',	'',	'',	'5',	'RewardInfo5',	'奖励表-兑换商店'},
-{'1',	'7',	'',	'',	'',	'6',	'RewardInfo6',	'奖励表-基地'},
-{'2',	'1',	'关卡表',	'MainLine',	'',	'',	'',	''},
-{'2',	'2',	'',	'',	'',	'1',	'MainLine1',	'主线关卡'},
-{'2',	'3',	'',	'',	'',	'2',	'MainLine2',	'副本关卡'},
-{'2',	'4',	'',	'',	'',	'3',	'MainLine3',	'支线关卡'},
-{'2',	'5',	'',	'',	'',	'4',	'MainLine4',	'教程关卡'},
-{'2',	'6',	'',	'',	'',	'5',	'MainLine5',	'爬塔关卡'},
-{'2',	'7',	'',	'',	'',	'6',	'MainLine6',	'团战系统关卡'},
-{'2',	'8',	'',	'',	'',	'7',	'MainLine7',	'剧情活动关卡'},
-{'2',	'9',	'',	'',	'',	'8',	'MainLine8',	'讨伐活动关卡'},
-{'2',	'10',	'',	'',	'',	'9',	'MainLine9',	'纯剧情关卡'},
-{'2',	'11',	'',	'',	'',	'10',	'MainLine10',	'异构空间关卡'},
-{'2',	'12',	'',	'',	'',	'11',	'MainLine11',	'试炼关卡'},
-{'2',	'13',	'',	'',	'',	'12',	'MainLine12',	'十二星宫关卡'},
-{'2',	'14',	'',	'',	'',	'13',	'MainLine13',	'乱序演习关卡'},
-{'2',	'15',	'',	'',	'',	'14',	'MainLine14',	'战力派遣关卡'},
-{'2',	'16',	'',	'',	'',	'15',	'MainLine15',	'角斗场关卡'},
-{'2',	'17',	'',	'',	'',	'16',	'MainLine16',	'限制肉鸽爬塔关卡'},
-{'2',	'18',	'',	'',	'',	'17',	'MainLine18',	'多队战斗'},
-{'2',	'19',	'',	'',	'',	'18',	'MainLine19',	'深塔计划'},
-{'3',	'1',	'物品表',	'ItemInfo',	'',	'',	'',	''},
-{'3',	'2',	'',	'',	'',	'1',	'ItemInfo1',	'物品集合'},
-{'3',	'3',	'',	'',	'',	'2',	'ItemInfo2',	'宿舍家具'},
-{'3',	'4',	'',	'',	'',	'3',	'ItemInfo3',	'芯片（单个）表'},
-{'3',	'5',	'',	'',	'',	'4',	'ItemInfo4',	'头像框'},
-{'3',	'6',	'',	'',	'',	'5',	'ItemInfo5',	'头像'},
-{'3',	'7',	'',	'',	'',	'6',	'ItemInfo6',	'宠物相关'},
-{'3',	'8',	'',	'',	'',	'7',	'ItemInfo7',	'玩家称号'},
-{'3',	'9',	'',	'',	'',	'8',	'ItemInfo8',	'对战表情'},
-{'4',	'1',	'关卡分组表',	'DungeonGroup',	'',	'',	'',	''},
-{'4',	'2',	'',	'',	'',	'1',	'DungeonGroup1',	'主线关卡分组'},
-{'4',	'3',	'',	'',	'',	'2',	'DungeonGroup2',	'剧情关卡分组'},
-{'4',	'4',	'',	'',	'',	'3',	'DungeonGroup3',	'角色关卡分组'},
-{'4',	'5',	'',	'',	'',	'4',	'DungeonGroup4',	'讨伐活动分组'},
-{'4',	'6',	'',	'',	'',	'5',	'DungeonGroup5',	'试炼活动分组'},
-{'4',	'7',	'',	'',	'',	'6',	'DungeonGroup6',	'十二星宫分组'},
-{'4',	'8',	'',	'',	'',	'7',	'DungeonGroup7',	'乱序演习分组'},
-{'4',	'9',	'',	'',	'',	'8',	'DungeonGroup8',	'战力派遣分组'},
-{'4',	'10',	'',	'',	'',	'9',	'DungeonGroup9',	'肉鸽爬塔分组'},
-{'4',	'11',	'',	'',	'',	'10',	'DungeonGroup11',	'多队战斗分组'},
-{'4',	'12',	'',	'',	'',	'11',	'DungeonGroup12',	'深塔计划分组'},
-{'5',	'1',	'剧情表',	'TalkInfo',	'',	'',	'',	''},
-{'5',	'2',	'',	'',	'',	'1',	'TalkInfo1',	'主线剧情'},
-{'5',	'3',	'',	'',	'',	'2',	'TalkInfo2',	'好感剧情'},
-{'5',	'4',	'',	'',	'',	'3',	'TalkInfo3',	'活动剧情'},
-{'5',	'5',	'',	'',	'',	'4',	'TalkInfo4',	'特殊剧情'},
-{'6',	'1',	'章节表',	'Section',	'',	'',	'',	''},
-{'6',	'2',	'',	'',	'',	'1',	'Section1',	'主线'},
-{'6',	'3',	'',	'',	'',	'2',	'Section2',	'材料'},
-{'6',	'4',	'',	'',	'',	'3',	'Section3',	'普通活动'},
-{'6',	'5',	'',	'',	'',	'4',	'Section4',	'教程'},
-{'6',	'6',	'',	'',	'',	'5',	'Section5',	'角色剧情活动'},
-{'6',	'7',	'',	'',	'',	'6',	'Section6',	'试炼'},
-{'7',	'1',	'敏感词表',	'CfgSensitiveWord',	'',	'',	'',	''},
-{'7',	'2',	'',	'',	'',	'1',	'CfgSensitiveWord1',	'敏感字1'},
-{'7',	'3',	'',	'',	'',	'2',	'CfgSensitiveWord2',	'敏感字2'},
-{'7',	'4',	'',	'',	'',	'3',	'CfgSensitiveWord3',	'敏感字3'},
-{'8',	'1',	'声音表',	'Sound',	'',	'',	'',	''},
-{'8',	'2',	'',	'',	'',	'1',	'Sound1',	'角色普通语音'},
-{'8',	'3',	'',	'',	'',	'2',	'Sound2',	'角色皮肤语音'},
-{'8',	'4',	'',	'',	'',	'3',	'Sound3',	'插图语音'},
-{'9',	'1',	'多人插图表',	'CfgArchiveMultiPicture',	'',	'',	'',	''},
-{'9',	'2',	'',	'',	'',	'1',	'CfgArchiveMultiPicture1',	'多人插图'},
-{'9',	'3',	'',	'',	'',	'2',	'CfgArchiveMultiPicture2',	'贴纸半身像'},
-},
+_G["ConfigUnion"]={{["key"]="1",["sUnionName"]="RewardInfo",["id"]=1,["item"]={{["sCfgName"]="奖励表-常规",["index"]=1,["sCfgKey"]="RewardInfo1"}
+,{["sCfgName"]="奖励表-抽卡",["index"]=2,["sCfgKey"]="RewardInfo2"}
+,{["sCfgName"]="奖励表-关卡",["index"]=3,["sCfgKey"]="RewardInfo3"}
+,{["sCfgName"]="奖励表-礼包",["index"]=4,["sCfgKey"]="RewardInfo4"}
+,{["sCfgName"]="奖励表-兑换商店",["index"]=5,["sCfgKey"]="RewardInfo5"}
+,{["sCfgName"]="奖励表-基地",["index"]=6,["sCfgKey"]="RewardInfo6"}
 }
---cfgConfigUnion = conf
-return conf
+,["name"]="奖励表"}
+,{["key"]="1",["sUnionName"]="MainLine",["id"]=2,["item"]={{["sCfgName"]="主线关卡",["index"]=1,["sCfgKey"]="MainLine1"}
+,{["sCfgName"]="副本关卡",["index"]=2,["sCfgKey"]="MainLine2"}
+,{["sCfgName"]="支线关卡",["index"]=3,["sCfgKey"]="MainLine3"}
+,{["sCfgName"]="教程关卡",["index"]=4,["sCfgKey"]="MainLine4"}
+,{["sCfgName"]="爬塔关卡",["index"]=5,["sCfgKey"]="MainLine5"}
+,{["sCfgName"]="团战系统关卡",["index"]=6,["sCfgKey"]="MainLine6"}
+,{["sCfgName"]="剧情活动关卡",["index"]=7,["sCfgKey"]="MainLine7"}
+,{["sCfgName"]="讨伐活动关卡",["index"]=8,["sCfgKey"]="MainLine8"}
+,{["sCfgName"]="纯剧情关卡",["index"]=9,["sCfgKey"]="MainLine9"}
+,{["sCfgName"]="异构空间关卡",["index"]=10,["sCfgKey"]="MainLine10"}
+,{["sCfgName"]="试炼关卡",["index"]=11,["sCfgKey"]="MainLine11"}
+,{["sCfgName"]="十二星宫关卡",["index"]=12,["sCfgKey"]="MainLine12"}
+,{["sCfgName"]="乱序演习关卡",["index"]=13,["sCfgKey"]="MainLine13"}
+,{["sCfgName"]="战力派遣关卡",["index"]=14,["sCfgKey"]="MainLine14"}
+,{["sCfgName"]="角斗场关卡",["index"]=15,["sCfgKey"]="MainLine15"}
+,{["sCfgName"]="限制肉鸽爬塔关卡",["index"]=16,["sCfgKey"]="MainLine16"}
+,{["sCfgName"]="多队战斗",["index"]=17,["sCfgKey"]="MainLine18"}
+,{["sCfgName"]="深塔计划",["index"]=18,["sCfgKey"]="MainLine19"}
+}
+,["name"]="关卡表"}
+,{["key"]="1",["sUnionName"]="ItemInfo",["id"]=3,["item"]={{["sCfgName"]="物品集合",["index"]=1,["sCfgKey"]="ItemInfo1"}
+,{["sCfgName"]="宿舍家具",["index"]=2,["sCfgKey"]="ItemInfo2"}
+,{["sCfgName"]="芯片（单个）表",["index"]=3,["sCfgKey"]="ItemInfo3"}
+,{["sCfgName"]="头像框",["index"]=4,["sCfgKey"]="ItemInfo4"}
+,{["sCfgName"]="头像",["index"]=5,["sCfgKey"]="ItemInfo5"}
+,{["sCfgName"]="宠物相关",["index"]=6,["sCfgKey"]="ItemInfo6"}
+,{["sCfgName"]="玩家称号",["index"]=7,["sCfgKey"]="ItemInfo7"}
+,{["sCfgName"]="对战表情",["index"]=8,["sCfgKey"]="ItemInfo8"}
+}
+,["name"]="物品表"}
+,{["key"]="1",["sUnionName"]="DungeonGroup",["id"]=4,["item"]={{["sCfgName"]="主线关卡分组",["index"]=1,["sCfgKey"]="DungeonGroup1"}
+,{["sCfgName"]="剧情关卡分组",["index"]=2,["sCfgKey"]="DungeonGroup2"}
+,{["sCfgName"]="角色关卡分组",["index"]=3,["sCfgKey"]="DungeonGroup3"}
+,{["sCfgName"]="讨伐活动分组",["index"]=4,["sCfgKey"]="DungeonGroup4"}
+,{["sCfgName"]="试炼活动分组",["index"]=5,["sCfgKey"]="DungeonGroup5"}
+,{["sCfgName"]="十二星宫分组",["index"]=6,["sCfgKey"]="DungeonGroup6"}
+,{["sCfgName"]="乱序演习分组",["index"]=7,["sCfgKey"]="DungeonGroup7"}
+,{["sCfgName"]="战力派遣分组",["index"]=8,["sCfgKey"]="DungeonGroup8"}
+,{["sCfgName"]="肉鸽爬塔分组",["index"]=9,["sCfgKey"]="DungeonGroup9"}
+,{["sCfgName"]="多队战斗分组",["index"]=10,["sCfgKey"]="DungeonGroup11"}
+,{["sCfgName"]="深塔计划分组",["index"]=11,["sCfgKey"]="DungeonGroup12"}
+}
+,["name"]="关卡分组表"}
+,{["key"]="1",["sUnionName"]="TalkInfo",["id"]=5,["item"]={{["sCfgName"]="主线剧情",["index"]=1,["sCfgKey"]="TalkInfo1"}
+,{["sCfgName"]="好感剧情",["index"]=2,["sCfgKey"]="TalkInfo2"}
+,{["sCfgName"]="活动剧情",["index"]=3,["sCfgKey"]="TalkInfo3"}
+,{["sCfgName"]="特殊剧情",["index"]=4,["sCfgKey"]="TalkInfo4"}
+}
+,["name"]="剧情表"}
+,{["key"]="1",["sUnionName"]="Section",["id"]=6,["item"]={{["sCfgName"]="主线",["index"]=1,["sCfgKey"]="Section1"}
+,{["sCfgName"]="材料",["index"]=2,["sCfgKey"]="Section2"}
+,{["sCfgName"]="普通活动",["index"]=3,["sCfgKey"]="Section3"}
+,{["sCfgName"]="教程",["index"]=4,["sCfgKey"]="Section4"}
+,{["sCfgName"]="角色剧情活动",["index"]=5,["sCfgKey"]="Section5"}
+,{["sCfgName"]="试炼",["index"]=6,["sCfgKey"]="Section6"}
+}
+,["name"]="章节表"}
+,{["key"]="1",["sUnionName"]="CfgSensitiveWord",["id"]=7,["item"]={{["sCfgName"]="敏感字1",["index"]=1,["sCfgKey"]="CfgSensitiveWord1"}
+,{["sCfgName"]="敏感字2",["index"]=2,["sCfgKey"]="CfgSensitiveWord2"}
+,{["sCfgName"]="敏感字3",["index"]=3,["sCfgKey"]="CfgSensitiveWord3"}
+}
+,["name"]="敏感词表"}
+,{["key"]="1",["sUnionName"]="Sound",["id"]=8,["item"]={{["sCfgName"]="角色普通语音",["index"]=1,["sCfgKey"]="Sound1"}
+,{["sCfgName"]="角色皮肤语音",["index"]=2,["sCfgKey"]="Sound2"}
+,{["sCfgName"]="插图语音",["index"]=3,["sCfgKey"]="Sound3"}
+}
+,["name"]="声音表"}
+,{["key"]="1",["sUnionName"]="CfgArchiveMultiPicture",["id"]=9,["item"]={{["sCfgName"]="多人插图",["index"]=1,["sCfgKey"]="CfgArchiveMultiPicture1"}
+,{["sCfgName"]="贴纸半身像",["index"]=2,["sCfgKey"]="CfgArchiveMultiPicture2"}
+}
+,["name"]="多人插图表"}
+}
+

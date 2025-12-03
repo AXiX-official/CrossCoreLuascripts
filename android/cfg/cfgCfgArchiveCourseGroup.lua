@@ -1,21 +1,9 @@
-local conf = {
-	["filename"] = 't-图鉴表.xlsx',
-	["sheetname"] = '教程分组',
-	["types"] = {
-'int','string','string','string','int'
-},
-	["names"] = {
-'id','key','sName','icon','languageID'
-},
-	["data"] = {
-{'1',	'1',	'战斗',	'Tech_05',	'20000'},
-{'2',	'2',	'队员',	'Tech_06',	'29030'},
-{'3',	'3',	'冷却',	'Tech_03',	'2007'},
-{'4',	'4',	'探索等级',	'Tech_07',	'29031'},
-{'5',	'5',	'基建',	'Tech_04',	'2003'},
-{'6',	'6',	'编队',	'Tech_08',	'2006'},
-{'7',	'7',	'地图',	'Tech_09',	'29057'},
-},
+_G["CfgArchiveCourseGroup"]={{["key"]="1",["id"]=1,["sName"]="战斗",["icon"]="Tech_05",["languageID"]=20000}
+,{["key"]="2",["id"]=2,["sName"]="队员",["icon"]="Tech_06",["languageID"]=29030}
+,{["key"]="3",["id"]=3,["sName"]="冷却",["icon"]="Tech_03",["languageID"]=2007}
+,{["key"]="4",["id"]=4,["sName"]="探索等级",["icon"]="Tech_07",["languageID"]=29031}
+,{["key"]="5",["id"]=5,["sName"]="基建",["icon"]="Tech_04",["languageID"]=2003}
+,{["key"]="6",["id"]=6,["sName"]="编队",["icon"]="Tech_08",["languageID"]=2006}
+,{["key"]="7",["id"]=7,["sName"]="地图",["icon"]="Tech_09",["languageID"]=29057}
 }
---cfgCfgArchiveCourseGroup = conf
-return conf
+

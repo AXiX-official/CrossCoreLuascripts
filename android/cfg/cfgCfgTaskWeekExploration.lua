@@ -1,21 +1,30 @@
-local conf = {
-	["filename"] = 'r-任务配置表.xlsx',
-	["sheetname"] = '每周勘测任务',
-	["types"] = {
-'int','string','int','string','string','string','int','int','int','int','string','string','int','int','int[]','json','int'
-},
-	["names"] = {
-'id','key','type','sName','sDescription','icon','nOpenLevel','nCloseLevel','nOppssId','nPreTaskId','sOpenTime','sCloseTime','nRestType','nTransferPath','aFinishIds','jAwardId','nIsHide'
-},
-	["data"] = {
-{'49101',	'',	'2',	'通关跃升行动关卡10次',	'通关跃升行动关卡10次',	'1',	'',	'',	'',	'',	'',	'',	'2',	'10401',	'49101',	'[[10043,800,2]]',	'2'},
-{'49102',	'',	'2',	'通关芯片嵌合关卡10次',	'通关芯片嵌合关卡10次',	'1',	'',	'',	'',	'',	'',	'',	'2',	'10501',	'49102',	'[[10043,800,2]]',	'2'},
-{'49103',	'',	'2',	'通关碎星虚影5次',	'通关碎星虚影5次',	'1',	'',	'',	'',	'',	'',	'',	'2',	'15001',	'49103',	'[[10043,800,2]]',	'2'},
-{'49104',	'',	'2',	'镜像竞技胜利10次',	'镜像竞技胜利10次',	'1',	'',	'',	'',	'',	'',	'',	'2',	'30003',	'49104',	'[[10043,800,2]]',	'2'},
-{'49105',	'',	'2',	'芯片重塑3次',	'芯片重塑3次',	'1',	'',	'',	'',	'',	'',	'',	'2',	'150004',	'49105',	'[[10043,800,2]]',	'2'},
-{'49106',	'',	'2',	'累计消耗1000燃料',	'累计消耗1000燃料',	'1',	'',	'',	'',	'',	'',	'',	'2',	'30001',	'49106',	'[[10043,800,2]]',	'2'},
-{'49107',	'',	'2',	'累计消耗星币500000',	'累计消耗星币500000',	'1',	'',	'',	'',	'',	'',	'',	'2',	'140006',	'49107',	'[[10043,800,2]]',	'2'},
-},
+_G["CfgTaskWeekExploration"]={[49104]={["type"]=2,["sDescription"]="镜像竞技胜利10次",["nRestType"]=2,["jAwardId"]={{10043,800,2}
 }
---cfgCfgTaskWeekExploration = conf
-return conf
+,["aFinishIds"]={49104}
+,["key"]=49104,["nIsHide"]=2,["nTransferPath"]=30003,["sName"]="镜像竞技胜利10次",["icon"]="1",["id"]=49104}
+,[49106]={["type"]=2,["sDescription"]="累计消耗1000燃料",["nRestType"]=2,["jAwardId"]={{10043,800,2}
+}
+,["aFinishIds"]={49106}
+,["key"]=49106,["nIsHide"]=2,["nTransferPath"]=30001,["sName"]="累计消耗1000燃料",["icon"]="1",["id"]=49106}
+,[49101]={["type"]=2,["sDescription"]="通关跃升行动关卡10次",["nRestType"]=2,["jAwardId"]={{10043,800,2}
+}
+,["aFinishIds"]={49101}
+,["key"]=49101,["nIsHide"]=2,["nTransferPath"]=10401,["sName"]="通关跃升行动关卡10次",["icon"]="1",["id"]=49101}
+,[49103]={["type"]=2,["sDescription"]="通关碎星虚影5次",["nRestType"]=2,["jAwardId"]={{10043,800,2}
+}
+,["aFinishIds"]={49103}
+,["key"]=49103,["nIsHide"]=2,["nTransferPath"]=15001,["sName"]="通关碎星虚影5次",["icon"]="1",["id"]=49103}
+,[49105]={["type"]=2,["sDescription"]="芯片重塑3次",["nRestType"]=2,["jAwardId"]={{10043,800,2}
+}
+,["aFinishIds"]={49105}
+,["key"]=49105,["nIsHide"]=2,["nTransferPath"]=150004,["sName"]="芯片重塑3次",["icon"]="1",["id"]=49105}
+,[49107]={["type"]=2,["sDescription"]="累计消耗星币500000",["nRestType"]=2,["jAwardId"]={{10043,800,2}
+}
+,["aFinishIds"]={49107}
+,["key"]=49107,["nIsHide"]=2,["nTransferPath"]=140006,["sName"]="累计消耗星币500000",["icon"]="1",["id"]=49107}
+,[49102]={["type"]=2,["sDescription"]="通关芯片嵌合关卡10次",["nRestType"]=2,["jAwardId"]={{10043,800,2}
+}
+,["aFinishIds"]={49102}
+,["key"]=49102,["nIsHide"]=2,["nTransferPath"]=10501,["sName"]="通关芯片嵌合关卡10次",["icon"]="1",["id"]=49102}
+}
+

@@ -14,6 +14,21 @@ function Skill603200304:DoSkill(caster, target, data)
 end
 -- 行动结束
 function Skill603200304:OnActionOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
 	-- 603200302
 	local targets = SkillFilter:MinPercentHp(self, caster, target, 1,"hp",1)
 	for i,target in ipairs(targets) do

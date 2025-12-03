@@ -1,88 +1,217 @@
-local conf = {
-	["filename"] = 'x-新世界boss表.xlsx',
-	["sheetname"] = '世界boss',
-	["types"] = {
-'int','string','int','int','int[]','int[]','int','int','int','int','int','int','string','string','string','string','string'
-},
-	["names"] = {
-'id','key','dupId','nBossHpLevel','skillId','buffId','challengeTimes','rankType','challengeRwdGroupId','killRwdGroupId','dropHpGroupId','rankRwdGroupId','nBeginTime','nEndTime','spriteWay','BossPreview','BossDeathTime'
-},
-	["data"] = {
-{'1001',	'',	'11005',	'1015',	'980101101,980101301',	'1,2',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2024/11/1 03:00:00',	'2024/11/21 3:00:00',	'BaoNue',	'boss_01',	'2024/11/18 21:24:00'},
-{'1002',	'',	'11005',	'1015',	'980101201,980101401',	'1',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2024/12/1 03:00:00',	'2024/12/21 3:00:00',	'BaoNue',	'boss_01',	'2024/12/18 21:24:00'},
-{'1003',	'',	'11005',	'1015',	'980101301,980101501',	'2',	'3',	'10004',	'10001',	'10002',	'10001',	'10001',	'2025/1/1 03:00:00',	'2025/1/21 3:00:00',	'BaoNue',	'boss_01',	'2025/1/18 21:24:00'},
-{'1004',	'',	'11005',	'1015',	'980101101,980101301',	'1,2',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/2/1 03:00:00',	'2025/2/21 3:00:00',	'BaoNue',	'boss_01',	'2025/2/18 21:24:00'},
-{'1005',	'',	'11005',	'1015',	'980101201,980101401',	'1',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/3/1 03:00:00',	'2025/3/21 3:00:00',	'BaoNue',	'boss_01',	'2025/3/18 21:24:00'},
-{'1006',	'',	'11005',	'1015',	'980101301,980101501',	'2',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/4/1 03:00:00',	'2025/4/21 3:00:00',	'BaoNue',	'boss_01',	'2025/4/18 21:24:00'},
-{'1007',	'',	'11005',	'1015',	'980101101,980101301',	'1,2',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/5/1 03:00:00',	'2025/5/21 3:00:00',	'BaoNue',	'boss_01',	'2025/5/18 21:24:00'},
-{'1008',	'',	'11005',	'1015',	'980101201,980101401',	'1',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/6/1 03:00:00',	'2025/6/21 3:00:00',	'BaoNue',	'boss_01',	'2025/6/18 21:24:00'},
-{'1009',	'',	'11005',	'1015',	'980101301,980101501',	'2',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/7/1 03:00:00',	'2025/7/21 3:00:00',	'BaoNue',	'boss_01',	'2025/7/18 21:24:00'},
-{'1010',	'',	'11005',	'1015',	'980101101,980101301',	'1,2',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/8/1 03:00:00',	'2025/8/21 3:00:00',	'BaoNue',	'boss_01',	'2025/8/18 21:24:00'},
-{'1011',	'',	'11005',	'1015',	'980101201,980101401',	'1',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/9/1 03:00:00',	'2025/9/21 3:00:00',	'BaoNue',	'boss_01',	'2025/9/18 21:24:00'},
-{'1012',	'',	'11005',	'1015',	'980101301,980101501',	'',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/10/1 03:00:00',	'2025/10/21 3:00:00',	'BaoNue',	'boss_01',	'2025/10/18 21:24:00'},
-{'1013',	'',	'11005',	'1015',	'980101501,980101701',	'',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/11/1 03:00:00',	'2025/11/21 3:00:00',	'BaoNue',	'boss_01',	'2025/11/18 21:24:00'},
-{'1014',	'',	'11005',	'1015',	'980101501,980101701',	'3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2025/12/1 03:00:00',	'2025/12/21 3:00:00',	'BaoNue',	'boss_01',	'2025/12/18 21:24:00'},
-{'1015',	'',	'11005',	'1015',	'980101501,980101701',	'',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/1/1 03:00:00',	'2026/1/21 3:00:00',	'BaoNue',	'boss_01',	'2026/1/18 21:24:00'},
-{'1016',	'',	'11005',	'1015',	'980101501,980101701',	'',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/2/1 03:00:00',	'2026/2/21 3:00:00',	'BaoNue',	'boss_01',	'2026/2/18 21:24:00'},
-{'1017',	'',	'11005',	'1015',	'980101501,980101701',	'',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/3/1 03:00:00',	'2026/3/21 3:00:00',	'BaoNue',	'boss_01',	'2026/3/18 21:24:00'},
-{'1018',	'',	'11005',	'1015',	'980101501,980101701',	'',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/4/1 03:00:00',	'2026/4/21 3:00:00',	'BaoNue',	'boss_01',	'2026/4/18 21:24:00'},
-{'1019',	'',	'11005',	'1015',	'980101501,980101701',	'',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/5/1 03:00:00',	'2026/5/21 3:00:00',	'BaoNue',	'boss_01',	'2026/5/18 21:24:00'},
-{'1020',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/6/1 03:00:00',	'2026/6/21 3:00:00',	'BaoNue',	'boss_01',	'2026/6/18 21:24:00'},
-{'1021',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/7/1 03:00:00',	'2026/7/21 3:00:00',	'BaoNue',	'boss_01',	'2026/7/18 21:24:00'},
-{'1022',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/8/1 03:00:00',	'2026/8/21 3:00:00',	'BaoNue',	'boss_01',	'2026/8/18 21:24:00'},
-{'1023',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/9/1 03:00:00',	'2026/9/21 3:00:00',	'BaoNue',	'boss_01',	'2026/9/18 21:24:00'},
-{'1024',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/10/1 03:00:00',	'2026/10/21 3:00:00',	'BaoNue',	'boss_01',	'2026/10/18 21:24:00'},
-{'1025',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/11/1 03:00:00',	'2026/11/21 3:00:00',	'BaoNue',	'boss_01',	'2026/11/18 21:24:00'},
-{'1026',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2026/12/1 03:00:00',	'2026/12/21 3:00:00',	'BaoNue',	'boss_01',	'2026/12/18 21:24:00'},
-{'1027',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/1/1 03:00:00',	'2027/1/21 3:00:00',	'BaoNue',	'boss_01',	'2027/1/18 21:24:00'},
-{'1028',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/2/1 03:00:00',	'2027/2/21 3:00:00',	'BaoNue',	'boss_01',	'2027/2/18 21:24:00'},
-{'1029',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/3/1 03:00:00',	'2027/3/21 3:00:00',	'BaoNue',	'boss_01',	'2027/3/18 21:24:00'},
-{'1030',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/4/1 03:00:00',	'2027/4/21 3:00:00',	'BaoNue',	'boss_01',	'2027/4/18 21:24:00'},
-{'1031',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/5/1 03:00:00',	'2027/5/21 3:00:00',	'BaoNue',	'boss_01',	'2027/5/18 21:24:00'},
-{'1032',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/6/1 03:00:00',	'2027/6/21 3:00:00',	'BaoNue',	'boss_01',	'2027/6/18 21:24:00'},
-{'1033',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/7/1 03:00:00',	'2027/7/21 3:00:00',	'BaoNue',	'boss_01',	'2027/7/18 21:24:00'},
-{'1034',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/8/1 03:00:00',	'2027/8/21 3:00:00',	'BaoNue',	'boss_01',	'2027/8/18 21:24:00'},
-{'1035',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/9/1 03:00:00',	'2027/9/21 3:00:00',	'BaoNue',	'boss_01',	'2027/9/18 21:24:00'},
-{'1036',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/10/1 03:00:00',	'2027/10/21 3:00:00',	'BaoNue',	'boss_01',	'2027/10/18 21:24:00'},
-{'1037',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/11/1 03:00:00',	'2027/11/21 3:00:00',	'BaoNue',	'boss_01',	'2027/11/18 21:24:00'},
-{'1038',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2027/12/1 03:00:00',	'2027/12/21 3:00:00',	'BaoNue',	'boss_01',	'2027/12/18 21:24:00'},
-{'1039',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/1/1 03:00:00',	'2028/1/21 3:00:00',	'BaoNue',	'boss_01',	'2028/1/18 21:24:00'},
-{'1040',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/2/1 03:00:00',	'2028/2/21 3:00:00',	'BaoNue',	'boss_01',	'2028/2/18 21:24:00'},
-{'1041',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/3/1 03:00:00',	'2028/3/21 3:00:00',	'BaoNue',	'boss_01',	'2028/3/18 21:24:00'},
-{'1042',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/4/1 03:00:00',	'2028/4/21 3:00:00',	'BaoNue',	'boss_01',	'2028/4/18 21:24:00'},
-{'1043',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/5/1 03:00:00',	'2028/5/21 3:00:00',	'BaoNue',	'boss_01',	'2028/5/18 21:24:00'},
-{'1044',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/6/1 03:00:00',	'2028/6/21 3:00:00',	'BaoNue',	'boss_01',	'2028/6/18 21:24:00'},
-{'1045',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/7/1 03:00:00',	'2028/7/21 3:00:00',	'BaoNue',	'boss_01',	'2028/7/18 21:24:00'},
-{'1046',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/8/1 03:00:00',	'2028/8/21 3:00:00',	'BaoNue',	'boss_01',	'2028/8/18 21:24:00'},
-{'1047',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/9/1 03:00:00',	'2028/9/21 3:00:00',	'BaoNue',	'boss_01',	'2028/9/18 21:24:00'},
-{'1048',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/10/1 03:00:00',	'2028/10/21 3:00:00',	'BaoNue',	'boss_01',	'2028/10/18 21:24:00'},
-{'1049',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/11/1 03:00:00',	'2028/11/21 3:00:00',	'BaoNue',	'boss_01',	'2028/11/18 21:24:00'},
-{'1050',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2028/12/1 03:00:00',	'2028/12/21 3:00:00',	'BaoNue',	'boss_01',	'2028/12/18 21:24:00'},
-{'1051',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/1/1 03:00:00',	'2029/1/21 3:00:00',	'BaoNue',	'boss_01',	'2029/1/18 21:24:00'},
-{'1052',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/2/1 03:00:00',	'2029/2/21 3:00:00',	'BaoNue',	'boss_01',	'2029/2/18 21:24:00'},
-{'1053',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/3/1 03:00:00',	'2029/3/21 3:00:00',	'BaoNue',	'boss_01',	'2029/3/18 21:24:00'},
-{'1054',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/4/1 03:00:00',	'2029/4/21 3:00:00',	'BaoNue',	'boss_01',	'2029/4/18 21:24:00'},
-{'1055',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/5/1 03:00:00',	'2029/5/21 3:00:00',	'BaoNue',	'boss_01',	'2029/5/18 21:24:00'},
-{'1056',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/6/1 03:00:00',	'2029/6/21 3:00:00',	'BaoNue',	'boss_01',	'2029/6/18 21:24:00'},
-{'1057',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/7/1 03:00:00',	'2029/7/21 3:00:00',	'BaoNue',	'boss_01',	'2029/7/18 21:24:00'},
-{'1058',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/8/1 03:00:00',	'2029/8/21 3:00:00',	'BaoNue',	'boss_01',	'2029/8/18 21:24:00'},
-{'1059',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/9/1 03:00:00',	'2029/9/21 3:00:00',	'BaoNue',	'boss_01',	'2029/9/18 21:24:00'},
-{'1060',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/10/1 03:00:00',	'2029/10/21 3:00:00',	'BaoNue',	'boss_01',	'2029/10/18 21:24:00'},
-{'1061',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/11/1 03:00:00',	'2029/11/21 3:00:00',	'BaoNue',	'boss_01',	'2029/11/18 21:24:00'},
-{'1062',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2029/12/1 03:00:00',	'2029/12/21 3:00:00',	'BaoNue',	'boss_01',	'2029/12/18 21:24:00'},
-{'1063',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/1/1 03:00:00',	'2030/1/21 3:00:00',	'BaoNue',	'boss_01',	'2030/1/18 21:24:00'},
-{'1064',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/2/1 03:00:00',	'2030/2/21 3:00:00',	'BaoNue',	'boss_01',	'2030/2/18 21:24:00'},
-{'1065',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/3/1 03:00:00',	'2030/3/21 3:00:00',	'BaoNue',	'boss_01',	'2030/3/18 21:24:00'},
-{'1066',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/4/1 03:00:00',	'2030/4/21 3:00:00',	'BaoNue',	'boss_01',	'2030/4/18 21:24:00'},
-{'1067',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/5/1 03:00:00',	'2030/5/21 3:00:00',	'BaoNue',	'boss_01',	'2030/5/18 21:24:00'},
-{'1068',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/6/1 03:00:00',	'2030/6/21 3:00:00',	'BaoNue',	'boss_01',	'2030/6/18 21:24:00'},
-{'1069',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/7/1 03:00:00',	'2030/7/21 3:00:00',	'BaoNue',	'boss_01',	'2030/7/18 21:24:00'},
-{'1070',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/8/1 03:00:00',	'2030/8/21 3:00:00',	'BaoNue',	'boss_01',	'2030/8/18 21:24:00'},
-{'1071',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/9/1 03:00:00',	'2030/9/21 3:00:00',	'BaoNue',	'boss_01',	'2030/9/18 21:24:00'},
-{'1072',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/10/1 03:00:00',	'2030/10/21 3:00:00',	'BaoNue',	'boss_01',	'2030/10/18 21:24:00'},
-{'1073',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/11/1 03:00:00',	'2030/11/21 3:00:00',	'BaoNue',	'boss_01',	'2030/11/18 21:24:00'},
-{'1074',	'',	'11005',	'1015',	'980101501,980101701',	'1,3',	'3',	'10004',	'10001',	'10001',	'10001',	'10001',	'2030/12/1 03:00:00',	'2030/12/21 3:00:00',	'BaoNue',	'boss_01',	'2030/12/18 21:24:00'},
-},
+_G["cfgGlobalBoss"]={[1031]={["dropHpGroupId"]=10001,["nBeginTime"]=1809111600,["BossDeathTime"]=1810646640,["key"]=1031,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1031,["buffId"]={1,3}
+,["nEndTime"]=1810839600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1047]={["dropHpGroupId"]=10001,["nBeginTime"]=1851361200,["BossDeathTime"]=1852896240,["key"]=1047,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1047,["buffId"]={1,3}
+,["nEndTime"]=1853089200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1063]={["dropHpGroupId"]=10001,["nBeginTime"]=1893438000,["BossDeathTime"]=1894973040,["key"]=1063,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1063,["buffId"]={1,3}
+,["nEndTime"]=1895166000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1004]={["dropHpGroupId"]=10001,["nBeginTime"]=1738350000,["BossDeathTime"]=1739885040,["key"]=1004,["dupId"]=11005,["skillId"]={980101101,980101301}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1004,["buffId"]={1,2}
+,["nEndTime"]=1740078000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1012]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1760793840,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1012,["BossPreview"]="boss_01",["nEndTime"]=1760986800,["nBeginTime"]=1759258800,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1012,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101301,980101501}
 }
---cfgcfgGlobalBoss = conf
-return conf
+,[1020]={["dropHpGroupId"]=10001,["nBeginTime"]=1780254000,["BossDeathTime"]=1781789040,["key"]=1020,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1020,["buffId"]={1,3}
+,["nEndTime"]=1781982000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1032]={["dropHpGroupId"]=10001,["nBeginTime"]=1811790000,["BossDeathTime"]=1813325040,["key"]=1032,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1032,["buffId"]={1,3}
+,["nEndTime"]=1813518000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1048]={["dropHpGroupId"]=10001,["nBeginTime"]=1853953200,["BossDeathTime"]=1855488240,["key"]=1048,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1048,["buffId"]={1,3}
+,["nEndTime"]=1855681200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1064]={["dropHpGroupId"]=10001,["nBeginTime"]=1896116400,["BossDeathTime"]=1897651440,["key"]=1064,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1064,["buffId"]={1,3}
+,["nEndTime"]=1897844400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1033]={["dropHpGroupId"]=10001,["nBeginTime"]=1814382000,["BossDeathTime"]=1815917040,["key"]=1033,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1033,["buffId"]={1,3}
+,["nEndTime"]=1816110000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1049]={["dropHpGroupId"]=10001,["nBeginTime"]=1856631600,["BossDeathTime"]=1858166640,["key"]=1049,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1049,["buffId"]={1,3}
+,["nEndTime"]=1858359600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1065]={["dropHpGroupId"]=10001,["nBeginTime"]=1898535600,["BossDeathTime"]=1900070640,["key"]=1065,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1065,["buffId"]={1,3}
+,["nEndTime"]=1900263600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1005]={["dropHpGroupId"]=10001,["nBeginTime"]=1740769200,["BossDeathTime"]=1742304240,["key"]=1005,["dupId"]=11005,["skillId"]={980101201,980101401}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1005,["buffId"]={1}
+,["nEndTime"]=1742497200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1013]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1763472240,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1013,["BossPreview"]="boss_01",["nEndTime"]=1763665200,["nBeginTime"]=1761937200,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1013,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
+}
+,[1021]={["dropHpGroupId"]=10001,["nBeginTime"]=1782846000,["BossDeathTime"]=1784381040,["key"]=1021,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1021,["buffId"]={1,3}
+,["nEndTime"]=1784574000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1034]={["dropHpGroupId"]=10001,["nBeginTime"]=1817060400,["BossDeathTime"]=1818595440,["key"]=1034,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1034,["buffId"]={1,3}
+,["nEndTime"]=1818788400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1050]={["dropHpGroupId"]=10001,["nBeginTime"]=1859223600,["BossDeathTime"]=1860758640,["key"]=1050,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1050,["buffId"]={1,3}
+,["nEndTime"]=1860951600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1066]={["dropHpGroupId"]=10001,["nBeginTime"]=1901214000,["BossDeathTime"]=1902749040,["key"]=1066,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1066,["buffId"]={1,3}
+,["nEndTime"]=1902942000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1035]={["dropHpGroupId"]=10001,["nBeginTime"]=1819738800,["BossDeathTime"]=1821273840,["key"]=1035,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1035,["buffId"]={1,3}
+,["nEndTime"]=1821466800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1051]={["dropHpGroupId"]=10001,["nBeginTime"]=1861902000,["BossDeathTime"]=1863437040,["key"]=1051,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1051,["buffId"]={1,3}
+,["nEndTime"]=1863630000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1067]={["dropHpGroupId"]=10001,["nBeginTime"]=1903806000,["BossDeathTime"]=1905341040,["key"]=1067,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1067,["buffId"]={1,3}
+,["nEndTime"]=1905534000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1006]={["dropHpGroupId"]=10001,["nBeginTime"]=1743447600,["BossDeathTime"]=1744982640,["key"]=1006,["dupId"]=11005,["skillId"]={980101301,980101501}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1006,["buffId"]={2}
+,["nEndTime"]=1745175600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1014]={["dropHpGroupId"]=10001,["nBeginTime"]=1764529200,["BossDeathTime"]=1766064240,["key"]=1014,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1014,["buffId"]={3}
+,["nEndTime"]=1766257200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1022]={["dropHpGroupId"]=10001,["nBeginTime"]=1785524400,["BossDeathTime"]=1787059440,["key"]=1022,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1022,["buffId"]={1,3}
+,["nEndTime"]=1787252400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1036]={["dropHpGroupId"]=10001,["nBeginTime"]=1822330800,["BossDeathTime"]=1823865840,["key"]=1036,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1036,["buffId"]={1,3}
+,["nEndTime"]=1824058800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1052]={["dropHpGroupId"]=10001,["nBeginTime"]=1864580400,["BossDeathTime"]=1866115440,["key"]=1052,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1052,["buffId"]={1,3}
+,["nEndTime"]=1866308400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1068]={["dropHpGroupId"]=10001,["nBeginTime"]=1906484400,["BossDeathTime"]=1908019440,["key"]=1068,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1068,["buffId"]={1,3}
+,["nEndTime"]=1908212400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1037]={["dropHpGroupId"]=10001,["nBeginTime"]=1825009200,["BossDeathTime"]=1826544240,["key"]=1037,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1037,["buffId"]={1,3}
+,["nEndTime"]=1826737200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1053]={["dropHpGroupId"]=10001,["nBeginTime"]=1866999600,["BossDeathTime"]=1868534640,["key"]=1053,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1053,["buffId"]={1,3}
+,["nEndTime"]=1868727600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1069]={["dropHpGroupId"]=10001,["nBeginTime"]=1909076400,["BossDeathTime"]=1910611440,["key"]=1069,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1069,["buffId"]={1,3}
+,["nEndTime"]=1910804400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1007]={["dropHpGroupId"]=10001,["nBeginTime"]=1746039600,["BossDeathTime"]=1747574640,["key"]=1007,["dupId"]=11005,["skillId"]={980101101,980101301}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1007,["buffId"]={1,2}
+,["nEndTime"]=1747767600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1015]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1768742640,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1015,["BossPreview"]="boss_01",["nEndTime"]=1768935600,["nBeginTime"]=1767207600,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1015,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
+}
+,[1023]={["dropHpGroupId"]=10001,["nBeginTime"]=1788202800,["BossDeathTime"]=1789737840,["key"]=1023,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1023,["buffId"]={1,3}
+,["nEndTime"]=1789930800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1038]={["dropHpGroupId"]=10001,["nBeginTime"]=1827601200,["BossDeathTime"]=1829136240,["key"]=1038,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1038,["buffId"]={1,3}
+,["nEndTime"]=1829329200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1054]={["dropHpGroupId"]=10001,["nBeginTime"]=1869678000,["BossDeathTime"]=1871213040,["key"]=1054,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1054,["buffId"]={1,3}
+,["nEndTime"]=1871406000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1070]={["dropHpGroupId"]=10001,["nBeginTime"]=1911754800,["BossDeathTime"]=1913289840,["key"]=1070,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1070,["buffId"]={1,3}
+,["nEndTime"]=1913482800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1039]={["dropHpGroupId"]=10001,["nBeginTime"]=1830279600,["BossDeathTime"]=1831814640,["key"]=1039,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1039,["buffId"]={1,3}
+,["nEndTime"]=1832007600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1055]={["dropHpGroupId"]=10001,["nBeginTime"]=1872270000,["BossDeathTime"]=1873805040,["key"]=1055,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1055,["buffId"]={1,3}
+,["nEndTime"]=1873998000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1071]={["dropHpGroupId"]=10001,["nBeginTime"]=1914433200,["BossDeathTime"]=1915968240,["key"]=1071,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1071,["buffId"]={1,3}
+,["nEndTime"]=1916161200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1008]={["dropHpGroupId"]=10001,["nBeginTime"]=1748718000,["BossDeathTime"]=1750253040,["key"]=1008,["dupId"]=11005,["skillId"]={980101201,980101401}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1008,["buffId"]={1}
+,["nEndTime"]=1750446000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1016]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1771421040,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1016,["BossPreview"]="boss_01",["nEndTime"]=1771614000,["nBeginTime"]=1769886000,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1016,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
+}
+,[1024]={["dropHpGroupId"]=10001,["nBeginTime"]=1790794800,["BossDeathTime"]=1792329840,["key"]=1024,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1024,["buffId"]={1,3}
+,["nEndTime"]=1792522800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1040]={["dropHpGroupId"]=10001,["nBeginTime"]=1832958000,["BossDeathTime"]=1834493040,["key"]=1040,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1040,["buffId"]={1,3}
+,["nEndTime"]=1834686000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1056]={["dropHpGroupId"]=10001,["nBeginTime"]=1874948400,["BossDeathTime"]=1876483440,["key"]=1056,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1056,["buffId"]={1,3}
+,["nEndTime"]=1876676400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1072]={["dropHpGroupId"]=10001,["nBeginTime"]=1917025200,["BossDeathTime"]=1918560240,["key"]=1072,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1072,["buffId"]={1,3}
+,["nEndTime"]=1918753200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1025]={["dropHpGroupId"]=10001,["nBeginTime"]=1793473200,["BossDeathTime"]=1795008240,["key"]=1025,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1025,["buffId"]={1,3}
+,["nEndTime"]=1795201200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1041]={["dropHpGroupId"]=10001,["nBeginTime"]=1835463600,["BossDeathTime"]=1836998640,["key"]=1041,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1041,["buffId"]={1,3}
+,["nEndTime"]=1837191600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1057]={["dropHpGroupId"]=10001,["nBeginTime"]=1877540400,["BossDeathTime"]=1879075440,["key"]=1057,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1057,["buffId"]={1,3}
+,["nEndTime"]=1879268400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1073]={["dropHpGroupId"]=10001,["nBeginTime"]=1919703600,["BossDeathTime"]=1921238640,["key"]=1073,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1073,["buffId"]={1,3}
+,["nEndTime"]=1921431600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1001]={["dropHpGroupId"]=10001,["nBeginTime"]=1730401200,["BossDeathTime"]=1731936240,["key"]=1001,["dupId"]=11005,["skillId"]={980101101,980101301}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1001,["buffId"]={1,2}
+,["nEndTime"]=1732129200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1009]={["dropHpGroupId"]=10001,["nBeginTime"]=1751310000,["BossDeathTime"]=1752845040,["key"]=1009,["dupId"]=11005,["skillId"]={980101301,980101501}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1009,["buffId"]={2}
+,["nEndTime"]=1753038000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1017]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1773840240,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1017,["BossPreview"]="boss_01",["nEndTime"]=1774033200,["nBeginTime"]=1772305200,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1017,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
+}
+,[1026]={["dropHpGroupId"]=10001,["nBeginTime"]=1796065200,["BossDeathTime"]=1797600240,["key"]=1026,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1026,["buffId"]={1,3}
+,["nEndTime"]=1797793200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1042]={["dropHpGroupId"]=10001,["nBeginTime"]=1838142000,["BossDeathTime"]=1839677040,["key"]=1042,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1042,["buffId"]={1,3}
+,["nEndTime"]=1839870000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1058]={["dropHpGroupId"]=10001,["nBeginTime"]=1880218800,["BossDeathTime"]=1881753840,["key"]=1058,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1058,["buffId"]={1,3}
+,["nEndTime"]=1881946800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1074]={["dropHpGroupId"]=10001,["nBeginTime"]=1922295600,["BossDeathTime"]=1923830640,["key"]=1074,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1074,["buffId"]={1,3}
+,["nEndTime"]=1924023600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1027]={["dropHpGroupId"]=10001,["nBeginTime"]=1798743600,["BossDeathTime"]=1800278640,["key"]=1027,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1027,["buffId"]={1,3}
+,["nEndTime"]=1800471600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1043]={["dropHpGroupId"]=10001,["nBeginTime"]=1840734000,["BossDeathTime"]=1842269040,["key"]=1043,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1043,["buffId"]={1,3}
+,["nEndTime"]=1842462000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1059]={["dropHpGroupId"]=10001,["nBeginTime"]=1882897200,["BossDeathTime"]=1884432240,["key"]=1059,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1059,["buffId"]={1,3}
+,["nEndTime"]=1884625200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1002]={["dropHpGroupId"]=10001,["nBeginTime"]=1732993200,["BossDeathTime"]=1734528240,["key"]=1002,["dupId"]=11005,["skillId"]={980101201,980101401}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1002,["buffId"]={1}
+,["nEndTime"]=1734721200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1010]={["dropHpGroupId"]=10001,["nBeginTime"]=1753988400,["BossDeathTime"]=1755523440,["key"]=1010,["dupId"]=11005,["skillId"]={980101101,980101301}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1010,["buffId"]={1,2}
+,["nEndTime"]=1755716400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1018]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1776518640,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1018,["BossPreview"]="boss_01",["nEndTime"]=1776711600,["nBeginTime"]=1774983600,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1018,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
+}
+,[1028]={["dropHpGroupId"]=10001,["nBeginTime"]=1801422000,["BossDeathTime"]=1802957040,["key"]=1028,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1028,["buffId"]={1,3}
+,["nEndTime"]=1803150000,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1044]={["dropHpGroupId"]=10001,["nBeginTime"]=1843412400,["BossDeathTime"]=1844947440,["key"]=1044,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1044,["buffId"]={1,3}
+,["nEndTime"]=1845140400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1060]={["dropHpGroupId"]=10001,["nBeginTime"]=1885489200,["BossDeathTime"]=1887024240,["key"]=1060,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1060,["buffId"]={1,3}
+,["nEndTime"]=1887217200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1029]={["dropHpGroupId"]=10001,["nBeginTime"]=1803841200,["BossDeathTime"]=1805376240,["key"]=1029,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1029,["buffId"]={1,3}
+,["nEndTime"]=1805569200,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1045]={["dropHpGroupId"]=10001,["nBeginTime"]=1846004400,["BossDeathTime"]=1847539440,["key"]=1045,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1045,["buffId"]={1,3}
+,["nEndTime"]=1847732400,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1061]={["dropHpGroupId"]=10001,["nBeginTime"]=1888167600,["BossDeathTime"]=1889702640,["key"]=1061,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1061,["buffId"]={1,3}
+,["nEndTime"]=1889895600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1003]={["dropHpGroupId"]=10001,["nBeginTime"]=1735671600,["BossDeathTime"]=1737206640,["key"]=1003,["dupId"]=11005,["skillId"]={980101301,980101501}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1003,["buffId"]={2}
+,["nEndTime"]=1737399600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10002,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1011]={["dropHpGroupId"]=10001,["nBeginTime"]=1756666800,["BossDeathTime"]=1758201840,["key"]=1011,["dupId"]=11005,["skillId"]={980101201,980101401}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1011,["buffId"]={1}
+,["nEndTime"]=1758394800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1019]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1779110640,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1019,["BossPreview"]="boss_01",["nEndTime"]=1779303600,["nBeginTime"]=1777575600,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1019,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
+}
+,[1030]={["dropHpGroupId"]=10001,["nBeginTime"]=1806519600,["BossDeathTime"]=1808054640,["key"]=1030,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1030,["buffId"]={1,3}
+,["nEndTime"]=1808247600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1046]={["dropHpGroupId"]=10001,["nBeginTime"]=1848682800,["BossDeathTime"]=1850217840,["key"]=1046,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1046,["buffId"]={1,3}
+,["nEndTime"]=1850410800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+,[1062]={["dropHpGroupId"]=10001,["nBeginTime"]=1890759600,["BossDeathTime"]=1892294640,["key"]=1062,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1062,["buffId"]={1,3}
+,["nEndTime"]=1892487600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
+}
+

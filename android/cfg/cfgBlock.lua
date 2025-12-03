@@ -1,34 +1,22 @@
-local conf = {
-	["filename"] = 'g-关卡表.xlsx',
-	["sheetname"] = '障碍物表',
-	["types"] = {
-'int','string','string','string','string','string'
-},
-	["names"] = {
-'id','key','res','icon','name','desc'
-},
-	["data"] = {
-{'1',	'',	'lupai',	'organ_notenter',	'路障',	'地面单位无法通过的障碍'},
-{'2',	'',	'jinfei',	'organ_noflight',	'禁飞区',	'飞行单位无法通过的障碍'},
-{'3',	'',	'passless',	'organ_noban',	'全禁止',	'所有单位无法通过的障碍'},
-{'4',	'',	'chess/1',	'organ_notenter',	'路障',	''},
-{'5',	'',	'chess/2',	'organ_notenter',	'路障',	''},
-{'6',	'',	'chess/3',	'organ_notenter',	'路障',	''},
-{'7',	'',	'chess/4',	'organ_notenter',	'路障',	''},
-{'8',	'',	'chess/5',	'organ_notenter',	'路障',	''},
-{'301',	'',	'part3/1',	'organ_notenter',	'路障',	''},
-{'302',	'',	'part3/2',	'organ_notenter',	'路障',	''},
-{'303',	'',	'part3/3',	'organ_notenter',	'路障',	''},
-{'304',	'',	'part3/4',	'organ_notenter',	'路障',	''},
-{'305',	'',	'part3/5',	'organ_notenter',	'路障',	''},
-{'306',	'',	'part3/6',	'organ_notenter',	'路障',	''},
-{'307',	'',	'part3/7',	'organ_notenter',	'路障',	''},
-{'308',	'',	'part3/8',	'organ_notenter',	'路障',	''},
-{'309',	'',	'part3/9',	'organ_notenter',	'路障',	''},
-{'310',	'',	'part3/10',	'organ_notenter',	'路障',	''},
-{'311',	'',	'part3/11',	'organ_notenter',	'路障',	''},
-{'312',	'',	'part3/12',	'organ_notenter',	'路障',	''},
-},
+_G["Block"]={{["name"]="路障",["key"]=1,["id"]=1,["res"]="lupai",["icon"]="organ_notenter",["desc"]="地面单位无法通过的障碍"}
+,{["name"]="禁飞区",["key"]=2,["id"]=2,["res"]="jinfei",["icon"]="organ_noflight",["desc"]="飞行单位无法通过的障碍"}
+,{["name"]="全禁止",["key"]=3,["id"]=3,["res"]="passless",["icon"]="organ_noban",["desc"]="所有单位无法通过的障碍"}
+,{["name"]="路障",["key"]=4,["id"]=4,["res"]="chess/1",["icon"]="organ_notenter"}
+,{["name"]="路障",["key"]=5,["id"]=5,["res"]="chess/2",["icon"]="organ_notenter"}
+,{["name"]="路障",["key"]=6,["id"]=6,["res"]="chess/3",["icon"]="organ_notenter"}
+,{["name"]="路障",["key"]=7,["id"]=7,["res"]="chess/4",["icon"]="organ_notenter"}
+,{["name"]="路障",["key"]=8,["id"]=8,["res"]="chess/5",["icon"]="organ_notenter"}
+,[305]={["name"]="路障",["key"]=305,["id"]=305,["res"]="part3/5",["icon"]="organ_notenter"}
+,[306]={["name"]="路障",["key"]=306,["id"]=306,["res"]="part3/6",["icon"]="organ_notenter"}
+,[307]={["name"]="路障",["key"]=307,["id"]=307,["res"]="part3/7",["icon"]="organ_notenter"}
+,[308]={["name"]="路障",["key"]=308,["id"]=308,["res"]="part3/8",["icon"]="organ_notenter"}
+,[309]={["name"]="路障",["key"]=309,["id"]=309,["res"]="part3/9",["icon"]="organ_notenter"}
+,[310]={["name"]="路障",["key"]=310,["id"]=310,["res"]="part3/10",["icon"]="organ_notenter"}
+,[311]={["name"]="路障",["key"]=311,["id"]=311,["res"]="part3/11",["icon"]="organ_notenter"}
+,[312]={["name"]="路障",["key"]=312,["id"]=312,["res"]="part3/12",["icon"]="organ_notenter"}
+,[301]={["name"]="路障",["key"]=301,["id"]=301,["res"]="part3/1",["icon"]="organ_notenter"}
+,[302]={["name"]="路障",["key"]=302,["id"]=302,["res"]="part3/2",["icon"]="organ_notenter"}
+,[303]={["name"]="路障",["key"]=303,["id"]=303,["res"]="part3/3",["icon"]="organ_notenter"}
+,[304]={["name"]="路障",["key"]=304,["id"]=304,["res"]="part3/4",["icon"]="organ_notenter"}
 }
---cfgBlock = conf
-return conf
+

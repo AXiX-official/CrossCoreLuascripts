@@ -236,11 +236,11 @@ function this:GetMaxCostNum(isNowRound)
                     tempNum=maxNum;
                     break;
                 elseif v:GetCurrRewardNum()>0 then
-                    tempNum=maxNum+v:GetCurrRewardNum();
+                    tempNum=tempNum+v:GetCurrRewardNum();
                 end
             end
         end
-        maxNum=tempNum;
+        maxNum=tempNum>=maxNum and maxNum or tempNum;
     end
     return maxNum;
 end

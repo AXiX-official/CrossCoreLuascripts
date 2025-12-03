@@ -18,10 +18,8 @@ function Skill4300402:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 4300406
-	local count4300406 = SkillApi:BuffCount(self, caster, target,2,3,300400302)
-	-- 4300407
-	local count4300407 = SkillApi:BuffCount(self, caster, target,2,3,300400303)
+	-- 300400316
+	local count300400311 = SkillApi:GetCount(self, caster, target,2,300400311)
 	-- 4300402
-	self:AddTempAttr(SkillEffect[4300402], caster, self.card, data, "damage",0.12*(count4300406+count4300407))
+	self:AddTempAttr(SkillEffect[4300402], caster, self.card, data, "damage",0.06*count300400311)
 end

@@ -1,18 +1,18 @@
-local conf = {
-	["filename"] = 'r-任务配置表.xlsx',
-	["sheetname"] = '周年活动任务',
-	["types"] = {
-'int','string','int','string','string','string','string','int','int[]','json'
-},
-	["names"] = {
-'id','key','nGroup','sName','sDescription','sOpenTime','sCloseTime','nTransferPath','aFinishIds','jAwardId'
-},
-	["data"] = {
-{'1',	'1',	'18001',	'登录一天',	'登录一天',	'2025/6/18 12:00:00',	'2025/9/3 03:00:00',	'',	'320001',	'[[24199,1,2]]'},
-{'2',	'2',	'18001',	'登录五天',	'登录五天',	'2025/6/18 12:00:00',	'2025/9/3 03:00:00',	'',	'320002',	'[[10037,1,2]]'},
-{'3',	'3',	'18001',	'进行核心构建10次',	'进行核心构建10次',	'2025/6/18 12:00:00',	'2025/9/3 03:00:00',	'61001',	'320003',	'[[29086,1,2]]'},
-{'4',	'4',	'18001',	'通关任意关卡40次',	'通关任意关卡40次',	'2025/6/18 12:00:00',	'2025/9/3 03:00:00',	'30001',	'1100131',	'[[10702,1,2]]'},
-},
+_G["cfgAnniversaryMission"]={{["sOpenTime"]="2025/6/18 12:00:00",["sDescription"]="登录一天",["id"]=1,["jAwardId"]={{24199,1,2}
 }
---cfgcfgAnniversaryMission = conf
-return conf
+,["aFinishIds"]={320001}
+,["key"]="1",["sCloseTime"]="2025/9/3 03:00:00",["sName"]="登录一天",["nGroup"]=18001}
+,{["sOpenTime"]="2025/6/18 12:00:00",["sDescription"]="登录五天",["id"]=2,["jAwardId"]={{10037,1,2}
+}
+,["aFinishIds"]={320002}
+,["key"]="2",["sCloseTime"]="2025/9/3 03:00:00",["sName"]="登录五天",["nGroup"]=18001}
+,{["sOpenTime"]="2025/6/18 12:00:00",["sDescription"]="进行核心构建10次",["id"]=3,["jAwardId"]={{29086,1,2}
+}
+,["aFinishIds"]={320003}
+,["key"]="3",["nTransferPath"]=61001,["sName"]="进行核心构建10次",["sCloseTime"]="2025/9/3 03:00:00",["nGroup"]=18001}
+,{["sOpenTime"]="2025/6/18 12:00:00",["sDescription"]="通关任意关卡40次",["id"]=4,["jAwardId"]={{10702,1,2}
+}
+,["aFinishIds"]={1100131}
+,["key"]="4",["nTransferPath"]=30001,["sName"]="通关任意关卡40次",["sCloseTime"]="2025/9/3 03:00:00",["nGroup"]=18001}
+}
+

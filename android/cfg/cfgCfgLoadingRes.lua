@@ -1,36 +1,24 @@
-local conf = {
-	["filename"] = 'c-场景.xlsx',
-	["sheetname"] = 'loading背景资源',
-	["types"] = {
-'int','string','int','string','string','string'
-},
-	["names"] = {
-'id','key','sType','name','title','desc'
-},
-	["data"] = {
-{'1',	'1',	'1',	'loading_03',	'',	''},
-{'2',	'2',	'1',	'loading_04',	'',	''},
-{'3',	'3',	'1',	'loading_05',	'',	''},
-{'4',	'4',	'1',	'loading_06',	'',	''},
-{'5',	'5',	'1',	'loading_07',	'',	''},
-{'6',	'6',	'1',	'loading_11',	'',	''},
-{'7',	'7',	'1',	'loading_12',	'',	''},
-{'8',	'8',	'1',	'loading_15',	'',	''},
-{'9',	'9',	'1',	'loading_16',	'',	''},
-{'10',	'10',	'1',	'loading_18',	'',	''},
-{'11',	'11',	'1',	'loading_21',	'',	''},
-{'12',	'12',	'1',	'loading_22',	'',	''},
-{'13',	'13',	'1',	'loading_23',	'',	''},
-{'14',	'14',	'1',	'loading_03',	'',	''},
-{'15',	'15',	'1',	'loading_04',	'',	''},
-{'16',	'16',	'1',	'loading_05',	'',	''},
-{'17',	'17',	'1',	'loading_06',	'',	''},
-{'18',	'18',	'1',	'loading_07',	'',	''},
-{'19',	'19',	'1',	'loading_11',	'',	''},
-{'20',	'20',	'1',	'loading_12',	'',	''},
-{'21',	'21',	'2',	'loading_neri',	'',	''},
-{'22',	'22',	'1',	'loading_15',	'',	''},
-},
+_G["CfgLoadingRes"]={{["key"]="1",["name"]="loading_03",["sType"]=1,["id"]=1}
+,{["key"]="2",["name"]="loading_04",["sType"]=1,["id"]=2}
+,{["key"]="3",["name"]="loading_05",["sType"]=1,["id"]=3}
+,{["key"]="4",["name"]="loading_06",["sType"]=1,["id"]=4}
+,{["key"]="5",["name"]="loading_07",["sType"]=1,["id"]=5}
+,{["key"]="6",["name"]="loading_11",["sType"]=1,["id"]=6}
+,{["key"]="7",["name"]="loading_12",["sType"]=1,["id"]=7}
+,{["key"]="8",["name"]="loading_15",["sType"]=1,["id"]=8}
+,{["key"]="9",["name"]="loading_16",["sType"]=1,["id"]=9}
+,{["key"]="10",["name"]="loading_18",["sType"]=1,["id"]=10}
+,{["key"]="11",["name"]="loading_21",["sType"]=1,["id"]=11}
+,{["key"]="12",["name"]="loading_22",["sType"]=1,["id"]=12}
+,{["key"]="13",["name"]="loading_23",["sType"]=1,["id"]=13}
+,{["key"]="14",["name"]="loading_03",["sType"]=1,["id"]=14}
+,{["key"]="15",["name"]="loading_04",["sType"]=1,["id"]=15}
+,{["key"]="16",["name"]="loading_05",["sType"]=1,["id"]=16}
+,{["key"]="17",["name"]="loading_06",["sType"]=1,["id"]=17}
+,{["key"]="18",["name"]="loading_07",["sType"]=1,["id"]=18}
+,{["key"]="19",["name"]="loading_11",["sType"]=1,["id"]=19}
+,{["key"]="20",["name"]="loading_12",["sType"]=1,["id"]=20}
+,{["key"]="21",["name"]="loading_neri",["sType"]=2,["id"]=21}
+,{["key"]="22",["name"]="loading_15",["sType"]=1,["id"]=22}
 }
---cfgCfgLoadingRes = conf
-return conf
+

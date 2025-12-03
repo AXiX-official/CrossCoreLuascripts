@@ -1,38 +1,37 @@
-local conf = {
-	["filename"] = 'c-触发礼包.xlsx',
-	["sheetname"] = '触发条件',
-	["types"] = {
-'int','string','int','int','int[]','int','int','int'
-},
-	["names"] = {
-'id','key','conditionType','nVal1','nVal2','loopCount','popupPack','nCountdown'
-},
-	["data"] = {
-{'1',	'1',	'1',	'10',	'',	'1',	'1001',	'720'},
-{'2',	'2',	'1',	'20',	'',	'1',	'1002',	'720'},
-{'3',	'3',	'1',	'30',	'',	'1',	'1003',	'720'},
-{'4',	'4',	'1',	'40',	'',	'1',	'1004',	'720'},
-{'5',	'5',	'1',	'50',	'',	'1',	'1005',	'720'},
-{'6',	'6',	'4',	'1008',	'',	'1',	'1006',	'720'},
-{'7',	'7',	'4',	'1125',	'',	'1',	'1007',	'720'},
-{'8',	'8',	'4',	'1222',	'',	'1',	'1008',	'720'},
-{'9',	'9',	'4',	'1321',	'',	'1',	'1009',	'720'},
-{'10',	'10',	'4',	'2008',	'',	'1',	'1010',	'720'},
-{'11',	'11',	'4',	'2125',	'',	'1',	'1011',	'720'},
-{'12',	'12',	'4',	'2222',	'',	'1',	'1012',	'720'},
-{'13',	'13',	'4',	'2321',	'',	'1',	'1013',	'720'},
-{'14',	'14',	'7',	'1',	'40',	'1',	'1014',	'720'},
-{'15',	'15',	'7',	'1',	'60',	'1',	'1015',	'720'},
-{'16',	'16',	'7',	'1',	'70',	'1',	'1016',	'720'},
-{'17',	'17',	'2',	'3',	'2',	'3',	'1017',	'720'},
-{'18',	'18',	'2',	'6',	'3',	'2',	'1018',	'720'},
-{'19',	'19',	'2',	'6',	'4',	'5',	'1019',	'720'},
-{'20',	'20',	'5',	'3',	'2',	'3',	'1020',	'720'},
-{'21',	'21',	'5',	'6',	'3',	'2',	'1021',	'720'},
-{'22',	'22',	'5',	'6',	'4',	'5',	'1022',	'720'},
-{'23',	'23',	'6',	'1',	'4',	'3',	'1023',	'720'},
-{'24',	'24',	'6',	'10',	'5',	'2',	'1024',	'720'},
-},
+_G["cfgPopupPackCondition"]={{["nCountdown"]=720,["popupPack"]=1001,["key"]="1",["conditionType"]=1,["id"]=1,["loopCount"]=1,["nVal1"]=10}
+,{["nCountdown"]=720,["popupPack"]=1002,["key"]="2",["conditionType"]=1,["id"]=2,["loopCount"]=1,["nVal1"]=20}
+,{["nCountdown"]=720,["popupPack"]=1003,["key"]="3",["conditionType"]=1,["id"]=3,["loopCount"]=1,["nVal1"]=30}
+,{["nCountdown"]=720,["popupPack"]=1004,["key"]="4",["conditionType"]=1,["id"]=4,["loopCount"]=1,["nVal1"]=40}
+,{["nCountdown"]=720,["popupPack"]=1005,["key"]="5",["conditionType"]=1,["id"]=5,["loopCount"]=1,["nVal1"]=50}
+,{["nCountdown"]=720,["popupPack"]=1006,["key"]="6",["conditionType"]=4,["id"]=6,["loopCount"]=1,["nVal1"]=1008}
+,{["nCountdown"]=720,["popupPack"]=1007,["key"]="7",["conditionType"]=4,["id"]=7,["loopCount"]=1,["nVal1"]=1125}
+,{["nCountdown"]=720,["popupPack"]=1008,["key"]="8",["conditionType"]=4,["id"]=8,["loopCount"]=1,["nVal1"]=1222}
+,{["nCountdown"]=720,["popupPack"]=1009,["key"]="9",["conditionType"]=4,["id"]=9,["loopCount"]=1,["nVal1"]=1321}
+,{["nCountdown"]=720,["popupPack"]=1010,["key"]="10",["conditionType"]=4,["id"]=10,["loopCount"]=1,["nVal1"]=2008}
+,{["nCountdown"]=720,["popupPack"]=1011,["key"]="11",["conditionType"]=4,["id"]=11,["loopCount"]=1,["nVal1"]=2125}
+,{["nCountdown"]=720,["popupPack"]=1012,["key"]="12",["conditionType"]=4,["id"]=12,["loopCount"]=1,["nVal1"]=2222}
+,{["nCountdown"]=720,["popupPack"]=1013,["key"]="13",["conditionType"]=4,["id"]=13,["loopCount"]=1,["nVal1"]=2321}
+,{["nCountdown"]=720,["popupPack"]=1014,["key"]="14",["conditionType"]=7,["id"]=14,["loopCount"]=1,["nVal2"]={40}
+,["nVal1"]=1}
+,{["nCountdown"]=720,["popupPack"]=1015,["key"]="15",["conditionType"]=7,["id"]=15,["loopCount"]=1,["nVal2"]={60}
+,["nVal1"]=1}
+,{["nCountdown"]=720,["popupPack"]=1016,["key"]="16",["conditionType"]=7,["id"]=16,["loopCount"]=1,["nVal2"]={70}
+,["nVal1"]=1}
+,{["nCountdown"]=720,["popupPack"]=1017,["key"]="17",["conditionType"]=2,["id"]=17,["loopCount"]=3,["nVal2"]={2}
+,["nVal1"]=3}
+,{["nCountdown"]=720,["popupPack"]=1018,["key"]="18",["conditionType"]=2,["id"]=18,["loopCount"]=2,["nVal2"]={3}
+,["nVal1"]=6}
+,{["nCountdown"]=720,["popupPack"]=1019,["key"]="19",["conditionType"]=2,["id"]=19,["loopCount"]=5,["nVal2"]={4}
+,["nVal1"]=6}
+,{["nCountdown"]=720,["popupPack"]=1020,["key"]="20",["conditionType"]=5,["id"]=20,["loopCount"]=3,["nVal2"]={2}
+,["nVal1"]=3}
+,{["nCountdown"]=720,["popupPack"]=1021,["key"]="21",["conditionType"]=5,["id"]=21,["loopCount"]=2,["nVal2"]={3}
+,["nVal1"]=6}
+,{["nCountdown"]=720,["popupPack"]=1022,["key"]="22",["conditionType"]=5,["id"]=22,["loopCount"]=5,["nVal2"]={4}
+,["nVal1"]=6}
+,{["nCountdown"]=720,["popupPack"]=1023,["key"]="23",["conditionType"]=6,["id"]=23,["loopCount"]=3,["nVal2"]={4}
+,["nVal1"]=1}
+,{["nCountdown"]=720,["popupPack"]=1024,["key"]="24",["conditionType"]=6,["id"]=24,["loopCount"]=2,["nVal2"]={5}
+,["nVal1"]=10}
 }
---cfgcfgPopupPackCondition = conf
-return conf
+

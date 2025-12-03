@@ -1,18 +1,6 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '物品筛选类型',
-	["types"] = {
-'int','string','string','json'
-},
-	["names"] = {
-'id','key','sName','sortIcon'
-},
-	["data"] = {
-{'1',	'1',	'强化素材',	''},
-{'2',	'2',	'角色星源',	''},
-{'3',	'3',	'基地材料',	''},
-{'4',	'4',	'其他',	''},
-},
+_G["CfgGoodsSortEnum"]={{["id"]=1,["sName"]="强化素材",["key"]="1"}
+,{["id"]=2,["sName"]="角色星源",["key"]="2"}
+,{["id"]=3,["sName"]="基地材料",["key"]="3"}
+,{["id"]=4,["sName"]="其他",["key"]="4"}
 }
---cfgCfgGoodsSortEnum = conf
-return conf
+

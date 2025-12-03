@@ -8,9 +8,9 @@ function Skill932800301:Init(skillID, card)
 end
 -- 执行技能
 function Skill932800301:DoSkill(caster, target, data)
-	-- 11001
+	-- 12001
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
+	self:DamageLight(SkillEffect[12001], caster, target, data, 1,1)
 end
 -- 攻击结束
 function Skill932800301:OnAttackOver(caster, target, data)

@@ -1,17 +1,8 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '日常本枚举',
-	["types"] = {
-'int','string','string','string','string','string'
-},
-	["names"] = {
-'id','key','sName','eName','desc','icon'
-},
-	["data"] = {
-{'1',	'1',	'资源采集',	'RESOURCE\nACQUISITION',	'// 星币、技术点、训练数据等',	'bg1'},
-{'2',	'2',	'芯片嵌合',	'CHIP\nEMBEDDING',	'// 各类型芯片',	'bg2'},
-{'3',	'3',	'跃升行动',	'UPDATE\nACTION',	'//小队跃升材料',	'bg3'},
-},
+_G["CfgDailyEnum"]={{["key"]="1",["eName"]=[[RESOURCE
+ACQUISITION]],["id"]=1,["sName"]="资源采集",["icon"]="bg1",["desc"]="// 星币、技术点、训练数据等"}
+,{["key"]="2",["eName"]=[[CHIP
+EMBEDDING]],["id"]=2,["sName"]="芯片嵌合",["icon"]="bg2",["desc"]="// 各类型芯片"}
+,{["key"]="3",["eName"]=[[UPDATE
+ACTION]],["id"]=3,["sName"]="跃升行动",["icon"]="bg3",["desc"]="//小队跃升材料"}
 }
---cfgCfgDailyEnum = conf
-return conf
+

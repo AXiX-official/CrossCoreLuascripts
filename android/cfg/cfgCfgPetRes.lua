@@ -1,17 +1,32 @@
-local conf = {
-	["filename"] = 'd-电子宠物.xlsx',
-	["sheetname"] = '宠物动画资源',
-	["types"] = {
-'int','string','int','string','float[]','string','float[]','string','float[]','int','string','float[]','int','string','float[]','int','string','float[]','int','string','float[]','int','string','float[]','string','float[]'
-},
-	["names"] = {
-'id','key','sort','idle','idlePos','sleep','sleepPos','eat','eatPos','eatTime','wash','washPos','washTime','clean','cleanPos','cleanTime','play','playPos','playTime','move','movePos','moveTime','walk','walkPos','sport','sportPos'
-},
-	["data"] = {
-{'1',	'1',	'1',	'role_Standby1',	'0,0,1',	'role_Sleep3',	'0,0,1.2',	'roel_Eat1',	'0,0,1',	'10',	'roel_Bath',	'0,0,1.1',	'25',	'role_Relax',	'0,0,1.1',	'19',	'role_ride',	'0,0,1.5',	'16',	'role_Move',	'0,0,0.95',	'1',	'role_Run2',	'0,0,0.95',	'Standby1_Weightlifting',	'0,0,1.3'},
-{'2',	'2',	'3',	'eggplant_Standby2',	'0,0,1',	'eggplant_Sleep1',	'0,0,1.35',	'eggplant_Eat2',	'0,0,1.1',	'4',	'eggplant_Wash',	'0,0,1.3',	'19',	'eggplant_Watered',	'0,0,1.2',	'12',	'eggplant_Music',	'0,0,1.2',	'9',	'eggplant_Move',	'0,0,1',	'6',	'eggplant_Run1',	'0,0,1.2',	'eggplant_Ballet',	'0,0,1'},
-{'3',	'3',	'2',	'Pet02_Idel',	'0,0,1',	'Pet02_Sleep',	'0,0,0.9',	'Pet02_Eat',	'0,0,1',	'3',	'Pet02_Wash',	'0,0,1.2',	'14',	'Pet02_Wash02',	'0,0,0.9',	'9',	'Pet02_Fish',	'0,0,0.9',	'4',	'Pet02_Move02',	'0,0,0.9',	'6',	'Pet02_Move',	'0,0,0.9',	'Pet02_Run',	'0,0,1.2'},
-},
+_G["CfgPetRes"]={{["sleep"]="role_Sleep3",["washPos"]={0,0,1.1}
+,["wash"]="roel_Bath",["sportPos"]={0,0,1.3}
+,["key"]="1",["eatTime"]=10,["eat"]="roel_Eat1",["sport"]="Standby1_Weightlifting",["cleanTime"]=19,["clean"]="role_Relax",["idlePos"]={0,0,1}
+,["walkPos"]={0,0,0.95}
+,["idle"]="role_Standby1",["washTime"]=25,["id"]=1,["playTime"]=16,["eatPos"]={0,0,1}
+,["movePos"]={0,0,0.95}
+,["move"]="role_Move",["moveTime"]=1,["cleanPos"]={0,0,1.1}
+,["sleepPos"]={0,0,1.2}
+,["playPos"]={0,0,1.5}
+,["play"]="role_ride",["sort"]=1,["walk"]="role_Run2"}
+,{["sleep"]="eggplant_Sleep1",["washPos"]={0,0,1.3}
+,["wash"]="eggplant_Wash",["sportPos"]={0,0,1}
+,["key"]="2",["eatTime"]=4,["eat"]="eggplant_Eat2",["sport"]="eggplant_Ballet",["cleanTime"]=12,["clean"]="eggplant_Watered",["idlePos"]={0,0,1}
+,["walkPos"]={0,0,1.2}
+,["idle"]="eggplant_Standby2",["washTime"]=19,["id"]=2,["playTime"]=9,["eatPos"]={0,0,1.1}
+,["movePos"]={0,0,1}
+,["move"]="eggplant_Move",["moveTime"]=6,["cleanPos"]={0,0,1.2}
+,["sleepPos"]={0,0,1.35}
+,["playPos"]={0,0,1.2}
+,["play"]="eggplant_Music",["sort"]=3,["walk"]="eggplant_Run1"}
+,{["sleep"]="Pet02_Sleep",["washPos"]={0,0,1.2}
+,["wash"]="Pet02_Wash",["sportPos"]={0,0,1.2}
+,["key"]="3",["eatTime"]=3,["eat"]="Pet02_Eat",["sport"]="Pet02_Run",["cleanTime"]=9,["clean"]="Pet02_Wash02",["idlePos"]={0,0,1}
+,["walkPos"]={0,0,0.9}
+,["idle"]="Pet02_Idel",["washTime"]=14,["id"]=3,["playTime"]=4,["eatPos"]={0,0,1}
+,["movePos"]={0,0,0.9}
+,["move"]="Pet02_Move02",["moveTime"]=6,["cleanPos"]={0,0,0.9}
+,["sleepPos"]={0,0,0.9}
+,["playPos"]={0,0,0.9}
+,["play"]="Pet02_Fish",["sort"]=2,["walk"]="Pet02_Move"}
 }
---cfgCfgPetRes = conf
-return conf
+

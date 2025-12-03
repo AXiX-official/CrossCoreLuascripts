@@ -70,6 +70,7 @@ end
 
 function OnOpen()
     SetBGScale()
+    SetBGSex()
     if data then
         sectionData = DungeonMgr:GetSectionData(data.id)
         info = sectionData:GetInfo()
@@ -143,6 +144,15 @@ function SetSpecial()
             end
         end, nil, 300)
         CSAPI.SetText(txtHard, LanguageMgr:GetTips(24007, openInfo:GetOpenCfg().hardBegTime))
+    end
+end
+
+function SetBGSex()
+    if bgWoman and not IsNil(bgWoman.gameObject) then
+        CSAPI.SetGOActive(bgWoman,PlayerClient:GetSex() == 2)
+    end
+    if bgMan and not IsNil(bgMan.gameObject) then
+        CSAPI.SetGOActive(bgMan,PlayerClient:GetSex() == 1)
     end
 end
 

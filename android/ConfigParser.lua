@@ -297,7 +297,12 @@ end
 -- 读取配置表到内存
 function ConfigParser:ReadLuaConfig()
     for k, filename in pairs(self.m_mapConfigList) do
+        -- local t = os.clock()
         ConfigParser:ReadOneConfig(filename)
+        -- local t2=(os.clock() - t)
+        -- if t2>0.1 then
+        --     print("读取"..filename.."耗时"..t2)
+        -- end
     end
 end
 
@@ -344,6 +349,10 @@ function ConfigParser:ReadOneLineLuaConfig(filename, newCfgs, config, currrow, k
         t.key = t.id
     end
 
+    if not t.id then
+        LogTable(t, "ReadOneLineLuaConfig not id row data:")
+    end
+
     if newCfgs[t.id] then
         LogTable(t, 't:')
         LogTable(newCfgs, 'newCfgs:')
@@ -357,9 +366,73 @@ function ConfigParser:ReadOneLineLuaConfig(filename, newCfgs, config, currrow, k
     return currrow
 end
 
+
 function ConfigParser:SetGolble()
     -- 代码移动到，ConfigChecker:global_setting(cfgs)
-    -- IS_CLIENT
+    if IS_CLIENT then
+        -- 导表工具
+        if IS_CLIENT_TOOL then
+            ConfigChecker:global_setting(_G["global_setting"])
+            ConfigChecker:CfgEquipSkill(_G["CfgEquipSkill"])
+            ConfigChecker:CfgDupDropCntAdd(_G["CfgDupDropCntAdd"])
+            ConfigChecker:CfgFriendConst(_G["CfgFriendConst"])
+
+            return
+        end
+
+        -- 做loading延迟, 这里集中处理加载配置表
+        local count = 0
+        local size = table.size(self.listClientConfig)
+        if size <= 0 then size = 1 end
+        local laodfunlist = {}
+
+        for i,v in ipairs(self.listClientConfig) do
+            local fun = function ()
+                LoadOneConfig(v)
+                count = count + 1 
+                local p = math.ceil((count/size)*50)
+                print("ClientConfig", count, size,p)
+                EventMgr.Dispatch(EventType.Read_Cfg_Progress,p);
+                if count == size then 
+                    -- 读取所有配置表完成, 设置全局变量和生成客户端所需的配置格式
+                    -- EventMgr.Dispatch(EventType.Read_Cfg_Complete);
+                    ConfigChecker:global_setting(_G["global_setting"])
+                    ConfigChecker:CfgEquipSkill(_G["CfgEquipSkill"])
+                    ConfigChecker:CfgDupDropCntAdd(_G["CfgDupDropCntAdd"])
+                    ConfigChecker:CfgFriendConst(_G["CfgFriendConst"])
+                    self:ClientConfig3()
+                end
+            end
+
+            table.insert(laodfunlist, fun)
+        end
+
+        function OnTimer()
+
+            if #laodfunlist == 0 then return end  
+            local c = 50 
+            if #laodfunlist < c then 
+                c=#laodfunlist
+            end
+
+            for i=1,c do
+                laodfunlist[1]()
+                table.remove(laodfunlist, 1)
+            end
+
+            if #laodfunlist > 0 then 
+                FuncUtil:Call(OnTimer,nil,1);
+            end
+        end
+
+        FuncUtil:Call(OnTimer,nil,1);
+
+
+        -- ConfigChecker:global_setting(_G["global_setting"])
+        -- ConfigChecker:CfgEquipSkill(_G["CfgEquipSkill"])
+        -- ConfigChecker:CfgDupDropCntAdd(_G["CfgDupDropCntAdd"])
+        -- ConfigChecker:CfgFriendConst(_G["CfgFriendConst"])
+    end
 end
 
 function ConfigParser:GenCfgList(ConfigList)
@@ -380,12 +453,27 @@ end
 function ConfigParser:ClientConfig()
     -- local this = {};
     -- _G.CfgBase = Loader:Require('CfgBase');
+    -- print("--------ClientConfig---------------")
+    -- local count = 0
+    -- local size = table.size(self.m_mapConfigList)
+    -- if size <= 0 then size = 1 end
+
     for k, v in pairs(self.m_mapConfigList) do
         LogDebugEx('load config:' .. k)
         local initData = _G[k]
         if initData then
-            Cfgs[k] = CfgBase:New()
+            Cfgs[k] = CfgBase:New(k)
             Cfgs[k]:Init(_G[k])
+            -- count = count + 1 
+            -- if IS_CLIENT then
+            --     local p = math.ceil(count/size)
+            --     LogDebugEx("ClientConfig", count)
+            --     EventMgr.Dispatch(EventType.Read_Cfg_Progress,p);
+            -- end
+
+            -- if _G[k][1] and _G[k][1].group then
+            --     LogDebug(k)
+            -- end
         else
             if LogError then
                 LogError('ConfigParser:ClientConfig()' .. k .. 'get nil')
@@ -394,6 +482,11 @@ function ConfigParser:ClientConfig()
             end
         end
     end
+
+    -- if IS_CLIENT then
+    --     EventMgr.Dispatch(EventType.Read_Cfg_Complete);
+    -- -- ASSERT()
+    -- end
 
     -- 需要全部配置检查完才检查的配置，key为表名，value随便配的
     local FinallyCheckConfig = {
@@ -405,7 +498,8 @@ function ConfigParser:ClientConfig()
         CfgMenuBg = 1,
         CfgItemPool = 1,
         CfgIconTitle = 1,
-        CfgIconEmote = 1
+        CfgIconEmote = 1,
+        CfgDormPet = 1
     }
 
     -- 检查/特殊处理以及设为只读
@@ -446,13 +540,184 @@ function ConfigParser:ClientConfig()
     --     _G[cfgName] = table.ReadOnly(cfgs)
     -- end
 
+
+    
+
+    -- print("xxxxxxxxxx")
+    local mt = {
+        __index = function(t,k) 
+            -- print("ReadAllConfig", k)
+            local val = rawget(t, k)
+            if val == nil then
+                local t = ConfigParser:LoadConfig(k)
+                return t
+            end
+            return val
+        end,
+    }
+
+    setmetatable(Cfgs, mt)
+
+    return Cfgs
+end
+
+function ConfigParser:ClientConfig2()
+    -- local this = {};
+    -- _G.CfgBase = Loader:Require('CfgBase');
+
+    if IS_CLIENT_TOOL then
+        print("--------ClientConfig---------------", IS_CLIENT)
+
+        for k, v in pairs(self.m_mapConfigList) do
+            LogDebugEx('load config:' .. k)
+            local initData = _G[k]
+            if initData then
+                Cfgs[k] = CfgBase:New(k)
+
+                local fun = function ()
+                    Cfgs[k]:Init(_G[k])
+
+                end
+
+                -- if _G[k][1] and _G[k][1].group then
+                --     LogDebug(k)
+                -- end
+            else
+                if LogError then
+                    LogError('ConfigParser:ClientConfig()' .. k .. 'get nil')
+                else
+                    print('ConfigParser:ClientConfig() ', k, 'get nil')
+                end
+            end
+        end
+        
+        local mt = {
+            __index = function(t,k) 
+                print("ReadAllConfig", k)
+                local val = rawget(t, k)
+                if val == nil then
+                    local t = ConfigParser:LoadConfig(k)
+                    return t
+                end
+                return val
+            end,
+        }
+
+        setmetatable(Cfgs, mt)
+
+        return Cfgs
+    end
+end
+
+-- 做loading延迟, 在读完配置表后调用
+function ConfigParser:ClientConfig3()
+    print("--------ClientConfig---------------", IS_CLIENT)
+    local count = 0
+    local size = table.size(self.m_mapConfigList)
+    if size <= 0 then size = 1 end
+    local funlist = {}
+
+    for k, v in pairs(self.m_mapConfigList) do
+        LogDebugEx('load config:' .. k)
+        local initData = _G[k]
+        if initData then
+            Cfgs[k] = CfgBase:New(k)
+
+            local fun = function ()
+                Cfgs[k]:Init(_G[k])
+
+                count = count + 1 
+                -- if IS_CLIENT then
+                    local p = math.ceil((count/size)*50) + 50
+                    print("ClientConfig", count, size,p)
+                    EventMgr.Dispatch(EventType.Read_Cfg_Progress,p);
+                -- end
+                if count == size then 
+                    -- 完成所有配置的生成, 结束loading
+                    EventMgr.Dispatch(EventType.Read_Cfg_Complete);
+                end
+            end
+
+            table.insert(funlist, fun)
+
+            -- if _G[k][1] and _G[k][1].group then
+            --     LogDebug(k)
+            -- end
+        else
+            if LogError then
+                LogError('ConfigParser:ClientConfig()' .. k .. 'get nil')
+            else
+                print('ConfigParser:ClientConfig() ', k, 'get nil')
+            end
+        end
+    end
+
+
+    function OnTimer()
+
+        if #funlist == 0 then return end  
+        local c = 50 
+        if #funlist < c then 
+            c=#funlist
+        end
+
+        for i=1,c do
+            funlist[1]()
+            table.remove(funlist, 1)
+        end
+
+        if #funlist > 0 then 
+            FuncUtil:Call(OnTimer,nil,1);
+        end
+    end
+
+    FuncUtil:Call(OnTimer,nil,1);
+
+    -- print("xxxxxxxxxx")
+    local mt = {
+        __index = function(t,k) 
+            print("ReadAllConfig", k)
+            local val = rawget(t, k)
+            if val == nil then
+                local t = ConfigParser:LoadConfig(k)
+                return t
+            end
+            return val
+        end,
+    }
+
+    setmetatable(Cfgs, mt)
+
     return Cfgs
 end
 
 function ConfigParser:LoadConfig(filename)
-    -- print("--------LoadConfig------------", filename)
+    print("--------LoadConfig------------", filename)
     ConfigParser:ReadOneConfig(filename)
     Cfgs[filename] = CfgBase:New()
     Cfgs[filename]:Init(_G[filename])
+    return Cfgs[filename]
     -- LogError(Cfgs[filename])
+end
+
+
+function LoadOneConfig(filename)
+    -- print("--------LoadConfig2------------", filename)
+    require("cfg"..filename)
+    Cfgs[filename] = CfgBase:New()
+    Cfgs[filename]:Init(_G[filename])
+    return Cfgs[filename]
+    -- LogError(Cfgs[filename])
+end
+
+function ConfigParser:LoadConfig2(filename)
+
+    if not self.isClientInit then
+        self.listClientConfig = self.listClientConfig or {}
+        LoadOneConfig(filename)
+    else
+        -- 做loading延迟
+        self.listClientConfig = self.listClientConfig or {}
+        table.insert(self.listClientConfig, filename)
+    end
 end

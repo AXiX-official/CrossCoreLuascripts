@@ -1,24 +1,12 @@
-local conf = {
-	["filename"] = 'd-电子宠物.xlsx',
-	["sheetname"] = '宠物物品',
-	["types"] = {
-'int','string','int','int','int','int','int','int','int','string'
-},
-	["names"] = {
-'id','key','type','sort','item','happyChange','foodChange','washChange','feedChange','animation'
-},
-	["data"] = {
-{'101',	'7',	'2',	'3',	'27011',	'21',	'150',	'-25',	'9',	'eat'},
-{'102',	'8',	'2',	'4',	'27012',	'15',	'105',	'-15',	'6',	'eat'},
-{'103',	'9',	'2',	'8',	'27013',	'9',	'50',	'-9',	'3',	'eat'},
-{'201',	'18',	'3',	'1',	'27021',	'15',	'0',	'300',	'0',	'wash'},
-{'202',	'19',	'3',	'2',	'27022',	'12',	'0',	'240',	'0',	'wash'},
-{'301',	'13',	'3',	'6',	'27031',	'6',	'0',	'120',	'0',	'clean'},
-{'302',	'14',	'3',	'7',	'27032',	'3',	'0',	'60',	'0',	'clean'},
-{'401',	'1',	'1',	'5',	'27041',	'45',	'0',	'-50',	'0',	'play'},
-{'402',	'2',	'1',	'9',	'27042',	'30',	'0',	'-30',	'0',	'play'},
-{'403',	'3',	'1',	'10',	'27043',	'15',	'0',	'-15',	'0',	'play'},
-},
+_G["CfgPetItem"]={[103]={["type"]=2,["animation"]="eat",["id"]=103,["foodChange"]=50,["happyChange"]=9,["key"]="9",["feedChange"]=3,["sort"]=8,["washChange"]=-9,["item"]=27013}
+,[401]={["type"]=1,["animation"]="play",["id"]=401,["foodChange"]=0,["happyChange"]=45,["key"]="1",["feedChange"]=0,["sort"]=5,["washChange"]=-50,["item"]=27041}
+,[101]={["type"]=2,["animation"]="eat",["id"]=101,["foodChange"]=150,["happyChange"]=21,["key"]="7",["feedChange"]=9,["sort"]=3,["washChange"]=-25,["item"]=27011}
+,[202]={["type"]=3,["animation"]="wash",["id"]=202,["foodChange"]=0,["happyChange"]=12,["key"]="19",["feedChange"]=0,["sort"]=2,["washChange"]=240,["item"]=27022}
+,[403]={["type"]=1,["animation"]="play",["id"]=403,["foodChange"]=0,["happyChange"]=15,["key"]="3",["feedChange"]=0,["sort"]=10,["washChange"]=-15,["item"]=27043}
+,[102]={["type"]=2,["animation"]="eat",["id"]=102,["foodChange"]=105,["happyChange"]=15,["key"]="8",["feedChange"]=6,["sort"]=4,["washChange"]=-15,["item"]=27012}
+,[302]={["type"]=3,["animation"]="clean",["id"]=302,["foodChange"]=0,["happyChange"]=3,["key"]="14",["feedChange"]=0,["sort"]=7,["washChange"]=60,["item"]=27032}
+,[402]={["type"]=1,["animation"]="play",["id"]=402,["foodChange"]=0,["happyChange"]=30,["key"]="2",["feedChange"]=0,["sort"]=9,["washChange"]=-30,["item"]=27042}
+,[201]={["type"]=3,["animation"]="wash",["id"]=201,["foodChange"]=0,["happyChange"]=15,["key"]="18",["feedChange"]=0,["sort"]=1,["washChange"]=300,["item"]=27021}
+,[301]={["type"]=3,["animation"]="clean",["id"]=301,["foodChange"]=0,["happyChange"]=6,["key"]="13",["feedChange"]=0,["sort"]=6,["washChange"]=120,["item"]=27031}
 }
---cfgCfgPetItem = conf
-return conf
+

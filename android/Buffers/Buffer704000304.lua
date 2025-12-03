@@ -10,6 +10,6 @@ end
 function Buffer704000304:OnCreate(caster, target)
 	-- 4003
 	self:AddAttrPercent(BufferEffect[4003], self.caster, target or self.owner, nil,"attack",0.15)
-	-- 4302
-	self:AddAttr(BufferEffect[4302], self.caster, target or self.owner, nil,"crit_rate",0.1)
+	-- 4303
+	self:AddAttr(BufferEffect[4303], self.caster, target or self.owner, nil,"crit_rate",0.15)
 end

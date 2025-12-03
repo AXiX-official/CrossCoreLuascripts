@@ -1,23 +1,11 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '待机提示',
-	["types"] = {
-'int','string','int','string'
-},
-	["names"] = {
-'id','key','language','icon'
-},
-	["data"] = {
-{'1',	'1',	'68001',	'icon_01_01'},
-{'2',	'2',	'68002',	'icon_01_01'},
-{'3',	'3',	'68003',	'icon_01_02'},
-{'4',	'4',	'68004',	'icon_01_02'},
-{'5',	'5',	'68005',	'icon_01_03'},
-{'6',	'6',	'68006',	'icon_01_03'},
-{'7',	'7',	'68007',	'icon_01_03'},
-{'8',	'8',	'68008',	'icon_01_05'},
-{'9',	'9',	'68009',	'icon_01_05'},
-},
+_G["CfgStandbyTips"]={{["id"]=1,["icon"]="icon_01_01",["key"]="1",["language"]=68001}
+,{["id"]=2,["icon"]="icon_01_01",["key"]="2",["language"]=68002}
+,{["id"]=3,["icon"]="icon_01_02",["key"]="3",["language"]=68003}
+,{["id"]=4,["icon"]="icon_01_02",["key"]="4",["language"]=68004}
+,{["id"]=5,["icon"]="icon_01_03",["key"]="5",["language"]=68005}
+,{["id"]=6,["icon"]="icon_01_03",["key"]="6",["language"]=68006}
+,{["id"]=7,["icon"]="icon_01_03",["key"]="7",["language"]=68007}
+,{["id"]=8,["icon"]="icon_01_05",["key"]="8",["language"]=68008}
+,{["id"]=9,["icon"]="icon_01_05",["key"]="9",["language"]=68009}
 }
---cfgCfgStandbyTips = conf
-return conf
+

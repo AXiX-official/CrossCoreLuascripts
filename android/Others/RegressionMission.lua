@@ -6,10 +6,14 @@ local info = nil
 
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
-    layout:Init("UIs/Activity2/MissionContinueItem2", LayoutCallBack, true)
+    layout:Init("UIs/RegressionActivity3/RegressionMissionItem", LayoutCallBack, true)
     tlua = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Normal)
 
     eventMgr = ViewEvent.New();
+    
+end
+
+function OnEnable()
     eventMgr:AddListener(EventType.Mission_List, function(_data)
         if gameObject.activeSelf == false then
             return
@@ -36,7 +40,7 @@ function LayoutCallBack(index)
     end
 end
 
-function OnDestroy()
+function OnDisable()
     eventMgr:ClearListener()
 end
 

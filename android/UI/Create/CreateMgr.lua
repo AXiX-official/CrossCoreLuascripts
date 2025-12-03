@@ -372,13 +372,13 @@ function this:IsFreeInTime()
         local curTime = TimeUtil:GetTime()
         local sTime = TimeUtil:GetTimeStampBySplit(cfg.sTime)
         if(sTime and curTime<sTime) then 
-            return false
+            return false,sTime
         end 
         local eTime = TimeUtil:GetTimeStampBySplit(cfg.eTime)
         if(eTime and curTime>=eTime) then 
             return false
         end 
-        return true
+        return true,eTime
     end 
     return false
 end

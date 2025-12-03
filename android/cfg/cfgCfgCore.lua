@@ -1,18 +1,6 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '核心',
-	["types"] = {
-'int','string','string','string','string','string'
-},
-	["names"] = {
-'id','key','sName','sIcon1','sIcon2','sIcon3'
-},
-	["data"] = {
-{'1',	'1',	'全能',	'a_core',	'w_amighty_nove',	'special_skills3'},
-{'2',	'2',	'机装',	'f_core',	'w_machine_nove',	'special_skills'},
-{'3',	'3',	'同调',	's_core',	'w_homology_nove',	'special_skills2'},
-{'4',	'4',	'特殊',	's_core',	'w_homology_nove',	'special_skills2'},
-},
+_G["CfgCore"]={{["sIcon3"]="special_skills3",["key"]="1",["id"]=1,["sIcon1"]="a_core",["sIcon2"]="w_amighty_nove",["sName"]="全能"}
+,{["sIcon3"]="special_skills",["key"]="2",["id"]=2,["sIcon1"]="f_core",["sIcon2"]="w_machine_nove",["sName"]="机装"}
+,{["sIcon3"]="special_skills2",["key"]="3",["id"]=3,["sIcon1"]="s_core",["sIcon2"]="w_homology_nove",["sName"]="同调"}
+,{["sIcon3"]="special_skills2",["key"]="4",["id"]=4,["sIcon1"]="s_core",["sIcon2"]="w_homology_nove",["sName"]="特殊"}
 }
---cfgCfgCore = conf
-return conf
+

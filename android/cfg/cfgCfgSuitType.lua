@@ -1,16 +1,4 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '套装类型',
-	["types"] = {
-'int','string','int'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'23067'},
-{'2',	'2',	'23068'},
-},
+_G["CfgSuitType"]={{["id"]=1,["sName"]=23067,["key"]="1"}
+,{["id"]=2,["sName"]=23068,["key"]="2"}
 }
---cfgCfgSuitType = conf
-return conf
+

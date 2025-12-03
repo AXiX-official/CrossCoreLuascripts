@@ -1,17 +1,10 @@
-local conf = {
-	["filename"] = 'j-卡牌角色.xlsx',
-	["sheetname"] = '宿舍剧情事件',
-	["types"] = {
-'int','string','string','string','int','bool','int','json'
-},
-	["names"] = {
-'id','key','sDesc','icon','weight','story','addExp','gets'
-},
-	["data"] = {
-{'1',	'1',	'“叹号”',	'event_1',	'10',	'1',	'',	''},
-{'2',	'2',	'“心情”',	'event_2',	'100',	'0',	'10',	'[[10010,100,2,300],[10010,100,2,300]]'},
-{'3',	'3',	'“家具币”',	'event_3',	'50',	'0',	'10',	'[[10010,100,2,500]]'},
-},
+_G["CfgRoleDormitoryEvents"]={{["story"]=true,["key"]="1",["weight"]=10,["id"]=1,["icon"]="event_1",["sDesc"]="“叹号”"}
+,{["gets"]={{10010,100,2,300}
+,{10010,100,2,300}
 }
---cfgCfgRoleDormitoryEvents = conf
-return conf
+,["story"]=false,["key"]="2",["weight"]=100,["id"]=2,["addExp"]=10,["icon"]="event_2",["sDesc"]="“心情”"}
+,{["gets"]={{10010,100,2,500}
+}
+,["story"]=false,["key"]="3",["weight"]=50,["id"]=3,["addExp"]=10,["icon"]="event_3",["sDesc"]="“家具币”"}
+}
+

@@ -116,6 +116,10 @@ function SetPrice(TxtUI)
 end
 function SetOrgPrice()
     if this.data~=nil then
+        if this.data:IsOver() then
+            CSAPI.SetGOActive(discountInfo,false);
+            do return end
+        end
         local orgCosts=this.data:GetOrgCosts();
         CSAPI.SetGOActive(discountInfo,orgCosts~=nil);
         if orgCosts~=nil then
@@ -157,9 +161,16 @@ end
 --检测红点数据
 function SetRedInfo()
     local rd=RedPointMgr:GetData(RedPointType.Shop);
+    local rd2=RedPointMgr:GetData(RedPointType.RegressionShop);
     local isShowRed=false;
     if rd and this.data then
         local list=rd[this.data:GetShopID()];
+        if list~=nil then
+            isShowRed=list[this.data:GetID()]~=nil;
+        end
+    end
+    if rd2 and this.data and isShowRed~=true then
+        local list=rd2[this.data:GetShopID()];
         if list~=nil then
             isShowRed=list[this.data:GetID()]~=nil;
         end

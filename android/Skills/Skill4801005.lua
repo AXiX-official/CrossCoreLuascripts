@@ -20,15 +20,20 @@ function Skill4801005:OnBefourHurt(caster, target, data)
 	end
 	-- 8418
 	local count18 = SkillApi:GetAttr(self, caster, target,3,"sp")
+	-- 8219
+	if SkillJudger:IsUltimate(self, caster, target, true) then
+	else
+		return
+	end
 	-- 48010002
-	self:AddTempAttr(SkillEffect[48010002], caster, self.card, data, "damage",math.max((count18)/100,0))
+	self:AddTempAttr(SkillEffect[48010002], caster, self.card, data, "damage",math.max((count18-20)/100,0))
 	-- 8246
 	if SkillJudger:IsTargetMech(self, caster, target, true,10) then
 	else
 		return
 	end
 	-- 48010003
-	self:AddTempAttr(SkillEffect[48010003], caster, self.card, data, "damage",math.max((count18)/100,0)*2)
+	self:AddTempAttr(SkillEffect[48010003], caster, self.card, data, "damage",math.max((count18-20)/100,0)*2)
 end
 -- 行动结束
 function Skill4801005:OnActionOver(caster, target, data)
@@ -47,8 +52,13 @@ function Skill4801005:OnActionOver(caster, target, data)
 	-- 48010004
 	self:AddSp(SkillEffect[48010004], caster, self.card, data, -count18)
 end
--- 行动结束2
-function Skill4801005:OnActionOver2(caster, target, data)
+-- 回合结束时
+function Skill4801005:OnRoundOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
 	-- 4603332
 	self:AddStep(SkillEffect[4603332], caster, self.card, data, 1,1)
 end
@@ -60,5 +70,8 @@ function Skill4801005:OnBornSpecial(caster, target, data)
 		return
 	end
 	-- 4603307
-	self:CallOwnerSkill(SkillEffect[4603307], caster, self.card.oSummonOwner, data, 801000201)
+	local targets = SkillFilter:Rand(self, caster, target, 3)
+	for i,target in ipairs(targets) do
+		self:CallOwnerSkill(SkillEffect[4603307], caster, target, data, 801000201)
+	end
 end

@@ -1,35 +1,37 @@
-local conf = {
-	["filename"] = 'j-角斗场表.xlsx',
-	["sheetname"] = '模式设置',
-	["types"] = {
-'int','string','table#7','int','int','int','int','int','int[]','int'
-},
-	["names"] = {
-'id','key','infos','modeId','teamSet','turnNum','nChoose','charaGachaId','reChooseTurn','maxTurn'
-},
-	["data"] = {
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'1',	'0',	'',	'',	'',	'',	'9'},
-{'1',	'1',	'',	'2',	'1',	'6',	'3',	'101',	'4,6',	'9'},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'1',	'0',	'',	'',	'',	'',	'9'},
-{'2',	'2',	'',	'2',	'1',	'6',	'3',	'101',	'4,6',	'9'},
-{'3',	'3',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'3',	'',	'1',	'0',	'',	'',	'',	'',	'9'},
-{'3',	'3',	'',	'2',	'1',	'6',	'3',	'102',	'4,6',	'9'},
-{'4',	'4',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'4',	'',	'1',	'0',	'',	'',	'',	'',	'9'},
-{'4',	'4',	'',	'2',	'1',	'6',	'3',	'102',	'4,6',	'9'},
-{'5',	'5',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5',	'5',	'',	'1',	'0',	'',	'',	'',	'',	'9'},
-{'5',	'5',	'',	'2',	'1',	'6',	'3',	'102',	'4,6',	'9'},
-{'6',	'6',	'',	'',	'',	'',	'',	'',	'',	''},
-{'6',	'6',	'',	'1',	'0',	'',	'',	'',	'',	'9'},
-{'6',	'6',	'',	'2',	'1',	'6',	'3',	'102',	'4,6',	'9'},
-{'7',	'7',	'',	'',	'',	'',	'',	'',	'',	''},
-{'7',	'7',	'',	'1',	'0',	'',	'',	'',	'',	'9'},
-{'7',	'7',	'',	'2',	'1',	'6',	'3',	'102',	'4,6',	'9'},
-},
+_G["cfgColosseumOptional"]={{["id"]=1,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=101,["reChooseTurn"]={4,6}
+,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
 }
---cfgcfgColosseumOptional = conf
-return conf
+,["key"]="1"}
+,{["id"]=2,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=101,["reChooseTurn"]={4,6}
+,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
+}
+,["key"]="2"}
+,{["id"]=3,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=102,["reChooseTurn"]={4,6}
+,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
+}
+,["key"]="3"}
+,{["id"]=4,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=102,["reChooseTurn"]={4,6}
+,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
+}
+,["key"]="4"}
+,{["id"]=5,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=102,["reChooseTurn"]={4,6}
+,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
+}
+,["key"]="5"}
+,{["id"]=6,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=102,["reChooseTurn"]={4,6}
+,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
+}
+,["key"]="6"}
+,{["id"]=7,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=102,["reChooseTurn"]={4,6}
+,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
+}
+,["key"]="7"}
+}
+

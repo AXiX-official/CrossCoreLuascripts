@@ -26,10 +26,10 @@ function Skill603300205:OnBorn(caster, target, data)
 		return
 	end
 	-- 8742
-	local count742 = SkillApi:SkillLevel(self, caster, target,3,6033002)
+	local count742 = SkillApi:SkillLevel(self, caster, target,3,7801002)
 	-- 4603306
 	local targets = SkillFilter:Rand(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:CallOwnerSkill(SkillEffect[4603306], caster, target, data, 603300200+count742)
+		self:CallOwnerSkill(SkillEffect[4603306], caster, target, data, 780100200+count742)
 	end
 end

@@ -15,6 +15,59 @@ function Skill338401:OnBornSpecial(caster, target, data)
 	end
 	-- 338401
 	self:AddBuff(SkillEffect[338401], caster, self.card, data, 338401)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8219
+	if SkillJudger:IsUltimate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8743
+	local count743 = SkillApi:BuffCount(self, caster, target,3,4,338401)
+	-- 8956
+	if SkillJudger:Greater(self, caster, self.card, true,count743,0) then
+	else
+		return
+	end
+	-- 8213
+	if SkillJudger:IsCrit(self, caster, target, true) then
+	else
+		return
+	end
 	-- 338411
-	self:AddBuff(SkillEffect[338411], caster, caster, data, 338401)
+	if self:Rand(1000) then
+		self:LimitDamage(SkillEffect[338411], caster, target, data, 0.05,1.2,1)
+	end
+end
+-- 伤害前
+function Skill338401:OnBefourHurt(caster, target, data)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8219
+	if SkillJudger:IsUltimate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8743
+	local count743 = SkillApi:BuffCount(self, caster, target,3,4,338401)
+	-- 8956
+	if SkillJudger:Greater(self, caster, self.card, true,count743,0) then
+	else
+		return
+	end
+	-- 8213
+	if SkillJudger:IsCrit(self, caster, target, true) then
+	else
+		return
+	end
+	-- 338411
+	if self:Rand(1000) then
+		self:LimitDamage(SkillEffect[338411], caster, target, data, 0.05,1.2,1)
+	end
 end

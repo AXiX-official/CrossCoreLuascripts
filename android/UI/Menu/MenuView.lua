@@ -4,7 +4,7 @@ local redPoss = {
     ["MailView"] = {40, 22},
     ["Bag"] = {40, 22},
     ["MenuMore"] = {40, 22},
-    ["ActivityListView"] = {109, 55},
+    -- ["ActivityListView"] = {109, 55},
     ["Section"] = {112, 71},
     ["Matrix"] = {33.8, 43.5},
     ["MissionView"] = {33.8, 43.5},
@@ -16,14 +16,14 @@ local redPoss = {
 }
 -- 上锁位置，下面没有就用红点的位置
 local lockPoss = {
-    ["ActivityListView"] = {0, 0},
+    -- ["ActivityListView"] = {0, 0},
     ["ActiveityEnter"] = {0, 0} -- 版本活动入口
 }
 -- 入口拿取红点的key值，没有的特殊处理
 local redsRef = {
     ["MailView"] = RedPointType.Mail,
     -- ["Bag"] = RedPointType.Bag,
-    ["ActivityListView"] = RedPointType.ActivityList1,
+    -- ["ActivityListView"] = RedPointType.ActivityList1,
     -- ["Section"] = RedPointType.Attack,
     ["Matrix"] = RedPointType.Matrix,
     -- ["MissionView"] = RedPointType.Mission,
@@ -34,10 +34,11 @@ local redsRef = {
 --
 local moneyIDs = {ITEM_ID.DIAMOND, ITEM_ID.GOLD, 10035}
 --
-local views = {"PlayerView", "MailView", "Bag", "MenuMore", "ActivityListView", "Matrix", "MissionView",
-               "RoleListNormal", "TeamView", "CreateView", "ShopView", "Section"} -- 统一处理（上锁，红点检查，点击）
+local views = {"PlayerView", "MailView", "Bag", "MenuMore", "Matrix", "MissionView", "RoleListNormal", "TeamView",
+               "CreateView", "ShopView", "Section"} -- 统一处理（上锁，红点检查，点击）
 --
 local MenuLBtnData = require("MenuLBtnData")
+local MenuRBtnData = require("MenuRBtnData")
 --
 local mAlpha = 0.5
 local fill_lv = nil
@@ -54,9 +55,10 @@ local isHideUI = false -- 隐藏ui
 local showTime = nil
 local isShowTalk = true -- 台词文本
 local activeEnter_tab = {} -- {cfg:CfgActiveEntry,刷新时间,是否开启}
-local menuBuy_tab = nil -- 下次刷新点{time，id}
+--local menuBuy_tab = nil -- 下次刷新点{time，id}
 local isTalking = false -- 正在说话
 local lvSV_time = nil
+local rtSV_time = nil
 local lockDatasDic = {} -- 当前上锁的view
 local closeViews = nil
 local voicePlaying
@@ -88,16 +90,15 @@ local isDestory = false
 local attackEffectIsShow = false
 local attackEffectBaseTime = nil
 local attackEffectTimer = nil
-local skinRebateTime = nil
-local skinRebateShowTime = nil
-local skinRebateRefreshTime = nil
+-- local skinRebateTime = nil
+-- local skinRebateShowTime = nil
+-- local skinRebateRefreshTime = nil
 local questionnaireTime = nil
 local puzzleNextInfo = nil;
 
 local exerciseRTime = nil
 local popupPackTime = nil
 local isSpineUIHide = nil
-
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
     fill_lv = ComUtil.GetCom(fillLv, "Image")
@@ -133,6 +134,7 @@ function InitListener()
     eventMgr:AddListener(EventType.RedPoint_Refresh, function()
         SetReds()
         SetLTSV()
+        SetRTSV()
         SetActivityEnter()
     end)
     -- 更换看板
@@ -178,7 +180,7 @@ function InitListener()
         end
     end)
     -- 商店购买回调 商店界面返回就自动触发弹窗了
-    eventMgr:AddListener(EventType.Shop_Buy_Ret, SetMenuBuy)
+    eventMgr:AddListener(EventType.Shop_Buy_Ret, SetRTSV)
     -- 回归判断(3点会更新)
     eventMgr:AddListener(EventType.HuiGui_Check, SetRegressionBtn)
     -- 改名
@@ -194,7 +196,7 @@ function InitListener()
     -- 更新看板2.0
     eventMgr:AddListener(EventType.CRoleDisplayS_Change, SetBtnChange)
     -- 首充界面关闭
-    eventMgr:AddListener(EventType.MenuBuy_RechargeCB, SetMenuBuy)
+    eventMgr:AddListener(EventType.MenuBuy_RechargeCB, SetRTSV)
 
     -- rtSV相关 START
     -- 回归绑定活动数据更新
@@ -206,7 +208,7 @@ function InitListener()
         skinLimitTime = RoleSkinMgr:CheckLimitSkin()
     end)
     -- 皮肤返利
-    eventMgr:AddListener(EventType.Activity_SkinRebate_Refresh, SetSkinRebate)
+    eventMgr:AddListener(EventType.Activity_SkinRebate_Refresh, SetRTSV)
     eventMgr:AddListener(EventType.Menu_Questionnaire, function()
         questionnaireTime = QuestionnaireMgr:GetRefreshTime()
     end)
@@ -215,10 +217,17 @@ function InitListener()
     eventMgr:AddListener(EventType.Menu_SpineUI, SpineUI)
     eventMgr:AddListener(EventType.Riddle_Data_Ret, SetLTSV)
     -- 点触礼包新增或者被购买
-    eventMgr:AddListener(EventType.Menu_PopupPack, SetPopupPack)
-    eventMgr:AddListener(EventType.Menu_PopupPack_MinTime, function ()
-        popupPackTime = PopupPackMgr:GetMinTime()
-        SetPopupPackBtn()
+    eventMgr:AddListener(EventType.Menu_PopupPack, function()
+        SetRTSV()
+        if (openViews["Guide"] == nil and CheckIsTop()) then
+            ShowPopupPack()
+        end
+    end)
+    eventMgr:AddListener(EventType.Menu_PopupPack_MinTime, SetRTSV)
+    eventMgr:AddListener(EventType.Role_Create_Finish, function()
+        if (freeCreateRed.activeSelf) then
+            SetFreeCreate(true)
+        end
     end)
 end
 
@@ -271,14 +280,18 @@ function Update()
     if (lvSV_time and curTime >= lvSV_time) then
         SetLTSV()
     end
-    -- 付费弹窗
-    if (menuBuy_tab and curTime > menuBuy_tab[1]) then
-        MenuBuyMgr:ConditionCheck2(menuBuy_tab[2])
-        SetMenuBuy()
-        if (CheckIsTop()) then
-            CheckPopUpWindow()
-        end
+    -- 刷新rtSV
+    if (rtSV_time and curTime >= rtSV_time) then
+        SetRTSV()
     end
+    -- 付费弹窗
+    -- if (menuBuy_tab and curTime > menuBuy_tab[1]) then
+    --     MenuBuyMgr:ConditionCheck2(menuBuy_tab[2])
+    --     SetMenuBuy()
+    --     if (CheckIsTop()) then
+    --         CheckPopUpWindow()
+    --     end
+    -- end
     -- 自动播放台词
     if (not voicePlaying and curTime > nextPlayTime and mainIconItem and mainIconItem:GetModelID() > 10000) then
         nextPlayTime = curTime + 180
@@ -385,16 +398,16 @@ function Update()
         RoleSkinMgr:CheckLimitSkin()
     end
     -- 皮肤返利
-    if skinRebateTime then
-        if skinRebateShowTime then
-            local srTimeTab = TimeUtil:GetTimeTab(skinRebateShowTime - curTime)
-            LanguageMgr:SetText(txtSkinRebateTime, 34039, srTimeTab[1], srTimeTab[2], srTimeTab[3])
-        end
-        if curTime > skinRebateTime or (skinRebateRefreshTime and curTime > skinRebateRefreshTime) then
-            skinRebateTime = nil
-            SetSkinRebate()
-        end
-    end
+    -- if skinRebateTime then
+    --     if skinRebateShowTime then
+    --         local srTimeTab = TimeUtil:GetTimeTab(skinRebateShowTime - curTime)
+    --         LanguageMgr:SetText(txtSkinRebateTime, 34039, srTimeTab[1], srTimeTab[2], srTimeTab[3])
+    --     end
+    --     if curTime > skinRebateTime or (skinRebateRefreshTime and curTime > skinRebateRefreshTime) then
+    --         skinRebateTime = nil
+    --         SetSkinRebate()
+    --     end
+    -- end
     -- 问卷
     if (questionnaireTime and curTime >= questionnaireTime) then
         questionnaireTime = nil
@@ -412,13 +425,13 @@ function Update()
         EventMgr.Dispatch(EventType.ExerciseR_End)
     end 
     -- 点触礼包
-    if (popupPackTime ~= nil) then        
-        if (curTime >= popupPackTime) then
-            popupPackTime = nil
-            PopupPackMgr:UpdateDatas()
-        end
-        SetPopupPackBtn()
-    end
+    -- if (popupPackTime ~= nil) then
+    --     if (curTime >= popupPackTime) then
+    --         popupPackTime = nil
+    --         PopupPackMgr:UpdateDatas()
+    --     end
+    --     SetPopupPackBtn()
+    -- end
     -- 静默下载
     UpdateSilentDownloadProgress()
 end
@@ -475,13 +488,14 @@ function InitTimers()
 end
 
 function RefreshPanel()
-    SetLocks()
     if (isAnimSuccess) then
-        SetReds()
         SetLocks()
+        SetReds()
     else
-        FuncUtil:Call(SetReds, nil, 320)
-        FuncUtil:Call(SetLocks, nil, 320)
+        FuncUtil:Call(function()
+            SetLocks()
+            SetReds()
+        end, nil, 320)
     end
     SetLT()
     SetLD()
@@ -519,13 +533,13 @@ function PlayUIAnimEnd()
         PlayerClient:ApplyChangeLine() -- 切线
     end
     -- 
-    MenuMgr:CheckInviteTips() --理论上没有引导都可以弹出
+    MenuMgr:CheckInviteTips() -- 理论上没有引导都可以弹出
     --
     if (not CheckIsTop()) then
         return
     end
     -- 检测邀请
-    --MenuMgr:CheckInviteTips()
+    -- MenuMgr:CheckInviteTips()
 
     -- 引导相关（有引导时，在关闭引导界面时会触发OnViewClosed）
     local b = false
@@ -628,6 +642,16 @@ function SetReds()
             rdLNR[v .. "_limit"] = {limitObj, isLimit}
         end
     end
+    -- 特殊
+    SetFreeCreate(true)
+end
+-- b:展开
+function SetFreeCreate(zk)
+    local n = 0
+    if (zk and lockDatasDic and not lockDatasDic["CreateView"]) then
+        n = CreateMgr:GetFreeCnt()
+    end
+    CSAPI.SetGOActive(freeCreateRed, n > 0)
 end
 
 function CheckMoreRed()
@@ -798,8 +822,8 @@ function SetImg()
         top = iconParent1
     end
     top.transform:SetAsLastSibling()
-    --记录看板的ab
-    --ABMgr:RefreshMajorRoleList(RecordAB(curDisplayData))
+    -- 记录看板的ab
+    -- ABMgr:RefreshMajorRoleList(RecordAB(curDisplayData))
     RoleABMgr:ChangeByIDs("MenuView", curDisplayData:GetIDs())
 end
 
@@ -981,10 +1005,63 @@ end
 function SetRT()
     SetMoneys()
     SetHot()
-    SetMenuBuy()
-    SetSkinRebate()
-    SetPopupPackBtn()
+    -- SetMenuBuy()
+    --SetSkinRebate()
+    -- SetPopupPackBtn()
+    SetRTSV()
 end
+
+function SetRTSV()
+    rtSV_time = nil
+    -- 初始化数据
+    local rtSVDatas = {}
+    local cfgs = Cfgs.CfgMenuRBtns:GetAll()
+    for k, v in pairs(cfgs) do
+        local _data = MenuRBtnData.New()
+        _data:Init(v)
+        if (_data:IsShow()) then
+            table.insert(rtSVDatas, _data)
+        end
+        -- 刷新的最短时间
+        local _time = _data:RefreshTime()
+        if (_time and (rtSV_time == nil or _time < rtSV_time)) then
+            rtSV_time = _time
+        end
+    end
+    if (#rtSVDatas > 1) then
+        table.sort(rtSVDatas, function(a, b)
+            return a:GetCfg().sort < b:GetCfg().sort
+        end)
+    end
+    rtSVItems = rtSVItems or {}
+    local len = #rtSVDatas
+    ItemUtil.AddItems("Menu/MenuRBtn", rtSVItems, rtSVDatas, rtSVContent)
+
+    -- 特殊数据 
+    -- 充值弹窗
+    if (not CSAPI.IsAppReview()) then
+        menuBuy_tab = nil
+        if (MenuBuyMgr:CheckMenuBuyIsOpen()) then
+            if (not menuBuy_tab) then
+                menuBuy_tab = MenuBuyMgr:GetOpenEndTimeInfo()
+            elseif (menuBuy_tab and TimeUtil:GetTime() >= menuBuy_tab[1]) then
+                MenuBuyMgr:ConditionCheck2(menuBuy_tab[2])
+                menuBuy_tab = MenuBuyMgr:GetOpenEndTimeInfo()
+                if (CheckIsTop()) then
+                    CheckPopUpWindow()
+                end
+            end
+        end
+    end
+    -- 点触礼包 
+    if (popupPackTime == nil) then
+        popupPackTime = PopupPackMgr:GetMinTime()
+    elseif (popupPackTime ~= nil and TimeUtil:GetTime() >= popupPackTime) then
+        popupPackTime = nil
+        PopupPackMgr:UpdateDatas()
+    end
+end
+
 function SetMoneys()
     for i, v in ipairs(moneyIDs) do
         local cfg = Cfgs.ItemInfo:GetByID(v)
@@ -1002,29 +1079,29 @@ function SetHot()
     CSAPI.SetText(txtMoney3, cur .. "/" .. max1)
 end
 -- 付费弹窗
-function SetMenuBuy()
-    if (CSAPI.IsAppReview()) then
-        return -- app审核
-    end
-    local isHad = false
-    menuBuy_tab = nil
-    local isOpen = MenuBuyMgr:CheckMenuBuyIsOpen()
-    if (isOpen) then
-        local curData = MenuBuyMgr:GetCurData()
-        if (curData) then
-            isHad = true
-            if (not menuBuyItem) then
-                local go = ResUtil:CreateUIGO("Menu/MenuBuy", objBuy.transform)
-                menuBuyItem = ComUtil.GetLuaTable(go)
-            else
-                CSAPI.SetGOActive(menuBuyItem.gameObject, true)
-            end
-            menuBuyItem.Refresh(curData)
-        end
-        menuBuy_tab = MenuBuyMgr:GetOpenEndTimeInfo()
-    end
-    CSAPI.SetGOActive(objBuy, isHad)
-end
+-- function SetMenuBuy()
+--     if (CSAPI.IsAppReview()) then
+--         return -- app审核
+--     end
+--     local isHad = false
+--     menuBuy_tab = nil
+--     local isOpen = MenuBuyMgr:CheckMenuBuyIsOpen()
+--     if (isOpen) then
+--         local curData = MenuBuyMgr:GetCurData()
+--         if (curData) then
+--             isHad = true
+--             if (not menuBuyItem) then
+--                 local go = ResUtil:CreateUIGO("Menu/MenuBuy", objBuy.transform)
+--                 menuBuyItem = ComUtil.GetLuaTable(go)
+--             else
+--                 CSAPI.SetGOActive(menuBuyItem.gameObject, true)
+--             end
+--             menuBuyItem.Refresh(curData)
+--         end
+--         menuBuy_tab = MenuBuyMgr:GetOpenEndTimeInfo()
+--     end
+--     CSAPI.SetGOActive(objBuy, isHad)
+-- end
 
 -- function SetPetTimeStamp(eventData)
 --     if eventData then
@@ -1032,25 +1109,25 @@ end
 --     end
 -- end
 
-function SetSkinRebate()
-    local isOpen, id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
-    CSAPI.SetGOActive(btnSkinRebate, isOpen)
-    if isOpen then
-        local type, limitTime, rTime = OperationActivityMgr:GetSkinRebateState()
-        local isRed = ActivityMgr:CheckRed(id) and type ~= SkinRebateType.Lock
-        UIUtil:SetRedPoint(btnSkinRebate, isRed, 120, 39)
-        CSAPI.SetGOActive(skinRebateLock, type == SkinRebateType.Lock)
-        CSAPI.SetGOActive(skinRebateLimit, type == SkinRebateType.LimitTime)
-        CSAPI.SetGOActive(skinRebateNol, not isRed and type ~= SkinRebateType.Lock)
-        if type == SkinRebateType.LimitTime then
-            skinRebateShowTime = limitTime
-        end
-        if rTime and rTime > 0 then
-            skinRebateRefreshTime = rTime
-        end
-    end
-    skinRebateTime = ActivityMgr:GetRefreshTime(ActivityListType.SkinRebate)
-end
+-- function SetSkinRebate()
+--     local isOpen, id = ActivityMgr:IsOpenByType(ActivityListType.SkinRebate)
+--     CSAPI.SetGOActive(btnSkinRebate, isOpen)
+--     if isOpen then
+--         local type, limitTime, rTime = OperationActivityMgr:GetSkinRebateState()
+--         local isRed = ActivityMgr:CheckRed(id) and type ~= SkinRebateType.Lock
+--         UIUtil:SetRedPoint(btnSkinRebate, isRed, 120, 39)
+--         CSAPI.SetGOActive(skinRebateLock, type == SkinRebateType.Lock)
+--         CSAPI.SetGOActive(skinRebateLimit, type == SkinRebateType.LimitTime)
+--         CSAPI.SetGOActive(skinRebateNol, not isRed and type ~= SkinRebateType.Lock)
+--         if type == SkinRebateType.LimitTime then
+--             skinRebateShowTime = limitTime
+--         end
+--         if rTime and rTime > 0 then
+--             skinRebateRefreshTime = rTime
+--         end
+--     end
+--     skinRebateTime = ActivityMgr:GetRefreshTime(ActivityListType.SkinRebate)
+-- end
 
 -------------------------RD--------------------------------------
 function SetRD()
@@ -1170,7 +1247,7 @@ function EActivityGetCB()
     if (not CSAPI.IsAppReview()) then
         if (isNeedToShowMenuBuy) then
             return true
-        elseif (not isNeedToShowMenuBuy and objBuy.activeSelf and menuBuyItem ~= nil and MenuBuyMgr:CheckIsNeedShow()) then
+        elseif (not isNeedToShowMenuBuy and MenuBuyMgr:CheckIsNeedShow()) then
             isNeedToShowMenuBuy = true
             FuncUtil:Call(EActivityGetCB2, nil, 100)
             return true
@@ -1186,8 +1263,8 @@ function EActivityGetCB()
         return true
     end
 
-    --点触礼包
-    if(ShowPopupPack())then 
+    -- 点触礼包
+    if (ShowPopupPack()) then
         return true
     end
 
@@ -1197,7 +1274,7 @@ function EActivityGetCB()
     CSAPI.SetGOActive(mask, false)
 
     -- 检测邀请
-    --MenuMgr:CheckInviteTips()
+    -- MenuMgr:CheckInviteTips()
 
     return false
 end
@@ -1205,7 +1282,8 @@ end
 function EActivityGetCB2()
     CSAPI.SetGOActive(mask, false)
     isNeedToShowMenuBuy = false
-    menuBuyItem.OnClick()
+    CSAPI.OpenView("MenuBuyPanel")
+    -- menuBuyItem.OnClick()
 end
 
 ---谷歌奖励
@@ -1561,14 +1639,17 @@ function Anim_RD(b)
         end
     end
 end
-function SetRDLockNexRed(b)
+-- b:展开
+function SetRDLockNexRed(zk)
     for key, v in pairs(rdLNR) do
         local isShow = false
-        if (b and v[2]) then
+        if (zk and v[2]) then
             isShow = true
         end
         CSAPI.SetGOActive(v[1], isShow)
     end
+    -- 
+    SetFreeCreate(zk)
 end
 function HideAnimRD()
     if (rdType == 2) then
@@ -1824,12 +1905,12 @@ end
 
 function SpineUI(b)
     if (b) then
-        if(not isHideUI)then 
+        if (not isHideUI) then
             isSpineUIHide = true
             OnClickHide()
         end
     else
-        if(isSpineUIHide)then 
+        if (isSpineUIHide) then
             OnClickBack()
         end
         isSpineUIHide = nil
@@ -1837,32 +1918,32 @@ function SpineUI(b)
     MenuMgr:SpineUI(b)
 end
 
-function SetPopupPackBtn()
-    local isShow = false
-    if(popupPackTime ~= nil and (popupPackTime>TimeUtil:GetTime()))then 
-        isShow = true 
-    end 
-    CSAPI.SetGOActive(btnPopupPack, isShow)
-    if(isShow)then 
-        local needTime = popupPackTime - TimeUtil:GetTime()
-        CSAPI.SetText(txtPopupPack, TimeUtil:GetTimeStr(needTime <= 0 and 0 or needTime))
-    end 
-end
+-- function SetPopupPackBtn()
+--     local isShow = false
+--     if (popupPackTime ~= nil and (popupPackTime > TimeUtil:GetTime())) then
+--         isShow = true
+--     end
+--     CSAPI.SetGOActive(btnPopupPack, isShow)
+--     if (isShow) then
+--         local needTime = popupPackTime - TimeUtil:GetTime()
+--         CSAPI.SetText(txtPopupPack, TimeUtil:GetTimeStr(needTime <= 0 and 0 or needTime))
+--     end
+-- end
 
 -- 点触礼包 新增或被购买 
-function SetPopupPack()
-    popupPackTime = PopupPackMgr:GetMinTime()
-    SetPopupPackBtn()
-    if (openViews["Guide"] == nil and CheckIsTop()) then
-        ShowPopupPack()
-    end
-end
+-- function SetPopupPack()
+--     popupPackTime = PopupPackMgr:GetMinTime()
+--     SetPopupPackBtn()
+--     if (openViews["Guide"] == nil and CheckIsTop()) then
+--         ShowPopupPack()
+--     end
+-- end
 
 -- 自动检测弹出
 function ShowPopupPack()
-    if(PopupPackMgr:CheckNeedShow())then 
-        if(not CSAPI.IsViewOpen("PopupPackView"))then 
-            --CSAPI.OpenView("PopupPackView")
+    if (PopupPackMgr:CheckNeedShow()) then
+        if (not CSAPI.IsViewOpen("PopupPackView")) then
+            -- CSAPI.OpenView("PopupPackView")
             PopupPackMgr:ToshowView("冷启动")
             return true
         end

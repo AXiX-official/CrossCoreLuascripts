@@ -1,85 +1,73 @@
-local conf = {
-	["filename"] = 'j-技能.xlsx',
-	["sheetname"] = 'buff特效',
-	["types"] = {
-'int','string','string','string','int','bool','int','int','int'
-},
-	["names"] = {
-'id','key','res','attach','time','uniqueness','play_model','play_channel','play_priority'
-},
-	["data"] = {
-{'1',	'armor',	'',	'',	'2000',	'',	'',	'',	''},
-{'2',	'weak_sarcasm',	'',	'',	'',	'1',	'1',	'1',	''},
-{'3',	'silence',	'',	'',	'',	'1',	'1',	'1',	''},
-{'4',	'superheat',	'',	'',	'',	'1',	'1',	'2',	''},
-{'5',	'vertigo',	'',	'',	'',	'1',	'1',	'1',	''},
-{'6',	'freeze',	'',	'',	'',	'1',	'2',	'4',	'3'},
-{'7',	'sleeping',	'',	'',	'',	'1',	'1',	'1',	''},
-{'8',	'strong_sarcasm',	'',	'',	'',	'1',	'1',	'1',	''},
-{'9',	'burn',	'',	'',	'',	'1',	'1',	'2',	''},
-{'10',	'poisoning',	'',	'',	'',	'1',	'1',	'2',	''},
-{'11',	'debby_tubercle',	's50180/debby_tubercle',	'',	'',	'1',	'2',	'4',	'2'},
-{'12',	'paralysis',	'',	'',	'1000',	'1',	'1',	'2',	''},
-{'13',	'poseidon_shield',	'',	'',	'3000',	'',	'',	'',	''},
-{'14',	'bleed',	'',	'',	'',	'1',	'1',	'2',	''},
-{'15',	'water_ball',	'',	'',	'',	'1',	'',	'',	''},
-{'16',	'bomb_point',	'device/bomb_point',	'',	'',	'1',	'',	'',	''},
-{'17',	'ice_point',	'device/ice_point',	'',	'',	'1',	'',	'',	''},
-{'18',	'paralytic_point',	'device/paralytic_point',	'',	'',	'1',	'',	'',	''},
-{'19',	'poison_point',	'device/poison_point',	'',	'',	'1',	'',	'',	''},
-{'20',	'sleep_point',	'device/sleep_point',	'',	'',	'1',	'',	'',	''},
-{'21',	'stun_point',	'device/stun_point',	'',	'',	'1',	'',	'',	''},
-{'22',	'seckill_point',	'device/seckill_point',	'',	'',	'1',	'',	'',	''},
-{'23',	'chaos_point',	'device/chaos_point',	'',	'',	'1',	'',	'',	''},
-{'24',	'tubercle ',	's50180/debby_tubercle',	'',	'',	'1',	'2',	'4',	'2'},
-{'25',	'debby_tubercle01',	's50180/debby_tubercle01',	'',	'',	'1',	'2',	'4',	'2'},
-{'26',	'debby_shield',	's50180/debby_shield',	'',	'',	'1',	'2',	'4',	'2'},
-{'27',	'absorb_shield',	'',	'',	'2000',	'',	'',	'',	''},
-{'28',	'thunder',	'',	'',	'1500',	'1',	'1',	'2',	''},
-{'29',	'thunderTest',	'',	'',	'',	'1',	'',	'',	''},
-{'30',	'paralysis_new',	'',	'',	'1000',	'1',	'1',	'2',	''},
-{'31',	'jarry_poison',	'm10190/cast1_eff2',	'',	'1500',	'',	'',	'',	''},
-{'32',	'GuangDun',	'',	'',	'',	'',	'',	'',	''},
-{'33',	'ShitiDun',	'',	'',	'',	'',	'',	'',	''},
-{'34',	'qc_buff_hit',	'common_hit/qc_buff_hit',	'',	'',	'',	'',	'',	''},
-{'35',	'qc_lightning_hit_strengthen',	'common_hit/qc_lightning_hit_strengthen',	'',	'1000',	'1',	'1',	'2',	''},
-{'36',	'cast1_eff2',	'o20070/CastPassiveEff2',	'CastPassiveEffect',	'',	'',	'',	'',	''},
-{'37',	'CastPassiveEff',	'o20070/CastPassiveEff',	'CastPassiveEffect',	'',	'',	'',	'',	''},
-{'38',	'70030_cast0_hit',	'd70030/cast0_hit',	'',	'',	'',	'',	'',	''},
-{'39',	'cast1_eff_20140',	'o20140/cast1_eff',	'',	'',	'',	'',	'',	''},
-{'40',	'cast_eff_40320',	'a40320/cast_buff',	'',	'',	'',	'',	'',	''},
-{'41',	'cast3_eff_40220',	'a40220/cast3_eff',	'',	'',	'',	'',	'',	''},
-{'42',	'cast3_eff3_50040',	's50040/cast3_eff3',	'',	'',	'1',	'1',	'1',	''},
-{'43',	'cast3_hit_50040',	's50040/cast3_hit',	'',	'1500',	'1',	'1',	'1',	''},
-{'44',	'cast_buff_60030',	'b60030/cast_buff',	'',	'1500',	'1',	'1',	'',	''},
-{'45',	'cast_Passive_20080',	'o20080/cast_Passive',	'',	'',	'1',	'1',	'1',	''},
-{'46',	'Cast1Effect_01_40310',	'a40310/Cast1Effect_01',	'Cast1Effect_01',	'',	'',	'',	'',	''},
-{'47',	'Cast1Effect_02_40310',	'a40310/Cast1Effect_02',	'Cast1Effect_02',	'',	'',	'',	'',	''},
-{'48',	'buff_dun_70290',	'd70290/buff_dun',	'',	'1000',	'',	'',	'',	''},
-{'49',	'cast2_buff_92291',	'g92291/cast2_buff',	'',	'',	'',	'',	'',	''},
-{'50',	'cast_cure_60090',	'b60090/cast_cure',	'',	'1500',	'',	'',	'',	''},
-{'51',	'cast_debuff_60090',	'b60090/cast_debuff',	'',	'2000',	'',	'',	'',	''},
-{'52',	'buff_dun2_70290',	'd70290/buff_dun2',	'',	'1000',	'',	'',	'',	''},
-{'53',	'buff_hit_a40350',	'a40350/buff_hit',	'',	'1500',	'',	'',	'',	''},
-{'54',	'buff_hit_m10260',	'm10260/cast2buff_hit',	'',	'1500',	'',	'',	'',	''},
-{'55',	'92280_cast_hit',	'g92280/cast_hit',	'',	'',	'',	'',	'',	''},
-{'56',	'92280_cast_buff',	'g92280/cast_buff',	'',	'',	'',	'',	'',	''},
-{'57',	'93270_cast3_defend',	'g93270/cast3_defend',	'',	'1500',	'',	'',	'',	''},
-{'58',	'93270_cast3_defend',	'd70320/cast0_buff',	'',	'1500',	'',	'',	'',	''},
-{'59',	'cast0_buff_70320',	'd70320/cast0_buff',	'',	'',	'1',	'1',	'1',	''},
-{'60',	'cast0_hit_70320',	'd70320/cast0_hit',	'',	'1500',	'1',	'1',	'1',	''},
-{'61',	'cast2_buff_g90880',	'g90880/cast2_buff',	'',	'',	'',	'',	'',	''},
-{'62',	'HightVoltage',	'',	'',	'',	'1',	'1',	'2',	''},
-{'63',	'cast_buff_zhuoshao',	'common/cast_buff_zhuoshao',	'',	'',	'',	'',	'',	''},
-{'64',	'cast_buff_bingdong',	'common/cast_buff_bingdong',	'',	'',	'',	'',	'',	''},
-{'65',	'buff_hit_a40020',	'a40020/cast_hit',	'',	'1500',	'',	'',	'',	''},
-{'66',	'Homology_eff',	'buff/Homology_eff',	'',	'',	'1',	'1',	'2',	''},
-{'67',	'cast2_cure01_o20230',	'o20230/cast2_cure01',	'',	'',	'1',	'1',	'2',	''},
-{'68',	'buff_eff2_o20230',	'o20230/buff_eff2',	'',	'',	'1',	'1',	'1',	''},
-{'69',	'cast2_buff_g91060',	'g91060/cast_shield',	'',	'',	'',	'',	'',	''},
-{'70',	'cast1_buff_g91340',	'g91340/cast1_buff',	'',	'',	'1',	'',	'',	''},
-{'71',	'u30500/cast_storage',	'u30500/cast_storage',	'CastPassiveEffect',	'',	'',	'',	'',	''},
-},
+_G["buff_effect"]={{["uniqueness"]=false,["time"]=2000,["id"]=1,["key"]="armor"}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="weak_sarcasm",["id"]=2,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="silence",["id"]=3,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=2,["key"]="superheat",["id"]=4,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="vertigo",["id"]=5,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=4,["key"]="freeze",["id"]=6,["play_model"]=2,["play_priority"]=3}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="sleeping",["id"]=7,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="strong_sarcasm",["id"]=8,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=2,["key"]="burn",["id"]=9,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=2,["key"]="poisoning",["id"]=10,["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=4,["key"]="debby_tubercle",["id"]=11,["res"]="s50180/debby_tubercle",["play_model"]=2,["play_priority"]=2}
+,{["uniqueness"]=true,["play_channel"]=2,["time"]=1000,["id"]=12,["key"]="paralysis",["play_model"]=1}
+,{["uniqueness"]=false,["time"]=3000,["id"]=13,["key"]="poseidon_shield"}
+,{["uniqueness"]=true,["play_channel"]=2,["key"]="bleed",["id"]=14,["play_model"]=1}
+,{["id"]=15,["uniqueness"]=true,["key"]="water_ball"}
+,{["uniqueness"]=true,["key"]="bomb_point",["id"]=16,["res"]="device/bomb_point"}
+,{["uniqueness"]=true,["key"]="ice_point",["id"]=17,["res"]="device/ice_point"}
+,{["uniqueness"]=true,["key"]="paralytic_point",["id"]=18,["res"]="device/paralytic_point"}
+,{["uniqueness"]=true,["key"]="poison_point",["id"]=19,["res"]="device/poison_point"}
+,{["uniqueness"]=true,["key"]="sleep_point",["id"]=20,["res"]="device/sleep_point"}
+,{["uniqueness"]=true,["key"]="stun_point",["id"]=21,["res"]="device/stun_point"}
+,{["uniqueness"]=true,["key"]="seckill_point",["id"]=22,["res"]="device/seckill_point"}
+,{["uniqueness"]=true,["key"]="chaos_point",["id"]=23,["res"]="device/chaos_point"}
+,{["uniqueness"]=true,["play_channel"]=4,["key"]="tubercle ",["id"]=24,["res"]="s50180/debby_tubercle",["play_model"]=2,["play_priority"]=2}
+,{["uniqueness"]=true,["play_channel"]=4,["key"]="debby_tubercle01",["id"]=25,["res"]="s50180/debby_tubercle01",["play_model"]=2,["play_priority"]=2}
+,{["uniqueness"]=true,["play_channel"]=4,["key"]="debby_shield",["id"]=26,["res"]="s50180/debby_shield",["play_model"]=2,["play_priority"]=2}
+,{["uniqueness"]=false,["time"]=2000,["id"]=27,["key"]="absorb_shield"}
+,{["uniqueness"]=true,["play_channel"]=2,["time"]=1500,["id"]=28,["key"]="thunder",["play_model"]=1}
+,{["id"]=29,["uniqueness"]=true,["key"]="thunderTest"}
+,{["uniqueness"]=true,["play_channel"]=2,["time"]=1000,["id"]=30,["key"]="paralysis_new",["play_model"]=1}
+,{["uniqueness"]=false,["time"]=1500,["key"]="jarry_poison",["id"]=31,["res"]="m10190/cast1_eff2"}
+,{["id"]=32,["uniqueness"]=false,["key"]="GuangDun"}
+,{["id"]=33,["uniqueness"]=false,["key"]="ShitiDun"}
+,{["uniqueness"]=false,["key"]="qc_buff_hit",["id"]=34,["res"]="common_hit/qc_buff_hit"}
+,{["uniqueness"]=true,["play_channel"]=2,["time"]=1000,["key"]="qc_lightning_hit_strengthen",["id"]=35,["res"]="common_hit/qc_lightning_hit_strengthen",["play_model"]=1}
+,{["uniqueness"]=false,["key"]="cast1_eff2",["id"]=36,["res"]="o20070/CastPassiveEff2",["attach"]="CastPassiveEffect"}
+,{["uniqueness"]=false,["key"]="CastPassiveEff",["id"]=37,["res"]="o20070/CastPassiveEff",["attach"]="CastPassiveEffect"}
+,{["uniqueness"]=false,["key"]="70030_cast0_hit",["id"]=38,["res"]="d70030/cast0_hit"}
+,{["uniqueness"]=false,["key"]="cast1_eff_20140",["id"]=39,["res"]="o20140/cast1_eff"}
+,{["uniqueness"]=false,["key"]="cast_eff_40320",["id"]=40,["res"]="a40320/cast_buff"}
+,{["uniqueness"]=false,["key"]="cast3_eff_40220",["id"]=41,["res"]="a40220/cast3_eff"}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="cast3_eff3_50040",["id"]=42,["res"]="s50040/cast3_eff3",["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=1,["time"]=1500,["key"]="cast3_hit_50040",["id"]=43,["res"]="s50040/cast3_hit",["play_model"]=1}
+,{["uniqueness"]=true,["time"]=1500,["key"]="cast_buff_60030",["id"]=44,["res"]="b60030/cast_buff",["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="cast_Passive_20080",["id"]=45,["res"]="o20080/cast_Passive",["play_model"]=1}
+,{["uniqueness"]=false,["key"]="Cast1Effect_01_40310",["id"]=46,["res"]="a40310/Cast1Effect_01",["attach"]="Cast1Effect_01"}
+,{["uniqueness"]=false,["key"]="Cast1Effect_02_40310",["id"]=47,["res"]="a40310/Cast1Effect_02",["attach"]="Cast1Effect_02"}
+,{["uniqueness"]=false,["time"]=1000,["key"]="buff_dun_70290",["id"]=48,["res"]="d70290/buff_dun"}
+,{["uniqueness"]=false,["key"]="cast2_buff_92291",["id"]=49,["res"]="g92291/cast2_buff"}
+,{["uniqueness"]=false,["time"]=1500,["key"]="cast_cure_60090",["id"]=50,["res"]="b60090/cast_cure"}
+,{["uniqueness"]=false,["time"]=2000,["key"]="cast_debuff_60090",["id"]=51,["res"]="b60090/cast_debuff"}
+,{["uniqueness"]=false,["time"]=1000,["key"]="buff_dun2_70290",["id"]=52,["res"]="d70290/buff_dun2"}
+,{["uniqueness"]=false,["time"]=1500,["key"]="buff_hit_a40350",["id"]=53,["res"]="a40350/buff_hit"}
+,{["uniqueness"]=false,["time"]=1500,["key"]="buff_hit_m10260",["id"]=54,["res"]="m10260/cast2buff_hit"}
+,{["uniqueness"]=false,["key"]="92280_cast_hit",["id"]=55,["res"]="g92280/cast_hit"}
+,{["uniqueness"]=false,["key"]="92280_cast_buff",["id"]=56,["res"]="g92280/cast_buff"}
+,{["uniqueness"]=false,["time"]=1500,["key"]="93270_cast3_defend",["id"]=57,["res"]="g93270/cast3_defend"}
+,{["uniqueness"]=false,["time"]=1500,["key"]="93270_cast3_defend",["id"]=58,["res"]="d70320/cast0_buff"}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="cast0_buff_70320",["id"]=59,["res"]="d70320/cast0_buff",["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=1,["time"]=1500,["key"]="cast0_hit_70320",["id"]=60,["res"]="d70320/cast0_hit",["play_model"]=1}
+,{["uniqueness"]=false,["key"]="cast2_buff_g90880",["id"]=61,["res"]="g90880/cast2_buff"}
+,{["uniqueness"]=true,["play_channel"]=2,["key"]="HightVoltage",["id"]=62,["play_model"]=1}
+,{["uniqueness"]=false,["key"]="cast_buff_zhuoshao",["id"]=63,["res"]="common/cast_buff_zhuoshao"}
+,{["uniqueness"]=false,["key"]="cast_buff_bingdong",["id"]=64,["res"]="common/cast_buff_bingdong"}
+,{["uniqueness"]=false,["time"]=1500,["key"]="buff_hit_a40020",["id"]=65,["res"]="a40020/cast_hit"}
+,{["uniqueness"]=true,["play_channel"]=2,["key"]="Homology_eff",["id"]=66,["res"]="buff/Homology_eff",["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=2,["key"]="cast2_cure01_o20230",["id"]=67,["res"]="o20230/cast2_cure01",["play_model"]=1}
+,{["uniqueness"]=true,["play_channel"]=1,["key"]="buff_eff2_o20230",["id"]=68,["res"]="o20230/buff_eff2",["play_model"]=1}
+,{["uniqueness"]=false,["key"]="cast2_buff_g91060",["id"]=69,["res"]="g91060/cast_shield"}
+,{["uniqueness"]=true,["key"]="cast1_buff_g91340",["id"]=70,["res"]="g91340/cast1_buff"}
+,{["uniqueness"]=false,["key"]="u30500/cast_storage",["id"]=71,["res"]="u30500/cast_storage",["attach"]="CastPassiveEffect"}
 }
---cfgbuff_effect = conf
-return conf
+

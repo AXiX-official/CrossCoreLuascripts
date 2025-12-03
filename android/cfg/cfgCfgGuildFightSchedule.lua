@@ -1,20 +1,24 @@
-local conf = {
-	["filename"] = 'g-工会.xlsx',
-	["sheetname"] = '工会战时间表',
-	["types"] = {
-'int','string','string','int[]','int[]','bool','int','table#9','int','string','int[]','bool','int[]','bool','bool','int[]','int[]'
-},
-	["names"] = {
-'id','key','title','openTime','closeTime','autoJoin','virtualGuildId','infos','index','name','startTime','startRestScore','endTime','endRestScore','endChangeGroup','rangRewardTime','fightResultRewardTime'
-},
-	["data"] = {
-{'1',	'1',	'第一季度',	'2020,12,5,6,0,0',	'2020,12,9,23,59,59',	'0',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'1',	'预选战',	'2020,12,5,9,0,0',	'1',	'2020,12,5,21,0,0',	'1',	'0',	'',	'2020,12,6,6,0,0'},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'2',	'正赛1',	'2020,12,6,9,0,0',	'0',	'2020,12,6,21,0,0',	'0',	'1',	'',	''},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'3',	'正赛2',	'2020,12,7,9,0,0',	'0',	'2020,12,7,21,0,0',	'0',	'1',	'',	''},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'4',	'正赛3',	'2020,12,8,9,0,0',	'0',	'2020,12,8,21,0,0',	'0',	'1',	'',	''},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'5',	'正赛4',	'2020,12,9,9,0,0',	'0',	'2020,12,9,21,0,0',	'0',	'1',	'2020,12,10,6,0,0',	'2020,12,10,6,0,0'},
-},
+_G["CfgGuildFightSchedule"]={{["closeTime"]={2020,12,9,23,59,59}
+,["infos"]={{["index"]=1,["startRestScore"]=true,["name"]="预选战",["fightResultRewardTime"]={2020,12,6,6,0,0}
+,["endTime"]={2020,12,5,21,0,0}
+,["startTime"]={2020,12,5,9,0,0}
+,["endChangeGroup"]=false,["endRestScore"]=true}
+,{["index"]=2,["startRestScore"]=false,["name"]="正赛1",["endTime"]={2020,12,6,21,0,0}
+,["startTime"]={2020,12,6,9,0,0}
+,["endChangeGroup"]=true,["endRestScore"]=false}
+,{["index"]=3,["startRestScore"]=false,["name"]="正赛2",["endTime"]={2020,12,7,21,0,0}
+,["startTime"]={2020,12,7,9,0,0}
+,["endChangeGroup"]=true,["endRestScore"]=false}
+,{["index"]=4,["startRestScore"]=false,["name"]="正赛3",["endTime"]={2020,12,8,21,0,0}
+,["startTime"]={2020,12,8,9,0,0}
+,["endChangeGroup"]=true,["endRestScore"]=false}
+,{["index"]=5,["endTime"]={2020,12,9,21,0,0}
+,["rangRewardTime"]={2020,12,10,6,0,0}
+,["startRestScore"]=false,["name"]="正赛4",["fightResultRewardTime"]={2020,12,10,6,0,0}
+,["startTime"]={2020,12,9,9,0,0}
+,["endChangeGroup"]=true,["endRestScore"]=false}
 }
---cfgCfgGuildFightSchedule = conf
-return conf
+,["title"]="第一季度",["virtualGuildId"]=1,["id"]=1,["autoJoin"]=false,["openTime"]={2020,12,5,6,0,0}
+,["key"]="1"}
+}
+

@@ -30,5 +30,5 @@ function Skill603210305:OnBefourCritHurt(caster, target, data)
 		return
 	end
 	-- 603210303
-	self:AddTempAttr(SkillEffect[603210303], caster, self.card, data, "crit",0.2)
+	self:AddTempAttr(SkillEffect[603210303], caster, self.card, data, "crit_rate",0.2)
 end

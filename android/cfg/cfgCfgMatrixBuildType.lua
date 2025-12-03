@@ -1,16 +1,4 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '基地建筑分类',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'生产'},
-{'2',	'2',	'生活'},
-},
+_G["CfgMatrixBuildType"]={{["id"]=1,["sName"]="生产",["key"]="1"}
+,{["id"]=2,["sName"]="生活",["key"]="2"}
 }
---cfgCfgMatrixBuildType = conf
-return conf
+

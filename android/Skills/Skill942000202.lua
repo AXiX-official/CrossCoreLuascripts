@@ -24,6 +24,11 @@ function Skill942000202:OnActionOver(caster, target, data)
 	else
 		return
 	end
+	-- 8071
+	if SkillJudger:TargetIsFriend(self, caster, target, true) then
+	else
+		return
+	end
 	-- 704000202
 	if self:Rand(2500) then
 		self:BeatBack(SkillEffect[704000202], caster, self.card, data, nil,8)

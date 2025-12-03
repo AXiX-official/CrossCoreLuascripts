@@ -318,7 +318,6 @@ end
 --显示对话框
 function ShowContent()
 	plotBox.ShowBox(currentPlotData, isAuto);
-	plotSound.PlaySound(currentPlotData)
 end
 
 --隐藏对话框
@@ -588,6 +587,8 @@ function PlayContent()
 	else
 		HideDialogBox(isHide);
 	end
+
+	plotSound.PlaySound(currentPlotData)
 end
 
 --对话显示完成时

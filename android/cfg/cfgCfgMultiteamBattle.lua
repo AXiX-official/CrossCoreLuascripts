@@ -1,15 +1,3 @@
-local conf = {
-	["filename"] = 'd-多队boss战斗.xlsx',
-	["sheetname"] = '入口',
-	["types"] = {
-'int','string','string','string','int','int','int','int','int'
-},
-	["names"] = {
-'id','begTime','settlementTime','endTime','rewardGp','missionGp','shopGp','pointId','EnterId'
-},
-	["data"] = {
-{'1',	'2025/08/06 12:00:00',	'2025/08/13 02:59:59',	'2025/08/15 02:59:59',	'1',	'1',	'6001',	'10502',	'10503'},
-},
+_G["CfgMultiteamBattle"]={{["pointId"]=10502,["missionGp"]=1,["rewardGp"]=1,["shopGp"]=6001,["settlementTime"]="2025/08/13 02:59:59",["nEndTime"]=1755197999,["nSettleTime"]=1755025199,["key"]=1,["nBeginTime"]=1754452800,["id"]=1,["begTime"]="2025/08/06 12:00:00",["endTime"]="2025/08/15 02:59:59",["EnterId"]=10503}
 }
---cfgCfgMultiteamBattle = conf
-return conf
+

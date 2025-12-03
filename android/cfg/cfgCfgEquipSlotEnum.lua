@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '装备部位类型',
-	["types"] = {
-'int','string','int','string','json'
-},
-	["names"] = {
-'id','key','nSlot','sName','sortIcon'
-},
-	["data"] = {
-{'1',	'1',	'1',	'运算芯片',	''},
-{'2',	'2',	'2',	'控制芯片',	''},
-{'3',	'3',	'3',	'存储芯片',	''},
-{'4',	'4',	'4',	'输入芯片',	''},
-{'5',	'5',	'5',	'反馈芯片',	''},
-},
+_G["CfgEquipSlotEnum"]={{["key"]="1",["id"]=1,["sName"]="运算芯片",["nSlot"]=1}
+,{["key"]="2",["id"]=2,["sName"]="控制芯片",["nSlot"]=2}
+,{["key"]="3",["id"]=3,["sName"]="存储芯片",["nSlot"]=3}
+,{["key"]="4",["id"]=4,["sName"]="输入芯片",["nSlot"]=4}
+,{["key"]="5",["id"]=5,["sName"]="反馈芯片",["nSlot"]=5}
 }
---cfgCfgEquipSlotEnum = conf
-return conf
+

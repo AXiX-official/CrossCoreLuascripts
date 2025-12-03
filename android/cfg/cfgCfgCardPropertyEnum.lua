@@ -1,57 +1,45 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '卡牌属性类型枚举',
-	["types"] = {
-'int','string','string','string','string','int','string','string'
-},
-	["names"] = {
-'id','key','sName','sName2','sFieldName','nUpperLimit','icon','icon2'
-},
-	["data"] = {
-{'1',	'1',	'攻击',	'攻击',	'attack',	'',	'1',	'1_1'},
-{'2',	'2',	'耐久',	'耐久',	'maxhp',	'',	'2',	'2_1'},
-{'3',	'3',	'防御',	'防御',	'defense',	'',	'3',	'3_1'},
-{'4',	'4',	'机动',	'机动',	'speed',	'',	'4',	'4_1'},
-{'5',	'5',	'暴击',	'暴击',	'crit_rate',	'',	'5',	'5_1'},
-{'6',	'6',	'暴伤',	'暴伤',	'crit',	'',	'6',	'6_1'},
-{'7',	'7',	'效果命中',	'命中',	'hit',	'',	'7',	'7_1'},
-{'8',	'8',	'效果抵抗',	'抵抗',	'resist',	'',	'8',	'8_1'},
-{'9',	'9',	'行动值',	'行动值',	'hot',	'',	'',	''},
-{'10',	'10',	'开场获得np',	'开场获得np',	'np',	'',	'',	''},
-{'11',	'11',	'基础同步率',	'基础同步率',	'sp',	'',	'11',	'11_1'},
-{'12',	'12',	'攻击SP率',	'攻击SP率',	'sp_race',	'',	'',	''},
-{'13',	'13',	'受击SP率',	'受击SP率',	'sp_race2',	'',	'',	''},
-{'14',	'14',	'受到伤害',	'受到伤害',	'bedamage',	'',	'',	''},
-{'15',	'15',	'造成伤害',	'造成伤害',	'damage',	'',	'',	''},
-{'16',	'16',	'受到治疗效果',	'受到治疗效果',	'becure',	'',	'',	''},
-{'17',	'17',	'治疗效果增加',	'治疗效果增加',	'cure',	'',	'',	''},
-{'18',	'18',	'物理伤害系数',	'物理伤害系数',	'damagePhysics',	'',	'',	''},
-{'19',	'19',	'能量伤害系数',	'能量伤害系数',	'damageLight',	'',	'',	''},
-{'20',	'20',	'防御类别',	'防御',	'career',	'',	'20',	'20_1'},
-{'21',	'21',	'COST',	'COST',	'fight_cost',	'',	'',	''},
-{'22',	'22',	'卡牌经验加成',	'卡牌经验加成',	'card_exp_add',	'',	'',	''},
-{'23',	'23',	'玩家经验加成',	'玩家经验加成',	'plr_exp_add',	'',	'',	''},
-{'24',	'24',	'金币获得加成',	'金币获得加成',	'gold_add',	'',	'',	''},
-{'25',	'25',	'金币上限加成',	'金币上限加成',	'gold_upper_add',	'',	'',	''},
-{'26',	'26',	'副本中，对敌方的伤害增加的百分比',	'副本中，对敌方的伤害增加的百分比',	'dup_damage_add_pct',	'',	'',	''},
-{'27',	'27',	'演习中，对敌方的伤害增加的百分比',	'演习中，对敌方的伤害增加的百分比',	'army_damage_add_pct',	'',	'',	''},
-{'28',	'28',	'增加在副本的战斗中的初始NP值',	'增加在副本的战斗中的初始NP值',	'dup_np_add',	'',	'',	''},
-{'29',	'29',	'增加在演习中的初始NP值',	'增加在演习中的初始NP值',	'army_np_add',	'',	'',	''},
-{'30',	'30',	'副本中，被伤害增加的百分比',	'副本中，被伤害增加的百分比',	'dup_bedamage_add_pct',	'',	'',	''},
-{'31',	'31',	'演习中，被伤害增加的百分比',	'演习中，被伤害增加的百分比',	'army_bedamage_add_pct',	'',	'',	''},
-{'32',	'32',	'基地袭击攻击增加百分比',	'基地袭击攻击增加百分比',	'build_attack_add_pct',	'',	'',	''},
-{'33',	'33',	'增加物品获得数量',	'增加物品获得数量',	'add_get_item_num',	'',	'',	''},
-{'34',	'34',	'增加物品获得百分比',	'增加物品获得百分比',	'add_get_item_pct',	'',	'',	''},
-{'35',	'35',	'移动步数',	'距离',	'nStep',	'',	'35',	'35_1'},
-{'36',	'36',	'移动高度',	'高度',	'nJump',	'',	'36',	'36_1'},
-{'37',	'37',	'卡牌经验池加成',	'卡牌经验池加成',	'store_exp_pct',	'',	'',	''},
-{'38',	'38',	'卡牌经验溢出返还',	'卡牌经验溢出返还',	'card_full_exp_pct',	'',	'',	''},
-{'39',	'39',	'移动类型',	'移动类型',	'nMoveType',	'',	'4',	'4_1'},
-{'40',	'40',	'伤害吸收',	'伤害吸收',	'suck',	'',	'',	''},
-{'41',	'41',	'物理',	'物理',	'shield1',	'',	'img_16_03',	''},
-{'42',	'42',	'能量',	'能量',	'shield2',	'',	'img_16_04',	''},
-{'43',	'43',	'特殊',	'特殊',	'shield3',	'',	'img_16_04',	''},
-},
+_G["CfgCardPropertyEnum"]={{["icon2"]="1_1",["icon"]="1",["key"]="1",["sFieldName"]="attack",["id"]=1,["sName"]="攻击",["sName2"]="攻击"}
+,{["icon2"]="2_1",["icon"]="2",["key"]="2",["sFieldName"]="maxhp",["id"]=2,["sName"]="耐久",["sName2"]="耐久"}
+,{["icon2"]="3_1",["icon"]="3",["key"]="3",["sFieldName"]="defense",["id"]=3,["sName"]="防御",["sName2"]="防御"}
+,{["icon2"]="4_1",["icon"]="4",["key"]="4",["sFieldName"]="speed",["id"]=4,["sName"]="机动",["sName2"]="机动"}
+,{["icon2"]="5_1",["icon"]="5",["key"]="5",["sFieldName"]="crit_rate",["id"]=5,["sName"]="暴击",["sName2"]="暴击"}
+,{["icon2"]="6_1",["icon"]="6",["key"]="6",["sFieldName"]="crit",["id"]=6,["sName"]="暴伤",["sName2"]="暴伤"}
+,{["icon2"]="7_1",["icon"]="7",["key"]="7",["sFieldName"]="hit",["id"]=7,["sName"]="效果命中",["sName2"]="命中"}
+,{["icon2"]="8_1",["icon"]="8",["key"]="8",["sFieldName"]="resist",["id"]=8,["sName"]="效果抵抗",["sName2"]="抵抗"}
+,{["key"]="9",["sFieldName"]="hot",["id"]=9,["sName"]="行动值",["sName2"]="行动值"}
+,{["key"]="10",["sFieldName"]="np",["id"]=10,["sName"]="开场获得np",["sName2"]="开场获得np"}
+,{["icon2"]="11_1",["icon"]="11",["key"]="11",["sFieldName"]="sp",["id"]=11,["sName"]="基础同步率",["sName2"]="基础同步率"}
+,{["key"]="12",["sFieldName"]="sp_race",["id"]=12,["sName"]="攻击SP率",["sName2"]="攻击SP率"}
+,{["key"]="13",["sFieldName"]="sp_race2",["id"]=13,["sName"]="受击SP率",["sName2"]="受击SP率"}
+,{["key"]="14",["sFieldName"]="bedamage",["id"]=14,["sName"]="受到伤害",["sName2"]="受到伤害"}
+,{["key"]="15",["sFieldName"]="damage",["id"]=15,["sName"]="造成伤害",["sName2"]="造成伤害"}
+,{["key"]="16",["sFieldName"]="becure",["id"]=16,["sName"]="受到治疗效果",["sName2"]="受到治疗效果"}
+,{["key"]="17",["sFieldName"]="cure",["id"]=17,["sName"]="治疗效果增加",["sName2"]="治疗效果增加"}
+,{["key"]="18",["sFieldName"]="damagePhysics",["id"]=18,["sName"]="物理伤害系数",["sName2"]="物理伤害系数"}
+,{["key"]="19",["sFieldName"]="damageLight",["id"]=19,["sName"]="能量伤害系数",["sName2"]="能量伤害系数"}
+,{["icon2"]="20_1",["icon"]="20",["key"]="20",["sFieldName"]="career",["id"]=20,["sName"]="防御类别",["sName2"]="防御"}
+,{["key"]="21",["sFieldName"]="fight_cost",["id"]=21,["sName"]="COST",["sName2"]="COST"}
+,{["key"]="22",["sFieldName"]="card_exp_add",["id"]=22,["sName"]="卡牌经验加成",["sName2"]="卡牌经验加成"}
+,{["key"]="23",["sFieldName"]="plr_exp_add",["id"]=23,["sName"]="玩家经验加成",["sName2"]="玩家经验加成"}
+,{["key"]="24",["sFieldName"]="gold_add",["id"]=24,["sName"]="金币获得加成",["sName2"]="金币获得加成"}
+,{["key"]="25",["sFieldName"]="gold_upper_add",["id"]=25,["sName"]="金币上限加成",["sName2"]="金币上限加成"}
+,{["key"]="26",["sFieldName"]="dup_damage_add_pct",["id"]=26,["sName"]="副本中，对敌方的伤害增加的百分比",["sName2"]="副本中，对敌方的伤害增加的百分比"}
+,{["key"]="27",["sFieldName"]="army_damage_add_pct",["id"]=27,["sName"]="演习中，对敌方的伤害增加的百分比",["sName2"]="演习中，对敌方的伤害增加的百分比"}
+,{["key"]="28",["sFieldName"]="dup_np_add",["id"]=28,["sName"]="增加在副本的战斗中的初始NP值",["sName2"]="增加在副本的战斗中的初始NP值"}
+,{["key"]="29",["sFieldName"]="army_np_add",["id"]=29,["sName"]="增加在演习中的初始NP值",["sName2"]="增加在演习中的初始NP值"}
+,{["key"]="30",["sFieldName"]="dup_bedamage_add_pct",["id"]=30,["sName"]="副本中，被伤害增加的百分比",["sName2"]="副本中，被伤害增加的百分比"}
+,{["key"]="31",["sFieldName"]="army_bedamage_add_pct",["id"]=31,["sName"]="演习中，被伤害增加的百分比",["sName2"]="演习中，被伤害增加的百分比"}
+,{["key"]="32",["sFieldName"]="build_attack_add_pct",["id"]=32,["sName"]="基地袭击攻击增加百分比",["sName2"]="基地袭击攻击增加百分比"}
+,{["key"]="33",["sFieldName"]="add_get_item_num",["id"]=33,["sName"]="增加物品获得数量",["sName2"]="增加物品获得数量"}
+,{["key"]="34",["sFieldName"]="add_get_item_pct",["id"]=34,["sName"]="增加物品获得百分比",["sName2"]="增加物品获得百分比"}
+,{["icon2"]="35_1",["icon"]="35",["key"]="35",["sFieldName"]="nStep",["id"]=35,["sName"]="移动步数",["sName2"]="距离"}
+,{["icon2"]="36_1",["icon"]="36",["key"]="36",["sFieldName"]="nJump",["id"]=36,["sName"]="移动高度",["sName2"]="高度"}
+,{["key"]="37",["sFieldName"]="store_exp_pct",["id"]=37,["sName"]="卡牌经验池加成",["sName2"]="卡牌经验池加成"}
+,{["key"]="38",["sFieldName"]="card_full_exp_pct",["id"]=38,["sName"]="卡牌经验溢出返还",["sName2"]="卡牌经验溢出返还"}
+,{["icon2"]="4_1",["icon"]="4",["key"]="39",["sFieldName"]="nMoveType",["id"]=39,["sName"]="移动类型",["sName2"]="移动类型"}
+,{["key"]="40",["sFieldName"]="suck",["id"]=40,["sName"]="伤害吸收",["sName2"]="伤害吸收"}
+,{["icon"]="img_16_03",["key"]="41",["sFieldName"]="shield1",["id"]=41,["sName"]="物理",["sName2"]="物理"}
+,{["icon"]="img_16_04",["key"]="42",["sFieldName"]="shield2",["id"]=42,["sName"]="能量",["sName2"]="能量"}
+,{["icon"]="img_16_04",["key"]="43",["sFieldName"]="shield3",["id"]=43,["sName"]="特殊",["sName2"]="特殊"}
 }
---cfgCfgCardPropertyEnum = conf
-return conf
+

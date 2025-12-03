@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'h-活动入口开放.xlsx',
-	["sheetname"] = '碎星虚影',
-	["types"] = {
-'int','string','string','int'
-},
-	["names"] = {
-'id','key','name','sectionID'
-},
-	["data"] = {
-{'4001',	'4001',	'Active_Section_Name_1001##戈里刻虚影',	'1001'},
-{'4002',	'4002',	'Active_Section_Name_1002##诺斯虚影',	'1002'},
-{'4003',	'4003',	'Active_Section_Name_1003##尼克罗虚影',	'1003'},
-},
+_G["CfgDungeonTower"]={[4003]={["id"]=4003,["sectionID"]=1003,["key"]="4003",["name"]="Active_Section_Name_1003##尼克罗虚影"}
+,[4002]={["id"]=4002,["sectionID"]=1002,["key"]="4002",["name"]="Active_Section_Name_1002##诺斯虚影"}
+,[4001]={["id"]=4001,["sectionID"]=1001,["key"]="4001",["name"]="Active_Section_Name_1001##戈里刻虚影"}
 }
---cfgCfgDungeonTower = conf
-return conf
+

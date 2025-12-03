@@ -18,6 +18,11 @@ function Skill21103:OnActionOver(caster, target, data)
 	else
 		return
 	end
+	-- 8965
+	if SkillJudger:IsCallSkill(self, caster, target, false) then
+	else
+		return
+	end
 	-- 21103
 	if self:Rand(10000) then
 		self:AddNp(SkillEffect[21103], caster, caster, data, 5)

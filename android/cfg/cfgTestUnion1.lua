@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = '测试.xlsx',
-	["sheetname"] = '随机点范围',
-	["types"] = {
-'int','string','string','int','int'
-},
-	["names"] = {
-'id','key','sName','nMin','nMax'
-},
-	["data"] = {
-{'1',	'1',	'0',	'0',	'0'},
-{'2',	'2',	'0',	'1',	'1'},
-{'3',	'3',	'0',	'2',	'2'},
-{'4',	'4',	'1',	'3',	'3'},
-{'5',	'5',	'1',	'5',	'5'},
-},
+_G["TestUnion1"]={{["key"]="1",["id"]=1,["sName"]="0",["nMin"]=0,["nMax"]=0}
+,{["key"]="2",["id"]=2,["sName"]="0",["nMin"]=1,["nMax"]=1}
+,{["key"]="3",["id"]=3,["sName"]="0",["nMin"]=2,["nMax"]=2}
+,{["key"]="4",["id"]=4,["sName"]="1",["nMin"]=3,["nMax"]=3}
+,{["key"]="5",["id"]=5,["sName"]="1",["nMin"]=5,["nMax"]=5}
 }
---cfgTestUnion1 = conf
-return conf
+

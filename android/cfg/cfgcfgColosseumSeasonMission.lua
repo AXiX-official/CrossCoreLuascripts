@@ -1,17 +1,15 @@
-local conf = {
-	["filename"] = 'r-任务配置表.xlsx',
-	["sheetname"] = '角斗场赛季任务',
-	["types"] = {
-'int','string','int','string','string','int','int[]','json','int','int'
-},
-	["names"] = {
-'id','key','nGroup','sName','sDescription','nTransferPath','aFinishIds','jAwardId','nIsHide','mailId'
-},
-	["data"] = {
-{'1',	'',	'2',	'随机模式累计获得500星',	'随机模式累计获得500星',	'290001',	'120114',	'[[10407,800,2]]',	'2',	'9001'},
-{'2',	'',	'2',	'随机模式累计获得600星',	'随机模式累计获得600星',	'290001',	'120115',	'[[10407,800,2]]',	'2',	'9001'},
-{'3',	'',	'2',	'随机模式累计获得800星',	'随机模式累计获得800星',	'290001',	'120116',	'[[10407,1500,2],[29048,1,2]]',	'2',	'9001'},
-},
+_G["cfgColosseumSeasonMission"]={{["sDescription"]="随机模式累计获得500星",["id"]=1,["jAwardId"]={{10407,800,2}
 }
---cfgcfgColosseumSeasonMission = conf
-return conf
+,["aFinishIds"]={120114}
+,["key"]=1,["mailId"]=9001,["nTransferPath"]=290001,["sName"]="随机模式累计获得500星",["nIsHide"]=2,["nGroup"]=2}
+,{["sDescription"]="随机模式累计获得600星",["id"]=2,["jAwardId"]={{10407,800,2}
+}
+,["aFinishIds"]={120115}
+,["key"]=2,["mailId"]=9001,["nTransferPath"]=290001,["sName"]="随机模式累计获得600星",["nIsHide"]=2,["nGroup"]=2}
+,{["sDescription"]="随机模式累计获得800星",["id"]=3,["jAwardId"]={{10407,1500,2}
+,{29048,1,2}
+}
+,["aFinishIds"]={120116}
+,["key"]=3,["mailId"]=9001,["nTransferPath"]=290001,["sName"]="随机模式累计获得800星",["nIsHide"]=2,["nGroup"]=2}
+}
+

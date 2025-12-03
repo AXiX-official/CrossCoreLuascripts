@@ -12,10 +12,3 @@ function Skill603210105:DoSkill(caster, target, data)
 	self.order = self.order + 1
 	self:DamagePhysics(SkillEffect[11002], caster, target, data, 0.5,2)
 end
--- 行动结束2
-function Skill603210105:OnActionOver2(caster, target, data)
-	-- 603210101
-	self:OwnerAddBuffCount(SkillEffect[603210101], caster, self.card, data, 4603201,-2,10)
-	-- 603210102
-	self:OwnerAddBuffCount(SkillEffect[603210102], caster, self.card, data, 4603211,2,999)
-end

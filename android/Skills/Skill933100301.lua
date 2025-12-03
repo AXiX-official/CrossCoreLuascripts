@@ -8,7 +8,29 @@ function Skill933100301:Init(skillID, card)
 end
 -- 执行技能
 function Skill933100301:DoSkill(caster, target, data)
-	-- 11001
+	-- 12001
 	self.order = self.order + 1
-	self:DamagePhysics(SkillEffect[11001], caster, target, data, 1,1)
+	self:DamageLight(SkillEffect[12001], caster, target, data, 1,1)
+end
+-- 攻击结束
+function Skill933100301:OnAttackOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8445
+	local count45 = SkillApi:GetAttr(self, caster, target,2,"hp")
+	-- 8200
+	if SkillJudger:IsCurrSkill(self, caster, target, true) then
+	else
+		return
+	end
+	-- 933100301
+	self:AddHp(SkillEffect[933100301], caster, target, data, -count45*0.15)
 end

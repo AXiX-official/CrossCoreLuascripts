@@ -1,15 +1,3 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '兵种',
-	["types"] = {
-'int','string','string','string','string'
-},
-	["names"] = {
-'id','key','sName','sIcon','sNameE'
-},
-	["data"] = {
-{'1',	'1',	'重装型',	'mech_type',	'HEAVY ARMOR'},
-},
+_G["CfgMech"]={{["key"]="1",["id"]=1,["sName"]="重装型",["sNameE"]="HEAVY ARMOR",["sIcon"]="mech_type"}
 }
---cfgCfgMech = conf
-return conf
+

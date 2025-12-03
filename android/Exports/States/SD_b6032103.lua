@@ -1,7 +1,7 @@
 --状态数据
 local this = 
 {
-eff_addition_pack={"b60321"},no_eff_ab=1,
+eff_addition_pack={"b60321"},
 change={play_time=5000,transform_delay=0,transform_enter_state="change",transform_enter_state_delay=0},
 transform={play_time=4700,common_camera="common_buff",transform_delay=0,transform_enter_state="change",transform_enter_state_delay=0},
 cast1={play_time=3500,feature=1,feature_camera_no_transform=1},

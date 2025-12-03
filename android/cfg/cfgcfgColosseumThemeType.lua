@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'j-角斗场表.xlsx',
-	["sheetname"] = '角斗场主题',
-	["types"] = {
-'int','int','string','string'
-},
-	["names"] = {
-'id','key','name','icon'
-},
-	["data"] = {
-{'1',	'1',	'高速',	'1'},
-{'2',	'2',	'中速',	'2'},
-{'3',	'3',	'慢速',	'3'},
-},
+_G["cfgColosseumThemeType"]={{["id"]=1,["icon"]="1",["key"]=1,["name"]="高速"}
+,{["id"]=2,["icon"]="2",["key"]=2,["name"]="中速"}
+,{["id"]=3,["icon"]="3",["key"]=3,["name"]="慢速"}
 }
---cfgcfgColosseumThemeType = conf
-return conf
+

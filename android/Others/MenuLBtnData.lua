@@ -104,6 +104,8 @@ function this:CheckIsShow()
             self.begTime = alData:GetStartTime()
             self.endTime = alData:GetEndTime()
         end
+    elseif self.cfg.nType == 16 then --圣诞活动
+        self.begTime, self.endTime = MerryChristmasMgr:GetActivityTime()
     end
     if (self.begTime == nil and self.endTime == nil) then
         self.isShow = false
@@ -193,6 +195,8 @@ function this:IsRed()
             self.isRed = RedPointMgr:GetData(RedPointType.LovePlus) ~= nil
         elseif self.cfg.nType == 15 then -- 万圣节
             self.isRed = RedPointMgr:GetData(RedPointType.Halloween) ~= nil
+        elseif (self.cfg.nType == 16) then 
+            self.isRed = RedPointMgr:GetData(RedPointType.MerryChristmas) ~= nil
         end
     end
     return self.isRed

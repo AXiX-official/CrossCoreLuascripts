@@ -1,16 +1,8 @@
-local conf = {
-	["filename"] = 's-商店配置.xlsx',
-	["sheetname"] = '随机商品配置',
-	["types"] = {
-'int','string','int','int','int','int[]','json'
-},
-	["names"] = {
-'id','key','group','nRewardId','nFlushType','aFlushTimes','aManFlushCosts'
-},
-	["data"] = {
-{'80001',	'',	'101',	'60001',	'5',	'6,12,18',	'[[10002,100]]'},
-{'80002',	'',	'904',	'60002',	'1',	'7',	''},
-},
+_G["CfgRandCommodity"]={[80001]={["nRewardId"]=60001,["aManFlushCosts"]={{10002,100}
 }
---cfgCfgRandCommodity = conf
-return conf
+,["key"]=80001,["id"]=80001,["aFlushTimes"]={6,12,18}
+,["group"]=101,["nFlushType"]=5}
+,[80002]={["nRewardId"]=60002,["key"]=80002,["id"]=80002,["aFlushTimes"]={7}
+,["group"]=904,["nFlushType"]=1}
+}
+

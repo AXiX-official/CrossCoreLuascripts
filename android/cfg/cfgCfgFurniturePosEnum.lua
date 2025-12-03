@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '家具排序',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'默认'},
-{'2',	'2',	'舒适度'},
-{'3',	'3',	'价格'},
-},
+_G["CfgFurniturePosEnum"]={{["id"]=1,["sName"]="默认",["key"]="1"}
+,{["id"]=2,["sName"]="舒适度",["key"]="2"}
+,{["id"]=3,["sName"]="价格",["key"]="3"}
 }
---cfgCfgFurniturePosEnum = conf
-return conf
+

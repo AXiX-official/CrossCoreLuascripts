@@ -1,16 +1,4 @@
-local conf = {
-	["filename"] = 'l-聊天.xlsx',
-	["sheetname"] = '聊天表情',
-	["types"] = {
-'int','string','string','int'
-},
-	["names"] = {
-'id','key','name','type'
-},
-	["data"] = {
-{'1',	'1',	'face01',	'1'},
-{'2',	'2',	'face02',	'2'},
-},
+_G["CfgChatFace"]={{["id"]=1,["type"]=1,["key"]="1",["name"]="face01"}
+,{["id"]=2,["type"]=2,["key"]="2",["name"]="face02"}
 }
---cfgCfgChatFace = conf
-return conf
+

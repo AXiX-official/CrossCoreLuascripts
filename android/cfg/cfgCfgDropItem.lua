@@ -1,19 +1,12 @@
-local conf = {
-	["filename"] = 't-特殊活动掉落表.xlsx',
-	["sheetname"] = '掉落道具表',
-	["types"] = {
-'int','int','int','int[]','int'
-},
-	["names"] = {
-'id','groupID','DropItemID','DropNum','DropMax'
-},
-	["data"] = {
-{'1',	'',	'58032',	'1,1',	''},
-{'2',	'',	'58033',	'1,1',	''},
-{'3',	'2001',	'10401',	'1,1',	'17'},
-{'4',	'2004',	'10409',	'1,1',	'17'},
-{'6',	'',	'10108',	'1,1',	''},
-},
+_G["CfgDropItem"]={{["DropItemID"]=58032,["id"]=1,["key"]=1,["DropNum"]={1,1}
 }
---cfgCfgDropItem = conf
-return conf
+,{["DropItemID"]=58033,["id"]=2,["key"]=2,["DropNum"]={1,1}
+}
+,{["DropItemID"]=10401,["DropMax"]=17,["DropNum"]={1,1}
+,["id"]=3,["groupID"]=2001,["key"]=3}
+,{["DropItemID"]=10409,["DropMax"]=17,["DropNum"]={1,1}
+,["id"]=4,["groupID"]=2004,["key"]=4}
+,[6]={["DropItemID"]=10108,["id"]=6,["key"]=6,["DropNum"]={1,1}
+}
+}
+

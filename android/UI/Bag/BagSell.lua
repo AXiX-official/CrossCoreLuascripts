@@ -45,9 +45,13 @@ function this.OnClickGrid(tab)
     if sellList == nil then
         sellList = {};
     end
+	if g_EquipChooiseNum <= #sellList and not tab.IsSelect() then
+        Tips.ShowTips(LanguageMgr:GetTips(16003));
+        do return end
+    end
     if tab.data:IsLock() then
         Tips.ShowTips(LanguageMgr:GetTips(16000));
-        return;
+        do return end
     end
 	if EquipMgr:CheckIsRefreshLast(tab.data:GetID()) then
 		do return end
@@ -148,7 +152,10 @@ function this.AutoSelect(_qualitys)
 			sellList = {};
 		end
 		local hasChoosie = false;
-		for i = #list, 1, - 1 do
+		for i = 1, #list do
+			if #sellList>=g_EquipChooiseNum then --限制选中数量
+				break;
+			end
 			local v = list[i];
 			local has = false;
 			local hasQuality=false;

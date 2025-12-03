@@ -3,6 +3,16 @@ local fixedTime=60;
 local upTime=0;
 local overTime=0;
 local endTime=0;
+local eventMgr=nil;
+function Awake()
+    eventMgr = ViewEvent.New();
+    eventMgr:AddListener(EventType.RedPoint_Refresh,SetRedInfo)
+end
+
+function OnDestroy()
+    eventMgr:ClearListener();
+end
+
 function Refresh(info)
     --初始化持续时间
     if info then
@@ -10,7 +20,14 @@ function Refresh(info)
         endTime=overTime-TimeUtil:GetTime();
         RefreshDownTime();
     end
+    ShopMgr:CheckRegressionShopRedInfo();
 end
+
+function SetRedInfo()
+    local rd=RedPointMgr:GetData(RedPointType.RegressionShop);
+    local isShowRed=rd~=nil;
+    UIUtil:SetRedPoint(btnC,isShowRed,100,35);
+ end
 
 function OnClickC()
     CSAPI.OpenView("ShopView",3001);

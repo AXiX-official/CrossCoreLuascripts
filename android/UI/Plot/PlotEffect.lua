@@ -48,6 +48,7 @@ function Refresh(_data, _elseData,_view)
                                     end
                                 elseif(not lastVideoInfos[v.id]) then
                                     lastVideoInfos[v.id] = {}
+                                    Log(string.format("播放剧情特效，name:%s",cfgVideo.name))
                                     CreateVideo(cfgVideo.name, parent,function (video)
                                         if gameObject and video then
                                             local _info = {

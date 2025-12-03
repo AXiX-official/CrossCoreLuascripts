@@ -1,116 +1,274 @@
-local conf = {
-	["filename"] = 'x-新手教程.xlsx',
-	["sheetname"] = '系统说明弹窗',
-	["types"] = {
-'string','string','int','int','int[]','int[]','int[]','int','float'
-},
-	["names"] = {
-'id','key','isOpen','pivot','pos','icons','question','first_open','delay'
-},
-	["data"] = {
-{'TeamView',	'TeamView',	'1',	'1',	'487,-72',	'1801,1802',	'',	'',	''},
-{'Section',	'Section',	'',	'',	'',	'',	'',	'',	''},
-{'AIPrefabSetting',	'AIPrefabSetting',	'1',	'1',	'487,-72',	'1106,1107',	'',	'',	''},
-{'CreateView',	'CreateView',	'',	'',	'',	'',	'',	'',	''},
-{'MissionView',	'MissionView',	'',	'1',	'487,-72',	'1',	'',	'',	''},
-{'Matrix',	'Matrix',	'1',	'1',	'487,-72',	'1601,1602,1609',	'',	'',	''},
-{'MatrixTrading',	'MatrixTrading',	'1',	'1',	'487,-72',	'1618,1604,1605,1606,1621,1608',	'',	'',	''},
-{'MatrixCommand',	'MatrixCommand',	'',	'1',	'487,-72',	'1610,1611',	'',	'',	''},
-{'PowerHouse',	'PowerHouse',	'1',	'1',	'487,-72',	'1615',	'',	'',	''},
-{'MatrixCompound',	'MatrixCompound',	'1',	'1',	'487,-72',	'1612,1622,1623',	'',	'',	''},
-{'MatrixRemould',	'MatrixRemould',	'1',	'1',	'487,-72',	'1613,1614',	'',	'',	''},
-{'MatrixResPanel',	'MatrixResPanel',	'1',	'1',	'487,-72',	'1616,1617',	'',	'',	''},
-{'MatrixExpedition',	'MatrixExpedition',	'1',	'1',	'487,-72',	'',	'',	'',	''},
-{'Dorm',	'Dorm',	'1',	'1',	'705,-72',	'1619,1620',	'',	'1',	''},
-{'CounselingRoom',	'CounselingRoom',	'1',	'1',	'487,-72',	'',	'',	'',	''},
-{'ArchiveView',	'ArchiveView',	'',	'',	'',	'',	'',	'',	''},
-{'GuildMenu',	'GuildMenu',	'',	'',	'',	'',	'',	'',	''},
-{'RoleListNormal',	'RoleListNormal',	'',	'',	'',	'',	'',	'',	''},
-{'CoolView',	'CoolView',	'1',	'1',	'487,-72',	'1201',	'',	'',	''},
-{'Bag',	'Bag',	'',	'',	'',	'',	'',	'',	''},
-{'MailView',	'MailView',	'',	'1',	'487,-72',	'1',	'',	'',	''},
-{'PlayerView',	'PlayerView',	'1',	'1',	'487,-72',	'1501',	'',	'',	''},
-{'ShopView',	'ShopView',	'',	'',	'',	'',	'',	'',	''},
-{'FriendView',	'FriendView',	'',	'1',	'487,-72',	'1401,1402',	'',	'',	''},
-{'SettingView',	'SettingView',	'',	'',	'',	'',	'',	'',	''},
-{'SignInView',	'SignInView',	'',	'',	'',	'',	'',	'',	''},
-{'Fight',	'Fight',	'',	'5',	'-210,0',	'1101,1102,1103,1104,1105,1106,1107',	'',	'',	''},
-{'AutoBattle',	'AutoBattle',	'',	'',	'',	'1106,1107',	'',	'',	''},
-{'BreakShield',	'BreakShield',	'',	'',	'',	'1701,1702,1703,1704',	'',	'',	''},
-{'Battle',	'Battle',	'1',	'',	'0,0',	'1301,1302,1303',	'',	'',	''},
-{'TowerBase',	'TowerBase',	'',	'',	'',	'1302,1304,1301',	'',	'',	''},
-{'EnemyMove',	'EnemyMove',	'',	'',	'',	'1302',	'',	'',	''},
-{'CaseMate',	'CaseMate',	'',	'',	'',	'1304',	'',	'',	''},
-{'IceSurface',	'IceSurface',	'',	'',	'',	'1303,1305',	'',	'',	''},
-{'IceTrap',	'IceTrap',	'',	'',	'',	'1306',	'',	'',	''},
-{'LightningStroke',	'LightningStroke',	'',	'',	'',	'1307',	'',	'',	''},
-{'RoleInfo',	'RoleInfo',	'1',	'1',	'968,-72',	'1001,1002,1003,1006,1007,1008,1009',	'',	'',	''},
-{'LevelUp',	'LevelUp',	'',	'',	'',	'1003',	'',	'',	''},
-{'Chip',	'Chip',	'',	'',	'',	'1006,1007',	'',	'',	''},
-{'SkillUp',	'SkillUp',	'',	'',	'',	'1008',	'',	'',	''},
-{'TalentUp',	'TalentUp',	'',	'',	'',	'1003,1009',	'',	'',	''},
-{'RankUp',	'RankUp',	'',	'',	'',	'1009',	'',	'',	''},
-{'TeamConfirm',	'TeamConfirm',	'1',	'1',	'487,-72',	'',	'26043,26044',	'',	''},
-{'ActivitySection',	'ActivitySection',	'1',	'1',	'487,-72',	'',	'15099,15100',	'',	''},
-{'DungeonTower',	'DungeonTower',	'1',	'1',	'487,-72',	'',	'15108,15109',	'',	''},
-{'DailySection',	'DailySection',	'1',	'1',	'487,-72',	'',	'15101,15102',	'',	''},
-{'StorySection',	'StorySection',	'1',	'1',	'487,-72',	'',	'15103,15104',	'',	''},
-{'Dungeon',	'Dungeon',	'1',	'1',	'487,-72',	'',	'15103,15104',	'',	''},
-{'ExerciseSection',	'ExerciseSection',	'1',	'1',	'487,-72',	'',	'15105,15106',	'',	''},
-{'ExerciseLView',	'ExerciseLView',	'1',	'1',	'487,-72',	'',	'33020,33021',	'',	''},
-{'ExerciseRView',	'ExerciseRView',	'1',	'1',	'487,-72',	'',	'33055,33056',	'',	''},
-{'Tactic',	'Tactic',	'',	'',	'',	'1901,1902',	'',	'',	''},
-{'Synchro',	'Synchro',	'',	'',	'',	'2001,2002,2003',	'',	'',	''},
-{'BaseFight',	'BaseFight',	'',	'',	'',	'1101,1102,1103',	'',	'',	''},
-{'CrystalInvest',	'CrystalInvest',	'1',	'1',	'332,-72',	'',	'22023,22024',	'',	''},
-{'Block',	'Block',	'',	'',	'',	'1308',	'',	'',	''},
-{'SkyEye',	'SkyEye',	'',	'',	'',	'1309',	'',	'',	''},
-{'Inject',	'Inject',	'',	'',	'',	'1310',	'',	'',	''},
-{'DungeonActivity2',	'DungeonActivity2',	'1',	'1',	'487,-72',	'',	'37028,37029',	'',	''},
-{'TowerListView',	'TowerListView',	'1',	'1',	'487,-72',	'2101,2102',	'',	'',	''},
-{'Achievement',	'Achievement',	'1',	'1',	'487,-72',	'',	'47013,47014',	'',	''},
-{'RogueView',	'RogueView',	'1',	'1',	'487,-72',	'2201,2202,2203,2204',	'',	'',	''},
-{'TotalBattle',	'TotalBattle',	'1',	'1',	'487,-72',	'',	'51021,51022',	'',	''},
-{'KishinBreak',	'',	'',	'',	'',	'2301,2302',	'',	'',	''},
-{'PetMain',	'PetMain',	'',	'',	'',	'2501,2502,2503',	'',	'',	''},
-{'PetMainFirst',	'PetMainFirst',	'',	'',	'',	'2501,2502',	'',	'',	''},
-{'FishMan',	'FishMan',	'',	'',	'',	'2601',	'',	'',	''},
-{'QuickSand',	'QuickSand',	'',	'',	'',	'2401',	'',	'',	''},
-{'RockFall',	'RockFall',	'',	'',	'',	'2402',	'',	'',	''},
-{'SandStorm',	'SandStorm',	'',	'',	'',	'2403',	'',	'',	''},
-{'RogueSView',	'RogueSView',	'1',	'1',	'487,-72',	'2701,2702',	'',	'',	''},
-{'ColosseumView',	'ColosseumView',	'1',	'1',	'487,-72',	'2801,2802,2803,2804',	'',	'',	''},
-{'ColosseumM',	'ColosseumM',	'1',	'1',	'487,-72',	'2801,2802,2803,2804',	'',	'',	''},
-{'ColosseumMRandom',	'ColosseumMRandom',	'1',	'1',	'487,-72',	'2801,2802,2803,2804',	'',	'',	''},
-{'ColosseumTeam',	'ColosseumTeam',	'1',	'1',	'487,-72',	'2801,2802,2803,2804',	'',	'',	''},
-{'GlobalBossView',	'GlobalBossView',	'1',	'1',	'487,-72',	'',	'70022,70023',	'',	''},
-{'CollaborationMain',	'CollaborationMain',	'1',	'1',	'487,-72',	'',	'61040,61041',	'',	''},
-{'TrialsView',	'TrialsView',	'1',	'1',	'487,-72',	'',	'37041,37042',	'',	''},
-{'TrialsListView',	'TrialsView',	'1',	'1',	'487,-72',	'',	'37041,37042',	'',	''},
-{'RogueTView',	'RogueTView',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTReward',	'RogueTReward',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTScore',	'RogueTScore',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTHard',	'RogueTHard',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTSelectBuff',	'RogueTSelectBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTBuffSelect',	'RogueTBuffSelect',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTCurBuff',	'RogueTCurBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTShopBuff',	'RogueTShopBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTEnemySelect',	'RogueTEnemySelect',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'RogueTSaveBuff',	'RogueTSaveBuff',	'1',	'1',	'487,-72',	'2901,2902,2903,2904',	'',	'',	''},
-{'10006',	'10006',	'',	'1',	'487,-72',	'',	'54055,54056',	'',	''},
-{'10002',	'10002',	'',	'1',	'487,-72',	'',	'64050,64051',	'',	''},
-{'PuzzleActivity',	'PuzzleActivity',	'1',	'1',	'886,-130',	'',	'74025,74026',	'',	''},
-{'SignInDuanWu',	'SignInDuanWu',	'1',	'1',	'487,-72',	'',	'13022,13023',	'',	''},
-{'SkinRebate',	'SkinRebate',	'1',	'1',	'487,-72',	'',	'45022,45023',	'',	''},
-{'EquipStreng',	'EquipStreng',	'1',	'1',	'487,-72',	'3001,3002,3003,3004',	'',	'',	''},
-{'LuckyGachaMain',	'LuckyGachaMain',	'1',	'1',	'487,-72',	'',	'67022,67023',	'',	''},
-{'MultTeamBattleMain',	'MultTeamBattleMain',	'1',	'1',	'487,-72',	'3201,3202',	'',	'',	''},
-{'CoffeeView',	'CoffeeView',	'1',	'1',	'487,-72',	'3101,3102,3103',	'',	'1',	''},
-{'RiddleMain',	'RiddleMain',	'1',	'1',	'487,-72',	'',	'80010,80011',	'',	''},
-{'LovePlusListView',	'LovePlusListView',	'1',	'1',	'487,-72',	'',	'73014,73015',	'',	''},
-{'TowerDeep',	'TowerDeep',	'1',	'1',	'487,-72',	'',	'130030,130031',	'',	''},
-{'HalloweenMenu',	'HalloweenMenu',	'1',	'1',	'487,-72',	'3301,3302,3303',	'',	'',	''},
-},
+_G["CfgModuleInfo"]={["AutoBattle"]={["id"]="AutoBattle",["key"]="AutoBattle",["icons"]={1106,1107}
 }
---cfgCfgModuleInfo = conf
-return conf
+,["RogueTHard"]={["isOpen"]=1,["key"]="RogueTHard",["id"]="RogueTHard",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["ColosseumView"]={["isOpen"]=1,["key"]="ColosseumView",["id"]="ColosseumView",["icons"]={2801,2802,2803,2804}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["QuickSand"]={["id"]="QuickSand",["key"]="QuickSand",["icons"]={2401}
+}
+,["CounselingRoom"]={["isOpen"]=1,["key"]="CounselingRoom",["id"]="CounselingRoom",["pivot"]=1,["pos"]={487,-72}
+}
+,["TotalBattle"]={["isOpen"]=1,["key"]="TotalBattle",["question"]={51021,51022}
+,["id"]="TotalBattle",["pivot"]=1,["pos"]={487,-72}
+}
+,["KishinBreak"]={["id"]="KishinBreak",["key"]="KishinBreak",["icons"]={2301,2302}
+}
+,["Dungeon"]={["isOpen"]=1,["key"]="Dungeon",["question"]={15103,15104}
+,["id"]="Dungeon",["pivot"]=1,["pos"]={487,-72}
+}
+,["Fight"]={["key"]="Fight",["id"]="Fight",["icons"]={1101,1102,1103,1104,1105,1106,1107}
+,["pivot"]=5,["pos"]={-210,0}
+}
+,["RoleInfo"]={["isOpen"]=1,["key"]="RoleInfo",["id"]="RoleInfo",["icons"]={1001,1002,1003,1006,1007,1008,1009}
+,["pivot"]=1,["pos"]={968,-72}
+}
+,["RogueTBuffSelect"]={["isOpen"]=1,["key"]="RogueTBuffSelect",["id"]="RogueTBuffSelect",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["TowerDeep"]={["isOpen"]=1,["key"]="TowerDeep",["question"]={130030,130031}
+,["id"]="TowerDeep",["pivot"]=1,["pos"]={487,-72}
+}
+,["BaseFight"]={["id"]="BaseFight",["key"]="BaseFight",["icons"]={1101,1102,1103}
+}
+,["IceSurface"]={["id"]="IceSurface",["key"]="IceSurface",["icons"]={1303,1305}
+}
+,["SettingView"]={["id"]="SettingView",["key"]="SettingView"}
+,["CaseMate"]={["id"]="CaseMate",["key"]="CaseMate",["icons"]={1304}
+}
+,["MatrixResPanel"]={["isOpen"]=1,["key"]="MatrixResPanel",["id"]="MatrixResPanel",["icons"]={1616,1617}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["Dorm"]={["isOpen"]=1,["key"]="Dorm",["first_open"]=1,["id"]="Dorm",["icons"]={1619,1620}
+,["pivot"]=1,["pos"]={705,-72}
+}
+,["Achievement"]={["isOpen"]=1,["key"]="Achievement",["question"]={47013,47014}
+,["id"]="Achievement",["pivot"]=1,["pos"]={487,-72}
+}
+,["RogueTCurBuff"]={["isOpen"]=1,["key"]="RogueTCurBuff",["id"]="RogueTCurBuff",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["10006"]={["key"]="10006",["question"]={54055,54056}
+,["id"]="10006",["pivot"]=1,["pos"]={487,-72}
+}
+,["Tactic"]={["id"]="Tactic",["key"]="Tactic",["icons"]={1901,1902}
+}
+,["RogueTEnemySelect"]={["isOpen"]=1,["key"]="RogueTEnemySelect",["id"]="RogueTEnemySelect",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["StorySection"]={["isOpen"]=1,["key"]="StorySection",["question"]={15103,15104}
+,["id"]="StorySection",["pivot"]=1,["pos"]={487,-72}
+}
+,["PowerHouse"]={["isOpen"]=1,["key"]="PowerHouse",["id"]="PowerHouse",["icons"]={1615}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["ExerciseLView"]={["isOpen"]=1,["key"]="ExerciseLView",["question"]={33020,33021}
+,["id"]="ExerciseLView",["pivot"]=1,["pos"]={487,-72}
+}
+,["RogueSView"]={["isOpen"]=1,["key"]="RogueSView",["id"]="RogueSView",["icons"]={2701,2702}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["CoolView"]={["isOpen"]=1,["key"]="CoolView",["id"]="CoolView",["icons"]={1201}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["ShopView"]={["id"]="ShopView",["key"]="ShopView"}
+,["Battle"]={["isOpen"]=1,["key"]="Battle",["id"]="Battle",["icons"]={1301,1302,1303}
+,["pos"]={0,0}
+}
+,["PlayerView"]={["isOpen"]=1,["key"]="PlayerView",["id"]="PlayerView",["icons"]={1501}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["BreakShield"]={["id"]="BreakShield",["key"]="BreakShield",["icons"]={1701,1702,1703,1704}
+}
+,["TowerBase"]={["id"]="TowerBase",["key"]="TowerBase",["icons"]={1302,1304,1301}
+}
+,["DungeonActivity2"]={["isOpen"]=1,["key"]="DungeonActivity2",["question"]={37028,37029}
+,["id"]="DungeonActivity2",["pivot"]=1,["pos"]={487,-72}
+}
+,["LuckyGachaMain"]={["isOpen"]=1,["key"]="LuckyGachaMain",["question"]={67022,67023}
+,["id"]="LuckyGachaMain",["pivot"]=1,["pos"]={487,-72}
+}
+,["TeamView"]={["isOpen"]=1,["key"]="TeamView",["id"]="TeamView",["icons"]={1801,1802}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["PetMain"]={["id"]="PetMain",["key"]="PetMain",["icons"]={2501,2502,2503}
+}
+,["RoleListNormal"]={["id"]="RoleListNormal",["key"]="RoleListNormal"}
+,["EnemyMove"]={["id"]="EnemyMove",["key"]="EnemyMove",["icons"]={1302}
+}
+,["MerryChristmas"]={["isOpen"]=1,["key"]="MerryChristmas",["id"]="MerryChristmas",["icons"]={3401,3402,3403}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["HaloMain"]={["isOpen"]=1,["key"]="HaloMain",["question"]={100045,100044}
+,["id"]="HaloMain",["pivot"]=1,["pos"]={487,-72}
+}
+,["LevelUp"]={["id"]="LevelUp",["key"]="LevelUp",["icons"]={1003}
+}
+,["LovePlusListView"]={["isOpen"]=1,["key"]="LovePlusListView",["question"]={73014,73015}
+,["id"]="LovePlusListView",["pivot"]=1,["pos"]={487,-72}
+}
+,["EquipStreng"]={["isOpen"]=1,["key"]="EquipStreng",["id"]="EquipStreng",["icons"]={3001,3002,3003,3004}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["CoffeeView"]={["isOpen"]=1,["key"]="CoffeeView",["id"]="CoffeeView",["icons"]={3101,3102,3103}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["MissionView"]={["key"]="MissionView",["id"]="MissionView",["icons"]={1}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["DungeonTower"]={["isOpen"]=1,["key"]="DungeonTower",["question"]={15108,15109}
+,["id"]="DungeonTower",["pivot"]=1,["pos"]={487,-72}
+}
+,["MatrixExpedition"]={["isOpen"]=1,["key"]="MatrixExpedition",["id"]="MatrixExpedition",["pivot"]=1,["pos"]={487,-72}
+}
+,["ExerciseSection"]={["isOpen"]=1,["key"]="ExerciseSection",["question"]={15105,15106}
+,["id"]="ExerciseSection",["pivot"]=1,["pos"]={487,-72}
+}
+,["IceTrap"]={["id"]="IceTrap",["key"]="IceTrap",["icons"]={1306}
+}
+,["RiddleMain"]={["isOpen"]=1,["key"]="RiddleMain",["question"]={80010,80011}
+,["id"]="RiddleMain",["pivot"]=1,["pos"]={487,-72}
+}
+,["Synchro"]={["id"]="Synchro",["key"]="Synchro",["icons"]={2001,2002,2003}
+}
+,["SkyEye"]={["id"]="SkyEye",["key"]="SkyEye",["icons"]={1309}
+}
+,["ExerciseRView"]={["isOpen"]=1,["key"]="ExerciseRView",["question"]={33055,33056}
+,["id"]="ExerciseRView",["pivot"]=1,["pos"]={487,-72}
+}
+,["HalloweenMenu"]={["isOpen"]=1,["key"]="HalloweenMenu",["id"]="HalloweenMenu",["icons"]={3301,3302,3303}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["TrialsListView"]={["isOpen"]=1,["key"]="TrialsView",["question"]={37041,37042}
+,["id"]="TrialsListView",["pivot"]=1,["pos"]={487,-72}
+}
+,["RogueView"]={["isOpen"]=1,["key"]="RogueView",["id"]="RogueView",["icons"]={2201,2202,2203,2204}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["BuffBattle"]={["isOpen"]=1,["key"]="BuffBattle",["question"]={37054,37055}
+,["id"]="BuffBattle",["pivot"]=1,["pos"]={487,-72}
+}
+,["PuzzleActivity"]={["isOpen"]=1,["key"]="PuzzleActivity",["question"]={74025,74026}
+,["id"]="PuzzleActivity",["pivot"]=1,["pos"]={886,-130}
+}
+,["RogueTShopBuff"]={["isOpen"]=1,["key"]="RogueTShopBuff",["id"]="RogueTShopBuff",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["MatrixTrading"]={["isOpen"]=1,["key"]="MatrixTrading",["id"]="MatrixTrading",["icons"]={1618,1604,1605,1606,1621,1608}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["RankUp"]={["id"]="RankUp",["key"]="RankUp",["icons"]={1009}
+}
+,["SignInDuanWu"]={["isOpen"]=1,["key"]="SignInDuanWu",["question"]={13022,13023}
+,["id"]="SignInDuanWu",["pivot"]=1,["pos"]={487,-72}
+}
+,["PetMainFirst"]={["id"]="PetMainFirst",["key"]="PetMainFirst",["icons"]={2501,2502}
+}
+,["10002"]={["key"]="10002",["question"]={64050,64051}
+,["id"]="10002",["pivot"]=1,["pos"]={487,-72}
+}
+,["SkillUp"]={["id"]="SkillUp",["key"]="SkillUp",["icons"]={1008}
+}
+,["RogueTSaveBuff"]={["isOpen"]=1,["key"]="RogueTSaveBuff",["id"]="RogueTSaveBuff",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["SkinRebate"]={["isOpen"]=1,["key"]="SkinRebate",["question"]={45022,45023}
+,["id"]="SkinRebate",["pivot"]=1,["pos"]={487,-72}
+}
+,["RogueTSelectBuff"]={["isOpen"]=1,["key"]="RogueTSelectBuff",["id"]="RogueTSelectBuff",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["RogueTScore"]={["isOpen"]=1,["key"]="RogueTScore",["id"]="RogueTScore",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["CollaborationMain"]={["isOpen"]=1,["key"]="CollaborationMain",["question"]={61040,61041}
+,["id"]="CollaborationMain",["pivot"]=1,["pos"]={487,-72}
+}
+,["ActivitySection"]={["isOpen"]=1,["key"]="ActivitySection",["question"]={15099,15100}
+,["id"]="ActivitySection",["pivot"]=1,["pos"]={487,-72}
+}
+,["RogueTView"]={["isOpen"]=1,["key"]="RogueTView",["id"]="RogueTView",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["MultTeamBattleMain"]={["isOpen"]=1,["key"]="MultTeamBattleMain",["id"]="MultTeamBattleMain",["icons"]={3201,3202}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["TeamConfirm"]={["isOpen"]=1,["key"]="TeamConfirm",["question"]={26043,26044}
+,["id"]="TeamConfirm",["pivot"]=1,["pos"]={487,-72}
+}
+,["LightningStroke"]={["id"]="LightningStroke",["key"]="LightningStroke",["icons"]={1307}
+}
+,["MatrixCompound"]={["isOpen"]=1,["key"]="MatrixCompound",["id"]="MatrixCompound",["icons"]={1612,1622,1623}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["Chip"]={["id"]="Chip",["key"]="Chip",["icons"]={1006,1007}
+}
+,["FriendView"]={["key"]="FriendView",["id"]="FriendView",["icons"]={1401,1402}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["RogueTReward"]={["isOpen"]=1,["key"]="RogueTReward",["id"]="RogueTReward",["icons"]={2901,2902,2903,2904}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["MatrixCommand"]={["key"]="MatrixCommand",["id"]="MatrixCommand",["icons"]={1610,1611}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["GlobalBossView"]={["isOpen"]=1,["key"]="GlobalBossView",["question"]={70022,70023}
+,["id"]="GlobalBossView",["pivot"]=1,["pos"]={487,-72}
+}
+,["ColosseumMRandom"]={["isOpen"]=1,["key"]="ColosseumMRandom",["id"]="ColosseumMRandom",["icons"]={2801,2802,2803,2804}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["ColosseumTeam"]={["isOpen"]=1,["key"]="ColosseumTeam",["id"]="ColosseumTeam",["icons"]={2801,2802,2803,2804}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["AIPrefabSetting"]={["key"]="AIPrefabSetting",["id"]="AIPrefabSetting",["icons"]={1106,1107}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["ColosseumM"]={["isOpen"]=1,["key"]="ColosseumM",["id"]="ColosseumM",["icons"]={2801,2802,2803,2804}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["TowerListView"]={["isOpen"]=1,["key"]="TowerListView",["id"]="TowerListView",["icons"]={2101,2102}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["Block"]={["id"]="Block",["key"]="Block",["icons"]={1308}
+}
+,["CreateView"]={["id"]="CreateView",["key"]="CreateView"}
+,["SandStorm"]={["id"]="SandStorm",["key"]="SandStorm",["icons"]={2403}
+}
+,["RockFall"]={["id"]="RockFall",["key"]="RockFall",["icons"]={2402}
+}
+,["Matrix"]={["isOpen"]=1,["key"]="Matrix",["id"]="Matrix",["icons"]={1601,1602,1609}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["FishMan"]={["id"]="FishMan",["key"]="FishMan",["icons"]={2601}
+}
+,["GuildMenu"]={["id"]="GuildMenu",["key"]="GuildMenu"}
+,["MailView"]={["key"]="MailView",["id"]="MailView",["icons"]={1}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["TrialsView"]={["isOpen"]=1,["key"]="TrialsView",["question"]={37041,37042}
+,["id"]="TrialsView",["pivot"]=1,["pos"]={487,-72}
+}
+,["Section"]={["id"]="Section",["key"]="Section"}
+,["Inject"]={["id"]="Inject",["key"]="Inject",["icons"]={1310}
+}
+,["SignInView"]={["id"]="SignInView",["key"]="SignInView"}
+,["TalentUp"]={["id"]="TalentUp",["key"]="TalentUp",["icons"]={1003,1009}
+}
+,["ArchiveView"]={["id"]="ArchiveView",["key"]="ArchiveView"}
+,["ExerciseRView3"]={["isOpen"]=1,["key"]="ExerciseRView3",["question"]={33055,91051}
+,["id"]="ExerciseRView3",["pivot"]=1,["pos"]={487,-72}
+}
+,["CrystalInvest"]={["isOpen"]=1,["key"]="CrystalInvest",["question"]={22023,22024}
+,["id"]="CrystalInvest",["pivot"]=1,["pos"]={332,-72}
+}
+,["Bag"]={["id"]="Bag",["key"]="Bag"}
+,["MatrixRemould"]={["isOpen"]=1,["key"]="MatrixRemould",["id"]="MatrixRemould",["icons"]={1613,1614}
+,["pivot"]=1,["pos"]={487,-72}
+}
+,["DailySection"]={["isOpen"]=1,["key"]="DailySection",["question"]={15101,15102}
+,["id"]="DailySection",["pivot"]=1,["pos"]={487,-72}
+}
+}
+

@@ -1,116 +1,206 @@
-local conf = {
-	["filename"] = 'z-装备配置表.xlsx',
-	["sheetname"] = '强化经验',
-	["types"] = {
-'int','string','table#8','int','int','int','int','int','int','int','json'
-},
-	["names"] = {
-'id','key','tInfos','nNextLevel','nCurLevel','nExp','nMaterialCost','nMaterialExp','nSuperExp','nSellPrice','jSellRewards'
-},
-	["data"] = {
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'1',	'0',	'100',	'750',	'50',	'',	'75',	''},
-{'1',	'1',	'',	'2',	'1',	'150',	'1500',	'100',	'',	'150',	''},
-{'1',	'1',	'',	'3',	'2',	'200',	'1500',	'250',	'',	'375',	''},
-{'1',	'1',	'',	'4',	'3',	'250',	'1500',	'450',	'',	'675',	''},
-{'1',	'1',	'',	'5',	'4',	'300',	'1500',	'650',	'',	'975',	''},
-{'1',	'1',	'',	'6',	'5',	'350',	'1500',	'850',	'',	'1275',	''},
-{'1',	'1',	'',	'7',	'6',	'400',	'1500',	'1150',	'',	'1725',	''},
-{'1',	'1',	'',	'8',	'7',	'450',	'1500',	'1450',	'',	'2175',	''},
-{'1',	'1',	'',	'9',	'8',	'500',	'1500',	'1850',	'',	'2775',	''},
-{'1',	'1',	'',	'10',	'9',	'550',	'1500',	'2250',	'',	'3375',	''},
-{'1',	'1',	'',	'11',	'10',	'600',	'1500',	'2750',	'',	'4125',	''},
-{'1',	'1',	'',	'12',	'11',	'650',	'1500',	'3150',	'',	'4725',	''},
-{'1',	'1',	'',	'13',	'12',	'700',	'1500',	'3650',	'',	'5475',	''},
-{'1',	'1',	'',	'14',	'13',	'750',	'1500',	'4250',	'',	'6375',	''},
-{'1',	'1',	'',	'15',	'14',	'800',	'1500',	'4850',	'',	'7275',	''},
-{'1',	'1',	'',	'16',	'15',	'0',	'1500',	'5450',	'',	'8175',	''},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'1',	'0',	'150',	'1125',	'75',	'',	'112',	''},
-{'2',	'2',	'',	'2',	'1',	'225',	'2250',	'150',	'',	'225',	''},
-{'2',	'2',	'',	'3',	'2',	'300',	'2250',	'375',	'',	'562',	''},
-{'2',	'2',	'',	'4',	'3',	'375',	'2250',	'675',	'',	'1012',	''},
-{'2',	'2',	'',	'5',	'4',	'450',	'2250',	'975',	'',	'1462',	''},
-{'2',	'2',	'',	'6',	'5',	'525',	'2250',	'1275',	'',	'1912',	''},
-{'2',	'2',	'',	'7',	'6',	'600',	'2250',	'1725',	'',	'2587',	''},
-{'2',	'2',	'',	'8',	'7',	'675',	'2250',	'2175',	'',	'3262',	''},
-{'2',	'2',	'',	'9',	'8',	'750',	'2250',	'2775',	'',	'4162',	''},
-{'2',	'2',	'',	'10',	'9',	'825',	'2250',	'3375',	'',	'5062',	''},
-{'2',	'2',	'',	'11',	'10',	'900',	'2250',	'4125',	'',	'6187',	''},
-{'2',	'2',	'',	'12',	'11',	'975',	'2250',	'4725',	'',	'7087',	''},
-{'2',	'2',	'',	'13',	'12',	'1050',	'2250',	'5475',	'',	'8212',	''},
-{'2',	'2',	'',	'14',	'13',	'1125',	'2250',	'6375',	'',	'9562',	''},
-{'2',	'2',	'',	'15',	'14',	'1200',	'2250',	'7275',	'',	'10912',	''},
-{'2',	'2',	'',	'16',	'15',	'0',	'2250',	'8175',	'',	'12262',	''},
-{'3',	'3',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'3',	'',	'1',	'0',	'200',	'1500',	'100',	'',	'150',	''},
-{'3',	'3',	'',	'2',	'1',	'300',	'3000',	'200',	'',	'300',	''},
-{'3',	'3',	'',	'3',	'2',	'400',	'3000',	'500',	'',	'750',	''},
-{'3',	'3',	'',	'4',	'3',	'500',	'3000',	'900',	'',	'1350',	''},
-{'3',	'3',	'',	'5',	'4',	'600',	'3000',	'1300',	'',	'1950',	''},
-{'3',	'3',	'',	'6',	'5',	'700',	'3000',	'1700',	'',	'2550',	''},
-{'3',	'3',	'',	'7',	'6',	'800',	'3000',	'2300',	'',	'3450',	''},
-{'3',	'3',	'',	'8',	'7',	'900',	'3000',	'2900',	'',	'4350',	''},
-{'3',	'3',	'',	'9',	'8',	'1000',	'3000',	'3700',	'',	'5550',	''},
-{'3',	'3',	'',	'10',	'9',	'1100',	'3000',	'4500',	'',	'6750',	''},
-{'3',	'3',	'',	'11',	'10',	'1200',	'3000',	'5500',	'',	'8250',	''},
-{'3',	'3',	'',	'12',	'11',	'1300',	'3000',	'6300',	'',	'9450',	''},
-{'3',	'3',	'',	'13',	'12',	'1400',	'3000',	'7300',	'',	'10950',	''},
-{'3',	'3',	'',	'14',	'13',	'1500',	'3000',	'8500',	'',	'12750',	''},
-{'3',	'3',	'',	'15',	'14',	'1600',	'3000',	'9700',	'',	'14550',	''},
-{'3',	'3',	'',	'16',	'15',	'0',	'3000',	'10900',	'',	'16350',	''},
-{'4',	'4',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'4',	'',	'1',	'0',	'300',	'2250',	'150',	'',	'225',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'2',	'1',	'450',	'4500',	'300',	'',	'450',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'3',	'2',	'600',	'4500',	'750',	'',	'1125',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'4',	'3',	'750',	'4500',	'1225',	'',	'1837',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'5',	'4',	'900',	'4500',	'1950',	'',	'2925',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'6',	'5',	'1050',	'4500',	'2550',	'',	'3825',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'7',	'6',	'1200',	'4500',	'3450',	'',	'5175',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'8',	'7',	'1350',	'4500',	'4350',	'',	'6525',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'9',	'8',	'1500',	'4500',	'5550',	'',	'8325',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'10',	'9',	'1650',	'4500',	'6750',	'',	'10125',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'11',	'10',	'1800',	'4500',	'8250',	'',	'12375',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'12',	'11',	'1950',	'4500',	'9450',	'',	'14175',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'13',	'12',	'2100',	'4500',	'10950',	'',	'16425',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'14',	'13',	'2250',	'4500',	'12750',	'',	'19125',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'15',	'14',	'2400',	'4500',	'14550',	'',	'21825',	'[[10011,4,2]]'},
-{'4',	'4',	'',	'16',	'15',	'0',	'4500',	'16350',	'',	'24525',	'[[10011,4,2]]'},
-{'5',	'5',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5',	'5',	'',	'1',	'0',	'400',	'3000',	'200',	'',	'300',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'2',	'1',	'600',	'6000',	'400',	'',	'600',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'3',	'2',	'800',	'6000',	'1000',	'',	'1500',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'4',	'3',	'1000',	'6000',	'1425',	'',	'2137',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'5',	'4',	'1200',	'6000',	'2600',	'',	'3900',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'6',	'5',	'1400',	'6000',	'3400',	'',	'5100',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'7',	'6',	'1600',	'6000',	'4600',	'',	'6900',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'8',	'7',	'1800',	'6000',	'5800',	'',	'8700',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'9',	'8',	'2000',	'6000',	'7400',	'',	'11100',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'10',	'9',	'2200',	'6000',	'9000',	'',	'13500',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'11',	'10',	'2400',	'6000',	'11000',	'',	'16500',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'12',	'11',	'2600',	'6000',	'12600',	'',	'18900',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'13',	'12',	'2800',	'6000',	'14600',	'',	'21900',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'14',	'13',	'3000',	'6000',	'17000',	'',	'25500',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'15',	'14',	'3200',	'6000',	'19400',	'',	'29100',	'[[10011,30,2]]'},
-{'5',	'5',	'',	'16',	'15',	'0',	'6000',	'21800',	'',	'32700',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'6',	'6',	'',	'1',	'0',	'400',	'3000',	'200',	'',	'300',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'2',	'1',	'600',	'6000',	'400',	'',	'600',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'3',	'2',	'800',	'6000',	'1000',	'',	'1500',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'4',	'3',	'1000',	'6000',	'1425',	'',	'2137',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'5',	'4',	'1200',	'6000',	'2600',	'',	'3900',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'6',	'5',	'1400',	'6000',	'3400',	'',	'5100',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'7',	'6',	'1600',	'6000',	'4600',	'',	'6900',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'8',	'7',	'1800',	'6000',	'5800',	'',	'8700',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'9',	'8',	'2000',	'6000',	'7400',	'',	'11100',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'10',	'9',	'2200',	'6000',	'9000',	'',	'13500',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'11',	'10',	'2400',	'6000',	'11000',	'',	'16500',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'12',	'11',	'2600',	'6000',	'12600',	'',	'18900',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'13',	'12',	'2800',	'6000',	'14600',	'',	'21900',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'14',	'13',	'3000',	'6000',	'17000',	'',	'25500',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'15',	'14',	'3200',	'6000',	'19400',	'',	'29100',	'[[10011,30,2]]'},
-{'6',	'6',	'',	'16',	'15',	'0',	'6000',	'21800',	'',	'32700',	'[[10011,30,2]]'},
-},
+_G["CfgEquipExp"]={{["id"]=1,["key"]="1",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=75,["nMaterialCost"]=750,["nExp"]=100,["nCurLevel"]=0,["nMaterialExp"]=50}
+,{["nNextLevel"]=2,["nSellPrice"]=150,["nMaterialCost"]=1500,["nExp"]=150,["nCurLevel"]=1,["nMaterialExp"]=100}
+,{["nNextLevel"]=3,["nSellPrice"]=375,["nMaterialCost"]=1500,["nExp"]=200,["nCurLevel"]=2,["nMaterialExp"]=250}
+,{["nNextLevel"]=4,["nSellPrice"]=675,["nMaterialCost"]=1500,["nExp"]=250,["nCurLevel"]=3,["nMaterialExp"]=450}
+,{["nNextLevel"]=5,["nSellPrice"]=975,["nMaterialCost"]=1500,["nExp"]=300,["nCurLevel"]=4,["nMaterialExp"]=650}
+,{["nNextLevel"]=6,["nSellPrice"]=1275,["nMaterialCost"]=1500,["nExp"]=350,["nCurLevel"]=5,["nMaterialExp"]=850}
+,{["nNextLevel"]=7,["nSellPrice"]=1725,["nMaterialCost"]=1500,["nExp"]=400,["nCurLevel"]=6,["nMaterialExp"]=1150}
+,{["nNextLevel"]=8,["nSellPrice"]=2175,["nMaterialCost"]=1500,["nExp"]=450,["nCurLevel"]=7,["nMaterialExp"]=1450}
+,{["nNextLevel"]=9,["nSellPrice"]=2775,["nMaterialCost"]=1500,["nExp"]=500,["nCurLevel"]=8,["nMaterialExp"]=1850}
+,{["nNextLevel"]=10,["nSellPrice"]=3375,["nMaterialCost"]=1500,["nExp"]=550,["nCurLevel"]=9,["nMaterialExp"]=2250}
+,{["nNextLevel"]=11,["nSellPrice"]=4125,["nMaterialCost"]=1500,["nExp"]=600,["nCurLevel"]=10,["nMaterialExp"]=2750}
+,{["nNextLevel"]=12,["nSellPrice"]=4725,["nMaterialCost"]=1500,["nExp"]=650,["nCurLevel"]=11,["nMaterialExp"]=3150}
+,{["nNextLevel"]=13,["nSellPrice"]=5475,["nMaterialCost"]=1500,["nExp"]=700,["nCurLevel"]=12,["nMaterialExp"]=3650}
+,{["nNextLevel"]=14,["nSellPrice"]=6375,["nMaterialCost"]=1500,["nExp"]=750,["nCurLevel"]=13,["nMaterialExp"]=4250}
+,{["nNextLevel"]=15,["nSellPrice"]=7275,["nMaterialCost"]=1500,["nExp"]=800,["nCurLevel"]=14,["nMaterialExp"]=4850}
+,{["nNextLevel"]=16,["nSellPrice"]=8175,["nMaterialCost"]=1500,["nExp"]=0,["nCurLevel"]=15,["nMaterialExp"]=5450}
 }
---cfgCfgEquipExp = conf
-return conf
+}
+,{["id"]=2,["key"]="2",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=112,["nMaterialCost"]=1125,["nExp"]=150,["nCurLevel"]=0,["nMaterialExp"]=75}
+,{["nNextLevel"]=2,["nSellPrice"]=225,["nMaterialCost"]=2250,["nExp"]=225,["nCurLevel"]=1,["nMaterialExp"]=150}
+,{["nNextLevel"]=3,["nSellPrice"]=562,["nMaterialCost"]=2250,["nExp"]=300,["nCurLevel"]=2,["nMaterialExp"]=375}
+,{["nNextLevel"]=4,["nSellPrice"]=1012,["nMaterialCost"]=2250,["nExp"]=375,["nCurLevel"]=3,["nMaterialExp"]=675}
+,{["nNextLevel"]=5,["nSellPrice"]=1462,["nMaterialCost"]=2250,["nExp"]=450,["nCurLevel"]=4,["nMaterialExp"]=975}
+,{["nNextLevel"]=6,["nSellPrice"]=1912,["nMaterialCost"]=2250,["nExp"]=525,["nCurLevel"]=5,["nMaterialExp"]=1275}
+,{["nNextLevel"]=7,["nSellPrice"]=2587,["nMaterialCost"]=2250,["nExp"]=600,["nCurLevel"]=6,["nMaterialExp"]=1725}
+,{["nNextLevel"]=8,["nSellPrice"]=3262,["nMaterialCost"]=2250,["nExp"]=675,["nCurLevel"]=7,["nMaterialExp"]=2175}
+,{["nNextLevel"]=9,["nSellPrice"]=4162,["nMaterialCost"]=2250,["nExp"]=750,["nCurLevel"]=8,["nMaterialExp"]=2775}
+,{["nNextLevel"]=10,["nSellPrice"]=5062,["nMaterialCost"]=2250,["nExp"]=825,["nCurLevel"]=9,["nMaterialExp"]=3375}
+,{["nNextLevel"]=11,["nSellPrice"]=6187,["nMaterialCost"]=2250,["nExp"]=900,["nCurLevel"]=10,["nMaterialExp"]=4125}
+,{["nNextLevel"]=12,["nSellPrice"]=7087,["nMaterialCost"]=2250,["nExp"]=975,["nCurLevel"]=11,["nMaterialExp"]=4725}
+,{["nNextLevel"]=13,["nSellPrice"]=8212,["nMaterialCost"]=2250,["nExp"]=1050,["nCurLevel"]=12,["nMaterialExp"]=5475}
+,{["nNextLevel"]=14,["nSellPrice"]=9562,["nMaterialCost"]=2250,["nExp"]=1125,["nCurLevel"]=13,["nMaterialExp"]=6375}
+,{["nNextLevel"]=15,["nSellPrice"]=10912,["nMaterialCost"]=2250,["nExp"]=1200,["nCurLevel"]=14,["nMaterialExp"]=7275}
+,{["nNextLevel"]=16,["nSellPrice"]=12262,["nMaterialCost"]=2250,["nExp"]=0,["nCurLevel"]=15,["nMaterialExp"]=8175}
+}
+}
+,{["id"]=3,["key"]="3",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=150,["nMaterialCost"]=1500,["nExp"]=200,["nCurLevel"]=0,["nMaterialExp"]=100}
+,{["nNextLevel"]=2,["nSellPrice"]=300,["nMaterialCost"]=3000,["nExp"]=300,["nCurLevel"]=1,["nMaterialExp"]=200}
+,{["nNextLevel"]=3,["nSellPrice"]=750,["nMaterialCost"]=3000,["nExp"]=400,["nCurLevel"]=2,["nMaterialExp"]=500}
+,{["nNextLevel"]=4,["nSellPrice"]=1350,["nMaterialCost"]=3000,["nExp"]=500,["nCurLevel"]=3,["nMaterialExp"]=900}
+,{["nNextLevel"]=5,["nSellPrice"]=1950,["nMaterialCost"]=3000,["nExp"]=600,["nCurLevel"]=4,["nMaterialExp"]=1300}
+,{["nNextLevel"]=6,["nSellPrice"]=2550,["nMaterialCost"]=3000,["nExp"]=700,["nCurLevel"]=5,["nMaterialExp"]=1700}
+,{["nNextLevel"]=7,["nSellPrice"]=3450,["nMaterialCost"]=3000,["nExp"]=800,["nCurLevel"]=6,["nMaterialExp"]=2300}
+,{["nNextLevel"]=8,["nSellPrice"]=4350,["nMaterialCost"]=3000,["nExp"]=900,["nCurLevel"]=7,["nMaterialExp"]=2900}
+,{["nNextLevel"]=9,["nSellPrice"]=5550,["nMaterialCost"]=3000,["nExp"]=1000,["nCurLevel"]=8,["nMaterialExp"]=3700}
+,{["nNextLevel"]=10,["nSellPrice"]=6750,["nMaterialCost"]=3000,["nExp"]=1100,["nCurLevel"]=9,["nMaterialExp"]=4500}
+,{["nNextLevel"]=11,["nSellPrice"]=8250,["nMaterialCost"]=3000,["nExp"]=1200,["nCurLevel"]=10,["nMaterialExp"]=5500}
+,{["nNextLevel"]=12,["nSellPrice"]=9450,["nMaterialCost"]=3000,["nExp"]=1300,["nCurLevel"]=11,["nMaterialExp"]=6300}
+,{["nNextLevel"]=13,["nSellPrice"]=10950,["nMaterialCost"]=3000,["nExp"]=1400,["nCurLevel"]=12,["nMaterialExp"]=7300}
+,{["nNextLevel"]=14,["nSellPrice"]=12750,["nMaterialCost"]=3000,["nExp"]=1500,["nCurLevel"]=13,["nMaterialExp"]=8500}
+,{["nNextLevel"]=15,["nSellPrice"]=14550,["nMaterialCost"]=3000,["nExp"]=1600,["nCurLevel"]=14,["nMaterialExp"]=9700}
+,{["nNextLevel"]=16,["nSellPrice"]=16350,["nMaterialCost"]=3000,["nExp"]=0,["nCurLevel"]=15,["nMaterialExp"]=10900}
+}
+}
+,{["id"]=4,["key"]="4",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=225,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=2250,["nExp"]=300,["nCurLevel"]=0,["nMaterialExp"]=150}
+,{["nNextLevel"]=2,["nSellPrice"]=450,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=450,["nCurLevel"]=1,["nMaterialExp"]=300}
+,{["nNextLevel"]=3,["nSellPrice"]=1125,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=600,["nCurLevel"]=2,["nMaterialExp"]=750}
+,{["nNextLevel"]=4,["nSellPrice"]=1837,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=750,["nCurLevel"]=3,["nMaterialExp"]=1225}
+,{["nNextLevel"]=5,["nSellPrice"]=2925,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=900,["nCurLevel"]=4,["nMaterialExp"]=1950}
+,{["nNextLevel"]=6,["nSellPrice"]=3825,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=1050,["nCurLevel"]=5,["nMaterialExp"]=2550}
+,{["nNextLevel"]=7,["nSellPrice"]=5175,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=1200,["nCurLevel"]=6,["nMaterialExp"]=3450}
+,{["nNextLevel"]=8,["nSellPrice"]=6525,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=1350,["nCurLevel"]=7,["nMaterialExp"]=4350}
+,{["nNextLevel"]=9,["nSellPrice"]=8325,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=1500,["nCurLevel"]=8,["nMaterialExp"]=5550}
+,{["nNextLevel"]=10,["nSellPrice"]=10125,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=1650,["nCurLevel"]=9,["nMaterialExp"]=6750}
+,{["nNextLevel"]=11,["nSellPrice"]=12375,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=1800,["nCurLevel"]=10,["nMaterialExp"]=8250}
+,{["nNextLevel"]=12,["nSellPrice"]=14175,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=1950,["nCurLevel"]=11,["nMaterialExp"]=9450}
+,{["nNextLevel"]=13,["nSellPrice"]=16425,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=2100,["nCurLevel"]=12,["nMaterialExp"]=10950}
+,{["nNextLevel"]=14,["nSellPrice"]=19125,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=2250,["nCurLevel"]=13,["nMaterialExp"]=12750}
+,{["nNextLevel"]=15,["nSellPrice"]=21825,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=2400,["nCurLevel"]=14,["nMaterialExp"]=14550}
+,{["nNextLevel"]=16,["nSellPrice"]=24525,["jSellRewards"]={{10011,4,2}
+}
+,["nMaterialCost"]=4500,["nExp"]=0,["nCurLevel"]=15,["nMaterialExp"]=16350}
+}
+}
+,{["id"]=5,["key"]="5",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=300,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=3000,["nExp"]=400,["nCurLevel"]=0,["nMaterialExp"]=200}
+,{["nNextLevel"]=2,["nSellPrice"]=600,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=600,["nCurLevel"]=1,["nMaterialExp"]=400}
+,{["nNextLevel"]=3,["nSellPrice"]=1500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=800,["nCurLevel"]=2,["nMaterialExp"]=1000}
+,{["nNextLevel"]=4,["nSellPrice"]=2137,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1000,["nCurLevel"]=3,["nMaterialExp"]=1425}
+,{["nNextLevel"]=5,["nSellPrice"]=3900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1200,["nCurLevel"]=4,["nMaterialExp"]=2600}
+,{["nNextLevel"]=6,["nSellPrice"]=5100,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1400,["nCurLevel"]=5,["nMaterialExp"]=3400}
+,{["nNextLevel"]=7,["nSellPrice"]=6900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1600,["nCurLevel"]=6,["nMaterialExp"]=4600}
+,{["nNextLevel"]=8,["nSellPrice"]=8700,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1800,["nCurLevel"]=7,["nMaterialExp"]=5800}
+,{["nNextLevel"]=9,["nSellPrice"]=11100,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2000,["nCurLevel"]=8,["nMaterialExp"]=7400}
+,{["nNextLevel"]=10,["nSellPrice"]=13500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2200,["nCurLevel"]=9,["nMaterialExp"]=9000}
+,{["nNextLevel"]=11,["nSellPrice"]=16500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2400,["nCurLevel"]=10,["nMaterialExp"]=11000}
+,{["nNextLevel"]=12,["nSellPrice"]=18900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2600,["nCurLevel"]=11,["nMaterialExp"]=12600}
+,{["nNextLevel"]=13,["nSellPrice"]=21900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2800,["nCurLevel"]=12,["nMaterialExp"]=14600}
+,{["nNextLevel"]=14,["nSellPrice"]=25500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=3000,["nCurLevel"]=13,["nMaterialExp"]=17000}
+,{["nNextLevel"]=15,["nSellPrice"]=29100,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=3200,["nCurLevel"]=14,["nMaterialExp"]=19400}
+,{["nNextLevel"]=16,["nSellPrice"]=32700,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=0,["nCurLevel"]=15,["nMaterialExp"]=21800}
+}
+}
+,{["id"]=6,["key"]="6",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=300,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=3000,["nExp"]=400,["nCurLevel"]=0,["nMaterialExp"]=200}
+,{["nNextLevel"]=2,["nSellPrice"]=600,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=600,["nCurLevel"]=1,["nMaterialExp"]=400}
+,{["nNextLevel"]=3,["nSellPrice"]=1500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=800,["nCurLevel"]=2,["nMaterialExp"]=1000}
+,{["nNextLevel"]=4,["nSellPrice"]=2137,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1000,["nCurLevel"]=3,["nMaterialExp"]=1425}
+,{["nNextLevel"]=5,["nSellPrice"]=3900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1200,["nCurLevel"]=4,["nMaterialExp"]=2600}
+,{["nNextLevel"]=6,["nSellPrice"]=5100,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1400,["nCurLevel"]=5,["nMaterialExp"]=3400}
+,{["nNextLevel"]=7,["nSellPrice"]=6900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1600,["nCurLevel"]=6,["nMaterialExp"]=4600}
+,{["nNextLevel"]=8,["nSellPrice"]=8700,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=1800,["nCurLevel"]=7,["nMaterialExp"]=5800}
+,{["nNextLevel"]=9,["nSellPrice"]=11100,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2000,["nCurLevel"]=8,["nMaterialExp"]=7400}
+,{["nNextLevel"]=10,["nSellPrice"]=13500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2200,["nCurLevel"]=9,["nMaterialExp"]=9000}
+,{["nNextLevel"]=11,["nSellPrice"]=16500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2400,["nCurLevel"]=10,["nMaterialExp"]=11000}
+,{["nNextLevel"]=12,["nSellPrice"]=18900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2600,["nCurLevel"]=11,["nMaterialExp"]=12600}
+,{["nNextLevel"]=13,["nSellPrice"]=21900,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=2800,["nCurLevel"]=12,["nMaterialExp"]=14600}
+,{["nNextLevel"]=14,["nSellPrice"]=25500,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=3000,["nCurLevel"]=13,["nMaterialExp"]=17000}
+,{["nNextLevel"]=15,["nSellPrice"]=29100,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=3200,["nCurLevel"]=14,["nMaterialExp"]=19400}
+,{["nNextLevel"]=16,["nSellPrice"]=32700,["jSellRewards"]={{10011,30,2}
+}
+,["nMaterialCost"]=6000,["nExp"]=0,["nCurLevel"]=15,["nMaterialExp"]=21800}
+}
+}
+}
+

@@ -1,83 +1,325 @@
-local conf = {
-	["filename"] = 'd-多人插图.xlsx',
-	["sheetname"] = '多人插图',
-	["types"] = {
-'int','string','int','string','int','string','string','int','int','string','string','string','string','string','float[]','string','float[]','bool','int'
-},
-	["names"] = {
-'id','key','itemId','sName','sort','sStart','sEnd','nType','theme_type','img','img_replace','icon','set_icon','get_txt','imgPos','l2dName','l2dPos','show','shopId'
-},
-	["data"] = {
-{'1',	'1',	'61001',	'皇室聚会',	'1',	'',	'',	'1',	'2',	'three_people',	'',	'board_three_people',	'Small_three_people',	'任务奖励',	'161,-17,1.65',	'CG02',	'-16,-51,0.92',	'',	'1'},
-{'2',	'2',	'61002',	'沙滩集会',	'2',	'',	'',	'1',	'1',	'seashore',	'',	'board_seashore',	'Small_seashore',	'商店购买',	'-45,-8,1.16',	'CG_seashore',	'-16,-51,0.92',	'1',	'80401'},
-{'3',	'3',	'61003',	'后勤彗心',	'3',	'',	'',	'1',	'2',	'kadya_liedown',	'',	'board_kadya_liedown',	'Small_kadya_liedown',	'高级勘测奖励',	'-66,2,1',	'kadiya',	'0,0,1.07',	'',	'1'},
-{'4',	'4',	'61007',	'热夏之约',	'4',	'',	'',	'1',	'1',	'summer_rendezvous',	'',	'board_summer_rendezvous',	'Small_summer_rendezvous',	'商店购买',	'-235,68,1.5',	'CG04_SummerRendezvous',	'0,0,1',	'1',	'80402'},
-{'5',	'5',	'61008',	'曦光盛宴',	'5',	'',	'',	'1',	'3',	'shimmering_feast',	'',	'board_shimmering_feast',	'Small_shimmering_feast',	'商店购买',	'-97.8,28.7,1.13',	'CG05_ShimmeringFeast_spine',	'0,0,1',	'1',	'80403'},
-{'6',	'6',	'61009',	'顷刻烟火',	'6',	'',	'',	'1',	'3',	'fireworks_IoIent',	'',	'board_fireworks_IoIent',	'Small_fireworks_IoIent',	'商店购买',	'29,-22,1.32',	'CG03_FireworksLoIent',	'0,0,1.07',	'1',	'80404'},
-{'7',	'7',	'61010',	'导购进修课',	'7',	'',	'',	'1',	'2',	'trytomoveforward',	'',	'board_trytomoveforward',	'Small_trytomoveforward',	'商店购买',	'-144,-371,0.98',	'CG06_TryToMoveForward_spine',	'0,-43,1',	'1',	'80405'},
-{'8',	'8',	'61004',	'基地勘测',	'8',	'',	'',	'1',	'4',	'base_check',	'',	'board_base_check',	'Small_base_check',	'高级勘测奖励',	'0,0,0.9',	'XingYun',	'148,-19,1.1',	'',	'1'},
-{'9',	'9',	'61011',	'游乐时光',	'9',	'',	'',	'1',	'2',	'play_time',	'',	'board_play_time',	'Small_play_time',	'高级勘测奖励',	'-29,-79,1.06',	'2022_04',	'0,0,1.07',	'',	'1'},
-{'10',	'10',	'61012',	'慵懒午后',	'10',	'',	'',	'1',	'2',	'relaxing_afternoon',	'',	'board_relaxing_afternoon',	'Small_relaxing_afternoon',	'高级勘测奖励',	'113,0,0.94',	'Aerbeisi',	'113,0,1',	'',	'1'},
-{'11',	'11',	'61013',	'妙探双姝',	'11',	'',	'',	'1',	'5',	'bestie_agent',	'',	'board_bestie_agent',	'Small_bestie_agent',	'商店购买',	'-149,-57,0.9',	'CG0008_BestieAgent_spine',	'164,-28,1',	'1',	'80406'},
-{'12',	'12',	'61014',	'星河共旅',	'12',	'',	'',	'1',	'6',	'trip_in_the_milky_way',	'',	'board_trip_in_the_milky_way',	'Small_trip_in_the_milky_way',	'高级勘测奖励',	'-58,-65,1.29',	'Ying',	'-58,-65,1.37',	'',	'1'},
-{'13',	'13',	'61015',	'温室闲暇',	'13',	'',	'',	'1',	'2',	'greenhouse',	'',	'board_greenhouse',	'Small_greenhouse',	'商店购买',	'214,14,1.36',	'CG00012_Greenhouse_spine',	'0,-37,1.07',	'1',	'80407'},
-{'14',	'14',	'61016',	'熠星之夜',	'14',	'',	'',	'1',	'2',	'starry_night',	'',	'board_starry_night',	'Small_starry_night',	'商店购买',	'78,-72,1.38',	'CG00011_StarryNight_spine',	'217,-77,1.3',	'1',	'80408'},
-{'15',	'15',	'61018',	'与喵同乐',	'15',	'',	'',	'1',	'2',	'fun_with_mew',	'',	'board_fun_with_mew',	'Small_fun_with_mew',	'高级勘测奖励',	'-69.5,-10,0.65',	'feili',	'-48,-10,1.47',	'',	'1'},
-{'16',	'16',	'61017',	'软梦盈心',	'16',	'',	'',	'1',	'2',	'tender_dream',	'',	'board_tender_dream',	'Small_tender_dream',	'商店购买',	'-54,19,1.15',	'CG0007_TenderDreamImmersingHeart',	'0,0,1.07',	'1',	'80409'},
-{'17',	'17',	'61019',	'醺光盏影',	'17',	'',	'',	'1',	'2',	'intoxicated_shadow',	'',	'board_intoxicated_shadow',	'Small_intoxicated_shadow',	'商店购买',	'52,-53,1.25',	'CG00010_IntoxicatedShadow_spine',	'111,-15,1.05',	'1',	'80410'},
-{'18',	'18',	'61020',	'失重空间',	'18',	'',	'',	'1',	'2',	'weightless_space',	'',	'board_weightless_space',	'Small_weightless_space',	'商店购买',	'63,-63,0.58',	'CG0009_WeightlessSpace_spine',	'0,0,1.3',	'1',	'80411'},
-{'19',	'19',	'61021',	'千里婵娟',	'19',	'',	'',	'1',	'2',	'moonlight_sharing',	'',	'board_moonlight_sharing',	'Small_moonlight_sharing',	'商店购买',	'-42,58,0.95',	'CG0013_MoonlightSharing_spine',	'68,90,1.15',	'1',	'80413'},
-{'20',	'20',	'61022',	'铁壁之卫',	'19',	'',	'',	'1',	'6',	'guard_of_iron_bastion',	'',	'board_guard_of_iron_bastion',	'Small_guard_of_iron_bastion',	'商店购买',	'44,-1,1.45',	'CG0014_GuardOfIronBastion_spine',	'176,0,1.07',	'',	'1'},
-{'21',	'21',	'61023',	'瞬息留影',	'21',	'',	'',	'1',	'6',	'silhouette_in_a_moment',	'',	'board_silhouette_in_a_moment',	'Small_silhouette_in_a_moment',	'高级勘测奖励',	'101,15,1.1',	'leikesi',	'106,11,1.17',	'',	'1'},
-{'22',	'22',	'61024',	'雪域众神',	'22',	'',	'',	'1',	'6',	'snowland_gods',	'',	'board_snowland_gods',	'Small_snowland_gods',	'活动商店兑换',	'-37,-140,1.13',	'CG0019_SnowlandGods_spine',	'72,-89,1.07',	'',	'1'},
-{'23',	'23',	'61025',	'泳夏派对',	'23',	'',	'',	'1',	'1',	'summer_swimming_party',	'',	'board_summer_swimming_party',	'Small_summer_swimming_party',	'奇珍馈赠奖励',	'-37,45,1.1',	'CG0015_SummerSwimmingParty_spine',	'115,0,1',	'',	'1'},
-{'24',	'24',	'61026',	'海边假日',	'24',	'',	'',	'1',	'1',	'beach_holidays',	'',	'board_beach_holidays',	'Small_beach_holidays',	'商店购买',	'42,15,1.17',	'CG0023_BeachHolidays',	'33,0,1',	'1',	'80415'},
-{'25',	'25',	'61027',	'清凉绚夏',	'25',	'',	'',	'1',	'1',	'cool_bright_summer',	'',	'board_cool_bright_summer',	'Small_cool_bright_summer',	'商店购买',	'-45,-71,1.05',	'CG0018_BreezyBrightSummer_spine',	'43,-5,1',	'1',	'80416'},
-{'26',	'26',	'61028',	'暖阳盛夏',	'26',	'',	'',	'1',	'1',	'warm_summer',	'',	'board_warm_summer',	'Small_warm_summer',	'商店购买',	'20,82,1.03',	'CG0017_WarmSummer_spine',	'81,0,1',	'1',	'80417'},
-{'27',	'27',	'61029',	'欢欣鼓舞',	'27',	'',	'',	'1',	'7',	'dance_for_joy',	'',	'board_dance_for_joy',	'Small_dance_for_joy',	'加油喝彩2024',	'-70,-20,0.88',	'CG0024_DanceForJoy_spine',	'55,-32,1.25',	'',	'1'},
-{'28',	'28',	'61030',	'暑夏清凉',	'28',	'',	'',	'1',	'1',	'coolness_of_summer',	'',	'board_coolness_of_summer',	'Small_coolness_of_summer',	'高级勘测奖励',	'36,-27,1.48',	'fulagelake',	'-143,-175,1.2',	'',	'1'},
-{'29',	'29',	'61031',	'焰火露营',	'29',	'',	'',	'1',	'8',	'camping_with_fireworks',	'',	'board_camping_with_fireworks',	'Small_camping_with_fireworks',	'商店购买',	'-226,-16,1.1',	'CG0021_CampingWithFireworks_spine',	'55,0,1',	'1',	'80418'},
-{'30',	'30',	'61032',	'星天莲火',	'30',	'',	'',	'1',	'3',	'starry_lotus_fire',	'',	'board_starry_lotus_fire',	'Small_starry_lotus_fire',	'高级勘测奖励',	'-10,-20,1.05',	'xiudie',	'0,0,1.43',	'',	'1'},
-{'31',	'31',	'61033',	'异变征兆',	'32',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'1',	'6',	'sign_of_mutation',	'',	'board_sign_of_mutation',	'Small_sign_of_mutation',	'幸运扭蛋机奖励',	'6,-16,1.18',	'hela',	'0,0,1.21',	'',	'1'},
-{'32',	'32',	'61034',	'怒涛汹涌',	'33',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'1',	'6',	'waves_tumble',	'',	'board_waves_tumble',	'Small_waves_tumble',	'幸运扭蛋机奖励',	'129,55,1.12',	'bosaidong',	'0,0,1.27',	'',	'1'},
-{'33',	'33',	'61035',	'青空虹影',	'34',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'1',	'6',	'rainbow_in_the_sky',	'',	'board_rainbow_in_the_sky',	'Small_rainbow_in_the_sky',	'幸运扭蛋机奖励',	'7,1,1.02',	'hong',	'0,0,1.07',	'',	'1'},
-{'35',	'35',	'61037',	'暗域之人',	'35',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'1',	'6',	'person_on_the_darknet',	'',	'board_person_on_the_darknet',	'Small_person_on_the_darknet',	'幸运扭蛋机奖励',	'-6,-4,1',	'hatuoli',	'0,-5,1',	'',	'1'},
-{'36',	'36',	'61038',	'携手重建',	'36',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'1',	'6',	'rebuilding_together',	'',	'board_rebuilding_together',	'Small_rebuilding_together',	'幸运扭蛋机奖励',	'56,-53,1.21',	'houqin',	'44,-58,1',	'',	'1'},
-{'38',	'38',	'61040',	'雨夜危情',	'57',	'',	'',	'1',	'9',	'rainy_night_jeopardy',	'',	'board_rainy_night_jeopardy',	'Small_rainy_night_jeopardy',	'商店购买',	'-123,-46,0.88',	'CG0022_RainyNightJeopardy_spine',	'0,0,0.88',	'1',	'80428'},
-{'39',	'39',	'61041',	'街头法则',	'31',	'',	'',	'1',	'9',	'law_of_the_streets',	'',	'board_law_of_the_streets',	'Small_law_of_the_streets',	'商店购买',	'50,50,0.97',	'CG0016_LawOfTheStreets_spine',	'0,0,1.07',	'1',	'80419'},
-{'40',	'40',	'61042',	'绝境逢生',	'37',	'2024-02-10 00:00:00',	'2024-10-16 03:00:00',	'1',	'6',	'a_narrow_escape',	'',	'board_a_narrow_escape',	'Small_a_narrow_escape',	'幸运扭蛋机奖励',	'-98,-41,0.89',	'Katina',	'0,0,1',	'',	'1'},
-{'41',	'41',	'61043',	'黑茧蝶梦',	'41',	'',	'',	'1',	'6',	'black_cocoon_rebecca',	'',	'board_black_cocoon_rebecca',	'Small_black_cocoon_rebecca',	'高级勘测奖励',	'19,56,1.26',	'jufeng_1',	'-7,129,2.1',	'',	'1'},
-{'43',	'43',	'61045',	'孤泳者集结！',	'43',	'',	'',	'1',	'1',	'swimmer_assemble',	'',	'board_swimmer_assemble',	'Small_swimmer_assemble',	'【奇迹之夜】活动',	'-18,-23,1',	'CG0028_SwimmerAssemble_spine',	'82,-18,1',	'',	'1'},
-{'44',	'44',	'61046',	'幻梦帷幕',	'44',	'',	'',	'1',	'9',	'fantastic_curtain_raiser',	'',	'board_fantastic_curtain_raiser',	'Small_fantastic_curtain_raiser',	'商店购买',	'-5,-66,1.21',	'CG0025_FantasticCurtainRaiser',	'43,0,1',	'1',	'80420'},
-{'45',	'45',	'61047',	'案卷迷踪',	'45',	'',	'',	'1',	'8',	'trail_of_cases',	'',	'board_trail_of_cases',	'Small_trail_of_cases',	'商店购买',	'-17,82,1.26',	'CG0027_TrailOfCases',	'0,0,1.07',	'1',	'80421'},
-{'46',	'46',	'61048',	'双重联映',	'46',	'',	'',	'1',	'9',	'double_feature',	'',	'board_double_feature',	'Small_double_feature',	'商店购买',	'-118,42,1.08',	'CG0026_DoubleFeature_spine',	'0,-26,1',	'1',	'80422'},
-{'42',	'47',	'61044',	'激浪漩流',	'42',	'',	'',	'1',	'6',	'wave_and_vortex',	'',	'board_wave_and_vortex',	'Small_wave_and_vortex',	'高级勘测奖励',	'54,63,1.17',	'2_bosaidong',	'0,0,1.07',	'',	'1'},
-{'47',	'47',	'61049',	'金色庆典',	'47',	'',	'',	'1',	'6',	'golden_celebration',	'',	'board_golden_celebration',	'Small_golden_celebration',	'商店购买',	'-15,-97,1.22',	'CG0033_GoldenCelebration_spine',	'0,-36,1',	'1',	'80423'},
-{'48',	'48',	'61050',	'暗巷危机',	'48',	'',	'',	'1',	'9',	'alley_corner_crisis',	'',	'board_alley_corner_crisis',	'Small_alley_corner_crisis',	'商店购买',	'-5,-34,1.32',	'CG0031_AlleyCornerCrisis_spine',	'0,0,1.07',	'1',	'80424'},
-{'49',	'49',	'61051',	'沙趣时光',	'49',	'',	'',	'1',	'1',	'beach_playtime',	'',	'board_beach_playtime',	'Small_beach_playtime',	'商店购买',	'-49,-23,1.13',	'CG0029_BeachPlaytime_spine',	'0,0,1.03',	'1',	'80425'},
-{'50',	'50',	'61052',	'暮光之约',	'50',	'',	'',	'1',	'9',	'twilight_invitation',	'',	'board_twilight_invitation',	'Small_twilight_invitation',	'商店购买',	'-9,-33,1.22',	'CG0032_TwilightInvitation_spine',	'0,0,1.07',	'1',	'80426'},
-{'51',	'51',	'61053',	'周年欢聚',	'51',	'',	'',	'1',	'7',	'anniversary_party',	'',	'board_anniversary_party',	'Small_anniversary_party',	'【周年狂欢】活动',	'44,15,1.08',	'CG0039_AnniversaryParty_spine',	'90,0,1.07',	'',	'1'},
-{'52',	'52',	'61054',	'旷野之声',	'52',	'',	'',	'1',	'6',	'voice_of_the_wild',	'',	'board_voice_of_the_wild',	'small_voice_of_the_wild',	'高级勘测奖励',	'-25,-10,0.74',	'wulin',	'-23,-27,1.4',	'',	'1'},
-{'53',	'53',	'61055',	'甜蜜一瞬',	'53',	'',	'',	'1',	'6',	'a_sweet_moment',	'',	'board_a_sweet_moment',	'Small_a_sweet_moment',	'高级勘测奖励',	'39,-50,1.07',	'niaoyun',	'-96,-35,1.35',	'',	'1'},
-{'55',	'55',	'61057',	'合家欢乐',	'55',	'',	'',	'1',	'7',	'whole_family_have_fun',	'',	'board_whole_family_have_fun',	'Small_whole_family_have_fun',	'新年活动',	'-102,3,1',	'CG0040_WholeFamilyHaveFun',	'0,0,1',	'',	'1'},
-{'56',	'56',	'61058',	'换装游戏',	'56',	'',	'',	'1',	'6',	'dress_up_game',	'',	'board_dress_up_game',	'Small_dress_up_game',	'商店购买',	'44,-7,1',	'CG0036_DressUpGame_spine',	'147,0,1',	'1',	'80427'},
-{'59',	'59',	'61061',	'粉红爱意',	'59',	'',	'',	'1',	'2',	'pink_love',	'',	'board_pink_love',	'Small_pink_love',	'商店购买',	'130,-158,1.36',	'CG0037_PinkLove_spine',	'25,-25,1',	'1',	'80429'},
-{'60',	'60',	'61062',	'惬意烹饪',	'60',	'',	'',	'1',	'2',	'cozy_cooking',	'',	'board_cozy_cooking',	'Small_cozy_cooking',	'商店购买',	'-91,28,1.15',	'CG0048_CozyCooking_spine',	'0,0,1.07',	'1',	'80430'},
-{'61',	'61',	'61063',	'蜜意投喂',	'61',	'',	'',	'1',	'2',	'feeding_with_affection',	'',	'board_feeding_with_affection',	'Small_feeding_with_affection',	'商店购买',	'-43,30,1.33',	'CG0038_FeedingWithAffection_spine',	'0,0,1.07',	'1',	'80431'},
-{'62',	'62',	'61064',	'夏日黄昏',	'62',	'',	'',	'1',	'8',	'dusk_of_summer',	'',	'board_dusk_of_summer',	'Small_dusk_of_summer',	'商店购买',	'-43,-32,1.23',	'CG0041_DuskOfSummer_spine',	'62,0,1.07',	'1',	'80432'},
-{'63',	'63',	'61065',	'靡丽倩影',	'63',	'',	'',	'1',	'6',	'mirage_of_splendor',	'',	'board_mirage_of_splendor',	'Small_mirage_of_splendor',	'高级勘测奖励',	'0,0,1.05',	'Aerbeisi_2',	'0,0,1.07',	'',	'1'},
-{'65',	'65',	'61067',	'偶像化妆间',	'65',	'',	'',	'1',	'2',	'idol_dressing_room',	'',	'board_idol_dressing_room',	'Small_idol_dressing_room',	'商店购买',	'7,-113,1.07',	'CG0042_BeautyBloom_spine',	'66,-41,1.07',	'1',	'80433'},
-{'66',	'66',	'61068',	'足间时尚',	'66',	'',	'',	'1',	'2',	'foot_fashion',	'',	'board_foot_fashion',	'Small_foot_fashion',	'商店购买',	'-43,121,1.25',	'CG0030_FootFashion_spine',	'-46,124,0.7',	'1',	'80434'},
-{'67',	'67',	'61069',	'温泉夜话',	'67',	'',	'',	'1',	'8',	'hot_spring_night_talk',	'',	'board_hot_spring_night_talk',	'Small_hot_spring_night_talk',	'商店购买',	'-9,-38,0.97',	'CG0044_HotSpringNightTalk_spine',	'180,-28,1.7',	'1',	'80435'},
-{'68',	'68',	'61070',	'薄雪艳色',	'68',	'',	'',	'1',	'8',	'thin_gorgeous_snow',	'',	'board_thin_gorgeous_snow',	'Small_thin_gorgeous_snow',	'商店购买',	'-122,-38,1.58',	'CG0043_ThinGorgeousSnow_spine',	'0,0,1.07',	'1',	'80436'},
-{'69',	'69',	'61071',	'劳逸结合',	'69',	'',	'',	'1',	'7',	'labor_leisure',	'',	'board_labor_leisure',	'Small_labor_leisure',	'【拾光剪影】活动',	'-19,106,1.2',	'CG0060_LaborLeisure_spine',	'94,0,1.14',	'',	'1'},
-{'70',	'70',	'61072',	'沐净悠然',	'70',	'',	'',	'1',	'6',	'calm_soak',	'',	'board_calm_soak',	'Small_calm_soak',	'高级勘测奖励',	'88.6,92.2,1.27',	'xingzhui',	'-13,-26,1',	'',	'1'},
-{'64',	'64',	'61066',	'制胜瞬间',	'71',	'',	'',	'1',	'10',	'decisiv_moment',	'',	'board_decisiv_moment',	'Small_decisiv_moment',	'高级勘测奖励',	'0,0,1.05',	'kkk',	'0,0,1.07',	'',	'1'},
-{'57',	'57',	'61059',	'妙韵乐音',	'72',	'',	'',	'1',	'3',	'chinese_music_party',	'',	'board_chinese_music_party',	'Small_chinese_music_party',	'商店购买',	'-49,-2,1.1',	'CG0035_ChineseMusicParty',	'0,0,1.07',	'1',	'80437'},
-{'72',	'72',	'61074',	'起步突袭',	'73',	'',	'',	'1',	'9',	'starting_raid',	'',	'board_starting_raid',	'Small_starting_raid',	'商店购买',	'-72,43,1.08',	'CG0050_StartingRaid_spine',	'0,0,1.07',	'1',	'80438'},
-{'75',	'75',	'61077',	'争夺竞赛',	'75',	'',	'',	'1',	'10',	'contention_arena',	'',	'board_contention_arena',	'Small_contention_arena',	'商店购买',	'8,-13,0.97',	'CG0052_ContentionArena_spine',	'59,0,1',	'1',	'80439'},
-{'76',	'76',	'61078',	'赛台决胜',	'76',	'',	'',	'1',	'10',	'knockout',	'',	'board_knockout',	'Small_knockout',	'商店购买',	'61,5,1.4',	'CG0051_Knockout_spine',	'0,0,1',	'1',	'80440'},
-},
+_G["CfgArchiveMultiPicture"]={{["shopId"]=1,["show"]=false,["l2dName"]="CG02",["get_txt"]="任务奖励",["id"]=1,["img"]="three_people",["imgPos"]={161,-17,1.65}
+,["l2dPos"]={-16,-51,0.92}
+,["theme_type"]=2,["nType"]=1,["sort"]=1,["set_icon"]="Small_three_people",["key"]="1",["sName"]="皇室聚会",["icon"]="board_three_people",["itemId"]=61001}
+,{["shopId"]=80401,["show"]=true,["l2dName"]="CG_seashore",["get_txt"]="商店购买",["id"]=2,["img"]="seashore",["imgPos"]={-45,-8,1.16}
+,["l2dPos"]={-16,-51,0.92}
+,["theme_type"]=1,["nType"]=1,["sort"]=2,["set_icon"]="Small_seashore",["key"]="2",["sName"]="沙滩集会",["icon"]="board_seashore",["itemId"]=61002}
+,{["shopId"]=1,["show"]=false,["l2dName"]="kadiya",["get_txt"]="高级勘测奖励",["id"]=3,["img"]="kadya_liedown",["imgPos"]={-66,2,1}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=2,["nType"]=1,["sort"]=3,["set_icon"]="Small_kadya_liedown",["key"]="3",["sName"]="后勤彗心",["icon"]="board_kadya_liedown",["itemId"]=61003}
+,{["shopId"]=80402,["show"]=true,["l2dName"]="CG04_SummerRendezvous",["get_txt"]="商店购买",["id"]=4,["img"]="summer_rendezvous",["imgPos"]={-235,68,1.5}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=4,["set_icon"]="Small_summer_rendezvous",["key"]="4",["sName"]="热夏之约",["icon"]="board_summer_rendezvous",["itemId"]=61007}
+,{["shopId"]=80403,["show"]=true,["l2dName"]="CG05_ShimmeringFeast_spine",["get_txt"]="商店购买",["id"]=5,["img"]="shimmering_feast",["imgPos"]={-97.8,28.7,1.13}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=3,["nType"]=1,["sort"]=5,["set_icon"]="Small_shimmering_feast",["key"]="5",["sName"]="曦光盛宴",["icon"]="board_shimmering_feast",["itemId"]=61008}
+,{["shopId"]=80404,["show"]=true,["l2dName"]="CG03_FireworksLoIent",["get_txt"]="商店购买",["id"]=6,["img"]="fireworks_IoIent",["imgPos"]={29,-22,1.32}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=3,["nType"]=1,["sort"]=6,["set_icon"]="Small_fireworks_IoIent",["key"]="6",["sName"]="顷刻烟火",["icon"]="board_fireworks_IoIent",["itemId"]=61009}
+,{["shopId"]=80405,["show"]=true,["l2dName"]="CG06_TryToMoveForward_spine",["get_txt"]="商店购买",["id"]=7,["img"]="trytomoveforward",["imgPos"]={-144,-371,0.98}
+,["l2dPos"]={0,-43,1}
+,["theme_type"]=2,["nType"]=1,["sort"]=7,["set_icon"]="Small_trytomoveforward",["key"]="7",["sName"]="导购进修课",["icon"]="board_trytomoveforward",["itemId"]=61010}
+,{["shopId"]=1,["show"]=false,["l2dName"]="XingYun",["get_txt"]="高级勘测奖励",["id"]=8,["img"]="base_check",["imgPos"]={0,0,0.9}
+,["l2dPos"]={148,-19,1.1}
+,["theme_type"]=4,["nType"]=1,["sort"]=8,["set_icon"]="Small_base_check",["key"]="8",["sName"]="基地勘测",["icon"]="board_base_check",["itemId"]=61004}
+,{["shopId"]=1,["show"]=false,["l2dName"]="2022_04",["get_txt"]="高级勘测奖励",["id"]=9,["img"]="play_time",["imgPos"]={-29,-79,1.06}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=2,["nType"]=1,["sort"]=9,["set_icon"]="Small_play_time",["key"]="9",["sName"]="游乐时光",["icon"]="board_play_time",["itemId"]=61011}
+,{["shopId"]=1,["show"]=false,["l2dName"]="Aerbeisi",["get_txt"]="高级勘测奖励",["id"]=10,["img"]="relaxing_afternoon",["imgPos"]={113,0,0.94}
+,["l2dPos"]={113,0,1}
+,["theme_type"]=2,["nType"]=1,["sort"]=10,["set_icon"]="Small_relaxing_afternoon",["key"]="10",["sName"]="慵懒午后",["icon"]="board_relaxing_afternoon",["itemId"]=61012}
+,{["shopId"]=80406,["show"]=true,["l2dName"]="CG0008_BestieAgent_spine",["get_txt"]="商店购买",["id"]=11,["img"]="bestie_agent",["imgPos"]={-149,-57,0.9}
+,["l2dPos"]={164,-28,1}
+,["theme_type"]=5,["nType"]=1,["sort"]=11,["set_icon"]="Small_bestie_agent",["key"]="11",["sName"]="妙探双姝",["icon"]="board_bestie_agent",["itemId"]=61013}
+,{["shopId"]=1,["show"]=false,["l2dName"]="Ying",["get_txt"]="高级勘测奖励",["id"]=12,["img"]="trip_in_the_milky_way",["imgPos"]={-58,-65,1.29}
+,["l2dPos"]={-58,-65,1.37}
+,["theme_type"]=6,["nType"]=1,["sort"]=12,["set_icon"]="Small_trip_in_the_milky_way",["key"]="12",["sName"]="星河共旅",["icon"]="board_trip_in_the_milky_way",["itemId"]=61014}
+,{["shopId"]=80407,["show"]=true,["l2dName"]="CG00012_Greenhouse_spine",["get_txt"]="商店购买",["id"]=13,["img"]="greenhouse",["imgPos"]={214,14,1.36}
+,["l2dPos"]={0,-37,1.07}
+,["theme_type"]=2,["nType"]=1,["sort"]=13,["set_icon"]="Small_greenhouse",["key"]="13",["sName"]="温室闲暇",["icon"]="board_greenhouse",["itemId"]=61015}
+,{["shopId"]=80408,["show"]=true,["l2dName"]="CG00011_StarryNight_spine",["get_txt"]="商店购买",["id"]=14,["img"]="starry_night",["imgPos"]={78,-72,1.38}
+,["l2dPos"]={217,-77,1.3}
+,["theme_type"]=2,["nType"]=1,["sort"]=14,["set_icon"]="Small_starry_night",["key"]="14",["sName"]="熠星之夜",["icon"]="board_starry_night",["itemId"]=61016}
+,{["shopId"]=1,["show"]=false,["l2dName"]="feili",["get_txt"]="高级勘测奖励",["id"]=15,["img"]="fun_with_mew",["imgPos"]={-69.5,-10,0.65}
+,["l2dPos"]={-48,-10,1.47}
+,["theme_type"]=2,["nType"]=1,["sort"]=15,["set_icon"]="Small_fun_with_mew",["key"]="15",["sName"]="与喵同乐",["icon"]="board_fun_with_mew",["itemId"]=61018}
+,{["shopId"]=80409,["show"]=true,["l2dName"]="CG0007_TenderDreamImmersingHeart",["get_txt"]="商店购买",["id"]=16,["img"]="tender_dream",["imgPos"]={-54,19,1.15}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=2,["nType"]=1,["sort"]=16,["set_icon"]="Small_tender_dream",["key"]="16",["sName"]="软梦盈心",["icon"]="board_tender_dream",["itemId"]=61017}
+,{["shopId"]=80410,["show"]=true,["l2dName"]="CG00010_IntoxicatedShadow_spine",["get_txt"]="商店购买",["id"]=17,["img"]="intoxicated_shadow",["imgPos"]={52,-53,1.25}
+,["l2dPos"]={111,-15,1.05}
+,["theme_type"]=2,["nType"]=1,["sort"]=17,["set_icon"]="Small_intoxicated_shadow",["key"]="17",["sName"]="醺光盏影",["icon"]="board_intoxicated_shadow",["itemId"]=61019}
+,{["shopId"]=80411,["show"]=true,["l2dName"]="CG0009_WeightlessSpace_spine",["get_txt"]="商店购买",["id"]=18,["img"]="weightless_space",["imgPos"]={63,-63,0.58}
+,["l2dPos"]={0,0,1.3}
+,["theme_type"]=2,["nType"]=1,["sort"]=18,["set_icon"]="Small_weightless_space",["key"]="18",["sName"]="失重空间",["icon"]="board_weightless_space",["itemId"]=61020}
+,{["shopId"]=80413,["show"]=true,["l2dName"]="CG0013_MoonlightSharing_spine",["get_txt"]="商店购买",["id"]=19,["img"]="moonlight_sharing",["imgPos"]={-42,58,0.95}
+,["l2dPos"]={68,90,1.15}
+,["theme_type"]=2,["nType"]=1,["sort"]=19,["set_icon"]="Small_moonlight_sharing",["key"]="19",["sName"]="千里婵娟",["icon"]="board_moonlight_sharing",["itemId"]=61021}
+,{["shopId"]=1,["show"]=false,["l2dName"]="CG0014_GuardOfIronBastion_spine",["get_txt"]="商店购买",["id"]=20,["img"]="guard_of_iron_bastion",["imgPos"]={44,-1,1.45}
+,["l2dPos"]={176,0,1.07}
+,["theme_type"]=6,["nType"]=1,["sort"]=19,["set_icon"]="Small_guard_of_iron_bastion",["key"]="20",["sName"]="铁壁之卫",["icon"]="board_guard_of_iron_bastion",["itemId"]=61022}
+,{["shopId"]=1,["show"]=false,["l2dName"]="leikesi",["get_txt"]="高级勘测奖励",["id"]=21,["img"]="silhouette_in_a_moment",["imgPos"]={101,15,1.1}
+,["l2dPos"]={106,11,1.17}
+,["theme_type"]=6,["nType"]=1,["sort"]=21,["set_icon"]="Small_silhouette_in_a_moment",["key"]="21",["sName"]="瞬息留影",["icon"]="board_silhouette_in_a_moment",["itemId"]=61023}
+,{["shopId"]=1,["show"]=false,["l2dName"]="CG0019_SnowlandGods_spine",["get_txt"]="活动商店兑换",["id"]=22,["img"]="snowland_gods",["imgPos"]={-37,-140,1.13}
+,["l2dPos"]={72,-89,1.07}
+,["theme_type"]=6,["nType"]=1,["sort"]=22,["set_icon"]="Small_snowland_gods",["key"]="22",["sName"]="雪域众神",["icon"]="board_snowland_gods",["itemId"]=61024}
+,{["shopId"]=1,["show"]=false,["l2dName"]="CG0015_SummerSwimmingParty_spine",["get_txt"]="奇珍馈赠奖励",["id"]=23,["img"]="summer_swimming_party",["imgPos"]={-37,45,1.1}
+,["l2dPos"]={115,0,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=23,["set_icon"]="Small_summer_swimming_party",["key"]="23",["sName"]="泳夏派对",["icon"]="board_summer_swimming_party",["itemId"]=61025}
+,{["shopId"]=80415,["show"]=true,["l2dName"]="CG0023_BeachHolidays",["get_txt"]="商店购买",["id"]=24,["img"]="beach_holidays",["imgPos"]={42,15,1.17}
+,["l2dPos"]={33,0,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=24,["set_icon"]="Small_beach_holidays",["key"]="24",["sName"]="海边假日",["icon"]="board_beach_holidays",["itemId"]=61026}
+,{["shopId"]=80416,["show"]=true,["l2dName"]="CG0018_BreezyBrightSummer_spine",["get_txt"]="商店购买",["id"]=25,["img"]="cool_bright_summer",["imgPos"]={-45,-71,1.05}
+,["l2dPos"]={43,-5,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=25,["set_icon"]="Small_cool_bright_summer",["key"]="25",["sName"]="清凉绚夏",["icon"]="board_cool_bright_summer",["itemId"]=61027}
+,{["shopId"]=80417,["show"]=true,["l2dName"]="CG0017_WarmSummer_spine",["get_txt"]="商店购买",["id"]=26,["img"]="warm_summer",["imgPos"]={20,82,1.03}
+,["l2dPos"]={81,0,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=26,["set_icon"]="Small_warm_summer",["key"]="26",["sName"]="暖阳盛夏",["icon"]="board_warm_summer",["itemId"]=61028}
+,{["shopId"]=1,["show"]=false,["l2dName"]="CG0024_DanceForJoy_spine",["get_txt"]="加油喝彩2024",["id"]=27,["img"]="dance_for_joy",["imgPos"]={-70,-20,0.88}
+,["l2dPos"]={55,-32,1.25}
+,["theme_type"]=7,["nType"]=1,["sort"]=27,["set_icon"]="Small_dance_for_joy",["key"]="27",["sName"]="欢欣鼓舞",["icon"]="board_dance_for_joy",["itemId"]=61029}
+,{["shopId"]=1,["show"]=false,["l2dName"]="fulagelake",["get_txt"]="高级勘测奖励",["id"]=28,["img"]="coolness_of_summer",["imgPos"]={36,-27,1.48}
+,["l2dPos"]={-143,-175,1.2}
+,["theme_type"]=1,["nType"]=1,["sort"]=28,["set_icon"]="Small_coolness_of_summer",["key"]="28",["sName"]="暑夏清凉",["icon"]="board_coolness_of_summer",["itemId"]=61030}
+,{["shopId"]=80418,["show"]=true,["l2dName"]="CG0021_CampingWithFireworks_spine",["get_txt"]="商店购买",["id"]=29,["img"]="camping_with_fireworks",["imgPos"]={-226,-16,1.1}
+,["l2dPos"]={55,0,1}
+,["theme_type"]=8,["nType"]=1,["sort"]=29,["set_icon"]="Small_camping_with_fireworks",["key"]="29",["sName"]="焰火露营",["icon"]="board_camping_with_fireworks",["itemId"]=61031}
+,{["shopId"]=1,["show"]=false,["l2dName"]="xiudie",["get_txt"]="高级勘测奖励",["id"]=30,["img"]="starry_lotus_fire",["imgPos"]={-10,-20,1.05}
+,["l2dPos"]={0,0,1.43}
+,["theme_type"]=3,["nType"]=1,["sort"]=30,["set_icon"]="Small_starry_lotus_fire",["key"]="30",["sName"]="星天莲火",["icon"]="board_starry_lotus_fire",["itemId"]=61032}
+,{["l2dName"]="hela",["get_txt"]="幸运扭蛋机奖励",["img"]="sign_of_mutation",["shopId"]=1,["sort"]=32,["sName"]="异变征兆",["icon"]="board_sign_of_mutation",["itemId"]=61033,["l2dPos"]={0,0,1.21}
+,["id"]=31,["imgPos"]={6,-16,1.18}
+,["theme_type"]=6,["nType"]=1,["show"]=false,["sEnd"]="2024-10-16 03:00:00",["set_icon"]="Small_sign_of_mutation",["sStart"]="2024-02-10 00:00:00",["key"]="31"}
+,{["l2dName"]="bosaidong",["get_txt"]="幸运扭蛋机奖励",["img"]="waves_tumble",["shopId"]=1,["sort"]=33,["sName"]="怒涛汹涌",["icon"]="board_waves_tumble",["itemId"]=61034,["l2dPos"]={0,0,1.27}
+,["id"]=32,["imgPos"]={129,55,1.12}
+,["theme_type"]=6,["nType"]=1,["show"]=false,["sEnd"]="2024-10-16 03:00:00",["set_icon"]="Small_waves_tumble",["sStart"]="2024-02-10 00:00:00",["key"]="32"}
+,{["l2dName"]="hong",["get_txt"]="幸运扭蛋机奖励",["img"]="rainbow_in_the_sky",["shopId"]=1,["sort"]=34,["sName"]="青空虹影",["icon"]="board_rainbow_in_the_sky",["itemId"]=61035,["l2dPos"]={0,0,1.07}
+,["id"]=33,["imgPos"]={7,1,1.02}
+,["theme_type"]=6,["nType"]=1,["show"]=false,["sEnd"]="2024-10-16 03:00:00",["set_icon"]="Small_rainbow_in_the_sky",["sStart"]="2024-02-10 00:00:00",["key"]="33"}
+,[35]={["l2dName"]="hatuoli",["get_txt"]="幸运扭蛋机奖励",["img"]="person_on_the_darknet",["shopId"]=1,["sort"]=35,["sName"]="暗域之人",["icon"]="board_person_on_the_darknet",["itemId"]=61037,["l2dPos"]={0,-5,1}
+,["id"]=35,["imgPos"]={-6,-4,1}
+,["theme_type"]=6,["nType"]=1,["show"]=false,["sEnd"]="2024-10-16 03:00:00",["set_icon"]="Small_person_on_the_darknet",["sStart"]="2024-02-10 00:00:00",["key"]="35"}
+,[36]={["l2dName"]="houqin",["get_txt"]="幸运扭蛋机奖励",["img"]="rebuilding_together",["shopId"]=1,["sort"]=36,["sName"]="携手重建",["icon"]="board_rebuilding_together",["itemId"]=61038,["l2dPos"]={44,-58,1}
+,["id"]=36,["imgPos"]={56,-53,1.21}
+,["theme_type"]=6,["nType"]=1,["show"]=false,["sEnd"]="2024-10-16 03:00:00",["set_icon"]="Small_rebuilding_together",["sStart"]="2024-02-10 00:00:00",["key"]="36"}
+,[38]={["shopId"]=80428,["show"]=true,["l2dName"]="CG0022_RainyNightJeopardy_spine",["get_txt"]="商店购买",["id"]=38,["img"]="rainy_night_jeopardy",["imgPos"]={-123,-46,0.88}
+,["l2dPos"]={0,0,0.88}
+,["theme_type"]=9,["nType"]=1,["sort"]=57,["set_icon"]="Small_rainy_night_jeopardy",["key"]="38",["sName"]="雨夜危情",["icon"]="board_rainy_night_jeopardy",["itemId"]=61040}
+,[39]={["shopId"]=80419,["show"]=true,["l2dName"]="CG0016_LawOfTheStreets_spine",["get_txt"]="商店购买",["id"]=39,["img"]="law_of_the_streets",["imgPos"]={50,50,0.97}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=9,["nType"]=1,["sort"]=31,["set_icon"]="Small_law_of_the_streets",["key"]="39",["sName"]="街头法则",["icon"]="board_law_of_the_streets",["itemId"]=61041}
+,[40]={["l2dName"]="Katina",["get_txt"]="幸运扭蛋机奖励",["img"]="a_narrow_escape",["shopId"]=1,["sort"]=37,["sName"]="绝境逢生",["icon"]="board_a_narrow_escape",["itemId"]=61042,["l2dPos"]={0,0,1}
+,["id"]=40,["imgPos"]={-98,-41,0.89}
+,["theme_type"]=6,["nType"]=1,["show"]=false,["sEnd"]="2024-10-16 03:00:00",["set_icon"]="Small_a_narrow_escape",["sStart"]="2024-02-10 00:00:00",["key"]="40"}
+,[41]={["shopId"]=1,["show"]=false,["l2dName"]="jufeng_1",["get_txt"]="高级勘测奖励",["id"]=41,["img"]="black_cocoon_rebecca",["imgPos"]={19,56,1.26}
+,["l2dPos"]={-7,129,2.1}
+,["theme_type"]=6,["nType"]=1,["sort"]=41,["set_icon"]="Small_black_cocoon_rebecca",["key"]="41",["sName"]="黑茧蝶梦",["icon"]="board_black_cocoon_rebecca",["itemId"]=61043}
+,[42]={["shopId"]=1,["show"]=false,["l2dName"]="2_bosaidong",["get_txt"]="高级勘测奖励",["id"]=42,["img"]="wave_and_vortex",["imgPos"]={54,63,1.17}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=6,["nType"]=1,["sort"]=42,["set_icon"]="Small_wave_and_vortex",["key"]="47",["sName"]="激浪漩流",["icon"]="board_wave_and_vortex",["itemId"]=61044}
+,[43]={["shopId"]=1,["show"]=false,["l2dName"]="CG0028_SwimmerAssemble_spine",["get_txt"]="【奇迹之夜】活动",["id"]=43,["img"]="swimmer_assemble",["imgPos"]={-18,-23,1}
+,["l2dPos"]={82,-18,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=43,["set_icon"]="Small_swimmer_assemble",["key"]="43",["sName"]="孤泳者集结！",["icon"]="board_swimmer_assemble",["itemId"]=61045}
+,[44]={["shopId"]=80420,["show"]=true,["l2dName"]="CG0025_FantasticCurtainRaiser",["get_txt"]="商店购买",["id"]=44,["img"]="fantastic_curtain_raiser",["imgPos"]={-5,-66,1.21}
+,["l2dPos"]={43,0,1}
+,["theme_type"]=9,["nType"]=1,["sort"]=44,["set_icon"]="Small_fantastic_curtain_raiser",["key"]="44",["sName"]="幻梦帷幕",["icon"]="board_fantastic_curtain_raiser",["itemId"]=61046}
+,[45]={["shopId"]=80421,["show"]=true,["l2dName"]="CG0027_TrailOfCases",["get_txt"]="商店购买",["id"]=45,["img"]="trail_of_cases",["imgPos"]={-17,82,1.26}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=8,["nType"]=1,["sort"]=45,["set_icon"]="Small_trail_of_cases",["key"]="45",["sName"]="案卷迷踪",["icon"]="board_trail_of_cases",["itemId"]=61047}
+,[46]={["shopId"]=80422,["show"]=true,["l2dName"]="CG0026_DoubleFeature_spine",["get_txt"]="商店购买",["id"]=46,["img"]="double_feature",["imgPos"]={-118,42,1.08}
+,["l2dPos"]={0,-26,1}
+,["theme_type"]=9,["nType"]=1,["sort"]=46,["set_icon"]="Small_double_feature",["key"]="46",["sName"]="双重联映",["icon"]="board_double_feature",["itemId"]=61048}
+,[47]={["shopId"]=80423,["show"]=true,["l2dName"]="CG0033_GoldenCelebration_spine",["get_txt"]="商店购买",["id"]=47,["img"]="golden_celebration",["imgPos"]={-15,-97,1.22}
+,["l2dPos"]={0,-36,1}
+,["theme_type"]=6,["nType"]=1,["sort"]=47,["set_icon"]="Small_golden_celebration",["key"]="47",["sName"]="金色庆典",["icon"]="board_golden_celebration",["itemId"]=61049}
+,[48]={["shopId"]=80424,["show"]=true,["l2dName"]="CG0031_AlleyCornerCrisis_spine",["get_txt"]="商店购买",["id"]=48,["img"]="alley_corner_crisis",["imgPos"]={-5,-34,1.32}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=9,["nType"]=1,["sort"]=48,["set_icon"]="Small_alley_corner_crisis",["key"]="48",["sName"]="暗巷危机",["icon"]="board_alley_corner_crisis",["itemId"]=61050}
+,[49]={["shopId"]=80425,["show"]=true,["l2dName"]="CG0029_BeachPlaytime_spine",["get_txt"]="商店购买",["id"]=49,["img"]="beach_playtime",["imgPos"]={-49,-23,1.13}
+,["l2dPos"]={0,0,1.03}
+,["theme_type"]=1,["nType"]=1,["sort"]=49,["set_icon"]="Small_beach_playtime",["key"]="49",["sName"]="沙趣时光",["icon"]="board_beach_playtime",["itemId"]=61051}
+,[50]={["shopId"]=80426,["show"]=true,["l2dName"]="CG0032_TwilightInvitation_spine",["get_txt"]="商店购买",["id"]=50,["img"]="twilight_invitation",["imgPos"]={-9,-33,1.22}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=9,["nType"]=1,["sort"]=50,["set_icon"]="Small_twilight_invitation",["key"]="50",["sName"]="暮光之约",["icon"]="board_twilight_invitation",["itemId"]=61052}
+,[51]={["shopId"]=1,["show"]=false,["l2dName"]="CG0039_AnniversaryParty_spine",["get_txt"]="【周年狂欢】活动",["id"]=51,["img"]="anniversary_party",["imgPos"]={44,15,1.08}
+,["l2dPos"]={90,0,1.07}
+,["theme_type"]=7,["nType"]=1,["sort"]=51,["set_icon"]="Small_anniversary_party",["key"]="51",["sName"]="周年欢聚",["icon"]="board_anniversary_party",["itemId"]=61053}
+,[52]={["shopId"]=1,["show"]=false,["l2dName"]="wulin",["get_txt"]="高级勘测奖励",["id"]=52,["img"]="voice_of_the_wild",["imgPos"]={-25,-10,0.74}
+,["l2dPos"]={-23,-27,1.4}
+,["theme_type"]=6,["nType"]=1,["sort"]=52,["set_icon"]="small_voice_of_the_wild",["key"]="52",["sName"]="旷野之声",["icon"]="board_voice_of_the_wild",["itemId"]=61054}
+,[53]={["shopId"]=1,["show"]=false,["l2dName"]="niaoyun",["get_txt"]="高级勘测奖励",["id"]=53,["img"]="a_sweet_moment",["imgPos"]={39,-50,1.07}
+,["l2dPos"]={-96,-35,1.35}
+,["theme_type"]=6,["nType"]=1,["sort"]=53,["set_icon"]="Small_a_sweet_moment",["key"]="53",["sName"]="甜蜜一瞬",["icon"]="board_a_sweet_moment",["itemId"]=61055}
+,[55]={["shopId"]=1,["show"]=false,["l2dName"]="CG0040_WholeFamilyHaveFun",["get_txt"]="新年活动",["id"]=55,["img"]="whole_family_have_fun",["imgPos"]={-102,3,1}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=7,["nType"]=1,["sort"]=55,["set_icon"]="Small_whole_family_have_fun",["key"]="55",["sName"]="合家欢乐",["icon"]="board_whole_family_have_fun",["itemId"]=61057}
+,[56]={["shopId"]=80427,["show"]=true,["l2dName"]="CG0036_DressUpGame_spine",["get_txt"]="商店购买",["id"]=56,["img"]="dress_up_game",["imgPos"]={44,-7,1}
+,["l2dPos"]={147,0,1}
+,["theme_type"]=6,["nType"]=1,["sort"]=56,["set_icon"]="Small_dress_up_game",["key"]="56",["sName"]="换装游戏",["icon"]="board_dress_up_game",["itemId"]=61058}
+,[57]={["shopId"]=80437,["show"]=true,["l2dName"]="CG0035_ChineseMusicParty",["get_txt"]="商店购买",["id"]=57,["img"]="chinese_music_party",["imgPos"]={-49,-2,1.1}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=3,["nType"]=1,["sort"]=72,["set_icon"]="Small_chinese_music_party",["key"]="57",["sName"]="妙韵乐音",["icon"]="board_chinese_music_party",["itemId"]=61059}
+,[58]={["shopId"]=80439,["show"]=true,["l2dName"]="CG0034_HangOutinLotusCorridor_spine",["get_txt"]="商店购买",["id"]=58,["img"]="hang_out_in_lotus",["imgPos"]={47,-21,1.08}
+,["l2dPos"]={55,0,1}
+,["theme_type"]=3,["nType"]=1,["sort"]=58,["set_icon"]="Small_hang_out_in_lotus",["key"]="58",["sName"]="游廊风荷",["icon"]="board_hang_out_in_lotus",["itemId"]=61060}
+,[59]={["shopId"]=80429,["show"]=true,["l2dName"]="CG0037_PinkLove_spine",["get_txt"]="商店购买",["id"]=59,["img"]="pink_love",["imgPos"]={130,-158,1.36}
+,["l2dPos"]={25,-25,1}
+,["theme_type"]=2,["nType"]=1,["sort"]=59,["set_icon"]="Small_pink_love",["key"]="59",["sName"]="粉红爱意",["icon"]="board_pink_love",["itemId"]=61061}
+,[60]={["shopId"]=80430,["show"]=true,["l2dName"]="CG0048_CozyCooking_spine",["get_txt"]="商店购买",["id"]=60,["img"]="cozy_cooking",["imgPos"]={-91,28,1.15}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=2,["nType"]=1,["sort"]=60,["set_icon"]="Small_cozy_cooking",["key"]="60",["sName"]="惬意烹饪",["icon"]="board_cozy_cooking",["itemId"]=61062}
+,[61]={["shopId"]=80431,["show"]=true,["l2dName"]="CG0038_FeedingWithAffection_spine",["get_txt"]="商店购买",["id"]=61,["img"]="feeding_with_affection",["imgPos"]={-43,30,1.33}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=2,["nType"]=1,["sort"]=61,["set_icon"]="Small_feeding_with_affection",["key"]="61",["sName"]="蜜意投喂",["icon"]="board_feeding_with_affection",["itemId"]=61063}
+,[62]={["shopId"]=80432,["show"]=true,["l2dName"]="CG0041_DuskOfSummer_spine",["get_txt"]="商店购买",["id"]=62,["img"]="dusk_of_summer",["imgPos"]={-43,-32,1.23}
+,["l2dPos"]={62,0,1.07}
+,["theme_type"]=8,["nType"]=1,["sort"]=62,["set_icon"]="Small_dusk_of_summer",["key"]="62",["sName"]="夏日黄昏",["icon"]="board_dusk_of_summer",["itemId"]=61064}
+,[63]={["shopId"]=1,["show"]=false,["l2dName"]="Aerbeisi_2",["get_txt"]="高级勘测奖励",["id"]=63,["img"]="mirage_of_splendor",["imgPos"]={0,0,1.05}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=6,["nType"]=1,["sort"]=63,["set_icon"]="Small_mirage_of_splendor",["key"]="63",["sName"]="靡丽倩影",["icon"]="board_mirage_of_splendor",["itemId"]=61065}
+,[64]={["shopId"]=1,["show"]=false,["l2dName"]="kkk",["get_txt"]="高级勘测奖励",["id"]=64,["img"]="decisiv_moment",["imgPos"]={0,0,1.05}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=10,["nType"]=1,["sort"]=71,["set_icon"]="Small_decisiv_moment",["key"]="64",["sName"]="制胜瞬间",["icon"]="board_decisiv_moment",["itemId"]=61066}
+,[65]={["shopId"]=80433,["show"]=true,["l2dName"]="CG0042_BeautyBloom_spine",["get_txt"]="商店购买",["id"]=65,["img"]="idol_dressing_room",["imgPos"]={7,-113,1.07}
+,["l2dPos"]={66,-41,1.07}
+,["theme_type"]=2,["nType"]=1,["sort"]=65,["set_icon"]="Small_idol_dressing_room",["key"]="65",["sName"]="偶像化妆间",["icon"]="board_idol_dressing_room",["itemId"]=61067}
+,[66]={["shopId"]=80434,["show"]=true,["l2dName"]="CG0030_FootFashion_spine",["get_txt"]="商店购买",["id"]=66,["img"]="foot_fashion",["imgPos"]={-43,121,1.25}
+,["l2dPos"]={-46,124,0.7}
+,["theme_type"]=2,["nType"]=1,["sort"]=66,["set_icon"]="Small_foot_fashion",["key"]="66",["sName"]="足间时尚",["icon"]="board_foot_fashion",["itemId"]=61068}
+,[67]={["shopId"]=80435,["show"]=true,["l2dName"]="CG0044_HotSpringNightTalk_spine",["get_txt"]="商店购买",["id"]=67,["img"]="hot_spring_night_talk",["imgPos"]={-9,-38,0.97}
+,["l2dPos"]={180,-28,1.7}
+,["theme_type"]=8,["nType"]=1,["sort"]=67,["set_icon"]="Small_hot_spring_night_talk",["key"]="67",["sName"]="温泉夜话",["icon"]="board_hot_spring_night_talk",["itemId"]=61069}
+,[68]={["shopId"]=80436,["show"]=true,["l2dName"]="CG0043_ThinGorgeousSnow_spine",["get_txt"]="商店购买",["id"]=68,["img"]="thin_gorgeous_snow",["imgPos"]={-122,-38,1.58}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=8,["nType"]=1,["sort"]=68,["set_icon"]="Small_thin_gorgeous_snow",["key"]="68",["sName"]="薄雪艳色",["icon"]="board_thin_gorgeous_snow",["itemId"]=61070}
+,[69]={["shopId"]=1,["show"]=false,["l2dName"]="CG0060_LaborLeisure_spine",["get_txt"]="【拾光剪影】活动",["id"]=69,["img"]="labor_leisure",["imgPos"]={-19,106,1.2}
+,["l2dPos"]={94,0,1.14}
+,["theme_type"]=7,["nType"]=1,["sort"]=69,["set_icon"]="Small_labor_leisure",["key"]="69",["sName"]="劳逸结合",["icon"]="board_labor_leisure",["itemId"]=61071}
+,[70]={["shopId"]=1,["show"]=false,["l2dName"]="xingzhui",["get_txt"]="高级勘测奖励",["id"]=70,["img"]="calm_soak",["imgPos"]={88.6,92.2,1.27}
+,["l2dPos"]={-13,-26,1}
+,["theme_type"]=6,["nType"]=1,["sort"]=70,["set_icon"]="Small_calm_soak",["key"]="70",["sName"]="沐净悠然",["icon"]="board_calm_soak",["itemId"]=61072}
+,[71]={["shopId"]=1,["show"]=false,["l2dName"]="CG0056_MasterofTides",["get_txt"]="【虚海奇谭】活动",["id"]=71,["img"]="master_of_tides",["imgPos"]={-35,-112,1.46}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=1,["nType"]=1,["sort"]=77,["set_icon"]="Small_master_of_tides",["key"]="71",["sName"]="谁主沉浮",["icon"]="board_master_of_tides",["itemId"]=61073}
+,[72]={["shopId"]=80438,["show"]=true,["l2dName"]="CG0050_StartingRaid_spine",["get_txt"]="商店购买",["id"]=72,["img"]="starting_raid",["imgPos"]={-72,43,1.08}
+,["l2dPos"]={0,0,1.07}
+,["theme_type"]=9,["nType"]=1,["sort"]=73,["set_icon"]="Small_starting_raid",["key"]="72",["sName"]="起步突袭",["icon"]="board_starting_raid",["itemId"]=61074}
+,[73]={["shopId"]=1,["show"]=false,["l2dName"]="buertegen",["get_txt"]="高级勘测奖励",["id"]=73,["img"]="quiet_nook",["imgPos"]={-1,124,0.71}
+,["l2dPos"]={0,122,1.2}
+,["theme_type"]=6,["nType"]=1,["sort"]=81,["set_icon"]="Small_quiet_nook",["key"]="73",["sName"]="静谧小筑",["icon"]="board_quiet_nook",["itemId"]=61075}
+,[74]={["shopId"]=1,["show"]=false,["l2dName"]="nagelin",["get_txt"]="高级勘测奖励",["id"]=74,["img"]="leisurely_picnic",["imgPos"]={-2,-74,0.98}
+,["l2dPos"]={0,-73,0.9}
+,["theme_type"]=6,["nType"]=1,["sort"]=74,["set_icon"]="Small_leisurely_picnic",["key"]="74",["sName"]="悠然野餐",["icon"]="board_leisurely_picnic",["itemId"]=61076}
+,[75]={["shopId"]=80439,["show"]=true,["l2dName"]="CG0052_ContentionArena_spine",["get_txt"]="商店购买",["id"]=75,["img"]="contention_arena",["imgPos"]={8,-13,0.97}
+,["l2dPos"]={59,0,1}
+,["theme_type"]=10,["nType"]=1,["sort"]=75,["set_icon"]="Small_contention_arena",["key"]="75",["sName"]="争夺竞赛",["icon"]="board_contention_arena",["itemId"]=61077}
+,[76]={["shopId"]=80440,["show"]=true,["l2dName"]="CG0051_Knockout_spine",["get_txt"]="商店购买",["id"]=76,["img"]="knockout",["imgPos"]={61,5,1.4}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=10,["nType"]=1,["sort"]=76,["set_icon"]="Small_knockout",["key"]="76",["sName"]="赛台决胜",["icon"]="board_knockout",["itemId"]=61078}
+,[77]={["shopId"]=80441,["show"]=true,["l2dName"]="CG0053_RadiantSummerSojourn_spine",["get_txt"]="商店购买",["id"]=77,["img"]="radiant_summer_sojourn",["imgPos"]={12,-46,0.98}
+,["l2dPos"]={-3,-46,0.9}
+,["theme_type"]=1,["nType"]=1,["sort"]=78,["set_icon"]="Small_radiant_summer_sojourn",["key"]="77",["sName"]="缤纷夏日行",["icon"]="board_radiant_summer_sojourn",["itemId"]=61079}
+,[78]={["shopId"]=80442,["show"]=true,["l2dName"]="CG0054_SandsofSummerHeat",["get_txt"]="商店购买",["id"]=78,["img"]="sands_of_summer_heat",["imgPos"]={-21,34,0.86}
+,["l2dPos"]={-38,0,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=79,["set_icon"]="Small_sands_of_summer_heat",["key"]="78",["sName"]="热沙之夏",["icon"]="board_sands_of_summer_heat",["itemId"]=61080}
+,[79]={["shopId"]=80443,["show"]=true,["l2dName"]="CG0055_Beachpicnic",["get_txt"]="商店购买",["id"]=79,["img"]="beach_picnic",["imgPos"]={84,-50,1.28}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=80,["set_icon"]="Small_beach_picnic",["key"]="79",["sName"]="海滩野餐",["icon"]="board_beach_picnic",["itemId"]=61081}
+,[83]={["shopId"]=80444,["show"]=true,["l2dName"]="CG0059_EphemeralIndulgence_spine",["get_txt"]="商店购买",["id"]=83,["img"]="ephemeral_indulgence",["imgPos"]={37,-156,1.04}
+,["l2dPos"]={97,-16,1}
+,["theme_type"]=2,["nType"]=1,["sort"]=83,["set_icon"]="Small_ephemeral_indulgence",["key"]="83",["sName"]="限定享用",["icon"]="board_ephemeral_indulgence",["itemId"]=61085}
+,[84]={["shopId"]=80459,["show"]=true,["l2dName"]="CG0068_TeaTime_spine",["get_txt"]="商店购买",["id"]=84,["img"]="Tea_Time",["imgPos"]={31,-32,0.95}
+,["l2dPos"]={61,-35,1.06}
+,["theme_type"]=2,["nType"]=1,["sort"]=84,["set_icon"]="Small_Tea_Time",["key"]="84",["sName"]="茶点时刻",["icon"]="board_Tea_Time",["itemId"]=61086}
+,[85]={["shopId"]=80460,["show"]=true,["l2dName"]="CG0069_DreamlikePicture_spine",["get_txt"]="商店购买",["id"]=85,["img"]="Dreamlike_Picture",["imgPos"]={-17,-91,0.86}
+,["l2dPos"]={9,52,1}
+,["theme_type"]=2,["nType"]=1,["sort"]=85,["set_icon"]="Small_Dreamlike_Picture",["key"]="85",["sName"]="梦幻光影",["icon"]="board_Dreamlike_Picture",["itemId"]=61087}
+,[86]={["l2dName"]="CG0063_ChangingMoment_spine",["get_txt"]="【爱相随】回忆刻录购买",["img"]="changing_moment",["shopId"]=1,["sort"]=86,["sName"]="更衣时刻",["icon"]="board_changing_moment",["itemId"]=61088,["l2dPos"]={39,24,0.95}
+,["id"]=86,["imgPos"]={4,16,0.896}
+,["theme_type"]=11,["nType"]=1,["show"]=false,["sEnd"]="2025/10/15 03:00:00",["set_icon"]="Small_changing_moment",["sStart"]="2025/09/24 10:00:00",["key"]="86"}
+,[87]={["l2dName"]="CG0064_WoodlandSearch_spine",["get_txt"]="【爱相随】回忆刻录购买",["img"]="woodland_search",["shopId"]=1,["sort"]=87,["sName"]="林中寻觅",["icon"]="board_woodland_search",["itemId"]=61089,["l2dPos"]={35,-10,1.04}
+,["id"]=87,["imgPos"]={34,-8,0.97}
+,["theme_type"]=11,["nType"]=1,["show"]=false,["sEnd"]="2025/10/15 03:00:00",["set_icon"]="Small_woodland_search",["sStart"]="2025/09/24 10:00:00",["key"]="87"}
+,[88]={["l2dName"]="CG0065_SoulConfession_spine",["get_txt"]="【爱相随】回忆刻录购买",["img"]="soul_confession",["shopId"]=1,["sort"]=88,["sName"]="心意交织",["icon"]="board_soul_confession",["itemId"]=61090,["l2dPos"]={-13,-12,0.9}
+,["id"]=88,["imgPos"]={-39,-5,0.77}
+,["theme_type"]=11,["nType"]=1,["show"]=false,["sEnd"]="2025/10/15 03:00:00",["set_icon"]="Small_soul_confession",["sStart"]="2025/09/24 10:00:00",["key"]="88"}
+,[89]={["l2dName"]="CG0066_DuskShore_spine",["get_txt"]="【爱相随】回忆刻录购买",["img"]="dusk_shore",["shopId"]=1,["sort"]=89,["sName"]="黄昏海滨",["icon"]="board_dusk_shore",["itemId"]=61091,["l2dPos"]={0,-16,1}
+,["id"]=89,["imgPos"]={37,-156,1.04}
+,["theme_type"]=11,["nType"]=1,["show"]=false,["sEnd"]="2025/10/15 03:00:00",["set_icon"]="Small_dusk_shore",["sStart"]="2025/09/24 10:00:00",["key"]="89"}
+,[90]={["l2dName"]="CG0067_StarryNight_spine",["get_txt"]="【爱相随】回忆刻录购买",["img"]="Brilliant_Night",["shopId"]=1,["sort"]=90,["sName"]="星空之下",["icon"]="board_Brilliant_Night",["itemId"]=61092,["l2dPos"]={0,0,0.98}
+,["id"]=90,["imgPos"]={30,-34,0.55}
+,["theme_type"]=11,["nType"]=1,["show"]=false,["sEnd"]="2025/10/15 03:00:00",["set_icon"]="Small_Brilliant_Night",["sStart"]="2025/09/24 10:00:00",["key"]="90"}
+,[91]={["l2dName"]="CG0072_CharmCheck_spine",["get_txt"]="商店购买",["img"]="The_Care_in_Check-ups",["shopId"]=80462,["sort"]=91,["sName"]="体检情韵",["icon"]="board_The_Care_in_Check-ups",["itemId"]=61093,["l2dPos"]={0,0,0.88}
+,["id"]=91,["imgPos"]={-24,-71,1.02}
+,["theme_type"]=12,["nType"]=1,["show"]=true,["sEnd"]="2025/10/29 03:00:00",["set_icon"]="Small_The_Care_in_Check-ups",["sStart"]="2025/10/15 10:00:00",["key"]="91"}
+,[92]={["l2dName"]="CG0071_OurHealingTime_spine",["get_txt"]="商店购买",["img"]="Soul-Searching_Consultation",["shopId"]=80463,["sort"]=92,["sName"]="抚心问诊",["icon"]="board_Soul-Searching_Consultation",["itemId"]=61094,["l2dPos"]={20,22,1.05}
+,["id"]=92,["imgPos"]={30,-126,1}
+,["theme_type"]=12,["nType"]=1,["show"]=true,["sEnd"]="2025/11/19 03:00:00",["set_icon"]="Small_Soul-Searching_Consultation",["sStart"]="2025/10/29 10:00:00",["key"]="92"}
+,[95]={["shopId"]=1,["show"]=false,["l2dName"]="kuizhou",["get_txt"]="高级勘测奖励",["id"]=95,["img"]="awaited_delicacy",["imgPos"]={-2,-74,0.8}
+,["l2dPos"]={0,-73,1}
+,["theme_type"]=1,["nType"]=1,["sort"]=95,["set_icon"]="Small_awaited_delicacy",["key"]="95",["sName"]="待享美味",["icon"]="board_awaited_delicacy",["itemId"]=61097}
+,[96]={["shopId"]=1,["show"]=false,["l2dName"]="qiangji",["get_txt"]="高级勘测奖励",["id"]=96,["img"]="private_inspection",["imgPos"]={-2,-74,0.8}
+,["l2dPos"]={0,-73,1}
+,["theme_type"]=2,["nType"]=1,["sort"]=96,["set_icon"]="Small_private_inspection",["key"]="96",["sName"]="私人检查",["icon"]="board_private_inspection",["itemId"]=61098}
+,[97]={["shopId"]=1,["show"]=false,["l2dName"]="xiwa",["get_txt"]="高级勘测奖励",["id"]=97,["img"]="jump_for_joy",["imgPos"]={-3,37,0.8}
+,["l2dPos"]={-3,35,1}
+,["theme_type"]=8,["nType"]=1,["sort"]=97,["set_icon"]="Small_jump_for_joy",["key"]="97",["sName"]="欢呼跃动",["icon"]="board_jump_for_joy",["itemId"]=61099}
+,[98]={["l2dName"]="CG0075_LockerRoomImpact",["get_txt"]="商店购买",["img"]="Changing_Room_Shenanigans",["shopId"]=80465,["sort"]=98,["sName"]="更衣密趣",["icon"]="board_Changing_Room_Shenanigans",["itemId"]=61100,["l2dPos"]={55,-29,1.03}
+,["id"]=98,["imgPos"]={3,-53,0.9}
+,["theme_type"]=2,["nType"]=1,["show"]=true,["sEnd"]="2025/12/03 03:00:00",["set_icon"]="Small_Changing_Room_Shenanigans",["sStart"]="2025/11/19 10:00:00",["key"]="98"}
+,[99]={["shopId"]=80466,["show"]=true,["l2dName"]="CG0049_BrilliantMirrorImage_spine",["get_txt"]="商店购买",["id"]=99,["img"]="Brilliant_Mirror_Image",["imgPos"]={-27,-45,1}
+,["l2dPos"]={26,-20,0.83}
+,["theme_type"]=8,["nType"]=1,["sort"]=99,["set_icon"]="Small_Brilliant_Mirror_Image",["key"]="99",["sName"]="璀璨镜影",["icon"]="board_Brilliant_Mirror_Image",["itemId"]=61101}
+,[100]={["shopId"]=1,["show"]=false,["l2dName"]="CG0080_LockerRoomParty_spine",["get_txt"]="活动赠送",["id"]=100,["img"]="Locker_Room_Party",["imgPos"]={-24,-1,0.9}
+,["l2dPos"]={-15,22,0.86}
+,["theme_type"]=2,["nType"]=1,["sort"]=100,["set_icon"]="Small_Locker_Room_Party",["key"]="100",["sName"]="更衣室派对",["icon"]="board_Locker_Room_Party",["itemId"]=61102}
+,[101]={["shopId"]=1,["get_txt"]="【冬日速递】活动",["id"]=101,["img"]="Nocturnal_Mystery_Gift",["imgPos"]={3,-53,0.9}
+,["show"]=false,["theme_type"]=2,["nType"]=1,["sort"]=101,["set_icon"]="Small_Nocturnal_Mystery_Gift",["key"]="101",["sName"]="良夜奉礼",["icon"]="board_Nocturnal_Mystery_Gift",["itemId"]=61103}
+,[1013]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1013,["img"]="Half_Picture_13",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=3,["nType"]=2,["sort"]=13,["set_icon"]="Small_Half_Picture_13",["key"]="1013",["sName"]="银羽-卡梅尔的努力学生",["icon"]="board_Half_Picture_13",["itemId"]=64013}
+,[1015]={["shopId"]=1,["show"]=false,["l2dName"]="HALF03_Tama_spine",["get_txt"]="幸运扭蛋机奖励",["id"]=1015,["img"]="Half_Picture_15",["imgPos"]={0,-48,0.47}
+,["l2dPos"]={25,-312,0.4}
+,["theme_type"]=3,["nType"]=2,["sort"]=15,["set_icon"]="Small_Half_Picture_15",["key"]="1015",["sName"]="小玉-卡梅尔之星",["icon"]="board_Half_Picture_15",["itemId"]=64015}
+,[1002]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1002,["img"]="Half_Picture_2",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=1,["nType"]=2,["sort"]=2,["set_icon"]="Small_Half_Picture_2",["key"]="1002",["sName"]="提尔锋的泳装特写",["icon"]="board_Half_Picture_2",["itemId"]=64002}
+,[1004]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1004,["img"]="Half_Picture_4",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=1,["nType"]=2,["sort"]=4,["set_icon"]="Small_Half_Picture_4",["key"]="1004",["sName"]="赤溟的泳装特写",["icon"]="board_Half_Picture_4",["itemId"]=64004}
+,[1006]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1006,["img"]="Half_Picture_6",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=2,["nType"]=2,["sort"]=7,["set_icon"]="Small_Half_Picture_6",["key"]="1006",["sName"]="努特的都市特写",["icon"]="board_Half_Picture_6",["itemId"]=64006}
+,[1008]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1008,["img"]="Half_Picture_8",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=2,["nType"]=2,["sort"]=9,["set_icon"]="Small_Half_Picture_8",["key"]="1008",["sName"]="阿图姆的都市特写",["icon"]="board_Half_Picture_8",["itemId"]=64008}
+,[1010]={["shopId"]=1,["show"]=false,["l2dName"]="HALF02_Kunlun_spine",["get_txt"]="幸运扭蛋机奖励",["id"]=1010,["img"]="Half_Picture_10",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={-4,-46,1.26}
+,["theme_type"]=2,["nType"]=2,["sort"]=6,["set_icon"]="Small_Half_Picture_10",["key"]="1010",["sName"]="昆仑·不朽的都市特写",["icon"]="board_Half_Picture_10",["itemId"]=64010}
+,[1012]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1012,["img"]="Half_Picture_12",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=3,["nType"]=2,["sort"]=12,["set_icon"]="Small_Half_Picture_12",["key"]="1012",["sName"]="琶音-卡梅尔的魅力偶像",["icon"]="board_Half_Picture_12",["itemId"]=64012}
+,[1014]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1014,["img"]="Half_Picture_14",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=3,["nType"]=2,["sort"]=14,["set_icon"]="Small_Half_Picture_14",["key"]="1014",["sName"]="灼碧-卡梅尔的完美会长",["icon"]="board_Half_Picture_14",["itemId"]=64014}
+,[1001]={["shopId"]=1,["show"]=false,["l2dName"]="HALF01_Tizona_spine",["get_txt"]="幸运扭蛋机奖励",["id"]=1001,["img"]="Half_Picture_1",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={4,-46,1.26}
+,["theme_type"]=1,["nType"]=2,["sort"]=1,["set_icon"]="Small_Half_Picture_1",["key"]="1001",["sName"]="提泽纳的泳装特写",["icon"]="board_Half_Picture_1",["itemId"]=64001}
+,[1003]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1003,["img"]="Half_Picture_3",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=1,["nType"]=2,["sort"]=3,["set_icon"]="Small_Half_Picture_3",["key"]="1003",["sName"]="哈托莉的泳装特写",["icon"]="board_Half_Picture_3",["itemId"]=64003}
+,[1005]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1005,["img"]="Half_Picture_5",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=1,["nType"]=2,["sort"]=5,["set_icon"]="Small_Half_Picture_5",["key"]="1005",["sName"]="艾穆尔的泳装特写",["icon"]="board_Half_Picture_5",["itemId"]=64005}
+,[1007]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1007,["img"]="Half_Picture_7",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=2,["nType"]=2,["sort"]=8,["set_icon"]="Small_Half_Picture_7",["key"]="1007",["sName"]="飓风的都市特写",["icon"]="board_Half_Picture_7",["itemId"]=64007}
+,[1009]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1009,["img"]="Half_Picture_9",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=2,["nType"]=2,["sort"]=10,["set_icon"]="Small_Half_Picture_9",["key"]="1009",["sName"]="阿努比斯的都市特写",["icon"]="board_Half_Picture_9",["itemId"]=64009}
+,[1011]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1011,["img"]="Half_Picture_11",["imgPos"]={0,-48,0.543}
+,["l2dPos"]={0,0,1}
+,["theme_type"]=3,["nType"]=2,["sort"]=11,["set_icon"]="Small_Half_Picture_11",["key"]="1011",["sName"]="袅韵-卡梅尔的天才学者",["icon"]="board_Half_Picture_11",["itemId"]=64011}
 }
---cfgCfgArchiveMultiPicture = conf
-return conf
+

@@ -1,20 +1,8 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '装备排序方式',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'稀有度'},
-{'2',	'2',	'等级'},
-{'3',	'3',	'部位'},
-{'4',	'4',	'保护'},
-{'5',	'5',	'入手顺序'},
-{'6',	'6',	'技能点数'},
-},
+_G["CfgEquipSortEnum"]={{["id"]=1,["sName"]="稀有度",["key"]="1"}
+,{["id"]=2,["sName"]="等级",["key"]="2"}
+,{["id"]=3,["sName"]="部位",["key"]="3"}
+,{["id"]=4,["sName"]="保护",["key"]="4"}
+,{["id"]=5,["sName"]="入手顺序",["key"]="5"}
+,{["id"]=6,["sName"]="技能点数",["key"]="6"}
 }
---cfgCfgEquipSortEnum = conf
-return conf
+

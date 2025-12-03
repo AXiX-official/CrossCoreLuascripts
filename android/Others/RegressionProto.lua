@@ -157,3 +157,36 @@ end
 function RegressionProto:PlrFundInfo(proto)
     RegressionMgr:SetFundTime(proto)
 end
+
+--获取燃料补给信息
+function RegressionProto:ResupplyInfo()
+    local proto = {"RegressionProto:ResupplyInfo"}
+    NetMgr.net:Send(proto)
+end
+
+function RegressionProto:ResupplyInfoRet(proto)
+    RegressionMgr:SetSupplyDatas(proto)
+end
+
+--燃料补给领取奖励
+function RegressionProto:ResupplyGain(id,index)
+    local proto = {"RegressionProto:ResupplyGain",{id = id,idx = index}}
+    NetMgr.net:Send(proto)
+end
+
+--回归活跃返利信息
+function RegressionProto:ActiveRewardsInfo()
+    local proto = {"RegressionProto:ActiveRewardsInfo"}
+    NetMgr.net:Send(proto)
+end
+
+--回归活跃返利信息返回
+function RegressionProto:ActiveRewardsInfoRet(proto)
+    RegressionMgr:SetRebateInfo(proto)
+end
+
+--回归活跃返利 奖励领取
+function RegressionProto:ActiveRewardsGain(index)
+    local proto = {"RegressionProto:ActiveRewardsGain",{idx = index}}
+    NetMgr.net:Send(proto)
+end

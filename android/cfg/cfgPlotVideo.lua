@@ -1,28 +1,19 @@
-local conf = {
-	["filename"] = 'j-剧情表.xlsx',
-	["sheetname"] = '剧情视频',
-	["types"] = {
-'int','string','string','int','int'
-},
-	["names"] = {
-'id','key','name','time','loop'
-},
-	["data"] = {
-{'1',	'1',	'plot/plot_burn1',	'1',	'1'},
-{'2',	'2',	'plot/plot_explode1',	'1',	''},
-{'3',	'3',	'plot/plot_hit1',	'1',	''},
-{'4',	'4',	'plot/plot_hit2',	'1',	''},
-{'5',	'5',	'plot/plot_rain1',	'1',	'1'},
-{'6',	'6',	'plot/plot_rain2',	'1',	'1'},
-{'7',	'7',	'plot/plot_through1',	'1',	'1'},
-{'8',	'8',	'plot/plot_explode2',	'1',	''},
-{'9',	'9',	'plot/plot_warning1',	'1',	'1'},
-{'10',	'10',	'plot/plot_warning2',	'1',	''},
-{'11',	'11',	'plot/plot_camera',	'1',	'1'},
-{'12',	'12',	'plot/plot_camera_end',	'1',	''},
-{'13',	'13',	'plot2/plot_misc1',	'1',	''},
-{'17',	'17',	'plot2/plot_cutsence',	'1',	''},
-},
+_G["PlotVideo"]={{["loop"]=1,["name"]="plot/plot_burn1",["id"]=1,["time"]=1,["key"]="1"}
+,{["name"]="plot/plot_explode1",["id"]=2,["time"]=1,["key"]="2"}
+,{["name"]="plot/plot_hit1",["id"]=3,["time"]=1,["key"]="3"}
+,{["name"]="plot/plot_hit2",["id"]=4,["time"]=1,["key"]="4"}
+,{["loop"]=1,["name"]="plot/plot_rain1",["id"]=5,["time"]=1,["key"]="5"}
+,{["loop"]=1,["name"]="plot/plot_rain2",["id"]=6,["time"]=1,["key"]="6"}
+,{["loop"]=1,["name"]="plot/plot_through1",["id"]=7,["time"]=1,["key"]="7"}
+,{["name"]="plot/plot_explode2",["id"]=8,["time"]=1,["key"]="8"}
+,{["loop"]=1,["name"]="plot/plot_warning1",["id"]=9,["time"]=1,["key"]="9"}
+,{["name"]="plot/plot_warning2",["id"]=10,["time"]=1,["key"]="10"}
+,{["loop"]=1,["name"]="plot/plot_camera",["id"]=11,["time"]=1,["key"]="11"}
+,{["name"]="plot/plot_camera_end",["id"]=12,["time"]=1,["key"]="12"}
+,{["name"]="plot2/plot_misc1",["id"]=13,["time"]=1,["key"]="13"}
+,{["loop"]=1,["name"]="plot/plot_line1",["id"]=14,["time"]=1,["key"]="14"}
+,{["loop"]=1,["name"]="plot/plot_line2",["id"]=15,["time"]=1,["key"]="15"}
+,{["loop"]=1,["name"]="plot/plot_line3",["id"]=16,["time"]=1,["key"]="16"}
+,{["name"]="plot2/plot_cutsence",["id"]=17,["time"]=1,["key"]="17"}
 }
---cfgPlotVideo = conf
-return conf
+

@@ -1,19 +1,17 @@
-local conf = {
-	["filename"] = 'h-活动列表.xlsx',
-	["sheetname"] = '累计充值',
-	["types"] = {
-'int','string','string','int','json'
-},
-	["names"] = {
-'id','key','sDescription','money','jAwardId'
-},
-	["data"] = {
-{'1',	'',	'累计充值 <color=#ffc146>6</color> 元',	'600',	'[[10002,60,2]]'},
-{'2',	'',	'累计充值 <color=#ffc146>30</color> 元',	'3000',	'[[10002,90,2]]'},
-{'3',	'',	'累计充值 <color=#ffc146>98</color> 元',	'9800',	'[[10002,340,2]]'},
-{'4',	'',	'累计充值 <color=#ffc146>198</color> 元',	'19800',	'[[10002,500,2]]'},
-{'5',	'',	'累计充值 <color=#ffc146>500</color> 元',	'50000',	'[[10002,2010,2]]'},
-},
+_G["CfgRechargeCount"]={{["sDescription"]="累计充值 <color=#ffc146>6</color> 元",["money"]=600,["jAwardId"]={{10002,60,2}
 }
---cfgCfgRechargeCount = conf
-return conf
+,["key"]=1,["id"]=1}
+,{["sDescription"]="累计充值 <color=#ffc146>30</color> 元",["money"]=3000,["jAwardId"]={{10002,90,2}
+}
+,["key"]=2,["id"]=2}
+,{["sDescription"]="累计充值 <color=#ffc146>98</color> 元",["money"]=9800,["jAwardId"]={{10002,340,2}
+}
+,["key"]=3,["id"]=3}
+,{["sDescription"]="累计充值 <color=#ffc146>198</color> 元",["money"]=19800,["jAwardId"]={{10002,500,2}
+}
+,["key"]=4,["id"]=4}
+,{["sDescription"]="累计充值 <color=#ffc146>500</color> 元",["money"]=50000,["jAwardId"]={{10002,2010,2}
+}
+,["key"]=5,["id"]=5}
+}
+

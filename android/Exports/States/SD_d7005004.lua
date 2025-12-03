@@ -1,7 +1,7 @@
 --状态数据
 local this = 
 {
-eff_addition_pack={"d70051","d7005003","d70050"},no_eff_ab=1,
+eff_addition_pack={"d70050"},no_eff_ab=1,
 transform={play_time=2000,common_camera="common_buff",transform_delay=0,transform_enter_state="change",transform_enter_state_delay=0},
 change={play_time=1500,common_camera="common_buff"},
 cast2={play_time=6000,start_pos={ref_type=10,offset_row=250},last_hit=5000,hide_buff=1},

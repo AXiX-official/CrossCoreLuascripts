@@ -233,13 +233,20 @@ function LoginProto:LoginGame(proto)
 	-- TacticsMgr:Init();
 	PlayerClient:SetInfo(proto);
 	if CSAPI.IsADV() then CSAPI.SetGameUID(PlayerClient:GetUid()) end
-	PlayerProto:SectionMultiInfo();
 	PlayerProto:GetLifeBuff();
-	-- EquipProto:GetEquips()
+	EquipProto:GetEquips()
+	eventMgr = ViewEvent.New();
+	eventMgr:AddListener(EventType.Init_Equip_Finish, function()
+		self:OnEquipInitFinish();
+	end);
+end
+
+function LoginProto:OnEquipInitFinish()
+	eventMgr:ClearListener();
 	ShopProto:GetShopOpenTime();
 	ShopProto:GetShopCommodity();
 	-- ShopProto:GetShopInfos();
-	eventMgr = ViewEvent.New();
+	-- eventMgr = ViewEvent.New();
 	eventMgr:AddListener(EventType.Init_Plot_Data, function()
 		self:OnPlotInit();
 	end);

@@ -1,20 +1,12 @@
-local conf = {
-	["filename"] = 'd-电子宠物.xlsx',
-	["sheetname"] = '运动场景',
-	["types"] = {
-'int','string','string','string','string','string','int[]','int','table#5','int','int','int','int','int'
-},
-	["names"] = {
-'id','key','name','picture','icon','des','time','interval','infos','index','happyChange','foodChange','washChange','feedChange'
-},
-	["data"] = {
-{'1',	'1',	'玩具城堡',	'bg_105',	'img_04_05',	'堆满彩色积木的玩具室，每个角落都藏匿着惊喜与欢笑',	'300,2700',	'300',	'',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	'1',	'10',	'-16',	'-16',	'1'},
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	'2',	'-20',	'-24',	'-25',	'2'},
-{'2',	'2',	'晴爽海岸',	'bg_104',	'img_04_06',	'现在距离在沙滩上享受日光浴，只差一副炫酷墨镜了！',	'300,900',	'300',	'',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	'1',	'12',	'-25',	'-30',	'2'},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	'2',	'-30',	'-36',	'-40',	'3'},
-},
+_G["CfgPetSport"]={{["picture"]="bg_105",["id"]=1,["infos"]={{["foodChange"]=-16,["happyChange"]=10,["index"]=1,["washChange"]=-16,["feedChange"]=1}
+,{["foodChange"]=-24,["happyChange"]=-20,["index"]=2,["washChange"]=-25,["feedChange"]=2}
 }
---cfgCfgPetSport = conf
-return conf
+,["name"]="玩具城堡",["time"]={300,2700}
+,["interval"]=300,["key"]="1",["icon"]="img_04_05",["des"]="堆满彩色积木的玩具室，每个角落都藏匿着惊喜与欢笑"}
+,{["picture"]="bg_104",["id"]=2,["infos"]={{["foodChange"]=-25,["happyChange"]=12,["index"]=1,["washChange"]=-30,["feedChange"]=2}
+,{["foodChange"]=-36,["happyChange"]=-30,["index"]=2,["washChange"]=-40,["feedChange"]=3}
+}
+,["name"]="晴爽海岸",["time"]={300,900}
+,["interval"]=300,["key"]="2",["icon"]="img_04_06",["des"]="现在距离在沙滩上享受日光浴，只差一副炫酷墨镜了！"}
+}
+

@@ -108,7 +108,7 @@ function this:ConditionCheck5(id)
     end
 end
 
--- 开放、结束时间检测
+-- 开放、结束时间检测 
 function this:GetOpenEndTimeInfo()
     local curTime = TimeUtil:GetTime()
     local time, id = nil, nil

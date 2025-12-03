@@ -244,8 +244,9 @@ end
 ----------------------------------免费抽卡-------------------------------------------
 function this:IsOneFree()
     -- 在时间内
-    if (not CreateMgr:IsFreeInTime()) then
-        return false
+    local b,refreshTime = CreateMgr:IsFreeInTime()
+    if (not b) then
+        return false,refreshTime
     end
     -- 是免费抽卡的卡池，有次数
     if (self:GetCfg().canFreeUse and CreateMgr:GetFreeCnt() > 0) then

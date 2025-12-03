@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '合成额外奖励',
-	["types"] = {
-'int','string','int','int','int','int','int'
-},
-	["names"] = {
-'id','key','minDiff','maxDiff','sPercent','rPercent','num'
-},
-	["data"] = {
-{'1',	'1',	'',	'-21',	'30',	'0',	'0'},
-{'2',	'2',	'-20',	'-1',	'80',	'0',	'0'},
-{'3',	'3',	'0',	'49',	'100',	'0',	'0'},
-{'4',	'4',	'50',	'99',	'100',	'30',	'1'},
-{'5',	'5',	'100',	'',	'100',	'50',	'2'},
-},
+_G["CfgBCompoundExGift"]={{["num"]=0,["key"]="1",["id"]=1,["sPercent"]=30,["rPercent"]=0,["maxDiff"]=-21}
+,{["num"]=0,["key"]="2",["minDiff"]=-20,["id"]=2,["sPercent"]=80,["rPercent"]=0,["maxDiff"]=-1}
+,{["num"]=0,["key"]="3",["minDiff"]=0,["id"]=3,["sPercent"]=100,["rPercent"]=0,["maxDiff"]=49}
+,{["num"]=1,["key"]="4",["minDiff"]=50,["id"]=4,["sPercent"]=100,["rPercent"]=30,["maxDiff"]=99}
+,{["num"]=2,["key"]="5",["minDiff"]=100,["id"]=5,["sPercent"]=100,["rPercent"]=50}
 }
---cfgCfgBCompoundExGift = conf
-return conf
+

@@ -1,18 +1,8 @@
-local conf = {
-	["filename"] = 's-宿舍.xlsx',
-	["sheetname"] = '宿舍分区',
-	["types"] = {
-'int','string','string','table#6','int','string','json','int','int','bool'
-},
-	["names"] = {
-'id','key','sName','infos','index','roomName','costs','maxLv','defaultTheme','onlyShow'
-},
-	["data"] = {
-{'1',	'',	'1F',	'',	'',	' 1-1',	'',	'',	'',	''},
-{'1',	'',	'',	'',	'1',	' 1-1',	'',	'1',	'4001',	''},
-{'2',	'',	'2F',	'',	'',	' 2-1',	'',	'',	'',	''},
-{'2',	'',	'',	'',	'1',	' 2-1',	'',	'1',	'',	'1'},
-},
+_G["CfgDorm"]={{["id"]=1,["sName"]="1F",["key"]=1,["infos"]={{["maxLv"]=1,["index"]=1,["roomName"]=" 1-1",["defaultTheme"]=4001,["onlyShow"]=false}
 }
---cfgCfgDorm = conf
-return conf
+}
+,{["id"]=2,["sName"]="2F",["key"]=2,["infos"]={{["maxLv"]=1,["roomName"]=" 2-1",["index"]=1,["onlyShow"]=true}
+}
+}
+}
+

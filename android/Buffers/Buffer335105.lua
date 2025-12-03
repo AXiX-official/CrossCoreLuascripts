@@ -10,4 +10,6 @@ end
 function Buffer335105:OnCreate(caster, target)
 	-- 335105
 	self:AddMaxHpPercent(BufferEffect[335105], self.caster, target or self.owner, nil,0.10)
+	-- 4708
+	self:AddAttr(BufferEffect[4708], self.caster, target or self.owner, nil,"becure",0.15)
 end

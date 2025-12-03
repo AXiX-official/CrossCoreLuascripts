@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '排行榜',
-	["types"] = {
-'int','string','string','int'
-},
-	["names"] = {
-'id','key','sName','themeID'
-},
-	["data"] = {
-{'1',	'1',	'测试主题',	'1001'},
-{'2',	'2',	'',	''},
-{'3',	'3',	'',	''},
-},
+_G["CfgRankEnum"]={{["id"]=1,["sName"]="测试主题",["key"]="1",["themeID"]=1001}
+,{["id"]=2,["key"]="2"}
+,{["id"]=3,["key"]="3"}
 }
---cfgCfgRankEnum = conf
-return conf
+

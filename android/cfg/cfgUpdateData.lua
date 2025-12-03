@@ -1,225 +1,213 @@
-local conf = {
-	["filename"] = 's-上报映射.xlsx',
-	["sheetname"] = '上报映射',
-	["types"] = {
-'int','string','string','string'
-},
-	["names"] = {
-'id','TE_event','HC_event','HC_argument'
-},
-	["data"] = {
-{'10001',	'before_login',	'event_1',	'param1'},
-{'10002',	'before_login',	'',	''},
-{'10003',	'before_login',	'',	''},
-{'10004',	'before_login',	'',	''},
-{'10005',	'before_login',	'event_1',	'param2'},
-{'10006',	'before_login',	'event_1',	'param3'},
-{'10007',	'before_login',	'event_1',	'param4'},
-{'10008',	'before_login',	'',	''},
-{'10009',	'before_login',	'',	''},
-{'10010',	'before_login',	'',	''},
-{'10011',	'before_login',	'',	''},
-{'10012',	'before_login',	'event_1',	'param5'},
-{'10013',	'before_login',	'',	''},
-{'10014',	'before_login',	'',	''},
-{'10015',	'before_login',	'',	''},
-{'10016',	'before_login',	'',	''},
-{'10017',	'before_login',	'event_1',	'param6'},
-{'10018',	'before_login',	'',	''},
-{'10019',	'before_login',	'event_1',	'param7'},
-{'10020',	'before_login',	'',	''},
-{'10021',	'before_login',	'event_1',	'param8'},
-{'10022',	'before_login',	'event_1',	'param9'},
-{'20001',	'after_login',	'event_2',	'param1'},
-{'20002',	'after_login',	'',	''},
-{'20003',	'after_login',	'',	''},
-{'20004',	'after_login',	'',	''},
-{'20005',	'after_login',	'',	''},
-{'20006',	'after_login',	'',	''},
-{'20007',	'after_login',	'',	''},
-{'20008',	'after_login',	'',	''},
-{'20009',	'after_login',	'',	''},
-{'20010',	'after_login',	'',	''},
-{'20011',	'after_login',	'',	''},
-{'20012',	'after_login',	'',	''},
-{'20013',	'after_login',	'',	''},
-{'20014',	'after_login',	'',	''},
-{'20015',	'after_login',	'',	''},
-{'20016',	'after_login',	'',	''},
-{'20017',	'after_login',	'',	''},
-{'20018',	'after_login',	'',	''},
-{'20019',	'after_login',	'',	''},
-{'20020',	'after_login',	'',	''},
-{'20021',	'after_login',	'',	''},
-{'20022',	'after_login',	'',	''},
-{'20023',	'after_login',	'',	''},
-{'20024',	'after_login',	'',	''},
-{'20025',	'after_login',	'',	''},
-{'20026',	'after_login',	'',	''},
-{'20027',	'after_login',	'',	''},
-{'20028',	'after_login',	'',	''},
-{'20029',	'after_login',	'',	''},
-{'20030',	'after_login',	'',	''},
-{'20031',	'after_login',	'',	''},
-{'20032',	'after_login',	'event_2',	'param2'},
-{'20033',	'after_login',	'',	''},
-{'20034',	'after_login',	'',	''},
-{'20035',	'after_login',	'',	''},
-{'20036',	'after_login',	'',	''},
-{'20037',	'after_login',	'',	''},
-{'20038',	'after_login',	'',	''},
-{'20039',	'after_login',	'',	''},
-{'20040',	'after_login',	'',	''},
-{'20041',	'after_login',	'',	''},
-{'20042',	'after_login',	'event_2',	'param3'},
-{'30003',	'after_login',	'',	''},
-{'20043',	'after_login',	'',	''},
-{'20044',	'after_login',	'',	''},
-{'20045',	'after_login',	'',	''},
-{'20046',	'after_login',	'',	''},
-{'20047',	'after_login',	'',	''},
-{'20048',	'after_login',	'',	''},
-{'20049',	'after_login',	'',	''},
-{'20050',	'after_login',	'event_2',	'param4'},
-{'20051',	'after_login',	'',	''},
-{'20052',	'after_login',	'',	''},
-{'20053',	'after_login',	'',	''},
-{'20054',	'after_login',	'',	''},
-{'20055',	'after_login',	'',	''},
-{'20056',	'after_login',	'',	''},
-{'20057',	'after_login',	'',	''},
-{'20058',	'after_login',	'',	''},
-{'20059',	'after_login',	'',	''},
-{'20060',	'after_login',	'',	''},
-{'20061',	'after_login',	'',	''},
-{'20062',	'after_login',	'',	''},
-{'20063',	'after_login',	'',	''},
-{'20064',	'after_login',	'',	''},
-{'20065',	'after_login',	'',	''},
-{'20066',	'after_login',	'event_2',	'param5'},
-{'20067',	'after_login',	'',	''},
-{'20068',	'after_login',	'',	''},
-{'20069',	'after_login',	'',	''},
-{'20070',	'after_login',	'',	''},
-{'20071',	'after_login',	'',	''},
-{'20072',	'after_login',	'',	''},
-{'20073',	'after_login',	'',	''},
-{'20074',	'after_login',	'',	''},
-{'20075',	'after_login',	'',	''},
-{'20076',	'after_login',	'',	''},
-{'20077',	'after_login',	'',	''},
-{'20078',	'after_login',	'',	''},
-{'20079',	'after_login',	'',	''},
-{'20080',	'after_login',	'',	''},
-{'20081',	'after_login',	'',	''},
-{'20082',	'after_login',	'',	''},
-{'20083',	'after_login',	'',	''},
-{'20084',	'after_login',	'',	''},
-{'20085',	'after_login',	'',	''},
-{'20086',	'after_login',	'',	''},
-{'20087',	'after_login',	'',	''},
-{'20088',	'after_login',	'',	''},
-{'20089',	'after_login',	'',	''},
-{'20090',	'after_login',	'',	''},
-{'20091',	'after_login',	'',	''},
-{'20092',	'after_login',	'',	''},
-{'20093',	'after_login',	'',	''},
-{'20094',	'after_login',	'',	''},
-{'20095',	'after_login',	'',	''},
-{'20096',	'after_login',	'',	''},
-{'20097',	'after_login',	'',	''},
-{'20098',	'after_login',	'event_2',	'param6'},
-{'20099',	'after_login',	'',	''},
-{'20100',	'after_login',	'',	''},
-{'20101',	'after_login',	'',	''},
-{'20102',	'after_login',	'',	''},
-{'20103',	'after_login',	'',	''},
-{'20104',	'after_login',	'event_2',	'param7'},
-{'20105',	'after_login',	'',	''},
-{'20106',	'after_login',	'',	''},
-{'20107',	'after_login',	'',	''},
-{'20108',	'after_login',	'',	''},
-{'20109',	'after_login',	'',	''},
-{'20110',	'after_login',	'',	''},
-{'20111',	'after_login',	'event_2',	'param8'},
-{'20112',	'after_login',	'',	''},
-{'20113',	'after_login',	'',	''},
-{'20114',	'after_login',	'',	''},
-{'20115',	'after_login',	'',	''},
-{'20116',	'after_login',	'',	''},
-{'20117',	'after_login',	'event_2',	'param9'},
-{'20118',	'after_login',	'',	''},
-{'20119',	'after_login',	'',	''},
-{'20120',	'after_login',	'',	''},
-{'20121',	'after_login',	'',	''},
-{'20122',	'after_login',	'',	''},
-{'20123',	'after_login',	'',	''},
-{'20124',	'after_login',	'',	''},
-{'20125',	'after_login',	'',	''},
-{'20126',	'after_login',	'',	''},
-{'20127',	'after_login',	'',	''},
-{'20128',	'after_login',	'',	''},
-{'20129',	'after_login',	'',	''},
-{'20130',	'after_login',	'',	''},
-{'20131',	'after_login',	'',	''},
-{'20132',	'after_login',	'',	''},
-{'20133',	'after_login',	'',	''},
-{'20134',	'after_login',	'',	''},
-{'20135',	'after_login',	'',	''},
-{'20136',	'after_login',	'',	''},
-{'20137',	'after_login',	'',	''},
-{'20138',	'after_login',	'',	''},
-{'20139',	'after_login',	'',	''},
-{'20140',	'after_login',	'',	''},
-{'20141',	'after_login',	'',	''},
-{'20142',	'after_login',	'',	''},
-{'20143',	'after_login',	'',	''},
-{'20144',	'after_login',	'',	''},
-{'20145',	'after_login',	'',	''},
-{'20146',	'after_login',	'',	''},
-{'20147',	'after_login',	'',	''},
-{'20148',	'after_login',	'',	''},
-{'20149',	'after_login',	'',	''},
-{'20150',	'after_login',	'',	''},
-{'20151',	'after_login',	'',	''},
-{'20152',	'after_login',	'',	''},
-{'20153',	'after_login',	'',	''},
-{'20154',	'after_login',	'',	''},
-{'20155',	'after_login',	'',	''},
-{'20156',	'after_login',	'',	''},
-{'20157',	'after_login',	'',	''},
-{'20158',	'after_login',	'',	''},
-{'20159',	'after_login',	'',	''},
-{'20160',	'after_login',	'',	''},
-{'20161',	'after_login',	'',	''},
-{'20162',	'after_login',	'',	''},
-{'20163',	'after_login',	'',	''},
-{'20164',	'after_login',	'',	''},
-{'20165',	'after_login',	'',	''},
-{'20166',	'after_login',	'',	''},
-{'20167',	'after_login',	'',	''},
-{'20168',	'after_login',	'',	''},
-{'20169',	'after_login',	'',	''},
-{'20170',	'after_login',	'',	''},
-{'20171',	'after_login',	'',	''},
-{'20172',	'after_login',	'',	''},
-{'20173',	'after_login',	'',	''},
-{'20174',	'after_login',	'',	''},
-{'20175',	'after_login',	'',	''},
-{'20176',	'after_login',	'',	''},
-{'20177',	'after_login',	'',	''},
-{'20178',	'after_login',	'',	''},
-{'20179',	'after_login',	'',	''},
-{'20180',	'after_login',	'',	''},
-{'20181',	'after_login',	'',	''},
-{'20182',	'after_login',	'',	''},
-{'20183',	'after_login',	'',	''},
-{'20184',	'after_login',	'',	''},
-{'20185',	'after_login',	'',	''},
-{'20186',	'after_login',	'',	''},
-{'20187',	'after_login',	'',	''},
-{'20188',	'after_login',	'event_2',	'param10'},
-},
+_G["UpdateData"]={[20141]={["id"]=20141,["TE_event"]="after_login",["key"]=20141}
+,[20145]={["id"]=20145,["TE_event"]="after_login",["key"]=20145}
+,[20149]={["id"]=20149,["TE_event"]="after_login",["key"]=20149}
+,[20153]={["id"]=20153,["TE_event"]="after_login",["key"]=20153}
+,[20157]={["id"]=20157,["TE_event"]="after_login",["key"]=20157}
+,[20161]={["id"]=20161,["TE_event"]="after_login",["key"]=20161}
+,[20165]={["id"]=20165,["TE_event"]="after_login",["key"]=20165}
+,[20169]={["id"]=20169,["TE_event"]="after_login",["key"]=20169}
+,[20173]={["id"]=20173,["TE_event"]="after_login",["key"]=20173}
+,[20177]={["id"]=20177,["TE_event"]="after_login",["key"]=20177}
+,[20181]={["id"]=20181,["TE_event"]="after_login",["key"]=20181}
+,[20185]={["id"]=20185,["TE_event"]="after_login",["key"]=20185}
+,[10001]={["HC_event"]="event_1",["key"]=10001,["id"]=10001,["TE_event"]="before_login",["HC_argument"]="param1"}
+,[10003]={["id"]=10003,["TE_event"]="before_login",["key"]=10003}
+,[10005]={["HC_event"]="event_1",["key"]=10005,["id"]=10005,["TE_event"]="before_login",["HC_argument"]="param2"}
+,[10007]={["HC_event"]="event_1",["key"]=10007,["id"]=10007,["TE_event"]="before_login",["HC_argument"]="param4"}
+,[10009]={["id"]=10009,["TE_event"]="before_login",["key"]=10009}
+,[10011]={["id"]=10011,["TE_event"]="before_login",["key"]=10011}
+,[10013]={["id"]=10013,["TE_event"]="before_login",["key"]=10013}
+,[10015]={["id"]=10015,["TE_event"]="before_login",["key"]=10015}
+,[10017]={["HC_event"]="event_1",["key"]=10017,["id"]=10017,["TE_event"]="before_login",["HC_argument"]="param6"}
+,[10019]={["HC_event"]="event_1",["key"]=10019,["id"]=10019,["TE_event"]="before_login",["HC_argument"]="param7"}
+,[10021]={["HC_event"]="event_1",["key"]=10021,["id"]=10021,["TE_event"]="before_login",["HC_argument"]="param8"}
+,[20002]={["id"]=20002,["TE_event"]="after_login",["key"]=20002}
+,[20006]={["id"]=20006,["TE_event"]="after_login",["key"]=20006}
+,[20010]={["id"]=20010,["TE_event"]="after_login",["key"]=20010}
+,[20014]={["id"]=20014,["TE_event"]="after_login",["key"]=20014}
+,[20018]={["id"]=20018,["TE_event"]="after_login",["key"]=20018}
+,[20022]={["id"]=20022,["TE_event"]="after_login",["key"]=20022}
+,[20026]={["id"]=20026,["TE_event"]="after_login",["key"]=20026}
+,[20030]={["id"]=20030,["TE_event"]="after_login",["key"]=20030}
+,[20034]={["id"]=20034,["TE_event"]="after_login",["key"]=20034}
+,[20038]={["id"]=20038,["TE_event"]="after_login",["key"]=20038}
+,[20042]={["HC_event"]="event_2",["key"]=20042,["id"]=20042,["TE_event"]="after_login",["HC_argument"]="param3"}
+,[20046]={["id"]=20046,["TE_event"]="after_login",["key"]=20046}
+,[20050]={["HC_event"]="event_2",["key"]=20050,["id"]=20050,["TE_event"]="after_login",["HC_argument"]="param4"}
+,[20054]={["id"]=20054,["TE_event"]="after_login",["key"]=20054}
+,[30003]={["id"]=30003,["TE_event"]="after_login",["key"]=30003}
+,[20062]={["id"]=20062,["TE_event"]="after_login",["key"]=20062}
+,[20066]={["HC_event"]="event_2",["key"]=20066,["id"]=20066,["TE_event"]="after_login",["HC_argument"]="param5"}
+,[20070]={["id"]=20070,["TE_event"]="after_login",["key"]=20070}
+,[20074]={["id"]=20074,["TE_event"]="after_login",["key"]=20074}
+,[20078]={["id"]=20078,["TE_event"]="after_login",["key"]=20078}
+,[20082]={["id"]=20082,["TE_event"]="after_login",["key"]=20082}
+,[20086]={["id"]=20086,["TE_event"]="after_login",["key"]=20086}
+,[20090]={["id"]=20090,["TE_event"]="after_login",["key"]=20090}
+,[20094]={["id"]=20094,["TE_event"]="after_login",["key"]=20094}
+,[20098]={["HC_event"]="event_2",["key"]=20098,["id"]=20098,["TE_event"]="after_login",["HC_argument"]="param6"}
+,[20102]={["id"]=20102,["TE_event"]="after_login",["key"]=20102}
+,[20106]={["id"]=20106,["TE_event"]="after_login",["key"]=20106}
+,[20110]={["id"]=20110,["TE_event"]="after_login",["key"]=20110}
+,[20114]={["id"]=20114,["TE_event"]="after_login",["key"]=20114}
+,[20118]={["id"]=20118,["TE_event"]="after_login",["key"]=20118}
+,[20122]={["id"]=20122,["TE_event"]="after_login",["key"]=20122}
+,[20126]={["id"]=20126,["TE_event"]="after_login",["key"]=20126}
+,[20130]={["id"]=20130,["TE_event"]="after_login",["key"]=20130}
+,[20134]={["id"]=20134,["TE_event"]="after_login",["key"]=20134}
+,[20138]={["id"]=20138,["TE_event"]="after_login",["key"]=20138}
+,[20142]={["id"]=20142,["TE_event"]="after_login",["key"]=20142}
+,[20146]={["id"]=20146,["TE_event"]="after_login",["key"]=20146}
+,[20150]={["id"]=20150,["TE_event"]="after_login",["key"]=20150}
+,[20154]={["id"]=20154,["TE_event"]="after_login",["key"]=20154}
+,[20158]={["id"]=20158,["TE_event"]="after_login",["key"]=20158}
+,[20162]={["id"]=20162,["TE_event"]="after_login",["key"]=20162}
+,[20166]={["id"]=20166,["TE_event"]="after_login",["key"]=20166}
+,[20170]={["id"]=20170,["TE_event"]="after_login",["key"]=20170}
+,[20174]={["id"]=20174,["TE_event"]="after_login",["key"]=20174}
+,[20178]={["id"]=20178,["TE_event"]="after_login",["key"]=20178}
+,[20182]={["id"]=20182,["TE_event"]="after_login",["key"]=20182}
+,[20186]={["id"]=20186,["TE_event"]="after_login",["key"]=20186}
+,[20003]={["id"]=20003,["TE_event"]="after_login",["key"]=20003}
+,[20007]={["id"]=20007,["TE_event"]="after_login",["key"]=20007}
+,[20011]={["id"]=20011,["TE_event"]="after_login",["key"]=20011}
+,[20015]={["id"]=20015,["TE_event"]="after_login",["key"]=20015}
+,[20019]={["id"]=20019,["TE_event"]="after_login",["key"]=20019}
+,[20023]={["id"]=20023,["TE_event"]="after_login",["key"]=20023}
+,[20027]={["id"]=20027,["TE_event"]="after_login",["key"]=20027}
+,[20031]={["id"]=20031,["TE_event"]="after_login",["key"]=20031}
+,[20035]={["id"]=20035,["TE_event"]="after_login",["key"]=20035}
+,[20039]={["id"]=20039,["TE_event"]="after_login",["key"]=20039}
+,[20043]={["id"]=20043,["TE_event"]="after_login",["key"]=20043}
+,[20047]={["id"]=20047,["TE_event"]="after_login",["key"]=20047}
+,[20051]={["id"]=20051,["TE_event"]="after_login",["key"]=20051}
+,[20055]={["id"]=20055,["TE_event"]="after_login",["key"]=20055}
+,[20059]={["id"]=20059,["TE_event"]="after_login",["key"]=20059}
+,[20063]={["id"]=20063,["TE_event"]="after_login",["key"]=20063}
+,[20067]={["id"]=20067,["TE_event"]="after_login",["key"]=20067}
+,[20071]={["id"]=20071,["TE_event"]="after_login",["key"]=20071}
+,[20075]={["id"]=20075,["TE_event"]="after_login",["key"]=20075}
+,[20079]={["id"]=20079,["TE_event"]="after_login",["key"]=20079}
+,[20083]={["id"]=20083,["TE_event"]="after_login",["key"]=20083}
+,[20087]={["id"]=20087,["TE_event"]="after_login",["key"]=20087}
+,[20091]={["id"]=20091,["TE_event"]="after_login",["key"]=20091}
+,[20095]={["id"]=20095,["TE_event"]="after_login",["key"]=20095}
+,[20099]={["id"]=20099,["TE_event"]="after_login",["key"]=20099}
+,[20103]={["id"]=20103,["TE_event"]="after_login",["key"]=20103}
+,[20107]={["id"]=20107,["TE_event"]="after_login",["key"]=20107}
+,[20111]={["HC_event"]="event_2",["key"]=20111,["id"]=20111,["TE_event"]="after_login",["HC_argument"]="param8"}
+,[20115]={["id"]=20115,["TE_event"]="after_login",["key"]=20115}
+,[20119]={["id"]=20119,["TE_event"]="after_login",["key"]=20119}
+,[20123]={["id"]=20123,["TE_event"]="after_login",["key"]=20123}
+,[20127]={["id"]=20127,["TE_event"]="after_login",["key"]=20127}
+,[20131]={["id"]=20131,["TE_event"]="after_login",["key"]=20131}
+,[20135]={["id"]=20135,["TE_event"]="after_login",["key"]=20135}
+,[20139]={["id"]=20139,["TE_event"]="after_login",["key"]=20139}
+,[20143]={["id"]=20143,["TE_event"]="after_login",["key"]=20143}
+,[20147]={["id"]=20147,["TE_event"]="after_login",["key"]=20147}
+,[20151]={["id"]=20151,["TE_event"]="after_login",["key"]=20151}
+,[20155]={["id"]=20155,["TE_event"]="after_login",["key"]=20155}
+,[20159]={["id"]=20159,["TE_event"]="after_login",["key"]=20159}
+,[20163]={["id"]=20163,["TE_event"]="after_login",["key"]=20163}
+,[20167]={["id"]=20167,["TE_event"]="after_login",["key"]=20167}
+,[20171]={["id"]=20171,["TE_event"]="after_login",["key"]=20171}
+,[20175]={["id"]=20175,["TE_event"]="after_login",["key"]=20175}
+,[20179]={["id"]=20179,["TE_event"]="after_login",["key"]=20179}
+,[20183]={["id"]=20183,["TE_event"]="after_login",["key"]=20183}
+,[20187]={["id"]=20187,["TE_event"]="after_login",["key"]=20187}
+,[10002]={["id"]=10002,["TE_event"]="before_login",["key"]=10002}
+,[10004]={["id"]=10004,["TE_event"]="before_login",["key"]=10004}
+,[10006]={["HC_event"]="event_1",["key"]=10006,["id"]=10006,["TE_event"]="before_login",["HC_argument"]="param3"}
+,[10008]={["id"]=10008,["TE_event"]="before_login",["key"]=10008}
+,[10010]={["id"]=10010,["TE_event"]="before_login",["key"]=10010}
+,[10012]={["HC_event"]="event_1",["key"]=10012,["id"]=10012,["TE_event"]="before_login",["HC_argument"]="param5"}
+,[10014]={["id"]=10014,["TE_event"]="before_login",["key"]=10014}
+,[10016]={["id"]=10016,["TE_event"]="before_login",["key"]=10016}
+,[10018]={["id"]=10018,["TE_event"]="before_login",["key"]=10018}
+,[10020]={["id"]=10020,["TE_event"]="before_login",["key"]=10020}
+,[10022]={["HC_event"]="event_1",["key"]=10022,["id"]=10022,["TE_event"]="before_login",["HC_argument"]="param9"}
+,[20004]={["id"]=20004,["TE_event"]="after_login",["key"]=20004}
+,[20008]={["id"]=20008,["TE_event"]="after_login",["key"]=20008}
+,[20012]={["id"]=20012,["TE_event"]="after_login",["key"]=20012}
+,[20016]={["id"]=20016,["TE_event"]="after_login",["key"]=20016}
+,[20020]={["id"]=20020,["TE_event"]="after_login",["key"]=20020}
+,[20024]={["id"]=20024,["TE_event"]="after_login",["key"]=20024}
+,[20028]={["id"]=20028,["TE_event"]="after_login",["key"]=20028}
+,[20032]={["HC_event"]="event_2",["key"]=20032,["id"]=20032,["TE_event"]="after_login",["HC_argument"]="param2"}
+,[20036]={["id"]=20036,["TE_event"]="after_login",["key"]=20036}
+,[20040]={["id"]=20040,["TE_event"]="after_login",["key"]=20040}
+,[20044]={["id"]=20044,["TE_event"]="after_login",["key"]=20044}
+,[20048]={["id"]=20048,["TE_event"]="after_login",["key"]=20048}
+,[20052]={["id"]=20052,["TE_event"]="after_login",["key"]=20052}
+,[20056]={["id"]=20056,["TE_event"]="after_login",["key"]=20056}
+,[20060]={["id"]=20060,["TE_event"]="after_login",["key"]=20060}
+,[20064]={["id"]=20064,["TE_event"]="after_login",["key"]=20064}
+,[20068]={["id"]=20068,["TE_event"]="after_login",["key"]=20068}
+,[20072]={["id"]=20072,["TE_event"]="after_login",["key"]=20072}
+,[20076]={["id"]=20076,["TE_event"]="after_login",["key"]=20076}
+,[20080]={["id"]=20080,["TE_event"]="after_login",["key"]=20080}
+,[20084]={["id"]=20084,["TE_event"]="after_login",["key"]=20084}
+,[20088]={["id"]=20088,["TE_event"]="after_login",["key"]=20088}
+,[20092]={["id"]=20092,["TE_event"]="after_login",["key"]=20092}
+,[20096]={["id"]=20096,["TE_event"]="after_login",["key"]=20096}
+,[20100]={["id"]=20100,["TE_event"]="after_login",["key"]=20100}
+,[20104]={["HC_event"]="event_2",["key"]=20104,["id"]=20104,["TE_event"]="after_login",["HC_argument"]="param7"}
+,[20108]={["id"]=20108,["TE_event"]="after_login",["key"]=20108}
+,[20112]={["id"]=20112,["TE_event"]="after_login",["key"]=20112}
+,[20116]={["id"]=20116,["TE_event"]="after_login",["key"]=20116}
+,[20120]={["id"]=20120,["TE_event"]="after_login",["key"]=20120}
+,[20124]={["id"]=20124,["TE_event"]="after_login",["key"]=20124}
+,[20128]={["id"]=20128,["TE_event"]="after_login",["key"]=20128}
+,[20132]={["id"]=20132,["TE_event"]="after_login",["key"]=20132}
+,[20136]={["id"]=20136,["TE_event"]="after_login",["key"]=20136}
+,[20140]={["id"]=20140,["TE_event"]="after_login",["key"]=20140}
+,[20144]={["id"]=20144,["TE_event"]="after_login",["key"]=20144}
+,[20148]={["id"]=20148,["TE_event"]="after_login",["key"]=20148}
+,[20152]={["id"]=20152,["TE_event"]="after_login",["key"]=20152}
+,[20156]={["id"]=20156,["TE_event"]="after_login",["key"]=20156}
+,[20160]={["id"]=20160,["TE_event"]="after_login",["key"]=20160}
+,[20164]={["id"]=20164,["TE_event"]="after_login",["key"]=20164}
+,[20168]={["id"]=20168,["TE_event"]="after_login",["key"]=20168}
+,[20172]={["id"]=20172,["TE_event"]="after_login",["key"]=20172}
+,[20176]={["id"]=20176,["TE_event"]="after_login",["key"]=20176}
+,[20180]={["id"]=20180,["TE_event"]="after_login",["key"]=20180}
+,[20184]={["id"]=20184,["TE_event"]="after_login",["key"]=20184}
+,[20188]={["HC_event"]="event_2",["key"]=20188,["id"]=20188,["TE_event"]="after_login",["HC_argument"]="param10"}
+,[20001]={["HC_event"]="event_2",["key"]=20001,["id"]=20001,["TE_event"]="after_login",["HC_argument"]="param1"}
+,[20005]={["id"]=20005,["TE_event"]="after_login",["key"]=20005}
+,[20009]={["id"]=20009,["TE_event"]="after_login",["key"]=20009}
+,[20013]={["id"]=20013,["TE_event"]="after_login",["key"]=20013}
+,[20017]={["id"]=20017,["TE_event"]="after_login",["key"]=20017}
+,[20021]={["id"]=20021,["TE_event"]="after_login",["key"]=20021}
+,[20025]={["id"]=20025,["TE_event"]="after_login",["key"]=20025}
+,[20029]={["id"]=20029,["TE_event"]="after_login",["key"]=20029}
+,[20033]={["id"]=20033,["TE_event"]="after_login",["key"]=20033}
+,[20037]={["id"]=20037,["TE_event"]="after_login",["key"]=20037}
+,[20041]={["id"]=20041,["TE_event"]="after_login",["key"]=20041}
+,[20045]={["id"]=20045,["TE_event"]="after_login",["key"]=20045}
+,[20049]={["id"]=20049,["TE_event"]="after_login",["key"]=20049}
+,[20053]={["id"]=20053,["TE_event"]="after_login",["key"]=20053}
+,[20057]={["id"]=20057,["TE_event"]="after_login",["key"]=20057}
+,[20061]={["id"]=20061,["TE_event"]="after_login",["key"]=20061}
+,[20065]={["id"]=20065,["TE_event"]="after_login",["key"]=20065}
+,[20069]={["id"]=20069,["TE_event"]="after_login",["key"]=20069}
+,[20073]={["id"]=20073,["TE_event"]="after_login",["key"]=20073}
+,[20077]={["id"]=20077,["TE_event"]="after_login",["key"]=20077}
+,[20081]={["id"]=20081,["TE_event"]="after_login",["key"]=20081}
+,[20085]={["id"]=20085,["TE_event"]="after_login",["key"]=20085}
+,[20089]={["id"]=20089,["TE_event"]="after_login",["key"]=20089}
+,[20093]={["id"]=20093,["TE_event"]="after_login",["key"]=20093}
+,[20097]={["id"]=20097,["TE_event"]="after_login",["key"]=20097}
+,[20101]={["id"]=20101,["TE_event"]="after_login",["key"]=20101}
+,[20105]={["id"]=20105,["TE_event"]="after_login",["key"]=20105}
+,[20109]={["id"]=20109,["TE_event"]="after_login",["key"]=20109}
+,[20113]={["id"]=20113,["TE_event"]="after_login",["key"]=20113}
+,[20117]={["HC_event"]="event_2",["key"]=20117,["id"]=20117,["TE_event"]="after_login",["HC_argument"]="param9"}
+,[20121]={["id"]=20121,["TE_event"]="after_login",["key"]=20121}
+,[20125]={["id"]=20125,["TE_event"]="after_login",["key"]=20125}
+,[20129]={["id"]=20129,["TE_event"]="after_login",["key"]=20129}
+,[20133]={["id"]=20133,["TE_event"]="after_login",["key"]=20133}
+,[20137]={["id"]=20137,["TE_event"]="after_login",["key"]=20137}
+,[20058]={["id"]=20058,["TE_event"]="after_login",["key"]=20058}
 }
---cfgUpdateData = conf
-return conf
+

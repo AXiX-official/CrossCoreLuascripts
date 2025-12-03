@@ -1,34 +1,29 @@
-local conf = {
-	["filename"] = 'c-成就.xlsx',
-	["sheetname"] = '成就类型定义',
-	["types"] = {
-'int','string','int','string','int','json','table#6','int','int','int','string','string','string'
-},
-	["names"] = {
-'id','key','type','small','sort','leftInfo','infos','index','typeNum','childId','childIcon','childBigIcon','showTime'
-},
-	["data"] = {
-{'1001',	'1001',	'1',	'icon1',	'2',	'[{"id":47200,"path":"ActivityList/icon1"}]',	'',	'',	'',	'',	'',	'',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'1',	'1001',	'47201',	'1',	'1',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'2',	'1002',	'47202',	'2',	'2',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'3',	'1003',	'47203',	'3',	'3',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'4',	'1004',	'47204',	'4',	'4',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'5',	'1005',	'47205',	'5',	'5',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'6',	'1006',	'47206',	'6',	'6',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'7',	'1007',	'47207',	'7',	'7',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'',	'8',	'1008',	'47208',	'8',	'8',	''},
-{'1002',	'1002',	'2',	'icon1',	'3',	'[{"id":47209,"path":"ActivityList/icon4"}]',	'',	'',	'',	'',	'',	'',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'1',	'2001',	'47210',	'9',	'1',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'2',	'2002',	'47211',	'10',	'2',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'3',	'2003',	'47212',	'11',	'3',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'4',	'2004',	'47213',	'12',	'4',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'5',	'2006',	'47216',	'13',	'13',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'6',	'2005',	'47215',	'13',	'5',	'2024/12/01 10:00:00'},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'7',	'2007',	'47217',	'2',	'2',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'8',	'2008',	'47218',	'15',	'15',	'2025/07/02 12:00:00'},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'9',	'2009',	'47219',	'17',	'17',	'2025/08/20 12:00:00'},
-{'1002',	'1002',	'',	'',	'',	'',	'',	'10',	'2010',	'47220',	'16',	'16',	'2025/08/06 12:00:00'},
-},
+_G["CfgAchieveType"]={[1001]={["small"]="icon1",["type"]=1,["key"]="1001",["id"]=1001,["infos"]={{["childIcon"]="1",["index"]=1,["childId"]=47201,["childBigIcon"]="1",["typeNum"]=1001}
+,{["childIcon"]="2",["index"]=2,["childId"]=47202,["childBigIcon"]="2",["typeNum"]=1002}
+,{["childIcon"]="3",["index"]=3,["childId"]=47203,["childBigIcon"]="3",["typeNum"]=1003}
+,{["childIcon"]="4",["index"]=4,["childId"]=47204,["childBigIcon"]="4",["typeNum"]=1004}
+,{["childIcon"]="5",["index"]=5,["childId"]=47205,["childBigIcon"]="5",["typeNum"]=1005}
+,{["childIcon"]="6",["index"]=6,["childId"]=47206,["childBigIcon"]="6",["typeNum"]=1006}
+,{["childIcon"]="7",["index"]=7,["childId"]=47207,["childBigIcon"]="7",["typeNum"]=1007}
+,{["childIcon"]="8",["index"]=8,["childId"]=47208,["childBigIcon"]="8",["typeNum"]=1008}
 }
---cfgCfgAchieveType = conf
-return conf
+,["leftInfo"]={{["id"]=47200,["path"]="ActivityList/icon1"}
+}
+,["sort"]=2}
+,[1002]={["small"]="icon1",["type"]=2,["key"]="1002",["id"]=1002,["infos"]={{["childIcon"]="9",["index"]=1,["childId"]=47210,["childBigIcon"]="1",["typeNum"]=2001}
+,{["childIcon"]="10",["index"]=2,["childId"]=47211,["childBigIcon"]="2",["typeNum"]=2002}
+,{["childIcon"]="11",["index"]=3,["childId"]=47212,["childBigIcon"]="3",["typeNum"]=2003}
+,{["childIcon"]="12",["index"]=4,["childId"]=47213,["childBigIcon"]="4",["typeNum"]=2004}
+,{["childIcon"]="13",["index"]=5,["childId"]=47216,["childBigIcon"]="13",["typeNum"]=2006}
+,{["childIcon"]="13",["index"]=6,["childId"]=47215,["childBigIcon"]="5",["showTime"]="2024/12/01 10:00:00",["typeNum"]=2005}
+,{["childIcon"]="2",["index"]=7,["childId"]=47217,["childBigIcon"]="2",["typeNum"]=2007}
+,{["childIcon"]="15",["index"]=8,["childId"]=47218,["childBigIcon"]="15",["showTime"]="2025/07/02 12:00:00",["typeNum"]=2008}
+,{["childIcon"]="17",["index"]=9,["childId"]=47219,["childBigIcon"]="17",["showTime"]="2025/08/20 12:00:00",["typeNum"]=2009}
+,{["childIcon"]="16",["index"]=10,["childId"]=47220,["childBigIcon"]="16",["showTime"]="2025/08/06 12:00:00",["typeNum"]=2010}
+,{["childIcon"]="18",["index"]=11,["childId"]=47221,["childBigIcon"]="18",["typeNum"]=2011}
+}
+,["leftInfo"]={{["id"]=47209,["path"]="ActivityList/icon4"}
+}
+,["sort"]=3}
+}
+

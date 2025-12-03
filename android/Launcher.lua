@@ -92,9 +92,21 @@ function Init()
 	InitSceneTypeDatas()
 	InitSceneDatas()
 	InitViewDatas()
-	
-    --读取所有配置
-	ReadAllConfig();
+
+	Init1();	
+end
+
+function Init1()
+	InitForReadCfg();
+
+	-- 读配置表的新loading
+    ConfigParser.isClientInit = true
+	ReadAllConfig()
+	ConfigParser.isClientInit = nil
+	-- FuncUtil:Call(ReadAllConfig,nil,500);
+end
+
+function Init2()    
     --多语言
 	LanguageMgr:Init()
 	--数数sdk
@@ -221,5 +233,82 @@ function PreCreate()
 			local tab = ComUtil.GetLuaTable(go)
 			tab.Remove();
 		end)
+	end
+end
+
+
+-------配置加载进度显示-------
+--读取配置前的初始化
+local cfgBar = nil;
+local txtBar = nil;
+function InitForReadCfg()	
+	local launcher = transform and transform.parent and transform.parent.gameObject;
+	local bar = ComUtil.GetComInChildren(launcher,"BarBase");
+	cfgBar = bar;	
+	local barParent = bar and bar.transform.parent.parent.parent;
+	if(not barParent)then
+		return;
+	end
+	local childCount = barParent.childCount;
+
+	local isUpdateNodeActive = false;
+	for i = 0,childCount - 1 do
+		local t = barParent:GetChild(i);
+		if(t.name == "updateNode")then
+			isUpdateNodeActive = t.gameObject.activeInHierarchy;
+		elseif(t.name == "block")then
+			txtBar = ComUtil.GetComInChildren(t.gameObject,"Text");
+		elseif(t.name == "img")then
+			if(t.gameObject.activeInHierarchy)then
+				local descBar = ComUtil.GetComInChildren(t.gameObject,"Text");
+				descBar.text = "loading...";
+			end
+			
+		end
+		--LogError(string.format("name = %s,active = %s",t.name,t.gameObject.activeInHierarchy));
+	end
+	if(not isUpdateNodeActive)then
+		local imageCom = ComUtil.GetCom(barParent.gameObject,"Image");
+		if(imageCom)then
+			imageCom.enabled = false;
+		end
+		barParent:SetSiblingIndex(1);
+	end
+
+	EventMgr.AddListener(EventType.Read_Cfg_Progress, OnUpdateCfgProgress);
+	EventMgr.AddListener(EventType.Read_Cfg_Complete, OnCfgComplete);
+
+	SetCfgReadProgress(1,true);
+	--EventMgr.Dispatch(EventType.Read_Cfg_Progress,1);
+
+	-- ---模拟进度
+	-- FuncUtil:Call(function()
+	-- 	EventMgr.Dispatch(EventType.Read_Cfg_Progress,20);
+	-- end,nil,100);
+	-- FuncUtil:Call(function()
+	-- 	EventMgr.Dispatch(EventType.Read_Cfg_Complete);
+	-- end,nil,1000);
+end
+
+function OnUpdateCfgProgress(p)
+	SetCfgReadProgress(p);
+end
+function OnCfgComplete()
+	SetCfgReadProgress(100,true);
+	Init2();
+
+	EventMgr.RemoveListener(EventType.Read_Cfg_Progress, OnUpdateCfgProgress);
+	EventMgr.RemoveListener(EventType.Read_Cfg_Complete, OnCfgComplete);
+end
+
+function SetCfgReadProgress(p,immediatelyFill)
+	p = math.ceil(p);
+	p = math.max(5,p);
+	p = math.min(100,p);
+	if(cfgBar)then
+		cfgBar:SetFullProgress(p,100,immediatelyFill and true or false);
+	end
+	if(txtBar)then
+		txtBar.text = string.format("%s%%",tostring(p));
 	end
 end

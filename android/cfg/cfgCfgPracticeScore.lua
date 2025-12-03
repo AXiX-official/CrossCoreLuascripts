@@ -1,24 +1,12 @@
-local conf = {
-	["filename"] = 'j-军演.xlsx',
-	["sheetname"] = '军演积分奖励',
-	["types"] = {
-'int','string','int','int','int'
-},
-	["names"] = {
-'id','key','nGetScore','nDiffMin','nDiffMax'
-},
-	["data"] = {
-{'1',	'1',	'16',	'-999999',	'-150'},
-{'2',	'2',	'17',	'-150',	'-100'},
-{'3',	'3',	'18',	'-100',	'-50'},
-{'4',	'4',	'20',	'-50',	'50'},
-{'5',	'5',	'21',	'50',	'75'},
-{'6',	'6',	'22',	'75',	'100'},
-{'7',	'7',	'23',	'100',	'125'},
-{'8',	'8',	'24',	'125',	'150'},
-{'9',	'9',	'26',	'150',	'200'},
-{'10',	'10',	'28',	'200',	'99999999999'},
-},
+_G["CfgPracticeScore"]={{["nDiffMax"]=-150,["key"]="1",["id"]=1,["nDiffMin"]=-999999,["nGetScore"]=16}
+,{["nDiffMax"]=-100,["key"]="2",["id"]=2,["nDiffMin"]=-150,["nGetScore"]=17}
+,{["nDiffMax"]=-50,["key"]="3",["id"]=3,["nDiffMin"]=-100,["nGetScore"]=18}
+,{["nDiffMax"]=50,["key"]="4",["id"]=4,["nDiffMin"]=-50,["nGetScore"]=20}
+,{["nDiffMax"]=75,["key"]="5",["id"]=5,["nDiffMin"]=50,["nGetScore"]=21}
+,{["nDiffMax"]=100,["key"]="6",["id"]=6,["nDiffMin"]=75,["nGetScore"]=22}
+,{["nDiffMax"]=125,["key"]="7",["id"]=7,["nDiffMin"]=100,["nGetScore"]=23}
+,{["nDiffMax"]=150,["key"]="8",["id"]=8,["nDiffMin"]=125,["nGetScore"]=24}
+,{["nDiffMax"]=200,["key"]="9",["id"]=9,["nDiffMin"]=150,["nGetScore"]=26}
+,{["nDiffMax"]=99999999999,["key"]="10",["id"]=10,["nDiffMin"]=200,["nGetScore"]=28}
 }
---cfgCfgPracticeScore = conf
-return conf
+

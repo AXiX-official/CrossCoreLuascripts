@@ -1,24 +1,42 @@
-local conf = {
-	["filename"] = 'j-军演限时.xlsx',
-	["sheetname"] = '军演段位',
-	["types"] = {
-'int','string','string','int','json','int','int','string','json','string'
-},
-	["names"] = {
-'id','key','name','nScore','jAward','nWinGetCoin','nLostGetCoin','icon','nBalanceBuff','rankColor'
-},
-	["data"] = {
-{'1',	'1',	'少尉',	'500',	'[[10012,0,2]]',	'0',	'0',	'img_3_1',	'[5600015]',	'5d5d5d'},
-{'2',	'2',	'中尉',	'1000',	'[[10703,2,2]]',	'0',	'0',	'img_3_2',	'[5600001]',	'5d5d5d'},
-{'3',	'3',	'上尉',	'1500',	'[[17405,1,2]]',	'0',	'0',	'img_3_3',	'[5600016]',	'5d5d5d'},
-{'4',	'4',	'少校',	'2000',	'[[17405,1,2]]',	'0',	'0',	'img_3_4',	'[5600017]',	'5d5d5d'},
-{'5',	'5',	'中校',	'3000',	'[[17405,1,2]]',	'0',	'0',	'img_3_5',	'[5600018]',	'5d5d5d'},
-{'6',	'6',	'上校',	'4000',	'[[17405,1,2]]',	'0',	'0',	'img_3_6',	'[5600019]',	'5d5d5d'},
-{'7',	'7',	'少将',	'5000',	'[[17405,1,2]]',	'0',	'0',	'img_3_7',	'[5600020]',	'5d5d5d'},
-{'8',	'8',	'中将',	'6000',	'[[15003,1,2]]',	'0',	'0',	'img_3_8',	'[5600021]',	'c6796f'},
-{'9',	'9',	'上将',	'7500',	'[[15003,1,2]]',	'0',	'0',	'img_3_9',	'[5600022]',	'ffffff'},
-{'10',	'10',	'元帅',	'99999',	'[[15003,1,2]]',	'0',	'0',	'img_3_10',	'[5600023]',	'f8dfb0'},
-},
+_G["CfgPvpRankLevel"]={{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600015}
+,["key"]="1",["nScore"]=500,["jAward"]={{10012,0,2}
 }
---cfgCfgPvpRankLevel = conf
-return conf
+,["name"]="少尉",["icon"]="img_3_1",["id"]=1}
+,{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600001}
+,["key"]="2",["nScore"]=1000,["jAward"]={{10703,2,2}
+}
+,["name"]="中尉",["icon"]="img_3_2",["id"]=2}
+,{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600016}
+,["key"]="3",["nScore"]=1500,["jAward"]={{17405,1,2}
+}
+,["name"]="上尉",["icon"]="img_3_3",["id"]=3}
+,{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600017}
+,["key"]="4",["nScore"]=2000,["jAward"]={{17405,1,2}
+}
+,["name"]="少校",["icon"]="img_3_4",["id"]=4}
+,{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600018}
+,["key"]="5",["nScore"]=3000,["jAward"]={{17405,1,2}
+}
+,["name"]="中校",["icon"]="img_3_5",["id"]=5}
+,{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600019}
+,["key"]="6",["nScore"]=4000,["jAward"]={{17405,1,2}
+}
+,["name"]="上校",["icon"]="img_3_6",["id"]=6}
+,{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600020}
+,["key"]="7",["nScore"]=5000,["jAward"]={{17405,1,2}
+}
+,["name"]="少将",["icon"]="img_3_7",["id"]=7}
+,{["rankColor"]="c6796f",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600021}
+,["key"]="8",["nScore"]=6000,["jAward"]={{15003,1,2}
+}
+,["name"]="中将",["icon"]="img_3_8",["id"]=8}
+,{["rankColor"]="ffffff",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600022}
+,["key"]="9",["nScore"]=7500,["jAward"]={{15003,1,2}
+}
+,["name"]="上将",["icon"]="img_3_9",["id"]=9}
+,{["rankColor"]="f8dfb0",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600023}
+,["key"]="10",["nScore"]=99999,["jAward"]={{15003,1,2}
+}
+,["name"]="元帅",["icon"]="img_3_10",["id"]=10}
+}
+

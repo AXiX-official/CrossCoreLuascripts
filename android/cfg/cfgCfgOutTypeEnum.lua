@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '掉落类型描述',
-	["types"] = {
-'int','string','string','string'
-},
-	["names"] = {
-'id','key','sName','eName'
-},
-	["data"] = {
-{'1',	'',	'固定掉落',	''},
-{'2',	'',	'概率掉落',	''},
-{'3',	'',	'稀有掉落',	''},
-},
+_G["CfgOutTypeEnum"]={{["id"]=1,["sName"]="固定掉落",["key"]=1}
+,{["id"]=2,["sName"]="概率掉落",["key"]=2}
+,{["id"]=3,["sName"]="稀有掉落",["key"]=3}
 }
---cfgCfgOutTypeEnum = conf
-return conf
+

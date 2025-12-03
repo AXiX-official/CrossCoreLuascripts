@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'k-卡牌冷却.xlsx',
-	["sheetname"] = '冷却计算突破等级参数',
-	["types"] = {
-'int','string','float'
-},
-	["names"] = {
-'id','key','fArg'
-},
-	["data"] = {
-{'1',	'1',	'1'},
-{'2',	'2',	'1'},
-{'3',	'3',	'1'},
-{'4',	'4',	'1'},
-{'5',	'5',	'1'},
-},
+_G["CfgCardCoolBoxBreakLevelArg"]={{["id"]=1,["key"]="1",["fArg"]=1}
+,{["id"]=2,["key"]="2",["fArg"]=1}
+,{["id"]=3,["key"]="3",["fArg"]=1}
+,{["id"]=4,["key"]="4",["fArg"]=1}
+,{["id"]=5,["key"]="5",["fArg"]=1}
 }
---cfgCfgCardCoolBoxBreakLevelArg = conf
-return conf
+

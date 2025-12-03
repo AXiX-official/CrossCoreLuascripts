@@ -1,20 +1,10 @@
-local conf = {
-	["filename"] = 'k-卡牌配置表.xlsx',
-	["sheetname"] = '强化能力修正',
-	["types"] = {
-'int','string','float','float','float','float','float','float','float','float','int','int','int','float','float','int','json'
-},
-	["names"] = {
-'id','key','attack','maxhp','defense','speed','crit_rate','crit','hit','resist','hot','sp','np','sp_race','sp_race2','exp','costs'
-},
-	["data"] = {
-{'1',	'1',	'1',	'1',	'1',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'400',	'[ 1, [10001,1,2] ]'},
-{'2',	'2',	'1',	'1',	'1',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'800',	''},
-{'3',	'3',	'1',	'1',	'1',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'1600',	''},
-{'4',	'4',	'1',	'1',	'1',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'3200',	''},
-{'5',	'5',	'1',	'1',	'1',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'4000',	''},
-{'6',	'6',	'1',	'1',	'1',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'0',	'5000',	''},
-},
+_G["CardIntensify"]={{["exp"]=400,["np"]=0,["key"]="1",["speed"]=0,["sp"]=0,["hot"]=0,["defense"]=1,["sp_race2"]=0,["sp_race"]=0,["id"]=1,["maxhp"]=1,["resist"]=0,["hit"]=0,["costs"]={1,{10001,1,2}
 }
---cfgCardIntensify = conf
-return conf
+,["crit_rate"]=0,["crit"]=0,["attack"]=1}
+,{["exp"]=800,["np"]=0,["key"]="2",["speed"]=0,["sp"]=0,["hot"]=0,["defense"]=1,["sp_race2"]=0,["sp_race"]=0,["id"]=2,["maxhp"]=1,["resist"]=0,["hit"]=0,["crit_rate"]=0,["crit"]=0,["attack"]=1}
+,{["exp"]=1600,["np"]=0,["key"]="3",["speed"]=0,["sp"]=0,["hot"]=0,["defense"]=1,["sp_race2"]=0,["sp_race"]=0,["id"]=3,["maxhp"]=1,["resist"]=0,["hit"]=0,["crit_rate"]=0,["crit"]=0,["attack"]=1}
+,{["exp"]=3200,["np"]=0,["key"]="4",["speed"]=0,["sp"]=0,["hot"]=0,["defense"]=1,["sp_race2"]=0,["sp_race"]=0,["id"]=4,["maxhp"]=1,["resist"]=0,["hit"]=0,["crit_rate"]=0,["crit"]=0,["attack"]=1}
+,{["exp"]=4000,["np"]=0,["key"]="5",["speed"]=0,["sp"]=0,["hot"]=0,["defense"]=1,["sp_race2"]=0,["sp_race"]=0,["id"]=5,["maxhp"]=1,["resist"]=0,["hit"]=0,["crit_rate"]=0,["crit"]=0,["attack"]=1}
+,{["exp"]=5000,["np"]=0,["key"]="6",["speed"]=0,["sp"]=0,["hot"]=0,["defense"]=1,["sp_race2"]=0,["sp_race"]=0,["id"]=6,["maxhp"]=1,["resist"]=0,["hit"]=0,["crit_rate"]=0,["crit"]=0,["attack"]=1}
+}
+

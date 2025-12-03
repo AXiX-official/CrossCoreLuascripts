@@ -13,8 +13,8 @@ function Skill335203:OnActionOver(caster, target, data)
 	else
 		return
 	end
-	-- 8244
-	if SkillJudger:IsBeatBack(self, caster, target, true) then
+	-- 8202
+	if SkillJudger:IsNormal(self, caster, target, true) then
 	else
 		return
 	end

@@ -26,6 +26,11 @@ function AchievementProto:GetRewardInfoRet(proto)
     AchievementMgr:SetRewardInfos(proto)
 end
 
+--成就信息刷新
+function AchievementProto:UpdateFinishInfoRet(proto)
+    AchievementMgr:UpdateFinishInfo(proto)
+end
+
 --成就领取
 function AchievementProto:GetReward(id, callBack)
     local proto = {"AchievementProto:GetReward", {id = id}};
@@ -57,3 +62,5 @@ function AchievementProto:GetAllRewardRet(proto)
         AchievementMgr:ShowReward(proto.achievementRewards, proto.gets)
     end
 end
+
+

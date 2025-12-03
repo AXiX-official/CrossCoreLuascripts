@@ -1,135 +1,145 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '建筑列表',
-	["types"] = {
-'int','string','float','float[]','float','table#2','int','string'
-},
-	["names"] = {
-'id','key','modelScale','namePos','angle','infos','index','modelName'
-},
-	["data"] = {
-{'1001',	'1001',	'5',	'0,0,0',	'0',	'',	'',	''},
-{'1001',	'1001',	'',	'',	'',	'',	'1',	'zhihui01'},
-{'1001',	'1001',	'',	'',	'',	'',	'2',	'zhihui01'},
-{'1001',	'1001',	'',	'',	'',	'',	'3',	'zhihui01'},
-{'1001',	'1001',	'',	'',	'',	'',	'4',	'zhihui02'},
-{'1001',	'1001',	'',	'',	'',	'',	'5',	'zhihui02'},
-{'1001',	'1001',	'',	'',	'',	'',	'6',	'zhihui02'},
-{'1001',	'1001',	'',	'',	'',	'',	'7',	'zhihui02'},
-{'1001',	'1001',	'',	'',	'',	'',	'8',	'zhihui03'},
-{'1001',	'1001',	'',	'',	'',	'',	'9',	'zhihui03'},
-{'1001',	'1001',	'',	'',	'',	'',	'10',	'zhihui03'},
-{'1002',	'1002',	'4',	'0,0,0',	'0',	'',	'',	''},
-{'1002',	'1002',	'',	'',	'',	'',	'1',	'heneng01'},
-{'1002',	'1002',	'',	'',	'',	'',	'2',	'heneng01'},
-{'1002',	'1002',	'',	'',	'',	'',	'3',	'heneng01'},
-{'1002',	'1002',	'',	'',	'',	'',	'4',	'heneng02'},
-{'1002',	'1002',	'',	'',	'',	'',	'5',	'heneng02'},
-{'1002',	'1002',	'',	'',	'',	'',	'6',	'heneng02'},
-{'1002',	'1002',	'',	'',	'',	'',	'7',	'heneng02'},
-{'1002',	'1002',	'',	'',	'',	'',	'8',	'heneng03'},
-{'1002',	'1002',	'',	'',	'',	'',	'9',	'heneng03'},
-{'1002',	'1002',	'',	'',	'',	'',	'10',	'heneng03'},
-{'1003',	'1003',	'4',	'0,0,0',	'0',	'',	'',	''},
-{'1003',	'1003',	'',	'',	'',	'',	'1',	'buji01'},
-{'1003',	'1003',	'',	'',	'',	'',	'2',	'buji01'},
-{'1003',	'1003',	'',	'',	'',	'',	'3',	'buji01'},
-{'1003',	'1003',	'',	'',	'',	'',	'4',	'buji02'},
-{'1003',	'1003',	'',	'',	'',	'',	'5',	'buji02'},
-{'1003',	'1003',	'',	'',	'',	'',	'6',	'buji02'},
-{'1003',	'1003',	'',	'',	'',	'',	'7',	'buji02'},
-{'1003',	'1003',	'',	'',	'',	'',	'8',	'buji03'},
-{'1003',	'1003',	'',	'',	'',	'',	'9',	'buji03'},
-{'1003',	'1003',	'',	'',	'',	'',	'10',	'buji03'},
-{'1004',	'1004',	'4',	'0,0,0',	'0',	'',	'',	''},
-{'1004',	'1004',	'',	'',	'',	'',	'1',	'cuiqu01'},
-{'1004',	'1004',	'',	'',	'',	'',	'2',	'cuiqu01'},
-{'1004',	'1004',	'',	'',	'',	'',	'3',	'cuiqu01'},
-{'1004',	'1004',	'',	'',	'',	'',	'4',	'cuiqu02'},
-{'1004',	'1004',	'',	'',	'',	'',	'5',	'cuiqu02'},
-{'1004',	'1004',	'',	'',	'',	'',	'6',	'cuiqu02'},
-{'1004',	'1004',	'',	'',	'',	'',	'7',	'cuiqu02'},
-{'1004',	'1004',	'',	'',	'',	'',	'8',	'cuiqu03'},
-{'1004',	'1004',	'',	'',	'',	'',	'9',	'cuiqu03'},
-{'1004',	'1004',	'',	'',	'',	'',	'10',	'cuiqu03'},
-{'1005',	'1005',	'3',	'0,0,0',	'0',	'',	'',	''},
-{'1005',	'1005',	'',	'',	'',	'',	'1',	'guidao01'},
-{'1005',	'1005',	'',	'',	'',	'',	'2',	'guidao01'},
-{'1005',	'1005',	'',	'',	'',	'',	'3',	'guidao01'},
-{'1005',	'1005',	'',	'',	'',	'',	'4',	'guidao02'},
-{'1005',	'1005',	'',	'',	'',	'',	'5',	'guidao02'},
-{'1005',	'1005',	'',	'',	'',	'',	'6',	'guidao02'},
-{'1005',	'1005',	'',	'',	'',	'',	'7',	'guidao02'},
-{'1005',	'1005',	'',	'',	'',	'',	'8',	'guidao03'},
-{'1005',	'1005',	'',	'',	'',	'',	'9',	'guidao03'},
-{'1005',	'1005',	'',	'',	'',	'',	'10',	'guidao03'},
-{'1006',	'1006',	'4',	'0,0,0',	'0',	'',	'',	''},
-{'1006',	'1006',	'',	'',	'',	'',	'1',	'yanjiu01'},
-{'1006',	'1006',	'',	'',	'',	'',	'2',	'yanjiu01'},
-{'1006',	'1006',	'',	'',	'',	'',	'3',	'yanjiu01'},
-{'1006',	'1006',	'',	'',	'',	'',	'4',	'yanjiu02'},
-{'1006',	'1006',	'',	'',	'',	'',	'5',	'yanjiu02'},
-{'1006',	'1006',	'',	'',	'',	'',	'6',	'yanjiu02'},
-{'1006',	'1006',	'',	'',	'',	'',	'7',	'yanjiu02'},
-{'1006',	'1006',	'',	'',	'',	'',	'8',	'yanjiu03'},
-{'1006',	'1006',	'',	'',	'',	'',	'9',	'yanjiu03'},
-{'1006',	'1006',	'',	'',	'',	'',	'10',	'yanjiu03'},
-{'1007',	'1007',	'3',	'0,0,0',	'0',	'',	'',	''},
-{'1007',	'1007',	'',	'',	'',	'',	'1',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'2',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'3',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'4',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'5',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'6',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'7',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'8',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'9',	'zhuangjia01_2'},
-{'1007',	'1007',	'',	'',	'',	'',	'10',	'zhuangjia01_2'},
-{'1008',	'1008',	'3',	'0,0,0',	'0',	'',	'',	''},
-{'1008',	'1008',	'',	'',	'',	'',	'1',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'2',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'3',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'4',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'5',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'6',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'7',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'8',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'9',	'yingji01_2'},
-{'1008',	'1008',	'',	'',	'',	'',	'10',	'yingji01_2'},
-{'1009',	'1009',	'4',	'0,0,0',	'0',	'',	'',	''},
-{'1009',	'1009',	'',	'',	'',	'',	'1',	'zhuangbei01'},
-{'1009',	'1009',	'',	'',	'',	'',	'2',	'zhuangbei01'},
-{'1009',	'1009',	'',	'',	'',	'',	'3',	'zhuangbei01'},
-{'1009',	'1009',	'',	'',	'',	'',	'4',	'zhuangbei02'},
-{'1009',	'1009',	'',	'',	'',	'',	'5',	'zhuangbei02'},
-{'1009',	'1009',	'',	'',	'',	'',	'6',	'zhuangbei02'},
-{'1009',	'1009',	'',	'',	'',	'',	'7',	'zhuangbei02'},
-{'1009',	'1009',	'',	'',	'',	'',	'8',	'zhuangbei03'},
-{'1009',	'1009',	'',	'',	'',	'',	'9',	'zhuangbei03'},
-{'1009',	'1009',	'',	'',	'',	'',	'10',	'zhuangbei03'},
-{'2001',	'2001',	'3',	'0,0,0',	'0',	'',	'',	''},
-{'2001',	'2001',	'',	'',	'',	'',	'1',	'xunlian01'},
-{'2001',	'2001',	'',	'',	'',	'',	'2',	'xunlian01'},
-{'2001',	'2001',	'',	'',	'',	'',	'3',	'xunlian01'},
-{'2001',	'2001',	'',	'',	'',	'',	'4',	'xunlian02'},
-{'2001',	'2001',	'',	'',	'',	'',	'5',	'xunlian02'},
-{'2001',	'2001',	'',	'',	'',	'',	'6',	'xunlian02'},
-{'2001',	'2001',	'',	'',	'',	'',	'7',	'xunlian02'},
-{'2001',	'2001',	'',	'',	'',	'',	'8',	'xunlian03'},
-{'2001',	'2001',	'',	'',	'',	'',	'9',	'xunlian03'},
-{'2001',	'2001',	'',	'',	'',	'',	'10',	'xunlian03'},
-{'2002',	'2002',	'3',	'0,0,0',	'0',	'',	'',	''},
-{'2002',	'2002',	'',	'',	'',	'',	'1',	'zhanshu01'},
-{'2002',	'2002',	'',	'',	'',	'',	'2',	'zhanshu01'},
-{'2002',	'2002',	'',	'',	'',	'',	'3',	'zhanshu01'},
-{'2002',	'2002',	'',	'',	'',	'',	'4',	'zhanshu02'},
-{'2002',	'2002',	'',	'',	'',	'',	'5',	'zhanshu02'},
-{'2002',	'2002',	'',	'',	'',	'',	'6',	'zhanshu02'},
-{'2002',	'2002',	'',	'',	'',	'',	'7',	'zhanshu02'},
-{'2002',	'2002',	'',	'',	'',	'',	'8',	'zhanshu03'},
-{'2002',	'2002',	'',	'',	'',	'',	'9',	'zhanshu03'},
-{'2002',	'2002',	'',	'',	'',	'',	'10',	'zhanshu03'},
-},
+_G["CfgBuilding"]={[1002]={["infos"]={{["index"]=1,["modelName"]="heneng01"}
+,{["index"]=2,["modelName"]="heneng01"}
+,{["index"]=3,["modelName"]="heneng01"}
+,{["index"]=4,["modelName"]="heneng02"}
+,{["index"]=5,["modelName"]="heneng02"}
+,{["index"]=6,["modelName"]="heneng02"}
+,{["index"]=7,["modelName"]="heneng02"}
+,{["index"]=8,["modelName"]="heneng03"}
+,{["index"]=9,["modelName"]="heneng03"}
+,{["index"]=10,["modelName"]="heneng03"}
 }
---cfgCfgBuilding = conf
-return conf
+,["key"]="1002",["modelScale"]=4,["angle"]=0,["id"]=1002,["namePos"]={0,0,0}
+}
+,[1004]={["infos"]={{["index"]=1,["modelName"]="cuiqu01"}
+,{["index"]=2,["modelName"]="cuiqu01"}
+,{["index"]=3,["modelName"]="cuiqu01"}
+,{["index"]=4,["modelName"]="cuiqu02"}
+,{["index"]=5,["modelName"]="cuiqu02"}
+,{["index"]=6,["modelName"]="cuiqu02"}
+,{["index"]=7,["modelName"]="cuiqu02"}
+,{["index"]=8,["modelName"]="cuiqu03"}
+,{["index"]=9,["modelName"]="cuiqu03"}
+,{["index"]=10,["modelName"]="cuiqu03"}
+}
+,["key"]="1004",["modelScale"]=4,["angle"]=0,["id"]=1004,["namePos"]={0,0,0}
+}
+,[1006]={["infos"]={{["index"]=1,["modelName"]="yanjiu01"}
+,{["index"]=2,["modelName"]="yanjiu01"}
+,{["index"]=3,["modelName"]="yanjiu01"}
+,{["index"]=4,["modelName"]="yanjiu02"}
+,{["index"]=5,["modelName"]="yanjiu02"}
+,{["index"]=6,["modelName"]="yanjiu02"}
+,{["index"]=7,["modelName"]="yanjiu02"}
+,{["index"]=8,["modelName"]="yanjiu03"}
+,{["index"]=9,["modelName"]="yanjiu03"}
+,{["index"]=10,["modelName"]="yanjiu03"}
+}
+,["key"]="1006",["modelScale"]=4,["angle"]=0,["id"]=1006,["namePos"]={0,0,0}
+}
+,[1008]={["infos"]={{["index"]=1,["modelName"]="yingji01_2"}
+,{["index"]=2,["modelName"]="yingji01_2"}
+,{["index"]=3,["modelName"]="yingji01_2"}
+,{["index"]=4,["modelName"]="yingji01_2"}
+,{["index"]=5,["modelName"]="yingji01_2"}
+,{["index"]=6,["modelName"]="yingji01_2"}
+,{["index"]=7,["modelName"]="yingji01_2"}
+,{["index"]=8,["modelName"]="yingji01_2"}
+,{["index"]=9,["modelName"]="yingji01_2"}
+,{["index"]=10,["modelName"]="yingji01_2"}
+}
+,["key"]="1008",["modelScale"]=3,["angle"]=0,["id"]=1008,["namePos"]={0,0,0}
+}
+,[2001]={["infos"]={{["index"]=1,["modelName"]="xunlian01"}
+,{["index"]=2,["modelName"]="xunlian01"}
+,{["index"]=3,["modelName"]="xunlian01"}
+,{["index"]=4,["modelName"]="xunlian02"}
+,{["index"]=5,["modelName"]="xunlian02"}
+,{["index"]=6,["modelName"]="xunlian02"}
+,{["index"]=7,["modelName"]="xunlian02"}
+,{["index"]=8,["modelName"]="xunlian03"}
+,{["index"]=9,["modelName"]="xunlian03"}
+,{["index"]=10,["modelName"]="xunlian03"}
+}
+,["key"]="2001",["modelScale"]=3,["angle"]=0,["id"]=2001,["namePos"]={0,0,0}
+}
+,[1001]={["infos"]={{["index"]=1,["modelName"]="zhihui01"}
+,{["index"]=2,["modelName"]="zhihui01"}
+,{["index"]=3,["modelName"]="zhihui01"}
+,{["index"]=4,["modelName"]="zhihui02"}
+,{["index"]=5,["modelName"]="zhihui02"}
+,{["index"]=6,["modelName"]="zhihui02"}
+,{["index"]=7,["modelName"]="zhihui02"}
+,{["index"]=8,["modelName"]="zhihui03"}
+,{["index"]=9,["modelName"]="zhihui03"}
+,{["index"]=10,["modelName"]="zhihui03"}
+}
+,["key"]="1001",["modelScale"]=5,["angle"]=0,["id"]=1001,["namePos"]={0,0,0}
+}
+,[1003]={["infos"]={{["index"]=1,["modelName"]="buji01"}
+,{["index"]=2,["modelName"]="buji01"}
+,{["index"]=3,["modelName"]="buji01"}
+,{["index"]=4,["modelName"]="buji02"}
+,{["index"]=5,["modelName"]="buji02"}
+,{["index"]=6,["modelName"]="buji02"}
+,{["index"]=7,["modelName"]="buji02"}
+,{["index"]=8,["modelName"]="buji03"}
+,{["index"]=9,["modelName"]="buji03"}
+,{["index"]=10,["modelName"]="buji03"}
+}
+,["key"]="1003",["modelScale"]=4,["angle"]=0,["id"]=1003,["namePos"]={0,0,0}
+}
+,[1005]={["infos"]={{["index"]=1,["modelName"]="guidao01"}
+,{["index"]=2,["modelName"]="guidao01"}
+,{["index"]=3,["modelName"]="guidao01"}
+,{["index"]=4,["modelName"]="guidao02"}
+,{["index"]=5,["modelName"]="guidao02"}
+,{["index"]=6,["modelName"]="guidao02"}
+,{["index"]=7,["modelName"]="guidao02"}
+,{["index"]=8,["modelName"]="guidao03"}
+,{["index"]=9,["modelName"]="guidao03"}
+,{["index"]=10,["modelName"]="guidao03"}
+}
+,["key"]="1005",["modelScale"]=3,["angle"]=0,["id"]=1005,["namePos"]={0,0,0}
+}
+,[1007]={["infos"]={{["index"]=1,["modelName"]="zhuangjia01_2"}
+,{["index"]=2,["modelName"]="zhuangjia01_2"}
+,{["index"]=3,["modelName"]="zhuangjia01_2"}
+,{["index"]=4,["modelName"]="zhuangjia01_2"}
+,{["index"]=5,["modelName"]="zhuangjia01_2"}
+,{["index"]=6,["modelName"]="zhuangjia01_2"}
+,{["index"]=7,["modelName"]="zhuangjia01_2"}
+,{["index"]=8,["modelName"]="zhuangjia01_2"}
+,{["index"]=9,["modelName"]="zhuangjia01_2"}
+,{["index"]=10,["modelName"]="zhuangjia01_2"}
+}
+,["key"]="1007",["modelScale"]=3,["angle"]=0,["id"]=1007,["namePos"]={0,0,0}
+}
+,[1009]={["infos"]={{["index"]=1,["modelName"]="zhuangbei01"}
+,{["index"]=2,["modelName"]="zhuangbei01"}
+,{["index"]=3,["modelName"]="zhuangbei01"}
+,{["index"]=4,["modelName"]="zhuangbei02"}
+,{["index"]=5,["modelName"]="zhuangbei02"}
+,{["index"]=6,["modelName"]="zhuangbei02"}
+,{["index"]=7,["modelName"]="zhuangbei02"}
+,{["index"]=8,["modelName"]="zhuangbei03"}
+,{["index"]=9,["modelName"]="zhuangbei03"}
+,{["index"]=10,["modelName"]="zhuangbei03"}
+}
+,["key"]="1009",["modelScale"]=4,["angle"]=0,["id"]=1009,["namePos"]={0,0,0}
+}
+,[2002]={["infos"]={{["index"]=1,["modelName"]="zhanshu01"}
+,{["index"]=2,["modelName"]="zhanshu01"}
+,{["index"]=3,["modelName"]="zhanshu01"}
+,{["index"]=4,["modelName"]="zhanshu02"}
+,{["index"]=5,["modelName"]="zhanshu02"}
+,{["index"]=6,["modelName"]="zhanshu02"}
+,{["index"]=7,["modelName"]="zhanshu02"}
+,{["index"]=8,["modelName"]="zhanshu03"}
+,{["index"]=9,["modelName"]="zhanshu03"}
+,{["index"]=10,["modelName"]="zhanshu03"}
+}
+,["key"]="2002",["modelScale"]=3,["angle"]=0,["id"]=2002,["namePos"]={0,0,0}
+}
+}
+

@@ -1,25 +1,23 @@
-local conf = {
-	["filename"] = 'z-自动战斗配置表.xlsx',
-	["sheetname"] = '目标筛选策略条目',
-	["types"] = {
-'int','string','string','int[]'
-},
-	["names"] = {
-'id','key','description','aiStrategy'
-},
-	["data"] = {
-{'1',	'',	'选择克制单位',	'6'},
-{'2',	'',	'耐久最低',	'1'},
-{'3',	'',	'攻击最高',	'2'},
-{'4',	'',	'防御最低',	'4'},
-{'5',	'',	'耐久最高',	'9'},
-{'6',	'',	'耐久比最低',	'13'},
-{'7',	'',	'人多一排',	'7'},
-{'8',	'',	'人多一列',	'8'},
-{'9',	'',	'人多2*2范围',	'10'},
-{'10',	'',	'人多十字范围',	'11'},
-{'11',	'',	'系统默认',	''},
-},
+_G["cfgAIStrategyItem"]={{["id"]=1,["aiStrategy"]={6}
+,["description"]="选择克制单位",["key"]=1}
+,{["id"]=2,["aiStrategy"]={1}
+,["description"]="耐久最低",["key"]=2}
+,{["id"]=3,["aiStrategy"]={2}
+,["description"]="攻击最高",["key"]=3}
+,{["id"]=4,["aiStrategy"]={4}
+,["description"]="防御最低",["key"]=4}
+,{["id"]=5,["aiStrategy"]={9}
+,["description"]="耐久最高",["key"]=5}
+,{["id"]=6,["aiStrategy"]={13}
+,["description"]="耐久比最低",["key"]=6}
+,{["id"]=7,["aiStrategy"]={7}
+,["description"]="人多一排",["key"]=7}
+,{["id"]=8,["aiStrategy"]={8}
+,["description"]="人多一列",["key"]=8}
+,{["id"]=9,["aiStrategy"]={10}
+,["description"]="人多2*2范围",["key"]=9}
+,{["id"]=10,["aiStrategy"]={11}
+,["description"]="人多十字范围",["key"]=10}
+,{["id"]=11,["description"]="系统默认",["key"]=11}
 }
---cfgcfgAIStrategyItem = conf
-return conf
+

@@ -104,6 +104,7 @@ end
 ---------------------------------------------目标功能开启时间---------------------------------------------
 function this:SetOpenTimes(proto)
 	if proto and proto.times and #proto.times >0 then
+		self.openTimes = self.openTimes or {}
 		for i, v in ipairs(proto.times) do
 			self.openTimes[v.first] = v.second
 		end

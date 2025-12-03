@@ -5,6 +5,7 @@ EquipProto = {
 -----------------------------------客户端发送--------------
 --获取装备列表
 function EquipProto:GetEquips()
+	EquipMgr:Clear()
 	local proto = {"EquipProto:GetEquips", {}}
 	NetMgr.net:Send(proto);
 end
@@ -100,6 +101,7 @@ end
 --获取装备列表返回
 function EquipProto:GetEquipsRet(proto)
 	EquipMgr:SetData(proto);
+	EventMgr.Dispatch(EventType.Init_Equip_Finish)
 end
 
 --装备穿戴返回

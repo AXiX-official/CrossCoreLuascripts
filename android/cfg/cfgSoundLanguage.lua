@@ -1,51 +1,39 @@
-local conf = {
-	["filename"] = 's-声音.xlsx',
-	["sheetname"] = '多语言配音',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','cue_sheet','language'
-},
-	["data"] = {
-{'1',	'Acheron',	'cn'},
-{'2',	'alps',	'cn'},
-{'3',	'Anthem',	'cn'},
-{'4',	'Arpeggio',	'cn'},
-{'5',	'Brynhild',	'cn'},
-{'6',	'Burtgang',	'cn'},
-{'7',	'Capriccio',	'cn'},
-{'8',	'Curtana',	'cn'},
-{'9',	'Direwolf',	'cn'},
-{'10',	'Durandal',	'cn'},
-{'11',	'Frost',	'cn'},
-{'12',	'Hurricane',	'cn'},
-{'13',	'Joyeuse',	'cn'},
-{'14',	'Kunlun',	'cn'},
-{'15',	'Lynx',	'cn'},
-{'16',	'machairodus',	'cn'},
-{'17',	'Megaloceros',	'cn'},
-{'18',	'melody',	'cn'},
-{'19',	'Meteor',	'cn'},
-{'20',	'Noctilucent',	'cn'},
-{'21',	'Pelorovis',	'cn'},
-{'22',	'Pongo',	'cn'},
-{'23',	'pyroxene',	'cn'},
-{'24',	'Queen_Bee',	'cn'},
-{'25',	'Rain',	'cn'},
-{'26',	'Rex',	'cn'},
-{'27',	'Sandfly',	'cn'},
-{'28',	'syujinko_f',	'cn'},
-{'29',	'syujinko_m',	'cn'},
-{'30',	'Talbot',	'cn'},
-{'31',	'Vortex',	'cn'},
-{'32',	'wolframite',	'cn'},
-{'33',	'Collapsar',	'cn'},
-{'34',	'Silver_Feather',	'cn'},
-{'35',	'Zeus',	'cn'},
-{'36',	'Uillean',	'cn'},
-{'37',	'Lepus',	'cn'},
-},
+_G["SoundLanguage"]={{["cue_sheet"]="Acheron",["key"]=1,["language"]="cn",["id"]=1}
+,{["cue_sheet"]="alps",["key"]=2,["language"]="cn",["id"]=2}
+,{["cue_sheet"]="Anthem",["key"]=3,["language"]="cn",["id"]=3}
+,{["cue_sheet"]="Arpeggio",["key"]=4,["language"]="cn",["id"]=4}
+,{["cue_sheet"]="Brynhild",["key"]=5,["language"]="cn",["id"]=5}
+,{["cue_sheet"]="Burtgang",["key"]=6,["language"]="cn",["id"]=6}
+,{["cue_sheet"]="Capriccio",["key"]=7,["language"]="cn",["id"]=7}
+,{["cue_sheet"]="Curtana",["key"]=8,["language"]="cn",["id"]=8}
+,{["cue_sheet"]="Direwolf",["key"]=9,["language"]="cn",["id"]=9}
+,{["cue_sheet"]="Durandal",["key"]=10,["language"]="cn",["id"]=10}
+,{["cue_sheet"]="Frost",["key"]=11,["language"]="cn",["id"]=11}
+,{["cue_sheet"]="Hurricane",["key"]=12,["language"]="cn",["id"]=12}
+,{["cue_sheet"]="Joyeuse",["key"]=13,["language"]="cn",["id"]=13}
+,{["cue_sheet"]="Kunlun",["key"]=14,["language"]="cn",["id"]=14}
+,{["cue_sheet"]="Lynx",["key"]=15,["language"]="cn",["id"]=15}
+,{["cue_sheet"]="machairodus",["key"]=16,["language"]="cn",["id"]=16}
+,{["cue_sheet"]="Megaloceros",["key"]=17,["language"]="cn",["id"]=17}
+,{["cue_sheet"]="melody",["key"]=18,["language"]="cn",["id"]=18}
+,{["cue_sheet"]="Meteor",["key"]=19,["language"]="cn",["id"]=19}
+,{["cue_sheet"]="Noctilucent",["key"]=20,["language"]="cn",["id"]=20}
+,{["cue_sheet"]="Pelorovis",["key"]=21,["language"]="cn",["id"]=21}
+,{["cue_sheet"]="Pongo",["key"]=22,["language"]="cn",["id"]=22}
+,{["cue_sheet"]="pyroxene",["key"]=23,["language"]="cn",["id"]=23}
+,{["cue_sheet"]="Queen_Bee",["key"]=24,["language"]="cn",["id"]=24}
+,{["cue_sheet"]="Rain",["key"]=25,["language"]="cn",["id"]=25}
+,{["cue_sheet"]="Rex",["key"]=26,["language"]="cn",["id"]=26}
+,{["cue_sheet"]="Sandfly",["key"]=27,["language"]="cn",["id"]=27}
+,{["cue_sheet"]="syujinko_f",["key"]=28,["language"]="cn",["id"]=28}
+,{["cue_sheet"]="syujinko_m",["key"]=29,["language"]="cn",["id"]=29}
+,{["cue_sheet"]="Talbot",["key"]=30,["language"]="cn",["id"]=30}
+,{["cue_sheet"]="Vortex",["key"]=31,["language"]="cn",["id"]=31}
+,{["cue_sheet"]="wolframite",["key"]=32,["language"]="cn",["id"]=32}
+,{["cue_sheet"]="Collapsar",["key"]=33,["language"]="cn",["id"]=33}
+,{["cue_sheet"]="Silver_Feather",["key"]=34,["language"]="cn",["id"]=34}
+,{["cue_sheet"]="Zeus",["key"]=35,["language"]="cn",["id"]=35}
+,{["cue_sheet"]="Uillean",["key"]=36,["language"]="cn",["id"]=36}
+,{["cue_sheet"]="Lepus",["key"]=37,["language"]="cn",["id"]=37}
 }
---cfgSoundLanguage = conf
-return conf
+

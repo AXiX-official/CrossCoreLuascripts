@@ -1,21 +1,9 @@
-local conf = {
-	["filename"] = 't-天赋技能相关.xlsx',
-	["sheetname"] = '副天赋开启数量',
-	["types"] = {
-'int','string','int'
-},
-	["names"] = {
-'id','key','cnt'
-},
-	["data"] = {
-{'1',	'1',	'0'},
-{'2',	'2',	'1'},
-{'3',	'3',	'2'},
-{'4',	'4',	'3'},
-{'5',	'5',	'4'},
-{'6',	'6',	'4'},
-{'7',	'7',	'4'},
-},
+_G["CfgSubTalentOpenCnt"]={{["id"]=1,["key"]="1",["cnt"]=0}
+,{["id"]=2,["key"]="2",["cnt"]=1}
+,{["id"]=3,["key"]="3",["cnt"]=2}
+,{["id"]=4,["key"]="4",["cnt"]=3}
+,{["id"]=5,["key"]="5",["cnt"]=4}
+,{["id"]=6,["key"]="6",["cnt"]=4}
+,{["id"]=7,["key"]="7",["cnt"]=4}
 }
---cfgCfgSubTalentOpenCnt = conf
-return conf
+

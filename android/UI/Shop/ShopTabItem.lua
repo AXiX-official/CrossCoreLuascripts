@@ -75,17 +75,23 @@ end
 --检测红点数据
 function SetRedInfo()
     local rd=RedPointMgr:GetData(RedPointType.Shop);
+    local rd2=RedPointMgr:GetData(RedPointType.RegressionShop);
+    local isShowRed=false;
     if rd and this.cfg then
         if rd[this.cfg.id] then
-            SetRed(true);
+            isShowRed=true
         elseif (this.cfg.group and rd[this.cfg.group] and this.cfg.isAll==1) or (rd.cTab and rd.cTab[this.cfg.id])  then
-            SetRed(true);
-        else
-            SetRed(false);
+             isShowRed=true
         end
-    else
-        SetRed(false);
     end
+    if isShowRed~=true and rd2 and this.cfg then
+        if rd2 and this.cfg and this.cfg.group==3001 then --判断是否是回归商店的子页签
+            if (rd2[this.cfg.id]) then
+                isShowRed=true
+            end
+        end
+    end
+    SetRed(isShowRed);
 end
 
 function SetNewInfo(infos)

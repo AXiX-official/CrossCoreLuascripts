@@ -1,78 +1,242 @@
-local conf = {
-	["filename"] = 'g-工会.xlsx',
-	["sheetname"] = '工会战房间',
-	["types"] = {
-'int','string','table#20','int','string','int','bool','bool','int','int','int[]','int','int','int','int','int','int[]','int[]','int','string','int[]','int[]','int','int','int','int'
-},
-	["names"] = {
-'id','key','infos','index','name','difficulty','singleJoin','multiJoin','openCostId','entryCostId','openId','score','openReawardId','openMailId','joinRewardId','joinMailId','mvpRewardId','mvpMialId','attackGoupId','previewLv','itemPreview','enemyPreview','validMin','lv','fightVal','model'
-},
-	["data"] = {
-{'1',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'1',	'1',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'1',	'1',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'1',	'1',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'1',	'1',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'1',	'1',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'1',	'1',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-{'2',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'2',	'2',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'2',	'2',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'2',	'2',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'2',	'2',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'2',	'2',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'2',	'2',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-{'3',	'3',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'3',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'3',	'3',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'3',	'3',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'3',	'3',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'3',	'3',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'3',	'3',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'3',	'3',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-{'4',	'4',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4',	'4',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'4',	'4',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'4',	'4',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'4',	'4',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'4',	'4',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'4',	'4',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'4',	'4',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-{'5',	'5',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5',	'5',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'5',	'5',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'5',	'5',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'5',	'5',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'5',	'5',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'5',	'5',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'5',	'5',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-{'6',	'6',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'6',	'6',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'6',	'6',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'6',	'6',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'6',	'6',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'6',	'6',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'6',	'6',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'6',	'6',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-{'7',	'7',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'7',	'7',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'7',	'7',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'7',	'7',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'7',	'7',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'7',	'7',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'7',	'7',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'7',	'7',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-{'8',	'8',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'8',	'8',	'',	'1',	'小怪A',	'1',	'1',	'',	'1001',	'1001',	'',	'500',	'1',	'',	'1',	'',	'1',	'',	'999901',	'1',	'18323',	'90010',	'30',	'30',	'1000',	'8008001'},
-{'8',	'8',	'',	'2',	'小怪B',	'2',	'1',	'1',	'1001',	'1001',	'',	'540',	'2',	'',	'2',	'',	'2',	'',	'999902',	'1',	'18323',	'90010',	'15',	'45',	'2000',	'8008001'},
-{'8',	'8',	'',	'3',	'小怪C',	'3',	'1',	'1',	'1001',	'1001',	'',	'5000',	'3',	'',	'3',	'',	'3',	'',	'999903',	'1',	'18323',	'90010',	'15',	'50',	'3000',	'8008001'},
-{'8',	'8',	'',	'4',	'小怪D',	'4',	'1',	'1',	'1001',	'1001',	'',	'26840',	'4',	'',	'4',	'',	'4',	'',	'999904',	'1',	'18323',	'90010',	'15',	'80',	'4000',	'8008001'},
-{'8',	'8',	'',	'5',	'小怪E',	'5',	'1',	'1',	'1001',	'1001',	'',	'51000',	'5',	'',	'5',	'',	'5',	'',	'999905',	'1',	'18323',	'90010',	'15',	'85',	'5000',	'8008001'},
-{'8',	'8',	'',	'6',	'大怪A',	'6',	'',	'1',	'1001',	'1001',	'',	'230000',	'6',	'',	'6',	'',	'6',	'',	'999906',	'1',	'18323',	'90010',	'30',	'90',	'8000',	'8008001'},
-{'8',	'8',	'',	'7',	'大怪B',	'7',	'',	'1',	'1001',	'1001',	'',	'200000',	'7',	'',	'7',	'',	'7',	'',	'999907',	'1',	'18323',	'90010',	'30',	'100',	'10000',	'8008001'},
-},
+_G["CfgGuildFightRoom"]={{["id"]=1,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
 }
---cfgCfgGuildFightRoom = conf
-return conf
+,["key"]="1"}
+,{["id"]=2,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
+}
+,["key"]="2"}
+,{["id"]=3,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
+}
+,["key"]="3"}
+,{["id"]=4,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
+}
+,["key"]="4"}
+,{["id"]=5,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
+}
+,["key"]="5"}
+,{["id"]=6,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
+}
+,["key"]="6"}
+,{["id"]=7,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
+}
+,["key"]="7"}
+,{["id"]=8,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
+,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
+,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999902,["score"]=540,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=2,["difficulty"]=2,["itemPreview"]={18323}
+,["openReawardId"]=2,["joinRewardId"]=2,["mvpRewardId"]={2}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪B"}
+,{["openCostId"]=1001,["attackGoupId"]=999903,["score"]=5000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=3,["difficulty"]=3,["itemPreview"]={18323}
+,["openReawardId"]=3,["joinRewardId"]=3,["mvpRewardId"]={3}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪C"}
+,{["openCostId"]=1001,["attackGoupId"]=999904,["score"]=26840,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=4,["difficulty"]=4,["itemPreview"]={18323}
+,["openReawardId"]=4,["joinRewardId"]=4,["mvpRewardId"]={4}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪D"}
+,{["openCostId"]=1001,["attackGoupId"]=999905,["score"]=51000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=15,["index"]=5,["difficulty"]=5,["itemPreview"]={18323}
+,["openReawardId"]=5,["joinRewardId"]=5,["mvpRewardId"]={5}
+,["multiJoin"]=true,["singleJoin"]=true,["name"]="小怪E"}
+,{["openCostId"]=1001,["attackGoupId"]=999906,["score"]=230000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=6,["difficulty"]=6,["itemPreview"]={18323}
+,["openReawardId"]=6,["joinRewardId"]=6,["mvpRewardId"]={6}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪A"}
+,{["openCostId"]=1001,["attackGoupId"]=999907,["score"]=200000,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+,["validMin"]=30,["index"]=7,["difficulty"]=7,["itemPreview"]={18323}
+,["openReawardId"]=7,["joinRewardId"]=7,["mvpRewardId"]={7}
+,["multiJoin"]=true,["singleJoin"]=false,["name"]="大怪B"}
+}
+,["key"]="8"}
+}
+

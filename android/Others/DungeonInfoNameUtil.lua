@@ -130,4 +130,20 @@ function this.TowerDeep()
     return {"Title","Score","Target","Output","Details","Button"},"TowerDeep"
 end
 
+function this.Christmas()
+    return {"Title","Level","Target","Output","Details","Double","Button"},"DungeonActivity16"
+end
+
+function this.ChristmasPlot()
+    return {"Title","Plot","Output","PlotButton"},"DungeonActivity16"
+end
+
+function this.ChristmasDanger()
+    return {"Title","Level","Target","Danger","Details","Double","Button"},"DungeonActivity16"
+end
+
+function this.ChristmasSpecial()
+    return {"Title","Level","Plot","Output","Details","Button"},"DungeonActivity16"
+end
+
 return this; 

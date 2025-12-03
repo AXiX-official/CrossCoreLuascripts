@@ -1,17 +1,14 @@
-local conf = {
-	["filename"] = 'r-任务配置表.xlsx',
-	["sheetname"] = '多队战斗入场任务',
-	["types"] = {
-'int','string','int','int','string','string','string','string','int','int[]','json','int','int'
-},
-	["names"] = {
-'id','key','index','nGroup','sName','sDescription','sOpenTime','sCloseTime','nTransferPath','aFinishIds','jAwardId','nIsHide','nRestType'
-},
-	["data"] = {
-{'1',	'1',	'1',	'1',	'累计消耗100燃料',	'累计消耗100燃料',	'2025/8/6 12:00:00',	'2025/08/13 03:00:00',	'10301',	'330001',	'[[10503,1,2]]',	'',	'1'},
-{'2',	'2',	'2',	'1',	'累计消耗200燃料',	'累计消耗200燃料',	'2025/8/6 12:00:00',	'2025/08/13 03:00:00',	'10301',	'330002',	'[[10503,1,2]]',	'',	'1'},
-{'3',	'3',	'3',	'1',	'累计消耗300燃料',	'累计消耗300燃料',	'2025/8/6 12:00:00',	'2025/08/13 03:00:00',	'10301',	'330003',	'[[10503,1,2]]',	'',	'1'},
-},
+_G["CfgMultiteamEntrance"]={{["sOpenTime"]="2025/8/6 12:00:00",["index"]=1,["id"]=1,["jAwardId"]={{10503,1,2}
 }
---cfgCfgMultiteamEntrance = conf
-return conf
+,["nRestType"]=1,["aFinishIds"]={330001}
+,["key"]="1",["sCloseTime"]="2025/08/13 03:00:00",["nTransferPath"]=10301,["sName"]="累计消耗100燃料",["sDescription"]="累计消耗100燃料",["nGroup"]=1}
+,{["sOpenTime"]="2025/8/6 12:00:00",["index"]=2,["id"]=2,["jAwardId"]={{10503,1,2}
+}
+,["nRestType"]=1,["aFinishIds"]={330002}
+,["key"]="2",["sCloseTime"]="2025/08/13 03:00:00",["nTransferPath"]=10301,["sName"]="累计消耗200燃料",["sDescription"]="累计消耗200燃料",["nGroup"]=1}
+,{["sOpenTime"]="2025/8/6 12:00:00",["index"]=3,["id"]=3,["jAwardId"]={{10503,1,2}
+}
+,["nRestType"]=1,["aFinishIds"]={330003}
+,["key"]="3",["sCloseTime"]="2025/08/13 03:00:00",["nTransferPath"]=10301,["sName"]="累计消耗300燃料",["sDescription"]="累计消耗300燃料",["nGroup"]=1}
+}
+

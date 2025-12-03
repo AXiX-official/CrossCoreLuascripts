@@ -634,7 +634,8 @@ end
 --设置出售结算信息
 function SetSellPrice(cNum,price,price2)
 	local maxNum=curDatas and #curDatas  or 0;
-	CSAPI.SetText(txt_sellNum, tostring(cNum).." / <color='#FFD426'>"..maxNum.."</color>");
+	-- CSAPI.SetText(txt_sellNum, tostring(cNum).." / <color='#FFD426'>"..maxNum.."</color>");
+	CSAPI.SetText(txt_choosie,LanguageMgr:GetByID(24040,cNum,g_EquipChooiseNum))
 	CSAPI.SetText(txt_price, tostring(price));
 	CSAPI.SetText(txt_price2, tostring(price2));
 end
@@ -673,13 +674,17 @@ function SetSellEquipInfo(equipData)
 			end
 		skillItems=skillItems or {};
 		for i=1,g_EquipMaxSkillNum  do
+			local isLock,desc=true,"";
+			if list[i]~=nil and equipData then
+				isLock,desc=equipData:GetSkillIsLock(list[i].id,i);
+			end
 			if skillItems and i <= #skillItems then
-				skillItems[i].Refresh(list[i]);
+				skillItems[i].Refresh(list[i],nil,{isLock=isLock});
 				skillItems[i].SetClickCB(OnClickSkillItem);
 			else
 				ResUtil:CreateUIGOAsync("EquipInfo/EquipSkillAttribute3",skillRoot,function(go)
 					local tab=ComUtil.GetLuaTable(go);
-					tab.Refresh(list[i]);
+					tab.Refresh(list[i],nil,{isLock=isLock});
 					tab.SetClickCB(OnClickSkillItem);
 					table.insert(skillItems,tab);
 				end);
@@ -860,7 +865,6 @@ txt_price2=nil;
 sellInAnima=nil;
 sellOutAnima=nil;
 txt_choosie=nil;
-txt_choosieNum=nil;
 txtFiltrate=nil;
 btnUD=nil;
 objSort=nil;

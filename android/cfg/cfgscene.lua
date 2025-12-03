@@ -1,306 +1,613 @@
-local conf = {
-	["filename"] = 'c-场景.xlsx',
-	["sheetname"] = '场景配置',
-	["types"] = {
-'int','string','string','string[]','int','string[]','string[]','string','string','bool','int','int','int[]','int'
-},
-	["names"] = {
-'id','key','name','res','type','views','camera_setting','bgm','bgm_boss','far_camera','item_jump','loading_type','loading_res','loading_random'
-},
-	["data"] = {
-{'301001001',	'Login',	'登录',	'',	'3',	'Login',	'',	'Sys_Login',	'',	'',	'',	'1',	'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20',	'1'},
-{'301001002',	'Battle',	'战棋',	'',	'3',	'Battle',	'',	'',	'',	'',	'',	'1',	'1',	'2'},
-{'301001003',	'Matrix',	'基地',	'',	'3',	'Matrix',	'',	'',	'',	'',	'',	'1',	'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20',	'2'},
-{'301001004',	'CharacterPreview',	'角色预览',	'Scenes/03_Outside/Main,Scenes/03_Outside/SceneSetting,Scenes/03_Outside/Effects,CharacterPreview',	'3',	'Common/CharacterPreview',	'',	'',	'',	'',	'',	'2',	'21',	''},
-{'301001005',	'Dorm',	'宿舍',	'',	'3',	'',	'',	'TEx_Sys_Hostel_bpm92_20230321',	'',	'',	'',	'',	'',	''},
-{'301001006',	'MatrixScene',	'基地资源',	'Scenes/BaseScene_Test/Main,Scenes/BaseScene_Test/SceneSetting,Scenes/BaseScene_Test/Effects',	'3',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001007',	'BS_Indoor_Command',	'',	'Scenes/BS_Indoor_Command/Main,Scenes/BS_Indoor_Command/SceneSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001008',	'BS_Indoor_Development',	'',	'Scenes/BS_Indoor_Development/Main,Scenes/BS_Indoor_Development/SceneSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001009',	'BS_Indoor_Expedition',	'',	'Scenes/BS_Indoor_Expedition/Main,Scenes/BS_Indoor_Expedition/SceneSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001010',	'BS_Indoor_Fabricate',	'',	'Scenes/BS_Indoor_Fabricate/Main,Scenes/BS_Indoor_Fabricate/SceneSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001011',	'BS_Indoor_Power',	'',	'Scenes/BS_Indoor_Power/Main,Scenes/BS_Indoor_Power/SceneSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001012',	'BS_Indoor_Synthesis',	'',	'Scenes/BS_Indoor_Synthesis/Main,Scenes/BS_Indoor_Synthesis/SceneSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001013',	'BS_Indoor_Trade',	'',	'Scenes/BS_Indoor_Trade/Main,Scenes/BS_Indoor_Trade/SceneSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'301001014',	'DormitoryScene_02',	'心理咨询室',	'Scenes/DormitoryScene_02/Main',	'',	'',	'',	'TEx_Sys_ConsultationRoom_bpm92_20230321',	'',	'',	'',	'',	'',	''},
-{'101001001',	'MajorCity',	'主城',	'Scenes/Common/Main,Scenes/Common/No_Fog',	'1',	'',	'',	'Sys_Lobby',	'',	'',	'1',	'1',	'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20',	'1'},
-{'200000000',	'test',	'空场地',	'Scenes/Common/Main,Scenes/Common/No_Fog',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'201000001',	'dirll',	'训练场',	'Scenes/DirllScenes/Main,Scenes/DirllScenes/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'201000002',	'Base',	'基地战斗场景',	'Scenes/Base/Main,Scenes/Base/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'201000003',	'ps_Outside',	'通用战斗场景',	'Scenes/ps_Outside/Main,Scenes/ps_Outside/SceneSetting,Scenes/ps_Outside/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'201000004',	'dirll_old',	'训练场（旧）',	'Scenes/dirll/Main,Scenes/dirll/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'201000005',	'DrillScenes_dark',	'训练场（黑色）',	'Scenes/DrillScenes_dark/Main,Scenes/DrillScenes_dark/SceneSetting,Scenes/DrillScenes_dark/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200001001',	'ps_Indoor_01',	'序章室内战斗场景1',	'Scenes/ps_Indoor_01/Main,Scenes/ps_Indoor_01/SceneSetting,Scenes/ps_Indoor_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200001002',	'ps_Indoor_02',	'序章室内战斗场景2',	'Scenes/ps_Indoor_02/Main,Scenes/ps_Indoor_02/SceneSetting,Scenes/ps_Indoor_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200101001',	'01_Indoor',	'第一章室内战斗场景',	'Scenes/01_Indoor/Main,Scenes/01_Indoor/SceneSetting,Scenes/01_Indoor/Effects',	'2',	'',	'',	'',	'',	'1',	'',	'',	'',	''},
-{'200101002',	'01_Indoor2',	'第一章室内战斗场景（boss特效）',	'Scenes/01_Indoor/Main,Scenes/01_Indoor/SceneSetting,Scenes/01_Indoor/Effects,Effects/common_hit/Yvaine_light_hit_Range',	'2',	'',	'',	'',	'',	'1',	'',	'',	'',	''},
-{'200102001',	'01_Outside',	'第一章室外战斗场景',	'Scenes/01_Outside/Main,Scenes/01_Outside/SceneSetting,Scenes/01_Outside/Effects,SceneSounds/amb',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200102002',	'01_Outside_Hades',	'第一章室外战斗场景哈迪斯特效',	'Scenes/01_Outside_Hades/Main,Scenes/01_Outside_Hades/SceneSetting,Scenes/01_Outside_Hades/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200102003',	'01_Outside_Ares',	'第一章室外战斗场景阿瑞斯特效',	'Scenes/01_Outside_Ares/Main,Scenes/01_Outside_Ares/SceneSetting,Scenes/01_Outside_Ares/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200102006',	'01_Outside_Boss',	'第一章室外战斗场景boss特效',	'Scenes/01_Outside_Boss/Main,Scenes/01_Outside_Boss/SceneSetting,Scenes/01_Outside_Boss/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200102004',	'01_Outside_nightfall',	'第一章室外战斗场景黄昏特效',	'Scenes/01_Outside_nightfall/Main,Scenes/01_Outside_nightfall/SceneSetting,Scenes/01_Outside_nightfall/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200102005',	'01_Outside_night',	'第一章室外战斗场景夜晚特效',	'Scenes/01_Outside_night/Main,Scenes/01_Outside_night/SceneSetting,Scenes/01_Outside_night/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200201001',	'02_Outside',	'第二章森林室外战斗场景',	'Scenes/02_Outside/Main,Scenes/02_Outside/SceneSetting,Scenes/02_Outside/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200201002',	'02_Outside_Nightfall',	'第二章森林室外战斗场景（黄昏）',	'Scenes/02_Outside_Nightfall/Main,Scenes/02_Outside_Nightfall/SceneSetting,Scenes/02_Outside_Nightfall/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200201003',	'02_Outside_Night',	'第二章森林室外战斗场景（夜晚）',	'Scenes/02_Outside_Night/Main,Scenes/02_Outside_Night/SceneSetting,Scenes/02_Outside_Night/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200202001',	'02_Indoor_01',	'第二章尼福尔海姆室内战斗场景',	'Scenes/02_Indoor_01/Main,Scenes/02_Indoor_01/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200203001',	'02_Indoor_02',	'第二章世界树室内战斗场景',	'Scenes/02_Indoor_02/Main,Scenes/02_Indoor_02/SceneSetting,Scenes/02_Indoor_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200203002',	'02_Indoor_Boss',	'第二章世界树室内战斗场景（boss特效）',	'Scenes/02_Indoor_Boss/Main,Scenes/02_Indoor_Boss/SceneSetting,Scenes/02_Indoor_Boss/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200203003',	'02_Indoor_02_Nightfall',	'第二章世界树室内战斗场景（黄昏）',	'Scenes/02_Indoor_02_Nightfall/Main,Scenes/02_Indoor_02_Nightfall/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200203004',	'02_Indoor_02_Night',	'第二章世界树室内战斗场景（夜晚）',	'Scenes/02_Indoor_02_Night/Main,Scenes/02_Indoor_02_Night/SceneSetting,Scenes/02_Indoor_02_Night/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200204001',	'02_Outside_01',	'第二章世界树室外战斗场景',	'Scenes/02_Outside_01/Main,Scenes/02_Outside_01/SceneSetting,Scenes/02_Outside_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200204002',	'02_Outside_01_Nightfall',	'第二章世界树室外战斗场景（黄昏）',	'Scenes/02_Outside_01_Nightfall/Main,Scenes/02_Outside_01_Nightfall/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200204003',	'02_Outside_01_Night',	'第二章世界树室外战斗场景（夜晚）',	'Scenes/02_Outside_01_Night/Main,Scenes/02_Outside_01_Night/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200205001',	'ContractionTower3',	'第二章塔战斗场景1',	'Scenes/ContractionTower_03/Main,Scenes/ContractionTower_03/SceneSetting,Scenes/ContractionTower_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200205002',	'ContractionTower4',	'第二章塔战斗场景2Boss关',	'Scenes/ContractionTower_04/Main,Scenes/ContractionTower_04/SceneSetting,Scenes/ContractionTower_04/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200206001',	'02_Indoor',	'第二章工厂室内战斗场景',	'Scenes/02_Indoor/Main,Scenes/02_Indoor/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200301001',	'03_Outside',	'第三章室外战斗场景（废弃）',	'Scenes/03_Outside/Main,Scenes/03_Outside/SceneSetting,Scenes/03_Outside/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200301002',	'03_Outside_01',	'第三章室外战斗场景',	'Scenes/03_Outside_01/Main,Scenes/03_Outside_01/SceneSetting,Scenes/03_Outside_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200301003',	'03_Outside_02',	'第三章室外战斗场景1',	'Scenes/03_Outside_02/Main,Scenes/03_Outside_02/SceneSetting,Scenes/03_Outside_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200302001',	'03_Indoor',	'第三章室内战斗场景',	'Scenes/03_Indoor/Main,Scenes/03_Indoor/SceneSetting,Scenes/03_Indoor/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200303001',	'03_Indoor_01',	'第三章控制中心室内战斗场景1',	'Scenes/03_Indoor_01/Main,Scenes/03_Indoor_01/SceneSetting,Scenes/03_Indoor_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200303002',	'03_Indoor_05',	'第三章控制中心室内战斗场景(奥西里斯boss)',	'Scenes/03_Indoor_05/Main,Scenes/03_Indoor_05/SceneSetting,Scenes/03_Indoor_05/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200304001',	'03_Indoor_02',	'第三章升降电梯室内战斗场景2',	'Scenes/03_Indoor_02/Main,Scenes/03_Indoor_02/SceneSetting,Scenes/03_Indoor_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200305001',	'03_Indoor_03',	'第三章升降电梯室2内战斗场景3(废弃)',	'Scenes/03_Indoor_03/Main,Scenes/03_Indoor_03/SceneSetting,Scenes/03_Indoor_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200306001',	'03_Indoor_04',	'第三章室内战斗场景4',	'Scenes/03_Indoor_04/Main,Scenes/03_Indoor_04/SceneSetting,Scenes/03_Indoor_04/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200307001',	'03_Indoor_06',	'第三章收束塔',	'Scenes/03_Indoor_06/Main,Scenes/03_Indoor_06/SceneSetting,Scenes/03_Indoor_06/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200401001',	'04_Outside_01',	'第四章室外战斗场景荒地',	'Scenes/04_Outside_01/Main,Scenes/04_Outside_01/SceneSetting,Scenes/04_Outside_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200401002',	'04_Outside_02',	'第四章室外战斗场景荒地差分',	'Scenes/04_Outside_02/Main,Scenes/04_Outside_02/SceneSetting,Scenes/04_Outside_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200402001',	'04_Outside_03',	'第四章街道',	'Scenes/04_Outside_03/Main,Scenes/04_Outside_03/SceneSetting,Scenes/04_Outside_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200402002',	'04_Outside_04',	'第四章街道建筑差分',	'Scenes/04_Outside_04/Main,Scenes/04_Outside_04/SceneSetting,Scenes/04_Outside_04/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200403001',	'04_Outside_05',	'第四章室外海岸边',	'Scenes/04_Outside_05/Main,Scenes/04_Outside_05/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200406001',	'04_Outside_06',	'第四章室外青霞原',	'Scenes/04_Outside_06/Main,Scenes/04_Outside_06/SceneSetting,Scenes/04_Outside_06/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200406002',	'04_Outside_07',	'第四章室外青霞原夜晚差分',	'Scenes/04_Outside_07/Main,Scenes/04_Outside_07/SceneSetting,Scenes/04_Outside_07/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200404001',	'04_Indoor_01',	'第四章室内榻榻米红(收束塔)',	'Scenes/04_Indoor_01/Main,Scenes/04_Indoor_01/SceneSetting,Scenes/04_Indoor_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200404002',	'04_Indoor_02',	'第四章室内榻榻米蓝(收束塔)',	'Scenes/04_Indoor_02/Main,Scenes/04_Indoor_02/SceneSetting,Scenes/04_Indoor_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200405001',	'04_Indoor_03',	'第四章室内庭院樱花差分',	'Scenes/04_Indoor_03/Main,Scenes/04_Indoor_03/SceneSetting,Scenes/04_Indoor_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200405002',	'04_Indoor_04',	'第四章室内庭院平原差分',	'Scenes/04_Indoor_04/Main,Scenes/04_Indoor_04/SceneSetting,Scenes/04_Indoor_04/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200501001',	'05_Outside_01',	'第五章室外草地旷野',	'Scenes/05_Outside_01/Main,Scenes/05_Outside_01/SceneSetting,Scenes/05_Outside_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200502001',	'Activity_Circus_04',	'第五章室外海港',	'Scenes/Activity_Circus_04/Main,Scenes/Activity_Circus_04/SceneSetting,Scenes/Activity_Circus_04/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200503001',	'05_Outside_03',	'第五章地球城市废墟早',	'Scenes/05_Outside_03/Main,Scenes/05_Outside_03/SceneSetting,Scenes/05_Outside_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200503002',	'05_Outside_04',	'第五章地球城市废墟早晚',	'Scenes/05_Outside_04/Main,Scenes/05_Outside_04/SceneSetting,Scenes/05_Outside_04/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200504001',	'05_Indoor_01',	'第五章地球基地暗',	'Scenes/05_Indoor_01/Main,Scenes/05_Indoor_01/SceneSetting,Scenes/05_Indoor_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300101001',	'EarthScene',	'剧情活动-电影惊魂-地图基地场景',	'Scenes/EarthScene/Main,Scenes/EarthScene/SceneSetting,Scenes/EarthScene/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300201001',	'StreetScene_day',	'剧情活动-迷城蛛影(万圣节)-街区场景早上',	'Scenes/StreetScene_day/Main,Scenes/StreetScene_day/SceneSetting,Scenes/StreetScene_day/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300201002',	'StreetScene_night',	'剧情活动-迷城蛛影(万圣节)-街区场景晚上',	'Scenes/StreetScene_night/Main,Scenes/StreetScene_night/SceneSetting,Scenes/StreetScene_night/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300301001',	'DrillScenes_01',	'剧情活动-绮境笺宴-警局',	'Scenes/DrillScenes_01/Main',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300302001',	'DrillScenes_02',	'剧情活动-绮境笺宴-棋盘',	'Scenes/DrillScenes_02/Main,Scenes/DrillScenes_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300303001',	'DrillScenes_03',	'剧情活动-绮境笺宴-工厂',	'Scenes/DrillScenes_03/Main,Scenes/DrillScenes_03/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300302002',	'DrillScenes_02_01',	'剧情活动-绮境笺宴-棋盘差分',	'Scenes/DrillScenes_02_01/Main',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300401001',	'Activity_01',	'夏日活动海滩竖',	'Scenes/Activity_01/Main,Scenes/Activity_01/SceneSetting,Scenes/Activity_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300401002',	'Activity_02',	'夏日活动海滩竖岩石差分',	'Scenes/Activity_02/Main,Scenes/Activity_02/SceneSetting,Scenes/Activity_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300401003',	'Activity_03',	'夏日活动海滩竖黑暗差分',	'Scenes/Activity_03/Main,Scenes/Activity_03/SceneSetting,Scenes/Activity_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300402001',	'Activity_04',	'夏日活动海滩横',	'Scenes/Activity_04/Main,Scenes/Activity_04/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300501001',	'Activity_Circus_01_day',	'奇迹之夜广场日光',	'Scenes/Activity_Circus_01_day/Main,Scenes/Activity_Circus_01_day/SceneSetting,Scenes/Activity_Circus_01_day/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300501002',	'Activity_Circus_01_night',	'奇迹之夜广场夜光',	'Scenes/Activity_Circus_01_night/Main,Scenes/Activity_Circus_01_night/SceneSetting,Scenes/Activity_Circus_01_night/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300502001',	'Activity_Circus_02',	'奇迹之夜广场日光破坏差分',	'Scenes/Activity_Circus_02/Main,Scenes/Activity_Circus_02/SceneSetting,Scenes/Activity_Circus_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300503001',	'Activity_Circus_03',	'奇迹之夜舞台',	'Scenes/Activity_Circus_03/Main,Scenes/Activity_Circus_03/SceneSetting,Scenes/Activity_Circus_03/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300601001',	'Activity_VirtualSpace',	'虚海奇谭活动虚拟空间场景',	'Scenes/Activity_VirtualSpace/Main,Scenes/Activity_VirtualSpace/SceneSetting,Scenes/Activity_VirtualSpace/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300601002',	'Activity_VirtualSpace2',	'魔法少女jarry活动虚拟空间场景',	'Scenes/Activity_VirtualSpace_01/Main,Scenes/Activity_VirtualSpace_01/SceneSetting,Scenes/Activity_VirtualSpace_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'400101001',	'Activity_Stellaris',	'双子座战斗场景',	'Scenes/Activity_Stellaris/Main,Scenes/Activity_Stellaris/SceneSetting,Scenes/Activity_Stellaris/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'400101002',	'Activity_Stellaris_blue',	'双子座战斗场景差分1',	'Scenes/Activity_Stellaris_blue/Main,Scenes/Activity_Stellaris_blue/SceneSetting,Scenes/Activity_Stellaris_blue/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'400101003',	'Activity_Stellaris_purple',	'双子座战斗场景差分2',	'Scenes/Activity_Stellaris_purple/Main,Scenes/Activity_Stellaris_purple/SceneSetting,Scenes/Activity_Stellaris_purple/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'500101001',	'ContractionTower5',	'异度空间1场景1',	'Scenes/ContractionTower_05/Main,Scenes/ContractionTower_05/SceneSetting,Scenes/ContractionTower_05/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'500101002',	'ContractionTower6',	'异度空间1场景1差分1',	'Scenes/ContractionTower_06/Main,Scenes/ContractionTower_06/SceneSetting,Scenes/ContractionTower_06/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'500101003',	'ContractionTower7',	'',	'Scenes/ContractionTower_07/Main,Scenes/ContractionTower_07/SceneSetting',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'200301004',	'Duanwu_01',	'第三章室外战斗场景Boss端午差分',	'Scenes/Duanwu_01/Main,Scenes/Duanwu_01/SceneSetting,Scenes/Duanwu_01/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'201000006',	'Duanwu_02',	'序章通用室外场景端午差分',	'Scenes/Duanwu_02/Main,Scenes/Duanwu_02/SceneSetting,Scenes/Duanwu_02/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300201003',	'Duanwu_03_day',	'剧情活动-迷城蛛影(万圣节)-街区场景端午差分早上',	'Scenes/Duanwu_03_day/Main,Scenes/Duanwu_03_day/SceneSetting,Scenes/Duanwu_03_day/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'300201004',	'Duanwu_03_night',	'剧情活动-迷城蛛影(万圣节)-街区场景端午差分晚上',	'Scenes/Duanwu_03_night/Main,Scenes/Duanwu_03_night/SceneSetting,Scenes/Duanwu_03_night/Effects',	'2',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1001',	'GridScene0_1',	'序章室外1（通用）',	'Scenes/Main_G_ps_Outside_Common/Main_G_ps_Outside_Common,Scenes/Main_G_ps_Outside_Common/SceneSetting_G_ps_Outside_Common,Scenes/Main_G_ps_Outside_Common/Effects_G_ps_Outside_Common,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1002',	'GridScene0_2',	'序章室外补充图',	'Scenes/Main_G_ps_Outside_Common_03/Main_G_ps_Outside_Common_03,Scenes/Main_G_ps_Outside_Common_03/SceneSetting_G_ps_Outside_Common_03,Scenes/Main_G_ps_Outside_Common_03/Effects_G_ps_Outside_Common_03,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1003',	'GridScene0_3',	'序章室外补充图',	'Scenes/Main_G_ps_Outside_Common_03/Main_G_ps_Outside_Common_03,Scenes/Main_G_ps_Outside_Common_03/SceneSetting_G_ps_Outside_Common_03,Scenes/Main_G_ps_Outside_Common_03/Effects_G_ps_Outside_Common_03,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1004',	'GridScene0_4',	'序章室外2通用',	'Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1005',	'GridScene0_5',	'序章室外2通用',	'Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1006',	'GridScene0A_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1007',	'GridScene0A_2',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1008',	'GridScene0B_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1009',	'GridScene0B_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1010',	'GridScene0B_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1101',	'GridScene1_1',	'第一章上荒野1(白天)',	'Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1102',	'GridScene1_2',	'第一章上荒野1(白天)',	'Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1103',	'GridScene1_3',	'第一章上荒野1(白天)',	'Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1104',	'GridScene1_4',	'第一章上据点外围(白天)',	'Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1105',	'GridScene1_5',	'第一章上据点外围(白天)',	'Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1106',	'GridScene1_6',	'第一章上据点外围(白天)',	'Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1107',	'GridScene1_7',	'第一章上荒野2(白天)',	'Scenes/Main_G_01_Outside_Day_03/Main_G_01_Outside_Day_03,Scenes/Main_G_01_Outside_Day_03/SceneSetting_G_01_Outside_Day_03,Scenes/Main_G_01_Outside_Day_03/Effects_G_01_Outside_Day_03,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1108',	'GridScene1_8',	'第一章上荒野2(白天)',	'Scenes/Main_G_01_Outside_Day_03/Main_G_01_Outside_Day_03,Scenes/Main_G_01_Outside_Day_03/SceneSetting_G_01_Outside_Day_03,Scenes/Main_G_01_Outside_Day_03/Effects_G_01_Outside_Day_03,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1109',	'GridScene1_9',	'第一章上荒野2冰(白天)',	'Scenes/Main_G_01_Outside_Day_04/Main_G_01_Outside_Day_04,Scenes/Main_G_01_Outside_Day_04/SceneSetting_G_01_Outside_Day_04,Scenes/Main_G_01_Outside_Day_04/Effects_G_01_Outside_Day_04,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1110',	'GridScene1_10',	'第一章上荒野2冰(白天)',	'Scenes/Main_G_01_Outside_Day_04/Main_G_01_Outside_Day_04,Scenes/Main_G_01_Outside_Day_04/SceneSetting_G_01_Outside_Day_04,Scenes/Main_G_01_Outside_Day_04/Effects_G_01_Outside_Day_04,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1111',	'GridScene1_11',	'第一章下补充1过道1（白天）',	'Scenes/Main_G_01_Outside_Day_08/Main_G_01_Outside_Day_08,Scenes/Main_G_01_Outside_Day_08/SceneSetting_G_01_Outside_Day_08,Scenes/Main_G_01_Outside_Day_08/Effects_G_01_Outside_Day_08,Scenes/GridSceneBgBlue08/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1112',	'GridScene1_12',	'第一张下露天基地2（哈迪斯）',	'Scenes/Main_G_01_Outside_Hades/Main_G_01_Outside_Hades,Scenes/Main_G_01_Outside_Hades/SceneSetting_G_01_Outside_Hades,Scenes/Main_G_01_Outside_Hades/Effects_G_01_Outside_Hades,Scenes/GridSceneBgHades/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1113',	'GridScene1_13',	'第一章下露天基地1(白天)',	'Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1114',	'GridScene1_14',	'第一章下补充1过道1（白天）',	'Scenes/Main_G_01_Outside_Day_08/Main_G_01_Outside_Day_08,Scenes/Main_G_01_Outside_Day_08/SceneSetting_G_01_Outside_Day_08,Scenes/Main_G_01_Outside_Day_08/Effects_G_01_Outside_Day_08,Scenes/GridSceneBgBlue08/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1115',	'GridScene1_15',	'第一章下露天基地1(白天)',	'Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1116',	'GridScene1_16',	'第一章下补充2水池1（白天）',	'Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1117',	'GridScene1_17',	'第一张下露天基地2（白天）',	'Scenes/Main_G_01_Outside_Day_06/Main_G_01_Outside_Day_06,Scenes/Main_G_01_Outside_Day_06/SceneSetting_G_01_Outside_Day_06,Scenes/Main_G_01_Outside_Day_06/Effects_G_01_Outside_Day_06,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1118',	'GridScene1_18',	'第一章下露天基地1(白天)',	'Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1119',	'GridScene1_19',	'第一章下补充2水池1（白天）',	'Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1120',	'GridScene1_20',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1121',	'GridScene1_21',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1122',	'GridScene1_22',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1123',	'GridScene1_23',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1124',	'GridScene1_24',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1125',	'GridScene1_25',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1202',	'GridScene2_2',	'1202地图',	'Scenes/Main_G_02_Indoor_01/Main_G_02_Indoor_01,Scenes/Main_G_02_Indoor_01/SceneSetting_G_02_Indoor_01,Scenes/Main_G_02_Indoor_01/Effects_G_02_Indoor_01,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1203',	'GridScene2_3',	'1203',	'Scenes/Main_G_02_Outside_01/Main_G_02_Outside_01,Scenes/Main_G_02_Outside_01/SceneSetting_G_02_Outside_01,Scenes/Main_G_02_Outside_01/Effects_G_02_Outside_01,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1204',	'GridScene2_4',	'1204',	'Scenes/Main_G_02_Outside_02/Main_G_02_Outside_02,Scenes/Main_G_02_Outside_02/SceneSetting_G_02_Outside_02,Scenes/Main_G_02_Outside_02/Effects_G_02_Outside_02,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1205',	'GridScene2_5',	'1205',	'Scenes/Main_G_02_Outside_03/Main_G_02_Outside_03,Scenes/Main_G_02_Outside_03/SceneSetting_G_02_Outside_03,Scenes/Main_G_02_Outside_03/Effects_G_02_Outside_03,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1206',	'GridScene2_6',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1208',	'GridScene2_8',	'1208',	'Scenes/Main_G_02_Indoor_03/Main_G_02_Indoor_03,Scenes/Main_G_02_Indoor_03/SceneSetting_G_02_Indoor_03,Scenes/Main_G_02_Indoor_03/Effects_G_02_Indoor_03,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1209',	'GridScene2_9',	'1209',	'Scenes/Main_G_02_Outside_04/Main_G_02_Outside_04,Scenes/Main_G_02_Outside_04/SceneSetting_G_02_Outside_04,Scenes/Main_G_02_Outside_04/Effects_G_02_Outside_04,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1211',	'GridScene2_9',	'1211',	'Scenes/Main_G_02_Outside_05/Main_G_02_Outside_05,Scenes/Main_G_02_Outside_05/SceneSetting_G_02_Outside_05,Scenes/Main_G_02_Outside_05/Effects_G_02_Outside_05,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1212',	'GridScene2_12',	'1212地图',	'Scenes/Main_G_02_Indoor_04/Main_G_02_Indoor_04,Scenes/Main_G_02_Indoor_04/SceneSetting_G_02_Indoor_04,Scenes/Main_G_02_Indoor_04/Effects_G_02_Indoor_04,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1213',	'GridScene2_13',	'1213地图',	'Scenes/Main_G_02_Indoor_05/Main_G_02_Indoor_05,Scenes/Main_G_02_Indoor_05/SceneSetting_G_02_Indoor_05,Scenes/Main_G_02_Indoor_05/Effects_G_02_Indoor_05,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1214',	'GridScene2_14',	'1214地图',	'Scenes/Main_G_02_Indoor_06/Main_G_02_Indoor_06,Scenes/Main_G_02_Indoor_06/SceneSetting_G_02_Indoor_06,Scenes/Main_G_02_Indoor_06/Effects_G_02_Indoor_06,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1215',	'GridScene2_14',	'1215',	'Scenes/Main_G_02_Outside_06/Main_G_02_Outside_06,Scenes/Main_G_02_Outside_06/SceneSetting_G_02_Outside_06,Scenes/Main_G_02_Outside_06/Effects_G_02_Outside_06,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1216',	'GridScene2_14',	'1216',	'Scenes/Main_G_02_Outside_07/Main_G_02_Outside_07,Scenes/Main_G_02_Outside_07/SceneSetting_G_02_Outside_07,Scenes/Main_G_02_Outside_07/Effects_G_02_Outside_07,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1217',	'GridScene2_14',	'1217',	'Scenes/Main_G_02_Outside_08/Main_G_02_Outside_08,Scenes/Main_G_02_Outside_08/SceneSetting_G_02_Outside_08,Scenes/Main_G_02_Outside_08/Effects_G_02_Outside_08,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1218',	'GridScene2_18',	'1218地图',	'Scenes/Main_G_02_Indoor_07/Main_G_02_Indoor_07,Scenes/Main_G_02_Indoor_07/SceneSetting_G_02_Indoor_07,Scenes/Main_G_02_Indoor_07/Effects_G_02_Indoor_07,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1219',	'GridScene2_19',	'1219地图',	'Scenes/Main_G_02_Indoor_08/Main_G_02_Indoor_08,Scenes/Main_G_02_Indoor_08/SceneSetting_G_02_Indoor_08,Scenes/Main_G_02_Indoor_08/Effects_G_02_Indoor_08,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1220',	'GridScene2_20',	'1220地图',	'Scenes/Main_G_02_Indoor_09/Main_G_02_Indoor_09,Scenes/Main_G_02_Indoor_09/SceneSetting_G_02_Indoor_09,Scenes/Main_G_02_Indoor_09/Effects_G_02_Indoor_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1221',	'GridScene2_21',	'1221地图',	'Scenes/Main_G_02_Indoor_10/Main_G_02_Indoor_10,Scenes/Main_G_02_Indoor_10/SceneSetting_G_02_Indoor_10,Scenes/Main_G_02_Indoor_10/Effects_G_02_Indoor_10,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1222',	'GridScene2_22',	'1222地图',	'Scenes/Main_G_02_Indoor_11/Main_G_02_Indoor_11,Scenes/Main_G_02_Indoor_11/SceneSetting_G_02_Indoor_11,Scenes/Main_G_02_Indoor_11/Effects_G_02_Indoor_11,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1223',	'GridScene2_23',	'1223地图',	'Scenes/Main_G_02_Indoor_12/Main_G_02_Indoor_12,Scenes/Main_G_02_Indoor_12/SceneSetting_G_02_Indoor_12,Scenes/Main_G_02_Indoor_12/Effects_G_02_Indoor_12,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1224',	'GridScene2_24',	'1224地图',	'Scenes/Main_G_02_Indoor_13/Main_G_02_Indoor_13,Scenes/Main_G_02_Indoor_13/SceneSetting_G_02_Indoor_13,Scenes/Main_G_02_Indoor_13/Effects_G_02_Indoor_13,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'1225',	'GridScene2_25',	'1225地图',	'Scenes/Main_G_02_Indoor_14/Main_G_02_Indoor_14,Scenes/Main_G_02_Indoor_14/SceneSetting_G_02_Indoor_14,Scenes/Main_G_02_Indoor_14/Effects_G_02_Indoor_14,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'99999992',	'GridScene0A_4',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2001',	'HardScene0_1',	'序章室外1（通用）',	'Scenes/Main_G_ps_Outside_Common/Main_G_ps_Outside_Common,Scenes/Main_G_ps_Outside_Common/SceneSetting_G_ps_Outside_Common,Scenes/Main_G_ps_Outside_Common/Effects_G_ps_Outside_Common,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2002',	'HardScene0_2',	'序章室外补充图（黄昏）',	'Scenes/Main_G_ps_Outside_Nightfall_03/Main_G_ps_Outside_Nightfall_03,Scenes/Main_G_ps_Outside_Nightfall_03/SceneSetting_G_ps_Outside_Nightfall_03,Scenes/Main_G_ps_Outside_Nightfall_03/Effects_G_ps_Outside_Nightfall_03,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2003',	'HardScene0_3',	'序章室外补充图（黄昏）',	'Scenes/Main_G_ps_Outside_Nightfall_03/Main_G_ps_Outside_Nightfall_03,Scenes/Main_G_ps_Outside_Nightfall_03/SceneSetting_G_ps_Outside_Nightfall_03,Scenes/Main_G_ps_Outside_Nightfall_03/Effects_G_ps_Outside_Nightfall_03,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2004',	'HardScene0_4',	'序章室外2通用',	'Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2005',	'HardScene0_5',	'序章室外2通用',	'Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02,Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2006',	'HardScene0_6',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2007',	'HardScene0_7',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2008',	'HardScene0_8',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2009',	'HardScene0_9',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2010',	'HardScene0_10',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2101',	'HardScene1_1',	'第一章上荒野1(白天)',	'Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01,Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2102',	'HardScene1_2',	'第一章上荒野1(黄昏)',	'Scenes/Main_G_01_Outside_Nightfall_01/Main_G_01_Outside_Nightfall_01,Scenes/Main_G_01_Outside_Nightfall_01/SceneSetting_G_01_Outside_Nightfall_01,Scenes/Main_G_01_Outside_Nightfall_01/Effects_G_01_Outside_Nightfall_01,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2103',	'HardScene1_3',	'第一章上荒野1(夜)',	'Scenes/Main_G_01_Outside_Night_01/Main_G_01_Outside_Night_01,Scenes/Main_G_01_Outside_Night_01/SceneSetting_G_01_Outside_Night_01,Scenes/Main_G_01_Outside_Night_01/Effects_G_01_Outside_Night_01,Scenes/GridSceneBgNight02/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2104',	'HardScene1_4',	'第一章上据点外围(白天)',	'Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2105',	'HardScene1_5',	'第一章上据点外围(黄昏)',	'Scenes/Main_G_01_Outside_Nightfall_02/Main_G_01_Outside_Nightfall_02,Scenes/Main_G_01_Outside_Nightfall_02/SceneSetting_G_01_Outside_Nightfall_02,Scenes/Main_G_01_Outside_Nightfall_02/Effects_G_01_Outside_Nightfall_02,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2106',	'HardScene1_6',	'第一章上据点外围(夜晚)',	'Scenes/Main_G_01_Outside_Night_02/Main_G_01_Outside_Night_02,Scenes/Main_G_01_Outside_Night_02/SceneSetting_G_01_Outside_Night_02,Scenes/Main_G_01_Outside_Night_02/Effects_G_01_Outside_Night_02,Scenes/GridSceneBgNight02/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2107',	'HardScene1_7',	'第一章上荒野2(黄昏)',	'Scenes/Main_G_01_Outside_Nightfall_03/Main_G_01_Outside_Nightfall_03,Scenes/Main_G_01_Outside_Nightfall_03/SceneSetting_G_01_Outside_Nightfall_03,Scenes/Main_G_01_Outside_Nightfall_03/Effects_G_01_Outside_Nightfall_03,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2108',	'HardScene1_8',	'第一章上荒野2(夜)',	'Scenes/Main_G_01_Outside_Night_03/Main_G_01_Outside_Night_03,Scenes/Main_G_01_Outside_Night_03/SceneSetting_G_01_Outside_Night_03,Scenes/Main_G_01_Outside_Night_03/Effects_G_01_Outside_Night_03,Scenes/GridSceneBgNight02/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2109',	'HardScene1_9',	'第一章上荒野2冰(黄昏)',	'Scenes/Main_G_01_Outside_Nightfall_04/Main_G_01_Outside_Nightfall_04,Scenes/Main_G_01_Outside_Nightfall_04/SceneSetting_G_01_Outside_Nightfall_04,Scenes/Main_G_01_Outside_Nightfall_04/Effects_G_01_Outside_Nightfall_04,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2110',	'HardScene1_10',	'第一章上荒野2冰(夜)',	'Scenes/Main_G_01_Outside_Night_04/Main_G_01_Outside_Night_04,Scenes/Main_G_01_Outside_Night_04/SceneSetting_G_01_Outside_Night_04,Scenes/Main_G_01_Outside_Night_04/Effects_G_01_Outside_Night_04,Scenes/GridSceneBgNight02/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2111',	'HardScene1_11',	'第一章下补充1过道1（黄昏）',	'Scenes/Main_G_01_Outside_Nightfall_08/Main_G_01_Outside_Nightfall_08,Scenes/Main_G_01_Outside_Nightfall_08/SceneSetting_G_01_Outside_Nightfall_08,Scenes/Main_G_01_Outside_Nightfall_08/Effects_G_01_Outside_Nightfall_08,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2112',	'HardScene1_12',	'第一张下露天基地2（哈迪斯）',	'Scenes/Main_G_01_Outside_Hades/Main_G_01_Outside_Hades,Scenes/Main_G_01_Outside_Hades/SceneSetting_G_01_Outside_Hades,Scenes/Main_G_01_Outside_Hades/Effects_G_01_Outside_Hades,Scenes/GridSceneBgHades/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2113',	'HardScene1_13',	'第一章下露天基地1(黄昏)',	'Scenes/Main_G_01_Outside_Nightfall_05/Main_G_01_Outside_Nightfall_05,Scenes/Main_G_01_Outside_Nightfall_05/SceneSetting_G_01_Outside_Nightfall_05,Scenes/Main_G_01_Outside_Nightfall_05/Effects_G_01_Outside_Nightfall_05,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2114',	'HardScene1_14',	'第一章下补充1过道1（夜）',	'Scenes/Main_G_01_Outside_Night_08/Main_G_01_Outside_Night_08,Scenes/Main_G_01_Outside_Night_08/SceneSetting_G_01_Outside_Night_08,Scenes/Main_G_01_Outside_Night_08/Effects_G_01_Outside_Night_08,Scenes/GridSceneBgNight02/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2115',	'HardScene1_15',	'第一章下露天基地1(夜)',	'Scenes/Main_G_01_Outside_Night_05/Main_G_01_Outside_Night_05,Scenes/Main_G_01_Outside_Night_05/SceneSetting_G_01_Outside_Night_05,Scenes/Main_G_01_Outside_Night_05/Effects_G_01_Outside_Night_05,Scenes/GridSceneBgNight02/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2116',	'HardScene1_16',	'第一章下补充2水池1（白天）',	'Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2117',	'HardScene1_17',	'第一张下露天基地2（黄昏）',	'Scenes/Main_G_01_Outside_Nightfall_06/Main_G_01_Outside_Nightfall_06,Scenes/Main_G_01_Outside_Nightfall_06/SceneSetting_G_01_Outside_Nightfall_06,Scenes/Main_G_01_Outside_Nightfall_06/Effects_G_01_Outside_Nightfall_06,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2118',	'HardScene1_18',	'第一章下露天基地1(夜)',	'Scenes/Main_G_01_Outside_Night_05/Main_G_01_Outside_Night_05,Scenes/Main_G_01_Outside_Night_05/SceneSetting_G_01_Outside_Night_05,Scenes/Main_G_01_Outside_Night_05/Effects_G_01_Outside_Night_05,Scenes/GridSceneBgNight02/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2119',	'HardScene1_19',	'第一章下补充2水池1（黄昏）',	'Scenes/Main_G_01_Outside_Nightfall_07/Main_G_01_Outside_Nightfall_07,Scenes/Main_G_01_Outside_Nightfall_07/SceneSetting_G_01_Outside_Nightfall_07,Scenes/Main_G_01_Outside_Nightfall_07/Effects_G_01_Outside_Nightfall_07,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2120',	'HardScene1_20',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2121',	'HardScene1_21',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2122',	'HardScene1_22',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2123',	'HardScene1_23',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2124',	'HardScene1_24',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'2125',	'HardScene1_25',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3101',	'MaterialScene1_1',	'序章室外2白天',	'Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front,Scenes/GridSceneBgDay/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3102',	'MaterialScene1_2',	'序章室外2白天',	'Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front,Scenes/GridSceneBgDay/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3103',	'MaterialScene1_3',	'序章室外2白天',	'Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front,Scenes/GridSceneBgDay/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3104',	'MaterialScene1_4',	'序章室外2白天',	'Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front,Scenes/GridSceneBgDay/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3105',	'MaterialScene1_5',	'序章室外2白天',	'Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front,Scenes/GridSceneBgDay/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3106',	'MaterialScene1_4',	'序章室外2白天',	'Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front,Scenes/GridSceneBgDay/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3107',	'MaterialScene1_5',	'序章室外2白天',	'Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02,Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front,Scenes/GridSceneBgDay/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3201',	'MaterialScene2_1',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3202',	'MaterialScene2_2',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3203',	'MaterialScene2_3',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3204',	'MaterialScene2_4',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3205',	'MaterialScene2_5',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3206',	'MaterialScene2_4',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3207',	'MaterialScene2_5',	'序章室外2黄昏',	'Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02,Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front,Scenes/GridSceneBgNightfall/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3301',	'MaterialScene3_1',	'序章室外2夜晚',	'Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front,Scenes/GridSceneBgNight01/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3302',	'MaterialScene3_2',	'序章室外2夜晚',	'Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front,Scenes/GridSceneBgNight01/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3303',	'MaterialScene3_3',	'序章室外2夜晚',	'Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front,Scenes/GridSceneBgNight01/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3304',	'MaterialScene3_4',	'序章室外2夜晚',	'Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front,Scenes/GridSceneBgNight01/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3305',	'MaterialScene3_5',	'序章室外2夜晚',	'Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front,Scenes/GridSceneBgNight01/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3306',	'MaterialScene3_4',	'序章室外2夜晚',	'Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front,Scenes/GridSceneBgNight01/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3307',	'MaterialScene3_5',	'序章室外2夜晚',	'Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02,Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front,Scenes/GridSceneBgNight01/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4101',	'ChipScene1_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4102',	'ChipScene1_2',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4103',	'ChipScene1_3',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4104',	'ChipScene1_4',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4105',	'ChipScene1_5',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4106',	'ChipScene1_6',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4107',	'ChipScene1_7',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4201',	'ChipScene2_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4202',	'ChipScene2_2',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4203',	'ChipScene2_3',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4204',	'ChipScene2_4',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4205',	'ChipScene2_5',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4206',	'ChipScene2_6',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4207',	'ChipScene2_7',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4301',	'ChipScene3_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4302',	'ChipScene3_2',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4303',	'ChipScene3_3',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4304',	'ChipScene3_4',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4305',	'ChipScene3_5',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4306',	'ChipScene3_6',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'4307',	'ChipScene3_7',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5101',	'SkillScene1_1',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5102',	'SkillScene1_2',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5103',	'SkillScene1_3',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5104',	'SkillScene1_4',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5105',	'SkillScene1_5',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5106',	'SkillScene1_6',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'5107',	'SkillScene1_7',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'8001',	'Tutorial0_1',	'序章室外1（通用）',	'Scenes/Main_G_ps_Outside_Common/Main_G_ps_Outside_Common,Scenes/Main_G_ps_Outside_Common/SceneSetting_G_ps_Outside_Common,Scenes/Main_G_ps_Outside_Common/Effects_G_ps_Outside_Common,Scenes/GridSceneBgCommon/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'8002',	'GridScene0A_2',	'序章室内',	'Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day,Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day,Scenes/GridSceneBgGray/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10001',	'ClimbingTower1_1',	'第一章上据点外围(白天)',	'Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02,Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10002',	'ClimbingTower1_2',	'第一章上荒野2冰(白天)',	'Scenes/Main_G_01_Outside_Day_04/Main_G_01_Outside_Day_04,Scenes/Main_G_01_Outside_Day_04/SceneSetting_G_01_Outside_Day_04,Scenes/Main_G_01_Outside_Day_04/Effects_G_01_Outside_Day_04,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10003',	'ClimbingTower1_3',	'第一章下露天基地1(白天)',	'Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05,Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10004',	'ClimbingTower1_4',	'第一章下补充1过道1（白天）',	'Scenes/Main_G_01_Outside_Day_08/Main_G_01_Outside_Day_08,Scenes/Main_G_01_Outside_Day_08/SceneSetting_G_01_Outside_Day_08,Scenes/Main_G_01_Outside_Day_08/Effects_G_01_Outside_Day_08,Scenes/GridSceneBgBlue08/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10005',	'ClimbingTower1_5',	'第一章下补充2水池1（白天）',	'Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07,Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10006',	'ClimbingTower1_6',	'第一章收束塔上升场地',	'Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01,Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01,Scenes/GridSceneBgTower/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10101',	'ClimbingTower2_1',	'1202地图',	'Scenes/Main_G_02_Indoor_01/Main_G_02_Indoor_01,Scenes/Main_G_02_Indoor_01/SceneSetting_G_02_Indoor_01,Scenes/Main_G_02_Indoor_01/Effects_G_02_Indoor_01,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10102',	'ClimbingTower2_2',	'1209',	'Scenes/Main_G_02_Outside_04/Main_G_02_Outside_04,Scenes/Main_G_02_Outside_04/SceneSetting_G_02_Outside_04,Scenes/Main_G_02_Outside_04/Effects_G_02_Outside_04,Scenes/GridSceneBgForest/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10103',	'ClimbingTower2_3',	'1213地图',	'Scenes/Main_G_02_Indoor_05/Main_G_02_Indoor_05,Scenes/Main_G_02_Indoor_05/SceneSetting_G_02_Indoor_05,Scenes/Main_G_02_Indoor_05/Effects_G_02_Indoor_05,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10104',	'ClimbingTower2_4',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10105',	'ClimbingTower2_5',	'1224地图',	'Scenes/Main_G_02_Indoor_13/Main_G_02_Indoor_13,Scenes/Main_G_02_Indoor_13/SceneSetting_G_02_Indoor_13,Scenes/Main_G_02_Indoor_13/Effects_G_02_Indoor_13,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10106',	'ClimbingTower2_6',	'1225地图',	'Scenes/Main_G_02_Indoor_14/Main_G_02_Indoor_14,Scenes/Main_G_02_Indoor_14/SceneSetting_G_02_Indoor_14,Scenes/Main_G_02_Indoor_14/Effects_G_02_Indoor_14,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10201',	'ClimbingTower3_1',	'10201地图',	'Scenes/Main_G_03_Outside_01/Main_G_03_Outside_01,Scenes/Main_G_03_Outside_01/SceneSetting_G_03_Outside_01,Scenes/Main_G_03_Outside_01/Effects_G_03_Outside_01,Scenes/GridSceneBgIndoor03/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10202',	'ClimbingTower3_2',	'10202地图',	'Scenes/Main_G_03_Indoor_05/Main_G_03_Indoor_05,Scenes/Main_G_03_Indoor_05/SceneSetting_G_03_Indoor_05,Scenes/Main_G_03_Indoor_05/Effects_G_03_Indoor_05,Scenes/GridSceneBgIndoor03/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10203',	'ClimbingTower3_3',	'10203地图',	'Scenes/Main_G_03_Outside_02/Main_G_03_Outside_02,Scenes/Main_G_03_Outside_02/SceneSetting_G_03_Outside_02,Scenes/Main_G_03_Outside_02/Effects_G_03_Outside_02,Scenes/GridSceneBgIndoor03/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10204',	'ClimbingTower3_4',	'10204地图',	'Scenes/Main_G_03_Indoor_06/Main_G_03_Indoor_06,Scenes/Main_G_03_Indoor_06/SceneSetting_G_03_Indoor_06,Scenes/Main_G_03_Indoor_06/Effects_G_03_Indoor_06,Scenes/GridSceneBgIndoor03/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10205',	'ClimbingTower3_5',	'10205地图',	'Scenes/Main_G_03_Outside_03/Main_G_03_Outside_03,Scenes/Main_G_03_Outside_03/SceneSetting_G_03_Outside_03,Scenes/Main_G_03_Outside_03/Effects_G_03_Outside_03,Scenes/GridSceneBgIndoor03/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10206',	'ClimbingTower3_6',	'10206地图',	'Scenes/Main_G_03_Outside_04/Main_G_03_Outside_04,Scenes/Main_G_03_Outside_04/SceneSetting_G_03_Outside_04,Scenes/Main_G_03_Outside_04/Effects_G_03_Outside_04,Scenes/GridSceneBgIndoor03/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12301',	'ClimbingTower2_5',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12302',	'ClimbingTower2_6',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12303',	'ClimbingTower2_1',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12304',	'ClimbingTower2_2',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12305',	'ClimbingTower2_3',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12306',	'ClimbingTower2_4',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12307',	'ClimbingTower2_5',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12308',	'ClimbingTower2_6',	'第一章下补充3宙斯场地',	'Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09,Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09,Scenes/GridSceneBgBlue/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12501',	'ClimbingTower8002_1',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12502',	'ClimbingTower8002_2',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12503',	'ClimbingTower8002_3',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12504',	'ClimbingTower8002_4',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12505',	'ClimbingTower8002_5',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12506',	'ClimbingTower8002_6',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12507',	'ClimbingTower8002_7',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12508',	'ClimbingTower8002_8',	'12501奇迹之夜地图',	'Scenes/Main_G_Circus_01/Main_G_Circus_01,Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01,Scenes/Main_G_Circus_01/Effects_G_Circus_01,Scenes/GridSceneBgCircus/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12901',	'ClimbingTower8002_1',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12902',	'ClimbingTower8002_2',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12903',	'ClimbingTower8002_3',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12904',	'ClimbingTower8002_4',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12905',	'ClimbingTower8002_5',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12906',	'ClimbingTower8002_6',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12907',	'ClimbingTower8002_7',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'12908',	'ClimbingTower8002_8',	'12901虚海奇谭试炼地图',	'Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01,Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01,Scenes/GridSceneBgVirtualSpace/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121001',	'Thor121001_1',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121002',	'Thor121001_2',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121003',	'Thor121001_3',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121004',	'Thor121001_4',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121005',	'Thor121001_5',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121006',	'Thor121001_6',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121007',	'Thor121001_7',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'121008',	'Thor121001_8',	'1206',	'Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02,Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02,Scenes/GridSceneBgIndoor/bg',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-},
+_G["scene"]={[400101002]={["type"]=2,["name"]="双子座战斗场景差分1",["id"]=400101002,["res"]={"Scenes/Activity_Stellaris_blue/Main","Scenes/Activity_Stellaris_blue/SceneSetting","Scenes/Activity_Stellaris_blue/Effects"}
+,["key"]="Activity_Stellaris_blue",["far_camera"]=false}
+,[201000003]={["type"]=2,["name"]="通用战斗场景",["id"]=201000003,["res"]={"Scenes/ps_Outside/Main","Scenes/ps_Outside/SceneSetting","Scenes/ps_Outside/Effects"}
+,["key"]="ps_Outside",["far_camera"]=false}
+,[300701001]={["type"]=2,["name"]="冬日速递室外平地早",["id"]=300701001,["res"]={"Scenes/Activity_05_day/Main","Scenes/Activity_05_day/SceneSetting"}
+,["key"]="Activity_05_day",["far_camera"]=false}
+,[121008]={["far_camera"]=false,["name"]="1206",["id"]=121008,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_8"}
+,[200203004]={["type"]=2,["name"]="第二章世界树室内战斗场景（夜晚）",["id"]=200203004,["res"]={"Scenes/02_Indoor_02_Night/Main","Scenes/02_Indoor_02_Night/SceneSetting","Scenes/02_Indoor_02_Night/Effects"}
+,["key"]="02_Indoor_02_Night",["far_camera"]=false}
+,[10104]={["far_camera"]=false,["name"]="1206",["id"]=10104,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="ClimbingTower2_4"}
+,[301001007]={["far_camera"]=false,["key"]="BS_Indoor_Command",["id"]=301001007,["res"]={"Scenes/BS_Indoor_Command/Main","Scenes/BS_Indoor_Command/SceneSetting"}
 }
---cfgscene = conf
-return conf
+,[200301002]={["type"]=2,["name"]="第三章室外战斗场景",["id"]=200301002,["res"]={"Scenes/03_Outside_01/Main","Scenes/03_Outside_01/SceneSetting","Scenes/03_Outside_01/Effects"}
+,["key"]="03_Outside_01",["far_camera"]=false}
+,[101001001]={["item_jump"]=1,["type"]=1,["bgm"]="Sys_Lobby",["id"]=101001001,["far_camera"]=false,["key"]="MajorCity",["loading_res"]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}
+,["loading_random"]=1,["res"]={"Scenes/Common/Main","Scenes/Common/No_Fog"}
+,["name"]="主城",["loading_type"]=1}
+,[200303002]={["type"]=2,["name"]="第三章控制中心室内战斗场景(奥西里斯boss)",["id"]=200303002,["res"]={"Scenes/03_Indoor_05/Main","Scenes/03_Indoor_05/SceneSetting","Scenes/03_Indoor_05/Effects"}
+,["key"]="03_Indoor_05",["far_camera"]=false}
+,[5104]={["far_camera"]=false,["name"]="序章室内",["id"]=5104,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="SkillScene1_4"}
+,[5106]={["far_camera"]=false,["name"]="序章室内",["id"]=5106,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="SkillScene1_6"}
+,[10204]={["far_camera"]=false,["name"]="10204地图",["id"]=10204,["res"]={"Scenes/Main_G_03_Indoor_06/Main_G_03_Indoor_06","Scenes/Main_G_03_Indoor_06/SceneSetting_G_03_Indoor_06","Scenes/Main_G_03_Indoor_06/Effects_G_03_Indoor_06","Scenes/GridSceneBgIndoor03/bg"}
+,["key"]="ClimbingTower3_4"}
+,[4102]={["far_camera"]=false,["name"]="序章室内",["id"]=4102,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene1_2"}
+,[4104]={["far_camera"]=false,["name"]="序章室内",["id"]=4104,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene1_4"}
+,[4106]={["far_camera"]=false,["name"]="序章室内",["id"]=4106,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene1_6"}
+,[300302002]={["type"]=2,["name"]="剧情活动-绮境笺宴-棋盘差分",["id"]=300302002,["res"]={"Scenes/DrillScenes_02_01/Main"}
+,["key"]="DrillScenes_02_01",["far_camera"]=false}
+,[12304]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12304,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_2"}
+,[12308]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12308,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_6"}
+,[400101003]={["type"]=2,["name"]="双子座战斗场景差分2",["id"]=400101003,["res"]={"Scenes/Activity_Stellaris_purple/Main","Scenes/Activity_Stellaris_purple/SceneSetting","Scenes/Activity_Stellaris_purple/Effects"}
+,["key"]="Activity_Stellaris_purple",["far_camera"]=false}
+,[300701002]={["type"]=2,["name"]="冬日速递室外平地晚烟花",["id"]=300701002,["res"]={"Scenes/Activity_05_night/Main","Scenes/Activity_05_night/SceneSetting","Scenes/Activity_05_night/Effects"}
+,["key"]="Activity_05_night",["far_camera"]=false}
+,[3101]={["far_camera"]=false,["name"]="序章室外2白天",["id"]=3101,["res"]={"Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front","Scenes/GridSceneBgDay/bg"}
+,["key"]="MaterialScene1_1"}
+,[3102]={["far_camera"]=false,["name"]="序章室外2白天",["id"]=3102,["res"]={"Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front","Scenes/GridSceneBgDay/bg"}
+,["key"]="MaterialScene1_2"}
+,[3103]={["far_camera"]=false,["name"]="序章室外2白天",["id"]=3103,["res"]={"Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front","Scenes/GridSceneBgDay/bg"}
+,["key"]="MaterialScene1_3"}
+,[3104]={["far_camera"]=false,["name"]="序章室外2白天",["id"]=3104,["res"]={"Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front","Scenes/GridSceneBgDay/bg"}
+,["key"]="MaterialScene1_4"}
+,[3105]={["far_camera"]=false,["name"]="序章室外2白天",["id"]=3105,["res"]={"Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front","Scenes/GridSceneBgDay/bg"}
+,["key"]="MaterialScene1_5"}
+,[3106]={["far_camera"]=false,["name"]="序章室外2白天",["id"]=3106,["res"]={"Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front","Scenes/GridSceneBgDay/bg"}
+,["key"]="MaterialScene1_4"}
+,[3107]={["far_camera"]=false,["name"]="序章室外2白天",["id"]=3107,["res"]={"Scenes/Main_G_ps_Outside_Day_02/Main_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/SceneSetting_G_ps_Outside_Day_02","Scenes/Main_G_ps_Outside_Day_02/Effects_G_ps_Outside_Day_02_Front","Scenes/GridSceneBgDay/bg"}
+,["key"]="MaterialScene1_5"}
+,[200503002]={["type"]=2,["name"]="第五章地球城市废墟早晚",["id"]=200503002,["res"]={"Scenes/05_Outside_04/Main","Scenes/05_Outside_04/SceneSetting","Scenes/05_Outside_04/Effects"}
+,["key"]="05_Outside_04",["far_camera"]=false}
+,[301001008]={["far_camera"]=false,["key"]="BS_Indoor_Development",["id"]=301001008,["res"]={"Scenes/BS_Indoor_Development/Main","Scenes/BS_Indoor_Development/SceneSetting"}
+}
+,[300201001]={["type"]=2,["name"]="剧情活动-迷城蛛影(万圣节)-街区场景早上",["id"]=300201001,["res"]={"Scenes/StreetScene_day/Main","Scenes/StreetScene_day/SceneSetting","Scenes/StreetScene_day/Effects"}
+,["key"]="StreetScene_day",["far_camera"]=false}
+,[200001001]={["type"]=2,["name"]="序章室内战斗场景1",["id"]=200001001,["res"]={"Scenes/ps_Indoor_01/Main","Scenes/ps_Indoor_01/SceneSetting","Scenes/ps_Indoor_01/Effects"}
+,["key"]="ps_Indoor_01",["far_camera"]=false}
+,[2101]={["far_camera"]=false,["name"]="第一章上荒野1(白天)",["id"]=2101,["res"]={"Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01","Scenes/GridSceneBgBlue/bg"}
+,["key"]="HardScene1_1"}
+,[2102]={["far_camera"]=false,["name"]="第一章上荒野1(黄昏)",["id"]=2102,["res"]={"Scenes/Main_G_01_Outside_Nightfall_01/Main_G_01_Outside_Nightfall_01","Scenes/Main_G_01_Outside_Nightfall_01/SceneSetting_G_01_Outside_Nightfall_01","Scenes/Main_G_01_Outside_Nightfall_01/Effects_G_01_Outside_Nightfall_01","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_2"}
+,[2103]={["far_camera"]=false,["name"]="第一章上荒野1(夜)",["id"]=2103,["res"]={"Scenes/Main_G_01_Outside_Night_01/Main_G_01_Outside_Night_01","Scenes/Main_G_01_Outside_Night_01/SceneSetting_G_01_Outside_Night_01","Scenes/Main_G_01_Outside_Night_01/Effects_G_01_Outside_Night_01","Scenes/GridSceneBgNight02/bg"}
+,["key"]="HardScene1_3"}
+,[2104]={["far_camera"]=false,["name"]="第一章上据点外围(白天)",["id"]=2104,["res"]={"Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02","Scenes/GridSceneBgBlue/bg"}
+,["key"]="HardScene1_4"}
+,[4202]={["far_camera"]=false,["name"]="序章室内",["id"]=4202,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene2_2"}
+,[4204]={["far_camera"]=false,["name"]="序章室内",["id"]=4204,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene2_4"}
+,[2107]={["far_camera"]=false,["name"]="第一章上荒野2(黄昏)",["id"]=2107,["res"]={"Scenes/Main_G_01_Outside_Nightfall_03/Main_G_01_Outside_Nightfall_03","Scenes/Main_G_01_Outside_Nightfall_03/SceneSetting_G_01_Outside_Nightfall_03","Scenes/Main_G_01_Outside_Nightfall_03/Effects_G_01_Outside_Nightfall_03","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_7"}
+,[2108]={["far_camera"]=false,["name"]="第一章上荒野2(夜)",["id"]=2108,["res"]={"Scenes/Main_G_01_Outside_Night_03/Main_G_01_Outside_Night_03","Scenes/Main_G_01_Outside_Night_03/SceneSetting_G_01_Outside_Night_03","Scenes/Main_G_01_Outside_Night_03/Effects_G_01_Outside_Night_03","Scenes/GridSceneBgNight02/bg"}
+,["key"]="HardScene1_8"}
+,[2109]={["far_camera"]=false,["name"]="第一章上荒野2冰(黄昏)",["id"]=2109,["res"]={"Scenes/Main_G_01_Outside_Nightfall_04/Main_G_01_Outside_Nightfall_04","Scenes/Main_G_01_Outside_Nightfall_04/SceneSetting_G_01_Outside_Nightfall_04","Scenes/Main_G_01_Outside_Nightfall_04/Effects_G_01_Outside_Nightfall_04","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_9"}
+,[2110]={["far_camera"]=false,["name"]="第一章上荒野2冰(夜)",["id"]=2110,["res"]={"Scenes/Main_G_01_Outside_Night_04/Main_G_01_Outside_Night_04","Scenes/Main_G_01_Outside_Night_04/SceneSetting_G_01_Outside_Night_04","Scenes/Main_G_01_Outside_Night_04/Effects_G_01_Outside_Night_04","Scenes/GridSceneBgNight02/bg"}
+,["key"]="HardScene1_10"}
+,[2111]={["far_camera"]=false,["name"]="第一章下补充1过道1（黄昏）",["id"]=2111,["res"]={"Scenes/Main_G_01_Outside_Nightfall_08/Main_G_01_Outside_Nightfall_08","Scenes/Main_G_01_Outside_Nightfall_08/SceneSetting_G_01_Outside_Nightfall_08","Scenes/Main_G_01_Outside_Nightfall_08/Effects_G_01_Outside_Nightfall_08","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_11"}
+,[2112]={["far_camera"]=false,["name"]="第一张下露天基地2（哈迪斯）",["id"]=2112,["res"]={"Scenes/Main_G_01_Outside_Hades/Main_G_01_Outside_Hades","Scenes/Main_G_01_Outside_Hades/SceneSetting_G_01_Outside_Hades","Scenes/Main_G_01_Outside_Hades/Effects_G_01_Outside_Hades","Scenes/GridSceneBgHades/bg"}
+,["key"]="HardScene1_12"}
+,[2113]={["far_camera"]=false,["name"]="第一章下露天基地1(黄昏)",["id"]=2113,["res"]={"Scenes/Main_G_01_Outside_Nightfall_05/Main_G_01_Outside_Nightfall_05","Scenes/Main_G_01_Outside_Nightfall_05/SceneSetting_G_01_Outside_Nightfall_05","Scenes/Main_G_01_Outside_Nightfall_05/Effects_G_01_Outside_Nightfall_05","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_13"}
+,[2114]={["far_camera"]=false,["name"]="第一章下补充1过道1（夜）",["id"]=2114,["res"]={"Scenes/Main_G_01_Outside_Night_08/Main_G_01_Outside_Night_08","Scenes/Main_G_01_Outside_Night_08/SceneSetting_G_01_Outside_Night_08","Scenes/Main_G_01_Outside_Night_08/Effects_G_01_Outside_Night_08","Scenes/GridSceneBgNight02/bg"}
+,["key"]="HardScene1_14"}
+,[2115]={["far_camera"]=false,["name"]="第一章下露天基地1(夜)",["id"]=2115,["res"]={"Scenes/Main_G_01_Outside_Night_05/Main_G_01_Outside_Night_05","Scenes/Main_G_01_Outside_Night_05/SceneSetting_G_01_Outside_Night_05","Scenes/Main_G_01_Outside_Night_05/Effects_G_01_Outside_Night_05","Scenes/GridSceneBgNight02/bg"}
+,["key"]="HardScene1_15"}
+,[2116]={["far_camera"]=false,["name"]="第一章下补充2水池1（白天）",["id"]=2116,["res"]={"Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07","Scenes/GridSceneBgBlue/bg"}
+,["key"]="HardScene1_16"}
+,[2117]={["far_camera"]=false,["name"]="第一张下露天基地2（黄昏）",["id"]=2117,["res"]={"Scenes/Main_G_01_Outside_Nightfall_06/Main_G_01_Outside_Nightfall_06","Scenes/Main_G_01_Outside_Nightfall_06/SceneSetting_G_01_Outside_Nightfall_06","Scenes/Main_G_01_Outside_Nightfall_06/Effects_G_01_Outside_Nightfall_06","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_17"}
+,[2118]={["far_camera"]=false,["name"]="第一章下露天基地1(夜)",["id"]=2118,["res"]={"Scenes/Main_G_01_Outside_Night_05/Main_G_01_Outside_Night_05","Scenes/Main_G_01_Outside_Night_05/SceneSetting_G_01_Outside_Night_05","Scenes/Main_G_01_Outside_Night_05/Effects_G_01_Outside_Night_05","Scenes/GridSceneBgNight02/bg"}
+,["key"]="HardScene1_18"}
+,[2119]={["far_camera"]=false,["name"]="第一章下补充2水池1（黄昏）",["id"]=2119,["res"]={"Scenes/Main_G_01_Outside_Nightfall_07/Main_G_01_Outside_Nightfall_07","Scenes/Main_G_01_Outside_Nightfall_07/SceneSetting_G_01_Outside_Nightfall_07","Scenes/Main_G_01_Outside_Nightfall_07/Effects_G_01_Outside_Nightfall_07","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_19"}
+,[2120]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=2120,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="HardScene1_20"}
+,[2121]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=2121,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="HardScene1_21"}
+,[2122]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=2122,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="HardScene1_22"}
+,[2123]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=2123,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="HardScene1_23"}
+,[200102003]={["type"]=2,["name"]="第一章室外战斗场景阿瑞斯特效",["id"]=200102003,["res"]={"Scenes/01_Outside_Ares/Main","Scenes/01_Outside_Ares/SceneSetting","Scenes/01_Outside_Ares/Effects"}
+,["key"]="01_Outside_Ares",["far_camera"]=false}
+,[2125]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=2125,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="HardScene1_25"}
+,[10005]={["far_camera"]=false,["name"]="第一章下补充2水池1（白天）",["id"]=10005,["res"]={"Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower1_5"}
+,[201000004]={["type"]=2,["name"]="训练场（旧）",["id"]=201000004,["res"]={"Scenes/dirll/Main","Scenes/dirll/SceneSetting"}
+,["key"]="dirll_old",["far_camera"]=false}
+,[300601001]={["type"]=2,["name"]="虚海奇谭活动虚拟空间场景",["id"]=300601001,["res"]={"Scenes/Activity_VirtualSpace/Main","Scenes/Activity_VirtualSpace/SceneSetting","Scenes/Activity_VirtualSpace/Effects"}
+,["key"]="Activity_VirtualSpace",["far_camera"]=false}
+,[200201001]={["type"]=2,["name"]="第二章森林室外战斗场景",["id"]=200201001,["res"]={"Scenes/02_Outside/Main","Scenes/02_Outside/SceneSetting","Scenes/02_Outside/Effects"}
+,["key"]="02_Outside",["far_camera"]=false}
+,[200202001]={["type"]=2,["name"]="第二章尼福尔海姆室内战斗场景",["id"]=200202001,["res"]={"Scenes/02_Indoor_01/Main","Scenes/02_Indoor_01/SceneSetting"}
+,["key"]="02_Indoor_01",["far_camera"]=false}
+,[200203001]={["type"]=2,["name"]="第二章世界树室内战斗场景",["id"]=200203001,["res"]={"Scenes/02_Indoor_02/Main","Scenes/02_Indoor_02/SceneSetting","Scenes/02_Indoor_02/Effects"}
+,["key"]="02_Indoor_02",["far_camera"]=false}
+,[200204001]={["type"]=2,["name"]="第二章世界树室外战斗场景",["id"]=200204001,["res"]={"Scenes/02_Outside_01/Main","Scenes/02_Outside_01/SceneSetting","Scenes/02_Outside_01/Effects"}
+,["key"]="02_Outside_01",["far_camera"]=false}
+,[10105]={["far_camera"]=false,["name"]="1224地图",["id"]=10105,["res"]={"Scenes/Main_G_02_Indoor_13/Main_G_02_Indoor_13","Scenes/Main_G_02_Indoor_13/SceneSetting_G_02_Indoor_13","Scenes/Main_G_02_Indoor_13/Effects_G_02_Indoor_13","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_5"}
+,[301001001]={["type"]=3,["bgm"]="Sys_Login",["id"]=301001001,["views"]={"Login"}
+,["far_camera"]=false,["key"]="Login",["loading_random"]=1,["loading_res"]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}
+,["name"]="登录",["loading_type"]=1}
+,[301001009]={["far_camera"]=false,["key"]="BS_Indoor_Expedition",["id"]=301001009,["res"]={"Scenes/BS_Indoor_Expedition/Main","Scenes/BS_Indoor_Expedition/SceneSetting"}
+}
+,[4306]={["far_camera"]=false,["name"]="序章室内",["id"]=4306,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene3_6"}
+,[200401001]={["type"]=2,["name"]="第四章室外战斗场景荒地",["id"]=200401001,["res"]={"Scenes/04_Outside_01/Main","Scenes/04_Outside_01/SceneSetting","Scenes/04_Outside_01/Effects"}
+,["key"]="04_Outside_01",["far_camera"]=false}
+,[500101001]={["type"]=2,["name"]="异度空间1场景1",["id"]=500101001,["res"]={"Scenes/ContractionTower_05/Main","Scenes/ContractionTower_05/SceneSetting","Scenes/ContractionTower_05/Effects"}
+,["key"]="ContractionTower5",["far_camera"]=false}
+,[300201002]={["type"]=2,["name"]="剧情活动-迷城蛛影(万圣节)-街区场景晚上",["id"]=300201002,["res"]={"Scenes/StreetScene_night/Main","Scenes/StreetScene_night/SceneSetting","Scenes/StreetScene_night/Effects"}
+,["key"]="StreetScene_night",["far_camera"]=false}
+,[121305]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121305,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_5"}
+,[200301003]={["type"]=2,["name"]="第三章室外战斗场景1",["id"]=200301003,["res"]={"Scenes/03_Outside_02/Main","Scenes/03_Outside_02/SceneSetting","Scenes/03_Outside_02/Effects"}
+,["key"]="03_Outside_02",["far_camera"]=false}
+,[10201]={["far_camera"]=false,["name"]="10201地图",["id"]=10201,["res"]={"Scenes/Main_G_03_Outside_01/Main_G_03_Outside_01","Scenes/Main_G_03_Outside_01/SceneSetting_G_03_Outside_01","Scenes/Main_G_03_Outside_01/Effects_G_03_Outside_01","Scenes/GridSceneBgIndoor03/bg"}
+,["key"]="ClimbingTower3_1"}
+,[10205]={["far_camera"]=false,["name"]="10205地图",["id"]=10205,["res"]={"Scenes/Main_G_03_Outside_03/Main_G_03_Outside_03","Scenes/Main_G_03_Outside_03/SceneSetting_G_03_Outside_03","Scenes/Main_G_03_Outside_03/Effects_G_03_Outside_03","Scenes/GridSceneBgIndoor03/bg"}
+,["key"]="ClimbingTower3_5"}
+,[3201]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=3201,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="MaterialScene2_1"}
+,[3202]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=3202,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="MaterialScene2_2"}
+,[3203]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=3203,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="MaterialScene2_3"}
+,[3204]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=3204,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="MaterialScene2_4"}
+,[3205]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=3205,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="MaterialScene2_5"}
+,[3206]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=3206,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="MaterialScene2_4"}
+,[3207]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=3207,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="MaterialScene2_5"}
+,[200206001]={["type"]=2,["name"]="第二章工厂室内战斗场景",["id"]=200206001,["res"]={"Scenes/02_Indoor/Main","Scenes/02_Indoor/SceneSetting"}
+,["key"]="02_Indoor",["far_camera"]=false}
+,[12301]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12301,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_5"}
+,[12305]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12305,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_3"}
+,[200402001]={["type"]=2,["name"]="第四章街道",["id"]=200402001,["res"]={"Scenes/04_Outside_03/Main","Scenes/04_Outside_03/SceneSetting","Scenes/04_Outside_03/Effects"}
+,["key"]="04_Outside_03",["far_camera"]=false}
+,[200403001]={["type"]=2,["name"]="第四章室外海岸边",["id"]=200403001,["res"]={"Scenes/04_Outside_05/Main","Scenes/04_Outside_05/SceneSetting"}
+,["key"]="04_Outside_05",["far_camera"]=false}
+,[200404001]={["type"]=2,["name"]="第四章室内榻榻米红(收束塔)",["id"]=200404001,["res"]={"Scenes/04_Indoor_01/Main","Scenes/04_Indoor_01/SceneSetting","Scenes/04_Indoor_01/Effects"}
+,["key"]="04_Indoor_01",["far_camera"]=false}
+,[200405001]={["type"]=2,["name"]="第四章室内庭院樱花差分",["id"]=200405001,["res"]={"Scenes/04_Indoor_03/Main","Scenes/04_Indoor_03/SceneSetting","Scenes/04_Indoor_03/Effects"}
+,["key"]="04_Indoor_03",["far_camera"]=false}
+,[200406001]={["type"]=2,["name"]="第四章室外青霞原",["id"]=200406001,["res"]={"Scenes/04_Outside_06/Main","Scenes/04_Outside_06/SceneSetting","Scenes/04_Outside_06/Effects"}
+,["key"]="04_Outside_06",["far_camera"]=false}
+,[1102]={["far_camera"]=false,["name"]="第一章上荒野1(白天)",["id"]=1102,["res"]={"Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_2"}
+,[1103]={["far_camera"]=false,["name"]="第一章上荒野1(白天)",["id"]=1103,["res"]={"Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_3"}
+,[1104]={["far_camera"]=false,["name"]="第一章上据点外围(白天)",["id"]=1104,["res"]={"Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_4"}
+,[300601002]={["type"]=2,["name"]="魔法少女jarry活动虚拟空间场景",["id"]=300601002,["res"]={"Scenes/Activity_VirtualSpace_01/Main","Scenes/Activity_VirtualSpace_01/SceneSetting","Scenes/Activity_VirtualSpace_01/Effects"}
+,["key"]="Activity_VirtualSpace2",["far_camera"]=false}
+,[1105]={["far_camera"]=false,["name"]="第一章上据点外围(白天)",["id"]=1105,["res"]={"Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_5"}
+,[1106]={["far_camera"]=false,["name"]="第一章上据点外围(白天)",["id"]=1106,["res"]={"Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_6"}
+,[1107]={["far_camera"]=false,["name"]="第一章上荒野2(白天)",["id"]=1107,["res"]={"Scenes/Main_G_01_Outside_Day_03/Main_G_01_Outside_Day_03","Scenes/Main_G_01_Outside_Day_03/SceneSetting_G_01_Outside_Day_03","Scenes/Main_G_01_Outside_Day_03/Effects_G_01_Outside_Day_03","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_7"}
+,[1108]={["far_camera"]=false,["name"]="第一章上荒野2(白天)",["id"]=1108,["res"]={"Scenes/Main_G_01_Outside_Day_03/Main_G_01_Outside_Day_03","Scenes/Main_G_01_Outside_Day_03/SceneSetting_G_01_Outside_Day_03","Scenes/Main_G_01_Outside_Day_03/Effects_G_01_Outside_Day_03","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_8"}
+,[12908]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12908,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_8"}
+,[1109]={["far_camera"]=false,["name"]="第一章上荒野2冰(白天)",["id"]=1109,["res"]={"Scenes/Main_G_01_Outside_Day_04/Main_G_01_Outside_Day_04","Scenes/Main_G_01_Outside_Day_04/SceneSetting_G_01_Outside_Day_04","Scenes/Main_G_01_Outside_Day_04/Effects_G_01_Outside_Day_04","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_9"}
+,[8001]={["far_camera"]=false,["name"]="序章室外1（通用）",["id"]=8001,["res"]={"Scenes/Main_G_ps_Outside_Common/Main_G_ps_Outside_Common","Scenes/Main_G_ps_Outside_Common/SceneSetting_G_ps_Outside_Common","Scenes/Main_G_ps_Outside_Common/Effects_G_ps_Outside_Common","Scenes/GridSceneBgCommon/bg"}
+,["key"]="Tutorial0_1"}
+,[1111]={["far_camera"]=false,["name"]="第一章下补充1过道1（白天）",["id"]=1111,["res"]={"Scenes/Main_G_01_Outside_Day_08/Main_G_01_Outside_Day_08","Scenes/Main_G_01_Outside_Day_08/SceneSetting_G_01_Outside_Day_08","Scenes/Main_G_01_Outside_Day_08/Effects_G_01_Outside_Day_08","Scenes/GridSceneBgBlue08/bg"}
+,["key"]="GridScene1_11"}
+,[301001002]={["type"]=3,["loading_res"]={1}
+,["id"]=301001002,["views"]={"Battle"}
+,["far_camera"]=false,["key"]="Battle",["loading_random"]=2,["name"]="战棋",["loading_type"]=1}
+,[1112]={["far_camera"]=false,["name"]="第一张下露天基地2（哈迪斯）",["id"]=1112,["res"]={"Scenes/Main_G_01_Outside_Hades/Main_G_01_Outside_Hades","Scenes/Main_G_01_Outside_Hades/SceneSetting_G_01_Outside_Hades","Scenes/Main_G_01_Outside_Hades/Effects_G_01_Outside_Hades","Scenes/GridSceneBgHades/bg"}
+,["key"]="GridScene1_12"}
+,[1113]={["far_camera"]=false,["name"]="第一章下露天基地1(白天)",["id"]=1113,["res"]={"Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_13"}
+,[500101002]={["type"]=2,["name"]="异度空间1场景1差分1",["id"]=500101002,["res"]={"Scenes/ContractionTower_06/Main","Scenes/ContractionTower_06/SceneSetting","Scenes/ContractionTower_06/Effects"}
+,["key"]="ContractionTower6",["far_camera"]=false}
+,[1114]={["far_camera"]=false,["name"]="第一章下补充1过道1（白天）",["id"]=1114,["res"]={"Scenes/Main_G_01_Outside_Day_08/Main_G_01_Outside_Day_08","Scenes/Main_G_01_Outside_Day_08/SceneSetting_G_01_Outside_Day_08","Scenes/Main_G_01_Outside_Day_08/Effects_G_01_Outside_Day_08","Scenes/GridSceneBgBlue08/bg"}
+,["key"]="GridScene1_14"}
+,[1115]={["far_camera"]=false,["name"]="第一章下露天基地1(白天)",["id"]=1115,["res"]={"Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_15"}
+,[200001002]={["type"]=2,["name"]="序章室内战斗场景2",["id"]=200001002,["res"]={"Scenes/ps_Indoor_02/Main","Scenes/ps_Indoor_02/SceneSetting","Scenes/ps_Indoor_02/Effects"}
+,["key"]="ps_Indoor_02",["far_camera"]=false}
+,[300101001]={["type"]=2,["name"]="剧情活动-电影惊魂-地图基地场景",["id"]=300101001,["res"]={"Scenes/EarthScene/Main","Scenes/EarthScene/SceneSetting","Scenes/EarthScene/Effects"}
+,["key"]="EarthScene",["far_camera"]=false}
+,[1117]={["far_camera"]=false,["name"]="第一张下露天基地2（白天）",["id"]=1117,["res"]={"Scenes/Main_G_01_Outside_Day_06/Main_G_01_Outside_Day_06","Scenes/Main_G_01_Outside_Day_06/SceneSetting_G_01_Outside_Day_06","Scenes/Main_G_01_Outside_Day_06/Effects_G_01_Outside_Day_06","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_17"}
+,[1118]={["far_camera"]=false,["name"]="第一章下露天基地1(白天)",["id"]=1118,["res"]={"Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_18"}
+,[1119]={["far_camera"]=false,["name"]="第一章下补充2水池1（白天）",["id"]=1119,["res"]={"Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_19"}
+,[1120]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=1120,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_20"}
+,[1121]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=1121,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="GridScene1_21"}
+,[12501]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12501,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_1"}
+,[1122]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=1122,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="GridScene1_22"}
+,[1123]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=1123,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="GridScene1_23"}
+,[300503001]={["type"]=2,["name"]="奇迹之夜舞台",["id"]=300503001,["res"]={"Scenes/Activity_Circus_03/Main","Scenes/Activity_Circus_03/SceneSetting","Scenes/Activity_Circus_03/Effects"}
+,["key"]="Activity_Circus_03",["far_camera"]=false}
+,[1124]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=1124,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="GridScene1_24"}
+,[1125]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=1125,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="GridScene1_25"}
+,[200102004]={["type"]=2,["name"]="第一章室外战斗场景黄昏特效",["id"]=200102004,["res"]={"Scenes/01_Outside_nightfall/Main","Scenes/01_Outside_nightfall/SceneSetting","Scenes/01_Outside_nightfall/Effects"}
+,["key"]="01_Outside_nightfall",["far_camera"]=false}
+,[10002]={["far_camera"]=false,["name"]="第一章上荒野2冰(白天)",["id"]=10002,["res"]={"Scenes/Main_G_01_Outside_Day_04/Main_G_01_Outside_Day_04","Scenes/Main_G_01_Outside_Day_04/SceneSetting_G_01_Outside_Day_04","Scenes/Main_G_01_Outside_Day_04/Effects_G_01_Outside_Day_04","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower1_2"}
+,[10006]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=10006,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="ClimbingTower1_6"}
+,[201000001]={["type"]=2,["name"]="训练场",["id"]=201000001,["res"]={"Scenes/DirllScenes/Main","Scenes/DirllScenes/SceneSetting"}
+,["key"]="dirll",["far_camera"]=false}
+,[201000005]={["type"]=2,["name"]="训练场（黑色）",["id"]=201000005,["res"]={"Scenes/DrillScenes_dark/Main","Scenes/DrillScenes_dark/SceneSetting","Scenes/DrillScenes_dark/Effects"}
+,["key"]="DrillScenes_dark",["far_camera"]=false}
+,[200201002]={["type"]=2,["name"]="第二章森林室外战斗场景（黄昏）",["id"]=200201002,["res"]={"Scenes/02_Outside_Nightfall/Main","Scenes/02_Outside_Nightfall/SceneSetting","Scenes/02_Outside_Nightfall/Effects"}
+,["key"]="02_Outside_Nightfall",["far_camera"]=false}
+,[200203002]={["type"]=2,["name"]="第二章世界树室内战斗场景（boss特效）",["id"]=200203002,["res"]={"Scenes/02_Indoor_Boss/Main","Scenes/02_Indoor_Boss/SceneSetting","Scenes/02_Indoor_Boss/Effects"}
+,["key"]="02_Indoor_Boss",["far_camera"]=false}
+,[200204002]={["type"]=2,["name"]="第二章世界树室外战斗场景（黄昏）",["id"]=200204002,["res"]={"Scenes/02_Outside_01_Nightfall/Main","Scenes/02_Outside_01_Nightfall/SceneSetting"}
+,["key"]="02_Outside_01_Nightfall",["far_camera"]=false}
+,[3301]={["far_camera"]=false,["name"]="序章室外2夜晚",["id"]=3301,["res"]={"Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front","Scenes/GridSceneBgNight01/bg"}
+,["key"]="MaterialScene3_1"}
+,[3302]={["far_camera"]=false,["name"]="序章室外2夜晚",["id"]=3302,["res"]={"Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front","Scenes/GridSceneBgNight01/bg"}
+,["key"]="MaterialScene3_2"}
+,[3303]={["far_camera"]=false,["name"]="序章室外2夜晚",["id"]=3303,["res"]={"Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front","Scenes/GridSceneBgNight01/bg"}
+,["key"]="MaterialScene3_3"}
+,[3304]={["far_camera"]=false,["name"]="序章室外2夜晚",["id"]=3304,["res"]={"Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front","Scenes/GridSceneBgNight01/bg"}
+,["key"]="MaterialScene3_4"}
+,[301001003]={["type"]=3,["loading_res"]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}
+,["id"]=301001003,["views"]={"Matrix"}
+,["far_camera"]=false,["key"]="Matrix",["loading_random"]=2,["name"]="基地",["loading_type"]=1}
+,[3306]={["far_camera"]=false,["name"]="序章室外2夜晚",["id"]=3306,["res"]={"Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front","Scenes/GridSceneBgNight01/bg"}
+,["key"]="MaterialScene3_4"}
+,[3307]={["far_camera"]=false,["name"]="序章室外2夜晚",["id"]=3307,["res"]={"Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front","Scenes/GridSceneBgNight01/bg"}
+,["key"]="MaterialScene3_5"}
+,[200401002]={["type"]=2,["name"]="第四章室外战斗场景荒地差分",["id"]=200401002,["res"]={"Scenes/04_Outside_02/Main","Scenes/04_Outside_02/SceneSetting","Scenes/04_Outside_02/Effects"}
+,["key"]="04_Outside_02",["far_camera"]=false}
+,[500101003]={["far_camera"]=false,["key"]="ContractionTower7",["id"]=500101003,["res"]={"Scenes/ContractionTower_07/Main","Scenes/ContractionTower_07/SceneSetting"}
+,["type"]=2}
+,[300201004]={["type"]=2,["name"]="剧情活动-迷城蛛影(万圣节)-街区场景端午差分晚上",["id"]=300201004,["res"]={"Scenes/Duanwu_03_night/Main","Scenes/Duanwu_03_night/SceneSetting","Scenes/Duanwu_03_night/Effects"}
+,["key"]="Duanwu_03_night",["far_camera"]=false}
+,[200301004]={["type"]=2,["name"]="第三章室外战斗场景Boss端午差分",["id"]=200301004,["res"]={"Scenes/Duanwu_01/Main","Scenes/Duanwu_01/SceneSetting","Scenes/Duanwu_01/Effects"}
+,["key"]="Duanwu_01",["far_camera"]=false}
+,[5101]={["far_camera"]=false,["name"]="序章室内",["id"]=5101,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="SkillScene1_1"}
+,[5103]={["far_camera"]=false,["name"]="序章室内",["id"]=5103,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="SkillScene1_3"}
+,[5105]={["far_camera"]=false,["name"]="序章室内",["id"]=5105,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="SkillScene1_5"}
+,[5107]={["far_camera"]=false,["name"]="序章室内",["id"]=5107,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="SkillScene1_7"}
+,[10202]={["far_camera"]=false,["name"]="10202地图",["id"]=10202,["res"]={"Scenes/Main_G_03_Indoor_05/Main_G_03_Indoor_05","Scenes/Main_G_03_Indoor_05/SceneSetting_G_03_Indoor_05","Scenes/Main_G_03_Indoor_05/Effects_G_03_Indoor_05","Scenes/GridSceneBgIndoor03/bg"}
+,["key"]="ClimbingTower3_2"}
+,[10206]={["far_camera"]=false,["name"]="10206地图",["id"]=10206,["res"]={"Scenes/Main_G_03_Outside_04/Main_G_03_Outside_04","Scenes/Main_G_03_Outside_04/SceneSetting_G_03_Outside_04","Scenes/Main_G_03_Outside_04/Effects_G_03_Outside_04","Scenes/GridSceneBgIndoor03/bg"}
+,["key"]="ClimbingTower3_6"}
+,[300501002]={["type"]=2,["name"]="奇迹之夜广场夜光",["id"]=300501002,["res"]={"Scenes/Activity_Circus_01_night/Main","Scenes/Activity_Circus_01_night/SceneSetting","Scenes/Activity_Circus_01_night/Effects"}
+,["key"]="Activity_Circus_01_night",["far_camera"]=false}
+,[4101]={["far_camera"]=false,["name"]="序章室内",["id"]=4101,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene1_1"}
+,[4103]={["far_camera"]=false,["name"]="序章室内",["id"]=4103,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene1_3"}
+,[4105]={["far_camera"]=false,["name"]="序章室内",["id"]=4105,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene1_5"}
+,[4107]={["far_camera"]=false,["name"]="序章室内",["id"]=4107,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene1_7"}
+,[12302]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12302,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_6"}
+,[12306]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12306,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_4"}
+,[200402002]={["type"]=2,["name"]="第四章街道建筑差分",["id"]=200402002,["res"]={"Scenes/04_Outside_04/Main","Scenes/04_Outside_04/SceneSetting","Scenes/04_Outside_04/Effects"}
+,["key"]="04_Outside_04",["far_camera"]=false}
+,[200404002]={["type"]=2,["name"]="第四章室内榻榻米蓝(收束塔)",["id"]=200404002,["res"]={"Scenes/04_Indoor_02/Main","Scenes/04_Indoor_02/SceneSetting","Scenes/04_Indoor_02/Effects"}
+,["key"]="04_Indoor_02",["far_camera"]=false}
+,[200405002]={["type"]=2,["name"]="第四章室内庭院平原差分",["id"]=200405002,["res"]={"Scenes/04_Indoor_04/Main","Scenes/04_Indoor_04/SceneSetting","Scenes/04_Indoor_04/Effects"}
+,["key"]="04_Indoor_04",["far_camera"]=false}
+,[200406002]={["type"]=2,["name"]="第四章室外青霞原夜晚差分",["id"]=200406002,["res"]={"Scenes/04_Outside_07/Main","Scenes/04_Outside_07/SceneSetting","Scenes/04_Outside_07/Effects"}
+,["key"]="04_Outside_07",["far_camera"]=false}
+,[12901]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12901,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_1"}
+,[12905]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12905,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_5"}
+,[301001004]={["type"]=3,["loading_res"]={21}
+,["id"]=301001004,["views"]={"Common/CharacterPreview"}
+,["far_camera"]=false,["name"]="角色预览",["res"]={"Scenes/03_Outside/Main","Scenes/03_Outside/SceneSetting","Scenes/03_Outside/Effects","CharacterPreview"}
+,["key"]="CharacterPreview",["loading_type"]=2}
+,[301001012]={["far_camera"]=false,["key"]="BS_Indoor_Synthesis",["id"]=301001012,["res"]={"Scenes/BS_Indoor_Synthesis/Main","Scenes/BS_Indoor_Synthesis/SceneSetting"}
+}
+,[4201]={["far_camera"]=false,["name"]="序章室内",["id"]=4201,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene2_1"}
+,[4203]={["far_camera"]=false,["name"]="序章室内",["id"]=4203,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene2_3"}
+,[4205]={["far_camera"]=false,["name"]="序章室内",["id"]=4205,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene2_5"}
+,[4207]={["far_camera"]=false,["name"]="序章室内",["id"]=4207,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene2_7"}
+,[12502]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12502,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_2"}
+,[12506]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12506,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_6"}
+,[300401001]={["type"]=2,["name"]="夏日活动海滩竖",["id"]=300401001,["res"]={"Scenes/Activity_01/Main","Scenes/Activity_01/SceneSetting","Scenes/Activity_01/Effects"}
+,["key"]="Activity_01",["far_camera"]=false}
+,[300402001]={["type"]=2,["name"]="夏日活动海滩横",["id"]=300402001,["res"]={"Scenes/Activity_04/Main","Scenes/Activity_04/SceneSetting"}
+,["key"]="Activity_04",["far_camera"]=false}
+,[200101001]={["type"]=2,["name"]="第一章室内战斗场景",["id"]=200101001,["res"]={"Scenes/01_Indoor/Main","Scenes/01_Indoor/SceneSetting","Scenes/01_Indoor/Effects"}
+,["key"]="01_Indoor",["far_camera"]=true}
+,[200102001]={["type"]=2,["name"]="第一章室外战斗场景",["id"]=200102001,["res"]={"Scenes/01_Outside/Main","Scenes/01_Outside/SceneSetting","Scenes/01_Outside/Effects","SceneSounds/amb"}
+,["key"]="01_Outside",["far_camera"]=false}
+,[200102005]={["type"]=2,["name"]="第一章室外战斗场景夜晚特效",["id"]=200102005,["res"]={"Scenes/01_Outside_night/Main","Scenes/01_Outside_night/SceneSetting","Scenes/01_Outside_night/Effects"}
+,["key"]="01_Outside_night",["far_camera"]=false}
+,[10003]={["far_camera"]=false,["name"]="第一章下露天基地1(白天)",["id"]=10003,["res"]={"Scenes/Main_G_01_Outside_Day_05/Main_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/SceneSetting_G_01_Outside_Day_05","Scenes/Main_G_01_Outside_Day_05/Effects_G_01_Outside_Day_05","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower1_3"}
+,[121308]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121308,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_8"}
+,[121307]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121307,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_7"}
+,[121306]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121306,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_6"}
+,[121304]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121304,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_4"}
+,[121303]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121303,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_3"}
+,[300801001]={["type"]=2,["name"]="循环试炼战斗场景",["id"]=300801001,["res"]={"Scenes/ReclaimLoop_01/Main","Scenes/ReclaimLoop_01/SceneSetting","Scenes/ReclaimLoop_01/Effects"}
+,["key"]="ReclaimLoop_01",["far_camera"]=false}
+,[121302]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121302,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_2"}
+,[201000002]={["type"]=2,["name"]="基地战斗场景",["id"]=201000002,["res"]={"Scenes/Base/Main","Scenes/Base/SceneSetting"}
+,["key"]="Base",["far_camera"]=false}
+,[201000006]={["type"]=2,["name"]="序章通用室外场景端午差分",["id"]=201000006,["res"]={"Scenes/Duanwu_02/Main","Scenes/Duanwu_02/SceneSetting","Scenes/Duanwu_02/Effects"}
+,["key"]="Duanwu_02",["far_camera"]=false}
+,[121301]={["far_camera"]=false,["name"]="121301循环试炼地图",["id"]=121301,["res"]={"Scenes/Main_G_ReclaimLoop_01/Main_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/SceneSetting_G_ReclaimLoop_01","Scenes/Main_G_ReclaimLoop_01/Effects_G_ReclaimLoop_01","Scenes/GridSceneBgReclaim/bg"}
+,["key"]="ReclaimLoop01_1"}
+,[121007]={["far_camera"]=false,["name"]="1206",["id"]=121007,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_7"}
+,[200503001]={["type"]=2,["name"]="第五章地球城市废墟早",["id"]=200503001,["res"]={"Scenes/05_Outside_03/Main","Scenes/05_Outside_03/SceneSetting","Scenes/05_Outside_03/Effects"}
+,["key"]="05_Outside_03",["far_camera"]=false}
+,[121005]={["far_camera"]=false,["name"]="1206",["id"]=121005,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_5"}
+,[1110]={["far_camera"]=false,["name"]="第一章上荒野2冰(白天)",["id"]=1110,["res"]={"Scenes/Main_G_01_Outside_Day_04/Main_G_01_Outside_Day_04","Scenes/Main_G_01_Outside_Day_04/SceneSetting_G_01_Outside_Day_04","Scenes/Main_G_01_Outside_Day_04/Effects_G_01_Outside_Day_04","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_10"}
+,[121003]={["far_camera"]=false,["name"]="1206",["id"]=121003,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_3"}
+,[121002]={["far_camera"]=false,["name"]="1206",["id"]=121002,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_2"}
+,[121001]={["far_camera"]=false,["name"]="1206",["id"]=121001,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_1"}
+,[12907]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12907,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_7"}
+,[1202]={["far_camera"]=false,["name"]="1202地图",["id"]=1202,["res"]={"Scenes/Main_G_02_Indoor_01/Main_G_02_Indoor_01","Scenes/Main_G_02_Indoor_01/SceneSetting_G_02_Indoor_01","Scenes/Main_G_02_Indoor_01/Effects_G_02_Indoor_01","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="GridScene2_2"}
+,[200201003]={["type"]=2,["name"]="第二章森林室外战斗场景（夜晚）",["id"]=200201003,["res"]={"Scenes/02_Outside_Night/Main","Scenes/02_Outside_Night/SceneSetting","Scenes/02_Outside_Night/Effects"}
+,["key"]="02_Outside_Night",["far_camera"]=false}
+,[1203]={["far_camera"]=false,["name"]="1203",["id"]=1203,["res"]={"Scenes/Main_G_02_Outside_01/Main_G_02_Outside_01","Scenes/Main_G_02_Outside_01/SceneSetting_G_02_Outside_01","Scenes/Main_G_02_Outside_01/Effects_G_02_Outside_01","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_3"}
+,[300501001]={["type"]=2,["name"]="奇迹之夜广场日光",["id"]=300501001,["res"]={"Scenes/Activity_Circus_01_day/Main","Scenes/Activity_Circus_01_day/SceneSetting","Scenes/Activity_Circus_01_day/Effects"}
+,["key"]="Activity_Circus_01_day",["far_camera"]=false}
+,[200203003]={["type"]=2,["name"]="第二章世界树室内战斗场景（黄昏）",["id"]=200203003,["res"]={"Scenes/02_Indoor_02_Nightfall/Main","Scenes/02_Indoor_02_Nightfall/SceneSetting"}
+,["key"]="02_Indoor_02_Nightfall",["far_camera"]=false}
+,[12904]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12904,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_4"}
+,[1205]={["far_camera"]=false,["name"]="1205",["id"]=1205,["res"]={"Scenes/Main_G_02_Outside_03/Main_G_02_Outside_03","Scenes/Main_G_02_Outside_03/SceneSetting_G_02_Outside_03","Scenes/Main_G_02_Outside_03/Effects_G_02_Outside_03","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_5"}
+,[12903]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12903,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_3"}
+,[1206]={["far_camera"]=false,["name"]="1206",["id"]=1206,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="GridScene2_6"}
+,[12902]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12902,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_2"}
+,[4301]={["far_camera"]=false,["name"]="序章室内",["id"]=4301,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene3_1"}
+,[301001005]={["far_camera"]=false,["name"]="宿舍",["bgm"]="TEx_Sys_Hostel_bpm92_20230321",["id"]=301001005,["type"]=3,["key"]="Dorm"}
+,[4305]={["far_camera"]=false,["name"]="序章室内",["id"]=4305,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene3_5"}
+,[4307]={["far_camera"]=false,["name"]="序章室内",["id"]=4307,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene3_7"}
+,[1209]={["far_camera"]=false,["name"]="1209",["id"]=1209,["res"]={"Scenes/Main_G_02_Outside_04/Main_G_02_Outside_04","Scenes/Main_G_02_Outside_04/SceneSetting_G_02_Outside_04","Scenes/Main_G_02_Outside_04/Effects_G_02_Outside_04","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_9"}
+,[12508]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12508,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_8"}
+,[4302]={["far_camera"]=false,["name"]="序章室内",["id"]=4302,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene3_2"}
+,[12505]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12505,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_5"}
+,[1211]={["far_camera"]=false,["name"]="1211",["id"]=1211,["res"]={"Scenes/Main_G_02_Outside_05/Main_G_02_Outside_05","Scenes/Main_G_02_Outside_05/SceneSetting_G_02_Outside_05","Scenes/Main_G_02_Outside_05/Effects_G_02_Outside_05","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_9"}
+,[12504]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12504,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_4"}
+,[1212]={["far_camera"]=false,["name"]="1212地图",["id"]=1212,["res"]={"Scenes/Main_G_02_Indoor_04/Main_G_02_Indoor_04","Scenes/Main_G_02_Indoor_04/SceneSetting_G_02_Indoor_04","Scenes/Main_G_02_Indoor_04/Effects_G_02_Indoor_04","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_12"}
+,[12503]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12503,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_3"}
+,[1213]={["far_camera"]=false,["name"]="1213地图",["id"]=1213,["res"]={"Scenes/Main_G_02_Indoor_05/Main_G_02_Indoor_05","Scenes/Main_G_02_Indoor_05/SceneSetting_G_02_Indoor_05","Scenes/Main_G_02_Indoor_05/Effects_G_02_Indoor_05","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_13"}
+,[200301001]={["type"]=2,["name"]="第三章室外战斗场景（废弃）",["id"]=200301001,["res"]={"Scenes/03_Outside/Main","Scenes/03_Outside/SceneSetting","Scenes/03_Outside/Effects"}
+,["key"]="03_Outside",["far_camera"]=false}
+,[1214]={["far_camera"]=false,["name"]="1214地图",["id"]=1214,["res"]={"Scenes/Main_G_02_Indoor_06/Main_G_02_Indoor_06","Scenes/Main_G_02_Indoor_06/SceneSetting_G_02_Indoor_06","Scenes/Main_G_02_Indoor_06/Effects_G_02_Indoor_06","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_14"}
+,[200302001]={["type"]=2,["name"]="第三章室内战斗场景",["id"]=200302001,["res"]={"Scenes/03_Indoor/Main","Scenes/03_Indoor/SceneSetting","Scenes/03_Indoor/Effects"}
+,["key"]="03_Indoor",["far_camera"]=false}
+,[1215]={["far_camera"]=false,["name"]="1215",["id"]=1215,["res"]={"Scenes/Main_G_02_Outside_06/Main_G_02_Outside_06","Scenes/Main_G_02_Outside_06/SceneSetting_G_02_Outside_06","Scenes/Main_G_02_Outside_06/Effects_G_02_Outside_06","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_14"}
+,[200303001]={["type"]=2,["name"]="第三章控制中心室内战斗场景1",["id"]=200303001,["res"]={"Scenes/03_Indoor_01/Main","Scenes/03_Indoor_01/SceneSetting","Scenes/03_Indoor_01/Effects"}
+,["key"]="03_Indoor_01",["far_camera"]=false}
+,[1216]={["far_camera"]=false,["name"]="1216",["id"]=1216,["res"]={"Scenes/Main_G_02_Outside_07/Main_G_02_Outside_07","Scenes/Main_G_02_Outside_07/SceneSetting_G_02_Outside_07","Scenes/Main_G_02_Outside_07/Effects_G_02_Outside_07","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_14"}
+,[200304001]={["type"]=2,["name"]="第三章升降电梯室内战斗场景2",["id"]=200304001,["res"]={"Scenes/03_Indoor_02/Main","Scenes/03_Indoor_02/SceneSetting","Scenes/03_Indoor_02/Effects"}
+,["key"]="03_Indoor_02",["far_camera"]=false}
+,[1217]={["far_camera"]=false,["name"]="1217",["id"]=1217,["res"]={"Scenes/Main_G_02_Outside_08/Main_G_02_Outside_08","Scenes/Main_G_02_Outside_08/SceneSetting_G_02_Outside_08","Scenes/Main_G_02_Outside_08/Effects_G_02_Outside_08","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_14"}
+,[10203]={["far_camera"]=false,["name"]="10203地图",["id"]=10203,["res"]={"Scenes/Main_G_03_Outside_02/Main_G_03_Outside_02","Scenes/Main_G_03_Outside_02/SceneSetting_G_03_Outside_02","Scenes/Main_G_03_Outside_02/Effects_G_03_Outside_02","Scenes/GridSceneBgIndoor03/bg"}
+,["key"]="ClimbingTower3_3"}
+,[1218]={["far_camera"]=false,["name"]="1218地图",["id"]=1218,["res"]={"Scenes/Main_G_02_Indoor_07/Main_G_02_Indoor_07","Scenes/Main_G_02_Indoor_07/SceneSetting_G_02_Indoor_07","Scenes/Main_G_02_Indoor_07/Effects_G_02_Indoor_07","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_18"}
+,[12307]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12307,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_5"}
+,[1219]={["far_camera"]=false,["name"]="1219地图",["id"]=1219,["res"]={"Scenes/Main_G_02_Indoor_08/Main_G_02_Indoor_08","Scenes/Main_G_02_Indoor_08/SceneSetting_G_02_Indoor_08","Scenes/Main_G_02_Indoor_08/Effects_G_02_Indoor_08","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_19"}
+,[301001013]={["far_camera"]=false,["key"]="BS_Indoor_Trade",["id"]=301001013,["res"]={"Scenes/BS_Indoor_Trade/Main","Scenes/BS_Indoor_Trade/SceneSetting"}
+}
+,[1220]={["far_camera"]=false,["name"]="1220地图",["id"]=1220,["res"]={"Scenes/Main_G_02_Indoor_09/Main_G_02_Indoor_09","Scenes/Main_G_02_Indoor_09/SceneSetting_G_02_Indoor_09","Scenes/Main_G_02_Indoor_09/Effects_G_02_Indoor_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_20"}
+,[200501001]={["type"]=2,["name"]="第五章室外草地旷野",["id"]=200501001,["res"]={"Scenes/05_Outside_01/Main","Scenes/05_Outside_01/SceneSetting","Scenes/05_Outside_01/Effects"}
+,["key"]="05_Outside_01",["far_camera"]=false}
+,[200502001]={["type"]=2,["name"]="第五章室外海港",["id"]=200502001,["res"]={"Scenes/Activity_Circus_04/Main","Scenes/Activity_Circus_04/SceneSetting","Scenes/Activity_Circus_04/Effects"}
+,["key"]="Activity_Circus_04",["far_camera"]=false}
+,[10106]={["far_camera"]=false,["name"]="1225地图",["id"]=10106,["res"]={"Scenes/Main_G_02_Indoor_14/Main_G_02_Indoor_14","Scenes/Main_G_02_Indoor_14/SceneSetting_G_02_Indoor_14","Scenes/Main_G_02_Indoor_14/Effects_G_02_Indoor_14","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_6"}
+,[1222]={["far_camera"]=false,["name"]="1222地图",["id"]=1222,["res"]={"Scenes/Main_G_02_Indoor_11/Main_G_02_Indoor_11","Scenes/Main_G_02_Indoor_11/SceneSetting_G_02_Indoor_11","Scenes/Main_G_02_Indoor_11/Effects_G_02_Indoor_11","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_22"}
+,[301001010]={["far_camera"]=false,["key"]="BS_Indoor_Fabricate",["id"]=301001010,["res"]={"Scenes/BS_Indoor_Fabricate/Main","Scenes/BS_Indoor_Fabricate/SceneSetting"}
+}
+,[1223]={["far_camera"]=false,["name"]="1223地图",["id"]=1223,["res"]={"Scenes/Main_G_02_Indoor_12/Main_G_02_Indoor_12","Scenes/Main_G_02_Indoor_12/SceneSetting_G_02_Indoor_12","Scenes/Main_G_02_Indoor_12/Effects_G_02_Indoor_12","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_23"}
+,[301001011]={["far_camera"]=false,["key"]="BS_Indoor_Power",["id"]=301001011,["res"]={"Scenes/BS_Indoor_Power/Main","Scenes/BS_Indoor_Power/SceneSetting"}
+}
+,[1224]={["far_camera"]=false,["name"]="1224地图",["id"]=1224,["res"]={"Scenes/Main_G_02_Indoor_13/Main_G_02_Indoor_13","Scenes/Main_G_02_Indoor_13/SceneSetting_G_02_Indoor_13","Scenes/Main_G_02_Indoor_13/Effects_G_02_Indoor_13","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_24"}
+,[12303]={["far_camera"]=false,["name"]="第一章下补充3宙斯场地",["id"]=12303,["res"]={"Scenes/Main_G_01_Outside_Day_09/Main_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/SceneSetting_G_01_Outside_Day_09","Scenes/Main_G_01_Outside_Day_09/Effects_G_01_Outside_Day_09","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_1"}
+,[1225]={["far_camera"]=false,["name"]="1225地图",["id"]=1225,["res"]={"Scenes/Main_G_02_Indoor_14/Main_G_02_Indoor_14","Scenes/Main_G_02_Indoor_14/SceneSetting_G_02_Indoor_14","Scenes/Main_G_02_Indoor_14/Effects_G_02_Indoor_14","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_25"}
+,[200504001]={["type"]=2,["name"]="第五章地球基地暗",["id"]=200504001,["res"]={"Scenes/05_Indoor_01/Main","Scenes/05_Indoor_01/SceneSetting","Scenes/05_Indoor_01/Effects"}
+,["key"]="05_Indoor_01",["far_camera"]=false}
+,[300401002]={["type"]=2,["name"]="夏日活动海滩竖岩石差分",["id"]=300401002,["res"]={"Scenes/Activity_02/Main","Scenes/Activity_02/SceneSetting","Scenes/Activity_02/Effects"}
+,["key"]="Activity_02",["far_camera"]=false}
+,[400101001]={["type"]=2,["name"]="双子座战斗场景",["id"]=400101001,["res"]={"Scenes/Activity_Stellaris/Main","Scenes/Activity_Stellaris/SceneSetting","Scenes/Activity_Stellaris/Effects"}
+,["key"]="Activity_Stellaris",["far_camera"]=false}
+,[1204]={["far_camera"]=false,["name"]="1204",["id"]=1204,["res"]={"Scenes/Main_G_02_Outside_02/Main_G_02_Outside_02","Scenes/Main_G_02_Outside_02/SceneSetting_G_02_Outside_02","Scenes/Main_G_02_Outside_02/Effects_G_02_Outside_02","Scenes/GridSceneBgForest/bg"}
+,["key"]="GridScene2_4"}
+,[10103]={["far_camera"]=false,["name"]="1213地图",["id"]=10103,["res"]={"Scenes/Main_G_02_Indoor_05/Main_G_02_Indoor_05","Scenes/Main_G_02_Indoor_05/SceneSetting_G_02_Indoor_05","Scenes/Main_G_02_Indoor_05/Effects_G_02_Indoor_05","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower2_3"}
+,[10001]={["far_camera"]=false,["name"]="第一章上据点外围(白天)",["id"]=10001,["res"]={"Scenes/Main_G_01_Outside_Day_02/Main_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/SceneSetting_G_01_Outside_Day_02","Scenes/Main_G_01_Outside_Day_02/Effects_G_01_Outside_Day_02","Scenes/GridSceneBgBlue/bg"}
+,["key"]="ClimbingTower1_1"}
+,[10102]={["far_camera"]=false,["name"]="1209",["id"]=10102,["res"]={"Scenes/Main_G_02_Outside_04/Main_G_02_Outside_04","Scenes/Main_G_02_Outside_04/SceneSetting_G_02_Outside_04","Scenes/Main_G_02_Outside_04/Effects_G_02_Outside_04","Scenes/GridSceneBgForest/bg"}
+,["key"]="ClimbingTower2_2"}
+,[200305001]={["type"]=2,["name"]="第三章升降电梯室2内战斗场景3(废弃)",["id"]=200305001,["res"]={"Scenes/03_Indoor_03/Main","Scenes/03_Indoor_03/SceneSetting","Scenes/03_Indoor_03/Effects"}
+,["key"]="03_Indoor_03",["far_camera"]=false}
+,[1221]={["far_camera"]=false,["name"]="1221地图",["id"]=1221,["res"]={"Scenes/Main_G_02_Indoor_10/Main_G_02_Indoor_10","Scenes/Main_G_02_Indoor_10/SceneSetting_G_02_Indoor_10","Scenes/Main_G_02_Indoor_10/Effects_G_02_Indoor_10","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene2_21"}
+,[1101]={["far_camera"]=false,["name"]="第一章上荒野1(白天)",["id"]=1101,["res"]={"Scenes/Main_G_01_Outside_Day_01/Main_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/SceneSetting_G_01_Outside_Day_01","Scenes/Main_G_01_Outside_Day_01/Effects_G_01_Outside_Day_01","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_1"}
+,[1003]={["far_camera"]=false,["name"]="序章室外补充图",["id"]=1003,["res"]={"Scenes/Main_G_ps_Outside_Common_03/Main_G_ps_Outside_Common_03","Scenes/Main_G_ps_Outside_Common_03/SceneSetting_G_ps_Outside_Common_03","Scenes/Main_G_ps_Outside_Common_03/Effects_G_ps_Outside_Common_03","Scenes/GridSceneBgCommon/bg"}
+,["key"]="GridScene0_3"}
+,[300502001]={["type"]=2,["name"]="奇迹之夜广场日光破坏差分",["id"]=300502001,["res"]={"Scenes/Activity_Circus_02/Main","Scenes/Activity_Circus_02/SceneSetting","Scenes/Activity_Circus_02/Effects"}
+,["key"]="Activity_Circus_02",["far_camera"]=false}
+,[8002]={["far_camera"]=false,["name"]="序章室内",["id"]=8002,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="GridScene0A_2"}
+,[121004]={["far_camera"]=false,["name"]="1206",["id"]=121004,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_4"}
+,[1002]={["far_camera"]=false,["name"]="序章室外补充图",["id"]=1002,["res"]={"Scenes/Main_G_ps_Outside_Common_03/Main_G_ps_Outside_Common_03","Scenes/Main_G_ps_Outside_Common_03/SceneSetting_G_ps_Outside_Common_03","Scenes/Main_G_ps_Outside_Common_03/Effects_G_ps_Outside_Common_03","Scenes/GridSceneBgCommon/bg"}
+,["key"]="GridScene0_2"}
+,[200205002]={["type"]=2,["name"]="第二章塔战斗场景2Boss关",["id"]=200205002,["res"]={"Scenes/ContractionTower_04/Main","Scenes/ContractionTower_04/SceneSetting","Scenes/ContractionTower_04/Effects"}
+,["key"]="ContractionTower4",["far_camera"]=false}
+,[1001]={["far_camera"]=false,["name"]="序章室外1（通用）",["id"]=1001,["res"]={"Scenes/Main_G_ps_Outside_Common/Main_G_ps_Outside_Common","Scenes/Main_G_ps_Outside_Common/SceneSetting_G_ps_Outside_Common","Scenes/Main_G_ps_Outside_Common/Effects_G_ps_Outside_Common","Scenes/GridSceneBgCommon/bg"}
+,["key"]="GridScene0_1"}
+,[200306001]={["type"]=2,["name"]="第三章室内战斗场景4",["id"]=200306001,["res"]={"Scenes/03_Indoor_04/Main","Scenes/03_Indoor_04/SceneSetting","Scenes/03_Indoor_04/Effects"}
+,["key"]="03_Indoor_04",["far_camera"]=false}
+,[2001]={["far_camera"]=false,["name"]="序章室外1（通用）",["id"]=2001,["res"]={"Scenes/Main_G_ps_Outside_Common/Main_G_ps_Outside_Common","Scenes/Main_G_ps_Outside_Common/SceneSetting_G_ps_Outside_Common","Scenes/Main_G_ps_Outside_Common/Effects_G_ps_Outside_Common","Scenes/GridSceneBgCommon/bg"}
+,["key"]="HardScene0_1"}
+,[200307001]={["type"]=2,["name"]="第三章收束塔",["id"]=200307001,["res"]={"Scenes/03_Indoor_06/Main","Scenes/03_Indoor_06/SceneSetting","Scenes/03_Indoor_06/Effects"}
+,["key"]="03_Indoor_06",["far_camera"]=false}
+,[2002]={["far_camera"]=false,["name"]="序章室外补充图（黄昏）",["id"]=2002,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_03/Main_G_ps_Outside_Nightfall_03","Scenes/Main_G_ps_Outside_Nightfall_03/SceneSetting_G_ps_Outside_Nightfall_03","Scenes/Main_G_ps_Outside_Nightfall_03/Effects_G_ps_Outside_Nightfall_03","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene0_2"}
+,[12906]={["far_camera"]=false,["name"]="12901虚海奇谭试炼地图",["id"]=12906,["res"]={"Scenes/Main_G_VirtualSpace_01/Main_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/SceneSetting_G_VirtualSpace_01","Scenes/Main_G_VirtualSpace_01/Effects_G_VirtualSpace_01","Scenes/GridSceneBgVirtualSpace/bg"}
+,["key"]="ClimbingTower8002_6"}
+,[2003]={["far_camera"]=false,["name"]="序章室外补充图（黄昏）",["id"]=2003,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_03/Main_G_ps_Outside_Nightfall_03","Scenes/Main_G_ps_Outside_Nightfall_03/SceneSetting_G_ps_Outside_Nightfall_03","Scenes/Main_G_ps_Outside_Nightfall_03/Effects_G_ps_Outside_Nightfall_03","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene0_3"}
+,[1004]={["far_camera"]=false,["name"]="序章室外2通用",["id"]=1004,["res"]={"Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front","Scenes/GridSceneBgCommon/bg"}
+,["key"]="GridScene0_4"}
+,[2004]={["far_camera"]=false,["name"]="序章室外2通用",["id"]=2004,["res"]={"Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front","Scenes/GridSceneBgCommon/bg"}
+,["key"]="HardScene0_4"}
+,[99999992]={["far_camera"]=false,["name"]="序章室外2黄昏",["id"]=99999992,["res"]={"Scenes/Main_G_ps_Outside_Nightfall_02/Main_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/SceneSetting_G_ps_Outside_Nightfall_02","Scenes/Main_G_ps_Outside_Nightfall_02/Effects_G_ps_Outside_Nightfall_02_Front","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="GridScene0A_4"}
+,[2005]={["far_camera"]=false,["name"]="序章室外2通用",["id"]=2005,["res"]={"Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front","Scenes/GridSceneBgCommon/bg"}
+,["key"]="HardScene0_5"}
+,[300301001]={["type"]=2,["name"]="剧情活动-绮境笺宴-警局",["id"]=300301001,["res"]={"Scenes/DrillScenes_01/Main"}
+,["key"]="DrillScenes_01",["far_camera"]=false}
+,[301001006]={["type"]=3,["name"]="基地资源",["id"]=301001006,["res"]={"Scenes/BaseScene_Test/Main","Scenes/BaseScene_Test/SceneSetting","Scenes/BaseScene_Test/Effects"}
+,["key"]="MatrixScene",["far_camera"]=false}
+,[301001014]={["far_camera"]=false,["key"]="DormitoryScene_02",["bgm"]="TEx_Sys_ConsultationRoom_bpm92_20230321",["id"]=301001014,["res"]={"Scenes/DormitoryScene_02/Main"}
+,["name"]="心理咨询室"}
+,[2007]={["far_camera"]=false,["name"]="序章室内",["id"]=2007,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="HardScene0_7"}
+,[10101]={["far_camera"]=false,["name"]="1202地图",["id"]=10101,["res"]={"Scenes/Main_G_02_Indoor_01/Main_G_02_Indoor_01","Scenes/Main_G_02_Indoor_01/SceneSetting_G_02_Indoor_01","Scenes/Main_G_02_Indoor_01/Effects_G_02_Indoor_01","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="ClimbingTower2_1"}
+,[1005]={["far_camera"]=false,["name"]="序章室外2通用",["id"]=1005,["res"]={"Scenes/Main_G_ps_Outside_Common_02/Main_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/SceneSetting_G_ps_Outside_Common_02","Scenes/Main_G_ps_Outside_Common_02/Effects_G_ps_Outside_Common_02_Front","Scenes/GridSceneBgCommon/bg"}
+,["key"]="GridScene0_5"}
+,[1006]={["far_camera"]=false,["name"]="序章室内",["id"]=1006,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="GridScene0A_1"}
+,[200000000]={["type"]=2,["name"]="空场地",["id"]=200000000,["res"]={"Scenes/Common/Main","Scenes/Common/No_Fog"}
+,["key"]="test",["far_camera"]=false}
+,[1116]={["far_camera"]=false,["name"]="第一章下补充2水池1（白天）",["id"]=1116,["res"]={"Scenes/Main_G_01_Outside_Day_07/Main_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/SceneSetting_G_01_Outside_Day_07","Scenes/Main_G_01_Outside_Day_07/Effects_G_01_Outside_Day_07","Scenes/GridSceneBgBlue/bg"}
+,["key"]="GridScene1_16"}
+,[2010]={["far_camera"]=false,["name"]="序章室内",["id"]=2010,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="HardScene0_10"}
+,[2009]={["far_camera"]=false,["name"]="序章室内",["id"]=2009,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="HardScene0_9"}
+,[200204003]={["type"]=2,["name"]="第二章世界树室外战斗场景（夜晚）",["id"]=200204003,["res"]={"Scenes/02_Outside_01_Night/Main","Scenes/02_Outside_01_Night/SceneSetting"}
+,["key"]="02_Outside_01_Night",["far_camera"]=false}
+,[200102006]={["type"]=2,["name"]="第一章室外战斗场景boss特效",["id"]=200102006,["res"]={"Scenes/01_Outside_Boss/Main","Scenes/01_Outside_Boss/SceneSetting","Scenes/01_Outside_Boss/Effects"}
+,["key"]="01_Outside_Boss",["far_camera"]=false}
+,[1007]={["far_camera"]=false,["name"]="序章室内",["id"]=1007,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="GridScene0A_2"}
+,[2105]={["far_camera"]=false,["name"]="第一章上据点外围(黄昏)",["id"]=2105,["res"]={"Scenes/Main_G_01_Outside_Nightfall_02/Main_G_01_Outside_Nightfall_02","Scenes/Main_G_01_Outside_Nightfall_02/SceneSetting_G_01_Outside_Nightfall_02","Scenes/Main_G_01_Outside_Nightfall_02/Effects_G_01_Outside_Nightfall_02","Scenes/GridSceneBgNightfall/bg"}
+,["key"]="HardScene1_5"}
+,[2106]={["far_camera"]=false,["name"]="第一章上据点外围(夜晚)",["id"]=2106,["res"]={"Scenes/Main_G_01_Outside_Night_02/Main_G_01_Outside_Night_02","Scenes/Main_G_01_Outside_Night_02/SceneSetting_G_01_Outside_Night_02","Scenes/Main_G_01_Outside_Night_02/Effects_G_01_Outside_Night_02","Scenes/GridSceneBgNight02/bg"}
+,["key"]="HardScene1_6"}
+,[300201003]={["type"]=2,["name"]="剧情活动-迷城蛛影(万圣节)-街区场景端午差分早上",["id"]=300201003,["res"]={"Scenes/Duanwu_03_day/Main","Scenes/Duanwu_03_day/SceneSetting","Scenes/Duanwu_03_day/Effects"}
+,["key"]="Duanwu_03_day",["far_camera"]=false}
+,[1008]={["far_camera"]=false,["name"]="序章室内",["id"]=1008,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="GridScene0B_1"}
+,[121006]={["far_camera"]=false,["name"]="1206",["id"]=121006,["res"]={"Scenes/Main_G_02_Indoor_02/Main_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/SceneSetting_G_02_Indoor_02","Scenes/Main_G_02_Indoor_02/Effects_G_02_Indoor_02","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="Thor121001_6"}
+,[4304]={["far_camera"]=false,["name"]="序章室内",["id"]=4304,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene3_4"}
+,[4303]={["far_camera"]=false,["name"]="序章室内",["id"]=4303,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene3_3"}
+,[1009]={["far_camera"]=false,["name"]="序章室内",["id"]=1009,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="GridScene0B_1"}
+,[12507]={["far_camera"]=false,["name"]="12501奇迹之夜地图",["id"]=12507,["res"]={"Scenes/Main_G_Circus_01/Main_G_Circus_01","Scenes/Main_G_Circus_01/SceneSetting_G_Circus_01","Scenes/Main_G_Circus_01/Effects_G_Circus_01","Scenes/GridSceneBgCircus/bg"}
+,["key"]="ClimbingTower8002_7"}
+,[2124]={["far_camera"]=false,["name"]="第一章收束塔上升场地",["id"]=2124,["res"]={"Scenes/Main_G_ContractionTower_01/Main_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/SceneSetting_G_ContractionTower_01","Scenes/Main_G_ContractionTower_01/Effects_G_ContractionTower_01","Scenes/GridSceneBgTower/bg"}
+,["key"]="HardScene1_24"}
+,[4206]={["far_camera"]=false,["name"]="序章室内",["id"]=4206,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="ChipScene2_6"}
+,[1010]={["far_camera"]=false,["name"]="序章室内",["id"]=1010,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="GridScene0B_1"}
+,[200102002]={["type"]=2,["name"]="第一章室外战斗场景哈迪斯特效",["id"]=200102002,["res"]={"Scenes/01_Outside_Hades/Main","Scenes/01_Outside_Hades/SceneSetting","Scenes/01_Outside_Hades/Effects"}
+,["key"]="01_Outside_Hades",["far_camera"]=false}
+,[200205001]={["type"]=2,["name"]="第二章塔战斗场景1",["id"]=200205001,["res"]={"Scenes/ContractionTower_03/Main","Scenes/ContractionTower_03/SceneSetting","Scenes/ContractionTower_03/Effects"}
+,["key"]="ContractionTower3",["far_camera"]=false}
+,[300401003]={["type"]=2,["name"]="夏日活动海滩竖黑暗差分",["id"]=300401003,["res"]={"Scenes/Activity_03/Main","Scenes/Activity_03/SceneSetting","Scenes/Activity_03/Effects"}
+,["key"]="Activity_03",["far_camera"]=false}
+,[2008]={["far_camera"]=false,["name"]="序章室内",["id"]=2008,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="HardScene0_8"}
+,[2006]={["far_camera"]=false,["name"]="序章室内",["id"]=2006,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="HardScene0_6"}
+,[1208]={["far_camera"]=false,["name"]="1208",["id"]=1208,["res"]={"Scenes/Main_G_02_Indoor_03/Main_G_02_Indoor_03","Scenes/Main_G_02_Indoor_03/SceneSetting_G_02_Indoor_03","Scenes/Main_G_02_Indoor_03/Effects_G_02_Indoor_03","Scenes/GridSceneBgIndoor/bg"}
+,["key"]="GridScene2_8"}
+,[200101002]={["type"]=2,["name"]="第一章室内战斗场景（boss特效）",["id"]=200101002,["res"]={"Scenes/01_Indoor/Main","Scenes/01_Indoor/SceneSetting","Scenes/01_Indoor/Effects","Effects/common_hit/Yvaine_light_hit_Range"}
+,["key"]="01_Indoor2",["far_camera"]=true}
+,[300302001]={["type"]=2,["name"]="剧情活动-绮境笺宴-棋盘",["id"]=300302001,["res"]={"Scenes/DrillScenes_02/Main","Scenes/DrillScenes_02/Effects"}
+,["key"]="DrillScenes_02",["far_camera"]=false}
+,[300303001]={["type"]=2,["name"]="剧情活动-绮境笺宴-工厂",["id"]=300303001,["res"]={"Scenes/DrillScenes_03/Main","Scenes/DrillScenes_03/SceneSetting"}
+,["key"]="DrillScenes_03",["far_camera"]=false}
+,[10004]={["far_camera"]=false,["name"]="第一章下补充1过道1（白天）",["id"]=10004,["res"]={"Scenes/Main_G_01_Outside_Day_08/Main_G_01_Outside_Day_08","Scenes/Main_G_01_Outside_Day_08/SceneSetting_G_01_Outside_Day_08","Scenes/Main_G_01_Outside_Day_08/Effects_G_01_Outside_Day_08","Scenes/GridSceneBgBlue08/bg"}
+,["key"]="ClimbingTower1_4"}
+,[3305]={["far_camera"]=false,["name"]="序章室外2夜晚",["id"]=3305,["res"]={"Scenes/Main_G_ps_Outside_Night_02/Main_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/SceneSetting_G_ps_Outside_Night_02","Scenes/Main_G_ps_Outside_Night_02/Effects_G_ps_Outside_Night_02_Front","Scenes/GridSceneBgNight01/bg"}
+,["key"]="MaterialScene3_5"}
+,[5102]={["far_camera"]=false,["name"]="序章室内",["id"]=5102,["res"]={"Scenes/Main_G_ps_Indoor_Day/Main_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/SceneSetting_G_ps_Indoor_Day","Scenes/Main_G_ps_Indoor_Day/Effects_G_ps_Indoor_Day","Scenes/GridSceneBgGray/bg"}
+,["key"]="SkillScene1_2"}
+}
+

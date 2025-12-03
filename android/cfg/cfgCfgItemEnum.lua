@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '物品分类',
-	["types"] = {
-'int','string','string','string'
-},
-	["names"] = {
-'id','key','type','icon'
-},
-	["data"] = {
-{'1',	'1',	'货币',	''},
-{'2',	'2',	'突破素材',	''},
-{'3',	'3',	'基地素材',	''},
-},
+_G["CfgItemEnum"]={{["id"]=1,["type"]="货币",["key"]="1"}
+,{["id"]=2,["type"]="突破素材",["key"]="2"}
+,{["id"]=3,["type"]="基地素材",["key"]="3"}
 }
---cfgCfgItemEnum = conf
-return conf
+

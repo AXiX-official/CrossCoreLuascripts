@@ -1,18 +1,18 @@
-local conf = {
-	["filename"] = 'r-任务配置表.xlsx',
-	["sheetname"] = '每日勘测任务',
-	["types"] = {
-'int','string','int','string','string','string','int','int','int','int','string','string','int','int','int[]','json','int'
-},
-	["names"] = {
-'id','key','type','sName','sDescription','icon','nOpenLevel','nCloseLevel','nOppssId','nPreTaskId','sOpenTime','sCloseTime','nRestType','nTransferPath','aFinishIds','jAwardId','nIsHide'
-},
-	["data"] = {
-{'39101',	'',	'1',	'每日登录',	'每日登录',	'1',	'',	'',	'',	'',	'',	'',	'1',	'',	'39101',	'[[10043,120,2]]',	'2'},
-{'39102',	'',	'1',	'在限时贸易所任意1次购买',	'在限时贸易所任意1次购买',	'1',	'',	'',	'',	'',	'',	'',	'1',	'140006',	'39102',	'[[10043,120,2]]',	'2'},
-{'39103',	'',	'1',	'累计消耗150燃料',	'累计消耗150燃料',	'1',	'',	'',	'',	'',	'',	'',	'1',	'30001',	'39103',	'[[10043,120,2]]',	'2'},
-{'39104',	'',	'1',	'日常任务累计达到12星',	'日常任务累计达到12星',	'1',	'',	'',	'',	'',	'',	'',	'1',	'200001',	'39104',	'[[10043,180,2]]',	'2'},
-},
+_G["CfgTaskDayExploration"]={[39101]={["type"]=1,["sDescription"]="每日登录",["nRestType"]=1,["jAwardId"]={{10043,120,2}
 }
---cfgCfgTaskDayExploration = conf
-return conf
+,["aFinishIds"]={39101}
+,["key"]=39101,["nIsHide"]=2,["sName"]="每日登录",["icon"]="1",["id"]=39101}
+,[39103]={["type"]=1,["sDescription"]="累计消耗150燃料",["nRestType"]=1,["jAwardId"]={{10043,120,2}
+}
+,["aFinishIds"]={39103}
+,["key"]=39103,["nIsHide"]=2,["nTransferPath"]=30001,["sName"]="累计消耗150燃料",["icon"]="1",["id"]=39103}
+,[39102]={["type"]=1,["sDescription"]="在限时贸易所任意1次购买",["nRestType"]=1,["jAwardId"]={{10043,120,2}
+}
+,["aFinishIds"]={39102}
+,["key"]=39102,["nIsHide"]=2,["nTransferPath"]=140006,["sName"]="在限时贸易所任意1次购买",["icon"]="1",["id"]=39102}
+,[39104]={["type"]=1,["sDescription"]="日常任务累计达到12星",["nRestType"]=1,["jAwardId"]={{10043,180,2}
+}
+,["aFinishIds"]={39104}
+,["key"]=39104,["nIsHide"]=2,["nTransferPath"]=200001,["sName"]="日常任务累计达到12星",["icon"]="1",["id"]=39104}
+}
+

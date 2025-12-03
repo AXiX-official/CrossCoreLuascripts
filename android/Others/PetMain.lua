@@ -123,6 +123,13 @@ function Refresh(isJump)
     if currPet==nil then
         do return end;
     end
+    local cfg=Cfgs.CfgActiveEntry:GetByID(16);--获取宠物活动信息
+    local str=""
+    if cfg and cfg.endTime~=nil then
+        local timestamp= TimeUtil:GetTimeStampBySplit(cfg.endTime);
+        str=TimeUtil:GetTimeHMS(timestamp, "%Y-%m-%d %H:%M")
+    end
+    CSAPI.SetText(t2,str);
     PetActivityMgr:CountPetAttr(currPet:GetID());
     SetTabs();
     SetStateObj();

@@ -14,11 +14,6 @@ function Skill300401304:DoSkill(caster, target, data)
 end
 -- 攻击结束
 function Skill300401304:OnAttackOver(caster, target, data)
-	-- 300401306
-	self:tFunc_300401306_300401304(caster, target, data)
-	self:tFunc_300401306_300401305(caster, target, data)
-end
-function Skill300401304:tFunc_300401306_300401304(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -29,62 +24,11 @@ function Skill300401304:tFunc_300401306_300401304(caster, target, data)
 	else
 		return
 	end
-	-- 907800607
-	local playerturn = SkillApi:GetTurnCount(self, caster, self.card,nil)
-	-- 984100603
-	if SkillJudger:Equal(self, caster, target, true,(playerturn%2),1) then
-	else
-		return
-	end
-	-- 907800607
-	local playerturn = SkillApi:GetTurnCount(self, caster, self.card,nil)
-	-- 907800610
-	if SkillJudger:Greater(self, caster, self.card, true,playerturn,0) then
-	else
-		return
-	end
 	-- 8200
 	if SkillJudger:IsCurrSkill(self, caster, target, true) then
 	else
 		return
 	end
-	-- 300401304
-	if self:Rand(9000) then
-		self:AddBuff(SkillEffect[300401304], caster, target, data, 300400302)
-	end
-end
-function Skill300401304:tFunc_300401306_300401305(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8073
-	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
-	else
-		return
-	end
-	-- 907800607
-	local playerturn = SkillApi:GetTurnCount(self, caster, self.card,nil)
-	-- 984100603
-	if SkillJudger:Equal(self, caster, target, true,(playerturn%2),1) then
-	else
-		return
-	end
-	-- 907800607
-	local playerturn = SkillApi:GetTurnCount(self, caster, self.card,nil)
-	-- 907800610
-	if SkillJudger:Greater(self, caster, self.card, true,playerturn,0) then
-	else
-		return
-	end
-	-- 8200
-	if SkillJudger:IsCurrSkill(self, caster, target, true) then
-	else
-		return
-	end
-	-- 300401305
-	if self:Rand(9000) then
-		self:AddBuff(SkillEffect[300401305], caster, target, data, 300400303)
-	end
+	-- 300400313
+	self:AddBuffCount(SkillEffect[300400313], caster, target, data, 300400313,1,3)
 end

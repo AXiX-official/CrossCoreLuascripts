@@ -1,22 +1,91 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '建筑基础',
-	["types"] = {
-'int','string','string','string','string','bool','string','int','int','int','int','bool','string[]','int','json','int','int','int','json','int','int[]','int','string','string','string','float[]','float[]','string','float[]','float[]','int','int','float','float[]','float[]','int','string','float[]'
-},
-	["names"] = {
-'id','key','name','name_2','name_en','isShow','upCfg','buildSort','type','openType','openVal','initOpen','initRoles','hpCostUnit','hpCosts','assualtWeight','group','buildTime','costs','numLmit','needAbilitys','jumpId','res_icon','icon','icon_small','frontUIPos','overUIPos','sceneKey','offsetPos','offsetRot','minFov','maxFov','radius','centerOffset','startPos','startFov','explanation','enterPos'
-},
-	["data"] = {
-{'1001',	'1001',	'行星指挥部',	'指挥中枢',	'COMMAND',	'1',	'CfgBControlTowerLvl',	'1',	'1',	'1',	'1',	'1',	'',	'10',	'[[10001,1,2]]',	'1200',	'',	'30',	'',	'1',	'',	'',	'base_01',	'building1001',	'btn_2_11',	'-7.24,8.64,0',	'0,9.83,-3.14',	'BS_Indoor_Command',	'2.65,10,-14.14',	'45,0,0',	'22',	'46',	'4.5',	'0,0,1.5',	'0,0,0',	'45',	'碎星探索行动的总指挥部，是基地内所有建筑的基础设置和运算核心。升级可派遣更多队员进入其中协作。',	'8.26,2.12,-1.01'},
-{'1002',	'1002',	'能源发电站',	'供能中心',	'ENERGY CENTER',	'1',	'CfgBPowerHouseLvl',	'3',	'2',	'2',	'1',	'',	'',	'10',	'[[10001,1,2]]',	'800',	'1',	'30',	'[[10001,1000,2]]',	'1',	'',	'',	'base_02',	'building1002',	'btn_2_12',	'10.91,3,-4.07',	'-2.92,10.03,-4.03',	'BS_Indoor_Power',	'-12.77,9.93,-7.52',	'35,55,0',	'20',	'45',	'5',	'1,0,1',	'0.41,-0.59,-0.85',	'40',	'利用碎星当地的NOVA结晶产生的能量，高效的转换为基地所需的电力，升级可提高转换效率。',	''},
-{'1003',	'1003',	'挖掘矿场',	'制造中心',	'MINE',	'1',	'CfgBProductLvl',	'2',	'3',	'2',	'1',	'1',	'',	'10',	'[[10001,1,2]]',	'800',	'1',	'30',	'[[10001,1000,2]]',	'1',	'',	'',	'base_03',	'building1003',	'btn_2_13',	'-0.87,9.26,0',	'-0.06,-1.2,-9.48',	'BS_Indoor_Fabricate',	'-11.17,9.93,-10.20 ',	'35.00,45.25,0',	'22',	'40',	'5',	'0,0,0',	'-1.35,-0.62,-0.88',	'33',	'安置在矿产丰富的地方，通过开采可定时获得特定的原料，特定原料可用于升级基地和交易，升级可提高采集效率。',	'-4.65,1.71,-2.1'},
-{'1004',	'1004',	'原料交易所',	'交易中心',	'EXCHANGE',	'1',	'CfgBTradeLvl',	'4',	'4',	'2',	'1',	'',	'',	'10',	'[[10001,1,2]]',	'800',	'2',	'10',	'[[10001,1000,2]]',	'1',	'',	'',	'base_04',	'building1004',	'btn_2_14',	'-2.82,9.14,-1.09',	'1.44,10.85,-3.7',	'BS_Indoor_Trade',	'14,15,-7.6',	'43.7,-46,0',	'15',	'38',	'5',	'-2,0,-1',	'-4.12,0.41,0.15',	'30',	'可使用特定原料交易自己所需的物品，升级可获得更多的交易订单。',	'-4.96,1.82,0.041'},
-{'1006',	'1006',	'合成工厂',	'合成中心',	'SYNTHESIS CENTER',	'1',	'CfgBCompoundLvl',	'5',	'6',	'2',	'1',	'1',	'',	'10',	'[[10001,1,2]]',	'1000',	'1',	'30',	'[[10001,1000,2]]',	'1',	'',	'',	'base_06',	'building1006',	'btn_2_16',	'2.17,9.71,0',	'0,8.97,-3.2',	'BS_Indoor_Synthesis',	'-1.50,8.19,-11.22',	'41.25,31.80,0.00',	'28',	'46',	'4',	'-1,0,2',	'0,0,0',	'45',	'根据前哨基地既有设施改造的合成工厂，可将低级材料合成为更高效的材料。升级解锁更高级物品合成所需的基础条件。',	'2.2,1.7,-2.9'},
-{'1009',	'1009',	'研发中心',	'研发中心',	'R&D CENTER',	'1',	'CfgBRemouldLvl',	'6',	'9',	'1',	'1',	'',	'',	'10',	'[[10001,1,2]]',	'1000',	'1',	'30',	'[[10001,1000,2]]',	'1',	'',	'',	'base_09',	'building1009',	'btn_2_19',	'2.67,7.18,0',	'-0.32,7.18,1.1',	'BS_Indoor_Development',	'-9.47,16.67,-10.46',	'40,38.63,0',	'12',	'35',	'8',	'-1,0,0',	'-2.02,-0.31,-3.8',	'34',	'可把低阶芯片研发为高阶芯片，分解芯片可获得研发所需的材料，升级可开启更多的研发槽位。',	'-0.05,5,1.16'},
-{'2001',	'2001',	'宿舍',	'',	'DORMITORY',	'1',	'',	'11',	'10',	'1',	'1',	'1',	'',	'',	'',	'0',	'2',	'30',	'',	'1',	'',	'',	'',	'building2001',	'btn_2_21',	'0.6,8.68,-3.66',	'-4.01,5.63,-0.56',	'',	'-16.5,16.5,16.5',	'35,135,0',	'12',	'35',	'6',	'2,0,-2',	'0,0,0',	'35',	'可自由布置宿舍，增加宿舍的舒适度，提升宿舍内入驻队员的心情恢复速度。',	''},
-{'2002',	'2002',	'心理辅导室',	'',	'COUNSULTING',	'',	'CfgPhyRoomLvl',	'12',	'11',	'1',	'1',	'1',	'',	'',	'',	'0',	'2',	'30',	'',	'1',	'',	'',	'',	'building1005',	'btn_2_21',	'5.45,4.9,-11.06',	'-4.01,5.63,-0.56',	'DormitoryScene_02',	'-24.5,20,-27',	'35,45,0',	'12',	'29',	'8',	'2,0,2',	'0,0,0',	'20',	'',	''},
-},
+_G["CfgBuidingBase"]={[1006]={["offsetRot"]={41.25,31.8,0}
+,["sceneKey"]="BS_Indoor_Synthesis",["upCfg"]="CfgBCompoundLvl",["enterPos"]={2.2,1.7,-2.9}
+,["buildTime"]=30,["key"]="1006",["centerOffset"]={-1,0,2}
+,["overUIPos"]={0,8.97,-3.2}
+,["explanation"]="根据前哨基地既有设施改造的合成工厂，可将低级材料合成为更高效的材料。升级解锁更高级物品合成所需的基础条件。",["offsetPos"]={-1.5,8.19,-11.22}
+,["hpCosts"]={{10001,1,2}
 }
---cfgCfgBuidingBase = conf
-return conf
+,["initOpen"]=true,["needAbilitys"]={8001,9001,9002,15002,15003,15004,15005,15006,25001}
+,["name"]="合成工厂",["frontUIPos"]={2.17,9.71,0}
+,["maxFov"]=46,["icon_small"]="btn_2_16",["assualtWeight"]=1000,["group"]=1,["buildSort"]=5,["costs"]={{10001,1000,2}
+}
+,["isShow"]=true,["res_icon"]="base_06",["name_en"]="SYNTHESIS CENTER",["name_2"]="合成中心",["type"]=6,["startFov"]=45,["hpCostUnit"]=10,["id"]=1006,["openType"]=2,["minFov"]=28,["radius"]=4,["openVal"]=1,["icon"]="building1006",["startPos"]={0,0,0}
+,["numLmit"]=1}
+,[1001]={["offsetRot"]={45,0,0}
+,["sceneKey"]="BS_Indoor_Command",["upCfg"]="CfgBControlTowerLvl",["enterPos"]={8.26,2.12,-1.01}
+,["buildTime"]=30,["minFov"]=22,["centerOffset"]={0,0,1.5}
+,["icon"]="building1001",["explanation"]="碎星探索行动的总指挥部，是基地内所有建筑的基础设置和运算核心。升级可派遣更多队员进入其中协作。",["offsetPos"]={2.65,10,-14.14}
+,["hpCosts"]={{10001,1,2}
+}
+,["initOpen"]=true,["needAbilitys"]={1001,1002,2001,8001,9001,9002,25001,28001}
+,["name"]="行星指挥部",["frontUIPos"]={-7.24,8.64,0}
+,["maxFov"]=46,["icon_small"]="btn_2_11",["assualtWeight"]=1200,["buildSort"]=1,["isShow"]=true,["res_icon"]="base_01",["name_en"]="COMMAND",["name_2"]="指挥中枢",["type"]=1,["startFov"]=45,["hpCostUnit"]=10,["openType"]=1,["overUIPos"]={0,9.83,-3.14}
+,["radius"]=4.5,["key"]="1001",["openVal"]=1,["id"]=1001,["startPos"]={0,0,0}
+,["numLmit"]=1}
+,[1003]={["offsetRot"]={35,45.25,0}
+,["sceneKey"]="BS_Indoor_Fabricate",["upCfg"]="CfgBProductLvl",["enterPos"]={-4.65,1.71,-2.1}
+,["buildTime"]=30,["key"]="1003",["centerOffset"]={0,0,0}
+,["overUIPos"]={-0.06,-1.2,-9.48}
+,["explanation"]="安置在矿产丰富的地方，通过开采可定时获得特定的原料，特定原料可用于升级基地和交易，升级可提高采集效率。",["offsetPos"]={-11.17,9.93,-10.2}
+,["hpCosts"]={{10001,1,2}
+}
+,["initOpen"]=true,["needAbilitys"]={3001,3002,4001,4002,4003,5001,8001,9001,9002,24001,25001,29001,29002,29003,30001,30002,30003,31001,32001,33001}
+,["name"]="挖掘矿场",["frontUIPos"]={-0.87,9.26,0}
+,["maxFov"]=40,["icon_small"]="btn_2_13",["assualtWeight"]=800,["group"]=1,["buildSort"]=2,["costs"]={{10001,1000,2}
+}
+,["isShow"]=true,["res_icon"]="base_03",["name_en"]="MINE",["name_2"]="制造中心",["type"]=3,["startFov"]=33,["hpCostUnit"]=10,["id"]=1003,["openType"]=2,["minFov"]=22,["radius"]=5,["openVal"]=1,["icon"]="building1003",["startPos"]={-1.35,-0.62,-0.88}
+,["numLmit"]=1}
+,[2001]={["icon_small"]="btn_2_21",["openVal"]=1,["group"]=2,["overUIPos"]={-4.01,5.63,-0.56}
+,["buildSort"]=11,["buildTime"]=30,["radius"]=6,["key"]="2001",["minFov"]=12,["isShow"]=true,["centerOffset"]={2,0,-2}
+,["name_en"]="DORMITORY",["explanation"]="可自由布置宿舍，增加宿舍的舒适度，提升宿舍内入驻队员的心情恢复速度。",["openType"]=1,["type"]=10,["startFov"]=35,["offsetRot"]={35,135,0}
+,["id"]=2001,["offsetPos"]={-16.5,16.5,16.5}
+,["initOpen"]=true,["needAbilitys"]={},["assualtWeight"]=0,["name"]="宿舍",["icon"]="building2001",["frontUIPos"]={0.6,8.68,-3.66}
+,["maxFov"]=35,["startPos"]={0,0,0}
+,["numLmit"]=1}
+,[2002]={["openVal"]=1,["icon_small"]="btn_2_21",["assualtWeight"]=0,["group"]=2,["id"]=2002,["upCfg"]="CfgPhyRoomLvl",["buildTime"]=30,["offsetRot"]={35,45,0}
+,["isShow"]=false,["key"]="2002",["radius"]=8,["centerOffset"]={2,0,2}
+,["name_en"]="COUNSULTING",["minFov"]=12,["type"]=11,["startFov"]=20,["offsetPos"]={-24.5,20,-27}
+,["openType"]=1,["sceneKey"]="DormitoryScene_02",["overUIPos"]={-4.01,5.63,-0.56}
+,["initOpen"]=true,["needAbilitys"]={},["icon"]="building1005",["name"]="心理辅导室",["buildSort"]=12,["frontUIPos"]={5.45,4.9,-11.06}
+,["maxFov"]=29,["startPos"]={0,0,0}
+,["numLmit"]=1}
+,[1002]={["offsetRot"]={35,55,0}
+,["sceneKey"]="BS_Indoor_Power",["upCfg"]="CfgBPowerHouseLvl",["buildTime"]=30,["key"]="1002",["centerOffset"]={1,0,1}
+,["overUIPos"]={-2.92,10.03,-4.03}
+,["explanation"]="利用碎星当地的NOVA结晶产生的能量，高效的转换为基地所需的电力，升级可提高转换效率。",["offsetPos"]={-12.77,9.93,-7.52}
+,["hpCosts"]={{10001,1,2}
+}
+,["initOpen"]=false,["needAbilitys"]={8001,9001,9002,14001,14002,25001}
+,["name"]="能源发电站",["frontUIPos"]={10.91,3,-4.07}
+,["maxFov"]=45,["icon_small"]="btn_2_12",["assualtWeight"]=800,["group"]=1,["buildSort"]=3,["costs"]={{10001,1000,2}
+}
+,["isShow"]=true,["res_icon"]="base_02",["name_en"]="ENERGY CENTER",["name_2"]="供能中心",["type"]=2,["startFov"]=40,["hpCostUnit"]=10,["id"]=1002,["openType"]=2,["minFov"]=20,["radius"]=5,["openVal"]=1,["icon"]="building1002",["startPos"]={0.41,-0.59,-0.85}
+,["numLmit"]=1}
+,[1004]={["offsetRot"]={43.7,-46,0}
+,["sceneKey"]="BS_Indoor_Trade",["upCfg"]="CfgBTradeLvl",["enterPos"]={-4.96,1.82,0.041}
+,["buildTime"]=10,["key"]="1004",["centerOffset"]={-2,0,-1}
+,["overUIPos"]={1.44,10.85,-3.7}
+,["explanation"]="可使用特定原料交易自己所需的物品，升级可获得更多的交易订单。",["offsetPos"]={14,15,-7.6}
+,["hpCosts"]={{10001,1,2}
+}
+,["initOpen"]=false,["needAbilitys"]={8001,9001,9002,11001,11002,11003,11004,12001,12002,13001,13002,20001,21001,22001,23001,23002,25001}
+,["name"]="原料交易所",["frontUIPos"]={-2.82,9.14,-1.09}
+,["maxFov"]=38,["icon_small"]="btn_2_14",["assualtWeight"]=800,["group"]=2,["buildSort"]=4,["costs"]={{10001,1000,2}
+}
+,["isShow"]=true,["res_icon"]="base_04",["name_en"]="EXCHANGE",["name_2"]="交易中心",["type"]=4,["startFov"]=30,["hpCostUnit"]=10,["id"]=1004,["openType"]=2,["minFov"]=15,["radius"]=5,["openVal"]=1,["icon"]="building1004",["startPos"]={-4.12,0.41,0.15}
+,["numLmit"]=1}
+,[1009]={["offsetRot"]={40,38.63,0}
+,["sceneKey"]="BS_Indoor_Development",["upCfg"]="CfgBRemouldLvl",["enterPos"]={-0.05,5,1.16}
+,["buildTime"]=30,["key"]="1009",["centerOffset"]={-1,0,0}
+,["overUIPos"]={-0.32,7.18,1.1}
+,["explanation"]="可把低阶芯片研发为高阶芯片，分解芯片可获得研发所需的材料，升级可开启更多的研发槽位。",["offsetPos"]={-9.47,16.67,-10.46}
+,["hpCosts"]={{10001,1,2}
+}
+,["initOpen"]=false,["needAbilitys"]={8001,9001,9002,10001,24002,25001,26001,26002,26003,26004,26005,27001}
+,["name"]="研发中心",["frontUIPos"]={2.67,7.18,0}
+,["maxFov"]=35,["icon_small"]="btn_2_19",["assualtWeight"]=1000,["group"]=1,["buildSort"]=6,["costs"]={{10001,1000,2}
+}
+,["isShow"]=true,["res_icon"]="base_09",["name_en"]="R&D CENTER",["name_2"]="研发中心",["type"]=9,["startFov"]=34,["hpCostUnit"]=10,["id"]=1009,["openType"]=1,["minFov"]=12,["radius"]=8,["openVal"]=1,["icon"]="building1009",["startPos"]={-2.02,-0.31,-3.8}
+,["numLmit"]=1}
+}
+

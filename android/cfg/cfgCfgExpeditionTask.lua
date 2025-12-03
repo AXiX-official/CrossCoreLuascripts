@@ -1,18 +1,14 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '远征任务配置表',
-	["types"] = {
-'int','int','string','string','int[]','int','int','int[]'
-},
-	["names"] = {
-'id','key','sName','icon','tFlush','maxNum','per','subs'
-},
-	["data"] = {
-{'1',	'1',	'分支探索',	'btn_37_01',	'4',	'',	'',	'1001,1002'},
-{'2',	'2',	'主干探索',	'btn_38_01',	'4,12,20',	'2',	'',	'3001'},
-{'3',	'3',	'危险探索',	'btn_39_01',	'4',	'10',	'10',	'4001'},
-{'4',	'4',	'',	'',	'21',	'5',	'',	'2001'},
-},
+_G["CfgExpeditionTask"]={{["subs"]={1001,1002}
+,["key"]=1,["id"]=1,["sName"]="分支探索",["icon"]="btn_37_01",["tFlush"]={4}
 }
---cfgCfgExpeditionTask = conf
-return conf
+,{["maxNum"]=2,["subs"]={3001}
+,["key"]=2,["id"]=2,["sName"]="主干探索",["icon"]="btn_38_01",["tFlush"]={4,12,20}
+}
+,{["maxNum"]=10,["subs"]={4001}
+,["key"]=3,["per"]=10,["id"]=3,["sName"]="危险探索",["icon"]="btn_39_01",["tFlush"]={4}
+}
+,{["maxNum"]=5,["key"]=4,["tFlush"]={21}
+,["subs"]={2001}
+,["id"]=4}
+}
+

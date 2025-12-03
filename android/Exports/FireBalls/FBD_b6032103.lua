@@ -3,14 +3,16 @@ local this =
 {
 [1079508512]={
 {time=2350,type=0,cue_sheet="fight/effect/Eighteen.acb ",cue_name="60321_change"},
-{effect="change",effect_pack="b60321",time=4500,type=0,pos_ref={ref_type=6}}
+{effect="change",time=4500,type=0,pos_ref={ref_type=6}}
 },
 [-686817241]={
 {time=3500,type=0,cue_sheet="fight/effect/Eighteen.acb ",cue_name="60321_cast_01"},
 {delay=500,time=4000,type=3,hits={0}},
 {time=3500,type=0,cue_sheet="cv/Dainslef.acb",cue_name="Dainslef_20",cue_feature=1},
-{effect="cast1_hit",effect_pack="b60321",time=3500,type=0,pos_ref={ref_type=13}},
-{effect="cast1_eff",effect_pack="b60321",time=3500,type=0,pos_ref={ref_type=6}}
+{delay=500,time=4000,type=3,hits={0}},
+{effect="cast1_hit",effect_pack="b60321",time=3500,type=0,pos_ref={ref_type=6}},
+{effect="cast1_eff",effect_pack="b60321",time=3500,type=0,pos_ref={ref_type=6}},
+{delay=500,time=4000,type=3,hits={0}}
 },
 [1310282141]={
 {time=13700,type=0,cue_sheet="fight/effect/Eighteen.acb ",cue_name="60321_cast_02"},

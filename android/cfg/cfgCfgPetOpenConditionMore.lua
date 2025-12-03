@@ -1,20 +1,14 @@
-local conf = {
-	["filename"] = 'd-电子宠物.xlsx',
-	["sheetname"] = '模块开启条件',
-	["types"] = {
-'int','int','int[]'
-},
-	["names"] = {
-'id','key','conditions'
-},
-	["data"] = {
-{'1',	'1',	'5002'},
-{'2',	'2',	'5003'},
-{'3',	'3',	'2001'},
-{'4',	'4',	'5004'},
-{'5',	'5',	'2001'},
-{'6',	'6',	'2001'},
-},
+_G["CfgPetOpenConditionMore"]={{["id"]=1,["conditions"]={5012}
+,["key"]=1}
+,{["id"]=2,["conditions"]={5013}
+,["key"]=2}
+,{["id"]=3,["conditions"]={2001}
+,["key"]=3}
+,{["id"]=4,["conditions"]={5014}
+,["key"]=4}
+,{["id"]=5,["conditions"]={2001}
+,["key"]=5}
+,{["id"]=6,["conditions"]={2001}
+,["key"]=6}
 }
---cfgCfgPetOpenConditionMore = conf
-return conf
+

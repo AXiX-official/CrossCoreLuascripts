@@ -1,32 +1,20 @@
-local conf = {
-	["filename"] = 'h-好友.xlsx',
-	["sheetname"] = '好友常量',
-	["types"] = {
-'int','string','string','int','string'
-},
-	["names"] = {
-'id','key','sEnum','nVal','sDesc'
-},
-	["data"] = {
-{'1',	'1',	'InviteLimit',	'999',	'好友发送申请上限'},
-{'2',	'2',	'InviteSignLimit',	'20',	'申请备注文字上限'},
-{'3',	'3',	'DeleteCoolTime',	'24',	'删除的好友在XX小时内不能再添加'},
-{'4',	'4',	'RecommendLimit',	'10',	'系统推荐好友的数量'},
-{'5',	'5',	'RecommendFlushDiff',	'2',	'推荐好友的刷新时间（小时）'},
-{'6',	'6',	'DailyDelLimit',	'15',	'每天删除好友上限'},
-{'7',	'7',	'RecomendMaxLvlDiff',	'10',	'推荐等级最大差距'},
-{'8',	'8',	'SendMsgLenLimit',	'60',	'聊天信息文字上限'},
-{'9',	'9',	'AliasLenLimit',	'20',	'别名长度限制'},
-{'10',	'10',	'RecomendFlushCnt',	'5',	'好友推荐少于多少时刷新'},
-{'11',	'11',	'FriendStateUpdate',	'30',	'好友状态刷新时间(前端使用，开着界面的时候多久申请一次)'},
-{'12',	'12',	'FluhDiff',	'5',	'好友刷新间隔，包含助战队列刷新间隔（秒）(后端使用)'},
-{'13',	'13',	'AssitCntLimit',	'50',	'每个好友，可助战次数'},
-{'14',	'14',	'AssitCardMaxLevelLimit',	'20',	'助战卡牌和玩家最高等级差'},
-{'15',	'15',	'DenyCoolTime',	'1',	'拒绝后多久不能重复申请(小时)'},
-{'16',	'16',	'RecommendManualFlushDiff',	'10',	'好友推荐手动刷新间隔'},
-{'17',	'17',	'AssitPlrCnt',	'36',	'好友助战人数发送上限（包括非好友）'},
-{'18',	'18',	'NotFriendAssitCntLimit',	'5',	'非好友，可助战次数'},
-},
+_G["CfgFriendConst"]={{["sEnum"]="InviteLimit",["nVal"]=999,["key"]="1",["id"]=1,["sDesc"]="好友发送申请上限"}
+,{["sEnum"]="InviteSignLimit",["nVal"]=20,["key"]="2",["id"]=2,["sDesc"]="申请备注文字上限"}
+,{["sEnum"]="DeleteCoolTime",["nVal"]=24,["key"]="3",["id"]=3,["sDesc"]="删除的好友在XX小时内不能再添加"}
+,{["sEnum"]="RecommendLimit",["nVal"]=10,["key"]="4",["id"]=4,["sDesc"]="系统推荐好友的数量"}
+,{["sEnum"]="RecommendFlushDiff",["nVal"]=2,["key"]="5",["id"]=5,["sDesc"]="推荐好友的刷新时间（小时）"}
+,{["sEnum"]="DailyDelLimit",["nVal"]=15,["key"]="6",["id"]=6,["sDesc"]="每天删除好友上限"}
+,{["sEnum"]="RecomendMaxLvlDiff",["nVal"]=10,["key"]="7",["id"]=7,["sDesc"]="推荐等级最大差距"}
+,{["sEnum"]="SendMsgLenLimit",["nVal"]=60,["key"]="8",["id"]=8,["sDesc"]="聊天信息文字上限"}
+,{["sEnum"]="AliasLenLimit",["nVal"]=20,["key"]="9",["id"]=9,["sDesc"]="别名长度限制"}
+,{["sEnum"]="RecomendFlushCnt",["nVal"]=5,["key"]="10",["id"]=10,["sDesc"]="好友推荐少于多少时刷新"}
+,{["sEnum"]="FriendStateUpdate",["nVal"]=30,["key"]="11",["id"]=11,["sDesc"]="好友状态刷新时间(前端使用，开着界面的时候多久申请一次)"}
+,{["sEnum"]="FluhDiff",["nVal"]=5,["key"]="12",["id"]=12,["sDesc"]="好友刷新间隔，包含助战队列刷新间隔（秒）(后端使用)"}
+,{["sEnum"]="AssitCntLimit",["nVal"]=50,["key"]="13",["id"]=13,["sDesc"]="每个好友，可助战次数"}
+,{["sEnum"]="AssitCardMaxLevelLimit",["nVal"]=20,["key"]="14",["id"]=14,["sDesc"]="助战卡牌和玩家最高等级差"}
+,{["sEnum"]="DenyCoolTime",["nVal"]=1,["key"]="15",["id"]=15,["sDesc"]="拒绝后多久不能重复申请(小时)"}
+,{["sEnum"]="RecommendManualFlushDiff",["nVal"]=10,["key"]="16",["id"]=16,["sDesc"]="好友推荐手动刷新间隔"}
+,{["sEnum"]="AssitPlrCnt",["nVal"]=36,["key"]="17",["id"]=17,["sDesc"]="好友助战人数发送上限（包括非好友）"}
+,{["sEnum"]="NotFriendAssitCntLimit",["nVal"]=5,["key"]="18",["id"]=18,["sDesc"]="非好友，可助战次数"}
 }
---cfgCfgFriendConst = conf
-return conf
+

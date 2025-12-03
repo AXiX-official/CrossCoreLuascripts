@@ -2,7 +2,9 @@
 LanguageMgr = {}
 local this = LanguageMgr
 
-this.mLocalLanguageType = 1
+
+this.mLocalLanguageType =1;---5.0之前使用
+---this.mLocalLanguageType =CSAPI.GetDefaultLanguageIndex();---5.0或者5.0以启用
 
 function this:Init()
     if (self.mgr == nil) then

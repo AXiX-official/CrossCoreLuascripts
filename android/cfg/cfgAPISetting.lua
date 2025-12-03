@@ -1,67 +1,55 @@
-local conf = {
-	["filename"] = 'j-技能.xlsx',
-	["sheetname"] = 'API特殊处理表',
-	["types"] = {
-'int','int','int','int','int','int','string','string'
-},
-	["names"] = {
-'id','delay','action_delay','time','play_aft_skill','play_in_skill','play_eff','flag'
-},
-	["data"] = {
-{'1',	'',	'',	'100',	'',	'',	'',	''},
-{'2',	'',	'',	'2000',	'1',	'',	'',	''},
-{'3',	'500',	'',	'',	'',	'',	'',	''},
-{'4',	'',	'',	'20',	'2',	'',	'',	''},
-{'5',	'',	'',	'200',	'',	'',	'',	''},
-{'6',	'',	'',	'300',	'',	'',	'',	''},
-{'7',	'',	'',	'350',	'',	'',	'',	''},
-{'8',	'',	'',	'400',	'',	'',	'',	''},
-{'9',	'',	'',	'450',	'',	'',	'',	''},
-{'10',	'',	'',	'500',	'',	'',	'',	''},
-{'11',	'1500',	'',	'',	'',	'',	'',	''},
-{'12',	'1000',	'',	'',	'',	'',	'',	''},
-{'13',	'7000',	'',	'',	'1',	'',	'',	''},
-{'41',	'',	'',	'100',	'1',	'',	'',	''},
-{'42',	'',	'',	'100',	'2',	'',	'',	''},
-{'43',	'',	'1000',	'20',	'2',	'',	'common/cure',	''},
-{'100',	'',	'',	'',	'',	'1',	'',	''},
-{'101',	'',	'',	'100',	'',	'1',	'',	''},
-{'102',	'',	'',	'',	'',	'',	'common/cure',	''},
-{'103',	'',	'',	'20',	'1',	'',	'o20040/cast2_hit2',	''},
-{'104',	'500',	'800',	'',	'',	'',	'',	''},
-{'105',	'',	'200',	'500',	'1',	'',	'common_hit/qc_zhiliao_hit',	''},
-{'106',	'0',	'',	'1000',	'1',	'',	'',	''},
-{'201',	'',	'2000',	'',	'',	'1',	'common_hit/qc_buff_red_hit',	''},
-{'202',	'',	'2000',	'',	'',	'1',	'common_hit/qc_buff_hit',	''},
-{'203',	'',	'2000',	'',	'',	'1',	'common_hit/qc_buff_yellow_hit',	''},
-{'204',	'',	'1500',	'',	'',	'',	'common_hit/qc_buff_purple_hit',	''},
-{'211',	'',	'2000',	'',	'',	'',	'common_hit/qc_zhiliao_hit',	''},
-{'301',	'',	'2000',	'',	'',	'',	'common_hit/qc_debuff_hit',	''},
-{'401',	'',	'',	'',	'',	'',	'common_hit/qc_blunt_hit1',	'hit'},
-{'501',	'',	'',	'3000',	'',	'1',	'buff/GuangDun',	''},
-{'502',	'',	'',	'3000',	'',	'1',	'buff/ShitiDun',	''},
-{'503',	'',	'',	'',	'1',	'',	'common_hit/qc_shitidun_break',	''},
-{'504',	'',	'',	'',	'1',	'',	'common_hit/qc_guangdun_break',	''},
-{'601',	'',	'',	'',	'',	'',	'UIEff/UIEff_NP',	''},
-{'602',	'',	'',	'',	'1',	'',	'a40040/Cast0_hit1',	''},
-{'701',	'',	'',	'',	'',	'',	'',	'hit'},
-{'702',	'',	'400',	'20',	'',	'',	'a40200/cast3_hit',	''},
-{'703',	'1000',	'',	'',	'',	'',	'',	''},
-{'704',	'',	'',	'1000',	'2',	'',	's50040/cast3_hit',	''},
-{'705',	'',	'',	'1000',	'2',	'',	's50040/cast1_eff',	''},
-{'706',	'500',	'',	'',	'',	'',	'',	''},
-{'707',	'',	'1000',	'20',	'',	'',	'',	''},
-{'708',	'',	'3000',	'20',	'',	'',	'',	''},
-{'709',	'',	'2000',	'20',	'',	'',	'',	'hit'},
-{'710',	'',	'',	'',	'',	'',	'common_hit/qc_zhiliao_hit',	''},
-{'711',	'',	'300',	'',	'',	'',	'',	''},
-{'712',	'',	'500',	'20',	'2',	'',	'common_hit/qc_zhiliao_hit',	''},
-{'713',	'',	'1000',	'',	'',	'',	'o20230/cast2_cure01',	''},
-{'714',	'',	'1000',	'',	'',	'',	'u30480/cast1_eff',	''},
-{'715',	'',	'',	'',	'',	'',	'd70400/cast1_buff1',	''},
-{'716',	'',	'',	'',	'',	'',	'd70400/cast1_buff',	'hit'},
-{'717',	'',	'',	'20',	'2',	'',	'',	'hit'},
-},
+_G["APISetting"]={{["id"]=1,["time"]=100,["key"]=1}
+,{["id"]=2,["play_aft_skill"]=1,["time"]=2000,["key"]=2}
+,{["id"]=3,["key"]=3,["delay"]=500}
+,{["id"]=4,["play_aft_skill"]=2,["time"]=20,["key"]=4}
+,{["id"]=5,["time"]=200,["key"]=5}
+,{["id"]=6,["time"]=300,["key"]=6}
+,{["id"]=7,["time"]=350,["key"]=7}
+,{["id"]=8,["time"]=400,["key"]=8}
+,{["id"]=9,["time"]=450,["key"]=9}
+,{["id"]=10,["time"]=500,["key"]=10}
+,{["id"]=11,["key"]=11,["delay"]=1500}
+,{["id"]=12,["key"]=12,["delay"]=1000}
+,{["id"]=13,["play_aft_skill"]=1,["delay"]=7000,["key"]=13}
+,[106]={["key"]=106,["play_aft_skill"]=1,["time"]=1000,["id"]=106,["delay"]=0}
+,[211]={["id"]=211,["key"]=211,["play_eff"]="common_hit/qc_zhiliao_hit",["action_delay"]=2000}
+,[704]={["play_aft_skill"]=2,["play_eff"]="s50040/cast3_hit",["id"]=704,["key"]=704,["time"]=1000}
+,[706]={["id"]=706,["key"]=706,["delay"]=500}
+,[708]={["id"]=708,["key"]=708,["time"]=20,["action_delay"]=3000}
+,[710]={["id"]=710,["key"]=710,["play_eff"]="common_hit/qc_zhiliao_hit"}
+,[712]={["key"]=712,["play_aft_skill"]=2,["time"]=20,["id"]=712,["play_eff"]="common_hit/qc_zhiliao_hit",["action_delay"]=500}
+,[714]={["id"]=714,["key"]=714,["play_eff"]="u30480/cast1_eff",["action_delay"]=1000}
+,[716]={["id"]=716,["key"]=716,["play_eff"]="d70400/cast1_buff",["flag"]="hit"}
+,[301]={["id"]=301,["key"]=301,["play_eff"]="common_hit/qc_debuff_hit",["action_delay"]=2000}
+,[602]={["id"]=602,["play_aft_skill"]=1,["play_eff"]="a40040/Cast0_hit1",["key"]=602}
+,[501]={["time"]=3000,["key"]=501,["id"]=501,["play_in_skill"]=1,["play_eff"]="buff/GuangDun"}
+,[502]={["time"]=3000,["key"]=502,["id"]=502,["play_in_skill"]=1,["play_eff"]="buff/ShitiDun"}
+,[503]={["id"]=503,["play_aft_skill"]=1,["play_eff"]="common_hit/qc_shitidun_break",["key"]=503}
+,[504]={["id"]=504,["play_aft_skill"]=1,["play_eff"]="common_hit/qc_guangdun_break",["key"]=504}
+,[41]={["id"]=41,["play_aft_skill"]=1,["time"]=100,["key"]=41}
+,[701]={["flag"]="hit",["key"]=701,["id"]=701}
+,[703]={["id"]=703,["key"]=703,["delay"]=1000}
+,[705]={["play_aft_skill"]=2,["play_eff"]="s50040/cast1_eff",["id"]=705,["key"]=705,["time"]=1000}
+,[707]={["id"]=707,["key"]=707,["time"]=20,["action_delay"]=1000}
+,[709]={["time"]=20,["flag"]="hit",["key"]=709,["id"]=709,["action_delay"]=2000}
+,[711]={["id"]=711,["key"]=711,["action_delay"]=300}
+,[100]={["play_in_skill"]=1,["key"]=100,["id"]=100}
+,[715]={["id"]=715,["key"]=715,["play_eff"]="d70400/cast1_buff1"}
+,[717]={["play_aft_skill"]=2,["time"]=20,["flag"]="hit",["key"]=717,["id"]=717}
+,[43]={["key"]=43,["play_aft_skill"]=2,["time"]=20,["id"]=43,["play_eff"]="common/cure",["action_delay"]=1000}
+,[101]={["play_in_skill"]=1,["key"]=101,["time"]=100,["id"]=101}
+,[201]={["play_eff"]="common_hit/qc_buff_red_hit",["key"]=201,["play_in_skill"]=1,["id"]=201,["action_delay"]=2000}
+,[601]={["id"]=601,["key"]=601,["play_eff"]="UIEff/UIEff_NP"}
+,[102]={["id"]=102,["key"]=102,["play_eff"]="common/cure"}
+,[401]={["id"]=401,["key"]=401,["play_eff"]="common_hit/qc_blunt_hit1",["flag"]="hit"}
+,[203]={["play_eff"]="common_hit/qc_buff_yellow_hit",["key"]=203,["play_in_skill"]=1,["id"]=203,["action_delay"]=2000}
+,[204]={["id"]=204,["key"]=204,["play_eff"]="common_hit/qc_buff_purple_hit",["action_delay"]=1500}
+,[104]={["id"]=104,["key"]=104,["delay"]=500,["action_delay"]=800}
+,[713]={["id"]=713,["key"]=713,["play_eff"]="o20230/cast2_cure01",["action_delay"]=1000}
+,[105]={["key"]=105,["play_aft_skill"]=1,["time"]=500,["id"]=105,["play_eff"]="common_hit/qc_zhiliao_hit",["action_delay"]=200}
+,[103]={["play_aft_skill"]=1,["play_eff"]="o20040/cast2_hit2",["id"]=103,["key"]=103,["time"]=20}
+,[202]={["play_eff"]="common_hit/qc_buff_hit",["key"]=202,["play_in_skill"]=1,["id"]=202,["action_delay"]=2000}
+,[42]={["id"]=42,["play_aft_skill"]=2,["time"]=100,["key"]=42}
+,[702]={["time"]=20,["key"]=702,["id"]=702,["play_eff"]="a40200/cast3_hit",["action_delay"]=400}
 }
---cfgAPISetting = conf
-return conf
+

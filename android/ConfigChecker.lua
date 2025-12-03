@@ -623,11 +623,11 @@ function GetUnites(uniteLabels,cfgId)
             if (_cfg.fit_result) then --合体id
                 removeIDs[_cfg.fit_result] = _cfg.fit_result
             end
-            if (_cfg.tTransfo) then --变身id
-                for _, _id in ipairs(_cfg.tTransfo) do
-                    removeIDs[_id] = _id
-                end
-            end
+            -- if (_cfg.tTransfo) then --变身id
+            --     for _, _id in ipairs(_cfg.tTransfo) do
+            --         removeIDs[_id] = _id
+            --     end
+            -- end
 
             local count = 0
             for _, _info in ipairs(uniteLabels) do
@@ -680,11 +680,11 @@ function GetUnites(uniteLabels,cfgId)
             if (_cfg.fit_result) then --合体id
                 removeIDs[_cfg.fit_result] = _cfg.fit_result
             end
-            if (_cfg.tTransfo) then --变身id
-                for _, _id in ipairs(_cfg.tTransfo) do
-                    removeIDs[_id] = _id
-                end
-            end
+            -- if (_cfg.tTransfo) then --变身id
+            --     for _, _id in ipairs(_cfg.tTransfo) do
+            --         removeIDs[_id] = _id
+            --     end
+            -- end
 
             local count = 0
             for _, _info in ipairs(uniteLabels) do
@@ -2066,6 +2066,12 @@ function ConfigChecker:CfgActiveEntry(cfgs)
                     end
                 end
             end
+
+            if v.resetIx then
+                v.resetTime = GCalHelp:GetTimeStampBySplit(v.resetIx, v)
+                LogDebugEx("CHECK V.v.resetIx", v.resetIx, v.resetTime)
+            end
+
             _G['DupActiveBattleEndTime'] = battleEndTimeTable
         end
     end
@@ -2687,6 +2693,15 @@ function CommCalCfgTasks(cfgs, t)
 
                 table.insert(resetTypeTasks[returnType][resetType], cfg)
             end
+        elseif t == eTaskType.RegressionTask then
+            local type = cfg.type
+
+            if type and not cfg.nStage then
+                if not resetTypeTasks[type] then
+                    resetTypeTasks[type] = {}
+                end
+                table.insert(resetTypeTasks[type], cfg)
+            end
         end
 
         if not cfg.nPreTaskId or cfg.nPreTaskId == 0 then
@@ -2697,7 +2712,7 @@ function CommCalCfgTasks(cfgs, t)
                         stageFirstTasks[cfg.nStage] = {}
                     end
                     table.insert(stageFirstTasks[cfg.nStage], cfg)
-                else
+                elseif t ~= eTaskType.RegressionTask then
                     LogW('阶段类型任务%s：%s 缺少nStage的配置', t, cfg.id)
                 end
             else
@@ -2732,6 +2747,9 @@ function CommCalCfgTasks(cfgs, t)
     if t == eTaskType.RegressionBind then
         cfgs.returnTypeTasks = returnTypeTasks
         cfgs.resetTypeTasks = resetTypeTasks
+    elseif t == eTaskType.RegressionTask then
+        -- 4.6 回归任务新增 每日刷新与不刷新任务
+        cfgs.dailyRefreshTasks = resetTypeTasks
     end
 end
 
@@ -3052,6 +3070,15 @@ function ConfigChecker:CfgMultiteamEntrance(cfgs)
     CommCalCfgTasks(cfgs, eTaskType.MultTeam)
 end
 
+
+function ConfigChecker:CfgNewPlayerSevenDayTask(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.NewPlayerSeven)
+end
 function ConfigChecker:CfgExtraExploration(cfgs)
     if IS_CLIENT then
         -- IS_SERVER
@@ -3764,7 +3791,6 @@ function ConfigChecker:CfgPet(cfgs)
         local feedMax = 0
         ASSERT(feedCfg, "该宠物(id:%s)对应的养成奖励没有配置，养成奖励表ID：", cfg.id, cfg.feedReward)
         for _, v in pairs(feedCfg.infos) do
-            LogTable(v)
             if feedMax < v.feedNum then
                 feedMax = v.feedNum
             end
@@ -3831,6 +3857,24 @@ function ConfigChecker:CfgPvpRobot(cfgs)
         end
     end
 end
+
+function ConfigChecker:CfgChristMain(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.begTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        assert(cfg.nBeginTime < cfg.nEndTime, "圣诞签到活动开启时间范围有误")
+    end
+end
+
+-- v4.6 资源补给配置检查
+function ConfigChecker:CfgResupply(cfgs)
+    for id, cfg in pairs(cfgs) do
+        cfg.nstartTime = GCalHelp:GetTimeStampBySplit(cfg.startTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+    end
+end
+
+
 --v4.4 世界boss优化
 function ConfigChecker:cfgGlobalBossHpLevel(cfgs)
     local maxId

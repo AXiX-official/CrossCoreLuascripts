@@ -1,17 +1,8 @@
-local conf = {
-	["filename"] = 'j-卡牌角色.xlsx',
-	["sheetname"] = '角色能力信息',
-	["types"] = {
-'string','string','int','int[]'
-},
-	["names"] = {
-'id','key','type','vals'
-},
-	["data"] = {
-{'1001',	'1001',	'1',	'10'},
-{'1002',	'1002',	'1',	'20'},
-{'2001',	'2001',	'2',	'10,15'},
-},
+_G["CfgCardRoleAblility"]={["1001"]={["id"]="1001",["type"]=1,["key"]="1001",["vals"]={10}
 }
-cfgCfgCardRoleAblility = conf
-return conf
+,["2001"]={["id"]="2001",["type"]=2,["key"]="2001",["vals"]={10,15}
+}
+,["1002"]={["id"]="1002",["type"]=1,["key"]="1002",["vals"]={20}
+}
+}
+

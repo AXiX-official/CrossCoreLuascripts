@@ -1,20 +1,8 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '装备排序枚举',
-	["types"] = {
-'int','string','string','string'
-},
-	["names"] = {
-'id','key','sName','eName'
-},
-	["data"] = {
-{'1',	'1',	'属性',	'property1'},
-{'2',	'2',	'伤害',	'property2'},
-{'3',	'3',	'辅助',	'property3'},
-{'4',	'4',	'续战',	'property4'},
-{'5',	'5',	'状态',	'property5'},
-{'6',	'6',	'特殊',	'property6'},
-},
+_G["CfgEquipSkillSortEnum"]={{["id"]=1,["sName"]="属性",["key"]="1",["eName"]="property1"}
+,{["id"]=2,["sName"]="伤害",["key"]="2",["eName"]="property2"}
+,{["id"]=3,["sName"]="辅助",["key"]="3",["eName"]="property3"}
+,{["id"]=4,["sName"]="续战",["key"]="4",["eName"]="property4"}
+,{["id"]=5,["sName"]="状态",["key"]="5",["eName"]="property5"}
+,{["id"]=6,["sName"]="特殊",["key"]="6",["eName"]="property6"}
 }
---cfgCfgEquipSkillSortEnum = conf
-return conf
+

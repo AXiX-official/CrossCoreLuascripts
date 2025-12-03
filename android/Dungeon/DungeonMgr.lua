@@ -1446,6 +1446,7 @@ function this:Init()
         id = 0
     }) -- 初始化本地缓存
     self:InitDungeonGroupDatas()
+    PlayerProto:SectionMultiInfo();
 end
 
 -- 获取界面打开设置

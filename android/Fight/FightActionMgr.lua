@@ -45,6 +45,7 @@ FightActionType =
     StartPlay       = 34,--演出
     MainQueueBox    = 35,--主队列封装
     SummonTeammate  = 36,--召唤友军
+    Skip            = 37,--跳过
 }
 FightActionTypeDesc = 
 {
@@ -84,6 +85,7 @@ FightActionTypeDesc =
     [34] = "StartPlay";--       = 32,--演出
     [35] = "MainQueueBox";--    = 35,--主队列封装
     [36] = "SummonTeammate";--  = 36,--召唤友军
+    [37] = "Skip";--            = 37,--跳过
 }
 
 
@@ -303,6 +305,7 @@ function this:Apply(fightActionType,fightActionData,force)
             arr[FightActionType.OverLoadOn] = require "FightActionOverloadOn"; 
             arr[FightActionType.StartPlay] = require "FightActionStartPlay"; 
             arr[FightActionType.MainQueueBox] = require "FightActionMainQueueBox"; 
+            arr[FightActionType.Skip] = require "FightActionSkip"; 
             self.faClasses = arr;
         end
         local targetClass = self.faClasses[fightActionType];
@@ -397,7 +400,10 @@ function this:PushSkill(datas)
     --ProtocolRecordMgr:RecordFight(datas);
     FightRecordMgr:Push(datas);
     --FightActionDataMgr:Push(datas);
-
+    if(datas and datas.api)then
+        FightActionUtil:PushServerDatas({datas});
+        return;
+    end
     FightActionUtil:PushServerDatas(datas);
 end
 

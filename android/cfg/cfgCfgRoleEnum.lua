@@ -1,18 +1,6 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '角色类型',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'全能'},
-{'2',	'2',	'机装'},
-{'3',	'3',	'同调'},
-{'4',	'4',	'特殊'},
-},
+_G["CfgRoleEnum"]={{["id"]=1,["sName"]="全能",["key"]="1"}
+,{["id"]=2,["sName"]="机装",["key"]="2"}
+,{["id"]=3,["sName"]="同调",["key"]="3"}
+,{["id"]=4,["sName"]="特殊",["key"]="4"}
 }
---cfgCfgRoleEnum = conf
-return conf
+

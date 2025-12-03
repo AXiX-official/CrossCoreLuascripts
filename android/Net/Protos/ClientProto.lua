@@ -168,7 +168,7 @@ function ClientProto:InitFinishRet(proto)
 
     --服务器压力大，延迟到这里请求
     DormMgr:RequestDormProtoServerData();--先不请求试试看
-    EquipProto:GetEquips()
+    -- EquipProto:GetEquips();--装备改动到进入主界面开始获取
     CollaborationMgr:InitData();--初始化回归绑定活动
     ActivityMgr:CheckRedPointData() --用于活动
     RegressionMgr:CheckRedPointData() -- 回归活动

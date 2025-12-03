@@ -9,8 +9,10 @@ local this =
 {time=3500,type=0,cue_sheet="fight/effect/Eighteen.acb ",cue_name="60321_cast_01"},
 {delay=500,time=4000,type=3,hits={0}},
 {time=3500,type=0,cue_sheet="cv/Dainslef.acb",cue_name="Dainslef_20",cue_feature=1},
-{effect="cast1_hit",time=3500,type=0,pos_ref={ref_type=13}},
-{effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6}}
+{effect="cast1_hit",time=3500,type=0,pos_ref={ref_type=6}},
+{delay=500,time=4000,type=3,hits={0}},
+{effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6}},
+{delay=500,time=4000,type=3,hits={0}}
 },
 [1310282141]={
 {time=13700,type=0,cue_sheet="fight/effect/Eighteen.acb ",cue_name="60321_cast_02"},
@@ -29,7 +31,7 @@ local this =
 {effect="cast0_eff",time=3000,type=0,pos_ref={ref_type=1}}
 },
 [-1328923786]={
-{effect="win",time=3500,type=0,pos_ref={ref_type=1}}
+{effect="win",time=3500,type=0,pos_ref={ref_type=6,offset_row=-250}}
 }
 };
 

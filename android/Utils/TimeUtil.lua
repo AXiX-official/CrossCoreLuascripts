@@ -484,4 +484,68 @@ function this:CheckRefreshByDay(time, refreshTime)
     return false
 end
 
+--距离下一次凌晨3点剩余多少小时
+function this:HoursUntilNext3AM(time)
+    -- 如果未传入 timestamp，默认使用当前时间
+    time = time or os.time()
+
+    -- 解析当前时间
+    local now = os.date("*t", time)
+
+    -- 构造今天凌晨3点的时间戳
+    local today_3am = os.time({
+        year = now.year,
+        month = now.month,
+        day = now.day,
+        hour = 3,
+        min = 0,
+        sec = 0
+    })
+
+    -- 构造明天凌晨3点的时间戳
+    local tomorrow_3am = today_3am + 24 * 3600
+
+    -- 判断今天凌晨3点是否已经过去
+    local next_3am
+    if time < today_3am then
+        -- 今天凌晨3点还没到
+        next_3am = today_3am
+    else
+        -- 今天凌晨3点已过，等待明天凌晨3点
+        next_3am = tomorrow_3am
+    end
+
+    -- 计算差值（秒）
+    local diff_seconds = next_3am - time
+
+    -- 转换为小时（向上取整）
+    local diff_hours = math.ceil( diff_seconds / 3600)
+
+    return diff_hours
+end
+
+--下一个整点小时的时间戳
+function this:NextHourTimestamp(time)
+    -- 如果未传入时间戳，默认使用当前时间
+    time = time or os.time()
+
+    -- 解析当前时间
+    local dt = os.date("*t", time)
+
+    -- 设置为当前小时的 0 分 0 秒
+    local current_hour_start = os.time({
+        year = dt.year,
+        month = dt.month,
+        day = dt.day,
+        hour = dt.hour,
+        min = 0,
+        sec = 0
+    })
+
+    -- 下一个小时的开始时间
+    local next_hour_start = current_hour_start + 3600  -- 加1小时（3600秒）
+
+    return next_hour_start
+end
+
 return this

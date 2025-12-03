@@ -1,20 +1,10 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '角色品质类型',
-	["types"] = {
-'int','string','string','int','string','string','string','json'
-},
-	["names"] = {
-'id','key','sName','nQuality','sCreate_bg','sDesc1','sDesc2','sortIcon'
-},
-	["data"] = {
-{'1',	'1',	'1星',	'1',	'white_ash',	'w_ordinary',	'NORMAL',	''},
-{'2',	'2',	'2星',	'2',	'white_ash',	'w_ordinary',	'NORMAL',	''},
-{'3',	'3',	'3星',	'3',	'blue',	'w_rare',	'RERE',	''},
-{'4',	'4',	'4星',	'4',	'red',	'w_super_rare',	'SUPER RARE',	''},
-{'5',	'5',	'5星',	'5',	'yellow',	'w_premium_rare',	'SUPERIOR\nSUPER RARE',	''},
-{'6',	'6',	'6星',	'6',	'yellow',	'w_premium_rare',	'SUPERIOR\nSUPER RARE',	''},
-},
+_G["CfgCardQuality"]={{["sDesc1"]="w_ordinary",["sDesc2"]="NORMAL",["key"]="1",["sName"]="1星",["id"]=1,["nQuality"]=1,["sCreate_bg"]="white_ash"}
+,{["sDesc1"]="w_ordinary",["sDesc2"]="NORMAL",["key"]="2",["sName"]="2星",["id"]=2,["nQuality"]=2,["sCreate_bg"]="white_ash"}
+,{["sDesc1"]="w_rare",["sDesc2"]="RERE",["key"]="3",["sName"]="3星",["id"]=3,["nQuality"]=3,["sCreate_bg"]="blue"}
+,{["sDesc1"]="w_super_rare",["sDesc2"]="SUPER RARE",["key"]="4",["sName"]="4星",["id"]=4,["nQuality"]=4,["sCreate_bg"]="red"}
+,{["sDesc1"]="w_premium_rare",["sDesc2"]=[[SUPERIOR
+SUPER RARE]],["key"]="5",["sName"]="5星",["id"]=5,["nQuality"]=5,["sCreate_bg"]="yellow"}
+,{["sDesc1"]="w_premium_rare",["sDesc2"]=[[SUPERIOR
+SUPER RARE]],["key"]="6",["sName"]="6星",["id"]=6,["nQuality"]=6,["sCreate_bg"]="yellow"}
 }
---cfgCfgCardQuality = conf
-return conf
+

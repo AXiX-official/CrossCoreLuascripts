@@ -1,41 +1,159 @@
-local conf = {
-	["filename"] = 'p-排序筛选.xlsx',
-	["sheetname"] = '排序筛选总表',
-	["types"] = {
-'int','string','string','int[]','int','int[]','json','json'
-},
-	["names"] = {
-'id','key','view','sort_view','sort_default','sort','filter','filter_default'
-},
-	["data"] = {
-{'1',	'1',	'RoleListNormal',	'1008,1002,1001,1005,1004,1006,1003',	'1008',	'1008,1002,1001,1005,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
-{'2',	'2',	'TeamView',	'1002,1001,1005,1004,1006,1003,1008',	'1002',	'1002,1001,1005,1008,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
-{'3',	'3',	'TeamView',	'1002,1001,1005,1004,1006,1003,1008',	'1002',	'1002,1001,1005,1008,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
-{'4',	'4',	'TeamView',	'1002,1001,1005,1004,1006,1003,1008',	'1002',	'1002,1001,1005,1008,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
-{'5',	'5',	'CRoleSelectView',	'4003,4004',	'4003',	'4003,4004,4000',	'[[3022,"CfgTeamEnum"],[1053,"CfgIsSkin"],[3024,"CfgCardSortQuality"]]',	''},
-{'6',	'6',	'CRoleSelectView',	'5002',	'5002',	'5002,5001,5000',	'[[1054,"CfgMultiImageThemeType"]]',	''},
-{'7',	'7',	'DormSetRoleList',	'4001',	'4001',	'4001,4005,4008,4006,4002,4000',	'[[3022,"CfgTeamEnum"]]',	''},
-{'8',	'8',	'DormSetRoleList',	'4007,4008',	'4007',	'4005,4007,4008,4000',	'[[3022,"CfgTeamEnum"]]',	''},
-{'9',	'9',	'Bag',	'2001',	'2001',	'2001,2000',	'[[1055,"CfgGoodsSortEnum"]]',	''},
-{'10',	'10',	'Bag',	'3001,3002,3003,3004,3005,3006,3008,3010',	'3001',	'3001,3010,3003,3002,3008,3004,3006,3007,3005,3000',	'[[1056,"CfgEquipQualityEnum"],[1057,"CfgEquipSlotEnum"],[1058,"CfgIsEquipEnum"],[1059,"CfgEquipSkillTypeSortEnum"]]',	''},
-{'11',	'11',	'Bag',	'3009,3002,3003,3004,3005,3006,3010',	'3009',	'3009,3002,3003,3010,3004,3005,3006,3000',	'[[1056,"CfgEquipQualityEnum"],[1057,"CfgEquipSlotEnum"],[1059,"CfgEquipSkillTypeSortEnum"]]',	''},
-{'12',	'12',	'RoleEquip',	'3001,3002,3010,3006,3004,3005',	'3001',	'3001,3010,3002,3006,3004,3005,3000',	'[[1056,"CfgEquipQualityEnum"],[1059,"CfgEquipSkillTypeSortEnum"]]',	''},
-{'13',	'13',	'RoleEquip',	'3001,3002,3010,3006,3004,3005',	'3001',	'3001,3010,3002,3006,3004,3005,3000',	'[[1056,"CfgEquipQualityEnum"],[1059,"CfgEquipSkillTypeSortEnum"]]',	''},
-{'14',	'14',	'EquipStreng',	'3001,3002,3010,3006,3004,3005',	'3001',	'3001,3010,3002,3006,3004,3005,3000',	'[[1056,"CfgEquipQualityEnum"],[1059,"CfgEquipSkillTypeSortEnum"]]',	''},
-{'15',	'15',	'MatrixCompound',	'6003,6001,6002',	'6003',	'6004,6003,6001,6002,6000',	'',	''},
-{'16',	'16',	'Bag',	'3001',	'3009',	'3001,3000',	'',	''},
-{'17',	'17',	'RoleListSelectView',	'1008,1002,1001,1005,1004,1006,1003',	'1008',	'1009,1008,1002,1001,1005,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
-{'18',	'18',	'DormSetRoleList',	'4001',	'4001',	'4009,4001,4005,4008,4006,4002,4000',	'[[1060,"CfgMatrixOrderType"]]',	'[["CfgMatrixOrderType",[13]]]'},
-{'19',	'19',	'RewardPanel',	'7003,7002,7001,7000',	'7003',	'7003,7002,7001,7000',	'',	''},
-{'20',	'20',	'SweepView',	'7003',	'7003',	'7003',	'',	''},
-{'21',	'21',	'Bag',	'2001',	'2001',	'2001,2000',	'',	''},
-{'22',	'22',	'HeadFramePanel',	'8000',	'8000',	'8000',	'[[1061,"CfgIsAvatar"],[3022,"CfgTeamEnum"]]',	''},
-{'23',	'23',	'AchievementView',	'9003,9001',	'9003',	'9002,9003,9001,9000',	'[[3024,"CfgAchieveQualitySort"]]',	''},
-{'24',	'24',	'CRoleDisplayS',	'10001',	'10001',	'10001',	'[[7072,"CfgRandomRoleType"],[3022,"CfgTeamEnum"],[1053,"CfgIsSkin"],[3024,"CfgCardSortQuality"],[1054,"CfgMultiImageThemeType"]]',	''},
-{'25',	'25',	'TeamView',	'1002,1001,1005,1004,1006,1003,1008',	'1002',	'1010,1002,1001,1005,1008,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
-{'26',	'26',	'TeamView',	'1002,1001,1005,1004,1006,1003,1008',	'1002',	'1011,1010,1002,1001,1005,1008,1004,1006,1003,1000',	'[[3022,"CfgTeamEnum"],[3024,"CfgCardSortQuality"],[3027,"CfgRolePosEnum"]]',	''},
-{'27',	'27',	'CRoleSelectView',	'5002',	'5002',	'5002,5001,5000',	'[[1054,"CfgHalfBodyType"]]',	''},
-},
+_G["CfgSortFilter"]={{["view"]="RoleListNormal",["sort"]={1008,1002,1001,1005,1004,1006,1003,1000}
+,["key"]="1",["filter"]={{3022,"CfgTeamEnum"}
+,{3024,"CfgCardSortQuality"}
+,{3027,"CfgRolePosEnum"}
 }
---cfgCfgSortFilter = conf
-return conf
+,["id"]=1,["sort_default"]=1008,["sort_view"]={1008,1002,1001,1005,1004,1006,1003}
+}
+,{["view"]="TeamView",["sort"]={1002,1001,1005,1008,1004,1006,1003,1000}
+,["key"]="2",["filter"]={{3022,"CfgTeamEnum"}
+,{3024,"CfgCardSortQuality"}
+,{3027,"CfgRolePosEnum"}
+}
+,["id"]=2,["sort_default"]=1002,["sort_view"]={1002,1001,1005,1004,1006,1003,1008}
+}
+,{["view"]="TeamView",["sort"]={1002,1001,1005,1008,1004,1006,1003,1000}
+,["key"]="3",["filter"]={{3022,"CfgTeamEnum"}
+,{3024,"CfgCardSortQuality"}
+,{3027,"CfgRolePosEnum"}
+}
+,["id"]=3,["sort_default"]=1002,["sort_view"]={1002,1001,1005,1004,1006,1003,1008}
+}
+,{["view"]="TeamView",["sort"]={1002,1001,1005,1008,1004,1006,1003,1000}
+,["key"]="4",["filter"]={{3022,"CfgTeamEnum"}
+,{3024,"CfgCardSortQuality"}
+,{3027,"CfgRolePosEnum"}
+}
+,["id"]=4,["sort_default"]=1002,["sort_view"]={1002,1001,1005,1004,1006,1003,1008}
+}
+,{["view"]="CRoleSelectView",["sort"]={4003,4004,4000}
+,["key"]="5",["filter"]={{3022,"CfgTeamEnum"}
+,{1053,"CfgIsSkin"}
+,{3024,"CfgCardSortQuality"}
+}
+,["id"]=5,["sort_default"]=4003,["sort_view"]={4003,4004}
+}
+,{["view"]="CRoleSelectView",["sort"]={5002,5001,5000}
+,["key"]="6",["filter"]={{1054,"CfgMultiImageThemeType"}
+}
+,["id"]=6,["sort_default"]=5002,["sort_view"]={5002}
+}
+,{["view"]="DormSetRoleList",["sort"]={4001,4005,4008,4006,4002,4000}
+,["key"]="7",["filter"]={{3022,"CfgTeamEnum"}
+}
+,["id"]=7,["sort_default"]=4001,["sort_view"]={4001}
+}
+,{["view"]="DormSetRoleList",["sort"]={4005,4007,4008,4000}
+,["key"]="8",["filter"]={{3022,"CfgTeamEnum"}
+}
+,["id"]=8,["sort_default"]=4007,["sort_view"]={4007,4008}
+}
+,{["view"]="Bag",["sort"]={2001,2000}
+,["key"]="9",["filter"]={{1055,"CfgGoodsSortEnum"}
+}
+,["id"]=9,["sort_default"]=2001,["sort_view"]={2001}
+}
+,{["view"]="Bag",["sort"]={3001,3010,3003,3002,3008,3004,3006,3007,3005,3000}
+,["key"]="10",["filter"]={{1056,"CfgEquipQualityEnum"}
+,{1057,"CfgEquipSlotEnum"}
+,{1058,"CfgIsEquipEnum"}
+,{1059,"CfgEquipSkillTypeSortEnum"}
+}
+,["id"]=10,["sort_default"]=3001,["sort_view"]={3001,3002,3003,3004,3005,3006,3008,3010}
+}
+,{["view"]="Bag",["sort"]={3009,3002,3003,3010,3004,3005,3006,3000}
+,["key"]="11",["filter"]={{1056,"CfgEquipQualityEnum"}
+,{1057,"CfgEquipSlotEnum"}
+,{1059,"CfgEquipSkillTypeSortEnum"}
+}
+,["id"]=11,["sort_default"]=3009,["sort_view"]={3009,3002,3003,3004,3005,3006,3010}
+}
+,{["view"]="RoleEquip",["sort"]={3001,3010,3002,3006,3004,3005,3000}
+,["key"]="12",["filter"]={{1056,"CfgEquipQualityEnum"}
+,{1059,"CfgEquipSkillTypeSortEnum"}
+}
+,["id"]=12,["sort_default"]=3001,["sort_view"]={3001,3002,3010,3006,3004,3005}
+}
+,{["view"]="RoleEquip",["sort"]={3001,3010,3002,3006,3004,3005,3000}
+,["key"]="13",["filter"]={{1056,"CfgEquipQualityEnum"}
+,{1059,"CfgEquipSkillTypeSortEnum"}
+}
+,["id"]=13,["sort_default"]=3001,["sort_view"]={3001,3002,3010,3006,3004,3005}
+}
+,{["view"]="EquipStreng",["sort"]={3001,3010,3002,3006,3004,3005,3000}
+,["key"]="14",["filter"]={{1056,"CfgEquipQualityEnum"}
+,{1059,"CfgEquipSkillTypeSortEnum"}
+}
+,["id"]=14,["sort_default"]=3001,["sort_view"]={3001,3002,3010,3006,3004,3005}
+}
+,{["view"]="MatrixCompound",["sort"]={6004,6003,6001,6002,6000}
+,["key"]="15",["id"]=15,["sort_default"]=6003,["sort_view"]={6003,6001,6002}
+}
+,{["view"]="Bag",["sort"]={3001,3000}
+,["key"]="16",["id"]=16,["sort_default"]=3009,["sort_view"]={3001}
+}
+,{["view"]="RoleListSelectView",["sort"]={1009,1008,1002,1001,1005,1004,1006,1003,1000}
+,["key"]="17",["filter"]={{3022,"CfgTeamEnum"}
+,{3024,"CfgCardSortQuality"}
+,{3027,"CfgRolePosEnum"}
+}
+,["id"]=17,["sort_default"]=1008,["sort_view"]={1008,1002,1001,1005,1004,1006,1003}
+}
+,{["view"]="DormSetRoleList",["sort"]={4009,4001,4005,4008,4006,4002,4000}
+,["key"]="18",["filter"]={{1060,"CfgMatrixOrderType"}
+}
+,["id"]=18,["filter_default"]={{"CfgMatrixOrderType",{13}
+}
+}
+,["sort_default"]=4001,["sort_view"]={4001}
+}
+,{["view"]="RewardPanel",["sort"]={7003,7002,7001,7000}
+,["key"]="19",["id"]=19,["sort_default"]=7003,["sort_view"]={7003,7002,7001,7000}
+}
+,{["view"]="SweepView",["sort"]={7003}
+,["key"]="20",["id"]=20,["sort_default"]=7003,["sort_view"]={7003}
+}
+,{["view"]="Bag",["sort"]={2001,2000}
+,["key"]="21",["id"]=21,["sort_default"]=2001,["sort_view"]={2001}
+}
+,{["view"]="HeadFramePanel",["sort"]={8000}
+,["key"]="22",["filter"]={{1061,"CfgIsAvatar"}
+,{3022,"CfgTeamEnum"}
+}
+,["id"]=22,["sort_default"]=8000,["sort_view"]={8000}
+}
+,{["view"]="AchievementView",["sort"]={9002,9003,9001,9000}
+,["key"]="23",["filter"]={{3024,"CfgAchieveQualitySort"}
+}
+,["id"]=23,["sort_default"]=9003,["sort_view"]={9003,9001}
+}
+,{["view"]="CRoleDisplayS",["sort"]={10001}
+,["key"]="24",["filter"]={{7072,"CfgRandomRoleType"}
+,{3022,"CfgTeamEnum"}
+,{1053,"CfgIsSkin"}
+,{3024,"CfgCardSortQuality"}
+,{1054,"CfgMultiImageThemeType"}
+}
+,["id"]=24,["sort_default"]=10001,["sort_view"]={10001}
+}
+,{["view"]="TeamView",["sort"]={1010,1002,1001,1005,1008,1004,1006,1003,1000}
+,["key"]="25",["filter"]={{3022,"CfgTeamEnum"}
+,{3024,"CfgCardSortQuality"}
+,{3027,"CfgRolePosEnum"}
+}
+,["id"]=25,["sort_default"]=1002,["sort_view"]={1002,1001,1005,1004,1006,1003,1008}
+}
+,{["view"]="TeamView",["sort"]={1011,1010,1002,1001,1005,1008,1004,1006,1003,1000}
+,["key"]="26",["filter"]={{3022,"CfgTeamEnum"}
+,{3024,"CfgCardSortQuality"}
+,{3027,"CfgRolePosEnum"}
+}
+,["id"]=26,["sort_default"]=1002,["sort_view"]={1002,1001,1005,1004,1006,1003,1008}
+}
+,{["view"]="CRoleSelectView",["sort"]={5002,5001,5000}
+,["key"]="27",["filter"]={{1054,"CfgHalfBodyType"}
+}
+,["id"]=27,["sort_default"]=5002,["sort_view"]={5002}
+}
+}
+

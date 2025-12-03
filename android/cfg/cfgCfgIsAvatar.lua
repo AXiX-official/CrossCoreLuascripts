@@ -1,18 +1,6 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '角色头像筛选',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','sName'
-},
-	["data"] = {
-{'1',	'1',	'探索队成员'},
-{'2',	'2',	'势力'},
-{'3',	'3',	'活动'},
-{'4',	'4',	'限时礼包'},
-},
+_G["CfgIsAvatar"]={{["id"]=1,["sName"]="探索队成员",["key"]="1"}
+,{["id"]=2,["sName"]="势力",["key"]="2"}
+,{["id"]=3,["sName"]="活动",["key"]="3"}
+,{["id"]=4,["sName"]="限时礼包",["key"]="4"}
 }
---cfgCfgIsAvatar = conf
-return conf
+

@@ -72,6 +72,15 @@ function this:GetInfo()
     return self.cfg and self.cfg.info
 end
 
+--获取信息字段对应内容
+function this:GetInfoContent(key)
+	if key == nil or key == "" then
+		return
+	end
+	local info = self:GetInfo()
+	return info and info[key]
+end
+
 function this:GetPopIndex()
     return self.cfg.popIndex
 end
@@ -98,6 +107,9 @@ function this:IsOpen()
         isOpen = targetTime > TimeUtil:GetTime()
     elseif self:GetType() == ActivityListType.AccuCharge2 then
         isOpen = AccuChargeMgr:IsOpen2()
+    elseif self:GetType() == ActivityListType.NewPlayerSeven then
+        local targetTime = PlayerMgr:GetOpenTime(ActivityListType.NewPlayerSeven) + (g_NewPlayerSevenDayTaskTimes * 86400)
+        isOpen = targetTime > TimeUtil:GetTime()
     end
 
     if self:GetSpecType() == ALType.Pay then

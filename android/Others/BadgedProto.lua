@@ -40,3 +40,8 @@ function BadgedProto:UpdateSortBadged(list,cb)
 	NetMgr.net:Send(proto);
     self.updateSortBadgedCallback = cb
 end
+
+--徽章信息刷新
+function BadgedProto:UpdateBadgedInfoRet(proto)
+    BadgeMgr:UpdateBadgedInfo(proto)
+end

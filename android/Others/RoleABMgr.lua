@@ -8,7 +8,7 @@ end
 function this:Clear()
     self.abs = {} -- {abName:{viewName1 =1,viewName2 =1..},abName:{viewName1 =1,viewName2 =1..}...}
     self.removeABNames = {} -- 待移除的ab
-    self.removeLimit = 6 -- 上限缓存6个
+    self.removeLimit = 10 -- 上限缓存6个
 end
 
 function this:ChangeByIDs(viewName, modelIDs)
@@ -21,7 +21,11 @@ end
 
 -- 默认是替换
 function this:ChangeByABNames(viewName, abNames)
-    self:CheckRemoveAB(viewName)
+    for k, v in pairs(self.abs) do
+        if (v[viewName] == 1) then
+            v[viewName] = nil
+        end
+    end
     --
     for k, v in ipairs(abNames) do
         if (self.abs[v]) then
@@ -43,7 +47,12 @@ function this:CheckRemoveAB(viewName)
             v[viewName] = nil
         end
     end
-    local _removeABNames = {}
+    self:ToRelease()
+end
+
+-- 释放缓存的ab
+function this:ToRelease()
+    local noHadNames = {}
     for k, v in pairs(self.abs) do
         local isHad = false
         for p, q in pairs(v) do
@@ -51,34 +60,24 @@ function this:CheckRemoveAB(viewName)
             break
         end
         if (not isHad) then
-            _removeABNames[k] = 1
+            noHadNames[k] = 1
             self.removeABNames[k] = 1
         end
     end
-    for k, v in pairs(_removeABNames) do
+    for k, v in pairs(noHadNames) do
         self.abs[k] = nil
     end
-end
-
--- 释放缓存的ab
-function this:ToRelease()
-    local _hadABNames = {}
-    local _removeABNames = {}
+    --
+    for k, v in pairs(self.abs) do
+        self.removeABNames[k] = nil
+    end
+    local removeABNames = {}
     for k, v in pairs(self.removeABNames) do
-        if (self.abs[v]) then
-            table.insert(_hadABNames, k)
-        else
-            table.insert(_removeABNames, k)
-        end
+        table.insert(removeABNames, k)
     end
-    if (#_hadABNames > 0) then
-        for k, v in ipairs(_hadABNames) do
-            self.removeABNames[k] = nil
-        end
-    end
-    if (#_removeABNames >= self.removeLimit) then
+    if (#removeABNames >= self.removeLimit) then
         self.removeABNames = {}
-        ReleaseMgr:ApplyRelease(_removeABNames)
+        ReleaseMgr:ApplyRelease(removeABNames)
     end
 end
 

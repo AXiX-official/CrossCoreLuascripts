@@ -24,31 +24,48 @@ end
 function this:SetDatas(proto)
     if proto then
         if proto.infos and #proto.infos > 0 then
-            local newInfos = FileUtil.LoadByPath("Badge_new_info.txt") or {} -- 记录new
-            self.hasNew = false
-            for i, v in ipairs(proto.infos) do
-                if self.datas[v.id] then
-                    self.datas[v.id]:SetFinishTime(v.finish_time)
-                    self.datas[v.id]:SetIsNew(v.is_new)
-                    if v.is_new then
-                        self.hasNew = true
-                        newInfos[v.id] = 1
-                        if self.isFirst then
-                            self:UpdateChangeData(self.datas[v.id])
-                        end
-                    end
-                end
-            end
-            FileUtil.SaveToFile("Badge_new_info.txt", newInfos)
+            self:UpdateDatas(proto.infos)
         end
-
         if proto.is_finish then
-            EventMgr.Dispatch(EventType.Badge_Data_Update)
-            self:CheckRedPointData()
             self.isFirst = true
-            Tips.ShowMisionTips()
+            self:CheckRedPointData()
+            EventMgr.Dispatch(EventType.Badge_Data_Update)
         end
     end
+end
+
+function this:UpdateBadgedInfo(proto)
+    if proto then
+        if proto.infos and #proto.infos > 0 then
+            self:UpdateDatas(proto.infos)
+        end
+        if proto.is_finish then
+            if self.isFirst then
+                MissionMgr:ApplyShowMisionTips()
+            end
+            self:CheckRedPointData()
+            EventMgr.Dispatch(EventType.Badge_Data_Update)
+        end
+    end
+end
+
+function this:UpdateDatas(infos)
+    local newInfos = FileUtil.LoadByPath("Badge_new_info.txt") or {} -- 记录new
+    self.hasNew = false
+    for i, v in ipairs(infos) do
+        if self.datas[v.id] then
+            self.datas[v.id]:SetFinishTime(v.finish_time)
+            self.datas[v.id]:SetIsNew(v.is_new)
+            if v.is_new then
+                self.hasNew = true
+                newInfos[v.id] = 1
+                if self.isFirst then
+                    self:UpdateChangeData(self.datas[v.id])
+                end
+            end
+        end
+    end
+    FileUtil.SaveToFile("Badge_new_info.txt", newInfos)
 end
 
 function this:GetDatas()

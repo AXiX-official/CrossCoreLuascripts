@@ -1,511 +1,620 @@
-local conf = {
-	["filename"] = 'j-界面.xlsx',
-	["sheetname"] = '表',
-	["types"] = {
-'int','string','string','int','string','json','int','int','int','int','int','int[]','int','bool'
-},
-	["names"] = {
-'id','key','res','mask','layer','Show_CurrencyType','jump_close_type','is_window','multi','dont_close_when_load','dont_close_when_close_all','jump_chose','Virtualkeys_close','top_mask'
-},
-	["data"] = {
-{'1',	'GMC',	'GMCView',	'1',	'Top',	'',	'',	'',	'',	'',	'',	'',	'',	'1'},
-{'2',	'InputCtrler',	'InputCtrler',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'3',	'Loading',	'Loading/Loading',	'1',	'Top',	'',	'',	'',	'',	'1',	'1',	'',	'',	'1'},
-{'4',	'Login',	'Login/Login',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1'},
-{'5',	'SceneCameraCtrler',	'SceneCameraCtrler',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'6',	'FightTest',	'FightTest/FightTest',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'7',	'Dialog',	'Tips/DialogBox',	'',	'Topest',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'8',	'Menu',	'Menu/Menu',	'',	'',	'[[10002,140001],[10001,140014],[10035,140010]]',	'',	'1',	'',	'',	'1',	'',	'1',	'1'},
-{'9',	'Demo1',	'Demo1/Demo1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'10',	'Fight',	'Fight/Fight',	'',	'',	'',	'',	'1',	'',	'',	'',	'-1',	'',	''},
-{'11',	'FightEnd',	'Fight/FightEnd',	'',	'',	'',	'',	'',	'',	'',	'',	'-1',	'',	''},
-{'12',	'Skill',	'Skill/Skill',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'13',	'FightTimeLine',	'Fight/FightTimeLine',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'14',	'FightBoss',	'Fight/FightBoss',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'15',	'CharacterInfo',	'Fight/CharacterInfo',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'16',	'Relive',	'Fight/Relive',	'1',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'17',	'Bag',	'Bag/Bag',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'18',	'GoodPopup',	'Popup/GoodPopup',	'1',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'19',	'EnemyInfo',	'EnemyInfo/EnemyInfo',	'1',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'20',	'GoodsPack',	'Common/GoodsPack',	'1',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'21',	'Plot',	'Plot/Plot',	'1',	'Top',	'',	'',	'',	'',	'1',	'',	'',	'',	''},
-{'22',	'Section',	'Section/Section',	'1',	'',	'[[10035,140010]]',	'1',	'',	'',	'',	'',	'',	'1',	''},
-{'23',	'Dungeon',	'Dungeon/Dungeon',	'1',	'',	'[[10035,140010]]',	'1',	'',	'',	'',	'',	'',	'1',	''},
-{'24',	'Battle',	'Battle/Battle',	'',	'',	'',	'',	'',	'',	'',	'1',	'',	'1',	''},
-{'25',	'RoleEquipRecycleView',	'Role/RoleEquipRecycleView',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'26',	'TeamSelect',	'Formation/TeamSelectView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'27',	'TeamView',	'Team/TeamView',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'28',	'TeamAssistView',	'Team/TeamAssistView',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'29',	'Prompt',	'Tips/PromptBox',	'',	'Topest',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'30',	'TipsParent',	'Tips/Tips',	'',	'Topest',	'',	'',	'',	'',	'1',	'1',	'',	'1',	'1'},
-{'31',	'EquipListView',	'Equip/EquipListView',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'32',	'EquipSelectView',	'EquipSelect/EquipSelectView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'33',	'EquipChange',	'Equip/EquipChange',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'34',	'RoleEquipTable',	'Role/RoleEquipTable',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'35',	'EquipDetails',	'Goods/EquipDetails',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'36',	'RoleEquipSkillInfo',	'RoleEquip/RoleEquipSkillInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'-1',	'1',	''},
-{'37',	'EquipPopup',	'Popup/EquipPopup',	'1',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'38',	'RewardPanel',	'Popup/RewardPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'-1',	'1',	''},
-{'39',	'EquipStreng',	'EquipInfo/EquipStrengView',	'',	'',	'[[10001,10711]]',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'40',	'DungeonFormation',	'Team/DungeonFormation',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'41',	'FightFormation',	'Battle/FightFormation',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'42',	'ShopView',	'Shop/ShopView',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'43',	'ShopPayView',	'Shop/ShopPayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'44',	'FightMenu',	'FightMenu/FightMenu',	'1',	'Top',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'45',	'UserName',	'Login/UserName',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'46',	'GiftInfo',	'Goods/GiftInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'47',	'FightRender',	'Fight/FightRender',	'',	'',	'',	'',	'',	'',	'',	'1',	'',	'',	''},
-{'48',	'NetWeak',	'Common/NetWeak',	'1',	'Topest',	'',	'',	'',	'',	'1',	'1',	'',	'',	''},
-{'49',	'ShellEquipView',	'Goods/ShellEquipView',	'1',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'50',	'Transformer',	'Fight/Transformer',	'1',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'51',	'TeamRename',	'Team/TeamRename',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'52',	'BattleExplore',	'Battle/BattleExplore',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'53',	'FightWave',	'Fight/FightWave',	'',	'Topest',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'54',	'BuffInfoView',	'Menu/BuffInfoList',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'55',	'DialogNoTop',	'Tips/DialogBox',	'',	'Topest',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'56',	'SkinShowView',	'RoleSkinComm/SkinShowView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'57',	'GoodsCombine',	'Goods/GoodsCombine',	'1',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'58',	'GoodsCombineConfirm',	'Goods/GoodsCombineConfirm',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'59',	'GoodsCombineSuccess',	'Goods/GoodsCombineSuccess',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'60',	'ExploreBase',	'Explore/ExploreBase',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'61',	'ExploreBuild',	'Explore/ExploreBuild',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'62',	'BuildLvUpConfirm',	'Explore/BuildLvUpConfirm',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'63',	'SkillInfoView',	'Team/SkillInfoView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'64',	'TeamConfirm',	'TeamConfirm/TeamConfirm',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'65',	'ShopDepositView',	'Shop/ShopDepositView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'66',	'DungeonUseView',	'Dungeon/DungeonUseView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'67',	'TacticsView',	'Team/TacticsView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'68',	'TeamForceConfirm',	'TeamConfirm/TeamForceConfirm',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'69',	'DungeonPassView',	'Dungeon/DungeonPassView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'70',	'RoleListNormal',	'RoleList/RoleListNormal',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'71',	'RoleListSelectView',	'RoleList/RoleListSelectView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'72',	'RoleListExpeditionView',	'RoleList/RoleListExpeditionView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'73',	'RoleInfo',	'Role/RoleInfo',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'74',	'RoleShareView',	'Role/RoleShareView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'75',	'RoleEquip',	'RoleEquip/RoleEquip',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'76',	'RoleSkillInfoView',	'RoleSkillItem/RoleSkillInfoView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'77',	'RoleSkillDetail',	'RoleSkillItem/RoleSkillDetail',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'78',	'RoleSkillAllLV',	'RoleSkillItem/RoleSkillAllLV',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'79',	'RoleApparel',	'RoleSkinComm/RoleApparel',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'80',	'RoleBreakSuccess',	'Popup/RoleBreakSuccess',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'81',	'RoleInfoAmplification',	'Role/RoleInfoAmplification',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'82',	'RoleCenter',	'Role/RoleCenter',	'',	'',	'[[10001]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'83',	'RoleTopuSuccess',	'Popup/RoleTopuSuccess',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'84',	'RoleSelect',	'Role/RoleSelect',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'85',	'RoleInfoTag',	'Role/RoleInfoTag',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'86',	'RoleInfoFussion',	'Role/RoleInfoFussion',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'87',	'RoleUpBreak',	'Role/RoleUpBreak',	'',	'',	'[[10001],[10003]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'88',	'CoolView',	'Cool/CoolView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'89',	'CoolStopView',	'Cool/CoolStopView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'90',	'RoleEnsureView',	'Role/RoleEnsureView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'91',	'PlayerView',	'Player/PlayerView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'92',	'PlayerSkillInfoPanel',	'Player/PlayerSkillInfoPanel',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'93',	'PlayerAbility',	'PlayerAbility/PlayerAbility',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'94',	'CRoleDisplay',	'CRoleDisplay/CRoleDisplay',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'95',	'CRoleDisplayDetail',	'CRoleDisplay/CRoleDisplayDetail',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'96',	'CRoleDisplayDetailT',	'CRoleDisplay/CRoleDisplayDetailT',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'97',	'CRoleSelectView',	'CRoleDisplay/CRoleSelectView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'98',	'BGSelectView',	'CRoleDisplay/BGSelectView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'99',	'CRoleSelectClothesView',	'CRoleDisplay/CRoleSelectClothesView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'100',	'MatrixScene',	'Matrix/MatrixScene',	'',	'',	'',	'',	'',	'',	'',	'1',	'',	'1',	''},
-{'101',	'Matrix',	'Matrix/Matrix',	'',	'Top',	'',	'',	'1',	'',	'',	'1',	'',	'',	''},
-{'102',	'MatrixSetRole',	'Matrix/MatrixSetRole',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'103',	'MatrixUp',	'Matrix/MatrixUp',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'104',	'MatrixDismantle',	'Matrix/MatrixDismantle',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'105',	'MatrixRemould',	'Matrix/MatrixRemould',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'106',	'MatrixBuilding',	'Matrix/MatrixBuilding',	'',	'',	'',	'',	'',	'',	'',	'1',	'',	'1',	''},
-{'107',	'MatrixTrading',	'Matrix/MatrixTrading',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'108',	'MatrixTradingSpeedUp',	'Matrix/MatrixTradingSpeedUp',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'109',	'MatrixTradingFriend',	'Matrix/MatrixTradingFriend',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'110',	'MatrixTradingRecord',	'Matrix/MatrixTradingRecord',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'111',	'MatrixCompound',	'Compound/MatrixCompound',	'',	'Top',	'[[10001,10711]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'112',	'MatrixCompoundDetail',	'Compound/MatrixCompoundDetail',	'',	'Top',	'[[10001,10711]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'113',	'MatrixCompoundReward',	'Popup/MatrixCompoundReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'114',	'MatrixAllBuilding',	'Matrix/MatrixAllBuilding',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'115',	'MatrixCreate',	'Matrix/MatrixCreate',	'',	'',	'[[10001,10711]]',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'116',	'MatrixCreateInfo',	'Matrix/MatrixCreateInfo',	'',	'',	'[[10001,10711]]',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'117',	'MatrixDefense',	'Matrix/MatrixDefense',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'118',	'MatrixExpedition',	'Matrix/MatrixExpedition',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'119',	'MatrixMiniGame',	'Matrix/MatrixMiniGame',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'120',	'MatrixResPanel',	'Matrix/MatrixResPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'150002',	'1',	''},
-{'121',	'MatrixIndoor',	'Matrix/MatrixIndoor',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'122',	'MatrixBuildingInfo',	'Matrix/MatrixBuildingInfo',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'123',	'MatrixBuildingSelect',	'Matrix/MatrixBuildingSelect',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'124',	'MailView',	'Mail/MailView',	'',	'',	'[[10002],[10001]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'125',	'MailInfoPanel',	'Mail/MailInfoPanel',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'126',	'MissionView',	'Mission/MissionView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'127',	'ExerciseLView',	'ExerciseL/ExerciseLView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'128',	'ExerciseVsView',	'ExerciseL/ExerciseVsView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'129',	'ExerciseRView',	'ExerciseR/ExerciseRView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'130',	'ExerciseLChange',	'Popup/ExerciseLChange',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'131',	'ExerciseLBuy',	'ExerciseL/ExerciseLBuy',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'132',	'ExerciseLRankReward',	'ExerciseL/ExerciseLRankReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'133',	'FightWinPvp',	'FightWin/FightWinPvp',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'134',	'FightLostPvp',	'FightLost/FightLostPvp',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'135',	'RankView',	'Rank/RankView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'136',	'CreateView',	'Create/CreateView',	'',	'',	'[[10002],[10040],[11002]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'137',	'CreateFactory',	'Create/CreateFactory',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'138',	'CreateSelectPanel',	'Popup/CreateSelectPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'139',	'CreateEnsurePanel',	'Popup/CreateEnsurePanel',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'140',	'CreateShowView',	'CreateShow/CreateShowView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'141',	'CreateInfoPanel',	'Create/CreateInfoPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'142',	'CreateRoleView',	'CreateShow/CreateRoleView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'143',	'CreateBuy',	'Create/CreateBuy',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'144',	'CreateTips',	'Create/CreateTips',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'145',	'CreateRecord',	'Create/CreateRecord',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'146',	'CreateBDPanel',	'Create/CreateBDPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'147',	'CreateDetail',	'Create/CreateDetail',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'148',	'ArchiveView',	'Archive1/ArchiveView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'149',	'ArchiveRoleListView',	'Archive2/ArchiveRoleListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'150',	'ArchiveEnemyListView',	'Archive2/ArchiveEnemyListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'151',	'ArchiveGoodsListView',	'Archive2/ArchiveGoodsListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'152',	'ArchiveStoryView',	'Archive2/ArchiveStoryView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'153',	'ArchiveCourseView',	'Archive2/ArchiveCourseView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'154',	'ArchiveRole',	'Archive3/ArchiveRole',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'155',	'ArchiveEnemy',	'Archive3/ArchiveEnemy',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'156',	'FriendView',	'Friend/FriendView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'157',	'PlayerUpgrade',	'Player/PlayerUpgrade',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'158',	'SettingView',	'Setting/SettingView',	'1',	'Top',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'159',	'SignInView',	'SignIn/SignInView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'-1',	'1',	''},
-{'160',	'SignInContinue',	'SignInContinue/SignInContinue',	'',	'Top',	'',	'',	'',	'',	'',	'',	'-1',	'1',	''},
-{'161',	'AddGridView',	'Common/AddGridView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'162',	'ModuleInfoView',	'ModuleInfo/ModuleInfoView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'163',	'WorldBossMenu',	'WorldBoss/WorldBossMenu',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'164',	'SortView',	'Sort/SortView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'165',	'SortProView',	'Sort/SortProView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'166',	'MenuOpen',	'Popup/MenuOpen',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'167',	'FightOverResult',	'FightOver/FightOverResult',	'',	'Top',	'',	'',	'',	'',	'',	'',	'-1',	'1',	''},
-{'168',	'AttributeInfoView',	'AttributeNew2/AttributeInfoView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'169',	'AttributeInfoTView',	'AttributeNew2/AttributeInfoTView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'170',	'RolesFullInfo',	'Goods/RolesFullInfo',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'171',	'TeamBossView',	'TeamBoss/TeamBossView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'172',	'TeamBossTips',	'TeamBoss/TeamBossTips',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'173',	'TeamBossCreate',	'TeamBoss/TeamBossCreate',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'174',	'TeamBossSort',	'TeamBoss/TeamBossSort',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'175',	'TeamBossPrepare',	'TeamBoss/TeamBossPrepare',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'176',	'TeamBossInvite',	'TeamBoss/TeamBossInvite',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'177',	'TeamBossDamage',	'TeamBoss/TeamBossDamage',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'178',	'ActivityView',	'Activity/ActivityView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'179',	'Dorm',	'Dorm/Dorm',	'',	'',	'',	'',	'',	'',	'',	'1',	'',	'1',	''},
-{'180',	'DormRoom',	'Dorm2/DormRoom',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'181',	'DormComfort',	'Dorm/DormComfort',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'182',	'DormGift',	'Dorm/DormGift',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'183',	'DormGift2',	'Dorm/DormGift2',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'184',	'DormShop',	'Dorm2/DormShop',	'',	'',	'[[10002,140001],[10013,140017]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'185',	'DormShopConf',	'Dorm/DormShopConf',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'186',	'DormTheme',	'Dorm/DormTheme',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'187',	'DormLayoutThemeSave',	'Dorm/DormLayoutThemeSave',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'188',	'DormLayoutFurnitureCof',	'Dorm/DormLayoutFurnitureCof',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'189',	'DormLayoutThemeCof',	'Dorm/DormLayoutThemeCof',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'190',	'DormThemeTemplate',	'Dorm/DormThemeTemplate',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'191',	'DormDress',	'Dorm/DormDress',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'192',	'DormSetRoleList',	'DormSetRole/DormSetRoleList',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'193',	'DormLayoutSort',	'Dorm2/DormLayoutSort',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'194',	'DormThemePayView',	'Dorm2/DormThemePayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'195',	'DormFurniturePayView',	'Dorm2/DormFurniturePayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'196',	'PopupSpendView',	'Popup/PopupSpendView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'197',	'HotPanel',	'Hot/HotPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'198',	'HotBuyPanel',	'Hot/HotBuyPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'199',	'HotDetailPanel',	'Hot/HotDetailPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'200',	'HotUsePanel',	'Hot/HotUsePanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'201',	'HotTipsPanel',	'Popup/HotTipsPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'202',	'FavourView',	'Favour/FavourView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'203',	'FavourHypnosisView',	'Favour/FavourHypnosisView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'204',	'FavourPlotInfoView',	'Favour/FavourPlotInfoView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'205',	'FavourPlotView',	'Favour/FavourPlotView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'206',	'MulPictureView',	'Common/MulPictureView',	'',	'Top',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'207',	'SortPanel',	'Sort/SortPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'208',	'SortFilterPanel',	'Sort/SortFilterPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'209',	'Authentication',	'Login/Authentication',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'210',	'FightRoleInfo',	'FightRoleInfo/FightRoleInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'211',	'GoodsFullInfo',	'Goods/GoodsFullInfo',	'',	'Top',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'212',	'EquipFullInfo',	'EquipInfo/EquipFullInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'213',	'FightResultNewPlayer',	'FightWin/FightResultNewPlayer',	'1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'214',	'Guide',	'Guide/Guide',	'',	'Top',	'',	'',	'1',	'',	'',	'1',	'',	'',	''},
-{'215',	'GuildMain',	'Guild/GuildMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'216',	'GuildMenu',	'Guild/GuildMenu',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'217',	'GuildSearch',	'Guild/GuildSearch',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'218',	'GuildSetting',	'Guild/GuildSetting',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'219',	'GuildInfo',	'Guild/GuildInfo',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'220',	'GuildCreate',	'Guild/GuildCreate',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'221',	'GuildMemInfo',	'Guild/GuildMemInfo',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'222',	'GuildIcon',	'Guild/GuildIconView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'223',	'Hint',	'Guide/Hint',	'',	'Top',	'',	'',	'',	'',	'1',	'1',	'',	'',	''},
-{'224',	'GuildFightMain',	'GuildFight/GuildFightMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'225',	'GuildFightTeamEdit',	'GuildFight/GuildFightTeamEdit',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'226',	'GuildBattleField',	'GuildFight/GuildBattleField',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'227',	'GuildFieldConfirm',	'GuildFight/GuildFieldConfirm',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'228',	'GuildBattleResult',	'GuildFight/GuildBattleResult',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'229',	'RoleEquipSkillFull',	'RoleEquip/RoleEquipSkillFull',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'230',	'PlotStory',	'Plot/PlotStory',	'',	'Top',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'231',	'FightLoading',	'FightLoading/FightLoading',	'',	'Topest',	'',	'',	'',	'',	'1',	'1',	'',	'',	''},
-{'232',	'HideLoading',	'Loading/HideLoading',	'',	'Top',	'',	'',	'',	'',	'1',	'1',	'',	'',	''},
-{'233',	'PlotSimple',	'Plot/PlotSimple',	'1',	'Top',	'',	'',	'1',	'',	'1',	'',	'',	'',	''},
-{'234',	'LoadPrompt',	'Tips/PromptBox',	'',	'Topest',	'',	'',	'1',	'',	'1',	'',	'',	'1',	''},
-{'235',	'EquipPrefab',	'RoleEquip/EquipPrefabView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'236',	'ShopPackPayView',	'Shop/ShopPackPayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'237',	'GuildRankList',	'GuildFight/GuildRankList',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'238',	'LoadDialog',	'Tips/DialogBox',	'',	'Topest',	'',	'',	'1',	'',	'1',	'',	'',	'1',	''},
-{'239',	'LoginAgreement',	'Login/LoginAgreement',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'240',	'FightSkillSkip',	'Fight/FightSkillSkip',	'',	'Topest',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'241',	'AgeTipsView',	'Login/AgeTipsView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'242',	'DungeonDaily',	'Dungeon/DungeonDailyView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'243',	'DialogTopest',	'Tips/DialogBox',	'',	'Topest',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'244',	'BagQualitySelect',	'Bag/BagQualitySelect',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'245',	'Chat',	'Chat/ChatView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'246',	'PlayerInfoView',	'Player/PlayerInfoView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'247',	'FightNaviSetting',	'TeamConfirm/FightNaviSetting',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'248',	'FightNaviReward',	'NaviReward/FightNaviReward',	'1',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'249',	'FightDirll',	'FightDirll/FightDirllView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'250',	'AIPrefabSetting',	'AISetting/AIPrefabSetting',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'251',	'AIConditionView',	'AISetting/AIConditionView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'252',	'TurnWarning',	'Fight/TurnWarning',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'253',	'AssistPlayerInfo',	'Team/AssistPlayerInfo',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'254',	'RoleExchangeView',	'Shop/RoleExchangeView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'255',	'BattleStrategy',	'BattleAISetting/BattleStrategy',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'256',	'RoleUniteView',	'Role/RoleUniteView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'257',	'GoodsFullInfo2',	'Goods/GoodsFullInfo',	'',	'',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'258',	'LoginWait',	'Login/LoginWait',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'259',	'ErrorView',	'Common/ErrorView',	'',	'Topest',	'',	'',	'',	'',	'1',	'1',	'',	'',	''},
-{'260',	'DungeonDetail',	'DungeonDetail/DungeonDetail',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'261',	'ActivityListView',	'ActivityList/ActivityListView',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	'1',	''},
-{'262',	'AbilityInfoView',	'PlayerAbility/AbilityInfoView',	'',	'Topest',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'263',	'ExplorationMain',	'Exploration/ExplorationMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'264',	'ExplorationItem',	'Exploration/ExplorationItem',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'265',	'ExplorationGUIDE',	'Exploration/ExplorationGUIDE',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'266',	'ExplorationGUIDEItem',	'Exploration/ExplorationGUIDEItem',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'267',	'ExplorationStage',	'Exploration/ExplorationStage',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'268',	'ExplorationCardGrid',	'ExplorationCard/ExplorationCardGrid',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'269',	'ExplorationBuy',	'Exploration/ExplorationBuy',	'',	'',	'',	'',	'',	'',	'',	'',	'-1',	'1',	''},
-{'270',	'NetWait',	'Common/NetWait',	'',	'Topest',	'',	'',	'',	'',	'1',	'1',	'',	'',	'1'},
-{'271',	'ColorMask',	'Common/ColorMask',	'',	'Top',	'',	'',	'',	'',	'1',	'1',	'',	'',	''},
-{'272',	'RoleEquipSkillDesc',	'RoleEquip/RoleEquipSkillDesc',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'273',	'RoleEquippedInfo',	'EquipInfo/RoleEquippedInfo',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'274',	'MissionActivity',	'Mission1/MissionActivity',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'275',	'GoodsSmallInfo',	'Goods/GoodsSmallInfo',	'',	'Top',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'276',	'GoodsSmallInfo2',	'Goods/GoodsSmallInfo',	'',	'',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'277',	'DungeonTower',	'DungeonTower/DungeonTowerView',	'',	'',	'[[10035,140010]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'278',	'BattleField',	'BattleField/BattleFieldView',	'',	'',	'[[10042],[10035,140010]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'279',	'BattleFieldBoss',	'BattleField/BattleFieldBoss',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'280',	'BattleFieldExplain',	'BattleField/BattleFieldExplain',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'281',	'BattleFieldRank',	'Rank/BattleFieldRank',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'282',	'FightEnemyInfo',	'FightRoleInfo/FightEnemyInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'283',	'DungeonActivity1',	'DungeonActivity1/DungeonActivityView1',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'284',	'DungeonPlot',	'DungeonActivity1/DungeonPlotView',	'',	'',	'[[10035,140010]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'285',	'DungeonActivity2',	'DungeonActivity2/DungeonActivityView2',	'',	'',	'[[10035,140010]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'286',	'SkinSetView',	'RoleSkinComm/SkinSetView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'287',	'SkinFullInfo',	'RoleSkinComm/SkinFullInfo',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'288',	'ShopSkinBuy',	'Shop/ShopSkinBuy',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'289',	'ArchiveBoard',	'Archive2/ArchiveBoardView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'290',	'EquipReplaceTips',	'EquipSelect/EquipReplaceTips',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'291',	'FightOverBuff',	'FightOver/FightOverBuffView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'292',	'SweepView',	'Sweep/SweepView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'293',	'SDKPaySelect',	'SDK/SDKPaySelect',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'294',	'WaitPanel',	'Common/WaitPanel',	'',	'Topest',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'295',	'CourseView',	'Course/CourseView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'296',	'CoreExchangeDetails',	'Shop/CoreExchangeDetails',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'297',	'PermissionTips',	'Login/PermissionTips',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'298',	'MenuBuyPanel',	'MenuBuy/MenuBuyPanel',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'299',	'SettingWindow',	'Setting/SettingWindow',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'300',	'ExtraActivityView',	'ActivityList/ActivityListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'301',	'DungeonActivity3',	'DungeonActivity3/DungeonActivityView3',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'302',	'DungeonRole',	'DungeonRole/DungeonRoleView',	'',	'',	'[[10035,140010]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'303',	'DungeonTaoFaBuy',	'DungeonActivity2/DungeonTaoFaBuy',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'304',	'ExplainBox',	'Tips/ExplainBox',	'',	'Topest',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'305',	'DungeonActivity4',	'DungeonActivity4/DungeonActivityView4',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'306',	'DungeonShadowSpider',	'DungeonActivity4/DungeonShadowSpider',	'',	'',	'[[10016],[12007,140014]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'307',	'VideoPlayer',	'VideoPlayer/VideoPlayer',	'',	'Top',	'',	'',	'',	'',	'1',	'1',	'',	'',	''},
-{'308',	'DungeonActivity5',	'DungeonActivity5/DungeonActivityView5',	'',	'',	'[[10101],[12008,140014]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'309',	'TrialsView',	'Trials/TrialsView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'310',	'TrialsListView',	'Trials/TrialsListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'311',	'HeadFramePanel',	'HeadFrame/HeadFramePanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'312',	'UniversalPurchase',	'UniversalPurchase/UniversalPurchaseVIew',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'313',	'RoleJieJin',	'Role/RoleJieJin',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'314',	'RoleJieJinSuccess',	'Popup/RoleJieJinSuccess',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'315',	'Achievement',	'Achievement/AchievementView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'316',	'MatrixRolePreset',	'Matrix/MatrixRolePreset',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'317',	'BadgeView',	'Badge/BadgeView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'318',	'TowerView',	'Tower/TowerView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'319',	'TowerListView',	'Tower/TowerListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'320',	'TowerListView2',	'Tower2/TowerListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'321',	'DungeonActivity6',	'DungeonActivity6/DungeonActivityView6',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'322',	'DungeonFeast',	'DungeonActivity5/DungeonFeastView',	'',	'',	'[[12008,140014]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'323',	'TowerAssistDialog',	'Tower/TowerAssistDialog',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'324',	'ResRecovery',	'ResRecovery/ResRecovery',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'325',	'RewardAchievement',	'Popup/RewardAchievementView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'326',	'RewardBadge',	'Popup/RewardBadgeView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'327',	'SpecialActivityView',	'ActivityList/ActivityListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'328',	'InfoCorrBox',	'Tips/InfoCorrBox',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'329',	'RegressionList',	'RegressionList/RegressionListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'330',	'TotalBattle',	'TotalBattle/TotalBattleView',	'',	'',	'[[10102],[12009]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'331',	'TotalBattleRank',	'Rank/TotalBattleRank',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'332',	'ItemPoolActivity',	'ItemPool/ItemPoolActivity',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'333',	'ItemPoolRewardActivity',	'ItemPool/ItemPoolRewardActivity',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'334',	'ItemPoolPreview',	'ItemPool/ItemPoolPreview',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'335',	'ItemPoolDraw',	'ItemPool/ItemPoolDraw',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'336',	'RogueView',	'Rogue/RogueView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'337',	'RogueBuffDetail',	'Rogue/RogueBuffDetail',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'338',	'RogueEnemySelect',	'Rogue/RogueEnemySelect',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'339',	'RogueBuffSelect',	'Rogue/RogueBuffSelect',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'340',	'RogueMission',	'Rogue/RogueMission',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'341',	'BGPictureView',	'Common/BGPictureView',	'',	'Top',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'342',	'CollaborationMain',	'Collaboration/CollaborationMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'343',	'CollaborationBinding',	'Collaboration/CollaborationBinding',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'344',	'CollaborationConfirm',	'Collaboration/CollaborationConfirm',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'345',	'CollaborationCode',	'Collaboration/CollaborationCode',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'346',	'CollaborationBindingSuccess',	'Collaboration/CollaborationBindingSuccess',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'347',	'CollaborationInvition',	'Collaboration/CollaborationInvition',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'348',	'CollaborationPreview',	'Collaboration/CollaborationPreview',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'349',	'DungeonTaoFa',	'DungeonActivity2/DungeonTaoFaView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'350',	'AdvGuideSoreView',	'AdvGuideSore/AdvGuideSoreView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'351',	'DungeonActivity7',	'DungeonActivity7/DungeonActivityView7',	'',	'',	'[[10103],[10104],[12010,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'352',	'DungeonSummer',	'DungeonActivity7/DungeonSummerView',	'',	'',	'[[10103],[10104],[12010,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'353',	'RankSummer',	'Rank/RankSummerView',	'',	'',	'[[10103],[10104],[12010,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'354',	'PetMain',	'Pet/PetMain',	'',	'',	'[[10002],[10104,12702]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'355',	'PlayerSex',	'PlayerSex/PlayerSexView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'356',	'PlayerShow',	'RoleSkinComm/PlayerShowView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'357',	'CRoleDisplayMain',	'CRoleDisplay/CRoleDisplayMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'358',	'SpecialExploration',	'SpecialExploration/SpecialExploration',	'',	'',	'[[10103]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'359',	'LovePlusView',	'LovePlus/LovePlusView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'360',	'LovePlusListView',	'LovePlus/LovePlusListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'361',	'LovePlusPayView',	'LovePlusShop/LovePlusPayView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'362',	'LovePlusPlotPanel',	'LovePlusPlot/LovePlusPlotPanel',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'363',	'LovePlusMulView',	'LovePlusPic/LovePlusMulView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'364',	'LovePlusPackPayView',	'LovePlusShop/LovePlusPackPayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'365',	'RewardSummerPanel',	'SpecialReward/RewardSummerPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'-1',	'1',	''},
-{'366',	'RogueSView',	'RogueS/RogueSView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'367',	'RogueSGift',	'Dungeon/RogueSGift',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'368',	'RogueSTeam',	'RogueS/RogueSTeam',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'369',	'RogueSTeamDownList',	'TeamConfirm/RogueSTeamDownList',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'370',	'ShareView',	'ShareView/ShareView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'371',	'BgmView',	'Bgm/BgmView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'372',	'RogueSBuffDetail',	'RogueS/RogueSBuffDetail',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'373',	'RogueMain',	'RogueMain/RogueMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'374',	'MatrixDormSelect',	'Matrix/MatrixDormSelect',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'375',	'DungeonActivity8',	'DungeonActivity8/DungeonActivityView8',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'376',	'ColosseumView',	'Colosseum/ColosseumView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'377',	'ColosseumBuy',	'Colosseum/ColosseumBuy',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'378',	'ColosseumTeam',	'Colosseum/ColosseumTeam',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'379',	'ColosseumZX',	'Colosseum/ColosseumZX',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'380',	'ColosseumSJ',	'Colosseum/ColosseumSJ',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'381',	'ColosseumMissionView',	'Mission/ColosseumMissionView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'382',	'DungeonActivity9',	'DungeonActivity9/DungeonActivityView9',	'',	'',	'[[10105],[12011,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'383',	'DungeonNight',	'DungeonActivity9/DungeonNightView',	'',	'',	'[[10105],[12011,140021]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'384',	'ColosseumEquipPanel',	'Colosseum/ColosseumEquipPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'385',	'RankTeamCheck',	'Rank/RankTeamCheckView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'386',	'RankTeamReplace',	'Rank/RankTeamReplaceView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'387',	'MenuStandby',	'MenuStandby/MenuStandby',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'388',	'CRoleDisplayS',	'CRoleDisplay/CRoleDisplayS',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'389',	'CRoleDisplaySet',	'CRoleDisplay/CRoleDisplaySet',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'390',	'SDKPayJPlimitLevel',	'SDK/SDKPayJPlimitLevel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'391',	'ColosseumM',	'Colosseum/ColosseumM',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'392',	'ColosseumReward',	'Dungeon/ColosseumReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'393',	'ASMRView',	'ASMR/ASMRView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'394',	'ASMRShow',	'ASMR/ASMRShow',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'395',	'GlobalBossView',	'GlobalBoss/GlobalBossView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'396',	'GlobalBossList',	'GlobalBoss/GlobalBossListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'397',	'ShopMultPayView',	'Shop/ShopMultPayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'398',	'DungeonActivity10',	'DungeonActivity10/DungeonActivityView10',	'',	'',	'[[10035,140010]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'399',	'SneakMain',	'Sneak/SneakMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'400',	'MenuMore',	'Menu/MenuMore',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'401',	'AnniversaryView',	'Activity7/AnniversaryView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'402',	'AnniversaryWindow',	'AnniversaryWindow/AnniversaryWindow',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'403',	'PackGetInfo',	'Goods/PackGetInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'404',	'RogueTView',	'RogueT/RogueTView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'405',	'RogueTHard',	'RogueT/RogueTHard',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'406',	'RogueTReward',	'RogueT/RogueTReward',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'407',	'RogueTScore',	'RogueT/RogueTScore',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'408',	'RogueTBuffSelect',	'RogueT/RogueTBuffSelect',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'409',	'RogueTEnemySelect',	'RogueT/RogueTEnemySelect',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'410',	'RogueTCurBuff',	'RogueT/RogueTCurBuff',	'',	'Top',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'411',	'RogueTSaveBuff',	'RogueT/RogueTSaveBuff',	'',	'Top',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'412',	'RogueTShopBuff',	'RogueT/RogueTShopBuff',	'',	'',	'[[10501]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'413',	'ColosseumMRandom',	'Colosseum/ColosseumMRandom',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'414',	'BadgeTips',	'Tips/BadgeTips',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'415',	'RogueTSelectBuff',	'RogueT/RogueTSelectBuff',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'416',	'SummaryNewYear',	'Summary1/SummaryNewYear',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'417',	'ConvertedItemView',	'Goods/ConvertedItemView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'418',	'DungeonActivity11',	'DungeonActivity11/DungeonActivityView11',	'',	'',	'[[10106],[12012,140024]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'419',	'DungeonCloud',	'DungeonActivity11/DungeonCloudView',	'',	'',	'[[10106],[12012,140024]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'420',	'ExerciseLHistory',	'ExerciseL/ExerciseLHistory',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'421',	'CRoleDisplayPVP',	'CRoleDisplay/CRoleDisplayPVP',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'422',	'HeadFrameDialog4',	'HeadFrame/HeadFrameDialog4',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'423',	'SpecialGuide',	'SpecialGuide/SpecialGuideView',	'',	'Top',	'',	'',	'1',	'',	'',	'1',	'',	'',	''},
-{'424',	'MissionGlobalBoss',	'Mission1/MissionGlobalBoss',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'425',	'Dialog2',	'Tips/DialogBox2',	'',	'Topest',	'',	'',	'1',	'1',	'',	'',	'',	'1',	''},
-{'426',	'SkinRebate',	'OperationActivity1/SkinRebateView',	'',	'',	'[[10002]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'427',	'PuzzleActivity',	'PuzzleActivity/PuzzleActivity',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'428',	'PuzzlePool',	'PuzzleActivity/PuzzlePool',	'',	'',	'[[10002],[10040]]',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'429',	'PuzzleMultPayView',	'PuzzleActivity/PuzzleMultPayView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'430',	'LuckyGachaMain',	'LuckyGacha/LuckyGachaMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'431',	'LuckyGachaPoolInfo',	'LuckyGacha/LuckyGachaPoolInfo',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'432',	'LuckyGachaReward',	'LuckyGacha/LuckyGachaReward',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'433',	'DungeonActivity12',	'DungeonActivity12/DungeonActivityView12',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'434',	'Questionnaire',	'Questionnaire/Questionnaire',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'435',	'SignInDuanWu',	'SignInContinue13/SignInDuanWu',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'436',	'CreateSelectRolePanel',	'Create/CreateSelectRolePanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'437',	'CreateSelectRoleTPanel',	'Create/CreateSelectRoleTPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'438',	'BuffBattle',	'BuffBattle/BuffBattleView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'439',	'TeamLimitPanel',	'Team/TeamLimitPanel',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'440',	'SilentDownload',	'SilentDownload/SilentDownloadView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'441',	'SelectSlotBox',	'EquipInfo/SelectSlotBox',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'442',	'MissionReward',	'Mission2/MissionRewardView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'443',	'RogueMap',	'RogueMap/RogueMapView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'444',	'RogueMapList',	'RogueMap/RogueMapListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'445',	'RogueMapBattle',	'RogueMapBattle/RogueMapBattleView',	'',	'',	'',	'',	'',	'',	'',	'1',	'',	'',	''},
-{'446',	'RewardRogueMap',	'Popup/RewardRogueMapView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'447',	'RogueMapSup',	'RogueMap/RogueMapSupView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'448',	'RogueMapLog',	'RogueMap/RogueMapLogView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'449',	'RogueMapAssist',	'RogueMap/RogueMapAssistView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'450',	'RogueMapVideo',	'RogueMapBattle/RogueMapVideoView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'451',	'DungeonActivity13',	'DungeonActivity13/DungeonActivityView13',	'',	'',	'[[10107],[12013,140027]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'452',	'DungeonSummer2',	'DungeonActivity13/DungeonSummer2View',	'',	'',	'[[10107],[12013,140027]]',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'453',	'ExplorationBuy2',	'Exploration/ExplorationBuy2',	'',	'',	'',	'',	'',	'',	'',	'',	'-1',	'1',	''},
-{'454',	'MultTeamBattleMain',	'MultTeamBattle/MultTeamBattleMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'455',	'MultTeamLimitInfo',	'MultTeamBattle/MultTeamLimitInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'456',	'MultTeamRewardInfo',	'MultTeamBattle/MultTeamRewardInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'457',	'AnniversaryList',	'AnniversaryList/AnniversaryListView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'458',	'DungeonActivity14',	'DungeonActivity14/DungeonActivityView14',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'459',	'CoffeeView',	'Coffee/CoffeeView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'460',	'CoffeePlayView',	'Coffee/CoffeePlayView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'461',	'CoffeeFoodDetail',	'Coffee/CoffeeFoodDetail',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'462',	'SignInNReward',	'Common/SignInNReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'463',	'CoffeeOverView',	'Coffee/CoffeeOverView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'464',	'RiddleMain',	'Riddle/RiddleMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'465',	'RiddleDialog',	'Riddle/RiddleDialog',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'466',	'MissionLimitTips',	'Tips/MissisonLimitTips',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'467',	'GiftFilter',	'Goods/GiftFilter',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'468',	'ExerciseRMain',	'ExerciseR/ExerciseRMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'469',	'ExerciseRPP',	'ExerciseR/ExerciseRPP',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'470',	'ExerciseRRankReward',	'ExerciseR/ExerciseRRankReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'471',	'ExerciseRJC',	'Popup/ExerciseRJC',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'472',	'ExerciseRChange',	'Popup/ExerciseRChange',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'473',	'PopupPackView',	'PopupPack/PopupPackView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'474',	'RaisingDialog',	'TeamConfirm/RaisingDialog',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'475',	'RaisingJumpDialog',	'TeamConfirm/RaisingJumpDialog',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'476',	'HaloMain',	'Halo/HaloMain',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'477',	'HaloReplace',	'Halo/HaloReplace',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'478',	'HaloEquipSelect',	'Halo/HaloEquipSelect',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'479',	'HaloEquipReplace',	'Halo/HaloEquipReplace',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'480',	'HaloUpgrade',	'Halo/HaloUpgrade',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'481',	'HaloEquipSell',	'Halo/HaloEquipSell',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'482',	'DungeonTeamReplace',	'DungeonTeamReplace/DungeonTeamReplaceView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'483',	'NumSelectView',	'Goods/NumSelectView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'484',	'GlobalBossBuff',	'GlobalBoss/GlobalBossBuffView',	'',	'',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'485',	'HalloweenMenu',	'Halloween/HalloweenMenuView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'486',	'Halloween',	'Halloween/HalloweenView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'487',	'HaloBag',	'Bag/HaloBag',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'488',	'HaloEquipFullInfo',	'Halo/HaloEquipFullInfo',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'489',	'TowerDeep',	'TowerDeep/TowerDeepView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'490',	'TowerDeepTeam',	'TowerDeep/TowerDeepTeamView',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'491',	'DungeonActivity15',	'DungeonActivity15/DungeonActivityView15',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'492',	'SkinTagDesc',	'RoleSkinComm/SkinTagDesc',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'493',	'MerryChristmas',	'MerryChristmas/MerryChristmas',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'1',	''},
-{'494',	'MerryChristmasOverView',	'MerryChristmas/MerryChristmasOverView',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-{'495',	'RichManMain',	'RichMan/RichManMain',	'',	'',	'[[10416]]',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'496',	'DungeonDetail2',	'DungeonDetail/DungeonDetail2',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'1',	''},
-{'497',	'PhysicalReward',	'PhysicalReward/PhysicalReward',	'',	'Top',	'',	'',	'1',	'',	'',	'',	'',	'',	''},
-},
+_G["view"]={{["top_mask"]=true,["key"]="GMC",["id"]=1,["layer"]="Top",["res"]="GMCView",["mask"]=1}
+,{["top_mask"]=false,["key"]="InputCtrler",["id"]=2,["res"]="InputCtrler"}
+,{["id"]=3,["layer"]="Top",["top_mask"]=true,["key"]="Loading",["mask"]=1,["dont_close_when_load"]=1,["dont_close_when_close_all"]=1,["res"]="Loading/Loading"}
+,{["top_mask"]=true,["key"]="Login",["id"]=4,["res"]="Login/Login"}
+,{["top_mask"]=false,["key"]="SceneCameraCtrler",["id"]=5,["res"]="SceneCameraCtrler"}
+,{["top_mask"]=false,["key"]="FightTest",["id"]=6,["res"]="FightTest/FightTest"}
+,{["id"]=7,["layer"]="Topest",["is_window"]=1,["top_mask"]=false,["key"]="Dialog",["res"]="Tips/DialogBox",["Virtualkeys_close"]=1,["multi"]=1}
+,{["id"]=8,["is_window"]=1,["top_mask"]=true,["key"]="Menu",["Show_CurrencyType"]={{10002,140001}
+,{10001,140014}
+,{10035,140010}
 }
---cfgview = conf
-return conf
+,["res"]="Menu/Menu",["Virtualkeys_close"]=1,["dont_close_when_close_all"]=1}
+,{["top_mask"]=false,["key"]="Demo1",["id"]=9,["res"]="Demo1/Demo1"}
+,{["top_mask"]=false,["key"]="Fight",["id"]=10,["res"]="Fight/Fight",["is_window"]=1,["jump_chose"]={-1}
+}
+,{["top_mask"]=false,["key"]="FightEnd",["id"]=11,["jump_chose"]={-1}
+,["res"]="Fight/FightEnd"}
+,{["top_mask"]=false,["key"]="Skill",["id"]=12,["res"]="Skill/Skill",["is_window"]=1}
+,{["top_mask"]=false,["key"]="FightTimeLine",["id"]=13,["res"]="Fight/FightTimeLine",["is_window"]=1}
+,{["top_mask"]=false,["key"]="FightBoss",["id"]=14,["res"]="Fight/FightBoss",["is_window"]=1}
+,{["top_mask"]=false,["key"]="CharacterInfo",["id"]=15,["res"]="Fight/CharacterInfo",["is_window"]=1}
+,{["top_mask"]=false,["key"]="Relive",["layer"]="Top",["id"]=16,["mask"]=1,["is_window"]=1,["res"]="Fight/Relive"}
+,{["top_mask"]=false,["key"]="Bag",["id"]=17,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Bag/Bag"}
+,{["top_mask"]=false,["key"]="GoodPopup",["Virtualkeys_close"]=1,["id"]=18,["mask"]=1,["is_window"]=1,["res"]="Popup/GoodPopup"}
+,{["top_mask"]=false,["key"]="EnemyInfo",["Virtualkeys_close"]=1,["id"]=19,["mask"]=1,["is_window"]=1,["res"]="EnemyInfo/EnemyInfo"}
+,{["top_mask"]=false,["key"]="GoodsPack",["Virtualkeys_close"]=1,["id"]=20,["mask"]=1,["is_window"]=1,["res"]="Common/GoodsPack"}
+,{["top_mask"]=false,["key"]="Plot",["res"]="Plot/Plot",["id"]=21,["layer"]="Top",["dont_close_when_load"]=1,["mask"]=1}
+,{["jump_close_type"]=1,["id"]=22,["mask"]=1,["top_mask"]=false,["key"]="Section",["Show_CurrencyType"]={{10035,140010}
+}
+,["res"]="Section/Section",["Virtualkeys_close"]=1}
+,{["jump_close_type"]=1,["id"]=23,["mask"]=1,["top_mask"]=false,["key"]="Dungeon",["Show_CurrencyType"]={{10035,140010}
+}
+,["res"]="Dungeon/Dungeon",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="Battle",["id"]=24,["dont_close_when_close_all"]=1,["Virtualkeys_close"]=1,["res"]="Battle/Battle"}
+,{["top_mask"]=false,["key"]="RoleEquipRecycleView",["id"]=25,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Role/RoleEquipRecycleView"}
+,{["top_mask"]=false,["key"]="TeamSelect",["id"]=26,["res"]="Formation/TeamSelectView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TeamView",["id"]=27,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Team/TeamView"}
+,{["top_mask"]=false,["key"]="TeamAssistView",["id"]=28,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Team/TeamAssistView"}
+,{["id"]=29,["layer"]="Topest",["is_window"]=1,["top_mask"]=false,["key"]="Prompt",["res"]="Tips/PromptBox",["Virtualkeys_close"]=1,["multi"]=1}
+,{["id"]=30,["layer"]="Topest",["top_mask"]=true,["key"]="TipsParent",["dont_close_when_load"]=1,["res"]="Tips/Tips",["Virtualkeys_close"]=1,["dont_close_when_close_all"]=1}
+,{["top_mask"]=false,["key"]="EquipListView",["id"]=31,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Equip/EquipListView"}
+,{["top_mask"]=false,["key"]="EquipSelectView",["id"]=32,["res"]="EquipSelect/EquipSelectView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="EquipChange",["id"]=33,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Equip/EquipChange"}
+,{["top_mask"]=false,["key"]="RoleEquipTable",["id"]=34,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Role/RoleEquipTable"}
+,{["top_mask"]=false,["key"]="EquipDetails",["Virtualkeys_close"]=1,["id"]=35,["layer"]="Top",["is_window"]=1,["res"]="Goods/EquipDetails"}
+,{["id"]=36,["layer"]="Top",["is_window"]=1,["top_mask"]=false,["key"]="RoleEquipSkillInfo",["res"]="RoleEquip/RoleEquipSkillInfo",["Virtualkeys_close"]=1,["jump_chose"]={-1}
+}
+,{["top_mask"]=false,["key"]="EquipPopup",["Virtualkeys_close"]=1,["id"]=37,["mask"]=1,["is_window"]=1,["res"]="Popup/EquipPopup"}
+,{["id"]=38,["layer"]="Top",["is_window"]=1,["top_mask"]=false,["key"]="RewardPanel",["res"]="Popup/RewardPanel",["Virtualkeys_close"]=1,["jump_chose"]={-1}
+}
+,{["top_mask"]=false,["key"]="EquipStreng",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10001,10711}
+}
+,["res"]="EquipInfo/EquipStrengView",["is_window"]=1,["id"]=39}
+,{["top_mask"]=false,["key"]="DungeonFormation",["id"]=40,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Team/DungeonFormation"}
+,{["top_mask"]=false,["key"]="FightFormation",["id"]=41,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Battle/FightFormation"}
+,{["top_mask"]=false,["key"]="ShopView",["id"]=42,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Shop/ShopView"}
+,{["top_mask"]=false,["key"]="ShopPayView",["id"]=43,["res"]="Shop/ShopPayView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="FightMenu",["res"]="FightMenu/FightMenu",["id"]=44,["layer"]="Top",["Virtualkeys_close"]=1,["mask"]=1}
+,{["top_mask"]=false,["key"]="UserName",["id"]=45,["mask"]=1,["Virtualkeys_close"]=1,["res"]="Login/UserName"}
+,{["top_mask"]=false,["key"]="GiftInfo",["Virtualkeys_close"]=1,["id"]=46,["layer"]="Top",["is_window"]=1,["res"]="Goods/GiftInfo"}
+,{["top_mask"]=false,["key"]="FightRender",["id"]=47,["dont_close_when_close_all"]=1,["res"]="Fight/FightRender"}
+,{["id"]=48,["layer"]="Topest",["top_mask"]=false,["key"]="NetWeak",["mask"]=1,["dont_close_when_load"]=1,["dont_close_when_close_all"]=1,["res"]="Common/NetWeak"}
+,{["top_mask"]=false,["key"]="ShellEquipView",["Virtualkeys_close"]=1,["id"]=49,["mask"]=1,["is_window"]=1,["res"]="Goods/ShellEquipView"}
+,{["top_mask"]=false,["key"]="Transformer",["id"]=50,["mask"]=1,["is_window"]=1,["res"]="Fight/Transformer"}
+,{["top_mask"]=false,["key"]="TeamRename",["id"]=51,["res"]="Team/TeamRename",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="BattleExplore",["id"]=52,["mask"]=1,["res"]="Battle/BattleExplore"}
+,{["top_mask"]=false,["key"]="FightWave",["id"]=53,["res"]="Fight/FightWave",["layer"]="Topest"}
+,{["top_mask"]=false,["key"]="BuffInfoView",["id"]=54,["res"]="Menu/BuffInfoList",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DialogNoTop",["id"]=55,["layer"]="Topest",["is_window"]=1,["res"]="Tips/DialogBox"}
+,{["top_mask"]=false,["key"]="SkinShowView",["id"]=56,["res"]="RoleSkinComm/SkinShowView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="GoodsCombine",["Virtualkeys_close"]=1,["id"]=57,["mask"]=1,["is_window"]=1,["res"]="Goods/GoodsCombine"}
+,{["top_mask"]=false,["key"]="GoodsCombineConfirm",["id"]=58,["res"]="Goods/GoodsCombineConfirm",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="GoodsCombineSuccess",["id"]=59,["res"]="Goods/GoodsCombineSuccess",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExploreBase",["id"]=60,["res"]="Explore/ExploreBase",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExploreBuild",["id"]=61,["res"]="Explore/ExploreBuild",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="BuildLvUpConfirm",["id"]=62,["res"]="Explore/BuildLvUpConfirm",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="SkillInfoView",["id"]=63,["res"]="Team/SkillInfoView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TeamConfirm",["id"]=64,["res"]="TeamConfirm/TeamConfirm",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ShopDepositView",["id"]=65,["res"]="Shop/ShopDepositView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonUseView",["id"]=66,["res"]="Dungeon/DungeonUseView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TacticsView",["id"]=67,["res"]="Team/TacticsView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TeamForceConfirm",["id"]=68,["res"]="TeamConfirm/TeamForceConfirm",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonPassView",["id"]=69,["res"]="Dungeon/DungeonPassView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleListNormal",["id"]=70,["res"]="RoleList/RoleListNormal",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleListSelectView",["id"]=71,["res"]="RoleList/RoleListSelectView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleListExpeditionView",["id"]=72,["res"]="RoleList/RoleListExpeditionView"}
+,{["top_mask"]=false,["key"]="RoleInfo",["id"]=73,["res"]="Role/RoleInfo",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleShareView",["id"]=74,["res"]="Role/RoleShareView",["is_window"]=1}
+,{["top_mask"]=false,["key"]="RoleEquip",["id"]=75,["res"]="RoleEquip/RoleEquip",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleSkillInfoView",["id"]=76,["res"]="RoleSkillItem/RoleSkillInfoView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleSkillDetail",["id"]=77,["res"]="RoleSkillItem/RoleSkillDetail",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleSkillAllLV",["id"]=78,["res"]="RoleSkillItem/RoleSkillAllLV",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleApparel",["id"]=79,["res"]="RoleSkinComm/RoleApparel",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleBreakSuccess",["id"]=80,["res"]="Popup/RoleBreakSuccess",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleInfoAmplification",["id"]=81,["res"]="Role/RoleInfoAmplification",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleCenter",["id"]=82,["res"]="Role/RoleCenter",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10001}
+}
+}
+,{["top_mask"]=false,["key"]="RoleTopuSuccess",["id"]=83,["res"]="Popup/RoleTopuSuccess",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleSelect",["id"]=84,["res"]="Role/RoleSelect",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleInfoTag",["id"]=85,["res"]="Role/RoleInfoTag",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleInfoFussion",["id"]=86,["res"]="Role/RoleInfoFussion",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleUpBreak",["id"]=87,["res"]="Role/RoleUpBreak",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10001}
+,{10003}
+}
+}
+,{["top_mask"]=false,["key"]="CoolView",["id"]=88,["res"]="Cool/CoolView"}
+,{["top_mask"]=false,["key"]="CoolStopView",["id"]=89,["res"]="Cool/CoolStopView",["is_window"]=1}
+,{["top_mask"]=false,["key"]="RoleEnsureView",["id"]=90,["res"]="Role/RoleEnsureView",["is_window"]=1}
+,{["top_mask"]=false,["key"]="PlayerView",["id"]=91,["res"]="Player/PlayerView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PlayerSkillInfoPanel",["id"]=92,["res"]="Player/PlayerSkillInfoPanel",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PlayerAbility",["id"]=93,["res"]="PlayerAbility/PlayerAbility"}
+,{["top_mask"]=false,["key"]="CRoleDisplay",["id"]=94,["res"]="CRoleDisplay/CRoleDisplay",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CRoleDisplayDetail",["id"]=95,["res"]="CRoleDisplay/CRoleDisplayDetail",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CRoleDisplayDetailT",["id"]=96,["res"]="CRoleDisplay/CRoleDisplayDetailT",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CRoleSelectView",["id"]=97,["res"]="CRoleDisplay/CRoleSelectView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="BGSelectView",["id"]=98,["res"]="CRoleDisplay/BGSelectView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CRoleSelectClothesView",["id"]=99,["res"]="CRoleDisplay/CRoleSelectClothesView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixScene",["id"]=100,["dont_close_when_close_all"]=1,["Virtualkeys_close"]=1,["res"]="Matrix/MatrixScene"}
+,{["top_mask"]=false,["key"]="Matrix",["dont_close_when_close_all"]=1,["id"]=101,["layer"]="Top",["is_window"]=1,["res"]="Matrix/Matrix"}
+,{["top_mask"]=false,["key"]="MatrixSetRole",["id"]=102,["res"]="Matrix/MatrixSetRole",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixUp",["id"]=103,["res"]="Matrix/MatrixUp",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixDismantle",["id"]=104,["res"]="Matrix/MatrixDismantle",["is_window"]=1}
+,{["top_mask"]=false,["key"]="MatrixRemould",["id"]=105,["res"]="Matrix/MatrixRemould",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixBuilding",["id"]=106,["dont_close_when_close_all"]=1,["Virtualkeys_close"]=1,["res"]="Matrix/MatrixBuilding"}
+,{["top_mask"]=false,["key"]="MatrixTrading",["id"]=107,["res"]="Matrix/MatrixTrading",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixTradingSpeedUp",["id"]=108,["res"]="Matrix/MatrixTradingSpeedUp",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixTradingFriend",["id"]=109,["res"]="Matrix/MatrixTradingFriend",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixTradingRecord",["id"]=110,["res"]="Matrix/MatrixTradingRecord",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixCompound",["id"]=111,["Show_CurrencyType"]={{10001,10711}
+}
+,["layer"]="Top",["Virtualkeys_close"]=1,["res"]="Compound/MatrixCompound"}
+,{["top_mask"]=false,["key"]="MatrixCompoundDetail",["id"]=112,["Show_CurrencyType"]={{10001,10711}
+}
+,["layer"]="Top",["Virtualkeys_close"]=1,["res"]="Compound/MatrixCompoundDetail"}
+,{["top_mask"]=false,["key"]="MatrixCompoundReward",["Virtualkeys_close"]=1,["id"]=113,["layer"]="Top",["is_window"]=1,["res"]="Popup/MatrixCompoundReward"}
+,{["top_mask"]=false,["key"]="MatrixAllBuilding",["id"]=114,["res"]="Matrix/MatrixAllBuilding",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixCreate",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10001,10711}
+}
+,["res"]="Matrix/MatrixCreate",["is_window"]=1,["id"]=115}
+,{["top_mask"]=false,["key"]="MatrixCreateInfo",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10001,10711}
+}
+,["res"]="Matrix/MatrixCreateInfo",["is_window"]=1,["id"]=116}
+,{["top_mask"]=false,["key"]="MatrixDefense",["id"]=117,["res"]="Matrix/MatrixDefense",["is_window"]=1}
+,{["top_mask"]=false,["key"]="MatrixExpedition",["id"]=118,["res"]="Matrix/MatrixExpedition"}
+,{["top_mask"]=false,["key"]="MatrixMiniGame",["id"]=119,["res"]="Matrix/MatrixMiniGame"}
+,{["id"]=120,["layer"]="Top",["is_window"]=1,["top_mask"]=false,["key"]="MatrixResPanel",["res"]="Matrix/MatrixResPanel",["Virtualkeys_close"]=1,["jump_chose"]={150002}
+}
+,{["top_mask"]=false,["key"]="MatrixIndoor",["id"]=121,["res"]="Matrix/MatrixIndoor",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixBuildingInfo",["id"]=122,["res"]="Matrix/MatrixBuildingInfo",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixBuildingSelect",["id"]=123,["res"]="Matrix/MatrixBuildingSelect",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MailView",["id"]=124,["res"]="Mail/MailView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10002}
+,{10001}
+}
+}
+,{["top_mask"]=false,["key"]="MailInfoPanel",["id"]=125,["res"]="Mail/MailInfoPanel"}
+,{["top_mask"]=false,["key"]="MissionView",["id"]=126,["res"]="Mission/MissionView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExerciseLView",["id"]=127,["res"]="ExerciseL/ExerciseLView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExerciseVsView",["id"]=128,["res"]="ExerciseL/ExerciseVsView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExerciseRView",["id"]=129,["res"]="ExerciseR/ExerciseRView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExerciseLChange",["id"]=130,["res"]="Popup/ExerciseLChange",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExerciseLBuy",["Virtualkeys_close"]=1,["id"]=131,["layer"]="Top",["is_window"]=1,["res"]="ExerciseL/ExerciseLBuy"}
+,{["top_mask"]=false,["key"]="ExerciseLRankReward",["Virtualkeys_close"]=1,["id"]=132,["layer"]="Top",["is_window"]=1,["res"]="ExerciseL/ExerciseLRankReward"}
+,{["top_mask"]=false,["key"]="FightWinPvp",["id"]=133,["res"]="FightWin/FightWinPvp"}
+,{["top_mask"]=false,["key"]="FightLostPvp",["id"]=134,["res"]="FightLost/FightLostPvp"}
+,{["top_mask"]=false,["key"]="RankView",["id"]=135,["res"]="Rank/RankView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CreateView",["id"]=136,["res"]="Create/CreateView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10002}
+,{10040}
+,{11002}
+}
+}
+,{["top_mask"]=false,["key"]="CreateFactory",["id"]=137,["res"]="Create/CreateFactory"}
+,{["top_mask"]=false,["key"]="CreateSelectPanel",["Virtualkeys_close"]=1,["id"]=138,["layer"]="Top",["is_window"]=1,["res"]="Popup/CreateSelectPanel"}
+,{["top_mask"]=false,["key"]="CreateEnsurePanel",["id"]=139,["res"]="Popup/CreateEnsurePanel",["is_window"]=1}
+,{["top_mask"]=false,["key"]="CreateShowView",["id"]=140,["res"]="CreateShow/CreateShowView"}
+,{["top_mask"]=false,["key"]="CreateInfoPanel",["Virtualkeys_close"]=1,["id"]=141,["layer"]="Top",["is_window"]=1,["res"]="Create/CreateInfoPanel"}
+,{["top_mask"]=false,["key"]="CreateRoleView",["id"]=142,["res"]="CreateShow/CreateRoleView"}
+,{["top_mask"]=false,["key"]="CreateBuy",["Virtualkeys_close"]=1,["id"]=143,["layer"]="Top",["is_window"]=1,["res"]="Create/CreateBuy"}
+,{["top_mask"]=false,["key"]="CreateTips",["Virtualkeys_close"]=1,["id"]=144,["layer"]="Top",["is_window"]=1,["res"]="Create/CreateTips"}
+,{["top_mask"]=false,["key"]="CreateRecord",["id"]=145,["res"]="Create/CreateRecord",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CreateBDPanel",["Virtualkeys_close"]=1,["id"]=146,["layer"]="Top",["is_window"]=1,["res"]="Create/CreateBDPanel"}
+,{["top_mask"]=false,["key"]="CreateDetail",["Virtualkeys_close"]=1,["id"]=147,["layer"]="Top",["is_window"]=1,["res"]="Create/CreateDetail"}
+,{["top_mask"]=false,["key"]="ArchiveView",["id"]=148,["res"]="Archive1/ArchiveView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveRoleListView",["id"]=149,["res"]="Archive2/ArchiveRoleListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveEnemyListView",["id"]=150,["res"]="Archive2/ArchiveEnemyListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveGoodsListView",["id"]=151,["res"]="Archive2/ArchiveGoodsListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveStoryView",["id"]=152,["res"]="Archive2/ArchiveStoryView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveCourseView",["id"]=153,["res"]="Archive2/ArchiveCourseView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveRole",["id"]=154,["res"]="Archive3/ArchiveRole",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveEnemy",["id"]=155,["res"]="Archive3/ArchiveEnemy",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="FriendView",["id"]=156,["res"]="Friend/FriendView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PlayerUpgrade",["id"]=157,["layer"]="Top",["is_window"]=1,["res"]="Player/PlayerUpgrade"}
+,{["top_mask"]=false,["key"]="SettingView",["res"]="Setting/SettingView",["id"]=158,["layer"]="Top",["Virtualkeys_close"]=1,["mask"]=1}
+,{["id"]=159,["layer"]="Top",["is_window"]=1,["top_mask"]=false,["key"]="SignInView",["res"]="SignIn/SignInView",["Virtualkeys_close"]=1,["jump_chose"]={-1}
+}
+,{["top_mask"]=false,["key"]="SignInContinue",["jump_chose"]={-1}
+,["id"]=160,["res"]="SignInContinue/SignInContinue",["Virtualkeys_close"]=1,["layer"]="Top"}
+,{["top_mask"]=false,["key"]="AddGridView",["id"]=161,["res"]="Common/AddGridView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ModuleInfoView",["Virtualkeys_close"]=1,["id"]=162,["layer"]="Top",["is_window"]=1,["res"]="ModuleInfo/ModuleInfoView"}
+,{["top_mask"]=false,["key"]="WorldBossMenu",["id"]=163,["res"]="WorldBoss/WorldBossMenu"}
+,{["top_mask"]=false,["key"]="SortView",["Virtualkeys_close"]=1,["id"]=164,["layer"]="Top",["is_window"]=1,["res"]="Sort/SortView"}
+,{["top_mask"]=false,["key"]="SortProView",["Virtualkeys_close"]=1,["id"]=165,["layer"]="Top",["is_window"]=1,["res"]="Sort/SortProView"}
+,{["top_mask"]=false,["key"]="MenuOpen",["Virtualkeys_close"]=1,["id"]=166,["layer"]="Top",["is_window"]=1,["res"]="Popup/MenuOpen"}
+,{["top_mask"]=false,["key"]="FightOverResult",["jump_chose"]={-1}
+,["id"]=167,["res"]="FightOver/FightOverResult",["Virtualkeys_close"]=1,["layer"]="Top"}
+,{["top_mask"]=false,["key"]="AttributeInfoView",["id"]=168,["res"]="AttributeNew2/AttributeInfoView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="AttributeInfoTView",["id"]=169,["res"]="AttributeNew2/AttributeInfoTView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RolesFullInfo",["id"]=170,["res"]="Goods/RolesFullInfo",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TeamBossView",["id"]=171,["res"]="TeamBoss/TeamBossView"}
+,{["top_mask"]=false,["key"]="TeamBossTips",["id"]=172,["res"]="TeamBoss/TeamBossTips"}
+,{["top_mask"]=false,["key"]="TeamBossCreate",["id"]=173,["res"]="TeamBoss/TeamBossCreate"}
+,{["top_mask"]=false,["key"]="TeamBossSort",["id"]=174,["res"]="TeamBoss/TeamBossSort"}
+,{["top_mask"]=false,["key"]="TeamBossPrepare",["id"]=175,["res"]="TeamBoss/TeamBossPrepare"}
+,{["top_mask"]=false,["key"]="TeamBossInvite",["id"]=176,["res"]="TeamBoss/TeamBossInvite"}
+,{["top_mask"]=false,["key"]="TeamBossDamage",["id"]=177,["res"]="TeamBoss/TeamBossDamage"}
+,{["top_mask"]=false,["key"]="ActivityView",["Virtualkeys_close"]=1,["id"]=178,["layer"]="Top",["is_window"]=1,["res"]="Activity/ActivityView"}
+,{["top_mask"]=false,["key"]="Dorm",["id"]=179,["dont_close_when_close_all"]=1,["Virtualkeys_close"]=1,["res"]="Dorm/Dorm"}
+,{["top_mask"]=false,["key"]="DormRoom",["id"]=180,["res"]="Dorm2/DormRoom",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormComfort",["Virtualkeys_close"]=1,["id"]=181,["layer"]="Top",["is_window"]=1,["res"]="Dorm/DormComfort"}
+,{["top_mask"]=false,["key"]="DormGift",["id"]=182,["res"]="Dorm/DormGift",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormGift2",["Virtualkeys_close"]=1,["id"]=183,["layer"]="Top",["is_window"]=1,["res"]="Dorm/DormGift2"}
+,{["top_mask"]=false,["key"]="DormShop",["id"]=184,["res"]="Dorm2/DormShop",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10002,140001}
+,{10013,140017}
+}
+}
+,{["top_mask"]=false,["key"]="DormShopConf",["Virtualkeys_close"]=1,["id"]=185,["layer"]="Top",["is_window"]=1,["res"]="Dorm/DormShopConf"}
+,{["top_mask"]=false,["key"]="DormTheme",["id"]=186,["res"]="Dorm/DormTheme",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormLayoutThemeSave",["Virtualkeys_close"]=1,["id"]=187,["layer"]="Top",["is_window"]=1,["res"]="Dorm/DormLayoutThemeSave"}
+,{["top_mask"]=false,["key"]="DormLayoutFurnitureCof",["Virtualkeys_close"]=1,["id"]=188,["layer"]="Top",["is_window"]=1,["res"]="Dorm/DormLayoutFurnitureCof"}
+,{["top_mask"]=false,["key"]="DormLayoutThemeCof",["Virtualkeys_close"]=1,["id"]=189,["layer"]="Top",["is_window"]=1,["res"]="Dorm/DormLayoutThemeCof"}
+,{["top_mask"]=false,["key"]="DormThemeTemplate",["id"]=190,["res"]="Dorm/DormThemeTemplate",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormDress",["id"]=191,["res"]="Dorm/DormDress",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormSetRoleList",["id"]=192,["res"]="DormSetRole/DormSetRoleList",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormLayoutSort",["id"]=193,["res"]="Dorm2/DormLayoutSort",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormThemePayView",["id"]=194,["res"]="Dorm2/DormThemePayView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DormFurniturePayView",["id"]=195,["res"]="Dorm2/DormFurniturePayView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PopupSpendView",["Virtualkeys_close"]=1,["id"]=196,["layer"]="Top",["is_window"]=1,["res"]="Popup/PopupSpendView"}
+,{["top_mask"]=false,["key"]="HotPanel",["Virtualkeys_close"]=1,["id"]=197,["layer"]="Top",["is_window"]=1,["res"]="Hot/HotPanel"}
+,{["top_mask"]=false,["key"]="HotBuyPanel",["Virtualkeys_close"]=1,["id"]=198,["layer"]="Top",["is_window"]=1,["res"]="Hot/HotBuyPanel"}
+,{["top_mask"]=false,["key"]="HotDetailPanel",["Virtualkeys_close"]=1,["id"]=199,["layer"]="Top",["is_window"]=1,["res"]="Hot/HotDetailPanel"}
+,{["top_mask"]=false,["key"]="HotUsePanel",["Virtualkeys_close"]=1,["id"]=200,["layer"]="Top",["is_window"]=1,["res"]="Hot/HotUsePanel"}
+,{["top_mask"]=false,["key"]="HotTipsPanel",["Virtualkeys_close"]=1,["id"]=201,["layer"]="Top",["is_window"]=1,["res"]="Popup/HotTipsPanel"}
+,{["top_mask"]=false,["key"]="FavourView",["id"]=202,["res"]="Favour/FavourView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="FavourHypnosisView",["id"]=203,["res"]="Favour/FavourHypnosisView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="FavourPlotInfoView",["id"]=204,["res"]="Favour/FavourPlotInfoView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="FavourPlotView",["id"]=205,["res"]="Favour/FavourPlotView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MulPictureView",["id"]=206,["res"]="Common/MulPictureView",["Virtualkeys_close"]=1,["layer"]="Top"}
+,{["top_mask"]=false,["key"]="SortPanel",["Virtualkeys_close"]=1,["id"]=207,["layer"]="Top",["is_window"]=1,["res"]="Sort/SortPanel"}
+,{["top_mask"]=false,["key"]="SortFilterPanel",["Virtualkeys_close"]=1,["id"]=208,["layer"]="Top",["is_window"]=1,["res"]="Sort/SortFilterPanel"}
+,{["top_mask"]=false,["key"]="Authentication",["id"]=209,["layer"]="Top",["is_window"]=1,["res"]="Login/Authentication"}
+,{["top_mask"]=false,["key"]="FightRoleInfo",["Virtualkeys_close"]=1,["id"]=210,["layer"]="Top",["is_window"]=1,["res"]="FightRoleInfo/FightRoleInfo"}
+,{["id"]=211,["layer"]="Top",["is_window"]=1,["top_mask"]=false,["key"]="GoodsFullInfo",["res"]="Goods/GoodsFullInfo",["Virtualkeys_close"]=1,["multi"]=1}
+,{["top_mask"]=false,["key"]="EquipFullInfo",["Virtualkeys_close"]=1,["id"]=212,["layer"]="Top",["is_window"]=1,["res"]="EquipInfo/EquipFullInfo"}
+,{["top_mask"]=false,["key"]="FightResultNewPlayer",["id"]=213,["mask"]=1,["res"]="FightWin/FightResultNewPlayer"}
+,{["top_mask"]=false,["key"]="Guide",["dont_close_when_close_all"]=1,["id"]=214,["layer"]="Top",["is_window"]=1,["res"]="Guide/Guide"}
+,{["top_mask"]=false,["key"]="GuildMain",["id"]=215,["res"]="Guild/GuildMain"}
+,{["top_mask"]=false,["key"]="GuildMenu",["id"]=216,["res"]="Guild/GuildMenu"}
+,{["top_mask"]=false,["key"]="GuildSearch",["id"]=217,["res"]="Guild/GuildSearch"}
+,{["top_mask"]=false,["key"]="GuildSetting",["id"]=218,["res"]="Guild/GuildSetting"}
+,{["top_mask"]=false,["key"]="GuildInfo",["id"]=219,["res"]="Guild/GuildInfo"}
+,{["top_mask"]=false,["key"]="GuildCreate",["id"]=220,["res"]="Guild/GuildCreate"}
+,{["top_mask"]=false,["key"]="GuildMemInfo",["id"]=221,["res"]="Guild/GuildMemInfo"}
+,{["top_mask"]=false,["key"]="GuildIcon",["id"]=222,["res"]="Guild/GuildIconView"}
+,{["top_mask"]=false,["key"]="Hint",["dont_close_when_load"]=1,["id"]=223,["layer"]="Top",["dont_close_when_close_all"]=1,["res"]="Guide/Hint"}
+,{["top_mask"]=false,["key"]="GuildFightMain",["id"]=224,["res"]="GuildFight/GuildFightMain"}
+,{["top_mask"]=false,["key"]="GuildFightTeamEdit",["id"]=225,["res"]="GuildFight/GuildFightTeamEdit"}
+,{["top_mask"]=false,["key"]="GuildBattleField",["id"]=226,["res"]="GuildFight/GuildBattleField",["jumpType"]=1}
+,{["top_mask"]=false,["key"]="GuildFieldConfirm",["id"]=227,["res"]="GuildFight/GuildFieldConfirm"}
+,{["top_mask"]=false,["key"]="GuildBattleResult",["id"]=228,["res"]="GuildFight/GuildBattleResult"}
+,{["top_mask"]=false,["key"]="RoleEquipSkillFull",["Virtualkeys_close"]=1,["id"]=229,["layer"]="Top",["is_window"]=1,["res"]="RoleEquip/RoleEquipSkillFull"}
+,{["top_mask"]=false,["key"]="PlotStory",["id"]=230,["res"]="Plot/PlotStory",["layer"]="Top"}
+,{["top_mask"]=false,["key"]="FightLoading",["dont_close_when_load"]=1,["id"]=231,["layer"]="Topest",["dont_close_when_close_all"]=1,["res"]="FightLoading/FightLoading"}
+,{["top_mask"]=false,["key"]="HideLoading",["dont_close_when_load"]=1,["id"]=232,["layer"]="Top",["dont_close_when_close_all"]=1,["res"]="Loading/HideLoading"}
+,{["id"]=233,["mask"]=1,["is_window"]=1,["top_mask"]=false,["key"]="PlotSimple",["res"]="Plot/PlotSimple",["dont_close_when_load"]=1,["layer"]="Top"}
+,{["id"]=234,["layer"]="Topest",["is_window"]=1,["top_mask"]=false,["key"]="LoadPrompt",["res"]="Tips/PromptBox",["Virtualkeys_close"]=1,["dont_close_when_load"]=1}
+,{["top_mask"]=false,["key"]="EquipPrefab",["Virtualkeys_close"]=1,["id"]=235,["layer"]="Top",["is_window"]=1,["res"]="RoleEquip/EquipPrefabView"}
+,{["top_mask"]=false,["key"]="ShopPackPayView",["id"]=236,["res"]="Shop/ShopPackPayView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="GuildRankList",["id"]=237,["res"]="GuildFight/GuildRankList"}
+,{["id"]=238,["layer"]="Topest",["is_window"]=1,["top_mask"]=false,["key"]="LoadDialog",["res"]="Tips/DialogBox",["Virtualkeys_close"]=1,["dont_close_when_load"]=1}
+,{["top_mask"]=false,["key"]="LoginAgreement",["id"]=239,["layer"]="Top",["is_window"]=1,["res"]="Login/LoginAgreement"}
+,{["top_mask"]=false,["key"]="FightSkillSkip",["id"]=240,["layer"]="Topest",["is_window"]=1,["res"]="Fight/FightSkillSkip"}
+,{["top_mask"]=false,["key"]="AgeTipsView",["id"]=241,["res"]="Login/AgeTipsView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonDaily",["id"]=242,["res"]="Dungeon/DungeonDailyView",["Virtualkeys_close"]=1}
+,{["id"]=243,["layer"]="Topest",["is_window"]=1,["top_mask"]=false,["key"]="DialogTopest",["res"]="Tips/DialogBox",["Virtualkeys_close"]=1,["multi"]=1}
+,{["top_mask"]=false,["key"]="BagQualitySelect",["id"]=244,["res"]="Bag/BagQualitySelect",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="Chat",["id"]=245,["res"]="Chat/ChatView",["is_window"]=1}
+,{["top_mask"]=false,["key"]="PlayerInfoView",["id"]=246,["res"]="Player/PlayerInfoView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="FightNaviSetting",["id"]=247,["res"]="TeamConfirm/FightNaviSetting",["is_window"]=1}
+,{["top_mask"]=false,["key"]="FightNaviReward",["layer"]="Top",["id"]=248,["mask"]=1,["is_window"]=1,["res"]="NaviReward/FightNaviReward"}
+,{["top_mask"]=false,["key"]="FightDirll",["Virtualkeys_close"]=1,["id"]=249,["layer"]="Top",["is_window"]=1,["res"]="FightDirll/FightDirllView"}
+,{["top_mask"]=false,["key"]="AIPrefabSetting",["id"]=250,["res"]="AISetting/AIPrefabSetting",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="AIConditionView",["id"]=251,["res"]="AISetting/AIConditionView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TurnWarning",["id"]=252,["res"]="Fight/TurnWarning",["is_window"]=1}
+,{["top_mask"]=false,["key"]="AssistPlayerInfo",["id"]=253,["res"]="Team/AssistPlayerInfo",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleExchangeView",["id"]=254,["res"]="Shop/RoleExchangeView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="BattleStrategy",["id"]=255,["res"]="BattleAISetting/BattleStrategy",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleUniteView",["id"]=256,["res"]="Role/RoleUniteView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="GoodsFullInfo2",["Virtualkeys_close"]=1,["id"]=257,["multi"]=1,["is_window"]=1,["res"]="Goods/GoodsFullInfo"}
+,{["top_mask"]=false,["key"]="LoginWait",["id"]=258,["layer"]="Top",["is_window"]=1,["res"]="Login/LoginWait"}
+,{["top_mask"]=false,["key"]="ErrorView",["dont_close_when_load"]=1,["id"]=259,["layer"]="Topest",["dont_close_when_close_all"]=1,["res"]="Common/ErrorView"}
+,{["top_mask"]=false,["key"]="DungeonDetail",["Virtualkeys_close"]=1,["id"]=260,["layer"]="Top",["is_window"]=1,["res"]="DungeonDetail/DungeonDetail"}
+,{["top_mask"]=false,["key"]="ActivityListView",["id"]=261,["res"]="ActivityList/ActivityListView",["Virtualkeys_close"]=1,["jump_close_type"]=1}
+,{["top_mask"]=false,["key"]="AbilityInfoView",["id"]=262,["layer"]="Topest",["is_window"]=1,["res"]="PlayerAbility/AbilityInfoView"}
+,{["top_mask"]=false,["key"]="ExplorationMain",["id"]=263,["res"]="Exploration/ExplorationMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExplorationItem",["id"]=264,["res"]="Exploration/ExplorationItem",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExplorationGUIDE",["id"]=265,["res"]="Exploration/ExplorationGUIDE",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExplorationGUIDEItem",["id"]=266,["res"]="Exploration/ExplorationGUIDEItem",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExplorationStage",["id"]=267,["res"]="Exploration/ExplorationStage",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExplorationCardGrid",["id"]=268,["res"]="ExplorationCard/ExplorationCardGrid",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExplorationBuy",["id"]=269,["jump_chose"]={-1}
+,["Virtualkeys_close"]=1,["res"]="Exploration/ExplorationBuy"}
+,{["top_mask"]=true,["key"]="NetWait",["dont_close_when_load"]=1,["id"]=270,["layer"]="Topest",["dont_close_when_close_all"]=1,["res"]="Common/NetWait"}
+,{["top_mask"]=false,["key"]="ColorMask",["dont_close_when_load"]=1,["id"]=271,["layer"]="Top",["dont_close_when_close_all"]=1,["res"]="Common/ColorMask"}
+,{["top_mask"]=false,["key"]="RoleEquipSkillDesc",["id"]=272,["res"]="RoleEquip/RoleEquipSkillDesc",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleEquippedInfo",["id"]=273,["res"]="EquipInfo/RoleEquippedInfo",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MissionActivity",["id"]=274,["res"]="Mission1/MissionActivity",["Virtualkeys_close"]=1}
+,{["id"]=275,["layer"]="Top",["is_window"]=1,["top_mask"]=false,["key"]="GoodsSmallInfo",["res"]="Goods/GoodsSmallInfo",["Virtualkeys_close"]=1,["multi"]=1}
+,{["top_mask"]=false,["key"]="GoodsSmallInfo2",["Virtualkeys_close"]=1,["id"]=276,["multi"]=1,["is_window"]=1,["res"]="Goods/GoodsSmallInfo"}
+,{["top_mask"]=false,["key"]="DungeonTower",["id"]=277,["res"]="DungeonTower/DungeonTowerView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10035,140010}
+}
+}
+,{["top_mask"]=false,["key"]="BattleField",["id"]=278,["res"]="BattleField/BattleFieldView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10042}
+,{10035,140010}
+}
+}
+,{["top_mask"]=false,["key"]="BattleFieldBoss",["id"]=279,["res"]="BattleField/BattleFieldBoss",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="BattleFieldExplain",["Virtualkeys_close"]=1,["id"]=280,["layer"]="Top",["is_window"]=1,["res"]="BattleField/BattleFieldExplain"}
+,{["top_mask"]=false,["key"]="BattleFieldRank",["id"]=281,["res"]="Rank/BattleFieldRank",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="FightEnemyInfo",["Virtualkeys_close"]=1,["id"]=282,["layer"]="Top",["is_window"]=1,["res"]="FightRoleInfo/FightEnemyInfo"}
+,{["top_mask"]=false,["key"]="DungeonActivity1",["id"]=283,["res"]="DungeonActivity1/DungeonActivityView1",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonPlot",["jumpType"]=1,["id"]=284,["res"]="DungeonActivity1/DungeonPlotView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10035,140010}
+}
+}
+,{["top_mask"]=false,["key"]="DungeonActivity2",["id"]=285,["res"]="DungeonActivity2/DungeonActivityView2",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10035,140010}
+}
+}
+,{["top_mask"]=false,["key"]="SkinSetView",["id"]=286,["res"]="RoleSkinComm/SkinSetView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="SkinFullInfo",["id"]=287,["res"]="RoleSkinComm/SkinFullInfo",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ShopSkinBuy",["id"]=288,["res"]="Shop/ShopSkinBuy",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ArchiveBoard",["id"]=289,["res"]="Archive2/ArchiveBoardView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="EquipReplaceTips",["Virtualkeys_close"]=1,["id"]=290,["layer"]="Top",["is_window"]=1,["res"]="EquipSelect/EquipReplaceTips"}
+,{["top_mask"]=false,["key"]="FightOverBuff",["Virtualkeys_close"]=1,["id"]=291,["layer"]="Top",["is_window"]=1,["res"]="FightOver/FightOverBuffView"}
+,{["top_mask"]=false,["key"]="SweepView",["Virtualkeys_close"]=1,["id"]=292,["layer"]="Top",["is_window"]=1,["res"]="Sweep/SweepView"}
+,{["top_mask"]=false,["key"]="SDKPaySelect",["Virtualkeys_close"]=1,["id"]=293,["layer"]="Top",["is_window"]=1,["res"]="SDK/SDKPaySelect"}
+,{["top_mask"]=false,["key"]="WaitPanel",["id"]=294,["layer"]="Topest",["is_window"]=1,["res"]="Common/WaitPanel"}
+,{["top_mask"]=false,["key"]="CourseView",["id"]=295,["res"]="Course/CourseView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CoreExchangeDetails",["id"]=296,["res"]="Shop/CoreExchangeDetails",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PermissionTips",["id"]=297,["res"]="Login/PermissionTips",["is_window"]=1}
+,{["top_mask"]=false,["key"]="MenuBuyPanel",["id"]=298,["res"]="MenuBuy/MenuBuyPanel",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="SettingWindow",["Virtualkeys_close"]=1,["id"]=299,["layer"]="Top",["is_window"]=1,["res"]="Setting/SettingWindow"}
+,{["top_mask"]=false,["key"]="ExtraActivityView",["id"]=300,["res"]="ActivityList/ActivityListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonActivity3",["id"]=301,["res"]="DungeonActivity3/DungeonActivityView3",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonRole",["jumpType"]=1,["id"]=302,["res"]="DungeonRole/DungeonRoleView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10035,140010}
+}
+}
+,{["top_mask"]=false,["key"]="DungeonTaoFaBuy",["Virtualkeys_close"]=1,["id"]=303,["layer"]="Top",["is_window"]=1,["res"]="DungeonActivity2/DungeonTaoFaBuy"}
+,{["top_mask"]=false,["key"]="ExplainBox",["Virtualkeys_close"]=1,["id"]=304,["layer"]="Topest",["is_window"]=1,["res"]="Tips/ExplainBox"}
+,{["top_mask"]=false,["key"]="DungeonActivity4",["id"]=305,["res"]="DungeonActivity4/DungeonActivityView4",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonShadowSpider",["jumpType"]=1,["id"]=306,["res"]="DungeonActivity4/DungeonShadowSpider",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10016}
+,{12007,140014}
+}
+}
+,{["top_mask"]=false,["key"]="VideoPlayer",["dont_close_when_load"]=1,["id"]=307,["layer"]="Top",["dont_close_when_close_all"]=1,["res"]="VideoPlayer/VideoPlayer"}
+,{["top_mask"]=false,["key"]="DungeonActivity5",["id"]=308,["res"]="DungeonActivity5/DungeonActivityView5",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10101}
+,{12008,140014}
+}
+}
+,{["top_mask"]=false,["key"]="TrialsView",["id"]=309,["res"]="Trials/TrialsView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TrialsListView",["id"]=310,["res"]="Trials/TrialsListView",["Virtualkeys_close"]=1,["jumpType"]=1}
+,{["top_mask"]=false,["key"]="HeadFramePanel",["Virtualkeys_close"]=1,["id"]=311,["layer"]="Top",["is_window"]=1,["res"]="HeadFrame/HeadFramePanel"}
+,{["top_mask"]=false,["key"]="UniversalPurchase",["Virtualkeys_close"]=1,["id"]=312,["layer"]="Top",["is_window"]=1,["res"]="UniversalPurchase/UniversalPurchaseVIew"}
+,{["top_mask"]=false,["key"]="RoleJieJin",["id"]=313,["res"]="Role/RoleJieJin",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RoleJieJinSuccess",["id"]=314,["layer"]="Top",["is_window"]=1,["res"]="Popup/RoleJieJinSuccess"}
+,{["top_mask"]=false,["key"]="Achievement",["id"]=315,["res"]="Achievement/AchievementView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixRolePreset",["Virtualkeys_close"]=1,["id"]=316,["layer"]="Top",["is_window"]=1,["res"]="Matrix/MatrixRolePreset"}
+,{["top_mask"]=false,["key"]="BadgeView",["id"]=317,["res"]="Badge/BadgeView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TowerView",["id"]=318,["res"]="Tower/TowerView",["Virtualkeys_close"]=1,["jumpType"]=1}
+,{["top_mask"]=false,["key"]="TowerListView",["id"]=319,["res"]="Tower/TowerListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TowerListView2",["id"]=320,["res"]="Tower2/TowerListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonActivity6",["id"]=321,["res"]="DungeonActivity6/DungeonActivityView6",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonFeast",["jumpType"]=1,["id"]=322,["res"]="DungeonActivity5/DungeonFeastView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{12008,140014}
+}
+}
+,{["top_mask"]=false,["key"]="TowerAssistDialog",["Virtualkeys_close"]=1,["id"]=323,["layer"]="Top",["is_window"]=1,["res"]="Tower/TowerAssistDialog"}
+,{["top_mask"]=false,["key"]="ResRecovery",["id"]=324,["layer"]="Top",["is_window"]=1,["res"]="ResRecovery/ResRecovery"}
+,{["top_mask"]=false,["key"]="RewardAchievement",["Virtualkeys_close"]=1,["id"]=325,["layer"]="Top",["is_window"]=1,["res"]="Popup/RewardAchievementView"}
+,{["top_mask"]=false,["key"]="RewardBadge",["Virtualkeys_close"]=1,["id"]=326,["layer"]="Top",["is_window"]=1,["res"]="Popup/RewardBadgeView"}
+,{["top_mask"]=false,["key"]="SpecialActivityView",["id"]=327,["res"]="ActivityList/ActivityListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="InfoCorrBox",["Virtualkeys_close"]=1,["id"]=328,["layer"]="Top",["is_window"]=1,["res"]="Tips/InfoCorrBox"}
+,{["top_mask"]=false,["key"]="RegressionList",["id"]=329,["res"]="RegressionList/RegressionListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="TotalBattle",["jumpType"]=1,["id"]=330,["res"]="TotalBattle/TotalBattleView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10102}
+,{12009}
+}
+}
+,{["top_mask"]=false,["key"]="TotalBattleRank",["id"]=331,["res"]="Rank/TotalBattleRank",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ItemPoolActivity",["id"]=332,["res"]="ItemPool/ItemPoolActivity",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ItemPoolRewardActivity",["id"]=333,["res"]="ItemPool/ItemPoolRewardActivity",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ItemPoolPreview",["Virtualkeys_close"]=1,["id"]=334,["layer"]="Top",["is_window"]=1,["res"]="ItemPool/ItemPoolPreview"}
+,{["top_mask"]=false,["key"]="ItemPoolDraw",["Virtualkeys_close"]=1,["id"]=335,["layer"]="Top",["is_window"]=1,["res"]="ItemPool/ItemPoolDraw"}
+,{["top_mask"]=false,["key"]="RogueView",["id"]=336,["res"]="Rogue/RogueView",["Virtualkeys_close"]=1,["jumpType"]=1}
+,{["top_mask"]=false,["key"]="RogueBuffDetail",["Virtualkeys_close"]=1,["id"]=337,["layer"]="Top",["is_window"]=1,["res"]="Rogue/RogueBuffDetail"}
+,{["top_mask"]=false,["key"]="RogueEnemySelect",["id"]=338,["res"]="Rogue/RogueEnemySelect",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueBuffSelect",["id"]=339,["res"]="Rogue/RogueBuffSelect",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueMission",["id"]=340,["res"]="Rogue/RogueMission",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="BGPictureView",["id"]=341,["res"]="Common/BGPictureView",["Virtualkeys_close"]=1,["layer"]="Top"}
+,{["top_mask"]=false,["key"]="CollaborationMain",["id"]=342,["res"]="Collaboration/CollaborationMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CollaborationBinding",["id"]=343,["res"]="Collaboration/CollaborationBinding",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CollaborationConfirm",["Virtualkeys_close"]=1,["id"]=344,["layer"]="Top",["is_window"]=1,["res"]="Collaboration/CollaborationConfirm"}
+,{["top_mask"]=false,["key"]="CollaborationCode",["Virtualkeys_close"]=1,["id"]=345,["layer"]="Top",["is_window"]=1,["res"]="Collaboration/CollaborationCode"}
+,{["top_mask"]=false,["key"]="CollaborationBindingSuccess",["Virtualkeys_close"]=1,["id"]=346,["layer"]="Top",["is_window"]=1,["res"]="Collaboration/CollaborationBindingSuccess"}
+,{["top_mask"]=false,["key"]="CollaborationInvition",["id"]=347,["res"]="Collaboration/CollaborationInvition",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CollaborationPreview",["Virtualkeys_close"]=1,["id"]=348,["layer"]="Top",["is_window"]=1,["res"]="Collaboration/CollaborationPreview"}
+,{["top_mask"]=false,["key"]="DungeonTaoFa",["id"]=349,["res"]="DungeonActivity2/DungeonTaoFaView",["Virtualkeys_close"]=1,["jumpType"]=1}
+,{["top_mask"]=false,["key"]="AdvGuideSoreView",["Virtualkeys_close"]=1,["id"]=350,["layer"]="Top",["is_window"]=1,["res"]="AdvGuideSore/AdvGuideSoreView"}
+,{["top_mask"]=false,["key"]="DungeonActivity7",["id"]=351,["res"]="DungeonActivity7/DungeonActivityView7",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10103}
+,{10104}
+,{12010,140021}
+}
+}
+,{["top_mask"]=false,["key"]="DungeonSummer",["jumpType"]=1,["id"]=352,["res"]="DungeonActivity7/DungeonSummerView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10103}
+,{10104}
+,{12010,140021}
+}
+}
+,{["top_mask"]=false,["key"]="RankSummer",["id"]=353,["res"]="Rank/RankSummerView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10103}
+,{10104}
+,{12010,140021}
+}
+}
+,{["top_mask"]=false,["key"]="PetMain",["id"]=354,["res"]="Pet/PetMain",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10002}
+,{10104,12802}
+}
+}
+,{["top_mask"]=false,["key"]="PlayerSex",["id"]=355,["res"]="PlayerSex/PlayerSexView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PlayerShow",["id"]=356,["res"]="RoleSkinComm/PlayerShowView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CRoleDisplayMain",["id"]=357,["res"]="CRoleDisplay/CRoleDisplayMain"}
+,{["top_mask"]=false,["key"]="SpecialExploration",["id"]=358,["res"]="SpecialExploration/SpecialExploration",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10103}
+}
+}
+,{["top_mask"]=false,["key"]="LovePlusView",["id"]=359,["res"]="LovePlus/LovePlusView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="LovePlusListView",["id"]=360,["res"]="LovePlus/LovePlusListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="LovePlusPayView",["Virtualkeys_close"]=1,["id"]=361,["layer"]="Top",["is_window"]=1,["res"]="LovePlusShop/LovePlusPayView"}
+,{["top_mask"]=false,["key"]="LovePlusPlotPanel",["id"]=362,["res"]="LovePlusPlot/LovePlusPlotPanel",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="LovePlusMulView",["Virtualkeys_close"]=1,["id"]=363,["layer"]="Top",["is_window"]=1,["res"]="LovePlusPic/LovePlusMulView"}
+,{["top_mask"]=false,["key"]="LovePlusPackPayView",["id"]=364,["res"]="LovePlusShop/LovePlusPackPayView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["id"]=365,["layer"]="Top",["is_window"]=1,["top_mask"]=false,["key"]="RewardSummerPanel",["res"]="SpecialReward/RewardSummerPanel",["Virtualkeys_close"]=1,["jump_chose"]={-1}
+}
+,{["top_mask"]=false,["key"]="RogueSView",["id"]=366,["res"]="RogueS/RogueSView",["Virtualkeys_close"]=1,["jumpType"]=1}
+,{["top_mask"]=false,["key"]="RogueSGift",["Virtualkeys_close"]=1,["id"]=367,["layer"]="Top",["is_window"]=1,["res"]="Dungeon/RogueSGift"}
+,{["top_mask"]=false,["key"]="RogueSTeam",["id"]=368,["res"]="RogueS/RogueSTeam",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueSTeamDownList",["id"]=369,["res"]="TeamConfirm/RogueSTeamDownList",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ShareView",["Virtualkeys_close"]=1,["id"]=370,["layer"]="Top",["is_window"]=1,["res"]="ShareView/ShareView"}
+,{["top_mask"]=false,["key"]="BgmView",["id"]=371,["res"]="Bgm/BgmView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueSBuffDetail",["Virtualkeys_close"]=1,["id"]=372,["layer"]="Top",["is_window"]=1,["res"]="RogueS/RogueSBuffDetail"}
+,{["top_mask"]=false,["key"]="RogueMain",["id"]=373,["res"]="RogueMain/RogueMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MatrixDormSelect",["id"]=374,["layer"]="Top",["is_window"]=1,["res"]="Matrix/MatrixDormSelect"}
+,{["top_mask"]=false,["key"]="DungeonActivity8",["id"]=375,["res"]="DungeonActivity8/DungeonActivityView8",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ColosseumView",["id"]=376,["res"]="Colosseum/ColosseumView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ColosseumBuy",["id"]=377,["layer"]="Top",["is_window"]=1,["res"]="Colosseum/ColosseumBuy"}
+,{["top_mask"]=false,["key"]="ColosseumTeam",["id"]=378,["res"]="Colosseum/ColosseumTeam"}
+,{["top_mask"]=false,["key"]="ColosseumZX",["id"]=379,["res"]="Colosseum/ColosseumZX"}
+,{["top_mask"]=false,["key"]="ColosseumSJ",["id"]=380,["res"]="Colosseum/ColosseumSJ"}
+,{["top_mask"]=false,["key"]="ColosseumMissionView",["id"]=381,["res"]="Mission/ColosseumMissionView"}
+,{["top_mask"]=false,["key"]="DungeonActivity9",["id"]=382,["res"]="DungeonActivity9/DungeonActivityView9",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10105}
+,{12011,140021}
+}
+}
+,{["top_mask"]=false,["key"]="DungeonNight",["jumpType"]=1,["id"]=383,["res"]="DungeonActivity9/DungeonNightView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10105}
+,{12011,140021}
+}
+}
+,{["top_mask"]=false,["key"]="ColosseumEquipPanel",["id"]=384,["layer"]="Top",["is_window"]=1,["res"]="Colosseum/ColosseumEquipPanel"}
+,{["top_mask"]=false,["key"]="RankTeamCheck",["Virtualkeys_close"]=1,["id"]=385,["layer"]="Top",["is_window"]=1,["res"]="Rank/RankTeamCheckView"}
+,{["top_mask"]=false,["key"]="RankTeamReplace",["Virtualkeys_close"]=1,["id"]=386,["layer"]="Top",["is_window"]=1,["res"]="Rank/RankTeamReplaceView"}
+,{["top_mask"]=false,["key"]="MenuStandby",["id"]=387,["layer"]="Top",["is_window"]=1,["res"]="MenuStandby/MenuStandby"}
+,{["top_mask"]=false,["key"]="CRoleDisplayS",["id"]=388,["res"]="CRoleDisplay/CRoleDisplayS"}
+,{["top_mask"]=false,["key"]="CRoleDisplaySet",["id"]=389,["layer"]="Top",["is_window"]=1,["res"]="CRoleDisplay/CRoleDisplaySet"}
+,{["top_mask"]=false,["key"]="SDKPayJPlimitLevel",["Virtualkeys_close"]=1,["id"]=390,["layer"]="Top",["is_window"]=1,["res"]="SDK/SDKPayJPlimitLevel"}
+,{["top_mask"]=false,["key"]="ColosseumM",["id"]=391,["res"]="Colosseum/ColosseumM"}
+,{["top_mask"]=false,["key"]="ColosseumReward",["id"]=392,["layer"]="Top",["is_window"]=1,["res"]="Dungeon/ColosseumReward"}
+,{["top_mask"]=false,["key"]="ASMRView",["id"]=393,["res"]="ASMR/ASMRView"}
+,{["top_mask"]=false,["key"]="ASMRShow",["id"]=394,["res"]="ASMR/ASMRShow"}
+,{["top_mask"]=false,["key"]="GlobalBossView",["id"]=395,["res"]="GlobalBoss/GlobalBossView",["Virtualkeys_close"]=1,["jumpType"]=1}
+,{["top_mask"]=false,["key"]="GlobalBossList",["id"]=396,["res"]="GlobalBoss/GlobalBossListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ShopMultPayView",["id"]=397,["res"]="Shop/ShopMultPayView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonActivity10",["id"]=398,["res"]="DungeonActivity10/DungeonActivityView10",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10035,140010}
+}
+}
+,{["top_mask"]=false,["key"]="SneakMain",["id"]=399,["res"]="Sneak/SneakMain"}
+,{["top_mask"]=false,["key"]="MenuMore",["id"]=400,["res"]="Menu/MenuMore",["is_window"]=1}
+,{["top_mask"]=false,["key"]="AnniversaryView",["id"]=401,["res"]="Activity7/AnniversaryView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="AnniversaryWindow",["id"]=402,["res"]="AnniversaryWindow/AnniversaryWindow",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PackGetInfo",["Virtualkeys_close"]=1,["id"]=403,["layer"]="Top",["is_window"]=1,["res"]="Goods/PackGetInfo"}
+,{["top_mask"]=false,["key"]="RogueTView",["id"]=404,["res"]="RogueT/RogueTView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueTHard",["id"]=405,["res"]="RogueT/RogueTHard",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueTReward",["id"]=406,["res"]="RogueT/RogueTReward",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueTScore",["id"]=407,["res"]="RogueT/RogueTScore",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueTBuffSelect",["id"]=408,["res"]="RogueT/RogueTBuffSelect",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueTEnemySelect",["id"]=409,["res"]="RogueT/RogueTEnemySelect",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueTCurBuff",["id"]=410,["res"]="RogueT/RogueTCurBuff",["Virtualkeys_close"]=1,["layer"]="Top"}
+,{["top_mask"]=false,["key"]="RogueTSaveBuff",["id"]=411,["res"]="RogueT/RogueTSaveBuff",["Virtualkeys_close"]=1,["layer"]="Top"}
+,{["top_mask"]=false,["key"]="RogueTShopBuff",["id"]=412,["res"]="RogueT/RogueTShopBuff",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10501}
+}
+}
+,{["top_mask"]=false,["key"]="ColosseumMRandom",["id"]=413,["res"]="Colosseum/ColosseumMRandom",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="BadgeTips",["Virtualkeys_close"]=1,["id"]=414,["layer"]="Top",["is_window"]=1,["res"]="Tips/BadgeTips"}
+,{["top_mask"]=false,["key"]="RogueTSelectBuff",["id"]=415,["res"]="RogueT/RogueTSelectBuff",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="SummaryNewYear",["id"]=416,["res"]="Summary1/SummaryNewYear",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ConvertedItemView",["Virtualkeys_close"]=1,["id"]=417,["layer"]="Top",["is_window"]=1,["res"]="Goods/ConvertedItemView"}
+,{["top_mask"]=false,["key"]="DungeonActivity11",["id"]=418,["res"]="DungeonActivity11/DungeonActivityView11",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10106}
+,{12012,140024}
+}
+}
+,{["top_mask"]=false,["key"]="DungeonCloud",["jumpType"]=1,["id"]=419,["res"]="DungeonActivity11/DungeonCloudView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10106}
+,{12012,140024}
+}
+}
+,{["top_mask"]=false,["key"]="ExerciseLHistory",["Virtualkeys_close"]=1,["id"]=420,["layer"]="Top",["is_window"]=1,["res"]="ExerciseL/ExerciseLHistory"}
+,{["top_mask"]=false,["key"]="CRoleDisplayPVP",["id"]=421,["res"]="CRoleDisplay/CRoleDisplayPVP",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HeadFrameDialog4",["Virtualkeys_close"]=1,["id"]=422,["layer"]="Top",["is_window"]=1,["res"]="HeadFrame/HeadFrameDialog4"}
+,{["top_mask"]=false,["key"]="SpecialGuide",["dont_close_when_close_all"]=1,["id"]=423,["layer"]="Top",["is_window"]=1,["res"]="SpecialGuide/SpecialGuideView"}
+,{["top_mask"]=false,["key"]="MissionGlobalBoss",["id"]=424,["res"]="Mission1/MissionGlobalBoss",["Virtualkeys_close"]=1}
+,{["id"]=425,["layer"]="Topest",["is_window"]=1,["top_mask"]=false,["key"]="Dialog2",["res"]="Tips/DialogBox2",["Virtualkeys_close"]=1,["multi"]=1}
+,{["top_mask"]=false,["key"]="SkinRebate",["id"]=426,["res"]="OperationActivity1/SkinRebateView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10002}
+}
+}
+,{["top_mask"]=false,["key"]="PuzzleActivity",["id"]=427,["res"]="PuzzleActivity/PuzzleActivity",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="PuzzlePool",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10002}
+,{10040}
+}
+,["res"]="PuzzleActivity/PuzzlePool",["is_window"]=1,["id"]=428}
+,{["top_mask"]=false,["key"]="PuzzleMultPayView",["id"]=429,["res"]="PuzzleActivity/PuzzleMultPayView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="LuckyGachaMain",["id"]=430,["res"]="LuckyGacha/LuckyGachaMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="LuckyGachaPoolInfo",["id"]=431,["res"]="LuckyGacha/LuckyGachaPoolInfo",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="LuckyGachaReward",["id"]=432,["res"]="LuckyGacha/LuckyGachaReward",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonActivity12",["id"]=433,["res"]="DungeonActivity12/DungeonActivityView12",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="Questionnaire",["id"]=434,["layer"]="Top",["is_window"]=1,["res"]="Questionnaire/Questionnaire"}
+,{["top_mask"]=false,["key"]="SignInDuanWu",["id"]=435,["res"]="SignInContinue13/SignInDuanWu",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CreateSelectRolePanel",["id"]=436,["layer"]="Top",["is_window"]=1,["res"]="Create/CreateSelectRolePanel"}
+,{["top_mask"]=false,["key"]="CreateSelectRoleTPanel",["id"]=437,["layer"]="Top",["is_window"]=1,["res"]="Create/CreateSelectRoleTPanel"}
+,{["top_mask"]=false,["key"]="BuffBattle",["id"]=438,["res"]="BuffBattle/BuffBattleView"}
+,{["top_mask"]=false,["key"]="TeamLimitPanel",["Virtualkeys_close"]=1,["id"]=439,["layer"]="Top",["is_window"]=1,["res"]="Team/TeamLimitPanel"}
+,{["top_mask"]=false,["key"]="SilentDownload",["id"]=440,["layer"]="Top",["is_window"]=1,["res"]="SilentDownload/SilentDownloadView"}
+,{["top_mask"]=false,["key"]="SelectSlotBox",["id"]=441,["res"]="EquipInfo/SelectSlotBox",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MissionReward",["Virtualkeys_close"]=1,["id"]=442,["layer"]="Top",["is_window"]=1,["res"]="Mission2/MissionRewardView"}
+,{["top_mask"]=false,["key"]="RogueMap",["id"]=443,["res"]="RogueMap/RogueMapView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueMapList",["id"]=444,["res"]="RogueMap/RogueMapListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueMapBattle",["id"]=445,["dont_close_when_close_all"]=1,["res"]="RogueMapBattle/RogueMapBattleView"}
+,{["top_mask"]=false,["key"]="RewardRogueMap",["Virtualkeys_close"]=1,["id"]=446,["layer"]="Top",["is_window"]=1,["res"]="Popup/RewardRogueMapView"}
+,{["top_mask"]=false,["key"]="RogueMapSup",["Virtualkeys_close"]=1,["id"]=447,["layer"]="Top",["is_window"]=1,["res"]="RogueMap/RogueMapSupView"}
+,{["top_mask"]=false,["key"]="RogueMapLog",["Virtualkeys_close"]=1,["id"]=448,["layer"]="Top",["is_window"]=1,["res"]="RogueMap/RogueMapLogView"}
+,{["top_mask"]=false,["key"]="RogueMapAssist",["id"]=449,["res"]="RogueMap/RogueMapAssistView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RogueMapVideo",["id"]=450,["layer"]="Top",["is_window"]=1,["res"]="RogueMapBattle/RogueMapVideoView"}
+,{["top_mask"]=false,["key"]="DungeonActivity13",["id"]=451,["res"]="DungeonActivity13/DungeonActivityView13",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10107}
+,{12013,140027}
+}
+}
+,{["top_mask"]=false,["key"]="DungeonSummer2",["jumpType"]=1,["id"]=452,["res"]="DungeonActivity13/DungeonSummer2View",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10107}
+,{12013,140027}
+}
+}
+,{["top_mask"]=false,["key"]="ExplorationBuy2",["id"]=453,["jump_chose"]={-1}
+,["Virtualkeys_close"]=1,["res"]="Exploration/ExplorationBuy2"}
+,{["top_mask"]=false,["key"]="MultTeamBattleMain",["id"]=454,["res"]="MultTeamBattle/MultTeamBattleMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MultTeamLimitInfo",["Virtualkeys_close"]=1,["id"]=455,["layer"]="Top",["is_window"]=1,["res"]="MultTeamBattle/MultTeamLimitInfo"}
+,{["top_mask"]=false,["key"]="MultTeamRewardInfo",["Virtualkeys_close"]=1,["id"]=456,["layer"]="Top",["is_window"]=1,["res"]="MultTeamBattle/MultTeamRewardInfo"}
+,{["top_mask"]=false,["key"]="AnniversaryList",["id"]=457,["res"]="AnniversaryList/AnniversaryListView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonActivity14",["id"]=458,["res"]="DungeonActivity14/DungeonActivityView14",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CoffeeView",["id"]=459,["res"]="Coffee/CoffeeView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CoffeePlayView",["id"]=460,["res"]="Coffee/CoffeePlayView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="CoffeeFoodDetail",["Virtualkeys_close"]=1,["id"]=461,["layer"]="Top",["is_window"]=1,["res"]="Coffee/CoffeeFoodDetail"}
+,{["top_mask"]=false,["key"]="SignInNReward",["Virtualkeys_close"]=1,["id"]=462,["layer"]="Top",["is_window"]=1,["res"]="Common/SignInNReward"}
+,{["top_mask"]=false,["key"]="CoffeeOverView",["Virtualkeys_close"]=1,["id"]=463,["layer"]="Top",["is_window"]=1,["res"]="Coffee/CoffeeOverView"}
+,{["top_mask"]=false,["key"]="RiddleMain",["id"]=464,["res"]="Riddle/RiddleMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RiddleDialog",["id"]=465,["res"]="Riddle/RiddleDialog",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MissionLimitTips",["Virtualkeys_close"]=1,["id"]=466,["layer"]="Top",["is_window"]=1,["res"]="Tips/MissisonLimitTips"}
+,{["top_mask"]=false,["key"]="GiftFilter",["Virtualkeys_close"]=1,["id"]=467,["layer"]="Top",["is_window"]=1,["res"]="Goods/GiftFilter"}
+,{["top_mask"]=false,["key"]="ExerciseRMain",["id"]=468,["res"]="ExerciseR/ExerciseRMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExerciseRPP",["id"]=469,["res"]="ExerciseR/ExerciseRPP",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="ExerciseRRankReward",["Virtualkeys_close"]=1,["id"]=470,["layer"]="Top",["is_window"]=1,["res"]="ExerciseR/ExerciseRRankReward"}
+,{["top_mask"]=false,["key"]="ExerciseRJC",["Virtualkeys_close"]=1,["id"]=471,["layer"]="Top",["is_window"]=1,["res"]="Popup/ExerciseRJC"}
+,{["top_mask"]=false,["key"]="ExerciseRChange",["Virtualkeys_close"]=1,["id"]=472,["layer"]="Top",["is_window"]=1,["res"]="Popup/ExerciseRChange"}
+,{["top_mask"]=false,["key"]="PopupPackView",["id"]=473,["res"]="PopupPack/PopupPackView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RaisingDialog",["id"]=474,["res"]="TeamConfirm/RaisingDialog",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="RaisingJumpDialog",["id"]=475,["res"]="TeamConfirm/RaisingJumpDialog",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloMain",["id"]=476,["res"]="Halo/HaloMain",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloReplace",["id"]=477,["res"]="Halo/HaloReplace",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloEquipSelect",["id"]=478,["res"]="Halo/HaloEquipSelect",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloEquipReplace",["id"]=479,["res"]="Halo/HaloEquipReplace",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloUpgrade",["id"]=480,["res"]="Halo/HaloUpgrade",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloEquipSell",["id"]=481,["res"]="Halo/HaloEquipSell",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonTeamReplace",["Virtualkeys_close"]=1,["id"]=482,["layer"]="Top",["is_window"]=1,["res"]="DungeonTeamReplace/DungeonTeamReplaceView"}
+,{["top_mask"]=false,["key"]="NumSelectView",["Virtualkeys_close"]=1,["id"]=483,["layer"]="Top",["is_window"]=1,["res"]="Goods/NumSelectView"}
+,{["top_mask"]=false,["key"]="GlobalBossBuff",["id"]=484,["res"]="GlobalBoss/GlobalBossBuffView",["is_window"]=1,["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HalloweenMenu",["id"]=485,["res"]="Halloween/HalloweenMenuView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="Halloween",["id"]=486,["res"]="Halloween/HalloweenView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloBag",["id"]=487,["res"]="Bag/HaloBag",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="HaloEquipFullInfo",["Virtualkeys_close"]=1,["id"]=488,["layer"]="Top",["is_window"]=1,["res"]="Halo/HaloEquipFullInfo"}
+,{["top_mask"]=false,["key"]="TowerDeep",["id"]=489,["res"]="TowerDeep/TowerDeepView",["Virtualkeys_close"]=1,["jumpType"]=1}
+,{["top_mask"]=false,["key"]="TowerDeepTeam",["id"]=490,["res"]="TowerDeep/TowerDeepTeamView",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="DungeonActivity15",["id"]=491,["res"]="DungeonActivity15/DungeonActivityView15",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="SkinTagDesc",["Virtualkeys_close"]=1,["id"]=492,["layer"]="Top",["is_window"]=1,["res"]="RoleSkinComm/SkinTagDesc"}
+,{["top_mask"]=false,["key"]="MerryChristmas",["id"]=493,["res"]="MerryChristmas/MerryChristmas",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MerryChristmasPlay",["id"]=494,["res"]="MerryChristmas/MerryChristmasPlay",["Virtualkeys_close"]=1}
+,{["top_mask"]=false,["key"]="MerryChristmasOverView",["id"]=495,["layer"]="Top",["is_window"]=1,["res"]="MerryChristmas/MerryChristmasOverView"}
+,{["top_mask"]=false,["key"]="RichManMain",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10416}
+}
+,["res"]="RichMan/RichManMain",["is_window"]=1,["id"]=496}
+,{["top_mask"]=false,["key"]="DungeonDetail2",["Virtualkeys_close"]=1,["id"]=497,["layer"]="Top",["is_window"]=1,["res"]="DungeonDetail/DungeonDetail2"}
+,{["top_mask"]=false,["key"]="PhysicalReward",["id"]=498,["layer"]="Top",["is_window"]=1,["res"]="PhysicalReward/PhysicalReward"}
+,{["top_mask"]=false,["key"]="DungeonActivity16",["id"]=499,["res"]="DungeonActivity16/DungeonActivityView16",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10109}
+,{12016,140031}
+}
+}
+,{["top_mask"]=false,["key"]="DungeonChristmas",["jumpType"]=1,["id"]=500,["res"]="DungeonActivity16/DungeonChristmasView",["Virtualkeys_close"]=1,["Show_CurrencyType"]={{10109}
+,{12016,140031}
+}
+}
+}
+

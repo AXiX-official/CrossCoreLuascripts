@@ -1,5 +1,3 @@
-
-
 local timer = 0
 local targetTime = 0
 local curDatas = nil
@@ -14,6 +12,9 @@ function Awake()
     tlua = UIInfiniteUtil:AddUIInfiniteAnim(layout, UIInfiniteAnimType.Normal)
 
     eventMgr = ViewEvent.New();
+end
+
+function OnEnable()
     eventMgr:AddListener(EventType.Mission_List, function(_data)
         if gameObject.activeSelf == false then
             return
@@ -29,7 +30,7 @@ function Awake()
             UIUtil:OpenReward({rewards})
         end
     end);
-    eventMgr:AddListener(EventType.Regression_Fund_Buy,RefreshPanel)
+    eventMgr:AddListener(EventType.Regression_Fund_Buy, RefreshPanel)
 end
 
 function LayoutCallBack(index)
@@ -39,11 +40,13 @@ function LayoutCallBack(index)
         lua.SetIndex(index)
         lua.SetClickCB(OnClickCB)
         lua.SetShopClickCB(OnShopCallBuy)
-        lua.Refresh(_data, {isBuy = isBuy})
+        lua.Refresh(_data, {
+            isBuy = isBuy
+        })
     end
 end
 
-function OnDestroy()
+function OnDisable()
     eventMgr:ClearListener()
 end
 
@@ -55,7 +58,7 @@ function Update()
         tab.hour = tab.hour < 10 and "0" .. tab.hour or tab.hour
         tab.minute = tab.minute < 10 and "0" .. tab.minute or tab.minute
         tab.second = tab.second < 10 and "0" .. tab.second or tab.second
-        LanguageMgr:SetText(txtTime,22031,tab.day,tab.hour,tab.minute,tab.second)
+        LanguageMgr:SetText(txtTime, 22031, tab.day, tab.hour, tab.minute, tab.second)
     end
 end
 
@@ -63,7 +66,7 @@ function Refresh(_info)
     info = _info
     if info then
         targetTime = RegressionMgr:GetActivityEndTime(info.type)
-        RefreshPanel()    
+        RefreshPanel()
     end
 end
 
@@ -82,15 +85,15 @@ function SetDatas()
     curDatas = {}
     if #datas > 0 then
         for i, v in ipairs(datas) do
-            if v:GetFundId()~=nil then
-                table.insert(curDatas,v)
+            if v:GetFundId() ~= nil then
+                table.insert(curDatas, v)
             end
         end
     end
 end
 
 function SetSort()
-    if #curDatas>0 then
+    if #curDatas > 0 then
         table.sort(curDatas, function(a, b)
             local fund1 = MissionMgr:GetData2(a:GetFundId())
             local fund2 = MissionMgr:GetData2(b:GetFundId())
@@ -120,11 +123,11 @@ function SetShop()
     commData = ShopMgr:GetFixedCommodity(shopId)
     if commData then
         local price = commData:GetRealPrice()
-        CSAPI.SetText(txtPrice,(price and price[1]) and price[1].num .. "" or "0")
+        CSAPI.SetText(txtPrice, (price and price[1]) and price[1].num .. "" or "0")
 
         local rewards = commData:GetCommodityList()
         local num = 300
-        CSAPI.SetText(txtMoney,num .. "")
+        CSAPI.SetText(txtMoney, num .. "")
 
         commData:GetData().close_time = targetTime
     end
@@ -141,20 +144,20 @@ function OnClickCB()
         for i, v in ipairs(datas) do
             if v:IsFinish() and not v:IsGet() then
                 if v:GetFundId() then
-                    table.insert(ids,v:GetID())
+                    table.insert(ids, v:GetID())
                 else
                     if isBuy then
-                        table.insert(ids,v:GetID()) 
+                        table.insert(ids, v:GetID())
                     end
                 end
             end
         end
     end
-    TaskProto:GetReward(nil,ids)
+    TaskProto:GetReward(nil, ids)
 end
 
 function OnShopCallBuy()
     if commData then
-        ShopCommFunc.OpenPayView2(commData:GetID(),nil,true)
+        ShopCommFunc.OpenPayView2(commData:GetID(), nil, true)
     end
 end

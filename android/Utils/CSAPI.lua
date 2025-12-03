@@ -1418,7 +1418,10 @@ this.IsAppReviewMode = CS.CSAPI.IsAppReviewMode;
 function this.IsCheckRate(b)
 	CS.CSAPI.IsCheckRate(b)
 end
-
+---首次安装或者修改了默认时会重置一次玩家选择,其他时候用玩家选择的或者默认值
+this.SetDelaultLanguageIndex = CS.CSAPI.SetDelaultLanguageIndex;
+---获取默认语言下标 目前已有（简体中文1、繁體中文2、日文3、英文4、韩文5）
+this.GetDefaultLanguageIndex = CS.CSAPI.GetDefaultLanguageIndex;
 
 return this;
 

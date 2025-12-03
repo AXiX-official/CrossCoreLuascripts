@@ -61,5 +61,12 @@ function Skill4942004:OnActionOver2(caster, target, data)
 	-- 4704024
 	self:AddBuff(SkillEffect[4704024], caster, caster, data, 302301)
 	-- 4704034
-	self:AddHp(SkillEffect[4704034], caster, caster, data, math.floor(-count633*0.25))
+	self:AddHp(SkillEffect[4704034], caster, caster, data, math.floor(-count633*0.15))
+	-- 8958
+	if SkillJudger:IsCasterMech(self, caster, target, true,10) then
+	else
+		return
+	end
+	-- 4704039
+	self:AddHp(SkillEffect[4704039], caster, caster, data, math.floor(-count633*3.5))
 end

@@ -1,15 +1,3 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '宿舍入口等级配置表',
-	["types"] = {
-'int','string','int','int','json','int','int'
-},
-	["names"] = {
-'id','key','centerlvl','upTime','upCosts','roleLimit','powerVal'
-},
-	["data"] = {
-{'1',	'1',	'1',	'1',	'',	'0',	'0'},
-},
+_G["CfgDormEntryLv"]={{["centerlvl"]=1,["key"]="1",["upTime"]=1,["powerVal"]=0,["id"]=1,["roleLimit"]=0}
 }
---cfgCfgDormEntryLv = conf
-return conf
+

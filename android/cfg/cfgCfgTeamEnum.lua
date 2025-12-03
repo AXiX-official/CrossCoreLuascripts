@@ -1,23 +1,29 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '角色小队类型',
-	["types"] = {
-'int','string','string','string','string','string','string','string','string','json','string','int'
-},
-	["names"] = {
-'id','key','sName','icon','logo','itemIcon','cIcon','details','details1','sortIcon','mvName','languageID'
-},
-	["data"] = {
-{'1',	'1',	'山脉',	'icon_01_01',	'01_montagnes_1',	'01_montagnes_item',	'1',	'01_Montagnes',	'01_montagnes',	'[[1,"RoleTeam/01_montagnes_4",1,0.3]]',	'montagnes_mv_01',	'29009'},
-{'2',	'2',	'乐团',	'icon_01_02',	'02_swars_1',	'02_swars_item',	'2',	'02_Swars',	'02_swars',	'[[1,"RoleTeam/02_swars_4",1,0.3]]',	'montagnes_mv_02',	'29010'},
-{'3',	'3',	'不朽',	'icon_01_03',	'03_unsterblich_1',	'03_unsterblich_item',	'3',	'03_Unsterblich',	'03_unsterblich',	'[[1,"RoleTeam/03_unsterblich_4",1,0.3]]',	'montagnes_mv_03',	'29011'},
-{'4',	'4',	'气象',	'icon_01_04',	'04_atmosphere_1',	'04_atmosphere_item',	'4',	'04_Atmosphere',	'04_atmosphere',	'[[1,"RoleTeam/04_atmosphere_4",1,0.3]]',	'montagnes_mv_04',	'29012'},
-{'5',	'5',	'虫洞',	'icon_01_05',	'05_swarms_1',	'05_swarms_item',	'5',	'05_Swarms',	'05_swarms',	'[[1,"RoleTeam/05_swarms_4",1,0.3]]',	'montagnes_mv_05',	'29013'},
-{'6',	'6',	'灭刃',	'icon_01_06',	'06_blade_1',	'06_blade_item',	'6',	'06_Blade',	'06_blade',	'[[1,"RoleTeam/06_blade_4",1,0.3]]',	'montagnes_mv_06',	'29014'},
-{'7',	'7',	'碎星',	'icon_01_07',	'07_star_1',	'07_star_item',	'7',	'07_Star',	'07_star',	'[[1,"RoleTeam/07_star_4",0.9,0.3]]',	'montagnes_mv_07',	'29015'},
-{'8',	'8',	'其他',	'icon_01_07',	'08_other_1',	'08_other_item',	'7',	'08_Other',	'08_other',	'[[1,"RoleTeam/08_other_4",1,0.3]]',	'montagnes_mv_01',	'29016'},
-{'9',	'9',	'盟约',	'icon_01_09',	'09_extra_1',	'07_star_item',	'9',	'09_Extra',	'09_extra',	'[[1,"RoleTeam/09_extra_4",1,0.3]]',	'montagnes_mv_09',	'29076'},
-},
+_G["CfgTeamEnum"]={{["id"]=1,["languageID"]=29009,["mvName"]="montagnes_mv_01",["sortIcon"]={{1,"RoleTeam/01_montagnes_4",1,0.3}
 }
---cfgCfgTeamEnum = conf
-return conf
+,["cIcon"]="1",["details"]="01_Montagnes",["key"]="1",["logo"]="01_montagnes_1",["details1"]="01_montagnes",["sName"]="山脉",["icon"]="icon_01_01",["itemIcon"]="01_montagnes_item"}
+,{["id"]=2,["languageID"]=29010,["mvName"]="montagnes_mv_02",["sortIcon"]={{1,"RoleTeam/02_swars_4",1,0.3}
+}
+,["cIcon"]="2",["details"]="02_Swars",["key"]="2",["logo"]="02_swars_1",["details1"]="02_swars",["sName"]="乐团",["icon"]="icon_01_02",["itemIcon"]="02_swars_item"}
+,{["id"]=3,["languageID"]=29011,["mvName"]="montagnes_mv_03",["sortIcon"]={{1,"RoleTeam/03_unsterblich_4",1,0.3}
+}
+,["cIcon"]="3",["details"]="03_Unsterblich",["key"]="3",["logo"]="03_unsterblich_1",["details1"]="03_unsterblich",["sName"]="不朽",["icon"]="icon_01_03",["itemIcon"]="03_unsterblich_item"}
+,{["id"]=4,["languageID"]=29012,["mvName"]="montagnes_mv_04",["sortIcon"]={{1,"RoleTeam/04_atmosphere_4",1,0.3}
+}
+,["cIcon"]="4",["details"]="04_Atmosphere",["key"]="4",["logo"]="04_atmosphere_1",["details1"]="04_atmosphere",["sName"]="气象",["icon"]="icon_01_04",["itemIcon"]="04_atmosphere_item"}
+,{["id"]=5,["languageID"]=29013,["mvName"]="montagnes_mv_05",["sortIcon"]={{1,"RoleTeam/05_swarms_4",1,0.3}
+}
+,["cIcon"]="5",["details"]="05_Swarms",["key"]="5",["logo"]="05_swarms_1",["details1"]="05_swarms",["sName"]="虫洞",["icon"]="icon_01_05",["itemIcon"]="05_swarms_item"}
+,{["id"]=6,["languageID"]=29014,["mvName"]="montagnes_mv_06",["sortIcon"]={{1,"RoleTeam/06_blade_4",1,0.3}
+}
+,["cIcon"]="6",["details"]="06_Blade",["key"]="6",["logo"]="06_blade_1",["details1"]="06_blade",["sName"]="灭刃",["icon"]="icon_01_06",["itemIcon"]="06_blade_item"}
+,{["id"]=7,["languageID"]=29015,["mvName"]="montagnes_mv_07",["sortIcon"]={{1,"RoleTeam/07_star_4",0.9,0.3}
+}
+,["cIcon"]="7",["details"]="07_Star",["key"]="7",["logo"]="07_star_1",["details1"]="07_star",["sName"]="碎星",["icon"]="icon_01_07",["itemIcon"]="07_star_item"}
+,{["id"]=8,["languageID"]=29016,["mvName"]="montagnes_mv_01",["sortIcon"]={{1,"RoleTeam/08_other_4",1,0.3}
+}
+,["cIcon"]="7",["details"]="08_Other",["key"]="8",["logo"]="08_other_1",["details1"]="08_other",["sName"]="其他",["icon"]="icon_01_07",["itemIcon"]="08_other_item"}
+,{["id"]=9,["languageID"]=29076,["mvName"]="montagnes_mv_09",["sortIcon"]={{1,"RoleTeam/09_extra_4",1,0.3}
+}
+,["cIcon"]="9",["details"]="09_Extra",["key"]="9",["logo"]="09_extra_1",["details1"]="09_extra",["sName"]="盟约",["icon"]="icon_01_09",["itemIcon"]="07_star_item"}
+}
+

@@ -13,49 +13,23 @@ function this:ApplyCheck()
     if(not self.state)then
         return;
     end
-    local url;
+    local url;---访问URL
+    local IncludeContent;---包含关键字
     if CSAPI.IsADV() then
-        ---国内不可跟随该方法，除非重新出包更新C#代码
         --url = CSAPI.HotFileUrl().."/ClientHotRes/fix.txt";
         url = CSAPI.PlatformURL().."/ClientHotRes/fix.txt";
-        ---LogError("_G.g_HotResVersion:".._G.g_HotResVersion)
-        CSAPI.GetServerInfo(url,function (str)
-            Log(str);
-            if str~=nil and str~=" " then
-                local matchResult = string.match(str, "_G.g_HotResVersion")
-                if matchResult then
-                    local func = loadstring(str);
-                    func();
-                else
-                  ---  LogError("HotRes获取:"..url.."异常数据内容未包含指定内容:"..tostring(str));
-                end
-            else
-                ---LogError("HotRes获取:"..url.."异常数据内容:"..tostring(str));
-            end
-        end);
+        IncludeContent="_G.g_HotResVersion";
     else
-        ---url 兼容处理
-        if  CSAPI.HotFileUrl and CSAPI.HotFileUrl() and StringUtil:IsEmpty(CSAPI.HotFileUrl()) == false then
-           ---新版本
-           url = CSAPI.HotFileUrl().."/fix.txt";
-        else
-            ---旧版本兼容
-            url = self.test_url or "https://cdn.megagamelog.com/cross/release/fix.txt";
-        end
-        CSAPI.GetServerInfo(url,function (str)
-            Log(str);
-            if str~=nil and str~=" " then
-                local matchResult = string.match(str, "g_svnVersion")
-                if matchResult then
-                    local func = loadstring(str);
-                    func();
-                else
-                   --- LogError("HotRes获取:"..url.."异常数据内容未包含指定内容:"..tostring(str));
-                end
-            end
-        end);
+        url = CSAPI.HotFileUrl().."/fix.txt";
+        IncludeContent="g_svnVersion";
     end
-
+    CSAPI.GetServerInfo(url,function (str)
+        Log(str);
+        if str~=nil and str~=" " then
+            local matchResult = string.match(str, IncludeContent)
+            if matchResult then local func = loadstring(str); func(); end
+        end
+    end);
 end
 
 function this:ApplyUpdate()
@@ -65,18 +39,10 @@ function this:ApplyUpdate()
     dialogData.okCallBack =  self.UpdateVer;
     --dialogData.cancelCallBack = self.UpdateVer;
     CSAPI.OpenView("Prompt",dialogData);
-    --测试时候使用
-    if PlayerClient:GetUid()~=nil then
-        LogError("测试使用正式关闭_触发热更新强制更新玩家:"..PlayerClient:GetUid())
-    end
 end
 
 function this:UpdateVer()
-    if CSAPI.IsADV() then
-        CSAPI.UnityQuit();
-    else
-        CSAPI.Quit();
-    end
+    CSAPI.UnityQuit();
 end
 
 function this:EnableTest()

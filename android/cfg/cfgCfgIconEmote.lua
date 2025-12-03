@@ -1,29 +1,47 @@
-local conf = {
-	["filename"] = 'T-头像框表.xlsx',
-	["sheetname"] = '表情',
-	["types"] = {
-'int','string','int','bool','int','string','string[]','float[]','string','string','int','int','int'
-},
-	["names"] = {
-'id','key','index','isShow','type','avatarname','picture','textPos','avatareffect','accessmethods','shopId','is_Open','sound'
-},
-	["data"] = {
-{'1031',	'1031',	'3',	'',	'3',	'银羽-胜利',	'img_02_01,img_02_02',	'61,-47',	'',	'',	'',	'1',	''},
-{'1032',	'1032',	'3',	'',	'4',	'银羽-失败',	'img_03_01,img_03_02',	'61,-47',	'',	'',	'',	'1',	''},
-{'1033',	'1033',	'3',	'',	'2',	'银羽-问好',	'img_01_01,img_01_02',	'61,-47',	'',	'',	'',	'1',	''},
-{'1041',	'1041',	'1',	'',	'3',	'哈托莉-胜利',	'',	'',	'HeadFace/Gif2',	'GetWay_137##幸运扭蛋机奖励',	'',	'',	'50320143'},
-{'1042',	'1042',	'1',	'',	'4',	'哈托莉-失败',	'',	'',	'HeadFace/Gif4',	'GetWay_137##幸运扭蛋机奖励',	'',	'',	'50320146'},
-{'1043',	'1043',	'1',	'',	'2',	'哈托莉-问好',	'',	'',	'HeadFace/Gif3',	'GetWay_137##幸运扭蛋机奖励',	'',	'',	'50320142'},
-{'1051',	'1051',	'2',	'',	'3',	'刃齿-胜利',	'',	'',	'HeadFace/Gif7',	'GetWay_148##奇趣扭蛋奖励',	'',	'',	'30180142'},
-{'1052',	'1052',	'2',	'',	'4',	'刃齿-失败',	'',	'',	'HeadFace/Gif5',	'GetWay_148##奇趣扭蛋奖励',	'',	'',	'30180145'},
-{'1053',	'1053',	'2',	'',	'2',	'刃齿-问好',	'',	'',	'HeadFace/Gif6',	'GetWay_148##奇趣扭蛋奖励',	'',	'',	'30180140'},
-{'1061',	'1061',	'4',	'',	'3',	'袅韵-胜利',	'img_04_01,img_04_02',	'61,-47',	'',	'GetWay_137##幸运扭蛋机奖励',	'',	'',	''},
-{'1062',	'1062',	'4',	'',	'4',	'袅韵-失败',	'img_05_01,img_05_02',	'61,-47',	'',	'GetWay_137##幸运扭蛋机奖励',	'',	'',	''},
-{'1063',	'1063',	'4',	'',	'2',	'袅韵-问好',	'img_06_01,img_06_02',	'61,-47',	'',	'GetWay_137##幸运扭蛋机奖励',	'',	'',	''},
-{'1071',	'1071',	'5',	'',	'3',	'巴德兰兹-胜利',	'img_07_01,img_07_02',	'61,-47',	'',	'GetWay_148##奇趣扭蛋奖励',	'',	'',	''},
-{'1072',	'1072',	'5',	'',	'4',	'巴德兰兹-失败',	'img_08_01,img_08_02',	'61,-47',	'',	'GetWay_148##奇趣扭蛋奖励',	'',	'',	''},
-{'1073',	'1073',	'5',	'',	'2',	'巴德兰兹-问好',	'img_09_01,img_09_02',	'61,-47',	'',	'GetWay_148##奇趣扭蛋奖励',	'',	'',	''},
-},
+_G["CfgIconEmote"]={[1081]={["type"]=3,["index"]=5,["avatareffect"]="HeadFace/Gif10",["id"]=1081,["key"]="1081",["item_id"]=31081,["avatarname"]="灼碧-胜利",["sound"]=10220110,["isShow"]=false}
+,[1051]={["type"]=3,["index"]=2,["avatareffect"]="HeadFace/Gif7",["avatarname"]="刃齿-胜利",["isShow"]=false,["item_id"]=31051,["key"]="1051",["id"]=1051,["sound"]=30180142,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
+,[1052]={["type"]=4,["index"]=2,["avatareffect"]="HeadFace/Gif5",["avatarname"]="刃齿-失败",["isShow"]=false,["item_id"]=31052,["key"]="1052",["id"]=1052,["sound"]=30180145,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
+,[1053]={["type"]=2,["index"]=2,["avatareffect"]="HeadFace/Gif6",["avatarname"]="刃齿-问好",["isShow"]=false,["item_id"]=31053,["key"]="1053",["id"]=1053,["sound"]=30180140,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
+,[1091]={["type"]=3,["index"]=5,["picture"]={"img_14_01","img_14_02"}
+,["avatarname"]="随想曲-胜利",["textPos"]={61,-47}
+,["item_id"]=31091,["key"]="1091",["isShow"]=false,["id"]=1091}
+,[1061]={["type"]=3,["index"]=4,["picture"]={"img_04_01","img_04_02"}
+,["avatarname"]="袅韵-胜利",["textPos"]={61,-47}
+,["item_id"]=31061,["key"]="1061",["isShow"]=false,["id"]=1061,["accessmethods"]="GetWay_137##幸运扭蛋机奖励"}
+,[1062]={["type"]=4,["index"]=4,["picture"]={"img_05_01","img_05_02"}
+,["avatarname"]="袅韵-失败",["textPos"]={61,-47}
+,["item_id"]=31062,["key"]="1062",["isShow"]=false,["id"]=1062,["accessmethods"]="GetWay_137##幸运扭蛋机奖励"}
+,[1063]={["type"]=2,["index"]=4,["picture"]={"img_06_01","img_06_02"}
+,["avatarname"]="袅韵-问好",["textPos"]={61,-47}
+,["item_id"]=31063,["key"]="1063",["isShow"]=false,["id"]=1063,["accessmethods"]="GetWay_137##幸运扭蛋机奖励"}
+,[1033]={["type"]=2,["index"]=3,["picture"]={"img_01_01","img_01_02"}
+,["avatarname"]="银羽-问好",["textPos"]={61,-47}
+,["is_Open"]=1,["item_id"]=31033,["key"]="1033",["isShow"]=false,["id"]=1033}
+,[1093]={["type"]=2,["index"]=5,["picture"]={"img_16_01","img_16_02"}
+,["avatarname"]="随想曲-问好",["textPos"]={61,-47}
+,["item_id"]=31093,["key"]="1093",["isShow"]=false,["id"]=1093}
+,[1092]={["type"]=4,["index"]=5,["picture"]={"img_15_01","img_15_02"}
+,["avatarname"]="随想曲-失败",["textPos"]={61,-47}
+,["item_id"]=31092,["key"]="1092",["isShow"]=false,["id"]=1092}
+,[1083]={["type"]=2,["index"]=5,["avatareffect"]="HeadFace/Gif9",["id"]=1083,["key"]="1083",["item_id"]=31083,["avatarname"]="灼碧-问好",["sound"]=10220113,["isShow"]=false}
+,[1082]={["type"]=4,["index"]=5,["avatareffect"]="HeadFace/Gif8",["id"]=1082,["key"]="1082",["item_id"]=31082,["avatarname"]="灼碧-失败",["sound"]=10220120,["isShow"]=false}
+,[1032]={["type"]=4,["index"]=3,["picture"]={"img_03_01","img_03_02"}
+,["avatarname"]="银羽-失败",["textPos"]={61,-47}
+,["is_Open"]=1,["item_id"]=31032,["key"]="1032",["isShow"]=false,["id"]=1032}
+,[1073]={["type"]=2,["index"]=5,["picture"]={"img_09_01","img_09_02"}
+,["avatarname"]="巴德兰兹-问好",["textPos"]={61,-47}
+,["item_id"]=31073,["key"]="1073",["isShow"]=false,["id"]=1073,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
+,[1071]={["type"]=3,["index"]=5,["picture"]={"img_07_01","img_07_02"}
+,["avatarname"]="巴德兰兹-胜利",["textPos"]={61,-47}
+,["item_id"]=31071,["key"]="1071",["isShow"]=false,["id"]=1071,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
+,[1072]={["type"]=4,["index"]=5,["picture"]={"img_08_01","img_08_02"}
+,["avatarname"]="巴德兰兹-失败",["textPos"]={61,-47}
+,["item_id"]=31072,["key"]="1072",["isShow"]=false,["id"]=1072,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
+,[1042]={["type"]=4,["index"]=1,["avatareffect"]="HeadFace/Gif4",["avatarname"]="哈托莉-失败",["isShow"]=false,["item_id"]=31042,["key"]="1042",["id"]=1042,["sound"]=50320146,["accessmethods"]="GetWay_137##幸运扭蛋机奖励"}
+,[1043]={["type"]=2,["index"]=1,["avatareffect"]="HeadFace/Gif3",["avatarname"]="哈托莉-问好",["isShow"]=false,["item_id"]=31043,["key"]="1043",["id"]=1043,["sound"]=50320142,["accessmethods"]="GetWay_137##幸运扭蛋机奖励"}
+,[1041]={["type"]=3,["index"]=1,["avatareffect"]="HeadFace/Gif2",["avatarname"]="哈托莉-胜利",["isShow"]=false,["item_id"]=31041,["key"]="1041",["id"]=1041,["sound"]=50320143,["accessmethods"]="GetWay_137##幸运扭蛋机奖励"}
+,[1031]={["type"]=3,["index"]=3,["picture"]={"img_02_01","img_02_02"}
+,["avatarname"]="银羽-胜利",["textPos"]={61,-47}
+,["is_Open"]=1,["item_id"]=31031,["key"]="1031",["isShow"]=false,["id"]=1031}
 }
---cfgCfgIconEmote = conf
-return conf
+

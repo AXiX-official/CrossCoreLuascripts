@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '装备品质类型',
-	["types"] = {
-'int','string','int','string','string','json'
-},
-	["names"] = {
-'id','key','nQuality','sName','sColor','sortIcon'
-},
-	["data"] = {
-{'1',	'1',	'1',	'R1',	'ffffff',	''},
-{'2',	'2',	'2',	'R2',	'57bd7e',	''},
-{'3',	'3',	'3',	'R3',	'39a9ff',	''},
-{'4',	'4',	'4',	'R4',	'cf83f3',	''},
-{'5',	'5',	'5',	'R5',	'ffb847',	''},
-},
+_G["CfgEquipQualityEnum"]={{["key"]="1",["nQuality"]=1,["id"]=1,["sName"]="R1",["sColor"]="ffffff"}
+,{["key"]="2",["nQuality"]=2,["id"]=2,["sName"]="R2",["sColor"]="57bd7e"}
+,{["key"]="3",["nQuality"]=3,["id"]=3,["sName"]="R3",["sColor"]="39a9ff"}
+,{["key"]="4",["nQuality"]=4,["id"]=4,["sName"]="R4",["sColor"]="cf83f3"}
+,{["key"]="5",["nQuality"]=5,["id"]=5,["sName"]="R5",["sColor"]="ffb847"}
 }
---cfgCfgEquipQualityEnum = conf
-return conf
+

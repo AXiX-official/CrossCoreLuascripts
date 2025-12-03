@@ -1,16 +1,5 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '半身像主题',
-	["types"] = {
-'int','string','string','json'
-},
-	["names"] = {
-'id','key','sName','sortIcon'
-},
-	["data"] = {
-{'1',	'',	'海边度假',	''},
-{'2',	'',	'时光盛典',	''},
-},
+_G["CfgHalfBodyType"]={{["id"]=1,["sName"]="海边度假",["key"]=1}
+,{["id"]=2,["sName"]="时光盛典",["key"]=2}
+,{["id"]=3,["sName"]="活力瞬间",["key"]=3}
 }
---cfgCfgHalfBodyType = conf
-return conf
+

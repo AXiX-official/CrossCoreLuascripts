@@ -1,15 +1,5 @@
-local conf = {
-	["filename"] = 'h-活动列表.xlsx',
-	["sheetname"] = '新手累充',
-	["types"] = {
-'int','string','string','int','json'
-},
-	["names"] = {
-'id','key','sDescription','money','jAwardId'
-},
-	["data"] = {
-{'1',	'',	'累计充值 <color=#ffc146>6</color> 元',	'600',	'[[10002,60,2]]'},
-},
+_G["CfgRechargeCount2"]={{["sDescription"]="累计充值 <color=#ffc146>6</color> 元",["money"]=600,["jAwardId"]={{10002,60,2}
 }
---cfgCfgRechargeCount2 = conf
-return conf
+,["key"]=1,["id"]=1}
+}
+

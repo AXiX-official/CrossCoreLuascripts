@@ -4,8 +4,9 @@ local this = MgrRegister("RegressionMgr")
 function this:Init()
     self:Clear()
     -- 回归信息
+    RegressionProto:ResupplyInfo() -- 燃料补给
+    RegressionProto:ActiveRewardsInfo() -- 活跃返利
     RegressionProto:GetInfo()
-
 end
 
 function this:Clear()
@@ -14,6 +15,8 @@ function this:Clear()
     self.closeTime = 0
     self.activityInfos = {}
     self.fundTime = 0
+    self.supplyDatas = {}
+    self.rebateInfo = nil
 end
 
 -- 回归数据
@@ -128,7 +131,7 @@ function this:CheckNeedShow()
         return false
     end
     local resRecoveryEndTime = self:GetActivityEndTime(RegressionActiveType.ResourcesRecovery)
-    if(not resRecoveryEndTime or resRecoveryEndTime==0 or TimeUtil:GetTime()>resRecoveryEndTime)then 
+    if (not resRecoveryEndTime or resRecoveryEndTime == 0 or TimeUtil:GetTime() > resRecoveryEndTime) then
         return false
     end
     local key = PlayerClient:GetID() .. "_resrecovery3"
@@ -222,12 +225,12 @@ function this:GetResRecoveryTime()
     return begTime, endTime
 end
 
---活动关闭时间
+-- 活动关闭时间
 function this:GetActivityTime()
     if self:IsHuiGui() and #self:GetArr() > 0 then
-        return nil,self.closeTime
+        return nil, self.closeTime
     end
-    return nil,nil
+    return nil, nil
 end
 
 ------------------------------------------------------------------红点---------------------------------------------------------------------
@@ -237,9 +240,9 @@ function this:CheckRedPointData()
     local redData1 = nil
     if isCheck then
         local _cfgs = Cfgs.CfgReturningActivity:GetAll()
-        if _cfgs and #_cfgs > 0 then
+        if _cfgs then
             local redInfos = FileUtil.LoadByPath("Regression_RedInfo.txt") or {}
-            for _, v in ipairs(_cfgs) do
+            for _, v in pairs(_cfgs) do
                 if v.id == type and v.infos and #v.infos > 0 then
                     for _, _info in ipairs(v.infos) do
                         local aInfo = self.activityInfos[_info.type]
@@ -294,6 +297,24 @@ function this:CheckRed(_type, _activityId, redInfos, _info)
         return false
     elseif _type == RegressionActiveType.ItemPool then
         return ItemPoolActivityMgr:CheckPoolHasRedPoint(_activityId);
+    elseif _type == RegressionActiveType.AcitveRewards then
+        if self.rebateInfo then -- 未购买
+            local cfg = Cfgs.CfgReturningActivityReward:GetByID(self.rebateInfo.index)
+            if cfg and cfg.infos then
+                for i, info in ipairs(cfg.infos) do
+                    if self.rebateInfo.day >= info.param and
+                        (not self.rebateInfo.gainArr[info.idx] or self.rebateInfo.gainArr[info.idx] == 0) then
+                        return true -- 完成但未领取
+                    end
+                end
+            end
+        end
+        return false
+    elseif _type == RegressionActiveType.Resupply then
+        return self:CheckSupplyHasGet(_activityId)
+    elseif _type==RegressionActiveType.Shop then --回归商店
+        local infos=ShopMgr:GetRegressionShopRedInfo();
+        return infos~=nil;
     else
         if redInfos == nil then
             redInfos = FileUtil.LoadByPath("Regression_RedInfo.txt") or {}
@@ -301,4 +322,60 @@ function this:CheckRed(_type, _activityId, redInfos, _info)
         return (redInfos[tostring(_type)] == nil or redInfos[tostring(_type)] == 0)
     end
 end
+------------------------------------------------------------------燃料补给---------------------------------------------------------------------
+function this:SetSupplyDatas(proto)
+    if proto and proto.info then
+        for i, v in ipairs(proto.info) do
+            self.supplyDatas[v.id] = v
+        end
+    end
+    EventMgr.Dispatch(EventType.Hot_Supply_Refresh)
+end
+
+function this:GetSupplyData(id)
+    return self.supplyDatas[id]
+end
+
+function this:CheckSupplyIsGet(activityId, index)
+    if not activityId or not index then
+        return false
+    end
+    if not self.supplyDatas or not self.supplyDatas[activityId] or not self.supplyDatas[activityId].gainArr or
+        not self.supplyDatas[activityId].gainArr[index] then
+        return false
+    end
+
+    return self.supplyDatas[activityId].gainArr[index] == 1
+end
+
+function this:CheckSupplyHasGet(activityId)
+    local cfg = Cfgs.CfgResupply:GetByID(activityId)
+    if cfg and cfg.infos then
+        local timeTab = TimeUtil:GetTimeHMS(TimeUtil:GetTime())
+        for i, v in ipairs(cfg.infos) do
+            if v.time and timeTab.hour >= v.time[1] and timeTab.hour < v.time[2] then
+                if not self:CheckSupplyIsGet(activityId,i) then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+------------------------------------------------------------------活跃返利---------------------------------------------------------------------
+function this:SetRebateInfo(proto)
+    if proto and proto.idx and proto.idx ~= 0 then
+        self.rebateInfo = {}
+        self.rebateInfo.index = proto.idx
+        self.rebateInfo.day = proto.loginDay
+        self.rebateInfo.gainArr = proto.gainArr
+    end
+    EventMgr.Dispatch(EventType.Regression_Rebate_Refresh)
+end
+
+function this:GetRebateInfo()
+    return self.rebateInfo
+end
+
 return this

@@ -1,83 +1,75 @@
-local conf = {
-	["filename"] = 's-声音.xlsx',
-	["sheetname"] = '剧情音效',
-	["types"] = {
-'int','string','string','string','int'
-},
-	["names"] = {
-'id','key','cue_sheet','cue_name','loop'
-},
-	["data"] = {
-{'10001',	'short_click',	'plot_effect/plot_effect.acb',	'short_click',	''},
-{'10002',	'short_alert_loop',	'plot_effect/plot_effect.acb',	'short_alert_loop',	'1'},
-{'10003',	'short_alert',	'plot_effect/plot_effect.acb',	'short_alert',	''},
-{'10004',	'short_pace',	'plot_effect/plot_effect.acb',	'short_pace',	''},
-{'10005',	'short_slash',	'plot_effect/plot_effect.acb',	'short_slash',	''},
-{'10006',	'short_incised',	'plot_effect/plot_effect.acb',	'short_incised',	''},
-{'10007',	'short_clash',	'plot_effect/plot_effect.acb',	'short_clash',	''},
-{'10008',	'short_bump',	'plot_effect/plot_effect.acb',	'short_bump',	''},
-{'10009',	'short_slip',	'plot_effect/plot_effect.acb',	'short_slip',	''},
-{'10010',	'short_Noisy',	'plot_effect/plot_effect.acb',	'short_Noisy',	''},
-{'10011',	'short_monster',	'plot_effect/plot_effect.acb',	'short_monster',	''},
-{'10012',	'short_laser',	'plot_effect/plot_effect.acb',	'short_laser',	''},
-{'10013',	'short_cannon',	'plot_effect/plot_effect.acb',	'short_cannon',	''},
-{'10014',	'short_thunder',	'plot_effect/plot_effect.acb',	'short_thunder',	''},
-{'10015',	'short_engine',	'plot_effect/plot_effect.acb',	'short_engine',	''},
-{'10016',	'short_keyboard_loop',	'plot_effect/plot_effect.acb',	'short_keyboard_loop',	'1'},
-{'10017',	'short_keyboard',	'plot_effect/plot_effect.acb',	'short_keyboard',	''},
-{'10018',	'short_shoot',	'plot_effect/plot_effect.acb',	'short_shoot',	''},
-{'10019',	'short_boom',	'plot_effect/plot_effect.acb',	'short_boom',	''},
-{'10020',	'short_earthquake',	'plot_effect/plot_effect.acb',	'short_earthquake',	''},
-{'10021',	'short_Missile',	'plot_effect/plot_effect.acb',	'short_Missile',	''},
-{'10022',	'short_spacejump',	'plot_effect/plot_effect.acb',	'short_spacejump',	''},
-{'10023',	'short_run',	'plot_effect/plot_effect.acb',	'short_run',	''},
-{'10024',	'short_launch',	'plot_effect/plot_effect.acb',	'short_launch',	''},
-{'10025',	'short_landing',	'plot_effect/plot_effect.acb',	'short_landing',	''},
-{'10026',	'short_search',	'plot_effect/plot_effect.acb',	'short_search',	''},
-{'10027',	'short_communication',	'plot_effect/plot_effect.acb',	'short_communication',	''},
-{'10028',	'short_door',	'plot_effect/plot_effect.acb',	'short_door',	''},
-{'10029',	'short_quickrun',	'plot_effect/plot_effect.acb',	'short_quickrun',	''},
-{'10030',	'short_moving',	'plot_effect/plot_effect.acb',	'short_moving',	''},
-{'10031',	'short_bang',	'plot_effect/plot_effect.acb',	'short_bang',	''},
-{'10032',	'amb_burning_loop',	'plot_effect/plot_effect.acb',	'amb_burning_loop',	'1'},
-{'10033',	'amb_burning',	'plot_effect/plot_effect.acb',	'amb_burning',	''},
-{'10034',	'amb_fire_loop',	'plot_effect/plot_effect.acb',	'amb_fire_loop',	'1'},
-{'10035',	'amb_fire',	'plot_effect/plot_effect.acb',	'amb_fire',	''},
-{'10036',	'amb_rain_loop',	'plot_effect/plot_effect.acb',	'amb_rain_loop',	'1'},
-{'10037',	'amb_rain',	'plot_effect/plot_effect.acb',	'amb_rain',	''},
-{'10038',	'amb_thunder_loop',	'plot_effect/plot_effect.acb',	'amb_thunder_loop',	'1'},
-{'10039',	'amb_thunder',	'plot_effect/plot_effect.acb',	'amb_thunder',	''},
-{'10040',	'amb_lighting',	'plot_effect/plot_effect.acb',	'amb_lighting',	''},
-{'10041',	'amb_echnology_loop',	'plot_effect/plot_effect.acb',	'amb_echnology_loop',	'1'},
-{'10042',	'amb_echnology',	'plot_effect/plot_effect.acb',	'amb_echnology',	''},
-{'10043',	'amb_factory_loop',	'plot_effect/plot_effect.acb',	'amb_factory_loop',	'1'},
-{'10044',	'amb_factory',	'plot_effect/plot_effect.acb',	'amb_factory',	''},
-{'10045',	'amb_snow_loop',	'plot_effect/plot_effect.acb',	'amb_snow_loop',	'1'},
-{'10046',	'amb_snow',	'plot_effect/plot_effect.acb',	'amb_snow',	''},
-{'10047',	'amb_breeze_loop',	'plot_effect/plot_effect.acb',	'amb_breeze_loop',	'1'},
-{'10048',	'amb_breeze',	'plot_effect/plot_effect.acb',	'amb_breeze',	''},
-{'10049',	'amb_wind_loop',	'plot_effect/plot_effect.acb',	'amb_wind_loop',	'1'},
-{'10050',	'amb_wind',	'plot_effect/plot_effect.acb',	'amb_wind',	''},
-{'10051',	'amb_storm_loop',	'plot_effect/plot_effect.acb',	'amb_storm_loop',	'1'},
-{'10052',	'amb_storm',	'plot_effect/plot_effect.acb',	'amb_storm',	''},
-{'10053',	'amb_forest_loop',	'plot_effect/plot_effect.acb',	'amb_forest_loop',	'1'},
-{'10054',	'amb_forest',	'plot_effect/plot_effect.acb',	'amb_forest',	''},
-{'10055',	'short_sixgun',	'plot_effect/plot_effect.acb',	'short_sixgun',	''},
-{'10056',	'amb_Radio_wave_loop',	'plot_effect/plot_effect.acb',	'amb_Radio_wave_loop',	''},
-{'10057',	'ticking_1s',	'plot_effect/plot_effect.acb',	'ticking_1s',	''},
-{'10058',	'ticking_4s',	'plot_effect/plot_effect.acb',	'ticking_4s',	''},
-{'10059',	'ticking_12s',	'plot_effect/plot_effect.acb',	'ticking_12s',	''},
-{'10060',	'ticking_12s_loop',	'plot_effect/plot_effect.acb',	'ticking_12s_loop',	'1'},
-{'10061',	'sea_wave',	'plot_effect/plot_effect.acb',	'sea_wave',	''},
-{'10062',	'sea_wave_loop',	'plot_effect/plot_effect.acb',	'sea_wave_loop',	'1'},
-{'10063',	'Signal_loss_1s',	'plot_effect/plot_effect.acb',	'Signal_loss_1s',	''},
-{'10064',	'Signal_loss_loop',	'plot_effect/plot_effect.acb',	'Signal_loss_loop',	'1'},
-{'10065',	'bubble',	'plot_effect/plot_effect.acb',	'bubble',	''},
-{'10066',	'droplet',	'plot_effect/plot_effect.acb',	'droplet',	''},
-{'10067',	'droplet_loop',	'plot_effect/plot_effect.acb',	'droplet_loop',	'1'},
-{'10068',	'knock_slow',	'plot_effect/plot_effect.acb',	'knock_slow',	''},
-{'10069',	'knock_fast',	'plot_effect/plot_effect.acb',	'knock_fast',	''},
-},
+_G["PlotSound"]={[10001]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_click",["cue_name"]="short_click",["id"]=10001}
+,[10002]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="short_alert_loop",["cue_name"]="short_alert_loop",["id"]=10002}
+,[10003]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_alert",["cue_name"]="short_alert",["id"]=10003}
+,[10004]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_pace",["cue_name"]="short_pace",["id"]=10004}
+,[10005]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_slash",["cue_name"]="short_slash",["id"]=10005}
+,[10006]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_incised",["cue_name"]="short_incised",["id"]=10006}
+,[10007]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_clash",["cue_name"]="short_clash",["id"]=10007}
+,[10008]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_bump",["cue_name"]="short_bump",["id"]=10008}
+,[10009]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_slip",["cue_name"]="short_slip",["id"]=10009}
+,[10010]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_Noisy",["cue_name"]="short_Noisy",["id"]=10010}
+,[10011]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_monster",["cue_name"]="short_monster",["id"]=10011}
+,[10012]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_laser",["cue_name"]="short_laser",["id"]=10012}
+,[10013]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_cannon",["cue_name"]="short_cannon",["id"]=10013}
+,[10014]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_thunder",["cue_name"]="short_thunder",["id"]=10014}
+,[10015]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_engine",["cue_name"]="short_engine",["id"]=10015}
+,[10016]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="short_keyboard_loop",["cue_name"]="short_keyboard_loop",["id"]=10016}
+,[10017]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_keyboard",["cue_name"]="short_keyboard",["id"]=10017}
+,[10018]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_shoot",["cue_name"]="short_shoot",["id"]=10018}
+,[10019]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_boom",["cue_name"]="short_boom",["id"]=10019}
+,[10020]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_earthquake",["cue_name"]="short_earthquake",["id"]=10020}
+,[10021]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_Missile",["cue_name"]="short_Missile",["id"]=10021}
+,[10022]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_spacejump",["cue_name"]="short_spacejump",["id"]=10022}
+,[10023]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_run",["cue_name"]="short_run",["id"]=10023}
+,[10024]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_launch",["cue_name"]="short_launch",["id"]=10024}
+,[10025]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_landing",["cue_name"]="short_landing",["id"]=10025}
+,[10026]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_search",["cue_name"]="short_search",["id"]=10026}
+,[10027]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_communication",["cue_name"]="short_communication",["id"]=10027}
+,[10028]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_door",["cue_name"]="short_door",["id"]=10028}
+,[10029]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_quickrun",["cue_name"]="short_quickrun",["id"]=10029}
+,[10030]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_moving",["cue_name"]="short_moving",["id"]=10030}
+,[10031]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_bang",["cue_name"]="short_bang",["id"]=10031}
+,[10032]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_burning_loop",["cue_name"]="amb_burning_loop",["id"]=10032}
+,[10033]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_burning",["cue_name"]="amb_burning",["id"]=10033}
+,[10034]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_fire_loop",["cue_name"]="amb_fire_loop",["id"]=10034}
+,[10035]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_fire",["cue_name"]="amb_fire",["id"]=10035}
+,[10036]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_rain_loop",["cue_name"]="amb_rain_loop",["id"]=10036}
+,[10037]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_rain",["cue_name"]="amb_rain",["id"]=10037}
+,[10038]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_thunder_loop",["cue_name"]="amb_thunder_loop",["id"]=10038}
+,[10039]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_thunder",["cue_name"]="amb_thunder",["id"]=10039}
+,[10040]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_lighting",["cue_name"]="amb_lighting",["id"]=10040}
+,[10041]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_echnology_loop",["cue_name"]="amb_echnology_loop",["id"]=10041}
+,[10042]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_echnology",["cue_name"]="amb_echnology",["id"]=10042}
+,[10043]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_factory_loop",["cue_name"]="amb_factory_loop",["id"]=10043}
+,[10044]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_factory",["cue_name"]="amb_factory",["id"]=10044}
+,[10045]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_snow_loop",["cue_name"]="amb_snow_loop",["id"]=10045}
+,[10046]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_snow",["cue_name"]="amb_snow",["id"]=10046}
+,[10047]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_breeze_loop",["cue_name"]="amb_breeze_loop",["id"]=10047}
+,[10048]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_breeze",["cue_name"]="amb_breeze",["id"]=10048}
+,[10049]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_wind_loop",["cue_name"]="amb_wind_loop",["id"]=10049}
+,[10050]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_wind",["cue_name"]="amb_wind",["id"]=10050}
+,[10051]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_storm_loop",["cue_name"]="amb_storm_loop",["id"]=10051}
+,[10052]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_storm",["cue_name"]="amb_storm",["id"]=10052}
+,[10053]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="amb_forest_loop",["cue_name"]="amb_forest_loop",["id"]=10053}
+,[10054]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_forest",["cue_name"]="amb_forest",["id"]=10054}
+,[10055]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_sixgun",["cue_name"]="short_sixgun",["id"]=10055}
+,[10056]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="amb_Radio_wave_loop",["cue_name"]="amb_Radio_wave_loop",["id"]=10056}
+,[10057]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="ticking_1s",["cue_name"]="ticking_1s",["id"]=10057}
+,[10058]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="ticking_4s",["cue_name"]="ticking_4s",["id"]=10058}
+,[10059]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="ticking_12s",["cue_name"]="ticking_12s",["id"]=10059}
+,[10060]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="ticking_12s_loop",["cue_name"]="ticking_12s_loop",["id"]=10060}
+,[10061]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="sea_wave",["cue_name"]="sea_wave",["id"]=10061}
+,[10062]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="sea_wave_loop",["cue_name"]="sea_wave_loop",["id"]=10062}
+,[10063]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="Signal_loss_1s",["cue_name"]="Signal_loss_1s",["id"]=10063}
+,[10064]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="Signal_loss_loop",["cue_name"]="Signal_loss_loop",["id"]=10064}
+,[10065]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="bubble",["cue_name"]="bubble",["id"]=10065}
+,[10066]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="droplet",["cue_name"]="droplet",["id"]=10066}
+,[10067]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="droplet_loop",["cue_name"]="droplet_loop",["id"]=10067}
+,[10068]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="knock_slow",["cue_name"]="knock_slow",["id"]=10068}
+,[10069]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="knock_fast",["cue_name"]="knock_fast",["id"]=10069}
+,[10070]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="Fireworks_Set",["cue_name"]="Fireworks_Set",["id"]=10070}
+,[10071]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="Fireworks_Boom",["cue_name"]="Fireworks_Boom",["id"]=10071}
+,[10072]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="Fireworks_Loop",["cue_name"]="Fireworks_Loop",["id"]=10072}
+,[10073]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="Blanket",["cue_name"]="Blanket",["id"]=10073}
 }
---cfgPlotSound = conf
-return conf
+

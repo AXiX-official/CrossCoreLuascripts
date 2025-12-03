@@ -1,29 +1,17 @@
-local conf = {
-	["filename"] = 'e-枚举定义表.xlsx',
-	["sheetname"] = '怪物标签',
-	["types"] = {
-'int','string','string','string','int'
-},
-	["names"] = {
-'id','key','sName','icon','languageID'
-},
-	["data"] = {
-{'1',	'1',	'机巧型',	'Monster_01',	'29018'},
-{'2',	'2',	'守卫型',	'Monster_02',	'29019'},
-{'3',	'3',	'巡游型',	'Monster_03',	'29020'},
-{'4',	'4',	'傀儡型',	'Monster_04',	'29021'},
-{'5',	'5',	'鸟型',	'Monster_05',	'29022'},
-{'6',	'6',	'人马型',	'Monster_06',	'29023'},
-{'7',	'7',	'泰坦型',	'Monster_07',	'29024'},
-{'8',	'8',	'人型',	'Monster_08',	'29025'},
-{'9',	'9',	'传说型',	'Monster_09',	'29026'},
-{'10',	'10',	'机神型',	'Monster_10',	'29027'},
-{'11',	'11',	'人偶型',	'Monster_11',	'29028'},
-{'12',	'12',	'巨龙型',	'Monster_12',	'29029'},
-{'13',	'13',	'野兽型',	'Monster_12',	'29061'},
-{'14',	'14',	'战车型',	'Monster_12',	'29062'},
-{'15',	'15',	'海魔型',	'Monster_13',	'29074'},
-},
+_G["CfgMonsterEnum"]={{["key"]="1",["id"]=1,["sName"]="机巧型",["icon"]="Monster_01",["languageID"]=29018}
+,{["key"]="2",["id"]=2,["sName"]="守卫型",["icon"]="Monster_02",["languageID"]=29019}
+,{["key"]="3",["id"]=3,["sName"]="巡游型",["icon"]="Monster_03",["languageID"]=29020}
+,{["key"]="4",["id"]=4,["sName"]="傀儡型",["icon"]="Monster_04",["languageID"]=29021}
+,{["key"]="5",["id"]=5,["sName"]="鸟型",["icon"]="Monster_05",["languageID"]=29022}
+,{["key"]="6",["id"]=6,["sName"]="人马型",["icon"]="Monster_06",["languageID"]=29023}
+,{["key"]="7",["id"]=7,["sName"]="泰坦型",["icon"]="Monster_07",["languageID"]=29024}
+,{["key"]="8",["id"]=8,["sName"]="人型",["icon"]="Monster_08",["languageID"]=29025}
+,{["key"]="9",["id"]=9,["sName"]="传说型",["icon"]="Monster_09",["languageID"]=29026}
+,{["key"]="10",["id"]=10,["sName"]="机神型",["icon"]="Monster_10",["languageID"]=29027}
+,{["key"]="11",["id"]=11,["sName"]="人偶型",["icon"]="Monster_11",["languageID"]=29028}
+,{["key"]="12",["id"]=12,["sName"]="巨龙型",["icon"]="Monster_12",["languageID"]=29029}
+,{["key"]="13",["id"]=13,["sName"]="野兽型",["icon"]="Monster_12",["languageID"]=29061}
+,{["key"]="14",["id"]=14,["sName"]="战车型",["icon"]="Monster_12",["languageID"]=29062}
+,{["key"]="15",["id"]=15,["sName"]="海魔型",["icon"]="Monster_13",["languageID"]=29074}
 }
---cfgCfgMonsterEnum = conf
-return conf
+

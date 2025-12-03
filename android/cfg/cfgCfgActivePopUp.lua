@@ -1,31 +1,19 @@
-local conf = {
-	["filename"] = 'h-活动列表.xlsx',
-	["sheetname"] = '界面弹出控制',
-	["types"] = {
-'int','string','int','string','int'
-},
-	["names"] = {
-'id','key','index','viewName','activeId'
-},
-	["data"] = {
-{'1',	'1',	'1',	'SignInDuanWu',	'1029'},
-{'2',	'2',	'2',	'ActivityListView',	'1001'},
-{'3',	'3',	'3',	'ActivityListView',	'1030'},
-{'4',	'4',	'4',	'ActivityListView',	'1002'},
-{'5',	'5',	'5',	'ActivityListView',	'1006'},
-{'6',	'6',	'6',	'ActivityListView',	'1007'},
-{'7',	'7',	'7',	'ActivityListView',	'1008'},
-{'8',	'8',	'8',	'ActivityListView',	'1013'},
-{'9',	'9',	'9',	'ActivityListView',	'1014'},
-{'10',	'10',	'10',	'ActivityListView',	'1015'},
-{'11',	'11',	'11',	'ActivityListView',	'1016'},
-{'12',	'12',	'12',	'ActivityListView',	'1024'},
-{'13',	'13',	'13',	'ActivityListView',	'1025'},
-{'14',	'14',	'14',	'ActivityListView',	'1026'},
-{'15',	'15',	'15',	'ActivityListView',	'1027'},
-{'16',	'16',	'16',	'ActivityListView',	'1028'},
-{'17',	'17',	'17',	'ActivityListView',	'1036'},
-},
+_G["CfgActivePopUp"]={{["index"]=1,["id"]=1,["activeId"]=1029,["viewName"]="SignInDuanWu",["key"]="1"}
+,{["index"]=2,["id"]=2,["activeId"]=1001,["viewName"]="ActivityListView",["key"]="2"}
+,{["index"]=3,["id"]=3,["activeId"]=1030,["viewName"]="ActivityListView",["key"]="3"}
+,{["index"]=4,["id"]=4,["activeId"]=1002,["viewName"]="ActivityListView",["key"]="4"}
+,{["index"]=5,["id"]=5,["activeId"]=1006,["viewName"]="ActivityListView",["key"]="5"}
+,{["index"]=6,["id"]=6,["activeId"]=1007,["viewName"]="ActivityListView",["key"]="6"}
+,{["index"]=7,["id"]=7,["activeId"]=1008,["viewName"]="ActivityListView",["key"]="7"}
+,{["index"]=8,["id"]=8,["activeId"]=1013,["viewName"]="ActivityListView",["key"]="8"}
+,{["index"]=9,["id"]=9,["activeId"]=1014,["viewName"]="ActivityListView",["key"]="9"}
+,{["index"]=10,["id"]=10,["activeId"]=1015,["viewName"]="ActivityListView",["key"]="10"}
+,{["index"]=11,["id"]=11,["activeId"]=1016,["viewName"]="ActivityListView",["key"]="11"}
+,{["index"]=12,["id"]=12,["activeId"]=1024,["viewName"]="ActivityListView",["key"]="12"}
+,{["index"]=13,["id"]=13,["activeId"]=1025,["viewName"]="ActivityListView",["key"]="13"}
+,{["index"]=14,["id"]=14,["activeId"]=1026,["viewName"]="ActivityListView",["key"]="14"}
+,{["index"]=15,["id"]=15,["activeId"]=1027,["viewName"]="ActivityListView",["key"]="15"}
+,{["index"]=16,["id"]=16,["activeId"]=1028,["viewName"]="ActivityListView",["key"]="16"}
+,{["index"]=17,["id"]=17,["activeId"]=1036,["viewName"]="ActivityListView",["key"]="17"}
 }
---cfgCfgActivePopUp = conf
-return conf
+

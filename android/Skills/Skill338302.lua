@@ -26,8 +26,13 @@ function Skill338302:OnBornSpecial(caster, target, data)
 	-- 338312
 	self:AddSp(SkillEffect[338312], caster, caster, data, 15)
 end
--- 行动结束
-function Skill338302:OnActionOver(caster, target, data)
+-- 回合结束时
+function Skill338302:OnRoundOver(caster, target, data)
+	-- 338341
+	self:tFunc_338341_338321(caster, target, data)
+	self:tFunc_338341_338321(caster, target, data)
+end
+function Skill338302:tFunc_338341_338321(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else

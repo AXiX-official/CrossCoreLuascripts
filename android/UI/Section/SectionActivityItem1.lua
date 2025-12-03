@@ -4,7 +4,6 @@ local isLock = false
 local lockStr = ""
 local openInfo = nil
 local currState = 0
-local lastState = 0
 local sectionData = nil
 local enterCB = nil
 local cb = nil
@@ -37,6 +36,10 @@ local globalBossTime = 0
 local isMultTeamBattle = false
 local globalMTBTime = 0
 local globalMTBTime2 = 0;
+-- 副本活动
+local isAcitvity = false
+local activityTime = 0
+local activityTime2 = 0
 -- 动效
 local textRand = nil
 local lastSelect = false
@@ -67,7 +70,6 @@ function Refresh(_data, elseData)
     if data then
         sectionData = data.data
         currState = sectionData:GetOpenState()
-        lastState = currState
         openInfo = DungeonMgr:GetActiveOpenInfo2(sectionData:GetID())
         SetBG()
         SetTower()
@@ -77,6 +79,7 @@ function Refresh(_data, elseData)
         SetGlobalBoss()
         SetMultTeamBattle();
         SetTowerDeep()
+        SetActivity()
         SetTitle()
         SetLock()
         isNew = DungeonActivityMgr:GetIsNew(sectionData:GetID())
@@ -166,16 +169,6 @@ function OnClick()
         cb(this)
     end
 end
--------------------------------------------活动
-function UpdateActivity()
-    if sectionData then
-        local currState = sectionData:GetOpen() and 1 or 0
-        if currState ~= lastState then
-            lastState = currState
-            EventMgr.Dispatch(EventType.Activity_Open_State)
-        end
-    end
-end
 
 -------------------------------------------时间
 function UpdateTime()
@@ -193,6 +186,8 @@ function UpdateTime()
         UpdateMultTeamBattle();
     elseif isTowerDeep then
         UpdateTowerDeep()
+    elseif isAcitvity then
+        UpdateAcitivty()
     end
 end
 -------------------------------------------爬塔
@@ -414,6 +409,44 @@ function UpdateGlobalBoss()
         end
     end
 end
+-------------------------------------------副本活动
+function SetActivity()
+    isAcitvity = IsActivity()
+    CSAPI.SetGOActive(activityObj, isAcitvity)
+    if isAcitvity then
+        local openInfo = sectionData:GetOpenInfo()
+        if openInfo then
+            activityTime = openInfo:GetDungeonEndTime() - TimeUtil:GetTime()
+            activityTime2 = openInfo:GetEndTime() - TimeUtil:GetTime()
+        end
+    end
+end
+
+function IsActivity()
+    local b = false
+    if data.type == SectionActivityType.Plot or data.type == SectionActivityType.TaoFa or data.type ==
+        SectionActivityType.TotalBattle  then
+        b = true
+    end
+    if sectionData and sectionData:IsResident() then
+        b = false
+    end
+    return b
+end
+
+function UpdateAcitivty()
+    if (activityTime > 0 or activityTime2 > 0) then
+        activityTime = openInfo:GetDungeonEndTime() - TimeUtil:GetTime()
+        activityTime2 = openInfo:GetEndTime() - TimeUtil:GetTime()
+        local timeTab = TimeUtil:GetTimeTab(activityTime > 0 and activityTime or activityTime2)
+        LanguageMgr:SetText(txtActivityTime, activityTime > 0 and 36014 or 36015, timeTab[1], timeTab[2], timeTab[3])
+        if activityTime2 <= 0 then
+            CSAPI.SetGOActive(activityObj, false)
+            EventMgr.Dispatch(EventType.Activity_Open_State)
+        end
+    end
+end
+
 ------------------------------------动效----------------------------------------
 
 function PlayAnim()

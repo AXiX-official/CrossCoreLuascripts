@@ -1,42 +1,40 @@
-local conf = {
-	["filename"] = 'd-动态配置开启表.xlsx',
-	["sheetname"] = '动态设置开启的配置',
-	["types"] = {
-'string','string','table#7','int','string','string','string','string','string','string[]'
-},
-	["names"] = {
-'id','name','fields','index','field','sub_tb','sub_index_type','field_type','desc','show_ids'
-},
-	["data"] = {
-{'AvatarFrame',	'avatarname',	'',	'',	'',	'',	'',	'',	'',	''},
-{'AvatarFrame',	'',	'',	'1',	'isShow',	'',	'',	'bool',	'是否显示',	''},
-{'AvatarFrame',	'',	'',	'2',	'type',	'',	'',	'number',	'类型',	''},
-{'CfgAccTypeLimit',	'name',	'',	'',	'',	'',	'',	'',	'',	''},
-{'CfgAccTypeLimit',	'',	'',	'1',	'sumTime',	'infos',	'number',	'number',	'在线总时长',	''},
-{'CfgCardPool',	'CardPool',	'',	'',	'',	'',	'',	'',	'',	''},
-{'CfgCardPool',	'',	'',	'1',	'sStart',	'',	'',	'date',	'开始时间',	''},
-{'CfgCardPool',	'',	'',	'2',	'sEnd',	'',	'',	'date',	'结束时间',	''},
-{'CfgCardPool',	'',	'',	'3',	'jCost',	'',	'',	'json',	'抽卡花费',	''},
-{'CfgAvatar',	'avatarname',	'',	'',	'',	'',	'',	'',	'',	''},
-{'CfgAvatar',	'',	'',	'1',	'isShow',	'',	'',	'bool',	'是否显示在列表中',	''},
-{'global_setting',	'',	'',	'',	'',	'',	'',	'',	'',	''},
-{'global_setting',	'',	'',	'1',	'value',	'',	'',	'string',	'活动按钮开启',	'g_ZilongWebBtnOpen,g_ZilongWebBtnClose,g_ZilongWebBtnLv'},
-{'CfgActiveEntry',	'Active',	'',	'',	'',	'',	'',	'',	'',	''},
-{'CfgActiveEntry',	'',	'',	'1',	'mainShow',	'',	'',	'number',	'是否在主界面显示',	''},
-{'CfgActiveEntry',	'',	'',	'2',	'begTime',	'',	'',	'string',	'开始时间',	''},
-{'CfgActiveEntry',	'',	'',	'3',	'hardBegTime',	'',	'',	'string',	'困难本开启时间',	''},
-{'CfgActiveEntry',	'',	'',	'4',	'battleendTime',	'',	'',	'string',	'副本关闭时间',	''},
-{'CfgActiveEntry',	'',	'',	'5',	'endTime',	'',	'',	'string',	'结束时间',	''},
-{'CfgCommodity',	'CfgCommodity',	'',	'',	'',	'',	'',	'',	'',	''},
-{'CfgCommodity',	'',	'',	'1',	'sBuyStart',	'',	'',	'string',	'购买开始时间',	''},
-{'CfgCommodity',	'',	'',	'2',	'sBuyEnd',	'',	'',	'string',	'购买结束时间',	''},
-{'ItemInfo',	'ItemInfo',	'',	'',	'',	'',	'',	'',	'',	''},
-{'ItemInfo',	'',	'',	'1',	'sExpiry',	'',	'',	'string',	'失效日期',	''},
-{'ItemInfo',	'',	'',	'2',	'expiryIx',	'',	'',	'number',	'失效序列值',	''},
-{'CfgActiveList',	'CfgActiveList',	'',	'',	'',	'',	'',	'',	'',	''},
-{'CfgActiveList',	'',	'',	'1',	'sTime',	'',	'',	'string',	'开始时间',	''},
-{'CfgActiveList',	'',	'',	'2',	'eTime',	'',	'',	'string',	'结束时间',	''},
-},
+_G["CfgDySetOpenCfgs"]={["CfgActiveEntry"]={["id"]="CfgActiveEntry",["fields"]={{["index"]=1,["field_type"]="number",["desc"]="是否在主界面显示",["field"]="mainShow"}
+,{["index"]=2,["field_type"]="string",["desc"]="开始时间",["field"]="begTime"}
+,{["index"]=3,["field_type"]="string",["desc"]="困难本开启时间",["field"]="hardBegTime"}
+,{["index"]=4,["field_type"]="string",["desc"]="副本关闭时间",["field"]="battleendTime"}
+,{["index"]=5,["field_type"]="string",["desc"]="结束时间",["field"]="endTime"}
 }
---cfgCfgDySetOpenCfgs = conf
-return conf
+,["name"]="Active",["sheetName"]="活动表"}
+,["global_setting"]={["id"]="global_setting",["fields"]={{["index"]=1,["show_ids"]={"g_ZilongWebBtnOpen","g_ZilongWebBtnClose","g_ZilongWebBtnLv"}
+,["field_type"]="string",["desc"]="活动按钮开启",["field"]="value"}
+}
+,["sheetName"]="表"}
+,["CfgCommodity"]={["id"]="CfgCommodity",["fields"]={{["index"]=1,["field_type"]="string",["desc"]="购买开始时间",["field"]="sBuyStart"}
+,{["index"]=2,["field_type"]="string",["desc"]="购买结束时间",["field"]="sBuyEnd"}
+}
+,["name"]="CfgCommodity",["sheetName"]="固定商品配置"}
+,["CfgActiveList"]={["id"]="CfgActiveList",["fields"]={{["index"]=1,["field_type"]="string",["desc"]="开始时间",["field"]="sTime"}
+,{["index"]=2,["field_type"]="string",["desc"]="结束时间",["field"]="eTime"}
+}
+,["name"]="CfgActiveList",["sheetName"]="活动列表"}
+,["CfgCardPool"]={["id"]="CfgCardPool",["fields"]={{["index"]=1,["field_type"]="date",["desc"]="开始时间",["field"]="sStart"}
+,{["index"]=2,["field_type"]="date",["desc"]="结束时间",["field"]="sEnd"}
+,{["index"]=3,["field_type"]="json",["desc"]="抽卡花费",["field"]="jCost"}
+}
+,["name"]="CardPool",["sheetName"]="卡池配置表"}
+,["ItemInfo"]={["id"]="ItemInfo",["fields"]={{["index"]=1,["field_type"]="string",["desc"]="失效日期",["field"]="sExpiry"}
+,{["index"]=2,["field_type"]="number",["desc"]="失效序列值",["field"]="expiryIx"}
+}
+,["name"]="ItemInfo",["sheetName"]="ItemInfo"}
+,["CfgAccTypeLimit"]={["id"]="CfgAccTypeLimit",["fields"]={{["index"]=1,["desc"]="在线总时长",["sub_index_type"]="number",["field_type"]="number",["sub_tb"]="infos",["field"]="sumTime"}
+}
+,["name"]="name",["sheetName"]="账号限制"}
+,["AvatarFrame"]={["id"]="AvatarFrame",["fields"]={{["index"]=1,["field_type"]="bool",["desc"]="是否显示",["field"]="isShow"}
+,{["index"]=2,["field_type"]="number",["desc"]="类型",["field"]="type"}
+}
+,["name"]="avatarname",["sheetName"]="头像框"}
+,["CfgAvatar"]={["id"]="CfgAvatar",["fields"]={{["index"]=1,["field_type"]="bool",["desc"]="是否显示在列表中",["field"]="isShow"}
+}
+,["name"]="avatarname",["sheetName"]="头像"}
+}
+

@@ -4,6 +4,7 @@ local timer2 = nil
 local fill_power = nil
 local ids = {}
 local waitInfos = nil
+local isDestory = false 
 
 function Awake()
     fill_power = ComUtil.GetCom(fill, "Image")
@@ -13,6 +14,7 @@ function Awake()
 end
 
 function OnDestroy()
+    isDestory = true
     eventMgr:ClearListener()
 end
 
@@ -262,7 +264,9 @@ function OnClickBlack()
     end
 
     FuncUtil:Call(function()
-        view:Close()
+        if(not isDestory)then 
+            view:Close()
+        end 
     end, nil, 2000)
 end
 

@@ -1,19 +1,8 @@
-local conf = {
-	["filename"] = 'j-卡牌角色.xlsx',
-	["sheetname"] = '卡牌角色CG',
-	["types"] = {
-'string','string','table#5','int','string','string','int','string'
-},
-	["names"] = {
-'id','key','infos','index','sName','sDesc','unlock_id','cg_icon'
-},
-	["data"] = {
-{'10010',	'1001_Alps',	'',	'',	'',	'',	'',	''},
-{'10010',	'1001_Alps',	'',	'1',	'test',	'',	'',	'CG_test1'},
-{'10010',	'1001_Alps',	'',	'2',	'test',	'',	'',	'CG_test2'},
-{'10010',	'1001_Alps',	'',	'3',	'test',	'',	'',	'CG_test3'},
-{'10010',	'1001_Alps',	'',	'4',	'test',	'',	'',	'CG_test4'},
-},
+_G["CfgCardRoleCG"]={["10010"]={["id"]="10010",["infos"]={{["cg_icon"]="CG_test1",["sName"]="test",["index"]=1}
+,{["cg_icon"]="CG_test2",["sName"]="test",["index"]=2}
+,{["cg_icon"]="CG_test3",["sName"]="test",["index"]=3}
+,{["cg_icon"]="CG_test4",["sName"]="test",["index"]=4}
 }
---cfgCfgCardRoleCG = conf
-return conf
+,["key"]="1001_Alps"}
+}
+

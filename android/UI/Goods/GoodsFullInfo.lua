@@ -541,8 +541,6 @@ function OpenGift()
 	EquipMgr.maxSize -
 	EquipMgr.curSize,
 	rewardID, useNum)
-	local isCard = GLogicCheck:CheckRewardCapacity(RandRewardType.CARD,
-	RoleMgr:GetMaxSize()-RoleMgr:GetCurSize(),rewardID, useNum)
 	local index=nil;
 	local id= itemInfo:GetID();
 	local data=itemInfo:GetData();
@@ -552,11 +550,6 @@ function OpenGift()
 	end
 	if isEquip == nil or isEquip == false then
 		Tips.ShowTips(LanguageMgr:GetTips(12012))
-		Close()
-		return
-	end
-	if isCard == nil or isCard == false then
-		Tips.ShowTips(LanguageMgr:GetTips(12013))
 		Close()
 		return
 	end

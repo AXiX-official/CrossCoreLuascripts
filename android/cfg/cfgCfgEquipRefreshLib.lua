@@ -1,86 +1,90 @@
-local conf = {
-	["filename"] = 'z-装备配置表.xlsx',
-	["sheetname"] = '装备洗炼库',
-	["types"] = {
-'int','string','table#5','int','int','int','int','int'
-},
-	["names"] = {
-'id','key','infos','index','showRareCnt','skillId','weight','isRare'
-},
-	["data"] = {
-{'1',	'1',	'',	'',	'',	'',	'',	''},
-{'1',	'1',	'',	'1',	'10',	'10101',	'850',	'1'},
-{'1',	'1',	'',	'2',	'10',	'10201',	'1300',	''},
-{'1',	'1',	'',	'3',	'10',	'10301',	'1200',	''},
-{'1',	'1',	'',	'4',	'10',	'10401',	'900',	''},
-{'1',	'1',	'',	'5',	'10',	'10501',	'750',	'1'},
-{'1',	'1',	'',	'6',	'10',	'10601',	'400',	'1'},
-{'1',	'1',	'',	'7',	'10',	'10701',	'1300',	''},
-{'1',	'1',	'',	'8',	'10',	'10801',	'1300',	''},
-{'2',	'2',	'',	'',	'',	'',	'',	''},
-{'2',	'2',	'',	'1',	'10',	'10101',	'400',	'1'},
-{'2',	'2',	'',	'2',	'10',	'10201',	'1300',	''},
-{'2',	'2',	'',	'3',	'10',	'10301',	'1200',	''},
-{'2',	'2',	'',	'4',	'10',	'10401',	'900',	''},
-{'2',	'2',	'',	'5',	'10',	'10501',	'850',	'1'},
-{'2',	'2',	'',	'6',	'10',	'10601',	'750',	'1'},
-{'2',	'2',	'',	'7',	'10',	'10701',	'1300',	''},
-{'2',	'2',	'',	'8',	'10',	'10801',	'1300',	''},
-{'3',	'3',	'',	'',	'',	'',	'',	''},
-{'3',	'3',	'',	'1',	'10',	'10101',	'750',	'1'},
-{'3',	'3',	'',	'2',	'10',	'10201',	'1300',	''},
-{'3',	'3',	'',	'3',	'10',	'10301',	'1200',	''},
-{'3',	'3',	'',	'4',	'10',	'10401',	'900',	''},
-{'3',	'3',	'',	'5',	'10',	'10501',	'400',	'1'},
-{'3',	'3',	'',	'6',	'10',	'10601',	'850',	'1'},
-{'3',	'3',	'',	'7',	'10',	'10701',	'1300',	''},
-{'3',	'3',	'',	'8',	'10',	'10801',	'1300',	''},
-{'4',	'4',	'',	'',	'',	'',	'',	''},
-{'4',	'4',	'',	'1',	'10',	'10101',	'1300',	''},
-{'4',	'4',	'',	'2',	'10',	'10201',	'400',	'1'},
-{'4',	'4',	'',	'3',	'10',	'10301',	'1300',	''},
-{'4',	'4',	'',	'4',	'10',	'10401',	'750',	'1'},
-{'4',	'4',	'',	'5',	'10',	'10501',	'1300',	''},
-{'4',	'4',	'',	'6',	'10',	'10601',	'1200',	''},
-{'4',	'4',	'',	'7',	'10',	'10701',	'850',	'1'},
-{'4',	'4',	'',	'8',	'10',	'10801',	'900',	''},
-{'5',	'5',	'',	'',	'',	'',	'',	''},
-{'5',	'5',	'',	'1',	'10',	'10101',	'750',	'1'},
-{'5',	'5',	'',	'2',	'10',	'10201',	'1300',	''},
-{'5',	'5',	'',	'3',	'10',	'10301',	'1200',	''},
-{'5',	'5',	'',	'4',	'10',	'10401',	'400',	'1'},
-{'5',	'5',	'',	'5',	'10',	'10501',	'1300',	''},
-{'5',	'5',	'',	'6',	'10',	'10601',	'1300',	''},
-{'5',	'5',	'',	'7',	'10',	'10701',	'850',	'1'},
-{'5',	'5',	'',	'8',	'10',	'10801',	'900',	''},
-{'6',	'6',	'',	'',	'',	'',	'',	''},
-{'6',	'6',	'',	'1',	'10',	'10101',	'1300',	''},
-{'6',	'6',	'',	'2',	'10',	'10201',	'400',	'1'},
-{'6',	'6',	'',	'3',	'10',	'10301',	'850',	'1'},
-{'6',	'6',	'',	'4',	'10',	'10401',	'1300',	''},
-{'6',	'6',	'',	'5',	'10',	'10501',	'1200',	''},
-{'6',	'6',	'',	'6',	'10',	'10601',	'900',	''},
-{'6',	'6',	'',	'7',	'10',	'10701',	'1300',	''},
-{'6',	'6',	'',	'8',	'10',	'10801',	'750',	'1'},
-{'7',	'7',	'',	'',	'',	'',	'',	''},
-{'7',	'7',	'',	'1',	'10',	'10101',	'1300',	''},
-{'7',	'7',	'',	'2',	'10',	'10201',	'850',	'1'},
-{'7',	'7',	'',	'3',	'10',	'10301',	'750',	'1'},
-{'7',	'7',	'',	'4',	'10',	'10401',	'1300',	''},
-{'7',	'7',	'',	'5',	'10',	'10501',	'1200',	''},
-{'7',	'7',	'',	'6',	'10',	'10601',	'900',	''},
-{'7',	'7',	'',	'7',	'10',	'10701',	'400',	'1'},
-{'7',	'7',	'',	'8',	'10',	'10801',	'1300',	''},
-{'8',	'8',	'',	'',	'',	'',	'',	''},
-{'8',	'8',	'',	'1',	'10',	'10101',	'1300',	''},
-{'8',	'8',	'',	'2',	'10',	'10201',	'400',	'1'},
-{'8',	'8',	'',	'3',	'10',	'10301',	'750',	'1'},
-{'8',	'8',	'',	'4',	'10',	'10401',	'900',	''},
-{'8',	'8',	'',	'5',	'10',	'10501',	'1200',	''},
-{'8',	'8',	'',	'6',	'10',	'10601',	'1300',	''},
-{'8',	'8',	'',	'7',	'10',	'10701',	'1300',	''},
-{'8',	'8',	'',	'8',	'10',	'10801',	'850',	'1'},
-},
+_G["CfgEquipRefreshLib"]={{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=850,["isRare"]=1,["sumWeight"]=850,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=1300,["sumWeight"]=2150,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=1200,["sumWeight"]=3350,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=900,["sumWeight"]=4250,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=750,["isRare"]=1,["sumWeight"]=5000,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=400,["isRare"]=1,["sumWeight"]=5400,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=1300,["sumWeight"]=6700,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=1300,["sumWeight"]=8000,["skillId"]=10801}
 }
---cfgCfgEquipRefreshLib = conf
-return conf
+,["key"]="1",["id"]=1,["showRareCnt"]=10,["mapRare"]={[10101]=true,[10601]=true,[10501]=true}
+}
+,{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=400,["isRare"]=1,["sumWeight"]=400,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=1300,["sumWeight"]=1700,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=1200,["sumWeight"]=2900,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=900,["sumWeight"]=3800,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=850,["isRare"]=1,["sumWeight"]=4650,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=750,["isRare"]=1,["sumWeight"]=5400,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=1300,["sumWeight"]=6700,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=1300,["sumWeight"]=8000,["skillId"]=10801}
+}
+,["key"]="2",["id"]=2,["showRareCnt"]=10,["mapRare"]={[10101]=true,[10601]=true,[10501]=true}
+}
+,{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=750,["isRare"]=1,["sumWeight"]=750,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=1300,["sumWeight"]=2050,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=1200,["sumWeight"]=3250,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=900,["sumWeight"]=4150,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=400,["isRare"]=1,["sumWeight"]=4550,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=850,["isRare"]=1,["sumWeight"]=5400,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=1300,["sumWeight"]=6700,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=1300,["sumWeight"]=8000,["skillId"]=10801}
+}
+,["key"]="3",["id"]=3,["showRareCnt"]=10,["mapRare"]={[10101]=true,[10601]=true,[10501]=true}
+}
+,{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=1300,["sumWeight"]=1300,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=400,["isRare"]=1,["sumWeight"]=1700,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=1300,["sumWeight"]=3000,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=750,["isRare"]=1,["sumWeight"]=3750,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=1300,["sumWeight"]=5050,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=1200,["sumWeight"]=6250,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=850,["isRare"]=1,["sumWeight"]=7100,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=900,["sumWeight"]=8000,["skillId"]=10801}
+}
+,["key"]="4",["id"]=4,["showRareCnt"]=10,["mapRare"]={[10401]=true,[10201]=true,[10701]=true}
+}
+,{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=750,["isRare"]=1,["sumWeight"]=750,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=1300,["sumWeight"]=2050,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=1200,["sumWeight"]=3250,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=400,["isRare"]=1,["sumWeight"]=3650,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=1300,["sumWeight"]=4950,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=1300,["sumWeight"]=6250,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=850,["isRare"]=1,["sumWeight"]=7100,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=900,["sumWeight"]=8000,["skillId"]=10801}
+}
+,["key"]="5",["id"]=5,["showRareCnt"]=10,["mapRare"]={[10401]=true,[10701]=true,[10101]=true}
+}
+,{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=1300,["sumWeight"]=1300,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=400,["isRare"]=1,["sumWeight"]=1700,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=850,["isRare"]=1,["sumWeight"]=2550,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=1300,["sumWeight"]=3850,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=1200,["sumWeight"]=5050,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=900,["sumWeight"]=5950,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=1300,["sumWeight"]=7250,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=750,["isRare"]=1,["sumWeight"]=8000,["skillId"]=10801}
+}
+,["key"]="6",["id"]=6,["showRareCnt"]=10,["mapRare"]={[10301]=true,[10201]=true,[10801]=true}
+}
+,{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=1300,["sumWeight"]=1300,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=850,["isRare"]=1,["sumWeight"]=2150,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=750,["isRare"]=1,["sumWeight"]=2900,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=1300,["sumWeight"]=4200,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=1200,["sumWeight"]=5400,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=900,["sumWeight"]=6300,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=400,["isRare"]=1,["sumWeight"]=6700,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=1300,["sumWeight"]=8000,["skillId"]=10801}
+}
+,["key"]="7",["id"]=7,["showRareCnt"]=10,["mapRare"]={[10701]=true,[10301]=true,[10201]=true}
+}
+,{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=1300,["sumWeight"]=1300,["skillId"]=10101}
+,{["showRareCnt"]=10,["index"]=2,["weight"]=400,["isRare"]=1,["sumWeight"]=1700,["skillId"]=10201}
+,{["showRareCnt"]=10,["index"]=3,["weight"]=750,["isRare"]=1,["sumWeight"]=2450,["skillId"]=10301}
+,{["showRareCnt"]=10,["index"]=4,["weight"]=900,["sumWeight"]=3350,["skillId"]=10401}
+,{["showRareCnt"]=10,["index"]=5,["weight"]=1200,["sumWeight"]=4550,["skillId"]=10501}
+,{["showRareCnt"]=10,["index"]=6,["weight"]=1300,["sumWeight"]=5850,["skillId"]=10601}
+,{["showRareCnt"]=10,["index"]=7,["weight"]=1300,["sumWeight"]=7150,["skillId"]=10701}
+,{["showRareCnt"]=10,["index"]=8,["weight"]=850,["isRare"]=1,["sumWeight"]=8000,["skillId"]=10801}
+}
+,["key"]="8",["id"]=8,["showRareCnt"]=10,["mapRare"]={[10301]=true,[10201]=true,[10801]=true}
+}
+}
+

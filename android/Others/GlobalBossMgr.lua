@@ -248,7 +248,7 @@ function this:GetRankStr(rank)
             end
             if num1 ~= 0 and num2 ~= 0 then
                 if tonumber(rankStr) >= num1 then
-                    rankStr = math.floor(tonumber(rankStr) / maxRank * 10000) / 100
+                    rankStr = math.ceil(tonumber(rankStr) / maxRank * 1000) / 10
                     rankStr = rankStr > (num2 / 100) and math.floor(num2 / 100) .. "%+" or rankStr .. "%"
                 end
             end

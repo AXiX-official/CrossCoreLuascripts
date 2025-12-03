@@ -34,6 +34,14 @@ function Awake()
     canvasGroup = ComUtil.GetCom(c, "CanvasGroup")
 
     eventMgr = ViewEvent.New();
+
+    nFade = ComUtil.GetCom(node, "ActionFade")
+    bFade = ComUtil.GetCom(bottom, "ActionFade")
+
+    fade = ComUtil.GetCom(gameObject, "ActionFade")
+end
+
+function OnEnable()
     eventMgr:AddListener(EventType.Mission_List, function(_data)
         if gameObject.activeSelf == false then
             return
@@ -51,11 +59,6 @@ function Awake()
             UIUtil:OpenReward({rewards})
         end
     end);
-
-    nFade = ComUtil.GetCom(node, "ActionFade")
-    bFade = ComUtil.GetCom(bottom, "ActionFade")
-
-    fade = ComUtil.GetCom(gameObject, "ActionFade")
 end
 
 function LayoutCallBack(index)
@@ -75,7 +78,7 @@ function OnItemClickCB(info)
                 -- LanguageMgr:ShowTips(xxx)
                 LogError("任务已过期")
             else
-                MissionMgr:GetRewardByType({eTaskType.NewYear,eTaskType.NewYearFinish},info:GetGroup())
+                MissionMgr:GetRewardByType({eTaskType.NewYear, eTaskType.NewYearFinish}, info:GetGroup())
                 -- MissionMgr:GetReward(info:GetID())
             end
         elseif (not info:IsGet() and not info:IsFinish()) then
@@ -104,17 +107,21 @@ function Update()
     end
 end
 
-function Refresh(_data,_elseData)
-    --初始化
+function OnDisable()
+    eventMgr:ClearListener()
+end
+
+function Refresh(_data, _elseData)
+    -- 初始化
     bFade:SetAlpha(1)
-    
+
     local cfg = _elseData and _elseData.cfg or nil
     if cfg == nil then
         LogError("未获取到七日或阶段任务的活动列表数据！！！")
         return
     end
-    mType,mStageType = GetTaskType(cfg)
-    
+    mType, mStageType = GetTaskType(cfg)
+
     currDay = MissionMgr:GetActivityIndex(mType)
     RefreshTopItems()
 
@@ -123,15 +130,15 @@ function Refresh(_data,_elseData)
 end
 
 function GetTaskType(cfg)
-    local type,stageType = eTaskType.Seven,eTaskType.SevenStage
+    local type, stageType = eTaskType.Seven, eTaskType.SevenStage
     if cfg.taskType then
-        if cfg.taskType== eContinueTaskType.Guide then
-             type,stageType = eTaskType.Guide,eTaskType.GuideStage
-        elseif cfg.taskType== eContinueTaskType.NewYear then
-            type,stageType = eTaskType.NewYear,eTaskType.NewYearFinish
+        if cfg.taskType == eContinueTaskType.Guide then
+            type, stageType = eTaskType.Guide, eTaskType.GuideStage
+        elseif cfg.taskType == eContinueTaskType.NewYear then
+            type, stageType = eTaskType.NewYear, eTaskType.NewYearFinish
         end
     end
-    return type,stageType
+    return type, stageType
 end
 
 -- 刷新上方item
@@ -150,7 +157,10 @@ function RefreshTopItems()
             ResUtil:CreateUIGOAsync("Activity4/MissionContinueItem", topParent, function(go)
                 local lua = ComUtil.GetLuaTable(go)
                 lua.SetIndex(i)
-                lua.Refresh(datas[i], {isLock =currDay < i, type = mType})
+                lua.Refresh(datas[i], {
+                    isLock = currDay < i,
+                    type = mType
+                })
                 lua.SetClickCB(ClickItemCB1)
                 table.insert(topItems, lua)
 
@@ -165,7 +175,10 @@ function RefreshTopItems()
         else
             local lua = topItems[i]
             lua.SetIndex(i)
-            lua.Refresh(datas[i], {isLock =currDay < i, type = mType})
+            lua.Refresh(datas[i], {
+                isLock = currDay < i,
+                type = mType
+            })
 
             CSAPI.SetGOActive(lua.gameObject, true)
 
@@ -305,8 +318,8 @@ function SetRewards()
     end
     -- item
     local gridDatas = GridUtil.GetGridObjectDatas(rewards)
-    
-    --scale
+
+    -- scale
     local scale = #gridDatas > 3 and 0.54 or 0.7
     CSAPI.SetScale(rewardParent, scale, scale, 1)
 
@@ -315,9 +328,7 @@ function SetRewards()
         GridClickFunc.OpenInfoSmiple, 1)
 end
 
-function OnDestroy()
-    eventMgr:ClearListener()
-end
+
 
 function OnClickGet()
     local data = currTopItem.data
@@ -327,13 +338,12 @@ function OnClickGet()
                 -- LanguageMgr:ShowTips(xxx)
                 LogError("任务已过期")
             else
-                MissionMgr:GetRewardByType({eTaskType.NewYear,eTaskType.NewYearFinish},data:GetGroup())
+                MissionMgr:GetRewardByType({eTaskType.NewYear, eTaskType.NewYearFinish}, data:GetGroup())
                 -- MissionMgr:GetReward(data:GetID())
             end
         end
     end
 end
-
 
 ------------------------------------anim------------------------------------
 
@@ -363,12 +373,12 @@ function PlayAnim(isFirst, cb)
     end
 end
 
-function PlayFade(isFade,cb)
-	local star = isFade and 1 or 0
-	local target = isFade and 0 or 1
-	fade:Play(star,target,200,0,function ()
-		if cb then
-			cb()
-		end
-	end)
+function PlayFade(isFade, cb)
+    local star = isFade and 1 or 0
+    local target = isFade and 0 or 1
+    fade:Play(star, target, 200, 0, function()
+        if cb then
+            cb()
+        end
+    end)
 end

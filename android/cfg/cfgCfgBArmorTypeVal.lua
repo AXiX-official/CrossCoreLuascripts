@@ -1,19 +1,7 @@
-local conf = {
-	["filename"] = 'j-基地配置表.xlsx',
-	["sheetname"] = '建筑护甲减少伤害',
-	["types"] = {
-'int','string','int'
-},
-	["names"] = {
-'id','key','val'
-},
-	["data"] = {
-{'1',	'1',	'0'},
-{'2',	'2',	'10'},
-{'3',	'3',	'30'},
-{'4',	'4',	'50'},
-{'5',	'5',	'70'},
-},
+_G["CfgBArmorTypeVal"]={{["id"]=1,["key"]="1",["val"]=0}
+,{["id"]=2,["key"]="2",["val"]=10}
+,{["id"]=3,["key"]="3",["val"]=30}
+,{["id"]=4,["key"]="4",["val"]=50}
+,{["id"]=5,["key"]="5",["val"]=70}
 }
---cfgCfgBArmorTypeVal = conf
-return conf
+

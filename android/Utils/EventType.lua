@@ -582,6 +582,8 @@ this.Menu_Coffee = 180025
 this.Menu_PopupPack = 180026 
 --触发礼包 
 this.Menu_PopupPack_MinTime = 180027
+--圣诞活动
+this.Menu_Christmas = 180028
 -------------------------------------------编队系统
 --选中预设
 this.Select_Perset_Item = 190000;
@@ -794,6 +796,8 @@ this.Equip_Refining_Comfirm=210038
 this.Equip_Refining_Update=210039
 --点击锁定条件
 this.Equip_Click_LockLimit=210040
+--装备数据推送完毕
+this.Init_Equip_Finish=210041
 ------------------------------------------战棋系统事件
 --场地初始化完成
 this.Battle_Ground_Inited = 220000;
@@ -1357,6 +1361,8 @@ this.PetActivity_Click_BookItem=620020;--点击图鉴奖励中的格子
 this.PetActivity_Exit_Sport=620021;--退出运动状态
 ----------------------------------夏活宠物活动
 this.Regression_Fund_Buy=630000 --回归基金购买
+this.Hot_Supply_Refresh = 630001 -- 燃料补给刷新
+this.Regression_Rebate_Refresh = 630002 --活跃返利界面刷新
 ----------------------------------爱相随
 this.LovePlus_Chat_Update = 640000 --聊天数据更新
 this.LovePlus_Data_Update = 640001 --章节数据更新
@@ -1456,5 +1462,8 @@ this.SDK_ShiryuSDK_GetActivitys_Complete = 800024;
 this.SDK_ShiryuSDK_Redeem = 800025;
 this.SDK_ShiryuSDK_Redeem_Complete = 800026;-----------------------------------------------------
 
+----------------------------配置读取进度
+this.Read_Cfg_Progress = 900001;
+this.Read_Cfg_Complete = 900002;
 
 return this; 

@@ -1,17 +1,5 @@
-local conf = {
-	["filename"] = 'w-物品表.xlsx',
-	["sheetname"] = '道具合成分页',
-	["types"] = {
-'int','string','string'
-},
-	["names"] = {
-'id','key','pageName'
-},
-	["data"] = {
-{'1',	'',	'小队'},
-{'2',	'',	'核心'},
-{'3',	'',	'副本'},
-},
+_G["CfgItemCombinePage"]={{["id"]=1,["pageName"]="小队",["key"]=1}
+,{["id"]=2,["pageName"]="核心",["key"]=2}
+,{["id"]=3,["pageName"]="副本",["key"]=3}
 }
---cfgCfgItemCombinePage = conf
-return conf
+

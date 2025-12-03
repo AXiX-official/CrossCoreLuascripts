@@ -5,7 +5,7 @@ local this = MgrRegister("JumpMgr")
 function this:Jump(id)
     local cfg = Cfgs.CfgJump:GetByID(id)
     if (cfg and cfg.sName) then
-        local func = self:GetFunc(cfg.sName)
+        local func = self:GetFunc(self:GetName(cfg.sName))
         -- Log(cfg);
         if (func) then
             func(cfg)
@@ -15,6 +15,16 @@ function this:Jump(id)
     end
 end
 
+function this:GetName(sName)
+    local cfgView = Cfgs.view:GetByKey(sName)
+    if cfgView and cfgView.jumpType then
+        if cfgView.jumpType == 1 then
+            return "DungeonActivity"
+        end
+    end
+    return sName
+end
+
 function this:GetFunc(sName)
     if (self.funcs == nil) then
         self.funcs = {}
@@ -22,23 +32,6 @@ function this:GetFunc(sName)
         self.funcs["Dungeon"] = self.Dungeon
         self.funcs["DungeonTower"] = self.Dungeon
         self.funcs["DungeonActivity"] = self.DungeonActivity
-        self.funcs["DungeonRole"] = self.DungeonActivity
-        self.funcs["DungeonShadowSpider"] = self.DungeonActivity
-        self.funcs["DungeonPlot"] = self.DungeonActivity
-        self.funcs["DungeonFeast"] = self.DungeonActivity
-        self.funcs["DungeonTaoFa"] = self.DungeonActivity
-        self.funcs["TotalBattle"] = self.DungeonActivity
-        self.funcs["BattleField"] = self.DungeonActivity
-        self.funcs["TowerView"] = self.DungeonActivity
-        self.funcs["RogueView"] = self.DungeonActivity
-        self.funcs["DungeonSummer"] = self.DungeonActivity
-        self.funcs["RogueSView"] = self.DungeonActivity
-        self.funcs["DungeonNight"] = self.DungeonActivity
-        self.funcs["GlobalBossView"] = self.DungeonActivity
-        self.funcs["TrialsListView"] = self.DungeonActivity
-        self.funcs["DungeonTaoFa"] = self.DungeonActivity
-        self.funcs["DungeonCloud"] = self.DungeonActivity
-        self.funcs["DungeonSummer2"] = self.DungeonActivity
         self.funcs["ShopView"] = self.Shop
         self.funcs["Section"] = self.Section
         self.funcs["SignInContinue"] = self.SignInContinue
@@ -62,7 +55,6 @@ function this:GetFunc(sName)
         self.funcs["LuckyGachaMain"] = self.LuckyGachaMain
         self.funcs["SkinRebate"] = self.SkinRebate
         self.funcs["RiddleMain"]=self.RiddleMain
-        self.funcs["TowerDeep"]=self.DungeonActivity
     end
     if (self.funcs[sName]) then
         return self.funcs[sName]
@@ -413,10 +405,14 @@ function this.BuffBattle(cfg)
 end
 
 function this.AnniversaryList(cfg)
+    local viewName = cfg.sName
+    if cfg.page == 3 then
+        viewName = "AnniversaryList2"
+    end
     this.CheckClose(cfg);
-    CSAPI.OpenView(cfg.sName,{
+    CSAPI.OpenView(cfg.sName, {
         group = cfg.page,
-        jumpId = cfg.val1,
+        jumpId = cfg.val1
     })
 end
 

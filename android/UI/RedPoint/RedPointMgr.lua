@@ -66,6 +66,8 @@ RedPointType.LovePlus = "LovePlus"
 RedPointType.Riddle="Riddle"--猜谜
 RedPointType.PVP = "PVP" 
 RedPointType.Halloween = "Halloween" --万圣节小游戏
+RedPointType.MerryChristmas = "MerryChristmas" --圣诞活动
+RedPointType.RegressionShop="RegressionShop"--回归商店
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}
 RedPointDayOnceType.GachaBall="GachaBall"--扭蛋机

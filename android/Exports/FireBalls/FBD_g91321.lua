@@ -22,7 +22,7 @@ time=10000,type=0
 },
 [958292235]={
 {delay=2000,time=10000,type=1,hit_type=0,camera_shake={time=500,shake_dir=1,range=300,range2=300,hz=100,decay_value=0.6},hits={0}},
-{effect="cast3_eff",time=10000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="CorruptPriest_attack_skill_03"},
+{effect="cast3_eff",time=5000,type=0,pos_ref={ref_type=6},cue_sheet="fight/effect/seventeen.acb",cue_name="CorruptPriest_attack_skill_03"},
 {delay=1100,time=10000,type=1,hit_type=1,camera_shake={time=500,shake_dir=1,range=250,range2=250,hz=10,decay_value=0.6},hits={0}},
 {delay=4000,time=10000,type=1,hit_type=0,camera_shake={time=500,shake_dir=1,range=150,range2=150,hz=100,decay_value=0.66},hit_creates={1776661962},hits={200,300,0,100}}
 },

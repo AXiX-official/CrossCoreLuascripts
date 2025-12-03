@@ -1,24 +1,12 @@
-local conf = {
-	["filename"] = 'p-配置表关联表.xlsx',
-	["sheetname"] = '主键关联检测表',
-	["types"] = {
-'int','string','string','string','string','string'
-},
-	["names"] = {
-'id','key','cfgName','cfgFieldKey','cfgFieldKey2','relevance'
-},
-	["data"] = {
-{'1',	'1',	'MainLine',	'reward',	'',	'RewardInfo'},
-{'2',	'2',	'MonsterGroup',	'stage',	'monsters',	'MonsterData'},
-{'3',	'3',	'CardData',	'halo',	'',	'cfgHalo'},
-{'4',	'4',	'CardData',	'tTransfo',	'',	'CardData'},
-{'5',	'5',	'CardData',	'coreItemId',	'',	'ItemInfo'},
-{'6',	'6',	'CfgFurniture',	'itemId',	'',	'ItemInfo'},
-{'7',	'7',	'CfgClothes',	'itemId',	'',	'ItemInfo'},
-{'8',	'8',	'CfgGifts',	'itemId',	'',	'ItemInfo'},
-{'9',	'9',	'CfgGifts',	'infos',	'index',	'CfgCardRole'},
-{'10',	'10',	'CfgTeamBoss',	'bossId',	'',	'MonsterData'},
-},
+_G["ConfigPrimaryKey"]={{["key"]="1",["relevance"]="RewardInfo",["id"]=1,["cfgFieldKey"]="reward",["cfgName"]="MainLine"}
+,{["key"]="2",["relevance"]="MonsterData",["id"]=2,["cfgFieldKey2"]="monsters",["cfgFieldKey"]="stage",["cfgName"]="MonsterGroup"}
+,{["key"]="3",["relevance"]="cfgHalo",["id"]=3,["cfgFieldKey"]="halo",["cfgName"]="CardData"}
+,{["key"]="4",["relevance"]="CardData",["id"]=4,["cfgFieldKey"]="tTransfo",["cfgName"]="CardData"}
+,{["key"]="5",["relevance"]="ItemInfo",["id"]=5,["cfgFieldKey"]="coreItemId",["cfgName"]="CardData"}
+,{["key"]="6",["relevance"]="ItemInfo",["id"]=6,["cfgFieldKey"]="itemId",["cfgName"]="CfgFurniture"}
+,{["key"]="7",["relevance"]="ItemInfo",["id"]=7,["cfgFieldKey"]="itemId",["cfgName"]="CfgClothes"}
+,{["key"]="8",["relevance"]="ItemInfo",["id"]=8,["cfgFieldKey"]="itemId",["cfgName"]="CfgGifts"}
+,{["key"]="9",["relevance"]="CfgCardRole",["id"]=9,["cfgFieldKey2"]="index",["cfgFieldKey"]="infos",["cfgName"]="CfgGifts"}
+,{["key"]="10",["relevance"]="MonsterData",["id"]=10,["cfgFieldKey"]="bossId",["cfgName"]="CfgTeamBoss"}
 }
---cfgConfigPrimaryKey = conf
-return conf
+

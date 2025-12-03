@@ -1,16 +1,11 @@
-local conf = {
-	["filename"] = 'r-任务配置表.xlsx',
-	["sheetname"] = '末日战线（世界BOSS）任务（日重置）',
-	["types"] = {
-'int','string','int','string','string','int','int[]','json','int','int'
-},
-	["names"] = {
-'id','key','nGroup','sName','sDescription','nTransferPath','aFinishIds','jAwardId','isNeedLogin','mailId'
-},
-	["data"] = {
-{'1',	'',	'14001',	'',	'参与3次末日战线玩法（每日重置）',	'',	'220001',	'[[10001,30000,2]]',	'',	'14001'},
-{'6',	'',	'14001',	'',	'击败首领奖励（每日重置）',	'',	'220002',	'[[10001,30000,2],[10003,30000,2]]',	'1',	'14001'},
-},
+_G["cfgWorldBossMission"]={{["key"]=1,["aFinishIds"]={220001}
+,["sDescription"]="参与3次末日战线玩法（每日重置）",["mailId"]=14001,["id"]=1,["jAwardId"]={{10001,30000,2}
 }
---cfgcfgWorldBossMission = conf
-return conf
+,["nGroup"]=14001}
+,[6]={["key"]=6,["aFinishIds"]={220002}
+,["sDescription"]="击败首领奖励（每日重置）",["mailId"]=14001,["id"]=6,["jAwardId"]={{10001,30000,2}
+,{10003,30000,2}
+}
+,["isNeedLogin"]=1,["nGroup"]=14001}
+}
+
