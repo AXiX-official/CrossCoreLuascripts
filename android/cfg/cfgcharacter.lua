@@ -3744,7 +3744,8 @@ _G["character"]={[9409001]={["get_txt"]="获得途径描述",["img"]="94050_Comm
 ,["id"]=5031005,["ab_name"]="s5031005",["formation_icon"]="50310_Skin127_Orchid",["s_skipcast2"]={"Orchid_05","Orchid_06","Orchid_07","Orchid_08"}
 ,["Fight_head"]="50310_Skin127_Orchid_F",["get_txt"]="时装商店中购买",["hadAni"]=1,["voiceID"]=503105,["Card_head"]="50310_Skin127_Orchid_C",["giant"]=false,["s_mvp"]={"Orchid_skin127_17"}
 ,["shopImg"]="5031_Skin127_Orchid_draw"}
-,[6032003]={["l2dName"]="60320_skin_Dainslef03_spine",["get_txt"]="时装商店中购买",["img"]="6032_Skin117_Dainslef_draw",["body"]="60320/Dorm_6032003_Body",["s_death"]={"Dainslef_skin117_38"}
+,[6032003]={["l2dName"]="60320_skin_Dainslef03_spine",["get_txt"]="时装商店中购买",["img"]="6032_Skin117_Dainslef_draw",["body"]="60320/Dorm_6032003_Body",["changeShowBtn"]={6032103,1}
+,["s_death"]={"Dainslef_skin117_38"}
 ,["voiceID"]=603203,["skin"]="b6032003",["englishName"]="Dainslef",["icon"]="60320_Skin117_Dainslef_N",["s_fail"]={"Dainslef_skin117_40"}
 ,["skinType"]=1,["List_head"]="60320_Skin117_Dainslef_L",["dead_retain"]=false,["imgPos"]={3,13,0.6}
 ,["desc"]="赤诚之礼",["s_turn"]={"Dainslef_04"}

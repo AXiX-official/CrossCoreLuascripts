@@ -157,7 +157,7 @@ _G["CfgRecharge"]={[400015]={["iosID"]="PayItem_108",["appleShopType"]=0,["id"]=
 ,[31039]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31039,["key"]=31039,["group"]=1}
 ,[31038]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31038,["key"]=31038,["group"]=1}
 ,[31001]={["iosID"]="PayPassportA_31001",["appleShopType"]=2,["id"]=31001,["key"]=31001,["group"]=1}
-,[50152]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=50152,["key"]=50152,["group"]=1}
+,[50152]={["iosID"]="PayItem_168",["appleShopType"]=0,["id"]=50152,["key"]=50152,["group"]=1}
 ,[31009]={["iosID"]="PayItem_198",["appleShopType"]=0,["id"]=31009,["key"]=31009,["group"]=1}
 ,[31036]={["iosID"]="PayItem_248",["appleShopType"]=0,["id"]=31036,["key"]=31036,["group"]=1}
 ,[31017]={["iosID"]="PayItem_648",["appleShopType"]=0,["id"]=31017,["key"]=31017,["group"]=1}

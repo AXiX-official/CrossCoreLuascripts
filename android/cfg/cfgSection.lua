@@ -232,7 +232,7 @@ _G["Section"]={{["chapter"]="序章",["index"]=1,["eName"]="Avanpost",["group"]=
 ,["fade"]=1,["key"]=6001,["name"]="奇美拉",["icon"]="Chimera_Head",["type"]=106,["bg"]="tBg1",["id"]=6001,["isShowPassTeam"]=true,["icon3"]="Chimera_Sign",["sBg"]="aBg1_21",["icon1"]="Chimera_List",["info"]={{["view"]="TrialsView",["isHideExtre"]=1,["taskType"]=8,["rankIcon"]="btn_1_01",["rankId"]=51025,["rankType"]=10005,["badge"]=15,["rankDes"]=25036,["childView"]="TrialsListView"}
 }
 ,["icon2"]="Chimera_Page",["conditions"]={2222}
-,["onlyOne"]=1,["pos"]=1}
+,["onlyOne"]=1,["pos"]=7}
 ,[4001]={["chapter"]="拟真演训",["type"]=104,["eName"]="PSEUDO TRAINING",["group"]=3,["isShowPassTeam"]=true,["openTime"]={1,1,1,1,1,1,1}
 ,["sBg"]="aBg1_3",["key"]=4001,["name"]="拟真演训",["id"]=4001,["fade"]=2,["conditions"]={2009}
 ,["info"]={{["view"]="DungeonActivity2"}
@@ -242,12 +242,12 @@ _G["Section"]={{["chapter"]="序章",["index"]=1,["eName"]="Avanpost",["group"]=
 ,["fade"]=1,["key"]=6002,["name"]="尤弥尔",["icon"]="Ymir_Head",["type"]=106,["bg"]="tBg1",["id"]=6002,["isShowPassTeam"]=true,["icon3"]="Ymir_Sign",["sBg"]="aBg1_21",["icon1"]="Ymir_List",["info"]={{["view"]="TrialsView",["isHideExtre"]=1,["taskType"]=8,["rankIcon"]="btn_1_01",["rankId"]=51026,["rankType"]=10008,["badge"]=15,["rankDes"]=25036,["childView"]="TrialsListView"}
 }
 ,["icon2"]="Ymir_Page",["conditions"]={2222}
-,["onlyOne"]=1,["pos"]=1}
+,["onlyOne"]=1,["pos"]=7}
 ,[6003]={["chapter"]="历战试炼",["eName"]="TEST OF BATTLE",["group"]=3,["openTime"]={1,1,1,1,1,1,1}
 ,["fade"]=1,["key"]=6003,["name"]="德拉苏",["icon"]="Drasoul_Head",["type"]=106,["bg"]="tBg1",["id"]=6003,["isShowPassTeam"]=true,["icon3"]="Drasoul_Sign",["sBg"]="aBg1_21",["icon1"]="Drasoul_List",["info"]={{["view"]="TrialsView",["isHideExtre"]=1,["taskType"]=29,["rankIcon"]="btn_1_01",["rankId"]=51027,["rankType"]=10009,["badge"]=15,["rankDes"]=25036,["childView"]="TrialsListView"}
 }
 ,["icon2"]="Drasoul_Page",["conditions"]={2222}
-,["onlyOne"]=1,["pos"]=1}
+,["onlyOne"]=1,["pos"]=7}
 ,[4002]={["chapter"]="拟真演训",["type"]=104,["key"]=4002,["eName"]="PSEUDO TRAINING",["id"]=4002,["isShowPassTeam"]=true,["openTime"]={1,1,1,1,1,1,1}
 ,["fade"]=2,["group"]=3,["name"]="拟真演训",["sBg"]="aBg1_3",["info"]={{["view"]="DungeonActivity2"}
 }
@@ -257,12 +257,12 @@ _G["Section"]={{["chapter"]="序章",["index"]=1,["eName"]="Avanpost",["group"]=
 ,["fade"]=1,["key"]=6004,["name"]="瑞尔",["icon"]="Riel_Head",["type"]=106,["bg"]="tBg1",["id"]=6004,["isShowPassTeam"]=true,["icon3"]="Riel_Sign",["sBg"]="aBg1_21",["icon1"]="Riel_List",["info"]={{["view"]="TrialsView",["isHideExtre"]=1,["taskType"]=29,["rankIcon"]="btn_1_01",["rankId"]=51028,["rankType"]=10010,["badge"]=15,["rankDes"]=25036,["childView"]="TrialsListView"}
 }
 ,["icon2"]="Riel_Page",["conditions"]={2222}
-,["onlyOne"]=1,["pos"]=1}
+,["onlyOne"]=1,["pos"]=7}
 ,[6005]={["chapter"]="历战试炼",["eName"]="TEST OF BATTLE",["group"]=3,["openTime"]={1,1,1,1,1,1,1}
 ,["fade"]=1,["key"]=6005,["name"]="冰霜禁卫",["icon"]="Frostguard_Head",["type"]=106,["bg"]="tBg1",["id"]=6005,["isShowPassTeam"]=true,["icon3"]="Frostguard_Sign",["sBg"]="aBg1_21",["icon1"]="Frostguard_List",["info"]={{["view"]="TrialsView",["isHideExtre"]=1,["taskType"]=8,["rankIcon"]="btn_1_01",["rankId"]=51029,["rankType"]=10011,["badge"]=15,["rankDes"]=25036,["childView"]="TrialsListView"}
 }
 ,["icon2"]="Frostguard_Page",["conditions"]={2222}
-,["onlyOne"]=1,["pos"]=1}
+,["onlyOne"]=1,["pos"]=7}
 ,[4003]={["chapter"]="拟真演训",["type"]=104,["key"]=4003,["eName"]="PSEUDO TRAINING",["id"]=4003,["isShowPassTeam"]=true,["openTime"]={1,1,1,1,1,1,1}
 ,["fade"]=2,["group"]=3,["name"]="拟真演训",["sBg"]="aBg1_3",["info"]={{["view"]="DungeonActivity2"}
 }
@@ -272,7 +272,7 @@ _G["Section"]={{["chapter"]="序章",["index"]=1,["eName"]="Avanpost",["group"]=
 ,["fade"]=1,["key"]=6006,["name"]="克拉肯",["icon"]="Kraken_Head",["type"]=106,["bg"]="tBg1",["id"]=6006,["isShowPassTeam"]=true,["icon3"]="Kraken_Sign",["sBg"]="aBg1_21",["icon1"]="Kraken_List",["info"]={{["view"]="TrialsView",["isHideExtre"]=1,["taskType"]=29,["rankIcon"]="btn_1_01",["rankId"]=51030,["rankType"]=10012,["badge"]=15,["rankDes"]=25036,["childView"]="TrialsListView"}
 }
 ,["icon2"]="Kraken_Page",["conditions"]={2222}
-,["onlyOne"]=1,["pos"]=1}
+,["onlyOne"]=1,["pos"]=7}
 ,[1001]={["chapter"]="碎星虚影",["eName"]="DAIBUROSU ILLUSION",["group"]=3,["openTime"]={1,1,1,1,1,1,1}
 ,["fade"]=1,["specType"]=1,["key"]=1001,["bg"]="tBg1",["type"]=101,["onlyOne"]=1,["id"]=1001,["isShowPassTeam"]=true,["sBg"]="aBg1_2",["name"]="戈里刻虚影",["conditions"]={4001}
 ,["info"]={{["view"]="DungeonTower"}
@@ -302,7 +302,7 @@ _G["Section"]={{["chapter"]="序章",["index"]=1,["eName"]="Avanpost",["group"]=
 ,["fade"]=1,["key"]=6007,["name"]="索尔达森",["icon"]="Thórdarson_Head",["type"]=106,["bg"]="tBg1",["id"]=6007,["isShowPassTeam"]=true,["icon3"]="Thórdarson_Sign",["sBg"]="aBg1_21",["icon1"]="Thórdarson_List",["info"]={{["view"]="TrialsView",["isHideExtre"]=1,["taskType"]=29,["rankIcon"]="btn_1_01",["rankId"]=51031,["rankType"]=10016,["badge"]=15,["rankDes"]=25036,["childView"]="TrialsListView"}
 }
 ,["icon2"]="Thórdarson_Page",["conditions"]={2222}
-,["onlyOne"]=1,["pos"]=1}
+,["onlyOne"]=1,["pos"]=7}
 ,[4007]={["chapter"]="拟真演训",["type"]=104,["key"]=4007,["eName"]="PSEUDO TRAINING",["id"]=4007,["isShowPassTeam"]=true,["openTime"]={1,1,1,1,1,1,1}
 ,["fade"]=2,["group"]=3,["name"]="拟真演训",["sBg"]="aBg1_3",["info"]={{["view"]="DungeonActivity2",["rankDes2"]=37053,["taskType"]=32,["rankIcon"]="btn_1_01",["rankId"]=37051,["rankType"]=10013,["rankDes"]=37052}
 }

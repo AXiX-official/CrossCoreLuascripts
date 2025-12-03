@@ -2095,7 +2095,7 @@ _G["CardData"]={[91110]={["subTfSkills"]={10001}
 ,["crit"]=1.5,["attack"]=157,["nClass"]=7,["allTcSkills"]={},["main_type"]=4,["notBuyChangeCardIds"]={},["isActionLog"]=false,["np"]=0,["break_id"]=74461,["crit_rate"]=0.02,["get_from_gm"]=true,["role_tag"]="91410",["jcSkills"]={914000101,914000201,914000301}
 ,["nStep"]=0,["nameEng"]="SHADOW ARBITER",["base_card"]=true,["fight_cost"]=0,["sp_race2"]=10,["sp"]=30,["id"]=91410,["changeCardIds"]={},["hot"]=100,["tfSkills"]={914100501}
 ,["resist"]=0,["sMech"]=7,["hit"]=0,["card_type"]=1,["career"]=1,["enum"]={4}
-,["m_Desc"]="\"卡梅尔学院生物学院制造的螃蟹型机器人，那对巨大的钳子会夹住所见之物，将它们通通丢进炉子里进行处理。原本是卡梅尔学院用来为各种危机而准备的后勤决战兵器，检测到可以当做食材的有机物，就会马上对其捕获和处理，然后加工成罐头食品。但因为一些意外情况，导致它开始把任何东西都当成是可加工的食材。",["nJump"]=0}
+,["m_Desc"]="卡梅尔学院生物学院制造的螃蟹型机器人，那对巨大的钳子会夹住所见之物，将它们通通丢进炉子里进行处理。原本是卡梅尔学院用来为各种危机而准备的后勤决战兵器，检测到可以当做食材的有机物，就会马上对其捕获和处理，然后加工成罐头食品。但因为一些意外情况，导致它开始把任何东西都当成是可加工的食材。",["nJump"]=0}
 ,[701101]={["subTfSkills"]={70110}
 ,["nMoveType"]=1,["overLoad"]=1,["key"]="701101",["skin"]={7011003}
 ,["speed"]=114,["notBuyAllTcSkills"]={},["quality"]=4,["isUseCommon"]=false,["defense"]=90,["sp_race"]=5,["dirll"]=70110,["maxhp"]=1568,["skinMinBreakLv"]={[7011001]=1,[7011002]=2}
