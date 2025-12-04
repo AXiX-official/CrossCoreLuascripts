@@ -135,6 +135,7 @@ function this:Clean()
     end
     self.list = {};
     self.deads = {};
+    self:ClearTransformState();
 end
 
 ----角色加入死亡列表
@@ -239,6 +240,11 @@ function this:CreateCharacters(datas)
                 --Log(data);
             end
             table.insert(list,character);
+            
+            local transformState = self:GetTransformState(character.GetID());               
+            if(transformState)then
+                character.SetTransformState(transformState);
+            end
         else
             if(not data.characterData or not self:IsSpecialId(data.characterData.id))then
                 LogError("创建角色过程中出现错误，数据如下！！！");
@@ -324,6 +330,17 @@ function this:SyncPartState(partSign,state,ignorePartCharacter)
             character.SyncPartState(state);
         end
     end
+end
+
+function this:SetTransformState(id,state)
+    self.transformStates = self.transformStates or {};
+    self.transformStates[id] = state;
+end
+function this:GetTransformState(id)
+    return self.transformStates and self.transformStates[id];
+end
+function this:ClearTransformState()
+    self.transformStates = nil;
 end
 
 return this;

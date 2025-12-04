@@ -88,7 +88,7 @@ function this:PlayTransform()
  
    local transformData = character.GetCastStateData(cfgSkill.cast);  
    character.SetTransformState(self.data.state);
- 
+    CharacterMgr:SetTransformState(character.GetID(),self.data.state);
    --LogError(self.data);
    character.ReplacedModel(self.data.model,self.goModel);  
    
