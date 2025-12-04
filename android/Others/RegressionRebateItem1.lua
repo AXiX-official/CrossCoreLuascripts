@@ -110,7 +110,7 @@ function SetPrice()
         local price = (comm:GetRealPrice() and comm:GetRealPrice()[1]) and comm:GetRealPrice()[1].num or 0
         if price > 0 then
             if CSAPI.IsADV() then
-                price = comm:GetSDKdisplayPrice()
+                price = comm:GetSDKdisplayPrice() ~= nil and comm:GetSDKdisplayPrice() or price
             end
             CSAPI.SetText(txtPrice2, price .. "")
             CSAPI.SetText(txtPrice1, comm:GetCurrencySymbols() .. "")

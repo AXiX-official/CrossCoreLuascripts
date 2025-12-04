@@ -346,6 +346,8 @@ function this:PushSub(fightAction,order)
             if(fightAction:GetAPIName() ~= APIType.AddNP)then
                 LogError("API:AddBuff、UpdateBuff或者MissBuff操作失败，找不到目标角色，api数据如下");
                 LogError(fightAction:GetData());
+            else
+                self:TryPushToTargetArr(fightAction);
             end
             return;
         end

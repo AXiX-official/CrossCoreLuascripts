@@ -72,7 +72,7 @@ function SetGridItem()
         rewardData = BagMgr:GetFakeData(_cfg.rewards[1][1], _cfg.rewards[1][2])
         ResUtil.IconGoods:Load(imgReward, rewardData:GetIcon())
     end
-    -- CSAPI.SetGOActive(maskR, isGet)
+    CSAPI.SetGOActive(maskR, isGet)
 end
 
 -- 排行榜

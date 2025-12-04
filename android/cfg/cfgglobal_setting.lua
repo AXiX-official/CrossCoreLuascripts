@@ -302,7 +302,7 @@ _G["global_setting"]={["g_MaxUseItem"]={["id"]="g_MaxUseItem",["type"]="int",["k
 ,["g_CardInitFriendlyRate"]={["id"]="g_CardInitFriendlyRate",["type"]="int",["key"]="g_CardInitFriendlyRate",["value"]="1"}
 ,["g_MailItemRepeat"]={["id"]="g_MailItemRepeat",["type"]="int",["key"]="g_MailItemRepeat",["value"]="40001"}
 ,["g_ArmyFriendFightWaitTime"]={["id"]="g_ArmyFriendFightWaitTime",["type"]="int",["key"]="g_ArmyFriendFightWaitTime",["value"]="30"}
-,["g_ArmyPvpShowUi"]={["id"]="g_ArmyPvpShowUi",["type"]="int",["key"]="g_ArmyPvpShowUi",["value"]="0"}
+,["g_ArmyPvpShowUi"]={["id"]="g_ArmyPvpShowUi",["type"]="int",["key"]="g_ArmyPvpShowUi",["value"]="1"}
 ,["g_StoreCardExpBaseAddVal"]={["id"]="g_StoreCardExpBaseAddVal",["type"]="float",["key"]="g_StoreCardExpBaseAddVal",["value"]="0"}
 ,["g_AssitShowMaxCnt"]={["id"]="g_AssitShowMaxCnt",["type"]="int",["key"]="g_AssitShowMaxCnt",["value"]="12"}
 ,["g_BuildTradeFlushTimes"]={["id"]="g_BuildTradeFlushTimes",["type"]="int[]",["key"]="g_BuildTradeFlushTimes",["value"]="0,12,18"}
