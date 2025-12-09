@@ -39,6 +39,16 @@ function Skill933100603:OnActionOver2(caster, target, data)
 end
 -- 行动结束
 function Skill933100603:OnActionOver(caster, target, data)
+	-- 8060
+	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
 	-- 933101605
 	if self:Rand(5000) then
 		self:AddNp(SkillEffect[933101605], caster, target, data, -5)
