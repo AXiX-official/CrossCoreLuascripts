@@ -1,4 +1,4 @@
-TaskProto = {}
+﻿TaskProto = {}
 
 ----------------------------------任务--------------------------------------
 function TaskProto:TaskAdd(proto)
@@ -20,7 +20,7 @@ end
 function TaskProto:GetRewardRet(proto)
     --
     local datas = (proto.infos and #proto.infos > 0) and proto.infos or {proto.info}
-    MissionMgr:GetRewardRet(datas, proto.dailyStar, proto.weeklyStar, proto.gets)
+    MissionMgr:GetRewardRet(datas, proto.dailyStar, proto.weeklyStar, proto.gets, proto.anvsStarInfo)
 
     -- rui数数 日常/周常任务 -- GCalHelp:GetTaskCfg(taskType, taskCfgid) 需要策划修改 todo 
     -- if proto.info and #proto.info>0 then
@@ -57,7 +57,7 @@ end
 
 function TaskProto:GetRewardByTypeRet(proto)
     --
-    MissionMgr:GetRewardRet(proto.infos, proto.dailyStar, proto.weeklyStar, proto.gets)
+    MissionMgr:GetRewardRet(proto.infos, proto.dailyStar, proto.weeklyStar, proto.gets,proto.anvsStarInfo)
 
     -- rui数数 日常/周常任务 -- GCalHelp:GetTaskCfg(taskType, taskCfgid) 需要策划修改 todo 
     -- if (proto.infos and #proto.infos > 0) then

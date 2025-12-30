@@ -1,4 +1,4 @@
---勘探等级按钮
+﻿--勘探等级按钮
 local currLv=0;
 --- func desc
 ---@param data table={lv,state,isSelect}

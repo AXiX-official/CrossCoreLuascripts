@@ -1,4 +1,4 @@
--- local index = 1 -- 有问题
+﻿-- local index = 1 -- 有问题
 function Awake()
     cg_btnUp = ComUtil.GetCom(btnUp, "CanvasGroup")
     FuncUtil:Call(function ()
@@ -78,6 +78,7 @@ end
 
 function SetMaterials()
     CSAPI.SetGOActive(mat, not isMax)
+    CSAPI.SetGOActive(coin, false)
     if (not isMax) then
         isEnough = true
         datas = {}

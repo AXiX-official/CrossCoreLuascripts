@@ -1,4 +1,4 @@
-local goods=nil;
+﻿local goods=nil;
 function Refresh(itemPoolGoodsInfo)
     if itemPoolGoodsInfo then
         goods=itemPoolGoodsInfo:GetGoodInfo();

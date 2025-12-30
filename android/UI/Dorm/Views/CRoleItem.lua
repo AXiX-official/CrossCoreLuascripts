@@ -1,4 +1,4 @@
-local needToCheckMove = false
+﻿local needToCheckMove = false
 function OnRecycle()
     if goRect == nil then
         goRect = ComUtil.GetCom(gameObject, "RectTransform")

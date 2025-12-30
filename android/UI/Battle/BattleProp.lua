@@ -1,4 +1,4 @@
---副本道具
+﻿--副本道具
 
 --初始化道具
 function InitProp(propId)

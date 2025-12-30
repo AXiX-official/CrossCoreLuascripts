@@ -1,4 +1,4 @@
-local maxLen = 10
+﻿local maxLen = 10
 
 function Awake()
 	layout = ComUtil.GetComInChildren(gameObject, "UIInfinite")

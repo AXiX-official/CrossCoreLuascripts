@@ -1,4 +1,4 @@
---皮肤展示界面
+﻿--皮肤展示界面
 local roleItem=nil;
 local effect=nil;
 local skinDesc=""

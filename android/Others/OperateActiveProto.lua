@@ -1,4 +1,4 @@
--- 运营活动
+﻿-- 运营活动
 OperateActiveProto = {
     SkinRebateInfoCallBack = nil,
 }
@@ -122,18 +122,14 @@ function OperateActiveProto:TakeQuestionRewardRet(proto)
 end
 
 --限量奖励活动 获取信息
-function OperateActiveProto:GetLimitRewardInfo(callback)
-    self.getLimitRewardInfoCallBack = callback
-    local proto = {"OperateActiveProto:GetLimitRewardInfo"}
+function OperateActiveProto:GetLimitRewardInfo(id,callback)
+    local proto = {"OperateActiveProto:GetLimitRewardInfo",{id = id}}
     NetMgr.net:Send(proto);
 end
 
 --限量奖励活动 获取信息返回
 function OperateActiveProto:GetLimitRewardInfoRet(proto)
-    if self.getLimitRewardInfoCallBack then
-        self.getLimitRewardInfoCallBack(proto)
-        self.getLimitRewardInfoCallBack = nil
-    end
+    EventMgr.Dispatch(EventType.Mission_Limit_Update,proto)
 end
 
 --限量奖励活动 确认领取关闭弹窗
@@ -262,7 +258,21 @@ end
 
 --投掷返回
 function OperateActiveProto:RichManThrowRet(proto)
+    local isFixed=proto and proto.isFixed or false;
+    EventMgr.Dispatch(EventType.RichMan_Throw_Ret,isFixed)
     RichManMgr:OnThrowRet(proto);
+end
+
+--请求投掷
+function OperateActiveProto:RichManStopAutoThrow()
+    local proto = {"OperateActiveProto:RichManStopAutoThrow"}
+    NetMgr.net:Send(proto)
+end
+
+function OperateActiveProto:RichManStopAutoThrowRet(proto)
+    if proto and proto.rewards then
+        EventMgr.Dispatch(EventType.RichMan_AutoThrow_Reward,proto.rewards);
+    end
 end
 
 function OperateActiveProto:NoticePhysicalReward(proto)

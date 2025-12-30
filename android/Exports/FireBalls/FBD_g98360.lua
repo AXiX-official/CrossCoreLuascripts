@@ -1,9 +1,9 @@
---FireBall数据
+﻿--FireBall数据
 local this = 
 {
 [-390021739]={
-{effect="cast1_summon",time=6000,type=0,pos_ref={ref_type=10},cue_sheet="fight/effect/Nineteen.acb",cue_name="98360_cast_01_01"},
-{time=1000,type=0,cue_sheet="fight/effect/Nineteen.acb",cue_name="98360_cast_01_01"}
+{effect="cast1_summon",time=6000,type=0,pos_ref={ref_type=10}},
+{time=1000,type=0}
 },
 [-1609092943]={
 {time=2500,type=0,cue_sheet="fight/effect/Nineteen.acb",cue_name="98360_cast_00"},
@@ -39,6 +39,10 @@ effect="cast2_buff",time=3000,type=0,pos_ref={ref_type=4,part_index=1}
 },
 [226809859]={
 time=3000,type=0
+},
+[-316323548]={
+{effect="deadLarge_common_eff",effect_pack="common",delay=1800,time=6000,type=0,pos_ref={ref_type=6}},
+{time=6000,type=0,cue_sheet="fight/effect/nineth.acb",cue_name="Censor_Die"}
 }
 };
 

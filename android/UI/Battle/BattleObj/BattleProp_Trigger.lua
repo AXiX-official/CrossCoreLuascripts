@@ -1,4 +1,4 @@
---���»�����״̬
+﻿--���»�����״̬
 function UpdateActiveState(state)
     --LogError("state:" .. tostring(state));
     CSAPI.SetGOActive(effNode,state);

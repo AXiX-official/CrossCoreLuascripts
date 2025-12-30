@@ -1,4 +1,4 @@
-local index = 0 -- 当前页码
+﻿local index = 0 -- 当前页码
 local max = 1 --
 local page = 5 -- 每页数量
 local allLogs = {} -- 所有数据 

@@ -1,4 +1,4 @@
---[[
+﻿--[[
     10010:阿尔卑斯 UI_GangTieBiLei
     40310 荧:      UI_LieHeXinYun
     60050：纳格陵   Naglering
@@ -17,7 +17,7 @@ local minStartTime, minEndTime = nil, nil
 
 -- local abNames1 = {}
 -- local abNames2 = {}
-
+local prRefreshTime = nil
 
 function Awake()
     CSAPI.PlayUISound("ui_window_open_load")
@@ -49,7 +49,7 @@ end
 
 function OnDestroy()
     eventMgr:ClearListener()
-    --ABMgr:RefreshProtectABList("CreateView",{})
+    -- ABMgr:RefreshProtectABList("CreateView",{})
     RoleABMgr:CheckRemoveAB("CreateView")
 end
 
@@ -101,13 +101,17 @@ function Update()
             SetShowTime()
         end
     end
-    --免费单抽刷新
-    if(freeRefreshTime and TimeUtil:GetTime() > freeRefreshTime)then 
+    if (prRefreshTime and TimeUtil:GetTime() > prRefreshTime) then
+        prRefreshTime = nil
+        SetPhysicalReward()
+    end
+    -- 免费单抽刷新
+    if (freeRefreshTime and TimeUtil:GetTime() > freeRefreshTime) then
         SetFree()
-    end 
-    if(nextHour and TimeUtil:GetTime() > nextHour)then 
+    end
+    if (nextHour and TimeUtil:GetTime() > nextHour) then
         SetFreeTime()
-    end 
+    end
 end
 
 function OnOpen()
@@ -236,6 +240,25 @@ function ClickBtnItemCB(index)
 
     --
     SetMoney()
+    -- 
+    SetPhysicalReward()
+end
+
+function SetPhysicalReward()
+    local beginTime, endTime = PhysicalRewardMgr:CheckCardPoolIsShow(curData:GetID())
+    local b = false
+    local curTime = TimeUtil:GetTime()
+    if (beginTime~=nil and curTime >= beginTime and curTime < endTime) then
+        b = true
+    end
+    CSAPI.SetGOActive(btnPR, b)
+    --
+    prRefreshTime = nil
+    if (b) then
+        prRefreshTime = endTime
+    elseif (beginTime and beginTime > curTime) then
+        prRefreshTime = beginTime
+    end
 end
 
 function SetObj6()
@@ -259,7 +282,7 @@ function SetObj6()
             end
         end
         items35 = items35 or {}
-        ItemUtil.AddItems("Create/CreateRoleCard", items35, datas35, grids35, nil, 1, {curData:GetID(),false})
+        ItemUtil.AddItems("Create/CreateRoleCard", items35, datas35, grids35, nil, 1, {curData:GetID(), false})
     end
     -- 
     CSAPI.SetGOActive(objToShop6, b)
@@ -282,7 +305,7 @@ function SetLeft()
 end
 
 function SetFree()
-    isOneFree,freeRefreshTime = curData:IsOneFree()
+    isOneFree, freeRefreshTime = curData:IsOneFree()
     local str1 = ""
     if (isOneFree) then
         str1 = LanguageMgr:GetByID(16108, CreateMgr:FreeRemainDay())
@@ -293,16 +316,16 @@ function SetFree()
     local spend1Name = isOneFree and "UIs/Create/btn_4_05.png" or "UIs/Create/btn_4_04.png"
     CSAPI.LoadImg(spend1, spend1Name, true, nil, true)
     -- red 
-    --UIUtil:SetRedPoint(btn1, isOneFree, 166, 44, 0)
-    --免费剩余时间
+    -- UIUtil:SetRedPoint(btn1, isOneFree, 166, 44, 0)
+    -- 免费剩余时间
     SetFreeTime()
 end
 
 function SetFreeTime()
-    nextHour = nil 
-    if(isOneFree)then 
+    nextHour = nil
+    if (isOneFree) then
         local hour = TimeUtil:HoursUntilNext3AM(TimeUtil:GetTime())
-        LanguageMgr:SetText(txtFreeTime,18087,hour) --剩余刷新时间
+        LanguageMgr:SetText(txtFreeTime, 18087, hour) -- 剩余刷新时间
         nextHour = TimeUtil:NextHourTimestamp(TimeUtil:GetTime())
     end
 end
@@ -376,17 +399,18 @@ function SetLookItems()
     if (isSelectPool) then
         local look_cards = curData:GetCfg().look_cards or {}
         lookItems2 = lookItems2 or {}
-        ItemUtil.AddItems("Create/CreateLookItem2", lookItems2, look_cards, entity6,nil,1,curData:GetID())
+        ItemUtil.AddItems("Create/CreateLookItem2", lookItems2, look_cards, entity6, CreateLookItemCB, 1,
+            curData:GetID())
     else
         local look_cards = curData:GetCfg().look_cards or {}
         lookItems = lookItems or {}
-        ItemUtil.AddItems("Create/CreateLookItem", lookItems, look_cards, icon)
+        ItemUtil.AddItems("Create/CreateLookItem", lookItems, look_cards, icon, CreateLookItemCB)
     end
 end
 
 function CreateLookItemCB(cardData)
     RoleABMgr:ChangeByIDs("CreateView", {cardData:GetModelCfg().id})
-    --local cfgModel = cardData:GetModelCfg()
+    -- local cfgModel = cardData:GetModelCfg()
     -- local abName = ABMgr:GetABName(cfgModel,true)
     -- if(abNames1[abName])then 
     --     return
@@ -849,7 +873,7 @@ function OnClickCX()
     CSAPI.OpenView("CreateSelectRolePanel", curData:GetID())
 end
 
---前往自选星尘区
+-- 前往自选星尘区
 function OnClickToShow6()
     JumpMgr:Jump(140029)
 end
@@ -879,6 +903,10 @@ function ChangeBtnItems(isLeft)
         _curIndex = (curIndex + 1) > #datas and 1 or (curIndex + 1)
     end
     ClickBtnItemCB(_curIndex)
+end
+
+function OnClickPR()
+    JumpMgr:Jump(351004)
 end
 
 -- -- {g_CreateSpendID, ITEM_ID.DIAMOND}

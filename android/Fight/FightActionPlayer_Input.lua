@@ -1,4 +1,4 @@
---角色输入播放器
+﻿--角色输入播放器
 
 --local SceneInput = nil;
 local GetScenePos;

@@ -1,4 +1,4 @@
--- local mTab = nil
+﻿-- local mTab = nil
 -- local curIndex = 0
 curIndex1, curIndex2 = 1, 1 -- 父index,子index
 

@@ -1,4 +1,4 @@
---技能设置界面
+﻿--技能设置界面
 
 
 function SetData(setData)

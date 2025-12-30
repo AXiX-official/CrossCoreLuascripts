@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 local root;
 local data;
 local selectIndex;

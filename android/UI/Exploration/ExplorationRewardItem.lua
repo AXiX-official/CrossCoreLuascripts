@@ -1,4 +1,4 @@
-local frameList=nil;
+﻿local frameList=nil;
 local txtCount=nil;
 local clickImg=nil;
 local canvasGroup=nil;

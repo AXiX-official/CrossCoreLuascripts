@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local grid=nil;
 local redObj=nil;
 local cb=nil;

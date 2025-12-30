@@ -1,4 +1,4 @@
--- 队伍信息物体
+﻿-- 队伍信息物体
 local teamData=nil;
 -- local isChange=false;
 local state=TeamConfirmItemState.Normal;

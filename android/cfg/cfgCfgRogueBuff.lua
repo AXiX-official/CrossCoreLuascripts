@@ -1,4 +1,4 @@
-_G["CfgRogueBuff"]={[1000040160]={["id"]=1000040160,["buffId"]={1000040160}
+﻿_G["CfgRogueBuff"]={[1000040160]={["id"]=1000040160,["buffId"]={1000040160}
 ,["desc"]="我方单位使用群体攻击前，攻击力增加<color=#FFC432>30%</color>，持续2回合",["quality"]=5,["key"]=1000040160,["icon"]="1004",["target"]=1,["name"]="能级：群体效应",["lifeType"]=1,["probability"]=3000}
 ,[1000020021]={["preConditions"]=1,["id"]=1000020021,["buffId"]={1000020021}
 ,["desc"]="持有<color=#33CCFF>神盾：攻击Ⅰ</color>时，我方攻击增加<color=#FFC432>16%</color>",["quality"]=3,["preConditionsValue"]=1000020020,["key"]=1000020021,["icon"]="1002",["target"]=1,["name"]="神盾：攻击Ⅱ",["lifeType"]=1,["probability"]=3000}

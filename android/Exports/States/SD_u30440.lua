@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cast2={play_time=9500,start_pos={ref_type=10},spe_setting="spe_setting_cast2",last_hit=8500},

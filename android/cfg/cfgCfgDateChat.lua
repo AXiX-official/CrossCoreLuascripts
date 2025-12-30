@@ -1,4 +1,4 @@
-_G["CfgDateChat"]={[202400103]={["talkRoleEmblem"]="20240_Common_Uillean_N",["type"]=1,["dateContent"]="刚刚我去拿快递的时候，发现你有一份快递还没有拿走哦？",["group"]=2024001,["nextChatID"]={202400104}
+﻿_G["CfgDateChat"]={[202400103]={["talkRoleEmblem"]="20240_Common_Uillean_N",["type"]=1,["dateContent"]="刚刚我去拿快递的时候，发现你有一份快递还没有拿走哦？",["group"]=2024001,["nextChatID"]={202400104}
 ,["key"]=202400103,["chattingSpeed"]=120,["id"]=202400103}
 ,[202400104]={["talkRoleEmblem"]="20240_Common_Uillean_N",["type"]=2,["dateContent"]="工作人员说，已经放在这里好几天了",["group"]=2024001,["nextChatID"]={202400105}
 ,["key"]=202400104,["id"]=202400104,["chattingSpeed"]=110,["isHideIcon"]=1}

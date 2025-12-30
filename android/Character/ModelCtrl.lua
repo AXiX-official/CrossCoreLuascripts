@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     goParts = {};
     goParts[1] = foot;
     goParts[2] = body;

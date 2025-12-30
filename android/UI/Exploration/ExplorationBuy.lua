@@ -1,4 +1,4 @@
---购买勘探
+﻿--购买勘探
 local eventMgr=nil;
 local curData=nil;
 local exList={};

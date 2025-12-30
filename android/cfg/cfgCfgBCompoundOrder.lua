@@ -1,4 +1,4 @@
-_G["CfgBCompoundOrder"]={[15003]={["tiredVal"]=-50,["subRewardId"]=80307,["cost"]={{10001,400}
+﻿_G["CfgBCompoundOrder"]={[15003]={["tiredVal"]=-50,["subRewardId"]=80307,["cost"]={{10001,400}
 }
 ,["group"]=3,["rewards"]={{15003,1}
 }

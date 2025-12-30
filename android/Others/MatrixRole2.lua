@@ -1,4 +1,4 @@
--- 驻员item
+﻿-- 驻员item
 function Awake()
     CSAPI.SetGOActive(plObj, false)
 end

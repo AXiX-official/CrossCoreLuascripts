@@ -1,4 +1,4 @@
-_G["CfgOpenConditionMore"]={["special13"]={["id"]="special13",["sName"]="荒墟拾遗（每日探索）",["key"]="special13"}
+﻿_G["CfgOpenConditionMore"]={["special13"]={["id"]="special13",["sName"]="荒墟拾遗（每日探索）",["key"]="special13"}
 ,["special7"]={["conditions"]={2003}
 ,["key"]="special7",["open_tips"]=1,["sName"]="自动战斗",["icon"]="AutoBattle",["id"]="special7"}
 ,["special1"]={["id"]="special1",["sName"]="核心升级",["key"]="special1"}

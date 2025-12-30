@@ -1,4 +1,4 @@
--- 房间 
+﻿-- 房间 
 function Awake()
     grid_sr = ComUtil.GetCom(grid, "Renderer")
     dormScreenshot = ComUtil.GetCom(screenshot, "Screenshot")

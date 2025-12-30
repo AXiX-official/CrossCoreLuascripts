@@ -1,4 +1,4 @@
---弱引导界面
+﻿--弱引导界面
 
 function Awake()
     SetHint();

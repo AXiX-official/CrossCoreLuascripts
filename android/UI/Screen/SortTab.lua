@@ -1,4 +1,4 @@
-function Refresh(data)
+﻿function Refresh(data)
     this.data=data;
     CSAPI.SetText(txt,data.title);
     SetSelect(data.isSelect);

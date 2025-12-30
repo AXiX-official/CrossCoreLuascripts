@@ -1,4 +1,4 @@
-_G["CfgNewYearFinish"]={{["sOpenTime"]="2024/2/07 10:00:00",["sDescription"]="新年任务第1阶段最终阶段",["id"]=1,["jAwardId"]={{10040,50,2}
+﻿_G["CfgNewYearFinish"]={{["sOpenTime"]="2024/2/07 10:00:00",["sDescription"]="新年任务第1阶段最终阶段",["id"]=1,["jAwardId"]={{10040,50,2}
 ,{58032,2,2}
 ,{58002,1,2}
 }

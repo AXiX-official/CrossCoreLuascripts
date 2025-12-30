@@ -1,4 +1,4 @@
-local idx=nil;
+﻿local idx=nil;
 function OnOpen()
     if data then
         local cfg=Cfgs.CfgSuit:GetByID(data.suitID);

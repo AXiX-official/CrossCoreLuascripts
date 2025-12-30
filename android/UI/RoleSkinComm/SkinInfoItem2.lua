@@ -1,4 +1,4 @@
--- 皮肤信息子物体
+﻿-- 皮肤信息子物体
 
 local needToCheckMove = false
 function Awake()

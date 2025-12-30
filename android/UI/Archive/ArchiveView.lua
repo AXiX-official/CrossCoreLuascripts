@@ -1,4 +1,4 @@
-
+﻿
 local newName = {"roleNew", "", "goodsNew", "memoryNew", "equipNew", "enemyNew","boardNew","musicNew","asmrNew"}
 local top=nil;
 local records = {}

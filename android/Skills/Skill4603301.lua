@@ -1,4 +1,4 @@
--- 洛贝拉
+﻿-- 洛贝拉
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -25,9 +25,16 @@ function Skill4603301:OnActionBegin(caster, target, data)
 	end
 	-- 603300301
 	self:OwnerAddBuffCount(SkillEffect[603300301], caster, self.card, data, 603300301,1,3)
+	-- 9731
+	if SkillJudger:IsTypeOf(self, caster, target, true,4) then
+	else
+		return
+	end
+	-- 603300305
+	self:OwnerAddBuffCount(SkillEffect[603300305], caster, self.card, data, 603300301,1,3)
 end
--- 伤害前
-function Skill4603301:OnBefourHurt(caster, target, data)
+-- 伤害后
+function Skill4603301:OnAfterHurt(caster, target, data)
 	-- 4603341
 	self:tFunc_4603341_4603311(caster, target, data)
 	self:tFunc_4603341_4603314(caster, target, data)

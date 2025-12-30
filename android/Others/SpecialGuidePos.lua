@@ -1,4 +1,4 @@
-local item = nil
+﻿local item = nil
 local cfg = nil
 
 function Refresh(_data)

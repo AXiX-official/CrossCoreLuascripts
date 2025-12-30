@@ -1,4 +1,4 @@
-local PopupPackBase = require("PopupPackBase")
+﻿local PopupPackBase = require("PopupPackBase")
 local this = MgrRegister("PopupPackMgr")
 
 function this:Init()

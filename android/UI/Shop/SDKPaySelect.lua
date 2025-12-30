@@ -1,4 +1,4 @@
---自接SDK支付入口
+﻿--自接SDK支付入口
  local currType=PayType.Alipay;
  local confType=PaySelectConf.Default;--配置类型
 -- local confType=PaySelectConf.BsAli;--配置类型

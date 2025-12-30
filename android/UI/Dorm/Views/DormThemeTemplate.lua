@@ -1,4 +1,4 @@
--- 主题curIndex_1
+﻿-- 主题curIndex_1
 curIndex1, curIndex2 = 1, 1 -- 父index,子index
 local maxCount = 0 -- 一行可放置数量
 local perLimit = 3 -- 一次最多请求数量，因为服务器消息长度限制  用于每页多次请求

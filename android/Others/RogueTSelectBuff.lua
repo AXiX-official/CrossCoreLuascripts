@@ -1,4 +1,4 @@
-local curLIndex = 1
+﻿local curLIndex = 1
 local curTopIndex = 1
 local curUseIdx = nil
 

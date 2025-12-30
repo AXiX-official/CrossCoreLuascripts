@@ -1,4 +1,4 @@
-_G["AvatarFrame"]={{["type"]=1,["index"]=101,["picture"]="icon_1_01",["id"]=1,["avatarname"]="默认",["key"]="1",["bySex"]=false}
+﻿_G["AvatarFrame"]={{["type"]=1,["index"]=101,["picture"]="icon_1_01",["id"]=1,["avatarname"]="默认",["key"]="1",["bySex"]=false}
 ,[2014]={["type"]=1,["index"]=406,["picture"]="img_23_01",["avatarname"]="盛阳浪涛",["bySex"]=false,["key"]="2014",["item_id"]=19291,["id"]=2014,["accessmethods"]="【夏日海韵】活动"}
 ,[8007]={["type"]=1,["index"]=57,["picture"]="img_52_01",["id"]=8007,["bySex"]=false,["isShow"]=1,["item_id"]=19807,["key"]="8007",["avatarname"]="运营用id预留7",["accessmethods"]="活动获得"}
 ,[2022]={["type"]=1,["index"]=401,["picture"]="img_31_01",["avatarname"]="双子座",["bySex"]=false,["key"]="2022",["item_id"]=19371,["id"]=2022,["accessmethods"]="【溯源探查】活动"}
@@ -18,6 +18,7 @@ _G["AvatarFrame"]={{["type"]=1,["index"]=101,["picture"]="icon_1_01",["id"]=1,["
 ,[2043]={["type"]=1,["index"]=806,["picture"]="img_52_01",["id"]=2043,["bySex"]=false,["isShow"]=1,["item_id"]=19464,["key"]="2043",["avatarname"]="给我三连",["accessmethods"]="活动获得"}
 ,[2047]={["type"]=1,["index"]=601,["picture"]="img_53_04",["avatarname"]="最初的传说",["bySex"]=false,["key"]="2047",["item_id"]=19471,["id"]=2047,["accessmethods"]="角斗场获得"}
 ,[1002]={["type"]=1,["index"]=999,["picture"]="img_2_01",["id"]=1002,["bySex"]=false,["isShow"]=1,["item_id"]=19111,["key"]="1002",["avatarname"]="幽绿幻痕"}
+,[2062]={["item_id"]=19488,["type"]=1,["key"]="2062",["picture"]="img_69_01",["avatarname"]="欢庆今宵",["index"]=69,["id"]=2062,["bySex"]=false}
 ,[2012]={["type"]=1,["index"]=801,["picture"]="img_21_01",["avatarname"]="锋芒獠齿",["bySex"]=false,["key"]="2012",["item_id"]=19271,["id"]=2012,["accessmethods"]="兑换码获得"}
 ,[2016]={["type"]=1,["index"]=301,["picture"]="img_25_01",["avatarname"]="沁心畅饮",["bySex"]=false,["key"]="2016",["item_id"]=19311,["id"]=2016,["accessmethods"]="传说星尘区购买"}
 ,[2024]={["type"]=1,["index"]=804,["picture"]="img_33_01",["id"]=2024,["bySex"]=false,["isShow"]=1,["item_id"]=19391,["key"]="2024",["avatarname"]="荣誉时刻",["accessmethods"]="加油喝彩2024"}

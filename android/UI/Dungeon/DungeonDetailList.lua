@@ -1,4 +1,4 @@
-local items = {}
+﻿local items = {}
 local height = 199
 local num = 0
 local tweenDelay = 0

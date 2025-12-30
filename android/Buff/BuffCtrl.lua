@@ -1,4 +1,4 @@
---特殊buff控制
+﻿--特殊buff控制
 
 function Awake()
     SetTierLv(1);

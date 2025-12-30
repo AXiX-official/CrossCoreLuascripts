@@ -1,4 +1,4 @@
- 
+﻿ 
 local team1={{title='道中战斗',id=1,group=FightNaviObjType.Team1,isOn=true},{title='BOSS战斗',id=2,group=FightNaviObjType.Team1},{title='全部战斗',id=3,group=FightNaviObjType.Team1},{title='战斗待机',id=4,group=FightNaviObjType.Team1}}
 local team2={{title='道中战斗',id=1,group=FightNaviObjType.Team2},{title='BOSS战斗',id=2,group=FightNaviObjType.Team2,isOn=true},{title='全部战斗',id=3,group=FightNaviObjType.Team2},{title='战斗待机',id=4,group=FightNaviObjType.Team2}}
 local attack={{title='优先敌兵',id=1,group=FightNaviObjType.Attack,isOn=true},{title='优先boss',id=2,group=FightNaviObjType.Attack}}

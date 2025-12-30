@@ -1,4 +1,4 @@
--- 先选角色，再调整参数
+﻿-- 先选角色，再调整参数
 local slot = 1 -- 槽位的某个孔
 local lIndex = 1 -- 左侧栏index
 local lIsShow = false

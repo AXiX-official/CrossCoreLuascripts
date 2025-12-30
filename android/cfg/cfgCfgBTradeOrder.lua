@@ -1,4 +1,4 @@
-_G["CfgBTradeOrder"]={[30002]={["gets"]={{10003,50000,2}
+﻿_G["CfgBTradeOrder"]={[30002]={["gets"]={{10003,50000,2}
 }
 ,["selfBuyCnt"]={1,4,1}
 ,["id"]=30002,["friendByCnt"]={1,1,1}

@@ -1,4 +1,4 @@
---数据类型
+﻿--数据类型
 MsgType = {}
 MsgType.Normal	= 0 -- 普通类型
 MsgType.Struts	= 1 -- 结构体

@@ -1,4 +1,4 @@
-local isSel = false
+﻿local isSel = false
 local isLock = false
 local lockStr = ""
 local data = nil

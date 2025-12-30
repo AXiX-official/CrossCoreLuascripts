@@ -1,4 +1,4 @@
---摄像机
+﻿--摄像机
 
 function Start()
     EventMgr.AddListener(EventType.SkyBox_Changed,OnSkyBoxChanged);

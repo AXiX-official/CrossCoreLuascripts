@@ -1,4 +1,4 @@
-local grid=nil;
+﻿local grid=nil;
 function Refresh(_d)
     local num=0;
     if _d then

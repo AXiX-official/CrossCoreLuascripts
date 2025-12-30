@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local slider = nil
 local colors = {{255,193,70,255},{255,255,255,255}}
 local isNew = false

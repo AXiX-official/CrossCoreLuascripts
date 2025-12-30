@@ -1,4 +1,4 @@
--- 队员信息
+﻿-- 队员信息
 local this = {};
 function this.New()
     this.__index = this.__index or this;

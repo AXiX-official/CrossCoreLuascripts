@@ -1,4 +1,4 @@
--- 商店公用方法
+﻿-- 商店公用方法
 local this = {};
 local normalSize = 1;
 local iconSize = 1.3;

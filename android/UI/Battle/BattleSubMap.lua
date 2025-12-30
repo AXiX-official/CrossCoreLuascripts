@@ -1,4 +1,4 @@
---子地图
+﻿--子地图
 
 --初始化
 function Init(subMapData,gridRes)

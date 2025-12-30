@@ -1,4 +1,4 @@
-
+﻿
 
 function Awake()
     txtMove=ComUtil.GetCom(targetDesc,"TextMove")

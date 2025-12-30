@@ -1,4 +1,4 @@
--- 打开界面是设置一份复制的数据，离开时赋值到真实数据并移除复制的数据，避免频繁交互
+﻿-- 打开界面是设置一份复制的数据，离开时赋值到真实数据并移除复制的数据，避免频繁交互
 local CRoleDisplayData = require("CRoleDisplayData")
 local this = MgrRegister("CRoleDisplayMgr")
 

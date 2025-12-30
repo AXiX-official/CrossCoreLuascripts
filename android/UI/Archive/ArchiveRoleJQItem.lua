@@ -1,4 +1,4 @@
---剧情item
+﻿--剧情item
 local StoryData = require "StoryData"
 
 --CRoleStoryInfo

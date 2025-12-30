@@ -1,4 +1,4 @@
--- 回归相关 
+﻿-- 回归相关 
 local this = MgrRegister("RegressionMgr")
 
 function this:Init()

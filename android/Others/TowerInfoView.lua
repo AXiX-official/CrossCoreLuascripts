@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local goGoals = {}
 
 function Refresh(_data)

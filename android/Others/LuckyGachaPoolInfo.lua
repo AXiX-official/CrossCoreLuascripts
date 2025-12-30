@@ -1,4 +1,4 @@
-local layout=nil;
+﻿local layout=nil;
 local curDatas={}
 local totalVal=0;
 

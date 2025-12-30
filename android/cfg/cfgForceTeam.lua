@@ -1,4 +1,4 @@
-_G["ForceTeam"]={{["id"]=1,["name"]="通用不强制",["key"]=1,["arrForceTeam"]={{["bIsNpc"]=false,["index"]=1}
+﻿_G["ForceTeam"]={{["id"]=1,["name"]="通用不强制",["key"]=1,["arrForceTeam"]={{["bIsNpc"]=false,["index"]=1}
 ,{["bIsNpc"]=false,["index"]=2}
 ,{["bIsNpc"]=false,["index"]=3}
 ,{["bIsNpc"]=false,["index"]=4}

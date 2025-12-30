@@ -1,4 +1,4 @@
---战棋角色管理
+﻿--战棋角色管理
 BattleCharacterMgr = {};
 local this = BattleCharacterMgr;
 

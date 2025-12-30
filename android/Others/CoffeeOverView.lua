@@ -1,4 +1,4 @@
-function OnOpen()
+﻿function OnOpen()
     LanguageMgr:SetText(txtScore,78005,data[1].score)
 end
 

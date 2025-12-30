@@ -1,4 +1,4 @@
--- 图片窗口说明
+﻿-- 图片窗口说明
 local curIndex = 1
 local isGuideing = false
 local num = 0

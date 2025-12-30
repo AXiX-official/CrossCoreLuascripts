@@ -1,4 +1,4 @@
-local effects = {}
+﻿local effects = {}
 local curType = nil
 local curEffect = nil
 

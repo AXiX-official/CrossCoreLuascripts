@@ -1,4 +1,4 @@
--- 建造数量选择
+﻿-- 建造数量选择
 local isSet = false
 
 function OnOpen()

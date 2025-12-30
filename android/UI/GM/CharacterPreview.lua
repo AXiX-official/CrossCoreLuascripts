@@ -1,4 +1,4 @@
-local arr = 
+﻿local arr = 
 {
 "amelia_kit",
 "andeliya",

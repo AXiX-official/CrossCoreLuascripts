@@ -1,4 +1,4 @@
-local eventMgr=nil;
+﻿local eventMgr=nil;
 local list={};
 local btnList={};
 local ids={80005,80006,80007}

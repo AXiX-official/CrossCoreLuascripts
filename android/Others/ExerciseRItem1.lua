@@ -1,4 +1,4 @@
-local rank_colors = {"191919", "191919", "ffffff"}
+﻿local rank_colors = {"191919", "191919", "ffffff"}
 
 -- sFreeArmyRank
 function Refresh(data)

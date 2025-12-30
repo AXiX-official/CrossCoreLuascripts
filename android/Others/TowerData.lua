@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 local MonsterInfo=require "MonsterInfo"
 
 function this.New()

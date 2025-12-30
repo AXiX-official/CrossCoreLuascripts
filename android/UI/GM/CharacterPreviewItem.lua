@@ -1,4 +1,4 @@
-
+﻿
 
 function SetCallBack(clickCallBack)
     callBack = clickCallBack;

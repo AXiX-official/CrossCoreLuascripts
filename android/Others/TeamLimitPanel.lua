@@ -1,4 +1,4 @@
-function OnOpen()
+﻿function OnOpen()
     --local curData = RogueTMgr:GetFightData()
     cfg = Cfgs.MainLine:GetByID(data)--curData.nDuplicateID)
     SetDatas()

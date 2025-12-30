@@ -1,4 +1,4 @@
-_G["CfgShopPage"]={{["tabPage"]={1,1}
+﻿_G["CfgShopPage"]={{["tabPage"]={1,1}
 ,["commodityType"]=3,["key"]=1,["showType"]=1,["bg"]="bg_27",["nEndTime"]=0,["goldInfo"]={{10002,140001}
 }
 ,["nameID"]=18101,["topGroup"]=2,["sort"]=1,["id"]=1,["nStartTime"]=0,["sName"]="卡蒂雅推荐",["icon"]="btn_01_01",["nDefault"]=1}
@@ -24,6 +24,9 @@ _G["CfgShopPage"]={{["tabPage"]={1,1}
 ,[913]={["commodityType"]=1,["bg"]="bg_28",["showType"]=1,["key"]=913,["nEndTime"]=0,["isHide"]=1,["nameID"]=51004,["goldInfo"]={{10035}
 }
 ,["sort"]=20,["id"]=913,["nStartTime"]=0,["sName"]="冬日入场卷",["icon"]="btn_07_01",["tabPage"]={}}
+,[10001]={["commodityType"]=1,["bg"]="bg_28",["showType"]=1,["key"]=10001,["nEndTime"]=0,["isHide"]=1,["nameID"]=160003,["goldInfo"]={{10416}
+}
+,["sort"]=37,["id"]=10001,["nStartTime"]=0,["sName"]="奇境商店",["icon"]="btn_07_01",["tabPage"]={}}
 ,[3001]={["commodityType"]=1,["bg"]="bg_28",["showType"]=2,["key"]=3001,["nEndTime"]=0,["isHide"]=1,["nameID"]=60700,["goldInfo"]={{10002,140001}
 }
 ,["sort"]=16,["id"]=3001,["nStartTime"]=0,["sName"]="复归礼包",["icon"]="btn_07_01",["tabPage"]={}}

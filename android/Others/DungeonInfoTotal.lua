@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local data = nil --dungeonData
 local sectionData = nil
 local slider = nil

@@ -1,4 +1,4 @@
-_G["CfgActiveRankReward"]={[2001]={["id"]=2001,["infos"]={{["rewards"]={{10001,1000,2}
+﻿_G["CfgActiveRankReward"]={[2001]={["id"]=2001,["infos"]={{["rewards"]={{10001,1000,2}
 ,{10002,50,2}
 }
 ,["maxRank"]=3,["index"]=1}

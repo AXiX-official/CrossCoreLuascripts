@@ -1,4 +1,4 @@
---战斗剧情
+﻿--战斗剧情
 
 FightActionPlot = oo.class(FightActionBase);
 local this = FightActionPlot;

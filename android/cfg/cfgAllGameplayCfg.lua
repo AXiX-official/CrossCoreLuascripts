@@ -1,4 +1,4 @@
-_G["AllGameplayCfg"]={{["enName"]="RESOURCE ACQUISITION",["index"]=5,["jumpID"]=10301,["id"]=1,["rewards"]={{10001,30,2}
+﻿_G["AllGameplayCfg"]={{["enName"]="RESOURCE ACQUISITION",["index"]=5,["jumpID"]=10301,["id"]=1,["rewards"]={{10001,30,2}
 ,{10003,30,2}
 ,{15002,30,2}
 ,{10039,30,2}

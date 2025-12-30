@@ -1,4 +1,4 @@
-local group=nil;
+﻿local group=nil;
 -- local textMove=nil;
 function Awake()
     group=ComUtil.GetCom(gameObject,"CanvasGroup");

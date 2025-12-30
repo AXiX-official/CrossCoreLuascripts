@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cast3={play_time=1500,hide_buff=1},

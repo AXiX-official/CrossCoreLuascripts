@@ -1,4 +1,4 @@
-local changeName = ""
+﻿local changeName = ""
 local sName = ""
 
 function Awake()

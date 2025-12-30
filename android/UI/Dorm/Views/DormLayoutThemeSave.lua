@@ -1,4 +1,4 @@
---主题保存
+﻿--主题保存
 function Awake()
 	input = ComUtil.GetCom(InputField, "InputField")
 	CSAPI.AddInputFieldChange(InputField, InputChange)

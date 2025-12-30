@@ -1,4 +1,4 @@
-local index= 0
+﻿local index= 0
 local isLock = false
 local curType = 1 --1.未解锁，2.已解锁，3.当前
 function SetIndex(idx)

@@ -1,4 +1,4 @@
---公会战赛季配置数据
+﻿--公会战赛季配置数据
 local this = {};
 
 function this.New()

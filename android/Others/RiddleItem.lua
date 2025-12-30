@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local elseData=nil;
 local clickImg=nil
 local animator=nil;

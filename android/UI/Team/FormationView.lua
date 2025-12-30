@@ -1,4 +1,4 @@
---阵型调整视图
+﻿--阵型调整视图
 local gridList = nil;--格子预制物列表，字典型[列-行]=GameObject，用于确定卡牌的位置
 local cardList = nil;--卡牌列表，字典型[cid]=CardDragView
 -- local formatTab = nil;--占位信息列表，记录了每个格子当前的占位情况，字典型，[列-行]=CardData;

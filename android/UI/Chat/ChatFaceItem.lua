@@ -1,4 +1,4 @@
-local name = nil
+﻿local name = nil
 --聊天表情
 function SetIndex(idx)
 	index = idx

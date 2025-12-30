@@ -1,4 +1,4 @@
-function Refresh(lv, id)
+﻿function Refresh(lv, id)
     -- lv
     --SAPI.SetText(txtLv2, lv .. "")
     -- icon 

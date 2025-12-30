@@ -1,4 +1,4 @@
---角色飘字
+﻿--角色飘字
 
 function Awake()   
     txtContent = ComUtil.GetCom(text,"Text");  

@@ -1,4 +1,4 @@
--- 记录在本地的模块开启信息，防止服务器数据过慢导致数据错误 
+﻿-- 记录在本地的模块开启信息，防止服务器数据过慢导致数据错误 
 -- 格式：{[OpenViewType] = {id,id,id},[OpenViewType] = {id,id,id},[OpenViewType] = {id,id,id}}
 -- 功能开启大类分类（按表分）
 OpenViewType = {}

@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 -----------------------------------------------
 BuffMgr = oo.class()
 function BuffMgr:Init(card, fightMgr)

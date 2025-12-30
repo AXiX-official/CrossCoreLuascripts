@@ -1,4 +1,4 @@
---剧情管理
+﻿--剧情管理
 PlotMgr = {};
 
 local this = PlotMgr;

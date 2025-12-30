@@ -1,4 +1,4 @@
-_G["CfgTaskDailyStarReward"]={{["id"]=1,["star"]=1,["key"]="1",["jAwardId"]={{10013,15,2}
+﻿_G["CfgTaskDailyStarReward"]={{["id"]=1,["star"]=1,["key"]="1",["jAwardId"]={{10013,15,2}
 ,{10036,6,2}
 }
 }

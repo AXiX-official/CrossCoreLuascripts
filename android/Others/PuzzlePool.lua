@@ -1,4 +1,4 @@
---拼图奖池
+﻿--拼图奖池
 local layout=nil;
 local curDatas=nil;
 local selectItem=nil;

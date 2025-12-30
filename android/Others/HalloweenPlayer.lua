@@ -1,4 +1,4 @@
-local rtSize = nil
+﻿local rtSize = nil
 local boxSize = nil
 local posX, posY = 0, 0
 local boxPosX,boxPosY = 0,0

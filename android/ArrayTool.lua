@@ -1,4 +1,4 @@
---[[
+﻿--[[
     ArrayTool: 不保证顺序
 ]]
 ArrayTool = {}

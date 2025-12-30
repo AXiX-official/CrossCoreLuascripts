@@ -1,4 +1,4 @@
--- 将名字与数值反向关联，就可以实用数值返回枚举值的名字
+﻿-- 将名字与数值反向关联，就可以实用数值返回枚举值的名字
 function GenEnumNameByVal(name, enums)
     local tmpTb = {}
 
@@ -76,6 +76,7 @@ ITEM_TYPE.LIMITED_TIME_SKIN = 29 --限时皮肤
 ITEM_TYPE.ICON_EMOTE = 30 --对战表情
 ITEM_TYPE.CHANGE_NAME_AND_SEX = 31 -- 名字与形态转换券
 ITEM_TYPE.LIMIT_CODE = 32 -- 识别码容器
+ITEM_TYPE.DORM_PET = 34 -- 宿舍宠物
 
 -- 物品标签
 ITEM_TAG = {}
@@ -367,6 +368,7 @@ eTaskType.PointsBattle = 32     -- 积分战斗
 eTaskType.AnniversaryMission = 33     -- 周年活动任务
 eTaskType.MultTeam = 34     -- 多队玩法
 eTaskType.NewPlayerSeven = 37      -- 新手七日任务
+eTaskType.RichMan = 38      -- 大富翁任务
 
 GenEnumNameByVal('eTaskTypeName', eTaskType)
 
@@ -472,6 +474,7 @@ cTaskCfgNames = {
     [eTaskType.AnniversaryMission] = 'cfgAnniversaryMission',
     [eTaskType.MultTeam] = 'CfgMultiteamEntrance',
     [eTaskType.NewPlayerSeven] = 'CfgNewPlayerSevenDayTask',
+    [eTaskType.RichMan]='cfgMonopolyMission',
 }
 
 -- 完成类型, GetTypeById() 计算返回 eTaskFinishType 的枚举值
@@ -494,6 +497,7 @@ eTaskFinishType.Task = 60 -- 任务
 eTaskFinishType.Army = 61 -- 军演
 eTaskFinishType.Item = 65 -- 物品
 eTaskFinishType.Pet = 67 -- 夏活宠物
+eTaskFinishType.RichMan = 68 -- 大富翁
 
 -- 任务状态
 eTaskState = {}
@@ -545,6 +549,7 @@ eTaskEventType.GlobalBossFight = 36 -- 世界boss挑战或扫荡X次（每日重
 eTaskEventType.GlobalBossDamage = 37 -- 世界boss单次伤害达到N（每月重置）
 eTaskEventType.GlobalBossKill = 38 -- 世界boss击败（每月重置）
 eTaskEventType.GlobalBossTotalDamage = 39 -- 世界boss累计伤害达到N（每月重置）
+eTaskEventType.RichManFinishRound = 40 -- 大富翁行走X圈
 
 eLockState = {}
 eLockState.No = 0
@@ -822,6 +827,7 @@ ActivityListType = {
     SignInAnniversary = 1030, --1.5周年
     LovePlus = 1033,--爱相随
     Halloween = 1035,--万圣节活动
+    PhysicalReward = 1038,--实物抽奖活动
     NewPlayerSeven = 1039, -- 新手七日任务
 }
 
@@ -1529,7 +1535,7 @@ eRecordType.GlobalBossFindIx = 25         -- [中心服]新世界boss处理结�
 eRecordType.ResetDoubleRecharge = 26      -- [中心服]重置双倍充值次数设置
 eRecordType.ResetDoubleRechargeToken = 27 -- [中心服]重置双倍充值次数设置
 eRecordType.OneTypeCodeMultiUse = 28      -- [Code服使用]一个码多人使用
-eRecordType.FreeMatchPvpCfgid = 29        -- [军演服使用]自由pvp当前配置id
+eRecordType.FreeMatchPvpCfgId = 29        -- [军演服使用]自由pvp当前配置id
 eRecordType.LimitCodeActiveId = 30        -- [游戏服] 限量奖励任务活动ID
 eRecordType.FreeMatchJoinPlrCnt = 31      -- [军演服使用] pvp参与人数
 eRecordType.DyExchangeCodeId = 32         -- [Code服使用] 动态兑换码生成id
@@ -2017,6 +2023,8 @@ eOperateType.PayNotice1 = 1020 --充值弹窗1
 --(特殊处理)对应多个活动，所以不对应活动id
 eOperateType.SkinRebate = 13000 --皮肤返利
 eOperateType.DragonBoatFestival = 1029 --端午签到
+eOperateType.RichMan = 1037--大富翁
+eOperateType.PhysicalReward = 1038 --实物抽奖活动
 eOperateType.HalloweenGame = 1035--万圣节小游戏
 eOperateType.NewPlayerSeven = 1039 --新手七日活动
 
@@ -2142,9 +2150,10 @@ eDragonBoatFestivalType.Salty = 2   -- 咸
 -----------------------------------------------------------------------------------------------------------------
 AnniversaryType = {}
 AnniversaryType.Timest = 2 --1.5周年
+AnniversaryType.Second = 3 --2周年
 
 AnniversaryListType = {}
-AnniversaryListType.Timest = 1 --1.5周年主界面
+AnniversaryListType.Main = 1 --主界面
 AnniversaryListType.Pic = 2 --图片跳转
 AnniversaryListType.Shop = 3 --商店
 AnniversaryListType.AccuCharge = 4 --累积充值

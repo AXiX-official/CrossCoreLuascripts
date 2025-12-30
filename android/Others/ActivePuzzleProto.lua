@@ -1,4 +1,4 @@
-ActivePuzzleProto = {}
+﻿ActivePuzzleProto = {}
 
 --获取拼图数据
 function ActivePuzzleProto:GetPuzzleData(id)

@@ -1,4 +1,4 @@
---镜头数据
+﻿--镜头数据
 local this = 
 {
 [-1105245822]={{delay=350,side_angle=0,overlook_angle=35,distance=1500,time=500,pos_ref={ref_type=10,offset_height=150}}},

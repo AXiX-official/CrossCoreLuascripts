@@ -1,4 +1,4 @@
-local cb = nil
+﻿local cb = nil
 local slider = nil
 local isGet = false
 local isFinish = false

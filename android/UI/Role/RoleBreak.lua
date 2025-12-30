@@ -1,4 +1,4 @@
-local targetPos = {{-243.9, 491.3}, {-81.4, 491.3}, {81.3, 491.3}, {243.5, 491.3}}
+﻿-- local targetPos = {{-243.9, 491.3}, {-81.4, 491.3}, {81.3, 491.3}, {243.5, 491.3}}
 local lookBreakLv -- 预览等级
 
 function Awake()
@@ -14,7 +14,8 @@ function OnDisable()
 end
 
 function Refresh(_cardData, _elseData)
-    _lookBreakLv = _elseData -- 查看等级 
+    _lookBreakLv = _elseData and _elseData[1] or nil -- 查看突破等级返回
+    _target = _elseData and _elseData[2] or nil
     InitData(_cardData)
     SetLv()
     SetStatus()
@@ -22,13 +23,22 @@ function Refresh(_cardData, _elseData)
     SetMaterials()
     SetBtn()
     SetIconAnim()
+    -- 
+    local lv = _lookBreakLv
+    if (not lv) then
+        lv = cardData:GetBreakLevel()
+    end
+    LanguageMgr:SetText(txtBreak, lv > 4 and 4091 or 4213)
 end
 
+-- 选中
 function SetIconAnim()
     if (_lookBreakLv) then
-        local pos = targetPos[_lookBreakLv - 1]
+        local x1, y1, z1 = CSAPI.GetPos(_target)
+        CSAPI.SetPos(imgBreak, x1, y1, z1)
+        local x2, y2 = CSAPI.GetAnchor(imgBreak)
         CSAPI.SetGOIgnoreAlpha(imgBreak, true)
-        UIUtil:SetPObjMove(imgBreak, pos[1], -162.7, pos[2], 503.6, 0, 0, nil, 300, 1)
+        UIUtil:SetPObjMove(imgBreak, x2, -162.7, y2, 503.6, 0, 0, nil, 300, 1)
         UIUtil:SetObjScale(imgBreak, 1, 0.6, 1, 0.6, 1, 1, function()
             CSAPI.SetGOIgnoreAlpha(imgBreak, false)
         end, 300, 0)
@@ -67,7 +77,8 @@ end
 
 function SetLv()
     --
-    ResUtil.RoleCard_BG:Load(imgBreak, "btn_20_0" .. (lookBreakLv - 1))
+    CSAPI.SetGOActive(imgEX, lookBreakLv > 5)
+    ResUtil.RoleCard_BG:Load(imgBreak, "img_2_0" .. (lookBreakLv - 1))
     -- 
     local curLv, maxLv = cardData:GetLv(), cardData:GetMaxLv()
     CSAPI.SetText(txtLv1, string.format("%s<color=#929296>/%s</color>", curLv, maxLv))
@@ -115,25 +126,27 @@ function GetAddValue(_key)
 end
 
 function SetTalent()
+    CSAPI.SetGOActive(talent, lookBreakLv <= 5)
     CSAPI.SetGOActive(objMaxTalent, lookBreakLv > 5)
-    local curTalentID = cardData:GetTalentIDByBreakLV(lookBreakLv)
-    if (curTalentID) then
-        local cfg = Cfgs.CfgSubTalentSkill:GetByID(curTalentID)
-
-        -- item 
-        if (not talentItem) then
-            ResUtil:CreateUIGOAsync("Role/RoleInfoTalentItem1", talent, function(go)
-                talentItem = ComUtil.GetLuaTable(go)
+    if (lookBreakLv <= 5) then
+        local curTalentID = cardData:GetTalentIDByBreakLV(lookBreakLv)
+        if (curTalentID) then
+            local cfg = Cfgs.CfgSubTalentSkill:GetByID(curTalentID)
+            -- item 
+            if (not talentItem) then
+                ResUtil:CreateUIGOAsync("Role/RoleInfoTalentItem1", talent, function(go)
+                    talentItem = ComUtil.GetLuaTable(go)
+                    talentItem.Refresh2(cfg)
+                end)
+            else
                 talentItem.Refresh2(cfg)
-            end)
-        else
-            talentItem.Refresh2(cfg)
+            end
+            -- name
+            CSAPI.SetText(txtTalent1, cfg.name)
+            -- desc 
+            local _desc = StringUtil:SkillDescFormat(cfg.desc)
+            CSAPI.SetText(txtTalent2, _desc or cfg.desc)
         end
-        -- name
-        CSAPI.SetText(txtTalent1, cfg.name)
-        -- desc 
-        local _desc = StringUtil:SkillDescFormat(cfg.desc)
-        CSAPI.SetText(txtTalent2,_desc or cfg.desc)
     end
 end
 
@@ -145,9 +158,14 @@ end
 
 function SetMaterials()
     local goodsDatas = {}
-    local break_id = cardData:GetCfg().break_id
-    local useBreakId = GCardCalculator:CalUseBreakId(break_id, lookBreakLv - 1)
-    materialCfg = Cfgs.CardBreakMaterial:GetByID(useBreakId)
+    if (lookBreakLv > 5) then
+        local matCfg2 = Cfgs.CardBreakMaterial2:GetByID(cardData:GetQuality())
+        materialCfg = matCfg2.infos[lookBreakLv - 1]
+    else
+        local break_id = cardData:GetCfg().break_id
+        local useBreakId = GCardCalculator:CalUseBreakId(break_id, lookBreakLv - 1)
+        materialCfg = Cfgs.CardBreakMaterial:GetByID(useBreakId)
+    end
     local mats = {}
     if (materialCfg) then
         mats = materialCfg.materials
@@ -192,7 +210,7 @@ function SetBtn()
         -- 预览 
         cg_btnBreak.alpha = 1
         LanguageMgr:SetText(txtBreak1, 4214)
-        LanguageMgr:SetEnText(txtBreak2, 4214)
+        -- LanguageMgr:SetEnText(txtBreak2, 4214)
     else
         -- 正常升级 
         isOpen, lockStr = MenuMgr:CheckModelOpen(OpenViewType.special, "special1") -- 是否已解锁
@@ -226,7 +244,7 @@ end
 function OnClickBreak()
     if (_lookBreakLv ~= nil) then
         -- 返回升级
-        EventMgr.Dispatch(EventType.Role_Jump_Break, {_lookBreakLv, true})
+        EventMgr.Dispatch(EventType.Role_Jump_Break, {_lookBreakLv, true, imgBreak})
     else
         if(not isOpen)then 
             Tips.ShowTips(lockStr)

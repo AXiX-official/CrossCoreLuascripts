@@ -1,4 +1,4 @@
-local items={};
+﻿local items={};
 function Refresh(list)
     if items then
         for k,v in ipairs(items) do

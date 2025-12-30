@@ -1,4 +1,4 @@
--- local minScale = 0.9
+﻿-- local minScale = 0.9
 -- local len = 0
 
 -- function Awake()

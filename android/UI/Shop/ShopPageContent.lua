@@ -1,4 +1,4 @@
---商店中的商品页
+﻿--商店中的商品页
 local grids={};
 function Refresh(_data,_elseData)
     if _data then

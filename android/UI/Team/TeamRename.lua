@@ -1,4 +1,4 @@
---队伍重命名
+﻿--队伍重命名
 local inp;
 function Awake()
     inp=ComUtil.GetCom(InputField,"InputField");

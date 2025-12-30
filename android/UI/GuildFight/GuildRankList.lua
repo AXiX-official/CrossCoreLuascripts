@@ -1,4 +1,4 @@
---公会战排名界面
+﻿--公会战排名界面
 local listType=GuildRankType.GuildGobalRank;--排名类型
 local protoInfo={};
 local layout=nil;

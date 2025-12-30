@@ -1,4 +1,4 @@
-SpecialGuideMgr = MgrRegister("SpecialGuideMgr")
+﻿SpecialGuideMgr = MgrRegister("SpecialGuideMgr")
 local this = SpecialGuideMgr;
 
 function this:Init()

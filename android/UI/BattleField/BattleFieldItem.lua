@@ -1,4 +1,4 @@
-local fightSlider = nil
+﻿local fightSlider = nil
 local data = nil
 local ids = {}
 

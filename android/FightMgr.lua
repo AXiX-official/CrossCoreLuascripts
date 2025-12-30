@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 
 -- 冒泡排序(稳定)
 function BubbleSort(arr, sortfun, key)
@@ -1266,7 +1266,7 @@ function FightMgrBase:CheckOver(isRoundOver)
         -- 本来应该结束的, 但是需求最后一次死亡还要触发事件
         if isRoundOver then
             self:OnRoundOver()
-            LogTable(self.log:GetAndClean())
+            LogTable(self.log:GetAndClean(), "FightMgrBase:CheckOver() self.log:GetAndClean()")
             return self:CheckOver()
         end
     end
@@ -1313,6 +1313,13 @@ function FightMgrBase:OnRoundOver()
     else
         if self.nStep >= self.nStepLimit then
             flag = true
+        end
+    end
+
+    -- 回合结束清除buff状态
+    for i, v in ipairs(self.arrCard) do
+        if v:IsUnite() then 
+            v:OnRoundOver() --检查是否需要解体
         end
     end
 
@@ -1405,7 +1412,7 @@ function FightMgrBase:OnTurnNext()
     if self.isOver then return end
 
     if DEBUG then
-        LogTable(self.log:GetAndClean())
+        LogTable(self.log:GetAndClean(), "FightMgrBase:OnTurnNext() self.log:GetAndClean()")
     end
 
     -- 由于回合结束触发了技能打死怪物, 导致切换切换周目, 所以回合结束之后判断一次切换回合
@@ -1494,7 +1501,7 @@ function FightMgrBase:OnTurnNext()
     card:AIOnTurn(isMotionless)
     card.bAIOnTurn = nil -- 设置了自动战斗, 就不执行ai
     LogDebugEx('OnTurnNext end--------', card.name, card.oid)
-    LogTable(self.log:GetAndClean())
+    LogTable(self.log:GetAndClean(), "FightMgrBase:OnTurnNext() self.log:GetAndClean()")
 end
 
 -- 自动战斗
@@ -1904,7 +1911,7 @@ function FightMgrBase:SendRestoreFight(uid, nCmdIndex)
         return
     end
 
-    LogTable(self.cmds)
+    LogTable(self.cmds, "FightMgrBase:SendRestoreFight cmds:")
 
     if nCmdIndex > 0 then
         -- 断线重连, 什么都不用做
@@ -1982,10 +1989,22 @@ end
 function FightMgrBase:AddStep(num, isHide)
     LogDebugEx("FightMgrBase:AddStep before-----", num, isHide, self.nStepLimit, self.nStepOffset)
     -- LogTrace()
+    
+    -- pvp以及镜像不生效
+    if IsPvpSceneTypeEx(self.type) or self:IsAbattoirFight() then return end
+
     self.nStepLimit = self.nStepLimit + num
     if not isHide then return end
     self.nStepOffset   = self.nStepOffset - num
     LogDebugEx("FightMgrBase:AddStep after-----", num, isHide, self.nStepLimit, self.nStepOffset)
+end
+
+function FightMgrBase:IsAbattoirFight()
+    local dupCfg = MainLine[self.nDuplicateID]
+    if dupCfg and (dupCfg.type == eDuplicateType.AbattoirRand or dupCfg.type == eDuplicateType.AbattoirSelect) then
+        return true
+    end
+    return false
 end
 
 -- 获取操作数上限
@@ -2341,15 +2360,15 @@ function FightMgrClient:DoCommanderSkill(data)
 
     -- 再发一次OnTurn
     local card = self.currTurn
-    local log = {api = 'OnTurn', turnNum = self.nStep+self.nStepOffset, nStepLimit = self.nStepLimit+self.nStepOffset, isMotionless = isMotionless}
+    local log = {api = 'OnTurn', turnNum = self:GetCurrStep(), nStepLimit = self:GetStepLimit(), isMotionless = isMotionless}
 
-    if self:IsPVE() then
-        if self.currTurn:GetTeamID() == 1 then
-            log.turnNum = self.nStepPVE
-        else
-            log.turnNum = self.nStepPVE
-        end
-    end
+    -- if self:IsPVE() then
+    --     if self.currTurn:GetTeamID() == 1 then
+    --         log.turnNum = self.nStepPVE
+    --     else
+    --         log.turnNum = self.nStepPVE
+    --     end
+    -- end
 
     self.log:Add(log)
     self.log:StartSub('datas')
@@ -2597,18 +2616,18 @@ function FightMgrClient:DoTurn(data)
 
         local log = {
             api = 'OnTurn',
-            turnNum = self.nStep+self.nStepOffset,
-            nStepLimit = self.nStepLimit+self.nStepOffset,
+            turnNum = self:GetCurrStep(),
+            nStepLimit = self:GetStepLimit(),
             isMotionless = isMotionless
         }
 
-        if self:IsPVE() then
-            if self.currTurn:GetTeamID() == 1 then
-                log.turnNum = self.nStepPVE
-            else
-                log.turnNum = self.nStepPVE
-            end
-        end
+        -- if self:IsPVE() then
+        --     if self.currTurn:GetTeamID() == 1 then
+        --         log.turnNum = self.nStepPVE
+        --     else
+        --         log.turnNum = self.nStepPVE
+        --     end
+        -- end
 
         self.log:Add(log)
         self.log:StartSub('datas')
@@ -2826,14 +2845,14 @@ function FightMgrClient:RestoreFight()
     -- 控制类buffer处理
     local isMotionless = card.bufferMgr:IsMotionless()
 
-    local log = {api = 'OnTurn', turnNum = self.nStep+self.nStepOffset, nStepLimit = self.nStepLimit+self.nStepOffset, isMotionless = isMotionless}
-    if self:IsPVE() then
-        if self.currTurn:GetTeamID() == 1 then
-            log.turnNum = self.nStepPVE
-        else
-            log.turnNum = self.nStepPVE
-        end
-    end
+    local log = {api = 'OnTurn', turnNum = self:GetCurrStep(), nStepLimit = self:GetStepLimit(), isMotionless = isMotionless}
+    -- if self:IsPVE() then
+    --     if self.currTurn:GetTeamID() == 1 then
+    --         log.turnNum = self.nStepPVE
+    --     else
+    --         log.turnNum = self.nStepPVE
+    --     end
+    -- end
 
     self.log:Add(log)
     self.log:StartSub('datas')
@@ -3189,7 +3208,7 @@ function PVEFightMgrServer:Over(stage, winer)
             self.monsterOID,
             grade,
             hpinfo,
-            self.nStepPVE,
+            self:GetCurrStep(),
             deathcount,
             cardCnt,
             cardIds,

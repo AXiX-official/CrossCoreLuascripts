@@ -1,4 +1,4 @@
-local itemScaleX = 116   --item大小
+﻿local itemScaleX = 116   --item大小
 local scaleDown = 0.77   --缩小比例约 0.65
 local interval = 21     --间隔
 local canUse = false

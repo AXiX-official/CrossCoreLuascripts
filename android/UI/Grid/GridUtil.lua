@@ -1,4 +1,4 @@
-
+﻿
 --一些格子的通用点击事件
 GridClickFunc = {
 	EquipDetails = function(tab, func) --打开装备详情界面

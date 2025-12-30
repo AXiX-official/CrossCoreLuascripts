@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local sTime,eTime = 0,0
 local jumpState = 1
 

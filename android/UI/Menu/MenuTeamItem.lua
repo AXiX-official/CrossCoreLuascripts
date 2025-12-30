@@ -1,4 +1,4 @@
-function Refresh(_data)
+﻿function Refresh(_data)
 	data = _data
 	if(data[2] == 0) then
 		SetNil()

@@ -1,4 +1,4 @@
---核心突破
+﻿--核心突破
 local index = nil
 
 function Awake()

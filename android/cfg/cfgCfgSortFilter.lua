@@ -1,4 +1,4 @@
-_G["CfgSortFilter"]={{["view"]="RoleListNormal",["sort"]={1008,1002,1001,1005,1004,1006,1003,1000}
+﻿_G["CfgSortFilter"]={{["view"]="RoleListNormal",["sort"]={1008,1002,1001,1005,1004,1006,1003,1000}
 ,["key"]="1",["filter"]={{3022,"CfgTeamEnum"}
 ,{3024,"CfgCardSortQuality"}
 ,{3027,"CfgRolePosEnum"}

@@ -1,4 +1,4 @@
-local layout=nil;
+﻿local layout=nil;
 function Awake()
     layout=ComUtil.GetCom(sv,"UISV");
     layout:Init("UIs/EquipInfo/EquipSkillAttribute2",LayoutCallBack,true);

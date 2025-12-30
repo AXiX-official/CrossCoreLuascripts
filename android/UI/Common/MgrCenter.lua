@@ -1,4 +1,4 @@
---管理器中心
+﻿--管理器中心
 require "MgrBase"
 
 --注册名称(必填)
@@ -38,6 +38,7 @@ local mgrNames = {
 	"GuildFightMgr",--公会战
 	--"TeamBossMgr",--组队boss
     "DormMgr",    --宿舍
+	"DormPetMgr",
 	"ArchiveMgr",   --图鉴
 	"SweepMgr",  --扫荡
 	"DungeonBoxMgr", --副本星级
@@ -85,6 +86,9 @@ local mgrNames = {
 	"HalloweenMgr", --万圣节小游戏
     "DungeonTeamReplaceMgr", --推荐阵容
 	"MerryChristmasMgr", --圣诞活动
+	"RichManMgr",--大富翁
+    "PhysicalRewardMgr", --实物抽奖
+
 	"MissionMgr",   --任务  --------------------------------------必须放到最后}
 	"SilentDownloadManager"
 }

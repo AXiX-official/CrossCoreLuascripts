@@ -1,4 +1,4 @@
---角色装备属性面板
+﻿--角色装备属性面板
 local layout=nil;
 local statusItems;
 local statusDatas;

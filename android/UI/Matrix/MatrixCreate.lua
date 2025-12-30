@@ -1,4 +1,4 @@
--- 建筑列表
+﻿-- 建筑列表
 curIndex1, curIndex2 = 1, 1 -- 父index,子index
 -- local curIndex = 0
 

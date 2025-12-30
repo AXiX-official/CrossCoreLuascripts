@@ -1,4 +1,4 @@
-local canvasGroup = nil
+﻿local canvasGroup = nil
 
 function SetClickCB(_cb)
 	cb = _cb

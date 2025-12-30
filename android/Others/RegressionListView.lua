@@ -1,4 +1,4 @@
-local leftInfos = nil
+﻿local leftInfos = nil
 local top = nil
 local panels = {}
 local currPanel = nil

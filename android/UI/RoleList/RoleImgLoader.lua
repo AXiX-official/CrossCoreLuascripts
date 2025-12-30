@@ -1,4 +1,4 @@
-
+﻿
 
 --加载立绘
 function LoadImg(_imgGo, _modelId, _type, _callBack)

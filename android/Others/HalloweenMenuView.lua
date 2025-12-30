@@ -1,4 +1,4 @@
-local alData = nil
+﻿local alData = nil
 local cfgRewards = nil
 local goodsData = nil
 local lastBGM = nil

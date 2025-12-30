@@ -1,4 +1,4 @@
-_G["CfgPetFeedReward"]={[103]={["id"]=103,["infos"]={{["reward"]={{14209,4,2}
+﻿_G["CfgPetFeedReward"]={[103]={["id"]=103,["infos"]={{["reward"]={{14209,4,2}
 }
 ,["index"]=1,["feedNum"]=50}
 ,{["reward"]={{14209,4,2}

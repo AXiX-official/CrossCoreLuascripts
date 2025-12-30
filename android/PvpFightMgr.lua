@@ -1,4 +1,4 @@
--- OPENDEBUG(false)
+﻿-- OPENDEBUG(false)
 ------------------------------------------------
 -- pvp战斗
 PvpFightMgrBase = oo.class(FightMgrBase)

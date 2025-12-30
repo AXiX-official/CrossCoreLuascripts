@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local isLeft= false
 local time = 0
 local showTime = 0

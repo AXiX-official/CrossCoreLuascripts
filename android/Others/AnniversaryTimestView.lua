@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local mDatas = {}
 local rDatas1 = {}
 local rDatas2 = {}

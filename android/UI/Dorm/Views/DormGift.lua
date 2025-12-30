@@ -1,4 +1,4 @@
-local curRole
+﻿local curRole
 local curDatas = {}
 local giftDatas = {}
 local totaleExp = 0

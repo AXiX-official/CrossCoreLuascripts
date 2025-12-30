@@ -1,4 +1,4 @@
-_G["CfgPetSport"]={{["picture"]="bg_105",["id"]=1,["infos"]={{["foodChange"]=-16,["happyChange"]=10,["index"]=1,["washChange"]=-16,["feedChange"]=1}
+﻿_G["CfgPetSport"]={{["picture"]="bg_105",["id"]=1,["infos"]={{["foodChange"]=-16,["happyChange"]=10,["index"]=1,["washChange"]=-16,["feedChange"]=1}
 ,{["foodChange"]=-24,["happyChange"]=-20,["index"]=2,["washChange"]=-25,["feedChange"]=2}
 }
 ,["name"]="玩具城堡",["time"]={300,2700}

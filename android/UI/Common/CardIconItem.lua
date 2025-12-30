@@ -1,4 +1,4 @@
-isLive2D = true
+﻿isLive2D = true
 
 function Awake()
     local arr = CSAPI.GetScreenSize()

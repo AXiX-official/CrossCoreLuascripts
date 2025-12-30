@@ -1,4 +1,4 @@
--- 策划
+﻿-- 策划
 local winIndex = nil -- 胜利动画,填下标
 local loseIndex = nil -- 失败动画,填下标
 local clickIndex = nil -- 点击动画,填下标

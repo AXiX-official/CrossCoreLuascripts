@@ -1,4 +1,4 @@
-local clickImg = nil;
+﻿local clickImg = nil;
 function Awake()
     clickImg = ComUtil.GetCom(clickNode, "Image")
 end

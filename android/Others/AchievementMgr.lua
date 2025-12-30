@@ -1,4 +1,4 @@
-AchievementMgr = MgrRegister("AchievementMgr")
+﻿AchievementMgr = MgrRegister("AchievementMgr")
 local this = AchievementMgr;
 
 function this:Init()

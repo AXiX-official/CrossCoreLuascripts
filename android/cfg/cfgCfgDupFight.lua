@@ -1,4 +1,4 @@
-_G["CfgDupFight"]={[10215]={["aFinishIds"]={93115}
+﻿_G["CfgDupFight"]={[10215]={["aFinishIds"]={93115}
 ,["sDescription"]="获得400000战场荣誉",["key"]=10215,["id"]=10215,["jAwardId"]={{10042,4000,2}
 }
 ,["nTransferPath"]=14001,["sName"]="战场荣誉15"}

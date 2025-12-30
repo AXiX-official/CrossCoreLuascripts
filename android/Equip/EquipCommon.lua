@@ -1,4 +1,4 @@
---装备品质
+﻿--装备品质
 EquipQuality = {
 	gray = 1, --灰色
 	green = 2,--绿色

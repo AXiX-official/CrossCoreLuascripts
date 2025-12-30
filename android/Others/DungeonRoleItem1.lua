@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local currLevel = 1
 local turnNum
 local currNum = 0

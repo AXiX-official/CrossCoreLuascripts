@@ -1,4 +1,4 @@
-isSelect = false
+﻿isSelect = false
 id = nil 
 
 function SetIndex(_index)

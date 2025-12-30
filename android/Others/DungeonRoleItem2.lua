@@ -1,4 +1,4 @@
-local isSelect = false
+﻿local isSelect = false
 local cb = nil
 local elseData =nil
 local cfgDungeon = nil

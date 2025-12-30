@@ -1,4 +1,4 @@
--- {_addRankNum, _isRankLevelUp, _addCoin}
+﻿-- {_addRankNum, _isRankLevelUp, _addCoin}
 function Awake()
     fade = ComUtil.GetCom(gameObject, "ActionFade")
     fade1 = ComUtil.GetCom(goShaderRaw, "ActionFade")

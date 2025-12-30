@@ -1,4 +1,4 @@
---皮肤信息子物体
+﻿--皮肤信息子物体
 
 local needToCheckMove = false
 function Awake()
@@ -27,17 +27,23 @@ function Refresh(_data,_elseData)
         -- SetAnimaTag(this.data:HasEnterTween());
         -- SetModelTag(this.data:HasModel());
          --特殊标签
-        local icons=this.data:GetTagIcons();
+        local icons,lIds=this.data:GetTagIcons(true);
         if icons~=nil then
             for i, v in ipairs(icons) do
-                CSAPI.SetGOActive(this[("tag"..i)],true)
-                ResUtil.Tag:Load(this[("tagIcon"..i)],v);
+                CSAPI.SetGOActive(this[("tagIcon" .. i)], true)
+                ResUtil.Tag:Load(this[("tagIcon" .. i)], v);
+                CSAPI.SetText(this["txtTagIcon"..i],tostring(LanguageMgr:GetByID(lIds[i])));
+                -- if lIds[i]==18146 then
+                --     CSAPI.SetTextColorByCode(this["txtTagIcon"..i],"AA5324");
+                -- else
+                --     CSAPI.SetTextColorByCode(this["txtTagIcon"..i],"A9C4F5");
+                -- end
             end
         end
          if icons==nil or #icons<3 then
                 local index= icons~=nil and #icons+1 or 1;
                 for i=index,3 do
-                    CSAPI.SetGOActive(this[("tag"..i)],false)
+                    CSAPI.SetGOActive(this[("tagIcon"..i)],false)
                 end
             end
         local comm=ShopCommFunc.GetSkinCommodity(this.data:GetModelID());

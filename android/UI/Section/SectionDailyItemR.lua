@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local textL = nil
 local textR = nil
 local lockState = false

@@ -1,4 +1,4 @@
-local  weight_key = "Loading";
+﻿local  weight_key = "Loading";
 local currKey=nil;
 local currCfg=nil;
 local currIdx=0;--当前显示的loading图下标

@@ -1,4 +1,4 @@
---战斗死亡
+﻿--战斗死亡
 
 FightActionDead = oo.class(FightActionBase);
 local this = FightActionDead;

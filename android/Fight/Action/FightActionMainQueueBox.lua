@@ -1,4 +1,4 @@
---主队列封装器
+﻿--主队列封装器
 
 FightActionMainQueueBox = oo.class(FightActionBase);
 local this = FightActionMainQueueBox;

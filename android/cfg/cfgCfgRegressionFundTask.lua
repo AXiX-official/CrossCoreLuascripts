@@ -1,4 +1,4 @@
-_G["CfgRegressionFundTask"]={[70002]={["sDescription"]="芯片重塑15次",["id"]=70002,["jAwardId"]={{10001,50000,2}
+﻿_G["CfgRegressionFundTask"]={[70002]={["sDescription"]="芯片重塑15次",["id"]=70002,["jAwardId"]={{10001,50000,2}
 }
 ,["aFinishIds"]={29201}
 ,["key"]=70002,["nIsHide"]=2,["nTransferPath"]=150004,["sName"]="芯片重塑15次",["fundId"]=71002,["nGroup"]=1}

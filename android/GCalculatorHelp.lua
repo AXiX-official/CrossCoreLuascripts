@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 GCalHelp = {}
 
 -------------------------------------------------------------------------------------------------------------------
@@ -3396,16 +3396,20 @@ end
 -- 添加装备互斥技能
 function GCalHelp:RegisterExcludeSkill(cid, equipFightSkills, excludeSkills)
     local rInfo = {}
-    
+
+    local isChange = false
     for _, skillId in ipairs(equipFightSkills) do
         local cfg = g_CalExcludeSkillIds[skillId]
         if cfg then
+            isChange = true
             table.insert(rInfo, cfg) -- cfg:{nExcludeId = cfg.nExcludeId, nEquipSkillId = id, nSkillId = cfg.nGetSkillId}
         end
     end
 
     -- 保存互斥技能数组
-    excludeSkills[cid] = rInfo
+    if isChange then
+        excludeSkills[cid] = rInfo
+    end
 end
 
 --------------------------------------------------------------------------------------------
@@ -3413,7 +3417,7 @@ end
 -- cardDataArrs: 
 function GCalHelp:RemoveExcludeSkill(cardDataArrs, excludeSkills)
    -- LogDebug("=================================================================================================")
-    -- LogTable(excludeSkills, "CardMgr:RemoveExcludeSkill m_excludeSkills:")
+    LogTable(excludeSkills, "GCalHelp:RemoveExcludeSkill excludeSkills:")
     -- 根据卡牌id分类
     local cardDatas = {}
 
@@ -3423,7 +3427,7 @@ function GCalHelp:RemoveExcludeSkill(cardDataArrs, excludeSkills)
     -- 遍历卡牌数据，取出所有卡牌的互斥技能信息
     for _, fightData in ipairs(cardDataArrs) do
         local cardData = fightData.data
-        local cid = cardData.real_cid
+        local cid = cardData.real_cid or cardData.cid
         if cid then
             cardDatas[cid] = cardData
 
@@ -3438,7 +3442,7 @@ function GCalHelp:RemoveExcludeSkill(cardDataArrs, excludeSkills)
                 end
             end
         else
-            -- LogWarning("CardMgr:RemoveExcludeSkill had none card not real_cid")
+            LogWarning("GCalHelp:RemoveExcludeSkill had none card not real_cid")
         end
     end
 
@@ -3447,7 +3451,7 @@ function GCalHelp:RemoveExcludeSkill(cardDataArrs, excludeSkills)
     -- LogTable(CfgSkills, "CfgSkills:")
     -- LogTable(cardDatas, "cardDatas:")
     -- LogTable(cardDataArrs, "cardDataArrs:")
-    -- LogTable(excludeIdMap, "CardMgr:RemoveExcludeSkill:")
+    LogTable(excludeIdMap, "GCalHelp:RemoveExcludeSkill:")
 
     for excludeId, infos in pairs(excludeIdMap) do
         local len = #infos
@@ -3468,11 +3472,13 @@ function GCalHelp:RemoveExcludeSkill(cardDataArrs, excludeSkills)
                 local cardData = cardDatas[info.cid]
 
                 local sLen = #cardData.skills
+                LogTable(cardData.skills, string.format("GCalHelp:RemoveExcludeSkill card cfgid:%s before", cardData.cfgid))
                 for si = sLen, 1, -1 do
-                    if cardData.skills[si] == info.id then
+                    if cardData.skills[si] == info.skillId then
                         table.remove(cardData.skills, si)
                     end
                 end
+                LogTable(cardData.skills, string.format("GCalHelp:RemoveExcludeSkill card cfgid:%s after", cardData.cfgid))
             end
         end
     end

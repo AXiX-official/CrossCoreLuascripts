@@ -1,4 +1,4 @@
-_G["CfgTaskPuzzle"]={[210004]={["sOpenTime"]="2025/5/21 12:00:00",["sDescription"]=[[解锁影像碎片NO.4条件：基地挖掘矿场收获
+﻿_G["CfgTaskPuzzle"]={[210004]={["sOpenTime"]="2025/5/21 12:00:00",["sDescription"]=[[解锁影像碎片NO.4条件：基地挖掘矿场收获
 30次]],["id"]=210004,["jAwardId"]={{10604,1,2}
 }
 ,["gridIdx"]=4,["aFinishIds"]={210004}

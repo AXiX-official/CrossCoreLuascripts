@@ -1,4 +1,4 @@
-local itemPathT = "UIs/Archive2/ArchiveCourseItemT"
+﻿local itemPathT = "UIs/Archive2/ArchiveCourseItemT"
 
 local curType = 1  --当前类型
 local curDatas = {}

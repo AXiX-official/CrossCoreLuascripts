@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 function this.New(groupName)
 	this.__index = this.__index or this;

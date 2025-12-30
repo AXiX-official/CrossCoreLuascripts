@@ -1,4 +1,4 @@
-local leftInfos = {}
+﻿local leftInfos = {}
 local panels = {}
 local currPanel = nil
 local tab = nil

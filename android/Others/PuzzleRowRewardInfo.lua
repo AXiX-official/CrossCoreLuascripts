@@ -1,4 +1,4 @@
---拼图行奖励信息
+﻿--拼图行奖励信息
 local this = {}
 
 function this.New()

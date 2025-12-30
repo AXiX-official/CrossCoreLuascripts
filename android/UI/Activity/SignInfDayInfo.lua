@@ -1,4 +1,4 @@
---日数据
+﻿--日数据
 local this = {}
 
 function this.New()

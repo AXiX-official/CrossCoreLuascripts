@@ -1,4 +1,4 @@
-local time, timer, refreshTime = 0, 0, 0
+﻿local time, timer, refreshTime = 0, 0, 0
 local openNums = nil
 local currSel = 1
 local isPvpRet = false

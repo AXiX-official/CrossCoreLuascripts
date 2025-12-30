@@ -1,4 +1,4 @@
-require "BattleCharacterMgr";
+﻿require "BattleCharacterMgr";
 
 --副本管理
 BattleMgr = {};

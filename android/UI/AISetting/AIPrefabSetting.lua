@@ -1,4 +1,4 @@
---自动战斗预设UI data:teamItemData
+﻿--自动战斗预设UI data:teamItemData
 local tabIndex=1;
 local isFirst=true;
 local layout1=nil;

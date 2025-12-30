@@ -1,4 +1,4 @@
---协战格子
+﻿--协战格子
 local cb=nil;
 function Refresh(_data)
 	data = _data

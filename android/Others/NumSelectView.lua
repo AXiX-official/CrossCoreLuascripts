@@ -1,4 +1,4 @@
-local top=nil;
+﻿local top=nil;
 local eventMgr=nil;
 local useNum=0;
 local maxNum=0;

@@ -1,4 +1,4 @@
-local this = MgrRegister("RiddleMgr")
+﻿local this = MgrRegister("RiddleMgr")
 --猜谜管理
 function this:Update(proto)
     if proto and next(proto)~=nil then

@@ -1,4 +1,4 @@
-_G["CfgArchiveMultiPicture"]={{["shopId"]=1,["show"]=false,["l2dName"]="CG02",["get_txt"]="任务奖励",["id"]=1,["img"]="three_people",["imgPos"]={161,-17,1.65}
+﻿_G["CfgArchiveMultiPicture"]={{["shopId"]=1,["show"]=false,["l2dName"]="CG02",["get_txt"]="任务奖励",["id"]=1,["img"]="three_people",["imgPos"]={161,-17,1.65}
 ,["l2dPos"]={-16,-51,0.92}
 ,["theme_type"]=2,["nType"]=1,["sort"]=1,["set_icon"]="Small_three_people",["key"]="1",["sName"]="皇室聚会",["icon"]="board_three_people",["itemId"]=61001}
 ,{["shopId"]=80401,["show"]=true,["l2dName"]="CG_seashore",["get_txt"]="商店购买",["id"]=2,["img"]="seashore",["imgPos"]={-45,-8,1.16}
@@ -268,14 +268,23 @@ _G["CfgArchiveMultiPicture"]={{["shopId"]=1,["show"]=false,["l2dName"]="CG02",["
 ,[98]={["l2dName"]="CG0075_LockerRoomImpact",["get_txt"]="商店购买",["img"]="Changing_Room_Shenanigans",["shopId"]=80465,["sort"]=98,["sName"]="更衣密趣",["icon"]="board_Changing_Room_Shenanigans",["itemId"]=61100,["l2dPos"]={55,-29,1.03}
 ,["id"]=98,["imgPos"]={3,-53,0.9}
 ,["theme_type"]=2,["nType"]=1,["show"]=true,["sEnd"]="2025/12/03 03:00:00",["set_icon"]="Small_Changing_Room_Shenanigans",["sStart"]="2025/11/19 10:00:00",["key"]="98"}
-,[99]={["shopId"]=80466,["show"]=true,["l2dName"]="CG0049_BrilliantMirrorImage_spine",["get_txt"]="商店购买",["id"]=99,["img"]="Brilliant_Mirror_Image",["imgPos"]={-27,-45,1}
-,["l2dPos"]={26,-20,0.83}
-,["theme_type"]=8,["nType"]=1,["sort"]=99,["set_icon"]="Small_Brilliant_Mirror_Image",["key"]="99",["sName"]="璀璨镜影",["icon"]="board_Brilliant_Mirror_Image",["itemId"]=61101}
+,[99]={["l2dName"]="CG0049_BrilliantMirrorImage_spine",["get_txt"]="商店购买",["img"]="Brilliant_Mirror_Image",["shopId"]=80466,["sort"]=99,["sName"]="璀璨镜影",["icon"]="board_Brilliant_Mirror_Image",["itemId"]=61101,["l2dPos"]={26,-20,0.83}
+,["id"]=99,["imgPos"]={-27,-45,1}
+,["theme_type"]=8,["nType"]=1,["show"]=true,["sEnd"]="2025/12/30 03:00:00",["set_icon"]="Small_Brilliant_Mirror_Image",["sStart"]="2025/12/03 10:00:00",["key"]="99"}
 ,[100]={["shopId"]=1,["show"]=false,["l2dName"]="CG0080_LockerRoomParty_spine",["get_txt"]="活动赠送",["id"]=100,["img"]="Locker_Room_Party",["imgPos"]={-24,-1,0.9}
-,["l2dPos"]={-15,22,0.86}
+,["l2dPos"]={35,101,1.68}
 ,["theme_type"]=2,["nType"]=1,["sort"]=100,["set_icon"]="Small_Locker_Room_Party",["key"]="100",["sName"]="更衣室派对",["icon"]="board_Locker_Room_Party",["itemId"]=61102}
 ,[101]={["shopId"]=1,["get_txt"]="【冬日速递】活动",["id"]=101,["img"]="Nocturnal_Mystery_Gift",["imgPos"]={3,-53,0.9}
 ,["show"]=false,["theme_type"]=2,["nType"]=1,["sort"]=101,["set_icon"]="Small_Nocturnal_Mystery_Gift",["key"]="101",["sName"]="良夜奉礼",["icon"]="board_Nocturnal_Mystery_Gift",["itemId"]=61103}
+,[102]={["l2dName"]="CG0077_ChangingInPrivate_a",["get_txt"]="商店购买",["img"]="Alluring_Set",["shopId"]=80467,["sort"]=102,["sName"]="诱惑配搭",["icon"]="board_Alluring_Set",["itemId"]=61104,["l2dPos"]={42,18,0.86}
+,["id"]=102,["imgPos"]={-14,11,0.9}
+,["theme_type"]=9,["nType"]=1,["show"]=true,["sEnd"]="2026/02/11 03:00:00",["set_icon"]="Small_Alluring_Set",["sStart"]="2025/12/30 10:00:00",["key"]="102"}
+,[103]={["shopId"]=1,["show"]=false,["l2dName"]="CG0081_SymphonyOfOpulence_spine",["get_txt"]="活动赠送",["id"]=103,["img"]="Symphony_Of_Opulence",["imgPos"]={0,51,1.03}
+,["l2dPos"]={20,-65,0.86}
+,["theme_type"]=7,["nType"]=1,["sort"]=103,["set_icon"]="Small_Symphony_Of_Opulence",["key"]="103",["sName"]="奢华乐章",["icon"]="board_Symphony_Of_Opulence",["itemId"]=61105}
+,[104]={["shopId"]=1,["show"]=false,["l2dName"]="wulin_1",["get_txt"]="高级勘测奖励",["id"]=104,["img"]="A_Night_in_Scarlet",["imgPos"]={5,-48,0.92}
+,["l2dPos"]={6,-48,1.15}
+,["theme_type"]=8,["nType"]=1,["sort"]=104,["set_icon"]="Small_A_Night_in_Scarlet",["key"]="104",["sName"]="瑰色夜会",["icon"]="board_A_Night_in_Scarlet",["itemId"]=61106}
 ,[1013]={["shopId"]=1,["show"]=false,["get_txt"]="幸运扭蛋机奖励",["id"]=1013,["img"]="Half_Picture_13",["imgPos"]={0,-48,0.543}
 ,["l2dPos"]={0,0,1}
 ,["theme_type"]=3,["nType"]=2,["sort"]=13,["set_icon"]="Small_Half_Picture_13",["key"]="1013",["sName"]="银羽-卡梅尔的努力学生",["icon"]="board_Half_Picture_13",["itemId"]=64013}

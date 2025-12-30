@@ -1,4 +1,4 @@
---道具池奖励说明子物体
+﻿--道具池奖励说明子物体
 local items={};
 function Refresh(d)
     if d==nil then

@@ -1,4 +1,4 @@
---过场或暂停界面
+﻿--过场或暂停界面
 local imgFill1 = nil
 local imgFill2 = nil
 local maskGo = nil

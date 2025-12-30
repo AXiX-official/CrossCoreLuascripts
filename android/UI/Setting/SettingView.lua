@@ -1,4 +1,4 @@
-local childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "SettingCDKPanel"}
+﻿local childPanels = {"SettingFpsPanel", "SettingMusicPanel", "SettingFightPanel","SettingOtherPanel", "SettingCDKPanel"}
 local panels = {}
 local curPanel = nil
 local curIndex = 1

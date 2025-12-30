@@ -1,4 +1,4 @@
-_G["CfgTaskDaily"]={[37001]={["key"]=37001,["aFinishIds"]={37001}
+﻿_G["CfgTaskDaily"]={[37001]={["key"]=37001,["aFinishIds"]={37001}
 ,["sDescription"]="通关跃升行动关卡1次",["nStar"]=2,["id"]=37001,["sName"]="跃升行动",["nIsHide"]=2,["nTransferPath"]=10402}
 ,[30003]={["key"]=30003,["aFinishIds"]={30003}
 ,["sDescription"]="通关任意关卡3次",["nStar"]=3,["id"]=30003,["sName"]="通关之路",["nIsHide"]=2,["nTransferPath"]=30001}

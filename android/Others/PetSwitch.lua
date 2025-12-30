@@ -1,4 +1,4 @@
---宠物切换
+﻿--宠物切换
 local totalNum=0;
 local currNum=0;
 local layout=nil;

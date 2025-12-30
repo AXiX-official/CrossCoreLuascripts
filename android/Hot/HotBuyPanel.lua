@@ -1,4 +1,4 @@
-
+﻿
 function OnInit()
 	eventMgr = ViewEvent.New()
 	eventMgr:AddListener(EventType.Player_HotChange, OnOpen)

@@ -1,4 +1,4 @@
-
+﻿
 --设置立绘
 
 -- function SetImg(imgName)

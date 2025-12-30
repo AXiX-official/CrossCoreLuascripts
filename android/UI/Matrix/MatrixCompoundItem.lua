@@ -1,4 +1,4 @@
--- MatrixCompoundData
+﻿-- MatrixCompoundData
 local isOpen = false
 
 function Awake()

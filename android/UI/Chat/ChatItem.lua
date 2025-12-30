@@ -1,4 +1,4 @@
---聊天子物体
+﻿--聊天子物体
 local isSelf = false
 local data = nil
 local type = nil

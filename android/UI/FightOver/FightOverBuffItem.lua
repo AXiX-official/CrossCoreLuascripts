@@ -1,4 +1,4 @@
-local buffs = nil
+﻿local buffs = nil
 local itemHeight = 41 -- 子物体高度
 local height = 47 -- 标题高度
 local expireTime = 0

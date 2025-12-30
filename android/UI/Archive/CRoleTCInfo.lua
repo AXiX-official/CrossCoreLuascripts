@@ -1,4 +1,4 @@
---台词基类
+﻿--台词基类
 local this = {}
 
 function this.New()

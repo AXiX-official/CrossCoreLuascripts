@@ -1,4 +1,4 @@
-local d=nil;
+﻿local d=nil;
 local activeId=nil;
 local clickImg=nil;
 

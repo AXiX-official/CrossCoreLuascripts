@@ -1,9 +1,9 @@
---FireBall数据
+﻿--FireBall数据
 local this = 
 {
 [-865403415]={
 {delay=1500,time=19100,type=0,cue_sheet="cv/Lobera.acb",cue_name="Lobera_45",cue_feature=1},
-{time=20600,type=0,cue_sheet="fight/effect/Eighteen.acb ",cue_name="60330_call"},
+{time=20600,type=0,cue_sheet="fight/effect/Eighteen.acb",cue_name="60330_call"},
 {effect="call",effect_pack="b60330",time=21100,type=0,pos_ref={ref_type=6}}
 },
 [-686817241]={

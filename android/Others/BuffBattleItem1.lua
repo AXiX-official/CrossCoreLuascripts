@@ -1,4 +1,4 @@
-local item = nil
+﻿local item = nil
 local isSel = false
 
 function Awake()

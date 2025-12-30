@@ -1,4 +1,4 @@
-local multiItem = nil
+﻿local multiItem = nil
 
 function Awake()
     local go = ResUtil:CreateUIGO("LovePlusPic/LovePlusMulLive2DItem", itemParent.transform)

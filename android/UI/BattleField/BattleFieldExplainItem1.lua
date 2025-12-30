@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local isGet = nil
 local index = 0
 

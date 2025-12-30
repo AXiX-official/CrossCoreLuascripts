@@ -1,4 +1,4 @@
---主题item
+﻿--主题item
 function Refresh(_data, _curThemeType)
 	data = _data
 	curThemeType = _curThemeType

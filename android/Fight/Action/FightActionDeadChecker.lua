@@ -1,4 +1,4 @@
---战斗角色死亡检测
+﻿--战斗角色死亡检测
 
 FightActionDeadChecker = oo.class(FightActionBase);
 local this = FightActionDeadChecker;

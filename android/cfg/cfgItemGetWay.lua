@@ -1,4 +1,4 @@
-_G["ItemGetWay"]={{["describe"]="日常任务",["key"]=1,["id"]=1}
+﻿_G["ItemGetWay"]={{["describe"]="日常任务",["key"]=1,["id"]=1}
 ,{["describe"]="周常任务",["key"]=2,["id"]=2}
 ,{["describe"]="任务奖励",["key"]=3,["id"]=3}
 ,{["describe"]="核心构建获得",["key"]=4,["id"]=4}

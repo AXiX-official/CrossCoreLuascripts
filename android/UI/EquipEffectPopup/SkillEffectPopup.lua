@@ -1,4 +1,4 @@
-function Refresh(name,colorID,desc)
+﻿function Refresh(name,colorID,desc)
     CSAPI.SetText(txt_Name,name);
     local color=Cfgs.CfgUIColorEnum:GetByID(colorID or 1);
     CSAPI.SetImgColor(titleImg,color.r,color.g,color.b,color.a,false);

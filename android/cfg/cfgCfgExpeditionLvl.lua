@@ -1,4 +1,4 @@
-_G["CfgExpeditionLvl"]={{["tiredVal"]={432,-1}
+﻿_G["CfgExpeditionLvl"]={{["tiredVal"]={432,-1}
 ,["upCosts"]={{60101,50,2}
 ,{10001,500,2}
 }

@@ -1,4 +1,4 @@
-local curTag = nil
+﻿local curTag = nil
 
 function OnOpen()
 	oldTag = data:GetData().tag or 0

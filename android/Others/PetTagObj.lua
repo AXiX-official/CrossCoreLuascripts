@@ -1,4 +1,4 @@
-
+﻿
 local isOn=false;
 local isFirst=true
 function Refresh(_d,currIdx)

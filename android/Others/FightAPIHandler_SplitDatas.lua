@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --回合结束
 function this:Handle(data)   

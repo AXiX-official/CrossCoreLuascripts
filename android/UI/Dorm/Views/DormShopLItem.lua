@@ -1,4 +1,4 @@
--- 系统主题
+﻿-- 系统主题
 function SetIndex(_index)
     index = _index
 end

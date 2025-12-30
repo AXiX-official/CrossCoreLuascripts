@@ -1,4 +1,4 @@
-_G["CfgCardElem"]={{["id"]=1,["infos"]={{["index"]=1,["minGetCnt"]=1,["maxGetCnt"]=1,["elemNum"]=0,["reward"]={{10033,1,2}
+﻿_G["CfgCardElem"]={{["id"]=1,["infos"]={{["index"]=1,["minGetCnt"]=1,["maxGetCnt"]=1,["elemNum"]=0,["reward"]={{10033,1,2}
 }
 }
 ,{["index"]=2,["minGetCnt"]=2,["maxGetCnt"]=9,["elemNum"]=1,["reward"]={{10034,1,2}

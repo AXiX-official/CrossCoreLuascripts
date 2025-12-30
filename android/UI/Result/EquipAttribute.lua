@@ -1,4 +1,4 @@
-function Refresh(data)
+﻿function Refresh(data)
     if data then
         local cfg=Cfgs.CfgCardPropertyEnum:GetByID(data.id);
         CSAPI.SetText(txt_name,cfg.sName);

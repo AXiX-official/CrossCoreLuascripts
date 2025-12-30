@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 change={play_time=5000,transform_delay=0,transform_enter_state="change",transform_enter_state_delay=0},

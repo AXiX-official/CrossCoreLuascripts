@@ -1,4 +1,4 @@
-function OnOpen()
+﻿function OnOpen()
     optionDatas = data[1] --数据  {{desc = "xxx"},{desc = "xxx"}...}
     cb = data[2]          --选中回调
     posGO = data[3]       --位置参照

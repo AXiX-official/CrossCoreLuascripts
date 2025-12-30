@@ -1,4 +1,4 @@
-_G["CfgAlbum"]={{["offices"]={150,0,0.6}
+﻿_G["CfgAlbum"]={{["offices"]={150,0,0.6}
 ,["type"]=1,["key"]="1",["id"]=1,["img"]="UIs/BGs/loading_16/bg.jpg",["background_colour"]="7095CA",["sName"]="交织的日常"}
 ,{["offices"]={0,0,1.2}
 ,["type"]=1,["key"]="2",["id"]=2,["img"]="UIs/SectionImg/sBg2/bg1.png",["background_colour"]="90BBFF",["sName"]="英雄之旅"}

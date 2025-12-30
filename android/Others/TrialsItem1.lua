@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local mSlider = nil
 local info = nil
 local actionMove = nil

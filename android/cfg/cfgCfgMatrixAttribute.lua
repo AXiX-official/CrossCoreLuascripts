@@ -1,4 +1,4 @@
-_G["CfgMatrixAttribute"]={{["key"]="1",["viewName"]="MatrixRemould",["id"]=1,["sName"]="改造槽",["icon"]="btn_1_01",["icon2"]="btn_3_01"}
+﻿_G["CfgMatrixAttribute"]={{["key"]="1",["viewName"]="MatrixRemould",["id"]=1,["sName"]="改造槽",["icon"]="btn_1_01",["icon2"]="btn_3_01"}
 ,{["key"]="2",["viewName"]="MatrixCompound",["id"]=2,["sName"]="合成菜单",["icon"]="btn_1_02",["icon2"]="btn_3_01"}
 ,{["key"]="3",["viewName"]="MatrixResPanel",["id"]=3,["sName"]="资源库",["icon"]="btn_1_03",["icon2"]="btn_3_01"}
 ,{["key"]="4",["viewName"]="MatrixSetRole",["id"]=4,["sName"]="角色管理",["icon"]="btn_1_04",["icon2"]="btn_3_01"}

@@ -1,4 +1,4 @@
-ArmyProto = {}
+﻿ArmyProto = {}
 
 -- 获取军演信息
 function ArmyProto:GetPracticeInfoRet(proto)

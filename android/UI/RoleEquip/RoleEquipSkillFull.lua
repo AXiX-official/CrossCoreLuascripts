@@ -1,4 +1,4 @@
-
+﻿
 local lastSkillItem=nil;
 local selectSKId=nil; --当前高亮的详细技能信息
 local lvItems={};--等级描述物体

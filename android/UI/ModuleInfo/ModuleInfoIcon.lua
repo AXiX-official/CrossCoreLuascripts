@@ -1,4 +1,4 @@
-function Refresh(data,_cb)
+﻿function Refresh(data,_cb)
     cb = _cb
     ResUtil.ModuleInfo:Load(icon, data)
 end

@@ -1,4 +1,4 @@
--- 点线段
+﻿-- 点线段
 local lines = {}
 local datas = {}
 local index = 1

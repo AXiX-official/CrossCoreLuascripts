@@ -1,4 +1,4 @@
--- 关卡组的数据
+﻿-- 关卡组的数据
 local this = {}
 
 function this.New()

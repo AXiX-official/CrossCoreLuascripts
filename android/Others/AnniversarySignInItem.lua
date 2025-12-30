@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local items = {}
 local anim = nil
 

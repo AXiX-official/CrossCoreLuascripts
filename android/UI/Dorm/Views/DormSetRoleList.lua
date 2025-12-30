@@ -1,4 +1,4 @@
--- 驻员更换界面
+﻿-- 驻员更换界面
 --[[	基地：只有技能有效的会显示出来
 ]] local oldSelectIDs = {}
 local selectIDS = {} -- 字典
@@ -123,7 +123,7 @@ function InitDataBase()
         maxCount = buildData:GetMaxNum()
     else
         -- 宿舍 看所有人
-        local roomData = DormMgr:GetRoomData(roomId)
+        roomData = DormMgr:GetRoomData(roomId)
         -- if (#arr > 1) then
         --     for i, v in ipairs(arr) do
         --         if (v:GetCfg().bAddToBuild == true) then
@@ -529,7 +529,8 @@ end
 function SetRoles(infos, curRoleIds)
     if (not buildData) then
         -- 宿舍
-        if (DormMgr:GetEmptyNum() > #curRoleIds) then
+        local needCount = #curRoleIds + roomData:GetMaxNum_pet()
+        if (DormMgr:GetEmptyNum() > needCount) then
             BuildingProto:BuildSetRole(infos)
         else
             FuncUtil:Call(function()

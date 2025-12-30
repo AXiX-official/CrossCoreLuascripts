@@ -1,4 +1,4 @@
---技能API
+﻿--技能API
 FightActionSkillAPI = oo.class(FightActionBase);
 local this = FightActionSkillAPI;
 

@@ -1,4 +1,4 @@
-MapGrid = oo.class();
+﻿MapGrid = oo.class();
 local this = MapGrid;
 
 function this:Init(gridData)

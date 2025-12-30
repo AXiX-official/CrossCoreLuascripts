@@ -1,4 +1,4 @@
---公会菜单
+﻿--公会菜单
 function Awake()
     UIUtil:AddTop2("GuildMenu", gameObject, OnClickReturn)
     --UIUtil:AddTop(gameObject, OnClickReturn)

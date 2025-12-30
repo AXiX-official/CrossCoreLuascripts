@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 
 function this.New()
     this.__index = this.__index or this
@@ -104,8 +104,14 @@ function this:CheckIsShow()
             self.begTime = alData:GetStartTime()
             self.endTime = alData:GetEndTime()
         end
-    elseif self.cfg.nType == 16 then --圣诞活动
+    elseif self.cfg.nType == 16 then -- 圣诞活动
         self.begTime, self.endTime = MerryChristmasMgr:GetActivityTime()
+    elseif self.cfg.nType==17 then --大富翁
+        local curData=RichManMgr:GetCurData();
+        if curData~=nil then
+            self.begTime=curData:GetOpenTimeStamp();
+            self.endTime=curData:GetCloseTimeStamp();
+        end
     end
     if (self.begTime == nil and self.endTime == nil) then
         self.isShow = false
@@ -151,6 +157,8 @@ function this:IsOpen()
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "RiddleMain")
     elseif self.cfg.nType == 14 then
         self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "LovePlusView")
+    elseif self.cfg.nType==17 then --大富翁
+        self.isOpen, str = MenuMgr:CheckModelOpen(OpenViewType.main, "RichManMain")
     end
     return self.isOpen, str
 end
@@ -195,8 +203,10 @@ function this:IsRed()
             self.isRed = RedPointMgr:GetData(RedPointType.LovePlus) ~= nil
         elseif self.cfg.nType == 15 then -- 万圣节
             self.isRed = RedPointMgr:GetData(RedPointType.Halloween) ~= nil
-        elseif (self.cfg.nType == 16) then 
+        elseif (self.cfg.nType == 16) then
             self.isRed = RedPointMgr:GetData(RedPointType.MerryChristmas) ~= nil
+        elseif self.cfg.nType==17 then --大富翁
+            self.isRed = RedPointMgr:GetData(RedPointType.RichMan) == true
         end
     end
     return self.isRed

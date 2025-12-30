@@ -1,4 +1,4 @@
-DownloadProto={}
+﻿DownloadProto={}
 local this=DownloadProto;
 
 ---查询是否领取

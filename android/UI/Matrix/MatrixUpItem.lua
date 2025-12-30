@@ -1,4 +1,4 @@
-
+﻿
 function Refresh(data)
 	LanguageMgr:SetText(txtInfo1, data[1].."")
 	CSAPI.SetText(txtInfo2, data[2].."")

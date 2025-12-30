@@ -1,4 +1,4 @@
---玩家头像框
+﻿--玩家头像框
 local data=nil;
 local cb=nil;
 function Refresh(_d,_cb)

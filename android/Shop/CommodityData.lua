@@ -1,4 +1,4 @@
--- 固定商品数据
+﻿-- 固定商品数据
 local this = {}
 
 function this.New()
@@ -442,8 +442,8 @@ function this:GetPrice(key)
     key=key==nil and ShopPriceKey.jCosts or key
     if self.data and self.data.shop_config then
         jCosts=self.data.shop_config[key] or nil;
-    elseif self.cfg then
-        jCosts=self.cfg.jCosts[key] or nil;
+    -- elseif self.cfg then
+    --     jCosts=self.cfg[key] or nil;
     end
     if jCosts then
         priceInfo = {}
@@ -522,6 +522,9 @@ function this:GetCommodityList()
     local jGets=nil;
     if self.data and self.data.shop_config and self.data.shop_config.jGets then
         jGets=self.data.shop_config.jGets;
+    -- else
+    --     LogWarning("当前商品:"..tostring(self:GetID()).."没有服务器下发的数据！")
+    --     jGets=self.cfg.jGets;
     end
     if jGets then
         info = {}
@@ -840,11 +843,7 @@ function this:GetShopGroupID()
 end
 
 function this:HasDiscountTag()
-    local has=false
-    if self.cfg and self.cfg.hasDiscountTag then
-        has=self.cfg.hasDiscountTag==1;
-    end
-    return has
+    return  self.cfg and self.cfg.hasDiscountTag or nil;
 end
 
 --返回后台商店ID
@@ -906,6 +905,31 @@ function this:GetOrgCosts()
     elseif self.cfg then
         return self.cfg and self.cfg.orgCosts or nil;
     end
+end
+
+function this:GetOrgCostsByCostKey(key)
+    local costs=self:GetOrgCosts();
+    key=key or ShopPriceKey.jCosts;
+    if costs~=nil then
+        if #costs==1 then
+            local index=costs[1][3]==nil and 1 or costs[1][3];
+            if index==1 and key==ShopPriceKey.jCosts then
+                return costs[1];
+            elseif index==2 and key==ShopPriceKey.jCosts1 then
+                return costs[1];
+            end
+        else
+            for k,v in ipairs(costs) do
+                local index=v[3]==nil and k or v[3];
+                if index==1 and key==ShopPriceKey.jCosts then
+                    return v;
+                elseif index==2 and key==ShopPriceKey.jCosts1 then
+                    return v;
+                end
+            end
+        end
+    end
+    return nil;
 end
 
 --返回显示用的字段结束时间的提示

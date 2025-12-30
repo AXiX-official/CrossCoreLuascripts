@@ -1,4 +1,4 @@
-local num=12
+﻿local num=12
 function Awake()
     CreateLine(num,-400,400,-300,300,40,90,gameObject,{255,255,255,60})
 end

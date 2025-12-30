@@ -1,4 +1,4 @@
-BadgedProto = {}
+﻿BadgedProto = {}
 
 --获取徽章的数据
 function BadgedProto:GetBadgedInfo()

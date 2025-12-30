@@ -1,4 +1,4 @@
---战场
+﻿--战场
 
 local currDis=0; --当前摄像机距离
 local currMinDis=0;--当前摄像机最小可以设置的距离

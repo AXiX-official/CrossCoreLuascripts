@@ -1,4 +1,4 @@
-_G["CfgSevenDayFinish"]={{["key"]=1,["sRewardDes"]="总队长星源，可用于强化总队长的特性",["nCount"]=5,["id"]=1,["jAwardId"]={{10002,50,2}
+﻿_G["CfgSevenDayFinish"]={{["key"]=1,["sRewardDes"]="总队长星源，可用于强化总队长的特性",["nCount"]=5,["id"]=1,["jAwardId"]={{10002,50,2}
 ,{107101,1,2}
 ,{58001,2,2}
 }

@@ -1,4 +1,4 @@
-local CRoleSortUtil = require "CRoleSortUtil"
+﻿local CRoleSortUtil = require "CRoleSortUtil"
 local CRoleInfo = require "CRoleInfo"
 local CRoleTCInfo = require "CRoleTCInfo"
 local CRoleStoryInfo = require "CRoleStoryInfo"

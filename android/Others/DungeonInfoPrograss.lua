@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local data = nil
 local sectionData = nil
 local cur,max = 0,0

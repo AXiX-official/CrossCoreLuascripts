@@ -1,4 +1,4 @@
-_G["CfgDupDropMulti"]={{["id"]=1,["dropAdd"]={2,2}
+﻿_G["CfgDupDropMulti"]={{["id"]=1,["dropAdd"]={2,2}
 ,["key"]=1}
 ,{["id"]=2,["dropAdd"]={2,2}
 ,["key"]=2}

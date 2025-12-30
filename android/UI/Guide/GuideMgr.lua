@@ -1,4 +1,4 @@
---引导管理
+﻿--引导管理
 local GuideBehaviour = require "GuideBehaviour";
 
 

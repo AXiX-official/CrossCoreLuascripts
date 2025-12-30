@@ -1,4 +1,4 @@
---指挥官战术对象
+﻿--指挥官战术对象
 local this = {};
 
 function this.New()

@@ -1,4 +1,4 @@
-Loader:Require("FightLogic.FightDef")
+﻿Loader:Require("FightLogic.FightDef")
 Loader:Require("FightLogic.FightLog")
 Loader:Require("FightLogic.Random")
 Loader:Require("FightLogic.Filter")

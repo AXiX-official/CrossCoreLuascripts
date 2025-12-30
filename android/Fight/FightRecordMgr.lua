@@ -1,4 +1,4 @@
---战斗记录
+﻿--战斗记录
 FightRecordMgr = oo.class();
 local this = FightRecordMgr;
 

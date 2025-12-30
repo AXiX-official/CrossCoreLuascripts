@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     --EventMgr.AddListener(EventType.Scene_Load_Complete,OnSceneLoadComplete);
     EventMgr.AddListener(EventType.Camera_Shake,OnShake);
 end

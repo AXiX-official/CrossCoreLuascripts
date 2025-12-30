@@ -1,4 +1,4 @@
---远征选人  
+﻿--远征选人  
 local listType = RoleListType.Expedition
 
 local isAnimEnd = false --入场动画是否已展示完毕

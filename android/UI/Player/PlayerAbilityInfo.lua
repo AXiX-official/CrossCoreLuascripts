@@ -1,4 +1,4 @@
--- 玩家能力基类
+﻿-- 玩家能力基类
 local this = {}
 
 function this.New()

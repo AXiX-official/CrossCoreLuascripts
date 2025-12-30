@@ -1,4 +1,4 @@
-FightActionJumperMgr = {};
+﻿FightActionJumperMgr = {};
 local this = FightActionJumperMgr;
 
 --function this:PushData(apiData)

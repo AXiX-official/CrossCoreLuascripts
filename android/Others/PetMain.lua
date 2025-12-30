@@ -1,4 +1,4 @@
---宠物活动主界面
+﻿--宠物活动主界面
 local stateView=nil;
 local leftViews=nil;
 local tabList={};

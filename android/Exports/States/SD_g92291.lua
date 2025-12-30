@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 eff_addition_pack={"g90610","prefabs_characters_g92291"},camera_dis_fix=200,

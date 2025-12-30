@@ -1,4 +1,4 @@
---公会主界面
+﻿--公会主界面
 local title=nil;--当前的权限
 local rightView=nil;
 local rightList={};

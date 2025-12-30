@@ -1,4 +1,4 @@
-isSelect = false
+﻿isSelect = false
 
 function SetIndex(_index)
     index = _index

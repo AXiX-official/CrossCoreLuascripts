@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local item = nil
 
 function SetClickCB(_cb)

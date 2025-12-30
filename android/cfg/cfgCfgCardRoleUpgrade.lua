@@ -1,4 +1,4 @@
-_G["CfgCardRoleUpgrade"]={{["mExp"]=0,["key"]="1",["aMinGames"]={1}
+﻿_G["CfgCardRoleUpgrade"]={{["mExp"]=0,["key"]="1",["aMinGames"]={1}
 ,["nExp"]=20,["sName"]="非常陌生",["inwardWorld"]=1,["id"]=1}
 ,{["mExp"]=20,["key"]="2",["aMinGames"]={1}
 ,["nExp"]=20,["sName"]="非常陌生",["inwardWorld"]=1,["id"]=2}

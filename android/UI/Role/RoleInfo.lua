@@ -1,4 +1,4 @@
-local colors = {"ffffff", "12f6b2", "30baf7", "956dfd", "ffc146", "ffffff"}
+﻿local colors = {"ffffff", "12f6b2", "30baf7", "956dfd", "ffc146", "ffffff"}
 local timer = nil
 local isFirst = true
 isHideQuestionItem = true -- 外部调用
@@ -125,6 +125,8 @@ function OnInit()
     end)
     -- 使用礼物回调
     eventMgr:AddListener(EventType.Dorm_UseGiftRet, SetMatrix)
+    eventMgr:AddListener(EventType.Guide_RoleInfo_220040, Guide_220040)
+    eventMgr:AddListener(EventType.Guide_RoleInfo_230070, Guide_230070)
 end
 
 -- 降低 DC
@@ -199,9 +201,9 @@ end
 
 function SetBreak()
     local breakLv = cardData:GetBreakLevel()
-    CSAPI.SetGOActive(imgBreak, breakLv > 1)
+    CSAPI.SetGOActive(imgBreakBG, breakLv > 1)
     if (breakLv > 1) then
-        ResUtil.RoleCard_BG:Load(imgBreak, "img_37_0" .. (breakLv - 1))
+        ResUtil.RoleCard_BG:Load(imgBreak, "img_1_0" .. (breakLv - 1))
     end
 end
 
@@ -345,6 +347,7 @@ function SetBuff()
     if (cardData:GetCfg().gridsIcon) then
         ResUtil.RoleSkillGrid:Load(imgGrid, cardData:GetCfg().gridsIcon)
     end
+
     -- nums
     local haloID = cardData:GetCfg().halo
     local cfg = haloID and Cfgs.cfgHalo:GetByID(haloID[1]) or nil

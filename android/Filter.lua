@@ -1,4 +1,4 @@
--- OPENDEBUG(false)
+﻿-- OPENDEBUG(false)
 -- 目标筛选器
 Filter = oo.class()
 function Filter:Init(team, teamID, row, col)
@@ -623,8 +623,6 @@ function Filter:HasBuff(buffID, typ, rand)
 			-- if #list >= num then return list end
 		end
 	end	
-
-
 
 	if #list <= 1 then
 		return list

@@ -1,4 +1,4 @@
-PetViewType={ --宠物切页类型
+﻿PetViewType={ --宠物切页类型
     Bag=62001, --背包
     Store=62002, --商店
     Sport=62003, --运动

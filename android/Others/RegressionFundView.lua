@@ -1,4 +1,4 @@
-local timer = 0
+﻿local timer = 0
 local targetTime = 0
 local curDatas = nil
 local layout = nil

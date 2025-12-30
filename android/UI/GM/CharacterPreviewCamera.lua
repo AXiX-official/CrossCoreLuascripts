@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     _G.characterPreviewCamera = ComUtil.GetCom(gameObject,"BattleCameraMgr");    
 end

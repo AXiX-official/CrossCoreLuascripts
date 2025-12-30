@@ -1,4 +1,4 @@
-_G["CfgPracticeRankLevelReward"]={{["key"]=1,["name"]="少尉",["nScore"]=500,["id"]=1,["rewards"]={{10010,200,2}
+﻿_G["CfgPracticeRankLevelReward"]={{["key"]=1,["name"]="少尉",["nScore"]=500,["id"]=1,["rewards"]={{10010,200,2}
 }
 ,["scoreShow"]="0 ~ 499积分",["icon"]="img_3_1"}
 ,{["key"]=2,["name"]="中尉",["nScore"]=1000,["id"]=2,["rewards"]={{10010,500,2}

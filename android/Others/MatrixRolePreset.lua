@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/Matrix/MatrixRolePresetItem", LayoutCallBack, true)
 

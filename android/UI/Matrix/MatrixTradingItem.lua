@@ -1,4 +1,4 @@
--- 交易订单 item
+﻿-- 交易订单 item
 local limitTypeStrs = {10213, 10214, 10215, 10212}
 local timer = 0
 

@@ -1,4 +1,4 @@
---解体
+﻿--解体
 FightActionComboBreak = oo.class(FightActionBase);
 local this = FightActionComboBreak;
 

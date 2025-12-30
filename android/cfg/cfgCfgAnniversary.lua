@@ -1,4 +1,4 @@
-_G["CfgAnniversary"]={{["group"]=2,["enName"]="Time Festival",["index"]=1,["id"]=1,["type"]=1,["summary"]=2,["jumpId"]=140008,["eTime"]="2025/9/3 03:00:00",["name"]="时光盛典",["path"]="Anniversary1/AnniversaryTimestView",["sTime"]="2025/7/30 03:00:00",["key"]="1",["icon"]="icon_02_01",["mission"]={33,18001}
+﻿_G["CfgAnniversary"]={{["group"]=2,["enName"]="Time Festival",["index"]=1,["id"]=1,["type"]=1,["summary"]=2,["jumpId"]=140008,["eTime"]="2025/9/3 03:00:00",["name"]="时光盛典",["path"]="Anniversary1/AnniversaryTimestView",["sTime"]="2025/7/30 03:00:00",["key"]="1",["icon"]="icon_02_01",["mission"]={33,18001}
 }
 ,{["group"]=2,["enName"]="Celebration benefits",["index"]=2,["id"]=2,["type"]=2,["summary"]=3,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="庆典福利",["path"]="Anniversary1/AnniversaryPicView1",["sTime"]="2024/1/25 10:00:00",["key"]="2",["icon"]="icon_02_02"}
 ,{["group"]=2,["enName"]="activity",["index"]=3,["id"]=3,["type"]=2,["summary"]=4,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="庆典活动",["path"]="Anniversary1/AnniversaryPicView2",["sTime"]="2024/1/25 10:00:00",["key"]="3",["icon"]="icon_02_03"}
@@ -9,5 +9,15 @@ _G["CfgAnniversary"]={{["group"]=2,["enName"]="Time Festival",["index"]=1,["id"]
 ,{["path"]="Anniversary1/AnniversaryShopView",["index"]=8,["id"]=8,["group"]=2,["enName"]="Gift Pack",["type"]=3,["jumpId"]=140008,["key"]="8",["eTime"]="2028/1/6 03:00:00",["sTime"]="2024/1/25 10:00:00",["name"]="庆典礼包",["icon"]="icon_02_08",["commodity"]={31301,31070,31071,31072,31073,31074,31075,31066,31401,31076,31402,31403,31404,31405}
 }
 ,{["group"]=2,["enName"]="Accumulated recharge",["index"]=5,["activity"]=1023,["id"]=9,["type"]=4,["jumpId"]=140008,["eTime"]="2028/1/6 03:00:00",["name"]="惠享返礼",["path"]="Anniversary1/AnniversaryAccuCharge",["sTime"]="2024/1/25 10:00:00",["key"]="9",["icon"]="icon_02_09"}
+,[203]={["group"]=3,["enName"]="Activity",["index"]=3,["id"]=203,["type"]=2,["summary"]=203,["jumpId"]=140008,["eTime"]="2026/2/11 03:00:00",["name"]="悠游之旅",["path"]="Anniversary2/AnniversaryPicView2",["sTime"]="2025/10/30 10:00:00",["key"]="203",["icon"]="tag_02_03"}
+,[207]={["group"]=3,["enName"]="INTEREST GACHA",["index"]=8,["id"]=207,["type"]=2,["summary"]=207,["jumpId"]=140008,["eTime"]="2026/2/11 03:00:00",["name"]="次元馈赠",["path"]="Anniversary2/PhysicalReward",["sTime"]="2025/10/30 10:00:00",["key"]="207",["icon"]="tag_02_07"}
+,[204]={["group"]=3,["enName"]="Picture album",["index"]=6,["id"]=204,["type"]=2,["summary"]=204,["jumpId"]=140008,["eTime"]="2026/2/11 03:00:00",["name"]="同行画册",["path"]="Anniversary2/AnniversaryPicView3",["sTime"]="2025/10/30 10:00:00",["key"]="204",["icon"]="tag_02_04"}
+,[201]={["group"]=3,["enName"]="Time Festival",["index"]=1,["id"]=201,["type"]=1,["summary"]=201,["jumpId"]=140008,["eTime"]="2026/2/11 03:00:00",["name"]="相携同行",["path"]="Anniversary2/AnniversaryMainView",["sTime"]="2025/10/30 10:00:00",["key"]="201",["icon"]="tag_02_01",["mission"]={33,18002}
+}
+,[205]={["group"]=3,["enName"]="Fashion",["index"]=5,["id"]=205,["type"]=2,["summary"]=205,["jumpId"]=140008,["eTime"]="2026/2/11 03:00:00",["name"]="焕然新装",["path"]="Anniversary2/AnniversaryPicView1",["sTime"]="2025/10/30 10:00:00",["key"]="205",["icon"]="tag_02_05"}
+,[202]={["group"]=3,["enName"]="Celebration benefits",["index"]=2,["id"]=202,["type"]=2,["summary"]=202,["jumpId"]=140008,["eTime"]="2026/2/11 03:00:00",["name"]="同行福利",["path"]="Anniversary2/AnniversaryPicView4",["sTime"]="2025/10/30 10:00:00",["key"]="202",["icon"]="tag_02_02"}
+,[206]={["group"]=3,["enName"]="Exclusive",["index"]=4,["id"]=206,["type"]=2,["summary"]=206,["jumpId"]=140008,["eTime"]="2026/2/11 03:00:00",["name"]="洛贝拉专属",["path"]="Anniversary2/AnniversaryPicView6",["sTime"]="2025/10/30 10:00:00",["key"]="206",["icon"]="tag_02_06"}
+,[208]={["path"]="Anniversary2/AnniversaryShopView",["index"]=7,["id"]=208,["group"]=3,["enName"]="Gift Pack",["type"]=3,["summary"]=208,["jumpId"]=140008,["key"]="208",["eTime"]="2026/2/11 03:00:00",["sTime"]="2025/10/30 10:00:00",["name"]="同行礼包",["icon"]="tag_02_08",["commodity"]={31303,31087,31070,31071,31072,31073,31074,31075,31083,31084,31085,31086,31047,31081,31031,31082,31033,31079,31018,31080}
+}
 }
 

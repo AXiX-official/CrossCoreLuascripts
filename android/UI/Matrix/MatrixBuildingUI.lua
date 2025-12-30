@@ -1,4 +1,4 @@
--- 建造或者升级
+﻿-- 建造或者升级
 local runTime = false
 local timer = 0
 local needTime = 0

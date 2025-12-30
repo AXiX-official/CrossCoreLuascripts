@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     tab = ComUtil.GetCom(tabs, "CTab")
     tab:AddSelChangedCallBack(OnTabChanged)
 

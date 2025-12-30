@@ -1,4 +1,4 @@
-local func=nil;
+﻿local func=nil;
 local showBtn=false;
 local elseData=nil;
 --礼包详情ITEM data:{id,num,type,cfg}

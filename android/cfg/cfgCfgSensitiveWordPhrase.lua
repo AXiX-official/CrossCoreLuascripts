@@ -1,4 +1,4 @@
-_G["CfgSensitiveWordPhrase"]={{["id"]=1,["word"]={21,38,9}
+﻿_G["CfgSensitiveWordPhrase"]={{["id"]=1,["word"]={21,38,9}
 ,["key"]=1,["num"]=2}
 ,{["id"]=2,["word"]={32,19,25}
 ,["key"]=2,["num"]=2}

@@ -1,4 +1,4 @@
---格子视图数据基类
+﻿--格子视图数据基类
 -- DataBase=oo.class();
 local this=oo.class();
 

@@ -1,4 +1,4 @@
-local landIDs = {72002, 72003, 72004}
+﻿local landIDs = {72002, 72003, 72004}
 
 function SetIndex(_index)
     index = _index

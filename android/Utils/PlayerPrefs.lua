@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 this.GetString = CS.UnityEngine.PlayerPrefs.GetString;
 this.SetString = CS.UnityEngine.PlayerPrefs.SetString;

@@ -1,4 +1,4 @@
--- 积分
+﻿-- 积分
 function Awake()
     UIUtil:AddTop2("RogueTReward", gameObject, function()
         view:Close()

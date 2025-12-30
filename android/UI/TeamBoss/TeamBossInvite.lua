@@ -1,4 +1,4 @@
---好友邀请
+﻿--好友邀请
 function Awake()
 	layout = ComUtil.GetCom(vsv, "UIInfinite")
 	layout:Init("UIs/TeamBoss/TeamBossInviteItem", LayoutCallBack, true)

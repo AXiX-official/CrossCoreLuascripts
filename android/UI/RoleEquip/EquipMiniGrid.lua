@@ -1,4 +1,4 @@
---mini装备槽
+﻿--mini装备槽
 local slotImgs=nil;
 
 function Awake()

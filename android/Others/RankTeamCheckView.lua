@@ -1,4 +1,4 @@
-local teamInfo = nil
+﻿local teamInfo = nil
 local items = nil
 local tacItem = nil
 local isNotClick = false

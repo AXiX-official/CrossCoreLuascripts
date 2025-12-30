@@ -1,4 +1,4 @@
-_G["CfgLoadingRes"]={{["key"]="1",["name"]="loading_03",["sType"]=1,["id"]=1}
+﻿_G["CfgLoadingRes"]={{["key"]="1",["name"]="loading_03",["sType"]=1,["id"]=1}
 ,{["key"]="2",["name"]="loading_04",["sType"]=1,["id"]=2}
 ,{["key"]="3",["name"]="loading_05",["sType"]=1,["id"]=3}
 ,{["key"]="4",["name"]="loading_06",["sType"]=1,["id"]=4}

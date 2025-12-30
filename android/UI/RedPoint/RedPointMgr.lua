@@ -1,4 +1,4 @@
--- 红点管理
+﻿-- 红点管理
 RedPointType = {};
 RedPointType.Dungeon = "Dungeon"; -- 副本
 RedPointType.Mail = "Mail"; -- 邮件
@@ -67,6 +67,7 @@ RedPointType.Riddle="Riddle"--猜谜
 RedPointType.PVP = "PVP" 
 RedPointType.Halloween = "Halloween" --万圣节小游戏
 RedPointType.MerryChristmas = "MerryChristmas" --圣诞活动
+RedPointType.RichMan="RichMan"--大富翁
 RedPointType.RegressionShop="RegressionShop"--回归商店
 --每日固定显示一次红点的类型
 RedPointDayOnceType={}

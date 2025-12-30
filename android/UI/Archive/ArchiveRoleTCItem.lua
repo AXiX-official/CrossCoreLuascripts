@@ -1,4 +1,4 @@
---台词item
+﻿--台词item
 local isSelect = false
 local isOpen = false
 
@@ -32,7 +32,7 @@ function GetBreakOpen(roleInfo)
 		if cfg.type == RoleAudioType.perBreak then
 			return card:GetBreakLevel() > 1
 		elseif cfg.type == RoleAudioType.maxBreak then
-			return card:GetBreakLevel() >= card:GetBreakMaxlevel()
+			return card:GetBreakLevel() >= 5
 		end
 	end
 	return false

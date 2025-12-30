@@ -1,4 +1,4 @@
-local cur = 1
+﻿local cur = 1
 local bs = 10 --1个数量对应的个数
 local quantitynum=0;  ---数据量
 function Awake()

@@ -1,4 +1,4 @@
-_G["CfgSpecialDrops"]={{["DropsEndTime"]="2025/12/03 03:00:00",["id"]=1,["key"]=1,["DropID"]={4}
+﻿_G["CfgSpecialDrops"]={{["DropsEndTime"]="2025/12/03 03:00:00",["id"]=1,["key"]=1,["DropID"]={4}
 ,["proportions"]=21,["nStartTime"]=1762282800,["nEndTime"]=1764702000,["DropsStartTime"]="2025/11/05 03:00:00"}
 ,{["DropsEndTime"]="2025/12/03 03:00:00",["id"]=2,["key"]=2,["DropID"]={4}
 ,["proportions"]=21,["nStartTime"]=1762282800,["nEndTime"]=1764702000,["DropsStartTime"]="2025/11/05 03:00:00"}

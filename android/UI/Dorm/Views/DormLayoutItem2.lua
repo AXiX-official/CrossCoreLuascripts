@@ -1,4 +1,4 @@
-local oldSelect = false
+﻿local oldSelect = false
 
 function Awake()
     action_go = ComUtil.GetCom(gameObject, "ActionBase")

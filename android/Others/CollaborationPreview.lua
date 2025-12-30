@@ -1,4 +1,4 @@
---绑定阶段奖励预览界面
+﻿--绑定阶段奖励预览界面
 local layout=nil;
 local curDatas=nil
 function Awake()

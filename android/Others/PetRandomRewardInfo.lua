@@ -1,4 +1,4 @@
---宠物随机奖励信息
+﻿--宠物随机奖励信息
 local this = {}
 
 function this.New()

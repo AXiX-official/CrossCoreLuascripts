@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local iconName = ""
 local code = {"FFFFFF","53afe6","ffc146","deb8ff"}
 

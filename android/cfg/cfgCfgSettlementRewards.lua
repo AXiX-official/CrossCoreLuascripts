@@ -1,4 +1,4 @@
-_G["CfgSettlementRewards"]={{["id"]=1,["infos"]={{["idx"]=1,["reward"]={{10040,280}
+﻿_G["CfgSettlementRewards"]={{["id"]=1,["infos"]={{["idx"]=1,["reward"]={{10040,280}
 ,{10001,60000}
 ,{10003,40000}
 }

@@ -1,4 +1,4 @@
-
+﻿
 function SetData(data)
     CSAPI.SetText(count,"x" .. data.num);
     if data.type == RandRewardType.EQUIP then

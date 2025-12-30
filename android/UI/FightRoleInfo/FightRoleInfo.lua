@@ -1,4 +1,4 @@
---战斗界面查看卡牌信息
+﻿--战斗界面查看卡牌信息
 local curDatas=nil;
 local lastIndex=1;--选中物体的下标
 local attrs={};--属性物体
@@ -326,7 +326,7 @@ function SetCharInfos(character)
         local cfg=Cfgs.skill:GetByID(v);
         -- LogError("主动、被动、特殊技：");
         -- LogError(cfg)
-        if cfg.bIsHide~=true then
+        if cfg.bIsHide~=true and cfg.main_type~=SkillMainType.Other then --技能类型为6的不在该面板显示
             if cfg and character.IsEnemy()==false and charData.isNpc~=true and (charData.cid==nil or charData.cid>0) then --剔除副天赋 charData的cid为负数时表示在试玩模式
                 if SkillUtil:IsSpecialSkill(cfg.type) and not PlayerClient:IsPassNewPlayerFight() then --如果未通关新手剧情不显示合体技
                 elseif cfg.main_type~=SkillMainType.CardSubTalent and cfg.main_type~=SkillMainType.Equip and cfg.upgrade_type~=CardSkillUpType.OverLoad then
@@ -373,6 +373,17 @@ function SetCharInfos(character)
                     -- LogError(skillCfg);
                     table.insert( charInfos[4],charData.isMonster==true and {skillCfg,1} or {skillCfg});
                 end
+            end
+        end
+    end
+    --新增机神继承用户装备技能词条
+    if character.GetEquipSkills() and charData then
+         for k,v in ipairs(character.GetEquipSkills()) do
+            local skillCfg=Cfgs.skill:GetByID(v);
+            if skillCfg and skillCfg.main_type~=SkillMainType.Other then--技能类型为6的不在该面板显示
+                -- LogError("装备技能：")
+                -- LogError(skillCfg);
+                table.insert( charInfos[1], {cfg=skillCfg});
             end
         end
     end

@@ -1,4 +1,4 @@
-local isCheckCard = false
+﻿local isCheckCard = false
 local card = nil
 local item = nil
 

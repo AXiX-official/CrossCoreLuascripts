@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --OverLoad
 function this:Handle(data)   

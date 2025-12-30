@@ -1,4 +1,4 @@
---卡牌技能预设
+﻿--卡牌技能预设
 local this={};
 
 function this.New()

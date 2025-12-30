@@ -1,4 +1,4 @@
-local curIndex = 0
+﻿local curIndex = 0
 local calTime = false --是否计算时间
 local timer = 0       --计时，没0.1s执行一次
 local rTime = 0       --剩余秒数

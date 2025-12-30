@@ -1,4 +1,4 @@
-local HeadFaceData = require("HeadFaceData")
+﻿local HeadFaceData = require("HeadFaceData")
 local minEndTime = nil
 local minShopTime = nil
 

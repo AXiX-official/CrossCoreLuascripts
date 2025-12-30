@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local isTactics = false
 local isEmpty = true
 local isHideLv = false
@@ -92,9 +92,9 @@ function SetCard()
     SetCamp(card)
     -- break 
     local breakLv = card:GetBreakLevel()
-    CSAPI.SetGOActive(imgBreak, breakLv > 1)
+    CSAPI.SetGOActive(imgBreakBG, breakLv > 1)
     if (breakLv > 1) then
-        ResUtil.RoleCard_BG:Load(imgBreak, "img_37_0" .. (breakLv - 1))
+        ResUtil.RoleCard_BG:Load(imgBreak, "img_1_0" .. (breakLv - 1))
     end
     -- star 
     ResUtil.RoleCard_BG:Load(imgStar, "img_01_0" .. card:GetQuality())

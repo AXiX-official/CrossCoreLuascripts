@@ -1,4 +1,4 @@
-local curIndex = 1
+﻿local curIndex = 1
 local curData
 local isBuy
 local isDownload

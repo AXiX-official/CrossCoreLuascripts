@@ -1,4 +1,4 @@
-require "ChatData"
+﻿require "ChatData"
 local this = MgrRegister("ChatMgr")
 
 function this:Init()

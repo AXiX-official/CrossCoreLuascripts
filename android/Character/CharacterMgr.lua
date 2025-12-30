@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 this.list = {};
 

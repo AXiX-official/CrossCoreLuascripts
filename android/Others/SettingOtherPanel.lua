@@ -1,4 +1,4 @@
-local liveIndex = nil
+﻿local liveIndex = nil
 local equipIndex = nil
 local timer = 0;
 local names ={s_wait_scale.waitTime,s_wait_scale.timeFormat,s_wait_scale.style,s_wait_scale.tips,s_wait_scale.time,s_wait_scale.electric,s_wait_scale.date,s_wait_scale.rotate}

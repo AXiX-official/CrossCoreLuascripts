@@ -1,4 +1,4 @@
---data；name:名字,isLight:是否显示高亮
+﻿--data；name:名字,isLight:是否显示高亮
 function Refresh(_data)
     this.data=_data;
     if _data then

@@ -1,4 +1,4 @@
-local cfgs = nil
+﻿local cfgs = nil
 local curIndex = 0
 local rightItems = {}
 local datas = {} -- 开启的活动

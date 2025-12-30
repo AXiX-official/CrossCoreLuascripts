@@ -1,4 +1,4 @@
-local rect = nil
+﻿local rect = nil
 local titleIDs = {37018, 37019, 37012}
 local buffItems = nil
 

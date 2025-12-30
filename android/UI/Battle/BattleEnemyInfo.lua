@@ -1,4 +1,4 @@
---战斗中的人物信息
+﻿--战斗中的人物信息
 local pos={-10.6,23};
 local pos2={-10.6,40};
 function Awake()

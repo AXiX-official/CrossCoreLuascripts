@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 no_eff_ab=1,

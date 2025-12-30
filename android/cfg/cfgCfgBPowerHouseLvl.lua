@@ -1,4 +1,4 @@
-_G["CfgBPowerHouseLvl"]={{["armorType"]=1,["upCosts"]={{60101,50,2}
+﻿_G["CfgBPowerHouseLvl"]={{["armorType"]=1,["upCosts"]={{60101,50,2}
 ,{10001,500,2}
 }
 ,["centerlvl"]=2,["id"]=1,["key"]="1",["maxHp"]=500,["upTime"]=10,["powerVal"]=140,["tiredVal"]={432,-1}

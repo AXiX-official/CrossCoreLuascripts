@@ -1,3 +1,3 @@
-function Refresh(txt)
+﻿function Refresh(txt)
     CSAPI.SetText(gameObject,txt);
 end

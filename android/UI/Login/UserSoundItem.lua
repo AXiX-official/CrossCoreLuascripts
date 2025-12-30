@@ -1,4 +1,4 @@
---角色声音按钮
+﻿--角色声音按钮
 local cb = nil
 local data = nil
 local index = 3

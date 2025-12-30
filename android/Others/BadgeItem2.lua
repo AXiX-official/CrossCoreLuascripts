@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local typeDatas = nil
 local layout = nil
 local selIndex = 1

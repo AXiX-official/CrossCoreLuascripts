@@ -1,4 +1,4 @@
--- spine执行工具，每个spine文件播放时都有一个
+﻿-- spine执行工具，每个spine文件播放时都有一个
 --[[
 //1、固定
 //1.1 必定有idle，idle在0轨道循环播放，不会停止，其余动作都是非0轨道的叠加动作
@@ -265,7 +265,7 @@ function this:PlayByClick1(animName, trackIndex, fadeIn, fadeOut, complete)
     fadeIn = fadeIn == nil and true or fadeIn
     fadeOut = fadeOut == nil and true or fadeOut
     local te = self.anim:SetAnimation(trackIndex, animName, false)
-    te.MixDuration = self.fadeInTime
+    te.MixDuration = fadeIn and self.fadeInTime or 0
     te.Alpha = fadeIn and 0 or 1
     te.TrackTime = 0
     te.Loop = false
@@ -294,12 +294,12 @@ function this:PlayByClick2(animName, trackIndex, fadeIn, fadeOut)
 end
 
 -- 多段点击（物件）（非1轨道）
-function this:PlayByMulClick(animName, trackIndex, mulData)
+function this:PlayByMulClick(animName, trackIndex, mulData, imm)
     local data = self.mulClickDic[trackIndex]
     if (data == nil) then
         local te = self.anim:SetAnimation(trackIndex, animName, false)
         te.Loop = false
-        te.TimeScale = mulData.timeScale
+        te.TimeScale = imm and 0 or mulData.timeScale
         data = {}
         data.te = te
         data.duration = te.Animation.Duration
@@ -308,9 +308,15 @@ function this:PlayByMulClick(animName, trackIndex, mulData)
         data.clickTime = mulData.clickTime -- 多长时间不点击，则倒退，为nil则不用处理
         data.clickTimeCB = mulData.clickTimeCB
         self.mulClickDic[trackIndex] = data
+        if (imm) then
+            data.te.TrackTime = data.progress
+        end
         return true
     else
-        if (data.te.TimeScale == 0) then
+        if (imm) then
+            data.te.TimeScale = 0
+            data.te.TrackTime = data.progress
+        elseif (data.te.TimeScale == 0) then
             data.isClicksLast = mulData.isClicksLast
             data.progress = mulData.progress * data.duration
             data.te.TimeScale = mulData.timeScale
@@ -328,6 +334,20 @@ function this:CheckMulClickIsPlay(trackIndex)
         return true
     end
     return false
+end
+
+-- 直接异常某个多段点击的数据和轨道
+function this:ClearMulClick(trackIndex)
+    local data = self.mulClickDic[trackIndex]
+    if (data) then
+        data.te.TrackTime = 0
+        self:ClearTrack(trackIndex)
+        self.mulClickDic[trackIndex] = nil
+        -- 重置点击记录
+        if (data.clickTimeCB) then
+            data.clickTimeCB()
+        end
+    end
 end
 
 -- 主体的多段点击（渐入渐出）
@@ -507,9 +527,9 @@ end
 function this:GetTrackTimePercent(trackIndex)
     local te = self.anim:GetCurrent(trackIndex)
     if (te) then
-        return true,te.TrackTime / te.Animation.Duration
+        return true, te.TrackTime / te.Animation.Duration
     end
-    return false,0
+    return false, 0
 end
 
 -- 某轨道是不是在初始状态

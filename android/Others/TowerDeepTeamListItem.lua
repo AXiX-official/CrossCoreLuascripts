@@ -1,4 +1,4 @@
-function SetIndex(idx)
+﻿function SetIndex(idx)
     index = idx
 end
 

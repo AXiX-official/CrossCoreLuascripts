@@ -1,4 +1,4 @@
-_G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
+﻿_G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["index"]=116,["name2"]="索尔达森",["id"]="9106_Thórdarson",["skillDesc"]="作为超级机器人拥有丰富的攻击手段，以及各类自我强化能力。不同技能可以减少目标机动、防御、攻击等属性，还能对目标附加“割裂”效果。如果将目标击败，能造成群体推迟行动条的效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="存有索尔达森意识的超算与其他周围物品组合的超级机器人，本来为了解决布拉克喷嚏破灭后的存续问题，但现在——毁灭（exterminate）",["key"]="9106_Thórdarson",["unlock_id"]={94013,1401071}
 ,["aModels"]=9106001,["type"]=1,["name_en"]="Thórdarson",["name"]="索尔达森"}
 ,["9074_ShapingBody"]={["aCards"]={90740}
@@ -34,9 +34,15 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["91121_HyperKraken"]={["aCards"]={91121}
 ,["index"]=157,["name2"]="克拉肯-狂暴",["id"]="91121_HyperKraken",["skillDesc"]="克拉肯-狂暴能降低敌人的防御和速度，还能驱散敌人的增益效果并有概率施加眩晕。除此以外它还能增加自身防御，并不断召唤触手到己方场上，配合它进行攻击。需要注意的是，每有一根触手战败退场，都会使它的特定攻击变得更加凶狠。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="狂暴化的克拉肯虽然防御能力有所降低，但它拥有比通常状态更加丰富、强大的战斗能力。如果持续击退它的触手，还会使它变得更加狂暴。",["key"]="91121_HyperKraken",["unlock_id"]={96109,96110,96111,96112,96113,96114,1401061,1401062,1401063}
 ,["aModels"]=9112101,["type"]=15,["name_en"]="HyperKraken",["name"]="克拉肯-狂暴"}
+,["98363_SSUC"]={["aCards"]={98363}
+,["index"]=246,["name2"]="自律子机C型",["id"]="98363_SSUC",["skillDesc"]="自律子机C型自身在场时能令己方全体免疫控制以及持续伤害效果，不过在其战败退场时，会令己方全体的防御减少。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="从摩羯座身上分离的自律子机之一，拥有强大的射击压制能力。",["key"]="98363_SSUC",["unlock_id"]={30401}
+,["aModels"]=9836301,["type"]=7,["name_en"]="SSU-C",["name"]="自律子机C型"}
 ,["9020_Device"]={["aCards"]={90200}
 ,["index"]=12,["name2"]="缓时陷阱",["id"]="9020_Device",["skillDesc"]="对敌方全体单位施加“机动弱化”效果",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="碎星人所制造的效能装置，当其存在于敌方阵地时，会对我方全体施加缓速干扰，如不进行处理，作战会变得有些艰难。",["key"]="9020_Device",["unlock_id"]={1001}
 ,["aModels"]=9020001,["type"]=2,["name_en"]="Slow Trap",["name"]="缓速装置"}
+,["98362_SSUB"]={["aCards"]={98362}
+,["index"]=245,["name2"]="自律子机B型",["id"]="98362_SSUB",["skillDesc"]="自律子机B型能够在行动结束后对己方全体施加随机强化效果，不过在其战败退场时，会令己方全体的防御减少。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="从摩羯座身上分离的自律子机之一，拥有均衡的射击和冲锋能力。",["key"]="98362_SSUB",["unlock_id"]={30401}
+,["aModels"]=9836201,["type"]=7,["name_en"]="SSU-B",["name"]="自律子机B型"}
 ,["9501_Soulless"]={["aCards"]={95010}
 ,["index"]=220,["name2"]="离魂者",["id"]="9501_Soulless",["skillDesc"]="离魂者的攻击能够减少敌方的攻击与防御，而且还能召唤劣化陷阱协助自身战斗。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="高等级的机械造物，该机械造物拥有一定程度的自律意识，能独立进行思考与行动，也会与其他造物相互配合发动攻击，是极为棘手的敌人。",["key"]="9501_Soulless",["unlock_id"]={1519}
 ,["aModels"]=9501001,["type"]=10,["name_en"]="Soulless",["name"]="离魂者"}
@@ -52,6 +58,12 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["94091_ShieldGuard"]={["aCards"]={94091}
 ,["index"]=179,["name2"]="盾卫士",["id"]="94091_ShieldGuard",["skillDesc"]="盾卫士有用极强的干扰装置，可对敌方目标施加强制嘲讽，并为自身添加物理装甲。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="经过二次改造，性能得到进一步提升的重装造物。此机配备了特制盾牌，会在战斗中主动吸引火力。",["key"]="94091_ShieldGuard",["unlock_id"]={1403}
 ,["aModels"]=9409101,["type"]=1,["name_en"]="ShieldGuard",["name"]="盾卫士"}
+,["98361_SSUA"]={["aCards"]={98361}
+,["index"]=244,["name2"]="自律子机A型",["id"]="98361_SSUA",["skillDesc"]="自律子机A型能够在敌方进行额外攻击时为己方全体提供伤害增益，不过在其战败退场时，会令己方全体的防御减少。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="从摩羯座身上分离的自律子机之一，拥有高精度的射击支援能力。",["key"]="98361_SSUA",["unlock_id"]={30401}
+,["aModels"]=9836101,["type"]=7,["name_en"]="SSU-A",["name"]="自律子机A型"}
+,["98360_Capricorn"]={["aCards"]={98360}
+,["index"]=243,["name2"]="摩羯座",["id"]="98360_Capricorn",["skillDesc"]="摩羯座能够与自律子机进行连携作战，为己方提供各类增益的同时还能驱散负面效果，并且造成的攻击威力与场上的自律子机数量有关。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="其名为摩羯座，可以控制多个自律子机进行协同作战的星宫战士。当其分离出自律子机的时候，自律子机可以为其提供各种各样增益以及辅助效果。",["key"]="98360_Capricorn",["unlock_id"]={30401}
+,["aModels"]=9836001,["type"]=7,["name_en"]="Capricorn",["name"]="摩羯座"}
 ,["9043_Puppet"]={["aCards"]={90430}
 ,["index"]=61,["name2"]="重击人偶",["id"]="9043_Puppet",["skillDesc"]="重击人偶能对单个目标单位施加“眩晕”效果",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="板块收束塔中的机械天使，由塔内的核心天使控制。主要功能是维持收束塔内的秩序，具有高度智能，在外装配备机械拳臂时，会作为重击型战斗单位。",["key"]="9043_Puppet",["unlock_id"]={1124}
 ,["aModels"]=9043001,["type"]=11,["name_en"]="Bash Puppet",["name"]="重击人偶"}
@@ -121,6 +133,9 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["9314_BetisSupernaturalist"]={["aCards"]={93140}
 ,["index"]=132,["name2"]="贝蒂斯异能者",["id"]="9314_BetisSupernaturalist",["skillDesc"]="贝蒂斯异能者能使用导弹发射器，对敌方造成能量伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="尼克罗板块上十分常见的造物，配备有制式导弹发射器。",["key"]="9314_BetisSupernaturalist",["unlock_id"]={1308}
 ,["aModels"]=9314001,["type"]=13,["name_en"]="BetisSupernaturalist",["name"]="贝蒂斯异能者"}
+,["94180_Sunrise"]={["aCards"]={94180}
+,["index"]=212,["name2"]="朝晖「异变」",["id"]="94180_Sunrise",["skillDesc"]="朝晖的攻击可以对敌人施加灼烧效果，还能为自身提供攻击和防御增益；除此以外己方使用终极技能时，有概率对敌方使用特殊技能造成物理伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="被视界意识所操控的朝晖，除了本身的强悍战力外，还能反向汲取视界本身能量，提升自身伤害。",["key"]="94180_Sunrise",["unlock_id"]={910008}
+,["aModels"]=9418001,["type"]=8,["name_en"]="Sunrise「Mutation」",["name"]="朝晖「傀儡」"}
 ,["9098_BadWolf"]={["aCards"]={90980}
 ,["index"]=102,["name2"]="恶狼",["id"]="9098_BadWolf",["skillDesc"]="恶狼拥有极强的隐蔽性和机动性，却又拥有骇人群体输出能力，其携带的模因病毒又为它增加了“蚕食”对方的效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="与流星工业制作的突击型造物原型机十分相似的特殊造物，但性能却远超原型。",["key"]="9098_BadWolf",["unlock_id"]={93008}
 ,["aModels"]=9098001,["type"]=13,["name_en"]="BadWolf",["name"]="恶狼"}
@@ -130,33 +145,54 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["94041_SpearMartialist"]={["aCards"]={94041}
 ,["index"]=185,["name2"]="矛武者",["id"]="94041_SpearMartialist",["skillDesc"]="矛武者能使单体目标防御下降。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="天阶原板块制造的人形造物，拥有优异的作战性能。此机作为突击型机体，善于冲锋陷阵。",["key"]="94041_SpearMartialist",["unlock_id"]={1407}
 ,["aModels"]=9404101,["type"]=1,["name_en"]="SpearMartialist",["name"]="矛武者"}
+,["9510_AberrantArtillery"]={["aCards"]={95100}
+,["index"]=241,["name2"]="异铸重炮兵",["id"]="9510_AberrantArtillery",["skillDesc"]="异铸重炮兵能够对敌人施加冰冻状态。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="造型怪异的自动化机械造物，其配备的重炮拥有极强的破坏力，具有高度智能，作战性能较其他造物高出相当多。",["key"]="9510_AberrantArtillery",["unlock_id"]={1613}
+,["aModels"]=9510001,["type"]=8,["name_en"]="Aberrant Artillery",["name"]="异铸重炮兵"}
 ,["94061_AxeGuard"]={["aCards"]={94061}
 ,["index"]=181,["name2"]="斧卫士",["id"]="94061_AxeGuard",["skillDesc"]="斧卫士熟练使用盾斧武装，对敌方目标造成物理伤害的同时额外获得吸收护盾。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="原本拥有一定自律性的斧卫士，经过二次改造，适应了更强劲的武装，熟练使用盾斧重击保证其在复杂战斗环境中的适应能力。",["key"]="94061_AxeGuard",["unlock_id"]={1405}
 ,["aModels"]=9406101,["type"]=1,["name_en"]="AxeGuard",["name"]="斧卫士"}
 ,["9002_Robot"]={["aCards"]={90020}
 ,["index"]=104,["name2"]="自律轻机兵β",["id"]="9002_Robot",["skillDesc"]="远程特化的轻机兵β，使用射击程式远距离攻击目标单位",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="不受控制的自律轻机兵β，NERI早期研发的造物之一。作为轻型自动化人型兵器，此款造物配置了远程战斗的枪械，可以自动执行巡逻与作战程式。在碎星战争中，因芯片技术缺陷被敌方所控制。我们无法与这些自律轻机兵β重新建立控制链接，如遇到须尽快清理",["key"]="9002_Robot",["unlock_id"]={93013}
 ,["aModels"]=9002001,["type"]=1,["name_en"]="SDLM β「Mutation」",["name"]="自律轻机兵β「异变」"}
+,["9001_Robot"]={["aCards"]={90010}
+,["index"]=103,["name2"]="自律轻机兵α",["id"]="9001_Robot",["skillDesc"]="近战特化的轻机兵α，使用剑术程式近距离攻击目标单位",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="不受控制的自律轻机兵α，NERI早期研发的造物之一。作为轻型自动化人型兵器，此款造物配置了近身战斗的剑刃，可以自动执行巡逻与作战程式。在碎星战争中，因芯片技术缺陷被敌方所控制。我们无法与这些自律轻机兵α重新建立控制链接，如遇到须尽快清理。",["key"]="9001_Robot",["unlock_id"]={93013}
+,["aModels"]=9001001,["type"]=1,["name_en"]="SDLM α「Mutation」",["name"]="自律轻机兵α「异变」"}
 ,["9038_Centaur"]={["aCards"]={90380}
 ,["index"]=53,["name2"]="黑陨重骑",["id"]="9038_Centaur",["skillDesc"]="黑陨迅骑能对目标单位施加“眩晕”和“弱化”效果",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="戈里刻板块罕见的战争造物，由奥林匹斯直接控制。突击性能与输出效能远远高于其他作战用造物，通常驻守于大型枢纽与要塞内部，极难被击败，需要特别注意。",["key"]="9038_Centaur",["unlock_id"]={1118}
 ,["aModels"]=9038001,["type"]=6,["name_en"]="Black Meteor",["name"]="黑坠重骑"}
 ,["9205_Warrior"]={["aCards"]={92050}
 ,["index"]=73,["name2"]="深谙剑战士",["id"]="9205_Warrior",["skillDesc"]="深谙剑战士挥动巨剑撕裂敌方目标，造成物理伤害，并对目标施加割裂效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="经过世界树的改造，性能得到进一步提升的重装造物。此机配备了剑刃武装，善于在近距离为自己取得优势。",["key"]="9205_Warrior",["unlock_id"]={1206}
 ,["aModels"]=9205001,["type"]=1,["name_en"]="Sword Troll",["name"]="深谙剑战士"}
+,["9509_ShockRavager"]={["aCards"]={95090}
+,["index"]=239,["name2"]="前线强袭者",["id"]="9509_ShockRavager",["skillDesc"]="前线强袭者可以令自身获得物理屏障，并且对敌方目标施加强制嘲讽。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="来历不明，似乎是由被淘汰的最早一批人形自律武装经过深度改造后制成的机械人形，配备厚重的战盾，主要用以掩护其他敌方单位快速突进。",["key"]="9509_ShockRavager",["unlock_id"]={1609}
+,["aModels"]=9509001,["type"]=8,["name_en"]="Shock Ravager",["name"]="前线强袭者"}
 ,["92280_Yumir"]={["aCards"]={92280}
 ,["index"]=72,["name2"]="尤弥尔",["id"]="92280_Yumir",["skillDesc"]="尤弥尔作为拥有始祖巨人之名的巨形造物拥有多种能力，无论是弱化能力、驱散能力这种低级能力，还是推迟敌方行动、自身行动提前、全场火力覆盖都不在话下，更可怕的是当其血量降低到一定程度时，还会获得反伤能力。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="拥有始祖巨人之名的巨型造物，是碎星人制造来把守重要设施的试验型机体。全身配备了大量重型武装，仅此一机就能压制一个部队，如行走的军事要塞般散发出无比的威慑力。",["key"]="92280_Yumir",["unlock_id"]={1205,12101,1401021,1401022,1401023}
 ,["aModels"]=9228001,["type"]=7,["name_en"]="Yumir",["name"]="尤弥尔"}
 ,["9104_HCCM-α"]={["aCards"]={91040}
 ,["index"]=109,["name2"]="住建特使α",["id"]="9104_HCCM-α",["skillDesc"]="住建特使α能使用拐杖糖发动各种攻击，还拥有偷取机动，推迟行动条的能力。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="《碎星关于版块群优化措施的通告(征求意见稿)》的执行特使，卡达斯办事署的高等造物——一切为了碎星！",["key"]="9104_HCCM-α",["unlock_id"]={94004}
 ,["aModels"]=9104001,["type"]=6,["name_en"]="HCCM-α",["name"]="住建特使α"}
+,["9508_VanguardMauler"]={["aCards"]={95080}
+,["index"]=238,["name2"]="前线重击者",["id"]="9508_VanguardMauler",["skillDesc"]="前线重击者能够减少敌人的防御。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="来历不明，似乎是由被淘汰的最早一批人形自律武装经过深度改造后制成的机械人形，外装配备了铳枪和盾牌，能进行火力压制，为其他敌方单位创造攻击机会。",["key"]="9508_VanguardMauler",["unlock_id"]={1609}
+,["aModels"]=9508001,["type"]=8,["name_en"]="Vanguard Mauler",["name"]="前线重击者"}
 ,["7026_Thor"]={["aCards"]={70260}
 ,["index"]=92,["name2"]="托尔",["id"]="7026_Thor",["skillDesc"]="君主托尔拥有极强的爆发能力，通过与雷霆共鸣增加自身暴击和防御，溢出的暴击还可以转化为暴伤",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="诺斯板块的统治者，因过去未能履行使命，被人戏称为“无能君主”。",["key"]="7026_Thor",["unlock_id"]={1221}
 ,["aModels"]=7026001,["type"]=8,["name_en"]="THOR",["name"]="托尔"}
+,["9506_LurkerGunner"]={["aCards"]={95060}
+,["index"]=237,["name2"]="潜藏机枪兵",["id"]="9506_LurkerGunner",["skillDesc"]="潜藏机枪兵能使单体目标单位机动下降。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="藏匿在北境战区内的重装机械造物，制造者不明，拥有强猛火力，常与潜藏重盾兵共同出击，拥有快速推进战线的能力。",["key"]="9506_LurkerGunner",["unlock_id"]={1609}
+,["aModels"]=9506001,["type"]=8,["name_en"]="Lurker Gunner",["name"]="潜藏机枪兵"}
+,["9519_CorrosiveCavalier"]={["aCards"]={95190}
+,["index"]=236,["name2"]="侵蚀重骑",["id"]="9519_CorrosiveCavalier",["skillDesc"]="侵蚀重骑能对目标单位施加“眩晕”和“弱化”效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="造型特异的重装机械造物，似乎由不明人物控制其行动，防御性能与攻击性能都极其出色，多用于巡查守卫特定区域及秘密基地，与其交战时尽量采取小队作战。",["key"]="9519_CorrosiveCavalier",["unlock_id"]={1607}
+,["aModels"]=9519001,["type"]=6,["name_en"]="Corrosive Cavalier",["name"]="侵蚀重骑"}
 ,["9105_HCCM-β"]={["aCards"]={91050}
 ,["index"]=113,["name2"]="住建特使β",["id"]="9105_HCCM-β",["skillDesc"]="住建特使β能使用拐杖糖发动各种攻击，还拥有驱散目标强化效果，施加眩晕状态的能力。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="《碎星关于版块群优化措施的通告(征求意见稿)》的执行特使，卡达斯办事署的高等造物，但只有在事情发生意外时才会启动的特殊机体。",["key"]="9105_HCCM-β",["unlock_id"]={94007}
 ,["aModels"]=9105001,["type"]=6,["name_en"]="HCCM-β",["name"]="住建特使β"}
 ,["91321_CorruptPriest"]={["aCards"]={91321}
 ,["index"]=208,["name2"]="虚蚀显化者",["id"]="91321_CorruptPriest",["skillDesc"]="虚蚀显化者能够造成强大的物理伤害，并且降低敌人的防御。除此以外，还会召唤虚蚀之刃配合自身进行攻击。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="原为碎星收束塔中的核心天使，负责守卫监测收束塔中的能量核心，在系尔的意识入侵后，被强行与稽查者融合改造成全新的机械造物，拥有了更强的战力。",["key"]="91321_CorruptPriest",["unlock_id"]={1422}
 ,["aModels"]=9132101,["type"]=11,["name_en"]="CorruptPriest",["name"]="虚蚀显化者"}
+,["9502_RemadeStalker"]={["aCards"]={95020}
+,["index"]=235,["name2"]="重塑追猎者",["id"]="9502_RemadeStalker",["skillDesc"]="重塑追猎者的攻击能够对敌人施加麻痹，偷取敌人拥有的强化效果，并且对敌人随机施加弱化效果。如果敌人数量少于一定数量时，则有概率额外进行攻击，但如果人数大于一定数量，反而会令敌人的行动提前。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="听从“索菲亚之瞳”组织成员驱使，拥有一定程度自律意识的机神型造物，能因应敌方灵活切换战斗模式，也能驱使其他造物合作发起攻击，是相当麻烦的敌人。",["key"]="9502_RemadeStalker",["unlock_id"]={1606}
+,["aModels"]=9502001,["type"]=10,["name_en"]="42",["name"]="重塑追猎者"}
 ,["9115_Dawnguard"]={["aCards"]={91150}
 ,["index"]=171,["name2"]="黎明守卫",["id"]="9115_Dawnguard",["skillDesc"]="黎明之锤在造成高伤害的同时，还能钳制目标的行动，甚至还能施加割裂效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="戈里刻板块以据点防卫为目的制造出来的重型战斗造物，后被未知势力送往地球。为了降低控制难度与随之产生的风险，进行了二次改造。",["key"]="91150_Dawnguard",["unlock_id"]={99006}
 ,["aModels"]=9115001,["type"]=7,["name_en"]="Dawnguard",["name"]="黎明守卫"}
@@ -172,9 +208,15 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["94081_FirearmGuard"]={["aCards"]={94081}
 ,["index"]=177,["name2"]="枪卫士",["id"]="94081_FirearmGuard",["skillDesc"]="枪卫士射出光弹，对远距离敌方目标造成能量伤害，并有概率对其汲取目标的防御。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="经过二次改造，性能得到进一步提升的重装造物。此机配备了射击武装，能在战场后方进行强火力输出。",["key"]="94081_FirearmGuard",["unlock_id"]={1401}
 ,["aModels"]=9408101,["type"]=1,["name_en"]="FirearmGuard",["name"]="枪卫士"}
+,["9505_LurkerWarden"]={["aCards"]={95050}
+,["index"]=234,["name2"]="潜藏重盾兵",["id"]="9505_LurkerWarden",["skillDesc"]="潜藏重盾兵就能对单体目标施加战术嘲讽。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="藏匿在北境战区内的重装机械造物，制造者不明，拥有不逊色于碎星本土造物的强度，常与潜藏机枪兵共同出击，拥有快速推进战线的能力。",["key"]="9505_LurkerWarden",["unlock_id"]={1609}
+,["aModels"]=9505001,["type"]=8,["name_en"]="Lurker Warden",["name"]="潜藏重盾兵"}
 ,["9029_Fighter"]={["aCards"]={90290}
 ,["index"]=39,["name2"]="疾射哨兵",["id"]="9029_Fighter",["skillDesc"]="疾射哨兵能对单个目标单位施加“机动弱化“",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="戈里刻板块常见的造物，属于轻型自动化人型哨兵。多数时候作为劳作的工具，在外装配备枪械时，即可作为射击型战斗兵器使用。",["key"]="9029_Fighter",["unlock_id"]={1108}
 ,["aModels"]=9029001,["type"]=1,["name_en"]="Accelshooted Sentry",["name"]="疾射士兵"}
+,["94031_FirearmMartialist"]={["aCards"]={94031}
+,["index"]=182,["name2"]="枪武者",["id"]="94031_FirearmMartialist",["skillDesc"]="枪武者能使单体目标单位机动下降。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="天阶原板块制造的人形造物，拥有优异的作战性能。此机作为射击型机体，常会在后方发动牵制射击。",["key"]="94031_FirearmMartialist",["unlock_id"]={1405}
+,["aModels"]=9403101,["type"]=1,["name_en"]="FirearmMartialist",["name"]="枪武者"}
 ,["9004_Robot"]={["aCards"]={90040}
 ,["index"]=101,["name2"]="自律重机兵α",["id"]="9004_Robot",["skillDesc"]="搭载了复合装甲的机兵β，使用联结型枪械对目标单位进行“扫射”攻击",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="不受控制的自律重机兵β，和轻机兵同属于NERI早期研发的造物。作为重自动化人型兵器，其制造工艺在NERI被严格管控。此款造物搭载了复合装甲与远程能量手炮，可以自动执行作战程式。在碎星战争中，因芯片技术缺陷被敌方所控制。为防止这些自律重机兵β带来更多危害，如遇到须尽快清理。",["key"]="9004_Robot",["unlock_id"]={93002}
 ,["aModels"]=9004001,["type"]=1,["name_en"]="SDHM β「Mutation」",["name"]="自律重机兵β「异变」"}
@@ -196,15 +238,36 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["9005_Device"]={["aCards"]={90050}
 ,["index"]=1,["name2"]="部署炸弹",["id"]="9005_Device",["skillDesc"]="充能三回合后，对敌方全体单位进行“自爆”攻击",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="碎星人所制造的陷阱装置，在侦测到敌人后会进入自毁倒计时，继而引发剧烈爆炸。建议在其造成破坏之前，迅速处理，以免战局陷入被动。",["key"]="9005_Device",["unlock_id"]={1001}
 ,["aModels"]=9005001,["type"]=2,["name_en"]="Booby-trapped Bomb",["name"]="爆炸陷阱"}
+,["9218_SpiderToother"]={["aCards"]={92180}
+,["index"]=67,["name2"]="蛛牙者",["id"]="9218_SpiderToother",["skillDesc"]="蛛牙者跳至敌方目标头部，并用毒牙撕咬目标，对其造成物理伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="诺斯板块上常见的蛛形造物，经常附着在难以发现的地方。虽然单体威胁不大，但聚集成堆就会变得很棘手。",["key"]="9218_SpiderToother",["unlock_id"]={1202}
+,["aModels"]=9218001,["type"]=3,["name_en"]="spidy",["name"]="蛛牙者"}
+,["9514_ChimeraSpearman"]={["aCards"]={95140}
+,["index"]=231,["name2"]="嵌合矛斗士",["id"]="9514_ChimeraSpearman",["skillDesc"]="嵌合矛斗士能使单体目标防御下降。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="经过嵌合改造后，性能大幅度提高的重装机械造物。此造物配备了辅助射击武装，常在战场后方发动特殊袭击。",["key"]="9514_ChimeraSpearman",["unlock_id"]={1602}
+,["aModels"]=9514001,["type"]=1,["name_en"]="Chimera Spearman",["name"]="嵌合矛斗士"}
 ,["9325_LmmortalServant"]={["aCards"]={93250}
 ,["index"]=135,["name2"]="不朽从者",["id"]="9325_LmmortalServant",["skillDesc"]="不朽从者挥舞利刃对敌方造成物理伤害，并且自身回合开始时有概率强化自身。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="在尼克罗板块被称为不朽从者的造物，它会听从命令用双手的利刃摧毁所有敌人。",["key"]="9325_LmmortalServant",["unlock_id"]={1311}
 ,["aModels"]=9325001,["type"]=1,["name_en"]="LmmortalServant",["name"]="不朽从者"}
 ,["98400_Gemini"]={["aCards"]={98400}
 ,["index"]=117,["name2"]="双子座",["id"]="98400_Gemini",["skillDesc"]="双子座能用手中的剑与盾对敌人造成大量的伤害，还能使自身获得免疫负面效果及自身行动提前的效果。此外还拥有驱散并使敌方无法获得强化效果的能力。双子座还会根据自身的强化、负面效果的数量来决定是发动进攻，还是对自身进行强化。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="其名为双子座，由波拉克斯与卡托斯合体而成的星宫战士。结合两者攻击性能的同时，防御性能也大幅提升。",["key"]="98400_Gemini",["unlock_id"]={30107,30108,30109}
 ,["aModels"]=9840001,["type"]=7,["name_en"]="Gemini",["name"]="双子座"}
+,["98420_Leo"]={["aCards"]={98420}
+,["index"]=172,["name2"]="狮子座",["id"]="98420_Leo",["skillDesc"]="狮子座的攻击能够标记敌人，并且随着标记次数的增多，增强自身特定技能的伤害。它还能在战斗过程中强化自身的攻击和防御能力，但相应的速度会有所下降。并且，狮子座承受的负面效果越多，其受到的伤害也就越高。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="其名为狮子座，宛如金色猛兽的的星宫战士。善于利用自己的利爪与剑尾，贴近敌人爆发疾风骤雨般的攻击。",["key"]="98420_Leo",["unlock_id"]={30201}
+,["aModels"]=9842001,["type"]=1,["name_en"]="Leo",["name"]="狮子座"}
+,["9516_RemadeReaver"]={["aCards"]={95160}
+,["index"]=229,["name2"]="重塑斧战士",["id"]="9516_RemadeReaver",["skillDesc"]="重塑斧战士熟练使用盾斧武装，对敌方目标造成物理伤害的同时额外获得吸收护盾。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="从海中出现的神秘造物，拥有优异的作战性能。此造物配备了战斧武装，即使有着厚重的外部装甲，也难以完全抵消它的攻击影响。",["key"]="9516_RemadeReaver",["unlock_id"]={1601}
+,["aModels"]=9516001,["type"]=1,["name_en"]="Remade Reaver",["name"]="重塑斧战士"}
+,["9515_ RemadeSwordsman"]={["aCards"]={95150}
+,["index"]=228,["name2"]="重塑剑战士",["id"]="9515_ RemadeSwordsman",["skillDesc"]="重塑剑战士挥动巨剑撕裂敌方目标，造成物理伤害，并对目标施加割裂效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="从海中出现的神秘造物，拥有优异的作战性能。此造物配备了巨剑武装，极其擅长近身作战。",["key"]="9515_ RemadeSwordsman",["unlock_id"]={1601}
+,["aModels"]=9515001,["type"]=1,["name_en"]=" Remade Swordsman",["name"]="重塑剑战士"}
 ,["9025_IceButterfly"]={["aCards"]={90250}
 ,["index"]=17,["name2"]="阿卡玛纳",["id"]="9025_IceButterfly",["skillDesc"]="拥有在战斗中，自主学习的高性能AI能力的技能",["unlock_type"]=1,["bShowInAltas"]=false,["bgDesc"]="极为罕见的战争造物，制作者与控制者尚不明确。突击性能与输出效能远远高于其他作战用造物，战斗力接近同规格机神。一旦遭遇，需要谨慎判断形式后再进行战术布置。",["key"]="9025_IceButterfly",["unlock_id"]={1001}
 ,["aModels"]=9025001,["type"]=1,["name_en"]="Trainer",["name"]="同调用素体"}
+,["98411_CancerAbyss"]={["aCards"]={98411}
+,["index"]=223,["name2"]="巨蟹座-海魔",["id"]="98411_CancerAbyss",["skillDesc"]="巨蟹座-海魔能对敌人造成大量的物理伤害，并且对为自身提供强大的增益效果。它的能量值高于一定水平时，会获得伤害减免效果，但也会使其承受的持续伤害增加。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="巨蟹座切换为海魔形态，其强大无比的机械巨钳将会毁灭眼前出现的所有敌人。",["key"]="98411_CancerAbyss",["unlock_id"]={30306}
+,["aModels"]=9841101,["type"]=7,["name_en"]="CancerAbyss",["name"]="巨蟹座-海魔"}
+,["9511_ChimeraShield"]={["aCards"]={95110}
+,["index"]=226,["name2"]="嵌合盾斗士",["id"]="9511_ChimeraShield",["skillDesc"]="嵌合盾斗士能对单体目标施加战术嘲讽。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="经过嵌合改造后，性能大幅度提高的重装机械造物。此造物配备了特制盾牌，在战斗中会主动吸引火力。",["key"]="9511_ChimeraShield",["unlock_id"]={1601}
+,["aModels"]=9511001,["type"]=1,["name_en"]="Chimera Shield",["name"]="嵌合盾斗士"}
 ,["9006_Device"]={["aCards"]={90060}
 ,["index"]=2,["name2"]="剧毒炸弹",["id"]="9006_Device",["skillDesc"]="充能三回合后，对敌方全体单位进行“自爆”攻击，并施加“劣化”效果",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="碎星人所制造的陷阱装置，在侦测到敌人后会进入自毁倒计时，其内部装填了劣化弹片，爆炸后会侵蚀我方装备。建议在其造成破坏之前，迅速处理。",["key"]="9006_Device",["unlock_id"]={1001}
 ,["aModels"]=9006001,["type"]=2,["name_en"]="Decline Bomb",["name"]="劣化陷阱"}
@@ -219,16 +282,16 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["aModels"]=9130001,["type"]=15,["name_en"]="SkyMantaRay",["name"]="飞翔魔鬼鱼"}
 ,["93310_OmanSpecial"]={["aCards"]={93310}
 ,["index"]=224,["name2"]="阿曼（异兽）",["id"]="93310_OmanSpecial",["skillDesc"]="阿曼（异兽）除了利用庞大的身躯发动攻击，还会发出咆哮使敌人耐久上限下降。除此以外还拥有对敌人施加各类负面效果的能力。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="该个体躯体部分地方呈现红色，比普通阿曼拥有更强大的力量。该个体并不是十分活跃的造物，它大部分时间都处于休眠状态。每隔十几年，它就会为了补充能量，开始袭击世界各地。",["key"]="93310_OmanSpecial",["unlock_id"]={915008}
-,["aModels"]=9331001,["type"]=13,["name_en"]="OmanSpecial",["name"]="巨蟹座-海魔"}
+,["aModels"]=9331001,["type"]=13,["name_en"]="OmanSpecial",["name"]="阿曼（异兽）"}
 ,["9108_Forestguard"]={["aCards"]={91080}
 ,["index"]=106,["name2"]="森林守卫",["id"]="9108_Forestguard",["skillDesc"]="森林守卫能发动使敌人眩晕的攻击，在削弱敌人的同时使用驱散能力，恢复自身耐久并不断对自身进行不可驱散的强化，务必速战速决。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="配色与森林几乎融为一体的造物，在这被碎星人遗忘的美丽板块上，守护着造物们的“家园”。",["key"]="9108_Forestguard",["unlock_id"]={95008}
 ,["aModels"]=9108001,["type"]=7,["name_en"]="Forestguard",["name"]="森林守卫"}
 ,["7038_Nephthys"]={["aCards"]={70380}
 ,["index"]=141,["name2"]="奈芙蒂斯",["id"]="7038_Nephthys",["skillDesc"]="奈芙蒂斯的攻击能推迟目标行动，攻击后可以减少友方全体承受伤害的能力。除此以外还能重塑友方战败退场单位，为其修复耐久。在受到攻击后，有概率获得能量值，并为友方耐久比最低的单位提供护盾。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="潜藏于拉的体内，本该早就消失的碎星人，拥有极强的战斗能力。",["key"]="7038_Nephthys",["unlock_id"]={1313}
 ,["aModels"]=7038001,["type"]=8,["name_en"]="Nephthys",["name"]="奈芙蒂斯"}
-,["98411_CancerAbyss"]={["aCards"]={98411}
-,["index"]=223,["name2"]="巨蟹座-海魔",["id"]="98411_CancerAbyss",["skillDesc"]="巨蟹座-海魔能对敌人造成大量的物理伤害，并且对为自身提供强大的增益效果。它的能量值高于一定水平时，会获得伤害减免效果，但也会使其承受的持续伤害增加。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="巨蟹座切换为海魔形态，其强大无比的机械巨钳将会毁灭眼前出现的所有敌人。",["key"]="98411_CancerAbyss",["unlock_id"]={30306}
-,["aModels"]=9841101,["type"]=7,["name_en"]="CancerAbyss",["name"]="巨蟹座-海魔"}
+,["9512_ChimeraBlade"]={["aCards"]={95120}
+,["index"]=227,["name2"]="嵌合剑斗士",["id"]="9512_ChimeraBlade",["skillDesc"]="嵌合剑斗士能对单体目标施加“割裂”效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="经过嵌合改造后，性能大幅度提高的重装机械造物。此造物配备了特制盾牌，在战斗中会主动吸引火力。",["key"]="9512_ChimeraBlade",["unlock_id"]={1601}
+,["aModels"]=9512001,["type"]=1,["name_en"]="Chimera Blade",["name"]="嵌合剑斗士"}
 ,["9119_Censor"]={["aCards"]={91190}
 ,["index"]=221,["name2"]="巨大稽查者",["id"]="9119_Censor",["skillDesc"]="稽查者-异态体的攻击能够减少敌方的机动，并使敌人的行动延迟，甚至还能造成大量的真实伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="属于“稽查者”类别的机械天使，整体结构庞大，并且被防御力场笼罩，需要极高的动能打击才能破开。除了体型与之前机械天使相差巨大，也拥有明显情绪波动和自我意识，能短暂控制及召唤其他造物，对特化核心极为执着。",["key"]="9119_Censor",["unlock_id"]={1522}
 ,["aModels"]=9119001,["type"]=11,["name_en"]="Censor",["name"]="稽查者-异态体"}
@@ -250,9 +313,9 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["9322_RielScout"]={["aCards"]={93220}
 ,["index"]=215,["name2"]="瑞尔斥候",["id"]="9322_RielScout",["skillDesc"]="不朽斥候能够发动冲击，对敌人造成物理伤害",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="在尼克罗板块被称为不朽斥候的造物，它会听从命令发动冲击，从而击溃敌人。",["key"]="9322_RielScout",["unlock_id"]={911001}
 ,["aModels"]=9322001,["type"]=13,["name_en"]="RielScout",["name"]="不朽斥候"}
-,["94180_Sunrise"]={["aCards"]={94180}
-,["index"]=212,["name2"]="朝晖「异变」",["id"]="94180_Sunrise",["skillDesc"]="朝晖的攻击可以对敌人施加灼烧效果，还能为自身提供攻击和防御增益；除此以外己方使用终极技能时，有概率对敌方使用特殊技能造成物理伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="被视界意识所操控的朝晖，除了本身的强悍战力外，还能反向汲取视界本身能量，提升自身伤害。",["key"]="94180_Sunrise",["unlock_id"]={910008}
-,["aModels"]=9418001,["type"]=8,["name_en"]="Sunrise「Mutation」",["name"]="朝晖「傀儡」"}
+,["9504_Gemini"]={["aCards"]={95040}
+,["index"]=242,["name2"]="黄金双子座",["id"]="9504_Gemini",["skillDesc"]="黄金双子座能够对敌人同时造成物理伤害和能量伤害，并且会根据敌人使用不同的技能，采取不同的反制措施。它在攻击后可以为自身施加随机强化效果，并对敌人施加随机弱化效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="原是阿卡斯从“秘所”中带来的维度装置，在经过阿卡斯漫长时间的改造后，被重塑为一具极其强大的黄金机械造物。在地球的NOVA能量网络激活后，它将作为网络的守卫，确保“重塑”计划的顺利实施。",["key"]="9504_Gemini",["unlock_id"]={1619}
+,["aModels"]=9504001,["type"]=7,["name_en"]="Gemini",["name"]="黄金双子座"}
 ,["94181_Sunrise"]={["aCards"]={94181}
 ,["index"]=211,["name2"]="朝晖",["id"]="94181_Sunrise",["skillDesc"]="朝晖的攻击可以对敌人施加灼烧效果，还能为自身提供攻击和防御增益；除此以外己方使用终极技能时，有概率对敌方使用特殊技能造成物理伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="天阶原的统治者，本身实力强悍，拥有过分充足的好奇心，喜欢收集陌生又新奇的东西。平时对外表现得脾气极好，但被戳穿内心所想后会恼羞成怒。",["key"]="94181_Sunrise",["unlock_id"]={910006}
 ,["aModels"]=9418101,["type"]=8,["name_en"]="Sunrise",["name"]="朝晖"}
@@ -397,9 +460,9 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["8013_ForLegion"]={["aCards"]={80130}
 ,["index"]=38,["name2"]="军团战魂",["id"]="8013_ForLegion",["skillDesc"]="军团战魂拥有兼顾单体和全体伤害的输出手段，作为我方机神时还能提供全面的“增益”效果",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="在斗技场脱颖而出的王者才会被授予的执行者，目前的持有者是阿瑞斯。据闻这台机体还配备了十一台护卫机，但从未有人亲眼目睹过全机出动的场面。",["key"]="8013_ForLegion",["unlock_id"]={1107}
 ,["aModels"]=8013001,["type"]=10,["name_en"]="Legions",["name"]="军团战魂"}
-,["94031_FirearmMartialist"]={["aCards"]={94031}
-,["index"]=182,["name2"]="枪武者",["id"]="94031_FirearmMartialist",["skillDesc"]="枪武者能使单体目标单位机动下降。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="天阶原板块制造的人形造物，拥有优异的作战性能。此机作为射击型机体，常会在后方发动牵制射击。",["key"]="94031_FirearmMartialist",["unlock_id"]={1405}
-,["aModels"]=9403101,["type"]=1,["name_en"]="FirearmMartialist",["name"]="枪武者"}
+,["9518_BrutalCavalier"]={["aCards"]={95180}
+,["index"]=233,["name2"]="暴戾重骑",["id"]="9518_BrutalCavalier",["skillDesc"]="暴戾重骑能对目标单位施加“机动弱化”和“行动降低”效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="造型特异的重装机械造物，似乎由不明人物控制其行动。突击性能与防御性能都极其出色，被用于驻守特定区域及秘密基地，与其交战时需要特别慎重。",["key"]="9518_BrutalCavalier",["unlock_id"]={1602}
+,["aModels"]=9518001,["type"]=6,["name_en"]="Brutal Cavalier",["name"]="暴戾重骑"}
 ,["9216_RigidPestle"]={["aCards"]={92160}
 ,["index"]=66,["name2"]="刚杵者",["id"]="9216_RigidPestle",["skillDesc"]="刚杵者通过发射光弹对敌方目标造成能量伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="诺斯板块上常见的部署造物，平时都处于休眠状态，但只要有人闯进它的检测范围内，就会立刻对目标进行识别，并判断是否该发起攻击。",["key"]="9216_RigidPestle",["unlock_id"]={1202}
 ,["aModels"]=9216001,["type"]=3,["name_en"]="Pestle",["name"]="刚杵者"}
@@ -445,9 +508,9 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["9202_Fighter"]={["aCards"]={92020}
 ,["index"]=80,["name2"]="剑斗士",["id"]="9202_Fighter",["skillDesc"]="剑斗士能对单体目标施加“割裂”效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="诺斯板块制造的人形造物，拥有优异的作战性能。此机作为剑装型机体，擅长在近距离作战。",["key"]="9202_Fighter",["unlock_id"]={1210}
 ,["aModels"]=9202001,["type"]=1,["name_en"]="Sword Thurses",["name"]="剑斗士"}
-,["98420_Leo"]={["aCards"]={98420}
-,["index"]=172,["name2"]="狮子座",["id"]="98420_Leo",["skillDesc"]="狮子座的攻击能够标记敌人，并且随着标记次数的增多，增强自身特定技能的伤害。它还能在战斗过程中强化自身的攻击和防御能力，但相应的速度会有所下降。并且，狮子座承受的负面效果越多，其受到的伤害也就越高。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="其名为狮子座，宛如金色猛兽的的星宫战士。善于利用自己的利爪与剑尾，贴近敌人爆发疾风骤雨般的攻击。",["key"]="98420_Leo",["unlock_id"]={30201}
-,["aModels"]=9842001,["type"]=1,["name_en"]="Leo",["name"]="狮子座"}
+,["9513_ChimeraGunner"]={["aCards"]={95130}
+,["index"]=230,["name2"]="嵌合枪斗士",["id"]="9513_ChimeraGunner",["skillDesc"]="嵌合枪斗士能使单体目标单位机动下降。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="经过嵌合改造后，性能大幅度提高的重装机械造物。此造物配备了火力强猛的射击武装，能在战场后方进行强火力输出。",["key"]="9513_ChimeraGunner",["unlock_id"]={1602}
+,["aModels"]=9513001,["type"]=1,["name_en"]="Chimera Gunner",["name"]="嵌合枪斗士"}
 ,["91380_Queen"]={["aCards"]={91380}
 ,["index"]=217,["name2"]="提泽纳",["id"]="91380_Queen",["skillDesc"]="她攻击能够使敌人获得圣痕印记，拥有圣痕标记的目标在回合开始时将受到真实伤害。此外，她还能驱散自身的负面状态，并为己方全体施加增益效果，而她在受到攻击时该增益效果会被夺取。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="伊卢森岛的统治者，将赐福赠与四天王之人。真实身份是从提泽纳身上剥离出来的负面情绪，她的负面情绪在虚拟网络空间的影响下拥有了实体。",["key"]="91380_Queen",["unlock_id"]={912007}
 ,["aModels"]=9138001,["type"]=8,["name_en"]="Queen",["name"]="女王"}
@@ -601,9 +664,9 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["7030_Brynhild"]={["aCards"]={70300}
 ,["index"]=78,["name2"]="布伦希尔德「异变」",["id"]="7030_Brynhild",["skillDesc"]="布伦希尔德是攻守兼备的女武神，攻击后可以增加自身抗性，修复团队耐久，亦可以使敌方行动推迟。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="诺斯板块的碎星人，「阿斯加德」女武神部队的卫士长，实力出众，具有出色的战场指挥能力。成为异变者的她虽然失去了自己的部队，但也令她更能放开手交战。",["key"]="7030_Brynhild",["unlock_id"]={1209}
 ,["aModels"]=7030001,["type"]=8,["name_en"]="BRYNHILD",["name"]="布伦希尔德「异变」"}
-,["9218_SpiderToother"]={["aCards"]={92180}
-,["index"]=67,["name2"]="蛛牙者",["id"]="9218_SpiderToother",["skillDesc"]="蛛牙者跳至敌方目标头部，并用毒牙撕咬目标，对其造成物理伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="诺斯板块上常见的蛛形造物，经常附着在难以发现的地方。虽然单体威胁不大，但聚集成堆就会变得很棘手。",["key"]="9218_SpiderToother",["unlock_id"]={1202}
-,["aModels"]=9218001,["type"]=3,["name_en"]="spidy",["name"]="蛛牙者"}
+,["9517_RemadeCrusher"]={["aCards"]={95170}
+,["index"]=232,["name2"]="重塑锤战士",["id"]="9517_RemadeCrusher",["skillDesc"]="锤战士锤战士巨锤在对敌方目标造成物理伤害的同时，还有概率对目标施加眩晕效果。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="从海中出现的神秘造物，拥有优异的作战性能。此造物配备了巨锤武装，对防御薄弱的单位拥有极强的破坏能力。",["key"]="9517_RemadeCrusher",["unlock_id"]={1602}
+,["aModels"]=9517001,["type"]=1,["name_en"]="Remade Crusher",["name"]="重塑锤战士"}
 ,["7036_Ra"]={["aCards"]={70360}
 ,["index"]=138,["name2"]="拉",["id"]="7036_Ra",["skillDesc"]="拉的攻击能推迟目标行动，攻击后可以减少友方全体承受伤害的能力。除此以外还能重塑友方战败退场单位，为其修复耐久。在受到攻击后，有概率获得能量值，并为友方耐久比最低的单位提供护盾。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="尼克罗板块中持有最强力量的碎星人之一，拥有极强的战斗与指挥能力。",["key"]="7036_Ra",["unlock_id"]={1313}
 ,["aModels"]=7036001,["type"]=8,["name_en"]="Ra",["name"]="拉"}
@@ -646,9 +709,9 @@ _G["CfgArchiveMonster"]={["9106_Thórdarson"]={["aCards"]={91060}
 ,["9217_Planktonic"]={["aCards"]={92170}
 ,["index"]=75,["name2"]="浮游者",["id"]="9217_Planktonic",["skillDesc"]="浮游者收缩翼展，发出屏障式光弹，对目标造成能量伤害。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="诺斯板块上常见的游荡造物，制造工艺虽然简单，却非常结实耐用，所以得到了大批量生产。",["key"]="9217_Planktonic",["unlock_id"]={1208}
 ,["aModels"]=9217001,["type"]=3,["name_en"]="Funnel",["name"]="浮游者"}
-,["9001_Robot"]={["aCards"]={90010}
-,["index"]=103,["name2"]="自律轻机兵α",["id"]="9001_Robot",["skillDesc"]="近战特化的轻机兵α，使用剑术程式近距离攻击目标单位",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="不受控制的自律轻机兵α，NERI早期研发的造物之一。作为轻型自动化人型兵器，此款造物配置了近身战斗的剑刃，可以自动执行巡逻与作战程式。在碎星战争中，因芯片技术缺陷被敌方所控制。我们无法与这些自律轻机兵α重新建立控制链接，如遇到须尽快清理。",["key"]="9001_Robot",["unlock_id"]={93013}
-,["aModels"]=9001001,["type"]=1,["name_en"]="SDLM α「Mutation」",["name"]="自律轻机兵α「异变」"}
+,["9507_ShockBreacher"]={["aCards"]={95070}
+,["index"]=240,["name2"]="前线冲锋者",["id"]="9507_ShockBreacher",["skillDesc"]="前线冲锋者攻击后还能获得抵挡伤害的吸收护盾。",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="来历不明，似乎是由被淘汰的最早一批人形自律武装经过深度改造后制成的机械人形，外装配备了单手斧与盾牌，在撕裂防线方面有着相当大的优势。",["key"]="9507_ShockBreacher",["unlock_id"]={1610}
+,["aModels"]=9507001,["type"]=8,["name_en"]="Shock Breacher",["name"]="前线冲锋者"}
 ,["9036_Harper"]={["aCards"]={90360}
 ,["index"]=50,["name2"]="鹰型禁卫β",["id"]="9036_Harper",["skillDesc"]="禁卫β能制造真空气流，使目标行动推迟至行动最末端",["unlock_type"]=1,["bShowInAltas"]=true,["bgDesc"]="戈里刻板块少见的战斗专用造物，属于主动出击型兵器。整体设计皆以快速击溃敌人为目标，外装能通过变形在多种环境下高速移动，攻击迅猛，极难躲避。",["key"]="9036_Harper",["unlock_id"]={1115}
 ,["aModels"]=9036001,["type"]=5,["name_en"]="Eagle Guard β",["name"]="鹰身卫兵β"}

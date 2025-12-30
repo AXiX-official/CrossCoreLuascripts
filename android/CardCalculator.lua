@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 -- 计算卡牌的属性
 GCardCalculator = {
     m_useProperty = {
@@ -182,15 +182,23 @@ function GCardCalculator:CalCardMaxLv(cardCfg, breakLv, coreLv)
     if bCfgLimit then
         max_level = bCfgLimit.limitLv
     else
-        local clCfgs = CfgCardCoreLv[cardCfg.quality]
-        if clCfgs then
-            local clCfg = clCfgs.infos[coreLv]
-            if clCfg then
-                max_level = clCfg.limitLv
-            end
-        else
-            LogWarning('CfgCardCoreLv not find by quality:%s', cardCfg.quality)
-        end
+        -- [[ v 5.0 begin
+
+        -- 先屏蔽突破
+        -- local clCfgs = CfgCardCoreLv[cardCfg.quality]
+        -- if clCfgs then
+        --     local clCfg = clCfgs.infos[coreLv]
+        --     if clCfg then
+        --         max_level = clCfg.limitLv
+        --     end
+        -- else
+        --     LogWarning('CfgCardCoreLv not find by quality:%s', cardCfg.quality)
+        -- end
+
+        bCfgLimit = CfgCardBreakLimitLv[#CfgCardBreakLimitLv]
+        max_level = bCfgLimit.MaxLv
+        
+        -- ]] v 5.0 end
     end
 
     return max_level

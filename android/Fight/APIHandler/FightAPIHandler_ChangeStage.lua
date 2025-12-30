@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --切换周目
 function this:Handle(data)

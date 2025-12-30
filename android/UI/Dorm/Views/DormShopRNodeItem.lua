@@ -1,4 +1,4 @@
-function Refresh(_ids)
+﻿function Refresh(_ids)
     ids = _ids
 
     -- title

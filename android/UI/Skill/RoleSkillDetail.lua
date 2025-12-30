@@ -1,4 +1,4 @@
-local maxX = -358
+﻿local maxX = -358
 local minY = 120
 
 function Awake()

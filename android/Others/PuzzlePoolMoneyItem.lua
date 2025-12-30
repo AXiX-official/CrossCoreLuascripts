@@ -1,4 +1,4 @@
-function OnEnable()
+﻿function OnEnable()
     if (eventMgr) then
         eventMgr:ClearListener()
     end

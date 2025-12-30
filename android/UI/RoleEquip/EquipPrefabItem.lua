@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local elseData=nil;
 local grids={};
 function Awake()

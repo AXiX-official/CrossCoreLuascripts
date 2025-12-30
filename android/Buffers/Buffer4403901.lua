@@ -1,4 +1,4 @@
--- 疾风
+﻿-- 疾风
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -9,7 +9,7 @@ end
 -- 创建时
 function Buffer4403901:OnCreate(caster, target)
 	-- 4403901
-	self:AddAttr(BufferEffect[4403901], self.caster, target or self.owner, nil,"attack",150*self.nCount)
+	self:AddAttr(BufferEffect[4403901], self.caster, target or self.owner, nil,"attack",50*self.nCount)
 	-- 4403902
-	self:AddAttr(BufferEffect[4403902], self.caster, target or self.owner, nil,"speed",5*self.nCount)
+	self:AddAttr(BufferEffect[4403902], self.caster, target or self.owner, nil,"speed",1*self.nCount)
 end

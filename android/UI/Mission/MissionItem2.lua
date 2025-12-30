@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
 	mSlider = ComUtil.GetCom(Slider, "Slider")
 	mAnimSlider = ComUtil.GetCom(Slider, "SliderValue")
 end

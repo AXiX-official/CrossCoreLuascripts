@@ -1,4 +1,4 @@
---FireBall数据
+﻿--FireBall数据
 local this = 
 {
 [2008187309]={

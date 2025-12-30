@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 
 function SetIndex(idx)
 	index = idx

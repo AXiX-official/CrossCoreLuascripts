@@ -1,4 +1,4 @@
---战斗治疗
+﻿--战斗治疗
 
 FightActionCure = oo.class(FightActionBase);
 local this = FightActionCure;

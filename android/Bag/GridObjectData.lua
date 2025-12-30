@@ -1,4 +1,4 @@
---格子视图数据基类
+﻿--格子视图数据基类
 local this=oo.class(GridDataBase);
 
 --data格式：{

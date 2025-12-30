@@ -1,4 +1,4 @@
-ProtocolRecordMgr = oo.class();
+﻿ProtocolRecordMgr = oo.class();
 
 local this = ProtocolRecordMgr;
 

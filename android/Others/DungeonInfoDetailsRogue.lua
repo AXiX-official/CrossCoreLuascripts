@@ -1,4 +1,4 @@
-
+﻿
 -- _data :RogueData
 function Refresh(_data) 
     data = _data

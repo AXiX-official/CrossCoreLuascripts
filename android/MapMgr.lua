@@ -1,4 +1,4 @@
-Loader:Require "MapGrid"
+﻿Loader:Require "MapGrid"
 
 MapMgr = {}
 local this = MapMgr

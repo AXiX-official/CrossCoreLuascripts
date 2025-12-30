@@ -1,4 +1,4 @@
-
+﻿
 function OnOpen()
     UIUtil:ShowAction(gameObject, nil, UIUtil.active2);
 end

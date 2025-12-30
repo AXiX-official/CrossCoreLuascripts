@@ -1,4 +1,4 @@
-_G["CfgVoucher"]={{["id"]=1,["reduceId"]=10002,["minCost"]=100,["mixDiscount"]=true,["name"]="通用优惠券Ⅰ",["mixUse"]=false,["describe"]=[[可用于补给站内所有商品的优惠券。
+﻿_G["CfgVoucher"]={{["id"]=1,["reduceId"]=10002,["minCost"]=100,["mixDiscount"]=true,["name"]="通用优惠券Ⅰ",["mixUse"]=false,["describe"]=[[可用于补给站内所有商品的优惠券。
 普普通通的优惠券，亦是探索队每日辛勤的回报。]],["reduceNum"]=50,["key"]="1",["voucherType"]=1}
 ,{["id"]=2,["reduceId"]=10002,["minCost"]=200,["mixDiscount"]=true,["name"]="通用优惠券Ⅱ",["mixUse"]=false,["describe"]=[[可用于补给站内所有商品的优惠券。
 限量发放的优惠券，优惠力度足以匹配一场胜利。]],["reduceNum"]=100,["key"]="2",["voucherType"]=1}

@@ -1,4 +1,4 @@
---召唤友军角色
+﻿--召唤友军角色
 FightActionSummonTeammate = oo.class(FightActionBase);
 local this = FightActionSummonTeammate;
 

@@ -1,4 +1,4 @@
-function Refresh(cRoleData)
+﻿function Refresh(cRoleData)
     local cfg = cRoleData:GetAbilityCfg()
     local curCfg = cRoleData:GetAbilityCurCfg()
     -- icon 

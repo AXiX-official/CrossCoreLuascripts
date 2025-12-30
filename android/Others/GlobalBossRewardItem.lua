@@ -1,4 +1,4 @@
-local info = nil
+﻿local info = nil
 local key = nil
 local items = {}
 

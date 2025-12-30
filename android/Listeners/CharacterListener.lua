@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     EventMgr.AddListener(EventType.Fight_Info_Update,OnFightInfoUpdate);
     EventMgr.AddListener(EventType.Character_Dead,OnCharacterDead);
 end

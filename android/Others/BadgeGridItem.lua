@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local isHideNew = false
 
 function Awake()

@@ -1,4 +1,4 @@
-
+﻿
 local isClick = false
 
 function Awake()

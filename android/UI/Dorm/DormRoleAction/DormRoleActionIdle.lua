@@ -1,15 +1,15 @@
--- 休闲
+﻿-- 休闲
 DormRoleActionIdle = oo.class(DormRoleActionBase)
 
 local this = DormRoleActionIdle
 
 function this:Enter()
-    local actionTime = Dorm_Action_Time(DormAction2.idle)
+    local actionTime = Dorm_Action_Time("idle")
     self.endTime = Time.time + actionTime
     self.isEnter = true
 
     -- 播放休闲动画
-    self.dormRole.dormRoleStateMachine:PlayByActionType(DormAction2.idle,actionTime)
+    self.dormRole.dormRoleStateMachine:PlayByActionType("idle",actionTime)
 
     -- 动画过渡
     -- self.curSpeed = self.dormRole.animators[0]:GetFloat(DormAction1.Speed)
@@ -43,7 +43,7 @@ end
 function this:OnComplete()
     self.isEnter = false
 
-    local action, dormAction2 = Dorm_GetActionType(DormAction2.idle, self.dormRole)
+    local action, dormAction2 = Dorm_GetActionType("idle", self.dormRole)
     self.dormRole.ChangeAction(action, dormAction2) 
 end
 

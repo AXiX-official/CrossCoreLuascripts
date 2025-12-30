@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 function Refresh(_data)
     data = _data
     if data then

@@ -1,4 +1,4 @@
-
+﻿
 function OnInit()
 	InitListener();
     FuncUtil:Call(Close,nil,3000);--自动关闭

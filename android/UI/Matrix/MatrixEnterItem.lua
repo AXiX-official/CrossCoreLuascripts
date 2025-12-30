@@ -1,4 +1,4 @@
-local viewName = nil
+﻿local viewName = nil
 local buildData
 
 function Awake()

@@ -1,4 +1,4 @@
--- 卡牌角色基类
+﻿-- 卡牌角色基类
 local this = {}
 
 function this.New()
@@ -26,6 +26,10 @@ function this:InitData(_data, isRealCard)
     if (isRealCard ~= nil) then
         self.isRealCard = isRealCard
     end
+end
+
+function this:IsPet()
+    return false 
 end
 
 -- function this:GetId()

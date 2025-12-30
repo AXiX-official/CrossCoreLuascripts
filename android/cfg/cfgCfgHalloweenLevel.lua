@@ -1,4 +1,4 @@
-_G["CfgHalloweenLevel"]={{["infos"]={{["index"]=1,["speed"]=500,["startTime"]=0,["itemInfo"]={{1,90}
+﻿_G["CfgHalloweenLevel"]={{["infos"]={{["index"]=1,["speed"]=500,["startTime"]=0,["itemInfo"]={{1,90}
 ,{2,5}
 ,{3,5}
 }

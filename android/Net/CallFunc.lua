@@ -1,4 +1,4 @@
-
+﻿
 -- 分割字符串
 function SplitString(str, p1)
 	local r = {}

@@ -1,4 +1,4 @@
-local SignInInfo = require "SignInInfo" -- 某活动数据
+﻿local SignInInfo = require "SignInInfo" -- 某活动数据
 local SignInfDayInfo = require "SignInfDayInfo" -- 某活动日数据
 local this = MgrRegister("SignInMgr")
 

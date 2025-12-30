@@ -1,4 +1,4 @@
---角色支援
+﻿--角色支援
 local data = nil
 local card = nil
 local uid = 0

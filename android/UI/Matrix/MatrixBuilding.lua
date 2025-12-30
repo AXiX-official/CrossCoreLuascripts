@@ -1,4 +1,4 @@
-local recordBeginTime = 0
+﻿local recordBeginTime = 0
 local timer = nil
 local cRoleInfo = nil
 local time = 0

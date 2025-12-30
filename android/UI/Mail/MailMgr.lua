@@ -1,4 +1,4 @@
---邮件管理
+﻿--邮件管理
 local MailInfo = require "MailInfo"
 local this = MgrRegister("MailMgr")
 

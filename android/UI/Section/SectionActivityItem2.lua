@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local cb = nil
 local enterCB = nil
 local eTime = nil

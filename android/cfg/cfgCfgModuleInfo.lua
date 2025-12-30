@@ -1,4 +1,4 @@
-_G["CfgModuleInfo"]={["AutoBattle"]={["id"]="AutoBattle",["key"]="AutoBattle",["icons"]={1106,1107}
+﻿_G["CfgModuleInfo"]={["AutoBattle"]={["id"]="AutoBattle",["key"]="AutoBattle",["icons"]={1106,1107}
 }
 ,["RogueTHard"]={["isOpen"]=1,["key"]="RogueTHard",["id"]="RogueTHard",["icons"]={2901,2902,2903,2904}
 ,["pivot"]=1,["pos"]={487,-72}
@@ -92,9 +92,14 @@ _G["CfgModuleInfo"]={["AutoBattle"]={["id"]="AutoBattle",["key"]="AutoBattle",["
 ,["TeamView"]={["isOpen"]=1,["key"]="TeamView",["id"]="TeamView",["icons"]={1801,1802}
 ,["pivot"]=1,["pos"]={487,-72}
 }
+,["PhysicalReward"]={["id"]="PhysicalReward",["key"]="PhysicalReward",["question"]={180010,180009}
+}
 ,["PetMain"]={["id"]="PetMain",["key"]="PetMain",["icons"]={2501,2502,2503}
 }
 ,["RoleListNormal"]={["id"]="RoleListNormal",["key"]="RoleListNormal"}
+,["RichMan"]={["isOpen"]=1,["key"]="RichMan",["id"]="RichMan",["icons"]={3501,3502,3503}
+,["pivot"]=1,["pos"]={487,-72}
+}
 ,["EnemyMove"]={["id"]="EnemyMove",["key"]="EnemyMove",["icons"]={1302}
 }
 ,["MerryChristmas"]={["isOpen"]=1,["key"]="MerryChristmas",["id"]="MerryChristmas",["icons"]={3401,3402,3403}

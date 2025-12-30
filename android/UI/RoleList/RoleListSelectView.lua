@@ -1,4 +1,4 @@
--- 角色列表 
+﻿-- 角色列表 
 local listType = RoleListType.Cool
 local curCoolCid = nil
 local curSelectDatas = {} -- 当前选择的冷却列表

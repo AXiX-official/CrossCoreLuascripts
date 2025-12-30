@@ -1,4 +1,4 @@
---道具池元素信息
+﻿--道具池元素信息
 local this = {}
 function this.New()
 	this.__index = this.__index or this;

@@ -1,4 +1,4 @@
-local curIDs = {}
+﻿local curIDs = {}
 
 function Awake()
     eventMgr = ViewEvent.New()

@@ -1,4 +1,4 @@
---向下移动入场
+﻿--向下移动入场
 local this = {}
 
 local animTotalTime = 0.7 --动画总时长

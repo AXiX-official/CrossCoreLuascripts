@@ -1,10 +1,10 @@
-DormRoleActionInteraction = oo.class(DormRoleActionBase)
+﻿DormRoleActionInteraction = oo.class(DormRoleActionBase)
 
 local this = DormRoleActionInteraction
 
 function this:Enter(dormColData)
     -- 如果不是步行，默认先进入步行状态
-    self.dormRole.dormRoleStateMachine:PlayByActionType(DormAction2.walk)
+    self.dormRole.dormRoleStateMachine:PlayByActionType("walk")
 
     self.dormColData = dormColData
     self.endTime = Time.time + self.dormColData:GetActionTime()

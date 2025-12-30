@@ -1,4 +1,4 @@
-local elseData=nil
+﻿local elseData=nil
 local data=nil
 local cfg=nil
 local sliderBar=nil;

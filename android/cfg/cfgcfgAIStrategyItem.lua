@@ -1,4 +1,4 @@
-_G["cfgAIStrategyItem"]={{["id"]=1,["aiStrategy"]={6}
+﻿_G["cfgAIStrategyItem"]={{["id"]=1,["aiStrategy"]={6}
 ,["description"]="选择克制单位",["key"]=1}
 ,{["id"]=2,["aiStrategy"]={1}
 ,["description"]="耐久最低",["key"]=2}

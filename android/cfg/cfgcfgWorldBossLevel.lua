@@ -1,4 +1,4 @@
-_G["cfgWorldBossLevel"]={{["key"]=1,["up"]=599,["id"]=1,["level"]=4,["down"]=0}
+﻿_G["cfgWorldBossLevel"]={{["key"]=1,["up"]=599,["id"]=1,["level"]=4,["down"]=0}
 ,{["key"]=2,["up"]=899,["id"]=2,["level"]=3,["down"]=600}
 ,{["key"]=3,["up"]=1199,["id"]=3,["level"]=2,["down"]=900}
 ,{["key"]=4,["up"]=1499,["id"]=4,["level"]=1,["down"]=1200}

@@ -1,4 +1,4 @@
--- 训练物体
+﻿-- 训练物体
 local cfg = nil
 
 function SetIndex(idx)

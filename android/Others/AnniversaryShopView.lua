@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local layout = nil
 local curDatas = nil
 function Awake()

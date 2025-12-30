@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     UIUtil:AddTop2("RogueBuffSelect", AdaptiveScreen, function()
         RogueMgr:Back(view)
     end, nil, {})

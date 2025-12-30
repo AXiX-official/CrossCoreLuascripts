@@ -1,4 +1,4 @@
--- ABNF from RFC 3629
+﻿-- ABNF from RFC 3629
 --
 -- UTF8-octets = *( UTF8-char )
 -- UTF8-char = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4

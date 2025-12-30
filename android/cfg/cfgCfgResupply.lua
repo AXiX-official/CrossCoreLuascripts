@@ -1,4 +1,4 @@
-_G["CfgResupply"]={{["infos"]={{["index"]=1,["time"]={11,17}
+﻿_G["CfgResupply"]={{["infos"]={{["index"]=1,["time"]={11,17}
 ,["reward"]={{10035,60}
 }
 }

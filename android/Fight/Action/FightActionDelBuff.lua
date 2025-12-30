@@ -1,4 +1,4 @@
---移除Buff
+﻿--移除Buff
 
 FightActionDelBuff = oo.class(FightActionBase);
 local this = FightActionDelBuff;

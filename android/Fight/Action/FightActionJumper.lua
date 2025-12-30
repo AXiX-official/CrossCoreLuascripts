@@ -1,4 +1,4 @@
---特殊排队的API
+﻿--特殊排队的API
 
 FightActionJumper = oo.class(FightActionBase);
 local this = FightActionJumper;

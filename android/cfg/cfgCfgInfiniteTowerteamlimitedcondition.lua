@@ -1,4 +1,4 @@
-_G["CfgInfiniteTowerteamlimitedcondition"]={[90252]={["id"]=90252,["limitedtypeID"]=252,["key"]=90252,["limitedtype"]=9}
+﻿_G["CfgInfiniteTowerteamlimitedcondition"]={[90252]={["id"]=90252,["limitedtypeID"]=252,["key"]=90252,["limitedtype"]=9}
 ,[11001]={["id"]=11001,["limitedtypeID"]=1,["key"]=11001,["limitedtype"]=11}
 ,[11003]={["id"]=11003,["limitedtypeID"]=3,["key"]=11003,["limitedtype"]=11}
 ,[11005]={["id"]=11005,["limitedtypeID"]=5,["key"]=11005,["limitedtype"]=11}

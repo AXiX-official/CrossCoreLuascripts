@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 camera_dis_fix=200,

@@ -1,4 +1,4 @@
-local data =nil
+﻿local data =nil
 local slider = nil
 function Awake()
     slider = ComUtil.GetCom(numSlider,"Slider")

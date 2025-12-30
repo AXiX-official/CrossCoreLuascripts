@@ -1,4 +1,4 @@
---物品
+﻿--物品
 local data = nil
 local cv = nil
 local item = nil

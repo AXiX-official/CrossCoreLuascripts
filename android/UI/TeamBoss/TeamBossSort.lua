@@ -1,4 +1,4 @@
-function OnInit()
+﻿function OnInit()
 	eventMgr = ViewEvent.New()
 	--eventMgr:AddListener(EventType.TeamBoss_Room_Update, RefreshPanel)
 	eventMgr:AddListener(EventType.TeamBoss_Over, function()

@@ -1,4 +1,4 @@
-_G["CfgHolidays"]={[2020]={["id"]=2020,["holidays"]={{["index"]=1,["holidayArr"]={1,15,20}
+﻿_G["CfgHolidays"]={[2020]={["id"]=2020,["holidays"]={{["index"]=1,["holidayArr"]={1,15,20}
 }
 ,[12]={["index"]=12,["holidayArr"]={3,15,30}
 }

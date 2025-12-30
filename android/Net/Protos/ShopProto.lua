@@ -1,4 +1,4 @@
---商城协议
+﻿--商城协议
 ShopProto={
     buyCallBack=nil,
     exchangeCallBack=nil;

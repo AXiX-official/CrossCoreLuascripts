@@ -1,4 +1,4 @@
-local items = {}
+﻿local items = {}
 local cfgLists = {}
 local cfgs = {}
 local infos = {}

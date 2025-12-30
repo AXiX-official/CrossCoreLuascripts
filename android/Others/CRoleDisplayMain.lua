@@ -1,4 +1,4 @@
-local curTab = nil
+﻿local curTab = nil
 local isAnim = true
 local oldRandom
 local oldUsing

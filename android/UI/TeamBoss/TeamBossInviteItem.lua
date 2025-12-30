@@ -1,4 +1,4 @@
-function Refresh(_data, _roomInfo)
+﻿function Refresh(_data, _roomInfo)
 	data = _data
 	roomInfo = _roomInfo
 

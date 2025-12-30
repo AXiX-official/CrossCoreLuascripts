@@ -1,4 +1,4 @@
----剩余次数
+﻿---剩余次数
 local Remainingtimes=0;
 -- 抽次抽卡的缓存界面
 function Awake()

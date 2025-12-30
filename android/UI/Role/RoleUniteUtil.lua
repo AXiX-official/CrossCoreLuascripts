@@ -1,4 +1,4 @@
--- 角色同调工具
+﻿-- 角色同调工具
 RoleUniteUtil = {}
 local this = RoleUniteUtil
 

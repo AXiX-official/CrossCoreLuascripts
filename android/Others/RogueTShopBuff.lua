@@ -1,4 +1,4 @@
-local curTopIndex = 1
+﻿local curTopIndex = 1
 local selectID = nil
 
 function Awake()

@@ -1,4 +1,4 @@
-_G["CfgBProductLvl"]={{["armorType"]=1,["upCosts"]={{60101,50,2}
+﻿_G["CfgBProductLvl"]={{["armorType"]=1,["upCosts"]={{60101,50,2}
 ,{10001,500,2}
 }
 ,["centerlvl"]=2,["id"]=1,["tiredVal"]={432,-1}

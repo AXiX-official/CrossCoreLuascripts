@@ -1,4 +1,4 @@
-local ladIDs = {72005, 72002, 72003, 72004}
+﻿local ladIDs = {72005, 72002, 72003, 72004}
 local selectInfo
 
 function SetClickCB(_cb)

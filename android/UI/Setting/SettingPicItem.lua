@@ -1,4 +1,4 @@
---画面质量
+﻿--画面质量
 function Refresh(_data)
 	data = _data
 	CSAPI.SetText(txtNormal, data.name)

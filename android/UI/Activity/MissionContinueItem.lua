@@ -1,4 +1,4 @@
-local isLock = false
+﻿local isLock = false
 local isGet = false
 local isSel = false
 local cb = false

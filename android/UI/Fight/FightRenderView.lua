@@ -1,4 +1,4 @@
-function Awake()    
+﻿function Awake()    
     InitRT();    
     FixScale();    
 

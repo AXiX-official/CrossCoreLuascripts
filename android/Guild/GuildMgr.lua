@@ -1,4 +1,4 @@
---公会数据管理
+﻿--公会数据管理
 local this=MgrRegister("GuildMgr")
 
 function this:SetData(proto)

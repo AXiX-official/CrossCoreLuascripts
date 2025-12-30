@@ -1,4 +1,4 @@
---无限滚动格子父类
+﻿--无限滚动格子父类
 local item = nil
 local itemPath = nil
 

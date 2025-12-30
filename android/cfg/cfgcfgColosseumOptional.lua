@@ -1,4 +1,4 @@
-_G["cfgColosseumOptional"]={{["id"]=1,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
+﻿_G["cfgColosseumOptional"]={{["id"]=1,["infos"]={{["maxTurn"]=9,["modeId"]=1,["teamSet"]=0}
 ,{["maxTurn"]=9,["modeId"]=2,["charaGachaId"]=101,["reChooseTurn"]={4,6}
 ,["nChoose"]=3,["turnNum"]=6,["teamSet"]=1}
 }

@@ -1,4 +1,4 @@
-local CfgBase = {}
+﻿local CfgBase = {}
 
 --配置数据
 CfgBase.datas_ID = nil

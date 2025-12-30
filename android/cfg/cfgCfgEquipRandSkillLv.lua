@@ -1,4 +1,4 @@
-_G["CfgEquipRandSkillLv"]={[1002]={["id"]=1002,["infos"]={{["lv"]=1,["index"]=1,["weight"]=990}
+﻿_G["CfgEquipRandSkillLv"]={[1002]={["id"]=1002,["infos"]={{["lv"]=1,["index"]=1,["weight"]=990}
 ,{["lv"]=2,["index"]=2,["weight"]=10}
 }
 ,["key"]="1002"}

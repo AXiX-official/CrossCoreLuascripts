@@ -1,4 +1,4 @@
--- 配置容错检测及特殊处理
+﻿-- 配置容错检测及特殊处理
 -- 此函数会在每个配置表的设置为只读表前调用, 在此可以修改配置表
 -- ConfigChecker:[表名(同配置一致)](cfg)
 -- OPENDEBUG()
@@ -915,13 +915,26 @@ function ConfigChecker:MainLine(cfgs)
         end
 
         if v.type == 17 and v.stage then
-            g_MultTeamStageDup[v.stage] = g_MultTeamStageDup[v.stage] or {}
-            g_MultTeamStageDup[v.stage].dups = g_MultTeamStageDup[v.stage].dups or {}
-            local dups = g_MultTeamStageDup[v.stage].dups
-            dups[v.id] = true
-            local dupNum = g_MultTeamStageDup[v.stage].dupNum or 0
-            g_MultTeamStageDup[v.stage].dupNum = dupNum + 1
-            g_MultTeamStageDup[v.stage].groupId = g_MultTeamStageDup[v.stage].groupId or v.dungeonGroup
+            local gpCfg = DungeonGroup[v.dungeonGroup]
+            local actId = gpCfg.eventId
+            if gpCfg and actId then
+                g_MultTeamStageDup[actId] = g_MultTeamStageDup[actId] or {}
+                g_MultTeamStageDup[actId][v.stage] = g_MultTeamStageDup[actId][v.stage] or {}
+                g_MultTeamStageDup[actId][v.stage].dups = g_MultTeamStageDup[actId][v.stage].dups or {}
+                local dups = g_MultTeamStageDup[actId][v.stage].dups
+                dups[v.id] = true
+                local dupNum = g_MultTeamStageDup[actId][v.stage].dupNum or 0
+                g_MultTeamStageDup[actId][v.stage].dupNum = dupNum + 1
+                g_MultTeamStageDup[actId][v.stage].groupId = g_MultTeamStageDup[actId][v.stage].groupId or v.dungeonGroup
+            end
+
+            -- g_MultTeamStageDup[v.stage] = g_MultTeamStageDup[v.stage] or {}
+            -- g_MultTeamStageDup[v.stage].dups = g_MultTeamStageDup[v.stage].dups or {}
+            -- local dups = g_MultTeamStageDup[v.stage].dups
+            -- dups[v.id] = true
+            -- local dupNum = g_MultTeamStageDup[v.stage].dupNum or 0
+            -- g_MultTeamStageDup[v.stage].dupNum = dupNum + 1
+            -- g_MultTeamStageDup[v.stage].groupId = g_MultTeamStageDup[v.stage].groupId or v.dungeonGroup
         end
     end
 end
@@ -1828,6 +1841,14 @@ function ConfigChecker:ItemInfo(cfgs)
                 ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 头像框表里找不到该物品id:%s对应的头像框id：%s', id, cfg.dy_value2))
             end
 
+        elseif cfg.type == ITEM_TYPE.DORM_PET then
+            local petCfg = CfgDormPet[cfg.dy_value1]
+            if petCfg then
+                ASSERT(not petCfg.item_id, string.format('ConfigChecker:ItemInfo(cfgs) 该宿舍宠物id=%s已有对应的物品id=%s,配置冲突', cfg.dy_value1, id))
+                petCfg.item_id = id
+            else
+                ASSERT(false, string.format('ConfigChecker:ItemInfo(cfgs) 宿舍宠物表里找不到该物品id:%s对应的宿舍宠物id：%s', id, cfg.dy_value1))
+            end
         elseif cfg.type == ITEM_TYPE.CARD then
             local cardCfg = CardData[cfg.dy_value1]
             if not cardCfg then
@@ -2702,6 +2723,12 @@ function CommCalCfgTasks(cfgs, t)
                 end
                 table.insert(resetTypeTasks[type], cfg)
             end
+        elseif t == eTaskType.RichMan and cfg.nRestType then
+            local resetType = cfg.nRestType
+            resetTypeTasks[resetType] = resetTypeTasks[resetType] or {}
+            if resetType == PeriodType.Day or resetType == PeriodType.Week then
+                table.insert(resetTypeTasks[resetType], cfg)
+            end
         end
 
         if not cfg.nPreTaskId or cfg.nPreTaskId == 0 then
@@ -2750,6 +2777,8 @@ function CommCalCfgTasks(cfgs, t)
     elseif t == eTaskType.RegressionTask then
         -- 4.6 回归任务新增 每日刷新与不刷新任务
         cfgs.dailyRefreshTasks = resetTypeTasks
+    elseif t == eTaskType.RichMan then
+        cfgs.resetTypeTasks = resetTypeTasks
     end
 end
 
@@ -3078,6 +3107,14 @@ function ConfigChecker:CfgNewPlayerSevenDayTask(cfgs)
     end
 
     CommCalCfgTasks(cfgs, eTaskType.NewPlayerSeven)
+end
+function ConfigChecker:cfgMonopolyMission(cfgs)
+    if IS_CLIENT then
+        -- IS_SERVER
+        return
+    end
+
+    CommCalCfgTasks(cfgs, eTaskType.RichMan)
 end
 function ConfigChecker:CfgExtraExploration(cfgs)
     if IS_CLIENT then
@@ -3866,6 +3903,62 @@ function ConfigChecker:CfgChristMain(cfgs)
     end
 end
 
+function ConfigChecker:cfgMonopoly(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nStartTime = GCalHelp:GetTimeStampBySplit(cfg.openTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.closeTime, cfg)
+        assert(cfg.nStartTime < cfg.nEndTime, "大富翁活动开启时间范围有误")
+    end
+end
+
+-- v5.0 实物抽奖表配置检查
+function ConfigChecker:cfgPhysicalReward(cfgs)
+    for _, cfg in pairs(cfgs) do
+        cfg.nBeginTime = GCalHelp:GetTimeStampBySplit(cfg.beginTime, cfg)
+        cfg.nEndTime = GCalHelp:GetTimeStampBySplit(cfg.endTime, cfg)
+        assert(cfg.nBeginTime < cfg.nEndTime, "实物抽奖活动开启时间范围有误")
+
+        cfg.poolIdMap = {}
+        for k, poolId in ipairs(cfg.rewardPoolId) do
+            local poolCfg = CfgCardPool[poolId]
+            ASSERT(poolCfg, string.format("卡池配置表没有相应的ID:%s",poolId))
+            cfg.poolIdMap[poolId] = true
+        end
+
+        local minTime = cfg.nBeginTime
+        local maxTime = cfg.nEndTime
+        -- 某个时间段时 实物奖励总投放数量
+        local totalNums = {}
+        cfg.rewardNums = {}
+        for index, v in ipairs(cfg.infos) do
+
+            totalNums[index] = {}
+
+            for k, num in pairs(v.rewardNum) do
+                local preNum = 0
+                if totalNums[index - 1] and totalNums[index - 1][k] then
+                    preNum = totalNums[index - 1][k]
+                end
+                totalNums[index][k] = preNum + num
+                cfg.rewardNums[k] = (cfg.rewardNums[k] or 0) + num
+            end
+            v.nBTime = GCalHelp:GetTimeStampBySplit(v.bTime, v)
+            v.nETime = GCalHelp:GetTimeStampBySplit(v.eTime, v)
+            ASSERT(v.nBTime < v.nETime, string.format("实物抽奖活动开启时间范围有误,活动id%s,下标%s",cfg.id, v.index))
+            ASSERT(minTime <= v.nBTime, string.format("实物抽奖活动开启时间范围有误,活动id%s,下标%s, 开启时间%s",cfg.id, v.index, v.nBTime))
+            ASSERT(maxTime >= v.nETime, string.format("实物抽奖活动开启时间范围有误,活动id%s,下标%s, 结束时间%s",cfg.id, v.index, v.nETime))
+        end
+        cfg.totalNums = totalNums
+    end
+end
+
+-- v5.0 宿舍宠物配置检查
+function ConfigChecker:CfgDormPet(cfgs)
+    for id, cfg in pairs(cfgs) do
+        ASSERT(cfg.item_id, string.format('宿舍宠物id:%s无对应的的物品id,配置不对', id))
+    end
+end
+
 -- v4.6 资源补给配置检查
 function ConfigChecker:CfgResupply(cfgs)
     for id, cfg in pairs(cfgs) do
@@ -3874,6 +3967,18 @@ function ConfigChecker:CfgResupply(cfgs)
     end
 end
 
+-- v5.0 大富翁
+function ConfigChecker:cfgMonopolyGrid(cfgs)
+    g_RichManGrid = {}
+    for id, cfg in pairs(cfgs) do
+        for _,info in pairs(cfg.infos or {}) do
+            g_RichManGrid[id] = g_RichManGrid[id] or {}
+            g_RichManGrid[id][info.sort] = info
+            local oldNum = g_RichManGrid[id].gridNum or 0
+            g_RichManGrid[id].gridNum = oldNum + 1
+        end
+    end
+end
 
 --v4.4 世界boss优化
 function ConfigChecker:cfgGlobalBossHpLevel(cfgs)

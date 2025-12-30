@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 
 function Refresh(_data)
     cfg = Cfgs.cfgGlobalBossBuffBattle:GetByID(_data)

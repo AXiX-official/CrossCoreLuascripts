@@ -1,4 +1,4 @@
-_G["CfgPlrHotBuyCosts"]={{["id"]=1,["infos"]={{["costs"]={{10002,60,2}
+﻿_G["CfgPlrHotBuyCosts"]={{["id"]=1,["infos"]={{["costs"]={{10002,60,2}
 }
 ,["index"]=1,["hot"]=120}
 ,{["costs"]={{10002,60,2}

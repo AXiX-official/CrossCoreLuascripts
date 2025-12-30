@@ -1,4 +1,4 @@
-local data =nil
+﻿local data =nil
 local layout = nil
 local curDatas = {}
 local animTime = 0.2 --0.2秒播完一条动效

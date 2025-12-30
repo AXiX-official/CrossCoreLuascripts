@@ -1,4 +1,4 @@
-function Refresh(_reward, _isGet)
+﻿function Refresh(_reward, _isGet)
     local data = BagMgr:GetFakeData(_reward[1])
     if (not item) then
         ResUtil:CreateUIGOAsync("Grid/GridItem", node, function(go)

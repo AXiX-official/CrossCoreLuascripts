@@ -1,4 +1,4 @@
-ThinkingAnalyticsMgr = {}
+﻿ThinkingAnalyticsMgr = {}
 local this = ThinkingAnalyticsMgr
 
 local isOpen = false

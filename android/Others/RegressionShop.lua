@@ -1,4 +1,4 @@
---回归商店
+﻿--回归商店
 local fixedTime=60;
 local upTime=0;
 local overTime=0;

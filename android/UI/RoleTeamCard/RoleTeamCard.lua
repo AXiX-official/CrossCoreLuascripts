@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
 	--btn = ComUtil.GetCom(icon, "Button")
 end
 

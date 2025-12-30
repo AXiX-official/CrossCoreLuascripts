@@ -1,4 +1,4 @@
---lua������
+﻿--lua������
 UnityEngine = CS.UnityEngine
 GameObject = UnityEngine.GameObject
 Time = UnityEngine.Time

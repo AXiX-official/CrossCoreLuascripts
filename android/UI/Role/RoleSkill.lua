@@ -1,4 +1,4 @@
-local matIndex = nil
+﻿local matIndex = nil
 local iconColors = {"white", "green", "blue", "purple", "yellow", "red"};
 
 -- 引导用 todo 
@@ -132,9 +132,9 @@ function NormalMats()
     ItemUtil.AddItems("Grid/RoleGridItem", items1, datas1, materialGrids1, GridClickFunc.OpenInfo, 1, {nil, count})
 
     -- 金币
-    CSAPI.SetGOActive(coin, expCfg.costAdds ~= nil)
-    if (expCfg.costAdds ~= nil) then
-        local cost = expCfg.costAdds[1]
+    CSAPI.SetGOActive(coin, materialCfg.costAdds ~= nil)
+    if (materialCfg.costAdds ~= nil) then
+        local cost = materialCfg.costAdds[1]
         local cfg = Cfgs.ItemInfo:GetByID(cost[1])
         ResUtil.IconGoods:Load(imgCoin, cfg.icon .. "_1")
         CSAPI.SetText(txtCoin, cost[2] .. "")

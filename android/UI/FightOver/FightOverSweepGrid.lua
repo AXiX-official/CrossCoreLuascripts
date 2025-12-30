@@ -1,4 +1,4 @@
-local reward = nil
+﻿local reward = nil
 function Refresh(_reward)
     reward = _reward
     if reward then

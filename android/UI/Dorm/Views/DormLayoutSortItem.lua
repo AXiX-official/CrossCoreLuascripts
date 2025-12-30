@@ -1,4 +1,4 @@
-local ud = 1
+﻿local ud = 1
 
 function SetIndex(_index)
     index = _index

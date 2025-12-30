@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local datas = nil
 -- time
 local targetTime, time, timer = 0, 0, 0

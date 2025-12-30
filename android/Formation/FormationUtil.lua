@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 
 this.gridSize = {230, 230}; -- 格子大小2D
 this.grid3DSize = {1.88, 1.88}; -- 格子大小3D

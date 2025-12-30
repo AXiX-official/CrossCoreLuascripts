@@ -1,4 +1,4 @@
---回归绑定任务子物体
+﻿--回归绑定任务子物体
 local isGet = false
 local isFinish = false
 local grid=nil;

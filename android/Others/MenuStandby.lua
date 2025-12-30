@@ -1,4 +1,4 @@
-local timer = nil
+﻿local timer = nil
 local is12 = true
 local timer2 = nil
 local fill_power = nil

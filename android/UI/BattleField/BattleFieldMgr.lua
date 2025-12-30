@@ -1,4 +1,4 @@
--- 世界boss
+﻿-- 世界boss
 local this = MgrRegister("BattleFieldMgr")
 BattleFieldData = require "BattleFieldData"
 BattleFieldRankInfo = require "BattleFieldRankInfo"

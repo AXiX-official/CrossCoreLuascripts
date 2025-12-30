@@ -1,4 +1,4 @@
---角色排序工具
+﻿--角色排序工具
 local this = {};
 local funcs = {}
 

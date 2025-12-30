@@ -1,4 +1,4 @@
-local restoreShoeCB = nil
+﻿local restoreShoeCB = nil
 local dragNum = 0
 local hideSpine
 -- local isMove = false

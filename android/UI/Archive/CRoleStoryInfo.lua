@@ -1,4 +1,4 @@
---卡牌剧情 基类
+﻿--卡牌剧情 基类
 local this = {}
 
 function this.New()

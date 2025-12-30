@@ -1,4 +1,4 @@
---API处理
+﻿--API处理
 local this = {};
 FightActionAPIHandler = this;
 
@@ -39,6 +39,8 @@ function this:Handle(effEventData)
         self.effFuncArr[APIType.UpdateDamage] = self.EffAction_UpdateDamage;  
         self.effFuncArr[APIType.SetFury] = self.EffAction_UpdateFury;  
         self.effFuncArr[APIType.UpdateFury] = self.EffAction_UpdateFury;  
+        self.effFuncArr[APIType.AddOwnerEquipSkill] = self.EffAction_AddOwnerEquipSkill;   
+
 
         self.effFuncArr[APIType.UpdateValue] = self.EffAction_UpdateValue;  
         self.effFuncArr[APIType.DelValue] = self.EffAction_DelValue;  
@@ -357,6 +359,18 @@ function this:EffAction_UpdateFury(effEventData)
         targetCharacter.UpdateFury(effEventData.fury,effEventData.max);
     end
 end
+
+--添加装备技能
+function this:EffAction_AddOwnerEquipSkill(effEventData)
+    local targetId = effEventData.targetID;         
+    local targetCharacter = CharacterMgr:Get(targetId);
+    LogError(effEventData)
+    if(targetCharacter)then        
+        --处理装备技能
+        targetCharacter.SetEquipSkills(effEventData.equipSkills);
+    end
+end
+
 
 
 function this:EffAction_UpdateValue(effEventData)

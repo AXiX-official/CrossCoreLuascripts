@@ -1,4 +1,4 @@
-
+﻿
 local state=JumpModuleState.Normal;
 local data=nil;
 local isDisable=false;

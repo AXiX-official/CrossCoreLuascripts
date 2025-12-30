@@ -1,4 +1,4 @@
-Loader:Require("ConfigChecker")
+﻿Loader:Require("ConfigChecker")
 
 if IS_CLIENT then
 

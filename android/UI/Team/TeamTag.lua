@@ -1,4 +1,4 @@
-local teamData=nil;
+﻿local teamData=nil;
 local index=0;
 function Init(_index)
     index=_index;

@@ -1,4 +1,4 @@
-_G["CfgNewYearTask"]={[22102]={["sOpenTime"]="2024/1/22 10:00:00",["sDescription"]="在原料交易所完成1次订单",["id"]=22102,["jAwardId"]={{58032,1,2}
+﻿_G["CfgNewYearTask"]={[22102]={["sOpenTime"]="2024/1/22 10:00:00",["sDescription"]="在原料交易所完成1次订单",["id"]=22102,["jAwardId"]={{58032,1,2}
 ,{60106,1,2}
 }
 ,["aFinishIds"]={1100152}

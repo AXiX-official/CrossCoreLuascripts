@@ -1,4 +1,4 @@
-local TableSign	= {}
+﻿local TableSign	= {}
 TableSign.Begin	= 1
 TableSign.End	= 2
 TableSign.Alter	= 3

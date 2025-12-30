@@ -1,4 +1,4 @@
---消耗性通用面板
+﻿--消耗性通用面板
 local id = nil
 local num = 0
 function Awake()

@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     slider = ComUtil.GetCom(Slider, "Slider")
 end
 

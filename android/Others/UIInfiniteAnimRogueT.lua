@@ -1,4 +1,4 @@
--- 从右往左入场
+﻿-- 从右往左入场
 local this = {}
 local animTotalTime = 1 -- 动画总时长
 local animTotalTime2 = 1 -- 实际时长

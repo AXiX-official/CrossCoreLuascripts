@@ -1,4 +1,4 @@
---会员预制物
+﻿--会员预制物
 local data=nil;
 function Refresh(_data)
     data=_data

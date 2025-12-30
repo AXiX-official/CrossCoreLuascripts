@@ -1,4 +1,4 @@
--- 无限滚动工具
+﻿-- 无限滚动工具
 UIInfiniteAnimType = {}
 UIInfiniteAnimType.None = 0
 -- 通用（首次打开时的动画）

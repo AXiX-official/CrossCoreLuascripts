@@ -1,4 +1,4 @@
--- 画质数据
+﻿-- 画质数据
 local hzDatas = {{
     index = 1,
     iconName = "quality_1",

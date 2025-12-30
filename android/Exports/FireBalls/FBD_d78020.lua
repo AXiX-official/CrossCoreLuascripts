@@ -1,0 +1,37 @@
+﻿--FireBall数据
+local this = 
+{
+[1310282141]={
+{effect="cast2_eff",time=7700,type=0,pos_ref={ref_type=6}},
+{time=7700,type=0,cue_sheet="fight/effect/Nineteen.acb",cue_name="78020_cast_02"}
+},
+[-686817241]={
+{time=4000,type=1,hit_type=1,camera_shake={time=180,shake_dir=1,range=330,range2=100,hz=35,decay_value=0.3},hits={2100,2200,2300}},
+{effect="cast1_hit",delay=2000,time=2000,type=0,pos_ref={ref_type=3}},
+{effect="cast1_eff",time=3500,type=0,pos_ref={ref_type=6},path_target={ref_type=3}},
+{time=3000,type=0,cue_sheet="fight/effect/Nineteen.acb",cue_name="78020_cast_01"}
+},
+[958292235]={
+{time=4000,type=1,hit_type=1,camera_shake={time=180,shake_dir=1,range=300,range2=100,hz=35,decay_value=0.3},hit_creates={-142532503},hits={1050,1250}},
+{effect="cast3_hit",delay=700,time=2000,type=0,pos_ref={ref_type=3}},
+{effect="cast3_eff",time=3500,type=0,pos_ref={ref_type=6}},
+{time=2500,type=0,cue_sheet="fight/effect/Nineteen.acb",cue_name="78020_cast_03"}
+},
+[-142532503]={
+effect="cast3_hit1",time=2000,type=0,pos_ref={ref_type=4,part_index=0}
+},
+[-1609092943]={
+{time=2000,type=0,cue_sheet="fight/effect/Nineteen.acb",cue_name="78020_cast_00"},
+{delay=1200,time=4000,type=1,hit_type=1,camera_shake={time=300,shake_dir=1,range=220,range2=50,hz=40,decay_value=0.25},hits={0}},
+{effect="cast0_hit",delay=500,time=2000,type=0,pos_ref={ref_type=1}},
+{effect="cast0_eff",time=3500,type=0,pos_ref={ref_type=6}}
+},
+[-1183793042]={
+{effect="enter",time=3500,type=0,pos_ref={ref_type=6}}
+},
+[-1328923786]={
+{effect="win",time=3500,type=0,pos_ref={ref_type=6}}
+}
+};
+
+return this;

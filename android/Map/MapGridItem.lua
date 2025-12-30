@@ -1,4 +1,4 @@
---战棋地图格子
+﻿--战棋地图格子
 
 function Awake()
     SetEnemyState(false);    

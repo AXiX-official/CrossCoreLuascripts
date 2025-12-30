@@ -1,4 +1,4 @@
-local ActivityPopUpData = require "ActivityPopUpData"
+﻿local ActivityPopUpData = require "ActivityPopUpData"
 
 ActivityPopUpMgr = MgrRegister("ActivityPopUpMgr")
 local this = ActivityPopUpMgr

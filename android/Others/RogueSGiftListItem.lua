@@ -1,4 +1,4 @@
-
+﻿
 --箱子物品
 local index = 0
 local reward = nil

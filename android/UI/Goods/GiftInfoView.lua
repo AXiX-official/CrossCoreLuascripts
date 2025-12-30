@@ -1,4 +1,4 @@
---礼包信息界面
+﻿--礼包信息界面
 local item = nil;
 local rewardCfg = nil;
 local items=nil;

@@ -1,4 +1,4 @@
-local stateStrs = {10403, 10404, 10405}
+﻿local stateStrs = {10403, 10404, 10405}
 local isSelect = false
 local curState = 1
 

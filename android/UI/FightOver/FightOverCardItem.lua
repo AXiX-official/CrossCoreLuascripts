@@ -1,4 +1,4 @@
---2400的动效播放时间
+﻿--2400的动效播放时间
 local nextDelayTime = 200 --到下一个阶段的冷却时间
 local index = 0
 local teamIndex = 0

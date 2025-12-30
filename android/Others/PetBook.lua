@@ -1,4 +1,4 @@
---宠物图鉴
+﻿--宠物图鉴
 local layout1=nil;
 local layout2=nil;
 local curDatas={}

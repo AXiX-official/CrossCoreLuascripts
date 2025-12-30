@@ -1,4 +1,4 @@
-OperationActivityMgr = MgrRegister("OperationActivityMgr")
+﻿OperationActivityMgr = MgrRegister("OperationActivityMgr")
 local this = OperationActivityMgr;
 
 function this:Init()

@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     curSelect = 0
     layout = ComUtil.GetCom(vsv2, "UISV2")
     layout:Init("UIs/Test/TestUISV2Item", LayoutCallBack)

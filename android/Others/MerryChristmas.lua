@@ -1,4 +1,4 @@
-local isSet = false 
+﻿local isSet = false 
 
 function Awake()
     UIUtil:AddTop2("MerryChristmas", gameObject, function()

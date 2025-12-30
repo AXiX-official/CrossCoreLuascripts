@@ -1,4 +1,4 @@
---Lua Action
+﻿--Lua Action
 --场景遮罩镜头效果
 
 --代替的相机

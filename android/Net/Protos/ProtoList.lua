@@ -1,4 +1,4 @@
-require "LoginProto"
+﻿require "LoginProto"
 require "FightProto"
 require "SystemProto"
 require "PlayerProto"

@@ -1,4 +1,4 @@
--- 催眠游戏界面
+﻿-- 催眠游戏界面
 local favour_first_open_key = "_favour_first_open"
 local speeds = {}
 local timer1 = 0

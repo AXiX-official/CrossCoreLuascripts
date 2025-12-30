@@ -1,4 +1,4 @@
---驻员总览
+﻿--驻员总览
 local itemPath1 = "Matrix/MatrixAllBuildingItemO"
 local itemPath2 = "Matrix/MatrixAllBuildingItemT"
 local curData = nil

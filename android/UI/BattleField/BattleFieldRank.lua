@@ -1,4 +1,4 @@
-local currDatas = nil
+﻿local currDatas = nil
 local layout = nil
 local intervalTime = 0 --刷新间隔
 curIndex1, curIndex2 = 1, 1

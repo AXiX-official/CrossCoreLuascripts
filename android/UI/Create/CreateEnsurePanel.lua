@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     local str1 = LanguageMgr:GetTips(10008)
     CSAPI.SetText(txt1, str1)
     local str2 = LanguageMgr:GetTips(10009)

@@ -1,4 +1,4 @@
---编成限制关联对象
+﻿--编成限制关联对象
 local this={};
 function this.New()
     this.__index = this.__index or this;

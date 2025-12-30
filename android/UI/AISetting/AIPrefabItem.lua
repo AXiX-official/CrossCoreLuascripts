@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local skillGrid=nil;
 local maxOrder=0;
 local conCfgs=nil;

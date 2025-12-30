@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 function SetIndex(idx)
     index = idx
 end

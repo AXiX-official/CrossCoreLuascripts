@@ -1,4 +1,4 @@
-local commData = nil
+﻿local commData = nil
 local curDatas = {}
 local isClose = true
 local isEnough = false

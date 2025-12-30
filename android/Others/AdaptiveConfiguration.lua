@@ -1,4 +1,4 @@
---UI自适应数据配置 词典
+﻿--UI自适应数据配置 词典
 AdaptiveConfiguration={}
 local this=AdaptiveConfiguration;
 local Screen=UnityEngine.Screen;

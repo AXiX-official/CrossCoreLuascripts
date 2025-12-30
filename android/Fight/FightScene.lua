@@ -1,4 +1,4 @@
---战斗场景
+﻿--战斗场景
 
 
 function Awake()

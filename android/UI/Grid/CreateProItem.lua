@@ -1,4 +1,4 @@
--- RewardInfo2 的某 index
+﻿-- RewardInfo2 的某 index
 local needToCheckMove = false
 local timer = nil
 function Awake()

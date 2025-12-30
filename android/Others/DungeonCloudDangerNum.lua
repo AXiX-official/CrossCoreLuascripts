@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local colors = {{228,219,213,255},{140,114,84,255},{255,255,255,45}}
 local isOpen = false
 local index = 1

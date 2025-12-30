@@ -1,9 +1,9 @@
--- 跃升成功界面
+﻿-- 跃升成功界面
 local showIndex = 1
 
 function Awake()
-	fade = ComUtil.GetCom(gameObject, "ActionFade")
-	fade1 = ComUtil.GetCom(goShaderRaw, "ActionFade")
+    fade = ComUtil.GetCom(gameObject, "ActionFade")
+    fade1 = ComUtil.GetCom(goShaderRaw, "ActionFade")
     UIMaskGo = CSAPI.GetGlobalGO("UIClickMask")
 end
 
@@ -28,7 +28,7 @@ function OnOpen()
     end
 end
 
-function SetPanel()	
+function SetPanel()
     CSAPI.PlayUISound("ui_core_upgrade")
 
     oldData = data[1]
@@ -37,7 +37,11 @@ function SetPanel()
     newTotalResult = newData:GetTotalProperty()
 
     -- title 
-    LanguageMgr:SetText(txtTitle1, 4019, newData:GetBreakLevel())
+    if (newData:GetBreakLevel() >= 6) then
+        LanguageMgr:SetText(txtTitle1, 4089)
+    else
+        LanguageMgr:SetText(txtTitle1, 4019, newData:GetBreakLevel())
+    end
 
     -- lv 
     local curLv = oldData:GetLv()
@@ -73,7 +77,7 @@ function SetNode2()
     CSAPI.SetGOActive(node2, true)
     CSAPI.SetGOActive(txtTitle1, false)
     CSAPI.SetGOActive(txtTitle2, false)
-    
+
     -- 动态效果开启提示(只提示一次)
     local breakLv = newData:GetBreakLevel()
     CSAPI.SetGOActive(objTips1, breakLv == 3)
@@ -154,10 +158,10 @@ function OnClickMask()
     if not isCanBack then
         return
     end
-    if (showIndex == 1) then
+    if (showIndex == 1 and newData:GetBreakLevel() < 5) then
         showIndex = 2
         SetNode2()
-        CSAPI.SetGOActive(anim,true)
+        CSAPI.SetGOActive(anim, true)
         return
     end
 

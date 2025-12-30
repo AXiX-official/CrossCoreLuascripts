@@ -1,4 +1,4 @@
--- local stagGrid=nil;
+﻿-- local stagGrid=nil;
 local grids={}
 function Refresh(_d)
     if _d then

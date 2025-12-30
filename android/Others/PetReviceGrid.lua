@@ -1,4 +1,4 @@
-
+﻿
 --_d:PetArchiveRewardInfo
 function Refresh(_d)
     this.data=_d;

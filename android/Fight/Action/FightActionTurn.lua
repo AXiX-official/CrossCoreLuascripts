@@ -1,4 +1,4 @@
---战斗回合
+﻿--战斗回合
 if(InputPlayer == nil)then
     InputPlayer = require "FightActionPlayer_Input";
 end

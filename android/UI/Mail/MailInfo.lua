@@ -1,4 +1,4 @@
-
+﻿
 --邮件信息
 local this = {
 	id = nil,

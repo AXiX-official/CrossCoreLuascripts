@@ -1,4 +1,4 @@
-local grid=nil
+﻿local grid=nil
 
 function Refresh(data,elseData)
     this.data=data;

@@ -1,4 +1,4 @@
---物品信息界面
+﻿--物品信息界面
 local useNum = 1;--当前使用的道具数据
 local minNum = 1;--最少使用数量
 local maxNum = 1;--当前使用的道具最大数量

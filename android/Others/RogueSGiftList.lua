@@ -1,4 +1,4 @@
-function Refresh(_cfgChild, starIx)
+﻿function Refresh(_cfgChild, starIx)
     cfg = _cfgChild
     -- 
     local curStar = RogueSMgr:GetStars(starIx)

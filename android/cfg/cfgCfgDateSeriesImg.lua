@@ -1,4 +1,4 @@
-_G["CfgDateSeriesImg"]={{["unLockType"]=1,["key"]=1,["group"]=101,["dateImg"]="Zeus_dateImg_01",["id"]=1}
+﻿_G["CfgDateSeriesImg"]={{["unLockType"]=1,["key"]=1,["group"]=101,["dateImg"]="Zeus_dateImg_01",["id"]=1}
 ,{["y"]=190,["x"]=-510,["key"]=2,["id"]=2,["group"]=102,["rotate"]=82,["dateImg"]="img_04_01"}
 ,{["y"]=-29,["x"]=-535,["key"]=3,["id"]=3,["group"]=102,["rotate"]=130,["dateImg"]="img_04_02"}
 ,{["y"]=243,["x"]=-147,["key"]=4,["id"]=4,["group"]=102,["rotate"]=0,["dateImg"]="img_04_03"}

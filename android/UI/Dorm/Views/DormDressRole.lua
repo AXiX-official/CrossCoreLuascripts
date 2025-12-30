@@ -1,4 +1,4 @@
---皮肤 data : RoleSkinInfo
+﻿--皮肤 data : RoleSkinInfo
 function SetIndex(_index)
 	index = _index
 end

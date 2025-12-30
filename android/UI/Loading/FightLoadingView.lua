@@ -1,4 +1,4 @@
-function OnInit()
+﻿function OnInit()
      InitListener();
 
      FuncUtil:Call(LoadingAni,nil,450);

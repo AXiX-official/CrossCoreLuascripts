@@ -1,4 +1,4 @@
-local redPos = {-74, 26.5}
+﻿local redPos = {-74, 26.5}
 
 function Refresh(_data)
     data = _data
@@ -32,6 +32,11 @@ function OnClick()
         ShiryuSDK.ShowActivityUI(function()
             data:IsRed7(clickNode, redPos)
         end)
+    elseif (data:GetCfg().nType==17) then--大富翁
+        local activity=RichManMgr:GetCurData();
+        if activity~=nil then
+            activity:EnterScene();
+        end
     else
         CSAPI.OpenView(data:GetCfg().openView, nil, data:GetCfg().page)
     end

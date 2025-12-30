@@ -1,4 +1,4 @@
-local timer = 0
+﻿local timer = 0
 
 function Refresh(_data)
     cfg = _data[1]
@@ -103,6 +103,7 @@ function SetBtn()
             btnNameID = 10041
             -- local upTime =cfg.upTime
             local buildTime = cfg.buildTime
+            LanguageMgr:SetText(txtTime1, 10048)
             CSAPI.SetText(txtTime2, TimeUtil:GetTimeStr7(buildTime))
             CSAPI.SetGOActive(time, true)
         else

@@ -1,4 +1,4 @@
---格子场景背景
+﻿--格子场景背景
 
 function OnEnable()
 	EventMgr.Dispatch(EventType.Battle_Bg,gameObject);

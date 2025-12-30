@@ -1,4 +1,4 @@
-local curTabIndex = 1 -- 1:主题 2：家具
+﻿local curTabIndex = 1 -- 1:主题 2：家具
 local curLIndex = 1 -- 左侧第几个
 
 function Awake()

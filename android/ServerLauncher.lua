@@ -1,4 +1,4 @@
-
+﻿
 
 -- Э��
 require("GMsgNo")

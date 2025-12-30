@@ -1,4 +1,4 @@
--- 能力 item
+﻿-- 能力 item
 local canvasGroup1 = nil
 local canvasGroup2 = nil
 local txtCG1 = nil

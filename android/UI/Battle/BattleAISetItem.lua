@@ -1,4 +1,4 @@
---AI设置子物体
+﻿--AI设置子物体
 local clickCB=nil;
 function Refresh(d,cData,cb)
     this.data=d

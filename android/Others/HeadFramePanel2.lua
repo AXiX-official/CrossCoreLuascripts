@@ -1,4 +1,4 @@
--- todo 设置头像；
+﻿-- todo 设置头像；
 local selectID = nil
 local isUseimg = false
 local minEndTime = nil

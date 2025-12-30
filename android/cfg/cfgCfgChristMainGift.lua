@@ -1,4 +1,4 @@
-_G["CfgChristMainGift"]={{["monster"]=false,["key"]="1",["id"]=1,["icon"]="img_09_01",["stage"]=1}
+﻿_G["CfgChristMainGift"]={{["monster"]=false,["key"]="1",["id"]=1,["icon"]="img_09_01",["stage"]=1}
 ,{["monster"]=false,["key"]="2",["id"]=2,["icon"]="img_09_02",["stage"]=1}
 ,{["monster"]=false,["key"]="3",["id"]=3,["icon"]="img_09_03",["stage"]=1}
 ,{["monster"]=false,["key"]="4",["id"]=4,["icon"]="img_09_01",["stage"]=1}

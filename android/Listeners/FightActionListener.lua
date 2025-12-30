@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     EventMgr.AddListener(EventType.Fight_Action_Push,OnFightActionPush);
 end

@@ -1,4 +1,4 @@
-_G["CfgPlrAbility"]={{["can_reset"]=true,["type"]=1,["id"]=1,["desc"]="解锁可在战斗中使用的<color=#FFC432>【续行战术】</color>技能组",["oldName"]="复活战术",["cost_num"]=50,["next_id"]={2}
+﻿_G["CfgPlrAbility"]={{["can_reset"]=true,["type"]=1,["id"]=1,["desc"]="解锁可在战斗中使用的<color=#FFC432>【续行战术】</color>技能组",["oldName"]="复活战术",["cost_num"]=50,["next_id"]={2}
 ,["key"]="1",["open_lv"]=1,["active_id"]=1003,["name"]="续行战术",["icon"]="203",["pos"]={2,1}
 }
 ,{["can_reset"]=true,["type"]=2,["id"]=2,["prev_id"]={1}
@@ -80,10 +80,26 @@ _G["CfgPlrAbility"]={{["can_reset"]=true,["type"]=1,["id"]=1,["desc"]="解锁可
 ,["name"]="削弱战术",["open_lv"]=1,["active_id"]=1005,["desc"]="解锁可在战斗中使用的<color=#FFC432>【削弱战术】</color>技能组",["icon"]="205",["pos"]={2,13}
 }
 ,{["can_reset"]=true,["type"]=2,["id"]=22,["prev_id"]={21}
-,["oldName"]="星币加成",["key"]="22",["cost_num"]=50,["name"]="星币加成5",["open_lv"]=1,["active_id"]=30,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>星币",["icon"]="107",["pos"]={1,14}
+,["key"]="22",["oldName"]="星币加成",["cost_num"]=50,["next_id"]={24}
+,["name"]="星币加成5",["open_lv"]=1,["active_id"]=30,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>星币",["icon"]="107",["pos"]={1,14}
 }
 ,{["can_reset"]=true,["type"]=2,["id"]=23,["prev_id"]={21}
-,["oldName"]="经验加成",["key"]="23",["cost_num"]=50,["name"]="经验加成5",["open_lv"]=1,["active_id"]=29,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>技术点",["icon"]="103",["pos"]={3,14}
+,["key"]="23",["oldName"]="经验加成",["cost_num"]=50,["next_id"]={25}
+,["name"]="经验加成5",["open_lv"]=1,["active_id"]=29,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>技术点",["icon"]="103",["pos"]={3,14}
+}
+,{["can_reset"]=true,["type"]=2,["id"]=24,["prev_id"]={22}
+,["key"]="24",["oldName"]="星币加成",["cost_num"]=50,["next_id"]={26}
+,["name"]="星币加成6",["open_lv"]=1,["active_id"]=30,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>星币",["icon"]="107",["pos"]={1,15}
+}
+,{["can_reset"]=true,["type"]=2,["id"]=25,["prev_id"]={23}
+,["key"]="25",["oldName"]="经验加成",["cost_num"]=50,["next_id"]={27}
+,["name"]="经验加成6",["open_lv"]=1,["active_id"]=29,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>技术点",["icon"]="103",["pos"]={3,15}
+}
+,{["can_reset"]=true,["type"]=2,["id"]=26,["prev_id"]={24}
+,["oldName"]="星币加成",["key"]="26",["cost_num"]=50,["name"]="星币加成7",["open_lv"]=1,["active_id"]=30,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>星币",["icon"]="107",["pos"]={1,16}
+}
+,{["can_reset"]=true,["type"]=2,["id"]=27,["prev_id"]={25}
+,["oldName"]="经验加成",["key"]="27",["cost_num"]=50,["name"]="经验加成7",["open_lv"]=1,["active_id"]=29,["desc"]="作战探索中，额外增加<color=#FFC432>5%</color>技术点",["icon"]="103",["pos"]={3,16}
 }
 }
 

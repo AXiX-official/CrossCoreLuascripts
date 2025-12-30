@@ -1,4 +1,4 @@
-_G["CfgArchiveCourseGroup"]={{["key"]="1",["id"]=1,["sName"]="战斗",["icon"]="Tech_05",["languageID"]=20000}
+﻿_G["CfgArchiveCourseGroup"]={{["key"]="1",["id"]=1,["sName"]="战斗",["icon"]="Tech_05",["languageID"]=20000}
 ,{["key"]="2",["id"]=2,["sName"]="队员",["icon"]="Tech_06",["languageID"]=29030}
 ,{["key"]="3",["id"]=3,["sName"]="冷却",["icon"]="Tech_03",["languageID"]=2007}
 ,{["key"]="4",["id"]=4,["sName"]="探索等级",["icon"]="Tech_07",["languageID"]=29031}

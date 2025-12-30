@@ -1,4 +1,4 @@
-_G["CfgGuildFightRankReward"]={{["id"]=1,["infos"]={{["index"]=1,["mailId"]=3017,["rewardId"]=1,["sartIx"]=1,["endIx"]=100}
+﻿_G["CfgGuildFightRankReward"]={{["id"]=1,["infos"]={{["index"]=1,["mailId"]=3017,["rewardId"]=1,["sartIx"]=1,["endIx"]=100}
 ,{["index"]=2,["mailId"]=3018,["rewardId"]=2,["sartIx"]=101,["endIx"]=500}
 ,{["index"]=3,["mailId"]=3019,["rewardId"]=3,["sartIx"]=501,["endIx"]=999}
 ,{["index"]=4,["mailId"]=3020,["rewardId"]=4,["sartIx"]=1000,["endIx"]=2000}

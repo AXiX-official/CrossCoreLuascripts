@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 combo_enter={play_time=2300},

@@ -1,4 +1,4 @@
-_G["cfgColosseumRewar"]={{["id"]=1,["star"]=3,["key"]=1,["reward"]={{10407,100}
+﻿_G["cfgColosseumRewar"]={{["id"]=1,["star"]=3,["key"]=1,["reward"]={{10407,100}
 }
 }
 ,{["id"]=2,["star"]=6,["key"]=2,["reward"]={{10407,200}

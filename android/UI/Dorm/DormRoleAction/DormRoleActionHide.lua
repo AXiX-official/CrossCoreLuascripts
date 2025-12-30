@@ -1,4 +1,4 @@
---隐藏状态（编辑家具时隐藏）
+﻿--隐藏状态（编辑家具时隐藏）
 DormRoleActionHide = oo.class(DormRoleActionBase)
 
 local this = DormRoleActionHide

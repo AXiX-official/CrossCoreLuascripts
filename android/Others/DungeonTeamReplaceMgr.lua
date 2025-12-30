@@ -1,4 +1,4 @@
-DungeonTeamReplaceMgr = MgrRegister("DungeonTeamReplaceMgr")
+﻿DungeonTeamReplaceMgr = MgrRegister("DungeonTeamReplaceMgr")
 local this = DungeonTeamReplaceMgr;
 
 function this:Init()

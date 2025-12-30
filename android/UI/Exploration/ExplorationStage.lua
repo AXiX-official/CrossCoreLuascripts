@@ -1,4 +1,4 @@
---勘探系统购买等级
+﻿--勘探系统购买等级
 local data=nil;
 local upLv=nil;
 local nextLv=nil;

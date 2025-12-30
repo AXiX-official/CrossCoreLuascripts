@@ -1,4 +1,4 @@
---{isTitle = false, isWin = , isLost = ,rewards = , index = })
+﻿--{isTitle = false, isWin = , isLost = ,rewards = , index = })
 function Refresh(_data)
 	data = _data
 	SetTitle()

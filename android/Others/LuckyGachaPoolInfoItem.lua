@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local grids={};
 
 function Refresh(_data,_total)

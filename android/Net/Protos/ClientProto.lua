@@ -1,4 +1,4 @@
-ClientProto =
+﻿ClientProto =
 {
     PayQueryAction=nil;
 }
@@ -174,6 +174,7 @@ function ClientProto:InitFinishRet(proto)
     RegressionMgr:CheckRedPointData() -- 回归活动
     EquipProto:EquipRefreshGetLastData();--获取最后一次洗炼的数据
     RiddleMgr:InitData();--初始化猜谜活动
+    RichManMgr:InitData();--初始化大富翁活动
     EventMgr.Dispatch(EventType.InitFinishRet)
 end
 ---中途打断清理数据

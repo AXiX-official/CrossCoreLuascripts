@@ -1,4 +1,4 @@
---皮肤合集子物体
+﻿--皮肤合集子物体
 local list=nil;
 local elseData=nil;
 local items={}; --子物体

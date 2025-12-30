@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     clickNode_cg = ComUtil.GetCom(clickNode, "CanvasGroup")
     as = ComUtil.GetCom(select,"ActionScale")
     af = ComUtil.GetCom(select,"ActionFade")

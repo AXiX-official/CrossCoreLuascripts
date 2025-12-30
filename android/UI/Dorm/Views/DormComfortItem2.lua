@@ -1,4 +1,4 @@
-function Refresh(_cfg)
+﻿function Refresh(_cfg)
 	--name
 	CSAPI.SetText(txtName, _cfg.sName)
 	--num

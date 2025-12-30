@@ -1,4 +1,4 @@
---FireBall数据
+﻿--FireBall数据
 local this = 
 {
 [-686817241]={
@@ -24,6 +24,10 @@ local this =
 },
 [1349028111]={
 time=4000,type=0
+},
+[-316323548]={
+{effect="deadLarge_common_eff",effect_pack="common",delay=1600,time=6000,type=0,pos_ref={ref_type=6}},
+{time=6000,type=0,cue_sheet="fight/effect/nineth.acb",cue_name="Censor_Die"}
 },
 [-1183793042]={
 {effect="enter",time=3500,type=0,pos_ref={ref_type=6}}

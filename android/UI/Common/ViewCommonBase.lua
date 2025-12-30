@@ -1,4 +1,4 @@
-ViewCommonBase = oo.class();
+﻿ViewCommonBase = oo.class();
 local this = ViewCommonBase;
 
 function this:Init(view)

@@ -1,4 +1,4 @@
---背景切割部件
+﻿--背景切割部件
 function Awake()
 	--CSAPI.SetAngle(gameObject, 45, 180, 0)
 end

@@ -1,4 +1,4 @@
-local this=oo.class(PetStateBase)
+﻿local this=oo.class(PetStateBase)
 function this:OnEnter(_d)
     PetStateBase.OnEnter(self,_d);
     if self.lua.GetData()~=nil then

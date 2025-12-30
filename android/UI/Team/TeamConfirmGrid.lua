@@ -1,4 +1,4 @@
---战前编队格子
+﻿--战前编队格子
 local clicker=nil
 local isDisable=false;
 local data=nil;

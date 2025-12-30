@@ -1,4 +1,4 @@
---战场界面
+﻿--战场界面
 local taskItems = nil;--星级物体
 local isFull = false;--星级物体显示是否完全
 local endTime = 0;--剩余时间

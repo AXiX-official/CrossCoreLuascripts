@@ -1,4 +1,4 @@
---竖形的商品展示
+﻿--竖形的商品展示
 local descPos={{-94.63,-99},{-94.63,-145.5}}
 local currPrice=priceObj;
 local eventMgr=nil;
@@ -120,40 +120,44 @@ function SetOrgPrice()
             CSAPI.SetGOActive(discountInfo,false);
             do return end
         end
-        local orgCosts=this.data:GetOrgCosts();
-        CSAPI.SetGOActive(discountInfo,orgCosts~=nil);
-        if orgCosts~=nil then
-            CSAPI.SetText(txt_discount2,tostring(orgCosts[2]));
-            --计算倒计时
-            local timeTips=this.data:GetOrgEndBuyTips()
-            CSAPI.SetGOActive(dsInfo2,timeTips~=nil)
+         local orgCosts = this.data:GetOrgCosts();
+        local orgNum=orgCosts~=nil and #orgCosts or 0;
+        CSAPI.SetGOActive(discountInfo, orgNum >0);
+        CSAPI.SetGOActive(discountLayout1, orgNum >0);
+        CSAPI.SetGOActive(discountLayout2, orgNum >1);
+        if orgCosts ~= nil then
+            -- 计算倒计时
+            local timeTips = this.data:GetOrgEndBuyTips()
+            CSAPI.SetGOActive(dsInfo2, timeTips ~= nil)
             if timeTips then
-                CSAPI.SetText(txtDSTime,timeTips);
+                CSAPI.SetText(txtDSTime, timeTips);
             end
-            if orgCosts[1]~=-1 then
-                CSAPI.SetGOActive(dsMoneyIcon,true);
-                CSAPI.SetGOActive(txt_dsRmb,false);
-                local cfg = Cfgs.ItemInfo:GetByID(orgCosts[1],true);
-                if cfg and cfg.icon then
-                    ResUtil.IconGoods:Load(dsMoneyIcon, cfg.icon.."_1");
+            for i, v in ipairs(orgCosts) do
+                CSAPI.SetText(this["txt_dsVal"..i], tostring(v[2]));
+                if v[1] ~= -1 then
+                    CSAPI.SetGOActive(this["dsMoneyIcon"..i], true);
+                    CSAPI.SetGOActive(this["txt_dsRmb"..i], false);
+                    local cfg = Cfgs.ItemInfo:GetByID(v[1], true);
+                    if cfg and cfg.icon then
+                        ResUtil.IconGoods:Load(this["dsMoneyIcon"..i], cfg.icon .. "_1");
+                    else
+                        LogError("道具商店：读取物品的价格Icon出错！Cfg:" .. tostring(cfg));
+                    end
                 else
-                    LogError("道具商店：读取物品的价格Icon出错！Cfg:"..tostring(cfg));
+                    CSAPI.SetText(this["txt_dsRmb"..i], this.data:GetCurrencySymbols(true));
+                    CSAPI.SetGOActive(this["dsMoneyIcon"..i], false);
+                    CSAPI.SetGOActive(this["txt_dsRmb"..i], true);
                 end
-            else
-                CSAPI.SetText(txt_dsRmb,this.data:GetCurrencySymbols(true));
-                CSAPI.SetGOActive(dsMoneyIcon,false);
-                CSAPI.SetGOActive(txt_dsRmb,true);
+                if #v == 3 then
+                    CSAPI.SetTextColorByCode(this["pnIcon" .. v[3]], "FFC146");
+                    CSAPI.SetTextColorByCode(this["txt_dPrice" .. v[3]], "FFC146");
+                else
+                    CSAPI.SetTextColorByCode(pnIcon1, "FFFFFF");
+                    CSAPI.SetTextColorByCode(pnIcon2, "FFFFFF");
+                    CSAPI.SetTextColorByCode(txt_dPrice1, "FFFFFF");
+                    CSAPI.SetTextColorByCode(txt_dPrice2, "FFFFFF");
+                end
             end
-
-        --     CSAPI.SetTextColorByCode(txt_price,"FFC146");
-        --     CSAPI.SetTextColorByCode(txt_rmb,"FFC146");
-        --     CSAPI.SetTextColorByCode(txt_rmbVal,"FFC146");
-        --     CSAPI.SetTextColorByCode(txt_price3,"FFC146");
-        -- else
-        --     CSAPI.SetTextColorByCode(txt_price,"FFFFFF");
-        --     CSAPI.SetTextColorByCode(txt_rmb,"FFFFFF");
-        --     CSAPI.SetTextColorByCode(txt_rmbVal,"FFFFFF");
-        --     CSAPI.SetTextColorByCode(txt_price3,"FFFFFF");
         end
     end
 end

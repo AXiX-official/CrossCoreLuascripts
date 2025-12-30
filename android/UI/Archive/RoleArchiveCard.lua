@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local elseData = nil
 local data = nil
 local dungeonData = nil

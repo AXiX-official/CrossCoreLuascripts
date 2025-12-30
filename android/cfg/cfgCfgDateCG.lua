@@ -1,4 +1,4 @@
-_G["CfgDateCG"]={{["l2dName"]="CG0063_ChangingMoment_spine",["imgName"]="更衣时刻",["group"]=20240011,["img"]="changing_moment",["imgPos"]={4,16,0.896}
+﻿_G["CfgDateCG"]={{["l2dName"]="CG0063_ChangingMoment_spine",["imgName"]="更衣时刻",["group"]=20240011,["img"]="changing_moment",["imgPos"]={4,16,0.896}
 ,["key"]=1,["goodsId"]=61088,["l2dPos"]={39,24,0.95}
 ,["icon"]="board_changing_moment",["id"]=1}
 ,{["l2dName"]="CG0064_WoodlandSearch_spine",["imgName"]="林中寻觅",["group"]=20240011,["img"]="woodland_search",["imgPos"]={34,-8,0.97}

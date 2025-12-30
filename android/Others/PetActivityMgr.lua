@@ -1,4 +1,4 @@
---宠物活动管理类
+﻿--宠物活动管理类
 local this = MgrRegister("PetActivityMgr")
 
 function this:Init()

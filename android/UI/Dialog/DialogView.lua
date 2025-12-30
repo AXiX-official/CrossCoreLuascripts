@@ -1,4 +1,4 @@
-
+﻿
 function Awake()    
     txtContent = ComUtil.GetCom(goTxtContent,"Text");
 end

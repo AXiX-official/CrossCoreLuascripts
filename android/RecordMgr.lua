@@ -1,4 +1,4 @@
---记录管理
+﻿--记录管理
 RecordMgr = {};
 local this = RecordMgr;
 

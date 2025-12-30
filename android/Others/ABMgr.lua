@@ -1,4 +1,4 @@
-ABMgr = oo.class();
+﻿ABMgr = oo.class();
 
 local this = ABMgr;
 --通用界面相关的AB资源不被删除，需要手动注册、移除

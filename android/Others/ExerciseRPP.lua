@@ -1,4 +1,4 @@
-local isFind = false -- 已匹配到
+﻿local isFind = false -- 已匹配到
 local isFinding = false -- 匹配中
 -- local lIsReady = false -- 是否已准备
 -- local rIsReady = false

@@ -1,4 +1,4 @@
-_G["ConfigPrimaryKey"]={{["key"]="1",["relevance"]="RewardInfo",["id"]=1,["cfgFieldKey"]="reward",["cfgName"]="MainLine"}
+﻿_G["ConfigPrimaryKey"]={{["key"]="1",["relevance"]="RewardInfo",["id"]=1,["cfgFieldKey"]="reward",["cfgName"]="MainLine"}
 ,{["key"]="2",["relevance"]="MonsterData",["id"]=2,["cfgFieldKey2"]="monsters",["cfgFieldKey"]="stage",["cfgName"]="MonsterGroup"}
 ,{["key"]="3",["relevance"]="cfgHalo",["id"]=3,["cfgFieldKey"]="halo",["cfgName"]="CardData"}
 ,{["key"]="4",["relevance"]="CardData",["id"]=4,["cfgFieldKey"]="tTransfo",["cfgName"]="CardData"}

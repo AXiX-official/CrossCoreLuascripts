@@ -1,4 +1,4 @@
--- 看ipad,打瞌睡,喝茶,打电话
+﻿-- 看ipad,打瞌睡,喝茶,打电话
 DormRoleActionLeisure = oo.class(DormRoleActionBase)
 
 local this = DormRoleActionLeisure

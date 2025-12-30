@@ -1,4 +1,4 @@
-local isStop = true
+﻿local isStop = true
 local cd = nil
 local holdTime = 0.2;
 local holdDownTime = 0;

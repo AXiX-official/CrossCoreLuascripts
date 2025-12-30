@@ -1,4 +1,4 @@
-
+﻿
 Loader:Require("FightDef")
 Loader:Require("FightLog")
 Loader:Require("Random")

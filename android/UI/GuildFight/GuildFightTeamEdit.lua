@@ -1,4 +1,4 @@
---公会战编队界面
+﻿--公会战编队界面
 
 local teamData=nil;
 local skillGrids={};

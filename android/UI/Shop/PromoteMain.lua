@@ -1,4 +1,4 @@
---推荐主界面
+﻿--推荐主界面
 local layout=nil;
 local layout2=nil;
 local layout3=nil;

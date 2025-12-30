@@ -1,4 +1,4 @@
--- ITEM_ID.Hot
+﻿-- ITEM_ID.Hot
 local canvasGroup = nil
 local isShowAgain = false
 local isTimeOut = false
@@ -122,8 +122,16 @@ function IsShowAgain()
         end
         CSAPI.SetGOActive(costObj, true)
 
-        local costNum = DungeonUtil.GetHot(cfgDungeon)
-        CSAPI.SetText(txtCost, costNum .. "")
+        -- icon
+        local _cost = DungeonUtil.GetCost(cfgDungeon)
+        if _cost~=nil then
+            ResUtil.IconGoods:Load(costIcon, _cost[1] .. "_1")
+            CSAPI.SetText(txtCost,"" .. _cost[2])
+        else
+            ResUtil.IconGoods:Load(costIcon, ITEM_ID.Hot .. "_1", true)
+            local costNum = DungeonUtil.GetHot(cfgDungeon)
+            CSAPI.SetText(txtCost, costNum .. "")
+        end
         return true
     end
 

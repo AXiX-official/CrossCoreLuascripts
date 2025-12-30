@@ -1,4 +1,4 @@
-local cfgGlobalBoss =nil
+﻿local cfgGlobalBoss =nil
 local cfg = nil
 local items = {}
 local rewards = nil

@@ -1,4 +1,4 @@
-_G["CfgExpeditionTask"]={{["subs"]={1001,1002}
+﻿_G["CfgExpeditionTask"]={{["subs"]={1001,1002}
 ,["key"]=1,["id"]=1,["sName"]="分支探索",["icon"]="btn_37_01",["tFlush"]={4}
 }
 ,{["maxNum"]=2,["subs"]={3001}

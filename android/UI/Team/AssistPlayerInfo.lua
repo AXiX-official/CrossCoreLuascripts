@@ -1,4 +1,4 @@
---支援玩家信息界面 data:好友id
+﻿--支援玩家信息界面 data:好友id
 local eventMgr=nil;
 local items={};
 function Awake()

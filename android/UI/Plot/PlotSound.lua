@@ -1,4 +1,4 @@
---剧情音效
+﻿--剧情音效
 local currentPlotData
 local infos
 

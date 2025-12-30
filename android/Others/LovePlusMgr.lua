@@ -1,4 +1,4 @@
-local this = MgrRegister("LovePlusMgr")
+﻿local this = MgrRegister("LovePlusMgr")
 LovePlusData = require "LovePlusData"
 LovePlusChatListData = require "LovePlusChatListData"
 LovePlusChatData = require "LovePlusChatData"

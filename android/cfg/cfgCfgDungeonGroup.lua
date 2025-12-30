@@ -1,4 +1,4 @@
-_G["CfgDungeonGroup"]={{["relativePos"]={100,0}
+﻿_G["CfgDungeonGroup"]={{["relativePos"]={100,0}
 ,["sY"]=-60,["dungeonGroups"]={1001,8001,1002}
 ,["id"]=1,["hDungeonGroups"]={2001,2002}
 ,["sSize"]={332,220}

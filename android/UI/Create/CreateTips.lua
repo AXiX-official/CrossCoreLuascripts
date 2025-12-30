@@ -1,4 +1,4 @@
-
+﻿
 
 function OnOpen()
 	local cfg = Cfgs.CfgCardPool:GetByID(data)

@@ -1,4 +1,4 @@
-_G["CfgPetWord"]={[103]={["id"]=103,["infos"]={{["word1"]="今天适合钓鱼~",["index"]=1,["animation"]="idle",["trigger"]=1,["time"]=4,["word2"]="该去钓鱼了~"}
+﻿_G["CfgPetWord"]={[103]={["id"]=103,["infos"]={{["word1"]="今天适合钓鱼~",["index"]=1,["animation"]="idle",["trigger"]=1,["time"]=4,["word2"]="该去钓鱼了~"}
 ,{["word1"]="钓具准备完毕~",["index"]=2,["animation"]="idle",["holdTime"]=180,["time"]=4,["trigger"]=3,["word2"]="钓鱼客准备动身~"}
 ,{["word1"]="呼噜~呼噜~",["index"]=3,["animation"]="sleep",["trigger"]=1,["time"]=4,["word2"]="Zzzz……"}
 ,{["word1"]="鱼……好多鱼……",["index"]=4,["animation"]="sleep",["holdTime"]=180,["time"]=4,["trigger"]=3,["word2"]="桶里全是鱼……"}

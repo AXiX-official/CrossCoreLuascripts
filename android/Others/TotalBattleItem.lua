@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local openInfo = nil
 local groupDatas = nil
 local resetTime= 0

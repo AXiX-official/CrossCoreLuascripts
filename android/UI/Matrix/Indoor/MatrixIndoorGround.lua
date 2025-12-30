@@ -1,4 +1,4 @@
--- data: MatrixData
+﻿-- data: MatrixData
 function Awake()
     dormCameraMgr = ComUtil.GetCom(gameObject, "DormCameraMgr")
 

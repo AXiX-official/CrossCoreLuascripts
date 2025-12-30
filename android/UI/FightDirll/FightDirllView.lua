@@ -1,4 +1,4 @@
---训练面板
+﻿--训练面板
 local itemPath = "UIs/FightDirll/FightDirllItem"
 local enemyCfgs = nil
 local cfgRole = nil

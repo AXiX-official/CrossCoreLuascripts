@@ -1,4 +1,4 @@
-_G["cfgWorldBossMonthMission"]={[2]={["key"]=2,["aFinishIds"]={220003}
+﻿_G["cfgWorldBossMonthMission"]={[2]={["key"]=2,["aFinishIds"]={220003}
 ,["sDescription"]="参与末日战线玩法自身单次挑战伤害达到2000000（每月重置）",["mailId"]=14001,["id"]=2,["jAwardId"]={{2000301,1,2}
 }
 ,["nGroup"]=14001}

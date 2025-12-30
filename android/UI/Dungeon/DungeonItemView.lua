@@ -1,4 +1,4 @@
---章节项
+﻿--章节项
 local curSel = false
 local leftLineWidths = {169, 127}
 local rightLineWidths = {142, 94}

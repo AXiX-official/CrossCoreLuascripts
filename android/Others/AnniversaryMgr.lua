@@ -1,4 +1,4 @@
-AnniversaryMgr = MgrRegister("AnniversaryMgr")
+﻿AnniversaryMgr = MgrRegister("AnniversaryMgr")
 local this = AnniversaryMgr;
 AnniversaryData = require "AnniversaryData"
 
@@ -84,7 +84,7 @@ function this:CheckRed(id)
         if not data:IsOpen() then
             return false
         end
-        if data:GetType() == AnniversaryListType.Timest then
+        if data:GetType() == AnniversaryListType.Main then
             local isRed= false
             local info = data:GetMissionInfo()
             if info then

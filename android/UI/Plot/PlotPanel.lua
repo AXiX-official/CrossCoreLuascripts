@@ -1,4 +1,4 @@
---剧情面板
+﻿--剧情面板
 local storyData = nil;
 local currentPlotData = nil;--当前输出的对话信息
 local isPlotEnd = false; --剧情播放结束

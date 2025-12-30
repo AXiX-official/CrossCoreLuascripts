@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local info = nil
 local actionMove = nil
 --badge

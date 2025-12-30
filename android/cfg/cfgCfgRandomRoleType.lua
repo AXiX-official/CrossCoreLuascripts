@@ -1,4 +1,4 @@
-_G["CfgRandomRoleType"]={{["id"]=1,["sName"]="角色",["key"]="1",["sortIcon"]={{1,"RolePos/1",1.2,0.3}
+﻿_G["CfgRandomRoleType"]={{["id"]=1,["sName"]="角色",["key"]="1",["sortIcon"]={{1,"RolePos/1",1.2,0.3}
 }
 }
 ,{["id"]=2,["sName"]="插画",["key"]="2",["sortIcon"]={{1,"RolePos/2",1.2,0.3}

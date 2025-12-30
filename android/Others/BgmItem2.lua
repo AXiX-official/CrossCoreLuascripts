@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     nameMove = ComUtil.GetCom(nameObj, "TextMove")
 end
 function SetIndex(_index)

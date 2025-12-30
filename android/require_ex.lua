@@ -1,4 +1,4 @@
--- require_ex.lua
+﻿-- require_ex.lua
 
 -- 判断是否可以更新的值
 function IsUseNewReloadVal(oType, key, oVal, nVal)

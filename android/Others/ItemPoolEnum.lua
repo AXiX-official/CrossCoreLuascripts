@@ -1,4 +1,4 @@
---奖品品级
+﻿--奖品品级
 _G.ItemPoolGoodsGrade={
     SSS=0,
     S=1,

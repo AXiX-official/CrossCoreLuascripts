@@ -1,4 +1,4 @@
-_G["CfgRankTeam"]={[10010]={["isHideTurn"]=1,["id"]=10010,["teamType"]=1,["key"]="10010"}
+﻿_G["CfgRankTeam"]={[10010]={["isHideTurn"]=1,["id"]=10010,["teamType"]=1,["key"]="10010"}
 ,[10018]={["rankType"]=4,["isBuffOpen"]=1,["key"]="10018",["id"]=10018,["teamType"]=1,["isHideTactics"]=1}
 ,[10003]={["isHideTurn"]=1,["id"]=10003,["teamType"]=1,["key"]="10003"}
 ,[10011]={["isHideTurn"]=1,["id"]=10011,["teamType"]=1,["key"]="10011"}
@@ -16,6 +16,7 @@ _G["CfgRankTeam"]={[10010]={["isHideTurn"]=1,["id"]=10010,["teamType"]=1,["key"]
 ,[10007]={["isHideTurn"]=1,["id"]=10007,["teamType"]=1,["key"]="10007"}
 ,[10015]={["rankType"]=5,["key"]="10015",["isClose"]=1,["id"]=10015,["teamType"]=1}
 ,[10023]={["rankType"]=4,["isBuffOpen"]=1,["key"]="10023",["id"]=10023,["teamType"]=1,["isHideTactics"]=1}
+,[9008]={["rankType"]=3,["key"]="9008",["id"]=9008,["teamType"]=1,["isHideTurn"]=1}
 ,[10008]={["isHideTurn"]=1,["id"]=10008,["teamType"]=1,["key"]="10008"}
 ,[10016]={["isHideTurn"]=1,["id"]=10016,["teamType"]=1,["key"]="10016"}
 ,[10024]={["isHideTurn"]=1,["id"]=10024,["teamType"]=1,["key"]="10024"}

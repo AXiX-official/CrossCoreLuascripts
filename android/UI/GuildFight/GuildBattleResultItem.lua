@@ -1,4 +1,4 @@
---公会战结果信息
+﻿--公会战结果信息
 local data=nil;
 local elseData=nil;
 local slider=nil;

@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     sd_slider = ComUtil.GetCom(sd, "Slider")
 end
 function Refresh(_AccuChargeData, _cb)

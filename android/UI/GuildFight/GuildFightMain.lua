@@ -1,4 +1,4 @@
-local state=nil;
+﻿local state=nil;
 local slider=nil;
 local currGFData=nil;--当前赛季数据
 local endTime=nil; --结束时间

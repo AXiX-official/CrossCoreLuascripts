@@ -1,4 +1,4 @@
---公会战奖励
+﻿--公会战奖励
 local data 
 local curIndex = 0
 

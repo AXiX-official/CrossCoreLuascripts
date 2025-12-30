@@ -1,4 +1,4 @@
---套装描述
+﻿--套装描述
 local items={};
 local width=702;
 local height=192;

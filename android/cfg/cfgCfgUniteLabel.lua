@@ -1,4 +1,4 @@
-_G["CfgUniteLabel"]={{["type"]=3,["key"]="nClass",["id"]=1,["typeName"]="分队",["cfgType"]=2}
+﻿_G["CfgUniteLabel"]={{["type"]=3,["key"]="nClass",["id"]=1,["typeName"]="分队",["cfgType"]=2}
 ,{["type"]=3,["key"]="sBelonging",["id"]=2,["typeName"]="所属",["cfgType"]=1}
 ,{["type"]=3,["key"]="sSex",["id"]=3,["typeName"]="性别",["cfgType"]=1}
 ,{["type"]=3,["key"]="career",["id"]=4,["typeName"]="护甲类型",["cfgType"]=2}

@@ -1,4 +1,4 @@
-local MatrixCompoundData = require "MatrixCompoundData"
+﻿local MatrixCompoundData = require "MatrixCompoundData"
 local mDatas1 = {} -- 已选择的物品
 local count = 1 -- 数量
 local maxCount = 0 -- 可购买的最大数量

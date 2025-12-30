@@ -1,4 +1,4 @@
---剧情故事界面
+﻿--剧情故事界面
 local lineHeight = 60;
 local currY = 0;
 local fade = nil

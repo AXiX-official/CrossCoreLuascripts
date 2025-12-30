@@ -1,4 +1,4 @@
---公会申请记录子物体
+﻿--公会申请记录子物体
 local data=nil;
 function Refresh(_data)
     data=_data

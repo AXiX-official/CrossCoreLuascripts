@@ -1,4 +1,4 @@
---防御部署item  CfgBAssault
+﻿--防御部署item  CfgBAssault
 --local colors = {"white", "blue", "yellow", "red"}  -- StringUtil:SetColor(str, colors[data.id])
 local isLock = false
 local colors = {"ffffff", "27b2ff", "FFC146", "ff0000"}

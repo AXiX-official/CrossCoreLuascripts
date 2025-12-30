@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --添加角色
 function this:Handle(data)   

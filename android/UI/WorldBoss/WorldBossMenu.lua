@@ -1,4 +1,4 @@
-
+﻿
 --世界boss入口界面
 local endTime = nil
 local panels = {}

@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     txtName = ComUtil.GetCom(name,"Text");
     txtDesc = ComUtil.GetCom(desc,"Text");

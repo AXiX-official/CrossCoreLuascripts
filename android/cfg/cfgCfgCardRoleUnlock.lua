@@ -1,4 +1,4 @@
-_G["CfgCardRoleUnlock"]={{["id"]=1,["value"]=10,["key"]="1",["sDesc"]="好感度到达10级开启"}
+﻿_G["CfgCardRoleUnlock"]={{["id"]=1,["value"]=10,["key"]="1",["sDesc"]="好感度到达10级开启"}
 ,{["id"]=2,["value"]=30,["key"]="2",["sDesc"]="好感度到达30级开启"}
 ,{["id"]=3,["value"]=60,["key"]="3",["sDesc"]="好感度到达60级开启"}
 ,{["id"]=4,["value"]=80,["key"]="4",["sDesc"]="好感度到达80级开启"}

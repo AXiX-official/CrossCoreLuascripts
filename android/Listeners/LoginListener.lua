@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     EventMgr.AddListener(EventType.Login_Success,OnLogin);
 
     EventMgr.AddListener(EventType.Dungeon_Data_Setted,OnDungeonSetted);

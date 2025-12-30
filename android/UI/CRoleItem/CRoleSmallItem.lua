@@ -1,4 +1,4 @@
--- 皮肤 data : RoleSkinInfo
+﻿-- 皮肤 data : RoleSkinInfo
 function Awake()
     image_node = ComUtil.GetCom(node, "Image")
 end

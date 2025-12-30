@@ -1,4 +1,4 @@
-_G["cfgQuestionsReward"]={{["id"]=1,["item"]={{["index"]=1,["count"]=1,["reward"]={{10001,60000}
+﻿_G["cfgQuestionsReward"]={{["id"]=1,["item"]={{["index"]=1,["count"]=1,["reward"]={{10001,60000}
 }
 }
 ,{["index"]=2,["count"]=2,["reward"]={{15001,5}

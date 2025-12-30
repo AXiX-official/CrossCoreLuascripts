@@ -1,4 +1,4 @@
-FightActionAPISpecial = oo.class(FightActionAPI);
+﻿FightActionAPISpecial = oo.class(FightActionAPI);
 local this = FightActionAPISpecial;
 
 function this:OnClean()

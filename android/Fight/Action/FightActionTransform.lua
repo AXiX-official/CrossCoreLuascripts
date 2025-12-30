@@ -1,4 +1,4 @@
---战斗变身
+﻿--战斗变身
 
 FightActionTransform = oo.class(FightActionBase);
 local this = FightActionTransform;

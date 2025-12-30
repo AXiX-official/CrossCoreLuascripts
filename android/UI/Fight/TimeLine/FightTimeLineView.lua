@@ -1,4 +1,4 @@
-----总个数
+﻿----总个数
 --local itemCount = 7;
 ----展开显示个数
 --local unfoldCount = 4;

@@ -1,4 +1,4 @@
---剧情面板动画类
+﻿--剧情面板动画类
 local this = {};
 local PlotTweenType = {
 	Move = 1,

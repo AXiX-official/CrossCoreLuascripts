@@ -1,4 +1,4 @@
-HalloweenMgr = MgrRegister("HalloweenMgr")
+﻿HalloweenMgr = MgrRegister("HalloweenMgr")
 local this = HalloweenMgr;
 
 function this:Init()

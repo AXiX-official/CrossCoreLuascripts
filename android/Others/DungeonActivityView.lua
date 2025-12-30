@@ -1,4 +1,4 @@
-local openInfo = nil
+﻿local openInfo = nil
 local info = nil
 local lastBGM = nil
 local isLoading = false

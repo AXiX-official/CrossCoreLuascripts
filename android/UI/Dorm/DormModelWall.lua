@@ -1,4 +1,4 @@
---墙
+﻿--墙
 function Init(_dormMain)
 	--dormMain = _dormMain
 end

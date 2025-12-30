@@ -1,4 +1,4 @@
-local this=
+﻿local this=
 {
 mapid=121308,born_group=100,
 groups=

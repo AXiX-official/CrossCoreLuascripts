@@ -1,4 +1,4 @@
-local c_MinHeight=124;
+﻿local c_MinHeight=124;
 local g_MinHeight=186;
 local curHeight=0;
 local minLines=3;

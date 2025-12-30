@@ -1,4 +1,4 @@
-_G["CfgBTradeLvl"]={{["armorType"]=1,["upCosts"]={{60101,50,2}
+﻿_G["CfgBTradeLvl"]={{["armorType"]=1,["upCosts"]={{60101,50,2}
 ,{10001,500,2}
 }
 ,["centerlvl"]=2,["id"]=1,["rewardId"]=70201,["orderNumLimit"]=3,["key"]="1",["maxHp"]=600,["upTime"]=10,["powerVal"]=-100,["tiredVal"]={432,-1}

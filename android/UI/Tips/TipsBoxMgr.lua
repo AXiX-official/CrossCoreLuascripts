@@ -1,4 +1,4 @@
---TipsPanel
+﻿--TipsPanel
 local tipsMaxCount = 1;--飘字最大显示个数
 local tipsPadding = 80;--间距
 local inviteTipsPadding = 120;--间距

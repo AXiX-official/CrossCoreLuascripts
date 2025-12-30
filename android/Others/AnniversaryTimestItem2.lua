@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local group = 0
 local isClose = false
 local isStart = false

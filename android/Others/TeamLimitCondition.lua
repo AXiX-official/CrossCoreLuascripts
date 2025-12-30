@@ -1,4 +1,4 @@
---编程限制条件元素
+﻿--编程限制条件元素
 local  this={};
 function this.New()
     this.__index = this.__index or this;

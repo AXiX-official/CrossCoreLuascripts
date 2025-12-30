@@ -1,4 +1,4 @@
-local curItem = nil
+﻿local curItem = nil
 
 function SetIndex(_index)
     index = _index

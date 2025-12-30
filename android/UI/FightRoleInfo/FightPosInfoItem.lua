@@ -1,4 +1,4 @@
---战斗站位信息子物体
+﻿--战斗站位信息子物体
 function Refresh(_data)
     this.data=_data;
     local color=_data.IsEnemy() and {255,0,64,255} or {255,193,70,255};

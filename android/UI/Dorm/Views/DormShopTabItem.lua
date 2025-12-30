@@ -1,4 +1,4 @@
-local iconNames = {"btn_18_01.png", "btn_19_01.png"}
+﻿local iconNames = {"btn_18_01.png", "btn_19_01.png"}
 
 function SetIndex(_index)
     index = _index

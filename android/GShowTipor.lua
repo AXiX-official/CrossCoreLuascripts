@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 -- 错误提示的文本来行
 TipAargType = {}
 

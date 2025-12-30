@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 summon={play_time=8500,start_pos={ref_type=10},hide_buff=1,summon_delay=0},

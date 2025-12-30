@@ -1,4 +1,4 @@
-_G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305,["specType"]=2,["group"]=1,["nEndTime"]=1723575600,["leftInfo"]={{["id"]=22060,["path"]="ActivityList/icon8"}
+﻿_G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305,["specType"]=2,["group"]=1,["nEndTime"]=1723575600,["leftInfo"]={{["id"]=22060,["path"]="ActivityList/icon8"}
 }
 ,["key"]="1013",["nStartTime"]=1721761200,["sTime"]="2024-07-24 03:00:00",["eTime"]="2024-08-14 03:00:00",["type"]=1013,["id"]=1013}
 ,[1015]={["type"]=1015,["index"]=306,["specType"]=1,["group"]=1,["resetKey"]=1763514000,["data"]="2025-11-19 09:00:00",["nEndTime"]=1764702000,["leftInfo"]={{["id"]=22062,["path"]="ActivityList/icon8"}
@@ -13,8 +13,8 @@ _G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305
 ,[1019]={["key"]="1019",["type"]=1019,["info"]={["start"]=48,["NoticeId"]=8,["finish"]=-1}
 ,["time"]={2002}
 ,["id"]=1019,["bIsShow"]=1}
-,[1021]={["sTime"]="2025-07-16 12:00:00",["type"]=1021,["info"]={["passDupId"]=1001,["freeCnt"]=1}
-,["nStartTime"]=1752638400,["id"]=1021,["eTime"]="2025-08-06 02:59:59",["nEndTime"]=1754420399,["key"]="1021"}
+,[1021]={["sTime"]="2026-01-01 10:00:00",["type"]=1021,["info"]={["passDupId"]=1001,["freeCnt"]=1}
+,["nStartTime"]=1767232800,["id"]=1021,["eTime"]="2026-01-07 23:59:59",["nEndTime"]=1767801599,["key"]="1021"}
 ,[1023]={["path"]="AccuCharge/AccuChargeT",["index"]=7,["resetKey"]=1751446800,["group"]=2,["data"]="2025-07-02 17:00:00",["nEndTime"]=1756839600,["leftInfo"]={{["id"]=22089,["path"]="ActivityList/icon11"}
 }
 ,["nStartTime"]=1753840800,["key"]="1023",["eTime"]="2025-09-03 03:00:00",["sTime"]="2025-07-30 10:00:00",["type"]=1023,["id"]=1023,["info"]={["mailId"]=40003}
@@ -26,6 +26,11 @@ _G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305
 }
 ,["key"]="1030",["nStartTime"]=1753840800,["sTime"]="2025-7-30 10:00:00",["eTime"]="2025-08-20 03:00:00",["type"]=1030,["id"]=1030}
 ,[1034]={["eTime"]="2025-12-30 03:00:00",["type"]=1034,["key"]="1034",["nStartTime"]=1764727200,["sTime"]="2025-12-03 10:00:00",["id"]=1034,["nEndTime"]=1767034800}
+,[1038]={["sTime"]="2025-12-30 10:00:00",["type"]=1038,["info"]={["id"]=1001}
+,["nStartTime"]=1767060000,["id"]=1038,["eTime"]="2026-2-11 03:00:00",["nEndTime"]=1770750000,["key"]="1038"}
+,[1042]={["path"]="SignInContinue10/SignInAnniversary5",["index"]=351,["specType"]=2,["group"]=1,["nEndTime"]=1770750000,["leftInfo"]={{["id"]=22106,["path"]="ActivityList/icon3"}
+}
+,["key"]="1042",["nStartTime"]=1767060000,["sTime"]="2025-12-30 10:00:00",["eTime"]="2026-2-11 03:00:00",["type"]=1042,["id"]=1042}
 ,[3005]={["type"]=3000,["id"]=3005,["nEndTime"]=1753815600,["key"]="3005",["nStartTime"]=1750816800,["sTime"]="2025-06-25 10:00:00",["eTime"]="2025-07-30 03:00:00",["info"]={["shopId"]=31105,["skinId"]=105,["mailId"]=40006,["itemId"]=10052}
 ,["time"]={2002}
 }
@@ -56,9 +61,9 @@ _G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305
 ,["nStartTime"]=1762282800,["key"]="1010",["eTime"]="2025-12-03 03:00:00",["sTime"]="2025-11-05 03:00:00",["type"]=1010,["id"]=1010,["info"]={{["shopId"]=2004,["goodId"]=10409}
 }
 }
-,[1012]={["path"]="Collaboration/CollaborationMain",["index"]=205,["id"]=1012,["nEndTime"]=1756666800,["leftInfo"]={{["id"]=22084,["path"]="ActivityList/icon15"}
+,[1012]={["path"]="Collaboration/CollaborationMain",["index"]=205,["id"]=1012,["nEndTime"]=1769972400,["leftInfo"]={{["id"]=22084,["path"]="ActivityList/icon15"}
 }
-,["key"]="1012",["nStartTime"]=1753815600,["sTime"]="2025-07-30 03:00:00",["eTime"]="2025-09-01 03:00:00",["type"]=1012,["group"]=4}
+,["key"]="1012",["nStartTime"]=1767034800,["sTime"]="2025-12-30 03:00:00",["eTime"]="2026-02-02 03:00:00",["type"]=1012,["group"]=4}
 ,[1014]={["path"]="SignInContinue6/SignInZhongQiu",["index"]=305,["specType"]=2,["group"]=1,["nEndTime"]=1727031600,["leftInfo"]={{["id"]=22061,["path"]="ActivityList/icon12"}
 }
 ,["key"]="1014",["nStartTime"]=1726200000,["sTime"]="2024-09-13 12:00:00",["eTime"]="2024-09-23 03:00:00",["type"]=1014,["id"]=1014}
@@ -79,10 +84,16 @@ _G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305
 ,[1036]={["nStartTime"]=1761703200,["type"]=1036,["key"]="1036",["specType"]=2,["id"]=1036,["nEndTime"]=1763492399,["leftInfo"]={{["id"]=22098,["path"]="ActivityList/icon2"}
 }
 ,["eTime"]="2025-11-19 2:59:59",["sTime"]="2025-10-29 10:00:00",["path"]="SignInContinue15/SignInHalloween",["group"]=1}
+,[1040]={["path"]="SignInContinue16/AnniversarySignIn2",["index"]=351,["specType"]=2,["group"]=1,["nEndTime"]=1770750000,["leftInfo"]={{["id"]=22104,["path"]="ActivityList/icon2"}
+}
+,["key"]="1040",["nStartTime"]=1767060000,["sTime"]="2025-12-30 10:00:00",["eTime"]="2026-2-11 03:00:00",["type"]=1040,["id"]=1040}
 ,[3001]={["type"]=3000,["id"]=3001,["nEndTime"]=1763492400,["key"]="3001",["nStartTime"]=1761703200,["sTime"]="2025-10-29 10:00:00",["eTime"]="2025-11-19 03:00:00",["info"]={["shopId"]=31101,["skinId"]=104,["mailId"]=40006,["itemId"]=10052}
 ,["time"]={2002}
 }
 ,[3002]={["type"]=3000,["id"]=3002,["nEndTime"]=1767034800,["key"]="3002",["nStartTime"]=1764727200,["sTime"]="2025-12-03 10:00:00",["eTime"]="2025-12-30 03:00:00",["info"]={["shopId"]=31102,["skinId"]=105,["mailId"]=40006,["itemId"]=10052}
+,["time"]={2002}
+}
+,[3003]={["type"]=3000,["id"]=3003,["nEndTime"]=1758654000,["key"]="3003",["nStartTime"]=1756864800,["sTime"]="2025-09-03 10:00:00",["eTime"]="2025-09-24 03:00:00",["info"]={["shopId"]=31103,["skinId"]=103,["mailId"]=40006,["itemId"]=10052}
 ,["time"]={2002}
 }
 ,[1025]={["path"]="SignInContinue9/SignInAnniversary1",["index"]=302,["specType"]=2,["group"]=1,["nEndTime"]=1736622000,["bIsShow"]=1,["key"]="1025",["nStartTime"]=1706155200,["sTime"]="2024-1-25 12:00:00",["eTime"]="2025-01-12 03:00:00",["type"]=1025,["id"]=1025}
@@ -93,6 +104,10 @@ _G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305
 ,["signInId"]=3006}
 }
 ,[1033]={["eTime"]="2025-10-15 03:00:00",["type"]=1033,["key"]="1033",["nStartTime"]=1758679200,["sTime"]="2025-09-24 10:00:00",["id"]=1033,["nEndTime"]=1760468400}
+,[1037]={["leftInfo"]={{["id"]=22099,["path"]="ActivityList/icon3"}
+}
+,["type"]=1037,["info"]={["id"]=1001}
+,["key"]="1037",["id"]=1037}
 ,[1001]={["path"]="SignIn/SignInView",["index"]=401,["specType"]=2,["group"]=1,["bIsShow"]=1,["leftInfo"]={{["id"]=22003,["path"]="ActivityList/icon1"}
 }
 ,["type"]=1001,["key"]="1001",["id"]=1001}
@@ -115,8 +130,8 @@ _G["CfgActiveList"]={[1013]={["path"]="SignInContinue5/SignInGold",["index"]=305
 ,[1011]={["path"]="AccuCharge/AccuCharge",["index"]=4,["resetKey"]=1763514000,["group"]=2,["data"]="2025-11-19 09:00:00",["leftInfo"]={{["id"]=22054,["path"]="ActivityList/icon11"}
 }
 ,["nEndTime"]=1764702000,["key"]="1011",["nStartTime"]=1763517600,["sTime"]="2025-11-19 10:00:00",["eTime"]="2025-12-03 03:00:00",["type"]=1011,["id"]=1011}
-,[3003]={["type"]=3000,["id"]=3003,["nEndTime"]=1758654000,["key"]="3003",["nStartTime"]=1756864800,["sTime"]="2025-09-03 10:00:00",["eTime"]="2025-09-24 03:00:00",["info"]={["shopId"]=31103,["skinId"]=103,["mailId"]=40006,["itemId"]=10052}
-,["time"]={2002}
+,[1041]={["path"]="SignInContinue12/SignInAnniversary6",["index"]=351,["specType"]=2,["group"]=1,["nEndTime"]=1770750000,["leftInfo"]={{["id"]=22105,["path"]="ActivityList/icon3"}
 }
+,["key"]="1041",["nStartTime"]=1767060000,["sTime"]="2025-12-30 10:00:00",["eTime"]="2026-2-11 03:00:00",["type"]=1041,["id"]=1041}
 }
 

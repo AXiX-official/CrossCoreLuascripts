@@ -1,4 +1,4 @@
-ZiLongProto={}
+﻿ZiLongProto={}
 local this=ZiLongProto;
 ---查询是否领取
 ---isTryfalse true 不领取  false 领取

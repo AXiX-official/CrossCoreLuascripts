@@ -1,4 +1,4 @@
---战斗目标物体
+﻿--战斗目标物体
 -- local textMove=nil;
 -- function Awake()
 --     textMove = ComUtil.GetCom(nameMask, "TextMove");

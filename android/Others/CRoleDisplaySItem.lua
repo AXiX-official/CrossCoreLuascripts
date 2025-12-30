@@ -1,4 +1,4 @@
-local needToCheckMove = false
+﻿local needToCheckMove = false
 function Awake()
     luaTextMove = LuaTextMove.New()
     luaTextMove:Init(txtName2)

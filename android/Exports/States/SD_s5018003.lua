@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 eff_addition_pack={"s50180","common_hit"},

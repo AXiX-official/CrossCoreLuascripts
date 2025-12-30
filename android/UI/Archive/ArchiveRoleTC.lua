@@ -1,4 +1,4 @@
-
+﻿
 local itemPath = "UIs/Archive3/ArchiveRoleTCItem"
 local selectIndex = nil
 function Awake()

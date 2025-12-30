@@ -1,4 +1,4 @@
---  {id, ratioStr, count, countMax}
+﻿--  {id, ratioStr, count, countMax}
 function Awake()
 	outlineBar = ComUtil.GetCom(bar, "OutlineBar")
 end

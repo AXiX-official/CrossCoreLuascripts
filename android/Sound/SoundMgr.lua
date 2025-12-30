@@ -1,4 +1,4 @@
---声音管理
+﻿--声音管理
 SoundMgr = {};
 local this = SoundMgr;
 

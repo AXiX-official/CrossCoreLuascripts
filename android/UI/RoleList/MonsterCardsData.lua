@@ -1,4 +1,4 @@
-local this = oo.class(CharacterCardsData)
+﻿local this = oo.class(CharacterCardsData)
 
 -- 设置角色物品信息
 function this:Init(characterData)

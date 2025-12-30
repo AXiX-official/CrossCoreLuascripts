@@ -1,4 +1,4 @@
-local effectGO = nil
+﻿local effectGO = nil
 
 function SetClickCB(_cb)
     cb = _cb

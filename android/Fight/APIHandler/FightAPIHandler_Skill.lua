@@ -1,4 +1,4 @@
---local skillEventKeys = {"PreSkill","DoSkill","AftSkill"};
+﻿--local skillEventKeys = {"PreSkill","DoSkill","AftSkill"};
 
 
 local this = {};

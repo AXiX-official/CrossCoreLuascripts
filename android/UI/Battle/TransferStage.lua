@@ -1,4 +1,4 @@
---传送台
+﻿--传送台
 
 function Awake()
     cAnimator = ComUtil.GetCom(gameObject,"CAnimator");

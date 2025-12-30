@@ -1,4 +1,4 @@
-local grids={};
+﻿local grids={};
 
 function Refresh(_d)
     if _d then

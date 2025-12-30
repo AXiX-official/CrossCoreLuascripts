@@ -1,4 +1,4 @@
---商品预制物
+﻿--商品预制物
 -- local grid=nil;
 local currPrice=nil;
 local rmbIcon=nil;

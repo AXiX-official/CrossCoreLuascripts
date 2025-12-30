@@ -1,4 +1,4 @@
-_G["CfgItemPool"]={[1006]={["starttime"]="2025-11-26 10:00:00",["Languageid"]={67006,67028}
+﻿_G["CfgItemPool"]={[1006]={["starttime"]="2025-11-26 10:00:00",["Languageid"]={67006,67028}
 ,["nEndTime"]=1767034800,["cost"]={{10408,1}
 }
 ,["group"]=5,["Proptype"]=1,["maxcostnum"]=5,["key"]=1006,["Propname"]="幸运扭蛋",["id"]=1006,["extracttype"]=5,["costnum"]=1,["nStartTime"]=1764122400,["costtype"]=1,["endtime"]="2025-12-30 03:00:00"}

@@ -1,4 +1,4 @@
-local this = MgrRegister("EquipMgr")
+﻿local this = MgrRegister("EquipMgr")
 
 this.typeIndex = nil;--按类型缓存id集合
 this.currentEquipID = nil;--当前操作的装备ID

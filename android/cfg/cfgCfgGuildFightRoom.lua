@@ -1,4 +1,4 @@
-_G["CfgGuildFightRoom"]={{["id"]=1,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
+﻿_G["CfgGuildFightRoom"]={{["id"]=1,["infos"]={{["openCostId"]=1001,["attackGoupId"]=999901,["score"]=500,["previewLv"]="1",["entryCostId"]=1001,["enemyPreview"]={90010}
 ,["validMin"]=30,["index"]=1,["difficulty"]=1,["itemPreview"]={18323}
 ,["openReawardId"]=1,["joinRewardId"]=1,["mvpRewardId"]={1}
 ,["multiJoin"]=false,["singleJoin"]=true,["name"]="小怪A"}

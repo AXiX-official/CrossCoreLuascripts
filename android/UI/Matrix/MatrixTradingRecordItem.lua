@@ -1,4 +1,4 @@
-function Refresh(_data)
+﻿function Refresh(_data)
     data = _data
 
     -- child

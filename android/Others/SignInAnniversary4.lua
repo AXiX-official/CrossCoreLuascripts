@@ -1,4 +1,4 @@
-local key = nil
+﻿local key = nil
 local cfg = nil
 local isCanGet = false
 local data =nil

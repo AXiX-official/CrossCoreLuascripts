@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     hpBar = ComUtil.GetCom(goHp,"BarBase");  
     shieldBar = ComUtil.GetCom(goShield,"BarBase");  

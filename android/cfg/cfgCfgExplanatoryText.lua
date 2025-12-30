@@ -1,4 +1,4 @@
-_G["CfgExplanatoryText"]={{["key"]="attributeInfo",["id"]=1,["title"]="属性说明",["group"]=1,["desc"]=[[1.加成显示：
+﻿_G["CfgExplanatoryText"]={{["key"]="attributeInfo",["id"]=1,["title"]="属性说明",["group"]=1,["desc"]=[[1.加成显示：
 【白色】：角色基础属性
 【绿色】：芯片或技能增加的额外属性
 

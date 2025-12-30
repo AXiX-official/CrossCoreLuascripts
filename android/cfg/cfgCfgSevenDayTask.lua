@@ -1,4 +1,4 @@
-_G["CfgSevenDayTask"]={[10121]={["key"]=10121,["nIsHide"]=2,["sDescription"]="探索等级达到<color=#f1872a> 15 </color>级",["jAwardId"]={{10004,200,2}
+﻿_G["CfgSevenDayTask"]={[10121]={["key"]=10121,["nIsHide"]=2,["sDescription"]="探索等级达到<color=#f1872a> 15 </color>级",["jAwardId"]={{10004,200,2}
 ,{10013,100,2}
 }
 ,["nTransferPath"]=30001,["sName"]="探索等级达到<color=#f1872a> 15 </color>级",["nDay"]=5,["id"]=10121}

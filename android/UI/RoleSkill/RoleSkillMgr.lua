@@ -1,4 +1,4 @@
---技能训练
+﻿--技能训练
 local this = MgrRegister("RoleSkillMgr")
 
 function this:Init()

@@ -1,4 +1,4 @@
---AI设置界面
+﻿--AI设置界面
 local isShowFocus=false;
 --设置显示状态
 function SetShowState(state)

@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理死亡
 function this:Handle(data)

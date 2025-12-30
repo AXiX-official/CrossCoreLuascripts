@@ -1,4 +1,4 @@
-
+﻿
 function Refresh(_data)
 	local msg = _data.content
 	if msg ~= "" then

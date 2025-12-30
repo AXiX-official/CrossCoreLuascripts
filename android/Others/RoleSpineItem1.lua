@@ -1,4 +1,4 @@
-local playCallBack = nil
+﻿local playCallBack = nil
 local endCallBack = nil
 local needClick = nil
 local isMul = nil -- 是不是多人插图
@@ -22,12 +22,12 @@ function Awake()
 end
 
 -- _needClick:是否可点触发语音，固定播放的情景（出击时、胜利时等是不需要的）
-function Init(_playCB, _endCB, _needClick, _isMul)
+function Init(_playCB, _endCB, _needClick,_isMul)
     playCallBack = _playCB
     endCallBack = _endCB
     needClick = (_needClick ~= nil) and _needClick or false
-    isMul = _isMul
-    CSAPI.SetImgColor(imgObj, 255, 255, 255, isMul and 255 or 0)
+    -- isMul = _isMul
+    -- CSAPI.SetImgColor(imgObj, 255, 255, 255, isMul and 255 or 0)
     isInit = true
 
     SetClickActive(needClick)
@@ -38,7 +38,9 @@ function Refresh(_modelId, _posType, _callBack, _isUseShopImg, _needClick)
     if (not isInit and _modelId == nil or _posType == nil) then
         return
     end
-
+    isMul = _modelId < 10000
+    CSAPI.SetImgColor(imgObj, 255, 255, 255, isMul and 255 or 0)
+    --
     modelId = _modelId
     posType = _posType
     callBack = _callBack
@@ -61,7 +63,7 @@ function Refresh(_modelId, _posType, _callBack, _isUseShopImg, _needClick)
         end
     end
     oldModelId = _modelId
-
+    CSAPI.SetGOActive(faceNode,not isMul)
     if (isMul) then
         SetBlack()
         SetTouch()

@@ -1,4 +1,4 @@
-function Refresh(id)
+﻿function Refresh(id)
     cfg = Cfgs.CfgRogueTBuff:GetByID(id)
     -- bg 
     ResUtil.RogueBuff:Load(iconBg, cfg.quality)

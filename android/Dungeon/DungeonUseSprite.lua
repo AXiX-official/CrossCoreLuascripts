@@ -1,4 +1,4 @@
---特殊道具子物体
+﻿--特殊道具子物体
 local idx = nil;
 local clickFunc = nil;
 local hasGoods = false;

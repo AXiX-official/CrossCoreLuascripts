@@ -1,4 +1,4 @@
-local isClick = false
+﻿local isClick = false
 
 --协战格子
 function Refresh(_data)

@@ -1,4 +1,4 @@
-_G["CfgNewPlayerSevenDayTask"]={{["type"]=1,["sDescription"]="通关序章【碎星前哨】",["id"]=1,["jAwardId"]={{58001,10,2}
+﻿_G["CfgNewPlayerSevenDayTask"]={{["type"]=1,["sDescription"]="通关序章【碎星前哨】",["id"]=1,["jAwardId"]={{58001,10,2}
 }
 ,["aFinishIds"]={111101}
 ,["key"]="1",["nTransferPath"]=10101,["sName"]="通关序章【碎星前哨】",["mailId"]=2018}

@@ -1,4 +1,4 @@
-PlayerProto = {
+﻿PlayerProto = {
     teamSaveCallBack = nil,
     teamListSaveCall = nil,
     setNameCallBack = nil,

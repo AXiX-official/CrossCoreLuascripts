@@ -1,4 +1,4 @@
-_G["CfgEquipRandType"]={[210]={["id"]=210,["key"]="210",["tTypes"]={{["nType"]=1001,["nRandType"]=2,["sType"]="基础模板",["nWeight"]=96,["nIndex"]=1}
+﻿_G["CfgEquipRandType"]={[210]={["id"]=210,["key"]="210",["tTypes"]={{["nType"]=1001,["nRandType"]=2,["sType"]="基础模板",["nWeight"]=96,["nIndex"]=1}
 ,{["nType"]=210,["nRandType"]=1,["sType"]="同步",["nWeight"]=4,["nIndex"]=2}
 }
 }

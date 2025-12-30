@@ -1,4 +1,4 @@
-_G["CfgTmpDupTower"]={[90082]={["aFinishIds"]={90082}
+﻿_G["CfgTmpDupTower"]={[90082]={["aFinishIds"]={90082}
 ,["sDescription"]="使用2队，不使用助战通过",["key"]=90082,["id"]=90082,["jAwardId"]={{10040,150,2}
 ,{10003,60000,2}
 ,{10034,30,2}

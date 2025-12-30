@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 --皮肤商店使用的皮肤信息
 function this.New()
 	this.__index = this.__index or this;
@@ -184,31 +184,43 @@ function this:GetHideType()
     return self.cfg and self.cfg.hideType or false;
 end
 
---返回当前限时的Tag Icon名
-function this:GetTagIcons()
+--返回当前限时的Tag Icon名 isItem：在商品子物体上显示时
+function this:GetTagIcons(isItem)
     local icons=nil;
     local hadL2d=self:HadLive2D();
-    if hadL2d~=nil then
-        local iconName=nil;
-        if hadL2d==1 then
-            iconName="img_22_03";
-        elseif hadL2d==2 then
-            iconName="img_22_07";
-        elseif hadL2d==3 then
-            iconName="img_22_06";
-        end
+    local oStr=isItem and "img_25_" or "img_22_"
+    local lIds=nil;
+    if self:HasSpecial() then
         icons=icons or {};
-        table.insert(icons,iconName);
+        lIds=lIds or {}
+        table.insert(icons,oStr.."04");
+        table.insert(lIds,18146);
     end
     if self:HasModel() then
         icons=icons or {};
-        table.insert(icons,"img_22_05");
+        lIds=lIds or {}
+        table.insert(icons,oStr.."05");
+        table.insert(lIds,18145);
     end
-    if self:HasSpecial() then
+    if hadL2d~=nil then
+        local iconName=nil;
+        local lId=nil;
+        if hadL2d==1 then
+            iconName="03";
+            lId=18142
+        elseif hadL2d==2 then
+            iconName="07";
+            lId=18143
+        elseif hadL2d==3 then
+            iconName="06";
+            lId=18144
+        end
         icons=icons or {};
-        table.insert(icons,"img_22_04");
+        lIds=lIds or {}
+        table.insert(icons,oStr..iconName);
+        table.insert(lIds,lId);
     end
-    return icons;
+    return icons,lIds;
 end
 
 return this;

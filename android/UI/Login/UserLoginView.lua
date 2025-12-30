@@ -1,4 +1,4 @@
-require "LoginCommFuns"
+﻿require "LoginCommFuns"
 
 --登录框
 

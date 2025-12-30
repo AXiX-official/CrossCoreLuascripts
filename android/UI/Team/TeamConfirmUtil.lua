@@ -1,4 +1,4 @@
-local this={};
+﻿local this={};
 
 --创建并显示格子信息
 function this.CreateGrids(teamData, grids,parent, cb,openSetting)

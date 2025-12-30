@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     coms = ComUtil.GetComsInChildren(gameObject,"ActionSRSize");
     if(coms)then

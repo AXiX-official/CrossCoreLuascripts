@@ -1,4 +1,4 @@
-_G["CfgAchieveType"]={[1001]={["small"]="icon1",["type"]=1,["key"]="1001",["id"]=1001,["infos"]={{["childIcon"]="1",["index"]=1,["childId"]=47201,["childBigIcon"]="1",["typeNum"]=1001}
+﻿_G["CfgAchieveType"]={[1001]={["small"]="icon1",["type"]=1,["key"]="1001",["id"]=1001,["infos"]={{["childIcon"]="1",["index"]=1,["childId"]=47201,["childBigIcon"]="1",["typeNum"]=1001}
 ,{["childIcon"]="2",["index"]=2,["childId"]=47202,["childBigIcon"]="2",["typeNum"]=1002}
 ,{["childIcon"]="3",["index"]=3,["childId"]=47203,["childBigIcon"]="3",["typeNum"]=1003}
 ,{["childIcon"]="4",["index"]=4,["childId"]=47204,["childBigIcon"]="4",["typeNum"]=1004}
@@ -21,6 +21,7 @@ _G["CfgAchieveType"]={[1001]={["small"]="icon1",["type"]=1,["key"]="1001",["id"]
 ,{["childIcon"]="17",["index"]=9,["childId"]=47219,["childBigIcon"]="17",["showTime"]="2025/08/20 12:00:00",["typeNum"]=2009}
 ,{["childIcon"]="16",["index"]=10,["childId"]=47220,["childBigIcon"]="16",["showTime"]="2025/08/06 12:00:00",["typeNum"]=2010}
 ,{["childIcon"]="18",["index"]=11,["childId"]=47221,["childBigIcon"]="18",["typeNum"]=2011}
+,{["childIcon"]="19",["index"]=12,["childId"]=47222,["childBigIcon"]="19",["typeNum"]=2012}
 }
 ,["leftInfo"]={{["id"]=47209,["path"]="ActivityList/icon4"}
 }

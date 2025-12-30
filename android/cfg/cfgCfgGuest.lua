@@ -1,4 +1,4 @@
-_G["CfgGuest"]={{["waitTime"]=15,["name"]="客人1",["score"]=50,["id"]=1,["foods"]={1}
+﻿_G["CfgGuest"]={{["waitTime"]=15,["name"]="客人1",["score"]=50,["id"]=1,["foods"]={1}
 ,["icon"]="img_09_01",["key"]="1"}
 ,{["waitTime"]=16,["name"]="客人2",["score"]=50,["id"]=2,["foods"]={2}
 ,["icon"]="img_09_02",["key"]="2"}

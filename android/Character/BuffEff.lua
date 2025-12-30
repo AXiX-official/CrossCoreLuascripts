@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     if(isShow)then
         SetShowState(isShow);

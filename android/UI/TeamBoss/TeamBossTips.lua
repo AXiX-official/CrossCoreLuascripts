@@ -1,4 +1,4 @@
-local curIndex = 0
+﻿local curIndex = 0
 function Awake()
 	tab = ComUtil.GetCom(tabs, "CTab")
 	tab:AddSelChangedCallBack(OnTabChanged)

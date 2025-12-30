@@ -1,4 +1,4 @@
-_G["CfgBAssault"]={{["openTimes"]={{11,14,5}
+﻿_G["CfgBAssault"]={{["openTimes"]={{11,14,5}
 ,{17,20,5}
 }
 ,["teamNum"]=0,["id"]=1,["sDesc"]="无描述",["teamInfos"]={},["colorName"]="585A59",["key"]="1",["targetNum"]=0,["sName"]="回避",["plrLvl"]=1}

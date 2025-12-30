@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 function Refresh(_data)
     cfg = _data
     if cfg then

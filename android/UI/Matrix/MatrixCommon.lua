@@ -1,4 +1,4 @@
-
+﻿
 --建筑基础状态
 MatrixBuildingType = {}
 MatrixBuildingType.Create = 1     --建造

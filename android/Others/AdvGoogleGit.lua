@@ -1,4 +1,4 @@
----海外客户端  Google 相关功能 逻辑
+﻿---海外客户端  Google 相关功能 逻辑
 --- 后续新增  安卓和ios端  礼物发放都走这里 ，所以不单指，只有谷歌 ，苹果也有
 AdvGoogleGit={}
 local this=AdvGoogleGit;

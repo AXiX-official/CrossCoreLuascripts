@@ -1,4 +1,4 @@
-_G["CfgCardQuality"]={{["sDesc1"]="w_ordinary",["sDesc2"]="NORMAL",["key"]="1",["sName"]="1星",["id"]=1,["nQuality"]=1,["sCreate_bg"]="white_ash"}
+﻿_G["CfgCardQuality"]={{["sDesc1"]="w_ordinary",["sDesc2"]="NORMAL",["key"]="1",["sName"]="1星",["id"]=1,["nQuality"]=1,["sCreate_bg"]="white_ash"}
 ,{["sDesc1"]="w_ordinary",["sDesc2"]="NORMAL",["key"]="2",["sName"]="2星",["id"]=2,["nQuality"]=2,["sCreate_bg"]="white_ash"}
 ,{["sDesc1"]="w_rare",["sDesc2"]="RERE",["key"]="3",["sName"]="3星",["id"]=3,["nQuality"]=3,["sCreate_bg"]="blue"}
 ,{["sDesc1"]="w_super_rare",["sDesc2"]="SUPER RARE",["key"]="4",["sName"]="4星",["id"]=4,["nQuality"]=4,["sCreate_bg"]="red"}

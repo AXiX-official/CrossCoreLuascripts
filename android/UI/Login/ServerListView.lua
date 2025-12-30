@@ -1,4 +1,4 @@
---服务器列表
+﻿--服务器列表
 
 function Awake()
     topItems={} --推荐的item组

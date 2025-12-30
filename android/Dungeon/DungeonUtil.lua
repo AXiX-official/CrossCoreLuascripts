@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 -- 获取当前的数据
 function this.GetCurrNum(type, target, num)

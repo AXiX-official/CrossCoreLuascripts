@@ -1,4 +1,4 @@
-local resetTime = -1
+﻿local resetTime = -1
 local cfg = nil
 function Awake()
     CSAPI.SetGOActive(scale1, false)

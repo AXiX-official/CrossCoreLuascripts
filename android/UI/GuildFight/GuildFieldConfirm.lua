@@ -1,4 +1,4 @@
---开启房间确认框
+﻿--开启房间确认框
 function OnOpen()
     CSAPI.SetGOActive(btnMult,data:MultJoin());
     CSAPI.SetGOActive(btnSingle,data:SingleJoin());

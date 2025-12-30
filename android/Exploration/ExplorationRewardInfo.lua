@@ -1,4 +1,4 @@
---勘探物品奖励信息
+﻿--勘探物品奖励信息
 local this = {}
 
 function this.New()

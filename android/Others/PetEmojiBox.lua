@@ -1,4 +1,4 @@
---宠物气泡
+﻿--宠物气泡
 local items={};
 function Show(cfgs)
     if cfgs then

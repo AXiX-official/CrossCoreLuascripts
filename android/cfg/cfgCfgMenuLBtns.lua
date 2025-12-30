@@ -1,4 +1,4 @@
-_G["CfgMenuLBtns"]={{["code"]="FFC146",["id"]=1,["nType"]=1,["Name"]=22005,["key"]="1",["sort"]=1,["icon"]="icon_02_01",["openView"]="ExplorationMain"}
+﻿_G["CfgMenuLBtns"]={{["code"]="FFC146",["id"]=1,["nType"]=1,["Name"]=22005,["key"]="1",["sort"]=1,["icon"]="icon_02_01",["openView"]="ExplorationMain"}
 ,{["code"]="7FAAE6",["id"]=2,["page"]=2,["nType"]=2,["Name"]=2024,["key"]="2",["sort"]=2,["icon"]="icon_02_02",["openView"]="ExtraActivityView"}
 ,{["code"]="C97EE5",["id"]=3,["nType"]=3,["Name"]=22040,["key"]="3",["sort"]=4,["icon"]="icon_02_05",["openView"]="ResRecovery"}
 ,{["code"]="DE8394",["id"]=4,["page"]=3,["nType"]=4,["Name"]=22045,["key"]="4",["sort"]=5,["icon"]="icon_02_06",["openView"]="SpecialActivityView"}
@@ -13,5 +13,6 @@ _G["CfgMenuLBtns"]={{["code"]="FFC146",["id"]=1,["nType"]=1,["Name"]=22005,["key
 ,[14]={["code"]="DE4586",["id"]=14,["nType"]=14,["Name"]=73012,["key"]="14",["sort"]=14,["icon"]="icon_02_13",["openView"]="LovePlusView"}
 ,[15]={["code"]="DE7E45",["id"]=15,["nType"]=15,["Name"]=140001,["key"]="15",["sort"]=15,["icon"]="icon_02_14",["openView"]="HalloweenMenu"}
 ,[16]={["code"]="ADDE45",["id"]=16,["nType"]=16,["Name"]=150001,["key"]="16",["sort"]=16,["icon"]="icon_02_15",["openView"]="MerryChristmas"}
+,[17]={["code"]="FFC85B",["id"]=17,["nType"]=17,["Name"]=160001,["key"]="17",["sort"]=17,["icon"]="icon_02_16",["openView"]="RichManMain"}
 }
 

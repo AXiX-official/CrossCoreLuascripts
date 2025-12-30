@@ -1,4 +1,4 @@
--- data :fid
+﻿-- data :fid
 function Awake()
     layout = ComUtil.GetCom(hsv, "UIInfinite")
     layout:Init("UIs/Matrix/MatrixTradingFriendItem", LayoutCallBack, true)

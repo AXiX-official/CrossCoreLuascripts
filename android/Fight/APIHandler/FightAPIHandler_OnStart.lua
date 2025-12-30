@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理OnStart事件
 function this:Handle(data)

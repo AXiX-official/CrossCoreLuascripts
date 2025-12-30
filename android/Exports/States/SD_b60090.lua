@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cage={play_time=3000},

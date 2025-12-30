@@ -1,4 +1,4 @@
---公会搜索界面
+﻿--公会搜索界面
 local searchItems={};
 local fInpID=nil;
 local isList=false;

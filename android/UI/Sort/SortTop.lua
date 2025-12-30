@@ -1,4 +1,4 @@
-local id, cb = nil, nil
+﻿local id, cb = nil, nil
 
 function Init(_id, _cb)
     id = _id

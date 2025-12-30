@@ -1,4 +1,4 @@
--- 角色皮肤信息界面
+﻿-- 角色皮肤信息界面
 local list = nil;
 local nowIdx = 1;
 local lastIdx=1;
@@ -312,7 +312,7 @@ end
 
 function SetOrgPrice()
     if comm~=nil then
-        local orgCosts=comm:GetOrgCosts();
+        local orgCosts=comm:GetOrgCostsByCostKey(shopPriceKey);
         CSAPI.SetGOActive(discountInfo,orgCosts~=nil);
         if orgCosts~=nil then
             CSAPI.SetText(txt_discount2,tostring(orgCosts[2]));

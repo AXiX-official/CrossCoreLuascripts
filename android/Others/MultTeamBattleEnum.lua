@@ -1,4 +1,4 @@
---多队枚举
+﻿--多队枚举
 
 _G.MultTeamActivityState={ --活动状态
     Open=1, --开放

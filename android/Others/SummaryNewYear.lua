@@ -1,4 +1,4 @@
-local info = nil
+﻿local info = nil
 local curDatas = {}
 local items,items2 =nil,nil
 local cfg = nil

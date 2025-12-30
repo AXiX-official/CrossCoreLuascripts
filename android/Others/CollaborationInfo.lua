@@ -1,4 +1,4 @@
---回归绑定活动信息
+﻿--回归绑定活动信息
 local this={}
 
 function this.New()

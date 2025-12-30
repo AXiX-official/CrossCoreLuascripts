@@ -1,4 +1,4 @@
--- 模拟
+﻿-- 模拟
 local curTeamIndex = 0
 local runTime = false
 local timer = 0
@@ -263,6 +263,9 @@ end
 -- 查看对手卡牌
 function EEnemyInfo(proto)
     if (proto) then
+        --刷新敌人 
+        SetEnemyItems()
+        --打开vs界面
         CSAPI.OpenView("ExerciseVsView", proto)
     end
 end

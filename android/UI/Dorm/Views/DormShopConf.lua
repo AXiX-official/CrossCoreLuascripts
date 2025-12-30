@@ -1,4 +1,4 @@
--- 单独购买家具
+﻿-- 单独购买家具
 local count = 1
 local max = 1
 

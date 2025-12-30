@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local num = 0
 local items = {}
 

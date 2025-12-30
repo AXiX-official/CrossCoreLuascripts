@@ -1,4 +1,4 @@
-_G["CfgCardCoreLv"]={{["id"]=1,["infos"]={{["costArr"]={{1}
+﻿_G["CfgCardCoreLv"]={{["id"]=1,["infos"]={{["costArr"]={{1}
 ,{2}
 ,{3}
 ,{4}

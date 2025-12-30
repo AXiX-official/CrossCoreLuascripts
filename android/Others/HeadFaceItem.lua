@@ -1,4 +1,4 @@
--- 战斗表情，战斗中使用
+﻿-- 战斗表情，战斗中使用
 -- id  ：表情id CfgIconEmote
 function Refresh(id, _isLeft)
     isLeft = _isLeft

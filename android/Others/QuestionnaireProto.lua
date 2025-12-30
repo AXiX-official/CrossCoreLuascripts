@@ -1,4 +1,4 @@
-QuestionnaireProto = {}
+﻿QuestionnaireProto = {}
 
 function QuestionnaireProto:GetInfo(_cb)
     self.GetInfoCB = _cb

@@ -1,4 +1,4 @@
-_G["cfgWorldBossReward"]={[1001]={["name"]="BOSS1排行奖励",["tDamageReward"]={{["tReward"]={{11002,1}
+﻿_G["cfgWorldBossReward"]={[1001]={["name"]="BOSS1排行奖励",["tDamageReward"]={{["tReward"]={{11002,1}
 ,{10002,200}
 }
 ,["nDamage"]=10000,["index"]=1}

@@ -1,4 +1,4 @@
-local effectGO = nil
+﻿local effectGO = nil
 
 function Awake()
     clickNode_img = ComUtil.GetCom(clickNode, "Image")

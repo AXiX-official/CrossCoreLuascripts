@@ -1,4 +1,4 @@
---背包二级菜单页签
+﻿--背包二级菜单页签
 local t_enter=nil;
 local t_out=nil;
 local isOn=false;

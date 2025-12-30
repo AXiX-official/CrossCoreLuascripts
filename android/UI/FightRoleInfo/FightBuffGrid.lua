@@ -1,4 +1,4 @@
-
+﻿
 function Refresh(buff)
     local cfg=buff:GetCfg();
     if cfg then   

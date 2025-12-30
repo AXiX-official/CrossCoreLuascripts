@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cast2={play_time=11500,start_pos={ref_type=1},last_hit=10200,hide_scene=1,hide_scene_time=11150},

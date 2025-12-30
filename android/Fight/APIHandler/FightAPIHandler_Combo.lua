@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理合体
 function this:Handle(data)

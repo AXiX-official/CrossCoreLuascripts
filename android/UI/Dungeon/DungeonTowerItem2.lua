@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local data = nil
 local isLock = false
 local cb = nil

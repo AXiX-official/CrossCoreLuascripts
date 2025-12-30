@@ -1,4 +1,4 @@
--- 赤夕2
+﻿-- 赤夕2
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -39,9 +39,9 @@ function Skill335105:OnBornSpecial(caster, target, data)
 	else
 		return
 	end
-	-- 4701315
+	-- 335115
 	local targets = SkillFilter:All(self, caster, target, 3)
 	for i,target in ipairs(targets) do
-		self:OwnerAddBuff(SkillEffect[4701315], caster, target, data, 4701305)
+		self:OwnerAddBuff(SkillEffect[335115], caster, target, data, 335105)
 	end
 end

@@ -1,4 +1,4 @@
-local resetTime = 0
+﻿local resetTime = 0
 local towerDatas = nil
 local m_Slider = nil
 local layout = nil

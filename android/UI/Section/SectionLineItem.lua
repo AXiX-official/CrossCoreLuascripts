@@ -1,4 +1,4 @@
-local sizeActions = nil
+﻿local sizeActions = nil
 function Awake()
     sizeActions = {}
     for i = 1, 3 do

@@ -1,4 +1,4 @@
-local items2 = nil
+﻿local items2 = nil
 local datas = nil
 local curIndex = 1
 local selIndex = 0
@@ -53,6 +53,9 @@ end
 
 function SetDatas()
     local group = AnniversaryType.Timest
+    if gameObject.name == "AnniversaryList2View" then
+        group = AnniversaryType.Second
+    end
     if data and data.group then
         group = tonumber(data.group)
     end
@@ -77,7 +80,11 @@ end
 
 function SetLeft()
     items2 = items2 or {}
-    ItemUtil.AddItems("AnniversaryList/AnniversaryListItem",items2,datas,itemParent2,OnItemClickCB,1,nil,OnFirstShow)
+    local itemName = "AnniversaryListItem"
+    if gameObject.name == "AnniversaryList2View" then
+        itemName = "AnniversaryList2Item"
+    end
+    ItemUtil.AddItems("AnniversaryList/" .. itemName,items2,datas,itemParent2,OnItemClickCB,1,nil,OnFirstShow)
 end
 
 function OnItemClickCB(item)
@@ -130,6 +137,7 @@ function ShowRight()
     local _data = datas[curIndex]
     if _data then
         PlayAnim(200)
+        SetImgObj(_data)
         local _elseData = GetElseData(_data)
         if (rightItems[_data:GetID()]) then
             CSAPI.SetGOActive(rightItems[_data:GetID()].gameObject, true)
@@ -149,6 +157,12 @@ function ShowRight()
                 LogError("找不到对应位置的预设体！！！" .. _data:GetID())
             end
         end
+    end
+end
+
+function SetImgObj(_data)
+    if gameObject.name == "AnniversaryList2View" then
+        CSAPI.SetGOActive(imgObj,_data:GetType() ~= AnniversaryListType.Main)
     end
 end
 

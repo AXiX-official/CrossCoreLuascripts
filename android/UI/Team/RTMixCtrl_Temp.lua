@@ -1,4 +1,4 @@
-local this={};
+﻿local this={};
 --临时用，等CShape更新后删除
 local RenderTexture=CS.UnityEngine.RenderTexture;
 local Vector2=CS.UnityEngine.Vector2;

@@ -1,4 +1,4 @@
---宠物信息格子
+﻿--宠物信息格子
 local cb=nil;
 local index=nil;
 function Refresh(_d,_isRed)

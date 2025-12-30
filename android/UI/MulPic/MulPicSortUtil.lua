@@ -1,4 +1,4 @@
--- 多人插图排序工具
+﻿-- 多人插图排序工具
 local this = {};
 local funcs = {}
 

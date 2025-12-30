@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 
 function OnInit()
 	UIUtil:AddTop2("ArchiveEnemy", gameObject, function()

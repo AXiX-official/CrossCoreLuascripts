@@ -1,4 +1,4 @@
-local grid=nil;
+﻿local grid=nil;
 local character=nil;
 local isNil=true;
 local isLoadGrid=false;--是否加载子物体

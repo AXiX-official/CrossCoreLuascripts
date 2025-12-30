@@ -1,4 +1,4 @@
-_G["CfgMonsterEnum"]={{["key"]="1",["id"]=1,["sName"]="机巧型",["icon"]="Monster_01",["languageID"]=29018}
+﻿_G["CfgMonsterEnum"]={{["key"]="1",["id"]=1,["sName"]="机巧型",["icon"]="Monster_01",["languageID"]=29018}
 ,{["key"]="2",["id"]=2,["sName"]="守卫型",["icon"]="Monster_02",["languageID"]=29019}
 ,{["key"]="3",["id"]=3,["sName"]="巡游型",["icon"]="Monster_03",["languageID"]=29020}
 ,{["key"]="4",["id"]=4,["sName"]="傀儡型",["icon"]="Monster_04",["languageID"]=29021}

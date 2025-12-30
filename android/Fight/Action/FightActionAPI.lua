@@ -1,4 +1,4 @@
---API
+﻿--API
 if(FightActionAPIHandler == nil)then
     require "FightActionAPIHandler";
 end

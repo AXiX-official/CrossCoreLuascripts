@@ -1,4 +1,4 @@
-local tab1 = nil
+﻿local tab1 = nil
 local tab2 = nil
 local curIndex1 = nil
 local curIndex2 = nil

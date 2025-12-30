@@ -1,4 +1,4 @@
--- data 不存在时，则是由宿舍进来的
+﻿-- data 不存在时，则是由宿舍进来的
 function OnOpen()
     arr = MatrixMgr:GetBuildingDatasArr()
     local index = nil

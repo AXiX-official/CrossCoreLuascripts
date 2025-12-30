@@ -1,4 +1,4 @@
-
+﻿
 -- data={
 --     id,  --属性的id，对应CfgCardPropertyEnum表中的id
 --     val1, --显示的第一个数字

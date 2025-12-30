@@ -1,4 +1,4 @@
-curIndex1, curIndex2 = 1, 1 -- 父index,子index
+﻿curIndex1, curIndex2 = 1, 1 -- 父index,子index
 local ids = {}
 local idIndex = -1
 local timer = 0

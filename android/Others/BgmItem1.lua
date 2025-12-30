@@ -1,4 +1,4 @@
-local curMusicID
+﻿local curMusicID
 
 function SetIndex(_index)
     index = _index

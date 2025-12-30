@@ -1,4 +1,4 @@
-local curIndex = 1
+﻿local curIndex = 1
 local oldIndex = 1
 function Awake()
     UIUtil:AddTop2("RogueTBuffSelect", gameObject, function()

@@ -1,4 +1,4 @@
-function this.New()
+﻿function this.New()
 	this.__index = this.__index or this
 	local ins = {}
 	setmetatable(ins, this)

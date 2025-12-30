@@ -1,4 +1,4 @@
-_G["CfgBuidingBase"]={[1006]={["offsetRot"]={41.25,31.8,0}
+﻿_G["CfgBuidingBase"]={[1006]={["offsetRot"]={41.25,31.8,0}
 ,["sceneKey"]="BS_Indoor_Synthesis",["upCfg"]="CfgBCompoundLvl",["enterPos"]={2.2,1.7,-2.9}
 ,["buildTime"]=30,["key"]="1006",["centerOffset"]={-1,0,2}
 ,["overUIPos"]={0,8.97,-3.2}

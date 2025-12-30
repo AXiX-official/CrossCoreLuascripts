@@ -1,4 +1,4 @@
-local this = MgrRegister("MultTeamBattleMgr")
+﻿local this = MgrRegister("MultTeamBattleMgr")
 
 function this:Init()
     -- self.curData=MultTeamBattleInfo.New();

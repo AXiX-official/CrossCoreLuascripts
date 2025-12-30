@@ -1,4 +1,4 @@
-local eventMgr=nil;
+﻿local eventMgr=nil;
 local currPetView=nil;
 
 function Awake()

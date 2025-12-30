@@ -1,4 +1,4 @@
-local leftDatas = {}
+﻿local leftDatas = {}
 local panels = {}
 local lastPanel = nil
 curIndex1, curIndex2 = 1, 0 -- 父index,子index

@@ -1,4 +1,4 @@
---宠物阶段奖励预览
+﻿--宠物阶段奖励预览
 local items={};
 function Show(_d,x,y)
     local infos={};

@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     hpSlider=ComUtil.GetCom(slider1,"Slider");
     hotSlider=ComUtil.GetCom(slider2,"Slider");

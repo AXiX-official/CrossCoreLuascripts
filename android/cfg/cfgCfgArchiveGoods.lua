@@ -1,4 +1,4 @@
-_G["CfgArchiveGoods"]={[14024]={["type"]=2,["index"]=2017,["id"]=14024,["bShowInAltas"]=true,["key"]=14024}
+﻿_G["CfgArchiveGoods"]={[14024]={["type"]=2,["index"]=2017,["id"]=14024,["bShowInAltas"]=true,["key"]=14024}
 ,[100004]={["type"]=3,["index"]=3004,["id"]=100004,["bShowInAltas"]=true,["key"]=100004}
 ,[100012]={["type"]=3,["index"]=3012,["id"]=100012,["bShowInAltas"]=true,["key"]=100012}
 ,[14031]={["type"]=2,["index"]=2018,["id"]=14031,["bShowInAltas"]=true,["key"]=14031}

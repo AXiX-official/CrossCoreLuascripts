@@ -1,4 +1,4 @@
-local ids = {}
+﻿local ids = {}
 local layout = nil
 local curDatas = {}
 

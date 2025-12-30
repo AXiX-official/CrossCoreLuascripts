@@ -1,4 +1,4 @@
-local isClose = false
+﻿local isClose = false
 
 -- 玩家升级
 function OnOpen()

@@ -1,4 +1,4 @@
---装备背包
+﻿--装备背包
 local this={};
 local root=nil;
 local data=nil;

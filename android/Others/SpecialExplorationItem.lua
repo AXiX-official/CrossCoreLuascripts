@@ -1,4 +1,4 @@
---特殊勘探道具展示物体
+﻿--特殊勘探道具展示物体
 local data=nil;
 local girds={};
 local click=nil;

@@ -1,4 +1,4 @@
---角色碎片兑换UI
+﻿--角色碎片兑换UI
 local layout=nil;
 local stuff1=nil;
 local stuff2=nil;

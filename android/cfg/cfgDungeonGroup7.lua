@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 'G-关卡组配置.xlsx',
 	["sheetname"] = '乱序演习分组',
 	["types"] = {

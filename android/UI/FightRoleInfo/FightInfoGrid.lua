@@ -1,4 +1,4 @@
---战斗信息界面的通用框
+﻿--战斗信息界面的通用框
 function Refresh(iconName,borderName,lv,iconLoader)
     if iconName then
         if iconLoader then

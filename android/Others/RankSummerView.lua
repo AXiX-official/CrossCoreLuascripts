@@ -1,4 +1,4 @@
-local sectionDatas = nil
+﻿local sectionDatas = nil
 local rankTypes = nil
 local rankType = 0
 local currDatas = nil

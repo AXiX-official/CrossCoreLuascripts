@@ -1,4 +1,4 @@
-local layout1 = nil
+﻿local layout1 = nil
 local layout2 = nil
 local cfgDungeon = nil
 local curDatas = nil

@@ -1,4 +1,4 @@
--- 角色卡牌数据
+﻿-- 角色卡牌数据
 -- data:协议数据
 -- curData:卡牌当前属性
 local this = oo.class(GridDataBase);
@@ -942,8 +942,17 @@ end
 -- 是否够材料跃升
 function this:CheckEnough1()
     local breakLv = self:GetBreakLevel()
-    local useBreakId = GCardCalculator:CalUseBreakId(self:GetCfg().break_id, breakLv)
-    local materialCfg = Cfgs.CardBreakMaterial:GetByID(useBreakId)
+    local materialCfg = nil
+    if (breakLv >= 5) then
+        local matCfg2 = Cfgs.CardBreakMaterial2:GetByID(self:GetQuality())
+        materialCfg = matCfg2.infos[breakLv]
+    else
+        local useBreakId = GCardCalculator:CalUseBreakId(self:GetCfg().break_id, breakLv)
+        materialCfg = Cfgs.CardBreakMaterial:GetByID(useBreakId)
+    end
+    if materialCfg==nil then
+        return false
+    end
     if (materialCfg.gold and materialCfg.gold > PlayerClient:GetGold()) then
         return false
     else

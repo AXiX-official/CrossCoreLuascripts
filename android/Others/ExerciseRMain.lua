@@ -1,4 +1,4 @@
-local timer2 = nil -- 开放时间
+﻿local timer2 = nil -- 开放时间
 
 function Awake()
     UIUtil:AddTop2("ExerciseRMain", gameObject, function()

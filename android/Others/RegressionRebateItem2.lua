@@ -1,4 +1,4 @@
-local info = nil
+﻿local info = nil
 local cfg = nil
 local numSlider = nil
 local rItems = {}

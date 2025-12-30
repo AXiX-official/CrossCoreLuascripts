@@ -1,4 +1,4 @@
-local groupData = nil
+﻿local groupData = nil
 local sectionData = nil
 local cfgDungeon = nil
 --left

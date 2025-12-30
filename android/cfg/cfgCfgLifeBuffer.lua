@@ -1,4 +1,4 @@
-_G["CfgLifeBuffer"]={{["jVal"]={0.2}
+﻿_G["CfgLifeBuffer"]={{["jVal"]={0.2}
 ,["id"]=1,["bIsShow"]=false,["oldName"]="角色EXP",["sDesc"]="同伴经验加成20%（装备用）",["nType"]=22,["name"]="角色EXP",["bIsAdd"]=false,["key"]="1",["icon"]="2011",["isPercent"]=1}
 ,{["jVal"]={0.3}
 ,["id"]=2,["bIsShow"]=false,["oldName"]="角色EXP",["sDesc"]="同伴经验加成30%（装备用）",["nType"]=22,["name"]="角色EXP",["bIsAdd"]=false,["key"]="2",["icon"]="2011",["isPercent"]=1}

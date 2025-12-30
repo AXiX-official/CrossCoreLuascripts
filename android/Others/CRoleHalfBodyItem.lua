@@ -1,4 +1,8 @@
--- 半身像
+﻿-- 半身像
+function Awake()
+    txtMove = ComUtil.GetCom(nameBG,"TextMove")
+end
+
 function SetIndex(_index)
     index = _index
 end
@@ -16,7 +20,8 @@ function Refresh(_data, curID)
     -- icon
     ResUtil.HalfBody:Load(icon, data:GetIcon())
     -- name 
-    CSAPI.SetText(txtName, data:GetName())
+    --CSAPI.SetText(txtName, data:GetName())
+    txtMove:SetText(data:GetName())
     -- use 
     --CSAPI.SetGOActive(use, isUse)
     -- select

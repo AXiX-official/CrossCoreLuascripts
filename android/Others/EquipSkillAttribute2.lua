@@ -1,16 +1,21 @@
---装备技能
+﻿--装备技能
 local cfg=nil;
 local pList={};
+local isLock=false;
+local isJP=false;
 
 function Awake()
     if points then
         pList=ComUtil.GetComsInChildren(points,"Image");
     end
+    isJP=CSAPI.IsADVRegional(3);
+    -- isJP=true;
 end
 
 --isUp:1：绿色,2:红色，nil不显示
-function Refresh(skillCfg,isUp)
+function Refresh(skillCfg,isUp,elseData)
     cfg=skillCfg;
+    isLock=elseData and elseData.isLock or false;
     --设置技能框颜色
     if skillCfg then
         CSAPI.SetGOActive(root,true);
@@ -35,6 +40,9 @@ function Refresh(skillCfg,isUp)
                 end
             end
         end
+        if isJP then
+            SetLock();
+        end
     else
         InitNull();
     end
@@ -44,6 +52,22 @@ function Refresh(skillCfg,isUp)
         CSAPI.LoadImg(arrow,"UIs/EquipInfo/img_30_02.png",true,nil,true);
     end
     CSAPI.SetGOActive(arrow,isUp~=nil);
+end
+
+--isForce:强制使用当前颜色
+function SetLock()
+    local color=nil;
+    if isLock then
+        CSAPI.SetTextColorByCode(txt_Name,"C3C3C8");
+        CSAPI.SetImgColorByCode(line2,"C3C3C8");
+        CSAPI.SetTextColorByCode(txt_Lv,"C3C3C8");
+        CSAPI.SetTextColorByCode(txt_lvVal,"C3C3C8");
+    end
+    CSAPI.SetGOActive(line2,isLock)
+    if isLock then
+        --图标设置为禁止
+        ResUtil.EquipSkillIcon:Load(icon,"253",false);
+    end
 end
 
 function InitNull()

@@ -1,4 +1,4 @@
-local curIndex = nil
+﻿local curIndex = nil
 local finishTime = nil
 local timer = nil
 local curData = nil

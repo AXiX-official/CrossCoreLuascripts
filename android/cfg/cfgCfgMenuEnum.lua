@@ -1,4 +1,4 @@
-_G["CfgMenuEnum"]={{["sName1"]="基建中心",["key"]="1",["id"]=1,["sViewName"]="Matrix",["sName2"]="INF.CENTER",["icon"]="v1"}
+﻿_G["CfgMenuEnum"]={{["sName1"]="基建中心",["key"]="1",["id"]=1,["sViewName"]="Matrix",["sName2"]="INF.CENTER",["icon"]="v1"}
 ,{["sName1"]="商店",["key"]="2",["id"]=2,["sViewName"]="ShopView",["sName2"]="SHOP",["icon"]="v2"}
 ,{["sName1"]="后勤仓",["key"]="3",["id"]=3,["sViewName"]="Bag",["sName2"]="STOREHOUSE",["icon"]="v3"}
 ,{["sName1"]="角色",["key"]="4",["id"]=4,["sViewName"]="RoleListNormal",["sName2"]="CHAAACTER",["icon"]="v4"}

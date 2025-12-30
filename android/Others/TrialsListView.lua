@@ -1,4 +1,4 @@
-local currItemL = nil
+﻿local currItemL = nil
 local sectionDatas = nil
 local groupDatas= nil
 local videoGOs = nil

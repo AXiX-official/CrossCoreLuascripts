@@ -1,4 +1,4 @@
-_G["global_setting"]={["g_MaxUseItem"]={["id"]="g_MaxUseItem",["type"]="int",["key"]="g_MaxUseItem",["value"]="50"}
+﻿_G["global_setting"]={["g_MaxUseItem"]={["id"]="g_MaxUseItem",["type"]="int",["key"]="g_MaxUseItem",["value"]="50"}
 ,["g_BuildPresetTeamBuyCost"]={["id"]="g_BuildPresetTeamBuyCost",["type"]="int[]",["key"]="g_BuildPresetTeamBuyCost",["value"]="10002,50,2"}
 ,["g_EquipOnceSell"]={["id"]="g_EquipOnceSell",["type"]="int",["key"]="g_EquipOnceSell",["value"]="100"}
 ,["g_nPVPMirrorSceneID"]={["id"]="g_nPVPMirrorSceneID",["type"]="int",["key"]="g_nPVPMirrorSceneID",["value"]="201000001"}
@@ -125,13 +125,14 @@ _G["global_setting"]={["g_MaxUseItem"]={["id"]="g_MaxUseItem",["type"]="int",["k
 ,["fight_ground_grid"]={["type"]="int",["key"]="fight_ground_grid",["user"]=1,["id"]="fight_ground_grid",["value"]="200"}
 ,["g_addHotTime"]={["id"]="g_addHotTime",["type"]="json",["key"]="g_addHotTime",["value"]="[[\"2025-11-05 03:00:00\",\"2025-12-03 03:00:00\"]]"}
 ,["g_RogueScoreLVIdx"]={["id"]="g_RogueScoreLVIdx",["type"]="int",["key"]="g_RogueScoreLVIdx",["value"]="0"}
+,["g_PhysicalRewardRefreshTime"]={["id"]="g_PhysicalRewardRefreshTime",["type"]="int",["key"]="g_PhysicalRewardRefreshTime",["value"]="30"}
 ,["g_FightGradeStep"]={["id"]="g_FightGradeStep",["type"]="int",["key"]="g_FightGradeStep",["value"]="20"}
 ,["g_FightOnlineUnlock"]={["id"]="g_FightOnlineUnlock",["type"]="bool",["key"]="g_FightOnlineUnlock",["value"]="1"}
 ,["g_ArmyFriendMatchWaitTime"]={["id"]="g_ArmyFriendMatchWaitTime",["type"]="int",["key"]="g_ArmyFriendMatchWaitTime",["value"]="20"}
 ,["g_SkipFirstCreate"]={["id"]="g_SkipFirstCreate",["type"]="int",["key"]="g_SkipFirstCreate",["value"]="1"}
 ,["fight_play_speed_pvp"]={["type"]="int",["key"]="fight_play_speed_pvp",["user"]=1,["id"]="fight_play_speed_pvp",["value"]="160"}
 ,["g_CalPerfArr"]={["id"]="g_CalPerfArr",["type"]="float[]",["key"]="g_CalCardPerfArr",["value"]="0.5,0.1,2.5,8.6,540,859,859,859,24,24,24,24,24"}
-,["g_PlayerLvMax"]={["id"]="g_PlayerLvMax",["type"]="int",["key"]="g_PlayerLvMax",["value"]="100"}
+,["g_PlayerLvMax"]={["id"]="g_PlayerLvMax",["type"]="int",["key"]="g_PlayerLvMax",["value"]="120"}
 ,["g_TradeOrderCostId"]={["id"]="g_TradeOrderCostId",["type"]="int[]",["key"]="g_TradeOrderCostId",["value"]="60104,60105,60106"}
 ,["g_ArmyPracticeJoinCnt"]={["id"]="g_ArmyPracticeJoinCnt",["type"]="int",["key"]="g_ArmyPracticeJoinCnt",["value"]="10"}
 ,["g_LineGroup_MaxScale"]={["id"]="g_LineGroup_MaxScale",["type"]="int",["key"]="g_LineGroup_MaxScale",["value"]="3"}
@@ -176,6 +177,7 @@ _G["global_setting"]={["g_MaxUseItem"]={["id"]="g_MaxUseItem",["type"]="int",["k
 ,["g_GuildFAllPlrRankCnt"]={["id"]="g_GuildFAllPlrRankCnt",["type"]="int",["key"]="g_GuildFAllPlrRankCnt",["value"]="100"}
 ,["g_fightControlTime_s"]={["id"]="g_fightControlTime_s",["type"]="int",["key"]="g_fightControlTime_s",["value"]="30"}
 ,["fight_play_speed_default"]={["type"]="int",["key"]="fight_play_speed_default",["user"]=1,["id"]="fight_play_speed_default",["value"]="100"}
+,["g_LevelBreakTicket"]={["id"]="g_LevelBreakTicket",["type"]="json",["key"]="g_LevelBreakTicket",["value"]="[[1,12015,3,3]]"}
 ,["g_CloseQuestions"]={["id"]="g_CloseQuestions",["type"]="int",["key"]="g_CloseQuestions",["value"]="5"}
 ,["g_Questions"]={["id"]="g_Questions",["type"]="int",["key"]="g_Questions",["value"]="5"}
 ,["g_CraftingCenterItems"]={["id"]="g_CraftingCenterItems",["type"]="int[]",["key"]="g_CraftingCenterItems",["value"]="60101,60102,60103"}

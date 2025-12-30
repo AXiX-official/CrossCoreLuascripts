@@ -1,4 +1,4 @@
-local cfg, data = nil, nil
+﻿local cfg, data = nil, nil
 local id = nil
 local sTime, eTime = 0, 0
 local isGet = false

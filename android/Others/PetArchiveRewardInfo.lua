@@ -1,4 +1,4 @@
---宠物图鉴奖励信息
+﻿--宠物图鉴奖励信息
 local this = {}
 
 function this.New()

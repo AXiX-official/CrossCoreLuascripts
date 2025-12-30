@@ -1,4 +1,4 @@
---编队界面
+﻿--编队界面
 local teamData=nil;
 local isFirst=true;
 local is3D=true;

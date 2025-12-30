@@ -1,4 +1,4 @@
--- 多语言
+﻿-- 多语言
 LanguageMgr = {}
 local this = LanguageMgr
 

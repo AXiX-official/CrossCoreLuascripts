@@ -1,4 +1,4 @@
-require "LoginCommFuns"
+﻿require "LoginCommFuns"
 LoginProto = {
 	onSuccess = nil,
 	onRegister = nil,

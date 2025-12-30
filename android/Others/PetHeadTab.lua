@@ -1,4 +1,4 @@
---宠物页签
+﻿--宠物页签
 local isLock=false;
 local data=nil;
 local key=nil;

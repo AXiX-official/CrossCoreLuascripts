@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     cg_node = ComUtil.GetCom(clickNode, "CanvasGroup")
 end
 function SetIndex(_index)

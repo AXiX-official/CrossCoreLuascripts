@@ -1,4 +1,4 @@
-_G["CfgEquipRefreshLock"]={{["id"]=1,["infos"]={{["idx"]=1,["lockCost"]={{10702,1}
+﻿_G["CfgEquipRefreshLock"]={{["id"]=1,["infos"]={{["idx"]=1,["lockCost"]={{10702,1}
 }
 }
 ,{["idx"]=2,["lockCost"]={{10702,4}

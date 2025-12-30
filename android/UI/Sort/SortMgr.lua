@@ -1,4 +1,4 @@
-local this = MgrRegister("SortMgr")
+﻿local this = MgrRegister("SortMgr")
 
 function this:Init()
     self:Clear()

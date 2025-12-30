@@ -1,4 +1,4 @@
--- 宿舍 
+﻿-- 宿舍 
 local isL
 local isDown
 local maxAngle = 45

@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cast2={play_time=10000,start_pos={ref_type=10},spe_setting="spe_setting_cast2",last_hit=6364,hide_scene=1,hide_buff=1,showDatas={{delay=0,isFriend=1}}},

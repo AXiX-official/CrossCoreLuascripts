@@ -1,4 +1,4 @@
--- 用于计算倒计时的基类
+﻿-- 用于计算倒计时的基类
 TimeBase = {}
 local this = TimeBase
 

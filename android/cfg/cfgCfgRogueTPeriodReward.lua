@@ -1,4 +1,4 @@
-_G["CfgRogueTPeriodReward"]={{["id"]=1,["points"]=3500,["key"]=1,["reward"]={{10003,60000}
+﻿_G["CfgRogueTPeriodReward"]={{["id"]=1,["points"]=3500,["key"]=1,["reward"]={{10003,60000}
 }
 }
 ,{["id"]=2,["points"]=7000,["key"]=2,["reward"]={{10001,80000}

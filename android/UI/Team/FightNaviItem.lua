@@ -1,4 +1,4 @@
-local isOn=false;
+﻿local isOn=false;
 local group=0;
 local isMult=false;
 local caller=nil;

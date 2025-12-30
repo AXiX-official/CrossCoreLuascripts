@@ -1,4 +1,4 @@
---剧情选项
+﻿--剧情选项
 local pos1 = {};
 local pos2 = {};
 local pos3 = {};

@@ -1,4 +1,4 @@
---装备盘
+﻿--装备盘
 local slotData={};--对应位置的装备数据
 local data=nil;
 local eventMgr=nil;

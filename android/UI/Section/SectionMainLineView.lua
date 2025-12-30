@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local img1 = nil
 local img2 = nil
 local targetPrecent = 0

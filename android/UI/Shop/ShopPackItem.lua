@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local comm=nil
 function Refresh(d,desc,isShowDesc,_comm)
     data=d;

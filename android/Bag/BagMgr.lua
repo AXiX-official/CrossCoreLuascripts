@@ -1,4 +1,4 @@
--- 背包管理
+﻿-- 背包管理
 local this = MgrRegister("BagMgr")
 
 -- 设置数据
@@ -46,7 +46,7 @@ function this:UpdateGoodsData(data, setNew)
             --         {3,TimeUtil:GetTime()+(3600*22),100351},
             --     }
             -- end
-            if data.get_infos then --带限时道具的物品
+            if data.get_infos and #data.get_infos>=1 then --带限时道具的物品
                 --分类统计限时物品数量            
                 local tempList={};
                 local fixedNum=data.num;

@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local index = 0
 local cb = nil
 local isNotOpenTime = false -- 开放时间

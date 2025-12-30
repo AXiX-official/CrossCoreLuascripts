@@ -1,4 +1,4 @@
-_G["CfgTeamEnum"]={{["id"]=1,["languageID"]=29009,["mvName"]="montagnes_mv_01",["sortIcon"]={{1,"RoleTeam/01_montagnes_4",1,0.3}
+﻿_G["CfgTeamEnum"]={{["id"]=1,["languageID"]=29009,["mvName"]="montagnes_mv_01",["sortIcon"]={{1,"RoleTeam/01_montagnes_4",1,0.3}
 }
 ,["cIcon"]="1",["details"]="01_Montagnes",["key"]="1",["logo"]="01_montagnes_1",["details1"]="01_montagnes",["sName"]="山脉",["icon"]="icon_01_01",["itemIcon"]="01_montagnes_item"}
 ,{["id"]=2,["languageID"]=29010,["mvName"]="montagnes_mv_02",["sortIcon"]={{1,"RoleTeam/02_swars_4",1,0.3}
@@ -25,5 +25,8 @@ _G["CfgTeamEnum"]={{["id"]=1,["languageID"]=29009,["mvName"]="montagnes_mv_01",[
 ,{["id"]=9,["languageID"]=29076,["mvName"]="montagnes_mv_09",["sortIcon"]={{1,"RoleTeam/09_extra_4",1,0.3}
 }
 ,["cIcon"]="9",["details"]="09_Extra",["key"]="9",["logo"]="09_extra_1",["details1"]="09_extra",["sName"]="盟约",["icon"]="icon_01_09",["itemIcon"]="07_star_item"}
+,{["id"]=10,["languageID"]=29077,["mvName"]="montagnes_mv_10",["sortIcon"]={{1,"RoleTeam/10_consortium_4",1,0.3}
+}
+,["cIcon"]="10",["details"]="10_Consortium",["key"]="10",["logo"]="10_consortium_1",["details1"]="10_consortium",["sName"]="联域",["icon"]="icon_01_10",["itemIcon"]="10_consortium_item"}
 }
 

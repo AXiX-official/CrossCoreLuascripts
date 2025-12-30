@@ -1,4 +1,4 @@
-_G["CfgBControlTowerLvl"]={{["armorType"]=1,["upCosts"]={{60101,100,2}
+﻿_G["CfgBControlTowerLvl"]={{["armorType"]=1,["upCosts"]={{60101,100,2}
 ,{10001,1000,2}
 }
 ,["id"]=1,["roleSumLimit"]=6,["openArea"]={1}

@@ -1,4 +1,4 @@
---事件类型，Lua事件100,000以上，C#100,000以下
+﻿--事件类型，Lua事件100,000以上，C#100,000以下
 local this = {};
 -----------------------------------------------------------------------------------------------------------------------------
 --C#层的事件
@@ -862,6 +862,8 @@ this.Mission_Stage_Update=240005
 this.Mission_Delete = 240006
 --领取奖励返回
 this.Mission_RewardRet = 240007
+--限量任务更新
+this.Mission_Limit_Update = 240008
 -------------------------------------------好友
 --刷新
 this.Friend_Update = 250001
@@ -976,6 +978,8 @@ this.RogueS_phase_Change = 290017 --战力派遣期数变更
 this.RogueT_Buff_Upgrade = 290018 --buff升级回调
 --this.Exercise_Role_Panel = 290019 --军演看板修改
 this.ExerciseR_End = 290020 --pvp 赛季结束或者开发时间结束
+this.ExerciseR3_ChangeTeam = 290021 --对方修改队伍顺序通知
+this.ExerciseR3_FixNotice = 290022 --双方都结算完成的通知
 --------------------------------------------------物品合成
 --合成成功
 this.Goods_Combine_Success = 300001
@@ -1409,8 +1413,42 @@ this.MTB_Data_Update=700003;--活动数据更新
 this.Riddle_Data_Ret=710001;--猜谜活动数据返回
 this.Riddle_Draw_Ret=710002;--猜谜活动答题返回
 this.Riddle_Reward_Ret=710003;--猜谜活动领取奖励返回
+
+--------------------------------光环
+this.Halo_RangeSelected_Change=720001;--光环范围选择变更
+this.Halo_RoleSelected_Change=720002;--光环主界面选择的卡牌变更
+this.Halo_Upgrade_Ret=720003;--光环升级返回
+this.Halo_Equip_Update=720004;--光环装备列表更新
+this.Halo_Equip_Wear=720005;--光环装备穿戴/卸载
+this.Halo_Equip_SellRet=720006;--光环装备分解
+this.Halo_Upgrade_Ret2=720007;--光环升级返回2
+this.Halo_EquipReplace_Close=720008;--光环替换界面关闭
 --------------------------------万圣节
 this.Halloween_data_Update = 730001 --数据更新
+
+--大富翁
+this.RichMan_data_Update=740001;--数据更新
+this.RichMan_ActionQueue_Push=740002;--播放列表更新
+this.RichMan_ActionQueue_Start=740003;--播放列表开始播放
+this.RichMan_ActionQueue_End=740004;--播放列表结束播放
+this.RichMan_Mask_Changed=740005;--更改遮罩状态
+this.RichMan_Map_Update=740006;--地图更新
+this.RichMan_GridIcon_Alpha=740007;--地图格子图标渐隐
+this.RichMan_PlayRand_Begin=740008;--播放骰子动画
+this.RichMan_PlayRand_Over=740009;--播放骰子动画结束
+this.RichMan_LoadGrid_Quality=740010;--设置图标光晕效果
+this.RichMan_Create_HUD=740011;--创建HUD
+this.RichMan_Throw_Ret=740012;--投掷回调
+this.RichMan_PlayTP_Begin=740013;--播放骰子动画
+this.RichMan_PlayTP_Over=740014;--播放骰子动画结束
+this.RichMan_Map_Refresh=740015;--地图刷新
+this.RichMan_Dice_Refresh=740016;--骰子数量刷新
+this.RichMan_Set_TargetEff=740017;--目标点特效
+this.RichMan_UIState_Switch=740018;--切换主UI
+this.RichMan_MoveAction_State=740019;--移动动作开始
+this.RichMan_AutoThrow_Reward=740020;--自动投掷奖励返回
+this.RichMan_AutoThrow_RewardOver=740021;--自动奖励展示完毕
+
 ----------------------------------------------海外SDK----下-----------------------------------------------------
 ---通知SDK初始化
 this.SDK_ShiryuSDK_Init=800001;

@@ -1,4 +1,4 @@
--- 购买内容 
+﻿-- 购买内容 
 -- {id,需要的数量，已购买的数量}
 function Refresh(_data, _selIndex)
     data = _data

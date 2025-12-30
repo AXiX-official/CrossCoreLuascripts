@@ -1,4 +1,4 @@
-_G["CfgActiveIntegralReward"]={[1001]={["id"]=1001,["infos"]={{["rewards"]={{10001,1000,2}
+﻿_G["CfgActiveIntegralReward"]={[1001]={["id"]=1001,["infos"]={{["rewards"]={{10001,1000,2}
 ,{10002,50,2}
 }
 ,["score"]=100,["index"]=1}

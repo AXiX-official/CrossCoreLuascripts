@@ -1,4 +1,4 @@
-local this = MgrRegister("FavourMgr")
+﻿local this = MgrRegister("FavourMgr")
 
 function this:Init()
     self:Clear()

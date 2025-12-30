@@ -1,4 +1,4 @@
-local time=0;
+﻿local time=0;
 function Show(name,txt,_time)
     if name and txt and _time then
         CSAPI.SetGOActive(gameObject,true);

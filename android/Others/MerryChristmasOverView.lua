@@ -1,4 +1,4 @@
-local timer = nil
+﻿local timer = nil
 
 function OnOpen()
     timer = Time.time + 2

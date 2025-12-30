@@ -1,4 +1,4 @@
-local plotData =nil
+﻿local plotData =nil
 local lastInfo = nil
 local info = nil
 

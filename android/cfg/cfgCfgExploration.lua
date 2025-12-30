@@ -1,4 +1,4 @@
-_G["CfgExploration"]={[1013]={["isNotice"]=false,["fullRewardID"]=120002,["modelID"]=9908002,["spRewardID"]=10003,["key"]="1013",["expGetID"]=1001,["startTime"]="2025/1/22 03:00:00",["endTime"]="2025/2/26 03:00:00",["id"]=1013,["nStart"]=1737486000,["nEnd"]=1740510000,["name"]="第13期",["levelID"]=3001,["buyRewardID"]=10004,["baseRewardID"]=20001,["backPos"]={4,-326,1}
+﻿_G["CfgExploration"]={[1013]={["isNotice"]=false,["fullRewardID"]=120002,["modelID"]=9908002,["spRewardID"]=10003,["key"]="1013",["expGetID"]=1001,["startTime"]="2025/1/22 03:00:00",["endTime"]="2025/2/26 03:00:00",["id"]=1013,["nStart"]=1737486000,["nEnd"]=1740510000,["name"]="第13期",["levelID"]=3001,["buyRewardID"]=10004,["baseRewardID"]=20001,["backPos"]={4,-326,1}
 ,["backResource"]="voice_of_the_wild"}
 ,[1015]={["isNotice"]=false,["fullRewardID"]=140002,["modelID"]=9908002,["spRewardID"]=10003,["key"]="1015",["expGetID"]=1001,["startTime"]="2025/4/2 03:00:00",["endTime"]="2025/5/7 03:00:00",["id"]=1015,["nStart"]=1743534000,["nEnd"]=1746558000,["name"]="第15期",["levelID"]=4001,["buyRewardID"]=10004,["baseRewardID"]=30001,["backPos"]={0,0,1}
 ,["backResource"]="mirage_of_splendor"}
@@ -37,7 +37,7 @@ _G["CfgExploration"]={[1013]={["isNotice"]=false,["fullRewardID"]=120002,["model
 ,[1023]={["fullMailReward"]={["dailyReward"]={{10055,1,2}
 }
 }
-,["isNotice"]=false,["spRewardShowID"]=10010,["baseRewardID"]=40001,["spRewardID"]=10005,["key"]="1023",["expGetID"]=1001,["startTime"]="2026/1/7 03:00:00",["noticeMail"]={["normal"]={},["ex"]={{["mailId"]=2016,["time"]=0,["itemId"]=10044}
+,["isNotice"]=false,["spRewardShowID"]=10012,["baseRewardID"]=40001,["spRewardID"]=10011,["key"]="1023",["expGetID"]=1001,["startTime"]="2026/1/7 03:00:00",["noticeMail"]={["normal"]={},["ex"]={{["mailId"]=2016,["time"]=0,["itemId"]=10044}
 ,{["mailId"]=2015,["time"]=4320,["itemId"]=10044}
 }
 ,["plus"]={{["mailId"]=2016,["time"]=0,["itemId"]=10045}
@@ -47,8 +47,8 @@ _G["CfgExploration"]={[1013]={["isNotice"]=false,["fullRewardID"]=120002,["model
 ,["baseMailReward"]={["dailyReward"]={{10054,1,2}
 }
 }
-,["buyRewardShowID"]=10009,["id"]=1023,["nStart"]=1767726000,["endTime"]="2026/2/11 03:00:00",["backPos"]={-27,-29,0}
-,["nEnd"]=1770750000,["name"]="第23期",["levelID"]=4001,["buyRewardID"]=10006,["fullRewardID"]=20002,["modelID"]=9908002,["backResource"]="kadya_liedown"}
+,["buyRewardShowID"]=10009,["id"]=1023,["nStart"]=1767726000,["endTime"]="2026/2/11 03:00:00",["backPos"]={0,-20,0.8}
+,["nEnd"]=1770750000,["name"]="第23期",["levelID"]=4001,["buyRewardID"]=10006,["fullRewardID"]=220002,["modelID"]=9908002,["backResource"]="A_Night_in_Scarlet"}
 ,[1026]={["fullMailReward"]={["dailyReward"]={{10055,1,2}
 }
 }

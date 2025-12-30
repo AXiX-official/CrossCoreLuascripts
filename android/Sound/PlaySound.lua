@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     SetSoundState(true);
 end

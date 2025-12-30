@@ -1,4 +1,4 @@
-local language,bgm = "",""
+﻿local language,bgm = "",""
 
 function Awake()
 	SetItem(s_audio_scale.music, item1)

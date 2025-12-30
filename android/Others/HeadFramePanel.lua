@@ -1,4 +1,4 @@
-local panelNames = {"HeadFramePanel1", "HeadFramePanel2", "HeadFramePanel3", "HeadFramePanel4"}
+﻿local panelNames = {"HeadFramePanel1", "HeadFramePanel2", "HeadFramePanel3", "HeadFramePanel4"}
 local panels = {}
 local curPanel
 local curIndex

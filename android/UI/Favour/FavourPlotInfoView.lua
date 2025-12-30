@@ -1,4 +1,4 @@
--- 角色剧情详情
+﻿-- 角色剧情详情
 function OnOpen()
     cRoleData = data[1]
     storyCfg = data[2]

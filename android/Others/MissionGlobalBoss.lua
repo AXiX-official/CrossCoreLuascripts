@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local mDatas = {}
 local layout = nil
 local isHad=false

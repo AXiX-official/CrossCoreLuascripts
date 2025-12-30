@@ -1,4 +1,4 @@
-local copyFilterDatas = {}
+﻿local copyFilterDatas = {}
 
 function OnOpen()
     id = data:GetID()

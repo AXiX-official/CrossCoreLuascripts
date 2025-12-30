@@ -1,4 +1,4 @@
-
+﻿
 local pList={};
 local isDetails=true;
 local layout

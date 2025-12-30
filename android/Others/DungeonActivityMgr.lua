@@ -1,4 +1,4 @@
-DungeonActivityMgr = MgrRegister("DungeonActivityMgr")
+﻿DungeonActivityMgr = MgrRegister("DungeonActivityMgr")
 local this = DungeonActivityMgr;
 RankActivityInfo = require "RankActivityInfo"
 

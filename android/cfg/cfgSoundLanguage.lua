@@ -1,4 +1,4 @@
-_G["SoundLanguage"]={{["cue_sheet"]="Acheron",["key"]=1,["language"]="cn",["id"]=1}
+﻿_G["SoundLanguage"]={{["cue_sheet"]="Acheron",["key"]=1,["language"]="cn",["id"]=1}
 ,{["cue_sheet"]="alps",["key"]=2,["language"]="cn",["id"]=2}
 ,{["cue_sheet"]="Anthem",["key"]=3,["language"]="cn",["id"]=3}
 ,{["cue_sheet"]="Arpeggio",["key"]=4,["language"]="cn",["id"]=4}

@@ -1,4 +1,4 @@
-_G["CfgLineGroup"]={{["sSize"]={332,220}
+﻿_G["CfgLineGroup"]={{["sSize"]={332,220}
 ,["sY"]=-60,["sX"]=47,["id"]=1,["y"]=-235,["x"]=166,["name"]="基地外部",["key"]=1,["sColor"]={209,209,209,185}
 ,["sRotateZ"]=0,["group"]=1,["lineGroups"]={{1,1001}
 ,{2,2001}

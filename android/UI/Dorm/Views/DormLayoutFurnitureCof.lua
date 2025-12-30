@@ -1,4 +1,4 @@
--- 家具描述
+﻿-- 家具描述
 function OnOpen()
     cfg = data
 

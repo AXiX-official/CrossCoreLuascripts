@@ -1,4 +1,4 @@
--- 解禁
+﻿-- 解禁
 local RoleJieJinItemData = require "RoleJieJinItemData"
 local MechaJieJinItemData = require "MechaJieJinItemData"
 local tabIndex, curIndex1, curIndex2 = nil, nil, nil

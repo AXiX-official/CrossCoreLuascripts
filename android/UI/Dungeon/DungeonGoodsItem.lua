@@ -1,4 +1,4 @@
-local lua = nil;
+﻿local lua = nil;
 local fade = nil
 local move = nil
 

@@ -1,4 +1,4 @@
---等待报名界面
+﻿--等待报名界面
 function Awake()
 	CSAPI.SetGOActive(infoParent, false)
 end

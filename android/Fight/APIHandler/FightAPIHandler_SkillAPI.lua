@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --技能过程处理API组事件
 function this:Handle(data)

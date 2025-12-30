@@ -1,4 +1,4 @@
---战斗受击结果延迟结算
+﻿--战斗受击结果延迟结算
 
 FightActionHitResult = oo.class(FightActionBase);
 local this = FightActionHitResult;

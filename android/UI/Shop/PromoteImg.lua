@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local click=nil;
 function Refresh(_data,_click)
     data=_data;

@@ -1,4 +1,4 @@
---引导行为
+﻿--引导行为
 local this = {};
 
 --新手战斗引导----------------------------------------------------------------------------
@@ -22,14 +22,12 @@ function this:GuideBehaviourSkipStep_Fight0_1_1010()
         return true;
     end
 end
---跳过
+---【日服特有】跳过
 function this:GuideBehaviourSkipStep_Fight0_1_1020()
     if(not FightClient:IsNewPlayerFight())then
         return true;
     end
 end
-
-
 --引导使用普通攻击
 function this:GuideBehaviour_Fight0_1_1040()
    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,3);
@@ -89,16 +87,25 @@ end
 
 
 --抽卡----------------------------------------------------------------------------
-
-function this:GuideBehaviourSkipStep_Create_4010()--拥有赤狼跳过抽卡引导 或者 通关了第一关
-    if(RoleMgr:GetData(30200) ~= nil or DungeonMgr:CheckDungeonPass(1001))then
+---国内注释：拥有赤狼跳过抽卡引导 或者 通关了第一关
+---海外注释：拥有霖跳过抽卡引导 或者 通关了第一关
+function this:GuideBehaviourSkipStep_Create_4010()
+    local idNum=30200;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=40290;
+    end
+    if(RoleMgr:GetData(idNum) ~= nil or DungeonMgr:CheckDungeonPass(1001))then
         return true;
     end 
 end
-
-function this:GuideBehaviourSkip_Create_4010()--拥有赤狼跳过抽卡引导 或者 通关了第一关
+---国内注释：拥有霖跳过抽卡引导 或者 通关了第一关
+---海外注释：拥有赤狼跳过抽卡引导 或者 通关了第一关
+function this:GuideBehaviourSkip_Create_4010()
 end
-function this:GuideBehaviourCondition_Create_4010()--拥有赤狼跳过抽卡引导
+---国内注释：拥有赤狼跳过抽卡引导
+---海外注释：拥有赤狼跳过抽卡引导
+function this:GuideBehaviourCondition_Create_4010()
     return true;
 end
 function this:GuideBehaviourStart_Create_4030()
@@ -114,8 +121,17 @@ function this:GuideBehaviourStart_Create_4050()
 end
 
 
-function this:GuideBehaviourSkipStep_Team_5010()--通关了副本、或者无赤狼、或者赤狼已在编队，跳过引导编队  
-    local targetCardId = 3020001;--赤狼卡牌ID
+
+
+---国内注释：通关了副本、或者无赤狼、或者赤狼已在编队，跳过引导编队
+---海外注释：通关了副本、或者无霖、或者霖已在编队，跳过引导编队
+function this:GuideBehaviourSkipStep_Team_5010()
+    local idNum=3020001;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=4029001;
+    end
+    local targetCardId=idNum;--赤狼卡牌ID
     local team1Data = TeamMgr:GetTeamData(1);
     if(team1Data and team1Data.data)then
         for k, v in pairs(team1Data.data) do
@@ -126,8 +142,12 @@ function this:GuideBehaviourSkipStep_Team_5010()--通关了副本、或者无赤
             end
 	    end
     end
-
-    if(RoleMgr:GetData(30200) == nil or DungeonMgr:CheckDungeonPass(1001))then
+    local idRoleNum=30200;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idRoleNum=40290;
+    end
+    if(RoleMgr:GetData(idRoleNum) == nil or DungeonMgr:CheckDungeonPass(1001))then
         --LogError("跳过5010");
         return true;
     end 
@@ -166,6 +186,8 @@ function this:GuideBehaviourStart_Team_5080()
     EventMgr.Dispatch(EventType.Drag_Card_Ctrl_State,false);
     
 end
+this.bronRow,this.bronCol=3,2 --队员首次放入阵盘的位置
+this.targetRow,this.targetCol=1,1--拖拽队员的目标位置
 
 function this:GuideBehaviourStart_Team_5091()
     CSAPI.DisableInput(100);
@@ -173,7 +195,13 @@ function this:GuideBehaviourStart_Team_5091()
     EventMgr.Dispatch(EventType.Team_Formation3D_SetRAndZ, {isRotate=false,isZoom=false});--禁用旋转和缩放
 
     local data = {};
-    data.forceData = {{row=1,col=1,cfgId=30200}};
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        data.forceData = {{row=this.bronRow,col=this.bronCol,cfgId=40290}};
+    else
+        ---日服以外地区
+        data.forceData = {{row=1,col=1,cfgId=30200}};
+    end
     data.forceCallBack = self.GuideBehaviourTeam_5091_CallBack;
     data.forceCaller = self;
     EventMgr.Dispatch(EventType.Team_FormationView_ForceMove,data);
@@ -186,16 +214,29 @@ function this:GuideBehaviourTeam_5091_CallBack()
 end
 
 function this:GuideBehaviourStart_Team_5110()
-    EventMgr.Dispatch(EventType.Team_FormationInfo_SetRC,{row=1,col=1})
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        EventMgr.Dispatch(EventType.Team_FormationInfo_SetRC,{row=this.bronRow,col=this.bronCol})
+    else
+        ---日服以外地区
+        EventMgr.Dispatch(EventType.Team_FormationInfo_SetRC,{row=1,col=1})
+    end
 end
+
 function this:GuideBehaviourStart_Team_5115()
     EventMgr.Dispatch(EventType.Team_FormationInfo_SetRC,{row=1,col=1})
     CSAPI.DisableInput(100);
     EventMgr.Dispatch(EventType.Drag_Card_Ctrl_State,true);
-
     local data = {};
-    data.forceData = {{row=1,col=1,cfgId=30200},{row=3,col=1,cfgId=30200}};
-    --data.forceData = {{row=3,col=1,cfgId=30200}};
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        data.forceData = {{row=this.targetRow,col=this.targetCol,cfgId=40290},{row=this.bronRow,col=this.bronCol,cfgId=40290}};
+        --data.forceData = {{row=3,col=1,cfgId=40290}};
+    else
+        ---日服以外地区
+        data.forceData = {{row=1,col=1,cfgId=30200},{row=3,col=1,cfgId=30200}};
+        --data.forceData = {{row=3,col=1,cfgId=30200}};
+    end
     data.forceCallBack = self.GuideBehaviourTeam_5115_CallBack;
     data.forceCaller = self;
     EventMgr.Dispatch(EventType.Team_FormationView_ForceMove,data);
@@ -222,8 +263,14 @@ end
 --副本0-1重复挑战----------------------------------------------------------------------------
 
 function this:GuideBehaviourCondition_Dungeon_6070()
-    local state= DungeonMgr:CheckDungeonPass(1001);
-    return state;
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日服是整个函数注释掉
+    else
+        ---日服以外地区
+        local state= DungeonMgr:CheckDungeonPass(1001);
+        return state;
+    end
 end
 
 
@@ -261,6 +308,19 @@ function this:GuideBehaviourSkip_Dungeon_6050()
         return true;
     end    
 end
+---【日服特有】
+--- 修正：去掉 CloseInput(true) 引发的 first grid 为 nil 的报错
+--- 6062 已取消，且不需要恢复到技能1，也不再锁战场输入
+function this:GuideBehaviour_Dungeon_6061()
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item, 2)
+    -- 不再调用 FightGridSelMgr.CloseInput(true)
+end
+---【日服特有】
+-- function this:GuideBehaviour_Dungeon_6062()
+--    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,1);
+--    FightGridSelMgr.CloseInput(false);
+-- end
+
 
 
 --副本战斗TR-0引导----------------------------------------------------------------------------
@@ -279,7 +339,13 @@ function this:GuideBehaviourCondition_DFight0_1_7030()
 end
 
 function this:GuideBehaviourStart_DFight0_1_7060()
-    UIUtil:OpenQuestion("BreakShield");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日服内容已经注释
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("BreakShield");
+    end
 end
 
 --副本同调战斗引导----------------------------------------------------------------------------
@@ -349,8 +415,14 @@ function this:GuideBehaviourSkip_Pass0_3_10520()
     return GuideMgr:IsGuided(110);--检测任务是否需要引导
 end
 function this:GuideBehaviourCondition_Pass0_3_10520()
-    local state = DungeonMgr:CheckDungeonPass(1002);
-    return state;
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日服函数已经注释
+    else
+        ---日服以外地区
+        local state = DungeonMgr:CheckDungeonPass(1002);
+        return state;
+    end
 end
 --function this:GuideBehaviourStart_Pass0_3_10520()
 --    self.next_guide_hide = 1;
@@ -367,14 +439,46 @@ end
 
 --任务引导
 function this:GuideBehaviourCondition_Mission_11010()
-    local state = DungeonMgr:CheckDungeonPass(1002); 
-    return state;
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日服函数已经注释
+    else
+        ---日服以外地区
+        local state = DungeonMgr:CheckDungeonPass(1002);
+        return state;
+    end
 end
 
 --30连引导
 function this:GuideBehaviourCondition_Create_11310()
-    local state = DungeonMgr:CheckDungeonPass(1002); 
-    return state and GuideMgr:IsGuided(110);
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日服函数已经注释
+    else
+        ---日服以外地区
+        local state = DungeonMgr:CheckDungeonPass(1002);
+        return state and GuideMgr:IsGuided(110);
+    end
+end
+--30连屏蔽分享
+function this:GuideBehaviourStart_Create_11350()
+    EventMgr.Dispatch(EventType.CreateRoleView_ShareBtn_SH,false)
+end
+--30连显示分享
+function this:GuideBehaviourStart_Create_11360()
+    EventMgr.Dispatch(EventType.CreateRoleView_ShareBtn_SH,true)
+end
+
+--30连后出击引导
+function this:GuideBehaviourCondition_Create_11440()
+    local state = DungeonMgr:CheckDungeonPass(1002);
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        return state and GuideMgr:IsGuided(114);
+    else
+        ---日服以外地区
+        return state and GuideMgr:IsGuided(110);
+    end
 end
 
 --通关副本0-5引导----------------------------------------------------------------------------
@@ -383,7 +487,12 @@ function this:GuideBehaviourSkip_Pass0_5_11520()
     return GuideMgr:IsGuided(120);--检测基地是否需要引导
 end
 function this:GuideBehaviourCondition_Pass0_5_11520()
-    local state = DungeonMgr:CheckDungeonPass(1005);
+    local idNum=1005;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=1007;
+    end
+    local state = DungeonMgr:CheckDungeonPass(idNum);
     return state;
 end
 --function this:GuideBehaviourStart_Pass0_5_11520()
@@ -412,7 +521,12 @@ function this:GuideBehaviourSkip_Base_12010()
     --发电厂已建造时跳过
 end
 function this:GuideBehaviourCondition_Base_12010()
-    local state = DungeonMgr:CheckDungeonPass(1005); 
+    local idNum=1005;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=1007;
+    end
+    local state = DungeonMgr:CheckDungeonPass(idNum);
     return state;
     --return true;
 end
@@ -422,7 +536,15 @@ function this:GuideBehaviour_Base_12053()
 end
 
 function this:GuideBehaviourStart_Base_12070()
-    UIUtil:OpenQuestion("Matrix");
+
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("Matrix");
+    end
+
 end
 
 
@@ -458,7 +580,7 @@ function this.Guide_Pass0_8_12520_Event_View_Lua_Closed(viewKey)
 end
 
 --通关副本1-14竞技场引导----------------------------------------------------------------------------
-function this:GuideBehaviourCondition_Exercise_13010()  
+function this:GuideBehaviourCondition_Exercise_13010()
     local state = DungeonMgr:CheckDungeonPass(1114);
     return state;
  end
@@ -547,7 +669,13 @@ function this:GuideBehaviourCondition_Battle0_1A_102510()
     return id == 8001;
 end
 function this:GuideBehaviourStart_Battle0_1A_102510()
-    UIUtil:OpenQuestion("TR1");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("TR1");
+    end
 end
 
 ----格子副本0-3
@@ -568,7 +696,13 @@ function this:GuideBehaviourCondition_Battle0_6_103010()
     return id == 1006;
 end
 function this:GuideBehaviourStart_Battle0_6_103010()
-    UIUtil:OpenQuestion("EnemyMove");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("EnemyMove");
+    end
 end
 
 
@@ -578,7 +712,13 @@ function this:GuideBehaviourCondition_Battle1_4_104010()
     return id == 1104;
 end
 function this:GuideBehaviourStart_Battle1_4_104010()
-    UIUtil:OpenQuestion("CaseMate");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("CaseMate");
+    end
 end
 
 --格子副本1-9
@@ -587,7 +727,13 @@ function this:GuideBehaviourCondition_Battle1_9_105010()
     return id == 1109;
 end
 function this:GuideBehaviourStart_Battle1_9_105010()
-    UIUtil:OpenQuestion("ICeSurface");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("ICeSurface");
+    end
 end
 
 --格子副本1-11
@@ -596,7 +742,13 @@ function this:GuideBehaviourCondition_Battle1_11_106010()
     return id == 1111;
 end
 function this:GuideBehaviourStart_Battle1_11_106010()
-    UIUtil:OpenQuestion("IceTrap");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("IceTrap");
+    end
 end
 
 --格子副本1-19
@@ -605,21 +757,39 @@ function this:GuideBehaviourCondition_Battle1_19_106510()
     return id == 1119;
 end
 function this:GuideBehaviourStart_Battle1_19_106510()
-    UIUtil:OpenQuestion("LightningStroke");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("LightningStroke");
+    end
 end
 
 
 --角色装备界面
 function this:GuideBehaviourStart_RoleEquip_109530()
-    UIUtil:OpenQuestion("Chip");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("Chip");
+    end
 end
 
 
 --AI设置
-function this:GuideBehaviourCondition_AISetting_111010()  
+function this:GuideBehaviourCondition_AISetting_111010()
    local data = GuideMgr:GetViewTriggerData();
-   return data and data.dungeonId == 1004;
+    local idNum=1004;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=1102;
+    end
+    return data and data.dungeonId == idNum;
 end
+
 function this:GuideBehaviourStart_AISetting_111060()
     UIUtil:OpenQuestion("AutoBattle");
 end
@@ -633,20 +803,35 @@ end
 
 --日常副本进入引导
 function this:GuideBehaviourCondition_DungeonDaily_113010()
+    local idNum=1106; ----已通关1-6
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=1008;---已通关0-8
+    end
+    -- local dungeonId = DungeonMgr:GetCurrFightId();
+    local state = DungeonMgr:CheckDungeonPass(idNum);
+    return state;
+end
+---【日服特有】
+function this:GuideBehaviourCondition_DungeonDaily_113020()
     -- local dungeonId = DungeonMgr:GetCurrFightId();
     local state = DungeonMgr:CheckDungeonPass(1106);
-    return state;--已通关1-6
+    return state;--已通关0-8
 end
 
 
---通关副本0-7引导----------------------------------------------------------------------------
-
-
+---国内:通关副本0-7引导----------------------------------------------------------------------------
+---海外:通关副本0-7(改为0-6)引导----------------------------------------------------------------------------
 function this:GuideBehaviourSkip_Pass0_2_114010()    
     return GuideMgr:IsGuided(100);--检测战术部署是否需要引导
 end
 function this:GuideBehaviourCondition_Pass0_2_114010()
-    local state = DungeonMgr:CheckDungeonPass(1007); 
+    local idNum=1007;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=1006;
+    end
+    local state = DungeonMgr:CheckDungeonPass(idNum);
     return state;
 end
 --function this:GuideBehaviourStart_Pass0_2_9520()
@@ -666,7 +851,12 @@ end
 --战术界面引导----------------------------------------------------------------------------
 
 function this:GuideBehaviourCondition_PlayerAbility_115010()
-    local state= DungeonMgr:CheckDungeonPass(1007); 
+    local idNum=1007;
+    if CSAPI.IsADVRegional(3) then
+        ---如果是日本地区
+        idNum=1006;
+    end
+    local state= DungeonMgr:CheckDungeonPass(idNum);
     if state then --已通关TR3
         return PlayerAbilityMgr:CheckIsOpen(1) and PlayerAbilityMgr:CheckIsOpen(2);
     end
@@ -743,7 +933,14 @@ function this:GuideBehaviour_TowerBattle_118030()
 end
 
 function this:GuideBehaviourStart_TowerBattle_118080()
-    UIUtil:OpenQuestion("TowerBase");
+
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("TowerBase");
+    end
 end
 
 
@@ -754,7 +951,14 @@ function this:GuideBehaviourCondition_TowerBattle_121010()
     return id == 10002;   
 end
 function this:GuideBehaviourStart_TowerBattle_121030()
-    UIUtil:OpenQuestion("IceSurface");
+
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("IceSurface");
+    end
 end
 
 --爬塔第三关引导----------------------------------------------------------------------------
@@ -765,7 +969,14 @@ function this:GuideBehaviourCondition_TowerBattle_122010()
     
 end
 function this:GuideBehaviourStart_TowerBattle_122020()
-    UIUtil:OpenQuestion("IceTrap");
+
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("IceTrap");
+    end
 end
 
 --爬塔宙斯引导----------------------------------------------------------------------------
@@ -775,29 +986,54 @@ function this:GuideBehaviourCondition_TowerBattle_123010()
     return id == 10005; 
 end
 function this:GuideBehaviourStart_TowerBattle_123020()
-    UIUtil:OpenQuestion("LightningStroke");
-end
 
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("LightningStroke");
+    end
+end
 function this:GuideBehaviourCondition_TowerBattle_124010()
     local id = DungeonMgr:GetCurrId();   
     return id == 10101; 
 end
 function this:GuideBehaviourStart_TowerBattle_124010()
-    UIUtil:OpenQuestion("Block");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("Block");
+    end
 end
 function this:GuideBehaviourCondition_TowerBattle_125010()
     local id = DungeonMgr:GetCurrId();   
     return id == 10103; 
 end
 function this:GuideBehaviourStart_TowerBattle_125010()
-    UIUtil:OpenQuestion("SkyEye");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("SkyEye");
+    end
 end
 function this:GuideBehaviourCondition_TowerBattle_126010()
     local id = DungeonMgr:GetCurrId();   
     return id == 10104; 
 end
 function this:GuideBehaviourStart_TowerBattle_126010()
-    UIUtil:OpenQuestion("Inject");
+
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("Inject");
+    end
 end
 
 --乱序空间引导----------------------------------------------------------------------------
@@ -851,7 +1087,13 @@ function this:GuideBehaviourStart_KishinBreak_142030()
     EventMgr.Dispatch(EventType.Role_Captain_ToFirst);
 end
 function this:GuideBehaviourStart_KishinBreak_142050()
-    UIUtil:OpenQuestion("KishinBreak");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("KishinBreak");
+    end
 end
 
 --钓鱼佬编队关卡引导
@@ -860,16 +1102,27 @@ function this:GuideBehaviourCondition_FishMan_143010()
     return data and data.dungeonId == 96114;
 end
 function this:GuideBehaviourStart_FishMan_143020()
-    UIUtil:OpenQuestion("FishMan");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("FishMan");
+    end
 end
 --宠物首次引导
 function this:GuideBehaviourCondition_Pet_144010()
     return DungeonMgr:CheckDungeonPass(1008);--检测是否需要引导
 end
 function this:GuideBehaviourStart_Pet_144020()
-    UIUtil:OpenQuestion("PetMainFirst");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("PetMainFirst");
+    end
 end
-
 
 --第三章爬塔第一关引导----------------------------------------------------------------------------
 
@@ -877,9 +1130,14 @@ function this:GuideBehaviourCondition_TowerBattle_145010()
     local id = DungeonMgr:GetCurrId();
     return id == 10201;
 end
-
 function this:GuideBehaviourStart_TowerBattle_145020()
-    UIUtil:OpenQuestion("QuickSand");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("QuickSand");
+    end
 end
 
 --第三章爬塔第二关引导----------------------------------------------------------------------------
@@ -890,21 +1148,33 @@ function this:GuideBehaviourCondition_TowerBattle_146010()
 end
 
 function this:GuideBehaviourStart_TowerBattle_146020()
-    UIUtil:OpenQuestion("RockFall");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("RockFall");
+    end
 end
 
 --第三章爬塔第四关引导----------------------------------------------------------------------------
-
 function this:GuideBehaviourCondition_TowerBattle_147010()
     local id = DungeonMgr:GetCurrId();
     return id == 10204;
 end
 
 function this:GuideBehaviourStart_TowerBattle_147030()
-    UIUtil:OpenQuestion("SandStorm");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("SandStorm");
+    end
 end
 
 --角斗场引导----------------------------------------------------------------------------
+
 function this:GuideBehaviourSkip_Colosseum_150010()    
     return GuideMgr:IsGuided(1505);--检测跳过本身的情况
 end
@@ -918,16 +1188,36 @@ function this:GuideBehaviourCondition_Colosseum_150025()
     return not GuideMgr:IsGuided(1500);
 end
 
-
 function this:GuideBehaviourStart_Colosseum_152030()
-    UIUtil:OpenQuestion("ColosseumView");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("ColosseumView");
+    end
+end
+---【日服特有】
+function this:GuideBehaviourCondition_Colosseum_149100()
+    return ColosseumMgr:CheckEnterOpen() and DungeonMgr:CheckDungeonPass(1201)
+end
+---【日服特有】
+function this:GuideBehaviourStart_Colosseum_149101()
+    EventMgr.Dispatch(EventType.Section_Guide_Update,{type = 3,index = 2});
 end
 --能力检测引导----------------------------------------------------------------------------
 
 
 function this:GuideBehaviourStart_AbilityTest_154040()
-    UIUtil:OpenQuestion("RogueTView");
+    if CSAPI.IsADVRegional(3) then
+        ---日服地区
+        ---日本地区 内容已经注释 已在表格中配置
+    else
+        ---日服以外地区
+        UIUtil:OpenQuestion("RogueTView");
+    end
 end
+
 function this:GuideBehaviourCondition_AbilityTest_155010()
     return GuideMgr:IsGuided(1530);
 end
@@ -936,6 +1226,101 @@ function this:GuideBehaviourCondition_AbilityTest_156010()
     return GuideMgr:IsGuided(1530);
 end
 
+--------------------------------------------------------------------------------------日服特有下----------------------------------------------------
+--编队引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_RoleInfo_108001()
+    return DungeonMgr:CheckDungeonPass(1001);
+end
+
+--0-1通过继续战斗引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_Dungeon_109010()
+    return DungeonMgr:CheckDungeonPass(1001);
+end
+
+
+--特装构建引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_Create_11410()
+
+    return DungeonMgr:CheckDungeonPass(1002) and GuideMgr:IsGuided(113);
+end
+
+--教程引导----------------------------------------------------------------------------
+function this:GuideBehaviourCondition_Course_158010()
+    return DungeonMgr:CheckDungeonPass(1003);
+end
+
+function this:GuideBehaviour_Course_158080()
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,3);
+    FightGridSelMgr.CloseInput(true);
+end
+function this:GuideBehaviour_Course_158090()
+    FightGridSelMgr.CloseInput(false);
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,3);
+end
+function this:GuideBehaviour_Course_158110()
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,2);
+    FightGridSelMgr.CloseInput(true);
+end
+function this:GuideBehaviour_Course_158120()
+    FightGridSelMgr.CloseInput(false);
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,2);
+end
+function this:GuideBehaviour_Course_158140()
+
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,1);
+    FightGridSelMgr.CloseInput(true);
+end
+function this:GuideBehaviour_Course_158150()
+    FightGridSelMgr.CloseInput(false);
+    EventMgr.Dispatch(EventType.Input_Select_Skill_Item,1);
+end
+--星数引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourCondition_Dungeon_159010()
+    return DungeonMgr:CheckDungeonPass(1004);--
+end
+
+--1-8自动完成引导-前置条件----------------------------------------------------------------------------
+function this:GuideBehaviourStart_Dungeon_175010()
+    FuncUtil:Call(function()
+        EventMgr.Dispatch(EventType.Guide_Custom_Complete);
+    end,nil,50);
+end
+
+--0-1困难引导----------------------------------------------------------------------------
+
+function this:GuideBehaviourSkipStep_Dungeon_180010()
+    if DungeonMgr:CheckDungeonPass(2001) then
+        return true
+    end
+end
+
+function this:GuideBehaviourCondition_Dungeon_180010()
+    local viewGO = CSAPI.GetView("Section")
+    if viewGO then
+        local view = ComUtil.GetLuaTable(viewGO)
+        return view and view.data == nil --检测有没跳转
+    end
+    return false
+end
+
+function this:GuideBehaviourStart_Dungeon_180010()
+    FuncUtil:Call(function()
+        EventMgr.Dispatch(EventType.Dungeon_MainLine_Update,1)
+    end,nil,50);
+end
+
+function this:GuideBehaviourStart_Dungeon_180030()
+    FuncUtil:Call(function()
+        EventMgr.Dispatch(EventType.Dungeon_MainLine_Guide_Refresh,1)
+    end,nil,50);
+end
+
+--芯片自动匹配-日服引导-------------------------------------------------------------------
+--------------------------------------------------------------------------------------日服特有上----------------------------------------------------
 function this:GuideBehaviourStart_RoleInfo_220040()
     EventMgr.Dispatch(EventType.Guide_RoleInfo_220040,true)
 end
@@ -948,6 +1333,5 @@ end
 function this:GuideBehaviourComplete_RoleInfo_230070()
     EventMgr.Dispatch(EventType.Guide_RoleInfo_230070,false)
 end
-
 
 return this;

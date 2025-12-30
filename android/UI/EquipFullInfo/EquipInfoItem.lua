@@ -1,4 +1,4 @@
---装备信息物体
+﻿--装备信息物体
 local baseItems={};
 local skillItems={};
 local grid=nil;

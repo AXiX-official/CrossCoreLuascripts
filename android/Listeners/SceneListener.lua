@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     EventMgr.AddListener(EventType.Scene_Load,OnSceneLoad);
     EventMgr.AddListener(EventType.Scene_Load_Start,OnSceneLoadStart);
     EventMgr.AddListener(EventType.Scene_Load_Complete,OnSceneLoadComplete);

@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     UIUtil:AddTop2("ColosseumTeam", gameObject, function()
         if (not isMax and data) then
             data.closeCB()

@@ -1,4 +1,4 @@
-
+﻿
 function HitShield()
     SetHitShieldState(true);
     FuncUtil:Call(SetHitShieldState,nil,500,false);

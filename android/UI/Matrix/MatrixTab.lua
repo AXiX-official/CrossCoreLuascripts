@@ -1,4 +1,4 @@
---建造列表页签
+﻿--建造列表页签
 function SetClickCB(_cb)
 	cb = _cb
 end

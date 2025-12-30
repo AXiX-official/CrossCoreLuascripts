@@ -1,4 +1,4 @@
---说明
+﻿--说明
 local tips={34001,34002};
 local items = {}
 local selectID=1;

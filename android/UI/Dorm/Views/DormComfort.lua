@@ -1,4 +1,4 @@
--- 房间舒适度
+﻿-- 房间舒适度
 local curIndex = nil
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
@@ -24,7 +24,11 @@ function OnOpen()
     local maxComfort = DormMgr:GetCurRoomData():GetLvCfg().maxComfort
     -- local _comfort = comfort>maxComfort and maxComfort or comfort
     -- CSAPI.SetText(txtComfort2, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
-    CSAPI.SetText(txtComfort2,comfort.."")
+    -- 
+    local petComforts = DormPetMgr:GetComforts(DormMgr:GetCurRoomData():GetID())
+    comfort = comfort + petComforts
+    -- 
+    CSAPI.SetText(txtComfort2, comfort .. "")
     -- effect
     local num = GCalHelp:DormTiredAddPerent(comfort)
     LanguageMgr:SetText(txtEffect3, 32015, "+" .. num .. "%")
@@ -35,20 +39,20 @@ function OnOpen()
     if (maxComfort and comfort >= maxComfort) then
         isMax = true
     end
-    --CSAPI.SetGOActive(objMaxComfort, isMax)
+    -- CSAPI.SetGOActive(objMaxComfort, isMax)
 end
 
 function Grids()
     items = items or {}
     local datas = table.copy(CfgFurnitureEnum)
     table.insert(datas, 1, {
-        id = 0,
-        sName = LanguageMgr:GetByID(3025),
-        index = 0
+        id = -1,
+        sName = LanguageMgr:GetByID(3025)
     })
-    -- table.sort(datas, function(a, b)
-    --     return a.index < b.index
-    -- end)
+    table.insert(datas, 2, {
+        id = 0,
+        sName = LanguageMgr:GetByID(32088)
+    })
     ItemUtil.AddItems("Dorm/DormComfortItem1", items, datas, grids, ItemClickCB, 1, nil, function()
         ItemClickCB(items[1])
     end)
@@ -64,12 +68,29 @@ function ItemClickCB(item)
     curIndex = item.index
     items[curIndex].Select(true)
     curDatas = {}
-    -- local furnitureDatas = copyFurnitureDatas -- curRoomData:GetFurnitures()
-    for i, v in pairs(furnitureDatas) do
-        -- local cfgID = GCalHelp:GetDormFurCfgId(v.id)
-        -- local cfg = Cfgs.CfgFurniture:GetByID(cfgID)
-        if (item.data.id == 0 or v:GetCfg().sType == (item.data.id - 1)) then
-            table.insert(curDatas, v:GetCfg())
+    if (curIndex == 2) then
+        local arr = DormPetMgr:GetArr(DormMgr:GetCurRoomData():GetID())
+        for k, v in ipairs(arr) do
+            table.insert(curDatas, {
+                sName = v:GetCfg().name,
+                comfort = v:GetCfg().comfort
+            })
+        end
+    else
+        if (curIndex == 1) then
+            local arr = DormPetMgr:GetArr(DormMgr:GetCurRoomData():GetID())
+            for k, v in ipairs(arr) do
+                table.insert(curDatas, {
+                    sName = v:GetCfg().name,
+                    comfort = v:GetCfg().comfort
+                })
+            end
+        end
+        --
+        for i, v in pairs(furnitureDatas) do
+            if (curIndex == 1 or v:GetCfg().sType == (item.data.id - 1)) then
+                table.insert(curDatas, v:GetCfg())
+            end
         end
     end
     if (#curDatas > 0) then

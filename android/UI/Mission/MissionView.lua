@@ -1,4 +1,4 @@
-curIndex1, curIndex2 = 1, 1 -- 父index,子index
+﻿curIndex1, curIndex2 = 1, 1 -- 父index,子index
 local isShowActivity = false
 local timer = nil
 

@@ -1,4 +1,4 @@
--- 奖励面板
+﻿-- 奖励面板
 local isCanBack = false
 local layout = nil;
 local svUtil = nil

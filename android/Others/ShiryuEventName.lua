@@ -1,4 +1,4 @@
-ShiryuEventName = {
+﻿ShiryuEventName = {
 
 
     MJ_LOGIN_SUCCESSFULLY = "mj_login_successfully";

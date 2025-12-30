@@ -1,4 +1,4 @@
-_G["CfgPvpRankLevel"]={{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600015}
+﻿_G["CfgPvpRankLevel"]={{["rankColor"]="5d5d5d",["nWinGetCoin"]=0,["nLostGetCoin"]=0,["nBalanceBuff"]={5600015}
 ,["key"]="1",["nScore"]=500,["jAward"]={{10012,0,2}
 }
 ,["name"]="少尉",["icon"]="img_3_1",["id"]=1}

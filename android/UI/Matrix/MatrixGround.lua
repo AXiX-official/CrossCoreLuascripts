@@ -1,4 +1,4 @@
-local gridItems = nil
+﻿local gridItems = nil
 local buildings = nil
 local isOver = false
 

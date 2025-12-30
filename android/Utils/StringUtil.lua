@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 -- 是否为空
 function this:IsEmpty(s)

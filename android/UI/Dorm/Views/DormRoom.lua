@@ -1,4 +1,4 @@
-local isIn = false
+﻿local isIn = false
 -- 宿舍分区界面(基地界面的子界面)
 -- function Awake()
 -- 	layout = ComUtil.GetCom(vsv, "UIInfinite")

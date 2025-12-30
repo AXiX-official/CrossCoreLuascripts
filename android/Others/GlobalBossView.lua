@@ -1,4 +1,4 @@
-local itemInfo = nil
+﻿local itemInfo = nil
 local bossData = nil
 local curType = nil
 

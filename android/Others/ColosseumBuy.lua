@@ -1,4 +1,4 @@
-local ids = {10035, 10002}
+﻿local ids = {10035, 10002}
 local freeCnt = 0
 
 function Awake()

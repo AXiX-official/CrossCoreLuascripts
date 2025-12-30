@@ -1,4 +1,4 @@
-local csDispatchEvent = CS.CSAPI.DispatchEvent;
+﻿local csDispatchEvent = CS.CSAPI.DispatchEvent;
 function DispatchEventToCS(id,param)
     if(id == nil)then
         LogError("事件id不能为空");

@@ -1,4 +1,4 @@
---Spine测试
+﻿--Spine测试
 local roleItem;
 local roleItem2;
 local spineList=null;

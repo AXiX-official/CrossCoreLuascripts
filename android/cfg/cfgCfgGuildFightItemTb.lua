@@ -1,4 +1,4 @@
-_G["CfgGuildFightItemTb"]={{["id"]=1,["rewards"]={{10001,1000,2}
+﻿_G["CfgGuildFightItemTb"]={{["id"]=1,["rewards"]={{10001,1000,2}
 ,{10002,2000,2}
 }
 ,["key"]="1"}

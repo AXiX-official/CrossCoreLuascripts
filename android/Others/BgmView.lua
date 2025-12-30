@@ -1,4 +1,4 @@
-local curIndex = nil
+﻿local curIndex = nil
 local curMusicID = nil
 local BgmData = require "BgmData"
 local isPlay = true

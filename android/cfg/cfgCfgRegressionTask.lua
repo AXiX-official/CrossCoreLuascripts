@@ -1,4 +1,4 @@
-_G["CfgRegressionTask"]={[70905]={["nStage"]=9,["id"]=70905,["jAwardId"]={{10402,3,2}
+﻿_G["CfgRegressionTask"]={[70905]={["nStage"]=9,["id"]=70905,["jAwardId"]={{10402,3,2}
 }
 ,["aFinishIds"]={39104}
 ,["key"]=70905,["nIsHide"]=2,["nTransferPath"]=200001,["sName"]="日常任务累计达到12星",["sDescription"]="日常任务累计达到12星",["nGroup"]=1}

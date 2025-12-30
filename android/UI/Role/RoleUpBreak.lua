@@ -1,4 +1,4 @@
-local panels = {}
+﻿local panels = {}
 
 function OnInit()
     UIUtil:AddTop2("RoleUpBreak", gameObject, function()
@@ -50,9 +50,9 @@ function RoleJumpBreak(_data)
     local isBack = _data[2]
     if (_data[2]) then
         -- 返回升级
-        ShowPanel("RoleUp", _data[1])
+        ShowPanel("RoleUp", {_data[1],_data[3]})
     else
-        ShowPanel("RoleBreak", _data[1])
+        ShowPanel("RoleBreak", {_data[1],_data[3]})
     end
 end
 
@@ -76,7 +76,7 @@ function RefreshPanel()
     local curLv = cardData:GetLv()
     local maxLv = cardData:GetMaxLv()
     local break_limitLv = cardData:GetBreakLimitLv()
-    local core_limitLv = cardData:GetCoreLimitLv()
+    --local core_limitLv = cardData:GetCoreLimitLv()
     local isMax = curLv >= break_limitLv -- core_limitLv 屏蔽
 
     if (isMax or curLv < maxLv) then

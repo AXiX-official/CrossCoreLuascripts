@@ -1,4 +1,4 @@
-local timer = nil
+﻿local timer = nil
 function Awake()
     anim_go = ComUtil.GetCom(gameObject, "Animator")
 end

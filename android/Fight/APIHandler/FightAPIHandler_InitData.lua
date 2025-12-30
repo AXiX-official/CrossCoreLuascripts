@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --战斗数据初始化
 function this:Handle(data)   

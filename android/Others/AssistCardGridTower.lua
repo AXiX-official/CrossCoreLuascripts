@@ -1,4 +1,4 @@
---卡牌助战（塔）
+﻿--卡牌助战（塔）
 --助战卡牌格子
 local colors = {"FFFFFF", "00ffbf", "26dbff", "8080ff", "FFC146"}
 local stateColors = {"FF265C", "307be9", "3cc7f5", "cc50ff", "f07b09", "11e70b", "FFFFFF"}

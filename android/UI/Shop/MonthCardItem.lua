@@ -1,4 +1,4 @@
---月卡说明物体
+﻿--月卡说明物体
 local animTotalTime=0.4;
 
 function Refresh(data,pos,isHideMonthPay)

@@ -1,4 +1,4 @@
-_G["CfgPetRes"]={{["sleep"]="role_Sleep3",["washPos"]={0,0,1.1}
+﻿_G["CfgPetRes"]={{["sleep"]="role_Sleep3",["washPos"]={0,0,1.1}
 ,["wash"]="roel_Bath",["sportPos"]={0,0,1.3}
 ,["key"]="1",["eatTime"]=10,["eat"]="roel_Eat1",["sport"]="Standby1_Weightlifting",["cleanTime"]=19,["clean"]="role_Relax",["idlePos"]={0,0,1}
 ,["walkPos"]={0,0,0.95}

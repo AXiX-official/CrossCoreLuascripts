@@ -1,4 +1,4 @@
--- 按参数缩进格子
+﻿-- 按参数缩进格子
 local this = {}
 
 local singleAnimTime = 0.25 -- 单个动画时长,毫秒

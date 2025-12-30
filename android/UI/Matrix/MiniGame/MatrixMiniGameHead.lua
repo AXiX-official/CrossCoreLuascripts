@@ -1,4 +1,4 @@
-
+﻿
 local moveTimer = 1000
 
 function Refresh(_index, _cardData, _moveCB)

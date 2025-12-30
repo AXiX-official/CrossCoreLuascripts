@@ -1,4 +1,4 @@
-local this = oo.class(GridDataBase);
+﻿local this = oo.class(GridDataBase);
 
 --初始化 equip:协议中的sEquip数据结构
 function this:Init(equip)

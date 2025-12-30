@@ -1,4 +1,4 @@
-local top = nil
+﻿local top = nil
 
 function OnInit()
 	top = UIUtil:AddTop2("DungeonDetials2", topParent, OnClickBack, nil, {})

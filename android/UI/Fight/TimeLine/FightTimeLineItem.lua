@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     layoutCom = ComUtil.GetCom(gameObject,"CustomLayout");--自定义布局组件    
     actionScale = ComUtil.GetCom(scaleNode,"ActionBase");--缩放组件    

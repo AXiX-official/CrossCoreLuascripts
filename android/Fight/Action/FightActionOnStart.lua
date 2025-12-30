@@ -1,4 +1,4 @@
---战斗开始数据
+﻿--战斗开始数据
 
 FightActionOnStart = oo.class(FightActionBase);
 local this = FightActionOnStart;

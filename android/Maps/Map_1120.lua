@@ -1,4 +1,4 @@
-local this=
+﻿local this=
 {
 sub_maps=
 {

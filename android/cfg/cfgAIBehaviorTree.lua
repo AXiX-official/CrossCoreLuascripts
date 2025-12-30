@@ -1,4 +1,4 @@
-_G["AIBehaviorTree"]={[1004]={["id"]=1004,["type"]="AISequence",["key"]=1004}
+﻿_G["AIBehaviorTree"]={[1004]={["id"]=1004,["type"]="AISequence",["key"]=1004}
 ,[1005]={["id"]=1005,["type"]="AITask",["key"]=1005}
 ,[1006]={["id"]=1006,["type"]="AIDecorator",["key"]=1006}
 ,[2012]={["id"]=2012,["type"]="AITask",["key"]=2012,["ToDo"]=[[-- 自己在战斗中

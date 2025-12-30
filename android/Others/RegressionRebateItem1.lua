@@ -1,4 +1,4 @@
-local isBuy = false
+﻿local isBuy = false
 local cfg = nil
 local comm = nil
 local isShow = false

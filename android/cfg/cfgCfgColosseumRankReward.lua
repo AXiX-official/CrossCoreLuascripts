@@ -1,4 +1,4 @@
-_G["CfgColosseumRankReward"]={{["sub"]=1,["name"]="排名奖励1",["up"]=3,["group"]=1,["messageid"]=9002,["id"]=1,["key"]=1}
+﻿_G["CfgColosseumRankReward"]={{["sub"]=1,["name"]="排名奖励1",["up"]=3,["group"]=1,["messageid"]=9002,["id"]=1,["key"]=1}
 ,{["sub"]=4,["name"]="排名奖励2",["up"]=10,["group"]=1,["messageid"]=9003,["id"]=2,["key"]=2}
 ,{["sub"]=11,["name"]="排名奖励3",["up"]=100,["group"]=1,["messageid"]=9004,["id"]=3,["key"]=3}
 ,{["sub"]=101,["name"]="排名奖励4",["up"]=-1,["group"]=1,["messageid"]=9005,["id"]=4,["key"]=4}

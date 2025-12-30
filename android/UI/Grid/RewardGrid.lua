@@ -1,4 +1,4 @@
--- 奖励格子，根据类型动态创建物品格子或者装备格子
+﻿-- 奖励格子，根据类型动态创建物品格子或者装备格子
 local data = nil;
 local elseData = nil;
 local grid = nil;

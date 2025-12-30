@@ -1,4 +1,4 @@
---装备强化面板
+﻿--装备强化面板
 local stuffList=StuffArray.New();
 local stuffItems=nil;
 local layout=nil;

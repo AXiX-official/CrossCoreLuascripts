@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     cg_btnOk = ComUtil.GetCom(btnOk, "CanvasGroup")
 end
 

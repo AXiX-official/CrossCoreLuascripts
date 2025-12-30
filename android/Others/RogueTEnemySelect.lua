@@ -1,4 +1,4 @@
-local curIndex = nil -- 准备挑战的下标
+﻿local curIndex = nil -- 准备挑战的下标
 function Awake()
     UIUtil:AddTop2("RogueTEnemySelect", topParent, function()
         view:Close()

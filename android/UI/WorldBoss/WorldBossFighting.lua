@@ -1,4 +1,4 @@
---战斗界面
+﻿--战斗界面
 local curTP = 1              --选择了几点TP
 local refreshHP = false
 local curTime = 0

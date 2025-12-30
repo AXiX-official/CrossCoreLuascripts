@@ -1,4 +1,4 @@
--- 扫荡编队组件
+﻿-- 扫荡编队组件
 local state = nil
 local grids={}
 local dropClick = nil

@@ -1,4 +1,4 @@
-function Refresh(_cfgID, _needNum)
+﻿function Refresh(_cfgID, _needNum)
 	id = _cfgID
 	cfg = Cfgs.CfgFurniture:GetByID(id)
 	--icon

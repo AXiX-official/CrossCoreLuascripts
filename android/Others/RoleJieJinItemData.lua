@@ -1,4 +1,4 @@
--- 解禁 角色
+﻿-- 解禁 角色
 local this = {}
 
 function this.New()

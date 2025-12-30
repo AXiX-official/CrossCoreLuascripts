@@ -1,4 +1,4 @@
---公会头像选择面板
+﻿--公会头像选择面板
 local iconList={};
 local currIconId=nil;
 local currIndex=nil;

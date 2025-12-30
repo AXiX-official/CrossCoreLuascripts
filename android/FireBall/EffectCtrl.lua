@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     if(pathCom)then
         csCom = ComUtil.GetCom(pathCom,"ResizePath");

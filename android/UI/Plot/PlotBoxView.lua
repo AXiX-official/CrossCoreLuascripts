@@ -1,4 +1,4 @@
---剧情对话框
+﻿--剧情对话框
 --播放文字效果参数
 local isPlaying = false; --文字是否播放完
 local isTween = false;--是否正在播放窗口动画

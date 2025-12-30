@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 'w-物品表.xlsx',
 	["sheetname"] = '单个芯片集合',
 	["types"] = {

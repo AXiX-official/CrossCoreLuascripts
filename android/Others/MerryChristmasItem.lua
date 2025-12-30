@@ -1,4 +1,4 @@
-local flyTime = nil
+﻿local flyTime = nil
 local timeCD = nil
 local anim_obj
 local anim_img

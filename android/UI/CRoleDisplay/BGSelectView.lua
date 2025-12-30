@@ -1,4 +1,4 @@
--- 选择角色
+﻿-- 选择角色
 local BGSelectData = require("BGSelectData")
 
 function Awake()

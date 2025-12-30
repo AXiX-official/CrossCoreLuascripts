@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local gridItem1,gridItem2 
 local isCanBuy = false
 local tgl = nil

@@ -1,4 +1,4 @@
--- 肉鸽
+﻿-- 肉鸽
 local RogueData = require "RogueData"
 local this = MgrRegister("RogueMgr")
 

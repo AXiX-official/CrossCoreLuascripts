@@ -1,4 +1,4 @@
---装备槽（装备系统）
+﻿--装备槽（装备系统）
 local slotImgs=nil;
 local data=nil
 local elseData=nil;

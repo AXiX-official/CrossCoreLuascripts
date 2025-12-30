@@ -1,4 +1,4 @@
-_G["ExploreBase"]={{["type"]=1,["productType"]=1,["defaultOpen"]=true,["desc"]={"前哨站的控制塔用于中枢指挥","指挥塔等级影响其他建筑的最大等级","指挥塔等级受到玩家等级的限制"}
+﻿_G["ExploreBase"]={{["type"]=1,["productType"]=1,["defaultOpen"]=true,["desc"]={"前哨站的控制塔用于中枢指挥","指挥塔等级影响其他建筑的最大等级","指挥塔等级受到玩家等级的限制"}
 ,["name"]="指挥塔",["key"]=1,["levelInfo"]={{["costs"]={{10001,1000}
 }
 ,["time"]=900,["index"]=1,["desc"]="指挥官最大等级达到2级,所有建筑等级可提升至2级"}

@@ -1,4 +1,4 @@
-local needToCheckMove = false
+﻿local needToCheckMove = false
 function Awake()
     clickNodeImage = ComUtil.GetCom(clickNode, "Image")
     luaTextMove = LuaTextMove.New()

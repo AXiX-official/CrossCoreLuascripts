@@ -1,4 +1,4 @@
-local mainIndex = nil -- 1:主题家具   2：家具部件  3：自由方案
+﻿local mainIndex = nil -- 1:主题家具   2：家具部件  3：自由方案
 local curThemeID = nil -- 当前选择的主题下标
 local curTypeIndex = 2 -- 当前家具类型下标
 local curDataType = nil -- 子数据类型 1：主题表 2：家具 3：主题数据

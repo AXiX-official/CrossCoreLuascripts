@@ -1,4 +1,4 @@
-local isInit = false
+﻿local isInit = false
 local isActive = true
 local imgScale = 1
 local oldModelId = nil

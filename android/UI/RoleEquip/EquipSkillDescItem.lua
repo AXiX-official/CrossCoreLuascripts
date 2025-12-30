@@ -1,4 +1,4 @@
-function Refresh(data)
+﻿function Refresh(data)
     CSAPI.SetText(txt_desc,data.cfg.sDetailed);
     CSAPI.SetTextColorByCode(txt_desc,data.isLight and "FFC146" or "929296")
 end

@@ -1,4 +1,4 @@
-
+﻿
 function SetClickCB(_cb)
 	cb = _cb
 end

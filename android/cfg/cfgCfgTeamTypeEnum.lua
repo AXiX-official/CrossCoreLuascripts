@@ -1,4 +1,4 @@
-_G["CfgTeamTypeEnum"]={{["endIdx"]=8,["key"]="1",["id"]=1,["singleCardType"]=1,["type"]=1}
+﻿_G["CfgTeamTypeEnum"]={{["endIdx"]=8,["key"]="1",["id"]=1,["singleCardType"]=1,["type"]=1}
 ,[30]={["endIdx"]=36,["key"]="30",["id"]=30,["type"]=1}
 ,[60]={["endIdx"]=61,["key"]="60",["id"]=60,["type"]=1}
 ,[62]={["endIdx"]=64,["key"]="62",["id"]=62,["singleCardType"]=1,["type"]=1}

@@ -1,4 +1,4 @@
-LItemAnimTools = {}
+﻿LItemAnimTools = {}
 local this = LItemAnimTools
 
 local inTimer = 300

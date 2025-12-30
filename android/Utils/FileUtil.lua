@@ -1,4 +1,4 @@
-local this={};
+﻿local this={};
 --local path = CS.CPath.persistentDataPath;
 
 function this.GetPath()

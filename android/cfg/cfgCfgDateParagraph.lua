@@ -1,4 +1,4 @@
-_G["CfgDateParagraph"]={[10005]={["lastNodeID"]=10004,["storyID"]=1000369,["key"]=10005,["name"]="结局-享受当下",["id"]=10005,["group"]=20240011,["icon"]="plot_05",["pos"]={2,3}
+﻿_G["CfgDateParagraph"]={[10005]={["lastNodeID"]=10004,["storyID"]=1000369,["key"]=10005,["name"]="结局-享受当下",["id"]=10005,["group"]=20240011,["icon"]="plot_05",["pos"]={2,3}
 }
 ,[10002]={["id"]=10002,["group"]=20240011,["storyID"]=1000101,["key"]=10002,["name"]="第二章",["lastNodeID"]=10001,["nextParagraphID"]={10003,10004}
 ,["icon"]="plot_02",["pos"]={1,2}

@@ -1,4 +1,4 @@
---公用格子
+﻿--公用格子
 local clickImg = nil;
 local removeFunc = nil;--点击删除的回调，素材格子用
 local choosieObj = nil;--当前显示的选择物体

@@ -1,4 +1,4 @@
-
+﻿
 local deviceType = CSAPI.GetDeviceType()
 local perPos, pos = nil, nil
 

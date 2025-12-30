@@ -1,4 +1,4 @@
-local color1,color2 = nil,nil
+﻿local color1,color2 = nil,nil
 
 function Init(lockColorStr,unLockColorStr,lockImgName,unLockImgName)
     color1 = lockColorStr or "ffffff"

@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 function this.GetNames(_type)
     if this[_type] then

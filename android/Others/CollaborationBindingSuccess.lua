@@ -1,4 +1,4 @@
-
+﻿
 function OnOpen()
     local currActivty=CollaborationMgr:GetCurrInfo();
     if currActivty==nil then

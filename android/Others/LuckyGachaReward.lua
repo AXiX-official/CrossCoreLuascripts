@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     UIUtil:SetPerfectScale(AdaptiveScreen) -- 适配大小
 end
 

@@ -1,4 +1,4 @@
-local RogueSData = require "RogueSData"
+﻿local RogueSData = require "RogueSData"
 local this = MgrRegister("RogueSMgr")
 
 function this:Init()

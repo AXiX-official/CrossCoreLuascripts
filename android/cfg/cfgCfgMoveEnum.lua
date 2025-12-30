@@ -1,4 +1,4 @@
-_G["CfgMoveEnum"]={{["id"]=1,["sName"]="陆行",["key"]="1"}
+﻿_G["CfgMoveEnum"]={{["id"]=1,["sName"]="陆行",["key"]="1"}
 ,{["id"]=2,["sName"]="飞行",["key"]="2"}
 ,{["id"]=3,["sName"]="水上",["key"]="3"}
 ,{["id"]=4,["sName"]="转移",["key"]="4"}

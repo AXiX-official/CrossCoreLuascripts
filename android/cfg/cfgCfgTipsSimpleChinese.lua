@@ -1,4 +1,4 @@
-_G["CfgTipsSimpleChinese"]={{["key"]="accExist",["nShowType"]=3,["id"]=1,["nFunType"]=1,["sStr"]="账号已经存在"}
+﻿_G["CfgTipsSimpleChinese"]={{["key"]="accExist",["nShowType"]=3,["id"]=1,["nFunType"]=1,["sStr"]="账号已经存在"}
 ,{["key"]="accNotExist",["nShowType"]=3,["id"]=2,["nFunType"]=1,["sStr"]="账号不存在"}
 ,{["key"]="accLenErr",["nShowType"]=3,["id"]=3,["nFunType"]=1,["sStr"]="账号长度错误"}
 ,{["key"]="notInWhite",["nShowType"]=3,["id"]=4,["nFunType"]=1,["sStr"]="服务器维护中"}

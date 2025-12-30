@@ -1,4 +1,4 @@
---设置人员入驻 data:MatrixData or DormRoomData
+﻿--设置人员入驻 data:MatrixData or DormRoomData
 function OnInit()
 	--UIUtil:AddTop2("MatrixSetRole", gameObject, function() view:Close() end, nil, {})
 	

@@ -1,4 +1,4 @@
-ChatProto = {}
+﻿ChatProto = {}
 
 --获取聊天历史
 function ChatProto:GetInfo(_type)

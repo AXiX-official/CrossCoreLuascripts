@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local curDatas = nil
 local isGet = false
 local isFinish = false

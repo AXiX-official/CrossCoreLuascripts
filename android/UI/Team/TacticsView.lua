@@ -1,4 +1,4 @@
---战术选择面板
+﻿--战术选择面板
 local currID=nil;--当前选中的ID
 local oldID=nil;
 local closeFunc=nil;--关闭事件

@@ -1,4 +1,4 @@
--- 驻员item
+﻿-- 驻员item
 function Awake()
     CSAPI.SetGOActive(plObj, false)
 end
@@ -81,6 +81,14 @@ function OnClick()
         cb()
     end
 end
+
+function SetIcon_pet(iconName)
+    CSAPI.SetGOActive(icon, iconName ~= nil)
+    if (iconName) then
+        ResUtil.PetHead:Load(icon, iconName)
+    end
+end
+
 -- =====================================pl=========================================================
 function InitPl()
     if (matrixPL == nil) then

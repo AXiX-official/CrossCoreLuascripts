@@ -1,4 +1,4 @@
---只处理 RandRewardType.ITEM && ITEM_TYPE.CARD
+﻿--只处理 RandRewardType.ITEM && ITEM_TYPE.CARD
 --[[    RandRewardType = {}
 RandRewardType.TEMPLATE = 1 --：嵌套模板
 RandRewardType.ITEM = 2 --：物品

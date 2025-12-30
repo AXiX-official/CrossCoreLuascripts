@@ -1,4 +1,4 @@
-_G["CfgRogueTScoreReward"]={{["key"]=1,["isReward"]=false,["id"]=1,["points"]=1400,["level"]=1,["reward"]={{2000301,2}
+﻿_G["CfgRogueTScoreReward"]={{["key"]=1,["isReward"]=false,["id"]=1,["points"]=1400,["level"]=1,["reward"]={{2000301,2}
 }
 }
 ,{["key"]=2,["isReward"]=true,["id"]=2,["points"]=2800,["level"]=2,["reward"]={{10040,80}

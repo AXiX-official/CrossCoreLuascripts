@@ -1,4 +1,4 @@
---适龄提示
+﻿--适龄提示
 function OnOpen()
     local cfg=Cfgs.CfgExplanatoryText:GetByID(6);
     CSAPI.SetText(txt_content,cfg.desc);

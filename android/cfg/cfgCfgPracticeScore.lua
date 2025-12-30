@@ -1,4 +1,4 @@
-_G["CfgPracticeScore"]={{["nDiffMax"]=-150,["key"]="1",["id"]=1,["nDiffMin"]=-999999,["nGetScore"]=16}
+﻿_G["CfgPracticeScore"]={{["nDiffMax"]=-150,["key"]="1",["id"]=1,["nDiffMin"]=-999999,["nGetScore"]=16}
 ,{["nDiffMax"]=-100,["key"]="2",["id"]=2,["nDiffMin"]=-150,["nGetScore"]=17}
 ,{["nDiffMax"]=-50,["key"]="3",["id"]=3,["nDiffMin"]=-100,["nGetScore"]=18}
 ,{["nDiffMax"]=50,["key"]="4",["id"]=4,["nDiffMin"]=-50,["nGetScore"]=20}

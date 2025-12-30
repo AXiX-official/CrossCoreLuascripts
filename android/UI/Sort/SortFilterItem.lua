@@ -1,4 +1,4 @@
--- filter的某一项，当前全部筛选数据
+﻿-- filter的某一项，当前全部筛选数据
 function Refresh(data, _elseData)
     elseData = _elseData
     title = data[1]

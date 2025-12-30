@@ -1,4 +1,4 @@
---剧情选项数据
+﻿--剧情选项数据
 local this = {}
 function this.New()
 	this.__index = this.__index or this;

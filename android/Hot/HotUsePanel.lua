@@ -1,4 +1,4 @@
-local curCount = 1
+﻿local curCount = 1
 local maxCount = 0
 
 function Awake()	

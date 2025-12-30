@@ -1,4 +1,4 @@
---副本格子
+﻿--副本格子
 
 function Awake()
     collider = ComUtil.GetCom(gameObject,"Collider");

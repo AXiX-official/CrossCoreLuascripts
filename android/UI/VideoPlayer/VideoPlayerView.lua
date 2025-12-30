@@ -1,4 +1,4 @@
-
+﻿
 function OnOpen()
     if(not data)then
          LogError("播放失败！");

@@ -1,4 +1,4 @@
-local talkEndTime = nil
+﻿local talkEndTime = nil
 local eventEndTime = nil
 local plNextTime = nil
 

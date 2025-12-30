@@ -1,4 +1,4 @@
--- 钻石-微晶 
+﻿-- 钻石-微晶 
 -- 微晶-抽卡卷
 function OnOpen()
     poolId = data[1] -- 卡池id

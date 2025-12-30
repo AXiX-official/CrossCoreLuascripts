@@ -1,4 +1,4 @@
---创建角色
+﻿--创建角色
 FightActionAddCard = oo.class(FightActionBase);
 local this = FightActionAddCard;
 

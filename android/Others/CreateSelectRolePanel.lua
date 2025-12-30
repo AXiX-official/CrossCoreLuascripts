@@ -1,4 +1,4 @@
-local baseCfgIDs
+﻿local baseCfgIDs
 local curCfgIDs
 local datas -- 选取的
 

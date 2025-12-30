@@ -1,4 +1,4 @@
-local animator=nil;
+﻿local animator=nil;
 local isPlaying=false;
 local canvasGroup=nil;
 local dungeonCfg=nil;

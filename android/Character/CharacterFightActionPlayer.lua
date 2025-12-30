@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 function this.New()
     this.__index = this.__index or this;
@@ -822,6 +822,10 @@ function this:StartAction()
         if(self.character.IsSkipSkill())then
             self.character.OnStateEnter(CSAPI.StringToHash(self.castName));
             self:ShowHitEffs();
+            local castNameSkip = self.castName and (self.castName .. "_skip");
+            if(castNameSkip)then
+                self.character.EnterState(castNameSkip);
+            end
         else
             --LogError(self.castName .. "========================");
             --LogError(self.fightAction.data);

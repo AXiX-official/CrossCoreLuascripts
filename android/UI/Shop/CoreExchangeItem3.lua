@@ -1,4 +1,4 @@
-local str="%s<color=#ffc146>X%s</color>";
+﻿local str="%s<color=#ffc146>X%s</color>";
 function Refresh(_d)
     if _d then
         ResUtil.IconGoods:Load(icon1,string.format("Role_splinter_%s",_d.stars),false,function()

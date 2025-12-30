@@ -1,4 +1,4 @@
---战斗行为管理器
+﻿--战斗行为管理器
 require "FightActionUtil"
 require "FightActionJumperMgr"
 require "FightActionBase"

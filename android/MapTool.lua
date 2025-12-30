@@ -1,4 +1,4 @@
-MapTool = {}
+﻿MapTool = {}
 
 function MapTool.new()
     return {size = 0, history_size = 0, datas = {}}

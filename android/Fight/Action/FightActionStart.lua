@@ -1,4 +1,4 @@
---战斗入场
+﻿--战斗入场
 
 FightActionStart = oo.class(FightActionBase);
 local this = FightActionStart;

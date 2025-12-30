@@ -1,4 +1,4 @@
-_G["GmCmdList"]={{["cmd"]="overFight",["num"]=0,["key"]=1,["exapmle"]="overFight",["id"]=1,["use"]="overFight",["type"]="战斗",["desc"]="一键结束战斗"}
+﻿_G["GmCmdList"]={{["cmd"]="overFight",["num"]=0,["key"]=1,["exapmle"]="overFight",["id"]=1,["use"]="overFight",["type"]="战斗",["desc"]="一键结束战斗"}
 ,{["cmd"]="passAll",["num"]=1,["key"]=2,["exapmle"]="passAll 3",["id"]=2,["use"]="passAll 星级",["type"]="战斗",["desc"]="一键通关"}
 ,{["cmd"]="plrlvl",["num"]=1,["key"]=3,["exapmle"]="plrlvl 100",["id"]=3,["use"]="plrlvl 等级",["type"]="玩家",["desc"]="设置玩家等级"}
 ,{["cmd"]="superCard",["num"]=1,["key"]=4,["exapmle"]="superCard 10010",["id"]=4,["use"]="superCard 卡牌id",["type"]="卡牌",["desc"]="卡牌满级,满级玩家"}

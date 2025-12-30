@@ -1,4 +1,4 @@
--- 好感度提升主界面
+﻿-- 好感度提升主界面
 function Awake()
     -- 立绘
     cardImgLua = RoleTool.AddRole(iconParent)

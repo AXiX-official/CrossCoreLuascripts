@@ -1,4 +1,4 @@
---公会详情界面
+﻿--公会详情界面
 function OnOpen()
     if data then
         CSAPI.SetText(txt_name,data.name);

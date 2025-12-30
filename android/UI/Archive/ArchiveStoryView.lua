@@ -1,4 +1,4 @@
---剧情图鉴
+﻿--剧情图鉴
 local itemPathT = "UIs/Archive2/ArchiveStoryItemT"
 local itemPathTH = "UIs/Archive2/ArchiveStoryItemTH"
 

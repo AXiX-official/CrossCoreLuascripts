@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 eff_addition_pack={"b6005004","b60050"},no_eff_ab=1,

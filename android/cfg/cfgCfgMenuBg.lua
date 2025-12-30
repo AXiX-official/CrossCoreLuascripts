@@ -1,4 +1,4 @@
-_G["CfgMenuBg"]={{["is_Open"]=1,["item_id"]=63001,["name"]="BGs/bg_2/bg.jpg",["id"]=1,["sName"]="生态实验室",["icon"]="bg2",["key"]="1"}
+﻿_G["CfgMenuBg"]={{["is_Open"]=1,["item_id"]=63001,["name"]="BGs/bg_2/bg.jpg",["id"]=1,["sName"]="生态实验室",["icon"]="bg2",["key"]="1"}
 ,{["is_Open"]=1,["item_id"]=63002,["name"]="BGs/bg_33/bg.jpg",["id"]=2,["sName"]="格纳库-1",["icon"]="bg33",["key"]="2"}
 ,{["is_Open"]=1,["item_id"]=63003,["name"]="BGs/bg_1/bg.jpg",["id"]=3,["sName"]="据点外围",["icon"]="bg1",["key"]="3"}
 ,{["is_Open"]=1,["item_id"]=63004,["name"]="BGs/bg_4/bg.jpg",["id"]=4,["sName"]="食堂",["icon"]="bg4",["key"]="4"}

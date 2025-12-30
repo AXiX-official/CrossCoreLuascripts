@@ -1,4 +1,4 @@
---月卡推荐
+﻿--月卡推荐
 local monthId=40007;
 function Awake()
     eventMgr = ViewEvent.New();

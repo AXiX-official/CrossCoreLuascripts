@@ -1,4 +1,4 @@
--- 裂空4
+﻿-- 裂空4
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -8,13 +8,37 @@ function Skill334401:Init(skillID, card)
 end
 -- 伤害前
 function Skill334401:OnBefourHurt(caster, target, data)
-	-- 8060
-	if SkillJudger:CasterIsSelf(self, caster, target, true) then
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
 	else
 		return
 	end
 	-- 8407
 	local count7 = SkillApi:GetAttr(self, caster, target,1,"speed")
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
 	-- 334401
-	self:AddTempAttr(SkillEffect[334401], caster, self.card, data, "damage",count7/1000)
+	self:AddTempAttr(SkillEffect[334401], caster, caster, data, "damage",math.floor(count7/10)*0.002)
+	-- 8062
+	if SkillJudger:CasterIsTeammate(self, caster, target, true) then
+	else
+		return
+	end
+	-- 8407
+	local count7 = SkillApi:GetAttr(self, caster, target,1,"speed")
+	-- 8966
+	if SkillJudger:HasBuff(self, caster, target, true,1,9038) then
+	else
+		return
+	end
+	-- 8073
+	if SkillJudger:TargetIsEnemy(self, caster, target, true) then
+	else
+		return
+	end
+	-- 334406
+	self:AddTempAttr(SkillEffect[334406], caster, caster, data, "damage",math.floor(count7/10)*0.006)
 end

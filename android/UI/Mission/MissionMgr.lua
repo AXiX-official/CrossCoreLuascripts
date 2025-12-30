@@ -1,4 +1,4 @@
---[[	-- 类型
+﻿--[[	-- 类型
 eTaskType = {}
 eTaskType.None = 0
 eTaskType.Main = 1 -- 主线
@@ -247,6 +247,12 @@ function this:GetInfos()
     return self.infos
 end
 
+function this:GetAnniversaryInfo(groupId)
+    if groupId then
+        return (self.infos and self.infos.anniversrays and self.infos.anniversrays[groupId]) or 0
+    end
+    return 0
+end
 ---------------------------------------------勘探任务------------------------
 function this:GetExplorationTasks(missionType)
     local arr = {}
@@ -344,6 +350,8 @@ function this:GetActivityDatas(_type, _group, _day,_isNotIndexSort)
         datas = self:GetPuzzleTasks(datas, _group)
     elseif _type==eTaskType.MultTeam then
         datas=self:GetMultTeamTasks(datas,_group)
+    elseif _type == eTaskType.LimitReward or _type == eTaskType.LimitRewardStage then
+        datas=self:GetMissionLimits(datas, _type, _day)
     end
     if (datas and #datas > 1) then
         if _type == eTaskType.SevenStage or _type == eTaskType.GuideStage or _type == eTaskType.NewYearFinish or _isNotIndexSort then -- 按id排序
@@ -546,7 +554,23 @@ function this:GetMultTeamTasks(_datas,nGroup)
     end
     return arr
 end
-
+---------------------------------------------限量任务------------------------
+function this:GetMissionLimits(_datas, _type, _stage)
+    if not _stage then
+        return _datas
+    end
+    local datas = {}
+    if _datas then
+        for k, data in ipairs(_datas) do
+            if _type == eTaskType.LimitRewardStage and data:GetCfg().id == _stage then
+                table.insert(datas, data)
+            elseif _type == eTaskType.LimitReward and data:GetCfgID() == _stage then
+                table.insert(datas, data)
+            end
+        end
+    end
+    return datas
+end
 -----------------------------------------------协议发------------------------
 -- 任务列表
 function this:GetTasksData()
@@ -638,8 +662,11 @@ function this:CheckRedPointData()
         RegressionMgr:CheckRedPointData()
 
         MultTeamBattleMgr:CheckRedInfo();
+
         -- 关卡
         DungeonMgr:CheckRedPointData()
+        --大富翁
+        RichManMgr:CheckRed();
     end
 
     -- 勘探
@@ -850,10 +877,16 @@ function this:GetChangeDatas()
 end
 
 -- 任务奖励  
-function this:GetRewardRet(datas, dailyStar, weeklyStar, rewards)
+function this:GetRewardRet(datas, dailyStar, weeklyStar, rewards, anniversrays)
     if (self.infos) then
         self.infos.dailyStar = dailyStar
         self.infos.weeklyStar = weeklyStar
+        if anniversrays then
+            self.infos.anniversrays = self.infos.anniversrays or {}
+            for _, v in ipairs(anniversrays) do
+                self.infos.anniversrays[v.first] = v.second
+            end
+        end
     end
     local type = nil
     if (datas and #datas > 0) then
@@ -885,6 +918,13 @@ function this:GetResetTaskInfo()
 end
 function this:GetResetTaskInfoRet(proto)
     self.infos = proto or {}
+    if proto.anvsStarInfo then
+        self.infos.anniversrays = self.infos.anniversrays or {}
+        for _, v in ipairs(proto.anvsStarInfo) do
+            self.infos.anniversrays[v.first] = v.second
+        end
+        self.infos.anvsStarInfo = nil
+    end
     -- EventMgr.Dispatch(EventType.Mission_List)    两条协议基本是同时请求的，所以由GetTasksDataRet来刷新界面
 end
 

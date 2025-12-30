@@ -1,4 +1,4 @@
-require "CallFunc";
+﻿require "CallFunc";
 require "LoginCommFuns"
 
 function Awake()

@@ -1,4 +1,4 @@
--- 点击地块时的入口
+﻿-- 点击地块时的入口
 function Awake()
     cg_btnR = ComUtil.GetCom(btnR, "CanvasGroup")
 end

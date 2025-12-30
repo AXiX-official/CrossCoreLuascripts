@@ -1,4 +1,4 @@
-local eventStart = false
+﻿local eventStart = false
 local endTime = nil
 
 function Refresh(_cRoleID)

@@ -1,4 +1,4 @@
---测绘子物体
+﻿--测绘子物体
 local data=nil;
 -- local nIconT=nil;
 -- local pIconT=nil;

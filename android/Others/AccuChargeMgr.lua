@@ -1,4 +1,4 @@
-local AccuChargeData = require("AccuChargeData")
+﻿local AccuChargeData = require("AccuChargeData")
 local AccuChargeDataS = require("AccuChargeDataS")
 local AccuChargeDataT = require("AccuChargeDataT")
 local this = MgrRegister("AccuChargeMgr")

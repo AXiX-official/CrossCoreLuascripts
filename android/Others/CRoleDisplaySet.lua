@@ -1,4 +1,4 @@
-local num = nil
+﻿local num = nil
 function OnOpen()
     SetItems(CRoleDisplayMgr:GetSpineInType())
 end

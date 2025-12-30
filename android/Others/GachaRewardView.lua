@@ -1,4 +1,4 @@
---扭蛋奖励界面
+﻿--扭蛋奖励界面
 function Open(_info)
     if _info then
         local goods=_info:GetGoodInfo();

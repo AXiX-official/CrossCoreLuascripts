@@ -1,4 +1,4 @@
-local MsgParser = {
+﻿local MsgParser = {
     inited = false
 }
 

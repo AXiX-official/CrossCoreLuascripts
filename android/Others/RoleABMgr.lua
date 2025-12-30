@@ -1,4 +1,4 @@
--- 角色（img,spine）资源关界面清理工具
+﻿-- 角色（img,spine）资源关界面清理工具
 local this = MgrRegister("RoleABMgr")
 
 function this:Init()

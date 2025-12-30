@@ -1,4 +1,4 @@
-local currItem = nil
+﻿local currItem = nil
 local listLines = nil
 local linePool = nil
 local sectionData = nil

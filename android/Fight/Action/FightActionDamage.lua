@@ -1,4 +1,4 @@
---战斗伤害
+﻿--战斗伤害
      
 --伤害事件
 local DamageEvent =

@@ -1,4 +1,4 @@
-_G["buff_effect"]={{["uniqueness"]=false,["time"]=2000,["id"]=1,["key"]="armor"}
+﻿_G["buff_effect"]={{["uniqueness"]=false,["time"]=2000,["id"]=1,["key"]="armor"}
 ,{["uniqueness"]=true,["play_channel"]=1,["key"]="weak_sarcasm",["id"]=2,["play_model"]=1}
 ,{["uniqueness"]=true,["play_channel"]=1,["key"]="silence",["id"]=3,["play_model"]=1}
 ,{["uniqueness"]=true,["play_channel"]=2,["key"]="superheat",["id"]=4,["play_model"]=1}
@@ -69,5 +69,6 @@ _G["buff_effect"]={{["uniqueness"]=false,["time"]=2000,["id"]=1,["key"]="armor"}
 ,{["uniqueness"]=false,["key"]="cast2_buff_g91060",["id"]=69,["res"]="g91060/cast_shield"}
 ,{["uniqueness"]=true,["key"]="cast1_buff_g91340",["id"]=70,["res"]="g91340/cast1_buff"}
 ,{["uniqueness"]=false,["key"]="u30500/cast_storage",["id"]=71,["res"]="u30500/cast_storage",["attach"]="CastPassiveEffect"}
+,{["uniqueness"]=false,["time"]=1500,["key"]="common_hit/qc_shoot_hit2",["id"]=72,["res"]="common_hit/qc_shoot_hit2"}
 }
 

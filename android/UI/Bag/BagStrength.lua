@@ -1,4 +1,4 @@
---背包强化装备逻辑
+﻿--背包强化装备逻辑
 local this={}
 local root=nil;
 local data=nil;

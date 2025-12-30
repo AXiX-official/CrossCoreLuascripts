@@ -1,4 +1,4 @@
-_G["CfgScriptEnum"]={{["id"]=1,["sName"]="获得",["key"]="1"}
+﻿_G["CfgScriptEnum"]={{["id"]=1,["sName"]="获得",["key"]="1"}
 ,{["id"]=2,["sName"]="出击",["key"]="2"}
 ,{["id"]=3,["sName"]="开战",["key"]="3"}
 ,{["id"]=4,["sName"]="胜利",["key"]="4"}

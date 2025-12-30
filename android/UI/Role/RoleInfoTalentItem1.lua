@@ -1,4 +1,4 @@
--- 副天赋，当前使用
+﻿-- 副天赋，当前使用
 function SetIndex(_index)
     index = _index
 end

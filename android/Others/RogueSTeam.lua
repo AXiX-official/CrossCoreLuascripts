@@ -1,4 +1,4 @@
-local isReady = false
+﻿local isReady = false
 local len = 1
 local teamlist = {}
 

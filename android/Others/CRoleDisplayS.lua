@@ -1,4 +1,4 @@
-local CRoleDisplayData = require("CRoleDisplayData")
+﻿local CRoleDisplayData = require("CRoleDisplayData")
 local topType = 1 -- 1：单人看板  2：双人看板
 function Awake()
     UIUtil:AddTop2("CRoleDisplayS", gameObject, function()

@@ -1,4 +1,4 @@
-
+﻿
 function OnOpen()
     local id = data[1]
     local targetGO = data[2]

@@ -1,4 +1,4 @@
-local this = MgrRegister("ColosseumMgr")
+﻿local this = MgrRegister("ColosseumMgr")
 
 function this:Init()
     self:Clear()

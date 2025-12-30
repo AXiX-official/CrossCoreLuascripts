@@ -1,4 +1,4 @@
-local isPlay = true
+﻿local isPlay = true
 local voiceTimer = nil
 local words = {}
 local oldStr = ""

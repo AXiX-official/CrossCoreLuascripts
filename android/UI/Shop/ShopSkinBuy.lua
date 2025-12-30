@@ -1,4 +1,4 @@
---皮肤购买界面
+﻿--皮肤购买界面
 local roleItem=nil;
 local currSkinInfo=nil;
 local voucherItem=nil;

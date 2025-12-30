@@ -1,4 +1,4 @@
---礼包格子
+﻿--礼包格子
 -- local cid=nil;
 local data=nil;
 local grid=nil;

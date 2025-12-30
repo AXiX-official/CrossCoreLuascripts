@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local pageData = nil
 local item = nil
 local isFinish = false

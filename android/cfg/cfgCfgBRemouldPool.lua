@@ -1,4 +1,4 @@
-_G["CfgBRemouldPool"]={[1001]={["id"]=1001,["arr"]={{["costs"]={{10011,1,2}
+﻿_G["CfgBRemouldPool"]={[1001]={["id"]=1001,["arr"]={{["costs"]={{10011,1,2}
 }
 ,["needTime"]=10,["index"]=1,["quality"]=1}
 ,{["costs"]={{10011,5,2}

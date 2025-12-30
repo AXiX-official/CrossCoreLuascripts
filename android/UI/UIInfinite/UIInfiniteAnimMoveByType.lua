@@ -1,4 +1,4 @@
--- 按参数缩进格子
+﻿-- 按参数缩进格子
 local this = {}
 
 local animTotalTime = 0.7 -- 动画总时长

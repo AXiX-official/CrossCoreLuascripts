@@ -1,4 +1,4 @@
-function Refresh(_index, _elseData)
+﻿function Refresh(_index, _elseData)
     _curIndex = _elseData[1]
     _animNum = _elseData[2]
     local isCur = _index == _curIndex

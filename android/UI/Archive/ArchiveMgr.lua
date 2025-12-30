@@ -1,4 +1,4 @@
-local this = MgrRegister("ArchiveMgr")
+﻿local this = MgrRegister("ArchiveMgr")
 
 -- datas{
 -- type = typeData={

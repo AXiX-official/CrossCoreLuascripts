@@ -1,4 +1,4 @@
-local state = nil
+﻿local state = nil
 local currItem = nil
 local canvasGroup = nil
 local supportDatas = nil --当前助战数据

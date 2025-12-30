@@ -1,4 +1,4 @@
-local cfgs = nil
+﻿local cfgs = nil
 local curDatas = nil
 local targetTime,timer = 0,0
 local time = 0

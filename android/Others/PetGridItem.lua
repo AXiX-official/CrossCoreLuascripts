@@ -1,4 +1,4 @@
---宠物物品格子
+﻿--宠物物品格子
 local elseData=nil;
 local quality=0;
 

@@ -1,4 +1,4 @@
-LovePlusProto = {}
+﻿LovePlusProto = {}
 
 --获取章节缩略信息
 function LovePlusProto:GetChapterSimpleInfo()

@@ -1,4 +1,4 @@
---技能工具
+﻿--技能工具
 SkillUtil = {};
 local this = SkillUtil;
 

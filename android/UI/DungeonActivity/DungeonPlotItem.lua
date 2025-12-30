@@ -1,4 +1,4 @@
--- 关卡组
+﻿-- 关卡组
 local clickCallBack = nil
 local curName = nil
 local alpha = 0

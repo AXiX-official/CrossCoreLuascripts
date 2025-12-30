@@ -1,4 +1,4 @@
--- 物品礼包面板
+﻿-- 物品礼包面板
 local grid = nil;
 function OnOpen()
 	if(data) then

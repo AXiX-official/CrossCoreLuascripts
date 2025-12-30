@@ -1,4 +1,4 @@
-local isCheckCard = false
+﻿local isCheckCard = false
 local teamNum = 1
 local curDatas1 = nil
 local curDatas2 = nil

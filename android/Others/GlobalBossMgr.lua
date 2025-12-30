@@ -1,4 +1,4 @@
-GlobalBossMgr = MgrRegister("GlobalBossMgr")
+﻿GlobalBossMgr = MgrRegister("GlobalBossMgr")
 local this = GlobalBossMgr;
 GlobalBossData = require "GlobalBossData"
 

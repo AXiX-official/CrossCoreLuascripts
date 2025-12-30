@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     UIUtil:AddTop2("CoffeeView", gameObject, function()
         view:Close()
     end, nil, {})

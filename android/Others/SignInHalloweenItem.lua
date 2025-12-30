@@ -1,4 +1,4 @@
-local items = nil
+﻿local items = nil
 local enStrs = {"ONE","TWO", "THREE","FOUR","FIVE","SIX","SEVEN","EIGHT","NINE","TENTH"}
 --SignInfDayInfo
 function Refresh(_data, _isShowNextDay)

@@ -1,4 +1,4 @@
-local FireBallDatas = require "FireBallDatas";
+﻿local FireBallDatas = require "FireBallDatas";
 
 local this = {};
 

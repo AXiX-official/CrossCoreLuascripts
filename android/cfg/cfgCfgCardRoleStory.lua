@@ -1,4 +1,4 @@
-_G["CfgCardRoleStory"]={[10020]={["id"]=10020,["infos"]={{["unlock_id"]=1,["rewards"]={{10001,2,2}
+﻿_G["CfgCardRoleStory"]={[10020]={["id"]=10020,["infos"]={{["unlock_id"]=1,["rewards"]={{10001,2,2}
 ,{10002,2,2}
 }
 ,["index"]=1,["weight"]=100,["story_id"]=30600,["story_icon"]="story_test1",["moduleId"]=1002001}

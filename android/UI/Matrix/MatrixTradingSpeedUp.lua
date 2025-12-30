@@ -1,4 +1,4 @@
--- data: MatrixTradingInfo
+﻿-- data: MatrixTradingInfo
 function OnOpen()
     cRoleInfo = data:GetCRoleInfo()
     -- grid

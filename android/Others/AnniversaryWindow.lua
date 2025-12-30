@@ -1,4 +1,4 @@
-local isClose = false
+﻿local isClose = false
 
 function OnOpen()
     local info = ActivityMgr:GetWindowInfo("AcitivtyEntryWindow_" .. eAEShowType.Anniversary)

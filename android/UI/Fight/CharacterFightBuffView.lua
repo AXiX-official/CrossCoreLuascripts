@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     tmRound = ComUtil.GetCom(goRound,"TextMesh");  
 end

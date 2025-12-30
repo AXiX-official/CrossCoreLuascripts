@@ -1,4 +1,4 @@
-local this = MgrRegister("TotalBattleMgr")
+﻿local this = MgrRegister("TotalBattleMgr")
 TotalBattleRankInfo = require "TotalBattleRankInfo"
 
 function this:Init()

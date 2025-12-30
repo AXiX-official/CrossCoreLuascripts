@@ -1,4 +1,4 @@
-_G["CfgMusic"]={{["cue_sheet"]="Sys_Lobby",["music_type"]=1,["id"]=1,["InitialType"]=1,["key"]="1",["cue_name_2"]="Sys_Lobby",["cue_name"]="Sys_Lobby_01",["sName"]="焕然心生",["group"]=1}
+﻿_G["CfgMusic"]={{["cue_sheet"]="Sys_Lobby",["music_type"]=1,["id"]=1,["InitialType"]=1,["key"]="1",["cue_name_2"]="Sys_Lobby",["cue_name"]="Sys_Lobby_01",["sName"]="焕然心生",["group"]=1}
 ,{["cue_sheet"]="Sys_Login",["music_type"]=1,["id"]=2,["key"]="2",["cue_name_2"]="Sys_Login",["cue_name"]="Sys_Login_1",["sName"]="交错的世界",["group"]=1}
 ,{["cue_sheet"]="Sys_Base",["music_type"]=1,["id"]=3,["key"]="3",["cue_name_2"]="Sys_Base",["cue_name"]="Sys_Base_1",["sName"]="前哨基地",["group"]=1}
 ,{["cue_sheet"]="Sys_Hostel",["music_type"]=1,["id"]=4,["key"]="4",["cue_name_2"]="Sys_Hostel",["cue_name"]="Sys_Hostel_1",["sName"]="小歇片刻",["group"]=1}

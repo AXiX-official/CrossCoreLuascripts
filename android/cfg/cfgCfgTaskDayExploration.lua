@@ -1,4 +1,4 @@
-_G["CfgTaskDayExploration"]={[39101]={["type"]=1,["sDescription"]="每日登录",["nRestType"]=1,["jAwardId"]={{10043,120,2}
+﻿_G["CfgTaskDayExploration"]={[39101]={["type"]=1,["sDescription"]="每日登录",["nRestType"]=1,["jAwardId"]={{10043,120,2}
 }
 ,["aFinishIds"]={39101}
 ,["key"]=39101,["nIsHide"]=2,["sName"]="每日登录",["icon"]="1",["id"]=39101}

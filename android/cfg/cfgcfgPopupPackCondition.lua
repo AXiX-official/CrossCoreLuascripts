@@ -1,4 +1,4 @@
-_G["cfgPopupPackCondition"]={{["nCountdown"]=720,["popupPack"]=1001,["key"]="1",["conditionType"]=1,["id"]=1,["loopCount"]=1,["nVal1"]=10}
+﻿_G["cfgPopupPackCondition"]={{["nCountdown"]=720,["popupPack"]=1001,["key"]="1",["conditionType"]=1,["id"]=1,["loopCount"]=1,["nVal1"]=10}
 ,{["nCountdown"]=720,["popupPack"]=1002,["key"]="2",["conditionType"]=1,["id"]=2,["loopCount"]=1,["nVal1"]=20}
 ,{["nCountdown"]=720,["popupPack"]=1003,["key"]="3",["conditionType"]=1,["id"]=3,["loopCount"]=1,["nVal1"]=30}
 ,{["nCountdown"]=720,["popupPack"]=1004,["key"]="4",["conditionType"]=1,["id"]=4,["loopCount"]=1,["nVal1"]=40}

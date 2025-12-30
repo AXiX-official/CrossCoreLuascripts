@@ -1,4 +1,4 @@
-
+﻿
 --管理基类，提供子类重写
 MgrBase = oo.class()
 local this = MgrBase

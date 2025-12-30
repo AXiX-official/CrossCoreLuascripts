@@ -1,4 +1,4 @@
-local info = nil
+﻿local info = nil
 local sTime,eTime = 0,0
 local isLock = false
 

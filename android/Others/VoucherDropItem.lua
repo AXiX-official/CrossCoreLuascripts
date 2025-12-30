@@ -1,4 +1,4 @@
---折扣券物体
+﻿--折扣券物体
 local options={};
 local opDatas=nil;
 local drop=nil;

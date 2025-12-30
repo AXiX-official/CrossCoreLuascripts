@@ -1,4 +1,4 @@
---队伍选择子物体
+﻿--队伍选择子物体
 local teamData=nil;
 local input=nil;--输入栏
 local teamGrids={};

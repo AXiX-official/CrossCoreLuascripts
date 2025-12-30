@@ -1,4 +1,4 @@
-local character = nil;
+﻿local character = nil;
 local timeOutValue = nil;
 local recordBeginTime = 0;
 local currTotalDamage=0;--当前战斗对敌方造成的总伤害值

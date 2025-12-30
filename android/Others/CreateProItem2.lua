@@ -1,4 +1,4 @@
--- RewardInfo2 的某 index
+﻿-- RewardInfo2 的某 index
 function SetClickCB(_cb)
     cb = _cb
 end

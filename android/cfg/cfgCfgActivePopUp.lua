@@ -1,4 +1,4 @@
-_G["CfgActivePopUp"]={{["index"]=1,["id"]=1,["activeId"]=1029,["viewName"]="SignInDuanWu",["key"]="1"}
+﻿_G["CfgActivePopUp"]={{["index"]=1,["id"]=1,["activeId"]=1029,["viewName"]="SignInDuanWu",["key"]="1"}
 ,{["index"]=2,["id"]=2,["activeId"]=1001,["viewName"]="ActivityListView",["key"]="2"}
 ,{["index"]=3,["id"]=3,["activeId"]=1030,["viewName"]="ActivityListView",["key"]="3"}
 ,{["index"]=4,["id"]=4,["activeId"]=1002,["viewName"]="ActivityListView",["key"]="4"}
@@ -15,5 +15,8 @@ _G["CfgActivePopUp"]={{["index"]=1,["id"]=1,["activeId"]=1029,["viewName"]="Sign
 ,{["index"]=15,["id"]=15,["activeId"]=1027,["viewName"]="ActivityListView",["key"]="15"}
 ,{["index"]=16,["id"]=16,["activeId"]=1028,["viewName"]="ActivityListView",["key"]="16"}
 ,{["index"]=17,["id"]=17,["activeId"]=1036,["viewName"]="ActivityListView",["key"]="17"}
+,{["index"]=18,["id"]=18,["activeId"]=1040,["viewName"]="ActivityListView",["key"]="18"}
+,{["index"]=19,["id"]=19,["activeId"]=1041,["viewName"]="ActivityListView",["key"]="19"}
+,{["index"]=20,["id"]=20,["activeId"]=1042,["viewName"]="ActivityListView",["key"]="20"}
 }
 

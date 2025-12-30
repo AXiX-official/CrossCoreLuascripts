@@ -1,4 +1,4 @@
-local isClose = false
+﻿local isClose = false
 local isStarClose = false
 local bgFade = nil
 

@@ -1,4 +1,4 @@
-local cfg=nil;
+﻿local cfg=nil;
 function Awake()
     --读取表中的配置初始化图片
     cfg=Cfgs.CfgShopReCommend:GetByID(1);

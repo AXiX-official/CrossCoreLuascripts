@@ -1,4 +1,4 @@
-local curIndex = nil
+﻿local curIndex = nil
 local baseIndex = nil
 
 function Awake()

@@ -1,4 +1,4 @@
-_G["cfgQuestionsGroup"]={{["infos"]={{["answer"]="月亮",["index"]=1,["isright"]=1}
+﻿_G["cfgQuestionsGroup"]={{["infos"]={{["answer"]="月亮",["index"]=1,["isright"]=1}
 ,{["answer"]="太阳",["index"]=2}
 ,{["answer"]="北极星",["index"]=3}
 ,{["answer"]="流星",["index"]=4}

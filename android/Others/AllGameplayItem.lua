@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     layout = ComUtil.GetCom(hsv, "UIInfinite")
     layout:Init("UIs/Grid/GridItem", LayoutCallBack, true, 0.5)
 end

@@ -1,4 +1,4 @@
---技能组协议
+﻿--技能组协议
 AbilityProto = {
 	useCallBack = nil,
 }

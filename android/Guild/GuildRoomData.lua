@@ -1,4 +1,4 @@
---公会战房间信息
+﻿--公会战房间信息
 local this={};
 
 function this.New()

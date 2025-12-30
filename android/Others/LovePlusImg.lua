@@ -1,4 +1,4 @@
-local cfg =nil
+﻿local cfg =nil
 local sid = nil
 
 function Refresh(_cfg,_sid)

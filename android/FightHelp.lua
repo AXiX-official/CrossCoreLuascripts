@@ -1,4 +1,4 @@
-function LogEnterFight(oPlayer, fid, sceneType, nDuplicateID, groupID, data)
+﻿function LogEnterFight(oPlayer, fid, sceneType, nDuplicateID, groupID, data)
     -- LogTable(data)
     --LogDebugEx("LogEnterFight", fid, sceneType, nDuplicateID, groupID)
     local logdata = {}
@@ -779,9 +779,13 @@ function FightHelp:GetPvpDataFromTeam(uid, teamData, icon_emotes)
         icon_emotes = icon_emotes or {1,1,1}
     }
 
+    local excludeSkills = {}
     if teamData and #teamData.data > 0 then
         for i, v in ipairs(teamData.data) do
             local cardData = GetFightDataFromTeamData(v.pvp_card_info)
+            
+            GCalHelp:RegisterExcludeSkill(cardData.cfgid, cardData.eskills, excludeSkills)
+
             cardData.row = v.row
             cardData.col = v.col
             cardData.cuid = v.cid
@@ -800,6 +804,8 @@ function FightHelp:GetPvpDataFromTeam(uid, teamData, icon_emotes)
     else
         return nil
     end
+
+    GCalHelp:RemoveExcludeSkill(tData.data, excludeSkills)
 
     return tData
 end

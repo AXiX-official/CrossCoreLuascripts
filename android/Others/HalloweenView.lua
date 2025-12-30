@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local screenData = {1609, 1027}
 local isContinue = false
 local isTimeEnd = false

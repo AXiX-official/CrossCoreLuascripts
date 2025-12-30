@@ -1,4 +1,4 @@
---local this=MgrRegister("ShiryuSDK")
+﻿--local this=MgrRegister("ShiryuSDK")
 require "AdvGoogleGit";
 require "AdvGuiDeScore"
 require "AdvBindingRewards"

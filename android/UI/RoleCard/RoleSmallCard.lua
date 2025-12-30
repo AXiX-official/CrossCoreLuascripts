@@ -1,4 +1,4 @@
-local cb = nil
+﻿local cb = nil
 local canClick = true
 local quality = nil
 

@@ -1,4 +1,4 @@
-local curDatas = {}
+﻿local curDatas = {}
 local layout = nil
 --time
 local refreshTime = 0

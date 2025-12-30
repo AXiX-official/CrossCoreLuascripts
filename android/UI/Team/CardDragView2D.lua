@@ -1,4 +1,4 @@
---拖拽卡牌视图
+﻿--拖拽卡牌视图
 local isDamage = false;
 local stars=nil;
 local gridSize=nil;

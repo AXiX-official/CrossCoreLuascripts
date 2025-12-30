@@ -1,4 +1,4 @@
--- 资源收取界面
+﻿-- 资源收取界面
 local isShow = false
 local timer = 0
 

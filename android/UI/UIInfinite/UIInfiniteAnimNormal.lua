@@ -1,4 +1,4 @@
--- 格子一个个生成
+﻿-- 格子一个个生成
 local this = {}
 
 local animTotalTime = 0.7 -- 动画总时长

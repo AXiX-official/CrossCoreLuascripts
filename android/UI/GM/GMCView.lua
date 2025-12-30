@@ -1,4 +1,4 @@
--- local GMCInfos = {
+﻿-- local GMCInfos = {
 --         --玩家
 --         {content = "设置玩家等级", formatStr = "plrlvl %s", tips = "参数格式：等级"},
 --         {content = "添加玩家经验", formatStr = "plrexp %s", tips = "参数格式：经验值"},
@@ -149,6 +149,7 @@ function OnBtnNewPlayerFight0()
     -- GuideMgr:SkipTo(3010);
     -- PlayerPrefs.SetInt(PlayerClient:GetNewPlayerFightStateKey() .. "_" .. PlayerClient:GetID(), 0);
     -- PlayerClient:NewPlayerFight(1);
+    CSAPI.OpenView("ExerciseRMain",nil,ePVPPPType.Three) 
 end
 
 function btnJump()
@@ -862,7 +863,7 @@ function OnClickUnite()
 
     local removeIds = GetRemoveIDs()
     if removeIds[id1] ~= nil or removeIds[id2] ~= nil then
-        LogError(string.format("id:%s不可被同调，存在被合体或被变身！！！",
+        LogError(string.format("id:%s不可被同调，存在被其他卡牌或怪物合体！！！",
             removeIds[id1] ~= nil and id1 or id2))
         return
     end
@@ -924,11 +925,11 @@ function GetRemoveIDs()
         if v.fit_result then
             infos[v.fit_result] = 1
         end
-        if v.tTransfo then
-            for _, _id in ipairs(v.tTransfo) do
-                infos[_id] = 1
-            end
-        end
+        -- if v.tTransfo then
+        --     for _, _id in ipairs(v.tTransfo) do
+        --         infos[_id] = 1
+        --     end
+        -- end
     end
 
     local cfgMonsters = Cfgs.MonsterData:GetAll()
@@ -936,11 +937,11 @@ function GetRemoveIDs()
         if v.fit_result then
             infos[v.fit_result] = 1
         end
-        if v.tTransfo then
-            for _, _id in ipairs(v.tTransfo) do
-                infos[_id] = 1
-            end
-        end
+        -- if v.tTransfo then
+        --     for _, _id in ipairs(v.tTransfo) do
+        --         infos[_id] = 1
+        --     end
+        -- end
     end
     return infos
 end

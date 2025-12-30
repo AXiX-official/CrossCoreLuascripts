@@ -1,4 +1,4 @@
-_G["CfgFurnitureEnum"]={{["id"]=3,["sName"]="椅子",["key"]="3",["index"]=1}
+﻿_G["CfgFurnitureEnum"]={{["id"]=3,["sName"]="椅子",["key"]="3",["index"]=1}
 ,{["id"]=4,["sName"]="床",["key"]="4",["index"]=2}
 ,{["id"]=5,["sName"]="柜",["key"]="5",["index"]=3}
 ,{["id"]=6,["sName"]="桌子",["key"]="6",["index"]=4}

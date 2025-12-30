@@ -1,4 +1,4 @@
--- 组队攻击
+﻿-- 组队攻击
 ExerciseFriendTool = {}
 local this = ExerciseFriendTool
 

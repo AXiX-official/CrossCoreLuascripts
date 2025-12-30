@@ -1,4 +1,4 @@
-_G["cfgSkillStrategyItem"]={{["id"]=1,["skillStrategy"]="%s",["description"]="直接释放",["key"]=1}
+﻿_G["cfgSkillStrategyItem"]={{["id"]=1,["skillStrategy"]="%s",["description"]="直接释放",["key"]=1}
 ,{["id"]=2,["skillStrategy"]="%s",["description"]="系统默认",["key"]=2}
 ,{["id"]=3,["skillStrategy"]="0,%s",["description"]="不能自动释放",["key"]=3}
 ,[702]={["id"]=702,["skillStrategy"]="7,3,4,30221,1,%s,0",["description"]="远古咆哮大于1层时",["key"]=702}

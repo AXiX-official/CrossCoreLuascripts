@@ -1,4 +1,4 @@
--- 卡牌工具
+﻿-- 卡牌工具
 RoleTool = {}
 local this = RoleTool
 
@@ -42,9 +42,8 @@ end
 
 -- 卡牌最大等级 
 function this.GetMaxLv()
-    -- local cfg = Cfgs.CardLevel:GetAll()
-    -- return #cfg
-    return 80 -- todo 
+    local cfg = Cfgs.CardLevel:GetAll()
+    return #cfg
 end
 
 -- 卡牌最大突破等级

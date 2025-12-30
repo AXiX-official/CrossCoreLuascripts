@@ -1,4 +1,4 @@
--- 商店buff
+﻿-- 商店buff
 local this = {}
 local animTotalTime = 1 -- 动画总时长
 local animTotalTime2 = 1 -- 实际时长

@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local isOpen = false
 
 function SetClickCB(_cb)

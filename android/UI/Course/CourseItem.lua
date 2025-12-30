@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local dungeonData = nil
 local canvasGroup = nil
 local isLock = false

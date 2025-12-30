@@ -1,4 +1,4 @@
-local num, min, max = 1, 1, 1
+﻿local num, min, max = 1, 1, 1
 
 function OnInit()
     eventMgr = ViewEvent.New()

@@ -1,4 +1,4 @@
-local runTime = false
+﻿local runTime = false
 local endTime = 0
 local timer = 0
 

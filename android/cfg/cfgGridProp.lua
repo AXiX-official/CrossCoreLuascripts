@@ -1,4 +1,4 @@
-_G["GridProp"]={{["type"]=2,["key"]=1,["float_font"]="prop_1",["id"]=1,["bIsCanPass"]=false,["desc"]="HP恢复道具",["get_eff"]="get_eff_green",["name"]="HP恢复",["eUseState"]=false,["perpetual"]=false,["res"]="banshou",["icon"]="organ_buff",["param"]={0.2}
+﻿_G["GridProp"]={{["type"]=2,["key"]=1,["float_font"]="prop_1",["id"]=1,["bIsCanPass"]=false,["desc"]="HP恢复道具",["get_eff"]="get_eff_green",["name"]="HP恢复",["eUseState"]=false,["perpetual"]=false,["res"]="banshou",["icon"]="organ_buff",["param"]={0.2}
 }
 ,{["type"]=1,["key"]=2,["float_font"]="prop_2",["id"]=2,["bIsCanPass"]=false,["desc"]="HP恢复道具",["get_eff"]="get_eff_green",["name"]="HP恢复",["eUseState"]=false,["perpetual"]=false,["res"]="banshou",["icon"]="organ_buff",["param"]={200}
 }

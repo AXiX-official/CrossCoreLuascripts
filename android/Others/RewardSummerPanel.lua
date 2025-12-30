@@ -1,4 +1,4 @@
-local layout = nil;
+﻿local layout = nil;
 
 function Awake()
     layout = ComUtil.GetCom(hpage, "UISlideshow")

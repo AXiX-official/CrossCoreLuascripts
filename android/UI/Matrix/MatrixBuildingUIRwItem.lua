@@ -1,4 +1,4 @@
-function Refresh1(_data, max)	
+﻿function Refresh1(_data, max)	
 	data = _data
 	local cfg = Cfgs.ItemInfo:GetByID(data.id)
 	local frame = GridFrame[cfg.quality]

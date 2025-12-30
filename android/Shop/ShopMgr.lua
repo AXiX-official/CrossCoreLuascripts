@@ -1,4 +1,4 @@
---商品数据管理
+﻿--商品数据管理
 local this = MgrRegister("ShopMgr")
 require "LoginCommFuns"
 -- Init函数中 存放了从服务器获取到的商店购买记录

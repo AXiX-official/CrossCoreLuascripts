@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理回合切换
 function this:Handle(data)    

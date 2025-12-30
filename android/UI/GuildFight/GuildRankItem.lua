@@ -1,4 +1,4 @@
---公会战排名预制物
+﻿--公会战排名预制物
 
 function Refresh(_data,_elseData)
     if _elseData.type==GuildRankType.GuildGobalRank then

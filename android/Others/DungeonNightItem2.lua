@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local anim = nil
 
 function Awake()

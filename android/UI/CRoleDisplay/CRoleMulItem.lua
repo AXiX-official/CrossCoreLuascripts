@@ -1,4 +1,4 @@
--- 多人插图 
+﻿-- 多人插图 
 function SetIndex(_index)
     index = _index
 end

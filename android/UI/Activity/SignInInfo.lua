@@ -1,4 +1,4 @@
---单个活动
+﻿--单个活动
 local this = {}
 
 function this.New()

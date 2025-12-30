@@ -1,4 +1,4 @@
--- 改造列表item
+﻿-- 改造列表item
 local costId = 10011
 local panelType = 1 -- 1:未选择  2：已选择  3：改造中/完成
 

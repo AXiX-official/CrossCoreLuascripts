@@ -1,4 +1,4 @@
-function Refresh(cfg)
+﻿function Refresh(cfg)
     if cfg then
         SetName(cfg.name)
         local cfgModel = Cfgs.character:GetByID(cfg.model)

@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cast2={play_time=6000,start_pos={ref_type=0,offset_row=-200},last_hit=3000,hide_scene=1,hide_buff=1,showDatas={{delay=0,showState=1,isEnemy=1},{delay=3800,isEnemy=1}}},

@@ -1,4 +1,4 @@
---��������Ϣ
+﻿--��������Ϣ
 _G.PlayerClient = require "PlayerClient";
 
 _G.ChannelWebUtil=require "ChannelWebUtil";
@@ -227,3 +227,20 @@ _G.MultTeamBattleInfo=require "MultTeamBattleInfo"
 --猜谜活动
 _G.RiddleActivityInfo=require "RiddleActivityInfo"
 _G.RiddleInfo=require "RiddleInfo"
+
+--大富翁活动
+_G.RichManEnum=require "RichManEnum"
+_G.RichManGridEvent=require "RichManGridEvent"
+_G.RichManGridInfo=require "RichManGridInfo"
+_G.RichManMapInfo=require "RichManMapInfo"
+_G.RichManInfo=require "RichManInfo"
+_G.RichManActionQueue=require "RichManActionQueue"
+_G.RichManActionBase=require "RichManActionBase"
+_G.RichManMoveAction=require "RichManMoveAction"
+_G.RichManFullRoundAction=require "RichManFullRoundAction"
+_G.RichManRandRewardAction=require "RichManRandRewardAction"
+_G.RichManRandEventAction=require "RichManRandEventAction"
+_G.RichManTpAction=require "RichManTpAction"
+_G.RichManRandTweenAction=require "RichManRandTweenAction"
+_G.RichManUtil=require "RichManUtil"
+

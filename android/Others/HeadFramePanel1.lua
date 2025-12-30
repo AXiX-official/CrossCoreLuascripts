@@ -1,4 +1,4 @@
-local selectID = nil
+﻿local selectID = nil
 local isUseimg = false
 local minEndTime = nil
 local minShopTime = nil

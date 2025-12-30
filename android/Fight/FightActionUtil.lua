@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 FightActionUtil = this;
 
 
@@ -57,6 +57,8 @@ APIType =
     OnDelBuff = "OnDelBuff";
     OnRemoveBuff = "OnRemoveBuff";
 
+    AddOwnerEquipSkill = "AddOwnerEquipSkill";
+    
      --拉条
     AddProgress = "AddProgress",
      --更新时间条
@@ -133,6 +135,7 @@ APIType =
     OnDeath          = "OnDeath", -- 死亡时
     OnCure           = "OnCure", -- 治疗时
     OnAddProgress    = "OnAddProgress", -- 拉条时
+    OnReduceProgress = "OnReduceProgress",--退条时
     --切换周目
     ChangeStage = "ChangeStage"; 
     --切换周目
@@ -427,7 +430,8 @@ function this:GetAPIHandler(apiName)
         self.handers[APIType.SetFury] = apiHandler;
         --更新怒气
         self.handers[APIType.UpdateFury] = apiHandler;
-
+        --添加武器技能
+        self.handers[APIType.AddOwnerEquipSkill] = apiHandler;
         --自定义
         self.handers[APIType.Custom] = apiHandler;
 
@@ -465,13 +469,16 @@ function this:GetAPIHandler(apiName)
         -- 治疗时
         self.handers[APIType.OnCure]           = apisHandler;
         -- 拉条时
-        self.handers[APIType.OnAddProgress]           = apisHandler;        
+        self.handers[APIType.OnAddProgress]           = apisHandler; 
+        --退条时
+        self.handers[APIType.OnReduceProgress]           = apisHandler;        
         --添加Buff时触发
         self.handers[APIType.OnAddBuff] = apisHandler;
         --删除Buff时触发（后端给的api）
         self.handers[APIType.OnDelBuff] = apisHandler;
          --移除Buff时触发（后端给的api）
         self.handers[APIType.OnRemoveBuff] = apisHandler;
+                    
         
         -- 前端自定义API
         self.handers[APIType.APIs]           = apisHandler;

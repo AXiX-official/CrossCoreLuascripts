@@ -1,4 +1,4 @@
-_G["CfgFurnitureTheme"]={[6001]={["nBuyEnd"]=0,["nBuyStart"]=0,["id"]=6001,["comfort"]=4497,["price_2"]={{10002,3768}
+﻿_G["CfgFurnitureTheme"]={[6001]={["nBuyEnd"]=0,["nBuyStart"]=0,["id"]=6001,["comfort"]=4497,["price_2"]={{10002,3768}
 }
 ,["desc"]="根据哈托莉的描述再现的某个直播间，风格独特，设备齐全，娱乐生活两不误。",["price_1"]={{10013,3768}
 }
@@ -10,6 +10,12 @@ _G["CfgFurnitureTheme"]={[6001]={["nBuyEnd"]=0,["nBuyStart"]=0,["id"]=6001,["com
 }
 ,["key"]="11001",["PromoImage"]={11001,11002,11003,11004}
 ,["layoutId"]=11001,["sName"]="甜蜜派对屋",["icon"]="bg11/bg",["new"]=true}
+,[15001]={["nBuyEnd"]=0,["nBuyStart"]=0,["id"]=15001,["comfort"]=2172,["price_2"]={{10002,1810}
+}
+,["desc"]="由地球某间极其昂贵的家居设计公司所设计的复古家居套装，令人充分感受高雅之美。",["price_1"]={{10013,1810}
+}
+,["key"]="15001",["PromoImage"]={15001,15002,15003,15004}
+,["layoutId"]=15001,["sName"]="金色典雅",["icon"]="bg15/bg",["new"]=true}
 ,[4001]={["nBuyEnd"]=0,["id"]=4001,["comfort"]=12,["price_2"]={{10002,0}
 }
 ,["desc"]="岁旦日，辰寅刻，祝新春。",["price_1"]={{10013,0}

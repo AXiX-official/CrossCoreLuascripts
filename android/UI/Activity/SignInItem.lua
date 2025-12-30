@@ -1,4 +1,4 @@
-
+﻿
 --SignInfDayInfo
 function Refresh(_data,isClear)
 	data = _data

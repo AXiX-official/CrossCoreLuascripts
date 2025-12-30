@@ -1,4 +1,4 @@
-_G["CfgRogueBuffType"]={{["id"]=1,["sName"]="迅捷",["key"]="1",["icon"]="1001"}
+﻿_G["CfgRogueBuffType"]={{["id"]=1,["sName"]="迅捷",["key"]="1",["icon"]="1001"}
 ,{["id"]=2,["sName"]="神盾",["key"]="2",["icon"]="1002"}
 ,{["id"]=3,["sName"]="猛袭",["key"]="3",["icon"]="1003"}
 ,{["id"]=4,["sName"]="单极",["key"]="4",["icon"]="1004"}

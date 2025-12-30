@@ -1,4 +1,4 @@
--- 点线段
+﻿-- 点线段
 local width = nil
 
 function Awake()

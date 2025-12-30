@@ -1,4 +1,4 @@
--- 飘字
+﻿-- 飘字
 local delayTime = 1.8; -- 显示时间
 local timer = 0; -- 计时器
 local canCount = false; -- 是否开始计时

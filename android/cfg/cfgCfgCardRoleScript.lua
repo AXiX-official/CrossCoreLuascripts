@@ -1,4 +1,4 @@
-_G["CfgCardRoleScript"]={["6010_Harpe"]={["id"]="6010_Harpe",["infos"]={{["index"]=1,["moduleId"]=6010001}
+﻿_G["CfgCardRoleScript"]={["6010_Harpe"]={["id"]="6010_Harpe",["infos"]={{["index"]=1,["moduleId"]=6010001}
 }
 ,["key"]="6010_Harpe"}
 ,["5003_Stinger"]={["id"]="5003_Stinger",["infos"]={{["index"]=1,["moduleId"]=5003001}

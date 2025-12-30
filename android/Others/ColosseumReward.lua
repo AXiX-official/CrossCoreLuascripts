@@ -1,4 +1,4 @@
-function OnOpen()
+﻿function OnOpen()
     randModData = ColosseumMgr:GetRandModData()
     local cur, max = ColosseumMgr:GetRandomStar(), 27
     -- star

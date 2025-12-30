@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local sid = nil
 local chatItem = nil
 local optionList = {}

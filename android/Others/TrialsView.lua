@@ -1,4 +1,4 @@
-local sectionDatas = nil
+﻿local sectionDatas = nil
 local isShowList = false -- 显示九宫格
 local layout1 = nil
 local layout2 = nil

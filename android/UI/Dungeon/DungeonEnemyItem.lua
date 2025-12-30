@@ -1,4 +1,4 @@
-
+﻿
 local isSmiple = false;
 local isBoss = false;
 local fade = nil;

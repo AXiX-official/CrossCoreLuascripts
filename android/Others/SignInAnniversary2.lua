@@ -1,4 +1,4 @@
-local key = nil
+﻿local key = nil
 local targetTime = 0
 local cfg = nil
 local data = nil
@@ -41,10 +41,11 @@ function SetDatas()
             table.insert(curDatas2, v)
         end
     end
+    local itemName = "SignInContinue10/"..gameObject.name.."Item"
     items1 = items1 or {}
-    ItemUtil.AddItems("SignInContinue10/SignInAnniversary2Item",items1,curDatas1,grid)
+    ItemUtil.AddItems(itemName,items1,curDatas1,grid)
     items2 = items2 or {}
-    ItemUtil.AddItems("SignInContinue10/SignInAnniversary2Item",items2,curDatas2,grid2)
+    ItemUtil.AddItems(itemName,items2,curDatas2,grid2)
 
     -- layout:IEShowList(#curDatas, nil, curDay)
 end

@@ -1,4 +1,4 @@
-local faces = {"img_10_01", "img_10_02", "img_10_03"}
+﻿local faces = {"img_10_01", "img_10_02", "img_10_03"}
 
 local isStop = true -- 暂停
 local changeTime = nil -- 客人更换间隔

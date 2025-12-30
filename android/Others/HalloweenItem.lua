@@ -1,4 +1,4 @@
-local size = nil
+﻿local size = nil
 local cfg = nil
 local isStop = true
 local posX,posY = 0,0

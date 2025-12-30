@@ -1,4 +1,4 @@
--- 扭蛋主界面
+﻿-- 扭蛋主界面
 local data = nil;
 local cfg = nil;
 local pool = nil;

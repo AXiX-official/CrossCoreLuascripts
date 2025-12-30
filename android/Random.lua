@@ -1,4 +1,4 @@
--- 2. 线性同余法产生均匀型伪随机数需要注意什么？
+﻿-- 2. 线性同余法产生均匀型伪随机数需要注意什么？
 -- 2.1）种子数是在计算时随机给出的。比如C语言中用srand(time(NULL))函数进行随机数种子初始化。
 -- 2.2）决定伪随机数质量的是其余的三个参数，即a,b,m决定生成伪随机数的质量（质量指的是伪随机数序列的周期性）
 -- 2.3）一般b不为0。如果b为零，线性同余法变成了乘同余法，也是最常用的均匀型伪随机数发生器。
@@ -23,6 +23,7 @@
 
 Random = oo.class()
 function Random:Init(seed)
+	LogDebugEx("初始化随机种子", seed)
 	self.arrSeed = {}
 	self.arrFormula = {}
 	self.nSeedNum = 13
@@ -73,7 +74,7 @@ end
 function Random:Rand(m)
 	self.count = self.count + 1
 	m = math.floor(m)
-
+	-- LogTrace()
 	-- self.seed = (82101 * self.seed + 104789) % 99985651
 	-- print("Random------", math.floor(82101 * self.seed), math.floor(82101 * self.seed + 12345), math.floor(82101 * self.seed + 12345) % 2147483647)
 	-- lua支持的最大整数2^53-1 = 1463726,7894162465

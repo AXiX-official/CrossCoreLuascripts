@@ -1,4 +1,4 @@
-_G["CfgCardRoleVoice"]={[301801]={["id"]=301801,["infos"]={{["type"]=1,["name"]="CrossCore",["openLv"]=1,["audio"]=30180101,["script"]="CrossCore。",["index"]=1}
+﻿_G["CfgCardRoleVoice"]={[301801]={["id"]=301801,["infos"]={{["type"]=1,["name"]="CrossCore",["openLv"]=1,["audio"]=30180101,["script"]="CrossCore。",["index"]=1}
 ,{["type"]=2,["name"]="获得",["openLv"]=1,["audio"]=30180102,["script"]="第三分队队长刃齿向您报道，话说你在那里磨蹭什么……敌人都在哪？我已经迫不及待要去摧垮他们了。",["index"]=2}
 ,{["type"]=3,["name"]="出击",["openLv"]=1,["audio"]=30180103,["script"]="我会冲在最前线。",["index"]=3}
 ,{["type"]=4,["name"]="开始行动",["openLv"]=1,["audio"]=30180104,["script"]="冲击冲击。",["index"]=4}

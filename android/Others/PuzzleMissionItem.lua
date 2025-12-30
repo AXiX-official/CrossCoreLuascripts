@@ -1,4 +1,4 @@
---拼图任务
+﻿--拼图任务
 local data=nil;
 local grid=nil;
 local isGet=false;

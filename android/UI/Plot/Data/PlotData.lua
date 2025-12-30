@@ -1,4 +1,4 @@
---对话数据
+﻿--对话数据
 local this = {}
 local talkInfo = nil;
 local options = nil;

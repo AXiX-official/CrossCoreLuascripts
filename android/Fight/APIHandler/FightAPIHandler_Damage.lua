@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 function this:Handle(data)
     local fightAction = FightActionMgr:Apply(FightActionType.Damage,data);   

@@ -1,4 +1,4 @@
-local info = nil
+﻿local info = nil
 local isCanUp = false
 local isRight = false
 local isShowSkill = false

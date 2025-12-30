@@ -1,4 +1,4 @@
---获取途径项
+﻿--获取途径项
 local isLock = false;
 local lockStr=LanguageMgr:GetTips(16005);
 function Awake()

@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     local characters = CharacterMgr:GetAll();
     if(characters)then

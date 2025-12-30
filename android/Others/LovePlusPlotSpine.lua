@@ -1,4 +1,4 @@
-local plotId = 0
+﻿local plotId = 0
 local spineItem = nil
 
 function Awake()

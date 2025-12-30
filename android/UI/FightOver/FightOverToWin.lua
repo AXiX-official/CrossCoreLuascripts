@@ -1,4 +1,4 @@
-local fillExpBar = nil
+﻿local fillExpBar = nil
 local expBar = nil
 local layout = nil
 local data = nil

@@ -1,4 +1,4 @@
-local PlayerAbilityInfo = require "PlayerAbilityInfo"
+﻿local PlayerAbilityInfo = require "PlayerAbilityInfo"
 -- local PlayerAbilityInfoT = require "PlayerAbilityInfoT"
 local this = MgrRegister("PlayerAbilityMgr")
 

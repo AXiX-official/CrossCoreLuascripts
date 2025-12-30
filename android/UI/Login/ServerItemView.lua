@@ -1,4 +1,4 @@
---服务器Item
+﻿--服务器Item
 local text_serverName
 local sourceData=nil;
 function Awake()

@@ -1,4 +1,4 @@
---装备信息界面（获得前）
+﻿--装备信息界面（获得前）
 local enableColor = {225, 116, 0, 255};
 local disableColor = {77, 77, 77, 255};
 local hasGet=false;

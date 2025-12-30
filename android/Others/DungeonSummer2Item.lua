@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local currLevel = 1
 local isOpen = false
 local lockStr = ""

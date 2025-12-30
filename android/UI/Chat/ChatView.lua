@@ -1,4 +1,4 @@
---聊天界面
+﻿--聊天界面
 local itemPath = "Chat/ChatItem"
 local itemPath2 = "UIs/Chat/ChatTextItem"
 local itemPath3 = "UIs/Chat/ChatFaceItem"

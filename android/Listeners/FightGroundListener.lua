@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     --EventMgr.AddListener(EventType.Scene_Load_Complete,OnSceneLoadComplete);
     EventMgr.AddListener(EventType.Character_Removed,OnCharacterRemoved);    

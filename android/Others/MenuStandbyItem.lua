@@ -1,4 +1,4 @@
-function Refresh(_id)
+﻿function Refresh(_id)
     id = _id
     local cfg = Cfgs.CfgStandbyTips:GetByID(id)
     -- icon 

@@ -1,4 +1,4 @@
-local this = {
+﻿local this = {
     oldLv = 1, -- 缓存等级
     oldExp = 0 -- 缓存经验
 };

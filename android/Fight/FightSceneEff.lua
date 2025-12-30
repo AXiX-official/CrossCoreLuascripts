@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     EventMgr.AddListener(EventType.Scene_Mask_Changed,OnSceneMaskChanged);    
 end

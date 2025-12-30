@@ -1,4 +1,4 @@
-_G["CfgPetArchiveReward"]={{["id"]=1,["archive"]={101,102,103}
+﻿_G["CfgPetArchiveReward"]={{["id"]=1,["archive"]={101,102,103}
 ,["key"]="1",["reward"]={{14208,3,2}
 }
 }

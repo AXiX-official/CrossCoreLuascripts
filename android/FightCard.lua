@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 
 -- 战斗伤害公式相关系数
 local arrFightCoefficient = {
@@ -326,8 +326,11 @@ function FightCardBase:Get(key)
         local val = (self[key] + self:GetBuffAttr(key)) *
                 (1 + self:GetAttrPercent(key) + self:GetTempAttrPercent(key)) + self:GetTempAttr(key)
 
-        if val < 0 then
+        if val <= 0 then
             val = 0
+            if key == "attack" then
+                val = 1
+            end
         end
         return val
     else
@@ -1125,7 +1128,7 @@ function FightCardBase:GetProgressPercent()
 end
 
 -- 拉条
-function FightCardBase:AddProgress(d, max, effectID)
+function FightCardBase:AddProgress(d, max, effectID, caster)
     ---注:max参数现在不用了
 
     -- 免疫退条
@@ -1161,8 +1164,14 @@ function FightCardBase:AddProgress(d, max, effectID)
     local mgr = self.team.fightMgr
     if mgr.currTurn then
         mgr:UpdateProgress(nil, mgr.currTurn, false)
+        if d >= 0 then
+            mgr:DoEventWithLog("OnAddProgress", caster, self)
+        else
+            mgr:DoEventWithLog("OnReduceProgress", caster, self)
+        end
     end
     mgr:PrintCardInfo("拉条结果")
+
 end
 
 -- 使用完后进入下一次跑条
@@ -1920,7 +1929,7 @@ function FightCardBase:Transform(state)
             self[to] = math.floor(self[to])
         end
 
-        if from == "maxhp" and self.hp > self.maxhp then
+        if from == "maxhp" and self.hp > self:Get("maxhp") then
             self.hp = self.maxhp
             log.attr.hp = self.maxhp
         end
@@ -2330,6 +2339,13 @@ function UniteCard:Resolve(ret)
     local mgr = self.team.fightMgr
     mgr:Resolve(self, ret)
     self.isLive = false
+end
+
+
+function UniteCard:OnRoundOver()
+    if self.hp <= 1 or self.sp < g_resolveSp then
+        self:Resolve(self)
+    end
 end
 
 -- -- 同调角色生命值为0解体

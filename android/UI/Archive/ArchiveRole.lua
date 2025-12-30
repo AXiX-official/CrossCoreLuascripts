@@ -1,4 +1,4 @@
---卡牌角色
+﻿--卡牌角色
 local curSkinData = nil
 local baseSkinData = nil
 local panelNames = {"ArchiveRoleZLNew","ArchiveRoleZLNew", "ArchiveRoleTC", "ArchiveRoleJQ", "ArchiveRoleCG", "ArchiveRoleApparel"}

@@ -1,4 +1,4 @@
-_G["CfgItemPoolReward"]={{["pool"]={{["rewardnum"]=2,["rounds"]={1}
+﻿_G["CfgItemPoolReward"]={{["pool"]={{["rewardnum"]=2,["rounds"]={1}
 ,["isInfinite"]=false,["iskeyreward"]=false,["index"]=1,["weight"]=70,["reward"]={10033,5}
 }
 ,{["rewardnum"]=1,["rounds"]={1}

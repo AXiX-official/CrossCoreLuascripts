@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cast2={play_time=4200,dont_hide_enemy=1,hide_scene=1,hide_buff=1},

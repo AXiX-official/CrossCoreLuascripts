@@ -1,4 +1,4 @@
---装备洗炼
+﻿--装备洗炼
 local eventMgr=nil;
 local layout=nil;
 local curItem=nil;--当前选中的格子

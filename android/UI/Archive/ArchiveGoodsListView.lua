@@ -1,4 +1,4 @@
-local itemPath = "UIs/Grid/GridItem"
+﻿local itemPath = "UIs/Grid/GridItem"
 local curIndex = 0
 curIndex1, curIndex2 = 1
 local top=nil;

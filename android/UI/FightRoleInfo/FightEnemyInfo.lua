@@ -1,4 +1,4 @@
---关卡敌人信息界面
+﻿--关卡敌人信息界面
 local MonsterInfo=require "MonsterInfo"
 local curDatas=nil;
 local lastIndex=1;--选中物体的下标
@@ -232,7 +232,7 @@ function SetMonsterInfos(monster)
         if cfg==nil then
             LogError("未找到技能配置："..tostring(v))
         end
-        if cfg and cfg.bIsHide~=true then
+       if cfg and cfg.bIsHide~=true and cfg.main_type~=SkillMainType.Other then --技能类型为6的不在该面板显示
             if SkillUtil:IsSpecialSkill(cfg.type) and not PlayerClient:IsPassNewPlayerFight() then --如果未通关新手剧情不显示合体技
             else 
                 if cfg.main_type~=SkillMainType.CardSubTalent then

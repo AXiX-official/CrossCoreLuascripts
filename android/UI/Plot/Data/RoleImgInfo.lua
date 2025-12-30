@@ -1,4 +1,4 @@
---参与者信息
+﻿--参与者信息
 local this={}
 
 function this.New()

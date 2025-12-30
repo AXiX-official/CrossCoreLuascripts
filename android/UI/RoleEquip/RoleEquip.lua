@@ -1,4 +1,4 @@
-local recordTime=nil;
+﻿local recordTime=nil;
 local grids={};
 local slotNodes={};
 local selectSlot=-1;--当前选择的位置

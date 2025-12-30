@@ -1,4 +1,4 @@
--- 列表头的 pre 是 nil, 列表尾部的 next 是nil
+﻿-- 列表头的 pre 是 nil, 列表尾部的 next 是nil
 ListTool = {}
 
 function ListTool.new()

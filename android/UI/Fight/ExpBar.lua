@@ -1,4 +1,4 @@
---Exp进度条类
+﻿--Exp进度条类
 local this = {
     isRun=false,
 }

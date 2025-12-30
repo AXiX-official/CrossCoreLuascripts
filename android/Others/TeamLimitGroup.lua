@@ -1,4 +1,4 @@
---编成限制组对象
+﻿--编成限制组对象
 local this={}
 
 function this.New()

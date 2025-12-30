@@ -1,4 +1,4 @@
---聊天数据
+﻿--聊天数据
 ChatData = {}
 local this = ChatData
 

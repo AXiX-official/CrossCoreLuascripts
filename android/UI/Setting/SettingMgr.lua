@@ -1,4 +1,4 @@
--- 设置
+﻿-- 设置
 require "SettingKey"
 -- local this = MgrRegister("SettingMgr")
 SettingMgr = {}

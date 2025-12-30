@@ -1,4 +1,4 @@
-_G["CfgReturningActivity"]={[2]={["id"]=2,["infos"]={{["keepTime"]=36000,["type"]=8,["index"]=1,["group"]=1,["nEndTime"]=0,["leftInfo"]={{["id"]=60300,["path"]="RegressionList/icon8"}
+﻿_G["CfgReturningActivity"]={[2]={["id"]=2,["infos"]={{["keepTime"]=36000,["type"]=8,["index"]=1,["group"]=1,["nEndTime"]=0,["leftInfo"]={{["id"]=60300,["path"]="RegressionList/icon8"}
 }
 ,["infos"]={{["jumpId"]=270004}
 }

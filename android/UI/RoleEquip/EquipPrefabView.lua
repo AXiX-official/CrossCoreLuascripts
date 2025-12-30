@@ -1,4 +1,4 @@
-
+﻿
 --装备预设界面
 local eventMgr=nil;
 local cap=0;

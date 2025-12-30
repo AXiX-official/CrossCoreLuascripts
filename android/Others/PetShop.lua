@@ -1,4 +1,4 @@
---宠物商店
+﻿--宠物商店
 local headList={};
 local headsData=nil
 local currTab=1;

@@ -1,4 +1,4 @@
---data；name:名字,isLight:是否显示高亮 _elseData
+﻿--data；name:名字,isLight:是否显示高亮 _elseData
 function Refresh(_data,_elseData)
     this.data=_data;
     if _data then

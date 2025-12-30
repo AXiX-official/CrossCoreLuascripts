@@ -1,4 +1,4 @@
--- 建造栏
+﻿-- 建造栏
 local colorNames = {"3b8eff", "a845c5", "ffc146"}
 
 function SetIndex(_index)

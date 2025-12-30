@@ -1,4 +1,4 @@
---随机商品数据
+﻿--随机商品数据
 local this = {}
 
 function this.New()
@@ -276,6 +276,14 @@ end
 
 function this:GetOrgCosts()
     return nil
+end
+
+function this:GetOrgEndBuyTips()
+    return nil
+end
+
+function this:GetOrgCostsByCostKey(key)
+    return nil;
 end
 
 --返回现金价格符号

@@ -1,4 +1,4 @@
-
+﻿
 function SetIndex(_index)
 	index = _index
 end

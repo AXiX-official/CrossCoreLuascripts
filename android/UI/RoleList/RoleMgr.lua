@@ -1,4 +1,4 @@
-require "RoleCommon" -- 角色常量定义
+﻿require "RoleCommon" -- 角色常量定义
 require "RoleSortUtil" -- 排序工具
 require "RoleTool" -- 角色工具
 require "RoleUniteUtil" -- 角色同调工具

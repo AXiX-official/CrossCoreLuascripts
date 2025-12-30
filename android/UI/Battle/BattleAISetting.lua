@@ -1,4 +1,4 @@
---战斗前AI设置
+﻿--战斗前AI设置
 local items = {}
 local skillItems={};
 local currItem=nil;--当前选择的队员物体

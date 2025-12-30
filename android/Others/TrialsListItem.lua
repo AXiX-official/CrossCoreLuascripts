@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local actionMove = nil
 --time
 local openInfo = nil

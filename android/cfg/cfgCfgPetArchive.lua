@@ -1,4 +1,4 @@
-_G["CfgPetArchive"]={[103]={["number"]=3,["aFinishIds"]={110014}
+﻿_G["CfgPetArchive"]={[103]={["number"]=3,["aFinishIds"]={110014}
 ,["key"]="103",["getDes"]="首次进入饱腹状态",["id"]=103,["jAwardId"]={{28003,1,2}
 }
 ,["item"]=28003,["quality"]=1}

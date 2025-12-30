@@ -1,4 +1,4 @@
---装备背包加锁
+﻿--装备背包加锁
 local this={};
 local root=nil;
 local data=nil;

@@ -1,4 +1,4 @@
-_G["cfgColosseumEquip"]={[60050]={["id"]=60050,["infos"]={[130100305]={["recommend"]={3}
+﻿_G["cfgColosseumEquip"]={[60050]={["id"]=60050,["infos"]={[130100305]={["recommend"]={3}
 ,["monsterIdx"]=130100305,["equipLevel"]=15,["suitId"]={2230501,2230502,2230503,2230504,2230505}
 ,["weight"]=10}
 ,[130100302]={["recommend"]={3}

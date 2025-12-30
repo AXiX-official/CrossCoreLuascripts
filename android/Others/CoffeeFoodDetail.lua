@@ -1,4 +1,4 @@
--- data {cfg,target}
+﻿-- data {cfg,target}
 function OnOpen()
     CSAPI.SetText(txtName, data[1].name)
     CSAPI.SetText(txtDesc, data[1].desc)

@@ -1,4 +1,4 @@
-local list = {};
+﻿local list = {};
 local emptyItems = {};
 local mono;
 

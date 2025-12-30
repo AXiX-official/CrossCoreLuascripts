@@ -1,4 +1,4 @@
---战场列表
+﻿--战场列表
 local fieldType=1;--战场列表类型
 local roomType=1;--房间筛选类型
 local layout=nil;

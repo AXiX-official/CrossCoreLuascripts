@@ -1,4 +1,4 @@
-local starPos={-45.7,59.5};
+﻿local starPos={-45.7,59.5};
 local cellHeight=25;
 local cellWidth=78;
 local lineHeight=20;

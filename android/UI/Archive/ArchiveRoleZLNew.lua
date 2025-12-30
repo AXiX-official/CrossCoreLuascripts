@@ -1,4 +1,4 @@
--- 资料
+﻿-- 资料
 local curIndex = 1
 local lastIndex = 0
 local needToCheckMove = false

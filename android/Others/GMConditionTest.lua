@@ -1,4 +1,4 @@
-local inputID=nil;
+﻿local inputID=nil;
 local inputCond=nil;
 local items={};
 local cond=nil;

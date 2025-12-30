@@ -1,4 +1,4 @@
-local leftInfos = {{70004,"GlobalBoss/btn_04_01"},{70005,"GlobalBoss/btn_04_02"},{70006,"GlobalBoss/btn_04_01"},{70007,"GlobalBoss/btn_04_01"}}
+﻿local leftInfos = {{70004,"GlobalBoss/btn_04_01"},{70005,"GlobalBoss/btn_04_02"},{70006,"GlobalBoss/btn_04_01"},{70007,"GlobalBoss/btn_04_01"}}
 local viewPaths = {"GlobalBossKillReward","GlobalBossRank","GlobalBossRankReward","GlobalBossFightReward"}
 local panels = {}
 local curPanel = nil

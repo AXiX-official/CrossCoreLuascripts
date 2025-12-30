@@ -1,4 +1,4 @@
-local canvasGroup=nil
+﻿local canvasGroup=nil
 function Awake()
     canvasGroup=ComUtil.GetCom(gameObject,"CanvasGroup");
 end

@@ -1,4 +1,4 @@
--- 洛贝拉2
+﻿-- 洛贝拉2
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -30,7 +30,16 @@ end
 function Skill338301:OnRoundOver(caster, target, data)
 	-- 338341
 	self:tFunc_338341_338321(caster, target, data)
-	self:tFunc_338341_338321(caster, target, data)
+	self:tFunc_338341_338331(caster, target, data)
+end
+function Skill338301:tFunc_338341_338331(caster, target, data)
+	-- 8166
+	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
+	else
+		return
+	end
+	-- 338331
+	self:AddSp(SkillEffect[338331], caster, caster, data, 5)
 end
 function Skill338301:tFunc_338341_338321(caster, target, data)
 	-- 8060

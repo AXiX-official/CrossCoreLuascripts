@@ -1,4 +1,4 @@
-require "DormFurnitureSortUtil"
+﻿require "DormFurnitureSortUtil"
 require "DormSetRoleSortUtil"
 require "DormIconUtil"
 

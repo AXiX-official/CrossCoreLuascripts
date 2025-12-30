@@ -1,4 +1,4 @@
-_G["cfgGlobalBossKill"]={[10001]={["id"]=10001,["infos"]={{["mailId"]=11001,["day"]=8,["index"]=1}
+﻿_G["cfgGlobalBossKill"]={[10001]={["id"]=10001,["infos"]={{["mailId"]=11001,["day"]=8,["index"]=1}
 ,{["mailId"]=11002,["day"]=9,["index"]=2}
 ,{["mailId"]=11003,["day"]=10,["index"]=3}
 ,{["mailId"]=11004,["day"]=11,["index"]=4}

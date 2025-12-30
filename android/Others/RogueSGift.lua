@@ -1,4 +1,4 @@
--- data :starIx
+﻿-- data :starIx
 function OnOpen()
     local cfg = Cfgs.CfgSectionStarReward:GetByID(data)
     curDatas = cfg.arr

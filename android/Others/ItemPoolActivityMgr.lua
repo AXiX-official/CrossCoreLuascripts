@@ -1,4 +1,4 @@
---道具池活动管理类
+﻿--道具池活动管理类
 local this = MgrRegister("ItemPoolActivityMgr")
 
 function this:Init()

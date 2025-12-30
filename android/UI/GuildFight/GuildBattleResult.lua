@@ -1,4 +1,4 @@
---战场列表
+﻿--战场列表
 local listType=1;--战场列表类型
 local layout=nil;
 local eventMgr=nil;

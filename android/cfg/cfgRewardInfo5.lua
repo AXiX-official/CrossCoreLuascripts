@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 'j-奖励表.xlsx',
 	["sheetname"] = '奖励表-随机商店',
 	["types"] = {

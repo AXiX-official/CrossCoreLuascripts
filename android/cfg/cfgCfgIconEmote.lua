@@ -1,4 +1,4 @@
-_G["CfgIconEmote"]={[1081]={["type"]=3,["index"]=5,["avatareffect"]="HeadFace/Gif10",["id"]=1081,["key"]="1081",["item_id"]=31081,["avatarname"]="灼碧-胜利",["sound"]=10220110,["isShow"]=false}
+﻿_G["CfgIconEmote"]={[1081]={["type"]=3,["index"]=5,["avatareffect"]="HeadFace/Gif10",["id"]=1081,["key"]="1081",["item_id"]=31081,["avatarname"]="灼碧-胜利",["sound"]=10220110,["isShow"]=false}
 ,[1051]={["type"]=3,["index"]=2,["avatareffect"]="HeadFace/Gif7",["avatarname"]="刃齿-胜利",["isShow"]=false,["item_id"]=31051,["key"]="1051",["id"]=1051,["sound"]=30180142,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
 ,[1052]={["type"]=4,["index"]=2,["avatareffect"]="HeadFace/Gif5",["avatarname"]="刃齿-失败",["isShow"]=false,["item_id"]=31052,["key"]="1052",["id"]=1052,["sound"]=30180145,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}
 ,[1053]={["type"]=2,["index"]=2,["avatareffect"]="HeadFace/Gif6",["avatarname"]="刃齿-问好",["isShow"]=false,["item_id"]=31053,["key"]="1053",["id"]=1053,["sound"]=30180140,["accessmethods"]="GetWay_148##奇趣扭蛋奖励"}

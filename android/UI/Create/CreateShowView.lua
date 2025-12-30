@@ -1,4 +1,4 @@
---[[一、规则
+﻿--[[一、规则
 1、有单抽/10抽动画，单抽不显示结果界面
 2、每张卡必带前后2个视频（进场视频，退场视频）,5星卡进场动画视频前还有小队动画
 3、
@@ -644,6 +644,7 @@ function ViewClose()
         if (rewards and #rewards ~= 10) then
             EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "BackToCreate")
             PopupPackMgr:CheckByCondition({3})
+            PhysicalRewardMgr:CheckShowReward()
         end 
     end, nil, 1)
 end

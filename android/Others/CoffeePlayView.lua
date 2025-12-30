@@ -1,4 +1,4 @@
-local isStop = true
+﻿local isStop = true
 local len = nil -- 每局时长
 local score = 0
 local combo = 0

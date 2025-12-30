@@ -1,4 +1,4 @@
---合体
+﻿--合体
 FightActionCombo = oo.class(FightActionBase);
 local this = FightActionCombo;
 

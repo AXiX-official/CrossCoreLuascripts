@@ -1,4 +1,4 @@
--- 每一关的数据
+﻿-- 每一关的数据
 local this = {}
 
 function this.New()

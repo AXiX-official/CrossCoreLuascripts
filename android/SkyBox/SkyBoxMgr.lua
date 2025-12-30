@@ -1,4 +1,4 @@
---天空盒管理
+﻿--天空盒管理
 SkyBoxMgr = {};
 local this = SkyBoxMgr;
 

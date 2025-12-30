@@ -1,4 +1,4 @@
-local layout = nil
+﻿local layout = nil
 local layoutTween = nil
 local curDatas = nil
 local deepDatas = nil

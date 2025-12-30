@@ -1,4 +1,4 @@
-_G["CfgCardCoolBox"]={{["id"]=1,["aPlrLv"]=1,["key"]="1"}
+﻿_G["CfgCardCoolBox"]={{["id"]=1,["aPlrLv"]=1,["key"]="1"}
 ,{["id"]=2,["aPlrLv"]=1,["key"]="2"}
 ,{["id"]=3,["aPlrLv"]=1,["key"]="3"}
 ,{["id"]=4,["aPlrLv"]=10,["key"]="4"}

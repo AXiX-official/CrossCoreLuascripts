@@ -1,4 +1,4 @@
-_G["CfgPetOpenConditionMore"]={{["id"]=1,["conditions"]={5012}
+﻿_G["CfgPetOpenConditionMore"]={{["id"]=1,["conditions"]={5012}
 ,["key"]=1}
 ,{["id"]=2,["conditions"]={5013}
 ,["key"]=2}

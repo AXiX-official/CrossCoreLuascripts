@@ -1,4 +1,4 @@
-_G["CfgCardCoolBoxLevelArg"]={{["id"]=1,["fArg"]=1,["key"]="1",["sDesc"]="1-10"}
+﻿_G["CfgCardCoolBoxLevelArg"]={{["id"]=1,["fArg"]=1,["key"]="1",["sDesc"]="1-10"}
 ,{["id"]=2,["fArg"]=1,["key"]="2",["sDesc"]="11-20"}
 ,{["id"]=3,["fArg"]=1,["key"]="3",["sDesc"]="21-30"}
 ,{["id"]=4,["fArg"]=1,["key"]="4",["sDesc"]="31-40"}

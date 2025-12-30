@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local info = nil
 local curDatas = {}
 local page = nil

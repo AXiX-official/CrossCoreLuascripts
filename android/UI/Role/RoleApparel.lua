@@ -1,4 +1,4 @@
-local curIndex = nil
+﻿local curIndex = nil
 local isLive2D = true
 local isFirst1 = false
 -- local countDown = 0.46

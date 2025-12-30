@@ -1,4 +1,4 @@
--- 角色音效播放管理
+﻿-- 角色音效播放管理
 -- 对应表: s-声音
 --[[	RoleAudioType = {}
 RoleAudioType.CrossCore = 1 --游戏开始（标题时语音）

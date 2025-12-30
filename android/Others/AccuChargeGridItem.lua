@@ -1,4 +1,4 @@
-local packQualitys2 = {"img_25_05", "img_25_04", "img_25_03", "img_25_02", "img_25_01", "img_25_06"}
+﻿local packQualitys2 = {"img_25_05", "img_25_04", "img_25_03", "img_25_02", "img_25_01", "img_25_06"}
 
 -- 如 [10040,30,2]
 function Refresh(_reward)

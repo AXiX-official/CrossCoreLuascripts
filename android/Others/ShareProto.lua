@@ -1,4 +1,4 @@
-ShareProto={}
+﻿ShareProto={}
 ---4901分享发送   返回 ClientProto:RewardNotice 和 PlayerProto:ItemUpdate
 function ShareProto:AddShareCount(msg)
     local proto = {"ShareProto:AddShareCount", msg};

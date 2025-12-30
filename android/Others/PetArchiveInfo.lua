@@ -1,4 +1,4 @@
---宠物图鉴信息
+﻿--宠物图鉴信息
 local this = {}
 
 function this.New()

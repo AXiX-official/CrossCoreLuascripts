@@ -1,4 +1,4 @@
-_G["cfgGlobalBoss"]={[1031]={["dropHpGroupId"]=10001,["nBeginTime"]=1809111600,["BossDeathTime"]=1810646640,["key"]=1031,["dupId"]=11005,["skillId"]={980101501,980101701}
+﻿_G["cfgGlobalBoss"]={[1031]={["dropHpGroupId"]=10001,["nBeginTime"]=1809111600,["BossDeathTime"]=1810646640,["key"]=1031,["dupId"]=11005,["skillId"]={980101501,980101701}
 ,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1031,["buffId"]={1,3}
 ,["nEndTime"]=1810839600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
 ,[1047]={["dropHpGroupId"]=10001,["nBeginTime"]=1851361200,["BossDeathTime"]=1852896240,["key"]=1047,["dupId"]=11005,["skillId"]={980101501,980101701}
@@ -89,8 +89,9 @@ _G["cfgGlobalBoss"]={[1031]={["dropHpGroupId"]=10001,["nBeginTime"]=1809111600,[
 ,[1007]={["dropHpGroupId"]=10001,["nBeginTime"]=1746039600,["BossDeathTime"]=1747574640,["key"]=1007,["dupId"]=11005,["skillId"]={980101101,980101301}
 ,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1007,["buffId"]={1,2}
 ,["nEndTime"]=1747767600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
-,[1015]={["rankRwdGroupId"]=10001,["BossDeathTime"]=1768742640,["challengeTimes"]=3,["dropHpGroupId"]=10001,["id"]=1015,["BossPreview"]="boss_01",["nEndTime"]=1768935600,["nBeginTime"]=1767207600,["rankType"]=10004,["spriteWay"]="BaoNue",["key"]=1015,["killRwdGroupId"]=10001,["challengeRwdGroupId"]=10001,["nBossHpLevel"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
-}
+,[1015]={["dropHpGroupId"]=10001,["nBeginTime"]=1767207600,["BossDeathTime"]=1768742640,["key"]=1015,["dupId"]=11005,["skillId"]={980101501,980101701}
+,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1015,["buffId"]={5}
+,["nEndTime"]=1768935600,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}
 ,[1023]={["dropHpGroupId"]=10001,["nBeginTime"]=1788202800,["BossDeathTime"]=1789737840,["key"]=1023,["dupId"]=11005,["skillId"]={980101501,980101701}
 ,["challengeTimes"]=3,["rankRwdGroupId"]=10001,["id"]=1023,["buffId"]={1,3}
 ,["nEndTime"]=1789930800,["rankType"]=10004,["spriteWay"]="BaoNue",["killRwdGroupId"]=10001,["BossPreview"]="boss_01",["nBossHpLevel"]=1015,["challengeRwdGroupId"]=10001}

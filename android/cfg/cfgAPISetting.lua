@@ -1,4 +1,4 @@
-_G["APISetting"]={{["id"]=1,["time"]=100,["key"]=1}
+﻿_G["APISetting"]={{["id"]=1,["time"]=100,["key"]=1}
 ,{["id"]=2,["play_aft_skill"]=1,["time"]=2000,["key"]=2}
 ,{["id"]=3,["key"]=3,["delay"]=500}
 ,{["id"]=4,["play_aft_skill"]=2,["time"]=20,["key"]=4}

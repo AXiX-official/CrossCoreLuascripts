@@ -1,4 +1,4 @@
---筛选词条
+﻿--筛选词条
 function SetClickCB(_cb)
 	cb = _cb
 end

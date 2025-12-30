@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 this.csGetCom = CS.ComUtil.GetCom;
 this.GetComs = CS.ComUtil.GetComs;
 this.GetComInChildren = CS.ComUtil.GetComInChildren;

@@ -1,4 +1,4 @@
---物品信息
+﻿--物品信息
 
 function Awake()       
 

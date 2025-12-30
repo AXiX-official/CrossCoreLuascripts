@@ -1,4 +1,4 @@
---商店分页数据
+﻿--商店分页数据
 local this = {}
 
 function this.New()

@@ -1,4 +1,4 @@
---战棋探索界面
+﻿--战棋探索界面
 local panel = nil
 function Awake()
 	

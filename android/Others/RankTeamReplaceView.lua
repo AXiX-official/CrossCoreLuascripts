@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Team_Data_Update,OnTeamUpdate)

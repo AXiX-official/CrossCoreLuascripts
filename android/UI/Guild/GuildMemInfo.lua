@@ -1,4 +1,4 @@
---公会成员信息
+﻿--公会成员信息
 local eventMgr=nil;
 local otherData=nil;--扩展信息：参考协议sGuildMemB类型
 local supportList=nil;

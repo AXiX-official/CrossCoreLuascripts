@@ -1,4 +1,4 @@
-
+﻿
 local this = MgrRegister("FriendMgr")
 FriendIxType = {
 	Assist = 0, --协战

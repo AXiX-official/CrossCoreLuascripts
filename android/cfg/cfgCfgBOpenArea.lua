@@ -1,4 +1,4 @@
-_G["CfgBOpenArea"]={{["key"]="1",["areas"]={{5,1}
+﻿_G["CfgBOpenArea"]={{["key"]="1",["areas"]={{5,1}
 ,{6,1}
 ,{7,1}
 ,{8,1}

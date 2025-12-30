@@ -1,4 +1,4 @@
---类型
+﻿--类型
 FireBallType = FireBallType or
 {
     --特效

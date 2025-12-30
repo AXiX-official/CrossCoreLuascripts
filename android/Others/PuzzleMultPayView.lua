@@ -1,4 +1,4 @@
---商城购买界
+﻿--商城购买界
 local eventMgr=nil;
 local onceMax=0;
 local tab=nil;

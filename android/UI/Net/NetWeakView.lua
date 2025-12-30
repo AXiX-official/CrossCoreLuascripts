@@ -1,4 +1,4 @@
-require "LoginCommFuns";
+﻿require "LoginCommFuns";
 local str = "LOADING";
 local text = nil;
 local bgFade = nil

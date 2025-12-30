@@ -1,4 +1,4 @@
--- 支线选项
+﻿-- 支线选项
 local clickCallBack = nil
 local index = 0
 local data = nil
@@ -155,11 +155,12 @@ end
 function OnClick()
     if not isOpen then
         local _isOpen, openStr = MenuMgr:CheckModelOpen(OpenViewType.section, cfg.id)
-        if _isOpen then
+        if _isOpen or not cfg.conditions then
             LanguageMgr:ShowTips(24003)
             return
         end
-        local preCfg = cfg.conditions and Cfgs.MainLine:GetByID(cfg.conditions[1]) or nil
+        local cfgRole = Cfgs.CfgOpenRules:GetByID(cfg.conditions[1])
+        local preCfg = cfgRole and Cfgs.MainLine:GetByID(cfgRole.val) or nil
         local str = ""
         if preCfg then
             str = preCfg.chapterID .. " " .. preCfg.name

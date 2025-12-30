@@ -1,4 +1,4 @@
--- 驻员动画
+﻿-- 驻员动画
 local this = {}
 
 function this.New()
@@ -12,6 +12,8 @@ this.roleLua = nil
 this.currStateHash = nil
 -- this.ActionTypeFuncs = {}
 this.curActionType = nil
+this.type_speed = "Speed" 
+this.param_speed = "Speed"
 
 -- 初始化状态机
 function this:Init(roleLua)
@@ -58,10 +60,10 @@ function this:PlayByActionType(_type, _loopTime)
 
     local cfg = Cfgs.CfgCardRoleAction:GetByID(_type)
     -- 下一动作是移动/休闲时
-    if (cfg.sType == DormAction1.Speed) then
+    if (cfg.sType == this.type_speed) then
         if (self.curActionType) then
             local _cfg = Cfgs.CfgCardRoleAction:GetByID(self.curActionType)
-            if (_cfg.sType ~= DormAction1.Speed) then
+            if (_cfg.sType ~= this.type_speed) then
                 self:ActionBool(_cfg.sType, false) -- 否则停止当前动作
             end
         end
@@ -70,7 +72,7 @@ function this:PlayByActionType(_type, _loopTime)
         -- 停止之前的所有动作（如果此时是移动，会有卡顿感，需要在移动那边将速度渐出再进入下一个动作）	
         if (self.curActionType) then
             local _cfg = Cfgs.CfgCardRoleAction:GetByID(self.curActionType)
-            if (_cfg.sType == DormAction1.Speed) then
+            if (_cfg.sType == this.type_speed) then
                 self:SetFloat(_cfg.sType, 0)
             else
                 self:ActionBool(_cfg.sType, false)
@@ -149,8 +151,8 @@ end
 
 -- 速度值过渡处理
 function this:InitSpeed(_type)
-    local _curSpeed = self.roleLua.animators[0]:GetFloat(DormAction1.Speed)
-    local _endSpeed = _type == DormAction2.idle and 0 or 1
+    local _curSpeed = self.roleLua.animators[0]:GetFloat(this.param_speed)
+    local _endSpeed = _type == "idle" and 0 or 1
     if (math.abs(_curSpeed - _endSpeed) > 0) then
         self.curSpeed = _curSpeed
         self.endSpeed = _endSpeed
@@ -162,7 +164,7 @@ end
 
 -- 将速度过渡到o
 function this:ChangeSpeedToValue(value, cb)
-    local _curSpeed = self.roleLua.animators[0]:GetFloat(DormAction1.Speed)
+    local _curSpeed = self.roleLua.animators[0]:GetFloat(this.param_speed)
     if (math.abs(_curSpeed - value) > 0) then
         self.speedToZeroCB = cb
         self.curSpeed = _curSpeed
@@ -171,7 +173,7 @@ function this:ChangeSpeedToValue(value, cb)
         self.timer = 0
         self.isChangeSpeed = true
     else
-        self:SetFloat(DormAction1.Speed, value)
+        self:SetFloat(this.param_speed, value)
         if (cb) then
             cb()
         end
@@ -180,10 +182,10 @@ end
 
 function this:UpdateSpeed()
     local speed = self.curSpeed + self.timer / self.timeLen * (self.endSpeed - self.curSpeed)
-    self:SetFloat(DormAction1.Speed, speed)
+    self:SetFloat(this.param_speed, speed)
     self.timer = self.timer + Time.deltaTime
     if (self.timer >= self.timeLen) then
-        self:SetFloat(DormAction1.Speed, self.endSpeed)
+        self:SetFloat(this.param_speed, self.endSpeed)
         if (self.speedToZeroCB~=nil) then
             self.speedToZeroCB()
         end
@@ -218,6 +220,13 @@ function this:SetFloat(name, num)
     local animators = self.roleLua.animators or {}
     for i = 0, animators.Length - 1 do
         self.roleLua.animators[i]:SetFloat(name, num)
+    end
+end
+
+function this:SetTrigger(name)
+    local animators = self.roleLua.animators or {}
+    for i = 0, animators.Length - 1 do
+        self.roleLua.animators[i]:SetTrigger(name)
     end
 end
 

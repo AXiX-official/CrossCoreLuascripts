@@ -1,4 +1,4 @@
-local str="%s<color=#ffc146>X%s</color>";
+﻿local str="%s<color=#ffc146>X%s</color>";
 function Refresh(_d,stars)
     if _d then
         CSAPI.SetGOActive(n,_d.card==true);

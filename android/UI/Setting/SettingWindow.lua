@@ -1,4 +1,4 @@
-local currType = SettingWindowType.Main
+﻿local currType = SettingWindowType.Main
 local lastType = SettingWindowType.Main
 local isBack = true
 local delayTime = 0

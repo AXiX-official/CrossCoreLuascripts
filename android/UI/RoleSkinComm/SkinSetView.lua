@@ -1,4 +1,4 @@
---时装图册界面
+﻿--时装图册界面
 local layout=nil;
 local layout2=nil;
 local isGroup=false;--是否分组视图

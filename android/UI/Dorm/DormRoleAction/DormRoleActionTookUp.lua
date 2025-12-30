@@ -1,4 +1,4 @@
-DormRoleActionTookUp2 = oo.class(DormRoleActionBase)
+﻿DormRoleActionTookUp2 = oo.class(DormRoleActionBase)
 
 local this = DormRoleActionTookUp2
 
@@ -6,7 +6,7 @@ function this:Enter()
     Input, GetMouseButton, GetMouseButtonDown, GetMouseButtonUp, Physics = UIUtil:GetFuncs()
 
     -- 播放抓起动画
-    self.dormRole.dormRoleStateMachine:PlayByActionType(DormAction2.click_grab)
+    self.dormRole.dormRoleStateMachine:PlayByActionType("click_grab")
     -- 抓起状态
     self.dormRole.SetTookUp(true)
 
@@ -53,7 +53,7 @@ function this:Update()
             end
         end
         if (GetMouseButtonUp(0)) then
-            self.dormRole.dormRoleStateMachine:ExitActionByType(DormAction1.grab) -- 落地动画
+            self.dormRole.dormRoleStateMachine:ExitActionByType("grab") -- 落地动画
             self.dormRole.SetTookUp(false)
             self.isEndIng = true
         end
@@ -64,7 +64,7 @@ function this:OnComplete()
     self.isEnter = false
     DormMgr:SetSceneCameraAction(true)
     if (not self.dormRole.CheckIsIn()) then
-        local action, dormAction2 = Dorm_GetActionType(DormAction2.click_grab, self.dormRole)
+        local action, dormAction2 = Dorm_GetActionType("click_grab", self.dormRole)
         self.dormRole.ChangeAction(action, dormAction2)
     end
 end

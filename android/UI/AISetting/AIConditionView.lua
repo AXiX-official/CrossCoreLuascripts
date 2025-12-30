@@ -1,4 +1,4 @@
-local selectIdx=1;
+﻿local selectIdx=1;
 local layout=nil
 function Awake()
     layout=ComUtil.GetCom(vsv,"UISV");

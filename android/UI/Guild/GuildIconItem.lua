@@ -1,4 +1,4 @@
---公会图标
+﻿--公会图标
 local cb=nil;
 local isSelect=false;
 function Refresh(_data,_elseData)

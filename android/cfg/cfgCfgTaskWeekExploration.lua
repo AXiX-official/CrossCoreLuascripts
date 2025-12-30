@@ -1,4 +1,4 @@
-_G["CfgTaskWeekExploration"]={[49104]={["type"]=2,["sDescription"]="镜像竞技胜利10次",["nRestType"]=2,["jAwardId"]={{10043,800,2}
+﻿_G["CfgTaskWeekExploration"]={[49104]={["type"]=2,["sDescription"]="镜像竞技胜利10次",["nRestType"]=2,["jAwardId"]={{10043,800,2}
 }
 ,["aFinishIds"]={49104}
 ,["key"]=49104,["nIsHide"]=2,["nTransferPath"]=30003,["sName"]="镜像竞技胜利10次",["icon"]="1",["id"]=49104}

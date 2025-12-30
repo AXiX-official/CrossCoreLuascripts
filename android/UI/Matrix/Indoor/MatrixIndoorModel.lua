@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     OnInit1()
 
     tool = MatrixRoleTool.New()

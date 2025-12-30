@@ -1,4 +1,4 @@
---编成预设面板
+﻿--编成预设面板
 local itemList = nil;
 local layout=nil;
 local eventMgr=nil;

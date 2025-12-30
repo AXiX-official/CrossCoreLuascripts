@@ -1,4 +1,4 @@
-_G["CfgMatrixInfo"]={{["id"]=1,["sName"]="建筑耐久",["key"]="1"}
+﻿_G["CfgMatrixInfo"]={{["id"]=1,["sName"]="建筑耐久",["key"]="1"}
 ,{["id"]=2,["sName"]="提供电力",["key"]="2"}
 ,{["id"]=3,["sName"]="驻员上限",["key"]="3"}
 ,{["id"]=4,["sName"]="等级上限",["key"]="4"}

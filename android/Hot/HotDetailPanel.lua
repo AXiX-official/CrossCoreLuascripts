@@ -1,4 +1,4 @@
-function OnOpen()
+﻿function OnOpen()
     local plrCfg = Cfgs.CfgPlrHot:GetByID(PlayerClient:GetLv())
     local costCfg = Cfgs.CfgPlrHotBuyCosts:GetByID(plrCfg.buyCostId)
     local infos = costCfg.infos

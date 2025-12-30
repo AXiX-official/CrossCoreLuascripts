@@ -1,4 +1,4 @@
---充值支付窗口
+﻿--充值支付窗口
 local commodity=nil;
 local commodityType=nil;
 local channelType=nil;

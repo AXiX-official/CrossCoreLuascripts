@@ -1,4 +1,4 @@
-_G["CfgDateChatrecords"]={[2024003]={["unLockStoryID"]={1000301}
+﻿_G["CfgDateChatrecords"]={[2024003]={["unLockStoryID"]={1000301}
 ,["storyID"]={1000287}
 ,["key"]=2024003,["group"]=20240011,["id"]=2024003,["unLockType"]=1}
 ,[2024001]={["group"]=20240011,["unLockStoryID"]={1000001}

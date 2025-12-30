@@ -1,4 +1,4 @@
-local CharacterFireBall = require "CharacterFireBall";
+﻿local CharacterFireBall = require "CharacterFireBall";
 local CharacterCameraAction = require "CharacterCameraAction";
 local CharacterFightActionPlayer = require "CharacterFightActionPlayer";
 local CharacterMove = require "CharacterMove";
@@ -2191,6 +2191,15 @@ function GetFury()
     end
     return fury,furyMax,p;
 end
+
+function SetEquipSkills(infos)
+    equipSkills=infos;
+end
+
+function GetEquipSkills()
+    return equipSkills;
+end
+
 --[[ function Update()
      if(CS.UnityEngine.Input.GetKeyDown(CS.UnityEngine.KeyCode.D))then
         LogError(GetModelName());

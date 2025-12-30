@@ -1,4 +1,4 @@
-local recordBeginTime = 0
+﻿local recordBeginTime = 0
 local Top=nil;
 local curBuildID = nil -- 当前选择的建筑
 --------------------------------------------------预警时间

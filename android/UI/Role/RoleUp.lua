@@ -1,4 +1,4 @@
-local targetPos = {{81.6, 12.2}, {-80.8, 12.2}, {-243.3, 12.2}, {-405.8, 12.2}}
+﻿-- local targetPos = {{81.6, 12.2}, {-80.8, 12.2}, {-243.3, 12.2}, {-405.8, 12.2}}
 local curShowTime = 0
 local oldData
 local addExp = 0
@@ -21,15 +21,15 @@ function Awake()
 
     EventMgr.Dispatch(EventType.Guide_Trigger_Flag, "RoleUp"); -- 引导用
 
-    for i = 1, 4 do
-        this["OnClickBtn" .. i] = function()
-            local lv = i + 1
-            local breakLv = cardData:GetBreakLevel()
-            if (not isUp and breakLv < lv) then
-                EventMgr.Dispatch(EventType.Role_Jump_Break, {i + 1, false})
-            end
-        end
-    end
+    -- for i = 1, 4 do
+    --     this["OnClickBtn" .. i] = function()
+    --         local lv = i + 1
+    --         local breakLv = cardData:GetBreakLevel()
+    --         if (not isUp and breakLv < lv) then
+    --             EventMgr.Dispatch(EventType.Role_Jump_Break, {i + 1, false})
+    --         end
+    --     end
+    -- end
     layout = ComUtil.GetCom(hsv, "UISV")
     layout:Init("UIs/Role/RoleUpNum", LayoutCallBack, true)
     layout:AddOnValueChangeFunc(OnValueChange)
@@ -37,6 +37,8 @@ function Awake()
 
     btnL_cg = ComUtil.GetCom(btnL, "CanvasGroup")
     btnR_cg = ComUtil.GetCom(btnR, "CanvasGroup")
+
+    sr_sv = ComUtil.GetCom(sv, "ScrollRect")
 end
 
 function Update()
@@ -97,25 +99,36 @@ end
 
 -- _isBack 从预览突破返回
 function Refresh(_cardData, _elseData)
-    _lookBreakLv = _elseData -- 查看突破等级返回
+    _lookBreakLv = _elseData and _elseData[1] or nil -- 查看突破等级返回
+    _target = _elseData and _elseData[2] or nil
+    --
     InitData(_cardData)
     SetBreak()
     SetLv()
     SetStatus()
     SetBtns()
-    SetIconAnim()
+    -- SetIconAnim()
+    SetSVBG()
+
+    --初始位置
+    if (not isFirst) then
+        isFirst = 1
+        local x = cardData:GetBreakLevel() > 5 and -321 or 0
+        CSAPI.SetAnchor(content, x, 0, 0)
+    end
 end
 
+function SetSVBG()
+    local imgName = cardData:GetBreakLevel() > 5 and "img2_02" or "img2_01"
+    ResUtil.RoleCard_BG:Load(svbg, imgName)
+end
+
+-- 返回动画
 function SetIconAnim()
-    if (_lookBreakLv) then
+    if (_lookBreakLv and breakNumItems) then
         local index = _lookBreakLv - 1
-        local obj = this["normal" .. index]
-        local pos = targetPos[index]
-        CSAPI.SetGOIgnoreAlpha(obj, true)
-        UIUtil:SetPObjMove(obj, pos[1], 0, pos[2], 0, 0, 0, nil, 300, 1)
-        UIUtil:SetObjScale(obj, 0.6, 1, 0.6, 1, 1, 1, function()
-            CSAPI.SetGOIgnoreAlpha(obj, false)
-        end, 300, 0)
+        local item = breakNumItems[index]
+        item.SetItemAnim(_target)
     end
     _lookBreakLv = nil
 end
@@ -159,10 +172,30 @@ end
 
 function SetBreak()
     local breakLv = cardData:GetBreakLevel() - 1
-    for k = 1, 4 do
-        local alpha = breakLv >= k and 1 or 0.3
-        CSAPI.SetGOAlpha(this["normal" .. k], alpha)
-        CSAPI.SetGOActive(this["sel" .. k], breakLv == k)
+    -- for k = 1, 4 do
+    --     local alpha = breakLv >= k and 1 or 0.3
+    --     CSAPI.SetGOAlpha(this["normal" .. k], alpha)
+    --     CSAPI.SetGOActive(this["sel" .. k], breakLv == k)
+    -- end
+    if (not breakNumDatas) then
+        breakNumDatas = {}
+        local maxBreakLv = RoleTool.GetMaxBreakLv() - 1
+        for k = 1, maxBreakLv do
+            table.insert(breakNumDatas, k)
+        end
+    end
+    breakNumItems = breakNumItems or {}
+    ItemUtil.AddItems("Role/RoleUpBreakNum", breakNumItems, breakNumDatas, content, BreakNumItemClickCB, 1, breakLv,
+        SetIconAnim)
+end
+
+function BreakNumItemClickCB(item)
+    local lv = item.lv + 1
+    sr_sv.enabled = false
+    sr_sv.enabled = true
+    local breakLv = cardData:GetBreakLevel()
+    if (not isUp and breakLv < lv) then
+        EventMgr.Dispatch(EventType.Role_Jump_Break, {lv, false, item.normal})
     end
 end
 

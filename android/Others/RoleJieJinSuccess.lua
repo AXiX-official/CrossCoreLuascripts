@@ -1,4 +1,4 @@
--- 解禁成功界面
+﻿-- 解禁成功界面
 local showIndex = 1
 
 function Awake()

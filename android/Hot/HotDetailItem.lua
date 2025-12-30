@@ -1,4 +1,4 @@
--- {x1 = index, x2 = i, v}
+﻿-- {x1 = index, x2 = i, v}
 function Refresh(data)
 	--count
 	local str =(data.x1 ~= data.x2) and string.format("%s - %s", data.x1, data.x2) or data.x1 .. ""

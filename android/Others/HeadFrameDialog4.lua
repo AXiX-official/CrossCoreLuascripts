@@ -1,4 +1,4 @@
-local landIDs = {72002, 72003, 72004}
+﻿local landIDs = {72002, 72003, 72004}
 -- {index,newid,selectType}
 function OnOpen()
     icon_emotes = table.copy(PlayerClient:GetEmotes())

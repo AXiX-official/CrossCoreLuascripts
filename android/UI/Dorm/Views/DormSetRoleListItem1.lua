@@ -1,4 +1,4 @@
---角色技能
+﻿--角色技能
 function Refresh(_data)
 	cfg = _data[1]
 	isUse = _data[2]

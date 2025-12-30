@@ -1,4 +1,4 @@
-local HeadTitleData = require("HeadTitleData")
+﻿local HeadTitleData = require("HeadTitleData")
 local selectID = nil
 local isUseimg = false
 local minEndTime = nil

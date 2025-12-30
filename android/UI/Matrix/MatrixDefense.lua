@@ -1,4 +1,4 @@
-local curID = nil
+﻿local curID = nil
 function OnOpen()
 	curID = MatrixMgr:GetWarningLv()
 	SetItems()

@@ -1,4 +1,4 @@
-local curDatas = {}
+﻿local curDatas = {}
 local isMax = false
 local isFirst = true
 function Awake()

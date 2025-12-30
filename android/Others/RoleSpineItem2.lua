@@ -1,4 +1,4 @@
-local imgScale = 1
+﻿local imgScale = 1
 local hideTxt = false
 local graphic = nil
 local spineTools = nil
@@ -20,6 +20,7 @@ local img_imgObj
 local isMul
 local isInit = false
 local changeIdleData = nil
+local clickCount = {} -- 点击次数
 
 function Awake()
     img_imgObj = ComUtil.GetCom(imgObj, "Image")
@@ -30,8 +31,8 @@ function Init(_playCB, _endCB, _needClick, _isMul)
     playCallBack = _playCB
     endCallBack = _endCB
     needClick = (_needClick ~= nil) and _needClick or false
-    isMul = _isMul
-    CSAPI.SetGOActive(imgObj, not isMul)
+    -- isMul = _isMul
+    -- CSAPI.SetGOActive(imgObj, not isMul)
     isInit = true
 end
 
@@ -39,6 +40,9 @@ function Refresh(_modelId, _posType, _callBack, _isUseShopImg, _needClick)
     if (not isInit or _modelId == nil or _posType == nil) then
         return
     end
+    isMul = _modelId < 10000
+    CSAPI.SetGOActive(imgObj, not isMul)
+    --
     modelId = _modelId
     posType = _posType
     callBack = _callBack
@@ -52,15 +56,10 @@ function Refresh(_modelId, _posType, _callBack, _isUseShopImg, _needClick)
         end
         return -- 相同的话不往下
     end
-    curRoleNum = 1
     oldModelId = _modelId
-    records = {}
-    changeIdleData = nil
-    if (dragObj) then
-        CSAPI.RemoveGO(dragObj)
-    end
-    dragObj = nil
-
+    -- 
+    CrearData()
+    --
     cfg = isMul and Cfgs.CfgSpineMultiImageAction:GetByID(modelId) or Cfgs.CfgSpineAction:GetByID(modelId)
     SetImg()
 end
@@ -139,7 +138,7 @@ end
 
 -- 点击触发
 -- _check 检查过场spine是否存在（存在时不让玩家点击），changerole时如果后接更换idle
-function TouchItemClickCB(cfgChild, _cb, _check)
+function TouchItemClickCB(cfgChild, _cb, _check, _isCan)
     local check = true
     if (_check ~= nil) then
         check = _check
@@ -167,8 +166,11 @@ function TouchItemClickCB(cfgChild, _cb, _check)
     end
     -- 轨道
     local trackIndex = GetTrackIndex(cfgChild)
-    local isCan = false
-    if (trackIndex == 1) then
+    local isCan = _isCan or false
+    if(isCan)then 
+        --必定可执行
+    elseif (trackIndex == 1) then
+        --[[
         -- 1轨道需要在idle状态下才能点击 或 前后都是同一多动作，并且不是最后一个动作
         if (not isCan and IsIdle() or content.actions ~= nil) then
             isCan = true
@@ -183,6 +185,10 @@ function TouchItemClickCB(cfgChild, _cb, _check)
                 end
             end
         end
+        ]]
+        if (IsIdle()) then
+            isCan = true
+        end
     elseif (content and content.guochange) then -- 如果是过场动作，未播完不能再次点
         if (IsIdle() and spineTools:CheckCanPlay(trackIndex)) then
             isCan = true
@@ -193,6 +199,14 @@ function TouchItemClickCB(cfgChild, _cb, _check)
             isCan = IsIdle()
         else
             isCan = true
+        end
+    end
+    -- 需要先点击其他动作
+    if (isCan and content.needClicks) then
+        for k, v in pairs(content.needClicks) do
+            if (not clickCount[v]) then
+                isCan = false
+            end
         end
     end
     if (not isCan) then
@@ -244,11 +258,13 @@ function TouchItemClickCB(cfgChild, _cb, _check)
                 cb, delay = GetClickCB(cfgChild)
             end
             if (sName ~= nil) then
-                local _b = false
-                if (trackIndex == 1 or content.guochange ~= nil) then
-                    _b = true
+                local b1,b2 = true,true
+                if(content.noFade)then 
+                    b1 = false
+                elseif (trackIndex ~= 1 and content.guochange == nil) then --轨道为1或者有过场时需要渐出
+                    b2 = false
                 end
-                b = spineTools:PlayByClick(sName, trackIndex, true, _b, cb)
+                b = spineTools:PlayByClick(sName, trackIndex, b1, b2, cb)
             else
                 if (delay > 0) then
                     FuncUtil:Call(function()
@@ -270,6 +286,9 @@ function TouchItemClickCB(cfgChild, _cb, _check)
             MissionMgr:DoClickBoard()
         end
     end
+    -- 点击记录 
+    local num = clickCount[cfgChild.index] or 0
+    clickCount[cfgChild.index] = num + 1
 end
 
 -- 点击回调
@@ -354,6 +373,9 @@ function ItemDragBeginCB(cfgChild, x, y)
     end
     PlayAudio(cfgChild)
     isDrag = true
+    -- 
+    local num = clickCount[cfgChild.index] or 0
+    clickCount[cfgChild.index] = num + 1
 end
 -- 拖拽中
 function ItemDragCB(cfgChild, x, y)
@@ -568,7 +590,8 @@ function PlayIn(cb, _movePoint)
     local indexs, names = GetIndexs()
     spineTools:ImmClearTracks(indexs, names)
     graphic.Skeleton:SetToSetupPose()
-    records = {}
+    -- 
+    CrearData()
     --
     isIn = true
     inCB = cb
@@ -844,12 +867,20 @@ function ClearCache()
         CSAPI.RemoveGO(l2dGo)
     end
     l2dGo = nil
+    oldModelId = nil
+    --
+    CrearData()
+end
+
+function CrearData()
+    curRoleNum = 1
+    records = {}
+    changeIdleData = nil
+    clickCount = {}
     if (dragObj) then
         CSAPI.RemoveGO(dragObj)
     end
     dragObj = nil
-    oldModelId = nil
-    records = {}
 end
 
 --
@@ -924,15 +955,15 @@ function SpineEvent(trackEntry, e)
         end
     else
         if (strs[1] == "TriggerIndex") then
-            PlayByIndex(tonumber(strs[2]))
+            PlayByIndex(tonumber(strs[2]),nil,nil,true)
         end
     end
 end
 
-function PlayByIndex(index, cb, check)
+function PlayByIndex(index, cb, check, isCan)
     local cfgChild = cfg.item[index]
     timer = 0
-    TouchItemClickCB(cfgChild, cb, check)
+    TouchItemClickCB(cfgChild, cb, check, isCan)
 end
 
 function GetAnimDuration(animName)

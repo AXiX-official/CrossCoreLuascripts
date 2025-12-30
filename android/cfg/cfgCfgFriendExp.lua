@@ -1,3 +1,3 @@
-_G["CfgFriendExp"]={{["id"]=1,["key"]="1",["nExp"]=10}
+﻿_G["CfgFriendExp"]={{["id"]=1,["key"]="1",["nExp"]=10}
 }
 

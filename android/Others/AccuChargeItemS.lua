@@ -1,4 +1,4 @@
-local endTime1, endTime2 = nil, nil
+﻿local endTime1, endTime2 = nil, nil
 local timer = nil
 function Awake()
     sd_slider = ComUtil.GetCom(sd, "Slider")

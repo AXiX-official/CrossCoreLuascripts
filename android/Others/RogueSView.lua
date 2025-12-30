@@ -1,4 +1,4 @@
-local nType = 1 -- 普通
+﻿local nType = 1 -- 普通
 local curID = nil
 local time, timer = 0, 0
 local isFirst = false

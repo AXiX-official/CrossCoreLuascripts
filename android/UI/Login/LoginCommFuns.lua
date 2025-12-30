@@ -1,4 +1,4 @@
-local crossSign="/cross/";
+﻿local crossSign="/cross/";
 local qoo="/qoo/";
 
 local lastServerPath = "last_login_server";

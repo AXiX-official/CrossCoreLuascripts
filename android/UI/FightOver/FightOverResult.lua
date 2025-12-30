@@ -1,4 +1,4 @@
-local expBar = nil;
+﻿local expBar = nil;
 local pos = {{-514, -7}, {-256, -7}, {3, -7}, {265, -7}, {526, -7}};
 local hpBar = nil;
 local fillExpBar = SetNil

@@ -1,4 +1,4 @@
-local itemPath = "UIs/Archive2/RoleArchiveCard"
+﻿local itemPath = "UIs/Archive2/RoleArchiveCard"
 local curIndex = 0
 local teamDatas = {}
 curIndex1, curIndex2 = 1,1

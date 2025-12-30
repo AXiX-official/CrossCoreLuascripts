@@ -1,4 +1,4 @@
--- 副产品获得的奖励界面
+﻿-- 副产品获得的奖励界面
 function Awake()
 	fade = ComUtil.GetCom(gameObject, "ActionFade")
 	fade1 = ComUtil.GetCom(goShaderRaw, "ActionFade")

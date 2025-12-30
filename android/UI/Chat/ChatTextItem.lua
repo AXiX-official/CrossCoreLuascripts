@@ -1,4 +1,4 @@
---常用语子物体
+﻿--常用语子物体
 local data = nil
 local index = 0
 

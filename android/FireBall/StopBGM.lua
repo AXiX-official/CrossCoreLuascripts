@@ -1,4 +1,4 @@
-
+﻿
 local bossEnter = "boss_enter";
 
 function Awake()

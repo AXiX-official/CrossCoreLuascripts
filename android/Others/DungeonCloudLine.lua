@@ -1,4 +1,4 @@
-local datas = nil
+﻿local datas = nil
 local currLevel = 1
 local items = {}
 

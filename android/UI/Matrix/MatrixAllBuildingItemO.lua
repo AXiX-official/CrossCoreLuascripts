@@ -1,4 +1,4 @@
--- {data = , curlv= , openlv = }  data=> 服务器
+﻿-- {data = , curlv= , openlv = }  data=> 服务器
 local isCalTime = false
 local len = 0
 local timer = 0

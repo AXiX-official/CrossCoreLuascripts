@@ -1,4 +1,4 @@
---用户注册框
+﻿--用户注册框
 --控件
 local inp_account = nil;
 local inp_pwd = nil;

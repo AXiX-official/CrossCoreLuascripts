@@ -1,4 +1,4 @@
-local sectionDatas = nil
+﻿local sectionDatas = nil
 local currDatas = nil
 local layout = nil
 local intervalTime = 0 --刷新间隔

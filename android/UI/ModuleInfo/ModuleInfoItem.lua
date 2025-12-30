@@ -1,4 +1,4 @@
-function SetIndex(_i)
+﻿function SetIndex(_i)
 	index = _i
 end
 

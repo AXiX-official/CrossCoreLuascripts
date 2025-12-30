@@ -1,4 +1,4 @@
-_G["CfgFriendConst"]={{["sEnum"]="InviteLimit",["nVal"]=999,["key"]="1",["id"]=1,["sDesc"]="好友发送申请上限"}
+﻿_G["CfgFriendConst"]={{["sEnum"]="InviteLimit",["nVal"]=999,["key"]="1",["id"]=1,["sDesc"]="好友发送申请上限"}
 ,{["sEnum"]="InviteSignLimit",["nVal"]=20,["key"]="2",["id"]=2,["sDesc"]="申请备注文字上限"}
 ,{["sEnum"]="DeleteCoolTime",["nVal"]=24,["key"]="3",["id"]=3,["sDesc"]="删除的好友在XX小时内不能再添加"}
 ,{["sEnum"]="RecommendLimit",["nVal"]=10,["key"]="4",["id"]=4,["sDesc"]="系统推荐好友的数量"}

@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 --答案
 function this.New()
 	this.__index = this.__index or this;

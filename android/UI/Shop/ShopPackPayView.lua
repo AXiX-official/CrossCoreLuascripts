@@ -1,4 +1,4 @@
---商店礼包购买窗口
+﻿--商店礼包购买窗口
 local currNum=1; --当前选择数量
 local currPrice=0;--当前总价格
 local currPriceType=nil;
@@ -47,8 +47,8 @@ end
 function OnMonthCardDaysChange(days)
     if  commodity and commodity:GetType()==CommodityItemType.MonthCard then--月卡，显示剩余天数
 		local info=commodity:GetMonthCardInfo();
-		if info and info.id==ITEM_ID.MonthCard then
-			SetDays(days);--刷新剩余时间
+		if info then
+			SetDays(info.l_cnt);--刷新剩余时间
 		end
     end
 end
@@ -188,7 +188,7 @@ function RefreshPrice()
 		CSAPI.SetGOActive(txt_free,false);
 		CSAPI.SetGOActive(nPriceObj,true);
 		local discount=commodity:GetNowDiscount();
-		local orgInfo=commodity:GetOrgCosts();
+		local orgInfo=commodity:GetOrgCostsByCostKey();
 		if discount~=1 then
 			local rPrice=commodity:GetRealPrice();
 			if voucherList then

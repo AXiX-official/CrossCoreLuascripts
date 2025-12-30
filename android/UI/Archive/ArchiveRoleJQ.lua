@@ -1,4 +1,4 @@
-local itemPath = "Archive2/ArchiveRoleJQItem"
+﻿local itemPath = "Archive2/ArchiveRoleJQItem"
 
 function Awake()
 	layout = ComUtil.GetComInChildren(sv, "UICircularScrollView")

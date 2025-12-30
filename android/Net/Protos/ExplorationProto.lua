@@ -1,4 +1,4 @@
---勘探协议
+﻿--勘探协议
 ExplorationProto={}
 
 function ExplorationProto:GetInfo(id)

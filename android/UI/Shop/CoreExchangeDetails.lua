@@ -1,4 +1,4 @@
---核心兑换详情
+﻿--核心兑换详情
 local data={
     {id=1,stars=3,first={card=false,gets={10033,1}},second={card=true,gets={10034,5}},third={card=true,gets={10034,5}}},
     {id=1,stars=4,first={card=false,gets={10033,1}},second={card=true,gets={10034,30}},third={card=true,gets={10034,30}}},

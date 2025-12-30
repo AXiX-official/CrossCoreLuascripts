@@ -1,4 +1,4 @@
--- 洛贝拉1
+﻿-- 洛贝拉1
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -29,6 +29,16 @@ function Skill780100104:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 603300102
-	self:AddTempAttr(SkillEffect[603300102], caster, target, data, "defense",-300)
+	-- 603300109
+	self:AddTempAttr(SkillEffect[603300109], caster, target, data, "defense",-300)
+end
+-- 特殊入场时(复活，召唤，合体)
+function Skill780100104:OnBornSpecial(caster, target, data)
+	-- 8166
+	if SkillJudger:CasterIsOwnSummon(self, caster, target, true) then
+	else
+		return
+	end
+	-- 338401
+	self:AddBuff(SkillEffect[338401], caster, self.card, data, 338401)
 end

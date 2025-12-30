@@ -1,4 +1,4 @@
---跳过输入
+﻿--跳过输入
 FightActionSkip = oo.class(FightActionBase);
 local this = FightActionSkip;
 

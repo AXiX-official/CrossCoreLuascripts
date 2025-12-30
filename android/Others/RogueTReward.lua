@@ -1,4 +1,4 @@
-local showIndex = nil
+﻿local showIndex = nil
 local curLv = 1
 
 local barTime = nil

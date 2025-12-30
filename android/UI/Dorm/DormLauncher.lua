@@ -1,10 +1,11 @@
--- 驻员行为管理器
+﻿-- 驻员行为管理器
 DormRoleActionMgr = require "DormRoleActionMgr"
 
 -- 驻员状态机（动画播放切换）
 DormRoleStateMachine = require "DormRoleStateMachine"
 
 DormRoleHitAngle = 60 -- 驻员与碰撞点发生交互的最大角度，这是一个-60到60的值
+DormRoleHitAngle2 = 120
 DormColMinDis1 = 0.2 -- 与家具的碰撞区域发生碰撞的最小距离
 DormColMinDis2 = 0.2 -- 与触发区的碰撞区域发生碰撞的最小距离
 DormInteDis = 0.01 -- 与目标点的最小判断距离
@@ -38,14 +39,14 @@ DormFurnitureType.carpet = 8 -- 地毯
 DormFurnitureType.sundries = 9 -- 杂物
 
 -- 家具细分
-DormFurnitrueChildType = {}
-DormFurnitrueChildType.normal = 1 -- 普通家具
-DormFurnitrueChildType.brick = 2 -- 地砖（无碰撞）
+-- DormFurnitrueChildType = {}
+-- DormFurnitrueChildType.normal = 1 -- 普通家具
+-- DormFurnitrueChildType.brick = 2 -- 地砖（无碰撞）
 
 -- 墙饰细分
-DormHangingsChildType = {}
-DormHangingsChildType.normal = 1 -- 普通墙饰
-DormHangingsChildType.brick = 2 -- 墙砖（无碰撞）
+-- DormHangingsChildType = {}
+-- DormHangingsChildType.normal = 1 -- 普通墙饰
+-- DormHangingsChildType.brick = 2 -- 墙砖（无碰撞）
 
 -- 宿舍层级
 DormLayer = {}
@@ -68,42 +69,42 @@ DormThemeOpenType.Theme = 2 -- 他人房间数据（主题分享）
 DormThemeOpenType.Room = 3 -- 房间数据
 
 -- 动作分类
-DormAction1 = {}
-DormAction1.Speed = "Speed"
-DormAction1.furniture = "furniture"
-DormAction1.grab = "grab"
-DormAction1.leisure = "leisure"
+-- DormAction1 = {}
+-- DormAction1.Speed = "Speed"
+-- DormAction1.furniture = "furniture"
+-- DormAction1.grab = "grab"
+-- DormAction1.leisure = "leisure"
 
 -- 角色动作，作为key去获取DormRoleActionType
-DormAction2 = {}
-DormAction2.idle = "idle"
-DormAction2.walk = "walk"
-DormAction2.furniture_sleep_01 = "furniture_sleep_01"
-DormAction2.furniture_sit_01 = "furniture_sit_01"
-DormAction2.furniture_sit_02 = "furniture_sit_02"
-DormAction2.base_operatePC = "base_operatePC" -- 操作电脑
-DormAction2.role_highfive_01 = "role_highfive_01" -- 集掌 右
-DormAction2.role_highfive_02 = "role_highfive_02" -- 集掌 左 
-DormAction2.click_grab = "click_grab" -- 抓起
-DormAction2.click_lens = "click_lens" -- 挥手
-DormAction2.click_lens_02 = "click_lens_02" -- 挥手
-DormAction2.furniture_Nod = "furniture_Nod" -- 点头
-DormAction2.Furn_ComA_ipad_01 = "Furn_ComA_ipad_01" -- 看ipad
-DormAction2.base_dozeOff = "base_dozeOff" -- 打瞌睡
-DormAction2.base_drinkTea = "base_drinkTea" -- 喝茶
-DormAction2.base_phone = "base_phone" -- 打电话
-DormAction2.base_handlingData = "base_handlingData" -- 送快递
-DormAction2.normal_daze_01 = "normal_daze_01" -- 发呆动作 
-DormAction2.normal_daze_02 = "normal_daze_02"
-DormAction2.normal_daze_03 = "normal_daze_03"
-DormAction2.normal_daze_04 = "normal_daze_04"
-DormAction2.normal_daze_05 = "normal_daze_05"
-DormAction2.normal_daze_06 = "normal_daze_06"
-DormAction2.normal_clean = "normal_clean"
-DormAction2.normal_stretch = "normal_stretch"
-DormAction2.normal_fatigue = "normal_fatigue"
+-- DormAction2 = {}
+-- DormAction2.idle = "idle"
+-- DormAction2.walk = "walk"
+-- DormAction2.furniture_sleep_01 = "furniture_sleep_01"
+-- DormAction2.furniture_sit_01 = "furniture_sit_01"
+-- DormAction2.furniture_sit_02 = "furniture_sit_02"
+-- DormAction2.base_operatePC = "base_operatePC" -- 操作电脑
+-- DormAction2.role_highfive_01 = "role_highfive_01" -- 集掌 右
+-- DormAction2.role_highfive_02 = "role_highfive_02" -- 集掌 左 
+-- DormAction2.click_grab = "click_grab" -- 抓起
+-- DormAction2.click_lens = "click_lens" -- 挥手
+-- DormAction2.click_lens_02 = "click_lens_02" -- 挥手
+-- DormAction2.furniture_Nod = "furniture_Nod" -- 点头
+-- DormAction2.Furn_ComA_ipad_01 = "Furn_ComA_ipad_01" -- 看ipad
+-- DormAction2.base_dozeOff = "base_dozeOff" -- 打瞌睡
+-- DormAction2.base_drinkTea = "base_drinkTea" -- 喝茶
+-- DormAction2.base_phone = "base_phone" -- 打电话
+-- DormAction2.base_handlingData = "base_handlingData" -- 送快递
+-- DormAction2.normal_daze_01 = "normal_daze_01" -- 发呆动作 
+-- DormAction2.normal_daze_02 = "normal_daze_02"
+-- DormAction2.normal_daze_03 = "normal_daze_03"
+-- DormAction2.normal_daze_04 = "normal_daze_04"
+-- DormAction2.normal_daze_05 = "normal_daze_05"
+-- DormAction2.normal_daze_06 = "normal_daze_06"
+-- DormAction2.normal_clean = "normal_clean"
+-- DormAction2.normal_stretch = "normal_stretch"
+-- DormAction2.normal_fatigue = "normal_fatigue"
 
--- 动作对应lua文件。 通过 Dorm_GetActionType  来获取后续动作
+-- 动作对应lua文件。 通过 Dorm_GetActionType  来获取后续动作(找不到的都返回DormRoleActionLeisure)
 DormRoleActionType = {}
 DormRoleActionType.Hide = "DormRoleActionHide" -- 隐藏  编辑家具时的状态
 DormRoleActionType.Await = "DormRoleActionAwait" -- 换装时进入待机
@@ -114,21 +115,21 @@ DormRoleActionType.click_grab = "DormRoleActionTookUp"
 DormRoleActionType.click_lens = "DormRoleActionClick"
 DormRoleActionType.click_lens_02 = "DormRoleActionClick"
 DormRoleActionType.furniture_Nod = "DormRoleActionClick"
-DormRoleActionType.Furn_ComA_ipad_01 = "DormRoleActionLeisure" -- 看ipad
-DormRoleActionType.base_dozeOff = "DormRoleActionLeisure" -- 打瞌睡
-DormRoleActionType.base_drinkTea = "DormRoleActionLeisure" -- 喝茶
-DormRoleActionType.base_phone = "DormRoleActionLeisure" -- 打电话
+-- DormRoleActionType.Furn_ComA_ipad_01 = "DormRoleActionLeisure" -- 看ipad
+-- DormRoleActionType.base_dozeOff = "DormRoleActionLeisure" -- 打瞌睡
+-- DormRoleActionType.base_drinkTea = "DormRoleActionLeisure" -- 喝茶
+-- DormRoleActionType.base_phone = "DormRoleActionLeisure" -- 打电话
 DormRoleActionType.base_handlingData = "DormRoleActionHandlingData" -- 送快递
-DormRoleActionType.normal_daze_01 = "DormRoleActionLeisure" -- 发呆动作（假数据，要在获取里赋值真正的数据）
-DormRoleActionType.normal_daze_02 = "DormRoleActionLeisure"
-DormRoleActionType.normal_daze_03 = "DormRoleActionLeisure"
-DormRoleActionType.normal_daze_04 = "DormRoleActionLeisure"
-DormRoleActionType.normal_daze_05 = "DormRoleActionLeisure"
-DormRoleActionType.normal_daze_06 = "DormRoleActionLeisure"
-DormRoleActionType.normal_clean = "DormRoleActionLeisure"
-DormRoleActionType.normal_stretch = "DormRoleActionLeisure"
-DormRoleActionType.normal_fatigue = "DormRoleActionLeisure"
-
+-- DormRoleActionType.normal_daze_01 = "DormRoleActionLeisure" -- 发呆动作（假数据，要在获取里赋值真正的数据）
+-- DormRoleActionType.normal_daze_02 = "DormRoleActionLeisure"
+-- DormRoleActionType.normal_daze_03 = "DormRoleActionLeisure"
+-- DormRoleActionType.normal_daze_04 = "DormRoleActionLeisure"
+-- DormRoleActionType.normal_daze_05 = "DormRoleActionLeisure"
+-- DormRoleActionType.normal_daze_06 = "DormRoleActionLeisure"
+-- DormRoleActionType.normal_clean = "DormRoleActionLeisure"
+-- DormRoleActionType.normal_stretch = "DormRoleActionLeisure"
+-- DormRoleActionType.normal_fatigue = "DormRoleActionLeisure"
+DormRoleActionType.lie = "DormRoleActionLie" -- 猫的休闲
 -- -- 家具触发人物动作 编辑器对应
 -- --[[
 -- 0：睡觉（要区分左右） furniture_sleep_01 furniture_sleep_02
@@ -173,7 +174,9 @@ function Dorm_GetActionType(_dormAction2, role)
     local cfg = Cfgs.CfgCardRoleAction:GetByID(_dormAction2)
     local actions = nil
 
-    if (role.IsRobot()) then
+    if (role.IsPet()) then 
+        actions = cfg.petActions
+    elseif (role.IsRobot()) then
         actions = cfg.robotActions
     else
         -- 在宿舍或者咨询室
@@ -193,12 +196,12 @@ function Dorm_GetActionType(_dormAction2, role)
         for i, v in pairs(actions) do
             count = count + v[2]
             if (count >= num) then
+                local key = v[1] 
                 if (v[1] == "normal_daze_0") then
-                    local key = Dorm_GetDaze(role.data)
-                    return DormRoleActionType[key], key
-                else
-                    return DormRoleActionType[v[1]], v[1]
+                    key = Dorm_GetDaze(role.data)
                 end
+                local actionType = DormRoleActionType[key] or "DormRoleActionLeisure"
+                return actionType, key
             end
         end
     else
@@ -214,7 +217,7 @@ function Dorm_GetDaze(cRoleInfo)
     return "normal_daze_0" .. daze
 end
 
--- 获取角色的发呆动作
+-- 获取角色的点击动作
 function Dorm_GetClick(cRoleInfo)
     local click = cRoleInfo:GetClick()
     local str = "click_lens"

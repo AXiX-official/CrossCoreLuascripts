@@ -1,4 +1,4 @@
---勘探主界面
+﻿--勘探主界面
 local layout=nil;
 local data=nil;
 local slider=nil;

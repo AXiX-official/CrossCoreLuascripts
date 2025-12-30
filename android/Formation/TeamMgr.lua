@@ -1,4 +1,4 @@
---编成数据管理
+﻿--编成数据管理
 local this=MgrRegister("TeamMgr")
 this.currentIndex = 1;--当前选中的队伍下标
 this.fightingID = {};--战斗中的队伍ID列表[index]=IDArray,index：副本类型

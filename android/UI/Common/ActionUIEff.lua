@@ -1,4 +1,4 @@
-
+﻿
 function OnEnter()
     local target = GetTarget();
     local data = { go = target };

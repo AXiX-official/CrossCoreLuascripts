@@ -1,4 +1,4 @@
-_G["CfgTerritoryEnum"]={{["id"]=1,["sName"]="地球",["key"]="1"}
+﻿_G["CfgTerritoryEnum"]={{["id"]=1,["sName"]="地球",["key"]="1"}
 ,{["id"]=2,["sName"]="碎星",["key"]="2"}
 ,{["id"]=3,["sName"]="卡洲皇室",["key"]="3"}
 ,{["id"]=4,["sName"]="U·E·D·F部队",["key"]="4"}

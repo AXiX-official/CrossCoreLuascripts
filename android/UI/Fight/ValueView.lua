@@ -1,4 +1,4 @@
-
+﻿
 function SetValue(value)
     local txtValue = ComUtil.GetCom(text,"TextMesh");
     txtValue.text = value .. "";

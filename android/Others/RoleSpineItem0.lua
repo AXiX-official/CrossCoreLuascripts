@@ -1,4 +1,4 @@
-local isLive2D = true -- 是否使用spine
+﻿local isLive2D = true -- 是否使用spine
 local isMul = nil -- 是不是多人插图 
 local playCallBack = nil
 local endCallBack = nil
@@ -21,7 +21,7 @@ function Init(_playCB, _endCB, _needClick, _isMul)
     playCallBack = _playCB
     endCallBack = _endCB
     needClick = (_needClick ~= nil) and _needClick or false
-    isMul = _isMul
+    --isMul = _isMul
     isInit = true
 end
 
@@ -30,6 +30,8 @@ function Refresh(_modelId, _posType, _callBack, _force, _isUseShopImg, _needClic
     if (not isInit and _modelId == nil or _posType == nil) then
         return
     end
+    isMul = _modelId < 10000
+    --
     modelId = _modelId
     posType = _posType
     callBack = _callBack

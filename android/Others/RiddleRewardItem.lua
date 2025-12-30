@@ -1,4 +1,4 @@
-local eventMgr=nil;
+﻿local eventMgr=nil;
 local isOver=false;
 local canReivce=false;
 local fakeData=nil;

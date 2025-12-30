@@ -1,4 +1,4 @@
-_G["CfgOpenCondition"]={["ColosseumView"]={["key"]="ColosseumView",["id"]="ColosseumView",["conditions"]={2120}
+﻿_G["CfgOpenCondition"]={["ColosseumView"]={["key"]="ColosseumView",["id"]="ColosseumView",["conditions"]={2120}
 ,["sName"]="角斗场"}
 ,["GuildMenu"]={["key"]="GuildMenu",["id"]="GuildMenu",["conditions"]={2110}
 ,["sName"]="公会"}
@@ -11,7 +11,7 @@ _G["CfgOpenCondition"]={["ColosseumView"]={["key"]="ColosseumView",["id"]="Colos
 ,["RogueTView"]={["key"]="RogueTView",["id"]="RogueTView",["conditions"]={2120}
 ,["sName"]="能力测验"}
 ,["Section"]={["id"]="Section",["sName"]="出击",["key"]="Section"}
-,["RichManMain"]={["key"]="RichManMain",["id"]="RichManMain",["conditions"]={2001}
+,["RichManMain"]={["key"]="RichManMain",["id"]="RichManMain",["conditions"]={2008}
 ,["sName"]="光影奇境"}
 ,["RogueView"]={["key"]="RogueView",["id"]="RogueView",["conditions"]={2120}
 ,["sName"]="乱序演习"}

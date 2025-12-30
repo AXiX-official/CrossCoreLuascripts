@@ -1,4 +1,4 @@
-
+﻿
 --设置目标
 function Set(targetCharacter)    
 

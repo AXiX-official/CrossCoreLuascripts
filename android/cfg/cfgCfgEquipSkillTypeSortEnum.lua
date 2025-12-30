@@ -1,7 +1,10 @@
-_G["CfgEquipSkillTypeSortEnum"]={[106]={["key"]="106",["group"]=1,["sName"]="暴伤",["id"]=106,["sortIcon"]={{1,"EquipSkill/106",0.415,0.9}
+﻿_G["CfgEquipSkillTypeSortEnum"]={[106]={["key"]="106",["group"]=1,["sName"]="暴伤",["id"]=106,["sortIcon"]={{1,"EquipSkill/106",0.415,0.9}
 }
 }
 ,[242]={["key"]="242",["group"]=1,["sName"]="重伤",["id"]=242,["sortIcon"]={{1,"EquipSkill/242",0.415,1}
+}
+}
+,[211]={["key"]="211",["group"]=1,["sName"]="蓄能",["id"]=211,["sortIcon"]={{1,"EquipSkill/211",0.415,1}
 }
 }
 ,[212]={["key"]="212",["group"]=1,["sName"]="收割",["id"]=212,["sortIcon"]={{1,"EquipSkill/212",0.415,1}
@@ -74,6 +77,9 @@ _G["CfgEquipSkillTypeSortEnum"]={[106]={["key"]="106",["group"]=1,["sName"]="暴
 }
 }
 ,[201]={["key"]="201",["group"]=1,["sName"]="穿甲",["id"]=201,["sortIcon"]={{1,"EquipSkill/201",0.415,1}
+}
+}
+,[233]={["key"]="233",["group"]=1,["sName"]="神威",["id"]=233,["sortIcon"]={{1,"EquipSkill/233",0.415,1}
 }
 }
 ,[102]={["key"]="102",["group"]=1,["sName"]="耐久",["id"]=102,["sortIcon"]={{1,"EquipSkill/102",0.415,0.9}

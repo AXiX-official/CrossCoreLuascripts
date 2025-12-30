@@ -1,4 +1,4 @@
--- 多人插图预览
+﻿-- 多人插图预览
 -- data ->CfgArchiveMultiPicture 的 id
 function OnOpen()
     local cfg = Cfgs.CfgArchiveMultiPicture:GetByID(data.id)

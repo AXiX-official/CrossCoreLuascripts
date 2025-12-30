@@ -1,4 +1,4 @@
-
+﻿
 --isStarting : 等待列表
 local TeamBossInfo = require "TeamBossInfo"
 local this = MgrRegister("TeamBossMgr")

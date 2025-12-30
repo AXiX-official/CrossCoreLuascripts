@@ -1,4 +1,4 @@
-local rect = nil
+﻿local rect = nil
 function Awake()
     rect = ComUtil.GetCom(bg,"RectTransform")
 end

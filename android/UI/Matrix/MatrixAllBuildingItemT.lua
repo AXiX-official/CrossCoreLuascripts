@@ -1,4 +1,4 @@
--- 建筑驻员列表
+﻿-- 建筑驻员列表
 local isSelect = false
 
 function SetClickCB(_cb)

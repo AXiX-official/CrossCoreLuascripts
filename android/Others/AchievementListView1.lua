@@ -1,4 +1,4 @@
-local collectItem = nil
+﻿local collectItem = nil
 local layout1 = nil
 local listDatas= nil
 local slider = nil

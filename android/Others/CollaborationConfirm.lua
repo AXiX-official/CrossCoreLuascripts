@@ -1,4 +1,4 @@
-local state=1;
+﻿local state=1;
 local eventMgr=nil;
 function Awake()
     eventMgr = ViewEvent.New();

@@ -1,4 +1,4 @@
-_G["CfgShopTab"]={[3001]={["checkNew"]=1,["id"]=3001,["isAll"]=1,["nEndTime"]=0,["name"]="全部礼包",["key"]=3001,["nStartTime"]=0,["group"]=3,["icon"]="img_49_01",["index"]=1}
+﻿_G["CfgShopTab"]={[3001]={["checkNew"]=1,["id"]=3001,["isAll"]=1,["nEndTime"]=0,["name"]="全部礼包",["key"]=3001,["nStartTime"]=0,["group"]=3,["icon"]="img_49_01",["index"]=1}
 ,[3006]={["nEndTime"]=0,["nStartTime"]=0,["name"]="周礼包",["key"]=3006,["group"]=3,["id"]=3006,["icon"]="img_49_05",["index"]=6}
 ,[1002]={["index"]=2,["goldInfo"]={{10033,60001}
 }

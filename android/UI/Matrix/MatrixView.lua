@@ -1,4 +1,4 @@
--- 基地场景包含10个场景的内容：MatrixScene、Dorm、BS_Indoor_xxx(8个建筑)
+﻿-- 基地场景包含10个场景的内容：MatrixScene、Dorm、BS_Indoor_xxx(8个建筑)
 -- 不进行场景切换，而是通过更换场景内容来实现场景切换
 -- MatrixView层级为Top,为切换提供渐入渐出动画
 -- 【MatrixView和MatrixScene同时监听Matrix_Building_Update出现了重叠UI的问题，因为两次调用太快，并且都是异步导致

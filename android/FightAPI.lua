@@ -1,4 +1,4 @@
-local unpack = unpack or table.unpack
+﻿local unpack = unpack or table.unpack
 
 ------------------筛选策略---------------------------------
 SkillFilter = {}
@@ -1104,6 +1104,17 @@ function SkillApi:GetTeamMaxHP(oSkill, caster, target,teamID)
 	return team:GetMaxHp()
 end
 
+-- 获取装备技能
+function SkillApi:GetOwnerEquipSkills(oSkill, caster, target)
+
+	local oSummonOwner = self:Filter(oSkill, caster, target, 6)  --获取召唤主
+    if oSummonOwner then
+		local mgr = oSummonOwner.skillMgr
+		return mgr.equipSkills or {}
+    end
+    return {}
+end
+
 ----------------------------------------------
 -- 技能基类
 FightAPI = oo.class()
@@ -1516,7 +1527,7 @@ function FightAPI:AddProgress(effect, caster, target, data, progress, max)
 
 	LogDebugEx("拉条 AddProgress", target.name, max)
 	if target:IsLive() then
-		target:AddProgress(progress, max, effect.apiSetting)
+		target:AddProgress(progress, max, effect.apiSetting, caster)
 	end
 end
 
@@ -2020,9 +2031,17 @@ function FightAPI:FlyAdjust(effect, caster, target, data, percent, rand)
 	target:SetSign("FlyAdjust",percent,{rand=rand, percent=percent}) 
 end
 
--- MISS地面兵种攻击:飞行兵种一定几率MISS地面兵种攻击
+-- MISS攻击:一定几率MISS攻击
 function FightAPI:MissSurface(effect, caster, target, data, rand)
 	target:SetSign("MissSurface",rand,{rand=rand}) 
+end
+-- MISS攻击 可叠加
+function FightAPI:MissSurface2(effect, caster, target, data, rand)
+
+	local d= target:GetSign("MissSurface2") or {rand = 0}
+	d.rand = d.rand + rand
+
+	target:SetSign("MissSurface2",rand, d) 
 end
 
 -- 免疫飞行兵种加成
@@ -2058,11 +2077,12 @@ function FightAPI:AddHp(effect, caster, target, data, hp, bNotDeathEvent)
 end
 
 --限制最大伤害
-function FightAPI:LimitDamage(effect, caster, target, data, percenthp, percentatt)
+function FightAPI:LimitDamage(effect, caster, target, data, percenthp, percentatt,param)
 	LogDebugEx("-----限制最大伤害-----", target.name)
 
 	local hp2 = self:CalcCure(caster, target, 2, percenthp) -- 受击者血量
-	local hp3 = self:CalcCure(caster, target, 3, percentatt) -- 攻击者攻击
+	local useCaster = param and self.card or caster
+	local hp3 = self:CalcCure(useCaster, target, 3, percentatt) -- 攻击者攻击
 
 	-- [4.2版本]
 	local bIsLive = target:IsLive() -- 记录原来的状态, 死了就不再添加死亡列表
@@ -2227,6 +2247,10 @@ function FightAPI:ChangeSkill(effect, caster, target, data, nIndex, skillID)
 			ASSERT(skill[newSkillID], "没有找到配置,无法替换技能"..newSkillID)
 			-- 替换原来的技能
 			for j,id in ipairs(skillMgr.list) do
+				if newSkillID == id then
+					LogDebugEx("新旧技能一样, 不切换", v.id, newSkillID)
+					return 
+				end
 				if id == v.id then
 					skillMgr.list[j] = newSkillID
 					skillMgr:DeleteEvent() -- 清除旧技能事件
@@ -2604,6 +2628,29 @@ function FightAPI:AddSkill(effect, caster, target, data, skillID)
 
 	-- local log = {api="AddSkill", targetID = target.oid, effectID = effect.apiSetting, skillID=skillID}
 	-- self.log:Add(log)
+end
+
+-- 获取召唤主技能
+function FightAPI:AddOwnerEquipSkill(effect, caster, target, data)
+
+	LogDebugEx("AddOwnerEquipSkill", target.name)
+	local oSummonOwner = target.oSummonOwner --获取召唤主
+	local mgr = oSummonOwner.skillMgr
+	LogDebugEx("oSummonOwner", oSummonOwner.name)
+	
+	local equipSkills = mgr.equipSkills or {}
+	LogTable(equipSkills, "equipSkills= ")
+	if table.empty(equipSkills) then return end
+	if target.bIsAddOwnerEquipSkill then return end
+
+	for i,v in ipairs(equipSkills) do
+		LogDebugEx("AddOwnerEquipSkill  AddSkill", i, v)
+		self:AddSkill(effect, caster, target, data, v)
+	end
+	target.bIsAddOwnerEquipSkill = true
+
+	local log = {api="AddOwnerEquipSkill", targetID = target.oid, effectID = effect.apiSetting, equipSkills=equipSkills}
+	self.log:Add(log)
 end
 
 -- 给队友删除一个技能

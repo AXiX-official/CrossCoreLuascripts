@@ -1,4 +1,4 @@
-
+﻿
 
 function Refresh(_cardData)
 	cardData = _cardData

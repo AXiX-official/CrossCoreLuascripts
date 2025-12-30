@@ -1,4 +1,4 @@
-_G["PlotSound"]={[10001]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_click",["cue_name"]="short_click",["id"]=10001}
+﻿_G["PlotSound"]={[10001]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_click",["cue_name"]="short_click",["id"]=10001}
 ,[10002]={["cue_sheet"]="plot_effect/plot_effect.acb",["loop"]=1,["key"]="short_alert_loop",["cue_name"]="short_alert_loop",["id"]=10002}
 ,[10003]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_alert",["cue_name"]="short_alert",["id"]=10003}
 ,[10004]={["cue_sheet"]="plot_effect/plot_effect.acb",["key"]="short_pace",["cue_name"]="short_pace",["id"]=10004}

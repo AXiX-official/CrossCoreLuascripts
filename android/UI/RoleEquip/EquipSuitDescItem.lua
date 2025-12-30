@@ -1,4 +1,4 @@
-function Refresh(_data)
+﻿function Refresh(_data)
     if _data.icon then
         ResUtil.EquipSkillIcon:Load(icon,_data.icon);
     end

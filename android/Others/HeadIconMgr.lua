@@ -1,4 +1,4 @@
--- 头像框（只处理红点）
+﻿-- 头像框（只处理红点）
 local this = MgrRegister("HeadIconMgr")
 
 function this:Init()

@@ -1,4 +1,4 @@
---复活角色
+﻿--复活角色
 FightActionRevive = oo.class(FightActionBase);
 local this = FightActionRevive;
 

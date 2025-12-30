@@ -1,4 +1,4 @@
-local ids={ ITEM_ID.GOLD,ITEM_ID.DIAMOND};--金币ID
+﻿local ids={ ITEM_ID.GOLD,ITEM_ID.DIAMOND};--金币ID
 local eventMgr=nil;
 local video=nil;
 local layout=nil;

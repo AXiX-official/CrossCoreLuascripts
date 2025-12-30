@@ -1,4 +1,4 @@
-_G["Block"]={{["name"]="路障",["key"]=1,["id"]=1,["res"]="lupai",["icon"]="organ_notenter",["desc"]="地面单位无法通过的障碍"}
+﻿_G["Block"]={{["name"]="路障",["key"]=1,["id"]=1,["res"]="lupai",["icon"]="organ_notenter",["desc"]="地面单位无法通过的障碍"}
 ,{["name"]="禁飞区",["key"]=2,["id"]=2,["res"]="jinfei",["icon"]="organ_noflight",["desc"]="飞行单位无法通过的障碍"}
 ,{["name"]="全禁止",["key"]=3,["id"]=3,["res"]="passless",["icon"]="organ_noban",["desc"]="所有单位无法通过的障碍"}
 ,{["name"]="路障",["key"]=4,["id"]=4,["res"]="chess/1",["icon"]="organ_notenter"}

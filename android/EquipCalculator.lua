@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 -- 计算卡牌的属性
 GEquipCalculator = {}
 
@@ -62,7 +62,23 @@ local cfgBasequipPropertys = {
     }
 }
 
-function GEquipCalculator:CalEquipPropertys(equips)
+
+
+function GEquipCalculator:IsEquipSkillLock(equip,idx,skillId)
+    local baseId, lv = GCalHelp:GetEquipBaseIdAndLv(skillId)
+    local cfg = CfgEquip[equip.cfgid]
+    if cfg then
+        local limitLv = cfg.randSkillsCondition and cfg.randSkillsCondition[idx] or 0
+        if equip.level >= limitLv then
+            return false
+        end
+    end
+    return true
+end
+
+
+
+function GEquipCalculator:CalEquipPropertys(equips,isJapanSvr)
     local ret = {
         baseVal = {}, -- 基础属性点
         propertySkills = {}, -- 添加属性的技能
@@ -85,30 +101,42 @@ function GEquipCalculator:CalEquipPropertys(equips)
         
         -- 遍历基础属性
         for _, v in pairs(cfgBasequipPropertys) do
-            -- 取出配置表，配置的属性id
-            local propertyIndex = cfg[v.type]
-            if propertyIndex then
-                -- 根据属性id取到属性的名字
-                local propertyEnumInfo = CfgCardPropertyEnum[propertyIndex]
-                if propertyEnumInfo then
-                    -- 根据名字，累计属性点
-                    local propertyName = propertyEnumInfo.sFieldName
-                    GCalHelp:Add(ret.baseVal, propertyName, cfg[v.value] + equip.level * cfg[v.add])
-                else
-                    LogError(
-                        "Unknow equip property from CfgEquip %s, type %s, propertyIndex %s",
-                        equip.cfgid,
-                        v.type,
-                        propertyIndex
-                )
+            local effectLv = cfg.base1Condition or 0
+            if not isJapanSvr or (v.type == "nBase1" and equip.level >= effectLv) then
+                -- 取出配置表，配置的属性id
+                local propertyIndex = cfg[v.type]
+                if propertyIndex then
+                    -- 根据属性id取到属性的名字
+                    local propertyEnumInfo = CfgCardPropertyEnum[propertyIndex]
+                    if propertyEnumInfo then
+                        -- 根据名字，累计属性点
+                        local propertyName = propertyEnumInfo.sFieldName
+                        GCalHelp:Add(ret.baseVal, propertyName, cfg[v.value] + equip.level * cfg[v.add])
+                    else
+                        LogError(
+                            "Unknow equip property from CfgEquip %s, type %s, propertyIndex %s",
+                            equip.cfgid,
+                            v.type,
+                            propertyIndex
+                    )
+                    end
                 end
             end
         end
         
         if equip.skills then
-            for _, skillId in pairs(equip.skills) do
-                local baseId, lv = GCalHelp:GetEquipBaseIdAndLv(skillId)
-                GCalHelp:Add(equipIds, baseId, lv)
+            if isJapanSvr then
+                for i, skillId in ipairs(equip.skills) do
+                    if not self:IsEquipSkillLock(equip,i,skillId) then
+                        local baseId, lv = GCalHelp:GetEquipBaseIdAndLv(skillId)
+                        GCalHelp:Add(equipIds, baseId, lv)
+                    end
+                end
+            else
+                for _, skillId in pairs(equip.skills) do
+                    local baseId, lv = GCalHelp:GetEquipBaseIdAndLv(skillId)
+                    GCalHelp:Add(equipIds, baseId, lv)
+                end
             end
         end
     end

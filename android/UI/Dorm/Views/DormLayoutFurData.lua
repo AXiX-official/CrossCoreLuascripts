@@ -1,4 +1,4 @@
---布局家具数据
+﻿--布局家具数据
 local this = {}
 
 function this.New()

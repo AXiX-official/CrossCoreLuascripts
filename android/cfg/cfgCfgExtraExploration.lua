@@ -1,4 +1,4 @@
-_G["CfgExtraExploration"]={[2003]={["jump"]=12602,["id"]=2003,["uiChange"]={["txts"]={["levelNum2"]="faebba",["time"]="b0b0b0",["coinName"]="ffffff",["coinNum2"]="ffeece",["coinNum1"]="ffeece",["rule"]="b0b0b0",["levelNum1"]="ffee8e"}
+﻿_G["CfgExtraExploration"]={[2003]={["jump"]=12602,["id"]=2003,["uiChange"]={["txts"]={["levelNum2"]="faebba",["time"]="b0b0b0",["coinName"]="ffffff",["coinNum2"]="ffeece",["coinNum1"]="ffeece",["rule"]="b0b0b0",["levelNum1"]="ffee8e"}
 ,["floder"]="SpecialExploration3",["expFill"]=true,["bg"]="bg_118",["coinCite"]=62044}
 ,["item"]={{["isInfinite"]=false,["exp"]=500,["index"]=1,["reward"]={{15001,5,2}
 ,{10011,100,2}

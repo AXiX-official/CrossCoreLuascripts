@@ -1,4 +1,4 @@
-_G["FloatFont"]={{["id"]=1,["key"]="AddAttrPercent_attack_up",["show"]="攻击强化"}
+﻿_G["FloatFont"]={{["id"]=1,["key"]="AddAttrPercent_attack_up",["show"]="攻击强化"}
 ,{["id"]=2,["key"]="AddAttrPercent_attack_down",["show"]="攻击弱化"}
 ,{["id"]=3,["key"]="AddAttrPercent_defense_up",["show"]="防御强化"}
 ,{["id"]=4,["key"]="AddAttrPercent_defense_down",["show"]="防御弱化"}
@@ -157,7 +157,7 @@ _G["FloatFont"]={{["id"]=1,["key"]="AddAttrPercent_attack_up",["show"]="攻击�
 ,[214010]={["id"]=214010,["key"]="214010",["show"]="铁壁"}
 ,[213010]={["id"]=213010,["key"]="213010",["show"]="屏障"}
 ,[212010]={["id"]=212010,["key"]="212010",["show"]="收割"}
-,[211010]={["id"]=211010,["key"]="211010",["show"]="慈悲"}
+,[211010]={["id"]=211010,["key"]="211010",["show"]="蓄能"}
 ,[210010]={["id"]=210010,["key"]="210010",["show"]="精力"}
 ,[209010]={["id"]=209010,["key"]="209010",["show"]="汲取"}
 ,[208010]={["id"]=208010,["key"]="208010",["show"]="不屈"}

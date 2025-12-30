@@ -1,4 +1,4 @@
-_G["CfgGuideTask"]={[20111]={["key"]=20111,["aFinishIds"]={100111}
+﻿_G["CfgGuideTask"]={[20111]={["key"]=20111,["aFinishIds"]={100111}
 ,["nStage"]=3,["sDescription"]="通关任意芯片嵌合的第<color=#f1872a> 1 </color>层",["nTransferPath"]=10301,["sName"]="通关任意芯片嵌合的第<color=#f1872a> 1 </color>层",["jAwardId"]={{10004,500,2}
 ,{2000101,5,2}
 }

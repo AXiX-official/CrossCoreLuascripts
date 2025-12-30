@@ -1,4 +1,4 @@
-BadgeMgr = MgrRegister("BadgeMgr")
+﻿BadgeMgr = MgrRegister("BadgeMgr")
 local this = BadgeMgr;
 
 function this:Init()

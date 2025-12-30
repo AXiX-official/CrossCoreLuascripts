@@ -1,4 +1,4 @@
-_G["CfgBadgeGroup"]={{["type"]=1,["key"]=1,["id"]=1,["size"]={1,2}
+﻿_G["CfgBadgeGroup"]={{["type"]=1,["key"]=1,["id"]=1,["size"]={1,2}
 ,["icon"]="bg_1",["pos"]={1,1}
 }
 ,{["type"]=2,["key"]=2,["id"]=2,["size"]={1,1}
@@ -66,6 +66,9 @@ _G["CfgBadgeGroup"]={{["type"]=1,["key"]=1,["id"]=1,["size"]={1,2}
 }
 ,{["type"]=23,["key"]=23,["id"]=23,["size"]={1,1}
 ,["icon"]="bg_23",["pos"]={1,13}
+}
+,{["type"]=24,["key"]=24,["id"]=24,["size"]={1,1}
+,["icon"]="bg_24",["pos"]={2,13}
 }
 }
 

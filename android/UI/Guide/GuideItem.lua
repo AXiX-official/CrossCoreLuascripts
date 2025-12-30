@@ -1,4 +1,4 @@
---引导界面
+﻿--引导界面
 
 function Set(cfg)
     currCfg = cfg;

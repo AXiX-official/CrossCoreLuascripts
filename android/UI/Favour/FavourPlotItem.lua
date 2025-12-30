@@ -1,4 +1,4 @@
--- {lv, cfgData} --CfgCardRoleStory ->info 
+﻿-- {lv, cfgData} --CfgCardRoleStory ->info 
 function Refresh(_role, _data, _isNext, _isGet)
     cRoleData = _role
     lv = _data[1]

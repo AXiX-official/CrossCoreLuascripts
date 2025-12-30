@@ -1,4 +1,4 @@
-local id, sortData
+﻿local id, sortData
 local clickSortId = nil
 
 function Awake()

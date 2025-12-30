@@ -1,4 +1,4 @@
-PlayerMgr = MgrRegister("PlayerMgr")
+﻿PlayerMgr = MgrRegister("PlayerMgr")
 local this = PlayerMgr
 
 function this:Init()

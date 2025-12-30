@@ -1,4 +1,4 @@
-_G["CfgInfiniteTowerteamlimited"]={[140040]={["limitedcondition"]={1}
+﻿_G["CfgInfiniteTowerteamlimited"]={[140040]={["limitedcondition"]={1}
 ,["conditionID"]="4004",["key"]=140040,["CfgLanguageID"]="49157",["id"]=140040,["count"]={0}
 }
 ,[120070]={["limitedcondition"]={1}

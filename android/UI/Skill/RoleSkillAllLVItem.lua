@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     cg_go = ComUtil.GetCom(gameObject, "CanvasGroup")
 end
 function SetIndex(_index)

@@ -1,4 +1,4 @@
--- 世界boss词条buff3
+﻿-- 世界boss词条buff3
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -63,5 +63,5 @@ function Skill5800003:tFunc_5800008_5800006(caster, target, data)
 		return
 	end
 	-- 5800006
-	self:AddTempAttr(SkillEffect[5800006], caster, self.card, data, "damage",1.5)
+	self:AddTempAttr(SkillEffect[5800006], caster, self.card, data, "damage",0.5)
 end

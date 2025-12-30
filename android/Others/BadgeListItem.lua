@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local items1 = nil
 local items2 = nil
 local datas1 = nil

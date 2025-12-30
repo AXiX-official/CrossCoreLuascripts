@@ -1,4 +1,4 @@
--- 场景类型
+﻿-- 场景类型
 SceneType = {}
 SceneType.PVE			= 1 -- pve(主线/副本)
 SceneType.PVP			= 2 -- pvp(实时)
@@ -23,6 +23,10 @@ SceneType.PVEFreeMatch3	= 20 -- 自由军演(镜像) -- v 4.6
 -- v 4.6
 function IsPvpSceneType(sType)
 	return sType == SceneType.PVP or sType == SceneType.PVEFreeMatch or sType == SceneType.PVP3 or sType == SceneType.PVEFreeMatch3
+end
+-- 包含镜像
+function IsPvpSceneTypeEx(sType)
+	return IsPvpSceneType(sType) or sType == SceneType.PVPMirror
 end
 
 -- 副本类型
@@ -170,6 +174,8 @@ ePassiveTiming.OnActionOver2     = 22 -- 行动结束2
 ePassiveTiming.OnResolve         = 23 -- 解体
 ePassiveTiming.OnBefourCritHurt  = 24  -- 暴击伤害前(OnBefourHurt之前)
 ePassiveTiming.OnAttackOver2     = 25  -- 攻击结束2
+ePassiveTiming.OnAddProgress     = 26  -- 拉条
+ePassiveTiming.OnReduceProgress  = 27  -- 退条
 
 
 -- 被动时机(数组)

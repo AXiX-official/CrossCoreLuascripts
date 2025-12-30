@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 transform={play_time=3000,common_camera="common_buff",transform_delay=1,transform_enter_state="transform_enter",transform_enter_state_delay=1},

@@ -1,4 +1,4 @@
--- 宿舍
+﻿-- 宿舍
 -- 当前房间数据
 curRoomData = nil
 
@@ -49,6 +49,8 @@ function OnInit()
     end)
     eventMgr:AddListener(EventType.Dorm_SetRoleList, function()
         setRoleTime = Time.time + 1.5
+        SetComfort()
+        SetCount()
     end)
 end
 
@@ -204,10 +206,14 @@ function SetComfort()
     CSAPI.SetGOActive(comfortObj, not isOnlyShow)
     if (not isOnlyShow) then
         local comfort = DormMgr:GetCopyDatasComfort()
-        local maxComfort = curRoomData:GetLvCfg().maxComfort
+        -- local maxComfort = curRoomData:GetLvCfg().maxComfort
         -- local _comfort = comfort>maxComfort and maxComfort or comfort
         -- CSAPI.SetText(txtComfort, maxComfort ~= nil and (_comfort .. "/" .. maxComfort) or (_comfort .. ""))
-        CSAPI.SetText(txtComfort,comfort.."")
+        --
+        local petComforts = DormPetMgr:GetComforts(curRoomData:GetID())
+        comfort = comfort + petComforts
+        --
+        CSAPI.SetText(txtComfort, comfort .. "")
         local num = GCalHelp:DormTiredAddPerent(comfort)
         CSAPI.SetText(txtSpeed2, num .. "%")
     end
@@ -366,13 +372,13 @@ function OnClickBuilding()
         return
     end
     CSAPI.SetAngle(imgBtn1, 0, 0, 180)
-    CSAPI.OpenView("MatrixBuildingSelect") 
-    CSAPI.SetGOActive(btnDorm,false)
+    CSAPI.OpenView("MatrixBuildingSelect")
+    CSAPI.SetGOActive(btnDorm, false)
 end
 function OnViewClosed(view)
     if (view == "MatrixBuildingSelect") then
         CSAPI.SetAngle(imgBtn1, 0, 0, 0)
-        CSAPI.SetGOActive(btnDorm,true)
+        CSAPI.SetGOActive(btnDorm, true)
         SetReds()
     elseif (view == "MatrixDormSelect") then
         CSAPI.SetAngle(imgBtn2, 0, 0, 0)
@@ -415,6 +421,12 @@ function OnClickRole()
     -- AddUIGO(1)
     CSAPI.OpenView("MatrixSetRole", curRoomData)
 end
+
+-- 编辑宠物
+function OnClickPet()
+    CSAPI.OpenView("DormSetPet", curRoomData)
+end
+
 -- 编辑家具
 function OnClickLayout()
     changeType = 2

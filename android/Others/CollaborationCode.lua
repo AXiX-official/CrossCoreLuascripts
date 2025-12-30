@@ -1,4 +1,4 @@
---回归绑定验证码阶段
+﻿--回归绑定验证码阶段
 local inp=nil;
 function Awake()
     inp=ComUtil.GetCom(inpInvitation,"InputField")

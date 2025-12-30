@@ -1,4 +1,4 @@
-_G["CfgMultiImageThemeType"]={{["id"]=1,["sName"]="海边度假",["key"]=1}
+﻿_G["CfgMultiImageThemeType"]={{["id"]=1,["sName"]="海边度假",["key"]=1}
 ,{["id"]=2,["sName"]="宿舍故事",["key"]=2}
 ,{["id"]=3,["sName"]="佳节逐禧",["key"]=3}
 ,{["id"]=4,["sName"]="作战准备",["key"]=4}

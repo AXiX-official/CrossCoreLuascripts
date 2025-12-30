@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 'j-剧情表.xlsx',
 	["sheetname"] = '好感剧情',
 	["types"] = {

@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local anim = nil
 
 function Awake()
@@ -45,9 +45,9 @@ function SetRed()
         return
     end
     local isRed = AnniversaryMgr:CheckRed(data:GetID())
-    if isRed and isSel then
-        isRed = false
-    end
+    -- if isRed and isSel then
+    --     isRed = false
+    -- end
     UIUtil:SetRedPoint(redParent, isRed)
 end
 

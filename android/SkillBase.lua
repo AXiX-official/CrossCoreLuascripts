@@ -1,4 +1,4 @@
--- OPENDEBUG()
+﻿-- OPENDEBUG()
 local unpack = unpack or table.unpack
 ---------------------------------
 -- 玩家技能管理器
@@ -1729,7 +1729,7 @@ function SkillBase:DoSkill(caster, target, data)
 			self:DamageLight({}, caster, target, data, 1, self.attackNum)
 		else
 			-- self:Damage(0, caster, target, 4, 1, self.attackNum)
-			ASSERT()
+			ASSERT(nil, "attackType类型错误")
 		end
 	end 
 end
@@ -1780,9 +1780,19 @@ function CorpsAdjust(caster, target)
 	-- if target:CanFly() then
 		-- if caster:CanFly() then return end --飞行对飞行(无效果)
 		local config = target:GetSign("MissSurface") -- MISS地面兵种
-		if not config then return end
+		local config2 = target:GetSign("MissSurface2") -- MISS地面兵种
+		if not config and not config2 then return end
+		local rand = 0
+		if config then 
+			rand = config.rand
+		end
+
+		if config2 then 
+			rand = rand + config2.rand
+		end
+
 		local r = caster:Rand(10000)
-		if r <= config.rand then
+		if r <= rand then
 			return true, 0
 		end
 	-- end

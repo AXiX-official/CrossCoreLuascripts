@@ -1,4 +1,4 @@
-function Refresh(data)
+﻿function Refresh(data)
     CSAPI.SetAnchor(gameObject, data[1], data[2])
     cfgID = data[3]
 end

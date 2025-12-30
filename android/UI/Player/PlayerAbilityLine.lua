@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local nextCfg = nil
 
 local isBeeLine = false -- 直线

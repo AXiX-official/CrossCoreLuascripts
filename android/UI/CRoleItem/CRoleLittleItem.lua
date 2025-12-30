@@ -1,4 +1,4 @@
--- 皮肤 data : CRoleInfo
+﻿-- 皮肤 data : CRoleInfo
 local needToCheckMove = false
 function Awake()
     luaTextMove = LuaTextMove.New()

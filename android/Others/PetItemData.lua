@@ -1,4 +1,4 @@
---宠物物品信息
+﻿--宠物物品信息
 local this = {}
 
 function this.New()

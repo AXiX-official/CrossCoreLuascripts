@@ -1,4 +1,4 @@
-
+﻿
 ---海外抵扣券相关
 AdvDeductionvoucher={}
 local this=AdvDeductionvoucher;

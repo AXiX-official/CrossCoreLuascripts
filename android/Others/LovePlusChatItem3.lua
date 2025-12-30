@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 function SetClickCB(_cb)
     cb = _cb
 end

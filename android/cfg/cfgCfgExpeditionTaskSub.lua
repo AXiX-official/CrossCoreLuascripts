@@ -1,4 +1,4 @@
-_G["CfgExpeditionTaskSub"]={[3001]={["id"]=3001,["initNum"]=2,["key"]=3001,["tasks"]={{["eventId"]={350101}
+﻿_G["CfgExpeditionTaskSub"]={[3001]={["id"]=3001,["initNum"]=2,["key"]=3001,["tasks"]={{["eventId"]={350101}
 ,["tValid"]=28800,["index"]=1,["buildLv"]=3,["startCondition"]={{1,30,1}
 ,{2,5}
 }

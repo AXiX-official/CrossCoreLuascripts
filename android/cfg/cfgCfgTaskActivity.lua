@@ -1,4 +1,4 @@
-_G["CfgTaskActivity"]={[50009]={["sOpenTime"]="2019/4/27 16:00:08",["sDescription"]="击败敌方单位数目达到1245个",["id"]=50009,["nPreTaskId"]=50008,["jAwardId"]={{10001,900,2}
+﻿_G["CfgTaskActivity"]={[50009]={["sOpenTime"]="2019/4/27 16:00:08",["sDescription"]="击败敌方单位数目达到1245个",["id"]=50009,["nPreTaskId"]=50008,["jAwardId"]={{10001,900,2}
 ,{11003,8,2}
 }
 ,["nIsHide"]=2,["aFinishIds"]={50009}

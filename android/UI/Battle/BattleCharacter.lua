@@ -1,4 +1,4 @@
---战场角色
+﻿--战场角色
 function Awake()
     action = ComUtil.GetCom(gameObject,"ActionBase");
     action:AddEnterLastGridCallBack(OnEnterLastGrid);

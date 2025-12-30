@@ -1,4 +1,4 @@
-function OnOpen()
+﻿function OnOpen()
     sort = data[1]
     isDetail = data[2]
     cb = data[3]

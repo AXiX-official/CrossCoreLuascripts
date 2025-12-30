@@ -1,4 +1,4 @@
---跳转推荐
+﻿--跳转推荐
 function Refresh(_data)
     if _data then
         this.data=_data;

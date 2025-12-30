@@ -1,4 +1,4 @@
---战斗队伍事件结算
+﻿--战斗队伍事件结算
 
 FightActionTeamEvent = oo.class(FightActionBase);
 local this = FightActionTeamEvent;

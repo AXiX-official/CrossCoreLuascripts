@@ -1,4 +1,4 @@
-local timer = nil
+﻿local timer = nil
 local freeCnt, freeTimer = 0, nil
 
 function Awake()

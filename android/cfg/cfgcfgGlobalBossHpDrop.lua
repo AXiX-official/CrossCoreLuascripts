@@ -1,4 +1,4 @@
-_G["cfgGlobalBossHpDrop"]={[10001]={["id"]=10001,["infos"]={{["dropPct"]="0.98529411765",["index"]=1,["dropTime"]=120480}
+﻿_G["cfgGlobalBossHpDrop"]={[10001]={["id"]=10001,["infos"]={{["dropPct"]="0.98529411765",["index"]=1,["dropTime"]=120480}
 ,{["dropPct"]="0.97058823529",["index"]=2,["dropTime"]=136680}
 ,{["dropPct"]="0.95588235294",["index"]=3,["dropTime"]=147840}
 ,{["dropPct"]="0.94117647059",["index"]=4,["dropTime"]=153240}

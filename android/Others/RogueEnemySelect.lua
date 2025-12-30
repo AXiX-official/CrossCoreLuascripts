@@ -1,4 +1,4 @@
-local isOK = false
+﻿local isOK = false
 
 function Awake()
     UIUtil:AddTop2("RogueEnemySelect", AdaptiveScreen, function()

@@ -1,4 +1,4 @@
-local colors = {"ffffff", "12f6b2", "30baf7", "956dfd", "ffc146", "ffffff"}
+﻿local colors = {"ffffff", "12f6b2", "30baf7", "956dfd", "ffc146", "ffffff"}
 local timer = nil
 local isFirst = true
 
@@ -215,9 +215,9 @@ end
 
 function SetBreak()
     local breakLv = cardData:GetBreakLevel()
-    CSAPI.SetGOActive(imgBreak, breakLv > 1)
+    CSAPI.SetGOActive(imgBreakBG, breakLv > 1)
     if (breakLv > 1) then
-        ResUtil.RoleCard_BG:Load(imgBreak, "img_37_0" .. (breakLv - 1))
+        ResUtil.RoleCard_BG:Load(imgBreak, "img_1_0" .. (breakLv - 1))
     end
 end
 
@@ -348,8 +348,10 @@ function SetBuff()
 
     CSAPI.SetGOActive(buff, cfg.type ~= SkillType.Summon)
     if (cfg.type == SkillType.Summon) then
+        CSAPI.SetGOActive(buff,false);
         return
     end
+    CSAPI.SetGOActive(buff,true);
 
     -- grid
     if (cardData:GetCardCfg().gridsIcon) then

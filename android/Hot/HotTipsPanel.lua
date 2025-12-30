@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
 	fade = ComUtil.GetCom(gameObject, "ActionFade")
 	fade1 = ComUtil.GetCom(goShaderRaw, "ActionFade")
     UIMaskGo = CSAPI.GetGlobalGO("UIClickMask")

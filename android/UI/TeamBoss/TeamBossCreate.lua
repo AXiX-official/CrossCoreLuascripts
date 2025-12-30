@@ -1,4 +1,4 @@
-local cfgid = 1
+﻿local cfgid = 1
 local curIndex = 0
 local isInvite = false
 

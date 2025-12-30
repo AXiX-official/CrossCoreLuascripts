@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local shopData = nil
 local skillDatas = {}
 local itemDatas = {}

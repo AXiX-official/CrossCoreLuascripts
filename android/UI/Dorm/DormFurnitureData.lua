@@ -1,4 +1,4 @@
--- 3d家具数据
+﻿-- 3d家具数据
 local this = {}
 function this.New()
     this.__index = this.__index or this
@@ -208,6 +208,12 @@ function this:GetInteActionID(targetGO)
         local inteBoxIndex = targetGO.transform:GetSiblingIndex()
         key = inteBoxIndex == 0 and "furniture_sleep_01" or "furniture_sleep_02"
     end
+    return key
+end
+
+--宠物交互动作
+function this:GetPetInteActionID()
+    local key = self:GetCfg().petInteActionId
     return key
 end
 

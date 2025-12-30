@@ -1,4 +1,4 @@
--- 皮肤管理器
+﻿-- 皮肤管理器
 local RoleSkinInfo = require "RoleSkinInfo"
 
 local this = MgrRegister("RoleSkinMgr")

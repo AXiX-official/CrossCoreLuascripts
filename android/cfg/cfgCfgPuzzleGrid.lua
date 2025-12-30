@@ -1,4 +1,4 @@
-_G["CfgPuzzleGrid"]={[1001]={["id"]=1001,["rewardShow"]={{10610}
+﻿_G["CfgPuzzleGrid"]={[1001]={["id"]=1001,["rewardShow"]={{10610}
 }
 ,["key"]="1001",["infos"]={{["idx"]=1,["position"]=1,["img"]="img_04_01",["reward"]={{10001,10000}
 }

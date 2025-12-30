@@ -1,4 +1,4 @@
---拼图碎片信息
+﻿--拼图碎片信息
 local this = {}
 
 function this.New()

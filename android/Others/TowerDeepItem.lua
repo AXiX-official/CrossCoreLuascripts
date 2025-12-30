@@ -1,4 +1,4 @@
-local isPass = false
+﻿local isPass = false
 local isLock = false
 local isSel = false
 local dupData = nil

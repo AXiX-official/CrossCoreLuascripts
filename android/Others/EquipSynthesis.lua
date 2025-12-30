@@ -1,4 +1,4 @@
---装备合成
+﻿--装备合成
 local eventMgr=nil;
 local layout=nil;
 local disNewTween=true;

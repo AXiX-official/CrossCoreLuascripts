@@ -1,4 +1,4 @@
-_G["CfgEquipRefreshLib"]={{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=850,["isRare"]=1,["sumWeight"]=850,["skillId"]=10101}
+﻿_G["CfgEquipRefreshLib"]={{["rareCnt"]=3,["infos"]={{["showRareCnt"]=10,["index"]=1,["weight"]=850,["isRare"]=1,["sumWeight"]=850,["skillId"]=10101}
 ,{["showRareCnt"]=10,["index"]=2,["weight"]=1300,["sumWeight"]=2150,["skillId"]=10201}
 ,{["showRareCnt"]=10,["index"]=3,["weight"]=1200,["sumWeight"]=3350,["skillId"]=10301}
 ,{["showRareCnt"]=10,["index"]=4,["weight"]=900,["sumWeight"]=4250,["skillId"]=10401}

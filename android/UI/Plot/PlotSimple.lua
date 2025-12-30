@@ -1,4 +1,4 @@
---简单的剧情播放界面(用于播放类型为2的剧情演出)
+﻿--简单的剧情播放界面(用于播放类型为2的剧情演出)
 local isJump = false;
 local storyData = nil;
 local isPlaying = false;

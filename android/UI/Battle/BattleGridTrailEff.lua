@@ -1,4 +1,4 @@
---格子拖尾特效
+﻿--格子拖尾特效
 
 function Awake()
     if(moveNode)then

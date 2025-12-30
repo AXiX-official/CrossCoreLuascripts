@@ -1,4 +1,4 @@
---复活界面
+﻿--复活界面
 
 function Awake()
     CSAPI.SetGOActive(mask,false);

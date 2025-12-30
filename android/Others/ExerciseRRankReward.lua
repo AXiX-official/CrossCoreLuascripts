@@ -1,4 +1,4 @@
-local curIndex = nil
+﻿local curIndex = nil
 
 function Awake()
     tab = ComUtil.GetCom(tabs, "CTab")

@@ -1,4 +1,4 @@
-DormProto = {}
+﻿DormProto = {}
 
 -- 宿舍更新
 function DormProto:Update(proto)
@@ -315,3 +315,24 @@ function DormProto:SearchThemeRet(proto)
     end
     self.SearchThemeCB = nil
 end
+
+-- 家具购买记录
+function DormProto:DormPetInfo()
+    local proto = {"DormProto:DormPetInfo"}
+    NetMgr.net:Send(proto)
+end
+function DormProto:DormPetInfoRet(proto)
+    DormPetMgr:DormPetInfoRet(proto.info)
+end
+
+function DormProto:SetPet(_info)
+        local proto = {"DormProto:SetPet", {
+        info = _info
+    }}
+    NetMgr.net:Send(proto)
+end
+function DormProto:SetPetRet(proto)
+    EventMgr.Dispatch(EventType.Dorm_SetRoleList)
+end
+
+

@@ -1,4 +1,4 @@
-local allActions = {}
+﻿local allActions = {}
 local curStateLua = nil
 local startPos = nil
 -- local colCount = 0 --拿起状态下，当前存在碰撞数量
@@ -11,6 +11,7 @@ local timer = 0
 -- 角色配置
 local cfgModel = nil
 local modelGOs = {}
+local isPet = false 
 -- 动画状态机
 dormRoleStateMachine = nil
 -- 动画控制器
@@ -30,6 +31,7 @@ function Clear()
     curHighfiveID = nil
     CSAPI.SetGOActive(gameObject, false)
     isRobot = nil
+    isPet = false 
     curStateLua = nil
     dormRoleStateMachine = nil
     animator = nil
@@ -71,6 +73,8 @@ function Init(_index, _tool, _info, _isDorm)
     data = _info
     isDorm = _isDorm
 
+    isPet = data:IsPet()
+    roleAI.ai.maxSpeed = isPet and 0.5 or 1
     modelId = data:GetFirstSkinId()
     -- 回避等级
     roleAI:SetPriority(index)
@@ -163,7 +167,11 @@ end
 function SetAnimators()
     animators = ComUtil.GetComsInChildren(node, "Animator")
     if (isRobot == nil) then
-        isRobot = (animators == nil or animators.Length == 0) and true or false
+        if(isPet)then 
+            isRobot = false 
+        else 
+            isRobot = (animators == nil or animators.Length == 0) and true or false
+        end 
     end
 end
 
@@ -195,6 +203,10 @@ end
 
 function IsRobot()
     return isRobot
+end
+
+function IsPet()
+    return isPet
 end
 
 -- 是否是男
@@ -385,11 +397,13 @@ function GetCurState()
 end
 
 -- 能否与其他角色交互
-function CheckCanInteraction()
-    if (curStateLua and
-        (curStateLua:GetType() == DormRoleActionType.idle or curStateLua:GetType() == DormRoleActionType.walk or
-            curStateLua:GetType() == DormRoleActionType.Interaction)) then
-        return true
+function CheckCanInteraction(id)
+    if (curStateLua) then 
+        if (curStateLua:GetType() == DormRoleActionType.idle or curStateLua:GetType() == DormRoleActionType.walk) then 
+            return true
+        elseif(interactionID and interactionID==id)then 
+            return true
+        end
     end
     return false
 end
@@ -427,6 +441,15 @@ function GetIsHanding()
     end
     return false
 end
+
+-- 是否送货状态
+function GetIsLie()
+    if (curStateLua and curStateLua:GetType() == DormRoleActionType.lie) then
+        return true
+    end
+    return false
+end
+
 
 -- 是否隐藏模型
 function GetIsHide()
@@ -471,7 +494,7 @@ function OnTriggerEnter(go)
     local isTookUp = GetIsTookUp()
 
     -- 拿起或有交互时 不再产生交互
-    if (isTookUp or GetIsInte() or GetIsHanding()) then
+    if (isTookUp or GetIsInte() or GetIsHanding() or GetIsLie()) then
         return
     end
     -- 非拿起时不与家具碰撞(拿起时产生碰撞让底部格子变红)
@@ -691,13 +714,18 @@ function CheckIsPhyRoom()
     return false
 end
 
--- 当前击掌对象
-function SetHighfiveID(id)
-    curHighfiveID = id
+-- 当前交互对象
+function SetInteractionID(id)
+    interactionID = id
 end
-function GetHighfiveID()
-    return curHighfiveID
-end
+
+-- -- 当前击掌对象
+-- function SetHighfiveID(id)
+--     curHighfiveID = id
+-- end
+-- function GetHighfiveID()
+--     return curHighfiveID
+-- end
 -- 能否击掌
 function CheckCanHighfive(id1)
     local curActionType = GetCurState() and GetCurState():GetType() or nil

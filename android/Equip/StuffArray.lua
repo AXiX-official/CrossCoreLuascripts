@@ -1,4 +1,4 @@
---素材列表工具类
+﻿--素材列表工具类
 local this={
     stuffList=nil,
     stuffTotalExp=0,

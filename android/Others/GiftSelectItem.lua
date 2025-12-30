@@ -1,4 +1,4 @@
-local func=nil;
+﻿local func=nil;
 local showBtn=false;
 local elseData=nil;
 local choosieNum=0;

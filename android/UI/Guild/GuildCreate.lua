@@ -1,4 +1,4 @@
---创建工会界面
+﻿--创建工会界面
 local lv=1;
 local desc="";
 local inpName;

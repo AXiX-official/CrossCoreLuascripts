@@ -1,4 +1,4 @@
-_G["CfgPvpRobot"]={{["aTeamIds"]={40050001,40050002,40050003}
+﻿_G["CfgPvpRobot"]={{["aTeamIds"]={40050001,40050002,40050003}
 ,["id"]=1,["nLevel"]=3,["nPerformance"]=2471,["nScore"]=140,["nRankLv"]=1,["nName"]="澹台思枫",["nIconId"]=7101001,["key"]="1"}
 ,{["aTeamIds"]={40050004,40050005,40050006}
 ,["id"]=2,["nLevel"]=3,["nPerformance"]=2471,["nScore"]=140,["nRankLv"]=1,["nName"]="前飞兰",["nIconId"]=7101001,["key"]="2"}

@@ -1,4 +1,4 @@
-local ClientBuff = require "ClientBuff";
+﻿local ClientBuff = require "ClientBuff";
 
 local this = {}
 ClientBuffMgr = this;

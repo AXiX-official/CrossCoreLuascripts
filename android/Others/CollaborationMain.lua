@@ -1,4 +1,4 @@
---回归绑定主界面
+﻿--回归绑定主界面
 local currActivty=nil;
 local isBindView=true; --是否显示绑定页面
 local isForceSwitch=false;--是否强制切换

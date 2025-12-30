@@ -1,4 +1,4 @@
-_G["CfgMultiImageAction"]={{["id"]=1,["item"]={{["areas"]={{487.62,-40.3,469,917.6,0}
+﻿_G["CfgMultiImageAction"]={{["id"]=1,["item"]={{["areas"]={{487.62,-40.3,469,917.6,0}
 }
 ,["audioId"]={6100102}
 ,["index"]=1}

@@ -1,4 +1,4 @@
-local leftPanel=nil;
+﻿local leftPanel=nil;
 local leftInfos={};
 local curType=1;
 curIndex1, curIndex2 = 1, 1;

@@ -1,4 +1,4 @@
---SignInfDayInfo
+﻿--SignInfDayInfo
 local items = nil
 local dayText = nil
 

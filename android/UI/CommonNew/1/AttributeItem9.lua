@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     tween = ComUtil.GetCom(val1, "ActionBase")
 end
 

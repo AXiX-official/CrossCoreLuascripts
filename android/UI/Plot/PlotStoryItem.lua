@@ -1,4 +1,4 @@
---剧情故事界面子物体
+﻿--剧情故事界面子物体
 local content = "";
 local fade = nil
 local isLeader = false

@@ -1,4 +1,4 @@
--- 活动管理
+﻿-- 活动管理
 local ActivityInfo = require "ActivityInfo"
 local ActivityData = require "ActivityData"
 local this = MgrRegister("ActivityMgr")

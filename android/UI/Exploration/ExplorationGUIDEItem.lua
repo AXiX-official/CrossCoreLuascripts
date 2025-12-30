@@ -1,4 +1,4 @@
-local isOn=false;
+﻿local isOn=false;
 local clickCB=nil;
 local canvasGroup=nil;
 function Awake()

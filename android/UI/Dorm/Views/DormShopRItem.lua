@@ -1,4 +1,4 @@
-local needToCheckMove = false
+﻿local needToCheckMove = false
 local timer = nil
 function Awake()
     luaTextMove = LuaTextMove.New()

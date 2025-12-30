@@ -1,0 +1,45 @@
+﻿-- 瑞泽印记
+-- 本文件由工具自动生成,请不要直接编辑本文件
+---------------------------------------------
+-- 技能基类
+Buffer100700203 = oo.class(BuffBase)
+function Buffer100700203:Init(mgr, id, target, caster)
+	BuffBase.Init(self, mgr, id, target, caster)
+end
+-- 行动结束
+function Buffer100700203:OnActionOver(caster, target)
+	-- 8063
+	if SkillJudger:CasterIsEnemy(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 8071
+	if SkillJudger:TargetIsFriend(self, self.caster, target, true) then
+	else
+		return
+	end
+	-- 8263
+	if SkillJudger:IsCallSkill(self, self.caster, target, false) then
+	else
+		return
+	end
+	-- 8778
+	local c778 = SkillApi:GetBeDamage(self, self.caster, target or self.owner,3)
+	-- 100700203
+	self:AddValue(BufferEffect[100700203], self.caster, self.card, nil, "dmg10070",0.14*c778)
+end
+-- 创建时
+function Buffer100700203:OnCreate(caster, target)
+	-- 8418
+	local c18 = SkillApi:GetAttr(self, self.caster, target or self.owner,3,"defense")
+	-- 8779
+	local c779 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,3387)
+	-- 100700206
+	self:AddAttr(BufferEffect[100700206], self.caster, self.creater, nil, "defense",math.floor(0.04*c18*c779))
+	-- 8418
+	local c18 = SkillApi:GetAttr(self, self.caster, target or self.owner,3,"defense")
+	-- 8779
+	local c779 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,3387)
+	-- 100700207
+	self:AddAttr(BufferEffect[100700207], self.caster, self.card, nil, "defense",-math.floor(0.04*c18*c779))
+end

@@ -1,4 +1,4 @@
-
+﻿
 function SetPos(y)
     CSAPI.SetAnchor(gameObject,0,y)
 end

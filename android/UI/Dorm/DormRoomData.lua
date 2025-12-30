@@ -1,4 +1,4 @@
--- 房间数据(宿舍（好友的，自己的），建筑)
+﻿-- 房间数据(宿舍（好友的，自己的），建筑)
 local this = {}
 
 function this.New()
@@ -242,7 +242,7 @@ end
 
 -- 家具数量
 function this:GetFurnitureNum()
-    local cur = 0 
+    local cur = 0
     local furnitureDatas = self:GetFurnitures()
     for i, v in pairs(furnitureDatas) do
         cur = cur + 1
@@ -262,15 +262,42 @@ function this:GetCurPresetId()
     return 1
 end
 
-
 function this:GetCfgIDIndex()
     return self.cfgID, self.index
 end
 
---是仅摆设的房间
+-- 是仅摆设的房间
 function this:IsOnlyShow()
     return self:GetIndexCfg().onlyShow
 end
 
+-- 宠物id 
+function this:GetRoles_pet()
+    return self.data.data.petIds or {}
+end
+
+function this:GetNum_pet()
+    local cur = #self:GetRoles_pet() or 0
+    return cur, self:GetMaxNum_pet()
+end
+
+function this:GetRoleInfos_pet()
+    local roleInfos = {}
+    local roles = self:GetRoles_pet()
+    local max = self:GetMaxNum_pet()
+    for i = 1, max do
+        local _id = i <= #roles and roles[i] or nil
+        table.insert(roleInfos, {
+            data = _id,
+            curLv = 1,
+            openLv = 1
+        })
+    end
+    return roleInfos
+end
+
+function this:GetMaxNum_pet()
+    return 5
+end
 
 return this

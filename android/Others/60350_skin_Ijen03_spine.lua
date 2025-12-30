@@ -1,4 +1,4 @@
--- 伊根
+﻿-- 伊根
 -- 策划
 local len = 15
 local maxfaliCount = 3

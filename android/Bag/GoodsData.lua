@@ -1,4 +1,4 @@
--- 物品数据
+﻿-- 物品数据
 local this = oo.class(GridDataBase)
 
 --设置物品信息

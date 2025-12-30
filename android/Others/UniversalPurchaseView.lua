@@ -1,4 +1,4 @@
-local cur,max = 0,0 --现有，最大
+﻿local cur,max = 0,0 --现有，最大
 local reward = nil --物品
 local cost = nil --购买价格
 local currNum = 0 --当前购买

@@ -1,4 +1,4 @@
--- 支线选项
+﻿-- 支线选项
 local clickCallBack = nil
 local index = 0
 local data = nil

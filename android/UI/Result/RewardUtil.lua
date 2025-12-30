@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 
 -- 合并相同的物品
 function this.SetShrink(_rewards)

@@ -1,4 +1,4 @@
---资料
+﻿--资料
 local itemPath = "Archive2/ArchiveRoleZLItem"
 local itemPath2 = "Archive2/ArchiveRoleZLItem2"
 --卡牌角色资料

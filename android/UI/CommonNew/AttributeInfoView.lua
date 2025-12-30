@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
 	CSAPI.PlayUISound("ui_popup_open")
 	LanguageMgr:SetText(txtTitle,1076)--CSAPI.SetText(txtTitle, StringConstant.role_145)
 end

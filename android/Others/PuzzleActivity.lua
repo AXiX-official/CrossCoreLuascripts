@@ -1,4 +1,4 @@
---拼图活动界面
+﻿--拼图活动界面
 local puzzleNode=nil;
 local puzzleInfo=nil;
 local layout=nil;

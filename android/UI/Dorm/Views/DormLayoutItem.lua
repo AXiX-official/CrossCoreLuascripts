@@ -1,4 +1,4 @@
-cur = 0
+﻿cur = 0
 local isDrag = false
 local colors = {"00FFBF", "FF6130", "FFC146"} -- 已放置，已占用，未拥有
 local stateLanIDs = {32075, 32076, 32077}

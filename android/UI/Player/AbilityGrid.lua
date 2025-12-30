@@ -1,4 +1,4 @@
--- 能力格子
+﻿-- 能力格子
 local data = nil
 local elseData = nil
 local cb = nil

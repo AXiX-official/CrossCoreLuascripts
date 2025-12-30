@@ -1,4 +1,4 @@
---BUFF信息列表
+﻿--BUFF信息列表
 local list=nil;
 local refreshTime=60;
 local currTime=0;

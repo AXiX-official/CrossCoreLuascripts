@@ -1,4 +1,4 @@
---商店礼包购买窗口
+﻿--商店礼包购买窗口
 local currNum=1; --当前选择数量
 local currPrice=0;--当前总价格
 local currPriceType=nil;

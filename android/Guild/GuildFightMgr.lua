@@ -1,4 +1,4 @@
-local this=MgrRegister("GuildFightMgr")
+﻿local this=MgrRegister("GuildFightMgr")
 
 --公会战个人数据
 function this:SetGFData(proto)

@@ -1,4 +1,4 @@
-function Refresh(_cfg)
+﻿function Refresh(_cfg)
 	if(_cfg) then
 		data = CRoleMgr:GetData(_cfg.id)
 		CSAPI.SetGOActive(hei, data == nil)

@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 'z-章节表.xlsx',
 	["sheetname"] = '角色剧情活动',
 	["types"] = {

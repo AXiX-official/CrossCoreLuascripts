@@ -1,4 +1,4 @@
-function SetClickCB(_cb)
+﻿function SetClickCB(_cb)
 	cb = _cb
 end
 function Refresh(_data)

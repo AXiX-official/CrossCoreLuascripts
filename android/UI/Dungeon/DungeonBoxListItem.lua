@@ -1,4 +1,4 @@
---奖励箱子
+﻿--奖励箱子
 local data = nil
 local isGet = false
 local isReach = false

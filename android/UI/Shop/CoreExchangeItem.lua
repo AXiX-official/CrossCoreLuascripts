@@ -1,4 +1,4 @@
-local stars=3;
+﻿local stars=3;
 function Refresh(_d)
     if _d then
         stars=_d.stars;

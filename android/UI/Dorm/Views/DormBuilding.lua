@@ -1,4 +1,4 @@
---建筑 
+﻿--建筑 
 function OnOpen()
 	arr = MatrixMgr:GetBuildingDatasArr()
 	if(data) then

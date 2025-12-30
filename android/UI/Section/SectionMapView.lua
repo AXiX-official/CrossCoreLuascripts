@@ -1,4 +1,4 @@
--- 背景界面
+﻿-- 背景界面
 local maxScale = 0
 local minScale = 0
 local scaleTime = 0.2

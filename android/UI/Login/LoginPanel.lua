@@ -1,4 +1,4 @@
--- 登录面板
+﻿-- 登录面板
 require "LoginCommFuns"
 local userLogin = nil; -- 登录框
 local userRegister = nil; -- 用户注册框

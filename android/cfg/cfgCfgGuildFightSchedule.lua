@@ -1,4 +1,4 @@
-_G["CfgGuildFightSchedule"]={{["closeTime"]={2020,12,9,23,59,59}
+﻿_G["CfgGuildFightSchedule"]={{["closeTime"]={2020,12,9,23,59,59}
 ,["infos"]={{["index"]=1,["startRestScore"]=true,["name"]="预选战",["fightResultRewardTime"]={2020,12,6,6,0,0}
 ,["endTime"]={2020,12,5,21,0,0}
 ,["startTime"]={2020,12,5,9,0,0}

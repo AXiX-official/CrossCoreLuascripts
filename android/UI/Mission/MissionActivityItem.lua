@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local cfg = nil
 local m_Slider = nil
 local rItems = {}
@@ -20,7 +20,14 @@ function Refresh(_data,_isBattle)
         SetPrograss(data:GetCnt(), data:GetMaxCnt())
         SetGrids(data:GetJAwardId())
         SetBtn(data:IsGet(), data:IsFinish())
+        local cfg=data:GetCfg();
+        local isDaily=cfg and cfg.nRestType==1 or false
+        SetType(isDaily)
     end
+end
+
+function SetType(isDaily)
+    CSAPI.SetGOActive(typeObj,isDaily);
 end
 
 -- 设置标题

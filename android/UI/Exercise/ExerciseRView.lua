@@ -1,4 +1,4 @@
-local rankDatas = {}
+﻿local rankDatas = {}
 local isEnd = false -- 已经请求到最大排行榜长度
 local getNum = 10 -- 每次请求个数
 local curTeamIndex = nil

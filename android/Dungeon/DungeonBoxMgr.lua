@@ -1,4 +1,4 @@
-DungeonBoxMgr = MgrRegister("DungeonBoxMgr")
+﻿DungeonBoxMgr = MgrRegister("DungeonBoxMgr")
 local this = DungeonBoxMgr
 
 function this:Init()

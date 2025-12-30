@@ -1,4 +1,4 @@
---天空盒
+﻿--天空盒
 
 function Awake()
     SkyBoxMgr:SetCurrSkyBox(gameObject);

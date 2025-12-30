@@ -1,4 +1,4 @@
-DormRoleActionBase = oo.class()
+﻿DormRoleActionBase = oo.class()
 
 local this = DormRoleActionBase
 

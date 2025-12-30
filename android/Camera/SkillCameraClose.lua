@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     CameraMgr:SetCustomCameraState(false);
 end

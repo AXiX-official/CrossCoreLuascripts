@@ -1,4 +1,4 @@
--- 战斗菜单
+﻿-- 战斗菜单
 local fade = nil
 local canvasGroup = nil
 local panel = nil

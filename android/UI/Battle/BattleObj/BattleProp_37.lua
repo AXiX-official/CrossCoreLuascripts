@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     animator = ComUtil.GetComInChildren(gameObject,"Animator");
 end
 

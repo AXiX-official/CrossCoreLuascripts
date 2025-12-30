@@ -1,4 +1,4 @@
--- 首充的item
+﻿-- 首充的item
 function Refresh(_reward)
     reward = _reward
 

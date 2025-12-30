@@ -1,4 +1,4 @@
-local items = nil
+﻿local items = nil
 --SignInfDayInfo
 function Refresh(_data, _isShowNextDay)
 	isShowNextDay = _isShowNextDay

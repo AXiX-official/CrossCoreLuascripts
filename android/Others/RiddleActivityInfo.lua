@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 --猜谜活动信息
 function this.New()
 	this.__index = this.__index or this;

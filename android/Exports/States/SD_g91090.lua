@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 cast1={play_time=2300,start_pos={ref_type=1,offset_row=-50,lock_row=1},last_hit=1350},

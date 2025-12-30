@@ -1,4 +1,4 @@
-local btns={}
+﻿local btns={}
 local bs={}
 local qualitys=nil;
 function OnOpen()

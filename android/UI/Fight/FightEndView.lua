@@ -1,4 +1,4 @@
-local txtContent = nil;
+﻿local txtContent = nil;
 
 function Awake()       
     txtContent = ComUtil.GetCom(content,"Text");

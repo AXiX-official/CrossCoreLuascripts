@@ -1,4 +1,4 @@
-local cfg =nil
+﻿local cfg =nil
 local iconItem
 
 function Refresh(_data)

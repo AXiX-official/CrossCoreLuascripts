@@ -1,4 +1,4 @@
-local this = {
+﻿local this = {
 	id = nil,
 	cfgid = 0,
 	type = 0,

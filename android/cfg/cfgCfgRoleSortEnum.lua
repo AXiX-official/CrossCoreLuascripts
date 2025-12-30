@@ -1,4 +1,4 @@
-_G["CfgRoleSortEnum"]={{["id"]=1,["sName"]="稀有度",["key"]="1"}
+﻿_G["CfgRoleSortEnum"]={{["id"]=1,["sName"]="稀有度",["key"]="1"}
 ,{["id"]=2,["sName"]="等级",["key"]="2"}
 ,{["id"]=3,["sName"]="好感度",["key"]="3",["icon"]="sort_03"}
 ,{["id"]=4,["sName"]="入手顺序",["key"]="4"}

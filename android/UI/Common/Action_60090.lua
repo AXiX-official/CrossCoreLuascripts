@@ -1,4 +1,4 @@
-
+﻿
 function OnComplete()
     local target = GetTarget();
     if(not target)then

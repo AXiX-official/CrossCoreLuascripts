@@ -1,4 +1,4 @@
-local SignInInfo = require "SignInInfo"
+﻿local SignInInfo = require "SignInInfo"
 local weekStr = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY","SUNDAY"}
 local isSignIn = false
 local curDayInfo = nil

@@ -1,4 +1,4 @@
-local endTime1, endTime2 = nil, nil
+﻿local endTime1, endTime2 = nil, nil
 local timer = nil
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")

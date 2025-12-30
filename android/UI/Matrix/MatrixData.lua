@@ -1,4 +1,4 @@
--- 基地建筑信息 sBuildInfo
+﻿-- 基地建筑信息 sBuildInfo
 MatrixData = {}
 local this = MatrixData
 

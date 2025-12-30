@@ -1,4 +1,4 @@
-
+﻿
 function SetData(cfg)    
     if(txtValue == nil)then
         txtValue = ComUtil.GetCom(text,"TextMesh");

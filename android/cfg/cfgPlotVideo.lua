@@ -1,4 +1,4 @@
-_G["PlotVideo"]={{["loop"]=1,["name"]="plot/plot_burn1",["id"]=1,["time"]=1,["key"]="1"}
+﻿_G["PlotVideo"]={{["loop"]=1,["name"]="plot/plot_burn1",["id"]=1,["time"]=1,["key"]="1"}
 ,{["name"]="plot/plot_explode1",["id"]=2,["time"]=1,["key"]="2"}
 ,{["name"]="plot/plot_hit1",["id"]=3,["time"]=1,["key"]="3"}
 ,{["name"]="plot/plot_hit2",["id"]=4,["time"]=1,["key"]="4"}

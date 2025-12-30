@@ -1,4 +1,4 @@
--- ui工具
+﻿-- ui工具
 local this = {}
 this.active1 = "View_Open_Scale" -- 界面打开
 this.active2 = "View_Open_Scale2"
@@ -1052,6 +1052,10 @@ function this:OpenTeamReplaceView(dungeonId,callBack)
         return
     end
     CSAPI.OpenView("DungeonTeamReplace",nil,{id = dungeonId,callBack = callBack})
+end
+
+function this:OpenMissionLimitTips(data)
+    CSAPI.OpenView("MissionLimitTips", data)
 end
 
 function this:ShowBuy(id)

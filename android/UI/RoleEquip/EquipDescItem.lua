@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     canvasGroup=ComUtil.GetCom(gameObject,"CanvasGroup");
 end
 

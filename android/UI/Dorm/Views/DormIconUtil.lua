@@ -1,4 +1,4 @@
-DormIconUtil = {}
+﻿DormIconUtil = {}
 
 local this = DormIconUtil
 

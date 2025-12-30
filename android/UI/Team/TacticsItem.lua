@@ -1,4 +1,4 @@
---战术选择物体
+﻿--战术选择物体
 local btn=nil;
 local grids=nil;
 local changeFunc=nil;

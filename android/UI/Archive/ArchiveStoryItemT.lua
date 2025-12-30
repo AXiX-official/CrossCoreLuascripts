@@ -1,4 +1,4 @@
-local isNew = false
+﻿local isNew = false
 
 function SetIndex(idx)
 	index = idx

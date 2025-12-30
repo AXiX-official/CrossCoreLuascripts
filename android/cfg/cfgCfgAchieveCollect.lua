@@ -1,4 +1,4 @@
-_G["CfgAchieveCollect"]={{["num"]=0,["name"]="故事记录者",["id"]=1,["icon"]="img_01_01",["key"]="1"}
+﻿_G["CfgAchieveCollect"]={{["num"]=0,["name"]="故事记录者",["id"]=1,["icon"]="img_01_01",["key"]="1"}
 ,{["num"]=50,["name"]="旅途参与者",["id"]=2,["icon"]="img_01_02",["key"]="2"}
 ,{["num"]=100,["name"]="危境挑战者",["id"]=3,["icon"]="img_02_01",["key"]="3"}
 ,{["num"]=200,["name"]="荣光胜利者",["id"]=4,["icon"]="img_02_02",["key"]="4"}

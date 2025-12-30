@@ -1,4 +1,4 @@
-GLogicCheck = {}
+﻿GLogicCheck = {}
 
 --判断名字长度
 function GLogicCheck:PlrNameLen(name)

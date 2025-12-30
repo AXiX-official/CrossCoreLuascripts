@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local curType = 1
 local curOpen = 1
 local currLevel = 1

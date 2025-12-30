@@ -1,4 +1,4 @@
---宠物运动
+﻿--宠物运动
 local pet=nil;
 local curScene=1;
 local curTime=0;

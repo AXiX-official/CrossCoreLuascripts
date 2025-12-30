@@ -1,4 +1,4 @@
-function OnOpen()
+﻿function OnOpen()
     curData = RogueSMgr:GetData(data)
     RefreshPanel()
 end

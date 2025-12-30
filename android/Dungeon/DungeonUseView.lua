@@ -1,4 +1,4 @@
---特殊道具使用界面
+﻿--特殊道具使用界面
 local currentItem = nil;
 local currentIndex = 0;
 local items = nil;

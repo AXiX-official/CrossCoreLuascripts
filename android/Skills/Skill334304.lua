@@ -1,4 +1,4 @@
--- 裂空2
+﻿-- 裂空2
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -6,33 +6,52 @@ Skill334304 = oo.class(SkillBase)
 function Skill334304:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 伤害前
-function Skill334304:OnBefourHurt(caster, target, data)
+-- 入场时
+function Skill334304:OnBorn(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
-	else
-		return
-	end
-	-- 8214
-	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
 	else
 		return
 	end
 	-- 334304
-	self:AddTempAttr(SkillEffect[334304], caster, self.card, data, "damage",0.25)
+	local targets = SkillFilter:Group(self, caster, target, 3,4)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[334304], caster, target, data, 334304)
+	end
 end
--- 攻击结束
-function Skill334304:OnAttackOver(caster, target, data)
+-- 特殊入场时(复活，召唤，合体)
+function Skill334304:OnBornSpecial(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 8214
-	if SkillJudger:IsTypeOf(self, caster, target, true,2) then
+	-- 334304
+	local targets = SkillFilter:Group(self, caster, target, 3,4)
+	for i,target in ipairs(targets) do
+		self:AddBuff(SkillEffect[334304], caster, target, data, 334304)
+	end
+end
+-- 死亡时
+function Skill334304:OnDeath(caster, target, data)
+	-- 8070
+	if SkillJudger:TargetIsSelf(self, caster, target, true) then
 	else
 		return
 	end
-	-- 334306
-	self:DelBufferGroup(SkillEffect[334306], caster, target, data, 2,2)
+	-- 334309
+	local targets = SkillFilter:Group(self, caster, target, 3,4)
+	for i,target in ipairs(targets) do
+		self:DelBufferForce(SkillEffect[334309], caster, target, data, 334304)
+	end
+	-- 334314
+	local targets = SkillFilter:HasBuff(self, caster, target, 3,334306,4)
+	for i,target in ipairs(targets) do
+		self:MissSurface2(SkillEffect[334314], caster, target, data, -1600)
+	end
+	-- 334316
+	local targets = SkillFilter:HasBuff(self, caster, target, 3,334306,4)
+	for i,target in ipairs(targets) do
+		self:DelBufferForce(SkillEffect[334316], caster, target, data, 334306)
+	end
 end

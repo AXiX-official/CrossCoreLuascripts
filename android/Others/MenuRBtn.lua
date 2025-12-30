@@ -1,4 +1,4 @@
-local redPos = {65, 60}
+﻿local redPos = {65, 60}
 local downTime = nil
 local timer = nil
 

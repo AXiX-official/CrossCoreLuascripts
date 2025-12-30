@@ -1,4 +1,4 @@
---390  --1390
+﻿--390  --1390
 local isShowMore = false
 local isCreate = false
 function Init(_backCB, _viewName)

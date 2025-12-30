@@ -1,4 +1,4 @@
--- 洛贝拉2
+﻿-- 洛贝拉2
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -27,6 +27,13 @@ function Skill603300205:OnBorn(caster, target, data)
 	end
 	-- 8742
 	local count742 = SkillApi:SkillLevel(self, caster, target,3,7801002)
+	-- 8476
+	local count76 = SkillApi:LiveCount(self, caster, target,3)
+	-- 8892
+	if SkillJudger:Greater(self, caster, target, true,count76,1) then
+	else
+		return
+	end
 	-- 4603306
 	local targets = SkillFilter:Rand(self, caster, target, 3)
 	for i,target in ipairs(targets) do

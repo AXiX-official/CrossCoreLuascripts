@@ -1,4 +1,4 @@
---注音工具
+﻿--注音工具
 local this = {}
 
 this.isInit = false

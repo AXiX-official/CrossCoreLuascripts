@@ -1,4 +1,4 @@
---材料显示 
+﻿--材料显示 
 local lens = {296, 148, 0}
 local ids = {11003, ITEM_ID.DIAMOND, ITEM_ID.GOLD}
 

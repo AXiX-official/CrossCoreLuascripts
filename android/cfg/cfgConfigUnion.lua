@@ -1,4 +1,4 @@
-_G["ConfigUnion"]={{["key"]="1",["sUnionName"]="RewardInfo",["id"]=1,["item"]={{["sCfgName"]="奖励表-常规",["index"]=1,["sCfgKey"]="RewardInfo1"}
+﻿_G["ConfigUnion"]={{["key"]="1",["sUnionName"]="RewardInfo",["id"]=1,["item"]={{["sCfgName"]="奖励表-常规",["index"]=1,["sCfgKey"]="RewardInfo1"}
 ,{["sCfgName"]="奖励表-抽卡",["index"]=2,["sCfgKey"]="RewardInfo2"}
 ,{["sCfgName"]="奖励表-关卡",["index"]=3,["sCfgKey"]="RewardInfo3"}
 ,{["sCfgName"]="奖励表-礼包",["index"]=4,["sCfgKey"]="RewardInfo4"}

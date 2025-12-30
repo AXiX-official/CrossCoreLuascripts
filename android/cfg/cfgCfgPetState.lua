@@ -1,4 +1,4 @@
-_G["CfgPetState"]={{["attribute"]={3}
+﻿_G["CfgPetState"]={{["attribute"]={3}
 ,["judge"]=5,["key"]="1",["id"]=1,["name"]="饥饿",["icon"]="img_07_04",["value"]=20}
 ,{["attribute"]={3}
 ,["judge"]=2,["key"]="2",["id"]=2,["name"]="饱腹",["icon"]="img_07_06",["value"]=83}

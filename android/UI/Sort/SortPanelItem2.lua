@@ -1,4 +1,4 @@
-local id
+﻿local id
 
 function SetClickCB(_cb)
     cb = _cb

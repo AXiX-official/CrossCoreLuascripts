@@ -1,4 +1,4 @@
-require "ProtoList";
+﻿require "ProtoList";
 require "ProtocolRecordMgr";
 
 local  this = {};

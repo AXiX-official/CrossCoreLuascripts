@@ -1,4 +1,4 @@
-local nextTime = nil
+﻿local nextTime = nil
 local curIndex = 1
 
 function Awake()

@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 local ids = {37013,37014,37015,37016,37017}
 

@@ -1,4 +1,4 @@
-_G["CfgPvpTaskReward"]={{["id"]=1,["infos"]={{["order"]=5,["sDescription"]="累计参与限时军演5次",["index"]=1,["jAward"]={{10011,50,2}
+﻿_G["CfgPvpTaskReward"]={{["id"]=1,["infos"]={{["order"]=5,["sDescription"]="累计参与限时军演5次",["index"]=1,["jAward"]={{10011,50,2}
 }
 }
 ,{["order"]=10,["sDescription"]="累计参与限时军演10次",["index"]=2,["jAward"]={{10703,1,2}

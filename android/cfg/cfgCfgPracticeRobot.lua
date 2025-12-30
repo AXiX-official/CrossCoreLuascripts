@@ -1,4 +1,4 @@
-_G["CfgPracticeRobot"]={{["aTeamIds"]={90101111,90101112,90101113}
+﻿_G["CfgPracticeRobot"]={{["aTeamIds"]={90101111,90101112,90101113}
 ,["id"]=1,["nLevel"]=3,["nPerformance"]=2471,["nScore"]=8,["nName"]="澹台思枫",["nGridId"]=1,["nIconId"]=7101001,["key"]="1"}
 ,{["aTeamIds"]={90101111,90101112,90101113}
 ,["id"]=2,["nLevel"]=3,["nPerformance"]=2471,["nScore"]=8,["nName"]="前飞兰",["nGridId"]=2,["nIconId"]=7101001,["key"]="2"}

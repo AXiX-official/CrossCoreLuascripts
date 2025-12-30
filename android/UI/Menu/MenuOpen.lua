@@ -1,4 +1,4 @@
--- function OnClickMask()
+﻿-- function OnClickMask()
 -- 	--特殊类型的(依次弹出)
 -- 	local fatherView = data and data:GetFatherView() or nil
 -- 	if(fatherView) then

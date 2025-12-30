@@ -1,4 +1,4 @@
-_G["cfgGlobalBossHpLevelAdjust"]={{["id"]=1,["key"]=1,["killTime"]=86400,["val"]=15}
+﻿_G["cfgGlobalBossHpLevelAdjust"]={{["id"]=1,["key"]=1,["killTime"]=86400,["val"]=15}
 ,{["id"]=2,["key"]=2,["killTime"]=172800,["val"]=15}
 ,{["id"]=3,["key"]=3,["killTime"]=259200,["val"]=15}
 ,{["id"]=4,["key"]=4,["killTime"]=345600,["val"]=12}

@@ -1,4 +1,4 @@
-local alpha = 0.5
+﻿local alpha = 0.5
 local goGoals = {}
 
 function Awake()

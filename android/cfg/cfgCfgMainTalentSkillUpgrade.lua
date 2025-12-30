@@ -1,4 +1,4 @@
-_G["CfgMainTalentSkillUpgrade"]={{["id"]=1,["infos"]={{["costArr"]={{1,{100008,1,2}
+﻿_G["CfgMainTalentSkillUpgrade"]={{["id"]=1,["infos"]={{["costArr"]={{1,{100008,1,2}
 }
 ,{2,{100009,1,2}
 }

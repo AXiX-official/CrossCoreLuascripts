@@ -1,4 +1,4 @@
-local fade = nil
+﻿local fade = nil
 local isAnim = false
 local isFirst = false
 local badgeItems = {}
@@ -64,6 +64,7 @@ function Show(_data)
     -- lv
     local level = _data.level or 1
     CSAPI.SetText(txtLv1, level .. "")
+    CSAPI.SetText(txtLv2, "/" .. PlayerClient:GetMaxLv())
 
     -- uid
     CSAPI.SetText(txtUID, _data.uid .. "")

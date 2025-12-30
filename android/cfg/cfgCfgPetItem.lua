@@ -1,4 +1,4 @@
-_G["CfgPetItem"]={[103]={["type"]=2,["animation"]="eat",["id"]=103,["foodChange"]=50,["happyChange"]=9,["key"]="9",["feedChange"]=3,["sort"]=8,["washChange"]=-9,["item"]=27013}
+﻿_G["CfgPetItem"]={[103]={["type"]=2,["animation"]="eat",["id"]=103,["foodChange"]=50,["happyChange"]=9,["key"]="9",["feedChange"]=3,["sort"]=8,["washChange"]=-9,["item"]=27013}
 ,[401]={["type"]=1,["animation"]="play",["id"]=401,["foodChange"]=0,["happyChange"]=45,["key"]="1",["feedChange"]=0,["sort"]=5,["washChange"]=-50,["item"]=27041}
 ,[101]={["type"]=2,["animation"]="eat",["id"]=101,["foodChange"]=150,["happyChange"]=21,["key"]="7",["feedChange"]=9,["sort"]=3,["washChange"]=-25,["item"]=27011}
 ,[202]={["type"]=3,["animation"]="wash",["id"]=202,["foodChange"]=0,["happyChange"]=12,["key"]="19",["feedChange"]=0,["sort"]=2,["washChange"]=240,["item"]=27022}

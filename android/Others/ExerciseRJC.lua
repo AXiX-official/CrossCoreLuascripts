@@ -1,4 +1,4 @@
-local panelIndex = 1
+﻿local panelIndex = 1
 
 function Awake()
     fade = ComUtil.GetCom(gameObject, "ActionFade")

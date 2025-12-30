@@ -1,4 +1,4 @@
---战前界面
+﻿--战前界面
 local formation = nil;    --阵型盘
 local dropList = nil; --掉落格子列表
 local taskItems = nil;    --目标集合

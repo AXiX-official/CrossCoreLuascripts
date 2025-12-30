@@ -1,4 +1,4 @@
-_G["cfgColosseumCharaGacha"]={[101]={["id"]=101,["infos"]={[20240]={["label"]={2}
+﻿_G["cfgColosseumCharaGacha"]={[101]={["id"]=101,["infos"]={[20240]={["label"]={2}
 ,["labelweight"]=10,["charaId"]=20240,["weight"]=10}
 ,[50060]={["label"]={1}
 ,["labelweight"]=10,["charaId"]=50060,["weight"]=10}

@@ -1,4 +1,4 @@
-_G["CfgTaskWeekly"]={[41002]={["key"]=41002,["aFinishIds"]={41002}
+﻿_G["CfgTaskWeekly"]={[41002]={["key"]=41002,["aFinishIds"]={41002}
 ,["sDescription"]="基地挖掘矿场收获15次",["nStar"]=1,["id"]=41002,["sName"]="基地生产",["nIsHide"]=2,["nTransferPath"]=150002}
 ,[49001]={["key"]=49001,["aFinishIds"]={49001}
 ,["sDescription"]="在碎星商贸完成任意10次兑换或购买",["nStar"]=1,["id"]=49001,["sName"]="商店兑换",["nIsHide"]=2,["nTransferPath"]=140006}

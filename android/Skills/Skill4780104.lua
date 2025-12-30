@@ -1,4 +1,4 @@
--- 洛贝拉
+﻿-- 洛贝拉
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -6,8 +6,8 @@ Skill4780104 = oo.class(SkillBase)
 function Skill4780104:Init(skillID, card)
 	SkillBase.Init(self, skillID, card)
 end
--- 行动开始
-function Skill4780104:OnActionBegin(caster, target, data)
+-- 行动结束2
+function Skill4780104:OnActionOver2(caster, target, data)
 	-- 8060
 	if SkillJudger:CasterIsSelf(self, caster, target, true) then
 	else
@@ -25,6 +25,13 @@ function Skill4780104:OnActionBegin(caster, target, data)
 	end
 	-- 603300302
 	self:OwnerAddBuffCount(SkillEffect[603300302], caster, self.card, data, 603300301,1,4)
+	-- 9731
+	if SkillJudger:IsTypeOf(self, caster, target, true,4) then
+	else
+		return
+	end
+	-- 603300306
+	self:OwnerAddBuffCount(SkillEffect[603300306], caster, self.card, data, 603300301,1,4)
 end
 -- 特殊入场时(复活，召唤，合体)
 function Skill4780104:OnBornSpecial(caster, target, data)
@@ -43,8 +50,8 @@ function Skill4780104:OnBornSpecial(caster, target, data)
 	-- 4603301
 	self:AddOwnerEquipSkill(SkillEffect[4603301], caster, caster, data, nil)
 end
--- 伤害前
-function Skill4780104:OnBefourHurt(caster, target, data)
+-- 伤害后
+function Skill4780104:OnAfterHurt(caster, target, data)
 	-- 4603343
 	self:tFunc_4603343_4603313(caster, target, data)
 	self:tFunc_4603343_4603316(caster, target, data)

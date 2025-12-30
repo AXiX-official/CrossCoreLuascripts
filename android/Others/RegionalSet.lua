@@ -1,4 +1,4 @@
---地区设置
+﻿--地区设置
 RegionalSet={}
 local this=RegionalSet;
 ---1:中国内陆

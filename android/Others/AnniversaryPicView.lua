@@ -1,9 +1,10 @@
-local data = nil
+﻿local data = nil
 local infos = nil
 
 function Refresh(_data)
     data = _data
     if data then
+        SetTop()
         infos = data:GetSummaryInfo()
         if infos and #infos > 0 then
             for i, v in ipairs(infos) do
@@ -13,6 +14,12 @@ function Refresh(_data)
             end
         end
     end
+end
+
+function SetTop()
+    SetText(txtTitle,data:GetName())
+    local sTime,eTime = data:GetStartTime(),data:GetEndTime()
+    SetText(txtTime,TimeUtil:GetTimeHMS(sTime,"%m.%d %H:%M") .. "-" .. TimeUtil:GetTimeHMS(eTime,"%m.%d %H:%M"))
 end
 
 function SetName(info, index)
@@ -53,10 +60,10 @@ function SetText(obj, str)
 end
 
 function OnClickItem(go)
-    TrackEvent(tonumber(go.name))
+    -- TrackEvent(tonumber(go.name))
     if infos and #infos > 0 then
         for i, v in ipairs(infos) do
-            if tostring(i) == go.name  and v.jumpId then
+            if tostring(i) == go.name and v.jumpId then
                 if CheckIsOpen(v) then
                     JumpMgr:Jump(v.jumpId)
                 else
@@ -95,4 +102,8 @@ function TrackEvent(index)
     if eventNames and eventNames[index] then
         AnniversaryMgr:TrackEvents(eventNames[index])
     end
+end
+
+function OnClickJump()
+    JumpMgr:Jump(data:GetJumpId())
 end

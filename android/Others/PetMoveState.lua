@@ -1,4 +1,4 @@
---宠物移动动画
+﻿--宠物移动动画
 local this=oo.class(PetStateBase)
 function this:OnEnter(_d)
     PetStateBase.OnEnter(self,_d);

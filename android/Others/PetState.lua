@@ -1,4 +1,4 @@
---宠物状态UI
+﻿--宠物状态UI
 local hp=nil;
 local heath=nil;
 local hunger=nil;

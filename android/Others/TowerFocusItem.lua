@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local cfgCard = nil --cardData
 local isPass = false
 local gridInfos = {}

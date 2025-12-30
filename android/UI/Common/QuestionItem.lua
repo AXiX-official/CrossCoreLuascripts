@@ -1,4 +1,4 @@
---cfg : CfgOpenCondition
+﻿--cfg : CfgOpenCondition
 local canClick=true;
 function Refresh(_cfg)
 	cfg = _cfg

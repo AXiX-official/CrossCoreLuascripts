@@ -1,4 +1,4 @@
-function Refresh(cfg,_elseData)
+﻿function Refresh(cfg,_elseData)
     this.data=cfg;
     this.elseData=_elseData;
     --初始化icon

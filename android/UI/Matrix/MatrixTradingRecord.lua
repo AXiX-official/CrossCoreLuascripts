@@ -1,4 +1,4 @@
-
+﻿
 local per = 10
 local canRequire = true --可以继续请求（如果该次请求回来的数量不对，则不能再请求了）
 local curIndex = 0

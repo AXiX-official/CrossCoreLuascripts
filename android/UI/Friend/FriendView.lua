@@ -1,4 +1,4 @@
--- 界面打开时初始状态  自己或好友操作返回时界面状态
+﻿-- 界面打开时初始状态  自己或好友操作返回时界面状态
 local itemPath1 = "Friend/FriendListItem"
 local itemPath3 = "UIs/Friend/FriendRItem"
 

@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     txtRound = ComUtil.GetCom(goRound,"Text");  
     txtNum = ComUtil.GetCom(goNum,"Text");  

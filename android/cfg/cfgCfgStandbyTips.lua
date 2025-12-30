@@ -1,4 +1,4 @@
-_G["CfgStandbyTips"]={{["id"]=1,["icon"]="icon_01_01",["key"]="1",["language"]=68001}
+﻿_G["CfgStandbyTips"]={{["id"]=1,["icon"]="icon_01_01",["key"]="1",["language"]=68001}
 ,{["id"]=2,["icon"]="icon_01_01",["key"]="2",["language"]=68002}
 ,{["id"]=3,["icon"]="icon_01_02",["key"]="3",["language"]=68003}
 ,{["id"]=4,["icon"]="icon_01_02",["key"]="4",["language"]=68004}

@@ -1,4 +1,4 @@
---技能
+﻿--技能
 local grid=nil;
 local clickCB=nil;
 function Refresh(cfg,idx,isSelect)

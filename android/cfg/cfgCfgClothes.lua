@@ -1,4 +1,4 @@
-_G["CfgClothes"]={[92202]={["initOpen"]=true,["name"]="女性通用2",["sex"]=2,["id"]=92202,["key"]="92202",["icon"]="92001",["body"]="Dorm_Girl_m1_white_Body"}
+﻿_G["CfgClothes"]={[92202]={["initOpen"]=true,["name"]="女性通用2",["sex"]=2,["id"]=92202,["key"]="92202",["icon"]="92001",["body"]="Dorm_Girl_m1_white_Body"}
 ,[92203]={["initOpen"]=false,["name"]="女性通用3",["sex"]=2,["id"]=92203,["key"]="92203",["icon"]="92001",["body"]="Dorm_Girl_b1_white_Body"}
 ,[92204]={["initOpen"]=true,["name"]="男性通用1",["sex"]=1,["id"]=92204,["key"]="92204",["icon"]="92001",["body"]="Dorm_Boy_Body"}
 ,[92205]={["initOpen"]=true,["name"]="男性通用2",["sex"]=1,["id"]=92205,["key"]="92205",["icon"]="92001",["body"]="Dorm_Boy_Body"}

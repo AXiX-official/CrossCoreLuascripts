@@ -1,4 +1,4 @@
-_G["cfgGlobalBossChallenge"]={[10001]={["id"]=10001,["infos"]={{["hurt"]=1,["index"]=1,["reward"]={{2000301,3,2}
+﻿_G["cfgGlobalBossChallenge"]={[10001]={["id"]=10001,["infos"]={{["hurt"]=1,["index"]=1,["reward"]={{2000301,3,2}
 ,{10001,7500,2}
 ,{10003,7500,2}
 }

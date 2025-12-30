@@ -1,4 +1,4 @@
--- 红点和new是同一个位置
+﻿-- 红点和new是同一个位置
 local redPoss = {
     ["PlayerView"] = {141, 35.5},
     ["MailView"] = {40, 22},
@@ -55,7 +55,7 @@ local isHideUI = false -- 隐藏ui
 local showTime = nil
 local isShowTalk = true -- 台词文本
 local activeEnter_tab = {} -- {cfg:CfgActiveEntry,刷新时间,是否开启}
---local menuBuy_tab = nil -- 下次刷新点{time，id}
+-- local menuBuy_tab = nil -- 下次刷新点{time，id}
 local isTalking = false -- 正在说话
 local lvSV_time = nil
 local rtSV_time = nil
@@ -99,6 +99,9 @@ local puzzleNextInfo = nil;
 local exerciseRTime = nil
 local popupPackTime = nil
 local isSpineUIHide = nil
+
+local oldRoleID = nil
+
 function Awake()
     AdaptiveConfiguration.SetLuaObjUIFit("MenuView", gameObject)
     fill_lv = ComUtil.GetCom(fillLv, "Image")
@@ -107,7 +110,7 @@ function Awake()
     cg_node = ComUtil.GetCom(node, "CanvasGroup")
     --
     cardIconItem = RoleTool.AddRole(iconParent1, PlayCB, EndCB, true) -- 立绘
-    mulIconItem = RoleTool.AddMulRole(iconParent1, PlayCB, EndCB, true) -- 多人插图 
+    --mulIconItem = RoleTool.AddMulRole(iconParent1, PlayCB, EndCB, true) -- 多人插图 
     cardIconItem2 = RoleTool.AddRole(iconParent2, PlayCB, EndCB, true) -- 立绘
     -- 台词相关
     voicePlaying = false -- 正在播放
@@ -813,9 +816,9 @@ function SetImg()
     --
     isChangeImgPlayVoice = true
     local curDisplayData = CRoleDisplayMgr:GetCurData()
-    SetItem(1, curDisplayData:GetIDs()[1], cardIconItem, true, iconParent1, curDisplayData)
-    SetItem(1, curDisplayData:GetIDs()[1], mulIconItem, false, iconParent1, curDisplayData)
-    SetItem(2, curDisplayData:GetIDs()[2], cardIconItem2, true, iconParent2, curDisplayData)
+    SetItem(1, curDisplayData:GetIDs()[1], cardIconItem, iconParent1, curDisplayData)
+    --SetItem(1, curDisplayData:GetIDs()[1], mulIconItem, false, iconParent1, curDisplayData)
+    SetItem(2, curDisplayData:GetIDs()[2], cardIconItem2, iconParent2, curDisplayData)
     -- 
     local top = iconParent2
     if (curDisplayData:GetDetail(1) and curDisplayData:GetDetail(1).top) then
@@ -827,8 +830,13 @@ function SetImg()
     RoleABMgr:ChangeByIDs("MenuView", curDisplayData:GetIDs())
 end
 
-function SetItem(slot, id, item, roleSlot, iconParent, curDisplayData)
-    if (id and id ~= 0 and ((roleSlot and id > 10000) or (not roleSlot and id < 10000))) then
+function SetItem(slot, id, item, iconParent, curDisplayData)
+    if (id and id ~= 0) then
+        if (oldRoleID and oldRoleID ~= id) then
+            item.ClearCache()
+        end
+        oldRoleID = id
+        --
         CSAPI.SetGOActive(item.gameObject, true)
         local detail = curDisplayData:GetDetail(slot)
         CSAPI.SetAnchor(iconParent, detail.x, detail.y, 0)
@@ -898,9 +906,9 @@ function SetLiveBroadcast()
     if (cardIconItem and cardIconItem.gameObject.activeSelf) then
         cardIconItem.SetLiveBroadcast()
     end
-    if (mulIconItem and mulIconItem.gameObject.activeSelf) then
-        mulIconItem.SetLiveBroadcast()
-    end
+    -- if (mulIconItem and mulIconItem.gameObject.activeSelf) then
+    --     mulIconItem.SetLiveBroadcast()
+    -- end
     if (cardIconItem2 and cardIconItem2.gameObject.activeSelf) then
         cardIconItem2.SetLiveBroadcast()
     end
@@ -1006,7 +1014,7 @@ function SetRT()
     SetMoneys()
     SetHot()
     -- SetMenuBuy()
-    --SetSkinRebate()
+    -- SetSkinRebate()
     -- SetPopupPackBtn()
     SetRTSV()
 end
@@ -1244,7 +1252,7 @@ function EActivityGetCB()
         return true
     end
     -- 首冲
-    if (not CSAPI.IsAppReview()) then
+    if (not CSAPI.IsAppReview() and MenuBuyMgr:CheckMenuBuyIsOpen()) then
         if (isNeedToShowMenuBuy) then
             return true
         elseif (not isNeedToShowMenuBuy and MenuBuyMgr:CheckIsNeedShow()) then
@@ -1905,12 +1913,12 @@ end
 
 function SpineUI(b)
     if (b) then
-        if (not isHideUI) then
+        if(not isHideUI)then 
             isSpineUIHide = true
             OnClickHide()
         end
     else
-        if (isSpineUIHide) then
+        if(isSpineUIHide)then 
             OnClickBack()
         end
         isSpineUIHide = nil

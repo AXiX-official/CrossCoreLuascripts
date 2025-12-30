@@ -1,4 +1,4 @@
-local  this = {};
+﻿local  this = {};
 
 --获取队伍的FireBall层
 this.GetTeamFireBallLayerName = CS.LayerUtil.GetTeamFireBallLayerName;

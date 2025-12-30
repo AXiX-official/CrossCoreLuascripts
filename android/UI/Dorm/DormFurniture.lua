@@ -1,4 +1,4 @@
--- 家具模板
+﻿-- 家具模板
 local baseScale -- j用于计算的基础大小（角度=0时）
 local curScale = {} -- 当前用于计算的大小[长,高,宽]（根据旋转角度进行改变）
 local offset -- 位置偏移
@@ -751,7 +751,7 @@ function PlayAnim(b)
             else
                 animators[i]:Play("idle")
             end
-        end
+        end  
     end
 end
 

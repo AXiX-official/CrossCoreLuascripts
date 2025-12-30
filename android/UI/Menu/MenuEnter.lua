@@ -1,4 +1,4 @@
-function Refresh(_cfg)
+﻿function Refresh(_cfg)
     cfg = _cfg
     key = "ActiveEntry" .. cfg.id
 

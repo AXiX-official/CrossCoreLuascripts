@@ -1,4 +1,4 @@
-BuryingPointMgr = {}
+﻿BuryingPointMgr = {}
 local this = BuryingPointMgr
 local SDKType = {
     TA = 1, -- 数数

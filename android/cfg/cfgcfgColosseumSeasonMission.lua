@@ -1,4 +1,4 @@
-_G["cfgColosseumSeasonMission"]={{["sDescription"]="随机模式累计获得500星",["id"]=1,["jAwardId"]={{10407,800,2}
+﻿_G["cfgColosseumSeasonMission"]={{["sDescription"]="随机模式累计获得500星",["id"]=1,["jAwardId"]={{10407,800,2}
 }
 ,["aFinishIds"]={120114}
 ,["key"]=1,["mailId"]=9001,["nTransferPath"]=290001,["sName"]="随机模式累计获得500星",["nIsHide"]=2,["nGroup"]=2}

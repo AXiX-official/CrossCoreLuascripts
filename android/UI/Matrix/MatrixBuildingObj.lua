@@ -1,4 +1,4 @@
---基地建筑
+﻿--基地建筑
 local modelGO = nil
 
 function SetData(_data)

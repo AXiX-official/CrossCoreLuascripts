@@ -1,4 +1,4 @@
---战斗切换周目
+﻿--战斗切换周目
 
 FightActionChangeStage = oo.class(FightActionBase);
 local this = FightActionChangeStage;

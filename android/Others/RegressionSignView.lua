@@ -1,4 +1,4 @@
-local key = nil
+﻿local key = nil
 local isDone = false
 local targetTime = 0
 local info = nil

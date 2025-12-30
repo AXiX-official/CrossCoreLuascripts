@@ -1,4 +1,4 @@
-Loader:Require('SvnVersion')
+﻿Loader:Require('SvnVersion')
 Loader:AddReplaceFile('SvnVersion')
 
 Loader:Require('GEnum')

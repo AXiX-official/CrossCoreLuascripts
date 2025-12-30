@@ -1,4 +1,4 @@
---特殊勘探协议
+﻿--特殊勘探协议
 PermitProto={}
 
 function PermitProto:GetInfo(id)

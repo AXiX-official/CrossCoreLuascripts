@@ -1,4 +1,4 @@
-_G["cfgColosseumMission"]={{["sDescription"]="参与1次自选模式",["id"]=1,["jAwardId"]={{10407,500,2}
+﻿_G["cfgColosseumMission"]={{["sDescription"]="参与1次自选模式",["id"]=1,["jAwardId"]={{10407,500,2}
 }
 ,["aFinishIds"]={120001}
 ,["key"]=1,["mailId"]=9001,["nTransferPath"]=290001,["sName"]="参与1次自选模式",["nIsHide"]=2,["nGroup"]=1}

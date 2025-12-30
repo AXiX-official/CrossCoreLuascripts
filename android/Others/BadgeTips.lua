@@ -1,4 +1,4 @@
-local badgeData = nil
+﻿local badgeData = nil
 
 function OnOpen()
     badgeData = data

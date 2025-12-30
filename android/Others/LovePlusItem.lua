@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local isOpen = false
 local iconItem = nil
 

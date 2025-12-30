@@ -1,4 +1,4 @@
-local curItemLua=nil;
+﻿local curItemLua=nil;
 local curItem=nil;
 local layout=nil;
 local curDatas={}

@@ -1,4 +1,4 @@
-_G["skill_range"]={{["range_type"]=0,["key"]="one",["cross"]=false,["id"]=1,["skill_icon"]="effective_range_01",["range"]={{1,1}
+﻿_G["skill_range"]={{["range_type"]=0,["key"]="one",["cross"]=false,["id"]=1,["skill_icon"]="effective_range_01",["range"]={{1,1}
 }
 }
 ,{["range_type"]=1,["skill_icon"]="effective_range_02",["cross"]=false,["id"]=2,["key"]="one_row"}

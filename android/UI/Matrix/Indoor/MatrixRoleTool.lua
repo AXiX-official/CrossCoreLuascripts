@@ -1,4 +1,4 @@
--- 操作角色相关
+﻿-- 操作角色相关
 MatrixRoleTool = {}
 local this = MatrixRoleTool
 
@@ -12,11 +12,22 @@ end
 function this:Awake(_main, _isDorm)
     self.main = _main
     self.isDorm = _isDorm
-    self.aStar = ComUtil.GetCom(self.main.gameObject, "AStar")
+    self:InitAStar()
 
     Input, GetMouseButton, GetMouseButtonDown, GetMouseButtonUp, Physics = UIUtil:GetFuncs()
     eventCurrent = UnityEngine.EventSystems.EventSystem.current
     -- uiCamera = UIUtil:GetUICamera()
+end
+
+--初始化缓存数组的长度
+function this:InitAStar()
+    self.aStar = ComUtil.GetCom(self.main.gameObject, "AStar")
+    local tab = {}
+    for k = 1, 10 do
+        local pos = UnityEngine.Vector3(0, 0, 0)
+        table.insert(tab, pos)
+    end
+    self.aStar.cachePos = tab
 end
 
 function this:SceneCamera()
@@ -115,8 +126,10 @@ function this:EditRole()
         if (hits and hits.Length > 0) then
             local hit = hits[0].transform.parent
             self.curRole = ComUtil.GetLuaTable(hit.gameObject)
-            pressTimer = Time.time + 0.2 -- 大于0.2s算长按
-            self.isPress = true
+            if (not self.curRole:IsPet()) then
+                pressTimer = Time.time + 0.2 -- 大于0.2s算长按
+                self.isPress = true
+            end
         end
     end
     if (self.isPress) then
@@ -157,7 +170,7 @@ function this:ChangeAction1(_action, curRole)
     if (not curRole or curRole.GetIsClick() or curRole.GetIsTookUp() or curRole.GetIsInte()) then
         return
     end
-    curRole.ChangeAction(_action,self.isDorm)
+    curRole.ChangeAction(_action, self.isDorm)
     -- 隐藏换装按钮
     if (_action == DormRoleActionType.click_grab) then
         -- self:SetBtnCloths(curRole, false)
@@ -190,7 +203,7 @@ end
 function this:Init(_mainView)
     self.mainView = _mainView
     self.roleModels = {}
-    self.indexs = {0, 0, 0, 0, 0}
+    self.indexs = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     -- self.roleUIs = {}
     self.dormUIEmptys = {}
     self.furnitureModels = {}
@@ -437,7 +450,14 @@ function this:RefreshRoles()
     for i, v in ipairs(ids) do
         idsDic[v] = v
     end
-
+    -- 
+    if (self.isDorm) then
+        local _ids = self.mainView.GetData():GetRoles_pet()
+        for i, v in ipairs(_ids) do
+            idsDic[v] = v
+        end
+    end
+    -- 
     local removeIDs = {}
     for i, v in pairs(self.roleModels) do
         if (not idsDic[i]) then
@@ -465,7 +485,7 @@ function this:RefreshRoles()
             end
         end
     end
-    self.inNUm = self.inNUm~=nil and self.inNUm+1 or 1
+    self.inNUm = self.inNUm ~= nil and self.inNUm + 1 or 1
     local isPlayAudio = false
     for i, v in pairs(idsDic) do
         if (not self.roleModels[v]) then
@@ -475,14 +495,19 @@ function this:RefreshRoles()
                 local lua = ComUtil.GetLuaTable(go)
                 local index = self:GetCanUseIndex()
                 local arr = self:GetUsablePos(index)
-                local info = self.isOwn and CRoleMgr:GetData(v) or CRoleMgr:GetFakeData(v)
+                local info = nil
+                if (v < 10000) then
+                    info = self.isOwn and DormPetMgr:GetData(v) or DormPetMgr:GetFakeData(v)
+                else
+                    info = self.isOwn and CRoleMgr:GetData(v) or CRoleMgr:GetFakeData(v)
+                end
                 CSAPI.SetPos(go, arr[0], arr[1], arr[2])
                 lua.Init(index, self, info, self.isDorm)
                 self.roleModels[v] = lua
-                if (self.inNUm>1 and not self.isDorm and not isPlayAudio) then
+                if (self.inNUm > 1 and not self.isDorm and not isPlayAudio) then
                     isPlayAudio = true
-                    --进入设施语言（仅基地）
-                    RoleAudioPlayMgr:PlayByType(info:GetFirstSkinId(), RoleAudioType.allocation) 
+                    -- 进入设施语言（仅基地）
+                    RoleAudioPlayMgr:PlayByType(info:GetFirstSkinId(), RoleAudioType.allocation)
                 end
             end)
         end
@@ -630,7 +655,7 @@ function this:InLayout(isChange)
         -- 编辑家具、人员时,移除所有碰撞关联
         for i, v in pairs(self.roleModels) do
             v.ChangeAction(DormRoleActionType.Hide)
-            v.ClearFurnitureAnim() --清楚关联的家具动作
+            v.ClearFurnitureAnim() -- 清楚关联的家具动作
             v.RemoveAllInte()
         end
     else

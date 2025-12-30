@@ -1,4 +1,4 @@
---战棋界面角色信息
+﻿--战棋界面角色信息
 local monsterType = nil;
 function Awake()
 	-- txtName = ComUtil.GetCom(name,"Text");

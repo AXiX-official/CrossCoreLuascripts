@@ -1,4 +1,4 @@
---NP滑动控件
+﻿--NP滑动控件
 local sdr=nil
 local tVal=5;
 function Awake()

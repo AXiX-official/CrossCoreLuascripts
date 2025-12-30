@@ -1,4 +1,4 @@
-local time, timer = 0, 0
+﻿local time, timer = 0, 0
 local curID = nil -- 关卡组id
 local curIndex = nil
 function Awake()

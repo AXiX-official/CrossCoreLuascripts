@@ -1,4 +1,4 @@
--- 角色列表  正常打开+分解
+﻿-- 角色列表  正常打开+分解
 local listType = RoleListType.Normal
 local curTab = nil
 -- local sellRewardIDs = {10001, 10005}

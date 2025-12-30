@@ -1,4 +1,4 @@
--- 图标工具
+﻿-- 图标工具
 local ResIconUtil = require "ResIconUtil";
 -- 大图工具
 local ResImgUtil = require "ResImgUtil";
@@ -623,6 +623,9 @@ function this:Init()
     self.Halloween = ResIconUtil.New("Halloween")
     --回归活动
     self.Regression = ResIconUtil.New("Regression")
+    --大富翁
+    self.RichManIcon = ResIconUtil.New("RichManIcon")
+    self.PetHead = ResIconUtil.New("PetHead")
 end
 
 return this;

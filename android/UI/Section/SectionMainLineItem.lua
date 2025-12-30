@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local index = 0
 local titleIdx = 0
 local cb = nil

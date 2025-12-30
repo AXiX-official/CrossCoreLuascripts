@@ -1,4 +1,4 @@
---道具池预览界面
+﻿--道具池预览界面
 local layout=nil;
 local curDatas=nil;
 function Awake()

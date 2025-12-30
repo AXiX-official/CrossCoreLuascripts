@@ -1,4 +1,4 @@
-local fade = nil
+﻿local fade = nil
 local move = nil
 function Awake()
 	fade = ComUtil.GetCom(action,"ActionFade")

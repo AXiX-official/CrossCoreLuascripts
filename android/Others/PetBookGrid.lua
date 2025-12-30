@@ -1,4 +1,4 @@
---宠物图鉴格子
+﻿--宠物图鉴格子
 local cb=nil;
 local stars=nil;
 local elseData=nil;

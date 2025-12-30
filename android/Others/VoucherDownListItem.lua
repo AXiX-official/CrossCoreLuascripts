@@ -1,4 +1,4 @@
---折扣券下拉子物体
+﻿--折扣券下拉子物体
 local click=nil;
 function Refresh(_d,index)
     local isSelect=false;

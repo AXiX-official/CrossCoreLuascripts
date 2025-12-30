@@ -1,4 +1,4 @@
-TeamBoss = {}
+﻿TeamBoss = {}
 
 --房间列表 true:未开始的战斗的房间 false：我参加过的房间
 function TeamBoss:Rooms(_isStarting)

@@ -1,4 +1,4 @@
-local curTopIndex = 1
+﻿local curTopIndex = 1
 
 function Awake()
     topLua = UIUtil:AddTop2("RogueTCurBuff", gameObject, function()

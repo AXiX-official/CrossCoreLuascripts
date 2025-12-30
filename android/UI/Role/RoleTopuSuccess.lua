@@ -1,4 +1,4 @@
---跃升成功界面
+﻿--跃升成功界面
 function Awake()
 	fade = ComUtil.GetCom(gameObject, "ActionFade")
 	fade1 = ComUtil.GetCom(goShaderRaw, "ActionFade")

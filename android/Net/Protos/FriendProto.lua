@@ -1,4 +1,4 @@
-FriendProto = {
+﻿FriendProto = {
 	assitInfoReturn = nil,
 }
 

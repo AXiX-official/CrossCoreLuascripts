@@ -1,4 +1,4 @@
-local reward = nil
+﻿local reward = nil
 local item = nil
 
 local scaleAnim = nil

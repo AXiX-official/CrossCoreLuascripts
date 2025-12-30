@@ -1,4 +1,4 @@
---购买格子
+﻿--购买格子
 local data=nil;
 local getType=nil;
 local costIdx=1;

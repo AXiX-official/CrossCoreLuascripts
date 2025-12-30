@@ -1,4 +1,4 @@
-_G["CfgArchiveCourse"]={[7001]={["type"]=7,["name"]="敌兵移动",["eName"]="Enemy Movement",["id"]=7001,["small_id"]="Course_1302",["icons"]={1302}
+﻿_G["CfgArchiveCourse"]={[7001]={["type"]=7,["name"]="敌兵移动",["eName"]="Enemy Movement",["id"]=7001,["small_id"]="Course_1302",["icons"]={1302}
 ,["key"]="7001"}
 ,[5001]={["type"]=5,["name"]="基础信息",["eName"]="Basic Information",["id"]=5001,["small_id"]="Course_1601",["icons"]={1601}
 ,["key"]="5001"}

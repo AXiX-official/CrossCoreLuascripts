@@ -1,4 +1,4 @@
--- 皮肤商品子物体
+﻿-- 皮肤商品子物体
 local currPrice = priceObj;
 local skinInfo = nil;
 local countTime = 0;
@@ -61,26 +61,7 @@ function Refresh(_data, _elseData)
         CSAPI.SetGOActive(bg2, not showBg1);
         -- CSAPI.SetGOActive(asmrIcon,this.data:GetBundlingID()~=nil);
         SetName(skinInfo:GetRoleName());
-        -- SetL2dTag(skinInfo:HasL2D());
-        -- SetAnimaTag(skinInfo:HasEnterTween());
-        -- SetModelTag(skinInfo:HasModel());
-        -- SetSPPriceTag(this.data:HasDiscountTag());
-        -- SetSPTag(skinInfo:HasSpecial());
-        -- 特殊标签
-        local icons = skinInfo:GetTagIcons();
-        if icons ~= nil then
-            -- LogError(skinInfo:GetSkinName().."\t"..table.tostring(icons))
-            for i, v in ipairs(icons) do
-                CSAPI.SetGOActive(this[("tag" .. i)], true)
-                ResUtil.Tag:Load(this[("tagIcon" .. i)], v);
-            end
-        end
-        if icons == nil or #icons < 3 then
-            local index = icons ~= nil and #icons + 1 or 1;
-            for i = index, 3 do
-                CSAPI.SetGOActive(this[("tag" .. i)], false)
-            end
-        end
+        SetTagIcons();
         local cfg = skinInfo:GetSetCfg();
         SetTag(skinInfo:GetSkinName());
         SetSIcon(cfg.icon);
@@ -110,6 +91,55 @@ function Refresh(_data, _elseData)
     end
 end
 
+function SetTagIcons()
+    local tagIdx=0;
+    local hotType=this.data:HasDiscountTag();
+    local icons,lIds=nil,nil;
+    if hotType~=nil then
+        icons=icons or {};
+        lIds=lIds or {};
+        if hotType==2 or hotType==4 then
+            table.insert(icons,"img_25_09");
+            table.insert(lIds,18169);
+        end
+        if hotType==3 or hotType==4 then
+            table.insert(icons,"img_25_10");
+            table.insert(lIds,18170);
+        end
+    end
+    -- 特殊标签
+    local icons2, lIds2 = skinInfo:GetTagIcons(true);
+    if icons2~=nil then
+        icons=icons or {};
+        lIds=lIds or {};
+        for i, v in ipairs(icons2) do
+            table.insert(icons,v);
+            table.insert(lIds,lIds2[i]);
+        end
+    end
+    if icons ~= nil then
+        -- LogError(skinInfo:GetSkinName().."\t"..table.tostring(icons))
+        for i, v in ipairs(icons) do
+            CSAPI.SetGOActive(this[("tagIcon" .. i)], true)
+            ResUtil.Tag:Load(this[("tagIcon" .. i)], v);
+            CSAPI.SetText(this["txtTagIcon" .. i], tostring(LanguageMgr:GetByID(lIds[i])));
+            -- if lIds[i] == 18146 then
+            --     CSAPI.SetTextColorByCode(this["txtTagIcon" .. i], "AA5324");
+            -- else
+            --     CSAPI.SetTextColorByCode(this["txtTagIcon" .. i], "A9C4F5");
+            -- end
+        end
+    end
+    tagIdx=icons==nil and 0 or #icons
+    if tagIdx < 5 then
+        local index = tagIdx +1;
+        for i = index, 5 do
+            CSAPI.SetGOActive(this[("tagIcon" .. i)], false)
+        end
+    end
+end
+
+
 function SetOrgPrice()
     if this.data ~= nil then
         if this.data:IsOver() then
@@ -119,41 +149,42 @@ function SetOrgPrice()
             end
         end
         local orgCosts = this.data:GetOrgCosts();
-        CSAPI.SetGOActive(discountInfo, orgCosts ~= nil);
+        local orgNum=orgCosts~=nil and #orgCosts or 0;
+        CSAPI.SetGOActive(discountInfo, orgNum >0);
+        CSAPI.SetGOActive(discountLayout1, orgNum >0);
+        CSAPI.SetGOActive(discountLayout2, orgNum >1);
         if orgCosts ~= nil then
-            CSAPI.SetText(txt_discount2, tostring(orgCosts[2]));
             -- 计算倒计时
             local timeTips = this.data:GetOrgEndBuyTips()
             CSAPI.SetGOActive(dsInfo2, timeTips ~= nil)
             if timeTips then
                 CSAPI.SetText(txtDSTime, timeTips);
             end
-            if orgCosts[1] ~= -1 then
-                CSAPI.SetGOActive(dsMoneyIcon, true);
-                CSAPI.SetGOActive(txt_dsRmb, false);
-                local cfg = Cfgs.ItemInfo:GetByID(orgCosts[1], true);
-                if cfg and cfg.icon then
-                    ResUtil.IconGoods:Load(dsMoneyIcon, cfg.icon .. "_1");
+            for i, v in ipairs(orgCosts) do
+                CSAPI.SetText(this["txt_dsVal"..i], tostring(v[2]));
+                if v[1] ~= -1 then
+                    CSAPI.SetGOActive(this["dsMoneyIcon"..i], true);
+                    CSAPI.SetGOActive(this["txt_dsRmb"..i], false);
+                    local cfg = Cfgs.ItemInfo:GetByID(v[1], true);
+                    if cfg and cfg.icon then
+                        ResUtil.IconGoods:Load(this["dsMoneyIcon"..i], cfg.icon .. "_1");
+                    else
+                        LogError("道具商店：读取物品的价格Icon出错！Cfg:" .. tostring(cfg));
+                    end
                 else
-                    LogError("道具商店：读取物品的价格Icon出错！Cfg:" .. tostring(cfg));
+                    CSAPI.SetText(this["txt_dsRmb"..i], this.data:GetCurrencySymbols(true));
+                    CSAPI.SetGOActive(this["dsMoneyIcon"..i], false);
+                    CSAPI.SetGOActive(this["txt_dsRmb"..i], true);
                 end
-            else
-                CSAPI.SetText(txt_dsRmb, this.data:GetCurrencySymbols(true));
-                CSAPI.SetGOActive(dsMoneyIcon, false);
-                CSAPI.SetGOActive(txt_dsRmb, true);
-            end
-            -- CSAPI.SetTextColorByCode(txt_price,"FFC146");
-            -- CSAPI.SetTextColorByCode(txt_rmb,"FFC146");
-            -- CSAPI.SetTextColorByCode(txt_rmbVal,"FFC146");
-            -- CSAPI.SetTextColorByCode(txt_price3,"FFC146");
-            if #orgCosts == 3 then
-                CSAPI.SetTextColorByCode(this["pnIcon" .. orgCosts[3]], "FFC146");
-                CSAPI.SetTextColorByCode(this["txt_dPrice" .. orgCosts[3]], "FFC146");
-            else
-                CSAPI.SetTextColorByCode(pnIcon1, "FFFFFF");
-                CSAPI.SetTextColorByCode(pnIcon2, "FFFFFF");
-                CSAPI.SetTextColorByCode(txt_dPrice1, "FFFFFF");
-                CSAPI.SetTextColorByCode(txt_dPrice2, "FFFFFF");
+                if #v == 3 then
+                    CSAPI.SetTextColorByCode(this["pnIcon" .. v[3]], "FFC146");
+                    CSAPI.SetTextColorByCode(this["txt_dPrice" .. v[3]], "FFC146");
+                else
+                    CSAPI.SetTextColorByCode(pnIcon1, "FFFFFF");
+                    CSAPI.SetTextColorByCode(pnIcon2, "FFFFFF");
+                    CSAPI.SetTextColorByCode(txt_dPrice1, "FFFFFF");
+                    CSAPI.SetTextColorByCode(txt_dPrice2, "FFFFFF");
+                end
             end
         else
             CSAPI.SetTextColorByCode(pnIcon1, "FFFFFF");

@@ -1,4 +1,4 @@
-local Screen = UnityEngine.Screen
+﻿local Screen = UnityEngine.Screen
 function Awake()
     adjustSlider = ComUtil.GetCom(slider, "Slider")
     adjustSlider.minValue = g_CardLookScale[1]

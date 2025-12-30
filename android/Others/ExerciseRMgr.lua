@@ -1,4 +1,4 @@
-require "ExerciseFriendTool" -- 管理邀请或被邀请的数据
+﻿require "ExerciseFriendTool" -- 管理邀请或被邀请的数据
 local this = MgrRegister("ExerciseRMgr")
 
 function this:Clear()

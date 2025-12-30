@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     eventMgr = ViewEvent.New();
     eventMgr:AddListener(EventType.Dungeon_InfoPanel_Update, OnPanelUpdate)

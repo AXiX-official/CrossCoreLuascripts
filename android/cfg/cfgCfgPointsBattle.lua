@@ -1,4 +1,4 @@
-_G["CfgPointsBattle"]={{["sOpenTime"]="2025/5/15 12:00:01",["index"]=1,["id"]=1,["jAwardId"]={{10001,4000,2}
+﻿_G["CfgPointsBattle"]={{["sOpenTime"]="2025/5/15 12:00:01",["index"]=1,["id"]=1,["jAwardId"]={{10001,4000,2}
 }
 ,["aFinishIds"]={250001}
 ,["key"]="1",["sCloseTime"]="2025/06/25 03:00:00",["nTransferPath"]=13149,["sName"]="天启难度累计获得200积分",["sDescription"]="天启难度累计获得200积分",["nGroup"]=4007}

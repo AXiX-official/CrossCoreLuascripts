@@ -1,4 +1,4 @@
---特殊勘探活动界面
+﻿--特殊勘探活动界面
 local progress=nil;
 local curDatas={};
 local slider=nil;

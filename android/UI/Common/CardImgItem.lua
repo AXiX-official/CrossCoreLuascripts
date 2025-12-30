@@ -1,4 +1,4 @@
--- 角色立绘大图 （管理点击音效）
+﻿-- 角色立绘大图 （管理点击音效）
 local isInit = false
 local isActive = true
 local imgScale = 1

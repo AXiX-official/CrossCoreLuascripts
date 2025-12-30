@@ -1,4 +1,4 @@
---角色插画类,用于显示插画和插画表情、气泡
+﻿--角色插画类,用于显示插画和插画表情、气泡
 local size={0,0}
 local rect=nil;
 local pivot=nil;

@@ -1,4 +1,4 @@
---道具池奖励描述界面
+﻿--道具池奖励描述界面
 local items={};
 local leftPanel=nil;
 local leftInfos={};

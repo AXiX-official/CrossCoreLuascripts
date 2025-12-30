@@ -1,4 +1,4 @@
-local timer = nil
+﻿local timer = nil
 
 function Awake()
     anim_node = ComUtil.GetCom(node, "Animator")

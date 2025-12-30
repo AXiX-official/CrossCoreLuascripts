@@ -1,4 +1,4 @@
-local cardData = nil;
+﻿local cardData = nil;
 local slider = nil;
 local current = 0;
 local max = 0;

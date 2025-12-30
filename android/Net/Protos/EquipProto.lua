@@ -1,4 +1,4 @@
-EquipProto = {
+﻿EquipProto = {
 	EquipSetNewCallBack = nil,--装备设置是否为新完成回调
 }
 

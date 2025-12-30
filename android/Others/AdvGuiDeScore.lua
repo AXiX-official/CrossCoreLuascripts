@@ -1,4 +1,4 @@
-
+﻿
 ---海外引导评分
 AdvGuiDeScore={}
 local this=AdvGuiDeScore;

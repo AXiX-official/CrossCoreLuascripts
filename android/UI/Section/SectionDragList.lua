@@ -1,4 +1,4 @@
---章节拖拽面板
+﻿--章节拖拽面板
 local items = {} --当前显示的item列表
 local displayItems={} --当前隐藏的item列表
 local topItem = nil

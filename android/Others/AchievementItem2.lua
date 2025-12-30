@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local isList = false
 local slider = nil
 local rewardItems = nil

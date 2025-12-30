@@ -1,4 +1,4 @@
-_G["CfgEquipExp"]={{["id"]=1,["key"]="1",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=75,["nMaterialCost"]=750,["nExp"]=100,["nCurLevel"]=0,["nMaterialExp"]=50}
+﻿_G["CfgEquipExp"]={{["id"]=1,["key"]="1",["tInfos"]={{["nNextLevel"]=1,["nSellPrice"]=75,["nMaterialCost"]=750,["nExp"]=100,["nCurLevel"]=0,["nMaterialExp"]=50}
 ,{["nNextLevel"]=2,["nSellPrice"]=150,["nMaterialCost"]=1500,["nExp"]=150,["nCurLevel"]=1,["nMaterialExp"]=100}
 ,{["nNextLevel"]=3,["nSellPrice"]=375,["nMaterialCost"]=1500,["nExp"]=200,["nCurLevel"]=2,["nMaterialExp"]=250}
 ,{["nNextLevel"]=4,["nSellPrice"]=675,["nMaterialCost"]=1500,["nExp"]=250,["nCurLevel"]=3,["nMaterialExp"]=450}

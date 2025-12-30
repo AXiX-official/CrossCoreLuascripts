@@ -1,4 +1,4 @@
-function Awake()    
+﻿function Awake()    
     --goRT = CSAPI.GetGlobalGO("UIEffRT");
     CSAPI.SetCameraRenderTarget(gameObject,goRT);
 

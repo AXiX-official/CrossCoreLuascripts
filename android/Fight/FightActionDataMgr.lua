@@ -1,4 +1,4 @@
---战斗数据管理器
+﻿--战斗数据管理器
 local this = {};
 FightActionDataMgr = this;
 

@@ -1,4 +1,4 @@
---渠道工具类,用于发送各种SDK相关的HTTP post请求 
+﻿--渠道工具类,用于发送各种SDK相关的HTTP post请求 
 local this={};
 local gameId="1";
 local signType={ --SDK访问的渠道对应关键字

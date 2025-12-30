@@ -1,4 +1,4 @@
---卡牌简单头像
+﻿--卡牌简单头像
 function Awake()
     starBar = ComUtil.GetCom(star, "BarBase");
 	Clean()

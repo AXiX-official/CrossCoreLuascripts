@@ -1,9 +1,9 @@
-DormRoleActionMove = oo.class(DormRoleActionBase)
+﻿DormRoleActionMove = oo.class(DormRoleActionBase)
 
 local this = DormRoleActionMove
 
 function this:Enter()
-    self.dormRole.dormRoleStateMachine:PlayByActionType(DormAction2.walk)
+    self.dormRole.dormRoleStateMachine:PlayByActionType("walk")
     self.dormRole.RandomToMove() -- 随机移动
     self.oldPos = nil  --cao ni ma
     self.isEnter = true
@@ -38,7 +38,7 @@ end
 function this:OnComplete()
     self.isEnter = false
     if (self.dormRole.IsRobot()) then
-        local action, dormAction2 = Dorm_GetActionType(DormAction2.walk, self.dormRole)
+        local action, dormAction2 = Dorm_GetActionType("walk", self.dormRole)
         self.dormRole.ChangeAction(action, dormAction2)
     else
         self.dormRole.dormRoleStateMachine:ChangeSpeedToValue(0, function()
@@ -48,7 +48,7 @@ function this:OnComplete()
 end
 
 function this:ChangeSpeedToValueCB()
-    local action, dormAction2 = Dorm_GetActionType(DormAction2.walk, self.dormRole)
+    local action, dormAction2 = Dorm_GetActionType("walk", self.dormRole)
     self.dormRole.ChangeAction(action, dormAction2)
 end
 

@@ -1,4 +1,4 @@
---道具池奖励格子
+﻿--道具池奖励格子
 local gridItem=nil;
 function Awake()
     local go = ResUtil:CreateUIGO("Grid/GridItem", gridNode.transform)

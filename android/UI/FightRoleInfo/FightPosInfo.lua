@@ -1,4 +1,4 @@
---战斗站位信息父物体
+﻿--战斗站位信息父物体
 local data=nil;
 local items={};
 local gridPadding=2;

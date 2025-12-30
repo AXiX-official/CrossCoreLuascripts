@@ -1,4 +1,4 @@
-_G["CfgRolePosEnum"]={{["key"]="1",["id"]=1,["sName"]="护盾",["icon"]="1",["sortIcon"]={{1,"RolePos/1",1.2,0.3}
+﻿_G["CfgRolePosEnum"]={{["key"]="1",["id"]=1,["sName"]="护盾",["icon"]="1",["sortIcon"]={{1,"RolePos/1",1.2,0.3}
 }
 }
 ,{["key"]="2",["id"]=2,["sName"]="输出",["icon"]="2",["sortIcon"]={{1,"RolePos/2",1.2,0.3}

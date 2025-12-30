@@ -1,4 +1,4 @@
---宠物状态基类
+﻿--宠物状态基类
 local this=oo.class()
 
 function this:Init(_tweenType,_view)

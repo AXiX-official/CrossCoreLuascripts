@@ -1,4 +1,4 @@
---宠物的有限状态机管理
+﻿--宠物的有限状态机管理
 local this={};
 
 function this.New()

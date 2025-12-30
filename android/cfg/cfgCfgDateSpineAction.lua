@@ -1,4 +1,4 @@
-_G["CfgDateSpineAction"]={[1000167]={["l2dName"]="CG0064_WoodlandSearch_spine",["l2dPos"]={0,0,1}
+﻿_G["CfgDateSpineAction"]={[1000167]={["l2dName"]="CG0064_WoodlandSearch_spine",["l2dPos"]={0,0,1}
 ,["id"]=1000167,["key"]=1000167,["item"]={{["index"]=1,["sType"]=2,["areas"]={{506.6,-41.5,325.26,359.33,0}
 }
 ,["gesture"]=0,["nextId"]=1000165}

@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local mapView = nil
 local currHardLv = 0
 local loadCB = nil -- 检测阶段任务弹窗回调

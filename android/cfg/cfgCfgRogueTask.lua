@@ -1,4 +1,4 @@
-_G["CfgRogueTask"]={{["key"]=1,["aFinishIds"]={102001}
+﻿_G["CfgRogueTask"]={{["key"]=1,["aFinishIds"]={102001}
 ,["sDescription"]="通关新人难度",["jAwardId"]={{10001,40000,2}
 ,{10003,20000,2}
 }

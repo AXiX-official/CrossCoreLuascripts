@@ -1,4 +1,4 @@
---装备套装选择框
+﻿--装备套装选择框
 local layout=nil;
 local condition=nil;
 local currEquip=nil;--当前选中的装备

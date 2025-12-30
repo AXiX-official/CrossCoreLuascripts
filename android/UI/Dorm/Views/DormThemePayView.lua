@@ -1,4 +1,4 @@
--- 主题购买
+﻿-- 主题购买
 function Awake()
 
     layout = ComUtil.GetCom(vsv, "UIInfinite")

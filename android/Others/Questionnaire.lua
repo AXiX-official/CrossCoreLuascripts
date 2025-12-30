@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     eventMgr = ViewEvent.New()
     eventMgr:AddListener(EventType.Menu_Questionnaire, RefreshPanel)
 end

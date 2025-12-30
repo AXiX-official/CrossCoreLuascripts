@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
    viewCommon = oo.class(ViewCommonBase);
    viewCommon:Init(this);
    DoInAction();

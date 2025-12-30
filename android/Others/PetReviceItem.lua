@@ -1,4 +1,4 @@
---宠物奖励物体
+﻿--宠物奖励物体
 local data=nil;
 local grids=nil;
 local reviceGrid=nil;

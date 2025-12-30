@@ -1,4 +1,4 @@
-local id
+﻿local id
 
 function Awake()
     cg_icon = ComUtil.GetCom(icon, "CanvasGroup")

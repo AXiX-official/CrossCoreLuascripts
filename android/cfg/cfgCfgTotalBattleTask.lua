@@ -1,4 +1,4 @@
-_G["CfgTotalBattleTask"]={[11103]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关波拉克斯困难模式",["id"]=11103,["jAwardId"]={{10102,100,2}
+﻿_G["CfgTotalBattleTask"]={[11103]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关波拉克斯困难模式",["id"]=11103,["jAwardId"]={{10102,100,2}
 }
 ,["aFinishIds"]={104003}
 ,["key"]=11103,["nTransferPath"]=13039,["sCloseTime"]="2024/8/19 03:00:00",["index"]=3,["sName"]="十二宫3"}
@@ -110,6 +110,115 @@ _G["CfgTotalBattleTask"]={[11103]={["sOpenTime"]="2024/2/7 10:00:01",["sDescript
 }
 ,["aFinishIds"]={104030}
 ,["key"]=11130,["nTransferPath"]=13039,["sCloseTime"]="2024/8/19 03:00:00",["index"]=30,["sName"]="十二宫30"}
+,[11401]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座简单模式",["id"]=11401,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480001}
+,["key"]=11401,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=1,["sName"]="十二宫1"}
+,[11402]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座普通模式",["id"]=11402,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480002}
+,["key"]=11402,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=2,["sName"]="十二宫2"}
+,[11403]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座困难模式",["id"]=11403,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480003}
+,["key"]=11403,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=3,["sName"]="十二宫3"}
+,[11404]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座地狱模式",["id"]=11404,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480004}
+,["key"]=11404,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=4,["sName"]="十二宫4"}
+,[11405]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币500个",["id"]=11405,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480005}
+,["key"]=11405,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=5,["sName"]="十二宫5"}
+,[11406]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币1000个",["id"]=11406,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480006}
+,["key"]=11406,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=6,["sName"]="十二宫6"}
+,[11407]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币1500个",["id"]=11407,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480007}
+,["key"]=11407,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=7,["sName"]="十二宫7"}
+,[11408]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币2000个",["id"]=11408,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480008}
+,["key"]=11408,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=8,["sName"]="十二宫8"}
+,[11409]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币2500个",["id"]=11409,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480009}
+,["key"]=11409,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=9,["sName"]="十二宫9"}
+,[11410]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币3000个",["id"]=11410,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480010}
+,["key"]=11410,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=10,["sName"]="十二宫10"}
+,[11411]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币3500个",["id"]=11411,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480011}
+,["key"]=11411,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=11,["sName"]="十二宫11"}
+,[11412]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币4000个",["id"]=11412,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480012}
+,["key"]=11412,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=12,["sName"]="十二宫12"}
+,[11413]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币4500个",["id"]=11413,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480013}
+,["key"]=11413,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=13,["sName"]="十二宫13"}
+,[11414]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币5000个",["id"]=11414,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480014}
+,["key"]=11414,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=14,["sName"]="十二宫14"}
+,[11415]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币5500个",["id"]=11415,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480015}
+,["key"]=11415,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=15,["sName"]="十二宫15"}
+,[11416]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="获得代币6000个",["id"]=11416,["jAwardId"]={{10102,200,2}
+,{29096,1,2}
+}
+,["aFinishIds"]={480016}
+,["key"]=11416,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=16,["sName"]="十二宫16"}
+,[11417]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到160000",["id"]=11417,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480017}
+,["key"]=11417,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=17,["sName"]="十二宫17"}
+,[11418]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到500000",["id"]=11418,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480018}
+,["key"]=11418,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=18,["sName"]="十二宫18"}
+,[11419]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到1000000",["id"]=11419,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480019}
+,["key"]=11419,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=19,["sName"]="十二宫19"}
+,[11420]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到1500000",["id"]=11420,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480020}
+,["key"]=11420,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=20,["sName"]="十二宫20"}
+,[11421]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到2000000",["id"]=11421,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480021}
+,["key"]=11421,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=21,["sName"]="十二宫21"}
+,[11422]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到2500000",["id"]=11422,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480022}
+,["key"]=11422,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=22,["sName"]="十二宫22"}
+,[11423]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到3000000",["id"]=11423,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480023}
+,["key"]=11423,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=23,["sName"]="十二宫23"}
+,[11424]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到3500000",["id"]=11424,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480024}
+,["key"]=11424,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=24,["sName"]="十二宫24"}
+,[11425]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到4000000",["id"]=11425,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480025}
+,["key"]=11425,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=25,["sName"]="十二宫25"}
+,[11426]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到4500000",["id"]=11426,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480026}
+,["key"]=11426,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=26,["sName"]="十二宫26"}
+,[11427]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关摩羯座积分达到5000000",["id"]=11427,["jAwardId"]={{10102,200,2}
+}
+,["aFinishIds"]={480027}
+,["key"]=11427,["nTransferPath"]=13039,["sCloseTime"]="2026/2/4 03:00:00",["index"]=27,["sName"]="十二宫27"}
 ,[11301]={["sOpenTime"]="2024/2/7 10:00:01",["sDescription"]="通关巨蟹座-泰坦简单模式",["id"]=11301,["jAwardId"]={{10102,200,2}
 }
 ,["aFinishIds"]={350001}

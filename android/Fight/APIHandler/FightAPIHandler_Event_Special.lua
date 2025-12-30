@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --特殊的处理API组事件
 function this:Handle(data)

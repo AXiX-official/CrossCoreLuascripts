@@ -1,4 +1,4 @@
---勘探活动数据
+﻿--勘探活动数据
 local this = {}
 
 function this.New()

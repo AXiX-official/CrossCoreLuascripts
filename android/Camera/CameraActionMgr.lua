@@ -1,4 +1,4 @@
---镜头控制管理
+﻿--镜头控制管理
 
 local CameraActionDatas = require "CameraActionDatas";
 

@@ -1,4 +1,4 @@
-BuffBattleMgr = MgrRegister("BuffBattleMgr")
+﻿BuffBattleMgr = MgrRegister("BuffBattleMgr")
 local this = BuffBattleMgr
 
 function this:Init()

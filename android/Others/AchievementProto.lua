@@ -1,4 +1,4 @@
-AchievementProto = {}
+﻿AchievementProto = {}
 
 --获取成就的数据
 function AchievementProto:GetFinishInfo()

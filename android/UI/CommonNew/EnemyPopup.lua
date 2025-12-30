@@ -1,4 +1,4 @@
-
+﻿
 function OnOpen()
     if data then
         --显示敌人立绘

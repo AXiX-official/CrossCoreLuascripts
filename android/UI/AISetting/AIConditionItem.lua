@@ -1,4 +1,4 @@
-function Refresh(_data,_isSelect,_callBack)
+﻿function Refresh(_data,_isSelect,_callBack)
     this.index=_data.index;
     this.callBack=_callBack;
     CSAPI.SetText(txt,tostring(_data.txt));

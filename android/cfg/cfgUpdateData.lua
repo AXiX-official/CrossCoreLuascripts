@@ -1,4 +1,4 @@
-_G["UpdateData"]={[20141]={["id"]=20141,["TE_event"]="after_login",["key"]=20141}
+﻿_G["UpdateData"]={[20141]={["id"]=20141,["TE_event"]="after_login",["key"]=20141}
 ,[20145]={["id"]=20145,["TE_event"]="after_login",["key"]=20145}
 ,[20149]={["id"]=20149,["TE_event"]="after_login",["key"]=20149}
 ,[20153]={["id"]=20153,["TE_event"]="after_login",["key"]=20153}

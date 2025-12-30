@@ -1,4 +1,4 @@
--- 副本管理
+﻿-- 副本管理
 -- DungeonMgr = {};
 -- local this = DungeonMgr;
 DungeonMgr = MgrRegister("DungeonMgr")

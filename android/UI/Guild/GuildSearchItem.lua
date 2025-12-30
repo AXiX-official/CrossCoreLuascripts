@@ -1,4 +1,4 @@
---公会搜索子物体
+﻿--公会搜索子物体
 local isRequest=false; --是否申请过
 local data=nil;
 local elseData=nil;

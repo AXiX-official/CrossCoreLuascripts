@@ -1,4 +1,4 @@
-local inpName = nil
+﻿local inpName = nil
 local playerName = ""
 local currLSel = 1
 local itemId = 25001

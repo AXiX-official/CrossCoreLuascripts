@@ -1,4 +1,4 @@
-_G["CfgResourcesRecovery"]={[11]={["key"]=1,["cost"]={10002,50}
+﻿_G["CfgResourcesRecovery"]={[11]={["key"]=1,["cost"]={10002,50}
 ,["id"]=11,["rewards"]={{10003,420000,2}
 ,{10001,420000,2}
 ,{2000401,11,2}

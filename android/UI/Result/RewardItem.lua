@@ -1,4 +1,4 @@
-local itemScale = nil
+﻿local itemScale = nil
 local imgScale = nil
 local imgFade = nil
 local objFade = nil

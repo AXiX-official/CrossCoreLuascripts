@@ -1,4 +1,4 @@
-curIndex1, curIndex2 = 1, 1 -- 对应  StringConstant.Exercise61
+﻿curIndex1, curIndex2 = 1, 1 -- 对应  StringConstant.Exercise61
 local timer = 1
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")

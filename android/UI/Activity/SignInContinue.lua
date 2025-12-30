@@ -1,4 +1,4 @@
-local curIndex = 1
+﻿local curIndex = 1
 local key = nil
 local items = {}
 local descFade = nil

@@ -1,4 +1,4 @@
-local needToCheckMove = false
+﻿local needToCheckMove = false
 local timer = 0
 
 function Awake()

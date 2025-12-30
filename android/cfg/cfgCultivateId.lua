@@ -1,4 +1,4 @@
-_G["CultivateId"]={{["numChipQuality"]=0,["numCardLevel"]=10,["key"]=1,["numGift"]=0,["id"]=1,["name"]="关卡养成值1",["numChipLevel"]=0,["numSkill"]=15}
+﻿_G["CultivateId"]={{["numChipQuality"]=0,["numCardLevel"]=10,["key"]=1,["numGift"]=0,["id"]=1,["name"]="关卡养成值1",["numChipLevel"]=0,["numSkill"]=15}
 ,{["numChipQuality"]=0,["numCardLevel"]=10,["key"]=2,["numGift"]=0,["id"]=2,["name"]="关卡养成值2",["numChipLevel"]=0,["numSkill"]=15}
 ,{["numChipQuality"]=0,["numCardLevel"]=15,["key"]=3,["numGift"]=0,["id"]=3,["name"]="关卡养成值3",["numChipLevel"]=0,["numSkill"]=15}
 ,{["numChipQuality"]=0,["numCardLevel"]=25,["key"]=4,["numGift"]=0,["id"]=4,["name"]="关卡养成值4",["numChipLevel"]=0,["numSkill"]=15}
@@ -235,5 +235,15 @@ _G["CultivateId"]={{["numChipQuality"]=0,["numCardLevel"]=10,["key"]=1,["numGift
 ,{["numChipQuality"]=125,["numCardLevel"]=400,["key"]=235,["numGift"]=60,["id"]=235,["name"]="关卡养成值235",["numChipLevel"]=375,["numSkill"]=60}
 ,{["numChipQuality"]=125,["numCardLevel"]=400,["key"]=236,["numGift"]=60,["id"]=236,["name"]="关卡养成值236",["numChipLevel"]=375,["numSkill"]=60}
 ,{["numChipQuality"]=125,["numCardLevel"]=400,["key"]=237,["numGift"]=60,["id"]=237,["name"]="关卡养成值237",["numChipLevel"]=375,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=405,["key"]=238,["numGift"]=60,["id"]=238,["name"]="关卡养成值238",["numChipLevel"]=325,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=410,["key"]=239,["numGift"]=60,["id"]=239,["name"]="关卡养成值239",["numChipLevel"]=325,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=415,["key"]=240,["numGift"]=60,["id"]=240,["name"]="关卡养成值240",["numChipLevel"]=325,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=420,["key"]=241,["numGift"]=60,["id"]=241,["name"]="关卡养成值241",["numChipLevel"]=325,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=425,["key"]=242,["numGift"]=60,["id"]=242,["name"]="关卡养成值242",["numChipLevel"]=325,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=405,["key"]=243,["numGift"]=60,["id"]=243,["name"]="关卡养成值243",["numChipLevel"]=375,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=410,["key"]=244,["numGift"]=60,["id"]=244,["name"]="关卡养成值244",["numChipLevel"]=375,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=415,["key"]=245,["numGift"]=60,["id"]=245,["name"]="关卡养成值245",["numChipLevel"]=375,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=420,["key"]=246,["numGift"]=60,["id"]=246,["name"]="关卡养成值246",["numChipLevel"]=375,["numSkill"]=60}
+,{["numChipQuality"]=125,["numCardLevel"]=425,["key"]=247,["numGift"]=60,["id"]=247,["name"]="关卡养成值247",["numChipLevel"]=375,["numSkill"]=60}
 }
 

@@ -1,4 +1,4 @@
-_G["CfgCardRoleAbilityPool"]={[15003]={["type"]=34,["id"]=15003,["repleaceType"]=6,["key"]="15003",["arr"]={{["index"]=1,["group"]=151,["roleLvMin"]=1,["roleLvMax"]=30,["desc"]="驻扎【合成工厂】时，增加4%合成【小队素材】产出副产品的概率。",["remarks"]="素材工匠",["modTired"]=0,["valArrs"]={{1,4}
+﻿_G["CfgCardRoleAbilityPool"]={[15003]={["type"]=34,["id"]=15003,["repleaceType"]=6,["key"]="15003",["arr"]={{["index"]=1,["group"]=151,["roleLvMin"]=1,["roleLvMax"]=30,["desc"]="驻扎【合成工厂】时，增加4%合成【小队素材】产出副产品的概率。",["remarks"]="素材工匠",["modTired"]=0,["valArrs"]={{1,4}
 }
 ,["repleaceVal"]=1}
 ,{["index"]=2,["group"]=151,["roleLvMin"]=31,["roleLvMax"]=70,["desc"]="驻扎【合成工厂】时，增加6%合成【小队素材】产出副产品的概率。",["remarks"]="素材工匠",["modTired"]=0,["valArrs"]={{1,6}

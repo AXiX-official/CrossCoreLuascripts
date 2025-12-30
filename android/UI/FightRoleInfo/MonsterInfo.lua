@@ -1,4 +1,4 @@
---怪物信息
+﻿--怪物信息
 local this={}
 
 function this.New()

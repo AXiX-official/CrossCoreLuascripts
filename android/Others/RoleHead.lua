@@ -1,4 +1,4 @@
--- 头像框+表frame_effectObj
+﻿-- 头像框+表frame_effectObj
 local frame_effectObj
 local head_effectObj
 

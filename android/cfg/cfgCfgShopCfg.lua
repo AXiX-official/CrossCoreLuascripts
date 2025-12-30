@@ -1,4 +1,4 @@
-_G["CfgShopCfg"]={[30002]={["sDesc"]="突破界限",["nResetValue"]=0,["nResetType"]=0,["jGets"]={{10001,2000,2}
+﻿_G["CfgShopCfg"]={[30002]={["sDesc"]="突破界限",["nResetValue"]=0,["nResetType"]=0,["jGets"]={{10001,2000,2}
 ,{17007,20,2}
 ,{11005,10,2}
 }

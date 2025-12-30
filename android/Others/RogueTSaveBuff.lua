@@ -1,4 +1,4 @@
-local curLIndex = 1
+﻿local curLIndex = 1
 local curTopIndex = 1
 --local toSaveBuff
 local isMax, idx = false, 1

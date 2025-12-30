@@ -1,4 +1,4 @@
-local mainCfg = nil
+﻿local mainCfg = nil
 local endTime = nil
 local isPlay = false
 local len = nil

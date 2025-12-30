@@ -1,4 +1,4 @@
---队伍选择面板
+﻿--队伍选择面板
 local currDungeonID=nil;
 local teamItems={};
 local teamMax=1;

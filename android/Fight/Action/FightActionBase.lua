@@ -1,4 +1,4 @@
-FightActionBase = oo.class();
+﻿FightActionBase = oo.class();
 
 local this = FightActionBase;
 

@@ -1,4 +1,4 @@
-_G["CfgDySetOpenCfgs"]={["CfgActiveEntry"]={["id"]="CfgActiveEntry",["fields"]={{["index"]=1,["field_type"]="number",["desc"]="是否在主界面显示",["field"]="mainShow"}
+﻿_G["CfgDySetOpenCfgs"]={["CfgActiveEntry"]={["id"]="CfgActiveEntry",["fields"]={{["index"]=1,["field_type"]="number",["desc"]="是否在主界面显示",["field"]="mainShow"}
 ,{["index"]=2,["field_type"]="string",["desc"]="开始时间",["field"]="begTime"}
 ,{["index"]=3,["field_type"]="string",["desc"]="困难本开启时间",["field"]="hardBegTime"}
 ,{["index"]=4,["field_type"]="string",["desc"]="副本关闭时间",["field"]="battleendTime"}

@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --�������ҷ�����
 this.myNetTeamId = 1;

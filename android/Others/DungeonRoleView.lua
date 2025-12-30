@@ -1,4 +1,4 @@
-local sectionData = nil
+﻿local sectionData = nil
 local canvasHeight = 0
 local openInfo = nil
 local jumpID = 0

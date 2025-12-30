@@ -1,4 +1,4 @@
---伤害面板
+﻿--伤害面板
 function OnInit()
 	eventMgr = ViewEvent.New()
 	eventMgr:AddListener(EventType.TeamBoss_Room_Update, RoomeUpdate)

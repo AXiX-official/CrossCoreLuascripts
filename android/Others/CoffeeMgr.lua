@@ -1,4 +1,4 @@
-local this = MgrRegister("CoffeeMgr")
+﻿local this = MgrRegister("CoffeeMgr")
 
 function this:Init()
     self:Clear()

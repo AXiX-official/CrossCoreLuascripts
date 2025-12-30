@@ -1,4 +1,4 @@
-local layout = nil
+﻿local layout = nil
 local sectionData =nil
 local curDatas = {}
 local selItem = nil

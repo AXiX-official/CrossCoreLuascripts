@@ -1,4 +1,4 @@
-_G["CfgDupStory"]={[92008]={["sOpenTime"]="2024/1/17 12:00:01",["sDescription"]="通关真假惊魂夜普通-看门犬",["id"]=92008,["jAwardId"]={{10015,30,2}
+﻿_G["CfgDupStory"]={[92008]={["sOpenTime"]="2024/1/17 12:00:01",["sDescription"]="通关真假惊魂夜普通-看门犬",["id"]=92008,["jAwardId"]={{10015,30,2}
 }
 ,["aFinishIds"]={92008}
 ,["key"]=92008,["nTransferPath"]=12009,["sName"]="电影惊魂8",["sCloseTime"]="2025/10/15 03:00:00",["nGroup"]=3001}

@@ -1,4 +1,4 @@
-local assistData = nil
+﻿local assistData = nil
 local teamData = nil
 
 function SetIndex(_index, _len, _optionDatas)

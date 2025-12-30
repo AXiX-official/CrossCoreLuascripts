@@ -1,4 +1,4 @@
-_G["CfgCardPropertyEnum"]={{["icon2"]="1_1",["icon"]="1",["key"]="1",["sFieldName"]="attack",["id"]=1,["sName"]="攻击",["sName2"]="攻击"}
+﻿_G["CfgCardPropertyEnum"]={{["icon2"]="1_1",["icon"]="1",["key"]="1",["sFieldName"]="attack",["id"]=1,["sName"]="攻击",["sName2"]="攻击"}
 ,{["icon2"]="2_1",["icon"]="2",["key"]="2",["sFieldName"]="maxhp",["id"]=2,["sName"]="耐久",["sName2"]="耐久"}
 ,{["icon2"]="3_1",["icon"]="3",["key"]="3",["sFieldName"]="defense",["id"]=3,["sName"]="防御",["sName2"]="防御"}
 ,{["icon2"]="4_1",["icon"]="4",["key"]="4",["sFieldName"]="speed",["id"]=4,["sName"]="机动",["sName2"]="机动"}

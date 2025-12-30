@@ -1,4 +1,4 @@
---带确认取消的提示框
+﻿--带确认取消的提示框
 local canvasGroup = nil;
 local isOpening=false;
 local isHideDailyTips = false

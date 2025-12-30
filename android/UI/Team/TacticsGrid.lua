@@ -1,4 +1,4 @@
---战术格子
+﻿--战术格子
 local data;
 local clickObj=nil;
 function Awake()

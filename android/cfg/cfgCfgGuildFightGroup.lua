@@ -1,4 +1,4 @@
-_G["CfgGuildFightGroup"]={{["id"]=1,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
+﻿_G["CfgGuildFightGroup"]={{["id"]=1,["infos"]={{["rankGroup"]="A",["endIx"]=2000,["winMailId"]=3007,["lostRewardId"]=2,["lostMailId"]=3008,["winRewardId"]=1,["index"]=1,["firstFightMailId"]=3001,["sartIx"]=1,["firstFightRewardId"]=1}
 ,{["rankGroup"]="B",["index"]=2,["winMailId"]=3009,["lostMailId"]=3010,["endIx"]=4000,["firstFightRewardId"]=2,["sartIx"]=2001,["firstFightMailId"]=3002}
 ,{["rankGroup"]="C",["index"]=3,["winMailId"]=3011,["lostMailId"]=3012,["endIx"]=6000,["firstFightRewardId"]=3,["sartIx"]=4001,["firstFightMailId"]=3003}
 ,{["rankGroup"]="D",["index"]=4,["winMailId"]=3013,["lostMailId"]=3014,["endIx"]=8000,["firstFightRewardId"]=4,["sartIx"]=6001,["firstFightMailId"]=3004}

@@ -1,4 +1,4 @@
-local selectIndex = 1 -- 打开前选中的索引
+﻿local selectIndex = 1 -- 打开前选中的索引
 local curIndex = 1 -- 当前滑动的索引
 local isDrag = false
 

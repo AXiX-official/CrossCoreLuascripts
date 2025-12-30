@@ -1,4 +1,4 @@
-
+﻿
 function Refresh(sectionData,num)
     local cfg = sectionData:GetCfg()
     if cfg then

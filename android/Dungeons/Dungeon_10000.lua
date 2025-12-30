@@ -1,4 +1,4 @@
-local this = 
+﻿local this = 
 {
 mapid=1000,
 born=0,

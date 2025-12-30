@@ -1,4 +1,4 @@
-local canClick = nil
+﻿local canClick = nil
 
 function Awake()
     animator = ComUtil.GetComInChildren(gameObject, "Animator")

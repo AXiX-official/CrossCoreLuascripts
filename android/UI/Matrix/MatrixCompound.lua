@@ -1,4 +1,4 @@
-curIndex1, curIndex2 = 1, 1
+﻿curIndex1, curIndex2 = 1, 1
 local MatrixCompoundData = require "MatrixCompoundData"
 local selectUD = 1 -- 1:价格 2：品质
 local priceUD = 2 -- 价格  1：由高到高低  2：由低到高

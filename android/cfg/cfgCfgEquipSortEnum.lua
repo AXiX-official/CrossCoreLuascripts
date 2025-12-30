@@ -1,4 +1,4 @@
-_G["CfgEquipSortEnum"]={{["id"]=1,["sName"]="稀有度",["key"]="1"}
+﻿_G["CfgEquipSortEnum"]={{["id"]=1,["sName"]="稀有度",["key"]="1"}
 ,{["id"]=2,["sName"]="等级",["key"]="2"}
 ,{["id"]=3,["sName"]="部位",["key"]="3"}
 ,{["id"]=4,["sName"]="保护",["key"]="4"}

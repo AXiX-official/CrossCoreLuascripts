@@ -1,4 +1,4 @@
-
+﻿
 local isDetail = true
 function OnOpen()
 	cardData = data

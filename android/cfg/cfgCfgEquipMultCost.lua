@@ -1,4 +1,4 @@
-_G["CfgEquipMultCost"]={[5]={["refreshCost"]={{10701,1}
+﻿_G["CfgEquipMultCost"]={[5]={["refreshCost"]={{10701,1}
 }
 ,["mergeAddCost"]={{10703,1}
 }

@@ -1,4 +1,4 @@
---上移补空位
+﻿--上移补空位
 local this = {}
 
 local animTotalTime = 0.7 --动画总时长

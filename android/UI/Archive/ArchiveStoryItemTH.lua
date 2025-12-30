@@ -1,4 +1,4 @@
-local index = 0
+﻿local index = 0
 local isUnLock = false
 local lockIcon = "plot_00"
 local canvasGroup = nil

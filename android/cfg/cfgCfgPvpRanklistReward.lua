@@ -1,4 +1,4 @@
-_G["CfgPvpRanklistReward"]={{["rankShowNum"]="1",["key"]="1",["id"]=1,["rankNum"]={1,1}
+﻿_G["CfgPvpRanklistReward"]={{["rankShowNum"]="1",["key"]="1",["id"]=1,["rankNum"]={1,1}
 ,["mailId"]=15001}
 ,{["rankShowNum"]="2~10",["key"]="2",["id"]=2,["rankNum"]={2,10}
 ,["mailId"]=15002}

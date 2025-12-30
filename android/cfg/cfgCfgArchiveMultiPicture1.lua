@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 'd-多人插图.xlsx',
 	["sheetname"] = '多人插图',
 	["types"] = {

@@ -1,4 +1,4 @@
-local curIndex = 1 -- 左
+﻿local curIndex = 1 -- 左
 local index = nil -- 分页
 
 function Awake()

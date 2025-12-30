@@ -1,4 +1,4 @@
-
+﻿
 --��ɫ������
 CharacterMgr = require "CharacterMgr"
 --��ɫ״̬��

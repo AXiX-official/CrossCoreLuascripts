@@ -1,4 +1,4 @@
-local isStart = false --开始倒计时,必定开始，无法中止
+﻿local isStart = false --开始倒计时,必定开始，无法中止
 local startTime = 0
 local timer = 0
 

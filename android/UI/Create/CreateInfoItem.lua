@@ -1,4 +1,4 @@
-function Refresh(_data, _isSelectPool)
+﻿function Refresh(_data, _isSelectPool)
     quality = _data[1]
     datas = _data[2]
     isSelectPool = _isSelectPool

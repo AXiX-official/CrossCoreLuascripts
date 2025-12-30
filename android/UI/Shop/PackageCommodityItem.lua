@@ -1,4 +1,4 @@
---礼包的商品展示
+﻿--礼包的商品展示
 local descPos={{-94.63,-99},{-94.63,-145.5}}
 local eventMgr=nil;
 local rmbIcon=nil;

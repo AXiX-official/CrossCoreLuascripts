@@ -1,4 +1,4 @@
-_G["CfgArchiveIllustration"]={{["small"]="arch_seashore",["infos"]={{["shopId"]=80401,["board_id"]=2,["index"]=1,["icon"]="arch_seashore"}
+﻿_G["CfgArchiveIllustration"]={{["small"]="arch_seashore",["infos"]={{["shopId"]=80401,["board_id"]=2,["index"]=1,["icon"]="arch_seashore"}
 ,{["shopId"]=80402,["board_id"]=4,["index"]=2,["icon"]="arch_summer_rendezvous"}
 ,{["board_id"]=23,["index"]=3,["icon"]="arch_summer_swimming_party"}
 ,{["shopId"]=80415,["board_id"]=24,["index"]=4,["icon"]="arch_beach_holidays"}
@@ -86,6 +86,7 @@ _G["CfgArchiveIllustration"]={{["small"]="arch_seashore",["infos"]={{["shopId"]=
 ,{["shopId"]=80436,["board_id"]=68,["index"]=5,["icon"]="arch_thin_gorgeous_snow"}
 ,{["board_id"]=97,["index"]=6,["icon"]="arch_jump_for_joy"}
 ,{["shopId"]=80466,["board_id"]=99,["index"]=7,["icon"]="arch_Brilliant_Mirror_Image"}
+,{["board_id"]=104,["index"]=8,["icon"]="mult_A_Night_in_Scarlet"}
 }
 ,["key"]="8",["id"]=8,["name"]="闲适假日"}
 ,{["small"]="arch_law_of_the_streets",["infos"]={{["shopId"]=80419,["board_id"]=39,["index"]=1,["icon"]="arch_law_of_the_streets"}

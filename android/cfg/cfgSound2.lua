@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 's-声音.xlsx',
 	["sheetname"] = '角色皮肤语音',
 	["types"] = {

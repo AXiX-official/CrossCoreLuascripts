@@ -1,4 +1,4 @@
-
+﻿
 --设置数据
 function SetData(data)    
     --CSAPI.PlayUISound("ui_battle_interface_in");

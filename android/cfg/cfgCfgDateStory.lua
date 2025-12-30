@@ -1,4 +1,4 @@
-_G["CfgDateStory"]={[1000245]={["storyType"]=1,["key"]=1000245,["id"]=1000245,["nextId"]={1000246}
+﻿_G["CfgDateStory"]={[1000245]={["storyType"]=1,["key"]=1000245,["id"]=1000245,["nextId"]={1000246}
 ,["talk"]="%s",["talkRoleID"]={100000}
 ,["isLeader"]=1,["showStory"]=2,["content"]="也可以……但不知道你介不介意我们用同一根吸管。",["showIcon"]=1}
 ,[1000246]={["storyType"]=1,["id"]=1000246,["nextId"]={1000247}

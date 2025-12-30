@@ -1,4 +1,4 @@
-function Refresh(_data)
+﻿function Refresh(_data)
 	CSAPI.SetText(txt, _data.titleName)
 end 
 function OnDestroy()    

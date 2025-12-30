@@ -1,4 +1,4 @@
--- 好感度剧情
+﻿-- 好感度剧情
 local curDatas
 local maxLv
 local storyDic

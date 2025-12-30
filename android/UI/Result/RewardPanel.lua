@@ -1,4 +1,4 @@
--- 奖励面板
+﻿-- 奖励面板
 local fullNum = 6; -- 超过这个数量将中心点设置为0,1
 local contentRect = nil;
 local isCanBack = false

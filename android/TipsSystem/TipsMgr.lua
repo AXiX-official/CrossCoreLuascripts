@@ -1,4 +1,4 @@
--- 服务器错误信息处理类
+﻿-- 服务器错误信息处理类
 local this = {
 	tipsMaxCount = 3, -- 飘字最大显示个数
 	disConnectError = { -- 需要断开链接的信息key

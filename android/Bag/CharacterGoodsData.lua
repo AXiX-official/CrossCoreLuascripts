@@ -1,4 +1,4 @@
---角色物品数据
+﻿--角色物品数据
 
 local this =oo.class(GridDataBase);
 --设置角色物品信息

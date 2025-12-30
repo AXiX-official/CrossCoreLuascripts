@@ -1,4 +1,4 @@
--- 拿起时的格子
+﻿-- 拿起时的格子
 local isGreen = true
 local planeType = 1
 

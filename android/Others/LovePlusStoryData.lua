@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 local talkInfo = nil;
 local allRoleInfos = nil;

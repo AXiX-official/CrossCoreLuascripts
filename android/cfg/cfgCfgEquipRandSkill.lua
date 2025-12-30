@@ -1,4 +1,4 @@
-_G["CfgEquipRandSkill"]={{["id"]=1,["infos"]={{["lvCfgId"]=1001,["weight"]=15,["index"]=1,["skillId"]=10101}
+﻿_G["CfgEquipRandSkill"]={{["id"]=1,["infos"]={{["lvCfgId"]=1001,["weight"]=15,["index"]=1,["skillId"]=10101}
 ,{["lvCfgId"]=1001,["weight"]=15,["index"]=2,["skillId"]=10201}
 ,{["lvCfgId"]=1001,["weight"]=15,["index"]=3,["skillId"]=10301}
 ,{["lvCfgId"]=1001,["weight"]=5,["index"]=4,["skillId"]=10401}

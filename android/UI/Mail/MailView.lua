@@ -1,4 +1,4 @@
-local itemName = "Mail/MailItem"
+﻿local itemName = "Mail/MailItem"
 local itemName2 = "Mail/MailItem2"
 local itemPath = "UIs/Mail/MailItem"
 local currItem = nil

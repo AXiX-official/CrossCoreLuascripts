@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --判定C#对象是否为空
 function _G.IsNil(uobj)

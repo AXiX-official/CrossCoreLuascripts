@@ -1,4 +1,4 @@
--- 第五章小怪被动三
+﻿-- 第五章小怪被动三
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -18,13 +18,13 @@ function Skill110008020:OnBefourHurt(caster, target, data)
 	else
 		return
 	end
-	-- 8148
-	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.8) then
+	-- 8203
+	if SkillJudger:IsSingle(self, caster, target, false) then
 	else
 		return
 	end
-	-- 8203
-	if SkillJudger:IsSingle(self, caster, target, false) then
+	-- 8144
+	if SkillJudger:OwnerPercentHp(self, caster, target, false,0.4) then
 	else
 		return
 	end

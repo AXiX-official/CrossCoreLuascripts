@@ -1,4 +1,4 @@
-local isHide = false
+﻿local isHide = false
 function Awake()
     CSAPI.SetGOActive(btnDetail,false)
 end

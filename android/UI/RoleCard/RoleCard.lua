@@ -1,4 +1,4 @@
-local holdTime = 1.5;
+﻿local holdTime = 1.5;
 local holdDownTime = 0;
 local colors = {"FFFFFF", "00ffbf", "26dbff", "8080ff", "FFC146"}
 -- {"战斗中", "远征中", "冷却中", "训练中", "军演中", "演习中", "助战中"}
@@ -80,9 +80,9 @@ function Refresh(_cardData, _elseData)
         SetCamp()
         -- break 
         local breakLv = cardData:GetBreakLevel()
-        CSAPI.SetGOActive(imgBreak, breakLv > 1)
+        CSAPI.SetGOActive(imgBreakBG, breakLv > 1)
         if (breakLv > 1) then
-            ResUtil.RoleCard_BG:Load(imgBreak, "img_37_0" .. (breakLv - 1))
+            ResUtil.RoleCard_BG:Load(imgBreak, "img_1_0" .. (breakLv - 1))
         end
         -- star 
         ResUtil.RoleCard_BG:Load(imgStar, "img_01_0" .. cardData:GetQuality())

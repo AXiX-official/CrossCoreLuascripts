@@ -1,4 +1,4 @@
---拼图排版界面
+﻿--拼图排版界面
 local items={};
 local puzzleInfo=nil;
 local list={};

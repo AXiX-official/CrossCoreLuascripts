@@ -1,4 +1,4 @@
---场景加载，加载完回调
+﻿--场景加载，加载完回调
 SceneLoader = {};
 local this = SceneLoader;
 

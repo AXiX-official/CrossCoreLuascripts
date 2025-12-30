@@ -1,4 +1,4 @@
-local dayStrs = {"一","",}
+﻿local dayStrs = {"一","",}
 local items = nil
 --SignInfDayInfo
 function Refresh(_data, _isShowNextDay)

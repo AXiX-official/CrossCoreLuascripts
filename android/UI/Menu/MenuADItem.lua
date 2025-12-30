@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
 	c_MenuADItem = ComUtil.GetCom(gameObject, "MenuADItem")  --TODO 优化下载存储
 end

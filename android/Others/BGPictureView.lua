@@ -1,4 +1,4 @@
---背景预览
+﻿--背景预览
 -- data -> {id=CfgMenuBg的id}
 function OnOpen()
     local cfg = Cfgs.CfgMenuBg:GetByID(data.id)

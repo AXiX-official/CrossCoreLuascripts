@@ -1,4 +1,4 @@
-_G["cfgWorldBossMission"]={{["key"]=1,["aFinishIds"]={220001}
+﻿_G["cfgWorldBossMission"]={{["key"]=1,["aFinishIds"]={220001}
 ,["sDescription"]="参与3次末日战线玩法（每日重置）",["mailId"]=14001,["id"]=1,["jAwardId"]={{10001,30000,2}
 }
 ,["nGroup"]=14001}

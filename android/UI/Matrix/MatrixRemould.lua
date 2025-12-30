@@ -1,4 +1,4 @@
-local selectDatas = {}
+﻿local selectDatas = {}
 local isDontClose = false
 
 function Awake()

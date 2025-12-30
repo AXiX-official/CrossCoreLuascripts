@@ -1,4 +1,4 @@
---公会战奖励界面
+﻿--公会战奖励界面
 local itemPath = "GuildReward/GuildRewardItem"
 local curIndex = 1
 local datas

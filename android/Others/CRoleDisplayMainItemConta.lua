@@ -1,4 +1,4 @@
--- CRoleDisplayData
+﻿-- CRoleDisplayData
 function Refresh(_data, isAnim)
     data = _data
 

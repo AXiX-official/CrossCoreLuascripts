@@ -1,4 +1,4 @@
-local eventMgr = nil;
+﻿local eventMgr = nil;
 local lastGold = 0;
 local lastDiamon = 0;
 local lastCost = 0;

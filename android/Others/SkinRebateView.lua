@@ -1,4 +1,4 @@
-local curDatas = nil
+﻿local curDatas = nil
 local isShow = false
 local alData = nil
 local curSkinId = 0

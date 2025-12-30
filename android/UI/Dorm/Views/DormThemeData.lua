@@ -1,4 +1,4 @@
--- 系统主题数据
+﻿-- 系统主题数据
 local this = {}
 
 function this.New()

@@ -1,4 +1,4 @@
--- 战斗结束
+﻿-- 战斗结束
 FightActionFightEnd = oo.class(FightActionBase);
 local this = FightActionFightEnd;
 

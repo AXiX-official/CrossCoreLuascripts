@@ -1,4 +1,4 @@
--- 多人插图 管理器 
+﻿-- 多人插图 管理器 
 local MulPicSortUtil = require "MulPicSortUtil"
 local MulPicInfo = require "MulPicInfo"
 local this = MgrRegister("MulPicMgr")

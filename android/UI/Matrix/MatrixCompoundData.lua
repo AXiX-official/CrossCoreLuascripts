@@ -1,4 +1,4 @@
--- 合成订单 
+﻿-- 合成订单 
 MatrixCompoundData = {}
 local this = MatrixCompoundData
 function this.New()

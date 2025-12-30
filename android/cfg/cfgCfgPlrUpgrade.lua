@@ -1,4 +1,4 @@
-_G["CfgPlrUpgrade"]={{["nAbilityNum"]=50,["nBaseBuildLvLimit"]=2,["key"]="1",["nGoldStorageLimit"]=1000000000,["id"]=1,["nCostVal"]=210,["nNextExp"]=300,["nFriendLimit"]=40}
+﻿_G["CfgPlrUpgrade"]={{["nAbilityNum"]=50,["nBaseBuildLvLimit"]=2,["key"]="1",["nGoldStorageLimit"]=1000000000,["id"]=1,["nCostVal"]=210,["nNextExp"]=300,["nFriendLimit"]=40}
 ,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=2,["key"]="2",["nGoldStorageLimit"]=1000010000,["id"]=2,["nCostVal"]=210,["nNextExp"]=500,["nFriendLimit"]=40}
 ,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=2,["key"]="3",["nGoldStorageLimit"]=1000020000,["id"]=3,["nCostVal"]=210,["nNextExp"]=800,["nFriendLimit"]=40}
 ,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=2,["key"]="4",["nGoldStorageLimit"]=1000030000,["id"]=4,["nCostVal"]=210,["nNextExp"]=1240,["nFriendLimit"]=40}
@@ -97,6 +97,26 @@ _G["CfgPlrUpgrade"]={{["nAbilityNum"]=50,["nBaseBuildLvLimit"]=2,["key"]="1",["n
 ,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="97",["nGoldStorageLimit"]=1000960000,["id"]=97,["nCostVal"]=210,["nNextExp"]=72200,["nFriendLimit"]=40}
 ,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="98",["nGoldStorageLimit"]=1000970000,["id"]=98,["nCostVal"]=210,["nNextExp"]=76300,["nFriendLimit"]=40}
 ,{["nAbilityNum"]=50,["nBaseBuildLvLimit"]=10,["key"]="99",["nGoldStorageLimit"]=1000980000,["id"]=99,["nCostVal"]=210,["nNextExp"]=80000,["nFriendLimit"]=40}
-,{["nAbilityNum"]=50,["key"]="100",["nBaseBuildLvLimit"]=10,["id"]=100,["nCostVal"]=210,["nGoldStorageLimit"]=1001000000,["nFriendLimit"]=40}
+,{["nAbilityNum"]=50,["nBaseBuildLvLimit"]=10,["key"]="100",["nGoldStorageLimit"]=1001000000,["id"]=100,["nCostVal"]=210,["nNextExp"]=83300,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="101",["nGoldStorageLimit"]=1001010000,["id"]=101,["nCostVal"]=210,["nNextExp"]=86600,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="102",["nGoldStorageLimit"]=1001030000,["id"]=102,["nCostVal"]=210,["nNextExp"]=89900,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="103",["nGoldStorageLimit"]=1001040000,["id"]=103,["nCostVal"]=210,["nNextExp"]=93200,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="104",["nGoldStorageLimit"]=1001060000,["id"]=104,["nCostVal"]=210,["nNextExp"]=96500,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="105",["nGoldStorageLimit"]=1001070000,["id"]=105,["nCostVal"]=210,["nNextExp"]=99800,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="106",["nGoldStorageLimit"]=1001090000,["id"]=106,["nCostVal"]=210,["nNextExp"]=103100,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="107",["nGoldStorageLimit"]=1001100000,["id"]=107,["nCostVal"]=210,["nNextExp"]=106400,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="108",["nGoldStorageLimit"]=1001120000,["id"]=108,["nCostVal"]=210,["nNextExp"]=109700,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="109",["nGoldStorageLimit"]=1001130000,["id"]=109,["nCostVal"]=210,["nNextExp"]=113000,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="110",["nGoldStorageLimit"]=1001150000,["id"]=110,["nCostVal"]=210,["nNextExp"]=118200,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="111",["nGoldStorageLimit"]=1001160000,["id"]=111,["nCostVal"]=210,["nNextExp"]=123400,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="112",["nGoldStorageLimit"]=1001180000,["id"]=112,["nCostVal"]=210,["nNextExp"]=128600,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="113",["nGoldStorageLimit"]=1001190000,["id"]=113,["nCostVal"]=210,["nNextExp"]=133800,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="114",["nGoldStorageLimit"]=1001210000,["id"]=114,["nCostVal"]=210,["nNextExp"]=139000,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="115",["nGoldStorageLimit"]=1001220000,["id"]=115,["nCostVal"]=210,["nNextExp"]=144200,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="116",["nGoldStorageLimit"]=1001240000,["id"]=116,["nCostVal"]=210,["nNextExp"]=149400,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="117",["nGoldStorageLimit"]=1001250000,["id"]=117,["nCostVal"]=210,["nNextExp"]=154600,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="118",["nGoldStorageLimit"]=1001270000,["id"]=118,["nCostVal"]=210,["nNextExp"]=159800,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["nBaseBuildLvLimit"]=10,["key"]="119",["nGoldStorageLimit"]=1001280000,["id"]=119,["nCostVal"]=210,["nNextExp"]=165000,["nFriendLimit"]=40}
+,{["nAbilityNum"]=20,["key"]="120",["nBaseBuildLvLimit"]=10,["id"]=120,["nCostVal"]=210,["nGoldStorageLimit"]=1001300000,["nFriendLimit"]=40}
 }
 

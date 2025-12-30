@@ -1,4 +1,4 @@
-_G["CfgPvpScore"]={{["nDiffMax"]=-150,["key"]="1",["id"]=1,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
+﻿_G["CfgPvpScore"]={{["nDiffMax"]=-150,["key"]="1",["id"]=1,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
 ,{["nDiffMax"]=-150,["key"]="2",["id"]=2,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
 ,{["nDiffMax"]=-150,["key"]="3",["id"]=3,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}
 ,{["nDiffMax"]=-150,["key"]="4",["id"]=4,["nLoseScore"]=-42,["nDiffMin"]=-999999,["nGetScore"]=140}

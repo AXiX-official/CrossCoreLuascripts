@@ -1,4 +1,4 @@
--- 送快递 
+﻿-- 送快递 
 --[[  
     1、idle状态下飞机带货飞入
     2、收货，无货飞机飞出
@@ -27,7 +27,7 @@ function this:Enter(actionData)
     self.actionTime = Dorm_Action_Time(self.dormAction2)
 
     -- idle
-    self.dormRole.dormRoleStateMachine:PlayByActionType(DormAction2.idle)
+    self.dormRole.dormRoleStateMachine:PlayByActionType("idle")
     -- 生成飞机
     local cfg = Cfgs.CfgCardRoleAction:GetByID(self.dormAction2)
     local uavPath = cfg.childs[1]

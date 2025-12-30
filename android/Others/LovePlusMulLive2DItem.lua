@@ -1,4 +1,4 @@
-local isInit = false
+﻿local isInit = false
 local imgScale = 1
 local hideTxt = false
 local graphic = nil

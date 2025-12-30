@@ -1,4 +1,4 @@
---折扣券信息
+﻿--折扣券信息
 local this = {}
 
 function this.New()

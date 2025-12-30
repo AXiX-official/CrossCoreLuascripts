@@ -1,4 +1,4 @@
---公会战编队UI
+﻿--公会战编队UI
 local gridClicks={};
 local grids={};
 local teamData=nil;

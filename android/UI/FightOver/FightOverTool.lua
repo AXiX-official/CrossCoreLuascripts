@@ -1,4 +1,4 @@
---结算数据封装工具（结算协议太多了）
+﻿--结算数据封装工具（结算协议太多了）
 FightOverTool = {}
 local this = FightOverTool
 

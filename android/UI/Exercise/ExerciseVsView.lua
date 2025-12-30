@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     cardIconItemL = RoleTool.AddRole(iconLParent, nil, nil, false)
     mulIconItemL = RoleTool.AddMulRole(iconLParent, nil, nil, false)
     cardIconItemR = RoleTool.AddRole(iconRParent, nil, nil, false)

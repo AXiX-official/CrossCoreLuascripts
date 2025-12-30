@@ -1,4 +1,4 @@
-
+﻿
 
 --收集打开页面
 local OpenViewList={};

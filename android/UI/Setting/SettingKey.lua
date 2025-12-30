@@ -1,4 +1,4 @@
---本地保存数据索引  有新值需要在SettingMgr的InitLocalCfg后赋初始值保存
+﻿--本地保存数据索引  有新值需要在SettingMgr的InitLocalCfg后赋初始值保存
 --获取游戏音频大小
 s_isSetting = "s_isSetting" --是否已设置过
 

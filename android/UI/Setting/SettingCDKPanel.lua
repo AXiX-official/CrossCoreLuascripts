@@ -1,4 +1,4 @@
-
+﻿
 local CurrStr = ""
 
 function Awake()

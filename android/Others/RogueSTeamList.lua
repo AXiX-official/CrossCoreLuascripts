@@ -1,4 +1,4 @@
-function SetIndex(_index, _len, _optionDatas)
+﻿function SetIndex(_index, _len, _optionDatas)
     index = _index
     len = _len
     optionDatas = _optionDatas

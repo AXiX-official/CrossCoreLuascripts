@@ -1,4 +1,4 @@
-_G["CfgBDefenceLvl"]={{["armorType"]=4,["upCosts"]={{60101,50,2}
+﻿_G["CfgBDefenceLvl"]={{["armorType"]=4,["upCosts"]={{60101,50,2}
 ,{10001,500,2}
 }
 ,["centerlvl"]=2,["effect"]=[[1.使相邻建筑战斗时，队伍防御力提升5%；

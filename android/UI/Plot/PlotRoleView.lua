@@ -1,4 +1,4 @@
---剧情对话的人物插图信息
+﻿--剧情对话的人物插图信息
 local roleImgInfo = nil;
 
 local tween_focus_scale; --获取焦点的动画

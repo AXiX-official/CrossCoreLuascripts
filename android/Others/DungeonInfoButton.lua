@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local data = nil
 local sectionData = nil
 local isSweepOpen = false
@@ -43,6 +43,7 @@ function Refresh(tab)
         ShowCost()
         ShowSweep()
         ShowTicket()
+        ShowTips()
     end
 end
 
@@ -117,6 +118,15 @@ function ShowTicket()
         local cur = BagMgr:GetCount(_cost[1]) or 0
         CSAPI.SetText(txtTicket,cur .. "")
         ResUtil.IconGoods:Load(ticketIcon, _cost[1] .. "_1")
+    end
+end
+
+function ShowTips()
+    if tipsObj and not IsNil(tipsObj.gameObject) then
+        CSAPI.SetGOActive(tipsObj,cfg.viewTips ~= nil)
+        if cfg.viewTips then
+            LanguageMgr:SetText(txtTips,cfg.viewTips)
+        end
     end
 end
 

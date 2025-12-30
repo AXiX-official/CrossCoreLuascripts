@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理召唤
 function this:Handle(data)

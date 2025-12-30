@@ -1,4 +1,4 @@
-local this = MgrRegister("AIStrategyMgr")
+﻿local this = MgrRegister("AIStrategyMgr")
 
 function this:Init()
     self.edits={};

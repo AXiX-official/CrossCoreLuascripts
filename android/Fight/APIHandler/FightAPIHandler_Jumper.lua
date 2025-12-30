@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理特殊排队的API事件
 function this:Handle(data)

@@ -1,4 +1,4 @@
-local itemPath = "Sort/SortBtn2"
+﻿local itemPath = "Sort/SortBtn2"
 function OnOpen()
 	rolePro = data[1]
 	cb = data[2]

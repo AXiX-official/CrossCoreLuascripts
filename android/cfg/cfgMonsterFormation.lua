@@ -1,4 +1,4 @@
-_G["MonsterFormation"]={{["summon"]={1}
+﻿_G["MonsterFormation"]={{["summon"]={1}
 ,["coordinate"]={{1,2}
 ,{2,1}
 ,{3,2}

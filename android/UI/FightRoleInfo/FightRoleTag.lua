@@ -1,4 +1,4 @@
-local isSelect=false;
+﻿local isSelect=false;
 local scaleAction=nil;
 function Awake()
     CSAPI.SetScale(icon,0.33,0.33,0.33);

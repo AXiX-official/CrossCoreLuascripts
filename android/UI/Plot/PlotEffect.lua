@@ -1,4 +1,4 @@
-local plotData = nil
+﻿local plotData = nil
 local videoPools = {}
 local videoInfo = nil
 local effectInfos = nil

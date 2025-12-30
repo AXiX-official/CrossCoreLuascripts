@@ -1,4 +1,4 @@
---调整受击角色
+﻿--调整受击角色
 
 function Awake()
     FuncUtil:Call(ApplyFix,nil,1);

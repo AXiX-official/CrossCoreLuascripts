@@ -1,4 +1,4 @@
---buff
+﻿--buff
 local this = {};
 
 function this.New()

@@ -1,4 +1,4 @@
-ReleaseMgr = oo.class();
+﻿ReleaseMgr = oo.class();
 
 local this = ReleaseMgr;
 

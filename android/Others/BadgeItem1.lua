@@ -1,4 +1,4 @@
-local datas = nil
+﻿local datas = nil
 local items=nil
 local selIndex= 0
 local isHideNew = false

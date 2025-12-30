@@ -1,4 +1,4 @@
-local mTab = nil
+﻿local mTab = nil
 local curIndex = 0
 local isUnLock = false
 

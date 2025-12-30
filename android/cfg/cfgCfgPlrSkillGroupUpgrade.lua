@@ -1,4 +1,4 @@
-_G["CfgPlrSkillGroupUpgrade"]={[1001]={["id"]=1001,["infos"]={{["costs"]={10020,100,2}
+﻿_G["CfgPlrSkillGroupUpgrade"]={[1001]={["id"]=1001,["infos"]={{["costs"]={10020,100,2}
 ,["index"]=1,["desc"]=[[升级效果：
 <color=#FFC432>【伤害强化】</color>造成伤害增加
 <color=#FFC432>【衰弱锁定】</color>易伤效果增强

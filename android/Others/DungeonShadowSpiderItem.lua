@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local cfgDungeon = nil
 local dungeonData = nil
 local isLock = false

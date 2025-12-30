@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理复活
 function this:Handle(data)

@@ -1,4 +1,4 @@
-_G["CfgTaskExploration"]={[29321]={["type"]=3,["sDescription"]="芯片重塑15次",["id"]=29321,["jAwardId"]={{10043,2400,2}
+﻿_G["CfgTaskExploration"]={[29321]={["type"]=3,["sDescription"]="芯片重塑15次",["id"]=29321,["jAwardId"]={{10043,2400,2}
 }
 ,["nIsHide"]=2,["aFinishIds"]={29201}
 ,["key"]=29321,["sOpenTime"]="2025/4/2 03:00:01",["nTransferPath"]=150004,["sCloseTime"]="2025/5/7 03:00:00",["icon"]="1",["sName"]="芯片重塑15次"}
@@ -74,6 +74,10 @@ _G["CfgTaskExploration"]={[29321]={["type"]=3,["sDescription"]="芯片重塑15�
 }
 ,["nIsHide"]=2,["aFinishIds"]={29206}
 ,["key"]=29397,["sOpenTime"]="2025/12/3 03:00:01",["nTransferPath"]=30001,["sCloseTime"]="2026/1/7 03:00:00",["icon"]="1",["sName"]="累计消耗6000燃料"}
+,[29405]={["type"]=3,["sDescription"]="通关碎星虚影20次",["id"]=29405,["jAwardId"]={{10043,2400,2}
+}
+,["nIsHide"]=2,["aFinishIds"]={29204}
+,["key"]=29405,["sOpenTime"]="2026/1/7 03:00:01",["nTransferPath"]=15001,["sCloseTime"]="2026/2/11 03:00:00",["icon"]="1",["sName"]="通关碎星虚影20次"}
 ,[29202]={["type"]=3,["sDescription"]="通关芯片嵌合关卡30次",["id"]=29202,["jAwardId"]={{10043,2400,2}
 }
 ,["nIsHide"]=2,["aFinishIds"]={29202}
@@ -222,6 +226,14 @@ _G["CfgTaskExploration"]={[29321]={["type"]=3,["sDescription"]="芯片重塑15�
 }
 ,["nIsHide"]=2,["aFinishIds"]={29399}
 ,["key"]=29398,["sOpenTime"]="2025/12/3 10:00:01",["nTransferPath"]=13172,["sCloseTime"]="2025/12/30 03:00:00",["icon"]="1",["sName"]="击败循环试炼困难难度关卡的所有敌人"}
+,[29402]={["type"]=3,["sDescription"]="芯片重塑15次",["id"]=29402,["jAwardId"]={{10043,2400,2}
+}
+,["nIsHide"]=2,["aFinishIds"]={29201}
+,["key"]=29402,["sOpenTime"]="2026/1/7 03:00:01",["nTransferPath"]=150004,["sCloseTime"]="2026/2/11 03:00:00",["icon"]="1",["sName"]="芯片重塑15次"}
+,[29406]={["type"]=3,["sDescription"]="镜像竞技胜利80次",["id"]=29406,["jAwardId"]={{10043,2400,2}
+}
+,["nIsHide"]=2,["aFinishIds"]={29205}
+,["key"]=29406,["sOpenTime"]="2026/1/7 03:00:01",["nTransferPath"]=30003,["sCloseTime"]="2026/2/11 03:00:00",["icon"]="1",["sName"]="镜像竞技胜利80次"}
 ,[29203]={["type"]=3,["sDescription"]="累计消耗星币1200000",["id"]=29203,["jAwardId"]={{10043,2400,2}
 }
 ,["nIsHide"]=2,["aFinishIds"]={29203}
@@ -386,6 +398,14 @@ _G["CfgTaskExploration"]={[29321]={["type"]=3,["sDescription"]="芯片重塑15�
 }
 ,["nIsHide"]=2,["aFinishIds"]={460108}
 ,["key"]=29399,["sOpenTime"]="2025/12/3 10:00:01",["nTransferPath"]=12819,["sCloseTime"]="2025/12/30 03:00:00",["icon"]="1",["sName"]="通关冬日速递困难-最终防卫"}
+,[29403]={["type"]=3,["sDescription"]="通关芯片嵌合关卡30次",["id"]=29403,["jAwardId"]={{10043,2400,2}
+}
+,["nIsHide"]=2,["aFinishIds"]={29202}
+,["key"]=29403,["sOpenTime"]="2026/1/7 03:00:01",["nTransferPath"]=10501,["sCloseTime"]="2026/2/11 03:00:00",["icon"]="1",["sName"]="通关芯片嵌合关卡30次"}
+,[29407]={["type"]=3,["sDescription"]="累计消耗6000燃料",["id"]=29407,["jAwardId"]={{10043,2400,2}
+}
+,["nIsHide"]=2,["aFinishIds"]={29206}
+,["key"]=29407,["sOpenTime"]="2026/1/7 03:00:01",["nTransferPath"]=30001,["sCloseTime"]="2026/2/11 03:00:00",["icon"]="1",["sName"]="累计消耗6000燃料"}
 ,[29204]={["type"]=3,["sDescription"]="通关碎星虚影20次",["id"]=29204,["jAwardId"]={{10043,2400,2}
 }
 ,["nIsHide"]=2,["aFinishIds"]={29204}
@@ -538,6 +558,14 @@ _G["CfgTaskExploration"]={[29321]={["type"]=3,["sDescription"]="芯片重塑15�
 }
 ,["nIsHide"]=2,["aFinishIds"]={29205}
 ,["key"]=29396,["sOpenTime"]="2025/12/3 03:00:01",["nTransferPath"]=30003,["sCloseTime"]="2026/1/7 03:00:00",["icon"]="1",["sName"]="镜像竞技胜利80次"}
+,[29404]={["type"]=3,["sDescription"]="累计消耗星币1200000",["id"]=29404,["jAwardId"]={{10043,2400,2}
+}
+,["nIsHide"]=2,["aFinishIds"]={29203}
+,["key"]=29404,["sOpenTime"]="2026/1/7 03:00:01",["nTransferPath"]=140006,["sCloseTime"]="2026/2/11 03:00:00",["icon"]="1",["sName"]="累计消耗星币1200000"}
+,[29408]={["type"]=3,["sDescription"]="击败日月试炼困难难度关卡的所有敌人",["id"]=29408,["jAwardId"]={{10043,2400,2}
+}
+,["nIsHide"]=2,["aFinishIds"]={29400}
+,["key"]=29408,["sOpenTime"]="2025/1/21 10:00:01",["nTransferPath"]=13212,["sCloseTime"]="2026/2/11 03:00:00",["icon"]="1",["sName"]="击败日月试炼困难难度关卡的所有敌人"}
 ,[29201]={["type"]=3,["sDescription"]="芯片重塑15次",["id"]=29201,["jAwardId"]={{10043,2400,2}
 }
 ,["nIsHide"]=2,["aFinishIds"]={29201}

@@ -1,4 +1,4 @@
---商店推荐页配置
+﻿--商店推荐页配置
 local this = {}
 
 function this.New()

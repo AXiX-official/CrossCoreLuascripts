@@ -1,4 +1,4 @@
-_G["CfgPlotActivityGroup"]={[911]={["key"]=911,["dungeonGroups"]=9011,["group"]=501,["id"]=911,["name"]="活动 EX-2"}
+﻿_G["CfgPlotActivityGroup"]={[911]={["key"]=911,["dungeonGroups"]=9011,["group"]=501,["id"]=911,["name"]="活动 EX-2"}
 ,[912]={["key"]=912,["dungeonGroups"]=9012,["group"]=501,["id"]=912,["name"]="活动 EX-3"}
 ,[913]={["key"]=913,["dungeonGroups"]=9013,["group"]=501,["id"]=913,["name"]="活动 EX-4"}
 ,[101]={["relativePos"]={100,0}

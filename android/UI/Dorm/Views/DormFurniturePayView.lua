@@ -1,4 +1,4 @@
--- 家具购买
+﻿-- 家具购买
 local count = 1 -- 选择几件
 
 function Awake()

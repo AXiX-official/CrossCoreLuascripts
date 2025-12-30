@@ -1,4 +1,4 @@
-local conf = {
+﻿local conf = {
 	["filename"] = 'm-敏感字.xlsx',
 	["sheetname"] = '敏感字1',
 	["types"] = {

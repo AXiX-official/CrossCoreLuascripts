@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local skillDatas = nil
 local item = nil
 local skinInfo = nil

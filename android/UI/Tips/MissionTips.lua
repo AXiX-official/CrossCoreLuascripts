@@ -1,4 +1,4 @@
--- local timer = 0
+﻿-- local timer = 0
 local isPlay = false
 local colors1 = {
     ["1"] = "b3b2b1",

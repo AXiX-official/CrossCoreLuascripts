@@ -1,4 +1,4 @@
-local func = nil;
+﻿local func = nil;
 local caller = nil;
 local param1 = nil;
 local param2 = nil;

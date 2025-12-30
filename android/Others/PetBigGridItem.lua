@@ -1,4 +1,4 @@
-local data=nil;
+﻿local data=nil;
 local elseData=nil;
 local currNum=0;
 local tween=nil;

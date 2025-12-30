@@ -1,4 +1,4 @@
-_G["CfgBRemouldLvl"]={{["armorType"]=1,["upCosts"]={{60101,100,2}
+﻿_G["CfgBRemouldLvl"]={{["armorType"]=1,["upCosts"]={{60101,100,2}
 ,{10001,1000,2}
 }
 ,["centerlvl"]=2,["effect"]=[[1.对芯片进行改造；

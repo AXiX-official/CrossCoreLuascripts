@@ -1,4 +1,4 @@
-function Refresh(_datas, isChoise)
+﻿function Refresh(_datas, isChoise)
     datas = _datas
     local nums = {}
     if (isChoise) then

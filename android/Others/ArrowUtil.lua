@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 
 function this.New()
 	this.__index = this.__index or this
@@ -22,6 +22,7 @@ function this:Init(father,child,arrowLT,arrowRD,isVer)
     CSAPI.SetGOActive(self.arrowRD,false)
     self.fatherLen = 0
     self.childLen = 0
+    self.childScale = 1
     self.currPos = 0
     self.lastPos = -1
     self.isVer = isVer ~= nil
@@ -35,11 +36,16 @@ function this:RefreshLen()
     end
     if self.child then
         self.childLen = self.isVer and CSAPI.GetRealRTSize(self.child)[1] or CSAPI.GetRealRTSize(self.child)[0]
+        if self.isVer then
+            self.x,self.childScale = CSAPI.GetScale()
+        else
+            self.childScale = CSAPI.GetScale()
+        end
     end
 end
 
 function this:Update()
-    if self.childLen > self.fatherLen then
+    if self.childLen * self.childScale > self.fatherLen then
         if not IsNil(self.child) then
             if self.isVer then
                self.x,self.currPos = CSAPI.GetAnchor(self.child)
@@ -50,10 +56,10 @@ function this:Update()
         if math.abs(self.currPos - self.lastPos) > 0.01 then
             if self.isVer then
                 CSAPI.SetGOActive(self.arrowLT,self.currPos > 0.1)
-                CSAPI.SetGOActive(self.arrowRD,self.currPos < (self.childLen - self.fatherLen) - 0.1) 
+                CSAPI.SetGOActive(self.arrowRD,self.currPos < (self.childLen * self.childScale  - self.fatherLen) - 0.1) 
             else
                 CSAPI.SetGOActive(self.arrowLT,self.currPos < -0.1)
-                CSAPI.SetGOActive(self.arrowRD,self.currPos > -(self.childLen - self.fatherLen) + 0.1)    
+                CSAPI.SetGOActive(self.arrowRD,self.currPos > -(self.childLen * self.childScale - self.fatherLen) + 0.1)    
             end
             self.lastPos = self.currPos
         end

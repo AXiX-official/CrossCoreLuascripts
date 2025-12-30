@@ -1,4 +1,4 @@
-local grids = {};
+﻿local grids = {};
 local itemLists = {}
 local currData = nil;
 local info = nil

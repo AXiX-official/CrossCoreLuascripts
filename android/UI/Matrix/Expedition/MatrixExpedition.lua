@@ -1,4 +1,4 @@
---远征 (不耗电的所以不会停止)
+﻿--远征 (不耗电的所以不会停止)
 local MatrixExpeditionInfo = require "MatrixExpeditionInfo"
 local curIndex = 1
 

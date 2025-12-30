@@ -1,4 +1,4 @@
-local ColosseumSJData = require("ColosseumSJData")
+﻿local ColosseumSJData = require("ColosseumSJData")
 local ColosseumZXData = require("ColosseumZXData")
 local chidItem = nil
 local isSelect = false

@@ -1,4 +1,4 @@
---模块信息
+﻿--模块信息
 local this = {}
 
 function this.New()

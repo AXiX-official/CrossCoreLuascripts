@@ -1,4 +1,4 @@
-curIndex1, curIndex2 = 1, 1 -- 父index,子index
+﻿curIndex1, curIndex2 = 1, 1 -- 父index,子index
 local panel1LinesPos = {{155, 0, -28}, {155, 0, -21}, {155, 0, 65}, {-151, 180, 231}, {-151, 180, 231}}
 local panel2LinesPos = {{155, 0, -28}, {155, 0, -28}, {155, 0, 65}, {155, 0, 79}, {-151, 180, 231}, {-151, 180, 231},
                         {-151, 180, 253}}

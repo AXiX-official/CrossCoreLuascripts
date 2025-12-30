@@ -1,4 +1,4 @@
---道具池主界面
+﻿--道具池主界面
 local pool=nil;
 local endTime=0;
 local fixedTime=60;

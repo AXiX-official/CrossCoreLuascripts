@@ -1,4 +1,4 @@
--- local isHold = false
+﻿-- local isHold = false
 local holdDownTime1 = 0
 local isPress1 = false
 local timer1 = 0

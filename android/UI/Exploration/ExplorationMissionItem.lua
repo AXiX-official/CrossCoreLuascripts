@@ -1,4 +1,4 @@
---勘探任务子物体
+﻿--勘探任务子物体
 local isGet = false
 local isFinish = false
 local grid=nil;

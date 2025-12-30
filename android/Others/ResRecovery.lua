@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     -- 记录
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/ResRecovery/ResRecoveryItem", LayoutCallBack, true)

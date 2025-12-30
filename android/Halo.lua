@@ -1,4 +1,4 @@
--- OPENDEBUG(true)
+﻿-- OPENDEBUG(true)
 
 -- 获取卡牌的站格
 function GetCardGrids(cid, row, col)

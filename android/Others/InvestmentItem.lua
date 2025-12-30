@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local isSel = false
 local isLock = false
 local names = {}

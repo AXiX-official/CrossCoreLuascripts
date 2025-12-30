@@ -1,4 +1,4 @@
-local ExerciseLRankData = require "ExerciseLRankData"
+﻿local ExerciseLRankData = require "ExerciseLRankData"
 local index = nil
 
 function Awake()

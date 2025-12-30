@@ -1,4 +1,4 @@
---宠物动画控制脚本
+﻿--宠物动画控制脚本
 local petId=nil;
 local FSM=nil;
 local currState=nil;

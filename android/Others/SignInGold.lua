@@ -1,4 +1,4 @@
-local key = nil
+﻿local key = nil
 local targetTime = 0
 local cfg =nil
 local data = nil

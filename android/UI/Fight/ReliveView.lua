@@ -1,4 +1,4 @@
---复活界面
+﻿--复活界面
 
 function Awake()
     LanguageMgr:SetText(goTitle,1086)--CSAPI.SetText(goTitle,StringConstant.fight_title_relive);

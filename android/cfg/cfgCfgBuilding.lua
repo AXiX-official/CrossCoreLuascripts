@@ -1,4 +1,4 @@
-_G["CfgBuilding"]={[1002]={["infos"]={{["index"]=1,["modelName"]="heneng01"}
+﻿_G["CfgBuilding"]={[1002]={["infos"]={{["index"]=1,["modelName"]="heneng01"}
 ,{["index"]=2,["modelName"]="heneng01"}
 ,{["index"]=3,["modelName"]="heneng01"}
 ,{["index"]=4,["modelName"]="heneng02"}

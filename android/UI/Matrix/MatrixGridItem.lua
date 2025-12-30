@@ -1,4 +1,4 @@
---基地格子
+﻿--基地格子
 --local textMesh
 local data = nil
 

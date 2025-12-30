@@ -1,4 +1,4 @@
---战斗技能
+﻿--战斗技能
 
 FightActionSkill = oo.class(FightActionBase);
 local this = FightActionSkill;

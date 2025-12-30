@@ -1,4 +1,4 @@
-local curType = 1
+﻿local curType = 1
 local curOpen = 1
 local currLevel = 1
 local videoGOs = nil

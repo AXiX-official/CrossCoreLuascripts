@@ -1,4 +1,4 @@
---向左缩进 冷却系统
+﻿--向左缩进 冷却系统
 local this = {}
 
 local animTotalTime = 1.5 --动画总时长

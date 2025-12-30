@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     c_MenuADItem = ComUtil.GetCom(icon, "MenuADItem")
 end
 

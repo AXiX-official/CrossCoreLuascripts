@@ -1,4 +1,4 @@
--- 洛贝拉
+﻿-- 洛贝拉
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -25,6 +25,13 @@ function Skill4603303:OnActionBegin(caster, target, data)
 	end
 	-- 603300302
 	self:OwnerAddBuffCount(SkillEffect[603300302], caster, self.card, data, 603300301,1,4)
+	-- 9731
+	if SkillJudger:IsTypeOf(self, caster, target, true,4) then
+	else
+		return
+	end
+	-- 603300306
+	self:OwnerAddBuffCount(SkillEffect[603300306], caster, self.card, data, 603300301,1,4)
 end
 -- 特殊入场时(复活，召唤，合体)
 function Skill4603303:OnBornSpecial(caster, target, data)
@@ -43,8 +50,8 @@ function Skill4603303:OnBornSpecial(caster, target, data)
 	-- 4603301
 	self:AddOwnerEquipSkill(SkillEffect[4603301], caster, caster, data, nil)
 end
--- 伤害前
-function Skill4603303:OnBefourHurt(caster, target, data)
+-- 伤害后
+function Skill4603303:OnAfterHurt(caster, target, data)
 	-- 4603342
 	self:tFunc_4603342_4603312(caster, target, data)
 	self:tFunc_4603342_4603315(caster, target, data)

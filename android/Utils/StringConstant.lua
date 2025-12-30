@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 
 this.data_error = "数据出错";

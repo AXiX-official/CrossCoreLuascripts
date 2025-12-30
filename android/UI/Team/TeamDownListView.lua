@@ -1,4 +1,4 @@
---出战界面下拉面板
+﻿--出战界面下拉面板
 local maxCount=6; --最多显示个数
 local currCount=0;--当前显示数量
 local height=74;--子物体高度

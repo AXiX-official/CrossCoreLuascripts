@@ -1,4 +1,4 @@
-local isGet = false
+﻿local isGet = false
 local cfg
 
 function Awake()

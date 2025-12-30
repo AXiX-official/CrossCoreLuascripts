@@ -1,4 +1,4 @@
---镜头数据
+﻿--镜头数据
 local this = 
 {
 [-865403415]={{time=13000,name="camera_summon_0",pos_ref={ref_type=6}}},

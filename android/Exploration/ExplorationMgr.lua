@@ -1,4 +1,4 @@
-local this = MgrRegister("ExplorationMgr")
+﻿local this = MgrRegister("ExplorationMgr")
 
 --初始化，根据最新的id获取勘探数据
 function this:Init()

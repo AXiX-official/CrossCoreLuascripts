@@ -1,4 +1,4 @@
---副本道具
+﻿--副本道具
 
 function Awake()
     action = ComUtil.GetCom(gameObject,"ActionBase");

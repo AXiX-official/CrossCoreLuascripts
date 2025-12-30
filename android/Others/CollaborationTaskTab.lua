@@ -1,4 +1,4 @@
-local data=nil
+﻿local data=nil
 local isOn=false;
 function Refresh(_d,elseData)
     data=_d;

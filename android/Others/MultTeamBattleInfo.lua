@@ -1,4 +1,4 @@
-local this = {}
+﻿local this = {}
 --多队boss战斗类
 function this.New()
 	this.__index = this.__index or this;

@@ -1,4 +1,4 @@
-_G["CfgRoleDormitoryEvents"]={{["story"]=true,["key"]="1",["weight"]=10,["id"]=1,["icon"]="event_1",["sDesc"]="“叹号”"}
+﻿_G["CfgRoleDormitoryEvents"]={{["story"]=true,["key"]="1",["weight"]=10,["id"]=1,["icon"]="event_1",["sDesc"]="“叹号”"}
 ,{["gets"]={{10010,100,2,300}
 ,{10010,100,2,300}
 }

@@ -1,4 +1,4 @@
---队伍人物信息格子
+﻿--队伍人物信息格子
 local sliderBar=nil;
 local hpSlider=nil;
 local clickFunc=nil;

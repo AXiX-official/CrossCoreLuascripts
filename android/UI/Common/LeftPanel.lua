@@ -1,4 +1,4 @@
---[[	1、20220518 可修改父间隔 Init(--,_parentScale)
+﻿--[[	1、20220518 可修改父间隔 Init(--,_parentScale)
     2、20220518 可以滑动，由于子数量是动态的，所以大小放在动画进行时调整 SetContentScale()
 	3/20221025 SetCanClick 能否点击
 ]] local mLItemAnimTools = LItemAnimTools.New()

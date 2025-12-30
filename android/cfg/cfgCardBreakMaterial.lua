@@ -1,4 +1,4 @@
-_G["CardBreakMaterial"]={[24344]={["materials"]={{14322,2}
+﻿_G["CardBreakMaterial"]={[24344]={["materials"]={{14322,2}
 ,{14144,1}
 ,{14033,2}
 ,{14041,2}

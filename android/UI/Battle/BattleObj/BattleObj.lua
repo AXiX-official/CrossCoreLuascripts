@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     if(openNode)then
         CSAPI.SetGOActive(openNode,false);

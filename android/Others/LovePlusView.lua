@@ -1,4 +1,4 @@
-local layout = nil
+﻿local layout = nil
 local curIndex = 1
 local curDatas = {}
 local isJumpToPlot = false

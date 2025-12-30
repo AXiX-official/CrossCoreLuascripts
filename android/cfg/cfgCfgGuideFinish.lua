@@ -1,4 +1,4 @@
-_G["CfgGuideFinish"]={{["sDescription"]="探索日志第一天最终阶段",["bRole"]=1,["id"]=1,["jAwardId"]={{10002,50,2}
+﻿_G["CfgGuideFinish"]={{["sDescription"]="探索日志第一天最终阶段",["bRole"]=1,["id"]=1,["jAwardId"]={{10002,50,2}
 ,{107101,1,2}
 ,{58001,2,2}
 }

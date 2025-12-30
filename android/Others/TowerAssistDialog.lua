@@ -1,4 +1,4 @@
---提示锁定助战界面
+﻿--提示锁定助战界面
 local canvasGroup = nil;
 local isOpening=false;
 ---是否移动平台

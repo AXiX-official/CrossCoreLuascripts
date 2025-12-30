@@ -1,4 +1,4 @@
--- 进度条 （例子可参考 MenuView）
+﻿-- 进度条 （例子可参考 MenuView）
 Bar = {}
 local this = Bar
 function this.New(o)

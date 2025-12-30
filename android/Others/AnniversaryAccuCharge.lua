@@ -1,4 +1,4 @@
-local data= nil
+﻿local data= nil
 local panel = nil
 
 function Refresh(_data)

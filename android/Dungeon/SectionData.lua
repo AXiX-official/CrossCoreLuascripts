@@ -1,4 +1,4 @@
---章节数据
+﻿--章节数据
 local this = {};
 
 function this.New()

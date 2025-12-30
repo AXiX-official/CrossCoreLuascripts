@@ -1,4 +1,4 @@
-local layout=nil;
+﻿local layout=nil;
 local curDatas=nil;
 local activityData=nil;
 local fixedTime=1;

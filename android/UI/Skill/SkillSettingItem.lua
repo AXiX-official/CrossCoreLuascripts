@@ -1,4 +1,4 @@
---技能设置项
+﻿--技能设置项
 
 function SetData(itemData)
     data = itemData;

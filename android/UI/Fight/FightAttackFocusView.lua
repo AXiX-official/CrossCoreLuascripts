@@ -1,4 +1,4 @@
---集火界面
+﻿--集火界面
 
 --设置显示状态
 function SetShowState(state)      

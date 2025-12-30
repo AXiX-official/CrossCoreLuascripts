@@ -1,4 +1,4 @@
--- 战斗事件类型
+﻿-- 战斗事件类型
 eFightEventType = {}
 eFightEventType.Skill	= 1
 eFightEventType.Buffer	= 2
@@ -78,7 +78,7 @@ function FightEventMgr:AddSkillEvent(event, skill)
 end
 
 function FightEventMgr:DelSkill(skill)
-	LogDebugEx("FightEventMgr:DelBuffer", skill.id, skill.name)
+	LogDebugEx("FightEventMgr:DelSkill", skill.id, skill.name)
 
 	for id,event in ipairs(arrPassiveTiming) do
 		for i,tskill in ipairs(self.events.Skill[event]) do

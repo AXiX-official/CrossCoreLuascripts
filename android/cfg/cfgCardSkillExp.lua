@@ -1,4 +1,4 @@
-_G["CardSkillExp"]={{["id"]=1,["arr"]={{["costs"]={{15001,3,2}
+﻿_G["CardSkillExp"]={{["id"]=1,["arr"]={{["costs"]={{15001,3,2}
 }
 ,["seconds"]=0,["index"]=1}
 ,{["costs"]={{15001,15,2}

@@ -1,4 +1,4 @@
--- 抽卡结果
+﻿-- 抽卡结果
 local timer = 0
 
 function Awake()
@@ -142,6 +142,7 @@ function OnClickMask()
     else
         view:Close()
         PopupPackMgr:CheckByCondition({3})
+        PhysicalRewardMgr:CheckShowReward()
     end
 end
 function OnClickShareBtn()
@@ -159,4 +160,5 @@ end
 function FirstEnd()
     view:Close()
     PopupPackMgr:CheckByCondition({3})
+    PhysicalRewardMgr:CheckShowReward()
 end

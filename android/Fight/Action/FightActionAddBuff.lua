@@ -1,4 +1,4 @@
---战斗添加Buff
+﻿--战斗添加Buff
 
 if(FightActionAPI == nil)then    
     require "FightActionAPI";

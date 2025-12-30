@@ -1,4 +1,4 @@
---从右往左入场
+﻿--从右往左入场
 local animTotalTime = 0.7 --动画总时长
 local animTotalTime2 = 0.5 -- 实际时长
 

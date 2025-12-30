@@ -1,4 +1,4 @@
-_G["CfgZuYing"]={{["id"]=1,["word"]="明白",["key"]=1,["zy"]="mingbai"}
+﻿_G["CfgZuYing"]={{["id"]=1,["word"]="明白",["key"]=1,["zy"]="mingbai"}
 ,{["id"]=2,["word"]="很好",["key"]=2,["zy"]="henghao"}
 ,{["id"]=3,["word"]="声优",["key"]=3,["zy"]="CV"}
 ,{["id"]=4,["word"]="画师",["key"]=4,["zy"]="Painter"}

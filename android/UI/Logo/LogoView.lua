@@ -1,4 +1,4 @@
-local whiteNum=6
+﻿local whiteNum=6
 local blackNum=4;
 function Awake()
     CreateLine(whiteNum,-240,240,-40,40,10,60,layer1,{0,0,0,60})

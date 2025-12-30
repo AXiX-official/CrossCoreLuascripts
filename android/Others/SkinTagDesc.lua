@@ -1,4 +1,4 @@
-
+﻿
 function OnOpen()
     Refresh();
 end
@@ -6,6 +6,16 @@ end
 function Refresh()
     local index=1;
     if data then
+        if data:HasSpecial() then
+            ResUtil.Tag:Load(this[("desc"..index.."Icon")],"img_22_04");
+            CSAPI.SetText(this[("desc"..index.."Txt")],LanguageMgr:GetByID(18140));
+            index=index+1;
+        end
+        if data:HasModel() then
+            ResUtil.Tag:Load(this[("desc"..index.."Icon")],"img_22_05");
+            CSAPI.SetText(this[("desc"..index.."Txt")],LanguageMgr:GetByID(18139));
+            index=index+1;
+        end
         local hadL2d=data:HadLive2D();
         if hadL2d~=nil then
             local iconName=nil;
@@ -20,18 +30,8 @@ function Refresh()
                 iconName="img_22_06";
                 lID=18138;
             end
-            ResUtil.Tag:Load(desc1Icon,iconName);
-            CSAPI.SetText(desc1Txt,LanguageMgr:GetByID(lID));
-            index=index+1;
-        end
-        if data:HasModel() then
-            ResUtil.Tag:Load(this[("desc"..index.."Icon")],"img_22_05");
-            CSAPI.SetText(this[("desc"..index.."Txt")],LanguageMgr:GetByID(18139));
-            index=index+1;
-        end
-        if data:HasSpecial() then
-            ResUtil.Tag:Load(this[("desc"..index.."Icon")],"img_22_04");
-            CSAPI.SetText(this[("desc"..index.."Txt")],LanguageMgr:GetByID(18140));
+            ResUtil.Tag:Load(this[("desc"..index.."Icon")],iconName);
+            CSAPI.SetText(this[("desc"..index.."Txt")],LanguageMgr:GetByID(lID));
             index=index+1;
         end
         for i=1,index do

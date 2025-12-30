@@ -1,4 +1,4 @@
-
+﻿
 local buffs = nil
 local items= nil
 local cfgDungeon = nil

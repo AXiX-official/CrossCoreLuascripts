@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     ab = ComUtil.GetCom(node, "ActionBase")
 end
 

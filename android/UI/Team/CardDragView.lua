@@ -1,4 +1,4 @@
---拖拽卡牌视图
+﻿--拖拽卡牌视图
 local isAddtive=false;
 local attrs={};
 local maxAttrNum=4;--每次最大显示的数量

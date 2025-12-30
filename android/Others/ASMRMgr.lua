@@ -1,4 +1,4 @@
-local ASMRData = require("ASMRData")
+﻿local ASMRData = require("ASMRData")
 local this = MgrRegister("ASMRMgr")
 
 function this:Clear()

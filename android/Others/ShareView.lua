@@ -1,4 +1,4 @@
----是否截图
+﻿---是否截图
 local IsCameraScreenshot=false;
 ---帧数
 local  CameraScreenshotStep=0;

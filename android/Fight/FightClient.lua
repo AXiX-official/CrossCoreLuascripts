@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 this.data = nil;
 this.isStarted = nil;

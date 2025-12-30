@@ -1,4 +1,4 @@
-_G["cfgColosseum"]={{["begTime"]="2024/12/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=1,["shopId"]=4001,["key"]=1,["randomCost"]={{10035,90}
+﻿_G["cfgColosseum"]={{["begTime"]="2024/12/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=1,["shopId"]=4001,["key"]=1,["randomCost"]={{10035,90}
 ,{10040,90}
 }
 ,["seasonName"]="测试赛季",["freeMax"]=3,["freeNum"]=1,["id"]=1,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}

@@ -1,4 +1,4 @@
---公会申请面板
+﻿--公会申请面板
 local sortType=1; --升序
 local applyItems={};
 local data=nil;

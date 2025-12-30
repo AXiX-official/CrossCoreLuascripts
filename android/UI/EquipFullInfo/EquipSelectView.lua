@@ -1,4 +1,4 @@
-local isSingle=false;--显示单件还是套装
+﻿local isSingle=false;--显示单件还是套装
 local isSuitSelect=false;--是否选择套装芯片
 local isHide=false;--是否隐藏已装备芯片
 local coreSlot=-1;--芯片盘当前选择位置

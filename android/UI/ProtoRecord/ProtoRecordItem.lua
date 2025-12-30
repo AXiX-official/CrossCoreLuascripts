@@ -1,4 +1,4 @@
-
+﻿
 function Set(itemData)
     data = itemData;
     local text =  data.title or (data.proto[1] and tostring(data.proto[1])) or "�ޱ���";

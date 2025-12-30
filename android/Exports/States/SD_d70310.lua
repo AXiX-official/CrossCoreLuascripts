@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 enter={play_time=1600,feature=1,feature_camera_no_transform=1},

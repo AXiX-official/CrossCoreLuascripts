@@ -1,4 +1,4 @@
-_G["CfgReturningActivityReward"]={{["shopId"]=1100101,["infos"]={{["idx"]=1,["type"]=1,["name"]="累计登录2天",["reward"]={{10002,160}
+﻿_G["CfgReturningActivityReward"]={{["shopId"]=1100101,["infos"]={{["idx"]=1,["type"]=1,["name"]="累计登录2天",["reward"]={{10002,160}
 }
 ,["param"]=2}
 ,{["idx"]=2,["type"]=1,["name"]="累计登录3天",["reward"]={{10002,160}

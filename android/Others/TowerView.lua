@@ -1,4 +1,4 @@
-local datas = {}
+﻿local datas = {}
 local resetTime = -1
 local openInfo = nil
 local items = {}

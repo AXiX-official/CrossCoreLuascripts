@@ -1,4 +1,4 @@
--- 卡牌建造
+﻿-- 卡牌建造
 require "CreateData"
 local this = MgrRegister("CreateMgr")
 

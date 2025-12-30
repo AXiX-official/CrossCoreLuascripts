@@ -1,4 +1,4 @@
--- function Awake()
+﻿-- function Awake()
 -- 	--综合战力
 -- 	CSAPI.SetText(txtFighting1, StringConstant.Exercise21)
 -- 	--排名

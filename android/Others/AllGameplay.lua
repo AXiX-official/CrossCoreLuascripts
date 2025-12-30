@@ -1,4 +1,4 @@
-function Awake()
+﻿function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/AllGameplay/AllGameplayItem", LayoutCallBack, true)
 

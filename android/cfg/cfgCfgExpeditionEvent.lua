@@ -1,4 +1,4 @@
-_G["CfgExpeditionEvent"]={[351001]={["id"]=351001,["infos"]={{["radius"]=300,["index"]=1,["reward"]=7351003,["sBg"]="range01",["accelerated"]=0,["nType"]=0,["pos"]={-701,303}
+﻿_G["CfgExpeditionEvent"]={[351001]={["id"]=351001,["infos"]={{["radius"]=300,["index"]=1,["reward"]=7351003,["sBg"]="range01",["accelerated"]=0,["nType"]=0,["pos"]={-701,303}
 ,["speed_min"]=200,["sName"]="钻石",["sIcon"]="10002"}
 ,{["radius"]=400,["index"]=2,["reward"]=7351001,["sBg"]="range01",["accelerated"]=0,["nType"]=0,["pos"]={373,184}
 ,["speed_min"]=200,["sName"]="冷却装置",["sIcon"]="11003"}

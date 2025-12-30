@@ -1,4 +1,4 @@
-
+﻿
 function SetFunc(targetFunc,targetCaller)
     func = targetFunc; 
     caller = targetCaller;

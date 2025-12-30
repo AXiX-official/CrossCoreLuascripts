@@ -1,4 +1,4 @@
---角色排序工具
+﻿--角色排序工具
 DormFurnitureSortUtil = {}
 
 local this = DormFurnitureSortUtil

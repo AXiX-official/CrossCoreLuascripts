@@ -1,4 +1,4 @@
--- 家具描述
+﻿-- 家具描述
 function OnOpen()
     curThemeType = data[1]
     themeData = data[2]

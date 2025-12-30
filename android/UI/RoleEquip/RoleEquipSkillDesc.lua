@@ -1,4 +1,4 @@
---技能等级
+﻿--技能等级
 local lvItems={};--等级描述物体
 local scrollRect=nil;
 function Awake()

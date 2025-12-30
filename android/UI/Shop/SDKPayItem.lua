@@ -1,4 +1,4 @@
---SDK支付选择子物体
+﻿--SDK支付选择子物体
 local cb=nil;
 local image=nil;
 function Awake()

@@ -1,4 +1,4 @@
--- RewardInfo2 的某 index
+﻿-- RewardInfo2 的某 index
 function Refresh(data, _clickNum)
     clickNum = _clickNum
     cfg = data:GetCfg()

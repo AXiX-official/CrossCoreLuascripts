@@ -1,4 +1,4 @@
---大招场景
+﻿--大招场景
 
 function SetCamp(ourCamp)
     CSAPI.SetGOActive(our,false);

@@ -1,4 +1,4 @@
---用户协议
+﻿--用户协议
 require "LoginCommFuns"
 local scroll=nil;
 local index=1;

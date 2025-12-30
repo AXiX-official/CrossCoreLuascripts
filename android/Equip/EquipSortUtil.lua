@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 ---------------------------排序子方法,返回nil是为了进行下一个方法的调用---------------------
 --根据品质降序排序
 function this.SortEquipByQuaily(a, b)

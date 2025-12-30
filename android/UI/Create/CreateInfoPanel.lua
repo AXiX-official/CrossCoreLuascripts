@@ -1,4 +1,4 @@
--- 建造卡池详情
+﻿-- 建造卡池详情
 local qualityDatasArr = {}
 
 function Awake()

@@ -1,4 +1,4 @@
--- 策划
+﻿-- 策划
 local actions = {3, 5, 4} -- 角色3个动作下标（石头，剪刀，布）
 local tyIndex = 10 -- 脱衣动作下标 
 local hxIndexs = {6, 7, 8, 9} -- 害羞动作下标(卡牌失败)

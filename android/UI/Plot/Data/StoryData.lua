@@ -1,4 +1,4 @@
---剧情故事数据
+﻿--剧情故事数据
 local this={}
 local beginData=nil;
 function this.New()

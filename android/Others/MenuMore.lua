@@ -1,4 +1,4 @@
--- 红点和new是同一个位置
+﻿-- 红点和new是同一个位置
 local redPoss = {
     ["PlayerView"] = {78, 78},
     ["Achievement"] = {147.4, 51.8},
@@ -159,7 +159,7 @@ function SetLv()
     local curLv = PlayerClient:GetLv()
     local maxLv = PlayerClient:GetMaxLv()
     CSAPI.SetText(txtLv1, string.format("%d", curLv))
-
+    CSAPI.SetText(txtLv2, maxLv.."")
     -- exp
     if curLv == maxLv then
         LanguageMgr:SetText(txtExp1, 34004)

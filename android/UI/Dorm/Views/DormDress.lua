@@ -1,4 +1,4 @@
--- 换装
+﻿-- 换装
 local curIndex = 1
 
 function OnInit()

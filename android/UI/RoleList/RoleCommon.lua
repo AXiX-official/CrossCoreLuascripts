@@ -1,4 +1,4 @@
-
+﻿
 
 --角色列表排序
 RoleListOrderType = {Up = 1, Down = 2}

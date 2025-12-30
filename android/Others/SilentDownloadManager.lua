@@ -1,4 +1,4 @@
-local this = MgrRegister("SilentDownloadManager")
+﻿local this = MgrRegister("SilentDownloadManager")
 
 function this:Init()
     

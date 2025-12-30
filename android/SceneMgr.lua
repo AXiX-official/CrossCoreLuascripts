@@ -1,4 +1,4 @@
---场景管理
+﻿--场景管理
 local this = {};
 
 function this:SetCurrScene(cfgScene,isLoaded)

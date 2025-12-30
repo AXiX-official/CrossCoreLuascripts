@@ -1,4 +1,4 @@
--- 选择角色
+﻿-- 选择角色
 local timeSort1 = 1 -- 早到后 
 local timeSort2 = 1 -- 多人插图
 -- local sortLua1 = nil

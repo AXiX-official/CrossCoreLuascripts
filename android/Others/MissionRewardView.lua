@@ -1,4 +1,4 @@
-local layout = nil
+﻿local layout = nil
 local tlua = nil
 local curDatas = nil
 local isHad = false

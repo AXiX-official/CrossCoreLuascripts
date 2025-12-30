@@ -1,4 +1,4 @@
---皮肤合集子物体
+﻿--皮肤合集子物体
 local clickCB=nil;
 function Refresh(_d)
     if _d then

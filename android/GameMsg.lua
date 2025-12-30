@@ -1,4 +1,4 @@
-GameMsg = {}
+﻿GameMsg = {}
 GameMsg.map = {}
 GameMsg.map["Test"] = {
 	--32位数字 16位数字 8位数字 64位数字 布尔   字符串   浮点数  结构体         结构体数组   普通类型数组 双精度小数 
@@ -2656,9 +2656,9 @@ GameMsg.map["TaskProto:GetReward"] = {
 	{ "id",        "ids",       },
 }
 GameMsg.map["TaskProto:GetRewardRet"] = {
-	--                     多领取返回           每日星数    每周星数                    
-	{ "struts|sGetRewardInfo","list|sGetRewardInfo","uint",     "uint",      "list|sReward",},
-	{ "info",              "infos",             "dailyStar","weeklyStar","gets",        },
+	--                     多领取返回           每日星数    每周星数                    庆典任务星数       
+	{ "struts|sGetRewardInfo","list|sGetRewardInfo","uint",     "uint",      "list|sReward","list|sPairIntInt",},
+	{ "info",              "infos",             "dailyStar","weeklyStar","gets",        "anvsStarInfo",    },
 }
 GameMsg.map["TaskProto:GetRewardByType"] = {
 	--任务类型 辅助字段[任务中细分类型] 
@@ -2666,9 +2666,9 @@ GameMsg.map["TaskProto:GetRewardByType"] = {
 	{ "type",  "nGroup",            },
 }
 GameMsg.map["TaskProto:GetRewardByTypeRet"] = {
-	--任务唯一索引         每日星数    每周星数                    
-	{ "list|sGetRewardInfo","uint",     "uint",      "list|sReward",},
-	{ "infos",             "dailyStar","weeklyStar","gets",        },
+	--任务唯一索引         每日星数    每周星数                    庆典任务星数       
+	{ "list|sGetRewardInfo","uint",     "uint",      "list|sReward","list|sPairIntInt",},
+	{ "infos",             "dailyStar","weeklyStar","gets",        "anvsStarInfo",    },
 }
 GameMsg.map["TaskProto:GetResetTaskInfo"] = {
 	--
@@ -2676,9 +2676,9 @@ GameMsg.map["TaskProto:GetResetTaskInfo"] = {
 	{ },
 }
 GameMsg.map["TaskProto:GetResetTaskInfoRet"] = {
-	--每天任务过期时间 每周任务过期时间  每日星数    每周星数     
-	{ "uint",          "uint",           "uint",     "uint",      },
-	{ "dailyResetTime","weeklyResetTime","dailyStar","weeklyStar",},
+	--每天任务过期时间 每周任务过期时间  每日星数    每周星数     庆典任务星数       
+	{ "uint",          "uint",           "uint",     "uint",      "list|sPairIntInt",},
+	{ "dailyResetTime","weeklyResetTime","dailyStar","weeklyStar","anvsStarInfo",    },
 }
 GameMsg.map["TaskProto:GetSevenTasksDay"] = {
 	--类型   
@@ -3946,9 +3946,9 @@ GameMsg.map["sDormA"] = {
 	{ "id",                "num",           "roleIds",   "lv",   "img",   "comfort",},
 }
 GameMsg.map["sDormData"] = {
-	--图片名称 入住角色id   家具列表            
-	{ "string","array|uint","map|sFurniture|id",},
-	{ "img",   "roleIds",   "furnitures",       },
+	--图片名称 入住角色id   家具列表            入住宠物信息 
+	{ "string","array|uint","map|sFurniture|id","array|uint",},
+	{ "img",   "roleIds",   "furnitures",       "petIds",    },
 }
 GameMsg.map["sDormB"] = {
 	--宿舍id 人数    等级    舒适度                       
@@ -4168,6 +4168,36 @@ GameMsg.map["DormProto:SearchTheme"] = {
 GameMsg.map["DormProto:SearchThemeRet"] = {
 	--                
 	{ "struts|sTheme",},
+	{ "info",         },
+}
+GameMsg.map["DormProto:SetPet"] = {
+	--宠物信息           
+	{ "list|sDormSetPet",},
+	{ "info",            },
+}
+GameMsg.map["DormProto:SetPetRet"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["sDormSetPet"] = {
+	--宿舍id 宠物ID       
+	{ "uint","array|uint",},
+	{ "id",  "petIds",    },
+}
+GameMsg.map["sDormPet"] = {
+	--宠物ID 宿舍ID     
+	{ "uint","uint",    },
+	{ "id",  "build_id",},
+}
+GameMsg.map["DormProto:DormPetInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["DormProto:DormPetInfoRet"] = {
+	--宠物信息        
+	{ "list|sDormPet",},
 	{ "info",         },
 }
 GameMsg.map["sFriendInfo"] = {
@@ -5305,6 +5335,36 @@ GameMsg.map["OperateActiveProto:GetMaidCoffeeRewardRet"] = {
 	{ "uint","uint",  "uint",      "uint",        },
 	{ "id",  "cnt",   "remainCnt", "maxScore",    },
 }
+GameMsg.map["OperateActiveProto:GetLimitRewardInfo"] = {
+	--活动ID 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["OperateActiveProto:GetLimitRewardInfoRet"] = {
+	--活动id 完成任务数    全服名额领取进度 是否弹过窗 第几名玩家 完成时间 当前第几阶段 
+	{ "uint","uint",       "uint",          "bool",    "uint",    "uint",  "uint",      },
+	{ "id",  "doneTaskNum","curQuota",      "isPopup", "quota",   "time",  "stage",     },
+}
+GameMsg.map["OperateActiveProto:LimitRewardCloseWindow"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:LimitRewardCloseWindowRet"] = {
+	--是否弹过窗 
+	{ "bool",    },
+	{ "isPopup", },
+}
+GameMsg.map["OperateActiveProto:LimitRewardShowCode"] = {
+	--物品id 
+	{ "uint",},
+	{ "id",  },
+}
+GameMsg.map["OperateActiveProto:LimitRewardShowCodeRet"] = {
+	--活动id 第几名玩家 兑换码   物品ID   
+	{ "uint","uint",    "string","uint",  },
+	{ "id",  "quota",   "code",  "itemId",},
+}
 GameMsg.map["OperateActiveProto:GetPopupPackInfo"] = {
 	--
 	{ },
@@ -5369,6 +5429,61 @@ GameMsg.map["OperateActiveProto:GetChristmasGiftRewardRet"] = {
 	--活动id 奖励次数 剩余奖励次数 个人历史最高分 
 	{ "uint","uint",  "uint",      "uint",        },
 	{ "id",  "cnt",   "remainCnt", "maxScore",    },
+}
+GameMsg.map["sRichManGridReward"] = {
+	--格子顺序 奖励           
+	{ "uint",  "list|sReward",},
+	{ "sort",  "rewards",     },
+}
+GameMsg.map["sRichManGridRewardInfo"] = {
+	--格子模板id 格子奖励             
+	{ "uint",    "list|sRichManGridReward",},
+	{ "mapId",   "info",              },
+}
+GameMsg.map["OperateActiveProto:GetRichManData"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:GetRichManDataRet"] = {
+	--配置id  当前所处格子序号 格子模板id 触发的事件  本圈已投掷次数（步数） 
+	{ "uint", "uint",          "uint",    "array|int","uint",               },
+	{ "cfgId","sort",          "mapId",   "eventList","throwCnt",           },
+}
+GameMsg.map["OperateActiveProto:RichManThrow"] = {
+	--遥控点数（非遥控不发） 是否自动投掷 
+	{ "uint",               "bool",      },
+	{ "point",              "isAuto",    },
+}
+GameMsg.map["OperateActiveProto:RichManThrowRet"] = {
+	--骰子点数 当前所处格子序号 格子模板id 触发的事件  本圈已投掷次数（步数） 奖励                 实际移动步数 是否是固定点数投掷 
+	{ "uint",  "uint",          "uint",    "array|int","uint",               "list|sRichManGridRewardInfo","uint",      "bool",            },
+	{ "point", "sort",          "mapId",   "eventList","throwCnt",           "rewards",           "stepCnt",   "isFixed",         },
+}
+GameMsg.map["OperateActiveProto:RichManStopAutoThrow"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:RichManStopAutoThrowRet"] = {
+	--奖励           
+	{ "list|sReward",},
+	{ "rewards",     },
+}
+GameMsg.map["OperateActiveProto:NoticePhysicalReward"] = {
+	--物品ID    奖励表ID 奖励下标 
+	{ "uint",   "uint",  "uint",  },
+	{ "item_id","id",    "index", },
+}
+GameMsg.map["OperateActiveProto:PhysicalRewardInfo"] = {
+	--
+	{ },
+	{ },
+}
+GameMsg.map["OperateActiveProto:PhysicalRewardInfoRet"] = {
+	--各个奖励剩余数量 
+	{ "array|uint",    },
+	{ "nums",          },
 }
 GameMsg.map["LovePlusProto:GetChapterData"] = {
 	--章节id      

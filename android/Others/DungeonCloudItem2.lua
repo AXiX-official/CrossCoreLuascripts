@@ -1,4 +1,4 @@
-local data = nil
+﻿local data = nil
 local easyAnim,hardAnim,extraAnim,birdAnim
 local levelAnimName = {"easy","hard","extra"}
 local levelAnims = {}

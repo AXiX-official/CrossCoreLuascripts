@@ -1,4 +1,4 @@
-_G["CfgPracticeRankLevel"]={{["rewardMailId"]=5001,["id"]=1,["rewards"]={{10010,0,2}
+﻿_G["CfgPracticeRankLevel"]={{["rewardMailId"]=5001,["id"]=1,["rewards"]={{10010,0,2}
 }
 ,["nLostGetCoin"]=64,["nWinGetExp"]=1200,["nWinGetCoin"]=80,["nGetCoin"]=0,["nScore"]=100,["name"]="少尉1星",["nLostGetExp"]=960,["icon"]="img_3_1",["key"]="1"}
 ,{["rewardMailId"]=5001,["id"]=2,["rewards"]={{10010,500,2}

@@ -1,4 +1,4 @@
-local delayTime=0;
+﻿local delayTime=0;
 local eventMgr=nil;
 function Awake()
     eventMgr = ViewEvent.New();

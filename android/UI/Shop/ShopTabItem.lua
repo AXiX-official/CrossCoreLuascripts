@@ -1,4 +1,4 @@
---二级分页子物体
+﻿--二级分页子物体
 local eventMgr=nil;
 local pageID=nil;--一级页面ID
 local isNew=false;

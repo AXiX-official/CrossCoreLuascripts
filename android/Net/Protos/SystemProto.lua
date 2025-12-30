@@ -1,4 +1,4 @@
-SystemProto = {};
+﻿SystemProto = {};
 
 --查询账号
 function SystemProto:ServerError(msg)

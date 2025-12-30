@@ -1,4 +1,4 @@
---回归绑定管理类
+﻿--回归绑定管理类
 local this = MgrRegister("CollaborationMgr")
 
 function this:Init()
@@ -370,8 +370,9 @@ function this:GetActivityTime()
         begTime = begTime and TimeUtil:GetTimeStampBySplit(begTime) or nil
         endTime = endTime and TimeUtil:GetTimeStampBySplit(endTime) or nil
         return begTime,endTime
+    else
+        return self:GetNextBeginTime(),self:GetNextEndTime();
     end 
-    return nil,nil
 end
 
 function this:SetNextRefreshTime(time)

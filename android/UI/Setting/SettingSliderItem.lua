@@ -1,4 +1,4 @@
-local keyName = ""
+﻿local keyName = ""
 local lastNum = 0
 local lastState = 0 --左为-1右为1
 local isSlider = false

@@ -1,4 +1,4 @@
-local UIMaskGo = nil
+﻿local UIMaskGo = nil
 local top = nil
 local currItem = nil;
 local currType = nil; -- 1.主线 2.日常 3.军演 4.活动
@@ -1483,7 +1483,7 @@ end
 
 function OnLoadSuccess()
     itemInfo.SetFunc("Button","OnClickEnter",OnBattleEnter)
-    itemInfo.AddTeamReplace(true,OnBattleEnter)
+    itemInfo.AddTeamReplace(true,OnBattleEnter,nil,nil,nil,0,16.5)
     SetInfoItemPos()
 end
 

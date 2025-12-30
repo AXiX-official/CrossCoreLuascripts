@@ -1,4 +1,4 @@
-local data =nil --DungeonGroupData
+﻿local data =nil --DungeonGroupData
 local currLevel = 1
 local isSel = false
 local isLock = false

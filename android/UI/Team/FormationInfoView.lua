@@ -1,4 +1,4 @@
---编队详情UI
+﻿--编队详情UI
 local leaderClick=nil;
 local descTxts={}
 local data=nil;

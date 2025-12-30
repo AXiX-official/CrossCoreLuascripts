@@ -1,4 +1,4 @@
-_G["cfgGlobalBossRanking"]={[10001]={["id"]=10001,["infos"]={{["sub"]={1,1}
+﻿_G["cfgGlobalBossRanking"]={[10001]={["id"]=10001,["infos"]={{["sub"]={1,1}
 ,["mailId"]=12001,["index"]=1,["up"]={1,20}
 }
 ,{["sub"]={1,21}

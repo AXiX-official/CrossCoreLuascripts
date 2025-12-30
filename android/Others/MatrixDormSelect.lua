@@ -1,4 +1,4 @@
--- data 好友id
+﻿-- data 好友id
 function OnOpen()
     local curRoomData = DormMgr:GetCurRoomData()
     local cfgID, index = curRoomData:GetCfgIDIndex()

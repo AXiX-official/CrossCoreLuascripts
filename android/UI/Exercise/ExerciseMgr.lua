@@ -1,4 +1,4 @@
-
+﻿
 local ExerciseInfo = require "ExerciseInfo"
 local this = MgrRegister("ExerciseMgr")
 

@@ -1,4 +1,4 @@
---弹珠
+﻿--弹珠
 local isRun = false
 local shootTime = 0
 local triggerList = nil --碰触列表

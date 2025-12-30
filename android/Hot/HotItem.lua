@@ -1,4 +1,4 @@
-local calTime = false
+﻿local calTime = false
 local endTimer = 0
 local timer = 0
 

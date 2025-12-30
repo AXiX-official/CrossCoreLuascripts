@@ -1,4 +1,4 @@
-local layout = nil
+﻿local layout = nil
 local topItems = nil
 local indexDatas = nil
 local currDatas = nil

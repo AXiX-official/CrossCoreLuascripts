@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
 	CSAPI.SetGOActive(img6, false)
 	CSAPI.SetGOActive(img7, false)

@@ -1,4 +1,4 @@
-
+﻿
 function Awake()
     layout = ComUtil.GetCom(vsv, "UIInfinite")
     layout:Init("UIs/AccuCharge/AccuChargeItemT", LayoutCallBack, true)

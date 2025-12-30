@@ -1,4 +1,4 @@
-local slotNodes = {}
+﻿local slotNodes = {}
 local equipDatas = {}
 local grids = {}
 

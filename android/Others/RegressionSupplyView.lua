@@ -1,4 +1,4 @@
-local cfg = nil
+﻿local cfg = nil
 local time, timer = 0, 0
 local items = nil
 local targetTime = 0

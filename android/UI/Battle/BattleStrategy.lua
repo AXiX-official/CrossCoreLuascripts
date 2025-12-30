@@ -1,4 +1,4 @@
---自动战斗策略
+﻿--自动战斗策略
 local targets={};
 local spRadios={};
 local sliders={};

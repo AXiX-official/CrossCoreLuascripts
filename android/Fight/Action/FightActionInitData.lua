@@ -1,4 +1,4 @@
---战斗初始化数据
+﻿--战斗初始化数据
 
 FightActionInitData = oo.class(FightActionBase);
 local this = FightActionInitData;

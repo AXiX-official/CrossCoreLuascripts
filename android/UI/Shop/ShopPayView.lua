@@ -1,4 +1,4 @@
---商城购买界面
+﻿--商城购买界面
 --328/420  -9.81 -79.7 / -161.18
 local currNum=1; --当前选择数量
 local currPrice=0;--当前总价格
@@ -125,7 +125,7 @@ function Refresh()
 		else
 			InitType2();
 		end
-		RefreshPrice();
+		-- RefreshPrice();
 		RefreshVoucherItem();
 	end
 end
@@ -244,7 +244,7 @@ function RefreshPrice()
 		CSAPI.SetGOActive(txt_free,false);
 		CSAPI.SetGOActive(nPriceObj,true);
 		local priceInfo=commodity:GetRealPrice();
-		local orgInfo=commodity:GetOrgCosts();
+		local orgInfo=commodity:GetOrgCostsByCostKey();
 		local disPrice=normalPrice[1].num*currNum;--折扣前价格
 		local curPrice=priceInfo[1].num*currNum;--当前价格
 		local curPID=priceInfo[1].id;
@@ -283,6 +283,7 @@ function RefreshPrice()
 				SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice,txt_rmb);
 			end
 			CSAPI.SetGOActive(hLayout2,onceMax>1);
+			CSAPI.SetGOActive(hPrice,isShowHPrice)
 		else
 			SetPrice(curPID,curPrice,nPriceIcon,txt_nPrice,txt_rmb);
 			if  onceMax>1 then

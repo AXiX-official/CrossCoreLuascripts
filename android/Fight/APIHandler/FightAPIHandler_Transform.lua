@@ -1,4 +1,4 @@
-local this = {};
+﻿local this = {};
 
 --处理变身事件
 function this:Handle(data)

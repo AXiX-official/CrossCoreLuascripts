@@ -1,4 +1,4 @@
-local isFirst = false
+﻿local isFirst = false
 local isLeft = true -- 左边的按钮
 
 function Awake()

@@ -1,4 +1,4 @@
-local this={};
+﻿local this={};
 
 --编队条件
 function this.New()

@@ -1,4 +1,4 @@
-local listType = RoleListType.Center
+﻿local listType = RoleListType.Center
 local selectID = nil
 
 function Awake()

@@ -1,4 +1,4 @@
--- local iconColors = {"white", "green", "blue", "purple", "yellow", "red"}
+﻿-- local iconColors = {"white", "green", "blue", "purple", "yellow", "red"}
 --local iconColors = {"ffffff", "57bd7e", "39a9ff", "cf83f3", "ff7246", "ff4747"}
 
 function OnOpen()

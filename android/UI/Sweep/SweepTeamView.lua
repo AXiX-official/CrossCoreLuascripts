@@ -1,4 +1,4 @@
---扫荡编队
+﻿--扫荡编队
 local data = nil
 local teamItems = {}
 local startTeamIdx=0; --起始队伍下标

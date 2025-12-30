@@ -1,4 +1,4 @@
---装备强化面板
+﻿--装备强化面板
 local disNewTween=false;
 local childs={};
 local leftPanel=nil

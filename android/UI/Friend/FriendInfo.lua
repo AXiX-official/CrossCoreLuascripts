@@ -1,4 +1,4 @@
-local this = {
+﻿local this = {
 	isNew = false,        --有新消息
 	isSelect = false,       --当前选中
 }

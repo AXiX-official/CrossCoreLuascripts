@@ -1,4 +1,4 @@
---版本设置
+﻿--版本设置
 local this = {};
 function this:Init()
     --语言设置

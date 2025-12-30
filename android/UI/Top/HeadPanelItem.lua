@@ -1,4 +1,4 @@
-
+﻿
 
 function Refresh(_data, elseData)
 	data = _data

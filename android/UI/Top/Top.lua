@@ -1,4 +1,4 @@
-local topIndex = 0
+﻿local topIndex = 0
 function Awake()
     topIndex = MenuMgr:GetTopIndex()
     AdaptiveConfiguration.SetLuaUIFit("Top" .. topIndex, gameObject)

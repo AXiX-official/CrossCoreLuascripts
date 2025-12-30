@@ -1,4 +1,4 @@
--- -- OPENDEBUG(false)
+﻿-- -- OPENDEBUG(false)
 ----------------------------------------------
 -- 战队阵列
 Team = oo.class()
@@ -269,17 +269,18 @@ function Team:Unite(list, monsterID, data)
 	-- local minpos = p
 	-- local coordinate = {}
 	for i, v in ipairs(list) do
-		v.isLive = false
-		v.isRemove = true -- 禁止复活
-		local g = v:GetGrids()
-		v.skillMgr:DeleteEvent() -- 注销技能事件
-		for _, pos in ipairs(g) do
-			self.map[pos[1]][pos[2]] = nil
-			-- table.insert(coordinate, {pos[1], pos[2]})
-			-- if (pos[1] < p[1]) or (pos[1] == p[1] and pos[2] < p[2]) then
-			-- 	minpos = pos
-			-- end
-		end
+		self:RemoveCard(v)
+		-- v.isLive = false
+		-- v.isRemove = true -- 禁止复活
+		-- local g = v:GetGrids()
+		-- v.skillMgr:DeleteEvent() -- 注销技能事件
+		-- for _, pos in ipairs(g) do
+		-- 	self.map[pos[1]][pos[2]] = nil
+		-- 	-- table.insert(coordinate, {pos[1], pos[2]})
+		-- 	-- if (pos[1] < p[1]) or (pos[1] == p[1] and pos[2] < p[2]) then
+		-- 	-- 	minpos = pos
+		-- 	-- end
+		-- end
 	end
 
 	-- if not self:CheckGridsEx(coordinate, monsterCfg.grids, minpos) then
@@ -295,6 +296,18 @@ function Team:Unite(list, monsterID, data)
 	return card
 end
 
+-- 移除卡牌
+function Team:RemoveCard(v)
+	if not v then return end
+	v.isLive = false
+	v.isRemove = true -- 禁止复活
+	local g = v:GetGrids()
+	v.skillMgr:DeleteEvent() -- 注销技能事件
+	for _, pos in ipairs(g) do
+		self.map[pos[1]][pos[2]] = nil
+	end
+end
+
 -- 解体
 function Team:Resolve(card, bnotlog)
 -- *解除同调后，血量计算：									
@@ -305,7 +318,7 @@ function Team:Resolve(card, bnotlog)
 	card.isResolve = true
 
 	-- LogTrace()
-	local percent = card.hp/card.maxhp
+	local percent = card.hp/card:Get("maxhp")
 
 	local log = {api = "Resolve", id = card.oid, datas = {}}
 
@@ -320,7 +333,7 @@ function Team:Resolve(card, bnotlog)
 		for _, pos in ipairs(v:GetGrids()) do
 			self.map[pos[1]][pos[2]] = v
 		end
-		v.hp = math.floor(v.maxhp*percent)
+		v.hp = math.floor(v:Get("maxhp")*percent)
 		if v.hp <= 0 then v.hp = 1 end -- 保底不死
 		-- v.sp = 0
 		table.insert(log.datas, v:GetShowData())

@@ -1,4 +1,4 @@
---状态数据
+﻿--状态数据
 local this = 
 {
 idle={play_time=2500},

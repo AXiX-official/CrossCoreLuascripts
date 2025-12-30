@@ -1,4 +1,4 @@
-local item = nil
+﻿local item = nil
 local rewardInfo = nil
 
 function Awake()

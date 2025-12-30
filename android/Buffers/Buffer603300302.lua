@@ -1,4 +1,4 @@
--- 空buff
+﻿-- 空buff
 -- 本文件由工具自动生成,请不要直接编辑本文件
 ---------------------------------------------
 -- 技能基类
@@ -13,7 +13,7 @@ function Buffer603300302:OnCreate(caster, target)
 	-- 8772
 	local c772 = SkillApi:GetCount(self, self.caster, target or self.owner,4,603300301)
 	-- 8773
-	local c773 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,46033)
+	local c773 = SkillApi:SkillLevel(self, self.caster, target or self.owner,4,47801)
 	-- 4603301
 	self:AddAttr(BufferEffect[4603301], self.caster, self.creater, nil, "attack",(0.03+math.floor(c773)*0.01)*c15*c772)
 	-- 4603311

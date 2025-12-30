@@ -1,4 +1,4 @@
-_G["CfgDirllEnemy"]={{["name"]="同调型造物",["key"]="1",["groupID"]=2007,["id"]=1,["groupType"]=3,["icon"]="90050_Common_TrapBomb_N",["desc"]="辅助我方进行同调测试的造物。"}
+﻿_G["CfgDirllEnemy"]={{["name"]="同调型造物",["key"]="1",["groupID"]=2007,["id"]=1,["groupType"]=3,["icon"]="90050_Common_TrapBomb_N",["desc"]="辅助我方进行同调测试的造物。"}
 ,{["name"]="火力测试型造物",["key"]="2",["groupID"]=2001,["id"]=2,["groupType"]=1,["icon"]="90050_Common_TrapBomb_N",["desc"]="移除了行动能力，专门用来进行火力测试的造物。"}
 ,{["name"]="实战用造物",["key"]="3",["groupID"]=2002,["id"]=3,["groupType"]=1,["icon"]="90260_Common_Sentry_N",["desc"]="荷枪实弹的实战训练，敌人会用上一切攻击手段。"}
 ,{["name"]="减益型造物",["key"]="4",["groupID"]=2003,["id"]=4,["groupType"]=1,["icon"]="90200_Common_SlowTrap_N",["desc"]="敌人会使用技能削弱我方战斗能力。"}

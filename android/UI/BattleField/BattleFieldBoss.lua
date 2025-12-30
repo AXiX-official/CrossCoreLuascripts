@@ -1,4 +1,4 @@
-local bossData = nil
+﻿local bossData = nil
 local hpSlider = nil
 local isEnd = false
 local cfg = nil

@@ -1,4 +1,4 @@
--- 称号
+﻿-- 称号
 local effectObj
 local isMy = false 
 

@@ -1,4 +1,4 @@
-local SweepData = require("SweepData")
+﻿local SweepData = require("SweepData")
 SweepMgr = MgrRegister("SweepMgr")
 local this = SweepMgr;
 

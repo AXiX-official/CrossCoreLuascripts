@@ -1,4 +1,4 @@
-local elseData = nil
+﻿local elseData = nil
 local fade = nil
 local isAnim = false
 local outBar = nil
@@ -99,6 +99,7 @@ function SetLv()
     local curLv = PlayerClient:GetLv()
     local maxLv = PlayerClient:GetMaxLv()
     CSAPI.SetText(txtLv1, string.format("%d", curLv))
+    CSAPI.SetText(txtLv2, "/" .. maxLv)
 
     -- exp
     if curLv == maxLv then
@@ -288,6 +289,14 @@ end
 
 function OnClickIcon()
     CSAPI.OpenView("HeadFramePanel")
+end
+
+function OnClickSex()
+    -- if BagMgr:GetCount(25501) > 0 then
+        CSAPI.OpenView("PlayerSex")
+    -- else
+    --     Tips.ShowTips("不足")
+    -- end
 end
 
 function OnDestroy()

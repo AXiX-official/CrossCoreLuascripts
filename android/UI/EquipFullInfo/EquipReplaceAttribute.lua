@@ -1,4 +1,4 @@
---isUp:1：绿色,2:红色，nil不显示
+﻿--isUp:1：绿色,2:红色，nil不显示
 local item=nil;
 function Refresh(data)
     if item==nil then

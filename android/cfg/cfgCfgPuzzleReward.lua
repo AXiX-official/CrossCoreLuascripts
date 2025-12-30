@@ -1,4 +1,4 @@
-_G["CfgPuzzleReward"]={[1001]={["id"]=1001,["infos"]={{["rewardShow"]={{10001}
+﻿_G["CfgPuzzleReward"]={[1001]={["id"]=1001,["infos"]={{["rewardShow"]={{10001}
 }
 ,["grids"]={1,2,3}
 ,["position"]={-288,168}

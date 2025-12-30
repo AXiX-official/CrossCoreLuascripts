@@ -1,4 +1,4 @@
---SDK支付管理类
+﻿--SDK支付管理类
 local this = MgrRegister("SDKPayMgr")
 require "LoginCommFuns"
 

@@ -1,4 +1,4 @@
--- 解禁 机神
+﻿-- 解禁 机神
 local this = {}
 
 function this.New()

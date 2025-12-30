@@ -1,4 +1,4 @@
--- BUFF信息物体
+﻿-- BUFF信息物体
 local lifeTime=0;
 function Awake()
     CSAPI.SetText(time, LanguageMgr:GetByID(2016));

@@ -1,4 +1,4 @@
-AdvBindingRewards={}
+﻿AdvBindingRewards={}
 local this=AdvBindingRewards;
 
 

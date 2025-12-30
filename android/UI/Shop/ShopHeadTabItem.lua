@@ -1,4 +1,4 @@
---商店头部页签
+﻿--商店头部页签
 local isNowOn=false;
 local data=nil;
 local eventMgr=nil;

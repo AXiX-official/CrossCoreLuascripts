@@ -1,4 +1,4 @@
--- function Awake()
+﻿-- function Awake()
 -- 	dormThemeIcon = ComUtil.GetCom(icon, "DormThemeIcon")
 -- end
 function SetIndex(_index)

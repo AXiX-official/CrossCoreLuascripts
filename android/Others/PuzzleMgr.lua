@@ -1,4 +1,4 @@
---拼图管理器
+﻿--拼图管理器
 local this = MgrRegister("PuzzleMgr")
 
 function this:Init()

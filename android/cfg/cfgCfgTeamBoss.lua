@@ -1,4 +1,4 @@
-_G["CfgTeamBoss"]={{["forceDelCd"]=10,["timeArr"]={1,1,1,1,1,1,1}
+﻿_G["CfgTeamBoss"]={{["forceDelCd"]=10,["timeArr"]={1,1,1,1,1,1,1}
 ,["minStarCnt"]=2,["infos"]={{["hard"]="简单",["win_rewards"]={{10010,500,2}
 }
 ,["rank_rewards3"]={{10010,30,2}

@@ -1,4 +1,4 @@
-local groupCfgs = {}
+﻿local groupCfgs = {}
 local listItems= nil
 local infoItem = nil
 local currItem = nil

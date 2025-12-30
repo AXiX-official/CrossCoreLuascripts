@@ -1,4 +1,4 @@
--- text满框后左右移动 
+﻿-- text满框后左右移动 
 -- 要考虑无限滚动的item，不满足滚动的要还原初始位置
 -- 只考虑Text的Anchors为左中右情况
 LuaTextMove = {}

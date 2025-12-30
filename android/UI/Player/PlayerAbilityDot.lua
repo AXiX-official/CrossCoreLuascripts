@@ -1,4 +1,4 @@
-local dotMove1 = nil
+﻿local dotMove1 = nil
 local dotMove2 = nil
 local dotCanvasG1 = nil
 local dotCanvasG2 = nil

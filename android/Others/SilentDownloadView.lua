@@ -1,4 +1,4 @@
-
+﻿
 local timer = 0
 local slider = 0
 local grids = nil

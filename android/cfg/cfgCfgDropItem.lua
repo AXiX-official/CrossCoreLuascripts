@@ -1,4 +1,4 @@
-_G["CfgDropItem"]={{["DropItemID"]=58032,["id"]=1,["key"]=1,["DropNum"]={1,1}
+﻿_G["CfgDropItem"]={{["DropItemID"]=58032,["id"]=1,["key"]=1,["DropNum"]={1,1}
 }
 ,{["DropItemID"]=58033,["id"]=2,["key"]=2,["DropNum"]={1,1}
 }

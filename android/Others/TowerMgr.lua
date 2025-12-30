@@ -1,4 +1,4 @@
-TowerMgr = MgrRegister("TowerMgr")
+﻿TowerMgr = MgrRegister("TowerMgr")
 local this = TowerMgr;
 
 function this:Init()

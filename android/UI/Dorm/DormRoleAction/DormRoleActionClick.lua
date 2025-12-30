@@ -1,4 +1,4 @@
-DormRoleActionClick = oo.class(DormRoleActionBase)
+﻿DormRoleActionClick = oo.class(DormRoleActionBase)
 
 local this = DormRoleActionClick
 
