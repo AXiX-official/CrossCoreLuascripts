@@ -13,6 +13,19 @@ end
 function this:SetData(fightActionData)
     FightActionBase.SetData(self,fightActionData);
     self:Preload(fightActionData.datas);
+
+    if(fightActionData.datas)then
+        for _,data in pairs(fightActionData.datas)do
+            local modelId = data.characterData.model;
+            local cfgModel = Cfgs.character:GetByID(modelId);
+            if(cfgModel and cfgModel.robotBgm_enter)then
+                CSAPI.PlayBGM(cfgModel.robotBgm_enter, 1000);
+                if(cfgModel.robotBgm_enter_time)then
+                    FuncUtil:Call(CSAPI.PlayBGM,nil,cfgModel.robotBgm_enter_time,cfgModel.robotBgm,1000);
+                end
+            end
+        end
+    end
 end
 --预加载角色
 function this:Preload(datas)   
@@ -26,7 +39,6 @@ end
 
 function this:OnPlay()   
     self.isPlayed = 1;
-
     self:ApplyCreate();
 
 
@@ -42,10 +54,23 @@ function this:OnClean()
     self.isPreloaded = nil;
     self.isPlayed = nil;
 
+    local replaceCastStates = self:GetReplaceCastStates();--替换机神技能状态
+    --replaceCastStates = {"cast2","cast2a"};
+    --LogError("==================================");
+    --LogError(replaceCastStates);
     if(self.summons)then
         for _,character in ipairs(self.summons)do
             character.SetSummonState(false);
             character.SetOverTurn(false);
+
+            if(replaceCastStates)then                
+                local oldCastState = replaceCastStates[1];
+                local newCastState = replaceCastStates[2];
+
+                if(oldCastState and newCastState)then
+                    character.SetReplaceCastState(oldCastState,newCastState);
+                end
+            end
         end
     end
     if(self.master)then
@@ -56,6 +81,12 @@ function this:OnClean()
     self.master = nil;
 
     EventMgr.Dispatch(EventType.Scene_Mask_Changed,false);
+end
+
+function this:GetReplaceCastStates()
+    local cfgModel = self.master and self.master.GetCfgModel();
+    --LogError(cfgModel);
+    return cfgModel and cfgModel.replace_state;    
 end
 
 function this:IsSkip()
@@ -78,7 +109,20 @@ function this:ApplyCreate()
         self:ShowSummonCharacter();
         return;
     end
+    local aniName,aniSound = self:GetEnterAni();    
+    if(aniName)then
+        local enterAniPlayDelay = self:GetEnterAniPlayDelay();
+        FuncUtil:Call(self.PlayEnterAni,self,enterAniPlayDelay or 0);
+        --self:PlayEnterAni();
+    else
+        self:SetSummonsShowState(false);
+        self:MasterShow();
+        --self:ApplySummonShow();  
+    end
+      
+end
 
+function this:PlayEnterAni()
     local aniName,aniSound = self:GetEnterAni();      
     if(aniName and not FightActionMgr:IsSkiping())then
         local summonAni = ResUtil:PlayVideo(aniName); 
@@ -90,31 +134,29 @@ function this:ApplyCreate()
             --FuncUtil:Call(self.OnVideoComplete,self,250);
             self:OnVideoComplete();
         end); 
-        return;
-    end
-    
-    self:SetSummonsShowState(false);
-    self:MasterShow();
-   --self:ApplySummonShow();    
+        --return;
+    end     
 end
 
 function this:OnVideoComplete()
     self:ShowSummonCharacter();
 end
 
+function this:GetEnterAniPlayDelay()
+    local cfgSkill = Cfgs.skill:GetByID(self.fightAction and self.fightAction:GetSkillID()); 
+
+    local summonCast = cfgSkill and cfgSkill.cast or "summon";
+    local masterSummonData = self.master.GetCastStateData(summonCast); 
+    local delay = masterSummonData and masterSummonData.enter_ani_delay or 0;
+    return delay;
+end
 
 --- 机身自带入场视频，写在这里
 function this:GetCustomPlayTime()
-    local enterAniName = self:GetEnterAni();
+    local enterAniName,enterSound,enterTime = self:GetEnterAni();
     if(enterAniName)then
-    --[[     if(not enterAniTimes)then
-            enterAniTimes = 
-            {
-                summon_enter_80240 = 5000
-            };
-        end ]]
-        --LogError(enterAniTimes[enterAniName]);
-        return 7000;--enterAniTimes[enterAniName];
+        local enterAniPlayDelay = self:GetEnterAniPlayDelay() or 0;
+        return enterAniPlayDelay + (enterTime or 7000);--enterAniTimes[enterAniName];
     end
 
 end
@@ -132,7 +174,7 @@ function this:GetEnterAni()
         --LogError(cfgModel);
         --enterAniName = "summon_enter_80240"
         if(enterAniName)then
-            return enterAniName,cfgModel.enter_sound;
+            return enterAniName,cfgModel.enter_sound,cfgModel.enter_time;
         end        
     end
 
@@ -167,10 +209,16 @@ function this:MasterShow()
     
     
     local delay = masterSummonData.summon_delay or 0;
-    FuncUtil:Call(self.SummonEnter,self,delay);
+    if(delay >= 0)then
+        FuncUtil:Call(self.SummonEnter,self,delay);
+    end
 
-    local maskDelayTime = 80;--大招场景遮罩延迟时间
-    FuncUtil:Call(self.Complete,self,masterSummonData.play_time + maskDelayTime);
+    local aniName,aniSound = self:GetEnterAni();
+    local playTime = masterSummonData.play_time or 0;
+    if(playTime >= 0 and StringUtil:IsEmpty(aniName))then
+        local maskDelayTime = 80;--大招场景遮罩延迟时间
+        FuncUtil:Call(self.Complete,self,playTime + maskDelayTime);
+    end
 end
 
 function this:SetSummonsShowState(isShow)

@@ -364,7 +364,6 @@ end
 function this:EffAction_AddOwnerEquipSkill(effEventData)
     local targetId = effEventData.targetID;         
     local targetCharacter = CharacterMgr:Get(targetId);
-    LogError(effEventData)
     if(targetCharacter)then        
         --处理装备技能
         targetCharacter.SetEquipSkills(effEventData.equipSkills);

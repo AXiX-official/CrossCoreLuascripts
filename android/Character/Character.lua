@@ -669,6 +669,10 @@ function DeadEnd()
     end
     isDeadEnd = true;
     ShowDeadEffect();
+
+    if(GetBGM())then
+        FightClient:TryPlayCharacterBGM();
+    end
 end
 function IsDeadEnd()
     return isDeadEnd;
@@ -2199,6 +2203,15 @@ end
 function GetEquipSkills()
     return equipSkills;
 end
+
+-------------专属BGM-------------
+--是否BGM
+function GetBGM(key)
+    key = key or "robotBgm";
+    local cfg = GetCfgModel();
+    return cfg and cfg[key];
+end
+
 
 --[[ function Update()
      if(CS.UnityEngine.Input.GetKeyDown(CS.UnityEngine.KeyCode.D))then

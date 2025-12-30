@@ -104,8 +104,8 @@ function Refresh()
 	if needNum and needNum>0 and needCfgId~=nil and needUseNum~=0 then
 		CSAPI.SetGOActive(needObj,true);
 		CSAPI.SetText(txtNeedNum,LanguageMgr:GetByID(24048,needUseNum));
-		curUseList[selectID]=needUseNum;--需要的数量
 		useNum=maxNum>=needUseNum and needUseNum or maxNum;
+		curUseList[selectID]=useNum;--需要的数量
 	else
 		CSAPI.SetGOActive(needObj,false);
 	end
@@ -137,7 +137,7 @@ end
 
 function Close()
 	UIUtil:HideAction(child, function()
-		if  view~=nil then
+		if  IsNil(gameObject)~=nil and IsNil(view)~=nil then
 			view:Close();
 		end
 	end, UIUtil.active4);

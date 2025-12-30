@@ -3398,7 +3398,7 @@ function GCalHelp:RegisterExcludeSkill(cid, equipFightSkills, excludeSkills)
     local rInfo = {}
 
     local isChange = false
-    for _, skillId in ipairs(equipFightSkills) do
+    for _, skillId in ipairs(equipFightSkills or {}) do
         local cfg = g_CalExcludeSkillIds[skillId]
         if cfg then
             isChange = true

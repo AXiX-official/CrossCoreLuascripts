@@ -558,7 +558,7 @@ function PlayUIAnimEnd()
     if (not b) then
         PlayLoginVoice() -- 登录语音
         VerChecker:ApplyCheck() -- 版本检查
-        -- CheckInternation() -- 和谐开关
+        CheckInternation() -- 和谐开关
     end
 end
 
@@ -1425,7 +1425,7 @@ function OnViewCloseds()
     ShowHint(true)
     PlayLoginVoice() -- 登录语音
     VerChecker:ApplyCheck() -- 检测是否强制更新
-    -- CheckInternation() -- 和谐开关
+    CheckInternation() -- 和谐开关
 end
 
 function CheckPopUpWindow()

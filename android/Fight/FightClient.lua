@@ -70,9 +70,7 @@ end
 --获取开场表情
 function this:GetEmote(emoteState)
     local emotes = self.data and self.data.emotes;
-    --LogError(self.data);
     if(emotes)then
-       --LogError(emotes);
        local emote1,emote2;
        emote1 = emotes[1] and emotes[1][emoteState];
        emote2 = emotes[2] and emotes[2][emoteState];
@@ -196,7 +194,8 @@ function this:ApplyStart()
 	FightProto:SendCmd(CMD_TYPE.Start, {});
 	-- g_FightMgr:OnStart();
 	
-	--CameraMgr:EnableMainCamera(true);  
+	--CameraMgr:EnableMainCamera(true); 
+    FightClient:TryPlayCharacterBGM(); 
 end
 
 function this:IsFightting()
@@ -236,7 +235,7 @@ function this:Reset()
 end
 
 --清理
-function this:Clean()
+function this:Clean(needConnect)
     Log("战斗清理");
 
     CSAPI.PlaySound("", "", true, false, "feature", 1);--停止人声
@@ -249,8 +248,9 @@ function this:Clean()
 	FightGroundMgr:Clean();
 	FightGridSelMgr.Hide();
     ClientBuffMgr:Clean();
-    NetMgr.netFight:Disconnect();
-    
+    if(not needConnect)then 
+        NetMgr.netFight:Disconnect();
+    end 
     if(FightActionInputIdle)then
         FightActionInputIdle:SetState(nil);
     end
@@ -631,4 +631,27 @@ function this:GetTotalDamage()
     return self.totalDamage;
 end
 
-return this; 
+--播放角色BGM
+function this:TryPlayCharacterBGM()
+    local characters = CharacterMgr:GetAll();
+    local bgm = nil;
+    if(characters)then
+        for id,character in pairs(characters)do
+            if(character and not character.IsDead())then
+                local tmpBgm = character.GetBGM();
+                bgm = tmpBgm;
+                if(tmpBgm and character.IsMine())then
+                    break;
+                end
+            end
+        end
+    end
+
+    if(bgm)then
+        CSAPI.PlayBGM(bgm,1000);
+    else
+        EventMgr.Dispatch(EventType.Replay_BGM);
+    end
+end
+
+return this;

@@ -684,7 +684,7 @@
 ,["key"]=3401,["eliteLimit"]=0,["map"]="map_test",["chapterID"]="01",["bgm"]="Map_Prologue",["enterLimitHot"]=0,["skillGroup"]=34,["eliteReward"]=2100001,["angle_x"]=0,["y"]=-80,["x"]=3278,["name"]="超维跃升",["id"]=3401,["checkImage"]="bg5",["winCostHot"]=0,["enemyPreview"]={30601111}
 ,["exp"]=0,["group"]=104,["jLostCon"]={{3,99}
 }
-,["lvTips"]="22000",["gold"]=0,["plrExp"]=0,["LockLevel"]=50,["fisrt3StarReward"]={{10002,60,2}
+,["lvTips"]="38000",["gold"]=0,["plrExp"]=0,["LockLevel"]=50,["fisrt3StarReward"]={{10002,60,2}
 }
 ,["enterCostHot"]=0,["star1"]={1,1}
 ,["fisrtPassReward"]={{14010,6,2}

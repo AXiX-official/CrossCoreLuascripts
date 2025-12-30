@@ -714,6 +714,7 @@ SkillMainType.CardTalent = 2 -- 卡牌天赋技能
 SkillMainType.CardSpecial = 3 -- 卡牌特殊技能
 SkillMainType.CardSubTalent = 4 -- 卡牌副天赋技能
 SkillMainType.Equip = 5 -- 装备技能
+SkillMainType.Other         = 6 -- 其他技能
 
 -- 特殊技能分类
 SpecialSkillType = {}

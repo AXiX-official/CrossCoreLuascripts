@@ -102,6 +102,10 @@ function SetImg(_l2dName, _b, _cb)
             if (_cb) then
                 _cb()
             end
+            -- 切换spine
+            if (_l2dName ~= nil) then
+                RestoreClicks()
+            end
         end)
     end
 
@@ -167,8 +171,8 @@ function TouchItemClickCB(cfgChild, _cb, _check, _isCan)
     -- 轨道
     local trackIndex = GetTrackIndex(cfgChild)
     local isCan = _isCan or false
-    if(isCan)then 
-        --必定可执行
+    if (isCan) then
+        -- 必定可执行
     elseif (trackIndex == 1) then
         --[[
         -- 1轨道需要在idle状态下才能点击 或 前后都是同一多动作，并且不是最后一个动作
@@ -258,10 +262,10 @@ function TouchItemClickCB(cfgChild, _cb, _check, _isCan)
                 cb, delay = GetClickCB(cfgChild)
             end
             if (sName ~= nil) then
-                local b1,b2 = true,true
-                if(content.noFade)then 
+                local b1, b2 = true, true
+                if (content.noFade) then
                     b1 = false
-                elseif (trackIndex ~= 1 and content.guochange == nil) then --轨道为1或者有过场时需要渐出
+                elseif (trackIndex ~= 1 and content.guochange == nil) then -- 轨道为1或者有过场时需要渐出
                     b2 = false
                 end
                 b = spineTools:PlayByClick(sName, trackIndex, b1, b2, cb)
@@ -300,9 +304,16 @@ function GetClickCB(cfgChild)
             curRoleNum = 3 - _curRoleNum
             func = function()
                 local cb = nil
-                if (cfgChild.content.changerole[4]) then
+                if (cfgChild.content.changerole[4] and cfgChild.content.changerole[4] ~= "") then
                     cb = function()
                         PlayByIndex(cfgChild.content.changerole[4], nil, false)
+                        if (cfgChild.content.changerole[5]) then
+                            RecordsJC(cfgChild.content.changerole[5])
+                        end
+                    end
+                elseif (cfgChild.content.changerole[5]) then
+                    cb = function()
+                        RecordsJC(cfgChild.content.changerole[5])
                     end
                 end
                 SetImg(cfgChild.content.changerole[1], false, cb)
@@ -320,6 +331,36 @@ function GetClickCB(cfgChild)
         end
     end
     return func, delay
+end
+
+-- 多spine多段点击操作的阶段继承
+function RecordsJC(str)
+    local tab = StringUtil:split(str, "_")
+    local len = #tab
+    for k = 1, len, 2 do
+        local cfgChild = cfg.item[tonumber(tab[k])]
+        local realIndex = GetRealIndex(cfgChild)
+        local cfgChild2 = cfg.item[tonumber(tab[k + 1])]
+        local realIndex2 = GetRealIndex(cfgChild2)
+        records[realIndex2] = records[realIndex]
+        if (not records[realIndex2]) then
+            -- 移除
+            spineTools:ClearMulClick(realIndex2)
+        end
+    end
+end
+
+-- 多段点击按记录恢复,设置动作百分比
+function RestoreClicks()
+    for k, v in ipairs(cfg.item) do
+        if (v.role == curRoleNum and v.sType == 7 and v.content ~= nil and v.content.clicks ~= nil) then
+            local realIndex = GetRealIndex(v)
+            if (records[realIndex]) then
+                local mulData = GetMulData(v.content, realIndex, records[realIndex])
+                spineTools:PlayByMulClick(v.sName, realIndex, mulData, true)
+            end
+        end
+    end
 end
 
 -- 过场spine
@@ -765,26 +806,7 @@ function SetContent(cfgChild)
                 num = records[realIndex] + 1
             end
             records[realIndex] = num
-            mulData.progress = content.clicks[num]
-            mulData.timeScale = mulData.progress == 0 and -1 or 1 -- 最后是1的，如果再填0，意思是点多一下就倒退，否则就是播完就移除
-            mulData.isClicksLast = num >= #content.clicks
-            mulData.clickTime = content.clickTime
-            mulData.clickTimeCB = function()
-                records[realIndex] = nil
-                -- 隐藏
-                if (content.activation and touchItems ~= nil) then
-                    for k, v in pairs(content.activation) do
-                        for p, q in pairs(touchItems) do
-                            if (q.cfgChild.index == tonumber(k)) then
-                                CSAPI.SetGOActive(q.gameObject, v ~= 1)
-                                break
-                            end
-                        end
-                    end
-                    -- 
-                    isDrag = nil -- todo 这种处理有问题的，需要优化
-                end
-            end
+            mulData = GetMulData(content, realIndex, num)
         end
     end
     -- 激活与隐藏
@@ -814,6 +836,36 @@ function SetContent(cfgChild)
         end
     end
     return sName, mulData
+end
+
+function GetMulData(content, realIndex, num)
+    local mulData = {
+        timeScale = 1,
+        progress = 1,
+        isClicksLast = false
+    }
+    mulData.progress = content.clicks[num]
+    mulData.timeScale = mulData.progress == 0 and -1 or 1 -- 最后是1的，如果再填0，意思是点多一下就倒退，否则就是播完就移除
+    mulData.isClicksLast = num >= #content.clicks
+    mulData.clickTime = content.clickTime
+    -- 最后一次点击则调用清除记录
+    mulData.clickTimeCB = function()
+        records[realIndex] = nil
+        -- 隐藏
+        if (content.activation and touchItems ~= nil) then
+            for k, v in pairs(content.activation) do
+                for p, q in pairs(touchItems) do
+                    if (q.cfgChild.index == tonumber(k)) then
+                        CSAPI.SetGOActive(q.gameObject, v ~= 1)
+                        break
+                    end
+                end
+            end
+            -- 
+            isDrag = nil -- todo 这种处理有问题的，需要优化
+        end
+    end
+    return mulData
 end
 
 function GetRealIndex(cfgChild)
@@ -955,7 +1007,7 @@ function SpineEvent(trackEntry, e)
         end
     else
         if (strs[1] == "TriggerIndex") then
-            PlayByIndex(tonumber(strs[2]),nil,nil,true)
+            PlayByIndex(tonumber(strs[2]), nil, nil, true)
         end
     end
 end

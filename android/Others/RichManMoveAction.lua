@@ -24,24 +24,28 @@ function this:Update(playerCtrl)
             return
         end
     end
+	local pos = playerCtrl.gameObject.transform.position;
     if self.targetPos==nil and self.playIdx<=#self.data.grids then	
 		self.currGrid=self.data.grids[self.playIdx];
 		-- LogError(tostring(self.curGridPos).."\t"..tostring(self.playIdx).."\t"..tostring(self.currGrid:GetID().."\t"..tostring(self.currGrid:GetPos())))
 		-- LogError("移动至ID:"..tostring(self.currGrid:GetID()).."的格子");
 		self.targetGO,self.targetGrid=playerCtrl.GetGridGO(self.currGrid:GetPos());
 		self.targetPos=self.targetGO.transform.position;
+		local dir2=self.targetPos-pos;
+		self.moveDirection=dir2.normalized;
 		self.playIdx=self.playIdx+1;
 		--目标地点播放图标渐隐效果
 		if self.playIdx>#self.data.grids then
 			EventMgr.Dispatch(EventType.RichMan_GridIcon_Alpha,{pos=self.currGrid:GetPos(),isHide=true})
 		end
     end
-    local pos = playerCtrl.gameObject.transform.position;
-    local dir = self.targetPos - pos;
-    local dist = dir.magnitude;
-    -- LogError(tostring(dist) .. "\t" .. tostring(self.done))
-	-- LogError(self.step.."\t"..tostring(self.data.step).."\t"..tostring(dist))
 	if self:GetState()==1 then
+		local nextPos = pos + self.moveDirection * Time.deltaTime*self.speed;
+		local toTarget = self.targetPos - nextPos;
+		-- local dist = dir.magnitude;
+		local dist=UnityEngine.Vector3.Dot(self.moveDirection,toTarget);
+		-- LogError(tostring(dist) .. "\t" .. tostring(self.done))
+		-- LogError(self.step.."\t"..tostring(self.data.step).."\t"..tostring(dist))
 		if dist < 0.05 then
 			playerCtrl.gameObject.transform.position = self.targetPos;
 			if self.playIdx>#self.data.grids then
@@ -61,8 +65,7 @@ function this:Update(playerCtrl)
 				-- 设置旋转角度
 				playerCtrl.LookAt(self.targetGO);
 			end
-			local move = dir.normalized * Time.deltaTime*self.speed;
-			playerCtrl.gameObject.transform.position = pos + move;
+			playerCtrl.gameObject.transform.position = nextPos
 		end
 	elseif self:GetState()==2 and self.sendPress~=true then
 		if self.targetGrid ~= nil then

@@ -506,9 +506,11 @@
 2.耐久大于80%时，攻击提升]],["icon"]="248",["quality"]=4,["type"]=6,["id"]=2480404,["isGmForbid"]=false,["describeBase"]=[[自在：
 1.提升角色的暴击
 2.耐久大于80%时，攻击提升]],["upperLimit"]=9999,["name"]="R4自在输入芯片",["hide"]=1,["dy_value1"]=2480404,["is_can_combine"]=false,["auto_use"]=false,["tag"]=0}
-,[24205]={["isActionLog"]=true,["key"]=24205,["is_can_use"]=false,["describe"]=[[角色头像：心花怒放
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10069,["isGmForbid"]=false,["describeBase"]=[[角色头像：心花怒放
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="心花怒放",["quality"]=4,["id"]=24205,["icon"]="avatar_71",["auto_use"]=false,["tag"]=0}
+,[24205]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24205,["is_can_use"]=false,["describe"]=[[角色头像：心花怒放
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24205,["isGmForbid"]=false,["describeBase"]=[[角色头像：心花怒放
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="心花怒放",["quality"]=4,["icon"]="avatar_71",["dy_value2"]=10069,["auto_use"]=false,["tag"]=0}
 ,[61071]={["name2"]="劳逸结合",["isActionLog"]=false,["itemPicture"]="mult_labor_leisure",["key"]=61071,["is_can_use"]=false,["describe"]="获得后在看板中解锁【劳逸结合】插图",["invert"]=1,["quality"]=5,["is_can_combine"]=false,["type"]=16,["id"]=61071,["isGmForbid"]=false,["describeBase"]="获得后在看板中解锁【劳逸结合】插图",["upperLimit"]=1,["name"]="劳逸结合",["hide"]=1,["dy_value1"]=69,["icon"]="mult_labor_leisure",["auto_use"]=false,["tag"]=0}
 ,[106002]={["isActionLog"]=false,["key"]=106002,["is_can_use"]=false,["describe"]="用于升级咎瓦尤斯特性。",["icon"]="Role_splinter",["quality"]=6,["dy_arr"]={60020}
 ,["type"]=15,["dy_value2"]=106002,["isGmForbid"]=false,["describeBase"]="用于升级咎瓦尤斯特性。",["upperLimit"]=9999,["name"]="咎瓦尤斯星源",["is_can_combine"]=false,["id"]=106002,["auto_use"]=false,["t_otherGet"]={21117}
@@ -2074,8 +2076,8 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[104006]={["isActionLog"]=false,["key"]=104006,["is_can_use"]=false,["describe"]="用于升级岚特性。",["icon"]="Role_splinter",["quality"]=6,["dy_arr"]={40060}
 ,["type"]=15,["dy_value2"]=104006,["isGmForbid"]=true,["describeBase"]="用于升级岚特性。",["upperLimit"]=9999,["name"]="岚星源",["is_can_combine"]=false,["id"]=104006,["auto_use"]=false,["t_otherGet"]={21117}
 ,["tag"]=1}
-,[12015]={["key"]=12015,["type"]=20,["is_can_combine"]=false,["quality"]=5,["id"]=12015,["isGmForbid"]=false,["describeBase"]="挑战活动副本需要消耗的入场券",["is_can_use"]=false,["upperLimit"]=9999,["isActionLog"]=true,["name"]="入场券",["exipiry_type"]={2,1}
-,["describe"]="挑战活动副本需要消耗的入场券",["auto_use"]=false,["icon"]="12009",["tag"]=1}
+,[12015]={["isActionLog"]=true,["key"]=12015,["is_can_use"]=false,["describe"]="挑战活动副本需要消耗的入场券",["icon"]="12009",["quality"]=5,["type"]=20,["id"]=12015,["isGmForbid"]=false,["describeBase"]="挑战活动副本需要消耗的入场券",["upperLimit"]=9999,["name"]="入场券",["hide"]=1,["is_can_combine"]=false,["exipiry_type"]={2,1}
+,["auto_use"]=false,["tag"]=1}
 ,[105030]={["isActionLog"]=false,["key"]=105030,["is_can_use"]=false,["describe"]="用于升级刺蝽特性。",["icon"]="Role_splinter",["quality"]=6,["dy_arr"]={50300}
 ,["type"]=15,["dy_value2"]=105030,["isGmForbid"]=true,["describeBase"]="用于升级刺蝽特性。",["upperLimit"]=9999,["name"]="刺蝽星源",["is_can_combine"]=false,["id"]=105030,["auto_use"]=false,["t_otherGet"]={21117}
 ,["tag"]=1}
@@ -2319,9 +2321,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,["type"]=15,["dy_value2"]=104014,["isGmForbid"]=false,["describeBase"]="用于升级霞光特性。",["upperLimit"]=9999,["name"]="霞光星源",["is_can_combine"]=false,["id"]=104014,["auto_use"]=false,["t_otherGet"]={21117}
 ,["tag"]=1}
 ,[12016]={["sExpiry"]="2025/12/30 3:00:00",["isActionLog"]=true,["nExpiry"]=1767034800,["expiryIx"]=12,["key"]=12016,["is_can_use"]=false,["describe"]="挑战【冬日速递】活动需要消耗的入场券",["icon"]="12016",["quality"]=5,["type"]=20,["dy_value2"]=3009,["isGmForbid"]=false,["describeBase"]="挑战【冬日速递】活动需要消耗的入场券",["is_can_combine"]=false,["upperLimit"]=9999,["name"]="入场券",["j_moneyGet"]=140031,["hide"]=1,["id"]=12016,["auto_use"]=false,["tag"]=1}
-,[24220]={["isActionLog"]=true,["key"]=24220,["is_can_use"]=false,["describe"]=[[角色头像：圣愿祝礼
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10084,["isGmForbid"]=false,["describeBase"]=[[角色头像：圣愿祝礼
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="圣愿祝礼",["quality"]=4,["id"]=24220,["icon"]="avatar_85",["auto_use"]=false,["tag"]=0}
+,[24220]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24220,["is_can_use"]=false,["describe"]=[[角色头像：圣愿祝礼
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24220,["isGmForbid"]=false,["describeBase"]=[[角色头像：圣愿祝礼
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="圣愿祝礼",["quality"]=4,["icon"]="avatar_85",["dy_value2"]=10084,["auto_use"]=false,["tag"]=0}
 ,[93009]={["type"]=12,["key"]=93009,["seizeIcon"]="91001",["id"]=93009,["isGmForbid"]=true,["isActionLog"]=true,["hide"]=1,["upperLimit"]=999,["name"]="蒙尘地毯",["dy_value1"]=3009,["describe"]="虹在前哨基地中为惊魂夜活动布置的道具。本想集众多恐怖片之长，却做出了另一种诡异的风格。",["icon"]="93009",["tag"]=0}
 ,[61101]={["name2"]="璀璨镜影",["price"]={{10002,1580}
 }
@@ -2459,9 +2463,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[10033]={["isActionLog"]=true,["key"]=10033,["is_can_use"]=false,["describe"]="NERI总部回收多余的星尘碎片所发放的兑换券，可用于兑换需要的传说星尘碎片。",["is_can_combine"]=false,["icon"]="10033",["quality"]=6,["j_otherGet"]={15001,140007}
 ,["type"]=1,["id"]=10033,["isGmForbid"]=false,["addColor"]="FFC146",["upperLimit"]=99999,["name"]="传说星尘券",["j_moneyGet"]=60001,["t_otherGet"]={21111}
 ,["describeBase"]="NERI总部回收多余的星尘碎片所发放的兑换券，可用于兑换需要的传说星尘碎片。",["auto_use"]=false,["tag"]=1}
-,[24221]={["isActionLog"]=true,["key"]=24221,["is_can_use"]=false,["describe"]=[[角色头像：喔！Santa！
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10085,["isGmForbid"]=false,["describeBase"]=[[角色头像：喔！Santa！
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="喔！Santa！",["quality"]=4,["id"]=24221,["icon"]="avatar_86",["auto_use"]=false,["tag"]=0}
+,[24221]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24221,["is_can_use"]=false,["describe"]=[[角色头像：喔！Santa！
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24221,["isGmForbid"]=false,["describeBase"]=[[角色头像：喔！Santa！
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="喔！Santa！",["quality"]=4,["icon"]="avatar_86",["dy_value2"]=10085,["auto_use"]=false,["tag"]=0}
 ,[93013]={["type"]=12,["key"]=93013,["seizeIcon"]="91001",["id"]=93013,["isGmForbid"]=true,["isActionLog"]=true,["hide"]=1,["upperLimit"]=999,["name"]="积灰毯（大）",["dy_value1"]=3013,["describe"]="虹在前哨基地中为惊魂夜活动布置的道具。也许是某种废物利用吧。",["icon"]="93013",["tag"]=0}
 ,[2400303]={["isActionLog"]=false,["key"]=2400303,["is_can_use"]=false,["describe"]=[[消除：
 1.提升角色的攻击
@@ -2830,9 +2836,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[10034]={["isActionLog"]=true,["key"]=10034,["is_can_use"]=false,["describe"]="NERI总部回收多余的星尘碎片所发放的兑换券，可用于兑换需要的罕见星尘碎片。",["is_can_combine"]=false,["icon"]="10034",["quality"]=5,["j_otherGet"]={15001,140007}
 ,["type"]=1,["id"]=10034,["isGmForbid"]=false,["addColor"]="FFC146",["upperLimit"]=99999,["name"]="罕见星尘券",["j_moneyGet"]=60001,["t_otherGet"]={21111}
 ,["describeBase"]="NERI总部回收多余的星尘碎片所发放的兑换券，可用于兑换需要的罕见星尘碎片。",["auto_use"]=false,["tag"]=1}
-,[24223]={["isActionLog"]=true,["key"]=24223,["is_can_use"]=false,["describe"]=[[角色头像：命运挑战
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10087,["isGmForbid"]=false,["describeBase"]=[[角色头像：命运挑战
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="命运挑战",["quality"]=4,["id"]=24223,["icon"]="avatar_88",["auto_use"]=false,["tag"]=0}
+,[24223]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24223,["is_can_use"]=false,["describe"]=[[角色头像：命运挑战
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24223,["isGmForbid"]=false,["describeBase"]=[[角色头像：命运挑战
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="命运挑战",["quality"]=4,["icon"]="avatar_88",["dy_value2"]=10087,["auto_use"]=false,["tag"]=0}
 ,[93021]={["type"]=12,["key"]=93021,["seizeIcon"]="91001",["id"]=93021,["isGmForbid"]=true,["isActionLog"]=true,["hide"]=1,["upperLimit"]=999,["name"]="双节棍架",["dy_value1"]=3021,["describe"]="虹在前哨基地中为惊魂夜活动布置的道具。“这一定是双节棍的某种变体，至于其中链接结构不太清晰，所以现在只是徒有其表！”——哈迪斯",["icon"]="93021",["tag"]=0}
 ,[17434]={["key"]=17434,["type"]=8,["quality"]=5,["is_can_combine"]=false,["id"]=17434,["isGmForbid"]=false,["describeBase"]="打开后可获得一个5星神力芯片",["auto_use"]=true,["upperLimit"]=9999,["isActionLog"]=false,["name"]="R5神力芯片箱",["is_can_use"]=true,["dy_value1"]=53234,["describe"]="打开后可获得一个5星神力芯片",["icon"]="Chip_T5",["tag"]=2}
 ,[57012]={["key"]=57012,["type"]=17,["quality"]=5,["is_can_combine"]=false,["id"]=57012,["isGmForbid"]=false,["describeBase"]="征服、致命、收割、神力套装选择任意部位一个R5芯片",["auto_use"]=false,["upperLimit"]=9999,["isActionLog"]=false,["name"]="R5芯片自选箱",["is_can_use"]=true,["dy_value1"]=57012,["describe"]="引爆套装选择任意部位一个R5芯片",["icon"]="Chip_Choose_T5",["tag"]=2}
@@ -3284,9 +3292,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 }
 ,["addColor"]="00FFBF",["auto_use"]=false,["tag"]=1}
 ,[10035]={["isActionLog"]=true,["key"]=10035,["is_can_use"]=false,["describe"]="在作战探索中给队员武装提供动力",["quality"]=1,["icon"]="10035",["hide"]=1,["type"]=1,["id"]=10035,["isGmForbid"]=false,["addColor"]="00FFBF",["is_can_combine"]=false,["upperLimit"]=9999,["name"]="燃料",["j_moneyGet"]=140010,["dy_value1"]=7,["describeBase"]="在作战探索中给队员武装提供动力",["auto_use"]=false,["tag"]=0}
-,[24225]={["isActionLog"]=true,["key"]=24225,["is_can_use"]=false,["describe"]=[[角色头像：湮灭光束
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10089,["isGmForbid"]=false,["describeBase"]=[[角色头像：湮灭光束
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="湮灭光束",["quality"]=4,["id"]=24225,["icon"]="avatar_90",["auto_use"]=false,["tag"]=0}
+,[24225]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24225,["is_can_use"]=false,["describe"]=[[角色头像：湮灭光束
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24225,["isGmForbid"]=false,["describeBase"]=[[角色头像：湮灭光束
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="湮灭光束",["quality"]=4,["icon"]="avatar_90",["dy_value2"]=10089,["auto_use"]=false,["tag"]=0}
 ,[93029]={["type"]=12,["key"]=93029,["seizeIcon"]="91001",["id"]=93029,["isGmForbid"]=true,["isActionLog"]=true,["hide"]=1,["upperLimit"]=999,["name"]="电影横幅",["dy_value1"]=3029,["describe"]="虹在前哨基地中为惊魂夜活动布置的道具。是一些她精挑细选的经典恐怖片海报，可惜总队长似乎都没有看过。",["icon"]="93029",["tag"]=0}
 ,[29046]={["name2"]="物品",["price"]={{10001,100}
 }
@@ -3507,9 +3517,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[24162]={["isActionLog"]=true,["key"]=24162,["is_can_use"]=false,["describe"]=[[角色头像：宇宙级智慧
 可在角色信息处更换角色头像]],["icon"]="avatar_26",["quality"]=4,["type"]=21,["dy_value2"]=10026,["isGmForbid"]=false,["describeBase"]=[[角色头像：宇宙级智慧
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="宇宙级智慧",["hide"]=1,["is_can_combine"]=false,["id"]=24162,["auto_use"]=false,["tag"]=0}
-,[24226]={["isActionLog"]=true,["key"]=24226,["is_can_use"]=false,["describe"]=[[角色头像：热烈庆典
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10090,["isGmForbid"]=false,["describeBase"]=[[角色头像：热烈庆典
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="热烈庆典",["quality"]=4,["id"]=24226,["icon"]="avatar_91",["auto_use"]=false,["tag"]=0}
+,[24226]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24226,["is_can_use"]=false,["describe"]=[[角色头像：热烈庆典
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24226,["isGmForbid"]=false,["describeBase"]=[[角色头像：热烈庆典
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="热烈庆典",["quality"]=4,["icon"]="avatar_91",["dy_value2"]=10090,["auto_use"]=false,["tag"]=0}
 ,[93033]={["type"]=12,["key"]=93033,["seizeIcon"]="91001",["id"]=93033,["isGmForbid"]=true,["isActionLog"]=true,["hide"]=1,["upperLimit"]=999,["name"]="新的旧欧式沙发",["dy_value1"]=3033,["describe"]="虹在前哨基地中为惊魂夜活动布置的道具。沙发上的异色部分其实是漂染的结果，仅仅是为了做旧而已。",["icon"]="93033",["tag"]=0}
 ,[29087]={["name2"]="物品",["price"]={{10001,100}
 }
@@ -3674,15 +3686,19 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[92013]={["type"]=12,["key"]=92013,["seizeIcon"]="91001",["id"]=92013,["isGmForbid"]=true,["isActionLog"]=true,["hide"]=1,["upperLimit"]=999,["name"]="躺椅",["dy_value1"]=2013,["describe"]="以碎星材料复现的在NERI基地中标配的队员躺椅。",["icon"]="92013",["tag"]=0}
 ,[10004]={["type"]=1,["key"]=10004,["hide"]=1,["id"]=10004,["isGmForbid"]=false,["describeBase"]="碎星探索中获取的情报，用于提升探索等级。",["auto_use"]=false,["isActionLog"]=true,["is_can_combine"]=false,["name"]="探索经验",["is_can_use"]=false,["describe"]="碎星探索中获取的情报，用于提升探索等级。",["quality"]=4,["icon"]="10004",["tag"]=1}
 ,[10036]={["isActionLog"]=true,["key"]=10036,["is_can_use"]=true,["describe"]="使用后恢复10燃料",["icon"]="10036",["quality"]=3,["is_can_combine"]=false,["type"]=10,["dy_value2"]=10,["isGmForbid"]=false,["describeBase"]="使用后恢复10燃料",["upperLimit"]=9999,["name"]="备用燃料",["j_moneyGet"]=140010,["dy_value1"]=7,["id"]=10036,["auto_use"]=false,["tag"]=2}
-,[24227]={["isActionLog"]=true,["key"]=24227,["is_can_use"]=false,["describe"]=[[角色头像：日月交辉
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10091,["isGmForbid"]=false,["describeBase"]=[[角色头像：日月交辉
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="日月交辉",["quality"]=4,["id"]=24227,["icon"]="avatar_92",["auto_use"]=false,["tag"]=0}
+,[24227]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24227,["is_can_use"]=false,["describe"]=[[角色头像：日月交辉
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24227,["isGmForbid"]=false,["describeBase"]=[[角色头像：日月交辉
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="日月交辉",["quality"]=4,["icon"]="avatar_92",["dy_value2"]=10091,["auto_use"]=false,["tag"]=0}
 ,[33022004]={["name2"]="雷克斯",["price"]={{10002,1080}
 }
 ,["isActionLog"]=false,["key"]=33022004,["is_can_use"]=false,["describe"]="获得雷克斯【白垩无瑕】的时装",["invert"]=1,["quality"]=6,["is_can_combine"]=false,["type"]=9,["dy_value2"]=3022004,["isGmForbid"]=true,["describeBase"]="获得雷克斯【白垩无瑕】的时装",["upperLimit"]=1,["name"]="白垩无瑕",["id"]=33022004,["dy_value1"]=30220,["icon"]="30220_Skin118_REX_N",["auto_use"]=false,["tag"]=0}
-,[24235]={["isActionLog"]=true,["key"]=24235,["is_can_use"]=false,["describe"]=[[角色头像：海盗进货中
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10099,["isGmForbid"]=false,["describeBase"]=[[角色头像：海盗进货中
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="海盗进货中",["quality"]=4,["id"]=24235,["icon"]="avatar_100",["auto_use"]=false,["tag"]=0}
+,[24235]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24235,["is_can_use"]=false,["describe"]=[[角色头像：海盗进货中
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24235,["isGmForbid"]=false,["describeBase"]=[[角色头像：海盗进货中
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="海盗进货中",["quality"]=4,["icon"]="avatar_100",["dy_value2"]=10099,["auto_use"]=false,["tag"]=0}
 ,[57020]={["key"]=57020,["type"]=17,["quality"]=5,["is_can_combine"]=false,["id"]=57020,["isGmForbid"]=false,["describeBase"]="可在物攻、能量、切割、穿甲、支援、腐蚀、引爆、装填、精力、致命、灵巧、暴怒、连击、扩大套装任选1个R5反馈芯片",["auto_use"]=false,["upperLimit"]=9999,["isActionLog"]=false,["name"]="R5反馈芯片自选箱",["is_can_use"]=true,["dy_value1"]=57020,["describe"]="可在物攻、能量、切割、穿甲、支援、腐蚀、引爆、装填、精力、致命、灵巧、暴怒、连击、扩大套装任选1个R5反馈芯片",["icon"]="Chip_Choose_T5",["tag"]=2}
 ,[24173]={["isActionLog"]=true,["key"]=24173,["is_can_use"]=false,["describe"]=[[角色头像：小迷糊
 可在角色信息处更换角色头像]],["icon"]="avatar_37",["quality"]=4,["type"]=21,["dy_value2"]=10037,["isGmForbid"]=false,["describeBase"]=[[角色头像：小迷糊
@@ -3746,18 +3762,24 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 1.提升角色的暴击
 2.单体普攻技能触发暴击时，有機率使我方全体行动提前]],["upperLimit"]=9999,["name"]="R5乘风输入芯片",["hide"]=1,["dy_value1"]=2450504,["is_can_combine"]=false,["auto_use"]=false,["tag"]=0}
 ,[17445]={["key"]=17445,["type"]=8,["quality"]=5,["is_can_combine"]=false,["id"]=17445,["isGmForbid"]=false,["describeBase"]="打开后可获得一个5星乘风芯片",["auto_use"]=true,["upperLimit"]=9999,["isActionLog"]=false,["name"]="R5乘风芯片箱",["is_can_use"]=true,["dy_value1"]=53245,["describe"]="打开后可获得一个5星乘风芯片",["icon"]="Chip_T5",["tag"]=2}
-,[24217]={["isActionLog"]=true,["key"]=24217,["is_can_use"]=false,["describe"]=[[角色头像：坠机了
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10081,["isGmForbid"]=false,["describeBase"]=[[角色头像：坠机了
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="坠机了",["quality"]=4,["id"]=24217,["icon"]="avatar_83",["auto_use"]=false,["tag"]=0}
+,[24217]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24217,["is_can_use"]=false,["describe"]=[[角色头像：坠机了
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24217,["isGmForbid"]=false,["describeBase"]=[[角色头像：坠机了
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="坠机了",["quality"]=4,["icon"]="avatar_83",["dy_value2"]=10081,["auto_use"]=false,["tag"]=0}
 ,[103020]={["isActionLog"]=false,["key"]=103020,["is_can_use"]=false,["describe"]="用于升级赤狼特性。",["icon"]="Role_splinter",["quality"]=4,["dy_arr"]={30200}
 ,["type"]=15,["dy_value2"]=103020,["isGmForbid"]=false,["describeBase"]="用于升级赤狼特性。",["upperLimit"]=9999,["name"]="赤狼星源",["is_can_combine"]=false,["id"]=103020,["auto_use"]=false,["t_otherGet"]={21117}
 ,["tag"]=1}
-,[24215]={["isActionLog"]=true,["key"]=24215,["is_can_use"]=false,["describe"]=[[角色头像：邀月
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10079,["isGmForbid"]=false,["describeBase"]=[[角色头像：邀月
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="邀月",["quality"]=4,["id"]=24215,["icon"]="avatar_79",["auto_use"]=false,["tag"]=0}
-,[24211]={["isActionLog"]=true,["key"]=24211,["is_can_use"]=false,["describe"]=[[角色头像：大厨的祝语
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10075,["isGmForbid"]=false,["describeBase"]=[[角色头像：大厨的祝语
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="大厨的祝语",["quality"]=4,["id"]=24211,["icon"]="avatar_75",["auto_use"]=false,["tag"]=0}
+,[24215]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24215,["is_can_use"]=false,["describe"]=[[角色头像：邀月
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24215,["isGmForbid"]=false,["describeBase"]=[[角色头像：邀月
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="邀月",["quality"]=4,["icon"]="avatar_79",["dy_value2"]=10079,["auto_use"]=false,["tag"]=0}
+,[24211]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24211,["is_can_use"]=false,["describe"]=[[角色头像：大厨的祝语
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24211,["isGmForbid"]=false,["describeBase"]=[[角色头像：大厨的祝语
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="大厨的祝语",["quality"]=4,["icon"]="avatar_75",["dy_value2"]=10075,["auto_use"]=false,["tag"]=0}
 ,[24803]={["isActionLog"]=true,["key"]=24803,["is_can_use"]=false,["describe"]=[[角色头像：夜暝限定头像
 可在角色信息处更换角色头像]],["icon"]="avatar_62",["quality"]=4,["type"]=21,["dy_value2"]=80003,["isGmForbid"]=false,["describeBase"]=[[角色头像：夜暝限定头像
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="夜暝限定头像",["hide"]=1,["is_can_combine"]=false,["id"]=24803,["auto_use"]=false,["tag"]=0}
@@ -3771,9 +3793,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[24807]={["isActionLog"]=true,["key"]=24807,["is_can_use"]=false,["describe"]=[[角色头像：运营用头像
 可在角色信息处更换角色头像]],["icon"]="avatar_37",["quality"]=4,["type"]=21,["dy_value2"]=80007,["isGmForbid"]=false,["describeBase"]=[[角色头像：运营用头像
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="运营用头像",["hide"]=1,["is_can_combine"]=false,["id"]=24807,["auto_use"]=false,["tag"]=0}
-,[24199]={["isActionLog"]=true,["key"]=24199,["is_can_use"]=false,["describe"]=[[角色头像：感谢有你
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10063,["isGmForbid"]=false,["describeBase"]=[[角色头像：感谢有你
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="感谢有你",["quality"]=4,["id"]=24199,["icon"]="avatar_65",["auto_use"]=false,["tag"]=0}
+,[24199]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24199,["is_can_use"]=false,["describe"]=[[角色头像：感谢有你
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24199,["isGmForbid"]=false,["describeBase"]=[[角色头像：感谢有你
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="感谢有你",["quality"]=4,["icon"]="avatar_65",["dy_value2"]=10063,["auto_use"]=false,["tag"]=0}
 ,[18149]={["key"]=18149,["type"]=6,["is_can_combine"]=false,["hide"]=1,["id"]=18149,["isGmForbid"]=false,["describeBase"]=[[芯片特效 - 反击
 套装：友方单位受到攻击时，自身概率使用普通技能反击。]],["quality"]=3,["upperLimit"]=9999,["isActionLog"]=false,["name"]="反击芯片",["is_can_use"]=false,["describe"]=[[芯片特效 - 反击
 套装：友方单位受到攻击时，自身概率使用普通技能反击。]],["auto_use"]=false,["icon"]="249",["tag"]=0}
@@ -3783,9 +3807,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 套装：战斗开始时，我方全体获得生命百分比的汲取护盾。（汲取护盾持续2回合）]],["upperLimit"]=9999,["name"]="屏障芯片",["t_otherGet"]={21127}
 ,["describe"]=[[芯片特效 - 屏障
 套装：战斗开始时，我方全体获得生命百分比的汲取护盾。（汲取护盾持续2回合）]],["hide"]=1,["auto_use"]=false,["tag"]=0}
-,[24197]={["isActionLog"]=true,["key"]=24197,["is_can_use"]=false,["describe"]=[[角色头像：谁住在大菠萝里
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10061,["isGmForbid"]=false,["describeBase"]=[[角色头像：谁住在大菠萝里
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="谁住在大菠萝里",["quality"]=4,["id"]=24197,["icon"]="avatar_63",["auto_use"]=false,["tag"]=0}
+,[24197]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24197,["is_can_use"]=false,["describe"]=[[角色头像：谁住在大菠萝里
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24197,["isGmForbid"]=false,["describeBase"]=[[角色头像：谁住在大菠萝里
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="谁住在大菠萝里",["quality"]=4,["icon"]="avatar_63",["dy_value2"]=10061,["auto_use"]=false,["tag"]=0}
 ,[24808]={["isActionLog"]=true,["key"]=24808,["is_can_use"]=false,["describe"]=[[角色头像：运营用头像
 可在角色信息处更换角色头像]],["icon"]="avatar_37",["quality"]=4,["type"]=21,["dy_value2"]=80008,["isGmForbid"]=false,["describeBase"]=[[角色头像：运营用头像
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="运营用头像",["hide"]=1,["is_can_combine"]=false,["id"]=24808,["auto_use"]=false,["tag"]=0}
@@ -3885,9 +3911,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[24164]={["isActionLog"]=true,["key"]=24164,["is_can_use"]=false,["describe"]=[[角色头像：沙漠脆脆蝎
 可在角色信息处更换角色头像]],["icon"]="avatar_28",["quality"]=4,["type"]=21,["dy_value2"]=10028,["isGmForbid"]=false,["describeBase"]=[[角色头像：沙漠脆脆蝎
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="沙漠脆脆蝎",["hide"]=1,["is_can_combine"]=false,["id"]=24164,["auto_use"]=false,["tag"]=0}
-,[24228]={["isActionLog"]=true,["key"]=24228,["is_can_use"]=false,["describe"]=[[角色头像：蟹煲王
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10092,["isGmForbid"]=false,["describeBase"]=[[角色头像：蟹煲王
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="蟹煲王",["quality"]=4,["id"]=24228,["icon"]="avatar_93",["auto_use"]=false,["tag"]=0}
+,[24228]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24228,["is_can_use"]=false,["describe"]=[[角色头像：蟹煲王
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24228,["isGmForbid"]=false,["describeBase"]=[[角色头像：蟹煲王
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="蟹煲王",["quality"]=4,["icon"]="avatar_93",["dy_value2"]=10092,["auto_use"]=false,["tag"]=0}
 ,[2360502]={["isActionLog"]=false,["key"]=2360502,["is_can_use"]=false,["describe"]=[[救赎：
 1.提升角色的耐久
 2.队友受到致命攻击时，消耗自身耐久为其抵挡，并立即回复队友一定百分比的耐久，5回合内无法重复触发，自身生命低于40%时无法触发，效果不可叠加]],["icon"]="236",["quality"]=5,["type"]=6,["id"]=2360502,["isGmForbid"]=false,["describeBase"]=[[救赎：
@@ -3937,9 +3965,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[24121]={["name2"]="运营头像4",["isActionLog"]=true,["key"]=24121,["is_can_use"]=false,["describe"]=[[角色头像：就选你了
 可在角色信息处更换角色头像]],["icon"]="avatar_12",["quality"]=4,["type"]=21,["id"]=24121,["isGmForbid"]=false,["describeBase"]=[[角色头像：就选你了
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="就选你了",["is_can_combine"]=false,["dy_value2"]=10012,["hide"]=1,["auto_use"]=false,["tag"]=0}
-,[24240]={["isActionLog"]=true,["key"]=24240,["is_can_use"]=false,["describe"]=[[角色头像：出来画画
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10104,["isGmForbid"]=false,["describeBase"]=[[角色头像：出来画画
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="出来画画",["quality"]=4,["id"]=24240,["icon"]="avatar_105",["auto_use"]=false,["tag"]=0}
+,[24240]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24240,["is_can_use"]=false,["describe"]=[[角色头像：出来画画
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24240,["isGmForbid"]=false,["describeBase"]=[[角色头像：出来画画
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="出来画画",["quality"]=4,["icon"]="avatar_105",["dy_value2"]=10104,["auto_use"]=false,["tag"]=0}
 ,[24111]={["name2"]="奥运头像",["isActionLog"]=true,["key"]=24111,["is_can_use"]=false,["describe"]=[[角色头像：欢呼庆贺
 可在角色信息处更换角色头像]],["icon"]="avatar_11",["quality"]=4,["type"]=21,["id"]=24111,["isGmForbid"]=false,["describeBase"]=[[角色头像：欢呼庆贺
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="欢呼庆贺",["is_can_combine"]=false,["dy_value2"]=10011,["hide"]=1,["auto_use"]=false,["tag"]=0}
@@ -3970,9 +4000,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 2.我方全体单位受到能量伤害减少，效果不可叠加]],["icon"]="227",["quality"]=2,["type"]=6,["id"]=2270205,["isGmForbid"]=false,["describeBase"]=[[光幕：
 1.提升角色的防御
 2.我方全体单位受到能量伤害减少，效果不可叠加]],["upperLimit"]=9999,["name"]="R2光幕反馈芯片",["hide"]=1,["dy_value1"]=2270205,["is_can_combine"]=false,["auto_use"]=false,["tag"]=0}
-,[24232]={["isActionLog"]=true,["key"]=24232,["is_can_use"]=false,["describe"]=[[角色头像：啊哇哇哇哇
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10096,["isGmForbid"]=false,["describeBase"]=[[角色头像：啊哇哇哇哇
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="啊哇哇哇哇",["quality"]=4,["id"]=24232,["icon"]="avatar_97",["auto_use"]=false,["tag"]=0}
+,[24232]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24232,["is_can_use"]=false,["describe"]=[[角色头像：啊哇哇哇哇
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24232,["isGmForbid"]=false,["describeBase"]=[[角色头像：啊哇哇哇哇
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="啊哇哇哇哇",["quality"]=4,["icon"]="avatar_97",["dy_value2"]=10096,["auto_use"]=false,["tag"]=0}
 ,[24101]={["name2"]="TapTap头像",["isActionLog"]=true,["key"]=24101,["is_can_use"]=false,["describe"]=[[角色头像：闪耀光影
 可在角色信息处更换角色头像]],["icon"]="avatar_10",["quality"]=4,["type"]=21,["id"]=24101,["isGmForbid"]=false,["describeBase"]=[[角色头像：闪耀光影
 可在角色信息处更换角色头像]],["upperLimit"]=999,["name"]="闪耀光影",["is_can_combine"]=false,["dy_value2"]=10010,["hide"]=1,["auto_use"]=false,["tag"]=0}
@@ -3986,12 +4018,16 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 2.队友受到致命攻击时，消耗自身耐久为其抵挡，并立即回复队友一定百分比的耐久，5回合内无法重复触发，自身生命低于40%时无法触发，效果不可叠加]],["icon"]="236",["quality"]=3,["type"]=6,["id"]=2360305,["isGmForbid"]=false,["describeBase"]=[[救赎：
 1.提升角色的耐久
 2.队友受到致命攻击时，消耗自身耐久为其抵挡，并立即回复队友一定百分比的耐久，5回合内无法重复触发，自身生命低于40%时无法触发，效果不可叠加]],["upperLimit"]=9999,["name"]="R3救赎反馈芯片",["hide"]=1,["dy_value1"]=2360305,["is_can_combine"]=false,["auto_use"]=false,["tag"]=0}
-,[24224]={["isActionLog"]=true,["key"]=24224,["is_can_use"]=false,["describe"]=[[角色头像：阅读体验
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10088,["isGmForbid"]=false,["describeBase"]=[[角色头像：阅读体验
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="阅读体验",["quality"]=4,["id"]=24224,["icon"]="avatar_89",["auto_use"]=false,["tag"]=0}
-,[24222]={["isActionLog"]=true,["key"]=24222,["is_can_use"]=false,["describe"]=[[角色头像：毁灭炮火
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10086,["isGmForbid"]=false,["describeBase"]=[[角色头像：毁灭炮火
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="毁灭炮火",["quality"]=4,["id"]=24222,["icon"]="avatar_87",["auto_use"]=false,["tag"]=0}
+,[24224]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24224,["is_can_use"]=false,["describe"]=[[角色头像：阅读体验
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24224,["isGmForbid"]=false,["describeBase"]=[[角色头像：阅读体验
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="阅读体验",["quality"]=4,["icon"]="avatar_89",["dy_value2"]=10088,["auto_use"]=false,["tag"]=0}
+,[24222]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24222,["is_can_use"]=false,["describe"]=[[角色头像：毁灭炮火
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24222,["isGmForbid"]=false,["describeBase"]=[[角色头像：毁灭炮火
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="毁灭炮火",["quality"]=4,["icon"]="avatar_87",["dy_value2"]=10086,["auto_use"]=false,["tag"]=0}
 ,[36032003]={["name2"]="赫格尼",["price"]={{10002,1980}
 }
 ,["isActionLog"]=false,["key"]=36032003,["is_can_use"]=false,["describe"]="获得赫格尼【赤诚之礼】的时装",["invert"]=1,["quality"]=6,["is_can_combine"]=false,["type"]=9,["dy_value2"]=6032003,["isGmForbid"]=true,["describeBase"]="获得赫格尼【赤诚之礼】的时装",["upperLimit"]=1,["name"]="赤诚之礼",["id"]=36032003,["dy_value1"]=60320,["icon"]="60320_Skin117_Dainslef_N",["auto_use"]=false,["tag"]=0}
@@ -4031,12 +4067,16 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 2.攻击后，给目标施加1层劣化]],["icon"]="218",["quality"]=4,["type"]=6,["id"]=2180404,["isGmForbid"]=false,["describeBase"]=[[腐蚀：
 1.提升角色效果命中
 2.攻击后，给目标施加1层劣化]],["upperLimit"]=9999,["name"]="R4腐蚀输入芯片",["hide"]=1,["dy_value1"]=2180404,["is_can_combine"]=false,["auto_use"]=false,["tag"]=0}
-,[24218]={["isActionLog"]=true,["key"]=24218,["is_can_use"]=false,["describe"]=[[角色头像：魔法力量！
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10082,["isGmForbid"]=false,["describeBase"]=[[角色头像：魔法力量！
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="魔法力量！",["quality"]=4,["id"]=24218,["icon"]="avatar_82",["auto_use"]=false,["tag"]=0}
-,[24216]={["isActionLog"]=true,["key"]=24216,["is_can_use"]=false,["describe"]=[[角色头像：共庆有你
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10080,["isGmForbid"]=false,["describeBase"]=[[角色头像：共庆有你
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="共庆有你",["quality"]=4,["id"]=24216,["icon"]="avatar_80",["auto_use"]=false,["tag"]=0}
+,[24218]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24218,["is_can_use"]=false,["describe"]=[[角色头像：魔法力量！
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24218,["isGmForbid"]=false,["describeBase"]=[[角色头像：魔法力量！
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="魔法力量！",["quality"]=4,["icon"]="avatar_82",["dy_value2"]=10082,["auto_use"]=false,["tag"]=0}
+,[24216]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24216,["is_can_use"]=false,["describe"]=[[角色头像：共庆有你
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24216,["isGmForbid"]=false,["describeBase"]=[[角色头像：共庆有你
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="共庆有你",["quality"]=4,["icon"]="avatar_80",["dy_value2"]=10080,["auto_use"]=false,["tag"]=0}
 ,[46018]={["key"]=46018,["type"]=5,["quality"]=3,["is_can_combine"]=false,["id"]=46018,["isGmForbid"]=false,["describeBase"]="获得3星灭刃队员——却邪",["auto_use"]=false,["upperLimit"]=9999,["isActionLog"]=false,["name"]="却邪",["is_can_use"]=false,["dy_value1"]=60180,["describe"]="获得3星灭刃队员——却邪",["icon"]="rolecard_3",["tag"]=0}
 ,[2040502]={["isActionLog"]=false,["key"]=2040502,["is_can_use"]=false,["describe"]=[[催眠：
 1.提升角色的机动
@@ -4069,12 +4109,16 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,["type"]=15,["dy_value2"]=102002,["isGmForbid"]=false,["describeBase"]="用于升级进行曲特性。",["upperLimit"]=9999,["name"]="进行曲星源",["is_can_combine"]=false,["id"]=102002,["auto_use"]=false,["t_otherGet"]={21117}
 ,["tag"]=1}
 ,[47042]={["key"]=47042,["type"]=5,["quality"]=6,["is_can_combine"]=false,["id"]=47042,["isGmForbid"]=false,["describeBase"]="获得6星碎星队员——熔铄",["auto_use"]=false,["upperLimit"]=9999,["isActionLog"]=false,["name"]="熔铄",["is_can_use"]=false,["dy_value1"]=70420,["describe"]="获得6星碎星队员——熔铄",["icon"]="rolecard_6",["tag"]=0}
-,[24200]={["isActionLog"]=true,["key"]=24200,["is_can_use"]=false,["describe"]=[[角色头像：劲脆蟹味粒
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10064,["isGmForbid"]=false,["describeBase"]=[[角色头像：劲脆蟹味粒
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="劲脆蟹味粒",["quality"]=4,["id"]=24200,["icon"]="avatar_66",["auto_use"]=false,["tag"]=0}
-,[24198]={["isActionLog"]=true,["key"]=24198,["is_can_use"]=false,["describe"]=[[角色头像：虚海大海战
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10062,["isGmForbid"]=false,["describeBase"]=[[角色头像：虚海大海战
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="虚海大海战",["quality"]=4,["id"]=24198,["icon"]="avatar_64",["auto_use"]=false,["tag"]=0}
+,[24200]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24200,["is_can_use"]=false,["describe"]=[[角色头像：劲脆蟹味粒
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24200,["isGmForbid"]=false,["describeBase"]=[[角色头像：劲脆蟹味粒
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="劲脆蟹味粒",["quality"]=4,["icon"]="avatar_66",["dy_value2"]=10064,["auto_use"]=false,["tag"]=0}
+,[24198]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24198,["is_can_use"]=false,["describe"]=[[角色头像：虚海大海战
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24198,["isGmForbid"]=false,["describeBase"]=[[角色头像：虚海大海战
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="虚海大海战",["quality"]=4,["icon"]="avatar_64",["dy_value2"]=10062,["auto_use"]=false,["tag"]=0}
 ,[103026]={["isActionLog"]=false,["key"]=103026,["is_can_use"]=false,["describe"]="用于升级魁纣特性。",["icon"]="Role_splinter",["quality"]=6,["dy_arr"]={30260}
 ,["type"]=15,["dy_value2"]=103026,["isGmForbid"]=true,["describeBase"]="用于升级魁纣特性。",["upperLimit"]=9999,["name"]="魁纣星源",["is_can_combine"]=false,["id"]=103026,["auto_use"]=false,["t_otherGet"]={21117}
 ,["tag"]=1}
@@ -4095,9 +4139,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 }
 ,["isActionLog"]=false,["key"]=36035003,["is_can_use"]=false,["describe"]="获得伊根·灭刃【定期维护】的时装",["invert"]=1,["quality"]=6,["is_can_combine"]=false,["type"]=9,["dy_value2"]=6035003,["isGmForbid"]=true,["describeBase"]="获得伊根·灭刃【定期维护】的时装",["upperLimit"]=1,["name"]="定期维护",["id"]=36035003,["dy_value1"]=60350,["icon"]="60350_Skin127_Ijen_N",["auto_use"]=false,["tag"]=0}
 ,[10037]={["isActionLog"]=true,["key"]=10037,["is_can_use"]=true,["describe"]="使用后恢复120燃料",["icon"]="10037",["quality"]=4,["is_can_combine"]=false,["type"]=10,["dy_value2"]=120,["isGmForbid"]=false,["describeBase"]="使用后恢复120燃料",["upperLimit"]=9999,["name"]="高级备用燃料",["j_moneyGet"]=140010,["dy_value1"]=7,["id"]=10037,["auto_use"]=false,["tag"]=2}
-,[24229]={["isActionLog"]=true,["key"]=24229,["is_can_use"]=false,["describe"]=[[角色头像：嘿咻！砸开啦！
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10093,["isGmForbid"]=false,["describeBase"]=[[角色头像：嘿咻！砸开啦！
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="嘿咻！砸开啦！",["quality"]=4,["id"]=24229,["icon"]="avatar_94",["auto_use"]=false,["tag"]=0}
+,[24229]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24229,["is_can_use"]=false,["describe"]=[[角色头像：嘿咻！砸开啦！
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24229,["isGmForbid"]=false,["describeBase"]=[[角色头像：嘿咻！砸开啦！
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="嘿咻！砸开啦！",["quality"]=4,["icon"]="avatar_94",["dy_value2"]=10093,["auto_use"]=false,["tag"]=0}
 ,[10101]={["sExpiry"]="2025/12/30 10:00:00",["isActionLog"]=false,["expiryIx"]=1,["key"]=10101,["is_can_use"]=false,["describe"]="绮境笺宴活动中的宇宙口香糖，可以用于兑换物品。",["icon"]="10101",["hide"]=1,["nExpiry"]=1767060000,["type"]=1,["is_can_combine"]=false,["id"]=10101,["isGmForbid"]=false,["addColor"]="FFC146",["name"]="宇宙口香糖",["j_moneyGet"]=12001,["quality"]=4,["describeBase"]="绮境笺宴活动中的宇宙口香糖，可以用于兑换物品。",["auto_use"]=false,["tag"]=1}
 ,[93301]={["type"]=34,["key"]=93301,["quality"]=4,["id"]=93301,["isGmForbid"]=true,["isActionLog"]=true,["upperLimit"]=1,["dy_value1"]=1,["name"]="大灰",["hide"]=1,["describe"]="宠物故事：拥有与某只会说话的猫型生物相同的名字，但它既不会说话，也没有掌控世界的野心。",["icon"]="Pet001_N",["tag"]=0}
 ,[2070104]={["isActionLog"]=false,["key"]=2070104,["is_can_use"]=false,["describe"]=[[支援：
@@ -4181,9 +4227,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 ,[103028]={["isActionLog"]=false,["key"]=103028,["is_can_use"]=false,["describe"]="用于升级乱波特性。",["icon"]="Role_splinter",["quality"]=4,["dy_arr"]={30280}
 ,["type"]=15,["dy_value2"]=103028,["isGmForbid"]=true,["describeBase"]="用于升级乱波特性。",["upperLimit"]=9999,["name"]="乱波星源",["is_can_combine"]=false,["id"]=103028,["auto_use"]=false,["t_otherGet"]={21117}
 ,["tag"]=1}
-,[24239]={["isActionLog"]=true,["key"]=24239,["is_can_use"]=false,["describe"]=[[角色头像：少女祈祷中...
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10103,["isGmForbid"]=false,["describeBase"]=[[角色头像：少女祈祷中...
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="少女祈祷中...",["quality"]=4,["id"]=24239,["icon"]="avatar_104",["auto_use"]=false,["tag"]=0}
+,[24239]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24239,["is_can_use"]=false,["describe"]=[[角色头像：少女祈祷中...
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24239,["isGmForbid"]=false,["describeBase"]=[[角色头像：少女祈祷中...
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="少女祈祷中...",["quality"]=4,["icon"]="avatar_104",["dy_value2"]=10103,["auto_use"]=false,["tag"]=0}
 ,[19153]={["name2"]="七天",["price"]={{10001,100}
 }
 ,["isActionLog"]=true,["key"]=19153,["is_can_use"]=true,["describe"]=[[头像框：栅栏之内
@@ -4556,9 +4604,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 可在角色信息处更换头像框]],["icon"]="avatar_frame_19",["quality"]=5,["type"]=19,["dy_value2"]=2013,["isGmForbid"]=false,["describeBase"]=[[头像框：畅游TapTap
 可在角色信息处更换头像框]],["upperLimit"]=999,["name"]="畅游TapTap",["hide"]=1,["is_can_combine"]=false,["id"]=19281,["auto_use"]=false,["tag"]=0}
 ,[10038]={["sExpiry"]="2022/12/29 00:00:00",["isActionLog"]=false,["expiryIx"]=1,["key"]=10038,["is_can_use"]=true,["describe"]="使用后恢复50燃料",["icon"]="10013",["quality"]=1,["type"]=10,["nExpiry"]=1672243200,["dy_value2"]=50,["isGmForbid"]=false,["describeBase"]="使用后恢复50燃料",["name"]="限时燃料（测试）",["is_can_combine"]=false,["dy_value1"]=7,["id"]=10038,["auto_use"]=false,["tag"]=2}
-,[24231]={["isActionLog"]=true,["key"]=24231,["is_can_use"]=false,["describe"]=[[角色头像：竹取之刃！哎呀
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10095,["isGmForbid"]=false,["describeBase"]=[[角色头像：竹取之刃！哎呀
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="竹取之刃！哎呀",["quality"]=4,["id"]=24231,["icon"]="avatar_96",["auto_use"]=false,["tag"]=0}
+,[24231]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24231,["is_can_use"]=false,["describe"]=[[角色头像：竹取之刃！哎呀
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24231,["isGmForbid"]=false,["describeBase"]=[[角色头像：竹取之刃！哎呀
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="竹取之刃！哎呀",["quality"]=4,["icon"]="avatar_96",["dy_value2"]=10095,["auto_use"]=false,["tag"]=0}
 ,[10102]={["isActionLog"]=false,["key"]=10102,["is_can_use"]=false,["describe"]="溯源探查活动中掉落的探查票据，可在活动内的【兑换站点】用于兑换物品。",["icon"]="10102",["hide"]=1,["type"]=1,["quality"]=4,["id"]=10102,["isGmForbid"]=false,["addColor"]="FFC146",["name"]="探查票据",["j_moneyGet"]=12001,["is_can_combine"]=false,["describeBase"]="溯源探查活动中掉落的探查票据，可在活动内的【兑换站点】用于兑换物品。",["auto_use"]=false,["tag"]=1}
 ,[2400204]={["isActionLog"]=false,["key"]=2400204,["is_can_use"]=false,["describe"]=[[消除：
 1.提升角色的攻击
@@ -5134,9 +5184,11 @@ NERI的宣传册，由于是持续更新的，总有队员想买到最新的版�
 1.提升角色的暴击
 2.造成暴击伤害时，有機率使目标行动延后]],["upperLimit"]=9999,["name"]="R4震慑输入芯片",["hide"]=1,["dy_value1"]=2410404,["is_can_combine"]=false,["auto_use"]=false,["tag"]=0}
 ,[912030]={["key"]=912030,["type"]=12,["quality"]=4,["seizeIcon"]="91001",["id"]=912030,["isGmForbid"]=true,["isActionLog"]=true,["upperLimit"]=999,["dy_value1"]=12030,["name"]="半截木墙",["hide"]=1,["describe"]="被神秘力量损毁的半截木墙，危险！危险！但勇者不正为扫除危险而来吗？",["icon"]="912030",["tag"]=0}
-,[24234]={["isActionLog"]=true,["key"]=24234,["is_can_use"]=false,["describe"]=[[角色头像：闪亮秋裤
-可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["dy_value2"]=10098,["isGmForbid"]=false,["describeBase"]=[[角色头像：闪亮秋裤
-可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="闪亮秋裤",["quality"]=4,["id"]=24234,["icon"]="avatar_99",["auto_use"]=false,["tag"]=0}
+,[24234]={["price"]={{10001,1}
+}
+,["isActionLog"]=true,["key"]=24234,["is_can_use"]=false,["describe"]=[[角色头像：闪亮秋裤
+可在角色信息处更换角色头像]],["invert"]=1,["hide"]=1,["type"]=21,["id"]=24234,["isGmForbid"]=false,["describeBase"]=[[角色头像：闪亮秋裤
+可在角色信息处更换角色头像]],["upperLimit"]=1,["is_can_combine"]=false,["name"]="闪亮秋裤",["quality"]=4,["icon"]="avatar_99",["dy_value2"]=10098,["auto_use"]=false,["tag"]=0}
 ,[912031]={["key"]=912031,["type"]=12,["quality"]=4,["seizeIcon"]="91001",["id"]=912031,["isGmForbid"]=true,["isActionLog"]=true,["upperLimit"]=999,["dy_value1"]=12031,["name"]="“领主之仪”",["hide"]=1,["describe"]="散发着强烈存在感的红玉饰壁，它昭示着魔王城中怎样的秘密？",["icon"]="912031",["tag"]=0}
 ,[61001]={["name2"]="皇室聚会",["price"]={{10002,1580}
 }

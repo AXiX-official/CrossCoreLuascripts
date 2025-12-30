@@ -3449,9 +3449,9 @@
 ,["limitedTimes"]={},["nSumBuyLimit"]=-1,["nResetValue"]=0,["jGets"]={{10001,1000,2}
 }
 ,["key"]="90522"}
-,[80214]={["sBuyStart"]="2025/07/02 12:00:00",["tabID"]=1004,["group"]=102,["packageQuality"]=4,["sDesc"]="获得物品后，在智宠进化论中解锁钓鱼客",["key"]="80214",["nResetType"]=0,["sName"]="钓鱼客奇妙蛋",["nDiscountStart"]=0,["nBuyEnd"]=1767294000,["nBuyStart"]=1751428800,["nDiscountEnd"]=0,["jGets"]={{26003,1,2}
+,[80214]={["sBuyStart"]="2025/07/02 12:00:00",["tabID"]=1004,["group"]=102,["packageQuality"]=4,["sDesc"]="获得物品后，在智宠进化论中解锁钓鱼客",["key"]="80214",["nResetType"]=0,["sName"]="钓鱼客奇妙蛋",["nDiscountStart"]=0,["nBuyEnd"]=1767034800,["nBuyStart"]=1751428800,["nDiscountEnd"]=0,["jGets"]={{26003,1,2}
 }
-,["sBuyEnd"]="2026/01/02 03:00:00",["nResetValue"]=0,["nOnecBuyLimit"]=1,["limitedWeek"]={},["nType"]=1,["jCosts"]={{10002,200}
+,["sBuyEnd"]="2025/12/30 03:00:00",["nResetValue"]=0,["nOnecBuyLimit"]=1,["limitedWeek"]={},["nType"]=1,["jCosts"]={{10002,200}
 }
 ,["limitedTimes"]={},["nSumBuyLimit"]=1,["id"]=80214,["sort"]=4}
 ,[33010]={["group"]=7001,["packageQuality"]=5,["sDesc"]="可以获得构建蓝图*5、技术点*50000、星币*50000。",["ShowOnSoldOut"]=1,["sort"]=10,["nResetType"]=0,["sName"]="前哨成长礼包",["nBuyEnd"]=0,["nDiscountStart"]=0,["nBuyStart"]=0,["packageIcon"]="img_13_12",["nDiscountEnd"]=0,["jGets"]={{11002,5,2}
