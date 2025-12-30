@@ -96,6 +96,7 @@
 ,{["shopId"]=80426,["board_id"]=50,["index"]=5,["icon"]="arch_twilight_invitation"}
 ,{["shopId"]=80428,["board_id"]=38,["index"]=6,["icon"]="arch_rainy_night_jeopardy"}
 ,{["shopId"]=80438,["board_id"]=72,["index"]=7,["icon"]="arch_starting_raid"}
+,{["shopId"]=80467,["board_id"]=102,["index"]=8,["icon"]="arch_Alluring_Set"}
 }
 ,["key"]="9",["id"]=9,["name"]="都市掠影"}
 ,{["small"]="arch_decisiv_moment",["infos"]={{["board_id"]=64,["index"]=1,["icon"]="arch_decisiv_moment"}

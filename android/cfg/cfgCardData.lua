@@ -3656,14 +3656,14 @@
 ,[78010]={["subTfSkills"]={78010}
 ,["nMoveType"]=1,["overLoad"]=1,["itemId"]=47801,["skinMinBreakLv"]={[7801001]=1,[7801002]=2}
 ,["coreItemId"]=107801,["allTcSkills"]={},["key"]="78010",["skin"]={7801003}
-,["speed"]=107,["notBuyChangeCardIds"]={},["notBuyAllTcSkills"]={},["quality"]=6,["isUseCommon"]=false,["defense"]=94,["role_tag"]="78010",["sp_race"]=5,["dirll"]=78010,["maxhp"]=1475,["desc"]="78010_Common_Des##名为洛贝拉的战士",["crit_rate"]=0.1,["career"]=2,["name"]="洛贝拉",["model"]=7801001,["equip_suits"]={215,233,201}
+,["speed"]=107,["notBuyChangeCardIds"]={},["notBuyAllTcSkills"]={},["quality"]=6,["isUseCommon"]=false,["defense"]=94,["role_tag"]="78010",["sp_race"]=5,["dirll"]=78010,["maxhp"]=1475,["desc"]="名为洛贝拉的战士",["crit_rate"]=0.1,["career"]=2,["name"]="洛贝拉",["model"]=7801001,["equip_suits"]={215,233,201}
 ,["skills"]={780100101,780100201,780100301,780101301,4780101,780100401}
 ,["crit"]=1.5,["attack"]=198,["nClass"]=10,["fight_cost"]=0,["main_type"]=2,["get_from_gm"]=true,["pos_enum"]={2}
 ,["role_id"]=78010,["isActionLog"]=true,["tcSkills"]={780100401}
 ,["card_type"]=1,["resist"]=0.1,["sp"]=30,["np"]=0,["hot"]=100,["jcSkills"]={780100101,780100201,780100301,780101301}
 ,["nStep"]=0,["nameEng"]="Lobera",["nJump"]=0,["breakModels"]={7801001,7801002,7801002,7801002}
 ,["sp_race2"]=10,["hit"]=0,["id"]=78010,["changeCardIds"]={},["tfSkills"]={4780101}
-,["break_id"]=74261,["summon"]=10000034,["sMech"]=8,["add_role_id"]=80100,["gridsIcon"]="effective_range_78010",["base_card"]=true,["m_Desc"]="78010_Enemy_Des##名为洛贝拉的幻象",["halo"]={78010}
+,["break_id"]=74261,["summon"]=10000034,["sMech"]=8,["add_role_id"]=80100,["gridsIcon"]="effective_range_78010",["base_card"]=true,["m_Desc"]="名为洛贝拉的幻象",["halo"]={78010}
 }
 ,[93281]={["nMoveType"]=1,["overLoad"]=0,["key"]="93281",["speed"]=100,["notBuyAllTcSkills"]={},["quality"]=6,["isUseCommon"]=false,["defense"]=93,["sp_race"]=5,["dirll"]=93281,["maxhp"]=1315,["desc"]="名为阿曼1的战士",["name"]="阿曼1",["model"]=9328001,["skinMinBreakLv"]={},["skills"]={932800101,932800301,932800501,932800601}
 ,["crit"]=1.5,["attack"]=128,["nClass"]=7,["allTcSkills"]={},["main_type"]=4,["notBuyChangeCardIds"]={},["isActionLog"]=false,["np"]=0,["break_id"]=74461,["crit_rate"]=0.05,["get_from_gm"]=true,["role_tag"]="93281",["jcSkills"]={932800101,932800301,932800501}

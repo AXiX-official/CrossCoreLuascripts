@@ -190,7 +190,7 @@ function this.RichMan(cfg)
                 return
             end
         end
-        if cfg.page ~= nil then
+        if cfg.page ~= nil and cfg.page~="RichManMain" then
             CSAPI.OpenView(cfg.page);
         end
     end

@@ -239,7 +239,7 @@
 ,["nResetValue"]=5,["sSplitTime"]=1018,["limitedWeek"]={},["nType"]=3,["jCosts"]={{10002,1080}
 }
 ,["limitedTimes"]={},["isShowImg"]=1,["key"]="50128",["sIcon"]="70350_Skin124_mall"}
-,[50160]={["sBuyStart"]="2026/01/07 12:00:00",["hasDiscountTag"]=4,["nBuyEnd"]=1770750000,["group"]=4,["nBuyStart"]=1767758400,["packageQuality"]=5,["sDesc"]="获得龙弦【管道丽影】的时装",["nDiscountEnd"]=0,["key"]="50160",["sort"]=4,["nResetType"]=0,["sName"]="管道丽影",["orgCosts"]={{-1,138,1}
+,[50160]={["sBuyStart"]="2026/01/07 12:00:00",["hasDiscountTag"]=2,["nBuyEnd"]=1770750000,["group"]=4,["nBuyStart"]=1767758400,["packageQuality"]=5,["sDesc"]="获得龙弦【管道丽影】的时装",["nDiscountEnd"]=0,["key"]="50160",["sort"]=4,["nResetType"]=0,["sName"]="管道丽影",["orgCosts"]={{-1,138,1}
 }
 ,["id"]=50160,["nDiscountStart"]=0,["canUseVoucher"]={2}
 ,["nResetValue"]=0,["jGets"]={{36021004,1,2}
@@ -686,7 +686,7 @@
 ,["nType"]=3,["jCosts"]={{10002,1080}
 }
 ,["limitedTimes"]={},["isShowImg"]=1,["key"]="50131",["sIcon"]="30250_Skin118_mall"}
-,[50163]={["sBuyStart"]="2025/12/30 10:00:00",["hasDiscountTag"]=4,["nBuyEnd"]=1770750000,["group"]=4,["nBuyStart"]=1767060000,["packageQuality"]=5,["sDesc"]="获得赤夕【深宅简居】的时装",["nDiscountEnd"]=0,["key"]="50163",["sort"]=1,["nResetType"]=0,["sName"]="深宅简居",["orgCosts"]={{-1,146,1}
+,[50163]={["sBuyStart"]="2025/12/30 10:00:00",["hasDiscountTag"]=2,["nBuyEnd"]=1770750000,["group"]=4,["nBuyStart"]=1767060000,["packageQuality"]=5,["sDesc"]="获得赤夕【深宅简居】的时装",["nDiscountEnd"]=0,["key"]="50163",["sort"]=1,["nResetType"]=0,["sName"]="深宅简居",["orgCosts"]={{-1,146,1}
 }
 ,["id"]=50163,["nDiscountStart"]=0,["canUseVoucher"]={2}
 ,["nResetValue"]=0,["jGets"]={{37040003,1,2}
@@ -3737,7 +3737,7 @@
 ,["sBuyEnd"]="2026/02/11 03:00:00",["nResetValue"]=0,["nOnecBuyLimit"]=1,["limitedWeek"]={},["nType"]=1,["jCosts"]={{10002,1580}
 }
 ,["limitedTimes"]={},["nSumBuyLimit"]=1,["id"]=80409,["sort"]=2}
-,[31659]={["tabID"]=3005,["group"]=3,["packageQuality"]=5,["sDesc"]="可以获得创生微粒*220、星币*600000、经验*350000。",["key"]="31659",["nResetType"]=3,["sName"]="每月创生微粒组合包",["nBuyEnd"]=0,["nBuyStart"]=0,["nDiscountStart"]=0,["nDiscountEnd"]=0,["packageIcon"]="31659",["nResetValue"]=1,["jGets"]={{14010,220,2}
+,[31659]={["tabID"]=3005,["group"]=3,["packageQuality"]=5,["sDesc"]="可以获得创生微粒*220、星币*600000、技术点*350000。",["key"]="31659",["nResetType"]=3,["sName"]="每月创生微粒组合包",["nBuyEnd"]=0,["nBuyStart"]=0,["nDiscountStart"]=0,["nDiscountEnd"]=0,["packageIcon"]="31659",["nResetValue"]=1,["jGets"]={{14010,220,2}
 ,{10001,600000,2}
 ,{10003,350000,2}
 }
@@ -5721,7 +5721,7 @@
 ,["nResetValue"]=5,["sSplitTime"]=1017,["limitedWeek"]={},["nType"]=3,["jCosts"]={{10002,880}
 }
 ,["limitedTimes"]={},["isShowImg"]=1,["key"]="50125",["sIcon"]="70240_Skin112_mall"}
-,[50157]={["sBuyStart"]="2025/12/30 10:00:00",["hasDiscountTag"]=4,["nBuyEnd"]=1770750000,["group"]=4,["nBuyStart"]=1767060000,["packageQuality"]=5,["sDesc"]="获得刃齿【夜伴潜行】的时装",["nDiscountEnd"]=0,["key"]="50157",["sort"]=3,["nResetType"]=0,["sName"]="夜伴潜行",["orgCosts"]={{-1,138,1}
+,[50157]={["sBuyStart"]="2025/12/30 10:00:00",["hasDiscountTag"]=2,["nBuyEnd"]=1770750000,["group"]=4,["nBuyStart"]=1767060000,["packageQuality"]=5,["sDesc"]="获得刃齿【夜伴潜行】的时装",["nDiscountEnd"]=0,["key"]="50157",["sort"]=3,["nResetType"]=0,["sName"]="夜伴潜行",["orgCosts"]={{-1,138,1}
 }
 ,["id"]=50157,["nDiscountStart"]=0,["canUseVoucher"]={2}
 ,["nResetValue"]=0,["jGets"]={{33018004,1,2}

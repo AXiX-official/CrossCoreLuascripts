@@ -19,8 +19,8 @@ local isSend = false
 function Awake()
 	inp_account = ComUtil.GetCom(inpAccount, "InputField");
     inp_pwd = ComUtil.GetCom(inpPwd, "InputField");
-    inp_account.characterLimit=eRegisterLen.AccMax;
-    inp_pwd.characterLimit=eRegisterLen.PwdMax;
+    -- inp_account.characterLimit=eRegisterLen.AccMax;
+    -- inp_pwd.characterLimit=eRegisterLen.PwdMax;
 	text_accountTips = ComUtil.GetCom(accountTips, "Text");
 	text_pwdTips = ComUtil.GetCom(pwdTips, "Text");
 	CSAPI.AddInputFieldChange(inpAccount,OnAccountChange)

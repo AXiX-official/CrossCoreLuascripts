@@ -1051,7 +1051,7 @@
 ,["key"]="赤夕",["englishName"]="Lycoris Radiata",["icon"]="70400_Break_LycorisRadiata_N",["Card_head"]="70400_Break_LycorisRadiata_C",["skinType"]=2,["List_head"]="70400_Break_LycorisRadiata_L",["imgPos"]={6,114,0.9}
 ,["desc"]="跃变武装",["s_turn"]={"Lycoris_Radiata_04"}
 ,["s_hit"]={"Lycoris_Radiata_19","Lycoris_Radiata_20","Lycoris_Radiata_21","Lycoris_Radiata_22","Lycoris_Radiata_23"}
-,["skin_desc"]="无",["model_desc"]="探索队的跃变武装",["zoomSwitch"]=false,["monsterSize"]=60,["dead_retain"]=false,["jumpHeight"]=2,["face"]="70400/Dorm_70400_Face",["name"]="d70400",["role_id"]=70400,["card_id"]=70400,["hair"]="70400/Dorm_70400_Hair",["cast2_card"]="70400_Break_LycorisRadiata_O",["get_txt"]="跃升到第II阶段解锁",["id"]=7040002,["l2dPos"]={59,-3,1.03}
+,["skin_desc"]="无",["model_desc"]="探索队的跃变武装",["zoomSwitch"]=false,["monsterSize"]=60,["dead_retain"]=false,["jumpHeight"]=2,["face"]="70400/Dorm_70400_Face",["name"]="d70400",["role_id"]=70400,["card_id"]=70400,["hair"]="70400/Dorm_70400_Hair",["cast2_card"]="70400_Common_LycorisRadiata_O",["get_txt"]="跃升到第II阶段解锁",["id"]=7040002,["l2dPos"]={59,-3,1.03}
 ,["formation_icon"]="70400_Break_LycorisRadiata",["s_skipcast2"]={"Lycoris_Radiata_05","Lycoris_Radiata_06","Lycoris_Radiata_07","Lycoris_Radiata_08"}
 ,["Fight_head"]="70400_Break_LycorisRadiata_F",["teamIcon"]="07_star",["voiceID"]=704001,["s_fail"]={"Lycoris_Radiata_26"}
 ,["giant"]=false,["s_mvp"]={"Lycoris_Radiata_25"}
