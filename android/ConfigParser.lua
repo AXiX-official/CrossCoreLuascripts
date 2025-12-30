@@ -383,6 +383,8 @@ function ConfigParser:SetGolble()
         -- 做loading延迟, 这里集中处理加载配置表
         local count = 0
         local size = table.size(self.listClientConfig)
+        -- ASSERT(size, "ConfigParser:SetGolble() size is nil")
+
         if size <= 0 then size = 1 end
         local laodfunlist = {}
 
