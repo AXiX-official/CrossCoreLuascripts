@@ -3970,10 +3970,10 @@
 ,["resist"]=0,["sMech"]=7,["hit"]=0,["card_type"]=1,["career"]=1,["enum"]={3}
 ,["m_Desc"]="板块中常见的游荡造物，通常凭借自有程式进行如野兽般的捕猎活动。一旦被人蓄意控制并聚集起来，会变成非常棘手的对象。对防御设施颇具威胁性，必须时刻保持警惕。",["nJump"]=0}
 ,[10070]={["subTfSkills"]={10070}
-,["nMoveType"]=2,["overLoad"]=1,["coreItemId"]=101007,["sMech"]=1,["speed"]=110,["notBuyAllTcSkills"]={},["quality"]=3,["isUseCommon"]=false,["defense"]=97,["sp_race"]=5,["dirll"]=10070,["maxhp"]=1273,["itemId"]=41007,["desc"]="名为乌鲁鲁的战士",["skinMinBreakLv"]={},["allTcSkills"]={},["name"]="乌鲁鲁",["model"]=1007001,["equip_suits"]={220,234,210}
+,["nMoveType"]=2,["overLoad"]=1,["coreItemId"]=101007,["sMech"]=1,["speed"]=110,["notBuyAllTcSkills"]={},["quality"]=3,["isUseCommon"]=false,["defense"]=97,["sp_race"]=5,["dirll"]=10070,["maxhp"]=1273,["itemId"]=41007,["desc"]="名为乌鲁鲁的战士",["skinMinBreakLv"]={},["allTcSkills"]={},["name"]="瑞泽",["model"]=1007001,["equip_suits"]={220,234,210}
 ,["skills"]={100700101,100700201,100700301,100701301,4100701}
 ,["crit"]=1.5,["attack"]=201,["nClass"]=1,["notBuyChangeCardIds"]={},["main_type"]=1,["hot"]=100,["isActionLog"]=true,["gridsIcon"]="effective_range_01",["break_id"]=11301,["get_from_gm"]=false,["role_tag"]="10070",["role_id"]=10070,["fight_cost"]=0,["jcSkills"]={100700101,100700201,100700301,100701301}
-,["nStep"]=0,["nameEng"]="???",["base_card"]=true,["sp"]=30,["sp_race2"]=10,["np"]=0,["id"]=10070,["changeCardIds"]={},["tfSkills"]={4100701}
+,["nStep"]=0,["nameEng"]="CINNABAR",["base_card"]=true,["sp"]=30,["sp_race2"]=10,["np"]=0,["id"]=10070,["changeCardIds"]={},["tfSkills"]={4100701}
 ,["hit"]=0,["resist"]=0,["crit_rate"]=0.1,["key"]="10070",["card_type"]=1,["career"]=1,["m_Desc"]="名为乌鲁鲁的战士",["nJump"]=0}
 ,[20140]={["subTfSkills"]={20140}
 ,["nMoveType"]=2,["overLoad"]=1,["coreItemId"]=102014,["key"]="20140",["skin"]={2014003}

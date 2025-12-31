@@ -40,5 +40,11 @@
 ,["seasonName"]="第7赛季",["freeMax"]=3,["freeNum"]=1,["id"]=7,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={30}
 ,["endTime"]="2026/02/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={30}
 }
+,{["begTime"]="2026/02/01 10:00:00",["freeType"]=2,["randomSet"]=1,["dupSeasonId"]=4,["shopId"]=4002,["key"]=8,["randomCost"]={{10035,90}
+,{10040,90}
+}
+,["seasonName"]="第8赛季",["freeMax"]=3,["freeNum"]=1,["id"]=8,["optionalSwitch"]=1,["randomSwitch"]=1,["randomRefresh"]={28}
+,["endTime"]="2026/04/01 02:59:59",["messageid"]=9006,["optionalRefresh"]={28}
+}
 }
 

@@ -1009,7 +1009,7 @@ NERI的确是个资源充足又相对安全的庇护所，之前那位公爵大�
 ,["nStoryLv"]=30,["sHarmonyAbi"]="优",["nHateLv"]=30,["sHeight"]="158cm",["number"]=220,["sSex"]=1,["sInterview2Lv"]=30,["sTechniqueAbi"]="优",["sBirthDay"]="2/5",["sHarmony"]="？？？",["sSounder_jp"]="???",["aTiredMod"]={180,1}
 ,["sBelonging"]=1,["sInterest"]="画画、打游戏",["sInterview1Lv"]=10,["nBirthPlaceLv"]=30,["sInterview2"]="？？？",["nWeight"]=30,["bAddToBuild"]=false,["sBirthPlace"]=2,["sWeight"]="85kg",["aModels"]=8010001,["bShowInAltas"]=false,["nHeightLv"]=30,["id"]=80100,["sRecord1"]=[[档案一：
 太厉害了太厉害了太厉害了太厉害了太厉害了太厉害了太厉害了太厉害了太厉害了太厉害了太厉害了太厉害了
-档案二：cadfadfas]],["bHadLv"]=false,["sAliasName"]="先驱",["sBloodType"]="AB",["sMorale"]="？？？",["nAgeLv"]=20,["aCards"]={80100}
+档案二：cadfadfas]],["bHadLv"]=false,["sAliasName"]="达摩克利斯",["sBloodType"]="AB",["sMorale"]="？？？",["nAgeLv"]=20,["aCards"]={80100}
 ,["sEstimate"]="？？？",["sStature"]="70/62/88",["sHoppy"]="？？？",["nInterestLv"]=30}
 ,[20070]={["index"]=2007,["eName"]="Anthem",["sSounder_cn"]="香凝",["nAbilityId"]={14002}
 ,["sAge"]="17才",["sName"]="阿德里安·鲍姆巴赫",["sPhysical"]="综合体能测试中，各项指标均达到及格线。",["sStory"]="我是装甲光叔的妹抖，指挥官贵安。别看我这样，其实我也是有些小脾气的~上次夜袭了光叔，就顺便欺负了下jarry呢~",["sTeam"]=2,["sMoraleAbi"]="优",["sTechniqueAbi"]="良",["sHeight"]="164cm",["sSex"]=2,["aTiredMod"]={180,1}

@@ -10,7 +10,7 @@
 ,["key"]="furniture_sit_01",["sType"]="furniture",["restore"]=2,["actionTalkID2"]=6}
 ,["hug"]={["petActions"]={{"walk",100}
 }
-,["loop"]={6}
+,["loop"]={5}
 ,["key"]="hug",["id"]="hug",["sType"]="leisure",["shadow"]=1,["action"]="宠物_抱起来",["inteDir"]=false}
 ,["base_dozeOff"]={["action"]="打瞌睡",["id"]="base_dozeOff",["roleActions_g_m"]={{"walk",20}
 ,{"idle",100}
@@ -311,6 +311,10 @@
 }
 ,["loop"]={8}
 ,["key"]="base_drinkTea",["sType"]="leisure",["action"]="喝茶"}
+,["lie"]={["petActions"]={{"walk",100}
+,{"idle",100}
+}
+,["action"]="休闲系列",["key"]="lie",["id"]="lie",["sType"]="lie",["inteDir"]=false}
 ,["normal_stretch"]={["loop"]={5}
 ,["action"]="伸懒腰",["sType"]="leisure",["id"]="normal_stretch",["key"]="normal_stretch",["roleActions_g_d"]={{"walk",50}
 ,{"idle",50}
@@ -324,6 +328,7 @@
 ,{"base_handlingData",50}
 }
 ,["inteDir"]=false,["petActions"]={{"walk",100}
+,{"lie",100}
 }
 ,["loop"]={2,8}
 ,["key"]="idle",["roleActions_m_m"]={{"walk",50}
@@ -490,6 +495,8 @@
 ,{"base_phone",10}
 }
 ,["inteDir"]=false,["petActions"]={{"idle",100}
+,{"stretch",100}
+,{"lie",100}
 }
 ,["key"]="walk",["roleActions_m_m"]={{"idle",50}
 ,{"Furn_ComA_ipad_01",50}

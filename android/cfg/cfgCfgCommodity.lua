@@ -395,10 +395,10 @@
 ,["nResetValue"]=5,["sSplitTime"]=1016,["limitedWeek"]={},["nType"]=3,["jCosts"]={{10002,1080}
 }
 ,["limitedTimes"]={},["isShowImg"]=1,["key"]="50129",["sIcon"]="70360_Skin124_mall"}
-,[50161]={["sBuyStart"]="2025/12/30 10:00:00",["hasDiscountTag"]=2,["nBuyEnd"]=1770750000,["group"]=4,["nBuyStart"]=1767060000,["packageQuality"]=5,["sDesc"]="获得洛贝拉【燃情热夜】的时装",["nDiscountEnd"]=0,["key"]="50161",["sort"]=168,["nResetType"]=0,["sName"]="燃情热夜",["id"]=50161,["isShow"]=1,["nDiscountStart"]=0,["canUseVoucher"]={2}
+,[50161]={["sBuyStart"]="2025/12/30 10:00:00",["hasDiscountTag"]=2,["nBuyEnd"]=1767146400,["group"]=4,["nBuyStart"]=1767060000,["packageQuality"]=5,["sDesc"]="获得洛贝拉【燃情热夜】的时装",["nDiscountEnd"]=0,["key"]="50161",["sort"]=168,["nResetType"]=0,["sName"]="燃情热夜",["id"]=50161,["isShow"]=1,["nDiscountStart"]=0,["canUseVoucher"]={2}
 ,["nResetValue"]=0,["nSumBuyLimit"]=1,["jGets"]={{37801003,1,2}
 }
-,["sBuyEnd"]="2026/02/11 03:00:00",["orgCosts"]={{-1,146,1}
+,["sBuyEnd"]="2025/12/31 10:00:00",["orgCosts"]={{-1,146,1}
 ,{10002,1980}
 }
 ,["nOnecBuyLimit"]=1,["limitedWeek"]={},["nType"]=3,["jCosts"]={{-1,126}
